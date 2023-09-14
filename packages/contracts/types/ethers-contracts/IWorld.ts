@@ -9,177 +9,450 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
 } from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
+import type { FunctionFragment, Result, EventFragment } from "@ethersproject/abi";
 import type { Listener, Provider } from "@ethersproject/providers";
-import type {
-  TypedEventFilter,
-  TypedEvent,
-  TypedListener,
-  OnEvent,
-  PromiseOrValue,
-} from "./common";
+import type { TypedEventFilter, TypedEvent, TypedListener, OnEvent, PromiseOrValue } from "./common";
 
-export type WorldQueryFragmentStruct = {
-  queryType: PromiseOrValue<BigNumberish>;
-  componentId: PromiseOrValue<BigNumberish>;
-  value: PromiseOrValue<BytesLike>;
+export type PositionDataStruct = {
+  x: PromiseOrValue<BigNumberish>;
+  y: PromiseOrValue<BigNumberish>;
+  parent: PromiseOrValue<BytesLike>;
 };
 
-export type WorldQueryFragmentStructOutput = [number, BigNumber, string] & {
-  queryType: number;
-  componentId: BigNumber;
-  value: string;
+export type PositionDataStructOutput = [number, number, string] & {
+  x: number;
+  y: number;
+  parent: string;
 };
 
 export interface IWorldInterface extends utils.Interface {
   functions: {
-    "components()": FunctionFragment;
-    "getComponent(uint256)": FunctionFragment;
-    "getComponentIdFromAddress(address)": FunctionFragment;
-    "getNumEntities()": FunctionFragment;
-    "getUniqueEntityId()": FunctionFragment;
-    "hasEntity(uint256)": FunctionFragment;
-    "init()": FunctionFragment;
-    "query((uint8,uint256,bytes)[])": FunctionFragment;
-    "registerComponent(address,uint256)": FunctionFragment;
-    "registerComponentValueRemoved(uint256)": FunctionFragment;
-    "registerComponentValueRemoved(address,uint256)": FunctionFragment;
-    "registerComponentValueSet(address,uint256,bytes)": FunctionFragment;
-    "registerComponentValueSet(uint256,bytes)": FunctionFragment;
-    "registerSystem(address,uint256)": FunctionFragment;
-    "systems()": FunctionFragment;
+    "build(uint8,(int32,int32,bytes32))": FunctionFragment;
+    "call(bytes32,bytes)": FunctionFragment;
+    "callFrom(address,bytes32,bytes)": FunctionFragment;
+    "deleteRecord(bytes32,bytes32[],bytes32)": FunctionFragment;
+    "destroy((int32,int32,bytes32))": FunctionFragment;
+    "devDeleteRecord(bytes32,bytes32[],bytes32)": FunctionFragment;
+    "devPopFromField(bytes32,bytes32[],uint8,uint256,bytes32)": FunctionFragment;
+    "devPushToField(bytes32,bytes32[],uint8,bytes,bytes32)": FunctionFragment;
+    "devSetField(bytes32,bytes32[],uint8,bytes,bytes32)": FunctionFragment;
+    "devSetRecord(bytes32,bytes32[],bytes,bytes32)": FunctionFragment;
+    "devUpdateInField(bytes32,bytes32[],uint8,uint256,bytes,bytes32)": FunctionFragment;
+    "emitEphemeralRecord(bytes32,bytes32[],bytes,bytes32)": FunctionFragment;
+    "getField(bytes32,bytes32[],uint8,bytes32)": FunctionFragment;
+    "getFieldLength(bytes32,bytes32[],uint8,bytes32)": FunctionFragment;
+    "getFieldSlice(bytes32,bytes32[],uint8,bytes32,uint256,uint256)": FunctionFragment;
+    "getKeySchema(bytes32)": FunctionFragment;
+    "getRecord(bytes32,bytes32[],bytes32)": FunctionFragment;
+    "getValueSchema(bytes32)": FunctionFragment;
+    "grantAccess(bytes32,address)": FunctionFragment;
+    "increment()": FunctionFragment;
+    "installModule(address,bytes)": FunctionFragment;
+    "installRootModule(address,bytes)": FunctionFragment;
+    "popFromField(bytes32,bytes32[],uint8,uint256,bytes32)": FunctionFragment;
+    "pushToField(bytes32,bytes32[],uint8,bytes,bytes32)": FunctionFragment;
+    "registerDelegation(address,bytes32,bytes)": FunctionFragment;
+    "registerFunctionSelector(bytes32,string,string)": FunctionFragment;
+    "registerNamespace(bytes16)": FunctionFragment;
+    "registerRootFunctionSelector(bytes32,bytes4,bytes4)": FunctionFragment;
+    "registerStoreHook(bytes32,address,uint8)": FunctionFragment;
+    "registerSystem(bytes32,address,bool)": FunctionFragment;
+    "registerSystemHook(bytes32,address,uint8)": FunctionFragment;
+    "registerTable(bytes32,bytes32,bytes32,string[],string[])": FunctionFragment;
+    "revokeAccess(bytes32,address)": FunctionFragment;
+    "setField(bytes32,bytes32[],uint8,bytes,bytes32)": FunctionFragment;
+    "setRecord(bytes32,bytes32[],bytes,bytes32)": FunctionFragment;
+    "spawn()": FunctionFragment;
+    "transferBalanceToAddress(bytes16,address,uint256)": FunctionFragment;
+    "transferBalanceToNamespace(bytes16,bytes16,uint256)": FunctionFragment;
+    "transferOwnership(bytes16,address)": FunctionFragment;
+    "unregisterStoreHook(bytes32,address)": FunctionFragment;
+    "unregisterSystemHook(bytes32,address)": FunctionFragment;
+    "updateInField(bytes32,bytes32[],uint8,uint256,bytes,bytes32)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "components"
-      | "getComponent"
-      | "getComponentIdFromAddress"
-      | "getNumEntities"
-      | "getUniqueEntityId"
-      | "hasEntity"
-      | "init"
-      | "query"
-      | "registerComponent"
-      | "registerComponentValueRemoved(uint256)"
-      | "registerComponentValueRemoved(address,uint256)"
-      | "registerComponentValueSet(address,uint256,bytes)"
-      | "registerComponentValueSet(uint256,bytes)"
+      | "build"
+      | "call"
+      | "callFrom"
+      | "deleteRecord"
+      | "destroy"
+      | "devDeleteRecord"
+      | "devPopFromField"
+      | "devPushToField"
+      | "devSetField"
+      | "devSetRecord"
+      | "devUpdateInField"
+      | "emitEphemeralRecord"
+      | "getField"
+      | "getFieldLength"
+      | "getFieldSlice"
+      | "getKeySchema"
+      | "getRecord"
+      | "getValueSchema"
+      | "grantAccess"
+      | "increment"
+      | "installModule"
+      | "installRootModule"
+      | "popFromField"
+      | "pushToField"
+      | "registerDelegation"
+      | "registerFunctionSelector"
+      | "registerNamespace"
+      | "registerRootFunctionSelector"
+      | "registerStoreHook"
       | "registerSystem"
-      | "systems"
+      | "registerSystemHook"
+      | "registerTable"
+      | "revokeAccess"
+      | "setField"
+      | "setRecord"
+      | "spawn"
+      | "transferBalanceToAddress"
+      | "transferBalanceToNamespace"
+      | "transferOwnership"
+      | "unregisterStoreHook"
+      | "unregisterSystemHook"
+      | "updateInField"
   ): FunctionFragment;
 
+  encodeFunctionData(functionFragment: "build", values: [PromiseOrValue<BigNumberish>, PositionDataStruct]): string;
+  encodeFunctionData(functionFragment: "call", values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]): string;
   encodeFunctionData(
-    functionFragment: "components",
-    values?: undefined
+    functionFragment: "callFrom",
+    values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getComponent",
-    values: [PromiseOrValue<BigNumberish>]
+    functionFragment: "deleteRecord",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>[], PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(functionFragment: "destroy", values: [PositionDataStruct]): string;
+  encodeFunctionData(
+    functionFragment: "devDeleteRecord",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>[], PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getComponentIdFromAddress",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getNumEntities",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getUniqueEntityId",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "hasEntity",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(functionFragment: "init", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "query",
-    values: [WorldQueryFragmentStruct[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "registerComponent",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "registerComponentValueRemoved(uint256)",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "registerComponentValueRemoved(address,uint256)",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "registerComponentValueSet(address,uint256,bytes)",
+    functionFragment: "devPopFromField",
     values: [
-      PromiseOrValue<string>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BytesLike>
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "registerComponentValueSet(uint256,bytes)",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BytesLike>]
+    functionFragment: "devPushToField",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "devSetField",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "devSetRecord",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "devUpdateInField",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "emitEphemeralRecord",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getField",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getFieldLength",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getFieldSlice",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
+  ): string;
+  encodeFunctionData(functionFragment: "getKeySchema", values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(
+    functionFragment: "getRecord",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>[], PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(functionFragment: "getValueSchema", values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(
+    functionFragment: "grantAccess",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(functionFragment: "increment", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "installModule",
+    values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "installRootModule",
+    values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "popFromField",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "pushToField",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "registerDelegation",
+    values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "registerFunctionSelector",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(functionFragment: "registerNamespace", values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(
+    functionFragment: "registerRootFunctionSelector",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "registerStoreHook",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "registerSystem",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>, PromiseOrValue<boolean>]
   ): string;
-  encodeFunctionData(functionFragment: "systems", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "registerSystemHook",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "registerTable",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<string>[],
+      PromiseOrValue<string>[]
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "revokeAccess",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setField",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setRecord",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(functionFragment: "spawn", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "transferBalanceToAddress",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferBalanceToNamespace",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "unregisterStoreHook",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "unregisterSystemHook",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateInField",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
 
-  decodeFunctionResult(functionFragment: "components", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getComponent",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getComponentIdFromAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getNumEntities",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getUniqueEntityId",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "hasEntity", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "init", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "query", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "registerComponent",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "registerComponentValueRemoved(uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "registerComponentValueRemoved(address,uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "registerComponentValueSet(address,uint256,bytes)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "registerComponentValueSet(uint256,bytes)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "registerSystem",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "systems", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "build", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "call", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "callFrom", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "deleteRecord", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "destroy", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "devDeleteRecord", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "devPopFromField", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "devPushToField", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "devSetField", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "devSetRecord", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "devUpdateInField", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "emitEphemeralRecord", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getField", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getFieldLength", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getFieldSlice", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getKeySchema", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getRecord", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getValueSchema", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "grantAccess", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "increment", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "installModule", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "installRootModule", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "popFromField", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "pushToField", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "registerDelegation", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "registerFunctionSelector", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "registerNamespace", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "registerRootFunctionSelector", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "registerStoreHook", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "registerSystem", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "registerSystemHook", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "registerTable", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "revokeAccess", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setField", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setRecord", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "spawn", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "transferBalanceToAddress", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "transferBalanceToNamespace", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "transferOwnership", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "unregisterStoreHook", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "unregisterSystemHook", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "updateInField", data: BytesLike): Result;
 
-  events: {};
+  events: {
+    "HelloWorld()": EventFragment;
+    "StoreDeleteRecord(bytes32,bytes32[])": EventFragment;
+    "StoreEphemeralRecord(bytes32,bytes32[],bytes)": EventFragment;
+    "StoreSetField(bytes32,bytes32[],uint8,bytes)": EventFragment;
+    "StoreSetRecord(bytes32,bytes32[],bytes)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "HelloWorld"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "StoreDeleteRecord"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "StoreEphemeralRecord"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "StoreSetField"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "StoreSetRecord"): EventFragment;
 }
+
+export interface HelloWorldEventObject {}
+export type HelloWorldEvent = TypedEvent<[], HelloWorldEventObject>;
+
+export type HelloWorldEventFilter = TypedEventFilter<HelloWorldEvent>;
+
+export interface StoreDeleteRecordEventObject {
+  table: string;
+  key: string[];
+}
+export type StoreDeleteRecordEvent = TypedEvent<[string, string[]], StoreDeleteRecordEventObject>;
+
+export type StoreDeleteRecordEventFilter = TypedEventFilter<StoreDeleteRecordEvent>;
+
+export interface StoreEphemeralRecordEventObject {
+  table: string;
+  key: string[];
+  data: string;
+}
+export type StoreEphemeralRecordEvent = TypedEvent<[string, string[], string], StoreEphemeralRecordEventObject>;
+
+export type StoreEphemeralRecordEventFilter = TypedEventFilter<StoreEphemeralRecordEvent>;
+
+export interface StoreSetFieldEventObject {
+  table: string;
+  key: string[];
+  schemaIndex: number;
+  data: string;
+}
+export type StoreSetFieldEvent = TypedEvent<[string, string[], number, string], StoreSetFieldEventObject>;
+
+export type StoreSetFieldEventFilter = TypedEventFilter<StoreSetFieldEvent>;
+
+export interface StoreSetRecordEventObject {
+  table: string;
+  key: string[];
+  data: string;
+}
+export type StoreSetRecordEvent = TypedEvent<[string, string[], string], StoreSetRecordEventObject>;
+
+export type StoreSetRecordEventFilter = TypedEventFilter<StoreSetRecordEvent>;
 
 export interface IWorld extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -194,13 +467,9 @@ export interface IWorld extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TEvent>>;
 
-  listeners<TEvent extends TypedEvent>(
-    eventFilter?: TypedEventFilter<TEvent>
-  ): Array<TypedListener<TEvent>>;
+  listeners<TEvent extends TypedEvent>(eventFilter?: TypedEventFilter<TEvent>): Array<TypedListener<TEvent>>;
   listeners(eventName?: string): Array<Listener>;
-  removeAllListeners<TEvent extends TypedEvent>(
-    eventFilter: TypedEventFilter<TEvent>
-  ): this;
+  removeAllListeners<TEvent extends TypedEvent>(eventFilter: TypedEventFilter<TEvent>): this;
   removeAllListeners(eventName?: string): this;
   off: OnEvent<this>;
   on: OnEvent<this>;
@@ -208,350 +477,1472 @@ export interface IWorld extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    components(overrides?: CallOverrides): Promise<[string]>;
+    build(
+      buildingType: PromiseOrValue<BigNumberish>,
+      coord: PositionDataStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-    getComponent(
-      id: PromiseOrValue<BigNumberish>,
+    call(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      funcSelectorAndArgs: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    callFrom(
+      delegator: PromiseOrValue<string>,
+      resourceSelector: PromiseOrValue<BytesLike>,
+      funcSelectorAndArgs: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    deleteRecord(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    destroy(
+      coord: PositionDataStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    devDeleteRecord(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    devPopFromField(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      byteLengthToPop: PromiseOrValue<BigNumberish>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    devPushToField(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      dataToPush: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    devSetField(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    devSetRecord(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      data: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    devUpdateInField(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      startByteIndex: PromiseOrValue<BigNumberish>,
+      dataToSet: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    emitEphemeralRecord(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      data: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    getField(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      valueSchema: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<[string]>;
+    ): Promise<[string] & { data: string }>;
 
-    getComponentIdFromAddress(
-      componentAddr: PromiseOrValue<string>,
+    getFieldLength(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      valueSchema: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    getNumEntities(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    getUniqueEntityId(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    hasEntity(
-      entity: PromiseOrValue<BigNumberish>,
+    getFieldSlice(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      start: PromiseOrValue<BigNumberish>,
+      end: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    ): Promise<[string] & { data: string }>;
 
-    init(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+    getKeySchema(table: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<[string] & { schema: string }>;
 
-    query(
-      worldQueryFragments: WorldQueryFragmentStruct[],
+    getRecord(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      valueSchema: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<[BigNumber[]]>;
+    ): Promise<[string] & { data: string }>;
 
-    registerComponent(
-      componentAddr: PromiseOrValue<string>,
-      id: PromiseOrValue<BigNumberish>,
+    getValueSchema(table: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<[string] & { schema: string }>;
+
+    grantAccess(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      grantee: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "registerComponentValueRemoved(uint256)"(
-      entity: PromiseOrValue<BigNumberish>,
+    increment(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
+
+    installModule(
+      module: PromiseOrValue<string>,
+      args: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "registerComponentValueRemoved(address,uint256)"(
-      component: PromiseOrValue<string>,
-      entity: PromiseOrValue<BigNumberish>,
+    installRootModule(
+      module: PromiseOrValue<string>,
+      args: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "registerComponentValueSet(address,uint256,bytes)"(
-      component: PromiseOrValue<string>,
-      entity: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
+    popFromField(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      byteLengthToPop: PromiseOrValue<BigNumberish>,
+      valueSchema: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "registerComponentValueSet(uint256,bytes)"(
-      entity: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
+    pushToField(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      dataToPush: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    registerDelegation(
+      delegatee: PromiseOrValue<string>,
+      delegationControlId: PromiseOrValue<BytesLike>,
+      initFuncSelectorAndArgs: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    registerFunctionSelector(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      systemFunctionName: PromiseOrValue<string>,
+      systemFunctionArguments: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    registerNamespace(
+      namespace: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    registerRootFunctionSelector(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      worldFunctionSelector: PromiseOrValue<BytesLike>,
+      systemFunctionSelector: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    registerStoreHook(
+      table: PromiseOrValue<BytesLike>,
+      hookAddress: PromiseOrValue<string>,
+      enabledHooksBitmap: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     registerSystem(
-      systemAddr: PromiseOrValue<string>,
-      id: PromiseOrValue<BigNumberish>,
+      resourceSelector: PromiseOrValue<BytesLike>,
+      system: PromiseOrValue<string>,
+      publicAccess: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    systems(overrides?: CallOverrides): Promise<[string]>;
+    registerSystemHook(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      hookAddress: PromiseOrValue<string>,
+      enabledHooksBitmap: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    registerTable(
+      table: PromiseOrValue<BytesLike>,
+      keySchema: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      keyNames: PromiseOrValue<string>[],
+      fieldNames: PromiseOrValue<string>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    revokeAccess(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      grantee: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    setField(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    setRecord(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      data: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    spawn(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
+
+    transferBalanceToAddress(
+      fromNamespace: PromiseOrValue<BytesLike>,
+      toAddress: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    transferBalanceToNamespace(
+      fromNamespace: PromiseOrValue<BytesLike>,
+      toNamespace: PromiseOrValue<BytesLike>,
+      amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    transferOwnership(
+      namespace: PromiseOrValue<BytesLike>,
+      newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    unregisterStoreHook(
+      table: PromiseOrValue<BytesLike>,
+      hookAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    unregisterSystemHook(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      hookAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    updateInField(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      startByteIndex: PromiseOrValue<BigNumberish>,
+      dataToSet: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
   };
 
-  components(overrides?: CallOverrides): Promise<string>;
+  build(
+    buildingType: PromiseOrValue<BigNumberish>,
+    coord: PositionDataStruct,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  getComponent(
-    id: PromiseOrValue<BigNumberish>,
+  call(
+    resourceSelector: PromiseOrValue<BytesLike>,
+    funcSelectorAndArgs: PromiseOrValue<BytesLike>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  callFrom(
+    delegator: PromiseOrValue<string>,
+    resourceSelector: PromiseOrValue<BytesLike>,
+    funcSelectorAndArgs: PromiseOrValue<BytesLike>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  deleteRecord(
+    table: PromiseOrValue<BytesLike>,
+    key: PromiseOrValue<BytesLike>[],
+    valueSchema: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  destroy(
+    coord: PositionDataStruct,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  devDeleteRecord(
+    tableId: PromiseOrValue<BytesLike>,
+    key: PromiseOrValue<BytesLike>[],
+    valueSchema: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  devPopFromField(
+    tableId: PromiseOrValue<BytesLike>,
+    key: PromiseOrValue<BytesLike>[],
+    schemaIndex: PromiseOrValue<BigNumberish>,
+    byteLengthToPop: PromiseOrValue<BigNumberish>,
+    valueSchema: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  devPushToField(
+    tableId: PromiseOrValue<BytesLike>,
+    key: PromiseOrValue<BytesLike>[],
+    schemaIndex: PromiseOrValue<BigNumberish>,
+    dataToPush: PromiseOrValue<BytesLike>,
+    valueSchema: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  devSetField(
+    tableId: PromiseOrValue<BytesLike>,
+    key: PromiseOrValue<BytesLike>[],
+    schemaIndex: PromiseOrValue<BigNumberish>,
+    data: PromiseOrValue<BytesLike>,
+    valueSchema: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  devSetRecord(
+    tableId: PromiseOrValue<BytesLike>,
+    key: PromiseOrValue<BytesLike>[],
+    data: PromiseOrValue<BytesLike>,
+    valueSchema: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  devUpdateInField(
+    tableId: PromiseOrValue<BytesLike>,
+    key: PromiseOrValue<BytesLike>[],
+    schemaIndex: PromiseOrValue<BigNumberish>,
+    startByteIndex: PromiseOrValue<BigNumberish>,
+    dataToSet: PromiseOrValue<BytesLike>,
+    valueSchema: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  emitEphemeralRecord(
+    table: PromiseOrValue<BytesLike>,
+    key: PromiseOrValue<BytesLike>[],
+    data: PromiseOrValue<BytesLike>,
+    valueSchema: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  getField(
+    table: PromiseOrValue<BytesLike>,
+    key: PromiseOrValue<BytesLike>[],
+    schemaIndex: PromiseOrValue<BigNumberish>,
+    valueSchema: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<string>;
 
-  getComponentIdFromAddress(
-    componentAddr: PromiseOrValue<string>,
+  getFieldLength(
+    table: PromiseOrValue<BytesLike>,
+    key: PromiseOrValue<BytesLike>[],
+    schemaIndex: PromiseOrValue<BigNumberish>,
+    valueSchema: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  getNumEntities(overrides?: CallOverrides): Promise<BigNumber>;
-
-  getUniqueEntityId(overrides?: CallOverrides): Promise<BigNumber>;
-
-  hasEntity(
-    entity: PromiseOrValue<BigNumberish>,
+  getFieldSlice(
+    table: PromiseOrValue<BytesLike>,
+    key: PromiseOrValue<BytesLike>[],
+    schemaIndex: PromiseOrValue<BigNumberish>,
+    valueSchema: PromiseOrValue<BytesLike>,
+    start: PromiseOrValue<BigNumberish>,
+    end: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
-  ): Promise<boolean>;
+  ): Promise<string>;
 
-  init(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+  getKeySchema(table: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
 
-  query(
-    worldQueryFragments: WorldQueryFragmentStruct[],
+  getRecord(
+    table: PromiseOrValue<BytesLike>,
+    key: PromiseOrValue<BytesLike>[],
+    valueSchema: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
-  ): Promise<BigNumber[]>;
+  ): Promise<string>;
 
-  registerComponent(
-    componentAddr: PromiseOrValue<string>,
-    id: PromiseOrValue<BigNumberish>,
+  getValueSchema(table: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
+
+  grantAccess(
+    resourceSelector: PromiseOrValue<BytesLike>,
+    grantee: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "registerComponentValueRemoved(uint256)"(
-    entity: PromiseOrValue<BigNumberish>,
+  increment(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
+
+  installModule(
+    module: PromiseOrValue<string>,
+    args: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "registerComponentValueRemoved(address,uint256)"(
-    component: PromiseOrValue<string>,
-    entity: PromiseOrValue<BigNumberish>,
+  installRootModule(
+    module: PromiseOrValue<string>,
+    args: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "registerComponentValueSet(address,uint256,bytes)"(
-    component: PromiseOrValue<string>,
-    entity: PromiseOrValue<BigNumberish>,
-    data: PromiseOrValue<BytesLike>,
+  popFromField(
+    table: PromiseOrValue<BytesLike>,
+    key: PromiseOrValue<BytesLike>[],
+    schemaIndex: PromiseOrValue<BigNumberish>,
+    byteLengthToPop: PromiseOrValue<BigNumberish>,
+    valueSchema: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "registerComponentValueSet(uint256,bytes)"(
-    entity: PromiseOrValue<BigNumberish>,
-    data: PromiseOrValue<BytesLike>,
+  pushToField(
+    table: PromiseOrValue<BytesLike>,
+    key: PromiseOrValue<BytesLike>[],
+    schemaIndex: PromiseOrValue<BigNumberish>,
+    dataToPush: PromiseOrValue<BytesLike>,
+    valueSchema: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  registerDelegation(
+    delegatee: PromiseOrValue<string>,
+    delegationControlId: PromiseOrValue<BytesLike>,
+    initFuncSelectorAndArgs: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  registerFunctionSelector(
+    resourceSelector: PromiseOrValue<BytesLike>,
+    systemFunctionName: PromiseOrValue<string>,
+    systemFunctionArguments: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  registerNamespace(
+    namespace: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  registerRootFunctionSelector(
+    resourceSelector: PromiseOrValue<BytesLike>,
+    worldFunctionSelector: PromiseOrValue<BytesLike>,
+    systemFunctionSelector: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  registerStoreHook(
+    table: PromiseOrValue<BytesLike>,
+    hookAddress: PromiseOrValue<string>,
+    enabledHooksBitmap: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   registerSystem(
-    systemAddr: PromiseOrValue<string>,
-    id: PromiseOrValue<BigNumberish>,
+    resourceSelector: PromiseOrValue<BytesLike>,
+    system: PromiseOrValue<string>,
+    publicAccess: PromiseOrValue<boolean>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  systems(overrides?: CallOverrides): Promise<string>;
+  registerSystemHook(
+    resourceSelector: PromiseOrValue<BytesLike>,
+    hookAddress: PromiseOrValue<string>,
+    enabledHooksBitmap: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  registerTable(
+    table: PromiseOrValue<BytesLike>,
+    keySchema: PromiseOrValue<BytesLike>,
+    valueSchema: PromiseOrValue<BytesLike>,
+    keyNames: PromiseOrValue<string>[],
+    fieldNames: PromiseOrValue<string>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  revokeAccess(
+    resourceSelector: PromiseOrValue<BytesLike>,
+    grantee: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  setField(
+    table: PromiseOrValue<BytesLike>,
+    key: PromiseOrValue<BytesLike>[],
+    schemaIndex: PromiseOrValue<BigNumberish>,
+    data: PromiseOrValue<BytesLike>,
+    valueSchema: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  setRecord(
+    table: PromiseOrValue<BytesLike>,
+    key: PromiseOrValue<BytesLike>[],
+    data: PromiseOrValue<BytesLike>,
+    valueSchema: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  spawn(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
+
+  transferBalanceToAddress(
+    fromNamespace: PromiseOrValue<BytesLike>,
+    toAddress: PromiseOrValue<string>,
+    amount: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  transferBalanceToNamespace(
+    fromNamespace: PromiseOrValue<BytesLike>,
+    toNamespace: PromiseOrValue<BytesLike>,
+    amount: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  transferOwnership(
+    namespace: PromiseOrValue<BytesLike>,
+    newOwner: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  unregisterStoreHook(
+    table: PromiseOrValue<BytesLike>,
+    hookAddress: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  unregisterSystemHook(
+    resourceSelector: PromiseOrValue<BytesLike>,
+    hookAddress: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  updateInField(
+    table: PromiseOrValue<BytesLike>,
+    key: PromiseOrValue<BytesLike>[],
+    schemaIndex: PromiseOrValue<BigNumberish>,
+    startByteIndex: PromiseOrValue<BigNumberish>,
+    dataToSet: PromiseOrValue<BytesLike>,
+    valueSchema: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   callStatic: {
-    components(overrides?: CallOverrides): Promise<string>;
-
-    getComponent(
-      id: PromiseOrValue<BigNumberish>,
+    build(
+      buildingType: PromiseOrValue<BigNumberish>,
+      coord: PositionDataStruct,
       overrides?: CallOverrides
     ): Promise<string>;
 
-    getComponentIdFromAddress(
-      componentAddr: PromiseOrValue<string>,
+    call(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      funcSelectorAndArgs: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    callFrom(
+      delegator: PromiseOrValue<string>,
+      resourceSelector: PromiseOrValue<BytesLike>,
+      funcSelectorAndArgs: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    deleteRecord(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    destroy(coord: PositionDataStruct, overrides?: CallOverrides): Promise<string>;
+
+    devDeleteRecord(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    devPopFromField(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      byteLengthToPop: PromiseOrValue<BigNumberish>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    devPushToField(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      dataToPush: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    devSetField(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    devSetRecord(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      data: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    devUpdateInField(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      startByteIndex: PromiseOrValue<BigNumberish>,
+      dataToSet: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    emitEphemeralRecord(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      data: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    getField(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    getFieldLength(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      valueSchema: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getNumEntities(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getUniqueEntityId(overrides?: CallOverrides): Promise<BigNumber>;
-
-    hasEntity(
-      entity: PromiseOrValue<BigNumberish>,
+    getFieldSlice(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      start: PromiseOrValue<BigNumberish>,
+      end: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<boolean>;
+    ): Promise<string>;
 
-    init(overrides?: CallOverrides): Promise<void>;
+    getKeySchema(table: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
 
-    query(
-      worldQueryFragments: WorldQueryFragmentStruct[],
+    getRecord(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      valueSchema: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<BigNumber[]>;
+    ): Promise<string>;
 
-    registerComponent(
-      componentAddr: PromiseOrValue<string>,
-      id: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    getValueSchema(table: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
 
-    "registerComponentValueRemoved(uint256)"(
-      entity: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "registerComponentValueRemoved(address,uint256)"(
-      component: PromiseOrValue<string>,
-      entity: PromiseOrValue<BigNumberish>,
+    grantAccess(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      grantee: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "registerComponentValueSet(address,uint256,bytes)"(
-      component: PromiseOrValue<string>,
-      entity: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
+    increment(overrides?: CallOverrides): Promise<number>;
+
+    installModule(
+      module: PromiseOrValue<string>,
+      args: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "registerComponentValueSet(uint256,bytes)"(
-      entity: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
+    installRootModule(
+      module: PromiseOrValue<string>,
+      args: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    popFromField(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      byteLengthToPop: PromiseOrValue<BigNumberish>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    pushToField(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      dataToPush: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    registerDelegation(
+      delegatee: PromiseOrValue<string>,
+      delegationControlId: PromiseOrValue<BytesLike>,
+      initFuncSelectorAndArgs: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    registerFunctionSelector(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      systemFunctionName: PromiseOrValue<string>,
+      systemFunctionArguments: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    registerNamespace(namespace: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
+
+    registerRootFunctionSelector(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      worldFunctionSelector: PromiseOrValue<BytesLike>,
+      systemFunctionSelector: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    registerStoreHook(
+      table: PromiseOrValue<BytesLike>,
+      hookAddress: PromiseOrValue<string>,
+      enabledHooksBitmap: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     registerSystem(
-      systemAddr: PromiseOrValue<string>,
-      id: PromiseOrValue<BigNumberish>,
+      resourceSelector: PromiseOrValue<BytesLike>,
+      system: PromiseOrValue<string>,
+      publicAccess: PromiseOrValue<boolean>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    systems(overrides?: CallOverrides): Promise<string>;
+    registerSystemHook(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      hookAddress: PromiseOrValue<string>,
+      enabledHooksBitmap: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    registerTable(
+      table: PromiseOrValue<BytesLike>,
+      keySchema: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      keyNames: PromiseOrValue<string>[],
+      fieldNames: PromiseOrValue<string>[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    revokeAccess(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      grantee: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setField(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setRecord(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      data: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    spawn(overrides?: CallOverrides): Promise<string>;
+
+    transferBalanceToAddress(
+      fromNamespace: PromiseOrValue<BytesLike>,
+      toAddress: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    transferBalanceToNamespace(
+      fromNamespace: PromiseOrValue<BytesLike>,
+      toNamespace: PromiseOrValue<BytesLike>,
+      amount: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    transferOwnership(
+      namespace: PromiseOrValue<BytesLike>,
+      newOwner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    unregisterStoreHook(
+      table: PromiseOrValue<BytesLike>,
+      hookAddress: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    unregisterSystemHook(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      hookAddress: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    updateInField(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      startByteIndex: PromiseOrValue<BigNumberish>,
+      dataToSet: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
-  filters: {};
+  filters: {
+    "HelloWorld()"(): HelloWorldEventFilter;
+    HelloWorld(): HelloWorldEventFilter;
+
+    "StoreDeleteRecord(bytes32,bytes32[])"(table?: null, key?: null): StoreDeleteRecordEventFilter;
+    StoreDeleteRecord(table?: null, key?: null): StoreDeleteRecordEventFilter;
+
+    "StoreEphemeralRecord(bytes32,bytes32[],bytes)"(
+      table?: null,
+      key?: null,
+      data?: null
+    ): StoreEphemeralRecordEventFilter;
+    StoreEphemeralRecord(table?: null, key?: null, data?: null): StoreEphemeralRecordEventFilter;
+
+    "StoreSetField(bytes32,bytes32[],uint8,bytes)"(
+      table?: null,
+      key?: null,
+      schemaIndex?: null,
+      data?: null
+    ): StoreSetFieldEventFilter;
+    StoreSetField(table?: null, key?: null, schemaIndex?: null, data?: null): StoreSetFieldEventFilter;
+
+    "StoreSetRecord(bytes32,bytes32[],bytes)"(table?: null, key?: null, data?: null): StoreSetRecordEventFilter;
+    StoreSetRecord(table?: null, key?: null, data?: null): StoreSetRecordEventFilter;
+  };
 
   estimateGas: {
-    components(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getComponent(
-      id: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getComponentIdFromAddress(
-      componentAddr: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getNumEntities(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getUniqueEntityId(overrides?: CallOverrides): Promise<BigNumber>;
-
-    hasEntity(
-      entity: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    init(
+    build(
+      buildingType: PromiseOrValue<BigNumberish>,
+      coord: PositionDataStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    query(
-      worldQueryFragments: WorldQueryFragmentStruct[],
-      overrides?: CallOverrides
+    call(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      funcSelectorAndArgs: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    registerComponent(
-      componentAddr: PromiseOrValue<string>,
-      id: PromiseOrValue<BigNumberish>,
+    callFrom(
+      delegator: PromiseOrValue<string>,
+      resourceSelector: PromiseOrValue<BytesLike>,
+      funcSelectorAndArgs: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    deleteRecord(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      valueSchema: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "registerComponentValueRemoved(uint256)"(
-      entity: PromiseOrValue<BigNumberish>,
+    destroy(coord: PositionDataStruct, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>;
+
+    devDeleteRecord(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      valueSchema: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "registerComponentValueRemoved(address,uint256)"(
-      component: PromiseOrValue<string>,
-      entity: PromiseOrValue<BigNumberish>,
+    devPopFromField(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      byteLengthToPop: PromiseOrValue<BigNumberish>,
+      valueSchema: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "registerComponentValueSet(address,uint256,bytes)"(
-      component: PromiseOrValue<string>,
-      entity: PromiseOrValue<BigNumberish>,
+    devPushToField(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      dataToPush: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    devSetField(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
       data: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "registerComponentValueSet(uint256,bytes)"(
-      entity: PromiseOrValue<BigNumberish>,
+    devSetRecord(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
       data: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    devUpdateInField(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      startByteIndex: PromiseOrValue<BigNumberish>,
+      dataToSet: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    emitEphemeralRecord(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      data: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    getField(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getFieldLength(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getFieldSlice(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      start: PromiseOrValue<BigNumberish>,
+      end: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getKeySchema(table: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<BigNumber>;
+
+    getRecord(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getValueSchema(table: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<BigNumber>;
+
+    grantAccess(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      grantee: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    increment(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>;
+
+    installModule(
+      module: PromiseOrValue<string>,
+      args: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    installRootModule(
+      module: PromiseOrValue<string>,
+      args: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    popFromField(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      byteLengthToPop: PromiseOrValue<BigNumberish>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    pushToField(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      dataToPush: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    registerDelegation(
+      delegatee: PromiseOrValue<string>,
+      delegationControlId: PromiseOrValue<BytesLike>,
+      initFuncSelectorAndArgs: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    registerFunctionSelector(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      systemFunctionName: PromiseOrValue<string>,
+      systemFunctionArguments: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    registerNamespace(
+      namespace: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    registerRootFunctionSelector(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      worldFunctionSelector: PromiseOrValue<BytesLike>,
+      systemFunctionSelector: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    registerStoreHook(
+      table: PromiseOrValue<BytesLike>,
+      hookAddress: PromiseOrValue<string>,
+      enabledHooksBitmap: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     registerSystem(
-      systemAddr: PromiseOrValue<string>,
-      id: PromiseOrValue<BigNumberish>,
+      resourceSelector: PromiseOrValue<BytesLike>,
+      system: PromiseOrValue<string>,
+      publicAccess: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    systems(overrides?: CallOverrides): Promise<BigNumber>;
+    registerSystemHook(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      hookAddress: PromiseOrValue<string>,
+      enabledHooksBitmap: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    registerTable(
+      table: PromiseOrValue<BytesLike>,
+      keySchema: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      keyNames: PromiseOrValue<string>[],
+      fieldNames: PromiseOrValue<string>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    revokeAccess(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      grantee: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    setField(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    setRecord(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      data: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    spawn(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>;
+
+    transferBalanceToAddress(
+      fromNamespace: PromiseOrValue<BytesLike>,
+      toAddress: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    transferBalanceToNamespace(
+      fromNamespace: PromiseOrValue<BytesLike>,
+      toNamespace: PromiseOrValue<BytesLike>,
+      amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    transferOwnership(
+      namespace: PromiseOrValue<BytesLike>,
+      newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    unregisterStoreHook(
+      table: PromiseOrValue<BytesLike>,
+      hookAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    unregisterSystemHook(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      hookAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    updateInField(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      startByteIndex: PromiseOrValue<BigNumberish>,
+      dataToSet: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    components(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getComponent(
-      id: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getComponentIdFromAddress(
-      componentAddr: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getNumEntities(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getUniqueEntityId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    hasEntity(
-      entity: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    init(
+    build(
+      buildingType: PromiseOrValue<BigNumberish>,
+      coord: PositionDataStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    query(
-      worldQueryFragments: WorldQueryFragmentStruct[],
-      overrides?: CallOverrides
+    call(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      funcSelectorAndArgs: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    registerComponent(
-      componentAddr: PromiseOrValue<string>,
-      id: PromiseOrValue<BigNumberish>,
+    callFrom(
+      delegator: PromiseOrValue<string>,
+      resourceSelector: PromiseOrValue<BytesLike>,
+      funcSelectorAndArgs: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    deleteRecord(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      valueSchema: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "registerComponentValueRemoved(uint256)"(
-      entity: PromiseOrValue<BigNumberish>,
+    destroy(
+      coord: PositionDataStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "registerComponentValueRemoved(address,uint256)"(
-      component: PromiseOrValue<string>,
-      entity: PromiseOrValue<BigNumberish>,
+    devDeleteRecord(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      valueSchema: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "registerComponentValueSet(address,uint256,bytes)"(
-      component: PromiseOrValue<string>,
-      entity: PromiseOrValue<BigNumberish>,
+    devPopFromField(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      byteLengthToPop: PromiseOrValue<BigNumberish>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    devPushToField(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      dataToPush: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    devSetField(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
       data: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "registerComponentValueSet(uint256,bytes)"(
-      entity: PromiseOrValue<BigNumberish>,
+    devSetRecord(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
       data: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    devUpdateInField(
+      tableId: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      startByteIndex: PromiseOrValue<BigNumberish>,
+      dataToSet: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    emitEphemeralRecord(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      data: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getField(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getFieldLength(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getFieldSlice(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      start: PromiseOrValue<BigNumberish>,
+      end: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getKeySchema(table: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getRecord(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getValueSchema(table: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    grantAccess(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      grantee: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    increment(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>;
+
+    installModule(
+      module: PromiseOrValue<string>,
+      args: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    installRootModule(
+      module: PromiseOrValue<string>,
+      args: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    popFromField(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      byteLengthToPop: PromiseOrValue<BigNumberish>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    pushToField(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      dataToPush: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    registerDelegation(
+      delegatee: PromiseOrValue<string>,
+      delegationControlId: PromiseOrValue<BytesLike>,
+      initFuncSelectorAndArgs: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    registerFunctionSelector(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      systemFunctionName: PromiseOrValue<string>,
+      systemFunctionArguments: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    registerNamespace(
+      namespace: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    registerRootFunctionSelector(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      worldFunctionSelector: PromiseOrValue<BytesLike>,
+      systemFunctionSelector: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    registerStoreHook(
+      table: PromiseOrValue<BytesLike>,
+      hookAddress: PromiseOrValue<string>,
+      enabledHooksBitmap: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     registerSystem(
-      systemAddr: PromiseOrValue<string>,
-      id: PromiseOrValue<BigNumberish>,
+      resourceSelector: PromiseOrValue<BytesLike>,
+      system: PromiseOrValue<string>,
+      publicAccess: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    systems(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    registerSystemHook(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      hookAddress: PromiseOrValue<string>,
+      enabledHooksBitmap: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    registerTable(
+      table: PromiseOrValue<BytesLike>,
+      keySchema: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      keyNames: PromiseOrValue<string>[],
+      fieldNames: PromiseOrValue<string>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    revokeAccess(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      grantee: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setField(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setRecord(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      data: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    spawn(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>;
+
+    transferBalanceToAddress(
+      fromNamespace: PromiseOrValue<BytesLike>,
+      toAddress: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    transferBalanceToNamespace(
+      fromNamespace: PromiseOrValue<BytesLike>,
+      toNamespace: PromiseOrValue<BytesLike>,
+      amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    transferOwnership(
+      namespace: PromiseOrValue<BytesLike>,
+      newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    unregisterStoreHook(
+      table: PromiseOrValue<BytesLike>,
+      hookAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    unregisterSystemHook(
+      resourceSelector: PromiseOrValue<BytesLike>,
+      hookAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    updateInField(
+      table: PromiseOrValue<BytesLike>,
+      key: PromiseOrValue<BytesLike>[],
+      schemaIndex: PromiseOrValue<BigNumberish>,
+      startByteIndex: PromiseOrValue<BigNumberish>,
+      dataToSet: PromiseOrValue<BytesLike>,
+      valueSchema: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
   };
 }
