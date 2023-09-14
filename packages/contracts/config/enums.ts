@@ -50,6 +50,11 @@ export const MUDEnums = {
     "Uraninite",
     "Bolutite",
     "MoveCount",
+    // Crafted Item
+    "IronPlate",
+    "Alloy",
+    "PVCell",
+    "RocketFuel",
 
     // Utilities
     "U_Electricity",
