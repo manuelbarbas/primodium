@@ -76,34 +76,42 @@ export function renderLevelPrototype(config: StoreConfigWithPrototypes, name: st
         })};`
     )}
   `;
+
   const renderLevels = Object.entries(values)
     .map(([level, value]) => {
       return `
     /* ----------------------------- LEVEL ${level} ----------------------------- */
-    levelKeys = ${name}LevelKeys(${level});
-    tableIds = new bytes32[](${Object.keys(value).length});
-    values = new bytes[](${Object.keys(value).length});
+    function create${name}Level${level}(IStore store) {
+      bytes32[] memory levelKeys = ${name}LevelKeys(${level});
+      bytes32[] memory tableIds = new bytes32[](${Object.keys(value).length});
+      bytes[] memory values = new bytes[](${Object.keys(value).length});
 
-    ${Object.keys(value)
-      .map((key, i) => `tableIds[${i}] = ${key}TableId;`)
-      .join("")}
+      ${Object.keys(value)
+        .map((key, i) => `tableIds[${i}] = ${key}TableId;`)
+        .join("")}
 
-    ${Object.entries(value)
-      .map(([tableName, v], i) => (v ? renderSetLevelRecord(config, tableName, v, level, i) : ""))
-      .join("")}
+      ${Object.entries(value)
+        .map(([tableName, v], i) => (v ? renderSetLevelRecord(config, tableName, v, level, i) : ""))
+        .join("")}
 
-    createPrototype(store, levelKeys, tableIds, values);
+      createPrototype(store, levelKeys, tableIds, values);
+    }
     `;
     })
     .join("");
 
+  const levelFunctionCalls = Object.entries(values)
+    .map(([level]) => {
+      return `create${name}Level${level}(store);`;
+    })
+    .join("");
   return {
     levelKeys: `function ${name}LevelKeys(uint32 level) pure returns (bytes32[] memory) {
     ${keyTupleDefinition}
         return _keyTuple;
   }`,
+    levelFunctionCalls,
     levels: `
-    bytes32[] memory levelKeys; 
     ${renderLevels} 
 `,
   };
@@ -203,8 +211,9 @@ export function renderPrototype(config: StoreConfigWithPrototypes, name: string)
       .join("")}
 
     createPrototype(store, keys, tableIds, values);
-    ${levelPrototype ? levelPrototype.levels : ""}
+    ${levelPrototype ? levelPrototype.levelFunctionCalls : ""}
   }
+    ${levelPrototype ? levelPrototype.levels : ""}
 `;
 }
 
