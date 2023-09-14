@@ -5,7 +5,7 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { Level, P_MaxLevel } from "codegen/Tables.sol";
 import { ExpansionKey } from "src/Keys.sol";
-import { LibEncode } from "codegen/Libraries.sol";
+import { LibEncode, LibBuilding } from "codegen/Libraries.sol";
 
 contract UpgradeRangeSystem is PrimodiumSystem {
   function upgradeRange() public {
@@ -13,6 +13,10 @@ contract UpgradeRangeSystem is PrimodiumSystem {
 
     uint32 targetLevel = Level.get(playerEntity) + 1;
     require(P_MaxLevel.get(ExpansionKey) >= targetLevel, "[UpgradeRangeSystem] Max level reached");
+    require(
+      LibBuilding.hasRequiredBaseLevel(playerEntity, ExpansionKey, targetLevel),
+      "[UpgradeRangeSystem] MainBase level requirement not met"
+    );
 
     Level.set(playerEntity, targetLevel);
   }

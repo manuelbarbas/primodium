@@ -86,4 +86,27 @@ library LibBuilding {
     bytes32 buildingTile = LibEncode.getHash(BuildingTileKey, coord);
     return OwnedBy.get(buildingTile);
   }
+
+  function getBaseLevel(bytes32 playerEntity) internal view returns (uint32) {
+    if (!Spawned.get(playerEntity)) return 0;
+    bytes32 mainBase = Home.getMainBase(playerEntity);
+    return Level.get(mainBase);
+  }
+
+  function hasRequiredBaseLevel(
+    bytes32 playerEntity,
+    bytes32 prototype,
+    uint32 level
+  ) internal view returns (bool) {
+    uint32 mainLevel = getBaseLevel(playerEntity);
+    return mainLevel >= P_RequiredBaseLevel.get(prototype, level);
+  }
+
+  function hasRequiredBaseLevel(
+    bytes32 playerEntity,
+    EBuilding building,
+    uint32 level
+  ) internal view returns (bool) {
+    return hasRequiredBaseLevel(playerEntity, P_BuildingTypeToPrototype.get(uint32(building)), level);
+  }
 }
