@@ -44,6 +44,7 @@ const resources: Record<string, EntityID> = {
   alloy: BlockType.Alloy,
   pvcell: BlockType.PhotovoltaicCell,
   housing: BlockType.HousingUtilityResource,
+  vessel: BlockType.VesselUtilityResource,
   electricity: BlockType.ElectricityUtilityResource,
 };
 

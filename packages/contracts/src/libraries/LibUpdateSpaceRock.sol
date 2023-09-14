@@ -68,7 +68,12 @@ library LibUpdateSpaceRock {
         unitProductionBuildingEntity,
         unitProductionQueue.resource
       );
-      uint32 trainedUnitsCount = uint32(blockNumber - startTime) / unitTrainingTimeForBuilding;
+
+      uint32 trainedUnitsCount = uint32(
+        ((blockNumber - startTime) * SPEED_SCALE) /
+          (unitTrainingTimeForBuilding *
+            P_WorldSpeedComponent(world.getComponent(P_WorldSpeedComponentID)).getValue(SingletonID))
+      );
 
       if (trainedUnitsCount > 0) {
         if (trainedUnitsCount >= unitProductionQueue.value) {
@@ -82,7 +87,9 @@ library LibUpdateSpaceRock {
           unitProductionQueueComponent.set(buildingQueueEntity, unitProductionQueue);
         }
 
-        startTime += trainedUnitsCount * unitTrainingTimeForBuilding;
+        startTime +=
+          (trainedUnitsCount * unitTrainingTimeForBuilding * SPEED_SCALE) /
+          P_WorldSpeedComponent(world.getComponent(P_WorldSpeedComponentID)).getValue(SingletonID);
         addPlayerUnitsToAsteroid(world, playerEntity, unitProductionQueue.resource, trainedUnitsCount);
       } else {
         isStillClaiming = false;

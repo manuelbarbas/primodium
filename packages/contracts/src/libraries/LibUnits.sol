@@ -86,11 +86,7 @@ library LibUnits {
     uint32 unitTrainingTime = (getUnitTrainingTime(world, playerEntity, unitType) * 100) /
       buildingUnitProductionMultiplier;
 
-    return
-      uint32(
-        (unitTrainingTime * SPEED_SCALE) /
-          P_WorldSpeedComponent(world.getComponent(P_WorldSpeedComponentID)).getValue(SingletonID)
-      );
+    return unitTrainingTime;
   }
 
   function canBuildingProduceUnit(IWorld world, uint256 buildingEntity, uint256 unitType) internal view returns (bool) {
