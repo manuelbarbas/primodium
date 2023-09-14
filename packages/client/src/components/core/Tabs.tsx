@@ -47,7 +47,8 @@ const Pane: FC<{
 const Button: FC<{
   index: number;
   children: ReactNode;
-}> = memo(({ index, children }) => {
+  className?: string;
+}> = memo(({ index, children, className }) => {
   const { index: currIndex, setIndex } = useIndex();
 
   const selected = currIndex === index;
@@ -55,6 +56,7 @@ const Button: FC<{
   return (
     <_Button
       selected={selected}
+      className={className}
       onClick={() => setIndex(selected ? undefined : index)}
     >
       {children}

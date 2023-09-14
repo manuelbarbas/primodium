@@ -19,22 +19,22 @@ export const Panes: React.FC = () => {
 
   return (
     <Tabs className="flex gap-2" defaultIndex={-1}>
-      <Tabs.Pane index={0} className="w-80">
+      <Tabs.Pane index={0} className="w-96">
         <Outgoingfleets user={player ?? SingletonID} />
       </Tabs.Pane>
-      <Tabs.Pane index={1}>
+      <Tabs.Pane index={1} className="w-96">
         <Reinforcementfleets user={player ?? SingletonID} />
       </Tabs.Pane>
-      <Tabs.Pane index={2}>
+      <Tabs.Pane index={2} className="w-96">
         <HostileFleets spacerock={playerAstroid ?? SingletonID} />
       </Tabs.Pane>
-      <Tabs.Pane index={3}>
+      <Tabs.Pane index={3} className="w-96">
         <BattleReports />
       </Tabs.Pane>
-      <Tabs.Pane index={6}>
+      <Tabs.Pane index={6} className="w-96">
         <Leaderboard />
       </Tabs.Pane>
-      <Tabs.Pane index={7} className="w-80">
+      <Tabs.Pane index={7} className="w-96">
         <Settings />
       </Tabs.Pane>
       <div className="flex flex-col gap-2">

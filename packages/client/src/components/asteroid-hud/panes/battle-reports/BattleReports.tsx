@@ -11,6 +11,7 @@ import { useMemo } from "react";
 import { world } from "src/network/world";
 import { Position } from "src/network/components/chainComponents";
 import { BattleDetails } from "./BattleDetails";
+import { SecondaryCard } from "src/components/core/Card";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -74,13 +75,13 @@ export const BattleReports = () => {
   if (!player) return null;
 
   return (
-    <div className="flex flex-col items-center gap-2 text-white w-[30rem] min-w-full">
+    <div className="flex flex-col items-center gap-2 h-full">
       {!selectedBattle && (
-        <div className="w-full text-xs space-y-3 h-96 scrollbar p-2 rounded-md ">
+        <div className="text-xs space-y-3 h-full w-full scrollbar ">
           {battles.length === 0 && (
-            <div className="w-full h-full bg-slate-800 border rounded-md border-slate-700 flex items-center justify-center font-bold">
+            <SecondaryCard className="w-full h-full flex items-center justify-center font-bold">
               <p className="opacity-50">NO BATTLE REPORTS FOUND</p>
-            </div>
+            </SecondaryCard>
           )}
           {battles.length !== 0 &&
             battles.map((battle, index) => (

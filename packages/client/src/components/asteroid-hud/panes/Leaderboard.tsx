@@ -9,6 +9,7 @@ import {
 } from "src/network/components/clientComponents";
 import { shortenAddress } from "src/util/common";
 import { useGameStore } from "src/store/GameStore";
+import { SecondaryCard } from "src/components/core/Card";
 
 export const Leaderboard = () => {
   const address = Account.use()?.value;
@@ -19,12 +20,12 @@ export const Leaderboard = () => {
   if (!data || !address) return null;
 
   return (
-    <div className="flex flex-col items-center gap-2 text-white w-96 min-w-full">
+    <div className="flex flex-col items-center w-full text-xs pointer-events-auto scrollbar">
       <List
-        height={384}
+        height={332}
         width="100%"
         itemCount={data.players.length}
-        itemSize={48}
+        itemSize={40}
       >
         {({ index, style }) => {
           const player = data.players[index];
@@ -41,8 +42,8 @@ export const Leaderboard = () => {
           );
         }}
       </List>
-      <hr className="w-full border-t border-cyan-800" />
-      <div className="w-full overflow-y-auto border border-slate-700 rounded-md p-2 bg-slate-800 text-sm">
+      <hr className="w-full border-t border-cyan-800 my-2" />
+      <SecondaryCard className="w-full overflow-y-auto border border-slate-700 rounded-md p-2 bg-slate-800">
         {address && (
           <div className="grid grid-cols-6 w-full">
             <div>{data.playerRank}.</div>
@@ -63,7 +64,7 @@ export const Leaderboard = () => {
             </div>
           </div>
         )}
-      </div>
+      </SecondaryCard>
     </div>
   );
 };
@@ -110,7 +111,7 @@ const LeaderboardItem = ({
   }, [fetchedExternalWallet, player]);
 
   return (
-    <div className="grid grid-cols-6 w-full border rounded-md border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30">
+    <SecondaryCard className="grid grid-cols-6 w-full border rounded-md border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30">
       <div>{index + 1}.</div>
       <div className="col-span-5 flex justify-between">
         <div>{playerDisplay}</div>
@@ -118,6 +119,6 @@ const LeaderboardItem = ({
           {score.toLocaleString()}
         </div>
       </div>
-    </div>
+    </SecondaryCard>
   );
 };
