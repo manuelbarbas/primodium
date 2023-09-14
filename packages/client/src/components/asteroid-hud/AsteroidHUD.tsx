@@ -10,7 +10,7 @@ import { Fleets } from "./Fleets";
 import { PlayerInfo } from "./PlayerInfo";
 // import { BuildingMenu } from "./BuildingMenu/BuildingMenu";
 import { Resources } from "./resources/Resources";
-import Hotbar from "../asteroid-ui-old/hotbar/Hotbar";
+import { Hotbar } from "./hotbar/Hotbar";
 import { Units } from "./units/Units";
 import { Leaderboard } from "./Leaderboard";
 import { CurrentObjective } from "./CurrentObjective";

@@ -4,7 +4,6 @@ import { BlockNumber } from "src/network/components/clientComponents";
 import { formatNumber } from "src/util/common";
 import { RESOURCE_SCALE, ResourceType } from "src/util/constants";
 import { IconLabel } from "../core/IconLabel";
-import { Tooltip } from "../core/Tooltip";
 
 export default function ResourceIconTooltip({
   image,

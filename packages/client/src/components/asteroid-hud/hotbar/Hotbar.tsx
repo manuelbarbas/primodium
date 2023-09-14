@@ -1,6 +1,5 @@
 import { primodium } from "@game/api";
 import { AsteroidMap, KeybindActions } from "@game/constants";
-import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 import HotbarBody from "./HotbarBody";
 import HotbarLabel from "./HotbarLabel";
@@ -11,8 +10,9 @@ import {
   SelectedBuilding,
 } from "src/network/components/clientComponents";
 import { wrap } from "src/util/common";
+import { Join } from "src/components/core/Join";
 
-const Hotbar: React.FC = () => {
+export const Hotbar: React.FC = () => {
   const hotbarContent = useHotbarContent();
   const {
     hooks: { useKeybinds },
@@ -51,35 +51,24 @@ const Hotbar: React.FC = () => {
   }, [keybinds, hotbarContent]);
 
   return (
-    <div className=" z-[1000] viewport-container fixed bottom-0 left-1/2 -translate-x-1/2 flex justify-center text-white font-mono select-none">
-      <div>
-        <motion.div
-          initial={{ opacity: 0, scale: 0, y: 200 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0, y: 200 }}
-          className="flex flex-col items-center relative mb-5"
-        >
-          <div className="flex gap-2 mb-2 ">
-            {hotbarContent.map((item, index) => {
-              return (
-                <HotbarLabel
-                  key={index}
-                  icon={item.icon}
-                  name={item.name}
-                  onClick={() => setActiveBar(index)}
-                  active={item.name === hotbarContent[activeBar].name}
-                />
-              );
-            })}
-          </div>
-          <HotbarBody
-            activeBar={activeBarRef.current}
-            setActiveBar={setActiveBar}
-          />
-        </motion.div>
-      </div>
+    <div className="flex flex-col items-center relative mb-2">
+      <Join className="flex pointer-events-auto z-10 mb-4">
+        {hotbarContent.map((item, index) => {
+          return (
+            <HotbarLabel
+              key={index}
+              icon={item.icon}
+              name={item.name}
+              onClick={() => setActiveBar(index)}
+              active={item.name === hotbarContent[activeBar].name}
+            />
+          );
+        })}
+      </Join>
+      <HotbarBody
+        activeBar={activeBarRef.current}
+        setActiveBar={setActiveBar}
+      />
     </div>
   );
 };
-
-export default Hotbar;

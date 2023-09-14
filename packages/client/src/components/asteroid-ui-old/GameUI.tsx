@@ -8,7 +8,7 @@ import { AsteroidMap, KeybindActions } from "@game/constants";
 import { useGameStore } from "../../store/GameStore";
 import { InfoBox } from "./InfoBox";
 
-import Hotbar from "./hotbar/Hotbar";
+import Hotbar from "../asteroid-hud/hotbar/Hotbar";
 // import { TileInfo } from "./tile-info/TileInfo";
 import NotificationBox from "./NotificationBox";
 import { BrandingLabel } from "./BrandingLabel";

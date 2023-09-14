@@ -20,7 +20,7 @@ export const Button: React.FC<{
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`btn btn-md join-item inline gap-1 pointer-events-auto font-bold ${className} ${
+      className={`btn join-item inline gap-1 pointer-events-auto font-bold outline-non ${className} ${
         disabled ? "opacity-50" : ""
       } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
     >
@@ -35,7 +35,7 @@ export const IconButton: React.FC<{
   text: string;
   hideText?: boolean;
   className?: string;
-  onClick: () => void;
+  onClick?: () => void;
   disabled?: boolean;
   selected?: boolean;
   loading?: boolean;
@@ -53,11 +53,9 @@ export const IconButton: React.FC<{
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`btn btn-md join-item inline gap-1 pointer-events-auto font-bold ${
-        className || ""
-      } ${disabled ? "opacity-50" : ""} ${
-        selected ? "border-accent z-10 bg-base-100" : ""
-      } `}
+      className={`btn join-item inline gap-1 pointer-events-auto font-bold outline-none ${className} ${
+        disabled ? "opacity-50" : ""
+      } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
     >
       {loading && <Loader />}
       {!loading && (

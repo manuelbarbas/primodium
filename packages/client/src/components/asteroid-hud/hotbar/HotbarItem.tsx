@@ -131,7 +131,7 @@ const HotbarItem: React.FC<{
     >
       <div
         onClick={handleSelectBuilding}
-        className={`relative flex flex-col text-sm items-center cursor-pointer w-16 h-12 border rounded border-cyan-400 ${
+        className={`relative flex flex-col text-sm items-center cursor-pointer w-16 h-12 border rounded border-cyan-400 pointer-events-auto ${
           selectedBuilding === blockType
             ? "scale-110 ring-4 ring-amber-400 transistion-all duration-100 z-50"
             : ""

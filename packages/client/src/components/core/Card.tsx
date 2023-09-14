@@ -12,7 +12,7 @@ export const Card: React.FC<{
 };
 
 export const SecondaryCard: React.FC<{
-  children: React.ReactNode;
+  children: React.ReactNode | React.ReactNode[];
   className?: string;
 }> = ({ children, className }) => {
   return (
