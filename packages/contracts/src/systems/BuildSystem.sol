@@ -8,7 +8,7 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { Position, PositionData, Spawned, Home } from "codegen/Tables.sol";
 
 // libraries
-import { LibEncode, LibBuilding } from "codegen/Libraries.sol";
+import { LibEncode, LibBuilding, LibResource } from "codegen/Libraries.sol";
 
 // types
 import { BuildingKey } from "src/Keys.sol";
@@ -36,6 +36,8 @@ contract BuildSystem is PrimodiumSystem {
     );
 
     require(LibBuilding.canBuildOnTile(buildingType, coord), "[BuildSystem] Cannot build on this tile");
+
+    require(LibResource.hasRequiredResources(playerEntity, buildingType, 1), "[BuildSystem] Not enough resources");
 
     LibBuilding.build(playerEntity, buildingType, coord);
   }
