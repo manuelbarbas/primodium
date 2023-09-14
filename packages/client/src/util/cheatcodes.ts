@@ -10,7 +10,9 @@ import {
   P_ScoreMultiplier,
   Position,
   Units,
+  P_WorldSpeed,
 } from "src/network/components/chainComponents";
+import { SingletonID } from "@latticexyz/network";
 import { Cheatcode, Cheatcodes } from "src/components/dev/Cheatcodes";
 import { Network } from "src/network/layer";
 import { BlockType } from "./constants";
@@ -23,7 +25,7 @@ import {
 import { hashEntities, hashKeyEntity } from "./encode";
 import { EntityID } from "@latticexyz/recs";
 import { updateSpaceRock } from "./web3/updateSpaceRock";
-
+import { SPEED_SCALE } from "./constants";
 const resources: Record<string, EntityID> = {
   iron: BlockType.Iron,
   copper: BlockType.Copper,
@@ -213,6 +215,20 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
         await mud.dev.setEntityContractComponentValue(player, MaxMoves, {
           value,
         });
+      },
+    },
+
+    setWorldSpeed: {
+      params: [{ name: "value", type: "number" }],
+      function: async (value: number) => {
+        value = SPEED_SCALE / value;
+        await mud.dev.setEntityContractComponentValue(
+          SingletonID,
+          P_WorldSpeed,
+          {
+            value,
+          }
+        );
       },
     },
   };

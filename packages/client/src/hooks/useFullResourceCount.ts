@@ -10,6 +10,7 @@ import {
   LastClaimedAt,
   OccupiedUtilityResource,
   MaxUtility,
+  P_WorldSpeed,
 } from "src/network/components/chainComponents";
 import {
   BlockNumber,
@@ -21,7 +22,8 @@ import { mineableResources, getMotherlodeResource } from "src/util/resource";
 import { getUnitStats } from "src/util/trainUnits";
 import { ESpaceRockType } from "src/util/web3/types";
 import useResourceCount from "./useResourceCount";
-import { ResourceType } from "src/util/constants";
+import { ResourceType, SPEED_SCALE } from "src/util/constants";
+import { SingletonID } from "@latticexyz/network";
 
 export function useFullResourceCount(
   resourceID: EntityID,
@@ -45,6 +47,8 @@ export function useFullResourceCount(
 
   //****production****//
 
+  const worldSpeed = P_WorldSpeed.use(SingletonID)?.value ?? SPEED_SCALE;
+  console.log("world speed: " + worldSpeed);
   //motherlode//
   const motherlodeProduction = useMemo(() => {
     if (!mineableResources.includes(resourceID)) return 0;
@@ -93,15 +97,15 @@ export function useFullResourceCount(
 
       if (!hangar || resource?.resource !== resourceID) return prev;
       const lastClaimedAt = LastClaimedAt.get(entity)?.value ?? 0;
-      let toClaim = (blockNumber - lastClaimedAt) * production;
-      if (toClaim > maxStorage - resourceCount)
-        toClaim = maxStorage - resourceCount;
 
       let total = 0;
       for (let i = 0; i < hangar.units.length; i++) {
         total += getUnitStats(hangar.units[i]).MIN * hangar.counts[i];
       }
-      return prev + total * (blockNumber - lastClaimedAt);
+      return (
+        prev +
+        total * (((blockNumber - lastClaimedAt) * SPEED_SCALE) / worldSpeed)
+      );
     }, 0);
   }, [motherlodes, resourceID, block, resourceCount]);
 
@@ -112,7 +116,10 @@ export function useFullResourceCount(
   );
   const resourcesToClaimFromBuilding = useMemo(() => {
     const toClaim =
-      (blockNumber - buildingProductionLastClaimedAt) * buildingProduction;
+      ((blockNumber - buildingProductionLastClaimedAt) *
+        buildingProduction *
+        SPEED_SCALE) /
+      worldSpeed;
     if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
     return toClaim;
   }, [buildingProductionLastClaimedAt, blockNumber]);
