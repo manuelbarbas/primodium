@@ -30,6 +30,11 @@ contract BuildSystem is PrimodiumSystem {
       "[BuildSystem] Building must be built on your home asteroid"
     );
 
+    require(
+      LibBuilding.hasRequiredBaseLevel(playerEntity, buildingType, 1),
+      "[BuildSystem] MainBase level requirement not met"
+    );
+
     // require(LibBuilding.canBuildOnTile(buildingType, coord), "[BuildSystem] Cannot build on this tile");
 
     LibBuilding.build(playerEntity, buildingType, coord);
