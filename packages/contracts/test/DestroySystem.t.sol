@@ -44,7 +44,7 @@ contract DestroySystemTest is PrimodiumTest {
 
   function testDestroyWithTile() public {
     bytes32 buildingEntity = buildDummy();
-    bytes32 asteroid = HomeAsteroid.get(world, playerEntity);
+    bytes32 asteroid = Home.getAsteroid(world, playerEntity);
     position.parent = asteroid;
     destroy(buildingEntity, position);
   }

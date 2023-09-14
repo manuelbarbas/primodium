@@ -2,23 +2,22 @@
 pragma solidity >=0.8.0;
 
 // tables
-import { P_Asteroid, P_BuildingTypeToPrototype, P_AsteroidData, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/Tables.sol";
+import { Home, P_RequiredBaseLevel, P_Asteroid, P_BuildingTypeToPrototype, P_AsteroidData, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/Tables.sol";
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
 
 // types
 import { BuildingKey, BuildingTileKey, ExpansionKey } from "src/Keys.sol";
-import { Bounds } from "src/Types.sol";
-import { EBuilding } from "src/Types.sol";
+import { Bounds, EBuilding } from "src/Types.sol";
 
 library LibBuilding {
   function build(
     bytes32 playerEntity,
     EBuilding buildingType,
     PositionData memory coord
-  ) internal {
-    bytes32 buildingEntity = LibEncode.getHash(BuildingKey, coord);
+  ) internal returns (bytes32 buildingEntity) {
+    buildingEntity = LibEncode.getHash(BuildingKey, coord);
     uint32 level = 1;
 
     Spawned.set(buildingEntity, true);
