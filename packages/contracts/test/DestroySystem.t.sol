@@ -17,10 +17,9 @@ contract DestroySystemTest is PrimodiumTest {
     vm.startPrank(alice);
   }
 
-  EBuilding dummyBuilding = EBuilding.IronMine;
-
-  function buildDummy() private returns (bytes32) {
-    return world.build(dummyBuilding, position);
+  function buildIronMine() private returns (bytes32) {
+    removeRequirements(EBuilding.IronMine);
+    return world.build(EBuilding.IronMine, position);
   }
 
   function destroy(bytes32 buildingEntity, PositionData memory _coord) public {
@@ -38,12 +37,12 @@ contract DestroySystemTest is PrimodiumTest {
   }
 
   function testDestroyWithBuildingOrigin() public {
-    bytes32 buildingEntity = buildDummy();
+    bytes32 buildingEntity = buildIronMine();
     destroy(buildingEntity, position);
   }
 
   function testDestroyWithTile() public {
-    bytes32 buildingEntity = buildDummy();
+    bytes32 buildingEntity = buildIronMine();
     bytes32 asteroid = Home.getAsteroid(world, playerEntity);
     position.parent = asteroid;
     destroy(buildingEntity, position);

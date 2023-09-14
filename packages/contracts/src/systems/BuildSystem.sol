@@ -35,7 +35,7 @@ contract BuildSystem is PrimodiumSystem {
       "[BuildSystem] MainBase level requirement not met"
     );
 
-    // require(LibBuilding.canBuildOnTile(buildingType, coord), "[BuildSystem] Cannot build on this tile");
+    require(LibBuilding.canBuildOnTile(buildingType, coord), "[BuildSystem] Cannot build on this tile");
 
     LibBuilding.build(playerEntity, buildingType, coord);
   }

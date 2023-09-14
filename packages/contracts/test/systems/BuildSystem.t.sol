@@ -76,6 +76,7 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testSameXYZCannotCollideFail() public {
     vm.startPrank(alice);
+    removeRequirements(EBuilding.IronMine);
     world.build(EBuilding.IronMine, getPosition1(alice));
 
     vm.expectRevert(bytes("[BuildSystem] Building already exists"));
@@ -123,7 +124,20 @@ contract BuildSystemTest is PrimodiumTest {
       P_RequiredBaseLevel.getValueSchema()
     );
 
+    removeRequirements(EBuilding.IronMine);
     world.build(EBuilding.IronMine, coord1);
+    vm.stopPrank();
+  }
+
+  function testIronMineOnNonIronFail() public {
+    vm.startPrank(alice);
+
+    PositionData memory nonIronCoord = getNonIronPosition(alice);
+    assertTrue(P_Terrain.get(nonIronCoord.x, nonIronCoord.y) != EResource.Iron, "Tile should not have iron");
+
+    vm.expectRevert(bytes("[BuildSystem] Cannot build on this tile"));
+    world.build(EBuilding.IronMine, nonIronCoord);
+
     vm.stopPrank();
   }
 }

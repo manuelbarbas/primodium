@@ -6,7 +6,7 @@ import encodeBytes32 from "./util/encodeBytes32";
 
 const buildingIdToPrototypeId = MUDEnums.EBuilding.map((building, i) => ({
   [i]: {
-    P_BuildingTypeToPrototype: { value: encodeBytes32(building) },
+    P_EnumToPrototype: { value: encodeBytes32(building) },
   },
 })).reduce((acc, curr) => ({ ...acc, ...curr }), {});
 
@@ -17,6 +17,9 @@ export const prototypesConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_Asteroid: maxRange,
     },
+  },
+
+  Building: {
     levels: buildingIdToPrototypeId,
   },
 
@@ -53,6 +56,7 @@ export const prototypesConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_Blueprint: { value: getBlueprint(1, 1) },
       P_MaxLevel: { value: 5 },
+      P_RequiredTile: { value: MUDEnums.EResource.indexOf("Iron") },
     },
     levels: {
       1: { P_RequiredBaseLevel: { value: 1 } },
@@ -66,6 +70,7 @@ export const prototypesConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_Blueprint: { value: getBlueprint(1, 1) },
       P_MaxLevel: { value: 5 },
+      P_RequiredTile: { value: MUDEnums.EResource.indexOf("Copper") },
     },
     levels: {
       1: { P_RequiredBaseLevel: { value: 1 } },
@@ -79,6 +84,7 @@ export const prototypesConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_Blueprint: { value: getBlueprint(1, 1) },
       P_MaxLevel: { value: 5 },
+      P_RequiredTile: { value: MUDEnums.EResource.indexOf("Lithium") },
     },
     levels: {
       1: { P_RequiredBaseLevel: { value: 2 } },
@@ -92,6 +98,7 @@ export const prototypesConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_Blueprint: { value: getBlueprint(1, 1) },
       P_MaxLevel: { value: 5 },
+      P_RequiredTile: { value: MUDEnums.EResource.indexOf("Sulfur") },
     },
     levels: {
       1: { P_RequiredBaseLevel: { value: 2 } },

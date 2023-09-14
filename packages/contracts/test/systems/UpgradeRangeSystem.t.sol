@@ -15,6 +15,9 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
     bytes32 asteroid = Home.getAsteroid(aliceEntity);
 
     Bounds memory bounds = LibBuilding.getPlayerBounds(aliceEntity);
+
+    removeRequirements(EBuilding.IronMine);
+
     vm.expectRevert(bytes("[BuildSystem] Building out of bounds"));
     world.build(EBuilding.IronMine, PositionData(bounds.maxX + 1, bounds.maxY, asteroid));
   }
@@ -53,7 +56,7 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
     world.upgradeRange();
   }
 
-  function testUpgrade() public {
+  function testUpgradeRange() public {
     bytes32 aliceEntity = addressToEntity(alice);
     vm.startPrank(alice);
     // ResourceValues memory resourceValues = P_RequiredResourcesComponent(component(P_RequiredResourcesComponentID))
@@ -66,8 +69,14 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
     // }
 
     uint32 level = Level.get(aliceEntity);
-    // uint256 mainBaseEntity = MainBaseComponent(component(MainBaseComponentID)).getValue(aliceEntity);
-    // componentDevSystem.executeTyped(LevelComponentID, mainBaseEntity, abi.encode(level + 1));
+
+    // increment alice's main base level by 1
+    bytes32 mainBase = Home.getMainBase(aliceEntity);
+
+    bytes32[] memory keys = new bytes32[](1);
+    keys[0] = mainBase;
+
+    world.devSetRecord(LevelTableId, keys, Level.encode(level + 1), Level.getValueSchema());
 
     world.upgradeRange();
     assertEq(Level.get(aliceEntity), level + 1);
