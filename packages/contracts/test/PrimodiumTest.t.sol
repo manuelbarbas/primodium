@@ -77,6 +77,11 @@ contract PrimodiumTest is MudTest {
     console.log("parent", uint256(coord.parent));
   }
 
+  function getMainBasePosition(address player) internal view returns (PositionData memory) {
+    PositionData memory position = Position.get(MainBasePrototypeId);
+    return getPosition(PositionData2D(position.x, position.y), player);
+  }
+
   function getPosition1(address player) internal view returns (PositionData memory) {
     PositionData2D memory coord1 = PositionData2D(15, 12);
     return getPosition(coord1, player);
@@ -94,6 +99,11 @@ contract PrimodiumTest is MudTest {
 
   function getIronPosition(address player) internal view returns (PositionData memory) {
     PositionData2D memory coord = PositionData2D(20, 8);
+    return getPosition(coord, player);
+  }
+
+  function getIronPosition2(address player) internal view returns (PositionData memory) {
+    PositionData2D memory coord = PositionData2D(21, 8);
     return getPosition(coord, player);
   }
 
@@ -154,6 +164,28 @@ contract PrimodiumTest is MudTest {
     bytes32[] memory keys = new bytes32[](1);
     keys[0] = buildingEntity;
     world.devDeleteRecord(P_RequiredTileTableId, keys, P_RequiredTile.getValueSchema());
+  }
+
+  function removeRequiredResources(EBuilding building) internal {
+    bytes32 buildingEntity = P_EnumToPrototype.get(BuildingKey, uint8(building));
+    uint32 buildingMaxLevel = P_MaxLevel.get(world, buildingEntity);
+    bytes32[] memory keys = new bytes32[](2);
+    keys[0] = buildingEntity;
+    for (uint256 i = 0; i < buildingMaxLevel; i++) {
+      keys[1] = bytes32(i + 1);
+      world.devDeleteRecord(P_RequiredResourcesTableId, keys, P_RequiredResources.getValueSchema());
+    }
+  }
+
+  function removeRequiredMainBase(EBuilding building) internal {
+    bytes32 buildingEntity = P_EnumToPrototype.get(BuildingKey, uint8(building));
+    uint32 buildingMaxLevel = P_MaxLevel.get(world, buildingEntity);
+    bytes32[] memory keys = new bytes32[](2);
+    keys[0] = buildingEntity;
+    for (uint256 i = 0; i < buildingMaxLevel; i++) {
+      keys[1] = bytes32(i + 1);
+      world.devDeleteRecord(P_RequiredBaseLevelTableId, keys, P_RequiredBaseLevel.getValueSchema());
+    }
   }
 
   function removeRequirements(EBuilding building) internal {

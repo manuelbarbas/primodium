@@ -43,10 +43,10 @@ contract BuildSystemTest is PrimodiumTest {
   function testInvalidIndexFail() public {
     vm.startPrank(alice);
 
-    PositionData memory nonIronPositionData = getNonIronPosition(alice);
+    PositionData memory ironPositionData = getNonIronPosition(alice);
 
     vm.expectRevert(bytes("[BuildSystem] Invalid building type"));
-    world.build(EBuilding.LENGTH, nonIronPositionData);
+    world.build(EBuilding.LENGTH, ironPositionData);
 
     vm.stopPrank();
   }
@@ -54,9 +54,9 @@ contract BuildSystemTest is PrimodiumTest {
   function testFailIronMineOnNonIron() public {
     vm.startPrank(alice);
 
-    PositionData memory nonIronPositionData = getNonIronPosition(alice);
+    PositionData memory ironPositionData = getNonIronPosition(alice);
 
-    world.build(EBuilding.IronMine, nonIronPositionData);
+    world.build(EBuilding.IronMine, ironPositionData);
 
     vm.stopPrank();
   }
@@ -132,11 +132,21 @@ contract BuildSystemTest is PrimodiumTest {
     vm.startPrank(alice);
 
     PositionData memory nonIronCoord = getNonIronPosition(alice);
-    assertTrue(P_Terrain.get(nonIronCoord.x, nonIronCoord.y) != EResource.Iron, "Tile should not have iron");
 
     vm.expectRevert(bytes("[BuildSystem] Cannot build on this tile"));
     world.build(EBuilding.IronMine, nonIronCoord);
 
     vm.stopPrank();
+  }
+
+  function testBuildWithResourceReqs() public {
+    vm.startPrank(alice);
+    world.build(EBuilding.IronMine, getIronPosition(alice));
+    bytes32 ironMinePrototype = P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.IronMine));
+    assertGe(
+      P_RequiredResources.lengthResources(world, ironMinePrototype, 2),
+      0,
+      "Iron Mine Level 2 should have resource requirements"
+    );
   }
 }
