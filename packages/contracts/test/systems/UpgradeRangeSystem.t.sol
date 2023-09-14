@@ -25,15 +25,17 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
   //     upgradeRangeSystem.executeTyped();
   //   }
 
-  //   function testUpgradeRangeWrongBaseLevel() public {
-  //     uint256 aliceEntity = addressToEntity(alice);
-  //     vm.startPrank(alice);
-  //     componentDevSystem.executeTyped(LevelComponentID, aliceEntity, abi.encode(5));
+  function testUpgradeRangeWrongBaseLevelFail() public {
+    bytes32 aliceEntity = addressToEntity(alice);
+    vm.startPrank(alice);
+    bytes32[] memory keys = new bytes32[](1);
+    keys[0] = aliceEntity;
+    world.devSetRecord(LevelTableId, keys, Level.encode(5), Level.getValueSchema());
 
-  //     require(levelComponent.has(ExpansionResearch6), "should have expansion research 6");
-  //     vm.expectRevert(bytes("[UpgradeRangeSystem] MainBase level requirement not met"));
-  //     upgradeRangeSystem.executeTyped();
-  //   }
+    assertTrue(P_RequiredBaseLevel.get(ExpansionKey, 5) != 0, "should have expansion level 5");
+    vm.expectRevert(bytes("[UpgradeRangeSystem] MainBase level requirement not met"));
+    world.upgradeRange();
+  }
 
   function testUpgradeRangeMaxLevel() public {
     bytes32 aliceEntity = addressToEntity(alice);
