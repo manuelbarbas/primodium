@@ -1,6 +1,6 @@
 import { mudConfig } from "@latticexyz/world/register";
 import { MUDEnums } from "./config/enums";
-import { prototypesConfig } from "./config/prototypesConfig";
+import { prototypeConfig } from "./config/prototypeConfig";
 
 // Exclude dev systems if not in dev PRI_DEV
 let dev: string[] = [];
@@ -112,6 +112,18 @@ export const config = mudConfig({
       schema: "bool",
     },
 
+    // tracks the max resource a player can store
+    MaxResourceCount: {
+      keySchema: { entity: "bytes32", resource: "EResource" },
+      schema: "uint32",
+    },
+
+    // tracks the current resource amount a player can store
+    ResourceCount: {
+      keySchema: { entity: "bytes32", resource: "EResource" },
+      schema: "uint32",
+    },
+
     /* --------------------------- Build Requirements --------------------------- */
     P_RequiredTile: {
       keySchema: { prototype: "bytes32" },
@@ -154,6 +166,17 @@ export const config = mudConfig({
       schema: "uint32",
     },
 
+    // Used for ResourceUpgrade set
+    P_ByLevelMaxResourceUpgrades: {
+      keySchema: { prototype: "bytes32", resource: "EResource", level: "uint32" },
+      schema: "uint32",
+    },
+
+    P_ListMaxResourceUpgrades: {
+      keySchema: { prototype: "bytes32", level: "uint32" },
+      schema: "uint8[]",
+    },
+
     BuildingType: {
       keySchema: { entity: "bytes32" },
       schema: "bytes32",
@@ -166,11 +189,7 @@ export const config = mudConfig({
   },
 });
 
-/* -------------------------------------------------------------------------- */
-/*                                 Prototypes                                 */
-/* -------------------------------------------------------------------------- */
-
 export default {
   ...config,
-  prototypes: prototypesConfig,
+  prototypeConfig,
 };

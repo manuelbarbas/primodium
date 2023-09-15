@@ -54,28 +54,29 @@ export const renderSetLevelRecord = (
 };
 
 export function renderLevelPrototype(config: StoreConfigWithPrototypes, name: string) {
-  const prototype = config.prototypes[name];
+  const prototype = config.prototypeConfig[name];
 
-  const keys: Record<string, StaticAbiType> = prototype.keys
-    ? prototype.keys
-    : name == "World"
-    ? {}
-    : { prototypeId: "bytes32" };
-  keys["level"] = "uint32";
+  const keys: { [x: string]: StaticAbiType }[] =
+    prototype.keys !== undefined ? prototype.keys : [{ prototypeId: "bytes32" }];
+  keys.push({ level: "uint32" });
   const values = prototype.levels;
   if (!values) return undefined;
 
   const keyTupleDefinition = `
     bytes32[] memory _keyTuple = new bytes32[](${Object.entries(keys).length});
-    ${renderList(
-      Object.entries(keys),
-      (key, index) =>
-        `_keyTuple[${index}] = ${renderValueTypeToBytes32(key[0], {
-          typeUnwrap: "",
-          internalTypeId: key[1],
-        })};`
-    )}
-  `;
+    
+    ${keys
+      .map((key, index) =>
+        renderList(
+          Object.entries(key),
+          (key, index) =>
+            `_keyTuple[${index}] = ${renderValueTypeToBytes32(key[0], {
+              typeUnwrap: "",
+              internalTypeId: key[1],
+            })};`
+        )
+      )
+      .join("")}`;
 
   const renderLevels = Object.entries(values)
     .map(([level, value]) => {
@@ -150,21 +151,27 @@ export const renderSetRecord = (config: StoreConfig, tableName: string, value: {
 };
 
 export function renderPrototype(config: StoreConfigWithPrototypes, name: string) {
-  const prototype = config.prototypes[name];
-  const keys = prototype.keys !== undefined ? prototype.keys : name == "World" ? {} : { prototypeId: "bytes32" };
+  const prototype = config.prototypeConfig[name];
+  const keys = prototype.keys !== undefined ? prototype.keys : [{ prototypeId: "bytes32" }];
 
   const values = prototype.tables ?? {};
+
   const keyTupleDefinition = `
+
     bytes32[] memory _keyTuple = new bytes32[](${Object.entries(keys).length});
-    ${renderList(
-      Object.entries(keys),
-      (key, index) =>
-        `_keyTuple[${index}] = ${renderValueTypeToBytes32(key[0], {
-          typeUnwrap: "",
-          internalTypeId: key[1],
-        })};`
-    )}
-  `;
+  ${keys
+    .map((key, index) =>
+      renderList(
+        Object.entries(key),
+        (key, index) =>
+          `_keyTuple[${index}] = ${renderValueTypeToBytes32(key[0], {
+            typeUnwrap: "",
+            internalTypeId: key[1],
+          })};`
+      )
+    )
+    .join("")}`;
+
   const levelTables = Object.values(prototype.levels ?? {})
     .map((v) => {
       return Object.keys(v);
@@ -226,7 +233,7 @@ export function renderValueTypeToBytes32(
 ): string {
   const innerText = typeUnwrap.length ? `${typeUnwrap}(${name})` : name;
   if (internalTypeId === "bytes32") {
-    return innerText.startsWith("0x") ? innerText.slice(2) : innerText;
+    return innerText;
   } else if (internalTypeId.match(/^bytes\d{1,2}$/)) {
     return `bytes32(${innerText})`;
   } else if (internalTypeId.match(/^uint\d{1,3}$/)) {
