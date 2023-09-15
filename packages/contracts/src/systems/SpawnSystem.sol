@@ -29,11 +29,7 @@ contract SpawnSystem is PrimodiumSystem {
     bytes32 asteroid = LibAsteroid.createAsteroid(_world(), playerEntity);
     PositionData memory position = Position.get(MainBasePrototypeId);
     position.parent = asteroid;
-    bytes32 mainBase = LibBuilding.build(
-      playerEntity,
-      P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.MainBase)),
-      position
-    );
+    bytes32 mainBase = LibBuilding.build(playerEntity, MainBasePrototypeId, position);
     Home.set(playerEntity, asteroid, mainBase);
     return asteroid;
   }

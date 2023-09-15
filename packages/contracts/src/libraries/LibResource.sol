@@ -14,17 +14,9 @@ library LibResource {
 
   function spendRequiredResources(
     bytes32 playerEntity,
-    EBuilding building,
-    uint32 level
-  ) internal returns (bool) {
-    spendRequiredResources(playerEntity, P_EnumToPrototype.get(BuildingKey, uint8(building)), level);
-  }
-
-  function spendRequiredResources(
-    bytes32 playerEntity,
     bytes32 buildingPrototype,
     uint32 level
-  ) internal returns (bool) {
+  ) internal {
     claimAllResources(playerEntity);
 
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(buildingPrototype, level);
@@ -68,13 +60,14 @@ library LibResource {
     }
   }
 
-  function clearUtilityUsage(
-    bytes32 playerEntity,
-    bytes32 buildingEntity,
-    EResource utility
-  ) internal {
-    uint32 utilityUsage = UtilityUsage.get(playerEntity, utility);
-    UtilityUsage.deleteRecord(playerEntity, utility);
-    LibStorage.increaseStoredResource(playerEntity, utility, utilityUsage);
+  function clearUtilityUsage(bytes32 playerEntity, bytes32 buildingEntity) internal {
+    uint8[] memory resources = SetPlayerResource.getAll(playerEntity);
+    for (uint256 i = 0; i < resources.length; i++) {
+      EResource resource = EResource(resources[i]);
+      if (!P_IsUtility.get(resource)) continue;
+      uint32 utilityUsage = UtilityUsage.get(buildingEntity, resource);
+      UtilityUsage.deleteRecord(buildingEntity, resource);
+      LibStorage.increaseStoredResource(playerEntity, resource, utilityUsage);
+    }
   }
 }

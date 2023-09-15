@@ -4,8 +4,8 @@ pragma solidity >=0.8.0;
 import { P_RequiredDependencies, P_RequiredDependenciesData, P_Production, P_ProductionData, ProductionRate, Level } from "codegen/Tables.sol";
 import { EResource } from "src/Types.sol";
 
-library LibProduction {
-  function clearProductionUsage(bytes32 playerEntity, bytes32 buildingPrototype) internal {
+library LibDependency {
+  function clearDependencyUsage(bytes32 playerEntity, bytes32 buildingPrototype) internal {
     uint32 level = Level.get(buildingPrototype);
     P_RequiredDependenciesData memory requiredDeps = P_RequiredDependencies.get(buildingPrototype, level);
 
@@ -24,7 +24,7 @@ library LibProduction {
     }
   }
 
-  function increaseProductionUsage(
+  function increaseDependencyUsage(
     bytes32 playerEntity,
     bytes32 buildingPrototype,
     uint32 level

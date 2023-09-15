@@ -3,7 +3,7 @@ pragma solidity >=0.8.0;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { P_MaxLevel, BuildingType, PositionData, Level, P_MaxLevel, P_RequiredResources, OwnedBy } from "codegen/Tables.sol";
-import { LibBuilding, LibResource } from "codegen/Libraries.sol";
+import { LibBuilding, LibResource, LibDependency } from "codegen/Libraries.sol";
 import { EBuilding } from "codegen/Types.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 
@@ -33,7 +33,7 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
 
     // This system combines functionality of checkRequiredResources, checkRequiredUtilities, spendRequiredResources, and spendRequiredUtilities
     IWorld(_world()).spendRequiredResources(buildingPrototype, targetLevel);
-
+    LibDependency.increaseDependencyUsage(playerEntity, buildingPrototype, targetLevel);
     //update building level
     Level.set(buildingEntity, targetLevel);
   }
