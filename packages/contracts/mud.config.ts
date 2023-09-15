@@ -118,10 +118,18 @@ export const config = mudConfig({
       schema: "uint32",
     },
 
-    // tracks the current resource amount a player can store
-    ResourceCount: {
+    // ResourceSet tables: used to track which resources a player has
+    Set_Player: {
+      keySchema: { entity: "bytes32" },
+      schema: "uint8[]",
+    },
+
+    Set_PlayerResource: {
       keySchema: { entity: "bytes32", resource: "EResource" },
-      schema: "uint32",
+      schema: {
+        index: "uint256",
+        quantity: "uint32",
+      },
     },
 
     /* --------------------------- Build Requirements --------------------------- */
