@@ -36,6 +36,8 @@ import { hashAndTrimKeyEntity, hashKeyEntity } from "src/util/encode";
 import { Level } from "src/network/components/chainComponents";
 import { buildBuilding } from "src/util/web3";
 import { Network } from "src/network/layer";
+import { toast } from "react-toastify";
+import { getBlockTypeName } from "src/util/common";
 
 const {
   EntityIDtoAnimationKey,
@@ -104,7 +106,7 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
           x: pixelCoord.x,
           y: -pixelCoord.y + buildingDimensions.height * tileHeight,
         },
-        validPlacement
+        !validPlacement
           ? DepthLayers.Building
           : DepthLayers.Building - tileCoord.y + buildingDimensions.height
       ),
@@ -117,10 +119,16 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
       animation ? Animation(animation) : undefined,
       Outline({
         thickness: 3,
-        color: hasEnough && !validPlacement ? undefined : 0xff0000,
+        color: hasEnough && validPlacement ? undefined : 0xff0000,
       }),
       OnClick(() => {
-        if (!hasEnough || validPlacement) {
+        if (!hasEnough || !validPlacement) {
+          if (!hasEnough)
+            toast.error(
+              "Not have enough resources to build " +
+                getBlockTypeName(selectedBuilding)
+            );
+          if (!validPlacement) toast.error("Cannot place building here");
           scene.camera.phaserCamera.shake(200, 0.001);
           return;
         }

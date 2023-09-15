@@ -126,7 +126,7 @@ export function useFullResourceCount(
 
   //total//
   const resourcesToClaim = useMemo(() => {
-    let totalUnclaimed =
+    const totalUnclaimed =
       resourcesToClaimFromBuilding + resourcesToClaimFromMotherlode;
     if (totalUnclaimed > maxStorage - resourceCount)
       return maxStorage - resourceCount;

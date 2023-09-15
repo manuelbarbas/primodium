@@ -2,7 +2,6 @@ import { EntityID } from "@latticexyz/recs";
 import { execute } from "src/network/actions";
 import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
-import { useNotificationStore } from "src/store/NotificationStore";
 
 export const train = async (
   buildingEntity: EntityID,
@@ -12,15 +11,13 @@ export const train = async (
 ) => {
   const { providers, systems } = network;
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
-  const setNotification = useNotificationStore.getState().setNotification;
 
   setTransactionLoading(true);
   await execute(
     systems["system.TrainUnits"].executeTyped(buildingEntity, type, count, {
       gasLimit: 28_000_000,
     }),
-    providers,
-    setNotification
+    providers
   );
   setTransactionLoading(false);
 };

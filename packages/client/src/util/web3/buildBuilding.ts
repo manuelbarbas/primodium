@@ -5,7 +5,6 @@ import { addTileOverride, removeTileOverride } from "./override";
 import { execute } from "src/network/actions";
 import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
-import { useNotificationStore } from "src/store/NotificationStore";
 import { ampli } from "src/ampli";
 import { BlockIdToKey } from "../constants";
 import { parseReceipt } from "../analytics/parseReceipt";
@@ -20,7 +19,6 @@ export const buildBuilding = async (
   const { providers, systems } = network;
   const { tempPositionId } = addTileOverride(coord, blockType, address);
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
-  const setNotification = useNotificationStore.getState().setNotification;
   setTransactionLoading(true);
 
   // todo: find a cleaner way to extract this value in all web3 functions
@@ -38,8 +36,7 @@ export const buildBuilding = async (
           gasLimit: 15_000_000,
         }
       ),
-      providers,
-      setNotification
+      providers
     );
 
     ampli.systemBuild({

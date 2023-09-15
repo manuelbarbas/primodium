@@ -6,7 +6,6 @@ import { SelectedBuilding } from "src/network/components/clientComponents";
 import { ActiveAsteroid } from "src/network/components/clientComponents";
 import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
-import { useNotificationStore } from "src/store/NotificationStore";
 import { BlockIdToKey } from "../constants";
 import { ampli } from "src/ampli";
 import { parseReceipt } from "../analytics/parseReceipt";
@@ -15,7 +14,6 @@ import { BigNumber } from "ethers";
 export const demolishBuilding = async (coord: Coord, network: Network) => {
   const { providers, systems } = network;
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
-  const setNotification = useNotificationStore.getState().setNotification;
   setTransactionLoading(true);
 
   const building = SelectedBuilding.get()?.value;
@@ -33,8 +31,7 @@ export const demolishBuilding = async (coord: Coord, network: Network) => {
     systems["system.Destroy"].executeTyped(position, {
       gasLimit: 3_000_000,
     }),
-    providers,
-    setNotification
+    providers
   );
 
   ampli.systemDestroy({
