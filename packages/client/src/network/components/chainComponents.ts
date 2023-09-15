@@ -136,10 +136,22 @@ export const P_MaxStorage = newNumberComponent(world, {
   overridable: true,
 });
 
+export const P_UtilityProductionComponent = newComponent(
+  world,
+  {
+    ResourceID: Type.Entity,
+    ResourceProduction: Type.Number,
+  },
+  {
+    id: "P_UtilityProductionComponent",
+    metadata: { contractId: `${commonIdPrefix}P_UtilityProduction` },
+    overridable: true,
+  }
+);
+
 export const P_Production = newComponent(
   world,
   { resourceID: Type.Entity, resourceProductionRate: Type.Number },
-
   {
     id: "P_Production",
     metadata: { contractId: `${commonIdPrefix}P_Production` },
@@ -514,6 +526,7 @@ export default {
   LoadingState,
   OccupiedUtilityResource,
   MaxUtility,
+  P_UtilityProductionComponent,
   ReversePosition,
   P_Production,
   P_ProductionDependencies,

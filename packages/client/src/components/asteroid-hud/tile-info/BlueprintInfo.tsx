@@ -39,6 +39,7 @@ export const RecipeDisplay: React.FC<{
               scale={
                 resource.type !== ResourceType.Utility ? RESOURCE_SCALE : 1
               }
+              validate
               fontSize={"xs"}
             />
           );

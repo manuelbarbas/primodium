@@ -39,13 +39,13 @@ const resources: Record<string, EntityID> = {
   kimberlite: BlockType.Kimberlite,
   uraninite: BlockType.Uraninite,
   bolutite: BlockType.Bolutite,
-  ironplate: BlockType.IronPlateCrafted,
+  ironplate: BlockType.IronPlate,
   platinum: BlockType.Platinum,
   alloy: BlockType.Alloy,
   pvcell: BlockType.PhotovoltaicCell,
-  housing: BlockType.HousingUtilityResource,
-  vessel: BlockType.VesselUtilityResource,
-  electricity: BlockType.ElectricityUtilityResource,
+  housing: BlockType.Housing,
+  vessel: BlockType.VesselCapacity,
+  electricity: BlockType.Electricity,
 };
 
 const units: Record<string, EntityID> = {

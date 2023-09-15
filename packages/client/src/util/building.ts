@@ -3,13 +3,18 @@ import { Coord } from "@latticexyz/utils";
 import {
   BuildingType,
   Level,
+  P_MaxStorage,
+  P_Production,
   P_RequiredTile,
+  P_UtilityProductionComponent as P_UtilityProduction,
   RawBlueprint,
 } from "src/network/components/chainComponents";
 import { getBuildingAtCoord, getResourceKey } from "./tile";
 import { Account } from "src/network/components/clientComponents";
 import { outOfBounds } from "./outOfBounds";
-import { getBlockTypeName, toRomanNumeral } from "./common";
+import { clampedIndex, getBlockTypeName, toRomanNumeral } from "./common";
+import { BackgroundImage, ResourceType, ResourceStorages } from "./constants";
+import { hashAndTrimKeyEntity } from "./encode";
 
 type Dimensions = { width: number; height: number };
 export const blueprintCache = new Map<EntityID, Dimensions>();
@@ -124,4 +129,67 @@ export const getBuildingName = (building: EntityID) => {
   if (!buildingType) return null;
 
   return `${getBlockTypeName(buildingType)} ${toRomanNumeral(level)}`;
+};
+
+export const getBuildingStorages = (building: EntityID) => {
+  const resourceStorages = ResourceStorages.map((resourceId) => {
+    const buildingResourceEntity = hashAndTrimKeyEntity(resourceId, building);
+    const storage = P_MaxStorage.get(buildingResourceEntity)?.value;
+
+    if (!storage) return null;
+
+    return {
+      resourceId,
+      resourceType: ResourceType.Resource,
+      amount: storage,
+    };
+  });
+
+  const utilityProduction = P_UtilityProduction.get(building);
+
+  const utilityStorage = utilityProduction
+    ? {
+        resourceId: utilityProduction.ResourceID,
+        resourceType: ResourceType.Utility,
+        amount: utilityProduction.ResourceProduction,
+      }
+    : null;
+
+  return [...resourceStorages, utilityStorage].filter(
+    (storage) => !!storage
+  ) as {
+    resourceId: EntityID;
+    resourceType: ResourceType;
+    amount: number;
+  }[];
+};
+
+export const getBuildingInfo = (building: EntityID) => {
+  const buildingType = BuildingType.get(building)?.value;
+  const level = Level.get(building)?.value ?? 1;
+
+  if (!buildingType) return;
+
+  const buildingLevelEntity = hashAndTrimKeyEntity(buildingType, level);
+  const production = P_Production.get(buildingLevelEntity);
+  const storages = getBuildingStorages(buildingLevelEntity);
+
+  let imageUri = "";
+  if (BackgroundImage.has(buildingType)) {
+    const imageIndex = parseInt(level ? level.toString() : "1") - 1;
+
+    imageUri =
+      BackgroundImage.get(buildingType)![
+        clampedIndex(imageIndex, BackgroundImage.get(buildingType)!.length)
+      ];
+  }
+
+  return {
+    buildingType,
+    level,
+    buildingName: `${getBlockTypeName(buildingType)} ${toRomanNumeral(level)}`,
+    imageUri,
+    production,
+    storages,
+  };
 };
