@@ -11,7 +11,11 @@ import {
   P_MotherlodeResource,
   Position,
 } from "src/network/components/chainComponents";
-import { MotherlodeSizeNames, MotherlodeTypeNames } from "src/util/constants";
+import {
+  MotherlodeSizeNames,
+  MotherlodeTypeNames,
+  RESOURCE_SCALE,
+} from "src/util/constants";
 import { EntityID } from "@latticexyz/recs";
 import { hashKeyEntity } from "src/util/encode";
 import { ESpaceRockType } from "src/util/web3/types";
@@ -147,10 +151,7 @@ const MotherlodeTargetInfo: React.FC<{
     hashKeyEntity(motherlodeData?.motherlodeType, motherlodeData.size),
     { resource: "0" as EntityID, maxAmount: 0 }
   );
-  const resourceMined = MotherlodeResource.get(
-    hashKeyEntity(resource, target),
-    { value: 0 }
-  ).value;
+  const resourceMined = MotherlodeResource.get(target, { value: 0 }).value;
 
   const mineableAt = Number(IsMineableAt.get(target, { value: "0" }).value);
 
@@ -196,7 +197,8 @@ const MotherlodeTargetInfo: React.FC<{
         <div className="bg-slate-800/70 w-full h-full flex flex-col justify-center px-2 capitalize">
           <b className="opacity-70">QTY</b>
           <p>
-            {resourceLeft} / {maxAmount} {resourceName}
+            {resourceLeft * RESOURCE_SCALE} / {maxAmount * RESOURCE_SCALE}{" "}
+            {resourceName}
           </p>
         </div>
       </div>
