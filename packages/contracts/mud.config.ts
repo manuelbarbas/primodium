@@ -54,11 +54,6 @@ export const config = mudConfig({
       schema: "uint32",
     },
 
-    LastClaimedAt: {
-      keySchema: { entity: "bytes32" },
-      schema: "uint256",
-    },
-
     Spawned: {
       keySchema: { entity: "bytes32" },
       schema: "bool",
@@ -118,6 +113,11 @@ export const config = mudConfig({
       schema: "uint32",
     },
 
+    LastClaimedAt: {
+      keySchema: { entity: "bytes32" },
+      schema: "uint256",
+    },
+
     // ResourceSet tables: used to track which resources a player has
     Set_Player: {
       keySchema: { entity: "bytes32" },
@@ -145,7 +145,16 @@ export const config = mudConfig({
     P_RequiredResources: {
       keySchema: { prototype: "bytes32", level: "uint32" },
       schema: {
-        // mud doesnt recognize enum arrays so we will manually convert them
+        // mud doesnt recognize EResource arrays so we will manually convert them
+        resources: "uint8[]",
+        amounts: "uint32[]",
+      },
+    },
+
+    P_RequiredDependencies: {
+      keySchema: { prototype: "bytes32", level: "uint32" },
+      schema: {
+        // mud doesnt recognize EResource arrays so we will manually convert them
         resources: "uint8[]",
         amounts: "uint32[]",
       },
@@ -174,7 +183,16 @@ export const config = mudConfig({
       schema: "uint32",
     },
 
-    // Used for ResourceUpgrade set
+    P_Production: {
+      keySchema: { prototype: "bytes32", level: "uint32" },
+      schema: {
+        // mud doesnt recognize EResource arrays so we will manually convert them
+        resources: "uint8[]",
+        amounts: "uint32[]",
+      },
+    },
+
+    // @note Used for ResourceUpgrade set
     P_ByLevelMaxResourceUpgrades: {
       keySchema: { prototype: "bytes32", resource: "EResource", level: "uint32" },
       schema: "uint32",
@@ -193,6 +211,11 @@ export const config = mudConfig({
     Children: {
       keySchema: { entity: "bytes32" },
       schema: "bytes32[]",
+    },
+
+    ProductionRate: {
+      keySchema: { entity: "bytes32", resource: "EResource" },
+      schema: "uint32",
     },
   },
 });

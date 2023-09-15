@@ -60,7 +60,7 @@ export const MUDEnums = {
     "U_Electricity",
     "U_Housing",
     "U_Vessel",
-    "MoveCount",
+    "U_MoveCount",
 
     "LENGTH",
   ],
