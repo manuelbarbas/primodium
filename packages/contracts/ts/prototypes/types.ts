@@ -1,4 +1,4 @@
-import { StaticAbiType } from "@latticexyz/schema-type/deprecated";
+import { StaticAbiType } from "@latticexyz/schema-type";
 import { ConfigFieldTypeToPrimitiveType, StoreConfig } from "@latticexyz/store";
 
 type Tables<C extends StoreConfig, T = undefined> = {
@@ -12,7 +12,7 @@ type Tables<C extends StoreConfig, T = undefined> = {
 };
 
 export type PrototypeConfig<C extends StoreConfig> = {
-  keys?: Record<string, StaticAbiType>;
+  keys?: { [x: string]: StaticAbiType }[];
   tables?: Tables<C>;
   levels?: Record<number, Tables<C, { level: "uint32" } | { id: unknown }>>;
 };
@@ -20,5 +20,5 @@ export type PrototypeConfig<C extends StoreConfig> = {
 export type PrototypesConfig<C extends StoreConfig> = Record<string, PrototypeConfig<C>>;
 
 export type StoreConfigWithPrototypes = StoreConfig & {
-  prototypes: PrototypesConfig<StoreConfig>;
+  prototypeConfig: PrototypesConfig<StoreConfig>;
 };

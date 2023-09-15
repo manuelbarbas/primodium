@@ -1,3 +1,4 @@
+import { StaticAbiType } from "@latticexyz/schema-type";
 import { config } from "../mud.config";
 import { PrototypesConfig } from "../ts/prototypes/types";
 import { MUDEnums } from "./enums";
@@ -26,11 +27,105 @@ const getResourceValues = (resourceValues: Record<string, number>) => {
   return { resources, amounts };
 };
 
+const mainBaseMaxResourceUpgrades = {
+  1: { Iron: 175000, Copper: 135000, Lithium: 54000, IronPlate: 30000 },
+  2: { Iron: 540000, Copper: 270000, Lithium: 100000, IronPlate: 70000, PVCell: 27000 },
+  3: { Iron: 1440000, Copper: 720000, Sulfur: 144000, IronPlate: 155200, Alloy: 72000, PVCell: 50000 },
+  4: {
+    Iron: 3600000,
+    Copper: 1800000,
+    Lithium: 720000,
+    Sulfur: 360000,
+    IronPlate: 288000,
+    Alloy: 180000,
+    PVCell: 108000,
+    Titanium: 100000,
+    Platinum: 40000,
+    Iridium: 25000,
+    Kimberlite: 10000,
+  },
+  5: {
+    Iron: 5760000,
+    Copper: 2880000,
+    Lithium: 1152000,
+    Sulfur: 576000,
+    IronPlate: 460800,
+    Alloy: 300000,
+    PVCell: 300000,
+    Titanium: 300000,
+    Platinum: 300000,
+    Iridium: 200000,
+    Kimberlite: 100000,
+  },
+  6: {
+    Iron: 8640000,
+    Copper: 4320000,
+    Lithium: 1728000,
+    Sulfur: 864000,
+    IronPlate: 691200,
+    Alloy: 600000,
+    PVCell: 600000,
+    Titanium: 600000,
+    Platinum: 600000,
+    Iridium: 600000,
+    Kimberlite: 250000,
+  },
+  7: {
+    Iron: 17280000,
+    Copper: 8640000,
+    Lithium: 3456000,
+    Sulfur: 1728000,
+    IronPlate: 1382000,
+    Alloy: 864000,
+    PVCell: 700000,
+    Titanium: 700000,
+    Platinum: 700000,
+    Iridium: 700000,
+    Kimberlite: 700000,
+  },
+  8: {
+    Iron: 34560000,
+    Copper: 17280000,
+    Lithium: 6912000,
+    Sulfur: 3456000,
+    IronPlate: 2764000,
+    Alloy: 1728000,
+    PVCell: 1036800,
+    Titanium: 800000,
+    Platinum: 800000,
+    Iridium: 800000,
+    Kimberlite: 800000,
+  },
+};
+
+const mainBaseResourceUpgradesByLevel = Object.entries(mainBaseMaxResourceUpgrades).reduce(
+  (prev, [level, upgrades]) => {
+    const upgradesObject = Object.entries(upgrades).reduce((prev, [resource, max]) => {
+      prev[`MainBase${resource}L${level}Upgrade`] = {
+        keys: [
+          { [encodeBytes32("MainBase")]: "bytes32" },
+          { [MUDEnums.EResource.indexOf(resource)]: "uint8" },
+          { [level]: "uint32" },
+        ],
+        tables: { P_ByLevelMaxResourceUpgrades: { value: max } },
+      };
+      return prev;
+    }, {} as Record<string, { keys: { [x: string]: StaticAbiType }[]; tables: { P_ByLevelMaxResourceUpgrades: { value: number } } }>);
+    return { ...prev, ...upgradesObject };
+  },
+  {}
+);
+
+const upgradesToList = (upgrades: Record<string, number>) => {
+  return Object.keys(upgrades).map((resource) => MUDEnums.EResource.indexOf(resource));
+};
+
 const maxRange = { xBounds: 37, yBounds: 25 };
 
-export const prototypesConfig: PrototypesConfig<typeof config> = {
+export const prototypeConfig: PrototypesConfig<typeof config> = {
   /* ---------------------------------- World --------------------------------- */
   World: {
+    keys: [],
     tables: {
       P_Asteroid: maxRange,
     },
@@ -67,15 +162,56 @@ export const prototypesConfig: PrototypesConfig<typeof config> = {
       P_MaxLevel: { value: 8 },
     },
     levels: {
-      2: { P_RequiredResources: getResourceValues({ IronPlate: 6000, Copper: 10000 }) },
-      3: { P_RequiredResources: getResourceValues({ Sulfur: 12000, PVCell: 6000 }) },
-      4: { P_RequiredResources: getResourceValues({ Alloy: 10000 }) },
-      5: { P_RequiredResources: getResourceValues({ Titanium: 80000 }) },
-      6: { P_RequiredResources: getResourceValues({ Platinum: 250000 }) },
-      7: { P_RequiredResources: getResourceValues({ Iridium: 420000 }) },
-      8: { P_RequiredResources: getResourceValues({ Kimberlite: 590000 }) },
+      1: {
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(mainBaseMaxResourceUpgrades[1]),
+        },
+      },
+      2: {
+        P_RequiredResources: getResourceValues({ IronPlate: 6000, Copper: 10000 }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(mainBaseMaxResourceUpgrades[2]),
+        },
+      },
+      3: {
+        P_RequiredResources: getResourceValues({ Sulfur: 12000, PVCell: 6000 }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(mainBaseMaxResourceUpgrades[3]),
+        },
+      },
+      4: {
+        P_RequiredResources: getResourceValues({ Alloy: 10000 }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(mainBaseMaxResourceUpgrades[4]),
+        },
+      },
+      5: {
+        P_RequiredResources: getResourceValues({ Titanium: 80000 }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(mainBaseMaxResourceUpgrades[5]),
+        },
+      },
+      6: {
+        P_RequiredResources: getResourceValues({ Platinum: 250000 }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(mainBaseMaxResourceUpgrades[6]),
+        },
+      },
+      7: {
+        P_RequiredResources: getResourceValues({ Iridium: 420000 }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(mainBaseMaxResourceUpgrades[7]),
+        },
+      },
+      8: {
+        P_RequiredResources: getResourceValues({ Kimberlite: 590000 }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(mainBaseMaxResourceUpgrades[8]),
+        },
+      },
     },
   },
+  ...mainBaseResourceUpgradesByLevel,
 
   // Mines
   IronMine: {
@@ -324,7 +460,7 @@ export const prototypesConfig: PrototypesConfig<typeof config> = {
   /* -------------------------------- Resources ------------------------------- */
   // NOTE: To check if a resource is a utility, call P_IsUtility(EResource.<resource>);
   IsUtility: {
-    keys: {},
+    keys: [],
     levels: {
       [MUDEnums.EResource.indexOf("U_Electricity")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Housing")]: { P_IsUtility: { value: true } },
