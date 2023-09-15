@@ -9,7 +9,7 @@ import { IWorld } from "codegen/world/IWorld.sol";
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
-import { LibDependency } from "libraries/LibDependency.sol";
+import { LibReduceProductionRate } from "libraries/LibReduceProductionRate.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
 
 // types
@@ -48,7 +48,7 @@ library LibBuilding {
     LastClaimedAt.set(buildingEntity, block.number);
 
     placeBuildingTiles(playerEntity, buildingEntity, buildingPrototype, coord);
-    LibDependency.increaseDependencyUsage(playerEntity, buildingPrototype, level);
+    LibReduceProductionRate.reduceProductionRate(playerEntity, buildingPrototype, level);
     LibProduction.initResourceProduction(playerEntity, buildingEntity);
     OwnedBy.set(buildingEntity, playerEntity);
   }
