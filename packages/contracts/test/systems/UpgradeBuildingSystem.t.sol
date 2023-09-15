@@ -47,7 +47,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
     assertTrue(Level.get(buildingEntity) == 1);
 
-    vm.expectRevert(bytes("[UpgradeBuildingSystem] You do not have the required resources"));
+    vm.expectRevert(bytes("[SpendResources] Not enough resources to spend"));
     world.upgradeBuilding(coord);
     vm.stopPrank();
   }

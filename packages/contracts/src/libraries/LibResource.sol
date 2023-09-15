@@ -5,25 +5,47 @@ import { EBuilding, EResource } from "src/Types.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { SetPlayerResource } from "libraries/SetPlayerResource.sol";
-import { P_RequiredResources, P_RequiredResourcesData, P_EnumToPrototype, LastClaimedAt, ProductionRate } from "codegen/Tables.sol";
+import { P_IsUtility, P_RequiredResources, P_RequiredResourcesData, P_EnumToPrototype, UtilityUsage, LastClaimedAt, ProductionRate } from "codegen/Tables.sol";
 import { BuildingKey } from "src/Keys.sol";
 
 library LibResource {
   /// notice: this function should only be called after all resources have been claimed
-  function hasRequiredResources(
+  /// notice: this function adds resources from the last claimed time
+
+  function spendRequiredResources(
+    bytes32 playerEntity,
+    EBuilding building,
+    uint32 level
+  ) internal returns (bool) {
+    spendRequiredResources(playerEntity, P_EnumToPrototype.get(BuildingKey, uint8(building)), level);
+  }
+
+  function spendRequiredResources(
     bytes32 playerEntity,
     bytes32 buildingPrototype,
-    uint32 level,
-    uint32 count
-  ) internal view returns (bool) {
-    if (P_RequiredResources.lengthResources(buildingPrototype, level) == 0) return true;
+    uint32 level
+  ) internal returns (bool) {
+    claimAllResources(playerEntity);
+
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(buildingPrototype, level);
+
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
-      uint32 resourceCost = requiredResources.amounts[i] * count;
-      uint32 playerResourceCount = SetPlayerResource.get(playerEntity, EResource(requiredResources.resources[i]));
-      if (resourceCost > playerResourceCount) return false;
+      EResource resource = EResource(requiredResources.resources[i]);
+
+      // check if player has enough resources
+      uint32 resourceCost = requiredResources.amounts[i];
+      uint32 playerResourceCount = SetPlayerResource.get(playerEntity, resource);
+      require(resourceCost <= playerResourceCount, "[SpendResources] Not enough resources to spend");
+
+      // spend resources
+      LibStorage.decreaseStoredResource(playerEntity, resource, resourceCost);
+
+      // add total utility usage to building
+      if (P_IsUtility.get(resource)) {
+        uint32 prevUtilityUsage = UtilityUsage.get(playerEntity, resource);
+        UtilityUsage.set(playerEntity, resource, prevUtilityUsage + resourceCost);
+      }
     }
-    return true;
   }
 
   function claimAllResources(bytes32 playerEntity) internal {
@@ -33,27 +55,27 @@ library LibResource {
     LastClaimedAt.set(playerEntity, block.timestamp);
     for (uint256 i = 0; i < resources.length; i++) {
       EResource resource = EResource(resources[i]);
+      // you can't claim utilities
+      if (P_IsUtility.get(resource)) continue;
+
+      // you have no production rate
       uint32 productionRate = ProductionRate.get(playerEntity, resource);
       if (productionRate == 0) continue;
+
+      // add resource to storage
       uint32 unclaimedResource = (productionRate * uint32(block.timestamp - lastClaimed));
       LibStorage.increaseStoredResource(playerEntity, resource, unclaimedResource);
     }
   }
 
-  function hasRequiredResources(
+  function clearUtilityUsage(
     bytes32 playerEntity,
-    bytes32 buildingPrototype,
-    uint32 level
-  ) internal view returns (bool) {
-    return hasRequiredResources(playerEntity, buildingPrototype, level, 1);
-  }
-
-  function hasRequiredResources(
-    bytes32 playerEntity,
-    EBuilding buildingType,
-    uint32 level
-  ) internal view returns (bool) {
-    return hasRequiredResources(playerEntity, P_EnumToPrototype.get(BuildingKey, uint8(buildingType)), level, 1);
+    bytes32 buildingEntity,
+    EResource utility
+  ) internal {
+    uint32 utilityUsage = UtilityUsage.get(playerEntity, utility);
+    UtilityUsage.deleteRecord(playerEntity, utility);
+    LibStorage.increaseStoredResource(playerEntity, utility, utilityUsage);
   }
 
   // function canProduceResources(

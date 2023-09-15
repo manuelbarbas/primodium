@@ -3,6 +3,7 @@ pragma solidity >=0.8.0;
 
 // external
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
+import { IWorld } from "codegen/world/IWorld.sol";
 
 // tables
 import { Position, PositionData, Spawned, HomeAsteroid } from "codegen/Tables.sol";
@@ -37,7 +38,8 @@ contract BuildSystem is PrimodiumSystem {
 
     require(LibBuilding.canBuildOnTile(buildingType, coord), "[BuildSystem] Cannot build on this tile");
 
-    require(LibResource.hasRequiredResources(playerEntity, buildingType, 1), "[BuildSystem] Not enough resources");
+    // This system combines functionality of checkRequiredResources, checkRequiredUtilities, spendRequiredResources, and spendRequiredUtilities
+    IWorld(_world()).spendRequiredResources(buildingType, 1);
 
     LibBuilding.build(playerEntity, buildingType, coord);
   }

@@ -246,6 +246,11 @@ export const config = mudConfig({
       keySchema: { entity: "bytes32", resource: "EResource" },
       schema: "uint32",
     },
+
+    UtilityUsage: {
+      keySchema: { entity: "bytes32", resource: "EResource" },
+      schema: "uint32",
+    },
   },
 });
 

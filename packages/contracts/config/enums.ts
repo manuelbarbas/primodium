@@ -64,4 +64,5 @@ export const MUDEnums = {
 
     "LENGTH",
   ],
+  EActionType: ["NULL", "Build", "Upgrade", "Destroy"],
 };
