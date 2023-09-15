@@ -13,6 +13,10 @@ library SetPlayerResource {
     return Set_PlayerResource.get(player, resource).quantity;
   }
 
+  function getAll(bytes32 player) internal view returns (uint8[] memory) {
+    return Set_Player.get(player);
+  }
+
   function getIndex(bytes32 player, EResource resource) internal view returns (uint256) {
     return Set_PlayerResource.get(player, resource).index;
   }
