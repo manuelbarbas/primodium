@@ -66,10 +66,10 @@ export function renderLevelPrototype(config: StoreConfigWithPrototypes, name: st
     bytes32[] memory _keyTuple = new bytes32[](${Object.entries(keys).length});
     
     ${keys
-      .map((key) =>
+      .map((key, index) =>
         renderList(
           Object.entries(key),
-          (key, index) =>
+          (key) =>
             `_keyTuple[${index}] = ${renderValueTypeToBytes32(key[0], {
               typeUnwrap: "",
               internalTypeId: key[1],
@@ -160,10 +160,10 @@ export function renderPrototype(config: StoreConfigWithPrototypes, name: string)
 
     bytes32[] memory _keyTuple = new bytes32[](${Object.entries(keys).length});
   ${keys
-    .map((key) =>
+    .map((key, index) =>
       renderList(
         Object.entries(key),
-        (key, index) =>
+        (key) =>
           `_keyTuple[${index}] = ${renderValueTypeToBytes32(key[0], {
             typeUnwrap: "",
             internalTypeId: key[1],
