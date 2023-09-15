@@ -187,7 +187,7 @@ export const config = mudConfig({
       keySchema: { prototype: "bytes32", level: "uint32" },
       schema: {
         // mud doesnt recognize EResource arrays so we will manually convert them
-        resource: "uint8",
+        resource: "EResource",
         amount: "uint32",
       },
     },
