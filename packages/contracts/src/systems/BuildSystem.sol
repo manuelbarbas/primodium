@@ -24,24 +24,6 @@ contract BuildSystem is PrimodiumSystem {
     bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
     require(Spawned.get(playerEntity), "[BuildSystem] Player has not spawned");
 
-    buildingEntity = LibEncode.getHash(BuildingKey, coord);
-    require(!Spawned.get(buildingEntity), "[BuildSystem] Building already exists");
-
-    require(
-      coord.parent == HomeAsteroid.get(playerEntity),
-      "[BuildSystem] Building must be built on your home asteroid"
-    );
-
-    require(
-      LibBuilding.hasRequiredBaseLevel(playerEntity, buildingPrototype, 1),
-      "[BuildSystem] MainBase level requirement not met"
-    );
-
-    require(LibBuilding.canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
-
-    // This system combines functionality of checkRequiredResources, checkRequiredUtilities, spendRequiredResources, and spendRequiredUtilities
-    IWorld(_world()).spendRequiredResources(buildingPrototype, 1);
-
-    LibBuilding.build(playerEntity, buildingPrototype, coord);
+    return LibBuilding.build(IWorld(_world()), playerEntity, buildingPrototype, coord);
   }
 }

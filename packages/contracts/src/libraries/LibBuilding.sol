@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
+import { console } from "forge-std/console.sol";
+
 // tables
 import { Home, P_RequiredTile, P_RequiredBaseLevel, P_Asteroid, P_Terrain, P_EnumToPrototype, P_AsteroidData, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/Tables.sol";
+import { IWorld } from "codegen/world/IWorld.sol";
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -15,12 +18,28 @@ import { Bounds, EBuilding, EResource } from "src/Types.sol";
 
 library LibBuilding {
   function build(
+    IWorld world,
     bytes32 playerEntity,
     bytes32 buildingPrototype,
     PositionData memory coord
   ) internal {
     bytes32 buildingEntity = LibEncode.getHash(BuildingKey, coord);
     uint32 level = 1;
+    require(!Spawned.get(buildingEntity), "[BuildSystem] Building already exists");
+
+    require(
+      coord.parent == Home.getAsteroid(playerEntity),
+      "[BuildSystem] Building must be built on your home asteroid"
+    );
+
+    require(
+      LibBuilding.hasRequiredBaseLevel(playerEntity, buildingPrototype, level),
+      "[BuildSystem] MainBase level requirement not met"
+    );
+
+    require(LibBuilding.canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
+
+    world.spendRequiredResources(buildingPrototype, level);
 
     Spawned.set(buildingEntity, true);
     BuildingType.set(buildingEntity, buildingPrototype);
