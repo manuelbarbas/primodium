@@ -6,6 +6,7 @@ import { Home, P_RequiredTile, P_RequiredBaseLevel, P_Asteroid, P_Terrain, P_Enu
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
+import { LibProduction } from "libraries/LibProduction.sol";
 
 // types
 import { BuildingKey, BuildingTileKey, ExpansionKey } from "src/Keys.sol";
@@ -14,29 +15,29 @@ import { Bounds, EBuilding, EResource } from "src/Types.sol";
 library LibBuilding {
   function build(
     bytes32 playerEntity,
-    EBuilding buildingType,
+    bytes32 buildingPrototype,
     PositionData memory coord
   ) internal {
     bytes32 buildingEntity = LibEncode.getHash(BuildingKey, coord);
     uint32 level = 1;
 
     Spawned.set(buildingEntity, true);
-    BuildingType.set(buildingEntity, P_EnumToPrototype.get(BuildingKey, uint8(buildingType)));
+    BuildingType.set(buildingEntity, buildingPrototype);
     Level.set(buildingEntity, level);
     Position.set(buildingEntity, coord);
     LastClaimedAt.set(buildingEntity, block.number);
 
-    placeBuildingTiles(playerEntity, buildingEntity, buildingType, coord);
+    placeBuildingTiles(playerEntity, buildingEntity, buildingPrototype, coord);
+    LibProduction.increaseProductionUsage(playerEntity, buildingPrototype, level);
     OwnedBy.set(buildingEntity, playerEntity);
   }
 
   function placeBuildingTiles(
     bytes32 playerEntity,
     bytes32 buildingEntity,
-    EBuilding buildingType,
+    bytes32 buildingPrototype,
     PositionData memory position
   ) public {
-    bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
     int32[] memory blueprint = P_Blueprint.get(buildingPrototype);
     Bounds memory bounds = getPlayerBounds(playerEntity);
 

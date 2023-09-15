@@ -18,6 +18,11 @@ export const upgradesByLevel = (name: string, upgrades: Record<number, Record<st
     return { ...prev, ...upgradesObject };
   }, {});
 
+export const getResourceValue = (resourceValue: { [x: string]: number }) => {
+  const [resource, amount] = Object.entries(resourceValue)[0];
+  return { resource: MUDEnums.EResource.indexOf(resource), amount };
+};
+
 export const getResourceValues = (resourceValues: Record<string, number>) => {
   // unzip the array
   const [resources, amounts] = Object.entries(resourceValues).reduce(
