@@ -67,7 +67,9 @@ library LibResource {
         requiredResources.resources[i],
         block.number
       );
-      if (resourceCost > playerResourceCount) return false;
+      if (resourceCost > playerResourceCount) {
+        return false;
+      }
     }
     return true;
   }

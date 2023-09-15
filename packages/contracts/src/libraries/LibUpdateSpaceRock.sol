@@ -235,16 +235,12 @@ library LibUpdateSpaceRock {
   ) internal view returns (uint32) {
     MineableAtComponent mineableAtComponent = MineableAtComponent(world.getComponent(MineableAtComponentID));
     // cannot claim during cooldown
-
     if (blockNumber < mineableAtComponent.getValue(motherlodeEntity)) return 0;
-
     uint256 blocksSinceLastClaim = blockNumber -
       LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).getValue(motherlodeEntity);
-
     // cannot claim if no mining power
     uint32 miningPower = getMiningPower(world, playerEntity, motherlodeEntity);
     if (miningPower == 0) return 0;
-
     MotherlodeResourceComponent motherlodeResourceComponent = MotherlodeResourceComponent(
       world.getComponent(MotherlodeResourceComponentID)
     );
@@ -258,7 +254,6 @@ library LibUpdateSpaceRock {
 
     // cannot claim if resources are maxed out
     if (resource.value == prevMotherlodeResources) return 0;
-
     // get the amount of resources that have been mined
     uint32 rawIncrease = uint32(
       (miningPower * blocksSinceLastClaim * SPEED_SCALE) /
@@ -267,7 +262,6 @@ library LibUpdateSpaceRock {
     if (rawIncrease + prevMotherlodeResources > resource.value) {
       rawIncrease = resource.value - prevMotherlodeResources;
     }
-
     return rawIncrease;
   }
 
