@@ -7,7 +7,7 @@ import { SingletonID } from "solecs/SingletonID.sol";
 import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { GameConfigComponent, ID as GameConfigComponentID } from "components/GameConfigComponent.sol";
-
+import { P_WorldSpeedComponent, ID as P_WorldSpeedComponentID, SPEED_SCALE } from "components/P_WorldSpeedComponent.sol";
 import { Dimensions, Coord, GameConfig } from "../types.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 
@@ -30,5 +30,6 @@ library LibInitWorld {
       MainBaseID,
       Coord(maxRange.x / 2, maxRange.y / 2, 0)
     );
+    P_WorldSpeedComponent(world.getComponent(P_WorldSpeedComponentID)).set(SingletonID, SPEED_SCALE);
   }
 }

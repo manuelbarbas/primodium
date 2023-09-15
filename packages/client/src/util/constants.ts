@@ -15,7 +15,7 @@ export enum ResourceType {
   ResourceRate,
   Utility,
 }
-
+export const SPEED_SCALE = 10000;
 export const RESOURCE_SCALE = 1 / 100;
 
 export const BlockType = {

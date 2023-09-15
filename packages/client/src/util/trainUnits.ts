@@ -10,10 +10,12 @@ import {
   P_UnitProductionMultiplier,
   P_UnitProductionTypes,
   P_UnitTravelSpeed,
+  P_WorldSpeed,
 } from "src/network/components/chainComponents";
 import { hashKeyEntity } from "./encode";
 import { Account } from "src/network/components/clientComponents";
-import { RESOURCE_SCALE } from "./constants";
+import { RESOURCE_SCALE, SPEED_SCALE } from "./constants";
+import { SingletonID } from "@latticexyz/network";
 
 export function useTrainableUnits(buildingEntity: EntityID) {
   const buildingType = BuildingType.get(buildingEntity)?.value;
@@ -55,6 +57,7 @@ export function getUnitTrainingTime(
   const playerUnitEntity = hashKeyEntity(player, unit);
   const playerUnitLevel = Level.get(playerUnitEntity, { value: 1 }).value;
   const unitLevelEntity = hashKeyEntity(unit, playerUnitLevel);
+  const worldSpeed = P_WorldSpeed.get(SingletonID)?.value ?? SPEED_SCALE;
 
   const buildingLevel = Level.get(building, { value: 1 }).value;
   const multiplier =
@@ -62,7 +65,9 @@ export function getUnitTrainingTime(
       value: 100,
     }).value / 100;
   const time =
-    P_TrainingTime.get(unitLevelEntity, { value: 0 }).value / multiplier;
+    ((P_TrainingTime.get(unitLevelEntity, { value: 0 }).value / multiplier) *
+      worldSpeed) /
+    SPEED_SCALE;
 
   return time;
 }

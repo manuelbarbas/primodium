@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
-
+import "solecs/SingletonID.sol";
 import { ID as UpdatePlayerStorageSystemID } from "systems/S_UpdatePlayerStorageSystem.sol";
 import { ID as UpdatePlayerResourceProductionSystemID } from "systems/S_UpdatePlayerResourceProductionSystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "systems/S_SpendRequiredResourcesSystem.sol";
@@ -12,6 +12,7 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
 import { PlayerMotherlodeComponent, ID as PlayerMotherlodeComponentID } from "components/PlayerMotherlodeComponent.sol";
+import { P_WorldSpeedComponent, ID as P_WorldSpeedComponentID, SPEED_SCALE } from "components/P_WorldSpeedComponent.sol";
 // libraries
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -45,9 +46,11 @@ contract S_UpdateUnclaimedResourcesSystem is IOnEntitySubsystem, PrimodiumSystem
       lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
       return abi.encode(resourceID);
     }
-
-    uint32 unclaimedResource = (playerResourceProduction *
-      uint32(block.number - LibMath.getSafe(lastClaimedAtComponent, playerResourceProductionEntity)));
+    uint256 blocksPassed = block.number - LibMath.getSafe(lastClaimedAtComponent, playerResourceProductionEntity);
+    blocksPassed =
+      (blocksPassed * SPEED_SCALE) /
+      LibMath.getSafe(P_WorldSpeedComponent(world.getComponent(P_WorldSpeedComponentID)), SingletonID);
+    uint32 unclaimedResource = uint32(playerResourceProduction * blocksPassed);
 
     unclaimedResource = LibStorage.addResourceToStorage(world, playerEntity, resourceID, unclaimedResource);
     lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
