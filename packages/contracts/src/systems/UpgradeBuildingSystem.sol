@@ -28,7 +28,7 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
 
     require(
       LibBuilding.hasRequiredBaseLevel(playerEntity, buildingPrototype, targetLevel),
-      "[ResearchSystem] MainBase level requirement not met"
+      "[UpgradeBuildingSystem] MainBase level requirement not met"
     );
 
     // PREV: checkRequiredResources, checkRequiredUtilities, spendRequiredResources, spendRequiredUtilities

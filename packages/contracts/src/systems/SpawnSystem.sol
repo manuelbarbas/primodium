@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-// external
+import { IWorld } from "codegen/world/IWorld.sol";
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { Spawned, Position, PositionData, Level, Home, P_EnumToPrototype } from "codegen/Tables.sol";
-import { LibAsteroid, LibBuilding } from "codegen/Libraries.sol";
+import { LibAsteroid, LibBuilding, LibEncode } from "codegen/Libraries.sol";
 import { EBuilding } from "src/Types.sol";
 import { BuildingKey } from "src/Keys.sol";
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
@@ -29,8 +29,9 @@ contract SpawnSystem is PrimodiumSystem {
     bytes32 asteroid = LibAsteroid.createAsteroid(_world(), playerEntity);
     PositionData memory position = Position.get(MainBasePrototypeId);
     position.parent = asteroid;
-    bytes32 mainBase = LibBuilding.build(playerEntity, MainBasePrototypeId, position);
+    bytes32 mainBase = LibEncode.getHash(BuildingKey, position);
     Home.set(playerEntity, asteroid, mainBase);
+    LibBuilding.build(IWorld(_world()), playerEntity, MainBasePrototypeId, position);
     return asteroid;
   }
 }
