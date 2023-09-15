@@ -10,6 +10,7 @@ import { SetPlayerResource } from "libraries/SetPlayerResource.sol";
 import { EResource } from "src/Types.sol";
 
 library LibStorage {
+  /* -------------------------- Non-Utility Resources ------------------------- */
   function decreaseStoredResource(
     bytes32 playerEntity,
     EResource resource,
@@ -29,5 +30,29 @@ library LibStorage {
     uint32 maxResources = MaxResourceCount.get(playerEntity, resource);
     uint32 newResourceCount = LibMath.min(resourceCount + resourceToAdd, maxResources);
     SetPlayerResource.set(playerEntity, resource, newResourceCount);
+  }
+
+  /* ---------------------------- Utility Resources --------------------------- */
+
+  function increaseMaxUtility(
+    bytes32 playerEntity,
+    EResource resource,
+    uint32 amountToIncrease
+  ) internal {
+    uint32 maxUtility = MaxResourceCount.get(playerEntity, resource);
+    MaxResourceCount.set(playerEntity, resource, maxUtility + amountToIncrease);
+  }
+
+  function decreaseMaxUtility(
+    bytes32 playerEntity,
+    EResource resource,
+    uint32 amountToDecrease
+  ) internal {
+    uint32 maxUtility = MaxResourceCount.get(playerEntity, resource);
+    if (maxUtility < amountToDecrease) {
+      MaxResourceCount.set(playerEntity, resource, 0);
+      return;
+    }
+    MaxResourceCount.set(playerEntity, resource, maxUtility - amountToDecrease);
   }
 }
