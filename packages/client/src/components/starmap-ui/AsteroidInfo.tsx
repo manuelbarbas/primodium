@@ -147,7 +147,7 @@ const MotherlodeTargetInfo: React.FC<{
   const motherlodeData = Motherlode.get(target);
   if (!motherlodeData) return null;
 
-  const { resource, maxAmount } = P_MotherlodeResource.get(
+  const { maxAmount } = P_MotherlodeResource.get(
     hashKeyEntity(motherlodeData?.motherlodeType, motherlodeData.size),
     { resource: "0" as EntityID, maxAmount: 0 }
   );
