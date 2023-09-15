@@ -66,7 +66,7 @@ export function renderLevelPrototype(config: StoreConfigWithPrototypes, name: st
     bytes32[] memory _keyTuple = new bytes32[](${Object.entries(keys).length});
     
     ${keys
-      .map((key, index) =>
+      .map((key) =>
         renderList(
           Object.entries(key),
           (key, index) =>
@@ -160,7 +160,7 @@ export function renderPrototype(config: StoreConfigWithPrototypes, name: string)
 
     bytes32[] memory _keyTuple = new bytes32[](${Object.entries(keys).length});
   ${keys
-    .map((key, index) =>
+    .map((key) =>
       renderList(
         Object.entries(key),
         (key, index) =>
