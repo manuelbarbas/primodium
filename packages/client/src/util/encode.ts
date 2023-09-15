@@ -32,10 +32,10 @@ export function encodeCoord(coord: Coord): EntityID {
 export function decodeCoord(encodedValue: EntityID) {
   const bigInt = BigInt(encodedValue);
   // Extract the y value (rightmost 32 bits)
-  const y: number = Number(bigInt & BigInt(0xffffffff));
+  const y = Number(bigInt & BigInt(0xffffffff));
 
   // Right shift by 32 bits to extract the x value
-  const x: number = Number(bigInt >> BigInt(32));
+  const x = Number(bigInt >> BigInt(32));
 
   // Convert uint32 back to int32
   const int32_x: number = (x << 0) >> 0;
