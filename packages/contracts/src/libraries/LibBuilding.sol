@@ -7,6 +7,7 @@ import { Home, P_RequiredTile, P_RequiredBaseLevel, P_Asteroid, P_Terrain, P_Enu
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibDependency } from "libraries/LibDependency.sol";
+import { LibProduction } from "libraries/LibProduction.sol";
 
 // types
 import { BuildingKey, BuildingTileKey, ExpansionKey } from "src/Keys.sol";
@@ -29,6 +30,7 @@ library LibBuilding {
 
     placeBuildingTiles(playerEntity, buildingEntity, buildingPrototype, coord);
     LibDependency.increaseDependencyUsage(playerEntity, buildingPrototype, level);
+    LibProduction.initResourceProduction(playerEntity, buildingEntity);
     OwnedBy.set(buildingEntity, playerEntity);
   }
 
