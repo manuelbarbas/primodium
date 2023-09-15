@@ -1,31 +1,14 @@
-import { StaticAbiType } from "@latticexyz/schema-type";
 import { config } from "../mud.config";
+import {
+  getResourceValues,
+  idsToPrototypes,
+  upgradesByLevel,
+  upgradesToList,
+} from "../ts/prototypes/commands/maxResourceUpgrades";
 import { PrototypesConfig } from "../ts/prototypes/types";
 import { MUDEnums } from "./enums";
 import { getBlueprint } from "./util/blueprints";
 import encodeBytes32 from "./util/encodeBytes32";
-
-/* -------------------------------------------------------------------------- */
-/*                                  Utilities                                 */
-/* -------------------------------------------------------------------------- */
-const buildingIdToPrototypeId = MUDEnums.EBuilding.map((building, i) => ({
-  [i]: {
-    P_EnumToPrototype: { value: encodeBytes32(building) },
-  },
-})).reduce((acc, curr) => ({ ...acc, ...curr }), {});
-
-const getResourceValues = (resourceValues: Record<string, number>) => {
-  // unzip the array
-  const [resources, amounts] = Object.entries(resourceValues).reduce(
-    (acc, [resource, amount]) => {
-      acc[0].push(MUDEnums.EResource.indexOf(resource));
-      acc[1].push(amount);
-      return acc;
-    },
-    [[], []] as [number[], number[]]
-  );
-  return { resources, amounts };
-};
 
 const mainBaseMaxResourceUpgrades = {
   1: { Iron: 175000, Copper: 135000, Lithium: 54000, IronPlate: 30000 },
@@ -98,26 +81,31 @@ const mainBaseMaxResourceUpgrades = {
   },
 };
 
-const mainBaseResourceUpgradesByLevel = Object.entries(mainBaseMaxResourceUpgrades).reduce(
-  (prev, [level, upgrades]) => {
-    const upgradesObject = Object.entries(upgrades).reduce((prev, [resource, max]) => {
-      prev[`MainBase${resource}L${level}Upgrade`] = {
-        keys: [
-          { [encodeBytes32("MainBase")]: "bytes32" },
-          { [MUDEnums.EResource.indexOf(resource)]: "uint8" },
-          { [level]: "uint32" },
-        ],
-        tables: { P_ByLevelMaxResourceUpgrades: { value: max } },
-      };
-      return prev;
-    }, {} as Record<string, { keys: { [x: string]: StaticAbiType }[]; tables: { P_ByLevelMaxResourceUpgrades: { value: number } } }>);
-    return { ...prev, ...upgradesObject };
+const storageUnitMaxResourceUpgrades = {
+  1: { Iron: 90000, Copper: 45000, Lithium: 18000, IronPlate: 7200, Alloy: 4500 },
+  2: {
+    Iron: 360000,
+    Copper: 180000,
+    Lithium: 72000,
+    IronPlate: 28800,
+    Alloy: 18000,
+    Sulfur: 36000,
+    PVCell: 10800,
+    Titanium: 10000,
+    Platinum: 10000,
   },
-  {}
-);
-
-const upgradesToList = (upgrades: Record<string, number>) => {
-  return Object.keys(upgrades).map((resource) => MUDEnums.EResource.indexOf(resource));
+  3: {
+    Iron: 720000,
+    Copper: 360000,
+    Lithium: 144000,
+    IronPlate: 57600,
+    Alloy: 36000,
+    Sulfur: 72000,
+    PVCell: 21600,
+    Titanium: 20000,
+    Platinum: 20000,
+    Iridium: 10000,
+  },
 };
 
 const maxRange = { xBounds: 37, yBounds: 25 };
@@ -132,7 +120,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   },
 
   Building: {
-    levels: buildingIdToPrototypeId,
+    levels: idsToPrototypes(MUDEnums.EBuilding),
   },
 
   Expansion: {
@@ -211,7 +199,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       },
     },
   },
-  ...mainBaseResourceUpgradesByLevel,
+  ...upgradesByLevel("MainBase", mainBaseMaxResourceUpgrades),
 
   // Mines
   IronMine: {
@@ -221,14 +209,27 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_RequiredTile: { value: MUDEnums.EResource.indexOf("Iron") },
     },
     levels: {
-      1: { P_RequiredBaseLevel: { value: 1 } },
+      1: { P_RequiredBaseLevel: { value: 1 }, P_Production: getResourceValues({ Iron: 50 }) },
       2: {
         P_RequiredBaseLevel: { value: 1 },
         P_RequiredResources: getResourceValues({ Copper: 10000 }),
+        P_Production: getResourceValues({ Iron: 65 }),
       },
-      3: { P_RequiredBaseLevel: { value: 3 }, P_RequiredResources: getResourceValues({ Copper: 5000 }) },
-      4: { P_RequiredBaseLevel: { value: 5 }, P_RequiredResources: getResourceValues({ Copper: 300000 }) },
-      5: { P_RequiredBaseLevel: { value: 8 }, P_RequiredResources: getResourceValues({ Copper: 300000 }) },
+      3: {
+        P_RequiredBaseLevel: { value: 3 },
+        P_RequiredResources: getResourceValues({ Copper: 5000 }),
+        P_Production: getResourceValues({ Iron: 80 }),
+      },
+      4: {
+        P_RequiredBaseLevel: { value: 5 },
+        P_RequiredResources: getResourceValues({ Copper: 300000 }),
+        P_Production: getResourceValues({ Iron: 95 }),
+      },
+      5: {
+        P_RequiredBaseLevel: { value: 8 },
+        P_RequiredResources: getResourceValues({ Copper: 300000 }),
+        P_Production: getResourceValues({ Iron: 110 }),
+      },
     },
   },
   CopperMine: {
@@ -238,16 +239,30 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_RequiredTile: { value: MUDEnums.EResource.indexOf("Copper") },
     },
     levels: {
-      1: { P_RequiredBaseLevel: { value: 1 }, P_RequiredResources: getResourceValues({ Iron: 1500 }) },
-      2: { P_RequiredBaseLevel: { value: 2 }, P_RequiredResources: getResourceValues({ Iron: 10000, Copper: 5000 }) },
-      3: { P_RequiredBaseLevel: { value: 4 }, P_RequiredResources: getResourceValues({ Iron: 150000, Copper: 50000 }) },
+      1: {
+        P_RequiredBaseLevel: { value: 1 },
+        P_RequiredResources: getResourceValues({ Iron: 1500 }),
+        P_Production: getResourceValues({ Copper: 30 }),
+      },
+      2: {
+        P_RequiredBaseLevel: { value: 2 },
+        P_RequiredResources: getResourceValues({ Iron: 10000, Copper: 5000 }),
+        P_Production: getResourceValues({ Copper: 40 }),
+      },
+      3: {
+        P_RequiredBaseLevel: { value: 4 },
+        P_RequiredResources: getResourceValues({ Iron: 150000, Copper: 50000 }),
+        P_Production: getResourceValues({ Copper: 50 }),
+      },
       4: {
         P_RequiredBaseLevel: { value: 6 },
         P_RequiredResources: getResourceValues({ Iron: 500000, Copper: 150000 }),
+        P_Production: getResourceValues({ Copper: 60 }),
       },
       5: {
         P_RequiredBaseLevel: { value: 8 },
         P_RequiredResources: getResourceValues({ Iron: 1000000, Copper: 500000 }),
+        P_Production: getResourceValues({ Copper: 70 }),
       },
     },
   },
@@ -258,11 +273,31 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_RequiredTile: { value: MUDEnums.EResource.indexOf("Lithium") },
     },
     levels: {
-      1: { P_RequiredBaseLevel: { value: 2 }, P_RequiredResources: getResourceValues({ Iron: 20000 }) },
-      2: { P_RequiredBaseLevel: { value: 4 }, P_RequiredResources: getResourceValues({ Copper: 100000 }) },
-      3: { P_RequiredBaseLevel: { value: 6 }, P_RequiredResources: getResourceValues({ Copper: 250000 }) },
-      4: { P_RequiredBaseLevel: { value: 7 }, P_RequiredResources: getResourceValues({ Copper: 750000 }) },
-      5: { P_RequiredBaseLevel: { value: 8 }, P_RequiredResources: getResourceValues({ Copper: 1250000 }) },
+      1: {
+        P_RequiredBaseLevel: { value: 2 },
+        P_RequiredResources: getResourceValues({ Iron: 20000 }),
+        P_Production: getResourceValues({ Lithium: 20 }),
+      },
+      2: {
+        P_RequiredBaseLevel: { value: 4 },
+        P_RequiredResources: getResourceValues({ Copper: 100000 }),
+        P_Production: getResourceValues({ Lithium: 25 }),
+      },
+      3: {
+        P_RequiredBaseLevel: { value: 6 },
+        P_RequiredResources: getResourceValues({ Copper: 250000 }),
+        P_Production: getResourceValues({ Lithium: 30 }),
+      },
+      4: {
+        P_RequiredBaseLevel: { value: 7 },
+        P_RequiredResources: getResourceValues({ Copper: 750000 }),
+        P_Production: getResourceValues({ Lithium: 35 }),
+      },
+      5: {
+        P_RequiredBaseLevel: { value: 8 },
+        P_RequiredResources: getResourceValues({ Copper: 1250000 }),
+        P_Production: getResourceValues({ Lithium: 40 }),
+      },
     },
   },
   SulfurMine: {
@@ -272,16 +307,30 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_RequiredTile: { value: MUDEnums.EResource.indexOf("Sulfur") },
     },
     levels: {
-      1: { P_RequiredBaseLevel: { value: 2 }, P_RequiredResources: getResourceValues({ Iron: 25000 }) },
-      2: { P_RequiredBaseLevel: { value: 4 }, P_RequiredResources: getResourceValues({ Iron: 100000, Copper: 15000 }) },
-      3: { P_RequiredBaseLevel: { value: 6 }, P_RequiredResources: getResourceValues({ Iron: 250000, Copper: 50000 }) },
+      1: {
+        P_RequiredBaseLevel: { value: 2 },
+        P_RequiredResources: getResourceValues({ Iron: 25000 }),
+        P_Production: getResourceValues({ Sulfur: 10 }),
+      },
+      2: {
+        P_RequiredBaseLevel: { value: 4 },
+        P_RequiredResources: getResourceValues({ Iron: 100000, Copper: 15000 }),
+        P_Production: getResourceValues({ Sulfur: 12 }),
+      },
+      3: {
+        P_RequiredBaseLevel: { value: 6 },
+        P_RequiredResources: getResourceValues({ Iron: 250000, Copper: 50000 }),
+        P_Production: getResourceValues({ Sulfur: 15 }),
+      },
       4: {
         P_RequiredBaseLevel: { value: 7 },
         P_RequiredResources: getResourceValues({ Iron: 500000, Copper: 150000 }),
+        P_Production: getResourceValues({ Sulfur: 17 }),
       },
       5: {
         P_RequiredBaseLevel: { value: 8 },
         P_RequiredResources: getResourceValues({ Iron: 1000000, Copper: 500000 }),
+        P_Production: getResourceValues({ Sulfur: 20 }),
       },
     },
   },
@@ -293,22 +342,35 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_MaxLevel: { value: 5 },
     },
     levels: {
-      1: { P_RequiredBaseLevel: { value: 1 }, P_RequiredResources: getResourceValues({ Iron: 40000, Copper: 10000 }) },
+      1: {
+        P_RequiredBaseLevel: { value: 1 },
+        P_RequiredResources: getResourceValues({ Iron: 40000, Copper: 10000 }),
+        P_RequiredDependencies: getResourceValues({ Iron: 35 }),
+        P_Production: getResourceValues({ IronPlate: 8 }),
+      },
       2: {
         P_RequiredBaseLevel: { value: 3 },
         P_RequiredResources: getResourceValues({ Copper: 100000, Lithium: 75000 }),
+        P_RequiredDependencies: getResourceValues({ Iron: 45 }),
+        P_Production: getResourceValues({ IronPlate: 12 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 5 },
         P_RequiredResources: getResourceValues({ Copper: 500000, Lithium: 250000 }),
+        P_RequiredDependencies: getResourceValues({ Iron: 55 }),
+        P_Production: getResourceValues({ IronPlate: 15 }),
       },
       4: {
         P_RequiredBaseLevel: { value: 7 },
         P_RequiredResources: getResourceValues({ Copper: 1500000, Titanium: 7000 }),
+        P_RequiredDependencies: getResourceValues({ Iron: 65 }),
+        P_Production: getResourceValues({ IronPlate: 17 }),
       },
       5: {
         P_RequiredBaseLevel: { value: 8 },
         P_RequiredResources: getResourceValues({ Copper: 2500000, Kimberlite: 10000 }),
+        P_RequiredDependencies: getResourceValues({ Iron: 65 }),
+        P_Production: getResourceValues({ IronPlate: 20 }),
       },
     },
   },
@@ -321,14 +383,20 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredBaseLevel: { value: 3 },
         P_RequiredResources: getResourceValues({ Iron: 50000, IronPlate: 50000, U_Electricity: 100 }),
+        P_RequiredDependencies: getResourceValues({ Iron: 35, Copper: 20 }),
+        P_Production: getResourceValues({ Alloy: 5 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 6 },
         P_RequiredResources: getResourceValues({ Copper: 500000, IronPlate: 25000, U_Electricity: 120 }),
+        P_RequiredDependencies: getResourceValues({ Iron: 50, Copper: 30 }),
+        P_Production: getResourceValues({ Alloy: 7 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 8 },
         P_RequiredResources: getResourceValues({ Copper: 1250000, IronPlate: 100000, U_Electricity: 150 }),
+        P_RequiredDependencies: getResourceValues({ Iron: 60, Copper: 35 }),
+        P_Production: getResourceValues({ Alloy: 9 }),
       },
     },
   },
@@ -338,14 +406,23 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_MaxLevel: { value: 3 },
     },
     levels: {
-      1: { P_RequiredBaseLevel: { value: 2 }, P_RequiredResources: getResourceValues({ Iron: 25000, Lithium: 5000 }) },
+      1: {
+        P_RequiredBaseLevel: { value: 2 },
+        P_RequiredResources: getResourceValues({ Iron: 25000, Lithium: 5000 }),
+        P_RequiredDependencies: getResourceValues({ Lithium: 10, Copper: 20 }),
+        P_Production: getResourceValues({ PVCell: 5 }),
+      },
       2: {
         P_RequiredBaseLevel: { value: 5 },
         P_RequiredResources: getResourceValues({ Copper: 350000, Lithium: 25000 }),
+        P_RequiredDependencies: getResourceValues({ Lithium: 20, Copper: 30 }),
+        P_Production: getResourceValues({ PVCell: 7 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 8 },
         P_RequiredResources: getResourceValues({ Copper: 750000, Lithium: 100000 }),
+        P_RequiredDependencies: getResourceValues({ Lithium: 25, Copper: 35 }),
+        P_Production: getResourceValues({ PVCell: 9 }),
       },
     },
   },
@@ -357,31 +434,50 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_MaxLevel: { value: 3 },
     },
     levels: {
-      1: { P_RequiredBaseLevel: { value: 2 }, P_RequiredResources: getResourceValues({ Iron: 50000 }) },
+      1: {
+        P_RequiredBaseLevel: { value: 2 },
+        P_RequiredResources: getResourceValues({ Iron: 50000 }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(storageUnitMaxResourceUpgrades[1]),
+        },
+      },
       2: {
         P_RequiredBaseLevel: { value: 4 },
         P_RequiredResources: getResourceValues({ Iron: 100000, Copper: 100000 }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(storageUnitMaxResourceUpgrades[2]),
+        },
       },
       3: {
         P_RequiredBaseLevel: { value: 6 },
         P_RequiredResources: getResourceValues({ Iron: 500000, Titanium: 1000, U_Electricity: 50 }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(storageUnitMaxResourceUpgrades[3]),
+        },
       },
     },
   },
+  ...upgradesByLevel("StorageUnit", storageUnitMaxResourceUpgrades),
   SolarPanel: {
     tables: {
       P_Blueprint: { value: getBlueprint(2, 2) },
       P_MaxLevel: { value: 3 },
     },
     levels: {
-      1: { P_RequiredBaseLevel: { value: 2 }, P_RequiredResources: getResourceValues({ PVCell: 2000, Iron: 40000 }) },
+      1: {
+        P_RequiredBaseLevel: { value: 2 },
+        P_RequiredResources: getResourceValues({ PVCell: 2000, Iron: 40000 }),
+        P_Production: getResourceValues({ U_Electricity: 300 }),
+      },
       2: {
         P_RequiredBaseLevel: { value: 4 },
         P_RequiredResources: getResourceValues({ PVCell: 40000, Copper: 50000 }),
+        P_Production: getResourceValues({ U_Electricity: 600 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 6 },
         P_RequiredResources: getResourceValues({ PVCell: 150000, Copper: 150000 }),
+        P_Production: getResourceValues({ U_Electricity: 800 }),
       },
     },
   },
@@ -396,22 +492,27 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredBaseLevel: { value: 2 },
         P_RequiredResources: getResourceValues({ Iron: 20000, Lithium: 15000, U_Electricity: 100 }),
+        P_Production: getResourceValues({ U_Housing: 100 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 4 },
         P_RequiredResources: getResourceValues({ Sulfur: 5000, Copper: 175000, U_Electricity: 200 }),
+        P_Production: getResourceValues({ U_Housing: 250 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 6 },
         P_RequiredResources: getResourceValues({ Sulfur: 15000, Copper: 300000, U_Electricity: 300 }),
+        P_Production: getResourceValues({ U_Housing: 350 }),
       },
       4: {
         P_RequiredBaseLevel: { value: 7 },
         P_RequiredResources: getResourceValues({ Sulfur: 50000, Platinum: 10000, U_Electricity: 400 }),
+        P_Production: getResourceValues({ U_Housing: 500 }),
       },
       5: {
         P_RequiredBaseLevel: { value: 8 },
         P_RequiredResources: getResourceValues({ Sulfur: 100000, Kimberlite: 15000, U_Electricity: 500 }),
+        P_Production: getResourceValues({ U_Housing: 600 }),
       },
     },
   },
@@ -445,14 +546,20 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_MaxLevel: { value: 3 },
     },
     levels: {
-      1: { P_RequiredBaseLevel: { value: 3 }, P_RequiredResources: getResourceValues({ Sulfur: 10000 }) },
+      1: {
+        P_RequiredBaseLevel: { value: 3 },
+        P_RequiredResources: getResourceValues({ Sulfur: 10000 }),
+        P_Production: getResourceValues({ U_MoveCount: 1 }),
+      },
       2: {
         P_RequiredBaseLevel: { value: 7 },
         P_RequiredResources: getResourceValues({ Sulfur: 125000 }),
+        P_Production: getResourceValues({ U_MoveCount: 2 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 8 },
         P_RequiredResources: getResourceValues({ Sulfur: 125000, Kimberlite: 10000 }),
+        P_Production: getResourceValues({ U_MoveCount: 3 }),
       },
     },
   },
@@ -465,7 +572,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       [MUDEnums.EResource.indexOf("U_Electricity")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Housing")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Vessel")]: { P_IsUtility: { value: true } },
-      [MUDEnums.EResource.indexOf("MoveCount")]: { P_IsUtility: { value: true } },
+      [MUDEnums.EResource.indexOf("U_MoveCount")]: { P_IsUtility: { value: true } },
     },
   },
 };
