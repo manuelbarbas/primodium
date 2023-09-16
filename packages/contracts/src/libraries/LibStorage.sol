@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { P_ListMaxResourceUpgrades, MaxResourceCount } from "codegen/Tables.sol";
+import { P_ListMaxResourceUpgrades, P_ByLevelMaxResourceUpgrades, MaxResourceCount, Level, BuildingType } from "codegen/Tables.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -10,6 +10,35 @@ import { SetPlayerResource } from "libraries/SetPlayerResource.sol";
 import { EResource } from "src/Types.sol";
 
 library LibStorage {
+  function increaseMaxStorage(bytes32 playerEntity, bytes32 buildingEntity) internal {
+    bytes32 buildingType = BuildingType.get(buildingEntity);
+    uint32 level = Level.get(buildingEntity);
+
+    uint8[] memory storageResources = P_ListMaxResourceUpgrades.get(buildingType, level);
+    for (uint256 i = 0; i < storageResources.length; i++) {
+      EResource resource = EResource(storageResources[i]);
+      uint32 maxResource = MaxResourceCount.get(playerEntity, resource);
+      uint32 maxResourceIncrease = P_ByLevelMaxResourceUpgrades.get(buildingType, resource, level);
+      if (level > 1) {
+        maxResourceIncrease -= P_ByLevelMaxResourceUpgrades.get(buildingType, resource, level - 1);
+      }
+      setMaxStorage(playerEntity, resource, maxResource + maxResourceIncrease);
+    }
+  }
+
+  function clearMaxStorageIncrease(bytes32 playerEntity, bytes32 buildingEntity) internal {
+    bytes32 buildingType = BuildingType.get(buildingEntity);
+    uint32 level = Level.get(buildingEntity);
+    uint8[] memory storageResources = P_ListMaxResourceUpgrades.get(buildingType, level);
+    for (uint256 i = 0; i < storageResources.length; i++) {
+      EResource resource = EResource(storageResources[i]);
+      uint32 maxResource = MaxResourceCount.get(playerEntity, resource);
+      uint32 maxResourceDecrease = P_ByLevelMaxResourceUpgrades.get(buildingType, resource, level);
+      require(maxResource >= maxResourceDecrease, "[StorageUsage] not enough storage to reduce usage");
+      setMaxStorage(playerEntity, resource, maxResource - maxResourceDecrease);
+    }
+  }
+
   /* -------------------------- Non-Utility Resources ------------------------- */
   function decreaseStoredResource(
     bytes32 playerEntity,
@@ -30,6 +59,18 @@ library LibStorage {
     uint32 maxResources = MaxResourceCount.get(playerEntity, resource);
     uint32 newResourceCount = LibMath.min(resourceCount + resourceToAdd, maxResources);
     SetPlayerResource.set(playerEntity, resource, newResourceCount);
+  }
+
+  function setMaxStorage(
+    bytes32 playerEntity,
+    EResource resource,
+    uint32 newMaxStorage
+  ) internal {
+    MaxResourceCount.set(playerEntity, resource, newMaxStorage);
+    uint32 playerResourceAmount = SetPlayerResource.get(playerEntity, resource);
+    if (playerResourceAmount > newMaxStorage) {
+      SetPlayerResource.set(playerEntity, resource, newMaxStorage);
+    }
   }
 
   /* ---------------------------- Utility Resources --------------------------- */
