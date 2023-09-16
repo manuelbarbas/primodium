@@ -11,40 +11,20 @@ contract LibMathTest is PrimodiumTest {
   function testFuzzPositionByVector(uint32 distance, uint32 direction) public {
     distance = distance % 100_000;
     direction = direction % 720;
-    PositionData memory destination = LibMath.getPositionByVector(
-      distance,
-      direction
-    );
+    PositionData memory destination = LibMath.getPositionByVector(distance, direction);
     uint32 reverseDirection = direction + 180;
-    PositionData memory origin = LibMath.getPositionByVector(
-      distance,
-      reverseDirection
-    );
-    origin = PositionData(
-      origin.x + destination.x,
-      origin.y + destination.y,
-      0
-    );
+    PositionData memory origin = LibMath.getPositionByVector(distance, reverseDirection);
+    origin = PositionData(origin.x + destination.x, origin.y + destination.y, 0);
     assertEq(origin, PositionData(0, 0, 0));
   }
 
   function testPositionByVector() public {
     uint32 distance = 100;
     uint32 direction = 85;
-    PositionData memory destination = LibMath.getPositionByVector(
-      distance,
-      direction
-    );
+    PositionData memory destination = LibMath.getPositionByVector(distance, direction);
     uint32 reverseDirection = direction + 180;
-    PositionData memory origin = LibMath.getPositionByVector(
-      distance,
-      reverseDirection
-    );
-    origin = PositionData(
-      origin.x + destination.x,
-      origin.y + destination.y,
-      0
-    );
+    PositionData memory origin = LibMath.getPositionByVector(distance, reverseDirection);
+    origin = PositionData(origin.x + destination.x, origin.y + destination.y, 0);
     assertEq(origin, PositionData(0, 0, 0));
   }
 
@@ -52,10 +32,7 @@ contract LibMathTest is PrimodiumTest {
     uint32 distance = 100;
     uint32 max = 13;
     for (uint32 i = 0; i < max; i++) {
-      PositionData memory coord = LibMath.getPositionByVector(
-        distance,
-        (i * 360) / max
-      );
+      PositionData memory coord = LibMath.getPositionByVector(distance, (i * 360) / max);
       logPosition(coord);
     }
   }

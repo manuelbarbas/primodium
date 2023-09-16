@@ -31,7 +31,7 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
       "[UpgradeBuildingSystem] MainBase level requirement not met"
     );
 
-    // PREV: checkRequiredResources, checkRequiredUtilities, spendRequiredResources, spendRequiredUtilities
+    // PREV: checkRequiredResources, checkRequiredUtilities, spendRequiredResources, spendRequiredUtilities, claim resources
     IWorld(_world()).spendRequiredResources(buildingPrototype, targetLevel);
     // PREV: updateRequiredProduction, checkResourceProductionRequirements
     LibReduceProductionRate.reduceProductionRate(playerEntity, buildingPrototype, targetLevel);
