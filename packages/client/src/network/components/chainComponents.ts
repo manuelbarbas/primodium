@@ -428,6 +428,11 @@ export const MaxMoves = newNumberComponent(world, {
   metadata: { contractId: `${commonIdPrefix}MaxMoves` },
 });
 
+export const P_MaxMoves = newNumberComponent(world, {
+  id: "P_MaxMoves",
+  metadata: { contractId: `${commonIdPrefix}P_MaxMoves` },
+});
+
 export const ArrivalsIndex = newEntityComponent(world, {
   id: "ArrivalsIndex",
   metadata: { contractId: `${commonIdPrefix}ArrivalsIndex` },
@@ -563,6 +568,7 @@ export default {
   ArrivalsIndex,
   ArrivalsSize,
   MaxMoves,
+  P_MaxMoves,
 
   // Scoreboard
   Score,

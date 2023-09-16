@@ -3,6 +3,7 @@ import { Coord } from "@latticexyz/utils";
 import {
   BuildingType,
   Level,
+  P_MaxMoves,
   P_MaxStorage,
   P_Production,
   P_RequiredTile,
@@ -13,7 +14,12 @@ import { getBuildingAtCoord, getResourceKey } from "./tile";
 import { Account } from "src/network/components/clientComponents";
 import { outOfBounds } from "./outOfBounds";
 import { clampedIndex, getBlockTypeName, toRomanNumeral } from "./common";
-import { BackgroundImage, ResourceType, ResourceStorages } from "./constants";
+import {
+  BackgroundImage,
+  ResourceType,
+  ResourceStorages,
+  BlockType,
+} from "./constants";
 import { hashAndTrimKeyEntity } from "./encode";
 
 type Dimensions = { width: number; height: number };
@@ -155,7 +161,17 @@ export const getBuildingStorages = (building: EntityID) => {
       }
     : null;
 
-  return [...resourceStorages, utilityStorage].filter(
+  const maxMoves = P_MaxMoves.get(building)?.value;
+
+  const moveStorage = maxMoves
+    ? {
+        resourceId: BlockType.FleetMoves,
+        resourceType: ResourceType.Utility,
+        amount: maxMoves,
+      }
+    : null;
+
+  return [...resourceStorages, utilityStorage, moveStorage].filter(
     (storage) => !!storage
   ) as {
     resourceId: EntityID;

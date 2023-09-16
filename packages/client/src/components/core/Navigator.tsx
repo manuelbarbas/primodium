@@ -101,7 +101,7 @@ const BackButton: FC<{ children?: ReactNode }> = ({ children }) => {
 const Breadcrumbs: FC<{ children?: ReactNode }> = () => {
   const { history, navigateTo } = useNavigation();
   return (
-    <SecondaryCard className="w-fit text-sm breadcrumbs pointer-events-auto">
+    <SecondaryCard className="w-fit text-xs breadcrumbs pointer-events-auto">
       <ul>
         {history.map((item, index) => (
           <li key={index}>

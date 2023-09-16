@@ -44,7 +44,7 @@ export const Header: React.FC<{ building: EntityID }> = ({ building }) => {
             </div>
           )}
           {storages.length !== 0 && (
-            <p className="text-xs opacity-75 px-2 mb-1">STORES</p>
+            <p className="text-xs opacity-75 px-2 mb-1">PROVIDES</p>
           )}
           <div className="flex flex-wrap gap-1 px-2 min-w-80! w-80">
             {storages &&
