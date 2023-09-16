@@ -47,29 +47,28 @@ contract S_UpdateOccupiedUtilitySystem is IOnBuildingSubsystem, PrimodiumSystem 
     OccupiedUtilityResourceComponent occupiedUtilityResourceComponent = OccupiedUtilityResourceComponent(
       world.getComponent(OccupiedUtilityResourceComponentID)
     );
-
+    uint256[] memory resourceIDs;
+    uint32[] memory requiredAmounts;
     if (actionType == EActionType.Upgrade) {
+      require(buildingLevel > 1, "Cannot do Upgrade to a level Lower or equal to 1");
       uint256 buildingLastLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel - 1);
-      uint256[] memory resourceIDs = requiredUtilityComponent.getValue(buildingLastLevelEntity).resources;
-      uint32[] memory requiredAmounts = requiredUtilityComponent.getValue(buildingLastLevelEntity).values;
-      for (uint256 i = 0; i < resourceIDs.length; i++) {
-        uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceIDs[i], playerEntity);
-        occupiedUtilityResourceComponent.set(
-          playerResourceEntity,
-          LibMath.getSafe(occupiedUtilityResourceComponent, playerResourceEntity) - requiredAmounts[i]
-        );
+      if (requiredUtilityComponent.has(buildingLastLevelEntity)) {
+        resourceIDs = requiredUtilityComponent.getValue(buildingLastLevelEntity).resources;
+        requiredAmounts = requiredUtilityComponent.getValue(buildingLastLevelEntity).values;
+        for (uint256 i = 0; i < resourceIDs.length; i++) {
+          uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceIDs[i], playerEntity);
+          occupiedUtilityResourceComponent.set(
+            playerResourceEntity,
+            LibMath.getSafe(occupiedUtilityResourceComponent, playerResourceEntity) - requiredAmounts[i]
+          );
+        }
       }
     }
-    uint256[] memory resourceIDs = requiredUtilityComponent.getValue(buildingLevelEntity).resources;
-    uint32[] memory requiredAmounts = requiredUtilityComponent.getValue(buildingLevelEntity).values;
+    resourceIDs = requiredUtilityComponent.getValue(buildingLevelEntity).resources;
+    requiredAmounts = requiredUtilityComponent.getValue(buildingLevelEntity).values;
     for (uint256 i = 0; i < resourceIDs.length; i++) {
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceIDs[i], playerEntity);
       uint32 requiredAmount = requiredAmounts[i];
-      if (actionType == EActionType.Upgrade) {
-        requiredAmount -= requiredUtilityComponent
-          .getValue(LibEncode.hashKeyEntity(buildingType, buildingLevel - 1))
-          .values[i];
-      }
       occupiedUtilityResourceComponent.set(
         playerResourceEntity,
         (
