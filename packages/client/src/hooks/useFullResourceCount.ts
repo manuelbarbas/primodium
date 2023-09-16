@@ -55,7 +55,8 @@ export function useFullResourceCount(
   console.log("world speed: " + worldSpeed);
   //motherlode//
   const motherlodeProduction = useMemo(() => {
-    if (!mineableResources.includes(resourceID)) return 0;
+    if (!mineableResources.includes(resourceID) || type == ResourceType.Utility)
+      return 0;
     return motherlodes.reduce((prev: number, motherlodeIndex: EntityIndex) => {
       const entity = world.entities[motherlodeIndex];
       const resource = getMotherlodeResource(entity);
@@ -92,7 +93,8 @@ export function useFullResourceCount(
 
   //motherlode//
   const resourcesToClaimFromMotherlode = useMemo(() => {
-    if (!mineableResources.includes(resourceID)) return 0;
+    if (!mineableResources.includes(resourceID) || type == ResourceType.Utility)
+      return 0;
     return motherlodes.reduce((prev: number, motherlodeIndex: EntityIndex) => {
       const entity = world.entities[motherlodeIndex];
 
