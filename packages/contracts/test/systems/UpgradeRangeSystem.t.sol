@@ -22,11 +22,11 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
     world.build(EBuilding.IronMine, PositionData(bounds.maxX + 1, bounds.maxY, asteroid));
   }
 
-  //   function testUpgradeRangeResources() public {
-  //     vm.startPrank(alice);
-  //     vm.expectRevert(bytes("[SpendRequiredResourcesSystem] Not enough resources"));
-  //     upgradeRangeSystem.executeTyped();
-  //   }
+  // function testUpgradeRangeResources() public {
+  //   vm.startPrank(alice);
+  //   vm.expectRevert(bytes("[SpendRequiredResourcesSystem] Not enough resources"));
+  //   upgradeRangeSystem.executeTyped();
+  // }
 
   function testUpgradeRangeWrongBaseLevelFail() public {
     bytes32 aliceEntity = addressToEntity(alice);

@@ -16,7 +16,7 @@
     "dev": "pnpm mud dev-contracts",
     "devnode": "mud devnode",
     "lint": "pnpm run prettier && pnpm run solhint",
-    "prettier": "prettier --write 'src/**/*.sol'",
+    "prettier": "prettier --write './**/*.sol'",
     "prototypegen": "tsx ./ts/prototypes/commands/prototypegen.ts",
     "solhint": "solhint --config ./.solhint.json 'src/**/*.sol' --fix",
     "test": "mud test"
