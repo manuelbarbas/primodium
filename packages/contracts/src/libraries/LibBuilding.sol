@@ -49,7 +49,7 @@ library LibBuilding {
 
     placeBuildingTiles(playerEntity, buildingEntity, buildingPrototype, coord);
     LibReduceProductionRate.reduceProductionRate(playerEntity, buildingPrototype, level);
-    LibProduction.initResourceProduction(playerEntity, buildingEntity);
+    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, level);
     OwnedBy.set(buildingEntity, playerEntity);
   }
 
