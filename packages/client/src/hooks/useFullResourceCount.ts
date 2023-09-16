@@ -21,7 +21,7 @@ import {
   Hangar,
 } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
-import { mineableResources, getMotherlodeResource } from "src/util/resource";
+import { mineableResources } from "src/util/resource";
 import { getUnitStats } from "src/util/trainUnits";
 import { ESpaceRockType } from "src/util/web3/types";
 import useResourceCount from "./useResourceCount";
