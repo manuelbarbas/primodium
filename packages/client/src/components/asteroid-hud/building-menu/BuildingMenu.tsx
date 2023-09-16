@@ -24,6 +24,8 @@ export const BuildingMenu: React.FC = () => {
 
   if (!buildingName || !selectedBuilding) return null;
 
+  console.log(buildingType);
+
   const renderScreen = () => {
     switch (buildingType) {
       case BlockType.MainBase:

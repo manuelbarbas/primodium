@@ -11,6 +11,8 @@ export const Basic: React.FC<{ building: EntityID }> = ({ building }) => {
     return getBuildingName(building);
   }, [building]);
 
+  console.log(buildingName);
+
   if (!buildingName) return null;
 
   return (

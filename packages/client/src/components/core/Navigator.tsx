@@ -5,7 +5,7 @@ import {
   ReactNode,
   FC,
   useCallback,
-  useEffect,
+  useLayoutEffect,
 } from "react";
 import { Button } from "./Button";
 import { Card, SecondaryCard } from "./Card";
@@ -29,7 +29,7 @@ export const Navigator: FC<{ initialScreen?: string; children?: ReactNode }> & {
   const [history, setHistory] = useState<string[]>([initialScreen]);
 
   // Reset history when initialScreen prop changes
-  useEffect(() => {
+  useLayoutEffect(() => {
     setHistory([initialScreen]);
   }, [initialScreen]);
 
