@@ -39,8 +39,8 @@ library LibStorage {
     EResource resource,
     uint32 amountToIncrease
   ) internal {
-    uint32 maxUtility = MaxResourceCount.get(playerEntity, resource);
-    MaxResourceCount.set(playerEntity, resource, maxUtility + amountToIncrease);
+    uint32 prevMax = MaxResourceCount.get(playerEntity, resource);
+    MaxResourceCount.set(playerEntity, resource, prevMax + amountToIncrease);
   }
 
   function decreaseMaxUtility(

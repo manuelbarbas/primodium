@@ -10,7 +10,8 @@ contract LibReduceProductionRateTest is PrimodiumTest {
   bytes32 playerEntity = "playerEntity";
   bytes32 buildingEntity = "building";
   bytes32 buildingPrototype = "buildingPrototype";
-  uint32 level = 1;
+  uint32 level = 2;
+  uint32 prevReduction = 5;
 
   function setUp() public override {
     super.setUp();
@@ -18,6 +19,14 @@ contract LibReduceProductionRateTest is PrimodiumTest {
     vm.startPrank(address(world));
     BuildingType.set(buildingEntity, buildingPrototype);
     Level.set(buildingEntity, level);
+    P_RequiredDependenciesData memory requiredDependenciesData = P_RequiredDependenciesData(
+      new uint8[](1),
+      new uint32[](1)
+    );
+    requiredDependenciesData.resources[0] = uint8(EResource.Iron);
+    requiredDependenciesData.amounts[0] = prevReduction;
+
+    P_RequiredDependencies.set(buildingPrototype, level - 1, requiredDependenciesData);
   }
 
   function testClearDependencyUsage() public {
@@ -57,13 +66,16 @@ contract LibReduceProductionRateTest is PrimodiumTest {
 
     LibReduceProductionRate.reduceProductionRate(playerEntity, buildingPrototype, level);
 
-    assertEq(ProductionRate.get(playerEntity, EResource.Iron), originalProduction - productionReduction);
+    assertEq(
+      ProductionRate.get(playerEntity, EResource.Iron),
+      originalProduction - productionReduction + prevReduction
+    );
   }
 
   function testFailReduceProductionRate() public {
     // Set up mock data with insufficient production rate
     uint32 originalProduction = 5;
-    uint32 productionReduction = 10;
+    uint32 productionReduction = originalProduction + prevReduction + 1;
     ProductionRate.set(playerEntity, EResource.Iron, originalProduction);
 
     P_RequiredDependenciesData memory requiredDependenciesData = P_RequiredDependenciesData(
