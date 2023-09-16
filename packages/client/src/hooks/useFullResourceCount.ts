@@ -58,16 +58,27 @@ export function useFullResourceCount(
     if (!mineableResources.includes(resourceID)) return 0;
     return motherlodes.reduce((prev: number, motherlodeIndex: EntityIndex) => {
       const entity = world.entities[motherlodeIndex];
-      const resource = getMotherlodeResource(entity);
+      const motherlodeData = Motherlode.get(entity);
+      if (!motherlodeData) return prev;
+      const { resource, maxAmount } = P_MotherlodeResource.get(
+        hashKeyEntity(motherlodeData?.motherlodeType, motherlodeData.size),
+        { resource: "0" as EntityID, maxAmount: 0 }
+      );
 
       const hangar = Hangar.get(entity);
 
-      if (!hangar || resource?.resource !== resourceID) return prev;
+      if (!hangar || resource !== resourceID) return prev;
+      const lastClaimedAt = LastClaimedAt.get(entity)?.value ?? 0;
+      const resourceMined = MotherlodeResource.get(entity, { value: 0 }).value;
 
       let total = 0;
       for (let i = 0; i < hangar.units.length; i++) {
         total += getUnitStats(hangar.units[i]).MIN * hangar.counts[i];
       }
+
+      const totalProduced =
+        (total * ((blockNumber - lastClaimedAt) * SPEED_SCALE)) / worldSpeed;
+      if (totalProduced + resourceMined > maxAmount) return prev;
       return prev + total;
     }, 0);
   }, [motherlodes, resourceID, block]);
@@ -106,10 +117,7 @@ export function useFullResourceCount(
         { resource: "0" as EntityID, maxAmount: 0 }
       );
 
-      const resourceMined = MotherlodeResource.get(
-        hashKeyEntity(resource, entity),
-        { value: 0 }
-      ).value;
+      const resourceMined = MotherlodeResource.get(entity, { value: 0 }).value;
 
       if (!hangar || resource !== resourceID) return prev;
       const lastClaimedAt = LastClaimedAt.get(entity)?.value ?? 0;
@@ -118,11 +126,9 @@ export function useFullResourceCount(
       for (let i = 0; i < hangar.units.length; i++) {
         total += getUnitStats(hangar.units[i]).MIN * hangar.counts[i];
       }
+      total *= ((blockNumber - lastClaimedAt) * SPEED_SCALE) / worldSpeed;
       if (total + resourceMined > maxAmount) total = maxAmount - resourceMined;
-      return (
-        prev +
-        total * (((blockNumber - lastClaimedAt) * SPEED_SCALE) / worldSpeed)
-      );
+      return prev + total;
     }, 0);
   }, [motherlodes, resourceID, block, resourceCount]);
 
