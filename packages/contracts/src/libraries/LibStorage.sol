@@ -15,7 +15,6 @@ library LibStorage {
     uint32 level
   ) internal {
     bytes32 buildingType = BuildingType.get(buildingEntity);
-    uint32 level = Level.get(buildingEntity);
 
     uint8[] memory storageResources = P_ListMaxResourceUpgrades.get(buildingType, level);
     for (uint256 i = 0; i < storageResources.length; i++) {
