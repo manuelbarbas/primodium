@@ -15,27 +15,27 @@ contract TestLibStorage is PrimodiumTest {
   }
 
   function testDecreaseStoredResourceEnoughResources() public {
-    SetPlayerResource.set(mockPlayerEntity, mockResource, 100);
+    ResourceCount.set(mockPlayerEntity, mockResource, 100);
     LibStorage.decreaseStoredResource(mockPlayerEntity, mockResource, 50);
-    assertEq(SetPlayerResource.get(mockPlayerEntity, mockResource), 50);
+    assertEq(ResourceCount.get(mockPlayerEntity, mockResource), 50);
   }
 
   function testDecreaseStoredResourceNotEnoughResources() public {
     LibStorage.decreaseStoredResource(mockPlayerEntity, mockResource, 50);
-    assertEq(SetPlayerResource.get(mockPlayerEntity, mockResource), 0);
+    assertEq(ResourceCount.get(mockPlayerEntity, mockResource), 0);
   }
 
   function testIncreaseStoredResourceBelowMaxCap() public {
     MaxResourceCount.set(mockPlayerEntity, mockResource, 100);
     LibStorage.increaseStoredResource(mockPlayerEntity, mockResource, 50);
-    assertEq(SetPlayerResource.get(mockPlayerEntity, mockResource), 50);
+    assertEq(ResourceCount.get(mockPlayerEntity, mockResource), 50);
   }
 
   function testIncreaseStoredResourceAtMaxCap() public {
     MaxResourceCount.set(mockPlayerEntity, mockResource, 100);
-    SetPlayerResource.set(mockPlayerEntity, mockResource, 100);
+    ResourceCount.set(mockPlayerEntity, mockResource, 100);
     LibStorage.increaseStoredResource(mockPlayerEntity, mockResource, 50);
-    assertEq(SetPlayerResource.get(mockPlayerEntity, mockResource), 100);
+    assertEq(ResourceCount.get(mockPlayerEntity, mockResource), 100);
   }
 
   function testIncreaseMaxUtility() public {

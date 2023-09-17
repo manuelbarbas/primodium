@@ -148,17 +148,23 @@ export const config = mudConfig({
     },
 
     // ResourceSet tables: used to track which resources a player has
-    Set_Player: {
-      keySchema: { entity: "bytes32" },
-      schema: "uint8[]",
+
+    ResourceCount: {
+      keySchema: { entity: "bytes32", resource: "EResource" },
+      schema: "uint32",
     },
 
-    Set_PlayerResource: {
-      keySchema: { entity: "bytes32", resource: "EResource" },
+    // Used in the building utilities set
+    Set_UtilityUsage: {
+      keySchema: { entity: "bytes32", utility: "EResource" },
       schema: {
         index: "uint256",
         quantity: "uint32",
       },
+    },
+    Set_Utilities: {
+      keySchema: { entity: "bytes32" },
+      schema: "uint8[]",
     },
 
     /* --------------------------- Build Requirements --------------------------- */
@@ -221,7 +227,6 @@ export const config = mudConfig({
       },
     },
 
-    // @note Used for ResourceUpgrade set
     P_ByLevelMaxResourceUpgrades: {
       keySchema: { prototype: "bytes32", resource: "EResource", level: "uint32" },
       schema: "uint32",
@@ -243,11 +248,6 @@ export const config = mudConfig({
     },
 
     ProductionRate: {
-      keySchema: { entity: "bytes32", resource: "EResource" },
-      schema: "uint32",
-    },
-
-    UtilityUsage: {
       keySchema: { entity: "bytes32", resource: "EResource" },
       schema: "uint32",
     },

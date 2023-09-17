@@ -10,12 +10,13 @@ contract LibProductionTest is PrimodiumTest {
   bytes32 playerEntity = "playerEntity";
   bytes32 buildingEntity = "buildingEntity";
   bytes32 buildingPrototype = "buildingPrototype";
+  uint32 level = 1;
 
   function setUp() public override {
     super.setUp();
     vm.startPrank(address(world));
     BuildingType.set(buildingEntity, buildingPrototype);
-    Level.set(buildingEntity, 1);
+    Level.set(buildingEntity, level);
   }
 
   function testUpgradeResourceProductionNonUtility() public {
@@ -68,12 +69,12 @@ contract LibProductionTest is PrimodiumTest {
     LibProduction.clearResourceProduction(playerEntity, buildingEntity);
     uint32 startingAmount = 50;
     uint32 amountCleared = 20;
-    ProductionRate.set(playerEntity, EResource.Iron, 50);
-    LibProduction.clearResourceProduction(playerEntity, buildingEntity);
+    MaxResourceCount.set(playerEntity, EResource.Iron, 50);
 
     P_ProductionData memory data1 = P_ProductionData(EResource.Iron, amountCleared);
-    P_Production.set(buildingPrototype, 1, data1);
+    P_Production.set(buildingPrototype, level, data1);
 
+    LibProduction.clearResourceProduction(playerEntity, buildingEntity);
     assertEq(MaxResourceCount.get(playerEntity, EResource.Iron), startingAmount - amountCleared);
   }
 
@@ -81,11 +82,11 @@ contract LibProductionTest is PrimodiumTest {
     uint32 startingAmount = 50;
     uint32 amountCleared = 20;
     ProductionRate.set(playerEntity, EResource.Iron, 50);
-    LibProduction.clearResourceProduction(playerEntity, buildingEntity);
 
     P_ProductionData memory data1 = P_ProductionData(EResource.Iron, amountCleared);
-    P_Production.set(buildingPrototype, 1, data1);
+    P_Production.set(buildingPrototype, level, data1);
 
+    LibProduction.clearResourceProduction(playerEntity, buildingEntity);
     assertEq(ProductionRate.get(playerEntity, EResource.Iron), startingAmount - amountCleared);
   }
 }
