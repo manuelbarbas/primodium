@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
+import { console } from "forge-std/console.sol";
 import { EBuilding, EResource } from "src/Types.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
@@ -25,6 +26,8 @@ library LibResource {
       // check if player has enough resources
       uint32 resourceCost = requiredResources.amounts[i];
       uint32 playerResourceCount = ResourceCount.get(playerEntity, resource);
+      console.log("playerResourceCount", playerResourceCount);
+      console.log("resourceCost", resourceCost);
       require(resourceCost <= playerResourceCount, "[SpendResources] Not enough resources to spend");
 
       // spend resources. note: this will also decrease available utilities

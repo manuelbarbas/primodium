@@ -39,8 +39,6 @@ library LibBuilding {
 
     require(LibBuilding.canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
 
-    world.spendRequiredResources(buildingPrototype, level);
-
     Spawned.set(buildingEntity, true);
     BuildingType.set(buildingEntity, buildingPrototype);
     Level.set(buildingEntity, level);
@@ -48,6 +46,8 @@ library LibBuilding {
     LastClaimedAt.set(buildingEntity, block.number);
 
     placeBuildingTiles(playerEntity, buildingEntity, buildingPrototype, coord);
+
+    world.spendRequiredResources(buildingEntity, level);
     LibReduceProductionRate.reduceProductionRate(playerEntity, buildingPrototype, level);
     LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, level);
     OwnedBy.set(buildingEntity, playerEntity);

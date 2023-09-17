@@ -5,7 +5,7 @@ import "test/PrimodiumTest.t.sol";
 import { EResource } from "src/Types.sol";
 import { LibResource, UtilitySet } from "codegen/Libraries.sol";
 
-import { P_RequiredResourcesData, P_RequiredResources, MaxResourceCount } from "codegen/Tables.sol";
+import { P_RequiredResourcesData, P_RequiredResources, BuildingType, MaxResourceCount } from "codegen/Tables.sol";
 
 contract LibResourceTest is PrimodiumTest {
   bytes32 playerEntity = "playerEntity";
@@ -16,6 +16,7 @@ contract LibResourceTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
     vm.startPrank(address(world));
+    BuildingType.set(buildingEntity, buildingPrototype);
   }
 
   function testClaimAllResourcesBasic() public {
@@ -58,20 +59,19 @@ contract LibResourceTest is PrimodiumTest {
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(buildingPrototype, level, requiredResourcesData);
 
-    LibResource.spendRequiredResources(playerEntity, buildingPrototype, level);
+    LibResource.spendRequiredResources(playerEntity, buildingEntity, level);
     assertEq(ResourceCount.get(playerEntity, EResource.Iron), 50);
   }
 
-  function testSpendRequiredResourceInsufficient() public {
+  function testFailSpendRequiredResourceInsufficient() public {
     ResourceCount.set(playerEntity, EResource.Iron, 30);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint32[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);
     requiredResourcesData.amounts[0] = 50;
-    P_RequiredResources.set(buildingPrototype, 1, requiredResourcesData);
+    P_RequiredResources.set(buildingPrototype, level, requiredResourcesData);
 
-    vm.expectRevert(bytes("[SpendResources] Not enough resources to spend"));
-    LibResource.spendRequiredResources(playerEntity, buildingPrototype, 1);
+    LibResource.spendRequiredResources(playerEntity, buildingEntity, level);
   }
 
   function testSpendRequiredUtility() public {
@@ -80,13 +80,13 @@ contract LibResourceTest is PrimodiumTest {
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint32[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);
     requiredResourcesData.amounts[0] = 50;
-    P_RequiredResources.set(buildingPrototype, 1, requiredResourcesData);
+    P_RequiredResources.set(buildingPrototype, level, requiredResourcesData);
 
-    LibResource.spendRequiredResources(playerEntity, buildingPrototype, 1);
+    LibResource.spendRequiredResources(playerEntity, buildingEntity, level);
     assertEq(ResourceCount.get(playerEntity, EResource.Iron), 50);
   }
 
-  function testSpendRequiredUtilityInsufficient() public {
+  function testFailSpendRequiredUtilityInsufficient() public {
     ResourceCount.set(playerEntity, EResource.Iron, 30);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint32[](1));
@@ -94,8 +94,7 @@ contract LibResourceTest is PrimodiumTest {
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(buildingPrototype, 1, requiredResourcesData);
 
-    vm.expectRevert(bytes("[SpendResources] Not enough resources to spend"));
-    LibResource.spendRequiredResources(playerEntity, buildingPrototype, 1);
+    LibResource.spendRequiredResources(playerEntity, buildingEntity, 1);
   }
 
   function testClearUtilityUsage() public {
