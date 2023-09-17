@@ -3,7 +3,7 @@ pragma solidity >=0.8.0;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { P_MaxLevel, BuildingType, PositionData, Level, P_MaxLevel, P_RequiredResources, OwnedBy } from "codegen/Tables.sol";
-import { LibBuilding, LibResource, LibReduceProductionRate, LibProduction } from "codegen/Libraries.sol";
+import { LibBuilding, LibResource, LibReduceProductionRate, LibProduction, LibStorage } from "codegen/Libraries.sol";
 import { EBuilding } from "codegen/Types.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 
@@ -31,14 +31,11 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
       "[UpgradeBuildingSystem] MainBase level requirement not met"
     );
 
-    // PREV: checkRequiredResources, checkRequiredUtilities, spendRequiredResources, spendRequiredUtilities, claim resources
-    IWorld(_world()).spendRequiredResources(buildingPrototype, targetLevel);
-    // PREV: updateRequiredProduction, checkResourceProductionRequirements
-    LibReduceProductionRate.reduceProductionRate(playerEntity, buildingPrototype, targetLevel);
-    // PREV: updateRequiredProduction, checkResourceProductionRequirements
-    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, targetLevel);
-
-    //update building level
     Level.set(buildingEntity, targetLevel);
+
+    IWorld(_world()).spendRequiredResources(buildingPrototype, targetLevel);
+    LibReduceProductionRate.reduceProductionRate(playerEntity, buildingPrototype, targetLevel);
+    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, targetLevel);
+    LibStorage.increaseMaxStorage(playerEntity, buildingEntity, targetLevel);
   }
 }

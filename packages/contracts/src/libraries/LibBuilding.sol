@@ -11,6 +11,7 @@ import { IWorld } from "codegen/world/IWorld.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibReduceProductionRate } from "libraries/LibReduceProductionRate.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
+import { LibStorage } from "libraries/LibStorage.sol";
 
 // types
 import { BuildingKey, BuildingTileKey, ExpansionKey } from "src/Keys.sol";
@@ -44,13 +45,14 @@ library LibBuilding {
     Level.set(buildingEntity, level);
     Position.set(buildingEntity, coord);
     LastClaimedAt.set(buildingEntity, block.number);
+    OwnedBy.set(buildingEntity, playerEntity);
 
     placeBuildingTiles(playerEntity, buildingEntity, buildingPrototype, coord);
 
     world.spendRequiredResources(buildingEntity, level);
-    LibReduceProductionRate.reduceProductionRate(playerEntity, buildingPrototype, level);
+    LibReduceProductionRate.reduceProductionRate(playerEntity, buildingEntity, level);
     LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, level);
-    OwnedBy.set(buildingEntity, playerEntity);
+    LibStorage.increaseMaxStorage(playerEntity, buildingEntity, level);
   }
 
   function placeBuildingTiles(
