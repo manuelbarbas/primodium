@@ -51,6 +51,11 @@ contract PrimodiumTest is MudTest {
     vm.stopPrank();
   }
 
+  function switchPrank(address prankster) internal {
+    vm.stopPrank();
+    vm.startPrank(prankster);
+  }
+
   function assertEq(PositionData memory coordA, PositionData memory coordB) internal {
     assertEq(coordA.x, coordB.x, "[assertEq]: x doesn't match");
     assertEq(coordA.y, coordB.y, "[assertEq]: y doesn't match");

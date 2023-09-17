@@ -10,12 +10,7 @@ import { EBuilding } from "src/Types.sol";
 import { BuildingKey } from "src/Keys.sol";
 
 contract S_SpendResourcesSystem is PrimodiumSystem {
-  function spendRequiredResources(bytes32 buildingPrototype, uint32 level) public returns (bytes32 buildingEntity) {
-    bytes32 playerEntity = addressToEntity(_msgSender());
-    LibResource.spendRequiredResources(playerEntity, buildingPrototype, level);
-  }
-
-  function spendRequiredResources(EBuilding buildingType, uint32 level) public returns (bytes32 buildingEntity) {
-    spendRequiredResources(P_EnumToPrototype.get(BuildingKey, uint8(buildingType)), level);
+  function spendRequiredResources(bytes32 buildingEntity, uint32 level) public {
+    LibResource.spendRequiredResources(buildingEntity, level);
   }
 }

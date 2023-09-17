@@ -5,7 +5,7 @@ import "test/PrimodiumTest.t.sol";
 import { EResource } from "src/Types.sol";
 import { LibResource, UtilitySet } from "codegen/Libraries.sol";
 
-import { P_RequiredResourcesData, P_RequiredResources, BuildingType, MaxResourceCount } from "codegen/Tables.sol";
+import { P_RequiredResourcesData, P_RequiredResources, BuildingType, MaxResourceCount, OwnedBy } from "codegen/Tables.sol";
 
 contract LibResourceTest is PrimodiumTest {
   bytes32 playerEntity = "playerEntity";
@@ -17,6 +17,7 @@ contract LibResourceTest is PrimodiumTest {
     super.setUp();
     vm.startPrank(address(world));
     BuildingType.set(buildingEntity, buildingPrototype);
+    OwnedBy.set(buildingEntity, playerEntity);
   }
 
   function testClaimAllResourcesBasic() public {
@@ -59,7 +60,7 @@ contract LibResourceTest is PrimodiumTest {
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(buildingPrototype, level, requiredResourcesData);
 
-    LibResource.spendRequiredResources(playerEntity, buildingEntity, level);
+    LibResource.spendRequiredResources(buildingEntity, level);
     assertEq(ResourceCount.get(playerEntity, EResource.Iron), 50);
   }
 
@@ -71,7 +72,7 @@ contract LibResourceTest is PrimodiumTest {
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(buildingPrototype, level, requiredResourcesData);
 
-    LibResource.spendRequiredResources(playerEntity, buildingEntity, level);
+    LibResource.spendRequiredResources(buildingEntity, level);
   }
 
   function testSpendRequiredUtility() public {
@@ -82,7 +83,7 @@ contract LibResourceTest is PrimodiumTest {
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(buildingPrototype, level, requiredResourcesData);
 
-    LibResource.spendRequiredResources(playerEntity, buildingEntity, level);
+    LibResource.spendRequiredResources(buildingEntity, level);
     assertEq(ResourceCount.get(playerEntity, EResource.Iron), 50);
   }
 
@@ -94,7 +95,7 @@ contract LibResourceTest is PrimodiumTest {
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(buildingPrototype, 1, requiredResourcesData);
 
-    LibResource.spendRequiredResources(playerEntity, buildingEntity, 1);
+    LibResource.spendRequiredResources(buildingEntity, 1);
   }
 
   function testClearUtilityUsage() public {
