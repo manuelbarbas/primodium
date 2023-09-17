@@ -9,7 +9,11 @@ import { LibResource } from "libraries/LibResource.sol";
 import { EResource } from "src/Types.sol";
 
 library LibStorage {
-  function increaseMaxStorage(bytes32 playerEntity, bytes32 buildingEntity) internal {
+  function increaseMaxStorage(
+    bytes32 playerEntity,
+    bytes32 buildingEntity,
+    uint32 level
+  ) internal {
     bytes32 buildingType = BuildingType.get(buildingEntity);
     uint32 level = Level.get(buildingEntity);
 

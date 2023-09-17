@@ -5,7 +5,7 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { Position, PositionData, BuildingType, OwnedBy, Children, Spawned, Level, BuildingType } from "codegen/Tables.sol";
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
-import { LibBuilding, LibReduceProductionRate, LibResource, LibProduction } from "codegen/Libraries.sol";
+import { LibBuilding, LibReduceProductionRate, LibResource, LibProduction, LibStorage } from "codegen/Libraries.sol";
 
 contract DestroySystem is PrimodiumSystem {
   function destroy(PositionData memory coord) public returns (bytes32 buildingEntity) {
@@ -24,6 +24,7 @@ contract DestroySystem is PrimodiumSystem {
     LibReduceProductionRate.clearProductionRateReduction(playerEntity, buildingEntity);
     LibResource.clearUtilityUsage(playerEntity, buildingEntity);
     LibProduction.clearResourceProduction(playerEntity, buildingEntity);
+    LibStorage.clearMaxStorageIncrease(playerEntity, buildingEntity);
 
     Level.deleteRecord(buildingEntity);
     BuildingType.deleteRecord(buildingEntity);

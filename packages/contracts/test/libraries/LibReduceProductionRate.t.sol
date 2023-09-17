@@ -64,7 +64,7 @@ contract LibReduceProductionRateTest is PrimodiumTest {
 
     P_RequiredDependencies.set(buildingPrototype, level, requiredDependenciesData);
 
-    LibReduceProductionRate.reduceProductionRate(playerEntity, buildingPrototype, level);
+    LibReduceProductionRate.reduceProductionRate(playerEntity, buildingEntity, level);
 
     assertEq(
       ProductionRate.get(playerEntity, EResource.Iron),
@@ -87,6 +87,6 @@ contract LibReduceProductionRateTest is PrimodiumTest {
 
     P_RequiredDependencies.set(buildingPrototype, level, requiredDependenciesData);
 
-    LibReduceProductionRate.reduceProductionRate(playerEntity, buildingPrototype, level);
+    LibReduceProductionRate.reduceProductionRate(playerEntity, buildingEntity, level);
   }
 }

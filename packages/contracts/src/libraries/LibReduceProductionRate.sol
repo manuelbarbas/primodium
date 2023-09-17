@@ -23,9 +23,10 @@ library LibReduceProductionRate {
 
   function reduceProductionRate(
     bytes32 playerEntity,
-    bytes32 buildingPrototype,
+    bytes32 buildingEntity,
     uint32 level
   ) internal {
+    bytes32 buildingPrototype = BuildingType.get(buildingEntity);
     P_RequiredDependenciesData memory requiredDeps = P_RequiredDependencies.get(buildingPrototype, level);
     P_RequiredDependenciesData memory prevRequiredDeps;
     if (level > 1) {

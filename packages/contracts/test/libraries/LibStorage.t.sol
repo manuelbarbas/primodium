@@ -26,7 +26,7 @@ contract TestLibStorage is PrimodiumTest {
     P_ListMaxResourceUpgrades.set(buildingPrototype, level, data);
     P_ByLevelMaxResourceUpgrades.set(buildingPrototype, mockResource, level, 100);
 
-    LibStorage.increaseMaxStorage(playerEntity, buildingEntity);
+    LibStorage.increaseMaxStorage(playerEntity, buildingEntity, level);
     assertEq(MaxResourceCount.get(playerEntity, mockResource), 100);
   }
 
