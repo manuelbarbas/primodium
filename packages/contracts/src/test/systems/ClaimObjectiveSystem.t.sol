@@ -24,7 +24,7 @@ import { PositionComponent, ID as PositionComponentID } from "components/Positio
 import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
 import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-
+import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
 import { MaxUtilityComponent, ID as MaxUtilityComponentID } from "components/MaxUtilityComponent.sol";
 import { ArrivalsSizeComponent, ID as ArrivalsSizeComponentID } from "components/ArrivalsSizeComponent.sol";
 import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMovesComponent.sol";
@@ -104,6 +104,32 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     componentDevSystem.executeTyped(MaxMovesComponentID, addressToEntity(deployer), abi.encode(100));
   }
 
+  function testFailClaimObjectiveNotRegistered() public {
+    vm.prank(alice);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice))),
+      "objective should not have been completed"
+    );
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugUnit);
+  }
+
+  function testFailClaimObjectiveTwice() public {
+    vm.prank(alice);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(LibEncode.hashKeyEntity(DebugFreeObjectiveID, addressToEntity(alice))),
+      "objective should not have been completed"
+    );
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugFreeObjectiveID);
+    assertTrue(
+      hasCompletedObjectiveComponent.has(LibEncode.hashKeyEntity(DebugFreeObjectiveID, addressToEntity(alice))),
+      "objective should have been completed"
+    );
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugFreeObjectiveID);
+  }
+
   function testClaimObjective() public {
     vm.prank(alice);
     assertTrue(
@@ -116,6 +142,46 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
       hasCompletedObjectiveComponent.has(LibEncode.hashKeyEntity(DebugFreeObjectiveID, addressToEntity(alice))),
       "objective should have been completed"
     );
+  }
+
+  function testClaimObjectiveResources() public {
+    vm.prank(alice);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugHavResourcesObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
+    ResourceValues memory resourceValues = P_RequiredResourcesComponent(
+      world.getComponent(P_RequiredResourcesComponentID)
+    ).getValue(DebugHavResourcesObjectiveID);
+
+    for (uint256 i = 0; i < resourceValues.resources.length; i++) {
+      vm.prank(alice);
+      componentDevSystem.executeTyped(
+        ItemComponentID,
+        LibEncode.hashKeyEntity(resourceValues.resources[i], addressToEntity(alice)),
+        abi.encode(resourceValues.values[i])
+      );
+    }
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugHavResourcesObjectiveID);
+    assertTrue(
+      hasCompletedObjectiveComponent.has(LibEncode.hashKeyEntity(DebugHavResourcesObjectiveID, addressToEntity(alice))),
+      "objective should have been completed"
+    );
+  }
+
+  function testFailClaimObjectiveResources() public {
+    vm.prank(alice);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugHavResourcesObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugHavResourcesObjectiveID);
   }
 
   // todo: check motherlode movement rules

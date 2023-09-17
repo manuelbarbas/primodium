@@ -41,7 +41,10 @@ contract ClaimObjectiveSystem is System {
       getAddressById(components, HasCompletedObjectiveComponentID)
     );
     require(isObjectiveComponent.has(objective), "[ClaimObjectiveSystem] Objective not registered");
-
+    require(
+      !hasCompletedObjective.has(LibEncode.hashKeyEntity(objective, playerEntity)),
+      "[ClaimObjectiveSystem] Objective already completed"
+    );
     //Main Base Level
     require(
       LibBuilding.checkMainBaseLevelRequirement(world, playerEntity, objective),

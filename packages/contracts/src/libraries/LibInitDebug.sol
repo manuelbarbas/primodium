@@ -141,6 +141,17 @@ library LibInitDebug {
     isObjectiveComponent.set(DebugUnitsRewardObjectiveID);
   }
 
+  function initObjectives(IWorld world) {
+    P_RequiredResearchComponent requiredResourcesComponent = P_RequiredResearchComponent(
+      world.getComponent(P_RequiredResearchComponentID)
+    );
+
+    //DebugHavResourcesObjectiveID
+    ResourceValues memory resourceValues;
+    resourceValues.resources = new uint256[](1);
+    resourceValues.values = new uint32[](1);
+  }
+
   function initBlueprints(IWorld world) internal {
     P_BlueprintComponent blueprintComponent = P_BlueprintComponent(world.getComponent(P_BlueprintComponentID));
     int32[] memory coords = LibBlueprint.get1x1Blueprint();
