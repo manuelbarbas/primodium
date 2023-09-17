@@ -632,8 +632,12 @@ export const ResourceStorages = [
   BlockType.Lithium,
   BlockType.IronPlate,
   BlockType.Alloy,
+  BlockType.PhotovoltaicCell,
   BlockType.Sulfur,
   BlockType.Titanium,
+  BlockType.Iridium,
+  BlockType.Platinum,
+  BlockType.Kimberlite,
 ];
 
 export const UtilityStorages = [
