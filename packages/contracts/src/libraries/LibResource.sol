@@ -22,7 +22,6 @@ library LibResource {
       // check if player has enough resources
       uint32 resourceCost = requiredResources.amounts[i];
       uint32 playerResourceCount = ResourceCount.get(playerEntity, resource);
-      console.log("playerResourceCount", playerResourceCount);
       require(resourceCost <= playerResourceCount, "[SpendResources] Not enough resources to spend");
 
       // spend resources. note: this will also decrease available utilities
