@@ -9,7 +9,8 @@ import { StoreConfigWithPrototypes } from "../../prototypes/types";
 const __dirname = fileURLToPath(import.meta.url);
 const librariesFolder = path.resolve(__dirname, "../../../../src/libraries");
 
-const prefixes = ["Lib", "Set"];
+const prefixes = ["Lib"];
+const suffixes = ["Set"];
 async function libgen() {
   const config = (await loadConfig()) as StoreConfigWithPrototypes;
   const srcDirectory = await getSrcDirectory();
@@ -17,7 +18,12 @@ async function libgen() {
 
   const outputFileName = "Libraries.sol";
 
-  const files = fs.readdirSync(librariesFolder).filter((file) => prefixes.some((prefix) => file.startsWith(prefix)));
+  const files = fs
+    .readdirSync(librariesFolder)
+    .filter(
+      (file) =>
+        prefixes.some((prefix) => file.startsWith(prefix)) || suffixes.some((suffix) => file.endsWith(`${suffix}.sol`))
+    );
 
   const fileList = files.map((file) => {
     if (file == outputFileName) return "";

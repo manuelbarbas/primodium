@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { P_ListMaxResourceUpgrades, P_ByLevelMaxResourceUpgrades, MaxResourceCount, Level, BuildingType } from "codegen/Tables.sol";
+import { P_ListMaxResourceUpgrades, P_ByLevelMaxResourceUpgrades, MaxResourceCount, Level, ResourceCount, BuildingType } from "codegen/Tables.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibResource } from "libraries/LibResource.sol";
-import { SetPlayerResource } from "libraries/SetPlayerResource.sol";
 import { EResource } from "src/Types.sol";
 
 library LibStorage {
@@ -45,9 +44,9 @@ library LibStorage {
     EResource resource,
     uint32 resourceToDecrease
   ) internal {
-    uint32 resourceCount = SetPlayerResource.get(playerEntity, resource);
+    uint32 resourceCount = ResourceCount.get(playerEntity, resource);
     uint32 newResourceCount = resourceCount < resourceToDecrease ? 0 : resourceCount - resourceToDecrease;
-    SetPlayerResource.set(playerEntity, resource, newResourceCount);
+    ResourceCount.set(playerEntity, resource, newResourceCount);
   }
 
   function increaseStoredResource(
@@ -55,10 +54,10 @@ library LibStorage {
     EResource resource,
     uint32 resourceToAdd
   ) internal {
-    uint32 resourceCount = SetPlayerResource.get(playerEntity, resource);
+    uint32 resourceCount = ResourceCount.get(playerEntity, resource);
     uint32 maxResources = MaxResourceCount.get(playerEntity, resource);
     uint32 newResourceCount = LibMath.min(resourceCount + resourceToAdd, maxResources);
-    SetPlayerResource.set(playerEntity, resource, newResourceCount);
+    ResourceCount.set(playerEntity, resource, newResourceCount);
   }
 
   function setMaxStorage(
@@ -67,9 +66,9 @@ library LibStorage {
     uint32 newMaxStorage
   ) internal {
     MaxResourceCount.set(playerEntity, resource, newMaxStorage);
-    uint32 playerResourceAmount = SetPlayerResource.get(playerEntity, resource);
+    uint32 playerResourceAmount = ResourceCount.get(playerEntity, resource);
     if (playerResourceAmount > newMaxStorage) {
-      SetPlayerResource.set(playerEntity, resource, newMaxStorage);
+      ResourceCount.set(playerEntity, resource, newMaxStorage);
     }
   }
 
