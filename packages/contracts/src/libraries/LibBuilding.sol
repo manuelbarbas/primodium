@@ -27,6 +27,7 @@ import { BuildingCountComponent, ID as BuildingCountComponentID } from "componen
 import { HasBuiltBuildingComponent, ID as HasBuiltBuildingComponentID } from "components/HasBuiltBuildingComponent.sol";
 import { P_BuildingCountRequirementComponent, ID as P_BuildingCountRequirementComponentID } from "components/P_BuildingCountRequirementComponent.sol";
 import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
+import { P_HasBuiltBuildingComponent, ID as P_HasBuiltBuildingComponentID } from "components/P_HasBuiltBuildingComponent.sol";
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
@@ -52,11 +53,15 @@ library LibBuilding {
   function checkHasBuiltBuildingRequirement(
     IWorld world,
     uint256 playerEntity,
-    uint256 buildingType
+    uint256 objectiveEntity
   ) internal view returns (bool) {
+    P_HasBuiltBuildingComponent hasBuiltBuildingComponent = P_HasBuiltBuildingComponent(
+      world.getComponent(P_HasBuiltBuildingComponentID)
+    );
+    if (!hasBuiltBuildingComponent.has(objectiveEntity)) return true;
     return
       HasBuiltBuildingComponent(getAddressById(world.components(), HasBuiltBuildingComponentID)).has(
-        LibEncode.hashKeyEntity(buildingType, playerEntity)
+        LibEncode.hashKeyEntity(hasBuiltBuildingComponent.getValue(objectiveEntity), playerEntity)
       );
   }
 

@@ -20,7 +20,7 @@ import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID } from "
 import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
 import { IsDebugComponent, ID as IsDebugComponentID } from "components/IsDebugComponent.sol";
 import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "components/P_IsBuildingTypeComponent.sol";
-
+import { P_IsObjectiveComponent, ID as P_IsObjectiveComponentID } from "components/P_IsObjectiveComponent.sol";
 import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID } from "components/P_UnitProductionTypesComponent.sol";
 import { P_UnitProductionMultiplierComponent, ID as P_UnitProductionMultiplierComponentID } from "components/P_UnitProductionMultiplierComponent.sol";
 import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
@@ -65,6 +65,7 @@ library LibInitDebug {
     initializeUnits(world);
 
     registerUnitType(world);
+    registerObjectives(world);
   }
 
   function registerBuildingTypes(IWorld world) internal {
@@ -118,6 +119,26 @@ library LibInitDebug {
 
     isUnitComponent.set(DebugUnitBattle1);
     isUnitComponent.set(DebugUnitBattle2);
+  }
+
+  function registerObjectives(IWorld world) internal {
+    P_IsObjectiveComponent isObjectiveComponent = P_IsObjectiveComponent(world.getComponent(P_IsObjectiveComponentID));
+
+    isObjectiveComponent.set(DebugFreeObjectiveID);
+    isObjectiveComponent.set(DebugHavResourcesObjectiveID);
+    isObjectiveComponent.set(DebugHaveUnitsObjectiveID);
+    isObjectiveComponent.set(DebugHaveMaxUtilityObjectiveID);
+    isObjectiveComponent.set(DebugCompletedPriorObjectiveID);
+    isObjectiveComponent.set(DebugMainBaseLevelObjectiveID);
+    isObjectiveComponent.set(DebugTechnologyResearchedObjectiveID);
+    isObjectiveComponent.set(DebugResourceProductionObjectiveID);
+    isObjectiveComponent.set(DebugBuiltBuildingTypeObjectiveID);
+    isObjectiveComponent.set(DebugNumberOfBuiltBuildingTypeObjectiveID);
+    isObjectiveComponent.set(DebugRaidObjectiveID);
+    isObjectiveComponent.set(DebugMotherlodeMiningObjectiveID);
+    isObjectiveComponent.set(DebugDestroyedUnitsObjectiveID);
+    isObjectiveComponent.set(DebugResourceRewardObjectiveID);
+    isObjectiveComponent.set(DebugUnitsRewardObjectiveID);
   }
 
   function initBlueprints(IWorld world) internal {

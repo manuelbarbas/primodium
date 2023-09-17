@@ -139,8 +139,8 @@ library LibUnits {
     P_UnitRequirementComponent unitRequirementComponent = P_UnitRequirementComponent(
       world.getComponent(P_UnitRequirementComponentID)
     );
-    uint256 asteroidEntity = LibUpdateSpaceRock.getPlayerAsteroidEntity(world, playerEntity);
     if (!unitRequirementComponent.has(objectiveEntity)) return true;
+    uint256 asteroidEntity = LibUpdateSpaceRock.getPlayerAsteroidEntity(world, playerEntity);
     ResourceValues memory unitRequirements = unitRequirementComponent.getValue(objectiveEntity);
     for (uint256 i = 0; i < unitRequirements.resources.length; i++) {
       if (
