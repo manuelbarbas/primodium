@@ -4,7 +4,6 @@ pragma solidity >=0.8.0;
 import { getAddressById, entityToAddress } from "solecs/utils.sol";
 // external
 import { IWorld } from "solecs/interfaces/IWorld.sol";
-
 //interfaces
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { IOnSubsystem } from "../interfaces/IOnSubsystem.sol";
@@ -203,22 +202,16 @@ library LibRaid {
       battleEntity
     );
     for (uint256 i = 0; i < defenderResources.length; i++) {
-      uint32 raidAmount = (totalCargo * defenderResources[i]);
-
+      uint256 raidAmount = (uint256(totalCargo) * uint256(defenderResources[i]));
       raidAmount = raidAmount / totalResources;
-
       if (defenderResources[i] < raidAmount) {
         raidAmount = defenderResources[i];
       }
-
       if (raidAmount == 0) continue;
-
       raidResult.defenderValuesBeforeRaid[i] = defenderResources[i];
-
-      raidResult.raidedAmount[i] = raidAmount;
-
-      LibStorage.addResourceToStorage(world, attacker.participantEntity, resourceIds[i], raidAmount);
-      LibStorage.reduceResourceFromStorage(world, defender.participantEntity, resourceIds[i], raidAmount);
+      raidResult.raidedAmount[i] = uint32(raidAmount);
+      LibStorage.addResourceToStorage(world, attacker.participantEntity, resourceIds[i], uint32(raidAmount));
+      LibStorage.reduceResourceFromStorage(world, defender.participantEntity, resourceIds[i], uint32(raidAmount));
     }
     BattleRaidResultComponent(world.getComponent(BattleRaidResultComponentID)).set(battleEntity, raidResult);
   }
