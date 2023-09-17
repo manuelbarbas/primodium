@@ -39,6 +39,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
+  // todo: fix this
   function testUpgradeResourceRequirementsNotMetFail() public {
     vm.startPrank(alice);
 
@@ -47,7 +48,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
     assertTrue(Level.get(buildingEntity) == 1);
 
-    // vm.expectRevert(bytes("[SpendResources] Not enough resources to spend"));
+    vm.expectRevert(bytes("[SpendResources] Not enough resources to spend"));
     world.upgradeBuilding(coord);
     vm.stopPrank();
   }
