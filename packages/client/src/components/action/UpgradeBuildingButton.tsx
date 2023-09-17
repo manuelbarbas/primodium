@@ -20,6 +20,7 @@ import {
   Level,
   P_MaxLevel,
   HasResearched,
+  MainBase,
 } from "src/network/components/chainComponents";
 import { SingletonID } from "@latticexyz/network";
 import { getBlockTypeName } from "src/util/common";
@@ -56,11 +57,45 @@ export default function UpgradeBuildingButton({
       builtTile,
       upgradedLevel as unknown as EntityID
     ) as EntityID;
-  }, [currLevel, builtTile]);
+  }, [upgradedLevel, builtTile]);
+
+  const buildingTypeLastLevel = useMemo(() => {
+    return hashAndTrimKeyEntity(
+      builtTile,
+      (upgradedLevel - 1) as unknown as EntityID
+    ) as EntityID;
+  }, [upgradedLevel, builtTile]);
+
+  const lastLevelReceipe = useMemo(() => {
+    return getRecipe(buildingTypeLastLevel);
+  }, [buildingTypeLastLevel]);
 
   const recipe = useMemo(() => {
     return getRecipe(buildingTypeLevel);
   }, [buildingTypeLevel]);
+
+  const differenceRecipee = useMemo(() => {
+    if (!recipe || !lastLevelReceipe) return recipe;
+    const difference = recipe.map((resource) => {
+      let amount = resource.amount;
+      if (resource.type == ResourceType.Utility) {
+        let lastLevelResource = lastLevelReceipe.find(
+          (lastLevelResource) => resource.id === lastLevelResource.id
+        );
+
+        if (lastLevelResource) {
+          amount = resource.amount - lastLevelResource.amount;
+        }
+      }
+
+      return {
+        id: resource.id,
+        amount: amount,
+        type: resource.type,
+      };
+    });
+    return difference;
+  }, [recipe, lastLevelReceipe]);
 
   const researchRequirement = useMemo(() => {
     return getBuildingResearchRequirement(buildingTypeLevel);
@@ -78,6 +113,21 @@ export default function UpgradeBuildingButton({
     return HasResearched.get(researchOwner);
   }, [researchOwner]);
 
+  const mainBaseEntity = MainBase.use(address, {
+    value: "-1" as EntityID,
+  }).value;
+
+  const mainBaseLevel = Level.use(mainBaseEntity, {
+    value: 0,
+  }).value;
+  const requiredMainBaseLevel = Level.use(buildingTypeLevel, {
+    value: 0,
+  }).value;
+
+  const isMainBaseLevelRequirementsMet = useMemo(() => {
+    return mainBaseLevel >= requiredMainBaseLevel;
+  }, [mainBaseLevel, requiredMainBaseLevel]);
+
   const isUpgradeLocked = useMemo(() => {
     return (
       researchRequirement != undefined && !(isResearched && isResearched.value)
@@ -89,8 +139,10 @@ export default function UpgradeBuildingButton({
     upgradeText = "Research Not Met";
   } else if (!isLevelConditionMet) {
     upgradeText = "Max Level Reached";
-  } else {
+  } else if (isMainBaseLevelRequirementsMet) {
     upgradeText = "Upgrade Building Level " + upgradedLevel.toString();
+  } else {
+    upgradeText = "Lvl. " + requiredMainBaseLevel.toString() + " Base Required";
   }
 
   return (
@@ -100,16 +152,24 @@ export default function UpgradeBuildingButton({
         className="w-44 text-sm"
         onClick={() => upgradeBuilding(coord, network)}
         color={
-          isUpgradeLocked || !isLevelConditionMet ? "bg-gray-500" : undefined
+          isUpgradeLocked ||
+          !isLevelConditionMet ||
+          !isMainBaseLevelRequirementsMet
+            ? "bg-gray-500"
+            : undefined
         }
-        disable={isUpgradeLocked || !isLevelConditionMet}
+        disable={
+          isUpgradeLocked ||
+          !isLevelConditionMet ||
+          !isMainBaseLevelRequirementsMet
+        }
       >
         <div className="font-bold leading-none h-8 flex justify-center items-center px-2">
           {transactionLoading ? <Spinner /> : upgradeText}
         </div>
       </GameButton>
       <div className="mt-2 flex justify-center items-center text-sm bg-slate-900/60 px-2 space-x-2">
-        {recipe.map((resource) => {
+        {differenceRecipee.map((resource) => {
           const resourceImage = ResourceImage.get(resource.id)!;
           const resourceName = getBlockTypeName(resource.id);
           return (
