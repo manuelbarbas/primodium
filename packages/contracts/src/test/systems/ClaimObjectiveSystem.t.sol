@@ -14,7 +14,11 @@ import { RecallReinforcementsSystem, ID as RecallReinforcementsSystemID } from "
 import { RecallUnitsFromMotherlodeSystem, ID as RecallUnitsFromMotherlodeSystemID } from "systems/RecallUnitsFromMotherlodeSystem.sol";
 import { ClaimObjectiveSystem, ID as ClaimObjectiveSystemID } from "systems/ClaimObjectiveSystem.sol";
 import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "systems/UpgradeBuildingSystem.sol";
+import { ResearchSystem, ID as ResearchSystemID } from "systems/ResearchSystem.sol";
 //components
+import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
+import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
+import { P_RequiredResearchComponent, ID as P_RequiredResearchComponentID } from "components/P_RequiredResearchComponent.sol";
 import { P_ObjectiveRequirementComponent, ID as P_ObjectiveRequirementComponentID } from "components/P_ObjectiveRequirementComponent.sol";
 import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID } from "components/P_RequiredUtilityComponent.sol";
 import { P_UnitRequirementComponent, ID as P_UnitRequirementComponentID } from "components/P_UnitRequirementComponent.sol";
@@ -65,6 +69,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   RecallReinforcementsSystem public recallReinforcementsSystem;
   RecallUnitsFromMotherlodeSystem public recallUnitsFromMotherlodeSystem;
   UpgradeBuildingSystem public upgradeBuildingSystem;
+  ResearchSystem public researchSystem;
 
   function setUp() public override {
     super.setUp();
@@ -81,7 +86,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     recallReinforcementsSystem = RecallReinforcementsSystem(system(RecallReinforcementsSystemID));
     recallUnitsFromMotherlodeSystem = RecallUnitsFromMotherlodeSystem(system(RecallUnitsFromMotherlodeSystemID));
     upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
-
+    researchSystem = ResearchSystem(system(ResearchSystemID));
     occupiedUtilityResourceComponent = OccupiedUtilityResourceComponent(
       world.getComponent(OccupiedUtilityResourceComponentID)
     );
@@ -358,6 +363,106 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     assertTrue(
       hasCompletedObjectiveComponent.has(
         LibEncode.hashKeyEntity(DebugMainBaseLevelObjectiveID, addressToEntity(alice))
+      ),
+      "objective should have been completed"
+    );
+  }
+
+  function testClaimObjectiveTechnologyRequirement() public {
+    vm.startPrank(alice);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugTechnologyResearchedObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
+    P_RequiredResearchComponent requiredResearchComponent = P_RequiredResearchComponent(
+      world.getComponent(P_RequiredResearchComponentID)
+    );
+    assertTrue(
+      requiredResearchComponent.has(DebugTechnologyResearchedObjectiveID),
+      "no Technologye is required for objective"
+    );
+    researchSystem.executeTyped(DebugSimpleTechnologyNoReqsID);
+
+    claimObjectiveSystem.executeTyped(DebugTechnologyResearchedObjectiveID);
+    assertTrue(
+      hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugTechnologyResearchedObjectiveID, addressToEntity(alice))
+      ),
+      "objective should have been completed"
+    );
+    vm.stopPrank();
+  }
+
+  function testFailClaimObjectiveTechnologyRequirement() public {
+    vm.startPrank(alice);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugTechnologyResearchedObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
+
+    P_RequiredResearchComponent requiredResearchComponent = P_RequiredResearchComponent(
+      world.getComponent(P_RequiredResearchComponentID)
+    );
+    assertTrue(
+      requiredResearchComponent.has(DebugTechnologyResearchedObjectiveID),
+      "no Technologye is required for objective"
+    );
+
+    claimObjectiveSystem.executeTyped(DebugTechnologyResearchedObjectiveID);
+    vm.stopPrank();
+  }
+
+  function testClaimObjectiveResourceProduction() public {
+    vm.prank(alice);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugResourceProductionObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
+    ResourceValues memory resourceValues = P_ProductionDependenciesComponent(
+      world.getComponent(P_ProductionDependenciesComponentID)
+    ).getValue(DebugResourceProductionObjectiveID);
+
+    for (uint256 i = 0; i < resourceValues.resources.length; i++) {
+      vm.prank(alice);
+      componentDevSystem.executeTyped(
+        ProductionComponentID,
+        LibEncode.hashKeyEntity(resourceValues.resources[i], addressToEntity(alice)),
+        abi.encode(resourceValues.values[i])
+      );
+    }
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugResourceProductionObjectiveID);
+    assertTrue(
+      hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugResourceProductionObjectiveID, addressToEntity(alice))
+      ),
+      "objective should have been completed"
+    );
+  }
+
+  function testFailClaimObjectiveResourceProduction() public {
+    vm.prank(alice);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugResourceProductionObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
+    ResourceValues memory resourceValues = P_ProductionDependenciesComponent(
+      world.getComponent(P_ProductionDependenciesComponentID)
+    ).getValue(DebugResourceProductionObjectiveID);
+    assertTrue(resourceValues.resources.length > 0, "no resource production required for objective");
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugResourceProductionObjectiveID);
+    assertTrue(
+      hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugResourceProductionObjectiveID, addressToEntity(alice))
       ),
       "objective should have been completed"
     );

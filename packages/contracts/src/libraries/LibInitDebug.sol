@@ -188,6 +188,23 @@ library LibInitDebug {
     //DebugMainBaseLevelObjectiveID
     objective = DebugMainBaseLevelObjectiveID;
     levelComponent.set(objective, 2);
+
+    P_RequiredResearchComponent requiredReseachComponent = P_RequiredResearchComponent(
+      world.getComponent(P_RequiredResearchComponentID)
+    );
+    //DebugTechnologyResearchedObjectiveID
+    objective = DebugTechnologyResearchedObjectiveID;
+    requiredReseachComponent.set(objective, DebugSimpleTechnologyNoReqsID);
+
+    P_ProductionDependenciesComponent productionDependenciesComponent = P_ProductionDependenciesComponent(
+      world.getComponent(P_ProductionDependenciesComponentID)
+    );
+    //DebugResourceProductionObjectiveID
+    objective = DebugResourceProductionObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = IronResourceItemID;
+    resourceValues.values[0] = 10;
+    productionDependenciesComponent.set(objective, resourceValues);
   }
 
   function initBlueprints(IWorld world) internal {
