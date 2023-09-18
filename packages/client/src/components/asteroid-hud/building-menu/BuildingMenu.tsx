@@ -7,6 +7,7 @@ import { getBuildingName } from "src/util/building";
 import { BlockType } from "src/util/constants";
 import { Basic } from "./screens/Basic";
 import { Demolish } from "./screens/Demolish";
+import { DroneFactory } from "./screens/DroneFactory";
 import { MainBase } from "./screens/Mainbase";
 
 export const BuildingMenu: React.FC = () => {
@@ -45,7 +46,7 @@ export const BuildingMenu: React.FC = () => {
       case BlockType.MainBase:
         return <MainBase building={selectedBuilding} />;
       case BlockType.DroneFactory:
-        return null;
+        return <DroneFactory building={selectedBuilding} />;
       default:
         return <Basic building={selectedBuilding} />;
     }
