@@ -4,6 +4,7 @@ pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 // Production Buildings
+import { P_DestroyedUnitsRequirementComponent, ID as P_DestroyedUnitsRequirementComponentID } from "components/P_DestroyedUnitsRequirementComponent.sol";
 import { P_MotherlodeMinedRequirementComponent, ID as P_MotherlodeMinedRequirementComponentID } from "components/P_MotherlodeMinedRequirementComponent.sol";
 import { P_RaidRequirementComponent, ID as P_RaidRequirementComponentID } from "components/P_RaidRequirementComponent.sol";
 import { P_HasBuiltBuildingComponent, ID as P_HasBuiltBuildingComponentID } from "components/P_HasBuiltBuildingComponent.sol";
@@ -272,6 +273,16 @@ library LibInitDebug {
     resourceValues.resources[0] = KimberliteResourceItemID;
     resourceValues.values[0] = 500;
     motherlodeMinedRequirementComponent.set(objective, resourceValues);
+
+    P_DestroyedUnitsRequirementComponent destroyedUnitsRequirementComponent = P_DestroyedUnitsRequirementComponent(
+      world.getComponent(P_DestroyedUnitsRequirementComponentID)
+    );
+    //DebugDestroyedUnitsObjectiveID
+    objective = DebugDestroyedUnitsObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = DebugUnit;
+    resourceValues.values[0] = 1;
+    destroyedUnitsRequirementComponent.set(objective, resourceValues);
   }
 
   function initBlueprints(IWorld world) internal {

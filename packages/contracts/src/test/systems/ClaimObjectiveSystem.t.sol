@@ -800,6 +800,49 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     );
   }
 
+  function testClaimObjectiveDestroyedUnits() public {
+    Arrival memory raidArival = raid(alice);
+    setupUnits(bob, DebugUnit, 1);
+
+    console.log(
+      "bob unit count %s",
+      LibUnits.getUnitCountOnRock(
+        world,
+        addressToEntity(bob),
+        LibUpdateSpaceRock.getPlayerAsteroidEntity(world, addressToEntity(bob)),
+        DebugUnit
+      )
+    );
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(LibEncode.hashKeyEntity(DebugRaidObjectiveID, addressToEntity(alice))),
+      "objective should not have been completed"
+    );
+    vm.roll(block.number + raidArival.arrivalBlock);
+    uint32 currMoves = ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice));
+    vm.prank(alice);
+    console.log(
+      "alice iron: %s",
+      LibMath.getSafe(itemComponent, LibEncode.hashKeyEntity(IronResourceItemID, addressToEntity(alice)))
+    );
+    vm.prank(alice);
+    raidSystem.executeTyped(raidArival.destination);
+    console.log(
+      "alice iron after raid: %s",
+      LibMath.getSafe(itemComponent, LibEncode.hashKeyEntity(IronResourceItemID, addressToEntity(alice)))
+    );
+    assertEq(ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice)), currMoves - 1);
+    assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), raidArival.destination)), 0);
+    assertEq(ownedByComponent.getValue(raidArival.destination), addressToEntity(bob));
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugDestroyedUnitsObjectiveID);
+    assertTrue(
+      hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugDestroyedUnitsObjectiveID, addressToEntity(alice))
+      ),
+      "objective should have been completed"
+    );
+  }
+
   function testFailClaimObjectiveRaid() public {
     vm.prank(alice);
     claimObjectiveSystem.executeTyped(DebugRaidObjectiveID);
