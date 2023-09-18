@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 // external
 import { IWorld } from "solecs/interfaces/IWorld.sol";
-
+import "solecs/SingletonID.sol";
 // comps
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
@@ -19,6 +19,7 @@ import { UnitProductionQueueIndexComponent, ID as UnitProductionQueueIndexCompon
 import { UnitProductionLastQueueIndexComponent, ID as UnitProductionLastQueueIndexComponentID } from "components/UnitProductionLastQueueIndexComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
+import { P_WorldSpeedComponent, ID as P_WorldSpeedComponentID, SPEED_SCALE } from "components/P_WorldSpeedComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { PlayerMotherlodeComponent, ID as PlayerMotherlodeComponentID } from "components/PlayerMotherlodeComponent.sol";
 import { P_MotherlodeMinedRequirementComponent, ID as P_MotherlodeMinedRequirementComponentID } from "components/P_MotherlodeMinedRequirementComponent.sol";
@@ -69,7 +70,12 @@ library LibUpdateSpaceRock {
         unitProductionBuildingEntity,
         unitProductionQueue.resource
       );
-      uint32 trainedUnitsCount = uint32(blockNumber - startTime) / unitTrainingTimeForBuilding;
+
+      uint32 trainedUnitsCount = uint32(
+        ((blockNumber - startTime) * SPEED_SCALE) /
+          (unitTrainingTimeForBuilding *
+            P_WorldSpeedComponent(world.getComponent(P_WorldSpeedComponentID)).getValue(SingletonID))
+      );
 
       if (trainedUnitsCount > 0) {
         if (trainedUnitsCount >= unitProductionQueue.value) {
@@ -83,7 +89,9 @@ library LibUpdateSpaceRock {
           unitProductionQueueComponent.set(buildingQueueEntity, unitProductionQueue);
         }
 
-        startTime += trainedUnitsCount * unitTrainingTimeForBuilding;
+        startTime +=
+          (trainedUnitsCount * unitTrainingTimeForBuilding * SPEED_SCALE) /
+          P_WorldSpeedComponent(world.getComponent(P_WorldSpeedComponentID)).getValue(SingletonID);
         addPlayerUnitsToAsteroid(world, playerEntity, unitProductionQueue.resource, trainedUnitsCount);
       } else {
         isStillClaiming = false;
@@ -233,17 +241,12 @@ library LibUpdateSpaceRock {
   ) internal view returns (uint32) {
     MineableAtComponent mineableAtComponent = MineableAtComponent(world.getComponent(MineableAtComponentID));
     // cannot claim during cooldown
-
     if (blockNumber < mineableAtComponent.getValue(motherlodeEntity)) return 0;
-
-    uint32 blocksSinceLastClaim = uint32(
-      blockNumber - LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).getValue(motherlodeEntity)
-    );
-
+    uint256 blocksSinceLastClaim = blockNumber -
+      LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).getValue(motherlodeEntity);
     // cannot claim if no mining power
     uint32 miningPower = getMiningPower(world, playerEntity, motherlodeEntity);
     if (miningPower == 0) return 0;
-
     MotherlodeResourceComponent motherlodeResourceComponent = MotherlodeResourceComponent(
       world.getComponent(MotherlodeResourceComponentID)
     );
@@ -257,13 +260,14 @@ library LibUpdateSpaceRock {
 
     // cannot claim if resources are maxed out
     if (resource.value == prevMotherlodeResources) return 0;
-
     // get the amount of resources that have been mined
-    uint32 rawIncrease = miningPower * blocksSinceLastClaim;
+    uint32 rawIncrease = uint32(
+      (miningPower * blocksSinceLastClaim * SPEED_SCALE) /
+        P_WorldSpeedComponent(world.getComponent(P_WorldSpeedComponentID)).getValue(SingletonID)
+    );
     if (rawIncrease + prevMotherlodeResources > resource.value) {
       rawIncrease = resource.value - prevMotherlodeResources;
     }
-
     return rawIncrease;
   }
 

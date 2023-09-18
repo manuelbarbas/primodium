@@ -18,9 +18,10 @@ import {
   P_ProductionDependencies,
   P_RequiredResources,
   P_RequiredUtility,
+  P_WorldSpeed,
   Production,
 } from "src/network/components/chainComponents";
-import { BlockType } from "./constants";
+import { BlockType, SPEED_SCALE } from "./constants";
 import { hashAndTrimKeyEntity, hashKeyEntity } from "./encode";
 import { ResourceType } from "./constants";
 import {
@@ -32,6 +33,7 @@ import { world } from "src/network/world";
 import { getUnitStats } from "./trainUnits";
 import { ESpaceRockType } from "./web3/types";
 import { NewNumberComponent } from "src/network/components/customComponents/Component";
+import { SingletonID } from "@latticexyz/network";
 
 // building a building requires resources
 // fetch directly from component data
@@ -131,7 +133,7 @@ export function getFullResourceCount(
     HasValue(OwnedBy, { value: player }),
     HasValue(AsteroidType, { value: ESpaceRockType.Motherlode }),
   ];
-
+  const worldSpeed = P_WorldSpeed.get(SingletonID)?.value ?? SPEED_SCALE;
   const motherlodes = Array.from(runQuery(query));
 
   let motherlodeProduction = 0;
@@ -164,12 +166,52 @@ export function getFullResourceCount(
     ResourceType.Resource === type ? P_MaxStorage : MaxUtility,
     resourceID
   );
-  const production =
-    getResourceCount(Production, resourceID) + motherlodeProduction;
-  const lastClaimedAt = getResourceCount(LastClaimedAt, resourceID);
+
+  const buildingProduction = getResourceCount(Production, resourceID);
+
+  const production = (() => {
+    return buildingProduction + motherlodeProduction;
+  })();
+  const buildingProductionLastClaimedAt = getResourceCount(
+    LastClaimedAt,
+    resourceID
+  );
+
+  const resourcesToClaimFromBuilding = (() => {
+    const toClaim =
+      ((blockNumber - buildingProductionLastClaimedAt) *
+        buildingProduction *
+        SPEED_SCALE) /
+      worldSpeed;
+    if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
+    return toClaim;
+  })();
+
+  const resourcesToClaimFromMotherlode = (() => {
+    if (!mineableResources.includes(resourceID)) return 0;
+    return motherlodes.reduce((prev: number, motherlodeIndex: EntityIndex) => {
+      const entity = world.entities[motherlodeIndex];
+      const resource = getMotherlodeResource(entity);
+
+      const hangar = Hangar.get(entity);
+
+      if (!hangar || resource?.resource !== resourceID) return prev;
+      const lastClaimedAt = LastClaimedAt.get(entity)?.value ?? 0;
+
+      let total = 0;
+      for (let i = 0; i < hangar.units.length; i++) {
+        total += getUnitStats(hangar.units[i]).MIN * hangar.counts[i];
+      }
+      return (
+        prev +
+        total * (((blockNumber - lastClaimedAt) * SPEED_SCALE) / worldSpeed)
+      );
+    }, 0);
+  })();
 
   const resourcesToClaim = (() => {
-    const toClaim = (blockNumber - lastClaimedAt) * production;
+    const toClaim =
+      resourcesToClaimFromBuilding + resourcesToClaimFromMotherlode;
     if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
     return toClaim;
   })();

@@ -270,6 +270,15 @@ export const P_RequiredTile = newComponent(
 );
 
 /* -------------------------------------------------------------------------- */
+/*                                   World                                    */
+/* -------------------------------------------------------------------------- */
+export const P_WorldSpeed = newNumberComponent(world, {
+  id: "P_WorldSpeed",
+  metadata: { contractId: `${commonIdPrefix}P_WorldSpeed` },
+  overridable: true,
+});
+
+/* -------------------------------------------------------------------------- */
 /*                                 Motherlode                                 */
 /* -------------------------------------------------------------------------- */
 
@@ -509,6 +518,8 @@ export default {
   P_Production,
   P_ProductionDependencies,
   P_RequiredTile,
+  // World
+  P_WorldSpeed,
 
   // Motherlodes
   Motherlode,
