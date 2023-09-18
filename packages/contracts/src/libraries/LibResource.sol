@@ -13,7 +13,7 @@ library LibResource {
   /// @notice claims all resources beforehand
   /// @param buildingEntity Entity ID of the building
   /// @param level Target level for the building
-  function spendRequiredResources(bytes32 buildingEntity, uint32 level) internal {
+  function spendRequiredResources(bytes32 buildingEntity, uint256 level) internal {
     bytes32 playerEntity = OwnedBy.get(buildingEntity);
     claimAllResources(playerEntity);
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
@@ -23,8 +23,8 @@ library LibResource {
       EResource resource = EResource(requiredResources.resources[i]);
 
       // check if player has enough resources
-      uint32 resourceCost = requiredResources.amounts[i];
-      uint32 playerResourceCount = ResourceCount.get(playerEntity, resource);
+      uint256 resourceCost = requiredResources.amounts[i];
+      uint256 playerResourceCount = ResourceCount.get(playerEntity, resource);
       require(resourceCost <= playerResourceCount, "[SpendResources] Not enough resources to spend");
 
       // spend resources. note: this will also decrease available utilities
@@ -32,7 +32,7 @@ library LibResource {
 
       // add total utility usage to building
       if (P_IsUtility.get(resource)) {
-        uint32 prevUtilityUsage = UtilitySet.get(buildingEntity, resource);
+        uint256 prevUtilityUsage = UtilitySet.get(buildingEntity, resource);
         UtilitySet.set(buildingEntity, resource, resourceCost + prevUtilityUsage);
       }
     }
@@ -50,11 +50,11 @@ library LibResource {
       if (P_IsUtility.get(resource)) continue;
 
       // you have no production rate
-      uint32 productionRate = ProductionRate.get(playerEntity, resource);
+      uint256 productionRate = ProductionRate.get(playerEntity, resource);
       if (productionRate == 0) continue;
 
       // add resource to storage
-      uint32 unclaimedResource = (productionRate * uint32(block.timestamp - lastClaimed));
+      uint256 unclaimedResource = (productionRate * uint256(block.timestamp - lastClaimed));
       LibStorage.increaseStoredResource(playerEntity, resource, unclaimedResource);
     }
   }
@@ -66,7 +66,7 @@ library LibResource {
     uint8[] memory utilities = UtilitySet.getAll(buildingEntity);
     for (uint256 i = 0; i < utilities.length; i++) {
       EResource utility = EResource(utilities[i]);
-      uint32 utilityUsage = UtilitySet.get(buildingEntity, utility);
+      uint256 utilityUsage = UtilitySet.get(buildingEntity, utility);
       UtilitySet.remove(buildingEntity, utility);
       LibStorage.increaseStoredResource(playerEntity, utility, utilityUsage);
     }

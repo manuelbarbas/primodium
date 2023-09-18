@@ -30,7 +30,7 @@ contract SpawnSystemTest is PrimodiumTest {
   function testUniqueAsteroidPosition() public {
     // Asteroid Count is incremented before creation in createAsteroid(), so the asteroid index starts at one.
     // We create ten asteroids consecutively and check if their assigned coordinates match the expected coordinates based on their order of creation.
-    for (uint32 i = 1; i <= 10; i++) {
+    for (uint256 i = 1; i <= 10; i++) {
       address newAddress = address(uint160(uint256(keccak256(abi.encodePacked(i * 12345)))));
       bytes32 playerEntity = addressToEntity(newAddress);
       PositionData memory position = LibAsteroid.getUniqueAsteroidPosition(i);

@@ -156,9 +156,9 @@ contract BuildSystemTest is PrimodiumTest {
   function testBuildWithRequiredResources() public {
     vm.startPrank(address(world));
     ResourceCount.set(playerEntity, EResource.Iron, 100);
-    uint32 playerResourceCount = ResourceCount.get(playerEntity, EResource.Iron);
+    uint256 playerResourceCount = ResourceCount.get(playerEntity, EResource.Iron);
 
-    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint32[](1));
+    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(IronMinePrototypeId, 1, requiredResourcesData);
@@ -171,13 +171,13 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testBuildWithProductionDependencies() public {
     vm.startPrank(address(world));
-    uint32 originalProduction = 100;
-    uint32 productionReduction = 10;
+    uint256 originalProduction = 100;
+    uint256 productionReduction = 10;
     ProductionRate.set(playerEntity, EResource.Iron, originalProduction);
 
     P_RequiredDependenciesData memory requiredDependenciesData = P_RequiredDependenciesData(
       new uint8[](1),
-      new uint32[](1)
+      new uint256[](1)
     );
     requiredDependenciesData.resources[0] = uint8(EResource.Iron);
     requiredDependenciesData.amounts[0] = productionReduction;
@@ -186,7 +186,7 @@ contract BuildSystemTest is PrimodiumTest {
     switchPrank(alice);
 
     world.build(EBuilding.IronMine, getIronPosition(alice));
-    uint32 productionIncrease = P_Production.get(IronMinePrototypeId, 1).amount;
+    uint256 productionIncrease = P_Production.get(IronMinePrototypeId, 1).amount;
     assertEq(
       ProductionRate.get(playerEntity, EResource.Iron),
       originalProduction - productionReduction + productionIncrease
@@ -196,7 +196,7 @@ contract BuildSystemTest is PrimodiumTest {
   function testBuildWithResourceProductionIncrease() public {
     vm.startPrank(address(world));
 
-    uint32 increase = 69;
+    uint256 increase = 69;
     P_ProductionData memory data = P_ProductionData(EResource.Iron, increase);
     P_Production.set(IronMinePrototypeId, 1, data);
     switchPrank(alice);

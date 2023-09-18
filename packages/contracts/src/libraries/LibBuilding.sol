@@ -27,9 +27,9 @@ library LibBuilding {
     bytes32 playerEntity,
     bytes32 buildingPrototype,
     PositionData memory coord
-  ) internal {
-    bytes32 buildingEntity = LibEncode.getHash(BuildingKey, coord);
-    uint32 level = 1;
+  ) internal returns (bytes32 buildingEntity) {
+    buildingEntity = LibEncode.getHash(BuildingKey, coord);
+    uint256 level = 1;
     require(!Spawned.get(buildingEntity), "[BuildSystem] Building already exists");
 
     require(
@@ -74,7 +74,7 @@ library LibBuilding {
     Bounds memory bounds = getPlayerBounds(playerEntity);
 
     bytes32[] memory tiles = new bytes32[](blueprint.length / 2);
-    for (uint32 i = 0; i < blueprint.length; i += 2) {
+    for (uint256 i = 0; i < blueprint.length; i += 2) {
       PositionData memory relativeCoord = PositionData(blueprint[i], blueprint[i + 1], 0);
       PositionData memory absoluteCoord = PositionData(
         position.x + relativeCoord.x,
@@ -110,7 +110,7 @@ library LibBuilding {
   /// @param playerEntity The entity ID of the player
   /// @return bounds The boundary limits
   function getPlayerBounds(bytes32 playerEntity) internal view returns (Bounds memory bounds) {
-    uint32 playerLevel = Level.get(playerEntity);
+    uint256 playerLevel = Level.get(playerEntity);
     P_AsteroidData memory asteroidDims = P_Asteroid.get();
     DimensionsData memory range = Dimensions.get(ExpansionKey, playerLevel);
 
@@ -134,7 +134,7 @@ library LibBuilding {
   /// @notice Gets the base level for a player
   /// @param playerEntity The entity ID of the player
   /// @return The base level
-  function getBaseLevel(bytes32 playerEntity) internal view returns (uint32) {
+  function getBaseLevel(bytes32 playerEntity) internal view returns (uint256) {
     if (!Spawned.get(playerEntity)) return 0;
     bytes32 mainBase = Home.getMainBase(playerEntity);
     return Level.get(mainBase);
@@ -148,9 +148,9 @@ library LibBuilding {
   function hasRequiredBaseLevel(
     bytes32 playerEntity,
     bytes32 prototype,
-    uint32 level
+    uint256 level
   ) internal view returns (bool) {
-    uint32 mainLevel = getBaseLevel(playerEntity);
+    uint256 mainLevel = getBaseLevel(playerEntity);
     return mainLevel >= P_RequiredBaseLevel.get(prototype, level);
   }
 
