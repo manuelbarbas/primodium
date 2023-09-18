@@ -3,6 +3,8 @@ import { Coord } from "@latticexyz/utils";
 import {
   BuildingType,
   Level,
+  Position,
+  P_MaxLevel,
   P_MaxMoves,
   P_MaxStorage,
   P_Production,
@@ -21,6 +23,8 @@ import {
   BlockType,
 } from "./constants";
 import { hashAndTrimKeyEntity } from "./encode";
+import { getRecipe } from "./resource";
+import { SingletonID } from "@latticexyz/network";
 
 type Dimensions = { width: number; height: number };
 export const blueprintCache = new Map<EntityID, Dimensions>();
@@ -181,14 +185,28 @@ export const getBuildingStorages = (building: EntityID) => {
 };
 
 export const getBuildingInfo = (building: EntityID) => {
-  const buildingType = BuildingType.get(building)?.value;
-  const level = Level.get(building)?.value ?? 1;
+  const buildingType = BuildingType.get(building)?.value ?? SingletonID;
 
-  if (!buildingType) return;
+  const level = Level.get(building)?.value ?? 1;
+  const maxLevel = P_MaxLevel.get(buildingType)?.value ?? 1;
+  const nextLevel = Math.min(level + 1, maxLevel);
 
   const buildingLevelEntity = hashAndTrimKeyEntity(buildingType, level);
+  const buildingNextLevelEntity = hashAndTrimKeyEntity(
+    buildingType,
+    Math.min(level + 1, maxLevel)
+  );
+
   const production = P_Production.get(buildingLevelEntity);
+  const nextLevelProduction = P_Production.get(buildingNextLevelEntity);
+
   const storages = getBuildingStorages(buildingLevelEntity);
+  const nextLevelStorages = getBuildingStorages(buildingNextLevelEntity);
+
+  const upgradeRecipe = getRecipe(buildingNextLevelEntity);
+
+  const mainBaseLvlReq =
+    Level.get(hashAndTrimKeyEntity(buildingType, nextLevel))?.value ?? 1;
 
   let imageUri = "";
   if (BackgroundImage.has(buildingType)) {
@@ -200,12 +218,25 @@ export const getBuildingInfo = (building: EntityID) => {
       ];
   }
 
+  const position = Position.get(building) ?? { x: 0, y: 0 };
+
   return {
     buildingType,
     level,
+    maxLevel,
+    nextLevel,
+    levelEntity: buildingLevelEntity,
     buildingName: `${getBlockTypeName(buildingType)} ${toRomanNumeral(level)}`,
     imageUri,
     production,
     storages,
+    position,
+    upgrade: {
+      production: nextLevelProduction,
+      storages: nextLevelStorages,
+      recipe: upgradeRecipe,
+      mainBaseLvlReq,
+      nextLevelEntity: buildingNextLevelEntity,
+    },
   };
 };

@@ -13,7 +13,7 @@ export const BuildingImage: React.FC<{ building: EntityID }> = ({
 
   return (
     <div
-      className={`relative flex flex-col text-sm items-center cursor-pointer w-16 h-12 border rounded border-cyan-400`}
+      className={`relative flex flex-col text-sm items-center cursor-pointer min-w-[4rem] h-12 border rounded border-cyan-400`}
     >
       <img
         src={buildingInfo.imageUri}

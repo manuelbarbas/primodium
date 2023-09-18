@@ -17,7 +17,10 @@ export const Basic: React.FC<{ building: EntityID }> = ({ building }) => {
   return (
     <Navigator.Screen title={buildingName}>
       <Header building={building} />
-      <Upgrade />
+      <Upgrade building={building} />
+      <Navigator.NavButton className="btn-error btn-sm m-1" to="Demolish">
+        Demolish Building
+      </Navigator.NavButton>
     </Navigator.Screen>
   );
 };

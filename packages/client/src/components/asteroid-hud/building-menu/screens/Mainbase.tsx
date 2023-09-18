@@ -18,7 +18,7 @@ export const MainBase: React.FC<{ building: EntityID }> = ({ building }) => {
   return (
     <Navigator.Screen title={buildingName} className="w-fit">
       <Header building={building} />
-      <Upgrade />
+      <Upgrade building={building} />
       <ExpandRange />
     </Navigator.Screen>
   );

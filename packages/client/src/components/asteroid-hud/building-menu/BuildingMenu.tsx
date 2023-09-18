@@ -1,10 +1,12 @@
 import { useMemo } from "react";
+import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
 import { BuildingType } from "src/network/components/chainComponents";
 import { SelectedBuilding } from "src/network/components/clientComponents";
 import { getBuildingName } from "src/util/building";
 import { BlockType } from "src/util/constants";
 import { Basic } from "./screens/Basic";
+import { Demolish } from "./screens/Demolish";
 import { MainBase } from "./screens/Mainbase";
 
 export const BuildingMenu: React.FC = () => {
@@ -36,10 +38,18 @@ export const BuildingMenu: React.FC = () => {
   };
 
   return (
-    <Navigator initialScreen={buildingName}>
+    <Navigator initialScreen={buildingName} className="w-120">
       {/* <Navigator.Breadcrumbs /> */}
       {renderScreen()}
-      <Navigator.BackButton />
+      <Demolish building={selectedBuilding} />
+      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2">
+        <Button
+          className="btn-square btn-sm font-bold border border-secondary"
+          onClick={() => SelectedBuilding.remove()}
+        >
+          x
+        </Button>
+      </div>
     </Navigator>
   );
 };

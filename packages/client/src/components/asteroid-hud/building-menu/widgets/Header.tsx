@@ -1,28 +1,21 @@
 import { EntityID } from "@latticexyz/recs";
-import { useMemo } from "react";
 import { SecondaryCard } from "src/components/core/Card";
 import { Badge } from "src/components/core/Badge";
 import { BuildingImage } from "src/components/shared/BuildingImage";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
-import { getBuildingInfo } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
 import {
   ResourceImage,
   ResourceType,
   RESOURCE_SCALE,
 } from "src/util/constants";
+import { useBuildingInfo } from "src/hooks/useBuildingInfo";
 
 export const Header: React.FC<{ building: EntityID }> = ({ building }) => {
-  const buildingInfo = useMemo(() => {
-    return getBuildingInfo(building);
-  }, [building]);
-
-  if (!buildingInfo) return null;
-
-  const { buildingName, production, storages } = buildingInfo;
+  const { buildingName, production, storages } = useBuildingInfo(building);
 
   return (
-    <SecondaryCard>
+    <SecondaryCard className="w-full">
       <div className="flex items-center gap-4">
         <BuildingImage building={building} />
         <div>
@@ -46,7 +39,7 @@ export const Header: React.FC<{ building: EntityID }> = ({ building }) => {
           {storages.length !== 0 && (
             <p className="text-xs opacity-75 px-2 mb-1">PROVIDES</p>
           )}
-          <div className="flex flex-wrap gap-1 px-2 min-w-80! w-80">
+          <div className="flex flex-wrap gap-1 px-2">
             {storages &&
               storages.length !== 0 &&
               storages.map((storage) => {
