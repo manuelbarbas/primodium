@@ -34,10 +34,10 @@ export const Upgrade: React.FC<{ building: EntityID }> = ({ building }) => {
     position,
     level,
     maxLevel,
-    upgrade: { recipe, mainBaseLvlReq, nextLevelEntity },
+    upgrade: { recipe, mainBaseLvlReq },
   } = useBuildingInfo(building);
 
-  const hasEnough = useHasEnoughResources(nextLevelEntity);
+  const hasEnough = useHasEnoughResources(recipe);
   const canUpgrade =
     hasEnough && mainBaseLevel >= mainBaseLvlReq && level < maxLevel;
 
@@ -61,7 +61,10 @@ export const Upgrade: React.FC<{ building: EntityID }> = ({ building }) => {
             {recipe.length !== 0 &&
               recipe.map((resource) => {
                 return (
-                  <Badge key={resource.id} className="text-xs gap-2">
+                  <Badge
+                    key={resource.id + resource.type}
+                    className="text-xs gap-2"
+                  >
                     <ResourceIconTooltip
                       name={getBlockTypeName(resource.id)}
                       image={ResourceImage.get(resource.id) ?? ""}

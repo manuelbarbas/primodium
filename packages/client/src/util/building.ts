@@ -23,7 +23,7 @@ import {
   BlockType,
 } from "./constants";
 import { hashAndTrimKeyEntity } from "./encode";
-import { getRecipe } from "./resource";
+import { getRecipe, getRecipeDifference } from "./resource";
 import { SingletonID } from "@latticexyz/network";
 
 type Dimensions = { width: number; height: number };
@@ -203,7 +203,10 @@ export const getBuildingInfo = (building: EntityID) => {
   const storages = getBuildingStorages(buildingLevelEntity);
   const nextLevelStorages = getBuildingStorages(buildingNextLevelEntity);
 
-  const upgradeRecipe = getRecipe(buildingNextLevelEntity);
+  const upgradeRecipe = getRecipeDifference(
+    getRecipe(buildingNextLevelEntity),
+    getRecipe(buildingLevelEntity)
+  );
 
   const mainBaseLvlReq =
     Level.get(hashAndTrimKeyEntity(buildingType, nextLevel))?.value ?? 1;

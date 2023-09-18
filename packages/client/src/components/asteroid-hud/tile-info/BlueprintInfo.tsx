@@ -68,7 +68,7 @@ export const BlueprintInfo: React.FC<{
     ((production?.resourceProductionRate ?? 0) * RESOURCE_SCALE * 60) /
     avgBlockTime;
 
-  const hasEnough = useHasEnoughResources(buildingLevelEntity);
+  const hasEnough = useHasEnoughResources(getRecipe(buildingLevelEntity));
 
   if (!getBlockTypeName(buildingType)) return <></>;
 

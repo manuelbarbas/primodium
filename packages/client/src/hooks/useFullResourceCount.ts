@@ -11,6 +11,9 @@ import {
   OccupiedUtilityResource,
   MaxUtility,
   P_WorldSpeed,
+  Motherlode,
+  P_MotherlodeResource,
+  MotherlodeResource,
 } from "src/network/components/chainComponents";
 import {
   BlockNumber,
@@ -24,6 +27,7 @@ import { ESpaceRockType } from "src/util/web3/types";
 import useResourceCount from "./useResourceCount";
 import { ResourceType, SPEED_SCALE } from "src/util/constants";
 import { SingletonID } from "@latticexyz/network";
+import { hashKeyEntity } from "src/util/encode";
 
 export function useFullResourceCount(
   resourceID: EntityID,
@@ -51,7 +55,8 @@ export function useFullResourceCount(
 
   //motherlode//
   const motherlodeProduction = useMemo(() => {
-    if (!mineableResources.includes(resourceID)) return 0;
+    if (!mineableResources.includes(resourceID) || type == ResourceType.Utility)
+      return 0;
     return motherlodes.reduce((prev: number, motherlodeIndex: EntityIndex) => {
       const entity = world.entities[motherlodeIndex];
       const resource = getMotherlodeResource(entity);
@@ -88,20 +93,34 @@ export function useFullResourceCount(
 
   //motherlode//
   const resourcesToClaimFromMotherlode = useMemo(() => {
-    if (!mineableResources.includes(resourceID)) return 0;
+    if (!mineableResources.includes(resourceID) || type == ResourceType.Utility)
+      return 0;
     return motherlodes.reduce((prev: number, motherlodeIndex: EntityIndex) => {
       const entity = world.entities[motherlodeIndex];
-      const resource = getMotherlodeResource(entity);
 
       const hangar = Hangar.get(entity);
 
-      if (!hangar || resource?.resource !== resourceID) return prev;
+      const motherlodeData = Motherlode.get(entity);
+      if (!motherlodeData) return prev;
+
+      const { resource, maxAmount } = P_MotherlodeResource.get(
+        hashKeyEntity(motherlodeData?.motherlodeType, motherlodeData.size),
+        { resource: "0" as EntityID, maxAmount: 0 }
+      );
+
+      const resourceMined = MotherlodeResource.get(
+        hashKeyEntity(resource, entity),
+        { value: 0 }
+      ).value;
+
+      if (!hangar || resource !== resourceID) return prev;
       const lastClaimedAt = LastClaimedAt.get(entity)?.value ?? 0;
 
       let total = 0;
       for (let i = 0; i < hangar.units.length; i++) {
         total += getUnitStats(hangar.units[i]).MIN * hangar.counts[i];
       }
+      if (total + resourceMined > maxAmount) total = maxAmount - resourceMined;
       return (
         prev +
         total * (((blockNumber - lastClaimedAt) * SPEED_SCALE) / worldSpeed)
