@@ -16,6 +16,8 @@ import { ClaimObjectiveSystem, ID as ClaimObjectiveSystemID } from "systems/Clai
 import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "systems/UpgradeBuildingSystem.sol";
 import { ResearchSystem, ID as ResearchSystemID } from "systems/ResearchSystem.sol";
 //components
+import { P_HasBuiltBuildingComponent, ID as P_HasBuiltBuildingComponentID } from "components/P_HasBuiltBuildingComponent.sol";
+import { P_BuildingCountRequirementComponent, ID as P_BuildingCountRequirementComponentID } from "components/P_BuildingCountRequirementComponent.sol";
 import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
 import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 import { P_RequiredResearchComponent, ID as P_RequiredResearchComponentID } from "components/P_RequiredResearchComponent.sol";
@@ -463,6 +465,106 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     assertTrue(
       hasCompletedObjectiveComponent.has(
         LibEncode.hashKeyEntity(DebugResourceProductionObjectiveID, addressToEntity(alice))
+      ),
+      "objective should have been completed"
+    );
+  }
+
+  function testClaimObjectiveBuildingCount() public {
+    vm.prank(alice);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugNumberOfBuiltBuildingTypeObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
+
+    P_BuildingCountRequirementComponent buildingCountRequirementComponent = P_BuildingCountRequirementComponent(
+      world.getComponent(P_BuildingCountRequirementComponentID)
+    );
+    assertTrue(
+      buildingCountRequirementComponent.has(DebugNumberOfBuiltBuildingTypeObjectiveID),
+      "no building required for objective"
+    );
+    vm.prank(alice);
+    buildSystem.executeTyped(DebugSimpleBuildingNoReqsID, getCoord2(alice));
+    vm.prank(alice);
+    buildSystem.executeTyped(DebugSimpleBuildingNoReqsID, getCoord3(alice));
+
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugNumberOfBuiltBuildingTypeObjectiveID);
+    assertTrue(
+      hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugNumberOfBuiltBuildingTypeObjectiveID, addressToEntity(alice))
+      ),
+      "objective should have been completed"
+    );
+  }
+
+  function testFailClaimObjectiveBuildingCount() public {
+    vm.prank(alice);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugNumberOfBuiltBuildingTypeObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
+
+    P_BuildingCountRequirementComponent buildingCountRequirementComponent = P_BuildingCountRequirementComponent(
+      world.getComponent(P_BuildingCountRequirementComponentID)
+    );
+    assertTrue(
+      buildingCountRequirementComponent.has(DebugNumberOfBuiltBuildingTypeObjectiveID),
+      "no building required for objective"
+    );
+
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugNumberOfBuiltBuildingTypeObjectiveID);
+  }
+
+  function testClaimObjectiveHasBuiltBuilding() public {
+    vm.prank(alice);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugBuiltBuildingTypeObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
+    P_HasBuiltBuildingComponent hasBuiltBuildingComponent = P_HasBuiltBuildingComponent(
+      world.getComponent(P_HasBuiltBuildingComponentID)
+    );
+    assertTrue(hasBuiltBuildingComponent.has(DebugBuiltBuildingTypeObjectiveID), "no building required for objective");
+    vm.prank(alice);
+    buildSystem.executeTyped(DebugSimpleBuildingNoReqsID, getCoord2(alice));
+
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugBuiltBuildingTypeObjectiveID);
+    assertTrue(
+      hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugBuiltBuildingTypeObjectiveID, addressToEntity(alice))
+      ),
+      "objective should have been completed"
+    );
+  }
+
+  function testFailClaimObjectiveHasBuiltBuilding() public {
+    vm.prank(alice);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugBuiltBuildingTypeObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
+    P_HasBuiltBuildingComponent hasBuiltBuildingComponent = P_HasBuiltBuildingComponent(
+      world.getComponent(P_HasBuiltBuildingComponentID)
+    );
+    assertTrue(hasBuiltBuildingComponent.has(DebugBuiltBuildingTypeObjectiveID), "no building required for objective");
+
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugBuiltBuildingTypeObjectiveID);
+    assertTrue(
+      hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugBuiltBuildingTypeObjectiveID, addressToEntity(alice))
       ),
       "objective should have been completed"
     );

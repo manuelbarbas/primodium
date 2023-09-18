@@ -4,6 +4,8 @@ pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 // Production Buildings
+import { P_HasBuiltBuildingComponent, ID as P_HasBuiltBuildingComponentID } from "components/P_HasBuiltBuildingComponent.sol";
+import { P_BuildingCountRequirementComponent, ID as P_BuildingCountRequirementComponentID } from "components/P_BuildingCountRequirementComponent.sol";
 import { P_ObjectiveRequirementComponent, ID as P_ObjectiveRequirementComponentID } from "components/P_ObjectiveRequirementComponent.sol";
 import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID } from "components/P_RequiredUtilityComponent.sol";
 import { P_UnitRequirementComponent, ID as P_UnitRequirementComponentID } from "components/P_UnitRequirementComponent.sol";
@@ -205,6 +207,23 @@ library LibInitDebug {
     resourceValues.resources[0] = IronResourceItemID;
     resourceValues.values[0] = 10;
     productionDependenciesComponent.set(objective, resourceValues);
+
+    P_HasBuiltBuildingComponent hasBuiltBuildingComponent = P_HasBuiltBuildingComponent(
+      world.getComponent(P_HasBuiltBuildingComponentID)
+    );
+    //DebugBuiltBuildingTypeObjectiveID
+    objective = DebugBuiltBuildingTypeObjectiveID;
+    hasBuiltBuildingComponent.set(objective, DebugSimpleBuildingNoReqsID);
+
+    //DebugNumberOfBuiltBuildingTypeObjectiveID
+    objective = DebugNumberOfBuiltBuildingTypeObjectiveID;
+    P_BuildingCountRequirementComponent buildingCountRequirementComponent = P_BuildingCountRequirementComponent(
+      world.getComponent(P_BuildingCountRequirementComponentID)
+    );
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = DebugSimpleBuildingNoReqsID;
+    resourceValues.values[0] = 2;
+    buildingCountRequirementComponent.set(objective, resourceValues);
   }
 
   function initBlueprints(IWorld world) internal {
