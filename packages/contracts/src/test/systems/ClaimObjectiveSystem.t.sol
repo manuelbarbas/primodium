@@ -13,6 +13,7 @@ import { ReceiveReinforcementSystem, ID as ReceiveReinforcementSystemID } from "
 import { RecallReinforcementsSystem, ID as RecallReinforcementsSystemID } from "systems/RecallReinforcementsSystem.sol";
 import { RecallUnitsFromMotherlodeSystem, ID as RecallUnitsFromMotherlodeSystemID } from "systems/RecallUnitsFromMotherlodeSystem.sol";
 import { ClaimObjectiveSystem, ID as ClaimObjectiveSystemID } from "systems/ClaimObjectiveSystem.sol";
+import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "systems/UpgradeBuildingSystem.sol";
 //components
 import { P_ObjectiveRequirementComponent, ID as P_ObjectiveRequirementComponentID } from "components/P_ObjectiveRequirementComponent.sol";
 import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID } from "components/P_RequiredUtilityComponent.sol";
@@ -23,7 +24,7 @@ import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "c
 import { OccupiedUtilityResourceComponent, ID as OccupiedUtilityResourceComponentID } from "components/OccupiedUtilityResourceComponent.sol";
 import { P_UnitTravelSpeedComponent, ID as P_UnitTravelSpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
-
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
 import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
@@ -63,6 +64,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   ReceiveReinforcementSystem public receiveReinforcementSystem;
   RecallReinforcementsSystem public recallReinforcementsSystem;
   RecallUnitsFromMotherlodeSystem public recallUnitsFromMotherlodeSystem;
+  UpgradeBuildingSystem public upgradeBuildingSystem;
 
   function setUp() public override {
     super.setUp();
@@ -78,6 +80,8 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     receiveReinforcementSystem = ReceiveReinforcementSystem(system(ReceiveReinforcementSystemID));
     recallReinforcementsSystem = RecallReinforcementsSystem(system(RecallReinforcementsSystemID));
     recallUnitsFromMotherlodeSystem = RecallUnitsFromMotherlodeSystem(system(RecallUnitsFromMotherlodeSystemID));
+    upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
+
     occupiedUtilityResourceComponent = OccupiedUtilityResourceComponent(
       world.getComponent(OccupiedUtilityResourceComponentID)
     );
@@ -309,6 +313,54 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
     vm.prank(alice);
     claimObjectiveSystem.executeTyped(DebugCompletedPriorObjectiveID);
+  }
+
+  function testClaimObjectiveMainBaseLevel() public {
+    vm.startPrank(alice);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugMainBaseLevelObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
+
+    LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
+    assertTrue(levelComponent.has(DebugMainBaseLevelObjectiveID), "no Main Base level is required for objective");
+    componentDevSystem.executeTyped(
+      P_RequiredResourcesComponentID,
+      LibEncode.hashKeyEntity(MainBaseID, 2),
+      abi.encode()
+    );
+    upgradeBuildingSystem.executeTyped(getMainBaseCoord(alice));
+    claimObjectiveSystem.executeTyped(DebugMainBaseLevelObjectiveID);
+    assertTrue(
+      hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugMainBaseLevelObjectiveID, addressToEntity(alice))
+      ),
+      "objective should have been completed"
+    );
+    vm.stopPrank();
+  }
+
+  function testFailClaimObjectiveMainBaseLevel() public {
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugMainBaseLevelObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
+
+    LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
+    assertTrue(levelComponent.has(DebugMainBaseLevelObjectiveID), "no prior objective required for objective");
+
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugMainBaseLevelObjectiveID);
+    assertTrue(
+      hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugMainBaseLevelObjectiveID, addressToEntity(alice))
+      ),
+      "objective should have been completed"
+    );
   }
 
   // todo: check motherlode movement rules
