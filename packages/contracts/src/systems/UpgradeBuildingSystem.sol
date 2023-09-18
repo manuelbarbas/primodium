@@ -13,7 +13,7 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
     buildingEntity = LibBuilding.getBuildingFromCoord(coord);
     require(buildingEntity != 0, "[UpgradeBuildingSystem] no building at this coordinate");
 
-    uint32 targetLevel = Level.get(buildingEntity) + 1;
+    uint256 targetLevel = Level.get(buildingEntity) + 1;
     require(targetLevel > 1, "[UpgradeBuildingSystem] Cannot upgrade a non-building");
 
     bytes32 playerEntity = addressToEntity(msg.sender);
@@ -23,7 +23,7 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
     );
 
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
-    uint32 maxLevel = P_MaxLevel.get(buildingPrototype);
+    uint256 maxLevel = P_MaxLevel.get(buildingPrototype);
     require((targetLevel <= maxLevel), "[UpgradeBuildingSystem] Building has reached max level");
 
     require(

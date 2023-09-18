@@ -13,22 +13,22 @@ library LibProduction {
   function upgradeResourceProduction(
     bytes32 playerEntity,
     bytes32 buildingEntity,
-    uint32 targetLevel
+    uint256 targetLevel
   ) internal {
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
 
     P_ProductionData memory prototypeProduction = P_Production.get(buildingPrototype, targetLevel);
     if (prototypeProduction.amount == 0) return;
     EResource resource = EResource(prototypeProduction.resource);
-    uint32 prevLevelPrototypeProduction = targetLevel > 1
+    uint256 prevLevelPrototypeProduction = targetLevel > 1
       ? P_Production.get(buildingPrototype, targetLevel - 1).amount
       : 0;
-    uint32 addedProductionRate = prototypeProduction.amount - prevLevelPrototypeProduction;
+    uint256 addedProductionRate = prototypeProduction.amount - prevLevelPrototypeProduction;
     if (P_IsUtility.get(resource)) {
       LibStorage.increaseMaxUtility(playerEntity, resource, addedProductionRate);
       return;
     }
-    uint32 productionRate = ProductionRate.get(playerEntity, resource) + addedProductionRate;
+    uint256 productionRate = ProductionRate.get(playerEntity, resource) + addedProductionRate;
     ProductionRate.set(playerEntity, resource, productionRate);
   }
 
@@ -37,7 +37,7 @@ library LibProduction {
   /// @param buildingEntity Entity ID of the building to clear
   function clearResourceProduction(bytes32 playerEntity, bytes32 buildingEntity) internal {
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
-    uint32 buildingLevel = Level.get(buildingEntity);
+    uint256 buildingLevel = Level.get(buildingEntity);
 
     P_ProductionData memory prototypeProduction = P_Production.get(buildingPrototype, buildingLevel);
     if (prototypeProduction.amount == 0) return;
@@ -47,7 +47,7 @@ library LibProduction {
       return;
     }
 
-    uint32 prevProductionRate = ProductionRate.get(playerEntity, resource);
+    uint256 prevProductionRate = ProductionRate.get(playerEntity, resource);
     require(
       prevProductionRate >= prototypeProduction.amount,
       "[ProductionUsage] not enough production rate to reduce usage"

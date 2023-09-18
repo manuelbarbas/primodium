@@ -29,7 +29,7 @@ export const config = mudConfig({
     /* ----------------------------------- Dev ---------------------------------- */
     Counter: {
       keySchema: {},
-      schema: "uint32",
+      schema: "uint256",
     },
 
     /* --------------------------------- Common --------------------------------- */
@@ -58,7 +58,7 @@ export const config = mudConfig({
 
     Level: {
       keySchema: { entity: "bytes32" },
-      schema: "uint32",
+      schema: "uint256",
     },
 
     Spawned: {
@@ -85,7 +85,7 @@ export const config = mudConfig({
     },
     AsteroidCount: {
       keySchema: {},
-      schema: "uint32",
+      schema: "uint256",
     },
 
     RockType: {
@@ -95,7 +95,7 @@ export const config = mudConfig({
 
     // note: dimensions will always be positive, but are int32s so they work with coords
     Dimensions: {
-      keySchema: { key: "bytes32", level: "uint32" },
+      keySchema: { key: "bytes32", level: "uint256" },
       schema: {
         x: "int32",
         y: "int32",
@@ -117,7 +117,7 @@ export const config = mudConfig({
     // tracks the max resource a player can store
     MaxResourceCount: {
       keySchema: { entity: "bytes32", resource: "EResource" },
-      schema: "uint32",
+      schema: "uint256",
     },
 
     LastClaimedAt: {
@@ -129,7 +129,7 @@ export const config = mudConfig({
 
     ResourceCount: {
       keySchema: { entity: "bytes32", resource: "EResource" },
-      schema: "uint32",
+      schema: "uint256",
     },
 
     // Used in the building utilities set
@@ -137,7 +137,7 @@ export const config = mudConfig({
       keySchema: { entity: "bytes32", utility: "EResource" },
       schema: {
         index: "uint256",
-        quantity: "uint32",
+        quantity: "uint256",
       },
     },
     Set_Utilities: {
@@ -151,25 +151,25 @@ export const config = mudConfig({
       schema: "EResource",
     },
     P_RequiredBaseLevel: {
-      keySchema: { prototype: "bytes32", level: "uint32" },
-      schema: "uint32",
+      keySchema: { prototype: "bytes32", level: "uint256" },
+      schema: "uint256",
     },
 
     P_RequiredResources: {
-      keySchema: { prototype: "bytes32", level: "uint32" },
+      keySchema: { prototype: "bytes32", level: "uint256" },
       schema: {
         // mud doesnt recognize EResource arrays so we will manually convert them
         resources: "uint8[]",
-        amounts: "uint32[]",
+        amounts: "uint256[]",
       },
     },
 
     P_RequiredDependencies: {
-      keySchema: { prototype: "bytes32", level: "uint32" },
+      keySchema: { prototype: "bytes32", level: "uint256" },
       schema: {
         // mud doesnt recognize EResource arrays so we will manually convert them
         resources: "uint8[]",
-        amounts: "uint32[]",
+        amounts: "uint256[]",
       },
     },
 
@@ -193,25 +193,25 @@ export const config = mudConfig({
 
     P_MaxLevel: {
       keySchema: { prototype: "bytes32" },
-      schema: "uint32",
+      schema: "uint256",
     },
 
     P_Production: {
-      keySchema: { prototype: "bytes32", level: "uint32" },
+      keySchema: { prototype: "bytes32", level: "uint256" },
       schema: {
         // mud doesnt recognize EResource arrays so we will manually convert them
         resource: "EResource",
-        amount: "uint32",
+        amount: "uint256",
       },
     },
 
     P_ByLevelMaxResourceUpgrades: {
-      keySchema: { prototype: "bytes32", resource: "EResource", level: "uint32" },
-      schema: "uint32",
+      keySchema: { prototype: "bytes32", resource: "EResource", level: "uint256" },
+      schema: "uint256",
     },
 
     P_ListMaxResourceUpgrades: {
-      keySchema: { prototype: "bytes32", level: "uint32" },
+      keySchema: { prototype: "bytes32", level: "uint256" },
       schema: "uint8[]",
     },
 
@@ -227,7 +227,7 @@ export const config = mudConfig({
 
     ProductionRate: {
       keySchema: { entity: "bytes32", resource: "EResource" },
-      schema: "uint32",
+      schema: "uint256",
     },
   },
 });

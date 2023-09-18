@@ -10,7 +10,7 @@ contract LibProductionTest is PrimodiumTest {
   bytes32 playerEntity = "playerEntity";
   bytes32 buildingEntity = "buildingEntity";
   bytes32 buildingPrototype = "buildingPrototype";
-  uint32 level = 1;
+  uint256 level = 1;
 
   function setUp() public override {
     super.setUp();
@@ -20,9 +20,9 @@ contract LibProductionTest is PrimodiumTest {
   }
 
   function testUpgradeResourceProductionNonUtility() public {
-    uint32 amount1 = 20;
-    uint32 amount2 = 40;
-    uint32 amount3 = 57;
+    uint256 amount1 = 20;
+    uint256 amount2 = 40;
+    uint256 amount3 = 57;
 
     P_ProductionData memory data1 = P_ProductionData(EResource.Iron, amount1);
     P_ProductionData memory data2 = P_ProductionData(EResource.Iron, amount2);
@@ -43,9 +43,9 @@ contract LibProductionTest is PrimodiumTest {
   function testUpgradeResourceProductionUtility() public {
     P_IsUtility.set(EResource.Iron, true);
 
-    uint32 amount1 = 20;
-    uint32 amount2 = 40;
-    uint32 amount3 = 57;
+    uint256 amount1 = 20;
+    uint256 amount2 = 40;
+    uint256 amount3 = 57;
     P_ProductionData memory data1 = P_ProductionData(EResource.Iron, amount1);
     P_ProductionData memory data2 = P_ProductionData(EResource.Iron, amount2);
     P_ProductionData memory data3 = P_ProductionData(EResource.Iron, amount3);
@@ -67,8 +67,8 @@ contract LibProductionTest is PrimodiumTest {
   function testClearResourceProductionUtility() public {
     P_IsUtility.set(EResource.Iron, true);
     LibProduction.clearResourceProduction(playerEntity, buildingEntity);
-    uint32 startingAmount = 50;
-    uint32 amountCleared = 20;
+    uint256 startingAmount = 50;
+    uint256 amountCleared = 20;
     MaxResourceCount.set(playerEntity, EResource.Iron, 50);
 
     P_ProductionData memory data1 = P_ProductionData(EResource.Iron, amountCleared);
@@ -79,8 +79,8 @@ contract LibProductionTest is PrimodiumTest {
   }
 
   function testClearResourceProductionNonUtility() public {
-    uint32 startingAmount = 50;
-    uint32 amountCleared = 20;
+    uint256 startingAmount = 50;
+    uint256 amountCleared = 20;
     ProductionRate.set(playerEntity, EResource.Iron, 50);
 
     P_ProductionData memory data1 = P_ProductionData(EResource.Iron, amountCleared);

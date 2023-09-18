@@ -11,7 +11,7 @@ contract UpgradeRangeSystem is PrimodiumSystem {
   function upgradeRange() public {
     bytes32 playerEntity = addressToEntity(msg.sender);
 
-    uint32 targetLevel = Level.get(playerEntity) + 1;
+    uint256 targetLevel = Level.get(playerEntity) + 1;
     require(P_MaxLevel.get(ExpansionKey) >= targetLevel, "[UpgradeRangeSystem] Max level reached");
     require(
       LibBuilding.hasRequiredBaseLevel(playerEntity, ExpansionKey, targetLevel),
