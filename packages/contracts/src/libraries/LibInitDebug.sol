@@ -4,6 +4,8 @@ pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 // Production Buildings
+import { P_UnitRewardComponent, ID as P_UnitRewardComponentID } from "components/P_UnitRewardComponent.sol";
+import { P_ResourceRewardComponent, ID as P_ResourceRewardComponentID } from "components/P_ResourceRewardComponent.sol";
 import { P_DestroyedUnitsRequirementComponent, ID as P_DestroyedUnitsRequirementComponentID } from "components/P_DestroyedUnitsRequirementComponent.sol";
 import { P_MotherlodeMinedRequirementComponent, ID as P_MotherlodeMinedRequirementComponentID } from "components/P_MotherlodeMinedRequirementComponent.sol";
 import { P_RaidRequirementComponent, ID as P_RaidRequirementComponentID } from "components/P_RaidRequirementComponent.sol";
@@ -283,6 +285,21 @@ library LibInitDebug {
     resourceValues.resources[0] = DebugUnit;
     resourceValues.values[0] = 1;
     destroyedUnitsRequirementComponent.set(objective, resourceValues);
+
+    P_UnitRewardComponent unitRewardComponent = P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID));
+    //DebugUnitsRewardObjectiveID
+    objective = DebugUnitsRewardObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = DebugUnit;
+    resourceValues.values[0] = 1;
+    unitRewardComponent.set(objective, resourceValues);
+
+    //DebugResourceRewardObjectiveID
+    objective = DebugResourceRewardObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = SulfurResourceItemID;
+    resourceValues.values[0] = 100;
+    P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceValues);
   }
 
   function initBlueprints(IWorld world) internal {

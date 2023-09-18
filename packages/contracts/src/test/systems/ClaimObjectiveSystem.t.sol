@@ -16,6 +16,9 @@ import { ClaimObjectiveSystem, ID as ClaimObjectiveSystemID } from "systems/Clai
 import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "systems/UpgradeBuildingSystem.sol";
 import { ResearchSystem, ID as ResearchSystemID } from "systems/ResearchSystem.sol";
 //components
+import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "components/P_MaxStorageComponent.sol";
+import { P_UnitRewardComponent, ID as P_UnitRewardComponentID } from "components/P_UnitRewardComponent.sol";
+import { P_ResourceRewardComponent, ID as P_ResourceRewardComponentID } from "components/P_ResourceRewardComponent.sol";
 import { MotherlodeComponent, ID as MotherlodeComponentID } from "components/MotherlodeComponent.sol";
 import { P_HasBuiltBuildingComponent, ID as P_HasBuiltBuildingComponentID } from "components/P_HasBuiltBuildingComponent.sol";
 import { P_BuildingCountRequirementComponent, ID as P_BuildingCountRequirementComponentID } from "components/P_BuildingCountRequirementComponent.sol";
@@ -570,6 +573,107 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
       ),
       "objective should have been completed"
     );
+  }
+
+  function testClaimObjectiveResourceReward() public {
+    vm.prank(alice);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugResourceRewardObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
+    ResourceValues memory resourceValues = P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID))
+      .getValue(DebugResourceRewardObjectiveID);
+    assertTrue(resourceValues.resources.length > 0, "objective should have resource rewards");
+    for (uint256 i = 0; i < resourceValues.resources.length; i++) {
+      vm.prank(alice);
+      componentDevSystem.executeTyped(
+        P_MaxStorageComponentID,
+        LibEncode.hashKeyEntity(resourceValues.resources[i], addressToEntity(alice)),
+        abi.encode(resourceValues.values[i])
+      );
+    }
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugResourceRewardObjectiveID);
+    assertTrue(
+      hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugResourceRewardObjectiveID, addressToEntity(alice))
+      ),
+      "objective should have been completed"
+    );
+    for (uint256 i = 0; i < resourceValues.resources.length; i++) {
+      vm.prank(alice);
+      assertEq(
+        LibMath.getSafe(itemComponent, LibEncode.hashKeyEntity(resourceValues.resources[i], addressToEntity(alice))),
+        resourceValues.values[i],
+        "alice should have received resource reward"
+      );
+    }
+  }
+
+  function testFailClaimObjectiveResourceReward() public {
+    vm.prank(alice);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugResourceRewardObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
+    ResourceValues memory resourceValues = P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID))
+      .getValue(DebugResourceRewardObjectiveID);
+    assertTrue(resourceValues.resources.length > 0, "objective should have resource rewards");
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugResourceRewardObjectiveID);
+  }
+
+  function testClaimObjectiveUnitReward() public {
+    vm.prank(alice);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(LibEncode.hashKeyEntity(DebugUnitsRewardObjectiveID, addressToEntity(alice))),
+      "objective should not have been completed"
+    );
+    ResourceValues memory resourceValues = P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).getValue(
+      DebugUnitsRewardObjectiveID
+    );
+    assertTrue(resourceValues.resources.length > 0, "objective should have unit rewards");
+    componentDevSystem.executeTyped(
+      MaxUtilityComponentID,
+      LibEncode.hashKeyEntity(HousingUtilityResourceID, addressToEntity(alice)),
+      abi.encode(100)
+    );
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugUnitsRewardObjectiveID);
+    assertTrue(
+      hasCompletedObjectiveComponent.has(LibEncode.hashKeyEntity(DebugUnitsRewardObjectiveID, addressToEntity(alice))),
+      "objective should have been completed"
+    );
+    for (uint256 i = 0; i < resourceValues.resources.length; i++) {
+      assertEq(
+        LibUnits.getUnitCountOnRock(
+          world,
+          addressToEntity(alice),
+          getHomeAsteroidEntity(alice),
+          resourceValues.resources[i]
+        ),
+        resourceValues.values[i],
+        "alice should have unit reward"
+      );
+    }
+  }
+
+  function testFailClaimObjectiveUnitReward() public {
+    vm.prank(alice);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(LibEncode.hashKeyEntity(DebugUnitsRewardObjectiveID, addressToEntity(alice))),
+      "objective should not have been completed"
+    );
+    ResourceValues memory resourceValues = P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).getValue(
+      DebugUnitsRewardObjectiveID
+    );
+    assertTrue(resourceValues.resources.length > 0, "objective should have unit rewards");
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugUnitsRewardObjectiveID);
   }
 
   // todo: check motherlode movement rules

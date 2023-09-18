@@ -34,7 +34,6 @@ library LibReward {
 
     ResourceValues memory rewardResourceValues = resourceRewardComponent.getValue(objectiveEntity);
     for (uint256 i = 0; i < rewardResourceValues.resources.length; i++) {
-      uint256 resourceEntity = LibEncode.hashKeyEntity(rewardResourceValues.resources[i], playerEntity);
       if (
         LibStorage.getResourceStorageSpace(world, playerEntity, rewardResourceValues.resources[i]) <
         rewardResourceValues.values[i]
