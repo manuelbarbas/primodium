@@ -4,6 +4,7 @@ pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 // Production Buildings
+import { P_MotherlodeMinedRequirementComponent, ID as P_MotherlodeMinedRequirementComponentID } from "components/P_MotherlodeMinedRequirementComponent.sol";
 import { P_RaidRequirementComponent, ID as P_RaidRequirementComponentID } from "components/P_RaidRequirementComponent.sol";
 import { P_HasBuiltBuildingComponent, ID as P_HasBuiltBuildingComponentID } from "components/P_HasBuiltBuildingComponent.sol";
 import { P_BuildingCountRequirementComponent, ID as P_BuildingCountRequirementComponentID } from "components/P_BuildingCountRequirementComponent.sol";
@@ -143,7 +144,12 @@ library LibInitDebug {
     isObjectiveComponent.set(DebugBuiltBuildingTypeObjectiveID);
     isObjectiveComponent.set(DebugNumberOfBuiltBuildingTypeObjectiveID);
     isObjectiveComponent.set(DebugRaidObjectiveID);
-    isObjectiveComponent.set(DebugMotherlodeMiningObjectiveID);
+
+    isObjectiveComponent.set(DebugMotherlodeMiningTitaniumObjectiveID);
+    isObjectiveComponent.set(DebugMotherlodeMiningPlatinumObjectiveID);
+    isObjectiveComponent.set(DebugMotherlodeMiningIridiumObjectiveID);
+    isObjectiveComponent.set(DebugMotherlodeMiningKimberliteObjectiveID);
+
     isObjectiveComponent.set(DebugDestroyedUnitsObjectiveID);
     isObjectiveComponent.set(DebugResourceRewardObjectiveID);
     isObjectiveComponent.set(DebugUnitsRewardObjectiveID);
@@ -235,6 +241,37 @@ library LibInitDebug {
     resourceValues.resources[0] = IronResourceItemID;
     resourceValues.values[0] = 40;
     raidRequirementComponent.set(objective, resourceValues);
+
+    P_MotherlodeMinedRequirementComponent motherlodeMinedRequirementComponent = P_MotherlodeMinedRequirementComponent(
+      world.getComponent(P_MotherlodeMinedRequirementComponentID)
+    );
+    //DebugMotherlodeMiningTitaniumObjectiveID
+    objective = DebugMotherlodeMiningTitaniumObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = TitaniumResourceItemID;
+    resourceValues.values[0] = 500;
+    motherlodeMinedRequirementComponent.set(objective, resourceValues);
+
+    //DebugMotherlodeMiningPlatinumObjectiveID
+    objective = DebugMotherlodeMiningPlatinumObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = PlatinumResourceItemID;
+    resourceValues.values[0] = 500;
+    motherlodeMinedRequirementComponent.set(objective, resourceValues);
+
+    //DebugMotherlodeMiningIridiumObjectiveID
+    objective = DebugMotherlodeMiningIridiumObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = IridiumResourceItemID;
+    resourceValues.values[0] = 500;
+    motherlodeMinedRequirementComponent.set(objective, resourceValues);
+
+    //DebugMotherlodeMiningKimberliteObjectiveID
+    objective = DebugMotherlodeMiningKimberliteObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = KimberliteResourceItemID;
+    resourceValues.values[0] = 500;
+    motherlodeMinedRequirementComponent.set(objective, resourceValues);
   }
 
   function initBlueprints(IWorld world) internal {

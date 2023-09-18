@@ -99,7 +99,18 @@ uint256 constant DebugNumberOfBuiltBuildingTypeObjectiveID = uint256(
   keccak256("block.DebugNumberOfBuiltBuildingTypeObjective")
 );
 uint256 constant DebugRaidObjectiveID = uint256(keccak256("block.DebugRaidObjective"));
-uint256 constant DebugMotherlodeMiningObjectiveID = uint256(keccak256("block.DebugMotherlodeMiningObjective"));
+uint256 constant DebugMotherlodeMiningTitaniumObjectiveID = uint256(
+  keccak256("block.DebugMotherlodeMiningTitaniumObjective")
+);
+uint256 constant DebugMotherlodeMiningPlatinumObjectiveID = uint256(
+  keccak256("block.DebugMotherlodeMiningPlatinumObjective")
+);
+uint256 constant DebugMotherlodeMiningIridiumObjectiveID = uint256(
+  keccak256("block.DebugMotherlodeMiningIridiumObjective")
+);
+uint256 constant DebugMotherlodeMiningKimberliteObjectiveID = uint256(
+  keccak256("block.DebugMotherlodeMiningKimberliteObjective")
+);
 uint256 constant DebugDestroyedUnitsObjectiveID = uint256(keccak256("block.DebugDestroyedUnitsObjective"));
 uint256 constant DebugResourceRewardObjectiveID = uint256(keccak256("block.DebugResourceRewardObjective"));
 uint256 constant DebugUnitsRewardObjectiveID = uint256(keccak256("block.DebugUnitsRewardObjectiveID"));

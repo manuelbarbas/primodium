@@ -16,6 +16,7 @@ import { ClaimObjectiveSystem, ID as ClaimObjectiveSystemID } from "systems/Clai
 import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "systems/UpgradeBuildingSystem.sol";
 import { ResearchSystem, ID as ResearchSystemID } from "systems/ResearchSystem.sol";
 //components
+import { MotherlodeComponent, ID as MotherlodeComponentID } from "components/MotherlodeComponent.sol";
 import { P_HasBuiltBuildingComponent, ID as P_HasBuiltBuildingComponentID } from "components/P_HasBuiltBuildingComponent.sol";
 import { P_BuildingCountRequirementComponent, ID as P_BuildingCountRequirementComponentID } from "components/P_BuildingCountRequirementComponent.sol";
 import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
@@ -797,5 +798,78 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
       hasCompletedObjectiveComponent.has(LibEncode.hashKeyEntity(DebugRaidObjectiveID, addressToEntity(alice))),
       "objective should have been completed"
     );
+  }
+
+  function testFailClaimObjectiveRaid() public {
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugRaidObjectiveID);
+    assertTrue(
+      hasCompletedObjectiveComponent.has(LibEncode.hashKeyEntity(DebugRaidObjectiveID, addressToEntity(alice))),
+      "objective should have been completed"
+    );
+  }
+
+  function testClaimObjectiveMotherlodeMining() public {
+    Arrival memory invasionArrival = invade(alice, true);
+
+    vm.roll(invasionArrival.arrivalBlock);
+    uint32 currMoves = ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice));
+    vm.prank(alice);
+    invadeSystem.executeTyped(invasionArrival.destination);
+    assertEq(ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice)), currMoves - 1);
+    assertEq(
+      ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), invasionArrival.destination)),
+      0
+    );
+    assertEq(ownedByComponent.getValue(invasionArrival.destination), addressToEntity(alice));
+    uint32 unclaimedResource = LibUpdateSpaceRock.getUnclaimedMotherlodeResourceAmount(
+      world,
+      addressToEntity(alice),
+      invasionArrival.destination,
+      block.number
+    );
+    //uint256 mainBaseEntity = mainBaseComponent.getValue(addressToEntity(alice));
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
+    for (uint256 i = 2; i <= 6; i++) {
+      componentDevSystem.executeTyped(
+        P_RequiredResourcesComponentID,
+        LibEncode.hashKeyEntity(MainBaseID, i),
+        abi.encode()
+      );
+      vm.prank(alice);
+      upgradeBuildingSystem.executeTyped(mainBaseCoord);
+    }
+    console.log("unclaimed resource = %s", unclaimedResource);
+    vm.roll(block.number + 125);
+
+    unclaimedResource = LibUpdateSpaceRock.getUnclaimedMotherlodeResourceAmount(
+      world,
+      addressToEntity(alice),
+      invasionArrival.destination,
+      block.number
+    );
+    console.log("unclaimed resource = %s", unclaimedResource);
+    Motherlode memory motherlode = MotherlodeComponent(world.getComponent(MotherlodeComponentID)).getValue(
+      invasionArrival.destination
+    );
+
+    console.log("motherlodeType: %s ", uint8(motherlode.motherlodeType));
+    if (motherlode.motherlodeType == EMotherlodeType.TITANIUM) {
+      console.log("titanium");
+      vm.prank(alice);
+      claimObjectiveSystem.executeTyped(DebugMotherlodeMiningTitaniumObjectiveID);
+    } else if (motherlode.motherlodeType == EMotherlodeType.PLATINUM) {
+      console.log("platinum");
+      vm.prank(alice);
+      claimObjectiveSystem.executeTyped(DebugMotherlodeMiningPlatinumObjectiveID);
+    } else if (motherlode.motherlodeType == EMotherlodeType.IRIDIUM) {
+      console.log("iridium");
+      vm.prank(alice);
+      claimObjectiveSystem.executeTyped(DebugMotherlodeMiningIridiumObjectiveID);
+    } else {
+      console.log("other (kimberlite)");
+      vm.prank(alice);
+      claimObjectiveSystem.executeTyped(DebugMotherlodeMiningKimberliteObjectiveID);
+    }
   }
 }
