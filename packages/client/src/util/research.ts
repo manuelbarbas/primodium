@@ -1,6 +1,12 @@
 import { EntityID } from "@latticexyz/recs";
 import { BlockType } from "./constants";
-import { P_RequiredResearch } from "src/network/components/chainComponents";
+import {
+  HasResearched,
+  Level,
+  P_RequiredResearch,
+} from "src/network/components/chainComponents";
+import { hashAndTrimKeyEntity } from "./encode";
+import { getRecipe } from "./resource";
 
 export type ResearchTreeType = ResearchCategoryType[];
 
@@ -29,6 +35,43 @@ export function getBuildingResearchRequirement(
 
   if (!requiredResearch) return null;
   return requiredResearch.toString() as EntityID;
+}
+
+export function getResearchInfo(research: ResearchItemType, player: EntityID) {
+  const { name, levels } = research;
+
+  const levelsResearched = levels.map(({ id }, index) => {
+    if (research.id === ExpansionResearchTree.id) {
+      const level = Level.get(player)?.value ?? 1;
+      return level >= index + 1;
+    }
+
+    const entity = hashAndTrimKeyEntity(id, player);
+    const isResearched = HasResearched.get(entity);
+    return isResearched?.value ?? false;
+  });
+
+  const level =
+    levelsResearched.filter(Boolean).length >= levels.length
+      ? levels.length
+      : levelsResearched.filter(Boolean).length;
+
+  const isResearched = level === levels.length;
+
+  const researchId = levels[isResearched ? level - 1 : level].id;
+
+  const mainBaseLvlReq = Level.get(researchId)?.value ?? 1;
+
+  const recipe = getRecipe(researchId);
+
+  return {
+    maxLevel: levels.length,
+    level,
+    name,
+    id: researchId,
+    mainBaseLvlReq,
+    recipe,
+  };
 }
 
 export const MiningResearchTree: ResearchItemType = {
