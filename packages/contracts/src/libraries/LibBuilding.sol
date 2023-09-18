@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { console } from "forge-std/console.sol";
-
 // tables
-import { Home, P_RequiredTile, P_RequiredBaseLevel, P_Asteroid, P_Terrain, P_EnumToPrototype, P_AsteroidData, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/Tables.sol";
+import { Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/Tables.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 
 // libraries
@@ -18,6 +16,12 @@ import { BuildingKey, BuildingTileKey, ExpansionKey } from "src/Keys.sol";
 import { Bounds, EBuilding, EResource } from "src/Types.sol";
 
 library LibBuilding {
+  /// @notice Builds a building at a specified coordinate
+  /// @param world Interface for the world contract
+  /// @param playerEntity The entity ID of the player
+  /// @param buildingPrototype The type of building to construct
+  /// @param coord The coordinate where the building should be placed
+  /// @return buildingEntity The entity ID of the newly constructed building
   function build(
     IWorld world,
     bytes32 playerEntity,
@@ -55,6 +59,11 @@ library LibBuilding {
     LibStorage.increaseMaxStorage(playerEntity, buildingEntity, level);
   }
 
+  /// @notice Places building tiles for a constructed building
+  /// @param playerEntity The entity ID of the player
+  /// @param buildingEntity The entity ID of the building
+  /// @param buildingPrototype The type of building to construct
+  /// @param position The coordinate where the building should be placed
   function placeBuildingTiles(
     bytes32 playerEntity,
     bytes32 buildingEntity,
@@ -77,6 +86,11 @@ library LibBuilding {
     Children.set(buildingEntity, tiles);
   }
 
+  /// @notice Places a single building tile at a coordinate
+  /// @param buildingEntity The entity ID of the building
+  /// @param bounds The boundary limits for placing the tile
+  /// @param coord The coordinate where the tile should be placed
+  /// @return tileEntity The entity ID of the newly placed tile
   function placeBuildingTile(
     bytes32 buildingEntity,
     Bounds memory bounds,
@@ -92,6 +106,9 @@ library LibBuilding {
     Position.set(tileEntity, coord);
   }
 
+  /// @notice Gets the boundary limits for a player
+  /// @param playerEntity The entity ID of the player
+  /// @return bounds The boundary limits
   function getPlayerBounds(bytes32 playerEntity) internal view returns (Bounds memory bounds) {
     uint32 playerLevel = Level.get(playerEntity);
     P_AsteroidData memory asteroidDims = P_Asteroid.get();
@@ -106,17 +123,28 @@ library LibBuilding {
       });
   }
 
+  /// @notice Gets the building entity ID from a coordinate
+  /// @param coord The coordinate to look up
+  /// @return The building entity ID
   function getBuildingFromCoord(PositionData memory coord) internal view returns (bytes32) {
     bytes32 buildingTile = LibEncode.getHash(BuildingTileKey, coord);
     return OwnedBy.get(buildingTile);
   }
 
+  /// @notice Gets the base level for a player
+  /// @param playerEntity The entity ID of the player
+  /// @return The base level
   function getBaseLevel(bytes32 playerEntity) internal view returns (uint32) {
     if (!Spawned.get(playerEntity)) return 0;
     bytes32 mainBase = Home.getMainBase(playerEntity);
     return Level.get(mainBase);
   }
 
+  /// @notice Checks if a player meets the base level requirements to build a building
+  /// @param playerEntity The entity ID of the player
+  /// @param prototype The type of building
+  /// @param level The level of the building
+  /// @return True if requirements are met, false otherwise
   function hasRequiredBaseLevel(
     bytes32 playerEntity,
     bytes32 prototype,
@@ -126,21 +154,12 @@ library LibBuilding {
     return mainLevel >= P_RequiredBaseLevel.get(prototype, level);
   }
 
-  function hasRequiredBaseLevel(
-    bytes32 playerEntity,
-    EBuilding building,
-    uint32 level
-  ) internal view returns (bool) {
-    return hasRequiredBaseLevel(playerEntity, P_EnumToPrototype.get(BuildingKey, uint8(building)), level);
-  }
-
+  /// @notice Checks if a building can be constructed on a specific tile
+  /// @param prototype The type of building
+  /// @param coord The coordinate to check
+  /// @return True if the building's required terrain matches the terrain of the given coord
   function canBuildOnTile(bytes32 prototype, PositionData memory coord) internal view returns (bool) {
     EResource resource = P_RequiredTile.get(prototype);
-    return resource == EResource.NULL || resource == P_Terrain.get(coord.x, coord.y);
-  }
-
-  function canBuildOnTile(EBuilding building, PositionData memory coord) internal view returns (bool) {
-    EResource resource = P_RequiredTile.get(P_EnumToPrototype.get(BuildingKey, uint8(building)));
     return resource == EResource.NULL || resource == P_Terrain.get(coord.x, coord.y);
   }
 }

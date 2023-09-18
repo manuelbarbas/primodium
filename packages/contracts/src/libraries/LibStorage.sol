@@ -9,6 +9,11 @@ import { LibResource } from "libraries/LibResource.sol";
 import { EResource } from "src/Types.sol";
 
 library LibStorage {
+  /// @notice Increases the max storage of resources based on building prototype data
+  /// @notice uses P_ByLevelMaxResourceUpgrades and P_LisMaxResourceUpgrades to track storage upgrades
+  /// @param playerEntity ID of the owner of the building
+  /// @param buildingEntity ID of the building to update
+  /// @param level of the building to pull prototype data from
   function increaseMaxStorage(
     bytes32 playerEntity,
     bytes32 buildingEntity,
@@ -28,6 +33,9 @@ library LibStorage {
     }
   }
 
+  /// @notice clears max storage increase upon destroying a builing
+  /// @param playerEntity ID of the owner of the building
+  /// @param buildingEntity ID of the building to clear
   function clearMaxStorageIncrease(bytes32 playerEntity, bytes32 buildingEntity) internal {
     bytes32 buildingType = BuildingType.get(buildingEntity);
     uint32 level = Level.get(buildingEntity);
@@ -42,6 +50,10 @@ library LibStorage {
   }
 
   /* -------------------------- Non-Utility Resources ------------------------- */
+  /// @notice decreases stored resources upon building creation or upgrading
+  /// @param playerEntity ID of the player to update
+  /// @param resource ID of the resource to decrease
+  /// @param resourceToDecrease amount of resource to be decreased
   function decreaseStoredResource(
     bytes32 playerEntity,
     EResource resource,
@@ -52,6 +64,10 @@ library LibStorage {
     ResourceCount.set(playerEntity, resource, newResourceCount);
   }
 
+  /// @notice increases stored resources upon building creation or upgrading
+  /// @param playerEntity ID of the player to update
+  /// @param resource ID of the resource to increase
+  /// @param resourceToAdd amount of resource to be increased
   function increaseStoredResource(
     bytes32 playerEntity,
     EResource resource,
@@ -63,6 +79,10 @@ library LibStorage {
     ResourceCount.set(playerEntity, resource, newResourceCount);
   }
 
+  /// @notice sets the max storage of a resource
+  /// @param playerEntity ID of the  player to update
+  /// @param resource ID of the resource to increase
+  /// @param newMaxStorage amount of max storage resource to be set
   function setMaxStorage(
     bytes32 playerEntity,
     EResource resource,
@@ -77,15 +97,23 @@ library LibStorage {
 
   /* ---------------------------- Utility Resources --------------------------- */
 
+  /// @notice increases the max storage of a utility
+  /// @param playerEntity ID of the  player to update
+  /// @param resource ID of the utility to increase
+  /// @param amountToIncrease of max storage to be set
   function increaseMaxUtility(
     bytes32 playerEntity,
     EResource resource,
     uint32 amountToIncrease
   ) internal {
     uint32 prevMax = MaxResourceCount.get(playerEntity, resource);
-    MaxResourceCount.set(playerEntity, resource, prevMax + amountToIncrease);
+    setMaxStorage(playerEntity, resource, prevMax + amountToIncrease);
   }
 
+  /// @notice increases the max storage of a utility
+  /// @param playerEntity ID of the  player to update
+  /// @param resource ID of the resource to decrease
+  /// @param amountToDecrease of max storage to be set
   function decreaseMaxUtility(
     bytes32 playerEntity,
     EResource resource,
@@ -96,6 +124,6 @@ library LibStorage {
       MaxResourceCount.set(playerEntity, resource, 0);
       return;
     }
-    MaxResourceCount.set(playerEntity, resource, maxUtility - amountToDecrease);
+    setMaxStorage(playerEntity, resource, maxUtility - amountToDecrease);
   }
 }

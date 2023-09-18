@@ -17,7 +17,7 @@ import { ABDKMath64x64 as Math } from "abdk/ABDKMath64x64.sol";
 
 library LibAsteroid {
   /// @notice Creates new asteroid for player in world
-  /// @dev Checks if asteroid already exists, sets position and other properties
+  /// @notice Checks if asteroid already exists, sets position and other properties
   /// @param world World address
   /// @param ownerEntity Owner's entity ID
   /// @return asteroidEntity Created asteroid's entity ID
@@ -37,7 +37,7 @@ library LibAsteroid {
   }
 
   /// @notice Generates unique asteroid position
-  /// @dev Ensures asteroid positions do not overlap
+  /// @notice Ensures asteroid positions do not overlap
   /// @return position Generated unique position
   function getUniqueAsteroidPosition(uint32 asteroidCount) internal view returns (PositionData memory position) {
     position = LibMath.getPositionByVector(LibMath.getDistance(asteroidCount), LibMath.getDirection(asteroidCount));

@@ -4,7 +4,7 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { P_MaxLevel, BuildingType, PositionData, Level, P_MaxLevel, P_RequiredResources, OwnedBy } from "codegen/Tables.sol";
 import { LibBuilding, LibResource, LibReduceProductionRate, LibProduction, LibStorage } from "codegen/Libraries.sol";
-import { EBuilding } from "codegen/Types.sol";
+import { EBuilding } from "src/Types.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 
 contract UpgradeBuildingSystem is PrimodiumSystem {

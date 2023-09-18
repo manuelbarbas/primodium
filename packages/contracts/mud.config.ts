@@ -17,6 +17,13 @@ if (typeof process != undefined && typeof process != "undefined") {
 export type Config = typeof config;
 export const config = mudConfig({
   excludeSystems: [...dev],
+  overrideSystems: {
+    S_SpendResourcesSystem: {
+      openAccess: false,
+      accessList: ["BuildSystem", "UpgradeBuildingSystem"],
+      name: "PlayerSystem",
+    },
+  },
   enums: MUDEnums,
   tables: {
     /* ----------------------------------- Dev ---------------------------------- */

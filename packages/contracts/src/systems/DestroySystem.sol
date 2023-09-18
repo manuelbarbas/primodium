@@ -18,7 +18,8 @@ contract DestroySystem is PrimodiumSystem {
 
     bytes32[] memory children = Children.get(buildingEntity);
     for (uint256 i = 0; i < children.length; i++) {
-      clearBuildingTile(children[i]);
+      require(OwnedBy.get(children[i]) != 0, "[Destroy] Cannot destroy unowned coordinate");
+      OwnedBy.deleteRecord(children[i]);
     }
     Children.deleteRecord(buildingEntity);
 
@@ -32,10 +33,5 @@ contract DestroySystem is PrimodiumSystem {
     OwnedBy.deleteRecord(buildingEntity);
     Children.deleteRecord(buildingEntity);
     Position.deleteRecord(buildingEntity);
-  }
-
-  function clearBuildingTile(bytes32 tileEntity) private {
-    require(OwnedBy.get(tileEntity) != 0, "[Destroy] Cannot destroy unowned coordinate");
-    OwnedBy.deleteRecord(tileEntity);
   }
 }

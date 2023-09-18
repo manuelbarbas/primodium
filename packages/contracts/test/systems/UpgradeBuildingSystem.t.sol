@@ -71,9 +71,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     vm.startPrank(address(world));
     ResourceCount.set(playerEntity, EResource.Iron, 1000);
 
-    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](0), new uint32[](0));
-    P_RequiredResources.set(IronMinePrototypeId, 1, requiredResourcesData);
-    P_RequiredResources.set(IronMinePrototypeId, 2, requiredResourcesData);
+    removeRequiredResources(EBuilding.IronMine);
 
     uint32 originalProduction = 100;
     uint32 l1 = 10;
@@ -103,9 +101,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
   function testUpgradeBuildingWithResourceProductionIncrease() public {
     vm.startPrank(address(world));
 
-    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](0), new uint32[](0));
-    P_RequiredResources.set(IronMinePrototypeId, 1, requiredResourcesData);
-    P_RequiredResources.set(IronMinePrototypeId, 2, requiredResourcesData);
+    removeRequiredResources(EBuilding.IronMine);
 
     uint32 increase = 69;
     uint32 increase2 = 71;
@@ -124,9 +120,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
   function testUpgradeBuildingWithMaxStorageIncrease() public {
     vm.startPrank(address(world));
 
-    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](0), new uint32[](0));
-    P_RequiredResources.set(IronMinePrototypeId, 1, requiredResourcesData);
-    P_RequiredResources.set(IronMinePrototypeId, 2, requiredResourcesData);
+    removeRequiredResources(EBuilding.IronMine);
 
     uint8[] memory data = new uint8[](1);
     data[0] = uint8(EResource.Iron);
