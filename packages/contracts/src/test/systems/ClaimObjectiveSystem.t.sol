@@ -14,6 +14,7 @@ import { RecallReinforcementsSystem, ID as RecallReinforcementsSystemID } from "
 import { RecallUnitsFromMotherlodeSystem, ID as RecallUnitsFromMotherlodeSystemID } from "systems/RecallUnitsFromMotherlodeSystem.sol";
 import { ClaimObjectiveSystem, ID as ClaimObjectiveSystemID } from "systems/ClaimObjectiveSystem.sol";
 //components
+import { P_UnitRequirementComponent, ID as P_UnitRequirementComponentID } from "components/P_UnitRequirementComponent.sol";
 import { HasCompletedObjectiveComponent, ID as HasCompletedObjectiveComponentID } from "components/HasCompletedObjectiveComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
@@ -144,6 +145,40 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     );
   }
 
+  function testClaimObjectiveHasUnits() public {
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(LibEncode.hashKeyEntity(DebugHaveUnitsObjectiveID, addressToEntity(alice))),
+      "objective should not have been completed"
+    );
+    ResourceValues memory resourceValues = P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID))
+      .getValue(DebugHaveUnitsObjectiveID);
+
+    for (uint256 i = 0; i < resourceValues.resources.length; i++) {
+      setupUnits(alice, resourceValues.resources[i], resourceValues.values[i]);
+    }
+
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugHaveUnitsObjectiveID);
+    assertTrue(
+      hasCompletedObjectiveComponent.has(LibEncode.hashKeyEntity(DebugHaveUnitsObjectiveID, addressToEntity(alice))),
+      "objective should have been completed"
+    );
+  }
+
+  function testFailClaimObjectiveHasUnits() public {
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(LibEncode.hashKeyEntity(DebugHaveUnitsObjectiveID, addressToEntity(alice))),
+      "objective should not have been completed"
+    );
+    ResourceValues memory resourceValues = P_RequiredResourcesComponent(
+      world.getComponent(P_RequiredResourcesComponentID)
+    ).getValue(DebugHaveUnitsObjectiveID);
+    assertTrue(resourceValues.resources.length > 0, "no resources required for objective");
+
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugHaveUnitsObjectiveID);
+  }
+
   function testClaimObjectiveResources() public {
     vm.prank(alice);
     assertTrue(
@@ -196,8 +231,9 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     uint256 unitProductionBuildingEntityID = abi.decode(unitProductionBuildingEntity, (uint256));
     buildSystem.executeTyped(DebugHousingBuilding, getCoord3(playerAddress));
 
-    vm.roll(10);
+    vm.roll(block.number + 10);
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, unitType, count);
+    vm.roll(block.number + 20);
     vm.stopPrank();
   }
 

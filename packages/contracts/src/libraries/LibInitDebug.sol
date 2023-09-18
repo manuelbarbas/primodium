@@ -4,6 +4,9 @@ pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 // Production Buildings
+import { P_ObjectiveRequirementComponent, ID as P_ObjectiveRequirementComponentID } from "components/P_ObjectiveRequirementComponent.sol";
+import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID } from "components/P_RequiredUtilityComponent.sol";
+import { P_UnitRequirementComponent, ID as P_UnitRequirementComponentID } from "components/P_UnitRequirementComponent.sol";
 import { P_UnitTravelSpeedComponent as SpeedComponent, ID as SpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 import { P_RequiredResearchComponent, ID as P_RequiredResearchComponentID } from "components/P_RequiredResearchComponent.sol";
 import { P_RequiredTileComponent, ID as P_RequiredTileComponentID } from "components/P_RequiredTileComponent.sol";
@@ -66,6 +69,8 @@ library LibInitDebug {
 
     registerUnitType(world);
     registerObjectives(world);
+
+    initObjectives(world);
   }
 
   function registerBuildingTypes(IWorld world) internal {
@@ -141,15 +146,48 @@ library LibInitDebug {
     isObjectiveComponent.set(DebugUnitsRewardObjectiveID);
   }
 
-  function initObjectives(IWorld world) {
+  function initObjectives(IWorld world) internal {
     P_RequiredResearchComponent requiredResourcesComponent = P_RequiredResearchComponent(
       world.getComponent(P_RequiredResearchComponentID)
     );
-
+    uint256 objective;
+    objective = DebugHavResourcesObjectiveID;
     //DebugHavResourcesObjectiveID
-    ResourceValues memory resourceValues;
-    resourceValues.resources = new uint256[](1);
-    resourceValues.values = new uint32[](1);
+    ResourceValues memory resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = IronResourceItemID;
+    resourceValues.values[0] = 1000;
+    LibSetBuildingReqs.setResourceReqs(world, objective, resourceValues);
+
+    P_UnitRequirementComponent unitRequirementComponent = P_UnitRequirementComponent(
+      world.getComponent(P_UnitRequirementComponentID)
+    );
+    //DebugHaveUnitsObjectiveID
+    objective = DebugHaveUnitsObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = DebugUnit;
+    resourceValues.values[0] = 5;
+    unitRequirementComponent.set(objective, resourceValues);
+    P_RequiredUtilityComponent requiredUtilityComponent = P_RequiredUtilityComponent(
+      world.getComponent(P_RequiredUtilityComponentID)
+    );
+    //DebugHaveMaxUtilityObjectiveID
+    objective = DebugHaveMaxUtilityObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = ElectricityUtilityResourceID;
+    resourceValues.values[0] = 5;
+    requiredUtilityComponent.set(objective, resourceValues);
+
+    P_ObjectiveRequirementComponent objectiveRequirementComponent = P_ObjectiveRequirementComponent(
+      world.getComponent(P_ObjectiveRequirementComponentID)
+    );
+    //DebugCompletedPriorObjectiveID
+    objective = DebugCompletedPriorObjectiveID;
+    objectiveRequirementComponent.set(objective, DebugFreeObjectiveID);
+
+    LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
+    //DebugMainBaseLevelObjectiveID
+    objective = DebugMainBaseLevelObjectiveID;
+    levelComponent.set(objective, 2);
   }
 
   function initBlueprints(IWorld world) internal {

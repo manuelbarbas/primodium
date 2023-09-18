@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
-
+import { entityToAddress, getAddressById } from "solecs/utils.sol";
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
@@ -14,6 +14,10 @@ import { P_UnitRequirementComponent, ID as P_UnitRequirementComponentID } from "
 import { UnitProductionQueueIndexComponent, ID as UnitProductionQueueIndexComponentID } from "components/UnitProductionQueueIndexComponent.sol";
 import { UnitProductionLastQueueIndexComponent, ID as UnitProductionLastQueueIndexComponentID } from "components/UnitProductionLastQueueIndexComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
+
+import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+import { ID as S_UpdatePlayerSpaceRockSystemID } from "systems/S_UpdatePlayerSpaceRockSystem.sol";
+
 import { LibUpdateSpaceRock } from "./LibUpdateSpaceRock.sol";
 import { LibUtilityResource } from "./LibUtilityResource.sol";
 import { LibEncode } from "./LibEncode.sol";
@@ -131,15 +135,16 @@ library LibUnits {
     return true;
   }
 
-  function checkUnitRequirement(
-    IWorld world,
-    uint256 playerEntity,
-    uint256 objectiveEntity
-  ) internal view returns (bool) {
+  function checkUnitRequirement(IWorld world, uint256 playerEntity, uint256 objectiveEntity) internal returns (bool) {
     P_UnitRequirementComponent unitRequirementComponent = P_UnitRequirementComponent(
       world.getComponent(P_UnitRequirementComponentID)
     );
     if (!unitRequirementComponent.has(objectiveEntity)) return true;
+
+    IOnEntitySubsystem(getAddressById(world.systems(), S_UpdatePlayerSpaceRockSystemID)).executeTyped(
+      entityToAddress(playerEntity),
+      LibUpdateSpaceRock.getPlayerAsteroidEntity(world, playerEntity)
+    );
     uint256 asteroidEntity = LibUpdateSpaceRock.getPlayerAsteroidEntity(world, playerEntity);
     ResourceValues memory unitRequirements = unitRequirementComponent.getValue(objectiveEntity);
     for (uint256 i = 0; i < unitRequirements.resources.length; i++) {
