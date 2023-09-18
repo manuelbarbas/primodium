@@ -12,10 +12,10 @@ import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 
 /// @title Spawn System for Primodium Game
 /// @notice Handles player spawning in the game world
-/// @dev Inherits from PrimodiumSystem
+/// @notice Inherits from PrimodiumSystem
 contract SpawnSystem is PrimodiumSystem {
   /// @notice Spawns a player into the world
-  /// @dev Checks if player is already spawned, sets initial level and associates asteroid
+  /// @notice Checks if player is already spawned, sets initial level and associates asteroid
   /// @return bytes32 The entity ID of the spawned asteroid
   function spawn() public returns (bytes32) {
     bytes32 playerEntity = addressToEntity(_msgSender());

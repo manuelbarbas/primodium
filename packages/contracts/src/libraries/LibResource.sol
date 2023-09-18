@@ -9,7 +9,10 @@ import { P_IsUtility, P_RequiredResources, P_RequiredResourcesData, P_EnumToProt
 import { BuildingKey } from "src/Keys.sol";
 
 library LibResource {
-  /// notice: this function adds resources from the last claimed time
+  /// @notice Spends required resources of building when building or upgrading
+  /// @notice claims all resources beforehand
+  /// @param buildingEntity Entity ID of the building
+  /// @param level Target level for the building
   function spendRequiredResources(bytes32 buildingEntity, uint32 level) internal {
     bytes32 playerEntity = OwnedBy.get(buildingEntity);
     claimAllResources(playerEntity);
@@ -35,6 +38,8 @@ library LibResource {
     }
   }
 
+  /// @notice Claims all unclaimed resources of a player
+  /// @param playerEntity ID of the player to claim
   function claimAllResources(bytes32 playerEntity) internal {
     uint256 lastClaimed = LastClaimedAt.get(playerEntity);
     if (lastClaimed == 0 || lastClaimed == block.timestamp) return;
@@ -54,6 +59,9 @@ library LibResource {
     }
   }
 
+  /// @notice Clears utility usage of a building when it is destroyed
+  /// @param playerEntity ID of the owner of the building
+  /// @param buildingEntity ID of the building to clear
   function clearUtilityUsage(bytes32 playerEntity, bytes32 buildingEntity) internal {
     uint8[] memory utilities = UtilitySet.getAll(buildingEntity);
     for (uint256 i = 0; i < utilities.length; i++) {

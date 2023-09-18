@@ -6,6 +6,9 @@ import { EResource } from "src/Types.sol";
 import { ResourceSelector } from "@latticexyz/world/src/ResourceSelector.sol";
 
 library LibReduceProductionRate {
+  /// @notice Restores production rate when a building is destroyed
+  /// @param playerEntity Entity ID of the player
+  /// @param buildingEntity Entity ID of the building
   function clearProductionRateReduction(bytes32 playerEntity, bytes32 buildingEntity) internal {
     uint32 level = Level.get(buildingEntity);
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
@@ -21,6 +24,10 @@ library LibReduceProductionRate {
     }
   }
 
+  /// @notice Reduces production rate when building or upgrading
+  /// @param playerEntity Entity ID of the player
+  /// @param buildingEntity Entity ID of the building
+  /// @param level Target level for the building
   function reduceProductionRate(
     bytes32 playerEntity,
     bytes32 buildingEntity,

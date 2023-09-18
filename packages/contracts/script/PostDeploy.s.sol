@@ -15,13 +15,13 @@ contract PostDeploy is Script {
     // Start broadcasting transactions from the deployer account
     vm.startBroadcast(deployerPrivateKey);
 
-    // ------------------ EXAMPLES ------------------
-
-    // Call increment on the world via the registered function selector
     uint32 newValue = world.increment();
     console.log("Increment via IWorld:", newValue);
 
     createPrototypes(world);
+    console.log("Prototypes created");
+    createTerrain(world);
+    console.log("Terrain created");
 
     vm.stopBroadcast();
   }

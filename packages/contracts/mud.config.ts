@@ -15,39 +15,14 @@ if (typeof process != undefined && typeof process != "undefined") {
 /* -------------------------------------------------------------------------- */
 export const config = mudConfig({
   excludeSystems: [...dev],
-
-  structs: {},
-  enums: {
-    ERock: ["NULL", "Asteroid", "Motherlode", "LENGTH"],
-    EBuilding: [
-      "NULL",
-      // Special
-      "MainBase",
-
-      // Mines
-      "LithiumMine",
-      "IronMine",
-      "CopperMine",
-      "SulfurMine",
-
-      // Factories
-      "IronPlateFactory",
-      "AlloyFactory",
-      "PVCellFactory",
-      "RocketFuelFactory",
-
-      // Utilities
-      "SolarPanel",
-
-      // Units
-      "Hangar",
-      "UnitTrainingBuilding",
-      "StorageUnit",
-      "DroneFactory",
-      "Starmapper",
-      "LENGTH",
-    ],
+  overrideSystems: {
+    S_SpendResourcesSystem: {
+      openAccess: false,
+      accessList: ["BuildSystem", "UpgradeBuildingSystem"],
+      name: "PlayerSystem",
+    },
   },
+  enums: MUDEnums,
   tables: {
     /* ----------------------------------- Dev ---------------------------------- */
     Counter: {

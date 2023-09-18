@@ -7,7 +7,7 @@ import { ABDKMath64x64 as Math } from "abdk/ABDKMath64x64.sol";
 
 library LibMath {
   /// @notice Calculates the absolute value of an int32 input
-  /// @dev Returns the non-negative integer counterpart of the input
+  /// @notice Returns the non-negative integer counterpart of the input
   /// @param input The integer whose absolute value is to be calculated
   /// @return int32 The absolute value of the input integer
   function abs(int32 input) internal pure returns (int32) {
@@ -15,7 +15,7 @@ library LibMath {
   }
 
   /// @notice Finds the minimum value between two uint32 numbers
-  /// @dev Compares num1 and num2 and returns the smaller number
+  /// @notice Compares num1 and num2 and returns the smaller number
   /// @param num1 The first number to be compared
   /// @param num2 The second number to be compared
   /// @return uint32 The smaller of num1 and num2
@@ -24,7 +24,7 @@ library LibMath {
   }
 
   /// @notice Finds the maximum value between two uint32 numbers
-  /// @dev Compares num1 and num2 and returns the larger number
+  /// @notice Compares num1 and num2 and returns the larger number
   /// @param num1 The first number to be compared
   /// @param num2 The second number to be compared
   /// @return uint32 The larger of num1 and num2
@@ -33,7 +33,7 @@ library LibMath {
   }
 
   /// @notice Calculates position based on distance and direction
-  /// @dev Converts angle to radians and calculates x, y coords
+  /// @notice Converts angle to radians and calculates x, y coords
   /// @param _distance Distance to asteroid
   /// @param direction Direction angle in degrees
   /// @return position Calculated position
@@ -53,7 +53,7 @@ library LibMath {
   }
 
   /// @notice Calculates distance for asteroid based on asteroid count
-  /// @dev Uses the formula 260 * ln((asteroidCount + 105) / 10) - 580
+  /// @notice Uses the formula 260 * ln((asteroidCount + 105) / 10) - 580
   /// @param asteroidCount Number of asteroids
   /// @return uint32 Calculated distance
   function getDistance(uint32 asteroidCount) internal pure returns (uint32) {
@@ -65,7 +65,7 @@ library LibMath {
   }
 
   /// @notice Determines asteroid's direction based on asteroid count
-  /// @dev Uses the asteroid count to find direction angle
+  /// @notice Uses the asteroid count to find direction angle
   /// @param asteroidCount Number of asteroids
   /// @return uint32 Calculated direction
   function getDirection(uint32 asteroidCount) internal pure returns (uint32) {
