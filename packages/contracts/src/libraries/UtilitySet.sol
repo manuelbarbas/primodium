@@ -29,6 +29,7 @@ library UtilitySet {
   function add(bytes32 player, EResource resource) internal {
     if (has(player, resource)) return;
     Set_Utilities.push(player, uint8(resource));
+    Set_UtilityUsage.setIndex(player, resource, Set_Utilities.length(player) - 1);
   }
 
   /// @notice Get all resources for a player.

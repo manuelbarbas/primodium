@@ -64,4 +64,7 @@ export const MUDEnums = {
 
     "LENGTH",
   ],
+
+  EMotherlodeType: ["NULL", "Titanium", "Iridium", "Kimberlite", "Platinum", "LENGTH"],
+  ESize: ["NULL", "Small", "Medium", "Large", "LENGTH"],
 };
