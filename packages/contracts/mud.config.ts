@@ -31,6 +31,16 @@ export const config = mudConfig({
     },
 
     /* --------------------------------- Common --------------------------------- */
+
+    P_GameConfig: {
+      keySchema: {},
+      schema: {
+        maxMotherlodesPerAsteroid: "uint32",
+        motherlodeChanceInv: "uint32",
+        motherlodeDistance: "uint32",
+      },
+    },
+
     Position: {
       keySchema: { entity: "bytes32" },
       schema: {
@@ -244,6 +254,7 @@ export const config = mudConfig({
         ownedBy: "bytes32",
         size: "ESize",
         motherlodeType: "EMotherlodeType",
+        quantity: "uint32",
         cooldownSeconds: "uint256",
         mineableAt: "uint256",
       },
