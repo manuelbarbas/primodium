@@ -217,7 +217,7 @@ library LibRaid {
       }
       raidResult.defenderValuesBeforeRaid[i] = resources[i];
       raidResult.raidedAmount[i] = raidAmount;
-      LibMath.add(totalRaidComponent, LibEncode.hashKeyEntity(resources[i], attacker.participantEntity), raidAmount);
+      LibMath.add(totalRaidComponent, LibEncode.hashKeyEntity(resourceIds[i], attacker.participantEntity), raidAmount);
       LibStorage.addResourceToStorage(world, attacker.participantEntity, resourceIds[i], raidAmount);
       LibStorage.reduceResourceFromStorage(world, defender.participantEntity, resourceIds[i], raidAmount);
     }
@@ -234,11 +234,11 @@ library LibRaid {
     );
     if (!raidRequirementComponent.has(objectiveEntity)) return true;
     TotalRaidComponent totalRaidComponent = TotalRaidComponent(world.getComponent(TotalRaidComponentID));
-    ResourceValues memory unitRequirements = raidRequirementComponent.getValue(objectiveEntity);
-    for (uint256 i = 0; i < unitRequirements.resources.length; i++) {
+    ResourceValues memory raidRequirements = raidRequirementComponent.getValue(objectiveEntity);
+    for (uint256 i = 0; i < raidRequirements.resources.length; i++) {
       if (
-        LibMath.getSafe(totalRaidComponent, LibEncode.hashKeyEntity(unitRequirements.resources[i], playerEntity)) <
-        unitRequirements.values[i]
+        LibMath.getSafe(totalRaidComponent, LibEncode.hashKeyEntity(raidRequirements.resources[i], playerEntity)) <
+        raidRequirements.values[i]
       ) {
         return false;
       }

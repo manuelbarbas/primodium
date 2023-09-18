@@ -59,6 +59,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   UnitsComponent public unitsComponent;
   OccupiedUtilityResourceComponent public occupiedUtilityResourceComponent;
   HasCompletedObjectiveComponent public hasCompletedObjectiveComponent;
+  ItemComponent public itemComponent;
 
   ComponentDevSystem public componentDevSystem;
   ClaimObjectiveSystem public claimObjectiveSystem;
@@ -75,7 +76,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
   function setUp() public override {
     super.setUp();
-
+    itemComponent = ItemComponent(component(ItemComponentID));
     positionComponent = PositionComponent(component(PositionComponentID));
     raidSystem = RaidSystem(system(RaidSystemID));
     componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
@@ -768,14 +769,33 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     return arrival;
   }
 
-  function testExecuteRaid() public {
+  function testClaimObjectiveRaid() public {
     Arrival memory raidArival = raid(alice);
-    vm.roll(raidArival.arrivalBlock);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(LibEncode.hashKeyEntity(DebugRaidObjectiveID, addressToEntity(alice))),
+      "objective should not have been completed"
+    );
+    vm.roll(block.number + raidArival.arrivalBlock);
     uint32 currMoves = ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice));
     vm.prank(alice);
+    console.log(
+      "alice iron: %s",
+      LibMath.getSafe(itemComponent, LibEncode.hashKeyEntity(IronResourceItemID, addressToEntity(alice)))
+    );
+    vm.prank(alice);
     raidSystem.executeTyped(raidArival.destination);
+    console.log(
+      "alice iron after raid: %s",
+      LibMath.getSafe(itemComponent, LibEncode.hashKeyEntity(IronResourceItemID, addressToEntity(alice)))
+    );
     assertEq(ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice)), currMoves - 1);
     assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), raidArival.destination)), 0);
     assertEq(ownedByComponent.getValue(raidArival.destination), addressToEntity(bob));
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugRaidObjectiveID);
+    assertTrue(
+      hasCompletedObjectiveComponent.has(LibEncode.hashKeyEntity(DebugRaidObjectiveID, addressToEntity(alice))),
+      "objective should have been completed"
+    );
   }
 }

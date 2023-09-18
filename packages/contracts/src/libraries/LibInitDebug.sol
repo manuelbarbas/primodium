@@ -4,6 +4,7 @@ pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 // Production Buildings
+import { P_RaidRequirementComponent, ID as P_RaidRequirementComponentID } from "components/P_RaidRequirementComponent.sol";
 import { P_HasBuiltBuildingComponent, ID as P_HasBuiltBuildingComponentID } from "components/P_HasBuiltBuildingComponent.sol";
 import { P_BuildingCountRequirementComponent, ID as P_BuildingCountRequirementComponentID } from "components/P_BuildingCountRequirementComponent.sol";
 import { P_ObjectiveRequirementComponent, ID as P_ObjectiveRequirementComponentID } from "components/P_ObjectiveRequirementComponent.sol";
@@ -224,6 +225,16 @@ library LibInitDebug {
     resourceValues.resources[0] = DebugSimpleBuildingNoReqsID;
     resourceValues.values[0] = 2;
     buildingCountRequirementComponent.set(objective, resourceValues);
+
+    P_RaidRequirementComponent raidRequirementComponent = P_RaidRequirementComponent(
+      world.getComponent(P_RaidRequirementComponentID)
+    );
+    //DebugRaidObjectiveID
+    objective = DebugRaidObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = IronResourceItemID;
+    resourceValues.values[0] = 40;
+    raidRequirementComponent.set(objective, resourceValues);
   }
 
   function initBlueprints(IWorld world) internal {
