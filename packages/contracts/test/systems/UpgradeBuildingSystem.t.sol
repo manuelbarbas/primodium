@@ -16,7 +16,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     vm.startPrank(alice);
     PositionData memory coord = getIronPosition(alice);
     bytes32 ironMine = world.build(EBuilding.IronMine, coord);
-    uint32 ironMineMaxLevel = P_MaxLevel.get(world, IronMinePrototypeId);
+    uint256 ironMineMaxLevel = P_MaxLevel.get(world, IronMinePrototypeId);
     bytes32[] memory keys = new bytes32[](1);
     keys[0] = ironMine;
 
@@ -30,7 +30,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
   function testUpgradeToMaxLevel() public {
     removeRequiredResources(EBuilding.IronMine);
     removeRequiredMainBase(EBuilding.IronMine);
-    uint32 ironMineMaxLevel = P_MaxLevel.get(world, IronMinePrototypeId);
+    uint256 ironMineMaxLevel = P_MaxLevel.get(world, IronMinePrototypeId);
     vm.startPrank(alice);
     PositionData memory coord = getIronPosition(alice);
     bytes32 ironMine = world.build(EBuilding.IronMine, coord);
@@ -43,18 +43,18 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
   }
 
   function testUpgradeBuildingWithRequiredResources() public {
-    uint32 initial = 100;
-    uint32 l1 = 50;
-    uint32 l2 = 33;
+    uint256 initial = 100;
+    uint256 l1 = 50;
+    uint256 l2 = 33;
     vm.startPrank(address(world));
     ResourceCount.set(playerEntity, EResource.Iron, initial);
-    uint32 playerResourceCount = ResourceCount.get(playerEntity, EResource.Iron);
+    uint256 playerResourceCount = ResourceCount.get(playerEntity, EResource.Iron);
 
-    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint32[](1));
+    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);
     requiredResourcesData.amounts[0] = l1;
     P_RequiredResources.set(IronMinePrototypeId, 1, requiredResourcesData);
-    requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint32[](1));
+    requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);
     requiredResourcesData.amounts[0] = l2;
 
@@ -73,20 +73,20 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
     removeRequiredResources(EBuilding.IronMine);
 
-    uint32 originalProduction = 100;
-    uint32 l1 = 10;
-    uint32 l2 = 12;
+    uint256 originalProduction = 100;
+    uint256 l1 = 10;
+    uint256 l2 = 12;
     ProductionRate.set(playerEntity, EResource.Copper, originalProduction);
 
     P_RequiredDependenciesData memory requiredDependenciesData = P_RequiredDependenciesData(
       new uint8[](1),
-      new uint32[](1)
+      new uint256[](1)
     );
     requiredDependenciesData.resources[0] = uint8(EResource.Copper);
     requiredDependenciesData.amounts[0] = l1;
     P_RequiredDependencies.set(IronMinePrototypeId, 1, requiredDependenciesData);
 
-    requiredDependenciesData = P_RequiredDependenciesData(new uint8[](1), new uint32[](1));
+    requiredDependenciesData = P_RequiredDependenciesData(new uint8[](1), new uint256[](1));
     requiredDependenciesData.resources[0] = uint8(EResource.Copper);
     requiredDependenciesData.amounts[0] = l2;
     P_RequiredDependencies.set(IronMinePrototypeId, 2, requiredDependenciesData);
@@ -103,8 +103,8 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
     removeRequiredResources(EBuilding.IronMine);
 
-    uint32 increase = 69;
-    uint32 increase2 = 71;
+    uint256 increase = 69;
+    uint256 increase2 = 71;
     P_ProductionData memory data = P_ProductionData(EResource.Iron, increase);
     P_Production.set(IronMinePrototypeId, 1, data);
     data = P_ProductionData(EResource.Iron, increase2);

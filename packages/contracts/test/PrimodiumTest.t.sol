@@ -173,7 +173,7 @@ contract PrimodiumTest is MudTest {
 
   function removeRequiredResources(EBuilding building) internal {
     bytes32 buildingEntity = P_EnumToPrototype.get(BuildingKey, uint8(building));
-    uint32 buildingMaxLevel = P_MaxLevel.get(world, buildingEntity);
+    uint256 buildingMaxLevel = P_MaxLevel.get(world, buildingEntity);
     bytes32[] memory keys = new bytes32[](2);
     keys[0] = buildingEntity;
     for (uint256 i = 0; i < buildingMaxLevel; i++) {
@@ -184,7 +184,7 @@ contract PrimodiumTest is MudTest {
 
   function removeRequiredMainBase(EBuilding building) internal {
     bytes32 buildingEntity = P_EnumToPrototype.get(BuildingKey, uint8(building));
-    uint32 buildingMaxLevel = P_MaxLevel.get(world, buildingEntity);
+    uint256 buildingMaxLevel = P_MaxLevel.get(world, buildingEntity);
     bytes32[] memory keys = new bytes32[](2);
     keys[0] = buildingEntity;
     for (uint256 i = 0; i < buildingMaxLevel; i++) {

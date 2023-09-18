@@ -17,15 +17,15 @@ library LibStorage {
   function increaseMaxStorage(
     bytes32 playerEntity,
     bytes32 buildingEntity,
-    uint32 level
+    uint256 level
   ) internal {
     bytes32 buildingType = BuildingType.get(buildingEntity);
 
     uint8[] memory storageResources = P_ListMaxResourceUpgrades.get(buildingType, level);
     for (uint256 i = 0; i < storageResources.length; i++) {
       EResource resource = EResource(storageResources[i]);
-      uint32 maxResource = MaxResourceCount.get(playerEntity, resource);
-      uint32 maxResourceIncrease = P_ByLevelMaxResourceUpgrades.get(buildingType, resource, level);
+      uint256 maxResource = MaxResourceCount.get(playerEntity, resource);
+      uint256 maxResourceIncrease = P_ByLevelMaxResourceUpgrades.get(buildingType, resource, level);
       if (level > 1) {
         maxResourceIncrease -= P_ByLevelMaxResourceUpgrades.get(buildingType, resource, level - 1);
       }
@@ -38,12 +38,12 @@ library LibStorage {
   /// @param buildingEntity ID of the building to clear
   function clearMaxStorageIncrease(bytes32 playerEntity, bytes32 buildingEntity) internal {
     bytes32 buildingType = BuildingType.get(buildingEntity);
-    uint32 level = Level.get(buildingEntity);
+    uint256 level = Level.get(buildingEntity);
     uint8[] memory storageResources = P_ListMaxResourceUpgrades.get(buildingType, level);
     for (uint256 i = 0; i < storageResources.length; i++) {
       EResource resource = EResource(storageResources[i]);
-      uint32 maxResource = MaxResourceCount.get(playerEntity, resource);
-      uint32 maxResourceDecrease = P_ByLevelMaxResourceUpgrades.get(buildingType, resource, level);
+      uint256 maxResource = MaxResourceCount.get(playerEntity, resource);
+      uint256 maxResourceDecrease = P_ByLevelMaxResourceUpgrades.get(buildingType, resource, level);
       require(maxResource >= maxResourceDecrease, "[StorageUsage] not enough storage to reduce usage");
       setMaxStorage(playerEntity, resource, maxResource - maxResourceDecrease);
     }
@@ -57,10 +57,10 @@ library LibStorage {
   function decreaseStoredResource(
     bytes32 playerEntity,
     EResource resource,
-    uint32 resourceToDecrease
+    uint256 resourceToDecrease
   ) internal {
-    uint32 resourceCount = ResourceCount.get(playerEntity, resource);
-    uint32 newResourceCount = resourceCount < resourceToDecrease ? 0 : resourceCount - resourceToDecrease;
+    uint256 resourceCount = ResourceCount.get(playerEntity, resource);
+    uint256 newResourceCount = resourceCount < resourceToDecrease ? 0 : resourceCount - resourceToDecrease;
     ResourceCount.set(playerEntity, resource, newResourceCount);
   }
 
@@ -71,11 +71,11 @@ library LibStorage {
   function increaseStoredResource(
     bytes32 playerEntity,
     EResource resource,
-    uint32 resourceToAdd
+    uint256 resourceToAdd
   ) internal {
-    uint32 resourceCount = ResourceCount.get(playerEntity, resource);
-    uint32 maxResources = MaxResourceCount.get(playerEntity, resource);
-    uint32 newResourceCount = LibMath.min(resourceCount + resourceToAdd, maxResources);
+    uint256 resourceCount = ResourceCount.get(playerEntity, resource);
+    uint256 maxResources = MaxResourceCount.get(playerEntity, resource);
+    uint256 newResourceCount = LibMath.min(resourceCount + resourceToAdd, maxResources);
     ResourceCount.set(playerEntity, resource, newResourceCount);
   }
 
@@ -86,10 +86,10 @@ library LibStorage {
   function setMaxStorage(
     bytes32 playerEntity,
     EResource resource,
-    uint32 newMaxStorage
+    uint256 newMaxStorage
   ) internal {
     MaxResourceCount.set(playerEntity, resource, newMaxStorage);
-    uint32 playerResourceAmount = ResourceCount.get(playerEntity, resource);
+    uint256 playerResourceAmount = ResourceCount.get(playerEntity, resource);
     if (playerResourceAmount > newMaxStorage) {
       ResourceCount.set(playerEntity, resource, newMaxStorage);
     }
@@ -104,9 +104,9 @@ library LibStorage {
   function increaseMaxUtility(
     bytes32 playerEntity,
     EResource resource,
-    uint32 amountToIncrease
+    uint256 amountToIncrease
   ) internal {
-    uint32 prevMax = MaxResourceCount.get(playerEntity, resource);
+    uint256 prevMax = MaxResourceCount.get(playerEntity, resource);
     setMaxStorage(playerEntity, resource, prevMax + amountToIncrease);
   }
 
@@ -117,9 +117,9 @@ library LibStorage {
   function decreaseMaxUtility(
     bytes32 playerEntity,
     EResource resource,
-    uint32 amountToDecrease
+    uint256 amountToDecrease
   ) internal {
-    uint32 maxUtility = MaxResourceCount.get(playerEntity, resource);
+    uint256 maxUtility = MaxResourceCount.get(playerEntity, resource);
     if (maxUtility < amountToDecrease) {
       MaxResourceCount.set(playerEntity, resource, 0);
       return;

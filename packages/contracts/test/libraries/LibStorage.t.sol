@@ -11,7 +11,7 @@ contract TestLibStorage is PrimodiumTest {
   EResource mockResource = EResource.Iron;
   bytes32 buildingPrototype = "buildingPrototype";
   bytes32 buildingEntity = "building";
-  uint32 level = 2;
+  uint256 level = 2;
 
   function setUp() public override {
     super.setUp();

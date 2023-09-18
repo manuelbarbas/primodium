@@ -45,7 +45,7 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
     vm.startPrank(alice);
     // set player level to max level
 
-    uint32 maxLevel = P_MaxLevel.get(ExpansionKey);
+    uint256 maxLevel = P_MaxLevel.get(ExpansionKey);
     bytes32[] memory keys = new bytes32[](1);
     keys[0] = aliceEntity;
 
@@ -64,11 +64,11 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
     // for (uint256 i = 0; i < resourceValues.resources.length; i++) {
     //   uint256 resource = resourceValues.resources[i];
     //   uint256 playerResourceEntity = LibEncode.hashKeyEntity(resource, aliceEntity);
-    //   uint32 value = resourceValues.values[i];
+    //   uint256 value = resourceValues.values[i];
     //   componentDevSystem.executeTyped(ItemComponentID, playerResourceEntity, abi.encode(value));
     // }
 
-    uint32 level = Level.get(aliceEntity);
+    uint256 level = Level.get(aliceEntity);
 
     // increment alice's main base level by 1
     bytes32 mainBase = Home.getMainBase(aliceEntity);

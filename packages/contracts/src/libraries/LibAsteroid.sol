@@ -25,7 +25,7 @@ library LibAsteroid {
     asteroidEntity = LibEncode.getHash(world, ownerEntity);
     require(RockType.get(asteroidEntity) == ERock.NULL, "[LibAsteroid] asteroid already exists");
 
-    uint32 asteroidCount = AsteroidCount.get() + 1;
+    uint256 asteroidCount = AsteroidCount.get() + 1;
     PositionData memory position = getUniqueAsteroidPosition(asteroidCount);
 
     Position.set(asteroidEntity, position);
@@ -39,7 +39,7 @@ library LibAsteroid {
   /// @notice Generates unique asteroid position
   /// @notice Ensures asteroid positions do not overlap
   /// @return position Generated unique position
-  function getUniqueAsteroidPosition(uint32 asteroidCount) internal view returns (PositionData memory position) {
+  function getUniqueAsteroidPosition(uint256 asteroidCount) internal view returns (PositionData memory position) {
     position = LibMath.getPositionByVector(LibMath.getDistance(asteroidCount), LibMath.getDirection(asteroidCount));
     while (ReversePosition.get(position.x, position.y) != 0) {
       position.y += 5;

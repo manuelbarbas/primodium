@@ -11,7 +11,7 @@ contract LibResourceTest is PrimodiumTest {
   bytes32 playerEntity = "playerEntity";
   bytes32 buildingPrototype = "buildingPrototype";
   bytes32 buildingEntity = "building";
-  uint32 level = 2;
+  uint256 level = 2;
 
   function setUp() public override {
     super.setUp();
@@ -55,7 +55,7 @@ contract LibResourceTest is PrimodiumTest {
   function testSpendRequiredResource() public {
     ResourceCount.set(playerEntity, EResource.Iron, 100);
 
-    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint32[](1));
+    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(buildingPrototype, level, requiredResourcesData);
@@ -67,7 +67,7 @@ contract LibResourceTest is PrimodiumTest {
   function testFailSpendRequiredResourceInsufficient() public {
     ResourceCount.set(playerEntity, EResource.Iron, 30);
 
-    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint32[](1));
+    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(buildingPrototype, level, requiredResourcesData);
@@ -78,7 +78,7 @@ contract LibResourceTest is PrimodiumTest {
   function testSpendRequiredUtility() public {
     ResourceCount.set(playerEntity, EResource.Iron, 100);
 
-    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint32[](1));
+    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(buildingPrototype, level, requiredResourcesData);
@@ -90,7 +90,7 @@ contract LibResourceTest is PrimodiumTest {
   function testFailSpendRequiredUtilityInsufficient() public {
     ResourceCount.set(playerEntity, EResource.Iron, 30);
 
-    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint32[](1));
+    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(buildingPrototype, 1, requiredResourcesData);

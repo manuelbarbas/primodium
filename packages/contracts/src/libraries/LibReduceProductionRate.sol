@@ -10,15 +10,15 @@ library LibReduceProductionRate {
   /// @param playerEntity Entity ID of the player
   /// @param buildingEntity Entity ID of the building
   function clearProductionRateReduction(bytes32 playerEntity, bytes32 buildingEntity) internal {
-    uint32 level = Level.get(buildingEntity);
+    uint256 level = Level.get(buildingEntity);
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
     P_RequiredDependenciesData memory requiredDeps = P_RequiredDependencies.get(buildingPrototype, level);
 
     for (uint256 i = 0; i < requiredDeps.resources.length; i++) {
       EResource resource = EResource(requiredDeps.resources[i]);
-      uint32 requiredValue = requiredDeps.amounts[i];
+      uint256 requiredValue = requiredDeps.amounts[i];
       if (requiredValue == 0) continue;
-      uint32 productionRate = ProductionRate.get(playerEntity, resource);
+      uint256 productionRate = ProductionRate.get(playerEntity, resource);
 
       ProductionRate.set(playerEntity, resource, productionRate + requiredValue);
     }
@@ -31,7 +31,7 @@ library LibReduceProductionRate {
   function reduceProductionRate(
     bytes32 playerEntity,
     bytes32 buildingEntity,
-    uint32 level
+    uint256 level
   ) internal {
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
     P_RequiredDependenciesData memory requiredDeps = P_RequiredDependencies.get(buildingPrototype, level);
@@ -42,11 +42,11 @@ library LibReduceProductionRate {
 
     for (uint256 i = 0; i < requiredDeps.resources.length; i++) {
       EResource resource = EResource(requiredDeps.resources[i]);
-      uint32 prevAmount = level > 1 ? prevRequiredDeps.amounts[i] : 0;
-      uint32 requiredValue = requiredDeps.amounts[i] - prevAmount;
+      uint256 prevAmount = level > 1 ? prevRequiredDeps.amounts[i] : 0;
+      uint256 requiredValue = requiredDeps.amounts[i] - prevAmount;
       if (requiredValue == 0) continue;
 
-      uint32 productionRate = ProductionRate.get(playerEntity, resource);
+      uint256 productionRate = ProductionRate.get(playerEntity, resource);
       require(productionRate >= requiredValue, "[ProductionUsage] not enough production rate to reduce usage");
       ProductionRate.set(playerEntity, resource, productionRate - requiredValue);
     }

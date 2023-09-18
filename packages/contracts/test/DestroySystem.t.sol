@@ -50,13 +50,13 @@ contract DestroySystemTest is PrimodiumTest {
 
   function testDestroyWithProductionDependencies() public {
     switchPrank(address(world));
-    uint32 originalProduction = 100;
-    uint32 productionReduction = 10;
+    uint256 originalProduction = 100;
+    uint256 productionReduction = 10;
     ProductionRate.set(playerEntity, EResource.Iron, originalProduction);
 
     P_RequiredDependenciesData memory requiredDependenciesData = P_RequiredDependenciesData(
       new uint8[](1),
-      new uint32[](1)
+      new uint256[](1)
     );
     requiredDependenciesData.resources[0] = uint8(EResource.Iron);
     requiredDependenciesData.amounts[0] = productionReduction;
@@ -65,7 +65,7 @@ contract DestroySystemTest is PrimodiumTest {
     switchPrank(alice);
 
     world.build(EBuilding.IronMine, getIronPosition(alice));
-    uint32 productionIncrease = P_Production.get(IronMinePrototypeId, 1).amount;
+    uint256 productionIncrease = P_Production.get(IronMinePrototypeId, 1).amount;
     assertEq(
       ProductionRate.get(playerEntity, EResource.Iron),
       originalProduction - productionReduction + productionIncrease
@@ -78,7 +78,7 @@ contract DestroySystemTest is PrimodiumTest {
   function testDestroyWithResourceProductionIncrease() public {
     switchPrank(address(world));
 
-    uint32 increase = 69;
+    uint256 increase = 69;
     P_ProductionData memory data = P_ProductionData(EResource.Iron, increase);
     P_Production.set(IronMinePrototypeId, 1, data);
     switchPrank(alice);

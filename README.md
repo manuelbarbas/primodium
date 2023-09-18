@@ -63,6 +63,27 @@ The client is automatically deployed on Vercel from the main branch. The live in
 
 To clean types/ and abis/ in the git diff, run `pnpm clean` in the top level directory.
 
+# Config
+
+## There are four sources of configuration for the game:
+
+1. `mud.config.ts`: Houses tables. To create/modify a table, [read here.](https://mud.dev/world/config)
+2. `enums.ts`: Houses enums.
+3. `terrain.csv`: Houses the terrain of the main map. Numbers correspond to terrain as follows:
+
+```
+  60: "Iron"
+  62: "Lithium"
+  64: "Water"
+  58: "Copper"
+  66: "Sulfur"
+```
+
+4. `prototypesConfig.ts`: Houses preset entity configurations. A prototype object has the following fields:
+   a. keys?: the keys of the prototype. If not set, the key will be a bytes32 encoding of the name of the prototype.
+   b. tables: the values of the tables on the prototype's key(s)
+   c. levels: the values of the levels of the prototype, indexed by `[...keys, level: "uint256"]`. The key of each level should be the number of the level in question.
+
 # Dev Systems
 
 - Functions in `DevSystem` expose direct table access. We can add abstractions as necessary.

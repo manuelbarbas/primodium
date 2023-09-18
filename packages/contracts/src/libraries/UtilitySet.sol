@@ -19,7 +19,7 @@ library UtilitySet {
   /// @param player The address of the player.
   /// @param resource The resource to get.
   /// @return The quantity of the resource.
-  function get(bytes32 player, EResource resource) internal view returns (uint32) {
+  function get(bytes32 player, EResource resource) internal view returns (uint256) {
     return Set_UtilityUsage.get(player, resource).quantity;
   }
 
@@ -54,10 +54,10 @@ library UtilitySet {
   function set(
     bytes32 player,
     EResource resource,
-    uint32 quantity
+    uint256 quantity
   ) internal {
     if (quantity == 0) remove(player, resource);
-    uint32 oldQuantity = Set_UtilityUsage.get(player, resource).quantity;
+    uint256 oldQuantity = Set_UtilityUsage.get(player, resource).quantity;
     if (oldQuantity == 0) {
       Set_Utilities.push(player, uint8(resource));
       Set_UtilityUsage.set(player, resource, Set_Utilities.length(player) - 1, quantity);
