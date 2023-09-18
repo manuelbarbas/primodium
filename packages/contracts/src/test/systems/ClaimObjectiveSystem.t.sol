@@ -14,6 +14,8 @@ import { RecallReinforcementsSystem, ID as RecallReinforcementsSystemID } from "
 import { RecallUnitsFromMotherlodeSystem, ID as RecallUnitsFromMotherlodeSystemID } from "systems/RecallUnitsFromMotherlodeSystem.sol";
 import { ClaimObjectiveSystem, ID as ClaimObjectiveSystemID } from "systems/ClaimObjectiveSystem.sol";
 //components
+import { P_ObjectiveRequirementComponent, ID as P_ObjectiveRequirementComponentID } from "components/P_ObjectiveRequirementComponent.sol";
+import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID } from "components/P_RequiredUtilityComponent.sol";
 import { P_UnitRequirementComponent, ID as P_UnitRequirementComponentID } from "components/P_UnitRequirementComponent.sol";
 import { HasCompletedObjectiveComponent, ID as HasCompletedObjectiveComponentID } from "components/HasCompletedObjectiveComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
@@ -217,6 +219,96 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     );
     vm.prank(alice);
     claimObjectiveSystem.executeTyped(DebugHavResourcesObjectiveID);
+  }
+
+  function testClaimObjectiveMaxUtility() public {
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugHaveMaxUtilityObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
+    P_RequiredUtilityComponent requiredUtilityComponent = P_RequiredUtilityComponent(
+      world.getComponent(P_RequiredUtilityComponentID)
+    );
+
+    ResourceValues memory resourceValues = requiredUtilityComponent.getValue(DebugHaveMaxUtilityObjectiveID);
+    assertTrue(resourceValues.resources.length > 0, "no utility resources required for objective");
+
+    vm.prank(alice);
+    buildSystem.executeTyped(DebugSolarPanelID, getCoord2(alice));
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugHaveMaxUtilityObjectiveID);
+    assertTrue(
+      hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugHaveMaxUtilityObjectiveID, addressToEntity(alice))
+      ),
+      "objective should have been completed"
+    );
+  }
+
+  function testFailClaimObjectiveMaxUtility() public {
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugHaveMaxUtilityObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
+    P_RequiredUtilityComponent requiredUtilityComponent = P_RequiredUtilityComponent(
+      world.getComponent(P_RequiredUtilityComponentID)
+    );
+
+    ResourceValues memory resourceValues = requiredUtilityComponent.getValue(DebugHaveMaxUtilityObjectiveID);
+    assertTrue(resourceValues.resources.length > 0, "no resources required for objective");
+
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugHaveMaxUtilityObjectiveID);
+  }
+
+  function testClaimObjectiveRequiresObjective() public {
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugCompletedPriorObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
+
+    P_ObjectiveRequirementComponent objectiveRequirementComponent = P_ObjectiveRequirementComponent(
+      world.getComponent(P_ObjectiveRequirementComponentID)
+    );
+    assertTrue(
+      objectiveRequirementComponent.has(DebugCompletedPriorObjectiveID),
+      "no prior objective required for objective"
+    );
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugFreeObjectiveID);
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugCompletedPriorObjectiveID);
+    assertTrue(
+      hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugCompletedPriorObjectiveID, addressToEntity(alice))
+      ),
+      "objective should have been completed"
+    );
+  }
+
+  function testFailClaimObjectiveRequiredObjective() public {
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugCompletedPriorObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
+    P_ObjectiveRequirementComponent objectiveRequirementComponent = P_ObjectiveRequirementComponent(
+      world.getComponent(P_ObjectiveRequirementComponentID)
+    );
+    assertTrue(
+      objectiveRequirementComponent.has(DebugCompletedPriorObjectiveID),
+      "no prior objective required for objective"
+    );
+
+    vm.prank(alice);
+    claimObjectiveSystem.executeTyped(DebugCompletedPriorObjectiveID);
   }
 
   // todo: check motherlode movement rules

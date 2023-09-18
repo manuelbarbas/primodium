@@ -52,7 +52,11 @@ library LibUtilityResource {
     return getAvailableUtilityCapacity(world, playerEntity, resourceID) >= requiredAmount;
   }
 
-  function checkMaxUtilityResourceReqs(IWorld world, uint256 playerEntity, uint256 entity) internal returns (bool) {
+  function checkMaxUtilityResourceReqs(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 entity
+  ) internal view returns (bool) {
     P_RequiredUtilityComponent requiredUtilityComponent = P_RequiredUtilityComponent(
       getAddressById(world.components(), P_RequiredUtilityComponentID)
     );
