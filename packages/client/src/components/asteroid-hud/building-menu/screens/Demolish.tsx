@@ -16,7 +16,9 @@ export const Demolish: React.FC<{ building: EntityID }> = ({ building }) => {
   return (
     <Navigator.Screen title="Demolish">
       <SecondaryCard className="space-y-3 items-center text-center">
-        <p>Are you sure you want to demolish {getBuildingName(building)}? </p>
+        <p>
+          Are you sure you want to demolish <b>{getBuildingName(building)}</b>?{" "}
+        </p>
         <Join className="border-error">
           <Button
             className="btn-error btn-sm"

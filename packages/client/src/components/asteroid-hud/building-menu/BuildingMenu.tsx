@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
 import { BuildingType } from "src/network/components/chainComponents";
@@ -23,6 +23,20 @@ export const BuildingMenu: React.FC = () => {
 
     return getBuildingName(selectedBuilding);
   }, [selectedBuilding]);
+
+  useEffect(() => {
+    const removeSelectedBuildingOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        SelectedBuilding.remove();
+      }
+    };
+
+    document.addEventListener("keydown", removeSelectedBuildingOnEscape);
+
+    return () => {
+      document.removeEventListener("keydown", removeSelectedBuildingOnEscape);
+    };
+  }, []);
 
   if (!buildingName || !selectedBuilding) return null;
 

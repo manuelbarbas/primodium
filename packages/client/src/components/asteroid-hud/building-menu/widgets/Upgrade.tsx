@@ -55,7 +55,7 @@ export const Upgrade: React.FC<{ building: EntityID }> = ({ building }) => {
       <div className="flex items-center justify-between w-full">
         <div>
           {recipe.length !== 0 && (
-            <p className="text-xs opacity-75 px-2 mb-1">COST</p>
+            <p className="text-xs opacity-75 px-2 mb-1">UPGRADE COST</p>
           )}
           <div className="flex flex-wrap gap-1 px-2">
             {recipe.length !== 0 &&
