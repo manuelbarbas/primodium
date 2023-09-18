@@ -74,6 +74,13 @@ uint256 constant DebugSimpleTechnologyMainBaseLevelReqsID = uint256(
   keccak256("block.DebugSimpleTechnologyMainBaseLevelReqs")
 );
 
+uint256 constant DebugSimpleTechnologyTitaniumCostID = uint256(keccak256("block.DebugSimpleTechnologyTitaniumCost"));
+uint256 constant DebugSimpleTechnologyPlatinumCostID = uint256(keccak256("block.DebugSimpleTechnologyPlatinumCost"));
+uint256 constant DebugSimpleTechnologyIridiumCostID = uint256(keccak256("block.DebugSimpleTechnologyIridiumCost"));
+uint256 constant DebugSimpleTechnologyKimberliteCostID = uint256(
+  keccak256("block.DebugSimpleTechnologyKimberliteCost")
+);
+
 //storage building
 uint256 constant DebugStorageBuildingID = uint256(keccak256("block.DebugStorageBuilding"));
 uint32 constant BIGNUM = 1_294_967_295;

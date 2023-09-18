@@ -1,20 +1,23 @@
-import { BlockNumber } from "src/network/components/clientComponents";
+import { BlockNumber, Hangar } from "src/network/components/clientComponents";
 import { UnitBreakdown } from "./UnitBreakdown";
 import {
   AsteroidType,
   IsMineableAt,
+  LastClaimedAt,
   Level,
   MainBase,
   Motherlode,
   MotherlodeResource,
   OwnedBy,
   P_MotherlodeResource,
+  P_WorldSpeed,
   Position,
 } from "src/network/components/chainComponents";
 import {
   MotherlodeSizeNames,
   MotherlodeTypeNames,
   RESOURCE_SCALE,
+  SPEED_SCALE,
 } from "src/util/constants";
 import { EntityID } from "@latticexyz/recs";
 import { hashKeyEntity } from "src/util/encode";
@@ -27,6 +30,8 @@ import { GameButton } from "../shared/GameButton";
 import { FaCircleLeft } from "react-icons/fa6";
 import { FaUserAstronaut } from "react-icons/fa";
 import { HostileFleets } from "../asteroid-ui/hostile-fleets/HostileFleets";
+import { getUnitStats } from "src/util/trainUnits";
+import { SingletonID } from "@latticexyz/network";
 
 type PaneState = "units" | "arrivals" | "home";
 export const AsteroidInfo: React.FC<{ asteroid: EntityID; title?: string }> = ({
@@ -154,9 +159,22 @@ const MotherlodeTargetInfo: React.FC<{
   const resourceMined = MotherlodeResource.get(target, { value: 0 }).value;
 
   const mineableAt = Number(IsMineableAt.get(target, { value: "0" }).value);
+  let production = 0;
+  const hangar = Hangar.get(target);
+  if (hangar) {
+    const worldSpeed = P_WorldSpeed.get(SingletonID)?.value ?? SPEED_SCALE;
+    const lastClaimedAt = LastClaimedAt.get(target)?.value ?? 0;
+    for (let i = 0; i < hangar.units.length; i++) {
+      production += getUnitStats(hangar.units[i]).MIN * hangar.counts[i];
+    }
+
+    production *= ((blockNumber - lastClaimedAt) * SPEED_SCALE) / worldSpeed;
+    if (production + resourceMined > maxAmount)
+      production = maxAmount - resourceMined;
+  }
 
   const blocksLeft = mineableAt - blockNumber;
-  const resourceLeft = maxAmount - resourceMined;
+  const resourceLeft = maxAmount - (resourceMined + production);
   const resourceName = MotherlodeTypeNames[motherlodeData.motherlodeType];
   const resourceSize = MotherlodeSizeNames[motherlodeData.size];
   const image = getAsteroidImage(target);
