@@ -126,16 +126,16 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   Expansion: {
     tables: {
-      P_MaxLevel: { value: 6 },
+      P_MaxLevel: { value: 6n },
     },
     levels: {
-      1: { Dimensions: { x: 13, y: 11 }, P_RequiredBaseLevel: { value: 1 } },
-      2: { Dimensions: { x: 17, y: 13 }, P_RequiredBaseLevel: { value: 2 } },
-      3: { Dimensions: { x: 21, y: 15 }, P_RequiredBaseLevel: { value: 3 } },
-      4: { Dimensions: { x: 25, y: 17 }, P_RequiredBaseLevel: { value: 4 } },
-      5: { Dimensions: { x: 29, y: 19 }, P_RequiredBaseLevel: { value: 5 } },
-      6: { Dimensions: { x: 33, y: 13 }, P_RequiredBaseLevel: { value: 6 } },
-      7: { Dimensions: { x: maxRange.xBounds, y: maxRange.yBounds }, P_RequiredBaseLevel: { value: 7 } },
+      1: { Dimensions: { x: 13, y: 11 }, P_RequiredBaseLevel: { value: 1n } },
+      2: { Dimensions: { x: 17, y: 13 }, P_RequiredBaseLevel: { value: 2n } },
+      3: { Dimensions: { x: 21, y: 15 }, P_RequiredBaseLevel: { value: 3n } },
+      4: { Dimensions: { x: 25, y: 17 }, P_RequiredBaseLevel: { value: 4n } },
+      5: { Dimensions: { x: 29, y: 19 }, P_RequiredBaseLevel: { value: 5n } },
+      6: { Dimensions: { x: 33, y: 13 }, P_RequiredBaseLevel: { value: 6n } },
+      7: { Dimensions: { x: maxRange.xBounds, y: maxRange.yBounds }, P_RequiredBaseLevel: { value: 7n } },
     },
   },
 
@@ -148,7 +148,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       Position: { x: Math.floor(maxRange.xBounds / 2), y: Math.floor(maxRange.yBounds / 2), parent: encodeBytes32(0) },
       P_Blueprint: { value: getBlueprint(3, 3) },
-      P_MaxLevel: { value: 8 },
+      P_MaxLevel: { value: 8n },
     },
     levels: {
       1: {
@@ -206,28 +206,28 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   IronMine: {
     tables: {
       P_Blueprint: { value: getBlueprint(1, 1) },
-      P_MaxLevel: { value: 5 },
+      P_MaxLevel: { value: 5n },
       P_RequiredTile: { value: MUDEnums.EResource.indexOf("Iron") },
     },
     levels: {
-      1: { P_RequiredBaseLevel: { value: 1 }, P_Production: getResourceValue({ Iron: 50 }) },
+      1: { P_RequiredBaseLevel: { value: 1n }, P_Production: getResourceValue({ Iron: 50 }) },
       2: {
-        P_RequiredBaseLevel: { value: 1 },
+        P_RequiredBaseLevel: { value: 1n },
         P_RequiredResources: getResourceValues({ Copper: 10000 }),
         P_Production: getResourceValue({ Iron: 65 }),
       },
       3: {
-        P_RequiredBaseLevel: { value: 3 },
+        P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ Copper: 5000 }),
         P_Production: getResourceValue({ Iron: 80 }),
       },
       4: {
-        P_RequiredBaseLevel: { value: 5 },
+        P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ Copper: 300000 }),
         P_Production: getResourceValue({ Iron: 95 }),
       },
       5: {
-        P_RequiredBaseLevel: { value: 8 },
+        P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Copper: 300000 }),
         P_Production: getResourceValue({ Iron: 110 }),
       },
@@ -236,32 +236,32 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   CopperMine: {
     tables: {
       P_Blueprint: { value: getBlueprint(1, 1) },
-      P_MaxLevel: { value: 5 },
+      P_MaxLevel: { value: 5n },
       P_RequiredTile: { value: MUDEnums.EResource.indexOf("Copper") },
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 1 },
+        P_RequiredBaseLevel: { value: 1n },
         P_RequiredResources: getResourceValues({ Iron: 1500 }),
         P_Production: getResourceValue({ Copper: 30 }),
       },
       2: {
-        P_RequiredBaseLevel: { value: 2 },
+        P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Iron: 10000, Copper: 5000 }),
         P_Production: getResourceValue({ Copper: 40 }),
       },
       3: {
-        P_RequiredBaseLevel: { value: 4 },
+        P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Iron: 150000, Copper: 50000 }),
         P_Production: getResourceValue({ Copper: 50 }),
       },
       4: {
-        P_RequiredBaseLevel: { value: 6 },
+        P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Iron: 500000, Copper: 150000 }),
         P_Production: getResourceValue({ Copper: 60 }),
       },
       5: {
-        P_RequiredBaseLevel: { value: 8 },
+        P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Iron: 1000000, Copper: 500000 }),
         P_Production: getResourceValue({ Copper: 70 }),
       },
@@ -270,32 +270,32 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   LithiumMine: {
     tables: {
       P_Blueprint: { value: getBlueprint(1, 1) },
-      P_MaxLevel: { value: 5 },
+      P_MaxLevel: { value: 5n },
       P_RequiredTile: { value: MUDEnums.EResource.indexOf("Lithium") },
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 2 },
+        P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Iron: 20000 }),
         P_Production: getResourceValue({ Lithium: 20 }),
       },
       2: {
-        P_RequiredBaseLevel: { value: 4 },
+        P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Copper: 100000 }),
         P_Production: getResourceValue({ Lithium: 25 }),
       },
       3: {
-        P_RequiredBaseLevel: { value: 6 },
+        P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Copper: 250000 }),
         P_Production: getResourceValue({ Lithium: 30 }),
       },
       4: {
-        P_RequiredBaseLevel: { value: 7 },
+        P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ Copper: 750000 }),
         P_Production: getResourceValue({ Lithium: 35 }),
       },
       5: {
-        P_RequiredBaseLevel: { value: 8 },
+        P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Copper: 1250000 }),
         P_Production: getResourceValue({ Lithium: 40 }),
       },
@@ -304,32 +304,32 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   SulfurMine: {
     tables: {
       P_Blueprint: { value: getBlueprint(1, 1) },
-      P_MaxLevel: { value: 5 },
+      P_MaxLevel: { value: 5n },
       P_RequiredTile: { value: MUDEnums.EResource.indexOf("Sulfur") },
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 2 },
+        P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Iron: 25000 }),
         P_Production: getResourceValue({ Sulfur: 10 }),
       },
       2: {
-        P_RequiredBaseLevel: { value: 4 },
+        P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Iron: 100000, Copper: 15000 }),
         P_Production: getResourceValue({ Sulfur: 12 }),
       },
       3: {
-        P_RequiredBaseLevel: { value: 6 },
+        P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Iron: 250000, Copper: 50000 }),
         P_Production: getResourceValue({ Sulfur: 15 }),
       },
       4: {
-        P_RequiredBaseLevel: { value: 7 },
+        P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ Iron: 500000, Copper: 150000 }),
         P_Production: getResourceValue({ Sulfur: 17 }),
       },
       5: {
-        P_RequiredBaseLevel: { value: 8 },
+        P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Iron: 1000000, Copper: 500000 }),
         P_Production: getResourceValue({ Sulfur: 20 }),
       },
@@ -340,35 +340,35 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   IronPlateFactory: {
     tables: {
       P_Blueprint: { value: getBlueprint(2, 2) },
-      P_MaxLevel: { value: 5 },
+      P_MaxLevel: { value: 5n },
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 1 },
+        P_RequiredBaseLevel: { value: 1n },
         P_RequiredResources: getResourceValues({ Iron: 40000, Copper: 10000 }),
         P_RequiredDependencies: getResourceValues({ Iron: 35 }),
         P_Production: getResourceValue({ IronPlate: 8 }),
       },
       2: {
-        P_RequiredBaseLevel: { value: 3 },
+        P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ Copper: 100000, Lithium: 75000 }),
         P_RequiredDependencies: getResourceValues({ Iron: 45 }),
         P_Production: getResourceValue({ IronPlate: 12 }),
       },
       3: {
-        P_RequiredBaseLevel: { value: 5 },
+        P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ Copper: 500000, Lithium: 250000 }),
         P_RequiredDependencies: getResourceValues({ Iron: 55 }),
         P_Production: getResourceValue({ IronPlate: 15 }),
       },
       4: {
-        P_RequiredBaseLevel: { value: 7 },
+        P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ Copper: 1500000, Titanium: 7000 }),
         P_RequiredDependencies: getResourceValues({ Iron: 65 }),
         P_Production: getResourceValue({ IronPlate: 17 }),
       },
       5: {
-        P_RequiredBaseLevel: { value: 8 },
+        P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Copper: 2500000, Kimberlite: 10000 }),
         P_RequiredDependencies: getResourceValues({ Iron: 65 }),
         P_Production: getResourceValue({ IronPlate: 20 }),
@@ -378,23 +378,23 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   AlloyFactory: {
     tables: {
       P_Blueprint: { value: getBlueprint(2, 2) },
-      P_MaxLevel: { value: 3 },
+      P_MaxLevel: { value: 3n },
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 3 },
+        P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ Iron: 50000, IronPlate: 50000, U_Electricity: 100 }),
         P_RequiredDependencies: getResourceValues({ Iron: 35, Copper: 20 }),
         P_Production: getResourceValue({ Alloy: 5 }),
       },
       2: {
-        P_RequiredBaseLevel: { value: 6 },
+        P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Copper: 500000, IronPlate: 25000, U_Electricity: 120 }),
         P_RequiredDependencies: getResourceValues({ Iron: 50, Copper: 30 }),
         P_Production: getResourceValue({ Alloy: 7 }),
       },
       3: {
-        P_RequiredBaseLevel: { value: 8 },
+        P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Copper: 1250000, IronPlate: 100000, U_Electricity: 150 }),
         P_RequiredDependencies: getResourceValues({ Iron: 60, Copper: 35 }),
         P_Production: getResourceValue({ Alloy: 9 }),
@@ -404,23 +404,23 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   PVCellFactory: {
     tables: {
       P_Blueprint: { value: getBlueprint(2, 2) },
-      P_MaxLevel: { value: 3 },
+      P_MaxLevel: { value: 3n },
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 2 },
+        P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Iron: 25000, Lithium: 5000 }),
         P_RequiredDependencies: getResourceValues({ Lithium: 10, Copper: 20 }),
         P_Production: getResourceValue({ PVCell: 5 }),
       },
       2: {
-        P_RequiredBaseLevel: { value: 5 },
+        P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ Copper: 350000, Lithium: 25000 }),
         P_RequiredDependencies: getResourceValues({ Lithium: 20, Copper: 30 }),
         P_Production: getResourceValue({ PVCell: 7 }),
       },
       3: {
-        P_RequiredBaseLevel: { value: 8 },
+        P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Copper: 750000, Lithium: 100000 }),
         P_RequiredDependencies: getResourceValues({ Lithium: 25, Copper: 35 }),
         P_Production: getResourceValue({ PVCell: 9 }),
@@ -432,25 +432,25 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   StorageUnit: {
     tables: {
       P_Blueprint: { value: getBlueprint(2, 2) },
-      P_MaxLevel: { value: 3 },
+      P_MaxLevel: { value: 3n },
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 2 },
+        P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Iron: 50000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(storageUnitMaxResourceUpgrades[1]),
         },
       },
       2: {
-        P_RequiredBaseLevel: { value: 4 },
+        P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Iron: 100000, Copper: 100000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(storageUnitMaxResourceUpgrades[2]),
         },
       },
       3: {
-        P_RequiredBaseLevel: { value: 6 },
+        P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Iron: 500000, Titanium: 1000, U_Electricity: 50 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(storageUnitMaxResourceUpgrades[3]),
@@ -462,21 +462,21 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   SolarPanel: {
     tables: {
       P_Blueprint: { value: getBlueprint(2, 2) },
-      P_MaxLevel: { value: 3 },
+      P_MaxLevel: { value: 3n },
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 2 },
+        P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ PVCell: 2000, Iron: 40000 }),
         P_Production: getResourceValue({ U_Electricity: 300 }),
       },
       2: {
-        P_RequiredBaseLevel: { value: 4 },
+        P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ PVCell: 40000, Copper: 50000 }),
         P_Production: getResourceValue({ U_Electricity: 600 }),
       },
       3: {
-        P_RequiredBaseLevel: { value: 6 },
+        P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ PVCell: 150000, Copper: 150000 }),
         P_Production: getResourceValue({ U_Electricity: 800 }),
       },
@@ -487,31 +487,31 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   Hangar: {
     tables: {
       P_Blueprint: { value: getBlueprint(4, 4) },
-      P_MaxLevel: { value: 5 },
+      P_MaxLevel: { value: 5n },
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 2 },
+        P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Iron: 20000, Lithium: 15000, U_Electricity: 100 }),
         P_Production: getResourceValue({ U_Housing: 100 }),
       },
       2: {
-        P_RequiredBaseLevel: { value: 4 },
+        P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Sulfur: 5000, Copper: 175000, U_Electricity: 200 }),
         P_Production: getResourceValue({ U_Housing: 250 }),
       },
       3: {
-        P_RequiredBaseLevel: { value: 6 },
+        P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Sulfur: 15000, Copper: 300000, U_Electricity: 300 }),
         P_Production: getResourceValue({ U_Housing: 350 }),
       },
       4: {
-        P_RequiredBaseLevel: { value: 7 },
+        P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ Sulfur: 50000, Platinum: 10000, U_Electricity: 400 }),
         P_Production: getResourceValue({ U_Housing: 500 }),
       },
       5: {
-        P_RequiredBaseLevel: { value: 8 },
+        P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Sulfur: 100000, Kimberlite: 15000, U_Electricity: 500 }),
         P_Production: getResourceValue({ U_Housing: 600 }),
       },
@@ -520,23 +520,23 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   DroneFactory: {
     tables: {
       P_Blueprint: { value: getBlueprint(3, 3) },
-      P_MaxLevel: { value: 4 },
+      P_MaxLevel: { value: 4n },
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 2 },
+        P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Lithium: 5000, U_Electricity: 100 }),
       },
       2: {
-        P_RequiredBaseLevel: { value: 4 },
+        P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Sulfur: 25000, U_Electricity: 200 }),
       },
       3: {
-        P_RequiredBaseLevel: { value: 6 },
+        P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Sulfur: 100000, Iridium: 20000, U_Electricity: 350 }),
       },
       4: {
-        P_RequiredBaseLevel: { value: 8 },
+        P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Sulfur: 275000, Kimberlite: 10000, U_Electricity: 500 }),
       },
     },
@@ -544,21 +544,21 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   Starmapper: {
     tables: {
       P_Blueprint: { value: getBlueprint(3, 2) },
-      P_MaxLevel: { value: 3 },
+      P_MaxLevel: { value: 3n },
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 3 },
+        P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ Sulfur: 10000 }),
         P_Production: getResourceValue({ U_MoveCount: 1 }),
       },
       2: {
-        P_RequiredBaseLevel: { value: 7 },
+        P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ Sulfur: 125000 }),
         P_Production: getResourceValue({ U_MoveCount: 2 }),
       },
       3: {
-        P_RequiredBaseLevel: { value: 8 },
+        P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Sulfur: 125000, Kimberlite: 10000 }),
         P_Production: getResourceValue({ U_MoveCount: 3 }),
       },
