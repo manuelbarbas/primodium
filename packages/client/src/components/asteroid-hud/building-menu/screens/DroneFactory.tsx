@@ -4,7 +4,7 @@ import { getBuildingName } from "src/util/building";
 import { Navigator } from "src/components/core/Navigator";
 import { Header } from "../widgets/Header";
 import { Upgrade } from "../widgets/Upgrade";
-import { BuildDrones } from "../widgets/BuildDrones";
+import { BuildDrones } from "../widgets/BuildDrone";
 import { UpgradeDrones } from "../widgets/UpgradeDrones";
 
 export const DroneFactory: React.FC<{ building: EntityID }> = ({
@@ -26,6 +26,9 @@ export const DroneFactory: React.FC<{ building: EntityID }> = ({
         <BuildDrones />
         <UpgradeDrones />
       </div>
+      <Navigator.NavButton className="btn-error btn-sm m-1" to="Demolish">
+        Demolish Building
+      </Navigator.NavButton>
     </Navigator.Screen>
   );
 };

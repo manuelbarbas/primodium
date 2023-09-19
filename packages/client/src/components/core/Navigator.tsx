@@ -111,11 +111,12 @@ const BackButton: FC<{
   className?: string;
   children?: ReactNode;
   onClick?: () => void;
-}> = ({ children, onClick, className }) => {
+  disabled?: boolean;
+}> = ({ children, onClick, className, disabled = false }) => {
   const { goBack, history } = useNavigation();
   return (
     <Button
-      disabled={history.length <= 1}
+      disabled={history.length <= 1 || disabled}
       onClick={() => {
         if (onClick) onClick();
         goBack();

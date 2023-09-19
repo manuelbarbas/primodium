@@ -10,6 +10,8 @@ import { BuildingInfo } from "./screens/BuildingInfo";
 import { Demolish } from "./screens/Demolish";
 import { DroneFactory } from "./screens/DroneFactory";
 import { MainBase } from "./screens/Mainbase";
+import { BuildQueue } from "./screens/BuildQueue";
+import { BuildDrone } from "./screens/BuildDrone";
 
 export const BuildingMenu: React.FC = () => {
   const selectedBuilding = SelectedBuilding.use()?.value;
@@ -63,6 +65,8 @@ export const BuildingMenu: React.FC = () => {
       {/* Sub Screens */}
       <Demolish building={selectedBuilding} />
       <BuildingInfo building={selectedBuilding} />
+      <BuildQueue building={selectedBuilding} />
+      <BuildDrone building={selectedBuilding} />
 
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2">
         <Button

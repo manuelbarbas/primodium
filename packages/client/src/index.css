@@ -41,11 +41,11 @@
   }
 
   .scrollbar::-webkit-scrollbar-track {
-    @apply bg-slate-500;
+    @apply bg-slate-700 rounded-md;
   }
 
   .scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-slate-700;
+    @apply bg-slate-500 rounded-md;
   }
 
   .scrollbar::-webkit-scrollbar-thumb:hover {
