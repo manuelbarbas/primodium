@@ -195,6 +195,13 @@ export const config = mudConfig({
       },
     },
 
+    P_RequiredUpgradeResources: {
+      keySchema: { prototype: "bytes32", level: "uint256" },
+      schema: {
+        resources: "uint8[]",
+        amounts: "uint256[]",
+      },
+    },
     /* -------------------------------- Buildings ------------------------------- */
 
     P_Blueprint: {
@@ -247,7 +254,7 @@ export const config = mudConfig({
       keySchema: { motherlodeType: "EMotherlodeType", level: "ESize" },
       schema: {
         resource: "EResource",
-        amount: "uint32",
+        amount: "uint256",
       },
     },
 
@@ -276,6 +283,17 @@ export const config = mudConfig({
     },
 
     /* ----------------------------- Unit Production ---------------------------- */
+    P_Unit: {
+      keySchema: { unit: "EUnit", level: "uint256" },
+      schema: {
+        attack: "uint256",
+        defense: "uint256",
+        speed: "uint256",
+        cargo: "uint256",
+        mining: "uint256",
+        trainingTime: "uint256",
+      },
+    },
     QueueUnits: {
       keySchema: { entity: "bytes32" },
       schema: {

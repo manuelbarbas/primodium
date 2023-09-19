@@ -20,7 +20,7 @@ export const upgradesByLevel = (name: string, upgrades: Record<number, Record<st
 
 export const getResourceValue = (resourceValue: { [x: string]: number }) => {
   const [resource, amount] = Object.entries(resourceValue)[0];
-  return { resource: MUDEnums.EResource.indexOf(resource), amount };
+  return { resource: MUDEnums.EResource.indexOf(resource), amount: BigInt(amount) };
 };
 
 export const getResourceValues = (resourceValues: Record<string, number>) => {
@@ -28,10 +28,10 @@ export const getResourceValues = (resourceValues: Record<string, number>) => {
   const [resources, amounts] = Object.entries(resourceValues).reduce(
     (acc, [resource, amount]) => {
       acc[0].push(MUDEnums.EResource.indexOf(resource));
-      acc[1].push(amount);
+      acc[1].push(BigInt(amount));
       return acc;
     },
-    [[], []] as [number[], number[]]
+    [[], []] as [number[], bigint[]]
   );
   return { resources, amounts };
 };
