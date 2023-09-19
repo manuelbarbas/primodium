@@ -11,7 +11,7 @@ export const UpgradeDrones: React.FC = () => {
       </div>
 
       <Navigator.NavButton
-        to="BuildDrones"
+        to="UpgradeDrones"
         className="btn-sm w-fit btn-secondary"
       >
         <FaArrowRight />

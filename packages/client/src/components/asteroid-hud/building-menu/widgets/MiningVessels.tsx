@@ -1,3 +1,4 @@
+import { FaArrowRight } from "react-icons/fa";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 
@@ -10,7 +11,7 @@ export const MiningVessels: React.FC = () => {
         to="Commission"
         className="btn-sm w-fit btn-secondary"
       >
-        Go
+        <FaArrowRight />
       </Navigator.NavButton>
     </SecondaryCard>
   );
