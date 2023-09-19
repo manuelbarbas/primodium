@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 import { EResource } from "src/Types.sol";
-import { Motherlode, MotherlodeData, Set_EntityMotherlode, Set_Motherlodes } from "codegen/Tables.sol";
+import { Motherlode, MotherlodeData, SetItemMotherlodes, SetMotherlodes } from "codegen/Tables.sol";
 
 library MotherlodeSet {
   function has(bytes32 player, bytes32 motherlode) internal view returns (bool) {
@@ -15,17 +15,17 @@ library MotherlodeSet {
 
   function add(bytes32 player, bytes32 motherlode) internal {
     if (has(player, motherlode)) return;
-    Set_Motherlodes.push(player, motherlode);
+    SetMotherlodes.push(player, motherlode);
     bytes32 prevOwner = Motherlode.getOwnedBy(motherlode);
     if (prevOwner != 0) {
       remove(prevOwner, motherlode);
     }
     Motherlode.setOwnedBy(motherlode, player);
-    Set_EntityMotherlode.set(motherlode, Set_Motherlodes.length(player) - 1);
+    SetItemMotherlodes.set(motherlode, SetMotherlodes.length(player) - 1);
   }
 
   function getAll(bytes32 player) internal view returns (bytes32[] memory) {
-    return Set_Motherlodes.get(player);
+    return SetMotherlodes.get(player);
   }
 
   function set(bytes32 motherlode, MotherlodeData memory data) internal {
@@ -34,27 +34,27 @@ library MotherlodeSet {
 
   function remove(bytes32 player, bytes32 motherlode) internal {
     if (!has(player, motherlode)) return;
-    if (Set_Motherlodes.length(player) == 1) {
+    if (SetMotherlodes.length(player) == 1) {
       clear(player);
       return;
     }
-    bytes32 replacementId = Set_Motherlodes.getItem(player, Set_Motherlodes.length(player) - 1);
-    uint256 index = Set_EntityMotherlode.get(motherlode);
+    bytes32 replacementId = SetMotherlodes.getItem(player, SetMotherlodes.length(player) - 1);
+    uint256 index = SetItemMotherlodes.get(motherlode);
 
-    Set_Motherlodes.update(player, index, replacementId);
-    Set_EntityMotherlode.set(replacementId, index);
-    Set_Motherlodes.pop(player);
+    SetMotherlodes.update(player, index, replacementId);
+    SetItemMotherlodes.set(replacementId, index);
+    SetMotherlodes.pop(player);
 
     Motherlode.setOwnedBy(motherlode, 0);
-    Set_EntityMotherlode.set(motherlode, 0);
+    SetItemMotherlodes.set(motherlode, 0);
   }
 
   function clear(bytes32 player) internal {
-    for (uint256 i = 0; i < Set_Motherlodes.length(player); i++) {
-      bytes32 motherlode = Set_Motherlodes.getItem(player, i);
+    for (uint256 i = 0; i < SetMotherlodes.length(player); i++) {
+      bytes32 motherlode = SetMotherlodes.getItem(player, i);
       Motherlode.setOwnedBy(motherlode, 0);
-      Set_EntityMotherlode.set(motherlode, 0);
+      SetItemMotherlodes.set(motherlode, 0);
     }
-    Set_Motherlodes.deleteRecord(player);
+    SetMotherlodes.deleteRecord(player);
   }
 }

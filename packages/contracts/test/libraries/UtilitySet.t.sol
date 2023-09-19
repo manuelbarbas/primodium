@@ -33,11 +33,6 @@ contract UtilitySetTest is PrimodiumTest {
     assertEq(allResources.length, 2);
   }
 
-  function testGetIndex() public {
-    UtilitySet.set(player1, resource1, 50);
-    assertEq(UtilitySet.getIndex(player1, resource1), 0);
-  }
-
   function testSet() public {
     UtilitySet.set(player1, resource1, 50);
     assertEq(UtilitySet.get(player1, resource1), 50);

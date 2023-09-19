@@ -152,14 +152,14 @@ export const config = mudConfig({
     },
 
     // Used in the building utilities set
-    Set_UtilityUsage: {
+    SetItemUtilities: {
       keySchema: { entity: "bytes32", utility: "EResource" },
       schema: {
         index: "uint256",
         quantity: "uint256",
       },
     },
-    Set_Utilities: {
+    SetUtilities: {
       keySchema: { entity: "bytes32" },
       schema: "uint8[]",
     },
@@ -261,15 +261,33 @@ export const config = mudConfig({
     },
 
     // Used in the building utilities set
-    Set_EntityMotherlode: {
+    SetItemMotherlodes: {
       keySchema: { motherlode: "bytes32" },
       schema: {
         index: "uint256",
       },
     },
-    Set_Motherlodes: {
+    SetMotherlodes: {
       keySchema: { entity: "bytes32" },
       schema: "bytes32[]",
+    },
+
+    /* ----------------------------- Unit Production ---------------------------- */
+    QueueUnits: {
+      keySchema: { entity: "bytes32" },
+      schema: {
+        front: "uint256",
+        back: "uint256",
+        queue: "bytes32[]",
+      },
+    },
+
+    QueueItemUnits: {
+      keySchema: { entity: "bytes32", index: "uint256" },
+      schema: {
+        unitId: "bytes32",
+        quantity: "uint256",
+      },
     },
   },
 });
