@@ -20,6 +20,10 @@ library LibSetBuildingReqs {
     P_RequiredResourcesComponent(world.getComponent(P_RequiredResourcesComponentID)).set(buildingType, resources);
   }
 
+  function setResourceReqs(IWorld world, uint256 buildingType, ResourceValues memory resourceValues) internal {
+    P_RequiredResourcesComponent(world.getComponent(P_RequiredResourcesComponentID)).set(buildingType, resourceValues);
+  }
+
   function setStorageUpgrades(IWorld world, uint256 buildingType, ResourceValue[] memory resourceValues) internal {
     uint256[] memory resources = new uint256[](resourceValues.length);
     for (uint256 i = 0; i < resourceValues.length; i++) {

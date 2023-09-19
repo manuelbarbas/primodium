@@ -4,6 +4,16 @@ pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 // Production Buildings
+import { P_UnitRewardComponent, ID as P_UnitRewardComponentID } from "components/P_UnitRewardComponent.sol";
+import { P_ResourceRewardComponent, ID as P_ResourceRewardComponentID } from "components/P_ResourceRewardComponent.sol";
+import { P_DestroyedUnitsRequirementComponent, ID as P_DestroyedUnitsRequirementComponentID } from "components/P_DestroyedUnitsRequirementComponent.sol";
+import { P_MotherlodeMinedRequirementComponent, ID as P_MotherlodeMinedRequirementComponentID } from "components/P_MotherlodeMinedRequirementComponent.sol";
+import { P_RaidRequirementComponent, ID as P_RaidRequirementComponentID } from "components/P_RaidRequirementComponent.sol";
+import { P_HasBuiltBuildingComponent, ID as P_HasBuiltBuildingComponentID } from "components/P_HasBuiltBuildingComponent.sol";
+import { P_BuildingCountRequirementComponent, ID as P_BuildingCountRequirementComponentID } from "components/P_BuildingCountRequirementComponent.sol";
+import { P_ObjectiveRequirementComponent, ID as P_ObjectiveRequirementComponentID } from "components/P_ObjectiveRequirementComponent.sol";
+import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID } from "components/P_RequiredUtilityComponent.sol";
+import { P_UnitRequirementComponent, ID as P_UnitRequirementComponentID } from "components/P_UnitRequirementComponent.sol";
 import { P_UnitTravelSpeedComponent as SpeedComponent, ID as SpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 import { P_RequiredResearchComponent, ID as P_RequiredResearchComponentID } from "components/P_RequiredResearchComponent.sol";
 import { P_RequiredTileComponent, ID as P_RequiredTileComponentID } from "components/P_RequiredTileComponent.sol";
@@ -20,7 +30,7 @@ import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID } from "
 import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
 import { IsDebugComponent, ID as IsDebugComponentID } from "components/IsDebugComponent.sol";
 import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "components/P_IsBuildingTypeComponent.sol";
-
+import { P_IsObjectiveComponent, ID as P_IsObjectiveComponentID } from "components/P_IsObjectiveComponent.sol";
 import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID } from "components/P_UnitProductionTypesComponent.sol";
 import { P_UnitProductionMultiplierComponent, ID as P_UnitProductionMultiplierComponentID } from "components/P_UnitProductionMultiplierComponent.sol";
 import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
@@ -65,6 +75,9 @@ library LibInitDebug {
     initializeUnits(world);
 
     registerUnitType(world);
+    registerObjectives(world);
+
+    initObjectives(world);
   }
 
   function registerBuildingTypes(IWorld world) internal {
@@ -118,6 +131,175 @@ library LibInitDebug {
 
     isUnitComponent.set(DebugUnitBattle1);
     isUnitComponent.set(DebugUnitBattle2);
+  }
+
+  function registerObjectives(IWorld world) internal {
+    P_IsObjectiveComponent isObjectiveComponent = P_IsObjectiveComponent(world.getComponent(P_IsObjectiveComponentID));
+
+    isObjectiveComponent.set(DebugFreeObjectiveID);
+    isObjectiveComponent.set(DebugHavResourcesObjectiveID);
+    isObjectiveComponent.set(DebugHaveUnitsObjectiveID);
+    isObjectiveComponent.set(DebugHaveMaxUtilityObjectiveID);
+    isObjectiveComponent.set(DebugCompletedPriorObjectiveID);
+    isObjectiveComponent.set(DebugMainBaseLevelObjectiveID);
+    isObjectiveComponent.set(DebugTechnologyResearchedObjectiveID);
+    isObjectiveComponent.set(DebugResourceProductionObjectiveID);
+    isObjectiveComponent.set(DebugBuiltBuildingTypeObjectiveID);
+    isObjectiveComponent.set(DebugNumberOfBuiltBuildingTypeObjectiveID);
+    isObjectiveComponent.set(DebugRaidObjectiveID);
+
+    isObjectiveComponent.set(DebugMotherlodeMiningTitaniumObjectiveID);
+    isObjectiveComponent.set(DebugMotherlodeMiningPlatinumObjectiveID);
+    isObjectiveComponent.set(DebugMotherlodeMiningIridiumObjectiveID);
+    isObjectiveComponent.set(DebugMotherlodeMiningKimberliteObjectiveID);
+
+    isObjectiveComponent.set(DebugDestroyedUnitsObjectiveID);
+    isObjectiveComponent.set(DebugResourceRewardObjectiveID);
+    isObjectiveComponent.set(DebugUnitsRewardObjectiveID);
+  }
+
+  function initObjectives(IWorld world) internal {
+    P_RequiredResearchComponent requiredResourcesComponent = P_RequiredResearchComponent(
+      world.getComponent(P_RequiredResearchComponentID)
+    );
+    uint256 objective;
+    objective = DebugHavResourcesObjectiveID;
+    //DebugHavResourcesObjectiveID
+    ResourceValues memory resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = IronResourceItemID;
+    resourceValues.values[0] = 1000;
+    LibSetBuildingReqs.setResourceReqs(world, objective, resourceValues);
+
+    P_UnitRequirementComponent unitRequirementComponent = P_UnitRequirementComponent(
+      world.getComponent(P_UnitRequirementComponentID)
+    );
+    //DebugHaveUnitsObjectiveID
+    objective = DebugHaveUnitsObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = DebugUnit;
+    resourceValues.values[0] = 5;
+    unitRequirementComponent.set(objective, resourceValues);
+    P_RequiredUtilityComponent requiredUtilityComponent = P_RequiredUtilityComponent(
+      world.getComponent(P_RequiredUtilityComponentID)
+    );
+    //DebugHaveMaxUtilityObjectiveID
+    objective = DebugHaveMaxUtilityObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = ElectricityUtilityResourceID;
+    resourceValues.values[0] = 5;
+    requiredUtilityComponent.set(objective, resourceValues);
+
+    P_ObjectiveRequirementComponent objectiveRequirementComponent = P_ObjectiveRequirementComponent(
+      world.getComponent(P_ObjectiveRequirementComponentID)
+    );
+    //DebugCompletedPriorObjectiveID
+    objective = DebugCompletedPriorObjectiveID;
+    objectiveRequirementComponent.set(objective, DebugFreeObjectiveID);
+
+    LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
+    //DebugMainBaseLevelObjectiveID
+    objective = DebugMainBaseLevelObjectiveID;
+    levelComponent.set(objective, 2);
+
+    P_RequiredResearchComponent requiredReseachComponent = P_RequiredResearchComponent(
+      world.getComponent(P_RequiredResearchComponentID)
+    );
+    //DebugTechnologyResearchedObjectiveID
+    objective = DebugTechnologyResearchedObjectiveID;
+    requiredReseachComponent.set(objective, DebugSimpleTechnologyNoReqsID);
+
+    P_ProductionDependenciesComponent productionDependenciesComponent = P_ProductionDependenciesComponent(
+      world.getComponent(P_ProductionDependenciesComponentID)
+    );
+    //DebugResourceProductionObjectiveID
+    objective = DebugResourceProductionObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = IronResourceItemID;
+    resourceValues.values[0] = 10;
+    productionDependenciesComponent.set(objective, resourceValues);
+
+    P_HasBuiltBuildingComponent hasBuiltBuildingComponent = P_HasBuiltBuildingComponent(
+      world.getComponent(P_HasBuiltBuildingComponentID)
+    );
+    //DebugBuiltBuildingTypeObjectiveID
+    objective = DebugBuiltBuildingTypeObjectiveID;
+    hasBuiltBuildingComponent.set(objective, DebugSimpleBuildingNoReqsID);
+
+    //DebugNumberOfBuiltBuildingTypeObjectiveID
+    objective = DebugNumberOfBuiltBuildingTypeObjectiveID;
+    P_BuildingCountRequirementComponent buildingCountRequirementComponent = P_BuildingCountRequirementComponent(
+      world.getComponent(P_BuildingCountRequirementComponentID)
+    );
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = DebugSimpleBuildingNoReqsID;
+    resourceValues.values[0] = 2;
+    buildingCountRequirementComponent.set(objective, resourceValues);
+
+    P_RaidRequirementComponent raidRequirementComponent = P_RaidRequirementComponent(
+      world.getComponent(P_RaidRequirementComponentID)
+    );
+    //DebugRaidObjectiveID
+    objective = DebugRaidObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = IronResourceItemID;
+    resourceValues.values[0] = 40;
+    raidRequirementComponent.set(objective, resourceValues);
+
+    P_MotherlodeMinedRequirementComponent motherlodeMinedRequirementComponent = P_MotherlodeMinedRequirementComponent(
+      world.getComponent(P_MotherlodeMinedRequirementComponentID)
+    );
+    //DebugMotherlodeMiningTitaniumObjectiveID
+    objective = DebugMotherlodeMiningTitaniumObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = TitaniumResourceItemID;
+    resourceValues.values[0] = 500;
+    motherlodeMinedRequirementComponent.set(objective, resourceValues);
+
+    //DebugMotherlodeMiningPlatinumObjectiveID
+    objective = DebugMotherlodeMiningPlatinumObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = PlatinumResourceItemID;
+    resourceValues.values[0] = 500;
+    motherlodeMinedRequirementComponent.set(objective, resourceValues);
+
+    //DebugMotherlodeMiningIridiumObjectiveID
+    objective = DebugMotherlodeMiningIridiumObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = IridiumResourceItemID;
+    resourceValues.values[0] = 500;
+    motherlodeMinedRequirementComponent.set(objective, resourceValues);
+
+    //DebugMotherlodeMiningKimberliteObjectiveID
+    objective = DebugMotherlodeMiningKimberliteObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = KimberliteResourceItemID;
+    resourceValues.values[0] = 500;
+    motherlodeMinedRequirementComponent.set(objective, resourceValues);
+
+    P_DestroyedUnitsRequirementComponent destroyedUnitsRequirementComponent = P_DestroyedUnitsRequirementComponent(
+      world.getComponent(P_DestroyedUnitsRequirementComponentID)
+    );
+    //DebugDestroyedUnitsObjectiveID
+    objective = DebugDestroyedUnitsObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = DebugUnit;
+    resourceValues.values[0] = 1;
+    destroyedUnitsRequirementComponent.set(objective, resourceValues);
+
+    P_UnitRewardComponent unitRewardComponent = P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID));
+    //DebugUnitsRewardObjectiveID
+    objective = DebugUnitsRewardObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = DebugUnit;
+    resourceValues.values[0] = 1;
+    unitRewardComponent.set(objective, resourceValues);
+
+    //DebugResourceRewardObjectiveID
+    objective = DebugResourceRewardObjectiveID;
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = SulfurResourceItemID;
+    resourceValues.values[0] = 100;
+    P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceValues);
   }
 
   function initBlueprints(IWorld world) internal {

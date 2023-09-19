@@ -39,7 +39,23 @@
     "ScoreComponent",
     "BattleBlockNumberComponent",
     "PlayerMotherlodeComponent",
+    "HasCompletedObjectiveComponent",
+    "HasBuiltBuildingComponent",
+    "BuildingCountComponent",
+    "TotalRaidComponent",
+    "TotalMotherlodeMinedComponent",
+    "TotalUnitsDestroyedComponent",
 
+    "P_DestroyedUnitsRequirementComponent",
+    "P_MotherlodeMinedRequirementComponent",
+    "P_RaidRequirementComponent",
+    "P_UnitRequirementComponent",
+    "P_BuildingCountRequirementComponent",
+    "P_HasBuiltBuildingComponent",
+    "P_IsObjectiveComponent",
+    "P_ObjectiveRequirementComponent",
+    "P_ResourceRewardComponent",
+    "P_UnitRewardComponent",
     "P_WorldSpeedComponent",
     "P_MaxMovesComponent",
     "P_ProductionDependenciesComponent",
@@ -127,12 +143,17 @@
       "writeAccess": ["*"]
     },
     {
+      "name": "ClaimObjectiveSystem",
+      "writeAccess": ["*"]
+    },
+
+    {
       "name": "ComponentDevSystem",
       "writeAccess": ["*"]
     },
     {
       "name": "S_ResolveBattleSystem",
-      "writeAccess": ["BattleResultComponent"]
+      "writeAccess": ["*"]
     },
     {
       "name": "S_ResolveRaidUnitsSystem",
