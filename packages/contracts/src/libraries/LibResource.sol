@@ -5,7 +5,7 @@ import { EBuilding, EResource } from "src/Types.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { UtilitySet } from "libraries/UtilitySet.sol";
-import { P_IsUtility, P_RequiredResources, P_RequiredResourcesData, P_EnumToPrototype, ResourceCount, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/Tables.sol";
+import { P_IsUtility, P_RequiredResources, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/Tables.sol";
 import { BuildingKey } from "src/Keys.sol";
 
 library LibResource {
@@ -20,21 +20,54 @@ library LibResource {
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(buildingPrototype, level);
 
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
-      EResource resource = EResource(requiredResources.resources[i]);
+      spendResource(
+        playerEntity,
+        buildingEntity,
+        EResource(requiredResources.resources[i]),
+        requiredResources.amounts[i]
+      );
+    }
+  }
 
-      // check if player has enough resources
-      uint256 resourceCost = requiredResources.amounts[i];
-      uint256 playerResourceCount = ResourceCount.get(playerEntity, resource);
-      require(resourceCost <= playerResourceCount, "[SpendResources] Not enough resources to spend");
+  /// @notice Spends resources required to upgrade a unit
+  /// @notice claims all resources beforehand
+  /// @param playerEntity ID of the player upgrading
+  /// @param unitPrototype Prototype ID of the unit to upgrade
+  /// @param level Target level for the building
+  function spendUpgradeResources(
+    bytes32 playerEntity,
+    bytes32 unitPrototype,
+    uint256 level
+  ) internal {
+    claimAllResources(playerEntity);
+    P_RequiredUpgradeResourcesData memory requiredResources = P_RequiredUpgradeResources.get(unitPrototype, level);
+    for (uint256 i = 0; i < requiredResources.resources.length; i++) {
+      spendResource(
+        playerEntity,
+        unitPrototype,
+        EResource(requiredResources.resources[i]),
+        requiredResources.amounts[i]
+      );
+    }
+  }
 
-      // spend resources. note: this will also decrease available utilities
-      LibStorage.decreaseStoredResource(playerEntity, resource, resourceCost);
+  function spendResource(
+    bytes32 playerEntity,
+    bytes32 entity,
+    EResource resource,
+    uint256 resourceCost
+  ) internal {
+    // check if player has enough resources
+    uint256 playerResourceCount = ResourceCount.get(playerEntity, resource);
+    require(resourceCost <= playerResourceCount, "[SpendResources] Not enough resources to spend");
 
-      // add total utility usage to building
-      if (P_IsUtility.get(resource)) {
-        uint256 prevUtilityUsage = UtilitySet.get(buildingEntity, resource);
-        UtilitySet.set(buildingEntity, resource, resourceCost + prevUtilityUsage);
-      }
+    // spend resources. note: this will also decrease available utilities
+    LibStorage.decreaseStoredResource(playerEntity, resource, resourceCost);
+
+    // add total utility usage to building
+    if (P_IsUtility.get(resource)) {
+      uint256 prevUtilityUsage = UtilitySet.get(entity, resource);
+      UtilitySet.set(entity, resource, resourceCost + prevUtilityUsage);
     }
   }
 

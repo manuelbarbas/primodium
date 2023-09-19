@@ -307,6 +307,10 @@ export const config = mudConfig({
         quantity: "uint256",
       },
     },
+    UnitLevel: {
+      keySchema: { entity: "bytes32", unit: "bytes32" },
+      schema: "uint256",
+    },
   },
 });
 
