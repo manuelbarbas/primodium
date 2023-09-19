@@ -9,23 +9,18 @@ import { P_IsUtility, P_RequiredResources, P_RequiredResourcesData, P_RequiredUp
 import { BuildingKey } from "src/Keys.sol";
 
 library LibResource {
-  /// @notice Spends required resources of building when building or upgrading
+  /// @notice Spends required resources of an entity, when creating/upgrading a building or enqueueing a unit
   /// @notice claims all resources beforehand
-  /// @param buildingEntity Entity ID of the building
+  /// @param entity Entity ID of the building
   /// @param level Target level for the building
-  function spendRequiredResources(bytes32 buildingEntity, uint256 level) internal {
-    bytes32 playerEntity = OwnedBy.get(buildingEntity);
+  function spendRequiredResources(bytes32 entity, uint256 level) internal {
+    bytes32 playerEntity = OwnedBy.get(entity);
     claimAllResources(playerEntity);
-    bytes32 buildingPrototype = BuildingType.get(buildingEntity);
+    bytes32 buildingPrototype = BuildingType.get(entity);
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(buildingPrototype, level);
 
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
-      spendResource(
-        playerEntity,
-        buildingEntity,
-        EResource(requiredResources.resources[i]),
-        requiredResources.amounts[i]
-      );
+      spendResource(playerEntity, entity, EResource(requiredResources.resources[i]), requiredResources.amounts[i]);
     }
   }
 
