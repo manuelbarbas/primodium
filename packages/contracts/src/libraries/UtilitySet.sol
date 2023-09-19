@@ -79,6 +79,7 @@ library UtilitySet {
     uint8 replacement = Set_Utilities.getItem(player, Set_Utilities.length(player) - 1);
     Set_Utilities.update(player, data.index, replacement);
     Set_Utilities.pop(player);
+    Set_UtilityUsage.deleteRecord(player, resource);
   }
 
   /// @notice Clear all resources for a player.

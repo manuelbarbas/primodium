@@ -30,7 +30,6 @@ contract DestroySystem is PrimodiumSystem {
     Level.deleteRecord(buildingEntity);
     BuildingType.deleteRecord(buildingEntity);
     OwnedBy.deleteRecord(buildingEntity);
-    Children.deleteRecord(buildingEntity);
     Position.deleteRecord(buildingEntity);
   }
 }
