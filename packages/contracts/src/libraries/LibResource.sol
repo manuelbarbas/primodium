@@ -43,6 +43,7 @@ library LibResource {
   function claimAllResources(bytes32 playerEntity) internal {
     uint256 lastClaimed = LastClaimedAt.get(playerEntity);
     if (lastClaimed == 0 || lastClaimed == block.timestamp) return;
+    uint256 timeSinceClaimed = block.timestamp - lastClaimed;
     LastClaimedAt.set(playerEntity, block.timestamp);
     for (uint8 i = 1; i < uint8(EResource.LENGTH); i++) {
       EResource resource = EResource(i);
@@ -54,8 +55,7 @@ library LibResource {
       if (productionRate == 0) continue;
 
       // add resource to storage
-      uint256 unclaimedResource = (productionRate * uint256(block.timestamp - lastClaimed));
-      LibStorage.increaseStoredResource(playerEntity, resource, unclaimedResource);
+      LibStorage.increaseStoredResource(playerEntity, resource, productionRate * timeSinceClaimed);
     }
   }
 
