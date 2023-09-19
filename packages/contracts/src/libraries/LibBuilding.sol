@@ -38,11 +38,11 @@ library LibBuilding {
     );
 
     require(
-      LibBuilding.hasRequiredBaseLevel(playerEntity, buildingPrototype, level),
+      hasRequiredBaseLevel(playerEntity, buildingPrototype, level),
       "[BuildSystem] MainBase level requirement not met"
     );
 
-    require(LibBuilding.canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
+    require(canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
 
     Spawned.set(buildingEntity, true);
     BuildingType.set(buildingEntity, buildingPrototype);

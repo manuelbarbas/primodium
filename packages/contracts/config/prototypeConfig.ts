@@ -613,8 +613,11 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   },
 
   /* --------------------------------- Units --------------------------------- */
+  Unit: {
+    levels: idsToPrototypes(MUDEnums.EUnit),
+  },
+
   AnvilDrone: {
-    keys: [{ [MUDEnums.EUnit.indexOf("AnvilDrone").toString()]: "uint8" }],
     tables: {
       P_MaxLevel: { value: 6n },
     },
@@ -699,7 +702,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
   },
   AegisDrone: {
-    keys: [{ [MUDEnums.EUnit.indexOf("AegisDrone").toString()]: "uint8" }],
     tables: {
       P_MaxLevel: { value: 6n },
     },
@@ -783,7 +785,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
   },
   HammerDrone: {
-    keys: [{ [MUDEnums.EUnit.indexOf("HammerDrone").toString()]: "uint8" }],
     tables: {
       P_MaxLevel: { value: 6n },
     },
@@ -867,7 +868,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
   },
   StingerDrone: {
-    keys: [{ [MUDEnums.EUnit.indexOf("StingerDrone").toString()]: "uint8" }],
     tables: {
       P_MaxLevel: { value: 6n },
     },
@@ -951,7 +951,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
   },
   MiningVessel: {
-    keys: [{ [MUDEnums.EUnit.indexOf("MiningVessel").toString()]: "uint8" }],
     tables: {
       P_MaxLevel: { value: 6n },
     },
