@@ -57,7 +57,7 @@ library LibReward {
     ResourceValues memory rewardUnitValues = unitRewardComponent.getValue(objectiveEntity);
     for (uint256 i = 0; i < rewardUnitValues.resources.length; i++) {
       if (
-        !LibUtilityResource.checkUtilityResourceReqs(
+        !LibUnits.checkUtilityResourceReqs(
           world,
           playerEntity,
           rewardUnitValues.resources[i],
