@@ -15,7 +15,7 @@ contract SpawnSystemTest is PrimodiumTest {
 
     bool spawned = Spawned.get(world, playerEntity);
     assertTrue(spawned, "Player should have spawned");
-    assertEq(HomeAsteroid.get(world, playerEntity), asteroidEntity, "Player should have spawned on their own asteroid");
+    assertEq(Home.getAsteroid(world, playerEntity), asteroidEntity, "Player should have spawned on their own asteroid");
     assertEq(RockType.get(world, asteroidEntity), ERock.Asteroid, "Asteroid should be a normal asteroid");
 
     assertEq(Level.get(world, playerEntity), 1, "Player should have level 1");
@@ -30,12 +30,12 @@ contract SpawnSystemTest is PrimodiumTest {
   function testUniqueAsteroidPosition() public {
     // Asteroid Count is incremented before creation in createAsteroid(), so the asteroid index starts at one.
     // We create ten asteroids consecutively and check if their assigned coordinates match the expected coordinates based on their order of creation.
-    for (uint32 i = 1; i <= 10; i++) {
+    for (uint256 i = 1; i <= 10; i++) {
       address newAddress = address(uint160(uint256(keccak256(abi.encodePacked(i * 12345)))));
       bytes32 playerEntity = addressToEntity(newAddress);
       PositionData memory position = LibAsteroid.getUniqueAsteroidPosition(i);
       spawn(newAddress);
-      bytes32 asteroid = HomeAsteroid.get(world, playerEntity);
+      bytes32 asteroid = Home.getAsteroid(world, playerEntity);
       PositionData memory retrievedPosition = Position.get(world, asteroid);
       assertEq(position, retrievedPosition);
     }

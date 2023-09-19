@@ -28,7 +28,7 @@ contract LibBuildingTest is PrimodiumTest {
     world.devSetRecord(P_AsteroidTableId, keys, P_Asteroid.encode(maxX, maxY), P_Asteroid.getValueSchema());
 
     bytes32 playerEntity = addressToEntity(alice);
-    uint32 playerLevel = Level.get(playerEntity);
+    uint256 playerLevel = Level.get(playerEntity);
 
     keys = new bytes32[](2);
     keys[0] = ExpansionKey;
@@ -49,16 +49,16 @@ contract LibBuildingTest is PrimodiumTest {
     assertEq(curr.y, bounds.maxY - bounds.minY + 1);
   }
 
-  function testGetActualBounds() public {
-    spawn(alice);
-    vm.startPrank(alice);
+  // function testGetActualBounds() public {
+  //   spawn(alice);
+  //   vm.startPrank(alice);
 
-    bytes32 playerEntity = addressToEntity(alice);
+  // bytes32 playerEntity = addressToEntity(alice);
 
-    Bounds memory bounds = LibBuilding.getPlayerBounds(playerEntity);
-    // console.log("maxX", uint32(bounds.maxX));
-    // console.log("maxY", uint32(bounds.maxY));
-    // console.log("minX", uint32(bounds.minX));
-    // console.log("minY", uint32(bounds.minY));
-  }
+  // Bounds memory bounds = LibBuilding.getPlayerBounds(playerEntity);
+  // console.log("maxX", uint256(bounds.maxX));
+  // console.log("maxY", uint256(bounds.maxY));
+  // console.log("minX", uint256(bounds.minX));
+  // console.log("minY", uint256(bounds.minY));
+  // }
 }

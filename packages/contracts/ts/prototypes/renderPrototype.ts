@@ -1,7 +1,7 @@
 import { renderList, renderedSolidityHeader } from "@latticexyz/common/codegen";
 import { StaticAbiType } from "@latticexyz/schema-type";
 import { StoreConfig } from "@latticexyz/store";
-import { StoreConfigWithPrototypes } from "./prototypeConfig";
+import { StoreConfigWithPrototypes } from "./types";
 
 const formatValue = (config: StoreConfig, fieldType: string, value: number | string) => {
   if (fieldType in config.enums) {
@@ -54,56 +54,65 @@ export const renderSetLevelRecord = (
 };
 
 export function renderLevelPrototype(config: StoreConfigWithPrototypes, name: string) {
-  const prototype = config.prototypes[name];
+  const prototype = config.prototypeConfig[name];
 
-  const keys: Record<string, StaticAbiType> = prototype.keys
-    ? prototype.keys
-    : name == "World"
-    ? {}
-    : { prototypeId: "bytes32" };
-  keys["level"] = "uint32";
+  const keys: { [x: string]: StaticAbiType }[] =
+    prototype.keys !== undefined ? prototype.keys : [{ prototypeId: "bytes32" }];
+  keys.push({ level: "uint32" });
   const values = prototype.levels;
   if (!values) return undefined;
 
   const keyTupleDefinition = `
     bytes32[] memory _keyTuple = new bytes32[](${Object.entries(keys).length});
-    ${renderList(
-      Object.entries(keys),
-      (key, index) =>
-        `_keyTuple[${index}] = ${renderValueTypeToBytes32(key[0], {
-          typeUnwrap: "",
-          internalTypeId: key[1],
-        })};`
-    )}
-  `;
+    
+    ${keys
+      .map((key, index) =>
+        renderList(
+          Object.entries(key),
+          (key) =>
+            `_keyTuple[${index}] = ${renderValueTypeToBytes32(key[0], {
+              typeUnwrap: "",
+              internalTypeId: key[1],
+            })};`
+        )
+      )
+      .join("")}`;
+
   const renderLevels = Object.entries(values)
     .map(([level, value]) => {
       return `
     /* ----------------------------- LEVEL ${level} ----------------------------- */
-    levelKeys = ${name}LevelKeys(${level});
-    tableIds = new bytes32[](${Object.keys(value).length});
-    values = new bytes[](${Object.keys(value).length});
+    function create${name}Level${level}(IStore store) {
+      bytes32[] memory levelKeys = ${name}LevelKeys(${level});
+      bytes32[] memory tableIds = new bytes32[](${Object.keys(value).length});
+      bytes[] memory values = new bytes[](${Object.keys(value).length});
 
-    ${Object.keys(value)
-      .map((key, i) => `tableIds[${i}] = ${key}TableId;`)
-      .join("")}
+      ${Object.keys(value)
+        .map((key, i) => `tableIds[${i}] = ${key}TableId;`)
+        .join("")}
 
-    ${Object.entries(value)
-      .map(([tableName, v], i) => (v ? renderSetLevelRecord(config, tableName, v, level, i) : ""))
-      .join("")}
+      ${Object.entries(value)
+        .map(([tableName, v], i) => (v ? renderSetLevelRecord(config, tableName, v, level, i) : ""))
+        .join("")}
 
-    createPrototype(store, levelKeys, tableIds, values);
+      createPrototype(store, levelKeys, tableIds, values);
+    }
     `;
     })
     .join("");
 
+  const levelFunctionCalls = Object.entries(values)
+    .map(([level]) => {
+      return `create${name}Level${level}(store);`;
+    })
+    .join("");
   return {
     levelKeys: `function ${name}LevelKeys(uint32 level) pure returns (bytes32[] memory) {
     ${keyTupleDefinition}
         return _keyTuple;
   }`,
+    levelFunctionCalls,
     levels: `
-    bytes32[] memory levelKeys; 
     ${renderLevels} 
 `,
   };
@@ -142,29 +151,38 @@ export const renderSetRecord = (config: StoreConfig, tableName: string, value: {
 };
 
 export function renderPrototype(config: StoreConfigWithPrototypes, name: string) {
-  const prototype = config.prototypes[name];
-  const keys = prototype.keys ? prototype.keys : name == "World" ? {} : { prototypeId: "bytes32" };
+  const prototype = config.prototypeConfig[name];
+  const keys = prototype.keys !== undefined ? prototype.keys : [{ prototypeId: "bytes32" }];
+
   const values = prototype.tables ?? {};
+
+  const keyTupleDefinition = `
+
+    bytes32[] memory _keyTuple = new bytes32[](${Object.entries(keys).length});
+  ${keys
+    .map((key, index) =>
+      renderList(
+        Object.entries(key),
+        (key) =>
+          `_keyTuple[${index}] = ${renderValueTypeToBytes32(key[0], {
+            typeUnwrap: "",
+            internalTypeId: key[1],
+          })};`
+      )
+    )
+    .join("")}`;
+
   const levelTables = Object.values(prototype.levels ?? {})
     .map((v) => {
       return Object.keys(v);
     })
     .flat();
+  const levelPrototype = renderLevelPrototype(config, name);
+
   const allImportedTableIds = [...Object.keys(prototype.tables ?? {}), ...levelTables]
     .map((tableName) => `${tableName}, ${tableName}TableId`)
     .join(",");
-  const levelPrototype = renderLevelPrototype(config, name);
-  const keyTupleDefinition = `
-    bytes32[] memory _keyTuple = new bytes32[](${Object.entries(keys).length});
-    ${renderList(
-      Object.entries(keys),
-      (key, index) =>
-        `_keyTuple[${index}] = ${renderValueTypeToBytes32(key[0], {
-          typeUnwrap: "",
-          internalTypeId: key[1],
-        })};`
-    )}
-  `;
+
   return `
   ${renderedSolidityHeader}
   
@@ -203,8 +221,9 @@ export function renderPrototype(config: StoreConfigWithPrototypes, name: string)
       .join("")}
 
     createPrototype(store, keys, tableIds, values);
-    ${levelPrototype ? levelPrototype.levels : ""}
+    ${levelPrototype ? levelPrototype.levelFunctionCalls : ""}
   }
+    ${levelPrototype ? levelPrototype.levels : ""}
 `;
 }
 
@@ -214,7 +233,7 @@ export function renderValueTypeToBytes32(
 ): string {
   const innerText = typeUnwrap.length ? `${typeUnwrap}(${name})` : name;
   if (internalTypeId === "bytes32") {
-    return innerText.startsWith("0x") ? innerText.slice(2) : innerText;
+    return innerText;
   } else if (internalTypeId.match(/^bytes\d{1,2}$/)) {
     return `bytes32(${innerText})`;
   } else if (internalTypeId.match(/^uint\d{1,3}$/)) {

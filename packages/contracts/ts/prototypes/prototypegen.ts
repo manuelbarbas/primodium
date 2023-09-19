@@ -1,10 +1,10 @@
 import { formatAndWriteSolidity } from "@latticexyz/common/codegen";
 import { StoreConfig } from "@latticexyz/store";
 import path from "path";
-import { PrototypesConfig, StoreConfigWithPrototypes } from "./prototypeConfig";
 import { renderPrototype } from "./renderPrototype";
 import { renderPrototypeIndex } from "./renderPrototypeIndex";
 import { renderPrototypeScript } from "./renderPrototypeScript";
+import { PrototypesConfig, StoreConfigWithPrototypes } from "./types";
 
 const generateIndex = async (prototypes: PrototypesConfig<StoreConfig>, outputBaseDirectory: string) => {
   const output = renderPrototypeIndex(prototypes);
@@ -21,7 +21,7 @@ const generateSystem = async (prototypes: PrototypesConfig<StoreConfig>, outputB
 };
 
 const generatePrototypes = async (config: StoreConfigWithPrototypes, outputBaseDirectory: string) => {
-  for (const name of Object.keys(config.prototypes)) {
+  for (const name of Object.keys(config.prototypeConfig)) {
     const output = renderPrototype(config, name);
     const fullOutputPath = path.join(outputBaseDirectory, `prototypes/${name}Prototype.sol`);
 
@@ -30,7 +30,7 @@ const generatePrototypes = async (config: StoreConfigWithPrototypes, outputBaseD
 };
 
 export async function prototypegen(config: StoreConfigWithPrototypes, outputBaseDirectory: string) {
-  generateSystem(config.prototypes, outputBaseDirectory);
-  generateIndex(config.prototypes, outputBaseDirectory);
+  generateSystem(config.prototypeConfig, outputBaseDirectory);
+  generateIndex(config.prototypeConfig, outputBaseDirectory);
   generatePrototypes(config, outputBaseDirectory);
 }

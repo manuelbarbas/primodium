@@ -1,7 +1,6 @@
 import { mudConfig } from "@latticexyz/world/register";
-import { getBlueprint } from "./config/util/blueprints";
-import encodeBytes32 from "./config/util/encodeBytes32";
-import { PrototypesConfig } from "./ts/prototypes/prototypeConfig";
+import { MUDEnums } from "./config/enums";
+import { prototypeConfig } from "./config/prototypeConfig";
 
 // Exclude dev systems if not in dev PRI_DEV
 let dev: string[] = [];
@@ -15,46 +14,22 @@ if (typeof process != undefined && typeof process != "undefined") {
 /* -------------------------------------------------------------------------- */
 /*                                   Config                                   */
 /* -------------------------------------------------------------------------- */
+export type Config = typeof config;
 export const config = mudConfig({
   excludeSystems: [...dev],
-
-  structs: {},
-  enums: {
-    ERock: ["NULL", "Asteroid", "Motherlode", "LENGTH"],
-    EBuilding: [
-      "NULL",
-      // Special
-      "MainBase",
-
-      // Mines
-      "LithiumMine",
-      "IronMine",
-      "CopperMine",
-      "SulfurMine",
-
-      // Factories
-      "IronPlateFactory",
-      "AlloyFactory",
-      "PVCellFactory",
-      "RocketFuelFactory",
-
-      // Utilities
-      "SolarPanel",
-
-      // Units
-      "Hangar",
-      "UnitTrainingBuilding",
-      "StorageUnit",
-      "DroneFactory",
-      "Starmapper",
-      "LENGTH",
-    ],
+  overrideSystems: {
+    S_SpendResourcesSystem: {
+      openAccess: false,
+      accessList: ["BuildSystem", "UpgradeBuildingSystem"],
+      name: "PlayerSystem",
+    },
   },
+  enums: MUDEnums,
   tables: {
     /* ----------------------------------- Dev ---------------------------------- */
     Counter: {
       keySchema: {},
-      schema: "uint32",
+      schema: "uint256",
     },
 
     /* --------------------------------- Common --------------------------------- */
@@ -83,19 +58,20 @@ export const config = mudConfig({
 
     Level: {
       keySchema: { entity: "bytes32" },
-      schema: "uint32",
-    },
-
-    LastClaimedAt: {
-      keySchema: { entity: "bytes32" },
       schema: "uint256",
     },
 
+    Spawned: {
+      keySchema: { entity: "bytes32" },
+      schema: "bool",
+    },
+
     /* --------------------------------- Player --------------------------------- */
-    HomeAsteroid: {
+    Home: {
       keySchema: { entity: "bytes32" },
       schema: {
-        value: "bytes32",
+        asteroid: "bytes32",
+        mainBase: "bytes32",
       },
     },
 
@@ -109,7 +85,7 @@ export const config = mudConfig({
     },
     AsteroidCount: {
       keySchema: {},
-      schema: "uint32",
+      schema: "uint256",
     },
 
     RockType: {
@@ -119,21 +95,94 @@ export const config = mudConfig({
 
     // note: dimensions will always be positive, but are int32s so they work with coords
     Dimensions: {
-      keySchema: { key: "bytes32", level: "uint32" },
+      keySchema: { key: "bytes32", level: "uint256" },
       schema: {
         x: "int32",
         y: "int32",
       },
     },
 
-    Spawned: {
-      keySchema: { entity: "bytes32" },
+    P_Terrain: {
+      keySchema: { x: "int32", y: "int32" },
+      schema: "EResource",
+    },
+
+    /* -------------------------------- Resources ------------------------------- */
+
+    P_IsUtility: {
+      keySchema: { id: "EResource" },
       schema: "bool",
     },
 
+    // tracks the max resource a player can store
+    MaxResourceCount: {
+      keySchema: { entity: "bytes32", resource: "EResource" },
+      schema: "uint256",
+    },
+
+    LastClaimedAt: {
+      keySchema: { entity: "bytes32" },
+      schema: "uint256",
+    },
+
+    // ResourceSet tables: used to track which resources a player has
+
+    ResourceCount: {
+      keySchema: { entity: "bytes32", resource: "EResource" },
+      schema: "uint256",
+    },
+
+    // Used in the building utilities set
+    Set_UtilityUsage: {
+      keySchema: { entity: "bytes32", utility: "EResource" },
+      schema: {
+        index: "uint256",
+        quantity: "uint256",
+      },
+    },
+    Set_Utilities: {
+      keySchema: { entity: "bytes32" },
+      schema: "uint8[]",
+    },
+
+    /* --------------------------- Build Requirements --------------------------- */
+    P_RequiredTile: {
+      keySchema: { prototype: "bytes32" },
+      schema: "EResource",
+    },
+    P_RequiredBaseLevel: {
+      keySchema: { prototype: "bytes32", level: "uint256" },
+      schema: "uint256",
+    },
+
+    P_RequiredResources: {
+      keySchema: { prototype: "bytes32", level: "uint256" },
+      schema: {
+        // mud doesnt recognize EResource arrays so we will manually convert them
+        resources: "uint8[]",
+        amounts: "uint256[]",
+      },
+    },
+
+    P_RequiredDependencies: {
+      keySchema: { prototype: "bytes32", level: "uint256" },
+      schema: {
+        // mud doesnt recognize EResource arrays so we will manually convert them
+        resources: "uint8[]",
+        amounts: "uint256[]",
+      },
+    },
+
     /* -------------------------------- Buildings ------------------------------- */
-    P_BuildingTypeToPrototype: {
-      keySchema: { buildingType: "EBuilding" },
+
+    /*
+     This table maps building types to their prototypes. 
+     The key is the EBuilding enum value for the building type (e.g. EBuilding.MainBase). 
+     The value is the prototype name (e.g. "MainBase")
+     It is autogenerated in the build step.
+    */
+    P_EnumToPrototype: {
+      keySchema: { key: "bytes32", id: "uint8" },
       schema: "bytes32",
     },
 
@@ -144,7 +193,26 @@ export const config = mudConfig({
 
     P_MaxLevel: {
       keySchema: { prototype: "bytes32" },
-      schema: "uint32",
+      schema: "uint256",
+    },
+
+    P_Production: {
+      keySchema: { prototype: "bytes32", level: "uint256" },
+      schema: {
+        // mud doesnt recognize EResource arrays so we will manually convert them
+        resource: "EResource",
+        amount: "uint256",
+      },
+    },
+
+    P_ByLevelMaxResourceUpgrades: {
+      keySchema: { prototype: "bytes32", resource: "EResource", level: "uint256" },
+      schema: "uint256",
+    },
+
+    P_ListMaxResourceUpgrades: {
+      keySchema: { prototype: "bytes32", level: "uint256" },
+      schema: "uint8[]",
     },
 
     BuildingType: {
@@ -156,142 +224,15 @@ export const config = mudConfig({
       keySchema: { entity: "bytes32" },
       schema: "bytes32[]",
     },
+
+    ProductionRate: {
+      keySchema: { entity: "bytes32", resource: "EResource" },
+      schema: "uint256",
+    },
   },
 });
 
-const buildingIdToPrototypeId = config.enums.EBuilding.map((building, i) => ({
-  [i]: {
-    P_BuildingTypeToPrototype: { value: encodeBytes32(building) },
-  },
-})).reduce((acc, curr) => ({ ...acc, ...curr }), {});
-
-/* -------------------------------------------------------------------------- */
-/*                                 Prototypes                                 */
-/* -------------------------------------------------------------------------- */
-const maxRange = { xBounds: 37, yBounds: 25 };
-const prototypesConfig: PrototypesConfig<typeof config> = {
-  /* ---------------------------------- World --------------------------------- */
-  World: {
-    tables: {
-      P_Asteroid: maxRange,
-    },
-    levels: buildingIdToPrototypeId,
-  },
-
-  Expansion: {
-    tables: {},
-    levels: {
-      0: { Dimensions: { x: 13, y: 11 } },
-      1: { Dimensions: { x: 17, y: 13 } },
-      2: { Dimensions: { x: 21, y: 15 } },
-      3: { Dimensions: { x: 25, y: 17 } },
-      4: { Dimensions: { x: 29, y: 19 } },
-      5: { Dimensions: { x: 33, y: 13 } },
-      6: { Dimensions: { x: maxRange.xBounds, y: maxRange.yBounds } },
-    },
-  },
-
-  /* -------------------------------- Buildings ------------------------------- 
-   NOTE the key of a building prototype must match its EBuilding enum equivalent
-   This is because we use the enum to look up the prototype in the P_BuildingTypeToPrototype table
-  ----------------------------------------------------------------------------- */
-
-  MainBase: {
-    tables: {
-      Position: { x: Math.floor(maxRange.xBounds / 2), y: Math.floor(maxRange.yBounds / 2), parent: encodeBytes32(0) },
-      P_Blueprint: { value: getBlueprint(3, 3) },
-      P_MaxLevel: { value: 8 },
-    },
-  },
-
-  // Mines
-  IronMine: {
-    tables: {
-      P_Blueprint: { value: getBlueprint(1, 1) },
-      P_MaxLevel: { value: 5 },
-    },
-  },
-  CopperMine: {
-    tables: {
-      P_Blueprint: { value: getBlueprint(1, 1) },
-      P_MaxLevel: { value: 5 },
-    },
-  },
-  LithiumMine: {
-    tables: {
-      P_Blueprint: { value: getBlueprint(1, 1) },
-      P_MaxLevel: { value: 5 },
-    },
-  },
-  SulfurMine: {
-    tables: {
-      P_Blueprint: { value: getBlueprint(1, 1) },
-      P_MaxLevel: { value: 5 },
-    },
-  },
-
-  // Factories
-  IronPlateFactory: {
-    tables: {
-      P_Blueprint: { value: getBlueprint(2, 2) },
-      P_MaxLevel: { value: 5 },
-    },
-  },
-  AlloyFactory: {
-    tables: {
-      P_Blueprint: { value: getBlueprint(2, 2) },
-      P_MaxLevel: { value: 3 },
-    },
-  },
-  PVCellFactory: {
-    tables: {
-      P_Blueprint: { value: getBlueprint(2, 2) },
-      P_MaxLevel: { value: 3 },
-    },
-  },
-
-  // Utilities
-  StorageUnit: {
-    tables: {
-      P_Blueprint: { value: getBlueprint(2, 2) },
-      P_MaxLevel: { value: 3 },
-    },
-  },
-  SolarPanel: {
-    tables: {
-      P_Blueprint: { value: getBlueprint(2, 2) },
-      P_MaxLevel: { value: 3 },
-    },
-  },
-
-  // Units
-  Hangar: {
-    tables: {
-      P_Blueprint: { value: getBlueprint(4, 4) },
-      P_MaxLevel: { value: 5 },
-    },
-  },
-  UnitTraining: {
-    tables: {
-      P_Blueprint: { value: getBlueprint(3, 3) },
-      P_MaxLevel: { value: 5 },
-    },
-  },
-  DroneFactory: {
-    tables: {
-      P_Blueprint: { value: getBlueprint(3, 3) },
-      P_MaxLevel: { value: 4 },
-    },
-  },
-  Starmapper: {
-    tables: {
-      P_Blueprint: { value: getBlueprint(3, 2) },
-      P_MaxLevel: { value: 3 },
-    },
-  },
-};
-
 export default {
   ...config,
-  prototypes: prototypesConfig,
+  prototypeConfig,
 };

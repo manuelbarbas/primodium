@@ -17,10 +17,9 @@ contract DestroySystemTest is PrimodiumTest {
     vm.startPrank(alice);
   }
 
-  EBuilding dummyBuilding = EBuilding.IronMine;
-
-  function buildDummy() private returns (bytes32) {
-    return world.build(dummyBuilding, position);
+  function buildIronMine() private returns (bytes32) {
+    removeRequirements(EBuilding.IronMine);
+    return world.build(EBuilding.IronMine, position);
   }
 
   function destroy(bytes32 buildingEntity, PositionData memory _coord) public {
@@ -38,14 +37,72 @@ contract DestroySystemTest is PrimodiumTest {
   }
 
   function testDestroyWithBuildingOrigin() public {
-    bytes32 buildingEntity = buildDummy();
+    bytes32 buildingEntity = buildIronMine();
     destroy(buildingEntity, position);
   }
 
   function testDestroyWithTile() public {
-    bytes32 buildingEntity = buildDummy();
-    bytes32 asteroid = HomeAsteroid.get(world, playerEntity);
+    bytes32 buildingEntity = buildIronMine();
+    bytes32 asteroid = Home.getAsteroid(world, playerEntity);
     position.parent = asteroid;
     destroy(buildingEntity, position);
+  }
+
+  function testDestroyWithProductionDependencies() public {
+    switchPrank(address(world));
+    uint256 originalProduction = 100;
+    uint256 productionReduction = 10;
+    ProductionRate.set(playerEntity, EResource.Iron, originalProduction);
+
+    P_RequiredDependenciesData memory requiredDependenciesData = P_RequiredDependenciesData(
+      new uint8[](1),
+      new uint256[](1)
+    );
+    requiredDependenciesData.resources[0] = uint8(EResource.Iron);
+    requiredDependenciesData.amounts[0] = productionReduction;
+
+    P_RequiredDependencies.set(IronMinePrototypeId, 1, requiredDependenciesData);
+    switchPrank(alice);
+
+    world.build(EBuilding.IronMine, getIronPosition(alice));
+    uint256 productionIncrease = P_Production.get(IronMinePrototypeId, 1).amount;
+    assertEq(
+      ProductionRate.get(playerEntity, EResource.Iron),
+      originalProduction - productionReduction + productionIncrease
+    );
+
+    world.destroy(getIronPosition(alice));
+    assertEq(ProductionRate.get(playerEntity, EResource.Iron), originalProduction);
+  }
+
+  function testDestroyWithResourceProductionIncrease() public {
+    switchPrank(address(world));
+
+    uint256 increase = 69;
+    P_ProductionData memory data = P_ProductionData(EResource.Iron, increase);
+    P_Production.set(IronMinePrototypeId, 1, data);
+    switchPrank(alice);
+
+    world.build(EBuilding.IronMine, getIronPosition(alice));
+    assertEq(ProductionRate.get(playerEntity, EResource.Iron), increase);
+
+    world.destroy(getIronPosition(alice));
+    assertEq(ProductionRate.get(playerEntity, EResource.Iron), 0);
+  }
+
+  function testDestroyWithMaxStorageIncrease() public {
+    switchPrank(address(world));
+
+    uint8[] memory data = new uint8[](1);
+    data[0] = uint8(EResource.Iron);
+    P_ListMaxResourceUpgrades.set(IronMinePrototypeId, 1, data);
+    P_ByLevelMaxResourceUpgrades.set(IronMinePrototypeId, EResource.Iron, 1, 50);
+
+    switchPrank(alice);
+    world.build(EBuilding.IronMine, getIronPosition(alice));
+    assertEq(MaxResourceCount.get(playerEntity, EResource.Iron), 50);
+
+    world.destroy(getIronPosition(alice));
+    assertEq(MaxResourceCount.get(playerEntity, EResource.Iron), 0);
   }
 }
