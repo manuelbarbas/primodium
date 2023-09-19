@@ -81,8 +81,10 @@ To clean types/ and abis/ in the git diff, run `pnpm clean` in the top level dir
 
 4. `prototypesConfig.ts`: Houses preset entity configurations. A prototype object has the following fields:
    a. keys?: the keys of the prototype. If not set, the key will be a bytes32 encoding of the name of the prototype.
-   b. tables: the values of the tables on the prototype's key(s)
-   c. levels: the values of the levels of the prototype, indexed by `[...keys, level: "uint256"]`. The key of each level should be the number of the level in question.
+   b. tables?: the values of the tables on the prototype's key(s)
+   c. levels?: the values of the levels of the prototype, indexed by `[...keys, level: "uint256"]`. The key of each level should be the number of the level in question.
+
+To regenerate solidity based on updated typescript source, run `pnpm build`.
 
 # Dev Systems
 
