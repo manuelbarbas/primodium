@@ -53,37 +53,44 @@ export const Upgrade: React.FC<{ building: EntityID }> = ({ building }) => {
   return (
     <SecondaryCard className="w-full items-center">
       <div className="flex items-center justify-between w-full">
-        <div>
-          {recipe.length !== 0 && (
-            <p className="text-xs opacity-75 px-2 mb-1">UPGRADE COST</p>
-          )}
-          <div className="flex flex-wrap gap-1 px-2">
-            {recipe.length !== 0 &&
-              recipe.map((resource) => {
-                return (
-                  <Badge
-                    key={resource.id + resource.type}
-                    className="text-xs gap-2"
-                  >
-                    <ResourceIconTooltip
-                      name={getBlockTypeName(resource.id)}
-                      image={ResourceImage.get(resource.id) ?? ""}
-                      resourceId={resource.id}
-                      amount={resource.amount}
-                      resourceType={resource.type}
-                      scale={
-                        resource.type === ResourceType.Utility
-                          ? 1
-                          : RESOURCE_SCALE
-                      }
-                      direction="top"
-                      validate
-                    />
-                  </Badge>
-                );
-              })}
+        <div className="flex gap-2 items-center">
+          <img
+            src="img/icons/minersicon.png"
+            className="pixel-images h-8 w-8"
+          />
+          <div>
+            {recipe.length !== 0 && (
+              <p className="text-xs opacity-75 px-2 mb-1">UPGRADE COST</p>
+            )}
+            <div className="flex flex-wrap gap-1 px-2">
+              {recipe.length !== 0 &&
+                recipe.map((resource) => {
+                  return (
+                    <Badge
+                      key={resource.id + resource.type}
+                      className="text-xs gap-2"
+                    >
+                      <ResourceIconTooltip
+                        name={getBlockTypeName(resource.id)}
+                        image={ResourceImage.get(resource.id) ?? ""}
+                        resourceId={resource.id}
+                        amount={resource.amount}
+                        resourceType={resource.type}
+                        scale={
+                          resource.type === ResourceType.Utility
+                            ? 1
+                            : RESOURCE_SCALE
+                        }
+                        direction="top"
+                        validate
+                      />
+                    </Badge>
+                  );
+                })}
+            </div>
           </div>
         </div>
+
         <Button
           className="w-fit btn-secondary btn-sm"
           disabled={!canUpgrade}

@@ -6,6 +6,7 @@ import { SelectedBuilding } from "src/network/components/clientComponents";
 import { getBuildingName } from "src/util/building";
 import { BlockType } from "src/util/constants";
 import { Basic } from "./screens/Basic";
+import { BuildingInfo } from "./screens/BuildingInfo";
 import { Demolish } from "./screens/Demolish";
 import { DroneFactory } from "./screens/DroneFactory";
 import { MainBase } from "./screens/Mainbase";
@@ -55,8 +56,14 @@ export const BuildingMenu: React.FC = () => {
   return (
     <Navigator initialScreen={buildingName} className="w-120">
       {/* <Navigator.Breadcrumbs /> */}
+
+      {/* Initial Screen */}
       {renderScreen()}
+
+      {/* Sub Screens */}
       <Demolish building={selectedBuilding} />
+      <BuildingInfo building={selectedBuilding} />
+
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2">
         <Button
           className="btn-square btn-sm font-bold border border-secondary"

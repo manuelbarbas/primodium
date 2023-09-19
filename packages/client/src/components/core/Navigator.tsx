@@ -93,10 +93,15 @@ const NavButton: FC<{
   to: string;
   children?: ReactNode;
   className?: string;
-}> = ({ to, className, children }) => {
+  disabled?: boolean;
+}> = ({ to, className, children, disabled }) => {
   const { navigateTo } = useNavigation();
   return (
-    <Button className={className} onClick={() => navigateTo(to, true)}>
+    <Button
+      className={className}
+      onClick={() => navigateTo(to, true)}
+      disabled={disabled}
+    >
       {children}
     </Button>
   );

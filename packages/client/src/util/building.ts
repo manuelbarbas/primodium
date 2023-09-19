@@ -9,6 +9,7 @@ import {
   P_MaxStorage,
   P_Production,
   P_RequiredTile,
+  P_UnitProductionMultiplier,
   P_UtilityProductionComponent as P_UtilityProduction,
   RawBlueprint,
 } from "src/network/components/chainComponents";
@@ -203,6 +204,12 @@ export const getBuildingInfo = (building: EntityID) => {
   const storages = getBuildingStorages(buildingLevelEntity);
   const nextLevelStorages = getBuildingStorages(buildingNextLevelEntity);
 
+  const unitProductionMultiplier =
+    P_UnitProductionMultiplier.get(buildingLevelEntity)?.value;
+  const nextLevelUnitProductionMultiplier = P_UnitProductionMultiplier.get(
+    buildingNextLevelEntity
+  )?.value;
+
   const upgradeRecipe = getRecipeDifference(
     getRecipe(buildingNextLevelEntity),
     getRecipe(buildingLevelEntity)
@@ -234,12 +241,14 @@ export const getBuildingInfo = (building: EntityID) => {
     production,
     storages,
     position,
+    unitProductionMultiplier,
     upgrade: {
       production: nextLevelProduction,
       storages: nextLevelStorages,
       recipe: upgradeRecipe,
       mainBaseLvlReq,
       nextLevelEntity: buildingNextLevelEntity,
+      nextLevelUnitProductionMultiplier,
     },
   };
 };
