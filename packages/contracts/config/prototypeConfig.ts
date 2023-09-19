@@ -522,6 +522,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_Blueprint: { value: getBlueprint(3, 3) },
       P_MaxLevel: { value: 4n },
+      P_ProducesUnits: { value: true },
     },
     levels: {
       1: {

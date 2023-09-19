@@ -229,6 +229,24 @@ export const config = mudConfig({
       schema: "bool",
     },
 
+    P_ProducesUnits: {
+      keySchema: { prototype: "bytes32" },
+      schema: "bool",
+    },
+
+    SetItemUnitFactories: {
+      keySchema: { entity: "bytes32", building: "bytes32" },
+      schema: {
+        stored: "bool",
+        index: "uint256",
+      },
+    },
+
+    SetUnitFactories: {
+      keySchema: { entity: "bytes32" },
+      schema: "bytes32[]",
+    },
+
     P_ByLevelMaxResourceUpgrades: {
       keySchema: { prototype: "bytes32", resource: "EResource", level: "uint256" },
       schema: "uint256",
@@ -278,8 +296,9 @@ export const config = mudConfig({
 
     // Used in the building utilities set
     SetItemMotherlodes: {
-      keySchema: { motherlode: "bytes32" },
+      keySchema: { motherlode: "bytes32", item: "bytes32" },
       schema: {
+        stored: "bool",
         index: "uint256",
       },
     },
