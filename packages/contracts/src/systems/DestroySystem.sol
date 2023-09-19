@@ -3,9 +3,9 @@ pragma solidity >=0.8.0;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
-import { Position, PositionData, BuildingType, OwnedBy, Children, Spawned, Level, BuildingType } from "codegen/Tables.sol";
+import { P_ProducesUnits, Position, PositionData, BuildingType, OwnedBy, Children, Spawned, Level, BuildingType } from "codegen/Tables.sol";
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
-import { LibBuilding, LibReduceProductionRate, LibResource, LibProduction, LibStorage } from "codegen/Libraries.sol";
+import { LibBuilding, LibReduceProductionRate, LibResource, LibProduction, LibStorage, UnitFactorySet } from "codegen/Libraries.sol";
 
 contract DestroySystem is PrimodiumSystem {
   function destroy(PositionData memory coord) public returns (bytes32 buildingEntity) {
@@ -31,5 +31,9 @@ contract DestroySystem is PrimodiumSystem {
     BuildingType.deleteRecord(buildingEntity);
     OwnedBy.deleteRecord(buildingEntity);
     Position.deleteRecord(buildingEntity);
+
+    if (P_ProducesUnits.get(buildingType)) {
+      UnitFactorySet.remove(playerEntity, buildingEntity);
+    }
   }
 }
