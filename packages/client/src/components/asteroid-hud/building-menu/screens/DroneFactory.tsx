@@ -4,6 +4,8 @@ import { getBuildingName } from "src/util/building";
 import { Navigator } from "src/components/core/Navigator";
 import { Header } from "../widgets/Header";
 import { Upgrade } from "../widgets/Upgrade";
+import { BuildDrones } from "../widgets/BuildDrones";
+import { UpgradeDrones } from "../widgets/UpgradeDrones";
 
 export const DroneFactory: React.FC<{ building: EntityID }> = ({
   building,
@@ -20,6 +22,10 @@ export const DroneFactory: React.FC<{ building: EntityID }> = ({
     <Navigator.Screen title={buildingName} className="w-fit">
       <Header building={building} />
       <Upgrade building={building} />
+      <div className="grid grid-cols-2 w-full">
+        <BuildDrones />
+        <UpgradeDrones />
+      </div>
     </Navigator.Screen>
   );
 };
