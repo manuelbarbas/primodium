@@ -10,9 +10,11 @@ import { MotherlodeSet } from "libraries/MotherlodeSet.sol";
 library LibMotherlode {
   function createMotherlode(PositionData memory position) internal returns (bytes32) {
     P_GameConfigData memory config = P_GameConfig.get();
-    for (uint32 i = 0; i < config.maxMotherlodesPerAsteroid; i++) {
-      PositionData memory relPosition = getCoord(i, config.motherlodeDistance, config.maxMotherlodesPerAsteroid);
-      bytes32 sourceAsteroid = ReversePosition.get(relPosition.x, relPosition.y);
+    for (uint256 i = 0; i < config.maxMotherlodesPerAsteroid; i++) {
+      PositionData memory sourcePosition = getPosition(i, config.motherlodeDistance, config.maxMotherlodesPerAsteroid);
+      sourcePosition.x += position.x;
+      sourcePosition.y += position.y;
+      bytes32 sourceAsteroid = ReversePosition.get(sourcePosition.x, sourcePosition.y);
       if (sourceAsteroid == 0) continue;
       if (RockType.get(sourceAsteroid) == ERock.Motherlode) continue;
       bytes32 motherlodeSeed = keccak256(abi.encode(sourceAsteroid, "motherlode", position.x, position.y));
@@ -69,10 +71,10 @@ library LibMotherlode {
     cooldownSeconds = LibEncode.getByteUInt(motherlodeEntity, 6, 10);
   }
 
-  function getCoord(
-    uint32 i,
-    uint32 distance,
-    uint32 max
+  function getPosition(
+    uint256 i,
+    uint256 distance,
+    uint256 max
   ) internal pure returns (PositionData memory) {
     return LibMath.getPositionByVector(distance, (i * 360) / max);
   }

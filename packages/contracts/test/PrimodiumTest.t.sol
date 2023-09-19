@@ -82,6 +82,11 @@ contract PrimodiumTest is MudTest {
     console.log("parent", uint256(coord.parent));
   }
 
+  function getHomeAsteroidPosition(address player) public view returns (PositionData memory) {
+    bytes32 asteroid = Home.get(world, addressToEntity(player)).asteroid;
+    return Position.get(world, asteroid);
+  }
+
   function getMainBasePosition(address player) internal view returns (PositionData memory) {
     PositionData memory position = Position.get(MainBasePrototypeId);
     return getPosition(PositionData2D(position.x, position.y), player);
