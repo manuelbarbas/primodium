@@ -220,6 +220,12 @@ export const config = mudConfig({
       },
     },
 
+    // tracks if a building (prototype) can produce a unit (id)
+    P_UnitProduction: {
+      keySchema: { prototype: "bytes32", id: "bytes32" },
+      schema: "bool",
+    },
+
     P_ByLevelMaxResourceUpgrades: {
       keySchema: { prototype: "bytes32", resource: "EResource", level: "uint256" },
       schema: "uint256",

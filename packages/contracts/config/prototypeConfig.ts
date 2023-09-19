@@ -1,11 +1,12 @@
 import { config } from "../mud.config";
 import {
+  buildingUnitProduction,
   getResourceValue,
   getResourceValues,
   idsToPrototypes,
   upgradesByLevel,
   upgradesToList,
-} from "../ts/prototypes/commands/maxResourceUpgrades";
+} from "../ts/prototypes/prototypeGenUtils";
 import { PrototypesConfig } from "../ts/prototypes/types";
 import { MUDEnums } from "./enums";
 import { getBlueprint } from "./util/blueprints";
@@ -541,6 +542,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       },
     },
   },
+  ...buildingUnitProduction("DroneFactory", ["AnvilDrone", "HammerDrone", "MiningVessel", "StingerDrone"]),
   Starmapper: {
     tables: {
       P_Blueprint: { value: getBlueprint(3, 2) },
@@ -1033,4 +1035,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       },
     },
   },
+
+  // Building unit production
 };

@@ -1,6 +1,6 @@
 import { StaticAbiType } from "@latticexyz/schema-type";
-import { MUDEnums } from "../../../config/enums";
-import encodeBytes32 from "../../../config/util/encodeBytes32";
+import { MUDEnums } from "../../config/enums";
+import encodeBytes32 from "../../config/util/encodeBytes32";
 
 export const upgradesByLevel = (name: string, upgrades: Record<number, Record<string, number>>) =>
   Object.entries(upgrades).reduce((prev, [level, upgrades]) => {
@@ -48,3 +48,17 @@ export const idsToPrototypes = (ids: string[]) =>
       },
     }))
     .reduce((acc, curr) => ({ ...acc, ...curr }), {});
+
+export const buildingUnitProduction = (building: string, units: string[]) =>
+  units.reduce(
+    (prev, unit) => ({
+      ...prev,
+      [`${building}${unit}Prod`]: {
+        keys: [{ [encodeBytes32(building)]: "bytes32" }, { [encodeBytes32(unit)]: "bytes32" }] as {
+          [x: string]: StaticAbiType;
+        }[],
+        tables: { P_UnitProduction: { value: true } },
+      },
+    }),
+    {} as Record<string, { keys: { [x: string]: StaticAbiType }[]; tables: { P_UnitProduction: { value: boolean } } }>
+  );

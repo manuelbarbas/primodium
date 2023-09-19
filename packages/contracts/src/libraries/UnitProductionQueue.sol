@@ -4,6 +4,7 @@ pragma solidity >=0.8.0;
 import { QueueUnits, QueueUnitsData, QueueItemUnits, QueueItemUnitsData } from "codegen/Tables.sol";
 
 library UnitProductionQueue {
+  // todo: make custom queue type
   function enqueue(bytes32 queueId, QueueItemUnitsData memory queueItem) internal {
     QueueUnits.pushQueue(queueId, queueItem.unitId);
     QueueUnitsData memory queueData = QueueUnits.get(queueId);
@@ -23,7 +24,7 @@ library UnitProductionQueue {
     return item;
   }
 
-  function peek(bytes32 queueId) internal returns (QueueItemUnitsData memory) {
+  function peek(bytes32 queueId) internal view returns (QueueItemUnitsData memory) {
     QueueUnitsData memory queueData = QueueUnits.get(queueId);
     require(queueData.front < queueData.back, "Queue is empty");
     return QueueItemUnits.get(queueId, queueData.front);

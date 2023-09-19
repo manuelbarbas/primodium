@@ -10,7 +10,7 @@ import { EBuilding } from "src/Types.sol";
 import { BuildingKey } from "src/Keys.sol";
 
 contract S_SpendResourcesSystem is PrimodiumSystem {
-  function spendRequiredResources(bytes32 buildingEntity, uint256 level) public {
-    LibResource.spendRequiredResources(buildingEntity, level);
+  function spendRequiredResources(bytes32 entity, uint256 level) public {
+    LibResource.spendRequiredResources(entity, level);
   }
 }
