@@ -9,6 +9,9 @@ import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 import { LibBuilding, LibReduceProductionRate, LibResource, LibProduction, LibStorage, UnitFactorySet } from "codegen/Libraries.sol";
 
 contract DestroySystem is PrimodiumSystem {
+  /// @notice Destroys a building entity
+  /// @param coord Coordinate of the building to be destroyed
+  /// @return buildingEntity Entity identifier of the destroyed building
   function destroy(PositionData memory coord) public returns (bytes32 buildingEntity) {
     buildingEntity = LibBuilding.getBuildingFromCoord(coord);
     bytes32 playerEntity = addressToEntity(msg.sender);

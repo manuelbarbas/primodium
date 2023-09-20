@@ -164,7 +164,6 @@ contract BuildSystemTest is PrimodiumTest {
     P_RequiredResources.set(IronMinePrototypeId, 1, requiredResourcesData);
 
     switchPrank(alice);
-    console.log("alice:", alice);
     world.build(EBuilding.IronMine, getIronPosition(alice));
     assertEq(ResourceCount.get(playerEntity, EResource.Iron), 50);
   }

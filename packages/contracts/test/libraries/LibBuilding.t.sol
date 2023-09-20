@@ -48,17 +48,4 @@ contract LibBuildingTest is PrimodiumTest {
     assertEq(curr.x, bounds.maxX - bounds.minX + 1);
     assertEq(curr.y, bounds.maxY - bounds.minY + 1);
   }
-
-  function testGetActualBounds() public {
-    spawn(alice);
-    vm.startPrank(alice);
-
-    bytes32 playerEntity = addressToEntity(alice);
-
-  // Bounds memory bounds = LibBuilding.getPlayerBounds(playerEntity);
-  // console.log("maxX", uint256(bounds.maxX));
-  // console.log("maxY", uint256(bounds.maxY));
-  // console.log("minX", uint256(bounds.minX));
-  // console.log("minY", uint256(bounds.minY));
-  // }
 }
