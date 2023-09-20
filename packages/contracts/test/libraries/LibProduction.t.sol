@@ -2,9 +2,6 @@
 pragma solidity >=0.8.0;
 
 import "test/PrimodiumTest.t.sol";
-import { BuildingType, Level, P_Production, P_ProductionData, P_IsUtility, ProductionRate } from "codegen/Tables.sol";
-import { EResource } from "src/Types.sol";
-import { LibProduction } from "codegen/Libraries.sol";
 
 contract LibProductionTest is PrimodiumTest {
   bytes32 playerEntity = "playerEntity";
