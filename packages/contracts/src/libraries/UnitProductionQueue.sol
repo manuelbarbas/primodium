@@ -14,7 +14,7 @@ library UnitProductionQueue {
 
   function dequeue(bytes32 queueId) internal returns (UnitProductionQueueData memory) {
     QueueUnitsData memory queueData = QueueUnits.get(queueId);
-    require(queueData.front <= queueData.back, "Queue is empty");
+    require(queueData.front < queueData.back, "Queue is empty");
     UnitProductionQueueData memory item = QueueItemUnits.get(queueId, queueData.front);
     if (queueData.front + 1 == queueData.back) reset(queueId);
     else {
