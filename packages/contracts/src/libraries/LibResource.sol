@@ -56,14 +56,15 @@ library LibResource {
     uint256 playerResourceCount = ResourceCount.get(playerEntity, resource);
     require(resourceCost <= playerResourceCount, "[SpendResources] Not enough resources to spend");
 
-    // spend resources. note: this will also decrease available utilities
-    LibStorage.decreaseStoredResource(playerEntity, resource, resourceCost);
-
     // add total utility usage to building
     if (P_IsUtility.get(resource)) {
       uint256 prevUtilityUsage = UtilitySet.get(entity, resource);
-      UtilitySet.set(entity, resource, resourceCost + prevUtilityUsage);
+      // if the building already has utility usage, add the difference
+      resourceCost = resourceCost - prevUtilityUsage;
+      UtilitySet.set(entity, resource, resourceCost);
     }
+    // spend resources. note: this will also decrease available utilities
+    LibStorage.decreaseStoredResource(playerEntity, resource, resourceCost);
   }
 
   /// @notice Claims all unclaimed resources of a player
