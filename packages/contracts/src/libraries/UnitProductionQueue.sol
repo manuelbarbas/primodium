@@ -9,12 +9,12 @@ library UnitProductionQueue {
     QueueUnits.pushQueue(queueId, queueItem.unitId);
     QueueUnitsData memory queueData = QueueUnits.get(queueId);
     QueueUnits.setBack(queueId, queueData.back + 1);
-    QueueItemUnits.set(queueId, queueData.queue.length - 1, queueItem);
+    QueueItemUnits.set(queueId, queueData.back, queueItem);
   }
 
   function dequeue(bytes32 queueId) internal returns (UnitProductionQueueData memory) {
     QueueUnitsData memory queueData = QueueUnits.get(queueId);
-    require(queueData.front < queueData.back, "Queue is empty");
+    require(queueData.front <= queueData.back, "Queue is empty");
     UnitProductionQueueData memory item = QueueItemUnits.get(queueId, queueData.front);
     if (queueData.front + 1 == queueData.back) reset(queueId);
     else {
@@ -33,7 +33,7 @@ library UnitProductionQueue {
   function updateFront(bytes32 queueId, UnitProductionQueueData memory queueItem) internal {
     QueueUnitsData memory queueData = QueueUnits.get(queueId);
     require(queueData.front < queueData.back, "Queue is empty");
-    QueueItemUnits.set(queueId, 0, queueItem);
+    QueueItemUnits.set(queueId, queueData.front, queueItem);
   }
 
   function size(bytes32 queueId) internal view returns (uint256) {

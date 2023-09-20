@@ -49,7 +49,7 @@ library LibBuilding {
     BuildingType.set(buildingEntity, buildingPrototype);
     Level.set(buildingEntity, level);
     Position.set(buildingEntity, coord);
-    LastClaimedAt.set(buildingEntity, block.number);
+    LastClaimedAt.set(buildingEntity, block.timestamp);
     OwnedBy.set(buildingEntity, playerEntity);
 
     placeBuildingTiles(playerEntity, buildingEntity, buildingPrototype, coord);
