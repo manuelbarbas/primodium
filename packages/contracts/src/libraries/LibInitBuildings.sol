@@ -1475,37 +1475,33 @@ library LibInitBuildings {
     uint256[][] memory allUnitTypes = new uint256[][](maxLevel);
     uint256[] memory unitTypes;
     //Level 1
-    unitTypes = new uint256[](5);
+    unitTypes = new uint256[](4);
     unitTypes[0] = AnvilDrone;
     unitTypes[1] = HammerDrone;
-    unitTypes[2] = MiningVessel;
-    unitTypes[3] = AegisDrone;
-    unitTypes[4] = StingerDrone;
+    unitTypes[2] = AegisDrone;
+    unitTypes[3] = StingerDrone;
     allUnitTypes[0] = unitTypes;
     //Level 2
-    unitTypes = new uint256[](5);
+    unitTypes = new uint256[](4);
     unitTypes[0] = AnvilDrone;
     unitTypes[1] = HammerDrone;
-    unitTypes[2] = MiningVessel;
-    unitTypes[3] = AegisDrone;
-    unitTypes[4] = StingerDrone;
+    unitTypes[2] = AegisDrone;
+    unitTypes[3] = StingerDrone;
     allUnitTypes[1] = unitTypes;
 
     //Level 3
-    unitTypes = new uint256[](5);
+    unitTypes = new uint256[](4);
     unitTypes[0] = AnvilDrone;
     unitTypes[1] = HammerDrone;
-    unitTypes[2] = MiningVessel;
-    unitTypes[3] = AegisDrone;
-    unitTypes[4] = StingerDrone;
+    unitTypes[2] = AegisDrone;
+    unitTypes[3] = StingerDrone;
     allUnitTypes[2] = unitTypes;
     //Level 4
-    unitTypes = new uint256[](5);
+    unitTypes = new uint256[](4);
     unitTypes[0] = AnvilDrone;
     unitTypes[1] = HammerDrone;
-    unitTypes[2] = MiningVessel;
-    unitTypes[3] = AegisDrone;
-    unitTypes[4] = StingerDrone;
+    unitTypes[2] = AegisDrone;
+    unitTypes[3] = StingerDrone;
     allUnitTypes[3] = unitTypes;
 
     /* ***********************Set Values ************************* */
