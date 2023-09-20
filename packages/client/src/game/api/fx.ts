@@ -1,5 +1,3 @@
-// import type OutlinePostFx from "phaser3-rex-plugins/plugins/outlinepipeline.js";
-
 export const createFxApi = () => {
   function outline(
     gameObject: Phaser.GameObjects.Sprite,

@@ -5,7 +5,7 @@
     },
     "textures": [
         {
-            "image": "atlas.png?timestamp=1693576892924",
+            "image": "atlas.png?timestamp=1695242188390",
             "format": "RGBA8888",
             "size": {
                 "w": 1024,
@@ -2408,24 +2408,24 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_2.png",
+                    "filename": "sprites/spacerocks/asteroids/asteroid1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
-                        "w": 32,
-                        "h": 53
+                        "w": 64,
+                        "h": 64
                     },
                     "spriteSourceSize": {
                         "x": 0,
                         "y": 0,
-                        "w": 32,
-                        "h": 53
+                        "w": 64,
+                        "h": 64
                     },
                     "frame": {
                         "x": 605,
                         "y": 492,
-                        "w": 32,
-                        "h": 53
+                        "w": 64,
+                        "h": 64
                     }
                 },
                 {
@@ -2471,7 +2471,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_3.png",
+                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -2513,7 +2513,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_4.png",
+                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -2534,7 +2534,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_5.png",
+                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -2555,7 +2555,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_6.png",
+                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -2591,51 +2591,9 @@
                     },
                     "frame": {
                         "x": 637,
-                        "y": 492,
+                        "y": 556,
                         "w": 64,
                         "h": 82
-                    }
-                },
-                {
-                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_7.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 637,
-                        "y": 574,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_8.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 669,
-                        "y": 574,
-                        "w": 32,
-                        "h": 53
                     }
                 },
                 {
@@ -2723,7 +2681,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_9.png",
+                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -2870,6 +2828,48 @@
                     }
                 },
                 {
+                    "filename": "sprites/storage-facility/level1/Storage_Facility_LVL1.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 76
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 76
+                    },
+                    "frame": {
+                        "x": 669,
+                        "y": 480,
+                        "w": 64,
+                        "h": 76
+                    }
+                },
+                {
+                    "filename": "sprites/storage-facility/level2/Storage_Facility_LVL2.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 76
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 76
+                    },
+                    "frame": {
+                        "x": 733,
+                        "y": 480,
+                        "w": 64,
+                        "h": 76
+                    }
+                },
+                {
                     "filename": "sprites/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_2.png",
                     "rotated": false,
                     "trimmed": false,
@@ -2884,8 +2884,8 @@
                         "h": 80
                     },
                     "frame": {
-                        "x": 476,
-                        "y": 1324,
+                        "x": 733,
+                        "y": 0,
                         "w": 64,
                         "h": 80
                     }
@@ -2905,8 +2905,8 @@
                         "h": 80
                     },
                     "frame": {
-                        "x": 476,
-                        "y": 1404,
+                        "x": 733,
+                        "y": 80,
                         "w": 64,
                         "h": 80
                     }
@@ -2926,8 +2926,8 @@
                         "h": 80
                     },
                     "frame": {
-                        "x": 476,
-                        "y": 1484,
+                        "x": 733,
+                        "y": 160,
                         "w": 64,
                         "h": 80
                     }
@@ -2947,8 +2947,8 @@
                         "h": 80
                     },
                     "frame": {
-                        "x": 476,
-                        "y": 1564,
+                        "x": 733,
+                        "y": 240,
                         "w": 64,
                         "h": 80
                     }
@@ -2968,8 +2968,8 @@
                         "h": 80
                     },
                     "frame": {
-                        "x": 476,
-                        "y": 1644,
+                        "x": 733,
+                        "y": 320,
                         "w": 64,
                         "h": 80
                     }
@@ -2989,94 +2989,10 @@
                         "h": 80
                     },
                     "frame": {
-                        "x": 476,
-                        "y": 1724,
+                        "x": 733,
+                        "y": 400,
                         "w": 64,
                         "h": 80
-                    }
-                },
-                {
-                    "filename": "sprites/storage-facility/level1/Storage_Facility_LVL1.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 64,
-                        "h": 76
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 64,
-                        "h": 76
-                    },
-                    "frame": {
-                        "x": 476,
-                        "y": 1804,
-                        "w": 64,
-                        "h": 76
-                    }
-                },
-                {
-                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_1.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 476,
-                        "y": 1880,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_2.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 508,
-                        "y": 1880,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/storage-facility/level2/Storage_Facility_LVL2.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 64,
-                        "h": 76
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 64,
-                        "h": 76
-                    },
-                    "frame": {
-                        "x": 510,
-                        "y": 1933,
-                        "w": 64,
-                        "h": 76
                     }
                 },
                 {
@@ -3094,8 +3010,8 @@
                         "h": 76
                     },
                     "frame": {
-                        "x": 574,
-                        "y": 1933,
+                        "x": 476,
+                        "y": 1324,
                         "w": 64,
                         "h": 76
                     }
@@ -3115,8 +3031,8 @@
                         "h": 76
                     },
                     "frame": {
-                        "x": 540,
-                        "y": 1240,
+                        "x": 476,
+                        "y": 1400,
                         "w": 64,
                         "h": 76
                     }
@@ -3136,14 +3052,203 @@
                         "h": 76
                     },
                     "frame": {
-                        "x": 576,
-                        "y": 1154,
+                        "x": 476,
+                        "y": 1476,
                         "w": 64,
                         "h": 76
                     }
                 },
                 {
-                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_3.png",
+                    "filename": "sprites/storage-facility/level3/Storage_Facility_LVL3_4.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 76
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 76
+                    },
+                    "frame": {
+                        "x": 476,
+                        "y": 1552,
+                        "w": 64,
+                        "h": 76
+                    }
+                },
+                {
+                    "filename": "sprites/storage-facility/level3/Storage_Facility_LVL3_5.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 76
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 76
+                    },
+                    "frame": {
+                        "x": 476,
+                        "y": 1628,
+                        "w": 64,
+                        "h": 76
+                    }
+                },
+                {
+                    "filename": "sprites/storage-facility/level3/Storage_Facility_LVL3_6.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 76
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 76
+                    },
+                    "frame": {
+                        "x": 476,
+                        "y": 1704,
+                        "w": 64,
+                        "h": 76
+                    }
+                },
+                {
+                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_1.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 75
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 75
+                    },
+                    "frame": {
+                        "x": 476,
+                        "y": 1780,
+                        "w": 64,
+                        "h": 75
+                    }
+                },
+                {
+                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_15.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 75
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 75
+                    },
+                    "frame": {
+                        "x": 476,
+                        "y": 1855,
+                        "w": 64,
+                        "h": 75
+                    }
+                },
+                {
+                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_2.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 75
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 75
+                    },
+                    "frame": {
+                        "x": 510,
+                        "y": 1930,
+                        "w": 64,
+                        "h": 75
+                    }
+                },
+                {
+                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_3.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 75
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 75
+                    },
+                    "frame": {
+                        "x": 574,
+                        "y": 1930,
+                        "w": 64,
+                        "h": 75
+                    }
+                },
+                {
+                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_4.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 75
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 75
+                    },
+                    "frame": {
+                        "x": 540,
+                        "y": 1240,
+                        "w": 64,
+                        "h": 75
+                    }
+                },
+                {
+                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_5.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 75
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 75
+                    },
+                    "frame": {
+                        "x": 576,
+                        "y": 1154,
+                        "w": 64,
+                        "h": 75
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -3164,216 +3269,6 @@
                     }
                 },
                 {
-                    "filename": "sprites/storage-facility/level3/Storage_Facility_LVL3_4.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 64,
-                        "h": 76
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 64,
-                        "h": 76
-                    },
-                    "frame": {
-                        "x": 638,
-                        "y": 695,
-                        "w": 64,
-                        "h": 76
-                    }
-                },
-                {
-                    "filename": "sprites/storage-facility/level3/Storage_Facility_LVL3_5.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 64,
-                        "h": 76
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 64,
-                        "h": 76
-                    },
-                    "frame": {
-                        "x": 701,
-                        "y": 480,
-                        "w": 64,
-                        "h": 76
-                    }
-                },
-                {
-                    "filename": "sprites/storage-facility/level3/Storage_Facility_LVL3_6.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 64,
-                        "h": 76
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 64,
-                        "h": 76
-                    },
-                    "frame": {
-                        "x": 701,
-                        "y": 556,
-                        "w": 64,
-                        "h": 76
-                    }
-                },
-                {
-                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_4.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 701,
-                        "y": 632,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_1.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 64,
-                        "h": 75
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 64,
-                        "h": 75
-                    },
-                    "frame": {
-                        "x": 638,
-                        "y": 771,
-                        "w": 64,
-                        "h": 75
-                    }
-                },
-                {
-                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_15.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 64,
-                        "h": 75
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 64,
-                        "h": 75
-                    },
-                    "frame": {
-                        "x": 638,
-                        "y": 846,
-                        "w": 64,
-                        "h": 75
-                    }
-                },
-                {
-                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_2.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 64,
-                        "h": 75
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 64,
-                        "h": 75
-                    },
-                    "frame": {
-                        "x": 638,
-                        "y": 921,
-                        "w": 64,
-                        "h": 75
-                    }
-                },
-                {
-                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_3.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 64,
-                        "h": 75
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 64,
-                        "h": 75
-                    },
-                    "frame": {
-                        "x": 638,
-                        "y": 996,
-                        "w": 64,
-                        "h": 75
-                    }
-                },
-                {
-                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_4.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 64,
-                        "h": 75
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 64,
-                        "h": 75
-                    },
-                    "frame": {
-                        "x": 638,
-                        "y": 1071,
-                        "w": 64,
-                        "h": 75
-                    }
-                },
-                {
-                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_5.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 64,
-                        "h": 75
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 64,
-                        "h": 75
-                    },
-                    "frame": {
-                        "x": 733,
-                        "y": 0,
-                        "w": 64,
-                        "h": 75
-                    }
-                },
-                {
                     "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_6.png",
                     "rotated": false,
                     "trimmed": false,
@@ -3388,8 +3283,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 733,
-                        "y": 75,
+                        "x": 638,
+                        "y": 695,
                         "w": 64,
                         "h": 75
                     }
@@ -3409,10 +3304,73 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 733,
-                        "y": 150,
+                        "x": 701,
+                        "y": 556,
                         "w": 64,
                         "h": 75
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/asteroids/asteroid2.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 701,
+                        "y": 631,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/asteroids/asteroid3.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 765,
+                        "y": 631,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/asteroids/asteroid4.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 829,
+                        "y": 631,
+                        "w": 64,
+                        "h": 64
                     }
                 },
                 {
@@ -3430,8 +3388,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 733,
-                        "y": 225,
+                        "x": 765,
+                        "y": 556,
                         "w": 64,
                         "h": 75
                     }
@@ -3451,8 +3409,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 733,
-                        "y": 300,
+                        "x": 638,
+                        "y": 770,
                         "w": 64,
                         "h": 75
                     }
@@ -3472,8 +3430,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 733,
-                        "y": 375,
+                        "x": 638,
+                        "y": 845,
                         "w": 64,
                         "h": 75
                     }
@@ -3493,8 +3451,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 540,
-                        "y": 1316,
+                        "x": 638,
+                        "y": 920,
                         "w": 64,
                         "h": 75
                     }
@@ -3514,8 +3472,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 540,
-                        "y": 1391,
+                        "x": 638,
+                        "y": 995,
                         "w": 64,
                         "h": 75
                     }
@@ -3535,8 +3493,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 540,
-                        "y": 1466,
+                        "x": 638,
+                        "y": 1070,
                         "w": 64,
                         "h": 75
                     }
@@ -3556,8 +3514,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 540,
-                        "y": 1541,
+                        "x": 797,
+                        "y": 0,
                         "w": 64,
                         "h": 75
                     }
@@ -3577,8 +3535,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 540,
-                        "y": 1616,
+                        "x": 797,
+                        "y": 75,
                         "w": 64,
                         "h": 75
                     }
@@ -3598,8 +3556,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 540,
-                        "y": 1691,
+                        "x": 797,
+                        "y": 150,
                         "w": 64,
                         "h": 75
                     }
@@ -3619,8 +3577,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 540,
-                        "y": 1766,
+                        "x": 797,
+                        "y": 225,
                         "w": 64,
                         "h": 75
                     }
@@ -3640,8 +3598,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 540,
-                        "y": 1841,
+                        "x": 797,
+                        "y": 300,
                         "w": 64,
                         "h": 75
                     }
@@ -3661,8 +3619,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 604,
-                        "y": 1230,
+                        "x": 797,
+                        "y": 375,
                         "w": 64,
                         "h": 75
                     }
@@ -3682,8 +3640,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 640,
-                        "y": 1146,
+                        "x": 797,
+                        "y": 450,
                         "w": 64,
                         "h": 75
                     }
@@ -3703,73 +3661,10 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 702,
-                        "y": 685,
+                        "x": 829,
+                        "y": 525,
                         "w": 64,
                         "h": 75
-                    }
-                },
-                {
-                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_5.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 733,
-                        "y": 632,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_6.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 765,
-                        "y": 632,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_7.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 797,
-                        "y": 632,
-                        "w": 32,
-                        "h": 53
                     }
                 },
                 {
@@ -3787,8 +3682,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 765,
-                        "y": 450,
+                        "x": 861,
+                        "y": 0,
                         "w": 64,
                         "h": 75
                     }
@@ -3808,8 +3703,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 765,
-                        "y": 525,
+                        "x": 861,
+                        "y": 75,
                         "w": 64,
                         "h": 75
                     }
@@ -3829,10 +3724,472 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 702,
-                        "y": 760,
+                        "x": 861,
+                        "y": 150,
                         "w": 64,
                         "h": 75
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/asteroids/asteroid5.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 861,
+                        "y": 225,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_iridium_large.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 861,
+                        "y": 289,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_iridium_medium.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 861,
+                        "y": 353,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_iridium_small.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 861,
+                        "y": 417,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_kimberlite_large.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 540,
+                        "y": 1315,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_kimberlite_medium.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 540,
+                        "y": 1379,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_kimberlite_small.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 540,
+                        "y": 1443,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_platinum_large.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 540,
+                        "y": 1507,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_platinum_medium.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 540,
+                        "y": 1571,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_platinum_small.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 540,
+                        "y": 1635,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_titanium_large.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 540,
+                        "y": 1699,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_titanium_medium.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 540,
+                        "y": 1763,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_titanium_small.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 540,
+                        "y": 1827,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_8.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 604,
+                        "y": 1229,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_9.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 604,
+                        "y": 1282,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_1.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 604,
+                        "y": 1335,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_2.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 604,
+                        "y": 1388,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_3.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 604,
+                        "y": 1441,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_4.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 604,
+                        "y": 1494,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_5.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 604,
+                        "y": 1547,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_6.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 604,
+                        "y": 1600,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_7.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 604,
+                        "y": 1653,
+                        "w": 32,
+                        "h": 53
                     }
                 },
                 {
@@ -3850,8 +4207,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 702,
-                        "y": 835,
+                        "x": 604,
+                        "y": 1706,
                         "w": 32,
                         "h": 53
                     }
@@ -3871,8 +4228,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 702,
-                        "y": 888,
+                        "x": 604,
+                        "y": 1759,
                         "w": 32,
                         "h": 53
                     }
@@ -3892,8 +4249,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 702,
-                        "y": 941,
+                        "x": 604,
+                        "y": 1812,
                         "w": 32,
                         "h": 53
                     }
@@ -3913,8 +4270,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 702,
-                        "y": 994,
+                        "x": 604,
+                        "y": 1865,
                         "w": 32,
                         "h": 53
                     }
@@ -3934,8 +4291,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 702,
-                        "y": 1047,
+                        "x": 636,
+                        "y": 1229,
                         "w": 32,
                         "h": 53
                     }
@@ -3955,8 +4312,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 797,
-                        "y": 0,
+                        "x": 640,
+                        "y": 1145,
                         "w": 32,
                         "h": 53
                     }
@@ -3976,8 +4333,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 797,
-                        "y": 53,
+                        "x": 636,
+                        "y": 1282,
                         "w": 32,
                         "h": 53
                     }
@@ -3997,8 +4354,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 797,
-                        "y": 106,
+                        "x": 636,
+                        "y": 1335,
                         "w": 32,
                         "h": 53
                     }
@@ -4018,8 +4375,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 797,
-                        "y": 159,
+                        "x": 636,
+                        "y": 1388,
                         "w": 32,
                         "h": 53
                     }
@@ -4039,8 +4396,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 797,
-                        "y": 212,
+                        "x": 636,
+                        "y": 1441,
                         "w": 32,
                         "h": 53
                     }
@@ -4060,8 +4417,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 797,
-                        "y": 265,
+                        "x": 636,
+                        "y": 1494,
                         "w": 32,
                         "h": 53
                     }
@@ -4081,8 +4438,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 797,
-                        "y": 318,
+                        "x": 636,
+                        "y": 1547,
                         "w": 32,
                         "h": 53
                     }
@@ -4102,8 +4459,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 797,
-                        "y": 371,
+                        "x": 636,
+                        "y": 1600,
                         "w": 32,
                         "h": 53
                     }
@@ -4123,8 +4480,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 604,
-                        "y": 1305,
+                        "x": 636,
+                        "y": 1653,
                         "w": 32,
                         "h": 53
                     }
@@ -4144,8 +4501,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 604,
-                        "y": 1358,
+                        "x": 636,
+                        "y": 1706,
                         "w": 32,
                         "h": 53
                     }
@@ -4165,8 +4522,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 604,
-                        "y": 1411,
+                        "x": 636,
+                        "y": 1759,
                         "w": 32,
                         "h": 53
                     }
@@ -4186,8 +4543,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 604,
-                        "y": 1464,
+                        "x": 636,
+                        "y": 1812,
                         "w": 32,
                         "h": 53
                     }
@@ -4207,8 +4564,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 604,
-                        "y": 1517,
+                        "x": 636,
+                        "y": 1865,
                         "w": 32,
                         "h": 53
                     }
@@ -4228,8 +4585,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 604,
-                        "y": 1570,
+                        "x": 668,
+                        "y": 1865,
                         "w": 32,
                         "h": 53
                     }
@@ -4249,8 +4606,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 604,
-                        "y": 1623,
+                        "x": 638,
+                        "y": 1918,
                         "w": 32,
                         "h": 53
                     }
@@ -4270,8 +4627,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 604,
-                        "y": 1676,
+                        "x": 638,
+                        "y": 1971,
                         "w": 32,
                         "h": 53
                     }
@@ -4291,8 +4648,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 604,
-                        "y": 1729,
+                        "x": 670,
+                        "y": 1918,
                         "w": 32,
                         "h": 53
                     }
@@ -4312,8 +4669,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 604,
-                        "y": 1782,
+                        "x": 670,
+                        "y": 1971,
                         "w": 32,
                         "h": 53
                     }
@@ -4333,8 +4690,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 604,
-                        "y": 1835,
+                        "x": 668,
+                        "y": 1198,
                         "w": 32,
                         "h": 53
                     }
@@ -4354,8 +4711,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 636,
-                        "y": 1305,
+                        "x": 672,
+                        "y": 1145,
                         "w": 32,
                         "h": 53
                     }
@@ -4375,8 +4732,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 636,
-                        "y": 1358,
+                        "x": 704,
+                        "y": 1145,
                         "w": 32,
                         "h": 53
                     }
@@ -4396,8 +4753,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 636,
-                        "y": 1411,
+                        "x": 702,
+                        "y": 695,
                         "w": 32,
                         "h": 53
                     }
@@ -4417,8 +4774,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 636,
-                        "y": 1464,
+                        "x": 702,
+                        "y": 748,
                         "w": 32,
                         "h": 53
                     }
@@ -4438,8 +4795,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 636,
-                        "y": 1517,
+                        "x": 702,
+                        "y": 801,
                         "w": 32,
                         "h": 53
                     }
@@ -4459,8 +4816,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 636,
-                        "y": 1570,
+                        "x": 702,
+                        "y": 854,
                         "w": 32,
                         "h": 53
                     }
@@ -4480,8 +4837,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 636,
-                        "y": 1623,
+                        "x": 702,
+                        "y": 907,
                         "w": 32,
                         "h": 53
                     }
@@ -4501,8 +4858,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 636,
-                        "y": 1676,
+                        "x": 702,
+                        "y": 960,
                         "w": 32,
                         "h": 53
                     }
@@ -4522,8 +4879,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 636,
-                        "y": 1729,
+                        "x": 702,
+                        "y": 1013,
                         "w": 32,
                         "h": 53
                     }
@@ -4543,8 +4900,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 636,
-                        "y": 1782,
+                        "x": 702,
+                        "y": 1066,
                         "w": 32,
                         "h": 53
                     }
@@ -4564,8 +4921,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 636,
-                        "y": 1835,
+                        "x": 734,
+                        "y": 695,
                         "w": 32,
                         "h": 53
                     }
@@ -4585,8 +4942,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 638,
-                        "y": 1888,
+                        "x": 734,
+                        "y": 748,
                         "w": 32,
                         "h": 53
                     }
@@ -4606,8 +4963,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 638,
-                        "y": 1941,
+                        "x": 734,
+                        "y": 801,
                         "w": 32,
                         "h": 53
                     }
@@ -4627,8 +4984,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 638,
-                        "y": 1994,
+                        "x": 734,
+                        "y": 854,
                         "w": 32,
                         "h": 53
                     }
@@ -4648,8 +5005,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 668,
-                        "y": 1221,
+                        "x": 734,
+                        "y": 907,
                         "w": 32,
                         "h": 53
                     }
@@ -4669,8 +5026,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 668,
-                        "y": 1274,
+                        "x": 734,
+                        "y": 960,
                         "w": 32,
                         "h": 53
                     }
@@ -4690,8 +5047,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 668,
-                        "y": 1327,
+                        "x": 734,
+                        "y": 1013,
                         "w": 32,
                         "h": 53
                     }
@@ -4711,8 +5068,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 668,
-                        "y": 1380,
+                        "x": 734,
+                        "y": 1066,
                         "w": 32,
                         "h": 53
                     }
@@ -4732,8 +5089,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 668,
-                        "y": 1433,
+                        "x": 766,
+                        "y": 1066,
                         "w": 32,
                         "h": 53
                     }
@@ -4753,8 +5110,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 668,
-                        "y": 1486,
+                        "x": 766,
+                        "y": 695,
                         "w": 32,
                         "h": 53
                     }
@@ -4774,8 +5131,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 668,
-                        "y": 1539,
+                        "x": 766,
+                        "y": 748,
                         "w": 32,
                         "h": 53
                     }
@@ -4795,8 +5152,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 668,
-                        "y": 1592,
+                        "x": 766,
+                        "y": 801,
                         "w": 32,
                         "h": 53
                     }
@@ -4816,8 +5173,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 668,
-                        "y": 1645,
+                        "x": 766,
+                        "y": 854,
                         "w": 32,
                         "h": 53
                     }
@@ -5110,8 +5467,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 638,
-                        "y": 771,
+                        "x": 476,
+                        "y": 1780,
                         "w": 64,
                         "h": 75
                     }
@@ -5131,8 +5488,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 638,
-                        "y": 771,
+                        "x": 476,
+                        "y": 1780,
                         "w": 64,
                         "h": 75
                     }
@@ -5152,8 +5509,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 638,
-                        "y": 771,
+                        "x": 476,
+                        "y": 1780,
                         "w": 64,
                         "h": 75
                     }
@@ -5173,8 +5530,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 638,
-                        "y": 771,
+                        "x": 476,
+                        "y": 1780,
                         "w": 64,
                         "h": 75
                     }
@@ -5194,8 +5551,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 638,
-                        "y": 771,
+                        "x": 476,
+                        "y": 1780,
                         "w": 64,
                         "h": 75
                     }
@@ -5215,8 +5572,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 638,
-                        "y": 846,
+                        "x": 476,
+                        "y": 1855,
                         "w": 64,
                         "h": 75
                     }
@@ -5236,8 +5593,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 638,
-                        "y": 846,
+                        "x": 476,
+                        "y": 1855,
                         "w": 64,
                         "h": 75
                     }
@@ -5257,8 +5614,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 638,
-                        "y": 846,
+                        "x": 476,
+                        "y": 1855,
                         "w": 64,
                         "h": 75
                     }
@@ -5278,8 +5635,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 733,
-                        "y": 375,
+                        "x": 638,
+                        "y": 845,
                         "w": 64,
                         "h": 75
                     }
@@ -5299,8 +5656,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 540,
-                        "y": 1391,
+                        "x": 638,
+                        "y": 995,
                         "w": 64,
                         "h": 75
                     }
@@ -5320,8 +5677,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 540,
-                        "y": 1541,
+                        "x": 797,
+                        "y": 0,
                         "w": 64,
                         "h": 75
                     }
