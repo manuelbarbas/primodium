@@ -119,9 +119,9 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_Asteroid: maxRange,
       P_GameConfig: {
-        motherlodeDistance: 10,
-        maxMotherlodesPerAsteroid: 10,
-        motherlodeChanceInv: 4,
+        motherlodeDistance: 10n,
+        maxMotherlodesPerAsteroid: 10n,
+        motherlodeChanceInv: 4n,
         unitProductionRate: 10000n,
       },
     },
