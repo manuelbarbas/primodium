@@ -43,10 +43,10 @@ export const config = mudConfig({
     P_GameConfig: {
       keySchema: {},
       schema: {
-        maxMotherlodesPerAsteroid: "uint32",
-        motherlodeChanceInv: "uint32",
-        motherlodeDistance: "uint32",
         unitProductionRate: "uint256",
+        maxMotherlodesPerAsteroid: "uint256",
+        motherlodeChanceInv: "uint256",
+        motherlodeDistance: "uint256",
       },
     },
 
