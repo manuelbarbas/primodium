@@ -15,12 +15,14 @@ contract UpgradeUnitSystem is PrimodiumSystem {
     uint256 currentLevel = UnitLevel.get(playerEntity, unitPrototype);
     uint256 targetLevel = currentLevel == 0 ? 2 : currentLevel + 1;
 
+    require(unit != EUnit.NULL && unit != EUnit.LENGTH, "[UpgradeUnitSystem] Invalid unit");
+
     require(
       LibBuilding.hasRequiredBaseLevel(playerEntity, unitPrototype, targetLevel),
       "[UpgradeUnitSystem] MainBase level requirement not met"
     );
 
-    require(targetLevel < P_MaxLevel.get(unitPrototype), "[UpgradeUnitSystem] Max level reached");
+    require(targetLevel <= P_MaxLevel.get(unitPrototype), "[UpgradeUnitSystem] Max level reached");
 
     UnitLevel.set(playerEntity, unitPrototype, targetLevel);
 
