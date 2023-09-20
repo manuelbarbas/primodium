@@ -5,15 +5,15 @@ import { EBuilding, EResource } from "src/Types.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { UtilitySet } from "libraries/UtilitySet.sol";
-import { P_IsUtility, P_RequiredResources, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/Tables.sol";
+import { P_IsUtility, P_RequiredResources, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/Tables.sol";
 import { BuildingKey } from "src/Keys.sol";
 
 library LibResource {
-  /// @notice Spends required resources of an entity, when creating/upgrading a building or enqueueing a unit
+  /// @notice Spends required resources of an entity, when creating/upgrading a building
   /// @notice claims all resources beforehand
   /// @param entity Entity ID of the building
   /// @param level Target level for the building
-  function spendRequiredResources(bytes32 entity, uint256 level) internal {
+  function spendBuildingRequiredResources(bytes32 entity, uint256 level) internal {
     bytes32 playerEntity = OwnedBy.get(entity);
     claimAllResources(playerEntity);
     bytes32 buildingPrototype = BuildingType.get(entity);
@@ -21,6 +21,20 @@ library LibResource {
 
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       spendResource(playerEntity, entity, EResource(requiredResources.resources[i]), requiredResources.amounts[i]);
+    }
+  }
+
+  /// @notice Spends required resources of a unit, when adding to training queue
+  /// @notice claims all resources beforehand
+  /// @param playerEntity Entity ID of the player
+  /// @param prototype Unit Prototype
+  function spendUnitRequiredResources(bytes32 playerEntity, bytes32 prototype) internal {
+    uint256 level = UnitLevel.get(playerEntity, prototype);
+    if (level == 0) level = 1;
+    claimAllResources(playerEntity);
+    P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(prototype, level);
+    for (uint256 i = 0; i < requiredResources.resources.length; i++) {
+      spendResource(playerEntity, prototype, EResource(requiredResources.resources[i]), requiredResources.amounts[i]);
     }
   }
 

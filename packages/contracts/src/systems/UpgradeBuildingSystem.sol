@@ -34,7 +34,7 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
 
     Level.set(buildingEntity, targetLevel);
 
-    world.spendRequiredResources(buildingEntity, targetLevel);
+    world.spendBuildingRequiredResources(buildingEntity, targetLevel);
     world.reduceProductionRate(playerEntity, buildingEntity, targetLevel);
     LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, targetLevel);
     LibStorage.increaseMaxStorage(playerEntity, buildingEntity, targetLevel);

@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { Level, P_EnumToPrototype, QueueItemUnitsData } from "codegen/Tables.sol";
+import { UnitLevel, P_EnumToPrototype, QueueItemUnitsData } from "codegen/Tables.sol";
 import { LibUnit, UnitProductionQueue } from "codegen/Libraries.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 
@@ -17,13 +17,16 @@ contract TrainUnitsSystem is PrimodiumSystem {
   ) public {
     IWorld world = IWorld(_world());
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
-    uint256 level = Level.get(buildingEntity);
     bytes32 playerEntity = addressToEntity(_msgSender());
+    uint256 level = UnitLevel.get(playerEntity, unitPrototype);
 
     require(LibUnit.canProduceUnit(buildingEntity, unitPrototype), "[TrainUnitsSystem] Building cannot produce unit");
 
     world.updateHomeRock(playerEntity);
-    world.spendRequiredResources(buildingEntity, level);
+    world.spendUnitRequiredResources(playerEntity, unitPrototype);
+    if (count == 0) {
+      return;
+    }
 
     QueueItemUnitsData memory queueItem = QueueItemUnitsData({ unitId: unitPrototype, quantity: count });
 
