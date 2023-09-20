@@ -77,6 +77,32 @@ export function getRecipe(entityId: EntityID) {
   return [...resources, ...utilities, ...resourceRate];
 }
 
+export function getRecipeDifference(
+  firstRecipe: ReturnType<typeof getRecipe>,
+  secondRecipe: ReturnType<typeof getRecipe>
+) {
+  const difference = firstRecipe.map((resource) => {
+    let amount = resource.amount;
+    if (resource.type == ResourceType.Utility) {
+      const secondResource = secondRecipe.find(
+        (secondResource) => resource.id === secondResource.id
+      );
+
+      if (secondResource) {
+        amount = resource.amount - secondResource.amount;
+      }
+    }
+
+    return {
+      id: resource.id,
+      amount: amount,
+      type: resource.type,
+    };
+  });
+
+  return difference;
+}
+
 export const mineableResources = [
   BlockType.Titanium,
   BlockType.Iridium,
@@ -219,9 +245,10 @@ export function getFullResourceCount(
   return { resourceCount, resourcesToClaim, maxStorage, production };
 }
 
-export function hasEnoughResources(entityId: EntityID, count = 1) {
-  const recipe = getRecipe(entityId);
-
+export function hasEnoughResources(
+  recipe: ReturnType<typeof getRecipe>,
+  count = 1
+) {
   const resourceAmounts = recipe.map((resource) => {
     return getFullResourceCount(resource.id, resource.type);
   });

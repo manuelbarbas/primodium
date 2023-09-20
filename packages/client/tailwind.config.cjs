@@ -22,7 +22,7 @@ module.exports = {
       {
         base: {
           primary: colors.cyan[900],
-          secondary: colors.cyan[800],
+          secondary: colors.cyan[700],
           accent: colors.cyan[400],
           neutral: colors.slate[900],
           "base-100": colors.slate[800],

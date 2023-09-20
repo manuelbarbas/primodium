@@ -39,7 +39,7 @@ export const Panes: React.FC = () => {
       </Tabs.Pane>
       <div className="flex flex-col gap-2">
         <div>
-          <Join direction="vertical" className="z-10">
+          <Join direction="vertical" className="z-10 border-secondary">
             <Tabs.IconButton
               index={0}
               imageUri="/img/icons/transporticon.png"
@@ -76,7 +76,7 @@ export const Panes: React.FC = () => {
         </div>
 
         <Divider />
-        <Join direction="vertical" className="z-10">
+        <Join direction="vertical" className="z-10 border-secondary">
           <Tabs.IconButton
             index={4}
             imageUri="/img/icons/debugicon.png"

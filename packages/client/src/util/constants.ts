@@ -82,14 +82,14 @@ export const BlockType = {
   PhotovoltaicCell: keccak256("item.PhotovoltaicCellCrafted") as EntityID,
 
   SpaceFuelCraftedItem: keccak256("item.SpaceFuelCrafted") as EntityID,
-  ElectricityUtilityResource: keccak256(
-    "item.ElectricityUtilityResource"
-  ) as EntityID,
-  HousingUtilityResource: keccak256("item.HousingUtilityResource") as EntityID,
-  VesselUtilityResource: keccak256("item.VesselUtilityResource") as EntityID,
+
+  Electricity: keccak256("item.ElectricityUtilityResource") as EntityID,
+  Housing: keccak256("item.HousingUtilityResource") as EntityID,
+  VesselCapacity: keccak256("item.VesselUtilityResource") as EntityID,
+  FleetMoves: keccak256("item.MoveCount") as EntityID,
 
   BulletCrafted: keccak256("item.BulletCrafted") as EntityID,
-  IronPlateCrafted: keccak256("item.IronPlateCrafted") as EntityID,
+  IronPlate: keccak256("item.IronPlateCrafted") as EntityID,
   BasicPowerSourceCrafted: keccak256(
     "item.BasicPowerSourceCrafted"
   ) as EntityID,
@@ -561,7 +561,7 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.BulletCrafted, "/img/crafted/ironplate.png"],
   [BlockType.Platinum, "/img/resource/platinum_resource.png"],
 
-  [BlockType.IronPlateCrafted, "/img/crafted/ironplate.png"],
+  [BlockType.IronPlate, "/img/crafted/ironplate.png"],
   [BlockType.BasicPowerSourceCrafted, "/img/crafted/basicbattery.png"],
   [BlockType.AdvancedPowerSourceCrafted, "/img/crafted/photovoltaiccell.png"],
   [BlockType.IridiumCrystalCrafted, "/img/crafted/iridiumcrystal.png"],
@@ -583,9 +583,10 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.PhotovoltaicCell, "/img/resource/photovoltaiccell_resource.png"],
   [BlockType.SpaceFuelCraftedItem, "/img/crafted/refinedosmium.png"],
 
-  [BlockType.ElectricityUtilityResource, "/img/icons/powericon.png"],
-  [BlockType.HousingUtilityResource, "/img/icons/utilitiesicon.png"],
-  [BlockType.VesselUtilityResource, "/img/unit/miningvessel.png"],
+  [BlockType.Electricity, "/img/icons/powericon.png"],
+  [BlockType.Housing, "/img/icons/utilitiesicon.png"],
+  [BlockType.VesselCapacity, "/img/unit/miningvessel.png"],
+  [BlockType.FleetMoves, "img/icons/moveicon.png"],
 
   // debug
   [BlockType.BulletCrafted, "/img/crafted/bullet.png"],
@@ -624,3 +625,24 @@ export const MotherlodeTypeNames: Record<number, string> = {
   [EMotherlodeType.PLATINUM]: "platinum",
   [EMotherlodeType.KIMBERLITE]: "kimberlite",
 };
+
+export const ResourceStorages = [
+  BlockType.Iron,
+  BlockType.Copper,
+  BlockType.Lithium,
+  BlockType.IronPlate,
+  BlockType.Alloy,
+  BlockType.PhotovoltaicCell,
+  BlockType.Sulfur,
+  BlockType.Titanium,
+  BlockType.Iridium,
+  BlockType.Platinum,
+  BlockType.Kimberlite,
+];
+
+export const UtilityStorages = [
+  BlockType.Housing,
+  BlockType.Electricity,
+  BlockType.VesselCapacity,
+  BlockType.FleetMoves,
+];

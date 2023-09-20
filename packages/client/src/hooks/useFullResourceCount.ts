@@ -118,7 +118,10 @@ export function useFullResourceCount(
         { resource: "0" as EntityID, maxAmount: 0 }
       );
 
-      const resourceMined = MotherlodeResource.get(entity, { value: 0 }).value;
+      const resourceMined = MotherlodeResource.get(
+        hashKeyEntity(resource, entity),
+        { value: 0 }
+      ).value;
 
       if (!hangar || resource !== resourceID) return prev;
       const lastClaimedAt = LastClaimedAt.get(entity)?.value ?? 0;
@@ -127,9 +130,11 @@ export function useFullResourceCount(
       for (let i = 0; i < hangar.units.length; i++) {
         total += getUnitStats(hangar.units[i]).MIN * hangar.counts[i];
       }
-      total *= ((blockNumber - lastClaimedAt) * SPEED_SCALE) / worldSpeed;
       if (total + resourceMined > maxAmount) total = maxAmount - resourceMined;
-      return prev + total;
+      return (
+        prev +
+        total * (((blockNumber - lastClaimedAt) * SPEED_SCALE) / worldSpeed)
+      );
     }, 0);
   }, [motherlodes, resourceID, block, resourceCount]);
 

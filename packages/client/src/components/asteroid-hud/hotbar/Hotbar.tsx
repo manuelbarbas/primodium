@@ -52,7 +52,7 @@ export const Hotbar: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center relative mb-2">
-      <Join className="flex pointer-events-auto z-10 mb-4">
+      <Join className="flex pointer-events-auto z-10 mb-4 border-accent">
         {hotbarContent.map((item, index) => {
           return (
             <HotbarLabel

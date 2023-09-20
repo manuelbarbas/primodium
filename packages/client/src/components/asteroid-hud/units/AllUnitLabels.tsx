@@ -30,6 +30,11 @@ export const AllUnitLabels = () => {
         resourceId={BlockType.AnvilLightDrone}
       />
       <UnitLabel
+        name={"Hammer Drone"}
+        count={getUnitCount(BlockType.HammerLightDrone)}
+        resourceId={BlockType.HammerLightDrone}
+      />
+      <UnitLabel
         name={"Stinger Drone"}
         count={getUnitCount(BlockType.StingerDrone)}
         resourceId={BlockType.StingerDrone}

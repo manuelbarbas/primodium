@@ -30,7 +30,7 @@ import {
   getBuildingDimensions,
   getBuildingOrigin,
 } from "src/util/building";
-import { hasEnoughResources } from "src/util/resource";
+import { getRecipe, hasEnoughResources } from "src/util/resource";
 import { hashAndTrimKeyEntity, hashKeyEntity } from "src/util/encode";
 import { Level } from "src/network/components/chainComponents";
 import { buildBuilding } from "src/util/web3";
@@ -92,7 +92,7 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
       Level.get(hashKeyEntity(selectedBuilding, player))?.value ?? 1;
     const buildingLevelEntity = hashAndTrimKeyEntity(selectedBuilding, level);
 
-    const hasEnough = hasEnoughResources(buildingLevelEntity);
+    const hasEnough = hasEnoughResources(getRecipe(buildingLevelEntity));
     const validPlacement = validateBuildingPlacement(
       tileCoord,
       selectedBuilding

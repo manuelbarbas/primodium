@@ -21,7 +21,7 @@ export const UtilityLabel = ({
     <div className="mx-1">
       <ResourceIconTooltip
         name={name}
-        amount={maxStorage - resourceCount + resourcesToClaim}
+        amount={maxStorage - (resourceCount + resourcesToClaim)}
         resourceId={resourceId}
         scale={1}
         image={resourceIcon ?? ""}

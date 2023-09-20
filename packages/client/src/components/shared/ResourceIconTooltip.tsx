@@ -13,7 +13,7 @@ export default function ResourceIconTooltip({
   scale = RESOURCE_SCALE,
   fontSize = "md",
   resourceType = ResourceType.Resource,
-  validate = true,
+  validate = false,
   direction = "right",
   className,
 }: {

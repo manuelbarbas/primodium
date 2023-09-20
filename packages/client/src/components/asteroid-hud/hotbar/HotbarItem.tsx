@@ -26,6 +26,7 @@ import {
 import { RawBlueprint, Level } from "src/network/components/chainComponents";
 import { useMainBaseCoord } from "src/hooks/useMainBase";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
+import { getRecipe } from "src/util/resource";
 
 const HotbarItem: React.FC<{
   blockType: EntityID;
@@ -78,7 +79,7 @@ const HotbarItem: React.FC<{
   })?.value;
   const buildingLevelEntity = hashAndTrimKeyEntity(blockType, level);
 
-  const hasEnough = useHasEnoughResources(buildingLevelEntity);
+  const hasEnough = useHasEnoughResources(getRecipe(buildingLevelEntity));
 
   useEffect(() => {
     if (!keybinds || !unlocked || !keybindAction) return;

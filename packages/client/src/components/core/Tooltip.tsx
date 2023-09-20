@@ -28,7 +28,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
 
   return (
     <div
-      className={`tooltip ${getTooltipClass()} pointer-events-auto`}
+      className={`before:z-50 before:content-[attr(data-tip)] tooltip ${getTooltipClass()} pointer-events-auto`}
       data-tip={text}
     >
       {children}
