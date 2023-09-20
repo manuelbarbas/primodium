@@ -11,6 +11,7 @@ import { createInputApi } from "./input";
 import { createSceneApi } from "./scene";
 import { createFxApi } from "./fx";
 import { world } from "src/network/world";
+import { createSpriteApi } from "./sprite";
 
 async function init(network: Network, version = "v1") {
   const asciiArt = `
@@ -82,6 +83,7 @@ function api(sceneKey = "MAIN", instance: string | Game = "MAIN") {
     input: createInputApi(scene),
     scene: createSceneApi(scene),
     fx: createFxApi(),
+    spirte: createSpriteApi(scene),
   };
 }
 
