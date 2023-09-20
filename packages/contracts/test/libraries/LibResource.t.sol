@@ -2,10 +2,6 @@
 pragma solidity >=0.8.0;
 
 import "test/PrimodiumTest.t.sol";
-import { EResource } from "src/Types.sol";
-import { LibResource, UtilitySet } from "codegen/Libraries.sol";
-
-import { P_RequiredResourcesData, P_RequiredResources, BuildingType, MaxResourceCount, OwnedBy } from "codegen/Tables.sol";
 
 contract LibResourceTest is PrimodiumTest {
   bytes32 playerEntity = "playerEntity";

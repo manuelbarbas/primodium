@@ -2,8 +2,6 @@
 pragma solidity >=0.8.0;
 
 import "test/PrimodiumTest.t.sol";
-import { UnitProductionQueue } from "codegen/Libraries.sol";
-import { QueueUnits, QueueUnitsData, QueueItemUnits, QueueItemUnitsData } from "codegen/Tables.sol";
 
 contract UnitProductionQueueTest is PrimodiumTest {
   bytes32 queueId = "queueId";

@@ -2,9 +2,6 @@
 pragma solidity >=0.8.0;
 
 import "test/PrimodiumTest.t.sol";
-import { P_ByLevelMaxResourceUpgrades, P_ListMaxResourceUpgrades } from "codegen/Tables.sol";
-import { EResource } from "src/Types.sol";
-import { LibStorage } from "codegen/Libraries.sol";
 
 contract TestLibStorage is PrimodiumTest {
   bytes32 playerEntity = "playerEntity";

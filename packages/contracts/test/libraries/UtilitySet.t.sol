@@ -2,8 +2,6 @@
 pragma solidity >=0.8.0;
 
 import "test/PrimodiumTest.t.sol";
-import { EResource } from "src/Types.sol";
-import { UtilitySet } from "codegen/Libraries.sol";
 
 contract UtilitySetTest is PrimodiumTest {
   bytes32 player1 = "player1";
