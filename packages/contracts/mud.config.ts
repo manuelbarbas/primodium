@@ -21,9 +21,15 @@ export const config = mudConfig({
     S_SpendResourcesSystem: {
       openAccess: false,
       accessList: ["BuildSystem", "UpgradeBuildingSystem"],
-      name: "PlayerSystem",
+      name: "S_SpendResourcesSystem",
+    },
+    S_ReduceProductionRateSystem: {
+      openAccess: false,
+      accessList: ["BuildSystem", "UpgradeBuildingSystem", "DestroySystem"],
+      name: "S_ReduceProductionRateSystem",
     },
   },
+
   enums: MUDEnums,
   tables: {
     /* ----------------------------------- Dev ---------------------------------- */
@@ -40,6 +46,7 @@ export const config = mudConfig({
         maxMotherlodesPerAsteroid: "uint32",
         motherlodeChanceInv: "uint32",
         motherlodeDistance: "uint32",
+        unitProductionRate: "uint256",
       },
     },
 
@@ -234,6 +241,11 @@ export const config = mudConfig({
       schema: "bool",
     },
 
+    P_UnitProdMultiplier: {
+      keySchema: { prototype: "bytes32", level: "uint256" },
+      schema: "uint256",
+    },
+
     SetItemUnitFactories: {
       keySchema: { entity: "bytes32", building: "bytes32" },
       schema: {
@@ -309,7 +321,7 @@ export const config = mudConfig({
 
     /* ----------------------------- Unit Production ---------------------------- */
     P_Unit: {
-      keySchema: { unit: "EUnit", level: "uint256" },
+      keySchema: { entity: "bytes32", level: "uint256" },
       schema: {
         attack: "uint256",
         defense: "uint256",
@@ -337,6 +349,11 @@ export const config = mudConfig({
     },
     UnitLevel: {
       keySchema: { entity: "bytes32", unit: "bytes32" },
+      schema: "uint256",
+    },
+
+    UnitCount: {
+      keySchema: { player: "bytes32", rock: "bytes32", unit: "bytes32" },
       schema: "uint256",
     },
   },

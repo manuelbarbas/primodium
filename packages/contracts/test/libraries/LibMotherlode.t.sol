@@ -7,11 +7,10 @@ contract LibMotherlodeTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
 
-    P_GameConfigData memory gameConfig = P_GameConfigData({
-      motherlodeDistance: 8,
-      maxMotherlodesPerAsteroid: 12,
-      motherlodeChanceInv: 2
-    });
+    P_GameConfigData memory gameConfig = P_GameConfig.get();
+    gameConfig.motherlodeDistance = 8;
+    gameConfig.maxMotherlodesPerAsteroid = 12;
+    gameConfig.motherlodeChanceInv = 2;
     vm.startPrank(worldAddress);
     P_GameConfig.set(world, gameConfig);
     vm.stopPrank();
@@ -112,11 +111,13 @@ contract LibMotherlodeTest is PrimodiumTest {
   }
 
   function testPrintAsteroidMotherlodes() public {
-    P_GameConfigData memory config = P_GameConfigData({
-      motherlodeDistance: 10,
-      maxMotherlodesPerAsteroid: 6,
-      motherlodeChanceInv: 4
-    });
+    P_GameConfigData memory config = P_GameConfig.get();
+    config.motherlodeDistance = 10;
+    config.maxMotherlodesPerAsteroid = 6;
+    config.motherlodeChanceInv = 4;
+    vm.startPrank(worldAddress);
+    P_GameConfig.set(world, config);
+    vm.stopPrank();
 
     address player = alice;
     spawn(player);

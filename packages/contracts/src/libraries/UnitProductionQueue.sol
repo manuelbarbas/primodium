@@ -1,21 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { QueueUnits, QueueUnitsData, QueueItemUnits, QueueItemUnitsData } from "codegen/Tables.sol";
+import { QueueUnits, QueueUnitsData, QueueItemUnits, QueueItemUnitsData as UnitProductionQueueData } from "codegen/Tables.sol";
 
 library UnitProductionQueue {
   // todo: make custom queue type
-  function enqueue(bytes32 queueId, QueueItemUnitsData memory queueItem) internal {
+  function enqueue(bytes32 queueId, UnitProductionQueueData memory queueItem) internal {
     QueueUnits.pushQueue(queueId, queueItem.unitId);
     QueueUnitsData memory queueData = QueueUnits.get(queueId);
     QueueUnits.setBack(queueId, queueData.back + 1);
     QueueItemUnits.set(queueId, queueData.queue.length - 1, queueItem);
   }
 
-  function dequeue(bytes32 queueId) internal returns (QueueItemUnitsData memory) {
+  function dequeue(bytes32 queueId) internal returns (UnitProductionQueueData memory) {
     QueueUnitsData memory queueData = QueueUnits.get(queueId);
     require(queueData.front < queueData.back, "Queue is empty");
-    QueueItemUnitsData memory item = QueueItemUnits.get(queueId, queueData.front);
+    UnitProductionQueueData memory item = QueueItemUnits.get(queueId, queueData.front);
     if (queueData.front + 1 == queueData.back) reset(queueId);
     else {
       QueueUnits.setFront(queueId, queueData.front + 1);
@@ -24,14 +24,21 @@ library UnitProductionQueue {
     return item;
   }
 
-  function peek(bytes32 queueId) internal view returns (QueueItemUnitsData memory) {
+  function peek(bytes32 queueId) internal view returns (UnitProductionQueueData memory) {
     QueueUnitsData memory queueData = QueueUnits.get(queueId);
     require(queueData.front < queueData.back, "Queue is empty");
     return QueueItemUnits.get(queueId, queueData.front);
   }
 
+  function updateFront(bytes32 queueId, UnitProductionQueueData memory queueItem) internal {
+    QueueUnitsData memory queueData = QueueUnits.get(queueId);
+    require(queueData.front < queueData.back, "Queue is empty");
+    QueueItemUnits.set(queueId, 0, queueItem);
+  }
+
   function size(bytes32 queueId) internal view returns (uint256) {
     QueueUnitsData memory queueData = QueueUnits.get(queueId);
+    if (queueData.front >= queueData.back) return 0;
     return queueData.back - queueData.front;
   }
 

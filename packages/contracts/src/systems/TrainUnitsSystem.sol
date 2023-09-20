@@ -15,14 +15,15 @@ contract TrainUnitsSystem is PrimodiumSystem {
     EUnit unit,
     uint256 count
   ) public {
+    IWorld world = IWorld(_world());
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
     uint256 level = Level.get(buildingEntity);
-
-    // update space rock
+    bytes32 playerEntity = addressToEntity(_msgSender());
 
     require(LibUnit.canProduceUnit(buildingEntity, unitPrototype), "[TrainUnitsSystem] Building cannot produce unit");
 
-    IWorld(_world()).spendRequiredResources(buildingEntity, level);
+    world.updateHomeRock(playerEntity);
+    world.spendRequiredResources(buildingEntity, level);
 
     QueueItemUnitsData memory queueItem = QueueItemUnitsData({ unitId: unitPrototype, quantity: count });
 
