@@ -13,7 +13,7 @@ export const research = async (item: EntityID, network: Network) => {
 
   const receipt = await execute(
     systems["system.Research"].executeTyped(item, {
-      gasLimit: 2_000_000,
+      gasLimit: 5_000_000,
     }),
     providers
   );

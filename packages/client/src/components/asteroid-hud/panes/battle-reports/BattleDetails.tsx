@@ -1,6 +1,7 @@
 import { EntityID } from "@latticexyz/recs";
 import { FaTimes, FaTrophy } from "react-icons/fa";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
+import { BattleRaidResult } from "src/network/components/chainComponents";
 import { Battle } from "src/network/components/clientComponents";
 import {
   getBlockTypeName,
@@ -52,7 +53,7 @@ export const BattleDetails: React.FC<{
     player === battle.attacker ? battle.attackerUnits : battle.defenderUnits;
   const enemyUnits =
     player === battle.attacker ? battle.defenderUnits : battle.attackerUnits;
-
+  const raid = BattleRaidResult.use(battle.id);
   return (
     <div className="relative gap-3 flex flex-col items-center text-white w-full">
       <div className="relative bg-slate-800 pixel-images border border-cyan-400 p-3 w-full rounded-md">
@@ -89,19 +90,19 @@ export const BattleDetails: React.FC<{
 
           <hr className="border-t border-cyan-600/40 w-full" />
 
-          {battle.resources && (
+          {raid && (
             <div className="flex flex-col justify-center items-center gap-2 bg-slate-900 p-2 px-5 rounded-md border border-slate-700">
               <p className="text-lg font-bold leading-none">
                 {player === battle.winner ? "REWARDS" : "RAIDED"}
               </p>
               <div className="flex items-center ">
-                {battle.resources.map((resource, i) => (
+                {raid.resources.map((resource, i) => (
                   <ResourceIconTooltip
                     key={`resource-${i}`}
                     image={ResourceImage.get(resource)!}
                     resourceId={resource}
                     name={getBlockTypeName(resource)}
-                    amount={Number(battle.raidedAmount?.at(i) ?? 0)}
+                    amount={Number(Math.round(raid.raidedAmount?.at(i) ?? 0))}
                   />
                 ))}
               </div>

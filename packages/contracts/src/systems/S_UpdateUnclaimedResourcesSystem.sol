@@ -34,27 +34,24 @@ contract S_UpdateUnclaimedResourcesSystem is IOnEntitySubsystem, PrimodiumSystem
     );
 
     uint256 playerResourceProductionEntity = LibEncode.hashKeyEntity(resourceID, playerEntity);
-    if (!lastClaimedAtComponent.has(playerResourceProductionEntity)) {
-      lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
-      return abi.encode(resourceID);
-    } else if (lastClaimedAtComponent.getValue(playerResourceProductionEntity) == block.number) {
-      return abi.encode(resourceID);
-    }
+
     ProductionComponent productionComponent = ProductionComponent(world.getComponent(ProductionComponentID));
     uint32 playerResourceProduction = LibMath.getSafe(productionComponent, playerResourceProductionEntity);
-    if (playerResourceProduction <= 0) {
+    if (playerResourceProduction > 0) {
+      if (!lastClaimedAtComponent.has(playerResourceProductionEntity)) {
+        lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
+      } else if (lastClaimedAtComponent.getValue(playerResourceProductionEntity) != block.number) {
+        uint256 blocksPassed = block.number - LibMath.getSafe(lastClaimedAtComponent, playerResourceProductionEntity);
+        blocksPassed =
+          (blocksPassed * SPEED_SCALE) /
+          LibMath.getSafe(P_WorldSpeedComponent(world.getComponent(P_WorldSpeedComponentID)), SingletonID);
+        uint32 unclaimedResource = uint32(playerResourceProduction * blocksPassed);
+        unclaimedResource = LibStorage.addResourceToStorage(world, playerEntity, resourceID, unclaimedResource);
+        lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
+      }
+    } else {
       lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
-      return abi.encode(resourceID);
     }
-    uint256 blocksPassed = block.number - LibMath.getSafe(lastClaimedAtComponent, playerResourceProductionEntity);
-    blocksPassed =
-      (blocksPassed * SPEED_SCALE) /
-      LibMath.getSafe(P_WorldSpeedComponent(world.getComponent(P_WorldSpeedComponentID)), SingletonID);
-    uint32 unclaimedResource = uint32(playerResourceProduction * blocksPassed);
-
-    unclaimedResource = LibStorage.addResourceToStorage(world, playerEntity, resourceID, unclaimedResource);
-    lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
-
     uint256[] memory motherlodes = PlayerMotherlodeComponent(world.getComponent(PlayerMotherlodeComponentID))
       .getEntitiesWithValue(playerResourceProductionEntity);
     for (uint256 i = 0; i < motherlodes.length; i++) {
@@ -64,7 +61,7 @@ contract S_UpdateUnclaimedResourcesSystem is IOnEntitySubsystem, PrimodiumSystem
       );
     }
 
-    return abi.encode(unclaimedResource);
+    return abi.encode(playerEntity);
   }
 
   function executeTyped(address playerAddress, uint256 resourceID) public returns (bytes memory) {
