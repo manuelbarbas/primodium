@@ -8,6 +8,7 @@ import { Game } from "./screens/Game";
 import { LoadingState } from "./network/components/chainComponents";
 import { Landing } from "./screens/Landing";
 import { useInit } from "./hooks/useInit";
+import { Progress } from "./components/core/Progress";
 
 export default function AppLoadingState() {
   //initialize global components
@@ -30,14 +31,14 @@ export default function AppLoadingState() {
     >
       {loadingState.state !== SyncState.LIVE && (
         <div className="flex items-center justify-center h-screen text-white font-mono">
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center gap-2">
             {/* <h1 className="text-4xl font-bold mb-4">Primodium</h1> */}
-            <div className="w-72 ring-2 ring-cyan-400 h-4 relative mb-4">
-              <div
+            {/* <div
                 style={{ width: `${loadingState.percentage}%` }}
                 className="absolute top-0 left-0 bg-cyan-700 h-4"
-              />
-            </div>
+              /> */}
+            <Progress value={loadingState.percentage} max={100} />
+
             <p className="text-lg">
               {loadingState.msg} ({Math.floor(loadingState.percentage)}%)
             </p>

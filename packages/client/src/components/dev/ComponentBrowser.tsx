@@ -36,7 +36,7 @@ export const ComponentBrowser = () => {
         />
       )}
       {isVisible === "cheat" && <Cheatcodes cheatcodes={cheatcodes} />}
-      <div className="fixed bottom-0 right-0 flex flex-col gap-1">
+      <div className="fixed bottom-72 right-4 flex flex-col gap-1">
         <button
           className="bg-blue-500 text-white text-xs px-2 py-1 rounded"
           onClick={() =>

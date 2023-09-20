@@ -4,7 +4,6 @@ pragma solidity >=0.8.0;
 import { getAddressById, entityToAddress } from "solecs/utils.sol";
 // external
 import { IWorld } from "solecs/interfaces/IWorld.sol";
-
 //interfaces
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { IOnSubsystem } from "../interfaces/IOnSubsystem.sol";
@@ -29,6 +28,8 @@ import { BattleRaidResultComponent, ID as BattleRaidResultComponentID } from "co
 import { BattleBlockNumberComponent, ID as BattleBlockNumberComponentID } from "components/BattleBlockNumberComponent.sol";
 
 import { RaidResult } from "src/types.sol";
+
+import { ID as UpdateUnclaimedResourcesSystemID } from "systems/S_UpdateUnclaimedResourcesSystem.sol";
 
 // libs
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
@@ -179,46 +180,38 @@ library LibRaid {
     BattleParticipant memory defender = BattleDefenderComponent(world.getComponent(BattleDefenderComponentID)).getValue(
       battleEntity
     );
+    //uint256[] memory resourceIds = LibResource.getMotherlodeResources();
+    uint256[] memory resourceIds = P_MaxResourceStorageComponent(world.getComponent(P_MaxResourceStorageComponentID))
+      .getValue(defender.participantEntity);
 
-    (uint32 totalResources, uint32[] memory resources) = LibResource.getTotalResources(
+    (uint32 totalResources, uint32[] memory defenderResources) = LibResource.getTotalResources(
       world,
       defender.participantEntity
     );
 
-    uint256[] memory resourceIds = P_MaxResourceStorageComponent(world.getComponent(P_MaxResourceStorageComponentID))
-      .getValue(defender.participantEntity);
     RaidResult memory raidResult = RaidResult({
       resources: resourceIds,
-      defenderValuesBeforeRaid: new uint32[](resources.length),
-      raidedAmount: new uint32[](resources.length)
+      defenderValuesBeforeRaid: new uint32[](defenderResources.length),
+      raidedAmount: new uint32[](defenderResources.length)
     });
-    if (totalResources == 0) {
+    if (totalResources == 0 || resourceIds.length == 0) {
       BattleRaidResultComponent(world.getComponent(BattleRaidResultComponentID)).set(battleEntity, raidResult);
       return;
     }
     BattleParticipant memory attacker = BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(
       battleEntity
     );
-
-    IOnSubsystem(getAddressById(world.systems(), S_ClaimAllResourcesSystemID)).executeTyped(
-      entityToAddress(defender.participantEntity)
-    );
-
-    IOnSubsystem(getAddressById(world.systems(), S_ClaimAllResourcesSystemID)).executeTyped(
-      entityToAddress(attacker.participantEntity)
-    );
-
-    for (uint256 i = 0; i < resources.length; i++) {
-      uint32 raidAmount = (totalCargo * resources[i]) / totalResources;
-
-      if (resources[i] < raidAmount) {
-        raidAmount = resources[i];
+    for (uint256 i = 0; i < defenderResources.length; i++) {
+      uint256 raidAmount = (uint256(totalCargo) * uint256(defenderResources[i]));
+      raidAmount = raidAmount / totalResources;
+      if (defenderResources[i] < raidAmount) {
+        raidAmount = defenderResources[i];
       }
-      raidResult.defenderValuesBeforeRaid[i] = resources[i];
-      raidResult.raidedAmount[i] = raidAmount;
-
-      LibStorage.addResourceToStorage(world, attacker.participantEntity, resourceIds[i], raidAmount);
-      LibStorage.reduceResourceFromStorage(world, defender.participantEntity, resourceIds[i], raidAmount);
+      if (raidAmount == 0) continue;
+      raidResult.defenderValuesBeforeRaid[i] = defenderResources[i];
+      raidResult.raidedAmount[i] = uint32(raidAmount);
+      LibStorage.addResourceToStorage(world, attacker.participantEntity, resourceIds[i], uint32(raidAmount));
+      LibStorage.reduceResourceFromStorage(world, defender.participantEntity, resourceIds[i], uint32(raidAmount));
     }
     BattleRaidResultComponent(world.getComponent(BattleRaidResultComponentID)).set(battleEntity, raidResult);
   }

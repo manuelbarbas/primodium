@@ -10,7 +10,7 @@ import { P_UnitTravelSpeedComponent as SpeedComponent, ID as SpeedComponentID } 
 import { ArrivalsSizeComponent as ArrivalsSizeComponent, ID as ArrivalsSizeComponentID } from "components/ArrivalsSizeComponent.sol";
 import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
-
+import { P_WorldSpeedComponent as WorldSpeedComponent, ID as WorldSpeedComponentID, SPEED_SCALE } from "components/P_WorldSpeedComponent.sol";
 // libs
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -65,8 +65,10 @@ library LibSend {
     uint256 playerEntity,
     ArrivalUnit[] memory arrivalUnits
   ) internal view returns (uint256) {
-    uint256 worldSpeed = GameConfigComponent(world.getComponent(GameConfigComponentID)).getValue(SingletonID).moveSpeed;
+    uint256 moveSpeed = GameConfigComponent(world.getComponent(GameConfigComponentID)).getValue(SingletonID).moveSpeed;
     uint256 unitSpeed = getSlowestUnitSpeed(world, playerEntity, arrivalUnits);
-    return block.number + ((distance(origin, destination) * unitSpeed * worldSpeed) / 10000);
+    uint256 worldSpeed = WorldSpeedComponent(world.getComponent(WorldSpeedComponentID)).getValue(SingletonID);
+    return
+      block.number + ((distance(origin, destination) * unitSpeed * moveSpeed * worldSpeed) / (10000 * SPEED_SCALE));
   }
 }

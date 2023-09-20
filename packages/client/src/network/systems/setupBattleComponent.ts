@@ -32,6 +32,7 @@ export const setupBattleComponent = () => {
 
     Battle.set(
       {
+        id: entityId,
         attacker: attacker.participantEntity,
         defender: defender.participantEntity,
         attackerUnitCounts: attacker.unitCounts,

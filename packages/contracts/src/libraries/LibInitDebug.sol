@@ -477,6 +477,38 @@ library LibInitDebug {
     //DebugSimpleTechnologyIncreaseHousing
     isTechComponent.set(DebugSimpleTechnologyIncreaseHousing);
     utilityProductionComponent.set(DebugSimpleTechnologyIncreaseHousing, ResourceValue(HousingUtilityResourceID, 10));
+
+    //DebugSimpleTechnologyTitaniumCostID
+    isTechComponent.set(DebugSimpleTechnologyTitaniumCostID);
+
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: TitaniumResourceItemID, value: 500 });
+
+    LibSetBuildingReqs.setResourceReqs(world, DebugSimpleTechnologyTitaniumCostID, resourceValues);
+
+    //DebugSimpleTechnologyIridiumCostID
+    isTechComponent.set(DebugSimpleTechnologyIridiumCostID);
+
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: IridiumResourceItemID, value: 500 });
+
+    LibSetBuildingReqs.setResourceReqs(world, DebugSimpleTechnologyIridiumCostID, resourceValues);
+
+    //DebugSimpleTechnologyPlatinumCostID
+    isTechComponent.set(DebugSimpleTechnologyPlatinumCostID);
+
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 500 });
+
+    LibSetBuildingReqs.setResourceReqs(world, DebugSimpleTechnologyPlatinumCostID, resourceValues);
+
+    //DebugSimpleTechnologyKimberliteCostID
+    isTechComponent.set(DebugSimpleTechnologyKimberliteCostID);
+
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: KimberliteResourceItemID, value: 500 });
+
+    LibSetBuildingReqs.setResourceReqs(world, DebugSimpleTechnologyKimberliteCostID, resourceValues);
   }
 
   function initializeStorageBuildings(IWorld world) internal {
@@ -581,6 +613,7 @@ library LibInitDebug {
     unitAttackComponent.set(entity, 5);
     unitDefenceComponent.set(entity, 3);
     unitCargoComponent.set(entity, 10);
+    unitMiningComponent.set(entity, 1);
 
     //DebugUnit2
     // Level 1
@@ -596,6 +629,7 @@ library LibInitDebug {
     unitAttackComponent.set(entity, 20);
     unitDefenceComponent.set(entity, 10);
     unitCargoComponent.set(entity, 20);
+    unitMiningComponent.set(entity, 1);
 
     //DebugUnit3
     // Level 1

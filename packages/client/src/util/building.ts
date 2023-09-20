@@ -1,6 +1,15 @@
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { RawBlueprint } from "src/network/components/chainComponents";
+import {
+  BuildingType,
+  Level,
+  P_RequiredTile,
+  RawBlueprint,
+} from "src/network/components/chainComponents";
+import { getBuildingAtCoord, getResourceKey } from "./tile";
+import { Account } from "src/network/components/clientComponents";
+import { outOfBounds } from "./outOfBounds";
+import { getBlockTypeName, toRomanNumeral } from "./common";
 
 type Dimensions = { width: number; height: number };
 export const blueprintCache = new Map<EntityID, Dimensions>();
@@ -19,8 +28,8 @@ export function calcDims(entity: EntityID, coordinates: Coord[]): Dimensions {
     maxY = Math.max(maxY, coordinates[i].y);
   }
 
-  let width = maxX - minX + 1;
-  let height = maxY - minY + 1;
+  const width = maxX - minX + 1;
+  const height = maxY - minY + 1;
 
   blueprintCache.set(entity, { width, height });
   return { width, height };
@@ -31,7 +40,7 @@ export function convertToCoords(numbers: number[]): Coord[] {
     throw new Error("Input array must contain an even number of elements");
   }
 
-  let coordinates: Coord[] = [];
+  const coordinates: Coord[] = [];
 
   for (let i = 0; i < numbers.length; i += 2) {
     coordinates.push({ x: numbers[i], y: numbers[i + 1] });
@@ -87,3 +96,32 @@ export function getBuildingDimensions(building: EntityID) {
 
   return dimensions;
 }
+
+export const validateBuildingPlacement = (coord: Coord, bulding: EntityID) => {
+  //get building dimesions
+  const buildingDimensions = getBuildingDimensions(bulding);
+  const player = Account.get()?.value;
+  const requiredTile = P_RequiredTile.get(bulding)?.value;
+
+  //iterate over dimensions and check if there is a building there
+  for (let x = 0; x < buildingDimensions.width; x++) {
+    for (let y = 0; y < buildingDimensions.height; y++) {
+      const buildingCoord = { x: coord.x + x, y: coord.y - y };
+      if (getBuildingAtCoord(buildingCoord)) return false;
+      if (outOfBounds(buildingCoord, player)) return false;
+      if (requiredTile && requiredTile !== getResourceKey(buildingCoord))
+        return false;
+    }
+  }
+
+  return true;
+};
+
+export const getBuildingName = (building: EntityID) => {
+  const buildingType = BuildingType.get(building)?.value;
+  const level = Level.get(building)?.value ?? 1;
+
+  if (!buildingType) return null;
+
+  return `${getBlockTypeName(buildingType)} ${toRomanNumeral(level)}`;
+};

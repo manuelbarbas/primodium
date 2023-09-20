@@ -258,6 +258,26 @@ export const P_Terrain = newComponent(
   }
 );
 
+export const P_RequiredTile = newComponent(
+  world,
+  {
+    value: Type.Entity,
+  },
+  {
+    id: "P_RequiredTile",
+    metadata: { contractId: `${commonIdPrefix}P_RequiredTile` },
+  }
+);
+
+/* -------------------------------------------------------------------------- */
+/*                                   World                                    */
+/* -------------------------------------------------------------------------- */
+export const P_WorldSpeed = newNumberComponent(world, {
+  id: "P_WorldSpeed",
+  metadata: { contractId: `${commonIdPrefix}P_WorldSpeed` },
+  overridable: true,
+});
+
 /* -------------------------------------------------------------------------- */
 /*                                 Motherlode                                 */
 /* -------------------------------------------------------------------------- */
@@ -497,6 +517,9 @@ export default {
   ReversePosition,
   P_Production,
   P_ProductionDependencies,
+  P_RequiredTile,
+  // World
+  P_WorldSpeed,
 
   // Motherlodes
   Motherlode,
