@@ -1,5 +1,5 @@
 import { primodium } from "@game/api";
-import { KeybindActions } from "@game/constants";
+import { EntityIDtoSpriteKey, KeybindActions } from "@game/constants";
 import { isMobile } from "react-device-detect";
 import { EntityID } from "@latticexyz/recs";
 import { motion } from "framer-motion";
@@ -12,12 +12,7 @@ import {
 } from "src/network/components/clientComponents";
 import { calcDims, convertToCoords } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
-import {
-  Action,
-  BackgroundImage,
-  BlockType,
-  KeyImages,
-} from "src/util/constants";
+import { Action, BlockType, KeyImages } from "src/util/constants";
 import {
   hashAndTrimKeyCoord,
   hashAndTrimKeyEntity,
@@ -33,6 +28,7 @@ const HotbarItem: React.FC<{
   action: Action;
   index: number;
 }> = ({ blockType, action, index }) => {
+  const { getSpriteBase64 } = primodium.api().sprite;
   const player = Account.use()?.value!;
   const selectedBuilding = SelectedBuilding.use()?.value;
   const mainBaseCoord = useMainBaseCoord();
@@ -140,8 +136,8 @@ const HotbarItem: React.FC<{
       >
         <img
           src={
-            BackgroundImage.get(blockType) !== undefined
-              ? BackgroundImage.get(blockType)![0]
+            EntityIDtoSpriteKey[blockType] !== undefined
+              ? getSpriteBase64(EntityIDtoSpriteKey[blockType][0])
               : undefined
           }
           className={`absolute bottom-0 w-14 pixel-images rounded-md`}

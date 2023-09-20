@@ -2,7 +2,6 @@ import { EntityID } from "@latticexyz/recs";
 import React from "react";
 
 import {
-  BackgroundImage,
   RESOURCE_SCALE,
   ResourceImage,
   ResourceType,
@@ -14,6 +13,8 @@ import { formatNumber, getBlockTypeName } from "src/util/common";
 import { Account, BlockNumber } from "src/network/components/clientComponents";
 import { Level, P_Production } from "src/network/components/chainComponents";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
+import { EntityIDtoSpriteKey } from "@game/constants";
+import { primodium } from "@game/api";
 
 export const RecipeDisplay: React.FC<{
   entity: EntityID;
@@ -53,6 +54,7 @@ export const RecipeDisplay: React.FC<{
 export const BlueprintInfo: React.FC<{
   buildingType: EntityID;
 }> = ({ buildingType }) => {
+  const { getSpriteBase64 } = primodium.api().sprite;
   const player = Account.use()?.value!;
   const level = Level.use(hashKeyEntity(buildingType, player), {
     value: 1,
@@ -82,8 +84,8 @@ export const BlueprintInfo: React.FC<{
             >
               <img
                 src={
-                  BackgroundImage.get(buildingType) !== undefined
-                    ? BackgroundImage.get(buildingType)![0]
+                  EntityIDtoSpriteKey[buildingType] !== undefined
+                    ? getSpriteBase64(EntityIDtoSpriteKey[buildingType][0])
                     : undefined
                 }
                 className={`absolute bottom-0 w-14 pixel-images rounded-md`}

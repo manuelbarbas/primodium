@@ -38,12 +38,6 @@ async function init(network: Network, version = "v1") {
 
   await _init(network);
 
-  //expose api to window for debugging
-  if (import.meta.env.VITE_DEV === "true") {
-    // @ts-ignore
-    window.network = network;
-  }
-
   GameReady.set({ value: true });
 }
 
@@ -65,15 +59,13 @@ function api(sceneKey = "MAIN", instance: string | Game = "MAIN") {
     typeof instance === "string" ? engine.getGame().get(instance) : instance;
 
   if (_instance === undefined) {
-    console.warn("No instance found with key " + instance);
-    return;
+    throw Error("No instance found with key " + instance);
   }
 
   const scene = _instance.sceneManager.scenes.get(sceneKey);
 
   if (scene === undefined) {
-    console.warn("No scene found with key " + sceneKey);
-    return;
+    throw Error("No scene found with key " + sceneKey);
   }
 
   return {
@@ -83,7 +75,7 @@ function api(sceneKey = "MAIN", instance: string | Game = "MAIN") {
     input: createInputApi(scene),
     scene: createSceneApi(scene),
     fx: createFxApi(),
-    spirte: createSpriteApi(scene),
+    sprite: createSpriteApi(scene),
   };
 }
 
