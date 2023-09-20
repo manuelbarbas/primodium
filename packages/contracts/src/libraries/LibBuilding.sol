@@ -55,7 +55,7 @@ library LibBuilding {
     placeBuildingTiles(playerEntity, buildingEntity, buildingPrototype, coord);
 
     world.spendRequiredResources(buildingEntity, level);
-    LibReduceProductionRate.reduceProductionRate(playerEntity, buildingEntity, level);
+    world.reduceProductionRate(playerEntity, buildingEntity, level);
     LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, level);
     LibStorage.increaseMaxStorage(playerEntity, buildingEntity, level);
 

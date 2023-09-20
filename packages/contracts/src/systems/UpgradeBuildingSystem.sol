@@ -10,6 +10,7 @@ import { IWorld } from "codegen/world/IWorld.sol";
 contract UpgradeBuildingSystem is PrimodiumSystem {
   function upgradeBuilding(PositionData memory coord) public returns (bytes32 buildingEntity) {
     // Check there isn't another tile there
+    IWorld world = IWorld(_world());
     buildingEntity = LibBuilding.getBuildingFromCoord(coord);
     require(buildingEntity != 0, "[UpgradeBuildingSystem] no building at this coordinate");
 
@@ -33,8 +34,8 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
 
     Level.set(buildingEntity, targetLevel);
 
-    IWorld(_world()).spendRequiredResources(buildingEntity, targetLevel);
-    LibReduceProductionRate.reduceProductionRate(playerEntity, buildingEntity, targetLevel);
+    world.spendRequiredResources(buildingEntity, targetLevel);
+    world.reduceProductionRate(playerEntity, buildingEntity, targetLevel);
     LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, targetLevel);
     LibStorage.increaseMaxStorage(playerEntity, buildingEntity, targetLevel);
   }

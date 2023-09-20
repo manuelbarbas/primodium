@@ -118,6 +118,12 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     keys: [],
     tables: {
       P_Asteroid: maxRange,
+      P_GameConfig: {
+        motherlodeDistance: 10,
+        maxMotherlodesPerAsteroid: 10,
+        motherlodeChanceInv: 4,
+        unitProductionRate: 10000n,
+      },
     },
   },
 
@@ -528,18 +534,22 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Lithium: 5000, U_Electricity: 100 }),
+        P_UnitProdMultiplier: { value: 100n },
       },
       2: {
         P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Sulfur: 25000, U_Electricity: 200 }),
+        P_UnitProdMultiplier: { value: 110n },
       },
       3: {
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Sulfur: 100000, Iridium: 20000, U_Electricity: 350 }),
+        P_UnitProdMultiplier: { value: 130n },
       },
       4: {
         P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Sulfur: 275000, Kimberlite: 10000, U_Electricity: 500 }),
+        P_UnitProdMultiplier: { value: 150n },
       },
     },
   },
