@@ -12,7 +12,7 @@ import { createSceneApi } from "./scene";
 import { createFxApi } from "./fx";
 import { world } from "src/network/world";
 
-async function init(network: Network, version: string = "v1") {
+async function init(network: Network, version = "v1") {
   const asciiArt = `
                                                                           
                                                                           
@@ -59,7 +59,7 @@ function destroy() {
   world.dispose("game");
 }
 
-function api(instance: string | Game, sceneKey: string = "MAIN") {
+function api(sceneKey = "MAIN", instance: string | Game = "MAIN") {
   const _instance =
     typeof instance === "string" ? engine.getGame().get(instance) : instance;
 

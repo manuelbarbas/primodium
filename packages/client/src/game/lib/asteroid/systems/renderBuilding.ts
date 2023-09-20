@@ -22,7 +22,6 @@ import {
   BuildingType,
 } from "src/network/components/chainComponents";
 import { safeIndex } from "src/util/array";
-import { AsteroidMap } from "@game/constants";
 
 import {
   Animation,
@@ -36,14 +35,13 @@ import {
   SetValue,
 } from "../../common/object-components/common";
 import { getBuildingDimensions, getBuildingTopLeft } from "src/util/building";
-
-const {
+import {
   Assets,
-  SpriteKeys,
   DepthLayers,
   EntityIDtoAnimationKey,
   EntityIDtoSpriteKey,
-} = AsteroidMap;
+  SpriteKeys,
+} from "@game/constants";
 
 const MAX_SIZE = 2 ** 15 - 1;
 export const renderBuilding = (scene: Scene) => {

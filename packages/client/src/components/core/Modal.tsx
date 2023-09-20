@@ -1,5 +1,3 @@
-import { primodium } from "@game/api";
-import { AsteroidMap } from "@game/constants";
 import React, { useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 
@@ -19,7 +17,6 @@ const PortalModal: React.FC<ModalProps> = ({
   fullscreen = false,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
-  const { enableInput, disableInput } = primodium.api(AsteroidMap.KEY)!.input;
 
   useEffect(() => {
     const handleEscPress = (event: KeyboardEvent) => {
@@ -27,12 +24,6 @@ const PortalModal: React.FC<ModalProps> = ({
         onClose();
       }
     };
-
-    if (show) {
-      disableInput();
-    } else {
-      enableInput();
-    }
 
     window.addEventListener("keydown", handleEscPress);
     return () => {

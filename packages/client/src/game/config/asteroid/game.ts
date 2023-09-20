@@ -1,8 +1,8 @@
-import { ASSET_PACK, AsteroidMap } from "@game/constants";
+import { ASSET_PACK, KEY } from "@game/constants";
 import { GameConfig } from "engine/types";
 
 const gameConfig: GameConfig = {
-  key: AsteroidMap.KEY,
+  key: KEY,
   type: Phaser.WEBGL,
   parent: "phaser-container",
   backgroundColor: "64748b",

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { primodium } from "@game/api";
-import { AsteroidMap, KeybindActions } from "@game/constants";
+import { KeybindActions } from "@game/constants";
 
 import { useGameStore } from "../../store/GameStore";
 import { HUD } from "../core/HUD";
@@ -23,7 +23,7 @@ export const AsteroidHUD = () => {
     state.showUI,
     state.toggleShowUI,
   ]);
-  const { addListener } = primodium.api(AsteroidMap.KEY)!.input;
+  const { addListener } = primodium.api()!.input;
   const selectedBuilding = SelectedBuilding.use()?.value;
 
   useEffect(() => {

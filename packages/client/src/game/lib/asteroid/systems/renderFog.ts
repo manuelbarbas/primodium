@@ -11,15 +11,13 @@ import {
   getPlayerBounds,
   getPlayerNextBounds,
 } from "src/util/outOfBounds";
-import { AsteroidMap } from "@game/constants";
 import { Square } from "../../common/object-components/graphics";
 import {
   ObjectPosition,
   SetValue,
 } from "../../common/object-components/common";
 import { ObjectText } from "../../common/object-components/text";
-
-const { FogTilekeys, DepthLayers } = AsteroidMap;
+import { DepthLayers, FogTilekeys } from "@game/constants";
 
 export function renderFog(scene: Scene, player: EntityID) {
   const { tileWidth, tileHeight } = scene.tilemap;

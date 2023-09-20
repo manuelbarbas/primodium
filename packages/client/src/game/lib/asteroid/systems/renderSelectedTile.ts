@@ -11,9 +11,7 @@ import { world } from "src/network/world";
 import { SelectedTile } from "src/network/components/clientComponents";
 import { ObjectPosition } from "../../common/object-components/common";
 import { Square } from "../../common/object-components/graphics";
-import { AsteroidMap } from "@game/constants";
-
-const { DepthLayers } = AsteroidMap;
+import { DepthLayers } from "@game/constants";
 
 export const renderSelectedTile = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;

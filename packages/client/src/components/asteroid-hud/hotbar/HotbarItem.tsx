@@ -1,5 +1,5 @@
 import { primodium } from "@game/api";
-import { AsteroidMap, KeybindActions } from "@game/constants";
+import { KeybindActions } from "@game/constants";
 import { isMobile } from "react-device-detect";
 import { EntityID } from "@latticexyz/recs";
 import { motion } from "framer-motion";
@@ -38,7 +38,7 @@ const HotbarItem: React.FC<{
   const {
     hooks: { useKeybinds },
     input: { addListener },
-  } = primodium.api(AsteroidMap.KEY)!;
+  } = primodium.api()!;
   const keybinds = useKeybinds();
   let dimensions: { width: number; height: number } | undefined;
 
