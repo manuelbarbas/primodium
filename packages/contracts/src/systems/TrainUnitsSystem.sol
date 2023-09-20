@@ -10,6 +10,10 @@ import { EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
 contract TrainUnitsSystem is PrimodiumSystem {
+  /// @notice Trains units based on specified unit type and count
+  /// @param buildingEntity Entity identifier of the building
+  /// @param unit Unit type to be trained
+  /// @param count Quantity of units to be trained
   function trainUnits(
     bytes32 buildingEntity,
     EUnit unit,

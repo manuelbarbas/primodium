@@ -7,11 +7,17 @@ import { LibMath } from "libraries/LibMath.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
 
 library LibUnit {
+  /// @notice Check if a building can produce a unit
+  /// @param buildingEntity Entity ID of the building
+  /// @param unitPrototype Unit prototype to check
+  /// @return True if unit can be produced, false otherwise
   function canProduceUnit(bytes32 buildingEntity, bytes32 unitPrototype) internal view returns (bool) {
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
     return P_UnitProduction.get(buildingPrototype, unitPrototype);
   }
 
+  /// @notice Claim units from all player's buildings
+  /// @param playerEntity Entity ID of the player
   function claimUnits(bytes32 playerEntity) internal {
     // get all player buildings that can produce units
     bytes32[] memory buildings = UnitFactorySet.getAll(playerEntity);
@@ -21,6 +27,9 @@ library LibUnit {
     }
   }
 
+  /// @notice Claim units for a single building
+  /// @param playerEntity Entity ID of the player
+  /// @param building Entity ID of the building
   function claimBuildingUnits(bytes32 playerEntity, bytes32 building) internal {
     uint256 startTime = LastClaimedAt.get(building);
     LastClaimedAt.set(building, block.timestamp);
@@ -48,6 +57,11 @@ library LibUnit {
     }
   }
 
+  /// @notice Get the build time for a unit
+  /// @param playerEntity Entity ID of the player
+  /// @param building Entity ID of the building
+  /// @param unitPrototype Unit prototype to check
+  /// @return Time in seconds
   function getUnitBuildTime(
     bytes32 playerEntity,
     bytes32 building,
@@ -61,6 +75,11 @@ library LibUnit {
     return (rawTrainingTime * 100) / multiplier;
   }
 
+  /// @notice Add units to an asteroid
+  /// @param playerEntity Entity ID of the player
+  /// @param asteroid Entity ID of the asteroid
+  /// @param unitPrototype Unit prototype to add
+  /// @param quantity Number of units to add
   function addUnitsToAsteroid(
     bytes32 playerEntity,
     bytes32 asteroid,
