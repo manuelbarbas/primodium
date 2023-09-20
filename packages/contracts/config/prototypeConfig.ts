@@ -122,7 +122,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         motherlodeDistance: 10n,
         maxMotherlodesPerAsteroid: 10n,
         motherlodeChanceInv: 4n,
-        unitProductionRate: 10000n,
+        unitProductionRate: 100n,
       },
     },
   },

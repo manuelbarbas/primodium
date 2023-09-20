@@ -31,7 +31,7 @@ library LibUnit {
       uint256 trainingTime = getUnitBuildTime(playerEntity, building, item.unitId);
       uint256 trainedUnits = LibMath.min(
         item.quantity,
-        ((block.timestamp - startTime) * 100) / (trainingTime / P_GameConfig.getUnitProductionRate())
+        ((block.timestamp - startTime) * 100) / (trainingTime * P_GameConfig.getUnitProductionRate())
       );
 
       if (trainedUnits == 0) return;
@@ -57,6 +57,7 @@ library LibUnit {
     uint256 multiplier = P_UnitProdMultiplier.get(building, buildingLevel);
     uint256 unitLevel = UnitLevel.get(playerEntity, unitPrototype);
     uint256 rawTrainingTime = P_Unit.getTrainingTime(unitPrototype, unitLevel);
+    require(rawTrainingTime > 0 && multiplier > 0, "Training time is invalid");
     return (rawTrainingTime * 100) / multiplier;
   }
 
