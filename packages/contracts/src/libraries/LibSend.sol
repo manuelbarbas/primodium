@@ -24,6 +24,7 @@ library LibSend {
     for (uint256 i = 0; i < unitTypes.length; i++) {
       if (unitCounts[i] == 0) continue;
       uint256 unitLevel = UnitLevel.get(playerEntity, unitTypes[i]);
+      if (unitLevel == 0) unitLevel++;
       uint256 speed = P_Unit.getSpeed(unitTypes[i], unitLevel);
       require(speed > 0, "LibSend: unit type has no speed");
       if (speed < slowestSpeed) {
@@ -41,6 +42,7 @@ library LibSend {
   ) internal view returns (uint256) {
     P_GameConfigData memory config = P_GameConfig.get();
     uint256 unitSpeed = getSlowestUnitSpeed(playerEntity, unitTypes, unitCounts);
-    return block.number + ((LibMath.distance(origin, destination) * 100 * 100) / (config.moveSpeed * unitSpeed));
+    require(unitSpeed > 0 && config.moveSpeed > 0, "LibSend: unit and move speeds must be greater than 0");
+    return block.timestamp + ((LibMath.distance(origin, destination) * 100 * 100) / (config.moveSpeed * unitSpeed));
   }
 }

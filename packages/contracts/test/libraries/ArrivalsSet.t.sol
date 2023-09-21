@@ -1,18 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-/* 
-encodeArrivalData and decodeArrivalData Functions
-
-clear Function
-Test to ensure all records are cleared.
-Edge Cases
-Test invalid or empty bytes32 for player and asteroid.
-*/
-
 import "test/PrimodiumTest.t.sol";
 
-contract ArrivalSetTest is PrimodiumTest {
+contract ArrivalsSetTest is PrimodiumTest {
   bytes32 playerEntity = "playerEntity";
   bytes32 asteroidEntity = "asteroidEntity";
   uint256[] unitCounts;
