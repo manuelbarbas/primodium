@@ -87,12 +87,7 @@ contract SendUnitsSystem is PrimodiumSystem {
       originType != ERock.NULL && destinationType != ERock.NULL,
       "[SendUnitsSystem] Must travel between asteroids or motherlodes"
     );
-    if (sendType == ESendType.Reinforce || sendType == ESendType.Raid) {
-      require(
-        OwnedBy.get(destination) != 0,
-        "[SendUnitsSystem] Reinforce and raid destinations must be a owned by player."
-      );
-    }
+    bytes32 destinationOwner = OwnedBy.get(destination);
 
     require(origin != destination, "[SendUnitsSystem] Origin and destination cannot be the same.");
 
@@ -110,12 +105,12 @@ contract SendUnitsSystem is PrimodiumSystem {
     }
 
     if (sendType == ESendType.Raid) {
-      require(playerEntity != to, "you cannot raid yourself");
+      require(playerEntity != to && to != 0, "you cannot raid yourself");
       require(destinationType == ERock.Asteroid, "you can only raid a motherlode");
     }
 
     if (sendType == ESendType.Reinforce) {
-      require(OwnedBy.get(destination) == to, "you can only reinforce the current owner of a motherlode");
+      require(destinationOwner == to && to != 0, "you can only reinforce the current owner of a motherlode");
     }
   }
 

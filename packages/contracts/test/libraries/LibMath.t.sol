@@ -36,4 +36,14 @@ contract LibMathTest is PrimodiumTest {
       logPosition(coord);
     }
   }
+
+  function testDistance() public {
+    PositionData memory a = PositionData(0, 0, 0);
+    PositionData memory b = PositionData(0, 0, 0);
+    assertEq(LibMath.distance(a, b), 0);
+    b.y = 10;
+    assertEq(LibMath.distance(a, b), 10);
+    b.y = 100;
+    assertEq(LibMath.distance(a, b), 100);
+  }
 }
