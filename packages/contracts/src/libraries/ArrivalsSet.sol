@@ -99,7 +99,7 @@ library ArrivalsSet {
   /// @notice Gets all Arrival items
   /// @param player Player's address
   /// @param asteroid Asteroid's address
-  /// @return An array of Arrival items
+  /// @return items An array of Arrival items
   function getAll(bytes32 player, bytes32 asteroid) internal view returns (Arrival[] memory items) {
     bytes32[] memory keys = getAllKeys(player, asteroid);
     items = new Arrival[](keys.length);
