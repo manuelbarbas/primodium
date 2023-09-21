@@ -4,6 +4,7 @@ pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 // Production Buildings
+import { P_RequiredPirateAsteroidDefeatedComponent, ID as P_RequiredPirateAsteroidDefeatedComponentID } from "components/P_RequiredPirateAsteroidDefeatedComponent.sol";
 import { P_UnitRewardComponent, ID as P_UnitRewardComponentID } from "components/P_UnitRewardComponent.sol";
 import { P_ResourceRewardComponent, ID as P_ResourceRewardComponentID } from "components/P_ResourceRewardComponent.sol";
 import { P_DestroyedUnitsRequirementComponent, ID as P_DestroyedUnitsRequirementComponentID } from "components/P_DestroyedUnitsRequirementComponent.sol";
@@ -317,6 +318,13 @@ library LibInitDebug {
     resourceValues.resources[0] = IronResourceItemID;
     resourceValues.values[0] = 100;
     LibSetBuildingReqs.setResourceReqs(world, DebugSpawnPirateAsteroidID, resourceValues);
+
+    //DebugDefeatedPirateAsteroidObjectiveID
+    objective = DebugDefeatedPirateAsteroidObjectiveID;
+    P_RequiredPirateAsteroidDefeatedComponent(world.getComponent(P_RequiredPirateAsteroidDefeatedComponentID)).set(
+      objective,
+      DebugSpawnPirateAsteroidID
+    );
   }
 
   function initBlueprints(IWorld world) internal {

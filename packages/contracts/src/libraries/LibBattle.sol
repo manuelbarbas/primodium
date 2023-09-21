@@ -16,12 +16,16 @@ import { ArrivalsSizeComponent, ID as ArrivalsSizeComponentID } from "components
 import { BattleResult, BattleParticipant, Arrival, ESendType } from "../types.sol";
 import { TotalUnitsDestroyedComponent, ID as TotalUnitsDestroyedComponentID } from "components/TotalUnitsDestroyedComponent.sol";
 import { P_DestroyedUnitsRequirementComponent, ID as P_DestroyedUnitsRequirementComponentID } from "components/P_DestroyedUnitsRequirementComponent.sol";
+import { PirateComponent, ID as PirateComponentID } from "components/PirateComponent.sol";
+import { P_SpawnPirateAsteroidComponent, ID as P_SpawnPirateAsteroidComponentID } from "components/P_SpawnPirateAsteroidComponent.sol";
+import { DefeatedSpawnedPirateAsteroidComponent, ID as DefeatedSpawnedPirateAsteroidComponentID } from "components/DefeatedSpawnedPirateAsteroidComponent.sol";
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
 import { LibUnits } from "./LibUnits.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
+import { LibUpdateSpaceRock } from "libraries/LibUpdateSpaceRock.sol";
 import { ResourceValues } from "../types.sol";
 
 library LibBattle {
@@ -151,6 +155,19 @@ library LibBattle {
           defender.unitCounts[i] - battleResult.defenderUnitsLeft[i]
         );
       }
+    }
+    PirateComponent pirateComponent = PirateComponent(world.getComponent(PirateComponentID));
+    uint256 defenderHomeAsteroid = LibUpdateSpaceRock.getPlayerAsteroidEntity(world, defender.participantEntity);
+    if (pirateComponent.has(defenderHomeAsteroid)) {
+      DefeatedSpawnedPirateAsteroidComponent defeatedSpawnedPirateAsteroidComponent = DefeatedSpawnedPirateAsteroidComponent(
+          world.getComponent(DefeatedSpawnedPirateAsteroidComponentID)
+        );
+      P_SpawnPirateAsteroidComponent spawnPirateAsteroidComponent = P_SpawnPirateAsteroidComponent(
+        world.getComponent(P_SpawnPirateAsteroidComponentID)
+      );
+      defeatedSpawnedPirateAsteroidComponent.set(
+        LibEncode.hashKeyEntity(spawnPirateAsteroidComponent.getValue(defenderHomeAsteroid), attacker.participantEntity)
+      );
     }
     return battleResult;
   }

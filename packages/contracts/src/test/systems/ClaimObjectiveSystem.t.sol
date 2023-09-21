@@ -195,6 +195,68 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
       0,
       "there must be 0 on asteroid"
     );
+
+    claimObjectiveSystem.executeTyped(DebugDefeatedPirateAsteroidObjectiveID);
+
+    vm.stopPrank();
+  }
+
+  function testFailSpawnPirateAsteroidObjective() public {
+    vm.startPrank(alice);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugSpawnPirateAsteroidObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
+    claimObjectiveSystem.executeTyped(DebugSpawnPirateAsteroidObjectiveID);
+    assertTrue(
+      hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugSpawnPirateAsteroidObjectiveID, addressToEntity(alice))
+      ),
+      "objective should have been completed"
+    );
+    uint256 personalPirateEntity = LibPirateAsteroid.getPersonalPirate(addressToEntity(alice));
+    uint256 asteroidEntity = LibUpdateSpaceRock.getPlayerAsteroidEntity(world, personalPirateEntity);
+    assertTrue(PirateComponent(world.getComponent(PirateComponentID)).has(asteroidEntity), "pirate asteroid not found");
+    assertTrue(
+      PirateComponent(world.getComponent(PirateComponentID)).has(personalPirateEntity),
+      "personal pirate not found"
+    );
+    assertEq(
+      LibUnits.getUnitCountOnRock(world, personalPirateEntity, asteroidEntity, DebugUnit),
+      5,
+      "there must be 5 DebugUnit on asteroid"
+    );
+    assertEq(
+      LibMath.getSafe(
+        ItemComponent(world.getComponent(ItemComponentID)),
+        LibEncode.hashKeyEntity(IronResourceItemID, personalPirateEntity)
+      ),
+      100,
+      "there must be 100 iron on asteroid"
+    );
+    vm.stopPrank();
+    setupUnits(bob, DebugUnit, 10);
+    vm.startPrank(bob);
+    uint256[] memory unitTypes = isUnitComponent.getEntities();
+    ArrivalUnit[] memory units = new ArrivalUnit[](unitTypes.length);
+    for (uint i = 0; i < unitTypes.length; i++) {
+      units[i] = ArrivalUnit(unitTypes[i], unitTypes[i] == DebugUnit ? 10 : 0);
+    }
+
+    bytes memory rawArrival = sendUnitsSystem.executeTyped(
+      units,
+      ESendType.RAID,
+      getHomeAsteroid(bob),
+      positionComponent.getValue(asteroidEntity),
+      personalPirateEntity
+    );
+    Arrival memory arrival = abi.decode(rawArrival, (Arrival));
+    vm.roll(block.number + 200);
+
+    raidSystem.executeTyped(arrival.destination);
+
     vm.stopPrank();
   }
 
