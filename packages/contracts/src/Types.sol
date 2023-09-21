@@ -18,12 +18,13 @@ struct ArrivalUnit {
 
 struct Arrival {
   ESendType sendType;
-  ArrivalUnit[] units;
   uint256 arrivalBlock;
-  uint256 from;
-  uint256 to;
-  uint256 origin;
-  uint256 destination;
+  bytes32 from;
+  bytes32 to;
+  bytes32 origin;
+  bytes32 destination;
+  uint256[] unitCounts;
+  bytes32[] unitTypes;
 }
 
 struct SendArgs {

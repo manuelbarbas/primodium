@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { ArrivalUnit, ESendType } from "src/Types.sol";
-import { SetItemArrivalsData, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ArrivalCount } from "codegen/Tables.sol";
+import { ArrivalUnit, ESendType, Arrival } from "src/Types.sol";
+import { PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ArrivalCount } from "codegen/Tables.sol";
 import { ArrivalsSet } from "libraries/ArrivalsSet.sol";
 import { LibMath } from "libraries/LibMath.sol";
 
 library LibSend {
-  function sendUnits(SetItemArrivalsData memory arrival) internal {
+  function sendUnits(Arrival memory arrival) internal {
     bytes32 player = arrival.sendType == ESendType.Reinforce ? arrival.to : arrival.from;
     bytes32 asteroid = arrival.sendType == ESendType.Reinforce ? arrival.destination : arrival.origin;
     ArrivalsSet.add(player, asteroid, arrival);
