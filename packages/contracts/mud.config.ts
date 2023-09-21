@@ -44,6 +44,7 @@ export const config = mudConfig({
         maxMotherlodesPerAsteroid: "uint256",
         motherlodeChanceInv: "uint256",
         motherlodeDistance: "uint256",
+        moveSpeed: "uint256",
       },
     },
 
@@ -358,29 +359,37 @@ export const config = mudConfig({
       schema: "uint256",
     },
     /* ----------------------- Sending and Battling Units ----------------------- */
-    SetArrivals: {
+
+    // Tracks player arrivals
+
+    ArrivalCount: {
       keySchema: { entity: "bytes32" },
+      schema: "uint256",
+    },
+    // Tracks player asteroid arrivals
+    SetArrivals: {
+      keySchema: { entity: "bytes32", asteroid: "bytes32" },
       schema: { itemKeys: "bytes32[]" },
     },
 
     SetItemStoredArrivals: {
-      keySchema: { entity: "bytes32", arrivalEntity: "bytes32" },
+      keySchema: { entity: "bytes32", asteroid: "bytes32", arrivalEntity: "bytes32" },
       schema: {
         stored: "bool",
         index: "uint256",
       },
     },
     SetItemArrivals: {
-      keySchema: { entity: "bytes32", arrivalEntity: "bytes32" },
+      keySchema: { entity: "bytes32", asteroid: "bytes32", arrivalEntity: "bytes32" },
       schema: {
         sendType: "ESendType",
-        unitCounts: "uint256[]",
-        unitTypes: "bytes32[]",
         arrivalBlock: "uint256",
         from: "bytes32",
         to: "bytes32",
         origin: "bytes32",
         destination: "bytes32",
+        unitCounts: "uint256[]",
+        unitTypes: "bytes32[]",
       },
     },
   },

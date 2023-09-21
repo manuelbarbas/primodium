@@ -12,8 +12,8 @@ struct Bounds {
 }
 
 struct ArrivalUnit {
-  uint256 unitType;
-  uint32 count;
+  EUnit unit;
+  uint256 count;
 }
 
 struct Arrival {
@@ -31,5 +31,5 @@ struct SendArgs {
   ESendType sendType;
   PositionData originPosition;
   PositionData destinationPosition;
-  uint256 to;
+  bytes32 to;
 }

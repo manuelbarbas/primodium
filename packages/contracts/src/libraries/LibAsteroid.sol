@@ -41,7 +41,10 @@ library LibAsteroid {
   /// @notice Ensures asteroid positions do not overlap
   /// @return position Generated unique position
   function getUniqueAsteroidPosition(uint256 asteroidCount) internal view returns (PositionData memory position) {
-    position = LibMath.getPositionByVector(LibMath.getDistance(asteroidCount), LibMath.getDirection(asteroidCount));
+    position = LibMath.getPositionByVector(
+      LibMath.getSpawnDistance(asteroidCount),
+      LibMath.getSpawnDirection(asteroidCount)
+    );
     while (ReversePosition.get(position.x, position.y) != 0) {
       position.y += 5;
     }

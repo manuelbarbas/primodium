@@ -8,50 +8,62 @@ library ArrivalsSet {
     return keccak256(abi.encode(item));
   }
 
-  function has(bytes32 player, SetItemArrivalsData memory item) internal view returns (bool) {
-    return SetItemStoredArrivals.get(player, getKey(item)).stored;
+  function has(
+    bytes32 player,
+    bytes32 asteroid,
+    SetItemArrivalsData memory item
+  ) internal view returns (bool) {
+    return SetItemStoredArrivals.get(player, asteroid, getKey(item)).stored;
   }
 
-  function add(bytes32 player, SetItemArrivalsData memory item) internal {
-    if (has(player, item)) return;
+  function add(
+    bytes32 player,
+    bytes32 asteroid,
+    SetItemArrivalsData memory item
+  ) internal {
+    if (has(player, asteroid, item)) return;
     bytes32 key = getKey(item);
-    SetArrivals.push(player, key);
-    SetItemArrivals.set(player, key, item);
-    SetItemStoredArrivals.set(player, key, true, SetArrivals.length(player) - 1);
+    SetArrivals.push(player, asteroid, key);
+    SetItemArrivals.set(player, asteroid, key, item);
+    SetItemStoredArrivals.set(player, asteroid, key, true, SetArrivals.length(player, asteroid) - 1);
   }
 
-  function getAllKeys(bytes32 player) internal view returns (bytes32[] memory) {
-    return SetArrivals.get(player);
+  function getAllKeys(bytes32 player, bytes32 asteroid) internal view returns (bytes32[] memory) {
+    return SetArrivals.get(player, asteroid);
   }
 
-  function getAllValues(bytes32 player) internal view returns (SetItemArrivalsData[] memory items) {
-    bytes32[] memory keys = getAllKeys(player);
+  function getAllValues(bytes32 player, bytes32 asteroid) internal view returns (SetItemArrivalsData[] memory items) {
+    bytes32[] memory keys = getAllKeys(player, asteroid);
     items = new SetItemArrivalsData[](keys.length);
     for (uint256 i = 0; i < keys.length; i++) {
-      items[i] = SetItemArrivals.get(player, keys[i]);
+      items[i] = SetItemArrivals.get(player, asteroid, keys[i]);
     }
   }
 
-  function remove(bytes32 player, SetItemArrivalsData memory item) internal {
+  function remove(
+    bytes32 player,
+    bytes32 asteroid,
+    SetItemArrivalsData memory item
+  ) internal {
     bytes32 key = getKey(item);
-    uint256 index = SetItemStoredArrivals.getIndex(player, key);
-    if (SetArrivals.length(player) == 1) {
-      clear(player);
+    uint256 index = SetItemStoredArrivals.getIndex(player, asteroid, key);
+    if (SetArrivals.length(player, asteroid) == 1) {
+      clear(player, asteroid);
       return;
     }
-    bytes32 replacement = SetArrivals.getItem(player, SetArrivals.length(player) - 1);
-    SetArrivals.update(player, index, replacement);
-    SetArrivals.pop(player);
-    SetItemArrivals.deleteRecord(player, key);
-    SetItemStoredArrivals.deleteRecord(player, key);
+    bytes32 replacement = SetArrivals.getItem(player, asteroid, SetArrivals.length(player, asteroid) - 1);
+    SetArrivals.update(player, asteroid, index, replacement);
+    SetArrivals.pop(player, asteroid);
+    SetItemArrivals.deleteRecord(player, asteroid, key);
+    SetItemStoredArrivals.deleteRecord(player, asteroid, key);
   }
 
-  function clear(bytes32 player) internal {
-    for (uint256 i = 0; i < SetArrivals.length(player); i++) {
-      bytes32 key = SetArrivals.getItem(player, SetArrivals.length(player) - 1);
-      SetItemArrivals.deleteRecord(player, key);
-      SetItemStoredArrivals.deleteRecord(player, key);
+  function clear(bytes32 player, bytes32 asteroid) internal {
+    for (uint256 i = 0; i < SetArrivals.length(player, asteroid); i++) {
+      bytes32 key = SetArrivals.getItem(player, asteroid, SetArrivals.length(player, asteroid) - 1);
+      SetItemArrivals.deleteRecord(player, asteroid, key);
+      SetItemStoredArrivals.deleteRecord(player, asteroid, key);
     }
-    SetArrivals.deleteRecord(player);
+    SetArrivals.deleteRecord(player, asteroid);
   }
 }
