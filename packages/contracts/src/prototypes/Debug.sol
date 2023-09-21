@@ -114,3 +114,11 @@ uint256 constant DebugMotherlodeMiningKimberliteObjectiveID = uint256(
 uint256 constant DebugDestroyedUnitsObjectiveID = uint256(keccak256("block.DebugDestroyedUnitsObjective"));
 uint256 constant DebugResourceRewardObjectiveID = uint256(keccak256("block.DebugResourceRewardObjective"));
 uint256 constant DebugUnitsRewardObjectiveID = uint256(keccak256("block.DebugUnitsRewardObjectiveID"));
+
+uint256 constant DebugSpawnPirateAsteroidID = uint256(keccak256("block.DebugSpawnPirateAsteroid"));
+
+uint256 constant DebugSpawnPirateAsteroidObjectiveID = uint256(keccak256("block.DebugSpawnPirateAsteroidObjective"));
+
+uint256 constant DebugDefeatedPirateAsteroidObjectiveID = uint256(
+  keccak256("block.DebugDefeatedPirateAsteroidObjective")
+);
