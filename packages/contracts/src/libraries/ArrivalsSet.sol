@@ -69,11 +69,11 @@ library ArrivalsSet {
     SetItemStoredArrivals.set(player, asteroid, key, true, SetArrivals.length(player, asteroid) - 1);
   }
 
-  function getAllKeys(bytes32 player, bytes32 asteroid) internal view returns (bytes32[] memory) {
+  function getAllKeys(bytes32 player, bytes32 asteroid) private view returns (bytes32[] memory) {
     return SetArrivals.get(player, asteroid);
   }
 
-  function getAllValues(bytes32 player, bytes32 asteroid) internal view returns (Arrival[] memory items) {
+  function getAll(bytes32 player, bytes32 asteroid) internal view returns (Arrival[] memory items) {
     bytes32[] memory keys = getAllKeys(player, asteroid);
     items = new Arrival[](keys.length);
     for (uint256 i = 0; i < keys.length; i++) {
@@ -100,6 +100,10 @@ library ArrivalsSet {
     SetItemArrivals1.deleteRecord(player, asteroid, key);
     SetItemArrivals2.deleteRecord(player, asteroid, key);
     SetItemStoredArrivals.deleteRecord(player, asteroid, key);
+  }
+
+  function size(bytes32 player, bytes32 asteroid) internal view returns (uint256) {
+    return SetArrivals.length(player, asteroid);
   }
 
   function clear(bytes32 player, bytes32 asteroid) internal {
