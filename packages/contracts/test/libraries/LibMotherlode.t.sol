@@ -7,11 +7,10 @@ contract LibMotherlodeTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
 
-    P_GameConfigData memory gameConfig = P_GameConfigData({
-      motherlodeDistance: 8,
-      maxMotherlodesPerAsteroid: 12,
-      motherlodeChanceInv: 2
-    });
+    P_GameConfigData memory gameConfig = P_GameConfig.get();
+    gameConfig.motherlodeDistance = 8;
+    gameConfig.maxMotherlodesPerAsteroid = 12;
+    gameConfig.motherlodeChanceInv = 2;
     vm.startPrank(worldAddress);
     P_GameConfig.set(world, gameConfig);
     vm.stopPrank();
@@ -36,12 +35,9 @@ contract LibMotherlodeTest is PrimodiumTest {
 
   function findMotherlode() public returns (bytes32, PositionData memory) {
     P_GameConfigData memory config = P_GameConfig.get(world);
-    console.log("distance:", config.motherlodeDistance);
     address player = alice;
     bytes32 asteroid = spawn(player);
-    console.log("asteroid:", uint256(asteroid));
     PositionData memory sourcePosition = getHomeAsteroidPosition(player);
-    console.log("position");
     logPosition(sourcePosition);
     bytes32 motherlodeSeed;
     PositionData memory targetPosition;
@@ -53,19 +49,16 @@ contract LibMotherlodeTest is PrimodiumTest {
         config.motherlodeDistance,
         config.maxMotherlodesPerAsteroid
       );
-      console.log("trying position");
       logPosition(sourcePosition);
       targetPosition = PositionData(
         sourcePosition.x + targetPositionRelative.x,
         sourcePosition.y + targetPositionRelative.y,
         0
       );
-      console.log("trying position");
       logPosition(targetPosition);
 
       motherlodeSeed = keccak256(abi.encode(asteroid, "motherlode", targetPosition.x, targetPosition.y));
       found = LibMotherlode.isMotherlode(motherlodeSeed, config.motherlodeChanceInv);
-      console.log("found:", found);
       i++;
     }
     require(found, "uh oh, no motherlode found");
@@ -106,24 +99,23 @@ contract LibMotherlodeTest is PrimodiumTest {
       PositionData memory position = PositionData(int32(i) * 7, int32(i) * 11, 0);
       uint256 motherlodeEntity = uint256(keccak256(abi.encode(uint256(i), "motherlode", position.x, position.y)));
       logPosition(position);
-      console.log("i:", i);
-      console.log("motherlodeEntity: ", motherlodeEntity);
     }
   }
 
   function testPrintAsteroidMotherlodes() public {
-    P_GameConfigData memory config = P_GameConfigData({
-      motherlodeDistance: 10,
-      maxMotherlodesPerAsteroid: 6,
-      motherlodeChanceInv: 4
-    });
+    P_GameConfigData memory config = P_GameConfig.get();
+    config.motherlodeDistance = 10;
+    config.maxMotherlodesPerAsteroid = 6;
+    config.motherlodeChanceInv = 4;
+    vm.startPrank(worldAddress);
+    P_GameConfig.set(world, config);
+    vm.stopPrank();
 
     address player = alice;
     spawn(player);
     uint256 asteroid = 0xe19384268f063f61ad35763c513b0e482cc607fb876a26a511ae588042cfa35b;
     PositionData memory sourcePosition = PositionData(-16, 28, 0);
     for (uint256 i = 0; i < config.maxMotherlodesPerAsteroid; i++) {
-      console.log("ANGLE: ", (i * 360) / config.maxMotherlodesPerAsteroid);
       PositionData memory targetPositionRelative = LibMotherlode.getPosition(
         i,
         config.motherlodeDistance,
@@ -136,11 +128,8 @@ contract LibMotherlodeTest is PrimodiumTest {
       );
       bytes32 motherlodeSeed = keccak256(abi.encode(asteroid, "motherlode", targetPosition.x, targetPosition.y));
       bool found = LibMotherlode.isMotherlode(motherlodeSeed, config.motherlodeChanceInv);
-      if (found) {
-        console.log("motherlode found: ");
-      }
+      if (found) {}
       logPosition(targetPosition);
-      console.log(" ");
     }
   }
 }

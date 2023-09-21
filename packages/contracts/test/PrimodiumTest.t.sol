@@ -18,6 +18,10 @@ struct PositionData2D {
   int32 y;
 }
 
+function toString(bytes32 entity) pure returns (string memory) {
+  return string(abi.encodePacked(entity));
+}
+
 contract PrimodiumTest is MudTest {
   IWorld public world;
   uint256 userNonce = 0;

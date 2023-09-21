@@ -2,59 +2,59 @@
 pragma solidity >=0.8.0;
 
 import { EResource } from "src/Types.sol";
-import { Motherlode, MotherlodeData, Set_EntityMotherlode, Set_Motherlodes } from "codegen/Tables.sol";
+import { SetMotherlodes, SetItemMotherlodes } from "codegen/Tables.sol";
 
 library MotherlodeSet {
-  function has(bytes32 player, bytes32 motherlode) internal view returns (bool) {
-    return Motherlode.get(motherlode).ownedBy == player;
+  /// @notice Check if a player has an item in Motherlodes set
+  /// @param player Player's entity ID
+  /// @param item Item's entity ID
+  /// @return True if player has item, false otherwise
+  function has(bytes32 player, bytes32 item) internal view returns (bool) {
+    return SetItemMotherlodes.get(player, item).stored;
   }
 
-  function get(bytes32 motherlode) internal view returns (MotherlodeData memory) {
-    return Motherlode.get(motherlode);
+  /// @notice Add item to a player's Motherlodes set
+  /// @param player Player's entity ID
+  /// @param item Item's entity ID
+  function add(bytes32 player, bytes32 item) internal {
+    if (has(player, item)) return;
+    SetMotherlodes.push(player, item);
+    SetItemMotherlodes.set(player, item, true, SetMotherlodes.length(player) - 1);
   }
 
-  function add(bytes32 player, bytes32 motherlode) internal {
-    if (has(player, motherlode)) return;
-    Set_Motherlodes.push(player, motherlode);
-    bytes32 prevOwner = Motherlode.getOwnedBy(motherlode);
-    if (prevOwner != 0) {
-      remove(prevOwner, motherlode);
-    }
-    Motherlode.setOwnedBy(motherlode, player);
-    Set_EntityMotherlode.set(motherlode, Set_Motherlodes.length(player) - 1);
-  }
-
+  /// @notice Get all items in a player's Motherlodes set
+  /// @param player Player's entity ID
+  /// @return Array of item entity IDs
   function getAll(bytes32 player) internal view returns (bytes32[] memory) {
-    return Set_Motherlodes.get(player);
+    return SetMotherlodes.get(player);
   }
 
-  function set(bytes32 motherlode, MotherlodeData memory data) internal {
-    Motherlode.set(motherlode, data);
-  }
-
-  function remove(bytes32 player, bytes32 motherlode) internal {
-    if (!has(player, motherlode)) return;
-    if (Set_Motherlodes.length(player) == 1) {
+  /// @notice Remove item from a player's Motherlodes set
+  /// @param player Player's entity ID
+  /// @param item Item's entity ID
+  function remove(bytes32 player, bytes32 item) internal {
+    if (!has(player, item)) return;
+    if (SetMotherlodes.length(player) == 1) {
       clear(player);
       return;
     }
-    bytes32 replacementId = Set_Motherlodes.getItem(player, Set_Motherlodes.length(player) - 1);
-    uint256 index = Set_EntityMotherlode.get(motherlode);
 
-    Set_Motherlodes.update(player, index, replacementId);
-    Set_EntityMotherlode.set(replacementId, index);
-    Set_Motherlodes.pop(player);
+    bytes32 replacementId = SetMotherlodes.getItem(player, SetMotherlodes.length(player) - 1);
+    uint256 index = SetItemMotherlodes.get(player, item).index;
 
-    Motherlode.setOwnedBy(motherlode, 0);
-    Set_EntityMotherlode.set(motherlode, 0);
+    SetMotherlodes.update(player, index, replacementId);
+    SetItemMotherlodes.setIndex(player, replacementId, index);
+    SetMotherlodes.pop(player);
+    SetItemMotherlodes.deleteRecord(player, item);
   }
 
+  /// @notice Clear all items from a player's Motherlodes set
+  /// @param player Player's entity ID
   function clear(bytes32 player) internal {
-    for (uint256 i = 0; i < Set_Motherlodes.length(player); i++) {
-      bytes32 motherlode = Set_Motherlodes.getItem(player, i);
-      Motherlode.setOwnedBy(motherlode, 0);
-      Set_EntityMotherlode.set(motherlode, 0);
+    for (uint256 i = 0; i < SetMotherlodes.length(player); i++) {
+      bytes32 item = SetMotherlodes.getItem(player, i);
+      SetItemMotherlodes.deleteRecord(player, item);
     }
-    Set_Motherlodes.deleteRecord(player);
+    SetMotherlodes.deleteRecord(player);
   }
 }

@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 // tables
-import { Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/Tables.sol";
+import { Home, P_RequiredTile, P_ProducesUnits, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/Tables.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 
 // libraries
@@ -10,6 +10,7 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { LibReduceProductionRate } from "libraries/LibReduceProductionRate.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
+import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 
 // types
 import { BuildingKey, BuildingTileKey, ExpansionKey } from "src/Keys.sol";
@@ -38,25 +39,29 @@ library LibBuilding {
     );
 
     require(
-      LibBuilding.hasRequiredBaseLevel(playerEntity, buildingPrototype, level),
+      hasRequiredBaseLevel(playerEntity, buildingPrototype, level),
       "[BuildSystem] MainBase level requirement not met"
     );
 
-    require(LibBuilding.canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
+    require(canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
 
     Spawned.set(buildingEntity, true);
     BuildingType.set(buildingEntity, buildingPrototype);
     Level.set(buildingEntity, level);
     Position.set(buildingEntity, coord);
-    LastClaimedAt.set(buildingEntity, block.number);
+    LastClaimedAt.set(buildingEntity, block.timestamp);
     OwnedBy.set(buildingEntity, playerEntity);
 
     placeBuildingTiles(playerEntity, buildingEntity, buildingPrototype, coord);
 
-    world.spendRequiredResources(buildingEntity, level);
-    LibReduceProductionRate.reduceProductionRate(playerEntity, buildingEntity, level);
+    world.spendBuildingRequiredResources(buildingEntity, level);
+    world.reduceProductionRate(playerEntity, buildingEntity, level);
     LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, level);
     LibStorage.increaseMaxStorage(playerEntity, buildingEntity, level);
+
+    if (P_ProducesUnits.get(buildingPrototype)) {
+      UnitFactorySet.add(playerEntity, buildingEntity);
+    }
   }
 
   /// @notice Places building tiles for a constructed building

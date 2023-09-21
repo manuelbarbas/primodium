@@ -21,9 +21,15 @@ export const config = mudConfig({
     S_SpendResourcesSystem: {
       openAccess: false,
       accessList: ["BuildSystem", "UpgradeBuildingSystem"],
-      name: "PlayerSystem",
+      name: "S_SpendResourcesSystem",
+    },
+    S_ReduceProductionRateSystem: {
+      openAccess: false,
+      accessList: ["BuildSystem", "UpgradeBuildingSystem", "DestroySystem"],
+      name: "S_ReduceProductionRateSystem",
     },
   },
+
   enums: MUDEnums,
   tables: {
     /* ----------------------------------- Dev ---------------------------------- */
@@ -37,6 +43,7 @@ export const config = mudConfig({
     P_GameConfig: {
       keySchema: {},
       schema: {
+        unitProductionRate: "uint256",
         maxMotherlodesPerAsteroid: "uint256",
         motherlodeChanceInv: "uint256",
         motherlodeDistance: "uint256",
@@ -155,14 +162,14 @@ export const config = mudConfig({
     },
 
     // Used in the building utilities set
-    Set_UtilityUsage: {
+    SetItemUtilities: {
       keySchema: { entity: "bytes32", utility: "EResource" },
       schema: {
         index: "uint256",
         quantity: "uint256",
       },
     },
-    Set_Utilities: {
+    SetUtilities: {
       keySchema: { entity: "bytes32" },
       schema: "uint8[]",
     },
@@ -195,6 +202,13 @@ export const config = mudConfig({
       },
     },
 
+    P_RequiredUpgradeResources: {
+      keySchema: { prototype: "bytes32", level: "uint256" },
+      schema: {
+        resources: "uint8[]",
+        amounts: "uint256[]",
+      },
+    },
     /* -------------------------------- Buildings ------------------------------- */
 
     P_Blueprint: {
@@ -214,6 +228,35 @@ export const config = mudConfig({
         resource: "EResource",
         amount: "uint256",
       },
+    },
+
+    // tracks if a building (prototype) can produce a unit (id)
+    P_UnitProduction: {
+      keySchema: { prototype: "bytes32", id: "bytes32" },
+      schema: "bool",
+    },
+
+    P_ProducesUnits: {
+      keySchema: { prototype: "bytes32" },
+      schema: "bool",
+    },
+
+    P_UnitProdMultiplier: {
+      keySchema: { prototype: "bytes32", level: "uint256" },
+      schema: "uint256",
+    },
+
+    SetItemUnitFactories: {
+      keySchema: { entity: "bytes32", building: "bytes32" },
+      schema: {
+        stored: "bool",
+        index: "uint256",
+      },
+    },
+
+    SetUnitFactories: {
+      keySchema: { entity: "bytes32" },
+      schema: "bytes32[]",
     },
 
     P_ByLevelMaxResourceUpgrades: {
@@ -264,15 +307,54 @@ export const config = mudConfig({
     },
 
     // Used in the building utilities set
-    Set_EntityMotherlode: {
-      keySchema: { motherlode: "bytes32" },
+    SetItemMotherlodes: {
+      keySchema: { motherlode: "bytes32", item: "bytes32" },
       schema: {
+        stored: "bool",
         index: "uint256",
       },
     },
-    Set_Motherlodes: {
+    SetMotherlodes: {
       keySchema: { entity: "bytes32" },
       schema: "bytes32[]",
+    },
+
+    /* ----------------------------- Unit Production ---------------------------- */
+    P_Unit: {
+      keySchema: { entity: "bytes32", level: "uint256" },
+      schema: {
+        attack: "uint256",
+        defense: "uint256",
+        speed: "uint256",
+        cargo: "uint256",
+        mining: "uint256",
+        trainingTime: "uint256",
+      },
+    },
+    QueueUnits: {
+      keySchema: { entity: "bytes32" },
+      schema: {
+        front: "uint256",
+        back: "uint256",
+        queue: "bytes32[]",
+      },
+    },
+
+    QueueItemUnits: {
+      keySchema: { entity: "bytes32", index: "uint256" },
+      schema: {
+        unitId: "bytes32",
+        quantity: "uint256",
+      },
+    },
+    UnitLevel: {
+      keySchema: { entity: "bytes32", unit: "bytes32" },
+      schema: "uint256",
+    },
+
+    UnitCount: {
+      keySchema: { player: "bytes32", rock: "bytes32", unit: "bytes32" },
+      schema: "uint256",
     },
   },
 });

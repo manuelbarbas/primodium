@@ -1,6 +1,6 @@
 import { StaticAbiType } from "@latticexyz/schema-type";
-import { MUDEnums } from "../../../config/enums";
-import encodeBytes32 from "../../../config/util/encodeBytes32";
+import { MUDEnums } from "../../config/enums";
+import encodeBytes32 from "../../config/util/encodeBytes32";
 
 export const upgradesByLevel = (name: string, upgrades: Record<number, Record<string, number>>) =>
   Object.entries(upgrades).reduce((prev, [level, upgrades]) => {
@@ -20,7 +20,7 @@ export const upgradesByLevel = (name: string, upgrades: Record<number, Record<st
 
 export const getResourceValue = (resourceValue: { [x: string]: number }) => {
   const [resource, amount] = Object.entries(resourceValue)[0];
-  return { resource: MUDEnums.EResource.indexOf(resource), amount };
+  return { resource: MUDEnums.EResource.indexOf(resource), amount: BigInt(amount) };
 };
 
 export const getResourceValues = (resourceValues: Record<string, number>) => {
@@ -28,10 +28,10 @@ export const getResourceValues = (resourceValues: Record<string, number>) => {
   const [resources, amounts] = Object.entries(resourceValues).reduce(
     (acc, [resource, amount]) => {
       acc[0].push(MUDEnums.EResource.indexOf(resource));
-      acc[1].push(amount);
+      acc[1].push(BigInt(amount));
       return acc;
     },
-    [[], []] as [number[], number[]]
+    [[], []] as [number[], bigint[]]
   );
   return { resources, amounts };
 };
@@ -48,3 +48,17 @@ export const idsToPrototypes = (ids: string[]) =>
       },
     }))
     .reduce((acc, curr) => ({ ...acc, ...curr }), {});
+
+export const buildingUnitProduction = (building: string, units: string[]) =>
+  units.reduce(
+    (prev, unit) => ({
+      ...prev,
+      [`${building}${unit}Prod`]: {
+        keys: [{ [encodeBytes32(building)]: "bytes32" }, { [encodeBytes32(unit)]: "bytes32" }] as {
+          [x: string]: StaticAbiType;
+        }[],
+        tables: { P_UnitProduction: { value: true } },
+      },
+    }),
+    {} as Record<string, { keys: { [x: string]: StaticAbiType }[]; tables: { P_UnitProduction: { value: boolean } } }>
+  );

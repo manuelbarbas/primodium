@@ -22,12 +22,6 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
     world.build(EBuilding.IronMine, PositionData(bounds.maxX + 1, bounds.maxY, asteroid));
   }
 
-  // function testUpgradeRangeResources() public {
-  //   vm.startPrank(alice);
-  //   vm.expectRevert(bytes("[SpendRequiredResourcesSystem] Not enough resources"));
-  //   upgradeRangeSystem.executeTyped();
-  // }
-
   function testUpgradeRangeWrongBaseLevelFail() public {
     bytes32 aliceEntity = addressToEntity(alice);
     vm.startPrank(alice);
@@ -59,15 +53,6 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
   function testUpgradeRange() public {
     bytes32 aliceEntity = addressToEntity(alice);
     vm.startPrank(alice);
-    // ResourceValues memory resourceValues = P_RequiredResourcesComponent(component(P_RequiredResourcesComponentID))
-    //   .getValue(ExpansionResearch2);
-    // for (uint256 i = 0; i < resourceValues.resources.length; i++) {
-    //   uint256 resource = resourceValues.resources[i];
-    //   uint256 playerResourceEntity = LibEncode.hashKeyEntity(resource, aliceEntity);
-    //   uint256 value = resourceValues.values[i];
-    //   componentDevSystem.executeTyped(ItemComponentID, playerResourceEntity, abi.encode(value));
-    // }
-
     uint256 level = Level.get(aliceEntity);
 
     // increment alice's main base level by 1

@@ -61,7 +61,6 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     P_RequiredResources.set(IronMinePrototypeId, 2, requiredResourcesData);
 
     switchPrank(alice);
-    console.log("alice:", alice);
     world.build(EBuilding.IronMine, getIronPosition(alice));
     world.upgradeBuilding(getIronPosition(alice));
     assertEq(ResourceCount.get(playerEntity, EResource.Iron), initial - l1 - l2);

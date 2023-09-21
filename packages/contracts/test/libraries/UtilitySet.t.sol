@@ -2,8 +2,6 @@
 pragma solidity >=0.8.0;
 
 import "test/PrimodiumTest.t.sol";
-import { EResource } from "src/Types.sol";
-import { UtilitySet } from "codegen/Libraries.sol";
 
 contract UtilitySetTest is PrimodiumTest {
   bytes32 player1 = "player1";
@@ -31,11 +29,6 @@ contract UtilitySetTest is PrimodiumTest {
     UtilitySet.set(player1, resource2, 20);
     uint8[] memory allResources = UtilitySet.getAll(player1);
     assertEq(allResources.length, 2);
-  }
-
-  function testGetIndex() public {
-    UtilitySet.set(player1, resource1, 50);
-    assertEq(UtilitySet.getIndex(player1, resource1), 0);
   }
 
   function testSet() public {
