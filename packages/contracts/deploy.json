@@ -45,7 +45,10 @@
     "TotalRaidComponent",
     "TotalMotherlodeMinedComponent",
     "TotalUnitsDestroyedComponent",
+    "PirateComponent",
 
+    "P_RequiredPirateAsteroidDefeatedComponent",
+    "P_SpawnPirateAsteroidComponent",
     "P_DestroyedUnitsRequirementComponent",
     "P_MotherlodeMinedRequirementComponent",
     "P_RaidRequirementComponent",

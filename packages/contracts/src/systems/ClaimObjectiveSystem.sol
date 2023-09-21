@@ -21,6 +21,7 @@ import { LibReward } from "libraries/LibReward.sol";
 import { LibRaid } from "libraries/LibRaid.sol";
 import { LibUpdateSpaceRock } from "libraries/LibUpdateSpaceRock.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
+import { LibPirateAsteroid } from "libraries/LibPirateAsteroid.sol";
 import { ResourceValue } from "../types.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
@@ -128,6 +129,9 @@ contract ClaimObjectiveSystem is System {
     hasCompletedObjective.set(LibEncode.hashKeyEntity(objective, playerEntity));
 
     LibReward.receiveRewards(world, playerEntity, objective);
+
+    LibPirateAsteroid.createAsteroid(world, playerEntity, objective);
+
     return abi.encode(true);
   }
 
