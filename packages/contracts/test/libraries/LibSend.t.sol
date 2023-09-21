@@ -3,6 +3,7 @@ pragma solidity >=0.8.0;
 
 import "test/PrimodiumTest.t.sol";
 
+// Note checkMovementRules tests are in SendUnitsSystem.t.sol to verify revert statements
 contract LibSendTest is PrimodiumTest {
   uint256[] unitCounts;
   bytes32[] unitTypes;
@@ -66,7 +67,7 @@ contract LibSendTest is PrimodiumTest {
     unitData.speed = 69;
     P_Unit.set("unit1", 1, unitData);
 
-    assertEq(LibSend.getSlowestUnitSpeed(arrival.from, types, counts), 69);
+    assertEq(LibSend.getSlowestUnitSpeed(arrival.from, types), 69);
   }
 
   function testGetSlowestUnitSpeedNoCounts() public {
@@ -83,7 +84,7 @@ contract LibSendTest is PrimodiumTest {
     unitData.speed = 100;
     P_Unit.set("unit2", 1, unitData);
 
-    assertEq(LibSend.getSlowestUnitSpeed(arrival.from, types, counts), 100);
+    assertEq(LibSend.getSlowestUnitSpeed(arrival.from, types), 100);
   }
 
   function testGetSlowestUnitSpeed() public {
@@ -94,15 +95,15 @@ contract LibSendTest is PrimodiumTest {
     unitData.speed = 200;
     P_Unit.set("unit3", 1, unitData);
 
-    assertEq(LibSend.getSlowestUnitSpeed(arrival.from, unitTypes, unitCounts), 50);
+    assertEq(LibSend.getSlowestUnitSpeed(arrival.from, unitTypes), 50);
   }
 
   function testFailGetSlowestUnitSpeedNoUnits() public view {
-    LibSend.getSlowestUnitSpeed(arrival.from, new bytes32[](0), new uint256[](0));
+    LibSend.getSlowestUnitSpeed(arrival.from, new bytes32[](0));
   }
 
   function testFailGetSlowestUnitSpeedNoSpeed() public view {
-    LibSend.getSlowestUnitSpeed(arrival.from, unitTypes, unitCounts);
+    LibSend.getSlowestUnitSpeed(arrival.from, unitTypes);
   }
 
   function setupArrivalLength(
@@ -148,8 +149,7 @@ contract LibSendTest is PrimodiumTest {
         Position.get(testArrival.origin),
         Position.get(testArrival.destination),
         testArrival.from,
-        testArrival.unitTypes,
-        testArrival.unitCounts
+        testArrival.unitTypes
       ),
       expected
     );
@@ -161,8 +161,7 @@ contract LibSendTest is PrimodiumTest {
       Position.get(arrival.origin),
       Position.get(arrival.destination),
       arrival.from,
-      arrival.unitTypes,
-      arrival.unitCounts
+      arrival.unitTypes
     );
   }
 }
