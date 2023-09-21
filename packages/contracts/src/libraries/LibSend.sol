@@ -7,6 +7,8 @@ import { ArrivalsSet } from "libraries/ArrivalsSet.sol";
 import { LibMath } from "libraries/LibMath.sol";
 
 library LibSend {
+  /// @notice Adds a new arrival.
+  /// @param arrival The Arrival object to add.
   function sendUnits(Arrival memory arrival) internal {
     bytes32 player = arrival.sendType == ESendType.Reinforce ? arrival.to : arrival.from;
     bytes32 asteroid = arrival.sendType == ESendType.Reinforce ? arrival.destination : arrival.origin;
@@ -14,6 +16,10 @@ library LibSend {
     ArrivalCount.set(arrival.from, ArrivalCount.get(arrival.from) + 1);
   }
 
+  /// @notice Returns the slowest speed of given unit types.
+  /// @param playerEntity Entity initiating send.
+  /// @param unitTypes Array of unit types being sent.
+  /// @return slowestSpeed Slowest unit speed among the types.
   function getSlowestUnitSpeed(bytes32 playerEntity, bytes32[] memory unitTypes)
     internal
     view
@@ -32,6 +38,12 @@ library LibSend {
     }
   }
 
+  /// @notice Computes the block number an arrival will occur.
+  /// @param origin Origin position.
+  /// @param destination Destination position.
+  /// @param playerEntity Entity initiating send.
+  /// @param unitTypes Types of units being sent.
+  /// @return Block number of arrival.
   function getArrivalBlock(
     PositionData memory origin,
     PositionData memory destination,
@@ -53,6 +65,12 @@ library LibSend {
       5. You can only reinforce yourself on a motherlode.
       6. You must be under the max move count.
     */
+  /// @notice Checks if movement between two positions is allowed.
+  /// @param origin Origin position.
+  /// @param destination Destination position.
+  /// @param playerEntity Entity initiating send.
+  /// @param to Destination entity.
+  /// @param sendType Type of send (invade, raid, reinforce).
   function checkMovementRules(
     bytes32 origin,
     bytes32 destination,

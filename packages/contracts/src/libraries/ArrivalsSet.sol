@@ -5,6 +5,9 @@ import { Arrival } from "src/Types.sol";
 import { SetArrivals, SetItemArrivals1, SetItemArrivals1Data, SetItemArrivals2, SetItemArrivals2Data, SetItemStoredArrivals } from "codegen/Tables.sol";
 
 library ArrivalsSet {
+  /// @notice Encodes Arrival data into two parts
+  /// @param item The Arrival item
+  /// @return item1 Part 1 of Arrival, item2 Part 2 of Arrival
   function encodeArrivalData(Arrival memory item)
     private
     pure
@@ -25,6 +28,10 @@ library ArrivalsSet {
     });
   }
 
+  /// @notice Decodes Arrival data from two parts
+  /// @param item1 Part 1 of Arrival
+  /// @param item2 Part 2 of Arrival
+  /// @return The decoded Arrival item
   function decodeArrivalData(SetItemArrivals1Data memory item1, SetItemArrivals2Data memory item2)
     private
     pure
@@ -43,10 +50,18 @@ library ArrivalsSet {
       });
   }
 
+  /// @notice Calculates the key for an Arrival item
+  /// @param item The Arrival item
+  /// @return The key of the Arrival item
   function getKey(Arrival memory item) private pure returns (bytes32) {
     return keccak256(abi.encode(item));
   }
 
+  /// @notice Checks if an Arrival exists
+  /// @param player Player's address
+  /// @param asteroid Asteroid's address
+  /// @param item The Arrival item
+  /// @return true if exists, false otherwise
   function has(
     bytes32 player,
     bytes32 asteroid,
@@ -55,6 +70,10 @@ library ArrivalsSet {
     return SetItemStoredArrivals.get(player, asteroid, getKey(item)).stored;
   }
 
+  /// @notice Adds a new Arrival
+  /// @param player Player's address
+  /// @param asteroid Asteroid's address
+  /// @param item The Arrival item
   function add(
     bytes32 player,
     bytes32 asteroid,
@@ -69,10 +88,18 @@ library ArrivalsSet {
     SetItemStoredArrivals.set(player, asteroid, key, true, SetArrivals.length(player, asteroid) - 1);
   }
 
+  /// @notice Gets all keys for Arrivals
+  /// @param player Player's address
+  /// @param asteroid Asteroid's address
+  /// @return An array of keys
   function getAllKeys(bytes32 player, bytes32 asteroid) private view returns (bytes32[] memory) {
     return SetArrivals.get(player, asteroid);
   }
 
+  /// @notice Gets all Arrival items
+  /// @param player Player's address
+  /// @param asteroid Asteroid's address
+  /// @return An array of Arrival items
   function getAll(bytes32 player, bytes32 asteroid) internal view returns (Arrival[] memory items) {
     bytes32[] memory keys = getAllKeys(player, asteroid);
     items = new Arrival[](keys.length);
@@ -83,6 +110,10 @@ library ArrivalsSet {
     }
   }
 
+  /// @notice Removes an Arrival item
+  /// @param player Player's address
+  /// @param asteroid Asteroid's address
+  /// @param item The Arrival item
   function remove(
     bytes32 player,
     bytes32 asteroid,
@@ -102,10 +133,17 @@ library ArrivalsSet {
     SetItemStoredArrivals.deleteRecord(player, asteroid, key);
   }
 
+  /// @notice Gets the size of Arrivals
+  /// @param player Player's address
+  /// @param asteroid Asteroid's address
+  /// @return The number of stored Arrivals
   function size(bytes32 player, bytes32 asteroid) internal view returns (uint256) {
     return SetArrivals.length(player, asteroid);
   }
 
+  /// @notice Clears all Arrivals
+  /// @param player Player's address
+  /// @param asteroid Asteroid's address
   function clear(bytes32 player, bytes32 asteroid) internal {
     for (uint256 i = 0; i < SetArrivals.length(player, asteroid); i++) {
       bytes32 key = SetArrivals.getItem(player, asteroid, SetArrivals.length(player, asteroid) - 1);
