@@ -11,7 +11,7 @@ export const KEY = "MAIN";
 
 export enum Scenes {
   Root = "ROOT",
-  Main = "MAIN",
+  Asteroid = "MAIN",
   Starmap = "STARMAP",
 }
 
@@ -84,6 +84,7 @@ export enum TileAnimationKeys {
 }
 
 export enum SpriteKeys {
+  //BUILDINGS
   Mainbase1 = "sprites/mainbase/level1/Main_Base_LVL1_1.png",
   Mainbase2 = "sprites/mainbase/level2/Main_Base_LVL2_1.png",
   Mainbase3 = "sprites/mainbase/level3/Main_Base_LVL3_1.png",
@@ -122,6 +123,29 @@ export enum SpriteKeys {
   Hangar1 = "sprites/hangar/level1/Hangar1.png",
 
   DroneFactory1 = "sprites/drone-factory/normal/Drone_Factory1.png",
+
+  //ASTEROIDS
+  Asteroid1 = "sprites/spacerocks/asteroids/asteroid1.png",
+  Asteroid2 = "sprites/spacerocks/asteroids/asteroid2.png",
+  Asteroid3 = "sprites/spacerocks/asteroids/asteroid3.png",
+  Asteroid4 = "sprites/spacerocks/asteroids/asteroid4.png",
+  Asteroid5 = "sprites/spacerocks/asteroids/asteroid5.png",
+
+  MotherlodeIridiumSmall = "sprites/spacerocks/motherlodes/motherlode_iridium_small.png",
+  MotherlodeIridiumMedium = "sprites/spacerocks/motherlodes/motherlode_iridium_medium.png",
+  MotherlodeIridiumLarge = "sprites/spacerocks/motherlodes/motherlode_iridium_large.png",
+
+  MotherlodeTitaniumSmall = "sprites/spacerocks/motherlodes/motherlode_titanium_small.png",
+  MotherlodeTitaniumMedium = "sprites/spacerocks/motherlodes/motherlode_titanium_medium.png",
+  MotherlodeTitaniumLarge = "sprites/spacerocks/motherlodes/motherlode_titanium_large.png",
+
+  MotherlodeKimberliteSmall = "sprites/spacerocks/motherlodes/motherlode_kimberlite_small.png",
+  MotherlodeKimberliteMedium = "sprites/spacerocks/motherlodes/motherlode_kimberlite_medium.png",
+  MotherlodeKimberliteLarge = "sprites/spacerocks/motherlodes/motherlode_kimberlite_large.png",
+
+  MotherlodePlatinumSmall = "sprites/spacerocks/motherlodes/motherlode_platinum_small.png",
+  MotherlodePlatinumMedium = "sprites/spacerocks/motherlodes/motherlode_platinum_medium.png",
+  MotherlodePlatinumLarge = "sprites/spacerocks/motherlodes/motherlode_platinum_large.png",
 }
 
 export enum AnimationKeys {
@@ -220,6 +244,19 @@ export const EntityIDtoSpriteKey = {
   [BlockType.Hangar]: [SpriteKeys.Hangar1],
 
   [BlockType.DroneFactory]: [SpriteKeys.DroneFactory1],
+
+  //STARMAP
+  [BlockType.Asteroid]: [
+    SpriteKeys.Asteroid1,
+    SpriteKeys.Asteroid2,
+    SpriteKeys.Asteroid2,
+    SpriteKeys.Asteroid3,
+    SpriteKeys.Asteroid3,
+    SpriteKeys.Asteroid4,
+    SpriteKeys.Asteroid4,
+    SpriteKeys.Asteroid5,
+    SpriteKeys.Asteroid5,
+  ],
 };
 
 // Array index corresponds to lvl
