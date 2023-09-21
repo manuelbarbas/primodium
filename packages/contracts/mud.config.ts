@@ -386,23 +386,9 @@ export const config = mudConfig({
 
     // We need to split this up because it is too big to compile lol
     // But this is abstracted away in ArrivalSet.sol
-    SetItemArrivals1: {
+    SetItemArrivals: {
       keySchema: { entity: "bytes32", asteroid: "bytes32", arrivalEntity: "bytes32" },
-      schema: {
-        sendType: "ESendType",
-        arrivalBlock: "uint256",
-        from: "bytes32",
-        to: "bytes32",
-      },
-    },
-    SetItemArrivals2: {
-      keySchema: { entity: "bytes32", asteroid: "bytes32", arrivalEntity: "bytes32" },
-      schema: {
-        origin: "bytes32",
-        destination: "bytes32",
-        unitCounts: "uint256[]",
-        unitTypes: "bytes32[]",
-      },
+      schema: "bytes",
     },
   },
 });
