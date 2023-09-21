@@ -371,13 +371,13 @@ export const config = mudConfig({
       schema: "uint256",
     },
     // Tracks player asteroid arrivals
-    SetArrivals: {
+    MapArrivals: {
       keySchema: { entity: "bytes32", asteroid: "bytes32" },
       schema: { itemKeys: "bytes32[]" },
     },
 
-    SetItemStoredArrivals: {
-      keySchema: { entity: "bytes32", asteroid: "bytes32", arrivalEntity: "bytes32" },
+    MapItemStoredArrivals: {
+      keySchema: { entity: "bytes32", asteroid: "bytes32", key: "bytes32" },
       schema: {
         stored: "bool",
         index: "uint256",
@@ -386,8 +386,8 @@ export const config = mudConfig({
 
     // We need to split this up because it is too big to compile lol
     // But this is abstracted away in ArrivalSet.sol
-    SetItemArrivals: {
-      keySchema: { entity: "bytes32", asteroid: "bytes32", arrivalEntity: "bytes32" },
+    MapItemArrivals: {
+      keySchema: { entity: "bytes32", asteroid: "bytes32", key: "bytes32" },
       schema: "bytes",
     },
   },

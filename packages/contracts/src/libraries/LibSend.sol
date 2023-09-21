@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { ArrivalUnit, ESendType, Arrival, ERock, RockType, EResource } from "src/Types.sol";
-import { PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ArrivalCount, ResourceCount, OwnedBy } from "codegen/Tables.sol";
-import { ArrivalsSet } from "libraries/ArrivalsSet.sol";
+import { ArrivalUnit, ESendType, Arrival, ERock, EResource } from "src/Types.sol";
+import { RockType, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ArrivalCount, ResourceCount, OwnedBy } from "codegen/Tables.sol";
+import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 import { LibMath } from "libraries/LibMath.sol";
 
 library LibSend {
@@ -12,7 +12,7 @@ library LibSend {
   function sendUnits(Arrival memory arrival) internal {
     bytes32 player = arrival.sendType == ESendType.Reinforce ? arrival.to : arrival.from;
     bytes32 asteroid = arrival.sendType == ESendType.Reinforce ? arrival.destination : arrival.origin;
-    ArrivalsSet.add(player, asteroid, arrival);
+    ArrivalsMap.set(player, asteroid, keccak256(abi.encode(arrival)), arrival);
     ArrivalCount.set(arrival.from, ArrivalCount.get(arrival.from) + 1);
   }
 

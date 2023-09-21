@@ -3,9 +3,9 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { IWorld } from "codegen/world/IWorld.sol";
-import { ArrivalUnit, ESendType, UnitCount, SendArgs, ERock, EResource, EUnit, Arrival } from "src/Types.sol";
-import { ReversePosition, PositionData, RockType, OwnedBy, ResourceCount, ArrivalCount, P_EnumToPrototype } from "codegen/Tables.sol";
-import { LibMotherlode, LibSend, ArrivalsSet } from "codegen/Libraries.sol";
+import { ArrivalUnit, ESendType, SendArgs, ERock, EResource, EUnit, Arrival } from "src/Types.sol";
+import { ReversePosition, PositionData, UnitCount, RockType, OwnedBy, ResourceCount, ArrivalCount, P_EnumToPrototype } from "codegen/Tables.sol";
+import { LibMotherlode, LibSend, ArrivalsMap } from "codegen/Libraries.sol";
 import { UnitKey } from "src/Keys.sol";
 
 contract SendUnitsSystem is PrimodiumSystem {
