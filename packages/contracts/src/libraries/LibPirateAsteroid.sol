@@ -63,9 +63,10 @@ library LibPirateAsteroid {
       asteroidEntity,
       spawnPirateAsteroid
     );
-    PirateComponent(world.getComponent(PirateComponentID)).set(asteroidEntity, ownerEntity);
+    pirateComponent.set(asteroidEntity, ownerEntity);
 
     PositionComponent positionComponent = PositionComponent(world.getComponent(PositionComponentID));
+
     uint256 playerHomeAsteroidEntity = LibUpdateSpaceRock.getPlayerAsteroidEntity(world, ownerEntity);
     Coord memory playerHomeAsteroidPosition = positionComponent.getValue(playerHomeAsteroidEntity);
 
@@ -85,8 +86,17 @@ library LibPirateAsteroid {
     positionComponent.set(personalPirateEntity, 0, 0, asteroidEntity);
     uint256 encodedPosition = LibEncode.encodeCoord(position);
 
+    //remove old pirate asteroid coord as active
+    if (positionComponent.has(asteroidEntity)) {
+      uint256 oldEncodedPosition = LibEncode.encodeCoord(positionComponent.getValue(asteroidEntity));
+      ReversePositionComponent(world.getComponent(ReversePositionComponentID)).remove(oldEncodedPosition);
+    }
+
     // Mark the asteroid's position as active in the ReversePositionComponent.
     ReversePositionComponent(world.getComponent(ReversePositionComponentID)).set(encodedPosition, asteroidEntity);
+
+    positionComponent.set(asteroidEntity, position);
+
     OwnedByComponent(world.getComponent(OwnedByComponentID)).set(asteroidEntity, personalPirateEntity);
 
     setupPirateAsteroid(world, spawnPirateAsteroid, asteroidEntity);
