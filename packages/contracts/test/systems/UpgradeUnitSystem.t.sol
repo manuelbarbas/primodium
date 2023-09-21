@@ -67,4 +67,9 @@ contract UpgradeUnitSystemTest is PrimodiumTest {
     vm.expectRevert(bytes("[SpendResources] Not enough resources to spend"));
     world.upgradeUnit(unit);
   }
+
+  function invalidUnit() public {
+    vm.expectRevert();
+    world.upgradeUnit(EUnit(uint8(100)));
+  }
 }

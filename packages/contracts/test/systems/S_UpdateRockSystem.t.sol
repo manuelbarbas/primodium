@@ -36,12 +36,12 @@ contract S_UpdateRockSystemTest is PrimodiumTest {
   }
 
   function testUpdateRockNoRock() public {
-    vm.expectRevert(bytes("[S_UpdateRockSystem] rock does not exist"));
+    vm.expectRevert(bytes("[S_UpdateRockSystem] Rock does not exist"));
     world.updateRock(player, bytes32(0));
   }
 
   function testUpdateHomeRockNoHomeRock() public {
-    vm.expectRevert(bytes("[S_UpdateRockSystem] player does not have a home asteroid"));
+    vm.expectRevert(bytes("[S_UpdateRockSystem] Player does not have a home asteroid"));
     world.updateHomeRock(player);
   }
 
@@ -87,5 +87,15 @@ contract S_UpdateRockSystemTest is PrimodiumTest {
 
     assertEq(ResourceCount.get(player, EResource.Iron), 100);
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 100);
+  }
+
+  function testInvalidPlayer() public {
+    RockType.set(rock, ERock.Motherlode);
+    world.updateRock(bytes32(0), rock);
+  }
+
+  function testInvalidRock() public {
+    vm.expectRevert(bytes("[S_UpdateRockSystem] Rock does not exist"));
+    world.updateRock(player, bytes32(0));
   }
 }

@@ -22,8 +22,8 @@ contract TrainUnitsSystem is PrimodiumSystem {
     IWorld world = IWorld(_world());
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
     bytes32 playerEntity = addressToEntity(_msgSender());
-    uint256 level = UnitLevel.get(playerEntity, unitPrototype);
 
+    require(unit > EUnit.NULL && unit < EUnit.LENGTH, "[TrainUnitsSystem] Unit does not exist");
     require(LibUnit.canProduceUnit(buildingEntity, unitPrototype), "[TrainUnitsSystem] Building cannot produce unit");
 
     world.updateHomeRock(playerEntity);
