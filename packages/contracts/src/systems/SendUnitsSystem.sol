@@ -17,7 +17,7 @@ contract SendUnitsSystem is PrimodiumSystem {
     world.updateRock(playerEntity, origin);
     if (destination == 0) destination = LibMotherlode.createMotherlode(sendArgs.destinationPosition);
 
-    checkMovementRules(origin, destination, playerEntity, sendArgs.to, sendArgs.sendType);
+    LibSend.checkMovementRules(origin, destination, playerEntity, sendArgs.to, sendArgs.sendType);
 
     bool anyUnitsSent = false;
     uint256[] memory unitCounts = new uint256[](sendArgs.arrivalUnits.length);
@@ -25,93 +25,35 @@ contract SendUnitsSystem is PrimodiumSystem {
 
     for (uint256 i = 0; i < sendArgs.arrivalUnits.length; i++) {
       EUnit unit = EUnit(sendArgs.arrivalUnits[i].unit);
-      require(unit != EUnit.NULL && unit != EUnit.LENGTH, "SendUnitsSystem: unit type invalid");
+      require(unit != EUnit.NULL && unit != EUnit.LENGTH, "[SendUnits] Unit type invalid");
       unitCounts[i] = sendArgs.arrivalUnits[i].count;
       unitTypes[i] = P_EnumToPrototype.get(UnitKey, uint8(unit));
 
       if (sendArgs.arrivalUnits[i].count == 0) continue;
-      uint256 count = UnitCount.get(unitTypes[i], playerEntity, origin);
-      UnitCount.set(unitTypes[i], playerEntity, origin, count - sendArgs.arrivalUnits[i].count);
+      uint256 count = UnitCount.get(playerEntity, origin, unitTypes[i]);
+      require(count >= sendArgs.arrivalUnits[i].count, "[SendUnits] Not enough units to send");
+      UnitCount.set(playerEntity, origin, unitTypes[i], count - sendArgs.arrivalUnits[i].count);
       anyUnitsSent = true;
     }
     uint256 arrivalBlock = LibSend.getArrivalBlock(
       sendArgs.originPosition,
       sendArgs.destinationPosition,
       playerEntity,
-      unitTypes,
-      unitCounts
+      unitTypes
     );
 
-    Arrival memory arrival = Arrival({
-      unitCounts: unitCounts,
-      unitTypes: unitTypes,
-      sendType: sendArgs.sendType,
-      arrivalBlock: arrivalBlock,
-      from: playerEntity,
-      to: sendArgs.to,
-      origin: origin,
-      destination: destination
-    });
-
-    LibSend.sendUnits(arrival);
-  }
-
-  /*
-    Space rock movement rules:
-      1. You can only move from an asteroid if it is yours. 
-      2. You can only move from a motherlode to your asteroid. 
-      3. You cannot move between motherlodes.
-      4. You can only invade an enemy.
-      5. You can only reinforce yourself on a motherlode.
-      6. You must be under the max move count.
-    */
-  function checkMovementRules(
-    bytes32 origin,
-    bytes32 destination,
-    bytes32 playerEntity,
-    bytes32 to,
-    ESendType sendType
-  ) internal view {
-    uint256 moveCount = ArrivalCount.get(playerEntity);
-    uint256 maxMoveCount = ResourceCount.get(playerEntity, EResource.U_MaxMoves);
-
-    require(
-      moveCount < maxMoveCount,
-      "[SendUnitsSystem] You have reached your max move count. Build or upgrade your starmapper to make more moves."
+    LibSend.sendUnits(
+      Arrival({
+        unitCounts: unitCounts,
+        unitTypes: unitTypes,
+        sendType: sendArgs.sendType,
+        arrivalBlock: arrivalBlock,
+        from: playerEntity,
+        to: sendArgs.to,
+        origin: origin,
+        destination: destination
+      })
     );
-
-    ERock originType = RockType.get(origin);
-    ERock destinationType = RockType.get(destination);
-
-    require(
-      originType != ERock.NULL && destinationType != ERock.NULL,
-      "[SendUnitsSystem] Must travel between asteroids or motherlodes"
-    );
-    bytes32 destinationOwner = OwnedBy.get(destination);
-
-    require(origin != destination, "[SendUnitsSystem] Origin and destination cannot be the same.");
-
-    if (originType == ERock.Asteroid) {
-      require(OwnedBy.get(origin) == playerEntity, "[SendUnitsSystem] You can only move from an asteroid you own.");
-    }
-
-    if (destinationType == ERock.Motherlode) {
-      require(originType != ERock.Motherlode, "[SendUnitsSystem] You cannot move between motherlodes.");
-    }
-
-    if (sendType == ESendType.Invade) {
-      require(playerEntity != to, "you cannot invade yourself");
-      require(destinationType == ERock.Motherlode, "you can only invade a motherlode");
-    }
-
-    if (sendType == ESendType.Raid) {
-      require(playerEntity != to && to != 0, "you cannot raid yourself");
-      require(destinationType == ERock.Asteroid, "you can only raid a motherlode");
-    }
-
-    if (sendType == ESendType.Reinforce) {
-      require(destinationOwner == to && to != 0, "you can only reinforce the current owner of a motherlode");
-    }
   }
 
   function sendUnits(
