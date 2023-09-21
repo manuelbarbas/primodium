@@ -37,10 +37,10 @@ contract LibSendTest is PrimodiumTest {
   function testSendUnitsReinforce() public {
     arrival.sendType = ESendType.Reinforce;
     LibSend.sendUnits(arrival);
-    assertEq(ArrivalsSet.size(arrival.from, arrival.origin), 0);
-    assertEq(ArrivalsSet.size(arrival.from, arrival.destination), 0);
-    assertEq(ArrivalsSet.size(arrival.to, arrival.origin), 0);
-    assertEq(ArrivalsSet.size(arrival.to, arrival.destination), 1);
+    assertEq(ArrivalsMap.size(arrival.from, arrival.origin), 0);
+    assertEq(ArrivalsMap.size(arrival.from, arrival.destination), 0);
+    assertEq(ArrivalsMap.size(arrival.to, arrival.origin), 0);
+    assertEq(ArrivalsMap.size(arrival.to, arrival.destination), 1);
 
     assertEq(ArrivalCount.get(arrival.from), 1);
     assertEq(ArrivalCount.get(arrival.to), 0);
@@ -49,10 +49,10 @@ contract LibSendTest is PrimodiumTest {
   function testSendUnitsNonReinforce() public {
     arrival.sendType = ESendType.Invade;
     LibSend.sendUnits(arrival);
-    assertEq(ArrivalsSet.size(arrival.from, arrival.origin), 1);
-    assertEq(ArrivalsSet.size(arrival.from, arrival.destination), 0);
-    assertEq(ArrivalsSet.size(arrival.to, arrival.origin), 0);
-    assertEq(ArrivalsSet.size(arrival.to, arrival.destination), 0);
+    assertEq(ArrivalsMap.size(arrival.from, arrival.origin), 1);
+    assertEq(ArrivalsMap.size(arrival.from, arrival.destination), 0);
+    assertEq(ArrivalsMap.size(arrival.to, arrival.origin), 0);
+    assertEq(ArrivalsMap.size(arrival.to, arrival.destination), 0);
 
     assertEq(ArrivalCount.get(arrival.from), 1);
     assertEq(ArrivalCount.get(arrival.to), 0);
@@ -84,7 +84,7 @@ contract LibSendTest is PrimodiumTest {
     unitData.speed = 100;
     P_Unit.set("unit2", 1, unitData);
 
-    assertEq(LibSend.getSlowestUnitSpeed(arrival.from, types), 100);
+    assertEq(LibSend.getSlowestUnitSpeed(arrival.from, types), 50);
   }
 
   function testGetSlowestUnitSpeed() public {

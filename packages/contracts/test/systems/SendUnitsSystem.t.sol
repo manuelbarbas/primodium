@@ -224,7 +224,7 @@ Check if it triggers _sendUnits correctly.
 
     world.sendUnits(arrivalUnits, ESendType.Invade, originPosition, destinationPosition, bytes32(0));
 
-    assertEq(ArrivalsSet.size(player, origin), 1);
+    assertEq(ArrivalsMap.size(player, origin), 1);
     assertEq(ArrivalCount.get(player), 1);
 
     bytes32[] memory unitTypes = new bytes32[](1);
@@ -243,7 +243,7 @@ Check if it triggers _sendUnits correctly.
       unitTypes: unitTypes
     });
 
-    Arrival memory arrival = ArrivalsSet.getAll(player, origin)[0];
+    Arrival memory arrival = ArrivalsMap.values(player, origin)[0];
     assertEq(arrival, expectedArrival);
   }
 
@@ -259,7 +259,7 @@ Check if it triggers _sendUnits correctly.
 
     world.sendUnits(arrivalUnits, ESendType.Invade, originPosition, destinationPosition, to);
 
-    assertEq(ArrivalsSet.size(player, origin), 1);
+    assertEq(ArrivalsMap.size(player, origin), 1);
     assertEq(ArrivalCount.get(player), 1);
 
     bytes32[] memory unitTypes = new bytes32[](1);
@@ -278,7 +278,7 @@ Check if it triggers _sendUnits correctly.
       unitTypes: unitTypes
     });
 
-    Arrival memory arrival = ArrivalsSet.getAll(player, origin)[0];
+    Arrival memory arrival = ArrivalsMap.values(player, origin)[0];
     assertEq(arrival, expectedArrival);
   }
 
@@ -294,7 +294,7 @@ Check if it triggers _sendUnits correctly.
 
     world.sendUnits(arrivalUnits, ESendType.Reinforce, originPosition, destinationPosition, player);
 
-    assertEq(ArrivalsSet.size(player, destination), 1);
+    assertEq(ArrivalsMap.size(player, destination), 1);
     assertEq(ArrivalCount.get(player), 1);
 
     bytes32[] memory unitTypes = new bytes32[](1);
@@ -313,7 +313,7 @@ Check if it triggers _sendUnits correctly.
       unitTypes: unitTypes
     });
 
-    Arrival memory arrival = ArrivalsSet.getAll(player, destination)[0];
+    Arrival memory arrival = ArrivalsMap.values(player, destination)[0];
     assertEq(arrival, expectedArrival);
   }
 
@@ -329,7 +329,7 @@ Check if it triggers _sendUnits correctly.
 
     world.sendUnits(arrivalUnits, ESendType.Reinforce, originPosition, destinationPosition, to);
 
-    assertEq(ArrivalsSet.size(to, destination), 1);
+    assertEq(ArrivalsMap.size(to, destination), 1);
     assertEq(ArrivalCount.get(player), 1);
 
     bytes32[] memory unitTypes = new bytes32[](1);
@@ -348,7 +348,7 @@ Check if it triggers _sendUnits correctly.
       unitTypes: unitTypes
     });
 
-    Arrival memory arrival = ArrivalsSet.getAll(to, destination)[0];
+    Arrival memory arrival = ArrivalsMap.values(to, destination)[0];
     assertEq(arrival, expectedArrival);
   }
 
@@ -366,7 +366,7 @@ Check if it triggers _sendUnits correctly.
 
     world.sendUnits(arrivalUnits, ESendType.Raid, originPosition, destinationPosition, to);
 
-    assertEq(ArrivalsSet.size(player, origin), 1);
+    assertEq(ArrivalsMap.size(player, origin), 1);
     assertEq(ArrivalCount.get(player), 1);
 
     bytes32[] memory unitTypes = new bytes32[](1);
@@ -385,7 +385,7 @@ Check if it triggers _sendUnits correctly.
       unitTypes: unitTypes
     });
 
-    Arrival memory arrival = ArrivalsSet.getAll(player, origin)[0];
+    Arrival memory arrival = ArrivalsMap.values(player, origin)[0];
     assertEq(arrival, expectedArrival);
   }
 }

@@ -11,7 +11,7 @@ const __dirname = fileURLToPath(import.meta.url);
 const librariesFolder = path.resolve(__dirname, "../../src/libraries");
 
 const prefixes = ["Lib"];
-const suffixes = ["Set", "Queue"];
+const suffixes = ["Set", "Queue", "Map"];
 async function libgen() {
   const config = (await loadConfig()) as StoreConfigWithPrototypes;
   const srcDirectory = await getSrcDirectory();
