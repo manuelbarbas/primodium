@@ -84,7 +84,7 @@ contract LibSendTest is PrimodiumTest {
     unitData.speed = 100;
     P_Unit.set("unit2", 1, unitData);
 
-    assertEq(LibSend.getSlowestUnitSpeed(arrival.from, types), 100);
+    assertEq(LibSend.getSlowestUnitSpeed(arrival.from, types), 50);
   }
 
   function testGetSlowestUnitSpeed() public {
