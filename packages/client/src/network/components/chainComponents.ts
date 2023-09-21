@@ -484,6 +484,147 @@ export const BattleRaidResult = newComponent(
     metadata: { contractId: `${commonIdPrefix}BattleRaidResult` },
   }
 );
+/* -------------------------------------------------------------------------- */
+/*                                   Objective                                   */
+/* -------------------------------------------------------------------------- */
+
+export const P_IsObjective = newBoolComponent(world, {
+  id: "P_IsObjective",
+  metadata: { contractId: `${commonIdPrefix}P_IsObjective` },
+});
+export const HasCompletedObjective = newBoolComponent(world, {
+  id: "HasCompletedObjective",
+  metadata: { contractId: `${commonIdPrefix}HasCompletedObjective` },
+});
+export const HasBuiltBuilding = newBoolComponent(world, {
+  id: "HasBuiltBuilding",
+  metadata: { contractId: `${commonIdPrefix}HasBuiltBuilding` },
+});
+
+export const BuildingCount = newNumberComponent(world, {
+  id: "BuildingCount",
+  metadata: { contractId: `${commonIdPrefix}BuildingCount` },
+});
+
+export const TotalRaid = newNumberComponent(world, {
+  id: "TotalRaid",
+  metadata: { contractId: `${commonIdPrefix}TotalRaid` },
+});
+
+export const TotalMotherlodeMined = newNumberComponent(world, {
+  id: "TotalMotherlodeMined",
+  metadata: { contractId: `${commonIdPrefix}TotalMotherlodeMined` },
+});
+
+export const TotalUnitsDestroyed = newNumberComponent(world, {
+  id: "TotalUnitsDestroyed",
+  metadata: { contractId: `${commonIdPrefix}TotalUnitsDestroyed` },
+});
+
+export const P_HasBuiltBuilding = newComponent(
+  world,
+  {
+    value: Type.Entity,
+  },
+  {
+    id: "P_HasBuiltBuilding",
+    metadata: { contractId: `${commonIdPrefix}P_HasBuiltBuilding` },
+  }
+);
+
+export const P_ObjectiveRequirement = newComponent(
+  world,
+  {
+    value: Type.Entity,
+  },
+  {
+    id: "P_ObjectiveRequirement",
+    metadata: { contractId: `${commonIdPrefix}P_ObjectiveRequirement` },
+  }
+);
+
+export const P_DestroyedUnitsRequirement = newComponent(
+  world,
+  {
+    resource: Type.Entity,
+    maxAmount: Type.Number,
+  },
+  {
+    id: "P_DestroyedUnitsRequirement",
+    metadata: { contractId: `${commonIdPrefix}P_DestroyedUnitsRequirement` },
+  }
+);
+
+export const P_MotherlodeMinedRequirement = newComponent(
+  world,
+  {
+    resource: Type.Entity,
+    maxAmount: Type.Number,
+  },
+  {
+    id: "P_MotherlodeMinedRequirement",
+    metadata: { contractId: `${commonIdPrefix}P_MotherlodeMinedRequirement` },
+  }
+);
+
+export const P_RaidRequirement = newComponent(
+  world,
+  {
+    resource: Type.Entity,
+    maxAmount: Type.Number,
+  },
+  {
+    id: "P_RaidRequirement",
+    metadata: { contractId: `${commonIdPrefix}P_RaidRequirement` },
+  }
+);
+export const P_BuildingCountRequirement = newComponent(
+  world,
+  {
+    resource: Type.Entity,
+    maxAmount: Type.Number,
+  },
+  {
+    id: "P_BuildingCountRequirement",
+    metadata: { contractId: `${commonIdPrefix}P_BuildingCountRequirement` },
+  }
+);
+
+export const P_UnitRequirement = newComponent(
+  world,
+  {
+    resource: Type.Entity,
+    maxAmount: Type.Number,
+  },
+  {
+    id: "P_UnitRequirement",
+    metadata: { contractId: `${commonIdPrefix}P_UnitRequirement` },
+  }
+);
+
+export const P_ResourceReward = newComponent(
+  world,
+  {
+    resource: Type.Entity,
+    maxAmount: Type.Number,
+  },
+  {
+    id: "P_ResourceReward",
+    metadata: { contractId: `${commonIdPrefix}P_ResourceReward` },
+  }
+);
+
+export const P_UnitReward = newComponent(
+  world,
+  {
+    resource: Type.Entity,
+    maxAmount: Type.Number,
+  },
+  {
+    id: "P_UnitReward",
+    metadata: { contractId: `${commonIdPrefix}P_UnitReward` },
+  }
+);
 
 export default {
   GameConfig,
