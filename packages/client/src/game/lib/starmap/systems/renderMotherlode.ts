@@ -27,9 +27,7 @@ import { Send } from "src/network/components/clientComponents";
 import { encodeAndTrimCoord, encodeCoord } from "src/util/encode";
 import { ActiveButton } from "src/util/types";
 import { Coord } from "@latticexyz/utils";
-import { BeltMap } from "@game/constants";
-
-const { DepthLayers } = BeltMap;
+import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 
 export const renderMotherlode = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -47,52 +45,48 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
     const motherlodeData = Motherlode.get(entityId);
     if (!motherlodeData) throw new Error("motherlode data not found");
 
-    const sprite = `motherlode-${
-      MotherlodeTypeNames[motherlodeData.motherlodeType]
-    }-${MotherlodeSizeNames[motherlodeData.size]}`;
+    const sprite =
+      SpriteKeys[
+        `Motherlode${MotherlodeTypeNames[motherlodeData.motherlodeType]}${
+          MotherlodeSizeNames[motherlodeData.size]
+        }` as keyof typeof SpriteKeys
+      ];
 
-    const origin = Send.getOrigin();
-    const destination = Send.getDestination();
-    const owner = OwnedBy.get(entityId)?.value;
+    // const origin = Send.getOrigin();
+    // const destination = Send.getDestination();
+    // const owner = OwnedBy.get(entityId)?.value;
 
-    const originEntity = origin
-      ? ReversePosition.get(encodeCoord(origin))
-      : undefined;
-    const destinationEntity = destination
-      ? ReversePosition.get(encodeCoord(destination))
-      : undefined;
+    // const originEntity = origin
+    //   ? ReversePosition.get(encodeCoord(origin))
+    //   : undefined;
+    // const destinationEntity = destination
+    //   ? ReversePosition.get(encodeCoord(destination))
+    //   : undefined;
 
-    let outline: ReturnType<typeof Outline> | undefined;
+    // let outline: ReturnType<typeof Outline> | undefined;
 
-    if (originEntity?.value === entityId) {
-      outline = Outline({ color: 0x00ffff });
-    } else if (destinationEntity?.value === entityId) {
-      outline = Outline({ color: 0xffa500 });
-    } else if (owner === player) {
-      outline = Outline({ color: 0xffffff });
-    } else outline = Outline({ color: 0x808080 });
+    // if (originEntity?.value === entityId) {
+    //   outline = Outline({ color: 0x00ffff });
+    // } else if (destinationEntity?.value === entityId) {
+    //   outline = Outline({ color: 0xffa500 });
+    // } else if (owner === player) {
+    //   outline = Outline({ color: 0xffffff });
+    // } else outline = Outline({ color: 0x808080 });
 
-    const scale =
-      motherlodeData.size == EMotherlodeSize.SMALL
-        ? 1
-        : motherlodeData.size == EMotherlodeSize.MEDIUM
-        ? 2
-        : 4;
     motherlodeObjectGroup.add("Sprite").setComponents([
       ObjectPosition(
         {
           x: coord.x * tileWidth,
           y: -coord.y * tileHeight,
         },
-        DepthLayers.Asteroid
+        DepthLayers.Building
       ),
-      outline,
+      // outline,
       SetValue({
         originX: 0.5,
         originY: 0.5,
-        scale,
       }),
-      Texture(sprite),
+      Texture(Assets.SpriteAtlas, sprite),
       OnClick(() => {
         const activeButton = Send.get()?.activeButton ?? ActiveButton.NONE;
         if (activeButton === ActiveButton.ORIGIN) {

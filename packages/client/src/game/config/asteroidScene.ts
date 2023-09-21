@@ -1,10 +1,10 @@
 // import { SceneConfig } from "../../types";
 import { SceneConfig, TilesetConfig } from "engine/types";
+import { Scenes, Assets, Tilesets } from "../constants";
 import { animationConfig } from "./animation";
 import { tileAnimationConfig } from "./tileAnimation";
-import asteroidMap from "../../../maps/asteroid_0.7.json";
+import asteroidMap from "../../maps/asteroid_0.7.json";
 import { LayerConfig } from "engine/lib/core/tilemap/types";
-import { Assets, Tilesets } from "@game/constants";
 
 const tilesets: TilesetConfig = {};
 const tilesetNames = [];
@@ -31,8 +31,8 @@ for (const layer of asteroidMap.layers) {
   };
 }
 
-export const beltSceneConfig: SceneConfig = {
-  key: "Belt",
+export const asteroidSceneConfig: SceneConfig = {
+  key: Scenes.Asteroid,
   camera: {
     minZoom: 1,
     maxZoom: 5,
