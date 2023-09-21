@@ -3,17 +3,6 @@ pragma solidity >=0.8.0;
 
 import "test/PrimodiumTest.t.sol";
 
-/* 
-Test when buildingEntity, unit, and count are valid.
-Test when buildingEntity can't produce unitPrototype.
-Test when count is zero.
-Test when count is very high, close to uint256 max.
-Test when the required resources are not available.
-Edge Cases
-Test when buildingEntity or unit is an invalid value.
-Test when playerEntity is an empty bytes32.
-*/
-
 contract TrainUnitsSystemTest is PrimodiumTest {
   bytes32 rock = bytes32("rock");
   bytes32 player;
@@ -95,5 +84,15 @@ contract TrainUnitsSystemTest is PrimodiumTest {
 
     assertEq(ResourceCount.get(player, EResource.Iron), 100);
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 100);
+  }
+
+  function testInvalidBuilding() public {
+    vm.expectRevert(bytes("[TrainUnitsSystem] Building cannot produce unit"));
+    world.trainUnits(bytes32(0), unit, 1);
+  }
+
+  function testInvalidUnit() public {
+    vm.expectRevert();
+    world.trainUnits(building, EUnit(uint8(100)), 1);
   }
 }

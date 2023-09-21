@@ -39,10 +39,6 @@ contract PrimodiumTest is MudTest {
     eve = getUser();
   }
 
-  function toString(bytes32 entity) internal pure returns (string memory) {
-    return string(abi.encodePacked(entity));
-  }
-
   function addressToEntity(address a) internal pure returns (bytes32) {
     return bytes32(uint256(uint160((a))));
   }
