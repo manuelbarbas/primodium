@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 import "codegen/Types.sol";
-import "codegen/Tables.sol";
+import { PositionData } from "codegen/Tables.sol";
 
 struct Bounds {
   int32 minX;

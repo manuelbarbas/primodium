@@ -2,54 +2,9 @@
 pragma solidity >=0.8.0;
 
 import { Arrival } from "src/Types.sol";
-import { SetArrivals, SetItemArrivals1, SetItemArrivals1Data, SetItemArrivals2, SetItemArrivals2Data, SetItemStoredArrivals } from "codegen/Tables.sol";
+import { SetArrivals, SetItemArrivals, SetItemStoredArrivals } from "codegen/Tables.sol";
 
 library ArrivalsSet {
-  /// @notice Encodes Arrival data into two parts
-  /// @param item The Arrival item
-  /// @return item1 Part 1 of Arrival, item2 Part 2 of Arrival
-  function encodeArrivalData(Arrival memory item)
-    private
-    pure
-    returns (SetItemArrivals1Data memory item1, SetItemArrivals2Data memory item2)
-  {
-    item1 = SetItemArrivals1Data({
-      sendType: item.sendType,
-      arrivalBlock: item.arrivalBlock,
-      from: item.from,
-      to: item.to
-    });
-
-    item2 = SetItemArrivals2Data({
-      origin: item.origin,
-      destination: item.destination,
-      unitCounts: item.unitCounts,
-      unitTypes: item.unitTypes
-    });
-  }
-
-  /// @notice Decodes Arrival data from two parts
-  /// @param item1 Part 1 of Arrival
-  /// @param item2 Part 2 of Arrival
-  /// @return The decoded Arrival item
-  function decodeArrivalData(SetItemArrivals1Data memory item1, SetItemArrivals2Data memory item2)
-    private
-    pure
-    returns (Arrival memory)
-  {
-    return
-      Arrival({
-        sendType: item1.sendType,
-        arrivalBlock: item1.arrivalBlock,
-        from: item1.from,
-        to: item1.to,
-        origin: item2.origin,
-        destination: item2.destination,
-        unitCounts: item2.unitCounts,
-        unitTypes: item2.unitTypes
-      });
-  }
-
   /// @notice Calculates the key for an Arrival item
   /// @param item The Arrival item
   /// @return The key of the Arrival item
@@ -82,9 +37,7 @@ library ArrivalsSet {
     if (has(player, asteroid, item)) return;
     bytes32 key = getKey(item);
     SetArrivals.push(player, asteroid, key);
-    (SetItemArrivals1Data memory item1, SetItemArrivals2Data memory item2) = encodeArrivalData(item);
-    SetItemArrivals1.set(player, asteroid, key, item1);
-    SetItemArrivals2.set(player, asteroid, key, item2);
+    SetItemArrivals.set(player, asteroid, key, abi.encode(item));
     SetItemStoredArrivals.set(player, asteroid, key, true, SetArrivals.length(player, asteroid) - 1);
   }
 
@@ -104,9 +57,8 @@ library ArrivalsSet {
     bytes32[] memory keys = getAllKeys(player, asteroid);
     items = new Arrival[](keys.length);
     for (uint256 i = 0; i < keys.length; i++) {
-      SetItemArrivals1Data memory item1 = SetItemArrivals1.get(player, asteroid, keys[i]);
-      SetItemArrivals2Data memory item2 = SetItemArrivals2.get(player, asteroid, keys[i]);
-      items[i] = decodeArrivalData(item1, item2);
+      bytes memory encoding = SetItemArrivals.get(player, asteroid, keys[i]);
+      items[i] = abi.decode(encoding, (Arrival));
     }
   }
 
@@ -128,8 +80,7 @@ library ArrivalsSet {
     bytes32 replacement = SetArrivals.getItem(player, asteroid, SetArrivals.length(player, asteroid) - 1);
     SetArrivals.update(player, asteroid, index, replacement);
     SetArrivals.pop(player, asteroid);
-    SetItemArrivals1.deleteRecord(player, asteroid, key);
-    SetItemArrivals2.deleteRecord(player, asteroid, key);
+    SetItemArrivals.deleteRecord(player, asteroid, key);
     SetItemStoredArrivals.deleteRecord(player, asteroid, key);
   }
 
@@ -147,8 +98,7 @@ library ArrivalsSet {
   function clear(bytes32 player, bytes32 asteroid) internal {
     for (uint256 i = 0; i < SetArrivals.length(player, asteroid); i++) {
       bytes32 key = SetArrivals.getItem(player, asteroid, SetArrivals.length(player, asteroid) - 1);
-      SetItemArrivals1.deleteRecord(player, asteroid, key);
-      SetItemArrivals2.deleteRecord(player, asteroid, key);
+      SetItemArrivals.deleteRecord(player, asteroid, key);
       SetItemStoredArrivals.deleteRecord(player, asteroid, key);
     }
     SetArrivals.deleteRecord(player, asteroid);
