@@ -230,6 +230,9 @@ export const BlockType = {
   AnvilLightDrone: keccak256("unit.AnvilDrone") as EntityID,
   AegisDrone: keccak256("unit.AegisDrone") as EntityID,
   MiningVessel: keccak256("unit.MiningVessel") as EntityID,
+
+  //Starmap
+  Asteroid: keccak256("spacerock.Asteroid") as EntityID,
 };
 
 export const BlockIdToKey = Object.entries(BlockType).reduce<{
@@ -512,17 +515,17 @@ export const KeyImages = new Map<Key, string>([
 ]);
 
 export const MotherlodeSizeNames: Record<number, string> = {
-  [EMotherlodeSize.SMALL]: "small",
-  [EMotherlodeSize.MEDIUM]: "medium",
-  [EMotherlodeSize.LARGE]: "large",
+  [EMotherlodeSize.SMALL]: "Small",
+  [EMotherlodeSize.MEDIUM]: "Medium",
+  [EMotherlodeSize.LARGE]: "Large",
 };
 
 // do the same for types
 export const MotherlodeTypeNames: Record<number, string> = {
-  [EMotherlodeType.TITANIUM]: "titanium",
-  [EMotherlodeType.IRIDIUM]: "iridium",
-  [EMotherlodeType.PLATINUM]: "platinum",
-  [EMotherlodeType.KIMBERLITE]: "kimberlite",
+  [EMotherlodeType.TITANIUM]: "Titanium",
+  [EMotherlodeType.IRIDIUM]: "Iridium",
+  [EMotherlodeType.PLATINUM]: "Platinum",
+  [EMotherlodeType.KIMBERLITE]: "Kimberlite",
 };
 
 export const ResourceStorages = [

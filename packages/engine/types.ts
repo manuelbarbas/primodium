@@ -47,10 +47,10 @@ export interface SceneConfig {
     chunkSize: number;
     tileWidth: number;
     tileHeight: number;
-    tilesets: TilesetConfig;
-    layerConfig: Parameters<typeof createAnimatedTilemap>[0]["layerConfig"];
+    tilesets?: TilesetConfig;
+    layerConfig?: Parameters<typeof createAnimatedTilemap>[0]["layerConfig"];
     backgroundTile?: [number, ...number[]];
-    animationInterval: number;
+    animationInterval?: number;
   };
 }
 
