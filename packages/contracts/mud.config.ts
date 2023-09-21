@@ -100,6 +100,11 @@ export const config = mudConfig({
       },
     },
 
+    MaxMoves: {
+      keySchema: { entity: "bytes32" },
+      schema: "uint256",
+    },
+
     /* ---------------------------------- Rocks --------------------------------- */
     P_Asteroid: {
       keySchema: {},
@@ -351,6 +356,32 @@ export const config = mudConfig({
     UnitCount: {
       keySchema: { player: "bytes32", rock: "bytes32", unit: "bytes32" },
       schema: "uint256",
+    },
+    /* ----------------------- Sending and Battling Units ----------------------- */
+    SetArrivals: {
+      keySchema: { entity: "bytes32" },
+      schema: { itemKeys: "bytes32[]" },
+    },
+
+    SetItemStoredArrivals: {
+      keySchema: { entity: "bytes32", arrivalEntity: "bytes32" },
+      schema: {
+        stored: "bool",
+        index: "uint256",
+      },
+    },
+    SetItemArrivals: {
+      keySchema: { entity: "bytes32", arrivalEntity: "bytes32" },
+      schema: {
+        sendType: "ESendType",
+        unitCounts: "uint256[]",
+        unitTypes: "bytes32[]",
+        arrivalBlock: "uint256",
+        from: "bytes32",
+        to: "bytes32",
+        origin: "bytes32",
+        destination: "bytes32",
+      },
     },
   },
 });

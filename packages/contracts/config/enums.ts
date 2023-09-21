@@ -60,7 +60,7 @@ export const MUDEnums = {
     "U_Electricity",
     "U_Housing",
     "U_Vessel",
-    "U_MoveCount",
+    "U_MaxMoves",
 
     "LENGTH",
   ],
@@ -69,4 +69,5 @@ export const MUDEnums = {
   ESize: ["NULL", "Small", "Medium", "Large", "LENGTH"],
 
   EUnit: ["NULL", "MiningVessel", "AegisDrone", "HammerDrone", "StingerDrone", "AnvilDrone", "LENGTH"],
+  ESendType: ["NULL", "Reinforce", "Invade", "Raid", "LENGTH"],
 };
