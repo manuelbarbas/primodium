@@ -18,7 +18,7 @@ struct PositionData2D {
   int32 y;
 }
 
-function toString(bytes32 entity) returns (string memory) {
+function toString(bytes32 entity) pure returns (string memory) {
   return string(abi.encodePacked(entity));
 }
 
