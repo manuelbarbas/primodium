@@ -65,9 +65,9 @@ library LibMotherlode {
 
   /// @dev Gets raw prototype for a motherlode
   /// @param entity Entity to fetch prototype for
-  /// @return size
-  /// @return motherlodeType
-  /// @return cooldownSeconds
+  /// @return size raw id
+  /// @return motherlodeType raw id
+  /// @return cooldownSeconds between 0 and 63
   function getMotherlodeRawPrototype(bytes32 entity)
     internal
     pure
