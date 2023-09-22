@@ -545,10 +545,8 @@ export const P_ObjectiveRequirement = newComponent(
 
 export const P_DestroyedUnitsRequirement = newComponent(
   world,
-  {
-    resource: Type.Entity,
-    maxAmount: Type.Number,
-  },
+  { resources: Type.EntityArray, values: Type.NumberArray },
+
   {
     id: "P_DestroyedUnitsRequirement",
     metadata: { contractId: `${commonIdPrefix}P_DestroyedUnitsRequirement` },
@@ -557,10 +555,8 @@ export const P_DestroyedUnitsRequirement = newComponent(
 
 export const P_MotherlodeMinedRequirement = newComponent(
   world,
-  {
-    resource: Type.Entity,
-    maxAmount: Type.Number,
-  },
+  { resources: Type.EntityArray, values: Type.NumberArray },
+
   {
     id: "P_MotherlodeMinedRequirement",
     metadata: { contractId: `${commonIdPrefix}P_MotherlodeMinedRequirement` },
@@ -569,10 +565,8 @@ export const P_MotherlodeMinedRequirement = newComponent(
 
 export const P_RaidRequirement = newComponent(
   world,
-  {
-    resource: Type.Entity,
-    maxAmount: Type.Number,
-  },
+  { resources: Type.EntityArray, values: Type.NumberArray },
+
   {
     id: "P_RaidRequirement",
     metadata: { contractId: `${commonIdPrefix}P_RaidRequirement` },
@@ -580,10 +574,8 @@ export const P_RaidRequirement = newComponent(
 );
 export const P_BuildingCountRequirement = newComponent(
   world,
-  {
-    resource: Type.Entity,
-    maxAmount: Type.Number,
-  },
+  { resources: Type.EntityArray, values: Type.NumberArray },
+
   {
     id: "P_BuildingCountRequirement",
     metadata: { contractId: `${commonIdPrefix}P_BuildingCountRequirement` },
@@ -592,10 +584,8 @@ export const P_BuildingCountRequirement = newComponent(
 
 export const P_UnitRequirement = newComponent(
   world,
-  {
-    resource: Type.Entity,
-    maxAmount: Type.Number,
-  },
+  { resources: Type.EntityArray, values: Type.NumberArray },
+
   {
     id: "P_UnitRequirement",
     metadata: { contractId: `${commonIdPrefix}P_UnitRequirement` },
@@ -604,10 +594,8 @@ export const P_UnitRequirement = newComponent(
 
 export const P_ResourceReward = newComponent(
   world,
-  {
-    resource: Type.Entity,
-    maxAmount: Type.Number,
-  },
+  { resources: Type.EntityArray, values: Type.NumberArray },
+
   {
     id: "P_ResourceReward",
     metadata: { contractId: `${commonIdPrefix}P_ResourceReward` },
@@ -616,10 +604,8 @@ export const P_ResourceReward = newComponent(
 
 export const P_UnitReward = newComponent(
   world,
-  {
-    resource: Type.Entity,
-    maxAmount: Type.Number,
-  },
+  { resources: Type.EntityArray, values: Type.NumberArray },
+
   {
     id: "P_UnitReward",
     metadata: { contractId: `${commonIdPrefix}P_UnitReward` },
