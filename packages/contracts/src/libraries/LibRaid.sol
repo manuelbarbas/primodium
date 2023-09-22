@@ -17,6 +17,7 @@ import { ID as S_ResolveRaidUnitsSystemID } from "systems/S_ResolveRaidUnitsSyst
 import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
 import { P_UnitCargoComponent, ID as P_UnitCargoComponentID } from "components/P_UnitCargoComponent.sol";
 import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
+import { P_RaidRequirementComponent, ID as P_RaidRequirementComponentID } from "components/P_RaidRequirementComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { BattleSpaceRockComponent, ID as BattleSpaceRockComponentID } from "components/BattleSpaceRockComponent.sol";
 import { BattleDefenderComponent, ID as BattleDefenderComponentID } from "components/BattleDefenderComponent.sol";
@@ -26,7 +27,7 @@ import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { BattleRaidResultComponent, ID as BattleRaidResultComponentID } from "components/BattleRaidResultComponent.sol";
 import { BattleBlockNumberComponent, ID as BattleBlockNumberComponentID } from "components/BattleBlockNumberComponent.sol";
-
+import { TotalRaidComponent, ID as TotalRaidComponentID } from "components/TotalRaidComponent.sol";
 import { RaidResult } from "src/types.sol";
 
 import { ID as UpdateUnclaimedResourcesSystemID } from "systems/S_UpdateUnclaimedResourcesSystem.sol";
@@ -42,7 +43,7 @@ import { LibBattle } from "libraries/LibBattle.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 // types
-import { Coord, Arrival, ArrivalUnit, BattleParticipant, ESendType, BattleResult, ESpaceRockType } from "src/types.sol";
+import { Coord, Arrival, ArrivalUnit, BattleParticipant, ESendType, BattleResult, ESpaceRockType, ResourceValues } from "src/types.sol";
 
 library LibRaid {
   function raid(IWorld world, uint256 invader, uint256 rockEntity) internal {
@@ -201,6 +202,7 @@ library LibRaid {
     BattleParticipant memory attacker = BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(
       battleEntity
     );
+    TotalRaidComponent totalRaidComponent = TotalRaidComponent(world.getComponent(TotalRaidComponentID));
     for (uint256 i = 0; i < defenderResources.length; i++) {
       uint256 raidAmount = (uint256(totalCargo) * uint256(defenderResources[i]));
       raidAmount = raidAmount / totalResources;
@@ -210,9 +212,36 @@ library LibRaid {
       if (raidAmount == 0) continue;
       raidResult.defenderValuesBeforeRaid[i] = defenderResources[i];
       raidResult.raidedAmount[i] = uint32(raidAmount);
+      LibMath.add(
+        totalRaidComponent,
+        LibEncode.hashKeyEntity(resourceIds[i], attacker.participantEntity),
+        uint32(raidAmount)
+      );
       LibStorage.addResourceToStorage(world, attacker.participantEntity, resourceIds[i], uint32(raidAmount));
       LibStorage.reduceResourceFromStorage(world, defender.participantEntity, resourceIds[i], uint32(raidAmount));
     }
     BattleRaidResultComponent(world.getComponent(BattleRaidResultComponentID)).set(battleEntity, raidResult);
+  }
+
+  function checkRaidRequirement(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 objectiveEntity
+  ) internal view returns (bool) {
+    P_RaidRequirementComponent raidRequirementComponent = P_RaidRequirementComponent(
+      world.getComponent(P_RaidRequirementComponentID)
+    );
+    if (!raidRequirementComponent.has(objectiveEntity)) return true;
+    TotalRaidComponent totalRaidComponent = TotalRaidComponent(world.getComponent(TotalRaidComponentID));
+    ResourceValues memory raidRequirements = raidRequirementComponent.getValue(objectiveEntity);
+    for (uint256 i = 0; i < raidRequirements.resources.length; i++) {
+      if (
+        LibMath.getSafe(totalRaidComponent, LibEncode.hashKeyEntity(raidRequirements.resources[i], playerEntity)) <
+        raidRequirements.values[i]
+      ) {
+        return false;
+      }
+    }
+    return true;
   }
 }

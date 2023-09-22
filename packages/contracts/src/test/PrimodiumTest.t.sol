@@ -5,7 +5,7 @@ import "std-contracts/test/MudTest.t.sol";
 import { Deploy } from "./Deploy.sol";
 import "solecs/SingletonID.sol";
 
-import { addressToEntity, getAddressById } from "systems/internal/PrimodiumSystem.sol";
+import { addressToEntity, getAddressById, entityToAddress } from "systems/internal/PrimodiumSystem.sol";
 
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
