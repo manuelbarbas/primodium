@@ -9,6 +9,7 @@ import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } fr
 
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { HasCompletedObjectiveComponent, ID as HasCompletedObjectiveComponentID } from "components/HasCompletedObjectiveComponent.sol";
+import { P_SpawnPirateAsteroidComponent, ID as P_SpawnPirateAsteroidComponentID } from "components/P_SpawnPirateAsteroidComponent.sol";
 import { P_UnitLevelUpgradeComponent, ID as P_UnitLevelUpgradeComponentID } from "components/P_UnitLevelUpgradeComponent.sol";
 import { LibResearch } from "libraries/LibResearch.sol";
 import { LibResource } from "libraries/LibResource.sol";
@@ -21,10 +22,10 @@ import { LibReward } from "libraries/LibReward.sol";
 import { LibRaid } from "libraries/LibRaid.sol";
 import { LibUpdateSpaceRock } from "libraries/LibUpdateSpaceRock.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
-import { LibPirateAsteroid } from "libraries/LibPirateAsteroid.sol";
 import { ResourceValue } from "../types.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
-import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
+import { ID as S_SpawnPirateAsteroidSystemID } from "./S_SpawnPirateAsteroidSystem.sol";
+import { ID as S_ReceiveRewardsSystemID } from "./S_ReceiveRewardsSystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.ClaimObjective"));
 
@@ -128,9 +129,14 @@ contract ClaimObjectiveSystem is System {
 
     hasCompletedObjective.set(LibEncode.hashKeyEntity(objective, playerEntity));
 
-    LibReward.receiveRewards(world, playerEntity, objective);
+    IOnEntitySubsystem(getAddressById(world.systems(), S_ReceiveRewardsSystemID)).executeTyped(msg.sender, objective);
 
-    LibPirateAsteroid.createAsteroid(world, playerEntity, objective);
+    if (P_SpawnPirateAsteroidComponent(world.getComponent(P_SpawnPirateAsteroidComponentID)).has(objective)) {
+      IOnEntitySubsystem(getAddressById(world.systems(), S_SpawnPirateAsteroidSystemID)).executeTyped(
+        msg.sender,
+        objective
+      );
+    }
 
     return abi.encode(true);
   }

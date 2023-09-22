@@ -156,6 +156,14 @@
       "writeAccess": ["*"]
     },
     {
+      "name": "S_ReceiveRewardsSystem",
+      "writeAccess": ["*"]
+    },
+    {
+      "name": "S_SpawnPirateAsteroidSystem",
+      "writeAccess": ["*"]
+    },
+    {
       "name": "S_ResolveBattleSystem",
       "writeAccess": ["*"]
     },
