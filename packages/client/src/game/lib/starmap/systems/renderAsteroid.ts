@@ -12,7 +12,7 @@ import {
   OnClick,
   SetValue,
 } from "../../common/object-components/common";
-import { Outline, Texture } from "../../common/object-components/sprite";
+import { Texture } from "../../common/object-components/sprite";
 import {
   AsteroidType,
   Level,
@@ -26,9 +26,14 @@ import { Send } from "src/network/components/clientComponents";
 import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 import { ESpaceRockType } from "src/util/web3/types";
 import { Coord } from "@latticexyz/utils";
-import { encodeAndTrimCoord, encodeCoord } from "src/util/encode";
+import { encodeAndTrimCoord } from "src/util/encode";
 import { ActiveButton } from "src/util/types";
-import { Assets, DepthLayers, EntityIDtoSpriteKey } from "@game/constants";
+import {
+  Assets,
+  DepthLayers,
+  EntityIDtoSpriteKey,
+  SpriteKeys,
+} from "@game/constants";
 import { BlockType } from "src/util/constants";
 import { clampedIndex } from "src/util/common";
 import { SingletonID } from "@latticexyz/network";
@@ -58,26 +63,7 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
       "asteroid_" + entityId
     );
 
-    // const origin = Send.getOrigin();
-    // const destination = Send.getDestination();
-    // const owner = OwnedBy.get(entityId)?.value;
-
-    // const originEntity = origin
-    //   ? ReversePosition.get(encodeCoord(origin))
-    //   : undefined;
-    // const destinationEntity = destination
-    //   ? ReversePosition.get(encodeCoord(destination))
-    //   : undefined;
-
-    // if (originEntity?.value === entityId) {
-    //   outline = Outline({ color: 0x00ffff });
-    // } else if (destinationEntity?.value === entityId) {
-    //   outline = Outline({ color: 0xffa500 });
-    // } else if (owner === player) {
-    //   outline = Outline({ color: 0x00ff00 });
-    // } else outline = Outline({ color: 0xff0000 });
-
-    asteroidObjectGroup.add("Sprite").setComponents([
+    const sharedComponents = [
       ObjectPosition(
         {
           x: coord.x * tileWidth,
@@ -89,6 +75,10 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
         originX: 0.5,
         originY: 0.5,
       }),
+    ];
+
+    asteroidObjectGroup.add("Sprite").setComponents([
+      ...sharedComponents,
       Texture(
         Assets.SpriteAtlas,
         EntityIDtoSpriteKey[BlockType.Asteroid][
@@ -111,6 +101,20 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
         Send.update({ activeButton: ActiveButton.NONE });
       }),
     ]);
+
+    const outlineSprite =
+      SpriteKeys[
+        `Asteroid${
+          ownedBy === player ? "Player" : "Enemy"
+        }` as keyof typeof SpriteKeys
+      ];
+
+    asteroidObjectGroup
+      .add("Sprite")
+      .setComponents([
+        ...sharedComponents,
+        Texture(Assets.SpriteAtlas, outlineSprite),
+      ]);
   };
 
   const query = [

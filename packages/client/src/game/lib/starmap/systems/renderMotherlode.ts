@@ -22,9 +22,9 @@ import {
 } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
 import { MotherlodeSizeNames, MotherlodeTypeNames } from "src/util/constants";
-import { EMotherlodeSize, ESpaceRockType } from "src/util/web3/types";
+import { ESpaceRockType } from "src/util/web3/types";
 import { Send } from "src/network/components/clientComponents";
-import { encodeAndTrimCoord, encodeCoord } from "src/util/encode";
+import { encodeAndTrimCoord } from "src/util/encode";
 import { ActiveButton } from "src/util/types";
 import { Coord } from "@latticexyz/utils";
 import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
@@ -52,28 +52,7 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
         }` as keyof typeof SpriteKeys
       ];
 
-    // const origin = Send.getOrigin();
-    // const destination = Send.getDestination();
-    // const owner = OwnedBy.get(entityId)?.value;
-
-    // const originEntity = origin
-    //   ? ReversePosition.get(encodeCoord(origin))
-    //   : undefined;
-    // const destinationEntity = destination
-    //   ? ReversePosition.get(encodeCoord(destination))
-    //   : undefined;
-
-    // let outline: ReturnType<typeof Outline> | undefined;
-
-    // if (originEntity?.value === entityId) {
-    //   outline = Outline({ color: 0x00ffff });
-    // } else if (destinationEntity?.value === entityId) {
-    //   outline = Outline({ color: 0xffa500 });
-    // } else if (owner === player) {
-    //   outline = Outline({ color: 0xffffff });
-    // } else outline = Outline({ color: 0x808080 });
-
-    motherlodeObjectGroup.add("Sprite").setComponents([
+    const sharedComponents = [
       ObjectPosition(
         {
           x: coord.x * tileWidth,
@@ -86,6 +65,10 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
         originX: 0.5,
         originY: 0.5,
       }),
+    ];
+
+    motherlodeObjectGroup.add("Sprite").setComponents([
+      ...sharedComponents,
       Texture(Assets.SpriteAtlas, sprite),
       OnClick(() => {
         const activeButton = Send.get()?.activeButton ?? ActiveButton.NONE;
@@ -100,12 +83,30 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
         Send.update({ activeButton: ActiveButton.NONE });
       }),
     ]);
+
+    const ownedBy = OwnedBy.get(entityId)?.value;
+
+    const outlineSprite =
+      SpriteKeys[
+        `Motherlode${
+          !ownedBy ? (ownedBy === player ? "Player" : "Enemy") : "Neutral"
+        }${MotherlodeSizeNames[motherlodeData.size]}` as keyof typeof SpriteKeys
+      ];
+
+    motherlodeObjectGroup
+      .add("Sprite")
+      .setComponents([
+        ...sharedComponents,
+        Texture(Assets.SpriteAtlas, outlineSprite),
+      ]);
   };
+
   const query = [
     Has(AsteroidType),
     Has(Position),
     HasValue(AsteroidType, { value: ESpaceRockType.Motherlode }),
   ];
+
   defineEnterSystem(gameWorld, query, ({ entity }) => {
     const entityId = world.entities[entity];
     const coord = Position.get(entityId);
