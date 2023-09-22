@@ -129,7 +129,7 @@ contract LibSendTest is PrimodiumTest {
     return arrival;
   }
 
-  function testGetarrivalTime(
+  function testgetArrivalTime(
     uint256 moveSpeed,
     uint256 distance,
     uint256 unitSpeed
@@ -145,7 +145,7 @@ contract LibSendTest is PrimodiumTest {
 
     uint256 expected = block.timestamp + ((distance * 100 * 100) / (moveSpeed * unitSpeed));
     assertEq(
-      LibSend.getarrivalTime(
+      LibSend.getArrivalTime(
         Position.get(testArrival.origin),
         Position.get(testArrival.destination),
         testArrival.from,
@@ -155,9 +155,9 @@ contract LibSendTest is PrimodiumTest {
     );
   }
 
-  function testFailGetarrivalTimeSpeedZero() public {
+  function testFailGetArrivalTimeSpeedZero() public {
     vm.expectRevert();
-    LibSend.getarrivalTime(
+    LibSend.getArrivalTime(
       Position.get(arrival.origin),
       Position.get(arrival.destination),
       arrival.from,
