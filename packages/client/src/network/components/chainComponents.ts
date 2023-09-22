@@ -689,4 +689,22 @@ export default {
   BattleResult,
   BattleBlockNumber,
   BattleRaidResult,
+
+  //Objectives
+  P_IsObjective,
+  P_HasBuiltBuilding,
+  P_ObjectiveRequirement,
+  P_DestroyedUnitsRequirement,
+  P_MotherlodeMinedRequirement,
+  P_RaidRequirement,
+  P_BuildingCountRequirement,
+  P_UnitRequirement,
+  P_ResourceReward,
+  P_UnitReward,
+  HasCompletedObjective,
+  HasBuiltBuilding,
+  BuildingCount,
+  TotalRaid,
+  TotalMotherlodeMined,
+  TotalUnitsDestroyed,
 };

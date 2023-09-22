@@ -1,4 +1,4 @@
-import { EntityID, Has } from "@latticexyz/recs";
+import { EntityID, Has, HasValue } from "@latticexyz/recs";
 import {
   Arrival,
   HasCompletedObjective,
@@ -30,6 +30,7 @@ import { claimObjective } from "src/util/web3/claimObjective";
 import { useEntityQuery } from "@latticexyz/react";
 import { world } from "src/network/world";
 import { hashAndTrimKeyEntity } from "src/util/encode";
+import { getBlockTypeName } from "src/util/common";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -102,6 +103,7 @@ export const ClaimObjectiveButton: React.FC<{
 export const Objective: React.FC<{
   objective: EntityID;
 }> = ({ objective }) => {
+  const objectiveName = getBlockTypeName(objective);
   return (
     <div className="flex items-center justify-between w-full border rounded-md border-slate-700 bg-slate-800 ">
       <div className="flex gap-1 items-center">
@@ -114,35 +116,43 @@ export const Objective: React.FC<{
           </div>
         }
         <LabeledValue label="Objective: ">
-          <p>[getBlockTypeName(objective)]</p>
+          <p>{objectiveName}</p>
         </LabeledValue>
       </div>
       <div className="text-right mr-2">
-        (
-        <ClaimObjectiveButton objectiveEntity={objective} />)
+        <ClaimObjectiveButton objectiveEntity={objective} />
       </div>
     </div>
   );
 };
 
-export const UnclaimedObjective: React.FC<{ user: EntityID }> = ({ user }) => {
-  const objectives = useEntityQuery([Has(P_IsObjective)]);
+export const UnclaimedObjective: React.FC<{ user: EntityID }> = () => {
+  const objectives = useEntityQuery(
+    [HasValue(P_IsObjective, { value: true })],
+    {
+      updateOnValueChange: true,
+    }
+  );
 
-  const unclaimedObjectives = useMemo(() => {
-    return objectives.filter((objective) => {
-      return getIsObjectiveAvailable(world.entities[objective]);
-    });
-  }, [objectives]);
+  console.log("objective count: ", objectives.length);
+  const player = Account.use()?.value ?? SingletonID;
 
   return (
     <div className="w-full text-xs space-y-2 h-full overflow-y-auto">
-      {unclaimedObjectives.length === 0 ? (
+      {objectives.length === 0 ? (
         <div className="w-full bg-slate-800 border rounded-md border-slate-700 flex items-center justify-center h-12 font-bold">
           <p className="opacity-50">NO AVAILABLE OBJECTIVES</p>
         </div>
       ) : (
-        unclaimedObjectives.map((objective, i) => {
-          if (!objective) return null;
+        objectives.map((objective, i) => {
+          const isAvailable = getIsObjectiveAvailable(
+            world.entities[objective]
+          );
+          const claimed =
+            HasCompletedObjective.get(
+              hashAndTrimKeyEntity(world.entities[objective], player)
+            )?.value ?? false;
+          if (!objective || !isAvailable || claimed) return null;
           return <Objective key={i} objective={world.entities[objective]} />;
         })
       )}
@@ -150,25 +160,26 @@ export const UnclaimedObjective: React.FC<{ user: EntityID }> = ({ user }) => {
   );
 };
 
-export const ClaimedObjective: React.FC<{ user: EntityID }> = ({ user }) => {
-  const objectives = useEntityQuery([Has(P_IsObjective)]);
+export const ClaimedObjective: React.FC<{ user: EntityID }> = () => {
+  const objectives = useEntityQuery([Has(P_IsObjective)], {
+    updateOnValueChange: true,
+  });
 
-  const player = Account.use(user)?.value ?? SingletonID;
-  const claimedObjectives = useMemo(() => {
-    return objectives.filter((objective) => {
-      return HasCompletedObjective.get(hashAndTrimKeyEntity(objective, player));
-    });
-  }, [objectives]);
+  const player = Account.use()?.value ?? SingletonID;
 
   return (
     <div className="w-full text-xs space-y-2 h-full overflow-y-auto">
-      {claimedObjectives.length === 0 ? (
+      {objectives.length === 0 ? (
         <div className="w-full bg-slate-800 border rounded-md border-slate-700 flex items-center justify-center h-12 font-bold">
           <p className="opacity-50">NO COMPLETED OBJECTIVES</p>
         </div>
       ) : (
-        claimedObjectives.map((objective, i) => {
-          if (!objective) return null;
+        objectives.map((objective, i) => {
+          const claimed =
+            HasCompletedObjective.get(
+              hashAndTrimKeyEntity(world.entities[objective], player)
+            )?.value ?? false;
+          if (!objective || !claimed) return null;
           return <Objective key={i} objective={world.entities[objective]} />;
         })
       )}
