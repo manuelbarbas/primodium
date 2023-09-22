@@ -12,6 +12,7 @@ import {
   checkDestroyedUnitsRequirement,
 } from "./requirements";
 import { EntityID } from "@latticexyz/recs";
+import { hasEnoughResources } from "./resource";
 
 export function getIsObjectiveAvailable(entityID: EntityID) {
   return (
@@ -23,6 +24,7 @@ export function getIsObjectiveAvailable(entityID: EntityID) {
 export function getCanClaimObjective(entityID: EntityID) {
   return (
     getIsObjectiveAvailable(entityID) &&
+    hasEnoughResources(entityID, 1) &&
     checkResearcheRequirement(entityID) &&
     checkProductionRequirement(entityID) &&
     checkMaxUtilityResourceReqs(entityID) &&

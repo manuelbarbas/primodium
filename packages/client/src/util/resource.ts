@@ -221,6 +221,7 @@ export function getFullResourceCount(
 
 export function hasEnoughResources(entityId: EntityID, count = 1) {
   const recipe = getRecipe(entityId);
+  if (!recipe) return true;
 
   const resourceAmounts = recipe.map((resource) => {
     return getFullResourceCount(resource.id, resource.type);
