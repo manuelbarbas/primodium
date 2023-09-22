@@ -282,6 +282,18 @@ export const BlockType = {
   DebugUnitsRewardObjectiveID: keccak256(
     "block.DebugUnitsRewardObjectiveID"
   ) as EntityID,
+
+  DebugSpawnPirateAsteroid: keccak256(
+    "block.DebugSpawnPirateAsteroid"
+  ) as EntityID,
+
+  DebugSpawnPirateAsteroidObjective: keccak256(
+    "block.DebugSpawnPirateAsteroidObjective"
+  ) as EntityID,
+
+  DebugDefeatedPirateAsteroidObjective: keccak256(
+    "block.DebugDefeatedPirateAsteroidObjective"
+  ) as EntityID,
 };
 
 export const BlockIdToKey = Object.entries(BlockType).reduce<{
