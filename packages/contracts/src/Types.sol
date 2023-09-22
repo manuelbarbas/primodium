@@ -18,7 +18,7 @@ struct ArrivalUnit {
 
 struct Arrival {
   ESendType sendType;
-  uint256 arrivalBlock;
+  uint256 arrivalTime;
   bytes32 from;
   bytes32 to;
   bytes32 origin;

@@ -18,4 +18,12 @@ contract ReinforceSystem is PrimodiumSystem {
 
     LibReinforce.reinforce(playerEntity, rockEntity, arrival);
   }
+
+  function recallAll(bytes32 rockEntity) public {
+    LibReinforce.recallAllReinforcements(addressToEntity(_msgSender()), rockEntity);
+  }
+
+  function recall(bytes32 rockEntity, bytes32 arrivalEntity) public {
+    LibReinforce.recallReinforcement(addressToEntity(_msgSender()), rockEntity, arrivalEntity);
+  }
 }

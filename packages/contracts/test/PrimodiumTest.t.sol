@@ -72,7 +72,7 @@ contract PrimodiumTest is MudTest {
 
   function assertEq(Arrival memory a, Arrival memory b) internal {
     assertEq(uint8(a.sendType), uint8(b.sendType), "[assertEq]: sendType doesn't match");
-    assertEq(a.arrivalBlock, b.arrivalBlock, "[assertEq]: arrivalBlock doesn't match");
+    assertEq(a.arrivalTime, b.arrivalTime, "[assertEq]: arrivalTime doesn't match");
     assertEq(toString(a.from), toString(b.from), "[assertEq]: from doesn't match");
     assertEq(toString(a.to), toString(b.to), "[assertEq]: to doesn't match");
     assertEq(toString(a.origin), toString(b.origin), "[assertEq]: origin doesn't match");

@@ -37,7 +37,7 @@ library ArrivalsMap {
     return abi.decode(encoding, (Arrival));
   }
 
-  function keys(bytes32 player, bytes32 asteroid) private view returns (bytes32[] memory) {
+  function keys(bytes32 player, bytes32 asteroid) internal view returns (bytes32[] memory) {
     return MapArrivals.get(player, asteroid);
   }
 

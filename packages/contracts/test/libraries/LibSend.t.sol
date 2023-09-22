@@ -10,7 +10,7 @@ contract LibSendTest is PrimodiumTest {
   Arrival arrival =
     Arrival({
       sendType: ESendType.Invade,
-      arrivalBlock: 2,
+      arrivalTime: 2,
       from: "from",
       to: "to",
       origin: "origin",
@@ -129,7 +129,7 @@ contract LibSendTest is PrimodiumTest {
     return arrival;
   }
 
-  function testGetArrivalBlock(
+  function testGetarrivalTime(
     uint256 moveSpeed,
     uint256 distance,
     uint256 unitSpeed
@@ -145,7 +145,7 @@ contract LibSendTest is PrimodiumTest {
 
     uint256 expected = block.timestamp + ((distance * 100 * 100) / (moveSpeed * unitSpeed));
     assertEq(
-      LibSend.getArrivalBlock(
+      LibSend.getarrivalTime(
         Position.get(testArrival.origin),
         Position.get(testArrival.destination),
         testArrival.from,
@@ -155,9 +155,9 @@ contract LibSendTest is PrimodiumTest {
     );
   }
 
-  function testFailGetArrivalBlockSpeedZero() public {
+  function testFailGetarrivalTimeSpeedZero() public {
     vm.expectRevert();
-    LibSend.getArrivalBlock(
+    LibSend.getarrivalTime(
       Position.get(arrival.origin),
       Position.get(arrival.destination),
       arrival.from,

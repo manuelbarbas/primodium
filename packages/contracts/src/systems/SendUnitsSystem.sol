@@ -35,7 +35,7 @@ contract SendUnitsSystem is PrimodiumSystem {
       UnitCount.set(playerEntity, origin, unitTypes[i], count - sendArgs.arrivalUnits[i].count);
       anyUnitsSent = true;
     }
-    uint256 arrivalBlock = LibSend.getArrivalBlock(
+    uint256 arrivalTime = LibSend.getArrivalTime(
       sendArgs.originPosition,
       sendArgs.destinationPosition,
       playerEntity,
@@ -47,7 +47,7 @@ contract SendUnitsSystem is PrimodiumSystem {
         unitCounts: unitCounts,
         unitTypes: unitTypes,
         sendType: sendArgs.sendType,
-        arrivalBlock: arrivalBlock,
+        arrivalTime: arrivalTime,
         from: playerEntity,
         to: sendArgs.to,
         origin: origin,
