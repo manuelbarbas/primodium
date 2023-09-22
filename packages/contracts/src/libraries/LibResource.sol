@@ -5,10 +5,17 @@ import { EBuilding, EResource } from "src/Types.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { UtilitySet } from "libraries/UtilitySet.sol";
-import { P_IsUtility, P_RequiredResources, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/Tables.sol";
+import { P_IsUtility, P_RequiredResources, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/Tables.sol";
 import { BuildingKey } from "src/Keys.sol";
 
 library LibResource {
+  function getResourceCountAvailable(bytes32 playerEntity, EResource resource) internal view returns (uint256) {
+    uint256 max = MaxResourceCount.get(playerEntity, resource);
+    uint256 curr = ResourceCount.get(playerEntity, resource);
+    if (max - curr < 0) return 0;
+    return max - curr;
+  }
+
   /// @notice Spends required resources of an entity, when creating/upgrading a building
   /// @notice claims all resources beforehand
   /// @param entity Entity ID of the building
@@ -73,9 +80,8 @@ library LibResource {
     // add total utility usage to building
     if (P_IsUtility.get(resource)) {
       uint256 prevUtilityUsage = UtilitySet.get(entity, resource);
-      // if the building already has utility usage, add the difference
-      resourceCost = resourceCost - prevUtilityUsage;
-      UtilitySet.set(entity, resource, resourceCost);
+      // add to the total building utility usage
+      UtilitySet.set(entity, resource, prevUtilityUsage + resourceCost);
     }
     // spend resources. note: this will also decrease available utilities
     LibStorage.decreaseStoredResource(playerEntity, resource, resourceCost);

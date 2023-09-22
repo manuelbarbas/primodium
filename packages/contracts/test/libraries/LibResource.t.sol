@@ -73,6 +73,7 @@ contract LibResourceTest is PrimodiumTest {
   }
 
   function testSpendBuildingRequiredUtility() public {
+    P_IsUtility.set(EResource.Iron, true);
     ResourceCount.set(playerEntity, EResource.Iron, 100);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
@@ -80,11 +81,22 @@ contract LibResourceTest is PrimodiumTest {
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(buildingPrototype, level, requiredResourcesData);
 
+    requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
+    requiredResourcesData.resources[0] = uint8(EResource.Iron);
+    requiredResourcesData.amounts[0] = 50;
+    P_RequiredResources.set(buildingPrototype, level + 1, requiredResourcesData);
+
     LibResource.spendBuildingRequiredResources(buildingEntity, level);
     assertEq(ResourceCount.get(playerEntity, EResource.Iron), 50);
+    assertEq(UtilitySet.get(buildingEntity, EResource.Iron), 50);
+
+    LibResource.spendBuildingRequiredResources(buildingEntity, level + 1);
+    assertEq(ResourceCount.get(playerEntity, EResource.Iron), 0);
+    assertEq(UtilitySet.get(buildingEntity, EResource.Iron), 100);
   }
 
   function testFailSpendBuildingRequiredUtilityInsufficient() public {
+    P_IsUtility.set(EResource.Iron, true);
     ResourceCount.set(playerEntity, EResource.Iron, 30);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
