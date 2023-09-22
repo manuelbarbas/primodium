@@ -4,6 +4,7 @@ pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 // Production Buildings
+import { P_RequiredPirateAsteroidDefeatedComponent, ID as P_RequiredPirateAsteroidDefeatedComponentID } from "components/P_RequiredPirateAsteroidDefeatedComponent.sol";
 import { P_UnitRewardComponent, ID as P_UnitRewardComponentID } from "components/P_UnitRewardComponent.sol";
 import { P_ResourceRewardComponent, ID as P_ResourceRewardComponentID } from "components/P_ResourceRewardComponent.sol";
 import { P_DestroyedUnitsRequirementComponent, ID as P_DestroyedUnitsRequirementComponentID } from "components/P_DestroyedUnitsRequirementComponent.sol";
@@ -39,12 +40,13 @@ import { P_UnitAttackComponent, ID as P_UnitAttackComponentID } from "components
 import { P_UnitDefenceComponent, ID as P_UnitDefenceComponentID } from "components/P_UnitDefenceComponent.sol";
 import { P_UnitCargoComponent, ID as P_UnitCargoComponentID } from "components/P_UnitCargoComponent.sol";
 import { P_UnitMiningComponent, ID as P_UnitMiningComponentID } from "components/P_UnitMiningComponent.sol";
-
+import { P_SpawnPirateAsteroidComponent, ID as P_SpawnPirateAsteroidComponentID } from "components/P_SpawnPirateAsteroidComponent.sol";
+import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 
 import "../prototypes.sol";
 import { ResourceValue, ResourceValues } from "../types.sol";
-
+import { Coord } from "../types.sol";
 // Research
 import { LibSetBuildingReqs } from "../libraries/LibSetBuildingReqs.sol";
 import { LibBlueprint } from "../libraries/LibBlueprint.sol";
@@ -156,12 +158,12 @@ library LibInitDebug {
     isObjectiveComponent.set(DebugDestroyedUnitsObjectiveID);
     isObjectiveComponent.set(DebugResourceRewardObjectiveID);
     isObjectiveComponent.set(DebugUnitsRewardObjectiveID);
+
+    isObjectiveComponent.set(DebugSpawnPirateAsteroidObjectiveID);
+    isObjectiveComponent.set(DebugDefeatedPirateAsteroidObjectiveID);
   }
 
   function initObjectives(IWorld world) internal {
-    P_RequiredResearchComponent requiredResourcesComponent = P_RequiredResearchComponent(
-      world.getComponent(P_RequiredResearchComponentID)
-    );
     uint256 objective;
     objective = DebugHavResourcesObjectiveID;
     //DebugHavResourcesObjectiveID
@@ -300,6 +302,29 @@ library LibInitDebug {
     resourceValues.resources[0] = SulfurResourceItemID;
     resourceValues.values[0] = 100;
     P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceValues);
+
+    //DebugSpawnPirateAsteroidObjectiveID
+    objective = DebugSpawnPirateAsteroidObjectiveID;
+    P_SpawnPirateAsteroidComponent(world.getComponent(P_SpawnPirateAsteroidComponentID)).set(
+      objective,
+      DebugSpawnPirateAsteroidID
+    );
+
+    PositionComponent(world.getComponent(PositionComponentID)).set(DebugSpawnPirateAsteroidID, Coord(10, 10, 0));
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = DebugUnit;
+    resourceValues.values[0] = 5;
+    unitRequirementComponent.set(DebugSpawnPirateAsteroidID, resourceValues);
+    resourceValues.resources[0] = IronResourceItemID;
+    resourceValues.values[0] = 100;
+    LibSetBuildingReqs.setResourceReqs(world, DebugSpawnPirateAsteroidID, resourceValues);
+
+    //DebugDefeatedPirateAsteroidObjectiveID
+    objective = DebugDefeatedPirateAsteroidObjectiveID;
+    P_RequiredPirateAsteroidDefeatedComponent(world.getComponent(P_RequiredPirateAsteroidDefeatedComponentID)).set(
+      objective,
+      DebugSpawnPirateAsteroidID
+    );
   }
 
   function initBlueprints(IWorld world) internal {
