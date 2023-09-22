@@ -1,9 +1,7 @@
 import { EntityID, Has, HasValue } from "@latticexyz/recs";
 import {
-  Arrival,
   HasCompletedObjective,
   Level,
-  OwnedBy,
   P_BuildingCountRequirement,
   P_HasBuiltBuilding,
   P_IsObjective,
@@ -11,17 +9,15 @@ import {
   P_RequiredResources,
   P_RequiredUtility,
   P_UnitRequirement,
-  Position,
 } from "src/network/components/chainComponents";
-import { Account, BlockNumber } from "src/network/components/clientComponents";
-import { ESendType } from "src/util/web3/types";
-import { BiSolidInvader } from "react-icons/bi";
+import { Account } from "src/network/components/clientComponents";
+
 import { FaShieldAlt } from "react-icons/fa";
 import { SingletonID } from "@latticexyz/network";
 import { useGameStore } from "src/store/GameStore";
 import { useMud } from "src/hooks/useMud";
 import { useMemo, useState } from "react";
-import { getIndex } from "src/util/arrival";
+
 import {
   getCanClaimObjective,
   getIsObjectiveAvailable,
