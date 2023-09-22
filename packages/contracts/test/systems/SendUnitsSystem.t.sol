@@ -234,7 +234,7 @@ Check if it triggers _sendUnits correctly.
 
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.Invade,
-      arrivalBlock: LibSend.getArrivalBlock(originPosition, destinationPosition, player, unitTypes),
+      arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitTypes),
       from: player,
       to: bytes32(0),
       origin: origin,
@@ -269,7 +269,7 @@ Check if it triggers _sendUnits correctly.
 
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.Invade,
-      arrivalBlock: LibSend.getArrivalBlock(originPosition, destinationPosition, player, unitTypes),
+      arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitTypes),
       from: player,
       to: to,
       origin: origin,
@@ -304,7 +304,7 @@ Check if it triggers _sendUnits correctly.
 
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.Reinforce,
-      arrivalBlock: LibSend.getArrivalBlock(originPosition, destinationPosition, player, unitTypes),
+      arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitTypes),
       from: player,
       to: player,
       origin: origin,
@@ -339,7 +339,7 @@ Check if it triggers _sendUnits correctly.
 
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.Reinforce,
-      arrivalBlock: LibSend.getArrivalBlock(originPosition, destinationPosition, player, unitTypes),
+      arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitTypes),
       from: player,
       to: to,
       origin: origin,
@@ -376,7 +376,7 @@ Check if it triggers _sendUnits correctly.
 
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.Raid,
-      arrivalBlock: LibSend.getArrivalBlock(originPosition, destinationPosition, player, unitTypes),
+      arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitTypes),
       from: player,
       to: to,
       origin: origin,

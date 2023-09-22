@@ -44,7 +44,7 @@ library LibSend {
   /// @param playerEntity Entity initiating send.
   /// @param unitTypes Types of units being sent.
   /// @return Block number of arrival.
-  function getArrivalBlock(
+  function getArrivalTime(
     PositionData memory origin,
     PositionData memory destination,
     bytes32 playerEntity,

@@ -23,7 +23,7 @@ contract ArrivalsMapTest is PrimodiumTest {
   function testSet() public {
     Arrival memory item = Arrival({
       sendType: ESendType.Invade,
-      arrivalBlock: 2,
+      arrivalTime: 2,
       from: "from",
       to: "to",
       origin: "origin",
@@ -36,17 +36,17 @@ contract ArrivalsMapTest is PrimodiumTest {
     assertFalse(ArrivalsMap.has(playerEntity, asteroidEntity, key));
     ArrivalsMap.set(playerEntity, asteroidEntity, key, item);
     assertTrue(ArrivalsMap.has(playerEntity, asteroidEntity, key));
-    item.arrivalBlock = 3;
+    item.arrivalTime = 3;
     bytes32 key2 = keccak256(abi.encode(item));
     assertFalse(ArrivalsMap.has(playerEntity, asteroidEntity, key2));
-    item.arrivalBlock = 2;
+    item.arrivalTime = 2;
     assertTrue(ArrivalsMap.has(playerEntity, asteroidEntity, key));
   }
 
   function testSize() public {
     Arrival memory item = Arrival({
       sendType: ESendType.Invade,
-      arrivalBlock: 2,
+      arrivalTime: 2,
       from: "from",
       to: "to",
       origin: "origin",
@@ -60,7 +60,7 @@ contract ArrivalsMapTest is PrimodiumTest {
     assertEq(ArrivalsMap.size(playerEntity, asteroidEntity), 1);
     ArrivalsMap.set(playerEntity, asteroidEntity, key, item);
     assertEq(ArrivalsMap.size(playerEntity, asteroidEntity), 1);
-    item.arrivalBlock = 3;
+    item.arrivalTime = 3;
     ArrivalsMap.set(playerEntity, asteroidEntity, key, item);
     assertEq(ArrivalsMap.size(playerEntity, asteroidEntity), 1);
     key = keccak256(abi.encode(item));
@@ -71,7 +71,7 @@ contract ArrivalsMapTest is PrimodiumTest {
   function testGetAll() public {
     Arrival memory item = Arrival({
       sendType: ESendType.Invade,
-      arrivalBlock: 2,
+      arrivalTime: 2,
       from: "from",
       to: "to",
       origin: "origin",
@@ -82,7 +82,7 @@ contract ArrivalsMapTest is PrimodiumTest {
     bytes32 key = keccak256(abi.encode(item));
     Arrival memory item2 = Arrival({
       sendType: ESendType.Invade,
-      arrivalBlock: 3,
+      arrivalTime: 3,
       from: "from",
       to: "to",
       origin: "origin",
@@ -103,7 +103,7 @@ contract ArrivalsMapTest is PrimodiumTest {
   function testRemove() public {
     Arrival memory item = Arrival({
       sendType: ESendType.Invade,
-      arrivalBlock: 2,
+      arrivalTime: 2,
       from: "from",
       to: "to",
       origin: "origin",
@@ -114,7 +114,7 @@ contract ArrivalsMapTest is PrimodiumTest {
     bytes32 key = keccak256(abi.encode(item));
     Arrival memory item2 = Arrival({
       sendType: ESendType.Invade,
-      arrivalBlock: 3,
+      arrivalTime: 3,
       from: "from",
       to: "to",
       origin: "origin",
@@ -143,7 +143,7 @@ contract ArrivalsMapTest is PrimodiumTest {
   function testClear() public {
     Arrival memory item = Arrival({
       sendType: ESendType.Invade,
-      arrivalBlock: 2,
+      arrivalTime: 2,
       from: "from",
       to: "to",
       origin: "origin",
@@ -154,7 +154,7 @@ contract ArrivalsMapTest is PrimodiumTest {
     bytes32 key = keccak256(abi.encode(item));
     Arrival memory item2 = Arrival({
       sendType: ESendType.Invade,
-      arrivalBlock: 3,
+      arrivalTime: 3,
       from: "from",
       to: "to",
       origin: "origin",
