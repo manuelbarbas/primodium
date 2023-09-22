@@ -230,6 +230,58 @@ export const BlockType = {
   AnvilLightDrone: keccak256("unit.AnvilDrone") as EntityID,
   AegisDrone: keccak256("unit.AegisDrone") as EntityID,
   MiningVessel: keccak256("unit.MiningVessel") as EntityID,
+
+  //Objectives
+  DebugFreeObjectiveID: keccak256("block.DebugFreeObjective") as EntityID,
+  DebugHavResourcesObjectiveID: keccak256(
+    "block.DebugHavResourcesObjective"
+  ) as EntityID,
+  DebugHaveUnitsObjectiveID: keccak256(
+    "block.DebugHaveUnitsObjective"
+  ) as EntityID,
+  DebugHaveMaxUtilityObjectiveID: keccak256(
+    "block.DebugHaveMaxUtilityObjective"
+  ) as EntityID,
+  DebugCompletedPriorObjectiveID: keccak256(
+    "block.DebugCompletedPriorObjective"
+  ) as EntityID,
+  DebugMainBaseLevelObjectiveID: keccak256(
+    "block.DebugMainBaseLevelObjective"
+  ) as EntityID,
+  DebugTechnologyResearchedObjectiveID: keccak256(
+    "block.DebugTechnologyResearchedObjective"
+  ) as EntityID,
+  DebugResourceProductionObjectiveID: keccak256(
+    "block.DebugResourceProductionObjective"
+  ) as EntityID,
+  DebugBuiltBuildingTypeObjectiveID: keccak256(
+    "block.DebugBuiltBuildingTypeObjective"
+  ) as EntityID,
+  DebugNumberOfBuiltBuildingTypeObjectiveID: keccak256(
+    "block.DebugNumberOfBuiltBuildingTypeObjective"
+  ) as EntityID,
+  DebugRaidObjectiveID: keccak256("block.DebugRaidObjective") as EntityID,
+  DebugMotherlodeMiningTitaniumObjectiveID: keccak256(
+    "block.DebugMotherlodeMiningTitaniumObjective"
+  ) as EntityID,
+  DebugMotherlodeMiningPlatinumObjectiveID: keccak256(
+    "block.DebugMotherlodeMiningPlatinumObjective"
+  ) as EntityID,
+  DebugMotherlodeMiningIridiumObjectiveID: keccak256(
+    "block.DebugMotherlodeMiningIridiumObjective"
+  ) as EntityID,
+  DebugMotherlodeMiningKimberliteObjectiveID: keccak256(
+    "block.DebugMotherlodeMiningKimberliteObjective"
+  ) as EntityID,
+  DebugDestroyedUnitsObjectiveID: keccak256(
+    "block.DebugDestroyedUnitsObjective"
+  ) as EntityID,
+  DebugResourceRewardObjectiveID: keccak256(
+    "block.DebugResourceRewardObjective"
+  ) as EntityID,
+  DebugUnitsRewardObjectiveID: keccak256(
+    "block.DebugUnitsRewardObjectiveID"
+  ) as EntityID,
 };
 
 export const BlockIdToKey = Object.entries(BlockType).reduce<{
