@@ -18,7 +18,7 @@ import { Network } from "src/network/layer";
 import { BlockType } from "./constants";
 import {
   Account,
-  ActiveAsteroid,
+  HomeAsteroid,
   SelectedBuilding,
   Send,
 } from "src/network/components/clientComponents";
@@ -163,7 +163,7 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
       function: async (name: string, count: number) => {
         const entity = Account.get()?.value;
         const resource = units[name.toLowerCase()];
-        const asteroid = ActiveAsteroid.get()?.value;
+        const asteroid = HomeAsteroid.get()?.value;
         if (!entity || !asteroid || !resource)
           throw new Error("No unitwith that name");
         const playerResource = hashEntities(resource, entity, asteroid);

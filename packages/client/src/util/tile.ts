@@ -9,7 +9,7 @@ import {
   P_Terrain,
 } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
-import { ActiveAsteroid } from "src/network/components/clientComponents";
+import { HomeAsteroid } from "src/network/components/clientComponents";
 import { hashKeyCoord } from "./encode";
 
 // TODO: randomize perlinSeed
@@ -142,7 +142,7 @@ export const getBuildingAtCoord = (coord: Coord) => {
     HasValue(Position, {
       x: coord.x,
       y: coord.y,
-      parent: ActiveAsteroid.get()?.value,
+      parent: HomeAsteroid.get()?.value,
     }),
     Not(BuildingType),
   ]);

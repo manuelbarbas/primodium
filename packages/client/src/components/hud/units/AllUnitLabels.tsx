@@ -1,15 +1,12 @@
 import { EntityID } from "@latticexyz/recs";
 import { useCallback } from "react";
 import { SecondaryCard } from "src/components/core/Card";
-import {
-  ActiveAsteroid,
-  Hangar,
-} from "src/network/components/clientComponents";
+import { HomeAsteroid, Hangar } from "src/network/components/clientComponents";
 import { BlockType } from "src/util/constants";
 import { UnitLabel } from "./UnitLabel";
 
 export const AllUnitLabels = () => {
-  const activeAsteroid = ActiveAsteroid.use()?.value;
+  const activeAsteroid = HomeAsteroid.use()?.value;
   const units = Hangar.use(activeAsteroid);
 
   const getUnitCount = useCallback(

@@ -13,10 +13,10 @@ import { NotificationQueueComponent } from "./customComponents/NotificationQueue
 
 export const Account = newEntityComponent(world, { id: "Account" });
 
-export const ActiveAsteroid = newComponent(
+export const HomeAsteroid = newComponent(
   world,
   { value: Type.Entity },
-  { id: "ActiveAsteroid" }
+  { id: "HomeAsteroid" }
 );
 
 export const Battle = BattleComponent();
@@ -113,7 +113,7 @@ export const TrainingQueue = newComponent(
 
 export default {
   Account,
-  ActiveAsteroid,
+  ActiveAsteroid: HomeAsteroid,
   Battle,
   BattleReport,
   BlockNumber,

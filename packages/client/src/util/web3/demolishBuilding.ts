@@ -3,7 +3,7 @@ import { Coord } from "@latticexyz/utils";
 import { execute } from "src/network/actions";
 import { BuildingType, Level } from "src/network/components/chainComponents";
 import { SelectedBuilding } from "src/network/components/clientComponents";
-import { ActiveAsteroid } from "src/network/components/clientComponents";
+import { HomeAsteroid } from "src/network/components/clientComponents";
 import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
 import { BlockIdToKey } from "../constants";
@@ -22,7 +22,7 @@ export const demolishBuilding = async (coord: Coord, network: Network) => {
   })?.value;
   const currLevel = Level.get(building)?.value || 0;
 
-  const activeAsteroid = ActiveAsteroid.get()?.value;
+  const activeAsteroid = HomeAsteroid.get()?.value;
   if (!activeAsteroid) return;
 
   const position = { ...coord, parent: activeAsteroid };

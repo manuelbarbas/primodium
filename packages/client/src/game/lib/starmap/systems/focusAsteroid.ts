@@ -10,19 +10,19 @@ import { world } from "src/network/world";
 
 import { Position } from "src/network/components/chainComponents";
 import { createCameraApi } from "src/game/api/camera";
-import { ActiveAsteroid } from "src/network/components/clientComponents";
+import { HomeAsteroid } from "src/network/components/clientComponents";
 
 export const focusAsteroid = (scene: Scene) => {
   const { pan } = createCameraApi(scene);
   const gameWorld = namespaceWorld(world, "game");
 
-  const query = [Has(ActiveAsteroid)];
+  const query = [Has(HomeAsteroid)];
 
   const handleMove = async () => {
     // sleep 100 ms to properly pan
     await new Promise((resolve) => setTimeout(resolve, 100));
 
-    const activeAsteroid = ActiveAsteroid.get()?.value;
+    const activeAsteroid = HomeAsteroid.get()?.value;
 
     if (!activeAsteroid) return;
 

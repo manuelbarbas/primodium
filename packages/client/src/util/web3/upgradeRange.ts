@@ -4,10 +4,7 @@ import { execute } from "src/network/actions";
 import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
 import { parseReceipt } from "../analytics/parseReceipt";
-import {
-  Account,
-  ActiveAsteroid,
-} from "src/network/components/clientComponents";
+import { Account, HomeAsteroid } from "src/network/components/clientComponents";
 import { Level } from "src/network/components/chainComponents";
 import { getPlayerBounds } from "../outOfBounds";
 
@@ -16,7 +13,7 @@ export const upgradeRange = async (network: Network) => {
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
   setTransactionLoading(true);
 
-  const activeAsteroid = ActiveAsteroid.get()?.value;
+  const activeAsteroid = HomeAsteroid.get()?.value;
 
   const player = Account.get()?.value;
   const level = Level.get(player, { value: 1 }).value;

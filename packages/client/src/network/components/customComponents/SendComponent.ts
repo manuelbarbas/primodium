@@ -4,7 +4,7 @@ import newComponent, { Options } from "./Component";
 import { Coord } from "@latticexyz/utils";
 import { Position, ReversePosition } from "../chainComponents";
 import { encodeCoord } from "src/util/encode";
-import { ActiveAsteroid } from "../clientComponents";
+import { HomeAsteroid } from "../clientComponents";
 import { ActiveButton } from "src/util/types";
 
 function newSendComponent<Overridable extends boolean, M extends Metadata>(
@@ -54,7 +54,7 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
   };
 
   const reset = () => {
-    const activeAsteroid = ActiveAsteroid.get()?.value;
+    const activeAsteroid = HomeAsteroid.get()?.value;
     if (!activeAsteroid) return;
     const position = Position.get(activeAsteroid);
     component.set({

@@ -8,7 +8,7 @@ import { useGameStore } from "src/store/GameStore";
 import { ampli } from "src/ampli";
 import { BlockIdToKey } from "../constants";
 import { parseReceipt } from "../analytics/parseReceipt";
-import { ActiveAsteroid } from "src/network/components/clientComponents";
+import { HomeAsteroid } from "src/network/components/clientComponents";
 
 export const buildBuilding = async (
   coord: Coord,
@@ -22,7 +22,7 @@ export const buildBuilding = async (
   setTransactionLoading(true);
 
   // todo: find a cleaner way to extract this value in all web3 functions
-  const activeAsteroid = ActiveAsteroid.get()?.value;
+  const activeAsteroid = HomeAsteroid.get()?.value;
   if (!activeAsteroid) return;
 
   const position = { ...coord, parent: activeAsteroid };

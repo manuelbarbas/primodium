@@ -1,11 +1,8 @@
 import { useEffect, useMemo } from "react";
 import { useAccount } from "./useAccount";
 import { useMud } from "./useMud";
-import { setupActiveAsteroid } from "src/network/systems/setupActiveAsteroid";
-import {
-  ActiveAsteroid,
-  Account,
-} from "src/network/components/clientComponents";
+import { setupHomeAsteroid } from "src/network/systems/setupActiveAsteroid";
+import { HomeAsteroid, Account } from "src/network/components/clientComponents";
 import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
 import { setupHangar } from "src/network/systems/setupHangar";
 import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
@@ -17,7 +14,7 @@ import { ampli } from "src/ampli";
 export const useInit = () => {
   const { blockNumber$ } = useMud();
   const { address, rawAddress, external } = useAccount();
-  const activeAsteroid = ActiveAsteroid.use()?.value;
+  const activeAsteroid = HomeAsteroid.use()?.value;
 
   const initialized = useMemo(() => {
     if (!address) return false;
@@ -27,7 +24,7 @@ export const useInit = () => {
 
   useEffect(() => {
     if (address) {
-      setupActiveAsteroid(address);
+      setupHomeAsteroid(address);
     }
 
     Account.set({ value: address });

@@ -7,7 +7,7 @@ import {
 } from "@latticexyz/recs";
 import { world } from "../world";
 import {
-  ActiveAsteroid,
+  HomeAsteroid,
   BlockNumber,
   TrainingQueue,
 } from "../components/clientComponents";
@@ -96,7 +96,7 @@ export function setupTrainingQueues() {
       Has(UnitProductionLastQueueIndex),
       Has(LastClaimedAt),
       HasValue(Position, {
-        parent: ActiveAsteroid.get()?.value,
+        parent: HomeAsteroid.get()?.value,
       }),
       Has(BuildingType),
     ];
