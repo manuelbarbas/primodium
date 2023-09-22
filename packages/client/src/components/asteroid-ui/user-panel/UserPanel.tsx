@@ -8,6 +8,7 @@ import { PanelButton } from "./PanelButton";
 import { AllResourceLabels } from "./panes/inventory/AllResourceLabels";
 import { AllUtilityResourceLabels } from "./panes/utilities/AllUtilityResourceLabels";
 import { UserFleets } from "./panes/fleets/UserFleets";
+import { Objectives } from "./panes/objectives/Objectives";
 
 export const UserPanel = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
@@ -51,6 +52,12 @@ export const UserPanel = () => {
               active={menuIndex === 2}
               onClick={() => setMenuIndex(menuIndex === 2 ? null : 2)}
             />
+            <PanelButton
+              name="Objectives"
+              icon="/img/icons/attackaircraft.png"
+              active={menuIndex === 3}
+              onClick={() => setMenuIndex(menuIndex === 3 ? null : 3)}
+            />
           </motion.div>
 
           {menuIndex === 0 && (
@@ -82,6 +89,17 @@ export const UserPanel = () => {
               className="bg-gray-900 z-[999] w-full border rounded-md border-cyan-600 ring ring-cyan-900 p-2 text-xs"
             >
               <UserFleets user={address} />
+            </motion.div>
+          )}
+
+          {menuIndex === 3 && (
+            <motion.div
+              initial={{ scaleY: 0 }}
+              animate={{ scaleY: 1 }}
+              exit={{ scale: 0 }}
+              className="bg-gray-900 z-[999] w-full border rounded-md border-cyan-600 ring ring-cyan-900 p-2 text-xs"
+            >
+              <Objectives user={address} />
             </motion.div>
           )}
         </div>
