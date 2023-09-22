@@ -33,7 +33,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     uint256 ironMineMaxLevel = P_MaxLevel.get(world, IronMinePrototypeId);
     vm.startPrank(alice);
     PositionData memory coord = getIronPosition(alice);
-    bytes32 ironMine = world.build(EBuilding.IronMine, coord);
+    world.build(EBuilding.IronMine, coord);
     for (uint256 i = 1; i < ironMineMaxLevel; i++) {
       assertEq(Level.get(LibEncode.getHash(BuildingKey, coord)), i, "building should be level i");
       world.upgradeBuilding(coord);
@@ -48,7 +48,6 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     uint256 l2 = 33;
     vm.startPrank(address(world));
     ResourceCount.set(playerEntity, EResource.Iron, initial);
-    uint256 playerResourceCount = ResourceCount.get(playerEntity, EResource.Iron);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);

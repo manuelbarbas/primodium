@@ -56,7 +56,7 @@ library LibMath {
   /// @notice Uses the formula 260 * ln((asteroidCount + 105) / 10) - 580
   /// @param asteroidCount Number of asteroids
   /// @return uint256 Calculated distance
-  function getDistance(uint256 asteroidCount) internal pure returns (uint256) {
+  function getSpawnDistance(uint256 asteroidCount) internal pure returns (uint256) {
     int128 value = Math.add(Math.fromUInt(asteroidCount), Math.fromUInt(105));
     value = Math.div(value, Math.fromUInt(10));
     value = Math.ln(value);
@@ -68,10 +68,15 @@ library LibMath {
   /// @notice Uses the asteroid count to find direction angle
   /// @param asteroidCount Number of asteroids
   /// @return uint256 Calculated direction
-  function getDirection(uint256 asteroidCount) internal pure returns (uint256) {
+  function getSpawnDirection(uint256 asteroidCount) internal pure returns (uint256) {
     uint256 countMod27 = asteroidCount % 27;
     uint256 countMod3 = asteroidCount % 3;
     uint256 generalDirection = asteroidCount % 4;
     return generalDirection * 90 + countMod3 * 30 + countMod27;
+  }
+
+  function distance(PositionData memory a, PositionData memory b) internal pure returns (uint32) {
+    int128 distanceSquared = (a.x - b.x)**2 + (a.y - b.y)**2;
+    return uint32(Math.toUInt(Math.sqrt(Math.fromInt(distanceSquared))));
   }
 }

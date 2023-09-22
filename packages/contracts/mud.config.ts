@@ -47,6 +47,7 @@ export const config = mudConfig({
         maxMotherlodesPerAsteroid: "uint256",
         motherlodeChanceInv: "uint256",
         motherlodeDistance: "uint256",
+        moveSpeed: "uint256",
       },
     },
 
@@ -102,6 +103,11 @@ export const config = mudConfig({
         asteroid: "bytes32",
         mainBase: "bytes32",
       },
+    },
+
+    MaxMoves: {
+      keySchema: { entity: "bytes32" },
+      schema: "uint256",
     },
 
     /* ---------------------------------- Rocks --------------------------------- */
@@ -355,6 +361,48 @@ export const config = mudConfig({
     UnitCount: {
       keySchema: { player: "bytes32", rock: "bytes32", unit: "bytes32" },
       schema: "uint256",
+    },
+    /* ----------------------- Sending and Battling Units ----------------------- */
+
+    // Tracks player arrivals
+
+    ArrivalCount: {
+      keySchema: { entity: "bytes32" },
+      schema: "uint256",
+    },
+    // Tracks player asteroid arrivals
+    SetArrivals: {
+      keySchema: { entity: "bytes32", asteroid: "bytes32" },
+      schema: { itemKeys: "bytes32[]" },
+    },
+
+    SetItemStoredArrivals: {
+      keySchema: { entity: "bytes32", asteroid: "bytes32", arrivalEntity: "bytes32" },
+      schema: {
+        stored: "bool",
+        index: "uint256",
+      },
+    },
+
+    // We need to split this up because it is too big to compile lol
+    // But this is abstracted away in ArrivalSet.sol
+    SetItemArrivals1: {
+      keySchema: { entity: "bytes32", asteroid: "bytes32", arrivalEntity: "bytes32" },
+      schema: {
+        sendType: "ESendType",
+        arrivalBlock: "uint256",
+        from: "bytes32",
+        to: "bytes32",
+      },
+    },
+    SetItemArrivals2: {
+      keySchema: { entity: "bytes32", asteroid: "bytes32", arrivalEntity: "bytes32" },
+      schema: {
+        origin: "bytes32",
+        destination: "bytes32",
+        unitCounts: "uint256[]",
+        unitTypes: "bytes32[]",
+      },
     },
   },
 });

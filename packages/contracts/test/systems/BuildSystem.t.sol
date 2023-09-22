@@ -157,7 +157,6 @@ contract BuildSystemTest is PrimodiumTest {
   function testBuildWithRequiredResources() public {
     vm.startPrank(address(world));
     ResourceCount.set(playerEntity, EResource.Iron, 100);
-    uint256 playerResourceCount = ResourceCount.get(playerEntity, EResource.Iron);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);

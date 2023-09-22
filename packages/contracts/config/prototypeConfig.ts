@@ -123,6 +123,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         maxMotherlodesPerAsteroid: 10n,
         motherlodeChanceInv: 4n,
         unitProductionRate: 100n,
+        moveSpeed: 100n,
       },
     },
   },
@@ -563,17 +564,17 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ Sulfur: 10000 }),
-        P_Production: getResourceValue({ U_MoveCount: 1 }),
+        P_Production: getResourceValue({ U_MaxMoves: 1 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ Sulfur: 125000 }),
-        P_Production: getResourceValue({ U_MoveCount: 2 }),
+        P_Production: getResourceValue({ U_MaxMoves: 2 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Sulfur: 125000, Kimberlite: 10000 }),
-        P_Production: getResourceValue({ U_MoveCount: 3 }),
+        P_Production: getResourceValue({ U_MaxMoves: 3 }),
       },
     },
   },
@@ -586,7 +587,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       [MUDEnums.EResource.indexOf("U_Electricity")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Housing")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Vessel")]: { P_IsUtility: { value: true } },
-      [MUDEnums.EResource.indexOf("U_MoveCount")]: { P_IsUtility: { value: true } },
+      [MUDEnums.EResource.indexOf("U_MaxMoves")]: { P_IsUtility: { value: true } },
     },
   },
 
