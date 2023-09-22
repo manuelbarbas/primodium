@@ -28,6 +28,15 @@ library ArrivalsMap {
     }
   }
 
+  function get(
+    bytes32 player,
+    bytes32 asteroid,
+    bytes32 key
+  ) internal view returns (Arrival memory) {
+    bytes memory encoding = MapItemArrivals.get(player, asteroid, key);
+    return abi.decode(encoding, (Arrival));
+  }
+
   function keys(bytes32 player, bytes32 asteroid) private view returns (bytes32[] memory) {
     return MapArrivals.get(player, asteroid);
   }
