@@ -12,7 +12,7 @@ library LibResource {
   function getResourceCountAvailable(bytes32 playerEntity, EResource resource) internal view returns (uint256) {
     uint256 max = MaxResourceCount.get(playerEntity, resource);
     uint256 curr = ResourceCount.get(playerEntity, resource);
-    if (max - curr < 0) return 0;
+    if (curr > max) return 0;
     return max - curr;
   }
 
