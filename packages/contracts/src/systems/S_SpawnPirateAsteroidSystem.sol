@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld } from "systems/internal/PrimodiumSystem.sol";
-import { addressToEntity } from "solecs/utils.sol";
+import { addressToEntity, getAddressById } from "solecs/utils.sol";
 import { BattleResultComponent, ID as BattleResultComponentID, BattleResult } from "../components/BattleResultComponent.sol";
 import { BattleAttackerComponent, ID as BattleAttackerComponentID } from "../components/BattleAttackerComponent.sol";
 import { BattleDefenderComponent, ID as BattleDefenderComponentID } from "../components/BattleDefenderComponent.sol";
@@ -18,7 +18,7 @@ contract S_SpawnPirateAsteroidSystem is PrimodiumSystem, IOnEntitySubsystem {
   function execute(bytes memory args) public override returns (bytes memory) {
     (address playerAddress, uint256 objectiveId) = abi.decode(args, (address, uint256));
     require(
-      addressToEntity(msg.sender) == ClaimObjectiveSystemID,
+      msg.sender == getAddressById(world.systems(), ClaimObjectiveSystemID),
       "[S_SpawnPirateAsteroidSystem]: only ClaimObjectiveSystem can call this"
     );
     LibPirateAsteroid.createAsteroid(world, addressToEntity(playerAddress), objectiveId);
