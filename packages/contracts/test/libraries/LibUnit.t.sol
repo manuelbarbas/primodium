@@ -179,4 +179,71 @@ contract LibUnitTest is PrimodiumTest {
     LibUnit.addUnitsToAsteroid(player, Home.getAsteroid(player), unit, 100);
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unit), 150);
   }
+
+  function testUpdateStoredUtilitiesAdd() public {
+    P_IsUtility.set(EResource.Iron, true);
+    MaxResourceCount.set(player, EResource.Iron, 100);
+    UnitLevel.set(player, unit, 1);
+    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
+    requiredResourcesData.resources[0] = uint8(EResource.Iron);
+    requiredResourcesData.amounts[0] = 50;
+    P_RequiredResources.set(unit, 1, requiredResourcesData);
+
+    LibUnit.updateStoredUtilities(player, unit, 2, true);
+    assertEq(ResourceCount.get(player, EResource.Iron), 100);
+  }
+
+  function testUpdateStoredUtilitiesNotUtility() public {
+    MaxResourceCount.set(player, EResource.Iron, 100);
+    UnitLevel.set(player, unit, 1);
+    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
+    requiredResourcesData.resources[0] = uint8(EResource.Iron);
+    requiredResourcesData.amounts[0] = 50;
+    P_RequiredResources.set(unit, 1, requiredResourcesData);
+
+    LibUnit.updateStoredUtilities(player, unit, 2, true);
+    assertEq(ResourceCount.get(player, EResource.Iron), 0);
+  }
+
+  function testFailUpdateStoredUtilitiesNoSpace() public {
+    P_IsUtility.set(EResource.Iron, true);
+    MaxResourceCount.set(player, EResource.Iron, 100);
+    UnitLevel.set(player, unit, 1);
+    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
+    requiredResourcesData.resources[0] = uint8(EResource.Iron);
+    requiredResourcesData.amounts[0] = 50;
+    P_RequiredResources.set(unit, 1, requiredResourcesData);
+
+    LibUnit.updateStoredUtilities(player, unit, 3, true);
+  }
+
+  function testUpdateStoredUtilitiesSubtract() public {
+    P_IsUtility.set(EResource.Iron, true);
+    MaxResourceCount.set(player, EResource.Iron, 100);
+    ResourceCount.set(player, EResource.Iron, 100);
+
+    UnitLevel.set(player, unit, 1);
+    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
+    requiredResourcesData.resources[0] = uint8(EResource.Iron);
+    requiredResourcesData.amounts[0] = 33;
+    P_RequiredResources.set(unit, 1, requiredResourcesData);
+
+    LibUnit.updateStoredUtilities(player, unit, 2, false);
+    assertEq(ResourceCount.get(player, EResource.Iron), 34);
+  }
+
+  function testUpdateStoredUtilitiesSubtractOverflow() public {
+    P_IsUtility.set(EResource.Iron, true);
+    MaxResourceCount.set(player, EResource.Iron, 100);
+    ResourceCount.set(player, EResource.Iron, 100);
+
+    UnitLevel.set(player, unit, 1);
+    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
+    requiredResourcesData.resources[0] = uint8(EResource.Iron);
+    requiredResourcesData.amounts[0] = 33;
+    P_RequiredResources.set(unit, 1, requiredResourcesData);
+
+    LibUnit.updateStoredUtilities(player, unit, 10, false);
+    assertEq(ResourceCount.get(player, EResource.Iron), 0);
+  }
 }
