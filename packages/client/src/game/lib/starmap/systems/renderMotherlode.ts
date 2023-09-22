@@ -4,7 +4,6 @@ import {
   Has,
   defineEnterSystem,
   HasValue,
-  defineComponentSystem,
   EntityID,
 } from "@latticexyz/recs";
 import {
@@ -12,19 +11,17 @@ import {
   OnClick,
   SetValue,
 } from "../../common/object-components/common";
-import { Outline, Texture } from "../../common/object-components/sprite";
+import { Texture } from "../../common/object-components/sprite";
 import {
   AsteroidType,
   Motherlode,
   OwnedBy,
   Position,
-  ReversePosition,
 } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
 import { MotherlodeSizeNames, MotherlodeTypeNames } from "src/util/constants";
 import { ESpaceRockType } from "src/util/web3/types";
 import { Send } from "src/network/components/clientComponents";
-import { encodeAndTrimCoord } from "src/util/encode";
 import { ActiveButton } from "src/util/types";
 import { Coord } from "@latticexyz/utils";
 import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
@@ -114,18 +111,18 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
     render(entityId, coord);
   });
 
-  defineComponentSystem(gameWorld, Send, ({ value: values }) => {
-    values.map((value) => {
-      [
-        { x: value?.originX, y: value?.originY },
-        { x: value?.destinationX, y: value?.destinationY },
-      ].map((rawCoord) => {
-        if (!rawCoord || !rawCoord.x || !rawCoord.y) return;
-        const coord = { x: rawCoord.x, y: rawCoord.y };
-        const entity = ReversePosition.get(encodeAndTrimCoord(coord))?.value;
-        if (!entity) return;
-        render(entity, coord);
-      });
-    });
-  });
+  // defineComponentSystem(gameWorld, Send, ({ value: values }) => {
+  //   values.map((value) => {
+  //     [
+  //       { x: value?.originX, y: value?.originY },
+  //       { x: value?.destinationX, y: value?.destinationY },
+  //     ].map((rawCoord) => {
+  //       if (!rawCoord || !rawCoord.x || !rawCoord.y) return;
+  //       const coord = { x: rawCoord.x, y: rawCoord.y };
+  //       const entity = ReversePosition.get(encodeAndTrimCoord(coord))?.value;
+  //       if (!entity) return;
+  //       render(entity, coord);
+  //     });
+  //   });
+  // });
 };

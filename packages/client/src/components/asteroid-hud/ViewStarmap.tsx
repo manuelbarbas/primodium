@@ -1,47 +1,53 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Button } from "../core/Button";
 import { primodium } from "@game/api";
 import { KeybindActions, Scenes } from "@game/constants";
+import { MapOpen } from "src/network/components/clientComponents";
+import { SingletonID } from "@latticexyz/network";
 
 export const ViewStarmap = () => {
-  const [mapOpen, setMapOpen] = useState(false);
+  const mapOpen = MapOpen.use(SingletonID, {
+    value: false,
+  }).value;
   const { transitionToScene } = primodium.api().scene;
 
-  const handleTransition = useCallback(async () => {
-    if (mapOpen)
-      await transitionToScene(Scenes.Starmap, Scenes.Asteroid, 0, () =>
-        setMapOpen(false)
-      );
-    else
-      await transitionToScene(Scenes.Asteroid, Scenes.Starmap, 0, () =>
-        setMapOpen(true)
-      );
-  }, [mapOpen, transitionToScene]);
+  const closeMap = async () => {
+    await transitionToScene(Scenes.Starmap, Scenes.Asteroid, 0);
+    MapOpen.set({ value: false });
+  };
+
+  const openMap = async () => {
+    await transitionToScene(Scenes.Asteroid, Scenes.Starmap, 0);
+    MapOpen.set({ value: true });
+  };
 
   useEffect(() => {
-    const listener = mapOpen
-      ? primodium
-          .api(Scenes.Starmap)
-          .input.addListener(KeybindActions.Map, handleTransition)
-      : primodium
-          .api(Scenes.Asteroid)
-          .input.addListener(KeybindActions.Map, handleTransition);
+    const starmapListener = primodium
+      .api(Scenes.Starmap)
+      .input.addListener(KeybindActions.Map, closeMap);
+
+    const asteroidListener = primodium
+      .api(Scenes.Asteroid)
+      .input.addListener(KeybindActions.Map, openMap);
 
     return () => {
-      listener.dispose();
+      starmapListener.dispose();
+      asteroidListener.dispose();
     };
-  }, [mapOpen]);
+  }, []);
 
   return (
     <Button
       className="w-full flex gap-2 btn-warning bg-gradient-to-br from-rose-700 to-pink-600 border-2 ring-2 ring-error/30 border-rose-900 drop-shadow-2xl text-base-content pixel-images"
-      onClick={handleTransition}
+      onClick={mapOpen ? closeMap : openMap}
     >
       <img
         src="img/icons/attackaircraft.png"
         className="pixel-images w-8 h-8"
       />
-      <span className="flex font-bold gap-1">OPEN STAR MAP</span>
+      <span className="flex font-bold gap-1">
+        {!mapOpen ? "OPEN STAR MAP" : "CLOSE STAR MAP"}
+      </span>
     </Button>
   );
 };

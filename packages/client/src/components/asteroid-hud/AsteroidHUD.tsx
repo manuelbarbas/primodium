@@ -11,7 +11,10 @@ import { Hotbar } from "./hotbar/Hotbar";
 import { Units } from "./units/Units";
 import { Score } from "./Score";
 import { CurrentObjective } from "./CurrentObjective";
-import { SelectedBuilding } from "src/network/components/clientComponents";
+import {
+  MapOpen,
+  SelectedBuilding,
+} from "src/network/components/clientComponents";
 import { BlueprintInfo } from "./tile-info/BlueprintInfo";
 import { getBlockTypeName } from "src/util/common";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
@@ -25,6 +28,9 @@ export const AsteroidHUD = () => {
   ]);
   const { addListener } = primodium.api()!.input;
   const selectedBuilding = SelectedBuilding.use()?.value;
+  const mapOpen = MapOpen.use(undefined, {
+    value: false,
+  }).value;
 
   useEffect(() => {
     const listener = addListener(KeybindActions.ToggleUI, toggleShowUI);
@@ -40,9 +46,8 @@ export const AsteroidHUD = () => {
         <>
           <HUD scale={1} pad>
             <HUD.BottomMiddle>
-              {(getBlockTypeName(selectedBuilding) || !selectedBuilding) && (
-                <Hotbar />
-              )}
+              {(getBlockTypeName(selectedBuilding) || !selectedBuilding) &&
+                !mapOpen && <Hotbar />}
               {!getBlockTypeName(selectedBuilding) && <BuildingMenu />}
             </HUD.BottomMiddle>
             <HUD.TopMiddle>
