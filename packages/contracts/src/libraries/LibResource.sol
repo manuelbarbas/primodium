@@ -18,7 +18,11 @@ import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { LibEncode } from "./LibEncode.sol";
 import { LibMath } from "./LibMath.sol";
 import { ResourceValues, ResourceValue } from "../types.sol";
+
+import { TitaniumResourceItemID, PlatinumResourceItemID, IridiumResourceItemID, KimberliteResourceItemID } from "../prototypes/Item.sol";
+
 import { PlayerMotherlodeComponent, ID as PlayerMotherlodeComponentID } from "../components/PlayerMotherlodeComponent.sol";
+
 import { ID as UpdateUnclaimedResourcesSystemID } from "../systems/S_UpdateUnclaimedResourcesSystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { LibUpdateSpaceRock } from "./LibUpdateSpaceRock.sol";
@@ -67,7 +71,9 @@ library LibResource {
         requiredResources.resources[i],
         block.number
       );
-      if (resourceCost > playerResourceCount) return false;
+      if (resourceCost > playerResourceCount) {
+        return false;
+      }
     }
     return true;
   }
@@ -101,10 +107,13 @@ library LibResource {
     uint256 playerEntity
   ) internal view returns (uint32 totalResources, uint32[] memory resources) {
     ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
-    P_MaxResourceStorageComponent maxResourceStorageComponent = P_MaxResourceStorageComponent(
+
+    //hotfix
+    uint256[] memory storageResourceIds = P_MaxResourceStorageComponent(
       world.getComponent(P_MaxResourceStorageComponentID)
-    );
-    uint256[] memory storageResourceIds = maxResourceStorageComponent.getValue(playerEntity);
+    ).getValue(playerEntity);
+
+    //uint256[] memory storageResourceIds = getMotherlodeResources();
     resources = new uint32[](storageResourceIds.length);
     totalResources = 0;
     for (uint256 i = 0; i < storageResourceIds.length; i++) {
@@ -135,6 +144,15 @@ library LibResource {
       }
       lastClaimedAtComponent.set(playerResourceEntity, block.number);
     }
+  }
+
+  function getMotherlodeResources() internal pure returns (uint256[] memory resourceIds) {
+    resourceIds = new uint256[](4);
+    resourceIds[0] = TitaniumResourceItemID;
+    resourceIds[1] = PlatinumResourceItemID;
+    resourceIds[2] = IridiumResourceItemID;
+    resourceIds[3] = KimberliteResourceItemID;
+    return resourceIds;
   }
 
   function updateResourceAmount(IWorld world, uint256 entity, uint256 resourceType, uint32 value) internal {
@@ -190,6 +208,31 @@ library LibResource {
       if (level > 1) {
         requiredValue -= lastLevelRequiredProductions.values[i];
       }
+      if (LibMath.getSafe(productionComponent, playerResourceEntity) < requiredValue) return false;
+    }
+    return true;
+  }
+
+  function checkResourceProductionRequirements(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 entityType
+  ) internal view returns (bool) {
+    P_ProductionDependenciesComponent productionDependenciesComponent = P_ProductionDependenciesComponent(
+      world.getComponent(P_ProductionDependenciesComponentID)
+    );
+
+    if (!productionDependenciesComponent.has(entityType)) return true;
+
+    ResourceValues memory requiredProductions = productionDependenciesComponent.getValue(entityType);
+    ResourceValues memory lastLevelRequiredProductions;
+
+    ProductionComponent productionComponent = ProductionComponent(world.getComponent(ProductionComponentID));
+    for (uint256 i = 0; i < requiredProductions.resources.length; i++) {
+      uint256 playerResourceEntity = LibEncode.hashKeyEntity(requiredProductions.resources[i], playerEntity);
+      if (!productionComponent.has(playerResourceEntity)) return false;
+      uint256 requiredValue = requiredProductions.values[i];
+
       if (LibMath.getSafe(productionComponent, playerResourceEntity) < requiredValue) return false;
     }
     return true;
