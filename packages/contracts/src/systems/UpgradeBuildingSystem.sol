@@ -30,7 +30,7 @@ import { LibMath } from "libraries/LibMath.sol";
 import { LibResearch } from "libraries/LibResearch.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibResource } from "libraries/LibResource.sol";
-
+import { LibUtilityResource } from "libraries/LibUtilityResource.sol";
 import { IOnEntitySubsystem } from "src/interfaces/IOnEntitySubsystem.sol";
 import { IOnBuildingSubsystem, EActionType } from "src/interfaces/IOnBuildingSubsystem.sol";
 
@@ -75,6 +75,16 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
     require(
       LibBuilding.checkMainBaseLevelRequirement(world, playerEntity, buildingIdLevel),
       "[ResearchSystem] MainBase level requirement not met"
+    );
+
+    require(
+      LibUtilityResource.checkUtilityResourceReqs(
+        world,
+        playerEntity,
+        buildingType,
+        levelComponent.getValue(buildingEntity) + 1
+      ),
+      "[UpgradeBuildingSystem] You do not have the required utility resources"
     );
 
     if (P_ProductionDependenciesComponent(getC(P_ProductionDependenciesComponentID)).has(buildingIdLevel)) {
