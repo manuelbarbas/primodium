@@ -78,9 +78,8 @@ export const ClaimObjectiveButton: React.FC<{
   ]);
 
   const transactionLoading = useGameStore((state) => state.transactionLoading);
-
-  return (
-    !hasCompletedObjective && (
+  if (!hasCompletedObjective)
+    return (
       <button
         disabled={!canClaim}
         className={`border p-1 rounded-md hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${"bg-cyan-700 border-cyan-500"} ${
@@ -92,13 +91,14 @@ export const ClaimObjectiveButton: React.FC<{
       >
         {"Claim"}
       </button>
-    )
-  );
+    );
+  return <p> </p>;
 };
 
 export const Objective: React.FC<{
   objective: EntityID;
 }> = ({ objective }) => {
+  if (!objective) return;
   const objectiveName = getBlockTypeName(objective);
   return (
     <div className="flex items-center justify-between w-full border rounded-md border-slate-700 bg-slate-800 ">
