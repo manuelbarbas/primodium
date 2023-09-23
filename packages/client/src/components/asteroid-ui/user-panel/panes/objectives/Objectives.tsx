@@ -92,7 +92,7 @@ export const ClaimObjectiveButton: React.FC<{
         {"Claim"}
       </button>
     );
-  return <p> </p>;
+  return null;
 };
 
 export const Objective: React.FC<{
@@ -134,7 +134,7 @@ export const UnclaimedObjective: React.FC<{ user: EntityID }> = () => {
   const player = Account.use()?.value ?? SingletonID;
 
   return (
-    <div className="w-full text-xs space-y-2 h-full overflow-y-auto">
+    <div className="grid gap-2 min-h-fit max-h-56 overflow-y-auto">
       {objectives.length === 0 ? (
         <div className="w-full bg-slate-800 border rounded-md border-slate-700 flex items-center justify-center h-12 font-bold">
           <p className="opacity-50">NO AVAILABLE OBJECTIVES</p>
@@ -164,7 +164,7 @@ export const ClaimedObjective: React.FC<{ user: EntityID }> = () => {
   const player = Account.use()?.value ?? SingletonID;
 
   return (
-    <div className="w-full text-xs space-y-2 h-full overflow-y-auto">
+    <div className="grid gap-2 min-h-fit max-h-56 overflow-y-auto">
       {objectives.length === 0 ? (
         <div className="w-full bg-slate-800 border rounded-md border-slate-700 flex items-center justify-center h-12 font-bold">
           <p className="opacity-50">NO COMPLETED OBJECTIVES</p>
