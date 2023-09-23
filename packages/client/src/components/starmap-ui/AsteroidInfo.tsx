@@ -103,7 +103,7 @@ const AsteroidTargetInfo: React.FC<{
     parent: "0" as EntityID,
   });
 
-  if (!mainBase) return null;
+  //if (!mainBase) return null;
 
   const image = getAsteroidImage(target);
   if (paneState == "units") return <UnitBreakdown asteroid={target} />;
