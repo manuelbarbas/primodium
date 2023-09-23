@@ -42,7 +42,7 @@ export const Panes: React.FC = () => {
           <Join direction="vertical" className="z-10">
             <Tabs.IconButton
               index={0}
-              imageUri="/img/icons/transporticon.png"
+              imageUri="/img/icons/outgoingicon.png"
               text="Outgoing Fleets"
               hideText
               tooltipText="Outgoing Fleets"
@@ -50,7 +50,7 @@ export const Panes: React.FC = () => {
             />
             <Tabs.IconButton
               index={1}
-              imageUri="/img/icons/attackaircraft.png"
+              imageUri="/img/icons/reinforcementicon.png"
               text="Reinforcements"
               hideText
               tooltipText="Reinforcements"
@@ -58,7 +58,7 @@ export const Panes: React.FC = () => {
             />
             <Tabs.IconButton
               index={2}
-              imageUri="/img/icons/attackaircraft.png"
+              imageUri="/img/icons/attackicon.png"
               hideText
               text="Attacking Fleets"
               tooltipText="Attacking Fleets"
@@ -66,7 +66,7 @@ export const Panes: React.FC = () => {
             />
             <Tabs.IconButton
               index={3}
-              imageUri="/img/icons/weaponryicon.png"
+              imageUri="/img/icons/reportsicon.png"
               hideText
               text="Battle Reports"
               tooltipDirection="left"
@@ -79,7 +79,7 @@ export const Panes: React.FC = () => {
         <Join direction="vertical" className="z-10">
           <Tabs.IconButton
             index={4}
-            imageUri="/img/icons/debugicon.png"
+            imageUri="/img/icons/objectiveicon.png"
             hideText
             text="Objectives"
             tooltipText="Objectives"
@@ -87,7 +87,7 @@ export const Panes: React.FC = () => {
           />
           <Tabs.IconButton
             index={5}
-            imageUri="/img/spacerocks/motherlodes/motherlode_titanium_large.png"
+            imageUri="/img/icons/asteroidicon.png"
             text="Owned Asteroids"
             hideText
             tooltipDirection="left"
@@ -95,7 +95,7 @@ export const Panes: React.FC = () => {
           />
           <Tabs.IconButton
             index={6}
-            imageUri="/img/icons/settingsicon.png"
+            imageUri="/img/icons/leaderboardicon.png"
             hideText
             text="Leaderboard"
             tooltipText="Leaderboard"
