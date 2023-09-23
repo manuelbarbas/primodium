@@ -44,6 +44,7 @@ import { ArrivalsSizeComponent, ID as ArrivalsSizeComponentID } from "components
 import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMovesComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
 import { OccupiedUtilityResourceComponent, ID as OccupiedUtilityResourceComponentID } from "components/OccupiedUtilityResourceComponent.sol";
+import { PirateComponent, ID as PirateComponentID } from "components/PirateComponent.sol";
 import { LibUnits } from "libraries/LibUnits.sol";
 import { LibUpdateSpaceRock } from "libraries/LibUpdateSpaceRock.sol";
 import { LibMath } from "libraries/LibMath.sol";
@@ -51,6 +52,7 @@ import { LibSend } from "libraries/LibSend.sol";
 import { LibArrival } from "libraries/LibArrival.sol";
 import { LibMotherlode } from "libraries/LibMotherlode.sol";
 import { LibUtilityResource } from "libraries/LibUtilityResource.sol";
+import { LibPirateAsteroid } from "libraries/LibPirateAsteroid.sol";
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
 
 contract ClaimObjectiveSystemTest is PrimodiumTest {
@@ -121,6 +123,141 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     componentDevSystem.executeTyped(MaxMovesComponentID, addressToEntity(alice), abi.encode(100));
     componentDevSystem.executeTyped(MaxMovesComponentID, addressToEntity(bob), abi.encode(100));
     componentDevSystem.executeTyped(MaxMovesComponentID, addressToEntity(deployer), abi.encode(100));
+  }
+
+  function testSpawnPirateAsteroidObjective() public {
+    vm.startPrank(alice);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugSpawnPirateAsteroidObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
+    claimObjectiveSystem.executeTyped(DebugSpawnPirateAsteroidObjectiveID);
+    assertTrue(
+      hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugSpawnPirateAsteroidObjectiveID, addressToEntity(alice))
+      ),
+      "objective should have been completed"
+    );
+    uint256 personalPirateEntity = LibPirateAsteroid.getPersonalPirate(addressToEntity(alice));
+    uint256 asteroidEntity = LibUpdateSpaceRock.getPlayerAsteroidEntity(world, personalPirateEntity);
+    assertTrue(PirateComponent(world.getComponent(PirateComponentID)).has(asteroidEntity), "pirate asteroid not found");
+    assertTrue(
+      PirateComponent(world.getComponent(PirateComponentID)).has(personalPirateEntity),
+      "personal pirate not found"
+    );
+    assertEq(
+      LibUnits.getUnitCountOnRock(world, personalPirateEntity, asteroidEntity, DebugUnit),
+      5,
+      "there must be 5 DebugUnit on asteroid"
+    );
+    assertEq(
+      LibMath.getSafe(
+        ItemComponent(world.getComponent(ItemComponentID)),
+        LibEncode.hashKeyEntity(IronResourceItemID, personalPirateEntity)
+      ),
+      100,
+      "there must be 100 iron on asteroid"
+    );
+    vm.stopPrank();
+    setupUnits(alice, DebugUnit, 10);
+    vm.startPrank(alice);
+    uint256[] memory unitTypes = isUnitComponent.getEntities();
+    ArrivalUnit[] memory units = new ArrivalUnit[](unitTypes.length);
+    for (uint i = 0; i < unitTypes.length; i++) {
+      units[i] = ArrivalUnit(unitTypes[i], unitTypes[i] == DebugUnit ? 10 : 0);
+    }
+    console.log("alice: %s", addressToEntity(alice));
+
+    bytes memory rawArrival = sendUnitsSystem.executeTyped(
+      units,
+      ESendType.RAID,
+      getHomeAsteroid(alice),
+      positionComponent.getValue(asteroidEntity),
+      personalPirateEntity
+    );
+    Arrival memory arrival = abi.decode(rawArrival, (Arrival));
+    vm.roll(block.number + 200);
+
+    raidSystem.executeTyped(arrival.destination);
+
+    assertEq(
+      LibUnits.getUnitCountOnRock(world, personalPirateEntity, asteroidEntity, DebugUnit),
+      0,
+      "there must be 0 DebugUnit on asteroid"
+    );
+    assertEq(
+      LibMath.getSafe(
+        ItemComponent(world.getComponent(ItemComponentID)),
+        LibEncode.hashKeyEntity(IronResourceItemID, personalPirateEntity)
+      ),
+      0,
+      "there must be 0 on asteroid"
+    );
+
+    claimObjectiveSystem.executeTyped(DebugDefeatedPirateAsteroidObjectiveID);
+
+    vm.stopPrank();
+  }
+
+  function testFailSpawnPirateAsteroidObjective() public {
+    vm.startPrank(alice);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugSpawnPirateAsteroidObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
+    claimObjectiveSystem.executeTyped(DebugSpawnPirateAsteroidObjectiveID);
+    assertTrue(
+      hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugSpawnPirateAsteroidObjectiveID, addressToEntity(alice))
+      ),
+      "objective should have been completed"
+    );
+    uint256 personalPirateEntity = LibPirateAsteroid.getPersonalPirate(addressToEntity(alice));
+    uint256 asteroidEntity = LibUpdateSpaceRock.getPlayerAsteroidEntity(world, personalPirateEntity);
+    assertTrue(PirateComponent(world.getComponent(PirateComponentID)).has(asteroidEntity), "pirate asteroid not found");
+    assertTrue(
+      PirateComponent(world.getComponent(PirateComponentID)).has(personalPirateEntity),
+      "personal pirate not found"
+    );
+    assertEq(
+      LibUnits.getUnitCountOnRock(world, personalPirateEntity, asteroidEntity, DebugUnit),
+      5,
+      "there must be 5 DebugUnit on asteroid"
+    );
+    assertEq(
+      LibMath.getSafe(
+        ItemComponent(world.getComponent(ItemComponentID)),
+        LibEncode.hashKeyEntity(IronResourceItemID, personalPirateEntity)
+      ),
+      100,
+      "there must be 100 iron on asteroid"
+    );
+    vm.stopPrank();
+    setupUnits(bob, DebugUnit, 10);
+    vm.startPrank(bob);
+    uint256[] memory unitTypes = isUnitComponent.getEntities();
+    ArrivalUnit[] memory units = new ArrivalUnit[](unitTypes.length);
+    for (uint i = 0; i < unitTypes.length; i++) {
+      units[i] = ArrivalUnit(unitTypes[i], unitTypes[i] == DebugUnit ? 10 : 0);
+    }
+
+    bytes memory rawArrival = sendUnitsSystem.executeTyped(
+      units,
+      ESendType.RAID,
+      getHomeAsteroid(bob),
+      positionComponent.getValue(asteroidEntity),
+      personalPirateEntity
+    );
+    Arrival memory arrival = abi.decode(rawArrival, (Arrival));
+    vm.roll(block.number + 200);
+
+    raidSystem.executeTyped(arrival.destination);
+
+    vm.stopPrank();
   }
 
   function testFailClaimObjectiveNotRegistered() public {
@@ -670,6 +807,17 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     );
     ResourceValues memory resourceValues = P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).getValue(
       DebugUnitsRewardObjectiveID
+    );
+
+    console.log(
+      LibMath.getSafe(
+        occupiedUtilityResourceComponent,
+        LibEncode.hashKeyEntity(HousingUtilityResourceID, addressToEntity(alice))
+      )
+    );
+    MaxUtilityComponent maxUtilityComponent = MaxUtilityComponent(world.getComponent(MaxUtilityComponentID));
+    console.log(
+      LibMath.getSafe(maxUtilityComponent, LibEncode.hashKeyEntity(HousingUtilityResourceID, addressToEntity(alice)))
     );
     assertTrue(resourceValues.resources.length > 0, "objective should have unit rewards");
     vm.prank(alice);

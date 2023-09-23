@@ -12,7 +12,7 @@ export const spawn = async (network: Network) => {
 
   setTransactionLoading(true);
   const receipt = await execute(
-    systems["system.Spawn"].executeTyped({ gasLimit: 10_000_000 }),
+    systems["system.Spawn"].executeTyped({ gasLimit: 15_000_000 }),
     providers,
     setNotification
   );

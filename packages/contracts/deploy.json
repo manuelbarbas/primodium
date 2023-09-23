@@ -45,7 +45,11 @@
     "TotalRaidComponent",
     "TotalMotherlodeMinedComponent",
     "TotalUnitsDestroyedComponent",
+    "PirateComponent",
+    "DefeatedSpawnedPirateAsteroidComponent",
 
+    "P_RequiredPirateAsteroidDefeatedComponent",
+    "P_SpawnPirateAsteroidComponent",
     "P_DestroyedUnitsRequirementComponent",
     "P_MotherlodeMinedRequirementComponent",
     "P_RaidRequirementComponent",
@@ -149,6 +153,14 @@
 
     {
       "name": "ComponentDevSystem",
+      "writeAccess": ["*"]
+    },
+    {
+      "name": "S_ReceiveRewardsSystem",
+      "writeAccess": ["*"]
+    },
+    {
+      "name": "S_SpawnPirateAsteroidSystem",
       "writeAccess": ["*"]
     },
     {
