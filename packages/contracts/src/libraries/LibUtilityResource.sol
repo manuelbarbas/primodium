@@ -33,7 +33,14 @@ library LibUtilityResource {
       uint32 requiredAmount = requiredAmounts[i];
       if (buildingLevel > 1) {
         uint256 buildingPastLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel - 1);
-        requiredAmount -= requiredUtilityComponent.getValue(buildingPastLevelEntity).values[i];
+        if (requiredUtilityComponent.has(buildingPastLevelEntity)) {
+          uint256[] memory pastLevelResourceIDs = requiredUtilityComponent.getValue(buildingPastLevelEntity).resources;
+          for (uint256 j = 0; j < pastLevelResourceIDs.length; j++) {
+            if (pastLevelResourceIDs[j] == resourceIDs[i]) {
+              requiredAmount -= requiredUtilityComponent.getValue(buildingPastLevelEntity).values[j];
+            }
+          }
+        }
       }
 
       if (!checkRequiredUtility(world, playerEntity, resourceIDs[i], requiredAmount)) {
