@@ -10,6 +10,7 @@ import {
   checkRaidRequirement,
   checkMotherlodeMinedRequirement,
   checkDestroyedUnitsRequirement,
+  checkHasDefeatedPirateAsteroid,
 } from "./requirements";
 import { EntityID } from "@latticexyz/recs";
 import { hasEnoughResources } from "./resource";
@@ -33,6 +34,7 @@ export function getCanClaimObjective(entityID: EntityID) {
     checkUnitRequirement(entityID) &&
     checkRaidRequirement(entityID) &&
     checkMotherlodeMinedRequirement(entityID) &&
-    checkDestroyedUnitsRequirement(entityID)
+    checkDestroyedUnitsRequirement(entityID) &&
+    checkHasDefeatedPirateAsteroid(entityID)
   );
 }

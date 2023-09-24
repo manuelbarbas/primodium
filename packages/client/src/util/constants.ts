@@ -15,6 +15,28 @@ export enum ResourceType {
   ResourceRate,
   Utility,
 }
+
+export enum RewardType {
+  Resource,
+  Unit,
+}
+
+export enum RequirementType {
+  Resource,
+  Utility,
+  ResourceRate,
+  MaxUtility,
+  BuildingCount,
+  Unit,
+  Raid,
+  MotherlodeMined,
+  DestroyedUnit,
+  HasBuilt,
+  HasResearched,
+  HasMainBaseLevel,
+  HasDefeatedPirate,
+}
+
 export const SPEED_SCALE = 10000;
 export const RESOURCE_SCALE = 1 / 100;
 
@@ -653,6 +675,13 @@ export const ResourceImage = new Map<EntityID, string>([
 
   // debug
   [BlockType.BulletCrafted, "/img/crafted/bullet.png"],
+
+  //units
+  [BlockType.HammerLightDrone, "/img/unit/hammerdrone.png"],
+  [BlockType.StingerDrone, "/img/unit/stingerdrone.png"],
+  [BlockType.AnvilLightDrone, "/img/unit/anvildrone.png"],
+  [BlockType.AegisDrone, "/img/unit/aegisdrone.png"],
+  [BlockType.MiningVessel, "/img/unit/miningvessel.png"],
 ]);
 
 export type DisplayKeyPair = {

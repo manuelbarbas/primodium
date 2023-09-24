@@ -612,6 +612,23 @@ export const P_UnitReward = newComponent(
   }
 );
 
+export const P_RequiredPirateAsteroidDefeated = newComponent(
+  world,
+  {
+    value: Type.Entity,
+  },
+  {
+    id: "P_RequiredPirateAsteroidDefeated",
+    metadata: {
+      contractId: `${commonIdPrefix}P_RequiredPirateAsteroidDefeated`,
+    },
+  }
+);
+
+export const DefeatedSpawnedPirateAsteroid = newBoolComponent(world, {
+  id: "DefeatedSpawnedPirateAsteroid",
+  metadata: { contractId: `${commonIdPrefix}DefeatedSpawnedPirateAsteroid` },
+});
 export default {
   GameConfig,
   P_Terrain,

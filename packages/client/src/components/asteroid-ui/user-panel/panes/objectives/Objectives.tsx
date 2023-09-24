@@ -27,6 +27,7 @@ import { useEntityQuery } from "@latticexyz/react";
 import { world } from "src/network/world";
 import { hashAndTrimKeyEntity } from "src/util/encode";
 import { getBlockTypeName } from "src/util/common";
+import { getRewards } from "src/util/reward";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -99,7 +100,12 @@ export const Objective: React.FC<{
   objective: EntityID;
 }> = ({ objective }) => {
   if (!objective) return;
-  const objectiveName = getBlockTypeName(objective);
+  const objectiveName = useMemo(() => {
+    return getBlockTypeName(objective);
+  }, [objective]);
+  const rewardRecipee = useMemo(() => {
+    return getRewards(objective);
+  }, [objective]);
   return (
     <div className="flex items-center justify-between w-full border rounded-md border-slate-700 bg-slate-800 ">
       <div className="flex gap-1 items-center">
