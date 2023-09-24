@@ -392,9 +392,19 @@ export const BackgroundImage = new Map<EntityID, string[]>([
       "/img/building/solarpanels/solarpanel-level2.png",
     ],
   ],
+  [
+    BlockType.Garage,
+    ["/img/building/ironplatingfactory/ironplatingfactory-level1.png"],
+  ],
   [BlockType.Hangar, ["/img/building/hangar/level1/Hangar1.png"]],
   [
     BlockType.DroneFactory,
+    [
+      "/img/building/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_1.png",
+    ],
+  ],
+  [
+    BlockType.AdvancedDroneFactory,
     ["/img/building/drone-factory/normal/Drone_Factory1.png"],
   ],
   [

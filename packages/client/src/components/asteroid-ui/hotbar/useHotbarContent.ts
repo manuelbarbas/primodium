@@ -59,12 +59,20 @@ const advancedBuildingHotbar: Hotbar = {
       keybind: KeybindActions.Hotbar4,
     },
     {
-      blockType: BlockType.DroneFactory,
+      blockType: BlockType.Garage,
       keybind: KeybindActions.Hotbar5,
     },
     {
       blockType: BlockType.Hangar,
       keybind: KeybindActions.Hotbar6,
+    },
+    {
+      blockType: BlockType.DroneFactory,
+      keybind: KeybindActions.Hotbar7,
+    },
+    {
+      blockType: BlockType.AdvancedDroneFactory,
+      keybind: KeybindActions.Hotbar8,
     },
   ],
 };
