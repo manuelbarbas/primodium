@@ -95,7 +95,10 @@ const NavButton: FC<{
   className?: string;
   disabled?: boolean;
 }> = ({ to, className, children, disabled }) => {
-  const { navigateTo } = useNavigation();
+  const { navigateTo, history } = useNavigation();
+
+  if (to === history[history.length - 1]) return <></>;
+
   return (
     <Button
       className={className}
@@ -121,7 +124,7 @@ const BackButton: FC<{
         if (onClick) onClick();
         goBack();
       }}
-      className={className}
+      className={`${className} btn-sm border-secondary`}
     >
       {children || "Back"}
     </Button>

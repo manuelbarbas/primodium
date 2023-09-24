@@ -21,7 +21,7 @@ import { upgradeRange } from "src/util/web3";
 export const ExpandRange: React.FC = () => {
   const network = useMud();
   const transactionLoading = useGameStore((state) => state.transactionLoading);
-
+  const { levels } = ExpansionResearchTree;
   const player = Account.use()?.value ?? SingletonID;
   const mainBaseEntity = MainBase.use(player, {
     value: "-1" as EntityID,
@@ -105,6 +105,18 @@ export const ExpandRange: React.FC = () => {
           {error}
         </p>
       )}
+      <div className="flex gap-1 mt-1">
+        {levels.map((_, index) => {
+          return (
+            <div
+              key={index}
+              className={`w-2 h-2 rounded-full ${
+                level - 1 >= index ? "bg-green-600" : "bg-slate-500"
+              }`}
+            />
+          );
+        })}
+      </div>
     </SecondaryCard>
   );
 };
