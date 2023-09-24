@@ -265,6 +265,84 @@ export const MiningVesselUpgradeTree: ResearchItemType = {
   ],
 };
 
+export const MarineUnitUpgradeTree: ResearchItemType = {
+  name: "Marine Unit Unit Upgrade",
+  id: BlockType.MarineUnitUpgrade1,
+  description: "Increases the Marine Unit's Mining Power by 1. ",
+
+  levels: [
+    {
+      id: BlockType.MarineUnitUpgrade1,
+      subtitle: "Level 1",
+      description:
+        "Upgrades the Attack and Defence attributes of Marine units.",
+    },
+    {
+      id: BlockType.MarineUnitUpgrade2,
+      subtitle: "Level 2",
+      description:
+        "Upgrades the Attack and Defence attributes of Marine units.",
+    },
+    {
+      id: BlockType.MarineUnitUpgrade3,
+      subtitle: "Level 3",
+      description:
+        "Upgrades the Attack and Defence attributes of Marine units.",
+    },
+    {
+      id: BlockType.MarineUnitUpgrade4,
+      subtitle: "Level 4",
+      description:
+        "Upgrades the Attack and Defence attributes of Marine units.",
+    },
+    {
+      id: BlockType.MarineUnitUpgrade5,
+      subtitle: "Level 5",
+      description:
+        "Upgrades the Attack and Defence attributes of Marine units.",
+    },
+  ],
+};
+
+export const AdvancedMarineUnitUpgradeTree: ResearchItemType = {
+  name: "AdvancedMarine Unit Unit Upgrade",
+  id: BlockType.AdvancedMarineUnitUpgrade1,
+  description: "Increases the AdvancedMarine Unit's Mining Power by 1. ",
+
+  levels: [
+    {
+      id: BlockType.AdvancedMarineUnitUpgrade1,
+      subtitle: "Level 1",
+      description:
+        "Upgrades the Attack and Defence attributes of AdvancedMarine units.",
+    },
+    {
+      id: BlockType.AdvancedMarineUnitUpgrade2,
+      subtitle: "Level 2",
+      description:
+        "Upgrades the Attack and Defence attributes of AdvancedMarine units.",
+    },
+    {
+      id: BlockType.AdvancedMarineUnitUpgrade3,
+      subtitle: "Level 3",
+      description:
+        "Upgrades the Attack and Defence attributes of AdvancedMarine units.",
+    },
+    {
+      id: BlockType.AdvancedMarineUnitUpgrade4,
+      subtitle: "Level 4",
+      description:
+        "Upgrades the Attack and Defence attributes of AdvancedMarine units.",
+    },
+    {
+      id: BlockType.AdvancedMarineUnitUpgrade5,
+      subtitle: "Level 5",
+      description:
+        "Upgrades the Attack and Defence attributes of AdvancedMarine units.",
+    },
+  ],
+};
+
 // Research resource data should be read from getRecipe() in ../util/resource.ts
 
 export const ResearchTree: ResearchTreeType = [
@@ -275,6 +353,8 @@ export const ResearchTree: ResearchTreeType = [
   {
     category: "Unit Upgrade Research",
     data: [
+      MarineUnitUpgradeTree,
+      AdvancedMarineUnitUpgradeTree,
       AnvilDroneUpgradeTree,
       HammerDroneUpgradeTree,
       AegisDroneUpgradeTree,
