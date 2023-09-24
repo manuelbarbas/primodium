@@ -196,7 +196,7 @@ export const BuildDrone: React.FC<{
                 onChange={(val) => setCount(val)}
               />
 
-              <Join className="border-secondary">
+              <div className="flex gap-2">
                 <Navigator.BackButton
                   className="btn-sm btn-secondary"
                   disabled={
@@ -211,8 +211,8 @@ export const BuildDrone: React.FC<{
                 >
                   Train
                 </Navigator.BackButton>
-                <Navigator.BackButton className="btn-sm" />
-              </Join>
+                <Navigator.BackButton className="btn-sm border-secondary" />
+              </div>
             </>
           )}
           <p className="opacity-50 text-xs">

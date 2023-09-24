@@ -13,6 +13,8 @@ import { MainBase } from "./screens/Mainbase";
 import { BuildQueue } from "./screens/BuildQueue";
 import { BuildDrone } from "./screens/BuildDrone";
 import { UpgradeDrones } from "./screens/UpgradeDrones";
+import { FaTrash } from "react-icons/fa";
+import { MiningVessels } from "./screens/MiningVessels";
 
 export const BuildingMenu: React.FC = () => {
   const selectedBuilding = SelectedBuilding.use()?.value;
@@ -69,6 +71,7 @@ export const BuildingMenu: React.FC = () => {
       <BuildQueue building={selectedBuilding} />
       <BuildDrone building={selectedBuilding} />
       <UpgradeDrones />
+      <MiningVessels />
 
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2">
         <Button
@@ -78,6 +81,17 @@ export const BuildingMenu: React.FC = () => {
           x
         </Button>
       </div>
+
+      {buildingType !== BlockType.MainBase && (
+        <div className="absolute top-0 right-9 -translate-y-1/2 translate-x-1/2">
+          <Navigator.NavButton
+            className=" btn-square btn-sm font-bold border border-error inline-flex"
+            to="Demolish"
+          >
+            <FaTrash size={12} />
+          </Navigator.NavButton>
+        </div>
+      )}
     </Navigator>
   );
 };
