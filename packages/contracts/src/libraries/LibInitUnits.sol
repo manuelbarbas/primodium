@@ -86,29 +86,29 @@ library LibInitUnits {
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
     // LEVEL 1
     ResourceValue[] memory resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 2000 });
     requiredResources[0] = resourceValues;
     // LEVEL 2
     resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 2000 });
     requiredResources[1] = resourceValues;
     // LEVEL 3
     resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 2000 });
     requiredResources[2] = resourceValues;
 
     // LEVEL 4
     resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 2000 });
     requiredResources[3] = resourceValues;
     // LEVEL 5
     resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 2000 });
     requiredResources[4] = resourceValues;
 
     // LEVEL 6
     resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 2000 });
     requiredResources[5] = resourceValues;
 
     /****************** Required Utility Resources *******************/
@@ -616,12 +616,12 @@ library LibInitUnits {
 
     /****************** Cargos *******************/
 
-    unitDesigns[0].cargo = 4000;
-    unitDesigns[1].cargo = 4000;
-    unitDesigns[2].cargo = 4000;
-    unitDesigns[3].cargo = 4000;
-    unitDesigns[4].cargo = 4000;
-    unitDesigns[5].cargo = 4000;
+    unitDesigns[0].cargo = 10000;
+    unitDesigns[1].cargo = 10000;
+    unitDesigns[2].cargo = 10000;
+    unitDesigns[3].cargo = 10000;
+    unitDesigns[4].cargo = 10000;
+    unitDesigns[5].cargo = 10000;
 
     /****************** Speeds *******************/
 
@@ -662,28 +662,34 @@ library LibInitUnits {
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
     // LEVEL 1
-    ResourceValue[] memory resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
+    ResourceValue[] memory resourceValues = new ResourceValue[](2);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 10000 });
+    resourceValues[1] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 4000 });
     requiredResources[0] = resourceValues;
     // LEVEL 2
-    resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
+    resourceValues = new ResourceValue[](2);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 10000 });
+    resourceValues[1] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 4000 });
     requiredResources[1] = resourceValues;
     // LEVEL 3
-    resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
+    resourceValues = new ResourceValue[](2);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 10000 });
+    resourceValues[1] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 4000 });
     requiredResources[2] = resourceValues;
     // LEVEL 4
-    resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
+    resourceValues = new ResourceValue[](2);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 10000 });
+    resourceValues[1] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 4000 });
     requiredResources[3] = resourceValues;
     // LEVEL 5
-    resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
+    resourceValues = new ResourceValue[](2);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 10000 });
+    resourceValues[1] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 4000 });
     requiredResources[4] = resourceValues;
     // LEVEL 6
-    resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
+    resourceValues = new ResourceValue[](2);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 10000 });
+    resourceValues[1] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 4000 });
     requiredResources[5] = resourceValues;
 
     /****************** Required Utility Resources *******************/
@@ -802,36 +808,30 @@ library LibInitUnits {
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
     // LEVEL 1
-    ResourceValue[] memory resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 500 });
+    ResourceValue[] memory resourceValues = new ResourceValue[](1);
     resourceValues[1] = ResourceValue({ resource: TitaniumResourceItemID, value: 1500 });
     requiredResources[0] = resourceValues;
     // LEVEL 2
-    resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 500 });
+    resourceValues = new ResourceValue[](1);
     resourceValues[1] = ResourceValue({ resource: TitaniumResourceItemID, value: 1500 });
     requiredResources[1] = resourceValues;
     // LEVEL 3
-    resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 500 });
+    resourceValues = new ResourceValue[](1);
     resourceValues[1] = ResourceValue({ resource: TitaniumResourceItemID, value: 1500 });
     requiredResources[2] = resourceValues;
 
     // LEVEL 4
-    resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 500 });
+    resourceValues = new ResourceValue[](1);
     resourceValues[1] = ResourceValue({ resource: TitaniumResourceItemID, value: 1500 });
     requiredResources[3] = resourceValues;
 
     // LEVEL 5
-    resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 500 });
+    resourceValues = new ResourceValue[](1);
     resourceValues[1] = ResourceValue({ resource: TitaniumResourceItemID, value: 1500 });
     requiredResources[4] = resourceValues;
 
     // LEVEL 6
-    resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 500 });
+    resourceValues = new ResourceValue[](1);
     resourceValues[1] = ResourceValue({ resource: TitaniumResourceItemID, value: 1500 });
     requiredResources[5] = resourceValues;
 
@@ -905,12 +905,12 @@ library LibInitUnits {
 
     /****************** Cargos *******************/
 
-    unitDesigns[0].cargo = 10000;
-    unitDesigns[1].cargo = 10000;
-    unitDesigns[2].cargo = 10000;
-    unitDesigns[3].cargo = 10000;
-    unitDesigns[4].cargo = 10000;
-    unitDesigns[5].cargo = 10000;
+    unitDesigns[0].cargo = 20000;
+    unitDesigns[1].cargo = 20000;
+    unitDesigns[2].cargo = 20000;
+    unitDesigns[3].cargo = 20000;
+    unitDesigns[4].cargo = 20000;
+    unitDesigns[5].cargo = 20000;
 
     /****************** Speeds *******************/
 
@@ -952,38 +952,38 @@ library LibInitUnits {
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
     // LEVEL 1
     ResourceValue[] memory resourceValues = new ResourceValue[](3);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 2000 });
-    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 3000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 20000 });
+    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 30000 });
     resourceValues[2] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 5000 });
     requiredResources[0] = resourceValues;
     // LEVEL 2
     resourceValues = new ResourceValue[](3);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 2000 });
-    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 3000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 20000 });
+    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 30000 });
     resourceValues[2] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 5000 });
     requiredResources[1] = resourceValues;
     // LEVEL 3
     resourceValues = new ResourceValue[](3);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 2000 });
-    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 3000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 20000 });
+    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 30000 });
     resourceValues[2] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 5000 });
     requiredResources[2] = resourceValues;
     // LEVEL 4
     resourceValues = new ResourceValue[](3);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 2000 });
-    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 3000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 20000 });
+    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 30000 });
     resourceValues[2] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 5000 });
     requiredResources[3] = resourceValues;
     // LEVEL 5
     resourceValues = new ResourceValue[](3);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 2000 });
-    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 3000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 20000 });
+    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 30000 });
     resourceValues[2] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 5000 });
     requiredResources[4] = resourceValues;
     // LEVEL 6
     resourceValues = new ResourceValue[](3);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 2000 });
-    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 3000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 20000 });
+    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 30000 });
     resourceValues[2] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 5000 });
     requiredResources[5] = resourceValues;
 
@@ -1056,12 +1056,12 @@ library LibInitUnits {
 
     /****************** Cargos *******************/
 
-    unitDesigns[0].cargo = 3000;
-    unitDesigns[1].cargo = 3000;
-    unitDesigns[2].cargo = 3000;
-    unitDesigns[3].cargo = 3000;
-    unitDesigns[4].cargo = 3000;
-    unitDesigns[5].cargo = 3000;
+    unitDesigns[0].cargo = 30000;
+    unitDesigns[1].cargo = 30000;
+    unitDesigns[2].cargo = 30000;
+    unitDesigns[3].cargo = 30000;
+    unitDesigns[4].cargo = 30000;
+    unitDesigns[5].cargo = 30000;
 
     /****************** Speeds *******************/
 

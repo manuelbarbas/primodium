@@ -57,19 +57,19 @@ library LibInitResearch {
 
     // MiningVessel I:
     requiredResources = new ResourceValue[](1);
-    requiredResources[0] = ResourceValue({ resource: TitaniumResourceItemID, value: 10000 });
+    requiredResources[0] = ResourceValue({ resource: TitaniumResourceItemID, value: 50000 });
     mainBaseLevel = 3;
     initUnitUpgrade(world, MiningVesselUpgrade, unitType, 1, mainBaseLevel, requiredResources);
 
     // MiningVessel II:
     requiredResources = new ResourceValue[](1);
-    requiredResources[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 10000 });
+    requiredResources[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 50000 });
     mainBaseLevel = 4;
     initUnitUpgrade(world, MiningVesselUpgrade2, unitType, 2, mainBaseLevel, requiredResources);
 
     // MiningVessel III:
     requiredResources = new ResourceValue[](1);
-    requiredResources[0] = ResourceValue({ resource: IridiumResourceItemID, value: 10000 });
+    requiredResources[0] = ResourceValue({ resource: IridiumResourceItemID, value: 50000 });
     mainBaseLevel = 6;
     initUnitUpgrade(world, MiningVesselUpgrade3, unitType, 3, mainBaseLevel, requiredResources);
 
@@ -240,7 +240,7 @@ library LibInitResearch {
 
     // Expansion II: 1000 iron
     requiredResources = new ResourceValue[](1);
-    requiredResources[0] = ResourceValue({ resource: CopperResourceItemID, value: 4000 });
+    requiredResources[0] = ResourceValue({ resource: CopperResourceItemID, value: 40000 });
     LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch2, requiredResources);
     isTechComponent.set(ExpansionResearch2);
     levelComponent.set(ExpansionResearch2, 2);
@@ -248,7 +248,7 @@ library LibInitResearch {
 
     // Expansion III: 2000 copper
     requiredResources = new ResourceValue[](1);
-    requiredResources[0] = ResourceValue({ resource: LithiumResourceItemID, value: 8000 });
+    requiredResources[0] = ResourceValue({ resource: LithiumResourceItemID, value: 80000 });
     LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch3, requiredResources);
     isTechComponent.set(ExpansionResearch3);
     levelComponent.set(ExpansionResearch3, 3);
@@ -256,7 +256,7 @@ library LibInitResearch {
 
     // Expansion IV: 3000 iron plates
     requiredResources = new ResourceValue[](1);
-    requiredResources[0] = ResourceValue({ resource: TitaniumResourceItemID, value: 10000 });
+    requiredResources[0] = ResourceValue({ resource: TitaniumResourceItemID, value: 50000 });
     LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch4, requiredResources);
     isTechComponent.set(ExpansionResearch4);
     levelComponent.set(ExpansionResearch4, 4);
@@ -264,7 +264,7 @@ library LibInitResearch {
 
     // Expansion V: 4000 lithium
     requiredResources = new ResourceValue[](1);
-    requiredResources[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 20000 });
+    requiredResources[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 50000 });
     LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch5, requiredResources);
     isTechComponent.set(ExpansionResearch5);
     levelComponent.set(ExpansionResearch5, 5);
@@ -272,7 +272,7 @@ library LibInitResearch {
 
     // Expansion VI: 5000 lithium
     requiredResources = new ResourceValue[](1);
-    requiredResources[0] = ResourceValue({ resource: IridiumResourceItemID, value: 30000 });
+    requiredResources[0] = ResourceValue({ resource: IridiumResourceItemID, value: 50000 });
     LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch6, requiredResources);
     isTechComponent.set(ExpansionResearch6);
     levelComponent.set(ExpansionResearch6, 6);

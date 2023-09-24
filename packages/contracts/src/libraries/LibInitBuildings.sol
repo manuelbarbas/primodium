@@ -97,6 +97,60 @@ library LibInitBuildings {
     resourceValues[0] = ResourceValue({ resource: KimberliteResourceItemID, value: 590000 });
     requiredResources[7] = resourceValues;
 
+    /****************** Vessel Utility Upgrades *******************/
+    uint32[] memory vesselProduction = new uint32[](maxLevel);
+
+    // LEVEL 1
+    vesselProduction[0] = 1;
+
+    // LEVEL 2
+    vesselProduction[1] = 1;
+
+    // LEVEL 3
+    vesselProduction[2] = 1;
+
+    // LEVEL 4
+    vesselProduction[3] = 1;
+
+    // LEVEL 5
+    vesselProduction[4] = 1;
+
+    // LEVEL 6
+    vesselProduction[5] = 1;
+
+    // LEVEL 7
+    vesselProduction[6] = 1;
+
+    // LEVEL 8
+    vesselProduction[7] = 1;
+
+    /****************** Max Move *******************/
+    uint32[] memory maxMoves = new uint32[](maxLevel);
+
+    // LEVEL 1
+    maxMoves[0] = 1;
+
+    // LEVEL 2
+    maxMoves[1] = 1;
+
+    // LEVEL 3
+    maxMoves[2] = 1;
+
+    // LEVEL 4
+    maxMoves[3] = 1;
+
+    // LEVEL 5
+    maxMoves[4] = 1;
+
+    // LEVEL 6
+    maxMoves[5] = 1;
+
+    // LEVEL 7
+    maxMoves[6] = 1;
+
+    // LEVEL 8
+    maxMoves[7] = 1;
+
     /****************** Storage Upgrades *******************/
     ResourceValue[][] memory storageUpgrades = new ResourceValue[][](maxLevel);
     // LEVEL 1
@@ -211,6 +265,11 @@ library LibInitBuildings {
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
       LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
       LibSetBuildingReqs.setStorageUpgrades(world, buildingLevelEntity, storageUpgrades[i]);
+      P_UtilityProductionComponent(world.getComponent(P_UtilityProductionComponentID)).set(
+        buildingLevelEntity,
+        ResourceValue(VesselUtilityResourceID, vesselProduction[i])
+      );
+      P_MaxMovesComponent(world.getComponent(P_MaxMovesComponentID)).set(buildingLevelEntity, maxMoves[i]);
     }
   }
 
