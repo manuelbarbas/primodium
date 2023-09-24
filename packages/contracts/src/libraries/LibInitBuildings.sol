@@ -1239,7 +1239,7 @@ library LibInitBuildings {
     uint256 productionResourceType = HousingUtilityResourceID;
     P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(
       utilityBuildingType,
-      LibBlueprint.get4x4Blueprint()
+      LibBlueprint.get2x2Blueprint()
     );
     /****************** Required Main Base Levels *******************/
     uint32[] memory requiredMainBaseLevels = new uint32[](maxLevel);
@@ -1470,10 +1470,6 @@ library LibInitBuildings {
   ) internal {
     P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(uniTrainingBuildingType);
     P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(uniTrainingBuildingType, maxLevel);
-    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(
-      uniTrainingBuildingType,
-      LibBlueprint.get3x3Blueprint()
-    );
 
     for (uint256 i = 0; i < maxLevel; i++) {
       uint256 level = i + 1;
@@ -1499,7 +1495,10 @@ library LibInitBuildings {
   function initAdvancedDroneFactory(IWorld world) internal {
     uint256 unitTrainingBuildingType = AdvancedDroneFactoryID;
     uint32 maxLevel = 6;
-
+    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(
+      unitTrainingBuildingType,
+      LibBlueprint.get3x3Blueprint()
+    );
     /****************** Required Main Base Levels *******************/
     uint32[] memory requiredMainBaseLevels = new uint32[](maxLevel);
     requiredMainBaseLevels[0] = 2;
@@ -1668,7 +1667,10 @@ library LibInitBuildings {
   function initDroneFactory(IWorld world) internal {
     uint256 unitTrainingBuildingType = DroneFactoryID;
     uint32 maxLevel = 4;
-
+    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(
+      unitTrainingBuildingType,
+      LibBlueprint.get2x2Blueprint()
+    );
     /****************** Required Main Base Levels *******************/
     uint32[] memory requiredMainBaseLevels = new uint32[](maxLevel);
     requiredMainBaseLevels[0] = 1;
