@@ -154,20 +154,19 @@ library LibInitBuildings {
     /****************** Storage Upgrades *******************/
     ResourceValue[][] memory storageUpgrades = new ResourceValue[][](maxLevel);
     // LEVEL 1
-    resourceValues = new ResourceValue[](4);
+    resourceValues = new ResourceValue[](3);
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 175000 });
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 135000 });
-    resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 54000 });
-    resourceValues[3] = ResourceValue({ resource: IronPlateCraftedItemID, value: 30000 });
+    resourceValues[2] = ResourceValue({ resource: IronPlateCraftedItemID, value: 100000 });
     storageUpgrades[0] = resourceValues;
 
     // LEVEL 2
     resourceValues = new ResourceValue[](6);
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 540000 });
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 270000 });
-    resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 100000 });
-    resourceValues[3] = ResourceValue({ resource: SulfurResourceItemID, value: 144000 });
-    resourceValues[4] = ResourceValue({ resource: IronPlateCraftedItemID, value: 70000 });
+    resourceValues[2] = ResourceValue({ resource: IronPlateCraftedItemID, value: 170000 });
+    resourceValues[3] = ResourceValue({ resource: LithiumResourceItemID, value: 100000 });
+    resourceValues[4] = ResourceValue({ resource: SulfurResourceItemID, value: 144000 });
     resourceValues[5] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 27000 });
     storageUpgrades[1] = resourceValues;
 
@@ -175,22 +174,22 @@ library LibInitBuildings {
     resourceValues = new ResourceValue[](7);
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 1440000 });
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 720000 });
-    resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 288000 });
-    resourceValues[3] = ResourceValue({ resource: SulfurResourceItemID, value: 144000 });
-    resourceValues[4] = ResourceValue({ resource: IronPlateCraftedItemID, value: 115200 });
-    resourceValues[5] = ResourceValue({ resource: AlloyCraftedItemID, value: 72000 });
-    resourceValues[6] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 50000 });
+    resourceValues[2] = ResourceValue({ resource: IronPlateCraftedItemID, value: 250000 });
+    resourceValues[3] = ResourceValue({ resource: LithiumResourceItemID, value: 288000 });
+    resourceValues[4] = ResourceValue({ resource: SulfurResourceItemID, value: 144000 });
+    resourceValues[5] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 50000 });
+    resourceValues[6] = ResourceValue({ resource: AlloyCraftedItemID, value: 72000 });
     storageUpgrades[2] = resourceValues;
 
     // LEVEL 4
     resourceValues = new ResourceValue[](11);
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 3600000 });
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 1800000 });
-    resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 720000 });
-    resourceValues[3] = ResourceValue({ resource: SulfurResourceItemID, value: 360000 });
-    resourceValues[4] = ResourceValue({ resource: IronPlateCraftedItemID, value: 288000 });
-    resourceValues[5] = ResourceValue({ resource: AlloyCraftedItemID, value: 180000 });
-    resourceValues[6] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 108000 });
+    resourceValues[2] = ResourceValue({ resource: IronPlateCraftedItemID, value: 288000 });
+    resourceValues[3] = ResourceValue({ resource: LithiumResourceItemID, value: 720000 });
+    resourceValues[4] = ResourceValue({ resource: SulfurResourceItemID, value: 360000 });
+    resourceValues[5] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 108000 });
+    resourceValues[6] = ResourceValue({ resource: AlloyCraftedItemID, value: 180000 });
     resourceValues[7] = ResourceValue({ resource: TitaniumResourceItemID, value: 100000 });
     resourceValues[8] = ResourceValue({ resource: PlatinumResourceItemID, value: 40000 });
     resourceValues[9] = ResourceValue({ resource: IridiumResourceItemID, value: 25000 });
@@ -201,11 +200,11 @@ library LibInitBuildings {
     resourceValues = new ResourceValue[](11);
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 5760000 });
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 2880000 });
-    resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 1152000 });
-    resourceValues[3] = ResourceValue({ resource: SulfurResourceItemID, value: 576000 });
-    resourceValues[4] = ResourceValue({ resource: IronPlateCraftedItemID, value: 460800 });
-    resourceValues[5] = ResourceValue({ resource: AlloyCraftedItemID, value: 300000 });
-    resourceValues[6] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 300000 });
+    resourceValues[2] = ResourceValue({ resource: IronPlateCraftedItemID, value: 460800 });
+    resourceValues[3] = ResourceValue({ resource: LithiumResourceItemID, value: 1152000 });
+    resourceValues[4] = ResourceValue({ resource: SulfurResourceItemID, value: 576000 });
+    resourceValues[5] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 300000 });
+    resourceValues[6] = ResourceValue({ resource: AlloyCraftedItemID, value: 300000 });
     resourceValues[7] = ResourceValue({ resource: TitaniumResourceItemID, value: 300000 });
     resourceValues[8] = ResourceValue({ resource: PlatinumResourceItemID, value: 300000 });
     resourceValues[9] = ResourceValue({ resource: IridiumResourceItemID, value: 200000 });
@@ -215,11 +214,11 @@ library LibInitBuildings {
     resourceValues = new ResourceValue[](11);
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 8640000 });
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 4320000 });
-    resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 1728000 });
-    resourceValues[3] = ResourceValue({ resource: SulfurResourceItemID, value: 864000 });
-    resourceValues[4] = ResourceValue({ resource: IronPlateCraftedItemID, value: 691200 });
-    resourceValues[5] = ResourceValue({ resource: AlloyCraftedItemID, value: 600000 });
-    resourceValues[6] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 600000 });
+    resourceValues[2] = ResourceValue({ resource: IronPlateCraftedItemID, value: 691200 });
+    resourceValues[3] = ResourceValue({ resource: LithiumResourceItemID, value: 1728000 });
+    resourceValues[4] = ResourceValue({ resource: SulfurResourceItemID, value: 864000 });
+    resourceValues[5] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 600000 });
+    resourceValues[6] = ResourceValue({ resource: AlloyCraftedItemID, value: 600000 });
     resourceValues[7] = ResourceValue({ resource: TitaniumResourceItemID, value: 600000 });
     resourceValues[8] = ResourceValue({ resource: PlatinumResourceItemID, value: 600000 });
     resourceValues[9] = ResourceValue({ resource: IridiumResourceItemID, value: 600000 });
@@ -230,11 +229,11 @@ library LibInitBuildings {
     resourceValues = new ResourceValue[](11);
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 17280000 });
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 8640000 });
-    resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 3456000 });
-    resourceValues[3] = ResourceValue({ resource: SulfurResourceItemID, value: 1728000 });
-    resourceValues[4] = ResourceValue({ resource: IronPlateCraftedItemID, value: 1382000 });
-    resourceValues[5] = ResourceValue({ resource: AlloyCraftedItemID, value: 864000 });
-    resourceValues[6] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 700000 });
+    resourceValues[2] = ResourceValue({ resource: IronPlateCraftedItemID, value: 1382000 });
+    resourceValues[3] = ResourceValue({ resource: LithiumResourceItemID, value: 3456000 });
+    resourceValues[4] = ResourceValue({ resource: SulfurResourceItemID, value: 1728000 });
+    resourceValues[5] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 700000 });
+    resourceValues[6] = ResourceValue({ resource: AlloyCraftedItemID, value: 864000 });
     resourceValues[7] = ResourceValue({ resource: TitaniumResourceItemID, value: 700000 });
     resourceValues[8] = ResourceValue({ resource: PlatinumResourceItemID, value: 700000 });
     resourceValues[9] = ResourceValue({ resource: IridiumResourceItemID, value: 700000 });
@@ -245,11 +244,11 @@ library LibInitBuildings {
     resourceValues = new ResourceValue[](11);
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 34560000 });
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 17280000 });
-    resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 6912000 });
-    resourceValues[3] = ResourceValue({ resource: SulfurResourceItemID, value: 3456000 });
-    resourceValues[4] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2764000 });
-    resourceValues[5] = ResourceValue({ resource: AlloyCraftedItemID, value: 1728000 });
-    resourceValues[6] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 1036800 });
+    resourceValues[2] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2764000 });
+    resourceValues[3] = ResourceValue({ resource: LithiumResourceItemID, value: 6912000 });
+    resourceValues[4] = ResourceValue({ resource: SulfurResourceItemID, value: 3456000 });
+    resourceValues[5] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 1036800 });
+    resourceValues[6] = ResourceValue({ resource: AlloyCraftedItemID, value: 1728000 });
     resourceValues[7] = ResourceValue({ resource: TitaniumResourceItemID, value: 800000 });
     resourceValues[8] = ResourceValue({ resource: PlatinumResourceItemID, value: 800000 });
     resourceValues[9] = ResourceValue({ resource: IridiumResourceItemID, value: 800000 });
