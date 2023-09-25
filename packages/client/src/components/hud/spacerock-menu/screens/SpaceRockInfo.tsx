@@ -3,7 +3,7 @@ import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { Account } from "src/network/components/clientComponents";
 import { shortenAddress } from "src/util/common";
-import { SpaceRockTypeNames, MotherlodeSizeNames } from "src/util/constants";
+import { SpaceRockTypeNames } from "src/util/constants";
 import { getSpaceRockInfo } from "src/util/spacerock";
 import { ESpaceRockType } from "src/util/web3/types";
 

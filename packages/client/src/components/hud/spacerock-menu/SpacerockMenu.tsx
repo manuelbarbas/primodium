@@ -9,6 +9,7 @@ import { Motherlode } from "./screens/Motherlode";
 import { SpacerockInfo } from "./screens/SpaceRockInfo";
 import { SendFleet } from "./screens/SendFleet";
 import { UnitSelection } from "./screens/UnitSelection";
+import { StationedUnits } from "./screens/StationedUnits";
 
 export const SpacerockMenu: React.FC = () => {
   const selectedSpacerock = Send.useDestination()?.entity;
@@ -53,11 +54,7 @@ export const SpacerockMenu: React.FC = () => {
       <SpacerockInfo data={spaceRockInfo} />
       <SendFleet />
       <UnitSelection />
-      {/* <Demolish building={selectedBuilding} />
-      <BuildingInfo building={selectedBuilding} />
-      <BuildQueue building={selectedBuilding} />
-      <BuildDrone building={selectedBuilding} />
-      <UpgradeDrones /> */}
+      <StationedUnits />
 
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2">
         <Button
