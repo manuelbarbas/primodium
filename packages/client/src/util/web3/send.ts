@@ -28,6 +28,8 @@ export const send = async (
     encodeCoord(destination)
   )?.value;
 
+  console.log(arrivalUnits, sendType, origin, destination, to);
+
   const receipt = await execute(
     systems["system.SendUnits"].executeTyped(
       arrivalUnits,

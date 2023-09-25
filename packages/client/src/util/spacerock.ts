@@ -97,9 +97,20 @@ export function getSpaceRockInfo(spaceRock: EntityID) {
   });
 
   const resources = ownedBy
-    ? ResourceStorages.map((resource) =>
-        getFullResourceCount(resource, ResourceType.Resource, ownedBy)
-      )
+    ? ResourceStorages.map((resource) => {
+        const { resourceCount, resourcesToClaim } = getFullResourceCount(
+          resource,
+          ResourceType.Resource,
+          ownedBy
+        );
+
+        const amount = resourceCount + resourcesToClaim;
+
+        return {
+          id: resource,
+          amount,
+        };
+      }).filter((resource) => resource.amount)
     : [];
 
   const motherlodeResource = getMotherlodeResource(spaceRock);
@@ -145,6 +156,7 @@ export function getSpaceRockInfo(spaceRock: EntityID) {
       ...motherlodeData,
       ...motherlodeResource,
       mineableAt,
+      blocksLeft: mineableAt - blockNumber,
       resourceLeft: motherlodeResource
         ? motherlodeResource.maxAmount - (resourceMined + production)
         : 0,

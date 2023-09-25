@@ -1,79 +1,68 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
-import { BuildingType } from "src/network/components/chainComponents";
-import { SelectedBuilding } from "src/network/components/clientComponents";
-import { getBuildingName } from "src/util/building";
-import { BlockType } from "src/util/constants";
-import { Basic } from "./screens/Basic";
-import { BuildingInfo } from "./screens/BuildingInfo";
-import { Demolish } from "./screens/Demolish";
-import { DroneFactory } from "./screens/DroneFactory";
-import { MainBase } from "./screens/Mainbase";
-import { BuildQueue } from "./screens/BuildQueue";
-import { BuildDrone } from "./screens/BuildDrone";
-import { UpgradeDrones } from "./screens/UpgradeDrones";
+import { Send } from "src/network/components/clientComponents";
+import { getSpaceRockInfo } from "src/util/spacerock";
+import { ESpaceRockType } from "src/util/web3/types";
+import { Asteroid } from "./screens/Asteroid";
+import { Motherlode } from "./screens/Motherlode";
+import { SpacerockInfo } from "./screens/SpaceRockInfo";
+import { SendFleet } from "./screens/SendFleet";
+import { UnitSelection } from "./screens/UnitSelection";
 
 export const SpacerockMenu: React.FC = () => {
-  const selectedBuilding = SelectedBuilding.use()?.value;
-
-  const buildingType = useMemo(() => {
-    if (!selectedBuilding) return;
-
-    return BuildingType.get(selectedBuilding)?.value;
-  }, [selectedBuilding]);
-
-  const buildingName = useMemo(() => {
-    if (!selectedBuilding) return;
-
-    return getBuildingName(selectedBuilding);
-  }, [selectedBuilding]);
+  const selectedSpacerock = Send.useDestination()?.entity;
 
   useEffect(() => {
-    const removeSelectedBuildingOnEscape = (event: KeyboardEvent) => {
+    const resetSendOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        SelectedBuilding.remove();
+        Send.reset();
       }
     };
 
-    document.addEventListener("keydown", removeSelectedBuildingOnEscape);
+    document.addEventListener("keydown", resetSendOnEscape);
 
     return () => {
-      document.removeEventListener("keydown", removeSelectedBuildingOnEscape);
+      document.removeEventListener("keydown", resetSendOnEscape);
     };
   }, []);
 
-  if (!buildingName || !selectedBuilding) return null;
+  if (!selectedSpacerock) return null;
+
+  const spaceRockInfo = getSpaceRockInfo(selectedSpacerock);
 
   const renderScreen = () => {
-    switch (buildingType) {
-      case BlockType.MainBase:
-        return <MainBase building={selectedBuilding} />;
-      case BlockType.DroneFactory:
-        return <DroneFactory building={selectedBuilding} />;
+    switch (spaceRockInfo.type) {
+      case ESpaceRockType.Asteroid:
+        return <Asteroid data={spaceRockInfo} />;
+      case ESpaceRockType.Motherlode:
+        return <Motherlode data={spaceRockInfo} />;
       default:
-        return <Basic building={selectedBuilding} />;
+        return <></>;
     }
   };
 
   return (
-    <Navigator initialScreen={buildingName} className="w-120">
+    <Navigator initialScreen={selectedSpacerock} className="w-120">
       {/* <Navigator.Breadcrumbs /> */}
 
       {/* Initial Screen */}
       {renderScreen()}
 
       {/* Sub Screens */}
-      <Demolish building={selectedBuilding} />
+      <SpacerockInfo data={spaceRockInfo} />
+      <SendFleet />
+      <UnitSelection />
+      {/* <Demolish building={selectedBuilding} />
       <BuildingInfo building={selectedBuilding} />
       <BuildQueue building={selectedBuilding} />
       <BuildDrone building={selectedBuilding} />
-      <UpgradeDrones />
+      <UpgradeDrones /> */}
 
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2">
         <Button
           className="btn-square btn-sm font-bold border border-secondary"
-          onClick={() => SelectedBuilding.remove()}
+          onClick={() => Send.reset()}
         >
           x
         </Button>

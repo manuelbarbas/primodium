@@ -1,5 +1,6 @@
 import { SingletonID } from "@latticexyz/network";
 import { EntityID } from "@latticexyz/recs";
+import { Button } from "src/components/core/Button";
 import { useMud } from "src/hooks";
 import { OwnedBy } from "src/network/components/chainComponents";
 import { Account } from "src/network/components/clientComponents";
@@ -23,13 +24,14 @@ export const OrbitActionButton: React.FC<{
 
   const index = getIndex(entity);
   return (
-    <button
+    <Button
       disabled={transactionLoading || index === undefined}
-      className={`border p-1 rounded-md hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+      loading={transactionLoading}
+      className={`btn-sm ${
         isNeutral || sendType === ESendType.REINFORCE
-          ? "bg-cyan-700 border-cyan-500"
-          : "bg-rose-800 border-rose-600"
-      } ${transactionLoading ? "opacity-50 pointer-events-none" : ""} `}
+          ? "btn-secondary"
+          : "btn-error"
+      } `}
       onClick={() => {
         switch (sendType) {
           case ESendType.INVADE:
@@ -56,6 +58,6 @@ export const OrbitActionButton: React.FC<{
             : "RECALL"
           : "LAND")}
       {!isNeutral && (sendType === ESendType.REINFORCE ? "RECALL" : "ATTACK")}
-    </button>
+    </Button>
   );
 };

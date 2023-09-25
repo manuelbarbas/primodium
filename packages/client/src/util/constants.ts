@@ -2,7 +2,11 @@ import { EntityID } from "@latticexyz/recs";
 import { keccak256 } from "@latticexyz/utils";
 import { Key } from "engine/types";
 import { hashStringEntity } from "./encode";
-import { EMotherlodeSize, EMotherlodeType } from "src/util/web3/types";
+import {
+  EMotherlodeSize,
+  EMotherlodeType,
+  ESpaceRockType,
+} from "src/util/web3/types";
 
 export enum Action {
   DemolishBuilding,
@@ -526,6 +530,11 @@ export const MotherlodeTypeNames: Record<number, string> = {
   [EMotherlodeType.IRIDIUM]: "Iridium",
   [EMotherlodeType.PLATINUM]: "Platinum",
   [EMotherlodeType.KIMBERLITE]: "Kimberlite",
+};
+
+export const SpaceRockTypeNames: Record<number, string> = {
+  [ESpaceRockType.Asteroid]: "Asteroid",
+  [ESpaceRockType.Motherlode]: "Motherlode",
 };
 
 export const ResourceStorages = [

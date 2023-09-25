@@ -122,15 +122,16 @@ export function getMotherlodeResource(entityID: EntityID) {
 
 export default function getResourceCount(
   resourceComponent: NewNumberComponent,
-  resourceId: EntityID
+  resourceId: EntityID,
+  address?: EntityID
 ) {
-  const address = Account.get()?.value;
+  const player = address ?? Account.get()?.value;
 
   let resourceKey: EntityID | undefined = undefined;
-  if (address) {
+  if (player) {
     const encodedEntityId = hashAndTrimKeyEntity(
       resourceId,
-      address
+      player
     ) as EntityID;
     resourceKey = encodedEntityId.toString().toLowerCase() as EntityID;
   }
@@ -191,21 +192,25 @@ export function getFullResourceCount(
 
   const resourceCount = getResourceCount(
     ResourceType.Resource === type ? Item : OccupiedUtilityResource,
-    resourceID
-  );
-  const maxStorage = getResourceCount(
-    ResourceType.Resource === type ? P_MaxStorage : MaxUtility,
-    resourceID
+    resourceID,
+    player
   );
 
-  const buildingProduction = getResourceCount(Production, resourceID);
+  const maxStorage = getResourceCount(
+    ResourceType.Resource === type ? P_MaxStorage : MaxUtility,
+    resourceID,
+    player
+  );
+
+  const buildingProduction = getResourceCount(Production, resourceID, player);
 
   const production = (() => {
     return buildingProduction + motherlodeProduction;
   })();
   const buildingProductionLastClaimedAt = getResourceCount(
     LastClaimedAt,
-    resourceID
+    resourceID,
+    player
   );
 
   const resourcesToClaimFromBuilding = (() => {

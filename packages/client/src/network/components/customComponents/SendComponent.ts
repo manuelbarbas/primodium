@@ -6,6 +6,7 @@ import { Position, ReversePosition } from "../chainComponents";
 import { encodeCoord } from "src/util/encode";
 import { HomeAsteroid } from "../clientComponents";
 import { ActiveButton } from "src/util/types";
+import { ESendType } from "src/util/web3/types";
 
 function newSendComponent<Overridable extends boolean, M extends Metadata>(
   world: World,
