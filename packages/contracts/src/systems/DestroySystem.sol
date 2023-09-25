@@ -4,7 +4,6 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddress } from "systems/internal/PrimodiumSystem.sol";
 
 // components
-import { P_BuildingDefenceComponent, ID as P_BuildingDefenceComponentID } from "components/P_BuildingDefenceComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
@@ -38,7 +37,6 @@ import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibUtilityResource } from "../libraries/LibUtilityResource.sol";
 import { LibResource } from "../libraries/LibResource.sol";
-import { LibDefence } from "../libraries/LibDefence.sol";
 
 uint256 constant ID = uint256(keccak256("system.Destroy"));
 
@@ -159,13 +157,6 @@ contract DestroySystem is PrimodiumSystem {
       );
       LibMath.subtract(MaxMovesComponent(world.getComponent(MaxMovesComponentID)), playerEntity, movesToSubtract);
     }
-    LibDefence.updateBuildingDefence(
-      world,
-      playerEntity,
-      buildingType,
-      levelComponent.getValue(buildingEntity),
-      EActionType.Destroy
-    );
     levelComponent.remove(buildingEntity);
     buildingTypeComponent.remove(buildingEntity);
     ownedByComponent.remove(buildingEntity);

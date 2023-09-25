@@ -25,7 +25,6 @@ import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID 
 
 import { Coord } from "src/types.sol";
 
-import { LibDefence } from "libraries/LibDefence.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibResearch } from "libraries/LibResearch.sol";
@@ -175,8 +174,6 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
         EActionType.Upgrade
       );
     }
-    LibDefence.updateBuildingDefence(world, playerEntity, buildingType, newLevel, EActionType.Upgrade);
-
     return abi.encode(buildingEntity);
   }
 
