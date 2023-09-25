@@ -36,6 +36,7 @@ export const UpgradeMiningVessel: React.FC = () => {
   );
 
   const hasEnough = useHasEnoughResources(recipe);
+
   const canUpgrade =
     hasEnough && mainBaseLevel >= mainBaseLvlReq && level < maxLevel;
 
