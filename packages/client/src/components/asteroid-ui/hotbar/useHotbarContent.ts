@@ -74,6 +74,10 @@ const advancedBuildingHotbar: Hotbar = {
       blockType: BlockType.AdvancedDroneFactory,
       keybind: KeybindActions.Hotbar8,
     },
+    {
+      blockType: BlockType.SAMMissiles,
+      keybind: KeybindActions.Hotbar9,
+    },
   ],
 };
 
