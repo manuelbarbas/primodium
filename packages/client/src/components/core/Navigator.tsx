@@ -94,7 +94,8 @@ const NavButton: FC<{
   children?: ReactNode;
   className?: string;
   disabled?: boolean;
-}> = ({ to, className, children, disabled }) => {
+  onClick?: () => void;
+}> = ({ to, className, children, disabled, onClick }) => {
   const { navigateTo, history } = useNavigation();
 
   if (to === history[history.length - 1]) return <></>;
@@ -102,7 +103,10 @@ const NavButton: FC<{
   return (
     <Button
       className={className}
-      onClick={() => navigateTo(to, true)}
+      onClick={() => {
+        if (onClick) onClick();
+        navigateTo(to, true);
+      }}
       disabled={disabled}
     >
       {children}

@@ -25,3 +25,27 @@ export const recall = async (rockEntity: EntityID, network: Network) => {
 
   setTransactionLoading(false);
 };
+
+export const recallUnitsFromMotherlode = async (
+  rockEntity: EntityID,
+  network: Network
+) => {
+  const { providers, systems } = network;
+  const setTransactionLoading = useGameStore.getState().setTransactionLoading;
+
+  setTransactionLoading(true);
+
+  const receipt = await execute(
+    systems["system.RecallUnitsFromMotherlode"].executeTyped(rockEntity, {
+      gasLimit: 4_000_000,
+    }),
+    providers
+  );
+
+  ampli.systemRecallReinforcements({
+    asteroidCoord: rockEntity,
+    ...parseReceipt(receipt),
+  });
+
+  setTransactionLoading(false);
+};

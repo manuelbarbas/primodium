@@ -1,5 +1,5 @@
 import { EntityID } from "@latticexyz/recs";
-import { BackgroundImage } from "src/util/constants";
+import { BackgroundImage, ResourceImage } from "src/util/constants";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 
 export const UnitLabel = ({
@@ -11,7 +11,8 @@ export const UnitLabel = ({
   count: number;
   resourceId: EntityID;
 }) => {
-  const resourceIcon = BackgroundImage.get(resourceId)?.at(0);
+  const resourceIcon =
+    BackgroundImage.get(resourceId)?.at(0) ?? ResourceImage.get(resourceId);
 
   return (
     <div className="mx-1">

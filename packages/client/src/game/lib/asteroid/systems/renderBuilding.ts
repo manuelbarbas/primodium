@@ -13,7 +13,7 @@ import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 import { singletonIndex, world } from "src/network/world";
 import {
-  ActiveAsteroid,
+  HomeAsteroid,
   SelectedBuilding,
 } from "src/network/components/clientComponents";
 import {
@@ -135,7 +135,7 @@ export const renderBuilding = (scene: Scene) => {
 
   const positionQuery = [
     HasValue(Position, {
-      parent: ActiveAsteroid.get()?.value,
+      parent: HomeAsteroid.get()?.value,
     }),
     Has(BuildingType),
   ];

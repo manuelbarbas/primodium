@@ -1,7 +1,7 @@
 import { Coord } from "@latticexyz/utils";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
-import { ActiveAsteroid } from "src/network/components/clientComponents";
+import { HomeAsteroid } from "src/network/components/clientComponents";
 import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
 import { parseReceipt } from "../analytics/parseReceipt";
@@ -12,7 +12,7 @@ export const craft = async (coord: Coord, network: Network) => {
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
   setTransactionLoading(true);
 
-  const activeAsteroid = ActiveAsteroid.get()?.value;
+  const activeAsteroid = HomeAsteroid.get()?.value;
   if (!activeAsteroid) return;
 
   const position = { ...coord, parent: activeAsteroid };

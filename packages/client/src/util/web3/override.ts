@@ -5,7 +5,7 @@ import {
   OwnedBy,
   Position,
 } from "src/network/components/chainComponents";
-import { ActiveAsteroid } from "src/network/components/clientComponents";
+import { HomeAsteroid } from "src/network/components/clientComponents";
 import { singletonIndex } from "src/network/world";
 
 // Component overrides
@@ -21,7 +21,7 @@ export const addTileOverride = (
     value: {
       x: pos.x,
       y: pos.y,
-      parent: ActiveAsteroid.get()?.value,
+      parent: HomeAsteroid.get()?.value,
     },
   });
   BuildingType.addOverride(tempPositionId, {

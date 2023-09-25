@@ -83,8 +83,6 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
 
     const ownedBy = OwnedBy.get(entityId)?.value;
 
-    console.log(ownedBy);
-
     const outlineSprite =
       SpriteKeys[
         `Motherlode${

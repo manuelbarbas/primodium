@@ -1,8 +1,5 @@
 import { SingletonID } from "@latticexyz/network";
-import {
-  Account,
-  ActiveAsteroid,
-} from "src/network/components/clientComponents";
+import { Account, HomeAsteroid } from "src/network/components/clientComponents";
 import { Join } from "../../core/Join";
 import { Tabs } from "../../core/Tabs";
 import { BattleReports } from "./battle-reports/BattleReports";
@@ -14,7 +11,7 @@ import { Outgoingfleets } from "./OutgoingFleets";
 import { Reinforcementfleets } from "./ReinforcementFleet";
 
 export const Panes: React.FC = () => {
-  const playerAstroid = ActiveAsteroid.use()?.value;
+  const playerAstroid = HomeAsteroid.use()?.value;
   const player = Account.use()?.value;
 
   return (

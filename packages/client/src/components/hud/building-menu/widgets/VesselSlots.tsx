@@ -5,13 +5,10 @@ import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
+import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { Level, MainBase } from "src/network/components/chainComponents";
-import {
-  ActiveAsteroid,
-  Hangar,
-  TrainingQueue,
-} from "src/network/components/clientComponents";
+import { TrainingQueue } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
 import { getBlockTypeName } from "src/util/common";
 import {
@@ -163,17 +160,10 @@ export const VesselSlots: React.FC<{
   building: EntityID;
   player: EntityID;
 }> = ({ building, player }) => {
-  const activeAsteroid = ActiveAsteroid.use()?.value;
-  const units = Hangar.use(activeAsteroid);
-
-  const miningVesselCount = useMemo(() => {
-    if (!units) return 0;
-
-    const index = units.units.indexOf(BlockType.MiningVessel);
-    if (index === -1) return 0;
-
-    return units.counts[index];
-  }, [units]);
+  const { resourceCount, resourcesToClaim } = useFullResourceCount(
+    BlockType.VesselCapacity,
+    ResourceType.Utility
+  );
 
   const rawQueue = TrainingQueue.use(building);
 
@@ -186,6 +176,7 @@ export const VesselSlots: React.FC<{
     player
   );
 
+  const miningVesselCount = resourceCount + resourcesToClaim;
   const addSlots = maxLevel - level;
   const commisionSlots = level - miningVesselCount - queue.length;
 

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { AsteroidHUD } from "src/components/asteroid-hud/AsteroidHUD";
+import { GameHUD } from "src/components/hud/HUD";
 import { useMud } from "src/hooks/useMud";
 
 import { primodium } from "@game/api";
@@ -25,7 +25,7 @@ export const Game = () => {
       {/* cannot unmount. needs to be visible for phaser to attach to DOM element */}
       <div id="game-container relative ">
         <PhaserWrapper />
-        {gameReady && <AsteroidHUD />}
+        {gameReady && <GameHUD />}
       </div>
     </div>
   );

@@ -13,7 +13,7 @@ export const raid = async (rockEntity: EntityID, network: Network) => {
 
   const receipt = await execute(
     systems["system.Raid"].executeTyped(rockEntity, {
-      gasLimit: 10_000_000,
+      gasLimit: 15_000_000,
     }),
     providers
   );

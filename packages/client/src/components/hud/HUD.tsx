@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { primodium } from "@game/api";
-import { KeybindActions } from "@game/constants";
+import { KeybindActions, Scenes } from "@game/constants";
 
 import { useGameStore } from "../../store/GameStore";
 import { HUD } from "../core/HUD";
@@ -20,34 +20,43 @@ import { getBlockTypeName } from "src/util/common";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { ViewStarmap } from "./ViewStarmap";
 import { Panes } from "./panes/Panes";
+import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 
-export const AsteroidHUD = () => {
+export const GameHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [
     state.showUI,
     state.toggleShowUI,
   ]);
-  const { addListener } = primodium.api()!.input;
+
   const selectedBuilding = SelectedBuilding.use()?.value;
   const mapOpen = MapOpen.use(undefined, {
     value: false,
   }).value;
 
   useEffect(() => {
-    const listener = addListener(KeybindActions.ToggleUI, toggleShowUI);
+    const asteroidListener = primodium
+      .api(Scenes.Asteroid)
+      .input.addListener(KeybindActions.ToggleUI, toggleShowUI);
+    const starmapListener = primodium
+      .api(Scenes.Starmap)
+      .input.addListener(KeybindActions.ToggleUI, toggleShowUI);
 
     return () => {
-      listener.dispose();
+      asteroidListener.dispose();
+      starmapListener.dispose();
     };
   }, []);
 
   return (
     <div className="screen-container font-mono">
-      {showUI && (
-        <>
+      <>
+        {/* ASTEROID HUD */}
+        {!mapOpen && showUI && (
           <HUD scale={1} pad>
             <HUD.BottomMiddle>
-              {(getBlockTypeName(selectedBuilding) || !selectedBuilding) &&
-                !mapOpen && <Hotbar />}
+              {(getBlockTypeName(selectedBuilding) || !selectedBuilding) && (
+                <Hotbar />
+              )}
               {!getBlockTypeName(selectedBuilding) && <BuildingMenu />}
             </HUD.BottomMiddle>
             <HUD.TopMiddle>
@@ -72,13 +81,39 @@ export const AsteroidHUD = () => {
               <Units />
             </HUD.BottomRight>
           </HUD>
-          <HUD>
+        )}
+
+        {/* STARMAP HUD */}
+        {mapOpen && showUI && (
+          <HUD scale={1} pad>
+            <HUD.BottomMiddle>
+              <SpacerockMenu />
+            </HUD.BottomMiddle>
+            <HUD.TopMiddle>
+              <ViewStarmap />
+            </HUD.TopMiddle>
+            <HUD.TopLeft>
+              <Score />
+              <CurrentObjective />
+            </HUD.TopLeft>
+            <HUD.TopRight>
+              <Panes />
+            </HUD.TopRight>
+            <HUD.BottomLeft>
+              <Resources />
+            </HUD.BottomLeft>
             <HUD.BottomRight>
-              <BrandingLabel />
+              <Units />
             </HUD.BottomRight>
           </HUD>
-        </>
-      )}
+        )}
+
+        <HUD>
+          <HUD.BottomRight>
+            <BrandingLabel />
+          </HUD.BottomRight>
+        </HUD>
+      </>
     </div>
   );
 };
