@@ -19,8 +19,8 @@ export const initAsteroidScene = async (
   scene.camera.phaserCamera.setRoundPixels(false);
 
   const tileManager = await setupTileManager(scene.tilemap);
-  tileManager.renderInitialChunks();
-  tileManager.startChunkRenderer();
+  tileManager?.renderInitialChunks();
+  tileManager?.startChunkRenderer();
 
   scene.camera.phaserCamera.fadeIn(1000);
 

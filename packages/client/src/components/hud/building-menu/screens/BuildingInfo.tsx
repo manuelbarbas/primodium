@@ -86,7 +86,7 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({
         </div>
       )}
       {unitProductionMultiplier && (
-        <div className="grid grid-cols-2 w-full mb-1">
+        <div className="grid grid-cols-2 w-full ">
           <DataLabel label="speed">
             <b>x{unitProductionMultiplier * RESOURCE_SCALE}</b>{" "}
           </DataLabel>

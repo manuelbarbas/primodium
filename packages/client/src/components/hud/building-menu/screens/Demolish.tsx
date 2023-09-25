@@ -1,7 +1,6 @@
 import { EntityID } from "@latticexyz/recs";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
-import { Join } from "src/components/core/Join";
 import { Navigator } from "src/components/core/Navigator";
 import { useMud } from "src/hooks";
 import { Position } from "src/network/components/chainComponents";
@@ -19,7 +18,8 @@ export const Demolish: React.FC<{ building: EntityID }> = ({ building }) => {
         <p>
           Are you sure you want to demolish <b>{getBuildingName(building)}</b>?{" "}
         </p>
-        <Join className="border-error">
+
+        <div className="flex gap-2">
           <Button
             className="btn-error btn-sm"
             onClick={() => {
@@ -29,8 +29,8 @@ export const Demolish: React.FC<{ building: EntityID }> = ({ building }) => {
           >
             Demolish
           </Button>
-          <Navigator.BackButton className="btn-sm" />
-        </Join>
+          <Navigator.BackButton className="btn-sm border-secondary" />
+        </div>
       </SecondaryCard>
     </Navigator.Screen>
   );

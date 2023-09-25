@@ -1,6 +1,5 @@
 import { EntityID } from "@latticexyz/recs";
 import { SecondaryCard } from "src/components/core/Card";
-import { Join } from "src/components/core/Join";
 import { Loader } from "src/components/core/Loader";
 import { Navigator } from "src/components/core/Navigator";
 import { TrainingQueue } from "src/network/components/clientComponents";
@@ -55,12 +54,12 @@ export const BuildQueue: React.FC<{ building: EntityID }> = ({ building }) => {
           </div>
         )}
       </SecondaryCard>
-      <Join className="mt-2 border-secondary">
+      <div className="mt-2 flex gap-2">
         <Navigator.NavButton to="BuildDrone" className="btn-sm btn-secondary">
           + Add Build Order
         </Navigator.NavButton>
-        <Navigator.BackButton className="btn-sm" />
-      </Join>
+        <Navigator.BackButton className="btn-sm border-secondary" />
+      </div>
     </Navigator.Screen>
   );
 };

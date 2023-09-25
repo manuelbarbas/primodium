@@ -83,10 +83,12 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
 
     const ownedBy = OwnedBy.get(entityId)?.value;
 
+    console.log(ownedBy);
+
     const outlineSprite =
       SpriteKeys[
         `Motherlode${
-          !ownedBy ? (ownedBy === player ? "Player" : "Enemy") : "Neutral"
+          ownedBy ? (ownedBy === player ? "Player" : "Enemy") : "Neutral"
         }${MotherlodeSizeNames[motherlodeData.size]}` as keyof typeof SpriteKeys
       ];
 

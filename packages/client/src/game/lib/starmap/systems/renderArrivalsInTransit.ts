@@ -14,10 +14,8 @@ import { world } from "src/network/world";
 import { ObjectPosition } from "../../common/object-components/common";
 import { Circle, Line } from "../../common/object-components/graphics";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { BeltMap } from "@game/constants";
 import { Arrival, Position } from "src/network/components/chainComponents";
-
-const { DepthLayers } = BeltMap;
+import { DepthLayers } from "@game/constants";
 
 export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -62,7 +60,7 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
     const sendTrajectory = scene.objectPool.getGroup(entityId + objIndexSuffix);
 
     sendTrajectory.add("Graphics").setComponents([
-      ObjectPosition(originPixelCoord, DepthLayers.Asteroid),
+      ObjectPosition(originPixelCoord, DepthLayers.Building),
       Line(destinationPixelCoord, {
         thickness: 2,
         alpha: 0.5,
@@ -88,7 +86,7 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
           );
 
           arrivalOrbit.add("Graphics").setComponents([
-            ObjectPosition(destinationPixelCoord, DepthLayers.Paths),
+            ObjectPosition(destinationPixelCoord, DepthLayers.Path),
             Circle(5, {
               color: 0x00ff00,
             }),

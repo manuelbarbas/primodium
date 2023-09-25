@@ -62,8 +62,7 @@ export function setupTrainingQueues() {
       );
       let trainedUnits = (blockNumber - startTime) / trainingTime;
 
-      //temp
-      let timeRemaining =
+      const timeRemaining =
         trainingTime - ((blockNumber - startTime) % trainingTime);
 
       if (trainedUnits == 0) foundUnfinished = true;

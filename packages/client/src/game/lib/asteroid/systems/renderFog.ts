@@ -43,7 +43,7 @@ export function renderFog(scene: Scene, player: EntityID) {
       else if (maxTop) index = FogTilekeys.OuterTop;
       else if (maxBottom) index = FogTilekeys.OuterBottom;
 
-      scene.tilemap.map.putTileAt({ x, y: -y }, index, "GameFog");
+      scene.tilemap.map?.putTileAt({ x, y: -y }, index, "GameFog");
     }
   }
 
@@ -126,7 +126,7 @@ export function renderFog(scene: Scene, player: EntityID) {
           else if (maxBottom) index = FogTilekeys.Bottom;
         }
 
-        scene.tilemap.map.putTileAt({ x, y: -y }, index, "GameFog");
+        scene.tilemap.map?.putTileAt({ x, y: -y }, index, "GameFog");
       }
     }
   });

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
+import { entityToAddress, getAddressById } from "solecs/utils.sol";
 import "solecs/SingletonID.sol";
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
@@ -10,10 +11,16 @@ import { P_UnitTrainingTimeComponent, ID as P_UnitTrainingTimeComponentID } from
 import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID } from "components/P_RequiredUtilityComponent.sol";
 import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID } from "components/P_UnitProductionTypesComponent.sol";
 import { P_UnitProductionMultiplierComponent, ID as P_UnitProductionMultiplierComponentID } from "components/P_UnitProductionMultiplierComponent.sol";
+import { P_UnitRequirementComponent, ID as P_UnitRequirementComponentID } from "components/P_UnitRequirementComponent.sol";
 import { P_WorldSpeedComponent, ID as P_WorldSpeedComponentID, SPEED_SCALE } from "components/P_WorldSpeedComponent.sol";
 import { UnitProductionQueueIndexComponent, ID as UnitProductionQueueIndexComponentID } from "components/UnitProductionQueueIndexComponent.sol";
 import { UnitProductionLastQueueIndexComponent, ID as UnitProductionLastQueueIndexComponentID } from "components/UnitProductionLastQueueIndexComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
+
+import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+import { ID as S_UpdatePlayerSpaceRockSystemID } from "systems/S_UpdatePlayerSpaceRockSystem.sol";
+
+import { LibUpdateSpaceRock } from "./LibUpdateSpaceRock.sol";
 import { LibUtilityResource } from "./LibUtilityResource.sol";
 import { LibEncode } from "./LibEncode.sol";
 import { LibMath } from "./LibMath.sol";
@@ -124,6 +131,29 @@ library LibUnits {
     for (uint256 i = 0; i < resourceIDs.length; i++) {
       uint32 requiredAmount = requiredAmounts[i] * count;
       if (LibUtilityResource.getAvailableUtilityCapacity(world, playerEntity, resourceIDs[i]) < requiredAmount) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function checkUnitRequirement(IWorld world, uint256 playerEntity, uint256 objectiveEntity) internal returns (bool) {
+    P_UnitRequirementComponent unitRequirementComponent = P_UnitRequirementComponent(
+      world.getComponent(P_UnitRequirementComponentID)
+    );
+    if (!unitRequirementComponent.has(objectiveEntity)) return true;
+
+    IOnEntitySubsystem(getAddressById(world.systems(), S_UpdatePlayerSpaceRockSystemID)).executeTyped(
+      entityToAddress(playerEntity),
+      LibUpdateSpaceRock.getPlayerAsteroidEntity(world, playerEntity)
+    );
+    uint256 asteroidEntity = LibUpdateSpaceRock.getPlayerAsteroidEntity(world, playerEntity);
+    ResourceValues memory unitRequirements = unitRequirementComponent.getValue(objectiveEntity);
+    for (uint256 i = 0; i < unitRequirements.resources.length; i++) {
+      if (
+        getUnitCountOnRock(world, playerEntity, asteroidEntity, unitRequirements.resources[i]) <
+        unitRequirements.values[i]
+      ) {
         return false;
       }
     }

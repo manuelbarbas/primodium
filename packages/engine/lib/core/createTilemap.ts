@@ -55,10 +55,10 @@ export const createTilemap = (
         layerConfig,
         animationInterval,
       })
-    : emptyMap;
+    : null;
 
   //register tilemap animations
-  if (!(tilemap instanceof Phaser.Tilemaps.Tilemap)) {
+  if (tilemap) {
     for (const anim of animations) {
       tilemap.registerAnimation(anim.key, anim.frames);
     }
@@ -71,7 +71,7 @@ export const createTilemap = (
     map: tilemap,
     chunks,
     dispose: () => {
-      if (!(tilemap instanceof Phaser.Tilemaps.Tilemap)) tilemap.dispose();
+      if (tilemap) tilemap.dispose();
     },
   };
 };

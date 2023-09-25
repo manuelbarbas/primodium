@@ -13,11 +13,9 @@ import { world } from "src/network/world";
 import { ObjectPosition } from "../../common/object-components/common";
 import { Circle } from "../../common/object-components/graphics";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { BeltMap } from "@game/constants";
 import { Arrival, Position } from "src/network/components/chainComponents";
 import { ESendType } from "src/util/web3/types";
-
-const { DepthLayers } = BeltMap;
+import { DepthLayers } from "@game/constants";
 
 export const renderArrivalsInOrbit = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -58,7 +56,7 @@ export const renderArrivalsInOrbit = (scene: Scene, player: EntityID) => {
     else color = 0x808080;
 
     arrivalOrbit.add("Graphics").setComponents([
-      ObjectPosition(destinationPixelCoord, DepthLayers.Paths),
+      ObjectPosition(destinationPixelCoord, DepthLayers.Path),
       Circle(5, {
         color,
       }),

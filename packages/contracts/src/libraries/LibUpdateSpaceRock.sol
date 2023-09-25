@@ -22,6 +22,8 @@ import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUni
 import { P_WorldSpeedComponent, ID as P_WorldSpeedComponentID, SPEED_SCALE } from "components/P_WorldSpeedComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { PlayerMotherlodeComponent, ID as PlayerMotherlodeComponentID } from "components/PlayerMotherlodeComponent.sol";
+import { P_MotherlodeMinedRequirementComponent, ID as P_MotherlodeMinedRequirementComponentID } from "components/P_MotherlodeMinedRequirementComponent.sol";
+import { TotalMotherlodeMinedComponent, ID as TotalMotherlodeMinedComponentID } from "components/TotalMotherlodeMinedComponent.sol";
 // libs
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
@@ -30,7 +32,7 @@ import { LibResource } from "libraries/LibResource.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 
 // types
-import { ESendType, Coord, Arrival, ArrivalUnit, ResourceValue, ESpaceRockType, Motherlode } from "src/types.sol";
+import { ESendType, Coord, Arrival, ArrivalUnit, ResourceValue, ESpaceRockType, Motherlode, ResourceValues } from "src/types.sol";
 
 library LibUpdateSpaceRock {
   function updateSpaceRock(IWorld world, uint256 playerEntity, uint256 spaceRock) internal {
@@ -98,8 +100,12 @@ library LibUpdateSpaceRock {
     lastClaimedAtComponent.set(unitProductionBuildingEntity, blockNumber);
   }
 
+  function getPlayerAsteroidEntity(IWorld world, uint256 playerEntity) internal view returns (uint256) {
+    return PositionComponent(world.getComponent(PositionComponentID)).getValue(playerEntity).parent;
+  }
+
   function addPlayerUnitsToAsteroid(IWorld world, uint256 playerEntity, uint256 unitType, uint32 unitCount) internal {
-    uint256 asteroid = PositionComponent(world.getComponent(PositionComponentID)).getValue(playerEntity).parent;
+    uint256 asteroid = getPlayerAsteroidEntity(world, playerEntity);
     addUnitsToAsteroid(world, playerEntity, asteroid, unitType, unitCount);
   }
 
@@ -311,5 +317,38 @@ library LibUpdateSpaceRock {
       }
     }
     return totalPower;
+  }
+
+  function checkMotherlodeMinedRequirement(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 objectiveEntity
+  ) internal view returns (bool) {
+    P_MotherlodeMinedRequirementComponent motherlodeMinedRequirementComponent = P_MotherlodeMinedRequirementComponent(
+      world.getComponent(P_MotherlodeMinedRequirementComponentID)
+    );
+    if (!motherlodeMinedRequirementComponent.has(objectiveEntity)) return true;
+    ResourceValues memory motherlodeMinedRequirements = motherlodeMinedRequirementComponent.getValue(objectiveEntity);
+    TotalMotherlodeMinedComponent totalMotherlodeMinedComponent = TotalMotherlodeMinedComponent(
+      world.getComponent(TotalMotherlodeMinedComponentID)
+    );
+    uint256 blockNumber = block.number;
+    for (uint256 i = 0; i < motherlodeMinedRequirements.resources.length; i++) {
+      uint32 totalMined = LibMath.getSafe(
+        totalMotherlodeMinedComponent,
+        LibEncode.hashKeyEntity(motherlodeMinedRequirements.resources[i], playerEntity)
+      );
+      if (totalMined >= motherlodeMinedRequirements.values[i]) continue;
+      uint32 totalUnclaimed = LibResource.getTotalUnclaimedMotherlodeResources(
+        world,
+        playerEntity,
+        motherlodeMinedRequirements.resources[i],
+        blockNumber
+      );
+      if (totalMined + totalUnclaimed < motherlodeMinedRequirements.values[i]) {
+        return false;
+      }
+    }
+    return true;
   }
 }

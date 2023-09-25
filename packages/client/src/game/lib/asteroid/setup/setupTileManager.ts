@@ -67,6 +67,8 @@ export const setupTileManager = async (tilemap: Scene["tilemap"]) => {
   const { chunks, map, chunkSize } = tilemap;
   const chunkCache = new CoordMap<boolean>();
 
+  if (!map) return;
+
   const renderInitialChunks = () => {
     for (const chunk of chunks.visibleChunks.current.coords()) {
       renderChunk(chunk, map, chunkSize, chunkCache);
