@@ -71,8 +71,8 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
   };
 
   const removeUnit = (entity: EntityID) => {
-    let units = component.get()?.units;
-    let count = component.get()?.count;
+    const units = component.get()?.units;
+    const count = component.get()?.count;
 
     if (!units) return;
 
@@ -149,6 +149,27 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
     return { ...coord, entity };
   };
 
+  const useDestination = () => {
+    const componentValue = component.use();
+    if (
+      !componentValue ||
+      !componentValue.destinationX ||
+      !componentValue.destinationY
+    )
+      return undefined;
+    const coord = {
+      x: componentValue.destinationX,
+      y: componentValue.destinationY,
+    };
+    const entities = Position.getAllWith(coord);
+    if (entities.length === 0) return;
+
+    const entity = entities[0];
+    if (!entity) return;
+
+    return { ...coord, entity };
+  };
+
   const setUnitCount = (entity: EntityID, count: number) => {
     let currentUnits = component.get()?.units;
     let currentCount = component.get()?.count;
@@ -188,6 +209,7 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
     setUnitCount,
     setOrigin,
     setDestination,
+    useDestination,
     removeUnit,
     reset,
   };

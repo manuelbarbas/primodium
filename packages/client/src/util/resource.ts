@@ -146,13 +146,18 @@ export default function getResourceCount(
 
 export function getFullResourceCount(
   resourceID: EntityID,
-  type = ResourceType.Resource
+  type = ResourceType.Resource,
+  address?: EntityID
 ) {
   const blockNumber = BlockNumber.get(undefined, {
     value: 0,
     avgBlockTime: 1,
   }).value;
-  const player = Account.get()?.value;
+  const player =
+    address ??
+    Account.get(undefined, {
+      value: SingletonID,
+    }).value;
 
   const query = [
     Has(AsteroidType),
