@@ -6,3 +6,4 @@ string constant PirateKey = "pirate";
 uint256 constant PersonalPirate = uint256(keccak256("block.PersonalPirate"));
 
 uint256 constant FirstPirateAsteroidID = uint256(keccak256("block.FirstPirateAsteroid"));
+uint256 constant SecondPirateAsteroidID = uint256(keccak256("block.SecondPirateAsteroid"));
