@@ -28,7 +28,6 @@ import { SingletonID } from "@latticexyz/network";
 import { getRecipe } from "src/util/resource";
 import { Navigator } from "src/components/core/Navigator";
 import { SecondaryCard } from "src/components/core/Card";
-import { Join } from "src/components/core/Join";
 import { Badge } from "src/components/core/Badge";
 
 export const BuildDrone: React.FC<{
@@ -196,7 +195,7 @@ export const BuildDrone: React.FC<{
                 onChange={(val) => setCount(val)}
               />
 
-              <Join className="border-secondary">
+              <div className="flex gap-2">
                 <Navigator.BackButton
                   className="btn-sm btn-secondary"
                   disabled={
@@ -211,8 +210,8 @@ export const BuildDrone: React.FC<{
                 >
                   Train
                 </Navigator.BackButton>
-                <Navigator.BackButton className="btn-sm" />
-              </Join>
+                <Navigator.BackButton className="btn-sm border-secondary" />
+              </div>
             </>
           )}
           <p className="opacity-50 text-xs">

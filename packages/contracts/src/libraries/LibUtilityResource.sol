@@ -33,14 +33,56 @@ library LibUtilityResource {
       uint32 requiredAmount = requiredAmounts[i];
       if (buildingLevel > 1) {
         uint256 buildingPastLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel - 1);
-        requiredAmount -= requiredUtilityComponent.getValue(buildingPastLevelEntity).values[i];
+        if (requiredUtilityComponent.has(buildingPastLevelEntity)) {
+          uint256[] memory pastLevelResourceIDs = requiredUtilityComponent.getValue(buildingPastLevelEntity).resources;
+          for (uint256 j = 0; j < pastLevelResourceIDs.length; j++) {
+            if (pastLevelResourceIDs[j] == resourceIDs[i]) {
+              requiredAmount -= requiredUtilityComponent.getValue(buildingPastLevelEntity).values[j];
+            }
+          }
+        }
       }
 
-      if (getAvailableUtilityCapacity(world, playerEntity, resourceIDs[i]) < requiredAmount) {
+      if (!checkRequiredUtility(world, playerEntity, resourceIDs[i], requiredAmount)) {
         return false;
       }
     }
     return true;
+  }
+
+  function checkRequiredUtility(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 resourceID,
+    uint32 requiredAmount
+  ) internal view returns (bool) {
+    return getAvailableUtilityCapacity(world, playerEntity, resourceID) >= requiredAmount;
+  }
+
+  function checkMaxUtilityResourceReqs(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 entity
+  ) internal view returns (bool) {
+    P_RequiredUtilityComponent requiredUtilityComponent = P_RequiredUtilityComponent(
+      getAddressById(world.components(), P_RequiredUtilityComponentID)
+    );
+    if (!requiredUtilityComponent.has(entity)) return true;
+
+    uint256[] memory resourceIDs = requiredUtilityComponent.getValue(entity).resources;
+    uint32[] memory requiredAmounts = requiredUtilityComponent.getValue(entity).values;
+    for (uint256 i = 0; i < resourceIDs.length; i++) {
+      if (getMaxUtility(world, playerEntity, resourceIDs[i]) < requiredAmounts[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function getMaxUtility(IWorld world, uint256 playerEntity, uint256 resourceID) internal view returns (uint32) {
+    uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceID, playerEntity);
+    MaxUtilityComponent maxUtilityComponent = MaxUtilityComponent(world.getComponent(MaxUtilityComponentID));
+    return LibMath.getSafe(maxUtilityComponent, playerResourceEntity);
   }
 
   function getAvailableUtilityCapacity(

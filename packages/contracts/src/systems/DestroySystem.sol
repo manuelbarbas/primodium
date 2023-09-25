@@ -12,7 +12,7 @@ import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBas
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 import { P_MaxMovesComponent, ID as P_MaxMovesComponentID } from "components/P_MaxMovesComponent.sol";
 import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMovesComponent.sol";
-
+import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
 import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
 import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID, ResourceValues } from "components/P_RequiredUtilityComponent.sol";
 import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
@@ -162,6 +162,11 @@ contract DestroySystem is PrimodiumSystem {
     ownedByComponent.remove(buildingEntity);
     childrenComponent.remove(buildingEntity);
     PositionComponent(getC(PositionComponentID)).remove(buildingEntity);
+    LibMath.subtract(
+      BuildingCountComponent(getAddressById(world.components(), BuildingCountComponentID)),
+      LibEncode.hashKeyEntity(buildingType, playerEntity),
+      1
+    );
     return abi.encode(buildingEntity);
   }
 

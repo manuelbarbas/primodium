@@ -8,7 +8,7 @@ export const MiningVessels: React.FC = () => {
       <img src="/img/unit/miningvessel.png" className="w-8 h-8" />
       <p className="uppercase text-xs font-bold">manage mining vessels</p>
       <Navigator.NavButton
-        to="Commission"
+        to="MiningVessels"
         className="btn-sm w-fit btn-secondary"
       >
         <FaArrowRight />

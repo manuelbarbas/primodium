@@ -26,9 +26,6 @@ export const DroneFactory: React.FC<{ building: EntityID }> = ({
         <BuildDrones />
         <UpgradeDrones />
       </div>
-      <Navigator.NavButton className="btn-error btn-sm m-1" to="Demolish">
-        Demolish Building
-      </Navigator.NavButton>
     </Navigator.Screen>
   );
 };

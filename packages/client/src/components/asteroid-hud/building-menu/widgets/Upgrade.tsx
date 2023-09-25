@@ -105,6 +105,20 @@ export const Upgrade: React.FC<{ building: EntityID }> = ({ building }) => {
           {error}
         </p>
       )}
+      <div className="flex gap-1 mt-1">
+        {Array(maxLevel)
+          .fill(0)
+          .map((_, index) => {
+            return (
+              <div
+                key={index}
+                className={`w-2 h-2 rounded-full ${
+                  level - 1 >= index ? "bg-green-600" : "bg-slate-500"
+                }`}
+              />
+            );
+          })}
+      </div>
     </SecondaryCard>
   );
 };
