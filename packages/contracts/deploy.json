@@ -132,7 +132,7 @@
     },
     {
       "name": "UpgradeRangeSystem",
-      "writeAccess": ["LevelComponent"]
+      "writeAccess": ["LevelComponent", "HasResearchedComponent"]
     },
     {
       "name": "TrainUnitsSystem",
