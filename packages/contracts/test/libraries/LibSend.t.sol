@@ -5,8 +5,8 @@ import "test/PrimodiumTest.t.sol";
 
 // Note checkMovementRules tests are in SendUnitsSystem.t.sol to verify revert statements
 contract LibSendTest is PrimodiumTest {
-  uint256[] unitCounts;
-  bytes32[] unitTypes;
+  uint256[unitPrototypeCount] unitCounts;
+
   Arrival arrival =
     Arrival({
       sendType: ESendType.Invade,
@@ -15,8 +15,7 @@ contract LibSendTest is PrimodiumTest {
       to: "to",
       origin: "origin",
       destination: "destination",
-      unitCounts: unitCounts,
-      unitTypes: unitTypes
+      unitCounts: unitCounts
     });
 
   P_UnitData unitData = P_UnitData({ attack: 0, defense: 0, speed: 0, cargo: 0, mining: 0, trainingTime: 0 });
@@ -24,14 +23,13 @@ contract LibSendTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
     vm.startPrank(address(world));
-    unitCounts.push(1);
-    unitCounts.push(2);
-    unitCounts.push(3);
-    unitTypes.push("unit1");
-    unitTypes.push("unit2");
-    unitTypes.push("unit3");
+    bytes32[] memory unitTypes = new bytes32[](unitPrototypeCount);
+    unitTypes[0] = "unit1";
+    unitTypes[1] = "unit2";
+    unitTypes[2] = "unit3";
+    P_UnitPrototypes.set(unitTypes);
+
     arrival.unitCounts = unitCounts;
-    arrival.unitTypes = unitTypes;
   }
 
   function testSendUnitsReinforce() public {
@@ -59,51 +57,42 @@ contract LibSendTest is PrimodiumTest {
   }
 
   function testGetSlowestUnitSpeedSingle() public {
-    uint256[] memory counts = new uint256[](1);
-    bytes32[] memory types = new bytes32[](1);
-
-    counts[0] = 100;
-    types[0] = "unit1";
+    unitCounts[0] = 100;
     unitData.speed = 69;
-    P_Unit.set("unit1", 1, unitData);
+    P_Unit.set(P_UnitPrototypes.get()[0], 1, unitData);
 
-    assertEq(LibSend.getSlowestUnitSpeed(arrival.from, types), 69);
+    assertEq(LibSend.getSlowestUnitSpeed(arrival.from, unitCounts), 69);
   }
 
   function testGetSlowestUnitSpeedNoCounts() public {
-    uint256[] memory counts = new uint256[](2);
-    bytes32[] memory types = new bytes32[](2);
-
-    counts[0] = 0;
-    types[0] = "unit1";
+    unitCounts[0] = 0;
     unitData.speed = 50;
-    P_Unit.set("unit1", 1, unitData);
+    P_Unit.set(P_UnitPrototypes.get()[0], 1, unitData);
 
-    counts[1] = 100;
-    types[1] = "unit2";
+    unitCounts[1] = 100;
     unitData.speed = 100;
-    P_Unit.set("unit2", 1, unitData);
+    P_Unit.set(P_UnitPrototypes.get()[1], 1, unitData);
 
-    assertEq(LibSend.getSlowestUnitSpeed(arrival.from, types), 50);
+    assertEq(LibSend.getSlowestUnitSpeed(arrival.from, unitCounts), 100);
   }
 
   function testGetSlowestUnitSpeed() public {
+    unitCounts[0] = 1;
+    unitCounts[1] = 1;
+    unitCounts[2] = 1;
+
     unitData.speed = 100;
-    P_Unit.set("unit1", 1, unitData);
+    P_Unit.set(P_UnitPrototypes.get()[0], 1, unitData);
     unitData.speed = 50;
-    P_Unit.set("unit2", 1, unitData);
+    P_Unit.set(P_UnitPrototypes.get()[1], 1, unitData);
     unitData.speed = 200;
-    P_Unit.set("unit3", 1, unitData);
+    P_Unit.set(P_UnitPrototypes.get()[2], 1, unitData);
 
-    assertEq(LibSend.getSlowestUnitSpeed(arrival.from, unitTypes), 50);
+    assertEq(LibSend.getSlowestUnitSpeed(arrival.from, unitCounts), 50);
   }
 
-  function testFailGetSlowestUnitSpeedNoUnits() public view {
-    LibSend.getSlowestUnitSpeed(arrival.from, new bytes32[](0));
-  }
-
-  function testFailGetSlowestUnitSpeedNoSpeed() public view {
-    LibSend.getSlowestUnitSpeed(arrival.from, unitTypes);
+  function testGetSlowestUnitSpeedNoSpeed() public {
+    assertEq(LibSend.getSlowestUnitSpeed(arrival.from, unitCounts), 0);
   }
 
   function setupArrivalLength(
@@ -117,19 +106,16 @@ contract LibSendTest is PrimodiumTest {
     P_GameConfig.set(config);
     Position.set(arrival.origin, 0, 0, 0);
     Position.set(arrival.destination, int32(int256(distance)), 0, 0);
-    uint256[] memory counts = new uint256[](1);
-    bytes32[] memory types = new bytes32[](1);
+    uint256[unitPrototypeCount] memory counts;
 
     counts[0] = 100;
-    types[0] = "unit1";
     unitData.speed = unitSpeed;
     P_Unit.set("unit1", 1, unitData);
     arrival.unitCounts = counts;
-    arrival.unitTypes = types;
     return arrival;
   }
 
-  function testgetArrivalTime(
+  function testGetArrivalTime(
     uint256 moveSpeed,
     uint256 distance,
     uint256 unitSpeed
@@ -149,7 +135,7 @@ contract LibSendTest is PrimodiumTest {
         Position.get(testArrival.origin),
         Position.get(testArrival.destination),
         testArrival.from,
-        testArrival.unitTypes
+        testArrival.unitCounts
       ),
       expected
     );
@@ -161,7 +147,7 @@ contract LibSendTest is PrimodiumTest {
       Position.get(arrival.origin),
       Position.get(arrival.destination),
       arrival.from,
-      arrival.unitTypes
+      arrival.unitCounts
     );
   }
 }

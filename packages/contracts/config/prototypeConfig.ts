@@ -125,6 +125,12 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         unitProductionRate: 100n,
         moveSpeed: 100n,
       },
+      P_UnitPrototypes: {
+        value: MUDEnums.EUnit.reduce(
+          (prev: `0x${string}`[], unit) => (unit == "NULL" || unit == "LENGTH" ? prev : [...prev, encodeBytes32(unit)]),
+          []
+        ),
+      },
     },
   },
 

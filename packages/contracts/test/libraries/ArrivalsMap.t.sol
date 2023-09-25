@@ -6,18 +6,14 @@ import "test/PrimodiumTest.t.sol";
 contract ArrivalsMapTest is PrimodiumTest {
   bytes32 playerEntity = "playerEntity";
   bytes32 asteroidEntity = "asteroidEntity";
-  uint256[] unitCounts;
-  bytes32[] unitTypes;
+  uint256[unitPrototypeCount] unitCounts;
 
   function setUp() public override {
     super.setUp();
     vm.startPrank(worldAddress);
-    unitCounts.push(1);
-    unitCounts.push(2);
-    unitCounts.push(3);
-    unitTypes.push("unit1");
-    unitTypes.push("unit2");
-    unitTypes.push("unit3");
+    unitCounts[0] = (1);
+    unitCounts[1] = (2);
+    unitCounts[2] = (3);
   }
 
   function testSet() public {
@@ -28,8 +24,7 @@ contract ArrivalsMapTest is PrimodiumTest {
       to: "to",
       origin: "origin",
       destination: "destination",
-      unitCounts: unitCounts,
-      unitTypes: unitTypes
+      unitCounts: unitCounts
     });
 
     bytes32 key = keccak256(abi.encode(item));
@@ -51,8 +46,7 @@ contract ArrivalsMapTest is PrimodiumTest {
       to: "to",
       origin: "origin",
       destination: "destination",
-      unitCounts: unitCounts,
-      unitTypes: unitTypes
+      unitCounts: unitCounts
     });
     bytes32 key = keccak256(abi.encode(item));
     assertEq(ArrivalsMap.size(playerEntity, asteroidEntity), 0);
@@ -76,8 +70,7 @@ contract ArrivalsMapTest is PrimodiumTest {
       to: "to",
       origin: "origin",
       destination: "destination",
-      unitCounts: unitCounts,
-      unitTypes: unitTypes
+      unitCounts: unitCounts
     });
     bytes32 key = keccak256(abi.encode(item));
     Arrival memory item2 = Arrival({
@@ -87,8 +80,7 @@ contract ArrivalsMapTest is PrimodiumTest {
       to: "to",
       origin: "origin",
       destination: "destination",
-      unitCounts: unitCounts,
-      unitTypes: unitTypes
+      unitCounts: unitCounts
     });
     bytes32 key2 = keccak256(abi.encode(item2));
     ArrivalsMap.set(playerEntity, asteroidEntity, key, item);
@@ -108,8 +100,7 @@ contract ArrivalsMapTest is PrimodiumTest {
       to: "to",
       origin: "origin",
       destination: "destination",
-      unitCounts: unitCounts,
-      unitTypes: unitTypes
+      unitCounts: unitCounts
     });
     bytes32 key = keccak256(abi.encode(item));
     Arrival memory item2 = Arrival({
@@ -119,8 +110,7 @@ contract ArrivalsMapTest is PrimodiumTest {
       to: "to",
       origin: "origin",
       destination: "destination",
-      unitCounts: unitCounts,
-      unitTypes: unitTypes
+      unitCounts: unitCounts
     });
 
     bytes32 key2 = keccak256(abi.encode(item2));
@@ -148,8 +138,7 @@ contract ArrivalsMapTest is PrimodiumTest {
       to: "to",
       origin: "origin",
       destination: "destination",
-      unitCounts: unitCounts,
-      unitTypes: unitTypes
+      unitCounts: unitCounts
     });
     bytes32 key = keccak256(abi.encode(item));
     Arrival memory item2 = Arrival({
@@ -159,8 +148,7 @@ contract ArrivalsMapTest is PrimodiumTest {
       to: "to",
       origin: "origin",
       destination: "destination",
-      unitCounts: unitCounts,
-      unitTypes: unitTypes
+      unitCounts: unitCounts
     });
     bytes32 key2 = keccak256(abi.encode(item));
     ArrivalsMap.set(playerEntity, asteroidEntity, key, item);

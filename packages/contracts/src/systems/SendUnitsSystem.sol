@@ -3,10 +3,14 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { IWorld } from "codegen/world/IWorld.sol";
-import { ArrivalUnit, ESendType, SendArgs, ERock, EResource, EUnit, Arrival } from "src/Types.sol";
-import { ReversePosition, PositionData, UnitCount, RockType, OwnedBy, ResourceCount, ArrivalCount, P_EnumToPrototype } from "codegen/Tables.sol";
+import { ESendType, SendArgs, ERock, EResource, Arrival } from "src/Types.sol";
+import { ReversePosition, PositionData, UnitCount, RockType, OwnedBy, ResourceCount, ArrivalCount, P_EnumToPrototype, P_UnitPrototypes } from "codegen/Tables.sol";
 import { LibMotherlode, LibSend, ArrivalsMap } from "codegen/Libraries.sol";
 import { UnitKey } from "src/Keys.sol";
+
+function toString(bytes32 entity) pure returns (string memory) {
+  return string(abi.encodePacked(entity));
+}
 
 contract SendUnitsSystem is PrimodiumSystem {
   function _sendUnits(SendArgs memory sendArgs) internal {
@@ -20,32 +24,26 @@ contract SendUnitsSystem is PrimodiumSystem {
     LibSend.checkMovementRules(origin, destination, playerEntity, sendArgs.to, sendArgs.sendType);
 
     bool anyUnitsSent = false;
-    uint256[] memory unitCounts = new uint256[](sendArgs.arrivalUnits.length);
-    bytes32[] memory unitTypes = new bytes32[](sendArgs.arrivalUnits.length);
 
-    for (uint256 i = 0; i < sendArgs.arrivalUnits.length; i++) {
-      EUnit unit = EUnit(sendArgs.arrivalUnits[i].unit);
-      require(unit != EUnit.NULL && unit != EUnit.LENGTH, "[SendUnits] Unit type invalid");
-      unitCounts[i] = sendArgs.arrivalUnits[i].count;
-      unitTypes[i] = P_EnumToPrototype.get(UnitKey, uint8(unit));
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
-      if (sendArgs.arrivalUnits[i].count == 0) continue;
-      uint256 count = UnitCount.get(playerEntity, origin, unitTypes[i]);
-      require(count >= sendArgs.arrivalUnits[i].count, "[SendUnits] Not enough units to send");
-      UnitCount.set(playerEntity, origin, unitTypes[i], count - sendArgs.arrivalUnits[i].count);
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (sendArgs.unitCounts[i] == 0) continue;
+      uint256 count = UnitCount.get(playerEntity, origin, unitPrototypes[i]);
+      require(count >= sendArgs.unitCounts[i], "[SendUnits] Not enough units to send");
+      UnitCount.set(playerEntity, origin, unitPrototypes[i], count - sendArgs.unitCounts[i]);
       anyUnitsSent = true;
     }
     uint256 arrivalTime = LibSend.getArrivalTime(
       sendArgs.originPosition,
       sendArgs.destinationPosition,
       playerEntity,
-      unitTypes
+      sendArgs.unitCounts
     );
 
     LibSend.sendUnits(
       Arrival({
-        unitCounts: unitCounts,
-        unitTypes: unitTypes,
+        unitCounts: sendArgs.unitCounts,
         sendType: sendArgs.sendType,
         arrivalTime: arrivalTime,
         from: playerEntity,
@@ -57,12 +55,12 @@ contract SendUnitsSystem is PrimodiumSystem {
   }
 
   function sendUnits(
-    ArrivalUnit[] calldata arrivalUnits,
+    uint256[5] calldata unitCounts,
     ESendType sendType,
     PositionData memory origin,
     PositionData memory destination,
     bytes32 to
   ) public {
-    _sendUnits(SendArgs(arrivalUnits, sendType, origin, destination, to));
+    _sendUnits(SendArgs(unitCounts, sendType, origin, destination, to));
   }
 }

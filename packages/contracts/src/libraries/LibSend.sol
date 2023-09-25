@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { ArrivalUnit, ESendType, Arrival, ERock, EResource } from "src/Types.sol";
-import { RockType, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ArrivalCount, ResourceCount, OwnedBy } from "codegen/Tables.sol";
+import { ESendType, Arrival, ERock, EResource } from "src/Types.sol";
+import { RockType, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ArrivalCount, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/Tables.sol";
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 import { LibMath } from "libraries/LibMath.sol";
 
@@ -18,41 +18,44 @@ library LibSend {
 
   /// @notice Returns the slowest speed of given unit types.
   /// @param playerEntity Entity initiating send.
-  /// @param unitTypes Array of unit types being sent.
+  /// @param unitCounts Array of unit counts being sent.
   /// @return slowestSpeed Slowest unit speed among the types.
-  function getSlowestUnitSpeed(bytes32 playerEntity, bytes32[] memory unitTypes)
+  function getSlowestUnitSpeed(bytes32 playerEntity, uint256[5] memory unitCounts)
     internal
     view
     returns (uint256 slowestSpeed)
   {
-    require(unitTypes.length > 0, "[LibSend] No units sent");
-    slowestSpeed = 115792089237316195423570985008687907853269984665640564039457584007913129639935;
-    for (uint256 i = 0; i < unitTypes.length; i++) {
-      uint256 unitLevel = UnitLevel.get(playerEntity, unitTypes[i]);
+    uint256 bignum = 115792089237316195423570985008687907853269984665640564039457584007913129639935;
+    slowestSpeed = bignum;
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitCounts[i] == 0) continue;
+      uint256 unitLevel = UnitLevel.get(playerEntity, unitPrototypes[i]);
       if (unitLevel == 0) unitLevel++;
-      uint256 speed = P_Unit.getSpeed(unitTypes[i], unitLevel);
-      require(speed > 0, "[LibSend] Unit type has no speed");
+      uint256 speed = P_Unit.getSpeed(unitPrototypes[i], unitLevel);
       if (speed < slowestSpeed) {
         slowestSpeed = speed;
       }
     }
+    if (slowestSpeed == bignum) return 0;
+    return slowestSpeed;
   }
 
   /// @notice Computes the block number an arrival will occur.
   /// @param origin Origin position.
   /// @param destination Destination position.
   /// @param playerEntity Entity initiating send.
-  /// @param unitTypes Types of units being sent.
+  /// @param unitCounts Counts of units being sent.
   /// @return Block number of arrival.
   function getArrivalTime(
     PositionData memory origin,
     PositionData memory destination,
     bytes32 playerEntity,
-    bytes32[] memory unitTypes
+    uint256[5] memory unitCounts
   ) internal view returns (uint256) {
     P_GameConfigData memory config = P_GameConfig.get();
-    uint256 unitSpeed = getSlowestUnitSpeed(playerEntity, unitTypes);
-    require(unitSpeed > 0 && config.moveSpeed > 0, "[LibSend] Unit and move speeds must be greater than 0");
+    uint256 unitSpeed = getSlowestUnitSpeed(playerEntity, unitCounts);
+    require(unitSpeed > 0 && config.moveSpeed > 0, "[LibSend] No units");
     return block.timestamp + ((LibMath.distance(origin, destination) * 100 * 100) / (config.moveSpeed * unitSpeed));
   }
 

@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 import { Arrival, EResource, ESendType } from "src/Types.sol";
-import { ArrivalCount, UnitLevel, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, ResourceCount, OwnedBy, Home } from "codegen/Tables.sol";
+import { ArrivalCount, UnitLevel, P_RequiredResourcesData, P_UnitPrototypes, P_RequiredResources, P_IsUtility, ResourceCount, OwnedBy, Home } from "codegen/Tables.sol";
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibResource } from "libraries/LibResource.sol";
@@ -23,13 +23,14 @@ library LibReinforce {
       "[Reinforce] Invalid send type"
     );
 
-    for (uint256 i = 0; i < arrival.unitCounts.length; i++) {
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (arrival.unitCounts[i] == 0) continue;
       uint256 count = arrival.unitCounts[i];
-      LibUnit.addUnitsToAsteroid(playerEntity, rockEntity, arrival.unitTypes[i], count);
+      LibUnit.addUnitsToAsteroid(playerEntity, rockEntity, unitPrototypes[i], count);
       if (arrival.from != playerEntity) {
-        LibUnit.updateStoredUtilities(playerEntity, arrival.unitTypes[i], count, true);
-        LibUnit.updateStoredUtilities(arrival.from, arrival.unitTypes[i], count, false);
+        LibUnit.updateStoredUtilities(playerEntity, unitPrototypes[i], count, true);
+        LibUnit.updateStoredUtilities(arrival.from, unitPrototypes[i], count, false);
       }
     }
     ArrivalCount.set(arrival.from, ArrivalCount.get(arrival.from) - 1);
@@ -47,13 +48,15 @@ library LibReinforce {
     ) {
       return;
     }
-    for (uint256 j = 0; j < arrival.unitCounts.length; j++) {
-      if (arrival.unitCounts[j] == 0) continue;
+
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (arrival.unitCounts[i] == 0) continue;
       LibUnit.addUnitsToAsteroid(
         playerEntity,
         Home.getAsteroid(playerEntity),
-        arrival.unitTypes[j],
-        arrival.unitCounts[j]
+        unitPrototypes[i],
+        arrival.unitCounts[i]
       );
     }
     ArrivalCount.set(arrival.from, ArrivalCount.get(arrival.from) - 1);
