@@ -3,7 +3,8 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { IWorld } from "solecs/System.sol";
 import { addressToEntity, getAddressById } from "solecs/utils.sol";
-
+import { P_SpawnPirateAsteroidComponent, ID as P_SpawnPirateAsteroidComponentID } from "components/P_SpawnPirateAsteroidComponent.sol";
+import { DefeatedSpawnedPirateAsteroidComponent, ID as DefeatedSpawnedPirateAsteroidComponentID } from "components/DefeatedSpawnedPirateAsteroidComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { ReversePositionComponent, ID as ReversePositionComponentID } from "components/ReversePositionComponent.sol";
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
@@ -49,6 +50,14 @@ contract SendUnitsSystem is PrimodiumSystem {
         OwnedByComponent(getC(OwnedByComponentID)).getValue(destination) ==
           LibPirateAsteroid.getPersonalPirate(addressToEntity(msg.sender)),
         "you cannot send units to a non personal pirate"
+      );
+      uint256 spawnPirateAsteroidEntity = P_SpawnPirateAsteroidComponent(getC(P_SpawnPirateAsteroidComponentID))
+        .getValue(destination);
+      require(
+        !DefeatedSpawnedPirateAsteroidComponent(getC(DefeatedSpawnedPirateAsteroidComponentID)).has(
+          LibEncode.hashKeyEntity(spawnPirateAsteroidEntity, addressToEntity(msg.sender))
+        ),
+        "you cannot send units to a pirate asteroid that you have defeated"
       );
     }
 
