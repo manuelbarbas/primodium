@@ -9,6 +9,7 @@ import { Settings } from "./Settings";
 import { Divider } from "src/components/core/Divider";
 import { Outgoingfleets } from "./OutgoingFleets";
 import { Reinforcementfleets } from "./ReinforcementFleet";
+import { OwnedMotherlodes } from "./OwnedMotherlodes";
 
 export const Panes: React.FC = () => {
   const playerAstroid = HomeAsteroid.use()?.value;
@@ -27,6 +28,9 @@ export const Panes: React.FC = () => {
       </Tabs.Pane>
       <Tabs.Pane index={3} className="w-96">
         <BattleReports />
+      </Tabs.Pane>
+      <Tabs.Pane index={5} className="w-96">
+        <OwnedMotherlodes />
       </Tabs.Pane>
       <Tabs.Pane index={6} className="w-96">
         <Leaderboard />
@@ -88,7 +92,7 @@ export const Panes: React.FC = () => {
             text="Owned Asteroids"
             hideText
             tooltipDirection="left"
-            tooltipText="Owned Asteroids"
+            tooltipText="Owned Motherlodes"
           />
           <Tabs.IconButton
             index={6}

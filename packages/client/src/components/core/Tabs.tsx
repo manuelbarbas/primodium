@@ -41,7 +41,11 @@ const Pane: FC<{
     return null;
   }
 
-  return <Card className={`${className} `}>{children}</Card>;
+  return (
+    <Card className={`${className} overflow-y-auto scrollbar `}>
+      {children}
+    </Card>
+  );
 });
 
 const Button: FC<{
