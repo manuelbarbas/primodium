@@ -48,6 +48,7 @@
     "PirateComponent",
     "DefeatedSpawnedPirateAsteroidComponent",
 
+    "P_BuildingDefenceComponent",
     "P_RequiredPirateAsteroidDefeatedComponent",
     "P_SpawnPirateAsteroidComponent",
     "P_DestroyedUnitsRequirementComponent",
