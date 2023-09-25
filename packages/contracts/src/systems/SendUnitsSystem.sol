@@ -43,6 +43,14 @@ contract SendUnitsSystem is PrimodiumSystem {
 
     PirateComponent pirateComponent = PirateComponent(getC(PirateComponentID));
     ReversePositionComponent reversePositionComponent = ReversePositionComponent(getC(ReversePositionComponentID));
+
+    uint256 origin = reversePositionComponent.getValue(LibEncode.encodeCoord(sendArgs.originPosition));
+    IOnEntitySubsystem(getAddressById(world.systems(), S_UpdatePlayerSpaceRockSystem)).executeTyped(msg.sender, origin);
+
+    if (!reversePositionComponent.has(LibEncode.encodeCoord(sendArgs.destinationPosition))) {
+      LibMotherlode.createMotherlode(world, sendArgs.destinationPosition);
+    }
+
     uint256 destination = reversePositionComponent.getValue(LibEncode.encodeCoord(sendArgs.destinationPosition));
     if (pirateComponent.has(sendArgs.to)) {
       require(
@@ -50,13 +58,6 @@ contract SendUnitsSystem is PrimodiumSystem {
           LibPirateAsteroid.getPersonalPirate(addressToEntity(msg.sender)),
         "you cannot send units to a non personal pirate"
       );
-    }
-
-    uint256 origin = reversePositionComponent.getValue(LibEncode.encodeCoord(sendArgs.originPosition));
-    IOnEntitySubsystem(getAddressById(world.systems(), S_UpdatePlayerSpaceRockSystem)).executeTyped(msg.sender, origin);
-
-    if (!reversePositionComponent.has(LibEncode.encodeCoord(sendArgs.destinationPosition))) {
-      LibMotherlode.createMotherlode(world, sendArgs.destinationPosition);
     }
 
     uint256 playerEntity = addressToEntity(msg.sender);

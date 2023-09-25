@@ -14,8 +14,9 @@ export function getPositionByVector(
   const newX = solCosDegrees(direction) * BigInt(distance);
   const newY = solSinDegrees(direction) * BigInt(distance);
 
-  let x = Number(newX / TENe18);
-  let y = Number(newY / TENe18);
+  const x = Number(newX / TENe18);
+  const y = Number(newY / TENe18);
+
   return {
     x: (flip ? -x : x) + origin.x,
     y: (flip ? -y : y) + origin.y,
@@ -27,15 +28,15 @@ const TENe13 = BigInt("10000000000000");
 const ZERO = BigInt(0);
 const ONE = BigInt(1);
 const TWO = BigInt(2);
-const INDEX_WIDTH: bigint = BigInt(8);
-const INTERP_WIDTH: bigint = BigInt(16);
+const INDEX_WIDTH = BigInt(8);
+const INTERP_WIDTH = BigInt(16);
 const INDEX_OFFSET: bigint = BigInt(28) - INDEX_WIDTH;
 const INTERP_OFFSET: bigint = INDEX_OFFSET - INTERP_WIDTH;
-const ANGLES_IN_CYCLE: bigint = BigInt(1073741824);
-const QUADRANT_HIGH_MASK: bigint = BigInt(536870912);
-const QUADRANT_LOW_MASK: bigint = BigInt(268435456);
-const SINE_TABLE_SIZE: bigint = BigInt(256);
-const PI: bigint = BigInt("3141592653589793238");
+const ANGLES_IN_CYCLE = BigInt(1073741824);
+const QUADRANT_HIGH_MASK = BigInt(536870912);
+const QUADRANT_LOW_MASK = BigInt(268435456);
+const SINE_TABLE_SIZE = BigInt(256);
+const PI = BigInt("3141592653589793238");
 export const TWO_PI: bigint = TWO * PI;
 const PI_OVER_TWO: bigint = PI / TWO;
 

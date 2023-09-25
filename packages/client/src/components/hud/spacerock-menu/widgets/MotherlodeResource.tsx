@@ -21,8 +21,8 @@ export const MotherlodeResource: React.FC<{
           text={getBlockTypeName(resource)}
         />
         <p>
-          {formatNumber(remaining * RESOURCE_SCALE)}/
-          {formatNumber(max * RESOURCE_SCALE)}
+          {formatNumber(remaining * RESOURCE_SCALE, 0)}/
+          {formatNumber(max * RESOURCE_SCALE, 0)}
         </p>
       </div>
     </SecondaryCard>
