@@ -277,7 +277,10 @@ export namespace AsteroidMap {
     ],
 
     [BlockType.StarmapperStation]: [AnimationKeys.StarmapperStation1],
-    [BlockType.SAMMissiles]: [AnimationKeys.PhotovoltaicCellFactory1],
+    [BlockType.SAMMissiles]: [
+      AnimationKeys.PhotovoltaicCellFactory1,
+      AnimationKeys.PhotovoltaicCellFactory2,
+    ],
     [BlockType.Hangar]: [AnimationKeys.Hangar1],
 
     [BlockType.Garage]: [
