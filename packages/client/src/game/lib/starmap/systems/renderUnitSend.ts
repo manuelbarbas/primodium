@@ -12,9 +12,7 @@ import { world } from "src/network/world";
 import { ObjectPosition } from "../../common/object-components/common";
 import { Circle, Line } from "../../common/object-components/graphics";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { BeltMap } from "@game/constants";
-
-const { DepthLayers } = BeltMap;
+import { DepthLayers } from "@game/constants";
 
 export const renderUnitSend = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -46,7 +44,7 @@ export const renderUnitSend = (scene: Scene) => {
     const sendTrajectory = scene.objectPool.getGroup(entityId + objIndexSuffix);
 
     sendTrajectory.add("Graphics").setComponents([
-      ObjectPosition(originPixelCoord, DepthLayers.Paths),
+      ObjectPosition(originPixelCoord, DepthLayers.Path),
       Line(destinationPixelCoord, {
         thickness: 2,
         alpha: 0.5,
