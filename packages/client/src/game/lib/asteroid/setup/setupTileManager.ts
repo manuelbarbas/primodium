@@ -1,4 +1,8 @@
-import { AsteroidMap } from "../../../constants";
+import {
+  EntityIDToResourceTilesetKey,
+  RENDER_INTERVAL,
+  Tilesets,
+} from "../../../constants";
 import { getResourceKey } from "../../../../util/tile";
 import { Coord, CoordMap } from "@latticexyz/utils";
 import { interval } from "rxjs";
@@ -6,8 +10,6 @@ import { Scene } from "engine/types";
 import { world } from "src/network/world";
 import AsteroidTiledMap from "../../../../maps/asteroid_0.7.json";
 import { AnimatedTilemap } from "engine/lib/core/tilemap/types";
-
-const { EntityIDToResourceTilesetKey } = AsteroidMap;
 
 const renderChunk = async (
   coord: Coord,
@@ -41,20 +43,12 @@ const renderChunk = async (
       for (let i = AsteroidTiledMap.layers.length - 1; i >= 0; i--) {
         const layer = AsteroidTiledMap.layers[i];
 
-        //   // if (layer.name !== "Base") continue;
-        //   // y * mapWidth + x
-
         const tile =
           layer.data[tileCoord.x + tileCoord.y * AsteroidTiledMap.width];
 
         if (tile > 0) {
           map.putTileAt({ x, y }, tile, layer.name);
         }
-
-        //   // if (tile > 0) return TerrainTilesetIdToEntityId[tile - 1];
-        // }
-
-        // const { terrain, resource } = getTopLayerKeyPair(coord);
       }
 
       const resource = getResourceKey({ x, y });
@@ -62,7 +56,7 @@ const renderChunk = async (
       if (!resource) continue;
       const resourceId = EntityIDToResourceTilesetKey[resource!];
 
-      map.putTileAt({ x, y: -y }, resourceId, AsteroidMap.Tilesets.Resource);
+      map.putTileAt({ x, y: -y }, resourceId, Tilesets.Resource);
     }
   }
 
@@ -70,9 +64,10 @@ const renderChunk = async (
 };
 
 export const setupTileManager = async (tilemap: Scene["tilemap"]) => {
-  const { RENDER_INTERVAL } = AsteroidMap;
   const { chunks, map, chunkSize } = tilemap;
   const chunkCache = new CoordMap<boolean>();
+
+  if (!map) return;
 
   const renderInitialChunks = () => {
     for (const chunk of chunks.visibleChunks.current.coords()) {

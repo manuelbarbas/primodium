@@ -15,7 +15,8 @@
     "react/prop-types": "off",
     "react/display-name": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
-    "@typescript-eslint/no-non-null-asserted-optional-chain": "off"
+    "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
+    "no-unsafe-optional-chaining": "off"
   },
   "settings": {
     "react": {

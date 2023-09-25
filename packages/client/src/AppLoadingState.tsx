@@ -3,7 +3,6 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { SyncState } from "@latticexyz/network";
 
 import Increment from "./screens/Increment";
-import Map from "./screens/Map";
 import { Game } from "./screens/Game";
 import { LoadingState } from "./network/components/chainComponents";
 import { Landing } from "./screens/Landing";
@@ -32,11 +31,6 @@ export default function AppLoadingState() {
       {loadingState.state !== SyncState.LIVE && (
         <div className="flex items-center justify-center h-screen text-white font-mono">
           <div className="flex flex-col items-center gap-2">
-            {/* <h1 className="text-4xl font-bold mb-4">Primodium</h1> */}
-            {/* <div
-                style={{ width: `${loadingState.percentage}%` }}
-                className="absolute top-0 left-0 bg-cyan-700 h-4"
-              /> */}
             <Progress value={loadingState.percentage} max={100} />
 
             <p className="text-lg">
@@ -54,7 +48,6 @@ export default function AppLoadingState() {
               element={initialized ? <Game /> : <Landing />}
             />
             <Route path="/increment" element={<Increment />} />
-            <Route path="/map" element={<Map />} />
           </Routes>
         </BrowserRouter>
       )}

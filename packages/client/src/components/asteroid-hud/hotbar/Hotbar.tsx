@@ -1,5 +1,5 @@
 import { primodium } from "@game/api";
-import { AsteroidMap, KeybindActions } from "@game/constants";
+import { KeybindActions } from "@game/constants";
 import React, { useEffect, useRef, useState } from "react";
 import HotbarBody from "./HotbarBody";
 import HotbarLabel from "./HotbarLabel";
@@ -17,7 +17,7 @@ export const Hotbar: React.FC = () => {
   const {
     hooks: { useKeybinds },
     input: { addListener },
-  } = primodium.api(AsteroidMap.KEY)!;
+  } = primodium.api()!;
   const keybinds = useKeybinds();
   const [activeBar, setActiveBar] = useState(0);
   const activeBarRef = useRef(0);

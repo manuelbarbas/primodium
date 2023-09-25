@@ -1,18 +1,17 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
+  EntityID,
   EntityIndex,
   Has,
   HasValue,
-  defineComponentSystem,
   defineEnterSystem,
   defineExitSystem,
-  defineUpdateSystem,
   namespaceWorld,
 } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 
 import { Scene } from "engine/types";
-import { world } from "src/network/world";
+import { singletonIndex, world } from "src/network/world";
 import {
   ActiveAsteroid,
   SelectedBuilding,
@@ -23,7 +22,6 @@ import {
   BuildingType,
 } from "src/network/components/chainComponents";
 import { safeIndex } from "src/util/array";
-import { AsteroidMap } from "@game/constants";
 
 import {
   Animation,
@@ -32,17 +30,18 @@ import {
 } from "../../common/object-components/sprite";
 import {
   ObjectPosition,
+  OnComponentSystem,
+  OnUpdateSystem,
   SetValue,
 } from "../../common/object-components/common";
 import { getBuildingDimensions, getBuildingTopLeft } from "src/util/building";
-
-const {
+import {
   Assets,
-  SpriteKeys,
   DepthLayers,
   EntityIDtoAnimationKey,
   EntityIDtoSpriteKey,
-} = AsteroidMap;
+  SpriteKeys,
+} from "@game/constants";
 
 const MAX_SIZE = 2 ** 15 - 1;
 export const renderBuilding = (scene: Scene) => {
@@ -53,16 +52,14 @@ export const renderBuilding = (scene: Scene) => {
     const entityId = world.entities[entity];
     const renderId = `${entity}_entitySprite`;
     const buildingType = BuildingType.get(entityId)?.value;
-    const level = Level.get(entityId)?.value
-      ? parseInt(Level.get(entityId)!.value.toString())
-      : 1;
+
+    const isOptimisticUpdate = entity === singletonIndex;
 
     if (!buildingType) return;
 
     const origin = Position.get(entityId);
     if (!origin) return;
     const tilePosition = getBuildingTopLeft(origin, buildingType);
-    const selected = SelectedBuilding.get()?.value === entityId;
 
     // don't render beyond coord map limitation
     if (
@@ -80,18 +77,13 @@ export const renderBuilding = (scene: Scene) => {
     scene.objectPool.removeGroup(renderId);
     const buildingRenderGroup = scene.objectPool.getGroup(renderId);
 
-    const sprites = EntityIDtoSpriteKey[buildingType];
-    const spriteKey = sprites
-      ? safeIndex(level - 1, sprites)
-      : SpriteKeys.IronMine1;
-    const animations = EntityIDtoAnimationKey[buildingType];
-    const animationKey = animations
-      ? safeIndex(level - 1, animations)
-      : undefined;
+    const buildingSprite = buildingRenderGroup.add("Sprite");
+    const buildingSpriteOutline = buildingRenderGroup.add("Sprite");
 
     const buildingDimensions = getBuildingDimensions(buildingType);
+    const assetPair = getAssetKeyPair(entityId, buildingType);
 
-    const components = [
+    const sharedComponents = [
       ObjectPosition({
         x: pixelCoord.x,
         y: -pixelCoord.y + buildingDimensions.height * tileHeight,
@@ -99,26 +91,46 @@ export const renderBuilding = (scene: Scene) => {
       SetValue({
         originY: 1,
       }),
-      Texture(Assets.SpriteAtlas, spriteKey),
+      OnUpdateSystem([...positionQuery, Has(Level)], () => {
+        const updatedAssetPair = getAssetKeyPair(entityId, buildingType);
+        buildingSprite.setComponents([
+          Texture(Assets.SpriteAtlas, updatedAssetPair.sprite),
+          updatedAssetPair.animation
+            ? Animation(updatedAssetPair.animation)
+            : undefined,
+        ]);
+      }),
+      Texture(Assets.SpriteAtlas, assetPair.sprite),
+      assetPair.animation ? Animation(assetPair.animation) : undefined,
     ];
 
-    buildingRenderGroup.add("Sprite").setComponents([
+    buildingSprite.setComponents([
       SetValue({
         depth:
           DepthLayers.Building - tilePosition.y + buildingDimensions.height,
+        alpha: isOptimisticUpdate ? 0.5 : 1,
       }),
-      animationKey ? Animation(animationKey) : undefined,
-      ...components,
+      ...sharedComponents,
     ]);
 
-    if (selected)
-      buildingRenderGroup
-        .add("Sprite")
-        .setComponents([
-          SetValue({ depth: DepthLayers.Building }),
-          Outline({ knockout: true }),
-          ...components,
-        ]);
+    buildingSpriteOutline.setComponents([
+      SetValue({ depth: DepthLayers.Building, alpha: 0 }),
+      OnComponentSystem(SelectedBuilding, (gameObject) => {
+        if (SelectedBuilding.get()?.value === entityId) {
+          buildingSpriteOutline.setComponent(
+            Outline({ knockout: true, color: 0x00ffff })
+          );
+          gameObject.setAlpha(1);
+          return;
+        }
+
+        if (buildingSpriteOutline.hasComponent(Outline().id)) {
+          buildingSpriteOutline.removeComponent(Outline().id);
+          gameObject.setAlpha(0);
+        }
+      }),
+      ...sharedComponents,
+    ]);
   };
 
   const positionQuery = [
@@ -130,26 +142,30 @@ export const renderBuilding = (scene: Scene) => {
 
   defineEnterSystem(gameWorld, positionQuery, render);
 
-  const updateQuery = [...positionQuery, Has(Level)];
-  defineUpdateSystem(gameWorld, updateQuery, render);
-
   defineExitSystem(gameWorld, positionQuery, ({ entity }) => {
     const renderId = `${entity}_entitySprite`;
     scene.objectPool.removeGroup(renderId);
   });
-
-  defineComponentSystem(
-    gameWorld,
-    SelectedBuilding,
-    ({ value: [newValue, oldValue] }) => {
-      if (oldValue?.value) {
-        const entityIndex = world.entityToIndex.get(oldValue.value);
-        if (entityIndex) render({ entity: entityIndex });
-      }
-      if (newValue?.value) {
-        const entityIndex = world.entityToIndex.get(newValue.value);
-        if (entityIndex) render({ entity: entityIndex });
-      }
-    }
-  );
 };
+
+function getAssetKeyPair(entityId: EntityID, buildingType: EntityID) {
+  const sprites = EntityIDtoSpriteKey[buildingType];
+  const animations = EntityIDtoAnimationKey[buildingType];
+
+  const level = Level.get(entityId)?.value
+    ? parseInt(Level.get(entityId)!.value.toString())
+    : 1;
+
+  const spriteKey = sprites
+    ? safeIndex(level - 1, sprites)
+    : SpriteKeys.IronMine1;
+
+  const animationKey = animations
+    ? safeIndex(level - 1, animations)
+    : undefined;
+
+  return {
+    sprite: spriteKey,
+    animation: animationKey,
+  };
+}

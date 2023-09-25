@@ -17,15 +17,12 @@ import { getBuildingAtCoord, getResourceKey } from "./tile";
 import { Account } from "src/network/components/clientComponents";
 import { outOfBounds } from "./outOfBounds";
 import { clampedIndex, getBlockTypeName, toRomanNumeral } from "./common";
-import {
-  BackgroundImage,
-  ResourceType,
-  ResourceStorages,
-  BlockType,
-} from "./constants";
+import { ResourceType, ResourceStorages, BlockType } from "./constants";
 import { hashAndTrimKeyEntity } from "./encode";
 import { getRecipe, getRecipeDifference } from "./resource";
 import { SingletonID } from "@latticexyz/network";
+import { EntityIDtoSpriteKey } from "@game/constants";
+import { primodium } from "@game/api";
 
 type Dimensions = { width: number; height: number };
 export const blueprintCache = new Map<EntityID, Dimensions>();
@@ -186,6 +183,7 @@ export const getBuildingStorages = (building: EntityID) => {
 };
 
 export const getBuildingInfo = (building: EntityID) => {
+  const { getSpriteBase64 } = primodium.api().sprite;
   const buildingType = BuildingType.get(building)?.value ?? SingletonID;
 
   const level = Level.get(building)?.value ?? 1;
@@ -219,13 +217,14 @@ export const getBuildingInfo = (building: EntityID) => {
     Level.get(hashAndTrimKeyEntity(buildingType, nextLevel))?.value ?? 1;
 
   let imageUri = "";
-  if (BackgroundImage.has(buildingType)) {
+  if (EntityIDtoSpriteKey[buildingType]) {
     const imageIndex = parseInt(level ? level.toString() : "1") - 1;
 
-    imageUri =
-      BackgroundImage.get(buildingType)![
-        clampedIndex(imageIndex, BackgroundImage.get(buildingType)!.length)
-      ];
+    imageUri = getSpriteBase64(
+      EntityIDtoSpriteKey[buildingType][
+        clampedIndex(imageIndex, EntityIDtoSpriteKey[buildingType].length)
+      ]
+    );
   }
 
   const position = Position.get(building) ?? { x: 0, y: 0 };

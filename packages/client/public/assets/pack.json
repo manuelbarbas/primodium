@@ -8,11 +8,6 @@
       },
       {
         "type": "image",
-        "key": "terrain",
-        "url": "/assets/tilesets/terrain.png"
-      },
-      {
-        "type": "image",
         "key": "patches",
         "url": "/assets/tilesets/patches.png"
       },
@@ -61,80 +56,6 @@
         "type": "image",
         "key": "resource",
         "url": "/assets/tilesets/resource.png"
-      }
-    ]
-  },
-  "BELT_MAP": {
-    "files": [
-      {
-        "type": "image",
-        "key": "grid-tileset",
-        "url": "/assets/tilesets/grid.png"
-      },
-      {
-        "type": "image",
-        "key": "asteroid-sprite",
-        "url": "/img/spacerocks/asteroids/asteroid1.png"
-      },
-      {
-        "type": "image",
-        "key": "motherlode-iridium-small",
-        "url": "/img/spacerocks/motherlodes/motherlode_iridium_small.png"
-      },
-      {
-        "type": "image",
-        "key": "motherlode-iridium-medium",
-        "url": "/img/spacerocks/motherlodes/motherlode_iridium_medium.png"
-      },
-      {
-        "type": "image",
-        "key": "motherlode-iridium-large",
-        "url": "/img/spacerocks/motherlodes/motherlode_iridium_large.png"
-      },
-      {
-        "type": "image",
-        "key": "motherlode-platinum-small",
-        "url": "/img/spacerocks/motherlodes/motherlode_platinum_small.png"
-      },
-      {
-        "type": "image",
-        "key": "motherlode-platinum-medium",
-        "url": "/img/spacerocks/motherlodes/motherlode_platinum_medium.png"
-      },
-      {
-        "type": "image",
-        "key": "motherlode-platinum-large",
-        "url": "/img/spacerocks/motherlodes/motherlode_platinum_large.png"
-      },
-      {
-        "type": "image",
-        "key": "motherlode-kimberlite-small",
-        "url": "/img/spacerocks/motherlodes/motherlode_kimberlite_small.png"
-      },
-      {
-        "type": "image",
-        "key": "motherlode-kimberlite-medium",
-        "url": "/img/spacerocks/motherlodes/motherlode_kimberlite_medium.png"
-      },
-      {
-        "type": "image",
-        "key": "motherlode-kimberlite-large",
-        "url": "/img/spacerocks/motherlodes/motherlode_kimberlite_large.png"
-      },
-      {
-        "type": "image",
-        "key": "motherlode-titanium-small",
-        "url": "/img/spacerocks/motherlodes/motherlode_titanium_small.png"
-      },
-      {
-        "type": "image",
-        "key": "motherlode-titanium-medium",
-        "url": "/img/spacerocks/motherlodes/motherlode_titanium_medium.png"
-      },
-      {
-        "type": "image",
-        "key": "motherlode-titanium-large",
-        "url": "/img/spacerocks/motherlodes/motherlode_titanium_large.png"
       }
     ]
   }

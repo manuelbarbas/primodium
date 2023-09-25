@@ -1,46 +1,26 @@
 // ASTEROID MAP ENTRY POINT
 import engine from "engine";
 import { Network } from "../../../network/layer";
-import gameConfig from "../../config/asteroid/game";
-import mainSceneConfig from "../../config/asteroid/mainScene";
-import { AsteroidMap } from "../../constants";
+import { asteroidSceneConfig } from "../../config/asteroidScene";
 import { runSystems } from "./systems";
 import { setupTileManager } from "./setup/setupTileManager";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
 import { setupMouseInputs } from "./setup/setupMouseInputs";
 import { setupKeybinds } from "./setup/setupKeybinds";
 
-export const initAsteroidView = async (network: Network) => {
-  const { Scenes } = AsteroidMap;
+export const initAsteroidScene = async (
+  game: Awaited<ReturnType<typeof engine.createGame>>,
+  network: Network
+) => {
   const { world } = network;
 
-  const game = await engine.createGame(gameConfig);
-  const scene = await game.sceneManager.addScene(
-    Scenes.Main,
-    mainSceneConfig,
-    true
-  );
+  const scene = await game.sceneManager.addScene(asteroidSceneConfig, true);
 
   scene.camera.phaserCamera.setRoundPixels(false);
 
-  scene.phaserScene.lights.addLight(18 * 32, -10 * 32, 1000, 0x5a848a, 1.5);
-  scene.phaserScene.lights.setAmbientColor(0xb1b1cc);
-  scene.phaserScene.lights.enable();
-
-  // scene.camera.phaserCamera.postFX.addGradient(
-  //   0x0000ff,
-  //   undefined,
-  //   0.92,
-  //   undefined,
-  //   undefined,
-  //   undefined,
-  //   undefined,
-  //   50
-  // );
-
   const tileManager = await setupTileManager(scene.tilemap);
-  tileManager.renderInitialChunks();
-  tileManager.startChunkRenderer();
+  tileManager?.renderInitialChunks();
+  tileManager?.startChunkRenderer();
 
   scene.camera.phaserCamera.fadeIn(1000);
 

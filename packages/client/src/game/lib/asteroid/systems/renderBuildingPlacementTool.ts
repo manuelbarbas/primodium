@@ -20,7 +20,6 @@ import {
   OnClick,
   SetValue,
 } from "../../common/object-components/common";
-import { AsteroidMap } from "@game/constants";
 import {
   Texture,
   Animation,
@@ -38,14 +37,13 @@ import { buildBuilding } from "src/util/web3";
 import { Network } from "src/network/layer";
 import { toast } from "react-toastify";
 import { getBlockTypeName } from "src/util/common";
-
-const {
+import {
+  Assets,
+  DepthLayers,
   EntityIDtoAnimationKey,
   EntityIDtoSpriteKey,
-  Assets,
   SpriteKeys,
-  DepthLayers,
-} = AsteroidMap;
+} from "@game/constants";
 
 export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
   const { tileWidth, tileHeight } = scene.tilemap;
