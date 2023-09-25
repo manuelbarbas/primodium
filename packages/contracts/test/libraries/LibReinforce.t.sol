@@ -10,12 +10,9 @@ contract LibReinforceTest is PrimodiumTest {
   bytes32 destination = "destination";
 
   bytes32 unit = "unit";
-  bytes32 unitPrototype = "unitPrototype";
 
   bytes32 unit2 = "unit2";
-  bytes32 unitPrototype2 = "unitPrototype2";
-  uint256[] unitCounts;
-  bytes32[] unitTypes;
+  uint256[unitPrototypeCount] unitCounts;
 
   Arrival arrival =
     Arrival({
@@ -25,8 +22,7 @@ contract LibReinforceTest is PrimodiumTest {
       to: "to",
       origin: origin,
       destination: destination,
-      unitCounts: unitCounts,
-      unitTypes: unitTypes
+      unitCounts: unitCounts
     });
 
   bytes32 arrivalId = "arrival";
@@ -38,16 +34,18 @@ contract LibReinforceTest is PrimodiumTest {
     vm.startPrank(worldAddress);
     player = addressToEntity(worldAddress);
     arrival.from = player;
+    bytes32[] memory unitTypes = new bytes32[](unitPrototypeCount);
+    unitTypes[0] = unit;
+    unitTypes[1] = unit2;
+    P_UnitPrototypes.set(unitTypes);
   }
 
   function testReinforce() public {
     ArrivalCount.set(player, 10);
     arrival.sendType = ESendType.Reinforce;
 
-    unitCounts.push(47);
-    unitTypes.push(unit);
+    unitCounts[0] = (47);
     arrival.unitCounts = unitCounts;
-    arrival.unitTypes = unitTypes;
 
     ArrivalsMap.set(player, destination, arrivalId, arrival);
     LibReinforce.reinforce(player, destination, arrivalId);
@@ -61,10 +59,8 @@ contract LibReinforceTest is PrimodiumTest {
     arrival.sendType = ESendType.Reinforce;
     arrival.from = "anotherPlayer";
 
-    unitCounts.push(1);
-    unitTypes.push(unit);
+    unitCounts[0] = (1);
     arrival.unitCounts = unitCounts;
-    arrival.unitTypes = unitTypes;
     ArrivalsMap.set(player, destination, arrivalId, arrival);
 
     ArrivalCount.set(player, 10);
@@ -110,10 +106,9 @@ contract LibReinforceTest is PrimodiumTest {
     arrival.sendType = ESendType.Reinforce;
     arrival.arrivalTime = block.timestamp - 1;
 
-    unitCounts.push(47);
-    unitTypes.push(unit);
+    unitCounts[0] = (47);
+
     arrival.unitCounts = unitCounts;
-    arrival.unitTypes = unitTypes;
 
     ArrivalsMap.set(player, destination, arrivalId, arrival);
     LibReinforce.recallReinforcement(player, destination, arrivalId);
@@ -128,10 +123,9 @@ contract LibReinforceTest is PrimodiumTest {
     arrival.sendType = ESendType.Invade;
     arrival.arrivalTime = block.timestamp - 1;
 
-    unitCounts.push(47);
-    unitTypes.push(unit);
+    unitCounts[0] = (47);
+
     arrival.unitCounts = unitCounts;
-    arrival.unitTypes = unitTypes;
 
     ArrivalsMap.set(player, destination, arrivalId, arrival);
     LibReinforce.recallReinforcement(player, destination, arrivalId);
@@ -147,10 +141,9 @@ contract LibReinforceTest is PrimodiumTest {
     arrival.arrivalTime = block.timestamp - 1;
     arrival.from = "anotherPlayer";
 
-    unitCounts.push(47);
-    unitTypes.push(unit);
+    unitCounts[0] = (47);
+
     arrival.unitCounts = unitCounts;
-    arrival.unitTypes = unitTypes;
 
     ArrivalsMap.set(player, destination, arrivalId, arrival);
     LibReinforce.recallReinforcement(player, destination, arrivalId);
@@ -165,10 +158,9 @@ contract LibReinforceTest is PrimodiumTest {
     arrival.sendType = ESendType.Reinforce;
     arrival.arrivalTime = block.timestamp + 1;
 
-    unitCounts.push(47);
-    unitTypes.push(unit);
+    unitCounts[0] = (47);
+
     arrival.unitCounts = unitCounts;
-    arrival.unitTypes = unitTypes;
 
     ArrivalsMap.set(player, destination, arrivalId, arrival);
     LibReinforce.recallReinforcement(player, destination, arrivalId);
@@ -184,10 +176,8 @@ contract LibReinforceTest is PrimodiumTest {
     arrival.sendType = ESendType.Reinforce;
     arrival.arrivalTime = block.timestamp - 1;
 
-    unitCounts.push(47);
-    unitTypes.push(unit);
+    unitCounts[0] = (47);
     arrival.unitCounts = unitCounts;
-    arrival.unitTypes = unitTypes;
 
     ArrivalsMap.set(player, destination, arrivalId, arrival);
     LibReinforce.recallAllReinforcements(player, destination);
@@ -199,13 +189,11 @@ contract LibReinforceTest is PrimodiumTest {
       to: "to",
       origin: origin,
       destination: destination,
-      unitCounts: unitCounts,
-      unitTypes: unitTypes
+      unitCounts: unitCounts
     });
-    uint256[] memory unitCounts2 = new uint256[](1);
+    uint256[unitPrototypeCount] memory unitCounts2;
     unitCounts2[0] = 53;
 
-    arrival2.unitTypes = unitTypes;
     arrival2.unitCounts = unitCounts2;
     bytes32 key2 = keccak256(abi.encode(arrival));
 
@@ -222,10 +210,8 @@ contract LibReinforceTest is PrimodiumTest {
     arrival.sendType = ESendType.Reinforce;
     arrival.arrivalTime = block.timestamp - 1;
 
-    unitCounts.push(47);
-    unitTypes.push(unit);
+    unitCounts[0] = (47);
     arrival.unitCounts = unitCounts;
-    arrival.unitTypes = unitTypes;
 
     ArrivalsMap.set(player, destination, arrivalId, arrival);
     LibReinforce.recallAllReinforcements(player, destination);

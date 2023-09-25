@@ -28,6 +28,11 @@ export const config = mudConfig({
       accessList: ["BuildSystem", "UpgradeBuildingSystem", "DestroySystem"],
       name: "S_ReduceProductionRateSystem",
     },
+    S_BattleSystem: {
+      openAccess: false,
+      accessList: ["RaidSystem"],
+      name: "S_BattleSystem",
+    },
   },
 
   enums: MUDEnums,
@@ -326,6 +331,12 @@ export const config = mudConfig({
     },
 
     /* ----------------------------- Unit Production ---------------------------- */
+    // stores an array of all unit prototypes in the game
+    P_UnitPrototypes: {
+      keySchema: {},
+      schema: "bytes32[]",
+    },
+
     P_Unit: {
       keySchema: { entity: "bytes32", level: "uint256" },
       schema: {
@@ -337,6 +348,7 @@ export const config = mudConfig({
         trainingTime: "uint256",
       },
     },
+
     QueueUnits: {
       keySchema: { entity: "bytes32" },
       schema: {
@@ -389,6 +401,21 @@ export const config = mudConfig({
     MapItemArrivals: {
       keySchema: { entity: "bytes32", asteroid: "bytes32", key: "bytes32" },
       schema: "bytes",
+    },
+
+    /* ------------------------------ Battle Result ----------------------------- */
+
+    BattleResult: {
+      keySchema: { entity: "bytes32" },
+      schema: {
+        winner: "bytes32",
+        attacker: "bytes32",
+        defender: "bytes32",
+
+        attackerUnitsLeft: "uint256[]",
+        defenderUnitsLeft: "uint256[]",
+      },
+      ephemeral: true,
     },
   },
 });

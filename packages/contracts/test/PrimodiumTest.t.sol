@@ -13,6 +13,8 @@ import "codegen/Libraries.sol";
 import "src/Keys.sol";
 import "src/Types.sol";
 
+uint256 constant unitPrototypeCount = 5;
+
 struct PositionData2D {
   int32 x;
   int32 y;
@@ -79,9 +81,6 @@ contract PrimodiumTest is MudTest {
     assertEq(toString(a.destination), toString(b.destination), "[assertEq]: destination doesn't match");
     for (uint256 i = 0; i < a.unitCounts.length; i++) {
       assertEq(a.unitCounts[i], b.unitCounts[i], "[assertEq]: unitCounts doesn't match");
-    }
-    for (uint256 i = 0; i < a.unitTypes.length; i++) {
-      assertEq(toString(a.unitTypes[i]), toString(b.unitTypes[i]), "[assertEq]: unitTypes doesn't match");
     }
   }
 
