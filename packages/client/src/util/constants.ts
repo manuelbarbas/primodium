@@ -86,7 +86,7 @@ export const BlockType = {
   Electricity: keccak256("item.ElectricityUtilityResource") as EntityID,
   Housing: keccak256("item.HousingUtilityResource") as EntityID,
   VesselCapacity: keccak256("item.VesselUtilityResource") as EntityID,
-  FleetMoves: keccak256("item.MoveCount") as EntityID,
+  FleetMoves: keccak256("block.MoveCount") as EntityID,
 
   BulletCrafted: keccak256("item.BulletCrafted") as EntityID,
   IronPlate: keccak256("item.IronPlateCrafted") as EntityID,
