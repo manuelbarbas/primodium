@@ -46,6 +46,7 @@ uint256 constant DebugUtilityProductionBuilding = uint256(keccak256("block.Debug
 
 uint256 constant DebugHousingBuilding = uint256(keccak256("block.DebugHousingBuilding"));
 uint256 constant DebugUnitProductionBuilding = uint256(keccak256("block.DebugUnitProductionBuilding"));
+uint256 constant DebugDefenceBuilding = uint256(keccak256("block.DebugDefenceBuilding"));
 
 uint256 constant DebugUnit = uint256(keccak256("block.DebugUnit"));
 uint256 constant DebugUnit2 = uint256(keccak256("block.DebugUnit2"));
