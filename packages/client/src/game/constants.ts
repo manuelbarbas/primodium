@@ -280,10 +280,13 @@ export namespace AsteroidMap {
 
     [BlockType.Hangar]: [AnimationKeys.Hangar1],
 
-    [BlockType.Garage]: [SpriteKeys.PhotovoltaicCellFactory1],
-    [BlockType.AdvancedDroneFactory]: [SpriteKeys.DroneFactory1],
+    [BlockType.Garage]: [
+      AnimationKeys.PhotovoltaicCellFactory1,
+      AnimationKeys.PhotovoltaicCellFactory2,
+    ],
+    [BlockType.AdvancedDroneFactory]: [AnimationKeys.DroneFactory1],
 
-    [BlockType.DroneFactory]: [SpriteKeys.StorageUnit1],
+    [BlockType.DroneFactory]: [AnimationKeys.StorageUnit3],
   };
 }
 
