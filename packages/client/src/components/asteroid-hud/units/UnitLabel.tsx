@@ -18,6 +18,7 @@ export const UnitLabel = ({
       <ResourceIconTooltip
         name={name}
         amount={count}
+        scale={1}
         resourceId={resourceId}
         image={resourceIcon ?? ""}
         validate={false}

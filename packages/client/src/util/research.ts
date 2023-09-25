@@ -1,6 +1,12 @@
 import { EntityID } from "@latticexyz/recs";
 import { BlockType } from "./constants";
-import { P_RequiredResearch } from "src/network/components/chainComponents";
+import {
+  HasResearched,
+  Level,
+  P_RequiredResearch,
+} from "src/network/components/chainComponents";
+import { hashAndTrimKeyEntity } from "./encode";
+import { getRecipe } from "./resource";
 
 export type ResearchTreeType = ResearchCategoryType[];
 
@@ -29,6 +35,43 @@ export function getBuildingResearchRequirement(
 
   if (!requiredResearch) return null;
   return requiredResearch.toString() as EntityID;
+}
+
+export function getResearchInfo(research: ResearchItemType, player: EntityID) {
+  const { name, levels } = research;
+
+  const levelsResearched = levels.map(({ id }, index) => {
+    if (research.id === ExpansionResearchTree.id) {
+      const level = Level.get(player)?.value ?? 1;
+      return level >= index + 1;
+    }
+
+    const entity = hashAndTrimKeyEntity(id, player);
+    const isResearched = HasResearched.get(entity);
+    return isResearched?.value ?? false;
+  });
+
+  const level =
+    levelsResearched.filter(Boolean).length >= levels.length
+      ? levels.length
+      : levelsResearched.filter(Boolean).length;
+
+  const isResearched = level === levels.length;
+
+  const researchId = levels[isResearched ? level - 1 : level].id;
+
+  const mainBaseLvlReq = Level.get(researchId)?.value ?? 1;
+
+  const recipe = getRecipe(researchId);
+
+  return {
+    maxLevel: levels.length,
+    level,
+    name,
+    id: researchId,
+    mainBaseLvlReq,
+    recipe,
+  };
 }
 
 export const MiningResearchTree: ResearchItemType = {
@@ -72,7 +115,7 @@ export const MiningResearchTree: ResearchItemType = {
 };
 
 export const AnvilDroneUpgradeTree: ResearchItemType = {
-  name: "Anvil Drone Upgrade",
+  name: "Anvil Drone",
   id: BlockType.AnvilDroneUpgrade1,
   description:
     "Upgrades the Attack and Defence attributes of Anvil Drone units.",
@@ -112,7 +155,7 @@ export const AnvilDroneUpgradeTree: ResearchItemType = {
 };
 
 export const HammerDroneUpgradeTree: ResearchItemType = {
-  name: "Hammer Drone Upgrade",
+  name: "Hammer Drone",
   id: BlockType.HammerDroneUpgrade1,
   description:
     "Upgrades the Attack and Defence attributes of Hammer Drone units.",
@@ -152,7 +195,7 @@ export const HammerDroneUpgradeTree: ResearchItemType = {
 };
 
 export const AegisDroneUpgradeTree: ResearchItemType = {
-  name: "Aegis Drone Upgrade",
+  name: "Aegis Drone",
   id: BlockType.AegisDroneUpgrade1,
   description:
     "Upgrades the Attack and Defence attributes of Aegis Drone units.",
@@ -192,7 +235,7 @@ export const AegisDroneUpgradeTree: ResearchItemType = {
 };
 
 export const StingerDroneUpgradeTree: ResearchItemType = {
-  name: "Stinger Drone Upgrade",
+  name: "Stinger Drone",
   id: BlockType.StingerDroneUpgrade1,
   description:
     "Upgrades the Attack and Defence attributes of Stinger Drone units.",
@@ -232,7 +275,7 @@ export const StingerDroneUpgradeTree: ResearchItemType = {
 };
 
 export const MiningVesselUpgradeTree: ResearchItemType = {
-  name: "Mining Vessel Unit Upgrade",
+  name: "Mining Vessel",
   id: BlockType.MiningVesselUpgrade1,
   description: "Increases the Mining Vessel's Mining Power by 1. ",
 

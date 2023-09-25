@@ -9,10 +9,7 @@ export const AllMaterialLabels = () => {
       <MaterialLabel name={"Copper"} resourceId={BlockType.Copper} />
       <MaterialLabel name={"Lithium"} resourceId={BlockType.Lithium} />
       <MaterialLabel name={"Sulfur"} resourceId={BlockType.Sulfur} />
-      <MaterialLabel
-        name={"Iron Plate"}
-        resourceId={BlockType.IronPlateCrafted}
-      />
+      <MaterialLabel name={"Iron Plate"} resourceId={BlockType.IronPlate} />
       <MaterialLabel name={"Alloy"} resourceId={BlockType.Alloy} />
       <MaterialLabel
         name={"Photovoltaic Cell"}

@@ -39,6 +39,7 @@ export const RecipeDisplay: React.FC<{
               scale={
                 resource.type !== ResourceType.Utility ? RESOURCE_SCALE : 1
               }
+              validate
               fontSize={"xs"}
             />
           );
@@ -67,7 +68,7 @@ export const BlueprintInfo: React.FC<{
     ((production?.resourceProductionRate ?? 0) * RESOURCE_SCALE * 60) /
     avgBlockTime;
 
-  const hasEnough = useHasEnoughResources(buildingLevelEntity);
+  const hasEnough = useHasEnoughResources(getRecipe(buildingLevelEntity));
 
   if (!getBlockTypeName(buildingType)) return <></>;
 

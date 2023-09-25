@@ -24,15 +24,14 @@ export async function execute(
         error.transactionHash,
         providers.get().json
       );
-
       toast.warn(reason);
       return error.receipt as ContractReceipt;
     } catch (error: any) {
       // This is most likely a gas error. i.e.:
       //     TypeError: Cannot set properties of null (setting 'gasPrice')
       // so we tell the user to try again
-
-      toast.error(error);
+      //
+      toast.error(error.message);
       return undefined;
     }
   }

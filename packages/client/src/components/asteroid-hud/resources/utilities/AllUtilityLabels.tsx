@@ -5,14 +5,8 @@ import { UtilityLabel } from "./UtilityLabel";
 export const AllUtilityLabels = () => {
   return (
     <SecondaryCard className="grid grid-cols-1 gap-1">
-      <UtilityLabel
-        name={"Electricity"}
-        resourceId={BlockType.ElectricityUtilityResource}
-      />
-      <UtilityLabel
-        name={"Housing"}
-        resourceId={BlockType.HousingUtilityResource}
-      />
+      <UtilityLabel name={"Electricity"} resourceId={BlockType.Electricity} />
+      <UtilityLabel name={"Housing"} resourceId={BlockType.Housing} />
     </SecondaryCard>
   );
 };

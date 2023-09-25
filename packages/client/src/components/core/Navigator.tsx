@@ -5,7 +5,7 @@ import {
   ReactNode,
   FC,
   useCallback,
-  useEffect,
+  useLayoutEffect,
 } from "react";
 import { Button } from "./Button";
 import { Card, SecondaryCard } from "./Card";
@@ -20,16 +20,20 @@ const NavigationContext = createContext<NavigationContextValue | undefined>(
   undefined
 );
 
-export const Navigator: FC<{ initialScreen?: string; children?: ReactNode }> & {
+export const Navigator: FC<{
+  initialScreen?: string;
+  children?: ReactNode;
+  className?: string;
+}> & {
   Screen: typeof Screen;
   NavButton: typeof NavButton;
   BackButton: typeof BackButton;
   Breadcrumbs: typeof Breadcrumbs;
-} = ({ children, initialScreen = "Home" }) => {
+} = ({ children, initialScreen = "Home", className }) => {
   const [history, setHistory] = useState<string[]>([initialScreen]);
 
   // Reset history when initialScreen prop changes
-  useEffect(() => {
+  useLayoutEffect(() => {
     setHistory([initialScreen]);
   }, [initialScreen]);
 
@@ -58,7 +62,7 @@ export const Navigator: FC<{ initialScreen?: string; children?: ReactNode }> & {
 
   return (
     <NavigationContext.Provider value={{ navigateTo, goBack, history }}>
-      <Card className={``}>{children}</Card>
+      <Card className={className}>{children}</Card>
     </NavigationContext.Provider>
   );
 };
@@ -78,21 +82,50 @@ const Screen: FC<{
 }> = ({ title, className, children }) => {
   const { history } = useNavigation();
   if (history[history.length - 1] !== title) return null;
-  return <div className={className}>{children}</div>;
+  return (
+    <div className={`flex flex-col items-center w-full ${className}`}>
+      {children}
+    </div>
+  );
 };
 
-const NavButton: FC<{ to: string; children?: ReactNode }> = ({
-  to,
-  children,
-}) => {
-  const { navigateTo } = useNavigation();
-  return <Button onClick={() => navigateTo(to, true)}>{children}</Button>;
+const NavButton: FC<{
+  to: string;
+  children?: ReactNode;
+  className?: string;
+  disabled?: boolean;
+}> = ({ to, className, children, disabled }) => {
+  const { navigateTo, history } = useNavigation();
+
+  if (to === history[history.length - 1]) return <></>;
+
+  return (
+    <Button
+      className={className}
+      onClick={() => navigateTo(to, true)}
+      disabled={disabled}
+    >
+      {children}
+    </Button>
+  );
 };
 
-const BackButton: FC<{ children?: ReactNode }> = ({ children }) => {
+const BackButton: FC<{
+  className?: string;
+  children?: ReactNode;
+  onClick?: () => void;
+  disabled?: boolean;
+}> = ({ children, onClick, className, disabled = false }) => {
   const { goBack, history } = useNavigation();
   return (
-    <Button disabled={history.length <= 1} onClick={goBack}>
+    <Button
+      disabled={history.length <= 1 || disabled}
+      onClick={() => {
+        if (onClick) onClick();
+        goBack();
+      }}
+      className={`${className} btn-sm border-secondary`}
+    >
       {children || "Back"}
     </Button>
   );
@@ -101,7 +134,7 @@ const BackButton: FC<{ children?: ReactNode }> = ({ children }) => {
 const Breadcrumbs: FC<{ children?: ReactNode }> = () => {
   const { history, navigateTo } = useNavigation();
   return (
-    <SecondaryCard className="w-fit text-sm breadcrumbs pointer-events-auto">
+    <SecondaryCard className="w-fit text-xs breadcrumbs pointer-events-auto">
       <ul>
         {history.map((item, index) => (
           <li key={index}>

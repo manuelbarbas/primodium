@@ -20,7 +20,7 @@ export const Button: React.FC<{
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`btn join-item inline gap-1 pointer-events-auto font-bold outline-non ${className} ${
+      className={`btn join-item inline pointer-events-auto font-bold outline-non ${className} ${
         disabled ? "opacity-50" : ""
       } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
     >

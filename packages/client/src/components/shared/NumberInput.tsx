@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Badge } from "../core/Badge";
 
 export const NumberInput: React.FC<{
   min: number;
@@ -8,7 +9,7 @@ export const NumberInput: React.FC<{
   const [count, setCount] = useState<number | "">(min);
 
   return (
-    <div className="flex gap-2 mt-4 mb-2">
+    <Badge className="flex gap-2 mt-4 mb-2 p-5 rounded-box">
       <button
         onClick={() => {
           if (count !== "") {
@@ -21,7 +22,7 @@ export const NumberInput: React.FC<{
       </button>
       <input
         type="number"
-        className="bg-transparent text-center w-fit outline-none border-b border-pink-900"
+        className="bg-transparent text-center w-fit outline-none border-b border-secondary"
         value={count}
         placeholder="0"
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,6 +65,6 @@ export const NumberInput: React.FC<{
       >
         +
       </button>
-    </div>
+    </Badge>
   );
 };

@@ -52,7 +52,7 @@ export function useFullResourceCount(
   //****production****//
 
   const worldSpeed = P_WorldSpeed.use(SingletonID)?.value ?? SPEED_SCALE;
-  console.log("world speed: " + worldSpeed);
+
   //motherlode//
   const motherlodeProduction = useMemo(() => {
     if (!mineableResources.includes(resourceID) || type == ResourceType.Utility)

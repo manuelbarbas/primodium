@@ -15,7 +15,7 @@ import {
 import { SingletonID } from "@latticexyz/network";
 import { Cheatcode, Cheatcodes } from "src/components/dev/Cheatcodes";
 import { Network } from "src/network/layer";
-import { BlockType } from "./constants";
+import { BlockType, ResourceStorages } from "./constants";
 import {
   Account,
   ActiveAsteroid,
@@ -39,13 +39,13 @@ const resources: Record<string, EntityID> = {
   kimberlite: BlockType.Kimberlite,
   uraninite: BlockType.Uraninite,
   bolutite: BlockType.Bolutite,
-  ironplate: BlockType.IronPlateCrafted,
+  ironplate: BlockType.IronPlate,
   platinum: BlockType.Platinum,
   alloy: BlockType.Alloy,
   pvcell: BlockType.PhotovoltaicCell,
-  housing: BlockType.HousingUtilityResource,
-  vessel: BlockType.VesselUtilityResource,
-  electricity: BlockType.ElectricityUtilityResource,
+  housing: BlockType.Housing,
+  vessel: BlockType.VesselCapacity,
+  electricity: BlockType.Electricity,
 };
 
 const units: Record<string, EntityID> = {
@@ -101,7 +101,59 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
     },
   };
 
+  const getResourcePack: Cheatcode = {
+    params: [],
+    function: async () => {
+      ResourceStorages.forEach(async (resource) => {
+        const player = Account.get()?.value;
+        if (!player) throw new Error("No player found");
+        const playerResource = hashKeyEntity(resource, player);
+
+        await mud.dev.setEntityContractComponentValue(
+          playerResource,
+          P_MaxStorage,
+          {
+            value: 100000 * 100,
+          }
+        );
+
+        await mud.dev.setEntityContractComponentValue(playerResource, Item, {
+          value: 100000 * 100,
+        });
+      });
+    },
+  };
+
+  const getUtilityPack: Cheatcode = {
+    params: [],
+    function: async () => {
+      [BlockType.Housing, BlockType.Electricity].forEach(async (resource) => {
+        const player = Account.get()?.value;
+        if (!player) throw new Error("No player found");
+        const playerResource = hashKeyEntity(resource, player);
+
+        await mud.dev.setEntityContractComponentValue(
+          playerResource,
+          MaxUtility,
+          {
+            value: 10000,
+          }
+        );
+
+        mud.dev.setEntityContractComponentValue(
+          playerResource,
+          OccupiedUtilityResource,
+          {
+            value: 0,
+          }
+        );
+      });
+    },
+  };
+
   return {
+    getUtilityPack,
+    getResourcePack,
     setMaxUtility,
     setMaxResource,
     maxMainBase: {

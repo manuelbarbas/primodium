@@ -200,15 +200,49 @@ library LibInitBuildings {
     resourceValues[10] = ResourceValue({ resource: KimberliteResourceItemID, value: 800000 });
     storageUpgrades[7] = resourceValues;
 
+    /****************** Unit Types Production *******************/
+    uint256[][] memory allUnitTypes = new uint256[][](maxLevel);
+    uint256[] memory unitTypes;
+
+    unitTypes = new uint256[](1);
+    unitTypes[0] = MiningVessel;
+    allUnitTypes[0] = unitTypes;
+    allUnitTypes[1] = unitTypes;
+    allUnitTypes[2] = unitTypes;
+    allUnitTypes[3] = unitTypes;
+    allUnitTypes[4] = unitTypes;
+    allUnitTypes[5] = unitTypes;
+    allUnitTypes[6] = unitTypes;
+    allUnitTypes[7] = unitTypes;
+
+    /****************** Unit Production Multipliers *******************/
+    uint32[] memory productionSpeedMultipliers = new uint32[](maxLevel);
+
+    productionSpeedMultipliers[0] = 100;
+    productionSpeedMultipliers[1] = 100;
+    productionSpeedMultipliers[2] = 100;
+    productionSpeedMultipliers[3] = 100;
+    productionSpeedMultipliers[4] = 100;
+    productionSpeedMultipliers[5] = 100;
+    productionSpeedMultipliers[6] = 100;
+    productionSpeedMultipliers[7] = 100;
+
     /* ***********************Set Values ************************* */
     P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(entity, maxLevel);
     P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(entity, LibBlueprint.get3x3Blueprint());
-
+    P_UnitProductionTypesComponent unitProductionTypesComponent = P_UnitProductionTypesComponent(
+      world.getComponent(P_UnitProductionTypesComponentID)
+    );
+    P_UnitProductionMultiplierComponent unitProductionMultiplierComponent = P_UnitProductionMultiplierComponent(
+      world.getComponent(P_UnitProductionMultiplierComponentID)
+    );
     for (uint256 i = 0; i < maxLevel; i++) {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
       LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
       LibSetBuildingReqs.setStorageUpgrades(world, buildingLevelEntity, storageUpgrades[i]);
+      unitProductionTypesComponent.set(buildingLevelEntity, allUnitTypes[i]);
+      unitProductionMultiplierComponent.set(buildingLevelEntity, productionSpeedMultipliers[i]);
     }
   }
 
@@ -1441,37 +1475,33 @@ library LibInitBuildings {
     uint256[][] memory allUnitTypes = new uint256[][](maxLevel);
     uint256[] memory unitTypes;
     //Level 1
-    unitTypes = new uint256[](5);
+    unitTypes = new uint256[](4);
     unitTypes[0] = AnvilDrone;
     unitTypes[1] = HammerDrone;
-    unitTypes[2] = MiningVessel;
-    unitTypes[3] = AegisDrone;
-    unitTypes[4] = StingerDrone;
+    unitTypes[2] = AegisDrone;
+    unitTypes[3] = StingerDrone;
     allUnitTypes[0] = unitTypes;
     //Level 2
-    unitTypes = new uint256[](5);
+    unitTypes = new uint256[](4);
     unitTypes[0] = AnvilDrone;
     unitTypes[1] = HammerDrone;
-    unitTypes[2] = MiningVessel;
-    unitTypes[3] = AegisDrone;
-    unitTypes[4] = StingerDrone;
+    unitTypes[2] = AegisDrone;
+    unitTypes[3] = StingerDrone;
     allUnitTypes[1] = unitTypes;
 
     //Level 3
-    unitTypes = new uint256[](5);
+    unitTypes = new uint256[](4);
     unitTypes[0] = AnvilDrone;
     unitTypes[1] = HammerDrone;
-    unitTypes[2] = MiningVessel;
-    unitTypes[3] = AegisDrone;
-    unitTypes[4] = StingerDrone;
+    unitTypes[2] = AegisDrone;
+    unitTypes[3] = StingerDrone;
     allUnitTypes[2] = unitTypes;
     //Level 4
-    unitTypes = new uint256[](5);
+    unitTypes = new uint256[](4);
     unitTypes[0] = AnvilDrone;
     unitTypes[1] = HammerDrone;
-    unitTypes[2] = MiningVessel;
-    unitTypes[3] = AegisDrone;
-    unitTypes[4] = StingerDrone;
+    unitTypes[2] = AegisDrone;
+    unitTypes[3] = StingerDrone;
     allUnitTypes[3] = unitTypes;
 
     /* ***********************Set Values ************************* */
