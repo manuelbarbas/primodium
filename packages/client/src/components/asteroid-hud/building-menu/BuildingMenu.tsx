@@ -71,7 +71,7 @@ export const BuildingMenu: React.FC = () => {
       <BuildQueue building={selectedBuilding} />
       <BuildDrone building={selectedBuilding} />
       <UpgradeDrones />
-      <MiningVessels />
+      <MiningVessels building={selectedBuilding} />
 
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2">
         <Button

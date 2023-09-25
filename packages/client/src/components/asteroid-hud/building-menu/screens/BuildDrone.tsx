@@ -28,7 +28,6 @@ import { SingletonID } from "@latticexyz/network";
 import { getRecipe } from "src/util/resource";
 import { Navigator } from "src/components/core/Navigator";
 import { SecondaryCard } from "src/components/core/Card";
-import { Join } from "src/components/core/Join";
 import { Badge } from "src/components/core/Badge";
 
 export const BuildDrone: React.FC<{
