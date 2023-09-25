@@ -15,7 +15,7 @@ import {
 import { SingletonID } from "@latticexyz/network";
 import { Cheatcode, Cheatcodes } from "src/components/dev/Cheatcodes";
 import { Network } from "src/network/layer";
-import { BlockType, ResourceStorages, UtilityStorages } from "./constants";
+import { BlockType, ResourceStorages } from "./constants";
 import {
   Account,
   ActiveAsteroid,
