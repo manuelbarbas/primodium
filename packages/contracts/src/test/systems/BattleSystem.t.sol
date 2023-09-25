@@ -9,7 +9,6 @@ import { S_ResolveBattleSystem, ID as S_ResolveBattleSystemID } from "../../syst
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 import { BuildSystem as BuildSystem } from "../../systems/BuildSystem.sol";
 
-import { BattleSpaceRockComponent, ID as BattleSpaceRockComponentID } from "../../components/BattleSpaceRockComponent.sol";
 import { BattleParticipant } from "../../types.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "../../components/LevelComponent.sol";
@@ -97,7 +96,6 @@ contract S_ResolveBattleSystemTest is PrimodiumTest {
       battleEntity,
       abi.encode(defender.participantEntity, defender.unitTypes, defender.unitLevels, defender.unitCounts)
     );
-    componentDevSystem.executeTyped(BattleSpaceRockComponentID, battleEntity, abi.encode(getHomeAsteroidEntity(bob)));
 
     battleSystem.executeTyped(alice, battleEntity);
     assertTrue(battleResultComponent.has(battleEntity), "battle result not found");
@@ -152,7 +150,7 @@ contract S_ResolveBattleSystemTest is PrimodiumTest {
       battleEntity,
       abi.encode(defender.participantEntity, defender.unitTypes, defender.unitLevels, defender.unitCounts)
     );
-    componentDevSystem.executeTyped(BattleSpaceRockComponentID, battleEntity, abi.encode(getHomeAsteroidEntity(bob)));
+
     battleSystem.executeTyped(alice, battleEntity);
     assertTrue(battleResultComponent.has(battleEntity), "battle result not found");
     BattleResult memory result = battleResultComponent.getValue(battleEntity);
@@ -215,7 +213,7 @@ contract S_ResolveBattleSystemTest is PrimodiumTest {
       battleEntity,
       abi.encode(defender.participantEntity, defender.unitTypes, defender.unitLevels, defender.unitCounts)
     );
-    componentDevSystem.executeTyped(BattleSpaceRockComponentID, battleEntity, abi.encode(getHomeAsteroidEntity(bob)));
+
     battleSystem.executeTyped(alice, battleEntity);
     assertTrue(battleResultComponent.has(battleEntity), "battle result not found");
 
