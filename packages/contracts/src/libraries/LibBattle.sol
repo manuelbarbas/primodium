@@ -4,6 +4,8 @@ pragma solidity ^0.8.0;
 import { IWorld } from "solecs/System.sol";
 import { addressToEntity } from "solecs/utils.sol";
 //components
+import { BattleSpaceRockComponent, ID as BattleSpaceRockComponentID } from "components/BattleSpaceRockComponent.sol";
+import { P_BuildingDefenceComponent, ID as P_BuildingDefenceComponentID } from "components/P_BuildingDefenceComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
 import { P_UnitAttackComponent, ID as P_UnitAttackComponentID } from "components/P_UnitAttackComponent.sol";
@@ -255,6 +257,10 @@ library LibBattle {
         defender.unitCounts[i] *
         unitDefenceComponent.getValue(LibEncode.hashKeyEntity(defender.unitTypes[i], level));
     }
+    totalDefenceValue += LibMath.getSafe(
+      P_BuildingDefenceComponent(world.getComponent(P_BuildingDefenceComponentID)),
+      BattleSpaceRockComponent(world.getComponent(BattleSpaceRockComponentID)).getValue(battleEntity)
+    );
     return totalDefenceValue;
   }
 
