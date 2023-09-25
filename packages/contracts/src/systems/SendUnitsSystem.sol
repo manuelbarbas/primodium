@@ -46,6 +46,7 @@ contract SendUnitsSystem is PrimodiumSystem {
     ReversePositionComponent reversePositionComponent = ReversePositionComponent(getC(ReversePositionComponentID));
     uint256 destination = reversePositionComponent.getValue(LibEncode.encodeCoord(sendArgs.destinationPosition));
     if (pirateComponent.has(sendArgs.to)) {
+      require(sendArgs.sendType == ESendType.RAID, "you can only raid a pirate");
       require(
         OwnedByComponent(getC(OwnedByComponentID)).getValue(destination) ==
           LibPirateAsteroid.getPersonalPirate(addressToEntity(msg.sender)),
