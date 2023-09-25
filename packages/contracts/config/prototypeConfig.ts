@@ -140,7 +140,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   Expansion: {
     tables: {
-      P_MaxLevel: { value: 6n },
+      P_MaxLevel: { value: 7n },
     },
     levels: {
       1: { Dimensions: { x: 13, y: 11 }, P_RequiredBaseLevel: { value: 1n } },
@@ -639,10 +639,10 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   AnvilDrone: {
     tables: {
-      P_MaxLevel: { value: 6n },
+      P_MaxLevel: { value: 5n },
     },
     levels: {
-      1: {
+      0: {
         P_RequiredResources: getResourceValues({ IronPlate: 2000, U_Housing: 1 }),
         P_Unit: {
           attack: 40n,
@@ -653,7 +653,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 30n,
         },
       },
-      2: {
+      1: {
         P_RequiredUpgradeResources: getResourceValues({ Titanium: 30000 }),
         P_RequiredBaseLevel: { value: 4n },
 
@@ -667,7 +667,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 30n,
         },
       },
-      3: {
+      2: {
         P_RequiredUpgradeResources: getResourceValues({ Titanium: 50000 }),
         P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ IronPlate: 2000, U_Housing: 1 }),
@@ -680,7 +680,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 30n,
         },
       },
-      4: {
+      3: {
         P_RequiredUpgradeResources: getResourceValues({ Titanium: 100000 }),
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ IronPlate: 2000, U_Housing: 1 }),
@@ -693,7 +693,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 30n,
         },
       },
-      5: {
+      4: {
         P_RequiredUpgradeResources: getResourceValues({ Titanium: 160000 }),
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ IronPlate: 2000, U_Housing: 1 }),
@@ -706,7 +706,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 30n,
         },
       },
-      6: {
+      5: {
         P_RequiredUpgradeResources: getResourceValues({ Titanium: 220000 }),
         P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ IronPlate: 2000, U_Housing: 1 }),
@@ -723,10 +723,10 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   },
   AegisDrone: {
     tables: {
-      P_MaxLevel: { value: 6n },
+      P_MaxLevel: { value: 5n },
     },
     levels: {
-      1: {
+      0: {
         P_RequiredResources: getResourceValues({ Alloy: 3000, PVCell: 1000, U_Housing: 3 }),
         P_Unit: {
           attack: 150n,
@@ -737,7 +737,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 150n,
         },
       },
-      2: {
+      1: {
         P_RequiredUpgradeResources: getResourceValues({ Iridium: 30000 }),
         P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Alloy: 3000, PVCell: 1000, U_Housing: 3 }),
@@ -750,7 +750,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 150n,
         },
       },
-      3: {
+      2: {
         P_RequiredUpgradeResources: getResourceValues({ Iridium: 50000 }),
         P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ Alloy: 3000, PVCell: 1000, U_Housing: 3 }),
@@ -763,7 +763,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 150n,
         },
       },
-      4: {
+      3: {
         P_RequiredUpgradeResources: getResourceValues({ Titanium: 100000 }),
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Alloy: 3000, PVCell: 1000, U_Housing: 3 }),
@@ -776,7 +776,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 150n,
         },
       },
-      5: {
+      4: {
         P_RequiredUpgradeResources: getResourceValues({ Titanium: 160000 }),
         P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ Alloy: 3000, PVCell: 1000, U_Housing: 3 }),
@@ -789,7 +789,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 150n,
         },
       },
-      6: {
+      5: {
         P_RequiredUpgradeResources: getResourceValues({ Titanium: 220000 }),
         P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Alloy: 3000, PVCell: 1000, U_Housing: 3 }),
@@ -806,10 +806,10 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   },
   HammerDrone: {
     tables: {
-      P_MaxLevel: { value: 6n },
+      P_MaxLevel: { value: 5n },
     },
     levels: {
-      1: {
+      0: {
         P_RequiredResources: getResourceValues({ Alloy: 4000, U_Housing: 1 }),
         P_Unit: {
           attack: 140n,
@@ -820,7 +820,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 60n,
         },
       },
-      2: {
+      1: {
         P_RequiredUpgradeResources: getResourceValues({ Platinum: 30000 }),
         P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Alloy: 4000, U_Housing: 1 }),
@@ -833,7 +833,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 60n,
         },
       },
-      3: {
+      2: {
         P_RequiredUpgradeResources: getResourceValues({ Platinum: 50000 }),
         P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ Alloy: 4000, PVCell: 1000, U_Housing: 1 }),
@@ -846,9 +846,9 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 60n,
         },
       },
-      4: {
+      3: {
         P_RequiredUpgradeResources: getResourceValues({ Platinum: 100000 }),
-        P_RequiredBaseLevel: { value: 6n },
+        P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ Alloy: 4000, PVCell: 1000, U_Housing: 1 }),
         P_Unit: {
           attack: 161n,
@@ -859,7 +859,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 60n,
         },
       },
-      5: {
+      4: {
         P_RequiredUpgradeResources: getResourceValues({ Platinum: 160000 }),
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ Alloy: 4000, PVCell: 1000, U_Housing: 1 }),
@@ -872,7 +872,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 60n,
         },
       },
-      6: {
+      5: {
         P_RequiredUpgradeResources: getResourceValues({ Platinum: 220000 }),
         P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Alloy: 4000, PVCell: 1000, U_Housing: 1 }),
@@ -889,10 +889,10 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   },
   StingerDrone: {
     tables: {
-      P_MaxLevel: { value: 6n },
+      P_MaxLevel: { value: 5n },
     },
     levels: {
-      1: {
+      0: {
         P_RequiredResources: getResourceValues({ Platinum: 500, Titanium: 1500, U_Housing: 2 }),
         P_Unit: {
           attack: 550n,
@@ -903,7 +903,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 200n,
         },
       },
-      2: {
+      1: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 30000 }),
         P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Platinum: 500, Titanium: 1500, U_Housing: 2 }),
@@ -916,7 +916,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 200n,
         },
       },
-      3: {
+      2: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 50000 }),
         P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ Platinum: 500, Titanium: 1500, U_Housing: 2 }),
@@ -929,7 +929,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 200n,
         },
       },
-      4: {
+      3: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 100000 }),
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Platinum: 500, Titanium: 1500, U_Housing: 2 }),
@@ -942,7 +942,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 200n,
         },
       },
-      5: {
+      4: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 160000 }),
         P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ Platinum: 500, Titanium: 1500, U_Housing: 2 }),
@@ -955,7 +955,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 200n,
         },
       },
-      6: {
+      5: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 220000 }),
         P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Platinum: 500, Titanium: 1500, U_Housing: 2 }),
@@ -972,10 +972,10 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   },
   MiningVessel: {
     tables: {
-      P_MaxLevel: { value: 6n },
+      P_MaxLevel: { value: 5n },
     },
     levels: {
-      1: {
+      0: {
         P_RequiredResources: getResourceValues({ Sulfur: 2000, IronPlate: 3000, PVCell: 5000, U_Housing: 1 }),
         P_Unit: {
           attack: 20n,
@@ -986,7 +986,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 100n,
         },
       },
-      2: {
+      1: {
         P_RequiredUpgradeResources: getResourceValues({ Titanium: 10000 }),
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ Sulfur: 2000, IronPlate: 3000, PVCell: 5000, U_Housing: 1 }),
@@ -999,7 +999,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 100n,
         },
       },
-      3: {
+      2: {
         P_RequiredUpgradeResources: getResourceValues({ Platinum: 10000 }),
         P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Sulfur: 2000, IronPlate: 3000, PVCell: 5000, U_Housing: 1 }),
@@ -1012,7 +1012,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 100n,
         },
       },
-      4: {
+      3: {
         P_RequiredUpgradeResources: getResourceValues({ Iridium: 10000 }),
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Sulfur: 2000, IronPlate: 3000, PVCell: 5000, U_Housing: 1 }),
@@ -1025,7 +1025,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 100n,
         },
       },
-      5: {
+      4: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 20000 }),
         P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ Sulfur: 2000, IronPlate: 3000, PVCell: 5000, U_Housing: 1 }),
@@ -1038,7 +1038,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 100n,
         },
       },
-      6: {
+      5: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 50000 }),
         P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Sulfur: 2000, IronPlate: 3000, PVCell: 5000, U_Housing: 3 }),

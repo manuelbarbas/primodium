@@ -102,7 +102,6 @@ library LibUnit {
     if (count == 0) return;
 
     uint256 unitLevel = UnitLevel.get(playerEntity, unitType);
-    if (unitLevel == 0) unitLevel += 1;
 
     P_RequiredResourcesData memory resources = P_RequiredResources.get(unitType, unitLevel);
     for (uint256 i = 0; i < resources.resources.length; i++) {

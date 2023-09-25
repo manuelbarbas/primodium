@@ -59,7 +59,7 @@ contract LibSendTest is PrimodiumTest {
   function testGetSlowestUnitSpeedSingle() public {
     unitCounts[0] = 100;
     unitData.speed = 69;
-    P_Unit.set(P_UnitPrototypes.get()[0], 1, unitData);
+    P_Unit.set(P_UnitPrototypes.get()[0], 0, unitData);
 
     assertEq(LibSend.getSlowestUnitSpeed(arrival.from, unitCounts), 69);
   }
@@ -67,11 +67,11 @@ contract LibSendTest is PrimodiumTest {
   function testGetSlowestUnitSpeedNoCounts() public {
     unitCounts[0] = 0;
     unitData.speed = 50;
-    P_Unit.set(P_UnitPrototypes.get()[0], 1, unitData);
+    P_Unit.set(P_UnitPrototypes.get()[0], 0, unitData);
 
     unitCounts[1] = 100;
     unitData.speed = 100;
-    P_Unit.set(P_UnitPrototypes.get()[1], 1, unitData);
+    P_Unit.set(P_UnitPrototypes.get()[1], 0, unitData);
 
     assertEq(LibSend.getSlowestUnitSpeed(arrival.from, unitCounts), 100);
   }
@@ -82,11 +82,11 @@ contract LibSendTest is PrimodiumTest {
     unitCounts[2] = 1;
 
     unitData.speed = 100;
-    P_Unit.set(P_UnitPrototypes.get()[0], 1, unitData);
+    P_Unit.set(P_UnitPrototypes.get()[0], 0, unitData);
     unitData.speed = 50;
-    P_Unit.set(P_UnitPrototypes.get()[1], 1, unitData);
+    P_Unit.set(P_UnitPrototypes.get()[1], 0, unitData);
     unitData.speed = 200;
-    P_Unit.set(P_UnitPrototypes.get()[2], 1, unitData);
+    P_Unit.set(P_UnitPrototypes.get()[2], 0, unitData);
 
     assertEq(LibSend.getSlowestUnitSpeed(arrival.from, unitCounts), 50);
   }
@@ -110,7 +110,7 @@ contract LibSendTest is PrimodiumTest {
 
     counts[0] = 100;
     unitData.speed = unitSpeed;
-    P_Unit.set("unit1", 1, unitData);
+    P_Unit.set("unit1", 0, unitData);
     arrival.unitCounts = counts;
     return arrival;
   }

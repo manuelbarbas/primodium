@@ -113,7 +113,7 @@ contract LibResourceTest is PrimodiumTest {
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);
     requiredResourcesData.amounts[0] = 50;
-    P_RequiredResources.set(unitPrototype, 1, requiredResourcesData);
+    P_RequiredResources.set(unitPrototype, 0, requiredResourcesData);
 
     LibResource.spendUnitRequiredResources(playerEntity, unitPrototype);
     assertEq(ResourceCount.get(playerEntity, EResource.Iron), 50);
@@ -125,7 +125,7 @@ contract LibResourceTest is PrimodiumTest {
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);
     requiredResourcesData.amounts[0] = 50;
-    P_RequiredResources.set(unitPrototype, 1, requiredResourcesData);
+    P_RequiredResources.set(unitPrototype, 0, requiredResourcesData);
 
     LibResource.spendUnitRequiredResources(playerEntity, unitPrototype);
   }
@@ -136,7 +136,7 @@ contract LibResourceTest is PrimodiumTest {
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);
     requiredResourcesData.amounts[0] = 50;
-    P_RequiredResources.set(unitPrototype, 1, requiredResourcesData);
+    P_RequiredResources.set(unitPrototype, 0, requiredResourcesData);
 
     LibResource.spendUnitRequiredResources(playerEntity, unitPrototype);
     assertEq(ResourceCount.get(playerEntity, EResource.Iron), 50);
@@ -148,7 +148,7 @@ contract LibResourceTest is PrimodiumTest {
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);
     requiredResourcesData.amounts[0] = 50;
-    P_RequiredResources.set(unitPrototype, 1, requiredResourcesData);
+    P_RequiredResources.set(unitPrototype, 0, requiredResourcesData);
 
     LibResource.spendUnitRequiredResources(playerEntity, unitPrototype);
   }

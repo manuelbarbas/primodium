@@ -188,7 +188,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     UnitCount.set(player, origin, unitPrototype, 100);
 
     unitData.speed = 100;
-    P_Unit.set(unitPrototype, 1, unitData);
+    P_Unit.set(unitPrototype, 0, unitData);
 
     unitCounts[0] = 1;
 
@@ -219,7 +219,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     UnitCount.set(player, origin, unitPrototype, 100);
 
     unitData.speed = 100;
-    P_Unit.set(unitPrototype, 1, unitData);
+    P_Unit.set(unitPrototype, 0, unitData);
 
     unitCounts[0] = 1;
 
@@ -250,7 +250,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     UnitCount.set(player, origin, unitPrototype, 100);
 
     unitData.speed = 100;
-    P_Unit.set(unitPrototype, 1, unitData);
+    P_Unit.set(unitPrototype, 0, unitData);
 
     unitCounts[0] = 1;
 
@@ -281,7 +281,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     UnitCount.set(player, origin, unitPrototype, 100);
 
     unitData.speed = 100;
-    P_Unit.set(unitPrototype, 1, unitData);
+    P_Unit.set(unitPrototype, 0, unitData);
 
     unitCounts[0] = 1;
 
@@ -314,7 +314,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     UnitCount.set(player, origin, unitPrototype, 100);
 
     unitData.speed = 100;
-    P_Unit.set(unitPrototype, 1, unitData);
+    P_Unit.set(unitPrototype, 0, unitData);
 
     unitCounts[0] = 1;
 
