@@ -37,7 +37,6 @@ library LibResource {
   /// @param prototype Unit Prototype
   function spendUnitRequiredResources(bytes32 playerEntity, bytes32 prototype) internal {
     uint256 level = UnitLevel.get(playerEntity, prototype);
-    if (level == 0) level = 1;
     claimAllResources(playerEntity);
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(prototype, level);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {

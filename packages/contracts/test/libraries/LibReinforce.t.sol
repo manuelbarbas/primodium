@@ -71,7 +71,7 @@ contract LibReinforceTest is PrimodiumTest {
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);
     requiredResourcesData.amounts[0] = 33;
-    P_RequiredResources.set(unit, 1, requiredResourcesData);
+    P_RequiredResources.set(unit, 0, requiredResourcesData);
 
     uint256 before = 75;
     MaxResourceCount.set(player, EResource.Iron, before + 33);

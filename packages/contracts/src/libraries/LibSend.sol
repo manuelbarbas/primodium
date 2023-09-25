@@ -31,7 +31,6 @@ library LibSend {
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
       uint256 unitLevel = UnitLevel.get(playerEntity, unitPrototypes[i]);
-      if (unitLevel == 0) unitLevel++;
       uint256 speed = P_Unit.getSpeed(unitPrototypes[i], unitLevel);
       if (speed < slowestSpeed) {
         slowestSpeed = speed;

@@ -15,7 +15,7 @@ contract UpgradeUnitSystem is PrimodiumSystem {
     bytes32 playerEntity = addressToEntity(_msgSender());
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
     uint256 currentLevel = UnitLevel.get(playerEntity, unitPrototype);
-    uint256 targetLevel = currentLevel == 0 ? 2 : currentLevel + 1;
+    uint256 targetLevel = currentLevel + 1;
 
     require(unit != EUnit.NULL && unit != EUnit.LENGTH, "[UpgradeUnitSystem] Invalid unit");
 
