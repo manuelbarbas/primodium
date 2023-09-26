@@ -98,7 +98,9 @@
     "LibInitDebug",
     "LibInitMotherlode",
     "LibInitScoreMultipliers",
-    "LibInitUnits"
+    "LibInitUnits",
+    "LibInitObjectives",
+    "LibInitPirateAsteroids"
   ],
   "systems": [
     {
