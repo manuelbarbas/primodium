@@ -79,6 +79,7 @@ export const BlockType = {
   DroneFactory: keccak256("block.DroneFactory") as EntityID,
   AdvancedDroneFactory: keccak256("block.AdvancedDroneFactory") as EntityID,
   StarmapperStation: keccak256("block.Starmapper") as EntityID,
+  SAMMissiles: keccak256("block.SAMMissiles") as EntityID,
 
   Alloy: keccak256("item.AlloyCrafted") as EntityID,
   PhotovoltaicCell: keccak256("item.PhotovoltaicCellCrafted") as EntityID,
@@ -410,6 +411,11 @@ export const BackgroundImage = new Map<EntityID, string[]>([
   [
     BlockType.StarmapperStation,
     ["/img/building/starmapper-station/level1/Starmapper1.png"],
+  ],
+
+  [
+    BlockType.SAMMissiles,
+    ["/img/building/drone-factory/normal/Drone_Factory1.png"],
   ],
 
   //units

@@ -25,8 +25,6 @@ import { DimensionsComponent, ID as DimensionsComponentID } from "components/Dim
 import { P_MaxLevelComponent, ID as P_MaxLevelComponentID } from "components/P_MaxLevelComponent.sol";
 import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
 
-import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
-
 // Libraries
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetBuildingReqs } from "../libraries/LibSetBuildingReqs.sol";

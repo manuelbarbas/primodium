@@ -3,6 +3,7 @@ pragma solidity >=0.8.0;
 
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 // Production Buildings
+import { P_BuildingDefenceComponent, ID as P_BuildingDefenceComponentID } from "components/P_BuildingDefenceComponent.sol";
 import { P_RequiredResearchComponent, ID as P_RequiredResearchComponentID } from "components/P_RequiredResearchComponent.sol";
 import { P_RequiredTileComponent, ID as P_RequiredTileComponentID } from "components/P_RequiredTileComponent.sol";
 import { P_BlueprintComponent, ID as P_BlueprintComponentID } from "components/P_BlueprintComponent.sol";
@@ -1893,5 +1894,117 @@ library LibInitBuildings {
       LevelComponent(world.getComponent(LevelComponentID)).set(buildingLevelEntity, requiredMainBaseLevels[i]);
       LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
     }
+  }
+
+  function setupDefenciveBuilding(
+    IWorld world,
+    uint32 maxLevel,
+    uint256 defenciveBuildingType,
+    uint32[] memory requiredMainBaseLevels,
+    ResourceValue[][] memory requiredResources,
+    ResourceValues[] memory requiredUtilities,
+    uint32[] memory defenciveValues
+  ) internal {
+    P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(defenciveBuildingType);
+    P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(defenciveBuildingType, maxLevel);
+    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(
+      defenciveBuildingType,
+      LibBlueprint.get3x2Blueprint()
+    );
+    for (uint256 i = 0; i < maxLevel; i++) {
+      uint256 level = i + 1;
+      uint256 buildingLevelEntity = LibEncode.hashKeyEntity(defenciveBuildingType, level);
+      P_RequiredUtilityComponent(world.getComponent(P_RequiredUtilityComponentID)).set(
+        buildingLevelEntity,
+        requiredUtilities[i]
+      );
+      P_BuildingDefenceComponent(world.getComponent(P_BuildingDefenceComponentID)).set(
+        buildingLevelEntity,
+        defenciveValues[i]
+      );
+      LevelComponent(world.getComponent(LevelComponentID)).set(buildingLevelEntity, requiredMainBaseLevels[i]);
+      LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
+    }
+  }
+
+  function initSAMMissiles(IWorld world) internal {
+    uint256 entity = SAMMissilesID;
+    uint32 maxLevel = 3;
+
+    /****************** Required Main Base Levels *******************/
+    uint32[] memory requiredMainBaseLevels = new uint32[](maxLevel);
+    requiredMainBaseLevels[0] = 3;
+    requiredMainBaseLevels[1] = 7;
+    requiredMainBaseLevels[2] = 8;
+
+    /****************** Required Resources *******************/
+    ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
+    ResourceValue[] memory resourceValues = new ResourceValue[](1);
+    // LEVEL 1
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: TitaniumResourceItemID, value: 70000 });
+    requiredResources[0] = resourceValues;
+
+    // LEVEL 2
+    resourceValues = new ResourceValue[](2);
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 2500000 });
+    resourceValues[1] = ResourceValue({ resource: PlatinumResourceItemID, value: 250000 });
+    requiredResources[1] = resourceValues;
+
+    // LEVEL 3
+    resourceValues = new ResourceValue[](2);
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 2500000 });
+    resourceValues[1] = ResourceValue({ resource: IridiumResourceItemID, value: 10000 });
+    requiredResources[2] = resourceValues;
+
+    /****************** Required Utility Resources *******************/
+
+    ResourceValues[] memory requiredUtilities = new ResourceValues[](maxLevel);
+
+    uint256[] memory utilityResourceIds;
+    uint32[] memory utilityResourceAmounts;
+
+    // LEVEL 1
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = ElectricityUtilityResourceID;
+    utilityResourceAmounts[0] = 100;
+    requiredUtilities[0] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    // LEVEL 2
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = ElectricityUtilityResourceID;
+    utilityResourceAmounts[0] = 150;
+    requiredUtilities[1] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    // LEVEL 3
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = ElectricityUtilityResourceID;
+    utilityResourceAmounts[0] = 200;
+    requiredUtilities[2] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    /* -------------------------------- Defence Values ------------------------------- */
+
+    uint32[] memory defenciveValues = new uint32[](maxLevel);
+    // LEVEL 1
+    defenciveValues[0] = 250;
+    // LEVEL 2
+    defenciveValues[1] = 500;
+    // LEVEL 3
+    defenciveValues[2] = 900;
+
+    /* ***********************Set Values ************************* */
+
+    setupDefenciveBuilding(
+      world,
+      maxLevel,
+      entity,
+      requiredMainBaseLevels,
+      requiredResources,
+      requiredUtilities,
+      defenciveValues
+    );
   }
 }

@@ -45,3 +45,6 @@ uint256 constant AdvancedDroneFactoryID = uint256(keccak256("block.AdvancedDrone
 
 // Starmapper
 uint256 constant StarmapperID = uint256(keccak256("block.Starmapper"));
+
+// DefenciveBuildings
+uint256 constant SAMMissilesID = uint256(keccak256("block.SAMMissiles"));
