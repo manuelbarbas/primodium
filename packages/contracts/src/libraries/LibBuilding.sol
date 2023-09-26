@@ -5,6 +5,7 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { IWorld } from "solecs/System.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 // components
+import { P_BuildingDefenceComponent, ID as P_BuildingDefenceComponentID } from "components/P_BuildingDefenceComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
@@ -33,7 +34,7 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibTerrain } from "libraries/LibTerrain.sol";
-
+import { LibDefence } from "libraries/LibDefence.sol";
 // types
 import { BuildingKey, ExpansionKey } from "../prototypes.sol";
 import { Coord, Bounds, Dimensions } from "src/types.sol";
@@ -220,6 +221,9 @@ library LibBuilding {
       LibEncode.hashKeyEntity(buildingType, playerEntity),
       1
     );
+
+    LibDefence.updateBuildingDefence(world, playerEntity, buildingType, 1, EActionType.Build);
+
     //required production update
     LibResource.updateRequiredProduction(world, playerEntity, buildingType, 1, true);
   }

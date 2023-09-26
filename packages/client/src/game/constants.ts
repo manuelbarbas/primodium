@@ -267,6 +267,10 @@ export const EntityIDtoSpriteKey = {
 
   [BlockType.DroneFactory]: [SpriteKeys.DroneFactory1],
 
+  [BlockType.SAMMissiles]: [SpriteKeys.PhotovoltaicCellFactory1],
+  [BlockType.Garage]: [SpriteKeys.IronPlateFactory1],
+  [BlockType.AdvancedDroneFactory]: [SpriteKeys.DroneFactory1],
+
   //STARMAP
   [BlockType.Asteroid]: [
     SpriteKeys.Asteroid1,

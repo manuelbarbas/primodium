@@ -4,6 +4,7 @@ pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 // Production Buildings
+import { P_BuildingDefenceComponent, ID as P_BuildingDefenceComponentID } from "components/P_BuildingDefenceComponent.sol";
 import { P_RequiredPirateAsteroidDefeatedComponent, ID as P_RequiredPirateAsteroidDefeatedComponentID } from "components/P_RequiredPirateAsteroidDefeatedComponent.sol";
 import { P_UnitRewardComponent, ID as P_UnitRewardComponentID } from "components/P_UnitRewardComponent.sol";
 import { P_ResourceRewardComponent, ID as P_ResourceRewardComponentID } from "components/P_ResourceRewardComponent.sol";
@@ -120,6 +121,7 @@ library LibInitDebug {
     isBuildingTypeComponent.set(DebugHousingBuilding);
     isBuildingTypeComponent.set(DebugSimpleBuildingMainBaseLevelReqID);
     isBuildingTypeComponent.set(DebugSimpleBuildingRequiresTitanium);
+    isBuildingTypeComponent.set(DebugDefenceBuilding);
   }
 
   function registerUnitType(IWorld world) internal {
@@ -161,6 +163,32 @@ library LibInitDebug {
 
     isObjectiveComponent.set(DebugSpawnPirateAsteroidObjectiveID);
     isObjectiveComponent.set(DebugDefeatedPirateAsteroidObjectiveID);
+
+    //set as debug to filter out in client
+    IsDebugComponent isDebugComponent = IsDebugComponent(world.getComponent(IsDebugComponentID));
+    isDebugComponent.set(DebugFreeObjectiveID);
+    isDebugComponent.set(DebugHavResourcesObjectiveID);
+    isDebugComponent.set(DebugHaveUnitsObjectiveID);
+    isDebugComponent.set(DebugHaveMaxUtilityObjectiveID);
+    isDebugComponent.set(DebugCompletedPriorObjectiveID);
+    isDebugComponent.set(DebugMainBaseLevelObjectiveID);
+    isDebugComponent.set(DebugTechnologyResearchedObjectiveID);
+    isDebugComponent.set(DebugResourceProductionObjectiveID);
+    isDebugComponent.set(DebugBuiltBuildingTypeObjectiveID);
+    isDebugComponent.set(DebugNumberOfBuiltBuildingTypeObjectiveID);
+    isDebugComponent.set(DebugRaidObjectiveID);
+
+    isDebugComponent.set(DebugMotherlodeMiningTitaniumObjectiveID);
+    isDebugComponent.set(DebugMotherlodeMiningPlatinumObjectiveID);
+    isDebugComponent.set(DebugMotherlodeMiningIridiumObjectiveID);
+    isDebugComponent.set(DebugMotherlodeMiningKimberliteObjectiveID);
+
+    isDebugComponent.set(DebugDestroyedUnitsObjectiveID);
+    isDebugComponent.set(DebugResourceRewardObjectiveID);
+    isDebugComponent.set(DebugUnitsRewardObjectiveID);
+
+    isDebugComponent.set(DebugSpawnPirateAsteroidObjectiveID);
+    isDebugComponent.set(DebugDefeatedPirateAsteroidObjectiveID);
   }
 
   function initObjectives(IWorld world) internal {
@@ -365,6 +393,7 @@ library LibInitDebug {
     blueprintComponent.set(DebugSimpleBuildingMainBaseLevelReqID, coords);
 
     blueprintComponent.set(DebugSimpleBuildingRequiresTitanium, coords);
+    blueprintComponent.set(DebugDefenceBuilding, coords);
   }
 
   function initializeSimpleBuildings(IWorld world) internal {
@@ -456,6 +485,10 @@ library LibInitDebug {
     resourceValues = new ResourceValue[](1);
     resourceValues[0] = ResourceValue({ resource: TitaniumResourceItemID, value: 100 });
     LibSetBuildingReqs.setResourceReqs(world, entity, resourceValues);
+
+    //DebugDefenceBuilding
+    entity = LibEncode.hashKeyEntity(DebugDefenceBuilding, 1);
+    P_BuildingDefenceComponent(world.getComponent(P_BuildingDefenceComponentID)).set(entity, 300);
   }
 
   function initializeMines(IWorld world) internal {
