@@ -79,8 +79,11 @@ export const BlockType = {
   AlloyFactory: keccak256("block.AlloyFactory") as EntityID,
   SolarPanel: keccak256("block.SolarPanel") as EntityID,
   Hangar: keccak256("block.Hangar") as EntityID,
+  Garage: keccak256("block.Garage") as EntityID,
   DroneFactory: keccak256("block.DroneFactory") as EntityID,
+  AdvancedDroneFactory: keccak256("block.AdvancedDroneFactory") as EntityID,
   StarmapperStation: keccak256("block.Starmapper") as EntityID,
+  SAMMissiles: keccak256("block.SAMMissiles") as EntityID,
 
   Alloy: keccak256("item.AlloyCrafted") as EntityID,
   PhotovoltaicCell: keccak256("item.PhotovoltaicCellCrafted") as EntityID,
@@ -162,6 +165,33 @@ export const BlockType = {
   MiningVesselUpgrade4: hashStringEntity("research.MiningVesselUpgrade", 4),
   MiningVesselUpgrade5: hashStringEntity("research.MiningVesselUpgrade", 5),
 
+  MarineUnitUpgrade1: hashStringEntity("research.MarineUnitUpgrade", 1),
+  MarineUnitUpgrade2: hashStringEntity("research.MarineUnitUpgrade", 2),
+  MarineUnitUpgrade3: hashStringEntity("research.MarineUnitUpgrade", 3),
+  MarineUnitUpgrade4: hashStringEntity("research.MarineUnitUpgrade", 4),
+  MarineUnitUpgrade5: hashStringEntity("research.MarineUnitUpgrade", 5),
+
+  AdvancedMarineUnitUpgrade1: hashStringEntity(
+    "research.AdvancedMarineUnitUpgrade",
+    1
+  ),
+  AdvancedMarineUnitUpgrade2: hashStringEntity(
+    "research.AdvancedMarineUnitUpgrade",
+    2
+  ),
+  AdvancedMarineUnitUpgrade3: hashStringEntity(
+    "research.AdvancedMarineUnitUpgrade",
+    3
+  ),
+  AdvancedMarineUnitUpgrade4: hashStringEntity(
+    "research.AdvancedMarineUnitUpgrade",
+    4
+  ),
+  AdvancedMarineUnitUpgrade5: hashStringEntity(
+    "research.AdvancedMarineUnitUpgrade",
+    5
+  ),
+
   MiningResearch1: hashStringEntity("research.MiningResearch", 1),
   MiningResearch2: hashStringEntity("research.MiningResearch", 2),
   MiningResearch3: hashStringEntity("research.MiningResearch", 3),
@@ -237,6 +267,8 @@ export const BlockType = {
 
   //Starmap
   Asteroid: keccak256("spacerock.Asteroid") as EntityID,
+  MarineUnit: keccak256("unit.MarineUnit") as EntityID,
+  AdvancedMarineUnit: keccak256("unit.AdvancedMarineUnit") as EntityID,
 };
 
 export const BlockIdToKey = Object.entries(BlockType).reduce<{
@@ -283,6 +315,8 @@ export const BackgroundImage = new Map<EntityID, string[]>([
   [BlockType.AnvilLightDrone, ["/img/unit/anvildrone.png"]],
   [BlockType.AegisDrone, ["/img/unit/aegisdrone.png"]],
   [BlockType.MiningVessel, ["/img/unit/miningvessel.png"]],
+  [BlockType.MarineUnit, ["/img/unit/anvildrone.png"]],
+  [BlockType.AdvancedMarineUnit, ["/img/unit/anvildrone.png"]],
 
   // debug units
   [BlockType.DebugUnit, ["/img/unit/stingerdrone.png"]],
@@ -450,6 +484,18 @@ export const ResearchImage = new Map<EntityID, string>([
   [BlockType.MiningVesselUpgrade3, "/img/unit/miningvessel.png"],
   [BlockType.MiningVesselUpgrade4, "/img/unit/miningvessel.png"],
   [BlockType.MiningVesselUpgrade5, "/img/unit/miningvessel.png"],
+
+  [BlockType.AdvancedMarineUnitUpgrade1, "/img/unit/anvildrone.png"],
+  [BlockType.AdvancedMarineUnitUpgrade2, "/img/unit/anvildrone.png"],
+  [BlockType.AdvancedMarineUnitUpgrade3, "/img/unit/anvildrone.png"],
+  [BlockType.AdvancedMarineUnitUpgrade4, "/img/unit/anvildrone.png"],
+  [BlockType.AdvancedMarineUnitUpgrade5, "/img/unit/anvildrone.png"],
+
+  [BlockType.MarineUnitUpgrade1, "/img/unit/anvildrone.png"],
+  [BlockType.MarineUnitUpgrade2, "/img/unit/anvildrone.png"],
+  [BlockType.MarineUnitUpgrade3, "/img/unit/anvildrone.png"],
+  [BlockType.MarineUnitUpgrade4, "/img/unit/anvildrone.png"],
+  [BlockType.MarineUnitUpgrade5, "/img/unit/anvildrone.png"],
 ]);
 //images of resource items (think of them like minecraft entities)
 export const ResourceImage = new Map<EntityID, string>([
