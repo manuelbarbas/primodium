@@ -642,10 +642,20 @@ export const P_RequiredPirateAsteroidDefeated = newComponent(
   }
 );
 
+/* -------------------------------------------------------------------------- */
+/*                                   PIRATE                                   */
+/* -------------------------------------------------------------------------- */
+
+export const Pirate = newNumberComponent(world, {
+  id: "Pirate",
+  metadata: { contractId: `${commonIdPrefix}Pirate` },
+});
+
 export const DefeatedSpawnedPirateAsteroid = newBoolComponent(world, {
   id: "DefeatedSpawnedPirateAsteroid",
   metadata: { contractId: `${commonIdPrefix}DefeatedSpawnedPirateAsteroid` },
 });
+
 export default {
   GameConfig,
   P_Terrain,
@@ -743,4 +753,8 @@ export default {
   TotalRaid,
   TotalMotherlodeMined,
   TotalUnitsDestroyed,
+
+  //Pirate
+  Pirate,
+  DefeatedSpawnedPirateAsteroid,
 };
