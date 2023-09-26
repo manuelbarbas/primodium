@@ -38,6 +38,8 @@ library LibInitUnits {
     initHammerDrone(world);
     initStingerDrone(world);
     initMiningVessel(world);
+    initMarine(world);
+    initAdvancedMarine(world);
   }
 
   function setupUnit(
@@ -73,8 +75,7 @@ library LibInitUnits {
     }
   }
 
-  /******************************** Mines ********************************** */
-
+  /******************************** Units ********************************** */
   function initAnvilDrone(IWorld world) internal {
     uint256 unitType = AnvilDrone;
     P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).set(unitType);
@@ -85,29 +86,29 @@ library LibInitUnits {
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
     // LEVEL 1
     ResourceValue[] memory resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 2000 });
     requiredResources[0] = resourceValues;
     // LEVEL 2
     resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 2000 });
     requiredResources[1] = resourceValues;
     // LEVEL 3
     resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 2000 });
     requiredResources[2] = resourceValues;
 
     // LEVEL 4
     resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 2000 });
     requiredResources[3] = resourceValues;
     // LEVEL 5
     resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 2000 });
     requiredResources[4] = resourceValues;
 
     // LEVEL 6
     resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 2000 });
     requiredResources[5] = resourceValues;
 
     /****************** Required Utility Resources *******************/
@@ -213,6 +214,292 @@ library LibInitUnits {
     unitDesigns[3].trainingTime = 30;
     unitDesigns[4].trainingTime = 30;
     unitDesigns[5].trainingTime = 30;
+
+    /* ***********************Set Values ************************* */
+    setupUnit(world, unitType, maxLevel, unitDesigns, requiredResources, requiredUtilities);
+  }
+
+  function initMarine(IWorld world) internal {
+    uint256 unitType = MarineUnit;
+    P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).set(unitType);
+
+    uint32 maxLevel = 6;
+
+    /****************** Required Resources *******************/
+    ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
+    // LEVEL 1
+    ResourceValue[] memory resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 2000 });
+    requiredResources[0] = resourceValues;
+    // LEVEL 2
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 2000 });
+    requiredResources[1] = resourceValues;
+    // LEVEL 3
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 2000 });
+    requiredResources[2] = resourceValues;
+
+    // LEVEL 4
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 2000 });
+    requiredResources[3] = resourceValues;
+    // LEVEL 5
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 2000 });
+    requiredResources[4] = resourceValues;
+
+    // LEVEL 6
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 2000 });
+    requiredResources[5] = resourceValues;
+
+    /****************** Required Utility Resources *******************/
+
+    ResourceValues[] memory requiredUtilities = new ResourceValues[](maxLevel);
+
+    uint256[] memory utilityResourceIds;
+    uint32[] memory utilityResourceAmounts;
+
+    // LEVEL 1
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = HousingUtilityResourceID;
+    utilityResourceAmounts[0] = 1;
+    requiredUtilities[0] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    // LEVEL 2
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = HousingUtilityResourceID;
+    utilityResourceAmounts[0] = 1;
+    requiredUtilities[1] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    // LEVEL 3
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = HousingUtilityResourceID;
+    utilityResourceAmounts[0] = 1;
+    requiredUtilities[2] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    // LEVEL 4
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = HousingUtilityResourceID;
+    utilityResourceAmounts[0] = 1;
+    requiredUtilities[3] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    // LEVEL 5
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = HousingUtilityResourceID;
+    utilityResourceAmounts[0] = 1;
+    requiredUtilities[4] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    // LEVEL 6
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = HousingUtilityResourceID;
+    utilityResourceAmounts[0] = 1;
+    requiredUtilities[5] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    UnitDesign[] memory unitDesigns = new UnitDesign[](maxLevel);
+    /****************** Attacks *******************/
+
+    unitDesigns[0].attack = 40;
+    unitDesigns[1].attack = 42;
+    unitDesigns[2].attack = 44;
+    unitDesigns[3].attack = 46;
+    unitDesigns[4].attack = 48;
+    unitDesigns[5].attack = 50;
+
+    /****************** Defences *******************/
+
+    unitDesigns[0].defence = 20;
+    unitDesigns[1].defence = 21;
+    unitDesigns[2].defence = 23;
+    unitDesigns[3].defence = 25;
+    unitDesigns[4].defence = 27;
+    unitDesigns[5].defence = 30;
+
+    /****************** Cargos *******************/
+
+    unitDesigns[0].cargo = 1000;
+    unitDesigns[1].cargo = 1000;
+    unitDesigns[2].cargo = 1000;
+    unitDesigns[3].cargo = 1000;
+    unitDesigns[4].cargo = 1000;
+    unitDesigns[5].cargo = 1000;
+
+    /****************** Speeds *******************/
+
+    unitDesigns[0].speed = 20;
+    unitDesigns[1].speed = 20;
+    unitDesigns[2].speed = 20;
+    unitDesigns[3].speed = 20;
+    unitDesigns[4].speed = 20;
+    unitDesigns[5].speed = 20;
+
+    /****************** Minings *******************/
+
+    unitDesigns[0].mining = 0;
+    unitDesigns[1].mining = 0;
+    unitDesigns[2].mining = 0;
+    unitDesigns[3].mining = 0;
+    unitDesigns[4].mining = 0;
+    unitDesigns[5].mining = 0;
+
+    /****************** Training Times *******************/
+
+    unitDesigns[0].trainingTime = 20;
+    unitDesigns[1].trainingTime = 20;
+    unitDesigns[2].trainingTime = 20;
+    unitDesigns[3].trainingTime = 20;
+    unitDesigns[4].trainingTime = 20;
+    unitDesigns[5].trainingTime = 20;
+
+    /* ***********************Set Values ************************* */
+    setupUnit(world, unitType, maxLevel, unitDesigns, requiredResources, requiredUtilities);
+  }
+
+  function initAdvancedMarine(IWorld world) internal {
+    uint256 unitType = AdvancedMarineUnit;
+    P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).set(unitType);
+
+    uint32 maxLevel = 6;
+
+    /****************** Required Resources *******************/
+    ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
+    // LEVEL 1
+    ResourceValue[] memory resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    requiredResources[0] = resourceValues;
+    // LEVEL 2
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    requiredResources[1] = resourceValues;
+    // LEVEL 3
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    requiredResources[2] = resourceValues;
+
+    // LEVEL 4
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    requiredResources[3] = resourceValues;
+    // LEVEL 5
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    requiredResources[4] = resourceValues;
+
+    // LEVEL 6
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    requiredResources[5] = resourceValues;
+
+    /****************** Required Utility Resources *******************/
+
+    ResourceValues[] memory requiredUtilities = new ResourceValues[](maxLevel);
+
+    uint256[] memory utilityResourceIds;
+    uint32[] memory utilityResourceAmounts;
+
+    // LEVEL 1
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = HousingUtilityResourceID;
+    utilityResourceAmounts[0] = 1;
+    requiredUtilities[0] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    // LEVEL 2
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = HousingUtilityResourceID;
+    utilityResourceAmounts[0] = 1;
+    requiredUtilities[1] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    // LEVEL 3
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = HousingUtilityResourceID;
+    utilityResourceAmounts[0] = 1;
+    requiredUtilities[2] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    // LEVEL 4
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = HousingUtilityResourceID;
+    utilityResourceAmounts[0] = 1;
+    requiredUtilities[3] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    // LEVEL 5
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = HousingUtilityResourceID;
+    utilityResourceAmounts[0] = 1;
+    requiredUtilities[4] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    // LEVEL 6
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = HousingUtilityResourceID;
+    utilityResourceAmounts[0] = 1;
+    requiredUtilities[5] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    UnitDesign[] memory unitDesigns = new UnitDesign[](maxLevel);
+    /****************** Attacks *******************/
+
+    unitDesigns[0].attack = 80;
+    unitDesigns[1].attack = 84;
+    unitDesigns[2].attack = 90;
+    unitDesigns[3].attack = 95;
+    unitDesigns[4].attack = 100;
+    unitDesigns[5].attack = 110;
+
+    /****************** Defences *******************/
+
+    unitDesigns[0].defence = 150;
+    unitDesigns[1].defence = 157;
+    unitDesigns[2].defence = 165;
+    unitDesigns[3].defence = 172;
+    unitDesigns[4].defence = 180;
+    unitDesigns[5].defence = 187;
+
+    /****************** Cargos *******************/
+
+    unitDesigns[0].cargo = 2000;
+    unitDesigns[1].cargo = 2000;
+    unitDesigns[2].cargo = 2000;
+    unitDesigns[3].cargo = 2000;
+    unitDesigns[4].cargo = 2000;
+    unitDesigns[5].cargo = 2000;
+
+    /****************** Speeds *******************/
+
+    unitDesigns[0].speed = 20;
+    unitDesigns[1].speed = 20;
+    unitDesigns[2].speed = 20;
+    unitDesigns[3].speed = 20;
+    unitDesigns[4].speed = 20;
+    unitDesigns[5].speed = 20;
+
+    /****************** Minings *******************/
+
+    unitDesigns[0].mining = 0;
+    unitDesigns[1].mining = 0;
+    unitDesigns[2].mining = 0;
+    unitDesigns[3].mining = 0;
+    unitDesigns[4].mining = 0;
+    unitDesigns[5].mining = 0;
+
+    /****************** Training Times *******************/
+
+    unitDesigns[0].trainingTime = 40;
+    unitDesigns[1].trainingTime = 40;
+    unitDesigns[2].trainingTime = 40;
+    unitDesigns[3].trainingTime = 40;
+    unitDesigns[4].trainingTime = 40;
+    unitDesigns[5].trainingTime = 40;
 
     /* ***********************Set Values ************************* */
     setupUnit(world, unitType, maxLevel, unitDesigns, requiredResources, requiredUtilities);
@@ -329,12 +616,12 @@ library LibInitUnits {
 
     /****************** Cargos *******************/
 
-    unitDesigns[0].cargo = 4000;
-    unitDesigns[1].cargo = 4000;
-    unitDesigns[2].cargo = 4000;
-    unitDesigns[3].cargo = 4000;
-    unitDesigns[4].cargo = 4000;
-    unitDesigns[5].cargo = 4000;
+    unitDesigns[0].cargo = 10000;
+    unitDesigns[1].cargo = 10000;
+    unitDesigns[2].cargo = 10000;
+    unitDesigns[3].cargo = 10000;
+    unitDesigns[4].cargo = 10000;
+    unitDesigns[5].cargo = 10000;
 
     /****************** Speeds *******************/
 
@@ -375,28 +662,34 @@ library LibInitUnits {
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
     // LEVEL 1
-    ResourceValue[] memory resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
+    ResourceValue[] memory resourceValues = new ResourceValue[](2);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 10000 });
+    resourceValues[1] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 4000 });
     requiredResources[0] = resourceValues;
     // LEVEL 2
-    resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
+    resourceValues = new ResourceValue[](2);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 10000 });
+    resourceValues[1] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 4000 });
     requiredResources[1] = resourceValues;
     // LEVEL 3
-    resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
+    resourceValues = new ResourceValue[](2);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 10000 });
+    resourceValues[1] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 4000 });
     requiredResources[2] = resourceValues;
     // LEVEL 4
-    resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
+    resourceValues = new ResourceValue[](2);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 10000 });
+    resourceValues[1] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 4000 });
     requiredResources[3] = resourceValues;
     // LEVEL 5
-    resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
+    resourceValues = new ResourceValue[](2);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 10000 });
+    resourceValues[1] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 4000 });
     requiredResources[4] = resourceValues;
     // LEVEL 6
-    resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
+    resourceValues = new ResourceValue[](2);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 10000 });
+    resourceValues[1] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 4000 });
     requiredResources[5] = resourceValues;
 
     /****************** Required Utility Resources *******************/
@@ -515,37 +808,31 @@ library LibInitUnits {
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
     // LEVEL 1
-    ResourceValue[] memory resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 500 });
-    resourceValues[1] = ResourceValue({ resource: TitaniumResourceItemID, value: 1500 });
+    ResourceValue[] memory resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: TitaniumResourceItemID, value: 1500 });
     requiredResources[0] = resourceValues;
     // LEVEL 2
-    resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 500 });
-    resourceValues[1] = ResourceValue({ resource: TitaniumResourceItemID, value: 1500 });
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: TitaniumResourceItemID, value: 1500 });
     requiredResources[1] = resourceValues;
     // LEVEL 3
-    resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 500 });
-    resourceValues[1] = ResourceValue({ resource: TitaniumResourceItemID, value: 1500 });
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: TitaniumResourceItemID, value: 1500 });
     requiredResources[2] = resourceValues;
 
     // LEVEL 4
-    resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 500 });
-    resourceValues[1] = ResourceValue({ resource: TitaniumResourceItemID, value: 1500 });
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: TitaniumResourceItemID, value: 1500 });
     requiredResources[3] = resourceValues;
 
     // LEVEL 5
-    resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 500 });
-    resourceValues[1] = ResourceValue({ resource: TitaniumResourceItemID, value: 1500 });
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: TitaniumResourceItemID, value: 1500 });
     requiredResources[4] = resourceValues;
 
     // LEVEL 6
-    resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 500 });
-    resourceValues[1] = ResourceValue({ resource: TitaniumResourceItemID, value: 1500 });
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: TitaniumResourceItemID, value: 1500 });
     requiredResources[5] = resourceValues;
 
     /****************** Required Utility Resources *******************/
@@ -618,12 +905,12 @@ library LibInitUnits {
 
     /****************** Cargos *******************/
 
-    unitDesigns[0].cargo = 10000;
-    unitDesigns[1].cargo = 10000;
-    unitDesigns[2].cargo = 10000;
-    unitDesigns[3].cargo = 10000;
-    unitDesigns[4].cargo = 10000;
-    unitDesigns[5].cargo = 10000;
+    unitDesigns[0].cargo = 20000;
+    unitDesigns[1].cargo = 20000;
+    unitDesigns[2].cargo = 20000;
+    unitDesigns[3].cargo = 20000;
+    unitDesigns[4].cargo = 20000;
+    unitDesigns[5].cargo = 20000;
 
     /****************** Speeds *******************/
 
@@ -665,38 +952,38 @@ library LibInitUnits {
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
     // LEVEL 1
     ResourceValue[] memory resourceValues = new ResourceValue[](3);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 2000 });
-    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 3000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 20000 });
+    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 30000 });
     resourceValues[2] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 5000 });
     requiredResources[0] = resourceValues;
     // LEVEL 2
     resourceValues = new ResourceValue[](3);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 2000 });
-    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 3000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 20000 });
+    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 30000 });
     resourceValues[2] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 5000 });
     requiredResources[1] = resourceValues;
     // LEVEL 3
     resourceValues = new ResourceValue[](3);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 2000 });
-    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 3000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 20000 });
+    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 30000 });
     resourceValues[2] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 5000 });
     requiredResources[2] = resourceValues;
     // LEVEL 4
     resourceValues = new ResourceValue[](3);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 2000 });
-    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 3000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 20000 });
+    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 30000 });
     resourceValues[2] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 5000 });
     requiredResources[3] = resourceValues;
     // LEVEL 5
     resourceValues = new ResourceValue[](3);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 2000 });
-    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 3000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 20000 });
+    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 30000 });
     resourceValues[2] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 5000 });
     requiredResources[4] = resourceValues;
     // LEVEL 6
     resourceValues = new ResourceValue[](3);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 2000 });
-    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 3000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 20000 });
+    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 30000 });
     resourceValues[2] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 5000 });
     requiredResources[5] = resourceValues;
 
@@ -769,12 +1056,12 @@ library LibInitUnits {
 
     /****************** Cargos *******************/
 
-    unitDesigns[0].cargo = 3000;
-    unitDesigns[1].cargo = 3000;
-    unitDesigns[2].cargo = 3000;
-    unitDesigns[3].cargo = 3000;
-    unitDesigns[4].cargo = 3000;
-    unitDesigns[5].cargo = 3000;
+    unitDesigns[0].cargo = 30000;
+    unitDesigns[1].cargo = 30000;
+    unitDesigns[2].cargo = 30000;
+    unitDesigns[3].cargo = 30000;
+    unitDesigns[4].cargo = 30000;
+    unitDesigns[5].cargo = 30000;
 
     /****************** Speeds *******************/
 

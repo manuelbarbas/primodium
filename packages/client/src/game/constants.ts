@@ -227,10 +227,12 @@ export namespace AsteroidMap {
     [BlockType.SolarPanel]: [SpriteKeys.SolarPanel1, SpriteKeys.SolarPanel2],
 
     [BlockType.StarmapperStation]: [SpriteKeys.StarmapperStation1],
-
+    [BlockType.SAMMissiles]: [SpriteKeys.PhotovoltaicCellFactory1],
     [BlockType.Hangar]: [SpriteKeys.Hangar1],
+    [BlockType.Garage]: [SpriteKeys.IronPlateFactory1],
+    [BlockType.AdvancedDroneFactory]: [SpriteKeys.DroneFactory1],
 
-    [BlockType.DroneFactory]: [SpriteKeys.DroneFactory1],
+    [BlockType.DroneFactory]: [SpriteKeys.PhotovoltaicCellFactory1],
   };
 
   // Array index corresponds to lvl
@@ -275,10 +277,19 @@ export namespace AsteroidMap {
     ],
 
     [BlockType.StarmapperStation]: [AnimationKeys.StarmapperStation1],
-
+    [BlockType.SAMMissiles]: [
+      AnimationKeys.PhotovoltaicCellFactory1,
+      AnimationKeys.PhotovoltaicCellFactory2,
+    ],
     [BlockType.Hangar]: [AnimationKeys.Hangar1],
 
-    [BlockType.DroneFactory]: [AnimationKeys.DroneFactory1],
+    [BlockType.Garage]: [
+      AnimationKeys.PhotovoltaicCellFactory1,
+      AnimationKeys.PhotovoltaicCellFactory2,
+    ],
+    [BlockType.AdvancedDroneFactory]: [AnimationKeys.DroneFactory1],
+
+    [BlockType.DroneFactory]: [AnimationKeys.StorageUnit3],
   };
 }
 

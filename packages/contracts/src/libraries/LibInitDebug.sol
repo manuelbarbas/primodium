@@ -163,6 +163,32 @@ library LibInitDebug {
 
     isObjectiveComponent.set(DebugSpawnPirateAsteroidObjectiveID);
     isObjectiveComponent.set(DebugDefeatedPirateAsteroidObjectiveID);
+
+    //set as debug to filter out in client
+    IsDebugComponent isDebugComponent = IsDebugComponent(world.getComponent(IsDebugComponentID));
+    isDebugComponent.set(DebugFreeObjectiveID);
+    isDebugComponent.set(DebugHavResourcesObjectiveID);
+    isDebugComponent.set(DebugHaveUnitsObjectiveID);
+    isDebugComponent.set(DebugHaveMaxUtilityObjectiveID);
+    isDebugComponent.set(DebugCompletedPriorObjectiveID);
+    isDebugComponent.set(DebugMainBaseLevelObjectiveID);
+    isDebugComponent.set(DebugTechnologyResearchedObjectiveID);
+    isDebugComponent.set(DebugResourceProductionObjectiveID);
+    isDebugComponent.set(DebugBuiltBuildingTypeObjectiveID);
+    isDebugComponent.set(DebugNumberOfBuiltBuildingTypeObjectiveID);
+    isDebugComponent.set(DebugRaidObjectiveID);
+
+    isDebugComponent.set(DebugMotherlodeMiningTitaniumObjectiveID);
+    isDebugComponent.set(DebugMotherlodeMiningPlatinumObjectiveID);
+    isDebugComponent.set(DebugMotherlodeMiningIridiumObjectiveID);
+    isDebugComponent.set(DebugMotherlodeMiningKimberliteObjectiveID);
+
+    isDebugComponent.set(DebugDestroyedUnitsObjectiveID);
+    isDebugComponent.set(DebugResourceRewardObjectiveID);
+    isDebugComponent.set(DebugUnitsRewardObjectiveID);
+
+    isDebugComponent.set(DebugSpawnPirateAsteroidObjectiveID);
+    isDebugComponent.set(DebugDefeatedPirateAsteroidObjectiveID);
   }
 
   function initObjectives(IWorld world) internal {
