@@ -63,6 +63,7 @@ import { TotalMotherlodeMinedComponent, ID as TotalMotherlodeMinedComponentID } 
 import { TotalUnitsDestroyedComponent, ID as TotalUnitsDestroyedComponentID } from "components/TotalUnitsDestroyedComponent.sol";
 import { PirateComponent, ID as PirateComponentID } from "components/PirateComponent.sol";
 import { DefeatedSpawnedPirateAsteroidComponent, ID as DefeatedSpawnedPirateAsteroidComponentID } from "components/DefeatedSpawnedPirateAsteroidComponent.sol";
+import { P_BuildingDefenceComponent, ID as P_BuildingDefenceComponentID } from "components/P_BuildingDefenceComponent.sol";
 import { P_RequiredPirateAsteroidDefeatedComponent, ID as P_RequiredPirateAsteroidDefeatedComponentID } from "components/P_RequiredPirateAsteroidDefeatedComponent.sol";
 import { P_SpawnPirateAsteroidComponent, ID as P_SpawnPirateAsteroidComponentID } from "components/P_SpawnPirateAsteroidComponent.sol";
 import { P_DestroyedUnitsRequirementComponent, ID as P_DestroyedUnitsRequirementComponentID } from "components/P_DestroyedUnitsRequirementComponent.sol";
@@ -360,6 +361,10 @@ library LibDeploy {
       comp = new DefeatedSpawnedPirateAsteroidComponent(address(result.world));
       console.log(address(comp));
 
+      console.log("Deploying P_BuildingDefenceComponent");
+      comp = new P_BuildingDefenceComponent(address(result.world));
+      console.log(address(comp));
+
       console.log("Deploying P_RequiredPirateAsteroidDefeatedComponent");
       comp = new P_RequiredPirateAsteroidDefeatedComponent(address(result.world));
       console.log(address(comp));
@@ -611,6 +616,7 @@ library LibDeploy {
     authorizeWriter(components, TotalUnitsDestroyedComponentID, address(system));
     authorizeWriter(components, PirateComponentID, address(system));
     authorizeWriter(components, DefeatedSpawnedPirateAsteroidComponentID, address(system));
+    authorizeWriter(components, P_BuildingDefenceComponentID, address(system));
     authorizeWriter(components, P_RequiredPirateAsteroidDefeatedComponentID, address(system));
     authorizeWriter(components, P_SpawnPirateAsteroidComponentID, address(system));
     authorizeWriter(components, P_DestroyedUnitsRequirementComponentID, address(system));
@@ -709,6 +715,7 @@ library LibDeploy {
     authorizeWriter(components, TotalUnitsDestroyedComponentID, address(system));
     authorizeWriter(components, PirateComponentID, address(system));
     authorizeWriter(components, DefeatedSpawnedPirateAsteroidComponentID, address(system));
+    authorizeWriter(components, P_BuildingDefenceComponentID, address(system));
     authorizeWriter(components, P_RequiredPirateAsteroidDefeatedComponentID, address(system));
     authorizeWriter(components, P_SpawnPirateAsteroidComponentID, address(system));
     authorizeWriter(components, P_DestroyedUnitsRequirementComponentID, address(system));
@@ -801,6 +808,7 @@ library LibDeploy {
     authorizeWriter(components, TotalUnitsDestroyedComponentID, address(system));
     authorizeWriter(components, PirateComponentID, address(system));
     authorizeWriter(components, DefeatedSpawnedPirateAsteroidComponentID, address(system));
+    authorizeWriter(components, P_BuildingDefenceComponentID, address(system));
     authorizeWriter(components, P_RequiredPirateAsteroidDefeatedComponentID, address(system));
     authorizeWriter(components, P_SpawnPirateAsteroidComponentID, address(system));
     authorizeWriter(components, P_DestroyedUnitsRequirementComponentID, address(system));
@@ -893,6 +901,7 @@ library LibDeploy {
     authorizeWriter(components, TotalUnitsDestroyedComponentID, address(system));
     authorizeWriter(components, PirateComponentID, address(system));
     authorizeWriter(components, DefeatedSpawnedPirateAsteroidComponentID, address(system));
+    authorizeWriter(components, P_BuildingDefenceComponentID, address(system));
     authorizeWriter(components, P_RequiredPirateAsteroidDefeatedComponentID, address(system));
     authorizeWriter(components, P_SpawnPirateAsteroidComponentID, address(system));
     authorizeWriter(components, P_DestroyedUnitsRequirementComponentID, address(system));
@@ -992,6 +1001,7 @@ library LibDeploy {
     authorizeWriter(components, TotalUnitsDestroyedComponentID, address(system));
     authorizeWriter(components, PirateComponentID, address(system));
     authorizeWriter(components, DefeatedSpawnedPirateAsteroidComponentID, address(system));
+    authorizeWriter(components, P_BuildingDefenceComponentID, address(system));
     authorizeWriter(components, P_RequiredPirateAsteroidDefeatedComponentID, address(system));
     authorizeWriter(components, P_SpawnPirateAsteroidComponentID, address(system));
     authorizeWriter(components, P_DestroyedUnitsRequirementComponentID, address(system));
@@ -1038,6 +1048,7 @@ library LibDeploy {
     system = new UpgradeRangeSystem(world, address(components));
     world.registerSystem(address(system), UpgradeRangeSystemID);
     authorizeWriter(components, LevelComponentID, address(system));
+    authorizeWriter(components, HasResearchedComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying TrainUnitsSystem");
@@ -1090,6 +1101,7 @@ library LibDeploy {
     authorizeWriter(components, TotalUnitsDestroyedComponentID, address(system));
     authorizeWriter(components, PirateComponentID, address(system));
     authorizeWriter(components, DefeatedSpawnedPirateAsteroidComponentID, address(system));
+    authorizeWriter(components, P_BuildingDefenceComponentID, address(system));
     authorizeWriter(components, P_RequiredPirateAsteroidDefeatedComponentID, address(system));
     authorizeWriter(components, P_SpawnPirateAsteroidComponentID, address(system));
     authorizeWriter(components, P_DestroyedUnitsRequirementComponentID, address(system));
@@ -1182,6 +1194,7 @@ library LibDeploy {
     authorizeWriter(components, TotalUnitsDestroyedComponentID, address(system));
     authorizeWriter(components, PirateComponentID, address(system));
     authorizeWriter(components, DefeatedSpawnedPirateAsteroidComponentID, address(system));
+    authorizeWriter(components, P_BuildingDefenceComponentID, address(system));
     authorizeWriter(components, P_RequiredPirateAsteroidDefeatedComponentID, address(system));
     authorizeWriter(components, P_SpawnPirateAsteroidComponentID, address(system));
     authorizeWriter(components, P_DestroyedUnitsRequirementComponentID, address(system));
@@ -1274,6 +1287,7 @@ library LibDeploy {
     authorizeWriter(components, TotalUnitsDestroyedComponentID, address(system));
     authorizeWriter(components, PirateComponentID, address(system));
     authorizeWriter(components, DefeatedSpawnedPirateAsteroidComponentID, address(system));
+    authorizeWriter(components, P_BuildingDefenceComponentID, address(system));
     authorizeWriter(components, P_RequiredPirateAsteroidDefeatedComponentID, address(system));
     authorizeWriter(components, P_SpawnPirateAsteroidComponentID, address(system));
     authorizeWriter(components, P_DestroyedUnitsRequirementComponentID, address(system));
@@ -1366,6 +1380,7 @@ library LibDeploy {
     authorizeWriter(components, TotalUnitsDestroyedComponentID, address(system));
     authorizeWriter(components, PirateComponentID, address(system));
     authorizeWriter(components, DefeatedSpawnedPirateAsteroidComponentID, address(system));
+    authorizeWriter(components, P_BuildingDefenceComponentID, address(system));
     authorizeWriter(components, P_RequiredPirateAsteroidDefeatedComponentID, address(system));
     authorizeWriter(components, P_SpawnPirateAsteroidComponentID, address(system));
     authorizeWriter(components, P_DestroyedUnitsRequirementComponentID, address(system));
@@ -1458,6 +1473,7 @@ library LibDeploy {
     authorizeWriter(components, TotalUnitsDestroyedComponentID, address(system));
     authorizeWriter(components, PirateComponentID, address(system));
     authorizeWriter(components, DefeatedSpawnedPirateAsteroidComponentID, address(system));
+    authorizeWriter(components, P_BuildingDefenceComponentID, address(system));
     authorizeWriter(components, P_RequiredPirateAsteroidDefeatedComponentID, address(system));
     authorizeWriter(components, P_SpawnPirateAsteroidComponentID, address(system));
     authorizeWriter(components, P_DestroyedUnitsRequirementComponentID, address(system));
@@ -1550,6 +1566,7 @@ library LibDeploy {
     authorizeWriter(components, TotalUnitsDestroyedComponentID, address(system));
     authorizeWriter(components, PirateComponentID, address(system));
     authorizeWriter(components, DefeatedSpawnedPirateAsteroidComponentID, address(system));
+    authorizeWriter(components, P_BuildingDefenceComponentID, address(system));
     authorizeWriter(components, P_RequiredPirateAsteroidDefeatedComponentID, address(system));
     authorizeWriter(components, P_SpawnPirateAsteroidComponentID, address(system));
     authorizeWriter(components, P_DestroyedUnitsRequirementComponentID, address(system));
@@ -1642,6 +1659,7 @@ library LibDeploy {
     authorizeWriter(components, TotalUnitsDestroyedComponentID, address(system));
     authorizeWriter(components, PirateComponentID, address(system));
     authorizeWriter(components, DefeatedSpawnedPirateAsteroidComponentID, address(system));
+    authorizeWriter(components, P_BuildingDefenceComponentID, address(system));
     authorizeWriter(components, P_RequiredPirateAsteroidDefeatedComponentID, address(system));
     authorizeWriter(components, P_SpawnPirateAsteroidComponentID, address(system));
     authorizeWriter(components, P_DestroyedUnitsRequirementComponentID, address(system));
@@ -1734,6 +1752,7 @@ library LibDeploy {
     authorizeWriter(components, TotalUnitsDestroyedComponentID, address(system));
     authorizeWriter(components, PirateComponentID, address(system));
     authorizeWriter(components, DefeatedSpawnedPirateAsteroidComponentID, address(system));
+    authorizeWriter(components, P_BuildingDefenceComponentID, address(system));
     authorizeWriter(components, P_RequiredPirateAsteroidDefeatedComponentID, address(system));
     authorizeWriter(components, P_SpawnPirateAsteroidComponentID, address(system));
     authorizeWriter(components, P_DestroyedUnitsRequirementComponentID, address(system));
@@ -1826,6 +1845,7 @@ library LibDeploy {
     authorizeWriter(components, TotalUnitsDestroyedComponentID, address(system));
     authorizeWriter(components, PirateComponentID, address(system));
     authorizeWriter(components, DefeatedSpawnedPirateAsteroidComponentID, address(system));
+    authorizeWriter(components, P_BuildingDefenceComponentID, address(system));
     authorizeWriter(components, P_RequiredPirateAsteroidDefeatedComponentID, address(system));
     authorizeWriter(components, P_SpawnPirateAsteroidComponentID, address(system));
     authorizeWriter(components, P_DestroyedUnitsRequirementComponentID, address(system));
@@ -1918,6 +1938,7 @@ library LibDeploy {
     authorizeWriter(components, TotalUnitsDestroyedComponentID, address(system));
     authorizeWriter(components, PirateComponentID, address(system));
     authorizeWriter(components, DefeatedSpawnedPirateAsteroidComponentID, address(system));
+    authorizeWriter(components, P_BuildingDefenceComponentID, address(system));
     authorizeWriter(components, P_RequiredPirateAsteroidDefeatedComponentID, address(system));
     authorizeWriter(components, P_SpawnPirateAsteroidComponentID, address(system));
     authorizeWriter(components, P_DestroyedUnitsRequirementComponentID, address(system));
@@ -2010,6 +2031,7 @@ library LibDeploy {
     authorizeWriter(components, TotalUnitsDestroyedComponentID, address(system));
     authorizeWriter(components, PirateComponentID, address(system));
     authorizeWriter(components, DefeatedSpawnedPirateAsteroidComponentID, address(system));
+    authorizeWriter(components, P_BuildingDefenceComponentID, address(system));
     authorizeWriter(components, P_RequiredPirateAsteroidDefeatedComponentID, address(system));
     authorizeWriter(components, P_SpawnPirateAsteroidComponentID, address(system));
     authorizeWriter(components, P_DestroyedUnitsRequirementComponentID, address(system));
@@ -2102,6 +2124,7 @@ library LibDeploy {
     authorizeWriter(components, TotalUnitsDestroyedComponentID, address(system));
     authorizeWriter(components, PirateComponentID, address(system));
     authorizeWriter(components, DefeatedSpawnedPirateAsteroidComponentID, address(system));
+    authorizeWriter(components, P_BuildingDefenceComponentID, address(system));
     authorizeWriter(components, P_RequiredPirateAsteroidDefeatedComponentID, address(system));
     authorizeWriter(components, P_SpawnPirateAsteroidComponentID, address(system));
     authorizeWriter(components, P_DestroyedUnitsRequirementComponentID, address(system));
@@ -2194,6 +2217,7 @@ library LibDeploy {
     authorizeWriter(components, TotalUnitsDestroyedComponentID, address(system));
     authorizeWriter(components, PirateComponentID, address(system));
     authorizeWriter(components, DefeatedSpawnedPirateAsteroidComponentID, address(system));
+    authorizeWriter(components, P_BuildingDefenceComponentID, address(system));
     authorizeWriter(components, P_RequiredPirateAsteroidDefeatedComponentID, address(system));
     authorizeWriter(components, P_SpawnPirateAsteroidComponentID, address(system));
     authorizeWriter(components, P_DestroyedUnitsRequirementComponentID, address(system));
@@ -2286,6 +2310,7 @@ library LibDeploy {
     authorizeWriter(components, TotalUnitsDestroyedComponentID, address(system));
     authorizeWriter(components, PirateComponentID, address(system));
     authorizeWriter(components, DefeatedSpawnedPirateAsteroidComponentID, address(system));
+    authorizeWriter(components, P_BuildingDefenceComponentID, address(system));
     authorizeWriter(components, P_RequiredPirateAsteroidDefeatedComponentID, address(system));
     authorizeWriter(components, P_SpawnPirateAsteroidComponentID, address(system));
     authorizeWriter(components, P_DestroyedUnitsRequirementComponentID, address(system));
@@ -2403,6 +2428,7 @@ library LibDeploy {
     authorizeWriter(components, TotalUnitsDestroyedComponentID, address(system));
     authorizeWriter(components, PirateComponentID, address(system));
     authorizeWriter(components, DefeatedSpawnedPirateAsteroidComponentID, address(system));
+    authorizeWriter(components, P_BuildingDefenceComponentID, address(system));
     authorizeWriter(components, P_RequiredPirateAsteroidDefeatedComponentID, address(system));
     authorizeWriter(components, P_SpawnPirateAsteroidComponentID, address(system));
     authorizeWriter(components, P_DestroyedUnitsRequirementComponentID, address(system));

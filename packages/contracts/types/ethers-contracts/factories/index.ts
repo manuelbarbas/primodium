@@ -51,6 +51,7 @@ export { OccupiedUtilityResourceComponent__factory } from "./OccupiedUtilityReso
 export { OwnedByComponent__factory } from "./OwnedByComponent__factory";
 export { P_BlueprintComponent__factory } from "./P_BlueprintComponent__factory";
 export { P_BuildingCountRequirementComponent__factory } from "./P_BuildingCountRequirementComponent__factory";
+export { P_BuildingDefenceComponent__factory } from "./P_BuildingDefenceComponent__factory";
 export { P_DestroyedUnitsRequirementComponent__factory } from "./P_DestroyedUnitsRequirementComponent__factory";
 export { P_HasBuiltBuildingComponent__factory } from "./P_HasBuiltBuildingComponent__factory";
 export { P_IsBuildingTypeComponent__factory } from "./P_IsBuildingTypeComponent__factory";

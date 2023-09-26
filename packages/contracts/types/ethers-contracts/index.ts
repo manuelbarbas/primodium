@@ -51,6 +51,7 @@ export type { OccupiedUtilityResourceComponent } from "./OccupiedUtilityResource
 export type { OwnedByComponent } from "./OwnedByComponent";
 export type { P_BlueprintComponent } from "./P_BlueprintComponent";
 export type { P_BuildingCountRequirementComponent } from "./P_BuildingCountRequirementComponent";
+export type { P_BuildingDefenceComponent } from "./P_BuildingDefenceComponent";
 export type { P_DestroyedUnitsRequirementComponent } from "./P_DestroyedUnitsRequirementComponent";
 export type { P_HasBuiltBuildingComponent } from "./P_HasBuiltBuildingComponent";
 export type { P_IsBuildingTypeComponent } from "./P_IsBuildingTypeComponent";
@@ -185,6 +186,7 @@ export { OccupiedUtilityResourceComponent__factory } from "./factories/OccupiedU
 export { OwnedByComponent__factory } from "./factories/OwnedByComponent__factory";
 export { P_BlueprintComponent__factory } from "./factories/P_BlueprintComponent__factory";
 export { P_BuildingCountRequirementComponent__factory } from "./factories/P_BuildingCountRequirementComponent__factory";
+export { P_BuildingDefenceComponent__factory } from "./factories/P_BuildingDefenceComponent__factory";
 export { P_DestroyedUnitsRequirementComponent__factory } from "./factories/P_DestroyedUnitsRequirementComponent__factory";
 export { P_HasBuiltBuildingComponent__factory } from "./factories/P_HasBuiltBuildingComponent__factory";
 export { P_IsBuildingTypeComponent__factory } from "./factories/P_IsBuildingTypeComponent__factory";
