@@ -1,6 +1,7 @@
-import { EntityID, Has, HasValue } from "@latticexyz/recs";
+import { EntityID, Has, HasValue, Not } from "@latticexyz/recs";
 import {
   HasCompletedObjective,
+  IsDebug,
   Level,
   P_BuildingCountRequirement,
   P_HasBuiltBuilding,
@@ -161,7 +162,10 @@ const Objective: React.FC<{
 };
 
 const UnclaimedObjective: React.FC = () => {
-  const objectives = useEntityQuery([HasValue(P_IsObjective, { value: true })]);
+  const objectives = useEntityQuery([
+    HasValue(P_IsObjective, { value: true }),
+    Not(IsDebug),
+  ]);
   const player = Account.use()?.value ?? SingletonID;
 
   const filteredObjectives = useMemo(() => {
