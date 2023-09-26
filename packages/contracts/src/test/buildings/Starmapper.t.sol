@@ -56,6 +56,13 @@ contract StarmapperTest is PrimodiumTest {
   function testFailSendNoStarmapper() public {
     ArrivalUnit[] memory units = new ArrivalUnit[](1);
     units[0] = ArrivalUnit(DebugUnit, 10);
+    sendUnitsSystem.executeTyped(
+      units,
+      ESendType.RAID,
+      getHomeAsteroid(alice),
+      getHomeAsteroid(bob),
+      addressToEntity(bob)
+    );
     vm.expectRevert(
       bytes(
         "[SendUnitsSystem] You have reached your max move count. Build or upgrade your starmapper to make more moves."
@@ -119,7 +126,7 @@ contract StarmapperTest is PrimodiumTest {
     buildSystem.executeTyped(entity, getCoord1(alice));
 
     uint32 moves = P_MaxMovesComponent(world.getComponent(P_MaxMovesComponentID)).getValue(buildingLevelEntity);
-    assertEq(moves, MaxMovesComponent(world.getComponent(MaxMovesComponentID)).getValue(aliceEntity));
+    assertEq(moves + 1, MaxMovesComponent(world.getComponent(MaxMovesComponentID)).getValue(aliceEntity));
 
     uint256 origin = positionComponent.getValue(addressToEntity(alice)).parent;
     uint256 unitPlayerAsteroidEntity = LibEncode.hashEntities(DebugUnit, addressToEntity(alice), origin);
@@ -130,7 +137,7 @@ contract StarmapperTest is PrimodiumTest {
 
     Coord memory aliceHomeAsteroid = getHomeAsteroid(alice);
     Coord memory bobHomeAsteroid = getHomeAsteroid(bob);
-
+    sendUnitsSystem.executeTyped(units, ESendType.RAID, aliceHomeAsteroid, bobHomeAsteroid, addressToEntity(bob));
     sendUnitsSystem.executeTyped(units, ESendType.RAID, aliceHomeAsteroid, bobHomeAsteroid, addressToEntity(bob));
     vm.expectRevert(
       bytes(
@@ -154,7 +161,7 @@ contract StarmapperTest is PrimodiumTest {
     upgradeBuildingSystem.executeTyped(coord);
 
     uint32 moves = P_MaxMovesComponent(world.getComponent(P_MaxMovesComponentID)).getValue(buildingLevelEntity);
-    assertEq(moves, MaxMovesComponent(world.getComponent(MaxMovesComponentID)).getValue(addressToEntity(alice)));
+    assertEq(moves + 1, MaxMovesComponent(world.getComponent(MaxMovesComponentID)).getValue(addressToEntity(alice)));
   }
 
   // testDestroyStarmapper
@@ -162,6 +169,6 @@ contract StarmapperTest is PrimodiumTest {
     Coord memory coord = testBuildStarmapper();
     destroySystem.executeTyped(coord);
 
-    assertEq(0, MaxMovesComponent(world.getComponent(MaxMovesComponentID)).getValue(addressToEntity(alice)));
+    assertEq(1, MaxMovesComponent(world.getComponent(MaxMovesComponentID)).getValue(addressToEntity(alice)));
   }
 }

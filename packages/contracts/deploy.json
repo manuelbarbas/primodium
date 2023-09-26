@@ -48,6 +48,7 @@
     "PirateComponent",
     "DefeatedSpawnedPirateAsteroidComponent",
 
+    "P_BuildingDefenceComponent",
     "P_RequiredPirateAsteroidDefeatedComponent",
     "P_SpawnPirateAsteroidComponent",
     "P_DestroyedUnitsRequirementComponent",
@@ -131,7 +132,7 @@
     },
     {
       "name": "UpgradeRangeSystem",
-      "writeAccess": ["LevelComponent"]
+      "writeAccess": ["LevelComponent", "HasResearchedComponent"]
     },
     {
       "name": "TrainUnitsSystem",
