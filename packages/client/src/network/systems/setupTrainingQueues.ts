@@ -7,7 +7,7 @@ import {
 } from "@latticexyz/recs";
 import { world } from "../world";
 import {
-  ActiveAsteroid,
+  HomeAsteroid,
   BlockNumber,
   TrainingQueue,
 } from "../components/clientComponents";
@@ -62,8 +62,7 @@ export function setupTrainingQueues() {
       );
       let trainedUnits = (blockNumber - startTime) / trainingTime;
 
-      //temp
-      let timeRemaining =
+      const timeRemaining =
         trainingTime - ((blockNumber - startTime) % trainingTime);
 
       if (trainedUnits == 0) foundUnfinished = true;
@@ -96,7 +95,7 @@ export function setupTrainingQueues() {
       Has(UnitProductionLastQueueIndex),
       Has(LastClaimedAt),
       HasValue(Position, {
-        parent: ActiveAsteroid.get()?.value,
+        parent: HomeAsteroid.get()?.value,
       }),
       Has(BuildingType),
     ];

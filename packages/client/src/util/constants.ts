@@ -2,7 +2,11 @@ import { EntityID } from "@latticexyz/recs";
 import { keccak256 } from "@latticexyz/utils";
 import { Key } from "engine/types";
 import { hashStringEntity } from "./encode";
-import { EMotherlodeSize, EMotherlodeType } from "src/util/web3/types";
+import {
+  EMotherlodeSize,
+  EMotherlodeType,
+  ESpaceRockType,
+} from "src/util/web3/types";
 
 export enum Action {
   DemolishBuilding,
@@ -104,14 +108,14 @@ export const BlockType = {
   PhotovoltaicCell: keccak256("item.PhotovoltaicCellCrafted") as EntityID,
 
   SpaceFuelCraftedItem: keccak256("item.SpaceFuelCrafted") as EntityID,
-  ElectricityUtilityResource: keccak256(
-    "item.ElectricityUtilityResource"
-  ) as EntityID,
-  HousingUtilityResource: keccak256("item.HousingUtilityResource") as EntityID,
-  VesselUtilityResource: keccak256("item.VesselUtilityResource") as EntityID,
+
+  Electricity: keccak256("item.ElectricityUtilityResource") as EntityID,
+  Housing: keccak256("item.HousingUtilityResource") as EntityID,
+  VesselCapacity: keccak256("item.VesselUtilityResource") as EntityID,
+  FleetMoves: keccak256("block.MoveCount") as EntityID,
 
   BulletCrafted: keccak256("item.BulletCrafted") as EntityID,
-  IronPlateCrafted: keccak256("item.IronPlateCrafted") as EntityID,
+  IronPlate: keccak256("item.IronPlateCrafted") as EntityID,
   BasicPowerSourceCrafted: keccak256(
     "item.BasicPowerSourceCrafted"
   ) as EntityID,
@@ -316,6 +320,8 @@ export const BlockType = {
   DebugDefeatedPirateAsteroidObjective: keccak256(
     "block.DebugDefeatedPirateAsteroidObjective"
   ) as EntityID,
+  //Starmap
+  Asteroid: keccak256("spacerock.Asteroid") as EntityID,
 };
 
 export const BlockIdToKey = Object.entries(BlockType).reduce<{
@@ -356,107 +362,6 @@ export const BlockColors = new Map<EntityID, string>([
 ]);
 
 export const BackgroundImage = new Map<EntityID, string[]>([
-  //landscape blocks
-  [BlockType.Water, ["/img/terrain/water.gif"]],
-  [BlockType.Sandstone, ["/img/terrain/sandstone.png"]],
-  [BlockType.Biofilm, ["/img/terrain/biofilm.png"]],
-  [BlockType.Alluvium, ["/img/terrain/alluvium.png"]],
-  [BlockType.Regolith, ["/img/terrain/regolith.png"]],
-  [BlockType.Bedrock, ["/img/terrain/bedrock.png"]],
-  [BlockType.Air, ["/img/terrain/air.png"]],
-
-  //metal ores
-  [BlockType.Lithium, ["/img/resource/lithium_ore_layer.png"]],
-  [BlockType.Iron, ["/img/resource/iron_ore_layer.png"]],
-  [BlockType.Copper, ["/img/resource/copper_ore_layer.png"]],
-  [BlockType.Sulfur, ["/img/resource/sulfur_ore_layer.png"]],
-  [BlockType.Titanium, ["/img/resource/titanium_ore_layer.png"]],
-  [BlockType.Iridium, ["/img/resource/iridium_ore_layer.png"]],
-  [BlockType.Osmium, ["/img/resource/osmium_ore_layer.png"]],
-  [BlockType.Tungsten, ["/img/resource/tungsten_ore_layer.png"]],
-
-  //mineral ores
-  [BlockType.Kimberlite, ["/img/resource/kimberlite_ore_layer.png"]],
-  [BlockType.Uraninite, ["/img/resource/uraninite_ore_layer.png"]],
-  [BlockType.Bolutite, ["/img/resource/bolutite_ore_layer.png"]],
-
-  //buildings
-  [
-    BlockType.MainBase,
-    [
-      "/img/building/mainbase/mainbase.png",
-      "/img/building/mainbase/mainbase-level2.png",
-      "/img/building/mainbase/mainbase-level3.png",
-      "/img/building/mainbase/mainbase-level4.png",
-      "/img/building/mainbase/mainbase-level5.png",
-    ],
-  ],
-  [BlockType.DebugNode, ["/img/building/node.gif"]],
-  //new buildings
-  [
-    BlockType.CopperMine,
-    [
-      "/img/building/coppermine/copper-miner-level1.png",
-      "/img/building/coppermine/copper-miner-level2.png",
-      "/img/building/coppermine/copper-miner-level3.png",
-    ],
-  ],
-  [
-    BlockType.IronMine,
-    [
-      "/img/building/ironmine/iron-miner-level1.png",
-      "/img/building/ironmine/iron-miner-level2.png",
-      "/img/building/ironmine/iron-miner-level3.png",
-    ],
-  ],
-  [
-    BlockType.LithiumMine,
-    ["/img/building/lithiummine/lithium-mine-level1.png"],
-  ],
-  [BlockType.SulfurMine, ["/img/building/sulfurmine/sulfur-mine-level1.png"]],
-  [
-    BlockType.StorageUnit,
-    [
-      "/img/building/storageunit/storageunit-level1.png",
-      "/img/building/storageunit/storageunit-level2.png",
-      "/img/building/storageunit/storageunit-level3.png",
-    ],
-  ],
-  [
-    BlockType.IronPlateFactory,
-    [
-      "/img/building/ironplatingfactory/ironplatingfactory-level1.png",
-      "/img/building/ironplatingfactory/ironplatingfactory-level2.png",
-    ],
-  ],
-  [
-    BlockType.AlloyFactory,
-    ["/img/building/alloyfactory/alloyfactory-level1.png"],
-  ],
-  [
-    BlockType.PhotovoltaicCellFactory,
-    [
-      "/img/building/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_1.png",
-      "/img/building/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_1.png",
-    ],
-  ],
-  [
-    BlockType.SolarPanel,
-    [
-      "/img/building/solarpanels/solarpanel-level1.png",
-      "/img/building/solarpanels/solarpanel-level2.png",
-    ],
-  ],
-  [BlockType.Hangar, ["/img/building/hangar/level1/Hangar1.png"]],
-  [
-    BlockType.DroneFactory,
-    ["/img/building/drone-factory/normal/Drone_Factory1.png"],
-  ],
-  [
-    BlockType.StarmapperStation,
-    ["/img/building/starmapper-station/level1/Starmapper1.png"],
-  ],
-
   //units
   [BlockType.HammerLightDrone, ["/img/unit/hammerdrone.png"]],
   [BlockType.StingerDrone, ["/img/unit/stingerdrone.png"]],
@@ -647,7 +552,7 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.BulletCrafted, "/img/crafted/ironplate.png"],
   [BlockType.Platinum, "/img/resource/platinum_resource.png"],
 
-  [BlockType.IronPlateCrafted, "/img/crafted/ironplate.png"],
+  [BlockType.IronPlate, "/img/crafted/ironplate.png"],
   [BlockType.BasicPowerSourceCrafted, "/img/crafted/basicbattery.png"],
   [BlockType.AdvancedPowerSourceCrafted, "/img/crafted/photovoltaiccell.png"],
   [BlockType.IridiumCrystalCrafted, "/img/crafted/iridiumcrystal.png"],
@@ -669,9 +574,10 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.PhotovoltaicCell, "/img/resource/photovoltaiccell_resource.png"],
   [BlockType.SpaceFuelCraftedItem, "/img/crafted/refinedosmium.png"],
 
-  [BlockType.ElectricityUtilityResource, "/img/icons/powericon.png"],
-  [BlockType.HousingUtilityResource, "/img/icons/utilitiesicon.png"],
-  [BlockType.VesselUtilityResource, "/img/unit/miningvessel.png"],
+  [BlockType.Electricity, "/img/icons/powericon.png"],
+  [BlockType.Housing, "/img/icons/utilitiesicon.png"],
+  [BlockType.VesselCapacity, "/img/unit/miningvessel.png"],
+  [BlockType.FleetMoves, "img/icons/moveicon.png"],
 
   // debug
   [BlockType.BulletCrafted, "/img/crafted/bullet.png"],
@@ -705,15 +611,41 @@ export const KeyImages = new Map<Key, string>([
 ]);
 
 export const MotherlodeSizeNames: Record<number, string> = {
-  [EMotherlodeSize.SMALL]: "small",
-  [EMotherlodeSize.MEDIUM]: "medium",
-  [EMotherlodeSize.LARGE]: "large",
+  [EMotherlodeSize.SMALL]: "Small",
+  [EMotherlodeSize.MEDIUM]: "Medium",
+  [EMotherlodeSize.LARGE]: "Large",
 };
 
 // do the same for types
 export const MotherlodeTypeNames: Record<number, string> = {
-  [EMotherlodeType.TITANIUM]: "titanium",
-  [EMotherlodeType.IRIDIUM]: "iridium",
-  [EMotherlodeType.PLATINUM]: "platinum",
-  [EMotherlodeType.KIMBERLITE]: "kimberlite",
+  [EMotherlodeType.TITANIUM]: "Titanium",
+  [EMotherlodeType.IRIDIUM]: "Iridium",
+  [EMotherlodeType.PLATINUM]: "Platinum",
+  [EMotherlodeType.KIMBERLITE]: "Kimberlite",
 };
+
+export const SpaceRockTypeNames: Record<number, string> = {
+  [ESpaceRockType.Asteroid]: "Asteroid",
+  [ESpaceRockType.Motherlode]: "Motherlode",
+};
+
+export const ResourceStorages = [
+  BlockType.Iron,
+  BlockType.Copper,
+  BlockType.Lithium,
+  BlockType.IronPlate,
+  BlockType.Alloy,
+  BlockType.PhotovoltaicCell,
+  BlockType.Sulfur,
+  BlockType.Titanium,
+  BlockType.Iridium,
+  BlockType.Platinum,
+  BlockType.Kimberlite,
+];
+
+export const UtilityStorages = [
+  BlockType.Housing,
+  BlockType.Electricity,
+  BlockType.VesselCapacity,
+  BlockType.FleetMoves,
+];

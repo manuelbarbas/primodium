@@ -2,7 +2,7 @@ import { EntityID } from "@latticexyz/recs";
 import { BlockIdToKey } from "./constants";
 
 export function hasCommonElement(setA: Set<any>, setB: Set<any>) {
-  for (let element of setA) {
+  for (const element of setA) {
     if (setB.has(element)) {
       return true; // Found a common element
     }
@@ -54,10 +54,10 @@ export function toRomanNumeral(number: number) {
 }
 
 export function formatNumber(num: number, fractionDigits = 2) {
-  const fixedNum = parseFloat(num.toString()).toFixed(fractionDigits);
+  const fixedNum = num.toFixed(fractionDigits);
 
   // Convert it back to a number to remove trailing zeroes,
-  const trimmedNum = String(parseFloat(fixedNum));
+  const trimmedNum = String(parseFloat(fixedNum).toLocaleString());
 
   return trimmedNum;
 }

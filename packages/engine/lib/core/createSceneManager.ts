@@ -7,12 +7,11 @@ export const createSceneManager = (phaserGame: Phaser.Game) => {
   const scenes = new Map<string, Scene>();
 
   const addScene = async (
-    key: string,
     config: Parameters<typeof createScene>[1],
     autoStart: boolean = true
   ) => {
     const scene = await createScene(phaserGame, config, autoStart);
-    scenes.set(key, scene);
+    scenes.set(config.key, scene);
 
     return scene;
   };

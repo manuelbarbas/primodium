@@ -136,10 +136,22 @@ export const P_MaxStorage = newNumberComponent(world, {
   overridable: true,
 });
 
+export const P_UtilityProductionComponent = newComponent(
+  world,
+  {
+    ResourceID: Type.Entity,
+    ResourceProduction: Type.Number,
+  },
+  {
+    id: "P_UtilityProductionComponent",
+    metadata: { contractId: `${commonIdPrefix}P_UtilityProduction` },
+    overridable: true,
+  }
+);
+
 export const P_Production = newComponent(
   world,
   { resourceID: Type.Entity, resourceProductionRate: Type.Number },
-
   {
     id: "P_Production",
     metadata: { contractId: `${commonIdPrefix}P_Production` },
@@ -416,6 +428,11 @@ export const MaxMoves = newNumberComponent(world, {
   metadata: { contractId: `${commonIdPrefix}MaxMoves` },
 });
 
+export const P_MaxMoves = newNumberComponent(world, {
+  id: "P_MaxMoves",
+  metadata: { contractId: `${commonIdPrefix}P_MaxMoves` },
+});
+
 export const ArrivalsIndex = newEntityComponent(world, {
   id: "ArrivalsIndex",
   metadata: { contractId: `${commonIdPrefix}ArrivalsIndex` },
@@ -594,7 +611,7 @@ export const P_UnitRequirement = newComponent(
 
 export const P_ResourceReward = newComponent(
   world,
-  { resources: Type.EntityArray, values: Type.NumberArray },
+  { resourceIDs: Type.EntityArray, requiredAmounts: Type.NumberArray },
 
   {
     id: "P_ResourceReward",
@@ -604,7 +621,7 @@ export const P_ResourceReward = newComponent(
 
 export const P_UnitReward = newComponent(
   world,
-  { resources: Type.EntityArray, values: Type.NumberArray },
+  { resourceIDs: Type.EntityArray, requiredAmounts: Type.NumberArray },
 
   {
     id: "P_UnitReward",
@@ -658,6 +675,7 @@ export default {
   LoadingState,
   OccupiedUtilityResource,
   MaxUtility,
+  P_UtilityProductionComponent,
   ReversePosition,
   P_Production,
   P_ProductionDependencies,
@@ -694,6 +712,7 @@ export default {
   ArrivalsIndex,
   ArrivalsSize,
   MaxMoves,
+  P_MaxMoves,
 
   // Scoreboard
   Score,

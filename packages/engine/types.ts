@@ -47,10 +47,10 @@ export interface SceneConfig {
     chunkSize: number;
     tileWidth: number;
     tileHeight: number;
-    tilesets: TilesetConfig;
-    layerConfig: Parameters<typeof createAnimatedTilemap>[0]["layerConfig"];
+    tilesets?: TilesetConfig;
+    layerConfig?: Parameters<typeof createAnimatedTilemap>[0]["layerConfig"];
     backgroundTile?: [number, ...number[]];
-    animationInterval: number;
+    animationInterval?: number;
   };
 }
 
@@ -75,6 +75,7 @@ export type GameObjectComponent<Type extends keyof GameObjectTypes> = {
   now?: GameObjectFunction<Type>;
   once?: GameObjectFunction<Type>;
   update?: GameObjectFunction<Type>;
+  exit?: GameObjectFunction<Type>;
 };
 
 export declare type ObjectPool = ReturnType<typeof createObjectPool>;
