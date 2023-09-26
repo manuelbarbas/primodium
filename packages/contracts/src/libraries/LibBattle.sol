@@ -8,6 +8,14 @@ import { LibUnit } from "libraries/LibUnit.sol";
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 
 library LibBattle {
+  /**
+   * @dev Initiates a battle between two entities and calculates the outcome.
+   * @param attackerEntity The identifier of the attacker entity.
+   * @param defenderEntity The identifier of the defender entity.
+   * @param rockEntity The identifier of the asteroid/rock involved in the battle.
+   * @param sendType The type of the battle, e.g., Raid or other.
+   * @return battleResult The battle result data including units left, winner, and cargo.
+   */
   function battle(
     bytes32 attackerEntity,
     bytes32 defenderEntity,
@@ -53,6 +61,13 @@ library LibBattle {
     return battleResult;
   }
 
+  /**
+   * @dev Calculates the defense points for a defender entity and rock.
+   * @param defenderEntity The identifier of the defender entity.
+   * @param rockEntity The identifier of the asteroid/rock.
+   * @return defenseCounts The counts of defending units.
+   * @return defensePoints The total defense points.
+   */
   function getDefensePoints(bytes32 defenderEntity, bytes32 rockEntity)
     internal
     view
@@ -68,6 +83,15 @@ library LibBattle {
     }
   }
 
+  /**
+   * @dev Calculates the attack points for an attacker entity based on arrivals and send type.
+   * @param attackerEntity The identifier of the attacker entity.
+   * @param rockEntity The identifier of the asteroid/rock.
+   * @param sendType The type of the send, e.g., Raid or other.
+   * @return attackCounts The counts of attacking units.
+   * @return attackPoints The total attack points.
+   * @return cargo The total cargo points.
+   */
   function getAttackPoints(
     bytes32 attackerEntity,
     bytes32 rockEntity,
@@ -103,6 +127,11 @@ library LibBattle {
     ArrivalCount.set(attackerEntity, arrivalKeys.length - arrivalsApplied);
   }
 
+  /**
+   * @dev Updates units and utilities after a battle.
+   * @param br The battle result data.
+   * @param sendType The type of the send, e.g., Raid or other.
+   */
   function updateUnitsAfterBattle(BattleResultData memory br, ESendType sendType) internal {
     bytes32[] memory unitTypes = P_UnitPrototypes.get();
 

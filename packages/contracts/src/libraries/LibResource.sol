@@ -9,6 +9,12 @@ import { P_IsUtility, P_RequiredResources, P_RequiredResourcesData, P_RequiredUp
 import { BuildingKey } from "src/Keys.sol";
 
 library LibResource {
+  /**
+   * @dev Retrieves the available count of a specific resource for a player.
+   * @param playerEntity The identifier of the player.
+   * @param resource The type of resource to check.
+   * @return availableCount The available count of the specified resource.
+   */
   function getResourceCountAvailable(bytes32 playerEntity, EResource resource) internal view returns (uint256) {
     uint256 max = MaxResourceCount.get(playerEntity, resource);
     uint256 curr = ResourceCount.get(playerEntity, resource);
@@ -120,6 +126,12 @@ library LibResource {
     }
   }
 
+  /**
+   * @dev Retrieves the counts of all non-utility resources for a player and calculates the total.
+   * @param playerEntity The identifier of the player.
+   * @return totalResources The total count of non-utility resources.
+   * @return resourceCounts An array containing the counts of each non-utility resource.
+   */
   function getAllResourceCounts(bytes32 playerEntity)
     internal
     view

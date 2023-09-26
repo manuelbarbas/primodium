@@ -12,6 +12,12 @@ function toString(bytes32 entity) pure returns (string memory) {
 }
 
 library LibReinforce {
+  /**
+   * @dev Reinforces a player's rock with units from an arrival.
+   * @param playerEntity The identifier of the player.
+   * @param rockEntity The identifier of the target rock.
+   * @param arrivalId The identifier of the arrival to use for reinforcement.
+   */
   function reinforce(
     bytes32 playerEntity,
     bytes32 rockEntity,
@@ -37,6 +43,12 @@ library LibReinforce {
     ArrivalsMap.remove(playerEntity, rockEntity, arrivalId);
   }
 
+  /**
+   * @dev Recalls a reinforcement sent by a player.
+   * @param playerEntity The identifier of the player.
+   * @param rockEntity The identifier of the target rock.
+   * @param arrivalId The identifier of the arrival to recall.
+   */
   function recallReinforcement(
     bytes32 playerEntity,
     bytes32 rockEntity,
@@ -63,6 +75,11 @@ library LibReinforce {
     ArrivalsMap.remove(playerEntity, rockEntity, arrivalId);
   }
 
+  /**
+   * @dev Recalls all reinforcements sent by a player to a specific rock.
+   * @param playerEntity The identifier of the player.
+   * @param rockEntity The identifier of the target rock.
+   */
   function recallAllReinforcements(bytes32 playerEntity, bytes32 rockEntity) internal {
     bytes32 owner = OwnedBy.get(rockEntity);
     require(owner != 0, "[Reinforce] Rock not owned");
