@@ -13,11 +13,38 @@ uint256 constant BuildFirstPVCellFactoryID = uint256(keccak256("objective.BuildF
 uint256 constant BuildGarageID = uint256(keccak256("objective.BuildGarage"));
 uint256 constant BuildDroneFactoryID = uint256(keccak256("objective.BuildDroneFactory"));
 uint256 constant BuildSolarPanelID = uint256(keccak256("objective.BuildSolarPanel"));
+uint256 constant BuildAdvancedDroneFactoryID = uint256(keccak256("objective.BuildAdvancedDroneFactory"));
+uint256 constant BuildHangarID = uint256(keccak256("objective.BuildHangar"));
+
 uint256 constant TrainMarineUnitID = uint256(keccak256("objective.TrainMarineUnit"));
+uint256 constant TrainMarineUnit2ID = uint256(keccak256("objective.TrainMarineUnit2"));
+uint256 constant TrainMarineUnitI3D = uint256(keccak256("objective.TrainMarineUnit3"));
+
+uint256 constant TrainAdvancedMarineUnitID = uint256(keccak256("objective.TrainAdvancedMarineUnit"));
+uint256 constant TrainAdvancedMarineUnit2ID = uint256(keccak256("objective.TrainAdvancedMarineUnit2"));
+uint256 constant TrainAdvancedMarineUnitI3D = uint256(keccak256("objective.TrainAdvancedMarineUnit3"));
+
+uint256 constant TrainAnvilDroneID = uint256(keccak256("objective.TrainAnvilDrone"));
+uint256 constant TrainAnvilDrone2ID = uint256(keccak256("objective.TrainAnvilDrone2"));
+uint256 constant TrainAnvilDrone3ID = uint256(keccak256("objective.TrainAnvilDrone3"));
+
 uint256 constant DefeatFirstPirateBaseID = uint256(keccak256("objective.DefeatFirstPirateBase"));
 uint256 constant DefeatSecondPirateBaseID = uint256(keccak256("objective.DefeatSecondPirateBase"));
 uint256 constant DefeatThirdPirateBaseID = uint256(keccak256("objective.DefeatThirdPirateBase"));
+uint256 constant DefeatFourthPirateBaseID = uint256(keccak256("objective.DefeatFourthPirateBase"));
+uint256 constant DefeatFifthPirateBaseID = uint256(keccak256("objective.DefeatFifthPirateBase"));
+uint256 constant DefeatSixthPirateBaseID = uint256(keccak256("objective.DefeatSixthPirateBase"));
+uint256 constant DefeatSeventhPirateBaseID = uint256(keccak256("objective.DefeatSeventhPirateBase"));
+uint256 constant DefeatEighthPirateBaseID = uint256(keccak256("objective.DefeatEighthPirateBase"));
+uint256 constant DefeatNinthPirateBaseID = uint256(keccak256("objective.DefeatNinthPirateBase"));
+uint256 constant DefeatTenthPirateBaseID = uint256(keccak256("objective.DefeatTenthPirateBase"));
+uint256 constant DefeatEleventhPirateBaseID = uint256(keccak256("objective.DefeatEleventhPirateBase"));
 
 uint256 constant ExpandBaseID = uint256(keccak256("objective.ExpandBase"));
+uint256 constant ExpandBase2ID = uint256(keccak256("objective.ExpandBase2"));
+uint256 constant ExpandBase3ID = uint256(keccak256("objective.ExpandBase3"));
+uint256 constant ExpandBase4ID = uint256(keccak256("objective.ExpandBase4"));
+uint256 constant ExpandBase5ID = uint256(keccak256("objective.ExpandBase5"));
+uint256 constant ExpandBase6ID = uint256(keccak256("objective.ExpandBase6"));
 
 uint256 constant RaiseIronPlateProductionID = uint256(keccak256("objective.RaiseIronPlateProduction"));
