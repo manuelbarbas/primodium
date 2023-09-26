@@ -350,6 +350,95 @@ export const BlockType = {
   DebugDefeatedPirateAsteroidObjective: keccak256(
     "block.DebugDefeatedPirateAsteroidObjective"
   ) as EntityID,
+
+  BuildFirstIronMine: keccak256("objective.BuildFirstIronMine") as EntityID,
+  BuildFirstCopperMine: keccak256("objective.BuildFirstCopperMine") as EntityID,
+  BuildFirstLithiumMine: keccak256(
+    "objective.BuildFirstLithiumMine"
+  ) as EntityID,
+  BuildFirstSulfurMine: keccak256("objective.BuildFirstSulfurMine") as EntityID,
+
+  BuildFirstIronPlateFactory: keccak256(
+    "objective.BuildFirstIronPlateFactory"
+  ) as EntityID,
+  BuildFirstAlloyFactory: keccak256(
+    "objective.BuildFirstAlloyFactory"
+  ) as EntityID,
+  BuildFirstPVCellFactory: keccak256(
+    "objective.BuildFirstPVCellFactory"
+  ) as EntityID,
+
+  BuildGarage: keccak256("objective.BuildGarage") as EntityID,
+  BuildDroneFactory: keccak256("objective.BuildDroneFactory") as EntityID,
+  BuildSolarPanel: keccak256("objective.BuildSolarPanel") as EntityID,
+  BuildAdvancedDroneFactory: keccak256(
+    "objective.BuildAdvancedDroneFactory"
+  ) as EntityID,
+  BuildHangar: keccak256("objective.BuildHangar") as EntityID,
+
+  TrainMarineUnit: keccak256("objective.TrainMarineUnit") as EntityID,
+  TrainMarineUnit2: keccak256("objective.TrainMarineUnit2") as EntityID,
+  TrainMarineUnit3: keccak256("objective.TrainMarineUnit3") as EntityID,
+
+  TrainAdvancedMarineUnit: keccak256(
+    "objective.TrainAdvancedMarineUnit"
+  ) as EntityID,
+  TrainAdvancedMarineUnit2: keccak256(
+    "objective.TrainAdvancedMarineUnit2"
+  ) as EntityID,
+  TrainAdvancedMarineUnit3: keccak256(
+    "objective.TrainAdvancedMarineUnit3"
+  ) as EntityID,
+
+  TrainAnvilDrone: keccak256("objective.TrainAnvilDrone") as EntityID,
+  TrainAnvilDrone2: keccak256("objective.TrainAnvilDrone2") as EntityID,
+  TrainAnvilDrone3: keccak256("objective.TrainAnvilDrone3") as EntityID,
+
+  DefeatFirstPirateBase: keccak256(
+    "objective.DefeatFirstPirateBase"
+  ) as EntityID,
+  DefeatSecondPirateBase: keccak256(
+    "objective.DefeatSecondPirateBase"
+  ) as EntityID,
+  DefeatThirdPirateBase: keccak256(
+    "objective.DefeatThirdPirateBase"
+  ) as EntityID,
+  DefeatFourthPirateBase: keccak256(
+    "objective.DefeatFourthPirateBase"
+  ) as EntityID,
+  DefeatFifthPirateBase: keccak256(
+    "objective.DefeatFifthPirateBase"
+  ) as EntityID,
+  DefeatSixthPirateBase: keccak256(
+    "objective.DefeatSixthPirateBase"
+  ) as EntityID,
+  DefeatSeventhPirateBase: keccak256(
+    "objective.DefeatSeventhPirateBase"
+  ) as EntityID,
+  DefeatEighthPirateBase: keccak256(
+    "objective.DefeatEighthPirateBase"
+  ) as EntityID,
+  DefeatNinthPirateBase: keccak256(
+    "objective.DefeatNinthPirateBase"
+  ) as EntityID,
+  DefeatTenthPirateBase: keccak256(
+    "objective.DefeatTenthPirateBase"
+  ) as EntityID,
+  DefeatEleventhPirateBase: keccak256(
+    "objective.DefeatEleventhPirateBase"
+  ) as EntityID,
+
+  ExpandBase: keccak256("objective.ExpandBase") as EntityID,
+  ExpandBase2: keccak256("objective.ExpandBase2") as EntityID,
+  ExpandBase3: keccak256("objective.ExpandBase3") as EntityID,
+  ExpandBase4: keccak256("objective.ExpandBase4") as EntityID,
+  ExpandBase5: keccak256("objective.ExpandBase5") as EntityID,
+  ExpandBase6: keccak256("objective.ExpandBase6") as EntityID,
+
+  RaiseIronPlateProduction: keccak256(
+    "objective.RaiseIronPlateProduction"
+  ) as EntityID,
+
   //Starmap
   Asteroid: keccak256("spacerock.Asteroid") as EntityID,
   MarineUnit: keccak256("unit.MarineUnit") as EntityID,
