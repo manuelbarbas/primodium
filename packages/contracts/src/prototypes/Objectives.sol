@@ -20,6 +20,10 @@ uint256 constant TrainMarineUnitID = uint256(keccak256("objective.TrainMarineUni
 uint256 constant TrainMarineUnit2ID = uint256(keccak256("objective.TrainMarineUnit2"));
 uint256 constant TrainMarineUnitI3D = uint256(keccak256("objective.TrainMarineUnit3"));
 
+uint256 constant TrainAdvancedMarineUnitID = uint256(keccak256("objective.TrainAdvancedMarineUnit"));
+uint256 constant TrainAdvancedMarineUnit2ID = uint256(keccak256("objective.TrainAdvancedMarineUnit2"));
+uint256 constant TrainAdvancedMarineUnitI3D = uint256(keccak256("objective.TrainAdvancedMarineUnit3"));
+
 uint256 constant TrainAnvilDroneID = uint256(keccak256("objective.TrainAnvilDrone"));
 uint256 constant TrainAnvilDrone2ID = uint256(keccak256("objective.TrainAnvilDrone2"));
 uint256 constant TrainAnvilDrone3ID = uint256(keccak256("objective.TrainAnvilDrone3"));
