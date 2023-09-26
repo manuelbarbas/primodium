@@ -84,7 +84,7 @@ const ClaimObjectiveButton: React.FC<{
     return (
       <Button
         disabled={!canClaim}
-        className={`btn-sm btn-secondary border-accent w-20`}
+        className={`btn-sm btn-secondary border-accent w-full col-span-2`}
         loading={transactionLoading}
         onClick={() => {
           claimObjective(objectiveEntity, network);
@@ -116,11 +116,10 @@ const Objective: React.FC<{
   return (
     <SecondaryCard className="text-xs w-full">
       <div className="grid grid-cols-10">
-        <div className="flex items-center">
+        <div className="flex items-center col-span-1">
           <FaMedal className="text-accent" />
         </div>
-        <p className="text-ellipsis col-span-7 font-bold flex items-center">
-          {" "}
+        <p className=" col-span-7 font-bold flex items-center px-1">
           {objectiveName}
         </p>
 
