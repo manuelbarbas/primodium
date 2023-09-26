@@ -25,12 +25,16 @@ import {
 } from "src/network/components/chainComponents";
 import {
   Account,
-  ActiveAsteroid,
+  HomeAsteroid,
   Hangar,
 } from "src/network/components/clientComponents";
 import { hashAndTrimKeyEntity } from "./encode";
 import { SingletonID } from "@latticexyz/network";
-import { getFullResourceCount, hasEnoughResources } from "./resource";
+import {
+  getFullResourceCount,
+  getRecipe,
+  hasEnoughResources,
+} from "./resource";
 import { RequirementType, ResourceType } from "./constants";
 
 export function checkMainBaseLevelRequirement(entityID: EntityID) {
@@ -161,7 +165,7 @@ export function checkUnitRequirement(entityID: EntityID) {
   });
   if (requiredUnits && requiredUnits.values.length > 0) {
     const player = Account.get()?.value ?? SingletonID;
-    const homeAsteroid = ActiveAsteroid.get(player)?.value;
+    const homeAsteroid = HomeAsteroid.get(player)?.value;
     const units = Hangar.get(homeAsteroid);
     if (!units) return false;
 
@@ -278,7 +282,7 @@ export function getResourceRequirement(entityID: EntityID) {
   return {
     type: RequirementType.Resource,
     requirements: requiredResources,
-    isMet: hasEnoughResources(entityID),
+    isMet: hasEnoughResources(getRecipe(entityID)),
   };
 }
 
@@ -360,7 +364,7 @@ export function getUnitRequirement(entityID: EntityID) {
   });
 
   const player = Account.get()?.value ?? SingletonID;
-  const homeAsteroid = ActiveAsteroid.get(player)?.value;
+  const homeAsteroid = HomeAsteroid.get(player)?.value;
   const units = Hangar.get(homeAsteroid);
   if (!units) {
     const requiredUnit = rawUnit.resources.map((resource, index) => ({

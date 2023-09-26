@@ -3,31 +3,31 @@ import {
   P_ResourceReward,
   P_UnitReward,
 } from "src/network/components/chainComponents";
-import { RewardType } from "./constants";
+import { ResourceType } from "./constants";
 
 export function getRewards(entityId: EntityID) {
   const rawResourceRewards = P_ResourceReward.get(entityId, {
-    resources: [],
-    values: [],
+    resourceIDs: [],
+    requiredAmounts: [],
   });
 
   const rawUnitRewards = P_UnitReward.get(entityId, {
-    resources: [],
-    values: [],
+    resourceIDs: [],
+    requiredAmounts: [],
   });
 
-  const resourceRewards = rawResourceRewards.resources.map(
+  const resourceRewards = rawResourceRewards.resourceIDs.map(
     (resource, index) => ({
       id: resource,
-      type: RewardType.Resource,
-      amount: rawResourceRewards.values[index],
+      type: ResourceType.Resource,
+      amount: rawResourceRewards.requiredAmounts[index],
     })
   );
 
-  const unitRewards = rawUnitRewards.resources.map((resource, index) => ({
+  const unitRewards = rawUnitRewards.resourceIDs.map((resource, index) => ({
     id: resource,
-    type: RewardType.Unit,
-    amount: rawUnitRewards.values[index],
+    type: ResourceType.Utility,
+    amount: rawUnitRewards.requiredAmounts[index],
   }));
 
   return [...resourceRewards, ...unitRewards];

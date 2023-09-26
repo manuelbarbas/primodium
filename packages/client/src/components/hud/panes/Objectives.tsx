@@ -12,11 +12,10 @@ import {
 } from "src/network/components/chainComponents";
 import { Account } from "src/network/components/clientComponents";
 
-import { FaShieldAlt } from "react-icons/fa";
 import { SingletonID } from "@latticexyz/network";
 import { useGameStore } from "src/store/GameStore";
 import { useMud } from "src/hooks/useMud";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import {
   getCanClaimObjective,
@@ -28,20 +27,21 @@ import { world } from "src/network/world";
 import { hashAndTrimKeyEntity } from "src/util/encode";
 import { getBlockTypeName } from "src/util/common";
 import { getRewards } from "src/util/reward";
+import { Join } from "src/components/core/Join";
+import { Tabs } from "src/components/core/Tabs";
+import { SecondaryCard } from "src/components/core/Card";
+import { Button } from "src/components/core/Button";
+import { Badge } from "src/components/core/Badge";
+import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
+import {
+  BackgroundImage,
+  RESOURCE_SCALE,
+  ResourceImage,
+  ResourceType,
+} from "src/util/constants";
+import { FaCheck, FaGift, FaMedal } from "react-icons/fa";
 
-export const LabeledValue: React.FC<{
-  label: string;
-  children?: React.ReactNode;
-}> = ({ children = null, label }) => {
-  return (
-    <div className="flex flex-col gap-1">
-      <p className="text-xs font-bold text-cyan-400">{label}</p>
-      <div className="flex items-center gap-1">{children}</div>
-    </div>
-  );
-};
-
-export const ClaimObjectiveButton: React.FC<{
+const ClaimObjectiveButton: React.FC<{
   objectiveEntity: EntityID;
 }> = ({ objectiveEntity }) => {
   const network = useMud();
@@ -79,82 +79,113 @@ export const ClaimObjectiveButton: React.FC<{
   ]);
 
   const transactionLoading = useGameStore((state) => state.transactionLoading);
+
   if (!hasCompletedObjective)
     return (
-      <button
+      <Button
         disabled={!canClaim}
-        className={`border p-1 rounded-md hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${"bg-cyan-700 border-cyan-500"} ${
-          transactionLoading ? "opacity-50 pointer-events-none" : ""
-        } `}
+        className={`btn-sm btn-secondary border-accent w-20`}
+        loading={transactionLoading}
         onClick={() => {
           claimObjective(objectiveEntity, network);
         }}
       >
         {"Claim"}
-      </button>
+      </Button>
     );
-  return null;
-};
 
-export const Objective: React.FC<{
-  objective: EntityID;
-}> = ({ objective }) => {
-  if (!objective) return;
-  const objectiveName = useMemo(() => {
-    return getBlockTypeName(objective);
-  }, [objective]);
-  const rewardRecipee = useMemo(() => {
-    return getRewards(objective);
-  }, [objective]);
   return (
-    <div className="flex items-center justify-between w-full border rounded-md border-slate-700 bg-slate-800 ">
-      <div className="flex gap-1 items-center">
-        {
-          <div className="rounded-md bg-green-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
-            <FaShieldAlt size={16} />
-            <p className="bg-green-900 border border-green-500  rounded-md px-1 text-[.6rem]">
-              Objective
-            </p>
-          </div>
-        }
-        <LabeledValue label="Objective: ">
-          <p>{objectiveName}</p>
-        </LabeledValue>
-      </div>
-      <div className="text-right mr-2">
-        <ClaimObjectiveButton objectiveEntity={objective} />
-      </div>
+    <div className="col-span-2 flex items-center justify-end">
+      <FaCheck className=" text-success mr-2" />
     </div>
   );
 };
 
-export const UnclaimedObjective: React.FC<{ user: EntityID }> = () => {
-  const objectives = useEntityQuery(
-    [HasValue(P_IsObjective, { value: true })],
-    {
-      updateOnValueChange: true,
-    }
-  );
-
-  console.log("objective count: ", objectives.length);
-  const player = Account.use()?.value ?? SingletonID;
+const Objective: React.FC<{
+  objective: EntityID;
+}> = ({ objective }) => {
+  const objectiveName = useMemo(() => {
+    if (!objective) return;
+    return getBlockTypeName(objective);
+  }, [objective]);
+  const rewardRecipe = useMemo(() => {
+    if (!objective) return;
+    return getRewards(objective);
+  }, [objective]);
 
   return (
-    <div className="grid gap-2 min-h-fit max-h-56 overflow-y-auto">
-      {objectives.length === 0 ? (
-        <div className="w-full bg-slate-800 border rounded-md border-slate-700 flex items-center justify-center h-12 font-bold">
-          <p className="opacity-50">NO AVAILABLE OBJECTIVES</p>
+    <SecondaryCard className="text-xs w-full">
+      <div className="grid grid-cols-10">
+        <div className="flex items-center">
+          <FaMedal className="text-accent" />
         </div>
+        <p className="text-ellipsis col-span-7 font-bold flex items-center">
+          {" "}
+          {objectiveName}
+        </p>
+
+        <ClaimObjectiveButton objectiveEntity={objective} />
+      </div>
+
+      {rewardRecipe && rewardRecipe.length !== 0 && (
+        <div className="flex flex-wrap gap-1 items-center">
+          <hr className="border-t border-accent/20 w-full mb-1 mt-3" />
+          <span className="flex gap-1 items-center opacity-75">
+            <FaGift /> REWARDS:
+          </span>
+
+          {rewardRecipe.map((resource) => {
+            return (
+              <Badge key={resource.id} className="text-xs gap-2 badge-neutral">
+                <ResourceIconTooltip
+                  name={getBlockTypeName(resource.id)}
+                  image={
+                    ResourceImage.get(resource.id) ??
+                    BackgroundImage.get(resource.id)?.at(0) ??
+                    ""
+                  }
+                  resourceId={resource.id}
+                  amount={resource.amount}
+                  resourceType={resource.type}
+                  scale={
+                    resource.type === ResourceType.Utility ? 1 : RESOURCE_SCALE
+                  }
+                  direction="top"
+                />
+              </Badge>
+            );
+          })}
+        </div>
+      )}
+    </SecondaryCard>
+  );
+};
+
+const UnclaimedObjective: React.FC = () => {
+  const objectives = useEntityQuery([HasValue(P_IsObjective, { value: true })]);
+  const player = Account.use()?.value ?? SingletonID;
+
+  const filteredObjectives = useMemo(() => {
+    return objectives.filter((objective) => {
+      const isAvailable = getIsObjectiveAvailable(world.entities[objective]);
+
+      const claimed =
+        HasCompletedObjective.get(
+          hashAndTrimKeyEntity(world.entities[objective], player)
+        )?.value ?? false;
+
+      return isAvailable && !claimed;
+    });
+  }, [objectives]);
+
+  return (
+    <div className="w-full h-full">
+      {filteredObjectives.length === 0 ? (
+        <SecondaryCard className="w-full h-full items-center justify-center text-xs">
+          <p className="opacity-50 font-bold">NO COMPLETED OBJECTIVES</p>
+        </SecondaryCard>
       ) : (
-        objectives.map((objective, i) => {
-          const isAvailable = getIsObjectiveAvailable(
-            world.entities[objective]
-          );
-          const claimed =
-            HasCompletedObjective.get(
-              hashAndTrimKeyEntity(world.entities[objective], player)
-            )?.value ?? false;
-          if (!objective || !isAvailable || claimed) return null;
+        filteredObjectives.map((objective, i) => {
           return <Objective key={i} objective={world.entities[objective]} />;
         })
       )}
@@ -162,26 +193,32 @@ export const UnclaimedObjective: React.FC<{ user: EntityID }> = () => {
   );
 };
 
-export const ClaimedObjective: React.FC<{ user: EntityID }> = () => {
+const ClaimedObjective: React.FC = () => {
   const objectives = useEntityQuery([Has(P_IsObjective)], {
     updateOnValueChange: true,
   });
 
   const player = Account.use()?.value ?? SingletonID;
 
+  const filteredObjectives = useMemo(() => {
+    return objectives.filter((objective) => {
+      const claimed =
+        HasCompletedObjective.get(
+          hashAndTrimKeyEntity(world.entities[objective], player)
+        )?.value ?? false;
+
+      return claimed;
+    });
+  }, [objectives]);
+
   return (
-    <div className="grid gap-2 min-h-fit max-h-56 overflow-y-auto">
-      {objectives.length === 0 ? (
-        <div className="w-full bg-slate-800 border rounded-md border-slate-700 flex items-center justify-center h-12 font-bold">
-          <p className="opacity-50">NO COMPLETED OBJECTIVES</p>
-        </div>
+    <div className="w-full h-full">
+      {filteredObjectives.length === 0 ? (
+        <SecondaryCard className="w-full h-full items-center justify-center text-xs">
+          <p className="opacity-50 font-bold">NO COMPLETED OBJECTIVES</p>
+        </SecondaryCard>
       ) : (
-        objectives.map((objective, i) => {
-          const claimed =
-            HasCompletedObjective.get(
-              hashAndTrimKeyEntity(world.entities[objective], player)
-            )?.value ?? false;
-          if (!objective || !claimed) return null;
+        filteredObjectives.map((objective, i) => {
           return <Objective key={i} objective={world.entities[objective]} />;
         })
       )}
@@ -189,32 +226,24 @@ export const ClaimedObjective: React.FC<{ user: EntityID }> = () => {
   );
 };
 
-export const Objectives: React.FC<{ user: EntityID }> = ({ user }) => {
-  const [index, setIndex] = useState<number>(0);
-
+export const Objectives: React.FC = () => {
   return (
-    <div className="flex flex-col gap-2">
-      <div className="w-full flex items-center justify-center gap-2">
-        <button
-          className={`border  p-1 rounded-md text-sm hover:scale-105 transition-all ${
-            index === 0 ? "border-cyan-700 bg-slate-800" : "border-slate-700"
-          }`}
-          onClick={() => setIndex(0)}
-        >
+    <Tabs className="w-full flex flex-col items-center h-full">
+      <Join className="border-secondary">
+        <Tabs.Button index={0} className="btn-sm">
           Available
-        </button>
-        <button
-          className={`border  p-1 rounded-md text-sm hover:scale-105 transition-all ${
-            index === 1 ? "border-cyan-700 bg-slate-800" : "border-slate-700"
-          }`}
-          onClick={() => setIndex(1)}
-        >
+        </Tabs.Button>
+        <Tabs.Button index={1} className="btn-sm">
           Completed
-        </button>
-      </div>
+        </Tabs.Button>
+      </Join>
 
-      {index === 0 && <UnclaimedObjective user={user} />}
-      {index === 1 && <ClaimedObjective user={user} />}
-    </div>
+      <Tabs.Pane className="border-none w-full h-full p-0" index={0}>
+        <UnclaimedObjective />
+      </Tabs.Pane>
+      <Tabs.Pane className="border-none w-full h-full" index={1}>
+        <ClaimedObjective />
+      </Tabs.Pane>
+    </Tabs>
   );
 };
