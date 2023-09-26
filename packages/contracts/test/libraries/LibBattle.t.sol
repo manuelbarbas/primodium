@@ -3,37 +3,6 @@ pragma solidity >=0.8.0;
 
 import "test/PrimodiumTest.t.sol";
 
-/*
-
-
-Function: getDefensePoints
-
-Edge Cases
-No units for defender
-Multiple types of units
-UnitLevel changes
-
-Special Cases
-Invalid bytes32 entities
-Function: getAttackPoints
-
-Basic Scenario
-Compute with known attackerEntity, rockEntity, sendType
-
-Edge Cases
-No arrivals
-Multiple types of units
-UnitLevel changes
-
-Special Cases
-Invalid bytes32 entities
-Invalid ESendType
-
-Timing
-arrivalTime is in the future
-arrivalTime is in the past
-*/
-
 contract LibBattleTest is PrimodiumTest {
   bytes32 player;
   bytes32 enemy = "enemy";

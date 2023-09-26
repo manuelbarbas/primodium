@@ -8,6 +8,7 @@ import { LibBattle } from "libraries/LibBattle.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
+import { LibMath } from "libraries/LibMath.sol";
 
 function toString(bytes32 entity) pure returns (string memory) {
   return string(abi.encodePacked(entity));
@@ -46,12 +47,10 @@ library LibRaid {
     for (uint256 i = 1; i < defenderResources.length; i++) {
       EResource resource = EResource(i);
       if (P_IsUtility.get(resource)) continue;
-      uint256 raidAmount = (br.totalCargo * defenderResources[i]) / totalResources;
 
-      if (defenderResources[i] < raidAmount) {
-        raidAmount = defenderResources[i];
-      }
+      uint256 raidAmount = LibMath.min(defenderResources[i], (br.totalCargo * defenderResources[i]) / totalResources);
       if (raidAmount == 0) continue;
+
       raidResult.defenderValuesBeforeRaid[i] = defenderResources[i];
       raidResult.raidedAmount[i] = raidAmount;
       LibStorage.increaseStoredResource(br.attacker, resource, raidAmount);

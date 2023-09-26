@@ -58,15 +58,6 @@ library LibSend {
     return block.timestamp + ((LibMath.distance(origin, destination) * 100 * 100) / (config.moveSpeed * unitSpeed));
   }
 
-  /*
-    Space rock movement rules:
-      1. You can only move from an asteroid if it is yours. 
-      2. You can only move from a motherlode to your asteroid. 
-      3. You cannot move between motherlodes.
-      4. You can only invade an enemy.
-      5. You can only reinforce yourself on a motherlode.
-      6. You must be under the max move count.
-    */
   /// @notice Checks if movement between two positions is allowed.
   /// @param origin Origin position.
   /// @param destination Destination position.
