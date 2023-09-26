@@ -29,7 +29,7 @@ export const demolishBuilding = async (coord: Coord, network: Network) => {
 
   const receipt = await execute(
     systems["system.Destroy"].executeTyped(position, {
-      gasLimit: 3_000_000,
+      gasLimit: 8_000_000,
     }),
     providers
   );
