@@ -309,7 +309,7 @@ export const MiningVesselUpgradeTree: ResearchItemType = {
 };
 
 export const MarineUnitUpgradeTree: ResearchItemType = {
-  name: "Marine Unit Unit Upgrade",
+  name: "Minutemen Marine",
   id: BlockType.MarineUnitUpgrade1,
   description: "Increases the Marine Unit's Mining Power by 1. ",
 
@@ -348,7 +348,7 @@ export const MarineUnitUpgradeTree: ResearchItemType = {
 };
 
 export const AdvancedMarineUnitUpgradeTree: ResearchItemType = {
-  name: "AdvancedMarine Unit Unit Upgrade",
+  name: "Trident Marine",
   id: BlockType.AdvancedMarineUnitUpgrade1,
   description: "Increases the AdvancedMarine Unit's Mining Power by 1. ",
 
