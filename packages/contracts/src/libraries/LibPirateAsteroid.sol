@@ -58,11 +58,17 @@ library LibPirateAsteroid {
 
     asteroidEntity = LibEncode.hashEntity(world, personalPirateEntity);
     AsteroidTypeComponent asteroidTypeComponent = AsteroidTypeComponent(world.getComponent(AsteroidTypeComponentID));
-    require(!asteroidTypeComponent.has(asteroidEntity), "[LibAsteroid] asteroid already exists");
-    P_SpawnPirateAsteroidComponent(world.getComponent(P_SpawnPirateAsteroidComponentID)).set(
-      asteroidEntity,
-      spawnPirateAsteroid
+    P_SpawnPirateAsteroidComponent spawnPirateAsteroidComponent = P_SpawnPirateAsteroidComponent(
+      world.getComponent(P_SpawnPirateAsteroidComponentID)
     );
+
+    if (spawnPirateAsteroidComponent.has(asteroidEntity)) {
+      require(
+        spawnPirateAsteroidComponent.getValue(asteroidEntity) != spawnPirateAsteroid,
+        "[LibPirateAsteroid] asteroid already exists"
+      );
+    }
+    spawnPirateAsteroidComponent.set(asteroidEntity, spawnPirateAsteroid);
     pirateComponent.set(asteroidEntity, ownerEntity);
 
     PositionComponent positionComponent = PositionComponent(world.getComponent(PositionComponentID));
