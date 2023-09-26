@@ -8,7 +8,6 @@ import { LibReinforce } from "libraries/LibReinforce.sol";
 import { LibMotherlode } from "libraries/LibMotherlode.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
-import { console } from "forge-std/console.sol";
 
 library LibInvade {
   function invade(
@@ -38,7 +37,6 @@ library LibInvade {
     bytes32[] memory unitTypes = P_UnitPrototypes.get();
     (uint256[] memory attackCounts, , ) = LibBattle.getAttackPoints(invader, rockEntity, ESendType.Invade);
     for (uint256 i = 0; i < unitTypes.length; i++) {
-      console.log("attackUnit", attackCounts[i]);
       LibUnit.addUnitsToAsteroid(invader, rockEntity, unitTypes[i], attackCounts[i]);
     }
   }

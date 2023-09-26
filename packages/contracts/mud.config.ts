@@ -30,7 +30,7 @@ export const config = mudConfig({
     },
     S_BattleSystem: {
       openAccess: false,
-      accessList: ["RaidSystem"],
+      accessList: ["RaidSystem", "InvadeSystem"],
       name: "S_BattleSystem",
     },
   },
@@ -346,7 +346,6 @@ export const config = mudConfig({
         trainingTime: "uint256",
       },
     },
-
     QueueUnits: {
       keySchema: { entity: "bytes32" },
       schema: {
@@ -372,10 +371,8 @@ export const config = mudConfig({
       keySchema: { player: "bytes32", rock: "bytes32", unit: "bytes32" },
       schema: "uint256",
     },
-    /* ----------------------- Sending and Battling Units ----------------------- */
 
-    // Tracks player arrivals
-
+    /* ------------------------------ Sending Units ----------------------------- */
     ArrivalCount: {
       keySchema: { entity: "bytes32" },
       schema: "uint256",
@@ -402,7 +399,6 @@ export const config = mudConfig({
     },
 
     /* ------------------------------ Battle Result ----------------------------- */
-
     BattleResult: {
       keySchema: { entity: "bytes32" },
       schema: {

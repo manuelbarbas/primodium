@@ -2,7 +2,6 @@
 pragma solidity >=0.8.0;
 
 import { IWorld } from "codegen/world/IWorld.sol";
-import { console } from "forge-std/console.sol";
 import { ESendType, Arrival } from "src/Types.sol";
 import { UnitCount, UnitLevel, BattleResult, BattleResultData, P_UnitPrototypes, P_Unit, ArrivalCount, UnitCount, Home } from "codegen/Tables.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
@@ -61,7 +60,6 @@ library LibBattle {
   {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     defenseCounts = new uint256[](unitPrototypes.length);
-    console.log("unitPrototypes", unitPrototypes.length);
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       uint256 defenderUnitCount = UnitCount.get(defenderEntity, rockEntity, unitPrototypes[i]);
       uint256 defenderLevel = UnitLevel.get(defenderEntity, unitPrototypes[i]);
