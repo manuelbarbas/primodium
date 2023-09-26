@@ -8,6 +8,10 @@ import { OwnedBy } from "codegen/Tables.sol";
 import { LibRaid } from "codegen/Libraries.sol";
 
 contract RaidSystem is PrimodiumSystem {
+  /**
+   * @dev Initiates a raid on a rock entity using the LibRaid library.
+   * @param rockEntity The identifier of the target rock entity.
+   */
   function raid(bytes32 rockEntity) public {
     IWorld world = IWorld(_world());
     bytes32 playerEntity = addressToEntity(_msgSender());

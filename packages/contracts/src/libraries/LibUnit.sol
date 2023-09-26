@@ -93,6 +93,13 @@ library LibUnit {
     UnitCount.set(playerEntity, asteroid, unitPrototype, prevUnitCount + quantity);
   }
 
+  /**
+   * @dev Updates the stored utility resources based on the addition or removal of units.
+   * @param playerEntity The identifier of the player.
+   * @param unitType The type of unit.
+   * @param count The number of units being added or removed.
+   * @param add A boolean indicating whether units are being added (true) or removed (false).
+   */
   function updateStoredUtilities(
     bytes32 playerEntity,
     bytes32 unitType,
@@ -124,6 +131,13 @@ library LibUnit {
     }
   }
 
+  /**
+   * @dev Decreases the count of a specific unit type for a player's rock entity.
+   * @param playerEntity The identifier of the player.
+   * @param rockEntity The identifier of the player's rock entity.
+   * @param unitType The type of unit to decrease.
+   * @param unitCount The number of units to decrease.
+   */
   function decreaseUnitCount(
     bytes32 playerEntity,
     bytes32 rockEntity,

@@ -10,6 +10,12 @@ import { LibBattle } from "libraries/LibBattle.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 
 library LibInvade {
+  /**
+   * @dev Initiates an invasion of a rock entity, specifically a motherlode.
+   * @param world The world contract.
+   * @param invader The identifier of the invader.
+   * @param rockEntity The identifier of the target rock.
+   */
   function invade(
     IWorld world,
     bytes32 invader,
@@ -32,6 +38,11 @@ library LibInvade {
     }
   }
 
+  /**
+   * @dev Handles the invasion of a neutral rock entity by an invader.
+   * @param invader The identifier of the invader.
+   * @param rockEntity The identifier of the target rock.
+   */
   function invadeNeutral(bytes32 invader, bytes32 rockEntity) internal {
     OwnedBy.set(rockEntity, invader);
     bytes32[] memory unitTypes = P_UnitPrototypes.get();

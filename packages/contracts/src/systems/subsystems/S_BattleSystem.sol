@@ -8,7 +8,14 @@ import { ESendType } from "src/Types.sol";
 import { BattleResultData } from "codegen/Tables.sol";
 
 contract S_BattleSystem is PrimodiumSystem {
-  // NOTE: logic testing occurs in LibBattle.t.sol
+  /**
+   * @dev Initiates a battle between two entities using the LibBattle library.
+   * @param attackerEntity The identifier of the attacker entity.
+   * @param defenderEntity The identifier of the defender entity.
+   * @param rockEntity The identifier of the asteroid/rock involved in the battle.
+   * @param sendType The type of the battle, e.g., Raid or other.
+   * @return battleResult The battle result data including units left, winner, and cargo.
+   */
   function battle(
     bytes32 attackerEntity,
     bytes32 defenderEntity,

@@ -5,6 +5,13 @@ import { Arrival } from "src/Types.sol";
 import { MapArrivals, MapItemArrivals, MapItemStoredArrivals } from "codegen/Tables.sol";
 
 library ArrivalsMap {
+  /**
+   * @dev Checks if an arrival is stored for a specific player, asteroid, and key.
+   * @param player The player's identifier.
+   * @param asteroid The asteroid's identifier.
+   * @param key The unique key for the arrival.
+   * @return true if the arrival exists, false otherwise.
+   */
   function has(
     bytes32 player,
     bytes32 asteroid,
@@ -13,6 +20,14 @@ library ArrivalsMap {
     return MapItemStoredArrivals.get(player, asteroid, key).stored;
   }
 
+  /**
+   * @dev Sets an arrival for a specific player, asteroid, and key.
+   * If the arrival already exists, it updates the existing one.
+   * @param player The player's identifier.
+   * @param asteroid The asteroid's identifier.
+   * @param key The unique key for the arrival.
+   * @param item The arrival data to store.
+   */
   function set(
     bytes32 player,
     bytes32 asteroid,
@@ -28,6 +43,13 @@ library ArrivalsMap {
     }
   }
 
+  /**
+   * @dev Gets an arrival for a specific player, asteroid, and key.
+   * @param player The player's identifier.
+   * @param asteroid The asteroid's identifier.
+   * @param key The unique key for the arrival.
+   * @return The stored arrival data.
+   */
   function get(
     bytes32 player,
     bytes32 asteroid,
@@ -37,10 +59,22 @@ library ArrivalsMap {
     return abi.decode(encoding, (Arrival));
   }
 
+  /**
+   * @dev Retrieves all keys associated with arrivals for a specific player and asteroid.
+   * @param player The player's identifier.
+   * @param asteroid The asteroid's identifier.
+   * @return An array of keys for the arrivals.
+   */
   function keys(bytes32 player, bytes32 asteroid) internal view returns (bytes32[] memory) {
     return MapArrivals.get(player, asteroid);
   }
 
+  /**
+   * @dev Retrieves all arrival data associated with a specific player and asteroid.
+   * @param player The player's identifier.
+   * @param asteroid The asteroid's identifier.
+   * @return An array of arrival data.
+   */
   function values(bytes32 player, bytes32 asteroid) internal view returns (Arrival[] memory items) {
     bytes32[] memory _keys = keys(player, asteroid);
     items = new Arrival[](_keys.length);
@@ -50,6 +84,12 @@ library ArrivalsMap {
     }
   }
 
+  /**
+   * @dev Removes an arrival for a specific player, asteroid, and key.
+   * @param player The player's identifier.
+   * @param asteroid The asteroid's identifier.
+   * @param key The unique key for the arrival to remove.
+   */
   function remove(
     bytes32 player,
     bytes32 asteroid,
@@ -67,10 +107,21 @@ library ArrivalsMap {
     MapItemStoredArrivals.deleteRecord(player, asteroid, key);
   }
 
+  /**
+   * @dev Retrieves the number of arrivals stored for a specific player and asteroid.
+   * @param player The player's identifier.
+   * @param asteroid The asteroid's identifier.
+   * @return The number of arrivals.
+   */
   function size(bytes32 player, bytes32 asteroid) internal view returns (uint256) {
     return MapArrivals.length(player, asteroid);
   }
 
+  /**
+   * @dev Clears all arrivals for a specific player and asteroid.
+   * @param player The player's identifier.
+   * @param asteroid The asteroid's identifier.
+   */
   function clear(bytes32 player, bytes32 asteroid) internal {
     for (uint256 i = 0; i < MapArrivals.length(player, asteroid); i++) {
       bytes32 key = MapArrivals.getItem(player, asteroid, MapArrivals.length(player, asteroid) - 1);

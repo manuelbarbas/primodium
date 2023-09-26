@@ -10,11 +10,13 @@ import { LibStorage } from "libraries/LibStorage.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibMath } from "libraries/LibMath.sol";
 
-function toString(bytes32 entity) pure returns (string memory) {
-  return string(abi.encodePacked(entity));
-}
-
 library LibRaid {
+  /**
+   * @dev Initiates a raid on an asteroid rock entity.
+   * @param world The world contract.
+   * @param playerEntity The identifier of the player initiating the raid.
+   * @param rockEntity The identifier of the target asteroid rock.
+   */
   function raid(
     IWorld world,
     bytes32 playerEntity,
@@ -32,6 +34,11 @@ library LibRaid {
     resolveRaid(br);
   }
 
+  /**
+   * @dev Resolves the outcome of a raid battle and calculates resources raided.
+   * @param br The battle result data.
+   * @return raidResult The raid result data including resources before raid and raided amounts.
+   */
   function resolveRaid(BattleResultData memory br) internal returns (RaidResultData memory) {
     LibBattle.updateUnitsAfterBattle(br, ESendType.Raid);
 
