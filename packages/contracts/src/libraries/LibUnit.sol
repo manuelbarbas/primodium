@@ -123,4 +123,17 @@ library LibUnit {
       }
     }
   }
+
+  function decreaseUnitCount(
+    bytes32 playerEntity,
+    bytes32 rockEntity,
+    bytes32 unitType,
+    uint256 unitCount
+  ) internal {
+    updateStoredUtilities(playerEntity, unitType, unitCount, false);
+
+    uint256 currUnitCount = UnitCount.get(playerEntity, rockEntity, unitType);
+    if (unitCount > currUnitCount) unitCount = currUnitCount;
+    UnitCount.set(playerEntity, rockEntity, unitType, currUnitCount - unitCount);
+  }
 }

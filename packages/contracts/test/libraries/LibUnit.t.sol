@@ -16,6 +16,7 @@ contract LibUnitTest is PrimodiumTest {
   bytes32 buildingPrototype = "buildingPrototype";
 
   bytes32 building2 = "building2";
+  bytes32 rock = "rock";
 
   function setUp() public override {
     super.setUp();
@@ -171,8 +172,8 @@ contract LibUnitTest is PrimodiumTest {
   }
 
   function testUpdateStoredUtilitiesAdd() public {
-    P_IsUtility.set(EResource.Iron, true);
     MaxResourceCount.set(player, EResource.Iron, 100);
+    P_IsUtility.set(EResource.Iron, true);
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);
     requiredResourcesData.amounts[0] = 50;
@@ -230,5 +231,14 @@ contract LibUnitTest is PrimodiumTest {
 
     LibUnit.updateStoredUtilities(player, unit, 10, false);
     assertEq(ResourceCount.get(player, EResource.Iron), 0);
+  }
+
+  function testDecreaseUnitCount() public {
+    UnitCount.set(player, rock, unit, 100);
+    LibUnit.decreaseUnitCount(player, rock, unit, 50);
+    assertEq(UnitCount.get(player, rock, unit), 50);
+
+    LibUnit.decreaseUnitCount(player, rock, unit, 100);
+    assertEq(UnitCount.get(player, rock, unit), 0);
   }
 }
