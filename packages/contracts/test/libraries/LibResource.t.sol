@@ -164,4 +164,20 @@ contract LibResourceTest is PrimodiumTest {
     assertEq(ResourceCount.get(playerEntity, EResource.Iron), 150);
     assertEq(UtilitySet.get(buildingEntity, EResource.Iron), 0);
   }
+
+  function testGetAllResourceCounts() public {
+    ResourceCount.set(playerEntity, EResource.Iron, 100);
+    ResourceCount.set(playerEntity, EResource.Copper, 200);
+    ResourceCount.set(playerEntity, EResource.Platinum, 500);
+    ResourceCount.set(playerEntity, EResource.Kimberlite, 1500);
+
+    (uint256 totalResources, uint256[] memory resources) = LibResource.getAllResourceCounts(playerEntity);
+
+    assertEq(totalResources, 2300);
+    assertEq(resources[uint8(EResource.Iron)], 100);
+    assertEq(resources[uint8(EResource.Copper)], 200);
+    assertEq(resources[uint8(EResource.Lithium)], 0);
+    assertEq(resources[uint8(EResource.Platinum)], 500);
+    assertEq(resources[uint8(EResource.Kimberlite)], 1500);
+  }
 }

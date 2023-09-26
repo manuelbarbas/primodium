@@ -119,4 +119,17 @@ library LibResource {
       LibStorage.increaseStoredResource(playerEntity, utility, utilityUsage);
     }
   }
+
+  function getAllResourceCounts(bytes32 playerEntity)
+    internal
+    view
+    returns (uint256 totalResources, uint256[] memory resourceCounts)
+  {
+    resourceCounts = new uint256[](uint8(EResource.LENGTH));
+    for (uint256 i = 1; i < resourceCounts.length; i++) {
+      if (P_IsUtility.get(EResource(i))) continue;
+      resourceCounts[i] = ResourceCount.get(playerEntity, EResource(i));
+      totalResources += resourceCounts[i];
+    }
+  }
 }
