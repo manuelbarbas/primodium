@@ -4,6 +4,7 @@ pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 
 // Components
+
 import { P_IsObjectiveComponent, ID as P_IsObjectiveComponentID } from "components/P_IsObjectiveComponent.sol";
 import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 import { P_RequiredResearchComponent, ID as P_RequiredResearchComponentID } from "components/P_RequiredResearchComponent.sol";
@@ -15,16 +16,22 @@ import { P_UnitRewardComponent, ID as P_UnitRewardComponentID } from "components
 import { P_ObjectiveRequirementComponent, ID as P_ObjectiveRequirementComponentID } from "components/P_ObjectiveRequirementComponent.sol";
 import { P_ResourceRewardComponent, ID as P_ResourceRewardComponentID } from "components/P_ResourceRewardComponent.sol";
 import { P_HasBuiltBuildingComponent, ID as P_HasBuiltBuildingComponentID } from "components/P_HasBuiltBuildingComponent.sol";
+
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
+
 import { P_IsTechComponent, ID as P_IsTechComponentID } from "components/P_IsTechComponent.sol";
 import { P_UnitLevelUpgradeComponent, ID as P_UnitLevelUpgradeComponentID } from "components/P_UnitLevelUpgradeComponent.sol";
 import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
 import { P_MaxLevelComponent, ID as P_MaxLevelComponentID } from "components/P_MaxLevelComponent.sol";
 import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
+
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
+
 // Libraries
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetBuildingReqs } from "../libraries/LibSetBuildingReqs.sol";
 // Items
+
 import { ResourceValue, ResourceValues, Dimensions } from "../types.sol";
 
 // Research
