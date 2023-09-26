@@ -27,6 +27,8 @@ library LibBattle {
     (uint256[] memory defenseCounts, uint256 defensePoints) = getDefensePoints(defenderEntity, rockEntity);
     bool isAttackerWinner = attackPoints > defensePoints;
 
+    battleResult.attacker = attackerEntity;
+    battleResult.defender = defenderEntity;
     battleResult.attackerStartingUnits = attackCounts;
     battleResult.defenderStartingUnits = defenseCounts;
     battleResult.winner = isAttackerWinner ? attackerEntity : defenderEntity;

@@ -260,13 +260,6 @@ contract LibBattleTest is PrimodiumTest {
   //   uint256[] defenderUnitsLeft;
   // }
 
-  function getUnitArray(uint256 unit1Count, uint256 unit2Count) internal returns (uint256[] memory) {
-    uint256[] memory unitArray = new uint256[](unitPrototypeCount);
-    unitArray[0] = unit1Count;
-    unitArray[1] = unit2Count;
-    return unitArray;
-  }
-
   uint256 playerOriginalIron = 1000;
   uint256 playerOriginalCopper = 500;
   uint256 enemyOriginalIron = 1000;

@@ -219,4 +219,11 @@ contract PrimodiumTest is MudTest {
   function removeRequirements(EBuilding building) internal {
     removeRequiredTile(building);
   }
+
+  function getUnitArray(uint256 unit1Count, uint256 unit2Count) internal returns (uint256[] memory) {
+    uint256[] memory unitArray = new uint256[](unitPrototypeCount);
+    unitArray[0] = unit1Count;
+    unitArray[1] = unit2Count;
+    return unitArray;
+  }
 }
