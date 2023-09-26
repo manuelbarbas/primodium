@@ -34,10 +34,142 @@ import "../prototypes/PirateAsteroids.sol";
 
 library LibInitObjectives {
   function init(IWorld world) internal {
+    initPirateAsteroidObjectives(world);
+    initBuildingObjectives(world);
+    initExpandBaseObjective(world);
+
     P_IsObjectiveComponent isObjectiveComponent = P_IsObjectiveComponent(world.getComponent(P_IsObjectiveComponentID));
 
     uint256 objective;
     ResourceValues memory resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+
+    //RaiseIronPlateProductionID
+    objective = RaiseIronPlateProductionID;
+    isObjectiveComponent.set(objective);
+    LevelComponent(world.getComponent(LevelComponentID)).set(objective, 2);
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = IronPlateCraftedItemID;
+    resourceRewards.values[0] = 30;
+    P_ProductionDependenciesComponent(world.getComponent(P_ProductionDependenciesComponentID)).set(
+      objective,
+      resourceRewards
+    );
+  }
+
+  function initPirateAsteroidObjectives(IWorld world) internal {
+    P_IsObjectiveComponent isObjectiveComponent = P_IsObjectiveComponent(world.getComponent(P_IsObjectiveComponentID));
+
+    uint256 objective;
+    ResourceValues memory resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    //DefeatFirstPirateBaseID
+    objective = DefeatFirstPirateBaseID;
+    isObjectiveComponent.set(objective);
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      BuildDroneFactoryID
+    );
+    P_RequiredPirateAsteroidDefeatedComponent(world.getComponent(P_RequiredPirateAsteroidDefeatedComponentID)).set(
+      objective,
+      FirstPirateAsteroidID
+    );
+    P_SpawnPirateAsteroidComponent(world.getComponent(P_SpawnPirateAsteroidComponentID)).set(
+      objective,
+      SecondPirateAsteroidID
+    );
+    resourceRewards = ResourceValues(new uint256[](2), new uint32[](2));
+    resourceRewards.resources[0] = CopperResourceItemID;
+    resourceRewards.values[0] = 100000;
+    resourceRewards.resources[1] = IronResourceItemID;
+    resourceRewards.values[1] = 100000;
+    P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
+
+    //DefeatSecondPirateBaseID
+    objective = DefeatSecondPirateBaseID;
+    isObjectiveComponent.set(objective);
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      DefeatFirstPirateBaseID
+    );
+    P_RequiredPirateAsteroidDefeatedComponent(world.getComponent(P_RequiredPirateAsteroidDefeatedComponentID)).set(
+      objective,
+      SecondPirateAsteroidID
+    );
+    P_SpawnPirateAsteroidComponent(world.getComponent(P_SpawnPirateAsteroidComponentID)).set(
+      objective,
+      ThirdPirateAsteroidID
+    );
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = MarineUnit;
+    resourceRewards.values[0] = 50;
+    P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
+
+    //DefeatThirdPirateBaseID
+    objective = DefeatThirdPirateBaseID;
+    isObjectiveComponent.set(objective);
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      DefeatSecondPirateBaseID
+    );
+    P_RequiredPirateAsteroidDefeatedComponent(world.getComponent(P_RequiredPirateAsteroidDefeatedComponentID)).set(
+      objective,
+      ThirdPirateAsteroidID
+    );
+    P_SpawnPirateAsteroidComponent(world.getComponent(P_SpawnPirateAsteroidComponentID)).set(
+      objective,
+      FourthPirateAsteroidID
+    );
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = MarineUnit;
+    resourceRewards.values[0] = 100;
+    P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
+
+    //DefeatFourthPirateBaseID
+    objective = DefeatFourthPirateBaseID;
+    isObjectiveComponent.set(objective);
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      DefeatThirdPirateBaseID
+    );
+    P_RequiredPirateAsteroidDefeatedComponent(world.getComponent(P_RequiredPirateAsteroidDefeatedComponentID)).set(
+      objective,
+      FourthPirateAsteroidID
+    );
+    P_SpawnPirateAsteroidComponent(world.getComponent(P_SpawnPirateAsteroidComponentID)).set(
+      objective,
+      FifthPirateAsteroidID
+    );
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = AnvilDrone;
+    resourceRewards.values[0] = 30;
+    P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
+
+    //DefeatFifthPirateBaseID
+    objective = DefeatFifthPirateBaseID;
+    isObjectiveComponent.set(objective);
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      DefeatFourthPirateBaseID
+    );
+    P_RequiredPirateAsteroidDefeatedComponent(world.getComponent(P_RequiredPirateAsteroidDefeatedComponentID)).set(
+      objective,
+      FourthPirateAsteroidID
+    );
+    P_SpawnPirateAsteroidComponent(world.getComponent(P_SpawnPirateAsteroidComponentID)).set(
+      objective,
+      FifthPirateAsteroidID
+    );
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = AnvilDrone;
+    resourceRewards.values[0] = 70;
+    P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
+  }
+
+  function initBuildingObjectives(IWorld world) internal {
+    P_IsObjectiveComponent isObjectiveComponent = P_IsObjectiveComponent(world.getComponent(P_IsObjectiveComponentID));
+
+    uint256 objective;
+    ResourceValues memory resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+
     //BuildFirstIronMineID
     objective = BuildFirstIronMineID;
     isObjectiveComponent.set(objective);
@@ -105,57 +237,6 @@ library LibInitObjectives {
     resourceRewards.values[0] = 50000;
     P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
 
-    //DefeatFirstPirateBaseID
-    objective = DefeatFirstPirateBaseID;
-    isObjectiveComponent.set(objective);
-    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
-      objective,
-      BuildDroneFactoryID
-    );
-    P_RequiredPirateAsteroidDefeatedComponent(world.getComponent(P_RequiredPirateAsteroidDefeatedComponentID)).set(
-      objective,
-      FirstPirateAsteroidID
-    );
-    P_SpawnPirateAsteroidComponent(world.getComponent(P_SpawnPirateAsteroidComponentID)).set(
-      objective,
-      SecondPirateAsteroidID
-    );
-    resourceRewards = ResourceValues(new uint256[](2), new uint32[](2));
-    resourceRewards.resources[0] = CopperResourceItemID;
-    resourceRewards.values[0] = 100000;
-    resourceRewards.resources[1] = IronResourceItemID;
-    resourceRewards.values[1] = 100000;
-    P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
-
-    //DefeatSecondPirateBaseID
-    objective = DefeatSecondPirateBaseID;
-    isObjectiveComponent.set(objective);
-    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
-      objective,
-      DefeatFirstPirateBaseID
-    );
-    P_RequiredPirateAsteroidDefeatedComponent(world.getComponent(P_RequiredPirateAsteroidDefeatedComponentID)).set(
-      objective,
-      SecondPirateAsteroidID
-    );
-    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
-    resourceRewards.resources[0] = MarineUnit;
-    resourceRewards.values[0] = 50;
-    P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
-
-    //TrainMarineUnitID
-    objective = TrainMarineUnitID;
-    isObjectiveComponent.set(objective);
-    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
-    resourceRewards.resources[0] = MarineUnit;
-    resourceRewards.values[0] = 50;
-    P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(objective, resourceRewards);
-
-    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
-    resourceRewards.resources[0] = IronPlateCraftedItemID;
-    resourceRewards.values[0] = 50000;
-    P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
-
     //BuildFirstLithiumMineID
     objective = BuildFirstLithiumMineID;
     isObjectiveComponent.set(objective);
@@ -163,16 +244,6 @@ library LibInitObjectives {
     LevelComponent(world.getComponent(LevelComponentID)).set(objective, 2);
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
     resourceRewards.resources[0] = LithiumResourceItemID;
-    resourceRewards.values[0] = 50000;
-    P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
-
-    //BuildFirstSulfurMineID
-    objective = BuildFirstSulfurMineID;
-    isObjectiveComponent.set(objective);
-    P_HasBuiltBuildingComponent(world.getComponent(P_HasBuiltBuildingComponentID)).set(objective, SulfurMineID);
-    LevelComponent(world.getComponent(LevelComponentID)).set(objective, 2);
-    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
-    resourceRewards.resources[0] = SulfurResourceItemID;
     resourceRewards.values[0] = 50000;
     P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
 
@@ -207,6 +278,46 @@ library LibInitObjectives {
     resourceRewards.values[1] = 100000;
     P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
 
+    //BuildFirstSulfurMineID
+    objective = BuildFirstSulfurMineID;
+    isObjectiveComponent.set(objective);
+    P_HasBuiltBuildingComponent(world.getComponent(P_HasBuiltBuildingComponentID)).set(objective, SulfurMineID);
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      BuildSolarPanelID
+    );
+    resourceRewards = ResourceValues(new uint256[](2), new uint32[](2));
+    resourceRewards.resources[0] = SulfurResourceItemID;
+    resourceRewards.values[0] = 50000;
+    resourceRewards.resources[1] = CopperResourceItemID;
+    resourceRewards.values[1] = 100000;
+    P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
+
+    //BuildAdvancedDroneFactoryID
+    objective = BuildAdvancedDroneFactoryID;
+    isObjectiveComponent.set(objective);
+    P_HasBuiltBuildingComponent(world.getComponent(P_HasBuiltBuildingComponentID)).set(
+      objective,
+      AdvancedDroneFactoryID
+    );
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      BuildSolarPanelID
+    );
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = MarineUnit;
+    resourceRewards.values[0] = 100;
+    P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
+  }
+
+  function initTechnologyObjevctives(IWorld world) internal {}
+
+  function initExpandBaseObjective(IWorld world) internal {
+    P_IsObjectiveComponent isObjectiveComponent = P_IsObjectiveComponent(world.getComponent(P_IsObjectiveComponentID));
+
+    uint256 objective;
+    ResourceValues memory resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+
     //ExpandBaseID
     objective = ExpandBaseID;
     isObjectiveComponent.set(objective);
@@ -220,16 +331,213 @@ library LibInitObjectives {
     resourceRewards.values[0] = 200000;
     P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
 
-    //RaiseIronPlateProductionID
-    objective = RaiseIronPlateProductionID;
+    //ExpandBase2ID
+    objective = ExpandBase2ID;
     isObjectiveComponent.set(objective);
     LevelComponent(world.getComponent(LevelComponentID)).set(objective, 2);
+    P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
+      objective,
+      LibEncode.hashKeyEntity(ExpansionKey, 2)
+    );
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(objective, ExpandBaseID);
+    resourceRewards = ResourceValues(new uint256[](2), new uint32[](2));
+    resourceRewards.resources[0] = IronResourceItemID;
+    resourceRewards.values[0] = 500000;
+    resourceRewards.resources[1] = CopperResourceItemID;
+    resourceRewards.values[1] = 500000;
+
+    P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
+
+    //ExpandBase3ID
+    objective = ExpandBase3ID;
+    isObjectiveComponent.set(objective);
+    LevelComponent(world.getComponent(LevelComponentID)).set(objective, 3);
+    P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
+      objective,
+      LibEncode.hashKeyEntity(ExpansionKey, 3)
+    );
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      ExpandBase2ID
+    );
+    resourceRewards = ResourceValues(new uint256[](2), new uint32[](2));
+    resourceRewards.resources[0] = IronResourceItemID;
+    resourceRewards.values[0] = 500000;
+    resourceRewards.resources[1] = CopperResourceItemID;
+    resourceRewards.values[1] = 500000;
+
+    P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
+
+    //ExpandBase4ID
+    objective = ExpandBase4ID;
+    isObjectiveComponent.set(objective);
+    LevelComponent(world.getComponent(LevelComponentID)).set(objective, 4);
+    P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
+      objective,
+      LibEncode.hashKeyEntity(ExpansionKey, 4)
+    );
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      ExpandBase3ID
+    );
+    resourceRewards = ResourceValues(new uint256[](2), new uint32[](2));
+    resourceRewards.resources[0] = IronResourceItemID;
+    resourceRewards.values[0] = 1000000;
+    resourceRewards.resources[1] = CopperResourceItemID;
+    resourceRewards.values[1] = 1000000;
+
+    P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
+
+    //ExpandBase5ID
+    objective = ExpandBase5ID;
+    isObjectiveComponent.set(objective);
+    LevelComponent(world.getComponent(LevelComponentID)).set(objective, 5);
+    P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
+      objective,
+      LibEncode.hashKeyEntity(ExpansionKey, 5)
+    );
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      ExpandBase4ID
+    );
+    resourceRewards = ResourceValues(new uint256[](2), new uint32[](2));
+    resourceRewards.resources[0] = IronResourceItemID;
+    resourceRewards.values[0] = 2000000;
+    resourceRewards.resources[1] = CopperResourceItemID;
+    resourceRewards.values[1] = 2000000;
+
+    P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
+
+    //ExpandBase6ID
+    objective = ExpandBase6ID;
+    isObjectiveComponent.set(objective);
+    LevelComponent(world.getComponent(LevelComponentID)).set(objective, 6);
+    P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
+      objective,
+      LibEncode.hashKeyEntity(ExpansionKey, 6)
+    );
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      ExpandBase5ID
+    );
+    resourceRewards = ResourceValues(new uint256[](2), new uint32[](2));
+    resourceRewards.resources[0] = IronResourceItemID;
+    resourceRewards.values[0] = 10000000;
+    resourceRewards.resources[1] = CopperResourceItemID;
+    resourceRewards.values[1] = 10000000;
+
+    P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
+  }
+
+  function initUnitTrainingObjectives(IWorld world) internal {
+    P_IsObjectiveComponent isObjectiveComponent = P_IsObjectiveComponent(world.getComponent(P_IsObjectiveComponentID));
+
+    uint256 objective;
+    ResourceValues memory resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+
+    //TrainMarineUnitID
+    objective = TrainMarineUnitID;
+    isObjectiveComponent.set(objective);
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      BuildDroneFactoryID
+    );
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = MarineUnit;
+    resourceRewards.values[0] = 50;
+    P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(objective, resourceRewards);
+
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
     resourceRewards.resources[0] = IronPlateCraftedItemID;
-    resourceRewards.values[0] = 30;
-    P_ProductionDependenciesComponent(world.getComponent(P_ProductionDependenciesComponentID)).set(
+    resourceRewards.values[0] = 50000;
+    P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
+
+    //TrainMarineUnit2ID
+    objective = TrainMarineUnit2ID;
+    isObjectiveComponent.set(objective);
+
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
       objective,
-      resourceRewards
+      TrainMarineUnitID
     );
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = MarineUnit;
+    resourceRewards.values[0] = 100;
+    P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(objective, resourceRewards);
+
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = SulfurResourceItemID;
+    resourceRewards.values[0] = 100000;
+    P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
+
+    //TrainMarineUnit3ID
+    objective = TrainMarineUnit2ID;
+    isObjectiveComponent.set(objective);
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      TrainMarineUnit2ID
+    );
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = MarineUnit;
+    resourceRewards.values[0] = 200;
+    P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(objective, resourceRewards);
+
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = SulfurResourceItemID;
+    resourceRewards.values[0] = 100000;
+    P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
+
+    //TrainAnvilDroneID
+    objective = TrainAnvilDroneID;
+    isObjectiveComponent.set(objective);
+
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      BuildAdvancedDroneFactoryID
+    );
+    LevelComponent(world.getComponent(LevelComponentID)).set(objective, 2);
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = AnvilDrone;
+    resourceRewards.values[0] = 20;
+    P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(objective, resourceRewards);
+
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = IronPlateCraftedItemID;
+    resourceRewards.values[0] = 50000;
+    P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
+
+    //TrainAnvilDrone2ID
+    objective = TrainAnvilDrone2ID;
+    isObjectiveComponent.set(objective);
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      TrainAnvilDroneID
+    );
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = AnvilDrone;
+    resourceRewards.values[0] = 50;
+    P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(objective, resourceRewards);
+
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = SulfurResourceItemID;
+    resourceRewards.values[0] = 100000;
+    P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
+
+    //TrainAnvilDrone3ID
+    objective = TrainAnvilDrone2ID;
+    isObjectiveComponent.set(objective);
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      TrainAnvilDrone2ID
+    );
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = AnvilDrone;
+    resourceRewards.values[0] = 100;
+    P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(objective, resourceRewards);
+
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = SulfurResourceItemID;
+    resourceRewards.values[0] = 100000;
+    P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
   }
 }

@@ -47,7 +47,7 @@ library LibInitPirateAsteroids {
 
     //SecondPirateAsteroidID
     pirateAsteroid = SecondPirateAsteroidID;
-    PositionComponent(world.getComponent(PositionComponentID)).set(pirateAsteroid, Coord(10, 10, 0));
+    PositionComponent(world.getComponent(PositionComponentID)).set(pirateAsteroid, Coord(-20, 10, 0));
     resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
     resourceValues.resources[0] = MarineUnit;
     resourceValues.values[0] = 40;
@@ -59,6 +59,113 @@ library LibInitPirateAsteroids {
     resourceValues.values[1] = 50000;
     resourceValues.resources[2] = IronPlateCraftedItemID;
     resourceValues.values[2] = 50000;
+    LibSetBuildingReqs.setResourceReqs(world, pirateAsteroid, resourceValues);
+
+    //ThirdPirateAsteroid
+    pirateAsteroid = ThirdPirateAsteroidID;
+    PositionComponent(world.getComponent(PositionComponentID)).set(pirateAsteroid, Coord(-12, -10, 0));
+    resourceValues = ResourceValues(new uint256[](2), new uint32[](2));
+    resourceValues.resources[0] = AnvilDrone;
+    resourceValues.values[0] = 5;
+    resourceValues.resources[1] = MarineUnit;
+    resourceValues.values[1] = 80;
+    P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(pirateAsteroid, resourceValues);
+    resourceValues = ResourceValues(new uint256[](3), new uint32[](3));
+    resourceValues.resources[0] = PhotovoltaicCellCraftedItemID;
+    resourceValues.values[0] = 50000;
+    resourceValues.resources[1] = LithiumResourceItemID;
+    resourceValues.values[1] = 50000;
+    resourceValues.resources[2] = SulfurResourceItemID;
+    resourceValues.values[2] = 50000;
+    LibSetBuildingReqs.setResourceReqs(world, pirateAsteroid, resourceValues);
+
+    //ThirdPirateAsteroid
+    pirateAsteroid = ThirdPirateAsteroidID;
+    PositionComponent(world.getComponent(PositionComponentID)).set(pirateAsteroid, Coord(-12, -10, 0));
+    resourceValues = ResourceValues(new uint256[](2), new uint32[](2));
+    resourceValues.resources[0] = AnvilDrone;
+    resourceValues.values[0] = 5;
+    resourceValues.resources[1] = MarineUnit;
+    resourceValues.values[1] = 80;
+    P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(pirateAsteroid, resourceValues);
+    resourceValues = ResourceValues(new uint256[](3), new uint32[](3));
+    resourceValues.resources[0] = PhotovoltaicCellCraftedItemID;
+    resourceValues.values[0] = 50000;
+    resourceValues.resources[1] = LithiumResourceItemID;
+    resourceValues.values[1] = 50000;
+    resourceValues.resources[2] = SulfurResourceItemID;
+    resourceValues.values[2] = 50000;
+    LibSetBuildingReqs.setResourceReqs(world, pirateAsteroid, resourceValues);
+
+    //FourthPirateAsteroidID
+    pirateAsteroid = FourthPirateAsteroidID;
+    PositionComponent(world.getComponent(PositionComponentID)).set(pirateAsteroid, Coord(-12, -15, 0));
+    resourceValues = ResourceValues(new uint256[](2), new uint32[](2));
+    resourceValues.resources[0] = AnvilDrone;
+    resourceValues.values[0] = 20;
+    resourceValues.resources[1] = MarineUnit;
+    resourceValues.values[1] = 120;
+    P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(pirateAsteroid, resourceValues);
+    resourceValues = ResourceValues(new uint256[](3), new uint32[](3));
+    resourceValues.resources[0] = PhotovoltaicCellCraftedItemID;
+    resourceValues.values[0] = 100000;
+    resourceValues.resources[1] = LithiumResourceItemID;
+    resourceValues.values[1] = 100000;
+    resourceValues.resources[2] = SulfurResourceItemID;
+    resourceValues.values[2] = 100000;
+    LibSetBuildingReqs.setResourceReqs(world, pirateAsteroid, resourceValues);
+
+    //FifthPirateAsteroidID
+    pirateAsteroid = FifthPirateAsteroidID;
+    PositionComponent(world.getComponent(PositionComponentID)).set(pirateAsteroid, Coord(-3, -15, 0));
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = MarineUnit;
+    resourceValues.values[0] = 400;
+
+    P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(pirateAsteroid, resourceValues);
+    resourceValues = ResourceValues(new uint256[](3), new uint32[](3));
+    resourceValues.resources[0] = PhotovoltaicCellCraftedItemID;
+    resourceValues.values[0] = 100000;
+    resourceValues.resources[1] = CopperResourceItemID;
+    resourceValues.values[1] = 200000;
+    resourceValues.resources[2] = SulfurResourceItemID;
+    resourceValues.values[2] = 100000;
+    LibSetBuildingReqs.setResourceReqs(world, pirateAsteroid, resourceValues);
+
+    //SixthPirateAsteroidID
+    pirateAsteroid = SixthPirateAsteroidID;
+    PositionComponent(world.getComponent(PositionComponentID)).set(pirateAsteroid, Coord(-3, 20, 0));
+    resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceValues.resources[0] = MarineUnit;
+    resourceValues.values[0] = 400;
+
+    P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(pirateAsteroid, resourceValues);
+    resourceValues = ResourceValues(new uint256[](3), new uint32[](3));
+    resourceValues.resources[0] = PhotovoltaicCellCraftedItemID;
+    resourceValues.values[0] = 100000;
+    resourceValues.resources[1] = CopperResourceItemID;
+    resourceValues.values[1] = 200000;
+    resourceValues.resources[2] = SulfurResourceItemID;
+    resourceValues.values[2] = 100000;
+    LibSetBuildingReqs.setResourceReqs(world, pirateAsteroid, resourceValues);
+
+    //SeventhPirateAsteroidID
+    pirateAsteroid = SeventhPirateAsteroidID;
+    PositionComponent(world.getComponent(PositionComponentID)).set(pirateAsteroid, Coord(-3, 20, 0));
+    resourceValues = ResourceValues(new uint256[](2), new uint32[](2));
+    resourceValues.resources[0] = AnvilDrone;
+    resourceValues.values[0] = 100;
+    resourceValues.resources[1] = MarineUnit;
+    resourceValues.values[1] = 200;
+
+    P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(pirateAsteroid, resourceValues);
+    resourceValues = ResourceValues(new uint256[](3), new uint32[](3));
+    resourceValues.resources[0] = PhotovoltaicCellCraftedItemID;
+    resourceValues.values[0] = 150000;
+    resourceValues.resources[1] = CopperResourceItemID;
+    resourceValues.values[1] = 300000;
+    resourceValues.resources[2] = SulfurResourceItemID;
+    resourceValues.values[2] = 150000;
     LibSetBuildingReqs.setResourceReqs(world, pirateAsteroid, resourceValues);
   }
 }
