@@ -161,8 +161,6 @@ export const config = mudConfig({
       schema: "uint256",
     },
 
-    // ResourceSet tables: used to track which resources a player has
-
     ResourceCount: {
       keySchema: { entity: "bytes32", resource: "EResource" },
       schema: "uint256",
@@ -404,12 +402,27 @@ export const config = mudConfig({
     BattleResult: {
       keySchema: { entity: "bytes32" },
       schema: {
-        winner: "bytes32",
         attacker: "bytes32",
         defender: "bytes32",
+        winner: "bytes32",
 
+        rock: "bytes32",
+        totalCargo: "uint256",
+        timestamp: "uint256",
+
+        attackerStartingUnits: "uint256[]",
+        defenderStartingUnits: "uint256[]",
         attackerUnitsLeft: "uint256[]",
         defenderUnitsLeft: "uint256[]",
+      },
+      ephemeral: true,
+    },
+
+    RaidResult: {
+      keySchema: { entity: "bytes32" },
+      schema: {
+        defenderValuesBeforeRaid: "uint256[]",
+        raidedAmount: "uint256[]",
       },
       ephemeral: true,
     },
