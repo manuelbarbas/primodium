@@ -8,6 +8,7 @@ import { ESendType } from "src/Types.sol";
 import { BattleResultData } from "codegen/Tables.sol";
 
 contract S_BattleSystem is PrimodiumSystem {
+  // NOTE: logic testing occurs in LibBattle.t.sol
   function battle(
     bytes32 attackerEntity,
     bytes32 defenderEntity,
