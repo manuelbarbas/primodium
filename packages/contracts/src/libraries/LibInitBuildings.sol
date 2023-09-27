@@ -1329,26 +1329,26 @@ library LibInitBuildings {
     requiredResources[0] = resourceValues;
     // LEVEL 2
     resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 5000 });
-    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 175000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 50000 });
+    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 200000 });
     requiredResources[1] = resourceValues;
 
     // LEVEL 3
     resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 15000 });
-    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 300000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 150000 });
+    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 800000 });
     requiredResources[2] = resourceValues;
 
     // LEVEL 4
     resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 150000 });
-    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 1000000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 500000 });
+    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 2000000 });
     requiredResources[3] = resourceValues;
 
     // LEVEL 5
     resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 500000 });
-    resourceValues[1] = ResourceValue({ resource: TitaniumResourceItemID, value: 15000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 1000000 });
+    resourceValues[1] = ResourceValue({ resource: TitaniumResourceItemID, value: 50000 });
     requiredResources[4] = resourceValues;
 
     /****************** Required Utility Resources *******************/
@@ -1387,15 +1387,15 @@ library LibInitBuildings {
     uint32[] memory productionRates = new uint32[](maxLevel);
 
     // LEVEL 1
-    productionRates[0] = 20;
+    productionRates[0] = 40;
     // LEVEL 2
-    productionRates[1] = 30;
+    productionRates[1] = 60;
     // LEVEL 3
-    productionRates[2] = 40;
+    productionRates[2] = 80;
     // LEVEL 4
-    productionRates[3] = 50;
+    productionRates[3] = 100;
     // LEVEL 5
-    productionRates[4] = 60;
+    productionRates[4] = 120;
 
     /* ***********************Set Values ************************* */
     setupUtilityBuilding(
@@ -1437,26 +1437,26 @@ library LibInitBuildings {
     requiredResources[0] = resourceValues;
     // LEVEL 2
     resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 50000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 500000 });
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 1750000 });
     requiredResources[1] = resourceValues;
 
     // LEVEL 3
     resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 150000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 1500000 });
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 3000000 });
     requiredResources[2] = resourceValues;
 
     // LEVEL 4
     resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 500000 });
-    resourceValues[1] = ResourceValue({ resource: PlatinumResourceItemID, value: 50000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 5000000 });
+    resourceValues[1] = ResourceValue({ resource: PlatinumResourceItemID, value: 75000 });
     requiredResources[3] = resourceValues;
 
     // LEVEL 5
     resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 1000000 });
-    resourceValues[1] = ResourceValue({ resource: KimberliteResourceItemID, value: 25000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 7500000 });
+    resourceValues[1] = ResourceValue({ resource: KimberliteResourceItemID, value: 250000 });
     requiredResources[4] = resourceValues;
 
     /****************** Required Utility Resources *******************/
@@ -1505,7 +1505,7 @@ library LibInitBuildings {
     uint32[] memory productionRates = new uint32[](maxLevel);
 
     // LEVEL 1
-    productionRates[0] = 100;
+    productionRates[0] = 150;
     // LEVEL 2
     productionRates[1] = 250;
     // LEVEL 3
@@ -1588,27 +1588,27 @@ library LibInitBuildings {
     requiredResources[0] = resourceValues;
     // LEVEL 2
     resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 100000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 200000 });
     requiredResources[1] = resourceValues;
     // LEVEL 3
     resourceValues = new ResourceValue[](2);
     resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 500000 });
-    resourceValues[1] = ResourceValue({ resource: LithiumResourceItemID, value: 500000 });
+    resourceValues[1] = ResourceValue({ resource: LithiumResourceItemID, value: 750000 });
     requiredResources[2] = resourceValues;
     // LEVEL 4
     resourceValues = new ResourceValue[](2);
     resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 1500000 });
-    resourceValues[1] = ResourceValue({ resource: PlatinumResourceItemID, value: 20000 });
+    resourceValues[1] = ResourceValue({ resource: PlatinumResourceItemID, value: 100000 });
     requiredResources[3] = resourceValues;
     // LEVEL 5
     resourceValues = new ResourceValue[](2);
     resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 5000000 });
-    resourceValues[1] = ResourceValue({ resource: IridiumResourceItemID, value: 20000 });
+    resourceValues[1] = ResourceValue({ resource: IridiumResourceItemID, value: 200000 });
     requiredResources[4] = resourceValues;
     // LEVEL 6
     resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 275000 });
-    resourceValues[1] = ResourceValue({ resource: KimberliteResourceItemID, value: 10000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 7500000 });
+    resourceValues[1] = ResourceValue({ resource: KimberliteResourceItemID, value: 100000 });
     requiredResources[5] = resourceValues;
 
     /****************** Required Utility Resources *******************/
