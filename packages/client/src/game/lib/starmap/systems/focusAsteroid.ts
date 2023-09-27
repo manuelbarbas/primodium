@@ -29,7 +29,7 @@ export const focusAsteroid = (scene: Scene) => {
     const coord = Position.get(activeAsteroid);
     if (!coord) return;
 
-    pan(coord);
+    pan(coord, 0);
   };
 
   defineEnterSystem(gameWorld, query, handleMove);
