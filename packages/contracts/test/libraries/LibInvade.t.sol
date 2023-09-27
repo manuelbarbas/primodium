@@ -50,7 +50,7 @@ contract LibInvadeTest is PrimodiumTest {
       unitCounts: [uint256(200), 100, 0, 0, 0]
     });
     ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);
-    LibInvade.invadeNeutral(player, rock);
+    LibInvade.invadeNeutral(world, player, rock);
     assertEq(OwnedBy.get(rock), player, "OwnedBy");
     assertEq(UnitCount.get(player, rock, unit1), 200, "Unit1 Count");
     assertEq(UnitCount.get(player, rock, unit2), 100, "Unit2 Count");

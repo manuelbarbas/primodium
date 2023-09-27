@@ -25,7 +25,7 @@ library LibInvade {
     require(RockType.get(rockEntity) == ERock.Motherlode, "[Invade] Can only invade motherlodes");
 
     bytes32 defender = OwnedBy.get(rockEntity);
-    if (defender == 0) return invadeNeutral(invader, rockEntity);
+    if (defender == 0) return invadeNeutral(world, invader, rockEntity);
 
     require(defender != invader, "[Invade]: can not invade your own rock");
 
@@ -46,11 +46,15 @@ library LibInvade {
    * @param invader The identifier of the invader.
    * @param rockEntity The identifier of the target rock.
    */
-  function invadeNeutral(bytes32 invader, bytes32 rockEntity) internal {
+  function invadeNeutral(
+    IWorld world,
+    bytes32 invader,
+    bytes32 rockEntity
+  ) internal {
     MotherlodeSet.add(invader, rockEntity);
     OwnedBy.set(rockEntity, invader);
     bytes32[] memory unitTypes = P_UnitPrototypes.get();
-    (uint256[] memory attackCounts, , ) = LibBattle.getAttackPoints(invader, rockEntity, ESendType.Invade);
+    (uint256[] memory attackCounts, , ) = world.getAttackPoints(invader, rockEntity, ESendType.Invade);
     for (uint256 i = 0; i < unitTypes.length; i++) {
       LibUnit.increaseUnitCount(invader, rockEntity, unitTypes[i], attackCounts[i]);
     }

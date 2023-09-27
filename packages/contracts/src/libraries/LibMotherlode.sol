@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { P_GameConfig, P_GameConfigData, UnitCount, P_MiningUnits, P_MiningPower, LastClaimedAt, Motherlode, MotherlodeData, Position, PositionData, ReversePosition, RockType, P_Unit, UnitLevel } from "codegen/Tables.sol";
+import { P_GameConfig, P_GameConfigData, UnitCount, LastClaimedAt, Motherlode, MotherlodeData, Position, PositionData, ReversePosition, RockType, P_Unit, UnitLevel } from "codegen/Tables.sol";
 import { ERock, EUnit, ESize, EResource } from "codegen/Types.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
