@@ -1,6 +1,5 @@
 import {
   ComponentUpdate,
-  EntityID,
   Has,
   defineUpdateSystem,
   defineEnterSystem,
