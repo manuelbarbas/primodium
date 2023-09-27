@@ -6,6 +6,7 @@ import {
   HasValue,
   EntityID,
   defineComponentSystem,
+  defineUpdateSystem,
 } from "@latticexyz/recs";
 import {
   ObjectPosition,
@@ -101,6 +102,16 @@ export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
   ];
 
   defineEnterSystem(gameWorld, query, ({ entity }) => {
+    const entityId = world.entities[entity];
+
+    const coord = Position.get(entityId);
+
+    if (!coord) return;
+
+    render(entityId, coord);
+  });
+
+  defineUpdateSystem(gameWorld, query, ({ entity }) => {
     const entityId = world.entities[entity];
 
     const coord = Position.get(entityId);
