@@ -55,7 +55,7 @@ export const BuildQueue: React.FC<{ building: EntityID }> = ({ building }) => {
         )}
       </SecondaryCard>
       <div className="mt-2 flex gap-2">
-        <Navigator.NavButton to="BuildDrone" className="btn-sm btn-secondary">
+        <Navigator.NavButton to="BuildUnit" className="btn-sm btn-secondary">
           + Add Build Order
         </Navigator.NavButton>
         <Navigator.BackButton className="btn-sm border-secondary" />
