@@ -68,7 +68,7 @@ library LibInitBuildings {
     // LEVEL 2
     resourceValues = new ResourceValue[](1);
     resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 150000 });
-    requiredResources[0] = resourceValues;
+    requiredResources[1] = resourceValues;
     // LEVEL 3
     resourceValues = new ResourceValue[](2);
     resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 300000 });
