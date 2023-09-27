@@ -4,6 +4,7 @@ pragma solidity >=0.8.0;
 import { EBuilding, EResource } from "src/Types.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
+import { LibMotherlode } from "libraries/LibMotherlode.sol";
 import { UtilitySet } from "libraries/UtilitySet.sol";
 import { P_IsUtility, P_RequiredResources, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/Tables.sol";
 import { BuildingKey } from "src/Keys.sol";
@@ -99,6 +100,7 @@ library LibResource {
     if (lastClaimed == 0 || lastClaimed == block.timestamp) return;
     uint256 timeSinceClaimed = block.timestamp - lastClaimed;
     LastClaimedAt.set(playerEntity, block.timestamp);
+    uint256[] memory motherlodeClaims = LibMotherlode.getAllMotherlodeClaims(playerEntity);
     for (uint8 i = 1; i < uint8(EResource.LENGTH); i++) {
       EResource resource = EResource(i);
       // you can't claim utilities
@@ -109,7 +111,8 @@ library LibResource {
       if (productionRate == 0) continue;
 
       // add resource to storage
-      LibStorage.increaseStoredResource(playerEntity, resource, productionRate * timeSinceClaimed);
+      uint256 increase = productionRate * timeSinceClaimed + motherlodeClaims[i];
+      LibStorage.increaseStoredResource(playerEntity, resource, increase);
     }
   }
 
