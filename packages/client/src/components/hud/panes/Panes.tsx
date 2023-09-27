@@ -10,13 +10,19 @@ import { Divider } from "src/components/core/Divider";
 import { Outgoingfleets } from "./OutgoingFleets";
 import { Reinforcementfleets } from "./ReinforcementFleet";
 import { OwnedMotherlodes } from "./OwnedMotherlodes";
+import { Objectives } from "./Objectives";
 
 export const Panes: React.FC = () => {
   const playerAstroid = HomeAsteroid.use()?.value;
-  const player = Account.use()?.value;
+  const player = Account.use(undefined, {
+    value: SingletonID,
+  }).value;
 
   return (
-    <Tabs className="flex gap-2" defaultIndex={-1}>
+    <Tabs
+      className="flex gap-2 h-[25rem] pointer-events-auto"
+      defaultIndex={-1}
+    >
       <Tabs.Pane index={0} className="w-96">
         <Outgoingfleets user={player ?? SingletonID} />
       </Tabs.Pane>
@@ -28,6 +34,9 @@ export const Panes: React.FC = () => {
       </Tabs.Pane>
       <Tabs.Pane index={3} className="w-96">
         <BattleReports />
+      </Tabs.Pane>
+      <Tabs.Pane index={4} className="w-96">
+        <Objectives />
       </Tabs.Pane>
       <Tabs.Pane index={5} className="w-96">
         <OwnedMotherlodes />

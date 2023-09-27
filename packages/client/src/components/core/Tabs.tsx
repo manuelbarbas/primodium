@@ -42,7 +42,7 @@ const Pane: FC<{
   }
 
   return (
-    <Card className={`${className} overflow-y-auto scrollbar `}>
+    <Card className={`overflow-y-auto scrollbar ${className} `}>
       {children}
     </Card>
   );
@@ -52,7 +52,8 @@ const Button: FC<{
   index: number;
   children: ReactNode;
   className?: string;
-}> = memo(({ index, children, className }) => {
+  togglable?: boolean;
+}> = memo(({ index, children, className, togglable = false }) => {
   const { index: currIndex, setIndex } = useIndex();
 
   const selected = currIndex === index;
@@ -61,7 +62,7 @@ const Button: FC<{
     <_Button
       selected={selected}
       className={className}
-      onClick={() => setIndex(selected ? undefined : index)}
+      onClick={() => setIndex(selected && togglable ? undefined : index)}
     >
       {children}
     </_Button>
@@ -115,7 +116,7 @@ export const Tabs: FC<TabProps> & {
     <IndexContext.Provider
       value={{ index: currentIndex, setIndex: setCurrentIndex }}
     >
-      <div className={`gap-2 ${className}`}>{children}</div>
+      <div className={`gap-1 ${className}`}>{children}</div>
     </IndexContext.Provider>
   );
 };

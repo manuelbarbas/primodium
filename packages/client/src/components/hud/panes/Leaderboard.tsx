@@ -41,7 +41,7 @@ export const Leaderboard = () => {
   return (
     <div className="flex flex-col items-center w-full text-xs pointer-events-auto scrollbar">
       <List
-        height={320}
+        height={323}
         width="100%"
         itemCount={data.players.length}
         itemSize={35}
