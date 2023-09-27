@@ -64,3 +64,15 @@ uint256 constant MineIridium3ID = uint256(keccak256("objective.MineIridium3"));
 uint256 constant MineKimberlite1ID = uint256(keccak256("objective.MineKimberlite1"));
 uint256 constant MineKimberlite2ID = uint256(keccak256("objective.MineKimberlite2"));
 uint256 constant MineKimberlite3ID = uint256(keccak256("objective.MineKimberlite3"));
+
+uint256 constant TrainHammerDroneID = uint256(keccak256("objective.TrainHammerDrone"));
+uint256 constant TrainHammerDrone2ID = uint256(keccak256("objective.TrainHammerDrone2"));
+uint256 constant TrainHammerDrone3ID = uint256(keccak256("objective.TrainHammerDrone3"));
+
+uint256 constant TrainAegisDroneID = uint256(keccak256("objective.TrainAegisDrone"));
+uint256 constant TrainAegisDrone2ID = uint256(keccak256("objective.TrainAegisDrone2"));
+uint256 constant TrainAegisDrone3ID = uint256(keccak256("objective.TrainAegisDrone3"));
+
+uint256 constant TrainStingerDroneID = uint256(keccak256("objective.TrainStingerDrone"));
+uint256 constant TrainStingerDrone2ID = uint256(keccak256("objective.TrainStingerDrone2"));
+uint256 constant TrainStingerDrone3ID = uint256(keccak256("objective.TrainStingerDrone3"));
