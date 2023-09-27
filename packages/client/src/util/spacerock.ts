@@ -10,6 +10,7 @@ import {
   MotherlodeResource,
   OwnedBy,
   P_WorldSpeed,
+  Pirate,
   Position,
 } from "src/network/components/chainComponents";
 import {
@@ -32,6 +33,11 @@ function getSpaceRockImage(spaceRock: EntityID, type: ESpaceRockType) {
   const { getSpriteBase64 } = primodium.api().sprite;
 
   if (type === ESpaceRockType.Asteroid) {
+    const pirate = Pirate.get(spaceRock);
+
+    if (pirate)
+      return getSpriteBase64(SpriteKeys.PirateAsteroid1, Assets.SpriteAtlas);
+
     const ownedBy = OwnedBy.get(spaceRock, {
       value: SingletonID,
     }).value;
@@ -142,7 +148,7 @@ export function getSpaceRockInfo(spaceRock: EntityID) {
       } ${getBlockTypeName(motherlodeResource?.resource)} Motherlode`;
       break;
     case ESpaceRockType.Asteroid:
-      name = "Player Asteroid";
+      name = Pirate.get(spaceRock) ? "Pirate Asteroid" : "Player Asteroid";
       break;
     default:
       name = "Unknown Spacerock";

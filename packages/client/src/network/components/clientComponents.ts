@@ -113,7 +113,7 @@ export const TrainingQueue = newComponent(
 
 export default {
   Account,
-  ActiveAsteroid: HomeAsteroid,
+  HomeAsteroid,
   Battle,
   BattleReport,
   BlockNumber,
