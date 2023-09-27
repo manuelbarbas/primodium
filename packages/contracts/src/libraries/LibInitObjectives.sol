@@ -104,7 +104,7 @@ library LibInitObjectives {
       ThirdPirateAsteroidID
     );
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
-    resourceRewards.resources[0] = MarineUnit;
+    resourceRewards.resources[0] = MinutemanMarine;
     resourceRewards.values[0] = 50;
     P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
 
@@ -124,7 +124,7 @@ library LibInitObjectives {
       FourthPirateAsteroidID
     );
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
-    resourceRewards.resources[0] = MarineUnit;
+    resourceRewards.resources[0] = MinutemanMarine;
     resourceRewards.values[0] = 100;
     P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
 
@@ -221,7 +221,7 @@ library LibInitObjectives {
     );
 
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
-    resourceRewards.resources[0] = MarineUnit;
+    resourceRewards.resources[0] = MinutemanMarine;
     resourceRewards.values[0] = 10;
     P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
 
@@ -309,7 +309,7 @@ library LibInitObjectives {
       BuildSolarPanelID
     );
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
-    resourceRewards.resources[0] = MarineUnit;
+    resourceRewards.resources[0] = MinutemanMarine;
     resourceRewards.values[0] = 100;
     P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
   }
@@ -439,15 +439,15 @@ library LibInitObjectives {
     uint256 objective;
     ResourceValues memory resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
 
-    //TrainMarineUnitID
-    objective = TrainMarineUnitID;
+    //TrainMinutemanMarineID
+    objective = TrainMinutemanMarineID;
     isObjectiveComponent.set(objective);
     P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
       objective,
       BuildWorkshopID
     );
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
-    resourceRewards.resources[0] = MarineUnit;
+    resourceRewards.resources[0] = MinutemanMarine;
     resourceRewards.values[0] = 50;
     P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(objective, resourceRewards);
 
@@ -456,16 +456,16 @@ library LibInitObjectives {
     resourceRewards.values[0] = 50000;
     P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
 
-    //TrainMarineUnit2ID
-    objective = TrainMarineUnit2ID;
+    //TrainMinutemanMarine2ID
+    objective = TrainMinutemanMarine2ID;
     isObjectiveComponent.set(objective);
 
     P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
       objective,
-      TrainMarineUnitID
+      TrainMinutemanMarineID
     );
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
-    resourceRewards.resources[0] = MarineUnit;
+    resourceRewards.resources[0] = MinutemanMarine;
     resourceRewards.values[0] = 100;
     P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(objective, resourceRewards);
 
@@ -474,15 +474,15 @@ library LibInitObjectives {
     resourceRewards.values[0] = 100000;
     P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
 
-    //TrainMarineUnit3ID
-    objective = TrainMarineUnit2ID;
+    //TrainMinutemanMarine3ID
+    objective = TrainMinutemanMarine2ID;
     isObjectiveComponent.set(objective);
     P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
       objective,
-      TrainMarineUnit2ID
+      TrainMinutemanMarine2ID
     );
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
-    resourceRewards.resources[0] = MarineUnit;
+    resourceRewards.resources[0] = MinutemanMarine;
     resourceRewards.values[0] = 200;
     P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(objective, resourceRewards);
 
@@ -491,15 +491,15 @@ library LibInitObjectives {
     resourceRewards.values[0] = 100000;
     P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
 
-    //TrainAdvancedMarineUnitID
-    objective = TrainAdvancedMarineUnitID;
+    //TrainTridentMinutemanMarineID
+    objective = TrainTridentMinutemanMarineID;
     isObjectiveComponent.set(objective);
     P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
       objective,
       BuildWorkshopID
     );
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
-    resourceRewards.resources[0] = AdvancedMarineUnit;
+    resourceRewards.resources[0] = TridentMinutemanMarine;
     resourceRewards.values[0] = 50;
     P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(objective, resourceRewards);
 
@@ -508,16 +508,16 @@ library LibInitObjectives {
     resourceRewards.values[0] = 50000;
     P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
 
-    //TrainAdvancedMarineUnit2ID
-    objective = TrainAdvancedMarineUnit2ID;
+    //TrainTridentMinutemanMarine2ID
+    objective = TrainTridentMinutemanMarine2ID;
     isObjectiveComponent.set(objective);
 
     P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
       objective,
-      TrainAdvancedMarineUnitID
+      TrainTridentMinutemanMarineID
     );
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
-    resourceRewards.resources[0] = AdvancedMarineUnit;
+    resourceRewards.resources[0] = TridentMinutemanMarine;
     resourceRewards.values[0] = 100;
     P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(objective, resourceRewards);
 
@@ -526,15 +526,15 @@ library LibInitObjectives {
     resourceRewards.values[0] = 100000;
     P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
 
-    //TrainAdvancedMarineUnit3ID
-    objective = TrainAdvancedMarineUnit2ID;
+    //TrainTridentMinutemanMarine3ID
+    objective = TrainTridentMinutemanMarine2ID;
     isObjectiveComponent.set(objective);
     P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
       objective,
-      TrainAdvancedMarineUnit2ID
+      TrainTridentMinutemanMarine2ID
     );
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
-    resourceRewards.resources[0] = AdvancedMarineUnit;
+    resourceRewards.resources[0] = TridentMinutemanMarine;
     resourceRewards.values[0] = 200;
     P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(objective, resourceRewards);
 

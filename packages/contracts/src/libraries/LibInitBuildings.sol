@@ -1810,23 +1810,23 @@ library LibInitBuildings {
     uint256[] memory unitTypes;
     //Level 1
     unitTypes = new uint256[](1);
-    unitTypes[0] = MarineUnit;
+    unitTypes[0] = MinutemanMarine;
     allUnitTypes[0] = unitTypes;
     //Level 2
     unitTypes = new uint256[](2);
-    unitTypes[0] = MarineUnit;
-    unitTypes[1] = AdvancedMarineUnit;
+    unitTypes[0] = MinutemanMarine;
+    unitTypes[1] = TridentMinutemanMarine;
     allUnitTypes[1] = unitTypes;
 
     //Level 3
     unitTypes = new uint256[](2);
-    unitTypes[0] = MarineUnit;
-    unitTypes[1] = AdvancedMarineUnit;
+    unitTypes[0] = MinutemanMarine;
+    unitTypes[1] = TridentMinutemanMarine;
     allUnitTypes[2] = unitTypes;
     //Level 4
     unitTypes = new uint256[](2);
-    unitTypes[0] = MarineUnit;
-    unitTypes[1] = AdvancedMarineUnit;
+    unitTypes[0] = MinutemanMarine;
+    unitTypes[1] = TridentMinutemanMarine;
     allUnitTypes[3] = unitTypes;
 
     /* ***********************Set Values ************************* */

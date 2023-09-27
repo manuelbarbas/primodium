@@ -50,85 +50,85 @@ library LibInitResearch {
   }
 
   function initMarineUpgrades(IWorld world) internal {
-    uint256 unitType = MarineUnit;
+    uint256 unitType = MinutemanMarine;
     ResourceValue[] memory requiredResources = new ResourceValue[](1);
     uint32 mainBaseLevel;
 
-    // MarineUnit I:
+    // MinutemanMarine I:
     requiredResources = new ResourceValue[](2);
     requiredResources[0] = ResourceValue({ resource: SulfurResourceItemID, value: 500000 });
     requiredResources[1] = ResourceValue({ resource: IronResourceItemID, value: 500000 });
     mainBaseLevel = 1;
-    initUnitUpgrade(world, MarineUnitUpgrade, unitType, 1, mainBaseLevel, requiredResources);
+    initUnitUpgrade(world, MinutemanMarineUpgrade, unitType, 1, mainBaseLevel, requiredResources);
 
-    // MarineUnit II:
+    // MinutemanMarine II:
     requiredResources = new ResourceValue[](2);
     requiredResources[0] = ResourceValue({ resource: SulfurResourceItemID, value: 5000000 });
     requiredResources[1] = ResourceValue({ resource: IronResourceItemID, value: 5000000 });
     mainBaseLevel = 2;
-    initUnitUpgrade(world, MarineUnitUpgrade2, unitType, 2, mainBaseLevel, requiredResources);
+    initUnitUpgrade(world, MinutemanMarineUpgrade2, unitType, 2, mainBaseLevel, requiredResources);
 
-    // MarineUnit III:
+    // MinutemanMarine III:
     requiredResources = new ResourceValue[](2);
     requiredResources[0] = ResourceValue({ resource: SulfurResourceItemID, value: 10000000 });
     requiredResources[1] = ResourceValue({ resource: IronResourceItemID, value: 10000000 });
     mainBaseLevel = 3;
-    initUnitUpgrade(world, MarineUnitUpgrade3, unitType, 3, mainBaseLevel, requiredResources);
+    initUnitUpgrade(world, MinutemanMarineUpgrade3, unitType, 3, mainBaseLevel, requiredResources);
 
-    // MarineUnit IV:
+    // MinutemanMarine IV:
     requiredResources = new ResourceValue[](2);
     requiredResources[0] = ResourceValue({ resource: SulfurResourceItemID, value: 25000000 });
     requiredResources[1] = ResourceValue({ resource: IronResourceItemID, value: 25000000 });
     mainBaseLevel = 4;
-    initUnitUpgrade(world, MarineUnitUpgrade4, unitType, 4, mainBaseLevel, requiredResources);
+    initUnitUpgrade(world, MinutemanMarineUpgrade4, unitType, 4, mainBaseLevel, requiredResources);
 
-    // MarineUnit V:
+    // MinutemanMarine V:
     requiredResources = new ResourceValue[](2);
     requiredResources[0] = ResourceValue({ resource: SulfurResourceItemID, value: 50000000 });
     requiredResources[1] = ResourceValue({ resource: IronResourceItemID, value: 50000000 });
     mainBaseLevel = 5;
-    initUnitUpgrade(world, MarineUnitUpgrade5, unitType, 5, mainBaseLevel, requiredResources);
+    initUnitUpgrade(world, MinutemanMarineUpgrade5, unitType, 5, mainBaseLevel, requiredResources);
   }
 
   function initAdvancedMarineUpgrades(IWorld world) internal {
-    uint256 unitType = AdvancedMarineUnit;
+    uint256 unitType = TridentMinutemanMarine;
     ResourceValue[] memory requiredResources = new ResourceValue[](1);
     uint32 mainBaseLevel;
 
-    // AdvancedMarineUnit I:
+    // TridentMinutemanMarine I:
     requiredResources = new ResourceValue[](2);
     requiredResources[0] = ResourceValue({ resource: LithiumResourceItemID, value: 500000 });
     requiredResources[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 500000 });
     mainBaseLevel = 1;
-    initUnitUpgrade(world, AdvancedMarineUnitUpgrade, unitType, 1, mainBaseLevel, requiredResources);
+    initUnitUpgrade(world, TridentMinutemanMarineUpgrade, unitType, 1, mainBaseLevel, requiredResources);
 
-    // AdvancedMarineUnit II:
+    // TridentMinutemanMarine II:
     requiredResources = new ResourceValue[](2);
     requiredResources[0] = ResourceValue({ resource: LithiumResourceItemID, value: 5000000 });
     requiredResources[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 5000000 });
     mainBaseLevel = 2;
-    initUnitUpgrade(world, AdvancedMarineUnitUpgrade2, unitType, 2, mainBaseLevel, requiredResources);
+    initUnitUpgrade(world, TridentMinutemanMarineUpgrade2, unitType, 2, mainBaseLevel, requiredResources);
 
-    // AdvancedMarineUnit III:
+    // TridentMinutemanMarine III:
     requiredResources = new ResourceValue[](2);
     requiredResources[0] = ResourceValue({ resource: LithiumResourceItemID, value: 10000000 });
     requiredResources[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 10000000 });
     mainBaseLevel = 3;
-    initUnitUpgrade(world, AdvancedMarineUnitUpgrade3, unitType, 3, mainBaseLevel, requiredResources);
+    initUnitUpgrade(world, TridentMinutemanMarineUpgrade3, unitType, 3, mainBaseLevel, requiredResources);
 
-    // AdvancedMarineUnit IV:
+    // TridentMinutemanMarine IV:
     requiredResources = new ResourceValue[](2);
     requiredResources[0] = ResourceValue({ resource: LithiumResourceItemID, value: 25000000 });
     requiredResources[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 25000000 });
     mainBaseLevel = 4;
-    initUnitUpgrade(world, AdvancedMarineUnitUpgrade4, unitType, 4, mainBaseLevel, requiredResources);
+    initUnitUpgrade(world, TridentMinutemanMarineUpgrade4, unitType, 4, mainBaseLevel, requiredResources);
 
-    // AdvancedMarineUnit V:
+    // TridentMinutemanMarine V:
     requiredResources = new ResourceValue[](2);
     requiredResources[0] = ResourceValue({ resource: LithiumResourceItemID, value: 50000000 });
     requiredResources[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 50000000 });
     mainBaseLevel = 5;
-    initUnitUpgrade(world, AdvancedMarineUnitUpgrade5, unitType, 5, mainBaseLevel, requiredResources);
+    initUnitUpgrade(world, TridentMinutemanMarineUpgrade5, unitType, 5, mainBaseLevel, requiredResources);
   }
 
   // In the current design, MiningResearch increases the number of MiningVessels a player can have

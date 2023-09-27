@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-uint256 constant MarineUnit = uint256(keccak256("unit.MarineUnit"));
-uint256 constant AdvancedMarineUnit = uint256(keccak256("unit.AdvancedMarineUnit"));
+uint256 constant MinutemanMarine = uint256(keccak256("unit.MinutemanMarine"));
+uint256 constant TridentMinutemanMarine = uint256(keccak256("unit.TridentMinutemanMarine"));
 uint256 constant MiningVessel = uint256(keccak256("unit.MiningVessel"));
 uint256 constant AegisDrone = uint256(keccak256("unit.AegisDrone"));
 uint256 constant HammerDrone = uint256(keccak256("unit.HammerDrone"));

@@ -220,7 +220,7 @@ library LibInitUnits {
   }
 
   function initMarine(IWorld world) internal {
-    uint256 unitType = MarineUnit;
+    uint256 unitType = MinutemanMarine;
     P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).set(unitType);
 
     uint32 maxLevel = 6;
@@ -363,7 +363,7 @@ library LibInitUnits {
   }
 
   function initAdvancedMarine(IWorld world) internal {
-    uint256 unitType = AdvancedMarineUnit;
+    uint256 unitType = TridentMinutemanMarine;
     P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).set(unitType);
 
     uint32 maxLevel = 6;

@@ -265,38 +265,38 @@ export const MiningVesselUpgradeTree: ResearchItemType = {
   ],
 };
 
-export const MarineUnitUpgradeTree: ResearchItemType = {
+export const MinutemanMarineUpgradeTree: ResearchItemType = {
   name: "Marine Unit Unit Upgrade",
-  id: BlockType.MarineUnitUpgrade1,
+  id: BlockType.MinutemanMarineUpgrade1,
   description: "Increases the Marine Unit's Mining Power by 1. ",
 
   levels: [
     {
-      id: BlockType.MarineUnitUpgrade1,
+      id: BlockType.MinutemanMarineUpgrade1,
       subtitle: "Level 1",
       description:
         "Upgrades the Attack and Defence attributes of Marine units.",
     },
     {
-      id: BlockType.MarineUnitUpgrade2,
+      id: BlockType.MinutemanMarineUpgrade2,
       subtitle: "Level 2",
       description:
         "Upgrades the Attack and Defence attributes of Marine units.",
     },
     {
-      id: BlockType.MarineUnitUpgrade3,
+      id: BlockType.MinutemanMarineUpgrade3,
       subtitle: "Level 3",
       description:
         "Upgrades the Attack and Defence attributes of Marine units.",
     },
     {
-      id: BlockType.MarineUnitUpgrade4,
+      id: BlockType.MinutemanMarineUpgrade4,
       subtitle: "Level 4",
       description:
         "Upgrades the Attack and Defence attributes of Marine units.",
     },
     {
-      id: BlockType.MarineUnitUpgrade5,
+      id: BlockType.MinutemanMarineUpgrade5,
       subtitle: "Level 5",
       description:
         "Upgrades the Attack and Defence attributes of Marine units.",
@@ -304,38 +304,38 @@ export const MarineUnitUpgradeTree: ResearchItemType = {
   ],
 };
 
-export const AdvancedMarineUnitUpgradeTree: ResearchItemType = {
+export const TridentMinutemanMarineUpgradeTree: ResearchItemType = {
   name: "AdvancedMarine Unit Unit Upgrade",
-  id: BlockType.AdvancedMarineUnitUpgrade1,
+  id: BlockType.TridentMinutemanMarineUpgrade1,
   description: "Increases the AdvancedMarine Unit's Mining Power by 1. ",
 
   levels: [
     {
-      id: BlockType.AdvancedMarineUnitUpgrade1,
+      id: BlockType.TridentMinutemanMarineUpgrade1,
       subtitle: "Level 1",
       description:
         "Upgrades the Attack and Defence attributes of AdvancedMarine units.",
     },
     {
-      id: BlockType.AdvancedMarineUnitUpgrade2,
+      id: BlockType.TridentMinutemanMarineUpgrade2,
       subtitle: "Level 2",
       description:
         "Upgrades the Attack and Defence attributes of AdvancedMarine units.",
     },
     {
-      id: BlockType.AdvancedMarineUnitUpgrade3,
+      id: BlockType.TridentMinutemanMarineUpgrade3,
       subtitle: "Level 3",
       description:
         "Upgrades the Attack and Defence attributes of AdvancedMarine units.",
     },
     {
-      id: BlockType.AdvancedMarineUnitUpgrade4,
+      id: BlockType.TridentMinutemanMarineUpgrade4,
       subtitle: "Level 4",
       description:
         "Upgrades the Attack and Defence attributes of AdvancedMarine units.",
     },
     {
-      id: BlockType.AdvancedMarineUnitUpgrade5,
+      id: BlockType.TridentMinutemanMarineUpgrade5,
       subtitle: "Level 5",
       description:
         "Upgrades the Attack and Defence attributes of AdvancedMarine units.",
@@ -353,8 +353,8 @@ export const ResearchTree: ResearchTreeType = [
   {
     category: "Unit Upgrade Research",
     data: [
-      MarineUnitUpgradeTree,
-      AdvancedMarineUnitUpgradeTree,
+      MinutemanMarineUpgradeTree,
+      TridentMinutemanMarineUpgradeTree,
       AnvilDroneUpgradeTree,
       HammerDroneUpgradeTree,
       AegisDroneUpgradeTree,
