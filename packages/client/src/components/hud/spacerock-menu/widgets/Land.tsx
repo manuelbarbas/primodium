@@ -23,7 +23,7 @@ export const Land: React.FC<{
     from: player,
     onlyOrbiting: true,
     destination: destination,
-  });
+  }).filter((elem) => elem?.sendType !== ESendType.REINFORCE);
 
   const isNeutral = destinationOwner === player || !destinationOwner;
 

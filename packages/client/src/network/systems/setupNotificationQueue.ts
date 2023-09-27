@@ -33,7 +33,7 @@ export function setupNotificationQueue() {
 
       NotificationQueue.addNotification(newNotification);
 
-      toast.warning(
+      toast.info(
         "A battle has taken place. View Battle Reports for more info..."
       );
     }
@@ -97,7 +97,7 @@ export function setupNotificationQueue() {
         NotificationQueue.addNotification(newNotification);
         orbitingQueue.delete(entityId);
 
-        toast.warning(
+        toast.info(
           `Your fleet has arrived at its destination. Awaiting your command...`
         );
       }
