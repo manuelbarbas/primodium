@@ -4,7 +4,7 @@ pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 
 // Components
-
+import { P_MotherlodeMinedRequirementComponent, ID as P_MotherlodeMinedRequirementComponentID } from "components/P_MotherlodeMinedRequirementComponent.sol";
 import { P_IsObjectiveComponent, ID as P_IsObjectiveComponentID } from "components/P_IsObjectiveComponent.sol";
 import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 import { P_RequiredResearchComponent, ID as P_RequiredResearchComponentID } from "components/P_RequiredResearchComponent.sol";
@@ -595,5 +595,252 @@ library LibInitObjectives {
     resourceRewards.resources[0] = SulfurResourceItemID;
     resourceRewards.values[0] = 100000;
     P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
+  }
+
+  function initMotherlodeMiningObjectives(IWorld world) internal {
+    P_IsObjectiveComponent isObjectiveComponent = P_IsObjectiveComponent(world.getComponent(P_IsObjectiveComponentID));
+
+    uint256 objective;
+    ResourceValues memory resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+
+    //MineTitanium1ID
+    objective = MineTitanium1ID;
+    isObjectiveComponent.set(objective);
+    LevelComponent(world.getComponent(LevelComponentID)).set(objective, 4);
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = TitaniumResourceItemID;
+    resourceRewards.values[0] = 100000;
+    P_MotherlodeMinedRequirementComponent(world.getComponent(P_MotherlodeMinedRequirementComponentID)).set(
+      objective,
+      resourceRewards
+    );
+
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = AnvilDrone;
+    resourceRewards.values[0] = 30;
+    P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
+
+    //MineTitanium2ID
+    objective = MineTitanium2ID;
+    isObjectiveComponent.set(objective);
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      MineTitanium1ID
+    );
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = TitaniumResourceItemID;
+    resourceRewards.values[0] = 300000;
+    P_MotherlodeMinedRequirementComponent(world.getComponent(P_MotherlodeMinedRequirementComponentID)).set(
+      objective,
+      resourceRewards
+    );
+
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = AnvilDrone;
+    resourceRewards.values[0] = 100;
+    P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
+
+    //MineTitanium3ID
+    objective = MineTitanium3ID;
+    isObjectiveComponent.set(objective);
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      MineTitanium2ID
+    );
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = TitaniumResourceItemID;
+    resourceRewards.values[0] = 1000000;
+    P_MotherlodeMinedRequirementComponent(world.getComponent(P_MotherlodeMinedRequirementComponentID)).set(
+      objective,
+      resourceRewards
+    );
+
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = AnvilDrone;
+    resourceRewards.values[0] = 250;
+    P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
+
+    //MinePlatinum1ID
+    objective = MinePlatinum1ID;
+    isObjectiveComponent.set(objective);
+    LevelComponent(world.getComponent(LevelComponentID)).set(objective, 4);
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = PlatinumResourceItemID;
+    resourceRewards.values[0] = 100000;
+    P_MotherlodeMinedRequirementComponent(world.getComponent(P_MotherlodeMinedRequirementComponentID)).set(
+      objective,
+      resourceRewards
+    );
+
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = HammerDrone;
+    resourceRewards.values[0] = 30;
+    P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
+
+    //MinePlatinum2ID
+    objective = MinePlatinum2ID;
+    isObjectiveComponent.set(objective);
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      MinePlatinum1ID
+    );
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = PlatinumResourceItemID;
+    resourceRewards.values[0] = 300000;
+    P_MotherlodeMinedRequirementComponent(world.getComponent(P_MotherlodeMinedRequirementComponentID)).set(
+      objective,
+      resourceRewards
+    );
+
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = HammerDrone;
+    resourceRewards.values[0] = 100;
+    P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
+
+    //MinePlatinum3ID
+    objective = MinePlatinum3ID;
+    isObjectiveComponent.set(objective);
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      MinePlatinum2ID
+    );
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = PlatinumResourceItemID;
+    resourceRewards.values[0] = 1000000;
+    P_MotherlodeMinedRequirementComponent(world.getComponent(P_MotherlodeMinedRequirementComponentID)).set(
+      objective,
+      resourceRewards
+    );
+
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = HammerDrone;
+    resourceRewards.values[0] = 250;
+    P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
+
+    //MineIridium1ID
+    objective = MineIridium1ID;
+    isObjectiveComponent.set(objective);
+    LevelComponent(world.getComponent(LevelComponentID)).set(objective, 4);
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = IridiumResourceItemID;
+    resourceRewards.values[0] = 100000;
+    P_MotherlodeMinedRequirementComponent(world.getComponent(P_MotherlodeMinedRequirementComponentID)).set(
+      objective,
+      resourceRewards
+    );
+
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = AegisDrone;
+    resourceRewards.values[0] = 30;
+    P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
+
+    //MineIridium2ID
+    objective = MineIridium2ID;
+    isObjectiveComponent.set(objective);
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      MineIridium1ID
+    );
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = IridiumResourceItemID;
+    resourceRewards.values[0] = 300000;
+    P_MotherlodeMinedRequirementComponent(world.getComponent(P_MotherlodeMinedRequirementComponentID)).set(
+      objective,
+      resourceRewards
+    );
+
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = AegisDrone;
+    resourceRewards.values[0] = 100;
+    P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
+
+    //MineIridium3ID
+    objective = MineIridium3ID;
+    isObjectiveComponent.set(objective);
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      MineIridium2ID
+    );
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = IridiumResourceItemID;
+    resourceRewards.values[0] = 1000000;
+    P_MotherlodeMinedRequirementComponent(world.getComponent(P_MotherlodeMinedRequirementComponentID)).set(
+      objective,
+      resourceRewards
+    );
+
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = AegisDrone;
+    resourceRewards.values[0] = 250;
+    P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
+
+    //MineKimberlite1ID
+    objective = MineKimberlite1ID;
+    isObjectiveComponent.set(objective);
+    LevelComponent(world.getComponent(LevelComponentID)).set(objective, 4);
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = KimberliteResourceItemID;
+    resourceRewards.values[0] = 100000;
+    P_MotherlodeMinedRequirementComponent(world.getComponent(P_MotherlodeMinedRequirementComponentID)).set(
+      objective,
+      resourceRewards
+    );
+
+    resourceRewards = ResourceValues(new uint256[](3), new uint32[](3));
+    resourceRewards.resources[0] = AnvilDrone;
+    resourceRewards.values[0] = 15;
+    resourceRewards.resources[1] = HammerDrone;
+    resourceRewards.values[1] = 15;
+    resourceRewards.resources[2] = AegisDrone;
+    resourceRewards.values[2] = 15;
+    P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
+
+    //MineKimberlite2ID
+    objective = MineKimberlite2ID;
+    isObjectiveComponent.set(objective);
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      MineKimberlite1ID
+    );
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = KimberliteResourceItemID;
+    resourceRewards.values[0] = 300000;
+    P_MotherlodeMinedRequirementComponent(world.getComponent(P_MotherlodeMinedRequirementComponentID)).set(
+      objective,
+      resourceRewards
+    );
+
+    resourceRewards = ResourceValues(new uint256[](3), new uint32[](3));
+    resourceRewards.resources[0] = AnvilDrone;
+    resourceRewards.values[0] = 50;
+    resourceRewards.resources[1] = HammerDrone;
+    resourceRewards.values[1] = 50;
+    resourceRewards.resources[2] = AegisDrone;
+    resourceRewards.values[2] = 50;
+    P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
+
+    //MineKimberlite3ID
+    objective = MineKimberlite3ID;
+    isObjectiveComponent.set(objective);
+    P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
+      objective,
+      MineKimberlite2ID
+    );
+    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards.resources[0] = KimberliteResourceItemID;
+    resourceRewards.values[0] = 1000000;
+    P_MotherlodeMinedRequirementComponent(world.getComponent(P_MotherlodeMinedRequirementComponentID)).set(
+      objective,
+      resourceRewards
+    );
+
+    resourceRewards = ResourceValues(new uint256[](3), new uint32[](3));
+    resourceRewards.resources[0] = AnvilDrone;
+    resourceRewards.values[0] = 100;
+    resourceRewards.resources[1] = HammerDrone;
+    resourceRewards.values[1] = 100;
+    resourceRewards.resources[2] = AegisDrone;
+    resourceRewards.values[2] = 100;
+    P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
   }
 }

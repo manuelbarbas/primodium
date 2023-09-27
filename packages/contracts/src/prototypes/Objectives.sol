@@ -48,3 +48,19 @@ uint256 constant ExpandBase5ID = uint256(keccak256("objective.ExpandBase5"));
 uint256 constant ExpandBase6ID = uint256(keccak256("objective.ExpandBase6"));
 
 uint256 constant RaiseIronPlateProductionID = uint256(keccak256("objective.RaiseIronPlateProduction"));
+
+uint256 constant MineTitanium1ID = uint256(keccak256("objective.MineTitanium1"));
+uint256 constant MineTitanium2ID = uint256(keccak256("objective.MineTitanium2"));
+uint256 constant MineTitanium3ID = uint256(keccak256("objective.MineTitanium3"));
+
+uint256 constant MinePlatinum1ID = uint256(keccak256("objective.MinePlatinum1"));
+uint256 constant MinePlatinum2ID = uint256(keccak256("objective.MinePlatinum2"));
+uint256 constant MinePlatinum3ID = uint256(keccak256("objective.MinePlatinum3"));
+
+uint256 constant MineIridium1ID = uint256(keccak256("objective.MineIridium1"));
+uint256 constant MineIridium2ID = uint256(keccak256("objective.MineIridium2"));
+uint256 constant MineIridium3ID = uint256(keccak256("objective.MineIridium3"));
+
+uint256 constant MineKimberlite1ID = uint256(keccak256("objective.MineKimberlite1"));
+uint256 constant MineKimberlite2ID = uint256(keccak256("objective.MineKimberlite2"));
+uint256 constant MineKimberlite3ID = uint256(keccak256("objective.MineKimberlite3"));
