@@ -55,7 +55,7 @@ library LibUnit {
         stillClaiming = false;
       }
       startTime += trainingTime * trainedUnits;
-      addUnitsToAsteroid(playerEntity, Home.getAsteroid(playerEntity), item.unitId, trainedUnits);
+      increaseUnitCount(playerEntity, Home.getAsteroid(playerEntity), item.unitId, trainedUnits);
     }
   }
 
@@ -75,22 +75,6 @@ library LibUnit {
     uint256 rawTrainingTime = P_Unit.getTrainingTime(unitPrototype, unitLevel);
     require(rawTrainingTime > 0 && multiplier > 0, "Training time is invalid");
     return (rawTrainingTime * 100) / multiplier;
-  }
-
-  /// @notice Add units to an asteroid
-  /// @param playerEntity Entity ID of the player
-  /// @param asteroid Entity ID of the asteroid
-  /// @param unitPrototype Unit prototype to add
-  /// @param quantity Number of units to add
-  function addUnitsToAsteroid(
-    bytes32 playerEntity,
-    bytes32 asteroid,
-    bytes32 unitPrototype,
-    uint256 quantity
-  ) internal {
-    if (quantity == 0) return;
-    uint256 prevUnitCount = UnitCount.get(playerEntity, asteroid, unitPrototype);
-    UnitCount.set(playerEntity, asteroid, unitPrototype, prevUnitCount + quantity);
   }
 
   /**
@@ -129,6 +113,24 @@ library LibUnit {
         ResourceCount.set(playerEntity, resource, 0);
       }
     }
+  }
+
+  /**
+   * @dev Increases the count of a specific unit type for a player's rock entity.
+   * @param playerEntity The identifier of the player.
+   * @param rockEntity The identifier of the player's rock entity.
+   * @param unitType The type of unit to increase.
+   * @param unitCount The number of units to increase.
+   */
+  function increaseUnitCount(
+    bytes32 playerEntity,
+    bytes32 rockEntity,
+    bytes32 unitType,
+    uint256 unitCount
+  ) internal {
+    if (unitCount == 0) return;
+    uint256 prevUnitCount = UnitCount.get(playerEntity, asteroid, unitPrototype);
+    UnitCount.set(playerEntity, asteroid, unitPrototype, prevUnitCount + quantity);
   }
 
   /**

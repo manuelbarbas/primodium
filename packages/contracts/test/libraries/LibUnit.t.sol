@@ -162,12 +162,12 @@ contract LibUnitTest is PrimodiumTest {
     assertEq(LibUnit.getUnitBuildTime(player, building, unitPrototype), 200);
   }
 
-  function testAddUnitsToAsteroid() public {
+  function testincreaseUnitCount() public {
     UnitCount.set(player, Home.getAsteroid(player), unit, 50);
     P_GameConfig.setUnitProductionRate(100);
     QueueItemUnitsData memory item = QueueItemUnitsData(unit, 100);
     UnitProductionQueue.enqueue(building, item);
-    LibUnit.addUnitsToAsteroid(player, Home.getAsteroid(player), unit, 100);
+    LibUnit.increaseUnitCount(player, Home.getAsteroid(player), unit, 100);
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unit), 150);
   }
 

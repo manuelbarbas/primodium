@@ -52,7 +52,7 @@ library LibInvade {
     bytes32[] memory unitTypes = P_UnitPrototypes.get();
     (uint256[] memory attackCounts, , ) = LibBattle.getAttackPoints(invader, rockEntity, ESendType.Invade);
     for (uint256 i = 0; i < unitTypes.length; i++) {
-      LibUnit.addUnitsToAsteroid(invader, rockEntity, unitTypes[i], attackCounts[i]);
+      LibUnit.increaseUnitCount(invader, rockEntity, unitTypes[i], attackCounts[i]);
     }
   }
 }
