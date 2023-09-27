@@ -1,5 +1,18 @@
+import {
+  Component,
+  ComponentUpdate,
+  Metadata,
+  QueryFragment,
+  Schema,
+  defineComponentSystem,
+  defineEnterSystem,
+  defineExitSystem,
+  defineUpdateSystem,
+  namespaceWorld,
+} from "@latticexyz/recs";
 import { Coord, uuid } from "@latticexyz/utils";
 import { GameObjectComponent, GameObjectTypes } from "engine/types";
+import { world } from "src/network/world";
 
 type GameObjectInstances = {
   [K in keyof GameObjectTypes]: InstanceType<GameObjectTypes[K]>;
@@ -53,6 +66,135 @@ export const OnClick = <T extends keyof GameObjectTypes>(
       gameObject.on("pointerdown", () => {
         callback(gameObject as GameObjectInstances[T]);
       });
+    },
+  };
+};
+
+export const OnHover = <T extends keyof GameObjectTypes>(
+  callback: (gameObject?: GameObjectInstances[T]) => void
+): GameObjectComponent<T> => {
+  return {
+    id: uuid(),
+    once: (gameObject) => {
+      gameObject.setInteractive();
+      gameObject.on("pointerover", () => {
+        callback(gameObject as GameObjectInstances[T]);
+      });
+    },
+  };
+};
+
+export const OnComponentSystem = <
+  T extends keyof GameObjectTypes,
+  S extends Schema
+>(
+  component: Component<S, Metadata, undefined>,
+  callback: (
+    gameObject: GameObjectInstances[T],
+    update: ComponentUpdate<S>
+  ) => void,
+  options?: { runOnInit?: boolean }
+): GameObjectComponent<T> => {
+  const id = uuid();
+  const entityWorld = namespaceWorld(world, id);
+  return {
+    id,
+    once: (gameObject) => {
+      defineComponentSystem(
+        entityWorld,
+        component,
+        (update) => {
+          callback(gameObject as GameObjectInstances[T], update);
+        },
+        options
+      );
+    },
+    exit: () => {
+      entityWorld.dispose();
+    },
+  };
+};
+
+export const OnEnterSystem = <T extends keyof GameObjectTypes>(
+  query: QueryFragment[],
+  callback: (
+    gameObject: GameObjectInstances[T],
+    update: ComponentUpdate
+  ) => void,
+  options?: { runOnInit?: boolean }
+): GameObjectComponent<T> => {
+  const id = uuid();
+  const entityWorld = namespaceWorld(world, id);
+  return {
+    id,
+    once: (gameObject) => {
+      defineEnterSystem(
+        world,
+        query,
+        (update) => {
+          callback(gameObject as GameObjectInstances[T], update);
+        },
+        options
+      );
+    },
+    exit: () => {
+      entityWorld.dispose();
+    },
+  };
+};
+
+export const OnUpdateSystem = <T extends keyof GameObjectTypes>(
+  query: QueryFragment[],
+  callback: (
+    gameObject: GameObjectInstances[T],
+    update: ComponentUpdate
+  ) => void,
+  options?: { runOnInit?: boolean }
+): GameObjectComponent<T> => {
+  const id = uuid();
+  const entityWorld = namespaceWorld(world, id);
+  return {
+    id,
+    once: (gameObject) => {
+      defineUpdateSystem(
+        world,
+        query,
+        (update) => {
+          callback(gameObject as GameObjectInstances[T], update);
+        },
+        options
+      );
+    },
+    exit: () => {
+      entityWorld.dispose();
+    },
+  };
+};
+
+export const OnExitSystem = <T extends keyof GameObjectTypes>(
+  query: QueryFragment[],
+  callback: (
+    gameObject: GameObjectInstances[T],
+    update: ComponentUpdate
+  ) => void,
+  options?: { runOnInit?: boolean }
+): GameObjectComponent<T> => {
+  const id = uuid();
+  const entityWorld = namespaceWorld(world, id);
+  return {
+    id,
+    once: (gameObject) => {
+      defineExitSystem(
+        world,
+        query,
+        (update) => {
+          callback(gameObject as GameObjectInstances[T], update);
+        },
+        options
+      );
+    },
+    exit: () => {
+      entityWorld.dispose();
     },
   };
 };

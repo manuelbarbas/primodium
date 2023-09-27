@@ -1,19 +1,14 @@
 import { execute } from "src/network/actions";
 import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
-import { useNotificationStore } from "src/store/NotificationStore";
-import {
-  Account,
-  ActiveAsteroid,
-} from "src/network/components/clientComponents";
+import { Account, HomeAsteroid } from "src/network/components/clientComponents";
 
 export const updateSpaceRock = async (network: Network) => {
   const { providers, systems } = network;
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
-  const setNotification = useNotificationStore.getState().setNotification;
 
   // todo: find a cleaner way to extract this value in all web3 functions
-  const activeAsteroid = ActiveAsteroid.get()?.value;
+  const activeAsteroid = HomeAsteroid.get()?.value;
   const address = Account.get()?.value;
   if (!activeAsteroid || !address) return;
 
@@ -27,11 +22,9 @@ export const updateSpaceRock = async (network: Network) => {
           gasLimit: 10_000_000,
         }
       ),
-      providers,
-      setNotification
+      providers
     );
   } finally {
+    setTransactionLoading(false);
   }
-
-  setTransactionLoading(false);
 };

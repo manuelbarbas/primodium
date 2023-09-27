@@ -7,9 +7,10 @@ import {
   BlockNumber,
 } from "../components/clientComponents"; // Update with actual Battle and Player component imports
 import { Notification } from "../components/customComponents/NotificationQueueComponent";
-import { Arrival, LoadingState } from "../components/chainComponents";
-import { SyncState } from "@latticexyz/network";
+import { Arrival, LoadingState, Position } from "../components/chainComponents";
+import { SingletonID, SyncState } from "@latticexyz/network";
 import { uuid } from "@latticexyz/utils";
+import { toast } from "react-toastify";
 
 const LENGTH = 3500;
 
@@ -31,6 +32,10 @@ export function setupNotificationQueue() {
       };
 
       NotificationQueue.addNotification(newNotification);
+
+      toast.info(
+        "A battle has taken place. View Battle Reports for more info..."
+      );
     }
   });
 
@@ -59,6 +64,14 @@ export function setupNotificationQueue() {
 
     NotificationQueue.addNotification(newNotification);
     orbitingQueue.set(entityId, Number(arrival.arrivalBlock));
+
+    const coord = Position.get(arrival.destination, {
+      x: 0,
+      y: 0,
+      parent: SingletonID,
+    });
+
+    toast.info(`Your fleet on its way to [${coord.x}, ${coord.y}]`);
   });
 
   defineComponentSystem(world, BlockNumber, ({ value: [block] }) => {
@@ -83,6 +96,10 @@ export function setupNotificationQueue() {
 
         NotificationQueue.addNotification(newNotification);
         orbitingQueue.delete(entityId);
+
+        toast.info(
+          `Your fleet has arrived at its destination. Awaiting your command...`
+        );
       }
     });
   });

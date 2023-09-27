@@ -6,7 +6,7 @@ import { mountStoreDevtool } from "simple-zustand-devtools";
 import { KeybindActions } from "@game/constants";
 import { Key } from "engine/types";
 
-const VERSION = 2;
+const VERSION = 3;
 
 type Keybinds = Partial<{
   [key in KeybindActions]: Set<Key>;
@@ -52,6 +52,7 @@ const defaults: SettingsState = {
     [KeybindActions.Esc]: new Set(["ESC"]),
     [KeybindActions.Inventory]: new Set(["I", "TAB"]),
     [KeybindActions.Research]: new Set(["R"]),
+    [KeybindActions.Map]: new Set(["M"]),
   },
 };
 
@@ -97,7 +98,7 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
           }>;
 
           for (const _action in keybinds) {
-            let action = parseInt(_action) as KeybindActions;
+            const action = parseInt(_action) as KeybindActions;
             const array = keybinds[action];
             const set = new Set(array);
             result[action] = set;
@@ -119,7 +120,7 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
           const version = value.version;
 
           for (const _action in keybinds) {
-            let action = parseInt(_action) as KeybindActions;
+            const action = parseInt(_action) as KeybindActions;
             const set = keybinds[action];
 
             if (!set) continue;

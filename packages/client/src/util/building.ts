@@ -1,12 +1,28 @@
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import {
+  BuildingType,
+  Level,
+  Position,
+  P_MaxLevel,
+  P_MaxMoves,
+  P_MaxStorage,
+  P_Production,
   P_RequiredTile,
+  P_UnitProductionMultiplier,
+  P_UtilityProductionComponent as P_UtilityProduction,
   RawBlueprint,
 } from "src/network/components/chainComponents";
 import { getBuildingAtCoord, getResourceKey } from "./tile";
 import { Account } from "src/network/components/clientComponents";
 import { outOfBounds } from "./outOfBounds";
+import { clampedIndex, getBlockTypeName, toRomanNumeral } from "./common";
+import { ResourceType, ResourceStorages, BlockType } from "./constants";
+import { hashAndTrimKeyEntity } from "./encode";
+import { getRecipe, getRecipeDifference } from "./resource";
+import { SingletonID } from "@latticexyz/network";
+import { EntityIDtoSpriteKey } from "@game/constants";
+import { primodium } from "@game/api";
 
 type Dimensions = { width: number; height: number };
 export const blueprintCache = new Map<EntityID, Dimensions>();
@@ -104,12 +120,134 @@ export const validateBuildingPlacement = (coord: Coord, bulding: EntityID) => {
   for (let x = 0; x < buildingDimensions.width; x++) {
     for (let y = 0; y < buildingDimensions.height; y++) {
       const buildingCoord = { x: coord.x + x, y: coord.y - y };
-      if (getBuildingAtCoord(buildingCoord)) return true;
-      if (outOfBounds(buildingCoord, player)) return true;
+      if (getBuildingAtCoord(buildingCoord)) return false;
+      if (outOfBounds(buildingCoord, player)) return false;
       if (requiredTile && requiredTile !== getResourceKey(buildingCoord))
-        return true;
+        return false;
     }
   }
 
-  return false;
+  return true;
+};
+
+export const getBuildingName = (building: EntityID) => {
+  const buildingType = BuildingType.get(building)?.value;
+  const level = Level.get(building)?.value ?? 1;
+
+  if (!buildingType) return null;
+
+  return `${getBlockTypeName(buildingType)} ${toRomanNumeral(level)}`;
+};
+
+export const getBuildingStorages = (building: EntityID) => {
+  const resourceStorages = ResourceStorages.map((resourceId) => {
+    const buildingResourceEntity = hashAndTrimKeyEntity(resourceId, building);
+    const storage = P_MaxStorage.get(buildingResourceEntity)?.value;
+
+    if (!storage) return null;
+
+    return {
+      resourceId,
+      resourceType: ResourceType.Resource,
+      amount: storage,
+    };
+  });
+
+  const utilityProduction = P_UtilityProduction.get(building);
+
+  const utilityStorage = utilityProduction
+    ? {
+        resourceId: utilityProduction.ResourceID,
+        resourceType: ResourceType.Utility,
+        amount: utilityProduction.ResourceProduction,
+      }
+    : null;
+
+  const maxMoves = P_MaxMoves.get(building)?.value;
+
+  const moveStorage = maxMoves
+    ? {
+        resourceId: BlockType.FleetMoves,
+        resourceType: ResourceType.Utility,
+        amount: maxMoves,
+      }
+    : null;
+
+  return [...resourceStorages, utilityStorage, moveStorage].filter(
+    (storage) => !!storage
+  ) as {
+    resourceId: EntityID;
+    resourceType: ResourceType;
+    amount: number;
+  }[];
+};
+
+export const getBuildingInfo = (building: EntityID) => {
+  const { getSpriteBase64 } = primodium.api().sprite;
+  const buildingType = BuildingType.get(building)?.value ?? SingletonID;
+
+  const level = Level.get(building)?.value ?? 1;
+  const maxLevel = P_MaxLevel.get(buildingType)?.value ?? 1;
+  const nextLevel = Math.min(level + 1, maxLevel);
+
+  const buildingLevelEntity = hashAndTrimKeyEntity(buildingType, level);
+  const buildingNextLevelEntity = hashAndTrimKeyEntity(
+    buildingType,
+    Math.min(level + 1, maxLevel)
+  );
+
+  const production = P_Production.get(buildingLevelEntity);
+  const nextLevelProduction = P_Production.get(buildingNextLevelEntity);
+
+  const storages = getBuildingStorages(buildingLevelEntity);
+  const nextLevelStorages = getBuildingStorages(buildingNextLevelEntity);
+
+  const unitProductionMultiplier =
+    P_UnitProductionMultiplier.get(buildingLevelEntity)?.value;
+  const nextLevelUnitProductionMultiplier = P_UnitProductionMultiplier.get(
+    buildingNextLevelEntity
+  )?.value;
+
+  const upgradeRecipe = getRecipeDifference(
+    getRecipe(buildingNextLevelEntity),
+    getRecipe(buildingLevelEntity)
+  );
+
+  const mainBaseLvlReq =
+    Level.get(hashAndTrimKeyEntity(buildingType, nextLevel))?.value ?? 1;
+
+  let imageUri = "";
+  if (EntityIDtoSpriteKey[buildingType]) {
+    const imageIndex = parseInt(level ? level.toString() : "1") - 1;
+
+    imageUri = getSpriteBase64(
+      EntityIDtoSpriteKey[buildingType][
+        clampedIndex(imageIndex, EntityIDtoSpriteKey[buildingType].length)
+      ]
+    );
+  }
+
+  const position = Position.get(building) ?? { x: 0, y: 0 };
+
+  return {
+    buildingType,
+    level,
+    maxLevel,
+    nextLevel,
+    levelEntity: buildingLevelEntity,
+    buildingName: `${getBlockTypeName(buildingType)} ${toRomanNumeral(level)}`,
+    imageUri,
+    production,
+    storages,
+    position,
+    unitProductionMultiplier,
+    upgrade: {
+      production: nextLevelProduction,
+      storages: nextLevelStorages,
+      recipe: upgradeRecipe,
+      mainBaseLvlReq,
+      nextLevelEntity: buildingNextLevelEntity,
+      nextLevelUnitProductionMultiplier,
+    },
+  };
 };
