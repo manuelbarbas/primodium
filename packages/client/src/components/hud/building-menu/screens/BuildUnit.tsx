@@ -30,7 +30,7 @@ import { Navigator } from "src/components/core/Navigator";
 import { SecondaryCard } from "src/components/core/Card";
 import { Badge } from "src/components/core/Badge";
 
-export const BuildDrone: React.FC<{
+export const BuildUnit: React.FC<{
   building: EntityID;
 }> = ({ building }) => {
   const network = useMud();
@@ -97,7 +97,7 @@ export const BuildDrone: React.FC<{
 
   return (
     <Navigator.Screen
-      title="BuildDrone"
+      title="BuildUnit"
       className="relative flex flex-col  items-center text-white w-96"
     >
       <SecondaryCard className="pixel-images w-full pointer-events-auto">

@@ -122,7 +122,18 @@ export enum SpriteKeys {
 
   Hangar1 = "sprites/hangar/level1/Hangar1.png",
 
+  Garage1 = "sprites/garage/level1/Garage_LVL1_1.png",
+  Garage2 = "sprites/garage/level2/Garage_LVL2_1.png",
+
+  Workshop1 = "sprites/workshop/level1/Workshop_LVL1_1.png",
+  Workshop2 = "sprites/workshop/level2/Workshop_LVL2_1.png",
+  Workshop3 = "sprites/workshop/level3/Workshop_LVL1_3.png",
+
   DroneFactory1 = "sprites/drone-factory/normal/Drone_Factory1.png",
+
+  SAMLauncher1 = "sprites/sam_launcher/level1/SAM_Launcher_LVL1_1.png",
+  SAMLauncher2 = "sprites/sam_launcher/level2/SAM_Launcher_LVL2_1.png",
+  SAMLauncher3 = "sprites/sam_launcher/level3/SAM_Launcher_LVL3_1.png",
 
   //ASTEROIDS
   Asteroid1 = "sprites/spacerocks/asteroids/asteroid1.png",
@@ -201,7 +212,18 @@ export enum AnimationKeys {
 
   Hangar1 = "hangar/level1",
 
+  Garage1 = "garage/level1",
+  Garage2 = "garage/level2",
+
+  Workshop1 = "workshop/level1",
+  Workshop2 = "workshop/level2",
+  Workshop3 = "workshop/level3",
+
   DroneFactory1 = "dronefactory/level1",
+
+  SAMLauncher1 = "samlauncher/level1",
+  SAMLauncher2 = "samlauncher/level2",
+  SAMLauncher3 = "samlauncher/level3",
 }
 
 export const EntityIDToResourceTilesetKey = {
@@ -260,11 +282,21 @@ export const EntityIDtoSpriteKey = {
 
   [BlockType.Hangar]: [SpriteKeys.Hangar1],
 
-  [BlockType.DroneFactory]: [SpriteKeys.DroneFactory1],
+  [BlockType.Garage]: [SpriteKeys.Garage1, SpriteKeys.Garage2],
 
-  [BlockType.SAMMissiles]: [SpriteKeys.PhotovoltaicCellFactory1],
-  [BlockType.Garage]: [SpriteKeys.IronPlateFactory1],
-  [BlockType.AdvancedDroneFactory]: [SpriteKeys.DroneFactory1],
+  [BlockType.Workshop]: [
+    SpriteKeys.Workshop1,
+    SpriteKeys.Workshop2,
+    SpriteKeys.Workshop3,
+  ],
+
+  [BlockType.SAMLauncher]: [
+    SpriteKeys.SAMLauncher1,
+    SpriteKeys.SAMLauncher2,
+    SpriteKeys.SAMLauncher3,
+  ],
+
+  [BlockType.DroneFactory]: [SpriteKeys.DroneFactory1],
 
   //STARMAP
   [BlockType.Asteroid]: [
@@ -325,7 +357,21 @@ export const EntityIDtoAnimationKey = {
 
   [BlockType.Hangar]: [AnimationKeys.Hangar1],
 
+  [BlockType.Garage]: [AnimationKeys.Garage1, AnimationKeys.Garage2],
+
+  [BlockType.Workshop]: [
+    AnimationKeys.Workshop1,
+    AnimationKeys.Workshop2,
+    AnimationKeys.Workshop3,
+  ],
+
   [BlockType.DroneFactory]: [AnimationKeys.DroneFactory1],
+
+  [BlockType.SAMLauncher]: [
+    AnimationKeys.SAMLauncher1,
+    AnimationKeys.SAMLauncher2,
+    AnimationKeys.SAMLauncher3,
+  ],
 };
 
 export enum KeybindActions {

@@ -8,11 +8,11 @@ import { BlockType } from "src/util/constants";
 import { Basic } from "./screens/Basic";
 import { BuildingInfo } from "./screens/BuildingInfo";
 import { Demolish } from "./screens/Demolish";
-import { DroneFactory } from "./screens/DroneFactory";
+import { UnitFactory } from "./screens/UnitFactory";
 import { MainBase } from "./screens/Mainbase";
 import { BuildQueue } from "./screens/BuildQueue";
-import { BuildDrone } from "./screens/BuildDrone";
-import { UpgradeDrones } from "./screens/UpgradeDrones";
+import { BuildUnit } from "./screens/BuildUnit";
+import { UpgradeUnit } from "./screens/UpgradeUnit";
 import { FaTrash } from "react-icons/fa";
 import { MiningVessels } from "./screens/MiningVessels";
 
@@ -52,14 +52,16 @@ export const BuildingMenu: React.FC = () => {
       case BlockType.MainBase:
         return <MainBase building={selectedBuilding} />;
       case BlockType.DroneFactory:
-        return <DroneFactory building={selectedBuilding} />;
+        return <UnitFactory building={selectedBuilding} />;
+      case BlockType.Workshop:
+        return <UnitFactory building={selectedBuilding} />;
       default:
         return <Basic building={selectedBuilding} />;
     }
   };
 
   return (
-    <Navigator initialScreen={buildingName} className="w-120">
+    <Navigator initialScreen={selectedBuilding} className="w-120">
       {/* <Navigator.Breadcrumbs /> */}
 
       {/* Initial Screen */}
@@ -69,8 +71,8 @@ export const BuildingMenu: React.FC = () => {
       <Demolish building={selectedBuilding} />
       <BuildingInfo building={selectedBuilding} />
       <BuildQueue building={selectedBuilding} />
-      <BuildDrone building={selectedBuilding} />
-      <UpgradeDrones />
+      <BuildUnit building={selectedBuilding} />
+      <UpgradeUnit building={selectedBuilding} />
       <MiningVessels building={selectedBuilding} />
 
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2">

@@ -80,10 +80,10 @@ export const BlockType = {
   SolarPanel: keccak256("block.SolarPanel") as EntityID,
   Hangar: keccak256("block.Hangar") as EntityID,
   Garage: keccak256("block.Garage") as EntityID,
-  DroneFactory: keccak256("block.DroneFactory") as EntityID,
-  AdvancedDroneFactory: keccak256("block.AdvancedDroneFactory") as EntityID,
+  Workshop: keccak256("block.DroneFactory") as EntityID,
+  DroneFactory: keccak256("block.AdvancedDroneFactory") as EntityID,
   StarmapperStation: keccak256("block.Starmapper") as EntityID,
-  SAMMissiles: keccak256("block.SAMMissiles") as EntityID,
+  SAMLauncher: keccak256("block.SAMMissiles") as EntityID,
 
   Alloy: keccak256("item.AlloyCrafted") as EntityID,
   PhotovoltaicCell: keccak256("item.PhotovoltaicCellCrafted") as EntityID,
@@ -264,11 +264,11 @@ export const BlockType = {
   AnvilLightDrone: keccak256("unit.AnvilDrone") as EntityID,
   AegisDrone: keccak256("unit.AegisDrone") as EntityID,
   MiningVessel: keccak256("unit.MiningVessel") as EntityID,
+  MinutemenMarine: keccak256("unit.MarineUnit") as EntityID,
+  TridentMarine: keccak256("unit.AdvancedMarineUnit") as EntityID,
 
   //Starmap
   Asteroid: keccak256("spacerock.Asteroid") as EntityID,
-  MarineUnit: keccak256("unit.MarineUnit") as EntityID,
-  AdvancedMarineUnit: keccak256("unit.AdvancedMarineUnit") as EntityID,
 };
 
 export const BlockIdToKey = Object.entries(BlockType).reduce<{
@@ -315,8 +315,8 @@ export const BackgroundImage = new Map<EntityID, string[]>([
   [BlockType.AnvilLightDrone, ["/img/unit/anvildrone.png"]],
   [BlockType.AegisDrone, ["/img/unit/aegisdrone.png"]],
   [BlockType.MiningVessel, ["/img/unit/miningvessel.png"]],
-  [BlockType.MarineUnit, ["/img/unit/anvildrone.png"]],
-  [BlockType.AdvancedMarineUnit, ["/img/unit/anvildrone.png"]],
+  [BlockType.MinutemenMarine, ["/img/unit/minutemen_marine.png"]],
+  [BlockType.TridentMarine, ["/img/unit/trident_marine.png"]],
 
   // debug units
   [BlockType.DebugUnit, ["/img/unit/stingerdrone.png"]],
