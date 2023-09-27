@@ -81,6 +81,12 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
         {
           at: 0,
           run: () => {
+            const blocksTraveled = blockInfo.value - Number(arrival.timestamp);
+            const totalBlocks =
+              Number(arrival.arrivalBlock) - Number(arrival.timestamp);
+
+            const progress = blocksTraveled / totalBlocks;
+
             //TODO: change to embodied entity
             const fleetIcon = scene.phaserScene.add
               .circle(originPixelCoord.x, originPixelCoord.y, 7, 0x00ffff)
@@ -90,6 +96,7 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
               targets: fleetIcon,
               x: destinationPixelCoord.x,
               y: destinationPixelCoord.y,
+              progress,
               duration: remainingBlocks * blockInfo.avgBlockTime * 1000,
               onComplete: () => {
                 fleetIcon.destroy();

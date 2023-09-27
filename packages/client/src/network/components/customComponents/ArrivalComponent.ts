@@ -17,6 +17,7 @@ export const newArrivalComponent = () => {
       to: Type.Entity,
       origin: Type.Entity,
       destination: Type.Entity,
+      timestamp: Type.Number,
     },
     {
       id: "Arrival",
