@@ -87,16 +87,24 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
 
             const progress = blocksTraveled / totalBlocks;
 
-            //TODO: change to embodied entity
+            // Calculate the starting position based on progress
+            const startX =
+              originPixelCoord.x +
+              (destinationPixelCoord.x - originPixelCoord.x) * progress;
+            const startY =
+              originPixelCoord.y +
+              (destinationPixelCoord.y - originPixelCoord.y) * progress;
+
+            // Set the fleet icon's starting position to the calculated values
             const fleetIcon = scene.phaserScene.add
-              .circle(originPixelCoord.x, originPixelCoord.y, 7, 0x00ffff)
+              .circle(startX, startY, 7, 0x00ffff)
               .setDepth(DepthLayers.Marker);
 
-            scene.phaserScene.add.tween({
+            // Tween the fleet icon to the destination
+            scene.phaserScene.tweens.add({
               targets: fleetIcon,
               x: destinationPixelCoord.x,
               y: destinationPixelCoord.y,
-              progress,
               duration: remainingBlocks * blockInfo.avgBlockTime * 1000,
               onComplete: () => {
                 fleetIcon.destroy();
