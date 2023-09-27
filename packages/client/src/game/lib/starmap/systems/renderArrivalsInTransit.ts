@@ -60,11 +60,11 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
     const sendTrajectory = scene.objectPool.getGroup(entityId + objIndexSuffix);
 
     sendTrajectory.add("Graphics").setComponents([
-      ObjectPosition(originPixelCoord, DepthLayers.Building),
+      ObjectPosition(originPixelCoord, DepthLayers.Marker),
       Line(destinationPixelCoord, {
         thickness: 2,
-        alpha: 0.5,
-        color: 0x808080,
+        alpha: 0.25,
+        color: 0x00ffff,
       }),
       Circle(7, {
         position: destinationPixelCoord,
@@ -75,24 +75,46 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
 
     const remainingBlocks = Number(arrival.arrivalBlock) - blockInfo.value;
 
+    //animated transit timeline
     scene.phaserScene.add
-      .timeline({
-        at: remainingBlocks * blockInfo.avgBlockTime * 1000,
-        run: () => {
-          scene.objectPool.removeGroup(entityId + objIndexSuffix);
+      .timeline([
+        {
+          at: 0,
+          run: () => {
+            //TODO: change to embodied entity
+            const fleetIcon = scene.phaserScene.add
+              .circle(originPixelCoord.x, originPixelCoord.y, 7, 0x00ffff)
+              .setDepth(DepthLayers.Marker);
 
-          const arrivalOrbit = scene.objectPool.getGroup(
-            entityId + objIndexSuffix
-          );
-
-          arrivalOrbit.add("Graphics").setComponents([
-            ObjectPosition(destinationPixelCoord, DepthLayers.Path),
-            Circle(5, {
-              color: 0x00ff00,
-            }),
-          ]);
+            scene.phaserScene.add.tween({
+              targets: fleetIcon,
+              x: destinationPixelCoord.x,
+              y: destinationPixelCoord.y,
+              duration: remainingBlocks * blockInfo.avgBlockTime * 1000,
+              onComplete: () => {
+                fleetIcon.destroy();
+              },
+            });
+          },
         },
-      })
+        {
+          at: remainingBlocks * blockInfo.avgBlockTime * 1000,
+          run: () => {
+            scene.objectPool.removeGroup(entityId + objIndexSuffix);
+
+            const arrivalOrbit = scene.objectPool.getGroup(
+              entityId + objIndexSuffix
+            );
+
+            arrivalOrbit.add("Graphics").setComponents([
+              ObjectPosition(destinationPixelCoord, DepthLayers.Marker),
+              Circle(5, {
+                color: 0x00ff00,
+              }),
+            ]);
+          },
+        },
+      ])
       .play();
   };
 

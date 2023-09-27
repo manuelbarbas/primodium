@@ -40,7 +40,7 @@ export const newArrivalComponent = () => {
     if (filters?.onlyOrbiting && filters?.onlyTransit)
       throw new Error("Cannot filter for both orbiting and transit");
     const blockNumber = BlockNumber.get()?.value ?? 0;
-    let all = component.getAll().map((entity) => {
+    const all = component.getAll().map((entity) => {
       const comp = component.get(entity);
       if (!comp) return undefined;
       return {
@@ -48,6 +48,7 @@ export const newArrivalComponent = () => {
         ...comp,
       };
     });
+
     if (!filters) return all;
     return all.filter((elem) => {
       if (elem == undefined) return false;

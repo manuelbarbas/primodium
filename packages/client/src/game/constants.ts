@@ -28,10 +28,10 @@ export enum Tilesets {
 
 export enum DepthLayers {
   Terrain = 0,
-  Path = 1,
   Building = 4000,
-  Marker = 5000,
-  Tooltip = 5001,
+  Path = 5000,
+  Marker = 6000,
+  Tooltip = 700,
 }
 
 export enum TerrainTilekeys {

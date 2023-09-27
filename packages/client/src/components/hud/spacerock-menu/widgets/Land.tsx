@@ -19,25 +19,15 @@ export const Land: React.FC<{
   }).value;
   const destinationOwner = OwnedBy.use(destination)?.value;
   const transactionLoading = useGameStore((state) => state.transactionLoading);
-  const orbitingInvade =
-    Arrival.get({
-      from: player,
-      onlyOrbiting: true,
-      destination: destination,
-      sendType: ESendType.INVADE,
-    }) ?? [];
-
-  const orbitingRaid =
-    Arrival.get({
-      from: player,
-      onlyOrbiting: true,
-      destination: destination,
-      sendType: ESendType.RAID,
-    }) ?? [];
+  const orbiting = Arrival.get({
+    from: player,
+    onlyOrbiting: true,
+    destination: destination,
+  });
 
   const isNeutral = destinationOwner === player || !destinationOwner;
 
-  if (!orbitingInvade.length && !orbitingRaid.length) return <></>;
+  if (!orbiting.length) return <></>;
 
   return (
     <div className="w-full flex justify-center mt-2">
