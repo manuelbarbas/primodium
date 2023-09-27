@@ -23,7 +23,7 @@ contract SpawnSystemTest is PrimodiumTest {
 
   function testSpawnTwice() public prank(creator) {
     world.spawn();
-    vm.expectRevert(bytes("[SpawnSystem] Player already spawned"));
+    vm.expectRevert(bytes("[SpawnSystem] Already spawned"));
     world.spawn();
   }
 
