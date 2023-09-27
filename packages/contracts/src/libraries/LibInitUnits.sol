@@ -38,8 +38,8 @@ library LibInitUnits {
     initHammerDrone(world);
     initStingerDrone(world);
     initMiningVessel(world);
-    initMarine(world);
-    initAdvancedMarine(world);
+    initMinutemanMarine(world);
+    initTridentMinutemanMarine(world);
   }
 
   function setupUnit(
@@ -219,7 +219,7 @@ library LibInitUnits {
     setupUnit(world, unitType, maxLevel, unitDesigns, requiredResources, requiredUtilities);
   }
 
-  function initMarine(IWorld world) internal {
+  function initMinutemanMarine(IWorld world) internal {
     uint256 unitType = MinutemanMarine;
     P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).set(unitType);
 
@@ -324,12 +324,12 @@ library LibInitUnits {
 
     /****************** Cargos *******************/
 
-    unitDesigns[0].cargo = 1000;
-    unitDesigns[1].cargo = 1000;
-    unitDesigns[2].cargo = 1000;
-    unitDesigns[3].cargo = 1000;
-    unitDesigns[4].cargo = 1000;
-    unitDesigns[5].cargo = 1000;
+    unitDesigns[0].cargo = 2000;
+    unitDesigns[1].cargo = 2000;
+    unitDesigns[2].cargo = 2000;
+    unitDesigns[3].cargo = 2000;
+    unitDesigns[4].cargo = 2000;
+    unitDesigns[5].cargo = 2000;
 
     /****************** Speeds *******************/
 
@@ -362,7 +362,7 @@ library LibInitUnits {
     setupUnit(world, unitType, maxLevel, unitDesigns, requiredResources, requiredUtilities);
   }
 
-  function initAdvancedMarine(IWorld world) internal {
+  function initTridentMinutemanMarine(IWorld world) internal {
     uint256 unitType = TridentMinutemanMarine;
     P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).set(unitType);
 

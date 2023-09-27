@@ -27,8 +27,8 @@ library LibInitResearch {
     initHammerDroneUpgrades(world);
     initStingerDroneUpgrades(world);
     initMiningVesselUpgrades(world);
-    initMarineUpgrades(world);
-    initAdvancedMarineUpgrades(world);
+    initMinutemanMarineUpgrades(world);
+    initTridentMinutemanMarineUpgrades(world);
     initMiningResearch(world);
   }
 
@@ -49,7 +49,7 @@ library LibInitResearch {
     LibSetBuildingReqs.setResourceReqs(world, researchID, requiredResources);
   }
 
-  function initMarineUpgrades(IWorld world) internal {
+  function initMinutemanMarineUpgrades(IWorld world) internal {
     uint256 unitType = MinutemanMarine;
     ResourceValue[] memory requiredResources = new ResourceValue[](1);
     uint32 mainBaseLevel;
@@ -90,7 +90,7 @@ library LibInitResearch {
     initUnitUpgrade(world, MinutemanMarineUpgrade5, unitType, 5, mainBaseLevel, requiredResources);
   }
 
-  function initAdvancedMarineUpgrades(IWorld world) internal {
+  function initTridentMinutemanMarineUpgrades(IWorld world) internal {
     uint256 unitType = TridentMinutemanMarine;
     ResourceValue[] memory requiredResources = new ResourceValue[](1);
     uint32 mainBaseLevel;
