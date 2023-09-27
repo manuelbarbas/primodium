@@ -27,10 +27,9 @@ contract LibMotherlodeTest is PrimodiumTest {
   }
 
   function testFuzzMotherlodePrototype(bytes32 entity) public {
-    (uint8 size, uint8 motherlodeType, uint256 cooldownSeconds) = LibMotherlode.getMotherlodeRawPrototype(entity);
+    (uint8 size, uint8 motherlodeType) = LibMotherlode.getMotherlodeRawPrototype(entity);
     assertLt(uint256(size), 32);
     assertLt(uint256(motherlodeType), 32);
-    assertLt(cooldownSeconds, 64);
   }
 
   function findMotherlode() public returns (bytes32, PositionData memory) {
@@ -70,9 +69,7 @@ contract LibMotherlodeTest is PrimodiumTest {
     vm.startPrank(worldAddress);
     LibMotherlode.createMotherlode(position);
     bytes32 motherlodeEntity = keccak256(abi.encode(asteroid, "motherlode", position.x, position.y));
-    (uint8 size, uint8 motherlodeType, uint256 cooldownSeconds) = LibMotherlode.getMotherlodeRawPrototype(
-      motherlodeEntity
-    );
+    (uint8 size, uint8 motherlodeType) = LibMotherlode.getMotherlodeRawPrototype(motherlodeEntity);
 
     assertEq(Position.get(motherlodeEntity), position);
     assertEq(LastClaimedAt.get(motherlodeEntity), block.timestamp, "lastClaimedAt");
@@ -86,7 +83,6 @@ contract LibMotherlodeTest is PrimodiumTest {
       uint256(LibMotherlode.getMotherlodeType(motherlodeType)),
       "motherlodeType"
     );
-    assertEq(motherlode.cooldownSeconds, cooldownSeconds, "cooldownSeconds");
   }
 
   function testFailNoMotherlodeNoSource() public {

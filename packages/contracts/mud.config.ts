@@ -295,22 +295,11 @@ export const config = mudConfig({
 
     /* ------------------------------- Motherlode ------------------------------- */
 
-    P_MotherlodeResource: {
-      keySchema: { motherlodeType: "EResource", level: "ESize" },
-      schema: {
-        resource: "EResource",
-        amount: "uint256",
-      },
-    },
-
     Motherlode: {
       keySchema: { entity: "bytes32" },
       schema: {
         size: "ESize",
         motherlodeType: "EResource",
-        quantity: "uint32",
-        cooldownSeconds: "uint256",
-        mineableAt: "uint256",
       },
     },
 

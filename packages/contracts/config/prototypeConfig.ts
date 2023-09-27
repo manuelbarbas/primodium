@@ -600,41 +600,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
   },
 
-  /* ------------------------------- Motherlodes ------------------------------ */
-
-  Titanium: {
-    keys: [{ [MUDEnums.EResource.indexOf("Titanium").toString()]: "uint8" }],
-    levels: {
-      [MUDEnums.ESize.indexOf("Small")]: { P_MotherlodeResource: getResourceValue({ Titanium: 5000 }) },
-      [MUDEnums.ESize.indexOf("Medium")]: { P_MotherlodeResource: getResourceValue({ Titanium: 12000 }) },
-      [MUDEnums.ESize.indexOf("Large")]: { P_MotherlodeResource: getResourceValue({ Titanium: 25000 }) },
-    },
-  },
-  Iridium: {
-    keys: [{ [MUDEnums.EResource.indexOf("Iridium").toString()]: "uint8" }],
-    levels: {
-      [MUDEnums.ESize.indexOf("Small")]: { P_MotherlodeResource: getResourceValue({ Iridium: 5000 }) },
-      [MUDEnums.ESize.indexOf("Medium")]: { P_MotherlodeResource: getResourceValue({ Iridium: 12000 }) },
-      [MUDEnums.ESize.indexOf("Large")]: { P_MotherlodeResource: getResourceValue({ Iridium: 25000 }) },
-    },
-  },
-  Platinum: {
-    keys: [{ [MUDEnums.EResource.indexOf("Platinum").toString()]: "uint8" }],
-    levels: {
-      [MUDEnums.ESize.indexOf("Small")]: { P_MotherlodeResource: getResourceValue({ Platinum: 5000 }) },
-      [MUDEnums.ESize.indexOf("Medium")]: { P_MotherlodeResource: getResourceValue({ Platinum: 12000 }) },
-      [MUDEnums.ESize.indexOf("Large")]: { P_MotherlodeResource: getResourceValue({ Platinum: 25000 }) },
-    },
-  },
-  Kimberlite: {
-    keys: [{ [MUDEnums.EResource.indexOf("Kimberlite").toString()]: "uint8" }],
-    levels: {
-      [MUDEnums.ESize.indexOf("Small")]: { P_MotherlodeResource: getResourceValue({ Kimberlite: 5000 }) },
-      [MUDEnums.ESize.indexOf("Medium")]: { P_MotherlodeResource: getResourceValue({ Kimberlite: 12000 }) },
-      [MUDEnums.ESize.indexOf("Large")]: { P_MotherlodeResource: getResourceValue({ Kimberlite: 25000 }) },
-    },
-  },
-
   /* --------------------------------- Units --------------------------------- */
   Unit: {
     levels: idsToPrototypes(MUDEnums.EUnit),

@@ -136,12 +136,8 @@ library LibBattle {
     bytes32[] memory unitTypes = P_UnitPrototypes.get();
 
     for (uint256 i = 0; i < unitTypes.length; i++) {
-      uint256 attackerUnitsLost = (br.attacker == br.winner)
-        ? br.attackerStartingUnits[i] - br.attackerUnitsLeft[i]
-        : br.attackerStartingUnits[i];
-      uint256 defenderUnitsLost = (br.defender == br.winner)
-        ? br.defenderStartingUnits[i] - br.defenderUnitsLeft[i]
-        : br.defenderStartingUnits[i];
+      uint256 attackerUnitsLost = br.attackerStartingUnits[i] - br.attackerUnitsLeft[i];
+      uint256 defenderUnitsLost = br.defenderStartingUnits[i] - br.defenderUnitsLeft[i];
 
       LibUnit.decreaseUnitCount(br.defender, br.rock, unitTypes[i], defenderUnitsLost);
       LibUnit.updateStoredUtilities(br.attacker, unitTypes[i], attackerUnitsLost, false);
@@ -149,7 +145,7 @@ library LibBattle {
         bytes32 attackerRock = (br.attacker == br.winner && sendType == ESendType.Raid)
           ? Home.getAsteroid(br.attacker)
           : br.rock;
-        LibUnit.addUnitsToAsteroid(br.winner, attackerRock, unitTypes[i], br.attackerUnitsLeft[i]);
+        LibUnit.increaseUnitCount(br.winner, attackerRock, unitTypes[i], br.attackerUnitsLeft[i]);
       }
     }
   }
