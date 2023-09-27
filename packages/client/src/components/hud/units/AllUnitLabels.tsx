@@ -32,6 +32,16 @@ export const AllUnitLabels = () => {
       </SecondaryCard>
       <SecondaryCard className="grid grid-cols-1 gap-1">
         <UnitLabel
+          name={"Minutemen Marine"}
+          count={getUnitCount(BlockType.MinutemenMarine)}
+          resourceId={BlockType.MinutemenMarine}
+        />
+        <UnitLabel
+          name={"Trident Marine"}
+          count={getUnitCount(BlockType.TridentMarine)}
+          resourceId={BlockType.TridentMarine}
+        />
+        <UnitLabel
           name={"Anvil Light Drone"}
           count={getUnitCount(BlockType.AnvilLightDrone)}
           resourceId={BlockType.AnvilLightDrone}
