@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
-import { P_GameConfig, P_GameConfigData, UnitCount, LastClaimedAt, Motherlode, MotherlodeData, Position, PositionData, ReversePosition, RockType, P_Unit, UnitLevel } from "codegen/Tables.sol";
-import { ERock, EUnit, ESize, EResource } from "codegen/Types.sol";
+import { P_GameConfig, P_GameConfigData, UnitCount, LastClaimedAt, Motherlode, MotherlodeData, Position, PositionData, ReversePosition, RockType, P_Unit, UnitLevel } from "codegen/index.sol";
+import { ERock, EUnit, ESize, EResource } from "src/Types.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { MotherlodeSet } from "libraries/MotherlodeSet.sol";

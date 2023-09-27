@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
-import { Level, P_MaxLevel } from "codegen/Tables.sol";
+import { Level, P_MaxLevel } from "codegen/index.sol";
 import { ExpansionKey } from "src/Keys.sol";
 import { LibEncode, LibBuilding } from "codegen/Libraries.sol";
 

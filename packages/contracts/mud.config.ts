@@ -38,14 +38,15 @@ export const config = mudConfig({
     /* ----------------------------------- Dev ---------------------------------- */
     Counter: {
       keySchema: {},
-      schema: "uint256",
+      valueSchema: "uint256",
     },
 
     /* --------------------------------- Common --------------------------------- */
 
     P_GameConfig: {
       keySchema: {},
-      schema: {
+      valueSchema: {
+        unitProductionRate: "uint256",
         maxMotherlodesPerAsteroid: "uint256",
         motherlodeChanceInv: "uint256",
         motherlodeDistance: "uint256",
@@ -55,7 +56,7 @@ export const config = mudConfig({
 
     Position: {
       keySchema: { entity: "bytes32" },
-      schema: {
+      valueSchema: {
         x: "int32",
         y: "int32",
         parent: "bytes32",
@@ -64,26 +65,26 @@ export const config = mudConfig({
 
     ReversePosition: {
       keySchema: { x: "int32", y: "int32" },
-      schema: {
+      valueSchema: {
         entity: "bytes32",
       },
     },
 
     OwnedBy: {
       keySchema: { entity: "bytes32" },
-      schema: {
+      valueSchema: {
         owner: "bytes32",
       },
     },
 
     Level: {
       keySchema: { entity: "bytes32" },
-      schema: "uint256",
+      valueSchema: "uint256",
     },
 
     Spawned: {
       keySchema: { entity: "bytes32" },
-      schema: "bool",
+      valueSchema: "bool",
     },
 
     /*
@@ -95,103 +96,104 @@ export const config = mudConfig({
     */
     P_EnumToPrototype: {
       keySchema: { key: "bytes32", id: "uint8" },
-      schema: "bytes32",
+      valueSchema: "bytes32",
     },
 
     /* --------------------------------- Player --------------------------------- */
     HomeAsteroid: {
       keySchema: { entity: "bytes32" },
-      schema: {
-        value: "bytes32",
+      valueSchema: {
+        asteroid: "bytes32",
+        mainBase: "bytes32",
       },
     },
 
     MaxMoves: {
       keySchema: { entity: "bytes32" },
-      schema: "uint256",
+      valueSchema: "uint256",
     },
 
     /* ---------------------------------- Rocks --------------------------------- */
     P_Asteroid: {
       keySchema: {},
-      schema: {
+      valueSchema: {
         xBounds: "int32",
         yBounds: "int32",
       },
     },
     AsteroidCount: {
       keySchema: {},
-      schema: "uint256",
+      valueSchema: "uint256",
     },
 
     RockType: {
       keySchema: { entity: "bytes32" },
-      schema: "ERock",
+      valueSchema: "ERock",
     },
 
     // note: dimensions will always be positive, but are int32s so they work with coords
     Dimensions: {
       keySchema: { key: "bytes32", level: "uint256" },
-      schema: {
+      valueSchema: {
         x: "int32",
         y: "int32",
       },
     },
 
-    Spawned: {
-      keySchema: { entity: "bytes32" },
-      schema: "bool",
+    P_Terrain: {
+      keySchema: { x: "int32", y: "int32" },
+      valueSchema: "EResource",
     },
 
     /* -------------------------------- Resources ------------------------------- */
 
     P_IsUtility: {
       keySchema: { id: "EResource" },
-      schema: "bool",
+      valueSchema: "bool",
     },
 
     // tracks the max resource a player can store
     MaxResourceCount: {
       keySchema: { entity: "bytes32", resource: "EResource" },
-      schema: "uint256",
+      valueSchema: "uint256",
     },
 
     LastClaimedAt: {
       keySchema: { entity: "bytes32" },
-      schema: "uint256",
+      valueSchema: "uint256",
     },
 
     ResourceCount: {
       keySchema: { entity: "bytes32", resource: "EResource" },
-      schema: "uint256",
+      valueSchema: "uint256",
     },
 
     // Used in the building utilities set
     SetItemUtilities: {
       keySchema: { entity: "bytes32", utility: "EResource" },
-      schema: {
+      valueSchema: {
         index: "uint256",
         quantity: "uint256",
       },
     },
     SetUtilities: {
       keySchema: { entity: "bytes32" },
-      schema: "uint8[]",
+      valueSchema: "uint8[]",
     },
 
     /* --------------------------- Build Requirements --------------------------- */
     P_RequiredTile: {
       keySchema: { prototype: "bytes32" },
-      schema: "EResource",
+      valueSchema: "EResource",
     },
     P_RequiredBaseLevel: {
       keySchema: { prototype: "bytes32", level: "uint256" },
-      schema: "uint256",
+      valueSchema: "uint256",
     },
 
     P_RequiredResources: {
       keySchema: { prototype: "bytes32", level: "uint256" },
-      schema: {
+      valueSchema: {
         // mud doesnt recognize EResource arrays so we will manually convert them
         resources: "uint8[]",
         amounts: "uint256[]",
@@ -200,7 +202,7 @@ export const config = mudConfig({
 
     P_RequiredDependencies: {
       keySchema: { prototype: "bytes32", level: "uint256" },
-      schema: {
+      valueSchema: {
         // mud doesnt recognize EResource arrays so we will manually convert them
         resources: "uint8[]",
         amounts: "uint256[]",
@@ -209,7 +211,7 @@ export const config = mudConfig({
 
     P_RequiredUpgradeResources: {
       keySchema: { prototype: "bytes32", level: "uint256" },
-      schema: {
+      valueSchema: {
         resources: "uint8[]",
         amounts: "uint256[]",
       },
@@ -218,17 +220,17 @@ export const config = mudConfig({
 
     P_Blueprint: {
       keySchema: { prototype: "bytes32" },
-      schema: "int32[]",
+      valueSchema: "int32[]",
     },
 
     P_MaxLevel: {
       keySchema: { prototype: "bytes32" },
-      schema: "uint256",
+      valueSchema: "uint256",
     },
 
     P_Production: {
       keySchema: { prototype: "bytes32", level: "uint256" },
-      schema: {
+      valueSchema: {
         // mud doesnt recognize EResource arrays so we will manually convert them
         resource: "EResource",
         amount: "uint256",
@@ -238,22 +240,22 @@ export const config = mudConfig({
     // tracks if a building (prototype) can produce a unit (id)
     P_UnitProduction: {
       keySchema: { prototype: "bytes32", id: "bytes32" },
-      schema: "bool",
+      valueSchema: "bool",
     },
 
     P_ProducesUnits: {
       keySchema: { prototype: "bytes32" },
-      schema: "bool",
+      valueSchema: "bool",
     },
 
     P_UnitProdMultiplier: {
       keySchema: { prototype: "bytes32", level: "uint256" },
-      schema: "uint256",
+      valueSchema: "uint256",
     },
 
     SetItemUnitFactories: {
       keySchema: { entity: "bytes32", building: "bytes32" },
-      schema: {
+      valueSchema: {
         stored: "bool",
         index: "uint256",
       },
@@ -261,39 +263,39 @@ export const config = mudConfig({
 
     SetUnitFactories: {
       keySchema: { entity: "bytes32" },
-      schema: "bytes32[]",
+      valueSchema: "bytes32[]",
     },
 
     P_ByLevelMaxResourceUpgrades: {
       keySchema: { prototype: "bytes32", resource: "EResource", level: "uint256" },
-      schema: "uint256",
+      valueSchema: "uint256",
     },
 
     P_ListMaxResourceUpgrades: {
       keySchema: { prototype: "bytes32", level: "uint256" },
-      schema: "uint8[]",
+      valueSchema: "uint8[]",
     },
 
     BuildingType: {
       keySchema: { entity: "bytes32" },
-      schema: "bytes32",
+      valueSchema: "bytes32",
     },
 
     Children: {
       keySchema: { entity: "bytes32" },
-      schema: "bytes32[]",
+      valueSchema: "bytes32[]",
     },
 
     ProductionRate: {
       keySchema: { entity: "bytes32", resource: "EResource" },
-      schema: "uint256",
+      valueSchema: "uint256",
     },
 
     /* ------------------------------- Motherlode ------------------------------- */
 
     Motherlode: {
       keySchema: { entity: "bytes32" },
-      schema: {
+      valueSchema: {
         size: "ESize",
         motherlodeType: "EResource",
       },
@@ -302,26 +304,26 @@ export const config = mudConfig({
     // Used in the building utilities set
     SetItemMotherlodes: {
       keySchema: { motherlode: "bytes32", item: "bytes32" },
-      schema: {
+      valueSchema: {
         stored: "bool",
         index: "uint256",
       },
     },
     SetMotherlodes: {
       keySchema: { entity: "bytes32" },
-      schema: "bytes32[]",
+      valueSchema: "bytes32[]",
     },
 
     /* ----------------------------- Unit Production ---------------------------- */
     // stores an array of all unit prototypes in the game
     P_UnitPrototypes: {
       keySchema: {},
-      schema: "bytes32[]",
+      valueSchema: "bytes32[]",
     },
 
     P_Unit: {
       keySchema: { entity: "bytes32", level: "uint256" },
-      schema: {
+      valueSchema: {
         attack: "uint256",
         defense: "uint256",
         speed: "uint256",
@@ -332,12 +334,12 @@ export const config = mudConfig({
 
     P_MiningRate: {
       keySchema: { entity: "bytes32", level: "uint256" },
-      schema: "uint256",
+      valueSchema: "uint256",
     },
 
     QueueUnits: {
       keySchema: { entity: "bytes32" },
-      schema: {
+      valueSchema: {
         front: "uint256",
         back: "uint256",
         queue: "bytes32[]",
@@ -346,35 +348,35 @@ export const config = mudConfig({
 
     QueueItemUnits: {
       keySchema: { entity: "bytes32", index: "uint256" },
-      schema: {
+      valueSchema: {
         unitId: "bytes32",
         quantity: "uint256",
       },
     },
     UnitLevel: {
       keySchema: { entity: "bytes32", unit: "bytes32" },
-      schema: "uint256",
+      valueSchema: "uint256",
     },
 
     UnitCount: {
       keySchema: { player: "bytes32", rock: "bytes32", unit: "bytes32" },
-      schema: "uint256",
+      valueSchema: "uint256",
     },
 
     /* ------------------------------ Sending Units ----------------------------- */
     ArrivalCount: {
       keySchema: { entity: "bytes32" },
-      schema: "uint256",
+      valueSchema: "uint256",
     },
     // Tracks player asteroid arrivals
     MapArrivals: {
       keySchema: { entity: "bytes32", asteroid: "bytes32" },
-      schema: { itemKeys: "bytes32[]" },
+      valueSchema: { itemKeys: "bytes32[]" },
     },
 
     MapItemStoredArrivals: {
       keySchema: { entity: "bytes32", asteroid: "bytes32", key: "bytes32" },
-      schema: {
+      valueSchema: {
         stored: "bool",
         index: "uint256",
       },
@@ -384,13 +386,13 @@ export const config = mudConfig({
     // But this is abstracted away in ArrivalSet.sol
     MapItemArrivals: {
       keySchema: { entity: "bytes32", asteroid: "bytes32", key: "bytes32" },
-      schema: "bytes",
+      valueSchema: "bytes",
     },
 
     /* ------------------------------ Battle Result ----------------------------- */
     BattleResult: {
       keySchema: { entity: "bytes32" },
-      schema: {
+      valueSchema: {
         attacker: "bytes32",
         defender: "bytes32",
         winner: "bytes32",
@@ -404,16 +406,16 @@ export const config = mudConfig({
         attackerUnitsLeft: "uint256[]",
         defenderUnitsLeft: "uint256[]",
       },
-      ephemeral: true,
+      offchainOnly: true,
     },
 
     RaidResult: {
       keySchema: { entity: "bytes32" },
-      schema: {
+      valueSchema: {
         defenderValuesBeforeRaid: "uint256[]",
         raidedAmount: "uint256[]",
       },
-      ephemeral: true,
+      offchainOnly: true,
     },
   },
 });

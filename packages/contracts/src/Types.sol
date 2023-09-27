@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import "codegen/Types.sol";
-import { PositionData } from "codegen/Tables.sol";
+import "codegen/common.sol";
+import { PositionData } from "codegen/index.sol";
 
 struct Bounds {
   int32 minX;

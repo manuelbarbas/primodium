@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 /* Test when playerEntity and unit are valid and upgradeUnit is successful.
 Test when playerEntity is valid but doesn't meet MainBase level requirement.
@@ -20,7 +20,7 @@ contract UpgradeUnitSystemTest is PrimodiumTest {
 
   function setUp() public override {
     super.setUp();
-    vm.startPrank(worldAddress);
+    vm.startPrank(creator);
     player = addressToEntity(worldAddress);
 
     P_EnumToPrototype.set(UnitKey, uint8(unit), unitPrototype);

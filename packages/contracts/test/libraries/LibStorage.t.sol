@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import "test/PrimodiumTest.t.sol";
 
@@ -12,7 +12,7 @@ contract TestLibStorage is PrimodiumTest {
 
   function setUp() public override {
     super.setUp();
-    vm.startPrank(address(world));
+    vm.startPrank(creator);
     BuildingType.set(buildingEntity, buildingPrototype);
     Level.set(buildingEntity, level);
   }

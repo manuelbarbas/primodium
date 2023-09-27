@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import { IWorld } from "codegen/world/IWorld.sol";
-import { RockType, OwnedBy, BattleResultData, P_UnitPrototypes } from "codegen/Tables.sol";
+import { RockType, OwnedBy, BattleResultData, P_UnitPrototypes } from "codegen/index.sol";
 import { ERock, ESendType } from "src/Types.sol";
 import { LibReinforce } from "libraries/LibReinforce.sol";
 import { LibMotherlode } from "libraries/LibMotherlode.sol";

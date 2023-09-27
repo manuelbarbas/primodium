@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { ERock } from "src/Types.sol";
-import { RockType, Home } from "codegen/Tables.sol";
+import { RockType, Home } from "codegen/index.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 

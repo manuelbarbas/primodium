@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import { IWorld } from "codegen/world/IWorld.sol";
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
-import { Spawned, Position, PositionData, Level, Home, P_EnumToPrototype } from "codegen/Tables.sol";
+import { Spawned, Position, PositionData, Level, Home, P_EnumToPrototype } from "codegen/index.sol";
 import { LibAsteroid, LibBuilding, LibEncode } from "codegen/Libraries.sol";
 import { EBuilding } from "src/Types.sol";
 import { BuildingKey } from "src/Keys.sol";

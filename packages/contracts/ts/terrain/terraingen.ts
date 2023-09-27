@@ -51,12 +51,12 @@ function generateContent(jsonContent: JsonCoords) {
 
 function addContext(str: string) {
   return `// SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import { IStore } from "@latticexyz/store/src/IStore.sol";
 
-import { P_Terrain } from "codegen/Tables.sol";
-import { EResource } from "codegen/Types.sol";
+import { P_Terrain } from "codegen/index.sol";
+import { EResource } from "codegen/common.sol";
 
   function createTerrain(IStore store) {
     ${str}

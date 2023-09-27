@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 
-import { OwnedBy } from "codegen/Tables.sol";
+import { OwnedBy } from "codegen/index.sol";
 import { LibRaid } from "codegen/Libraries.sol";
 
 contract RaidSystem is PrimodiumSystem {

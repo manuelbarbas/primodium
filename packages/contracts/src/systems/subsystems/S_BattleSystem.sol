@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { LibBattle } from "libraries/LibBattle.sol";
 import { ESendType } from "src/Types.sol";
-import { BattleResultData } from "codegen/Tables.sol";
+import { BattleResultData } from "codegen/index.sol";
 
 contract S_BattleSystem is PrimodiumSystem {
   /**

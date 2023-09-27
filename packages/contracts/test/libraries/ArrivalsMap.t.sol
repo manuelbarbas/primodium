@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import "test/PrimodiumTest.t.sol";
 
@@ -10,7 +10,7 @@ contract ArrivalsMapTest is PrimodiumTest {
 
   function setUp() public override {
     super.setUp();
-    vm.startPrank(worldAddress);
+    vm.startPrank(creator);
     unitCounts[0] = (1);
     unitCounts[1] = (2);
     unitCounts[2] = (3);

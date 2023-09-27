@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import "test/PrimodiumTest.t.sol";
 
@@ -22,7 +22,7 @@ contract LibSendTest is PrimodiumTest {
 
   function setUp() public override {
     super.setUp();
-    vm.startPrank(address(world));
+    vm.startPrank(creator);
     bytes32[] memory unitTypes = new bytes32[](unitPrototypeCount);
     unitTypes[0] = "unit1";
     unitTypes[1] = "unit2";

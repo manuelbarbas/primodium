@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import { EResource } from "src/Types.sol";
-import { SetMotherlodes, SetItemMotherlodes } from "codegen/Tables.sol";
+import { SetMotherlodes, SetItemMotherlodes } from "codegen/index.sol";
 
 library MotherlodeSet {
   /// @notice Check if a player has an item in Motherlodes set

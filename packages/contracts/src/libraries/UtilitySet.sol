@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import { EResource } from "src/Types.sol";
-import { SetUtilities, SetItemUtilities, SetItemUtilitiesData } from "codegen/Tables.sol";
+import { SetUtilities, SetItemUtilities, SetItemUtilitiesData } from "codegen/index.sol";
 
 /// @title UtilitySet
 /// @notice Library for managing utility-related data structures.

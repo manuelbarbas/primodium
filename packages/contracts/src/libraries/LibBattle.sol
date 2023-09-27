@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
-import { IWorld } from "codegen/world/IWorld.sol";
 import { ESendType, Arrival } from "src/Types.sol";
-import { UnitCount, UnitLevel, BattleResult, BattleResultData, P_UnitPrototypes, P_Unit, ArrivalCount, UnitCount, Home } from "codegen/Tables.sol";
+import { UnitCount, UnitLevel, BattleResult, BattleResultData, P_UnitPrototypes, P_Unit, ArrivalCount, UnitCount, Home } from "codegen/index.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 
@@ -56,7 +55,7 @@ library LibBattle {
       }
     }
 
-    BattleResult.emitEphemeral(keccak256(abi.encode(battleResult)), battleResult);
+    BattleResult.set(keccak256(abi.encode(battleResult)), battleResult);
 
     return battleResult;
   }

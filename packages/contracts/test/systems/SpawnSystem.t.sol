@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import "test/PrimodiumTest.t.sol";
 
@@ -9,9 +9,9 @@ contract SpawnSystemTest is PrimodiumTest {
   }
 
   function testSpawnu() public {
-    bytes32 playerEntity = addressToEntity(alice);
+    bytes32 playerEntity = addressToEntity(creator);
     bytes32 asteroidEntity = LibEncode.getHash(worldAddress, playerEntity);
-    spawn(alice);
+    spawn(creator);
 
     bool spawned = Spawned.get(world, playerEntity);
     assertTrue(spawned, "Player should have spawned");
@@ -21,7 +21,7 @@ contract SpawnSystemTest is PrimodiumTest {
     assertEq(Level.get(world, playerEntity), 1, "Player should have level 1");
   }
 
-  function testSpawnTwice() public prank(alice) {
+  function testSpawnTwice() public prank(creator) {
     world.spawn();
     vm.expectRevert(bytes("[SpawnSystem] Player already spawned"));
     world.spawn();
@@ -42,7 +42,7 @@ contract SpawnSystemTest is PrimodiumTest {
   }
 
   function testBuildMainBase() public {
-    bytes32 asteroid = spawn(alice);
+    bytes32 asteroid = spawn(creator);
     P_AsteroidData memory maxRange = P_Asteroid.get();
     PositionData memory calculatedPosition = PositionData(maxRange.xBounds / 2, maxRange.yBounds / 2, asteroid);
     logPosition(calculatedPosition);
@@ -54,13 +54,13 @@ contract SpawnSystemTest is PrimodiumTest {
     assertEq(position.y, coord.y, "y values differ");
 
     assertTrue(OwnedBy.get(world, buildingEntity) != 0);
-    assertEq(OwnedBy.get(world, buildingEntity), addressToEntity(alice));
+    assertEq(OwnedBy.get(world, buildingEntity), addressToEntity(creator));
   }
 
   function testBuildBeforeSpawnFail() public {
-    vm.startPrank(alice);
+    vm.startPrank(creator);
 
-    PositionData memory nonIronPositionData = getNonIronPosition(alice);
+    PositionData memory nonIronPositionData = getNonIronPosition(creator);
 
     vm.expectRevert(bytes("[BuildSystem] Player has not spawned"));
     world.build(EBuilding.IronMine, nonIronPositionData);
