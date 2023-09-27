@@ -27,7 +27,7 @@ contract LibReinforceTest is PrimodiumTest {
 
   bytes32 arrivalId = "arrival";
 
-  P_UnitData unitData = P_UnitData({ attack: 0, defense: 0, speed: 0, cargo: 0, mining: 0, trainingTime: 0 });
+  P_UnitData unitData = P_UnitData({ attack: 0, defense: 0, speed: 0, cargo: 0, trainingTime: 0 });
 
   function setUp() public override {
     super.setUp();

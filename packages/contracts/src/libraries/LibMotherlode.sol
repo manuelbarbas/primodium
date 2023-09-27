@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { P_GameConfig, P_GameConfigData, P_MotherlodeResource, P_MotherlodeResourceData, LastClaimedAt, Motherlode, MotherlodeData, Position, PositionData, ReversePosition, RockType } from "codegen/Tables.sol";
-import { ERock, ESize, EMotherlodeType, EResource } from "codegen/Types.sol";
+import { P_GameConfig, P_GameConfigData, P_MotherlodeResource, P_MotherlodeResourceData, UnitCount, P_MiningUnits, P_MiningPower, LastClaimedAt, Motherlode, MotherlodeData, Position, PositionData, ReversePosition, RockType, P_Unit, UnitLevel } from "codegen/Tables.sol";
+import { ERock, EUnit, ESize, EResource } from "codegen/Types.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { MotherlodeSet } from "libraries/MotherlodeSet.sol";
@@ -43,12 +43,11 @@ library LibMotherlode {
   /// @param motherlodeEntity Hash of the motherlode to be initialized
   function initMotherlode(PositionData memory position, bytes32 motherlodeEntity) internal {
     (uint8 rawSize, uint8 rawMotherlodeType, uint256 cooldownSeconds) = getMotherlodeRawPrototype(motherlodeEntity);
-    EMotherlodeType motherlodeType = getMotherlodeType(rawMotherlodeType);
+    EResource motherlodeType = getMotherlodeType(rawMotherlodeType);
     ESize size = getSize(rawSize);
     Motherlode.set(
       motherlodeEntity,
       MotherlodeData({
-        ownedBy: 0,
         size: size,
         motherlodeType: motherlodeType,
         quantity: 0,
@@ -111,11 +110,11 @@ library LibMotherlode {
   /// @dev Determines the motherlode type enum based on raw type
   /// @param motherlodeType Raw motherlode type
   /// @return motherlode type enum
-  function getMotherlodeType(uint8 motherlodeType) internal pure returns (EMotherlodeType) {
-    if (motherlodeType <= 11) return EMotherlodeType.Titanium;
-    if (motherlodeType < 21) return EMotherlodeType.Iridium;
-    if (motherlodeType < 27) return EMotherlodeType.Platinum;
-    return EMotherlodeType.Kimberlite;
+  function getMotherlodeType(uint8 motherlodeType) internal pure returns (EResource) {
+    if (motherlodeType <= 11) return EResource.Titanium;
+    if (motherlodeType < 21) return EResource.Iridium;
+    if (motherlodeType < 27) return EResource.Platinum;
+    return EResource.Kimberlite;
   }
 
   /// @dev Fetches maximum resource for a motherlode
@@ -124,5 +123,51 @@ library LibMotherlode {
   function getMaxMotherlodeResource(bytes32 motherlodeEntity) internal view returns (P_MotherlodeResourceData memory) {
     MotherlodeData memory motherlode = Motherlode.get(motherlodeEntity);
     return P_MotherlodeResource.get(motherlode.motherlodeType, motherlode.size);
+  }
+
+  function getAllMotherlodeClaims(bytes32 playerEntity) internal returns (uint256[] memory resources) {
+    resources = new uint256[](uint8(EResource.LENGTH));
+    bytes32[] memory motherlodes = MotherlodeSet.getAll(playerEntity);
+    bytes32[] memory miningUnits = P_MiningUnits.get();
+    for (uint256 i = 0; i < motherlodes.length; i++) {
+      (EResource resource, uint256 increase) = getMotherlodeClaims(playerEntity, motherlodes[i], miningUnits);
+      resources[uint8(resource)] += increase;
+    }
+  }
+
+  // what happens if multiple cycles of filling and cooling down and refilling have occurred?
+  function getMotherlodeClaims(
+    bytes32 playerEntity,
+    bytes32 motherlodeEntity,
+    bytes32[] memory miningUnits
+  ) internal returns (EResource resource, uint256 increase) {
+    MotherlodeData memory motherlode = Motherlode.get(motherlodeEntity);
+    resource = motherlode.motherlodeType;
+
+    if (motherlode.mineableAt > block.timestamp) return (resource, 0);
+
+    P_MotherlodeResourceData memory motherlodePrototypeData = P_MotherlodeResource.get(
+      motherlode.motherlodeType,
+      motherlode.size
+    );
+
+    uint256 miningPower;
+    for (uint256 j = 0; j < miningUnits.length; j++) {
+      uint256 level = UnitLevel.get(playerEntity, miningUnits[j]);
+      miningPower += P_MiningPower.get(miningUnits[j], level);
+    }
+
+    uint256 lastClaimed = LastClaimedAt.get(motherlodeEntity);
+    uint256 timeSinceClaimed = block.timestamp - lastClaimed;
+    increase = LibMath.min(miningPower * timeSinceClaimed, motherlodePrototypeData.amount - motherlode.quantity);
+
+    uint256 resourceCount = increase + motherlode.quantity;
+    if (resourceCount == motherlodePrototypeData.amount) {
+      // there needs to be some modulo magic here
+      uint256 timeMaxed = block.timestamp - ((miningPower * timeSinceClaimed) - motherlodePrototypeData.amount);
+      motherlode.mineableAt = timeMaxed + motherlode.cooldownSeconds;
+      motherlode.quantity = 0;
+      Motherlode.set(motherlodeEntity, motherlode);
+    }
   }
 }

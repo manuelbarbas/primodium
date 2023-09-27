@@ -25,7 +25,7 @@ contract LibBattleTest is PrimodiumTest {
     });
   bytes32 arrivalId = keccak256(abi.encode(arrival));
 
-  P_UnitData unitData = P_UnitData({ attack: 0, defense: 0, speed: 0, cargo: 0, mining: 0, trainingTime: 0 });
+  P_UnitData unitData = P_UnitData({ attack: 0, defense: 0, speed: 0, cargo: 0, trainingTime: 0 });
 
   function setUp() public override {
     super.setUp();
@@ -43,11 +43,7 @@ contract LibBattleTest is PrimodiumTest {
     uint256 attack,
     uint256 defense
   ) internal {
-    P_Unit.set(
-      unit,
-      0,
-      P_UnitData({ attack: attack, defense: defense, speed: 0, cargo: 0, mining: 0, trainingTime: 0 })
-    );
+    P_Unit.set(unit, 0, P_UnitData({ attack: attack, defense: defense, speed: 0, cargo: 0, trainingTime: 0 }));
   }
 
   function testGetDefensePoints(uint256 unitCount, uint256 defense) public returns (uint256) {
