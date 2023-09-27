@@ -1,5 +1,8 @@
+import { SingletonID } from "@latticexyz/network";
 import { EntityID } from "@latticexyz/recs";
+import { useMemo } from "react";
 import { FaTimes, FaTrophy } from "react-icons/fa";
+import { Navigator } from "src/components/core/Navigator";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 import { BattleRaidResult } from "src/network/components/chainComponents";
 import { Battle } from "src/network/components/clientComponents";
@@ -47,15 +50,29 @@ export const UnitStatus: React.FC<{
 
 export const BattleDetails: React.FC<{
   player: EntityID;
-  battle: ReturnType<typeof Battle.format>;
-}> = ({ battle, player }) => {
+  battleId: EntityID;
+}> = ({ battleId, player }) => {
+  const battle = useMemo(() => {
+    if (!battleId) return undefined;
+    const rawBattle = Battle.get(battleId);
+    if (!rawBattle) return undefined;
+    return Battle.format(rawBattle);
+  }, [battleId]);
+
+  const raid = BattleRaidResult.use(battle?.id ?? SingletonID);
+
+  if (!battle) return <></>;
+
   const playersUnits =
     player === battle.attacker ? battle.attackerUnits : battle.defenderUnits;
   const enemyUnits =
     player === battle.attacker ? battle.defenderUnits : battle.attackerUnits;
-  const raid = BattleRaidResult.use(battle.id);
+
   return (
-    <div className="relative gap-3 flex flex-col items-center text-white w-full">
+    <Navigator.Screen
+      title="BattleDetails"
+      className="relative gap-3 flex flex-col items-center text-white h-full w-full scrollbar overflow-y-auto "
+    >
       <div className="relative bg-slate-800 pixel-images border border-cyan-400 p-3 w-full rounded-md">
         <div className="flex flex-col items-center space-y-3">
           {player === battle.winner && (
@@ -91,11 +108,11 @@ export const BattleDetails: React.FC<{
           <hr className="border-t border-cyan-600/40 w-full" />
 
           {raid && (
-            <div className="flex flex-col justify-center items-center gap-2 bg-slate-900 p-2 px-5 rounded-md border border-slate-700">
+            <div className="flex flex-col justify-center items-center gap-2 bg-slate-900 p-2 px-5 rounded-md border border-slate-700 text-sm">
               <p className="text-lg font-bold leading-none">
                 {player === battle.winner ? "REWARDS" : "RAIDED"}
               </p>
-              <div className="flex items-center ">
+              <div className="flex items-center gap-2">
                 {raid.resources.map((resource, i) => (
                   <ResourceIconTooltip
                     key={`resource-${i}`}
@@ -165,11 +182,9 @@ export const BattleDetails: React.FC<{
           <p className="opacity-50 font-bold">{Number(battle.blockNumber)}</p>
         </div>
         <div className="absolute top-0 left-0 flex gap-1 text-xs p-2">
-          <p className="opacity-50 font-bold">
-            {battle.raidedAmount ? "RAID" : "INVASION"}
-          </p>
+          <p className="opacity-50 font-bold">{raid ? "RAID" : "INVASION"}</p>
         </div>
       </div>
-    </div>
+    </Navigator.Screen>
   );
 };

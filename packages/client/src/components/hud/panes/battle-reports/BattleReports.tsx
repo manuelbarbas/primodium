@@ -1,17 +1,17 @@
-import { HasValue } from "@latticexyz/recs";
+import { EntityID, HasValue } from "@latticexyz/recs";
 import { useEntityQuery } from "@latticexyz/react";
-import { FaArrowLeft, FaGreaterThan, FaTimes, FaTrophy } from "react-icons/fa";
-import {
-  Account,
-  Battle,
-  BattleReport,
-} from "src/network/components/clientComponents";
+import { FaTimes, FaTrophy } from "react-icons/fa";
+import { Account, Battle } from "src/network/components/clientComponents";
 import { SingletonID } from "@latticexyz/network";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { world } from "src/network/world";
-import { Position } from "src/network/components/chainComponents";
+import {
+  BattleRaidResult,
+  Position,
+} from "src/network/components/chainComponents";
 import { BattleDetails } from "./BattleDetails";
 import { SecondaryCard } from "src/components/core/Card";
+import { Navigator } from "src/components/core/Navigator";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -26,13 +26,7 @@ export const LabeledValue: React.FC<{
 };
 
 export const BattleReports = () => {
-  const battleId = BattleReport.use()?.battle;
-  const selectedBattle = useMemo(() => {
-    if (!battleId) return undefined;
-    const rawBattle = Battle.get(battleId);
-    if (!rawBattle) return undefined;
-    return Battle.format(rawBattle);
-  }, [battleId]);
+  const [selectedBattle, setSelectedBattle] = useState<EntityID>();
 
   const player = Account.use()?.value;
   const attackingBattles = useEntityQuery([
@@ -75,9 +69,9 @@ export const BattleReports = () => {
   if (!player) return null;
 
   return (
-    <div className="flex flex-col items-center gap-2 h-full">
-      {!selectedBattle && (
-        <div className="text-xs space-y-3 h-full w-full scrollbar ">
+    <Navigator initialScreen={"BattleReports"} className="border-none">
+      <Navigator.Screen title={"BattleReports"}>
+        <div className="text-xs space-y-1 w-full overflow-x-hidden">
           {battles.length === 0 && (
             <SecondaryCard className="w-full h-full flex items-center justify-center font-bold">
               <p className="opacity-50">NO BATTLE REPORTS FOUND</p>
@@ -85,10 +79,13 @@ export const BattleReports = () => {
           )}
           {battles.length !== 0 &&
             battles.map((battle, index) => (
-              <button
+              <Navigator.NavButton
+                to="BattleDetails"
                 key={index}
-                onClick={() => BattleReport.update({ battle: battle.entity })}
-                className="relative flex items-center justify-between w-full p-2 border rounded-md border-slate-700 bg-slate-800 hover:border-cyan-400 outline-none"
+                onClick={() => {
+                  setSelectedBattle(battle.id);
+                }}
+                className="w-full p-0 flex justify-between text-xs bg-base-100 relative border-gray-700"
               >
                 <div className="flex gap-1 items-center">
                   {battle.winner !== player && (
@@ -116,7 +113,11 @@ export const BattleReports = () => {
                   </LabeledValue>
                 </div>
                 <LabeledValue label="TYPE">
-                  <p>{!battle.raidedAmount ? "INVASION" : "RAID"}</p>
+                  <p>
+                    {!BattleRaidResult.get(battle?.id ?? SingletonID)
+                      ? "INVASION"
+                      : "RAID"}
+                  </p>
                 </LabeledValue>
                 <div className="text-right">
                   <LabeledValue label="TIMESTAMP">
@@ -126,25 +127,14 @@ export const BattleReports = () => {
                     </div>
                   </LabeledValue>
                 </div>
-
-                <div className="flex items-center gap-1 px-1 absolute bottom-0 right-1 text-[.6rem] border rounded-md border-cyan-800 bg-slate-700 translate-y-1/2">
-                  VIEW DETAILS <FaGreaterThan />
-                </div>
-              </button>
+              </Navigator.NavButton>
             ))}
         </div>
-      )}
-      {selectedBattle && (
-        <BattleDetails battle={selectedBattle} player={player} />
-      )}
-      {selectedBattle && (
-        <button
-          className="p-1 px-4 border rounded-md gap-2 flex items-center text-md font-bold bg-slate-800 border-slate-600 mt-2"
-          onClick={() => BattleReport.update({ battle: undefined })}
-        >
-          <FaArrowLeft /> Back
-        </button>
-      )}
-    </div>
+      </Navigator.Screen>
+      <BattleDetails battleId={selectedBattle ?? SingletonID} player={player} />
+      <div className="sticky bottom-0 w-full flex items-center justify-center mt-2">
+        <Navigator.BackButton />
+      </div>
+    </Navigator>
   );
 };

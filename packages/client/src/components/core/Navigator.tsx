@@ -121,6 +121,8 @@ const BackButton: FC<{
   disabled?: boolean;
 }> = ({ children, onClick, className, disabled = false }) => {
   const { goBack, history } = useNavigation();
+  if (history.length <= 1) return <></>;
+
   return (
     <Button
       disabled={history.length <= 1 || disabled}
