@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
+import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
+import { SystemCall, ResourceId } from "@latticexyz/world/src/SystemCall.sol";
+import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 // tables
 import { Home, P_RequiredTile, P_ProducesUnits, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/index.sol";
 
@@ -11,25 +14,27 @@ import { LibProduction } from "libraries/LibProduction.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 
+import { S_SpendResourcesSystem } from "systems/subsystems/S_SpendResourcesSystem.sol";
+import { S_MaxStorageSystem } from "systems/subsystems/S_MaxStorageSystem.sol";
+import { S_ReduceProductionRateSystem } from "systems/subsystems/S_ReduceProductionRateSystem.sol";
+import { S_ResourceProductionSystem } from "systems/subsystems/S_ResourceProductionSystem.sol";
+
 // types
 import { BuildingKey, BuildingTileKey, ExpansionKey } from "src/Keys.sol";
 import { Bounds, EBuilding, EResource } from "src/Types.sol";
 
 library LibBuilding {
   /// @notice Builds a building at a specified coordinate
-  /// @param world Interface for the world contract
   /// @param playerEntity The entity ID of the player
   /// @param buildingPrototype The type of building to construct
   /// @param coord The coordinate where the building should be placed
   /// @return buildingEntity The entity ID of the newly constructed building
   function build(
-    IWorld world,
     bytes32 playerEntity,
     bytes32 buildingPrototype,
     PositionData memory coord
   ) internal returns (bytes32 buildingEntity) {
     buildingEntity = LibEncode.getHash(BuildingKey, coord);
-    uint256 level = 1;
     require(!Spawned.get(buildingEntity), "[BuildSystem] Building already exists");
 
     require(
@@ -38,7 +43,7 @@ library LibBuilding {
     );
 
     require(
-      hasRequiredBaseLevel(playerEntity, buildingPrototype, level),
+      hasRequiredBaseLevel(playerEntity, buildingPrototype, 1),
       "[BuildSystem] MainBase level requirement not met"
     );
 
@@ -46,17 +51,42 @@ library LibBuilding {
 
     Spawned.set(buildingEntity, true);
     BuildingType.set(buildingEntity, buildingPrototype);
-    Level.set(buildingEntity, level);
+    Level.set(buildingEntity, 1);
     Position.set(buildingEntity, coord);
     LastClaimedAt.set(buildingEntity, block.timestamp);
     OwnedBy.set(buildingEntity, playerEntity);
 
     placeBuildingTiles(playerEntity, buildingEntity, buildingPrototype, coord);
 
-    world.spendBuildingRequiredResources(buildingEntity, level);
-    world.reduceProductionRate(playerEntity, buildingEntity, level);
-    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, level);
-    LibStorage.increaseMaxStorage(playerEntity, buildingEntity, level);
+    address playerAddress = entityToAddress(playerEntity);
+
+    SystemCall.callWithHooksOrRevert(
+      playerAddress,
+      getSystemResourceId("S_SpendResourcesSystem"),
+      abi.encodeCall(S_SpendResourcesSystem.spendBuildingRequiredResources, (buildingEntity, 1)),
+      0
+    );
+
+    SystemCall.callWithHooksOrRevert(
+      entityToAddress(playerEntity),
+      getSystemResourceId("S_MaxStorageSystem"),
+      abi.encodeCall(S_MaxStorageSystem.increaseMaxStorage, (playerEntity, buildingEntity, 1)),
+      0
+    );
+
+    SystemCall.callWithHooksOrRevert(
+      entityToAddress(playerEntity),
+      getSystemResourceId("S_ReduceProductionRateSystem"),
+      abi.encodeCall(S_ReduceProductionRateSystem.reduceProductionRate, (playerEntity, buildingEntity, 1)),
+      0
+    );
+
+    SystemCall.callWithHooksOrRevert(
+      entityToAddress(playerEntity),
+      getSystemResourceId("S_ResourceProductionSystem"),
+      abi.encodeCall(S_ResourceProductionSystem.upgradeResourceProduction, (playerEntity, buildingEntity, 1)),
+      0
+    );
 
     if (P_ProducesUnits.get(buildingPrototype)) {
       UnitFactorySet.add(playerEntity, buildingEntity);

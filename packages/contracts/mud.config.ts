@@ -26,6 +26,16 @@ export const config = mudConfig({
       accessList: ["BuildSystem", "UpgradeBuildingSystem", "DestroySystem"],
       name: "S_ReduceProductionRateSystem",
     },
+    S_ResourceProductionSystem: {
+      openAccess: false,
+      accessList: ["BuildSystem", "UpgradeBuildingSystem", "DestroySystem"],
+      name: "S_ResourceProductionSystem",
+    },
+    S_MaxStorageSystem: {
+      openAccess: false,
+      accessList: ["BuildSystem", "UpgradeBuildingSystem", "DestroySystem"],
+      name: "S_MaxStorageSystem",
+    },
     S_BattleSystem: {
       openAccess: false,
       accessList: ["RaidSystem", "InvadeSystem"],

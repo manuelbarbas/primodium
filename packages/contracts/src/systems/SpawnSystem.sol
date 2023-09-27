@@ -20,18 +20,15 @@ contract SpawnSystem is PrimodiumSystem {
   function spawn() public returns (bytes32) {
     bytes32 playerEntity = addressToEntity(_msgSender());
 
-    bool spawned = Spawned.get(playerEntity);
-
-    require(!spawned, "[SpawnSystem] Player already spawned");
+    require(!Spawned.get(playerEntity), "[SpawnSystem] Already spawned");
 
     Level.set(playerEntity, 1);
 
     bytes32 asteroid = LibAsteroid.createAsteroid(_world(), playerEntity);
     PositionData memory position = Position.get(MainBasePrototypeId);
     position.parent = asteroid;
-    bytes32 mainBase = LibEncode.getHash(BuildingKey, position);
-    Home.set(playerEntity, asteroid, mainBase);
-    LibBuilding.build(IWorld(_world()), playerEntity, MainBasePrototypeId, position);
+    Home.set(playerEntity, asteroid, LibEncode.getHash(BuildingKey, position));
+    LibBuilding.build(playerEntity, MainBasePrototypeId, position);
     return asteroid;
   }
 }

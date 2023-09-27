@@ -3,7 +3,6 @@ pragma solidity >=0.8.21;
 
 // external
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { IWorld } from "codegen/world/IWorld.sol";
 
 // tables
 import { P_EnumToPrototype, Position, PositionData, Spawned, Home } from "codegen/index.sol";
@@ -24,6 +23,6 @@ contract BuildSystem is PrimodiumSystem {
     bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
     require(Spawned.get(playerEntity), "[BuildSystem] Player has not spawned");
 
-    return LibBuilding.build(IWorld(_world()), playerEntity, buildingPrototype, coord);
+    return LibBuilding.build(playerEntity, buildingPrototype, coord);
   }
 }

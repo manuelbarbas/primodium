@@ -3,9 +3,7 @@ pragma solidity >=0.8.21;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
-import { ERock } from "src/Types.sol";
-import { RockType } from "codegen/index.sol";
-import { LibReduceProductionRate } from "codegen/Libraries.sol";
+import { LibReduceProductionRate } from "libraries/LibReduceProductionRate.sol";
 
 contract S_ReduceProductionRateSystem is PrimodiumSystem {
   function reduceProductionRate(
