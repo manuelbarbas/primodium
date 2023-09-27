@@ -39,7 +39,7 @@ library LibInitUnits {
     initStingerDrone(world);
     initMiningVessel(world);
     initMinutemanMarine(world);
-    initTridentMinutemanMarine(world);
+    initTridentMarine(world);
   }
 
   function setupUnit(
@@ -362,8 +362,8 @@ library LibInitUnits {
     setupUnit(world, unitType, maxLevel, unitDesigns, requiredResources, requiredUtilities);
   }
 
-  function initTridentMinutemanMarine(IWorld world) internal {
-    uint256 unitType = TridentMinutemanMarine;
+  function initTridentMarine(IWorld world) internal {
+    uint256 unitType = TridentMarine;
     P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).set(unitType);
 
     uint32 maxLevel = 6;

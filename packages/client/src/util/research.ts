@@ -304,42 +304,41 @@ export const MinutemanMarineUpgradeTree: ResearchItemType = {
   ],
 };
 
-export const TridentMinutemanMarineUpgradeTree: ResearchItemType = {
-  name: "TridentMinutemanMarine Unit Unit Upgrade",
-  id: BlockType.TridentMinutemanMarineUpgrade1,
-  description:
-    "Increases the TridentMinutemanMarine Unit's Mining Power by 1. ",
+export const TridentMarineUpgradeTree: ResearchItemType = {
+  name: "TridentMarine Unit Unit Upgrade",
+  id: BlockType.TridentMarineUpgrade1,
+  description: "Increases the TridentMarine Unit's Mining Power by 1. ",
 
   levels: [
     {
-      id: BlockType.TridentMinutemanMarineUpgrade1,
+      id: BlockType.TridentMarineUpgrade1,
       subtitle: "Level 1",
       description:
-        "Upgrades the Attack and Defence attributes of TridentMinutemanMarine units.",
+        "Upgrades the Attack and Defence attributes of TridentMarine units.",
     },
     {
-      id: BlockType.TridentMinutemanMarineUpgrade2,
+      id: BlockType.TridentMarineUpgrade2,
       subtitle: "Level 2",
       description:
-        "Upgrades the Attack and Defence attributes of TridentMinutemanMarine units.",
+        "Upgrades the Attack and Defence attributes of TridentMarine units.",
     },
     {
-      id: BlockType.TridentMinutemanMarineUpgrade3,
+      id: BlockType.TridentMarineUpgrade3,
       subtitle: "Level 3",
       description:
-        "Upgrades the Attack and Defence attributes of TridentMinutemanMarine units.",
+        "Upgrades the Attack and Defence attributes of TridentMarine units.",
     },
     {
-      id: BlockType.TridentMinutemanMarineUpgrade4,
+      id: BlockType.TridentMarineUpgrade4,
       subtitle: "Level 4",
       description:
-        "Upgrades the Attack and Defence attributes of TridentMinutemanMarine units.",
+        "Upgrades the Attack and Defence attributes of TridentMarine units.",
     },
     {
-      id: BlockType.TridentMinutemanMarineUpgrade5,
+      id: BlockType.TridentMarineUpgrade5,
       subtitle: "Level 5",
       description:
-        "Upgrades the Attack and Defence attributes of TridentMinutemanMarine units.",
+        "Upgrades the Attack and Defence attributes of TridentMarine units.",
     },
   ],
 };
@@ -355,7 +354,7 @@ export const ResearchTree: ResearchTreeType = [
     category: "Unit Upgrade Research",
     data: [
       MinutemanMarineUpgradeTree,
-      TridentMinutemanMarineUpgradeTree,
+      TridentMarineUpgradeTree,
       AnvilDroneUpgradeTree,
       HammerDroneUpgradeTree,
       AegisDroneUpgradeTree,

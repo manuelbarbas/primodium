@@ -1826,18 +1826,18 @@ library LibInitBuildings {
     //Level 2
     unitTypes = new uint256[](2);
     unitTypes[0] = MinutemanMarine;
-    unitTypes[1] = TridentMinutemanMarine;
+    unitTypes[1] = TridentMarine;
     allUnitTypes[1] = unitTypes;
 
     //Level 3
     unitTypes = new uint256[](2);
     unitTypes[0] = MinutemanMarine;
-    unitTypes[1] = TridentMinutemanMarine;
+    unitTypes[1] = TridentMarine;
     allUnitTypes[2] = unitTypes;
     //Level 4
     unitTypes = new uint256[](2);
     unitTypes[0] = MinutemanMarine;
-    unitTypes[1] = TridentMinutemanMarine;
+    unitTypes[1] = TridentMarine;
     allUnitTypes[3] = unitTypes;
 
     /* ***********************Set Values ************************* */

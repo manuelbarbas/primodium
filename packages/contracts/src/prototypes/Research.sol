@@ -118,19 +118,9 @@ uint256 constant MinutemanMarineUpgrade3 = uint256(keccak256(abi.encodePacked(Mi
 uint256 constant MinutemanMarineUpgrade4 = uint256(keccak256(abi.encodePacked(MinutemanMarineUpgradeKey, uint256(4))));
 uint256 constant MinutemanMarineUpgrade5 = uint256(keccak256(abi.encodePacked(MinutemanMarineUpgradeKey, uint256(5))));
 
-string constant TridentMinutemanMarineUpgradeKey = "research.TridentMinutemanMarineUpgrade";
-uint256 constant TridentMinutemanMarineUpgrade = uint256(
-  keccak256(abi.encodePacked(TridentMinutemanMarineUpgradeKey, uint256(1)))
-);
-uint256 constant TridentMinutemanMarineUpgrade2 = uint256(
-  keccak256(abi.encodePacked(TridentMinutemanMarineUpgradeKey, uint256(2)))
-);
-uint256 constant TridentMinutemanMarineUpgrade3 = uint256(
-  keccak256(abi.encodePacked(TridentMinutemanMarineUpgradeKey, uint256(3)))
-);
-uint256 constant TridentMinutemanMarineUpgrade4 = uint256(
-  keccak256(abi.encodePacked(TridentMinutemanMarineUpgradeKey, uint256(4)))
-);
-uint256 constant TridentMinutemanMarineUpgrade5 = uint256(
-  keccak256(abi.encodePacked(TridentMinutemanMarineUpgradeKey, uint256(5)))
-);
+string constant TridentMarineUpgradeKey = "research.TridentMarineUpgrade";
+uint256 constant TridentMarineUpgrade = uint256(keccak256(abi.encodePacked(TridentMarineUpgradeKey, uint256(1))));
+uint256 constant TridentMarineUpgrade2 = uint256(keccak256(abi.encodePacked(TridentMarineUpgradeKey, uint256(2))));
+uint256 constant TridentMarineUpgrade3 = uint256(keccak256(abi.encodePacked(TridentMarineUpgradeKey, uint256(3))));
+uint256 constant TridentMarineUpgrade4 = uint256(keccak256(abi.encodePacked(TridentMarineUpgradeKey, uint256(4))));
+uint256 constant TridentMarineUpgrade5 = uint256(keccak256(abi.encodePacked(TridentMarineUpgradeKey, uint256(5))));

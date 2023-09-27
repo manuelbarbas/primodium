@@ -182,26 +182,11 @@ export const BlockType = {
     5
   ),
 
-  TridentMinutemanMarineUpgrade1: hashStringEntity(
-    "research.TridentMinutemanMarineUpgrade",
-    1
-  ),
-  TridentMinutemanMarineUpgrade2: hashStringEntity(
-    "research.TridentMinutemanMarineUpgrade",
-    2
-  ),
-  TridentMinutemanMarineUpgrade3: hashStringEntity(
-    "research.TridentMinutemanMarineUpgrade",
-    3
-  ),
-  TridentMinutemanMarineUpgrade4: hashStringEntity(
-    "research.TridentMinutemanMarineUpgrade",
-    4
-  ),
-  TridentMinutemanMarineUpgrade5: hashStringEntity(
-    "research.TridentMinutemanMarineUpgrade",
-    5
-  ),
+  TridentMarineUpgrade1: hashStringEntity("research.TridentMarineUpgrade", 1),
+  TridentMarineUpgrade2: hashStringEntity("research.TridentMarineUpgrade", 2),
+  TridentMarineUpgrade3: hashStringEntity("research.TridentMarineUpgrade", 3),
+  TridentMarineUpgrade4: hashStringEntity("research.TridentMarineUpgrade", 4),
+  TridentMarineUpgrade5: hashStringEntity("research.TridentMarineUpgrade", 5),
 
   MiningResearch1: hashStringEntity("research.MiningResearch", 1),
   MiningResearch2: hashStringEntity("research.MiningResearch", 2),
@@ -276,7 +261,7 @@ export const BlockType = {
   AegisDrone: keccak256("unit.AegisDrone") as EntityID,
   MiningVessel: keccak256("unit.MiningVessel") as EntityID,
   MinutemanMarine: keccak256("unit.MinutemanMarine") as EntityID,
-  TridentMinutemanMarine: keccak256("unit.TridentMinutemanMarine") as EntityID,
+  TridentMarine: keccak256("unit.TridentMarine") as EntityID,
 };
 
 export const BlockIdToKey = Object.entries(BlockType).reduce<{
@@ -440,7 +425,7 @@ export const BackgroundImage = new Map<EntityID, string[]>([
   [BlockType.AegisDrone, ["/img/unit/aegisdrone.png"]],
   [BlockType.MiningVessel, ["/img/unit/miningvessel.png"]],
   [BlockType.MinutemanMarine, ["/img/unit/anvildrone.png"]],
-  [BlockType.TridentMinutemanMarine, ["/img/unit/anvildrone.png"]],
+  [BlockType.TridentMarine, ["/img/unit/anvildrone.png"]],
 
   // debug units
   [BlockType.DebugUnit, ["/img/unit/stingerdrone.png"]],
@@ -609,11 +594,11 @@ export const ResearchImage = new Map<EntityID, string>([
   [BlockType.MiningVesselUpgrade4, "/img/unit/miningvessel.png"],
   [BlockType.MiningVesselUpgrade5, "/img/unit/miningvessel.png"],
 
-  [BlockType.TridentMinutemanMarineUpgrade1, "/img/unit/anvildrone.png"],
-  [BlockType.TridentMinutemanMarineUpgrade2, "/img/unit/anvildrone.png"],
-  [BlockType.TridentMinutemanMarineUpgrade3, "/img/unit/anvildrone.png"],
-  [BlockType.TridentMinutemanMarineUpgrade4, "/img/unit/anvildrone.png"],
-  [BlockType.TridentMinutemanMarineUpgrade5, "/img/unit/anvildrone.png"],
+  [BlockType.TridentMarineUpgrade1, "/img/unit/anvildrone.png"],
+  [BlockType.TridentMarineUpgrade2, "/img/unit/anvildrone.png"],
+  [BlockType.TridentMarineUpgrade3, "/img/unit/anvildrone.png"],
+  [BlockType.TridentMarineUpgrade4, "/img/unit/anvildrone.png"],
+  [BlockType.TridentMarineUpgrade5, "/img/unit/anvildrone.png"],
 
   [BlockType.MinutemanMarineUpgrade1, "/img/unit/anvildrone.png"],
   [BlockType.MinutemanMarineUpgrade2, "/img/unit/anvildrone.png"],
