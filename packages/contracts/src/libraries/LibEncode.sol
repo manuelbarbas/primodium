@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
-import { PositionData } from "codegen/Tables.sol";
+import { PositionData } from "codegen/index.sol";
 
 library LibEncode {
   function getHash(bytes32 entity) internal pure returns (bytes32) {

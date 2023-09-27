@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
-import { QueueUnits, QueueUnitsData, QueueItemUnits, QueueItemUnitsData as UnitProductionQueueData } from "codegen/Tables.sol";
+import { QueueUnits, QueueUnitsData, QueueItemUnits, QueueItemUnitsData as UnitProductionQueueData } from "codegen/index.sol";
 
 library UnitProductionQueue {
   /// @notice Enqueue unit for production

@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
-import { P_EnumToPrototype, P_MaxLevel, UnitLevel } from "codegen/Tables.sol";
+import { P_EnumToPrototype, P_MaxLevel, UnitLevel } from "codegen/index.sol";
 import { LibBuilding, LibResource } from "codegen/Libraries.sol";
 import { EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";

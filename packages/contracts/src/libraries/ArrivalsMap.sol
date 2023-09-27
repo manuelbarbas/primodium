@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import { Arrival } from "src/Types.sol";
-import { MapArrivals, MapItemArrivals, MapItemStoredArrivals } from "codegen/Tables.sol";
+import { MapArrivals, MapItemArrivals, MapItemStoredArrivals } from "codegen/index.sol";
 
 library ArrivalsMap {
   /**

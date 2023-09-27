@@ -21,14 +21,14 @@ export const renderSetLevelRecord = (
   level: string,
   i: number
 ) => {
-  const { schema } = config.tables[tableName];
+  const { valueSchema } = config.tables[tableName];
 
-  // Iterate through the keys in the original schema to preserve ordering
-  const formattedValues = Object.keys(schema).map((fieldName) => {
+  // Iterate through the keys in the original valueSchema to preserve ordering
+  const formattedValues = Object.keys(valueSchema).map((fieldName) => {
     const fieldValue = value[fieldName];
 
     const variableName = `${tableName.toLowerCase()}_${fieldName}_level_${level}`;
-    const fieldType = schema[fieldName];
+    const fieldType = valueSchema[fieldName];
     const isArray = Array.isArray(fieldValue);
 
     if (isArray) {
@@ -50,7 +50,9 @@ export const renderSetLevelRecord = (
   });
 
   return `${formattedValues.find((v) => v.declaration) ? formattedValues.map((v) => v.declaration).join("") : ""}
-  values[${i}] = ${tableName}.encode(${formattedValues.map((v) => (v.name ? v.name : v.formattedValue)).join(",")});`;
+  (staticData[${i}], encodedLengths[${i}], dynamicData[${i}]) = ${tableName}.encode(${formattedValues
+    .map((v) => (v.name ? v.name : v.formattedValue))
+    .join(",")});`;
 };
 
 export function renderLevelPrototype(config: StoreConfigWithPrototypes, name: string) {
@@ -84,8 +86,10 @@ export function renderLevelPrototype(config: StoreConfigWithPrototypes, name: st
     /* ----------------------------- LEVEL ${level} ----------------------------- */
     function create${name}Level${level}(IStore store) {
       bytes32[] memory levelKeys = ${name}LevelKeys(${level});
-      bytes32[] memory tableIds = new bytes32[](${Object.keys(value).length});
-      bytes[] memory values = new bytes[](${Object.keys(value).length});
+      ResourceId[] memory tableIds = new ResourceId[](${Object.keys(value).length});
+      bytes[] memory staticData =  new bytes[](${Object.keys(value).length});
+      PackedCounter[] memory encodedLengths = new PackedCounter[](${Object.keys(value).length});
+      bytes[] memory dynamicData = new bytes[](${Object.keys(value).length});
 
       ${Object.keys(value)
         .map((key, i) => `tableIds[${i}] = ${key}TableId;`)
@@ -95,7 +99,7 @@ export function renderLevelPrototype(config: StoreConfigWithPrototypes, name: st
         .map(([tableName, v], i) => (v ? renderSetLevelRecord(config, tableName, v, level, i) : ""))
         .join("")}
 
-      createPrototype(store, levelKeys, tableIds, values);
+      createPrototype(store, levelKeys, tableIds, staticData, encodedLengths, dynamicData);
     }
     `;
     })
@@ -118,14 +122,14 @@ export function renderLevelPrototype(config: StoreConfigWithPrototypes, name: st
   };
 }
 export const renderSetRecord = (config: StoreConfig, tableName: string, value: { [k: string]: number }, i: number) => {
-  const { schema } = config.tables[tableName];
+  const { valueSchema } = config.tables[tableName];
 
-  // Iterate through the keys in the original schema to preserve ordering
-  const formattedValues = Object.keys(schema).map((fieldName) => {
+  // Iterate through the keys in the original valueSchema to preserve ordering
+  const formattedValues = Object.keys(valueSchema).map((fieldName) => {
     const fieldValue = value[fieldName];
 
     const variableName = `${tableName.toLowerCase()}_${fieldName}`;
-    const fieldType = schema[fieldName];
+    const fieldType = valueSchema[fieldName];
     const isArray = Array.isArray(fieldValue);
 
     if (isArray) {
@@ -147,7 +151,9 @@ export const renderSetRecord = (config: StoreConfig, tableName: string, value: {
   });
 
   return `${formattedValues.find((v) => v.declaration) ? formattedValues.map((v) => v.declaration).join("") : ""}
-  values[${i}] = ${tableName}.encode(${formattedValues.map((v) => (v.name ? v.name : v.formattedValue)).join(",")});`;
+(staticData[${i}], encodedLengths[${i}], dynamicData[${i}]) = ${tableName}.encode(${formattedValues
+    .map((v) => (v.name ? v.name : v.formattedValue))
+    .join(",")});`;
 };
 
 export function renderPrototype(config: StoreConfigWithPrototypes, name: string) {
@@ -185,17 +191,19 @@ export function renderPrototype(config: StoreConfigWithPrototypes, name: string)
 
   return `
   ${renderedSolidityHeader}
-  
+
+  import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
   import { IStore } from "@latticexyz/store/src/IStore.sol";
   import { createPrototype } from "../../libraries/prototypes/createPrototype.sol";
+  import { PackedCounter } from "@latticexyz/store/src/PackedCounter.sol";
   ${
     Object.keys(config.enums).length > 0
       ? `import { ${Object.keys(config.enums)
           .map((e) => e)
-          .join(",")} } from "../Types.sol";`
+          .join(",")} } from "../common.sol";`
       : ""
   }
-  import {${allImportedTableIds}} from "../Tables.sol";
+  import {${allImportedTableIds}} from "../index.sol";
   
   bytes32 constant prototypeId = "${name}";
   bytes32 constant ${name}PrototypeId = prototypeId;
@@ -209,9 +217,11 @@ export function renderPrototype(config: StoreConfigWithPrototypes, name: string)
   ${levelPrototype ? levelPrototype.levelKeys : ""}
   function ${name}Prototype(IStore store) {
     bytes32[] memory keys = ${name}Keys();
-    bytes32[] memory tableIds = new bytes32[](LENGTH);
-    bytes[] memory values = new bytes[](LENGTH);
-    
+    ResourceId[] memory tableIds = new ResourceId[](LENGTH);
+    bytes[] memory staticData =  new bytes[](LENGTH);
+      PackedCounter[] memory encodedLengths = new PackedCounter[](LENGTH);
+      bytes[] memory dynamicData = new bytes[](LENGTH);
+
     ${Object.keys(values)
       .map((key, i) => `tableIds[${i}] = ${key}TableId;`)
       .join("")}
@@ -220,7 +230,7 @@ export function renderPrototype(config: StoreConfigWithPrototypes, name: string)
       .map(([tableName, value], i) => (value ? renderSetRecord(config, tableName, value, i) : ""))
       .join("")}
 
-    createPrototype(store, keys, tableIds, values);
+    createPrototype(store, keys, tableIds, staticData, encodedLengths, dynamicData);
     ${levelPrototype ? levelPrototype.levelFunctionCalls : ""}
   }
     ${levelPrototype ? levelPrototype.levels : ""}

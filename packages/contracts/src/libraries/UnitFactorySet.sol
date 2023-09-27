@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import { EResource } from "src/Types.sol";
-import { SetUnitFactories, SetItemUnitFactories } from "codegen/Tables.sol";
+import { SetUnitFactories, SetItemUnitFactories } from "codegen/index.sol";
 
 library UnitFactorySet {
   /// @notice Check if a player has a building in UnitFactories set

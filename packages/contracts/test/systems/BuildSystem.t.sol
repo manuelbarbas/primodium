@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import "test/PrimodiumTest.t.sol";
 
@@ -20,7 +20,8 @@ contract BuildSystemTest is PrimodiumTest {
     bytes32[] memory keys = new bytes32[](1);
     keys[0] = IronMinePrototypeId;
 
-    world.devSetRecord(P_BlueprintTableId, keys, P_Blueprint.encode(blueprint), P_Blueprint.getValueSchema());
+    P_Blueprint.set(IronMinePrototypeId, blueprint);
+
     vm.startPrank(alice);
     bytes32 buildingEntity = world.build(EBuilding.IronMine, getIronPosition(alice));
 
@@ -118,15 +119,7 @@ contract BuildSystemTest is PrimodiumTest {
 
     PositionData memory coord1 = getPosition3(alice);
 
-    bytes32[] memory keys = new bytes32[](1);
-    keys[0] = addressToEntity(alice);
-    world.devSetRecord(
-      P_RequiredBaseLevelTableId,
-      keys,
-      P_RequiredBaseLevel.encode(2),
-      P_RequiredBaseLevel.getValueSchema()
-    );
-
+    P_RequiredBaseLevel.set(IronMinePrototypeId, 0, 2);
     removeRequirements(EBuilding.IronMine);
     world.build(EBuilding.IronMine, coord1);
     vm.stopPrank();
@@ -155,7 +148,7 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testBuildWithRequiredResources() public {
-    vm.startPrank(address(world));
+    vm.startPrank(creator);
     ResourceCount.set(playerEntity, EResource.Iron, 100);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
@@ -169,7 +162,7 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testBuildWithProductionDependencies() public {
-    vm.startPrank(address(world));
+    vm.startPrank(creator);
     uint256 originalProduction = 100;
     uint256 productionReduction = 10;
     ProductionRate.set(playerEntity, EResource.Iron, originalProduction);
@@ -193,7 +186,7 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testBuildWithResourceProductionIncrease() public {
-    vm.startPrank(address(world));
+    vm.startPrank(creator);
 
     uint256 increase = 69;
     P_ProductionData memory data = P_ProductionData(EResource.Iron, increase);
@@ -205,7 +198,7 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testBuildWithMaxStorageIncrease() public {
-    vm.startPrank(address(world));
+    vm.startPrank(creator);
 
     uint8[] memory data = new uint8[](1);
     data[0] = uint8(EResource.Iron);

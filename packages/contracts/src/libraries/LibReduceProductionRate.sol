@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
-import { P_RequiredDependencies, P_RequiredDependenciesData, P_Production, ProductionRate, Level, BuildingType } from "codegen/Tables.sol";
+import { P_RequiredDependencies, P_RequiredDependenciesData, P_Production, ProductionRate, Level, BuildingType } from "codegen/index.sol";
 import { EResource } from "src/Types.sol";
-import { ResourceSelector } from "@latticexyz/world/src/ResourceSelector.sol";
 
 library LibReduceProductionRate {
   /// @notice Restores production rate when a building is destroyed

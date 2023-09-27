@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import "../PrimodiumTest.t.sol";
 
@@ -11,7 +11,7 @@ contract LibMotherlodeTest is PrimodiumTest {
     gameConfig.motherlodeDistance = 8;
     gameConfig.maxMotherlodesPerAsteroid = 12;
     gameConfig.motherlodeChanceInv = 2;
-    vm.startPrank(worldAddress);
+    vm.startPrank(creator);
     P_GameConfig.set(world, gameConfig);
     vm.stopPrank();
   }
@@ -66,7 +66,7 @@ contract LibMotherlodeTest is PrimodiumTest {
 
   function testCreateMotherlode() public {
     (bytes32 asteroid, PositionData memory position) = findMotherlode();
-    vm.startPrank(worldAddress);
+    vm.startPrank(creator);
     LibMotherlode.createMotherlode(position);
     bytes32 motherlodeEntity = keccak256(abi.encode(asteroid, "motherlode", position.x, position.y));
     (uint8 size, uint8 motherlodeType) = LibMotherlode.getMotherlodeRawPrototype(motherlodeEntity);

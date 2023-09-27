@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import { IWorld } from "codegen/world/IWorld.sol";
-import { RockType, OwnedBy, BattleResultData, RaidResult, RaidResultData, P_IsUtility, P_UnitPrototypes, Home } from "codegen/Tables.sol";
+import { RockType, OwnedBy, BattleResultData, RaidResult, RaidResultData, P_IsUtility, P_UnitPrototypes, Home } from "codegen/index.sol";
 import { ERock, EResource, ESendType } from "src/Types.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
 import { LibResource } from "libraries/LibResource.sol";
@@ -63,7 +63,7 @@ library LibRaid {
       LibStorage.increaseStoredResource(br.attacker, resource, raidAmount);
       LibStorage.decreaseStoredResource(br.defender, resource, raidAmount);
     }
-    RaidResult.emitEphemeral(keccak256(abi.encode(br)), raidResult);
+    RaidResult.set(keccak256(abi.encode(br)), raidResult);
     return raidResult;
   }
 }

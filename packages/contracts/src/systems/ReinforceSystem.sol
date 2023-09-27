@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import { System } from "@latticexyz/world/src/System.sol";
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { LibReinforce } from "codegen/Libraries.sol";
 
-import { OwnedBy } from "codegen/tables.sol";
+import { OwnedBy } from "codegen/index.sol";
 
 contract ReinforceSystem is PrimodiumSystem {
   /**

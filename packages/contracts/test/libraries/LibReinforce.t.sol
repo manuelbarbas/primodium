@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import "test/PrimodiumTest.t.sol";
 
@@ -31,7 +31,7 @@ contract LibReinforceTest is PrimodiumTest {
 
   function setUp() public override {
     super.setUp();
-    vm.startPrank(worldAddress);
+    vm.startPrank(creator);
     player = addressToEntity(worldAddress);
     arrival.from = player;
     bytes32[] memory unitTypes = new bytes32[](unitPrototypeCount);

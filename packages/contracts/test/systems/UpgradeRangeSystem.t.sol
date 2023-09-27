@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import "../PrimodiumTest.t.sol";
 
 contract UpgradeRangeSystemTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
-    spawn(alice);
+    spawn(worldAddress);
+    vm.startPrank(creator);
   }
 
   function testOutOfBounds() public {
-    vm.startPrank(alice);
     bytes32 aliceEntity = addressToEntity(alice);
     bytes32 asteroid = Home.getAsteroid(aliceEntity);
 
@@ -25,9 +25,7 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
   function testUpgradeRangeWrongBaseLevelFail() public {
     bytes32 aliceEntity = addressToEntity(alice);
     vm.startPrank(alice);
-    bytes32[] memory keys = new bytes32[](1);
-    keys[0] = aliceEntity;
-    world.devSetRecord(LevelTableId, keys, Level.encode(5), Level.getValueSchema());
+    Level.set(aliceEntity, 5);
 
     assertTrue(P_RequiredBaseLevel.get(ExpansionKey, 5) != 0, "should have expansion level 5");
     vm.expectRevert(bytes("[UpgradeRangeSystem] MainBase level requirement not met"));
@@ -41,9 +39,8 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
 
     uint256 maxLevel = P_MaxLevel.get(ExpansionKey);
     bytes32[] memory keys = new bytes32[](1);
-    keys[0] = aliceEntity;
 
-    world.devSetRecord(LevelTableId, keys, Level.encode(maxLevel), Level.getValueSchema());
+    Level.set(aliceEntity, maxLevel);
     assertEq(Level.get(aliceEntity), maxLevel);
 
     vm.expectRevert(bytes("[UpgradeRangeSystem] Max level reached"));
@@ -61,7 +58,7 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
     bytes32[] memory keys = new bytes32[](1);
     keys[0] = mainBase;
 
-    world.devSetRecord(LevelTableId, keys, Level.encode(level + 1), Level.getValueSchema());
+    Level.set(mainBase, level + 1);
 
     world.upgradeRange();
     assertEq(Level.get(aliceEntity), level + 1);

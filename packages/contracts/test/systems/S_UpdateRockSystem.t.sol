@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import "test/PrimodiumTest.t.sol";
 
@@ -27,7 +27,7 @@ contract S_UpdateRockSystemTest is PrimodiumTest {
 
   function setUp() public override {
     super.setUp();
-    vm.startPrank(worldAddress);
+    vm.startPrank(creator);
     player = addressToEntity(worldAddress);
     BuildingType.set(building, buildingPrototype);
     P_GameConfigData memory config = P_GameConfig.get();

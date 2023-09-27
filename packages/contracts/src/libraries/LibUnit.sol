@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
-import { Motherlode, ProductionRate, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_Unit, P_UnitProduction, P_UnitProdMultiplier, LastClaimedAt, RockType } from "codegen/Tables.sol";
+import { Motherlode, ProductionRate, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_Unit, P_UnitProduction, P_UnitProdMultiplier, LastClaimedAt, RockType } from "codegen/index.sol";
 import { EResource, ERock } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";

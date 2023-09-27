@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import "test/PrimodiumTest.t.sol";
 
 contract LibBuildingTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
+    spawn(creator);
+    vm.startPrank(creator);
   }
 
   function testGetPlayerBounds(
@@ -20,32 +22,24 @@ contract LibBuildingTest is PrimodiumTest {
     vm.assume(maxX >= currX);
     vm.assume(maxY >= currY);
 
-    spawn(alice);
-    vm.startPrank(alice);
-
     bytes32[] memory keys = new bytes32[](0);
 
-    world.devSetRecord(P_AsteroidTableId, keys, P_Asteroid.encode(maxX, maxY), P_Asteroid.getValueSchema());
+    P_Asteroid.set(maxX, maxY);
 
     bytes32 playerEntity = addressToEntity(alice);
     uint256 playerLevel = Level.get(playerEntity);
 
-    keys = new bytes32[](2);
-    keys[0] = ExpansionKey;
-    keys[1] = bytes32(uint256(playerLevel));
-
-    DimensionsData memory curr = DimensionsData(int32(currX), int32(currY));
-    world.devSetRecord(DimensionsTableId, keys, Dimensions.encode(currX, currY), Dimensions.getValueSchema());
+    Dimensions.set(ExpansionKey, playerLevel, currX, currY);
 
     Bounds memory bounds = LibBuilding.getPlayerBounds(playerEntity);
 
-    assertEq(bounds.minX, (maxX - curr.x) / 2);
-    assertEq(bounds.maxX, (maxX + curr.x) / 2 - 1);
-    assertEq(bounds.minY, (maxY - curr.y) / 2);
-    assertEq(bounds.maxY, (maxY + curr.y) / 2 - 1);
+    assertEq(bounds.minX, (maxX - currX) / 2);
+    assertEq(bounds.maxX, (maxX + currX) / 2 - 1);
+    assertEq(bounds.minY, (maxY - currY) / 2);
+    assertEq(bounds.maxY, (maxY + currY) / 2 - 1);
 
     // Check that the bound size matches with the current player dimensions
-    assertEq(curr.x, bounds.maxX - bounds.minX + 1);
-    assertEq(curr.y, bounds.maxY - bounds.minY + 1);
+    assertEq(currX, bounds.maxX - bounds.minX + 1);
+    assertEq(currY, bounds.maxY - bounds.minY + 1);
   }
 }

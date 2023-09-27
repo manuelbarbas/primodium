@@ -1,12 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 import "forge-std/Test.sol";
-import { MudTest } from "@latticexyz/store/src/MudTest.sol";
-import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/getKeysWithValue.sol";
-import { ResourceSelector } from "@latticexyz/world/src/ResourceSelector.sol";
+import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 
 import "codegen/world/IWorld.sol";
-import "codegen/Tables.sol";
+import "codegen/index.sol";
 import "src/Types.sol";
 import "codegen/Prototypes.sol";
 import "codegen/Libraries.sol";
@@ -28,6 +26,7 @@ contract PrimodiumTest is MudTest {
   IWorld public world;
   uint256 userNonce = 0;
 
+  address creator;
   address payable alice;
   address payable bob;
   address payable eve;
@@ -35,6 +34,8 @@ contract PrimodiumTest is MudTest {
   function setUp() public virtual override {
     super.setUp();
     world = IWorld(worldAddress);
+    creator = world.creator();
+    console.log("creator:", creator);
 
     alice = getUser();
     bob = getUser();
@@ -189,30 +190,22 @@ contract PrimodiumTest is MudTest {
 
   function removeRequiredTile(EBuilding building) internal {
     bytes32 buildingEntity = P_EnumToPrototype.get(BuildingKey, uint8(building));
-    bytes32[] memory keys = new bytes32[](1);
-    keys[0] = buildingEntity;
-    world.devDeleteRecord(P_RequiredTileTableId, keys, P_RequiredTile.getValueSchema());
+    P_RequiredTile.deleteRecord(buildingEntity);
   }
 
   function removeRequiredResources(EBuilding building) internal {
     bytes32 buildingEntity = P_EnumToPrototype.get(BuildingKey, uint8(building));
     uint256 buildingMaxLevel = P_MaxLevel.get(world, buildingEntity);
-    bytes32[] memory keys = new bytes32[](2);
-    keys[0] = buildingEntity;
     for (uint256 i = 0; i < buildingMaxLevel; i++) {
-      keys[1] = bytes32(i + 1);
-      world.devDeleteRecord(P_RequiredResourcesTableId, keys, P_RequiredResources.getValueSchema());
+      P_RequiredResources.deleteRecord(buildingEntity, i);
     }
   }
 
   function removeRequiredMainBase(EBuilding building) internal {
     bytes32 buildingEntity = P_EnumToPrototype.get(BuildingKey, uint8(building));
     uint256 buildingMaxLevel = P_MaxLevel.get(world, buildingEntity);
-    bytes32[] memory keys = new bytes32[](2);
-    keys[0] = buildingEntity;
     for (uint256 i = 0; i < buildingMaxLevel; i++) {
-      keys[1] = bytes32(i + 1);
-      world.devDeleteRecord(P_RequiredBaseLevelTableId, keys, P_RequiredBaseLevel.getValueSchema());
+      P_RequiredBaseLevel.deleteRecord(buildingEntity, i);
     }
   }
 
