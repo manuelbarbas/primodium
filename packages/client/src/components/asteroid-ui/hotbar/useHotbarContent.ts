@@ -67,11 +67,11 @@ const advancedBuildingHotbar: Hotbar = {
       keybind: KeybindActions.Hotbar6,
     },
     {
-      blockType: BlockType.DroneFactory,
+      blockType: BlockType.Workshop,
       keybind: KeybindActions.Hotbar7,
     },
     {
-      blockType: BlockType.AdvancedDroneFactory,
+      blockType: BlockType.DroneFactory,
       keybind: KeybindActions.Hotbar8,
     },
     {

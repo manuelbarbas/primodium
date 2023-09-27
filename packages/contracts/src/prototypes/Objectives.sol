@@ -11,9 +11,9 @@ uint256 constant BuildFirstAlloyFactoryID = uint256(keccak256("objective.BuildFi
 uint256 constant BuildFirstPVCellFactoryID = uint256(keccak256("objective.BuildFirstPVCellFactory"));
 
 uint256 constant BuildGarageID = uint256(keccak256("objective.BuildGarage"));
-uint256 constant BuildDroneFactoryID = uint256(keccak256("objective.BuildDroneFactory"));
+uint256 constant BuildWorkshopID = uint256(keccak256("objective.BuildWorkshop"));
 uint256 constant BuildSolarPanelID = uint256(keccak256("objective.BuildSolarPanel"));
-uint256 constant BuildAdvancedDroneFactoryID = uint256(keccak256("objective.BuildAdvancedDroneFactory"));
+uint256 constant BuildDroneFactoryID = uint256(keccak256("objective.BuildDroneFactory"));
 uint256 constant BuildHangarID = uint256(keccak256("objective.BuildHangar"));
 
 uint256 constant TrainMarineUnitID = uint256(keccak256("objective.TrainMarineUnit"));

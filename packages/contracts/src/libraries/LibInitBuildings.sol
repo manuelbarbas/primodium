@@ -49,8 +49,8 @@ library LibInitBuildings {
     initSolarPanel(world);
     initGarage(world);
     initHangar(world);
+    initWorkshop(world);
     initDroneFactory(world);
-    initAdvancedDroneFactory(world);
     initStarmapper(world);
   }
 
@@ -1551,8 +1551,8 @@ library LibInitBuildings {
     }
   }
 
-  function initAdvancedDroneFactory(IWorld world) internal {
-    uint256 unitTrainingBuildingType = AdvancedDroneFactoryID;
+  function initDroneFactory(IWorld world) internal {
+    uint256 unitTrainingBuildingType = DroneFactoryID;
     uint32 maxLevel = 6;
     P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(
       unitTrainingBuildingType,
@@ -1723,8 +1723,8 @@ library LibInitBuildings {
     );
   }
 
-  function initDroneFactory(IWorld world) internal {
-    uint256 unitTrainingBuildingType = DroneFactoryID;
+  function initWorkshop(IWorld world) internal {
+    uint256 unitTrainingBuildingType = WorkshopID;
     uint32 maxLevel = 4;
     P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(
       unitTrainingBuildingType,

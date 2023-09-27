@@ -234,7 +234,7 @@ export const animationConfig: Animation<any>[] = [
     suffix: ".png",
   },
   {
-    key: "dronefactory/level1",
+    key: "Workshop/level1",
     assetKey: "sprite-atlas",
     frameRate: 5,
     startFrame: 1,

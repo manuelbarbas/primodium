@@ -503,792 +503,268 @@
     "absolutePath": "src/libraries/LibInitWorld.sol",
     "id": 58957,
     "exportedSymbols": {
-      "AdvancedDroneFactoryID": [
-        71603
-      ],
-      "AdvancedMarineUnit": [
-        73892
-      ],
-      "AdvancedMarineUnitUpgrade": [
-        73628
-      ],
-      "AdvancedMarineUnitUpgrade2": [
-        73643
-      ],
-      "AdvancedMarineUnitUpgrade3": [
-        73658
-      ],
-      "AdvancedMarineUnitUpgrade4": [
-        73673
-      ],
-      "AdvancedMarineUnitUpgrade5": [
-        73688
-      ],
-      "AdvancedMarineUnitUpgradeKey": [
-        73613
-      ],
-      "AegisDrone": [
-        73908
-      ],
-      "AegisDroneUpgrade": [
-        73472
-      ],
-      "AegisDroneUpgrade2": [
-        73487
-      ],
-      "AegisDroneUpgrade3": [
-        73502
-      ],
-      "AegisDroneUpgrade4": [
-        73517
-      ],
-      "AegisDroneUpgrade5": [
-        73532
-      ],
-      "AegisDroneUpgradeKey": [
-        73457
-      ],
-      "AirID": [
-        73698
-      ],
-      "AlloyCraftedItemID": [
-        72219
-      ],
-      "AlloyFactory2ResearchID": [
-        72828
-      ],
-      "AlloyFactory3ResearchID": [
-        72836
-      ],
-      "AlloyFactoryID": [
-        71563
-      ],
-      "AlloyFactoryResearchID": [
-        72820
-      ],
-      "AlluviumID": [
-        73722
-      ],
-      "AnvilDrone": [
-        73932
-      ],
-      "AnvilDroneUpgrade": [
-        73238
-      ],
-      "AnvilDroneUpgrade2": [
-        73253
-      ],
-      "AnvilDroneUpgrade3": [
-        73268
-      ],
-      "AnvilDroneUpgrade4": [
-        73283
-      ],
-      "AnvilDroneUpgrade5": [
-        73298
-      ],
-      "AnvilDroneUpgradeKey": [
-        73223
-      ],
-      "AsteroidKey": [
-        71416
-      ],
-      "BIGNUM": [
-        71984
-      ],
-      "BedrockID": [
-        73738
-      ],
-      "BiofilmID": [
-        73714
-      ],
-      "BolutiteID": [
-        73842
-      ],
-      "BolutiteMineID": [
-        71515
-      ],
-      "BolutiteResearchID": [
-        72692
-      ],
-      "BolutiteResourceItemID": [
-        72170
-      ],
-      "BuildingKey": [
-        71410
-      ],
-      "BuildingTileKey": [
-        71413
-      ],
-      "Coord": [
-        106594
-      ],
-      "CopperID": [
-        73770
-      ],
-      "CopperMine2ResearchID": [
-        72732
-      ],
-      "CopperMine3ResearchID": [
-        72740
-      ],
-      "CopperMineID": [
-        71459
-      ],
-      "CopperMineResearchID": [
-        72724
-      ],
-      "CopperResearchID": [
-        72668
-      ],
-      "CopperResourceItemID": [
-        72173
-      ],
-      "DebugAlloyFactoryID": [
-        71773
-      ],
-      "DebugBuiltBuildingTypeObjectiveID": [
-        72056
-      ],
-      "DebugCompletedPriorObjectiveID": [
-        72024
-      ],
-      "DebugCopperMineID": [
-        71725
-      ],
-      "DebugDefeatedPirateAsteroidObjectiveID": [
-        72152
-      ],
-      "DebugDefenceBuilding": [
-        71821
-      ],
-      "DebugDestroyedUnitsObjectiveID": [
-        72112
-      ],
-      "DebugFreeObjectiveID": [
-        71992
-      ],
-      "DebugHavResourcesObjectiveID": [
-        72000
-      ],
-      "DebugHaveMaxUtilityObjectiveID": [
-        72016
-      ],
-      "DebugHaveUnitsObjectiveID": [
-        72008
-      ],
-      "DebugHousingBuilding": [
-        71805
-      ],
-      "DebugIronMineID": [
-        71717
-      ],
-      "DebugIronMineNoTileReqID": [
-        71749
-      ],
-      "DebugIronMineWithBuildLimitID": [
-        71741
-      ],
-      "DebugIronPlateFactoryID": [
-        71765
-      ],
-      "DebugIronPlateFactoryNoMineReqID": [
-        71757
-      ],
-      "DebugLithiumCopperOxideFactoryID": [
-        71781
-      ],
-      "DebugLithiumMineID": [
-        71733
-      ],
-      "DebugMainBaseLevelObjectiveID": [
-        72032
-      ],
-      "DebugMotherlodeMiningIridiumObjectiveID": [
-        72096
-      ],
-      "DebugMotherlodeMiningKimberliteObjectiveID": [
-        72104
-      ],
-      "DebugMotherlodeMiningPlatinumObjectiveID": [
-        72088
-      ],
-      "DebugMotherlodeMiningTitaniumObjectiveID": [
-        72080
-      ],
-      "DebugNumberOfBuiltBuildingTypeObjectiveID": [
-        72064
-      ],
-      "DebugRaidObjectiveID": [
-        72072
-      ],
-      "DebugResourceProductionObjectiveID": [
-        72048
-      ],
-      "DebugResourceRewardObjectiveID": [
-        72120
-      ],
-      "DebugSimpleBuilding3x3": [
-        71701
-      ],
-      "DebugSimpleBuildingBuildLimitReq": [
-        71653
-      ],
-      "DebugSimpleBuildingMainBaseLevelReqID": [
-        71669
-      ],
-      "DebugSimpleBuildingNoReqsID": [
-        71629
-      ],
-      "DebugSimpleBuildingRequiresTitanium": [
-        71709
-      ],
-      "DebugSimpleBuildingResearchReqsID": [
-        71645
-      ],
-      "DebugSimpleBuildingResourceReqsID": [
-        71637
-      ],
-      "DebugSimpleBuildingTileReqID": [
-        71661
-      ],
-      "DebugSimpleBuildingUtilityResourceRequirement": [
-        71677
-      ],
-      "DebugSimpleBuildingWithUpgradeResearchReqsID": [
-        71693
-      ],
-      "DebugSimpleBuildingWithUpgradeResourceReqsID": [
-        71685
-      ],
-      "DebugSimpleTechnologyIncreaseHousing": [
-        71909
-      ],
-      "DebugSimpleTechnologyIridiumCostID": [
-        71965
-      ],
-      "DebugSimpleTechnologyKimberliteCostID": [
-        71973
-      ],
-      "DebugSimpleTechnologyMainBaseLevelReqsID": [
-        71941
-      ],
-      "DebugSimpleTechnologyNoReqsID": [
-        71917
-      ],
-      "DebugSimpleTechnologyPlatinumCostID": [
-        71957
-      ],
-      "DebugSimpleTechnologyResearchReqsID": [
-        71933
-      ],
-      "DebugSimpleTechnologyResourceReqsID": [
-        71925
-      ],
-      "DebugSimpleTechnologyTitaniumCostID": [
-        71949
-      ],
-      "DebugSimpleTechnologyUpgradeUnit": [
-        71901
-      ],
-      "DebugSolarPanelID": [
-        71789
-      ],
-      "DebugSpawnPirateAsteroidID": [
-        72136
-      ],
-      "DebugSpawnPirateAsteroidObjectiveID": [
-        72144
-      ],
-      "DebugStorageBuildingID": [
-        71981
-      ],
-      "DebugSuperIronMineID": [
-        71885
-      ],
-      "DebugSuperIronPlateFactoryID": [
-        71893
-      ],
-      "DebugTechnologyResearchedObjectiveID": [
-        72040
-      ],
-      "DebugUnit": [
-        71829
-      ],
-      "DebugUnit2": [
-        71837
-      ],
-      "DebugUnit3": [
-        71845
-      ],
-      "DebugUnitBattle1": [
-        71869
-      ],
-      "DebugUnitBattle2": [
-        71877
-      ],
-      "DebugUnitMiner": [
-        71853
-      ],
-      "DebugUnitMiner2": [
-        71861
-      ],
-      "DebugUnitProductionBuilding": [
-        71813
-      ],
-      "DebugUnitsRewardObjectiveID": [
-        72128
-      ],
-      "DebugUtilityProductionBuilding": [
-        71797
-      ],
-      "Dimensions": [
-        106599
-      ],
-      "DimensionsComponent": [
-        22691
-      ],
-      "DimensionsComponentID": [
-        22536
-      ],
-      "DroneFactoryID": [
-        71595
-      ],
-      "ElectricityUtilityResourceID": [
-        73858
-      ],
-      "ExpansionKey": [
-        73037
-      ],
-      "ExpansionResearch": [
-        73052
-      ],
-      "ExpansionResearch2": [
-        73067
-      ],
-      "ExpansionResearch3": [
-        73082
-      ],
-      "ExpansionResearch4": [
-        73097
-      ],
-      "ExpansionResearch5": [
-        73112
-      ],
-      "ExpansionResearch6": [
-        73127
-      ],
-      "ExpansionResearch7": [
-        73142
-      ],
-      "GameConfig": [
-        106617
-      ],
-      "GameConfigComponent": [
-        22897
-      ],
-      "GameConfigComponentID": [
-        22704
-      ],
-      "GarageID": [
-        71547
-      ],
-      "HammerDrone": [
-        73916
-      ],
-      "HammerDroneUpgrade": [
-        73316
-      ],
-      "HammerDroneUpgrade2": [
-        73331
-      ],
-      "HammerDroneUpgrade3": [
-        73346
-      ],
-      "HammerDroneUpgrade4": [
-        73361
-      ],
-      "HammerDroneUpgrade5": [
-        73376
-      ],
-      "HammerDroneUpgradeKey": [
-        73301
-      ],
-      "HangarID": [
-        71539
-      ],
-      "HousingUnit2ResearchID": [
-        72924
-      ],
-      "HousingUnit3ResearchID": [
-        72932
-      ],
-      "HousingUnitResearchID": [
-        72916
-      ],
-      "HousingUtilityResourceID": [
-        73866
-      ],
-      "IWorld": [
-        1322
-      ],
-      "IridiumID": [
-        73794
-      ],
-      "IridiumMineID": [
-        71475
-      ],
-      "IridiumResearchID": [
-        72683
-      ],
-      "IridiumResourceItemID": [
-        72176
-      ],
-      "IronID": [
-        73762
-      ],
-      "IronMine2ResearchID": [
-        72700
-      ],
-      "IronMine3ResearchID": [
-        72708
-      ],
-      "IronMine4ResearchID": [
-        72716
-      ],
-      "IronMineID": [
-        71451
-      ],
-      "IronPlateCraftedItemID": [
-        72211
-      ],
-      "IronPlateFactory2ResearchID": [
-        72780
-      ],
-      "IronPlateFactory3ResearchID": [
-        72788
-      ],
-      "IronPlateFactoryID": [
-        71555
-      ],
-      "IronPlateFactoryResearchID": [
-        72772
-      ],
-      "IronResourceItemID": [
-        72179
-      ],
-      "KimberliteID": [
-        73818
-      ],
-      "KimberliteMineID": [
-        71499
-      ],
-      "KimberliteResearchID": [
-        72686
-      ],
-      "KimberliteResourceItemID": [
-        72182
-      ],
-      "LibEncode": [
-        31488
-      ],
-      "LibInitWorld": [
-        58956
-      ],
-      "LithiumCopperOxideFactory2ResearchID": [
-        72852
-      ],
-      "LithiumCopperOxideFactory3ResearchID": [
-        72860
-      ],
-      "LithiumCopperOxideFactoryResearchID": [
-        72844
-      ],
-      "LithiumID": [
-        73754
-      ],
-      "LithiumMine2ResearchID": [
-        72804
-      ],
-      "LithiumMine3ResearchID": [
-        72812
-      ],
-      "LithiumMineID": [
-        71443
-      ],
-      "LithiumMineResearchID": [
-        72796
-      ],
-      "LithiumResearchID": [
-        72671
-      ],
-      "LithiumResourceItemID": [
-        72185
-      ],
-      "MainBaseID": [
-        71427
-      ],
-      "MarineUnit": [
-        73884
-      ],
-      "MarineUnitUpgrade": [
-        73550
-      ],
-      "MarineUnitUpgrade2": [
-        73565
-      ],
-      "MarineUnitUpgrade3": [
-        73580
-      ],
-      "MarineUnitUpgrade4": [
-        73595
-      ],
-      "MarineUnitUpgrade5": [
-        73610
-      ],
-      "MarineUnitUpgradeKey": [
-        73535
-      ],
-      "MiningKey": [
-        72959
-      ],
-      "MiningResearch": [
-        72974
-      ],
-      "MiningResearch2": [
-        72989
-      ],
-      "MiningResearch3": [
-        73004
-      ],
-      "MiningResearch4": [
-        73019
-      ],
-      "MiningResearch5": [
-        73034
-      ],
-      "MiningVessel": [
-        73900
-      ],
-      "MiningVesselUpgrade": [
-        73160
-      ],
-      "MiningVesselUpgrade2": [
-        73175
-      ],
-      "MiningVesselUpgrade3": [
-        73190
-      ],
-      "MiningVesselUpgrade4": [
-        73205
-      ],
-      "MiningVesselUpgrade5": [
-        73220
-      ],
-      "MiningVesselUpgradeKey": [
-        73145
-      ],
-      "MoveCountID": [
-        73850
-      ],
-      "OsmiumID": [
-        73802
-      ],
-      "OsmiumMineID": [
-        71483
-      ],
-      "OsmiumResearchID": [
-        72677
-      ],
-      "OsmiumResourceItemID": [
-        72191
-      ],
-      "P_MaxResourceStorageComponent": [
-        24065
-      ],
-      "P_MaxResourceStorageComponentID": [
-        24052
-      ],
-      "P_MaxStorageComponent": [
-        24089
-      ],
-      "P_MaxStorageComponentID": [
-        24076
-      ],
-      "P_WorldSpeedComponent": [
-        26316
-      ],
-      "P_WorldSpeedComponentID": [
-        26300
-      ],
-      "PersonalPirate": [
-        72562
-      ],
-      "PhotovoltaicCellCraftedItemID": [
-        72227
-      ],
-      "PhotovoltaicCellFactoryID": [
-        71571
-      ],
-      "PlatinumID": [
-        73826
-      ],
-      "PlatinumResourceItemID": [
-        72203
-      ],
-      "PositionComponent": [
-        26554
-      ],
-      "PositionComponentID": [
-        26377
-      ],
-      "RegolithID": [
-        73730
-      ],
-      "ResourceValues": [
-        106579
-      ],
-      "SAMMissilesID": [
-        71619
-      ],
-      "SPEED_SCALE": [
-        26303
-      ],
-      "SandstoneID": [
-        73706
-      ],
-      "SingletonID": [
-        267
-      ],
-      "SolarPanel2ResearchID": [
-        72900
-      ],
-      "SolarPanel3ResearchID": [
-        72908
-      ],
-      "SolarPanelID": [
-        71531
-      ],
-      "SolarPanelResearchID": [
-        72892
-      ],
-      "SpaceFuelCraftedItemID": [
-        72235
-      ],
-      "SpaceFuelFactory2ResearchID": [
-        72876
-      ],
-      "SpaceFuelFactory3ResearchID": [
-        72884
-      ],
-      "SpaceFuelFactoryID": [
-        71579
-      ],
-      "SpaceFuelFactoryResearchID": [
-        72868
-      ],
-      "StarMapID": [
-        71435
-      ],
-      "Starmapper2ResearchID": [
-        72948
-      ],
-      "Starmapper3ResearchID": [
-        72956
-      ],
-      "StarmapperID": [
-        71611
-      ],
-      "StarmapperResearchID": [
-        72940
-      ],
-      "StingerDrone": [
-        73924
-      ],
-      "StingerDroneUpgrade": [
-        73394
-      ],
-      "StingerDroneUpgrade2": [
-        73409
-      ],
-      "StingerDroneUpgrade3": [
-        73424
-      ],
-      "StingerDroneUpgrade4": [
-        73439
-      ],
-      "StingerDroneUpgrade5": [
-        73454
-      ],
-      "StingerDroneUpgradeKey": [
-        73379
-      ],
-      "StorageUnit2ResearchID": [
-        72756
-      ],
-      "StorageUnit3ResearchID": [
-        72764
-      ],
-      "StorageUnitID": [
-        71587
-      ],
-      "StorageUnitResearchID": [
-        72748
-      ],
-      "SulfurID": [
-        73778
-      ],
-      "SulfurMineID": [
-        71523
-      ],
-      "SulfurResourceItemID": [
-        72188
-      ],
-      "TerrainKey": [
-        71419
-      ],
-      "TitaniumID": [
-        73786
-      ],
-      "TitaniumMineID": [
-        71467
-      ],
-      "TitaniumResearchID": [
-        72674
-      ],
-      "TitaniumResourceItemID": [
-        72194
-      ],
-      "TungstenID": [
-        73810
-      ],
-      "TungstenMineID": [
-        71491
-      ],
-      "TungstenResearchID": [
-        72680
-      ],
-      "TungstenResourceItemID": [
-        72197
-      ],
-      "UraniniteID": [
-        73834
-      ],
-      "UraniniteMineID": [
-        71507
-      ],
-      "UraniniteResearchID": [
-        72689
-      ],
-      "UraniniteResourceItemID": [
-        72200
-      ],
-      "VesselUtilityResourceID": [
-        73874
-      ],
-      "WaterID": [
-        73746
-      ]
+      "DroneFactoryID": [71603],
+      "AdvancedMarineUnit": [73892],
+      "AdvancedMarineUnitUpgrade": [73628],
+      "AdvancedMarineUnitUpgrade2": [73643],
+      "AdvancedMarineUnitUpgrade3": [73658],
+      "AdvancedMarineUnitUpgrade4": [73673],
+      "AdvancedMarineUnitUpgrade5": [73688],
+      "AdvancedMarineUnitUpgradeKey": [73613],
+      "AegisDrone": [73908],
+      "AegisDroneUpgrade": [73472],
+      "AegisDroneUpgrade2": [73487],
+      "AegisDroneUpgrade3": [73502],
+      "AegisDroneUpgrade4": [73517],
+      "AegisDroneUpgrade5": [73532],
+      "AegisDroneUpgradeKey": [73457],
+      "AirID": [73698],
+      "AlloyCraftedItemID": [72219],
+      "AlloyFactory2ResearchID": [72828],
+      "AlloyFactory3ResearchID": [72836],
+      "AlloyFactoryID": [71563],
+      "AlloyFactoryResearchID": [72820],
+      "AlluviumID": [73722],
+      "AnvilDrone": [73932],
+      "AnvilDroneUpgrade": [73238],
+      "AnvilDroneUpgrade2": [73253],
+      "AnvilDroneUpgrade3": [73268],
+      "AnvilDroneUpgrade4": [73283],
+      "AnvilDroneUpgrade5": [73298],
+      "AnvilDroneUpgradeKey": [73223],
+      "AsteroidKey": [71416],
+      "BIGNUM": [71984],
+      "BedrockID": [73738],
+      "BiofilmID": [73714],
+      "BolutiteID": [73842],
+      "BolutiteMineID": [71515],
+      "BolutiteResearchID": [72692],
+      "BolutiteResourceItemID": [72170],
+      "BuildingKey": [71410],
+      "BuildingTileKey": [71413],
+      "Coord": [106594],
+      "CopperID": [73770],
+      "CopperMine2ResearchID": [72732],
+      "CopperMine3ResearchID": [72740],
+      "CopperMineID": [71459],
+      "CopperMineResearchID": [72724],
+      "CopperResearchID": [72668],
+      "CopperResourceItemID": [72173],
+      "DebugAlloyFactoryID": [71773],
+      "DebugBuiltBuildingTypeObjectiveID": [72056],
+      "DebugCompletedPriorObjectiveID": [72024],
+      "DebugCopperMineID": [71725],
+      "DebugDefeatedPirateAsteroidObjectiveID": [72152],
+      "DebugDefenceBuilding": [71821],
+      "DebugDestroyedUnitsObjectiveID": [72112],
+      "DebugFreeObjectiveID": [71992],
+      "DebugHavResourcesObjectiveID": [72000],
+      "DebugHaveMaxUtilityObjectiveID": [72016],
+      "DebugHaveUnitsObjectiveID": [72008],
+      "DebugHousingBuilding": [71805],
+      "DebugIronMineID": [71717],
+      "DebugIronMineNoTileReqID": [71749],
+      "DebugIronMineWithBuildLimitID": [71741],
+      "DebugIronPlateFactoryID": [71765],
+      "DebugIronPlateFactoryNoMineReqID": [71757],
+      "DebugLithiumCopperOxideFactoryID": [71781],
+      "DebugLithiumMineID": [71733],
+      "DebugMainBaseLevelObjectiveID": [72032],
+      "DebugMotherlodeMiningIridiumObjectiveID": [72096],
+      "DebugMotherlodeMiningKimberliteObjectiveID": [72104],
+      "DebugMotherlodeMiningPlatinumObjectiveID": [72088],
+      "DebugMotherlodeMiningTitaniumObjectiveID": [72080],
+      "DebugNumberOfBuiltBuildingTypeObjectiveID": [72064],
+      "DebugRaidObjectiveID": [72072],
+      "DebugResourceProductionObjectiveID": [72048],
+      "DebugResourceRewardObjectiveID": [72120],
+      "DebugSimpleBuilding3x3": [71701],
+      "DebugSimpleBuildingBuildLimitReq": [71653],
+      "DebugSimpleBuildingMainBaseLevelReqID": [71669],
+      "DebugSimpleBuildingNoReqsID": [71629],
+      "DebugSimpleBuildingRequiresTitanium": [71709],
+      "DebugSimpleBuildingResearchReqsID": [71645],
+      "DebugSimpleBuildingResourceReqsID": [71637],
+      "DebugSimpleBuildingTileReqID": [71661],
+      "DebugSimpleBuildingUtilityResourceRequirement": [71677],
+      "DebugSimpleBuildingWithUpgradeResearchReqsID": [71693],
+      "DebugSimpleBuildingWithUpgradeResourceReqsID": [71685],
+      "DebugSimpleTechnologyIncreaseHousing": [71909],
+      "DebugSimpleTechnologyIridiumCostID": [71965],
+      "DebugSimpleTechnologyKimberliteCostID": [71973],
+      "DebugSimpleTechnologyMainBaseLevelReqsID": [71941],
+      "DebugSimpleTechnologyNoReqsID": [71917],
+      "DebugSimpleTechnologyPlatinumCostID": [71957],
+      "DebugSimpleTechnologyResearchReqsID": [71933],
+      "DebugSimpleTechnologyResourceReqsID": [71925],
+      "DebugSimpleTechnologyTitaniumCostID": [71949],
+      "DebugSimpleTechnologyUpgradeUnit": [71901],
+      "DebugSolarPanelID": [71789],
+      "DebugSpawnPirateAsteroidID": [72136],
+      "DebugSpawnPirateAsteroidObjectiveID": [72144],
+      "DebugStorageBuildingID": [71981],
+      "DebugSuperIronMineID": [71885],
+      "DebugSuperIronPlateFactoryID": [71893],
+      "DebugTechnologyResearchedObjectiveID": [72040],
+      "DebugUnit": [71829],
+      "DebugUnit2": [71837],
+      "DebugUnit3": [71845],
+      "DebugUnitBattle1": [71869],
+      "DebugUnitBattle2": [71877],
+      "DebugUnitMiner": [71853],
+      "DebugUnitMiner2": [71861],
+      "DebugUnitProductionBuilding": [71813],
+      "DebugUnitsRewardObjectiveID": [72128],
+      "DebugUtilityProductionBuilding": [71797],
+      "Dimensions": [106599],
+      "DimensionsComponent": [22691],
+      "DimensionsComponentID": [22536],
+      "WorkshopID": [71595],
+      "ElectricityUtilityResourceID": [73858],
+      "ExpansionKey": [73037],
+      "ExpansionResearch": [73052],
+      "ExpansionResearch2": [73067],
+      "ExpansionResearch3": [73082],
+      "ExpansionResearch4": [73097],
+      "ExpansionResearch5": [73112],
+      "ExpansionResearch6": [73127],
+      "ExpansionResearch7": [73142],
+      "GameConfig": [106617],
+      "GameConfigComponent": [22897],
+      "GameConfigComponentID": [22704],
+      "GarageID": [71547],
+      "HammerDrone": [73916],
+      "HammerDroneUpgrade": [73316],
+      "HammerDroneUpgrade2": [73331],
+      "HammerDroneUpgrade3": [73346],
+      "HammerDroneUpgrade4": [73361],
+      "HammerDroneUpgrade5": [73376],
+      "HammerDroneUpgradeKey": [73301],
+      "HangarID": [71539],
+      "HousingUnit2ResearchID": [72924],
+      "HousingUnit3ResearchID": [72932],
+      "HousingUnitResearchID": [72916],
+      "HousingUtilityResourceID": [73866],
+      "IWorld": [1322],
+      "IridiumID": [73794],
+      "IridiumMineID": [71475],
+      "IridiumResearchID": [72683],
+      "IridiumResourceItemID": [72176],
+      "IronID": [73762],
+      "IronMine2ResearchID": [72700],
+      "IronMine3ResearchID": [72708],
+      "IronMine4ResearchID": [72716],
+      "IronMineID": [71451],
+      "IronPlateCraftedItemID": [72211],
+      "IronPlateFactory2ResearchID": [72780],
+      "IronPlateFactory3ResearchID": [72788],
+      "IronPlateFactoryID": [71555],
+      "IronPlateFactoryResearchID": [72772],
+      "IronResourceItemID": [72179],
+      "KimberliteID": [73818],
+      "KimberliteMineID": [71499],
+      "KimberliteResearchID": [72686],
+      "KimberliteResourceItemID": [72182],
+      "LibEncode": [31488],
+      "LibInitWorld": [58956],
+      "LithiumCopperOxideFactory2ResearchID": [72852],
+      "LithiumCopperOxideFactory3ResearchID": [72860],
+      "LithiumCopperOxideFactoryResearchID": [72844],
+      "LithiumID": [73754],
+      "LithiumMine2ResearchID": [72804],
+      "LithiumMine3ResearchID": [72812],
+      "LithiumMineID": [71443],
+      "LithiumMineResearchID": [72796],
+      "LithiumResearchID": [72671],
+      "LithiumResourceItemID": [72185],
+      "MainBaseID": [71427],
+      "MarineUnit": [73884],
+      "MarineUnitUpgrade": [73550],
+      "MarineUnitUpgrade2": [73565],
+      "MarineUnitUpgrade3": [73580],
+      "MarineUnitUpgrade4": [73595],
+      "MarineUnitUpgrade5": [73610],
+      "MarineUnitUpgradeKey": [73535],
+      "MiningKey": [72959],
+      "MiningResearch": [72974],
+      "MiningResearch2": [72989],
+      "MiningResearch3": [73004],
+      "MiningResearch4": [73019],
+      "MiningResearch5": [73034],
+      "MiningVessel": [73900],
+      "MiningVesselUpgrade": [73160],
+      "MiningVesselUpgrade2": [73175],
+      "MiningVesselUpgrade3": [73190],
+      "MiningVesselUpgrade4": [73205],
+      "MiningVesselUpgrade5": [73220],
+      "MiningVesselUpgradeKey": [73145],
+      "MoveCountID": [73850],
+      "OsmiumID": [73802],
+      "OsmiumMineID": [71483],
+      "OsmiumResearchID": [72677],
+      "OsmiumResourceItemID": [72191],
+      "P_MaxResourceStorageComponent": [24065],
+      "P_MaxResourceStorageComponentID": [24052],
+      "P_MaxStorageComponent": [24089],
+      "P_MaxStorageComponentID": [24076],
+      "P_WorldSpeedComponent": [26316],
+      "P_WorldSpeedComponentID": [26300],
+      "PersonalPirate": [72562],
+      "PhotovoltaicCellCraftedItemID": [72227],
+      "PhotovoltaicCellFactoryID": [71571],
+      "PlatinumID": [73826],
+      "PlatinumResourceItemID": [72203],
+      "PositionComponent": [26554],
+      "PositionComponentID": [26377],
+      "RegolithID": [73730],
+      "ResourceValues": [106579],
+      "SAMMissilesID": [71619],
+      "SPEED_SCALE": [26303],
+      "SandstoneID": [73706],
+      "SingletonID": [267],
+      "SolarPanel2ResearchID": [72900],
+      "SolarPanel3ResearchID": [72908],
+      "SolarPanelID": [71531],
+      "SolarPanelResearchID": [72892],
+      "SpaceFuelCraftedItemID": [72235],
+      "SpaceFuelFactory2ResearchID": [72876],
+      "SpaceFuelFactory3ResearchID": [72884],
+      "SpaceFuelFactoryID": [71579],
+      "SpaceFuelFactoryResearchID": [72868],
+      "StarMapID": [71435],
+      "Starmapper2ResearchID": [72948],
+      "Starmapper3ResearchID": [72956],
+      "StarmapperID": [71611],
+      "StarmapperResearchID": [72940],
+      "StingerDrone": [73924],
+      "StingerDroneUpgrade": [73394],
+      "StingerDroneUpgrade2": [73409],
+      "StingerDroneUpgrade3": [73424],
+      "StingerDroneUpgrade4": [73439],
+      "StingerDroneUpgrade5": [73454],
+      "StingerDroneUpgradeKey": [73379],
+      "StorageUnit2ResearchID": [72756],
+      "StorageUnit3ResearchID": [72764],
+      "StorageUnitID": [71587],
+      "StorageUnitResearchID": [72748],
+      "SulfurID": [73778],
+      "SulfurMineID": [71523],
+      "SulfurResourceItemID": [72188],
+      "TerrainKey": [71419],
+      "TitaniumID": [73786],
+      "TitaniumMineID": [71467],
+      "TitaniumResearchID": [72674],
+      "TitaniumResourceItemID": [72194],
+      "TungstenID": [73810],
+      "TungstenMineID": [71491],
+      "TungstenResearchID": [72680],
+      "TungstenResourceItemID": [72197],
+      "UraniniteID": [73834],
+      "UraniniteMineID": [71507],
+      "UraniniteResearchID": [72689],
+      "UraniniteResourceItemID": [72200],
+      "VesselUtilityResourceID": [73874],
+      "WaterID": [73746]
     },
     "nodeType": "SourceUnit",
     "src": "32:3670:194",
@@ -1298,12 +774,7 @@
         "nodeType": "PragmaDirective",
         "src": "32:24:194",
         "nodes": [],
-        "literals": [
-          "solidity",
-          ">=",
-          "0.8",
-          ".0"
-        ]
+        "literals": ["solidity", ">=", "0.8", ".0"]
       },
       {
         "id": 58577,
@@ -1805,9 +1276,7 @@
               "nodes": [],
               "statements": [
                 {
-                  "assignments": [
-                    58620
-                  ],
+                  "assignments": [58620],
                   "declarations": [
                     {
                       "constant": false,
@@ -1830,9 +1299,7 @@
                         "pathNode": {
                           "id": 58618,
                           "name": "GameConfig",
-                          "nameLocations": [
-                            "1256:10:194"
-                          ],
+                          "nameLocations": ["1256:10:194"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 106617,
                           "src": "1256:10:194"
@@ -1951,18 +1418,8 @@
                     "isPure": true,
                     "kind": "structConstructorCall",
                     "lValueRequested": false,
-                    "nameLocations": [
-                      "1302:9:194",
-                      "1326:18:194",
-                      "1356:25:194",
-                      "1392:19:194"
-                    ],
-                    "names": [
-                      "moveSpeed",
-                      "motherlodeDistance",
-                      "maxMotherlodesPerAsteroid",
-                      "motherlodeChanceInv"
-                    ],
+                    "nameLocations": ["1302:9:194", "1326:18:194", "1356:25:194", "1392:19:194"],
+                    "names": ["moveSpeed", "motherlodeDistance", "maxMotherlodesPerAsteroid", "motherlodeChanceInv"],
                     "nodeType": "FunctionCall",
                     "src": "1283:138:194",
                     "tryCall": false,
@@ -1975,9 +1432,7 @@
                   "src": "1256:165:194"
                 },
                 {
-                  "assignments": [
-                    58630
-                  ],
+                  "assignments": [58630],
                   "declarations": [
                     {
                       "constant": false,
@@ -2000,9 +1455,7 @@
                         "pathNode": {
                           "id": 58628,
                           "name": "Dimensions",
-                          "nameLocations": [
-                            "1428:10:194"
-                          ],
+                          "nameLocations": ["1428:10:194"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 106599,
                           "src": "1428:10:194"
@@ -3057,9 +2510,7 @@
                     "pathNode": {
                       "id": 58613,
                       "name": "IWorld",
-                      "nameLocations": [
-                        "1179:6:194"
-                      ],
+                      "nameLocations": ["1179:6:194"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 1322,
                       "src": "1179:6:194"
@@ -3099,9 +2550,7 @@
               "nodes": [],
               "statements": [
                 {
-                  "assignments": [
-                    58703
-                  ],
+                  "assignments": [58703],
                   "declarations": [
                     {
                       "constant": false,
@@ -3124,9 +2573,7 @@
                         "pathNode": {
                           "id": 58701,
                           "name": "ResourceValues",
-                          "nameLocations": [
-                            "2002:14:194"
-                          ],
+                          "nameLocations": ["2002:14:194"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 106579,
                           "src": "2002:14:194"
@@ -5514,9 +4961,7 @@
                   "src": "3206:146:194"
                 },
                 {
-                  "assignments": [
-                    58915
-                  ],
+                  "assignments": [58915],
                   "declarations": [
                     {
                       "constant": false,
@@ -5539,9 +4984,7 @@
                         "pathNode": {
                           "id": 58913,
                           "name": "P_MaxStorageComponent",
-                          "nameLocations": [
-                            "3359:21:194"
-                          ],
+                          "nameLocations": ["3359:21:194"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 24089,
                           "src": "3359:21:194"
@@ -5982,9 +5425,7 @@
                   },
                   "id": 58953,
                   "initializationExpression": {
-                    "assignments": [
-                      58924
-                    ],
+                    "assignments": [58924],
                     "declarations": [
                       {
                         "constant": false,
@@ -6101,9 +5542,7 @@
                     "pathNode": {
                       "id": 58696,
                       "name": "IWorld",
-                      "nameLocations": [
-                        "1973:6:194"
-                      ],
+                      "nameLocations": ["1973:6:194"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 1322,
                       "src": "1973:6:194"
@@ -6138,9 +5577,7 @@
         "contractDependencies": [],
         "contractKind": "library",
         "fullyImplemented": true,
-        "linearizedBaseContracts": [
-          58956
-        ],
+        "linearizedBaseContracts": [58956],
         "name": "LibInitWorld",
         "nameLocation": "1105:12:194",
         "scope": 58957,

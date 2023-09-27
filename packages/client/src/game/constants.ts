@@ -121,7 +121,7 @@ export namespace AsteroidMap {
 
     Hangar1 = "sprites/hangar/level1/Hangar1.png",
 
-    DroneFactory1 = "sprites/drone-factory/normal/Drone_Factory1.png",
+    Workshop1 = "sprites/drone-factory/normal/Drone_Factory1.png",
   }
 
   export enum AnimationKeys {
@@ -160,7 +160,7 @@ export namespace AsteroidMap {
 
     Hangar1 = "hangar/level1",
 
-    DroneFactory1 = "dronefactory/level1",
+    Workshop1 = "Workshop/level1",
   }
 
   export const EntityIDToResourceTilesetKey = {
@@ -230,9 +230,9 @@ export namespace AsteroidMap {
     [BlockType.SAMMissiles]: [SpriteKeys.PhotovoltaicCellFactory1],
     [BlockType.Hangar]: [SpriteKeys.Hangar1],
     [BlockType.Garage]: [SpriteKeys.IronPlateFactory1],
-    [BlockType.AdvancedDroneFactory]: [SpriteKeys.DroneFactory1],
+    [BlockType.DroneFactory]: [SpriteKeys.Workshop1],
 
-    [BlockType.DroneFactory]: [SpriteKeys.PhotovoltaicCellFactory1],
+    [BlockType.Workshop]: [SpriteKeys.PhotovoltaicCellFactory1],
   };
 
   // Array index corresponds to lvl
@@ -287,9 +287,9 @@ export namespace AsteroidMap {
       AnimationKeys.PhotovoltaicCellFactory1,
       AnimationKeys.PhotovoltaicCellFactory2,
     ],
-    [BlockType.AdvancedDroneFactory]: [AnimationKeys.DroneFactory1],
+    [BlockType.DroneFactory]: [AnimationKeys.Workshop1],
 
-    [BlockType.DroneFactory]: [AnimationKeys.StorageUnit3],
+    [BlockType.Workshop]: [AnimationKeys.StorageUnit3],
   };
 }
 

@@ -77,7 +77,7 @@ async function executeContractFunction() {
 
   let contractWithSigner = component.connect(wallet);
 
-  const entityID = hashKeyEntity(BlockType.DroneFactory, 3);
+  const entityID = hashKeyEntity(BlockType.Workshop, 3);
   const resources = [BlockType.Sulfur, BlockType.Kimberlite];
   const values = [275000, 10000];
 

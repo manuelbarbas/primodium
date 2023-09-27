@@ -71,7 +71,7 @@ library LibInitObjectives {
     isObjectiveComponent.set(objective);
     P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
       objective,
-      BuildDroneFactoryID
+      BuildWorkshopID
     );
     P_RequiredPirateAsteroidDefeatedComponent(world.getComponent(P_RequiredPirateAsteroidDefeatedComponentID)).set(
       objective,
@@ -182,7 +182,7 @@ library LibInitObjectives {
 
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
     resourceRewards.resources[0] = IronResourceItemID;
-    resourceRewards.values[0] = 10000;
+    resourceRewards.values[0] = 20000;
     P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
 
     //BuildFirstCopperMineID
@@ -190,9 +190,11 @@ library LibInitObjectives {
     isObjectiveComponent.set(objective);
     P_HasBuiltBuildingComponent(world.getComponent(P_HasBuiltBuildingComponentID)).set(objective, CopperMineID);
 
-    resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
+    resourceRewards = ResourceValues(new uint256[](2), new uint32[](2));
     resourceRewards.resources[0] = CopperResourceItemID;
-    resourceRewards.values[0] = 10000;
+    resourceRewards.values[0] = 20000;
+    resourceRewards.resources[1] = IronResourceItemID;
+    resourceRewards.values[1] = 20000;
     P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
 
     //BuildFirstIronPlateFactoryID
@@ -205,8 +207,8 @@ library LibInitObjectives {
     );
 
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
-    resourceRewards.resources[0] = CopperResourceItemID;
-    resourceRewards.values[0] = 10000;
+    resourceRewards.resources[0] = IronResourceItemID;
+    resourceRewards.values[0] = 50000;
     P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
 
     //BuildGarageID
@@ -223,10 +225,10 @@ library LibInitObjectives {
     resourceRewards.values[0] = 10;
     P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
 
-    //BuildDroneFactoryID
-    objective = BuildDroneFactoryID;
+    //BuildWorkshopID
+    objective = BuildWorkshopID;
     isObjectiveComponent.set(objective);
-    P_HasBuiltBuildingComponent(world.getComponent(P_HasBuiltBuildingComponentID)).set(objective, DroneFactoryID);
+    P_HasBuiltBuildingComponent(world.getComponent(P_HasBuiltBuildingComponentID)).set(objective, WorkshopID);
     P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
       objective,
       BuildGarageID
@@ -298,13 +300,10 @@ library LibInitObjectives {
     resourceRewards.values[1] = 100000;
     P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
 
-    //BuildAdvancedDroneFactoryID
-    objective = BuildAdvancedDroneFactoryID;
+    //BuildDroneFactoryID
+    objective = BuildDroneFactoryID;
     isObjectiveComponent.set(objective);
-    P_HasBuiltBuildingComponent(world.getComponent(P_HasBuiltBuildingComponentID)).set(
-      objective,
-      AdvancedDroneFactoryID
-    );
+    P_HasBuiltBuildingComponent(world.getComponent(P_HasBuiltBuildingComponentID)).set(objective, DroneFactoryID);
     P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
       objective,
       BuildSolarPanelID
@@ -445,7 +444,7 @@ library LibInitObjectives {
     isObjectiveComponent.set(objective);
     P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
       objective,
-      BuildDroneFactoryID
+      BuildWorkshopID
     );
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
     resourceRewards.resources[0] = MarineUnit;
@@ -497,7 +496,7 @@ library LibInitObjectives {
     isObjectiveComponent.set(objective);
     P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
       objective,
-      BuildDroneFactoryID
+      BuildWorkshopID
     );
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
     resourceRewards.resources[0] = AdvancedMarineUnit;
@@ -550,7 +549,7 @@ library LibInitObjectives {
 
     P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
       objective,
-      BuildAdvancedDroneFactoryID
+      BuildDroneFactoryID
     );
     LevelComponent(world.getComponent(LevelComponentID)).set(objective, 2);
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
