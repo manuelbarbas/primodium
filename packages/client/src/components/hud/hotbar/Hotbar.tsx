@@ -11,6 +11,8 @@ import {
 } from "src/network/components/clientComponents";
 import { wrap } from "src/util/common";
 import { Join } from "src/components/core/Join";
+import { Button } from "src/components/core/Button";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 export const Hotbar: React.FC = () => {
   const hotbarContent = useHotbarContent();
@@ -52,19 +54,42 @@ export const Hotbar: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center relative mb-2">
-      <Join className="flex pointer-events-auto z-10 mb-4 border-accent">
-        {hotbarContent.map((item, index) => {
-          return (
-            <HotbarLabel
-              key={index}
-              icon={item.icon}
-              name={item.name}
-              onClick={() => setActiveBar(index)}
-              active={item.name === hotbarContent[activeBar].name}
-            />
-          );
-        })}
-      </Join>
+      <div className="flex gap-1 items-center justify-center mb-5 z-10">
+        <Button
+          className="btn-sm btn-ghost text-accent"
+          onClick={() => {
+            setActiveBar(wrap(activeBarRef.current - 1, hotbarContent.length));
+            SelectedBuilding.remove();
+            SelectedAction.remove();
+          }}
+        >
+          <FaChevronLeft />
+        </Button>
+        <Join className="flex pointer-events-auto border-accent">
+          {hotbarContent.map((item, index) => {
+            return (
+              <HotbarLabel
+                key={index}
+                icon={item.icon}
+                name={item.name}
+                onClick={() => setActiveBar(index)}
+                active={item.name === hotbarContent[activeBar].name}
+              />
+            );
+          })}
+        </Join>
+        <Button
+          className="btn-sm btn-ghost text-accent"
+          onClick={() => {
+            setActiveBar(wrap(activeBarRef.current + 1, hotbarContent.length));
+            SelectedBuilding.remove();
+            SelectedAction.remove();
+          }}
+        >
+          <FaChevronRight />
+        </Button>
+      </div>
+
       <HotbarBody
         activeBar={activeBarRef.current}
         setActiveBar={setActiveBar}
