@@ -10,14 +10,13 @@ import {
 import { Scene } from "engine/types";
 import { BlockNumber } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
-import { ObjectPosition } from "../../common/object-components/common";
+import { ObjectPosition, Tween } from "../../common/object-components/common";
 import { Circle } from "../../common/object-components/graphics";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Arrival, Position } from "src/network/components/chainComponents";
-import { ESendType } from "src/util/web3/types";
 import { DepthLayers } from "@game/constants";
 
-export const renderArrivalsInOrbit = (scene: Scene, player: EntityID) => {
+export const renderArrivalsInOrbit = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_arrivalOrbit";
@@ -47,18 +46,28 @@ export const renderArrivalsInOrbit = (scene: Scene, player: EntityID) => {
 
     const arrivalOrbit = scene.objectPool.getGroup(entityId + objIndexSuffix);
 
-    let color: number;
-
-    if (arrival.from === player) color = 0x00ff00;
-    else if (arrival.to === player && arrival.sendType === ESendType.REINFORCE)
-      color = 0x00ff00;
-    else if (arrival.to === player) color = 0xff0000;
-    else color = 0x808080;
-
     arrivalOrbit.add("Graphics").setComponents([
       ObjectPosition(destinationPixelCoord, DepthLayers.Marker),
+      Circle(50, {
+        color: 0x363636,
+        borderThickness: 1,
+        alpha: 0,
+      }),
+
       Circle(5, {
-        color,
+        color: 0x00ffff,
+        borderThickness: 0,
+        alpha: 1,
+        position: {
+          x: destinationPixelCoord.x + 50,
+          y: destinationPixelCoord.y,
+        },
+      }),
+      Tween(scene, {
+        angle: 360,
+        duration: 20 * 1000,
+        repeat: -1,
+        ease: "Linear",
       }),
     ]);
   };

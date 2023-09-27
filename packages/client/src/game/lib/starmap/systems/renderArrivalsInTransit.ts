@@ -11,7 +11,7 @@ import {
 import { Scene } from "engine/types";
 import { BlockNumber } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
-import { ObjectPosition } from "../../common/object-components/common";
+import { ObjectPosition, Tween } from "../../common/object-components/common";
 import { Circle, Line } from "../../common/object-components/graphics";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Arrival, Position } from "src/network/components/chainComponents";
@@ -123,8 +123,26 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
 
             arrivalOrbit.add("Graphics").setComponents([
               ObjectPosition(destinationPixelCoord, DepthLayers.Marker),
+              Circle(50, {
+                color: 0x363636,
+                borderThickness: 1,
+                alpha: 0,
+              }),
+
               Circle(5, {
-                color: 0x00ff00,
+                color: 0x00ffff,
+                borderThickness: 0,
+                alpha: 1,
+                position: {
+                  x: destinationPixelCoord.x + 50,
+                  y: destinationPixelCoord.y,
+                },
+              }),
+              Tween(scene, {
+                angle: 360,
+                duration: 20 * 1000,
+                repeat: -1,
+                ease: "Linear",
               }),
             ]);
           },
