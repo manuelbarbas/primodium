@@ -943,7 +943,8 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
       from: addressToEntity(alice),
       to: addressToEntity(bob),
       origin: getHomeAsteroidEntity(alice),
-      destination: motherlodeEntity
+      destination: motherlodeEntity,
+      timestamp: block.number
     });
     assertEq(arrival, expectedArrival);
 
@@ -1010,7 +1011,8 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
       from: addressToEntity(alice),
       to: addressToEntity(bob),
       origin: origin,
-      destination: destination
+      destination: destination,
+      timestamp: block.number
     });
     assertEq(arrival, expectedArrival);
 

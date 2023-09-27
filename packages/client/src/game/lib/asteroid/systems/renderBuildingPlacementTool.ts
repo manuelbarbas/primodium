@@ -20,7 +20,6 @@ import {
   OnClick,
   SetValue,
 } from "../../common/object-components/common";
-import { AsteroidMap } from "@game/constants";
 import {
   Texture,
   Animation,
@@ -31,19 +30,20 @@ import {
   getBuildingDimensions,
   getBuildingOrigin,
 } from "src/util/building";
-import { hasEnoughResources } from "src/util/resource";
+import { getRecipe, hasEnoughResources } from "src/util/resource";
 import { hashAndTrimKeyEntity, hashKeyEntity } from "src/util/encode";
 import { Level } from "src/network/components/chainComponents";
 import { buildBuilding } from "src/util/web3";
 import { Network } from "src/network/layer";
-
-const {
+import { toast } from "react-toastify";
+import { getBlockTypeName } from "src/util/common";
+import {
+  Assets,
+  DepthLayers,
   EntityIDtoAnimationKey,
   EntityIDtoSpriteKey,
-  Assets,
   SpriteKeys,
-  DepthLayers,
-} = AsteroidMap;
+} from "@game/constants";
 
 export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -92,7 +92,7 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
       Level.get(hashKeyEntity(selectedBuilding, player))?.value ?? 1;
     const buildingLevelEntity = hashAndTrimKeyEntity(selectedBuilding, level);
 
-    const hasEnough = hasEnoughResources(buildingLevelEntity);
+    const hasEnough = hasEnoughResources(getRecipe(buildingLevelEntity));
     const validPlacement = validateBuildingPlacement(
       tileCoord,
       selectedBuilding
@@ -104,7 +104,7 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
           x: pixelCoord.x,
           y: -pixelCoord.y + buildingDimensions.height * tileHeight,
         },
-        validPlacement
+        !validPlacement
           ? DepthLayers.Building
           : DepthLayers.Building - tileCoord.y + buildingDimensions.height
       ),
@@ -117,10 +117,16 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
       animation ? Animation(animation) : undefined,
       Outline({
         thickness: 3,
-        color: hasEnough && !validPlacement ? undefined : 0xff0000,
+        color: hasEnough && validPlacement ? undefined : 0xff0000,
       }),
       OnClick(() => {
-        if (!hasEnough || validPlacement) {
+        if (!hasEnough || !validPlacement) {
+          if (!hasEnough)
+            toast.error(
+              "Not have enough resources to build " +
+                getBlockTypeName(selectedBuilding)
+            );
+          if (!validPlacement) toast.error("Cannot place building here");
           scene.camera.phaserCamera.shake(200, 0.001);
           return;
         }

@@ -77,6 +77,32 @@ export function getRecipe(entityId: EntityID) {
   return [...resources, ...utilities, ...resourceRate];
 }
 
+export function getRecipeDifference(
+  firstRecipe: ReturnType<typeof getRecipe>,
+  secondRecipe: ReturnType<typeof getRecipe>
+) {
+  const difference = firstRecipe.map((resource) => {
+    let amount = resource.amount;
+    if (resource.type == ResourceType.Utility) {
+      const secondResource = secondRecipe.find(
+        (secondResource) => resource.id === secondResource.id
+      );
+
+      if (secondResource) {
+        amount = resource.amount - secondResource.amount;
+      }
+    }
+
+    return {
+      id: resource.id,
+      amount: amount,
+      type: resource.type,
+    };
+  });
+
+  return difference;
+}
+
 export const mineableResources = [
   BlockType.Titanium,
   BlockType.Iridium,
@@ -96,15 +122,16 @@ export function getMotherlodeResource(entityID: EntityID) {
 
 export default function getResourceCount(
   resourceComponent: NewNumberComponent,
-  resourceId: EntityID
+  resourceId: EntityID,
+  address?: EntityID
 ) {
-  const address = Account.get()?.value;
+  const player = address ?? Account.get()?.value;
 
   let resourceKey: EntityID | undefined = undefined;
-  if (address) {
+  if (player) {
     const encodedEntityId = hashAndTrimKeyEntity(
       resourceId,
-      address
+      player
     ) as EntityID;
     resourceKey = encodedEntityId.toString().toLowerCase() as EntityID;
   }
@@ -120,13 +147,18 @@ export default function getResourceCount(
 
 export function getFullResourceCount(
   resourceID: EntityID,
-  type = ResourceType.Resource
+  type = ResourceType.Resource,
+  address?: EntityID
 ) {
   const blockNumber = BlockNumber.get(undefined, {
     value: 0,
     avgBlockTime: 1,
   }).value;
-  const player = Account.get()?.value;
+  const player =
+    address ??
+    Account.get(undefined, {
+      value: SingletonID,
+    }).value;
 
   const query = [
     Has(AsteroidType),
@@ -160,21 +192,25 @@ export function getFullResourceCount(
 
   const resourceCount = getResourceCount(
     ResourceType.Resource === type ? Item : OccupiedUtilityResource,
-    resourceID
-  );
-  const maxStorage = getResourceCount(
-    ResourceType.Resource === type ? P_MaxStorage : MaxUtility,
-    resourceID
+    resourceID,
+    player
   );
 
-  const buildingProduction = getResourceCount(Production, resourceID);
+  const maxStorage = getResourceCount(
+    ResourceType.Resource === type ? P_MaxStorage : MaxUtility,
+    resourceID,
+    player
+  );
+
+  const buildingProduction = getResourceCount(Production, resourceID, player);
 
   const production = (() => {
     return buildingProduction + motherlodeProduction;
   })();
   const buildingProductionLastClaimedAt = getResourceCount(
     LastClaimedAt,
-    resourceID
+    resourceID,
+    player
   );
 
   const resourcesToClaimFromBuilding = (() => {
@@ -219,9 +255,10 @@ export function getFullResourceCount(
   return { resourceCount, resourcesToClaim, maxStorage, production };
 }
 
-export function hasEnoughResources(entityId: EntityID, count = 1) {
-  const recipe = getRecipe(entityId);
-
+export function hasEnoughResources(
+  recipe: ReturnType<typeof getRecipe>,
+  count = 1
+) {
   const resourceAmounts = recipe.map((resource) => {
     return getFullResourceCount(resource.id, resource.type);
   });

@@ -14,6 +14,8 @@ import { MudProvider } from "./hooks/providers/MudProvider";
 import wagmiClient from "./network/wagmi";
 import { ComponentBrowser } from "./components/dev/ComponentBrowser";
 import { ampli } from "./ampli";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
 const DEV = import.meta.env.VITE_DEV === "true";
 
@@ -65,6 +67,20 @@ export default function App() {
     return (
       <WagmiConfig client={wagmiClient}>
         <MudProvider {...networkLayer}>
+          <ToastContainer
+            toastClassName={`font-mono text-xs border bg-neutral border-secondary rounded-box drop-shadow-2xl`}
+            progressClassName={"bg-accent"}
+            position="top-left"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+          />
           <AppLoadingState />
           {DEV && <ComponentBrowser />}
         </MudProvider>

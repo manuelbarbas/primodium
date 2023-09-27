@@ -136,10 +136,22 @@ export const P_MaxStorage = newNumberComponent(world, {
   overridable: true,
 });
 
+export const P_UtilityProductionComponent = newComponent(
+  world,
+  {
+    ResourceID: Type.Entity,
+    ResourceProduction: Type.Number,
+  },
+  {
+    id: "P_UtilityProductionComponent",
+    metadata: { contractId: `${commonIdPrefix}P_UtilityProduction` },
+    overridable: true,
+  }
+);
+
 export const P_Production = newComponent(
   world,
   { resourceID: Type.Entity, resourceProductionRate: Type.Number },
-
   {
     id: "P_Production",
     metadata: { contractId: `${commonIdPrefix}P_Production` },
@@ -416,6 +428,11 @@ export const MaxMoves = newNumberComponent(world, {
   metadata: { contractId: `${commonIdPrefix}MaxMoves` },
 });
 
+export const P_MaxMoves = newNumberComponent(world, {
+  id: "P_MaxMoves",
+  metadata: { contractId: `${commonIdPrefix}P_MaxMoves` },
+});
+
 export const ArrivalsIndex = newEntityComponent(world, {
   id: "ArrivalsIndex",
   metadata: { contractId: `${commonIdPrefix}ArrivalsIndex` },
@@ -484,6 +501,160 @@ export const BattleRaidResult = newComponent(
     metadata: { contractId: `${commonIdPrefix}BattleRaidResult` },
   }
 );
+/* -------------------------------------------------------------------------- */
+/*                                   Objective                                   */
+/* -------------------------------------------------------------------------- */
+
+export const P_IsObjective = newBoolComponent(world, {
+  id: "P_IsObjective",
+  metadata: { contractId: `${commonIdPrefix}P_IsObjective` },
+});
+export const HasCompletedObjective = newBoolComponent(world, {
+  id: "HasCompletedObjective",
+  metadata: { contractId: `${commonIdPrefix}HasCompletedObjective` },
+});
+export const HasBuiltBuilding = newBoolComponent(world, {
+  id: "HasBuiltBuilding",
+  metadata: { contractId: `${commonIdPrefix}HasBuiltBuilding` },
+});
+
+export const BuildingCount = newNumberComponent(world, {
+  id: "BuildingCount",
+  metadata: { contractId: `${commonIdPrefix}BuildingCount` },
+});
+
+export const TotalRaid = newNumberComponent(world, {
+  id: "TotalRaid",
+  metadata: { contractId: `${commonIdPrefix}TotalRaid` },
+});
+
+export const TotalMotherlodeMined = newNumberComponent(world, {
+  id: "TotalMotherlodeMined",
+  metadata: { contractId: `${commonIdPrefix}TotalMotherlodeMined` },
+});
+
+export const TotalUnitsDestroyed = newNumberComponent(world, {
+  id: "TotalUnitsDestroyed",
+  metadata: { contractId: `${commonIdPrefix}TotalUnitsDestroyed` },
+});
+
+export const P_HasBuiltBuilding = newComponent(
+  world,
+  {
+    value: Type.Entity,
+  },
+  {
+    id: "P_HasBuiltBuilding",
+    metadata: { contractId: `${commonIdPrefix}P_HasBuiltBuilding` },
+  }
+);
+
+export const P_ObjectiveRequirement = newComponent(
+  world,
+  {
+    value: Type.Entity,
+  },
+  {
+    id: "P_ObjectiveRequirement",
+    metadata: { contractId: `${commonIdPrefix}P_ObjectiveRequirement` },
+  }
+);
+
+export const P_DestroyedUnitsRequirement = newComponent(
+  world,
+  { resources: Type.EntityArray, values: Type.NumberArray },
+
+  {
+    id: "P_DestroyedUnitsRequirement",
+    metadata: { contractId: `${commonIdPrefix}P_DestroyedUnitsRequirement` },
+  }
+);
+
+export const P_MotherlodeMinedRequirement = newComponent(
+  world,
+  { resources: Type.EntityArray, values: Type.NumberArray },
+
+  {
+    id: "P_MotherlodeMinedRequirement",
+    metadata: { contractId: `${commonIdPrefix}P_MotherlodeMinedRequirement` },
+  }
+);
+
+export const P_RaidRequirement = newComponent(
+  world,
+  { resources: Type.EntityArray, values: Type.NumberArray },
+
+  {
+    id: "P_RaidRequirement",
+    metadata: { contractId: `${commonIdPrefix}P_RaidRequirement` },
+  }
+);
+export const P_BuildingCountRequirement = newComponent(
+  world,
+  { resources: Type.EntityArray, values: Type.NumberArray },
+
+  {
+    id: "P_BuildingCountRequirement",
+    metadata: { contractId: `${commonIdPrefix}P_BuildingCountRequirement` },
+  }
+);
+
+export const P_UnitRequirement = newComponent(
+  world,
+  { resources: Type.EntityArray, values: Type.NumberArray },
+
+  {
+    id: "P_UnitRequirement",
+    metadata: { contractId: `${commonIdPrefix}P_UnitRequirement` },
+  }
+);
+
+export const P_ResourceReward = newComponent(
+  world,
+  { resourceIDs: Type.EntityArray, requiredAmounts: Type.NumberArray },
+
+  {
+    id: "P_ResourceReward",
+    metadata: { contractId: `${commonIdPrefix}P_ResourceReward` },
+  }
+);
+
+export const P_UnitReward = newComponent(
+  world,
+  { resourceIDs: Type.EntityArray, requiredAmounts: Type.NumberArray },
+
+  {
+    id: "P_UnitReward",
+    metadata: { contractId: `${commonIdPrefix}P_UnitReward` },
+  }
+);
+
+export const P_RequiredPirateAsteroidDefeated = newComponent(
+  world,
+  {
+    value: Type.Entity,
+  },
+  {
+    id: "P_RequiredPirateAsteroidDefeated",
+    metadata: {
+      contractId: `${commonIdPrefix}P_RequiredPirateAsteroidDefeated`,
+    },
+  }
+);
+
+/* -------------------------------------------------------------------------- */
+/*                                   PIRATE                                   */
+/* -------------------------------------------------------------------------- */
+
+export const Pirate = newNumberComponent(world, {
+  id: "Pirate",
+  metadata: { contractId: `${commonIdPrefix}Pirate` },
+});
+
+export const DefeatedSpawnedPirateAsteroid = newBoolComponent(world, {
+  id: "DefeatedSpawnedPirateAsteroid",
+  metadata: { contractId: `${commonIdPrefix}DefeatedSpawnedPirateAsteroid` },
+});
 
 export default {
   GameConfig,
@@ -514,6 +685,7 @@ export default {
   LoadingState,
   OccupiedUtilityResource,
   MaxUtility,
+  P_UtilityProductionComponent,
   ReversePosition,
   P_Production,
   P_ProductionDependencies,
@@ -550,6 +722,7 @@ export default {
   ArrivalsIndex,
   ArrivalsSize,
   MaxMoves,
+  P_MaxMoves,
 
   // Scoreboard
   Score,
@@ -562,4 +735,26 @@ export default {
   BattleResult,
   BattleBlockNumber,
   BattleRaidResult,
+
+  //Objectives
+  P_IsObjective,
+  P_HasBuiltBuilding,
+  P_ObjectiveRequirement,
+  P_DestroyedUnitsRequirement,
+  P_MotherlodeMinedRequirement,
+  P_RaidRequirement,
+  P_BuildingCountRequirement,
+  P_UnitRequirement,
+  P_ResourceReward,
+  P_UnitReward,
+  HasCompletedObjective,
+  HasBuiltBuilding,
+  BuildingCount,
+  TotalRaid,
+  TotalMotherlodeMined,
+  TotalUnitsDestroyed,
+
+  //Pirate
+  Pirate,
+  DefeatedSpawnedPirateAsteroid,
 };

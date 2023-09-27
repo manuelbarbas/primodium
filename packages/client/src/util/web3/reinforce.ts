@@ -3,7 +3,6 @@ import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
-import { useNotificationStore } from "src/store/NotificationStore";
 import { parseReceipt } from "../analytics/parseReceipt";
 
 export const reinforce = async (
@@ -13,7 +12,6 @@ export const reinforce = async (
 ) => {
   const { providers, systems } = network;
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
-  const setNotification = useNotificationStore.getState().setNotification;
 
   setTransactionLoading(true);
 
@@ -25,8 +23,7 @@ export const reinforce = async (
         gasLimit: 4_000_000,
       }
     ),
-    providers,
-    setNotification
+    providers
   );
 
   ampli.systemReceiveReinforcement({

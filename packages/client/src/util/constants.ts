@@ -2,7 +2,11 @@ import { EntityID } from "@latticexyz/recs";
 import { keccak256 } from "@latticexyz/utils";
 import { Key } from "engine/types";
 import { hashStringEntity } from "./encode";
-import { EMotherlodeSize, EMotherlodeType } from "src/util/web3/types";
+import {
+  EMotherlodeSize,
+  EMotherlodeType,
+  ESpaceRockType,
+} from "src/util/web3/types";
 
 export enum Action {
   DemolishBuilding,
@@ -15,6 +19,28 @@ export enum ResourceType {
   ResourceRate,
   Utility,
 }
+
+export enum RewardType {
+  Resource,
+  Unit,
+}
+
+export enum RequirementType {
+  Resource,
+  Utility,
+  ResourceRate,
+  MaxUtility,
+  BuildingCount,
+  Unit,
+  Raid,
+  MotherlodeMined,
+  DestroyedUnit,
+  HasBuilt,
+  HasResearched,
+  HasMainBaseLevel,
+  HasDefeatedPirate,
+}
+
 export const SPEED_SCALE = 10000;
 export const RESOURCE_SCALE = 1 / 100;
 
@@ -76,23 +102,23 @@ export const BlockType = {
   SolarPanel: keccak256("block.SolarPanel") as EntityID,
   Hangar: keccak256("block.Hangar") as EntityID,
   Garage: keccak256("block.Garage") as EntityID,
-  DroneFactory: keccak256("block.DroneFactory") as EntityID,
-  AdvancedDroneFactory: keccak256("block.AdvancedDroneFactory") as EntityID,
+  Workshop: keccak256("block.DroneFactory") as EntityID,
+  DroneFactory: keccak256("block.AdvancedDroneFactory") as EntityID,
   StarmapperStation: keccak256("block.Starmapper") as EntityID,
-  SAMMissiles: keccak256("block.SAMMissiles") as EntityID,
+  SAMLauncher: keccak256("block.SAMMissiles") as EntityID,
 
   Alloy: keccak256("item.AlloyCrafted") as EntityID,
   PhotovoltaicCell: keccak256("item.PhotovoltaicCellCrafted") as EntityID,
 
   SpaceFuelCraftedItem: keccak256("item.SpaceFuelCrafted") as EntityID,
-  ElectricityUtilityResource: keccak256(
-    "item.ElectricityUtilityResource"
-  ) as EntityID,
-  HousingUtilityResource: keccak256("item.HousingUtilityResource") as EntityID,
-  VesselUtilityResource: keccak256("item.VesselUtilityResource") as EntityID,
+
+  Electricity: keccak256("item.ElectricityUtilityResource") as EntityID,
+  Housing: keccak256("item.HousingUtilityResource") as EntityID,
+  VesselCapacity: keccak256("item.VesselUtilityResource") as EntityID,
+  FleetMoves: keccak256("block.MoveCount") as EntityID,
 
   BulletCrafted: keccak256("item.BulletCrafted") as EntityID,
-  IronPlateCrafted: keccak256("item.IronPlateCrafted") as EntityID,
+  IronPlate: keccak256("item.IronPlateCrafted") as EntityID,
   BasicPowerSourceCrafted: keccak256(
     "item.BasicPowerSourceCrafted"
   ) as EntityID,
@@ -260,8 +286,163 @@ export const BlockType = {
   AnvilLightDrone: keccak256("unit.AnvilDrone") as EntityID,
   AegisDrone: keccak256("unit.AegisDrone") as EntityID,
   MiningVessel: keccak256("unit.MiningVessel") as EntityID,
-  MarineUnit: keccak256("unit.MarineUnit") as EntityID,
-  AdvancedMarineUnit: keccak256("unit.AdvancedMarineUnit") as EntityID,
+  MinutemenMarine: keccak256("unit.MarineUnit") as EntityID,
+  TridentMarine: keccak256("unit.AdvancedMarineUnit") as EntityID,
+
+  //Objectives
+  DebugFreeObjectiveID: keccak256("block.DebugFreeObjective") as EntityID,
+  DebugHavResourcesObjectiveID: keccak256(
+    "block.DebugHavResourcesObjective"
+  ) as EntityID,
+  DebugHaveUnitsObjectiveID: keccak256(
+    "block.DebugHaveUnitsObjective"
+  ) as EntityID,
+  DebugHaveMaxUtilityObjectiveID: keccak256(
+    "block.DebugHaveMaxUtilityObjective"
+  ) as EntityID,
+  DebugCompletedPriorObjectiveID: keccak256(
+    "block.DebugCompletedPriorObjective"
+  ) as EntityID,
+  DebugMainBaseLevelObjectiveID: keccak256(
+    "block.DebugMainBaseLevelObjective"
+  ) as EntityID,
+  DebugTechnologyResearchedObjectiveID: keccak256(
+    "block.DebugTechnologyResearchedObjective"
+  ) as EntityID,
+  DebugResourceProductionObjectiveID: keccak256(
+    "block.DebugResourceProductionObjective"
+  ) as EntityID,
+  DebugBuiltBuildingTypeObjectiveID: keccak256(
+    "block.DebugBuiltBuildingTypeObjective"
+  ) as EntityID,
+  DebugNumberOfBuiltBuildingTypeObjectiveID: keccak256(
+    "block.DebugNumberOfBuiltBuildingTypeObjective"
+  ) as EntityID,
+  DebugRaidObjectiveID: keccak256("block.DebugRaidObjective") as EntityID,
+  DebugMotherlodeMiningTitaniumObjectiveID: keccak256(
+    "block.DebugMotherlodeMiningTitaniumObjective"
+  ) as EntityID,
+  DebugMotherlodeMiningPlatinumObjectiveID: keccak256(
+    "block.DebugMotherlodeMiningPlatinumObjective"
+  ) as EntityID,
+  DebugMotherlodeMiningIridiumObjectiveID: keccak256(
+    "block.DebugMotherlodeMiningIridiumObjective"
+  ) as EntityID,
+  DebugMotherlodeMiningKimberliteObjectiveID: keccak256(
+    "block.DebugMotherlodeMiningKimberliteObjective"
+  ) as EntityID,
+  DebugDestroyedUnitsObjectiveID: keccak256(
+    "block.DebugDestroyedUnitsObjective"
+  ) as EntityID,
+  DebugResourceRewardObjectiveID: keccak256(
+    "block.DebugResourceRewardObjective"
+  ) as EntityID,
+  DebugUnitsRewardObjectiveID: keccak256(
+    "block.DebugUnitsRewardObjectiveID"
+  ) as EntityID,
+
+  DebugSpawnPirateAsteroid: keccak256(
+    "block.DebugSpawnPirateAsteroid"
+  ) as EntityID,
+
+  DebugSpawnPirateAsteroidObjective: keccak256(
+    "block.DebugSpawnPirateAsteroidObjective"
+  ) as EntityID,
+
+  DebugDefeatedPirateAsteroidObjective: keccak256(
+    "block.DebugDefeatedPirateAsteroidObjective"
+  ) as EntityID,
+
+  BuildFirstIronMine: keccak256("objective.BuildFirstIronMine") as EntityID,
+  BuildFirstCopperMine: keccak256("objective.BuildFirstCopperMine") as EntityID,
+  BuildFirstLithiumMine: keccak256(
+    "objective.BuildFirstLithiumMine"
+  ) as EntityID,
+  BuildFirstSulfurMine: keccak256("objective.BuildFirstSulfurMine") as EntityID,
+
+  BuildFirstIronPlateFactory: keccak256(
+    "objective.BuildFirstIronPlateFactory"
+  ) as EntityID,
+  BuildFirstAlloyFactory: keccak256(
+    "objective.BuildFirstAlloyFactory"
+  ) as EntityID,
+  BuildFirstPVCellFactory: keccak256(
+    "objective.BuildFirstPVCellFactory"
+  ) as EntityID,
+
+  BuildGarage: keccak256("objective.BuildGarage") as EntityID,
+  BuildDroneFactory: keccak256("objective.BuildDroneFactory") as EntityID,
+  BuildSolarPanel: keccak256("objective.BuildSolarPanel") as EntityID,
+  BuildAdvancedDroneFactory: keccak256(
+    "objective.BuildAdvancedDroneFactory"
+  ) as EntityID,
+  BuildHangar: keccak256("objective.BuildHangar") as EntityID,
+
+  TrainMarineUnit: keccak256("objective.TrainMarineUnit") as EntityID,
+  TrainMarineUnit2: keccak256("objective.TrainMarineUnit2") as EntityID,
+  TrainMarineUnit3: keccak256("objective.TrainMarineUnit3") as EntityID,
+
+  TrainAdvancedMarineUnit: keccak256(
+    "objective.TrainAdvancedMarineUnit"
+  ) as EntityID,
+  TrainAdvancedMarineUnit2: keccak256(
+    "objective.TrainAdvancedMarineUnit2"
+  ) as EntityID,
+  TrainAdvancedMarineUnit3: keccak256(
+    "objective.TrainAdvancedMarineUnit3"
+  ) as EntityID,
+
+  TrainAnvilDrone: keccak256("objective.TrainAnvilDrone") as EntityID,
+  TrainAnvilDrone2: keccak256("objective.TrainAnvilDrone2") as EntityID,
+  TrainAnvilDrone3: keccak256("objective.TrainAnvilDrone3") as EntityID,
+
+  DefeatFirstPirateBase: keccak256(
+    "objective.DefeatFirstPirateBase"
+  ) as EntityID,
+  DefeatSecondPirateBase: keccak256(
+    "objective.DefeatSecondPirateBase"
+  ) as EntityID,
+  DefeatThirdPirateBase: keccak256(
+    "objective.DefeatThirdPirateBase"
+  ) as EntityID,
+  DefeatFourthPirateBase: keccak256(
+    "objective.DefeatFourthPirateBase"
+  ) as EntityID,
+  DefeatFifthPirateBase: keccak256(
+    "objective.DefeatFifthPirateBase"
+  ) as EntityID,
+  DefeatSixthPirateBase: keccak256(
+    "objective.DefeatSixthPirateBase"
+  ) as EntityID,
+  DefeatSeventhPirateBase: keccak256(
+    "objective.DefeatSeventhPirateBase"
+  ) as EntityID,
+  DefeatEighthPirateBase: keccak256(
+    "objective.DefeatEighthPirateBase"
+  ) as EntityID,
+  DefeatNinthPirateBase: keccak256(
+    "objective.DefeatNinthPirateBase"
+  ) as EntityID,
+  DefeatTenthPirateBase: keccak256(
+    "objective.DefeatTenthPirateBase"
+  ) as EntityID,
+  DefeatEleventhPirateBase: keccak256(
+    "objective.DefeatEleventhPirateBase"
+  ) as EntityID,
+
+  ExpandBase: keccak256("objective.ExpandBase") as EntityID,
+  ExpandBase2: keccak256("objective.ExpandBase2") as EntityID,
+  ExpandBase3: keccak256("objective.ExpandBase3") as EntityID,
+  ExpandBase4: keccak256("objective.ExpandBase4") as EntityID,
+  ExpandBase5: keccak256("objective.ExpandBase5") as EntityID,
+  ExpandBase6: keccak256("objective.ExpandBase6") as EntityID,
+
+  RaiseIronPlateProduction: keccak256(
+    "objective.RaiseIronPlateProduction"
+  ) as EntityID,
+
+  //Starmap
+  Asteroid: keccak256("spacerock.Asteroid") as EntityID,
 };
 
 export const BlockIdToKey = Object.entries(BlockType).reduce<{
@@ -302,130 +483,14 @@ export const BlockColors = new Map<EntityID, string>([
 ]);
 
 export const BackgroundImage = new Map<EntityID, string[]>([
-  //landscape blocks
-  [BlockType.Water, ["/img/terrain/water.gif"]],
-  [BlockType.Sandstone, ["/img/terrain/sandstone.png"]],
-  [BlockType.Biofilm, ["/img/terrain/biofilm.png"]],
-  [BlockType.Alluvium, ["/img/terrain/alluvium.png"]],
-  [BlockType.Regolith, ["/img/terrain/regolith.png"]],
-  [BlockType.Bedrock, ["/img/terrain/bedrock.png"]],
-  [BlockType.Air, ["/img/terrain/air.png"]],
-
-  //metal ores
-  [BlockType.Lithium, ["/img/resource/lithium_ore_layer.png"]],
-  [BlockType.Iron, ["/img/resource/iron_ore_layer.png"]],
-  [BlockType.Copper, ["/img/resource/copper_ore_layer.png"]],
-  [BlockType.Sulfur, ["/img/resource/sulfur_ore_layer.png"]],
-  [BlockType.Titanium, ["/img/resource/titanium_ore_layer.png"]],
-  [BlockType.Iridium, ["/img/resource/iridium_ore_layer.png"]],
-  [BlockType.Osmium, ["/img/resource/osmium_ore_layer.png"]],
-  [BlockType.Tungsten, ["/img/resource/tungsten_ore_layer.png"]],
-
-  //mineral ores
-  [BlockType.Kimberlite, ["/img/resource/kimberlite_ore_layer.png"]],
-  [BlockType.Uraninite, ["/img/resource/uraninite_ore_layer.png"]],
-  [BlockType.Bolutite, ["/img/resource/bolutite_ore_layer.png"]],
-
-  //buildings
-  [
-    BlockType.MainBase,
-    [
-      "/img/building/mainbase/mainbase.png",
-      "/img/building/mainbase/mainbase-level2.png",
-      "/img/building/mainbase/mainbase-level3.png",
-      "/img/building/mainbase/mainbase-level4.png",
-      "/img/building/mainbase/mainbase-level5.png",
-    ],
-  ],
-  [BlockType.DebugNode, ["/img/building/node.gif"]],
-  //new buildings
-  [
-    BlockType.CopperMine,
-    [
-      "/img/building/coppermine/copper-miner-level1.png",
-      "/img/building/coppermine/copper-miner-level2.png",
-      "/img/building/coppermine/copper-miner-level3.png",
-    ],
-  ],
-  [
-    BlockType.IronMine,
-    [
-      "/img/building/ironmine/iron-miner-level1.png",
-      "/img/building/ironmine/iron-miner-level2.png",
-      "/img/building/ironmine/iron-miner-level3.png",
-    ],
-  ],
-  [
-    BlockType.LithiumMine,
-    ["/img/building/lithiummine/lithium-mine-level1.png"],
-  ],
-  [BlockType.SulfurMine, ["/img/building/sulfurmine/sulfur-mine-level1.png"]],
-  [
-    BlockType.StorageUnit,
-    [
-      "/img/building/storageunit/storageunit-level1.png",
-      "/img/building/storageunit/storageunit-level2.png",
-      "/img/building/storageunit/storageunit-level3.png",
-    ],
-  ],
-  [
-    BlockType.IronPlateFactory,
-    [
-      "/img/building/ironplatingfactory/ironplatingfactory-level1.png",
-      "/img/building/ironplatingfactory/ironplatingfactory-level2.png",
-    ],
-  ],
-  [
-    BlockType.AlloyFactory,
-    ["/img/building/alloyfactory/alloyfactory-level1.png"],
-  ],
-  [
-    BlockType.PhotovoltaicCellFactory,
-    [
-      "/img/building/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_1.png",
-      "/img/building/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_1.png",
-    ],
-  ],
-  [
-    BlockType.SolarPanel,
-    [
-      "/img/building/solarpanels/solarpanel-level1.png",
-      "/img/building/solarpanels/solarpanel-level2.png",
-    ],
-  ],
-  [
-    BlockType.Garage,
-    ["/img/building/ironplatingfactory/ironplatingfactory-level1.png"],
-  ],
-  [BlockType.Hangar, ["/img/building/hangar/level1/Hangar1.png"]],
-  [
-    BlockType.DroneFactory,
-    [
-      "/img/building/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_1.png",
-    ],
-  ],
-  [
-    BlockType.AdvancedDroneFactory,
-    ["/img/building/drone-factory/normal/Drone_Factory1.png"],
-  ],
-  [
-    BlockType.StarmapperStation,
-    ["/img/building/starmapper-station/level1/Starmapper1.png"],
-  ],
-
-  [
-    BlockType.SAMMissiles,
-    ["/img/building/drone-factory/normal/Drone_Factory1.png"],
-  ],
-
   //units
   [BlockType.HammerLightDrone, ["/img/unit/hammerdrone.png"]],
   [BlockType.StingerDrone, ["/img/unit/stingerdrone.png"]],
   [BlockType.AnvilLightDrone, ["/img/unit/anvildrone.png"]],
   [BlockType.AegisDrone, ["/img/unit/aegisdrone.png"]],
   [BlockType.MiningVessel, ["/img/unit/miningvessel.png"]],
-  [BlockType.MarineUnit, ["/img/unit/anvildrone.png"]],
-  [BlockType.AdvancedMarineUnit, ["/img/unit/anvildrone.png"]],
+  [BlockType.MinutemenMarine, ["/img/unit/minutemen_marine.png"]],
+  [BlockType.TridentMarine, ["/img/unit/trident_marine.png"]],
 
   // debug units
   [BlockType.DebugUnit, ["/img/unit/stingerdrone.png"]],
@@ -622,7 +687,7 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.BulletCrafted, "/img/crafted/ironplate.png"],
   [BlockType.Platinum, "/img/resource/platinum_resource.png"],
 
-  [BlockType.IronPlateCrafted, "/img/crafted/ironplate.png"],
+  [BlockType.IronPlate, "/img/crafted/ironplate.png"],
   [BlockType.BasicPowerSourceCrafted, "/img/crafted/basicbattery.png"],
   [BlockType.AdvancedPowerSourceCrafted, "/img/crafted/photovoltaiccell.png"],
   [BlockType.IridiumCrystalCrafted, "/img/crafted/iridiumcrystal.png"],
@@ -644,12 +709,20 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.PhotovoltaicCell, "/img/resource/photovoltaiccell_resource.png"],
   [BlockType.SpaceFuelCraftedItem, "/img/crafted/refinedosmium.png"],
 
-  [BlockType.ElectricityUtilityResource, "/img/icons/powericon.png"],
-  [BlockType.HousingUtilityResource, "/img/icons/utilitiesicon.png"],
-  [BlockType.VesselUtilityResource, "/img/unit/miningvessel.png"],
+  [BlockType.Electricity, "/img/icons/powericon.png"],
+  [BlockType.Housing, "/img/icons/utilitiesicon.png"],
+  [BlockType.VesselCapacity, "/img/unit/miningvessel.png"],
+  [BlockType.FleetMoves, "img/icons/moveicon.png"],
 
   // debug
   [BlockType.BulletCrafted, "/img/crafted/bullet.png"],
+
+  //units
+  [BlockType.HammerLightDrone, "/img/unit/hammerdrone.png"],
+  [BlockType.StingerDrone, "/img/unit/stingerdrone.png"],
+  [BlockType.AnvilLightDrone, "/img/unit/anvildrone.png"],
+  [BlockType.AegisDrone, "/img/unit/aegisdrone.png"],
+  [BlockType.MiningVessel, "/img/unit/miningvessel.png"],
 ]);
 
 export type DisplayKeyPair = {
@@ -673,15 +746,41 @@ export const KeyImages = new Map<Key, string>([
 ]);
 
 export const MotherlodeSizeNames: Record<number, string> = {
-  [EMotherlodeSize.SMALL]: "small",
-  [EMotherlodeSize.MEDIUM]: "medium",
-  [EMotherlodeSize.LARGE]: "large",
+  [EMotherlodeSize.SMALL]: "Small",
+  [EMotherlodeSize.MEDIUM]: "Medium",
+  [EMotherlodeSize.LARGE]: "Large",
 };
 
 // do the same for types
 export const MotherlodeTypeNames: Record<number, string> = {
-  [EMotherlodeType.TITANIUM]: "titanium",
-  [EMotherlodeType.IRIDIUM]: "iridium",
-  [EMotherlodeType.PLATINUM]: "platinum",
-  [EMotherlodeType.KIMBERLITE]: "kimberlite",
+  [EMotherlodeType.TITANIUM]: "Titanium",
+  [EMotherlodeType.IRIDIUM]: "Iridium",
+  [EMotherlodeType.PLATINUM]: "Platinum",
+  [EMotherlodeType.KIMBERLITE]: "Kimberlite",
 };
+
+export const SpaceRockTypeNames: Record<number, string> = {
+  [ESpaceRockType.Asteroid]: "Asteroid",
+  [ESpaceRockType.Motherlode]: "Motherlode",
+};
+
+export const ResourceStorages = [
+  BlockType.Iron,
+  BlockType.Copper,
+  BlockType.Lithium,
+  BlockType.IronPlate,
+  BlockType.Alloy,
+  BlockType.PhotovoltaicCell,
+  BlockType.Sulfur,
+  BlockType.Titanium,
+  BlockType.Iridium,
+  BlockType.Platinum,
+  BlockType.Kimberlite,
+];
+
+export const UtilityStorages = [
+  BlockType.Housing,
+  BlockType.Electricity,
+  BlockType.VesselCapacity,
+  BlockType.FleetMoves,
+];

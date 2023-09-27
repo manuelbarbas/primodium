@@ -7,7 +7,7 @@ import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 
 export const createCameraApi = (targetScene: Scene) => {
-  function pan(coord: Coord, duration: number = 1000, ease: string = "Power2") {
+  function pan(coord: Coord, duration = 1000, ease = "Power2") {
     const { phaserScene, camera, tilemap } = targetScene;
 
     const pixelCoord = tileCoordToPixelCoord(
@@ -48,6 +48,14 @@ export const createCameraApi = (targetScene: Scene) => {
     });
   }
 
+  function zoomTo(zoom: number, duration = 1000, ease = "Power2") {
+    const { camera } = targetScene;
+
+    camera.phaserCamera.zoomTo(zoom, duration, ease, false, () => {
+      updateWorldView();
+    });
+  }
+
   function getPosition() {
     const { camera, tilemap } = targetScene;
 
@@ -81,6 +89,7 @@ export const createCameraApi = (targetScene: Scene) => {
 
   return {
     pan,
+    zoomTo,
     getPosition,
     updateWorldView,
     shake,
