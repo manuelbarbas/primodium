@@ -1,10 +1,18 @@
 import { EntityID } from "@latticexyz/recs";
 import { BiSolidInvader } from "react-icons/bi";
-import { FaShieldAlt } from "react-icons/fa";
-import { BlockNumber } from "src/network/components/clientComponents";
+import { FaCrosshairs, FaShieldAlt } from "react-icons/fa";
+import {
+  BlockNumber,
+  MapOpen,
+  Send,
+} from "src/network/components/clientComponents";
 import { ESendType } from "src/util/web3/types";
 import { OrbitActionButton } from "./OrbitActionButton";
 import { Position } from "src/network/components/chainComponents";
+import { Button } from "src/components/core/Button";
+import { primodium } from "@game/api";
+import { Scenes } from "@game/constants";
+import { Coord } from "@latticexyz/utils";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -15,6 +23,36 @@ export const LabeledValue: React.FC<{
       <p className="text-xs font-bold text-cyan-400">{label}</p>
       <div className="flex items-center gap-1">{children}</div>
     </div>
+  );
+};
+
+export const LocateButton: React.FC<{ coord: Coord }> = ({ coord }) => {
+  return (
+    <Button
+      className="btn-secondary btn-sm btn-square flex"
+      onClick={async () => {
+        const mapOpen = MapOpen.get(undefined, {
+          value: false,
+        }).value;
+
+        if (!mapOpen) {
+          const { transitionToScene } = primodium.api().scene;
+
+          await transitionToScene(Scenes.Asteroid, Scenes.Starmap);
+          MapOpen.set({ value: true });
+        }
+
+        const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
+
+        Send.setDestination(coord);
+
+        pan(coord);
+
+        zoomTo(2);
+      }}
+    >
+      <FaCrosshairs />
+    </Button>
   );
 };
 
@@ -76,12 +114,18 @@ export const Fleet: React.FC<{
             </div>
           </LabeledValue>
         ) : (
-          <OrbitActionButton
-            entity={arrivalEntity}
-            destination={destination}
-            sendType={sendType}
-            outgoing={outgoing}
-          />
+          <>
+            {ESendType.REINFORCE === sendType ? (
+              <OrbitActionButton
+                entity={arrivalEntity}
+                destination={destination}
+                sendType={sendType}
+                outgoing={outgoing}
+              />
+            ) : (
+              <LocateButton coord={destinationPosition} />
+            )}
+          </>
         )}
       </div>
     </div>
