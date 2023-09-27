@@ -6,6 +6,7 @@ import { SingletonID } from "@latticexyz/network";
 import { Invade } from "../widgets/Invade";
 import { Reinforce } from "../widgets/Reinforce";
 import { StationedUnits } from "../widgets/StationedUnits";
+import { Land } from "../widgets/Land";
 
 export const Motherlode: React.FC<{
   data: ReturnType<typeof getSpaceRockInfo>;
@@ -23,6 +24,7 @@ export const Motherlode: React.FC<{
         <Reinforce />
       </div>
       <StationedUnits />
+      <Land destination={data.entity} rockType={data.type} />
     </Navigator.Screen>
   );
 };

@@ -4,6 +4,7 @@ import { getSpaceRockInfo } from "src/util/spacerock";
 import { Raid } from "../widgets/Raid";
 import { Reinforce } from "../widgets/Reinforce";
 import { AsteroidResource } from "../widgets/AsteroidResource";
+import { Land } from "../widgets/Land";
 
 export const Asteroid: React.FC<{
   data: ReturnType<typeof getSpaceRockInfo>;
@@ -16,6 +17,7 @@ export const Asteroid: React.FC<{
         <Raid />
         <Reinforce />
       </div>
+      <Land destination={data.entity} rockType={data.type} />
     </Navigator.Screen>
   );
 };
