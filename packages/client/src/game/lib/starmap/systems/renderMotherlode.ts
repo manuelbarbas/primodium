@@ -105,6 +105,23 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
           );
         }
       }),
+      OnComponentSystem(OwnedBy, (_, { entity }) => {
+        if (world.entities[entity] !== entityId) return;
+        const ownedBy = OwnedBy.get(entityId)?.value;
+
+        const outlineSprite =
+          SpriteKeys[
+            `Motherlode${
+              ownedBy ? (ownedBy === player ? "Player" : "Enemy") : "Neutral"
+            }${
+              MotherlodeSizeNames[motherlodeData.size]
+            }` as keyof typeof SpriteKeys
+          ];
+
+        motherlodeOutline.setComponent(
+          Texture(Assets.SpriteAtlas, outlineSprite)
+        );
+      }),
     ]);
   };
 
