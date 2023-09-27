@@ -20,7 +20,7 @@ export const Motherlode: React.FC<{
       />
       <div className="grid grid-cols-2 w-full">
         <Invade />
-        <Reinforce type={data.type} />
+        <Reinforce />
       </div>
       <StationedUnits />
     </Navigator.Screen>

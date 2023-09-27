@@ -27,7 +27,7 @@ export const Raid: React.FC = () => {
       }`}
     >
       <img src="/img/icons/attackicon.png" className="w-8 h-8" />
-      <p className="uppercase text-xs font-bold">raid asteroid.</p>
+      <p className="uppercase text-xs font-bold">raid</p>
       <Navigator.NavButton
         to="Send"
         className="btn-sm w-fit btn-error"

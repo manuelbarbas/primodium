@@ -14,7 +14,7 @@ export const Asteroid: React.FC<{
       <AsteroidResource resources={data.resources} />
       <div className="grid grid-cols-2 w-full">
         <Raid />
-        <Reinforce type={data.type} />
+        <Reinforce />
       </div>
     </Navigator.Screen>
   );

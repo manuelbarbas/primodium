@@ -3,9 +3,9 @@ import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { OwnedBy } from "src/network/components/chainComponents";
 import { Hangar, Send } from "src/network/components/clientComponents";
-import { ESendType, ESpaceRockType } from "src/util/web3/types";
+import { ESendType } from "src/util/web3/types";
 
-export const Reinforce: React.FC<{ type: ESpaceRockType }> = ({ type }) => {
+export const Reinforce = () => {
   const origin = Send.getOrigin()?.entity;
   const destination = Send.getDestination()?.entity;
   const units = Hangar.use(origin, {
@@ -23,10 +23,7 @@ export const Reinforce: React.FC<{ type: ESpaceRockType }> = ({ type }) => {
       }`}
     >
       <img src="/img/icons/reinforcementicon.png" className="w-8 h-8" />
-      <p className="uppercase text-xs font-bold">
-        reinforce {type === ESpaceRockType.Asteroid ? "asteroid" : "motherlode"}
-        .
-      </p>
+      <p className="uppercase text-xs font-bold">reinforce</p>
       <Navigator.NavButton
         to="Send"
         className="btn-sm w-fit btn-success"

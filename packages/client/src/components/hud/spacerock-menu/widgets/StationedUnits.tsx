@@ -17,7 +17,7 @@ export const StationedUnits: React.FC = () => {
       }`}
     >
       <img src="/img/icons/mainbaseicon.png" className="w-8 h-8" />
-      <p className="uppercase text-xs font-bold">manage stationed units.</p>
+      <p className="uppercase text-xs font-bold">manage stationed units</p>
       <Navigator.NavButton
         to="StationedUnits"
         className="btn-sm w-fit btn-secondary"
