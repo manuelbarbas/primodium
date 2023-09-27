@@ -1,6 +1,10 @@
 import { EntityID, Has, HasValue } from "@latticexyz/recs";
 import { FaCrosshairs } from "react-icons/fa";
-import { Account, MapOpen } from "src/network/components/clientComponents";
+import {
+  Account,
+  MapOpen,
+  Send,
+} from "src/network/components/clientComponents";
 import { ESpaceRockType } from "src/util/web3/types";
 import { AsteroidType, OwnedBy } from "src/network/components/chainComponents";
 import { primodium } from "@game/api";
@@ -61,6 +65,8 @@ const Motherlode: React.FC<{ motherlodeId: EntityID }> = ({ motherlodeId }) => {
           }
 
           const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
+
+          Send.setDestination(motherlodeInfo.position);
 
           pan({
             x: motherlodeInfo.position.x,

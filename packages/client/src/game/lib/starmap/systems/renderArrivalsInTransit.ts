@@ -60,11 +60,11 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
     const sendTrajectory = scene.objectPool.getGroup(entityId + objIndexSuffix);
 
     sendTrajectory.add("Graphics").setComponents([
-      ObjectPosition(originPixelCoord, DepthLayers.Building),
+      ObjectPosition(originPixelCoord, DepthLayers.Marker),
       Line(destinationPixelCoord, {
         thickness: 2,
-        alpha: 0.5,
-        color: 0x808080,
+        alpha: 0.25,
+        color: 0x00ffff,
       }),
       Circle(7, {
         position: destinationPixelCoord,
@@ -75,24 +75,61 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
 
     const remainingBlocks = Number(arrival.arrivalBlock) - blockInfo.value;
 
+    //animated transit timeline
     scene.phaserScene.add
-      .timeline({
-        at: remainingBlocks * blockInfo.avgBlockTime * 1000,
-        run: () => {
-          scene.objectPool.removeGroup(entityId + objIndexSuffix);
+      .timeline([
+        {
+          at: 0,
+          run: () => {
+            const blocksTraveled = blockInfo.value - Number(arrival.timestamp);
+            const totalBlocks =
+              Number(arrival.arrivalBlock) - Number(arrival.timestamp);
 
-          const arrivalOrbit = scene.objectPool.getGroup(
-            entityId + objIndexSuffix
-          );
+            const progress = blocksTraveled / totalBlocks;
 
-          arrivalOrbit.add("Graphics").setComponents([
-            ObjectPosition(destinationPixelCoord, DepthLayers.Path),
-            Circle(5, {
-              color: 0x00ff00,
-            }),
-          ]);
+            // Calculate the starting position based on progress
+            const startX =
+              originPixelCoord.x +
+              (destinationPixelCoord.x - originPixelCoord.x) * progress;
+            const startY =
+              originPixelCoord.y +
+              (destinationPixelCoord.y - originPixelCoord.y) * progress;
+
+            // Set the fleet icon's starting position to the calculated values
+            const fleetIcon = scene.phaserScene.add
+              .circle(startX, startY, 7, 0x00ffff)
+              .setDepth(DepthLayers.Marker);
+
+            // Tween the fleet icon to the destination
+            scene.phaserScene.tweens.add({
+              targets: fleetIcon,
+              x: destinationPixelCoord.x,
+              y: destinationPixelCoord.y,
+              duration: remainingBlocks * blockInfo.avgBlockTime * 1000,
+              onComplete: () => {
+                fleetIcon.destroy();
+              },
+            });
+          },
         },
-      })
+        {
+          at: remainingBlocks * blockInfo.avgBlockTime * 1000,
+          run: () => {
+            scene.objectPool.removeGroup(entityId + objIndexSuffix);
+
+            const arrivalOrbit = scene.objectPool.getGroup(
+              entityId + objIndexSuffix
+            );
+
+            arrivalOrbit.add("Graphics").setComponents([
+              ObjectPosition(destinationPixelCoord, DepthLayers.Marker),
+              Circle(5, {
+                color: 0x00ff00,
+              }),
+            ]);
+          },
+        },
+      ])
       .play();
   };
 

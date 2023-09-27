@@ -176,7 +176,7 @@ export const VesselSlots: React.FC<{
     player
   );
 
-  const miningVesselCount = resourceCount + resourcesToClaim;
+  const miningVesselCount = resourceCount + resourcesToClaim - queue.length;
   const addSlots = maxLevel - level;
   const commisionSlots = level - miningVesselCount - queue.length;
 

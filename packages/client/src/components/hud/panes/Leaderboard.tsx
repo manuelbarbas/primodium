@@ -44,7 +44,7 @@ export const Leaderboard = () => {
         height={323}
         width="100%"
         itemCount={data.players.length}
-        itemSize={40}
+        itemSize={35}
       >
         {({ index, style }) => {
           const player = data.players[index];

@@ -232,7 +232,8 @@ contract SendUnitsTest is PrimodiumTest {
       from: addressToEntity(reinforcer),
       to: addressToEntity(receiver),
       origin: getHomeAsteroidEntity(reinforcer),
-      destination: getHomeAsteroidEntity(receiver)
+      destination: getHomeAsteroidEntity(receiver),
+      timestamp: block.number
     });
     assertEq(arrival, expectedArrival);
     console.log("checking arrival list length");
@@ -345,7 +346,8 @@ contract SendUnitsTest is PrimodiumTest {
       from: addressToEntity(alice),
       to: addressToEntity(bob),
       origin: getHomeAsteroidEntity(alice),
-      destination: motherlodeEntity
+      destination: motherlodeEntity,
+      timestamp: block.number
     });
     assertEq(arrival, expectedArrival);
 
@@ -412,7 +414,8 @@ contract SendUnitsTest is PrimodiumTest {
       from: addressToEntity(alice),
       to: addressToEntity(bob),
       origin: origin,
-      destination: destination
+      destination: destination,
+      timestamp: block.number
     });
     assertEq(arrival, expectedArrival);
 

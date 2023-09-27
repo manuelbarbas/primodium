@@ -70,7 +70,7 @@ export default function App() {
           <ToastContainer
             toastClassName={`font-mono text-xs border bg-neutral border-secondary rounded-box drop-shadow-2xl`}
             progressClassName={"bg-accent"}
-            position="top-center"
+            position="top-left"
             autoClose={3000}
             hideProgressBar={false}
             newestOnTop={false}

@@ -9,9 +9,10 @@ import {
 import {
   ObjectPosition,
   OnClick,
+  OnComponentSystem,
   SetValue,
 } from "../../common/object-components/common";
-import { Texture } from "../../common/object-components/sprite";
+import { Outline, Texture } from "../../common/object-components/sprite";
 import {
   AsteroidType,
   Motherlode,
@@ -90,12 +91,38 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
         }${MotherlodeSizeNames[motherlodeData.size]}` as keyof typeof SpriteKeys
       ];
 
-    motherlodeObjectGroup
-      .add("Sprite")
-      .setComponents([
-        ...sharedComponents,
-        Texture(Assets.SpriteAtlas, outlineSprite),
-      ]);
+    const motherlodeOutline = motherlodeObjectGroup.add("Sprite");
+    motherlodeOutline.setComponents([
+      ...sharedComponents,
+      Texture(Assets.SpriteAtlas, outlineSprite),
+      OnComponentSystem(Send, () => {
+        if (motherlodeOutline.hasComponent(Outline().id)) {
+          motherlodeOutline.removeComponent(Outline().id);
+        } else {
+          if (Send.getDestination()?.entity !== entityId) return;
+          motherlodeOutline.setComponent(
+            Outline({ thickness: 1.5, color: 0xffa500 })
+          );
+        }
+      }),
+      OnComponentSystem(OwnedBy, (_, { entity }) => {
+        if (world.entities[entity] !== entityId) return;
+        const ownedBy = OwnedBy.get(entityId)?.value;
+
+        const outlineSprite =
+          SpriteKeys[
+            `Motherlode${
+              ownedBy ? (ownedBy === player ? "Player" : "Enemy") : "Neutral"
+            }${
+              MotherlodeSizeNames[motherlodeData.size]
+            }` as keyof typeof SpriteKeys
+          ];
+
+        motherlodeOutline.setComponent(
+          Texture(Assets.SpriteAtlas, outlineSprite)
+        );
+      }),
+    ]);
   };
 
   const query = [

@@ -56,7 +56,7 @@ export const renderArrivalsInOrbit = (scene: Scene, player: EntityID) => {
     else color = 0x808080;
 
     arrivalOrbit.add("Graphics").setComponents([
-      ObjectPosition(destinationPixelCoord, DepthLayers.Path),
+      ObjectPosition(destinationPixelCoord, DepthLayers.Marker),
       Circle(5, {
         color,
       }),

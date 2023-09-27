@@ -88,7 +88,8 @@ contract SendUnitsSystem is PrimodiumSystem {
       from: playerEntity,
       to: sendArgs.to,
       origin: origin,
-      destination: destination
+      destination: destination,
+      timestamp: block.number
     });
 
     LibSend.sendUnits(world, arrival);
