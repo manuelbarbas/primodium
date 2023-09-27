@@ -21,6 +21,7 @@ import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { ViewStarmap } from "./ViewStarmap";
 import { Panes } from "./panes/Panes";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
+import { LoadingIndication } from "./LoadingIndication";
 
 export const GameHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [
@@ -69,7 +70,8 @@ export const GameHUD = () => {
             </HUD.TopMiddle>
             <HUD.TopLeft>
               <Score />
-              <CurrentObjective />
+              <LoadingIndication />
+              {/* <CurrentObjective /> */}
             </HUD.TopLeft>
             <HUD.TopRight>
               <Panes />
@@ -94,7 +96,8 @@ export const GameHUD = () => {
             </HUD.TopMiddle>
             <HUD.TopLeft>
               <Score />
-              <CurrentObjective />
+              <LoadingIndication />
+              {/* <CurrentObjective /> */}
             </HUD.TopLeft>
             <HUD.TopRight>
               <Panes />
