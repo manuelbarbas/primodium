@@ -57,12 +57,18 @@ library LibPirateAsteroid {
     }
 
     asteroidEntity = LibEncode.hashEntity(world, personalPirateEntity);
-    AsteroidTypeComponent asteroidTypeComponent = AsteroidTypeComponent(world.getComponent(AsteroidTypeComponentID));
-    require(!asteroidTypeComponent.has(asteroidEntity), "[LibAsteroid] asteroid already exists");
-    P_SpawnPirateAsteroidComponent(world.getComponent(P_SpawnPirateAsteroidComponentID)).set(
-      asteroidEntity,
-      spawnPirateAsteroid
+
+    P_SpawnPirateAsteroidComponent spawnPirateAsteroidComponent = P_SpawnPirateAsteroidComponent(
+      world.getComponent(P_SpawnPirateAsteroidComponentID)
     );
+
+    if (spawnPirateAsteroidComponent.has(asteroidEntity)) {
+      require(
+        spawnPirateAsteroidComponent.getValue(asteroidEntity) != spawnPirateAsteroid,
+        "[LibPirateAsteroid] asteroid already exists"
+      );
+    }
+    spawnPirateAsteroidComponent.set(asteroidEntity, spawnPirateAsteroid);
     pirateComponent.set(asteroidEntity, ownerEntity);
 
     PositionComponent positionComponent = PositionComponent(world.getComponent(PositionComponentID));
@@ -79,12 +85,11 @@ library LibPirateAsteroid {
     });
 
     positionComponent.set(asteroidEntity, position);
-    asteroidTypeComponent.set(asteroidEntity, ESpaceRockType.ASTEROID);
+    AsteroidTypeComponent(world.getComponent(AsteroidTypeComponentID)).set(asteroidEntity, ESpaceRockType.ASTEROID);
 
     // For now, we will use this component to ensure the owner can only build on their asteroid.
     // TODO: remove this component later as it might be for temporary use.
     positionComponent.set(personalPirateEntity, 0, 0, asteroidEntity);
-    uint256 encodedPosition = LibEncode.encodeCoord(position);
 
     //remove old pirate asteroid coord as active
     if (positionComponent.has(asteroidEntity)) {
@@ -93,7 +98,10 @@ library LibPirateAsteroid {
     }
 
     // Mark the asteroid's position as active in the ReversePositionComponent.
-    ReversePositionComponent(world.getComponent(ReversePositionComponentID)).set(encodedPosition, asteroidEntity);
+    ReversePositionComponent(world.getComponent(ReversePositionComponentID)).set(
+      LibEncode.encodeCoord(position),
+      asteroidEntity
+    );
 
     positionComponent.set(asteroidEntity, position);
 
