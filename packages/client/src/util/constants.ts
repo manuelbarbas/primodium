@@ -444,6 +444,34 @@ export const BlockType = {
     "objective.RaiseIronPlateProduction"
   ) as EntityID,
 
+  MineTitanium1ID: keccak256("objective.MineTitanium1") as EntityID,
+  MineTitanium2ID: keccak256("objective.MineTitanium2") as EntityID,
+  MineTitanium3ID: keccak256("objective.MineTitanium3") as EntityID,
+
+  MinePlatinum1ID: keccak256("objective.MinePlatinum1") as EntityID,
+  MinePlatinum2ID: keccak256("objective.MinePlatinum2") as EntityID,
+  MinePlatinum3ID: keccak256("objective.MinePlatinum3") as EntityID,
+
+  MineIridium1ID: keccak256("objective.MineIridium1") as EntityID,
+  MineIridium2ID: keccak256("objective.MineIridium2") as EntityID,
+  MineIridium3ID: keccak256("objective.MineIridium3") as EntityID,
+
+  MineKimberlite1ID: keccak256("objective.MineKimberlite1") as EntityID,
+  MineKimberlite2ID: keccak256("objective.MineKimberlite2") as EntityID,
+  MineKimberlite3ID: keccak256("objective.MineKimberlite3") as EntityID,
+
+  TrainHammerDroneID: keccak256("objective.TrainHammerDrone") as EntityID,
+  TrainHammerDrone2ID: keccak256("objective.TrainHammerDrone2") as EntityID,
+  TrainHammerDrone3ID: keccak256("objective.TrainHammerDrone3") as EntityID,
+
+  TrainAegisDroneID: keccak256("objective.TrainAegisDrone") as EntityID,
+  TrainAegisDrone2ID: keccak256("objective.TrainAegisDrone2") as EntityID,
+  TrainAegisDrone3ID: keccak256("objective.TrainAegisDrone3") as EntityID,
+
+  TrainStingerDroneID: keccak256("objective.TrainStingerDrone") as EntityID,
+  TrainStingerDrone2ID: keccak256("objective.TrainStingerDrone2") as EntityID,
+  TrainStingerDrone3ID: keccak256("objective.TrainStingerDrone3") as EntityID,
+
   //Starmap
   Asteroid: keccak256("spacerock.Asteroid") as EntityID,
 };
