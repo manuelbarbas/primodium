@@ -75,6 +75,7 @@ struct Arrival {
   uint256 to;
   uint256 origin;
   uint256 destination;
+  uint256 timestamp;
 }
 
 /* -------------------------------------------------------------------------- */
