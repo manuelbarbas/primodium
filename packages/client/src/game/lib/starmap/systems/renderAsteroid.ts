@@ -10,9 +10,10 @@ import {
 import {
   ObjectPosition,
   OnClick,
+  OnComponentSystem,
   SetValue,
 } from "../../common/object-components/common";
-import { Texture } from "../../common/object-components/sprite";
+import { Outline, Texture } from "../../common/object-components/sprite";
 import {
   AsteroidType,
   Level,
@@ -76,7 +77,9 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
       }),
     ];
 
-    asteroidObjectGroup.add("Sprite").setComponents([
+    const asteroidObject = asteroidObjectGroup.add("Sprite");
+
+    asteroidObject.setComponents([
       ...sharedComponents,
       Texture(
         Assets.SpriteAtlas,
@@ -108,12 +111,22 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
         }` as keyof typeof SpriteKeys
       ];
 
-    asteroidObjectGroup
-      .add("Sprite")
-      .setComponents([
-        ...sharedComponents,
-        Texture(Assets.SpriteAtlas, outlineSprite),
-      ]);
+    const asteroidOutline = asteroidObjectGroup.add("Sprite");
+
+    asteroidOutline.setComponents([
+      ...sharedComponents,
+      OnComponentSystem(Send, () => {
+        if (asteroidOutline.hasComponent(Outline().id)) {
+          asteroidOutline.removeComponent(Outline().id);
+        } else {
+          if (Send.getDestination()?.entity !== entityId) return;
+          asteroidOutline.setComponent(
+            Outline({ thickness: 2, color: 0xffa500 })
+          );
+        }
+      }),
+      Texture(Assets.SpriteAtlas, outlineSprite),
+    ]);
   };
 
   const query = [

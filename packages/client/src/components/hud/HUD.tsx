@@ -10,7 +10,6 @@ import { Resources } from "./resources/Resources";
 import { Hotbar } from "./hotbar/Hotbar";
 import { Units } from "./units/Units";
 import { Score } from "./Score";
-import { CurrentObjective } from "./CurrentObjective";
 import {
   MapOpen,
   SelectedBuilding,
