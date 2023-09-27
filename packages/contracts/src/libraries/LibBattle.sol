@@ -141,6 +141,7 @@ library LibBattle {
 
       LibUnit.decreaseUnitCount(br.defender, br.rock, unitTypes[i], defenderUnitsLost);
       LibUnit.updateStoredUtilities(br.attacker, unitTypes[i], attackerUnitsLost, false);
+      LibUnit.updateStoredUtilities(br.defender, unitTypes[i], defenderUnitsLost, false);
       if (br.winner == br.attacker) {
         bytes32 attackerRock = (br.attacker == br.winner && sendType == ESendType.Raid)
           ? Home.getAsteroid(br.attacker)

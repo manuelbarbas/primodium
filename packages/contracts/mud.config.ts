@@ -333,6 +333,12 @@ export const config = mudConfig({
         trainingTime: "uint256",
       },
     },
+
+    P_MiningRate: {
+      keySchema: { entity: "bytes32", level: "uint256" },
+      schema: "uint256",
+    },
+
     QueueUnits: {
       keySchema: { entity: "bytes32" },
       schema: {
@@ -412,17 +418,6 @@ export const config = mudConfig({
         raidedAmount: "uint256[]",
       },
       ephemeral: true,
-    },
-    /* ---------------------------- Motherlode Mining --------------------------- */
-
-    P_MiningUnits: {
-      keySchema: {},
-      schema: "bytes32[]",
-    },
-
-    P_MiningPower: {
-      keySchema: { entity: "bytes32", level: "uint256" },
-      schema: "uint256",
     },
   },
 });

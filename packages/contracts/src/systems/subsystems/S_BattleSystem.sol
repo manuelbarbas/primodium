@@ -24,4 +24,19 @@ contract S_BattleSystem is PrimodiumSystem {
   ) public returns (BattleResultData memory) {
     return LibBattle.battle(attackerEntity, defenderEntity, rockEntity, sendType);
   }
+
+  function getAttackPoints(
+    bytes32 invader,
+    bytes32 rockEntity,
+    ESendType sendType
+  )
+    public
+    returns (
+      uint256[] memory,
+      uint256,
+      uint256
+    )
+  {
+    return LibBattle.getAttackPoints(invader, rockEntity, sendType);
+  }
 }
