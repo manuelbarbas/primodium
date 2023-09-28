@@ -30,7 +30,7 @@
     "@latticexyz/utils": "2.0.0-next.9",
     "@latticexyz/world": "2.0.0-next.9",
     "@panzoom/panzoom": "^4.5.1",
-    "@primodiumxyz/mud-game-tools": "^1.0.5",
+    "@primodiumxyz/mud-game-tools": "^1.0.6",
     "@vercel/analytics": "^1.0.1",
     "async-mutex": "^0.4.0",
     "comlink": "^4.4.1",
