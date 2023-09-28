@@ -14,7 +14,7 @@ export const createSpriteApi = (scene: Scene) => {
       return texture;
     }
 
-    return cache.get(spriteKey);
+    return cache.get(spriteKey) ?? "";
   }
 
   return { getSpriteBase64 };
