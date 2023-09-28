@@ -159,6 +159,33 @@ library LibInitBuildings {
     // LEVEL 8
     maxMoves[7] = 1;
 
+    /****************** Unit Types Production *******************/
+    uint256[][] memory allUnitTypes = new uint256[][](maxLevel);
+    uint256[] memory unitTypes;
+
+    unitTypes = new uint256[](1);
+    unitTypes[0] = MiningVessel;
+    allUnitTypes[0] = unitTypes;
+    allUnitTypes[1] = unitTypes;
+    allUnitTypes[2] = unitTypes;
+    allUnitTypes[3] = unitTypes;
+    allUnitTypes[4] = unitTypes;
+    allUnitTypes[5] = unitTypes;
+    allUnitTypes[6] = unitTypes;
+    allUnitTypes[7] = unitTypes;
+
+    /****************** Unit Production Multipliers *******************/
+    uint32[] memory productionSpeedMultipliers = new uint32[](maxLevel);
+
+    productionSpeedMultipliers[0] = 100;
+    productionSpeedMultipliers[1] = 100;
+    productionSpeedMultipliers[2] = 100;
+    productionSpeedMultipliers[3] = 100;
+    productionSpeedMultipliers[4] = 100;
+    productionSpeedMultipliers[5] = 100;
+    productionSpeedMultipliers[6] = 100;
+    productionSpeedMultipliers[7] = 100;
+
     /****************** Storage Upgrades *******************/
     ResourceValue[][] memory storageUpgrades = new ResourceValue[][](maxLevel);
     // LEVEL 1
@@ -277,6 +304,14 @@ library LibInitBuildings {
         ResourceValue(VesselUtilityResourceID, vesselProduction[i])
       );
       P_MaxMovesComponent(world.getComponent(P_MaxMovesComponentID)).set(buildingLevelEntity, maxMoves[i]);
+      P_UnitProductionTypesComponent(world.getComponent(P_UnitProductionTypesComponentID)).set(
+        buildingLevelEntity,
+        allUnitTypes[i]
+      );
+      P_UnitProductionMultiplierComponent(world.getComponent(P_UnitProductionMultiplierComponentID)).set(
+        buildingLevelEntity,
+        productionSpeedMultipliers[i]
+      );
     }
   }
 
