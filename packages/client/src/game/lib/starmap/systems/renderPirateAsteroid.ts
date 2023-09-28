@@ -6,6 +6,7 @@ import {
   HasValue,
   EntityID,
   defineComponentSystem,
+  defineUpdateSystem,
 } from "@latticexyz/recs";
 import {
   ObjectPosition,
@@ -14,8 +15,8 @@ import {
 } from "../../common/object-components/common";
 import { Texture } from "../../common/object-components/sprite";
 import {
+  P_SpawnPirateAsteroid,
   AsteroidType,
-  DefeatedSpawnedPirateAsteroid,
   OwnedBy,
   Pirate,
   Position,
@@ -110,18 +111,22 @@ export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
     render(entityId, coord);
   });
 
-  //remove or add if pirate asteroid is defeated
-  defineComponentSystem(world, DefeatedSpawnedPirateAsteroid, ({ entity }) => {
+  defineUpdateSystem(gameWorld, query, ({ entity }) => {
     const entityId = world.entities[entity];
-    const defeated = DefeatedSpawnedPirateAsteroid.get(entityId, {
-      value: false,
-    });
 
-    if (defeated) {
-      scene.objectPool.removeGroup("asteroid_" + entityId);
-      return;
-    }
+    const coord = Position.get(entityId);
 
+    if (!coord) return;
+
+    render(entityId, coord);
+  });
+
+  //remove or add if pirate asteroid is defeated
+  defineComponentSystem(world, P_SpawnPirateAsteroid, ({ entity }) => {
+    
+    const entityId = world.entities[entity];
+    if(!Pirate.has(entityId)) return;
+    
     const coord = Position.get(entityId);
 
     if (!coord) return;
