@@ -378,7 +378,7 @@ library LibInitObjectives {
     LevelComponent(world.getComponent(LevelComponentID)).set(objective, 2);
     P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
       objective,
-      LibEncode.hashKeyEntity(ExpansionKey, 1)
+      LibEncode.hashKeyEntity(ExpansionKey, 2)
     );
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
     resourceRewards.resources[0] = IronResourceItemID;
@@ -391,7 +391,7 @@ library LibInitObjectives {
     LevelComponent(world.getComponent(LevelComponentID)).set(objective, 2);
     P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
       objective,
-      LibEncode.hashKeyEntity(ExpansionKey, 2)
+      LibEncode.hashKeyEntity(ExpansionKey, 3)
     );
     P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(objective, ExpandBaseID);
     resourceRewards = ResourceValues(new uint256[](2), new uint32[](2));
@@ -408,7 +408,7 @@ library LibInitObjectives {
     LevelComponent(world.getComponent(LevelComponentID)).set(objective, 3);
     P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
       objective,
-      LibEncode.hashKeyEntity(ExpansionKey, 3)
+      LibEncode.hashKeyEntity(ExpansionKey, 4)
     );
     P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
       objective,
@@ -428,7 +428,7 @@ library LibInitObjectives {
     LevelComponent(world.getComponent(LevelComponentID)).set(objective, 4);
     P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
       objective,
-      LibEncode.hashKeyEntity(ExpansionKey, 4)
+      LibEncode.hashKeyEntity(ExpansionKey, 5)
     );
     P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
       objective,
@@ -448,7 +448,7 @@ library LibInitObjectives {
     LevelComponent(world.getComponent(LevelComponentID)).set(objective, 5);
     P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
       objective,
-      LibEncode.hashKeyEntity(ExpansionKey, 5)
+      LibEncode.hashKeyEntity(ExpansionKey, 6)
     );
     P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
       objective,
@@ -468,7 +468,7 @@ library LibInitObjectives {
     LevelComponent(world.getComponent(LevelComponentID)).set(objective, 6);
     P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
       objective,
-      LibEncode.hashKeyEntity(ExpansionKey, 6)
+      LibEncode.hashKeyEntity(ExpansionKey, 7)
     );
     P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
       objective,
