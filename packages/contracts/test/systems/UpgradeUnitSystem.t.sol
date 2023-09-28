@@ -21,25 +21,25 @@ contract UpgradeUnitSystemTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
     vm.startPrank(creator);
-    player = addressToEntity(worldAddress);
+    player = addressToEntity(creator);
 
-    P_EnumToPrototype.set(UnitKey, uint8(unit), unitPrototype);
-    P_MaxLevel.set(unitPrototype, 2);
+    P_EnumToPrototype.set(world, UnitKey, uint8(unit), unitPrototype);
+    P_MaxLevel.set(world, unitPrototype, 2);
   }
 
   function testUpgradeUnit() public {
     world.upgradeUnit(unit);
-    assertEq(UnitLevel.get(player, unitPrototype), 1);
+    assertEq(UnitLevel.get(world, player, unitPrototype), 1);
   }
 
   function testUpgradeUnitMainBaseLevelRequirementNotMet() public {
-    P_RequiredBaseLevel.set(unitPrototype, 1, 3);
+    P_RequiredBaseLevel.set(world, unitPrototype, 1, 3);
     vm.expectRevert(bytes("[UpgradeUnitSystem] MainBase level requirement not met"));
     world.upgradeUnit(unit);
   }
 
   function testUpgradeUnitMaxLevelReached() public {
-    P_MaxLevel.set(unitPrototype, 0);
+    P_MaxLevel.set(world, unitPrototype, 0);
     vm.expectRevert(bytes("[UpgradeUnitSystem] Max level reached"));
     world.upgradeUnit(unit);
   }
@@ -49,10 +49,10 @@ contract UpgradeUnitSystemTest is PrimodiumTest {
     requiredResources[0] = uint8(EResource.Iron);
     uint256[] memory requiredAmounts = new uint256[](1);
     requiredAmounts[0] = 100;
-    P_RequiredUpgradeResources.set(unitPrototype, 1, requiredResources, requiredAmounts);
-    ResourceCount.set(player, EResource.Iron, 100);
+    P_RequiredUpgradeResources.set(world, unitPrototype, 1, requiredResources, requiredAmounts);
+    ResourceCount.set(world, player, EResource.Iron, 100);
     world.upgradeUnit(unit);
-    assertEq(ResourceCount.get(player, EResource.Iron), 0);
+    assertEq(ResourceCount.get(world, player, EResource.Iron), 0);
   }
 
   function testUpgradeUnitWithoutRequiredResources() public {

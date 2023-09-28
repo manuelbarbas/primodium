@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { System } from "@latticexyz/world/src/System.sol";
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { IWorld } from "codegen/world/IWorld.sol";
 import { LibReinforce } from "codegen/Libraries.sol";
+
+import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
+import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
+
+import { S_UpdateRockSystem } from "systems/subsystems/S_UpdateRockSystem.sol";
 
 import { OwnedBy } from "codegen/index.sol";
 
@@ -16,10 +19,14 @@ contract ReinforceSystem is PrimodiumSystem {
    */
   function reinforce(bytes32 rockEntity, bytes32 arrival) public {
     bytes32 playerEntity = addressToEntity(_msgSender());
-    IWorld world = IWorld(_world());
 
     require(OwnedBy.get(rockEntity) == playerEntity, "[Reinforce] Rock not owned by sender");
-    world.updateRock(playerEntity, rockEntity);
+    SystemCall.callWithHooksOrRevert(
+      entityToAddress(playerEntity),
+      getSystemResourceId("S_UpdateRockSystem"),
+      abi.encodeCall(S_UpdateRockSystem.updateRock, (playerEntity, rockEntity)),
+      0
+    );
 
     LibReinforce.reinforce(playerEntity, rockEntity, arrival);
   }

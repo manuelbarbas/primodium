@@ -16,7 +16,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
     vm.startPrank(creator);
-    player = addressToEntity(worldAddress);
+    player = addressToEntity(creator);
     BuildingType.set(building, buildingPrototype);
     P_EnumToPrototype.set(UnitKey, uint8(unit), unitPrototype);
     P_GameConfigData memory config = P_GameConfig.get();

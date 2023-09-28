@@ -3,6 +3,7 @@ pragma solidity >=0.8.21;
 import "forge-std/Test.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 
+import "src/utils.sol";
 import "codegen/world/IWorld.sol";
 import "codegen/index.sol";
 import "src/Types.sol";
@@ -35,15 +36,10 @@ contract PrimodiumTest is MudTest {
     super.setUp();
     world = IWorld(worldAddress);
     creator = world.creator();
-    console.log("creator:", creator);
 
     alice = getUser();
     bob = getUser();
     eve = getUser();
-  }
-
-  function addressToEntity(address a) internal pure returns (bytes32) {
-    return bytes32(uint256(uint160((a))));
   }
 
   function getUser() internal returns (address payable) {
@@ -160,7 +156,7 @@ contract PrimodiumTest is MudTest {
     returns (PositionData memory coord)
   {
     bytes32 playerEntity = addressToEntity(player);
-    bytes32 asteroid = LibEncode.getHash(worldAddress, playerEntity);
+    bytes32 asteroid = LibEncode.getHash(playerEntity);
 
     coord = PositionData(coord2D.x, coord2D.y, asteroid);
   }
@@ -190,22 +186,22 @@ contract PrimodiumTest is MudTest {
 
   function removeRequiredTile(EBuilding building) internal {
     bytes32 buildingEntity = P_EnumToPrototype.get(BuildingKey, uint8(building));
-    P_RequiredTile.deleteRecord(buildingEntity);
+    P_RequiredTile.deleteRecord(world, buildingEntity);
   }
 
   function removeRequiredResources(EBuilding building) internal {
     bytes32 buildingEntity = P_EnumToPrototype.get(BuildingKey, uint8(building));
     uint256 buildingMaxLevel = P_MaxLevel.get(world, buildingEntity);
-    for (uint256 i = 0; i < buildingMaxLevel; i++) {
-      P_RequiredResources.deleteRecord(buildingEntity, i);
+    for (uint256 i = 0; i <= buildingMaxLevel; i++) {
+      P_RequiredResources.deleteRecord(world, buildingEntity, i);
     }
   }
 
   function removeRequiredMainBase(EBuilding building) internal {
-    bytes32 buildingEntity = P_EnumToPrototype.get(BuildingKey, uint8(building));
+    bytes32 buildingEntity = P_EnumToPrototype.get(world, BuildingKey, uint8(building));
     uint256 buildingMaxLevel = P_MaxLevel.get(world, buildingEntity);
-    for (uint256 i = 0; i < buildingMaxLevel; i++) {
-      P_RequiredBaseLevel.deleteRecord(buildingEntity, i);
+    for (uint256 i = 0; i <= buildingMaxLevel; i++) {
+      P_RequiredBaseLevel.deleteRecord(world, buildingEntity, i);
     }
   }
 

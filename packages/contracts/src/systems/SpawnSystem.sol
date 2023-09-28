@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { IWorld } from "codegen/world/IWorld.sol";
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { Spawned, Position, PositionData, Level, Home, P_EnumToPrototype } from "codegen/index.sol";
@@ -24,7 +23,7 @@ contract SpawnSystem is PrimodiumSystem {
 
     Level.set(playerEntity, 1);
 
-    bytes32 asteroid = LibAsteroid.createAsteroid(_world(), playerEntity);
+    bytes32 asteroid = LibAsteroid.createAsteroid(playerEntity);
     PositionData memory position = Position.get(MainBasePrototypeId);
     position.parent = asteroid;
     Home.set(playerEntity, asteroid, LibEncode.getHash(BuildingKey, position));

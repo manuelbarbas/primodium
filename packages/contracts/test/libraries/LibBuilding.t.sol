@@ -22,21 +22,19 @@ contract LibBuildingTest is PrimodiumTest {
     vm.assume(maxX >= currX);
     vm.assume(maxY >= currY);
 
-    bytes32[] memory keys = new bytes32[](0);
-
     P_Asteroid.set(maxX, maxY);
 
-    bytes32 playerEntity = addressToEntity(alice);
-    uint256 playerLevel = Level.get(playerEntity);
+    bytes32 playerEntity = addressToEntity(creator);
+    uint256 playerLevel = Level.get(world, playerEntity);
 
-    Dimensions.set(ExpansionKey, playerLevel, currX, currY);
+    Dimensions.set(world, ExpansionKey, playerLevel, currX, currY);
 
     Bounds memory bounds = LibBuilding.getPlayerBounds(playerEntity);
 
-    assertEq(bounds.minX, (maxX - currX) / 2);
-    assertEq(bounds.maxX, (maxX + currX) / 2 - 1);
-    assertEq(bounds.minY, (maxY - currY) / 2);
-    assertEq(bounds.maxY, (maxY + currY) / 2 - 1);
+    assertEq(bounds.minX, (int32(maxX) - int32(currX)) / 2);
+    assertEq(bounds.maxX, (int32(maxX) + int32(currX)) / 2 - 1);
+    assertEq(bounds.minY, (int32(maxY) - int32(currY)) / 2);
+    assertEq(bounds.maxY, (int32(maxY) + int32(currY)) / 2 - 1);
 
     // Check that the bound size matches with the current player dimensions
     assertEq(currX, bounds.maxX - bounds.minX + 1);

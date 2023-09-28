@@ -20,7 +20,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
     vm.startPrank(creator);
-    player = addressToEntity(worldAddress);
+    player = addressToEntity(creator);
     to = addressToEntity(alice);
     P_EnumToPrototype.set(UnitKey, uint8(unit), unitPrototype);
 
