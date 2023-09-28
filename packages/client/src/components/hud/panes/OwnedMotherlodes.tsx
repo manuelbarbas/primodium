@@ -97,6 +97,11 @@ export const OwnedMotherlodes: React.FC = () => {
 
   return (
     <>
+      {motherlodes.length === 0 && (
+        <SecondaryCard className="w-full h-full flex text-xs items-center justify-center font-bold">
+          <p className="opacity-50">NO OWNED MOTHERLODES</p>
+        </SecondaryCard>
+      )}
       {motherlodes.map((entityIndex) => {
         const entityId = world.entities[entityIndex];
 
