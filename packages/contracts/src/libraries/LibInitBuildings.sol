@@ -1920,7 +1920,7 @@ library LibInitBuildings {
     P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(defenciveBuildingType, maxLevel);
     P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(
       defenciveBuildingType,
-      LibBlueprint.get3x2Blueprint()
+      LibBlueprint.get3x3Blueprint()
     );
     for (uint256 i = 0; i < maxLevel; i++) {
       uint256 level = i + 1;
