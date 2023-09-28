@@ -778,7 +778,7 @@ export const BlockDescriptions = new Map<EntityID, string>([
 
   [
     BlockType.BuildStarmap,
-    "Construct a starmapper station. A starmapper station will increase the number of fleets you can send at one time.",
+    "Construct a starmapper station. A starmapper station increases the number of fleets you can send at a time.",
   ],
 
   [
