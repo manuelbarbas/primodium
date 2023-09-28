@@ -77,8 +77,8 @@ library LibInitBuildings {
     requiredResources[2] = resourceValues;
     //LEVEL 4
     resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 300000 });
-    resourceValues[1] = ResourceValue({ resource: AlloyCraftedItemID, value: 500000 });
+    resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 700000 });
+    resourceValues[1] = ResourceValue({ resource: AlloyCraftedItemID, value: 60000 });
     requiredResources[3] = resourceValues;
     // LEVEL 5
     resourceValues = new ResourceValue[](2);
@@ -186,7 +186,7 @@ library LibInitBuildings {
     resourceValues[3] = ResourceValue({ resource: LithiumResourceItemID, value: 500000 });
     resourceValues[4] = ResourceValue({ resource: SulfurResourceItemID, value: 500000 });
     resourceValues[5] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 200000 });
-    resourceValues[6] = ResourceValue({ resource: AlloyCraftedItemID, value: 100000 });
+    resourceValues[6] = ResourceValue({ resource: AlloyCraftedItemID, value: 200000 });
     storageUpgrades[2] = resourceValues;
 
     // LEVEL 4
@@ -1096,13 +1096,14 @@ library LibInitBuildings {
     /****************** Storage Updates *******************/
     ResourceValue[][] memory storageUpgrades = new ResourceValue[][](maxLevel);
 
-    resourceValues = new ResourceValue[](6);
+    resourceValues = new ResourceValue[](7);
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 100000 });
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 100000 });
     resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 50000 });
     resourceValues[3] = ResourceValue({ resource: SulfurResourceItemID, value: 50000 });
     resourceValues[4] = ResourceValue({ resource: IronPlateCraftedItemID, value: 50000 });
     resourceValues[5] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 50000 });
+    resourceValues[6] = ResourceValue({ resource: AlloyCraftedItemID, value: 50000 });
     storageUpgrades[0] = resourceValues;
 
     // LEVEL 2
