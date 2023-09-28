@@ -85,7 +85,7 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = memo(
           />
 
           {!isResearched && (
-            <div className="mt-2 flex justify-center items-center text-sm">
+            <div className="mt-2 flex justify-center items-center text-sm gap-2">
               {recipe.map((resource) => {
                 const resourceImage = ResourceImage.get(resource.id)!;
                 const resourceName = getBlockTypeName(resource.id);
