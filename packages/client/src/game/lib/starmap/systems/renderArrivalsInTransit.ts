@@ -95,7 +95,6 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
       .setDepth(DepthLayers.Marker);
 
     // Tween the fleet icon to the destination
-    // l tween: Phaser.Tweens.Tween;
     const tweenWorld = namespaceWorld(world, entityId + objIndexSuffix);
     const tween = scene.phaserScene.tweens.add({
       targets: fleetIcon,
@@ -146,7 +145,9 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
         pauseTimestamp = Date.now();
       } else if (value[0]?.value === true && value[1]?.value === false) {
         tween.seek(
-          tween.progress * tween.duration + Date.now() - pauseTimestamp
+          tween.progress * tween.duration + Date.now() - pauseTimestamp,
+          undefined,
+          true
         );
       }
     });
@@ -155,8 +156,6 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
   defineEnterSystem(gameWorld, query, (update) => {
     render(update);
   });
-
-  defineUpdateSystem(gameWorld, query, render);
 
   defineExitSystem(gameWorld, query, (update) => {
     const entityId = world.entities[update.entity];
