@@ -11,7 +11,7 @@ import {
   P_RequiredUtility,
   P_UnitRequirement,
 } from "src/network/components/chainComponents";
-import { Account } from "src/network/components/clientComponents";
+import { Account, BlockNumber } from "src/network/components/clientComponents";
 
 import { SingletonID } from "@latticexyz/network";
 import { useGameStore } from "src/store/GameStore";
@@ -47,7 +47,7 @@ const ClaimObjectiveButton: React.FC<{
   objectiveEntity: EntityID;
 }> = ({ objectiveEntity }) => {
   const network = useMud();
-
+  const blockInfo = BlockNumber.use()?.value;
   const levelRequirement = Level.use(objectiveEntity);
   const objectiveClaimedRequirement =
     HasCompletedObjective.use(objectiveEntity);
@@ -78,6 +78,7 @@ const ClaimObjectiveButton: React.FC<{
     resourceRequirement,
     utilityRequirement,
     unitRequirement,
+    blockInfo,
   ]);
 
   const transactionLoading = useGameStore((state) => state.transactionLoading);
@@ -86,7 +87,7 @@ const ClaimObjectiveButton: React.FC<{
     return (
       <Button
         disabled={!canClaim}
-        className={`btn-sm btn-secondary border-accent w-full col-span-2`}
+        className={`btn-sm btn-secondary border-accent w-full col-span-2 mt-2`}
         loading={transactionLoading}
         onClick={() => {
           claimObjective(objectiveEntity, network);
@@ -97,7 +98,7 @@ const ClaimObjectiveButton: React.FC<{
     );
 
   return (
-    <div className="col-span-2 flex items-center justify-end">
+    <div className="flex items-center justify-end">
       <FaCheck className=" text-success mr-2" />
     </div>
   );
@@ -128,8 +129,6 @@ const Objective: React.FC<{
         <p className=" col-span-7 font-bold flex items-center px-1">
           {objectiveName}
         </p>
-
-        <ClaimObjectiveButton objectiveEntity={objective} />
       </div>
 
       {rewardRecipe && rewardRecipe.length !== 0 && (
@@ -166,6 +165,7 @@ const Objective: React.FC<{
           })}
         </div>
       )}
+      <ClaimObjectiveButton objectiveEntity={objective} />
     </SecondaryCard>
   );
 };
