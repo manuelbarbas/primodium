@@ -499,7 +499,7 @@ library LibInitObjectives {
 
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
     resourceRewards.resources[0] = AlloyCraftedItemID;
-    resourceRewards.values[0] = 500000;
+    resourceRewards.values[0] = 100000;
     P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
 
     //TrainMinutemanMarineID
