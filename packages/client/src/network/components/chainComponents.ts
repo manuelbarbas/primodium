@@ -656,6 +656,23 @@ export const DefeatedSpawnedPirateAsteroid = newBoolComponent(world, {
   metadata: { contractId: `${commonIdPrefix}DefeatedSpawnedPirateAsteroid` },
 });
 
+
+export const P_SpawnPirateAsteroid = newComponent(
+  world,
+  {
+    value: Type.Entity,
+  },
+  {
+    id: "P_SpawnPirateAsteroid",
+    metadata: {
+      contractId: `${commonIdPrefix}P_SpawnPirateAsteroid`,
+    },
+  }
+);
+
+
+
+
 export default {
   GameConfig,
   P_Terrain,
@@ -757,4 +774,5 @@ export default {
   //Pirate
   Pirate,
   DefeatedSpawnedPirateAsteroid,
+  P_SpawnPirateAsteroid
 };

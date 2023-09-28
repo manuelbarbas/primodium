@@ -15,6 +15,7 @@ import {
 } from "../../common/object-components/common";
 import { Texture } from "../../common/object-components/sprite";
 import {
+  P_SpawnPirateAsteroid,
   AsteroidType,
   DefeatedSpawnedPirateAsteroid,
   OwnedBy,
@@ -28,6 +29,7 @@ import { Coord } from "@latticexyz/utils";
 import { ActiveButton } from "src/util/types";
 import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 import { SingletonID } from "@latticexyz/network";
+import { useAccount } from "client/src/hooks";
 
 export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -122,17 +124,11 @@ export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
   });
 
   //remove or add if pirate asteroid is defeated
-  defineComponentSystem(world, DefeatedSpawnedPirateAsteroid, ({ entity }) => {
+  defineComponentSystem(world, P_SpawnPirateAsteroid, ({ entity }) => {
+    
     const entityId = world.entities[entity];
-    const defeated = DefeatedSpawnedPirateAsteroid.get(entityId, {
-      value: false,
-    });
-
-    if (defeated) {
-      scene.objectPool.removeGroup("asteroid_" + entityId);
-      return;
-    }
-
+    if(!Pirate.has(entityId)) return;
+    
     const coord = Position.get(entityId);
 
     if (!coord) return;
