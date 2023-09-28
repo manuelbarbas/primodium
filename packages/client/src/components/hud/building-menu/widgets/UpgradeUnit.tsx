@@ -7,7 +7,7 @@ export const UpgradeUnit: React.FC = () => {
     <SecondaryCard className="w-full flex-row items-center gap-2 justify-between">
       <div className="flex gap-2 items-center">
         <img src="/img/icons/powercoreicon.png" className="w-8 h-8" />
-        <p className="uppercase text-xs font-bold">upgrade</p>
+        <p className="uppercase text-xs font-bold">upgrade unit</p>
       </div>
 
       <Navigator.NavButton
