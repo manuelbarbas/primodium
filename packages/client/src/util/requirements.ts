@@ -175,18 +175,19 @@ export function checkUnitRequirement(entityID: EntityID) {
     values: [],
   });
   if (requiredUnits && requiredUnits.values.length > 0) {
-    const player = Account.get()?.value ?? SingletonID;
-    const homeAsteroid = HomeAsteroid.get(player)?.value;
-    const units = Hangar.get(homeAsteroid);
+    const activeAsteroid = HomeAsteroid.get()?.value;
+    const units = Hangar.get(activeAsteroid);
+
     if (!units) return false;
 
     for (let i = 0; i < requiredUnits.values.length; i++) {
-      let unitCouunt = 0;
-      for (let j = 0; j < units?.units.length; j++) {
-        if (units.units[j] == requiredUnits.resources[i])
-          unitCouunt = units.counts[j];
+      const index = units.units.indexOf(requiredUnits.resources[i]);
+      if (index === -1) {
+        if (requiredUnits.values[i] > 0) return false;
+        continue;
       }
-      if (unitCouunt < requiredUnits.values[i]) return false;
+      const unitCount = units.counts[index];
+      if (unitCount < requiredUnits.values[i]) return false;
     }
   }
 
@@ -387,9 +388,7 @@ export function getUnitRequirement(entityID: EntityID): Requirement | null {
     resources: [],
     values: [],
   });
-
-  const player = Account.get()?.value ?? SingletonID;
-  const homeAsteroid = HomeAsteroid.get(player)?.value;
+  const homeAsteroid = HomeAsteroid.get()?.value;
   const units = Hangar.get(homeAsteroid);
   if (!units) {
     const requiredUnit = rawUnit.resources.map((resource, index) => ({
@@ -406,23 +405,24 @@ export function getUnitRequirement(entityID: EntityID): Requirement | null {
     };
   } else {
     const requiredUnit = rawUnit.resources.map((resource, index) => {
-      for (let j = 0; j < units?.units.length; j++) {
-        if (units.units[j] == resource)
+      const playerUnitIndex = units.units.indexOf(resource);
+      if (playerUnitIndex === -1) {
+        if (rawUnit.values[index] > 0)
           return {
             id: resource,
             requiredValue: rawUnit.values[index],
-            currentValue: units.counts[j],
+            currentValue: 0,
             scale: 1,
           };
       }
+      const unitCount = units.counts[index];
       return {
         id: resource,
         requiredValue: rawUnit.values[index],
-        currentValue: 0,
+        currentValue: unitCount,
         scale: 1,
       };
     });
-
     return {
       type: RequirementType.Unit,
       requirements: requiredUnit,
