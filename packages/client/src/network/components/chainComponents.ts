@@ -95,10 +95,15 @@ export const MainBase = newComponent(
   }
 );
 
-export const P_RequiredResearch = newNumberComponent(world, {
-  id: "P_RequiredResearch",
-  metadata: { contractId: `${commonIdPrefix}P_RequiredResearch` },
-});
+export const P_RequiredResearch = newComponent(
+  world,
+  { value: Type.Entity },
+  {
+    id: "P_RequiredResearch",
+    metadata: { contractId: `${commonIdPrefix}P_RequiredResearch` },
+    overridable: true,
+  }
+);
 
 export const P_RequiredResources = newComponent(
   world,
@@ -656,7 +661,6 @@ export const DefeatedSpawnedPirateAsteroid = newBoolComponent(world, {
   metadata: { contractId: `${commonIdPrefix}DefeatedSpawnedPirateAsteroid` },
 });
 
-
 export const P_SpawnPirateAsteroid = newComponent(
   world,
   {
@@ -669,9 +673,6 @@ export const P_SpawnPirateAsteroid = newComponent(
     },
   }
 );
-
-
-
 
 export default {
   GameConfig,
@@ -775,5 +776,5 @@ export default {
   P_RequiredPirateAsteroidDefeated,
   Pirate,
   DefeatedSpawnedPirateAsteroid,
-  P_SpawnPirateAsteroid
+  P_SpawnPirateAsteroid,
 };
