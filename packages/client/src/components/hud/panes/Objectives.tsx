@@ -152,7 +152,7 @@ const Objective: React.FC<{
             requirements.length !== 0 &&
             requirements.map((req, index) => {
               return (
-                <div key={index} className="flex gap-1">
+                <div key={index} className="flex flex-wrap gap-1">
                   {req.requirements.map((_req, index) => {
                     return (
                       <Badge
