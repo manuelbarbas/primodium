@@ -71,7 +71,7 @@ export const BattleDetails: React.FC<{
   return (
     <Navigator.Screen
       title="BattleDetails"
-      className="relative gap-3 flex flex-col items-center text-white h-full w-full scrollbar overflow-y-auto "
+      className="relative gap-3 flex flex-col items-center text-white h-full w-full scrollbar overflow-y-auto p-1 mb-1 "
     >
       <div className="relative bg-slate-800 pixel-images border border-cyan-400 p-3 w-full rounded-md">
         <div className="flex flex-col items-center space-y-3">
@@ -184,6 +184,9 @@ export const BattleDetails: React.FC<{
         <div className="absolute top-0 left-0 flex gap-1 text-xs p-2">
           <p className="opacity-50 font-bold">{raid ? "RAID" : "INVASION"}</p>
         </div>
+      </div>
+      <div className="sticky bottom-0 w-full h-full flex items-center justify-center">
+        <Navigator.BackButton />
       </div>
     </Navigator.Screen>
   );

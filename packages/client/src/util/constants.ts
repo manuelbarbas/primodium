@@ -778,7 +778,7 @@ export const BlockDescriptions = new Map<EntityID, string>([
 
   [
     BlockType.BuildStarmap,
-    "Construct a starmapper station. A starmapper station will increase the number of fleets you can send at one time.",
+    "Construct a starmapper station. A starmapper station increases the number of fleets you can send at a time.",
   ],
 
   [
@@ -787,61 +787,61 @@ export const BlockDescriptions = new Map<EntityID, string>([
   ],
   [
     BlockType.RaidRawResources,
-    "Attack player asteroids and pirate bases and reek the raided rewards. Your total raid is the sum of your units cargo capacity.",
+    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
   ],
   [
     BlockType.RaidRawResources2,
-    "Attack player asteroids and pirate bases and reek the raided rewards. Your total raid is the sum of your units cargo capacity.",
+    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
   ],
   [
     BlockType.RaidRawResources3,
-    "Attack player asteroids and pirate bases and reek the raided rewards. Your total raid is the sum of your units cargo capacity.",
+    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
   ],
 
   [
     BlockType.RaidFactoryResources,
-    "Attack player asteroids and pirate bases and reek the raided rewards. Your total raid is the sum of your units cargo capacity.",
+    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
   ],
   [
     BlockType.RaidFactoryResources2,
-    "Attack player asteroids and pirate bases and reek the raided rewards. Your total raid is the sum of your units cargo capacity.",
+    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
   ],
   [
     BlockType.RaidFactoryResources3,
-    "Attack player asteroids and pirate bases and reek the raided rewards. Your total raid is the sum of your units cargo capacity.",
+    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
   ],
 
   [
     BlockType.RaidMotherlodeResources,
-    "Attack player asteroids and pirate bases and reek the raided rewards. Your total raid is the sum of your units cargo capacity.",
+    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
   ],
   [
     BlockType.RaidMotherlodeResources2,
-    "Attack player asteroids and pirate bases and reek the raided rewards. Your total raid is the sum of your units cargo capacity.",
+    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
   ],
   [
     BlockType.RaidMotherlodeResources3,
-    "Attack player asteroids and pirate bases and reek the raided rewards. Your total raid is the sum of your units cargo capacity.",
+    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
   ],
   [
     BlockType.DestroyEnemyUnits,
-    "Attack and defend against enemy units and destroy your enemies armies in the process.",
+    "Attack and defend against enemy units and destroy your enemies' armies.",
   ],
   [
     BlockType.DestroyEnemyUnits2,
-    "Attack and defend against enemy units and destroy your enemies armies in the process.",
+    "Attack and defend against enemy units and destroy your enemies' armies.",
   ],
   [
     BlockType.DestroyEnemyUnits3,
-    "Attack and defend against enemy units and destroy your enemies armies in the process.",
+    "Attack and defend against enemy units and destroy your enemies' armies.",
   ],
   [
     BlockType.DestroyEnemyUnits4,
-    "Attack and defend against enemy units and destroy your enemies armies in the process.",
+    "Attack and defend against enemy units and destroy your enemies' armies.",
   ],
   [
     BlockType.DestroyEnemyUnits5,
-    "Attack and defend against enemy units and destroy your enemies armies in the process.",
+    "Attack and defend against enemy units and destroy your enemies' armies.",
   ],
 ]);
 
@@ -1053,17 +1053,17 @@ export const ResearchImage = new Map<EntityID, string>([
   [BlockType.MiningVesselUpgrade4, "/img/unit/miningvessel.png"],
   [BlockType.MiningVesselUpgrade5, "/img/unit/miningvessel.png"],
 
-  [BlockType.TridentMarineUpgrade1, "/img/unit/anvildrone.png"],
-  [BlockType.TridentMarineUpgrade2, "/img/unit/anvildrone.png"],
-  [BlockType.TridentMarineUpgrade3, "/img/unit/anvildrone.png"],
-  [BlockType.TridentMarineUpgrade4, "/img/unit/anvildrone.png"],
-  [BlockType.TridentMarineUpgrade5, "/img/unit/anvildrone.png"],
+  [BlockType.TridentMarineUpgrade1, "img/unit/trident_marine.png"],
+  [BlockType.TridentMarineUpgrade2, "img/unit/trident_marine.png"],
+  [BlockType.TridentMarineUpgrade3, "img/unit/trident_marine.png"],
+  [BlockType.TridentMarineUpgrade4, "img/unit/trident_marine.png"],
+  [BlockType.TridentMarineUpgrade5, "img/unit/trident_marine.png"],
 
-  [BlockType.MinutemanMarineUpgrade1, "/img/unit/anvildrone.png"],
-  [BlockType.MinutemanMarineUpgrade2, "/img/unit/anvildrone.png"],
-  [BlockType.MinutemanMarineUpgrade3, "/img/unit/anvildrone.png"],
-  [BlockType.MinutemanMarineUpgrade4, "/img/unit/anvildrone.png"],
-  [BlockType.MinutemanMarineUpgrade5, "/img/unit/anvildrone.png"],
+  [BlockType.MinutemanMarineUpgrade1, "img/unit/minutemen_marine.png"],
+  [BlockType.MinutemanMarineUpgrade2, "img/unit/minutemen_marine.png"],
+  [BlockType.MinutemanMarineUpgrade3, "img/unit/minutemen_marine.png"],
+  [BlockType.MinutemanMarineUpgrade4, "img/unit/minutemen_marine.png"],
+  [BlockType.MinutemanMarineUpgrade5, "img/unit/minutemen_marine.png"],
 ]);
 //images of resource items (think of them like minecraft entities)
 export const ResourceImage = new Map<EntityID, string>([
@@ -1117,6 +1117,8 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.AnvilLightDrone, "/img/unit/anvildrone.png"],
   [BlockType.AegisDrone, "/img/unit/aegisdrone.png"],
   [BlockType.MiningVessel, "/img/unit/miningvessel.png"],
+  [BlockType.MinutemanMarine, "img/unit/minutemen_marine.png"],
+  [BlockType.TridentMarine, "img/unit/trident_marine.png"],
 ]);
 
 export type DisplayKeyPair = {
