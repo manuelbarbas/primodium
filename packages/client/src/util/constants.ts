@@ -442,71 +442,69 @@ export const BlockType = {
     "objective.RaiseIronPlateProduction"
   ) as EntityID,
 
-  MineTitanium1ID: keccak256("objective.MineTitanium1") as EntityID,
-  MineTitanium2ID: keccak256("objective.MineTitanium2") as EntityID,
-  MineTitanium3ID: keccak256("objective.MineTitanium3") as EntityID,
+  MineTitanium1: keccak256("objective.MineTitanium1") as EntityID,
+  MineTitanium2: keccak256("objective.MineTitanium2") as EntityID,
+  MineTitanium3: keccak256("objective.MineTitanium3") as EntityID,
 
-  MinePlatinum1ID: keccak256("objective.MinePlatinum1") as EntityID,
-  MinePlatinum2ID: keccak256("objective.MinePlatinum2") as EntityID,
-  MinePlatinum3ID: keccak256("objective.MinePlatinum3") as EntityID,
+  MinePlatinum1: keccak256("objective.MinePlatinum1") as EntityID,
+  MinePlatinum2: keccak256("objective.MinePlatinum2") as EntityID,
+  MinePlatinum3: keccak256("objective.MinePlatinum3") as EntityID,
 
-  MineIridium1ID: keccak256("objective.MineIridium1") as EntityID,
-  MineIridium2ID: keccak256("objective.MineIridium2") as EntityID,
-  MineIridium3ID: keccak256("objective.MineIridium3") as EntityID,
+  MineIridium1: keccak256("objective.MineIridium1") as EntityID,
+  MineIridium2: keccak256("objective.MineIridium2") as EntityID,
+  MineIridium3: keccak256("objective.MineIridium3") as EntityID,
 
-  MineKimberlite1ID: keccak256("objective.MineKimberlite1") as EntityID,
-  MineKimberlite2ID: keccak256("objective.MineKimberlite2") as EntityID,
-  MineKimberlite3ID: keccak256("objective.MineKimberlite3") as EntityID,
+  MineKimberlite1: keccak256("objective.MineKimberlite1") as EntityID,
+  MineKimberlite2: keccak256("objective.MineKimberlite2") as EntityID,
+  MineKimberlite3: keccak256("objective.MineKimberlite3") as EntityID,
 
-  TrainHammerDroneID: keccak256("objective.TrainHammerDrone") as EntityID,
-  TrainHammerDrone2ID: keccak256("objective.TrainHammerDrone2") as EntityID,
-  TrainHammerDrone3ID: keccak256("objective.TrainHammerDrone3") as EntityID,
+  TrainHammerDrone: keccak256("objective.TrainHammerDrone") as EntityID,
+  TrainHammerDrone2: keccak256("objective.TrainHammerDrone2") as EntityID,
+  TrainHammerDrone3: keccak256("objective.TrainHammerDrone3") as EntityID,
 
-  TrainAegisDroneID: keccak256("objective.TrainAegisDrone") as EntityID,
-  TrainAegisDrone2ID: keccak256("objective.TrainAegisDrone2") as EntityID,
-  TrainAegisDrone3ID: keccak256("objective.TrainAegisDrone3") as EntityID,
+  TrainAegisDrone: keccak256("objective.TrainAegisDrone") as EntityID,
+  TrainAegisDrone2: keccak256("objective.TrainAegisDrone2") as EntityID,
+  TrainAegisDrone3: keccak256("objective.TrainAegisDrone3") as EntityID,
 
-  TrainStingerDroneID: keccak256("objective.TrainStingerDrone") as EntityID,
-  TrainStingerDrone2ID: keccak256("objective.TrainStingerDrone2") as EntityID,
-  TrainStingerDrone3ID: keccak256("objective.TrainStingerDrone3") as EntityID,
+  TrainStingerDrone: keccak256("objective.TrainStingerDrone") as EntityID,
+  TrainStingerDrone2: keccak256("objective.TrainStingerDrone2") as EntityID,
+  TrainStingerDrone3: keccak256("objective.TrainStingerDrone3") as EntityID,
 
-  RaidRawResourcesID: keccak256("objective.RaidRawResources") as EntityID,
-  RaidRawResources2ID: keccak256("objective.RaidRawResources2") as EntityID,
-  RaidRawResources3ID: keccak256("objective.RaidRawResources3") as EntityID,
+  RaidRawResources: keccak256("objective.RaidRawResources") as EntityID,
+  RaidRawResources2: keccak256("objective.RaidRawResources2") as EntityID,
+  RaidRawResources3: keccak256("objective.RaidRawResources3") as EntityID,
 
-  RaidFactoryResourcesID: keccak256(
-    "objective.RaidFactoryResources"
-  ) as EntityID,
-  RaidFactoryResources2ID: keccak256(
+  RaidFactoryResources: keccak256("objective.RaidFactoryResources") as EntityID,
+  RaidFactoryResources2: keccak256(
     "objective.RaidFactoryResources2"
   ) as EntityID,
-  RaidFactoryResources3ID: keccak256(
+  RaidFactoryResources3: keccak256(
     "objective.RaidFactoryResources3"
   ) as EntityID,
 
-  RaidMotherlodeResourcesID: keccak256(
+  RaidMotherlodeResources: keccak256(
     "objective.RaidMotherlodeResources"
   ) as EntityID,
-  RaidMotherlodeResources2ID: keccak256(
+  RaidMotherlodeResources2: keccak256(
     "objective.RaidMotherlodeResources2"
   ) as EntityID,
-  RaidMotherlodeResources3ID: keccak256(
+  RaidMotherlodeResources3: keccak256(
     "objective.RaidMotherlodeResources3"
   ) as EntityID,
 
-  DestroyEnemyUnitsID: keccak256("objective.DestroyEnemyUnits") as EntityID,
-  DestroyEnemyUnits2ID: keccak256("objective.DestroyEnemyUnits2") as EntityID,
-  DestroyEnemyUnits3ID: keccak256("objective.DestroyEnemyUnits3") as EntityID,
-  DestroyEnemyUnits4ID: keccak256("objective.DestroyEnemyUnits4") as EntityID,
-  DestroyEnemyUnits5ID: keccak256("objective.DestroyEnemyUnits5") as EntityID,
+  DestroyEnemyUnits: keccak256("objective.DestroyEnemyUnits") as EntityID,
+  DestroyEnemyUnits2: keccak256("objective.DestroyEnemyUnits2") as EntityID,
+  DestroyEnemyUnits3: keccak256("objective.DestroyEnemyUnits3") as EntityID,
+  DestroyEnemyUnits4: keccak256("objective.DestroyEnemyUnits4") as EntityID,
+  DestroyEnemyUnits5: keccak256("objective.DestroyEnemyUnits5") as EntityID,
 
-  UpgradeMainBaseID: keccak256("objective.UpgradeMainBase") as EntityID,
-  CommissionMiningVesselID: keccak256(
+  UpgradeMainBase: keccak256("objective.UpgradeMainBase") as EntityID,
+  CommissionMiningVessel: keccak256(
     "objective.CommissionMiningVessel"
   ) as EntityID,
 
-  BuildStarmapID: keccak256("objective.BuildStarmap") as EntityID,
-  BuildSAMLauncherID: keccak256("objective.BuildSAMLauncher") as EntityID,
+  BuildStarmap: keccak256("objective.BuildStarmap") as EntityID,
+  BuildSAMLauncher: keccak256("objective.BuildSAMLauncher") as EntityID,
 
   //Starmap
   Asteroid: keccak256("spacerock.Asteroid") as EntityID,
@@ -518,6 +516,273 @@ export const BlockIdToKey = Object.entries(BlockType).reduce<{
   acc[id] = key;
   return acc;
 }, {});
+
+export const BlockDescriptions = new Map<EntityID, string>([
+  //landscape blocks
+  [
+    BlockType.BuildFirstIronMine,
+    "Select the iron mine on the building menu below and place it on the iron ore tile. Iron mines produce iron.",
+  ],
+  [
+    BlockType.BuildFirstCopperMine,
+    "Select the copper mine on the building menu below and place it on the copper ore tile. Copper mines produce copper.",
+  ],
+  [
+    BlockType.BuildFirstLithiumMine,
+    "Select the lithium mine on the building menu below and place it on the lithium ore tile. Lithium mines produce lithium.",
+  ],
+  [
+    BlockType.BuildFirstSulfurMine,
+    "Select the sulfur mine on the building menu below and place it on the sulfur ore tile. Sulfur mines produce sulfur.",
+  ],
+  [
+    BlockType.BuildFirstIronPlateFactory,
+    "Select the plating factory on the building menu and place it on an empty tile. It produces iron plates by consuming iron production.",
+  ],
+  [
+    BlockType.BuildFirstAlloyFactory,
+    "Select the alloy factory on the building menu and place it on an empty tile. It produces alloy by consuming iron and copper production.",
+  ],
+  [
+    BlockType.BuildFirstPVCellFactory,
+    "Select the photovoltaic cell factory on the building menu and place it on an empty tile. It produces photovoltaic cells by consuming copper and lithium production.",
+  ],
+  [
+    BlockType.BuildGarage,
+    "Select the garage from the building menu and place it on an empty tile. Garages provide housing for units. ",
+  ],
+  [
+    BlockType.BuildWorkshop,
+    "Select the workshop from the building menu and place it on an empty tile. Workshops train basic units, like marines.",
+  ],
+  [
+    BlockType.BuildSolarPanel,
+    "Select the solar panel from the building menu and place it on an empty tile. Solar panels provide electricity, which is used for advanced buildings.",
+  ],
+  [
+    BlockType.BuildDroneFactory,
+    "Select the drone factory from the building menu and place it on an empty tile. Drone factories train drones, which travel faster and are stronger.",
+  ],
+  [
+    BlockType.BuildHangar,
+    "Select the hangar from the building menu and place it on an empty tile. Hangars provide more housing than garages for units.",
+  ],
+  [
+    BlockType.TrainMarineUnit,
+    "Select the workshop you placed on the map to train Minuteman marines. Minutemen are basic defensive marines.",
+  ],
+  [
+    BlockType.TrainMarineUnit2,
+    "Select the workshop you placed on the map to train Minuteman marines. Minutemen are basic defensive marines.",
+  ],
+  [
+    BlockType.TrainMarineUnit3,
+    "Select the workshop you placed on the map to train Minuteman marines. Minutemen are basic defensive marines.",
+  ],
+
+  [
+    BlockType.TrainAdvancedMarineUnit,
+    "Select the workshop you placed on the map to train Trident marines. Trident marines are basic offensive units.",
+  ],
+  [
+    BlockType.TrainAdvancedMarineUnit2,
+    "Select the workshop you placed on the map to train Trident marines. Trident marines are basic offensive units.",
+  ],
+  [
+    BlockType.TrainAdvancedMarineUnit3,
+    "Select the workshop you placed on the map to train Trident marines. Trident marines are basic offensive units.",
+  ],
+  [
+    BlockType.TrainAnvilDrone,
+    "Select the drone factory you placed on the map to train anvil drones. Anvil drones are basic defensive drones.",
+  ],
+  [
+    BlockType.TrainAnvilDrone2,
+    "Select the drone factory you placed on the map to train anvil drones. Anvil drones are basic defensive drones.",
+  ],
+  [
+    BlockType.TrainAnvilDrone3,
+    "Select the drone factory you placed on the map to train anvil drones. Anvil drones are basic defensive drones.",
+  ],
+  [
+    BlockType.DefeatFirstPirateBase,
+    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+  ],
+  [
+    BlockType.DefeatSecondPirateBase,
+    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+  ],
+  [
+    BlockType.DefeatThirdPirateBase,
+    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+  ],
+  [
+    BlockType.DefeatFourthPirateBase,
+    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+  ],
+  [
+    BlockType.DefeatFifthPirateBase,
+    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+  ],
+  [
+    BlockType.DefeatSixthPirateBase,
+    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+  ],
+  [
+    BlockType.DefeatSeventhPirateBase,
+    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+  ],
+  [
+    BlockType.DefeatEighthPirateBase,
+    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+  ],
+  [
+    BlockType.DefeatNinthPirateBase,
+    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+  ],
+  [
+    BlockType.DefeatTenthPirateBase,
+    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+  ],
+  [
+    BlockType.DefeatEleventhPirateBase,
+    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+  ],
+  [
+    BlockType.ExpandBase,
+    "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
+  ],
+  [
+    BlockType.ExpandBase2,
+    "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
+  ],
+  [
+    BlockType.ExpandBase3,
+    "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
+  ],
+  [
+    BlockType.ExpandBase4,
+    "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
+  ],
+  [
+    BlockType.ExpandBase5,
+    "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
+  ],
+  [
+    BlockType.ExpandBase6,
+    "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
+  ],
+  [
+    BlockType.MineTitanium1,
+    "Go to the star map and send a mining vessel along with a few defending units to a Titanium motherlode. ",
+  ],
+  [
+    BlockType.MineTitanium2,
+    "Go to the star map and send a mining vessel along with a few defending units to a Titanium motherlode. ",
+  ],
+  [
+    BlockType.MineTitanium3,
+    "Go to the star map and send a mining vessel along with a few defending units to a Titanium motherlode. ",
+  ],
+
+  [
+    BlockType.MinePlatinum1,
+    "Go to the star map and send a mining vessel along with a few defending units to a Platinum motherlode. ",
+  ],
+  [
+    BlockType.MinePlatinum2,
+    "Go to the star map and send a mining vessel along with a few defending units to a Platinum motherlode. ",
+  ],
+  [
+    BlockType.MinePlatinum3,
+    "Go to the star map and send a mining vessel along with a few defending units to a Platinum motherlode. ",
+  ],
+
+  [
+    BlockType.MineIridium1,
+    "Go to the star map and send a mining vessel along with a few defending units to a Iridium motherlode. ",
+  ],
+  [
+    BlockType.MineIridium2,
+    "Go to the star map and send a mining vessel along with a few defending units to a Iridium motherlode. ",
+  ],
+  [
+    BlockType.MineIridium3,
+    "Go to the star map and send a mining vessel along with a few defending units to a Iridium motherlode. ",
+  ],
+
+  [
+    BlockType.MineKimberlite1,
+    "Go to the star map and send a mining vessel along with a few defending units to a Kimberlite motherlode. ",
+  ],
+  [
+    BlockType.MineKimberlite2,
+    "Go to the star map and send a mining vessel along with a few defending units to a Kimberlite motherlode. ",
+  ],
+  [
+    BlockType.MineKimberlite3,
+    "Go to the star map and send a mining vessel along with a few defending units to a Kimberlite motherlode. ",
+  ],
+
+  [
+    BlockType.TrainHammerDrone,
+    "Select the drone factory you placed on the map to train hammer drones. Hammer drones are used for attacking.",
+  ],
+  [
+    BlockType.TrainHammerDrone2,
+    "Select the drone factory you placed on the map to train hammer drones. Hammer drones are used for attacking.",
+  ],
+  [
+    BlockType.TrainHammerDrone3,
+    "Select the drone factory you placed on the map to train hammer drones. Hammer drones are used for attacking.",
+  ],
+
+  [
+    BlockType.TrainAegisDrone,
+    "Select the drone factory you placed on the map to train aegis drones. Aegis drones are strong defensive units, but take up more housing.",
+  ],
+  [
+    BlockType.TrainAegisDrone2,
+    "Select the drone factory you placed on the map to train aegis drones. Aegis drones are strong defensive units, but take up more housing.",
+  ],
+  [
+    BlockType.TrainAegisDrone3,
+    "Select the drone factory you placed on the map to train aegis drones. Aegis drones are strong defensive units, but take up more housing.",
+  ],
+
+  [
+    BlockType.TrainStingerDrone,
+    "Select the drone factory you placed on the map to train aegis drones. Stinger drones are strong and fast offensive units, but take up more housing.",
+  ],
+  [
+    BlockType.TrainStingerDrone2,
+    "Select the drone factory you placed on the map to train aegis drones. Stinger drones are strong and fast offensive units, but take up more housing.",
+  ],
+  [
+    BlockType.TrainStingerDrone3,
+    "Select the drone factory you placed on the map to train aegis drones. Stinger drones are strong and fast offensive units, but take up more housing.",
+  ],
+
+  [
+    BlockType.UpgradeMainBase,
+    "Upgrade your main base by clicking on the upgrade button in your main base.",
+  ],
+
+  [
+    BlockType.CommissionMiningVessel,
+    "Commission one mining vessel at your main base by first adding a slot and then building one mining vessel.",
+  ],
+
+  [
+    BlockType.BuildStarmap,
+    "Construct a starmapper station. A starmapper station will increase the number of fleets you can send at one time.",
+  ],
+
+  [
+    BlockType.BuildSAMLauncher,
+    "Construct a SAM site. SAM sites protect you from enemy attacks and raids by providing a base level of defense.",
+  ],
+]);
 
 // Terrain Tile colors
 //todo: pick ore block colors
