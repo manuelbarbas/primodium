@@ -470,6 +470,44 @@ export const BlockType = {
   TrainStingerDrone2ID: keccak256("objective.TrainStingerDrone2") as EntityID,
   TrainStingerDrone3ID: keccak256("objective.TrainStingerDrone3") as EntityID,
 
+  RaidRawResourcesID: keccak256("objective.RaidRawResources") as EntityID,
+  RaidRawResources2ID: keccak256("objective.RaidRawResources2") as EntityID,
+  RaidRawResources3ID: keccak256("objective.RaidRawResources3") as EntityID,
+
+  RaidFactoryResourcesID: keccak256(
+    "objective.RaidFactoryResources"
+  ) as EntityID,
+  RaidFactoryResources2ID: keccak256(
+    "objective.RaidFactoryResources2"
+  ) as EntityID,
+  RaidFactoryResources3ID: keccak256(
+    "objective.RaidFactoryResources3"
+  ) as EntityID,
+
+  RaidMotherlodeResourcesID: keccak256(
+    "objective.RaidMotherlodeResources"
+  ) as EntityID,
+  RaidMotherlodeResources2ID: keccak256(
+    "objective.RaidMotherlodeResources2"
+  ) as EntityID,
+  RaidMotherlodeResources3ID: keccak256(
+    "objective.RaidMotherlodeResources3"
+  ) as EntityID,
+
+  DestroyEnemyUnitsID: keccak256("objective.DestroyEnemyUnits") as EntityID,
+  DestroyEnemyUnits2ID: keccak256("objective.DestroyEnemyUnits2") as EntityID,
+  DestroyEnemyUnits3ID: keccak256("objective.DestroyEnemyUnits3") as EntityID,
+  DestroyEnemyUnits4ID: keccak256("objective.DestroyEnemyUnits4") as EntityID,
+  DestroyEnemyUnits5ID: keccak256("objective.DestroyEnemyUnits5") as EntityID,
+
+  UpgradeMainBaseID: keccak256("objective.UpgradeMainBase") as EntityID,
+  CommissionMiningVesselID: keccak256(
+    "objective.CommissionMiningVessel"
+  ) as EntityID,
+
+  BuildStarmapID: keccak256("objective.BuildStarmap") as EntityID,
+  BuildSAMLauncherID: keccak256("objective.BuildSAMLauncher") as EntityID,
+
   //Starmap
   Asteroid: keccak256("spacerock.Asteroid") as EntityID,
 };

@@ -76,3 +76,27 @@ uint256 constant TrainAegisDrone3ID = uint256(keccak256("objective.TrainAegisDro
 uint256 constant TrainStingerDroneID = uint256(keccak256("objective.TrainStingerDrone"));
 uint256 constant TrainStingerDrone2ID = uint256(keccak256("objective.TrainStingerDrone2"));
 uint256 constant TrainStingerDrone3ID = uint256(keccak256("objective.TrainStingerDrone3"));
+
+uint256 constant RaidRawResourcesID = uint256(keccak256("objective.RaidRawResources"));
+uint256 constant RaidRawResources2ID = uint256(keccak256("objective.RaidRawResources2"));
+uint256 constant RaidRawResources3ID = uint256(keccak256("objective.RaidRawResources3"));
+
+uint256 constant RaidFactoryResourcesID = uint256(keccak256("objective.RaidFactoryResources"));
+uint256 constant RaidFactoryResources2ID = uint256(keccak256("objective.RaidFactoryResources2"));
+uint256 constant RaidFactoryResources3ID = uint256(keccak256("objective.RaidFactoryResources3"));
+
+uint256 constant RaidMotherlodeResourcesID = uint256(keccak256("objective.RaidMotherlodeResources"));
+uint256 constant RaidMotherlodeResources2ID = uint256(keccak256("objective.RaidMotherlodeResources2"));
+uint256 constant RaidMotherlodeResources3ID = uint256(keccak256("objective.RaidMotherlodeResources3"));
+
+uint256 constant DestroyEnemyUnitsID = uint256(keccak256("objective.DestroyEnemyUnits"));
+uint256 constant DestroyEnemyUnits2ID = uint256(keccak256("objective.DestroyEnemyUnits2"));
+uint256 constant DestroyEnemyUnits3ID = uint256(keccak256("objective.DestroyEnemyUnits3"));
+uint256 constant DestroyEnemyUnits4ID = uint256(keccak256("objective.DestroyEnemyUnits4"));
+uint256 constant DestroyEnemyUnits5ID = uint256(keccak256("objective.DestroyEnemyUnits5"));
+
+uint256 constant UpgradeMainBaseID = uint256(keccak256("objective.UpgradeMainBase"));
+uint256 constant CommissionMiningVesselID = uint256(keccak256("objective.CommissionMiningVessel"));
+
+uint256 constant BuildStarmapID = uint256(keccak256("objective.BuildStarmap"));
+uint256 constant BuildSAMLauncherID = uint256(keccak256("objective.BuildSAMLauncher"));
