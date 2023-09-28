@@ -112,16 +112,19 @@ export const BattleDetails: React.FC<{
               <p className="text-lg font-bold leading-none">
                 {player === battle.winner ? "REWARDS" : "RAIDED"}
               </p>
-              <div className="flex items-center gap-2">
-                {raid.resources.map((resource, i) => (
-                  <ResourceIconTooltip
-                    key={`resource-${i}`}
-                    image={ResourceImage.get(resource)!}
-                    resourceId={resource}
-                    name={getBlockTypeName(resource)}
-                    amount={Number(Math.round(raid.raidedAmount?.at(i) ?? 0))}
-                  />
-                ))}
+              <div className="flex items-center gap-2 flex-wrap">
+                {raid.resources.map((resource, i) => {
+                  if (!raid.raidedAmount?.at(i)) return;
+                  return (
+                    <ResourceIconTooltip
+                      key={`resource-${i}`}
+                      image={ResourceImage.get(resource)!}
+                      resourceId={resource}
+                      name={getBlockTypeName(resource)}
+                      amount={Number(Math.round(raid.raidedAmount?.at(i) ?? 0))}
+                    />
+                  );
+                })}
               </div>
             </div>
           )}
