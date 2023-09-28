@@ -294,7 +294,11 @@ library LibUpdateSpaceRock {
     );
 
     LibStorage.addResourceToStorage(world, playerEntity, resource.resource, rawIncrease);
-
+    LibMath.add(
+      TotalMotherlodeMinedComponent(world.getComponent(TotalMotherlodeMinedComponentID)),
+      LibEncode.hashKeyEntity(resource.resource, playerEntity),
+      rawIncrease
+    );
     LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).set(motherlodeEntity, blockNumber);
   }
 
