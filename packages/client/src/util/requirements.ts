@@ -220,10 +220,14 @@ export function checkMotherlodeMinedRequirement(entityID: EntityID) {
   if (requiredMotherlodeMined) {
     const player = Account.get()?.value ?? SingletonID;
     for (let i = 0; i < requiredMotherlodeMined.resources.length; i++) {
-      const minedAmount =
+      let minedAmount =
         TotalMotherlodeMined.get(
           hashAndTrimKeyEntity(requiredMotherlodeMined.resources[i], player)
         )?.value ?? 0;
+        const { resourcesToClaim } = getFullResourceCount(
+          requiredMotherlodeMined.resources[i]
+        );
+        minedAmount += resourcesToClaim;
       if (minedAmount < requiredMotherlodeMined.values[i]) return false;
     }
   }
@@ -467,12 +471,13 @@ export function getMotherlodeMinedRequirement(
 
   const player = Account.get()?.value ?? SingletonID;
   const requiredMotherlodeMined = rawMotherlodeMined.resources.map(
-    (resource, index) => ({
+    (resource, index) => (
+      {
       id: resource,
       requiredValue: rawMotherlodeMined.values[index],
       currentValue:
         TotalMotherlodeMined.get(hashAndTrimKeyEntity(resource, player))
-          ?.value ?? 0,
+          ?.value ?? 0 + getFullResourceCount(resource).resourcesToClaim,
       scale: RESOURCE_SCALE,
     })
   );
