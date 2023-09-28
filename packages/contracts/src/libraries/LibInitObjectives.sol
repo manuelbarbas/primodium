@@ -221,7 +221,7 @@ library LibInitObjectives {
     P_HasBuiltBuildingComponent(world.getComponent(P_HasBuiltBuildingComponentID)).set(objective, GarageID);
     P_ObjectiveRequirementComponent(world.getComponent(P_ObjectiveRequirementComponentID)).set(
       objective,
-      BuildFirstIronPlateFactoryID
+      BuildFirstIronMineID
     );
 
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
