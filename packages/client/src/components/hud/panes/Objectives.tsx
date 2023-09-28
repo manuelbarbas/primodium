@@ -106,7 +106,6 @@ const ClaimObjectiveButton: React.FC<{
 const Objective: React.FC<{
   objective: EntityID;
 }> = ({ objective }) => {
-
   const objectiveName = useMemo(() => {
     if (!objective) return;
     return getBlockTypeName(objective);
@@ -129,15 +128,16 @@ const Objective: React.FC<{
         <p className=" col-span-7 font-bold flex items-center px-1">
           {objectiveName}
         </p>
-        <p className=" col-span-7 font-bold flex items-center px-1">
-          {objectiveDescription}
-        </p>
 
         <ClaimObjectiveButton objectiveEntity={objective} />
       </div>
 
       {rewardRecipe && rewardRecipe.length !== 0 && (
         <div className="flex flex-wrap gap-1 items-center">
+          <hr className="border-t border-accent/20 w-full mb-1 mt-3" />
+          <p className=" col-span-7 flex items-center px-1 opacity-75 font-normal">
+            {objectiveDescription}
+          </p>
           <hr className="border-t border-accent/20 w-full mb-1 mt-3" />
           <span className="flex gap-1 items-center opacity-75">
             <FaGift /> REWARDS:
