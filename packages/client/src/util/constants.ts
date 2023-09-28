@@ -376,9 +376,7 @@ export const BlockType = {
   BuildGarage: keccak256("objective.BuildGarage") as EntityID,
   BuildDroneFactory: keccak256("objective.BuildDroneFactory") as EntityID,
   BuildSolarPanel: keccak256("objective.BuildSolarPanel") as EntityID,
-  BuildAdvancedDroneFactory: keccak256(
-    "objective.BuildAdvancedDroneFactory"
-  ) as EntityID,
+  BuildWorkshop: keccak256("objective.BuildWorkshop") as EntityID,
   BuildHangar: keccak256("objective.BuildHangar") as EntityID,
 
   TrainMarineUnit: keccak256("objective.TrainMarineUnit") as EntityID,
