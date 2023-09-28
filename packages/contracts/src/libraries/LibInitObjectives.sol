@@ -325,7 +325,7 @@ library LibInitObjectives {
 
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
     resourceRewards.resources[0] = HammerDrone;
-    resourceRewards.values[0] = 100;
+    resourceRewards.values[0] = 10;
     P_UnitRewardComponent(world.getComponent(P_UnitRewardComponentID)).set(objective, resourceRewards);
 
     //BuildSAMLauncherID
