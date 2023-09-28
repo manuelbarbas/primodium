@@ -52,35 +52,31 @@ const advancedBuildingHotbar: Hotbar = {
   items: [
     {
       blockType: BlockType.PhotovoltaicCellFactory,
-      keybind: KeybindActions.Hotbar1,
+      keybind: KeybindActions.Hotbar0,
     },
     {
       blockType: BlockType.SolarPanel,
-      keybind: KeybindActions.Hotbar2,
+      keybind: KeybindActions.Hotbar1,
     },
     {
       blockType: BlockType.SAMLauncher,
-      keybind: KeybindActions.Hotbar3,
+      keybind: KeybindActions.Hotbar2,
     },
     {
       blockType: BlockType.Hangar,
+      keybind: KeybindActions.Hotbar3,
+    },
+    {
+      blockType: BlockType.DroneFactory,
       keybind: KeybindActions.Hotbar4,
     },
     {
-      blockType: BlockType.DroneFactory,
+      blockType: BlockType.AlloyFactory,
       keybind: KeybindActions.Hotbar5,
     },
     {
-      blockType: BlockType.AlloyFactory,
-      keybind: KeybindActions.Hotbar6,
-    },
-    {
       blockType: BlockType.StarmapperStation,
-      keybind: KeybindActions.Hotbar7,
-    },
-    {
-      blockType: BlockType.DroneFactory,
-      keybind: KeybindActions.Hotbar8,
+      keybind: KeybindActions.Hotbar6,
     },
   ],
 };
