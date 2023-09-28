@@ -415,7 +415,7 @@ export function getUnitRequirement(entityID: EntityID): Requirement | null {
             scale: 1,
           };
       }
-      const unitCount = units.counts[index];
+      const unitCount = units.counts[playerUnitIndex];
       return {
         id: resource,
         requiredValue: rawUnit.values[index],
