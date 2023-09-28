@@ -62,7 +62,7 @@ library LibInitObjectives {
     resourceRewards = ResourceValues(new uint256[](1), new uint32[](1));
     resourceRewards.resources[0] = IronResourceItemID;
     resourceRewards.values[0] = 300000;
-    P_ResourceRewardComponent(world.getComponent(P_ProductionDependenciesComponentID)).set(objective, resourceRewards);
+    P_ResourceRewardComponent(world.getComponent(P_ResourceRewardComponentID)).set(objective, resourceRewards);
   }
 
   function initPirateAsteroidObjectives(IWorld world) internal {
