@@ -46,6 +46,9 @@ library LibInitObjectives {
     initExpandBaseObjective(world);
     initMotherlodeMiningObjectives(world);
     initUnitTrainingObjectives(world);
+    initRaidObjectives(world);
+    initTechnologyObjevctives(world);
+    initDestroyUnitsObjective(world);
 
     P_IsObjectiveComponent isObjectiveComponent = P_IsObjectiveComponent(world.getComponent(P_IsObjectiveComponentID));
 
