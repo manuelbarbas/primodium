@@ -16,11 +16,10 @@ import { ABDKMath64x64 as Math } from "abdk/ABDKMath64x64.sol";
 library LibAsteroid {
   /// @notice Creates new asteroid for player in world
   /// @notice Checks if asteroid already exists, sets position and other properties
-  /// @param world World address
   /// @param ownerEntity Owner's entity ID
   /// @return asteroidEntity Created asteroid's entity ID
-  function createAsteroid(address world, bytes32 ownerEntity) internal returns (bytes32 asteroidEntity) {
-    asteroidEntity = LibEncode.getHash(world, ownerEntity);
+  function createAsteroid(bytes32 ownerEntity) internal returns (bytes32 asteroidEntity) {
+    asteroidEntity = LibEncode.getHash(ownerEntity);
     require(RockType.get(asteroidEntity) == ERock.NULL, "[LibAsteroid] asteroid already exists");
 
     uint256 asteroidCount = AsteroidCount.get() + 1;

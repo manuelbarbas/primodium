@@ -1,24 +1,31 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
+
+import { System } from "@latticexyz/world/src/System.sol";
+
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
-import { IWorld } from "codegen/world/IWorld.sol";
+import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
+import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
+
 import { ESendType, SendArgs, ERock, EResource, Arrival } from "src/Types.sol";
 import { ReversePosition, PositionData, UnitCount, RockType, OwnedBy, ResourceCount, ArrivalCount, P_EnumToPrototype, P_UnitPrototypes } from "codegen/index.sol";
 import { LibMotherlode, LibSend, ArrivalsMap } from "codegen/Libraries.sol";
 import { UnitKey } from "src/Keys.sol";
 
-function toString(bytes32 entity) pure returns (string memory) {
-  return string(abi.encodePacked(entity));
-}
+import { S_UpdateRockSystem } from "systems/subsystems/S_UpdateRockSystem.sol";
 
 contract SendUnitsSystem is PrimodiumSystem {
   function _sendUnits(SendArgs memory sendArgs) internal {
-    IWorld world = IWorld(_world());
     bytes32 origin = ReversePosition.get(sendArgs.originPosition.x, sendArgs.originPosition.y);
     bytes32 destination = ReversePosition.get(sendArgs.destinationPosition.x, sendArgs.destinationPosition.y);
     bytes32 playerEntity = addressToEntity(_msgSender());
-    world.updateRock(playerEntity, origin);
+    SystemCall.callWithHooksOrRevert(
+      entityToAddress(playerEntity),
+      getSystemResourceId("S_UpdateRockSystem"),
+      abi.encodeCall(S_UpdateRockSystem.updateRock, (playerEntity, origin)),
+      0
+    );
     if (destination == 0) destination = LibMotherlode.createMotherlode(sendArgs.destinationPosition);
 
     LibSend.checkMovementRules(origin, destination, playerEntity, sendArgs.to, sendArgs.sendType);

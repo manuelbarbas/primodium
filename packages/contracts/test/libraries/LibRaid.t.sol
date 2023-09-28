@@ -30,7 +30,7 @@ contract LibRaidTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
     vm.startPrank(creator);
-    player = addressToEntity(worldAddress);
+    player = addressToEntity(creator);
     Home.setAsteroid(player, homeRock);
     br.attacker = player;
     bytes32[] memory unitTypes = new bytes32[](unitPrototypeCount);
@@ -149,7 +149,7 @@ contract LibRaidTest is PrimodiumTest {
     ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);
     P_Unit.set(unit1, 0, P_UnitData({ attack: 100, defense: 100, speed: 200, cargo: 100, trainingTime: 0 }));
 
-    LibRaid.raid(world, player, rock);
+    world.raid(rock);
 
     assertEq(ResourceCount.get(player, EResource.Iron), 100, "Player Iron");
     assertEq(UnitCount.get(player, homeRock, unit1), 100, "Player units");
@@ -159,17 +159,17 @@ contract LibRaidTest is PrimodiumTest {
 
   function testFailRaidMotherlode() public {
     RockType.set(rock, ERock.Motherlode);
-    LibRaid.raid(world, player, rock);
+    world.raid(rock);
   }
 
   function testFailRaidUnowned() public {
     RockType.set(rock, ERock.Asteroid);
-    LibRaid.raid(world, player, rock);
+    world.raid(rock);
   }
 
   function testFailRaidSelfOwned() public {
     RockType.set(rock, ERock.Asteroid);
     OwnedBy.set(rock, player);
-    LibRaid.raid(world, player, rock);
+    world.raid(rock);
   }
 }

@@ -39,4 +39,8 @@ contract S_BattleSystem is PrimodiumSystem {
   {
     return LibBattle.getAttackPoints(invader, rockEntity, sendType);
   }
+
+  function updateUnitsAfterBattle(BattleResultData memory br, ESendType sendType) public {
+    LibBattle.updateUnitsAfterBattle(br, sendType);
+  }
 }

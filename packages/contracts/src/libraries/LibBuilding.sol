@@ -2,8 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
-import { SystemCall, ResourceId } from "@latticexyz/world/src/SystemCall.sol";
-import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
+import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 // tables
 import { Home, P_RequiredTile, P_ProducesUnits, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/index.sol";
 

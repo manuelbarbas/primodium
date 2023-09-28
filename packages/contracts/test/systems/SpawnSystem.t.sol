@@ -10,8 +10,9 @@ contract SpawnSystemTest is PrimodiumTest {
 
   function testSpawnu() public {
     bytes32 playerEntity = addressToEntity(creator);
-    bytes32 asteroidEntity = LibEncode.getHash(worldAddress, playerEntity);
+    bytes32 asteroidEntity = LibEncode.getHash(playerEntity);
     spawn(creator);
+    vm.startPrank(creator);
 
     bool spawned = Spawned.get(world, playerEntity);
     assertTrue(spawned, "Player should have spawned");
@@ -21,7 +22,7 @@ contract SpawnSystemTest is PrimodiumTest {
     assertEq(Level.get(world, playerEntity), 1, "Player should have level 1");
   }
 
-  function testSpawnTwice() public prank(creator) {
+  function testSpawnTwice() public {
     world.spawn();
     vm.expectRevert(bytes("[SpawnSystem] Already spawned"));
     world.spawn();
@@ -43,6 +44,7 @@ contract SpawnSystemTest is PrimodiumTest {
 
   function testBuildMainBase() public {
     bytes32 asteroid = spawn(creator);
+    vm.startPrank(creator);
     P_AsteroidData memory maxRange = P_Asteroid.get();
     PositionData memory calculatedPosition = PositionData(maxRange.xBounds / 2, maxRange.yBounds / 2, asteroid);
     logPosition(calculatedPosition);
@@ -58,13 +60,9 @@ contract SpawnSystemTest is PrimodiumTest {
   }
 
   function testBuildBeforeSpawnFail() public {
-    vm.startPrank(creator);
-
     PositionData memory nonIronPositionData = getNonIronPosition(creator);
 
     vm.expectRevert(bytes("[BuildSystem] Player has not spawned"));
     world.build(EBuilding.IronMine, nonIronPositionData);
-
-    vm.stopPrank();
   }
 }
