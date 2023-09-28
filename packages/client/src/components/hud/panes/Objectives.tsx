@@ -106,7 +106,12 @@ const ClaimObjectiveButton: React.FC<{
 const Objective: React.FC<{
   objective: EntityID;
 }> = ({ objective }) => {
+
   const objectiveName = useMemo(() => {
+    if (!objective) return;
+    return getBlockTypeName(objective);
+  }, [objective]);
+  const objectiveDescription = useMemo(() => {
     if (!objective) return;
     return getBlockTypeDescription(objective);
   }, [objective]);
@@ -123,6 +128,9 @@ const Objective: React.FC<{
         </div>
         <p className=" col-span-7 font-bold flex items-center px-1">
           {objectiveName}
+        </p>
+        <p className=" col-span-7 font-bold flex items-center px-1">
+          {objectiveDescription}
         </p>
 
         <ClaimObjectiveButton objectiveEntity={objective} />
