@@ -78,10 +78,6 @@ const advancedBuildingHotbar: Hotbar = {
       blockType: BlockType.StarmapperStation,
       keybind: KeybindActions.Hotbar7,
     },
-    {
-      blockType: BlockType.DroneFactory,
-      keybind: KeybindActions.Hotbar8,
-    },
   ],
 };
 
