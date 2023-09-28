@@ -52,6 +52,7 @@ library LibInitBuildings {
     initWorkshop(world);
     initDroneFactory(world);
     initStarmapper(world);
+    initSAMMissiles(world);
   }
 
   function initMainBase(IWorld world) internal {
