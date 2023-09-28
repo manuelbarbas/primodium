@@ -109,7 +109,8 @@ library LibResource {
       if (productionRate == 0) continue;
 
       // add resource to storage
-      LibStorage.increaseStoredResource(playerEntity, resource, productionRate * timeSinceClaimed);
+      uint256 increase = productionRate * timeSinceClaimed;
+      LibStorage.increaseStoredResource(playerEntity, resource, increase);
     }
   }
 

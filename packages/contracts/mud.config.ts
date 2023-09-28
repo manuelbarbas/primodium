@@ -295,23 +295,11 @@ export const config = mudConfig({
 
     /* ------------------------------- Motherlode ------------------------------- */
 
-    P_MotherlodeResource: {
-      keySchema: { motherlodeType: "EMotherlodeType", level: "ESize" },
-      schema: {
-        resource: "EResource",
-        amount: "uint256",
-      },
-    },
-
     Motherlode: {
       keySchema: { entity: "bytes32" },
       schema: {
-        ownedBy: "bytes32",
         size: "ESize",
-        motherlodeType: "EMotherlodeType",
-        quantity: "uint32",
-        cooldownSeconds: "uint256",
-        mineableAt: "uint256",
+        motherlodeType: "EResource",
       },
     },
 
@@ -342,10 +330,15 @@ export const config = mudConfig({
         defense: "uint256",
         speed: "uint256",
         cargo: "uint256",
-        mining: "uint256",
         trainingTime: "uint256",
       },
     },
+
+    P_MiningRate: {
+      keySchema: { entity: "bytes32", level: "uint256" },
+      schema: "uint256",
+    },
+
     QueueUnits: {
       keySchema: { entity: "bytes32" },
       schema: {

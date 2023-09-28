@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_Unit, P_UnitProduction, P_UnitProdMultiplier, LastClaimedAt } from "codegen/Tables.sol";
-import { EResource } from "src/Types.sol";
+import { Motherlode, ProductionRate, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_Unit, P_UnitProduction, P_UnitProdMultiplier, LastClaimedAt, RockType } from "codegen/Tables.sol";
+import { EResource, ERock } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibResource } from "libraries/LibResource.sol";
@@ -55,7 +55,7 @@ library LibUnit {
         stillClaiming = false;
       }
       startTime += trainingTime * trainedUnits;
-      addUnitsToAsteroid(playerEntity, Home.getAsteroid(playerEntity), item.unitId, trainedUnits);
+      increaseUnitCount(playerEntity, Home.getAsteroid(playerEntity), item.unitId, trainedUnits);
     }
   }
 
@@ -75,22 +75,6 @@ library LibUnit {
     uint256 rawTrainingTime = P_Unit.getTrainingTime(unitPrototype, unitLevel);
     require(rawTrainingTime > 0 && multiplier > 0, "Training time is invalid");
     return (rawTrainingTime * 100) / multiplier;
-  }
-
-  /// @notice Add units to an asteroid
-  /// @param playerEntity Entity ID of the player
-  /// @param asteroid Entity ID of the asteroid
-  /// @param unitPrototype Unit prototype to add
-  /// @param quantity Number of units to add
-  function addUnitsToAsteroid(
-    bytes32 playerEntity,
-    bytes32 asteroid,
-    bytes32 unitPrototype,
-    uint256 quantity
-  ) internal {
-    if (quantity == 0) return;
-    uint256 prevUnitCount = UnitCount.get(playerEntity, asteroid, unitPrototype);
-    UnitCount.set(playerEntity, asteroid, unitPrototype, prevUnitCount + quantity);
   }
 
   /**
@@ -132,6 +116,36 @@ library LibUnit {
   }
 
   /**
+   * @dev Increases the count of a specific unit type for a player's rock entity.
+   * @param playerEntity The identifier of the player.
+   * @param rockEntity The identifier of the player's rock entity.
+   * @param unitType The type of unit to increase.
+   * @param unitCount The number of units to increase.
+   */
+  function increaseUnitCount(
+    bytes32 playerEntity,
+    bytes32 rockEntity,
+    bytes32 unitType,
+    uint256 unitCount
+  ) internal {
+    if (unitCount == 0) return;
+
+    uint256 prevUnitCount = UnitCount.get(playerEntity, rockEntity, unitType);
+    UnitCount.set(playerEntity, rockEntity, unitType, prevUnitCount + unitCount);
+
+    // update production rate
+    if (RockType.get(rockEntity) != ERock.Motherlode) return;
+
+    uint256 level = UnitLevel.get(playerEntity, unitType);
+    uint256 productionRate = P_MiningRate.get(unitType, level);
+    if (productionRate == 0) return;
+
+    EResource resource = Motherlode.getMotherlodeType(rockEntity);
+    uint256 prevProductionRate = ProductionRate.get(playerEntity, resource);
+    ProductionRate.set(playerEntity, resource, prevProductionRate + (productionRate * unitCount));
+  }
+
+  /**
    * @dev Decreases the count of a specific unit type for a player's rock entity.
    * @param playerEntity The identifier of the player.
    * @param rockEntity The identifier of the player's rock entity.
@@ -144,10 +158,21 @@ library LibUnit {
     bytes32 unitType,
     uint256 unitCount
   ) internal {
-    updateStoredUtilities(playerEntity, unitType, unitCount, false);
+    if (unitCount == 0) return;
 
     uint256 currUnitCount = UnitCount.get(playerEntity, rockEntity, unitType);
     if (unitCount > currUnitCount) unitCount = currUnitCount;
     UnitCount.set(playerEntity, rockEntity, unitType, currUnitCount - unitCount);
+
+    // update production rate
+    if (RockType.get(rockEntity) != ERock.Motherlode) return;
+
+    uint256 level = UnitLevel.get(playerEntity, unitType);
+    uint256 productionRate = P_MiningRate.get(unitType, level);
+    if (productionRate == 0) return;
+
+    EResource resource = Motherlode.getMotherlodeType(rockEntity);
+    uint256 prevProductionRate = ProductionRate.get(playerEntity, resource);
+    ProductionRate.set(playerEntity, resource, prevProductionRate - (productionRate * unitCount));
   }
 }

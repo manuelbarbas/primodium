@@ -147,7 +147,7 @@ contract LibRaidTest is PrimodiumTest {
     });
 
     ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);
-    P_Unit.set(unit1, 0, P_UnitData({ attack: 100, defense: 100, speed: 200, cargo: 100, mining: 0, trainingTime: 0 }));
+    P_Unit.set(unit1, 0, P_UnitData({ attack: 100, defense: 100, speed: 200, cargo: 100, trainingTime: 0 }));
 
     LibRaid.raid(world, player, rock);
 

@@ -73,7 +73,7 @@ library ArrivalsMap {
    * @dev Retrieves all arrival data associated with a specific player and asteroid.
    * @param player The player's identifier.
    * @param asteroid The asteroid's identifier.
-   * @return An array of arrival data.
+   * @return items An array of arrival data.
    */
   function values(bytes32 player, bytes32 asteroid) internal view returns (Arrival[] memory items) {
     bytes32[] memory _keys = keys(player, asteroid);

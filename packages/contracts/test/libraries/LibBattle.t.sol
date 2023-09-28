@@ -25,7 +25,7 @@ contract LibBattleTest is PrimodiumTest {
     });
   bytes32 arrivalId = keccak256(abi.encode(arrival));
 
-  P_UnitData unitData = P_UnitData({ attack: 0, defense: 0, speed: 0, cargo: 0, mining: 0, trainingTime: 0 });
+  P_UnitData unitData = P_UnitData({ attack: 0, defense: 0, speed: 0, cargo: 0, trainingTime: 0 });
 
   function setUp() public override {
     super.setUp();
@@ -43,11 +43,7 @@ contract LibBattleTest is PrimodiumTest {
     uint256 attack,
     uint256 defense
   ) internal {
-    P_Unit.set(
-      unit,
-      0,
-      P_UnitData({ attack: attack, defense: defense, speed: 0, cargo: 0, mining: 0, trainingTime: 0 })
-    );
+    P_Unit.set(unit, 0, P_UnitData({ attack: attack, defense: defense, speed: 0, cargo: 0, trainingTime: 0 }));
   }
 
   function testGetDefensePoints(uint256 unitCount, uint256 defense) public returns (uint256) {
@@ -384,7 +380,7 @@ contract LibBattleTest is PrimodiumTest {
       defenderUnitsLeft: getUnitArray(70, 5)
     });
 
-    LibBattle.updateUnitsAfterBattle(br, ESendType.Invade);
+    LibBattle.updateUnitsAfterBattle(br, ESendType.Raid);
     assertEq(UnitCount.get(player, homeRock, unit1), 0, "Attacker should have 0 units on home rock");
     assertEq(UnitCount.get(player, homeRock, unit2), 0, "Attacker should have 0 unit2s on home rock");
     assertEq(UnitCount.get(enemy, rock, unit1), 70, "Defender should have 70 units on rock");
@@ -397,5 +393,34 @@ contract LibBattleTest is PrimodiumTest {
 
     assertEq(ResourceCount.get(enemy, EResource.Iron), enemyOriginalIron - 30, "Defender should lose 30 iron");
     assertEq(ResourceCount.get(enemy, EResource.Copper), enemyOriginalCopper - 5, "Defender should lose 5 copper");
+  }
+
+  function testUpdateProductionRatesAfterBattle() public {
+    setupUpdateUnitsAfterBattle();
+    Home.setAsteroid(player, homeRock);
+    RockType.set(rock, ERock.Motherlode);
+    Motherlode.set(rock, ESize.Large, EResource.Iron);
+
+    P_MiningRate.set(unit1, 0, 1);
+    ProductionRate.set(enemy, EResource.Iron, 200);
+
+    UnitCount.set(enemy, rock, unit1, 100);
+
+    BattleResultData memory br = BattleResultData({
+      attacker: player,
+      defender: enemy,
+      winner: player,
+      rock: rock,
+      totalCargo: 0,
+      timestamp: block.timestamp,
+      attackerStartingUnits: getUnitArray(100, 0),
+      attackerUnitsLeft: getUnitArray(70, 0),
+      defenderStartingUnits: getUnitArray(100, 0),
+      defenderUnitsLeft: getUnitArray(0, 0)
+    });
+
+    LibBattle.updateUnitsAfterBattle(br, ESendType.Invade);
+    assertEq(ProductionRate.get(enemy, EResource.Iron), 100, "Enemy should have 100 iron production");
+    assertEq(ProductionRate.get(player, EResource.Iron), 70, "Player should have 0 iron production");
   }
 }
