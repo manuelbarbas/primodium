@@ -785,6 +785,64 @@ export const BlockDescriptions = new Map<EntityID, string>([
     BlockType.BuildSAMLauncher,
     "Construct a SAM site. SAM sites protect you from enemy attacks and raids by providing a base level of defense.",
   ],
+  [
+    BlockType.RaidRawResources,
+    "Attack player asteroids and pirate bases and reek the raided rewards. Your total raid is the sum of your units cargo capacity.",
+  ],
+  [
+    BlockType.RaidRawResources2,
+    "Attack player asteroids and pirate bases and reek the raided rewards. Your total raid is the sum of your units cargo capacity.",
+  ],
+  [
+    BlockType.RaidRawResources3,
+    "Attack player asteroids and pirate bases and reek the raided rewards. Your total raid is the sum of your units cargo capacity.",
+  ],
+
+  [
+    BlockType.RaidFactoryResources,
+    "Attack player asteroids and pirate bases and reek the raided rewards. Your total raid is the sum of your units cargo capacity.",
+  ],
+  [
+    BlockType.RaidFactoryResources2,
+    "Attack player asteroids and pirate bases and reek the raided rewards. Your total raid is the sum of your units cargo capacity.",
+  ],
+  [
+    BlockType.RaidFactoryResources3,
+    "Attack player asteroids and pirate bases and reek the raided rewards. Your total raid is the sum of your units cargo capacity.",
+  ],
+
+  [
+    BlockType.RaidMotherlodeResources,
+    "Attack player asteroids and pirate bases and reek the raided rewards. Your total raid is the sum of your units cargo capacity.",
+  ],
+  [
+    BlockType.RaidMotherlodeResources2,
+    "Attack player asteroids and pirate bases and reek the raided rewards. Your total raid is the sum of your units cargo capacity.",
+  ],
+  [
+    BlockType.RaidMotherlodeResources3,
+    "Attack player asteroids and pirate bases and reek the raided rewards. Your total raid is the sum of your units cargo capacity.",
+  ],
+  [
+    BlockType.DestroyEnemyUnits,
+    "Attack and defend against enemy units and destroy your enemies armies in the process.",
+  ],
+  [
+    BlockType.DestroyEnemyUnits2,
+    "Attack and defend against enemy units and destroy your enemies armies in the process.",
+  ],
+  [
+    BlockType.DestroyEnemyUnits3,
+    "Attack and defend against enemy units and destroy your enemies armies in the process.",
+  ],
+  [
+    BlockType.DestroyEnemyUnits4,
+    "Attack and defend against enemy units and destroy your enemies armies in the process.",
+  ],
+  [
+    BlockType.DestroyEnemyUnits5,
+    "Attack and defend against enemy units and destroy your enemies armies in the process.",
+  ],
 ]);
 
 // Terrain Tile colors
