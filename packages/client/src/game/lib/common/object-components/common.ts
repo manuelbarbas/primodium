@@ -11,7 +11,7 @@ import {
   namespaceWorld,
 } from "@latticexyz/recs";
 import { Coord, uuid } from "@latticexyz/utils";
-import { GameObjectComponent, GameObjectTypes } from "engine/types";
+import { GameObjectComponent, GameObjectTypes, Scene } from "engine/types";
 import { world } from "src/network/world";
 
 type GameObjectInstances = {
@@ -80,6 +80,26 @@ export const OnHover = <T extends keyof GameObjectTypes>(
       gameObject.on("pointerover", () => {
         callback(gameObject as GameObjectInstances[T]);
       });
+    },
+  };
+};
+
+export const Tween = <T extends keyof GameObjectTypes>(
+  scene: Scene,
+  config: Partial<Phaser.Types.Tweens.TweenBuilderConfig>
+): GameObjectComponent<T> => {
+  let tween: Phaser.Tweens.Tween;
+  return {
+    id: uuid(),
+    once: (gameObject) => {
+      tween = scene.phaserScene.add.tween({
+        targets: gameObject,
+        ...config,
+      });
+    },
+    exit: () => {
+      tween.stop();
+      tween.destroy();
     },
   };
 };
