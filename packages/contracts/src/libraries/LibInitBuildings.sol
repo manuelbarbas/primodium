@@ -1076,21 +1076,21 @@ library LibInitBuildings {
     resourceValues = new ResourceValue[](3);
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 1000000 });
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 1000000 });
-    resourceValues[1] = ResourceValue({ resource: TitaniumResourceItemID, value: 10000 });
+    resourceValues[2] = ResourceValue({ resource: TitaniumResourceItemID, value: 10000 });
     requiredResources[1] = resourceValues;
 
     // LEVEL 3
     resourceValues = new ResourceValue[](3);
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 2000000 });
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 2000000 });
-    resourceValues[1] = ResourceValue({ resource: IridiumResourceItemID, value: 50000 });
+    resourceValues[2] = ResourceValue({ resource: IridiumResourceItemID, value: 50000 });
     requiredResources[2] = resourceValues;
 
     // LEVEL 4
     resourceValues = new ResourceValue[](3);
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 6000000 });
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 6000000 });
-    resourceValues[1] = ResourceValue({ resource: KimberliteResourceItemID, value: 100000 });
+    resourceValues[2] = ResourceValue({ resource: KimberliteResourceItemID, value: 100000 });
     requiredResources[3] = resourceValues;
 
     /****************** Storage Updates *******************/
