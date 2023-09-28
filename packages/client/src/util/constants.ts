@@ -379,20 +379,17 @@ export const BlockType = {
   BuildWorkshop: keccak256("objective.BuildWorkshop") as EntityID,
   BuildHangar: keccak256("objective.BuildHangar") as EntityID,
 
-  TrainMarineUnit: keccak256("objective.TrainMarineUnit") as EntityID,
-  TrainMarineUnit2: keccak256("objective.TrainMarineUnit2") as EntityID,
-  TrainMarineUnit3: keccak256("objective.TrainMarineUnit3") as EntityID,
-
-  TrainAdvancedMarineUnit: keccak256(
-    "objective.TrainAdvancedMarineUnit"
+  TrainMinutemanMarine: keccak256("objective.TrainMinutemanMarine") as EntityID,
+  TrainMinutemanMarine2: keccak256(
+    "objective.TrainMinutemanMarine2"
   ) as EntityID,
-  TrainAdvancedMarineUnit2: keccak256(
-    "objective.TrainAdvancedMarineUnit2"
-  ) as EntityID,
-  TrainAdvancedMarineUnit3: keccak256(
-    "objective.TrainAdvancedMarineUnit3"
+  TrainMinutemanMarine3: keccak256(
+    "objective.TrainMinutemanMarine3"
   ) as EntityID,
 
+  TrainTridentMarine: keccak256("objective.TrainTridentMarine") as EntityID,
+  TrainTridentMarine2: keccak256("objective.TrainTridentMarine2") as EntityID,
+  TrainTridentMarine3: keccak256("objective.TrainTridentMarine3") as EntityID,
   TrainAnvilDrone: keccak256("objective.TrainAnvilDrone") as EntityID,
   TrainAnvilDrone2: keccak256("objective.TrainAnvilDrone2") as EntityID,
   TrainAnvilDrone3: keccak256("objective.TrainAnvilDrone3") as EntityID,
@@ -574,28 +571,28 @@ export const BlockDescriptions = new Map<EntityID, string>([
     "Select the hangar from the building menu and place it on an empty tile. Hangars provide more housing than garages for units.",
   ],
   [
-    BlockType.TrainMarineUnit,
+    BlockType.TrainMinutemanMarine,
     "Select the workshop you placed on the map to train Minuteman marines. Minutemen are basic defensive marines.",
   ],
   [
-    BlockType.TrainMarineUnit2,
+    BlockType.TrainMinutemanMarine2,
     "Select the workshop you placed on the map to train Minuteman marines. Minutemen are basic defensive marines.",
   ],
   [
-    BlockType.TrainMarineUnit3,
+    BlockType.TrainMinutemanMarine3,
     "Select the workshop you placed on the map to train Minuteman marines. Minutemen are basic defensive marines.",
   ],
 
   [
-    BlockType.TrainAdvancedMarineUnit,
+    BlockType.TrainTridentMarine,
     "Select the workshop you placed on the map to train Trident marines. Trident marines are basic offensive units.",
   ],
   [
-    BlockType.TrainAdvancedMarineUnit2,
+    BlockType.TrainTridentMarine2,
     "Select the workshop you placed on the map to train Trident marines. Trident marines are basic offensive units.",
   ],
   [
-    BlockType.TrainAdvancedMarineUnit3,
+    BlockType.TrainTridentMarine3,
     "Select the workshop you placed on the map to train Trident marines. Trident marines are basic offensive units.",
   ],
   [
