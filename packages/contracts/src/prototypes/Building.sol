@@ -40,8 +40,8 @@ uint256 constant SpaceFuelFactoryID = uint256(keccak256("block.SpaceFuelFactory"
 uint256 constant StorageUnitID = uint256(keccak256("block.StorageUnit"));
 
 // Units
+uint256 constant WorkshopID = uint256(keccak256("block.Workshop"));
 uint256 constant DroneFactoryID = uint256(keccak256("block.DroneFactory"));
-uint256 constant AdvancedDroneFactoryID = uint256(keccak256("block.AdvancedDroneFactory"));
 
 // Starmapper
 uint256 constant StarmapperID = uint256(keccak256("block.Starmapper"));

@@ -37,7 +37,7 @@ library LibInitPirateAsteroids {
     pirateAsteroid = FirstPirateAsteroidID;
     PositionComponent(world.getComponent(PositionComponentID)).set(pirateAsteroid, Coord(10, 10, 0));
     resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
-    resourceValues.resources[0] = MarineUnit;
+    resourceValues.resources[0] = MinutemanMarine;
     resourceValues.values[0] = 10;
     P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(pirateAsteroid, resourceValues);
     resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
@@ -49,7 +49,7 @@ library LibInitPirateAsteroids {
     pirateAsteroid = SecondPirateAsteroidID;
     PositionComponent(world.getComponent(PositionComponentID)).set(pirateAsteroid, Coord(-20, 10, 0));
     resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
-    resourceValues.resources[0] = MarineUnit;
+    resourceValues.resources[0] = MinutemanMarine;
     resourceValues.values[0] = 40;
     P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(pirateAsteroid, resourceValues);
     resourceValues = ResourceValues(new uint256[](3), new uint32[](3));
@@ -67,7 +67,7 @@ library LibInitPirateAsteroids {
     resourceValues = ResourceValues(new uint256[](2), new uint32[](2));
     resourceValues.resources[0] = AnvilDrone;
     resourceValues.values[0] = 5;
-    resourceValues.resources[1] = MarineUnit;
+    resourceValues.resources[1] = MinutemanMarine;
     resourceValues.values[1] = 80;
     P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(pirateAsteroid, resourceValues);
     resourceValues = ResourceValues(new uint256[](3), new uint32[](3));
@@ -85,7 +85,7 @@ library LibInitPirateAsteroids {
     resourceValues = ResourceValues(new uint256[](2), new uint32[](2));
     resourceValues.resources[0] = AnvilDrone;
     resourceValues.values[0] = 5;
-    resourceValues.resources[1] = MarineUnit;
+    resourceValues.resources[1] = MinutemanMarine;
     resourceValues.values[1] = 80;
     P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(pirateAsteroid, resourceValues);
     resourceValues = ResourceValues(new uint256[](3), new uint32[](3));
@@ -103,7 +103,7 @@ library LibInitPirateAsteroids {
     resourceValues = ResourceValues(new uint256[](2), new uint32[](2));
     resourceValues.resources[0] = AnvilDrone;
     resourceValues.values[0] = 20;
-    resourceValues.resources[1] = MarineUnit;
+    resourceValues.resources[1] = MinutemanMarine;
     resourceValues.values[1] = 120;
     P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(pirateAsteroid, resourceValues);
     resourceValues = ResourceValues(new uint256[](3), new uint32[](3));
@@ -119,7 +119,7 @@ library LibInitPirateAsteroids {
     pirateAsteroid = FifthPirateAsteroidID;
     PositionComponent(world.getComponent(PositionComponentID)).set(pirateAsteroid, Coord(-3, -15, 0));
     resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
-    resourceValues.resources[0] = MarineUnit;
+    resourceValues.resources[0] = MinutemanMarine;
     resourceValues.values[0] = 400;
 
     P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(pirateAsteroid, resourceValues);
@@ -136,7 +136,7 @@ library LibInitPirateAsteroids {
     pirateAsteroid = SixthPirateAsteroidID;
     PositionComponent(world.getComponent(PositionComponentID)).set(pirateAsteroid, Coord(-3, 20, 0));
     resourceValues = ResourceValues(new uint256[](1), new uint32[](1));
-    resourceValues.resources[0] = MarineUnit;
+    resourceValues.resources[0] = MinutemanMarine;
     resourceValues.values[0] = 400;
 
     P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(pirateAsteroid, resourceValues);
@@ -155,7 +155,7 @@ library LibInitPirateAsteroids {
     resourceValues = ResourceValues(new uint256[](2), new uint32[](2));
     resourceValues.resources[0] = AnvilDrone;
     resourceValues.values[0] = 100;
-    resourceValues.resources[1] = MarineUnit;
+    resourceValues.resources[1] = MinutemanMarine;
     resourceValues.values[1] = 200;
 
     P_UnitRequirementComponent(world.getComponent(P_UnitRequirementComponentID)).set(pirateAsteroid, resourceValues);

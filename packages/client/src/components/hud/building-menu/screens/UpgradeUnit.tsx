@@ -1,11 +1,11 @@
 import { Navigator } from "src/components/core/Navigator";
 import { ResearchItem } from "../widgets/ResearchItem";
 import {
-  AdvancedMarineUnitUpgradeTree,
   AegisDroneUpgradeTree,
   AnvilDroneUpgradeTree,
   HammerDroneUpgradeTree,
-  MarineUnitUpgradeTree,
+  TridentMarineUpgradeTree,
+  MinutemanMarineUpgradeTree,
   StingerDroneUpgradeTree,
 } from "src/util/research";
 import { EntityID } from "@latticexyz/recs";
@@ -33,8 +33,8 @@ export const UpgradeUnit: React.FC<{ building: EntityID }> = ({ building }) => {
         )}
         {BlockType.Workshop === buildingType && (
           <>
-            <ResearchItem data={MarineUnitUpgradeTree} />
-            <ResearchItem data={AdvancedMarineUnitUpgradeTree} />
+            <ResearchItem data={MinutemanMarineUpgradeTree} />
+            <ResearchItem data={TridentMarineUpgradeTree} />
           </>
         )}
       </div>
