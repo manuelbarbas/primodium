@@ -755,6 +755,7 @@ export default {
   TotalUnitsDestroyed,
 
   //Pirate
+  P_RequiredPirateAsteroidDefeated,
   Pirate,
   DefeatedSpawnedPirateAsteroid,
 };
