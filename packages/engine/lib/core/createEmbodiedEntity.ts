@@ -144,6 +144,7 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     gameObject.resetPipeline(true);
     gameObject.setScale(1, 1);
     gameObject.setAlpha(1);
+    gameObject.setRotation(0);
     gameObject.setScrollFactor(1);
     gameObject.clearMask();
     gameObject.setData("objectPoolId", null);

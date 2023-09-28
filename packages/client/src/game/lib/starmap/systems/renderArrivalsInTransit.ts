@@ -128,7 +128,6 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
                 borderThickness: 1,
                 alpha: 0,
               }),
-
               Circle(5, {
                 color: 0x00ffff,
                 borderThickness: 0,

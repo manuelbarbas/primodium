@@ -88,13 +88,18 @@ export const Tween = <T extends keyof GameObjectTypes>(
   scene: Scene,
   config: Partial<Phaser.Types.Tweens.TweenBuilderConfig>
 ): GameObjectComponent<T> => {
+  let tween: Phaser.Tweens.Tween;
   return {
     id: uuid(),
     once: (gameObject) => {
-      scene.phaserScene.add.tween({
+      tween = scene.phaserScene.add.tween({
         targets: gameObject,
         ...config,
       });
+    },
+    exit: () => {
+      tween.stop();
+      tween.destroy();
     },
   };
 };
