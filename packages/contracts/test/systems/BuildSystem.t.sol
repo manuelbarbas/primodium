@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import "test/PrimodiumTest.t.sol";
 
@@ -9,8 +9,9 @@ contract BuildSystemTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
     // init other
-    spawn(alice);
-    playerEntity = addressToEntity(alice);
+    spawn(creator);
+    playerEntity = addressToEntity(creator);
+    vm.startPrank(creator);
   }
 
   // todo: sort these tests. the first test should be a vanilla build system call
@@ -20,9 +21,9 @@ contract BuildSystemTest is PrimodiumTest {
     bytes32[] memory keys = new bytes32[](1);
     keys[0] = IronMinePrototypeId;
 
-    world.devSetRecord(P_BlueprintTableId, keys, P_Blueprint.encode(blueprint), P_Blueprint.getValueSchema());
-    vm.startPrank(alice);
-    bytes32 buildingEntity = world.build(EBuilding.IronMine, getIronPosition(alice));
+    P_Blueprint.set(IronMinePrototypeId, blueprint);
+
+    bytes32 buildingEntity = world.build(EBuilding.IronMine, getIronPosition(creator));
 
     PositionData memory buildingPosition = Position.get(world, buildingEntity);
     logPosition(buildingPosition);
@@ -44,51 +45,38 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testInvalidIndexFail() public {
-    vm.startPrank(alice);
-
-    PositionData memory ironPositionData = getNonIronPosition(alice);
+    PositionData memory ironPositionData = getNonIronPosition(creator);
 
     vm.expectRevert(bytes("[BuildSystem] Invalid building type"));
     world.build(EBuilding.LENGTH, ironPositionData);
-
-    vm.stopPrank();
   }
 
   function testFailIronMineOnNonIron() public {
-    vm.startPrank(alice);
-
-    PositionData memory ironPositionData = getNonIronPosition(alice);
+    PositionData memory ironPositionData = getNonIronPosition(creator);
 
     world.build(EBuilding.IronMine, ironPositionData);
-
-    vm.stopPrank();
   }
 
   function testSameXYCanCollide() public {
-    vm.startPrank(alice);
-    PositionData memory ironPositionData = getIronPosition(alice);
+    PositionData memory ironPositionData = getIronPosition(creator);
     world.build(EBuilding.IronMine, ironPositionData);
     vm.stopPrank();
     spawn(bob);
     vm.startPrank(bob);
     ironPositionData = getIronPosition(bob);
     world.build(EBuilding.IronMine, ironPositionData);
-
-    vm.stopPrank();
   }
 
   function testSameXYZCannotCollideFail() public {
-    vm.startPrank(alice);
     removeRequirements(EBuilding.IronMine);
-    world.build(EBuilding.IronMine, getPosition1(alice));
+    world.build(EBuilding.IronMine, getPosition1(creator));
 
     vm.expectRevert(bytes("[BuildSystem] Building already exists"));
-    world.build(EBuilding.IronMine, getPosition1(alice));
+    world.build(EBuilding.IronMine, getPosition1(creator));
   }
 
   function testBuiltOnWrongAsteroid() public {
-    vm.startPrank(alice);
-    PositionData memory coord = getPosition2(alice);
+    PositionData memory coord = getPosition2(creator);
     coord.parent = bytes32(uint256(69));
 
     vm.expectRevert(bytes("[BuildSystem] Building must be built on your home asteroid"));
@@ -96,56 +84,34 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testBuildTwiceMainBaseFail() public {
-    vm.startPrank(alice);
-
-    PositionData memory coord1 = getPosition3(alice);
+    PositionData memory coord1 = getPosition3(creator);
     vm.expectRevert(bytes("[BuildSystem] Cannot build more than one main base per wallet"));
     world.build(EBuilding.MainBase, coord1);
-    vm.stopPrank();
   }
 
   function testBuildMainBaseLevelNotMetFail() public {
-    vm.startPrank(alice);
-
-    PositionData memory coord1 = getPosition3(alice);
+    PositionData memory coord1 = getPosition3(creator);
     vm.expectRevert(bytes("[BuildSystem] MainBase level requirement not met"));
     world.build(EBuilding.Hangar, coord1);
-    vm.stopPrank();
   }
 
   function testBuildMainBaseLevelMet() public {
-    vm.startPrank(alice);
+    PositionData memory coord1 = getPosition3(creator);
 
-    PositionData memory coord1 = getPosition3(alice);
-
-    bytes32[] memory keys = new bytes32[](1);
-    keys[0] = addressToEntity(alice);
-    world.devSetRecord(
-      P_RequiredBaseLevelTableId,
-      keys,
-      P_RequiredBaseLevel.encode(2),
-      P_RequiredBaseLevel.getValueSchema()
-    );
-
+    P_RequiredBaseLevel.set(IronMinePrototypeId, 0, 2);
     removeRequirements(EBuilding.IronMine);
     world.build(EBuilding.IronMine, coord1);
-    vm.stopPrank();
   }
 
   function testIronMineOnNonIronFail() public {
-    vm.startPrank(alice);
-
-    PositionData memory nonIronCoord = getNonIronPosition(alice);
+    PositionData memory nonIronCoord = getNonIronPosition(creator);
 
     vm.expectRevert(bytes("[BuildSystem] Cannot build on this tile"));
     world.build(EBuilding.IronMine, nonIronCoord);
-
-    vm.stopPrank();
   }
 
   function testBuildWithResourceReqs() public {
-    vm.startPrank(alice);
-    world.build(EBuilding.IronMine, getIronPosition(alice));
+    world.build(EBuilding.IronMine, getIronPosition(creator));
     bytes32 ironMinePrototype = P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.IronMine));
     assertGe(
       P_RequiredResources.lengthResources(world, ironMinePrototype, 2),
@@ -155,7 +121,6 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testBuildWithRequiredResources() public {
-    vm.startPrank(address(world));
     ResourceCount.set(playerEntity, EResource.Iron, 100);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
@@ -163,13 +128,11 @@ contract BuildSystemTest is PrimodiumTest {
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(IronMinePrototypeId, 1, requiredResourcesData);
 
-    switchPrank(alice);
-    world.build(EBuilding.IronMine, getIronPosition(alice));
+    world.build(EBuilding.IronMine, getIronPosition(creator));
     assertEq(ResourceCount.get(playerEntity, EResource.Iron), 50);
   }
 
   function testBuildWithProductionDependencies() public {
-    vm.startPrank(address(world));
     uint256 originalProduction = 100;
     uint256 productionReduction = 10;
     ProductionRate.set(playerEntity, EResource.Iron, originalProduction);
@@ -182,9 +145,8 @@ contract BuildSystemTest is PrimodiumTest {
     requiredDependenciesData.amounts[0] = productionReduction;
 
     P_RequiredDependencies.set(IronMinePrototypeId, 1, requiredDependenciesData);
-    switchPrank(alice);
 
-    world.build(EBuilding.IronMine, getIronPosition(alice));
+    world.build(EBuilding.IronMine, getIronPosition(creator));
     uint256 productionIncrease = P_Production.get(IronMinePrototypeId, 1).amount;
     assertEq(
       ProductionRate.get(playerEntity, EResource.Iron),
@@ -193,27 +155,21 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testBuildWithResourceProductionIncrease() public {
-    vm.startPrank(address(world));
-
     uint256 increase = 69;
     P_ProductionData memory data = P_ProductionData(EResource.Iron, increase);
     P_Production.set(IronMinePrototypeId, 1, data);
-    switchPrank(alice);
 
-    world.build(EBuilding.IronMine, getIronPosition(alice));
+    world.build(EBuilding.IronMine, getIronPosition(creator));
     assertEq(ProductionRate.get(playerEntity, EResource.Iron), increase);
   }
 
   function testBuildWithMaxStorageIncrease() public {
-    vm.startPrank(address(world));
-
     uint8[] memory data = new uint8[](1);
     data[0] = uint8(EResource.Iron);
     P_ListMaxResourceUpgrades.set(IronMinePrototypeId, 1, data);
     P_ByLevelMaxResourceUpgrades.set(IronMinePrototypeId, EResource.Iron, 1, 50);
 
-    switchPrank(alice);
-    world.build(EBuilding.IronMine, getIronPosition(alice));
+    world.build(EBuilding.IronMine, getIronPosition(creator));
     assertEq(MaxResourceCount.get(playerEntity, EResource.Iron), 50);
   }
 }

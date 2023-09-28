@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import "test/PrimodiumTest.t.sol";
 
@@ -8,7 +8,7 @@ contract UnitProductionQueueTest is PrimodiumTest {
 
   function setUp() public override {
     super.setUp();
-    vm.startPrank(worldAddress);
+    vm.startPrank(creator);
   }
 
   function testEnqueueItems() public {

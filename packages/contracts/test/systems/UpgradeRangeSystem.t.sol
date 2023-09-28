@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import "../PrimodiumTest.t.sol";
 
 contract UpgradeRangeSystemTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
-    spawn(alice);
+    spawn(creator);
+    vm.startPrank(creator);
   }
 
   function testOutOfBounds() public {
-    vm.startPrank(alice);
-    bytes32 aliceEntity = addressToEntity(alice);
-    bytes32 asteroid = Home.getAsteroid(aliceEntity);
+    bytes32 creatorEntity = addressToEntity(creator);
+    bytes32 asteroid = Home.getAsteroid(creatorEntity);
 
-    Bounds memory bounds = LibBuilding.getPlayerBounds(aliceEntity);
+    Bounds memory bounds = LibBuilding.getPlayerBounds(creatorEntity);
 
     removeRequirements(EBuilding.IronMine);
 
@@ -23,11 +23,8 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
   }
 
   function testUpgradeRangeWrongBaseLevelFail() public {
-    bytes32 aliceEntity = addressToEntity(alice);
-    vm.startPrank(alice);
-    bytes32[] memory keys = new bytes32[](1);
-    keys[0] = aliceEntity;
-    world.devSetRecord(LevelTableId, keys, Level.encode(5), Level.getValueSchema());
+    bytes32 creatorEntity = addressToEntity(creator);
+    Level.set(creatorEntity, 5);
 
     assertTrue(P_RequiredBaseLevel.get(ExpansionKey, 5) != 0, "should have expansion level 5");
     vm.expectRevert(bytes("[UpgradeRangeSystem] MainBase level requirement not met"));
@@ -35,35 +32,32 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
   }
 
   function testUpgradeRangeMaxLevel() public {
-    bytes32 aliceEntity = addressToEntity(alice);
-    vm.startPrank(alice);
+    bytes32 creatorEntity = addressToEntity(creator);
     // set player level to max level
 
     uint256 maxLevel = P_MaxLevel.get(ExpansionKey);
     bytes32[] memory keys = new bytes32[](1);
-    keys[0] = aliceEntity;
 
-    world.devSetRecord(LevelTableId, keys, Level.encode(maxLevel), Level.getValueSchema());
-    assertEq(Level.get(aliceEntity), maxLevel);
+    Level.set(creatorEntity, maxLevel);
+    assertEq(Level.get(creatorEntity), maxLevel);
 
     vm.expectRevert(bytes("[UpgradeRangeSystem] Max level reached"));
     world.upgradeRange();
   }
 
   function testUpgradeRange() public {
-    bytes32 aliceEntity = addressToEntity(alice);
-    vm.startPrank(alice);
-    uint256 level = Level.get(aliceEntity);
+    bytes32 creatorEntity = addressToEntity(creator);
+    uint256 level = Level.get(creatorEntity);
 
-    // increment alice's main base level by 1
-    bytes32 mainBase = Home.getMainBase(aliceEntity);
+    // increment creator's main base level by 1
+    bytes32 mainBase = Home.getMainBase(creatorEntity);
 
     bytes32[] memory keys = new bytes32[](1);
     keys[0] = mainBase;
 
-    world.devSetRecord(LevelTableId, keys, Level.encode(level + 1), Level.getValueSchema());
+    Level.set(mainBase, level + 1);
 
     world.upgradeRange();
-    assertEq(Level.get(aliceEntity), level + 1);
+    assertEq(Level.get(creatorEntity), level + 1);
   }
 }

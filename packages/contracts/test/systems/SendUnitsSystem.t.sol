@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import "test/PrimodiumTest.t.sol";
 
@@ -19,8 +19,8 @@ contract SendUnitsSystemTest is PrimodiumTest {
 
   function setUp() public override {
     super.setUp();
-    vm.startPrank(worldAddress);
-    player = addressToEntity(worldAddress);
+    vm.startPrank(creator);
+    player = addressToEntity(creator);
     to = addressToEntity(alice);
     P_EnumToPrototype.set(UnitKey, uint8(unit), unitPrototype);
 

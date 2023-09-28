@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
-import { LibResource } from "codegen/Libraries.sol";
+import { LibResource } from "libraries/LibResource.sol";
 
 contract S_SpendResourcesSystem is PrimodiumSystem {
   function spendBuildingRequiredResources(bytes32 entity, uint256 level) public {

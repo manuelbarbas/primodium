@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.21;
 
-// world
-import { IWorld } from "codegen/world/IWorld.sol";
 // tables
-import { Spawned, ReversePosition, OwnedBy, Position, PositionData, AsteroidCount, RockType, PositionData } from "codegen/Tables.sol";
+import { Spawned, ReversePosition, OwnedBy, Position, PositionData, AsteroidCount, RockType, PositionData } from "codegen/index.sol";
 
 // types
 import { ERock } from "src/Types.sol";
@@ -18,11 +16,10 @@ import { ABDKMath64x64 as Math } from "abdk/ABDKMath64x64.sol";
 library LibAsteroid {
   /// @notice Creates new asteroid for player in world
   /// @notice Checks if asteroid already exists, sets position and other properties
-  /// @param world World address
   /// @param ownerEntity Owner's entity ID
   /// @return asteroidEntity Created asteroid's entity ID
-  function createAsteroid(address world, bytes32 ownerEntity) internal returns (bytes32 asteroidEntity) {
-    asteroidEntity = LibEncode.getHash(world, ownerEntity);
+  function createAsteroid(bytes32 ownerEntity) internal returns (bytes32 asteroidEntity) {
+    asteroidEntity = LibEncode.getHash(ownerEntity);
     require(RockType.get(asteroidEntity) == ERock.NULL, "[LibAsteroid] asteroid already exists");
 
     uint256 asteroidCount = AsteroidCount.get() + 1;

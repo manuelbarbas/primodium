@@ -1,11 +1,16 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { P_MaxLevel, BuildingType, PositionData, Level, P_MaxLevel, P_RequiredResources, OwnedBy } from "codegen/Tables.sol";
+import { P_MaxLevel, BuildingType, PositionData, Level, P_MaxLevel, P_RequiredResources, OwnedBy } from "codegen/index.sol";
 import { LibBuilding, LibResource, LibReduceProductionRate, LibProduction, LibStorage } from "codegen/Libraries.sol";
 import { EBuilding } from "src/Types.sol";
-import { IWorld } from "codegen/world/IWorld.sol";
+
+import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
+import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
+
+import { S_SpendResourcesSystem } from "systems/subsystems/S_SpendResourcesSystem.sol";
+import { S_ReduceProductionRateSystem } from "systems/subsystems/S_ReduceProductionRateSystem.sol";
 
 contract UpgradeBuildingSystem is PrimodiumSystem {
   /// @notice Upgrades the building at the specified coordinate
@@ -13,7 +18,6 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
   /// @return buildingEntity Entity identifier of the upgraded building
   function upgradeBuilding(PositionData memory coord) public returns (bytes32 buildingEntity) {
     // Check there isn't another tile there
-    IWorld world = IWorld(_world());
     buildingEntity = LibBuilding.getBuildingFromCoord(coord);
     require(buildingEntity != 0, "[UpgradeBuildingSystem] no building at this coordinate");
 
@@ -37,8 +41,20 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
 
     Level.set(buildingEntity, targetLevel);
 
-    world.spendBuildingRequiredResources(buildingEntity, targetLevel);
-    world.reduceProductionRate(playerEntity, buildingEntity, targetLevel);
+    SystemCall.callWithHooksOrRevert(
+      entityToAddress(playerEntity),
+      getSystemResourceId("S_ReduceProductionRateSystem"),
+      abi.encodeCall(S_ReduceProductionRateSystem.reduceProductionRate, (playerEntity, buildingEntity, targetLevel)),
+      0
+    );
+
+    SystemCall.callWithHooksOrRevert(
+      entityToAddress(playerEntity),
+      getSystemResourceId("S_SpendResourcesSystem"),
+      abi.encodeCall(S_SpendResourcesSystem.spendBuildingRequiredResources, (buildingEntity, targetLevel)),
+      0
+    );
+
     LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, targetLevel);
     LibStorage.increaseMaxStorage(playerEntity, buildingEntity, targetLevel);
   }
