@@ -5,6 +5,7 @@ import { IWorld } from "solecs/System.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 
 //components
+import { DefeatedSpawnedPirateAsteroidComponent, ID as DefeatedSpawnedPirateAsteroidComponentID } from "components/DefeatedSpawnedPirateAsteroidComponent.sol";
 import { ReversePositionComponent, ID as ReversePositionComponentID } from "components/ReversePositionComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
@@ -15,6 +16,7 @@ import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } fr
 import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
 import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "components/P_MaxStorageComponent.sol";
 import { P_SpawnPirateAsteroidComponent, ID as P_SpawnPirateAsteroidComponentID } from "components/P_SpawnPirateAsteroidComponent.sol";
+import { P_RequiredPirateAsteroidDefeatedComponent, ID as P_RequiredPirateAsteroidDefeatedComponentID } from "components/P_RequiredPirateAsteroidDefeatedComponent.sol";
 import { Coord, ESpaceRockType } from "../types.sol";
 
 import { Trigonometry as Trig } from "trig/src/Trigonometry.sol";
@@ -167,5 +169,21 @@ library LibPirateAsteroid {
 
   function getPersonalPirate(uint256 playerEntity) internal pure returns (uint256) {
     return LibEncode.hashKeyEntity(PirateKey, playerEntity);
+  }
+
+  function checkDefeatedPirateAsteroidRequirement(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 objectiveEntity
+  ) internal view returns (bool) {
+    P_RequiredPirateAsteroidDefeatedComponent requiredPirateAsteroidDefeatedComponent = P_RequiredPirateAsteroidDefeatedComponent(
+        world.getComponent(P_RequiredPirateAsteroidDefeatedComponentID)
+      );
+    if (!requiredPirateAsteroidDefeatedComponent.has(objectiveEntity)) return true;
+    uint256 requiredPirateAsteroidDefeated = requiredPirateAsteroidDefeatedComponent.getValue(objectiveEntity);
+    return
+      DefeatedSpawnedPirateAsteroidComponent(world.getComponent(DefeatedSpawnedPirateAsteroidComponentID)).has(
+        LibEncode.hashKeyEntity(requiredPirateAsteroidDefeated, playerEntity)
+      );
   }
 }

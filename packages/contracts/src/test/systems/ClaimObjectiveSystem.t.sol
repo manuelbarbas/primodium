@@ -16,6 +16,7 @@ import { ClaimObjectiveSystem, ID as ClaimObjectiveSystemID } from "systems/Clai
 import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "systems/UpgradeBuildingSystem.sol";
 import { ResearchSystem, ID as ResearchSystemID } from "systems/ResearchSystem.sol";
 //components
+import { P_RequiredPirateAsteroidDefeatedComponent, ID as P_RequiredPirateAsteroidDefeatedComponentID } from "components/P_RequiredPirateAsteroidDefeatedComponent.sol";
 import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "components/P_MaxStorageComponent.sol";
 import { P_UnitRewardComponent, ID as P_UnitRewardComponentID } from "components/P_UnitRewardComponent.sol";
 import { P_ResourceRewardComponent, ID as P_ResourceRewardComponentID } from "components/P_ResourceRewardComponent.sol";
@@ -196,6 +197,26 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
       "there must be 0 on asteroid"
     );
 
+    claimObjectiveSystem.executeTyped(DebugDefeatedPirateAsteroidObjectiveID);
+
+    vm.stopPrank();
+  }
+
+  function testFailClaimObjectiveDefeatedPirateAsteroid() public {
+    P_RequiredPirateAsteroidDefeatedComponent requiredPirateAsteroidDefeatedComponent = P_RequiredPirateAsteroidDefeatedComponent(
+        world.getComponent(P_RequiredPirateAsteroidDefeatedComponentID)
+      );
+    assertTrue(
+      requiredPirateAsteroidDefeatedComponent.has(DebugDefeatedPirateAsteroidObjectiveID),
+      "objective should have defeated pirate asteroid requirement"
+    );
+    vm.startPrank(alice);
+    assertTrue(
+      !hasCompletedObjectiveComponent.has(
+        LibEncode.hashKeyEntity(DebugDefeatedPirateAsteroidObjectiveID, addressToEntity(alice))
+      ),
+      "objective should not have been completed"
+    );
     claimObjectiveSystem.executeTyped(DebugDefeatedPirateAsteroidObjectiveID);
 
     vm.stopPrank();
