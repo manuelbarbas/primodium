@@ -144,7 +144,7 @@ const Objective: React.FC<{
           {objectiveDescription}
         </p>
         <hr className="border-t border-accent/20 w-full mb-1 mt-3" />
-        <div className="col-span-10 w-full flex gap-1">
+        <div className="col-span-10 w-full flex flex-wrap gap-1">
           <span className="flex gap-1 items-center opacity-75">
             <FaSpinner /> PROGRESS:
           </span>
@@ -184,7 +184,7 @@ const Objective: React.FC<{
             })}
         </div>
         {rewardRecipe && rewardRecipe.length !== 0 && (
-          <>
+          <div className="col-span-10 w-full flex flex-wrap gap-1">
             <span className="flex gap-1 items-center opacity-75">
               <FaGift /> REWARDS:
             </span>
@@ -215,7 +215,7 @@ const Objective: React.FC<{
                 </Badge>
               );
             })}
-          </>
+          </div>
         )}
       </div>
 
