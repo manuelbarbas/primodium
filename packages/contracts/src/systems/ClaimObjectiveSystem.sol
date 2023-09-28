@@ -22,6 +22,7 @@ import { LibReward } from "libraries/LibReward.sol";
 import { LibRaid } from "libraries/LibRaid.sol";
 import { LibUpdateSpaceRock } from "libraries/LibUpdateSpaceRock.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
+import { LibPirateAsteroid } from "libraries/LibPirateAsteroid.sol";
 import { ResourceValue } from "../types.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as S_SpawnPirateAsteroidSystemID } from "./S_SpawnPirateAsteroidSystem.sol";
@@ -125,6 +126,11 @@ contract ClaimObjectiveSystem is System {
     require(
       LibReward.canReceiveRewards(world, playerEntity, objective),
       "[ClaimObjectiveSystem] Cannot receive rewards"
+    );
+
+    require(
+      LibPirateAsteroid.checkDefeatedPirateAsteroidRequirement(world, playerEntity, objective),
+      "[ClaimObjectiveSystem] Pirate Base not defeated"
     );
 
     hasCompletedObjective.set(LibEncode.hashKeyEntity(objective, playerEntity));
