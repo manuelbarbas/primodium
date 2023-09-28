@@ -17,7 +17,6 @@ import { Texture } from "../../common/object-components/sprite";
 import {
   P_SpawnPirateAsteroid,
   AsteroidType,
-  DefeatedSpawnedPirateAsteroid,
   OwnedBy,
   Pirate,
   Position,
@@ -29,7 +28,6 @@ import { Coord } from "@latticexyz/utils";
 import { ActiveButton } from "src/util/types";
 import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 import { SingletonID } from "@latticexyz/network";
-import { useAccount } from "client/src/hooks";
 
 export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
