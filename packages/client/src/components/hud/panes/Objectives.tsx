@@ -39,6 +39,7 @@ import {
   RESOURCE_SCALE,
   ResourceImage,
   ResourceType,
+  getBlockTypeDescription,
 } from "src/util/constants";
 import { FaCheck, FaGift, FaMedal } from "react-icons/fa";
 
@@ -107,7 +108,7 @@ const Objective: React.FC<{
 }> = ({ objective }) => {
   const objectiveName = useMemo(() => {
     if (!objective) return;
-    return getBlockTypeName(objective);
+    return getBlockTypeDescription(objective);
   }, [objective]);
   const rewardRecipe = useMemo(() => {
     if (!objective) return;

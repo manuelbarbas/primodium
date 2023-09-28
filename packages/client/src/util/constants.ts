@@ -510,6 +510,12 @@ export const BlockType = {
   Asteroid: keccak256("spacerock.Asteroid") as EntityID,
 };
 
+export const getBlockTypeDescription = (blockType: EntityID | undefined) => {
+  if (blockType === undefined || !BlockDescriptions.has(blockType)) return "";
+
+  return BlockDescriptions.get(blockType);
+};
+
 export const BlockIdToKey = Object.entries(BlockType).reduce<{
   [key: EntityID]: string;
 }>((acc, [key, id]) => {
