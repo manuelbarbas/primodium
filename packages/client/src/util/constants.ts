@@ -1053,17 +1053,17 @@ export const ResearchImage = new Map<EntityID, string>([
   [BlockType.MiningVesselUpgrade4, "/img/unit/miningvessel.png"],
   [BlockType.MiningVesselUpgrade5, "/img/unit/miningvessel.png"],
 
-  [BlockType.TridentMarineUpgrade1, "/img/unit/anvildrone.png"],
-  [BlockType.TridentMarineUpgrade2, "/img/unit/anvildrone.png"],
-  [BlockType.TridentMarineUpgrade3, "/img/unit/anvildrone.png"],
-  [BlockType.TridentMarineUpgrade4, "/img/unit/anvildrone.png"],
-  [BlockType.TridentMarineUpgrade5, "/img/unit/anvildrone.png"],
+  [BlockType.TridentMarineUpgrade1, "img/unit/trident_marine.png"],
+  [BlockType.TridentMarineUpgrade2, "img/unit/trident_marine.png"],
+  [BlockType.TridentMarineUpgrade3, "img/unit/trident_marine.png"],
+  [BlockType.TridentMarineUpgrade4, "img/unit/trident_marine.png"],
+  [BlockType.TridentMarineUpgrade5, "img/unit/trident_marine.png"],
 
-  [BlockType.MinutemanMarineUpgrade1, "/img/unit/anvildrone.png"],
-  [BlockType.MinutemanMarineUpgrade2, "/img/unit/anvildrone.png"],
-  [BlockType.MinutemanMarineUpgrade3, "/img/unit/anvildrone.png"],
-  [BlockType.MinutemanMarineUpgrade4, "/img/unit/anvildrone.png"],
-  [BlockType.MinutemanMarineUpgrade5, "/img/unit/anvildrone.png"],
+  [BlockType.MinutemanMarineUpgrade1, "img/unit/minutemen_marine.png"],
+  [BlockType.MinutemanMarineUpgrade2, "img/unit/minutemen_marine.png"],
+  [BlockType.MinutemanMarineUpgrade3, "img/unit/minutemen_marine.png"],
+  [BlockType.MinutemanMarineUpgrade4, "img/unit/minutemen_marine.png"],
+  [BlockType.MinutemanMarineUpgrade5, "img/unit/minutemen_marine.png"],
 ]);
 //images of resource items (think of them like minecraft entities)
 export const ResourceImage = new Map<EntityID, string>([
@@ -1117,6 +1117,8 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.AnvilLightDrone, "/img/unit/anvildrone.png"],
   [BlockType.AegisDrone, "/img/unit/aegisdrone.png"],
   [BlockType.MiningVessel, "/img/unit/miningvessel.png"],
+  [BlockType.MinutemanMarine, "img/unit/minutemen_marine.png"],
+  [BlockType.TridentMarine, "img/unit/trident_marine.png"],
 ]);
 
 export type DisplayKeyPair = {

@@ -15,6 +15,9 @@ module.exports = {
         120: "30rem",
         132: "33rem",
       },
+      padding: {
+        "0!": "0 !important",
+      },
     },
   },
   daisyui: {
