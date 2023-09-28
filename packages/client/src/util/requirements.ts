@@ -524,9 +524,18 @@ export function getHasDefeatedPirateRequirement(entityID: EntityID) {
   };
 }
 
-// export function getAllRequirements(entityID: EntityID) {
-//   const requiredResources = getResourceRequirement(entityID);
-//   const requiredMaxUtility = getMaxUtilityRequirement(entityID);
-
-//   return [...requiredResources, ...requiredMaxUtility];
-// }
+export function getAllRequirements(entityID: EntityID) {
+  return [
+    getDestroyedUnitsRequirement(entityID),
+    getResourceRequirement(entityID),
+    getResourceProductionRequirement(entityID),
+    getMaxUtilityRequirement(entityID),
+    getBuildingCountRequirement(entityID),
+    getUnitRequirement(entityID),
+    getRaidRequirement(entityID),
+    getMotherlodeMinedRequirement(entityID),
+    getResearchRequirement(entityID),
+    getHasBuiltBuildingRequirement(entityID),
+    getHasDefeatedPirateRequirement(entityID),
+  ].filter((req) => req !== null);
+}
