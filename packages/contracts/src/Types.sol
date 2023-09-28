@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 import "codegen/Types.sol";
-import "codegen/Tables.sol";
+import { PositionData } from "codegen/Tables.sol";
 
 struct Bounds {
   int32 minX;
@@ -11,24 +11,18 @@ struct Bounds {
   int32 maxY;
 }
 
-struct ArrivalUnit {
-  EUnit unit;
-  uint256 count;
-}
-
 struct Arrival {
   ESendType sendType;
-  uint256 arrivalBlock;
+  uint256 arrivalTime;
   bytes32 from;
   bytes32 to;
   bytes32 origin;
   bytes32 destination;
-  uint256[] unitCounts;
-  bytes32[] unitTypes;
+  uint256[5] unitCounts; // corresponds to EUnit: ["MiningVessel", "AegisDrone", "HammerDrone", "StingerDrone", "AnvilDrone"]
 }
 
 struct SendArgs {
-  ArrivalUnit[] arrivalUnits;
+  uint256[5] unitCounts;
   ESendType sendType;
   PositionData originPosition;
   PositionData destinationPosition;

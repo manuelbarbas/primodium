@@ -50,8 +50,7 @@ contract S_UpdateRockSystemTest is PrimodiumTest {
     Level.set(building, 1);
     LastClaimedAt.set(building, block.timestamp - 100);
     P_UnitProdMultiplier.set(building, 1, 100);
-    UnitLevel.set(player, unitPrototype, 1);
-    P_Unit.setTrainingTime(unitPrototype, 1, 1);
+    P_Unit.setTrainingTime(unitPrototype, 0, 1);
 
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
     UnitProductionQueue.enqueue(building, item);

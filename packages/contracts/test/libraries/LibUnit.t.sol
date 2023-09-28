@@ -16,6 +16,7 @@ contract LibUnitTest is PrimodiumTest {
   bytes32 buildingPrototype = "buildingPrototype";
 
   bytes32 building2 = "building2";
+  bytes32 rock = "rock";
 
   function setUp() public override {
     super.setUp();
@@ -53,8 +54,7 @@ contract LibUnitTest is PrimodiumTest {
     UnitFactorySet.add(player, building);
     UnitFactorySet.add(player, building2);
 
-    UnitLevel.set(player, unitPrototype, 1);
-    P_Unit.setTrainingTime(unitPrototype, 1, 1);
+    P_Unit.setTrainingTime(unitPrototype, 0, 1);
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
     UnitProductionQueue.enqueue(building, item);
     UnitProductionQueue.enqueue(building2, item);
@@ -68,8 +68,7 @@ contract LibUnitTest is PrimodiumTest {
     Level.set(building, 1);
     LastClaimedAt.set(building, block.timestamp);
     P_UnitProdMultiplier.set(building, 1, 100);
-    UnitLevel.set(player, unitPrototype, 1);
-    P_Unit.setTrainingTime(unitPrototype, 1, 1);
+    P_Unit.setTrainingTime(unitPrototype, 0, 1);
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
     UnitProductionQueue.enqueue(building, item);
     vm.warp(block.timestamp + 100);
@@ -82,8 +81,7 @@ contract LibUnitTest is PrimodiumTest {
     Level.set(building, 1);
     LastClaimedAt.set(building, block.timestamp);
     P_UnitProdMultiplier.set(building, 1, 100);
-    UnitLevel.set(player, unitPrototype, 1);
-    P_Unit.setTrainingTime(unitPrototype, 1, 1);
+    P_Unit.setTrainingTime(unitPrototype, 0, 1);
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
     UnitProductionQueue.enqueue(building, item);
     vm.warp(block.timestamp + 25);
@@ -98,13 +96,11 @@ contract LibUnitTest is PrimodiumTest {
     LastClaimedAt.set(building, block.timestamp);
     P_UnitProdMultiplier.set(building, 1, 100);
 
-    UnitLevel.set(player, unitPrototype, 1);
-    P_Unit.setTrainingTime(unitPrototype, 1, 1);
+    P_Unit.setTrainingTime(unitPrototype, 0, 1);
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
     UnitProductionQueue.enqueue(building, item);
 
-    UnitLevel.set(player, unitPrototype2, 1);
-    P_Unit.setTrainingTime(unitPrototype2, 1, 1);
+    P_Unit.setTrainingTime(unitPrototype2, 0, 1);
     QueueItemUnitsData memory item2 = QueueItemUnitsData(unitPrototype2, 100);
     UnitProductionQueue.enqueue(building, item2);
 
@@ -120,13 +116,11 @@ contract LibUnitTest is PrimodiumTest {
     LastClaimedAt.set(building, block.timestamp);
     P_UnitProdMultiplier.set(building, 1, 100);
 
-    UnitLevel.set(player, unitPrototype, 1);
-    P_Unit.setTrainingTime(unitPrototype, 1, 1);
+    P_Unit.setTrainingTime(unitPrototype, 0, 1);
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
     UnitProductionQueue.enqueue(building, item);
 
-    UnitLevel.set(player, unitPrototype2, 1);
-    P_Unit.setTrainingTime(unitPrototype2, 1, 1);
+    P_Unit.setTrainingTime(unitPrototype2, 0, 1);
     QueueItemUnitsData memory item2 = QueueItemUnitsData(unitPrototype2, 100);
     UnitProductionQueue.enqueue(building, item2);
 
@@ -153,20 +147,17 @@ contract LibUnitTest is PrimodiumTest {
 
   function testGetUnitBuildTime() public {
     P_UnitProdMultiplier.set(building, 1, 100);
-    P_Unit.setTrainingTime(unitPrototype, 1, 100);
-    UnitLevel.set(player, unitPrototype, 1);
+    P_Unit.setTrainingTime(unitPrototype, 0, 100);
     Level.set(building, 1);
     assertEq(LibUnit.getUnitBuildTime(player, building, unitPrototype), 100);
 
     P_UnitProdMultiplier.set(building, 1, 50);
-    P_Unit.setTrainingTime(unitPrototype, 1, 100);
-    UnitLevel.set(player, unitPrototype, 1);
+    P_Unit.setTrainingTime(unitPrototype, 0, 100);
     Level.set(building, 1);
     assertEq(LibUnit.getUnitBuildTime(player, building, unitPrototype), 200);
 
     P_UnitProdMultiplier.set(building, 1, 100);
-    P_Unit.setTrainingTime(unitPrototype, 1, 200);
-    UnitLevel.set(player, unitPrototype, 1);
+    P_Unit.setTrainingTime(unitPrototype, 0, 200);
     Level.set(building, 1);
     assertEq(LibUnit.getUnitBuildTime(player, building, unitPrototype), 200);
   }
@@ -178,5 +169,76 @@ contract LibUnitTest is PrimodiumTest {
     UnitProductionQueue.enqueue(building, item);
     LibUnit.addUnitsToAsteroid(player, Home.getAsteroid(player), unit, 100);
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unit), 150);
+  }
+
+  function testUpdateStoredUtilitiesAdd() public {
+    MaxResourceCount.set(player, EResource.Iron, 100);
+    P_IsUtility.set(EResource.Iron, true);
+    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
+    requiredResourcesData.resources[0] = uint8(EResource.Iron);
+    requiredResourcesData.amounts[0] = 50;
+    P_RequiredResources.set(unit, 0, requiredResourcesData);
+
+    LibUnit.updateStoredUtilities(player, unit, 2, true);
+    assertEq(ResourceCount.get(player, EResource.Iron), 100);
+  }
+
+  function testUpdateStoredUtilitiesNotUtility() public {
+    MaxResourceCount.set(player, EResource.Iron, 100);
+    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
+    requiredResourcesData.resources[0] = uint8(EResource.Iron);
+    requiredResourcesData.amounts[0] = 50;
+    P_RequiredResources.set(unit, 0, requiredResourcesData);
+
+    LibUnit.updateStoredUtilities(player, unit, 2, true);
+    assertEq(ResourceCount.get(player, EResource.Iron), 0);
+  }
+
+  function testFailUpdateStoredUtilitiesNoSpace() public {
+    P_IsUtility.set(EResource.Iron, true);
+    MaxResourceCount.set(player, EResource.Iron, 100);
+    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
+    requiredResourcesData.resources[0] = uint8(EResource.Iron);
+    requiredResourcesData.amounts[0] = 50;
+    P_RequiredResources.set(unit, 0, requiredResourcesData);
+
+    LibUnit.updateStoredUtilities(player, unit, 3, true);
+  }
+
+  function testUpdateStoredUtilitiesSubtract() public {
+    P_IsUtility.set(EResource.Iron, true);
+    MaxResourceCount.set(player, EResource.Iron, 100);
+    ResourceCount.set(player, EResource.Iron, 100);
+
+    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
+    requiredResourcesData.resources[0] = uint8(EResource.Iron);
+    requiredResourcesData.amounts[0] = 33;
+    P_RequiredResources.set(unit, 0, requiredResourcesData);
+
+    LibUnit.updateStoredUtilities(player, unit, 2, false);
+    assertEq(ResourceCount.get(player, EResource.Iron), 34);
+  }
+
+  function testUpdateStoredUtilitiesSubtractOverflow() public {
+    P_IsUtility.set(EResource.Iron, true);
+    MaxResourceCount.set(player, EResource.Iron, 100);
+    ResourceCount.set(player, EResource.Iron, 100);
+
+    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
+    requiredResourcesData.resources[0] = uint8(EResource.Iron);
+    requiredResourcesData.amounts[0] = 33;
+    P_RequiredResources.set(unit, 0, requiredResourcesData);
+
+    LibUnit.updateStoredUtilities(player, unit, 10, false);
+    assertEq(ResourceCount.get(player, EResource.Iron), 0);
+  }
+
+  function testDecreaseUnitCount() public {
+    UnitCount.set(player, rock, unit, 100);
+    LibUnit.decreaseUnitCount(player, rock, unit, 50);
+    assertEq(UnitCount.get(player, rock, unit), 50);
+
+    LibUnit.decreaseUnitCount(player, rock, unit, 100);
+    assertEq(UnitCount.get(player, rock, unit), 0);
   }
 }

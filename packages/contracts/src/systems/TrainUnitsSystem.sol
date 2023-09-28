@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { UnitLevel, P_EnumToPrototype, QueueItemUnitsData } from "codegen/Tables.sol";
+import { P_EnumToPrototype, QueueItemUnitsData } from "codegen/Tables.sol";
 import { LibUnit, UnitProductionQueue } from "codegen/Libraries.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 

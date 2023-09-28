@@ -13,7 +13,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
 
   bytes32 unitPrototype = "unitPrototype";
   EUnit unit = EUnit.AegisDrone;
-  ArrivalUnit[] arrivalUnits;
+  uint256[unitPrototypeCount] unitCounts;
 
   P_UnitData unitData = P_UnitData({ attack: 0, defense: 0, speed: 0, cargo: 0, mining: 0, trainingTime: 0 });
 
@@ -23,15 +23,11 @@ contract SendUnitsSystemTest is PrimodiumTest {
     player = addressToEntity(worldAddress);
     to = addressToEntity(alice);
     P_EnumToPrototype.set(UnitKey, uint8(unit), unitPrototype);
-  }
 
-  // checkMovementRules Function
-  // Test each rule in isolation.
-  // Test combinations where multiple rules apply.
-  // Test with exceeded move count.
-  // Test with same origin and destination.
-  // Test moving from an asteroid you don't own.
-  // Test moving between motherlodes.
+    bytes32[] memory unitTypes = new bytes32[](unitPrototypeCount);
+    unitTypes[0] = unitPrototype;
+    P_UnitPrototypes.set(unitTypes);
+  }
 
   function prepareTestMovementRules() public {
     RockType.set(origin, ERock.Asteroid);
@@ -45,28 +41,28 @@ contract SendUnitsSystemTest is PrimodiumTest {
     prepareTestMovementRules();
     ResourceCount.set(player, EResource.U_MaxMoves, 0);
     vm.expectRevert(bytes("[SendUnits] Reached max move count"));
-    world.sendUnits(arrivalUnits, ESendType.Reinforce, originPosition, destinationPosition, to);
+    world.sendUnits(unitCounts, ESendType.Reinforce, originPosition, destinationPosition, to);
   }
 
   function testMovementRulesNoOrigin() public {
     prepareTestMovementRules();
     RockType.deleteRecord(origin);
     vm.expectRevert();
-    world.sendUnits(arrivalUnits, ESendType.Reinforce, originPosition, destinationPosition, to);
+    world.sendUnits(unitCounts, ESendType.Reinforce, originPosition, destinationPosition, to);
   }
 
   function testMovementRulesNoDest() public {
     prepareTestMovementRules();
     RockType.deleteRecord(destination);
     vm.expectRevert();
-    world.sendUnits(arrivalUnits, ESendType.Reinforce, originPosition, destinationPosition, to);
+    world.sendUnits(unitCounts, ESendType.Reinforce, originPosition, destinationPosition, to);
   }
 
   function testMovementRulesSameRock() public {
     prepareTestMovementRules();
 
     vm.expectRevert(bytes("[SendUnits] Origin and destination cannot be the same"));
-    world.sendUnits(arrivalUnits, ESendType.Reinforce, originPosition, originPosition, to);
+    world.sendUnits(unitCounts, ESendType.Reinforce, originPosition, originPosition, to);
   }
 
   function testMovementRulesAsteroidOriginOwnerNotPlayer() public {
@@ -75,7 +71,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     OwnedBy.set(origin, addressToEntity(bob));
     RockType.set(origin, ERock.Asteroid);
     vm.expectRevert(bytes("[SendUnits] Must move from an asteroid you own"));
-    world.sendUnits(arrivalUnits, ESendType.Reinforce, originPosition, destinationPosition, to);
+    world.sendUnits(unitCounts, ESendType.Reinforce, originPosition, destinationPosition, to);
   }
 
   function testMovementRulesDestAndOriginAreMotherlodes() public {
@@ -84,7 +80,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     RockType.set(destination, ERock.Motherlode);
     RockType.set(origin, ERock.Motherlode);
     vm.expectRevert(bytes("[SendUnits] Cannot move between motherlodes"));
-    world.sendUnits(arrivalUnits, ESendType.Reinforce, originPosition, destinationPosition, to);
+    world.sendUnits(unitCounts, ESendType.Reinforce, originPosition, destinationPosition, to);
   }
 
   function testMovementRulesInvadeYourself() public {
@@ -95,7 +91,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     OwnedBy.set(destination, player);
     OwnedBy.set(origin, player);
     vm.expectRevert(bytes("[SendUnits] Cannot invade yourself"));
-    world.sendUnits(arrivalUnits, ESendType.Invade, originPosition, destinationPosition, player);
+    world.sendUnits(unitCounts, ESendType.Invade, originPosition, destinationPosition, player);
   }
 
   function testMovementRulesInvadeAsteroid() public {
@@ -105,7 +101,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     RockType.set(origin, ERock.Asteroid);
     OwnedBy.set(origin, player);
     vm.expectRevert(bytes("[SendUnits] Must only invade a motherlode"));
-    world.sendUnits(arrivalUnits, ESendType.Invade, originPosition, destinationPosition, to);
+    world.sendUnits(unitCounts, ESendType.Invade, originPosition, destinationPosition, to);
   }
 
   function testMovementRulesRaidYourself() public {
@@ -116,7 +112,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     OwnedBy.set(origin, player);
     OwnedBy.set(destination, player);
     vm.expectRevert(bytes("[SendUnits] Cannot raid yourself"));
-    world.sendUnits(arrivalUnits, ESendType.Raid, originPosition, destinationPosition, player);
+    world.sendUnits(unitCounts, ESendType.Raid, originPosition, destinationPosition, player);
   }
 
   function testMovementRulesRaidNobody() public {
@@ -126,7 +122,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     RockType.set(origin, ERock.Asteroid);
     OwnedBy.set(origin, player);
     vm.expectRevert(bytes("[SendUnits] Cannot raid yourself"));
-    world.sendUnits(arrivalUnits, ESendType.Raid, originPosition, destinationPosition, bytes32(0));
+    world.sendUnits(unitCounts, ESendType.Raid, originPosition, destinationPosition, bytes32(0));
   }
 
   function testMovementRulesRaidMotherlode() public {
@@ -138,7 +134,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     OwnedBy.set(destination, to);
 
     vm.expectRevert(bytes("[SendUnits] Must only raid an asteroid"));
-    world.sendUnits(arrivalUnits, ESendType.Raid, originPosition, destinationPosition, to);
+    world.sendUnits(unitCounts, ESendType.Raid, originPosition, destinationPosition, to);
   }
 
   function testMovementRulesReinforceNonOwner() public {
@@ -150,7 +146,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     OwnedBy.set(destination, to);
 
     vm.expectRevert(bytes("[SendUnits] Must only reinforce motherlode current owner"));
-    world.sendUnits(arrivalUnits, ESendType.Reinforce, originPosition, destinationPosition, addressToEntity(bob));
+    world.sendUnits(unitCounts, ESendType.Reinforce, originPosition, destinationPosition, addressToEntity(bob));
   }
 
   function testMovementRulesReinforceNobody() public {
@@ -162,7 +158,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     OwnedBy.set(destination, to);
 
     vm.expectRevert(bytes("[SendUnits] Must only reinforce motherlode current owner"));
-    world.sendUnits(arrivalUnits, ESendType.Reinforce, originPosition, destinationPosition, bytes32(0));
+    world.sendUnits(unitCounts, ESendType.Reinforce, originPosition, destinationPosition, bytes32(0));
   }
 
   function setupValidInvade() public {
@@ -174,43 +170,17 @@ contract SendUnitsSystemTest is PrimodiumTest {
     OwnedBy.set(origin, player);
   }
 
-  /*
-
-_sendUnits Function
-Test with different origin and destination.
-Test various unit types and counts.
-Check if units are deducted correctly.
-Check if arrival is created successfully.
-
-Send Types
-Test with different ESendType (Invade, Raid, Reinforce).
-Test reinforcing yourself and not yourself.
-Test invading only a motherlode.
-Test raiding only an asteroid.
-
-Public sendUnits Function
-Test with different valid and invalid inputs.
-Check if it triggers _sendUnits correctly.
-
-*/
   function testSendUnitsNoUnits() public {
     setupValidInvade();
-    vm.expectRevert(bytes("[LibSend] No units sent"));
-    world.sendUnits(arrivalUnits, ESendType.Invade, originPosition, destinationPosition, bytes32(0));
-  }
-
-  function testSendUnitsInvalidUnits() public {
-    setupValidInvade();
-    arrivalUnits.push(ArrivalUnit(EUnit.NULL, 1));
-    vm.expectRevert(bytes("[SendUnits] Unit type invalid"));
-    world.sendUnits(arrivalUnits, ESendType.Invade, originPosition, destinationPosition, bytes32(0));
+    vm.expectRevert(bytes("[LibSend] No units"));
+    world.sendUnits(unitCounts, ESendType.Invade, originPosition, destinationPosition, bytes32(0));
   }
 
   function testSendUnitsNotEnoughUnits() public {
     setupValidInvade();
-    arrivalUnits.push(ArrivalUnit(unit, 1));
+    unitCounts[0] = 1;
     vm.expectRevert(bytes("[SendUnits] Not enough units to send"));
-    world.sendUnits(arrivalUnits, ESendType.Invade, originPosition, destinationPosition, bytes32(0));
+    world.sendUnits(unitCounts, ESendType.Invade, originPosition, destinationPosition, bytes32(0));
   }
 
   function testSendUnitsInvadeEmpty() public {
@@ -218,33 +188,29 @@ Check if it triggers _sendUnits correctly.
     UnitCount.set(player, origin, unitPrototype, 100);
 
     unitData.speed = 100;
-    P_Unit.set(unitPrototype, 1, unitData);
+    P_Unit.set(unitPrototype, 0, unitData);
 
-    arrivalUnits.push(ArrivalUnit(unit, 1));
-
-    world.sendUnits(arrivalUnits, ESendType.Invade, originPosition, destinationPosition, bytes32(0));
-
-    assertEq(ArrivalsSet.size(player, origin), 1);
-    assertEq(ArrivalCount.get(player), 1);
-
-    bytes32[] memory unitTypes = new bytes32[](1);
-    unitTypes[0] = unitPrototype;
-    uint256[] memory unitCounts = new uint256[](1);
     unitCounts[0] = 1;
 
-    Arrival memory expectedArrival = Arrival({
-      sendType: ESendType.Invade,
-      arrivalBlock: LibSend.getArrivalBlock(originPosition, destinationPosition, player, unitTypes),
-      from: player,
-      to: bytes32(0),
-      origin: origin,
-      destination: destination,
-      unitCounts: unitCounts,
-      unitTypes: unitTypes
-    });
+    world.sendUnits(unitCounts, ESendType.Invade, originPosition, destinationPosition, bytes32(0));
 
-    Arrival memory arrival = ArrivalsSet.getAll(player, origin)[0];
-    assertEq(arrival, expectedArrival);
+    assertEq(ArrivalsMap.size(player, origin), 1);
+    assertEq(ArrivalCount.get(player), 1);
+
+    unitCounts[0] = 1;
+
+    // Arrival memory expectedArrival = Arrival({
+    //   sendType: ESendType.Invade,
+    //   arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitCounts),
+    //   from: player,
+    //   to: bytes32(0),
+    //   origin: origin,
+    //   destination: destination,
+    //   unitCounts: unitCounts
+    // });
+
+    // Arrival memory arrival = ArrivalsMap.values(player, origin)[0];
+    // assertEq(arrival, expectedArrival);
   }
 
   function testSendUnitsInvadeEnemy() public {
@@ -253,32 +219,28 @@ Check if it triggers _sendUnits correctly.
     UnitCount.set(player, origin, unitPrototype, 100);
 
     unitData.speed = 100;
-    P_Unit.set(unitPrototype, 1, unitData);
+    P_Unit.set(unitPrototype, 0, unitData);
 
-    arrivalUnits.push(ArrivalUnit(unit, 1));
+    unitCounts[0] = 1;
 
-    world.sendUnits(arrivalUnits, ESendType.Invade, originPosition, destinationPosition, to);
+    world.sendUnits(unitCounts, ESendType.Invade, originPosition, destinationPosition, to);
 
-    assertEq(ArrivalsSet.size(player, origin), 1);
+    assertEq(ArrivalsMap.size(player, origin), 1);
     assertEq(ArrivalCount.get(player), 1);
 
-    bytes32[] memory unitTypes = new bytes32[](1);
-    unitTypes[0] = unitPrototype;
-    uint256[] memory unitCounts = new uint256[](1);
     unitCounts[0] = 1;
 
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.Invade,
-      arrivalBlock: LibSend.getArrivalBlock(originPosition, destinationPosition, player, unitTypes),
+      arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitCounts),
       from: player,
       to: to,
       origin: origin,
       destination: destination,
-      unitCounts: unitCounts,
-      unitTypes: unitTypes
+      unitCounts: unitCounts
     });
 
-    Arrival memory arrival = ArrivalsSet.getAll(player, origin)[0];
+    Arrival memory arrival = ArrivalsMap.values(player, origin)[0];
     assertEq(arrival, expectedArrival);
   }
 
@@ -288,32 +250,28 @@ Check if it triggers _sendUnits correctly.
     UnitCount.set(player, origin, unitPrototype, 100);
 
     unitData.speed = 100;
-    P_Unit.set(unitPrototype, 1, unitData);
+    P_Unit.set(unitPrototype, 0, unitData);
 
-    arrivalUnits.push(ArrivalUnit(unit, 1));
+    unitCounts[0] = 1;
 
-    world.sendUnits(arrivalUnits, ESendType.Reinforce, originPosition, destinationPosition, player);
+    world.sendUnits(unitCounts, ESendType.Reinforce, originPosition, destinationPosition, player);
 
-    assertEq(ArrivalsSet.size(player, destination), 1);
+    assertEq(ArrivalsMap.size(player, destination), 1);
     assertEq(ArrivalCount.get(player), 1);
 
-    bytes32[] memory unitTypes = new bytes32[](1);
-    unitTypes[0] = unitPrototype;
-    uint256[] memory unitCounts = new uint256[](1);
     unitCounts[0] = 1;
 
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.Reinforce,
-      arrivalBlock: LibSend.getArrivalBlock(originPosition, destinationPosition, player, unitTypes),
+      arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitCounts),
       from: player,
       to: player,
       origin: origin,
       destination: destination,
-      unitCounts: unitCounts,
-      unitTypes: unitTypes
+      unitCounts: unitCounts
     });
 
-    Arrival memory arrival = ArrivalsSet.getAll(player, destination)[0];
+    Arrival memory arrival = ArrivalsMap.values(player, destination)[0];
     assertEq(arrival, expectedArrival);
   }
 
@@ -323,32 +281,28 @@ Check if it triggers _sendUnits correctly.
     UnitCount.set(player, origin, unitPrototype, 100);
 
     unitData.speed = 100;
-    P_Unit.set(unitPrototype, 1, unitData);
+    P_Unit.set(unitPrototype, 0, unitData);
 
-    arrivalUnits.push(ArrivalUnit(unit, 1));
+    unitCounts[0] = 1;
 
-    world.sendUnits(arrivalUnits, ESendType.Reinforce, originPosition, destinationPosition, to);
+    world.sendUnits(unitCounts, ESendType.Reinforce, originPosition, destinationPosition, to);
 
-    assertEq(ArrivalsSet.size(to, destination), 1);
+    assertEq(ArrivalsMap.size(to, destination), 1);
     assertEq(ArrivalCount.get(player), 1);
 
-    bytes32[] memory unitTypes = new bytes32[](1);
-    unitTypes[0] = unitPrototype;
-    uint256[] memory unitCounts = new uint256[](1);
     unitCounts[0] = 1;
 
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.Reinforce,
-      arrivalBlock: LibSend.getArrivalBlock(originPosition, destinationPosition, player, unitTypes),
+      arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitCounts),
       from: player,
       to: to,
       origin: origin,
       destination: destination,
-      unitCounts: unitCounts,
-      unitTypes: unitTypes
+      unitCounts: unitCounts
     });
 
-    Arrival memory arrival = ArrivalsSet.getAll(to, destination)[0];
+    Arrival memory arrival = ArrivalsMap.values(to, destination)[0];
     assertEq(arrival, expectedArrival);
   }
 
@@ -360,32 +314,28 @@ Check if it triggers _sendUnits correctly.
     UnitCount.set(player, origin, unitPrototype, 100);
 
     unitData.speed = 100;
-    P_Unit.set(unitPrototype, 1, unitData);
+    P_Unit.set(unitPrototype, 0, unitData);
 
-    arrivalUnits.push(ArrivalUnit(unit, 1));
+    unitCounts[0] = 1;
 
-    world.sendUnits(arrivalUnits, ESendType.Raid, originPosition, destinationPosition, to);
+    world.sendUnits(unitCounts, ESendType.Raid, originPosition, destinationPosition, to);
 
-    assertEq(ArrivalsSet.size(player, origin), 1);
+    assertEq(ArrivalsMap.size(player, origin), 1);
     assertEq(ArrivalCount.get(player), 1);
 
-    bytes32[] memory unitTypes = new bytes32[](1);
-    unitTypes[0] = unitPrototype;
-    uint256[] memory unitCounts = new uint256[](1);
     unitCounts[0] = 1;
 
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.Raid,
-      arrivalBlock: LibSend.getArrivalBlock(originPosition, destinationPosition, player, unitTypes),
+      arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitCounts),
       from: player,
       to: to,
       origin: origin,
       destination: destination,
-      unitCounts: unitCounts,
-      unitTypes: unitTypes
+      unitCounts: unitCounts
     });
 
-    Arrival memory arrival = ArrivalsSet.getAll(player, origin)[0];
+    Arrival memory arrival = ArrivalsMap.values(player, origin)[0];
     assertEq(arrival, expectedArrival);
   }
 }

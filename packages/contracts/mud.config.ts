@@ -28,6 +28,11 @@ export const config = mudConfig({
       accessList: ["BuildSystem", "UpgradeBuildingSystem", "DestroySystem"],
       name: "S_ReduceProductionRateSystem",
     },
+    S_BattleSystem: {
+      openAccess: false,
+      accessList: ["RaidSystem", "InvadeSystem"],
+      name: "S_BattleSystem",
+    },
   },
 
   enums: MUDEnums,
@@ -159,8 +164,6 @@ export const config = mudConfig({
       keySchema: { entity: "bytes32" },
       schema: "uint256",
     },
-
-    // ResourceSet tables: used to track which resources a player has
 
     ResourceCount: {
       keySchema: { entity: "bytes32", resource: "EResource" },
@@ -326,6 +329,12 @@ export const config = mudConfig({
     },
 
     /* ----------------------------- Unit Production ---------------------------- */
+    // stores an array of all unit prototypes in the game
+    P_UnitPrototypes: {
+      keySchema: {},
+      schema: "bytes32[]",
+    },
+
     P_Unit: {
       keySchema: { entity: "bytes32", level: "uint256" },
       schema: {
@@ -362,22 +371,20 @@ export const config = mudConfig({
       keySchema: { player: "bytes32", rock: "bytes32", unit: "bytes32" },
       schema: "uint256",
     },
-    /* ----------------------- Sending and Battling Units ----------------------- */
 
-    // Tracks player arrivals
-
+    /* ------------------------------ Sending Units ----------------------------- */
     ArrivalCount: {
       keySchema: { entity: "bytes32" },
       schema: "uint256",
     },
     // Tracks player asteroid arrivals
-    SetArrivals: {
+    MapArrivals: {
       keySchema: { entity: "bytes32", asteroid: "bytes32" },
       schema: { itemKeys: "bytes32[]" },
     },
 
-    SetItemStoredArrivals: {
-      keySchema: { entity: "bytes32", asteroid: "bytes32", arrivalEntity: "bytes32" },
+    MapItemStoredArrivals: {
+      keySchema: { entity: "bytes32", asteroid: "bytes32", key: "bytes32" },
       schema: {
         stored: "bool",
         index: "uint256",
@@ -386,23 +393,38 @@ export const config = mudConfig({
 
     // We need to split this up because it is too big to compile lol
     // But this is abstracted away in ArrivalSet.sol
-    SetItemArrivals1: {
-      keySchema: { entity: "bytes32", asteroid: "bytes32", arrivalEntity: "bytes32" },
-      schema: {
-        sendType: "ESendType",
-        arrivalBlock: "uint256",
-        from: "bytes32",
-        to: "bytes32",
-      },
+    MapItemArrivals: {
+      keySchema: { entity: "bytes32", asteroid: "bytes32", key: "bytes32" },
+      schema: "bytes",
     },
-    SetItemArrivals2: {
-      keySchema: { entity: "bytes32", asteroid: "bytes32", arrivalEntity: "bytes32" },
+
+    /* ------------------------------ Battle Result ----------------------------- */
+    BattleResult: {
+      keySchema: { entity: "bytes32" },
       schema: {
-        origin: "bytes32",
-        destination: "bytes32",
-        unitCounts: "uint256[]",
-        unitTypes: "bytes32[]",
+        attacker: "bytes32",
+        defender: "bytes32",
+        winner: "bytes32",
+
+        rock: "bytes32",
+        totalCargo: "uint256",
+        timestamp: "uint256",
+
+        attackerStartingUnits: "uint256[]",
+        defenderStartingUnits: "uint256[]",
+        attackerUnitsLeft: "uint256[]",
+        defenderUnitsLeft: "uint256[]",
       },
+      ephemeral: true,
+    },
+
+    RaidResult: {
+      keySchema: { entity: "bytes32" },
+      schema: {
+        defenderValuesBeforeRaid: "uint256[]",
+        raidedAmount: "uint256[]",
+      },
+      ephemeral: true,
     },
   },
 });

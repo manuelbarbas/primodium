@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { UnitCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_Unit, P_UnitProduction, P_UnitProdMultiplier, LastClaimedAt } from "codegen/Tables.sol";
+import { P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_Unit, P_UnitProduction, P_UnitProdMultiplier, LastClaimedAt } from "codegen/Tables.sol";
+import { EResource } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
+import { LibResource } from "libraries/LibResource.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
 
 library LibUnit {
@@ -89,5 +91,63 @@ library LibUnit {
     if (quantity == 0) return;
     uint256 prevUnitCount = UnitCount.get(playerEntity, asteroid, unitPrototype);
     UnitCount.set(playerEntity, asteroid, unitPrototype, prevUnitCount + quantity);
+  }
+
+  /**
+   * @dev Updates the stored utility resources based on the addition or removal of units.
+   * @param playerEntity The identifier of the player.
+   * @param unitType The type of unit.
+   * @param count The number of units being added or removed.
+   * @param add A boolean indicating whether units are being added (true) or removed (false).
+   */
+  function updateStoredUtilities(
+    bytes32 playerEntity,
+    bytes32 unitType,
+    uint256 count,
+    bool add
+  ) internal {
+    if (count == 0) return;
+
+    uint256 unitLevel = UnitLevel.get(playerEntity, unitType);
+
+    P_RequiredResourcesData memory resources = P_RequiredResources.get(unitType, unitLevel);
+    for (uint256 i = 0; i < resources.resources.length; i++) {
+      EResource resource = EResource(resources.resources[i]);
+      if (!P_IsUtility.get(resource)) continue;
+      uint256 requiredAmount = resources.amounts[i] * count;
+      uint256 currentAmount = ResourceCount.get(playerEntity, resource);
+
+      if (add) {
+        require(
+          LibResource.getResourceCountAvailable(playerEntity, resource) >= requiredAmount,
+          "[Reinforce] Not enough resources"
+        );
+        ResourceCount.set(playerEntity, resource, currentAmount + requiredAmount);
+      } else if (requiredAmount < currentAmount) {
+        ResourceCount.set(playerEntity, resource, currentAmount - requiredAmount);
+      } else {
+        ResourceCount.set(playerEntity, resource, 0);
+      }
+    }
+  }
+
+  /**
+   * @dev Decreases the count of a specific unit type for a player's rock entity.
+   * @param playerEntity The identifier of the player.
+   * @param rockEntity The identifier of the player's rock entity.
+   * @param unitType The type of unit to decrease.
+   * @param unitCount The number of units to decrease.
+   */
+  function decreaseUnitCount(
+    bytes32 playerEntity,
+    bytes32 rockEntity,
+    bytes32 unitType,
+    uint256 unitCount
+  ) internal {
+    updateStoredUtilities(playerEntity, unitType, unitCount, false);
+
+    uint256 currUnitCount = UnitCount.get(playerEntity, rockEntity, unitType);
+    if (unitCount > currUnitCount) unitCount = currUnitCount;
+    UnitCount.set(playerEntity, rockEntity, unitType, currUnitCount - unitCount);
   }
 }

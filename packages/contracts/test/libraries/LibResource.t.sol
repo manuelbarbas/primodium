@@ -73,6 +73,7 @@ contract LibResourceTest is PrimodiumTest {
   }
 
   function testSpendBuildingRequiredUtility() public {
+    P_IsUtility.set(EResource.Iron, true);
     ResourceCount.set(playerEntity, EResource.Iron, 100);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
@@ -80,11 +81,22 @@ contract LibResourceTest is PrimodiumTest {
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(buildingPrototype, level, requiredResourcesData);
 
+    requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
+    requiredResourcesData.resources[0] = uint8(EResource.Iron);
+    requiredResourcesData.amounts[0] = 50;
+    P_RequiredResources.set(buildingPrototype, level + 1, requiredResourcesData);
+
     LibResource.spendBuildingRequiredResources(buildingEntity, level);
     assertEq(ResourceCount.get(playerEntity, EResource.Iron), 50);
+    assertEq(UtilitySet.get(buildingEntity, EResource.Iron), 50);
+
+    LibResource.spendBuildingRequiredResources(buildingEntity, level + 1);
+    assertEq(ResourceCount.get(playerEntity, EResource.Iron), 0);
+    assertEq(UtilitySet.get(buildingEntity, EResource.Iron), 100);
   }
 
   function testFailSpendBuildingRequiredUtilityInsufficient() public {
+    P_IsUtility.set(EResource.Iron, true);
     ResourceCount.set(playerEntity, EResource.Iron, 30);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
@@ -101,7 +113,7 @@ contract LibResourceTest is PrimodiumTest {
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);
     requiredResourcesData.amounts[0] = 50;
-    P_RequiredResources.set(unitPrototype, 1, requiredResourcesData);
+    P_RequiredResources.set(unitPrototype, 0, requiredResourcesData);
 
     LibResource.spendUnitRequiredResources(playerEntity, unitPrototype);
     assertEq(ResourceCount.get(playerEntity, EResource.Iron), 50);
@@ -113,7 +125,7 @@ contract LibResourceTest is PrimodiumTest {
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);
     requiredResourcesData.amounts[0] = 50;
-    P_RequiredResources.set(unitPrototype, 1, requiredResourcesData);
+    P_RequiredResources.set(unitPrototype, 0, requiredResourcesData);
 
     LibResource.spendUnitRequiredResources(playerEntity, unitPrototype);
   }
@@ -124,7 +136,7 @@ contract LibResourceTest is PrimodiumTest {
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);
     requiredResourcesData.amounts[0] = 50;
-    P_RequiredResources.set(unitPrototype, 1, requiredResourcesData);
+    P_RequiredResources.set(unitPrototype, 0, requiredResourcesData);
 
     LibResource.spendUnitRequiredResources(playerEntity, unitPrototype);
     assertEq(ResourceCount.get(playerEntity, EResource.Iron), 50);
@@ -136,7 +148,7 @@ contract LibResourceTest is PrimodiumTest {
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);
     requiredResourcesData.amounts[0] = 50;
-    P_RequiredResources.set(unitPrototype, 1, requiredResourcesData);
+    P_RequiredResources.set(unitPrototype, 0, requiredResourcesData);
 
     LibResource.spendUnitRequiredResources(playerEntity, unitPrototype);
   }
@@ -151,5 +163,21 @@ contract LibResourceTest is PrimodiumTest {
 
     assertEq(ResourceCount.get(playerEntity, EResource.Iron), 150);
     assertEq(UtilitySet.get(buildingEntity, EResource.Iron), 0);
+  }
+
+  function testGetAllResourceCounts() public {
+    ResourceCount.set(playerEntity, EResource.Iron, 100);
+    ResourceCount.set(playerEntity, EResource.Copper, 200);
+    ResourceCount.set(playerEntity, EResource.Platinum, 500);
+    ResourceCount.set(playerEntity, EResource.Kimberlite, 1500);
+
+    (uint256 totalResources, uint256[] memory resources) = LibResource.getAllResourceCounts(playerEntity);
+
+    assertEq(totalResources, 2300);
+    assertEq(resources[uint8(EResource.Iron)], 100);
+    assertEq(resources[uint8(EResource.Copper)], 200);
+    assertEq(resources[uint8(EResource.Lithium)], 0);
+    assertEq(resources[uint8(EResource.Platinum)], 500);
+    assertEq(resources[uint8(EResource.Kimberlite)], 1500);
   }
 }

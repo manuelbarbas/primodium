@@ -32,8 +32,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     Level.set(building, 1);
     LastClaimedAt.set(building, block.timestamp - 100);
     P_UnitProdMultiplier.set(building, 1, 100);
-    UnitLevel.set(player, unitPrototype, 1);
-    P_Unit.setTrainingTime(unitPrototype, 1, 1);
+    P_Unit.setTrainingTime(unitPrototype, 0, 1);
 
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
     UnitProductionQueue.enqueue(building, item);
@@ -54,15 +53,15 @@ contract TrainUnitsSystemTest is PrimodiumTest {
   }
 
   function testTrainUnitsNotEnoughResources() public {
-    uint8[] memory p_requiredresources_resources_level_1 = new uint8[](1);
-    p_requiredresources_resources_level_1[0] = uint8(EResource.Iron);
-    uint256[] memory p_requiredresources_amounts_level_1 = new uint256[](1);
-    p_requiredresources_amounts_level_1[0] = 100;
+    uint8[] memory p_requiredresources_resources_level_0 = new uint8[](1);
+    p_requiredresources_resources_level_0[0] = uint8(EResource.Iron);
+    uint256[] memory p_requiredresources_amounts_level_0 = new uint256[](1);
+    p_requiredresources_amounts_level_0[0] = 100;
 
     P_RequiredResources.set(
       unitPrototype,
-      1,
-      P_RequiredResourcesData(p_requiredresources_resources_level_1, p_requiredresources_amounts_level_1)
+      0,
+      P_RequiredResourcesData(p_requiredresources_resources_level_0, p_requiredresources_amounts_level_0)
     );
 
     P_UnitProduction.set(buildingPrototype, unitPrototype, true);

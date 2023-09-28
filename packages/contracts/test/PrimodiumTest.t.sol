@@ -13,6 +13,8 @@ import "codegen/Libraries.sol";
 import "src/Keys.sol";
 import "src/Types.sol";
 
+uint256 constant unitPrototypeCount = 5;
+
 struct PositionData2D {
   int32 x;
   int32 y;
@@ -72,16 +74,13 @@ contract PrimodiumTest is MudTest {
 
   function assertEq(Arrival memory a, Arrival memory b) internal {
     assertEq(uint8(a.sendType), uint8(b.sendType), "[assertEq]: sendType doesn't match");
-    assertEq(a.arrivalBlock, b.arrivalBlock, "[assertEq]: arrivalBlock doesn't match");
+    assertEq(a.arrivalTime, b.arrivalTime, "[assertEq]: arrivalTime doesn't match");
     assertEq(toString(a.from), toString(b.from), "[assertEq]: from doesn't match");
     assertEq(toString(a.to), toString(b.to), "[assertEq]: to doesn't match");
     assertEq(toString(a.origin), toString(b.origin), "[assertEq]: origin doesn't match");
     assertEq(toString(a.destination), toString(b.destination), "[assertEq]: destination doesn't match");
     for (uint256 i = 0; i < a.unitCounts.length; i++) {
       assertEq(a.unitCounts[i], b.unitCounts[i], "[assertEq]: unitCounts doesn't match");
-    }
-    for (uint256 i = 0; i < a.unitTypes.length; i++) {
-      assertEq(toString(a.unitTypes[i]), toString(b.unitTypes[i]), "[assertEq]: unitTypes doesn't match");
     }
   }
 
@@ -219,5 +218,12 @@ contract PrimodiumTest is MudTest {
 
   function removeRequirements(EBuilding building) internal {
     removeRequiredTile(building);
+  }
+
+  function getUnitArray(uint256 unit1Count, uint256 unit2Count) internal returns (uint256[] memory) {
+    uint256[] memory unitArray = new uint256[](unitPrototypeCount);
+    unitArray[0] = unit1Count;
+    unitArray[1] = unit2Count;
+    return unitArray;
   }
 }
