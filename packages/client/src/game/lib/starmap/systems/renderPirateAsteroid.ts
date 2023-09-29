@@ -114,6 +114,7 @@ export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
     }),
     Has(Position),
     Has(Pirate),
+    Has(OwnedBy),
   ];
 
   defineEnterSystem(gameWorld, query, ({ entity }) => {
