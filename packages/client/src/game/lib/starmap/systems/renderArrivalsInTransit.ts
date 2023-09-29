@@ -2,7 +2,6 @@ import {
   ComponentUpdate,
   EntityID,
   Has,
-  HasValue,
   defineEnterSystem,
   defineExitSystem,
   namespaceWorld,
@@ -22,12 +21,7 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
   const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_arrival";
 
-  const query = [
-    Has(Arrival),
-    HasValue(Arrival, {
-      from: player,
-    }),
-  ];
+  const query = [Has(Arrival)];
 
   const render = (update: ComponentUpdate) => {
     const entityId = world.entities[update.entity];
@@ -39,6 +33,8 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
 
     //don't render if arrival is already in orbit
     if (Number(arrival.arrivalBlock) < blockInfo.value) return;
+
+    if (arrival.from !== player && arrival.to !== player) return;
 
     const origin = Position.get(arrival.origin);
     const destination = Position.get(arrival.destination);
