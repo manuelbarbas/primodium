@@ -5,6 +5,7 @@ import {
   defineEnterSystem,
   defineExitSystem,
   namespaceWorld,
+  EntityID,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { BlockNumber } from "src/network/components/clientComponents";
@@ -15,7 +16,7 @@ import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Arrival, Position } from "src/network/components/chainComponents";
 import { DepthLayers } from "@game/constants";
 
-export const renderArrivalsInOrbit = (scene: Scene) => {
+export const renderArrivalsInOrbit = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_arrivalOrbit";
@@ -30,8 +31,10 @@ export const renderArrivalsInOrbit = (scene: Scene) => {
 
     if (!arrival || !blockInfo) return;
 
-    //don't render if arrival is in orbit
+    //don't render if arrival is in transit
     if (parseInt(arrival.arrivalBlock) >= blockInfo.value) return;
+
+    if (arrival.from !== player && arrival.to !== player) return;
 
     const destination = Position.get(arrival.destination);
 
