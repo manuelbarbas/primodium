@@ -6,6 +6,7 @@ import {
   namespaceWorld,
   defineComponentSystem,
   Not,
+  EntityID,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { BlockNumber, MapOpen } from "src/network/components/clientComponents";
@@ -15,12 +16,15 @@ import { Circle, Line } from "../../common/object-components/graphics";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   Arrival,
+  OwnedBy,
   Pirate,
   Position,
 } from "src/network/components/chainComponents";
 import { DepthLayers } from "@game/constants";
+import { hashStringEntity } from "src/util/encode";
+import { PIRATE_KEY } from "src/util/constants";
 
-export const renderArrivalsInTransit = (scene: Scene) => {
+export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_arrival";
@@ -42,6 +46,14 @@ export const renderArrivalsInTransit = (scene: Scene) => {
     const destination = Position.get(arrival.destination);
 
     if (!origin || !destination) return;
+
+    //render personal pirates only
+    if (
+      Pirate.has(arrival.destination) &&
+      hashStringEntity(PIRATE_KEY, player) !==
+        OwnedBy.get(arrival.destination)?.value
+    )
+      return;
 
     const originPixelCoord = tileCoordToPixelCoord(
       { x: origin.x, y: -origin.y },
