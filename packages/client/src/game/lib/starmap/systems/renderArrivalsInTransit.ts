@@ -1,11 +1,11 @@
 import {
   ComponentUpdate,
-  EntityID,
   Has,
   defineEnterSystem,
   defineExitSystem,
   namespaceWorld,
   defineComponentSystem,
+  Not,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { BlockNumber, MapOpen } from "src/network/components/clientComponents";
@@ -13,15 +13,19 @@ import { world } from "src/network/world";
 import { ObjectPosition, Tween } from "../../common/object-components/common";
 import { Circle, Line } from "../../common/object-components/graphics";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Arrival, Position } from "src/network/components/chainComponents";
+import {
+  Arrival,
+  Pirate,
+  Position,
+} from "src/network/components/chainComponents";
 import { DepthLayers } from "@game/constants";
 
-export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
+export const renderArrivalsInTransit = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_arrival";
 
-  const query = [Has(Arrival)];
+  const query = [Has(Arrival), Not(Pirate)];
 
   const render = (update: ComponentUpdate) => {
     const entityId = world.entities[update.entity];
@@ -33,8 +37,6 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
 
     //don't render if arrival is already in orbit
     if (Number(arrival.arrivalBlock) < blockInfo.value) return;
-
-    if (arrival.from !== player && arrival.to !== player) return;
 
     const origin = Position.get(arrival.origin);
     const destination = Position.get(arrival.destination);
