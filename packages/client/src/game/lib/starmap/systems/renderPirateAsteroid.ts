@@ -68,7 +68,7 @@ export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
     asteroidObjectGroup.add("Sprite").setComponents([
       ...sharedComponents,
       Texture(Assets.SpriteAtlas, SpriteKeys.PirateAsteroid1),
-      OnClick(() => {
+      OnClick(scene, () => {
         const activeButton = Send.get()?.activeButton ?? ActiveButton.NONE;
         if (activeButton === ActiveButton.ORIGIN) {
           Send.setOrigin(coord);

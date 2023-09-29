@@ -68,7 +68,7 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
     motherlodeObjectGroup.add("Sprite").setComponents([
       ...sharedComponents,
       Texture(Assets.SpriteAtlas, sprite),
-      OnClick(() => {
+      OnClick(scene, () => {
         const activeButton = Send.get()?.activeButton ?? ActiveButton.NONE;
         if (activeButton === ActiveButton.ORIGIN) {
           Send.setOrigin(coord);

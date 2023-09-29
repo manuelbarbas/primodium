@@ -90,7 +90,7 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
           )
         ]
       ),
-      OnClick(() => {
+      OnClick(scene, () => {
         const activeButton = Send.get()?.activeButton ?? ActiveButton.NONE;
         if (activeButton === ActiveButton.ORIGIN) {
           Send.setOrigin(coord);

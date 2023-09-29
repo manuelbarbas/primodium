@@ -57,15 +57,19 @@ export const SetValue = <T extends keyof GameObjectTypes>(
 };
 
 export const OnClick = <T extends keyof GameObjectTypes>(
+  scene: Scene,
   callback: (
     gameObject?: GameObjectInstances[T],
     e?: Phaser.Input.Pointer
-  ) => void
+  ) => void,
+  pixelPerfect = false
 ): GameObjectComponent<T> => {
   return {
     id: uuid(),
     once: (gameObject) => {
-      gameObject.setInteractive();
+      if (pixelPerfect)
+        gameObject.setInteractive(scene.input.phaserInput.makePixelPerfect());
+      else gameObject.setInteractive();
       gameObject.on("pointerdown", (e: Phaser.Input.Pointer) => {
         if (e.downElement.nodeName !== "CANVAS") return;
         callback(gameObject as GameObjectInstances[T], e);
