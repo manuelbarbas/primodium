@@ -119,7 +119,13 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
         thickness: 3,
         color: hasEnough && validPlacement ? undefined : 0xff0000,
       }),
-      OnClick(() => {
+      OnClick((_, pointer) => {
+        //remove tooltip on right click
+        if (pointer?.rightButtonDown()) {
+          SelectedAction.remove();
+          return;
+        }
+
         if (!hasEnough || !validPlacement) {
           if (!hasEnough)
             toast.error(

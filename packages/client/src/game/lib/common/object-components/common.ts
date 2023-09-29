@@ -57,7 +57,10 @@ export const SetValue = <T extends keyof GameObjectTypes>(
 };
 
 export const OnClick = <T extends keyof GameObjectTypes>(
-  callback: (gameObject?: GameObjectInstances[T]) => void
+  callback: (
+    gameObject?: GameObjectInstances[T],
+    e?: Phaser.Input.Pointer
+  ) => void
 ): GameObjectComponent<T> => {
   return {
     id: uuid(),
@@ -65,7 +68,7 @@ export const OnClick = <T extends keyof GameObjectTypes>(
       gameObject.setInteractive();
       gameObject.on("pointerdown", (e: Phaser.Input.Pointer) => {
         if (e.downElement.nodeName !== "CANVAS") return;
-        callback(gameObject as GameObjectInstances[T]);
+        callback(gameObject as GameObjectInstances[T], e);
       });
     },
   };
