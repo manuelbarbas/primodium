@@ -19,6 +19,6 @@ export const runSystems = (scene: Scene) => {
   renderMotherlode(scene, player);
   renderPirateAsteroid(scene, player);
 
-  renderArrivalsInTransit(scene, player);
-  renderArrivalsInOrbit(scene, player);
+  renderArrivalsInTransit(scene);
+  renderArrivalsInOrbit(scene);
 };

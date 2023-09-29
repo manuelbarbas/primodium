@@ -1,6 +1,5 @@
 import {
   ComponentUpdate,
-  EntityID,
   Has,
   defineEnterSystem,
   defineExitSystem,
@@ -21,7 +20,7 @@ import {
 } from "src/network/components/chainComponents";
 import { DepthLayers } from "@game/constants";
 
-export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
+export const renderArrivalsInTransit = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_arrival";
