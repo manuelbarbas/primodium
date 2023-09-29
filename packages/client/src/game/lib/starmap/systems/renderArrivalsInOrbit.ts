@@ -5,7 +5,7 @@ import {
   defineEnterSystem,
   defineExitSystem,
   namespaceWorld,
-  Not,
+  EntityID,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { BlockNumber } from "src/network/components/clientComponents";
@@ -15,17 +15,20 @@ import { Circle } from "../../common/object-components/graphics";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   Arrival,
+  OwnedBy,
   Pirate,
   Position,
 } from "src/network/components/chainComponents";
 import { DepthLayers } from "@game/constants";
+import { hashStringEntity } from "src/util/encode";
+import { PIRATE_KEY } from "src/util/constants";
 
-export const renderArrivalsInOrbit = (scene: Scene) => {
+export const renderArrivalsInOrbit = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_arrivalOrbit";
 
-  const query = [Has(Arrival), Not(Pirate)];
+  const query = [Has(Arrival)];
 
   const render = (update: ComponentUpdate) => {
     const entityId = world.entities[update.entity];
@@ -37,6 +40,14 @@ export const renderArrivalsInOrbit = (scene: Scene) => {
 
     //don't render if arrival is in transit
     if (parseInt(arrival.arrivalBlock) >= blockInfo.value) return;
+
+    //render personal pirate only
+    if (
+      Pirate.has(arrival.destination) &&
+      hashStringEntity(PIRATE_KEY, player) !==
+        OwnedBy.get(arrival.destination)?.value
+    )
+      return;
 
     const destination = Position.get(arrival.destination);
 
