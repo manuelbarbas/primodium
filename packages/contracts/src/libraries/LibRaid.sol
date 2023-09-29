@@ -117,7 +117,7 @@ library LibRaid {
           attacker.unitCounts[i] - battleResult.attackerUnitsLeft[i],
           false
         );
-        LibUpdateSpaceRock.setUnitsOnAsteroid(
+        LibUpdateSpaceRock.addUnitsToAsteroid(
           world,
           attacker.participantEntity,
           attackerHomeAsteroid,

@@ -11,20 +11,23 @@ import {
   checkMotherlodeMinedRequirement,
   checkDestroyedUnitsRequirement,
   checkHasDefeatedPirateAsteroid,
+  getAllRequirements,
 } from "./requirements";
 import { EntityID } from "@latticexyz/recs";
 import { getRecipe, hasEnoughResources } from "./resource";
 
 export function getIsObjectiveAvailable(entityID: EntityID) {
   return (
-    checkMainBaseLevelRequirement(entityID) &&
-    checkCompletedObjectiveRequirement(entityID)
+    getAllRequirements(entityID).length === 0 ||
+    (checkMainBaseLevelRequirement(entityID) &&
+      checkCompletedObjectiveRequirement(entityID))
   );
 }
 
 export function getCanClaimObjective(entityID: EntityID) {
   return (
-    getIsObjectiveAvailable(entityID) &&
+    checkMainBaseLevelRequirement(entityID) &&
+    checkCompletedObjectiveRequirement(entityID) &&
     hasEnoughResources(getRecipe(entityID), 1) &&
     checkResearcheRequirement(entityID) &&
     checkProductionRequirement(entityID) &&

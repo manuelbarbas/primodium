@@ -11,7 +11,7 @@ import {
   P_RequiredUtility,
   P_UnitRequirement,
 } from "src/network/components/chainComponents";
-import { Account } from "src/network/components/clientComponents";
+import { Account, BlockNumber } from "src/network/components/clientComponents";
 
 import { SingletonID } from "@latticexyz/network";
 import { useGameStore } from "src/store/GameStore";
@@ -26,7 +26,7 @@ import { claimObjective } from "src/util/web3/claimObjective";
 import { useEntityQuery } from "@latticexyz/react";
 import { world } from "src/network/world";
 import { hashAndTrimKeyEntity } from "src/util/encode";
-import { getBlockTypeName } from "src/util/common";
+import { formatNumber, getBlockTypeName } from "src/util/common";
 import { getRewards } from "src/util/reward";
 import { Join } from "src/components/core/Join";
 import { Tabs } from "src/components/core/Tabs";
@@ -39,14 +39,16 @@ import {
   RESOURCE_SCALE,
   ResourceImage,
   ResourceType,
+  getBlockTypeDescription,
 } from "src/util/constants";
-import { FaCheck, FaGift, FaMedal } from "react-icons/fa";
+import { FaCheck, FaGift, FaMedal, FaSpinner } from "react-icons/fa";
+import { getAllRequirements } from "src/util/requirements";
 
 const ClaimObjectiveButton: React.FC<{
   objectiveEntity: EntityID;
 }> = ({ objectiveEntity }) => {
   const network = useMud();
-
+  const blockNumber = BlockNumber.use()?.value;
   const levelRequirement = Level.use(objectiveEntity);
   const objectiveClaimedRequirement =
     HasCompletedObjective.use(objectiveEntity);
@@ -77,6 +79,7 @@ const ClaimObjectiveButton: React.FC<{
     resourceRequirement,
     utilityRequirement,
     unitRequirement,
+    blockNumber,
   ]);
 
   const transactionLoading = useGameStore((state) => state.transactionLoading);
@@ -85,7 +88,7 @@ const ClaimObjectiveButton: React.FC<{
     return (
       <Button
         disabled={!canClaim}
-        className={`btn-sm btn-secondary border-accent w-full col-span-2`}
+        className={`btn-sm btn-secondary border-accent w-full col-span-2 mt-2`}
         loading={transactionLoading}
         onClick={() => {
           claimObjective(objectiveEntity, network);
@@ -96,7 +99,7 @@ const ClaimObjectiveButton: React.FC<{
     );
 
   return (
-    <div className="col-span-2 flex items-center justify-end">
+    <div className="flex items-center justify-end">
       <FaCheck className=" text-success mr-2" />
     </div>
   );
@@ -105,14 +108,24 @@ const ClaimObjectiveButton: React.FC<{
 const Objective: React.FC<{
   objective: EntityID;
 }> = ({ objective }) => {
+  const blockNumber = BlockNumber.use()?.value;
   const objectiveName = useMemo(() => {
     if (!objective) return;
     return getBlockTypeName(objective);
+  }, [objective]);
+  const objectiveDescription = useMemo(() => {
+    if (!objective) return;
+    return getBlockTypeDescription(objective);
   }, [objective]);
   const rewardRecipe = useMemo(() => {
     if (!objective) return;
     return getRewards(objective);
   }, [objective]);
+
+  const requirements = useMemo(() => {
+    if (!objective) return;
+    return getAllRequirements(objective);
+  }, [objective, blockNumber]);
 
   return (
     <SecondaryCard className="text-xs w-full">
@@ -123,40 +136,90 @@ const Objective: React.FC<{
         <p className=" col-span-7 font-bold flex items-center px-1">
           {objectiveName}
         </p>
-
-        <ClaimObjectiveButton objectiveEntity={objective} />
       </div>
 
-      {rewardRecipe && rewardRecipe.length !== 0 && (
-        <div className="flex flex-wrap gap-1 items-center">
-          <hr className="border-t border-accent/20 w-full mb-1 mt-3" />
+      <div className="flex flex-wrap gap-1 items-center">
+        <hr className="border-t border-accent/20 w-full mb-1 mt-3" />
+        <p className=" col-span-7 flex items-center px-1 opacity-75 font-normal">
+          {objectiveDescription}
+        </p>
+        <hr className="border-t border-accent/20 w-full mb-1 mt-3" />
+        <div className="col-span-10 w-full flex flex-wrap gap-1">
           <span className="flex gap-1 items-center opacity-75">
-            <FaGift /> REWARDS:
+            <FaSpinner /> PROGRESS:
           </span>
-
-          {rewardRecipe.map((resource) => {
-            return (
-              <Badge key={resource.id} className="text-xs gap-2 badge-neutral">
-                <ResourceIconTooltip
-                  name={getBlockTypeName(resource.id)}
-                  image={
-                    ResourceImage.get(resource.id) ??
-                    BackgroundImage.get(resource.id)?.at(0) ??
-                    ""
-                  }
-                  resourceId={resource.id}
-                  amount={resource.amount}
-                  resourceType={resource.type}
-                  scale={
-                    resource.type === ResourceType.Utility ? 1 : RESOURCE_SCALE
-                  }
-                  direction="top"
-                />
-              </Badge>
-            );
-          })}
+          {requirements &&
+            requirements.length !== 0 &&
+            requirements.map((req, index) => {
+              return (
+                <div key={index} className="flex flex-wrap gap-1">
+                  {req.requirements.map((_req, index) => {
+                    return (
+                      <Badge
+                        key={index}
+                        className={`text-xs gap-2 ${
+                          req.isMet ? "badge-success" : "badge-neutral"
+                        }`}
+                      >
+                        <ResourceIconTooltip
+                          name={getBlockTypeName(_req.id)}
+                          image={
+                            ResourceImage.get(_req.id) ??
+                            BackgroundImage.get(_req.id)?.at(0) ??
+                            "/img/icons/minersicon.png"
+                          }
+                          resourceId={_req.id}
+                          amount={_req.currentValue}
+                          scale={_req.scale}
+                          direction="top"
+                        />
+                        <span className="font-bold">
+                          / {formatNumber(_req.requiredValue * _req.scale, 1)}
+                        </span>
+                      </Badge>
+                    );
+                  })}
+                </div>
+              );
+            })}
         </div>
-      )}
+        {rewardRecipe && rewardRecipe.length !== 0 && (
+          <div className="col-span-10 w-full flex flex-wrap gap-1">
+            <span className="flex gap-1 items-center opacity-75">
+              <FaGift /> REWARDS:
+            </span>
+
+            {rewardRecipe.map((resource) => {
+              return (
+                <Badge
+                  key={resource.id}
+                  className="text-xs gap-2 badge-neutral"
+                >
+                  <ResourceIconTooltip
+                    name={getBlockTypeName(resource.id)}
+                    image={
+                      ResourceImage.get(resource.id) ??
+                      BackgroundImage.get(resource.id)?.at(0) ??
+                      ""
+                    }
+                    resourceId={resource.id}
+                    amount={resource.amount}
+                    resourceType={resource.type}
+                    scale={
+                      resource.type === ResourceType.Utility
+                        ? 1
+                        : RESOURCE_SCALE
+                    }
+                    direction="top"
+                  />
+                </Badge>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      <ClaimObjectiveButton objectiveEntity={objective} />
     </SecondaryCard>
   );
 };
@@ -167,6 +230,7 @@ const UnclaimedObjective: React.FC = () => {
     Not(IsDebug),
   ]);
   const player = Account.use()?.value ?? SingletonID;
+  const blockNumber = BlockNumber.use()?.value;
 
   const filteredObjectives = useMemo(() => {
     return objectives.filter((objective) => {
@@ -179,7 +243,7 @@ const UnclaimedObjective: React.FC = () => {
 
       return isAvailable && !claimed;
     });
-  }, [objectives]);
+  }, [objectives, blockNumber]);
 
   return (
     <div className="w-full h-full">

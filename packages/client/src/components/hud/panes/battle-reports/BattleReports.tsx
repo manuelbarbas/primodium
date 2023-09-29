@@ -69,9 +69,12 @@ export const BattleReports = () => {
   if (!player) return null;
 
   return (
-    <Navigator initialScreen={"BattleReports"} className="border-none">
-      <Navigator.Screen title={"BattleReports"}>
-        <div className="text-xs space-y-1 w-full overflow-x-hidden">
+    <Navigator
+      initialScreen={"BattleReports"}
+      className="border-none p-0! h-full"
+    >
+      <Navigator.Screen title={"BattleReports"} className="w-full h-full">
+        <div className="text-xs space-y-1 w-full h-full overflow-x-hidden">
           {battles.length === 0 && (
             <SecondaryCard className="w-full h-full flex items-center justify-center font-bold">
               <p className="opacity-50">NO BATTLE REPORTS FOUND</p>
@@ -132,9 +135,6 @@ export const BattleReports = () => {
         </div>
       </Navigator.Screen>
       <BattleDetails battleId={selectedBattle ?? SingletonID} player={player} />
-      <div className="sticky bottom-0 w-full flex items-center justify-center mt-2">
-        <Navigator.BackButton />
-      </div>
     </Navigator>
   );
 };

@@ -123,7 +123,7 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
         if (!hasEnough || !validPlacement) {
           if (!hasEnough)
             toast.error(
-              "Not have enough resources to build " +
+              "Not enough resources to build " +
                 getBlockTypeName(selectedBuilding)
             );
           if (!validPlacement) toast.error("Cannot place building here");

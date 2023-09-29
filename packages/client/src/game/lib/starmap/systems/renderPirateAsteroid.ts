@@ -11,9 +11,10 @@ import {
 import {
   ObjectPosition,
   OnClick,
+  OnComponentSystem,
   SetValue,
 } from "../../common/object-components/common";
-import { Texture } from "../../common/object-components/sprite";
+import { Outline, Texture } from "../../common/object-components/sprite";
 import {
   P_SpawnPirateAsteroid,
   AsteroidType,
@@ -28,6 +29,8 @@ import { Coord } from "@latticexyz/utils";
 import { ActiveButton } from "src/util/types";
 import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 import { SingletonID } from "@latticexyz/network";
+import { hashStringEntity } from "src/util/encode";
+import { PIRATE_KEY } from "src/util/constants";
 
 export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -40,6 +43,8 @@ export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
     const ownedBy = OwnedBy.get(entityId, {
       value: SingletonID,
     }).value;
+
+    if (hashStringEntity(PIRATE_KEY, player) !== ownedBy) return;
 
     if (asteroidType !== ESpaceRockType.Asteroid) return;
     const asteroidObjectGroup = scene.objectPool.getGroup(
@@ -84,12 +89,22 @@ export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
         }` as keyof typeof SpriteKeys
       ];
 
-    asteroidObjectGroup
-      .add("Sprite")
-      .setComponents([
-        ...sharedComponents,
-        Texture(Assets.SpriteAtlas, outlineSprite),
-      ]);
+    const asteroidOutline = asteroidObjectGroup.add("Sprite");
+
+    asteroidOutline.setComponents([
+      ...sharedComponents,
+      OnComponentSystem(Send, () => {
+        if (asteroidOutline.hasComponent(Outline().id)) {
+          asteroidOutline.removeComponent(Outline().id);
+        } else {
+          if (Send.getDestination()?.entity !== entityId) return;
+          asteroidOutline.setComponent(
+            Outline({ thickness: 2, color: 0xffa500 })
+          );
+        }
+      }),
+      Texture(Assets.SpriteAtlas, outlineSprite),
+    ]);
   };
 
   const query = [
@@ -123,10 +138,9 @@ export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
 
   //remove or add if pirate asteroid is defeated
   defineComponentSystem(world, P_SpawnPirateAsteroid, ({ entity }) => {
-    
     const entityId = world.entities[entity];
-    if(!Pirate.has(entityId)) return;
-    
+    if (!Pirate.has(entityId)) return;
+
     const coord = Position.get(entityId);
 
     if (!coord) return;
