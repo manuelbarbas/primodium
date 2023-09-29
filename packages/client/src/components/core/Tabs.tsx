@@ -5,6 +5,8 @@ import {
   useContext,
   useState,
   FC,
+  useEffect,
+  useRef,
 } from "react";
 import { Button as _Button, IconButton as _IconButton } from "./Button";
 import { Card } from "./Card";
@@ -13,6 +15,7 @@ interface TabProps {
   children?: ReactNode;
   defaultIndex?: number;
   className?: string;
+  onChange?: () => void;
 }
 
 interface IndexContextValue {
@@ -76,6 +79,7 @@ export const IconButton: FC<{
   hideText?: boolean;
   tooltipDirection?: "right" | "left" | "top" | "bottom";
   tooltipText?: string;
+  onClick?: () => void;
 }> = memo(
   ({
     index,
@@ -84,6 +88,7 @@ export const IconButton: FC<{
     hideText = false,
     tooltipDirection = "right",
     tooltipText,
+    onClick,
   }) => {
     const { index: currIndex, setIndex } = useIndex();
 
@@ -95,7 +100,10 @@ export const IconButton: FC<{
         selected={selected}
         imageUri={imageUri}
         hideText={hideText || !selected}
-        onClick={() => setIndex(selected ? undefined : index)}
+        onClick={() => {
+          setIndex(selected ? undefined : index);
+          if (onClick) onClick();
+        }}
         tooltipDirection={tooltipDirection}
         tooltipText={tooltipText}
       />
@@ -107,10 +115,23 @@ export const Tabs: FC<TabProps> & {
   Button: typeof Button;
   IconButton: typeof IconButton;
   Pane: typeof Pane;
-} = ({ children, defaultIndex = 0, className }) => {
+} = ({ children, defaultIndex = 0, className, onChange }) => {
   const [currentIndex, setCurrentIndex] = useState<number | undefined>(
     defaultIndex
   );
+
+  // Ref to check if it's the first render
+  const initialRender = useRef(true);
+
+  useEffect(() => {
+    // If it's the first render, skip calling onChange
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+
+    if (onChange) onChange();
+  }, [currentIndex]);
 
   return (
     <IndexContext.Provider
