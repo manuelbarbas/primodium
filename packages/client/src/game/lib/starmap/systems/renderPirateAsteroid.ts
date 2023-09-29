@@ -29,6 +29,8 @@ import { Coord } from "@latticexyz/utils";
 import { ActiveButton } from "src/util/types";
 import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 import { SingletonID } from "@latticexyz/network";
+import { hashStringEntity } from "src/util/encode";
+import { PIRATE_KEY } from "src/util/constants";
 
 export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -41,6 +43,8 @@ export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
     const ownedBy = OwnedBy.get(entityId, {
       value: SingletonID,
     }).value;
+
+    if (hashStringEntity(PIRATE_KEY, player) !== ownedBy) return;
 
     if (asteroidType !== ESpaceRockType.Asteroid) return;
     const asteroidObjectGroup = scene.objectPool.getGroup(

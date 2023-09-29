@@ -43,6 +43,7 @@ export enum RequirementType {
 
 export const SPEED_SCALE = 10000;
 export const RESOURCE_SCALE = 1 / 100;
+export const PIRATE_KEY = "pirate";
 
 export const BlockType = {
   // Landscape blocks
