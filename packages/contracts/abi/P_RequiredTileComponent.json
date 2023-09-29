@@ -1125,22 +1125,22 @@
   },
   "ast": {
     "absolutePath": "src/components/P_RequiredTileComponent.sol",
-    "id": 25106,
+    "id": 25127,
     "exportedSymbols": {
       "Component": [
         262
       ],
       "ID": [
-        25092
+        25113
       ],
       "IUint256Component": [
         1209
       ],
       "LibTypes": [
-        107016
+        112784
       ],
       "P_RequiredTileComponent": [
-        25105
+        25126
       ],
       "Uint256Component": [
         1110
@@ -1150,7 +1150,7 @@
     "src": "32:270:137",
     "nodes": [
       {
-        "id": 25083,
+        "id": 25104,
         "nodeType": "PragmaDirective",
         "src": "32:24:137",
         "nodes": [],
@@ -1162,20 +1162,20 @@
         ]
       },
       {
-        "id": 25084,
+        "id": 25105,
         "nodeType": "ImportDirective",
         "src": "57:55:137",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/Uint256Component.sol",
         "file": "std-contracts/components/Uint256Component.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 25106,
+        "scope": 25127,
         "sourceUnit": 1820,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 25092,
+        "id": 25113,
         "nodeType": "VariableDeclaration",
         "src": "114:68:137",
         "nodes": [],
@@ -1183,7 +1183,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "131:2:137",
-        "scope": 25106,
+        "scope": 25127,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1191,7 +1191,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 25085,
+          "id": 25106,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "114:7:137",
@@ -1206,7 +1206,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e505f526571756972656454696c65",
-                  "id": 25089,
+                  "id": 25110,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1228,7 +1228,7 @@
                     "typeString": "literal_string \"component.P_RequiredTile\""
                   }
                 ],
-                "id": 25088,
+                "id": 25109,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1239,7 +1239,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 25090,
+              "id": 25111,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1263,7 +1263,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 25087,
+            "id": 25108,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1275,14 +1275,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 25086,
+              "id": 25107,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "136:7:137",
               "typeDescriptions": {}
             }
           },
-          "id": 25091,
+          "id": 25112,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1301,17 +1301,17 @@
         "visibility": "internal"
       },
       {
-        "id": 25105,
+        "id": 25126,
         "nodeType": "ContractDefinition",
         "src": "185:116:137",
         "nodes": [
           {
-            "id": 25104,
+            "id": 25125,
             "nodeType": "FunctionDefinition",
             "src": "242:57:137",
             "nodes": [],
             "body": {
-              "id": 25103,
+              "id": 25124,
               "nodeType": "Block",
               "src": "297:2:137",
               "nodes": [],
@@ -1323,11 +1323,11 @@
               {
                 "arguments": [
                   {
-                    "id": 25099,
+                    "id": 25120,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 25096,
+                    "referencedDeclaration": 25117,
                     "src": "286:5:137",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1335,11 +1335,11 @@
                     }
                   },
                   {
-                    "id": 25100,
+                    "id": 25121,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 25092,
+                    "referencedDeclaration": 25113,
                     "src": "293:2:137",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1347,10 +1347,10 @@
                     }
                   }
                 ],
-                "id": 25101,
+                "id": 25122,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 25098,
+                  "id": 25119,
                   "name": "Uint256Component",
                   "nameLocations": [
                     "269:16:137"
@@ -1366,17 +1366,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 25097,
+              "id": 25118,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 25096,
+                  "id": 25117,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "262:5:137",
                   "nodeType": "VariableDeclaration",
-                  "scope": 25104,
+                  "scope": 25125,
                   "src": "254:13:137",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1385,7 +1385,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 25095,
+                    "id": 25116,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "254:7:137",
@@ -1401,12 +1401,12 @@
               "src": "253:15:137"
             },
             "returnParameters": {
-              "id": 25102,
+              "id": 25123,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "297:0:137"
             },
-            "scope": 25105,
+            "scope": 25126,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1416,7 +1416,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 25093,
+              "id": 25114,
               "name": "Uint256Component",
               "nameLocations": [
                 "221:16:137"
@@ -1425,43 +1425,43 @@
               "referencedDeclaration": 1110,
               "src": "221:16:137"
             },
-            "id": 25094,
+            "id": 25115,
             "nodeType": "InheritanceSpecifier",
             "src": "221:16:137"
           }
         ],
         "canonicalName": "P_RequiredTileComponent",
         "contractDependencies": [
-          107209,
-          107375
+          112977,
+          113143
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          25105,
+          25126,
           1110,
           1209,
           262,
-          106977,
-          109710,
-          107413,
+          112745,
+          115478,
+          113181,
           2125,
-          109266,
-          109749,
-          109142,
+          115034,
+          115517,
+          114910,
           1180,
-          109009,
+          114777,
           2168,
-          109276
+          115044
         ],
         "name": "P_RequiredTileComponent",
         "nameLocation": "194:23:137",
-        "scope": 25106,
+        "scope": 25127,
         "usedErrors": [
-          106777,
-          109635,
-          109746,
-          109748
+          112545,
+          115403,
+          115514,
+          115516
         ]
       }
     ],

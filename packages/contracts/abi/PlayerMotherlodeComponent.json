@@ -1125,22 +1125,22 @@
   },
   "ast": {
     "absolutePath": "src/components/PlayerMotherlodeComponent.sol",
-    "id": 26365,
+    "id": 26386,
     "exportedSymbols": {
       "Component": [
         262
       ],
       "ID": [
-        26351
+        26372
       ],
       "IUint256Component": [
         1209
       ],
       "LibTypes": [
-        107016
+        112784
       ],
       "PlayerMotherlodeComponent": [
-        26364
+        26385
       ],
       "Uint256Component": [
         1110
@@ -1150,7 +1150,7 @@
     "src": "32:274:157",
     "nodes": [
       {
-        "id": 26342,
+        "id": 26363,
         "nodeType": "PragmaDirective",
         "src": "32:24:157",
         "nodes": [],
@@ -1162,20 +1162,20 @@
         ]
       },
       {
-        "id": 26343,
+        "id": 26364,
         "nodeType": "ImportDirective",
         "src": "57:55:157",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/Uint256Component.sol",
         "file": "std-contracts/components/Uint256Component.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 26365,
+        "scope": 26386,
         "sourceUnit": 1820,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 26351,
+        "id": 26372,
         "nodeType": "VariableDeclaration",
         "src": "114:70:157",
         "nodes": [],
@@ -1183,7 +1183,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "131:2:157",
-        "scope": 26365,
+        "scope": 26386,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1191,7 +1191,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 26344,
+          "id": 26365,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "114:7:157",
@@ -1206,7 +1206,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e506c617965724d6f746865726c6f6465",
-                  "id": 26348,
+                  "id": 26369,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1228,7 +1228,7 @@
                     "typeString": "literal_string \"component.PlayerMotherlode\""
                   }
                 ],
-                "id": 26347,
+                "id": 26368,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1239,7 +1239,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 26349,
+              "id": 26370,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1263,7 +1263,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 26346,
+            "id": 26367,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1275,14 +1275,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 26345,
+              "id": 26366,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "136:7:157",
               "typeDescriptions": {}
             }
           },
-          "id": 26350,
+          "id": 26371,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1301,17 +1301,17 @@
         "visibility": "internal"
       },
       {
-        "id": 26364,
+        "id": 26385,
         "nodeType": "ContractDefinition",
         "src": "187:118:157",
         "nodes": [
           {
-            "id": 26363,
+            "id": 26384,
             "nodeType": "FunctionDefinition",
             "src": "246:57:157",
             "nodes": [],
             "body": {
-              "id": 26362,
+              "id": 26383,
               "nodeType": "Block",
               "src": "301:2:157",
               "nodes": [],
@@ -1323,11 +1323,11 @@
               {
                 "arguments": [
                   {
-                    "id": 26358,
+                    "id": 26379,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 26355,
+                    "referencedDeclaration": 26376,
                     "src": "290:5:157",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1335,11 +1335,11 @@
                     }
                   },
                   {
-                    "id": 26359,
+                    "id": 26380,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 26351,
+                    "referencedDeclaration": 26372,
                     "src": "297:2:157",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1347,10 +1347,10 @@
                     }
                   }
                 ],
-                "id": 26360,
+                "id": 26381,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 26357,
+                  "id": 26378,
                   "name": "Uint256Component",
                   "nameLocations": [
                     "273:16:157"
@@ -1366,17 +1366,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 26356,
+              "id": 26377,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 26355,
+                  "id": 26376,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "266:5:157",
                   "nodeType": "VariableDeclaration",
-                  "scope": 26363,
+                  "scope": 26384,
                   "src": "258:13:157",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1385,7 +1385,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 26354,
+                    "id": 26375,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "258:7:157",
@@ -1401,12 +1401,12 @@
               "src": "257:15:157"
             },
             "returnParameters": {
-              "id": 26361,
+              "id": 26382,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "301:0:157"
             },
-            "scope": 26364,
+            "scope": 26385,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1416,7 +1416,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 26352,
+              "id": 26373,
               "name": "Uint256Component",
               "nameLocations": [
                 "225:16:157"
@@ -1425,43 +1425,43 @@
               "referencedDeclaration": 1110,
               "src": "225:16:157"
             },
-            "id": 26353,
+            "id": 26374,
             "nodeType": "InheritanceSpecifier",
             "src": "225:16:157"
           }
         ],
         "canonicalName": "PlayerMotherlodeComponent",
         "contractDependencies": [
-          107209,
-          107375
+          112977,
+          113143
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          26364,
+          26385,
           1110,
           1209,
           262,
-          106977,
-          109710,
-          107413,
+          112745,
+          115478,
+          113181,
           2125,
-          109266,
-          109749,
-          109142,
+          115034,
+          115517,
+          114910,
           1180,
-          109009,
+          114777,
           2168,
-          109276
+          115044
         ],
         "name": "PlayerMotherlodeComponent",
         "nameLocation": "196:25:157",
-        "scope": 26365,
+        "scope": 26386,
         "usedErrors": [
-          106777,
-          109635,
-          109746,
-          109748
+          112545,
+          115403,
+          115514,
+          115516
         ]
       }
     ],

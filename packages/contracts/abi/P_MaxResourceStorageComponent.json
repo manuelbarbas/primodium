@@ -1117,34 +1117,34 @@
   },
   "ast": {
     "absolutePath": "src/components/P_MaxResourceStorageComponent.sol",
-    "id": 24066,
+    "id": 24087,
     "exportedSymbols": {
       "BareComponent": [
-        106977
+        112745
       ],
       "Component": [
         262
       ],
       "ID": [
-        24052
+        24073
       ],
       "IEntityIndexer": [
-        107394
+        113162
       ],
       "IWorld": [
         1322
       ],
       "LibTypes": [
-        107016
+        112784
       ],
       "MapSet": [
-        107209
+        112977
       ],
       "P_MaxResourceStorageComponent": [
-        24065
+        24086
       ],
       "Set": [
-        107375
+        113143
       ],
       "Uint256ArrayComponent": [
         1816
@@ -1154,7 +1154,7 @@
     "src": "32:297:126",
     "nodes": [
       {
-        "id": 24043,
+        "id": 24064,
         "nodeType": "PragmaDirective",
         "src": "32:24:126",
         "nodes": [],
@@ -1166,20 +1166,20 @@
         ]
       },
       {
-        "id": 24044,
+        "id": 24065,
         "nodeType": "ImportDirective",
         "src": "57:60:126",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/Uint256ArrayComponent.sol",
         "file": "std-contracts/components/Uint256ArrayComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 24066,
+        "scope": 24087,
         "sourceUnit": 1817,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 24052,
+        "id": 24073,
         "nodeType": "VariableDeclaration",
         "src": "119:74:126",
         "nodes": [],
@@ -1187,7 +1187,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "136:2:126",
-        "scope": 24066,
+        "scope": 24087,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1195,7 +1195,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 24045,
+          "id": 24066,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "119:7:126",
@@ -1210,7 +1210,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e505f4d61785265736f7572636553746f72616765",
-                  "id": 24049,
+                  "id": 24070,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1232,7 +1232,7 @@
                     "typeString": "literal_string \"component.P_MaxResourceStorage\""
                   }
                 ],
-                "id": 24048,
+                "id": 24069,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1243,7 +1243,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 24050,
+              "id": 24071,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1267,7 +1267,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 24047,
+            "id": 24068,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1279,14 +1279,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 24046,
+              "id": 24067,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "141:7:126",
               "typeDescriptions": {}
             }
           },
-          "id": 24051,
+          "id": 24072,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1305,17 +1305,17 @@
         "visibility": "internal"
       },
       {
-        "id": 24065,
+        "id": 24086,
         "nodeType": "ContractDefinition",
         "src": "196:132:126",
         "nodes": [
           {
-            "id": 24064,
+            "id": 24085,
             "nodeType": "FunctionDefinition",
             "src": "264:62:126",
             "nodes": [],
             "body": {
-              "id": 24063,
+              "id": 24084,
               "nodeType": "Block",
               "src": "324:2:126",
               "nodes": [],
@@ -1327,11 +1327,11 @@
               {
                 "arguments": [
                   {
-                    "id": 24059,
+                    "id": 24080,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 24056,
+                    "referencedDeclaration": 24077,
                     "src": "313:5:126",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1339,11 +1339,11 @@
                     }
                   },
                   {
-                    "id": 24060,
+                    "id": 24081,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 24052,
+                    "referencedDeclaration": 24073,
                     "src": "320:2:126",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1351,10 +1351,10 @@
                     }
                   }
                 ],
-                "id": 24061,
+                "id": 24082,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 24058,
+                  "id": 24079,
                   "name": "Uint256ArrayComponent",
                   "nameLocations": [
                     "291:21:126"
@@ -1370,17 +1370,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 24057,
+              "id": 24078,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 24056,
+                  "id": 24077,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "284:5:126",
                   "nodeType": "VariableDeclaration",
-                  "scope": 24064,
+                  "scope": 24085,
                   "src": "276:13:126",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1389,7 +1389,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 24055,
+                    "id": 24076,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "276:7:126",
@@ -1405,12 +1405,12 @@
               "src": "275:15:126"
             },
             "returnParameters": {
-              "id": 24062,
+              "id": 24083,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "324:0:126"
             },
-            "scope": 24065,
+            "scope": 24086,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1420,7 +1420,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 24053,
+              "id": 24074,
               "name": "Uint256ArrayComponent",
               "nameLocations": [
                 "238:21:126"
@@ -1429,42 +1429,42 @@
               "referencedDeclaration": 1816,
               "src": "238:21:126"
             },
-            "id": 24054,
+            "id": 24075,
             "nodeType": "InheritanceSpecifier",
             "src": "238:21:126"
           }
         ],
         "canonicalName": "P_MaxResourceStorageComponent",
         "contractDependencies": [
-          107209,
-          107375
+          112977,
+          113143
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          24065,
+          24086,
           1816,
           262,
-          106977,
-          109710,
-          107413,
+          112745,
+          115478,
+          113181,
           2125,
-          109266,
-          109749,
-          109142,
+          115034,
+          115517,
+          114910,
           1180,
-          109009,
+          114777,
           2168,
-          109276
+          115044
         ],
         "name": "P_MaxResourceStorageComponent",
         "nameLocation": "205:29:126",
-        "scope": 24066,
+        "scope": 24087,
         "usedErrors": [
-          106777,
-          109635,
-          109746,
-          109748
+          112545,
+          115403,
+          115514,
+          115516
         ]
       }
     ],

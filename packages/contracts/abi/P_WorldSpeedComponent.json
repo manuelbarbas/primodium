@@ -1125,25 +1125,25 @@
   },
   "ast": {
     "absolutePath": "src/components/P_WorldSpeedComponent.sol",
-    "id": 26317,
+    "id": 26338,
     "exportedSymbols": {
       "Component": [
         262
       ],
       "ID": [
-        26300
+        26321
       ],
       "IUint256Component": [
         1209
       ],
       "LibTypes": [
-        107016
+        112784
       ],
       "P_WorldSpeedComponent": [
-        26316
+        26337
       ],
       "SPEED_SCALE": [
-        26303
+        26324
       ],
       "Uint256Component": [
         1110
@@ -1153,7 +1153,7 @@
     "src": "32:305:155",
     "nodes": [
       {
-        "id": 26291,
+        "id": 26312,
         "nodeType": "PragmaDirective",
         "src": "32:24:155",
         "nodes": [],
@@ -1165,20 +1165,20 @@
         ]
       },
       {
-        "id": 26292,
+        "id": 26313,
         "nodeType": "ImportDirective",
         "src": "57:55:155",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/Uint256Component.sol",
         "file": "std-contracts/components/Uint256Component.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 26317,
+        "scope": 26338,
         "sourceUnit": 1820,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 26300,
+        "id": 26321,
         "nodeType": "VariableDeclaration",
         "src": "114:66:155",
         "nodes": [],
@@ -1186,7 +1186,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "131:2:155",
-        "scope": 26317,
+        "scope": 26338,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1194,7 +1194,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 26293,
+          "id": 26314,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "114:7:155",
@@ -1209,7 +1209,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e505f576f726c645370656564",
-                  "id": 26297,
+                  "id": 26318,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1231,7 +1231,7 @@
                     "typeString": "literal_string \"component.P_WorldSpeed\""
                   }
                 ],
-                "id": 26296,
+                "id": 26317,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1242,7 +1242,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 26298,
+              "id": 26319,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1266,7 +1266,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 26295,
+            "id": 26316,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1278,14 +1278,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 26294,
+              "id": 26315,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "136:7:155",
               "typeDescriptions": {}
             }
           },
-          "id": 26299,
+          "id": 26320,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1304,7 +1304,7 @@
         "visibility": "internal"
       },
       {
-        "id": 26303,
+        "id": 26324,
         "nodeType": "VariableDeclaration",
         "src": "183:36:155",
         "nodes": [],
@@ -1312,7 +1312,7 @@
         "mutability": "constant",
         "name": "SPEED_SCALE",
         "nameLocation": "200:11:155",
-        "scope": 26317,
+        "scope": 26338,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1320,7 +1320,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 26301,
+          "id": 26322,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "183:7:155",
@@ -1331,7 +1331,7 @@
         },
         "value": {
           "hexValue": "3130303030",
-          "id": 26302,
+          "id": 26323,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1348,17 +1348,17 @@
         "visibility": "internal"
       },
       {
-        "id": 26316,
+        "id": 26337,
         "nodeType": "ContractDefinition",
         "src": "222:114:155",
         "nodes": [
           {
-            "id": 26315,
+            "id": 26336,
             "nodeType": "FunctionDefinition",
             "src": "277:57:155",
             "nodes": [],
             "body": {
-              "id": 26314,
+              "id": 26335,
               "nodeType": "Block",
               "src": "332:2:155",
               "nodes": [],
@@ -1370,11 +1370,11 @@
               {
                 "arguments": [
                   {
-                    "id": 26310,
+                    "id": 26331,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 26307,
+                    "referencedDeclaration": 26328,
                     "src": "321:5:155",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1382,11 +1382,11 @@
                     }
                   },
                   {
-                    "id": 26311,
+                    "id": 26332,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 26300,
+                    "referencedDeclaration": 26321,
                     "src": "328:2:155",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1394,10 +1394,10 @@
                     }
                   }
                 ],
-                "id": 26312,
+                "id": 26333,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 26309,
+                  "id": 26330,
                   "name": "Uint256Component",
                   "nameLocations": [
                     "304:16:155"
@@ -1413,17 +1413,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 26308,
+              "id": 26329,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 26307,
+                  "id": 26328,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "297:5:155",
                   "nodeType": "VariableDeclaration",
-                  "scope": 26315,
+                  "scope": 26336,
                   "src": "289:13:155",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1432,7 +1432,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 26306,
+                    "id": 26327,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "289:7:155",
@@ -1448,12 +1448,12 @@
               "src": "288:15:155"
             },
             "returnParameters": {
-              "id": 26313,
+              "id": 26334,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "332:0:155"
             },
-            "scope": 26316,
+            "scope": 26337,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1463,7 +1463,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 26304,
+              "id": 26325,
               "name": "Uint256Component",
               "nameLocations": [
                 "256:16:155"
@@ -1472,43 +1472,43 @@
               "referencedDeclaration": 1110,
               "src": "256:16:155"
             },
-            "id": 26305,
+            "id": 26326,
             "nodeType": "InheritanceSpecifier",
             "src": "256:16:155"
           }
         ],
         "canonicalName": "P_WorldSpeedComponent",
         "contractDependencies": [
-          107209,
-          107375
+          112977,
+          113143
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          26316,
+          26337,
           1110,
           1209,
           262,
-          106977,
-          109710,
-          107413,
+          112745,
+          115478,
+          113181,
           2125,
-          109266,
-          109749,
-          109142,
+          115034,
+          115517,
+          114910,
           1180,
-          109009,
+          114777,
           2168,
-          109276
+          115044
         ],
         "name": "P_WorldSpeedComponent",
         "nameLocation": "231:21:155",
-        "scope": 26317,
+        "scope": 26338,
         "usedErrors": [
-          106777,
-          109635,
-          109746,
-          109748
+          112545,
+          115403,
+          115514,
+          115516
         ]
       }
     ],

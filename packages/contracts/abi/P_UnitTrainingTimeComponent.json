@@ -1117,34 +1117,34 @@
   },
   "ast": {
     "absolutePath": "src/components/P_UnitTrainingTimeComponent.sol",
-    "id": 26118,
+    "id": 26139,
     "exportedSymbols": {
       "BareComponent": [
-        106977
+        112745
       ],
       "Component": [
         262
       ],
       "ID": [
-        26104
+        26125
       ],
       "IEntityIndexer": [
-        107394
+        113162
       ],
       "IWorld": [
         1322
       ],
       "LibTypes": [
-        107016
+        112784
       ],
       "MapSet": [
-        107209
+        112977
       ],
       "P_UnitTrainingTimeComponent": [
-        26117
+        26138
       ],
       "Set": [
-        107375
+        113143
       ],
       "Uint32Component": [
         1934
@@ -1154,7 +1154,7 @@
     "src": "32:275:152",
     "nodes": [
       {
-        "id": 26095,
+        "id": 26116,
         "nodeType": "PragmaDirective",
         "src": "32:24:152",
         "nodes": [],
@@ -1166,20 +1166,20 @@
         ]
       },
       {
-        "id": 26096,
+        "id": 26117,
         "nodeType": "ImportDirective",
         "src": "57:54:152",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/Uint32Component.sol",
         "file": "std-contracts/components/Uint32Component.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 26118,
+        "scope": 26139,
         "sourceUnit": 1935,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 26104,
+        "id": 26125,
         "nodeType": "VariableDeclaration",
         "src": "113:72:152",
         "nodes": [],
@@ -1187,7 +1187,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "130:2:152",
-        "scope": 26118,
+        "scope": 26139,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1195,7 +1195,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 26097,
+          "id": 26118,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "113:7:152",
@@ -1210,7 +1210,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e505f556e6974547261696e696e6754696d65",
-                  "id": 26101,
+                  "id": 26122,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1232,7 +1232,7 @@
                     "typeString": "literal_string \"component.P_UnitTrainingTime\""
                   }
                 ],
-                "id": 26100,
+                "id": 26121,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1243,7 +1243,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 26102,
+              "id": 26123,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1267,7 +1267,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 26099,
+            "id": 26120,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1279,14 +1279,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 26098,
+              "id": 26119,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "135:7:152",
               "typeDescriptions": {}
             }
           },
-          "id": 26103,
+          "id": 26124,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1305,17 +1305,17 @@
         "visibility": "internal"
       },
       {
-        "id": 26117,
+        "id": 26138,
         "nodeType": "ContractDefinition",
         "src": "188:118:152",
         "nodes": [
           {
-            "id": 26116,
+            "id": 26137,
             "nodeType": "FunctionDefinition",
             "src": "248:56:152",
             "nodes": [],
             "body": {
-              "id": 26115,
+              "id": 26136,
               "nodeType": "Block",
               "src": "302:2:152",
               "nodes": [],
@@ -1327,11 +1327,11 @@
               {
                 "arguments": [
                   {
-                    "id": 26111,
+                    "id": 26132,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 26108,
+                    "referencedDeclaration": 26129,
                     "src": "291:5:152",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1339,11 +1339,11 @@
                     }
                   },
                   {
-                    "id": 26112,
+                    "id": 26133,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 26104,
+                    "referencedDeclaration": 26125,
                     "src": "298:2:152",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1351,10 +1351,10 @@
                     }
                   }
                 ],
-                "id": 26113,
+                "id": 26134,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 26110,
+                  "id": 26131,
                   "name": "Uint32Component",
                   "nameLocations": [
                     "275:15:152"
@@ -1370,17 +1370,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 26109,
+              "id": 26130,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 26108,
+                  "id": 26129,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "268:5:152",
                   "nodeType": "VariableDeclaration",
-                  "scope": 26116,
+                  "scope": 26137,
                   "src": "260:13:152",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1389,7 +1389,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 26107,
+                    "id": 26128,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "260:7:152",
@@ -1405,12 +1405,12 @@
               "src": "259:15:152"
             },
             "returnParameters": {
-              "id": 26114,
+              "id": 26135,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "302:0:152"
             },
-            "scope": 26117,
+            "scope": 26138,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1420,7 +1420,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 26105,
+              "id": 26126,
               "name": "Uint32Component",
               "nameLocations": [
                 "228:15:152"
@@ -1429,42 +1429,42 @@
               "referencedDeclaration": 1934,
               "src": "228:15:152"
             },
-            "id": 26106,
+            "id": 26127,
             "nodeType": "InheritanceSpecifier",
             "src": "228:15:152"
           }
         ],
         "canonicalName": "P_UnitTrainingTimeComponent",
         "contractDependencies": [
-          107209,
-          107375
+          112977,
+          113143
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          26117,
+          26138,
           1934,
           262,
-          106977,
-          109710,
-          107413,
+          112745,
+          115478,
+          113181,
           2125,
-          109266,
-          109749,
-          109142,
+          115034,
+          115517,
+          114910,
           1180,
-          109009,
+          114777,
           2168,
-          109276
+          115044
         ],
         "name": "P_UnitTrainingTimeComponent",
         "nameLocation": "197:27:152",
-        "scope": 26118,
+        "scope": 26139,
         "usedErrors": [
-          106777,
-          109635,
-          109746,
-          109748
+          112545,
+          115403,
+          115514,
+          115516
         ]
       }
     ],

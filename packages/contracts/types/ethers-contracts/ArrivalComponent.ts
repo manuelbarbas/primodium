@@ -45,11 +45,13 @@ export type ArrivalStruct = {
   to: PromiseOrValue<BigNumberish>;
   origin: PromiseOrValue<BigNumberish>;
   destination: PromiseOrValue<BigNumberish>;
+  timestamp: PromiseOrValue<BigNumberish>;
 };
 
 export type ArrivalStructOutput = [
   number,
   ArrivalUnitStructOutput[],
+  BigNumber,
   BigNumber,
   BigNumber,
   BigNumber,
@@ -63,14 +65,15 @@ export type ArrivalStructOutput = [
   to: BigNumber;
   origin: BigNumber;
   destination: BigNumber;
+  timestamp: BigNumber;
 };
 
 export interface ArrivalComponentInterface extends utils.Interface {
   functions: {
     "authorizeWriter(address)": FunctionFragment;
     "getEntities()": FunctionFragment;
+    "getEntitiesWithValue((uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256,uint256))": FunctionFragment;
     "getEntitiesWithValue(bytes)": FunctionFragment;
-    "getEntitiesWithValue((uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256))": FunctionFragment;
     "getRawValue(uint256)": FunctionFragment;
     "getSchema()": FunctionFragment;
     "getValue(uint256)": FunctionFragment;
@@ -81,7 +84,7 @@ export interface ArrivalComponentInterface extends utils.Interface {
     "registerWorld(address)": FunctionFragment;
     "remove(uint256)": FunctionFragment;
     "set(uint256,bytes)": FunctionFragment;
-    "set(uint256,(uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256))": FunctionFragment;
+    "set(uint256,(uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256,uint256))": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "unauthorizeWriter(address)": FunctionFragment;
     "world()": FunctionFragment;
@@ -92,8 +95,8 @@ export interface ArrivalComponentInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "authorizeWriter"
       | "getEntities"
+      | "getEntitiesWithValue((uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256,uint256))"
       | "getEntitiesWithValue(bytes)"
-      | "getEntitiesWithValue((uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256))"
       | "getRawValue"
       | "getSchema"
       | "getValue"
@@ -104,7 +107,7 @@ export interface ArrivalComponentInterface extends utils.Interface {
       | "registerWorld"
       | "remove"
       | "set(uint256,bytes)"
-      | "set(uint256,(uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256))"
+      | "set(uint256,(uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256,uint256))"
       | "transferOwnership"
       | "unauthorizeWriter"
       | "world"
@@ -120,12 +123,12 @@ export interface ArrivalComponentInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getEntitiesWithValue(bytes)",
-    values: [PromiseOrValue<BytesLike>]
+    functionFragment: "getEntitiesWithValue((uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256,uint256))",
+    values: [ArrivalStruct]
   ): string;
   encodeFunctionData(
-    functionFragment: "getEntitiesWithValue((uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256))",
-    values: [ArrivalStruct]
+    functionFragment: "getEntitiesWithValue(bytes)",
+    values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "getRawValue",
@@ -159,7 +162,7 @@ export interface ArrivalComponentInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "set(uint256,(uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256))",
+    functionFragment: "set(uint256,(uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256,uint256))",
     values: [PromiseOrValue<BigNumberish>, ArrivalStruct]
   ): string;
   encodeFunctionData(
@@ -185,11 +188,11 @@ export interface ArrivalComponentInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getEntitiesWithValue(bytes)",
+    functionFragment: "getEntitiesWithValue((uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256,uint256))",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getEntitiesWithValue((uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256))",
+    functionFragment: "getEntitiesWithValue(bytes)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -215,7 +218,7 @@ export interface ArrivalComponentInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "set(uint256,(uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256))",
+    functionFragment: "set(uint256,(uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256,uint256))",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -285,13 +288,13 @@ export interface ArrivalComponent extends BaseContract {
 
     getEntities(overrides?: CallOverrides): Promise<[BigNumber[]]>;
 
-    "getEntitiesWithValue(bytes)"(
-      value: PromiseOrValue<BytesLike>,
+    "getEntitiesWithValue((uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256,uint256))"(
+      sendType: ArrivalStruct,
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
-    "getEntitiesWithValue((uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256))"(
-      sendType: ArrivalStruct,
+    "getEntitiesWithValue(bytes)"(
+      value: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
@@ -339,7 +342,7 @@ export interface ArrivalComponent extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "set(uint256,(uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256))"(
+    "set(uint256,(uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256,uint256))"(
       entity: PromiseOrValue<BigNumberish>,
       arrival: ArrivalStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -370,13 +373,13 @@ export interface ArrivalComponent extends BaseContract {
 
   getEntities(overrides?: CallOverrides): Promise<BigNumber[]>;
 
-  "getEntitiesWithValue(bytes)"(
-    value: PromiseOrValue<BytesLike>,
+  "getEntitiesWithValue((uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256,uint256))"(
+    sendType: ArrivalStruct,
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
-  "getEntitiesWithValue((uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256))"(
-    sendType: ArrivalStruct,
+  "getEntitiesWithValue(bytes)"(
+    value: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
@@ -424,7 +427,7 @@ export interface ArrivalComponent extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "set(uint256,(uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256))"(
+  "set(uint256,(uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256,uint256))"(
     entity: PromiseOrValue<BigNumberish>,
     arrival: ArrivalStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -455,13 +458,13 @@ export interface ArrivalComponent extends BaseContract {
 
     getEntities(overrides?: CallOverrides): Promise<BigNumber[]>;
 
-    "getEntitiesWithValue(bytes)"(
-      value: PromiseOrValue<BytesLike>,
+    "getEntitiesWithValue((uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256,uint256))"(
+      sendType: ArrivalStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
 
-    "getEntitiesWithValue((uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256))"(
-      sendType: ArrivalStruct,
+    "getEntitiesWithValue(bytes)"(
+      value: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
 
@@ -509,7 +512,7 @@ export interface ArrivalComponent extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "set(uint256,(uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256))"(
+    "set(uint256,(uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256,uint256))"(
       entity: PromiseOrValue<BigNumberish>,
       arrival: ArrivalStruct,
       overrides?: CallOverrides
@@ -552,13 +555,13 @@ export interface ArrivalComponent extends BaseContract {
 
     getEntities(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getEntitiesWithValue(bytes)"(
-      value: PromiseOrValue<BytesLike>,
+    "getEntitiesWithValue((uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256,uint256))"(
+      sendType: ArrivalStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "getEntitiesWithValue((uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256))"(
-      sendType: ArrivalStruct,
+    "getEntitiesWithValue(bytes)"(
+      value: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -604,7 +607,7 @@ export interface ArrivalComponent extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "set(uint256,(uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256))"(
+    "set(uint256,(uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256,uint256))"(
       entity: PromiseOrValue<BigNumberish>,
       arrival: ArrivalStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -636,13 +639,13 @@ export interface ArrivalComponent extends BaseContract {
 
     getEntities(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "getEntitiesWithValue(bytes)"(
-      value: PromiseOrValue<BytesLike>,
+    "getEntitiesWithValue((uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256,uint256))"(
+      sendType: ArrivalStruct,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "getEntitiesWithValue((uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256))"(
-      sendType: ArrivalStruct,
+    "getEntitiesWithValue(bytes)"(
+      value: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -688,7 +691,7 @@ export interface ArrivalComponent extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "set(uint256,(uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256))"(
+    "set(uint256,(uint8,(uint256,uint32)[],uint256,uint256,uint256,uint256,uint256,uint256))"(
       entity: PromiseOrValue<BigNumberish>,
       arrival: ArrivalStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }

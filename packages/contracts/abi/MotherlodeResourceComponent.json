@@ -1117,34 +1117,34 @@
   },
   "ast": {
     "absolutePath": "src/components/MotherlodeResourceComponent.sol",
-    "id": 23369,
+    "id": 23390,
     "exportedSymbols": {
       "BareComponent": [
-        106977
+        112745
       ],
       "Component": [
         262
       ],
       "ID": [
-        23355
+        23376
       ],
       "IEntityIndexer": [
-        107394
+        113162
       ],
       "IWorld": [
         1322
       ],
       "LibTypes": [
-        107016
+        112784
       ],
       "MapSet": [
-        107209
+        112977
       ],
       "MotherlodeResourceComponent": [
-        23368
+        23389
       ],
       "Set": [
-        107375
+        113143
       ],
       "Uint32Component": [
         1934
@@ -1154,7 +1154,7 @@
     "src": "32:275:112",
     "nodes": [
       {
-        "id": 23346,
+        "id": 23367,
         "nodeType": "PragmaDirective",
         "src": "32:24:112",
         "nodes": [],
@@ -1166,20 +1166,20 @@
         ]
       },
       {
-        "id": 23347,
+        "id": 23368,
         "nodeType": "ImportDirective",
         "src": "57:54:112",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/Uint32Component.sol",
         "file": "std-contracts/components/Uint32Component.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 23369,
+        "scope": 23390,
         "sourceUnit": 1935,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 23355,
+        "id": 23376,
         "nodeType": "VariableDeclaration",
         "src": "113:72:112",
         "nodes": [],
@@ -1187,7 +1187,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "130:2:112",
-        "scope": 23369,
+        "scope": 23390,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1195,7 +1195,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 23348,
+          "id": 23369,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "113:7:112",
@@ -1210,7 +1210,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e4d6f746865726c6f64655265736f75726365",
-                  "id": 23352,
+                  "id": 23373,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1232,7 +1232,7 @@
                     "typeString": "literal_string \"component.MotherlodeResource\""
                   }
                 ],
-                "id": 23351,
+                "id": 23372,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1243,7 +1243,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 23353,
+              "id": 23374,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1267,7 +1267,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 23350,
+            "id": 23371,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1279,14 +1279,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 23349,
+              "id": 23370,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "135:7:112",
               "typeDescriptions": {}
             }
           },
-          "id": 23354,
+          "id": 23375,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1305,17 +1305,17 @@
         "visibility": "internal"
       },
       {
-        "id": 23368,
+        "id": 23389,
         "nodeType": "ContractDefinition",
         "src": "188:118:112",
         "nodes": [
           {
-            "id": 23367,
+            "id": 23388,
             "nodeType": "FunctionDefinition",
             "src": "248:56:112",
             "nodes": [],
             "body": {
-              "id": 23366,
+              "id": 23387,
               "nodeType": "Block",
               "src": "302:2:112",
               "nodes": [],
@@ -1327,11 +1327,11 @@
               {
                 "arguments": [
                   {
-                    "id": 23362,
+                    "id": 23383,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 23359,
+                    "referencedDeclaration": 23380,
                     "src": "291:5:112",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1339,11 +1339,11 @@
                     }
                   },
                   {
-                    "id": 23363,
+                    "id": 23384,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 23355,
+                    "referencedDeclaration": 23376,
                     "src": "298:2:112",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1351,10 +1351,10 @@
                     }
                   }
                 ],
-                "id": 23364,
+                "id": 23385,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 23361,
+                  "id": 23382,
                   "name": "Uint32Component",
                   "nameLocations": [
                     "275:15:112"
@@ -1370,17 +1370,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 23360,
+              "id": 23381,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 23359,
+                  "id": 23380,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "268:5:112",
                   "nodeType": "VariableDeclaration",
-                  "scope": 23367,
+                  "scope": 23388,
                   "src": "260:13:112",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1389,7 +1389,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 23358,
+                    "id": 23379,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "260:7:112",
@@ -1405,12 +1405,12 @@
               "src": "259:15:112"
             },
             "returnParameters": {
-              "id": 23365,
+              "id": 23386,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "302:0:112"
             },
-            "scope": 23368,
+            "scope": 23389,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1420,7 +1420,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 23356,
+              "id": 23377,
               "name": "Uint32Component",
               "nameLocations": [
                 "228:15:112"
@@ -1429,42 +1429,42 @@
               "referencedDeclaration": 1934,
               "src": "228:15:112"
             },
-            "id": 23357,
+            "id": 23378,
             "nodeType": "InheritanceSpecifier",
             "src": "228:15:112"
           }
         ],
         "canonicalName": "MotherlodeResourceComponent",
         "contractDependencies": [
-          107209,
-          107375
+          112977,
+          113143
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          23368,
+          23389,
           1934,
           262,
-          106977,
-          109710,
-          107413,
+          112745,
+          115478,
+          113181,
           2125,
-          109266,
-          109749,
-          109142,
+          115034,
+          115517,
+          114910,
           1180,
-          109009,
+          114777,
           2168,
-          109276
+          115044
         ],
         "name": "MotherlodeResourceComponent",
         "nameLocation": "197:27:112",
-        "scope": 23369,
+        "scope": 23390,
         "usedErrors": [
-          106777,
-          109635,
-          109746,
-          109748
+          112545,
+          115403,
+          115514,
+          115516
         ]
       }
     ],

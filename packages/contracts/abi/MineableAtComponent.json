@@ -1125,22 +1125,22 @@
   },
   "ast": {
     "absolutePath": "src/components/MineableAtComponent.sol",
-    "id": 23162,
+    "id": 23183,
     "exportedSymbols": {
       "Component": [
         262
       ],
       "ID": [
-        23148
+        23169
       ],
       "IUint256Component": [
         1209
       ],
       "LibTypes": [
-        107016
+        112784
       ],
       "MineableAtComponent": [
-        23161
+        23182
       ],
       "Uint256Component": [
         1110
@@ -1150,7 +1150,7 @@
     "src": "32:262:110",
     "nodes": [
       {
-        "id": 23139,
+        "id": 23160,
         "nodeType": "PragmaDirective",
         "src": "32:24:110",
         "nodes": [],
@@ -1162,20 +1162,20 @@
         ]
       },
       {
-        "id": 23140,
+        "id": 23161,
         "nodeType": "ImportDirective",
         "src": "57:55:110",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/Uint256Component.sol",
         "file": "std-contracts/components/Uint256Component.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 23162,
+        "scope": 23183,
         "sourceUnit": 1820,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 23148,
+        "id": 23169,
         "nodeType": "VariableDeclaration",
         "src": "114:64:110",
         "nodes": [],
@@ -1183,7 +1183,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "131:2:110",
-        "scope": 23162,
+        "scope": 23183,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1191,7 +1191,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 23141,
+          "id": 23162,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "114:7:110",
@@ -1206,7 +1206,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e4d696e6561626c654174",
-                  "id": 23145,
+                  "id": 23166,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1228,7 +1228,7 @@
                     "typeString": "literal_string \"component.MineableAt\""
                   }
                 ],
-                "id": 23144,
+                "id": 23165,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1239,7 +1239,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 23146,
+              "id": 23167,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1263,7 +1263,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 23143,
+            "id": 23164,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1275,14 +1275,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 23142,
+              "id": 23163,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "136:7:110",
               "typeDescriptions": {}
             }
           },
-          "id": 23147,
+          "id": 23168,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1301,17 +1301,17 @@
         "visibility": "internal"
       },
       {
-        "id": 23161,
+        "id": 23182,
         "nodeType": "ContractDefinition",
         "src": "181:112:110",
         "nodes": [
           {
-            "id": 23160,
+            "id": 23181,
             "nodeType": "FunctionDefinition",
             "src": "234:57:110",
             "nodes": [],
             "body": {
-              "id": 23159,
+              "id": 23180,
               "nodeType": "Block",
               "src": "289:2:110",
               "nodes": [],
@@ -1323,11 +1323,11 @@
               {
                 "arguments": [
                   {
-                    "id": 23155,
+                    "id": 23176,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 23152,
+                    "referencedDeclaration": 23173,
                     "src": "278:5:110",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1335,11 +1335,11 @@
                     }
                   },
                   {
-                    "id": 23156,
+                    "id": 23177,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 23148,
+                    "referencedDeclaration": 23169,
                     "src": "285:2:110",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1347,10 +1347,10 @@
                     }
                   }
                 ],
-                "id": 23157,
+                "id": 23178,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 23154,
+                  "id": 23175,
                   "name": "Uint256Component",
                   "nameLocations": [
                     "261:16:110"
@@ -1366,17 +1366,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 23153,
+              "id": 23174,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 23152,
+                  "id": 23173,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "254:5:110",
                   "nodeType": "VariableDeclaration",
-                  "scope": 23160,
+                  "scope": 23181,
                   "src": "246:13:110",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1385,7 +1385,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 23151,
+                    "id": 23172,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "246:7:110",
@@ -1401,12 +1401,12 @@
               "src": "245:15:110"
             },
             "returnParameters": {
-              "id": 23158,
+              "id": 23179,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "289:0:110"
             },
-            "scope": 23161,
+            "scope": 23182,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1416,7 +1416,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 23149,
+              "id": 23170,
               "name": "Uint256Component",
               "nameLocations": [
                 "213:16:110"
@@ -1425,43 +1425,43 @@
               "referencedDeclaration": 1110,
               "src": "213:16:110"
             },
-            "id": 23150,
+            "id": 23171,
             "nodeType": "InheritanceSpecifier",
             "src": "213:16:110"
           }
         ],
         "canonicalName": "MineableAtComponent",
         "contractDependencies": [
-          107209,
-          107375
+          112977,
+          113143
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          23161,
+          23182,
           1110,
           1209,
           262,
-          106977,
-          109710,
-          107413,
+          112745,
+          115478,
+          113181,
           2125,
-          109266,
-          109749,
-          109142,
+          115034,
+          115517,
+          114910,
           1180,
-          109009,
+          114777,
           2168,
-          109276
+          115044
         ],
         "name": "MineableAtComponent",
         "nameLocation": "190:19:110",
-        "scope": 23162,
+        "scope": 23183,
         "usedErrors": [
-          106777,
-          109635,
-          109746,
-          109748
+          112545,
+          115403,
+          115514,
+          115516
         ]
       }
     ],

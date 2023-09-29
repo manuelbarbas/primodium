@@ -1117,34 +1117,34 @@
   },
   "ast": {
     "absolutePath": "src/components/P_UnitProductionTypesComponent.sol",
-    "id": 25782,
+    "id": 25803,
     "exportedSymbols": {
       "BareComponent": [
-        106977
+        112745
       ],
       "Component": [
         262
       ],
       "ID": [
-        25768
+        25789
       ],
       "IEntityIndexer": [
-        107394
+        113162
       ],
       "IWorld": [
         1322
       ],
       "LibTypes": [
-        107016
+        112784
       ],
       "MapSet": [
-        107209
+        112977
       ],
       "P_UnitProductionTypesComponent": [
-        25781
+        25802
       ],
       "Set": [
-        107375
+        113143
       ],
       "Uint256ArrayComponent": [
         1816
@@ -1154,7 +1154,7 @@
     "src": "32:299:149",
     "nodes": [
       {
-        "id": 25759,
+        "id": 25780,
         "nodeType": "PragmaDirective",
         "src": "32:24:149",
         "nodes": [],
@@ -1166,20 +1166,20 @@
         ]
       },
       {
-        "id": 25760,
+        "id": 25781,
         "nodeType": "ImportDirective",
         "src": "57:60:149",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/Uint256ArrayComponent.sol",
         "file": "std-contracts/components/Uint256ArrayComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 25782,
+        "scope": 25803,
         "sourceUnit": 1817,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 25768,
+        "id": 25789,
         "nodeType": "VariableDeclaration",
         "src": "119:75:149",
         "nodes": [],
@@ -1187,7 +1187,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "136:2:149",
-        "scope": 25782,
+        "scope": 25803,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1195,7 +1195,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 25761,
+          "id": 25782,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "119:7:149",
@@ -1210,7 +1210,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e505f556e697450726f64756374696f6e5479706573",
-                  "id": 25765,
+                  "id": 25786,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1232,7 +1232,7 @@
                     "typeString": "literal_string \"component.P_UnitProductionTypes\""
                   }
                 ],
-                "id": 25764,
+                "id": 25785,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1243,7 +1243,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 25766,
+              "id": 25787,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1267,7 +1267,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 25763,
+            "id": 25784,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1279,14 +1279,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 25762,
+              "id": 25783,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "141:7:149",
               "typeDescriptions": {}
             }
           },
-          "id": 25767,
+          "id": 25788,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1305,17 +1305,17 @@
         "visibility": "internal"
       },
       {
-        "id": 25781,
+        "id": 25802,
         "nodeType": "ContractDefinition",
         "src": "197:133:149",
         "nodes": [
           {
-            "id": 25780,
+            "id": 25801,
             "nodeType": "FunctionDefinition",
             "src": "266:62:149",
             "nodes": [],
             "body": {
-              "id": 25779,
+              "id": 25800,
               "nodeType": "Block",
               "src": "326:2:149",
               "nodes": [],
@@ -1327,11 +1327,11 @@
               {
                 "arguments": [
                   {
-                    "id": 25775,
+                    "id": 25796,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 25772,
+                    "referencedDeclaration": 25793,
                     "src": "315:5:149",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1339,11 +1339,11 @@
                     }
                   },
                   {
-                    "id": 25776,
+                    "id": 25797,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 25768,
+                    "referencedDeclaration": 25789,
                     "src": "322:2:149",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1351,10 +1351,10 @@
                     }
                   }
                 ],
-                "id": 25777,
+                "id": 25798,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 25774,
+                  "id": 25795,
                   "name": "Uint256ArrayComponent",
                   "nameLocations": [
                     "293:21:149"
@@ -1370,17 +1370,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 25773,
+              "id": 25794,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 25772,
+                  "id": 25793,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "286:5:149",
                   "nodeType": "VariableDeclaration",
-                  "scope": 25780,
+                  "scope": 25801,
                   "src": "278:13:149",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1389,7 +1389,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 25771,
+                    "id": 25792,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "278:7:149",
@@ -1405,12 +1405,12 @@
               "src": "277:15:149"
             },
             "returnParameters": {
-              "id": 25778,
+              "id": 25799,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "326:0:149"
             },
-            "scope": 25781,
+            "scope": 25802,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1420,7 +1420,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 25769,
+              "id": 25790,
               "name": "Uint256ArrayComponent",
               "nameLocations": [
                 "240:21:149"
@@ -1429,42 +1429,42 @@
               "referencedDeclaration": 1816,
               "src": "240:21:149"
             },
-            "id": 25770,
+            "id": 25791,
             "nodeType": "InheritanceSpecifier",
             "src": "240:21:149"
           }
         ],
         "canonicalName": "P_UnitProductionTypesComponent",
         "contractDependencies": [
-          107209,
-          107375
+          112977,
+          113143
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          25781,
+          25802,
           1816,
           262,
-          106977,
-          109710,
-          107413,
+          112745,
+          115478,
+          113181,
           2125,
-          109266,
-          109749,
-          109142,
+          115034,
+          115517,
+          114910,
           1180,
-          109009,
+          114777,
           2168,
-          109276
+          115044
         ],
         "name": "P_UnitProductionTypesComponent",
         "nameLocation": "206:30:149",
-        "scope": 25782,
+        "scope": 25803,
         "usedErrors": [
-          106777,
-          109635,
-          109746,
-          109748
+          112545,
+          115403,
+          115514,
+          115516
         ]
       }
     ],

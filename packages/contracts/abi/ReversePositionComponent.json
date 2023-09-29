@@ -1125,22 +1125,22 @@
   },
   "ast": {
     "absolutePath": "src/components/ReversePositionComponent.sol",
-    "id": 26603,
+    "id": 26624,
     "exportedSymbols": {
       "Component": [
         262
       ],
       "ID": [
-        26589
+        26610
       ],
       "IUint256Component": [
         1209
       ],
       "LibTypes": [
-        107016
+        112784
       ],
       "ReversePositionComponent": [
-        26602
+        26623
       ],
       "Uint256Component": [
         1110
@@ -1150,7 +1150,7 @@
     "src": "32:272:160",
     "nodes": [
       {
-        "id": 26580,
+        "id": 26601,
         "nodeType": "PragmaDirective",
         "src": "32:24:160",
         "nodes": [],
@@ -1162,20 +1162,20 @@
         ]
       },
       {
-        "id": 26581,
+        "id": 26602,
         "nodeType": "ImportDirective",
         "src": "57:55:160",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/Uint256Component.sol",
         "file": "std-contracts/components/Uint256Component.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 26603,
+        "scope": 26624,
         "sourceUnit": 1820,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 26589,
+        "id": 26610,
         "nodeType": "VariableDeclaration",
         "src": "114:69:160",
         "nodes": [],
@@ -1183,7 +1183,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "131:2:160",
-        "scope": 26603,
+        "scope": 26624,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1191,7 +1191,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 26582,
+          "id": 26603,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "114:7:160",
@@ -1206,7 +1206,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e52657665727365506f736974696f6e",
-                  "id": 26586,
+                  "id": 26607,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1228,7 +1228,7 @@
                     "typeString": "literal_string \"component.ReversePosition\""
                   }
                 ],
-                "id": 26585,
+                "id": 26606,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1239,7 +1239,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 26587,
+              "id": 26608,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1263,7 +1263,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 26584,
+            "id": 26605,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1275,14 +1275,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 26583,
+              "id": 26604,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "136:7:160",
               "typeDescriptions": {}
             }
           },
-          "id": 26588,
+          "id": 26609,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1301,17 +1301,17 @@
         "visibility": "internal"
       },
       {
-        "id": 26602,
+        "id": 26623,
         "nodeType": "ContractDefinition",
         "src": "186:117:160",
         "nodes": [
           {
-            "id": 26601,
+            "id": 26622,
             "nodeType": "FunctionDefinition",
             "src": "244:57:160",
             "nodes": [],
             "body": {
-              "id": 26600,
+              "id": 26621,
               "nodeType": "Block",
               "src": "299:2:160",
               "nodes": [],
@@ -1323,11 +1323,11 @@
               {
                 "arguments": [
                   {
-                    "id": 26596,
+                    "id": 26617,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 26593,
+                    "referencedDeclaration": 26614,
                     "src": "288:5:160",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1335,11 +1335,11 @@
                     }
                   },
                   {
-                    "id": 26597,
+                    "id": 26618,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 26589,
+                    "referencedDeclaration": 26610,
                     "src": "295:2:160",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1347,10 +1347,10 @@
                     }
                   }
                 ],
-                "id": 26598,
+                "id": 26619,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 26595,
+                  "id": 26616,
                   "name": "Uint256Component",
                   "nameLocations": [
                     "271:16:160"
@@ -1366,17 +1366,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 26594,
+              "id": 26615,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 26593,
+                  "id": 26614,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "264:5:160",
                   "nodeType": "VariableDeclaration",
-                  "scope": 26601,
+                  "scope": 26622,
                   "src": "256:13:160",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1385,7 +1385,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 26592,
+                    "id": 26613,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "256:7:160",
@@ -1401,12 +1401,12 @@
               "src": "255:15:160"
             },
             "returnParameters": {
-              "id": 26599,
+              "id": 26620,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "299:0:160"
             },
-            "scope": 26602,
+            "scope": 26623,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1416,7 +1416,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 26590,
+              "id": 26611,
               "name": "Uint256Component",
               "nameLocations": [
                 "223:16:160"
@@ -1425,43 +1425,43 @@
               "referencedDeclaration": 1110,
               "src": "223:16:160"
             },
-            "id": 26591,
+            "id": 26612,
             "nodeType": "InheritanceSpecifier",
             "src": "223:16:160"
           }
         ],
         "canonicalName": "ReversePositionComponent",
         "contractDependencies": [
-          107209,
-          107375
+          112977,
+          113143
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          26602,
+          26623,
           1110,
           1209,
           262,
-          106977,
-          109710,
-          107413,
+          112745,
+          115478,
+          113181,
           2125,
-          109266,
-          109749,
-          109142,
+          115034,
+          115517,
+          114910,
           1180,
-          109009,
+          114777,
           2168,
-          109276
+          115044
         ],
         "name": "ReversePositionComponent",
         "nameLocation": "195:24:160",
-        "scope": 26603,
+        "scope": 26624,
         "usedErrors": [
-          106777,
-          109635,
-          109746,
-          109748
+          112545,
+          115403,
+          115514,
+          115516
         ]
       }
     ],

@@ -1117,34 +1117,34 @@
   },
   "ast": {
     "absolutePath": "src/components/OccupiedUtilityResourceComponent.sol",
-    "id": 23393,
+    "id": 23414,
     "exportedSymbols": {
       "BareComponent": [
-        106977
+        112745
       ],
       "Component": [
         262
       ],
       "ID": [
-        23379
+        23400
       ],
       "IEntityIndexer": [
-        107394
+        113162
       ],
       "IWorld": [
         1322
       ],
       "LibTypes": [
-        107016
+        112784
       ],
       "MapSet": [
-        107209
+        112977
       ],
       "OccupiedUtilityResourceComponent": [
-        23392
+        23413
       ],
       "Set": [
-        107375
+        113143
       ],
       "Uint32Component": [
         1934
@@ -1154,7 +1154,7 @@
     "src": "32:285:113",
     "nodes": [
       {
-        "id": 23370,
+        "id": 23391,
         "nodeType": "PragmaDirective",
         "src": "32:24:113",
         "nodes": [],
@@ -1166,20 +1166,20 @@
         ]
       },
       {
-        "id": 23371,
+        "id": 23392,
         "nodeType": "ImportDirective",
         "src": "57:54:113",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/Uint32Component.sol",
         "file": "std-contracts/components/Uint32Component.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 23393,
+        "scope": 23414,
         "sourceUnit": 1935,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 23379,
+        "id": 23400,
         "nodeType": "VariableDeclaration",
         "src": "113:77:113",
         "nodes": [],
@@ -1187,7 +1187,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "130:2:113",
-        "scope": 23393,
+        "scope": 23414,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1195,7 +1195,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 23372,
+          "id": 23393,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "113:7:113",
@@ -1210,7 +1210,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e4f636375706965645574696c6974795265736f75726365",
-                  "id": 23376,
+                  "id": 23397,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1232,7 +1232,7 @@
                     "typeString": "literal_string \"component.OccupiedUtilityResource\""
                   }
                 ],
-                "id": 23375,
+                "id": 23396,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1243,7 +1243,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 23377,
+              "id": 23398,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1267,7 +1267,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 23374,
+            "id": 23395,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1279,14 +1279,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 23373,
+              "id": 23394,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "135:7:113",
               "typeDescriptions": {}
             }
           },
-          "id": 23378,
+          "id": 23399,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1305,17 +1305,17 @@
         "visibility": "internal"
       },
       {
-        "id": 23392,
+        "id": 23413,
         "nodeType": "ContractDefinition",
         "src": "193:123:113",
         "nodes": [
           {
-            "id": 23391,
+            "id": 23412,
             "nodeType": "FunctionDefinition",
             "src": "258:56:113",
             "nodes": [],
             "body": {
-              "id": 23390,
+              "id": 23411,
               "nodeType": "Block",
               "src": "312:2:113",
               "nodes": [],
@@ -1327,11 +1327,11 @@
               {
                 "arguments": [
                   {
-                    "id": 23386,
+                    "id": 23407,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 23383,
+                    "referencedDeclaration": 23404,
                     "src": "301:5:113",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1339,11 +1339,11 @@
                     }
                   },
                   {
-                    "id": 23387,
+                    "id": 23408,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 23379,
+                    "referencedDeclaration": 23400,
                     "src": "308:2:113",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1351,10 +1351,10 @@
                     }
                   }
                 ],
-                "id": 23388,
+                "id": 23409,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 23385,
+                  "id": 23406,
                   "name": "Uint32Component",
                   "nameLocations": [
                     "285:15:113"
@@ -1370,17 +1370,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 23384,
+              "id": 23405,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 23383,
+                  "id": 23404,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "278:5:113",
                   "nodeType": "VariableDeclaration",
-                  "scope": 23391,
+                  "scope": 23412,
                   "src": "270:13:113",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1389,7 +1389,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 23382,
+                    "id": 23403,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "270:7:113",
@@ -1405,12 +1405,12 @@
               "src": "269:15:113"
             },
             "returnParameters": {
-              "id": 23389,
+              "id": 23410,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "312:0:113"
             },
-            "scope": 23392,
+            "scope": 23413,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1420,7 +1420,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 23380,
+              "id": 23401,
               "name": "Uint32Component",
               "nameLocations": [
                 "238:15:113"
@@ -1429,42 +1429,42 @@
               "referencedDeclaration": 1934,
               "src": "238:15:113"
             },
-            "id": 23381,
+            "id": 23402,
             "nodeType": "InheritanceSpecifier",
             "src": "238:15:113"
           }
         ],
         "canonicalName": "OccupiedUtilityResourceComponent",
         "contractDependencies": [
-          107209,
-          107375
+          112977,
+          113143
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          23392,
+          23413,
           1934,
           262,
-          106977,
-          109710,
-          107413,
+          112745,
+          115478,
+          113181,
           2125,
-          109266,
-          109749,
-          109142,
+          115034,
+          115517,
+          114910,
           1180,
-          109009,
+          114777,
           2168,
-          109276
+          115044
         ],
         "name": "OccupiedUtilityResourceComponent",
         "nameLocation": "202:32:113",
-        "scope": 23393,
+        "scope": 23414,
         "usedErrors": [
-          106777,
-          109635,
-          109746,
-          109748
+          112545,
+          115403,
+          115514,
+          115516
         ]
       }
     ],

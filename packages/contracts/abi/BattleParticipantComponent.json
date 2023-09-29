@@ -469,7 +469,7 @@
     "world()": "30b67baa",
     "writeAccess(address)": "861eb905"
   },
-  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"BareComponent__NotImplemented\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OwnableWritable__NotWriter\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Ownable__NotOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Ownable__NotTransitiveOwner\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"writer\",\"type\":\"address\"}],\"name\":\"authorizeWriter\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getEntities\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"participantEntity\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"unitTypes\",\"type\":\"uint256[]\"},{\"internalType\":\"uint32[]\",\"name\":\"unitLevels\",\"type\":\"uint32[]\"},{\"internalType\":\"uint32[]\",\"name\":\"unitCounts\",\"type\":\"uint32[]\"}],\"internalType\":\"struct BattleParticipant\",\"name\":\"result\",\"type\":\"tuple\"}],\"name\":\"getEntitiesWithValue\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"value\",\"type\":\"bytes\"}],\"name\":\"getEntitiesWithValue\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"entity\",\"type\":\"uint256\"}],\"name\":\"getRawValue\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSchema\",\"outputs\":[{\"internalType\":\"string[]\",\"name\":\"keys\",\"type\":\"string[]\"},{\"internalType\":\"enum LibTypes.SchemaValue[]\",\"name\":\"values\",\"type\":\"uint8[]\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"entity\",\"type\":\"uint256\"}],\"name\":\"getValue\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"participantEntity\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"unitTypes\",\"type\":\"uint256[]\"},{\"internalType\":\"uint32[]\",\"name\":\"unitLevels\",\"type\":\"uint32[]\"},{\"internalType\":\"uint32[]\",\"name\":\"unitCounts\",\"type\":\"uint32[]\"}],\"internalType\":\"struct BattleParticipant\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"entity\",\"type\":\"uint256\"}],\"name\":\"has\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"id\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"indexer\",\"type\":\"address\"}],\"name\":\"registerIndexer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_world\",\"type\":\"address\"}],\"name\":\"registerWorld\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"entity\",\"type\":\"uint256\"}],\"name\":\"remove\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"entity\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"participantEntity\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"unitTypes\",\"type\":\"uint256[]\"},{\"internalType\":\"uint32[]\",\"name\":\"unitLevels\",\"type\":\"uint32[]\"},{\"internalType\":\"uint32[]\",\"name\":\"unitCounts\",\"type\":\"uint32[]\"}],\"internalType\":\"struct BattleParticipant\",\"name\":\"value\",\"type\":\"tuple\"}],\"name\":\"set\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"entity\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"value\",\"type\":\"bytes\"}],\"name\":\"set\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"entity\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"participantEntity\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"unitTypes\",\"type\":\"uint256[]\"},{\"internalType\":\"uint32[]\",\"name\":\"unitLevels\",\"type\":\"uint32[]\"},{\"internalType\":\"uint32[]\",\"name\":\"unitCounts\",\"type\":\"uint32[]\"}],\"name\":\"set\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"writer\",\"type\":\"address\"}],\"name\":\"unauthorizeWriter\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"world\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"writeAccess\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"authorizeWriter(address)\":{\"params\":{\"writer\":\"Address to grant write access to.\"}},\"getEntitiesWithValue(bytes)\":{\"params\":{\"value\":\"Abi-encoded value to get the list of entities with this value for.\"}},\"getRawValue(uint256)\":{\"params\":{\"entity\":\"Entity to get the raw value in this component for.\"}},\"has(uint256)\":{\"params\":{\"entity\":\"Entity to check whether it has a value in this component for.\"}},\"owner()\":{\"returns\":{\"_0\":\"conrtact owner\"}},\"registerIndexer(address)\":{\"params\":{\"indexer\":\"Address of the indexer to notify when a component value is set.\"}},\"registerWorld(address)\":{\"params\":{\"_world\":\"Address of the World contract.\"}},\"remove(uint256)\":{\"params\":{\"entity\":\"Entity to remove from this component.\"}},\"set(uint256,bytes)\":{\"params\":{\"entity\":\"Entity to set the value for.\",\"value\":\"Value to set for the given entity.\"}},\"transferOwnership(address)\":{\"params\":{\"account\":\"address of new owner\"}},\"unauthorizeWriter(address)\":{\"params\":{\"writer\":\"Address to revoke write access.\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"authorizeWriter(address)\":{\"notice\":\"Grant write access to the given address. Can only be called by the owner.\"},\"getEntities()\":{\"notice\":\"Get a list of all entities that have a value in this component.\"},\"getEntitiesWithValue(bytes)\":{\"notice\":\"Get a list of all entities that have the specified value in this component.\"},\"getRawValue(uint256)\":{\"notice\":\"Get the raw (abi-encoded) value of the given entity in this component.\"},\"getSchema()\":{\"notice\":\"Return the keys and value types of the schema of this component. \"},\"has(uint256)\":{\"notice\":\"Check whether the given entity has a value in this component.\"},\"id()\":{\"notice\":\"Public identifier of this component \"},\"owner()\":{\"notice\":\"get the ERC173 contract owner\"},\"registerIndexer(address)\":{\"notice\":\"Register a new indexer that gets notified when a component value is set.\"},\"registerWorld(address)\":{\"notice\":\"Register this component in the given world.\"},\"remove(uint256)\":{\"notice\":\"Remove the given entity from this component. Registers the update in the World contract. Can only be called by addresses with write access to this component.\"},\"set(uint256,bytes)\":{\"notice\":\"Set the given component value for the given entity. Registers the update in the World contract. Can only be called by addresses with write access to this component.\"},\"transferOwnership(address)\":{\"notice\":\"transfer contract ownership to new account\"},\"unauthorizeWriter(address)\":{\"notice\":\"Revoke write access from the given address. Can only be called by the owner.\"},\"world()\":{\"notice\":\"Reference to the World contract this component is registered in \"},\"writeAccess(address)\":{\"notice\":\"Whether given operator has write access \"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/components/base/BattleParticipantComponent.sol\":\"BattleParticipantComponent\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@latticexyz/=../../node_modules/@latticexyz/\",\":@rari-capital/=../../node_modules/@rari-capital/\",\":@solidstate/=../../node_modules/@solidstate/\",\":abdk-libraries-solidity/=../../node_modules/abdk-libraries-solidity/\",\":components/=src/components/\",\":ds-test/=../../node_modules/ds-test/src/\",\":forge-std/=../../node_modules/forge-std/src/\",\":libraries/=src/libraries/\",\":memmove/=../../node_modules/memmove/src/\",\":noise/=../../node_modules/@latticexyz/noise/contracts/\",\":packages/=../../../mud/packages/\",\":solecs/=../../node_modules/@latticexyz/solecs/src/\",\":solidity-trigonometry/=/Users/emersonhsieh/primodium/primodium/node_modules/solidity-trigonometry/src/\",\":solmate/=../../node_modules/@rari-capital/solmate/src/\",\":src/=src/\",\":std-contracts/=../../node_modules/@latticexyz/std-contracts/src/\",\":systems/=src/systems/\",\":trig/=../../node_modules/solidity-trigonometry/\"]},\"sources\":{\"../../node_modules/@latticexyz/solecs/src/BareComponent.sol\":{\"keccak256\":\"0x2cd722acd3cad5a9318bd5907a3d9f3849756727a5b2303eaf76aa7ea8caa65a\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://890e17cd1f2f2ed87c99ca7b9383f7eabb31570989247a81e268a636b163a89a\",\"dweb:/ipfs/QmXJEKkMBQniSwHvC9aqHjRCaMohwkpPT7ssCtkL31j4FA\"]},\"../../node_modules/@latticexyz/solecs/src/Component.sol\":{\"keccak256\":\"0x40085c2f86bf6be7a756015025477aa46308b1618083ece93ae13093881a6874\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ca8653540b5674e50abfd4b4898009b472fc7fd2fba456146c1a1c44b615d83a\",\"dweb:/ipfs/QmSqbRng5fHuGUKgkFuNw3BfoefNteYU95sYi4g9QjCCNh\"]},\"../../node_modules/@latticexyz/solecs/src/LibTypes.sol\":{\"keccak256\":\"0xa3898035fd9fa865bcfc9861e3b5ecce36be3196fb27705e50a02fed9831f102\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://273284a35a950f6d0bc4223d345cf46c59972a00510ddbc4ba695ede38714798\",\"dweb:/ipfs/QmdqzKMaAfKWfBzUsrzsDMWnyxSKJRuEvrc6VTR5VarQaH\"]},\"../../node_modules/@latticexyz/solecs/src/MapSet.sol\":{\"keccak256\":\"0xe1a1f412b22d586c01a3e9e0e0af40893b880260f6765b9a5e23e56154dae1db\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f8aeddb1af783e43e8ca8a004954016c9f00d9d217d86454b3a3839ef0981288\",\"dweb:/ipfs/QmegHggcpmgGgL9xbZKqnWMwNMSqvs622MuhyEhR9bVfb9\"]},\"../../node_modules/@latticexyz/solecs/src/Ownable.sol\":{\"keccak256\":\"0x7572ffd98860b2539eacdbb2112ce3d25ad8521c5d95f91e21ea5588a6904209\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://3516b95146224d3fc04c5cc2818161fa9504a048894f6dd905b1e42307494fc4\",\"dweb:/ipfs/QmTqvvAs1fSLzXVWjAgSt3TtE3MM3M1DFXRzkkSsixtVza\"]},\"../../node_modules/@latticexyz/solecs/src/OwnableWritable.sol\":{\"keccak256\":\"0x0e3e9a7ca8ee0a020753c233db1b757f09f3be37d9ea21614892311e6d29baaf\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://43d631dfbedce59f2f0d594bfd432eafaaa75e76a381368d309bbadb062ec76c\",\"dweb:/ipfs/QmNjGZPJGAXf26HgMCUk68euquWUkKQ13sEyLMvkjTJ91A\"]},\"../../node_modules/@latticexyz/solecs/src/OwnableWritableStorage.sol\":{\"keccak256\":\"0x9f99bbacdfd6c5b0779bd18d3900dd4f957c5a0d89d5986815fae2eff8254df5\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://3ee736ebade674846118859290603b8ad2cc91efbe13e3621aa52fb4987cb0b4\",\"dweb:/ipfs/QmNUzZS4LPhBCacrPNjbQXLV4anrvNxQ2yPEPETj3sgbzW\"]},\"../../node_modules/@latticexyz/solecs/src/Set.sol\":{\"keccak256\":\"0xcddfd88e4fd1c183470f470dbe5e6fdd48ed0d26bd1ccefb8070a476bc8ba344\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://e81ffd8a5b104abd04876a42d613378181009bae9368779223fabc1b1d514e46\",\"dweb:/ipfs/QmUywR2WzJfzPn1bRkd7e6Sy6jo3q9AjuQWU55BHKUiNME\"]},\"../../node_modules/@latticexyz/solecs/src/interfaces/IComponent.sol\":{\"keccak256\":\"0xc25ab58cac1449fcd501ddcc56dade0653a7946adcd9eee2931bc095eda2a6b4\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c9505da36322f3b3de4dc0aaf0aec911e76be6cbd091f4d142070a7316df4629\",\"dweb:/ipfs/QmY5aGhwzBV5fXeLRDuzWMUfbPZGGdggbLdARhrkjmPBYW\"]},\"../../node_modules/@latticexyz/solecs/src/interfaces/IERC173.sol\":{\"keccak256\":\"0x2bd9a729a3bfcfc445bc557a914aee17fcaf1c0f74b909b6a91a5d3755a699e9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://203741d681a686fb75f0715332e554083733f349100dfe11252c17fbe9cd094e\",\"dweb:/ipfs/QmaBXDHiU4ZdJ8K5jQZ3FfswMpWEqSPsBWGFkJMU2qmmWi\"]},\"../../node_modules/@latticexyz/solecs/src/interfaces/IEntityContainer.sol\":{\"keccak256\":\"0x4506db1dcbdbe68a397107a57bfa3da888a889f14181a90eb728cfecc60700b8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://23f5c02d110f5abf6340a08a2a8b7e0b5668f211fe6baf41213e6c4f69dece10\",\"dweb:/ipfs/QmYfKeZMeEUNExsxjkCF5nGdw8KRyPe1t5tcGFTEkP7CkV\"]},\"../../node_modules/@latticexyz/solecs/src/interfaces/IEntityIndexer.sol\":{\"keccak256\":\"0xd89023b2a5e9961be3c9d49d9f7f9ac7dcc416e3f43a8758dc058d1db2eea6b5\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://3266ea1dd5a7f372f8814db24ac4981730f66fba8e6f90f614246ca5cec529b4\",\"dweb:/ipfs/QmQ71BtaBsDjfke46dndaTBVhyXAHxs5qs7d9GHJwVXuvw\"]},\"../../node_modules/@latticexyz/solecs/src/interfaces/IOwnableWritable.sol\":{\"keccak256\":\"0x804db2685d65f5d4029431c47276b6ac43d3c329ea4ce75358928dbd4d11ee77\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a1d85dfe46f678ce4cf3a788092519251a24c2c015f9e858a81111b506b0ee78\",\"dweb:/ipfs/QmVmE4f8axCeh8V2kcs8nxYd27rSiwvXJbDbNCg3VZHSXY\"]},\"../../node_modules/@latticexyz/solecs/src/interfaces/IUint256Component.sol\":{\"keccak256\":\"0x12e2eaa4c5663048343e43a1994c446baacb16a4aacbe314ed5202d878751be9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2d78184a1b1868773f2d5a7cf54bb42bccc666dc75cea14eeed15b8573fd000f\",\"dweb:/ipfs/QmemXPHPB7V8StWR8kZcKt3eDxB78sZFZW4Dp7TcEFTxx9\"]},\"../../node_modules/@latticexyz/solecs/src/interfaces/IWorld.sol\":{\"keccak256\":\"0x3ac1853f4cade8f432f5b3144e0c914b93f110ea3eabd85438cde39160716114\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1f0ba421b481b66d43c9da4de63171a79ffadc708956893bddf10eec666a0f4a\",\"dweb:/ipfs/QmdSyzQUDrP3MXt8JjgXt1QUgraUKBUPHE2CVzJiEwfMAK\"]},\"../../node_modules/@latticexyz/solecs/src/interfaces/Query.sol\":{\"keccak256\":\"0x987e47a4d3f076910382b4e8619f607ea15abdedd786d6095bd27126ff6f941c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8c3d57f9da85917b77e1043a179d3b516bc8c00a8880fdcb1bffca7e53169059\",\"dweb:/ipfs/QmaHxqsT1ZpS8toN88qxgbeaDSMvnhYv9J9FMjVnKrMgoP\"]},\"../../node_modules/@solidstate/contracts/access/ownable/IOwnable.sol\":{\"keccak256\":\"0xd2d21c507ed587cd5de6cc016d4b9c7e956e468108b784455a400301707031c1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://091a98176309554295f1d471f888b1567d07e0250b11e23fa540739b6dfdce38\",\"dweb:/ipfs/Qme69DrKhhtwkSBMU456C3NxzXNMC7AJ4sVNMg5rKcrtPn\"]},\"../../node_modules/@solidstate/contracts/access/ownable/IOwnableInternal.sol\":{\"keccak256\":\"0x6237a634712261bd82d5c7753780d35f77af215406d1e59512052f743f8f1c60\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8e54ac6cd1b376224b8d148c704693ff3f7ac9f69954fd30ee3d949fa17210c3\",\"dweb:/ipfs/QmWjq37K3gg29XhFbepg5GbmmFYoyXb81sh2K1MnVZqG6y\"]},\"../../node_modules/@solidstate/contracts/access/ownable/Ownable.sol\":{\"keccak256\":\"0xe16b09090c1251f8cc97fb2cc10c86675e0d0d9f0fc0032b417c37c8dba2db5f\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8482effd630de3e3eb3c66ce6bc5ddd12838381e6e585df42116b4fd7764e4bc\",\"dweb:/ipfs/Qma9ga6QS2SooCYKyB7J5EHE8uUGiAv49kosEyjHt9Zg79\"]},\"../../node_modules/@solidstate/contracts/access/ownable/OwnableInternal.sol\":{\"keccak256\":\"0x0185d24250a5e6fbafce443b9ba19bba761803e3e5d91ba423bfb1f5f0bbdbf9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://547fadeaec559ee824f4dd37b2ef972a061ca59576f5733cf643e00d88a4db52\",\"dweb:/ipfs/QmYx6rmRmZZQkoS8TykMVsz9ZvfQ8MfSPt6UzWJ8pyj8qF\"]},\"../../node_modules/@solidstate/contracts/access/ownable/OwnableStorage.sol\":{\"keccak256\":\"0x7385e2020de914f75cabdc83c6adf88ed21e9de14669a89b3832b80f4f8c7b73\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a367c512bf29fb4923ed5d2454783e3dae88e5e03dec216e65c3986f3c3a8995\",\"dweb:/ipfs/QmfYkD6osr6SQzod6wc7WPae6YvVnYbn2BjJuHrYL3ERXM\"]},\"../../node_modules/@solidstate/contracts/interfaces/IERC173.sol\":{\"keccak256\":\"0x9b18a5ad66323c65a81ecd62c3536db99115fe69a30b56a04409de941da7deb6\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a93684363c5bfd4e31fa2cc2d3402e9451ba61c7dbb404e8e50658610fb2a555\",\"dweb:/ipfs/QmanFgF5v5GjBBrAEYCpaZyXRFRvzLGgB8SQcSEf9Dkj5Q\"]},\"../../node_modules/@solidstate/contracts/interfaces/IERC173Internal.sol\":{\"keccak256\":\"0x9644c3e56c9ecd1763f8aaa437d5d573a7f64a8d93ad7bea1a9c44beb5911b89\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c32cfda38b44878ab196d32eeb72823a9f9904e8193286c787caccfb2e5bfa75\",\"dweb:/ipfs/QmfBNKWUSKaJtYL3JJ3YFioXCVFeeakqQ4cR5XzAxxZkCx\"]},\"../../node_modules/@solidstate/contracts/utils/AddressUtils.sol\":{\"keccak256\":\"0x7d924db4dbd9210923ab08db77db3c77438014c255fd49fa208ebce283d991bf\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5189eebdf91899224a14b4cd5184fa9e67a9b8904e6d88ff9610944d06c63929\",\"dweb:/ipfs/QmRwNhfcp98pPgbzK4i9hbypHLTWPGYpuRCtEJRCTNASRm\"]},\"../../node_modules/@solidstate/contracts/utils/UintUtils.sol\":{\"keccak256\":\"0x5aaeaea22a0800402c6f2d8ce6185293bc64f74f6c390c1b1c53b624b43972f8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8b1c95c745da8ca4de7b68e65ef9122dab4e748c3ae3c9f5fd5aa7c65887c9d2\",\"dweb:/ipfs/QmX2KURY4JbM4NVFp5KPYsNxoJGA8n8w6SdAFdD5Pasgza\"]},\"../../node_modules/memmove/src/Array.sol\":{\"keccak256\":\"0x0d7681d3392c34f811cebc9598c5e8f4eef6aba431dca9e1fa87267ba51a4515\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0ffb5179dd40ccacadc2cb26ac99e9ea5148796f6d21413d7e0f37913831bea1\",\"dweb:/ipfs/QmfJogaoqook5JgnUZKib6w6khzViUag3EQb1EZ8aUEasQ\"]},\"../../node_modules/memmove/src/LinkedList.sol\":{\"keccak256\":\"0x2374863d39689178dda92b841e77b835ba8fa550561be23b7861d2e52c0fe8c1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8538ec6ca6be4e1b25b74dfd2139586fa2b9dab8d49d91428ed64dc683884598\",\"dweb:/ipfs/Qma7Z6urenqG5Dzqwe8ouGiFH37mbsJEX83tqjSq1PTnRc\"]},\"src/components/base/BattleParticipantComponent.sol\":{\"keccak256\":\"0x34505a9d5224a54098e2c5b94b6889c8b36f022ba69da8fe915e6ad799558c71\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://aac069705d070091e6ef79900022185826921b02f02bbf5dd2d1d2f52314b42e\",\"dweb:/ipfs/QmT2eZLtrnGHoqSv5Svb7nDaRA2WVweoxHzeZHxt6vJiec\"]},\"src/types.sol\":{\"keccak256\":\"0x6933c539e92af99150049248b241483288fcc44c1dfba911ce1f0624d04c8768\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ba78f99590bd57ffbd849f7122ffad8ced70e3fa041b96fbee5b1fb4c90b08bc\",\"dweb:/ipfs/QmbLKvUJZXQpnG7sGnhgyMg4DL2q3nWFZNziHhvc8237iP\"]}},\"version\":1}",
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"BareComponent__NotImplemented\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OwnableWritable__NotWriter\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Ownable__NotOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Ownable__NotTransitiveOwner\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"writer\",\"type\":\"address\"}],\"name\":\"authorizeWriter\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getEntities\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"participantEntity\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"unitTypes\",\"type\":\"uint256[]\"},{\"internalType\":\"uint32[]\",\"name\":\"unitLevels\",\"type\":\"uint32[]\"},{\"internalType\":\"uint32[]\",\"name\":\"unitCounts\",\"type\":\"uint32[]\"}],\"internalType\":\"struct BattleParticipant\",\"name\":\"result\",\"type\":\"tuple\"}],\"name\":\"getEntitiesWithValue\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"value\",\"type\":\"bytes\"}],\"name\":\"getEntitiesWithValue\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"entity\",\"type\":\"uint256\"}],\"name\":\"getRawValue\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSchema\",\"outputs\":[{\"internalType\":\"string[]\",\"name\":\"keys\",\"type\":\"string[]\"},{\"internalType\":\"enum LibTypes.SchemaValue[]\",\"name\":\"values\",\"type\":\"uint8[]\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"entity\",\"type\":\"uint256\"}],\"name\":\"getValue\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"participantEntity\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"unitTypes\",\"type\":\"uint256[]\"},{\"internalType\":\"uint32[]\",\"name\":\"unitLevels\",\"type\":\"uint32[]\"},{\"internalType\":\"uint32[]\",\"name\":\"unitCounts\",\"type\":\"uint32[]\"}],\"internalType\":\"struct BattleParticipant\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"entity\",\"type\":\"uint256\"}],\"name\":\"has\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"id\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"indexer\",\"type\":\"address\"}],\"name\":\"registerIndexer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_world\",\"type\":\"address\"}],\"name\":\"registerWorld\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"entity\",\"type\":\"uint256\"}],\"name\":\"remove\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"entity\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"participantEntity\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"unitTypes\",\"type\":\"uint256[]\"},{\"internalType\":\"uint32[]\",\"name\":\"unitLevels\",\"type\":\"uint32[]\"},{\"internalType\":\"uint32[]\",\"name\":\"unitCounts\",\"type\":\"uint32[]\"}],\"internalType\":\"struct BattleParticipant\",\"name\":\"value\",\"type\":\"tuple\"}],\"name\":\"set\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"entity\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"value\",\"type\":\"bytes\"}],\"name\":\"set\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"entity\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"participantEntity\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"unitTypes\",\"type\":\"uint256[]\"},{\"internalType\":\"uint32[]\",\"name\":\"unitLevels\",\"type\":\"uint32[]\"},{\"internalType\":\"uint32[]\",\"name\":\"unitCounts\",\"type\":\"uint32[]\"}],\"name\":\"set\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"writer\",\"type\":\"address\"}],\"name\":\"unauthorizeWriter\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"world\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"writeAccess\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"authorizeWriter(address)\":{\"params\":{\"writer\":\"Address to grant write access to.\"}},\"getEntitiesWithValue(bytes)\":{\"params\":{\"value\":\"Abi-encoded value to get the list of entities with this value for.\"}},\"getRawValue(uint256)\":{\"params\":{\"entity\":\"Entity to get the raw value in this component for.\"}},\"has(uint256)\":{\"params\":{\"entity\":\"Entity to check whether it has a value in this component for.\"}},\"owner()\":{\"returns\":{\"_0\":\"conrtact owner\"}},\"registerIndexer(address)\":{\"params\":{\"indexer\":\"Address of the indexer to notify when a component value is set.\"}},\"registerWorld(address)\":{\"params\":{\"_world\":\"Address of the World contract.\"}},\"remove(uint256)\":{\"params\":{\"entity\":\"Entity to remove from this component.\"}},\"set(uint256,bytes)\":{\"params\":{\"entity\":\"Entity to set the value for.\",\"value\":\"Value to set for the given entity.\"}},\"transferOwnership(address)\":{\"params\":{\"account\":\"address of new owner\"}},\"unauthorizeWriter(address)\":{\"params\":{\"writer\":\"Address to revoke write access.\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"authorizeWriter(address)\":{\"notice\":\"Grant write access to the given address. Can only be called by the owner.\"},\"getEntities()\":{\"notice\":\"Get a list of all entities that have a value in this component.\"},\"getEntitiesWithValue(bytes)\":{\"notice\":\"Get a list of all entities that have the specified value in this component.\"},\"getRawValue(uint256)\":{\"notice\":\"Get the raw (abi-encoded) value of the given entity in this component.\"},\"getSchema()\":{\"notice\":\"Return the keys and value types of the schema of this component. \"},\"has(uint256)\":{\"notice\":\"Check whether the given entity has a value in this component.\"},\"id()\":{\"notice\":\"Public identifier of this component \"},\"owner()\":{\"notice\":\"get the ERC173 contract owner\"},\"registerIndexer(address)\":{\"notice\":\"Register a new indexer that gets notified when a component value is set.\"},\"registerWorld(address)\":{\"notice\":\"Register this component in the given world.\"},\"remove(uint256)\":{\"notice\":\"Remove the given entity from this component. Registers the update in the World contract. Can only be called by addresses with write access to this component.\"},\"set(uint256,bytes)\":{\"notice\":\"Set the given component value for the given entity. Registers the update in the World contract. Can only be called by addresses with write access to this component.\"},\"transferOwnership(address)\":{\"notice\":\"transfer contract ownership to new account\"},\"unauthorizeWriter(address)\":{\"notice\":\"Revoke write access from the given address. Can only be called by the owner.\"},\"world()\":{\"notice\":\"Reference to the World contract this component is registered in \"},\"writeAccess(address)\":{\"notice\":\"Whether given operator has write access \"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/components/base/BattleParticipantComponent.sol\":\"BattleParticipantComponent\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@latticexyz/=../../node_modules/@latticexyz/\",\":@rari-capital/=../../node_modules/@rari-capital/\",\":@solidstate/=../../node_modules/@solidstate/\",\":abdk-libraries-solidity/=../../node_modules/abdk-libraries-solidity/\",\":components/=src/components/\",\":ds-test/=../../node_modules/ds-test/src/\",\":forge-std/=../../node_modules/forge-std/src/\",\":libraries/=src/libraries/\",\":memmove/=../../node_modules/memmove/src/\",\":noise/=../../node_modules/@latticexyz/noise/contracts/\",\":packages/=../../../mud/packages/\",\":solecs/=../../node_modules/@latticexyz/solecs/src/\",\":solidity-trigonometry/=/Users/emersonhsieh/primodium/primodium/node_modules/solidity-trigonometry/src/\",\":solmate/=../../node_modules/@rari-capital/solmate/src/\",\":src/=src/\",\":std-contracts/=../../node_modules/@latticexyz/std-contracts/src/\",\":systems/=src/systems/\",\":trig/=../../node_modules/solidity-trigonometry/\"]},\"sources\":{\"../../node_modules/@latticexyz/solecs/src/BareComponent.sol\":{\"keccak256\":\"0x2cd722acd3cad5a9318bd5907a3d9f3849756727a5b2303eaf76aa7ea8caa65a\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://890e17cd1f2f2ed87c99ca7b9383f7eabb31570989247a81e268a636b163a89a\",\"dweb:/ipfs/QmXJEKkMBQniSwHvC9aqHjRCaMohwkpPT7ssCtkL31j4FA\"]},\"../../node_modules/@latticexyz/solecs/src/Component.sol\":{\"keccak256\":\"0x40085c2f86bf6be7a756015025477aa46308b1618083ece93ae13093881a6874\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ca8653540b5674e50abfd4b4898009b472fc7fd2fba456146c1a1c44b615d83a\",\"dweb:/ipfs/QmSqbRng5fHuGUKgkFuNw3BfoefNteYU95sYi4g9QjCCNh\"]},\"../../node_modules/@latticexyz/solecs/src/LibTypes.sol\":{\"keccak256\":\"0xa3898035fd9fa865bcfc9861e3b5ecce36be3196fb27705e50a02fed9831f102\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://273284a35a950f6d0bc4223d345cf46c59972a00510ddbc4ba695ede38714798\",\"dweb:/ipfs/QmdqzKMaAfKWfBzUsrzsDMWnyxSKJRuEvrc6VTR5VarQaH\"]},\"../../node_modules/@latticexyz/solecs/src/MapSet.sol\":{\"keccak256\":\"0xe1a1f412b22d586c01a3e9e0e0af40893b880260f6765b9a5e23e56154dae1db\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f8aeddb1af783e43e8ca8a004954016c9f00d9d217d86454b3a3839ef0981288\",\"dweb:/ipfs/QmegHggcpmgGgL9xbZKqnWMwNMSqvs622MuhyEhR9bVfb9\"]},\"../../node_modules/@latticexyz/solecs/src/Ownable.sol\":{\"keccak256\":\"0x7572ffd98860b2539eacdbb2112ce3d25ad8521c5d95f91e21ea5588a6904209\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://3516b95146224d3fc04c5cc2818161fa9504a048894f6dd905b1e42307494fc4\",\"dweb:/ipfs/QmTqvvAs1fSLzXVWjAgSt3TtE3MM3M1DFXRzkkSsixtVza\"]},\"../../node_modules/@latticexyz/solecs/src/OwnableWritable.sol\":{\"keccak256\":\"0x0e3e9a7ca8ee0a020753c233db1b757f09f3be37d9ea21614892311e6d29baaf\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://43d631dfbedce59f2f0d594bfd432eafaaa75e76a381368d309bbadb062ec76c\",\"dweb:/ipfs/QmNjGZPJGAXf26HgMCUk68euquWUkKQ13sEyLMvkjTJ91A\"]},\"../../node_modules/@latticexyz/solecs/src/OwnableWritableStorage.sol\":{\"keccak256\":\"0x9f99bbacdfd6c5b0779bd18d3900dd4f957c5a0d89d5986815fae2eff8254df5\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://3ee736ebade674846118859290603b8ad2cc91efbe13e3621aa52fb4987cb0b4\",\"dweb:/ipfs/QmNUzZS4LPhBCacrPNjbQXLV4anrvNxQ2yPEPETj3sgbzW\"]},\"../../node_modules/@latticexyz/solecs/src/Set.sol\":{\"keccak256\":\"0xcddfd88e4fd1c183470f470dbe5e6fdd48ed0d26bd1ccefb8070a476bc8ba344\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://e81ffd8a5b104abd04876a42d613378181009bae9368779223fabc1b1d514e46\",\"dweb:/ipfs/QmUywR2WzJfzPn1bRkd7e6Sy6jo3q9AjuQWU55BHKUiNME\"]},\"../../node_modules/@latticexyz/solecs/src/interfaces/IComponent.sol\":{\"keccak256\":\"0xc25ab58cac1449fcd501ddcc56dade0653a7946adcd9eee2931bc095eda2a6b4\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c9505da36322f3b3de4dc0aaf0aec911e76be6cbd091f4d142070a7316df4629\",\"dweb:/ipfs/QmY5aGhwzBV5fXeLRDuzWMUfbPZGGdggbLdARhrkjmPBYW\"]},\"../../node_modules/@latticexyz/solecs/src/interfaces/IERC173.sol\":{\"keccak256\":\"0x2bd9a729a3bfcfc445bc557a914aee17fcaf1c0f74b909b6a91a5d3755a699e9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://203741d681a686fb75f0715332e554083733f349100dfe11252c17fbe9cd094e\",\"dweb:/ipfs/QmaBXDHiU4ZdJ8K5jQZ3FfswMpWEqSPsBWGFkJMU2qmmWi\"]},\"../../node_modules/@latticexyz/solecs/src/interfaces/IEntityContainer.sol\":{\"keccak256\":\"0x4506db1dcbdbe68a397107a57bfa3da888a889f14181a90eb728cfecc60700b8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://23f5c02d110f5abf6340a08a2a8b7e0b5668f211fe6baf41213e6c4f69dece10\",\"dweb:/ipfs/QmYfKeZMeEUNExsxjkCF5nGdw8KRyPe1t5tcGFTEkP7CkV\"]},\"../../node_modules/@latticexyz/solecs/src/interfaces/IEntityIndexer.sol\":{\"keccak256\":\"0xd89023b2a5e9961be3c9d49d9f7f9ac7dcc416e3f43a8758dc058d1db2eea6b5\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://3266ea1dd5a7f372f8814db24ac4981730f66fba8e6f90f614246ca5cec529b4\",\"dweb:/ipfs/QmQ71BtaBsDjfke46dndaTBVhyXAHxs5qs7d9GHJwVXuvw\"]},\"../../node_modules/@latticexyz/solecs/src/interfaces/IOwnableWritable.sol\":{\"keccak256\":\"0x804db2685d65f5d4029431c47276b6ac43d3c329ea4ce75358928dbd4d11ee77\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a1d85dfe46f678ce4cf3a788092519251a24c2c015f9e858a81111b506b0ee78\",\"dweb:/ipfs/QmVmE4f8axCeh8V2kcs8nxYd27rSiwvXJbDbNCg3VZHSXY\"]},\"../../node_modules/@latticexyz/solecs/src/interfaces/IUint256Component.sol\":{\"keccak256\":\"0x12e2eaa4c5663048343e43a1994c446baacb16a4aacbe314ed5202d878751be9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2d78184a1b1868773f2d5a7cf54bb42bccc666dc75cea14eeed15b8573fd000f\",\"dweb:/ipfs/QmemXPHPB7V8StWR8kZcKt3eDxB78sZFZW4Dp7TcEFTxx9\"]},\"../../node_modules/@latticexyz/solecs/src/interfaces/IWorld.sol\":{\"keccak256\":\"0x3ac1853f4cade8f432f5b3144e0c914b93f110ea3eabd85438cde39160716114\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1f0ba421b481b66d43c9da4de63171a79ffadc708956893bddf10eec666a0f4a\",\"dweb:/ipfs/QmdSyzQUDrP3MXt8JjgXt1QUgraUKBUPHE2CVzJiEwfMAK\"]},\"../../node_modules/@latticexyz/solecs/src/interfaces/Query.sol\":{\"keccak256\":\"0x987e47a4d3f076910382b4e8619f607ea15abdedd786d6095bd27126ff6f941c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8c3d57f9da85917b77e1043a179d3b516bc8c00a8880fdcb1bffca7e53169059\",\"dweb:/ipfs/QmaHxqsT1ZpS8toN88qxgbeaDSMvnhYv9J9FMjVnKrMgoP\"]},\"../../node_modules/@solidstate/contracts/access/ownable/IOwnable.sol\":{\"keccak256\":\"0xd2d21c507ed587cd5de6cc016d4b9c7e956e468108b784455a400301707031c1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://091a98176309554295f1d471f888b1567d07e0250b11e23fa540739b6dfdce38\",\"dweb:/ipfs/Qme69DrKhhtwkSBMU456C3NxzXNMC7AJ4sVNMg5rKcrtPn\"]},\"../../node_modules/@solidstate/contracts/access/ownable/IOwnableInternal.sol\":{\"keccak256\":\"0x6237a634712261bd82d5c7753780d35f77af215406d1e59512052f743f8f1c60\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8e54ac6cd1b376224b8d148c704693ff3f7ac9f69954fd30ee3d949fa17210c3\",\"dweb:/ipfs/QmWjq37K3gg29XhFbepg5GbmmFYoyXb81sh2K1MnVZqG6y\"]},\"../../node_modules/@solidstate/contracts/access/ownable/Ownable.sol\":{\"keccak256\":\"0xe16b09090c1251f8cc97fb2cc10c86675e0d0d9f0fc0032b417c37c8dba2db5f\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8482effd630de3e3eb3c66ce6bc5ddd12838381e6e585df42116b4fd7764e4bc\",\"dweb:/ipfs/Qma9ga6QS2SooCYKyB7J5EHE8uUGiAv49kosEyjHt9Zg79\"]},\"../../node_modules/@solidstate/contracts/access/ownable/OwnableInternal.sol\":{\"keccak256\":\"0x0185d24250a5e6fbafce443b9ba19bba761803e3e5d91ba423bfb1f5f0bbdbf9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://547fadeaec559ee824f4dd37b2ef972a061ca59576f5733cf643e00d88a4db52\",\"dweb:/ipfs/QmYx6rmRmZZQkoS8TykMVsz9ZvfQ8MfSPt6UzWJ8pyj8qF\"]},\"../../node_modules/@solidstate/contracts/access/ownable/OwnableStorage.sol\":{\"keccak256\":\"0x7385e2020de914f75cabdc83c6adf88ed21e9de14669a89b3832b80f4f8c7b73\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a367c512bf29fb4923ed5d2454783e3dae88e5e03dec216e65c3986f3c3a8995\",\"dweb:/ipfs/QmfYkD6osr6SQzod6wc7WPae6YvVnYbn2BjJuHrYL3ERXM\"]},\"../../node_modules/@solidstate/contracts/interfaces/IERC173.sol\":{\"keccak256\":\"0x9b18a5ad66323c65a81ecd62c3536db99115fe69a30b56a04409de941da7deb6\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a93684363c5bfd4e31fa2cc2d3402e9451ba61c7dbb404e8e50658610fb2a555\",\"dweb:/ipfs/QmanFgF5v5GjBBrAEYCpaZyXRFRvzLGgB8SQcSEf9Dkj5Q\"]},\"../../node_modules/@solidstate/contracts/interfaces/IERC173Internal.sol\":{\"keccak256\":\"0x9644c3e56c9ecd1763f8aaa437d5d573a7f64a8d93ad7bea1a9c44beb5911b89\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c32cfda38b44878ab196d32eeb72823a9f9904e8193286c787caccfb2e5bfa75\",\"dweb:/ipfs/QmfBNKWUSKaJtYL3JJ3YFioXCVFeeakqQ4cR5XzAxxZkCx\"]},\"../../node_modules/@solidstate/contracts/utils/AddressUtils.sol\":{\"keccak256\":\"0x7d924db4dbd9210923ab08db77db3c77438014c255fd49fa208ebce283d991bf\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5189eebdf91899224a14b4cd5184fa9e67a9b8904e6d88ff9610944d06c63929\",\"dweb:/ipfs/QmRwNhfcp98pPgbzK4i9hbypHLTWPGYpuRCtEJRCTNASRm\"]},\"../../node_modules/@solidstate/contracts/utils/UintUtils.sol\":{\"keccak256\":\"0x5aaeaea22a0800402c6f2d8ce6185293bc64f74f6c390c1b1c53b624b43972f8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8b1c95c745da8ca4de7b68e65ef9122dab4e748c3ae3c9f5fd5aa7c65887c9d2\",\"dweb:/ipfs/QmX2KURY4JbM4NVFp5KPYsNxoJGA8n8w6SdAFdD5Pasgza\"]},\"../../node_modules/memmove/src/Array.sol\":{\"keccak256\":\"0x0d7681d3392c34f811cebc9598c5e8f4eef6aba431dca9e1fa87267ba51a4515\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0ffb5179dd40ccacadc2cb26ac99e9ea5148796f6d21413d7e0f37913831bea1\",\"dweb:/ipfs/QmfJogaoqook5JgnUZKib6w6khzViUag3EQb1EZ8aUEasQ\"]},\"../../node_modules/memmove/src/LinkedList.sol\":{\"keccak256\":\"0x2374863d39689178dda92b841e77b835ba8fa550561be23b7861d2e52c0fe8c1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8538ec6ca6be4e1b25b74dfd2139586fa2b9dab8d49d91428ed64dc683884598\",\"dweb:/ipfs/Qma7Z6urenqG5Dzqwe8ouGiFH37mbsJEX83tqjSq1PTnRc\"]},\"src/components/base/BattleParticipantComponent.sol\":{\"keccak256\":\"0x34505a9d5224a54098e2c5b94b6889c8b36f022ba69da8fe915e6ad799558c71\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://aac069705d070091e6ef79900022185826921b02f02bbf5dd2d1d2f52314b42e\",\"dweb:/ipfs/QmT2eZLtrnGHoqSv5Svb7nDaRA2WVweoxHzeZHxt6vJiec\"]},\"src/types.sol\":{\"keccak256\":\"0xd21506fa7b49201c1b02af998e8de03a28bfbdbe930a9598bbacebf67a7b5b7d\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://062fa145ee689e71ff79ae24524cabae061a8f8614f7415a72c9d3efecbf77ab\",\"dweb:/ipfs/QmYV67TEiMB3uNmkSL99zANMXFgvyGDCeW8Uwk7NCpnvuF\"]}},\"version\":1}",
   "metadata": {
     "compiler": {
       "version": "0.8.19+commit.7dd6d404"
@@ -1281,10 +1281,10 @@
         "license": "MIT"
       },
       "src/types.sol": {
-        "keccak256": "0x6933c539e92af99150049248b241483288fcc44c1dfba911ce1f0624d04c8768",
+        "keccak256": "0xd21506fa7b49201c1b02af998e8de03a28bfbdbe930a9598bbacebf67a7b5b7d",
         "urls": [
-          "bzz-raw://ba78f99590bd57ffbd849f7122ffad8ced70e3fa041b96fbee5b1fb4c90b08bc",
-          "dweb:/ipfs/QmbLKvUJZXQpnG7sGnhgyMg4DL2q3nWFZNziHhvc8237iP"
+          "bzz-raw://062fa145ee689e71ff79ae24524cabae061a8f8614f7415a72c9d3efecbf77ab",
+          "dweb:/ipfs/QmYV67TEiMB3uNmkSL99zANMXFgvyGDCeW8Uwk7NCpnvuF"
         ],
         "license": "MIT"
       }
@@ -1293,41 +1293,41 @@
   },
   "ast": {
     "absolutePath": "src/components/base/BattleParticipantComponent.sol",
-    "id": 27163,
+    "id": 27184,
     "exportedSymbols": {
       "BareComponent": [
-        106977
+        112745
       ],
       "BattleParticipant": [
-        106683
+        112451
       ],
       "BattleParticipantComponent": [
-        27162
+        27183
       ],
       "Component": [
         262
       ],
       "IEntityIndexer": [
-        107394
+        113162
       ],
       "IWorld": [
         1322
       ],
       "LibTypes": [
-        107016
+        112784
       ],
       "MapSet": [
-        107209
+        112977
       ],
       "Set": [
-        107375
+        113143
       ]
     },
     "nodeType": "SourceUnit",
     "src": "32:1796:170",
     "nodes": [
       {
-        "id": 26944,
+        "id": 26965,
         "nodeType": "PragmaDirective",
         "src": "32:24:170",
         "nodes": [],
@@ -1339,36 +1339,36 @@
         ]
       },
       {
-        "id": 26945,
+        "id": 26966,
         "nodeType": "ImportDirective",
         "src": "57:30:170",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/solecs/src/Component.sol",
         "file": "solecs/Component.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 27163,
+        "scope": 27184,
         "sourceUnit": 263,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 26947,
+        "id": 26968,
         "nodeType": "ImportDirective",
         "src": "89:52:170",
         "nodes": [],
         "absolutePath": "src/types.sol",
         "file": "../../types.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 27163,
-        "sourceUnit": 106707,
+        "scope": 27184,
+        "sourceUnit": 112475,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 26946,
+              "id": 26967,
               "name": "BattleParticipant",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 106683,
+              "referencedDeclaration": 112451,
               "src": "98:17:170",
               "typeDescriptions": {}
             },
@@ -1378,17 +1378,17 @@
         "unitAlias": ""
       },
       {
-        "id": 27162,
+        "id": 27183,
         "nodeType": "ContractDefinition",
         "src": "143:1684:170",
         "nodes": [
           {
-            "id": 26961,
+            "id": 26982,
             "nodeType": "FunctionDefinition",
             "src": "205:62:170",
             "nodes": [],
             "body": {
-              "id": 26960,
+              "id": 26981,
               "nodeType": "Block",
               "src": "265:2:170",
               "nodes": [],
@@ -1400,11 +1400,11 @@
               {
                 "arguments": [
                   {
-                    "id": 26956,
+                    "id": 26977,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 26951,
+                    "referencedDeclaration": 26972,
                     "src": "254:5:170",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1412,11 +1412,11 @@
                     }
                   },
                   {
-                    "id": 26957,
+                    "id": 26978,
                     "name": "id",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 26953,
+                    "referencedDeclaration": 26974,
                     "src": "261:2:170",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1424,10 +1424,10 @@
                     }
                   }
                 ],
-                "id": 26958,
+                "id": 26979,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 26955,
+                  "id": 26976,
                   "name": "Component",
                   "nameLocations": [
                     "244:9:170"
@@ -1443,17 +1443,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 26954,
+              "id": 26975,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 26951,
+                  "id": 26972,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "225:5:170",
                   "nodeType": "VariableDeclaration",
-                  "scope": 26961,
+                  "scope": 26982,
                   "src": "217:13:170",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1462,7 +1462,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 26950,
+                    "id": 26971,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "217:7:170",
@@ -1476,12 +1476,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 26953,
+                  "id": 26974,
                   "mutability": "mutable",
                   "name": "id",
                   "nameLocation": "240:2:170",
                   "nodeType": "VariableDeclaration",
-                  "scope": 26961,
+                  "scope": 26982,
                   "src": "232:10:170",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1490,7 +1490,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 26952,
+                    "id": 26973,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "232:7:170",
@@ -1505,40 +1505,40 @@
               "src": "216:27:170"
             },
             "returnParameters": {
-              "id": 26959,
+              "id": 26980,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "265:0:170"
             },
-            "scope": 27162,
+            "scope": 27183,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "internal"
           },
           {
-            "id": 27046,
+            "id": 27067,
             "nodeType": "FunctionDefinition",
             "src": "271:510:170",
             "nodes": [],
             "body": {
-              "id": 27045,
+              "id": 27066,
               "nodeType": "Block",
               "src": "382:399:170",
               "nodes": [],
               "statements": [
                 {
                   "expression": {
-                    "id": 26978,
+                    "id": 26999,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
-                      "id": 26972,
+                      "id": 26993,
                       "name": "keys",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 26966,
+                      "referencedDeclaration": 26987,
                       "src": "388:4:170",
                       "typeDescriptions": {
                         "typeIdentifier": "t_array$_t_string_memory_ptr_$dyn_memory_ptr",
@@ -1551,7 +1551,7 @@
                       "arguments": [
                         {
                           "hexValue": "34",
-                          "id": 26976,
+                          "id": 26997,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -1573,7 +1573,7 @@
                             "typeString": "int_const 4"
                           }
                         ],
-                        "id": 26975,
+                        "id": 26996,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -1586,7 +1586,7 @@
                         },
                         "typeName": {
                           "baseType": {
-                            "id": 26973,
+                            "id": 26994,
                             "name": "string",
                             "nodeType": "ElementaryTypeName",
                             "src": "399:6:170",
@@ -1595,7 +1595,7 @@
                               "typeString": "string"
                             }
                           },
-                          "id": 26974,
+                          "id": 26995,
                           "nodeType": "ArrayTypeName",
                           "src": "399:8:170",
                           "typeDescriptions": {
@@ -1604,7 +1604,7 @@
                           }
                         }
                       },
-                      "id": 26977,
+                      "id": 26998,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -1626,26 +1626,26 @@
                       "typeString": "string memory[] memory"
                     }
                   },
-                  "id": 26979,
+                  "id": 27000,
                   "nodeType": "ExpressionStatement",
                   "src": "388:22:170"
                 },
                 {
                   "expression": {
-                    "id": 26987,
+                    "id": 27008,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
-                      "id": 26980,
+                      "id": 27001,
                       "name": "values",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 26970,
+                      "referencedDeclaration": 26991,
                       "src": "416:6:170",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_array$_t_enum$_SchemaValue_$107015_$dyn_memory_ptr",
+                        "typeIdentifier": "t_array$_t_enum$_SchemaValue_$112783_$dyn_memory_ptr",
                         "typeString": "enum LibTypes.SchemaValue[] memory"
                       }
                     },
@@ -1655,7 +1655,7 @@
                       "arguments": [
                         {
                           "hexValue": "34",
-                          "id": 26985,
+                          "id": 27006,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -1677,7 +1677,7 @@
                             "typeString": "int_const 4"
                           }
                         ],
-                        "id": 26984,
+                        "id": 27005,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -1685,41 +1685,41 @@
                         "nodeType": "NewExpression",
                         "src": "425:26:170",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_function_objectcreation_pure$_t_uint256_$returns$_t_array$_t_enum$_SchemaValue_$107015_$dyn_memory_ptr_$",
+                          "typeIdentifier": "t_function_objectcreation_pure$_t_uint256_$returns$_t_array$_t_enum$_SchemaValue_$112783_$dyn_memory_ptr_$",
                           "typeString": "function (uint256) pure returns (enum LibTypes.SchemaValue[] memory)"
                         },
                         "typeName": {
                           "baseType": {
-                            "id": 26982,
+                            "id": 27003,
                             "nodeType": "UserDefinedTypeName",
                             "pathNode": {
-                              "id": 26981,
+                              "id": 27002,
                               "name": "LibTypes.SchemaValue",
                               "nameLocations": [
                                 "429:8:170",
                                 "438:11:170"
                               ],
                               "nodeType": "IdentifierPath",
-                              "referencedDeclaration": 107015,
+                              "referencedDeclaration": 112783,
                               "src": "429:20:170"
                             },
-                            "referencedDeclaration": 107015,
+                            "referencedDeclaration": 112783,
                             "src": "429:20:170",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_enum$_SchemaValue_$107015",
+                              "typeIdentifier": "t_enum$_SchemaValue_$112783",
                               "typeString": "enum LibTypes.SchemaValue"
                             }
                           },
-                          "id": 26983,
+                          "id": 27004,
                           "nodeType": "ArrayTypeName",
                           "src": "429:22:170",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_array$_t_enum$_SchemaValue_$107015_$dyn_storage_ptr",
+                            "typeIdentifier": "t_array$_t_enum$_SchemaValue_$112783_$dyn_storage_ptr",
                             "typeString": "enum LibTypes.SchemaValue[]"
                           }
                         }
                       },
-                      "id": 26986,
+                      "id": 27007,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -1731,44 +1731,44 @@
                       "src": "425:29:170",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_array$_t_enum$_SchemaValue_$107015_$dyn_memory_ptr",
+                        "typeIdentifier": "t_array$_t_enum$_SchemaValue_$112783_$dyn_memory_ptr",
                         "typeString": "enum LibTypes.SchemaValue[] memory"
                       }
                     },
                     "src": "416:38:170",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_enum$_SchemaValue_$107015_$dyn_memory_ptr",
+                      "typeIdentifier": "t_array$_t_enum$_SchemaValue_$112783_$dyn_memory_ptr",
                       "typeString": "enum LibTypes.SchemaValue[] memory"
                     }
                   },
-                  "id": 26988,
+                  "id": 27009,
                   "nodeType": "ExpressionStatement",
                   "src": "416:38:170"
                 },
                 {
                   "expression": {
-                    "id": 26993,
+                    "id": 27014,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "baseExpression": {
-                        "id": 26989,
+                        "id": 27010,
                         "name": "keys",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 26966,
+                        "referencedDeclaration": 26987,
                         "src": "461:4:170",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_string_memory_ptr_$dyn_memory_ptr",
                           "typeString": "string memory[] memory"
                         }
                       },
-                      "id": 26991,
+                      "id": 27012,
                       "indexExpression": {
                         "hexValue": "30",
-                        "id": 26990,
+                        "id": 27011,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -1797,7 +1797,7 @@
                     "operator": "=",
                     "rightHandSide": {
                       "hexValue": "7061727469636970616e74456e74697479",
-                      "id": 26992,
+                      "id": 27013,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -1817,34 +1817,34 @@
                       "typeString": "string memory"
                     }
                   },
-                  "id": 26994,
+                  "id": 27015,
                   "nodeType": "ExpressionStatement",
                   "src": "461:29:170"
                 },
                 {
                   "expression": {
-                    "id": 27001,
+                    "id": 27022,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "baseExpression": {
-                        "id": 26995,
+                        "id": 27016,
                         "name": "values",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 26970,
+                        "referencedDeclaration": 26991,
                         "src": "496:6:170",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_array$_t_enum$_SchemaValue_$107015_$dyn_memory_ptr",
+                          "typeIdentifier": "t_array$_t_enum$_SchemaValue_$112783_$dyn_memory_ptr",
                           "typeString": "enum LibTypes.SchemaValue[] memory"
                         }
                       },
-                      "id": 26997,
+                      "id": 27018,
                       "indexExpression": {
                         "hexValue": "30",
-                        "id": 26996,
+                        "id": 27017,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -1865,7 +1865,7 @@
                       "nodeType": "IndexAccess",
                       "src": "496:9:170",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_enum$_SchemaValue_$107015",
+                        "typeIdentifier": "t_enum$_SchemaValue_$112783",
                         "typeString": "enum LibTypes.SchemaValue"
                       }
                     },
@@ -1874,18 +1874,18 @@
                     "rightHandSide": {
                       "expression": {
                         "expression": {
-                          "id": 26998,
+                          "id": 27019,
                           "name": "LibTypes",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 107016,
+                          "referencedDeclaration": 112784,
                           "src": "508:8:170",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_LibTypes_$107016_$",
+                            "typeIdentifier": "t_type$_t_contract$_LibTypes_$112784_$",
                             "typeString": "type(library LibTypes)"
                           }
                         },
-                        "id": 26999,
+                        "id": 27020,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -1893,14 +1893,14 @@
                         "memberLocation": "517:11:170",
                         "memberName": "SchemaValue",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 107015,
+                        "referencedDeclaration": 112783,
                         "src": "508:20:170",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_enum$_SchemaValue_$107015_$",
+                          "typeIdentifier": "t_type$_t_enum$_SchemaValue_$112783_$",
                           "typeString": "type(enum LibTypes.SchemaValue)"
                         }
                       },
-                      "id": 27000,
+                      "id": 27021,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -1908,47 +1908,47 @@
                       "memberLocation": "529:7:170",
                       "memberName": "UINT256",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 106994,
+                      "referencedDeclaration": 112762,
                       "src": "508:28:170",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_enum$_SchemaValue_$107015",
+                        "typeIdentifier": "t_enum$_SchemaValue_$112783",
                         "typeString": "enum LibTypes.SchemaValue"
                       }
                     },
                     "src": "496:40:170",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_enum$_SchemaValue_$107015",
+                      "typeIdentifier": "t_enum$_SchemaValue_$112783",
                       "typeString": "enum LibTypes.SchemaValue"
                     }
                   },
-                  "id": 27002,
+                  "id": 27023,
                   "nodeType": "ExpressionStatement",
                   "src": "496:40:170"
                 },
                 {
                   "expression": {
-                    "id": 27007,
+                    "id": 27028,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "baseExpression": {
-                        "id": 27003,
+                        "id": 27024,
                         "name": "keys",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 26966,
+                        "referencedDeclaration": 26987,
                         "src": "543:4:170",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_string_memory_ptr_$dyn_memory_ptr",
                           "typeString": "string memory[] memory"
                         }
                       },
-                      "id": 27005,
+                      "id": 27026,
                       "indexExpression": {
                         "hexValue": "31",
-                        "id": 27004,
+                        "id": 27025,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -1977,7 +1977,7 @@
                     "operator": "=",
                     "rightHandSide": {
                       "hexValue": "756e69745479706573",
-                      "id": 27006,
+                      "id": 27027,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -1997,34 +1997,34 @@
                       "typeString": "string memory"
                     }
                   },
-                  "id": 27008,
+                  "id": 27029,
                   "nodeType": "ExpressionStatement",
                   "src": "543:21:170"
                 },
                 {
                   "expression": {
-                    "id": 27015,
+                    "id": 27036,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "baseExpression": {
-                        "id": 27009,
+                        "id": 27030,
                         "name": "values",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 26970,
+                        "referencedDeclaration": 26991,
                         "src": "570:6:170",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_array$_t_enum$_SchemaValue_$107015_$dyn_memory_ptr",
+                          "typeIdentifier": "t_array$_t_enum$_SchemaValue_$112783_$dyn_memory_ptr",
                           "typeString": "enum LibTypes.SchemaValue[] memory"
                         }
                       },
-                      "id": 27011,
+                      "id": 27032,
                       "indexExpression": {
                         "hexValue": "31",
-                        "id": 27010,
+                        "id": 27031,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -2045,7 +2045,7 @@
                       "nodeType": "IndexAccess",
                       "src": "570:9:170",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_enum$_SchemaValue_$107015",
+                        "typeIdentifier": "t_enum$_SchemaValue_$112783",
                         "typeString": "enum LibTypes.SchemaValue"
                       }
                     },
@@ -2054,18 +2054,18 @@
                     "rightHandSide": {
                       "expression": {
                         "expression": {
-                          "id": 27012,
+                          "id": 27033,
                           "name": "LibTypes",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 107016,
+                          "referencedDeclaration": 112784,
                           "src": "582:8:170",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_LibTypes_$107016_$",
+                            "typeIdentifier": "t_type$_t_contract$_LibTypes_$112784_$",
                             "typeString": "type(library LibTypes)"
                           }
                         },
-                        "id": 27013,
+                        "id": 27034,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -2073,14 +2073,14 @@
                         "memberLocation": "591:11:170",
                         "memberName": "SchemaValue",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 107015,
+                        "referencedDeclaration": 112783,
                         "src": "582:20:170",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_enum$_SchemaValue_$107015_$",
+                          "typeIdentifier": "t_type$_t_enum$_SchemaValue_$112783_$",
                           "typeString": "type(enum LibTypes.SchemaValue)"
                         }
                       },
-                      "id": 27014,
+                      "id": 27035,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -2088,47 +2088,47 @@
                       "memberLocation": "603:13:170",
                       "memberName": "UINT256_ARRAY",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 107012,
+                      "referencedDeclaration": 112780,
                       "src": "582:34:170",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_enum$_SchemaValue_$107015",
+                        "typeIdentifier": "t_enum$_SchemaValue_$112783",
                         "typeString": "enum LibTypes.SchemaValue"
                       }
                     },
                     "src": "570:46:170",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_enum$_SchemaValue_$107015",
+                      "typeIdentifier": "t_enum$_SchemaValue_$112783",
                       "typeString": "enum LibTypes.SchemaValue"
                     }
                   },
-                  "id": 27016,
+                  "id": 27037,
                   "nodeType": "ExpressionStatement",
                   "src": "570:46:170"
                 },
                 {
                   "expression": {
-                    "id": 27021,
+                    "id": 27042,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "baseExpression": {
-                        "id": 27017,
+                        "id": 27038,
                         "name": "keys",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 26966,
+                        "referencedDeclaration": 26987,
                         "src": "623:4:170",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_string_memory_ptr_$dyn_memory_ptr",
                           "typeString": "string memory[] memory"
                         }
                       },
-                      "id": 27019,
+                      "id": 27040,
                       "indexExpression": {
                         "hexValue": "32",
-                        "id": 27018,
+                        "id": 27039,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -2157,7 +2157,7 @@
                     "operator": "=",
                     "rightHandSide": {
                       "hexValue": "756e69744c6576656c73",
-                      "id": 27020,
+                      "id": 27041,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -2177,34 +2177,34 @@
                       "typeString": "string memory"
                     }
                   },
-                  "id": 27022,
+                  "id": 27043,
                   "nodeType": "ExpressionStatement",
                   "src": "623:22:170"
                 },
                 {
                   "expression": {
-                    "id": 27029,
+                    "id": 27050,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "baseExpression": {
-                        "id": 27023,
+                        "id": 27044,
                         "name": "values",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 26970,
+                        "referencedDeclaration": 26991,
                         "src": "651:6:170",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_array$_t_enum$_SchemaValue_$107015_$dyn_memory_ptr",
+                          "typeIdentifier": "t_array$_t_enum$_SchemaValue_$112783_$dyn_memory_ptr",
                           "typeString": "enum LibTypes.SchemaValue[] memory"
                         }
                       },
-                      "id": 27025,
+                      "id": 27046,
                       "indexExpression": {
                         "hexValue": "32",
-                        "id": 27024,
+                        "id": 27045,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -2225,7 +2225,7 @@
                       "nodeType": "IndexAccess",
                       "src": "651:9:170",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_enum$_SchemaValue_$107015",
+                        "typeIdentifier": "t_enum$_SchemaValue_$112783",
                         "typeString": "enum LibTypes.SchemaValue"
                       }
                     },
@@ -2234,18 +2234,18 @@
                     "rightHandSide": {
                       "expression": {
                         "expression": {
-                          "id": 27026,
+                          "id": 27047,
                           "name": "LibTypes",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 107016,
+                          "referencedDeclaration": 112784,
                           "src": "663:8:170",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_LibTypes_$107016_$",
+                            "typeIdentifier": "t_type$_t_contract$_LibTypes_$112784_$",
                             "typeString": "type(library LibTypes)"
                           }
                         },
-                        "id": 27027,
+                        "id": 27048,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -2253,14 +2253,14 @@
                         "memberLocation": "672:11:170",
                         "memberName": "SchemaValue",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 107015,
+                        "referencedDeclaration": 112783,
                         "src": "663:20:170",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_enum$_SchemaValue_$107015_$",
+                          "typeIdentifier": "t_type$_t_enum$_SchemaValue_$112783_$",
                           "typeString": "type(enum LibTypes.SchemaValue)"
                         }
                       },
-                      "id": 27028,
+                      "id": 27049,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -2268,47 +2268,47 @@
                       "memberLocation": "684:12:170",
                       "memberName": "UINT32_ARRAY",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 107009,
+                      "referencedDeclaration": 112777,
                       "src": "663:33:170",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_enum$_SchemaValue_$107015",
+                        "typeIdentifier": "t_enum$_SchemaValue_$112783",
                         "typeString": "enum LibTypes.SchemaValue"
                       }
                     },
                     "src": "651:45:170",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_enum$_SchemaValue_$107015",
+                      "typeIdentifier": "t_enum$_SchemaValue_$112783",
                       "typeString": "enum LibTypes.SchemaValue"
                     }
                   },
-                  "id": 27030,
+                  "id": 27051,
                   "nodeType": "ExpressionStatement",
                   "src": "651:45:170"
                 },
                 {
                   "expression": {
-                    "id": 27035,
+                    "id": 27056,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "baseExpression": {
-                        "id": 27031,
+                        "id": 27052,
                         "name": "keys",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 26966,
+                        "referencedDeclaration": 26987,
                         "src": "703:4:170",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_string_memory_ptr_$dyn_memory_ptr",
                           "typeString": "string memory[] memory"
                         }
                       },
-                      "id": 27033,
+                      "id": 27054,
                       "indexExpression": {
                         "hexValue": "33",
-                        "id": 27032,
+                        "id": 27053,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -2337,7 +2337,7 @@
                     "operator": "=",
                     "rightHandSide": {
                       "hexValue": "756e6974436f756e7473",
-                      "id": 27034,
+                      "id": 27055,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -2357,34 +2357,34 @@
                       "typeString": "string memory"
                     }
                   },
-                  "id": 27036,
+                  "id": 27057,
                   "nodeType": "ExpressionStatement",
                   "src": "703:22:170"
                 },
                 {
                   "expression": {
-                    "id": 27043,
+                    "id": 27064,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "baseExpression": {
-                        "id": 27037,
+                        "id": 27058,
                         "name": "values",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 26970,
+                        "referencedDeclaration": 26991,
                         "src": "731:6:170",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_array$_t_enum$_SchemaValue_$107015_$dyn_memory_ptr",
+                          "typeIdentifier": "t_array$_t_enum$_SchemaValue_$112783_$dyn_memory_ptr",
                           "typeString": "enum LibTypes.SchemaValue[] memory"
                         }
                       },
-                      "id": 27039,
+                      "id": 27060,
                       "indexExpression": {
                         "hexValue": "33",
-                        "id": 27038,
+                        "id": 27059,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -2405,7 +2405,7 @@
                       "nodeType": "IndexAccess",
                       "src": "731:9:170",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_enum$_SchemaValue_$107015",
+                        "typeIdentifier": "t_enum$_SchemaValue_$112783",
                         "typeString": "enum LibTypes.SchemaValue"
                       }
                     },
@@ -2414,18 +2414,18 @@
                     "rightHandSide": {
                       "expression": {
                         "expression": {
-                          "id": 27040,
+                          "id": 27061,
                           "name": "LibTypes",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 107016,
+                          "referencedDeclaration": 112784,
                           "src": "743:8:170",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_LibTypes_$107016_$",
+                            "typeIdentifier": "t_type$_t_contract$_LibTypes_$112784_$",
                             "typeString": "type(library LibTypes)"
                           }
                         },
-                        "id": 27041,
+                        "id": 27062,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -2433,14 +2433,14 @@
                         "memberLocation": "752:11:170",
                         "memberName": "SchemaValue",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 107015,
+                        "referencedDeclaration": 112783,
                         "src": "743:20:170",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_enum$_SchemaValue_$107015_$",
+                          "typeIdentifier": "t_type$_t_enum$_SchemaValue_$112783_$",
                           "typeString": "type(enum LibTypes.SchemaValue)"
                         }
                       },
-                      "id": 27042,
+                      "id": 27063,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -2448,20 +2448,20 @@
                       "memberLocation": "764:12:170",
                       "memberName": "UINT32_ARRAY",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 107009,
+                      "referencedDeclaration": 112777,
                       "src": "743:33:170",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_enum$_SchemaValue_$107015",
+                        "typeIdentifier": "t_enum$_SchemaValue_$112783",
                         "typeString": "enum LibTypes.SchemaValue"
                       }
                     },
                     "src": "731:45:170",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_enum$_SchemaValue_$107015",
+                      "typeIdentifier": "t_enum$_SchemaValue_$112783",
                       "typeString": "enum LibTypes.SchemaValue"
                     }
                   },
-                  "id": 27044,
+                  "id": 27065,
                   "nodeType": "ExpressionStatement",
                   "src": "731:45:170"
                 }
@@ -2477,29 +2477,29 @@
             "name": "getSchema",
             "nameLocation": "280:9:170",
             "overrides": {
-              "id": 26963,
+              "id": 26984,
               "nodeType": "OverrideSpecifier",
               "overrides": [],
               "src": "304:8:170"
             },
             "parameters": {
-              "id": 26962,
+              "id": 26983,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "289:2:170"
             },
             "returnParameters": {
-              "id": 26971,
+              "id": 26992,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 26966,
+                  "id": 26987,
                   "mutability": "mutable",
                   "name": "keys",
                   "nameLocation": "338:4:170",
                   "nodeType": "VariableDeclaration",
-                  "scope": 27046,
+                  "scope": 27067,
                   "src": "322:20:170",
                   "stateVariable": false,
                   "storageLocation": "memory",
@@ -2509,7 +2509,7 @@
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 26964,
+                      "id": 26985,
                       "name": "string",
                       "nodeType": "ElementaryTypeName",
                       "src": "322:6:170",
@@ -2518,7 +2518,7 @@
                         "typeString": "string"
                       }
                     },
-                    "id": 26965,
+                    "id": 26986,
                     "nodeType": "ArrayTypeName",
                     "src": "322:8:170",
                     "typeDescriptions": {
@@ -2530,46 +2530,46 @@
                 },
                 {
                   "constant": false,
-                  "id": 26970,
+                  "id": 26991,
                   "mutability": "mutable",
                   "name": "values",
                   "nameLocation": "374:6:170",
                   "nodeType": "VariableDeclaration",
-                  "scope": 27046,
+                  "scope": 27067,
                   "src": "344:36:170",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_enum$_SchemaValue_$107015_$dyn_memory_ptr",
+                    "typeIdentifier": "t_array$_t_enum$_SchemaValue_$112783_$dyn_memory_ptr",
                     "typeString": "enum LibTypes.SchemaValue[]"
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 26968,
+                      "id": 26989,
                       "nodeType": "UserDefinedTypeName",
                       "pathNode": {
-                        "id": 26967,
+                        "id": 26988,
                         "name": "LibTypes.SchemaValue",
                         "nameLocations": [
                           "344:8:170",
                           "353:11:170"
                         ],
                         "nodeType": "IdentifierPath",
-                        "referencedDeclaration": 107015,
+                        "referencedDeclaration": 112783,
                         "src": "344:20:170"
                       },
-                      "referencedDeclaration": 107015,
+                      "referencedDeclaration": 112783,
                       "src": "344:20:170",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_enum$_SchemaValue_$107015",
+                        "typeIdentifier": "t_enum$_SchemaValue_$112783",
                         "typeString": "enum LibTypes.SchemaValue"
                       }
                     },
-                    "id": 26969,
+                    "id": 26990,
                     "nodeType": "ArrayTypeName",
                     "src": "344:22:170",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_enum$_SchemaValue_$107015_$dyn_storage_ptr",
+                      "typeIdentifier": "t_array$_t_enum$_SchemaValue_$112783_$dyn_storage_ptr",
                       "typeString": "enum LibTypes.SchemaValue[]"
                     }
                   },
@@ -2578,18 +2578,18 @@
               ],
               "src": "321:60:170"
             },
-            "scope": 27162,
+            "scope": 27183,
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "public"
           },
           {
-            "id": 27070,
+            "id": 27091,
             "nodeType": "FunctionDefinition",
             "src": "785:190:170",
             "nodes": [],
             "body": {
-              "id": 27069,
+              "id": 27090,
               "nodeType": "Block",
               "src": "863:112:170",
               "nodes": [],
@@ -2598,11 +2598,11 @@
                   "expression": {
                     "arguments": [
                       {
-                        "id": 27055,
+                        "id": 27076,
                         "name": "entity",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 27048,
+                        "referencedDeclaration": 27069,
                         "src": "873:6:170",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -2613,18 +2613,18 @@
                         "arguments": [
                           {
                             "expression": {
-                              "id": 27058,
+                              "id": 27079,
                               "name": "value",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 27051,
+                              "referencedDeclaration": 27072,
                               "src": "892:5:170",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_BattleParticipant_$106683_calldata_ptr",
+                                "typeIdentifier": "t_struct$_BattleParticipant_$112451_calldata_ptr",
                                 "typeString": "struct BattleParticipant calldata"
                               }
                             },
-                            "id": 27059,
+                            "id": 27080,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -2632,7 +2632,7 @@
                             "memberLocation": "898:17:170",
                             "memberName": "participantEntity",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 106673,
+                            "referencedDeclaration": 112441,
                             "src": "892:23:170",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
@@ -2641,18 +2641,18 @@
                           },
                           {
                             "expression": {
-                              "id": 27060,
+                              "id": 27081,
                               "name": "value",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 27051,
+                              "referencedDeclaration": 27072,
                               "src": "917:5:170",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_BattleParticipant_$106683_calldata_ptr",
+                                "typeIdentifier": "t_struct$_BattleParticipant_$112451_calldata_ptr",
                                 "typeString": "struct BattleParticipant calldata"
                               }
                             },
-                            "id": 27061,
+                            "id": 27082,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -2660,7 +2660,7 @@
                             "memberLocation": "923:9:170",
                             "memberName": "unitTypes",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 106676,
+                            "referencedDeclaration": 112444,
                             "src": "917:15:170",
                             "typeDescriptions": {
                               "typeIdentifier": "t_array$_t_uint256_$dyn_calldata_ptr",
@@ -2669,18 +2669,18 @@
                           },
                           {
                             "expression": {
-                              "id": 27062,
+                              "id": 27083,
                               "name": "value",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 27051,
+                              "referencedDeclaration": 27072,
                               "src": "934:5:170",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_BattleParticipant_$106683_calldata_ptr",
+                                "typeIdentifier": "t_struct$_BattleParticipant_$112451_calldata_ptr",
                                 "typeString": "struct BattleParticipant calldata"
                               }
                             },
-                            "id": 27063,
+                            "id": 27084,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -2688,7 +2688,7 @@
                             "memberLocation": "940:10:170",
                             "memberName": "unitLevels",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 106679,
+                            "referencedDeclaration": 112447,
                             "src": "934:16:170",
                             "typeDescriptions": {
                               "typeIdentifier": "t_array$_t_uint32_$dyn_calldata_ptr",
@@ -2697,18 +2697,18 @@
                           },
                           {
                             "expression": {
-                              "id": 27064,
+                              "id": 27085,
                               "name": "value",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 27051,
+                              "referencedDeclaration": 27072,
                               "src": "952:5:170",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_BattleParticipant_$106683_calldata_ptr",
+                                "typeIdentifier": "t_struct$_BattleParticipant_$112451_calldata_ptr",
                                 "typeString": "struct BattleParticipant calldata"
                               }
                             },
-                            "id": 27065,
+                            "id": 27086,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -2716,7 +2716,7 @@
                             "memberLocation": "958:10:170",
                             "memberName": "unitCounts",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 106682,
+                            "referencedDeclaration": 112450,
                             "src": "952:16:170",
                             "typeDescriptions": {
                               "typeIdentifier": "t_array$_t_uint32_$dyn_calldata_ptr",
@@ -2744,7 +2744,7 @@
                             }
                           ],
                           "expression": {
-                            "id": 27056,
+                            "id": 27077,
                             "name": "abi",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -2755,7 +2755,7 @@
                               "typeString": "abi"
                             }
                           },
-                          "id": 27057,
+                          "id": 27078,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -2769,7 +2769,7 @@
                             "typeString": "function () pure returns (bytes memory)"
                           }
                         },
-                        "id": 27066,
+                        "id": 27087,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -2797,22 +2797,22 @@
                           "typeString": "bytes memory"
                         }
                       ],
-                      "id": 27054,
+                      "id": 27075,
                       "name": "set",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        27070,
-                        27098,
-                        106852
+                        27091,
+                        27119,
+                        112620
                       ],
-                      "referencedDeclaration": 106852,
+                      "referencedDeclaration": 112620,
                       "src": "869:3:170",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_uint256_$_t_bytes_memory_ptr_$returns$__$",
                         "typeString": "function (uint256,bytes memory)"
                       }
                     },
-                    "id": 27067,
+                    "id": 27088,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2828,7 +2828,7 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 27068,
+                  "id": 27089,
                   "nodeType": "ExpressionStatement",
                   "src": "869:101:170"
                 }
@@ -2841,17 +2841,17 @@
             "name": "set",
             "nameLocation": "794:3:170",
             "parameters": {
-              "id": 27052,
+              "id": 27073,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 27048,
+                  "id": 27069,
                   "mutability": "mutable",
                   "name": "entity",
                   "nameLocation": "806:6:170",
                   "nodeType": "VariableDeclaration",
-                  "scope": 27070,
+                  "scope": 27091,
                   "src": "798:14:170",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2860,7 +2860,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 27047,
+                    "id": 27068,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "798:7:170",
@@ -2873,36 +2873,36 @@
                 },
                 {
                   "constant": false,
-                  "id": 27051,
+                  "id": 27072,
                   "mutability": "mutable",
                   "name": "value",
                   "nameLocation": "841:5:170",
                   "nodeType": "VariableDeclaration",
-                  "scope": 27070,
+                  "scope": 27091,
                   "src": "814:32:170",
                   "stateVariable": false,
                   "storageLocation": "calldata",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_BattleParticipant_$106683_calldata_ptr",
+                    "typeIdentifier": "t_struct$_BattleParticipant_$112451_calldata_ptr",
                     "typeString": "struct BattleParticipant"
                   },
                   "typeName": {
-                    "id": 27050,
+                    "id": 27071,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 27049,
+                      "id": 27070,
                       "name": "BattleParticipant",
                       "nameLocations": [
                         "814:17:170"
                       ],
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 106683,
+                      "referencedDeclaration": 112451,
                       "src": "814:17:170"
                     },
-                    "referencedDeclaration": 106683,
+                    "referencedDeclaration": 112451,
                     "src": "814:17:170",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_BattleParticipant_$106683_storage_ptr",
+                      "typeIdentifier": "t_struct$_BattleParticipant_$112451_storage_ptr",
                       "typeString": "struct BattleParticipant"
                     }
                   },
@@ -2912,23 +2912,23 @@
               "src": "797:50:170"
             },
             "returnParameters": {
-              "id": 27053,
+              "id": 27074,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "863:0:170"
             },
-            "scope": 27162,
+            "scope": 27183,
             "stateMutability": "nonpayable",
             "virtual": true,
             "visibility": "public"
           },
           {
-            "id": 27098,
+            "id": 27119,
             "nodeType": "FunctionDefinition",
             "src": "979:267:170",
             "nodes": [],
             "body": {
-              "id": 27097,
+              "id": 27118,
               "nodeType": "Block",
               "src": "1158:88:170",
               "nodes": [],
@@ -2937,11 +2937,11 @@
                   "expression": {
                     "arguments": [
                       {
-                        "id": 27087,
+                        "id": 27108,
                         "name": "entity",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 27072,
+                        "referencedDeclaration": 27093,
                         "src": "1168:6:170",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -2951,11 +2951,11 @@
                       {
                         "arguments": [
                           {
-                            "id": 27090,
+                            "id": 27111,
                             "name": "participantEntity",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 27074,
+                            "referencedDeclaration": 27095,
                             "src": "1187:17:170",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
@@ -2963,11 +2963,11 @@
                             }
                           },
                           {
-                            "id": 27091,
+                            "id": 27112,
                             "name": "unitTypes",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 27077,
+                            "referencedDeclaration": 27098,
                             "src": "1206:9:170",
                             "typeDescriptions": {
                               "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
@@ -2975,11 +2975,11 @@
                             }
                           },
                           {
-                            "id": 27092,
+                            "id": 27113,
                             "name": "unitLevels",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 27080,
+                            "referencedDeclaration": 27101,
                             "src": "1217:10:170",
                             "typeDescriptions": {
                               "typeIdentifier": "t_array$_t_uint32_$dyn_memory_ptr",
@@ -2987,11 +2987,11 @@
                             }
                           },
                           {
-                            "id": 27093,
+                            "id": 27114,
                             "name": "unitCounts",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 27083,
+                            "referencedDeclaration": 27104,
                             "src": "1229:10:170",
                             "typeDescriptions": {
                               "typeIdentifier": "t_array$_t_uint32_$dyn_memory_ptr",
@@ -3019,7 +3019,7 @@
                             }
                           ],
                           "expression": {
-                            "id": 27088,
+                            "id": 27109,
                             "name": "abi",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -3030,7 +3030,7 @@
                               "typeString": "abi"
                             }
                           },
-                          "id": 27089,
+                          "id": 27110,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -3044,7 +3044,7 @@
                             "typeString": "function () pure returns (bytes memory)"
                           }
                         },
-                        "id": 27094,
+                        "id": 27115,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -3072,22 +3072,22 @@
                           "typeString": "bytes memory"
                         }
                       ],
-                      "id": 27086,
+                      "id": 27107,
                       "name": "set",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        27070,
-                        27098,
-                        106852
+                        27091,
+                        27119,
+                        112620
                       ],
-                      "referencedDeclaration": 106852,
+                      "referencedDeclaration": 112620,
                       "src": "1164:3:170",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_uint256_$_t_bytes_memory_ptr_$returns$__$",
                         "typeString": "function (uint256,bytes memory)"
                       }
                     },
-                    "id": 27095,
+                    "id": 27116,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3103,7 +3103,7 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 27096,
+                  "id": 27117,
                   "nodeType": "ExpressionStatement",
                   "src": "1164:77:170"
                 }
@@ -3116,17 +3116,17 @@
             "name": "set",
             "nameLocation": "988:3:170",
             "parameters": {
-              "id": 27084,
+              "id": 27105,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 27072,
+                  "id": 27093,
                   "mutability": "mutable",
                   "name": "entity",
                   "nameLocation": "1005:6:170",
                   "nodeType": "VariableDeclaration",
-                  "scope": 27098,
+                  "scope": 27119,
                   "src": "997:14:170",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3135,7 +3135,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 27071,
+                    "id": 27092,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "997:7:170",
@@ -3148,12 +3148,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 27074,
+                  "id": 27095,
                   "mutability": "mutable",
                   "name": "participantEntity",
                   "nameLocation": "1025:17:170",
                   "nodeType": "VariableDeclaration",
-                  "scope": 27098,
+                  "scope": 27119,
                   "src": "1017:25:170",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3162,7 +3162,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 27073,
+                    "id": 27094,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1017:7:170",
@@ -3175,12 +3175,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 27077,
+                  "id": 27098,
                   "mutability": "mutable",
                   "name": "unitTypes",
                   "nameLocation": "1065:9:170",
                   "nodeType": "VariableDeclaration",
-                  "scope": 27098,
+                  "scope": 27119,
                   "src": "1048:26:170",
                   "stateVariable": false,
                   "storageLocation": "memory",
@@ -3190,7 +3190,7 @@
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 27075,
+                      "id": 27096,
                       "name": "uint256",
                       "nodeType": "ElementaryTypeName",
                       "src": "1048:7:170",
@@ -3199,7 +3199,7 @@
                         "typeString": "uint256"
                       }
                     },
-                    "id": 27076,
+                    "id": 27097,
                     "nodeType": "ArrayTypeName",
                     "src": "1048:9:170",
                     "typeDescriptions": {
@@ -3211,12 +3211,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 27080,
+                  "id": 27101,
                   "mutability": "mutable",
                   "name": "unitLevels",
                   "nameLocation": "1096:10:170",
                   "nodeType": "VariableDeclaration",
-                  "scope": 27098,
+                  "scope": 27119,
                   "src": "1080:26:170",
                   "stateVariable": false,
                   "storageLocation": "memory",
@@ -3226,7 +3226,7 @@
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 27078,
+                      "id": 27099,
                       "name": "uint32",
                       "nodeType": "ElementaryTypeName",
                       "src": "1080:6:170",
@@ -3235,7 +3235,7 @@
                         "typeString": "uint32"
                       }
                     },
-                    "id": 27079,
+                    "id": 27100,
                     "nodeType": "ArrayTypeName",
                     "src": "1080:8:170",
                     "typeDescriptions": {
@@ -3247,12 +3247,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 27083,
+                  "id": 27104,
                   "mutability": "mutable",
                   "name": "unitCounts",
                   "nameLocation": "1128:10:170",
                   "nodeType": "VariableDeclaration",
-                  "scope": 27098,
+                  "scope": 27119,
                   "src": "1112:26:170",
                   "stateVariable": false,
                   "storageLocation": "memory",
@@ -3262,7 +3262,7 @@
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 27081,
+                      "id": 27102,
                       "name": "uint32",
                       "nodeType": "ElementaryTypeName",
                       "src": "1112:6:170",
@@ -3271,7 +3271,7 @@
                         "typeString": "uint32"
                       }
                     },
-                    "id": 27082,
+                    "id": 27103,
                     "nodeType": "ArrayTypeName",
                     "src": "1112:8:170",
                     "typeDescriptions": {
@@ -3285,43 +3285,43 @@
               "src": "991:151:170"
             },
             "returnParameters": {
-              "id": 27085,
+              "id": 27106,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1158:0:170"
             },
-            "scope": 27162,
+            "scope": 27183,
             "stateMutability": "nonpayable",
             "virtual": true,
             "visibility": "public"
           },
           {
-            "id": 27144,
+            "id": 27165,
             "nodeType": "FunctionDefinition",
             "src": "1250:401:170",
             "nodes": [],
             "body": {
-              "id": 27143,
+              "id": 27164,
               "nodeType": "Block",
               "src": "1339:312:170",
               "nodes": [],
               "statements": [
                 {
                   "assignments": [
-                    27107,
-                    27110,
-                    27113,
-                    27116
+                    27128,
+                    27131,
+                    27134,
+                    27137
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 27107,
+                      "id": 27128,
                       "mutability": "mutable",
                       "name": "participantEntity",
                       "nameLocation": "1361:17:170",
                       "nodeType": "VariableDeclaration",
-                      "scope": 27143,
+                      "scope": 27164,
                       "src": "1353:25:170",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -3330,7 +3330,7 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 27106,
+                        "id": 27127,
                         "name": "uint256",
                         "nodeType": "ElementaryTypeName",
                         "src": "1353:7:170",
@@ -3343,12 +3343,12 @@
                     },
                     {
                       "constant": false,
-                      "id": 27110,
+                      "id": 27131,
                       "mutability": "mutable",
                       "name": "unitTypes",
                       "nameLocation": "1403:9:170",
                       "nodeType": "VariableDeclaration",
-                      "scope": 27143,
+                      "scope": 27164,
                       "src": "1386:26:170",
                       "stateVariable": false,
                       "storageLocation": "memory",
@@ -3358,7 +3358,7 @@
                       },
                       "typeName": {
                         "baseType": {
-                          "id": 27108,
+                          "id": 27129,
                           "name": "uint256",
                           "nodeType": "ElementaryTypeName",
                           "src": "1386:7:170",
@@ -3367,7 +3367,7 @@
                             "typeString": "uint256"
                           }
                         },
-                        "id": 27109,
+                        "id": 27130,
                         "nodeType": "ArrayTypeName",
                         "src": "1386:9:170",
                         "typeDescriptions": {
@@ -3379,12 +3379,12 @@
                     },
                     {
                       "constant": false,
-                      "id": 27113,
+                      "id": 27134,
                       "mutability": "mutable",
                       "name": "unitLevels",
                       "nameLocation": "1436:10:170",
                       "nodeType": "VariableDeclaration",
-                      "scope": 27143,
+                      "scope": 27164,
                       "src": "1420:26:170",
                       "stateVariable": false,
                       "storageLocation": "memory",
@@ -3394,7 +3394,7 @@
                       },
                       "typeName": {
                         "baseType": {
-                          "id": 27111,
+                          "id": 27132,
                           "name": "uint32",
                           "nodeType": "ElementaryTypeName",
                           "src": "1420:6:170",
@@ -3403,7 +3403,7 @@
                             "typeString": "uint32"
                           }
                         },
-                        "id": 27112,
+                        "id": 27133,
                         "nodeType": "ArrayTypeName",
                         "src": "1420:8:170",
                         "typeDescriptions": {
@@ -3415,12 +3415,12 @@
                     },
                     {
                       "constant": false,
-                      "id": 27116,
+                      "id": 27137,
                       "mutability": "mutable",
                       "name": "unitCounts",
                       "nameLocation": "1470:10:170",
                       "nodeType": "VariableDeclaration",
-                      "scope": 27143,
+                      "scope": 27164,
                       "src": "1454:26:170",
                       "stateVariable": false,
                       "storageLocation": "memory",
@@ -3430,7 +3430,7 @@
                       },
                       "typeName": {
                         "baseType": {
-                          "id": 27114,
+                          "id": 27135,
                           "name": "uint32",
                           "nodeType": "ElementaryTypeName",
                           "src": "1454:6:170",
@@ -3439,7 +3439,7 @@
                             "typeString": "uint32"
                           }
                         },
-                        "id": 27115,
+                        "id": 27136,
                         "nodeType": "ArrayTypeName",
                         "src": "1454:8:170",
                         "typeDescriptions": {
@@ -3450,17 +3450,17 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 27135,
+                  "id": 27156,
                   "initialValue": {
                     "arguments": [
                       {
                         "arguments": [
                           {
-                            "id": 27120,
+                            "id": 27141,
                             "name": "entity",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 27100,
+                            "referencedDeclaration": 27121,
                             "src": "1512:6:170",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
@@ -3475,18 +3475,18 @@
                               "typeString": "uint256"
                             }
                           ],
-                          "id": 27119,
+                          "id": 27140,
                           "name": "getRawValue",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 106897,
+                          "referencedDeclaration": 112665,
                           "src": "1500:11:170",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_bytes_memory_ptr_$",
                             "typeString": "function (uint256) view returns (bytes memory)"
                           }
                         },
-                        "id": 27121,
+                        "id": 27142,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -3505,7 +3505,7 @@
                       {
                         "components": [
                           {
-                            "id": 27123,
+                            "id": 27144,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -3517,7 +3517,7 @@
                               "typeString": "type(uint256)"
                             },
                             "typeName": {
-                              "id": 27122,
+                              "id": 27143,
                               "name": "uint256",
                               "nodeType": "ElementaryTypeName",
                               "src": "1522:7:170",
@@ -3526,7 +3526,7 @@
                           },
                           {
                             "baseExpression": {
-                              "id": 27125,
+                              "id": 27146,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
@@ -3538,14 +3538,14 @@
                                 "typeString": "type(uint256)"
                               },
                               "typeName": {
-                                "id": 27124,
+                                "id": 27145,
                                 "name": "uint256",
                                 "nodeType": "ElementaryTypeName",
                                 "src": "1531:7:170",
                                 "typeDescriptions": {}
                               }
                             },
-                            "id": 27126,
+                            "id": 27147,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -3559,7 +3559,7 @@
                           },
                           {
                             "baseExpression": {
-                              "id": 27128,
+                              "id": 27149,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
@@ -3571,14 +3571,14 @@
                                 "typeString": "type(uint32)"
                               },
                               "typeName": {
-                                "id": 27127,
+                                "id": 27148,
                                 "name": "uint32",
                                 "nodeType": "ElementaryTypeName",
                                 "src": "1542:6:170",
                                 "typeDescriptions": {}
                               }
                             },
-                            "id": 27129,
+                            "id": 27150,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -3592,7 +3592,7 @@
                           },
                           {
                             "baseExpression": {
-                              "id": 27131,
+                              "id": 27152,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
@@ -3604,14 +3604,14 @@
                                 "typeString": "type(uint32)"
                               },
                               "typeName": {
-                                "id": 27130,
+                                "id": 27151,
                                 "name": "uint32",
                                 "nodeType": "ElementaryTypeName",
                                 "src": "1552:6:170",
                                 "typeDescriptions": {}
                               }
                             },
-                            "id": 27132,
+                            "id": 27153,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -3624,7 +3624,7 @@
                             }
                           }
                         ],
-                        "id": 27133,
+                        "id": 27154,
                         "isConstant": false,
                         "isInlineArray": false,
                         "isLValue": false,
@@ -3650,7 +3650,7 @@
                         }
                       ],
                       "expression": {
-                        "id": 27117,
+                        "id": 27138,
                         "name": "abi",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
@@ -3661,7 +3661,7 @@
                           "typeString": "abi"
                         }
                       },
-                      "id": 27118,
+                      "id": 27139,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -3675,7 +3675,7 @@
                         "typeString": "function () pure"
                       }
                     },
-                    "id": 27134,
+                    "id": 27155,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3698,11 +3698,11 @@
                   "expression": {
                     "arguments": [
                       {
-                        "id": 27137,
+                        "id": 27158,
                         "name": "participantEntity",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 27107,
+                        "referencedDeclaration": 27128,
                         "src": "1593:17:170",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -3710,11 +3710,11 @@
                         }
                       },
                       {
-                        "id": 27138,
+                        "id": 27159,
                         "name": "unitTypes",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 27110,
+                        "referencedDeclaration": 27131,
                         "src": "1612:9:170",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
@@ -3722,11 +3722,11 @@
                         }
                       },
                       {
-                        "id": 27139,
+                        "id": 27160,
                         "name": "unitLevels",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 27113,
+                        "referencedDeclaration": 27134,
                         "src": "1623:10:170",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_uint32_$dyn_memory_ptr",
@@ -3734,11 +3734,11 @@
                         }
                       },
                       {
-                        "id": 27140,
+                        "id": 27161,
                         "name": "unitCounts",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 27116,
+                        "referencedDeclaration": 27137,
                         "src": "1635:10:170",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_uint32_$dyn_memory_ptr",
@@ -3765,18 +3765,18 @@
                           "typeString": "uint32[] memory"
                         }
                       ],
-                      "id": 27136,
+                      "id": 27157,
                       "name": "BattleParticipant",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 106683,
+                      "referencedDeclaration": 112451,
                       "src": "1575:17:170",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_type$_t_struct$_BattleParticipant_$106683_storage_ptr_$",
+                        "typeIdentifier": "t_type$_t_struct$_BattleParticipant_$112451_storage_ptr_$",
                         "typeString": "type(struct BattleParticipant storage pointer)"
                       }
                     },
-                    "id": 27141,
+                    "id": 27162,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3788,12 +3788,12 @@
                     "src": "1575:71:170",
                     "tryCall": false,
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_BattleParticipant_$106683_memory_ptr",
+                      "typeIdentifier": "t_struct$_BattleParticipant_$112451_memory_ptr",
                       "typeString": "struct BattleParticipant memory"
                     }
                   },
-                  "functionReturnParameters": 27105,
-                  "id": 27142,
+                  "functionReturnParameters": 27126,
+                  "id": 27163,
                   "nodeType": "Return",
                   "src": "1568:78:170"
                 }
@@ -3806,17 +3806,17 @@
             "name": "getValue",
             "nameLocation": "1259:8:170",
             "parameters": {
-              "id": 27101,
+              "id": 27122,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 27100,
+                  "id": 27121,
                   "mutability": "mutable",
                   "name": "entity",
                   "nameLocation": "1276:6:170",
                   "nodeType": "VariableDeclaration",
-                  "scope": 27144,
+                  "scope": 27165,
                   "src": "1268:14:170",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3825,7 +3825,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 27099,
+                    "id": 27120,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1268:7:170",
@@ -3840,41 +3840,41 @@
               "src": "1267:16:170"
             },
             "returnParameters": {
-              "id": 27105,
+              "id": 27126,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 27104,
+                  "id": 27125,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 27144,
+                  "scope": 27165,
                   "src": "1313:24:170",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_BattleParticipant_$106683_memory_ptr",
+                    "typeIdentifier": "t_struct$_BattleParticipant_$112451_memory_ptr",
                     "typeString": "struct BattleParticipant"
                   },
                   "typeName": {
-                    "id": 27103,
+                    "id": 27124,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 27102,
+                      "id": 27123,
                       "name": "BattleParticipant",
                       "nameLocations": [
                         "1313:17:170"
                       ],
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 106683,
+                      "referencedDeclaration": 112451,
                       "src": "1313:17:170"
                     },
-                    "referencedDeclaration": 106683,
+                    "referencedDeclaration": 112451,
                     "src": "1313:17:170",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_BattleParticipant_$106683_storage_ptr",
+                      "typeIdentifier": "t_struct$_BattleParticipant_$112451_storage_ptr",
                       "typeString": "struct BattleParticipant"
                     }
                   },
@@ -3883,18 +3883,18 @@
               ],
               "src": "1312:26:170"
             },
-            "scope": 27162,
+            "scope": 27183,
             "stateMutability": "view",
             "virtual": true,
             "visibility": "public"
           },
           {
-            "id": 27161,
+            "id": 27182,
             "nodeType": "FunctionDefinition",
             "src": "1655:170:170",
             "nodes": [],
             "body": {
-              "id": 27160,
+              "id": 27181,
               "nodeType": "Block",
               "src": "1767:58:170",
               "nodes": [],
@@ -3905,14 +3905,14 @@
                       {
                         "arguments": [
                           {
-                            "id": 27156,
+                            "id": 27177,
                             "name": "result",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 27147,
+                            "referencedDeclaration": 27168,
                             "src": "1812:6:170",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_BattleParticipant_$106683_calldata_ptr",
+                              "typeIdentifier": "t_struct$_BattleParticipant_$112451_calldata_ptr",
                               "typeString": "struct BattleParticipant calldata"
                             }
                           }
@@ -3920,12 +3920,12 @@
                         "expression": {
                           "argumentTypes": [
                             {
-                              "typeIdentifier": "t_struct$_BattleParticipant_$106683_calldata_ptr",
+                              "typeIdentifier": "t_struct$_BattleParticipant_$112451_calldata_ptr",
                               "typeString": "struct BattleParticipant calldata"
                             }
                           ],
                           "expression": {
-                            "id": 27154,
+                            "id": 27175,
                             "name": "abi",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -3936,7 +3936,7 @@
                               "typeString": "abi"
                             }
                           },
-                          "id": 27155,
+                          "id": 27176,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -3950,7 +3950,7 @@
                             "typeString": "function () pure returns (bytes memory)"
                           }
                         },
-                        "id": 27157,
+                        "id": 27178,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -3974,11 +3974,11 @@
                           "typeString": "bytes memory"
                         }
                       ],
-                      "id": 27153,
+                      "id": 27174,
                       "name": "getEntitiesWithValue",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        27161,
+                        27182,
                         104
                       ],
                       "referencedDeclaration": 104,
@@ -3988,7 +3988,7 @@
                         "typeString": "function (bytes memory) view returns (uint256[] memory)"
                       }
                     },
-                    "id": 27158,
+                    "id": 27179,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -4004,8 +4004,8 @@
                       "typeString": "uint256[] memory"
                     }
                   },
-                  "functionReturnParameters": 27152,
-                  "id": 27159,
+                  "functionReturnParameters": 27173,
+                  "id": 27180,
                   "nodeType": "Return",
                   "src": "1773:47:170"
                 }
@@ -4018,41 +4018,41 @@
             "name": "getEntitiesWithValue",
             "nameLocation": "1664:20:170",
             "parameters": {
-              "id": 27148,
+              "id": 27169,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 27147,
+                  "id": 27168,
                   "mutability": "mutable",
                   "name": "result",
                   "nameLocation": "1712:6:170",
                   "nodeType": "VariableDeclaration",
-                  "scope": 27161,
+                  "scope": 27182,
                   "src": "1685:33:170",
                   "stateVariable": false,
                   "storageLocation": "calldata",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_BattleParticipant_$106683_calldata_ptr",
+                    "typeIdentifier": "t_struct$_BattleParticipant_$112451_calldata_ptr",
                     "typeString": "struct BattleParticipant"
                   },
                   "typeName": {
-                    "id": 27146,
+                    "id": 27167,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 27145,
+                      "id": 27166,
                       "name": "BattleParticipant",
                       "nameLocations": [
                         "1685:17:170"
                       ],
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 106683,
+                      "referencedDeclaration": 112451,
                       "src": "1685:17:170"
                     },
-                    "referencedDeclaration": 106683,
+                    "referencedDeclaration": 112451,
                     "src": "1685:17:170",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_BattleParticipant_$106683_storage_ptr",
+                      "typeIdentifier": "t_struct$_BattleParticipant_$112451_storage_ptr",
                       "typeString": "struct BattleParticipant"
                     }
                   },
@@ -4062,17 +4062,17 @@
               "src": "1684:35:170"
             },
             "returnParameters": {
-              "id": 27152,
+              "id": 27173,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 27151,
+                  "id": 27172,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 27161,
+                  "scope": 27182,
                   "src": "1749:16:170",
                   "stateVariable": false,
                   "storageLocation": "memory",
@@ -4082,7 +4082,7 @@
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 27149,
+                      "id": 27170,
                       "name": "uint256",
                       "nodeType": "ElementaryTypeName",
                       "src": "1749:7:170",
@@ -4091,7 +4091,7 @@
                         "typeString": "uint256"
                       }
                     },
-                    "id": 27150,
+                    "id": 27171,
                     "nodeType": "ArrayTypeName",
                     "src": "1749:9:170",
                     "typeDescriptions": {
@@ -4104,7 +4104,7 @@
               ],
               "src": "1748:18:170"
             },
-            "scope": 27162,
+            "scope": 27183,
             "stateMutability": "view",
             "virtual": true,
             "visibility": "public"
@@ -4114,7 +4114,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 26948,
+              "id": 26969,
               "name": "Component",
               "nameLocations": [
                 "191:9:170"
@@ -4123,41 +4123,41 @@
               "referencedDeclaration": 262,
               "src": "191:9:170"
             },
-            "id": 26949,
+            "id": 26970,
             "nodeType": "InheritanceSpecifier",
             "src": "191:9:170"
           }
         ],
         "canonicalName": "BattleParticipantComponent",
         "contractDependencies": [
-          107209,
-          107375
+          112977,
+          113143
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          27162,
+          27183,
           262,
-          106977,
-          109710,
-          107413,
+          112745,
+          115478,
+          113181,
           2125,
-          109266,
-          109749,
-          109142,
+          115034,
+          115517,
+          114910,
           1180,
-          109009,
+          114777,
           2168,
-          109276
+          115044
         ],
         "name": "BattleParticipantComponent",
         "nameLocation": "161:26:170",
-        "scope": 27163,
+        "scope": 27184,
         "usedErrors": [
-          106777,
-          109635,
-          109746,
-          109748
+          112545,
+          115403,
+          115514,
+          115516
         ]
       }
     ],

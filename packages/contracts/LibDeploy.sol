@@ -147,6 +147,8 @@ import { LibInitDebug } from "libraries/LibInitDebug.sol";
 import { LibInitMotherlode } from "libraries/LibInitMotherlode.sol";
 import { LibInitScoreMultipliers } from "libraries/LibInitScoreMultipliers.sol";
 import { LibInitUnits } from "libraries/LibInitUnits.sol";
+import { LibInitObjectives } from "libraries/LibInitObjectives.sol";
+import { LibInitPirateAsteroids } from "libraries/LibInitPirateAsteroids.sol";
 
 struct DeployResult {
   IWorld world;
@@ -542,6 +544,8 @@ library LibDeploy {
       LibInitMotherlode.init(result.world);
       LibInitScoreMultipliers.init(result.world);
       LibInitUnits.init(result.world);
+      LibInitObjectives.init(result.world);
+      LibInitPirateAsteroids.init(result.world);
     }
   }
   
