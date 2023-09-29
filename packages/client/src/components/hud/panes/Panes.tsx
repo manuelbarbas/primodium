@@ -11,17 +11,23 @@ import { Outgoingfleets } from "./OutgoingFleets";
 import { Reinforcementfleets } from "./ReinforcementFleet";
 import { OwnedMotherlodes } from "./OwnedMotherlodes";
 import { Objectives } from "./Objectives";
+import { useSettingsStore } from "src/game/stores/SettingsStore";
 
 export const Panes: React.FC = () => {
   const playerAstroid = HomeAsteroid.use()?.value;
   const player = Account.use(undefined, {
     value: SingletonID,
   }).value;
+  const [newPlayer, setNewPlayer] = useSettingsStore((state) => [
+    state.newPlayer,
+    state.setNewPlayer,
+  ]);
 
   return (
     <Tabs
       className="flex gap-2 h-[25rem] pointer-events-auto"
-      defaultIndex={-1}
+      defaultIndex={newPlayer ? 4 : -1}
+      onChange={() => setNewPlayer(false)}
     >
       <Tabs.Pane index={0} className="w-96">
         <Outgoingfleets user={player ?? SingletonID} />
