@@ -1,7 +1,7 @@
 import { Perlin } from "@latticexyz/noise";
 import { EntityID, Has, HasValue, Not, runQuery } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { BlockType, DisplayKeyPair } from "./constants";
+import { BlockType } from "./constants";
 import {
   Position,
   BuildingType,
@@ -9,12 +9,8 @@ import {
   P_Terrain,
 } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
-import { ActiveAsteroid } from "src/network/components/clientComponents";
+import { HomeAsteroid } from "src/network/components/clientComponents";
 import { hashKeyCoord } from "./encode";
-import AsteroidTiledMap from "../maps/asteroid_0.7.json";
-import { AsteroidMap } from "@game/constants";
-
-const { TerrainTilesetIdToEntityId } = AsteroidMap;
 
 // TODO: randomize perlinSeed
 const perlinSeed1 = 60194;
@@ -44,31 +40,6 @@ export function getTerrainNormalizedDepth(coord: Coord, perlin: Perlin) {
   return Math.floor(normalizedDepth);
 }
 
-export function getTerrainKey(coord: Coord) {
-  if (
-    coord.x < 0 ||
-    coord.x > AsteroidTiledMap.width - 1 ||
-    coord.y < 0 ||
-    coord.y > AsteroidTiledMap.height
-  ) {
-    return null;
-  }
-
-  //reverse through the layers
-  for (let i = AsteroidTiledMap.layers.length - 1; i >= 0; i--) {
-    const layer = AsteroidTiledMap.layers[i];
-    const tile =
-      layer.data[
-        coord.x +
-          (AsteroidTiledMap.height - coord.y - 1) * AsteroidTiledMap.width
-      ];
-
-    if (tile > 0) return TerrainTilesetIdToEntityId[tile - 1];
-  }
-
-  return null;
-}
-
 export function getResourceKey(coord: Coord) {
   const coordEntity = hashKeyCoord("terrain", {
     ...coord,
@@ -95,52 +66,6 @@ export function getResourceKey(coord: Coord) {
 
   return resource;
 }
-const topLayerKeys = new Map<string, EntityID | null>();
-
-export function getTopLayerKey(coord: Coord) {
-  const coordKey = `${coord.x}-${coord.y}`; // Assuming 2D coords. Adjust if needed.
-
-  if (topLayerKeys.has(coordKey)) return topLayerKeys.get(coordKey);
-
-  const terrainKey = getTerrainKey(coord);
-  const resourceKey = getResourceKey(coord);
-  let result;
-
-  if (resourceKey === BlockType.Air || terrainKey === BlockType.Water) {
-    result = terrainKey;
-  } else {
-    result = resourceKey;
-  }
-
-  topLayerKeys.set(coordKey, result);
-  return result;
-}
-
-const topLayerKeyPair = new Map<
-  string,
-  { terrain: EntityID | null; resource: EntityID | null }
->();
-
-export function getTopLayerKeyPair(coord: Coord): DisplayKeyPair {
-  const coordKey = `${coord.x}-${coord.y}`; // Assuming 2D coords. Adjust if needed.
-
-  if (topLayerKeyPair.has(coordKey)) {
-    return topLayerKeyPair.get(coordKey)!;
-  }
-
-  const terrainKey = getTerrainKey(coord);
-  const resourceKey = getResourceKey(coord);
-
-  if (resourceKey === BlockType.Air || terrainKey === BlockType.Water) {
-    const pair = { terrain: terrainKey, resource: null };
-    topLayerKeyPair.set(coordKey, pair);
-    return pair;
-  } else {
-    const pair = { terrain: terrainKey, resource: resourceKey };
-    topLayerKeyPair.set(coordKey, pair);
-    return pair;
-  }
-}
 
 //gets all tiles of a certain type within a certain range with the origin being the center
 export function getTilesOfTypeInRange(
@@ -159,8 +84,8 @@ export function getTilesOfTypeInRange(
       }
 
       const currentCoord = { x: origin.x + x, y: origin.y + y };
-      const keyPair = getTopLayerKeyPair(currentCoord);
-      if (keyPair.resource === type || keyPair.terrain === type) {
+      const resource = getResourceKey(currentCoord);
+      if (resource === type) {
         tiles.push(currentCoord);
       }
     }
@@ -217,7 +142,7 @@ export const getBuildingAtCoord = (coord: Coord) => {
     HasValue(Position, {
       x: coord.x,
       y: coord.y,
-      parent: ActiveAsteroid.get()?.value,
+      parent: HomeAsteroid.get()?.value,
     }),
     Not(BuildingType),
   ]);

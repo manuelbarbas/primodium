@@ -1,14 +1,15 @@
 import { KeybindActions } from "@game/constants";
-import { EntityID } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { createCameraApi } from "src/game/api/camera";
 import { createInputApi } from "src/game/api/input";
 import { Position, MainBase } from "src/network/components/chainComponents";
+import { Account } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
 
-export const setupKeybinds = (scene: Scene, player: EntityID) => {
+export const setupKeybinds = (scene: Scene) => {
   const { pan } = createCameraApi(scene);
   const { addListener } = createInputApi(scene);
+  const player = Account.get()?.value!;
 
   const mainbaseKeybind = addListener(KeybindActions.Base, () => {
     const mainBase = MainBase.get(player)?.value;

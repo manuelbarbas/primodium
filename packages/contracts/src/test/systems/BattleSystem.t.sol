@@ -9,6 +9,7 @@ import { S_ResolveBattleSystem, ID as S_ResolveBattleSystemID } from "../../syst
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 import { BuildSystem as BuildSystem } from "../../systems/BuildSystem.sol";
 
+import { BattleSpaceRockComponent, ID as BattleSpaceRockComponentID } from "../../components/BattleSpaceRockComponent.sol";
 import { BattleParticipant } from "../../types.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "../../components/LevelComponent.sol";
@@ -96,6 +97,7 @@ contract S_ResolveBattleSystemTest is PrimodiumTest {
       battleEntity,
       abi.encode(defender.participantEntity, defender.unitTypes, defender.unitLevels, defender.unitCounts)
     );
+    componentDevSystem.executeTyped(BattleSpaceRockComponentID, battleEntity, abi.encode(getHomeAsteroidEntity(bob)));
 
     battleSystem.executeTyped(alice, battleEntity);
     assertTrue(battleResultComponent.has(battleEntity), "battle result not found");
@@ -150,7 +152,7 @@ contract S_ResolveBattleSystemTest is PrimodiumTest {
       battleEntity,
       abi.encode(defender.participantEntity, defender.unitTypes, defender.unitLevels, defender.unitCounts)
     );
-
+    componentDevSystem.executeTyped(BattleSpaceRockComponentID, battleEntity, abi.encode(getHomeAsteroidEntity(bob)));
     battleSystem.executeTyped(alice, battleEntity);
     assertTrue(battleResultComponent.has(battleEntity), "battle result not found");
     BattleResult memory result = battleResultComponent.getValue(battleEntity);
@@ -161,6 +163,65 @@ contract S_ResolveBattleSystemTest is PrimodiumTest {
       console.log("defender units left: %s", result.defenderUnitsLeft[i]);
     }
     assertEq(result.winnerEntity, addressToEntity(alice), "winner is not alice");
+
+    vm.stopPrank();
+  }
+
+  function testBattleWithDefenceBuilding() public {
+    vm.startPrank(bob);
+    buildSystem.executeTyped(DebugDefenceBuilding, getCoord1(bob));
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+    uint256 battleEntity = LibEncode.hashKeyEntity(S_ResolveBattleSystemID, 0);
+
+    //alice
+    uint256 unitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice));
+    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(0));
+
+    uint256[] memory unitTypes = new uint256[](1);
+    unitTypes[0] = DebugUnit;
+    uint32[] memory unitLevels = new uint32[](1);
+    unitLevels[0] = 1;
+    uint32[] memory unitCounts = new uint32[](1);
+    unitCounts[0] = 100;
+    BattleParticipant memory attacker = BattleParticipant(addressToEntity(alice), unitTypes, unitLevels, unitCounts);
+    componentDevSystem.executeTyped(
+      BattleAttackerComponentID,
+      battleEntity,
+      abi.encode(attacker.participantEntity, attacker.unitTypes, attacker.unitLevels, attacker.unitCounts)
+    );
+    BattleParticipant memory getAttacker = BattleAttackerComponent(component(BattleAttackerComponentID)).getValue(
+      battleEntity
+    );
+    console.log("attacker: %s", getAttacker.participantEntity);
+    //bob
+    unitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(bob));
+    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(0));
+
+    unitTypes = new uint256[](1);
+    unitTypes[0] = DebugUnit;
+    unitLevels = new uint32[](1);
+    unitLevels[0] = 1;
+    unitCounts = new uint32[](1);
+    unitCounts[0] = 100;
+    BattleParticipant memory defender = BattleParticipant(addressToEntity(bob), unitTypes, unitLevels, unitCounts);
+    componentDevSystem.executeTyped(
+      BattleDefenderComponentID,
+      battleEntity,
+      abi.encode(defender.participantEntity, defender.unitTypes, defender.unitLevels, defender.unitCounts)
+    );
+    componentDevSystem.executeTyped(BattleSpaceRockComponentID, battleEntity, abi.encode(getHomeAsteroidEntity(bob)));
+    battleSystem.executeTyped(alice, battleEntity);
+    assertTrue(battleResultComponent.has(battleEntity), "battle result not found");
+    BattleResult memory result = battleResultComponent.getValue(battleEntity);
+    for (uint256 i = 0; i < result.attackerUnitsLeft.length; i++) {
+      console.log("attacker units left: %s", result.attackerUnitsLeft[i]);
+    }
+    for (uint256 i = 0; i < result.defenderUnitsLeft.length; i++) {
+      console.log("defender units left: %s", result.defenderUnitsLeft[i]);
+    }
+    assertEq(result.winnerEntity, addressToEntity(bob), "winner is not bob");
 
     vm.stopPrank();
   }
@@ -213,7 +274,7 @@ contract S_ResolveBattleSystemTest is PrimodiumTest {
       battleEntity,
       abi.encode(defender.participantEntity, defender.unitTypes, defender.unitLevels, defender.unitCounts)
     );
-
+    componentDevSystem.executeTyped(BattleSpaceRockComponentID, battleEntity, abi.encode(getHomeAsteroidEntity(bob)));
     battleSystem.executeTyped(alice, battleEntity);
     assertTrue(battleResultComponent.has(battleEntity), "battle result not found");
 

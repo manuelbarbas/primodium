@@ -1,14 +1,15 @@
 import { useState } from "react";
+import { Badge } from "../core/Badge";
 
 export const NumberInput: React.FC<{
   min: number;
   max: number;
   onChange: (val: number) => void;
 }> = ({ min, max, onChange }) => {
-  const [count, setCount] = useState<number | "">(0);
+  const [count, setCount] = useState<number | "">(min);
 
   return (
-    <div className="flex gap-2 mt-4 mb-2">
+    <Badge className="flex gap-2 mt-4 mb-2 p-5 rounded-box">
       <button
         onClick={() => {
           if (count !== "") {
@@ -21,7 +22,7 @@ export const NumberInput: React.FC<{
       </button>
       <input
         type="number"
-        className="bg-transparent text-center w-fit outline-none border-b border-pink-900"
+        className="bg-transparent text-center w-fit outline-none border-b border-secondary"
         value={count}
         placeholder="0"
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,12 +32,12 @@ export const NumberInput: React.FC<{
 
           if (isNaN(value)) {
             setCount("");
-            onChange(0);
+            onChange(min);
             return;
           }
 
           // Check if the input value is a number and within the specified range
-          if (value >= 0 && value <= max) {
+          if (value >= min && value <= max) {
             setCount(value);
             onChange(value);
             return;
@@ -46,13 +47,13 @@ export const NumberInput: React.FC<{
             setCount(max);
             onChange(max);
           } else {
-            setCount(0);
-            onChange(0);
+            setCount(min);
+            onChange(min);
           }
 
           // Else, we don't update count (this makes it a controlled input that does not accept values outside the range)
         }}
-        min={0}
+        min={min}
         max={max}
       />
       {/* add to count */}
@@ -64,6 +65,6 @@ export const NumberInput: React.FC<{
       >
         +
       </button>
-    </div>
+    </Badge>
   );
 };

@@ -4,6 +4,8 @@ pragma solidity ^0.8.0;
 import { IWorld } from "solecs/System.sol";
 import { addressToEntity } from "solecs/utils.sol";
 //components
+import { BattleSpaceRockComponent, ID as BattleSpaceRockComponentID } from "components/BattleSpaceRockComponent.sol";
+import { P_BuildingDefenceComponent, ID as P_BuildingDefenceComponentID } from "components/P_BuildingDefenceComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
 import { P_UnitAttackComponent, ID as P_UnitAttackComponentID } from "components/P_UnitAttackComponent.sol";
@@ -14,12 +16,19 @@ import { BattleAttackerComponent, ID as BattleAttackerComponentID } from "compon
 import { BattleDefenderComponent, ID as BattleDefenderComponentID } from "components/BattleDefenderComponent.sol";
 import { ArrivalsSizeComponent, ID as ArrivalsSizeComponentID } from "components/ArrivalsSizeComponent.sol";
 import { BattleResult, BattleParticipant, Arrival, ESendType } from "../types.sol";
+import { TotalUnitsDestroyedComponent, ID as TotalUnitsDestroyedComponentID } from "components/TotalUnitsDestroyedComponent.sol";
+import { P_DestroyedUnitsRequirementComponent, ID as P_DestroyedUnitsRequirementComponentID } from "components/P_DestroyedUnitsRequirementComponent.sol";
+import { PirateComponent, ID as PirateComponentID } from "components/PirateComponent.sol";
+import { P_SpawnPirateAsteroidComponent, ID as P_SpawnPirateAsteroidComponentID } from "components/P_SpawnPirateAsteroidComponent.sol";
+import { DefeatedSpawnedPirateAsteroidComponent, ID as DefeatedSpawnedPirateAsteroidComponentID } from "components/DefeatedSpawnedPirateAsteroidComponent.sol";
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
 import { LibUnits } from "./LibUnits.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
+import { LibUpdateSpaceRock } from "libraries/LibUpdateSpaceRock.sol";
+import { ResourceValues } from "../types.sol";
 
 library LibBattle {
   function setupBattleDefender(IWorld world, uint256 battleEntity, uint256 defenderEntity, uint256 spaceRock) internal {
@@ -91,7 +100,7 @@ library LibBattle {
     battleAttackerComponent.set(battleEntity, attacker);
   }
 
-  function resolveBattle(IWorld world, uint256 battleEntity) internal view returns (BattleResult memory) {
+  function resolveBattle(IWorld world, uint256 battleEntity) internal returns (BattleResult memory) {
     BattleResult memory battleResult;
 
     BattleParticipant memory attacker = BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(
@@ -110,18 +119,57 @@ library LibBattle {
     bool isAttackerWinner = totalAttackValue > totalDefenceValue;
 
     battleResult.winnerEntity = isAttackerWinner ? attacker.participantEntity : defender.participantEntity;
-
+    TotalUnitsDestroyedComponent totalUnitsDestroyedComponent = TotalUnitsDestroyedComponent(
+      world.getComponent(TotalUnitsDestroyedComponentID)
+    );
     uint32 lossRatio;
     if (isAttackerWinner) {
+      for (uint256 i = 0; i < defender.unitTypes.length; i++) {
+        LibMath.add(
+          totalUnitsDestroyedComponent,
+          LibEncode.hashKeyEntity(defender.unitTypes[i], attacker.participantEntity),
+          defender.unitCounts[i]
+        );
+      }
       lossRatio = 100 - ((totalDefenceValue * 100) / totalAttackValue);
       for (uint256 i = 0; i < attacker.unitCounts.length; i++) {
         battleResult.attackerUnitsLeft[i] = (attacker.unitCounts[i] * lossRatio) / 100;
+        LibMath.add(
+          totalUnitsDestroyedComponent,
+          LibEncode.hashKeyEntity(attacker.unitTypes[i], defender.participantEntity),
+          attacker.unitCounts[i] - battleResult.attackerUnitsLeft[i]
+        );
       }
     } else {
       lossRatio = 100 - ((totalAttackValue * 100) / totalDefenceValue);
+      for (uint256 i = 0; i < attacker.unitTypes.length; i++) {
+        LibMath.add(
+          totalUnitsDestroyedComponent,
+          LibEncode.hashKeyEntity(attacker.unitTypes[i], defender.participantEntity),
+          attacker.unitCounts[i]
+        );
+      }
       for (uint256 i = 0; i < defender.unitCounts.length; i++) {
         battleResult.defenderUnitsLeft[i] = (defender.unitCounts[i] * lossRatio) / 100;
+        LibMath.add(
+          totalUnitsDestroyedComponent,
+          LibEncode.hashKeyEntity(defender.unitTypes[i], attacker.participantEntity),
+          defender.unitCounts[i] - battleResult.defenderUnitsLeft[i]
+        );
       }
+    }
+    PirateComponent pirateComponent = PirateComponent(world.getComponent(PirateComponentID));
+    uint256 defenderHomeAsteroid = LibUpdateSpaceRock.getPlayerAsteroidEntity(world, defender.participantEntity);
+    if (pirateComponent.has(defenderHomeAsteroid)) {
+      DefeatedSpawnedPirateAsteroidComponent defeatedSpawnedPirateAsteroidComponent = DefeatedSpawnedPirateAsteroidComponent(
+          world.getComponent(DefeatedSpawnedPirateAsteroidComponentID)
+        );
+      P_SpawnPirateAsteroidComponent spawnPirateAsteroidComponent = P_SpawnPirateAsteroidComponent(
+        world.getComponent(P_SpawnPirateAsteroidComponentID)
+      );
+      defeatedSpawnedPirateAsteroidComponent.set(
+        LibEncode.hashKeyEntity(spawnPirateAsteroidComponent.getValue(defenderHomeAsteroid), attacker.participantEntity)
+      );
     }
     return battleResult;
   }
@@ -209,6 +257,10 @@ library LibBattle {
         defender.unitCounts[i] *
         unitDefenceComponent.getValue(LibEncode.hashKeyEntity(defender.unitTypes[i], level));
     }
+    totalDefenceValue += LibMath.getSafe(
+      P_BuildingDefenceComponent(world.getComponent(P_BuildingDefenceComponentID)),
+      BattleSpaceRockComponent(world.getComponent(BattleSpaceRockComponentID)).getValue(battleEntity)
+    );
     return totalDefenceValue;
   }
 
@@ -229,5 +281,31 @@ library LibBattle {
     }
 
     return (totalAttackValue);
+  }
+
+  function checkDestroyedUnitsRequirement(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 objectiveEntity
+  ) internal view returns (bool) {
+    P_DestroyedUnitsRequirementComponent destroyedUnitsRequirementComponent = P_DestroyedUnitsRequirementComponent(
+      world.getComponent(P_DestroyedUnitsRequirementComponentID)
+    );
+    if (!destroyedUnitsRequirementComponent.has(objectiveEntity)) return true;
+    TotalUnitsDestroyedComponent totalUnitsDestroyedComponent = TotalUnitsDestroyedComponent(
+      world.getComponent(TotalUnitsDestroyedComponentID)
+    );
+    ResourceValues memory destroyedUnitsRequirements = destroyedUnitsRequirementComponent.getValue(objectiveEntity);
+    for (uint256 i = 0; i < destroyedUnitsRequirements.resources.length; i++) {
+      if (
+        LibMath.getSafe(
+          totalUnitsDestroyedComponent,
+          LibEncode.hashKeyEntity(destroyedUnitsRequirements.resources[i], playerEntity)
+        ) < destroyedUnitsRequirements.values[i]
+      ) {
+        return false;
+      }
+    }
+    return true;
   }
 }

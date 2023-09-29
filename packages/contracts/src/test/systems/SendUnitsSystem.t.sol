@@ -9,19 +9,23 @@ import { TrainUnitsSystem, ID as TrainUnitsSystemID } from "systems/TrainUnitsSy
 import { BuildSystem, ID as BuildSystemID } from "systems/BuildSystem.sol";
 import { InvadeSystem, ID as InvadeSystemID } from "systems/InvadeSystem.sol";
 import { RaidSystem, ID as RaidSystemID } from "systems/RaidSystem.sol";
+import { ResearchSystem, ID as ResearchSystemID } from "systems/ResearchSystem.sol";
 import { ReceiveReinforcementSystem, ID as ReceiveReinforcementSystemID } from "systems/ReceiveReinforcementSystem.sol";
 import { RecallReinforcementsSystem, ID as RecallReinforcementsSystemID } from "systems/RecallReinforcementsSystem.sol";
+import { RecallUnitsFromMotherlodeSystem, ID as RecallUnitsFromMotherlodeSystemID } from "systems/RecallUnitsFromMotherlodeSystem.sol";
+import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "systems/UpgradeBuildingSystem.sol";
 //components
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
 import { OccupiedUtilityResourceComponent, ID as OccupiedUtilityResourceComponentID } from "components/OccupiedUtilityResourceComponent.sol";
 import { P_UnitTravelSpeedComponent, ID as P_UnitTravelSpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
-
+import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
 import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-
+import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
+import { MotherlodeComponent, ID as MotherlodeComponentID } from "components/MotherlodeComponent.sol";
 import { MaxUtilityComponent, ID as MaxUtilityComponentID } from "components/MaxUtilityComponent.sol";
 import { ArrivalsSizeComponent, ID as ArrivalsSizeComponentID } from "components/ArrivalsSizeComponent.sol";
 import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMovesComponent.sol";
@@ -35,6 +39,7 @@ import { LibArrival } from "libraries/LibArrival.sol";
 import { LibMotherlode } from "libraries/LibMotherlode.sol";
 import { LibUtilityResource } from "libraries/LibUtilityResource.sol";
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
+import { EMotherlodeType } from "../../types.sol";
 
 contract SendUnitsTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
@@ -44,21 +49,27 @@ contract SendUnitsTest is PrimodiumTest {
   GameConfigComponent public gameConfigComponent;
   OwnedByComponent public ownedByComponent;
   UnitsComponent public unitsComponent;
+  MainBaseComponent public mainBaseComponent;
   ComponentDevSystem public componentDevSystem;
   OccupiedUtilityResourceComponent public occupiedUtilityResourceComponent;
 
+  UpgradeBuildingSystem public upgradeBuildingSystem;
   SendUnitsSystem public sendUnitsSystem;
   TrainUnitsSystem public trainUnitsSystem;
   BuildSystem public buildSystem;
   InvadeSystem public invadeSystem;
   RaidSystem public raidSystem;
+  ResearchSystem public researchSystem;
   ReceiveReinforcementSystem public receiveReinforcementSystem;
   RecallReinforcementsSystem public recallReinforcementsSystem;
+  RecallUnitsFromMotherlodeSystem public recallUnitsFromMotherlodeSystem;
 
   function setUp() public override {
     super.setUp();
 
     positionComponent = PositionComponent(component(PositionComponentID));
+    upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
+    researchSystem = ResearchSystem(system(ResearchSystemID));
     raidSystem = RaidSystem(system(RaidSystemID));
     componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     sendUnitsSystem = SendUnitsSystem(system(SendUnitsSystemID));
@@ -67,7 +78,7 @@ contract SendUnitsTest is PrimodiumTest {
     invadeSystem = InvadeSystem(system(InvadeSystemID));
     receiveReinforcementSystem = ReceiveReinforcementSystem(system(ReceiveReinforcementSystemID));
     recallReinforcementsSystem = RecallReinforcementsSystem(system(RecallReinforcementsSystemID));
-
+    recallUnitsFromMotherlodeSystem = RecallUnitsFromMotherlodeSystem(system(RecallUnitsFromMotherlodeSystemID));
     occupiedUtilityResourceComponent = OccupiedUtilityResourceComponent(
       world.getComponent(OccupiedUtilityResourceComponentID)
     );
@@ -75,6 +86,7 @@ contract SendUnitsTest is PrimodiumTest {
     isUnitComponent = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID));
     gameConfigComponent = GameConfigComponent(world.getComponent(GameConfigComponentID));
     ownedByComponent = OwnedByComponent(world.getComponent(OwnedByComponentID));
+    mainBaseComponent = MainBaseComponent(world.getComponent(MainBaseComponentID));
     spawn(alice);
     spawn(bob);
     spawn(deployer);
@@ -220,7 +232,8 @@ contract SendUnitsTest is PrimodiumTest {
       from: addressToEntity(reinforcer),
       to: addressToEntity(receiver),
       origin: getHomeAsteroidEntity(reinforcer),
-      destination: getHomeAsteroidEntity(receiver)
+      destination: getHomeAsteroidEntity(receiver),
+      timestamp: block.number
     });
     assertEq(arrival, expectedArrival);
     console.log("checking arrival list length");
@@ -333,7 +346,8 @@ contract SendUnitsTest is PrimodiumTest {
       from: addressToEntity(alice),
       to: addressToEntity(bob),
       origin: getHomeAsteroidEntity(alice),
-      destination: motherlodeEntity
+      destination: motherlodeEntity,
+      timestamp: block.number
     });
     assertEq(arrival, expectedArrival);
 
@@ -400,7 +414,8 @@ contract SendUnitsTest is PrimodiumTest {
       from: addressToEntity(alice),
       to: addressToEntity(bob),
       origin: origin,
-      destination: destination
+      destination: destination,
+      timestamp: block.number
     });
     assertEq(arrival, expectedArrival);
 
@@ -543,6 +558,105 @@ contract SendUnitsTest is PrimodiumTest {
       0
     );
     assertEq(ownedByComponent.getValue(invasionArrival.destination), addressToEntity(alice));
+  }
+
+  function testExecuteMotherlodeAutoClaim() public {
+    Arrival memory invasionArrival = invade(alice, true);
+
+    vm.roll(invasionArrival.arrivalBlock);
+    uint32 currMoves = ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice));
+    vm.prank(alice);
+    invadeSystem.executeTyped(invasionArrival.destination);
+    assertEq(ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice)), currMoves - 1);
+    assertEq(
+      ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), invasionArrival.destination)),
+      0
+    );
+    assertEq(ownedByComponent.getValue(invasionArrival.destination), addressToEntity(alice));
+    uint32 unclaimedResource = LibUpdateSpaceRock.getUnclaimedMotherlodeResourceAmount(
+      world,
+      addressToEntity(alice),
+      invasionArrival.destination,
+      block.number
+    );
+    //uint256 mainBaseEntity = mainBaseComponent.getValue(addressToEntity(alice));
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
+    for (uint256 i = 2; i <= 6; i++) {
+      componentDevSystem.executeTyped(
+        P_RequiredResourcesComponentID,
+        LibEncode.hashKeyEntity(MainBaseID, i),
+        abi.encode()
+      );
+      vm.prank(alice);
+      upgradeBuildingSystem.executeTyped(mainBaseCoord);
+    }
+    console.log("unclaimed resource = %s", unclaimedResource);
+    vm.roll(block.number + 125);
+
+    unclaimedResource = LibUpdateSpaceRock.getUnclaimedMotherlodeResourceAmount(
+      world,
+      addressToEntity(alice),
+      invasionArrival.destination,
+      block.number
+    );
+    console.log("unclaimed resource = %s", unclaimedResource);
+    Motherlode memory motherlode = MotherlodeComponent(world.getComponent(MotherlodeComponentID)).getValue(
+      invasionArrival.destination
+    );
+
+    console.log("motherlodeType: %s ", uint8(motherlode.motherlodeType));
+    if (motherlode.motherlodeType == EMotherlodeType.TITANIUM) {
+      console.log("titanium");
+      vm.prank(alice);
+      researchSystem.executeTyped(DebugSimpleTechnologyTitaniumCostID);
+    } else if (motherlode.motherlodeType == EMotherlodeType.PLATINUM) {
+      console.log("platinum");
+      vm.prank(alice);
+      researchSystem.executeTyped(DebugSimpleTechnologyPlatinumCostID);
+    } else if (motherlode.motherlodeType == EMotherlodeType.IRIDIUM) {
+      console.log("iridium");
+      vm.prank(alice);
+      researchSystem.executeTyped(DebugSimpleTechnologyIridiumCostID);
+    } else {
+      console.log("other (kimberlite)");
+      vm.prank(alice);
+      researchSystem.executeTyped(DebugSimpleTechnologyKimberliteCostID);
+    }
+  }
+
+  function testExecuteRecallUnitsFromMotherlode() public {
+    Arrival memory invasionArrival = invade(alice, true);
+
+    vm.roll(invasionArrival.arrivalBlock);
+    uint32 currMoves = ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice));
+    vm.prank(alice);
+    invadeSystem.executeTyped(invasionArrival.destination);
+    assertEq(ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice)), currMoves - 1);
+    assertEq(
+      ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), invasionArrival.destination)),
+      0
+    );
+    assertEq(ownedByComponent.getValue(invasionArrival.destination), addressToEntity(alice));
+    uint32 debugUnitsOnMotherlode = unitsComponent.getValue(
+      LibEncode.hashEntities(DebugUnit, addressToEntity(alice), invasionArrival.destination)
+    );
+    uint32 debugUnitsOnAsteroids = unitsComponent.getValue(
+      LibEncode.hashEntities(DebugUnit, addressToEntity(alice), invasionArrival.origin)
+    );
+    vm.prank(alice);
+    recallUnitsFromMotherlodeSystem.executeTyped(invasionArrival.destination);
+    assertEq(
+      LibMath.getSafe(
+        unitsComponent,
+        LibEncode.hashEntities(DebugUnit, addressToEntity(alice), invasionArrival.destination)
+      ),
+      0,
+      "units on motherlode must be 0 after recall"
+    );
+    assertEq(
+      unitsComponent.getValue(LibEncode.hashEntities(DebugUnit, addressToEntity(alice), invasionArrival.origin)),
+      debugUnitsOnAsteroids + debugUnitsOnMotherlode
+    );
   }
 
   function testExecuteRaid() public {

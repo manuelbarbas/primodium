@@ -28,6 +28,7 @@ uint256 constant SulfurMineID = uint256(keccak256("block.SulfurMine"));
 //Resource Capacity Blocks
 uint256 constant SolarPanelID = uint256(keccak256("block.SolarPanel"));
 uint256 constant HangarID = uint256(keccak256("block.Hangar"));
+uint256 constant GarageID = uint256(keccak256("block.Garage"));
 
 // Factory Blocks
 uint256 constant IronPlateFactoryID = uint256(keccak256("block.IronPlateFactory"));
@@ -39,7 +40,11 @@ uint256 constant SpaceFuelFactoryID = uint256(keccak256("block.SpaceFuelFactory"
 uint256 constant StorageUnitID = uint256(keccak256("block.StorageUnit"));
 
 // Units
+uint256 constant WorkshopID = uint256(keccak256("block.Workshop"));
 uint256 constant DroneFactoryID = uint256(keccak256("block.DroneFactory"));
 
 // Starmapper
 uint256 constant StarmapperID = uint256(keccak256("block.Starmapper"));
+
+// DefenciveBuildings
+uint256 constant SAMMissilesID = uint256(keccak256("block.SAMMissiles"));

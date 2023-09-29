@@ -27,6 +27,8 @@ library LibInitResearch {
     initHammerDroneUpgrades(world);
     initStingerDroneUpgrades(world);
     initMiningVesselUpgrades(world);
+    initMinutemanMarineUpgrades(world);
+    initTridentMarineUpgrades(world);
     initMiningResearch(world);
   }
 
@@ -47,6 +49,88 @@ library LibInitResearch {
     LibSetBuildingReqs.setResourceReqs(world, researchID, requiredResources);
   }
 
+  function initMinutemanMarineUpgrades(IWorld world) internal {
+    uint256 unitType = MinutemanMarine;
+    ResourceValue[] memory requiredResources = new ResourceValue[](1);
+    uint32 mainBaseLevel;
+
+    // MinutemanMarine I:
+    requiredResources = new ResourceValue[](2);
+    requiredResources[0] = ResourceValue({ resource: SulfurResourceItemID, value: 500000 });
+    requiredResources[1] = ResourceValue({ resource: IronResourceItemID, value: 500000 });
+    mainBaseLevel = 1;
+    initUnitUpgrade(world, MinutemanMarineUpgrade, unitType, 1, mainBaseLevel, requiredResources);
+
+    // MinutemanMarine II:
+    requiredResources = new ResourceValue[](2);
+    requiredResources[0] = ResourceValue({ resource: SulfurResourceItemID, value: 5000000 });
+    requiredResources[1] = ResourceValue({ resource: IronResourceItemID, value: 5000000 });
+    mainBaseLevel = 2;
+    initUnitUpgrade(world, MinutemanMarineUpgrade2, unitType, 2, mainBaseLevel, requiredResources);
+
+    // MinutemanMarine III:
+    requiredResources = new ResourceValue[](2);
+    requiredResources[0] = ResourceValue({ resource: SulfurResourceItemID, value: 10000000 });
+    requiredResources[1] = ResourceValue({ resource: IronResourceItemID, value: 10000000 });
+    mainBaseLevel = 3;
+    initUnitUpgrade(world, MinutemanMarineUpgrade3, unitType, 3, mainBaseLevel, requiredResources);
+
+    // MinutemanMarine IV:
+    requiredResources = new ResourceValue[](2);
+    requiredResources[0] = ResourceValue({ resource: SulfurResourceItemID, value: 25000000 });
+    requiredResources[1] = ResourceValue({ resource: IronResourceItemID, value: 25000000 });
+    mainBaseLevel = 4;
+    initUnitUpgrade(world, MinutemanMarineUpgrade4, unitType, 4, mainBaseLevel, requiredResources);
+
+    // MinutemanMarine V:
+    requiredResources = new ResourceValue[](2);
+    requiredResources[0] = ResourceValue({ resource: SulfurResourceItemID, value: 50000000 });
+    requiredResources[1] = ResourceValue({ resource: IronResourceItemID, value: 50000000 });
+    mainBaseLevel = 5;
+    initUnitUpgrade(world, MinutemanMarineUpgrade5, unitType, 5, mainBaseLevel, requiredResources);
+  }
+
+  function initTridentMarineUpgrades(IWorld world) internal {
+    uint256 unitType = TridentMarine;
+    ResourceValue[] memory requiredResources = new ResourceValue[](1);
+    uint32 mainBaseLevel;
+
+    // TridentMarine I:
+    requiredResources = new ResourceValue[](2);
+    requiredResources[0] = ResourceValue({ resource: LithiumResourceItemID, value: 500000 });
+    requiredResources[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 500000 });
+    mainBaseLevel = 1;
+    initUnitUpgrade(world, TridentMarineUpgrade, unitType, 1, mainBaseLevel, requiredResources);
+
+    // TridentMarine II:
+    requiredResources = new ResourceValue[](2);
+    requiredResources[0] = ResourceValue({ resource: LithiumResourceItemID, value: 5000000 });
+    requiredResources[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 5000000 });
+    mainBaseLevel = 2;
+    initUnitUpgrade(world, TridentMarineUpgrade2, unitType, 2, mainBaseLevel, requiredResources);
+
+    // TridentMarine III:
+    requiredResources = new ResourceValue[](2);
+    requiredResources[0] = ResourceValue({ resource: LithiumResourceItemID, value: 10000000 });
+    requiredResources[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 10000000 });
+    mainBaseLevel = 3;
+    initUnitUpgrade(world, TridentMarineUpgrade3, unitType, 3, mainBaseLevel, requiredResources);
+
+    // TridentMarine IV:
+    requiredResources = new ResourceValue[](2);
+    requiredResources[0] = ResourceValue({ resource: LithiumResourceItemID, value: 25000000 });
+    requiredResources[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 25000000 });
+    mainBaseLevel = 4;
+    initUnitUpgrade(world, TridentMarineUpgrade4, unitType, 4, mainBaseLevel, requiredResources);
+
+    // TridentMarine V:
+    requiredResources = new ResourceValue[](2);
+    requiredResources[0] = ResourceValue({ resource: LithiumResourceItemID, value: 50000000 });
+    requiredResources[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 50000000 });
+    mainBaseLevel = 5;
+    initUnitUpgrade(world, TridentMarineUpgrade5, unitType, 5, mainBaseLevel, requiredResources);
+  }
+
   // In the current design, MiningResearch increases the number of MiningVessels a player can have
   // and unit upgrades initialized in LibInitUnits.sol increases their mining rates.
   // This function is unused but kept here for future balancing and debugging.
@@ -57,19 +141,19 @@ library LibInitResearch {
 
     // MiningVessel I:
     requiredResources = new ResourceValue[](1);
-    requiredResources[0] = ResourceValue({ resource: TitaniumResourceItemID, value: 10000 });
+    requiredResources[0] = ResourceValue({ resource: TitaniumResourceItemID, value: 50000 });
     mainBaseLevel = 3;
     initUnitUpgrade(world, MiningVesselUpgrade, unitType, 1, mainBaseLevel, requiredResources);
 
     // MiningVessel II:
     requiredResources = new ResourceValue[](1);
-    requiredResources[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 10000 });
+    requiredResources[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 50000 });
     mainBaseLevel = 4;
     initUnitUpgrade(world, MiningVesselUpgrade2, unitType, 2, mainBaseLevel, requiredResources);
 
     // MiningVessel III:
     requiredResources = new ResourceValue[](1);
-    requiredResources[0] = ResourceValue({ resource: IridiumResourceItemID, value: 10000 });
+    requiredResources[0] = ResourceValue({ resource: IridiumResourceItemID, value: 50000 });
     mainBaseLevel = 6;
     initUnitUpgrade(world, MiningVesselUpgrade3, unitType, 3, mainBaseLevel, requiredResources);
 
@@ -240,7 +324,7 @@ library LibInitResearch {
 
     // Expansion II: 1000 iron
     requiredResources = new ResourceValue[](1);
-    requiredResources[0] = ResourceValue({ resource: CopperResourceItemID, value: 4000 });
+    requiredResources[0] = ResourceValue({ resource: CopperResourceItemID, value: 40000 });
     LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch2, requiredResources);
     isTechComponent.set(ExpansionResearch2);
     levelComponent.set(ExpansionResearch2, 2);
@@ -248,7 +332,7 @@ library LibInitResearch {
 
     // Expansion III: 2000 copper
     requiredResources = new ResourceValue[](1);
-    requiredResources[0] = ResourceValue({ resource: LithiumResourceItemID, value: 8000 });
+    requiredResources[0] = ResourceValue({ resource: LithiumResourceItemID, value: 80000 });
     LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch3, requiredResources);
     isTechComponent.set(ExpansionResearch3);
     levelComponent.set(ExpansionResearch3, 3);
@@ -256,7 +340,7 @@ library LibInitResearch {
 
     // Expansion IV: 3000 iron plates
     requiredResources = new ResourceValue[](1);
-    requiredResources[0] = ResourceValue({ resource: TitaniumResourceItemID, value: 10000 });
+    requiredResources[0] = ResourceValue({ resource: TitaniumResourceItemID, value: 50000 });
     LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch4, requiredResources);
     isTechComponent.set(ExpansionResearch4);
     levelComponent.set(ExpansionResearch4, 4);
@@ -264,7 +348,7 @@ library LibInitResearch {
 
     // Expansion V: 4000 lithium
     requiredResources = new ResourceValue[](1);
-    requiredResources[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 20000 });
+    requiredResources[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 50000 });
     LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch5, requiredResources);
     isTechComponent.set(ExpansionResearch5);
     levelComponent.set(ExpansionResearch5, 5);
@@ -272,7 +356,7 @@ library LibInitResearch {
 
     // Expansion VI: 5000 lithium
     requiredResources = new ResourceValue[](1);
-    requiredResources[0] = ResourceValue({ resource: IridiumResourceItemID, value: 30000 });
+    requiredResources[0] = ResourceValue({ resource: IridiumResourceItemID, value: 50000 });
     LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch6, requiredResources);
     isTechComponent.set(ExpansionResearch6);
     levelComponent.set(ExpansionResearch6, 6);

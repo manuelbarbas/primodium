@@ -4,6 +4,7 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddress } from "systems/internal/PrimodiumSystem.sol";
 
 // components
+import { P_BuildingDefenceComponent, ID as P_BuildingDefenceComponentID } from "components/P_BuildingDefenceComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
@@ -12,7 +13,7 @@ import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBas
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 import { P_MaxMovesComponent, ID as P_MaxMovesComponentID } from "components/P_MaxMovesComponent.sol";
 import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMovesComponent.sol";
-
+import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
 import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
 import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID, ResourceValues } from "components/P_RequiredUtilityComponent.sol";
 import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
@@ -37,6 +38,7 @@ import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibUtilityResource } from "../libraries/LibUtilityResource.sol";
 import { LibResource } from "../libraries/LibResource.sol";
+import { LibDefence } from "../libraries/LibDefence.sol";
 
 uint256 constant ID = uint256(keccak256("system.Destroy"));
 
@@ -157,11 +159,23 @@ contract DestroySystem is PrimodiumSystem {
       );
       LibMath.subtract(MaxMovesComponent(world.getComponent(MaxMovesComponentID)), playerEntity, movesToSubtract);
     }
+    LibDefence.updateBuildingDefence(
+      world,
+      playerEntity,
+      buildingType,
+      levelComponent.getValue(buildingEntity),
+      EActionType.Destroy
+    );
     levelComponent.remove(buildingEntity);
     buildingTypeComponent.remove(buildingEntity);
     ownedByComponent.remove(buildingEntity);
     childrenComponent.remove(buildingEntity);
     PositionComponent(getC(PositionComponentID)).remove(buildingEntity);
+    LibMath.subtract(
+      BuildingCountComponent(getAddressById(world.components(), BuildingCountComponentID)),
+      LibEncode.hashKeyEntity(buildingType, playerEntity),
+      1
+    );
     return abi.encode(buildingEntity);
   }
 

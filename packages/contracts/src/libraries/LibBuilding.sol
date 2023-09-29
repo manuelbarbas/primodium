@@ -5,6 +5,7 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { IWorld } from "solecs/System.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 // components
+import { P_BuildingDefenceComponent, ID as P_BuildingDefenceComponentID } from "components/P_BuildingDefenceComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
@@ -23,13 +24,17 @@ import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } fr
 import { P_ProductionComponent, ID as P_ProductionComponentID } from "components/P_ProductionComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { UnitProductionOwnedByComponent, ID as UnitProductionOwnedByComponentID } from "components/UnitProductionOwnedByComponent.sol";
-
+import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
+import { HasBuiltBuildingComponent, ID as HasBuiltBuildingComponentID } from "components/HasBuiltBuildingComponent.sol";
+import { P_BuildingCountRequirementComponent, ID as P_BuildingCountRequirementComponentID } from "components/P_BuildingCountRequirementComponent.sol";
+import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
+import { P_HasBuiltBuildingComponent, ID as P_HasBuiltBuildingComponentID } from "components/P_HasBuiltBuildingComponent.sol";
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibTerrain } from "libraries/LibTerrain.sol";
-
+import { LibDefence } from "libraries/LibDefence.sol";
 // types
 import { BuildingKey, ExpansionKey } from "../prototypes.sol";
 import { Coord, Bounds, Dimensions } from "src/types.sol";
@@ -46,6 +51,46 @@ import { ID as UpdateUtilityProductionSystemID } from "systems/S_UpdateUtilityPr
 import { ID as S_UpdatePlayerResourceProductionSystemID } from "systems/S_UpdatePlayerResourceProductionSystem.sol";
 
 library LibBuilding {
+  function checkHasBuiltBuildingRequirement(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 objectiveEntity
+  ) internal view returns (bool) {
+    P_HasBuiltBuildingComponent hasBuiltBuildingComponent = P_HasBuiltBuildingComponent(
+      world.getComponent(P_HasBuiltBuildingComponentID)
+    );
+    if (!hasBuiltBuildingComponent.has(objectiveEntity)) return true;
+    return
+      HasBuiltBuildingComponent(getAddressById(world.components(), HasBuiltBuildingComponentID)).has(
+        LibEncode.hashKeyEntity(hasBuiltBuildingComponent.getValue(objectiveEntity), playerEntity)
+      );
+  }
+
+  function checkBuildingCountRequirement(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 objectiveEntity
+  ) internal view returns (bool) {
+    P_BuildingCountRequirementComponent buildingCountRequirementComponent = P_BuildingCountRequirementComponent(
+      getAddressById(world.components(), P_BuildingCountRequirementComponentID)
+    );
+    if (!buildingCountRequirementComponent.has(objectiveEntity)) return true;
+
+    ResourceValues memory buildingCountRequirement = buildingCountRequirementComponent.getValue(objectiveEntity);
+    for (uint256 i = 0; i < buildingCountRequirement.resources.length; i++) {
+      uint256 buildingType = buildingCountRequirement.resources[i];
+      uint32 requiredBuildingCount = buildingCountRequirement.values[i];
+
+      uint32 currBuildingCount = LibMath.getSafe(
+        BuildingCountComponent(getAddressById(world.components(), BuildingCountComponentID)),
+        LibEncode.hashKeyEntity(buildingType, playerEntity)
+      );
+
+      if (currBuildingCount < requiredBuildingCount) return false;
+    }
+    return true;
+  }
+
   function checkMainBaseLevelRequirement(
     IWorld world,
     uint256 playerEntity,
@@ -166,6 +211,18 @@ library LibBuilding {
         EActionType.Build
       );
     }
+
+    HasBuiltBuildingComponent(getAddressById(world.components(), HasBuiltBuildingComponentID)).set(
+      LibEncode.hashKeyEntity(buildingType, playerEntity)
+    );
+
+    LibMath.add(
+      BuildingCountComponent(getAddressById(world.components(), BuildingCountComponentID)),
+      LibEncode.hashKeyEntity(buildingType, playerEntity),
+      1
+    );
+
+    LibDefence.updateBuildingDefence(world, playerEntity, buildingType, 1, EActionType.Build);
 
     //required production update
     LibResource.updateRequiredProduction(world, playerEntity, buildingType, 1, true);

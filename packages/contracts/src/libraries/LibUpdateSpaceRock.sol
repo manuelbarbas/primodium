@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 // external
 import { IWorld } from "solecs/interfaces/IWorld.sol";
-
+import "solecs/SingletonID.sol";
 // comps
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
@@ -19,6 +19,11 @@ import { UnitProductionQueueIndexComponent, ID as UnitProductionQueueIndexCompon
 import { UnitProductionLastQueueIndexComponent, ID as UnitProductionLastQueueIndexComponentID } from "components/UnitProductionLastQueueIndexComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
+import { P_WorldSpeedComponent, ID as P_WorldSpeedComponentID, SPEED_SCALE } from "components/P_WorldSpeedComponent.sol";
+import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
+import { PlayerMotherlodeComponent, ID as PlayerMotherlodeComponentID } from "components/PlayerMotherlodeComponent.sol";
+import { P_MotherlodeMinedRequirementComponent, ID as P_MotherlodeMinedRequirementComponentID } from "components/P_MotherlodeMinedRequirementComponent.sol";
+import { TotalMotherlodeMinedComponent, ID as TotalMotherlodeMinedComponentID } from "components/TotalMotherlodeMinedComponent.sol";
 // libs
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
@@ -27,7 +32,7 @@ import { LibResource } from "libraries/LibResource.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 
 // types
-import { ESendType, Coord, Arrival, ArrivalUnit, ResourceValue, ESpaceRockType, Motherlode } from "src/types.sol";
+import { ESendType, Coord, Arrival, ArrivalUnit, ResourceValue, ESpaceRockType, Motherlode, ResourceValues } from "src/types.sol";
 
 library LibUpdateSpaceRock {
   function updateSpaceRock(IWorld world, uint256 playerEntity, uint256 spaceRock) internal {
@@ -65,7 +70,12 @@ library LibUpdateSpaceRock {
         unitProductionBuildingEntity,
         unitProductionQueue.resource
       );
-      uint32 trainedUnitsCount = uint32(blockNumber - startTime) / unitTrainingTimeForBuilding;
+
+      uint32 trainedUnitsCount = uint32(
+        ((blockNumber - startTime) * SPEED_SCALE) /
+          (unitTrainingTimeForBuilding *
+            P_WorldSpeedComponent(world.getComponent(P_WorldSpeedComponentID)).getValue(SingletonID))
+      );
 
       if (trainedUnitsCount > 0) {
         if (trainedUnitsCount >= unitProductionQueue.value) {
@@ -79,7 +89,9 @@ library LibUpdateSpaceRock {
           unitProductionQueueComponent.set(buildingQueueEntity, unitProductionQueue);
         }
 
-        startTime += trainedUnitsCount * unitTrainingTimeForBuilding;
+        startTime +=
+          (trainedUnitsCount * unitTrainingTimeForBuilding * SPEED_SCALE) /
+          P_WorldSpeedComponent(world.getComponent(P_WorldSpeedComponentID)).getValue(SingletonID);
         addPlayerUnitsToAsteroid(world, playerEntity, unitProductionQueue.resource, trainedUnitsCount);
       } else {
         isStillClaiming = false;
@@ -88,8 +100,12 @@ library LibUpdateSpaceRock {
     lastClaimedAtComponent.set(unitProductionBuildingEntity, blockNumber);
   }
 
+  function getPlayerAsteroidEntity(IWorld world, uint256 playerEntity) internal view returns (uint256) {
+    return PositionComponent(world.getComponent(PositionComponentID)).getValue(playerEntity).parent;
+  }
+
   function addPlayerUnitsToAsteroid(IWorld world, uint256 playerEntity, uint256 unitType, uint32 unitCount) internal {
-    uint256 asteroid = PositionComponent(world.getComponent(PositionComponentID)).getValue(playerEntity).parent;
+    uint256 asteroid = getPlayerAsteroidEntity(world, playerEntity);
     addUnitsToAsteroid(world, playerEntity, asteroid, unitType, unitCount);
   }
 
@@ -106,6 +122,29 @@ library LibUpdateSpaceRock {
           unitTypes[i],
           LibMath.getSafe(unitsComponent, unitPlayerSpaceRockEntity)
         );
+      }
+    }
+  }
+
+  function moveUnitsFromTo(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 fromSpaceRockEntity,
+    uint256 toSpaceRockEntity
+  ) internal {
+    uint256[] memory unitTypes = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).getEntities();
+    UnitsComponent unitsComponent = UnitsComponent(world.getComponent(UnitsComponentID));
+    for (uint256 i = 0; i < unitTypes.length; i++) {
+      uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(unitTypes[i], playerEntity, fromSpaceRockEntity);
+      if (unitsComponent.has(unitPlayerSpaceRockEntity)) {
+        addUnitsToAsteroid(
+          world,
+          playerEntity,
+          toSpaceRockEntity,
+          unitTypes[i],
+          LibMath.getSafe(unitsComponent, unitPlayerSpaceRockEntity)
+        );
+        setUnitsOnAsteroid(world, playerEntity, fromSpaceRockEntity, unitTypes[i], 0);
       }
     }
   }
@@ -147,7 +186,8 @@ library LibUpdateSpaceRock {
     uint32 unitCount
   ) internal {
     uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(unitType, playerEntity, asteroidEntity);
-    UnitsComponent(world.getComponent(UnitsComponentID)).set(unitPlayerSpaceRockEntity, unitCount);
+    if (unitCount > 0) UnitsComponent(world.getComponent(UnitsComponentID)).set(unitPlayerSpaceRockEntity, unitCount);
+    else UnitsComponent(world.getComponent(UnitsComponentID)).remove(unitPlayerSpaceRockEntity);
   }
 
   function claimUnits(IWorld world, uint256 playerEntity, uint256 blockNumber) internal {
@@ -179,25 +219,34 @@ library LibUpdateSpaceRock {
     }
   }
 
-  function claimMotherlodeResource(
+  function updateMotherlodeOwnership(IWorld world, uint256 motherlodeEntity, uint256 playerEntity) internal {
+    Motherlode memory motherlode = MotherlodeComponent(world.getComponent(MotherlodeComponentID)).getValue(
+      motherlodeEntity
+    );
+    ResourceValue memory resource = P_MotherlodeResourceComponent(world.getComponent(P_MotherlodeResourceComponentID))
+      .getValue(LibEncode.hashKeyEntity(uint256(motherlode.motherlodeType), uint256(motherlode.size)));
+    uint256 playerResourceEntity = LibEncode.hashKeyEntity(resource.resource, playerEntity);
+    PlayerMotherlodeComponent(world.getComponent(PlayerMotherlodeComponentID)).set(
+      motherlodeEntity,
+      playerResourceEntity
+    );
+    OwnedByComponent(world.getComponent(OwnedByComponentID)).set(motherlodeEntity, playerEntity);
+  }
+
+  function getUnclaimedMotherlodeResourceAmount(
     IWorld world,
     uint256 playerEntity,
     uint256 motherlodeEntity,
     uint256 blockNumber
-  ) internal {
+  ) internal view returns (uint32) {
     MineableAtComponent mineableAtComponent = MineableAtComponent(world.getComponent(MineableAtComponentID));
     // cannot claim during cooldown
-
-    if (blockNumber < mineableAtComponent.getValue(motherlodeEntity)) return;
-
-    uint32 blocksSinceLastClaim = uint32(
-      blockNumber - LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).getValue(motherlodeEntity)
-    );
-
+    if (blockNumber < mineableAtComponent.getValue(motherlodeEntity)) return 0;
+    uint256 blocksSinceLastClaim = blockNumber -
+      LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).getValue(motherlodeEntity);
     // cannot claim if no mining power
     uint32 miningPower = getMiningPower(world, playerEntity, motherlodeEntity);
-    if (miningPower == 0) return;
-
+    if (miningPower == 0) return 0;
     MotherlodeResourceComponent motherlodeResourceComponent = MotherlodeResourceComponent(
       world.getComponent(MotherlodeResourceComponentID)
     );
@@ -210,17 +259,46 @@ library LibUpdateSpaceRock {
     uint32 prevMotherlodeResources = LibMath.getSafe(motherlodeResourceComponent, motherlodeEntity);
 
     // cannot claim if resources are maxed out
-    if (resource.value == prevMotherlodeResources) return;
-
+    if (resource.value == prevMotherlodeResources) return 0;
     // get the amount of resources that have been mined
-    uint32 rawIncrease = miningPower * blocksSinceLastClaim;
+    uint32 rawIncrease = uint32(
+      (miningPower * blocksSinceLastClaim * SPEED_SCALE) /
+        P_WorldSpeedComponent(world.getComponent(P_WorldSpeedComponentID)).getValue(SingletonID)
+    );
     if (rawIncrease + prevMotherlodeResources > resource.value) {
       rawIncrease = resource.value - prevMotherlodeResources;
     }
-    motherlodeResourceComponent.set(motherlodeEntity, rawIncrease + prevMotherlodeResources);
+    return rawIncrease;
+  }
+
+  function claimMotherlodeResource(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 motherlodeEntity,
+    uint256 blockNumber
+  ) internal {
+    MotherlodeResourceComponent motherlodeResourceComponent = MotherlodeResourceComponent(
+      world.getComponent(MotherlodeResourceComponentID)
+    );
+    Motherlode memory motherlode = MotherlodeComponent(world.getComponent(MotherlodeComponentID)).getValue(
+      motherlodeEntity
+    );
+    ResourceValue memory resource = P_MotherlodeResourceComponent(world.getComponent(P_MotherlodeResourceComponentID))
+      .getValue(LibEncode.hashKeyEntity(uint256(motherlode.motherlodeType), uint256(motherlode.size)));
+
+    uint32 rawIncrease = getUnclaimedMotherlodeResourceAmount(world, playerEntity, motherlodeEntity, blockNumber);
+
+    motherlodeResourceComponent.set(
+      motherlodeEntity,
+      rawIncrease + LibMath.getSafe(motherlodeResourceComponent, motherlodeEntity)
+    );
 
     LibStorage.addResourceToStorage(world, playerEntity, resource.resource, rawIncrease);
-
+    LibMath.add(
+      TotalMotherlodeMinedComponent(world.getComponent(TotalMotherlodeMinedComponentID)),
+      LibEncode.hashKeyEntity(resource.resource, playerEntity),
+      rawIncrease
+    );
     LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).set(motherlodeEntity, blockNumber);
   }
 
@@ -243,5 +321,38 @@ library LibUpdateSpaceRock {
       }
     }
     return totalPower;
+  }
+
+  function checkMotherlodeMinedRequirement(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 objectiveEntity
+  ) internal view returns (bool) {
+    P_MotherlodeMinedRequirementComponent motherlodeMinedRequirementComponent = P_MotherlodeMinedRequirementComponent(
+      world.getComponent(P_MotherlodeMinedRequirementComponentID)
+    );
+    if (!motherlodeMinedRequirementComponent.has(objectiveEntity)) return true;
+    ResourceValues memory motherlodeMinedRequirements = motherlodeMinedRequirementComponent.getValue(objectiveEntity);
+    TotalMotherlodeMinedComponent totalMotherlodeMinedComponent = TotalMotherlodeMinedComponent(
+      world.getComponent(TotalMotherlodeMinedComponentID)
+    );
+    uint256 blockNumber = block.number;
+    for (uint256 i = 0; i < motherlodeMinedRequirements.resources.length; i++) {
+      uint32 totalMined = LibMath.getSafe(
+        totalMotherlodeMinedComponent,
+        LibEncode.hashKeyEntity(motherlodeMinedRequirements.resources[i], playerEntity)
+      );
+      if (totalMined >= motherlodeMinedRequirements.values[i]) continue;
+      uint32 totalUnclaimed = LibResource.getTotalUnclaimedMotherlodeResources(
+        world,
+        playerEntity,
+        motherlodeMinedRequirements.resources[i],
+        blockNumber
+      );
+      if (totalMined + totalUnclaimed < motherlodeMinedRequirements.values[i]) {
+        return false;
+      }
+    }
+    return true;
   }
 }

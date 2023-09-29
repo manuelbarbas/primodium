@@ -10,8 +10,8 @@ contract ArrivalComponent is Component {
   constructor(address world) Component(world, ID) {}
 
   function getSchema() public pure override returns (string[] memory keys, LibTypes.SchemaValue[] memory values) {
-    keys = new string[](8);
-    values = new LibTypes.SchemaValue[](8);
+    keys = new string[](9);
+    values = new LibTypes.SchemaValue[](9);
 
     keys[0] = "sendType";
     values[0] = LibTypes.SchemaValue.UINT8;
@@ -36,6 +36,9 @@ contract ArrivalComponent is Component {
 
     keys[7] = "destination";
     values[7] = LibTypes.SchemaValue.UINT256;
+
+    keys[8] = "timestamp";
+    values[8] = LibTypes.SchemaValue.UINT256;
   }
 
   function set(uint256 entity, Arrival calldata arrival) public virtual {
@@ -55,7 +58,8 @@ contract ArrivalComponent is Component {
         arrival.from,
         arrival.to,
         arrival.origin,
-        arrival.destination
+        arrival.destination,
+        arrival.timestamp
       )
     );
   }
@@ -70,8 +74,9 @@ contract ArrivalComponent is Component {
       uint256 from,
       uint256 to,
       uint256 origin,
-      uint256 destination
-    ) = abi.decode(getRawValue(entity), (ESendType, uint32[], uint256[], uint256, uint256, uint256, uint256, uint256));
+      uint256 destination, 
+      uint256 timestamp
+    ) = abi.decode(getRawValue(entity), (ESendType, uint32[], uint256[], uint256, uint256, uint256, uint256, uint256, uint256));
     ArrivalUnit[] memory arrivalUnits = new ArrivalUnit[](unitCounts.length);
     for (uint256 i = 0; i < unitCounts.length; i++) {
       arrivalUnits[i] = ArrivalUnit({ count: unitCounts[i], unitType: uint256(unitTypes[i]) });
@@ -84,7 +89,8 @@ contract ArrivalComponent is Component {
         from: from,
         to: to,
         origin: origin,
-        destination: destination
+        destination: destination,
+        timestamp: timestamp
       });
   }
 

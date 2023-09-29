@@ -9,6 +9,7 @@ import {
 import { Scene } from "engine/types";
 import { Action } from "src/util/constants";
 import {
+  Account,
   HoverTile,
   SelectedAction,
   SelectedBuilding,
@@ -16,25 +17,35 @@ import {
 import { world } from "src/network/world";
 import {
   ObjectPosition,
+  OnClick,
   SetValue,
 } from "../../common/object-components/common";
-import { AsteroidMap } from "@game/constants";
 import {
   Texture,
   Animation,
   Outline,
 } from "../../common/object-components/sprite";
-import { getBuildingDimensions } from "src/util/building";
-
-const {
+import {
+  validateBuildingPlacement,
+  getBuildingDimensions,
+  getBuildingOrigin,
+} from "src/util/building";
+import { getRecipe, hasEnoughResources } from "src/util/resource";
+import { hashAndTrimKeyEntity, hashKeyEntity } from "src/util/encode";
+import { Level } from "src/network/components/chainComponents";
+import { buildBuilding } from "src/util/web3";
+import { Network } from "src/network/layer";
+import { toast } from "react-toastify";
+import { getBlockTypeName } from "src/util/common";
+import {
+  Assets,
+  DepthLayers,
   EntityIDtoAnimationKey,
   EntityIDtoSpriteKey,
-  Assets,
   SpriteKeys,
-  DepthLayers,
-} = AsteroidMap;
+} from "@game/constants";
 
-export const renderBuildingPlacementTool = (scene: Scene) => {
+export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_buildingPlacement";
@@ -50,6 +61,7 @@ export const renderBuildingPlacementTool = (scene: Scene) => {
     const entityIndex = update.entity;
     const objIndex = update.entity + objIndexSuffix;
     const selectedBuilding = SelectedBuilding.get()?.value;
+    const player = Account.get()?.value!;
 
     // Avoid updating on optimistic overrides
     if (
@@ -76,26 +88,53 @@ export const renderBuildingPlacementTool = (scene: Scene) => {
 
     const buildingDimensions = getBuildingDimensions(selectedBuilding);
 
+    const level =
+      Level.get(hashKeyEntity(selectedBuilding, player))?.value ?? 1;
+    const buildingLevelEntity = hashAndTrimKeyEntity(selectedBuilding, level);
+
+    const hasEnough = hasEnoughResources(getRecipe(buildingLevelEntity));
+    const validPlacement = validateBuildingPlacement(
+      tileCoord,
+      selectedBuilding
+    );
+
     buildingTool.setComponents([
       ObjectPosition(
         {
           x: pixelCoord.x,
           y: -pixelCoord.y + buildingDimensions.height * tileHeight,
         },
-        DepthLayers.Building - tileCoord.y + buildingDimensions.height
+        !validPlacement
+          ? DepthLayers.Building
+          : DepthLayers.Building - tileCoord.y + buildingDimensions.height
       ),
       SetValue({
         alpha: 0.9,
         originY: 1,
+        tint: hasEnough ? 0xffffff : 0xff0000,
       }),
       Texture(Assets.SpriteAtlas, sprite ?? SpriteKeys.IronMine1),
       animation ? Animation(animation) : undefined,
       Outline({
         thickness: 3,
-        color: 0x000000,
+        color: hasEnough && validPlacement ? undefined : 0xff0000,
       }),
-      Outline({
-        thickness: 5,
+      OnClick(() => {
+        if (!hasEnough || !validPlacement) {
+          if (!hasEnough)
+            toast.error(
+              "Not enough resources to build " +
+                getBlockTypeName(selectedBuilding)
+            );
+          if (!validPlacement) toast.error("Cannot place building here");
+          scene.camera.phaserCamera.shake(200, 0.001);
+          return;
+        }
+
+        const buildingOrigin = getBuildingOrigin(tileCoord, selectedBuilding);
+        if (!buildingOrigin) return;
+        buildBuilding(buildingOrigin, selectedBuilding, player, network);
+        SelectedAction.remove();
       }),
     ]);
   };

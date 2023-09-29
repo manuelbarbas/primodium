@@ -2,7 +2,6 @@ import { EntityID } from "@latticexyz/recs";
 import { execute } from "src/network/actions";
 import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
-import { useNotificationStore } from "src/store/NotificationStore";
 import { ReversePosition } from "src/network/components/chainComponents";
 import { ampli } from "src/ampli";
 import { parseReceipt } from "../analytics/parseReceipt";
@@ -21,7 +20,6 @@ export const send = async (
 ) => {
   const { providers, systems } = network;
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
-  const setNotification = useNotificationStore.getState().setNotification;
 
   setTransactionLoading(true);
 
@@ -41,8 +39,7 @@ export const send = async (
         gasLimit: 5_000_000,
       }
     ),
-    providers,
-    setNotification
+    providers
   );
 
   ampli.systemSendUnits({

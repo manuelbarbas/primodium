@@ -1,4 +1,4 @@
-import { EntityID, namespaceWorld } from "@latticexyz/recs";
+import { namespaceWorld } from "@latticexyz/recs";
 import engine from "engine";
 import { Game } from "engine/types";
 import { GameReady } from "src/network/components/clientComponents";
@@ -11,12 +11,9 @@ import { createInputApi } from "./input";
 import { createSceneApi } from "./scene";
 import { createFxApi } from "./fx";
 import { world } from "src/network/world";
+import { createSpriteApi } from "./sprite";
 
-async function init(
-  player: EntityID,
-  network: Network,
-  version: string = "v1"
-) {
+async function init(network: Network, version = "v1") {
   const asciiArt = `
                                                                           
                                                                           
@@ -39,13 +36,7 @@ async function init(
 
   namespaceWorld(world, "game");
 
-  await _init(player, network);
-
-  //expose api to window for debugging
-  if (import.meta.env.VITE_DEV === "true") {
-    // @ts-ignore
-    window.network = network;
-  }
+  await _init(network);
 
   GameReady.set({ value: true });
 }
@@ -63,20 +54,18 @@ function destroy() {
   world.dispose("game");
 }
 
-function api(instance: string | Game, sceneKey: string = "MAIN") {
+function api(sceneKey = "MAIN", instance: string | Game = "MAIN") {
   const _instance =
     typeof instance === "string" ? engine.getGame().get(instance) : instance;
 
   if (_instance === undefined) {
-    console.warn("No instance found with key " + instance);
-    return;
+    throw Error("No instance found with key " + instance);
   }
 
   const scene = _instance.sceneManager.scenes.get(sceneKey);
 
   if (scene === undefined) {
-    console.warn("No scene found with key " + sceneKey);
-    return;
+    throw Error("No scene found with key " + sceneKey);
   }
 
   return {
@@ -84,8 +73,9 @@ function api(instance: string | Game, sceneKey: string = "MAIN") {
     game: createGameApi(_instance),
     hooks: createHooksApi(scene),
     input: createInputApi(scene),
-    scene: createSceneApi(scene),
+    scene: createSceneApi(_instance),
     fx: createFxApi(),
+    sprite: createSpriteApi(scene),
   };
 }
 

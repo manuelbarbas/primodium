@@ -13,14 +13,14 @@ import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMove
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
-
+import { PirateComponent, ID as PirateComponentID } from "components/PirateComponent.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as S_UpdatePlayerSpaceRockSystem } from "./S_UpdatePlayerSpaceRockSystem.sol";
-
 import { LibSend } from "libraries/LibSend.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMotherlode } from "libraries/LibMotherlode.sol";
+import { LibPirateAsteroid } from "libraries/LibPirateAsteroid.sol";
 
 import { ESendType, ESpaceRockType, Coord, Arrival, ArrivalUnit } from "src/types.sol";
 
@@ -41,14 +41,24 @@ contract SendUnitsSystem is PrimodiumSystem {
   function execute(bytes memory args) public override returns (bytes memory) {
     SendArgs memory sendArgs = abi.decode(args, (SendArgs));
 
+    PirateComponent pirateComponent = PirateComponent(getC(PirateComponentID));
     ReversePositionComponent reversePositionComponent = ReversePositionComponent(getC(ReversePositionComponentID));
+
     uint256 origin = reversePositionComponent.getValue(LibEncode.encodeCoord(sendArgs.originPosition));
     IOnEntitySubsystem(getAddressById(world.systems(), S_UpdatePlayerSpaceRockSystem)).executeTyped(msg.sender, origin);
 
     if (!reversePositionComponent.has(LibEncode.encodeCoord(sendArgs.destinationPosition))) {
       LibMotherlode.createMotherlode(world, sendArgs.destinationPosition);
     }
+
     uint256 destination = reversePositionComponent.getValue(LibEncode.encodeCoord(sendArgs.destinationPosition));
+    if (pirateComponent.has(sendArgs.to)) {
+      require(
+        OwnedByComponent(getC(OwnedByComponentID)).getValue(destination) ==
+          LibPirateAsteroid.getPersonalPirate(addressToEntity(msg.sender)),
+        "you cannot send units to a non personal pirate"
+      );
+    }
 
     uint256 playerEntity = addressToEntity(msg.sender);
     checkMovementRules(origin, destination, playerEntity, sendArgs.to, sendArgs.sendType);
@@ -78,7 +88,8 @@ contract SendUnitsSystem is PrimodiumSystem {
       from: playerEntity,
       to: sendArgs.to,
       origin: origin,
-      destination: destination
+      destination: destination,
+      timestamp: block.number
     });
 
     LibSend.sendUnits(world, arrival);

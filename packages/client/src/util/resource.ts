@@ -1,13 +1,39 @@
-import { EntityID } from "@latticexyz/recs";
 import {
+  EntityID,
+  EntityIndex,
+  Has,
+  HasValue,
+  runQuery,
+} from "@latticexyz/recs";
+import {
+  AsteroidType,
+  Item,
+  LastClaimedAt,
+  MaxUtility,
   Motherlode,
+  OccupiedUtilityResource,
+  OwnedBy,
+  P_MaxStorage,
   P_MotherlodeResource,
+  P_ProductionDependencies,
   P_RequiredResources,
   P_RequiredUtility,
+  P_WorldSpeed,
+  Production,
 } from "src/network/components/chainComponents";
-import { BlockType } from "./constants";
-import { hashKeyEntity } from "./encode";
+import { BlockType, SPEED_SCALE } from "./constants";
+import { hashAndTrimKeyEntity, hashKeyEntity } from "./encode";
 import { ResourceType } from "./constants";
+import {
+  Account,
+  BlockNumber,
+  Hangar,
+} from "src/network/components/clientComponents";
+import { world } from "src/network/world";
+import { getUnitStats } from "./trainUnits";
+import { ESpaceRockType } from "./web3/types";
+import { NewNumberComponent } from "src/network/components/customComponents/Component";
+import { SingletonID } from "@latticexyz/network";
 
 // building a building requires resources
 // fetch directly from component data
@@ -21,6 +47,11 @@ export function getRecipe(entityId: EntityID) {
     requiredAmounts: [],
   });
 
+  const requiredProduction = P_ProductionDependencies.get(entityId, {
+    resources: [],
+    values: [],
+  });
+
   const resources = requiredResources.resources.map(
     (resourceId: EntityID, index: number) => ({
       id: resourceId,
@@ -28,6 +59,7 @@ export function getRecipe(entityId: EntityID) {
       amount: requiredResources.values[index],
     })
   );
+
   const utilities = requiredUtilities.resourceIDs.map(
     (resourceId: EntityID, index: number) => ({
       id: resourceId,
@@ -35,7 +67,40 @@ export function getRecipe(entityId: EntityID) {
       amount: requiredUtilities.requiredAmounts[index],
     })
   );
-  return [...resources, ...utilities];
+
+  const resourceRate = requiredProduction.resources.map((resource, index) => ({
+    id: resource,
+    type: ResourceType.ResourceRate,
+    amount: requiredProduction.values[index],
+  }));
+
+  return [...resources, ...utilities, ...resourceRate];
+}
+
+export function getRecipeDifference(
+  firstRecipe: ReturnType<typeof getRecipe>,
+  secondRecipe: ReturnType<typeof getRecipe>
+) {
+  const difference = firstRecipe.map((resource) => {
+    let amount = resource.amount;
+    if (resource.type == ResourceType.Utility) {
+      const secondResource = secondRecipe.find(
+        (secondResource) => resource.id === secondResource.id
+      );
+
+      if (secondResource) {
+        amount = resource.amount - secondResource.amount;
+      }
+    }
+
+    return {
+      id: resource.id,
+      amount: amount,
+      type: resource.type,
+    };
+  });
+
+  return difference;
 }
 
 export const mineableResources = [
@@ -53,4 +118,175 @@ export function getMotherlodeResource(entityID: EntityID) {
     motherlode.size
   );
   return P_MotherlodeResource.get(motherlodeType);
+}
+
+export default function getResourceCount(
+  resourceComponent: NewNumberComponent,
+  resourceId: EntityID,
+  address?: EntityID
+) {
+  const player = address ?? Account.get()?.value;
+
+  let resourceKey: EntityID | undefined = undefined;
+  if (player) {
+    const encodedEntityId = hashAndTrimKeyEntity(
+      resourceId,
+      player
+    ) as EntityID;
+    resourceKey = encodedEntityId.toString().toLowerCase() as EntityID;
+  }
+
+  const resource = resourceComponent.get(resourceKey);
+
+  if (resource) {
+    return parseInt(resource.value.toString());
+  } else {
+    return 0;
+  }
+}
+
+export function getFullResourceCount(
+  resourceID: EntityID,
+  type = ResourceType.Resource,
+  address?: EntityID
+) {
+  const blockNumber = BlockNumber.get(undefined, {
+    value: 0,
+    avgBlockTime: 1,
+  }).value;
+  const player =
+    address ??
+    Account.get(undefined, {
+      value: SingletonID,
+    }).value;
+
+  const query = [
+    Has(AsteroidType),
+    HasValue(OwnedBy, { value: player }),
+    HasValue(AsteroidType, { value: ESpaceRockType.Motherlode }),
+  ];
+  const worldSpeed = P_WorldSpeed.get(SingletonID)?.value ?? SPEED_SCALE;
+  const motherlodes = Array.from(runQuery(query));
+
+  let motherlodeProduction = 0;
+
+  if (mineableResources.includes(resourceID)) {
+    motherlodeProduction = motherlodes.reduce(
+      (prev: number, motherlodeIndex: EntityIndex) => {
+        const entity = world.entities[motherlodeIndex];
+        const resource = getMotherlodeResource(entity);
+
+        const hangar = Hangar.get(entity);
+
+        if (!hangar || resource?.resource !== resourceID) return prev;
+
+        let total = 0;
+        for (let i = 0; i < hangar.units.length; i++) {
+          total += getUnitStats(hangar.units[i]).MIN * hangar.counts[i];
+        }
+        return prev + total;
+      },
+      0
+    );
+  }
+
+  const resourceCount = getResourceCount(
+    ResourceType.Resource === type ? Item : OccupiedUtilityResource,
+    resourceID,
+    player
+  );
+
+  const maxStorage = getResourceCount(
+    ResourceType.Resource === type ? P_MaxStorage : MaxUtility,
+    resourceID,
+    player
+  );
+
+  const buildingProduction = getResourceCount(Production, resourceID, player);
+
+  const production = (() => {
+    return buildingProduction + motherlodeProduction;
+  })();
+  const buildingProductionLastClaimedAt = getResourceCount(
+    LastClaimedAt,
+    resourceID,
+    player
+  );
+
+  const resourcesToClaimFromBuilding = (() => {
+    const toClaim =
+      ((blockNumber - buildingProductionLastClaimedAt) *
+        buildingProduction *
+        SPEED_SCALE) /
+      worldSpeed;
+    if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
+    return toClaim;
+  })();
+
+  const resourcesToClaimFromMotherlode = (() => {
+    if (!mineableResources.includes(resourceID)) return 0;
+    return motherlodes.reduce((prev: number, motherlodeIndex: EntityIndex) => {
+      const entity = world.entities[motherlodeIndex];
+      const resource = getMotherlodeResource(entity);
+
+      const hangar = Hangar.get(entity);
+
+      if (!hangar || resource?.resource !== resourceID) return prev;
+      const lastClaimedAt = LastClaimedAt.get(entity)?.value ?? 0;
+
+      let total = 0;
+      for (let i = 0; i < hangar.units.length; i++) {
+        total += getUnitStats(hangar.units[i]).MIN * hangar.counts[i];
+      }
+      return (
+        prev +
+        total * (((blockNumber - lastClaimedAt) * SPEED_SCALE) / worldSpeed)
+      );
+    }, 0);
+  })();
+
+  const resourcesToClaim = (() => {
+    const toClaim =
+      resourcesToClaimFromBuilding + resourcesToClaimFromMotherlode;
+    if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
+    return toClaim;
+  })();
+
+  return { resourceCount, resourcesToClaim, maxStorage, production };
+}
+
+export function hasEnoughResources(
+  recipe: ReturnType<typeof getRecipe>,
+  count = 1
+) {
+  const resourceAmounts = recipe.map((resource) => {
+    return getFullResourceCount(resource.id, resource.type);
+  });
+
+  for (const [index, resource] of recipe.entries()) {
+    const resourceAmount = resourceAmounts[index];
+    const { resourceCount, resourcesToClaim, production, maxStorage } =
+      resourceAmount;
+
+    switch (resource.type) {
+      case ResourceType.Resource:
+        if (resourceCount + resourcesToClaim < resource.amount * count)
+          return false;
+        break;
+      case ResourceType.ResourceRate:
+        if (production < resource.amount * count) return false;
+        break;
+      case ResourceType.Utility:
+        if (
+          maxStorage - (resourceCount + resourcesToClaim) <
+          resource.amount * count
+        )
+          return false;
+        break;
+      default:
+        return false;
+    }
+  }
+
+  return true;
 }

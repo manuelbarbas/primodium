@@ -7,7 +7,9 @@ import { ID as SpawnSystemID } from "./SpawnSystem.sol";
 import { ID as UpgradeBuildingSystemID } from "./UpgradeBuildingSystem.sol";
 import { ID as DestroySystemID } from "./DestroySystem.sol";
 
+import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
+import { ID as S_UpdateUnclaimedResourcesSystemID } from "./S_UpdateUnclaimedResourcesSystem.sol";
 import { ItemComponent, ID as ItemComponentID } from "../components/ItemComponent.sol";
 import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "../components/P_MaxStorageComponent.sol";
 import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "../components/P_MaxResourceStorageComponent.sol";
@@ -57,10 +59,15 @@ contract S_UpdatePlayerStorageSystem is IOnBuildingSubsystem, PrimodiumSystem {
       uint32 maxStorageIncrease = LibStorage.getResourceMaxStorage(world, buildingIdNewLevel, storageResources[i]);
       if (actionType == EActionType.Upgrade) {
         uint256 buildingIdOldLevel = LibEncode.hashKeyEntity(buildingType, buildingLevel - 1);
+
         maxStorageIncrease =
           maxStorageIncrease -
           LibStorage.getResourceMaxStorage(world, buildingIdOldLevel, storageResources[i]);
       }
+      IOnEntitySubsystem(getAddressById(world.systems(), S_UpdateUnclaimedResourcesSystemID)).executeTyped(
+        playerAddress,
+        storageResources[i]
+      );
       updateResourceMaxStorage(
         world,
         playerEntity,

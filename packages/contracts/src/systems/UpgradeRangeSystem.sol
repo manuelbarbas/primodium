@@ -47,7 +47,7 @@ contract UpgradeRangeSystem is PrimodiumSystem {
         researchItem
       );
     }
-
+    HasResearchedComponent(getC(HasResearchedComponentID)).set(LibEncode.hashKeyEntity(researchItem, playerEntity));
     LevelComponent(getC(LevelComponentID)).set(playerEntity, playerLevel + 1);
 
     return abi.encode(true);

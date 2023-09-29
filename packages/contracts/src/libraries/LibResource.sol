@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 import { getAddressById, entityToAddress } from "solecs/utils.sol";
-
+import "solecs/SingletonID.sol";
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { ScoreComponent, ID as ScoreComponentID } from "components/ScoreComponent.sol";
 import { P_ScoreMultiplierComponent, ID as P_ScoreMultiplierComponentID } from "components/P_ScoreMultiplierComponent.sol";
@@ -13,13 +13,19 @@ import { ProductionComponent, ID as ProductionComponentID } from "components/Pro
 import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
 import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 import { P_ProductionComponent, ID as P_ProductionComponentID } from "components/P_ProductionComponent.sol";
+import { P_WorldSpeedComponent, ID as P_WorldSpeedComponentID, SPEED_SCALE } from "components/P_WorldSpeedComponent.sol";
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { LibEncode } from "./LibEncode.sol";
 import { LibMath } from "./LibMath.sol";
 import { ResourceValues, ResourceValue } from "../types.sol";
 
+import { TitaniumResourceItemID, PlatinumResourceItemID, IridiumResourceItemID, KimberliteResourceItemID } from "../prototypes/Item.sol";
+
+import { PlayerMotherlodeComponent, ID as PlayerMotherlodeComponentID } from "../components/PlayerMotherlodeComponent.sol";
+
 import { ID as UpdateUnclaimedResourcesSystemID } from "../systems/S_UpdateUnclaimedResourcesSystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+import { LibUpdateSpaceRock } from "./LibUpdateSpaceRock.sol";
 
 library LibResource {
   //checks all required conditions for a factory to be functional and updates factory is functional status
@@ -41,22 +47,59 @@ library LibResource {
     LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
       world.getComponent(LastClaimedAtComponentID)
     );
-
     ResourceValues memory requiredResources = requiredResourcesComponent.getValue(entity);
+    uint256 worldSpeed = P_WorldSpeedComponent(world.getComponent(P_WorldSpeedComponentID)).getValue(SingletonID);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       uint32 resourceCost = requiredResources.values[i] * count;
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(requiredResources.resources[i], playerEntity);
       uint32 playerResourceCount = LibMath.getSafe(itemComponent, playerResourceEntity);
-
+      if (resourceCost <= playerResourceCount) continue;
+      // uint256 blocksPassed = block.number - LibMath.getSafe(lastClaimedAtComponent, playerResourceEntity);
+      // blocksPassed = (blocksPassed * SPEED_SCALE) / worldSpeed;
       if (LibMath.getSafe(productionComponent, playerResourceEntity) > 0) {
         playerResourceCount +=
           productionComponent.getValue(playerResourceEntity) *
-          uint32(block.number - LibMath.getSafe(lastClaimedAtComponent, playerResourceEntity));
+          uint32(
+            ((block.number - LibMath.getSafe(lastClaimedAtComponent, playerResourceEntity)) * SPEED_SCALE) / worldSpeed
+          );
       }
+      if (resourceCost <= playerResourceCount) continue;
 
-      if (resourceCost > playerResourceCount) return false;
+      playerResourceCount += getTotalUnclaimedMotherlodeResources(
+        world,
+        playerEntity,
+        requiredResources.resources[i],
+        block.number
+      );
+      if (resourceCost > playerResourceCount) {
+        return false;
+      }
     }
     return true;
+  }
+
+  function getTotalUnclaimedMotherlodeResources(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 resourceEntity,
+    uint256 blockNumber
+  ) internal view returns (uint32) {
+    PlayerMotherlodeComponent playerMotherlodeComponent = PlayerMotherlodeComponent(
+      world.getComponent(PlayerMotherlodeComponentID)
+    );
+    uint256[] memory motherlodes = playerMotherlodeComponent.getEntitiesWithValue(
+      LibEncode.hashKeyEntity(resourceEntity, playerEntity)
+    );
+    uint32 totalUnclaimedResources = 0;
+    for (uint256 i = 0; i < motherlodes.length; i++) {
+      totalUnclaimedResources += LibUpdateSpaceRock.getUnclaimedMotherlodeResourceAmount(
+        world,
+        playerEntity,
+        motherlodes[i],
+        blockNumber
+      );
+    }
+    return totalUnclaimedResources;
   }
 
   function getTotalResources(
@@ -64,10 +107,13 @@ library LibResource {
     uint256 playerEntity
   ) internal view returns (uint32 totalResources, uint32[] memory resources) {
     ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
-    P_MaxResourceStorageComponent maxResourceStorageComponent = P_MaxResourceStorageComponent(
+
+    //hotfix
+    uint256[] memory storageResourceIds = P_MaxResourceStorageComponent(
       world.getComponent(P_MaxResourceStorageComponentID)
-    );
-    uint256[] memory storageResourceIds = maxResourceStorageComponent.getValue(playerEntity);
+    ).getValue(playerEntity);
+
+    //uint256[] memory storageResourceIds = getMotherlodeResources();
     resources = new uint32[](storageResourceIds.length);
     totalResources = 0;
     for (uint256 i = 0; i < storageResourceIds.length; i++) {
@@ -98,6 +144,15 @@ library LibResource {
       }
       lastClaimedAtComponent.set(playerResourceEntity, block.number);
     }
+  }
+
+  function getMotherlodeResources() internal pure returns (uint256[] memory resourceIds) {
+    resourceIds = new uint256[](4);
+    resourceIds[0] = TitaniumResourceItemID;
+    resourceIds[1] = PlatinumResourceItemID;
+    resourceIds[2] = IridiumResourceItemID;
+    resourceIds[3] = KimberliteResourceItemID;
+    return resourceIds;
   }
 
   function updateResourceAmount(IWorld world, uint256 entity, uint256 resourceType, uint32 value) internal {
@@ -153,6 +208,31 @@ library LibResource {
       if (level > 1) {
         requiredValue -= lastLevelRequiredProductions.values[i];
       }
+      if (LibMath.getSafe(productionComponent, playerResourceEntity) < requiredValue) return false;
+    }
+    return true;
+  }
+
+  function checkResourceProductionRequirements(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 entityType
+  ) internal view returns (bool) {
+    P_ProductionDependenciesComponent productionDependenciesComponent = P_ProductionDependenciesComponent(
+      world.getComponent(P_ProductionDependenciesComponentID)
+    );
+
+    if (!productionDependenciesComponent.has(entityType)) return true;
+
+    ResourceValues memory requiredProductions = productionDependenciesComponent.getValue(entityType);
+    ResourceValues memory lastLevelRequiredProductions;
+
+    ProductionComponent productionComponent = ProductionComponent(world.getComponent(ProductionComponentID));
+    for (uint256 i = 0; i < requiredProductions.resources.length; i++) {
+      uint256 playerResourceEntity = LibEncode.hashKeyEntity(requiredProductions.resources[i], playerEntity);
+      if (!productionComponent.has(playerResourceEntity)) return false;
+      uint256 requiredValue = requiredProductions.values[i];
+
       if (LibMath.getSafe(productionComponent, playerResourceEntity) < requiredValue) return false;
     }
     return true;
