@@ -3,7 +3,6 @@ import {
   EntityID,
   Has,
   HasValue,
-  defineUpdateSystem,
   defineEnterSystem,
   defineExitSystem,
   namespaceWorld,
