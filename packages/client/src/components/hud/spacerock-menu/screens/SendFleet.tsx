@@ -4,14 +4,10 @@ import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { useMud } from "src/hooks";
-import {
-  OwnedBy,
-  ReversePosition,
-} from "src/network/components/chainComponents";
+import { OwnedBy, Position } from "src/network/components/chainComponents";
 import { Account, Send } from "src/network/components/clientComponents";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage } from "src/util/constants";
-import { encodeCoord } from "src/util/encode";
 import { send } from "src/util/web3/send";
 import { ESendType } from "src/util/web3/types";
 
@@ -23,8 +19,8 @@ export const SendFleet: React.FC = () => {
 
   const sendFleet = (sendType: ESendType) => {
     const account = Account.get()?.value;
-    const origin = Send.getOrigin();
-    const destination = Send.getDestination();
+    const origin = Send.get()?.origin;
+    const destination = Send.get()?.destination;
 
     if (
       account == undefined ||
@@ -40,17 +36,16 @@ export const SendFleet: React.FC = () => {
       count: count?.at(index) ?? 0,
     }));
 
-    const destinationEntityId = ReversePosition.get(
-      encodeCoord(destination)
-    )?.value;
+    const originCoord = Position.get(origin) ?? { x: 0, y: 0 };
+    const destinationCoord = Position.get(destination) ?? { x: 0, y: 0 };
 
-    const to = OwnedBy.get(destinationEntityId)?.value;
+    const to = OwnedBy.get(destination)?.value;
 
     send(
       arrivalUnits,
       sendType,
-      origin,
-      destination,
+      originCoord,
+      destinationCoord,
       to ?? ("0x00" as EntityID),
       network
     );

@@ -115,8 +115,8 @@ export function setupHangar() {
   defineComponentSystem(world, Send, () => {
     const blockNumber = BlockNumber.get()?.value;
     if (!blockNumber) return;
-    const origin = Send.getOrigin()?.entity;
-    const destination = Send.getDestination()?.entity;
+    const origin = Send.get()?.origin;
+    const destination = Send.get()?.destination;
     if (origin) setupHangar(blockNumber, origin);
     if (destination) setupHangar(blockNumber, destination);
   });
@@ -124,8 +124,8 @@ export function setupHangar() {
   defineComponentSystem(world, BlockNumber, ({ value: [rawBlockNumber] }) => {
     if (!rawBlockNumber) return;
     const blockNumber = rawBlockNumber.value;
-    const origin = Send.getOrigin()?.entity;
-    const destination = Send.getDestination()?.entity;
+    const origin = Send.get()?.origin;
+    const destination = Send.get()?.destination;
     if (origin) setupHangar(blockNumber, origin);
     if (destination) setupHangar(blockNumber, destination);
     // maintain hangars for all player motherlodes to track mining production

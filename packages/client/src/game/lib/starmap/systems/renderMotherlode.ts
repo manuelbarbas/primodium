@@ -23,7 +23,6 @@ import { world } from "src/network/world";
 import { MotherlodeSizeNames, MotherlodeTypeNames } from "src/util/constants";
 import { ESpaceRockType } from "src/util/web3/types";
 import { Send } from "src/network/components/clientComponents";
-import { ActiveButton } from "src/util/types";
 import { Coord } from "@latticexyz/utils";
 import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 
@@ -69,16 +68,7 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
       ...sharedComponents,
       Texture(Assets.SpriteAtlas, sprite),
       OnClick(() => {
-        const activeButton = Send.get()?.activeButton ?? ActiveButton.NONE;
-        if (activeButton === ActiveButton.ORIGIN) {
-          Send.setOrigin(coord);
-        } else if (
-          activeButton === ActiveButton.DESTINATION ||
-          activeButton === ActiveButton.NONE
-        ) {
-          Send.setDestination(coord);
-        }
-        Send.update({ activeButton: ActiveButton.NONE });
+        Send.setDestination(entityId);
       }),
     ]);
 
@@ -90,19 +80,21 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
           ownedBy ? (ownedBy === player ? "Player" : "Enemy") : "Neutral"
         }${MotherlodeSizeNames[motherlodeData.size]}` as keyof typeof SpriteKeys
       ];
-
     const motherlodeOutline = motherlodeObjectGroup.add("Sprite");
     motherlodeOutline.setComponents([
       ...sharedComponents,
       Texture(Assets.SpriteAtlas, outlineSprite),
       OnComponentSystem(Send, () => {
-        if (motherlodeOutline.hasComponent(Outline().id)) {
-          motherlodeOutline.removeComponent(Outline().id);
-        } else {
-          if (Send.getDestination()?.entity !== entityId) return;
+        if (Send.get()?.destination === entityId) {
+          if (motherlodeOutline.hasComponent(Outline().id)) return;
           motherlodeOutline.setComponent(
             Outline({ thickness: 1.5, color: 0xffa500 })
           );
+          return;
+        }
+
+        if (motherlodeOutline.hasComponent(Outline().id)) {
+          motherlodeOutline.removeComponent(Outline().id);
         }
       }),
       OnComponentSystem(OwnedBy, (_, { entity }) => {
@@ -137,19 +129,4 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
     if (!coord) return;
     render(entityId, coord);
   });
-
-  // defineComponentSystem(gameWorld, Send, ({ value: values }) => {
-  //   values.map((value) => {
-  //     [
-  //       { x: value?.originX, y: value?.originY },
-  //       { x: value?.destinationX, y: value?.destinationY },
-  //     ].map((rawCoord) => {
-  //       if (!rawCoord || !rawCoord.x || !rawCoord.y) return;
-  //       const coord = { x: rawCoord.x, y: rawCoord.y };
-  //       const entity = ReversePosition.get(encodeAndTrimCoord(coord))?.value;
-  //       if (!entity) return;
-  //       render(entity, coord);
-  //     });
-  //   });
-  // });
 };

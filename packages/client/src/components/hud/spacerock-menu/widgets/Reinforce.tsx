@@ -7,8 +7,8 @@ import { Hangar, Send } from "src/network/components/clientComponents";
 import { ESendType } from "src/util/web3/types";
 
 export const Reinforce = () => {
-  const origin = Send.getOrigin()?.entity;
-  const destination = Send.getDestination()?.entity;
+  const origin = Send.get()?.origin;
+  const destination = Send.get()?.destination;
   const units = Hangar.use(origin, {
     units: [],
     counts: [],

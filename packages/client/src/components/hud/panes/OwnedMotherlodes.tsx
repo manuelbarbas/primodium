@@ -66,7 +66,7 @@ const Motherlode: React.FC<{ motherlodeId: EntityID }> = ({ motherlodeId }) => {
 
           const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
 
-          Send.setDestination(motherlodeInfo.position);
+          Send.setDestination(motherlodeInfo.entity);
 
           pan({
             x: motherlodeInfo.position.x,

@@ -26,7 +26,10 @@ export const LabeledValue: React.FC<{
   );
 };
 
-export const LocateButton: React.FC<{ coord: Coord }> = ({ coord }) => {
+export const LocateButton: React.FC<{
+  destination: EntityID;
+  coord: Coord;
+}> = ({ destination, coord }) => {
   return (
     <Button
       className="btn-secondary btn-sm btn-square flex"
@@ -44,7 +47,7 @@ export const LocateButton: React.FC<{ coord: Coord }> = ({ coord }) => {
 
         const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
 
-        Send.setDestination(coord);
+        Send.setDestination(destination);
 
         pan(coord);
 
@@ -123,7 +126,10 @@ export const Fleet: React.FC<{
                 outgoing={outgoing}
               />
             ) : (
-              <LocateButton coord={destinationPosition} />
+              <LocateButton
+                destination={destination}
+                coord={destinationPosition}
+              />
             )}
           </>
         )}
