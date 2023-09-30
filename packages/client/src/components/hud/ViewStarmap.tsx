@@ -59,7 +59,6 @@ export const ViewStarmap = () => {
           <Button
             className="btn-sm flex border border-secondary"
             onClick={() => {
-              console.log("here");
               const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
               const homeAsteroid = HomeAsteroid.get()?.value;
               Send.setDestination(homeAsteroid);
