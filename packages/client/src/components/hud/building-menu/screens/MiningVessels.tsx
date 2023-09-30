@@ -71,10 +71,13 @@ export const MiningVessels: React.FC<{ building: EntityID }> = ({
     <Navigator.Screen title="MiningVessels" className="w-full">
       <SecondaryCard className="flex-row gap-1">
         <FaInfoCircle />
-        <p className="text-xs italic opacity-75">
-          Mining vessels are used to mine motherlodes. To commission one, you
-          must unlock an available slot first.
-        </p>
+        <div className="text-xs italic opacity-75 space-y-2">
+          <p>
+            Mining vessels are used to mine motherlodes. To commission one, you
+            must unlock an available slot first.
+          </p>
+          <p className="font-bold">First slot available at Main Base Lvl. 4</p>
+        </div>
       </SecondaryCard>
       <VesselSlots building={building} player={player} />
       <CommissionCost player={player} />
