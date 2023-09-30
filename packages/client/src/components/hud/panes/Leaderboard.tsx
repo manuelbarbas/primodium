@@ -5,6 +5,8 @@ import { getAddress } from "ethers/lib/utils.js";
 
 import {
   Account,
+  MapOpen,
+  Send,
   Leaderboard as _Leaderboard,
 } from "src/network/components/clientComponents";
 import { shortenAddress } from "src/util/common";
@@ -13,6 +15,10 @@ import { SecondaryCard } from "src/components/core/Card";
 import { getLinkedAddress } from "src/util/web2/getLinkedAddress";
 import { Button } from "src/components/core/Button";
 import { linkAddress } from "src/util/web2/linkAddress";
+import { primodium } from "@game/api";
+import { Scenes } from "@game/constants";
+import { Position } from "src/network/components/chainComponents";
+import { FaCrosshairs } from "react-icons/fa";
 
 export const Leaderboard = () => {
   const address = Account.use()?.value;
@@ -140,8 +146,34 @@ const LeaderboardItem = ({
       <div>{index + 1}.</div>
       <div className="col-span-5 flex justify-between">
         <div>{playerDisplay}</div>
-        <div className="font-bold rounded-md bg-cyan-700 px-2">
-          {score.toLocaleString()}
+        <div className="flex items-center gap-1">
+          <p className="font-bold rounded-md bg-cyan-700 px-2 ">
+            {score.toLocaleString()}
+          </p>
+          <Button
+            className="btn-xs flex border border-secondary"
+            onClick={async () => {
+              const mapOpen = MapOpen.get(undefined, {
+                value: false,
+              }).value;
+
+              if (!mapOpen) {
+                const { transitionToScene } = primodium.api().scene;
+
+                await transitionToScene(Scenes.Asteroid, Scenes.Starmap);
+                MapOpen.set({ value: true });
+              }
+
+              const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
+              const asteroid = Position.get(player)?.parent;
+
+              Send.setDestination(asteroid);
+              pan(Send.getDestinationCoord() ?? { x: 0, y: 0 });
+              zoomTo(1);
+            }}
+          >
+            <FaCrosshairs />
+          </Button>
         </div>
       </div>
     </SecondaryCard>
