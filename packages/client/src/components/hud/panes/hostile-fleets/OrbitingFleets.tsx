@@ -1,6 +1,6 @@
 import { ESendType } from "src/util/web3/types";
 import { EntityID } from "@latticexyz/recs";
-import { Arrival } from "src/network/components/chainComponents";
+import { Arrival, OwnedBy } from "src/network/components/chainComponents";
 import { Account } from "src/network/components/clientComponents";
 import { SingletonID } from "@latticexyz/network";
 import { useMemo } from "react";
@@ -16,11 +16,16 @@ export const OrbitingFleets: React.FC<{ spaceRock: EntityID }> = ({
     onlyOrbiting: true,
   });
 
+  console.log(orbitingFleets);
+
   //filter collection where sendType is not REINFORCE
   const attackingOrbitingFleets = useMemo(
     () =>
       orbitingFleets.filter((fleet) => {
         if (!fleet) return false;
+
+        if (OwnedBy.get(fleet.destination)?.value === player) return false;
+
         return fleet.sendType !== ESendType.REINFORCE;
       }),
     [orbitingFleets]
