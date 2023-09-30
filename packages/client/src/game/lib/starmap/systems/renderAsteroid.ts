@@ -27,7 +27,6 @@ import { Send } from "src/network/components/clientComponents";
 import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 import { ESpaceRockType } from "src/util/web3/types";
 import { Coord } from "@latticexyz/utils";
-import { ActiveButton } from "src/util/types";
 import {
   Assets,
   DepthLayers,
@@ -91,16 +90,7 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
         ]
       ),
       OnClick(scene, () => {
-        const activeButton = Send.get()?.activeButton ?? ActiveButton.NONE;
-        if (activeButton === ActiveButton.ORIGIN) {
-          Send.setOrigin(coord);
-        } else if (
-          activeButton === ActiveButton.DESTINATION ||
-          activeButton === ActiveButton.NONE
-        ) {
-          Send.setDestination(coord);
-        }
-        Send.update({ activeButton: ActiveButton.NONE });
+        Send.setDestination(entityId);
       }),
     ]);
 
@@ -116,13 +106,16 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
     asteroidOutline.setComponents([
       ...sharedComponents,
       OnComponentSystem(Send, () => {
+        if (Send.get()?.destination === entityId) {
+          if (asteroidOutline.hasComponent(Outline().id)) return;
+          asteroidOutline.setComponent(
+            Outline({ thickness: 1.5, color: 0xffa500 })
+          );
+          return;
+        }
+
         if (asteroidOutline.hasComponent(Outline().id)) {
           asteroidOutline.removeComponent(Outline().id);
-        } else {
-          if (Send.getDestination()?.entity !== entityId) return;
-          asteroidOutline.setComponent(
-            Outline({ thickness: 2, color: 0xffa500 })
-          );
         }
       }),
       Texture(Assets.SpriteAtlas, outlineSprite),

@@ -13,12 +13,10 @@ export const runSystems = (scene: Scene) => {
 
   focusAsteroid(scene);
 
-  // renderUnitSend(scene);
-
   renderAsteroid(scene, player);
   renderMotherlode(scene, player);
   renderPirateAsteroid(scene, player);
 
-  renderArrivalsInTransit(scene);
-  renderArrivalsInOrbit(scene);
+  renderArrivalsInTransit(scene, player);
+  renderArrivalsInOrbit(scene, player);
 };

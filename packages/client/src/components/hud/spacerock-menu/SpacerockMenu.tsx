@@ -12,7 +12,7 @@ import { UnitSelection } from "./screens/UnitSelection";
 import { StationedUnits } from "./screens/StationedUnits";
 
 export const SpacerockMenu: React.FC = () => {
-  const selectedSpacerock = Send.useDestination()?.entity;
+  const selectedSpacerock = Send.use()?.destination;
 
   useEffect(() => {
     const resetSendOnEscape = (event: KeyboardEvent) => {

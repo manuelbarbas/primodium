@@ -23,8 +23,8 @@ export const renderUnitSend = (scene: Scene) => {
 
   const render = (update: ComponentUpdate) => {
     const entityId = world.entities[update.entity];
-    const origin = Send.getOrigin();
-    const destination = Send.getDestination();
+    const origin = Send.getOriginCoord();
+    const destination = Send.getDestinationCoord();
     scene.objectPool.removeGroup(entityId + objIndexSuffix);
 
     if (!origin || !destination) return;

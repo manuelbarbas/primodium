@@ -11,7 +11,7 @@ import { BackgroundImage } from "src/util/constants";
 import { getUnitStats } from "src/util/trainUnits";
 
 export const UnitSelection = () => {
-  const origin = Send.getOrigin()?.entity;
+  const origin = Send.get()?.origin;
   const [selectedUnit, setSelectedUnit] = useState<EntityID>();
   const [count, setCount] = useState(1);
   const { units, counts } = Hangar.use(origin, {

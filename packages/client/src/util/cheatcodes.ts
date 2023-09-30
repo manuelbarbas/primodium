@@ -228,7 +228,7 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
     addMinerToDestination: {
       params: [{ name: "count", type: "number" }],
       function: async (count: number) => {
-        const destination = Send.getDestination()?.entity;
+        const destination = Send.get()?.destination;
         if (!destination) throw new Error("No destination set");
         console.log("destination", Position.get(destination));
         const entity = Account.get()?.value;
