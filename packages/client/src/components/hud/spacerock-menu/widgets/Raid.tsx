@@ -11,8 +11,8 @@ export const Raid: React.FC = () => {
   const player = Account.use(undefined, {
     value: SingletonID,
   }).value;
-  const origin = Send.getOrigin()?.entity;
-  const destination = Send.getDestination()?.entity;
+  const origin = Send.get()?.origin;
+  const destination = Send.get()?.destination;
   const units = Hangar.use(origin, {
     units: [],
     counts: [],

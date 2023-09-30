@@ -4,7 +4,7 @@ import { Navigator } from "src/components/core/Navigator";
 import { Hangar, Send } from "src/network/components/clientComponents";
 
 export const StationedUnits: React.FC = () => {
-  const destination = Send.getDestination()?.entity;
+  const destination = Send.get()?.destination;
   const units = Hangar.use(destination, {
     units: [],
     counts: [],

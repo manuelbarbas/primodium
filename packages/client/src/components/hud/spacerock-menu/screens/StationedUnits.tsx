@@ -11,7 +11,7 @@ import { recallUnitsFromMotherlode } from "src/util/web3";
 export const StationedUnits: React.FC = () => {
   const network = useMud();
 
-  const destination = Send.getDestination()?.entity;
+  const destination = Send.get()?.destination;
   const { units, counts } = Hangar.use(destination, {
     units: [],
     counts: [],

@@ -10,8 +10,6 @@ export const setupHomeAsteroid = (player: EntityID) => {
     if (!asteroid) return;
     HomeAsteroid.set({ value: asteroid });
 
-    // temp so we can test without the set origin ui
-    const position = Position.get(asteroid);
-    Send.setOrigin(position);
+    Send.setOrigin(asteroid);
   });
 };
