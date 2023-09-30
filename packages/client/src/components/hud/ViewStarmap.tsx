@@ -2,8 +2,14 @@ import { useEffect } from "react";
 import { Button } from "../core/Button";
 import { primodium } from "@game/api";
 import { KeybindActions, Scenes } from "@game/constants";
-import { MapOpen } from "src/network/components/clientComponents";
+import {
+  HomeAsteroid,
+  MapOpen,
+  Send,
+} from "src/network/components/clientComponents";
 import { SingletonID } from "@latticexyz/network";
+import { FaCrosshairs } from "react-icons/fa";
+import { Position } from "src/network/components/chainComponents";
 
 export const ViewStarmap = () => {
   const mapOpen = MapOpen.use(SingletonID, {
@@ -39,16 +45,31 @@ export const ViewStarmap = () => {
   return (
     <>
       {mapOpen && (
-        <Button
-          className="w-full flex gap-2 btn-secondary bg-gradient-to-br from-cyan-700 to-cyan-800 border-2  border-accent drop-shadow-2xl text-base-content pixel-images group overflow-hidden"
-          onClick={closeMap}
-        >
-          <img
-            src="img/icons/asteroidicon.png"
-            className="pixel-images w-8 h-8"
-          />
-          <span className="flex font-bold gap-1">CLOSE STAR MAP</span>
-        </Button>
+        <div className="flex flex-col items-center gap-2">
+          <Button
+            className="w-full flex gap-2 btn-secondary bg-gradient-to-br from-cyan-700 to-cyan-800 border-2  border-accent drop-shadow-2xl text-base-content pixel-images group overflow-hidden"
+            onClick={closeMap}
+          >
+            <img
+              src="img/icons/asteroidicon.png"
+              className="pixel-images w-8 h-8"
+            />
+            <span className="flex font-bold gap-1">CLOSE STAR MAP</span>
+          </Button>
+          <Button
+            className="btn-sm flex border border-secondary"
+            onClick={() => {
+              const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
+              const homeAsteroid = HomeAsteroid.get()?.value;
+              Send.setDestination(homeAsteroid);
+              const coord = Position.get(homeAsteroid) ?? { x: 0, y: 0 };
+              pan(coord);
+              zoomTo(2);
+            }}
+          >
+            <FaCrosshairs /> HOME
+          </Button>
+        </div>
       )}
       {!mapOpen && (
         <Button
