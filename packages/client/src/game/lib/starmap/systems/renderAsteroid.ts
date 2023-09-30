@@ -89,7 +89,7 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
           )
         ]
       ),
-      OnClick(() => {
+      OnClick(scene, () => {
         Send.setDestination(entityId);
       }),
     ]);

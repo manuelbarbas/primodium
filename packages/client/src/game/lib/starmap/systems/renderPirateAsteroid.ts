@@ -67,7 +67,7 @@ export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
     asteroidObjectGroup.add("Sprite").setComponents([
       ...sharedComponents,
       Texture(Assets.SpriteAtlas, SpriteKeys.PirateAsteroid1),
-      OnClick(() => {
+      OnClick(scene, () => {
         Send.setDestination(entityId);
       }),
     ]);

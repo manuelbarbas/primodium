@@ -67,7 +67,7 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
     motherlodeObjectGroup.add("Sprite").setComponents([
       ...sharedComponents,
       Texture(Assets.SpriteAtlas, sprite),
-      OnClick(() => {
+      OnClick(scene, () => {
         Send.setDestination(entityId);
       }),
     ]);

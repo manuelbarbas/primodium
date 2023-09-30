@@ -119,29 +119,33 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
         thickness: 3,
         color: hasEnough && validPlacement ? undefined : 0xff0000,
       }),
-      OnClick((_, pointer) => {
-        //remove tooltip on right click
-        if (pointer?.rightButtonDown()) {
+      OnClick(
+        scene,
+        (_, pointer) => {
+          //remove tooltip on right click
+          if (pointer?.rightButtonDown()) {
+            SelectedAction.remove();
+            return;
+          }
+
+          if (!hasEnough || !validPlacement) {
+            if (!hasEnough)
+              toast.error(
+                "Not enough resources to build " +
+                  getBlockTypeName(selectedBuilding)
+              );
+            if (!validPlacement) toast.error("Cannot place building here");
+            scene.camera.phaserCamera.shake(200, 0.001);
+            return;
+          }
+
+          const buildingOrigin = getBuildingOrigin(tileCoord, selectedBuilding);
+          if (!buildingOrigin) return;
+          buildBuilding(buildingOrigin, selectedBuilding, player, network);
           SelectedAction.remove();
-          return;
-        }
-
-        if (!hasEnough || !validPlacement) {
-          if (!hasEnough)
-            toast.error(
-              "Not enough resources to build " +
-                getBlockTypeName(selectedBuilding)
-            );
-          if (!validPlacement) toast.error("Cannot place building here");
-          scene.camera.phaserCamera.shake(200, 0.001);
-          return;
-        }
-
-        const buildingOrigin = getBuildingOrigin(tileCoord, selectedBuilding);
-        if (!buildingOrigin) return;
-        buildBuilding(buildingOrigin, selectedBuilding, player, network);
-        SelectedAction.remove();
-      }),
+        },
+        true
+      ),
     ]);
   };
 
