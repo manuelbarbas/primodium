@@ -99,9 +99,9 @@
   }
 
   .star-background {
-    background-image: url("/img/star-background.png");
+    background-image: url("/img/backgrounds/star.png");
     background-repeat: repeat;
-    background-size: 100px;
+    background-size: 2000px;
   }
 
   /* remove outline on waltour tooltip containers */

@@ -51,12 +51,9 @@ export default function App() {
 
   if (networkLayer === undefined) {
     return (
-      <div
-        style={{
-          backgroundImage: "url(/img/backgrounds/star.png)",
-        }}
-      >
-        <div className="flex items-center justify-center h-screen text-white font-mono">
+      <div className="relative bg-black">
+        <div className="absolute w-full h-full star-background opacity-50" />
+        <div className="relative flex items-center justify-center h-screen text-white font-mono">
           <div className="text-center">
             <p className="text-lg">Initializing...</p>
           </div>

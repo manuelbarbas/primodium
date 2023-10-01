@@ -23,34 +23,33 @@ export default function AppLoadingState() {
   });
 
   return (
-    <div
-      style={{
-        backgroundImage: "url(/img/backgrounds/star.png)",
-      }}
-    >
-      {loadingState.state !== SyncState.LIVE && (
-        <div className="flex items-center justify-center h-screen text-white font-mono">
-          <div className="flex flex-col items-center gap-2">
-            <Progress value={loadingState.percentage} max={100} />
+    <div className=" bg-black">
+      <div className="absolute w-full h-full star-background opacity-50" />
+      <div className="relative">
+        {loadingState.state !== SyncState.LIVE && (
+          <div className="flex items-center justify-center h-screen text-white font-mono">
+            <div className="flex flex-col items-center gap-2">
+              <Progress value={loadingState.percentage} max={100} />
 
-            <p className="text-lg">
-              {loadingState.msg} ({Math.floor(loadingState.percentage)}%)
-            </p>
+              <p className="text-lg">
+                {loadingState.msg} ({Math.floor(loadingState.percentage)}%)
+              </p>
+            </div>
           </div>
-        </div>
-      )}
-      {loadingState.state === SyncState.LIVE && (
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route
-              path="/game"
-              element={initialized ? <Game /> : <Landing />}
-            />
-            <Route path="/increment" element={<Increment />} />
-          </Routes>
-        </BrowserRouter>
-      )}
+        )}
+        {loadingState.state === SyncState.LIVE && (
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route
+                path="/game"
+                element={initialized ? <Game /> : <Landing />}
+              />
+              <Route path="/increment" element={<Increment />} />
+            </Routes>
+          </BrowserRouter>
+        )}
+      </div>
     </div>
   );
 }
