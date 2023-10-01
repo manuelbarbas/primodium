@@ -25,12 +25,12 @@ type SystemCallback<T extends keyof GameObjectTypes> = (
 
 type ComponentSystemMap = Map<
   Component<Schema, Metadata, undefined>,
-  Map<string, SystemCallback<keyof GameObjectInstances>>
+  Map<string, (update: ComponentUpdate<Schema>) => void>
 >;
 
 type QuerySystemMap = Map<
   QueryFragment[],
-  Map<string, SystemCallback<keyof GameObjectInstances>>
+  Map<string, (update: ComponentUpdate<Schema>) => void>
 >;
 
 const gameWorld = namespaceWorld(world, "game");
@@ -142,7 +142,7 @@ export const OnComponentSystem = <
 
   return {
     id,
-    now: (gameObject) => {
+    now: () => {
       if (!componentMap.has(component)) {
         componentMap.set(component, new Map());
 
@@ -156,18 +156,20 @@ export const OnComponentSystem = <
 
             //run all functions for component
             for (const fn of fnMap.values()) {
-              fn(gameObject, update);
+              fn(update);
             }
           },
           options
         );
       }
     },
-    once: () => {
+    once: (gameObject) => {
       if (!componentMap.has(component)) return;
 
       //subscribe to component updates
-      componentMap.get(component)?.set(id, callback);
+      componentMap
+        .get(component)
+        ?.set(id, (update) => callback(gameObject, update));
     },
     exit: () => {
       //unsub from component updates
@@ -186,7 +188,7 @@ export const OnEnterSystem = <T extends keyof GameObjectTypes>(
 
   return {
     id,
-    now: (gameObject) => {
+    now: () => {
       if (!enterMap.has(query)) {
         enterMap.set(query, new Map());
 
@@ -200,18 +202,18 @@ export const OnEnterSystem = <T extends keyof GameObjectTypes>(
 
             //run all functions for component
             for (const fn of fnMap.values()) {
-              fn(gameObject, update);
+              fn(update);
             }
           },
           options
         );
       }
     },
-    once: () => {
+    once: (gameObject) => {
       if (!enterMap.has(query)) return;
 
       //subscribe to component updates
-      enterMap.get(query)?.set(id, callback);
+      enterMap.get(query)?.set(id, (update) => callback(gameObject, update));
     },
     exit: () => {
       //unsub from component updates
@@ -230,7 +232,7 @@ export const OnUpdateSystem = <T extends keyof GameObjectTypes>(
 
   return {
     id,
-    now: (gameObject) => {
+    now: () => {
       if (!updateMap.has(query)) {
         updateMap.set(query, new Map());
 
@@ -244,18 +246,18 @@ export const OnUpdateSystem = <T extends keyof GameObjectTypes>(
 
             //run all functions for component
             for (const fn of fnMap.values()) {
-              fn(gameObject, update);
+              fn(update);
             }
           },
           options
         );
       }
     },
-    once: () => {
+    once: (gameObject) => {
       if (!updateMap.has(query)) return;
 
       //subscribe to component updates
-      updateMap.get(query)?.set(id, callback);
+      updateMap.get(query)?.set(id, (update) => callback(gameObject, update));
     },
     exit: () => {
       //unsub from component updates
@@ -274,7 +276,7 @@ export const OnExitSystem = <T extends keyof GameObjectTypes>(
 
   return {
     id,
-    now: (gameObject) => {
+    now: () => {
       if (!exitMap.has(query)) {
         exitMap.set(query, new Map());
 
@@ -288,18 +290,18 @@ export const OnExitSystem = <T extends keyof GameObjectTypes>(
 
             //run all functions for component
             for (const fn of fnMap.values()) {
-              fn(gameObject, update);
+              fn(update);
             }
           },
           options
         );
       }
     },
-    once: () => {
+    once: (gameObject) => {
       if (!exitMap.has(query)) return;
 
       //subscribe to component updates
-      exitMap.get(query)?.set(id, callback);
+      exitMap.get(query)?.set(id, (update) => callback(gameObject, update));
     },
     exit: () => {
       //unsub from component updates
