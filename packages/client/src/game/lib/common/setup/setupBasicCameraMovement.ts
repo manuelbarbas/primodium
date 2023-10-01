@@ -65,14 +65,12 @@ export const setupBasicCameraMovement = (
       if (originDragPoint) {
         const { x, y } = scene.input.phaserInput.activePointer.position;
         const { x: prevX, y: prevY } = originDragPoint;
-        // don't move camera if pointer is not moving much
-        if (scene.input.phaserInput.activePointer.velocity.length() < 5) return;
 
-        let scrollX = scene.camera.phaserCamera.scrollX;
-        let scrollY = scene.camera.phaserCamera.scrollY;
+        const scrollX = scene.camera.phaserCamera.scrollX;
+        const scrollY = scene.camera.phaserCamera.scrollY;
 
-        let dx = Math.round((x - prevX) / zoom);
-        let dy = Math.round((y - prevY) / zoom);
+        const dx = Math.round((x - prevX) / zoom);
+        const dy = Math.round((y - prevY) / zoom);
 
         scene.camera.setScroll(scrollX - dx, scrollY - dy);
       }

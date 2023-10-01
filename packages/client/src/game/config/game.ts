@@ -6,8 +6,8 @@ const gameConfig: GameConfig = {
   type: Phaser.WEBGL,
   parent: "phaser-container",
   backgroundColor: "64748b",
-  width: 1920,
-  height: 1080,
+  width: window.innerWidth,
+  height: window.innerHeight,
   scale: {
     mode: Phaser.Scale.ENVELOP,
     autoCenter: Phaser.Scale.CENTER_BOTH,
