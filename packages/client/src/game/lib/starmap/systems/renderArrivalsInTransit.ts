@@ -4,14 +4,17 @@ import {
   defineEnterSystem,
   defineExitSystem,
   namespaceWorld,
-  defineComponentSystem,
   Not,
   EntityID,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { BlockNumber, MapOpen } from "src/network/components/clientComponents";
+import { BlockNumber } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
-import { ObjectPosition, Tween } from "../../common/object-components/common";
+import {
+  ObjectPosition,
+  OnComponentSystem,
+  Tween,
+} from "../../common/object-components/common";
 import { Circle, Line } from "../../common/object-components/graphics";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
@@ -69,7 +72,8 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
 
     const sendTrajectory = scene.objectPool.getGroup(entityId + objIndexSuffix);
 
-    sendTrajectory.add("Graphics").setComponents([
+    const trajectory = sendTrajectory.add("Graphics");
+    trajectory.setComponents([
       ObjectPosition(originPixelCoord, DepthLayers.Marker),
       Line(destinationPixelCoord, {
         thickness: 2,
@@ -83,83 +87,75 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
       }),
     ]);
 
-    const remainingBlocks = Number(arrival.arrivalBlock) - blockInfo.value;
-    const blocksTraveled = blockInfo.value - Number(arrival.timestamp);
-    const totalBlocks =
-      Number(arrival.arrivalBlock) - Number(arrival.timestamp);
+    const fleetIcon = sendTrajectory.add("Graphics");
+    fleetIcon.setComponents([
+      ObjectPosition(originPixelCoord, DepthLayers.Marker),
+      Circle(7, {
+        color: 0x00ffff,
+        id: "fleet",
+        borderThickness: 1,
+        alpha: 0.75,
+      }),
+      OnComponentSystem(BlockNumber, (gameObject, { value }, systemId) => {
+        const blockNumber = (value[0]?.value as number) ?? 0;
+        // const remainingBlocks = Number(arrival.arrivalBlock) - blockNumber;
+        const blocksTraveled = blockNumber - Number(arrival.timestamp);
+        const totalBlocks =
+          Number(arrival.arrivalBlock) - Number(arrival.timestamp);
 
-    const progress = blocksTraveled / totalBlocks;
+        const progress = blocksTraveled / totalBlocks;
 
-    // Calculate the starting position based on progress
-    const startX =
-      originPixelCoord.x +
-      (destinationPixelCoord.x - originPixelCoord.x) * progress;
-    const startY =
-      originPixelCoord.y +
-      (destinationPixelCoord.y - originPixelCoord.y) * progress;
+        if (progress >= 1) {
+          //remove trajectory
+          scene.objectPool.remove(trajectory.id);
 
-    // Set the fleet icon's starting position to the calculated values
-    const fleetIcon = scene.phaserScene.add
-      .circle(startX, startY, 7, 0x00ffff)
-      .setDepth(DepthLayers.Marker);
+          //remove moving circle
+          fleetIcon.removeComponent("fleet");
 
-    // Tween the fleet icon to the destination
-    const tweenWorld = namespaceWorld(world, entityId + objIndexSuffix);
-    const tween = scene.phaserScene.tweens.add({
-      targets: fleetIcon,
-      x: destinationPixelCoord.x,
-      y: destinationPixelCoord.y,
-      duration: remainingBlocks * blockInfo.avgBlockTime * 1000,
-      onComplete: () => {
-        tweenWorld.dispose();
-        fleetIcon.destroy();
+          //change to orbit render
+          fleetIcon.setComponents([
+            ObjectPosition(destinationPixelCoord, DepthLayers.Marker),
+            Circle(50, {
+              color: 0x363636,
+              borderThickness: 1,
+              alpha: 0,
+            }),
+            Circle(5, {
+              color: 0x00ffff,
+              borderThickness: 1,
+              alpha: 0.75,
+              position: {
+                x: destinationPixelCoord.x + 50,
+                y: destinationPixelCoord.y,
+              },
+            }),
+            Tween(scene, {
+              angle: 360,
+              duration: 20 * 1000,
+              repeat: -1,
+              ease: "Linear",
+            }),
+          ]);
 
-        scene.objectPool.removeGroup(entityId + objIndexSuffix);
+          //remove system
+          fleetIcon.removeComponent(systemId);
 
-        const arrivalOrbit = scene.objectPool.getGroup(
-          entityId + objIndexSuffix
-        );
+          return;
+        }
 
-        arrivalOrbit.add("Graphics").setComponents([
-          ObjectPosition(destinationPixelCoord, DepthLayers.Marker),
-          Circle(50, {
-            color: 0x363636,
-            borderThickness: 1,
-            alpha: 0,
-          }),
-          Circle(5, {
-            color: 0x00ffff,
-            borderThickness: 0,
-            alpha: 1,
-            position: {
-              x: destinationPixelCoord.x + 50,
-              y: destinationPixelCoord.y,
-            },
-          }),
-          Tween(scene, {
-            angle: 360,
-            duration: 20 * 1000,
-            repeat: -1,
-            ease: "Linear",
-          }),
-        ]);
-      },
-    });
+        // Calculate the starting position based on progress
+        const startX =
+          originPixelCoord.x +
+          (destinationPixelCoord.x - originPixelCoord.x) * progress;
+        const startY =
+          originPixelCoord.y +
+          (destinationPixelCoord.y - originPixelCoord.y) * progress;
 
-    let pauseTimestamp: number;
-    defineComponentSystem(tweenWorld, MapOpen, ({ value }) => {
-      if (!tween) return;
-
-      if (value[0]?.value === false && value[1]?.value === true) {
-        pauseTimestamp = Date.now();
-      } else if (value[0]?.value === true && value[1]?.value === false) {
-        tween.seek(
-          tween.progress * tween.duration + Date.now() - pauseTimestamp,
-          undefined,
-          true
-        );
-      }
-    });
+        gameObject.x = startX;
+        gameObject.y = startY;
+        fleetIcon.position = { x: startX, y: startY };
+      }),
+    ]);
   };
 
   defineEnterSystem(gameWorld, query, (update) => {

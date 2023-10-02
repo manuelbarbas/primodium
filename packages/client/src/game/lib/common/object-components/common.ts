@@ -20,7 +20,8 @@ type GameObjectInstances = {
 
 type SystemCallback<T extends keyof GameObjectTypes> = (
   gameObject: InstanceType<GameObjectTypes[T]>,
-  update: ComponentUpdate<Schema>
+  update: ComponentUpdate<Schema>,
+  systemId: string //manage callback lifecycle
 ) => void;
 
 type ComponentSystemMap = Map<
@@ -169,7 +170,7 @@ export const OnComponentSystem = <
       //subscribe to component updates
       componentMap
         .get(component)
-        ?.set(id, (update) => callback(gameObject, update));
+        ?.set(id, (update) => callback(gameObject, update, id));
     },
     exit: () => {
       //unsub from component updates
@@ -213,7 +214,9 @@ export const OnEnterSystem = <T extends keyof GameObjectTypes>(
       if (!enterMap.has(query)) return;
 
       //subscribe to component updates
-      enterMap.get(query)?.set(id, (update) => callback(gameObject, update));
+      enterMap
+        .get(query)
+        ?.set(id, (update) => callback(gameObject, update, id));
     },
     exit: () => {
       //unsub from component updates
@@ -257,7 +260,9 @@ export const OnUpdateSystem = <T extends keyof GameObjectTypes>(
       if (!updateMap.has(query)) return;
 
       //subscribe to component updates
-      updateMap.get(query)?.set(id, (update) => callback(gameObject, update));
+      updateMap
+        .get(query)
+        ?.set(id, (update) => callback(gameObject, update, id));
     },
     exit: () => {
       //unsub from component updates
@@ -301,7 +306,7 @@ export const OnExitSystem = <T extends keyof GameObjectTypes>(
       if (!exitMap.has(query)) return;
 
       //subscribe to component updates
-      exitMap.get(query)?.set(id, (update) => callback(gameObject, update));
+      exitMap.get(query)?.set(id, (update) => callback(gameObject, update, id));
     },
     exit: () => {
       //unsub from component updates
