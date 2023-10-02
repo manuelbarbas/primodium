@@ -22,7 +22,7 @@ export const IncomingFleets: React.FC<{ spaceRock: EntityID }> = ({
       orbitingFleets.filter((fleet) => {
         if (!fleet) return false;
 
-        if (OwnedBy.get(fleet.destination)?.value === player) return false;
+        if (OwnedBy.get(fleet.destination)?.value !== player) return false;
 
         return fleet.sendType !== ESendType.REINFORCE;
       }),

@@ -16,15 +16,13 @@ export const OrbitingFleets: React.FC<{ spaceRock: EntityID }> = ({
     onlyOrbiting: true,
   });
 
-  console.log(orbitingFleets);
-
   //filter collection where sendType is not REINFORCE
   const attackingOrbitingFleets = useMemo(
     () =>
       orbitingFleets.filter((fleet) => {
         if (!fleet) return false;
 
-        if (OwnedBy.get(fleet.destination)?.value === player) return false;
+        if (OwnedBy.get(fleet.destination)?.value !== player) return false;
 
         return fleet.sendType !== ESendType.REINFORCE;
       }),
