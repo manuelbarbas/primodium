@@ -143,7 +143,8 @@ export const OnComponentSystem = <
 
   return {
     id,
-    now: () => {
+
+    once: (gameObject) => {
       if (!componentMap.has(component)) {
         componentMap.set(component, new Map());
 
@@ -163,9 +164,6 @@ export const OnComponentSystem = <
           options
         );
       }
-    },
-    once: (gameObject) => {
-      if (!componentMap.has(component)) return;
 
       //subscribe to component updates
       componentMap
@@ -189,7 +187,7 @@ export const OnEnterSystem = <T extends keyof GameObjectTypes>(
 
   return {
     id,
-    now: () => {
+    once: (gameObject) => {
       if (!enterMap.has(query)) {
         enterMap.set(query, new Map());
 
@@ -209,10 +207,6 @@ export const OnEnterSystem = <T extends keyof GameObjectTypes>(
           options
         );
       }
-    },
-    once: (gameObject) => {
-      if (!enterMap.has(query)) return;
-
       //subscribe to component updates
       enterMap
         .get(query)
@@ -235,7 +229,7 @@ export const OnUpdateSystem = <T extends keyof GameObjectTypes>(
 
   return {
     id,
-    now: () => {
+    once: (gameObject) => {
       if (!updateMap.has(query)) {
         updateMap.set(query, new Map());
 
@@ -255,9 +249,6 @@ export const OnUpdateSystem = <T extends keyof GameObjectTypes>(
           options
         );
       }
-    },
-    once: (gameObject) => {
-      if (!updateMap.has(query)) return;
 
       //subscribe to component updates
       updateMap
@@ -281,7 +272,7 @@ export const OnExitSystem = <T extends keyof GameObjectTypes>(
 
   return {
     id,
-    now: () => {
+    once: (gameObject) => {
       if (!exitMap.has(query)) {
         exitMap.set(query, new Map());
 
@@ -301,9 +292,6 @@ export const OnExitSystem = <T extends keyof GameObjectTypes>(
           options
         );
       }
-    },
-    once: (gameObject) => {
-      if (!exitMap.has(query)) return;
 
       //subscribe to component updates
       exitMap.get(query)?.set(id, (update) => callback(gameObject, update, id));
