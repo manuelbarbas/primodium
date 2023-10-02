@@ -166,7 +166,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     vm.startPrank(alice);
     uint256[] memory unitTypes = isUnitComponent.getEntities();
     ArrivalUnit[] memory units = new ArrivalUnit[](unitTypes.length);
-    for (uint i = 0; i < unitTypes.length; i++) {
+    for (uint256 i = 0; i < unitTypes.length; i++) {
       units[i] = ArrivalUnit(unitTypes[i], unitTypes[i] == DebugUnit ? 10 : 0);
     }
     console.log("alice: %s", addressToEntity(alice));
@@ -262,7 +262,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     vm.startPrank(bob);
     uint256[] memory unitTypes = isUnitComponent.getEntities();
     ArrivalUnit[] memory units = new ArrivalUnit[](unitTypes.length);
-    for (uint i = 0; i < unitTypes.length; i++) {
+    for (uint256 i = 0; i < unitTypes.length; i++) {
       units[i] = ArrivalUnit(unitTypes[i], unitTypes[i] == DebugUnit ? 10 : 0);
     }
 
@@ -847,7 +847,11 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
   // todo: check motherlode movement rules
 
-  function setupUnits(address playerAddress, uint256 unitType, uint32 count) internal {
+  function setupUnits(
+    address playerAddress,
+    uint256 unitType,
+    uint32 count
+  ) internal {
     vm.startPrank(playerAddress);
     vm.roll(0);
     bytes memory unitProductionBuildingEntity = buildSystem.executeTyped(
@@ -867,7 +871,11 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     invade(alice, false);
   }
 
-  function calculateArrivalBlock(address from, address to, Arrival memory arrival) public view returns (uint256) {
+  function calculateArrivalBlock(
+    address from,
+    address to,
+    Arrival memory arrival
+  ) public view returns (uint256) {
     //TODO can modify to use the actual speed of the slowest unit
     uint256 playerUnitTypeLevel = LibUnits.getPlayerUnitTypeLevel(world, addressToEntity(from), DebugUnit);
     uint256 unitTypeLevelEntity = LibEncode.hashKeyEntity(DebugUnit, playerUnitTypeLevel);
@@ -933,7 +941,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
     uint256[] memory unitTypes = isUnitComponent.getEntities();
     ArrivalUnit[] memory units = new ArrivalUnit[](unitTypes.length);
-    for (uint i = 0; i < unitTypes.length; i++) {
+    for (uint256 i = 0; i < unitTypes.length; i++) {
       units[i] = ArrivalUnit(unitTypes[i], unitTypes[i] == DebugUnit ? attackNumber : 0);
     }
 
@@ -974,7 +982,11 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     return arrival;
   }
 
-  function getPlayerUnitSpeed(IWorld world, address player, uint256 unitType) public view returns (uint32) {
+  function getPlayerUnitSpeed(
+    IWorld world,
+    address player,
+    uint256 unitType
+  ) public view returns (uint32) {
     uint256 playerUnitTypeLevel = LibUnits.getPlayerUnitTypeLevel(world, addressToEntity(player), unitType);
     uint256 unitTypeLevelEntity = LibEncode.hashKeyEntity(unitType, playerUnitTypeLevel);
     return P_UnitTravelSpeedComponent(world.getComponent(P_UnitTravelSpeedComponentID)).getValue(unitTypeLevelEntity);
@@ -996,7 +1008,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
     uint256[] memory unitTypes = isUnitComponent.getEntities();
     ArrivalUnit[] memory units = new ArrivalUnit[](unitTypes.length);
-    for (uint i = 0; i < unitTypes.length; i++) {
+    for (uint256 i = 0; i < unitTypes.length; i++) {
       units[i] = ArrivalUnit(unitTypes[i], unitTypes[i] == DebugUnit ? attackNumber : 0);
     }
 

@@ -130,7 +130,11 @@ library LibPirateAsteroid {
     }
   }
 
-  function setupPirateAsteroid(IWorld world, uint256 spawnPirateAsteroid, uint256 asteroidEntity) internal {
+  function setupPirateAsteroid(
+    IWorld world,
+    uint256 spawnPirateAsteroid,
+    uint256 asteroidEntity
+  ) internal {
     uint256 personalPirateEntity = OwnedByComponent(world.getComponent(OwnedByComponentID)).getValue(asteroidEntity);
 
     P_UnitRequirementComponent unitRequirementComponent = P_UnitRequirementComponent(

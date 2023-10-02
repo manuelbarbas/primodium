@@ -28,7 +28,6 @@ library LibAsteroid {
     Position.set(asteroidEntity, position);
     RockType.set(asteroidEntity, ERock.Asteroid);
     Spawned.set(ownerEntity, true);
-    HomeAsteroid.set(ownerEntity, asteroidEntity);
     ReversePosition.set(position.x, position.y, asteroidEntity);
     OwnedBy.set(asteroidEntity, ownerEntity);
     AsteroidCount.set(asteroidCount);

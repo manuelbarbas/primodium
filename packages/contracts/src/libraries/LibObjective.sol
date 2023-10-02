@@ -11,7 +11,11 @@ import { LibEncode } from "libraries/LibEncode.sol";
 
 library LibObjective {
   // Check that the user has researched a given component
-  function hasCompledtedObjective(IWorld world, uint256 entity, uint256 playerEntity) internal view returns (bool) {
+  function hasCompledtedObjective(
+    IWorld world,
+    uint256 entity,
+    uint256 playerEntity
+  ) internal view returns (bool) {
     P_ObjectiveRequirementComponent objectiveRequirementComponent = P_ObjectiveRequirementComponent(
       getAddressById(world.components(), P_ObjectiveRequirementComponentID)
     );

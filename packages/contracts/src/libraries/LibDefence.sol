@@ -43,7 +43,12 @@ library LibDefence {
     modifyAsteroidDefence(world, playerEntity, capacityIncrease, actionType != EActionType.Destroy);
   }
 
-  function modifyAsteroidDefence(IWorld world, uint256 playerEntity, uint32 amount, bool isAdd) internal {
+  function modifyAsteroidDefence(
+    IWorld world,
+    uint256 playerEntity,
+    uint32 amount,
+    bool isAdd
+  ) internal {
     uint256 asteroidEntity = LibUpdateSpaceRock.getPlayerAsteroidEntity(world, playerEntity);
     P_BuildingDefenceComponent buildingDefenceComponent = P_BuildingDefenceComponent(
       getAddressById(world.components(), P_BuildingDefenceComponentID)

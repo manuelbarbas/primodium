@@ -1,4 +1,5 @@
 import { mudConfig } from "@latticexyz/world/register";
+import { MUDEnums } from "./config/enums";
 import { prototypeConfig } from "./config/prototypeConfig";
 
 // Exclude dev systems if not in dev PRI_DEV
@@ -13,6 +14,7 @@ if (typeof process != undefined && typeof process != "undefined") {
 /* -------------------------------------------------------------------------- */
 /*                                   Config                                   */
 /* -------------------------------------------------------------------------- */
+export type Config = typeof config;
 export const config = mudConfig({
   excludeSystems: [...dev],
   overrideSystems: {
@@ -110,7 +112,7 @@ export const config = mudConfig({
     },
 
     /* --------------------------------- Player --------------------------------- */
-    HomeAsteroid: {
+    Home: {
       keySchema: { entity: "bytes32" },
       valueSchema: {
         asteroid: "bytes32",

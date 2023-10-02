@@ -4,11 +4,10 @@ import { loadConfig } from "@latticexyz/config/node";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { StoreConfigWithPrototypes } from "./prototypes/prototypeConfig";
+import { StoreConfigWithPrototypes } from "../../prototypes/types";
 
 const __dirname = fileURLToPath(import.meta.url);
-
-const librariesFolder = path.resolve(__dirname, "../../src/libraries");
+const librariesFolder = path.resolve(__dirname, "../../../../src/libraries");
 
 const prefixes = ["Lib"];
 const suffixes = ["Set", "Queue", "Map"];

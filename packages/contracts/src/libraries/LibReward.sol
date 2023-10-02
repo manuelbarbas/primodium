@@ -69,18 +69,30 @@ library LibReward {
     return true;
   }
 
-  function canReceiveRewards(IWorld world, uint256 playerEntity, uint256 objectiveEntity) internal view returns (bool) {
+  function canReceiveRewards(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 objectiveEntity
+  ) internal view returns (bool) {
     return
       canReceiveResourceRewards(world, playerEntity, objectiveEntity) &&
       canReceiveUnitRewards(world, playerEntity, objectiveEntity);
   }
 
-  function receiveRewards(IWorld world, uint256 playerEntity, uint256 objectiveEntity) internal {
+  function receiveRewards(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 objectiveEntity
+  ) internal {
     receiveResourceRewards(world, playerEntity, objectiveEntity);
     receiveUnitRewards(world, playerEntity, objectiveEntity);
   }
 
-  function receiveResourceRewards(IWorld world, uint256 playerEntity, uint256 objectiveEntity) internal {
+  function receiveResourceRewards(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 objectiveEntity
+  ) internal {
     P_ResourceRewardComponent resourceRewardComponent = P_ResourceRewardComponent(
       getAddressById(world.components(), P_ResourceRewardComponentID)
     );
@@ -97,7 +109,11 @@ library LibReward {
     }
   }
 
-  function receiveUnitRewards(IWorld world, uint256 playerEntity, uint256 objectiveEntity) internal {
+  function receiveUnitRewards(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 objectiveEntity
+  ) internal {
     P_UnitRewardComponent unitRewardComponent = P_UnitRewardComponent(
       getAddressById(world.components(), P_UnitRewardComponentID)
     );
