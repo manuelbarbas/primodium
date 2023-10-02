@@ -70,8 +70,8 @@ export const renderArrivalsInOrbit = (scene: Scene, player: EntityID) => {
       }),
       Circle(5, {
         color: 0x00ffff,
-        borderThickness: 0,
-        alpha: 1,
+        borderThickness: 1,
+        alpha: 0.75,
         position: {
           x: destinationPixelCoord.x + 50,
           y: destinationPixelCoord.y,

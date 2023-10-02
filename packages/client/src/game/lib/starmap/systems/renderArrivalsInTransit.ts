@@ -93,10 +93,10 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
       Circle(7, {
         color: 0x00ffff,
         id: "fleet",
-        borderThickness: 0,
-        alpha: 1,
+        borderThickness: 1,
+        alpha: 0.75,
       }),
-      OnComponentSystem(BlockNumber, (gameObject, { value }) => {
+      OnComponentSystem(BlockNumber, (gameObject, { value }, systemId) => {
         const blockNumber = (value[0]?.value as number) ?? 0;
         // const remainingBlocks = Number(arrival.arrivalBlock) - blockNumber;
         const blocksTraveled = blockNumber - Number(arrival.timestamp);
@@ -106,8 +106,13 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
         const progress = blocksTraveled / totalBlocks;
 
         if (progress >= 1) {
+          //remove trajectory
           scene.objectPool.remove(trajectory.id);
 
+          //remove moving circle
+          fleetIcon.removeComponent("fleet");
+
+          //change to orbit render
           fleetIcon.setComponents([
             ObjectPosition(destinationPixelCoord, DepthLayers.Marker),
             Circle(50, {
@@ -117,9 +122,8 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
             }),
             Circle(5, {
               color: 0x00ffff,
-              borderThickness: 0,
-              id: "fleet",
-              alpha: 1,
+              borderThickness: 1,
+              alpha: 0.75,
               position: {
                 x: destinationPixelCoord.x + 50,
                 y: destinationPixelCoord.y,
@@ -132,6 +136,9 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
               ease: "Linear",
             }),
           ]);
+
+          //remove system
+          fleetIcon.removeComponent(systemId);
 
           return;
         }
