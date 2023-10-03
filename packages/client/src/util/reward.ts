@@ -1,8 +1,9 @@
-import { EntityID } from "@latticexyz/recs";
-import { P_ResourceReward, P_UnitReward } from "src/network/components/chainComponents";
+import { Entity } from "@latticexyz/recs";
+import { components } from "src/network/components";
 import { ResourceType } from "./constants";
 
-export function getRewards(entityId: EntityID) {
+export function getRewards(entityId: Entity) {
+  const { P_ResourceReward, P_UnitReward } = components;
   const rawResourceRewards = P_ResourceReward.get(entityId, {
     resourceIDs: [],
     requiredAmounts: [],
