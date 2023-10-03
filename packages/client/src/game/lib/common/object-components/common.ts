@@ -1,5 +1,15 @@
+import {
+  Component,
+  Metadata,
+  QueryFragment,
+  Schema,
+  defineComponentSystem,
+  defineEnterSystem,
+  defineExitSystem,
+  defineUpdateSystem,
+} from "@latticexyz/recs";
 import { Coord, uuid } from "@latticexyz/utils";
-import { GameObjectComponent, GameObjectTypes } from "engine/types";
+import { GameObjectComponent, GameObjectTypes, Scene } from "engine/types";
 
 type GameObjectInstances = {
   [K in keyof GameObjectTypes]: InstanceType<GameObjectTypes[K]>;
@@ -52,6 +62,190 @@ export const OnClick = <T extends keyof GameObjectTypes>(
       gameObject.on("pointerdown", () => {
         callback(gameObject as GameObjectInstances[T]);
       });
+    },
+  };
+};
+
+export const Tween = <T extends keyof GameObjectTypes>(
+  scene: Scene,
+  config: Partial<Phaser.Types.Tweens.TweenBuilderConfig>
+): GameObjectComponent<T> => {
+  let tween: Phaser.Tweens.Tween;
+  return {
+    id: uuid(),
+    once: (gameObject) => {
+      tween = scene.phaserScene.add.tween({
+        targets: gameObject,
+        ...config,
+      });
+    },
+    exit: () => {
+      tween.stop();
+      tween.destroy();
+    },
+  };
+};
+
+const componentMap: ComponentSystemMap = new Map();
+export const OnComponentSystem = <T extends keyof GameObjectTypes, S extends Schema>(
+  component: Component<S, Metadata, undefined>,
+  callback: SystemCallback<T>,
+  options?: { runOnInit?: boolean }
+): GameObjectComponent<T> => {
+  const id = uuid();
+
+  return {
+    id,
+
+    once: (gameObject) => {
+      if (!componentMap.has(component)) {
+        componentMap.set(component, new Map());
+
+        defineComponentSystem(
+          gameWorld,
+          component,
+          (update) => {
+            const fnMap = componentMap.get(component);
+
+            if (!fnMap) return;
+
+            //run all functions for component
+            for (const fn of fnMap.values()) {
+              fn(update);
+            }
+          },
+          options
+        );
+      }
+
+      //subscribe to component updates
+      componentMap.get(component)?.set(id, (update) => callback(gameObject, update, id));
+    },
+    exit: () => {
+      //unsub from component updates
+      componentMap.get(component)?.delete(id);
+    },
+  };
+};
+
+const enterMap: QuerySystemMap = new Map();
+export const OnEnterSystem = <T extends keyof GameObjectTypes>(
+  query: QueryFragment[],
+  callback: SystemCallback<T>,
+  options?: { runOnInit?: boolean }
+): GameObjectComponent<T> => {
+  const id = uuid();
+
+  return {
+    id,
+    once: (gameObject) => {
+      if (!enterMap.has(query)) {
+        enterMap.set(query, new Map());
+
+        defineEnterSystem(
+          gameWorld,
+          query,
+          (update) => {
+            const fnMap = enterMap.get(query);
+
+            if (!fnMap) return;
+
+            //run all functions for component
+            for (const fn of fnMap.values()) {
+              fn(update);
+            }
+          },
+          options
+        );
+      }
+      //subscribe to component updates
+      enterMap.get(query)?.set(id, (update) => callback(gameObject, update, id));
+    },
+    exit: () => {
+      //unsub from component updates
+      enterMap.get(query)?.delete(id);
+    },
+  };
+};
+
+const updateMap: QuerySystemMap = new Map();
+export const OnUpdateSystem = <T extends keyof GameObjectTypes>(
+  query: QueryFragment[],
+  callback: SystemCallback<T>,
+  options?: { runOnInit?: boolean }
+): GameObjectComponent<T> => {
+  const id = uuid();
+
+  return {
+    id,
+    once: (gameObject) => {
+      if (!updateMap.has(query)) {
+        updateMap.set(query, new Map());
+
+        defineUpdateSystem(
+          gameWorld,
+          query,
+          (update) => {
+            const fnMap = updateMap.get(query);
+
+            if (!fnMap) return;
+
+            //run all functions for component
+            for (const fn of fnMap.values()) {
+              fn(update);
+            }
+          },
+          options
+        );
+      }
+
+      //subscribe to component updates
+      updateMap.get(query)?.set(id, (update) => callback(gameObject, update, id));
+    },
+    exit: () => {
+      //unsub from component updates
+      updateMap.get(query)?.delete(id);
+    },
+  };
+};
+
+const exitMap: QuerySystemMap = new Map();
+export const OnExitSystem = <T extends keyof GameObjectTypes>(
+  query: QueryFragment[],
+  callback: SystemCallback<T>,
+  options?: { runOnInit?: boolean }
+): GameObjectComponent<T> => {
+  const id = uuid();
+
+  return {
+    id,
+    once: (gameObject) => {
+      if (!exitMap.has(query)) {
+        exitMap.set(query, new Map());
+
+        defineExitSystem(
+          gameWorld,
+          query,
+          (update) => {
+            const fnMap = exitMap.get(query);
+
+            if (!fnMap) return;
+
+            //run all functions for component
+            for (const fn of fnMap.values()) {
+              fn(update);
+            }
+          },
+          options
+        );
+      }
+
+      //subscribe to component updates
+      exitMap.get(query)?.set(id, (update) => callback(gameObject, update, id));
+    },
+    exit: () => {
+      //unsub from component updates
+      exitMap.get(query)?.delete(id);
     },
   };
 };

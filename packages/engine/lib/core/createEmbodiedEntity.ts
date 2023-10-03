@@ -91,6 +91,11 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
   }
 
   function removeComponent(id: string, stop?: boolean) {
+    // Execute exit functions
+    if (activeGameObject) {
+      executeGameObjectFunctions(activeGameObject, onExit.values());
+    }
+
     onOnce.delete(id);
     onUpdate.delete(id);
 
