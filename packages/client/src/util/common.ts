@@ -1,8 +1,8 @@
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import { BlockIdToKey } from "./constants";
 
 export function hasCommonElement(setA: Set<any>, setB: Set<any>) {
-  for (let element of setA) {
+  for (const element of setA) {
     if (setB.has(element)) {
       return true; // Found a common element
     }
@@ -53,21 +53,25 @@ export function toRomanNumeral(number: number) {
   return result;
 }
 
-export function formatNumber(num: number, fractionDigits = 2) {
-  const fixedNum = parseFloat(num.toString()).toFixed(fractionDigits);
-
-  // Convert it back to a number to remove trailing zeroes,
-  const trimmedNum = String(parseFloat(fixedNum));
-
-  return trimmedNum;
+export function formatNumber(num: number | bigint, fractionDigits = 2): string {
+  if (typeof num === "number") {
+    const fixedNum = num.toFixed(fractionDigits);
+    return String(parseFloat(fixedNum).toLocaleString());
+  } else if (typeof num === "bigint") {
+    return num.toLocaleString();
+  }
+  return "";
 }
 
-export const getBlockTypeName = (blockType: EntityID | undefined) => {
+export const getBlockTypeName = (blockType: Entity | undefined) => {
   if (blockType === undefined || BlockIdToKey[blockType] == undefined) return "";
 
   return BlockIdToKey[blockType]
-    .replace(/([A-Z]+)/g, "$1")
-    .replace(/([A-Z][a-z])/g, " $1")
+    .replace(/([A-Z])([0-9])/g, "$1 $2") // Insert a space between an uppercase letter and a number.
+    .replace(/([0-9])([A-Z])/g, "$1 $2") // Insert a space between a number and an uppercase letter.
+    .replace(/([a-z])([0-9])/g, "$1 $2") // Insert a space between a lowercase letter and a number.
+    .replace(/([A-Z])([A-Z][a-z])/g, "$1 $2") // Insert a space between consecutive uppercase letters where the second one is followed by lowercase letter (camelCase).
+    .replace(/([a-z])([A-Z])/g, "$1 $2") // Handle general camelCase like "minePlatinum".
     .trimStart();
 };
 

@@ -1,5 +1,4 @@
-import { EntityID } from "@latticexyz/recs";
-import { P_RequiredResearch } from "src/network/components/chainComponents";
+import { Entity } from "@latticexyz/recs";
 import { BlockType } from "./constants";
 
 export type ResearchTreeType = ResearchCategoryType[];
@@ -11,23 +10,16 @@ export type ResearchCategoryType = {
 
 export type ResearchItemType = {
   name: string;
-  id: EntityID;
+  id: Entity;
   description?: string;
   levels: ResearchItemLevelType[];
 };
 
 export type ResearchItemLevelType = {
-  id: EntityID;
+  id: Entity;
   subtitle?: string;
   description: string;
 };
-
-export function getBuildingResearchRequirement(buildingId: EntityID): EntityID | null {
-  const requiredResearch = P_RequiredResearch.get(buildingId)?.value;
-
-  if (!requiredResearch) return null;
-  return requiredResearch.toString() as EntityID;
-}
 
 export const MiningResearchTree: ResearchItemType = {
   name: "Mining Vessel Capacity",
@@ -64,7 +56,7 @@ export const MiningResearchTree: ResearchItemType = {
 };
 
 export const AnvilDroneUpgradeTree: ResearchItemType = {
-  name: "Anvil Drone Upgrade",
+  name: "Anvil",
   id: BlockType.AnvilDroneUpgrade1,
   description: "Upgrades the Attack and Defence attributes of Anvil Drone units.",
 
@@ -98,7 +90,7 @@ export const AnvilDroneUpgradeTree: ResearchItemType = {
 };
 
 export const HammerDroneUpgradeTree: ResearchItemType = {
-  name: "Hammer Drone Upgrade",
+  name: "Hammer",
   id: BlockType.HammerDroneUpgrade1,
   description: "Upgrades the Attack and Defence attributes of Hammer Drone units.",
 
@@ -132,7 +124,7 @@ export const HammerDroneUpgradeTree: ResearchItemType = {
 };
 
 export const AegisDroneUpgradeTree: ResearchItemType = {
-  name: "Aegis Drone Upgrade",
+  name: "Aegis",
   id: BlockType.AegisDroneUpgrade1,
   description: "Upgrades the Attack and Defence attributes of Aegis Drone units.",
 
@@ -166,7 +158,7 @@ export const AegisDroneUpgradeTree: ResearchItemType = {
 };
 
 export const StingerDroneUpgradeTree: ResearchItemType = {
-  name: "Stinger Drone Upgrade",
+  name: "Stinger",
   id: BlockType.StingerDroneUpgrade1,
   description: "Upgrades the Attack and Defence attributes of Stinger Drone units.",
 
@@ -200,7 +192,7 @@ export const StingerDroneUpgradeTree: ResearchItemType = {
 };
 
 export const MiningVesselUpgradeTree: ResearchItemType = {
-  name: "Mining Vessel Unit Upgrade",
+  name: "Mining Vessel",
   id: BlockType.MiningVesselUpgrade1,
   description: "Increases the Mining Vessel's Mining Power by 1. ",
 
@@ -233,6 +225,72 @@ export const MiningVesselUpgradeTree: ResearchItemType = {
   ],
 };
 
+export const MinutemanMarineUpgradeTree: ResearchItemType = {
+  name: "Minuteman",
+  id: BlockType.MinutemanMarineUpgrade1,
+  description: "Increases the Minuteman Marine's stats. ",
+  levels: [
+    {
+      id: BlockType.MinutemanMarineUpgrade1,
+      subtitle: "Level 1",
+      description: "Upgrades the Attack and Defence attributes of Minuteman Marines.",
+    },
+    {
+      id: BlockType.MinutemanMarineUpgrade2,
+      subtitle: "Level 2",
+      description: "Upgrades the Attack and Defence attributes of Minuteman Marines.",
+    },
+    {
+      id: BlockType.MinutemanMarineUpgrade3,
+      subtitle: "Level 3",
+      description: "Upgrades the Attack and Defence attributes of Minuteman Marines.",
+    },
+    {
+      id: BlockType.MinutemanMarineUpgrade4,
+      subtitle: "Level 4",
+      description: "Upgrades the Attack and Defence attributes of Minuteman Marines.",
+    },
+    {
+      id: BlockType.MinutemanMarineUpgrade5,
+      subtitle: "Level 5",
+      description: "Upgrades the Attack and Defence attributes of Minuteman Marines.",
+    },
+  ],
+};
+
+export const TridentMarineUpgradeTree: ResearchItemType = {
+  name: "Trident",
+  id: BlockType.TridentMarineUpgrade1,
+  description: "Increases the Trident Marine's stats. ",
+  levels: [
+    {
+      id: BlockType.TridentMarineUpgrade1,
+      subtitle: "Level 1",
+      description: "Upgrades the Attack and Defence attributes of Trident Marines.",
+    },
+    {
+      id: BlockType.TridentMarineUpgrade2,
+      subtitle: "Level 2",
+      description: "Upgrades the Attack and Defence attributes of Trident Marines.",
+    },
+    {
+      id: BlockType.TridentMarineUpgrade3,
+      subtitle: "Level 3",
+      description: "Upgrades the Attack and Defence attributes of Trident Marines.",
+    },
+    {
+      id: BlockType.TridentMarineUpgrade4,
+      subtitle: "Level 4",
+      description: "Upgrades the Attack and Defence attributes of Trident Marines.",
+    },
+    {
+      id: BlockType.TridentMarineUpgrade5,
+      subtitle: "Level 5",
+      description: "Upgrades the Attack and Defence attributes of Trident Marines.",
+    },
+  ],
+};
+
 // Research resource data should be read from getRecipe() in ../util/resource.ts
 
 export const ResearchTree: ResearchTreeType = [
@@ -243,6 +301,8 @@ export const ResearchTree: ResearchTreeType = [
   {
     category: "Unit Upgrade Research",
     data: [
+      MinutemanMarineUpgradeTree,
+      TridentMarineUpgradeTree,
       AnvilDroneUpgradeTree,
       HammerDroneUpgradeTree,
       AegisDroneUpgradeTree,
