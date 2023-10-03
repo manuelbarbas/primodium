@@ -1,15 +1,11 @@
-import { useEffect } from "react";
-import { Button } from "../core/Button";
 import { primodium } from "@game/api";
 import { KeybindActions, Scenes } from "@game/constants";
-import {
-  HomeAsteroid,
-  MapOpen,
-  Send,
-} from "src/network/components/clientComponents";
 import { SingletonID } from "@latticexyz/network";
+import { useEffect } from "react";
 import { FaCrosshairs } from "react-icons/fa";
 import { Position } from "src/network/components/chainComponents";
+import { HomeAsteroid, MapOpen, Send } from "src/network/components/clientComponents";
+import { Button } from "../core/Button";
 
 export const ViewStarmap = () => {
   const mapOpen = MapOpen.use(SingletonID, {
@@ -28,13 +24,9 @@ export const ViewStarmap = () => {
   };
 
   useEffect(() => {
-    const starmapListener = primodium
-      .api(Scenes.Starmap)
-      .input.addListener(KeybindActions.Map, closeMap);
+    const starmapListener = primodium.api(Scenes.Starmap).input.addListener(KeybindActions.Map, closeMap);
 
-    const asteroidListener = primodium
-      .api(Scenes.Asteroid)
-      .input.addListener(KeybindActions.Map, openMap);
+    const asteroidListener = primodium.api(Scenes.Asteroid).input.addListener(KeybindActions.Map, openMap);
 
     return () => {
       starmapListener.dispose();
@@ -50,10 +42,7 @@ export const ViewStarmap = () => {
             className="w-full flex gap-2 btn-secondary bg-gradient-to-br from-cyan-700 to-cyan-800 border-2  border-accent drop-shadow-2xl text-base-content pixel-images group overflow-hidden"
             onClick={closeMap}
           >
-            <img
-              src="img/icons/asteroidicon.png"
-              className="pixel-images w-8 h-8"
-            />
+            <img src="img/icons/asteroidicon.png" className="pixel-images w-8 h-8" />
             <span className="flex font-bold gap-1">CLOSE STAR MAP</span>
           </Button>
           <Button
@@ -77,10 +66,7 @@ export const ViewStarmap = () => {
           onClick={openMap}
         >
           <span className="absolute bg-orange-400/50 -right-96 -bottom-0 group-hover:-right-16 group-hover:bottom-0 h-32 w-32 rounded-full mix-blend-overlay transition-all duration-200" />
-          <img
-            src="img/icons/starmapicon.png"
-            className="pixel-images w-8 h-8"
-          />
+          <img src="img/icons/starmapicon.png" className="pixel-images w-8 h-8" />
           <span className="flex font-bold gap-1">OPEN STAR MAP</span>
         </Button>
       )}

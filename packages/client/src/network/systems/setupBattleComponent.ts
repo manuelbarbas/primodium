@@ -18,8 +18,7 @@ export const setupBattleComponent = () => {
     Has(BattleSpaceRock),
     Has(BattleBlockNumber),
   ];
-  defineSystem(world, query, ({ entity }) => {
-    const entityId = world.entities[entity];
+  defineSystem(world, query, ({ entity: entityId }) => {
     if (Battle.has(entityId)) return;
     const attacker = BattleAttacker.get(entityId);
     const defender = BattleDefender.get(entityId);

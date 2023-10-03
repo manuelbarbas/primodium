@@ -1,38 +1,31 @@
+import { SingletonID } from "@latticexyz/network";
 import { useEntityQuery } from "@latticexyz/react";
-import { EntityID, Has, HasValue, EntityIndex } from "@latticexyz/recs";
+import { EntityID, EntityIndex, Has, HasValue } from "@latticexyz/recs";
 import { useMemo } from "react";
 import {
   AsteroidType,
-  OwnedBy,
   Item,
-  P_MaxStorage,
-  Production,
   LastClaimedAt,
-  OccupiedUtilityResource,
   MaxUtility,
-  P_WorldSpeed,
   Motherlode,
-  P_MotherlodeResource,
   MotherlodeResource,
+  OccupiedUtilityResource,
+  OwnedBy,
+  P_MaxStorage,
+  P_MotherlodeResource,
+  P_WorldSpeed,
+  Production,
 } from "src/network/components/chainComponents";
-import {
-  BlockNumber,
-  Account,
-  Hangar,
-} from "src/network/components/clientComponents";
+import { Account, BlockNumber, Hangar } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
+import { ResourceType, SPEED_SCALE } from "src/util/constants";
+import { hashKeyEntity } from "src/util/encode";
 import { mineableResources } from "src/util/resource";
 import { getUnitStats } from "src/util/trainUnits";
 import { ESpaceRockType } from "src/util/web3/types";
 import useResourceCount from "./useResourceCount";
-import { ResourceType, SPEED_SCALE } from "src/util/constants";
-import { SingletonID } from "@latticexyz/network";
-import { hashKeyEntity } from "src/util/encode";
 
-export function useFullResourceCount(
-  resourceID: EntityID,
-  type = ResourceType.Resource
-) {
+export function useFullResourceCount(resourceID: EntityID, type = ResourceType.Resource) {
   const { value: blockNumber } = BlockNumber.use(undefined, {
     value: 0,
     avgBlockTime: 1,
@@ -54,8 +47,7 @@ export function useFullResourceCount(
   const worldSpeed = P_WorldSpeed.use(SingletonID)?.value ?? SPEED_SCALE;
   //motherlode//
   const motherlodeProduction = useMemo(() => {
-    if (!mineableResources.includes(resourceID) || type == ResourceType.Utility)
-      return 0;
+    if (!mineableResources.includes(resourceID) || type == ResourceType.Utility) return 0;
     return motherlodes.reduce((prev: number, motherlodeIndex: EntityIndex) => {
       const entity = world.entities[motherlodeIndex];
       const motherlodeData = Motherlode.get(entity);
@@ -76,8 +68,7 @@ export function useFullResourceCount(
         total += getUnitStats(hangar.units[i]).MIN * hangar.counts[i];
       }
 
-      const totalProduced =
-        (total * ((blockNumber - lastClaimedAt) * SPEED_SCALE)) / worldSpeed;
+      const totalProduced = (total * ((blockNumber - lastClaimedAt) * SPEED_SCALE)) / worldSpeed;
       if (totalProduced + resourceMined > maxAmount) return prev;
       return prev + total;
     }, 0);
@@ -91,20 +82,13 @@ export function useFullResourceCount(
     return buildingProduction + motherlodeProduction;
   }, [buildingProduction, motherlodeProduction]);
 
-  const resourceCount = useResourceCount(
-    ResourceType.Resource === type ? Item : OccupiedUtilityResource,
-    resourceID
-  );
-  const maxStorage = useResourceCount(
-    ResourceType.Resource === type ? P_MaxStorage : MaxUtility,
-    resourceID
-  );
+  const resourceCount = useResourceCount(ResourceType.Resource === type ? Item : OccupiedUtilityResource, resourceID);
+  const maxStorage = useResourceCount(ResourceType.Resource === type ? P_MaxStorage : MaxUtility, resourceID);
   //****claiming****//
 
   //motherlode//
   const resourcesToClaimFromMotherlode = useMemo(() => {
-    if (!mineableResources.includes(resourceID) || type == ResourceType.Utility)
-      return 0;
+    if (!mineableResources.includes(resourceID) || type == ResourceType.Utility) return 0;
     return motherlodes.reduce((prev: number, motherlodeIndex: EntityIndex) => {
       const entity = world.entities[motherlodeIndex];
 
@@ -134,26 +118,17 @@ export function useFullResourceCount(
   }, [motherlodes, resourceID, block, resourceCount]);
 
   //building//
-  const buildingProductionLastClaimedAt = useResourceCount(
-    LastClaimedAt,
-    resourceID
-  );
+  const buildingProductionLastClaimedAt = useResourceCount(LastClaimedAt, resourceID);
   const resourcesToClaimFromBuilding = useMemo(() => {
-    const toClaim =
-      ((blockNumber - buildingProductionLastClaimedAt) *
-        buildingProduction *
-        SPEED_SCALE) /
-      worldSpeed;
+    const toClaim = ((blockNumber - buildingProductionLastClaimedAt) * buildingProduction * SPEED_SCALE) / worldSpeed;
     if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
     return toClaim;
   }, [buildingProductionLastClaimedAt, blockNumber]);
 
   //total//
   const resourcesToClaim = useMemo(() => {
-    const totalUnclaimed =
-      resourcesToClaimFromBuilding + resourcesToClaimFromMotherlode;
-    if (totalUnclaimed > maxStorage - resourceCount)
-      return maxStorage - resourceCount;
+    const totalUnclaimed = resourcesToClaimFromBuilding + resourcesToClaimFromMotherlode;
+    if (totalUnclaimed > maxStorage - resourceCount) return maxStorage - resourceCount;
     return totalUnclaimed;
   }, [resourcesToClaimFromBuilding, resourcesToClaimFromMotherlode]);
 

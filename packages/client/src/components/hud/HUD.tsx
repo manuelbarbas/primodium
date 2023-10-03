@@ -3,30 +3,24 @@ import { useEffect } from "react";
 import { primodium } from "@game/api";
 import { KeybindActions, Scenes } from "@game/constants";
 
+import { MapOpen, SelectedBuilding } from "src/network/components/clientComponents";
+import { getBlockTypeName } from "src/util/common";
 import { useGameStore } from "../../store/GameStore";
 import { HUD } from "../core/HUD";
 import { BrandingLabel } from "../shared/BrandingLabel";
-import { Resources } from "./resources/Resources";
-import { Hotbar } from "./hotbar/Hotbar";
-import { Units } from "./units/Units";
-import { Score } from "./Score";
-import {
-  MapOpen,
-  SelectedBuilding,
-} from "src/network/components/clientComponents";
-import { BlueprintInfo } from "./tile-info/BlueprintInfo";
-import { getBlockTypeName } from "src/util/common";
-import { BuildingMenu } from "./building-menu/BuildingMenu";
-import { ViewStarmap } from "./ViewStarmap";
-import { Panes } from "./panes/Panes";
-import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 import { LoadingIndication } from "./LoadingIndication";
+import { Score } from "./Score";
+import { ViewStarmap } from "./ViewStarmap";
+import { BuildingMenu } from "./building-menu/BuildingMenu";
+import { Hotbar } from "./hotbar/Hotbar";
+import { Panes } from "./panes/Panes";
+import { Resources } from "./resources/Resources";
+import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
+import { BlueprintInfo } from "./tile-info/BlueprintInfo";
+import { Units } from "./units/Units";
 
 export const GameHUD = () => {
-  const [showUI, toggleShowUI] = useGameStore((state) => [
-    state.showUI,
-    state.toggleShowUI,
-  ]);
+  const [showUI, toggleShowUI] = useGameStore((state) => [state.showUI, state.toggleShowUI]);
 
   const selectedBuilding = SelectedBuilding.use()?.value;
   const mapOpen = MapOpen.use(undefined, {
@@ -34,12 +28,8 @@ export const GameHUD = () => {
   }).value;
 
   useEffect(() => {
-    const asteroidListener = primodium
-      .api(Scenes.Asteroid)
-      .input.addListener(KeybindActions.ToggleUI, toggleShowUI);
-    const starmapListener = primodium
-      .api(Scenes.Starmap)
-      .input.addListener(KeybindActions.ToggleUI, toggleShowUI);
+    const asteroidListener = primodium.api(Scenes.Asteroid).input.addListener(KeybindActions.ToggleUI, toggleShowUI);
+    const starmapListener = primodium.api(Scenes.Starmap).input.addListener(KeybindActions.ToggleUI, toggleShowUI);
 
     return () => {
       asteroidListener.dispose();
@@ -54,18 +44,14 @@ export const GameHUD = () => {
         {!mapOpen && showUI && (
           <HUD scale={1} pad>
             <HUD.BottomMiddle>
-              {(getBlockTypeName(selectedBuilding) || !selectedBuilding) && (
-                <Hotbar />
-              )}
+              {(getBlockTypeName(selectedBuilding) || !selectedBuilding) && <Hotbar />}
               {!getBlockTypeName(selectedBuilding) && <BuildingMenu />}
             </HUD.BottomMiddle>
             <HUD.TopMiddle>
               {getBlockTypeName(selectedBuilding) && selectedBuilding && (
                 <BlueprintInfo buildingType={selectedBuilding} />
               )}
-              {(!selectedBuilding || !getBlockTypeName(selectedBuilding)) && (
-                <ViewStarmap />
-              )}
+              {(!selectedBuilding || !getBlockTypeName(selectedBuilding)) && <ViewStarmap />}
             </HUD.TopMiddle>
             <HUD.TopLeft>
               <Score />

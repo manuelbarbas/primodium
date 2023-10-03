@@ -31,10 +31,7 @@ export const StationedUnits: React.FC = () => {
                 >
                   <div className="relative">
                     <img
-                      src={
-                        BackgroundImage.get(unit)?.at(0) ??
-                        "/img/icons/debugicon.png"
-                      }
+                      src={BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"}
                       className="w-full h-full"
                     />
                     <p className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 font-bold text-xs bg-slate-900 border-cyan-400/30 px-1 rounded-md border group-hover:opacity-0">
@@ -54,9 +51,7 @@ export const StationedUnits: React.FC = () => {
       <div className="flex gap-2 mt-1">
         <Navigator.BackButton
           className="btn-secondary border-none"
-          onClick={() =>
-            recallUnitsFromMotherlode(destination ?? SingletonID, network)
-          }
+          onClick={() => recallUnitsFromMotherlode(destination ?? SingletonID, network)}
         >
           RECALL
         </Navigator.BackButton>

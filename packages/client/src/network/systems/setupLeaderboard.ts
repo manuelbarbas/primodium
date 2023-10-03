@@ -1,10 +1,10 @@
-import { EntityID, defineComponentSystem } from "@latticexyz/recs";
+import { Entity, defineComponentSystem } from "@latticexyz/recs";
 import { Score } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
 import { Account, Leaderboard } from "../components/clientComponents";
 
 export const setupLeaderboard = () => {
-  const leaderboardMap = new Map<EntityID, number>();
+  const leaderboardMap = new Map<Entity, number>();
 
   defineComponentSystem(world, Score, ({ entity, value }) => {
     const entityId = world.entities[entity];

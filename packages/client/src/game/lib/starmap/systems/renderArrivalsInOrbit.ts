@@ -1,27 +1,22 @@
-import {
-  ComponentUpdate,
-  Has,
-  defineUpdateSystem,
-  defineEnterSystem,
-  defineExitSystem,
-  namespaceWorld,
-  EntityID,
-} from "@latticexyz/recs";
-import { Scene } from "engine/types";
-import { BlockNumber } from "src/network/components/clientComponents";
-import { world } from "src/network/world";
-import { ObjectPosition, Tween } from "../../common/object-components/common";
-import { Circle } from "../../common/object-components/graphics";
+import { DepthLayers } from "@game/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
-  Arrival,
-  OwnedBy,
-  Pirate,
-  Position,
-} from "src/network/components/chainComponents";
-import { DepthLayers } from "@game/constants";
-import { hashStringEntity } from "src/util/encode";
+  ComponentUpdate,
+  EntityID,
+  Has,
+  defineEnterSystem,
+  defineExitSystem,
+  defineUpdateSystem,
+  namespaceWorld,
+} from "@latticexyz/recs";
+import { Scene } from "engine/types";
+import { Arrival, OwnedBy, Pirate, Position } from "src/network/components/chainComponents";
+import { BlockNumber } from "src/network/components/clientComponents";
+import { world } from "src/network/world";
 import { PIRATE_KEY } from "src/util/constants";
+import { hashStringEntity } from "src/util/encode";
+import { ObjectPosition, Tween } from "../../common/object-components/common";
+import { Circle } from "../../common/object-components/graphics";
 
 export const renderArrivalsInOrbit = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -44,8 +39,7 @@ export const renderArrivalsInOrbit = (scene: Scene, player: EntityID) => {
     //render personal pirate only
     if (
       Pirate.has(arrival.destination) &&
-      hashStringEntity(PIRATE_KEY, player) !==
-        OwnedBy.get(arrival.destination)?.value
+      hashStringEntity(PIRATE_KEY, player) !== OwnedBy.get(arrival.destination)?.value
     )
       return;
 
@@ -53,11 +47,7 @@ export const renderArrivalsInOrbit = (scene: Scene, player: EntityID) => {
 
     if (!destination) return;
 
-    const destinationPixelCoord = tileCoordToPixelCoord(
-      { x: destination.x, y: -destination.y },
-      tileWidth,
-      tileHeight
-    );
+    const destinationPixelCoord = tileCoordToPixelCoord({ x: destination.x, y: -destination.y }, tileWidth, tileHeight);
 
     const arrivalOrbit = scene.objectPool.getGroup(entityId + objIndexSuffix);
 

@@ -23,11 +23,7 @@ export const Camera = () => {
       return { x: 0, y: 0 };
     }
 
-    const tileCoord = pixelCoordToTileCoord(
-      { x: worldView.centerX, y: worldView.centerY },
-      tileWidth,
-      tileHeight
-    );
+    const tileCoord = pixelCoordToTileCoord({ x: worldView.centerX, y: worldView.centerY }, tileWidth, tileHeight);
 
     return { x: tileCoord.x, y: -tileCoord.y };
   }, [worldView]);
@@ -42,27 +38,11 @@ export const Camera = () => {
       className="fixed top-0 bottom-0 screen-container pointer-events-none "
     >
       <div className="[&>*]:absolute [&>*]:m-2 [&>*]:border-cyan-400/80 [&>*]:w-12 [&>*]:h-12">
-        <div
-          className={`top-0 left-0 border-l-2 border-t-2 ${
-            crtEffect ? "-skew-x-2 -skew-y-2" : ""
-          }`}
-        />
-        <div
-          className={`top-0 right-0 border-r-2 border-t-2 ${
-            crtEffect ? "-skew-x-2 -skew-y-2" : ""
-          }`}
-        />
-        <div
-          className={`bottom-0 left-0 border-l-2 border-b-2 ${
-            crtEffect ? "-skew-x-2 -skew-y-2" : ""
-          }`}
-        />
+        <div className={`top-0 left-0 border-l-2 border-t-2 ${crtEffect ? "-skew-x-2 -skew-y-2" : ""}`} />
+        <div className={`top-0 right-0 border-r-2 border-t-2 ${crtEffect ? "-skew-x-2 -skew-y-2" : ""}`} />
+        <div className={`bottom-0 left-0 border-l-2 border-b-2 ${crtEffect ? "-skew-x-2 -skew-y-2" : ""}`} />
 
-        <div
-          className={`bottom-0 right-0 border-r-2 border-b-2 ${
-            crtEffect ? "-skew-x-2 -skew-y-2" : ""
-          }`}
-        />
+        <div className={`bottom-0 right-0 border-r-2 border-b-2 ${crtEffect ? "-skew-x-2 -skew-y-2" : ""}`} />
       </div>
       <div
         style={{ textShadow: "2px 2px rgb(147 197 253 / 0.2)" }}

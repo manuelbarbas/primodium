@@ -1,10 +1,10 @@
 import { EntityID } from "@latticexyz/recs";
 import { useCallback } from "react";
 import { SecondaryCard } from "src/components/core/Card";
-import { HomeAsteroid, Hangar } from "src/network/components/clientComponents";
+import { useFleetMoves } from "src/hooks/useFleetMoves";
+import { Hangar, HomeAsteroid } from "src/network/components/clientComponents";
 import { BlockType } from "src/util/constants";
 import { UnitLabel } from "./UnitLabel";
-import { useFleetMoves } from "src/hooks/useFleetMoves";
 
 export const AllUnitLabels = () => {
   const activeAsteroid = HomeAsteroid.use()?.value;
@@ -24,11 +24,7 @@ export const AllUnitLabels = () => {
   return (
     <>
       <SecondaryCard className="grid grid-cols-1 gap-1">
-        <UnitLabel
-          name={"Fleet Moves"}
-          count={fleetMoves ?? 0}
-          resourceId={BlockType.FleetMoves}
-        />
+        <UnitLabel name={"Fleet Moves"} count={fleetMoves ?? 0} resourceId={BlockType.FleetMoves} />
       </SecondaryCard>
       <SecondaryCard className="grid grid-cols-1 gap-1">
         <UnitLabel
@@ -56,11 +52,7 @@ export const AllUnitLabels = () => {
           count={getUnitCount(BlockType.StingerDrone)}
           resourceId={BlockType.StingerDrone}
         />
-        <UnitLabel
-          name={"Aegis Drone"}
-          count={getUnitCount(BlockType.AegisDrone)}
-          resourceId={BlockType.AegisDrone}
-        />
+        <UnitLabel name={"Aegis Drone"} count={getUnitCount(BlockType.AegisDrone)} resourceId={BlockType.AegisDrone} />
         <UnitLabel
           name={"Mining Vessel"}
           count={getUnitCount(BlockType.MiningVessel)}

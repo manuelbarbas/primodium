@@ -1,5 +1,7 @@
+import { primodium } from "@game/api";
+import { Assets, EntityIDtoSpriteKey, SpriteKeys } from "@game/constants";
+import { SingletonID } from "@latticexyz/network";
 import { EntityID } from "@latticexyz/recs";
-import { ESpaceRockType } from "./web3/types";
 import {
   AsteroidType,
   IsMineableAt,
@@ -13,6 +15,8 @@ import {
   Pirate,
   Position,
 } from "src/network/components/chainComponents";
+import { BlockNumber, Hangar } from "src/network/components/clientComponents";
+import { clampedIndex, getBlockTypeName } from "./common";
 import {
   BlockType,
   MotherlodeSizeNames,
@@ -21,13 +25,9 @@ import {
   ResourceType,
   SPEED_SCALE,
 } from "./constants";
-import { clampedIndex, getBlockTypeName } from "./common";
-import { Assets, EntityIDtoSpriteKey, SpriteKeys } from "@game/constants";
-import { SingletonID } from "@latticexyz/network";
-import { primodium } from "@game/api";
 import { getFullResourceCount, getMotherlodeResource } from "./resource";
-import { BlockNumber, Hangar } from "src/network/components/clientComponents";
 import { getUnitStats } from "./trainUnits";
+import { ESpaceRockType } from "./web3/types";
 
 function getSpaceRockImage(spaceRock: EntityID, type: ESpaceRockType) {
   const { getSpriteBase64 } = primodium.api().sprite;
@@ -35,8 +35,7 @@ function getSpaceRockImage(spaceRock: EntityID, type: ESpaceRockType) {
   if (type === ESpaceRockType.Asteroid) {
     const pirate = Pirate.get(spaceRock);
 
-    if (pirate)
-      return getSpriteBase64(SpriteKeys.PirateAsteroid1, Assets.SpriteAtlas);
+    if (pirate) return getSpriteBase64(SpriteKeys.PirateAsteroid1, Assets.SpriteAtlas);
 
     const ownedBy = OwnedBy.get(spaceRock, {
       value: SingletonID,
@@ -52,10 +51,7 @@ function getSpaceRockImage(spaceRock: EntityID, type: ESpaceRockType) {
 
     const spriteKey =
       EntityIDtoSpriteKey[BlockType.Asteroid][
-        clampedIndex(
-          mainBaseLevel - 1,
-          EntityIDtoSpriteKey[BlockType.Asteroid].length
-        )
+        clampedIndex(mainBaseLevel - 1, EntityIDtoSpriteKey[BlockType.Asteroid].length)
       ];
 
     return getSpriteBase64(spriteKey, Assets.SpriteAtlas);
@@ -79,8 +75,7 @@ function getSpaceRockImage(spaceRock: EntityID, type: ESpaceRockType) {
 }
 
 export function getSpaceRockInfo(spaceRock: EntityID) {
-  const type = AsteroidType.get(spaceRock, { value: ESpaceRockType.Asteroid })
-    .value as ESpaceRockType;
+  const type = AsteroidType.get(spaceRock, { value: ESpaceRockType.Asteroid }).value as ESpaceRockType;
   const { value: blockNumber } = BlockNumber.get(undefined, {
     value: 0,
     avgBlockTime: 1,
@@ -104,11 +99,7 @@ export function getSpaceRockInfo(spaceRock: EntityID) {
 
   const resources = ownedBy
     ? ResourceStorages.map((resource) => {
-        const { resourceCount, resourcesToClaim } = getFullResourceCount(
-          resource,
-          ResourceType.Resource,
-          ownedBy
-        );
+        const { resourceCount, resourcesToClaim } = getFullResourceCount(resource, ResourceType.Resource, ownedBy);
 
         const amount = resourceCount + resourcesToClaim;
 
@@ -143,9 +134,9 @@ export function getSpaceRockInfo(spaceRock: EntityID) {
   let name = "";
   switch (type) {
     case ESpaceRockType.Motherlode:
-      name = `${
-        MotherlodeSizeNames[motherlodeData?.size ?? 0]
-      } ${getBlockTypeName(motherlodeResource?.resource)} Motherlode`;
+      name = `${MotherlodeSizeNames[motherlodeData?.size ?? 0]} ${getBlockTypeName(
+        motherlodeResource?.resource
+      )} Motherlode`;
       break;
     case ESpaceRockType.Asteroid:
       name = Pirate.get(spaceRock) ? "Pirate Asteroid" : "Player Asteroid";
@@ -163,9 +154,7 @@ export function getSpaceRockInfo(spaceRock: EntityID) {
       ...motherlodeResource,
       mineableAt,
       blocksLeft: mineableAt - blockNumber,
-      resourceLeft: motherlodeResource
-        ? motherlodeResource.maxAmount - (resourceMined + production)
-        : 0,
+      resourceLeft: motherlodeResource ? motherlodeResource.maxAmount - (resourceMined + production) : 0,
     },
     resources,
     ownedBy,

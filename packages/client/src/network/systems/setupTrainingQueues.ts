@@ -1,4 +1,4 @@
-import { EntityID, Has, HasValue, defineComponentSystem, runQuery } from "@latticexyz/recs";
+import { Entity, Has, HasValue, defineComponentSystem, runQuery } from "@latticexyz/recs";
 import { hashKeyEntity } from "src/util/encode";
 import { getUnitTrainingTime } from "src/util/trainUnits";
 import {
@@ -14,7 +14,7 @@ import { ActiveAsteroid, BlockNumber, TrainingQueue } from "../components/client
 import { world } from "../world";
 
 export function setupTrainingQueues() {
-  function updateTrainingQueue(blockNumber: number, building: EntityID) {
+  function updateTrainingQueue(blockNumber: number, building: Entity) {
     const startingIndex = UnitProductionQueueIndex.get(building)?.value;
     const finalIndex = UnitProductionLastQueueIndex.get(building)?.value;
 
@@ -43,7 +43,7 @@ export function setupTrainingQueues() {
       let trainedUnits = (blockNumber - startTime) / trainingTime;
 
       //temp
-      let timeRemaining = trainingTime - ((blockNumber - startTime) % trainingTime);
+      const timeRemaining = trainingTime - ((blockNumber - startTime) % trainingTime);
 
       if (trainedUnits == 0) foundUnfinished = true;
       else {

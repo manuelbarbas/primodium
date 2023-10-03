@@ -1,23 +1,18 @@
-import { Navigator } from "src/components/core/Navigator";
 import { SingletonID } from "@latticexyz/network";
-import { Account } from "src/network/components/clientComponents";
 import { EntityID } from "@latticexyz/recs";
-import {
-  BlockType,
-  RESOURCE_SCALE,
-  ResourceImage,
-  ResourceType,
-} from "src/util/constants";
-import { Badge } from "src/components/core/Badge";
-import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
-import { getBlockTypeName } from "src/util/common";
-import { SecondaryCard } from "src/components/core/Card";
 import { useMemo } from "react";
-import { hashKeyEntity } from "src/util/encode";
+import { FaInfoCircle } from "react-icons/fa";
+import { Badge } from "src/components/core/Badge";
+import { SecondaryCard } from "src/components/core/Card";
+import { Navigator } from "src/components/core/Navigator";
+import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 import { Level } from "src/network/components/chainComponents";
+import { Account } from "src/network/components/clientComponents";
+import { getBlockTypeName } from "src/util/common";
+import { BlockType, RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
+import { hashKeyEntity } from "src/util/encode";
 import { getRecipe } from "src/util/resource";
 import { UpgradeMiningVessel } from "../widgets/UpgradeMiningVessel";
-import { FaInfoCircle } from "react-icons/fa";
 import { VesselSlots } from "../widgets/VesselSlots";
 
 export const CommissionCost: React.FC<{ player: EntityID }> = ({ player }) => {
@@ -38,10 +33,7 @@ export const CommissionCost: React.FC<{ player: EntityID }> = ({ player }) => {
             if (resource.type === ResourceType.Utility) return;
 
             return (
-              <Badge
-                key={resource.id + resource.type}
-                className="text-xs gap-2"
-              >
+              <Badge key={resource.id + resource.type} className="text-xs gap-2">
                 <ResourceIconTooltip
                   name={getBlockTypeName(resource.id)}
                   image={ResourceImage.get(resource.id) ?? ""}
@@ -60,9 +52,7 @@ export const CommissionCost: React.FC<{ player: EntityID }> = ({ player }) => {
   );
 };
 
-export const MiningVessels: React.FC<{ building: EntityID }> = ({
-  building,
-}) => {
+export const MiningVessels: React.FC<{ building: EntityID }> = ({ building }) => {
   const player = Account.use(undefined, {
     value: SingletonID,
   }).value;
@@ -73,8 +63,7 @@ export const MiningVessels: React.FC<{ building: EntityID }> = ({
         <FaInfoCircle />
         <div className="text-xs italic opacity-75 space-y-2">
           <p>
-            Mining vessels are used to mine motherlodes. To commission one, you
-            must unlock an available slot first.
+            Mining vessels are used to mine motherlodes. To commission one, you must unlock an available slot first.
           </p>
           <p className="font-bold">First slot available at Main Base Lvl. 4</p>
         </div>

@@ -1,16 +1,13 @@
-import {
-  BackgroundImage,
-  BlockType,
-  ResourceImage,
-  ResourceType,
-} from "src/util/constants";
-import { getBlockTypeName } from "src/util/common";
+import { SingletonID } from "@latticexyz/network";
+import { EntityID } from "@latticexyz/recs";
 import { useEffect, useMemo, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
-import { EntityID } from "@latticexyz/recs";
-import { train } from "src/util/web3";
+import { Badge } from "src/components/core/Badge";
+import { SecondaryCard } from "src/components/core/Card";
+import { Navigator } from "src/components/core/Navigator";
+import { NumberInput } from "src/components/shared/NumberInput";
 import { useMud } from "src/hooks";
-import { getUnitStats, useTrainableUnits } from "src/util/trainUnits";
+import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import {
   Level,
   MaxUtility,
@@ -18,17 +15,15 @@ import {
   P_RequiredResources,
   P_RequiredUtility,
 } from "src/network/components/chainComponents";
-import { hashKeyEntity } from "src/util/encode";
-import ResourceIconTooltip from "../../../shared/ResourceIconTooltip";
 import { Account } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
-import { NumberInput } from "src/components/shared/NumberInput";
-import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
-import { SingletonID } from "@latticexyz/network";
+import { getBlockTypeName } from "src/util/common";
+import { BackgroundImage, BlockType, ResourceImage, ResourceType } from "src/util/constants";
+import { hashKeyEntity } from "src/util/encode";
 import { getRecipe } from "src/util/resource";
-import { Navigator } from "src/components/core/Navigator";
-import { SecondaryCard } from "src/components/core/Card";
-import { Badge } from "src/components/core/Badge";
+import { getUnitStats, useTrainableUnits } from "src/util/trainUnits";
+import { train } from "src/util/web3";
+import ResourceIconTooltip from "../../../shared/ResourceIconTooltip";
 
 export const BuildUnit: React.FC<{
   building: EntityID;
@@ -82,10 +77,7 @@ export const BuildUnit: React.FC<{
     return totalUnits + count * (requiredHousing ?? 0);
   }, [count, requiredHousing, totalUnits]);
 
-  const hasEnough = useHasEnoughResources(
-    getRecipe(unitLevelEntity ?? SingletonID),
-    count
-  );
+  const hasEnough = useHasEnoughResources(getRecipe(unitLevelEntity ?? SingletonID), count);
 
   useEffect(() => {
     if (trainableUnits.length == 0) return;
@@ -96,10 +88,7 @@ export const BuildUnit: React.FC<{
   if (trainableUnits.length == 0 || maximum == 0) return null;
 
   return (
-    <Navigator.Screen
-      title="BuildUnit"
-      className="relative flex flex-col  items-center text-white w-96"
-    >
+    <Navigator.Screen title="BuildUnit" className="relative flex flex-col  items-center text-white w-96">
       <SecondaryCard className="pixel-images w-full pointer-events-auto">
         <div className="flex flex-col items-center space-y-3">
           <div className="flex flex-wrap gap-2 items-center justify-center">
@@ -108,21 +97,12 @@ export const BuildUnit: React.FC<{
                 <button
                   key={index}
                   className="relative flex flex-col items-center group hover:scale-110 transition-transform hover:z-50"
-                  onClick={() =>
-                    selectedUnit == unit
-                      ? setSelectedUnit(undefined)
-                      : setSelectedUnit(unit)
-                  }
+                  onClick={() => (selectedUnit == unit ? setSelectedUnit(undefined) : setSelectedUnit(unit))}
                 >
                   <img
-                    src={
-                      BackgroundImage.get(unit)?.at(0) ??
-                      "/img/icons/debugicon.png"
-                    }
+                    src={BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"}
                     className={`border w-[64px] h-[64px] group-hover:opacity-50 rounded-xl ${
-                      selectedUnit == unit
-                        ? "border-2 border-accent"
-                        : "border-secondary/75"
+                      selectedUnit == unit ? "border-2 border-accent" : "border-secondary/75"
                     }`}
                   />
                   <p className="opacity-0 absolute -bottom-4 text-xs bg-error rounded-box px-1 group-hover:opacity-100 whitespace-nowrap transition-opacity">
@@ -139,19 +119,15 @@ export const BuildUnit: React.FC<{
             </p>
           ) : (
             <>
-              <p className="uppercase font-bold">
-                {getBlockTypeName(selectedUnit)}
-              </p>
+              <p className="uppercase font-bold">{getBlockTypeName(selectedUnit)}</p>
 
               <div className="grid grid-cols-5 gap-2 border-y border-cyan-400/30">
-                {Object.entries(getUnitStats(selectedUnit)).map(
-                  ([name, value]) => (
-                    <div key={name} className="flex flex-col items-center">
-                      <p className="text-xs opacity-50">{name}</p>
-                      <p>{value}</p>
-                    </div>
-                  )
-                )}
+                {Object.entries(getUnitStats(selectedUnit)).map(([name, value]) => (
+                  <div key={name} className="flex flex-col items-center">
+                    <p className="text-xs opacity-50">{name}</p>
+                    <p>{value}</p>
+                  </div>
+                ))}
               </div>
 
               <p className="text-sm leading-none opacity-75">COST</p>
@@ -198,12 +174,7 @@ export const BuildUnit: React.FC<{
               <div className="flex gap-2">
                 <Navigator.BackButton
                   className="btn-sm btn-secondary"
-                  disabled={
-                    maximum - unitsTaken < 0 ||
-                    transactionLoading ||
-                    !hasEnough ||
-                    count < 1
-                  }
+                  disabled={maximum - unitsTaken < 0 || transactionLoading || !hasEnough || count < 1}
                   onClick={() => {
                     train(building, selectedUnit, count, network);
                   }}
@@ -214,9 +185,7 @@ export const BuildUnit: React.FC<{
               </div>
             </>
           )}
-          <p className="opacity-50 text-xs">
-            {Math.max(maximum - unitsTaken, 0)} housing left
-          </p>
+          <p className="opacity-50 text-xs">{Math.max(maximum - unitsTaken, 0)} housing left</p>
         </div>
       </SecondaryCard>
     </Navigator.Screen>

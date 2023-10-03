@@ -27,11 +27,7 @@ export const OrbitActionButton: React.FC<{
     <Button
       disabled={transactionLoading || index === undefined}
       loading={transactionLoading}
-      className={`btn-sm ${
-        isNeutral || sendType === ESendType.REINFORCE
-          ? "btn-secondary"
-          : "btn-error"
-      } `}
+      className={`btn-sm ${isNeutral || sendType === ESendType.REINFORCE ? "btn-secondary" : "btn-error"} `}
       onClick={() => {
         switch (sendType) {
           case ESendType.INVADE:
@@ -51,12 +47,7 @@ export const OrbitActionButton: React.FC<{
         }
       }}
     >
-      {isNeutral &&
-        (sendType === ESendType.REINFORCE
-          ? !outgoing
-            ? "ACCEPT"
-            : "RECALL"
-          : "LAND")}
+      {isNeutral && (sendType === ESendType.REINFORCE ? (!outgoing ? "ACCEPT" : "RECALL") : "LAND")}
       {!isNeutral && (sendType === ESendType.REINFORCE ? "RECALL" : "ATTACK")}
     </Button>
   );

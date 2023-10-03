@@ -11,25 +11,15 @@ import {
   Production,
 } from "src/network/components/chainComponents";
 
-import {
-  Account,
-  BlockNumber,
-  Hangar,
-} from "src/network/components/clientComponents";
+import { Account, BlockNumber, Hangar } from "src/network/components/clientComponents";
+import { world } from "src/network/world";
 import { formatNumber } from "src/util/common";
 import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
-import { ESpaceRockType } from "src/util/web3/types";
-import { world } from "src/network/world";
-import { getUnitStats } from "src/util/trainUnits";
 import { getMotherlodeResource, mineableResources } from "src/util/resource";
+import { getUnitStats } from "src/util/trainUnits";
+import { ESpaceRockType } from "src/util/web3/types";
 
-export const ResourceLabel = ({
-  name,
-  resourceId,
-}: {
-  name: string;
-  resourceId: EntityID;
-}) => {
+export const ResourceLabel = ({ name, resourceId }: { name: string; resourceId: EntityID }) => {
   const { value: blockNumber, avgBlockTime } = BlockNumber.use(undefined, {
     value: 0,
     avgBlockTime: 1,
@@ -68,8 +58,7 @@ export const ResourceLabel = ({
 
   const maxStorage = useResourceCount(P_MaxStorage, resourceId);
 
-  const production =
-    useResourceCount(Production, resourceId) + motherlodeProduction;
+  const production = useResourceCount(Production, resourceId) + motherlodeProduction;
 
   const lastClaimedAt = useResourceCount(LastClaimedAt, resourceId);
 
@@ -91,51 +80,35 @@ export const ResourceLabel = ({
             <p>{name}</p>
           </div>
           <p className="text-slate-400">
-            {production
-              ? `+ ${formatNumber(
-                  (production * RESOURCE_SCALE * 60) / avgBlockTime
-                )}/MIN`
-              : "-"}
+            {production ? `+ ${formatNumber((production * RESOURCE_SCALE * 60) / avgBlockTime)}/MIN` : "-"}
           </p>
         </div>
         <div className="flex justify-between items-center gap-1">
           <div className="flex flex-col gap-1">
             <div className="flex justify-between border rounded-md border-cyan-800">
               <p className="px-1 bg-cyan-700 rounded-md rounded-r-none">
-                {formatNumber(
-                  (resourceCount + resourcesToClaim) * RESOURCE_SCALE
-                )}
+                {formatNumber((resourceCount + resourcesToClaim) * RESOURCE_SCALE)}
               </p>
-              <b className="rounded-md rounded-l-none bg-slate-700 px-1">
-                {formatNumber(maxStorage * RESOURCE_SCALE)}
-              </b>
+              <b className="rounded-md rounded-l-none bg-slate-700 px-1">{formatNumber(maxStorage * RESOURCE_SCALE)}</b>
             </div>
             <div className={`flex items-center w-full h-1 rounded-md`}>
               <div
                 className="h-full bg-cyan-600 rounded-md"
                 style={{
-                  width: `${
-                    ((resourceCount + resourcesToClaim) / maxStorage) * 100
-                  }%`,
+                  width: `${((resourceCount + resourcesToClaim) / maxStorage) * 100}%`,
                 }}
               />
 
               <div
                 className="h-full bg-gray-900 rounded-md"
                 style={{
-                  width: `${
-                    ((maxStorage - resourceCount - resourcesToClaim) /
-                      maxStorage) *
-                    100
-                  }%`,
+                  width: `${((maxStorage - resourceCount - resourcesToClaim) / maxStorage) * 100}%`,
                 }}
               />
             </div>
           </div>
 
-          {resourceCount + resourcesToClaim === maxStorage && (
-            <div className="w-2 h-2 bg-rose-600 rounded-sm" />
-          )}
+          {resourceCount + resourcesToClaim === maxStorage && <div className="w-2 h-2 bg-rose-600 rounded-sm" />}
         </div>
       </div>
     );

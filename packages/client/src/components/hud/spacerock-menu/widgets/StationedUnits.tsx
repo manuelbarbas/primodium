@@ -12,17 +12,11 @@ export const StationedUnits: React.FC = () => {
 
   return (
     <SecondaryCard
-      className={`w-full flex-row items-center gap-2 justify-between ${
-        units.length === 0 ? "opacity-20" : "0"
-      }`}
+      className={`w-full flex-row items-center gap-2 justify-between ${units.length === 0 ? "opacity-20" : "0"}`}
     >
       <img src="/img/icons/mainbaseicon.png" className="w-8 h-8" />
       <p className="uppercase text-xs font-bold">manage stationed units</p>
-      <Navigator.NavButton
-        to="StationedUnits"
-        className="btn-sm w-fit btn-secondary"
-        disabled={units.length === 0}
-      >
+      <Navigator.NavButton to="StationedUnits" className="btn-sm w-fit btn-secondary" disabled={units.length === 0}>
         <FaArrowRight />
       </Navigator.NavButton>
     </SecondaryCard>

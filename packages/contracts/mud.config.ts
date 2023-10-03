@@ -154,8 +154,8 @@ export const config = mudConfig({
     },
 
     P_Terrain: {
-      keySchema: { x: "int32", y: "int32" }, // EResource
-      valueSchema: "uint8",
+      keySchema: { x: "int32", y: "int32" },
+      valueSchema: "uint8", // EResource
     },
 
     /* -------------------------------- Resources ------------------------------- */

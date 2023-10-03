@@ -1,5 +1,8 @@
-import { BlockNumber } from "src/network/components/clientComponents";
-import { UnitBreakdown } from "./UnitBreakdown";
+import { EntityID } from "@latticexyz/recs";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
+import { FaUserAstronaut } from "react-icons/fa";
+import { FaCircleLeft } from "react-icons/fa6";
 import {
   AsteroidType,
   IsMineableAt,
@@ -11,24 +14,18 @@ import {
   P_MotherlodeResource,
   Position,
 } from "src/network/components/chainComponents";
+import { BlockNumber } from "src/network/components/clientComponents";
+import { getAsteroidImage } from "src/util/asteroid";
+import { shortenAddress } from "src/util/common";
 import { MotherlodeSizeNames, MotherlodeTypeNames } from "src/util/constants";
-import { EntityID } from "@latticexyz/recs";
 import { hashKeyEntity } from "src/util/encode";
 import { ESpaceRockType } from "src/util/web3/types";
-import { AnimatePresence, motion } from "framer-motion";
-import { getAsteroidImage } from "src/util/asteroid";
-import { useState } from "react";
-import { shortenAddress } from "src/util/common";
-import { GameButton } from "../shared/GameButton";
-import { FaCircleLeft } from "react-icons/fa6";
-import { FaUserAstronaut } from "react-icons/fa";
 import { HostileFleets } from "../asteroid-ui/hostile-fleets/HostileFleets";
+import { GameButton } from "../shared/GameButton";
+import { UnitBreakdown } from "./UnitBreakdown";
 
 type PaneState = "units" | "arrivals" | "home";
-export const AsteroidInfo: React.FC<{ asteroid: EntityID; title?: string }> = ({
-  asteroid,
-  title,
-}) => {
+export const AsteroidInfo: React.FC<{ asteroid: EntityID; title?: string }> = ({ asteroid, title }) => {
   const [paneState, setPaneState] = useState<PaneState>("home");
 
   const type = AsteroidType.use(asteroid, {
@@ -43,24 +40,14 @@ export const AsteroidInfo: React.FC<{ asteroid: EntityID; title?: string }> = ({
             <div className="p-1 border items-center border-t-0 border-r-0 border-l-0 border-cyan-400 flex justify-between">
               {title}
               {paneState !== "home" ? (
-                <GameButton
-                  id="units"
-                  color="bg-blue-500"
-                  onClick={() => setPaneState("home")}
-                  depth={1}
-                >
+                <GameButton id="units" color="bg-blue-500" onClick={() => setPaneState("home")} depth={1}>
                   <div className="flex m-1 items-center gap-2 px-1">
                     <FaCircleLeft size={12} />
                   </div>
                 </GameButton>
               ) : (
                 <div className="flex gap-1">
-                  <GameButton
-                    id="units"
-                    color="bg-green-500"
-                    onClick={() => setPaneState("units")}
-                    depth={1}
-                  >
+                  <GameButton id="units" color="bg-green-500" onClick={() => setPaneState("units")} depth={1}>
                     <div className="flex m-1 items-center gap-2 px-1">
                       <FaUserAstronaut size={12} />
                     </div>
@@ -69,12 +56,8 @@ export const AsteroidInfo: React.FC<{ asteroid: EntityID; title?: string }> = ({
               )}
             </div>
           )}
-          {type == ESpaceRockType.Asteroid && (
-            <AsteroidTargetInfo target={asteroid} paneState={paneState} />
-          )}
-          {type == ESpaceRockType.Motherlode && (
-            <MotherlodeTargetInfo target={asteroid} paneState={paneState} />
-          )}
+          {type == ESpaceRockType.Asteroid && <AsteroidTargetInfo target={asteroid} paneState={paneState} />}
+          {type == ESpaceRockType.Motherlode && <MotherlodeTargetInfo target={asteroid} paneState={paneState} />}
         </div>
       </motion.div>
     </AnimatePresence>
@@ -98,8 +81,7 @@ const AsteroidTargetInfo: React.FC<{
 
   const image = getAsteroidImage(target);
   if (paneState == "units") return <UnitBreakdown asteroid={target} />;
-  if (paneState == "arrivals")
-    return <HostileFleets spacerock={target} small />;
+  if (paneState == "arrivals") return <HostileFleets spacerock={target} small />;
   return (
     <div className="relative flex pixel-images h-32">
       <img src={image} className="h-32 w-32 object-cover p-1" />
@@ -147,10 +129,7 @@ const MotherlodeTargetInfo: React.FC<{
     hashKeyEntity(motherlodeData?.motherlodeType, motherlodeData.size),
     { resource: "0" as EntityID, maxAmount: 0 }
   );
-  const resourceMined = MotherlodeResource.get(
-    hashKeyEntity(resource, target),
-    { value: 0 }
-  ).value;
+  const resourceMined = MotherlodeResource.get(hashKeyEntity(resource, target), { value: 0 }).value;
 
   const mineableAt = Number(IsMineableAt.get(target, { value: "0" }).value);
 
@@ -161,8 +140,7 @@ const MotherlodeTargetInfo: React.FC<{
   const image = getAsteroidImage(target);
 
   if (paneState == "units") return <UnitBreakdown asteroid={target} />;
-  if (paneState == "arrivals")
-    return <HostileFleets spacerock={target} small />;
+  if (paneState == "arrivals") return <HostileFleets spacerock={target} small />;
 
   return (
     <div className="relative flex pixel-images h-32 w-full">
@@ -175,10 +153,7 @@ const MotherlodeTargetInfo: React.FC<{
           </div>
         </div>
       )}
-      <img
-        src={image}
-        className="border-r border-cyan-400 h-32 w-32 object-cover p-1"
-      />
+      <img src={image} className="border-r border-cyan-400 h-32 w-32 object-cover p-1" />
       <p className="absolute bottom-1 left-1 bg-slate-900/90 text-xs">
         [{position.x}, {position.y}]
       </p>

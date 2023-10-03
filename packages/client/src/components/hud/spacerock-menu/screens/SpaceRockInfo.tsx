@@ -7,10 +7,7 @@ import { SpaceRockTypeNames } from "src/util/constants";
 import { getSpaceRockInfo } from "src/util/spacerock";
 import { ESpaceRockType } from "src/util/web3/types";
 
-const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({
-  label,
-  children,
-}) => {
+const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (
     <SecondaryCard className="text-xs gap-2 w-full">
       <p className="text-xs opacity-75 mb-1 uppercase">{label}</p>
@@ -32,13 +29,7 @@ export const SpacerockInfo: React.FC<{
         <b>{SpaceRockTypeNames[data.type]}</b>
       </DataLabel>
       <DataLabel label="owned by">
-        <b>
-          {data.ownedBy
-            ? data.ownedBy === player
-              ? "You"
-              : shortenAddress(data.ownedBy)
-            : "Neutral"}
-        </b>
+        <b>{data.ownedBy ? (data.ownedBy === player ? "You" : shortenAddress(data.ownedBy)) : "Neutral"}</b>
       </DataLabel>
       <div className="grid grid-cols-2 w-full">
         {data.mainBaseLevel && (
@@ -48,11 +39,7 @@ export const SpacerockInfo: React.FC<{
         )}
         {data.type === ESpaceRockType.Motherlode && (
           <DataLabel label="COOLDOWN">
-            <b>
-              {data.motherlodeData.blocksLeft > 0
-                ? data.motherlodeData.blocksLeft
-                : "N/A"}
-            </b>
+            <b>{data.motherlodeData.blocksLeft > 0 ? data.motherlodeData.blocksLeft : "N/A"}</b>
           </DataLabel>
         )}
         <DataLabel label="coord">

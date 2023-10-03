@@ -1,26 +1,18 @@
 import { primodium } from "@game/api";
 import { EntityIDtoSpriteKey, KeybindActions } from "@game/constants";
-import { isMobile } from "react-device-detect";
 import { EntityID } from "@latticexyz/recs";
+import { Key } from "engine/types";
 import { motion } from "framer-motion";
 import React, { useEffect, useMemo } from "react";
-import { Key } from "engine/types";
-import {
-  Account,
-  SelectedAction,
-  SelectedBuilding,
-} from "src/network/components/clientComponents";
+import { isMobile } from "react-device-detect";
+import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
+import { useMainBaseCoord } from "src/hooks/useMainBase";
+import { Level, RawBlueprint } from "src/network/components/chainComponents";
+import { Account, SelectedAction, SelectedBuilding } from "src/network/components/clientComponents";
 import { calcDims, convertToCoords } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
 import { Action, BlockType, KeyImages } from "src/util/constants";
-import {
-  hashAndTrimKeyCoord,
-  hashAndTrimKeyEntity,
-  hashKeyEntity,
-} from "src/util/encode";
-import { RawBlueprint, Level } from "src/network/components/chainComponents";
-import { useMainBaseCoord } from "src/hooks/useMainBase";
-import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
+import { hashAndTrimKeyCoord, hashAndTrimKeyEntity, hashKeyEntity } from "src/util/encode";
 import { getRecipe } from "src/util/resource";
 
 const HotbarItem: React.FC<{
@@ -56,8 +48,7 @@ const HotbarItem: React.FC<{
   const keybindAction = useMemo(() => {
     if (!keybinds) return;
 
-    if (!KeybindActions[`Hotbar${index}` as keyof typeof KeybindActions])
-      return;
+    if (!KeybindActions[`Hotbar${index}` as keyof typeof KeybindActions]) return;
 
     return KeybindActions[`Hotbar${index}` as keyof typeof KeybindActions];
   }, [keybinds]);
@@ -65,9 +56,7 @@ const HotbarItem: React.FC<{
   const keyImage = useMemo(() => {
     if (!keybinds || !keybindAction) return;
 
-    return KeyImages.get(
-      keybinds[keybindAction]?.entries().next().value[0] as Key
-    );
+    return KeyImages.get(keybinds[keybindAction]?.entries().next().value[0] as Key);
   }, [keybinds, keybindAction]);
 
   const level = Level.use(hashKeyEntity(blockType, player), {
@@ -99,9 +88,7 @@ const HotbarItem: React.FC<{
   if (blockType) {
     const blueprint = RawBlueprint.get(blockType)?.value;
 
-    dimensions = blueprint
-      ? calcDims(blockType, convertToCoords(blueprint))
-      : undefined;
+    dimensions = blueprint ? calcDims(blockType, convertToCoords(blueprint)) : undefined;
   }
 
   const handleSelectBuilding = () => {
@@ -129,9 +116,7 @@ const HotbarItem: React.FC<{
       <div
         onClick={handleSelectBuilding}
         className={`relative flex flex-col text-sm items-center cursor-pointer w-16 h-12 border rounded border-cyan-400 pointer-events-auto ${
-          selectedBuilding === blockType
-            ? "scale-110 ring-4 ring-amber-400 transistion-all duration-100 z-50"
-            : ""
+          selectedBuilding === blockType ? "scale-110 ring-4 ring-amber-400 transistion-all duration-100 z-50" : ""
         } ${hasEnough ? "" : " border-rose-500"}`}
       >
         <img

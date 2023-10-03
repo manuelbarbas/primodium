@@ -3,17 +3,8 @@ import React from "react";
 import { FaGlobe, FaGreaterThan, FaTimes, FaTrophy } from "react-icons/fa";
 import { FaSpaceAwesome } from "react-icons/fa6";
 import { Arrival, Position } from "src/network/components/chainComponents";
-import {
-  Account,
-  Battle,
-  BattleReport,
-  BlockNumber,
-  NotificationQueue,
-} from "src/network/components/clientComponents";
-import {
-  Notification,
-  NotificationType,
-} from "src/network/components/customComponents/NotificationQueueComponent";
+import { Account, Battle, BattleReport, BlockNumber, NotificationQueue } from "src/network/components/clientComponents";
+import { Notification, NotificationType } from "src/network/components/customComponents/NotificationQueueComponent";
 import { shortenAddress } from "src/util/common";
 import { ESendType, ESendTypeToLiteral } from "src/util/web3/types";
 const Notifications: React.FC = () => {
@@ -32,27 +23,12 @@ const Notifications: React.FC = () => {
         };
 
         if (notification.type == "battle")
-          return (
-            <BattleNotification
-              id={notification.entity}
-              key={`${notification.id}-${index}`}
-            />
-          );
+          return <BattleNotification id={notification.entity} key={`${notification.id}-${index}`} />;
         if (notification.type == "arrival-transit") {
-          return (
-            <TransitNotification
-              id={notification.entity}
-              key={`${notification.id}-${index}`}
-            />
-          );
+          return <TransitNotification id={notification.entity} key={`${notification.id}-${index}`} />;
         }
         if (notification.type == "arrival-orbit") {
-          return (
-            <OrbitingNotification
-              id={notification.entity}
-              key={`${notification.id}-${index}`}
-            />
-          );
+          return <OrbitingNotification id={notification.entity} key={`${notification.id}-${index}`} />;
         }
         return null;
       })}
@@ -68,9 +44,7 @@ const TransitNotification: React.FC<{
   const blockNumber = BlockNumber.use(undefined, { value: 0, avgBlockTime: 1 });
   if (!arrival || !player) return null;
 
-  const timeLeft =
-    (Number(arrival.arrivalBlock) - blockNumber.value) /
-    blockNumber.avgBlockTime;
+  const timeLeft = (Number(arrival.arrivalBlock) - blockNumber.value) / blockNumber.avgBlockTime;
   if (timeLeft < 0) return null;
 
   const destination = Position.get(arrival.destination, {
@@ -87,9 +61,7 @@ const TransitNotification: React.FC<{
         <FaSpaceAwesome size={16} />
         <p
           className={`${
-            sent
-              ? "bg-green-700 border border-green-400"
-              : "bg-rose-700 border border-rose-400"
+            sent ? "bg-green-700 border border-green-400" : "bg-rose-700 border border-rose-400"
           }  rounded-md px-1 text-[.5rem]`}
         >
           {sent ? "SENT" : "INCOMING"}
@@ -97,8 +69,8 @@ const TransitNotification: React.FC<{
       </div>
 
       <span className="text-center text-xs uppercase font-bold">
-        {sender} {ESendTypeToLiteral[arrival.sendType as ESendType]} ARRIVING AT
-        [{destination.x}, {destination.y}] IN {timeLeft} SECONDS!
+        {sender} {ESendTypeToLiteral[arrival.sendType as ESendType]} ARRIVING AT [{destination.x}, {destination.y}] IN{" "}
+        {timeLeft} SECONDS!
       </span>
     </button>
   );
@@ -120,9 +92,7 @@ const OrbitingNotification: React.FC<{
     <button className="relative flex items-center justify-between bg-slate-800 pixel-images border border-cyan-400 p-3 rounded-md text-white">
       <div className="rounded-md bg-orange-600 gap-1 p-1 mr-2 flex flex-col items-center w-20">
         <FaGlobe size={16} />
-        <p className="bg-green-900 border border-green-500  rounded-md px-1 text-[.6rem]">
-          FLEET ARRIVED
-        </p>
+        <p className="bg-green-900 border border-green-500  rounded-md px-1 text-[.6rem]">FLEET ARRIVED</p>
       </div>
 
       <span className="text-center text-xs uppercase font-bold">
@@ -153,24 +123,18 @@ const BattleNotification: React.FC<{
       {battle.winner !== player && (
         <div className="rounded-md bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
           <FaTimes size={16} />
-          <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">
-            LOSS
-          </p>
+          <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">LOSS</p>
         </div>
       )}
       {battle.winner === player && (
         <div className="rounded-md bg-green-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
           <FaTrophy size={16} />
-          <p className="bg-green-900 border border-green-500  rounded-md px-1 text-[.6rem]">
-            WIN
-          </p>
+          <p className="bg-green-900 border border-green-500  rounded-md px-1 text-[.6rem]">WIN</p>
         </div>
       )}
 
       <span className="text-center text-xs uppercase font-bold">
-        You {winner ? "won" : "lost"} a
-        {!battle.raidedAmount ? "n INVASION" : " RAID"} against{" "}
-        {shortenAddress(enemy)}!
+        You {winner ? "won" : "lost"} a{!battle.raidedAmount ? "n INVASION" : " RAID"} against {shortenAddress(enemy)}!
       </span>
       <div className="flex items-center gap-1 px-1 absolute bottom-0 right-1 text-[.6rem] border rounded-md border-cyan-800 bg-slate-700 translate-y-1/2">
         VIEW DETAILS <FaGreaterThan />

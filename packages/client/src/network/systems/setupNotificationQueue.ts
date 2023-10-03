@@ -1,5 +1,5 @@
 import { SyncState } from "@latticexyz/network";
-import { EntityID, defineComponentSystem } from "@latticexyz/recs";
+import { Entity, defineComponentSystem } from "@latticexyz/recs";
 import { uuid } from "@latticexyz/utils";
 import { Arrival, LoadingState } from "../components/chainComponents";
 import { Account, Battle, BlockNumber, NotificationQueue } from "../components/clientComponents"; // Update with actual Battle and Player component imports
@@ -26,8 +26,8 @@ export function setupNotificationQueue() {
     }
   });
 
-  const usedArrivals = new Set<EntityID>();
-  const orbitingQueue = new Map<EntityID, number>();
+  const usedArrivals = new Set<Entity>();
+  const orbitingQueue = new Map<Entity, number>();
   defineComponentSystem(world, Arrival, (update) => {
     if (LoadingState.get()?.state !== SyncState.LIVE) return;
     const playerAddress = Account.get()?.value; // Assuming Player component has an 'address' field

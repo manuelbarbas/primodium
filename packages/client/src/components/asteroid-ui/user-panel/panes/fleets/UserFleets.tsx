@@ -1,19 +1,15 @@
+import { SingletonID } from "@latticexyz/network";
 import { EntityID } from "@latticexyz/recs";
-import {
-  Arrival,
-  OwnedBy,
-  Position,
-} from "src/network/components/chainComponents";
-import { Account, BlockNumber } from "src/network/components/clientComponents";
-import { ESendType } from "src/util/web3/types";
+import { useState } from "react";
 import { BiSolidInvader } from "react-icons/bi";
 import { FaShieldAlt } from "react-icons/fa";
-import { SingletonID } from "@latticexyz/network";
-import { useGameStore } from "src/store/GameStore";
-import { invade, raid, recall, reinforce } from "src/util/web3";
 import { useMud } from "src/hooks/useMud";
-import { useState } from "react";
+import { Arrival, OwnedBy, Position } from "src/network/components/chainComponents";
+import { Account, BlockNumber } from "src/network/components/clientComponents";
+import { useGameStore } from "src/store/GameStore";
 import { getIndex } from "src/util/arrival";
+import { invade, raid, recall, reinforce } from "src/util/web3";
+import { ESendType } from "src/util/web3/types";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -45,9 +41,7 @@ export const OrbitActionButton: React.FC<{
     <button
       disabled={transactionLoading || index === undefined}
       className={`border p-1 rounded-md hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
-        isNeutral || sendType === ESendType.REINFORCE
-          ? "bg-cyan-700 border-cyan-500"
-          : "bg-rose-800 border-rose-600"
+        isNeutral || sendType === ESendType.REINFORCE ? "bg-cyan-700 border-cyan-500" : "bg-rose-800 border-rose-600"
       } ${transactionLoading ? "opacity-50 pointer-events-none" : ""} `}
       onClick={() => {
         switch (sendType) {
@@ -68,12 +62,7 @@ export const OrbitActionButton: React.FC<{
         }
       }}
     >
-      {isNeutral &&
-        (sendType === ESendType.REINFORCE
-          ? !outgoing
-            ? "ACCEPT"
-            : "RECALL"
-          : "LAND")}
+      {isNeutral && (sendType === ESendType.REINFORCE ? (!outgoing ? "ACCEPT" : "RECALL") : "LAND")}
       {!isNeutral && (sendType === ESendType.REINFORCE ? "RECALL" : "ATTACK")}
     </button>
   );
@@ -101,25 +90,19 @@ export const Fleet: React.FC<{
         {sendType === ESendType.INVADE && (
           <div className="rounded-md bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
             <BiSolidInvader size={16} />
-            <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">
-              INVADE
-            </p>
+            <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">INVADE</p>
           </div>
         )}
         {sendType === ESendType.RAID && (
           <div className="rounded-md bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
             <BiSolidInvader size={16} />
-            <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">
-              RAID
-            </p>
+            <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">RAID</p>
           </div>
         )}
         {sendType === ESendType.REINFORCE && (
           <div className="rounded-md bg-green-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
             <FaShieldAlt size={16} />
-            <p className="bg-green-900 border border-green-500  rounded-md px-1 text-[.6rem]">
-              REINFORCE
-            </p>
+            <p className="bg-green-900 border border-green-500  rounded-md px-1 text-[.6rem]">REINFORCE</p>
           </div>
         )}
         <LabeledValue label={`${arrivalTime > 0 ? "IN-TRANSIT" : "ORBITING"}`}>
@@ -137,12 +120,7 @@ export const Fleet: React.FC<{
             </div>
           </LabeledValue>
         ) : (
-          <OrbitActionButton
-            entity={arrivalEntity}
-            destination={destination}
-            sendType={sendType}
-            outgoing={outgoing}
-          />
+          <OrbitActionButton entity={arrivalEntity} destination={destination} sendType={sendType} outgoing={outgoing} />
         )}
       </div>
     </div>

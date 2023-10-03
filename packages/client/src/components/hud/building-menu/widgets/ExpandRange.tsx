@@ -10,11 +10,7 @@ import { Level, MainBase } from "src/network/components/chainComponents";
 import { Account } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
 import { getBlockTypeName } from "src/util/common";
-import {
-  ResourceImage,
-  ResourceType,
-  RESOURCE_SCALE,
-} from "src/util/constants";
+import { RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
 import { ExpansionResearchTree, getResearchInfo } from "src/util/research";
 import { upgradeRange } from "src/util/web3";
 
@@ -30,14 +26,10 @@ export const ExpandRange: React.FC = () => {
     value: 0,
   }).value;
 
-  const { level, maxLevel, mainBaseLvlReq, recipe } = getResearchInfo(
-    ExpansionResearchTree,
-    player
-  );
+  const { level, maxLevel, mainBaseLvlReq, recipe } = getResearchInfo(ExpansionResearchTree, player);
 
   const hasEnough = useHasEnoughResources(recipe);
-  const canUpgrade =
-    hasEnough && mainBaseLevel >= mainBaseLvlReq && level < maxLevel;
+  const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && level < maxLevel;
 
   let error = "";
   if (!hasEnough) {
@@ -52,33 +44,21 @@ export const ExpandRange: React.FC = () => {
     <SecondaryCard className="w-full items-center">
       <div className="flex items-center justify-between w-full">
         <div className="flex gap-2 items-center">
-          <img
-            src="img/icons/expansionicon.png"
-            className="pixel-images h-8 w-8"
-          />
+          <img src="img/icons/expansionicon.png" className="pixel-images h-8 w-8" />
           <div>
-            {recipe.length !== 0 && (
-              <p className="text-xs opacity-75 px-2 mb-1">EXPANSION COST</p>
-            )}
+            {recipe.length !== 0 && <p className="text-xs opacity-75 px-2 mb-1">EXPANSION COST</p>}
             <div className="flex flex-wrap gap-1 px-2">
               {recipe.length !== 0 &&
                 recipe.map((resource) => {
                   return (
-                    <Badge
-                      key={resource.id + resource.type}
-                      className="text-xs gap-2"
-                    >
+                    <Badge key={resource.id + resource.type} className="text-xs gap-2">
                       <ResourceIconTooltip
                         name={getBlockTypeName(resource.id)}
                         image={ResourceImage.get(resource.id) ?? ""}
                         resourceId={resource.id}
                         amount={resource.amount}
                         resourceType={resource.type}
-                        scale={
-                          resource.type === ResourceType.Utility
-                            ? 1
-                            : RESOURCE_SCALE
-                        }
+                        scale={resource.type === ResourceType.Utility ? 1 : RESOURCE_SCALE}
                         direction="top"
                         validate
                       />
@@ -100,19 +80,13 @@ export const ExpandRange: React.FC = () => {
           Expand
         </Button>
       </div>
-      {error && (
-        <p className="animate-pulse text-error text-xs uppercase mt-2">
-          {error}
-        </p>
-      )}
+      {error && <p className="animate-pulse text-error text-xs uppercase mt-2">{error}</p>}
       <div className="flex gap-1 mt-1">
         {levels.map((_, index) => {
           return (
             <div
               key={index}
-              className={`w-2 h-2 rounded-full ${
-                level - 1 >= index ? "bg-green-600" : "bg-slate-500"
-              }`}
+              className={`w-2 h-2 rounded-full ${level - 1 >= index ? "bg-green-600" : "bg-slate-500"}`}
             />
           );
         })}

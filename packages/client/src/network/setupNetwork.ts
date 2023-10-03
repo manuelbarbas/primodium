@@ -1,10 +1,20 @@
 import { ContractWrite, createBurnerAccount, createContract, transportObserver } from "@latticexyz/common";
+import { Entity } from "@latticexyz/recs";
 import { createFaucetService } from "@latticexyz/services/faucet";
-import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs";
+import { syncToRecs } from "@latticexyz/store-sync/recs";
 import mudConfig from "contracts/mud.config";
 import { IWorld__factory } from "contracts/types/ethers-contracts";
 import { Subject, share } from "rxjs";
-import { Hex, createPublicClient, createWalletClient, fallback, http, parseEther, webSocket } from "viem";
+import {
+  Hex,
+  createPublicClient,
+  createWalletClient,
+  encodeAbiParameters,
+  fallback,
+  http,
+  parseEther,
+  webSocket,
+} from "viem";
 import { NetworkConfig } from "./types";
 import { world } from "./world";
 
@@ -32,14 +42,14 @@ export async function setupNetwork(networkConfig: NetworkConfig) {
     onWrite: (write) => write$.next(write),
   });
 
-  const { components, latestBlock$, latestBlockNumber$, blockStorageOperations$, waitForTransaction } =
-    await syncToRecs({
-      world,
-      config: mudConfig,
-      address: networkConfig.worldAddress as Hex,
-      publicClient,
-      startBlock: BigInt(networkConfig.initialBlockNumber),
-    });
+  const { components, latestBlock$, latestBlockNumber$, storedBlockLogs$, waitForTransaction } = await syncToRecs({
+    world,
+    config: mudConfig,
+    address: networkConfig.worldAddress as Hex,
+    publicClient,
+    startBlock: BigInt(networkConfig.initialBlockNumber),
+    indexerUrl: networkConfig.indexerUrl,
+  });
 
   // Request drip from faucet
   if (networkConfig.faucetServiceUrl) {
@@ -67,13 +77,13 @@ export async function setupNetwork(networkConfig: NetworkConfig) {
   return {
     world,
     components,
-    playerEntity: encodeEntity({ address: "address" }, { address: burnerWalletClient.account.address }),
+    playerEntity: encodeAbiParameters([{ type: "address" }], [burnerWalletClient.account.address]) as Entity,
     address: burnerWalletClient.account.address,
     publicClient,
     walletClient: burnerWalletClient,
     latestBlock$,
     latestBlockNumber$,
-    blockStorageOperations$,
+    storedBlockLogs$,
     waitForTransaction,
     worldContract,
     write$: write$.asObservable().pipe(share()),

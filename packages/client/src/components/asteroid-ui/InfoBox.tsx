@@ -1,31 +1,27 @@
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { EntityID } from "@latticexyz/recs";
-import { BlockType } from "src/util/constants";
-import { hashAndTrimKeyCoord } from "src/util/encode";
-import { useMainBaseCoord } from "src/hooks/useMainBase";
-import { useGameStore } from "src/store/GameStore";
-import { GameButton } from "../shared/GameButton";
-import { IoFlaskSharp, IoSettings } from "react-icons/io5";
-import Modal from "../shared/Modal";
-import ResearchPage from "./research-menu/ResearchPage";
-import { MainMenu } from "./MainMenu";
-import { Level, Position } from "src/network/components/chainComponents";
-import { Starmap } from "./user-panel/panes/starmap/Starmap";
-import { TileInfo } from "./tile-info/TileInfo";
 import { primodium } from "@game/api";
 import { BeltMap } from "@game/constants";
-import { FullStarmap } from "./user-panel/panes/starmap/FullStarmap";
-import { Leaderboard } from "./Leaderboard";
+import { EntityID } from "@latticexyz/recs";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { FaExpand, FaFileAlt } from "react-icons/fa";
 import { FaLocationCrosshairs, FaSpaceAwesome } from "react-icons/fa6";
-import { HostileFleets } from "./hostile-fleets/HostileFleets";
-import {
-  ActiveAsteroid,
-  BattleReport,
-  Send,
-} from "src/network/components/clientComponents";
-import { FaFileAlt, FaExpand } from "react-icons/fa";
+import { IoFlaskSharp, IoSettings } from "react-icons/io5";
+import { useMainBaseCoord } from "src/hooks/useMainBase";
+import { Level, Position } from "src/network/components/chainComponents";
+import { ActiveAsteroid, BattleReport, Send } from "src/network/components/clientComponents";
+import { useGameStore } from "src/store/GameStore";
+import { BlockType } from "src/util/constants";
+import { hashAndTrimKeyCoord } from "src/util/encode";
+import { GameButton } from "../shared/GameButton";
+import Modal from "../shared/Modal";
+import { Leaderboard } from "./Leaderboard";
+import { MainMenu } from "./MainMenu";
 import { BattleReports } from "./battle-reports/BattleReports";
+import { HostileFleets } from "./hostile-fleets/HostileFleets";
+import ResearchPage from "./research-menu/ResearchPage";
+import { TileInfo } from "./tile-info/TileInfo";
+import { FullStarmap } from "./user-panel/panes/starmap/FullStarmap";
+import { Starmap } from "./user-panel/panes/starmap/Starmap";
 
 export const InfoBox = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
@@ -68,11 +64,7 @@ export const InfoBox = () => {
           animate={{ opacity: 1, scale: 1, x: 0 }}
           exit={{ opacity: 0, scale: 0, x: -200 }}
         >
-          <div
-            className={`flex gap-2 items-start ${
-              crtEffect ? "skew-x-1 skew-y-1" : ""
-            }`}
-          >
+          <div className={`flex gap-2 items-start ${crtEffect ? "skew-x-1 skew-y-1" : ""}`}>
             {!minimized && (
               <motion.div
                 initial={{ scaleY: 0 }}
@@ -185,25 +177,13 @@ export const InfoBox = () => {
           <Leaderboard />
         </motion.div>
       </div>
-      <Modal
-        title="Menu"
-        show={showMenuModal}
-        onClose={() => setShowMenuModal(!showMenuModal)}
-      >
+      <Modal title="Menu" show={showMenuModal} onClose={() => setShowMenuModal(!showMenuModal)}>
         <MainMenu />
       </Modal>
-      <Modal
-        title="Research"
-        show={showResearchModal}
-        onClose={() => setShowResearchModal(!showResearchModal)}
-      >
+      <Modal title="Research" show={showResearchModal} onClose={() => setShowResearchModal(!showResearchModal)}>
         <ResearchPage />
       </Modal>
-      <Modal
-        title="Hostile Fleets"
-        show={showFleets}
-        onClose={() => setShowFleets(!showFleets)}
-      >
+      <Modal title="Hostile Fleets" show={showFleets} onClose={() => setShowFleets(!showFleets)}>
         {asteroid && <HostileFleets spacerock={asteroid} />}
       </Modal>
       <Modal

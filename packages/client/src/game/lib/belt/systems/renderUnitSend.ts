@@ -1,6 +1,9 @@
 // import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { ComponentUpdate, Has } from "@latticexyz/recs";
+import { BeltMap } from "@game/constants";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
+  ComponentUpdate,
+  Has,
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
@@ -11,8 +14,6 @@ import { Send } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
 import { ObjectPosition } from "../../common/object-components/common";
 import { Circle, Line } from "../../common/object-components/graphics";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { BeltMap } from "@game/constants";
 
 const { DepthLayers } = BeltMap;
 
@@ -31,17 +32,9 @@ export const renderUnitSend = (scene: Scene) => {
 
     if (!origin || !destination) return;
 
-    const originPixelCoord = tileCoordToPixelCoord(
-      { x: origin.x, y: -origin.y },
-      tileWidth,
-      tileHeight
-    );
+    const originPixelCoord = tileCoordToPixelCoord({ x: origin.x, y: -origin.y }, tileWidth, tileHeight);
 
-    const destinationPixelCoord = tileCoordToPixelCoord(
-      { x: destination.x, y: -destination.y },
-      tileWidth,
-      tileHeight
-    );
+    const destinationPixelCoord = tileCoordToPixelCoord({ x: destination.x, y: -destination.y }, tileWidth, tileHeight);
 
     const sendTrajectory = scene.objectPool.getGroup(entityId + objIndexSuffix);
 
@@ -67,9 +60,7 @@ export const renderUnitSend = (scene: Scene) => {
   defineEnterSystem(gameWorld, query, (update) => {
     render(update);
 
-    console.info(
-      "[ENTER SYSTEM](renderSendUnitsTool) Send units tool has been added"
-    );
+    console.info("[ENTER SYSTEM](renderSendUnitsTool) Send units tool has been added");
   });
 
   defineUpdateSystem(gameWorld, query, render);
@@ -80,8 +71,6 @@ export const renderUnitSend = (scene: Scene) => {
 
     scene.objectPool.removeGroup(objIndex);
 
-    console.info(
-      "[EXIT SYSTEM](renderSendUnitsTool) Send units tool has been removed"
-    );
+    console.info("[EXIT SYSTEM](renderSendUnitsTool) Send units tool has been removed");
   });
 };
