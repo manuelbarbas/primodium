@@ -72,12 +72,12 @@ library LibSend {
     ESendType sendType
   ) internal view {
     require(
-      ResourceCount.get(playerEntity, EResource.U_MaxMoves) > ArrivalCount.get(playerEntity),
+      ResourceCount.get(playerEntity, uint8(EResource.U_MaxMoves)) > ArrivalCount.get(playerEntity),
       "[SendUnits] Reached max move count"
     );
 
-    ERock originType = RockType.get(origin);
-    ERock destinationType = RockType.get(destination);
+    ERock originType = ERock(RockType.get(origin));
+    ERock destinationType = ERock(RockType.get(destination));
 
     require(originType != ERock.NULL && destinationType != ERock.NULL, "[SendUnits] Must travel between rocks");
     bytes32 destinationOwner = OwnedBy.get(destination);

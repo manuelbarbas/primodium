@@ -19,7 +19,7 @@ library LibProduction {
 
     P_ProductionData memory prototypeProduction = P_Production.get(buildingPrototype, targetLevel);
     if (prototypeProduction.amount == 0) return;
-    EResource resource = EResource(prototypeProduction.resource);
+    uint8 resource = prototypeProduction.resource;
     uint256 prevLevelPrototypeProduction = targetLevel > 1
       ? P_Production.get(buildingPrototype, targetLevel - 1).amount
       : 0;
@@ -41,8 +41,8 @@ library LibProduction {
 
     P_ProductionData memory prototypeProduction = P_Production.get(buildingPrototype, buildingLevel);
     if (prototypeProduction.amount == 0) return;
-    EResource resource = EResource(prototypeProduction.resource);
-    if (P_IsUtility.get(resource)) {
+    uint8 resource = prototypeProduction.resource;
+    if (P_IsUtility.get(uint8(resource))) {
       LibStorage.decreaseMaxUtility(playerEntity, resource, prototypeProduction.amount);
       return;
     }

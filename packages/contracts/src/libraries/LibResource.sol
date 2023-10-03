@@ -15,7 +15,7 @@ library LibResource {
    * @param resource The type of resource to check.
    * @return availableCount The available count of the specified resource.
    */
-  function getResourceCountAvailable(bytes32 playerEntity, EResource resource) internal view returns (uint256) {
+  function getResourceCountAvailable(bytes32 playerEntity, uint8 resource) internal view returns (uint256) {
     uint256 max = MaxResourceCount.get(playerEntity, resource);
     uint256 curr = ResourceCount.get(playerEntity, resource);
     if (curr > max) return 0;
@@ -33,7 +33,7 @@ library LibResource {
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(buildingPrototype, level);
 
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
-      spendResource(playerEntity, entity, EResource(requiredResources.resources[i]), requiredResources.amounts[i]);
+      spendResource(playerEntity, entity, requiredResources.resources[i], requiredResources.amounts[i]);
     }
   }
 
@@ -46,7 +46,7 @@ library LibResource {
     claimAllResources(playerEntity);
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(prototype, level);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
-      spendResource(playerEntity, prototype, EResource(requiredResources.resources[i]), requiredResources.amounts[i]);
+      spendResource(playerEntity, prototype, requiredResources.resources[i], requiredResources.amounts[i]);
     }
   }
 
@@ -63,19 +63,14 @@ library LibResource {
     claimAllResources(playerEntity);
     P_RequiredUpgradeResourcesData memory requiredResources = P_RequiredUpgradeResources.get(unitPrototype, level);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
-      spendResource(
-        playerEntity,
-        unitPrototype,
-        EResource(requiredResources.resources[i]),
-        requiredResources.amounts[i]
-      );
+      spendResource(playerEntity, unitPrototype, requiredResources.resources[i], requiredResources.amounts[i]);
     }
   }
 
   function spendResource(
     bytes32 playerEntity,
     bytes32 entity,
-    EResource resource,
+    uint8 resource,
     uint256 resourceCost
   ) internal {
     // check if player has enough resources
@@ -100,7 +95,7 @@ library LibResource {
     uint256 timeSinceClaimed = block.timestamp - lastClaimed;
     LastClaimedAt.set(playerEntity, block.timestamp);
     for (uint8 i = 1; i < uint8(EResource.LENGTH); i++) {
-      EResource resource = EResource(i);
+      uint8 resource = i;
       // you can't claim utilities
       if (P_IsUtility.get(resource)) continue;
 
@@ -120,7 +115,7 @@ library LibResource {
   function clearUtilityUsage(bytes32 playerEntity, bytes32 buildingEntity) internal {
     uint8[] memory utilities = UtilitySet.getAll(buildingEntity);
     for (uint256 i = 0; i < utilities.length; i++) {
-      EResource utility = EResource(utilities[i]);
+      uint8 utility = utilities[i];
       uint256 utilityUsage = UtilitySet.get(buildingEntity, utility);
       UtilitySet.remove(buildingEntity, utility);
       LibStorage.increaseStoredResource(playerEntity, utility, utilityUsage);
@@ -139,9 +134,9 @@ library LibResource {
     returns (uint256 totalResources, uint256[] memory resourceCounts)
   {
     resourceCounts = new uint256[](uint8(EResource.LENGTH));
-    for (uint256 i = 1; i < resourceCounts.length; i++) {
-      if (P_IsUtility.get(EResource(i))) continue;
-      resourceCounts[i] = ResourceCount.get(playerEntity, EResource(i));
+    for (uint8 i = 1; i < resourceCounts.length; i++) {
+      if (P_IsUtility.get(i)) continue;
+      resourceCounts[i] = ResourceCount.get(playerEntity, i);
       totalResources += resourceCounts[i];
     }
   }

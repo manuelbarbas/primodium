@@ -17,7 +17,7 @@ contract SpawnSystemTest is PrimodiumTest {
     bool spawned = Spawned.get(world, playerEntity);
     assertTrue(spawned, "Player should have spawned");
     assertEq(Home.getAsteroid(world, playerEntity), asteroidEntity, "Player should have spawned on their own asteroid");
-    assertEq(RockType.get(world, asteroidEntity), ERock.Asteroid, "Asteroid should be a normal asteroid");
+    assertEq(RockType.get(world, asteroidEntity), uint8(ERock.Asteroid), "Asteroid should be a normal asteroid");
 
     assertEq(Level.get(world, playerEntity), 1, "Player should have level 1");
   }

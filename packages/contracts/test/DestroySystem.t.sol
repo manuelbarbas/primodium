@@ -52,7 +52,7 @@ contract DestroySystemTest is PrimodiumTest {
     switchPrank(address(creator));
     uint256 originalProduction = 100;
     uint256 productionReduction = 10;
-    ProductionRate.set(playerEntity, EResource.Iron, originalProduction);
+    ProductionRate.set(playerEntity, uint8(EResource.Iron), originalProduction);
 
     P_RequiredDependenciesData memory requiredDependenciesData = P_RequiredDependenciesData(
       new uint8[](1),
@@ -67,27 +67,27 @@ contract DestroySystemTest is PrimodiumTest {
     world.build(EBuilding.IronMine, getIronPosition(creator));
     uint256 productionIncrease = P_Production.get(IronMinePrototypeId, 1).amount;
     assertEq(
-      ProductionRate.get(playerEntity, EResource.Iron),
+      ProductionRate.get(playerEntity, uint8(EResource.Iron)),
       originalProduction - productionReduction + productionIncrease
     );
 
     world.destroy(getIronPosition(creator));
-    assertEq(ProductionRate.get(playerEntity, EResource.Iron), originalProduction);
+    assertEq(ProductionRate.get(playerEntity, uint8(EResource.Iron)), originalProduction);
   }
 
   function testDestroyWithResourceProductionIncrease() public {
     switchPrank(address(creator));
 
     uint256 increase = 69;
-    P_ProductionData memory data = P_ProductionData(EResource.Iron, increase);
+    P_ProductionData memory data = P_ProductionData(uint8(EResource.Iron), increase);
     P_Production.set(IronMinePrototypeId, 1, data);
     switchPrank(creator);
 
     world.build(EBuilding.IronMine, getIronPosition(creator));
-    assertEq(ProductionRate.get(playerEntity, EResource.Iron), increase);
+    assertEq(ProductionRate.get(playerEntity, uint8(EResource.Iron)), increase);
 
     world.destroy(getIronPosition(creator));
-    assertEq(ProductionRate.get(playerEntity, EResource.Iron), 0);
+    assertEq(ProductionRate.get(playerEntity, uint8(EResource.Iron)), 0);
   }
 
   function testDestroyWithMaxStorageIncrease() public {
@@ -96,13 +96,13 @@ contract DestroySystemTest is PrimodiumTest {
     uint8[] memory data = new uint8[](1);
     data[0] = uint8(EResource.Iron);
     P_ListMaxResourceUpgrades.set(IronMinePrototypeId, 1, data);
-    P_ByLevelMaxResourceUpgrades.set(IronMinePrototypeId, EResource.Iron, 1, 50);
+    P_ByLevelMaxResourceUpgrades.set(IronMinePrototypeId, uint8(EResource.Iron), 1, 50);
 
     switchPrank(creator);
     world.build(EBuilding.IronMine, getIronPosition(creator));
-    assertEq(MaxResourceCount.get(playerEntity, EResource.Iron), 50);
+    assertEq(MaxResourceCount.get(playerEntity, uint8(EResource.Iron)), 50);
 
     world.destroy(getIronPosition(creator));
-    assertEq(MaxResourceCount.get(playerEntity, EResource.Iron), 0);
+    assertEq(MaxResourceCount.get(playerEntity, uint8(EResource.Iron)), 0);
   }
 }

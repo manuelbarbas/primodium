@@ -19,7 +19,7 @@ library LibMotherlode {
       sourcePosition.y += position.y;
       bytes32 sourceAsteroid = ReversePosition.get(sourcePosition.x, sourcePosition.y);
       if (sourceAsteroid == 0) continue;
-      if (RockType.get(sourceAsteroid) == ERock.Motherlode) continue;
+      if (RockType.get(sourceAsteroid) == uint8(ERock.Motherlode)) continue;
       bytes32 motherlodeSeed = keccak256(abi.encode(sourceAsteroid, "motherlode", position.x, position.y));
       if (!isMotherlode(motherlodeSeed, config.motherlodeChanceInv)) continue;
       initMotherlode(position, motherlodeSeed);
@@ -43,14 +43,14 @@ library LibMotherlode {
   /// @param motherlodeEntity Hash of the motherlode to be initialized
   function initMotherlode(PositionData memory position, bytes32 motherlodeEntity) internal {
     (uint8 rawSize, uint8 rawMotherlodeType) = getMotherlodeRawPrototype(motherlodeEntity);
-    EResource motherlodeType = getMotherlodeType(rawMotherlodeType);
+    EResource motherlodeType = EResource(getMotherlodeType(rawMotherlodeType));
     ESize size = getSize(rawSize);
-    Motherlode.set(motherlodeEntity, MotherlodeData({ size: size, motherlodeType: motherlodeType }));
+    Motherlode.set(motherlodeEntity, MotherlodeData({ size: uint8(size), motherlodeType: uint8(motherlodeType) }));
 
     Position.set(motherlodeEntity, position);
     ReversePosition.set(position.x, position.y, motherlodeEntity);
     LastClaimedAt.set(motherlodeEntity, block.timestamp);
-    RockType.set(motherlodeEntity, ERock.Motherlode);
+    RockType.set(motherlodeEntity, uint8(ERock.Motherlode));
   }
 
   /// @dev Gets raw prototype for a motherlode

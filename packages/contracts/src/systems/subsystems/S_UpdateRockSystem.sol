@@ -10,7 +10,7 @@ import { LibUnit } from "libraries/LibUnit.sol";
 
 contract S_UpdateRockSystem is PrimodiumSystem {
   function updateRock(bytes32 playerEntity, bytes32 rock) public {
-    ERock rockType = RockType.get(rock);
+    ERock rockType = ERock(RockType.get(rock));
     require(rockType != ERock.NULL, "[S_UpdateRockSystem] Rock does not exist");
     LibResource.claimAllResources(playerEntity);
     if (rockType == ERock.Asteroid) {

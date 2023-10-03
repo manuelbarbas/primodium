@@ -43,14 +43,14 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     uint256 initial = 100;
     uint256 l1 = 50;
     uint256 l2 = 33;
-    ResourceCount.set(playerEntity, EResource.Iron, initial);
+    ResourceCount.set(playerEntity, Iron, initial);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
-    requiredResourcesData.resources[0] = uint8(EResource.Iron);
+    requiredResourcesData.resources[0] = uint8(Iron);
     requiredResourcesData.amounts[0] = l1;
     P_RequiredResources.set(IronMinePrototypeId, 1, requiredResourcesData);
     requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
-    requiredResourcesData.resources[0] = uint8(EResource.Iron);
+    requiredResourcesData.resources[0] = uint8(Iron);
     requiredResourcesData.amounts[0] = l2;
 
     P_RequiredResources.set(IronMinePrototypeId, 2, requiredResourcesData);
@@ -58,29 +58,29 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     switchPrank(creator);
     world.build(EBuilding.IronMine, getIronPosition(creator));
     world.upgradeBuilding(getIronPosition(creator));
-    assertEq(ResourceCount.get(playerEntity, EResource.Iron), initial - l1 - l2);
+    assertEq(ResourceCount.get(playerEntity, Iron), initial - l1 - l2);
   }
 
   function testUpgradeBuildingWithProductionDependencies() public {
-    ResourceCount.set(playerEntity, EResource.Iron, 1000);
+    ResourceCount.set(playerEntity, Iron, 1000);
 
     removeRequiredResources(EBuilding.IronMine);
 
     uint256 originalProduction = 100;
     uint256 l1 = 10;
     uint256 l2 = 12;
-    ProductionRate.set(playerEntity, EResource.Copper, originalProduction);
+    ProductionRate.set(playerEntity, Copper, originalProduction);
 
     P_RequiredDependenciesData memory requiredDependenciesData = P_RequiredDependenciesData(
       new uint8[](1),
       new uint256[](1)
     );
-    requiredDependenciesData.resources[0] = uint8(EResource.Copper);
+    requiredDependenciesData.resources[0] = uint8(Copper);
     requiredDependenciesData.amounts[0] = l1;
     P_RequiredDependencies.set(IronMinePrototypeId, 1, requiredDependenciesData);
 
     requiredDependenciesData = P_RequiredDependenciesData(new uint8[](1), new uint256[](1));
-    requiredDependenciesData.resources[0] = uint8(EResource.Copper);
+    requiredDependenciesData.resources[0] = uint8(Copper);
     requiredDependenciesData.amounts[0] = l2;
     P_RequiredDependencies.set(IronMinePrototypeId, 2, requiredDependenciesData);
 
@@ -88,7 +88,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     world.build(EBuilding.IronMine, getIronPosition(creator));
     world.upgradeBuilding(getIronPosition(creator));
 
-    assertEq(ProductionRate.get(playerEntity, EResource.Copper), originalProduction - l2);
+    assertEq(ProductionRate.get(playerEntity, Copper), originalProduction - l2);
   }
 
   function testUpgradeBuildingWithResourceProductionIncrease() public {
@@ -96,31 +96,31 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
     uint256 increase = 69;
     uint256 increase2 = 71;
-    P_ProductionData memory data = P_ProductionData(EResource.Iron, increase);
+    P_ProductionData memory data = P_ProductionData(uint8(Iron), increase);
     P_Production.set(IronMinePrototypeId, 1, data);
-    data = P_ProductionData(EResource.Iron, increase2);
+    data = P_ProductionData(uint8(Iron), increase2);
     P_Production.set(IronMinePrototypeId, 2, data);
 
     switchPrank(creator);
 
     world.build(EBuilding.IronMine, getIronPosition(creator));
     world.upgradeBuilding(getIronPosition(creator));
-    assertEq(ProductionRate.get(playerEntity, EResource.Iron), increase2);
+    assertEq(ProductionRate.get(playerEntity, Iron), increase2);
   }
 
   function testUpgradeBuildingWithMaxStorageIncrease() public {
     removeRequiredResources(EBuilding.IronMine);
 
     uint8[] memory data = new uint8[](1);
-    data[0] = uint8(EResource.Iron);
+    data[0] = uint8(Iron);
     P_ListMaxResourceUpgrades.set(IronMinePrototypeId, 1, data);
     P_ListMaxResourceUpgrades.set(IronMinePrototypeId, 2, data);
-    P_ByLevelMaxResourceUpgrades.set(IronMinePrototypeId, EResource.Iron, 1, 50);
-    P_ByLevelMaxResourceUpgrades.set(IronMinePrototypeId, EResource.Iron, 2, 100);
+    P_ByLevelMaxResourceUpgrades.set(IronMinePrototypeId, Iron, 1, 50);
+    P_ByLevelMaxResourceUpgrades.set(IronMinePrototypeId, Iron, 2, 100);
 
     switchPrank(creator);
     world.build(EBuilding.IronMine, getIronPosition(creator));
     world.upgradeBuilding(getIronPosition(creator));
-    assertEq(MaxResourceCount.get(playerEntity, EResource.Iron), 100);
+    assertEq(MaxResourceCount.get(playerEntity, Iron), 100);
   }
 }
