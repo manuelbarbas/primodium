@@ -1,8 +1,4 @@
-import {
-  EntityIDToResourceTilesetKey,
-  RENDER_INTERVAL,
-  Tilesets,
-} from "../../../constants";
+import { EntityIDToResourceTilesetKey, RENDER_INTERVAL, ResourceToTilesetKey, Tilesets } from "../../../constants";
 import { getResourceKey } from "../../../../util/tile";
 import { Coord, CoordMap } from "@latticexyz/utils";
 import { interval } from "rxjs";
@@ -10,6 +6,7 @@ import { Scene } from "engine/types";
 import { world } from "src/network/world";
 import AsteroidTiledMap from "../../../../maps/asteroid_0.7.json";
 import { AnimatedTilemap } from "engine/lib/core/tilemap/types";
+import { EResource } from "src/util/constants";
 
 const renderChunk = async (
   coord: Coord,
@@ -21,11 +18,7 @@ const renderChunk = async (
   if (chunkCache.get(coord)) return;
 
   for (let x = coord.x * chunkSize; x < coord.x * chunkSize + chunkSize; x++) {
-    for (
-      let y = coord.y * chunkSize;
-      y < coord.y * chunkSize + chunkSize;
-      y++
-    ) {
+    for (let y = coord.y * chunkSize; y < coord.y * chunkSize + chunkSize; y++) {
       //get map offset from tiled properties, [0] = x offset, [1] = y offset
       const tileCoord = {
         x: x + AsteroidTiledMap.properties[0].value,
@@ -43,8 +36,7 @@ const renderChunk = async (
       for (let i = AsteroidTiledMap.layers.length - 1; i >= 0; i--) {
         const layer = AsteroidTiledMap.layers[i];
 
-        const tile =
-          layer.data[tileCoord.x + tileCoord.y * AsteroidTiledMap.width];
+        const tile = layer.data[tileCoord.x + tileCoord.y * AsteroidTiledMap.width];
 
         if (tile > 0) {
           map.putTileAt({ x, y }, tile, layer.name);
@@ -54,7 +46,9 @@ const renderChunk = async (
       const resource = getResourceKey({ x, y });
 
       if (!resource) continue;
-      const resourceId = EntityIDToResourceTilesetKey[resource!];
+
+      const resourceType = EResource[resource];
+      const resourceId = ResourceToTilesetKey[resourceType] ?? 0;
 
       map.putTileAt({ x, y: -y }, resourceId, Tilesets.Resource);
     }

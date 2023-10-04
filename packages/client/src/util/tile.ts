@@ -12,15 +12,15 @@ export function getResourceKey(coord: Coord) {
     return null;
   }
 
-  const resource = components.P_Terrain.getWithKeys(coord, { value: 0 })?.value; // todo: pull this from the Dimensions component
+  const resource = components.P_Terrain.getWithKeys(coord, { value: 0 })?.value;
 
-  // temp: until we have the sprites in the game
   if (MUDEnums.EResource[resource] == BlockType.Air) {
-    return BlockType.Osmium;
+    return 0;
   }
 
   return resource;
 }
+
 export function getBuildingsOfTypeInRange(origin: Coord, type: Entity, range: number) {
   const tiles: Coord[] = [];
 

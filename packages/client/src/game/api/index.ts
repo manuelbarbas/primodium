@@ -2,7 +2,6 @@ import { namespaceWorld } from "@latticexyz/recs";
 import engine from "engine";
 import { Game } from "engine/types";
 import { GameReady } from "src/network/components/clientComponents";
-import { Network } from "../../network/layer";
 import _init from "../init";
 import { createCameraApi } from "./camera";
 import { createGameApi } from "./game";
@@ -12,8 +11,9 @@ import { createSceneApi } from "./scene";
 import { createFxApi } from "./fx";
 import { world } from "src/network/world";
 import { createSpriteApi } from "./sprite";
+import { SetupResult } from "src/network/types";
 
-async function init(network: Network, version = "v1") {
+async function init(mud: SetupResult, version = "v1") {
   const asciiArt = `
                                                                           
                                                                           
@@ -28,15 +28,11 @@ async function init(network: Network, version = "v1") {
 
   console.log("%c" + asciiArt, "color: white; background-color: brown;");
 
-  console.log(
-    `%cPrimodium ${version}`,
-    "color: white; background-color: black;",
-    "https://twitter.com/primodiumgame"
-  );
+  console.log(`%cPrimodium ${version}`, "color: white; background-color: black;", "https://twitter.com/primodiumgame");
 
   namespaceWorld(world, "game");
 
-  await _init(network);
+  await _init(mud);
 
   GameReady.set({ value: true });
 }
@@ -55,8 +51,7 @@ function destroy() {
 }
 
 function api(sceneKey = "MAIN", instance: string | Game = "MAIN") {
-  const _instance =
-    typeof instance === "string" ? engine.getGame().get(instance) : instance;
+  const _instance = typeof instance === "string" ? engine.getGame().get(instance) : instance;
 
   if (_instance === undefined) {
     throw Error("No instance found with key " + instance);
