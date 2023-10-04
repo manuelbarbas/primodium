@@ -182,14 +182,20 @@ export const config = mudConfig({
     },
 
     // Used in the building utilities set
-    SetItemUtilities: {
+    MapItemUtilities: {
+      keySchema: { entity: "bytes32", utility: "uint8" }, // EResource
+      valueSchema: "uint256",
+    },
+
+    MapItemStoredUtilities: {
       keySchema: { entity: "bytes32", utility: "uint8" }, // EResource
       valueSchema: {
+        stored: "bool",
         index: "uint256",
-        quantity: "uint256",
       },
     },
-    SetUtilities: {
+
+    MapUtilities: {
       keySchema: { entity: "bytes32" },
       valueSchema: "uint8[]",
     },
