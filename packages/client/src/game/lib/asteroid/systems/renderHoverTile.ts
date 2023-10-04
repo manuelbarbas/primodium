@@ -1,7 +1,6 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { EntityIndex, Has } from "@latticexyz/recs";
 import {
-  EntityIndex,
-  Has,
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
@@ -13,7 +12,8 @@ import { world } from "src/network/world";
 import { ObjectPosition } from "../../common/object-components/common";
 import { Square } from "../../common/object-components/graphics";
 
-const objGraphicsIndex = (entity: EntityIndex) => `${entity}_hoverTile_graphics`;
+const objGraphicsIndex = (entity: EntityIndex) =>
+  `${entity}_hoverTile_graphics`;
 
 export const renderHoverTile = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -35,7 +35,10 @@ export const renderHoverTile = (scene: Scene) => {
 
     scene.objectPool.remove(objGraphicsIndex(entity));
 
-    const hoverRenderObject = scene.objectPool.get(objGraphicsIndex(entity), "Graphics");
+    const hoverRenderObject = scene.objectPool.get(
+      objGraphicsIndex(entity),
+      "Graphics"
+    );
 
     hoverRenderObject.setComponents([
       ObjectPosition({

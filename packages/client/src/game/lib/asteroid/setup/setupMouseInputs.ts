@@ -1,16 +1,22 @@
 import { Coord, coordEq, pixelCoordToTileCoord } from "@latticexyz/phaserx";
-import { EntityID } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { HoverTile, SelectedAction, SelectedBuilding, SelectedTile } from "src/network/components/clientComponents";
-import { Network } from "src/network/setupNetworkOld";
-import { world } from "src/network/world";
-import { getBuildingOrigin } from "src/util/building";
 import { Action } from "src/util/constants";
-import { outOfBounds } from "src/util/outOfBounds";
 import { getBuildingAtCoord } from "src/util/tile";
-import { buildBuilding, demolishBuilding } from "src/util/web3";
+import { demolishBuilding } from "src/util/web3";
+import {
+  Account,
+  HoverTile,
+  SelectedAction,
+  SelectedBuilding,
+  SelectedTile,
+} from "src/network/components/clientComponents";
+import { world } from "src/network/world";
+import { Network } from "src/network/layer";
+import { outOfBounds } from "src/util/outOfBounds";
 
-export const setupMouseInputs = (scene: Scene, network: Network, player: EntityID) => {
+export const setupMouseInputs = (scene: Scene, network: Network) => {
+  const player = Account.get()?.value!;
+
   const clickSub = scene.input.click$.subscribe((event) => {
     const { x, y } = pixelCoordToTileCoord(
       { x: event.worldX, y: event.worldY },
@@ -35,16 +41,9 @@ export const setupMouseInputs = (scene: Scene, network: Network, player: EntityI
       case Action.DemolishBuilding:
         demolishBuilding(gameCoord, network);
         break;
-      case Action.PlaceBuilding:
-        const selectedBuilding = SelectedBuilding.get()?.value;
-        if (!selectedBuilding) return;
-        SelectedBuilding.remove();
-        const buildingOrigin = getBuildingOrigin(gameCoord, selectedBuilding);
-        if (!buildingOrigin) return;
-        buildBuilding(buildingOrigin, selectedBuilding, player, network);
     }
 
-    if (selectedAction !== undefined) SelectedAction.remove();
+    if (selectedAction !== undefined) return;
 
     // update selected building
     const building = getBuildingAtCoord(gameCoord);

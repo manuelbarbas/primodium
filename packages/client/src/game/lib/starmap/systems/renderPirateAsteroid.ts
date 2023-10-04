@@ -1,24 +1,35 @@
+import { Scene } from "engine/types";
+import {
+  namespaceWorld,
+  Has,
+  defineEnterSystem,
+  HasValue,
+  EntityID,
+  defineComponentSystem,
+  defineUpdateSystem,
+} from "@latticexyz/recs";
+import {
+  ObjectPosition,
+  OnClick,
+  OnComponentSystem,
+  SetValue,
+} from "../../common/object-components/common";
+import { Outline, Texture } from "../../common/object-components/sprite";
+import {
+  P_SpawnPirateAsteroid,
+  AsteroidType,
+  OwnedBy,
+  Pirate,
+  Position,
+} from "src/network/components/chainComponents";
+import { world } from "src/network/world";
+import { Send } from "src/network/components/clientComponents";
+import { ESpaceRockType } from "src/util/web3/types";
+import { Coord } from "@latticexyz/utils";
 import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 import { SingletonID } from "@latticexyz/network";
-import {
-  EntityID,
-  Has,
-  HasValue,
-  defineComponentSystem,
-  defineEnterSystem,
-  defineUpdateSystem,
-  namespaceWorld,
-} from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
-import { Scene } from "engine/types";
-import { AsteroidType, OwnedBy, P_SpawnPirateAsteroid, Pirate, Position } from "src/network/components/chainComponents";
-import { Send } from "src/network/components/clientComponents";
-import { world } from "src/network/world";
-import { PIRATE_KEY } from "src/util/constants";
 import { hashStringEntity } from "src/util/encode";
-import { ESpaceRockType } from "src/util/web3/types";
-import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
-import { Outline, Texture } from "../../common/object-components/sprite";
+import { PIRATE_KEY } from "src/util/constants";
 
 export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -35,7 +46,9 @@ export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
     if (hashStringEntity(PIRATE_KEY, player) !== ownedBy) return;
 
     if (asteroidType !== ESpaceRockType.Asteroid) return;
-    const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entityId);
+    const asteroidObjectGroup = scene.objectPool.getGroup(
+      "asteroid_" + entityId
+    );
 
     const sharedComponents = [
       ObjectPosition(
@@ -59,7 +72,12 @@ export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
       }),
     ]);
 
-    const outlineSprite = SpriteKeys[`Asteroid${ownedBy === player ? "Player" : "Enemy"}` as keyof typeof SpriteKeys];
+    const outlineSprite =
+      SpriteKeys[
+        `Asteroid${
+          ownedBy === player ? "Player" : "Enemy"
+        }` as keyof typeof SpriteKeys
+      ];
 
     const asteroidOutline = asteroidObjectGroup.add("Sprite");
 
@@ -68,7 +86,9 @@ export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
       OnComponentSystem(Send, () => {
         if (Send.get()?.destination === entityId) {
           if (asteroidOutline.hasComponent(Outline().id)) return;
-          asteroidOutline.setComponent(Outline({ thickness: 1.5, color: 0xffa500 }));
+          asteroidOutline.setComponent(
+            Outline({ thickness: 1.5, color: 0xffa500 })
+          );
           return;
         }
 

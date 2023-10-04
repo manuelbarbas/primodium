@@ -17,14 +17,6 @@ export function createGameApi(game: Game) {
       // Adjust the camera's scroll position based on the new viewport size
       camera.scrollX = currentCenterX - width * 0.5;
       camera.scrollY = currentCenterY - height * 0.5;
-
-      // https://github.com/photonstorm/phaser/issues/6503
-      scene.objectPool.groups.Sprite.children.iterate((sprite) => {
-        //@ts-ignore
-        sprite.postFX?.clear();
-
-        return true;
-      });
     });
 
     phaserGame.scale.resize(width, height);
@@ -42,7 +34,10 @@ export function createGameApi(game: Game) {
 
     target.appendChild(div);
 
-    setResolution(target.offsetWidth * window.devicePixelRatio, target.offsetHeight * window.devicePixelRatio);
+    setResolution(
+      target.offsetWidth * window.devicePixelRatio,
+      target.offsetHeight * window.devicePixelRatio
+    );
   }
 
   function getConfig() {

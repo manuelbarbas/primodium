@@ -1,11 +1,11 @@
 import { Scene } from "engine/types";
-import { focusAsteroid } from "./focusAsteroid";
 import { renderAsteroid } from "./renderAsteroid";
+import { focusAsteroid } from "./focusAsteroid";
 import { renderMotherlode } from "./renderMotherlode";
 // import { renderUnitSend } from "./renderUnitSend";
-import { Account } from "src/network/components/clientComponents";
-import { renderArrivalsInOrbit } from "./renderArrivalsInOrbit";
 import { renderArrivalsInTransit } from "./renderArrivalsInTransit";
+import { renderArrivalsInOrbit } from "./renderArrivalsInOrbit";
+import { Account } from "src/network/components/clientComponents";
 import { renderPirateAsteroid } from "./renderPirateAsteroid";
 
 export const runSystems = (scene: Scene) => {

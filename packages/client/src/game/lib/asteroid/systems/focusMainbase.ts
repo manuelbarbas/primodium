@@ -1,11 +1,18 @@
-import { EntityID, EntityIndex, Has, defineEnterSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
+import {
+  EntityIndex,
+  Has,
+  defineEnterSystem,
+  defineUpdateSystem,
+  namespaceWorld,
+  EntityID,
+} from "@latticexyz/recs";
 import { Scene } from "engine/types";
 
 import { world } from "src/network/world";
 
-import { createCameraApi } from "src/game/api/camera";
 import { MainBase, Position } from "src/network/components/chainComponents";
-import { SelectedBuilding, SelectedTile } from "src/network/components/clientComponents";
+import { createCameraApi } from "src/game/api/camera";
+import { SelectedTile } from "src/network/components/clientComponents";
 
 export const focusMainbase = (scene: Scene, player: EntityID) => {
   const { pan } = createCameraApi(scene);
@@ -23,8 +30,7 @@ export const focusMainbase = (scene: Scene, player: EntityID) => {
 
     const mainBaseCoord = Position.get(mainBase);
     if (!mainBaseCoord) return;
-    pan(mainBaseCoord);
-    SelectedBuilding.set({ value: mainBase });
+    pan(mainBaseCoord, 0);
     SelectedTile.remove();
   };
 
