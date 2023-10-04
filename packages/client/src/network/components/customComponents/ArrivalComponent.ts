@@ -6,23 +6,16 @@ import { BlockNumber } from "../clientComponents";
 import { createExtendedComponent } from "./ExtendedComponent";
 
 export const newArrivalComponent = () => {
-  const component = createExtendedComponent(
-    world,
-    {
-      sendType: Type.Number,
-      unitCounts: Type.NumberArray,
-      unitTypes: Type.StringArray,
-      arrivalBlock: Type.String,
-      from: Type.Entity,
-      to: Type.Entity,
-      origin: Type.Entity,
-      destination: Type.Entity,
-    },
-    {
-      id: "Arrival",
-      metadata: { contractId: `component.Arrival` },
-    }
-  );
+  const component = createExtendedComponent(world, {
+    sendType: Type.Number,
+    unitCounts: Type.NumberArray,
+    unitTypes: Type.StringArray,
+    arrivalBlock: Type.String,
+    from: Type.Entity,
+    to: Type.Entity,
+    origin: Type.Entity,
+    destination: Type.Entity,
+  });
 
   const getWithId = (id: Entity) => {
     return component.get(id);
