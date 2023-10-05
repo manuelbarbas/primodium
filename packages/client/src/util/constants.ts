@@ -1,10 +1,14 @@
 import { Entity } from "@latticexyz/recs";
+import { encodeEntity } from "@latticexyz/store-sync/recs";
 import { MUDEnums } from "contracts/config/enums";
 import { Key } from "engine/types";
 import { EMotherlodeType, ERock, ESize } from "src/util/web3/types";
 import { toHex } from "viem";
 
 export const toHex32 = (input: string) => toHex(input, { size: 32 });
+export const encodeEntityLevel = (entity: string, level: number) => {
+  return encodeEntity({ entity: "bytes32", level: "uint256" }, { entity: toHex32(entity), level: BigInt(level) });
+};
 
 export enum Action {
   DemolishBuilding,
@@ -75,17 +79,6 @@ export const BlockType = {
   Bolutite: "Bolutite" as Entity,
   Platinum: "Platinum" as Entity,
 
-  // debug units
-  DebugUnit: toHex32("DebugUnit") as Entity,
-  DebugUnit2: toHex32("DebugUnit2") as Entity,
-  DebugUnit3: toHex32("DebugUnit3") as Entity,
-
-  DebugUnitMiner: toHex32("DebugUnitMiner") as Entity,
-  DebugUnitMiner2: toHex32("DebugUnitMiner2") as Entity,
-
-  DebugUnitBattle1: toHex32("DebugUnitBattle1") as Entity,
-  DebugUnitBattle2: toHex32("DebugUnitBattle2") as Entity,
-
   MainBase: toHex32("MainBase") as Entity,
   DebugNode: toHex32("DebugNode") as Entity,
   Miner: toHex32("Miner") as Entity,
@@ -134,52 +127,52 @@ export const BlockType = {
   ThermobaricMissile: toHex32("ThermobaricMissile") as Entity,
   KimberliteCrystalCatalyst: toHex32("KimberliteCrystalCatalyst") as Entity,
 
-  HammerLightDrone: toHex32("unit.HammerDrone") as Entity,
-  StingerDrone: toHex32("unit.StingerDrone") as Entity,
-  AnvilLightDrone: toHex32("unit.AnvilDrone") as Entity,
-  AegisDrone: toHex32("unit.AegisDrone") as Entity,
-  MiningVessel: toHex32("unit.MiningVessel") as Entity,
+  HammerLightDrone: toHex32("HammerDrone") as Entity,
+  StingerDrone: toHex32("StingerDrone") as Entity,
+  AnvilLightDrone: toHex32("AnvilDrone") as Entity,
+  AegisDrone: toHex32("AegisDrone") as Entity,
+  MiningVessel: toHex32("MiningVessel") as Entity,
 
   MinutemanMarine: toHex32("unit.MinutemanMarine") as Entity,
   TridentMarine: toHex32("unit.TridentMarine") as Entity,
 
-  ExpansionResearch1: toHex32("research.Expansion1") as Entity,
-  ExpansionResearch2: toHex32("research.Expansion2") as Entity,
-  ExpansionResearch3: toHex32("research.Expansion3") as Entity,
-  ExpansionResearch4: toHex32("research.Expansion4") as Entity,
-  ExpansionResearch5: toHex32("research.Expansion5") as Entity,
-  ExpansionResearch6: toHex32("research.Expansion6") as Entity,
-  ExpansionResearch7: toHex32("research.Expansion7") as Entity,
+  ExpansionResearch1: encodeEntityLevel("Expansion", 1) as Entity,
+  ExpansionResearch2: encodeEntityLevel("Expansion", 2) as Entity,
+  ExpansionResearch3: encodeEntityLevel("Expansion", 3) as Entity,
+  ExpansionResearch4: encodeEntityLevel("Expansion", 4) as Entity,
+  ExpansionResearch5: encodeEntityLevel("Expansion", 5) as Entity,
+  ExpansionResearch6: encodeEntityLevel("Expansion", 6) as Entity,
+  ExpansionResearch7: encodeEntityLevel("Expansion", 7) as Entity,
 
-  AnvilDroneUpgrade1: toHex32("research.AnvilDroneUpgrade1") as Entity,
-  AnvilDroneUpgrade2: toHex32("research.AnvilDroneUpgrade2") as Entity,
-  AnvilDroneUpgrade3: toHex32("research.AnvilDroneUpgrade3") as Entity,
-  AnvilDroneUpgrade4: toHex32("research.AnvilDroneUpgrade4") as Entity,
-  AnvilDroneUpgrade5: toHex32("research.AnvilDroneUpgrade5") as Entity,
+  AnvilDroneUpgrade1: encodeEntityLevel("AnvilDrone", 1) as Entity,
+  AnvilDroneUpgrade2: encodeEntityLevel("AnvilDrone", 2) as Entity,
+  AnvilDroneUpgrade3: encodeEntityLevel("AnvilDrone", 3) as Entity,
+  AnvilDroneUpgrade4: encodeEntityLevel("AnvilDrone", 4) as Entity,
+  AnvilDroneUpgrade5: encodeEntityLevel("AnvilDrone", 5) as Entity,
 
-  HammerDroneUpgrade1: toHex32("research.HammerDroneUpgrade1") as Entity,
-  HammerDroneUpgrade2: toHex32("research.HammerDroneUpgrade2") as Entity,
-  HammerDroneUpgrade3: toHex32("research.HammerDroneUpgrade3") as Entity,
-  HammerDroneUpgrade4: toHex32("research.HammerDroneUpgrade4") as Entity,
-  HammerDroneUpgrade5: toHex32("research.HammerDroneUpgrade5") as Entity,
+  HammerDroneUpgrade1: encodeEntityLevel("HammerDrone", 1) as Entity,
+  HammerDroneUpgrade2: encodeEntityLevel("HammerDrone", 2) as Entity,
+  HammerDroneUpgrade3: encodeEntityLevel("HammerDrone", 3) as Entity,
+  HammerDroneUpgrade4: encodeEntityLevel("HammerDrone", 4) as Entity,
+  HammerDroneUpgrade5: encodeEntityLevel("HammerDrone", 5) as Entity,
 
-  AegisDroneUpgrade1: toHex32("research.AegisDroneUpgrade1") as Entity,
-  AegisDroneUpgrade2: toHex32("research.AegisDroneUpgrade2") as Entity,
-  AegisDroneUpgrade3: toHex32("research.AegisDroneUpgrade3") as Entity,
-  AegisDroneUpgrade4: toHex32("research.AegisDroneUpgrade4") as Entity,
-  AegisDroneUpgrade5: toHex32("research.AegisDroneUpgrade5") as Entity,
+  AegisDroneUpgrade1: encodeEntityLevel("AegisDrone", 1) as Entity,
+  AegisDroneUpgrade2: encodeEntityLevel("AegisDrone", 2) as Entity,
+  AegisDroneUpgrade3: encodeEntityLevel("AegisDrone", 3) as Entity,
+  AegisDroneUpgrade4: encodeEntityLevel("AegisDrone", 4) as Entity,
+  AegisDroneUpgrade5: encodeEntityLevel("AegisDrone", 5) as Entity,
 
-  StingerDroneUpgrade1: toHex32("research.StingerDroneUpgrade1") as Entity,
-  StingerDroneUpgrade2: toHex32("research.StingerDroneUpgrade2") as Entity,
-  StingerDroneUpgrade3: toHex32("research.StingerDroneUpgrade3") as Entity,
-  StingerDroneUpgrade4: toHex32("research.StingerDroneUpgrade4") as Entity,
-  StingerDroneUpgrade5: toHex32("research.StingerDroneUpgrade5") as Entity,
+  StingerDroneUpgrade1: encodeEntityLevel("StingerDrone", 1) as Entity,
+  StingerDroneUpgrade2: encodeEntityLevel("StingerDrone", 2) as Entity,
+  StingerDroneUpgrade3: encodeEntityLevel("StingerDrone", 3) as Entity,
+  StingerDroneUpgrade4: encodeEntityLevel("StingerDrone", 4) as Entity,
+  StingerDroneUpgrade5: encodeEntityLevel("StingerDrone", 5) as Entity,
 
-  MiningVesselUpgrade1: toHex32("research.MiningVesselUpgrade1") as Entity,
-  MiningVesselUpgrade2: toHex32("research.MiningVesselUpgrade2") as Entity,
-  MiningVesselUpgrade3: toHex32("research.MiningVesselUpgrade3") as Entity,
-  MiningVesselUpgrade4: toHex32("research.MiningVesselUpgrade4") as Entity,
-  MiningVesselUpgrade5: toHex32("research.MiningVesselUpgrade") as Entity,
+  MiningVesselUpgrade1: encodeEntityLevel("MiningVessel", 1) as Entity,
+  MiningVesselUpgrade2: encodeEntityLevel("MiningVessel", 2) as Entity,
+  MiningVesselUpgrade3: encodeEntityLevel("MiningVessel", 3) as Entity,
+  MiningVesselUpgrade4: encodeEntityLevel("MiningVessel", 4) as Entity,
+  MiningVesselUpgrade5: encodeEntityLevel("MiningVessel", 5) as Entity,
 
   MinutemanMarineUpgrade1: toHex32("research.MinutemanMarineUpgrade") as Entity,
   MinutemanMarineUpgrade2: toHex32("research.MinutemanMarineUpgrade") as Entity,
@@ -198,47 +191,6 @@ export const BlockType = {
   MiningResearch3: toHex32("research.MiningResearch") as Entity,
   MiningResearch4: toHex32("research.MiningResearch") as Entity,
   MiningResearch5: toHex32("research.MiningResearch") as Entity,
-
-  IronMine2Research: toHex32("research.IronMine2") as Entity,
-  IronMine3Research: toHex32("research.IronMine3") as Entity,
-  IronMine4Research: toHex32("research.IronMine4") as Entity,
-
-  CopperMineResearch: toHex32("research.CopperMine") as Entity,
-  CopperMine2Research: toHex32("research.CopperMine2") as Entity,
-  CopperMine3Research: toHex32("research.CopperMine3") as Entity,
-
-  StorageUnitResearch: toHex32("research.StorageUnit") as Entity,
-  StorageUnit2Research: toHex32("research.StorageUnit2") as Entity,
-  StorageUnit3Research: toHex32("research.StorageUnit3") as Entity,
-
-  IronPlateFactoryResearch: toHex32("research.IronPlateFactory") as Entity,
-  IronPlateFactory2Research: toHex32("research.IronPlateFactory2") as Entity,
-  IronPlateFactory3Research: toHex32("research.IronPlateFactory3") as Entity,
-  IronPlateFactory4Research: toHex32("research.IronPlateFactory4") as Entity,
-
-  LithiumMineResearch: toHex32("research.LithiumMine") as Entity,
-  LithiumMine2Research: toHex32("research.LithiumMine2") as Entity,
-  LithiumMine3Research: toHex32("research.LithiumMine3") as Entity,
-
-  AlloyFactoryResearch: toHex32("research.AlloyFactory") as Entity,
-  AlloyFactory2Research: toHex32("research.AlloyFactory2") as Entity,
-  AlloyFactory3Research: toHex32("research.AlloyFactory3") as Entity,
-
-  PhotovoltaicCellResearch: toHex32("research.PhotovoltaicCellFactory") as Entity,
-  PhotovoltaicCell2Research: toHex32("research.LithiumCopperOxideFactory2") as Entity,
-  PhotovoltaicCell3Research: toHex32("research.LithiumCopperOxideFactory3") as Entity,
-
-  SpaceFuelFactoryResearch: toHex32("research.SpaceFuelFactory") as Entity,
-  SpaceFuelFactory2Research: toHex32("research.SpaceFuelFactory2") as Entity,
-  SpaceFuelFactory3Research: toHex32("research.SpaceFuelFactory3") as Entity,
-
-  SolarPanelResearch: toHex32("research.SolarPanel") as Entity,
-  SolarPanel2Research: toHex32("research.SolarPanel2") as Entity,
-  SolarPanel3Research: toHex32("research.SolarPanel3") as Entity,
-
-  HousingUnitResearch: toHex32("research.HousingUnit") as Entity,
-  HousingUnit2Research: toHex32("research.HousingUnit2") as Entity,
-  HousingUnit3Research: toHex32("research.HousingUnit3") as Entity,
 
   //Objectives
   DebugFreeObjectiveID: toHex32("block.DebugFreeObjective") as Entity,
@@ -729,15 +681,6 @@ export const BackgroundImage = new Map<Entity, string[]>([
 
   [BlockType.MinutemanMarine, ["/img/unit/minutemen_marine.png"]],
   [BlockType.TridentMarine, ["/img/unit/trident_marine.png"]],
-
-  // debug units
-  [BlockType.DebugUnit, ["/img/unit/stingerdrone.png"]],
-  [BlockType.DebugUnit2, ["/img/unit/anvildrone.png"]],
-  [BlockType.DebugUnit3, ["/img/unit/aegisdrone.png"]],
-  [BlockType.DebugUnitMiner, ["/img/unit/miningvessel.png"]],
-  [BlockType.DebugUnitMiner2, ["/img/unit/miningvessel.png"]],
-  [BlockType.DebugUnitBattle1, ["/img/unit/hammerdrone.png"]],
-  [BlockType.DebugUnitBattle2, ["/img/unit/hammerdrone.png"]],
 ]);
 
 export const ResearchImage = new Map<Entity, string>([
@@ -750,45 +693,6 @@ export const ResearchImage = new Map<Entity, string>([
   [BlockType.Tungsten, "/img/resource/tungsten_resource.png"],
   [BlockType.Iridium, "/img/resource/iridium_resource.png"],
   [BlockType.Kimberlite, "/img/resource/kimberlite_resource.png"],
-
-  [BlockType.IronMine2Research, "/img/building/ironmine/iron-miner-level2.gif"],
-  [BlockType.IronMine3Research, "/img/building/ironmine/iron-miner-level3.png"],
-  [BlockType.IronMine4Research, "/img/building/ironmine/iron-miner-level3.png"],
-
-  [BlockType.CopperMineResearch, "/img/building/coppermine/copper-miner.gif"],
-  [BlockType.CopperMine2Research, "/img/building/coppermine/copper-miner-level2.gif"],
-  [BlockType.CopperMine3Research, "/img/building/coppermine/copper-miner-level3.png"],
-
-  [BlockType.StorageUnitResearch, "/img/building/storageunit/storageunit-level1.png"],
-  [BlockType.StorageUnit2Research, "/img/building/storageunit/storageunit-level2.gif"],
-  [BlockType.StorageUnit3Research, "/img/building/storageunit/storageunit-level2.gif"],
-
-  [BlockType.LithiumMineResearch, "/img/building/lithiummine/lithium-miner.gif"],
-  [BlockType.LithiumMine2Research, "/img/building/lithiummine/lithium-miner-level2.gif"],
-  [BlockType.LithiumMine3Research, "/img/building/lithiummine/lithium-miner-level3.png"],
-
-  [BlockType.IronPlateFactoryResearch, "/img/building/ironplatingfactory/ironplatingfactory-level1.gif"],
-  [BlockType.IronPlateFactory2Research, "/img/building/ironplatingfactory/ironplatingfactory-level2.gif"],
-  [BlockType.IronPlateFactory3Research, "/img/building/ironplatingfactory/ironplatingfactory-level2.gif"],
-  [BlockType.IronPlateFactory4Research, "/img/building/ironplatingfactory/ironplatingfactory-level2.gif"],
-
-  [BlockType.AlloyFactoryResearch, "/img/building/alloyfactory/alloyfactory-level1.gif"],
-  [BlockType.AlloyFactory2Research, "/img/building/alloyfactory/alloyfactory-level1.gif"],
-  [BlockType.AlloyFactory3Research, "/img/building/alloyfactory/alloyfactory-level1.gif"],
-
-  [BlockType.PhotovoltaicCellResearch, "/img/building/photovoltaiccell/photovoltaiccell-level1.gif"],
-  [BlockType.PhotovoltaicCell2Research, "/img/building/photovoltaiccell/photovoltaiccell-level2.gif"],
-  [BlockType.PhotovoltaicCell3Research, "/img/building/photovoltaiccell/photovoltaiccell-level2.gif"],
-
-  [BlockType.SpaceFuelFactoryResearch, "/img/building/spacefuel.gif"],
-  [BlockType.SpaceFuelFactory2Research, "/img/building/spacefuel.gif"],
-  [BlockType.SpaceFuelFactory3Research, "/img/building/spacefuel.gif"],
-
-  [BlockType.SolarPanelResearch, "/img/building/solarpanels/solarpanel-level1.png"],
-  [BlockType.SolarPanel2Research, "/img/building/solarpanels/solarpanel-level2.png"],
-  [BlockType.SolarPanel2Research, "/img/building/solarpanels/solarpanel-level2.png"],
-
-  [BlockType.HousingUnitResearch, "/img/building/newplatingfactory.gif"],
 
   [BlockType.ExpansionResearch1, "/img/icons/mainbaseicon.png"],
   [BlockType.ExpansionResearch2, "/img/icons/mainbaseicon.png"],
