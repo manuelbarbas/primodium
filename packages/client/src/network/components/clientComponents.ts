@@ -8,6 +8,7 @@ import {
   createExtendedEntityComponent,
   createExtendedNumberComponent,
 } from "./customComponents/ExtendedComponent";
+import createSendComponent from "./customComponents/SendComponent";
 
 /* -------------------------------------------------------------------------- */
 /*                                     Dev                                    */
@@ -54,9 +55,9 @@ export const TrainingQueue = createExtendedComponent(
   world,
   {
     units: Type.EntityArray,
-    counts: Type.NumberArray,
-    progress: Type.NumberArray,
-    timeRemaining: Type.NumberArray,
+    counts: Type.BigIntArray,
+    progress: Type.BigIntArray,
+    timeRemaining: Type.BigIntArray,
   },
   {
     id: "TrainingQueue",
@@ -113,6 +114,8 @@ const Arrival = createExtendedComponent(world, {
   origin: Type.Entity,
   destination: Type.Entity,
 });
+
+const Send = createSendComponent(world);
 export default {
   /* ----------------------------------- Dev ---------------------------------- */
   DoubleCounter,
@@ -138,6 +141,7 @@ export default {
   Leaderboard,
 
   /* --------------------------------- Battle --------------------------------- */
+  Send,
   Arrival,
   BattleReport,
 };
