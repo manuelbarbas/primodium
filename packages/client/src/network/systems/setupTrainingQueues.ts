@@ -68,24 +68,28 @@ export function setupTrainingQueues() {
       if (!value) throw new Error("Queue item not found");
       data.units.push(value.unitId as Entity);
       data.counts.push(value.quantity);
-      if (i == 0) {
-        const owner = OwnedBy.get(queueId)?.value as Entity | undefined;
-        const startTime = LastClaimedAt.get(queueId)?.value;
-        if (!owner || !startTime) throw new Error("No owner");
-        const trainingTime = getUnitTrainingTime(owner, queueId, value.unitId as Entity);
-        const timeRemaining = trainingTime - ((getNow() - startTime) % trainingTime);
-        const trainedUnits = (getNow() - startTime) / trainingTime;
-        const progress = trainedUnits / value.quantity;
+      // if (i == 0) {
+      //   const owner = OwnedBy.get(queueId)?.value as Entity | undefined;
+      //   const startTime = LastClaimedAt.get(queueId)?.value;
+      //   if (!owner || !startTime) throw new Error("No owner");
+      //   const trainingTime = getUnitTrainingTime(owner, queueId, value.unitId as Entity);
+      //   const timeRemaining = trainingTime - ((getNow() - startTime) % trainingTime);
+      //   const trainedUnits = (getNow() - startTime) / trainingTime;
+      //   const progress = trainedUnits / value.quantity;
 
-        data.progress.push(progress);
+      //   data.progress.push(progress);
 
-        data.timeRemaining.push(timeRemaining);
-      } else {
-        data.progress.push(0n);
-        data.timeRemaining.push(0n);
-      }
+      //   data.timeRemaining.push(timeRemaining);
+      // } else {
+      //   data.progress.push(0n);
+      //   data.timeRemaining.push(0n);
+      // }
     }
+
+    data.progress.push(0n);
+    data.timeRemaining.push(0n);
     TrainingQueue.set(data, queueId);
+    updateTrainingQueue(queueId);
   }
 
   function updateTrainingQueue(building: Entity) {

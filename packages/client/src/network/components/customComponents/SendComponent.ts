@@ -1,28 +1,26 @@
-import { Entity, Metadata, Type, World } from "@latticexyz/recs";
+import { Entity, Type } from "@latticexyz/recs";
 
 import { Coord } from "@latticexyz/utils";
+import { world } from "src/network/world";
 import { ActiveButton } from "src/util/types";
-import { components } from "../../components";
+import { SetupNetworkResult } from "../../types";
 import { ActiveAsteroid } from "../clientComponents";
-import { Options, createExtendedComponent } from "./ExtendedComponent";
+import { createExtendedComponent } from "./ExtendedComponent";
+import { ExtendedContractComponents } from "./extendComponents";
 
-function createSendComponent<M extends Metadata>(world: World, options?: Options<M>) {
-  const { Position, ReversePosition } = components;
-  const component = createExtendedComponent(
-    world,
-    {
-      originX: Type.OptionalNumber,
-      originY: Type.OptionalNumber,
-      destinationX: Type.OptionalNumber,
-      destinationY: Type.OptionalNumber,
-      to: Type.OptionalEntity,
-      units: Type.OptionalEntityArray,
-      count: Type.OptionalNumberArray,
-      sendType: Type.OptionalNumber,
-      activeButton: Type.Number,
-    },
-    options
-  );
+function createSendComponent(contractComponents: ExtendedContractComponents<SetupNetworkResult["components"]>) {
+  const { Position, ReversePosition } = contractComponents;
+  const component = createExtendedComponent(world, {
+    originX: Type.OptionalNumber,
+    originY: Type.OptionalNumber,
+    destinationX: Type.OptionalNumber,
+    destinationY: Type.OptionalNumber,
+    to: Type.OptionalEntity,
+    units: Type.OptionalEntityArray,
+    count: Type.OptionalNumberArray,
+    sendType: Type.OptionalNumber,
+    activeButton: Type.Number,
+  });
   const emptyComponent = {
     originX: undefined,
     originY: undefined,

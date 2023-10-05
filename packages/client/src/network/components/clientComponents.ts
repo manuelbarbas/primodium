@@ -8,7 +8,6 @@ import {
   createExtendedEntityComponent,
   createExtendedNumberComponent,
 } from "./customComponents/ExtendedComponent";
-import createSendComponent from "./customComponents/SendComponent";
 
 /* -------------------------------------------------------------------------- */
 /*                                     Dev                                    */
@@ -115,7 +114,6 @@ const Arrival = createExtendedComponent(world, {
   destination: Type.Entity,
 });
 
-const Send = createSendComponent(world);
 export default {
   /* ----------------------------------- Dev ---------------------------------- */
   DoubleCounter,
@@ -141,7 +139,6 @@ export default {
   Leaderboard,
 
   /* --------------------------------- Battle --------------------------------- */
-  Send,
   Arrival,
   BattleReport,
 };
