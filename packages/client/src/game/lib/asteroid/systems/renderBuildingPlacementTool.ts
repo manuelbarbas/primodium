@@ -1,79 +1,37 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { ComponentUpdate, Has, HasValue } from "@latticexyz/recs";
-import {
-  defineEnterSystem,
-  defineExitSystem,
-  defineUpdateSystem,
-  namespaceWorld,
-} from "@latticexyz/recs";
+import { defineEnterSystem, defineExitSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { Action } from "src/util/constants";
-import {
-  Account,
-  HoverTile,
-  SelectedAction,
-  SelectedBuilding,
-} from "src/network/components/clientComponents";
 import { world } from "src/network/world";
-import {
-  ObjectPosition,
-  OnClick,
-  SetValue,
-} from "../../common/object-components/common";
-import {
-  Texture,
-  Animation,
-  Outline,
-} from "../../common/object-components/sprite";
-import {
-  validateBuildingPlacement,
-  getBuildingDimensions,
-  getBuildingOrigin,
-} from "src/util/building";
+import { ObjectPosition, OnClick, SetValue } from "../../common/object-components/common";
+import { Texture, Animation, Outline } from "../../common/object-components/sprite";
+import { validateBuildingPlacement, getBuildingDimensions, getBuildingOrigin } from "src/util/building";
 import { getRecipe, hasEnoughResources } from "src/util/resource";
-import { hashAndTrimKeyEntity, hashKeyEntity } from "src/util/encode";
-import { Level } from "src/network/components/chainComponents";
-import { buildBuilding } from "src/util/web3";
-import { Network } from "src/network/layer";
 import { toast } from "react-toastify";
 import { getBlockTypeName } from "src/util/common";
-import {
-  Assets,
-  DepthLayers,
-  EntityIDtoAnimationKey,
-  EntityIDtoSpriteKey,
-  SpriteKeys,
-} from "@game/constants";
+import { Assets, DepthLayers, EntityIDtoAnimationKey, EntityIDtoSpriteKey, SpriteKeys } from "@game/constants";
+import { components } from "src/network/components";
 
-export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
+export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_buildingPlacement";
 
   const query = [
-    Has(HoverTile),
-    HasValue(SelectedAction, {
+    Has(components.HoverTile),
+    HasValue(components.SelectedAction, {
       value: Action.PlaceBuilding,
     }),
   ];
 
   const render = (update: ComponentUpdate) => {
-    const entityIndex = update.entity;
     const objIndex = update.entity + objIndexSuffix;
-    const selectedBuilding = SelectedBuilding.get()?.value;
-    const player = Account.get()?.value!;
+    const selectedBuilding = components.SelectedBuilding.get()?.value;
 
-    // Avoid updating on optimistic overrides
-    if (
-      !selectedBuilding ||
-      typeof entityIndex !== "number" ||
-      entityIndex >= world.entities.length
-    ) {
-      return;
-    }
+    const tileCoord = components.HoverTile.get();
 
-    const tileCoord = HoverTile.get(world.entities[entityIndex]);
-    if (!tileCoord) return;
+    if (!tileCoord || !selectedBuilding) return;
 
     const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);
 
@@ -88,15 +46,8 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
 
     const buildingDimensions = getBuildingDimensions(selectedBuilding);
 
-    const level =
-      Level.get(hashKeyEntity(selectedBuilding, player))?.value ?? 1;
-    const buildingLevelEntity = hashAndTrimKeyEntity(selectedBuilding, level);
-
-    const hasEnough = hasEnoughResources(getRecipe(buildingLevelEntity));
-    const validPlacement = validateBuildingPlacement(
-      tileCoord,
-      selectedBuilding
-    );
+    const hasEnough = hasEnoughResources(getRecipe(selectedBuilding, 1n));
+    const validPlacement = validateBuildingPlacement(tileCoord, selectedBuilding);
 
     buildingTool.setComponents([
       ObjectPosition(
@@ -104,9 +55,7 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
           x: pixelCoord.x,
           y: -pixelCoord.y + buildingDimensions.height * tileHeight,
         },
-        !validPlacement
-          ? DepthLayers.Building
-          : DepthLayers.Building - tileCoord.y + buildingDimensions.height
+        !validPlacement ? DepthLayers.Building : DepthLayers.Building - tileCoord.y + buildingDimensions.height
       ),
       SetValue({
         alpha: 0.9,
@@ -124,16 +73,12 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
         (_, pointer) => {
           //remove tooltip on right click
           if (pointer?.rightButtonDown()) {
-            SelectedAction.remove();
+            components.SelectedAction.remove();
             return;
           }
 
           if (!hasEnough || !validPlacement) {
-            if (!hasEnough)
-              toast.error(
-                "Not enough resources to build " +
-                  getBlockTypeName(selectedBuilding)
-              );
+            if (!hasEnough) toast.error("Not enough resources to build " + getBlockTypeName(selectedBuilding));
             if (!validPlacement) toast.error("Cannot place building here");
             scene.camera.phaserCamera.shake(200, 0.001);
             return;
@@ -141,8 +86,8 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
 
           const buildingOrigin = getBuildingOrigin(tileCoord, selectedBuilding);
           if (!buildingOrigin) return;
-          buildBuilding(buildingOrigin, selectedBuilding, player, network);
-          SelectedAction.remove();
+          // buildBuilding(buildingOrigin, selectedBuilding, player, network);
+          components.SelectedAction.remove();
         },
         true
       ),
@@ -152,9 +97,7 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
   defineEnterSystem(gameWorld, query, (update) => {
     render(update);
 
-    console.info(
-      "[ENTER SYSTEM](renderBuildingPlacement) Building placement tool has been added"
-    );
+    console.info("[ENTER SYSTEM](renderBuildingPlacement) Building placement tool has been added");
   });
 
   defineUpdateSystem(gameWorld, query, render);
@@ -164,8 +107,6 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
 
     scene.objectPool.remove(objIndex);
 
-    console.info(
-      "[EXIT SYSTEM](renderBuildingPlacement) Building placement tool has been removed"
-    );
+    console.info("[EXIT SYSTEM](renderBuildingPlacement) Building placement tool has been removed");
   });
 };

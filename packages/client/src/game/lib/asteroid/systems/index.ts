@@ -5,18 +5,16 @@ import { renderHoverTile } from "./renderHoverTile";
 import { renderSelectedTile } from "./renderSelectedTile";
 import { focusMainbase } from "./focusMainbase";
 import { renderFog } from "./renderFog";
-import { Network } from "src/network/layer";
-import { Account } from "src/network/components/clientComponents";
+import { SetupResult } from "src/network/types";
 
-export const runSystems = (scene: Scene, network: Network) => {
-  const player = Account.get()?.value!;
+export const runSystems = (scene: Scene, mud: SetupResult) => {
   //Render world entity's sprites
-  renderBuilding(scene);
+  renderBuilding(scene, mud);
 
   // Render map utility elements, placement indicators, etc
   renderSelectedTile(scene);
   renderHoverTile(scene);
-  renderBuildingPlacementTool(scene, network);
-  focusMainbase(scene, player);
-  renderFog(scene, player);
+  renderBuildingPlacementTool(scene, mud);
+  focusMainbase(scene, mud);
+  renderFog(scene, mud);
 };

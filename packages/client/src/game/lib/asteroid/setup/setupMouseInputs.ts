@@ -2,22 +2,18 @@ import { Coord, coordEq, pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { Scene } from "engine/types";
 import { Action } from "src/util/constants";
 import { getBuildingAtCoord } from "src/util/tile";
-import { demolishBuilding } from "src/util/web3";
-import {
-  Account,
-  HoverTile,
-  SelectedAction,
-  SelectedBuilding,
-  SelectedTile,
-} from "src/network/components/clientComponents";
+
 import { world } from "src/network/world";
-import { Network } from "src/network/layer";
 import { outOfBounds } from "src/util/outOfBounds";
+import { SetupResult } from "src/network/types";
+import { components } from "src/network/components";
+import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 
-export const setupMouseInputs = (scene: Scene, network: Network) => {
-  const player = Account.get()?.value!;
+export const setupMouseInputs = (scene: Scene, mud: SetupResult) => {
+  const playerEntity = mud.network.playerEntity;
 
-  const clickSub = scene.input.click$.subscribe((event) => {
+  const clickSub = scene.input.click$.subscribe((event: Phaser.Input.Pointer) => {
     const { x, y } = pixelCoordToTileCoord(
       { x: event.worldX, y: event.worldY },
       scene.tilemap.tileWidth,
@@ -26,34 +22,37 @@ export const setupMouseInputs = (scene: Scene, network: Network) => {
 
     const gameCoord = { x, y: -y };
 
-    if (outOfBounds(gameCoord, player)) {
-      SelectedBuilding.remove();
-      SelectedTile.remove();
+    if (outOfBounds(gameCoord, playerEntity)) {
+      components.SelectedBuilding.remove();
+      components.SelectedTile.remove();
       return;
     }
 
-    const selectedAction = SelectedAction.get()?.value;
+    const selectedAction = components.SelectedAction.get()?.value;
 
     //handle web3 mutations
     switch (selectedAction) {
       case undefined:
         break;
       case Action.DemolishBuilding:
-        demolishBuilding(gameCoord, network);
         break;
     }
 
     if (selectedAction !== undefined) return;
 
     // update selected building
-    const building = getBuildingAtCoord(gameCoord);
+    //TODO - fix converting to entity
+    const building = getBuildingAtCoord(
+      gameCoord,
+      (components.Home.get(playerEntity)?.asteroid as Entity) ?? singletonEntity
+    ) as Entity;
 
     if (!building) {
-      SelectedBuilding.remove();
-      SelectedTile.set(gameCoord);
+      components.SelectedBuilding.remove();
+      components.SelectedTile.set(gameCoord);
     } else {
-      SelectedBuilding.set({ value: building });
-      SelectedTile.remove();
+      components.SelectedBuilding.set({ value: building });
+      components.SelectedTile.remove();
     }
   });
 
@@ -67,15 +66,15 @@ export const setupMouseInputs = (scene: Scene, network: Network) => {
     const mouseCoord = { x, y: -y } as Coord;
 
     //set hover tile if it is different
-    const currentHoverTile = HoverTile.get();
+    const currentHoverTile = components.HoverTile.get();
     if (coordEq(currentHoverTile, mouseCoord)) return;
 
-    if (outOfBounds(mouseCoord, player)) {
-      HoverTile.remove();
+    if (outOfBounds(mouseCoord, playerEntity)) {
+      components.HoverTile.remove();
       return;
     }
 
-    HoverTile.set(mouseCoord);
+    components.HoverTile.set(mouseCoord);
   });
 
   world.registerDisposer(() => {

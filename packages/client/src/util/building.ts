@@ -1,5 +1,5 @@
 import { primodium } from "@game/api";
-import { EntitytoSpriteKey } from "@game/constants";
+// import { EntitytoSpriteKey } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
@@ -62,6 +62,7 @@ export function getBuildingOrigin(source: Coord, building: Entity) {
   const blueprint = comps.P_Blueprint.get(building)?.value;
   if (!blueprint) return;
   const topLeftCoord = getTopLeftCoord(convertToCoords(blueprint));
+
   if (!blueprint) return;
   return { x: source.x - topLeftCoord.x, y: source.y - topLeftCoord.y };
 }
@@ -69,7 +70,9 @@ export function getBuildingOrigin(source: Coord, building: Entity) {
 export function getBuildingTopLeft(origin: Coord, buildingType: Entity) {
   const rawBlueprint = comps.P_Blueprint.get(buildingType)?.value;
   if (!rawBlueprint) throw new Error("No blueprint found");
+
   const relativeTopLeft = getTopLeftCoord(convertToCoords(rawBlueprint));
+
   return { x: origin.x + relativeTopLeft.x, y: origin.y + relativeTopLeft.y };
 }
 

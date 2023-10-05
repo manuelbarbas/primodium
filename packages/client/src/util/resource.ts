@@ -126,9 +126,7 @@ export function getFullResourceCount(resourceID: Entity) {
   return { resourceCount, resourcesToClaim, maxStorage, production };
 }
 
-export function hasEnoughResources(buildingType: Entity, level: bigint, count = 1n) {
-  const recipe = getRecipe(buildingType, level);
-
+export function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, count = 1n) {
   const resourceAmounts = recipe.map((resource) => {
     return getFullResourceCount(resource.id);
   });
