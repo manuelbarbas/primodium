@@ -429,6 +429,17 @@ export const config = mudConfig({
       },
       offchainOnly: true,
     },
+
+    /* ------------------------------ Test Hook ----------------------------- */
+    HookedValue: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "uint256",
+    },
+
+    OnHookChangedValue: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "uint256",
+    },
   },
 });
 
