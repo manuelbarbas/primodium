@@ -5,7 +5,6 @@ import { P_GameConfig, P_GameConfigData, UnitCount, LastClaimedAt, Motherlode, M
 import { ERock, EUnit, ESize, EResource } from "src/Types.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
-import { MotherlodeSet } from "libraries/MotherlodeSet.sol";
 
 library LibMotherlode {
   /// @notice Create a new motherlode at a position
