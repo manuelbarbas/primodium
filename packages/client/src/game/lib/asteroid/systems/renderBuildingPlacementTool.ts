@@ -1,5 +1,5 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { ComponentUpdate, Has, HasValue } from "@latticexyz/recs";
+import { ComponentUpdate, Entity, Has, HasValue } from "@latticexyz/recs";
 import { defineEnterSystem, defineExitSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { Action } from "src/util/constants";
@@ -12,11 +12,14 @@ import { toast } from "react-toastify";
 import { getBlockTypeName } from "src/util/common";
 import { Assets, DepthLayers, EntityIDtoAnimationKey, EntityIDtoSpriteKey, SpriteKeys } from "@game/constants";
 import { components } from "src/network/components";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { SetupResult } from "src/network/types";
 
 export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_buildingPlacement";
+  const playerEntity = mud.network.playerEntity;
 
   const query = [
     Has(components.HoverTile),
@@ -47,7 +50,11 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
     const buildingDimensions = getBuildingDimensions(selectedBuilding);
 
     const hasEnough = hasEnoughResources(getRecipe(selectedBuilding, 1n));
-    const validPlacement = validateBuildingPlacement(tileCoord, selectedBuilding);
+    const validPlacement = validateBuildingPlacement(
+      tileCoord,
+      selectedBuilding,
+      (components.Home.get(playerEntity)?.asteroid as Entity | undefined) ?? singletonEntity
+    );
 
     buildingTool.setComponents([
       ObjectPosition(

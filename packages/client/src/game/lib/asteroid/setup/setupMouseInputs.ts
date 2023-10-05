@@ -13,7 +13,7 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 export const setupMouseInputs = (scene: Scene, mud: SetupResult) => {
   const playerEntity = mud.network.playerEntity;
 
-  const clickSub = scene.input.click$.subscribe((event: Phaser.Input.Pointer) => {
+  const clickSub = scene.input.click$.subscribe((event) => {
     const { x, y } = pixelCoordToTileCoord(
       { x: event.worldX, y: event.worldY },
       scene.tilemap.tileWidth,
@@ -58,7 +58,7 @@ export const setupMouseInputs = (scene: Scene, mud: SetupResult) => {
 
   const pointerMoveSub = scene.input.pointermove$.pipe().subscribe((event) => {
     const { x, y } = pixelCoordToTileCoord(
-      { x: event.pointer.worldX, y: event.pointer.worldY },
+      { x: event.worldX, y: event.worldY },
       scene.tilemap.tileWidth,
       scene.tilemap.tileHeight
     );

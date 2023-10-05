@@ -340,6 +340,9 @@ importers:
       phaser:
         specifier: 3.61.0-beta.1
         version: 3.61.0-beta.1
+      rxjs:
+        specifier: ^7.5.5
+        version: 7.8.1
     devDependencies:
       '@types/node':
         specifier: ^18.0.3

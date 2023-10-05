@@ -7,7 +7,8 @@
     "@latticexyz/phaserx": "^1.43.0",
     "@use-gesture/vanilla": "^10.2.27",
     "mobx": "^6.7.0",
-    "phaser": "3.61.0-beta.1"
+    "phaser": "3.61.0-beta.1",
+    "rxjs": "^7.5.5"
   },
   "devDependencies": {
     "@types/node": "^18.0.3",

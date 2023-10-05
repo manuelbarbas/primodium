@@ -12,6 +12,7 @@ import { ResourceType } from "./constants";
 import { outOfBounds } from "./outOfBounds";
 import { getRecipe, getRecipeDifference } from "./resource";
 import { getBuildingAtCoord, getResourceKey } from "./tile";
+import { EntityIDtoSpriteKey } from "@game/constants";
 
 type Dimensions = { width: number; height: number };
 export const blueprintCache = new Map<Entity, Dimensions>();
@@ -99,7 +100,7 @@ export function getBuildingDimensions(building: Entity) {
   return dimensions;
 }
 
-export const validateBuildingPlacement = (coord: Coord, building: Entity) => {
+export const validateBuildingPlacement = (coord: Coord, building: Entity, asteroid: Entity) => {
   //get building dimesions
   const buildingDimensions = getBuildingDimensions(building);
   const player = Account.get()?.value;
@@ -109,7 +110,7 @@ export const validateBuildingPlacement = (coord: Coord, building: Entity) => {
   for (let x = 0; x < buildingDimensions.width; x++) {
     for (let y = 0; y < buildingDimensions.height; y++) {
       const buildingCoord = { x: coord.x + x, y: coord.y - y };
-      if (getBuildingAtCoord(buildingCoord)) return true;
+      if (getBuildingAtCoord(buildingCoord, asteroid)) return true;
       if (outOfBounds(buildingCoord, player)) return true;
       if (requiredTile && requiredTile !== getResourceKey(buildingCoord)) return true;
     }
@@ -177,11 +178,11 @@ export const getBuildingInfo = (building: Entity) => {
   const mainBaseLvlReq = comps.P_RequiredBaseLevel.getWithKeys(buildingNextLevelKeys)?.value ?? 1;
 
   let imageUri = "";
-  if (EntitytoSpriteKey[buildingType]) {
+  if (EntityIDtoSpriteKey[buildingType]) {
     const imageIndex = parseInt(level ? level.toString() : "1") - 1;
 
     imageUri = getSpriteBase64(
-      EntitytoSpriteKey[buildingType][clampedIndex(imageIndex, EntitytoSpriteKey[buildingType].length)]
+      EntityIDtoSpriteKey[buildingType][clampedIndex(imageIndex, EntityIDtoSpriteKey[buildingType].length)]
     );
   }
 
