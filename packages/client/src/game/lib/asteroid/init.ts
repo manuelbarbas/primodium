@@ -1,5 +1,4 @@
 // ASTEROID MAP ENTRY POINT
-import engine from "engine";
 import { asteroidSceneConfig } from "../../config/asteroidScene";
 import { runSystems } from "./systems";
 import { setupTileManager } from "./setup/setupTileManager";
@@ -7,8 +6,9 @@ import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMoveme
 import { setupMouseInputs } from "./setup/setupMouseInputs";
 import { setupKeybinds } from "./setup/setupKeybinds";
 import { SetupResult } from "src/network/types";
+import { Game } from "engine/types";
 
-export const initAsteroidScene = async (game: Awaited<ReturnType<typeof engine.createGame>>, mud: SetupResult) => {
+export const initAsteroidScene = async (game: Game, mud: SetupResult) => {
   const { world } = mud.network;
 
   const scene = await game.sceneManager.addScene(asteroidSceneConfig, true);
