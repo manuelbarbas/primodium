@@ -16,7 +16,7 @@ export const initStarmapScene = async (game: Awaited<ReturnType<typeof createGam
     translateKeybind: false,
   });
 
-  runSystems(scene, mud);
+  // runSystems(scene, mud);
 
   world.registerDisposer(() => {
     game.dispose();

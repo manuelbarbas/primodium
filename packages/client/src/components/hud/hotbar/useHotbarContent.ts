@@ -1,11 +1,11 @@
 import { KeybindActions } from "@game/constants";
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import { useEffect, useState } from "react";
-import { useMainBaseCoord } from "src/hooks/useMainBase";
-import { Level } from "src/network/components/chainComponents";
+import { useMud } from "src/hooks";
+import { components } from "src/network/components";
 import { BlockType } from "src/util/constants";
-import { hashAndTrimKeyCoord, hashKeyEntity } from "src/util/encode";
 import { Hotbar } from "src/util/types";
+import { Hex } from "viem";
 
 const buildingHotbar: Hotbar = {
   name: "Basic Buildings",
@@ -31,14 +31,14 @@ const buildingHotbar: Hotbar = {
       blockType: BlockType.IronPlateFactory,
       keybind: KeybindActions.Hotbar4,
     },
-    {
-      blockType: BlockType.Garage,
-      keybind: KeybindActions.Hotbar5,
-    },
-    {
-      blockType: BlockType.Workshop,
-      keybind: KeybindActions.Hotbar6,
-    },
+    // {
+    //   blockType: BlockType.Garage,
+    //   keybind: KeybindActions.Hotbar5,
+    // },
+    // {
+    //   blockType: BlockType.Workshop,
+    //   keybind: KeybindActions.Hotbar6,
+    // },
     {
       blockType: BlockType.StorageUnit,
       keybind: KeybindActions.Hotbar7,
@@ -51,17 +51,17 @@ const advancedBuildingHotbar: Hotbar = {
   icon: "/img/icons/weaponryicon.png",
   items: [
     {
-      blockType: BlockType.PhotovoltaicCellFactory,
+      blockType: BlockType.PVCellFactory,
       keybind: KeybindActions.Hotbar1,
     },
     {
       blockType: BlockType.SolarPanel,
       keybind: KeybindActions.Hotbar2,
     },
-    {
-      blockType: BlockType.SAMLauncher,
-      keybind: KeybindActions.Hotbar3,
-    },
+    // {
+    //   blockType: BlockType.SAMLauncher,
+    //   keybind: KeybindActions.Hotbar3,
+    // },
     {
       blockType: BlockType.Hangar,
       keybind: KeybindActions.Hotbar4,
@@ -82,35 +82,21 @@ const advancedBuildingHotbar: Hotbar = {
 };
 
 export const useHotbarContent = () => {
-  const mainBaseCoord = useMainBaseCoord();
-  const [hotbarContent, setHotbarContent] = useState<Hotbar[]>([
-    buildingHotbar,
-  ]);
-  const coordEntity = hashAndTrimKeyCoord(BlockType.BuildingKey, {
-    x: mainBaseCoord?.x ?? 0,
-    y: mainBaseCoord?.y ?? 0,
-    parent: mainBaseCoord?.parent ?? ("0" as EntityID),
-  });
+  const {
+    network: { playerEntity },
+  } = useMud();
+  const [hotbarContent, setHotbarContent] = useState<Hotbar[]>([buildingHotbar]);
+  const playerMainbase = components.Home.use(playerEntity)?.mainBase as Entity | undefined;
+  const playerLevel = components.Level.use(playerMainbase)?.value ?? 1n;
 
-  const mainBaseLevel = Level.use(coordEntity, {
-    value: 0,
-  }).value;
-
-  const minAdvancedLevel = Level.use(
-    hashKeyEntity(BlockType.PhotovoltaicCellFactory, 1),
-    {
-      value: 0,
-    }
-  ).value;
+  const minAdvancedLevel =
+    components.P_RequiredBaseLevel.getWithKeys({ prototype: BlockType.PVCellFactory as Hex, level: 1n })?.value ?? 1n;
 
   useEffect(() => {
     setHotbarContent(
-      [
-        buildingHotbar,
-        mainBaseLevel >= minAdvancedLevel ? advancedBuildingHotbar : undefined,
-      ].filter(Boolean) as Hotbar[]
+      [buildingHotbar, playerLevel >= minAdvancedLevel ? advancedBuildingHotbar : undefined].filter(Boolean) as Hotbar[]
     );
-  }, [mainBaseLevel]);
+  }, [playerLevel, minAdvancedLevel]);
 
   return hotbarContent;
 };

@@ -43,10 +43,10 @@ export const GameHUD = () => {
         {/* ASTEROID HUD */}
         {!mapOpen && showUI && (
           <HUD scale={1} pad>
-            {/* <HUD.BottomMiddle>
+            <HUD.BottomMiddle>
               {(getBlockTypeName(selectedBuilding) || !selectedBuilding) && <Hotbar />}
-              {!getBlockTypeName(selectedBuilding) && <BuildingMenu />}
-            </HUD.BottomMiddle> */}
+              {/* {!getBlockTypeName(selectedBuilding) && <BuildingMenu />} */}
+            </HUD.BottomMiddle>
             <HUD.TopMiddle>
               {/* {getBlockTypeName(selectedBuilding) && selectedBuilding && (
                 <BlueprintInfo buildingType={selectedBuilding} />

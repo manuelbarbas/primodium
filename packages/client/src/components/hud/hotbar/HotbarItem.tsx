@@ -1,105 +1,105 @@
 import { primodium } from "@game/api";
 import { EntityIDtoSpriteKey, KeybindActions } from "@game/constants";
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import { Key } from "engine/types";
 import { motion } from "framer-motion";
 import React, { useEffect, useMemo } from "react";
 import { isMobile } from "react-device-detect";
+import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { useMainBaseCoord } from "src/hooks/useMainBase";
-import { Level, RawBlueprint } from "src/network/components/chainComponents";
-import { Account, SelectedAction, SelectedBuilding } from "src/network/components/clientComponents";
+import { components } from "src/network/components";
 import { calcDims, convertToCoords } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
 import { Action, BlockType, KeyImages } from "src/util/constants";
 import { hashAndTrimKeyCoord, hashAndTrimKeyEntity, hashKeyEntity } from "src/util/encode";
 import { getRecipe } from "src/util/resource";
+import { Hex } from "viem";
 
 const HotbarItem: React.FC<{
-  blockType: EntityID;
+  building: Entity;
   action: Action;
   index: number;
-}> = ({ blockType, action, index }) => {
-  const { getSpriteBase64 } = primodium.api().sprite;
-  const player = Account.use()?.value!;
-  const selectedBuilding = SelectedBuilding.use()?.value;
-  const mainBaseCoord = useMainBaseCoord();
+}> = ({ building, action, index }) => {
   const {
-    hooks: { useKeybinds },
-    input: { addListener },
-  } = primodium.api()!;
-  const keybinds = useKeybinds();
+    network: { playerEntity },
+  } = useMud();
+
+  const { getSpriteBase64 } = primodium.api().sprite;
+  const selectedBuilding = components.SelectedBuilding.use()?.value;
+  // const main
+  // const {
+  //   hooks: { useKeybinds },
+  //   input: { addListener },
+  // } = primodium.api()!;
+  // const keybinds = useKeybinds();
+  // let dimensions: { width: number; height: number } | undefined;
+
+  // const coordEntity = hashAndTrimKeyCoord(BlockType.BuildingKey, {
+  //   x: mainBaseCoord?.x ?? 0,
+  //   y: mainBaseCoord?.y ?? 0,
+  //   parent: mainBaseCoord?.parent ?? ("0" as EntityID),
+  // });
+
+  // const mainBaseLevel = Level.use(coordEntity, {
+  //   value: 0,
+  // }).value;
+  const playerMainbase = components.Home.get(playerEntity)?.mainBase as Entity | undefined;
+  const playerLevel = components.Level.get(playerMainbase)?.value ?? 1n;
+  const requiredLevel = components.P_RequiredBaseLevel.getWithKeys({ prototype: building as Hex, level: 1n })?.value;
+  const unlocked = playerLevel >= (requiredLevel ?? 0n);
+
+  // const hasEnough = useHasEnoughResources(getRecipe(building, 1n));
+
+  // const keybindAction = useMemo(() => {
+  //   if (!keybinds) return;
+
+  //   if (!KeybindActions[`Hotbar${index}` as keyof typeof KeybindActions]) return;
+
+  //   return KeybindActions[`Hotbar${index}` as keyof typeof KeybindActions];
+  // }, [keybinds]);
+
+  // const keyImage = useMemo(() => {
+  //   if (!keybinds || !keybindAction) return;
+
+  //   return KeyImages.get(keybinds[keybindAction]?.entries().next().value[0] as Key);
+  // }, [keybinds, keybindAction]);
+
+  // useEffect(() => {
+  //   if (!keybinds || !unlocked || !keybindAction) return;
+
+  //   const listener = addListener(keybindAction, () => {
+  //     if (selectedBuilding === blockType) {
+  //       SelectedBuilding.remove();
+  //       SelectedAction.remove();
+  //       return;
+  //     }
+
+  //     SelectedBuilding.set({ value: blockType });
+  //     SelectedAction.set({ value: action });
+  //   });
+
+  //   return () => {
+  //     listener.dispose();
+  //   };
+  // }, [keybinds, selectedBuilding, action, blockType, unlocked, keybindAction]);
+
   let dimensions: { width: number; height: number } | undefined;
+  if (building) {
+    const blueprint = components.P_Blueprint.get(building)?.value;
 
-  const coordEntity = hashAndTrimKeyCoord(BlockType.BuildingKey, {
-    x: mainBaseCoord?.x ?? 0,
-    y: mainBaseCoord?.y ?? 0,
-    parent: mainBaseCoord?.parent ?? ("0" as EntityID),
-  });
-
-  const mainBaseLevel = Level.use(coordEntity, {
-    value: 0,
-  }).value;
-
-  const requiredLevel = Level.use(hashKeyEntity(blockType, 1))?.value;
-
-  const unlocked = mainBaseLevel >= (requiredLevel ?? 0);
-
-  const keybindAction = useMemo(() => {
-    if (!keybinds) return;
-
-    if (!KeybindActions[`Hotbar${index}` as keyof typeof KeybindActions]) return;
-
-    return KeybindActions[`Hotbar${index}` as keyof typeof KeybindActions];
-  }, [keybinds]);
-
-  const keyImage = useMemo(() => {
-    if (!keybinds || !keybindAction) return;
-
-    return KeyImages.get(keybinds[keybindAction]?.entries().next().value[0] as Key);
-  }, [keybinds, keybindAction]);
-
-  const level = Level.use(hashKeyEntity(blockType, player), {
-    value: 1,
-  })?.value;
-  const buildingLevelEntity = hashAndTrimKeyEntity(blockType, level);
-
-  const hasEnough = useHasEnoughResources(getRecipe(buildingLevelEntity));
-
-  useEffect(() => {
-    if (!keybinds || !unlocked || !keybindAction) return;
-
-    const listener = addListener(keybindAction, () => {
-      if (selectedBuilding === blockType) {
-        SelectedBuilding.remove();
-        SelectedAction.remove();
-        return;
-      }
-
-      SelectedBuilding.set({ value: blockType });
-      SelectedAction.set({ value: action });
-    });
-
-    return () => {
-      listener.dispose();
-    };
-  }, [keybinds, selectedBuilding, action, blockType, unlocked, keybindAction]);
-
-  if (blockType) {
-    const blueprint = RawBlueprint.get(blockType)?.value;
-
-    dimensions = blueprint ? calcDims(blockType, convertToCoords(blueprint)) : undefined;
+    dimensions = blueprint ? calcDims(building, convertToCoords(blueprint)) : undefined;
   }
 
   const handleSelectBuilding = () => {
-    if (selectedBuilding === blockType) {
-      SelectedBuilding.remove();
-      SelectedAction.remove();
+    if (selectedBuilding === building) {
+      components.SelectedBuilding.remove();
+      components.SelectedAction.remove();
       return;
     }
 
-    SelectedBuilding.set({ value: blockType });
-    SelectedAction.set({ value: action });
+    components.SelectedBuilding.set({ value: building });
+    components.SelectedAction.set({ value: action });
   };
 
   if (!unlocked) return null;
@@ -116,18 +116,16 @@ const HotbarItem: React.FC<{
       <div
         onClick={handleSelectBuilding}
         className={`relative flex flex-col text-sm items-center cursor-pointer w-16 h-12 border rounded border-cyan-400 pointer-events-auto ${
-          selectedBuilding === blockType ? "scale-110 ring-4 ring-amber-400 transistion-all duration-100 z-50" : ""
-        } ${hasEnough ? "" : " border-rose-500"}`}
+          selectedBuilding === building ? "scale-110 ring-4 ring-amber-400 transistion-all duration-100 z-50" : ""
+        } ${true ? "" : " border-rose-500"}`}
       >
         <img
           src={
-            EntityIDtoSpriteKey[blockType] !== undefined
-              ? getSpriteBase64(EntityIDtoSpriteKey[blockType][0])
-              : undefined
+            EntityIDtoSpriteKey[building] !== undefined ? getSpriteBase64(EntityIDtoSpriteKey[building][0]) : undefined
           }
           className={`absolute bottom-0 w-14 pixel-images rounded-md`}
         />
-        {selectedBuilding === blockType && (
+        {selectedBuilding === building && (
           <motion.p
             initial={{ opacity: 1 }}
             animate={{ opacity: 0 }}
@@ -139,14 +137,14 @@ const HotbarItem: React.FC<{
             {getBlockTypeName(selectedBuilding)}
           </motion.p>
         )}
-        {keyImage && !isMobile && (
+        {/* {keyImage && !isMobile && (
           <img
             src={keyImage}
             className={`absolute -bottom-2 -left-2 w-7 h-7 pixel-images rounded-md ${
               selectedBuilding === blockType ? "opacity-30" : "opacity-70"
             }`}
           />
-        )}
+        )} */}
         {dimensions && (
           <div className="absolute bottom-0 right-0 text-xs bg-black bg-opacity-50">
             {dimensions.width}x{dimensions.height}
