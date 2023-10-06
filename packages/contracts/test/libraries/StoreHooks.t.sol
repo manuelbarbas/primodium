@@ -15,6 +15,14 @@ import "test/PrimodiumTest.t.sol";
 contract TestStoreHooks is PrimodiumTest {
   function setUp() public override {
     super.setUp();
+    vm.startPrank(creator);
+    MirrorSubscriber subscriber = new MirrorSubscriber(HookedValueTableId, world);
+    console.log("Subscriber Created");
+    world.grantAccess(OnHookChangedValueTableId, address(subscriber));
+    world.registerStoreHook(HookedValueTableId, subscriber, ALL);
+
+    //StoreCore.registerStoreHook(HookedValueTableId, subscriber, ALL);
+    console.log("Subscriber Hooked");
   }
 
   function testStoreHooks(uint256 unitCount, uint256 defense) public returns (uint256) {
