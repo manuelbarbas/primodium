@@ -1,15 +1,12 @@
-import {
-  Account,
-  Leaderboard as _Leaderboard,
-} from "src/network/components/clientComponents";
-import { shortenAddress } from "src/util/common";
-import Modal from "../shared/Modal";
 import { useState } from "react";
 import { FaList, FaSync } from "react-icons/fa";
-import { claimFromMine } from "src/util/web3";
-import { useMud } from "src/hooks/useMud";
 import { useMainBaseCoord } from "src/hooks";
+import { useMud } from "src/hooks/useMud";
+import { Account, Leaderboard as _Leaderboard } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
+import { shortenAddress } from "src/util/common";
+import { claimFromMine } from "src/util/web3";
+import Modal from "../shared/Modal";
 
 export const Leaderboard = () => {
   const network = useMud();
@@ -30,11 +27,7 @@ export const Leaderboard = () => {
               <span className="opacity-75">#</span>
               {data.playerRank}
             </p>
-            <span>
-              {data.scores.length >= data.playerRank
-                ? data.scores[data.playerRank - 1].toLocaleString()
-                : 0}
-            </span>
+            <span>{data.scores.length >= data.playerRank ? data.scores[data.playerRank - 1].toLocaleString() : 0}</span>
             <p className="text-xs opacity-50"> POINTS </p>
           </div>
           {/* sync utility */}
@@ -55,11 +48,7 @@ export const Leaderboard = () => {
           <FaList />
         </button>
       </div>
-      <Modal
-        title="Leaderboard"
-        show={showLeaderboard}
-        onClose={() => setShowLeaderboard(false)}
-      >
+      <Modal title="Leaderboard" show={showLeaderboard} onClose={() => setShowLeaderboard(false)}>
         <div className="flex flex-col items-center gap-2 text-white w-96 min-w-full">
           <div className="w-full h-96 overflow-y-auto rounded-md bg-slate-900 text-sm space-y-2 scrollbar">
             {data.players.map((player, index) => (
@@ -69,12 +58,8 @@ export const Leaderboard = () => {
               >
                 <div>{index + 1}.</div>
                 <div className="col-span-5 flex justify-between">
-                  <div>
-                    {address === player ? "You" : shortenAddress(player)}
-                  </div>
-                  <div className="font-bold rounded-md bg-cyan-700 px-2">
-                    {data.scores[index].toLocaleString()}
-                  </div>
+                  <div>{address === player ? "You" : shortenAddress(player)}</div>
+                  <div className="font-bold rounded-md bg-cyan-700 px-2">{data.scores[index].toLocaleString()}</div>
                 </div>
               </div>
             ))}
@@ -87,9 +72,7 @@ export const Leaderboard = () => {
                 <div className="col-span-5 flex justify-between">
                   <div className="bg-rose-800 px-2 rounded-md">You</div>
                   <div className="font-bold rounded-md bg-cyan-700 px-2">
-                    {data.scores.length >= data.playerRank
-                      ? data.scores[data.playerRank - 1].toLocaleString()
-                      : 0}
+                    {data.scores.length >= data.playerRank ? data.scores[data.playerRank - 1].toLocaleString() : 0}
                   </div>
                 </div>
               </div>

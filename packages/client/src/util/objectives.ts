@@ -1,43 +1,42 @@
+import { Entity } from "@latticexyz/recs";
 import {
-  checkMainBaseLevelRequirement,
-  checkCompletedObjectiveRequirement,
-  checkResearcheRequirement,
-  checkProductionRequirement,
-  checkMaxUtilityResourceReqs,
-  checkHasBuiltBuildingRequirement,
   checkBuildingCountRequirement,
-  checkUnitRequirement,
-  checkRaidRequirement,
-  checkMotherlodeMinedRequirement,
+  checkCompletedObjectiveRequirement,
   checkDestroyedUnitsRequirement,
+  checkHasBuiltBuildingRequirement,
   checkHasDefeatedPirateAsteroid,
+  checkMainBaseLevelRequirement,
+  checkMaxUtilityResourceReqs,
+  checkMotherlodeMinedRequirement,
+  checkProductionRequirement,
+  checkRaidRequirement,
+  checkResearcheRequirement,
+  checkUnitRequirement,
   getAllRequirements,
 } from "./requirements";
-import { EntityID } from "@latticexyz/recs";
 import { getRecipe, hasEnoughResources } from "./resource";
 
-export function getIsObjectiveAvailable(entityID: EntityID) {
+export function getIsObjectiveAvailable(entity: Entity) {
   return (
-    getAllRequirements(entityID).length === 0 ||
-    (checkMainBaseLevelRequirement(entityID) &&
-      checkCompletedObjectiveRequirement(entityID))
+    getAllRequirements(entity).length === 0 ||
+    (checkMainBaseLevelRequirement(entity) && checkCompletedObjectiveRequirement(entity))
   );
 }
 
-export function getCanClaimObjective(entityID: EntityID) {
+export function getCanClaimObjective(entity: Entity) {
   return (
-    checkMainBaseLevelRequirement(entityID) &&
-    checkCompletedObjectiveRequirement(entityID) &&
-    hasEnoughResources(getRecipe(entityID), 1) &&
-    checkResearcheRequirement(entityID) &&
-    checkProductionRequirement(entityID) &&
-    checkMaxUtilityResourceReqs(entityID) &&
-    checkHasBuiltBuildingRequirement(entityID) &&
-    checkBuildingCountRequirement(entityID) &&
-    checkUnitRequirement(entityID) &&
-    checkRaidRequirement(entityID) &&
-    checkMotherlodeMinedRequirement(entityID) &&
-    checkDestroyedUnitsRequirement(entityID) &&
-    checkHasDefeatedPirateAsteroid(entityID)
+    checkMainBaseLevelRequirement(entity) &&
+    checkCompletedObjectiveRequirement(entity) &&
+    hasEnoughResources(getRecipe(entity), 1) &&
+    checkResearcheRequirement(entity) &&
+    checkProductionRequirement(entity) &&
+    checkMaxUtilityResourceReqs(entity) &&
+    checkHasBuiltBuildingRequirement(entity) &&
+    checkBuildingCountRequirement(entity) &&
+    checkUnitRequirement(entity) &&
+    checkRaidRequirement(entity) &&
+    checkMotherlodeMinedRequirement(entity) &&
+    checkDestroyedUnitsRequirement(entity) &&
+    checkHasDefeatedPirateAsteroid(entity)
   );
 }

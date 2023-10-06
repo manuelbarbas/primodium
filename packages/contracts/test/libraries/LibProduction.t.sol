@@ -21,69 +21,69 @@ contract LibProductionTest is PrimodiumTest {
     uint256 amount2 = 40;
     uint256 amount3 = 57;
 
-    P_ProductionData memory data1 = P_ProductionData(EResource.Iron, amount1);
-    P_ProductionData memory data2 = P_ProductionData(EResource.Iron, amount2);
-    P_ProductionData memory data3 = P_ProductionData(EResource.Iron, amount3);
+    P_ProductionData memory data1 = P_ProductionData(uint8(EResource.Iron), amount1);
+    P_ProductionData memory data2 = P_ProductionData(uint8(EResource.Iron), amount2);
+    P_ProductionData memory data3 = P_ProductionData(uint8(EResource.Iron), amount3);
 
     P_Production.set(buildingPrototype, 1, data1);
     P_Production.set(buildingPrototype, 2, data2);
     P_Production.set(buildingPrototype, 3, data3);
 
     LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 1);
-    assertEq(ProductionRate.get(playerEntity, EResource.Iron), amount1);
+    assertEq(ProductionRate.get(playerEntity, uint8(EResource.Iron)), amount1);
     LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 2);
-    assertEq(ProductionRate.get(playerEntity, EResource.Iron), amount2);
+    assertEq(ProductionRate.get(playerEntity, uint8(EResource.Iron)), amount2);
     LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 3);
-    assertEq(ProductionRate.get(playerEntity, EResource.Iron), amount3);
+    assertEq(ProductionRate.get(playerEntity, uint8(EResource.Iron)), amount3);
   }
 
   function testUpgradeResourceProductionUtility() public {
-    P_IsUtility.set(EResource.Iron, true);
+    P_IsUtility.set(uint8(EResource.Iron), true);
 
     uint256 amount1 = 20;
     uint256 amount2 = 40;
     uint256 amount3 = 57;
-    P_ProductionData memory data1 = P_ProductionData(EResource.Iron, amount1);
-    P_ProductionData memory data2 = P_ProductionData(EResource.Iron, amount2);
-    P_ProductionData memory data3 = P_ProductionData(EResource.Iron, amount3);
+    P_ProductionData memory data1 = P_ProductionData(uint8(EResource.Iron), amount1);
+    P_ProductionData memory data2 = P_ProductionData(uint8(EResource.Iron), amount2);
+    P_ProductionData memory data3 = P_ProductionData(uint8(EResource.Iron), amount3);
 
     P_Production.set(buildingPrototype, 1, data1);
     P_Production.set(buildingPrototype, 2, data2);
     P_Production.set(buildingPrototype, 3, data3);
 
     LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 1);
-    assertEq(MaxResourceCount.get(playerEntity, EResource.Iron), amount1);
+    assertEq(MaxResourceCount.get(playerEntity, uint8(EResource.Iron)), amount1);
     LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 2);
-    assertEq(MaxResourceCount.get(playerEntity, EResource.Iron), amount2);
+    assertEq(MaxResourceCount.get(playerEntity, uint8(EResource.Iron)), amount2);
     LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 3);
-    assertEq(MaxResourceCount.get(playerEntity, EResource.Iron), amount3);
+    assertEq(MaxResourceCount.get(playerEntity, uint8(EResource.Iron)), amount3);
 
-    assertEq(ProductionRate.get(buildingEntity, EResource.Iron), 0);
+    assertEq(ProductionRate.get(buildingEntity, uint8(EResource.Iron)), 0);
   }
 
   function testClearResourceProductionUtility() public {
-    P_IsUtility.set(EResource.Iron, true);
+    P_IsUtility.set(uint8(EResource.Iron), true);
     LibProduction.clearResourceProduction(playerEntity, buildingEntity);
     uint256 startingAmount = 50;
     uint256 amountCleared = 20;
-    MaxResourceCount.set(playerEntity, EResource.Iron, 50);
+    MaxResourceCount.set(playerEntity, uint8(EResource.Iron), 50);
 
-    P_ProductionData memory data1 = P_ProductionData(EResource.Iron, amountCleared);
+    P_ProductionData memory data1 = P_ProductionData(uint8(EResource.Iron), amountCleared);
     P_Production.set(buildingPrototype, level, data1);
 
     LibProduction.clearResourceProduction(playerEntity, buildingEntity);
-    assertEq(MaxResourceCount.get(playerEntity, EResource.Iron), startingAmount - amountCleared);
+    assertEq(MaxResourceCount.get(playerEntity, uint8(EResource.Iron)), startingAmount - amountCleared);
   }
 
   function testClearResourceProductionNonUtility() public {
     uint256 startingAmount = 50;
     uint256 amountCleared = 20;
-    ProductionRate.set(playerEntity, EResource.Iron, 50);
+    ProductionRate.set(playerEntity, uint8(EResource.Iron), 50);
 
-    P_ProductionData memory data1 = P_ProductionData(EResource.Iron, amountCleared);
+    P_ProductionData memory data1 = P_ProductionData(uint8(EResource.Iron), amountCleared);
     P_Production.set(buildingPrototype, level, data1);
 
     LibProduction.clearResourceProduction(playerEntity, buildingEntity);
-    assertEq(ProductionRate.get(playerEntity, EResource.Iron), startingAmount - amountCleared);
+    assertEq(ProductionRate.get(playerEntity, uint8(EResource.Iron)), startingAmount - amountCleared);
   }
 }

@@ -1,4 +1,4 @@
-import { createComponents } from "./components/components";
+import { createComponents } from "./components";
 import { getNetworkConfig } from "./config/getNetworkConfig";
 import { createContractCalls } from "./createContractCalls";
 import { setupNetwork } from "./setupNetwork";

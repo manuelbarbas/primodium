@@ -1,17 +1,14 @@
-import { EntityID, Metadata, Type, World } from "@latticexyz/recs";
+import { Entity, Metadata, Type, World } from "@latticexyz/recs";
 
 import { Coord } from "@latticexyz/utils";
-import { encodeCoord } from "src/util/encode";
 import { ActiveButton } from "src/util/types";
-import { Position, ReversePosition } from "../chainComponents";
+import { components } from "../../components";
 import { ActiveAsteroid } from "../clientComponents";
-import newComponent, { Options } from "./ExtendedComponent";
+import { Options, createExtendedComponent } from "./ExtendedComponent";
 
-function newSendComponent<Overridable extends boolean, M extends Metadata>(
-  world: World,
-  options?: Options<Overridable, M>
-) {
-  const component = newComponent(
+function createSendComponent<M extends Metadata>(world: World, options?: Options<M>) {
+  const { Position, ReversePosition } = components;
+  const component = createExtendedComponent(
     world,
     {
       originX: Type.OptionalNumber,
@@ -38,7 +35,7 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
     activeButton: ActiveButton.DESTINATION,
   };
 
-  const getUnitCount = (entity: EntityID) => {
+  const getUnitCount = (entity: Entity) => {
     const units = component.get()?.units;
     const count = component.get()?.count;
 
@@ -70,9 +67,9 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
     });
   };
 
-  const removeUnit = (entity: EntityID) => {
-    let units = component.get()?.units;
-    let count = component.get()?.count;
+  const removeUnit = (entity: Entity) => {
+    const units = component.get()?.units;
+    const count = component.get()?.count;
 
     if (!units) return;
 
@@ -119,12 +116,12 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
     const entities = Position.getAllWith(coord);
     if (entities.length === 0) return;
 
-    const entityId = entities[0];
-    if (!entityId) return;
+    const Entity = entities[0];
+    if (!Entity) return;
 
-    const entity = ReversePosition.get(encodeCoord(coord))?.value;
+    const entity = ReversePosition.getWithKeys(coord)?.entity;
     if (!entity) return undefined;
-    return { ...coord, entity };
+    return { ...coord, entity: entity as Entity };
   };
 
   const getDestination = () => {
@@ -143,7 +140,7 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
     return { ...coord, entity };
   };
 
-  const setUnitCount = (entity: EntityID, count: number) => {
+  const setUnitCount = (entity: Entity, count: number) => {
     let currentUnits = component.get()?.units;
     let currentCount = component.get()?.count;
 
@@ -187,4 +184,4 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
   };
 }
 
-export default newSendComponent;
+export default createSendComponent;

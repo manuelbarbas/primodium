@@ -1,17 +1,17 @@
-import { EntityID, Type } from "@latticexyz/recs";
+import { Entity, Type } from "@latticexyz/recs";
 import { world } from "src/network/world";
-import newComponent from "./ExtendedComponent";
+import { createExtendedComponent } from "./ExtendedComponent";
 
 export type NotificationType = "battle" | "arrival-transit" | "arrival-orbit";
 export type Notification = {
   id: string;
-  entity: EntityID;
+  entity: Entity;
   timestamp: number;
   type: NotificationType;
 };
 
 export const NotificationQueueComponent = () => {
-  const component = newComponent(
+  const component = createExtendedComponent(
     world,
     {
       ids: Type.StringArray,
@@ -28,7 +28,7 @@ export const NotificationQueueComponent = () => {
   const addNotification = (notification: Notification) => {
     const currentData = component.get() || {
       ids: new Array<string>(),
-      entities: new Array<EntityID>(),
+      entities: new Array<Entity>(),
       timestamp: new Array<number>(),
       type: new Array<NotificationType>(),
     };

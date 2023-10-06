@@ -1,33 +1,16 @@
+import { BeltMap } from "@game/constants";
+import { EntityID, Has, HasValue, defineComponentSystem, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
+import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
-import {
-  namespaceWorld,
-  Has,
-  defineEnterSystem,
-  HasValue,
-  defineComponentSystem,
-  EntityID,
-} from "@latticexyz/recs";
-import {
-  ObjectPosition,
-  OnClick,
-  SetValue,
-} from "../../common/object-components/common";
-import { Outline, Texture } from "../../common/object-components/sprite";
-import {
-  AsteroidType,
-  Motherlode,
-  OwnedBy,
-  Position,
-  ReversePosition,
-} from "src/network/components/chainComponents";
+import { AsteroidType, Motherlode, OwnedBy, Position, ReversePosition } from "src/network/components/chainComponents";
+import { Send } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
 import { MotherlodeSizeNames, MotherlodeTypeNames } from "src/util/constants";
-import { EMotherlodeSize, ESpaceRockType } from "src/util/web3/types";
-import { Send } from "src/network/components/clientComponents";
 import { encodeAndTrimCoord, encodeCoord } from "src/util/encode";
 import { ActiveButton } from "src/util/types";
-import { Coord } from "@latticexyz/utils";
-import { BeltMap } from "@game/constants";
+import { EMotherlodeSize, ESpaceRockType } from "src/util/web3/types";
+import { ObjectPosition, OnClick, SetValue } from "../../common/object-components/common";
+import { Outline, Texture } from "../../common/object-components/sprite";
 
 const { DepthLayers } = BeltMap;
 
@@ -41,26 +24,20 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
     const asteroidType = AsteroidType.get(entityId)?.value;
     if (asteroidType !== ESpaceRockType.Motherlode) return;
 
-    const motherlodeObjectGroup = scene.objectPool.getGroup(
-      "motherlode_" + entityId
-    );
+    const motherlodeObjectGroup = scene.objectPool.getGroup("motherlode_" + entityId);
     const motherlodeData = Motherlode.get(entityId);
     if (!motherlodeData) throw new Error("motherlode data not found");
 
-    const sprite = `motherlode-${
-      MotherlodeTypeNames[motherlodeData.motherlodeType]
-    }-${MotherlodeSizeNames[motherlodeData.size]}`;
+    const sprite = `motherlode-${MotherlodeTypeNames[motherlodeData.motherlodeType]}-${
+      MotherlodeSizeNames[motherlodeData.size]
+    }`;
 
     const origin = Send.getOrigin();
     const destination = Send.getDestination();
     const owner = OwnedBy.get(entityId)?.value;
 
-    const originEntity = origin
-      ? ReversePosition.get(encodeCoord(origin))
-      : undefined;
-    const destinationEntity = destination
-      ? ReversePosition.get(encodeCoord(destination))
-      : undefined;
+    const originEntity = origin ? ReversePosition.get(encodeCoord(origin)) : undefined;
+    const destinationEntity = destination ? ReversePosition.get(encodeCoord(destination)) : undefined;
 
     let outline: ReturnType<typeof Outline> | undefined;
 
@@ -73,11 +50,7 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
     } else outline = Outline({ color: 0x808080 });
 
     const scale =
-      motherlodeData.size == EMotherlodeSize.SMALL
-        ? 1
-        : motherlodeData.size == EMotherlodeSize.MEDIUM
-        ? 2
-        : 4;
+      motherlodeData.size == EMotherlodeSize.SMALL ? 1 : motherlodeData.size == EMotherlodeSize.MEDIUM ? 2 : 4;
     motherlodeObjectGroup.add("Sprite").setComponents([
       ObjectPosition(
         {
@@ -97,21 +70,14 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
         const activeButton = Send.get()?.activeButton ?? ActiveButton.NONE;
         if (activeButton === ActiveButton.ORIGIN) {
           Send.setOrigin(coord);
-        } else if (
-          activeButton === ActiveButton.DESTINATION ||
-          activeButton === ActiveButton.NONE
-        ) {
+        } else if (activeButton === ActiveButton.DESTINATION || activeButton === ActiveButton.NONE) {
           Send.setDestination(coord);
         }
         Send.update({ activeButton: ActiveButton.NONE });
       }),
     ]);
   };
-  const query = [
-    Has(AsteroidType),
-    Has(Position),
-    HasValue(AsteroidType, { value: ESpaceRockType.Motherlode }),
-  ];
+  const query = [Has(AsteroidType), Has(Position), HasValue(AsteroidType, { value: ESpaceRockType.Motherlode })];
   defineEnterSystem(gameWorld, query, ({ entity }) => {
     const entityId = world.entities[entity];
     const coord = Position.get(entityId);

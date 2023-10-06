@@ -5,7 +5,7 @@ import "test/PrimodiumTest.t.sol";
 
 contract TestLibStorage is PrimodiumTest {
   bytes32 playerEntity = "playerEntity";
-  EResource mockResource = EResource.Iron;
+  uint8 mockResource = Iron;
   bytes32 buildingPrototype = "buildingPrototype";
   bytes32 buildingEntity = "building";
   uint256 level = 2;

@@ -1,8 +1,10 @@
-import { abiTypesToSchema, encodeField, schemaToHex } from "@latticexyz/protocol-parser";
+import { encodeField } from "@latticexyz/protocol-parser";
 import { ComponentValue, Entity, Schema } from "@latticexyz/recs/src/types";
 import { StaticAbiType } from "@latticexyz/schema-type";
 import { entityToHexKeyTuple } from "@latticexyz/store-sync/recs";
+import { Coord } from "@latticexyz/utils";
 import { Hex } from "viem";
+import { ActiveAsteroid } from "./components/clientComponents";
 import { Components, ContractComponent, SetupNetworkResult } from "./types";
 export function createContractCalls(
   { worldContract, waitForTransaction }: SetupNetworkResult,
@@ -23,9 +25,8 @@ export function createContractCalls(
   async function removeComponent<S extends Schema>(component: ContractComponent<S>, entity: Entity) {
     const tableId = component.id as Hex;
     const key = entityToHexKeyTuple(entity);
-    const valueSchema = schemaToHex(abiTypesToSchema(Object.values(component.metadata.valueSchema) as StaticAbiType[]));
 
-    const tx = await worldContract.write.devDeleteRecord([tableId, key, valueSchema]);
+    const tx = await worldContract.write.devDeleteRecord([tableId, key]);
     await waitForTransaction(tx);
   }
 
@@ -36,14 +37,13 @@ export function createContractCalls(
   ) {
     const tableId = component.id as Hex;
     const key = entityToHexKeyTuple(entity);
-    const valueSchema = schemaToHex(abiTypesToSchema(Object.values(component.metadata.valueSchema) as StaticAbiType[]));
 
     const schema = Object.keys(component.metadata.valueSchema);
     Object.entries(newValues).forEach(async ([name, value]) => {
       const type = component.metadata.valueSchema[name] as StaticAbiType;
       const data = encodeField(type, value);
       const schemaIndex = schema.indexOf(name);
-      const tx = await worldContract.write.devSetField([tableId, key, schemaIndex, data, valueSchema]);
+      const tx = await worldContract.write.devSetField([tableId, key, schemaIndex, data]);
       await waitForTransaction(tx);
     });
   }
@@ -55,6 +55,16 @@ export function createContractCalls(
     CurrentTransaction.set({ value: false });
   }
 
+  async function demolishBuilding(coord: Coord) {
+    CurrentTransaction.set({ value: true });
+    const activeAsteroid = ActiveAsteroid.get()?.value;
+    if (!activeAsteroid) return;
+
+    const position = { ...coord, parent: activeAsteroid as Hex };
+    const tx = await worldContract.write.destroy([position]);
+    await waitForTransaction(tx);
+    CurrentTransaction.set({ value: false });
+  }
   return {
     /* ------------------------------- Dev Systems ------------------------------ */
     increment,
@@ -63,5 +73,6 @@ export function createContractCalls(
 
     /* ------------------------------- Game Systems ------------------------------ */
     spawn,
+    demolishBuilding,
   };
 }

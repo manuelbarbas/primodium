@@ -1,41 +1,17 @@
-import { Scene } from "engine/types";
-import {
-  namespaceWorld,
-  Has,
-  defineEnterSystem,
-  HasValue,
-  EntityID,
-  Not,
-} from "@latticexyz/recs";
-import {
-  ObjectPosition,
-  OnClick,
-  OnComponentSystem,
-  SetValue,
-} from "../../common/object-components/common";
-import { Outline, Texture } from "../../common/object-components/sprite";
-import {
-  AsteroidType,
-  Level,
-  MainBase,
-  OwnedBy,
-  Pirate,
-  Position,
-} from "src/network/components/chainComponents";
-import { world } from "src/network/world";
-import { Send } from "src/network/components/clientComponents";
-import { initializeMotherlodes } from "../utils/initializeMotherlodes";
-import { ESpaceRockType } from "src/util/web3/types";
-import { Coord } from "@latticexyz/utils";
-import {
-  Assets,
-  DepthLayers,
-  EntityIDtoSpriteKey,
-  SpriteKeys,
-} from "@game/constants";
-import { BlockType } from "src/util/constants";
-import { clampedIndex } from "src/util/common";
+import { Assets, DepthLayers, EntityIDtoSpriteKey, SpriteKeys } from "@game/constants";
 import { SingletonID } from "@latticexyz/network";
+import { EntityID, Has, HasValue, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
+import { Coord } from "@latticexyz/utils";
+import { Scene } from "engine/types";
+import { AsteroidType, Level, MainBase, OwnedBy, Pirate, Position } from "src/network/components/chainComponents";
+import { Send } from "src/network/components/clientComponents";
+import { world } from "src/network/world";
+import { clampedIndex } from "src/util/common";
+import { BlockType } from "src/util/constants";
+import { ESpaceRockType } from "src/util/web3/types";
+import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
+import { Outline, Texture } from "../../common/object-components/sprite";
+import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 
 export const renderAsteroid = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -58,9 +34,7 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
     }).value;
 
     if (asteroidType !== ESpaceRockType.Asteroid) return;
-    const asteroidObjectGroup = scene.objectPool.getGroup(
-      "asteroid_" + entityId
-    );
+    const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entityId);
 
     const sharedComponents = [
       ObjectPosition(
@@ -83,10 +57,7 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
       Texture(
         Assets.SpriteAtlas,
         EntityIDtoSpriteKey[BlockType.Asteroid][
-          clampedIndex(
-            mainBaseLevel - 1,
-            EntityIDtoSpriteKey[BlockType.Asteroid].length
-          )
+          clampedIndex(mainBaseLevel - 1, EntityIDtoSpriteKey[BlockType.Asteroid].length)
         ]
       ),
       OnClick(scene, () => {
@@ -94,12 +65,7 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
       }),
     ]);
 
-    const outlineSprite =
-      SpriteKeys[
-        `Asteroid${
-          ownedBy === player ? "Player" : "Enemy"
-        }` as keyof typeof SpriteKeys
-      ];
+    const outlineSprite = SpriteKeys[`Asteroid${ownedBy === player ? "Player" : "Enemy"}` as keyof typeof SpriteKeys];
 
     const asteroidOutline = asteroidObjectGroup.add("Sprite");
 
@@ -108,9 +74,7 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
       OnComponentSystem(Send, () => {
         if (Send.get()?.destination === entityId) {
           if (asteroidOutline.hasComponent(Outline().id)) return;
-          asteroidOutline.setComponent(
-            Outline({ thickness: 1.5, color: 0xffa500 })
-          );
+          asteroidOutline.setComponent(Outline({ thickness: 1.5, color: 0xffa500 }));
           return;
         }
 

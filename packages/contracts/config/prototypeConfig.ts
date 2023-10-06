@@ -1,3 +1,4 @@
+import { Hex } from "viem";
 import { config } from "../mud.config";
 import {
   buildingUnitProduction,
@@ -127,7 +128,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       },
       P_UnitPrototypes: {
         value: MUDEnums.EUnit.reduce(
-          (prev: `0x${string}`[], unit) => (unit == "NULL" || unit == "LENGTH" ? prev : [...prev, encodeBytes32(unit)]),
+          (prev: Hex[], unit) => (unit == "NULL" || unit == "LENGTH" ? prev : [...prev, encodeBytes32(unit)]),
           []
         ),
       },
@@ -143,13 +144,13 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_MaxLevel: { value: 7n },
     },
     levels: {
-      1: { Dimensions: { x: 13, y: 11 }, P_RequiredBaseLevel: { value: 1n } },
-      2: { Dimensions: { x: 17, y: 13 }, P_RequiredBaseLevel: { value: 2n } },
-      3: { Dimensions: { x: 21, y: 15 }, P_RequiredBaseLevel: { value: 3n } },
-      4: { Dimensions: { x: 25, y: 17 }, P_RequiredBaseLevel: { value: 4n } },
-      5: { Dimensions: { x: 29, y: 19 }, P_RequiredBaseLevel: { value: 5n } },
-      6: { Dimensions: { x: 33, y: 13 }, P_RequiredBaseLevel: { value: 6n } },
-      7: { Dimensions: { x: maxRange.xBounds, y: maxRange.yBounds }, P_RequiredBaseLevel: { value: 7n } },
+      1: { Dimensions: { width: 13, height: 11 }, P_RequiredBaseLevel: { value: 1n } },
+      2: { Dimensions: { width: 17, height: 13 }, P_RequiredBaseLevel: { value: 2n } },
+      3: { Dimensions: { width: 21, height: 15 }, P_RequiredBaseLevel: { value: 3n } },
+      4: { Dimensions: { width: 25, height: 17 }, P_RequiredBaseLevel: { value: 4n } },
+      5: { Dimensions: { width: 29, height: 19 }, P_RequiredBaseLevel: { value: 5n } },
+      6: { Dimensions: { width: 33, height: 13 }, P_RequiredBaseLevel: { value: 6n } },
+      7: { Dimensions: { width: maxRange.xBounds, height: maxRange.yBounds }, P_RequiredBaseLevel: { value: 7n } },
     },
   },
 

@@ -1,27 +1,22 @@
-import { BlockType } from "src/util/constants";
+import { EntityID } from "@latticexyz/recs";
 import { useState } from "react";
 import { FaArrowLeft, FaPlus } from "react-icons/fa";
-import { EntityID } from "@latticexyz/recs";
-import { useTrainableUnits } from "src/util/trainUnits";
-import { MaxUtility } from "src/network/components/chainComponents";
-import { hashKeyEntity } from "src/util/encode";
-import { Account } from "src/network/components/clientComponents";
-import PortalModal from "src/components/shared/PortalModal";
 import { GameButton } from "src/components/shared/GameButton";
-import { UnitTraining } from "./UnitTraining";
+import PortalModal from "src/components/shared/PortalModal";
+import { MaxUtility } from "src/network/components/chainComponents";
+import { Account } from "src/network/components/clientComponents";
+import { BlockType } from "src/util/constants";
+import { hashKeyEntity } from "src/util/encode";
+import { useTrainableUnits } from "src/util/trainUnits";
 import { TrainingProgress } from "./TrainingProgress";
+import { UnitTraining } from "./UnitTraining";
 
-export const TrainUnits: React.FC<{ buildingEntity: EntityID }> = ({
-  buildingEntity,
-}) => {
+export const TrainUnits: React.FC<{ buildingEntity: EntityID }> = ({ buildingEntity }) => {
   const [show, setShow] = useState(false);
   const [showTrainModal, setShowTrainModal] = useState(false);
   const account = Account.use(undefined, { value: "0" as EntityID }).value;
 
-  const playerResourceEntity = hashKeyEntity(
-    BlockType.HousingUtilityResource,
-    account
-  );
+  const playerResourceEntity = hashKeyEntity(BlockType.HousingUtilityResource, account);
 
   const maximum = MaxUtility.use(playerResourceEntity, { value: 0 }).value;
   const trainableUnits = useTrainableUnits(buildingEntity);
@@ -29,26 +24,12 @@ export const TrainUnits: React.FC<{ buildingEntity: EntityID }> = ({
   if (trainableUnits.length == 0 || maximum == 0) return null;
   return (
     <div className="">
-      <GameButton
-        className="w-44"
-        depth={6}
-        color="bg-orange-500"
-        onClick={() => setShowTrainModal(true)}
-      >
+      <GameButton className="w-44" depth={6} color="bg-orange-500" onClick={() => setShowTrainModal(true)}>
         <p className="px-2 p-1 text-sm font-bold">Train Units</p>
       </GameButton>
-      <PortalModal
-        title="Train Units"
-        show={showTrainModal}
-        onClose={() => setShowTrainModal(false)}
-      >
+      <PortalModal title="Train Units" show={showTrainModal} onClose={() => setShowTrainModal(false)}>
         <div className="flex flex-col w-96 items-center p-4 space-y-4">
-          {show && (
-            <UnitTraining
-              buildingEntity={buildingEntity}
-              onClose={() => setShow(false)}
-            />
-          )}
+          {show && <UnitTraining buildingEntity={buildingEntity} onClose={() => setShow(false)} />}
           {!show && (
             <div className="w-full">
               <div className="w-full">

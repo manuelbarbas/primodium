@@ -3,10 +3,10 @@ import { ConfigFieldTypeToPrimitiveType, StoreConfig } from "@latticexyz/store";
 
 type Tables<C extends StoreConfig, T = undefined> = {
   [Table in keyof C["tables"]]?: {
-    [Field in keyof C["tables"][Table]["schema"]]: T extends undefined
-      ? ConfigFieldTypeToPrimitiveType<C["tables"][Table]["schema"][Field]>
+    [Field in keyof C["tables"][Table]["valueSchema"]]: T extends undefined
+      ? ConfigFieldTypeToPrimitiveType<C["tables"][Table]["valueSchema"][Field]>
       : C["tables"][Table]["keySchema"] extends T
-      ? ConfigFieldTypeToPrimitiveType<C["tables"][Table]["schema"][Field]>
+      ? ConfigFieldTypeToPrimitiveType<C["tables"][Table]["valueSchema"][Field]>
       : never;
   };
 };

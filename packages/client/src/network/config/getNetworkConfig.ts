@@ -29,5 +29,6 @@ export const getNetworkConfig = () => {
     faucetServiceUrl: params.get("faucet") ?? chain.faucetUrl,
     worldAddress,
     initialBlockNumber: BigInt(initialBlockNumber),
+    indexerUrl: chain.indexerUrl,
   };
 };

@@ -6,7 +6,6 @@ import { P_ListMaxResourceUpgrades, P_ByLevelMaxResourceUpgrades, MaxResourceCou
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibResource } from "libraries/LibResource.sol";
-import { EResource } from "src/Types.sol";
 
 library LibStorage {
   /// @notice Increases the max storage of resources based on building prototype data
@@ -23,7 +22,7 @@ library LibStorage {
 
     uint8[] memory storageResources = P_ListMaxResourceUpgrades.get(buildingType, level);
     for (uint256 i = 0; i < storageResources.length; i++) {
-      EResource resource = EResource(storageResources[i]);
+      uint8 resource = (storageResources[i]);
       uint256 maxResource = MaxResourceCount.get(playerEntity, resource);
       uint256 maxResourceIncrease = P_ByLevelMaxResourceUpgrades.get(buildingType, resource, level);
       if (level > 1) {
@@ -40,8 +39,8 @@ library LibStorage {
     bytes32 buildingType = BuildingType.get(buildingEntity);
     uint256 level = Level.get(buildingEntity);
     uint8[] memory storageResources = P_ListMaxResourceUpgrades.get(buildingType, level);
-    for (uint256 i = 0; i < storageResources.length; i++) {
-      EResource resource = EResource(storageResources[i]);
+    for (uint8 i = 0; i < storageResources.length; i++) {
+      uint8 resource = storageResources[i];
       uint256 maxResource = MaxResourceCount.get(playerEntity, resource);
       uint256 maxResourceDecrease = P_ByLevelMaxResourceUpgrades.get(buildingType, resource, level);
       require(maxResource >= maxResourceDecrease, "[StorageUsage] not enough storage to reduce usage");
@@ -56,7 +55,7 @@ library LibStorage {
   /// @param resourceToDecrease amount of resource to be decreased
   function decreaseStoredResource(
     bytes32 playerEntity,
-    EResource resource,
+    uint8 resource,
     uint256 resourceToDecrease
   ) internal {
     uint256 resourceCount = ResourceCount.get(playerEntity, resource);
@@ -70,7 +69,7 @@ library LibStorage {
   /// @param resourceToAdd amount of resource to be increased
   function increaseStoredResource(
     bytes32 playerEntity,
-    EResource resource,
+    uint8 resource,
     uint256 resourceToAdd
   ) internal {
     uint256 resourceCount = ResourceCount.get(playerEntity, resource);
@@ -85,7 +84,7 @@ library LibStorage {
   /// @param newMaxStorage amount of max storage resource to be set
   function setMaxStorage(
     bytes32 playerEntity,
-    EResource resource,
+    uint8 resource,
     uint256 newMaxStorage
   ) internal {
     MaxResourceCount.set(playerEntity, resource, newMaxStorage);
@@ -103,7 +102,7 @@ library LibStorage {
   /// @param amountToIncrease of max storage to be set
   function increaseMaxUtility(
     bytes32 playerEntity,
-    EResource resource,
+    uint8 resource,
     uint256 amountToIncrease
   ) internal {
     uint256 prevMax = MaxResourceCount.get(playerEntity, resource);
@@ -116,7 +115,7 @@ library LibStorage {
   /// @param amountToDecrease of max storage to be set
   function decreaseMaxUtility(
     bytes32 playerEntity,
-    EResource resource,
+    uint8 resource,
     uint256 amountToDecrease
   ) internal {
     uint256 maxUtility = MaxResourceCount.get(playerEntity, resource);

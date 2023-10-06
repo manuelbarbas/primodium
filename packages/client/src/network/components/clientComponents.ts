@@ -1,5 +1,6 @@
 import { Type } from "@latticexyz/recs";
 import { world } from "../world";
+import { createBattleComponent } from "./customComponents/BattleComponent";
 import {
   createExtendedBoolComponent,
   createExtendedComponent,
@@ -48,7 +49,6 @@ export const SelectedAction = createExtendedNumberComponent(world, {
 /* -------------------------------------------------------------------------- */
 /*                                    Units                                   */
 /* -------------------------------------------------------------------------- */
-// export const Send = createExtendedSendComponent(world);
 
 export const TrainingQueue = createExtendedComponent(
   world,
@@ -67,7 +67,7 @@ export const Hangar = createExtendedComponent(
   world,
   {
     units: Type.EntityArray,
-    counts: Type.NumberArray,
+    counts: Type.BigIntArray,
   },
   {
     id: "Hangar",
@@ -92,7 +92,7 @@ export const Leaderboard = createExtendedComponent(
 /* -------------------------------------------------------------------------- */
 /*                                   Battle                                   */
 /* -------------------------------------------------------------------------- */
-// export const Battle = BattleComponent();
+export const Battle = createBattleComponent();
 export const BattleReport = createExtendedComponent(
   world,
   {
@@ -103,11 +103,6 @@ export const BattleReport = createExtendedComponent(
     id: "Battle",
   }
 );
-
-/* -------------------------------------------------------------------------- */
-/*                                Notifications                               */
-/* -------------------------------------------------------------------------- */
-// export const NotificationQueue = NotificationQueueComponent();
 
 export default {
   /* ----------------------------------- Dev ---------------------------------- */
@@ -135,7 +130,4 @@ export default {
 
   /* --------------------------------- Battle --------------------------------- */
   BattleReport,
-
-  /* ------------------------------ Notifications ----------------------------- */
-  // NotificationQueue
 };

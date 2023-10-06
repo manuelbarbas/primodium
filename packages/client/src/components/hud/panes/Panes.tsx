@@ -1,27 +1,24 @@
 import { SingletonID } from "@latticexyz/network";
+import { Divider } from "src/components/core/Divider";
+import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { Account, HomeAsteroid } from "src/network/components/clientComponents";
 import { Join } from "../../core/Join";
 import { Tabs } from "../../core/Tabs";
+import { Leaderboard } from "./Leaderboard";
+import { Objectives } from "./Objectives";
+import { Outgoingfleets } from "./OutgoingFleets";
+import { OwnedMotherlodes } from "./OwnedMotherlodes";
+import { Reinforcementfleets } from "./ReinforcementFleet";
+import { Settings } from "./Settings";
 import { BattleReports } from "./battle-reports/BattleReports";
 import { HostileFleets } from "./hostile-fleets/HostileFleets";
-import { Leaderboard } from "./Leaderboard";
-import { Settings } from "./Settings";
-import { Divider } from "src/components/core/Divider";
-import { Outgoingfleets } from "./OutgoingFleets";
-import { Reinforcementfleets } from "./ReinforcementFleet";
-import { OwnedMotherlodes } from "./OwnedMotherlodes";
-import { Objectives } from "./Objectives";
-import { useSettingsStore } from "src/game/stores/SettingsStore";
 
 export const Panes: React.FC = () => {
   const playerAstroid = HomeAsteroid.use()?.value;
   const player = Account.use(undefined, {
     value: SingletonID,
   }).value;
-  const [newPlayer, setNewPlayer] = useSettingsStore((state) => [
-    state.newPlayer,
-    state.setNewPlayer,
-  ]);
+  const [newPlayer, setNewPlayer] = useSettingsStore((state) => [state.newPlayer, state.setNewPlayer]);
 
   return (
     <Tabs

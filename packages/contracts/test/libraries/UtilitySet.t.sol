@@ -5,8 +5,8 @@ import "test/PrimodiumTest.t.sol";
 
 contract UtilitySetTest is PrimodiumTest {
   bytes32 player1 = "player1";
-  EResource resource1 = EResource.U_Electricity;
-  EResource resource2 = EResource.U_Housing;
+  uint8 resource1 = uint8(EResource.U_Electricity);
+  uint8 resource2 = uint8(EResource.U_Housing);
 
   function setUp() public override {
     super.setUp();

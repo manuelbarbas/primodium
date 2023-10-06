@@ -1,21 +1,21 @@
+import { BeltMap } from "@game/constants";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   ComponentUpdate,
   EntityID,
   Has,
-  defineUpdateSystem,
   defineEnterSystem,
   defineExitSystem,
+  defineUpdateSystem,
   namespaceWorld,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
+import { Arrival, Position } from "src/network/components/chainComponents";
 import { BlockNumber } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
+import { ESendType } from "src/util/web3/types";
 import { ObjectPosition } from "../../common/object-components/common";
 import { Circle } from "../../common/object-components/graphics";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { BeltMap } from "@game/constants";
-import { Arrival, Position } from "src/network/components/chainComponents";
-import { ESendType } from "src/util/web3/types";
 
 const { DepthLayers } = BeltMap;
 
@@ -41,19 +41,14 @@ export const renderArrivalsInOrbit = (scene: Scene, player: EntityID) => {
 
     if (!destination) return;
 
-    const destinationPixelCoord = tileCoordToPixelCoord(
-      { x: destination.x, y: -destination.y },
-      tileWidth,
-      tileHeight
-    );
+    const destinationPixelCoord = tileCoordToPixelCoord({ x: destination.x, y: -destination.y }, tileWidth, tileHeight);
 
     const arrivalOrbit = scene.objectPool.getGroup(entityId + objIndexSuffix);
 
     let color: number;
 
     if (arrival.from === player) color = 0x00ff00;
-    else if (arrival.to === player && arrival.sendType === ESendType.REINFORCE)
-      color = 0x00ff00;
+    else if (arrival.to === player && arrival.sendType === ESendType.REINFORCE) color = 0x00ff00;
     else if (arrival.to === player) color = 0xff0000;
     else color = 0x808080;
 

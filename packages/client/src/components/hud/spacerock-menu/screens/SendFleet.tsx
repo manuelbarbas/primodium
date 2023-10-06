@@ -41,14 +41,7 @@ export const SendFleet: React.FC = () => {
 
     const to = OwnedBy.get(destination)?.value;
 
-    send(
-      arrivalUnits,
-      sendType,
-      originCoord,
-      destinationCoord,
-      to ?? ("0x00" as EntityID),
-      network
-    );
+    send(arrivalUnits, sendType, originCoord, destinationCoord, to ?? ("0x00" as EntityID), network);
 
     Send.reset();
   };
@@ -67,10 +60,7 @@ export const SendFleet: React.FC = () => {
                 >
                   <div className="relative">
                     <img
-                      src={
-                        BackgroundImage.get(unit)?.at(0) ??
-                        "/img/icons/debugicon.png"
-                      }
+                      src={BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"}
                       className="w-full h-full"
                     />
                     <p className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 font-bold text-xs bg-slate-900 border-cyan-400/30 px-1 rounded-md border group-hover:opacity-0">
@@ -94,36 +84,24 @@ export const SendFleet: React.FC = () => {
           </div>
         )}
         {units.length === 0 && (
-          <Navigator.NavButton
-            to="UnitSelection"
-            className="btn-secondary w-fit m-4"
-          >
+          <Navigator.NavButton to="UnitSelection" className="btn-secondary w-fit m-4">
             + Add units from hangar
           </Navigator.NavButton>
         )}
       </SecondaryCard>
       <div className="flex gap-2 mt-1">
         {sendType === ESendType.INVADE && (
-          <Navigator.BackButton
-            className="btn-error border-none"
-            onClick={() => sendFleet(ESendType.INVADE)}
-          >
+          <Navigator.BackButton className="btn-error border-none" onClick={() => sendFleet(ESendType.INVADE)}>
             INVADE
           </Navigator.BackButton>
         )}
         {sendType === ESendType.REINFORCE && (
-          <Navigator.BackButton
-            className="btn-success border-none"
-            onClick={() => sendFleet(ESendType.REINFORCE)}
-          >
+          <Navigator.BackButton className="btn-success border-none" onClick={() => sendFleet(ESendType.REINFORCE)}>
             REINFORCE
           </Navigator.BackButton>
         )}
         {sendType === ESendType.RAID && (
-          <Navigator.BackButton
-            className="btn-error border-none"
-            onClick={() => sendFleet(ESendType.RAID)}
-          >
+          <Navigator.BackButton className="btn-error border-none" onClick={() => sendFleet(ESendType.RAID)}>
             RAID
           </Navigator.BackButton>
         )}

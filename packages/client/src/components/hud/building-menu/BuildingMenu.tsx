@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from "react";
+import { FaTrash } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
 import { BuildingType } from "src/network/components/chainComponents";
@@ -6,15 +7,14 @@ import { SelectedBuilding } from "src/network/components/clientComponents";
 import { getBuildingName } from "src/util/building";
 import { BlockType } from "src/util/constants";
 import { Basic } from "./screens/Basic";
-import { BuildingInfo } from "./screens/BuildingInfo";
-import { Demolish } from "./screens/Demolish";
-import { UnitFactory } from "./screens/UnitFactory";
-import { MainBase } from "./screens/Mainbase";
 import { BuildQueue } from "./screens/BuildQueue";
 import { BuildUnit } from "./screens/BuildUnit";
-import { UpgradeUnit } from "./screens/UpgradeUnit";
-import { FaTrash } from "react-icons/fa";
+import { BuildingInfo } from "./screens/BuildingInfo";
+import { Demolish } from "./screens/Demolish";
+import { MainBase } from "./screens/Mainbase";
 import { MiningVessels } from "./screens/MiningVessels";
+import { UnitFactory } from "./screens/UnitFactory";
+import { UpgradeUnit } from "./screens/UpgradeUnit";
 
 export const BuildingMenu: React.FC = () => {
   const selectedBuilding = SelectedBuilding.use()?.value;
@@ -86,10 +86,7 @@ export const BuildingMenu: React.FC = () => {
 
       {buildingType !== BlockType.MainBase && (
         <div className="absolute top-0 right-9 -translate-y-1/2 translate-x-1/2">
-          <Navigator.NavButton
-            className=" btn-square btn-sm font-bold border border-error inline-flex"
-            to="Demolish"
-          >
+          <Navigator.NavButton className=" btn-square btn-sm font-bold border border-error inline-flex" to="Demolish">
             <FaTrash size={12} />
           </Navigator.NavButton>
         </div>

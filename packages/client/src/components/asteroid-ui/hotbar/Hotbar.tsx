@@ -6,10 +6,7 @@ import HotbarBody from "./HotbarBody";
 import HotbarLabel from "./HotbarLabel";
 import { useHotbarContent } from "./useHotbarContent";
 
-import {
-  SelectedAction,
-  SelectedBuilding,
-} from "src/network/components/clientComponents";
+import { SelectedAction, SelectedBuilding } from "src/network/components/clientComponents";
 import { wrap } from "src/util/common";
 
 const Hotbar: React.FC = () => {
@@ -72,10 +69,7 @@ const Hotbar: React.FC = () => {
               );
             })}
           </div>
-          <HotbarBody
-            activeBar={activeBarRef.current}
-            setActiveBar={setActiveBar}
-          />
+          <HotbarBody activeBar={activeBarRef.current} setActiveBar={setActiveBar} />
         </motion.div>
       </div>
     </div>

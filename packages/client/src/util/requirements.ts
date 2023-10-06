@@ -1,3 +1,4 @@
+import { SingletonID } from "@latticexyz/network";
 import { EntityID } from "@latticexyz/recs";
 import {
   BuildingCount,
@@ -23,19 +24,10 @@ import {
   TotalRaid,
   TotalUnitsDestroyed,
 } from "src/network/components/chainComponents";
-import {
-  Account,
-  HomeAsteroid,
-  Hangar,
-} from "src/network/components/clientComponents";
-import { hashAndTrimKeyEntity } from "./encode";
-import { SingletonID } from "@latticexyz/network";
-import {
-  getFullResourceCount,
-  getRecipe,
-  hasEnoughResources,
-} from "./resource";
+import { Account, Hangar, HomeAsteroid } from "src/network/components/clientComponents";
 import { RESOURCE_SCALE, RequirementType, ResourceType } from "./constants";
+import { hashAndTrimKeyEntity } from "./encode";
+import { getFullResourceCount, getRecipe, hasEnoughResources } from "./resource";
 
 type Requirement = {
   type: RequirementType;
@@ -65,9 +57,7 @@ export function checkCompletedObjectiveRequirement(entityID: EntityID) {
   const objectiveRequirement = P_ObjectiveRequirement.get(entityID);
   if (objectiveRequirement) {
     const player = Account.get()?.value ?? SingletonID;
-    const hasCompletedObjective = HasCompletedObjective.get(
-      hashAndTrimKeyEntity(objectiveRequirement.value, player)
-    );
+    const hasCompletedObjective = HasCompletedObjective.get(hashAndTrimKeyEntity(objectiveRequirement.value, player));
     return hasCompletedObjective?.value ?? false;
   }
 
@@ -78,9 +68,7 @@ export function checkResearcheRequirement(entityID: EntityID) {
   const requiredResearch = P_RequiredResearch.get(entityID);
   if (requiredResearch) {
     const player = Account.get()?.value ?? SingletonID;
-    const hasResearched = HasResearched.get(
-      hashAndTrimKeyEntity(requiredResearch.value, player)
-    );
+    const hasResearched = HasResearched.get(hashAndTrimKeyEntity(requiredResearch.value, player));
     return hasResearched?.value ?? false;
   }
 
@@ -94,9 +82,7 @@ export function checkProductionRequirement(entityID: EntityID) {
   });
   if (requiredProduction) {
     for (let i = 0; i < requiredProduction.resources.length; i++) {
-      const { production } = getFullResourceCount(
-        requiredProduction.resources[i]
-      );
+      const { production } = getFullResourceCount(requiredProduction.resources[i]);
       if (production < requiredProduction.values[i]) return false;
     }
   }
@@ -111,9 +97,7 @@ export function checkMaxUtilityResourceReqs(entityID: EntityID) {
   });
   if (requiredUtility) {
     for (let i = 0; i < requiredUtility.resourceIDs.length; i++) {
-      const { maxStorage } = getFullResourceCount(
-        requiredUtility.resourceIDs[i]
-      );
+      const { maxStorage } = getFullResourceCount(requiredUtility.resourceIDs[i]);
       if (maxStorage < requiredUtility.requiredAmounts[i]) return false;
     }
   }
@@ -126,9 +110,7 @@ export function checkHasBuiltBuildingRequirement(entityID: EntityID) {
 
   if (requiredHasBuilt) {
     const player = Account.get()?.value ?? SingletonID;
-    const hasBuiltBuilding = HasBuiltBuilding.get(
-      hashAndTrimKeyEntity(requiredHasBuilt.value, player)
-    );
+    const hasBuiltBuilding = HasBuiltBuilding.get(hashAndTrimKeyEntity(requiredHasBuilt.value, player));
     return hasBuiltBuilding?.value ?? false;
   }
 
@@ -136,8 +118,7 @@ export function checkHasBuiltBuildingRequirement(entityID: EntityID) {
 }
 
 export function checkHasDefeatedPirateAsteroid(entityID: EntityID) {
-  const requiredDefeatedPirateAsteroid =
-    P_RequiredPirateAsteroidDefeated.get(entityID);
+  const requiredDefeatedPirateAsteroid = P_RequiredPirateAsteroidDefeated.get(entityID);
 
   if (requiredDefeatedPirateAsteroid) {
     const player = Account.get()?.value ?? SingletonID;
@@ -159,9 +140,7 @@ export function checkBuildingCountRequirement(entityID: EntityID) {
     const player = Account.get()?.value ?? SingletonID;
     for (let i = 0; i < requiredBildingCounts.values.length; i++) {
       const buildingCount =
-        BuildingCount.get(
-          hashAndTrimKeyEntity(requiredBildingCounts.resources[i], player)
-        )?.value ?? 0;
+        BuildingCount.get(hashAndTrimKeyEntity(requiredBildingCounts.resources[i], player))?.value ?? 0;
       if (buildingCount < requiredBildingCounts.values[i]) return false;
     }
   }
@@ -202,9 +181,7 @@ export function checkRaidRequirement(entityID: EntityID) {
   if (requiredRaid) {
     const player = Account.get()?.value ?? SingletonID;
     for (let i = 0; i < requiredRaid.resources.length; i++) {
-      const raidedAmount =
-        TotalRaid.get(hashAndTrimKeyEntity(requiredRaid.resources[i], player))
-          ?.value ?? 0;
+      const raidedAmount = TotalRaid.get(hashAndTrimKeyEntity(requiredRaid.resources[i], player))?.value ?? 0;
       if (raidedAmount < requiredRaid.values[i]) return false;
     }
   }
@@ -221,12 +198,8 @@ export function checkMotherlodeMinedRequirement(entityID: EntityID) {
     const player = Account.get()?.value ?? SingletonID;
     for (let i = 0; i < requiredMotherlodeMined.resources.length; i++) {
       let minedAmount =
-        TotalMotherlodeMined.get(
-          hashAndTrimKeyEntity(requiredMotherlodeMined.resources[i], player)
-        )?.value ?? 0;
-      const { resourcesToClaim } = getFullResourceCount(
-        requiredMotherlodeMined.resources[i]
-      );
+        TotalMotherlodeMined.get(hashAndTrimKeyEntity(requiredMotherlodeMined.resources[i], player))?.value ?? 0;
+      const { resourcesToClaim } = getFullResourceCount(requiredMotherlodeMined.resources[i]);
       minedAmount += resourcesToClaim;
       if (minedAmount < requiredMotherlodeMined.values[i]) return false;
     }
@@ -244,9 +217,7 @@ export function checkDestroyedUnitsRequirement(entityID: EntityID) {
     const player = Account.get()?.value ?? SingletonID;
     for (let i = 0; i < requiredDestroyedUnits.resources.length; i++) {
       const destroyedUnitAmount =
-        TotalUnitsDestroyed.get(
-          hashAndTrimKeyEntity(requiredDestroyedUnits.resources[i], player)
-        )?.value ?? 0;
+        TotalUnitsDestroyed.get(hashAndTrimKeyEntity(requiredDestroyedUnits.resources[i], player))?.value ?? 0;
       if (destroyedUnitAmount < requiredDestroyedUnits.values[i]) return false;
     }
   }
@@ -254,9 +225,7 @@ export function checkDestroyedUnitsRequirement(entityID: EntityID) {
   return true;
 }
 
-export function getDestroyedUnitsRequirement(
-  entityID: EntityID
-): Requirement | null {
+export function getDestroyedUnitsRequirement(entityID: EntityID): Requirement | null {
   if (!P_DestroyedUnitsRequirement.has(entityID)) return null;
 
   const rawRequiredDestroyedUnits = P_DestroyedUnitsRequirement.get(entityID, {
@@ -264,16 +233,12 @@ export function getDestroyedUnitsRequirement(
     values: [],
   });
   const player = Account.get()?.value ?? SingletonID;
-  const requiredDestroyedUnits = rawRequiredDestroyedUnits.resources.map(
-    (resource, index) => ({
-      id: resource,
-      requiredValue: rawRequiredDestroyedUnits.values[index],
-      currentValue:
-        TotalUnitsDestroyed.get(hashAndTrimKeyEntity(resource, player))
-          ?.value ?? 0,
-      scale: 1,
-    })
-  );
+  const requiredDestroyedUnits = rawRequiredDestroyedUnits.resources.map((resource, index) => ({
+    id: resource,
+    requiredValue: rawRequiredDestroyedUnits.values[index],
+    currentValue: TotalUnitsDestroyed.get(hashAndTrimKeyEntity(resource, player))?.value ?? 0,
+    scale: 1,
+  }));
 
   return {
     type: RequirementType.DestroyedUnit,
@@ -289,15 +254,12 @@ export function getResourceRequirement(entityID: EntityID): Requirement | null {
     resources: [],
     values: [],
   });
-  const requiredResources = rawRequiredResources.resources.map(
-    (resource, index) => ({
-      id: resource,
-      requiredValue: rawRequiredResources.values[index],
-      currentValue: getFullResourceCount(resource, ResourceType.Resource)
-        .resourceCount,
-      scale: RESOURCE_SCALE,
-    })
-  );
+  const requiredResources = rawRequiredResources.resources.map((resource, index) => ({
+    id: resource,
+    requiredValue: rawRequiredResources.values[index],
+    currentValue: getFullResourceCount(resource, ResourceType.Resource).resourceCount,
+    scale: RESOURCE_SCALE,
+  }));
 
   return {
     type: RequirementType.Resource,
@@ -306,24 +268,19 @@ export function getResourceRequirement(entityID: EntityID): Requirement | null {
   };
 }
 
-export function getResourceProductionRequirement(
-  entityID: EntityID
-): Requirement | null {
+export function getResourceProductionRequirement(entityID: EntityID): Requirement | null {
   if (!P_ProductionDependencies.has(entityID)) return null;
 
   const rawRequiredProduction = P_ProductionDependencies.get(entityID, {
     resources: [],
     values: [],
   });
-  const requiredProduction = rawRequiredProduction.resources.map(
-    (resource, index) => ({
-      id: resource,
-      requiredValue: rawRequiredProduction.values[index],
-      currentValue: getFullResourceCount(resource, ResourceType.Resource)
-        .production,
-      scale: RESOURCE_SCALE,
-    })
-  );
+  const requiredProduction = rawRequiredProduction.resources.map((resource, index) => ({
+    id: resource,
+    requiredValue: rawRequiredProduction.values[index],
+    currentValue: getFullResourceCount(resource, ResourceType.Resource).production,
+    scale: RESOURCE_SCALE,
+  }));
 
   return {
     type: RequirementType.ResourceRate,
@@ -332,24 +289,19 @@ export function getResourceProductionRequirement(
   };
 }
 
-export function getMaxUtilityRequirement(
-  entityID: EntityID
-): Requirement | null {
+export function getMaxUtilityRequirement(entityID: EntityID): Requirement | null {
   if (!P_RequiredUtility.has(entityID)) return null;
 
   const rawUtilityRequirement = P_RequiredUtility.get(entityID, {
     resourceIDs: [],
     requiredAmounts: [],
   });
-  const requiredMaxUtility = rawUtilityRequirement.resourceIDs.map(
-    (resource, index) => ({
-      id: resource,
-      requiredValue: rawUtilityRequirement.requiredAmounts[index],
-      currentValue: getFullResourceCount(resource, ResourceType.Utility)
-        .maxStorage,
-      scale: 1,
-    })
-  );
+  const requiredMaxUtility = rawUtilityRequirement.resourceIDs.map((resource, index) => ({
+    id: resource,
+    requiredValue: rawUtilityRequirement.requiredAmounts[index],
+    currentValue: getFullResourceCount(resource, ResourceType.Utility).maxStorage,
+    scale: 1,
+  }));
 
   return {
     type: RequirementType.MaxUtility,
@@ -358,9 +310,7 @@ export function getMaxUtilityRequirement(
   };
 }
 
-export function getBuildingCountRequirement(
-  entityID: EntityID
-): Requirement | null {
+export function getBuildingCountRequirement(entityID: EntityID): Requirement | null {
   if (!P_BuildingCountRequirement.has(entityID)) return null;
 
   const rawBuildingCount = P_BuildingCountRequirement.get(entityID, {
@@ -368,15 +318,12 @@ export function getBuildingCountRequirement(
     values: [],
   });
   const player = Account.get()?.value ?? SingletonID;
-  const requiredBuildingCount = rawBuildingCount.resources.map(
-    (resource, index) => ({
-      id: resource,
-      requiredValue: rawBuildingCount.values[index],
-      currentValue:
-        BuildingCount.get(hashAndTrimKeyEntity(resource, player))?.value ?? 0,
-      scale: 1,
-    })
-  );
+  const requiredBuildingCount = rawBuildingCount.resources.map((resource, index) => ({
+    id: resource,
+    requiredValue: rawBuildingCount.values[index],
+    currentValue: BuildingCount.get(hashAndTrimKeyEntity(resource, player))?.value ?? 0,
+    scale: 1,
+  }));
 
   return {
     type: RequirementType.BuildingCount,
@@ -447,8 +394,7 @@ export function getRaidRequirement(entityID: EntityID): Requirement | null {
   const requiredRaid = rawRaid.resources.map((resource, index) => ({
     id: resource,
     requiredValue: rawRaid.values[index],
-    currentValue:
-      TotalRaid.get(hashAndTrimKeyEntity(resource, player))?.value ?? 0,
+    currentValue: TotalRaid.get(hashAndTrimKeyEntity(resource, player))?.value ?? 0,
     scale: RESOURCE_SCALE,
   }));
 
@@ -459,9 +405,7 @@ export function getRaidRequirement(entityID: EntityID): Requirement | null {
   };
 }
 
-export function getMotherlodeMinedRequirement(
-  entityID: EntityID
-): Requirement | null {
+export function getMotherlodeMinedRequirement(entityID: EntityID): Requirement | null {
   if (!P_MotherlodeMinedRequirement.has(entityID)) return null;
 
   const rawMotherlodeMined = P_MotherlodeMinedRequirement.get(entityID, {
@@ -470,16 +414,14 @@ export function getMotherlodeMinedRequirement(
   });
 
   const player = Account.get()?.value ?? SingletonID;
-  const requiredMotherlodeMined = rawMotherlodeMined.resources.map(
-    (resource, index) => ({
-      id: resource,
-      requiredValue: rawMotherlodeMined.values[index],
-      currentValue:
-        (TotalMotherlodeMined.get(hashAndTrimKeyEntity(resource, player))
-          ?.value ?? 0) + getFullResourceCount(resource).resourcesToClaim,
-      scale: RESOURCE_SCALE,
-    })
-  );
+  const requiredMotherlodeMined = rawMotherlodeMined.resources.map((resource, index) => ({
+    id: resource,
+    requiredValue: rawMotherlodeMined.values[index],
+    currentValue:
+      (TotalMotherlodeMined.get(hashAndTrimKeyEntity(resource, player))?.value ?? 0) +
+      getFullResourceCount(resource).resourcesToClaim,
+    scale: RESOURCE_SCALE,
+  }));
 
   return {
     type: RequirementType.MotherlodeMined,
@@ -501,11 +443,7 @@ export function getResearchRequirement(entityID: EntityID): Requirement | null {
       {
         id: rawRequiredResearch,
         requiredValue: 1,
-        currentValue: HasResearched.get(
-          hashAndTrimKeyEntity(rawRequiredResearch, player)
-        )
-          ? 1
-          : 0,
+        currentValue: HasResearched.get(hashAndTrimKeyEntity(rawRequiredResearch, player)) ? 1 : 0,
         scale: 1,
       },
     ],
@@ -513,9 +451,7 @@ export function getResearchRequirement(entityID: EntityID): Requirement | null {
   };
 }
 
-export function getHasBuiltBuildingRequirement(
-  entityID: EntityID
-): Requirement | null {
+export function getHasBuiltBuildingRequirement(entityID: EntityID): Requirement | null {
   const rawRequiredHasBuiltBuilding = P_HasBuiltBuilding.get(entityID)?.value;
 
   if (!rawRequiredHasBuiltBuilding) return null;
@@ -528,11 +464,7 @@ export function getHasBuiltBuildingRequirement(
       {
         id: rawRequiredHasBuiltBuilding,
         requiredValue: 1,
-        currentValue: HasBuiltBuilding.get(
-          hashAndTrimKeyEntity(rawRequiredHasBuiltBuilding, player)
-        )
-          ? 1
-          : 0,
+        currentValue: HasBuiltBuilding.get(hashAndTrimKeyEntity(rawRequiredHasBuiltBuilding, player)) ? 1 : 0,
         scale: 1,
       },
     ],
@@ -540,11 +472,8 @@ export function getHasBuiltBuildingRequirement(
   };
 }
 
-export function getHasDefeatedPirateRequirement(
-  entityID: EntityID
-): Requirement | null {
-  const rawRequiredHasDefeatedPirate =
-    P_RequiredPirateAsteroidDefeated.get(entityID)?.value;
+export function getHasDefeatedPirateRequirement(entityID: EntityID): Requirement | null {
+  const rawRequiredHasDefeatedPirate = P_RequiredPirateAsteroidDefeated.get(entityID)?.value;
 
   if (!rawRequiredHasDefeatedPirate) return null;
 
@@ -556,9 +485,7 @@ export function getHasDefeatedPirateRequirement(
       {
         id: rawRequiredHasDefeatedPirate,
         requiredValue: 1,
-        currentValue: DefeatedSpawnedPirateAsteroid.get(
-          hashAndTrimKeyEntity(rawRequiredHasDefeatedPirate, player)
-        )
+        currentValue: DefeatedSpawnedPirateAsteroid.get(hashAndTrimKeyEntity(rawRequiredHasDefeatedPirate, player))
           ? 1
           : 0,
         scale: 1,

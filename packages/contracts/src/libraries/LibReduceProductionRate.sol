@@ -2,7 +2,6 @@
 pragma solidity >=0.8.21;
 
 import { P_RequiredDependencies, P_RequiredDependenciesData, P_Production, ProductionRate, Level, BuildingType } from "codegen/index.sol";
-import { EResource } from "src/Types.sol";
 
 library LibReduceProductionRate {
   /// @notice Restores production rate when a building is destroyed
@@ -14,7 +13,7 @@ library LibReduceProductionRate {
     P_RequiredDependenciesData memory requiredDeps = P_RequiredDependencies.get(buildingPrototype, level);
 
     for (uint256 i = 0; i < requiredDeps.resources.length; i++) {
-      EResource resource = EResource(requiredDeps.resources[i]);
+      uint8 resource = requiredDeps.resources[i];
       uint256 requiredValue = requiredDeps.amounts[i];
       if (requiredValue == 0) continue;
       uint256 productionRate = ProductionRate.get(playerEntity, resource);
@@ -40,7 +39,7 @@ library LibReduceProductionRate {
     }
 
     for (uint256 i = 0; i < requiredDeps.resources.length; i++) {
-      EResource resource = EResource(requiredDeps.resources[i]);
+      uint8 resource = requiredDeps.resources[i];
       uint256 prevAmount = level > 1 ? prevRequiredDeps.amounts[i] : 0;
       uint256 requiredValue = requiredDeps.amounts[i] - prevAmount;
       if (requiredValue == 0) continue;

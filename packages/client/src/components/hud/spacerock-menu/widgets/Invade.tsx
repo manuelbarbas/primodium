@@ -25,9 +25,7 @@ export const Invade: React.FC = () => {
   return (
     <SecondaryCard
       className={`w-full flex-row items-center gap-2 justify-between ${
-        units.length === 0 || ownedBy === player || !fleetMoves
-          ? "opacity-20"
-          : "0"
+        units.length === 0 || ownedBy === player || !fleetMoves ? "opacity-20" : "0"
       }`}
     >
       <img src="/img/icons/attackicon.png" className="w-8 h-8" />

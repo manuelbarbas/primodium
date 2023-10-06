@@ -16,6 +16,7 @@ export const caldera = {
     },
   },
   faucetUrl: "https://primodium-services.caldera.gg/faucet",
+  indexerUrl: "https://primodium-services.caldera.gg/trpc",
   blockExplorers: {
     default: {
       name: "Blockscout",
@@ -25,7 +26,7 @@ export const caldera = {
 };
 
 interface ChainConfigs {
-  [x: string]: MUDChain;
+  [x: string]: MUDChain & { indexerUrl?: string };
 }
 
 export const chainConfigs: ChainConfigs = {

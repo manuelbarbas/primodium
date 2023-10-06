@@ -46,18 +46,18 @@ contract UpgradeUnitSystemTest is PrimodiumTest {
 
   function testUpgradeUnitHasRequiredResources() public {
     uint8[] memory requiredResources = new uint8[](1);
-    requiredResources[0] = uint8(EResource.Iron);
+    requiredResources[0] = uint8(Iron);
     uint256[] memory requiredAmounts = new uint256[](1);
     requiredAmounts[0] = 100;
     P_RequiredUpgradeResources.set(world, unitPrototype, 1, requiredResources, requiredAmounts);
-    ResourceCount.set(world, player, EResource.Iron, 100);
+    ResourceCount.set(world, player, Iron, 100);
     world.upgradeUnit(unit);
-    assertEq(ResourceCount.get(world, player, EResource.Iron), 0);
+    assertEq(ResourceCount.get(world, player, Iron), 0);
   }
 
   function testUpgradeUnitWithoutRequiredResources() public {
     uint8[] memory requiredResources = new uint8[](1);
-    requiredResources[0] = uint8(EResource.Iron);
+    requiredResources[0] = uint8(Iron);
     uint256[] memory requiredAmounts = new uint256[](1);
     requiredAmounts[0] = 100;
     P_RequiredUpgradeResources.set(unitPrototype, 1, requiredResources, requiredAmounts);

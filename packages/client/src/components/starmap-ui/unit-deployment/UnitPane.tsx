@@ -1,10 +1,10 @@
-import { motion } from "framer-motion";
-import { getBlockTypeName } from "src/util/common";
-import { useEffect, useState } from "react";
 import { EntityID } from "@latticexyz/recs";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { Send } from "src/network/components/clientComponents";
+import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage } from "src/util/constants";
 import { getUnitStats } from "src/util/trainUnits";
-import { Send } from "src/network/components/clientComponents";
 
 export const UnitPane: React.FC<{
   unit: EntityID;
@@ -31,16 +31,11 @@ export const UnitPane: React.FC<{
       className="relative flex flex-col justify-between items-center"
     >
       <div className="flex gap-2 items-center">
-        <img
-          src={BackgroundImage.get(unit)?.at(0) ?? "img/icons/debugicon.png"}
-          className="w-[32px] h-[32px]"
-        />
+        <img src={BackgroundImage.get(unit)?.at(0) ?? "img/icons/debugicon.png"} className="w-[32px] h-[32px]" />
         <p className="bg-pink-900 px-2">{getBlockTypeName(unit)}</p>
       </div>
 
-      <p className="opacity-50 text-xs italic mt-2 flex gap-2 z-10">
-        A small description of the unit.
-      </p>
+      <p className="opacity-50 text-xs italic mt-2 flex gap-2 z-10">A small description of the unit.</p>
 
       <div className="grid grid-cols-6 gap-2 border-y py-2 my-2 border-cyan-400/30">
         {Object.entries(getUnitStats(unit)).map(([name, value]) => (

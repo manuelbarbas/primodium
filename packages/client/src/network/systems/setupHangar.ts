@@ -1,4 +1,4 @@
-import { EntityID, Has, HasValue, defineComponentSystem, runQuery } from "@latticexyz/recs";
+import { Entity, Has, HasValue, defineComponentSystem, runQuery } from "@latticexyz/recs";
 import { hashEntities, hashKeyEntity } from "src/util/encode";
 import { getUnitTrainingTime } from "src/util/trainUnits";
 import { ESpaceRockType } from "src/util/web3/types";
@@ -18,7 +18,7 @@ import { Account, BlockNumber, Hangar, Send } from "../components/clientComponen
 import { world } from "../world";
 
 export function setupHangar() {
-  function getTrainedUnclaimedUnits(units: Map<EntityID, number>, blockNumber: number, spaceRock: EntityID) {
+  function getTrainedUnclaimedUnits(units: Map<Entity, number>, blockNumber: number, spaceRock: Entity) {
     const query = [
       Has(UnitProductionQueueIndex),
       Has(UnitProductionLastQueueIndex),
@@ -58,10 +58,10 @@ export function setupHangar() {
       }
     });
   }
-  function setupHangar(blockNumber: number, spaceRock: EntityID) {
+  function setupHangar(blockNumber: number, spaceRock: Entity) {
     const player = OwnedBy.get(spaceRock)?.value;
     if (!player) return;
-    const units: Map<EntityID, number> = new Map();
+    const units: Map<Entity, number> = new Map();
 
     // get all units and find their counts on the space rock
     P_IsUnit.getAll().forEach((entity) => {

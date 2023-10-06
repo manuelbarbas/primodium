@@ -1,31 +1,22 @@
+import { DepthLayers } from "@game/constants";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   ComponentUpdate,
+  EntityID,
   Has,
+  Not,
   defineEnterSystem,
   defineExitSystem,
   namespaceWorld,
-  Not,
-  EntityID,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
+import { Arrival, OwnedBy, Pirate, Position } from "src/network/components/chainComponents";
 import { BlockNumber } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
-import {
-  ObjectPosition,
-  OnComponentSystem,
-  Tween,
-} from "../../common/object-components/common";
-import { Circle, Line } from "../../common/object-components/graphics";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import {
-  Arrival,
-  OwnedBy,
-  Pirate,
-  Position,
-} from "src/network/components/chainComponents";
-import { DepthLayers } from "@game/constants";
-import { hashStringEntity } from "src/util/encode";
 import { PIRATE_KEY } from "src/util/constants";
+import { hashStringEntity } from "src/util/encode";
+import { ObjectPosition, OnComponentSystem, Tween } from "../../common/object-components/common";
+import { Circle, Line } from "../../common/object-components/graphics";
 
 export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -53,22 +44,13 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
     //render personal pirates only
     if (
       Pirate.has(arrival.destination) &&
-      hashStringEntity(PIRATE_KEY, player) !==
-        OwnedBy.get(arrival.destination)?.value
+      hashStringEntity(PIRATE_KEY, player) !== OwnedBy.get(arrival.destination)?.value
     )
       return;
 
-    const originPixelCoord = tileCoordToPixelCoord(
-      { x: origin.x, y: -origin.y },
-      tileWidth,
-      tileHeight
-    );
+    const originPixelCoord = tileCoordToPixelCoord({ x: origin.x, y: -origin.y }, tileWidth, tileHeight);
 
-    const destinationPixelCoord = tileCoordToPixelCoord(
-      { x: destination.x, y: -destination.y },
-      tileWidth,
-      tileHeight
-    );
+    const destinationPixelCoord = tileCoordToPixelCoord({ x: destination.x, y: -destination.y }, tileWidth, tileHeight);
 
     const sendTrajectory = scene.objectPool.getGroup(entityId + objIndexSuffix);
 
@@ -100,8 +82,7 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
         const blockNumber = (value[0]?.value as number) ?? 0;
         // const remainingBlocks = Number(arrival.arrivalBlock) - blockNumber;
         const blocksTraveled = blockNumber - Number(arrival.timestamp);
-        const totalBlocks =
-          Number(arrival.arrivalBlock) - Number(arrival.timestamp);
+        const totalBlocks = Number(arrival.arrivalBlock) - Number(arrival.timestamp);
 
         const progress = blocksTraveled / totalBlocks;
 
@@ -144,12 +125,8 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
         }
 
         // Calculate the starting position based on progress
-        const startX =
-          originPixelCoord.x +
-          (destinationPixelCoord.x - originPixelCoord.x) * progress;
-        const startY =
-          originPixelCoord.y +
-          (destinationPixelCoord.y - originPixelCoord.y) * progress;
+        const startX = originPixelCoord.x + (destinationPixelCoord.x - originPixelCoord.x) * progress;
+        const startY = originPixelCoord.y + (destinationPixelCoord.y - originPixelCoord.y) * progress;
 
         gameObject.x = startX;
         gameObject.y = startY;

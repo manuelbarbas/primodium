@@ -1,15 +1,11 @@
-import { HasValue } from "@latticexyz/recs";
-import { useEntityQuery } from "@latticexyz/react";
-import { FaArrowLeft, FaGreaterThan, FaTimes, FaTrophy } from "react-icons/fa";
-import {
-  Account,
-  Battle,
-  BattleReport,
-} from "src/network/components/clientComponents";
 import { SingletonID } from "@latticexyz/network";
+import { useEntityQuery } from "@latticexyz/react";
+import { HasValue } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { world } from "src/network/world";
+import { FaArrowLeft, FaGreaterThan, FaTimes, FaTrophy } from "react-icons/fa";
 import { Position } from "src/network/components/chainComponents";
+import { Account, Battle, BattleReport } from "src/network/components/clientComponents";
+import { world } from "src/network/world";
 import { BattleDetails } from "./BattleDetails";
 
 export const LabeledValue: React.FC<{
@@ -93,24 +89,19 @@ export const BattleReports = () => {
                   {battle.winner !== player && (
                     <div className="rounded-md bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
                       <FaTimes size={16} />
-                      <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">
-                        LOSS
-                      </p>
+                      <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">LOSS</p>
                     </div>
                   )}
                   {battle.winner === player && (
                     <div className="rounded-md bg-green-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
                       <FaTrophy size={16} />
-                      <p className="bg-green-900 border border-green-500  rounded-md px-1 text-[.6rem]">
-                        WIN
-                      </p>
+                      <p className="bg-green-900 border border-green-500  rounded-md px-1 text-[.6rem]">WIN</p>
                     </div>
                   )}
 
                   <LabeledValue label="LOCATION">
                     <p>
-                      [{Position.get(battle.spaceRock)?.x ?? 0},
-                      {Position.get(battle.spaceRock)?.y ?? 0}]
+                      [{Position.get(battle.spaceRock)?.x ?? 0},{Position.get(battle.spaceRock)?.y ?? 0}]
                     </p>
                   </LabeledValue>
                 </div>
@@ -133,9 +124,7 @@ export const BattleReports = () => {
             ))}
         </div>
       )}
-      {selectedBattle && (
-        <BattleDetails battle={selectedBattle} player={player} />
-      )}
+      {selectedBattle && <BattleDetails battle={selectedBattle} player={player} />}
       {selectedBattle && (
         <button
           className="p-1 px-4 border rounded-md gap-2 flex items-center text-md font-bold bg-slate-800 border-slate-600 mt-2"
