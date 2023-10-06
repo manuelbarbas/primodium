@@ -7,16 +7,15 @@ import { renderArrivalsInTransit } from "./renderArrivalsInTransit";
 import { renderArrivalsInOrbit } from "./renderArrivalsInOrbit";
 import { Account } from "src/network/components/clientComponents";
 import { renderPirateAsteroid } from "./renderPirateAsteroid";
+import { SetupResult } from "src/network/types";
 
-export const runSystems = (scene: Scene) => {
-  const player = Account.get()?.value!;
+export const runSystems = (scene: Scene, mud: SetupResult) => {
+  // focusAsteroid(scene);
 
-  focusAsteroid(scene);
+  renderAsteroid(scene, mud);
+  // renderMotherlode(scene, player);
+  // renderPirateAsteroid(scene, player);
 
-  renderAsteroid(scene, player);
-  renderMotherlode(scene, player);
-  renderPirateAsteroid(scene, player);
-
-  renderArrivalsInTransit(scene, player);
-  renderArrivalsInOrbit(scene, player);
+  // renderArrivalsInTransit(scene, player);
+  // renderArrivalsInOrbit(scene, player);
 };
