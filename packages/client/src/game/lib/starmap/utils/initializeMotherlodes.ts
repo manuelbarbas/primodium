@@ -1,78 +1,47 @@
-import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import {
-  AsteroidType,
-  GameConfig,
-  Motherlode,
-  MotherlodeResource,
-  P_MotherlodeResource,
-  Position,
-  ReversePosition,
-} from "src/network/components/chainComponents";
-import {
-  encodeCoord,
-  getMotherlodeEntity,
-  hashKeyEntity,
-} from "src/util/encode";
+import { encodeCoord, getMotherlodeEntity, hashKeyEntity } from "src/util/encode";
 import { getPositionByVector } from "src/util/vector";
 import { world } from "src/network/world";
-import {
-  EMotherlodeSize,
-  EMotherlodeType,
-  ESpaceRockType,
-} from "src/util/web3/types";
+import { Entity } from "@latticexyz/recs";
+import { components } from "src/network/components";
+import { EMotherlodeType } from "src/util/web3/types";
 
-export function initializeMotherlodes(sourceEntity: EntityID, source: Coord) {
-  const config = GameConfig.get();
+export function initializeMotherlodes(sourceEntity: Entity, source: Coord) {
+  const config = components.P_GameConfig.get();
   if (!config) throw new Error("GameConfig not found");
   for (let i = 0; i < config.maxMotherlodesPerAsteroid; i++) {
     const motherlodePosition = getPositionByVector(
-      config.motherlodeDistance,
-      Math.floor((i * 360) / config.maxMotherlodesPerAsteroid),
+      Number(config.motherlodeDistance),
+      Math.floor((i * 360) / Number(config.maxMotherlodesPerAsteroid)),
       source
     );
-    if (ReversePosition.has(encodeCoord(motherlodePosition))) continue;
-    const motherlodeEntity = getMotherlodeEntity(
-      sourceEntity,
-      motherlodePosition
-    );
+
+    if (components.ReversePosition.getWithKeys(motherlodePosition)) continue;
+    const motherlodeEntity = getMotherlodeEntity(sourceEntity, motherlodePosition);
     const encodedPosition = encodeCoord(motherlodePosition);
     world.registerEntity({ id: encodedPosition });
-    ReversePosition.set({ value: motherlodeEntity }, encodedPosition);
+    components.ReversePosition.update({ entity: motherlodeEntity as string }, encodedPosition);
 
-    if (!isMotherlode(motherlodeEntity, config.motherlodeChanceInv)) continue;
+    if (!isMotherlode(motherlodeEntity, Number(config.motherlodeChanceInv))) continue;
 
     world.registerEntity({ id: motherlodeEntity });
-    const {
-      size: rawSize,
-      motherlodeType: rawMotherlodeType,
-      cooldownBlocks,
-    } = getMotherlodeRawPrototype(motherlodeEntity);
+    const { size: rawSize, motherlodeType: rawMotherlodeType } = getMotherlodeRawPrototype(motherlodeEntity);
     const motherlodeType = getMotherlodeType(rawMotherlodeType);
     const size = getSize(rawSize);
-    Motherlode.set(
-      { size, motherlodeType, cooldownBlocks: cooldownBlocks.toString() },
-      motherlodeEntity
-    );
-    Position.set(
-      { ...motherlodePosition, parent: "0" as EntityID },
-      motherlodeEntity
-    );
+    components.Motherlode.update({ size, motherlodeType }, motherlodeEntity);
+    components.Position.update({ ...motherlodePosition, parent: "0" }, motherlodeEntity);
 
-    const resource = P_MotherlodeResource.get(
-      hashKeyEntity(motherlodeType, size)
-    )?.resource;
+    // const resource = components.P_MotherlodeResource.get(hashKeyEntity(motherlodeType, size))?.resource;
 
-    if (!resource)
-      throw new Error("no resource found for this motherlode type and size");
-    const resourceMotherlodeEntity = hashKeyEntity(resource, motherlodeEntity);
-    world.registerEntity({ id: resourceMotherlodeEntity });
-    MotherlodeResource.set({ value: 0 }, resourceMotherlodeEntity);
-    AsteroidType.set({ value: ESpaceRockType.Motherlode }, motherlodeEntity);
+    // if (!resource) throw new Error("no resource found for this motherlode type and size");
+    // const resourceMotherlodeEntity = hashKeyEntity(resource, motherlodeEntity);
+    // world.registerEntity({ id: resourceMotherlodeEntity });
+    // components.MotherlodeResource.set({ value: 0 }, resourceMotherlodeEntity);
+    components.RockType.set({ value: 2 }, motherlodeEntity);
   }
 }
 
-function isMotherlode(entity: EntityID, chanceInv: number) {
+function isMotherlode(entity: Entity, chanceInv: number) {
   const motherlodeType = getByteUInt(entity, 6, 128);
   return motherlodeType % chanceInv === 1;
 }
@@ -91,14 +60,14 @@ function getMotherlodeType(motherlodeType: number) {
 }
 
 const ONE = BigInt(1);
-const getByteUInt = (_b: EntityID, length: number, shift: number): number => {
+const getByteUInt = (_b: Entity, length: number, shift: number): number => {
   const b = BigInt(_b);
   const mask = ((ONE << BigInt(length)) - ONE) << BigInt(shift);
   const _byteUInt = (b & mask) >> BigInt(shift);
   return Number(_byteUInt);
 };
 
-function getMotherlodeRawPrototype(entity: EntityID) {
+function getMotherlodeRawPrototype(entity: Entity) {
   // 0-31 size
   const size = getByteUInt(entity, 5, 0);
   // 0-31 motherlodeType
