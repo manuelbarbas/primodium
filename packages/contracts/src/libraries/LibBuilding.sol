@@ -21,6 +21,7 @@ import { S_ResourceProductionSystem } from "systems/subsystems/S_ResourceProduct
 // types
 import { BuildingKey, BuildingTileKey, ExpansionKey } from "src/Keys.sol";
 import { Bounds, EBuilding, EResource } from "src/Types.sol";
+import { BuildOrder, BuildOrderTableId, BuildOrderData } from "codegen/tables/BuildOrder.sol";
 
 library LibBuilding {
   /// @notice Builds a building at a specified coordinate
@@ -45,17 +46,17 @@ library LibBuilding {
       hasRequiredBaseLevel(playerEntity, buildingPrototype, 1),
       "[BuildSystem] MainBase level requirement not met"
     );
-
-    require(canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
-
+    BuildOrder.set(BuildOrderData(playerEntity, buildingEntity, buildingPrototype, coord.x, coord.y, coord.parent));
+    // require(canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
+    Position.set(buildingEntity, coord);
     Spawned.set(buildingEntity, true);
     BuildingType.set(buildingEntity, buildingPrototype);
     Level.set(buildingEntity, 1);
-    Position.set(buildingEntity, coord);
+
     LastClaimedAt.set(buildingEntity, block.timestamp);
     OwnedBy.set(buildingEntity, playerEntity);
 
-    placeBuildingTiles(playerEntity, buildingEntity, buildingPrototype, coord);
+    // placeBuildingTiles(playerEntity, buildingEntity, buildingPrototype, coord);
 
     address playerAddress = entityToAddress(playerEntity);
 

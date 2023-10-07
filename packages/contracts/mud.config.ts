@@ -429,6 +429,53 @@ export const config = mudConfig({
       },
       offchainOnly: true,
     },
+    /* ------------------------------ Orders ----------------------------- */
+
+    BuildOrder: {
+      keySchema: {},
+      valueSchema: {
+        playerEntity: "bytes32",
+        buildingEntity: "bytes32",
+        buildingType: "bytes32",
+        x: "int32",
+        y: "int32",
+        parrent: "bytes32",
+      },
+    },
+
+    UpgradeOrder: {
+      keySchema: {},
+      valueSchema: {
+        playerEntity: "bytes32",
+        buildingEntity: "bytes32",
+        level: "uint256",
+      },
+    },
+
+    TrainUnitsOrder: {
+      keySchema: {},
+      valueSchema: {
+        playerEntity: "bytes32",
+        unitType: "bytes32",
+        count: "uint256",
+      },
+    },
+
+    ResearchOrder: {
+      keySchema: {},
+      valueSchema: {
+        playerEntity: "bytes32",
+        researchID: "bytes32",
+      },
+    },
+
+    ObjectiveOrder: {
+      keySchema: {},
+      valueSchema: {
+        playerEntity: "bytes32",
+        objectiveID: "bytes32",
+      },
+    },
 
     /* ------------------------------ Test Hook ----------------------------- */
     HookedValue: {

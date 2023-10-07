@@ -104,7 +104,7 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testIronMineOnNonIronFail() public {
-    PositionData memory nonIronCoord = getNonIronPosition(creator);
+    PositionData memory nonIronCoord = getCopperPosition(creator);
 
     vm.expectRevert(bytes("[BuildSystem] Cannot build on this tile"));
     world.build(EBuilding.IronMine, nonIronCoord);

@@ -13,6 +13,11 @@ import { SchemaType } from "@latticexyz/schema-type/src/solidity/SchemaType.sol"
 import { MirrorSubscriber } from "libraries/MirrorSubscriber.sol";
 import { HookedValue, HookedValueTableId } from "codegen/tables/HookedValue.sol";
 import { OnHookChangedValue, OnHookChangedValueTableId } from "codegen/tables/OnHookChangedValue.sol";
+import { Children, ChildrenTableId } from "codegen/tables/Children.sol";
+import { OwnedBy, OwnedByTableId } from "codegen/tables/OwnedBy.sol";
+import { Position, PositionTableId, PositionData } from "codegen/tables/Position.sol";
+import { OnBuild_PlaceOnTile } from "libraries/hooks/OnBuild_PlaceOnTile.sol";
+import { BuildOrder, BuildOrderTableId, BuildOrderData } from "codegen/tables/BuildOrder.sol";
 import { ALL } from "@latticexyz/store/src/storeHookTypes.sol";
 
 contract PostDeploy is Script {
@@ -32,13 +37,11 @@ contract PostDeploy is Script {
     createTerrain(world);
     console.log("Terrain created");
 
-    MirrorSubscriber subscriber = new MirrorSubscriber(HookedValueTableId, world);
-    console.log("Subscriber Created");
-    world.grantAccess(OnHookChangedValueTableId, address(subscriber));
-    world.registerStoreHook(HookedValueTableId, subscriber, ALL);
-
-    //StoreCore.registerStoreHook(HookedValueTableId, subscriber, ALL);
-    console.log("Subscriber Hooked");
+    OnBuild_PlaceOnTile placeOnTile = new OnBuild_PlaceOnTile();
+    world.grantAccess(ChildrenTableId, address(placeOnTile));
+    world.grantAccess(OwnedByTableId, address(placeOnTile));
+    world.grantAccess(PositionTableId, address(placeOnTile));
+    world.registerStoreHook(BuildOrderTableId, placeOnTile, ALL);
 
     vm.stopBroadcast();
   }
