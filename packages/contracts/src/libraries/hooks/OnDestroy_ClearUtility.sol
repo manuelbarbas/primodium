@@ -26,7 +26,7 @@ import "forge-std/console.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
 
-contract OnBuild_PlaceOnTile is SystemHook {
+contract OnDestroy_ClearUtility is SystemHook {
   constructor() {}
 
   function onBeforeCallSystem(

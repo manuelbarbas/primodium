@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
+import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
 import { Script } from "forge-std/Script.sol";
 import { console } from "forge-std/console.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
@@ -18,7 +19,8 @@ import { OwnedBy, OwnedByTableId } from "codegen/tables/OwnedBy.sol";
 import { Position, PositionTableId, PositionData } from "codegen/tables/Position.sol";
 import { OnBuild_PlaceOnTile } from "libraries/hooks/OnBuild_PlaceOnTile.sol";
 import { BuildOrder, BuildOrderTableId, BuildOrderData } from "codegen/tables/BuildOrder.sol";
-import { ALL } from "@latticexyz/store/src/storeHookTypes.sol";
+
+import { ALL } from "@latticexyz/world/src/systemHookTypes.sol";
 
 contract PostDeploy is Script {
   function run(address worldAddress) external {
@@ -41,7 +43,7 @@ contract PostDeploy is Script {
     world.grantAccess(ChildrenTableId, address(placeOnTile));
     world.grantAccess(OwnedByTableId, address(placeOnTile));
     world.grantAccess(PositionTableId, address(placeOnTile));
-    world.registerStoreHook(BuildOrderTableId, placeOnTile, ALL);
+    world.registerSystemHook(getSystemResourceId("BuildSystem"), placeOnTile, ALL);
 
     vm.stopBroadcast();
   }
