@@ -47,7 +47,7 @@ library LibBuilding {
       "[BuildSystem] MainBase level requirement not met"
     );
     BuildOrder.set(BuildOrderData(playerEntity, buildingEntity, buildingPrototype, coord.x, coord.y, coord.parent));
-    // require(canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
+    require(canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
     Position.set(buildingEntity, coord);
     Spawned.set(buildingEntity, true);
     BuildingType.set(buildingEntity, buildingPrototype);
@@ -56,7 +56,7 @@ library LibBuilding {
     LastClaimedAt.set(buildingEntity, block.timestamp);
     OwnedBy.set(buildingEntity, playerEntity);
 
-    // placeBuildingTiles(playerEntity, buildingEntity, buildingPrototype, coord);
+    placeBuildingTiles(playerEntity, buildingEntity, buildingPrototype, coord);
 
     address playerAddress = entityToAddress(playerEntity);
 
