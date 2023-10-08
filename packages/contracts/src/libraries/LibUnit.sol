@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { Motherlode, ProductionRate, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_Unit, P_UnitProduction, P_UnitProdMultiplier, LastClaimedAt, RockType } from "codegen/index.sol";
-import { EResource, ERock } from "src/Types.sol";
+import { ERock } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibResource } from "libraries/LibResource.sol";
@@ -95,8 +95,8 @@ library LibUnit {
     uint256 unitLevel = UnitLevel.get(playerEntity, unitType);
 
     P_RequiredResourcesData memory resources = P_RequiredResources.get(unitType, unitLevel);
-    for (uint256 i = 0; i < resources.resources.length; i++) {
-      EResource resource = EResource(resources.resources[i]);
+    for (uint8 i = 0; i < resources.resources.length; i++) {
+      uint8 resource = resources.resources[i];
       if (!P_IsUtility.get(resource)) continue;
       uint256 requiredAmount = resources.amounts[i] * count;
       uint256 currentAmount = ResourceCount.get(playerEntity, resource);
@@ -134,13 +134,13 @@ library LibUnit {
     UnitCount.set(playerEntity, rockEntity, unitType, prevUnitCount + unitCount);
 
     // update production rate
-    if (RockType.get(rockEntity) != ERock.Motherlode) return;
+    if (RockType.get(rockEntity) != uint8(ERock.Motherlode)) return;
 
     uint256 level = UnitLevel.get(playerEntity, unitType);
     uint256 productionRate = P_MiningRate.get(unitType, level);
     if (productionRate == 0) return;
 
-    EResource resource = Motherlode.getMotherlodeType(rockEntity);
+    uint8 resource = (Motherlode.getMotherlodeType(rockEntity));
     uint256 prevProductionRate = ProductionRate.get(playerEntity, resource);
     ProductionRate.set(playerEntity, resource, prevProductionRate + (productionRate * unitCount));
   }
@@ -165,13 +165,13 @@ library LibUnit {
     UnitCount.set(playerEntity, rockEntity, unitType, currUnitCount - unitCount);
 
     // update production rate
-    if (RockType.get(rockEntity) != ERock.Motherlode) return;
+    if (RockType.get(rockEntity) != uint8(ERock.Motherlode)) return;
 
     uint256 level = UnitLevel.get(playerEntity, unitType);
     uint256 productionRate = P_MiningRate.get(unitType, level);
     if (productionRate == 0) return;
 
-    EResource resource = Motherlode.getMotherlodeType(rockEntity);
+    uint8 resource = (Motherlode.getMotherlodeType(rockEntity));
     uint256 prevProductionRate = ProductionRate.get(playerEntity, resource);
     ProductionRate.set(playerEntity, resource, prevProductionRate - (productionRate * unitCount));
   }

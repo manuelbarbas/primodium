@@ -149,10 +149,10 @@ library LibBuilding {
 
     return
       Bounds({
-        maxX: (asteroidDims.xBounds + range.x) / 2 - 1,
-        maxY: (asteroidDims.yBounds + range.y) / 2 - 1,
-        minX: (asteroidDims.xBounds - range.x) / 2,
-        minY: (asteroidDims.yBounds - range.y) / 2
+        maxX: (asteroidDims.xBounds + range.width) / 2 - 1,
+        maxY: (asteroidDims.yBounds + range.height) / 2 - 1,
+        minX: (asteroidDims.xBounds - range.width) / 2,
+        minY: (asteroidDims.yBounds - range.height) / 2
       });
   }
 
@@ -192,7 +192,7 @@ library LibBuilding {
   /// @param coord The coordinate to check
   /// @return True if the building's required terrain matches the terrain of the given coord
   function canBuildOnTile(bytes32 prototype, PositionData memory coord) internal view returns (bool) {
-    EResource resource = P_RequiredTile.get(prototype);
-    return resource == EResource.NULL || resource == P_Terrain.get(coord.x, coord.y);
+    EResource resource = EResource(P_RequiredTile.get(prototype));
+    return resource == EResource.NULL || uint8(resource) == P_Terrain.get(coord.x, coord.y);
   }
 }

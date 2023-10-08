@@ -58,38 +58,38 @@ contract S_UpdateRockSystemTest is PrimodiumTest {
   }
 
   function testUpdateMotherlode() public {
-    RockType.set(rock, ERock.Motherlode);
+    RockType.set(rock, uint8(ERock.Motherlode));
 
     setupClaimUnits();
 
     Home.setAsteroid(player, rock);
-    MaxResourceCount.set(player, EResource.Iron, 1000);
-    ProductionRate.set(player, EResource.Iron, 10);
+    MaxResourceCount.set(player, Iron, 1000);
+    ProductionRate.set(player, Iron, 10);
     LastClaimedAt.set(player, block.timestamp - 10);
 
     world.updateRock(player, rock);
 
-    assertEq(ResourceCount.get(player, EResource.Iron), 100);
+    assertEq(ResourceCount.get(player, Iron), 100);
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 0);
   }
 
   function testUpdateAsteroid() public {
-    RockType.set(rock, ERock.Asteroid);
+    RockType.set(rock, uint8(ERock.Asteroid));
 
     setupClaimUnits();
     Home.setAsteroid(player, rock);
-    MaxResourceCount.set(player, EResource.Iron, 1000);
-    ProductionRate.set(player, EResource.Iron, 10);
+    MaxResourceCount.set(player, Iron, 1000);
+    ProductionRate.set(player, Iron, 10);
     LastClaimedAt.set(player, block.timestamp - 10);
 
     world.updateRock(player, rock);
 
-    assertEq(ResourceCount.get(player, EResource.Iron), 100);
+    assertEq(ResourceCount.get(player, Iron), 100);
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 100);
   }
 
   function testInvalidPlayer() public {
-    RockType.set(rock, ERock.Motherlode);
+    RockType.set(rock, uint8(ERock.Motherlode));
     world.updateRock(bytes32(0), rock);
   }
 

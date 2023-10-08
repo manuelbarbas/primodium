@@ -1,12 +1,12 @@
-import { EntityID, Type } from "@latticexyz/recs";
+import { Entity, Type } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { world } from "src/network/world";
 import { ESendType } from "src/util/web3/types";
 import { BlockNumber } from "../clientComponents";
-import newComponent from "./ExtendedComponent";
+import { createExtendedComponent } from "./ExtendedComponent";
 
 export const newArrivalComponent = () => {
-  const component = newComponent(
+  const component = createExtendedComponent(
     world,
     {
       sendType: Type.Number,
@@ -24,22 +24,22 @@ export const newArrivalComponent = () => {
     }
   );
 
-  const getWithId = (id: EntityID) => {
+  const getWithId = (id: Entity) => {
     return component.get(id);
   };
 
   const get = (filters?: {
-    to?: EntityID;
-    from?: EntityID;
-    origin?: EntityID;
-    destination?: EntityID;
+    to?: Entity;
+    from?: Entity;
+    origin?: Entity;
+    destination?: Entity;
     sendType?: ESendType;
     onlyOrbiting?: boolean;
     onlyTransit?: boolean;
   }) => {
     if (filters?.onlyOrbiting && filters?.onlyTransit) throw new Error("Cannot filter for both orbiting and transit");
     const blockNumber = BlockNumber.get()?.value ?? 0;
-    let all = component.getAll().map((entity) => {
+    const all = component.getAll().map((entity) => {
       const comp = component.get(entity);
       if (!comp) return undefined;
       return {
@@ -64,11 +64,11 @@ export const newArrivalComponent = () => {
     });
   };
 
-  const use = (filters?: {
-    to?: EntityID;
-    from?: EntityID;
-    origin?: EntityID;
-    destination?: EntityID;
+  const useValue = (filters?: {
+    to?: Entity;
+    from?: Entity;
+    origin?: Entity;
+    destination?: Entity;
     sendType?: ESendType;
     onlyOrbiting?: boolean;
     onlyTransit?: boolean;
@@ -78,5 +78,5 @@ export const newArrivalComponent = () => {
     return useMemo(() => get(filters), [blockNumber]);
   };
 
-  return { ...component, get, getWithId, use, getEntity: component.get };
+  return { ...component, get, getWithId, use: useValue, getEntity: component.get };
 };

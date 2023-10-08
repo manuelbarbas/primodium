@@ -1,30 +1,14 @@
+import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
+import { EntityID, Has, HasValue, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
+import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
-import {
-  namespaceWorld,
-  Has,
-  defineEnterSystem,
-  HasValue,
-  EntityID,
-} from "@latticexyz/recs";
-import {
-  ObjectPosition,
-  OnClick,
-  OnComponentSystem,
-  SetValue,
-} from "../../common/object-components/common";
-import { Outline, Texture } from "../../common/object-components/sprite";
-import {
-  AsteroidType,
-  Motherlode,
-  OwnedBy,
-  Position,
-} from "src/network/components/chainComponents";
+import { AsteroidType, Motherlode, OwnedBy, Position } from "src/network/components/chainComponents";
+import { Send } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
 import { MotherlodeSizeNames, MotherlodeTypeNames } from "src/util/constants";
 import { ESpaceRockType } from "src/util/web3/types";
-import { Send } from "src/network/components/clientComponents";
-import { Coord } from "@latticexyz/utils";
-import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
+import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
+import { Outline, Texture } from "../../common/object-components/sprite";
 
 export const renderMotherlode = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -36,9 +20,7 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
     const asteroidType = AsteroidType.get(entityId)?.value;
     if (asteroidType !== ESpaceRockType.Motherlode) return;
 
-    const motherlodeObjectGroup = scene.objectPool.getGroup(
-      "motherlode_" + entityId
-    );
+    const motherlodeObjectGroup = scene.objectPool.getGroup("motherlode_" + entityId);
     const motherlodeData = Motherlode.get(entityId);
     if (!motherlodeData) throw new Error("motherlode data not found");
 
@@ -76,9 +58,9 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
 
     const outlineSprite =
       SpriteKeys[
-        `Motherlode${
-          ownedBy ? (ownedBy === player ? "Player" : "Enemy") : "Neutral"
-        }${MotherlodeSizeNames[motherlodeData.size]}` as keyof typeof SpriteKeys
+        `Motherlode${ownedBy ? (ownedBy === player ? "Player" : "Enemy") : "Neutral"}${
+          MotherlodeSizeNames[motherlodeData.size]
+        }` as keyof typeof SpriteKeys
       ];
     const motherlodeOutline = motherlodeObjectGroup.add("Sprite");
     motherlodeOutline.setComponents([
@@ -87,9 +69,7 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
       OnComponentSystem(Send, () => {
         if (Send.get()?.destination === entityId) {
           if (motherlodeOutline.hasComponent(Outline().id)) return;
-          motherlodeOutline.setComponent(
-            Outline({ thickness: 1.5, color: 0xffa500 })
-          );
+          motherlodeOutline.setComponent(Outline({ thickness: 1.5, color: 0xffa500 }));
           return;
         }
 
@@ -103,25 +83,17 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
 
         const outlineSprite =
           SpriteKeys[
-            `Motherlode${
-              ownedBy ? (ownedBy === player ? "Player" : "Enemy") : "Neutral"
-            }${
+            `Motherlode${ownedBy ? (ownedBy === player ? "Player" : "Enemy") : "Neutral"}${
               MotherlodeSizeNames[motherlodeData.size]
             }` as keyof typeof SpriteKeys
           ];
 
-        motherlodeOutline.setComponent(
-          Texture(Assets.SpriteAtlas, outlineSprite)
-        );
+        motherlodeOutline.setComponent(Texture(Assets.SpriteAtlas, outlineSprite));
       }),
     ]);
   };
 
-  const query = [
-    Has(AsteroidType),
-    Has(Position),
-    HasValue(AsteroidType, { value: ESpaceRockType.Motherlode }),
-  ];
+  const query = [Has(AsteroidType), Has(Position), HasValue(AsteroidType, { value: ESpaceRockType.Motherlode })];
 
   defineEnterSystem(gameWorld, query, ({ entity }) => {
     const entityId = world.entities[entity];

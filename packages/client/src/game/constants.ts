@@ -1,4 +1,4 @@
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import { find } from "lodash";
 import AsteroidTiledMap from "../maps/asteroid_0.7.json";
 import { BlockType } from "../util/constants";
@@ -34,7 +34,7 @@ export namespace AsteroidMap {
     Tooltip = 5001,
   }
 
-  export enum TerrainTilekeys {
+  export enum TerrainTileKeys {
     Air,
     Alluvium,
     Bedrock,
@@ -44,40 +44,40 @@ export namespace AsteroidMap {
     Water,
   }
 
-  export enum ResourceTilekeys {
+  export enum ResourceTileKeys {
     Iron,
     Copper,
     Lithium,
     Sulfur,
   }
 
-  const FogTilekeysGID =
+  const FogTileKeysGID =
     find(AsteroidTiledMap.tilesets, {
       name: "fog",
     })?.firstgid ?? 0;
 
-  export enum FogTilekeys {
-    Empty = FogTilekeysGID,
-    BottomRight = FogTilekeysGID + 10,
-    OuterBottomRight = FogTilekeysGID + 15,
-    TopLeft = FogTilekeysGID + 2,
-    OuterTopLeft = FogTilekeysGID + 17,
-    TopRight = FogTilekeysGID + 3,
-    OuterTopRight = FogTilekeysGID + 1,
-    Top = FogTilekeysGID + 14,
-    OuterTop = FogTilekeysGID + 16,
-    Left = FogTilekeysGID + 8,
-    OuterLeft = FogTilekeysGID + 6,
-    Right = FogTilekeysGID + 6,
-    OuterRight = FogTilekeysGID + 8,
-    BottomLeft = FogTilekeysGID + 9,
-    OuterBottomLeft = FogTilekeysGID + 13,
-    Bottom = FogTilekeysGID + 16,
-    OuterBottom = FogTilekeysGID + 14,
-    Base = FogTilekeysGID + 7,
+  export enum FogTileKeys {
+    Empty = FogTileKeysGID,
+    BottomRight = FogTileKeysGID + 10,
+    OuterBottomRight = FogTileKeysGID + 15,
+    TopLeft = FogTileKeysGID + 2,
+    OuterTopLeft = FogTileKeysGID + 17,
+    TopRight = FogTileKeysGID + 3,
+    OuterTopRight = FogTileKeysGID + 1,
+    Top = FogTileKeysGID + 14,
+    OuterTop = FogTileKeysGID + 16,
+    Left = FogTileKeysGID + 8,
+    OuterLeft = FogTileKeysGID + 6,
+    Right = FogTileKeysGID + 6,
+    OuterRight = FogTileKeysGID + 8,
+    BottomLeft = FogTileKeysGID + 9,
+    OuterBottomLeft = FogTileKeysGID + 13,
+    Bottom = FogTileKeysGID + 16,
+    OuterBottom = FogTileKeysGID + 14,
+    Base = FogTileKeysGID + 7,
   }
 
-  export const TileKeys = { ...TerrainTilekeys, ...ResourceTilekeys };
+  export const TileKeys = { ...TerrainTileKeys, ...ResourceTileKeys };
 
   export enum TileAnimationKeys {
     Water = "Water",
@@ -163,15 +163,15 @@ export namespace AsteroidMap {
     DroneFactory1 = "dronefactory/level1",
   }
 
-  export const EntityIDToResourceTilesetKey = {
-    [BlockType.Iron]: ResourceTilekeys.Iron,
-    [BlockType.Copper]: ResourceTilekeys.Copper,
-    [BlockType.Lithium]: ResourceTilekeys.Lithium,
-    [BlockType.Sulfur]: ResourceTilekeys.Sulfur,
+  export const EntityToResourceTilesetKey = {
+    [BlockType.Iron]: ResourceTileKeys.Iron,
+    [BlockType.Copper]: ResourceTileKeys.Copper,
+    [BlockType.Lithium]: ResourceTileKeys.Lithium,
+    [BlockType.Sulfur]: ResourceTileKeys.Sulfur,
   };
 
   export const TerrainTilesetIdToEntityId: {
-    [key: number]: EntityID;
+    [key: number]: Entity;
   } = {
     [TileKeys.Air]: BlockType.Air,
     [TileKeys.Biofilm]: BlockType.Biofilm,
@@ -181,7 +181,7 @@ export namespace AsteroidMap {
     [TileKeys.Regolith]: BlockType.Regolith,
   };
 
-  export const EntityIDtoSpriteKey = {
+  export const EntitytoSpriteKey = {
     [BlockType.MainBase]: [
       SpriteKeys.Mainbase1,
       SpriteKeys.Mainbase2,
@@ -204,7 +204,7 @@ export namespace AsteroidMap {
 
     [BlockType.AlloyFactory]: [SpriteKeys.AlloyFactory1],
 
-    [BlockType.PhotovoltaicCellFactory]: [SpriteKeys.PhotovoltaicCellFactory1, SpriteKeys.PhotovoltaicCellFactory2],
+    [BlockType.PVCellFactory]: [SpriteKeys.PhotovoltaicCellFactory1, SpriteKeys.PhotovoltaicCellFactory2],
 
     [BlockType.SolarPanel]: [SpriteKeys.SolarPanel1, SpriteKeys.SolarPanel2],
 
@@ -216,7 +216,7 @@ export namespace AsteroidMap {
   };
 
   // Array index corresponds to lvl
-  export const EntityIDtoAnimationKey = {
+  export const EntitytoAnimationKey = {
     [BlockType.MainBase]: [
       AnimationKeys.Mainbase1,
       AnimationKeys.Mainbase2,
@@ -235,10 +235,7 @@ export namespace AsteroidMap {
 
     [BlockType.AlloyFactory]: [AnimationKeys.AlloyFactory1],
 
-    [BlockType.PhotovoltaicCellFactory]: [
-      AnimationKeys.PhotovoltaicCellFactory1,
-      AnimationKeys.PhotovoltaicCellFactory2,
-    ],
+    [BlockType.PVCellFactory]: [AnimationKeys.PhotovoltaicCellFactory1, AnimationKeys.PhotovoltaicCellFactory2],
 
     [BlockType.SolarPanel]: [AnimationKeys.SolarPanel1, AnimationKeys.SolarPanel2],
 

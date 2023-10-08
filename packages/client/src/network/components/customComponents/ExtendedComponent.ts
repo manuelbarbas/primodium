@@ -1,3 +1,4 @@
+import { KeySchema, SchemaToPrimitives } from "@latticexyz/protocol-parser";
 import {
   Component,
   ComponentUpdate,
@@ -7,7 +8,6 @@ import {
   HasValue,
   Metadata,
   NotValue,
-  OverridableComponent,
   Schema,
   Type,
   World,
@@ -22,25 +22,19 @@ import {
 } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect, useState } from "react";
-import { overridableComponent } from "./overridableComponent";
-type OverridableType<
-  Overridable extends boolean,
-  S extends Schema,
-  M extends Metadata = Metadata,
-  T = unknown
-> = Overridable extends true ? OverridableComponent<S, M, T> : Component<S, M, T>;
+import { encodeEntity } from "./util";
 
-export interface Options<Overridable extends boolean, M extends Metadata> {
+export interface Options<M extends Metadata> {
   id: string;
   metadata?: M;
   indexed?: boolean;
-  overridable?: Overridable;
 }
+type NewType<S extends Schema> = Omit<ComponentValue<S>, "__staticData" | "__encodedLengths" | "__dynamicData">;
 
 export type ExtendedComponent<S extends Schema, M extends Metadata, T = unknown> = Component<S, M, T> & {
   get(): ComponentValue<S> | undefined;
   get(entity: Entity | undefined): ComponentValue<S> | undefined;
-  get(entity?: Entity | undefined, defaultValue?: ComponentValue<S>): ComponentValue<S> | undefined;
+  get(entity?: Entity | undefined, defaultValue?: NewType<S>): ComponentValue<S>;
 
   set: (value: ComponentValue<S, T>, entity?: Entity) => void;
   getAll: () => Entity[];
@@ -52,9 +46,59 @@ export type ExtendedComponent<S extends Schema, M extends Metadata, T = unknown>
   has: (entity?: Entity) => boolean;
 
   use(entity?: Entity | undefined): ComponentValue<S> | undefined;
-  use(entity: Entity | undefined, defaultValue?: ComponentValue<S>): ComponentValue<S>;
+  use(entity: Entity | undefined, defaultValue?: NewType<S>): ComponentValue<S>;
 };
 
+export type ContractMetadata<TKeySchema extends KeySchema> = {
+  componentName: string;
+  tableName: `${string}:${string}`;
+  keySchema: TKeySchema;
+  valueSchema: Record<string, string>;
+};
+
+export type ExtendedContractComponent<
+  S extends Schema = Schema,
+  TKeySchema extends KeySchema = KeySchema
+> = ExtendedComponent<S, ContractMetadata<TKeySchema>, unknown> & {
+  getWithKeys(): ComponentValue<S> | undefined;
+  getWithKeys(keys?: SchemaToPrimitives<TKeySchema>): ComponentValue<S> | undefined;
+  getWithKeys(keys?: SchemaToPrimitives<TKeySchema>, defaultValue?: NewType<S>): ComponentValue<S>;
+
+  hasWithKeys: (keys?: SchemaToPrimitives<TKeySchema>) => boolean;
+
+  useWithKeys(keys?: SchemaToPrimitives<TKeySchema>): ComponentValue<S> | undefined;
+  useWithKeys(keys?: SchemaToPrimitives<TKeySchema>, defaultValue?: NewType<S>): ComponentValue<S>;
+};
+
+export function extendContractComponent<S extends Schema, TKeySchema extends KeySchema, T = unknown>(
+  component: Component<S, ContractMetadata<TKeySchema>, T>
+): ExtendedContractComponent<S, TKeySchema> {
+  const extendedComponent = extendComponent(component);
+
+  function getWithKeys(): ComponentValue<S> | undefined;
+  function getWithKeys(keys?: SchemaToPrimitives<TKeySchema>): ComponentValue<S> | undefined;
+  function getWithKeys(keys?: SchemaToPrimitives<TKeySchema>, defaultValue?: NewType<S>): ComponentValue<S>;
+  function getWithKeys(keys?: SchemaToPrimitives<TKeySchema>, defaultValue?: NewType<S>) {
+    const entity = keys ? encodeEntity(component, keys) : singletonEntity;
+    return extendedComponent.get(entity, defaultValue);
+  }
+
+  function hasWithKeys(keys?: SchemaToPrimitives<TKeySchema>) {
+    const entity = keys ? encodeEntity(component, keys) : singletonEntity;
+    return extendedComponent.has(entity);
+  }
+
+  function useWithKeys(key?: SchemaToPrimitives<TKeySchema>, defaultValue?: NewType<S>) {
+    const entity = key ? encodeEntity(component, key) : singletonEntity;
+    return extendedComponent.use(entity, defaultValue);
+  }
+  return {
+    ...extendedComponent,
+    getWithKeys,
+    hasWithKeys,
+    useWithKeys,
+  } as ExtendedContractComponent<S, TKeySchema>;
+}
 export function extendComponent<S extends Schema, M extends Metadata, T = unknown>(
   component: Component<S, M, T>
 ): ExtendedComponent<S, M, T> {
@@ -64,7 +108,10 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
     setComponent(component, entity, value);
   }
 
-  function get(entity?: Entity, defaultValue?: ComponentValue<S>) {
+  function get(): ComponentValue<S> | undefined;
+  function get(entity: Entity | undefined): ComponentValue<S> | undefined;
+  function get(entity?: Entity | undefined, defaultValue?: NewType<S>): ComponentValue<S>;
+  function get(entity?: Entity, defaultValue?: NewType<S>) {
     entity = entity ?? singletonEntity;
     if (entity == undefined) return defaultValue;
     const value = getComponentValue(component, entity);
@@ -114,9 +161,9 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
     return update.component.id === component.id;
   }
 
-  function use(entity?: Entity | undefined): ComponentValue<S> | undefined;
-  function use(entity: Entity | undefined, defaultValue?: ComponentValue<S>): ComponentValue<S>;
-  function use(entity?: Entity, defaultValue?: ComponentValue<S>) {
+  function useValue(entity?: Entity | undefined): ComponentValue<S> | undefined;
+  function useValue(entity: Entity | undefined, defaultValue?: NewType<S>): ComponentValue<S>;
+  function useValue(entity?: Entity, defaultValue?: NewType<S>) {
     entity = entity ?? singletonEntity;
     const comp = component as Component<S>;
     const [value, setValue] = useState(entity != null ? getComponentValue(comp, entity) : undefined);
@@ -148,56 +195,43 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
     clear,
     update,
     has,
-    use,
+    use: useValue,
   };
   return context;
 }
 
-export function createExtendedComponent<
-  Overridable extends boolean,
-  S extends Schema,
-  M extends Metadata = Metadata,
-  T = unknown
->(world: World, schema: S, options?: Options<Overridable, M>) {
-  const rawComponent = defineComponent(world, schema, options);
-  const component: OverridableType<Overridable, S, M> = options?.overridable
-    ? overridableComponent(rawComponent)
-    : (rawComponent as OverridableType<Overridable, S, M>);
+export function createExtendedComponent<S extends Schema, M extends Metadata = Metadata, T = unknown>(
+  world: World,
+  schema: S,
+  options?: Options<M>
+) {
+  const component = defineComponent<S, M, T>(world, schema, options);
 
   return extendComponent(component);
 }
 
-export function createExtendedNumberComponent<Overridable extends boolean, M extends Metadata>(
-  world: World,
-  options?: Options<Overridable, M>
-) {
+export type ExtendedNumberComponent = ReturnType<typeof createExtendedNumberComponent>;
+export function createExtendedNumberComponent<M extends Metadata>(world: World, options?: Options<M>) {
   return createExtendedComponent(world, { value: Type.Number }, options);
 }
 
-export function createExtendedStringComponent<Overridable extends boolean, M extends Metadata>(
-  world: World,
-  options?: Options<Overridable, M>
-) {
+export type ExtendedBigIntComponent = ReturnType<typeof createExtendedBigIntComponent>;
+export function createExtendedBigIntComponent<M extends Metadata>(world: World, options?: Options<M>) {
+  return createExtendedComponent(world, { value: Type.BigInt }, options);
+}
+
+export function createExtendedStringComponent<M extends Metadata>(world: World, options?: Options<M>) {
   return createExtendedComponent(world, { value: Type.String }, options);
 }
 
-export function createExtendedCoordComponent<Overridable extends boolean, M extends Metadata>(
-  world: World,
-  options?: Options<Overridable, M>
-) {
+export function createExtendedCoordComponent<M extends Metadata>(world: World, options?: Options<M>) {
   return createExtendedComponent(world, { x: Type.Number, y: Type.Number }, options);
 }
 
-export function createExtendedBoolComponent<Overridable extends boolean, M extends Metadata>(
-  world: World,
-  options?: Options<Overridable, M>
-) {
+export function createExtendedBoolComponent<M extends Metadata>(world: World, options?: Options<M>) {
   return createExtendedComponent(world, { value: Type.Boolean }, options);
 }
 
-export function createExtendedEntityComponent<Overridable extends boolean, M extends Metadata>(
-  world: World,
-  options?: Options<Overridable, M>
-) {
+export function createExtendedEntityComponent<M extends Metadata>(world: World, options?: Options<M>) {
   return createExtendedComponent(world, { value: Type.Entity }, options);
 }

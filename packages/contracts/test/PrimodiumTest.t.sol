@@ -32,6 +32,13 @@ contract PrimodiumTest is MudTest {
   address payable bob;
   address payable eve;
 
+  uint8 Iron = uint8(EResource.Iron);
+  uint8 Copper = uint8(EResource.Copper);
+  uint8 Platinum = uint8(EResource.Platinum);
+  uint8 U_MaxMoves = uint8(EResource.U_MaxMoves);
+  uint8 Kimberlite = uint8(EResource.Kimberlite);
+  uint8 Lithium = uint8(EResource.Lithium);
+
   function setUp() public virtual override {
     super.setUp();
     world = IWorld(worldAddress);
@@ -66,6 +73,10 @@ contract PrimodiumTest is MudTest {
   }
 
   function assertEq(ERock a, ERock b) internal {
+    assertEq(uint256(a), uint256(b));
+  }
+
+  function assertEq(EResource a, EResource b) internal {
     assertEq(uint256(a), uint256(b));
   }
 

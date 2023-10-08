@@ -6,10 +6,10 @@ import { getSpaceRockInfo } from "src/util/spacerock";
 import { ESpaceRockType } from "src/util/web3/types";
 import { Asteroid } from "./screens/Asteroid";
 import { Motherlode } from "./screens/Motherlode";
-import { SpacerockInfo } from "./screens/SpaceRockInfo";
 import { SendFleet } from "./screens/SendFleet";
-import { UnitSelection } from "./screens/UnitSelection";
+import { SpacerockInfo } from "./screens/SpaceRockInfo";
 import { StationedUnits } from "./screens/StationedUnits";
+import { UnitSelection } from "./screens/UnitSelection";
 
 export const SpacerockMenu: React.FC = () => {
   const selectedSpacerock = Send.use()?.destination;
@@ -57,10 +57,7 @@ export const SpacerockMenu: React.FC = () => {
       <StationedUnits />
 
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2">
-        <Button
-          className="btn-square btn-sm font-bold border border-secondary"
-          onClick={() => Send.reset()}
-        >
+        <Button className="btn-square btn-sm font-bold border border-secondary" onClick={() => Send.reset()}>
           x
         </Button>
       </div>

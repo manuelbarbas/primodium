@@ -1,18 +1,14 @@
-import { EntityID } from "@latticexyz/recs";
-import { BiSolidInvader } from "react-icons/bi";
-import { FaCrosshairs, FaShieldAlt } from "react-icons/fa";
-import {
-  BlockNumber,
-  MapOpen,
-  Send,
-} from "src/network/components/clientComponents";
-import { ESendType } from "src/util/web3/types";
-import { OrbitActionButton } from "./OrbitActionButton";
-import { Position } from "src/network/components/chainComponents";
-import { Button } from "src/components/core/Button";
 import { primodium } from "@game/api";
 import { Scenes } from "@game/constants";
+import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { BiSolidInvader } from "react-icons/bi";
+import { FaCrosshairs, FaShieldAlt } from "react-icons/fa";
+import { Button } from "src/components/core/Button";
+import { Position } from "src/network/components/chainComponents";
+import { BlockNumber, MapOpen, Send } from "src/network/components/clientComponents";
+import { ESendType } from "src/util/web3/types";
+import { OrbitActionButton } from "./OrbitActionButton";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -81,25 +77,19 @@ export const Fleet: React.FC<{
         {sendType === ESendType.INVADE && (
           <div className="rounded-md bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
             <BiSolidInvader size={16} />
-            <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">
-              INVADE
-            </p>
+            <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">INVADE</p>
           </div>
         )}
         {sendType === ESendType.RAID && (
           <div className="rounded-md bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
             <BiSolidInvader size={16} />
-            <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">
-              RAID
-            </p>
+            <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">RAID</p>
           </div>
         )}
         {sendType === ESendType.REINFORCE && (
           <div className="rounded-md bg-green-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
             <FaShieldAlt size={16} />
-            <p className="bg-green-900 border border-green-500  rounded-md px-1 text-[.6rem]">
-              REINFORCE
-            </p>
+            <p className="bg-green-900 border border-green-500  rounded-md px-1 text-[.6rem]">REINFORCE</p>
           </div>
         )}
         <LabeledValue label={`${arrivalTime > 0 ? "IN-TRANSIT" : "ORBITING"}`}>
@@ -126,10 +116,7 @@ export const Fleet: React.FC<{
                 outgoing={outgoing}
               />
             ) : (
-              <LocateButton
-                destination={destination}
-                coord={destinationPosition}
-              />
+              <LocateButton destination={destination} coord={destinationPosition} />
             )}
           </>
         )}

@@ -1,20 +1,13 @@
 import { EntityID } from "@latticexyz/recs";
-import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
-import { useFullResourceCount } from "src/hooks/useFullResourceCount";
-import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 import { useMemo } from "react";
-import { formatNumber } from "src/util/common";
+import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
+import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { BlockNumber } from "src/network/components/clientComponents";
+import { formatNumber } from "src/util/common";
+import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
 
-export const MaterialLabel = ({
-  name,
-  resourceId,
-}: {
-  name: string;
-  resourceId: EntityID;
-}) => {
-  const { maxStorage, resourceCount, resourcesToClaim, production } =
-    useFullResourceCount(resourceId);
+export const MaterialLabel = ({ name, resourceId }: { name: string; resourceId: EntityID }) => {
+  const { maxStorage, resourceCount, resourcesToClaim, production } = useFullResourceCount(resourceId);
   const { avgBlockTime } = BlockNumber.use(undefined, {
     value: 0,
     avgBlockTime: 1,
@@ -48,8 +41,7 @@ export const MaterialLabel = ({
         />
         {production !== 0 && (
           <p className="opacity-50 text-[0rem] group-hover:text-xs transition-all">
-            +
-            {formatNumber((production * RESOURCE_SCALE * 60) / avgBlockTime, 1)}
+            +{formatNumber((production * RESOURCE_SCALE * 60) / avgBlockTime, 1)}
             /MIN <b>({maxStorage * RESOURCE_SCALE})</b>
           </p>
         )}

@@ -5,7 +5,7 @@ import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 
 import { RockType, OwnedBy, BattleResultData, RaidResult, RaidResultData, P_IsUtility, P_UnitPrototypes, Home } from "codegen/index.sol";
-import { ERock, EResource, ESendType } from "src/Types.sol";
+import { ERock, ESendType } from "src/Types.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
@@ -21,7 +21,7 @@ library LibRaid {
    * @param rockEntity The identifier of the target asteroid rock.
    */
   function raid(bytes32 playerEntity, bytes32 rockEntity) internal {
-    require(RockType.get(rockEntity) == ERock.Asteroid, "[LibRaid] Can only raid asteroids");
+    require(RockType.get(rockEntity) == uint8(ERock.Asteroid), "[LibRaid] Can only raid asteroids");
 
     bytes32 defenderEntity = OwnedBy.get(rockEntity);
     require(defenderEntity != 0, "[LibRaid] Can not raid unowned rock");
@@ -57,8 +57,8 @@ library LibRaid {
 
     if (br.totalCargo == 0 || totalResources == 0) return raidResult;
 
-    for (uint256 i = 1; i < defenderResources.length; i++) {
-      EResource resource = EResource(i);
+    for (uint8 i = 1; i < defenderResources.length; i++) {
+      uint8 resource = i;
       if (P_IsUtility.get(resource)) continue;
 
       uint256 raidAmount = LibMath.min(defenderResources[i], (br.totalCargo * defenderResources[i]) / totalResources);

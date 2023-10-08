@@ -1,12 +1,12 @@
-import { ActiveAsteroid, Send } from "src/network/components/clientComponents";
-import { useMemo } from "react";
-import { AsteroidInfo } from "./AsteroidInfo";
-import { Position } from "src/network/components/chainComponents";
-import { FaLocationCrosshairs } from "react-icons/fa6";
-import { BeltMap } from "@game/constants";
 import { primodium } from "@game/api";
-import { UserPanel } from "./user-panel/UserPanel";
+import { BeltMap } from "@game/constants";
+import { useMemo } from "react";
+import { FaLocationCrosshairs } from "react-icons/fa6";
+import { Position } from "src/network/components/chainComponents";
+import { ActiveAsteroid, Send } from "src/network/components/clientComponents";
+import { AsteroidInfo } from "./AsteroidInfo";
 import { UnitDeployment } from "./unit-deployment/UnitDeployment";
+import { UserPanel } from "./user-panel/UserPanel";
 
 export const StarmapUI: React.FC = () => {
   const send = Send.use();
@@ -23,9 +23,7 @@ export const StarmapUI: React.FC = () => {
       <div className="relative w-full h-full">
         <div className="flex flex-col gap-2 absolute top-0 left-0 pointer-events-auto">
           {/* {origin && <AsteroidInfo asteroid={origin} title="Origin" />} */}
-          {destination && (
-            <AsteroidInfo asteroid={destination} title="Target" />
-          )}
+          {destination && <AsteroidInfo asteroid={destination} title="Target" />}
           {/* {player && <UserFleets user={player} />} */}
         </div>
         <UnitDeployment />

@@ -34,9 +34,7 @@ export const Land: React.FC<{
       <Button
         disabled={transactionLoading}
         loading={transactionLoading}
-        className={`btn-sm w-44 ${
-          isNeutral ? "btn-secondary" : "btn-error"
-        } flex items-center `}
+        className={`btn-sm w-44 ${isNeutral ? "btn-secondary" : "btn-error"} flex items-center `}
         onClick={() => {
           if (ESpaceRockType.Motherlode === rockType) {
             invade(destination, network);

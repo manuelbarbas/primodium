@@ -11,15 +11,9 @@ import { Level, MainBase } from "src/network/components/chainComponents";
 import { TrainingQueue } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
 import { getBlockTypeName } from "src/util/common";
-import {
-  ResourceType,
-  ResourceImage,
-  RESOURCE_SCALE,
-  BlockType,
-  BackgroundImage,
-} from "src/util/constants";
+import { BackgroundImage, BlockType, RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
-import { getResearchInfo, MiningResearchTree } from "src/util/research";
+import { MiningResearchTree, getResearchInfo } from "src/util/research";
 import { getRecipe } from "src/util/resource";
 import { research, train } from "src/util/web3";
 
@@ -61,21 +55,14 @@ const AddSlot: React.FC<{
           {recipe.length !== 0 &&
             recipe.map((resource) => {
               return (
-                <Badge
-                  key={resource.id + resource.type}
-                  className="text-xs gap-2"
-                >
+                <Badge key={resource.id + resource.type} className="text-xs gap-2">
                   <ResourceIconTooltip
                     name={getBlockTypeName(resource.id)}
                     image={ResourceImage.get(resource.id) ?? ""}
                     resourceId={resource.id}
                     amount={resource.amount}
                     resourceType={resource.type}
-                    scale={
-                      resource.type === ResourceType.Utility
-                        ? 1
-                        : RESOURCE_SCALE
-                    }
+                    scale={resource.type === ResourceType.Utility ? 1 : RESOURCE_SCALE}
                     direction="top"
                     validate
                   />
@@ -129,10 +116,7 @@ const QueuedVessel: React.FC<{
       <Button
         className={`w-[5.2rem] h-[5.2rem] flex-row items-center justify-center border-secondary p-1 animate-pulse inline-flex`}
       >
-        <img
-          src={BackgroundImage.get(BlockType.MiningVessel)?.at(0)}
-          className="h-8 pixel-images"
-        />
+        <img src={BackgroundImage.get(BlockType.MiningVessel)?.at(0)} className="h-8 pixel-images" />
       </Button>
       <p className="min-w-fit w-full bg-slate-900 text-xs text-center rounded-md mt-1">
         {active ? queuedItem.timeRemaining + " BLOCKS LEFT" : "QUEUED"}
@@ -144,13 +128,8 @@ const QueuedVessel: React.FC<{
 const BuiltVessel = () => {
   return (
     <div className="space-y-1">
-      <Button
-        className={`w-[5.2rem] h-[5.2rem] flex-row items-center justify-center border-secondary p-1 inline-flex`}
-      >
-        <img
-          src={BackgroundImage.get(BlockType.MiningVessel)?.at(0)}
-          className="h-8 pixel-images"
-        />
+      <Button className={`w-[5.2rem] h-[5.2rem] flex-row items-center justify-center border-secondary p-1 inline-flex`}>
+        <img src={BackgroundImage.get(BlockType.MiningVessel)?.at(0)} className="h-8 pixel-images" />
       </Button>
     </div>
   );
@@ -160,10 +139,7 @@ export const VesselSlots: React.FC<{
   building: EntityID;
   player: EntityID;
 }> = ({ building, player }) => {
-  const { resourceCount, resourcesToClaim } = useFullResourceCount(
-    BlockType.VesselCapacity,
-    ResourceType.Utility
-  );
+  const { resourceCount, resourcesToClaim } = useFullResourceCount(BlockType.VesselCapacity, ResourceType.Utility);
 
   const rawQueue = TrainingQueue.use(building);
 
@@ -171,10 +147,7 @@ export const VesselSlots: React.FC<{
     return rawQueue ? convertTrainingQueue(rawQueue) : [];
   }, [rawQueue]);
 
-  const { level, maxLevel, recipe, id, mainBaseLvlReq } = getResearchInfo(
-    MiningResearchTree,
-    player
-  );
+  const { level, maxLevel, recipe, id, mainBaseLvlReq } = getResearchInfo(MiningResearchTree, player);
 
   const miningVesselCount = resourceCount + resourcesToClaim - queue.length;
   const addSlots = maxLevel - level;
@@ -188,21 +161,13 @@ export const VesselSlots: React.FC<{
           return <BuiltVessel key={index} />;
         })}
       {queue.map((item, index) => {
-        return (
-          <QueuedVessel key={index} active={index === 0} queuedItem={item} />
-        );
+        return <QueuedVessel key={index} active={index === 0} queuedItem={item} />;
       })}
       {commisionSlots > 0 &&
         Array(commisionSlots)
           .fill(0)
           .map((_, index) => {
-            return (
-              <CommissionVessel
-                key={index}
-                player={player}
-                building={building}
-              />
-            );
+            return <CommissionVessel key={index} player={player} building={building} />;
           })}
       {addSlots > 0 &&
         Array(addSlots)

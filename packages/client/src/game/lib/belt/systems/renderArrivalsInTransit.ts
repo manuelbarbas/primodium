@@ -1,21 +1,21 @@
+import { BeltMap } from "@game/constants";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   ComponentUpdate,
   EntityID,
   Has,
   HasValue,
-  defineUpdateSystem,
   defineEnterSystem,
   defineExitSystem,
+  defineUpdateSystem,
   namespaceWorld,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
+import { Arrival, Position } from "src/network/components/chainComponents";
 import { BlockNumber } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
 import { ObjectPosition } from "../../common/object-components/common";
 import { Circle, Line } from "../../common/object-components/graphics";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { BeltMap } from "@game/constants";
-import { Arrival, Position } from "src/network/components/chainComponents";
 
 const { DepthLayers } = BeltMap;
 
@@ -47,17 +47,9 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
 
     if (!origin || !destination) return;
 
-    const originPixelCoord = tileCoordToPixelCoord(
-      { x: origin.x, y: -origin.y },
-      tileWidth,
-      tileHeight
-    );
+    const originPixelCoord = tileCoordToPixelCoord({ x: origin.x, y: -origin.y }, tileWidth, tileHeight);
 
-    const destinationPixelCoord = tileCoordToPixelCoord(
-      { x: destination.x, y: -destination.y },
-      tileWidth,
-      tileHeight
-    );
+    const destinationPixelCoord = tileCoordToPixelCoord({ x: destination.x, y: -destination.y }, tileWidth, tileHeight);
 
     const sendTrajectory = scene.objectPool.getGroup(entityId + objIndexSuffix);
 
@@ -83,9 +75,7 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
         run: () => {
           scene.objectPool.removeGroup(entityId + objIndexSuffix);
 
-          const arrivalOrbit = scene.objectPool.getGroup(
-            entityId + objIndexSuffix
-          );
+          const arrivalOrbit = scene.objectPool.getGroup(entityId + objIndexSuffix);
 
           arrivalOrbit.add("Graphics").setComponents([
             ObjectPosition(destinationPixelCoord, DepthLayers.Paths),

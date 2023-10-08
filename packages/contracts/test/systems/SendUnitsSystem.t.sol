@@ -30,16 +30,16 @@ contract SendUnitsSystemTest is PrimodiumTest {
   }
 
   function prepareTestMovementRules() public {
-    RockType.set(origin, ERock.Asteroid);
-    RockType.set(destination, ERock.Asteroid);
+    RockType.set(origin, uint8(ERock.Asteroid));
+    RockType.set(destination, uint8(ERock.Asteroid));
     ReversePosition.set(originPosition.x, originPosition.y, origin);
     ReversePosition.set(destinationPosition.x, destinationPosition.y, destination);
-    ResourceCount.set(player, EResource.U_MaxMoves, 10);
+    ResourceCount.set(player, U_MaxMoves, 10);
   }
 
   function testMovementRulesNotEnoughMoves() public {
     prepareTestMovementRules();
-    ResourceCount.set(player, EResource.U_MaxMoves, 0);
+    ResourceCount.set(player, U_MaxMoves, 0);
     vm.expectRevert(bytes("[SendUnits] Reached max move count"));
     world.sendUnits(unitCounts, ESendType.Reinforce, originPosition, destinationPosition, to);
   }
@@ -69,7 +69,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     prepareTestMovementRules();
 
     OwnedBy.set(origin, addressToEntity(bob));
-    RockType.set(origin, ERock.Asteroid);
+    RockType.set(origin, uint8(ERock.Asteroid));
     vm.expectRevert(bytes("[SendUnits] Must move from an asteroid you own"));
     world.sendUnits(unitCounts, ESendType.Reinforce, originPosition, destinationPosition, to);
   }
@@ -77,8 +77,8 @@ contract SendUnitsSystemTest is PrimodiumTest {
   function testMovementRulesDestAndOriginAreMotherlodes() public {
     prepareTestMovementRules();
 
-    RockType.set(destination, ERock.Motherlode);
-    RockType.set(origin, ERock.Motherlode);
+    RockType.set(destination, uint8(ERock.Motherlode));
+    RockType.set(origin, uint8(ERock.Motherlode));
     vm.expectRevert(bytes("[SendUnits] Cannot move between motherlodes"));
     world.sendUnits(unitCounts, ESendType.Reinforce, originPosition, destinationPosition, to);
   }
@@ -86,8 +86,8 @@ contract SendUnitsSystemTest is PrimodiumTest {
   function testMovementRulesInvadeYourself() public {
     prepareTestMovementRules();
 
-    RockType.set(destination, ERock.Motherlode);
-    RockType.set(origin, ERock.Asteroid);
+    RockType.set(destination, uint8(ERock.Motherlode));
+    RockType.set(origin, uint8(ERock.Asteroid));
     OwnedBy.set(destination, player);
     OwnedBy.set(origin, player);
     vm.expectRevert(bytes("[SendUnits] Cannot invade yourself"));
@@ -97,8 +97,8 @@ contract SendUnitsSystemTest is PrimodiumTest {
   function testMovementRulesInvadeAsteroid() public {
     prepareTestMovementRules();
 
-    RockType.set(destination, ERock.Asteroid);
-    RockType.set(origin, ERock.Asteroid);
+    RockType.set(destination, uint8(ERock.Asteroid));
+    RockType.set(origin, uint8(ERock.Asteroid));
     OwnedBy.set(origin, player);
     vm.expectRevert(bytes("[SendUnits] Must only invade a motherlode"));
     world.sendUnits(unitCounts, ESendType.Invade, originPosition, destinationPosition, to);
@@ -107,8 +107,8 @@ contract SendUnitsSystemTest is PrimodiumTest {
   function testMovementRulesRaidYourself() public {
     prepareTestMovementRules();
 
-    RockType.set(destination, ERock.Asteroid);
-    RockType.set(origin, ERock.Asteroid);
+    RockType.set(destination, uint8(ERock.Asteroid));
+    RockType.set(origin, uint8(ERock.Asteroid));
     OwnedBy.set(origin, player);
     OwnedBy.set(destination, player);
     vm.expectRevert(bytes("[SendUnits] Cannot raid yourself"));
@@ -118,8 +118,8 @@ contract SendUnitsSystemTest is PrimodiumTest {
   function testMovementRulesRaidNobody() public {
     prepareTestMovementRules();
 
-    RockType.set(destination, ERock.Asteroid);
-    RockType.set(origin, ERock.Asteroid);
+    RockType.set(destination, uint8(ERock.Asteroid));
+    RockType.set(origin, uint8(ERock.Asteroid));
     OwnedBy.set(origin, player);
     vm.expectRevert(bytes("[SendUnits] Cannot raid yourself"));
     world.sendUnits(unitCounts, ESendType.Raid, originPosition, destinationPosition, bytes32(0));
@@ -128,8 +128,8 @@ contract SendUnitsSystemTest is PrimodiumTest {
   function testMovementRulesRaidMotherlode() public {
     prepareTestMovementRules();
 
-    RockType.set(destination, ERock.Motherlode);
-    RockType.set(origin, ERock.Asteroid);
+    RockType.set(destination, uint8(ERock.Motherlode));
+    RockType.set(origin, uint8(ERock.Asteroid));
     OwnedBy.set(origin, player);
     OwnedBy.set(destination, to);
 
@@ -140,8 +140,8 @@ contract SendUnitsSystemTest is PrimodiumTest {
   function testMovementRulesReinforceNonOwner() public {
     prepareTestMovementRules();
 
-    RockType.set(destination, ERock.Motherlode);
-    RockType.set(origin, ERock.Asteroid);
+    RockType.set(destination, uint8(ERock.Motherlode));
+    RockType.set(origin, uint8(ERock.Asteroid));
     OwnedBy.set(origin, player);
     OwnedBy.set(destination, to);
 
@@ -152,8 +152,8 @@ contract SendUnitsSystemTest is PrimodiumTest {
   function testMovementRulesReinforceNobody() public {
     prepareTestMovementRules();
 
-    RockType.set(destination, ERock.Motherlode);
-    RockType.set(origin, ERock.Asteroid);
+    RockType.set(destination, uint8(ERock.Motherlode));
+    RockType.set(origin, uint8(ERock.Asteroid));
     OwnedBy.set(origin, player);
     OwnedBy.set(destination, to);
 
@@ -162,11 +162,11 @@ contract SendUnitsSystemTest is PrimodiumTest {
   }
 
   function setupValidInvade() public {
-    RockType.set(origin, ERock.Asteroid);
-    RockType.set(destination, ERock.Motherlode);
+    RockType.set(origin, uint8(ERock.Asteroid));
+    RockType.set(destination, uint8(ERock.Motherlode));
     ReversePosition.set(originPosition.x, originPosition.y, origin);
     ReversePosition.set(destinationPosition.x, destinationPosition.y, destination);
-    ResourceCount.set(player, EResource.U_MaxMoves, 10);
+    ResourceCount.set(player, U_MaxMoves, 10);
     OwnedBy.set(origin, player);
   }
 
@@ -309,7 +309,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
   function testSendUnitsRaidOther() public {
     setupValidInvade();
     OwnedBy.set(destination, to);
-    RockType.set(destination, ERock.Asteroid);
+    RockType.set(destination, uint8(ERock.Asteroid));
 
     UnitCount.set(player, origin, unitPrototype, 100);
 

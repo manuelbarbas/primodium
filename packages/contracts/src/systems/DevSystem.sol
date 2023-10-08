@@ -7,6 +7,7 @@ import { IWorld } from "codegen/world/IWorld.sol";
 import { Schema } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter } from "@latticexyz/store/src/PackedCounter.sol";
 import { ResourceId } from "@latticexyz/world/src/WorldResourceId.sol";
+import { StoreCore } from "@latticexyz/store/src/StoreCore.sol";
 
 contract DevSystem is System {
   /**
@@ -20,7 +21,7 @@ contract DevSystem is System {
     bytes calldata dynamicData
   ) public {
     // Set the record
-    IWorld(_world()).setRecord(tableId, keyTuple, staticData, encodedLengths, dynamicData);
+    StoreCore.setRecord(tableId, keyTuple, staticData, encodedLengths, dynamicData);
   }
 
   function devSpliceStaticData(
@@ -30,7 +31,7 @@ contract DevSystem is System {
     bytes calldata data
   ) public {
     // Splice the static data
-    IWorld(_world()).spliceStaticData(tableId, keyTuple, start, data);
+    StoreCore.spliceStaticData(tableId, keyTuple, start, data);
   }
 
   function devSpliceDynamicData(
@@ -42,7 +43,7 @@ contract DevSystem is System {
     bytes calldata data
   ) public {
     // Splice the dynamic data
-    IWorld(_world()).spliceDynamicData(tableId, keyTuple, dynamicFieldIndex, startWithinField, deleteCount, data);
+    StoreCore.spliceDynamicData(tableId, keyTuple, dynamicFieldIndex, startWithinField, deleteCount, data);
   }
 
   /**
@@ -55,7 +56,7 @@ contract DevSystem is System {
     bytes calldata data
   ) public {
     // Set the field
-    IWorld(_world()).setField(tableId, keyTuple, fieldIndex, data);
+    StoreCore.setField(tableId, keyTuple, fieldIndex, data);
   }
 
   /**
@@ -69,7 +70,7 @@ contract DevSystem is System {
     FieldLayout fieldLayout
   ) public {
     // Set the field
-    IWorld(_world()).setField(tableId, keyTuple, fieldIndex, data, fieldLayout);
+    StoreCore.setField(tableId, keyTuple, fieldIndex, data, fieldLayout);
   }
 
   /**
@@ -83,7 +84,7 @@ contract DevSystem is System {
     FieldLayout fieldLayout
   ) public {
     // Set the field
-    IWorld(_world()).setStaticField(tableId, keyTuple, fieldIndex, data, fieldLayout);
+    StoreCore.setStaticField(tableId, keyTuple, fieldIndex, data, fieldLayout);
   }
 
   /**
@@ -96,7 +97,7 @@ contract DevSystem is System {
     bytes calldata data
   ) public {
     // Set the field
-    IWorld(_world()).setDynamicField(tableId, keyTuple, dynamicFieldIndex, data);
+    StoreCore.setDynamicField(tableId, keyTuple, dynamicFieldIndex, data);
   }
 
   /**
@@ -109,7 +110,7 @@ contract DevSystem is System {
     bytes calldata dataToPush
   ) public {
     // Push to the field
-    IWorld(_world()).pushToDynamicField(tableId, keyTuple, dynamicFieldIndex, dataToPush);
+    StoreCore.pushToDynamicField(tableId, keyTuple, dynamicFieldIndex, dataToPush);
   }
 
   /**
@@ -122,7 +123,7 @@ contract DevSystem is System {
     uint256 byteLengthToPop
   ) public {
     // Push to the field
-    IWorld(_world()).popFromDynamicField(tableId, keyTuple, dynamicFieldIndex, byteLengthToPop);
+    StoreCore.popFromDynamicField(tableId, keyTuple, dynamicFieldIndex, byteLengthToPop);
   }
 
   /**
@@ -130,6 +131,6 @@ contract DevSystem is System {
    */
   function devDeleteRecord(ResourceId tableId, bytes32[] calldata keyTuple) public {
     // Delete the record
-    IWorld(_world()).deleteRecord(tableId, keyTuple);
+    StoreCore.deleteRecord(tableId, keyTuple);
   }
 }

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { EResource } from "src/Types.sol";
 import { SetUtilities, SetItemUtilities, SetItemUtilitiesData } from "codegen/index.sol";
 
 /// @title UtilitySet
@@ -11,7 +10,7 @@ library UtilitySet {
   /// @param player The address of the player.
   /// @param resource The resource to check.
   /// @return True if the player has the resource, otherwise false.
-  function has(bytes32 player, EResource resource) internal view returns (bool) {
+  function has(bytes32 player, uint8 resource) internal view returns (bool) {
     return SetItemUtilities.get(player, resource).quantity > 0;
   }
 
@@ -19,14 +18,14 @@ library UtilitySet {
   /// @param player The address of the player.
   /// @param resource The resource to get.
   /// @return The quantity of the resource.
-  function get(bytes32 player, EResource resource) internal view returns (uint256) {
+  function get(bytes32 player, uint8 resource) internal view returns (uint256) {
     return SetItemUtilities.get(player, resource).quantity;
   }
 
   /// @notice Add a new resource to the utility set of a player.
   /// @param player The address of the player.
   /// @param resource The resource to add.
-  function add(bytes32 player, EResource resource) internal {
+  function add(bytes32 player, uint8 resource) internal {
     if (has(player, resource)) return;
     SetUtilities.push(player, uint8(resource));
     SetItemUtilities.setIndex(player, resource, SetUtilities.length(player) - 1);
@@ -45,7 +44,7 @@ library UtilitySet {
   /// @param quantity The quantity to set.
   function set(
     bytes32 player,
-    EResource resource,
+    uint8 resource,
     uint256 quantity
   ) internal {
     if (quantity == 0) remove(player, resource);
@@ -61,7 +60,7 @@ library UtilitySet {
   /// @notice Remove a resource from a player's utility set.
   /// @param player The address of the player.
   /// @param resource The resource to remove.
-  function remove(bytes32 player, EResource resource) internal {
+  function remove(bytes32 player, uint8 resource) internal {
     SetItemUtilitiesData memory data = SetItemUtilities.get(player, resource);
     if (data.quantity == 0) return;
     if (SetUtilities.length(player) == 1) {
@@ -78,7 +77,7 @@ library UtilitySet {
   /// @param player The address of the player.
   function clear(bytes32 player) internal {
     for (uint256 i = 0; i < SetUtilities.length(player); i++) {
-      SetItemUtilities.deleteRecord(player, EResource(SetUtilities.getItem(player, i)));
+      SetItemUtilities.deleteRecord(player, uint8(SetUtilities.getItem(player, i)));
     }
     SetUtilities.deleteRecord(player);
   }

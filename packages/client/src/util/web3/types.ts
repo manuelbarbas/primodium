@@ -1,12 +1,12 @@
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 
-export enum ESpaceRockType {
+export enum ERock {
   None,
   Asteroid,
   Motherlode,
 }
 
-export enum EMotherlodeSize {
+export enum ESize {
   SMALL,
   MEDIUM,
   LARGE,
@@ -25,16 +25,13 @@ export enum ESendType {
   REINFORCE,
 }
 
-export const ESendTypeToLiteral: Record<
-  ESendType,
-  "INVADE" | "RAID" | "REINFORCE"
-> = {
+export const ESendTypeToLiteral: Record<ESendType, "INVADE" | "RAID" | "REINFORCE"> = {
   [ESendType.INVADE]: "INVADE",
   [ESendType.RAID]: "RAID",
   [ESendType.REINFORCE]: "REINFORCE",
 };
 
 export type ArrivalUnit = {
-  unitType: EntityID;
+  unitType: Entity;
   count: number;
 };

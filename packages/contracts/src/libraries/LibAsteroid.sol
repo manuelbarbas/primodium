@@ -20,13 +20,13 @@ library LibAsteroid {
   /// @return asteroidEntity Created asteroid's entity ID
   function createAsteroid(bytes32 ownerEntity) internal returns (bytes32 asteroidEntity) {
     asteroidEntity = LibEncode.getHash(ownerEntity);
-    require(RockType.get(asteroidEntity) == ERock.NULL, "[LibAsteroid] asteroid already exists");
+    require(RockType.get(asteroidEntity) == uint8(ERock.NULL), "[LibAsteroid] asteroid already exists");
 
     uint256 asteroidCount = AsteroidCount.get() + 1;
     PositionData memory position = getUniqueAsteroidPosition(asteroidCount);
 
     Position.set(asteroidEntity, position);
-    RockType.set(asteroidEntity, ERock.Asteroid);
+    RockType.set(asteroidEntity, uint8(ERock.Asteroid));
     Spawned.set(ownerEntity, true);
     ReversePosition.set(position.x, position.y, asteroidEntity);
     OwnedBy.set(asteroidEntity, ownerEntity);

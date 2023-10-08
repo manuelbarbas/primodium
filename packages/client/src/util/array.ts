@@ -1,7 +1,4 @@
-export function safeIndex<Element extends any>(
-  index: number,
-  arr: Array<Element>
-): Element {
+export function safeIndex<Element>(index: number, arr: Array<Element>): Element {
   if (index < 0) {
     index = 0;
   }

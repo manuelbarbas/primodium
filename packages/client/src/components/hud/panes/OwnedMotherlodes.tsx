@@ -1,22 +1,18 @@
-import { EntityID, Has, HasValue } from "@latticexyz/recs";
-import { FaCrosshairs } from "react-icons/fa";
-import {
-  Account,
-  MapOpen,
-  Send,
-} from "src/network/components/clientComponents";
-import { ESpaceRockType } from "src/util/web3/types";
-import { AsteroidType, OwnedBy } from "src/network/components/chainComponents";
 import { primodium } from "@game/api";
+import { Scenes } from "@game/constants";
 import { SingletonID } from "@latticexyz/network";
 import { useEntityQuery } from "@latticexyz/react";
-import { SecondaryCard } from "src/components/core/Card";
-import { world } from "src/network/world";
-import { getSpaceRockInfo } from "src/util/spacerock";
+import { EntityID, Has, HasValue } from "@latticexyz/recs";
+import { FaCrosshairs } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
+import { SecondaryCard } from "src/components/core/Card";
+import { AsteroidType, OwnedBy } from "src/network/components/chainComponents";
+import { Account, MapOpen, Send } from "src/network/components/clientComponents";
+import { world } from "src/network/world";
 import { getBlockTypeName } from "src/util/common";
 import { MotherlodeSizeNames } from "src/util/constants";
-import { Scenes } from "@game/constants";
+import { getSpaceRockInfo } from "src/util/spacerock";
+import { ESpaceRockType } from "src/util/web3/types";
 
 export const LabeledValue: React.FC<{
   label: string;

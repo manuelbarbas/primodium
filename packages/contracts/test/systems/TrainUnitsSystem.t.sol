@@ -22,7 +22,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     P_GameConfigData memory config = P_GameConfig.get();
     config.unitProductionRate = 100;
     P_GameConfig.set(config);
-    RockType.set(rock, ERock.Asteroid);
+    RockType.set(rock, uint8(ERock.Asteroid));
     Home.setAsteroid(player, rock);
     OwnedBy.set(building, player);
   }
@@ -54,7 +54,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
 
   function testTrainUnitsNotEnoughResources() public {
     uint8[] memory p_requiredresources_resources_level_0 = new uint8[](1);
-    p_requiredresources_resources_level_0[0] = uint8(EResource.Iron);
+    p_requiredresources_resources_level_0[0] = uint8(Iron);
     uint256[] memory p_requiredresources_amounts_level_0 = new uint256[](1);
     p_requiredresources_amounts_level_0[0] = 100;
 
@@ -71,17 +71,17 @@ contract TrainUnitsSystemTest is PrimodiumTest {
 
   function testTrainUnitsUpdateAsteroid() public {
     P_UnitProduction.set(buildingPrototype, unitPrototype, true);
-    RockType.set(rock, ERock.Asteroid);
+    RockType.set(rock, uint8(ERock.Asteroid));
 
     setupClaimUnits();
     Home.setAsteroid(player, rock);
-    MaxResourceCount.set(player, EResource.Iron, 1000);
-    ProductionRate.set(player, EResource.Iron, 10);
+    MaxResourceCount.set(player, Iron, 1000);
+    ProductionRate.set(player, Iron, 10);
     LastClaimedAt.set(player, block.timestamp - 10);
 
     world.trainUnits(building, unit, 1);
 
-    assertEq(ResourceCount.get(player, EResource.Iron), 100);
+    assertEq(ResourceCount.get(player, Iron), 100);
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 100);
   }
 

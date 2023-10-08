@@ -1,20 +1,16 @@
 import { EntityID } from "@latticexyz/recs";
 import React from "react";
 
-import {
-  RESOURCE_SCALE,
-  ResourceImage,
-  ResourceType,
-} from "src/util/constants";
-import { getRecipe } from "src/util/resource";
-import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
-import { hashAndTrimKeyEntity, hashKeyEntity } from "src/util/encode";
-import { formatNumber, getBlockTypeName } from "src/util/common";
-import { Account, BlockNumber } from "src/network/components/clientComponents";
-import { Level, P_Production } from "src/network/components/chainComponents";
-import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
-import { EntityIDtoSpriteKey } from "@game/constants";
 import { primodium } from "@game/api";
+import { EntityIDtoSpriteKey } from "@game/constants";
+import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
+import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
+import { Level, P_Production } from "src/network/components/chainComponents";
+import { Account, BlockNumber } from "src/network/components/clientComponents";
+import { formatNumber, getBlockTypeName } from "src/util/common";
+import { RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
+import { hashAndTrimKeyEntity, hashKeyEntity } from "src/util/encode";
+import { getRecipe } from "src/util/resource";
 
 export const RecipeDisplay: React.FC<{
   entity: EntityID;
@@ -37,9 +33,7 @@ export const RecipeDisplay: React.FC<{
               resourceType={resource.type}
               name={resourceName}
               amount={resource.amount}
-              scale={
-                resource.type !== ResourceType.Utility ? RESOURCE_SCALE : 1
-              }
+              scale={resource.type !== ResourceType.Utility ? RESOURCE_SCALE : 1}
               validate
               fontSize={"xs"}
             />
@@ -66,9 +60,7 @@ export const BlueprintInfo: React.FC<{
   });
 
   const production = P_Production.use(buildingLevelEntity);
-  const productionRate =
-    ((production?.resourceProductionRate ?? 0) * RESOURCE_SCALE * 60) /
-    avgBlockTime;
+  const productionRate = ((production?.resourceProductionRate ?? 0) * RESOURCE_SCALE * 60) / avgBlockTime;
 
   const hasEnough = useHasEnoughResources(getRecipe(buildingLevelEntity));
 
@@ -96,10 +88,7 @@ export const BlueprintInfo: React.FC<{
                 {production && (
                   <>
                     <div className="flex items-center gap-2 text-xs bg-green-800/60 p-1 border border-green-600 rounded-md w-fit">
-                      <img
-                        className="inline-block h-4"
-                        src={ResourceImage.get(production.resourceID)}
-                      ></img>
+                      <img className="inline-block h-4" src={ResourceImage.get(production.resourceID)}></img>
                       {formatNumber(productionRate)}/MIN
                     </div>
                     <p className="text-[.6rem] opacity-50">OUTPUT</p>
@@ -124,11 +113,7 @@ export const BlueprintInfo: React.FC<{
         </div>
       </div>
 
-      {!hasEnough && (
-        <p className="text-rose-400 animate-pulse text-xs">
-          NOT ENOUGH RESOURCES
-        </p>
-      )}
+      {!hasEnough && <p className="text-rose-400 animate-pulse text-xs">NOT ENOUGH RESOURCES</p>}
     </div>
   );
 };

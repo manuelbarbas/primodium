@@ -9,6 +9,6 @@ export const setupDoubleCounter = ({ components }: SetupResult) => {
   defineComponentSystem(world, Counter, (update) => {
     console.log("updating double counter");
     const value = update?.value[0]?.value ?? 0;
-    DoubleCounter.set({ value: value * 2 });
+    DoubleCounter.set({ value: Number(value) * 2 });
   });
 };

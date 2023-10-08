@@ -1,24 +1,19 @@
-import { useEffect, useMemo, useState } from "react";
-import { FixedSizeList as List } from "react-window";
 import { EntityID } from "@latticexyz/recs";
 import { getAddress } from "ethers/lib/utils.js";
+import { useEffect, useMemo, useState } from "react";
+import { FixedSizeList as List } from "react-window";
 
-import {
-  Account,
-  MapOpen,
-  Send,
-  Leaderboard as _Leaderboard,
-} from "src/network/components/clientComponents";
-import { shortenAddress } from "src/util/common";
-import { useGameStore } from "src/store/GameStore";
-import { SecondaryCard } from "src/components/core/Card";
-import { getLinkedAddress } from "src/util/web2/getLinkedAddress";
-import { Button } from "src/components/core/Button";
-import { linkAddress } from "src/util/web2/linkAddress";
 import { primodium } from "@game/api";
 import { Scenes } from "@game/constants";
-import { Position } from "src/network/components/chainComponents";
 import { FaCrosshairs } from "react-icons/fa";
+import { Button } from "src/components/core/Button";
+import { SecondaryCard } from "src/components/core/Card";
+import { Position } from "src/network/components/chainComponents";
+import { Account, MapOpen, Send, Leaderboard as _Leaderboard } from "src/network/components/clientComponents";
+import { useGameStore } from "src/store/GameStore";
+import { shortenAddress } from "src/util/common";
+import { getLinkedAddress } from "src/util/web2/getLinkedAddress";
+import { linkAddress } from "src/util/web2/linkAddress";
 
 export const Leaderboard = () => {
   const address = Account.use()?.value;
@@ -46,23 +41,13 @@ export const Leaderboard = () => {
 
   return (
     <div className="flex flex-col items-center w-full text-xs pointer-events-auto scrollbar">
-      <List
-        height={323}
-        width="100%"
-        itemCount={data.players.length}
-        itemSize={35}
-      >
+      <List height={323} width="100%" itemCount={data.players.length} itemSize={35}>
         {({ index, style }) => {
           const player = data.players[index];
           const score = data.scores[index];
           return (
             <div style={style}>
-              <LeaderboardItem
-                key={index}
-                player={player}
-                index={index}
-                score={score}
-              />
+              <LeaderboardItem key={index} player={player} index={index} score={score} />
             </div>
           );
         }}
@@ -73,24 +58,12 @@ export const Leaderboard = () => {
           <div className="grid grid-cols-6 w-full items-center">
             <div>{data.playerRank}.</div>
             <div className="col-span-5 flex justify-between">
-              <p className="bg-rose-800 px-2 rounded-md flex items-center">
-                You
-              </p>
-              <Button
-                disabled={transactionLoading}
-                className="btn-xs btn-secondary"
-                onClick={linkAddress}
-              >
-                {loading
-                  ? "..."
-                  : linkedAddress
-                  ? "Wallet Linked"
-                  : "Link Wallet"}
+              <p className="bg-rose-800 px-2 rounded-md flex items-center">You</p>
+              <Button disabled={transactionLoading} className="btn-xs btn-secondary" onClick={linkAddress}>
+                {loading ? "..." : linkedAddress ? "Wallet Linked" : "Link Wallet"}
               </Button>
               <p className="font-bold rounded-md bg-cyan-700 px-2 flex items-center">
-                {data.scores.length >= data.playerRank
-                  ? data.scores[data.playerRank - 1].toLocaleString()
-                  : 0}
+                {data.scores.length >= data.playerRank ? data.scores[data.playerRank - 1].toLocaleString() : 0}
               </p>
             </div>
           </div>
@@ -100,15 +73,7 @@ export const Leaderboard = () => {
   );
 };
 
-const LeaderboardItem = ({
-  player,
-  index,
-  score,
-}: {
-  player: EntityID;
-  index: number;
-  score: number;
-}) => {
+const LeaderboardItem = ({ player, index, score }: { player: EntityID; index: number; score: number }) => {
   const [fetchedExternalWallet, setFetchedExternalWallet] = useState<{
     address: string | null;
     ensName: string | null;
@@ -118,9 +83,7 @@ const LeaderboardItem = ({
     const fetchLocalLinkedAddress = async () => {
       try {
         const res = await fetch(
-          `${
-            import.meta.env.VITE_ACCOUNT_LINK_VERCEL_URL
-          }/linked-address/local-to-external/${getAddress(player)}`
+          `${import.meta.env.VITE_ACCOUNT_LINK_VERCEL_URL}/linked-address/local-to-external/${getAddress(player)}`
         );
         const jsonRes = await res.json();
         setFetchedExternalWallet(jsonRes);
@@ -147,9 +110,7 @@ const LeaderboardItem = ({
       <div className="col-span-5 flex justify-between">
         <div>{playerDisplay}</div>
         <div className="flex items-center gap-1">
-          <p className="font-bold rounded-md bg-cyan-700 px-2 ">
-            {score.toLocaleString()}
-          </p>
+          <p className="font-bold rounded-md bg-cyan-700 px-2 ">{score.toLocaleString()}</p>
           <Button
             className="btn-xs flex border border-secondary"
             onClick={async () => {

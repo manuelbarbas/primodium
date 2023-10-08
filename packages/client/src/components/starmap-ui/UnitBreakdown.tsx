@@ -5,9 +5,7 @@ import { getBlockTypeName } from "src/util/common";
 import { RESOURCE_SCALE } from "src/util/constants";
 import { getUnitStats } from "src/util/trainUnits";
 
-export const UnitBreakdown: React.FC<{ asteroid: EntityID }> = ({
-  asteroid,
-}) => {
+export const UnitBreakdown: React.FC<{ asteroid: EntityID }> = ({ asteroid }) => {
   const rawUnits = Hangar.use(asteroid);
 
   const units = rawUnits?.units.map((unit, i) => ({
@@ -39,10 +37,7 @@ export const UnitBreakdown: React.FC<{ asteroid: EntityID }> = ({
               const name = getBlockTypeName(unit.type);
               const stats = getUnitStats(unit.type);
               return (
-                <tr
-                  key={index}
-                  className={index % 2 === 0 ? "bg-slate-800/70" : ""}
-                >
+                <tr key={index} className={index % 2 === 0 ? "bg-slate-800/70" : ""}>
                   <td>{name}</td>
                   <td>{unit.count}</td>
                   <td>{stats.ATK}</td>

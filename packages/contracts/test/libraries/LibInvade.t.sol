@@ -41,7 +41,7 @@ contract LibInvadeTest is PrimodiumTest {
 
   function testInvadeNeutral() public {
     vm.warp(1000);
-    RockType.set(rock, ERock.Motherlode);
+    RockType.set(rock, uint8(ERock.Motherlode));
     Arrival memory arrival = Arrival({
       sendType: ESendType.Invade,
       arrivalTime: 2,
@@ -59,12 +59,12 @@ contract LibInvadeTest is PrimodiumTest {
   }
 
   function testInvadeAttackerWins() public {
-    ResourceCount.set(enemy, EResource.Iron, 100);
-    MaxResourceCount.set(player, EResource.Iron, 100);
+    ResourceCount.set(enemy, uint8(EResource.Iron), 100);
+    MaxResourceCount.set(player, uint8(EResource.Iron), 100);
     Home.setAsteroid(player, homeRock);
     OwnedBy.set(rock, enemy);
-    RockType.set(rock, ERock.Motherlode);
-    RockType.set(homeRock, ERock.Asteroid);
+    RockType.set(rock, uint8(ERock.Motherlode));
+    RockType.set(homeRock, uint8(ERock.Asteroid));
     UnitCount.set(enemy, rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
@@ -82,20 +82,20 @@ contract LibInvadeTest is PrimodiumTest {
 
     world.invade(rock);
 
-    assertEq(ResourceCount.get(player, EResource.Iron), 0, "Player Iron");
+    assertEq(ResourceCount.get(player, uint8(EResource.Iron)), 0, "Player Iron");
     assertEq(UnitCount.get(player, rock, unit1), 100, "Player units");
     assertEq(UnitCount.get(enemy, rock, unit1), 0, "Enemy units");
-    assertEq(ResourceCount.get(enemy, EResource.Iron), 100, "Enemy Iron");
+    assertEq(ResourceCount.get(enemy, uint8(EResource.Iron)), 100, "Enemy Iron");
     assertEq(OwnedBy.get(rock), player, "OwnedBy");
   }
 
   function testInvadeDefenderWins() public {
-    ResourceCount.set(enemy, EResource.Iron, 100);
-    MaxResourceCount.set(player, EResource.Iron, 100);
+    ResourceCount.set(enemy, uint8(EResource.Iron), 100);
+    MaxResourceCount.set(player, uint8(EResource.Iron), 100);
     Home.setAsteroid(player, homeRock);
     OwnedBy.set(rock, enemy);
-    RockType.set(rock, ERock.Motherlode);
-    RockType.set(homeRock, ERock.Asteroid);
+    RockType.set(rock, uint8(ERock.Motherlode));
+    RockType.set(homeRock, uint8(ERock.Asteroid));
     UnitCount.set(enemy, rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
@@ -113,21 +113,21 @@ contract LibInvadeTest is PrimodiumTest {
 
     world.invade(rock);
 
-    assertEq(ResourceCount.get(player, EResource.Iron), 0, "Player Iron");
+    assertEq(ResourceCount.get(player, uint8(EResource.Iron)), 0, "Player Iron");
     assertEq(UnitCount.get(player, rock, unit1), 0, "Player units");
     assertEq(UnitCount.get(enemy, rock, unit1), 50, "Enemy units");
-    assertEq(ResourceCount.get(enemy, EResource.Iron), 100, "Enemy Iron");
+    assertEq(ResourceCount.get(enemy, uint8(EResource.Iron)), 100, "Enemy Iron");
     assertEq(OwnedBy.get(rock), enemy, "OwnedBy");
   }
 
   function testInvadeAsteroid() public {
-    RockType.set(rock, ERock.Asteroid);
+    RockType.set(rock, uint8(ERock.Asteroid));
     vm.expectRevert("[Invade] Can only invade motherlodes");
     world.invade(rock);
   }
 
   function testInvadeSelfOwned() public {
-    RockType.set(rock, ERock.Motherlode);
+    RockType.set(rock, uint8(ERock.Motherlode));
     OwnedBy.set(rock, player);
     vm.expectRevert("[Invade] can not invade your own rock");
     world.invade(rock);

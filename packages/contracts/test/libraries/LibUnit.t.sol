@@ -172,33 +172,33 @@ contract LibUnitTest is PrimodiumTest {
   }
 
   function testUpdateStoredUtilitiesAdd() public {
-    MaxResourceCount.set(player, EResource.Iron, 100);
-    P_IsUtility.set(EResource.Iron, true);
+    MaxResourceCount.set(player, Iron, 100);
+    P_IsUtility.set(Iron, true);
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
-    requiredResourcesData.resources[0] = uint8(EResource.Iron);
+    requiredResourcesData.resources[0] = uint8(Iron);
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(unit, 0, requiredResourcesData);
 
     LibUnit.updateStoredUtilities(player, unit, 2, true);
-    assertEq(ResourceCount.get(player, EResource.Iron), 100);
+    assertEq(ResourceCount.get(player, Iron), 100);
   }
 
   function testUpdateStoredUtilitiesNotUtility() public {
-    MaxResourceCount.set(player, EResource.Iron, 100);
+    MaxResourceCount.set(player, Iron, 100);
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
-    requiredResourcesData.resources[0] = uint8(EResource.Iron);
+    requiredResourcesData.resources[0] = uint8(Iron);
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(unit, 0, requiredResourcesData);
 
     LibUnit.updateStoredUtilities(player, unit, 2, true);
-    assertEq(ResourceCount.get(player, EResource.Iron), 0);
+    assertEq(ResourceCount.get(player, Iron), 0);
   }
 
   function testFailUpdateStoredUtilitiesNoSpace() public {
-    P_IsUtility.set(EResource.Iron, true);
-    MaxResourceCount.set(player, EResource.Iron, 100);
+    P_IsUtility.set(Iron, true);
+    MaxResourceCount.set(player, Iron, 100);
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
-    requiredResourcesData.resources[0] = uint8(EResource.Iron);
+    requiredResourcesData.resources[0] = uint8(Iron);
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(unit, 0, requiredResourcesData);
 
@@ -206,31 +206,31 @@ contract LibUnitTest is PrimodiumTest {
   }
 
   function testUpdateStoredUtilitiesSubtract() public {
-    P_IsUtility.set(EResource.Iron, true);
-    MaxResourceCount.set(player, EResource.Iron, 100);
-    ResourceCount.set(player, EResource.Iron, 100);
+    P_IsUtility.set(Iron, true);
+    MaxResourceCount.set(player, Iron, 100);
+    ResourceCount.set(player, Iron, 100);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
-    requiredResourcesData.resources[0] = uint8(EResource.Iron);
+    requiredResourcesData.resources[0] = uint8(Iron);
     requiredResourcesData.amounts[0] = 33;
     P_RequiredResources.set(unit, 0, requiredResourcesData);
 
     LibUnit.updateStoredUtilities(player, unit, 2, false);
-    assertEq(ResourceCount.get(player, EResource.Iron), 34);
+    assertEq(ResourceCount.get(player, Iron), 34);
   }
 
   function testUpdateStoredUtilitiesSubtractOverflow() public {
-    P_IsUtility.set(EResource.Iron, true);
-    MaxResourceCount.set(player, EResource.Iron, 100);
-    ResourceCount.set(player, EResource.Iron, 100);
+    P_IsUtility.set(Iron, true);
+    MaxResourceCount.set(player, Iron, 100);
+    ResourceCount.set(player, Iron, 100);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
-    requiredResourcesData.resources[0] = uint8(EResource.Iron);
+    requiredResourcesData.resources[0] = uint8(Iron);
     requiredResourcesData.amounts[0] = 33;
     P_RequiredResources.set(unit, 0, requiredResourcesData);
 
     LibUnit.updateStoredUtilities(player, unit, 10, false);
-    assertEq(ResourceCount.get(player, EResource.Iron), 0);
+    assertEq(ResourceCount.get(player, Iron), 0);
   }
 
   function testDecreaseUnitCount() public {

@@ -4,11 +4,7 @@ import { useMemo } from "react";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import Spinner from "src/components/shared/Spinner";
 import { useMud } from "src/hooks";
-import {
-  AsteroidType,
-  OwnedBy,
-  ReversePosition,
-} from "src/network/components/chainComponents";
+import { AsteroidType, OwnedBy, ReversePosition } from "src/network/components/chainComponents";
 import { Account, Send } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
 import { getAsteroidImage } from "src/util/asteroid";
@@ -69,28 +65,17 @@ export const FleetPane: React.FC<{
       count: send.count?.at(index) ?? 0,
     }));
 
-    const destinationEntityId = ReversePosition.get(
-      encodeCoord(destination)
-    )?.value;
+    const destinationEntityId = ReversePosition.get(encodeCoord(destination))?.value;
 
     const to = OwnedBy.get(destinationEntityId)?.value;
 
-    sendUnits(
-      arrivalUnits,
-      sendType,
-      origin,
-      destination,
-      to ?? ("0x00" as EntityID),
-      network
-    );
+    sendUnits(arrivalUnits, sendType, origin, destination, to ?? ("0x00" as EntityID), network);
 
     Send.reset();
   };
 
   const asteroidType = useMemo(() => {
-    const destinationEntityId = ReversePosition.get(
-      encodeCoord(destination ?? { x: 0, y: 0 })
-    )?.value;
+    const destinationEntityId = ReversePosition.get(encodeCoord(destination ?? { x: 0, y: 0 }))?.value;
 
     return AsteroidType.get(destinationEntityId)?.value;
   }, [destination]);
@@ -120,10 +105,7 @@ export const FleetPane: React.FC<{
                 >
                   <div className="relative bg-slate-900 w-14 h-14 border border-cyan-400 rounded-md p-2">
                     <img
-                      src={
-                        BackgroundImage.get(unit)?.at(0) ??
-                        "/img/icons/debugicon.png"
-                      }
+                      src={BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"}
                       className="w-full h-full"
                     />
                     <p className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 font-bold text-xs bg-slate-900 border-cyan-400/30 px-1 rounded-md border group-hover:opacity-0">
@@ -177,10 +159,7 @@ export const FleetPane: React.FC<{
                 <b>NO TARGET SELECTED</b>
               ) : (
                 <>
-                  <img
-                    src={getAsteroidImage(destination.entity)}
-                    className="w-[24px] h-[24px] shadow-2xl"
-                  />
+                  <img src={getAsteroidImage(destination.entity)} className="w-[24px] h-[24px] shadow-2xl" />
                   TARGET LOCKED
                 </>
               )}
@@ -193,30 +172,24 @@ export const FleetPane: React.FC<{
                   NO UNITS SELECTED
                 </b>
               )}
-              {send.units &&
-                send.units.length !== 0 &&
-                asteroidType !== ESpaceRockType.Asteroid && (
-                  <div className=" flex space-x-3">
-                    <button
-                      className="p-2 border rounded-md border-slate-700 ring ring-slate-900 bg-slate-700 hover:scale-105 transition-all w-24"
-                      onClick={() => sendFleet(ESendType.REINFORCE)}
-                    >
-                      {transactionLoading ? <Spinner /> : "REINFORCE"}
-                    </button>
-                    <button
-                      className="p-2 border rounded-md border-rose-700 ring ring-rose-900 bg-rose-700 hover:scale-105 transition-all w-16"
-                      onClick={() =>
-                        sendFleet(
-                          asteroidType === ESpaceRockType.Asteroid
-                            ? ESendType.RAID
-                            : ESendType.INVADE
-                        )
-                      }
-                    >
-                      {transactionLoading ? <Spinner /> : "INVADE"}
-                    </button>
-                  </div>
-                )}
+              {send.units && send.units.length !== 0 && asteroidType !== ESpaceRockType.Asteroid && (
+                <div className=" flex space-x-3">
+                  <button
+                    className="p-2 border rounded-md border-slate-700 ring ring-slate-900 bg-slate-700 hover:scale-105 transition-all w-24"
+                    onClick={() => sendFleet(ESendType.REINFORCE)}
+                  >
+                    {transactionLoading ? <Spinner /> : "REINFORCE"}
+                  </button>
+                  <button
+                    className="p-2 border rounded-md border-rose-700 ring ring-rose-900 bg-rose-700 hover:scale-105 transition-all w-16"
+                    onClick={() =>
+                      sendFleet(asteroidType === ESpaceRockType.Asteroid ? ESendType.RAID : ESendType.INVADE)
+                    }
+                  >
+                    {transactionLoading ? <Spinner /> : "INVADE"}
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>

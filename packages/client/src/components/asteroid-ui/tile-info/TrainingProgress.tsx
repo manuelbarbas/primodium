@@ -6,9 +6,7 @@ import { useGameStore } from "src/store/GameStore";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage } from "src/util/constants";
 
-export const TrainingProgress: React.FC<{ buildingEntity: EntityID }> = ({
-  buildingEntity,
-}) => {
+export const TrainingProgress: React.FC<{ buildingEntity: EntityID }> = ({ buildingEntity }) => {
   const transactionLoading = useGameStore((state) => state.transactionLoading);
 
   const rawQueue = TrainingQueue.use(buildingEntity);
@@ -37,9 +35,7 @@ export const TrainingProgress: React.FC<{ buildingEntity: EntityID }> = ({
       <div className="rounded-md overflow-hidden h-44 border border-slate-500 bg-slate-800 overflow-y-auto flex flex-col items-center justify-center scrollbar">
         {(!queue || queue.length === 0) && (
           <p className="text-sm font-bold text-slate-400 text-center">
-            {transactionLoading
-              ? "QUEUING TRAINING ORDER..."
-              : "NO TRAINING ORDERS QUEUED"}
+            {transactionLoading ? "QUEUING TRAINING ORDER..." : "NO TRAINING ORDERS QUEUED"}
           </p>
         )}
         {queue && queue.length !== 0 && (
@@ -72,30 +68,18 @@ const ProgressBar: React.FC<{
   const unitsLeft = Math.ceil((1 - progress) * count);
   if (index === 0) {
     return (
-      <div
-        key={index}
-        className={`w-full border border-cyan-500 text-xs bg-slate-700 rounded-md `}
-      >
+      <div key={index} className={`w-full border border-cyan-500 text-xs bg-slate-700 rounded-md `}>
         <div className="flex justify-between p-2">
-          <div className="flex gap-2 items-center justify-center">
-            {getBlockTypeName(unit)}
-          </div>
+          <div className="flex gap-2 items-center justify-center">{getBlockTypeName(unit)}</div>
           <div>
-            <motion.div
-              layout
-              className="relative flex gap-1 p-1 bg-slate-600 rounded-md items-center"
-            >
+            <motion.div layout className="relative flex gap-1 p-1 bg-slate-600 rounded-md items-center">
               <img
                 key={`unit-${index}`}
-                src={
-                  BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"
-                }
+                src={BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"}
                 className={`border border-cyan-400 w-7 h-7 rounded-xs`}
               />
 
-              <p className="rounded-md bg-cyan-700 text-xs p-1">
-                x{unitsLeft} REMAINING
-              </p>
+              <p className="rounded-md bg-cyan-700 text-xs p-1">x{unitsLeft} REMAINING</p>
             </motion.div>
             <p className="min-w-fit w-full bg-slate-900 text-xs text-center rounded-md mt-1">
               {timeRemaining} BLOCKS TILL NEXT
@@ -107,19 +91,13 @@ const ProgressBar: React.FC<{
   }
 
   return (
-    <div
-      key={index}
-      className={`w-full border-b border-b-slate-700 text-xs bg-slate-800`}
-    >
+    <div key={index} className={`w-full border-b border-b-slate-700 text-xs bg-slate-800`}>
       <div className="flex justify-between p-2">
         <div className="flex gap-2 items-center justify-center">
           <p className="text-slate-400"> {index}.</p>
           {getBlockTypeName(unit)}
         </div>
-        <motion.div
-          layout
-          className="relative flex gap-1 p-1 bg-slate-600 rounded-md items-center"
-        >
+        <motion.div layout className="relative flex gap-1 p-1 bg-slate-600 rounded-md items-center">
           <img
             key={`unit-${index}`}
             src={BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"}

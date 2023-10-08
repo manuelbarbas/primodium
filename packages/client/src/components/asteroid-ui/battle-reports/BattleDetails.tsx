@@ -2,11 +2,7 @@ import { EntityID } from "@latticexyz/recs";
 import { FaTimes, FaTrophy } from "react-icons/fa";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 import { Battle } from "src/network/components/clientComponents";
-import {
-  getBlockTypeName,
-  shortenAddress,
-  toRomanNumeral,
-} from "src/util/common";
+import { getBlockTypeName, shortenAddress, toRomanNumeral } from "src/util/common";
 import { BackgroundImage, ResourceImage } from "src/util/constants";
 
 export const UnitStatus: React.FC<{
@@ -30,11 +26,7 @@ export const UnitStatus: React.FC<{
           {getBlockTypeName(unit)} {toRomanNumeral(level)}
         </div>
         <div className="relative flex gap-1 p-1 px-2 bg-slate-900 rounded-md items-center">
-          <p
-            className={`font-bold ${
-              unitsLeft - count < 0 ? "text-rose-500" : "text-green-500"
-            }`}
-          >
+          <p className={`font-bold ${unitsLeft - count < 0 ? "text-rose-500" : "text-green-500"}`}>
             {Math.abs(Math.min(unitsLeft - count, 0))}
           </p>{" "}
           LOST
@@ -48,10 +40,8 @@ export const BattleDetails: React.FC<{
   player: EntityID;
   battle: ReturnType<typeof Battle.format>;
 }> = ({ battle, player }) => {
-  const playersUnits =
-    player === battle.attacker ? battle.attackerUnits : battle.defenderUnits;
-  const enemyUnits =
-    player === battle.attacker ? battle.defenderUnits : battle.attackerUnits;
+  const playersUnits = player === battle.attacker ? battle.attackerUnits : battle.defenderUnits;
+  const enemyUnits = player === battle.attacker ? battle.defenderUnits : battle.attackerUnits;
 
   return (
     <div className="relative gap-3 flex flex-col items-center text-white w-full">
@@ -74,16 +64,12 @@ export const BattleDetails: React.FC<{
           <div className="flex gap-2 text-sm items-center justify-center">
             <div className="bg-slate-700 p-2 rounded-md border border-rose-500 w-32">
               <p className="font-bold text-xs text-cyan-400">ATTACKER</p>
-              {battle.attacker === player
-                ? "You"
-                : shortenAddress(battle.attacker)}
+              {battle.attacker === player ? "You" : shortenAddress(battle.attacker)}
             </div>
             vs
             <div className="bg-slate-700 p-2 rounded-md border border-green-600 w-32">
               <p className="font-bold text-xs text-cyan-400">DEFENDER</p>
-              {battle.defender === player
-                ? "You"
-                : shortenAddress(battle.defender)}
+              {battle.defender === player ? "You" : shortenAddress(battle.defender)}
             </div>
           </div>
 
@@ -91,9 +77,7 @@ export const BattleDetails: React.FC<{
 
           {battle.resources && (
             <div className="flex flex-col justify-center items-center gap-2 bg-slate-900 p-2 px-5 rounded-md border border-slate-700">
-              <p className="text-lg font-bold leading-none">
-                {player === battle.winner ? "REWARDS" : "RAIDED"}
-              </p>
+              <p className="text-lg font-bold leading-none">{player === battle.winner ? "REWARDS" : "RAIDED"}</p>
               <div className="flex items-center ">
                 {battle.resources.map((resource, i) => (
                   <ResourceIconTooltip
@@ -109,50 +93,30 @@ export const BattleDetails: React.FC<{
           )}
 
           <div className="w-full">
-            <p className="p-1 text-xs font-bold text-cyan-400">
-              YOUR FLEET STATUS
-            </p>
+            <p className="p-1 text-xs font-bold text-cyan-400">YOUR FLEET STATUS</p>
             <div className="w-full rounded-md overflow-hidden h-32 border border-slate-500 bg-slate-800 overflow-y-auto flex flex-col items-center justify-center scrollbar">
               {playersUnits.length === 0 && (
-                <p className="text-sm font-bold text-slate-400 text-center">
-                  NO FLEET FOUND
-                </p>
+                <p className="text-sm font-bold text-slate-400 text-center">NO FLEET FOUND</p>
               )}
               {playersUnits.length !== 0 && (
                 <div className="w-full h-full">
                   {playersUnits.map(({ type, unitsLeft, count, level }, i) => (
-                    <UnitStatus
-                      unit={type}
-                      unitsLeft={unitsLeft}
-                      count={count}
-                      level={level}
-                      key={`unit-${i + 1}`}
-                    />
+                    <UnitStatus unit={type} unitsLeft={unitsLeft} count={count} level={level} key={`unit-${i + 1}`} />
                   ))}
                 </div>
               )}
             </div>
           </div>
           <div className="w-full">
-            <p className="p-1 text-xs font-bold text-cyan-400">
-              ENEMY FLEET STATUS
-            </p>
+            <p className="p-1 text-xs font-bold text-cyan-400">ENEMY FLEET STATUS</p>
             <div className="w-full rounded-md overflow-hidden h-32 border border-slate-500 bg-slate-800 overflow-y-auto flex flex-col items-center justify-center scrollbar">
               {enemyUnits.length === 0 && (
-                <p className="text-sm font-bold text-slate-400 text-center">
-                  NO FLEET FOUND
-                </p>
+                <p className="text-sm font-bold text-slate-400 text-center">NO FLEET FOUND</p>
               )}
               {enemyUnits.length !== 0 && (
                 <div className="w-full h-full">
                   {enemyUnits.map(({ type, unitsLeft, count, level }, i) => (
-                    <UnitStatus
-                      unit={type}
-                      unitsLeft={unitsLeft}
-                      count={count}
-                      level={level}
-                      key={`unit-${i + 1}`}
-                    />
+                    <UnitStatus unit={type} unitsLeft={unitsLeft} count={count} level={level} key={`unit-${i + 1}`} />
                   ))}
                 </div>
               )}
@@ -164,9 +128,7 @@ export const BattleDetails: React.FC<{
           <p className="opacity-50 font-bold">{Number(battle.blockNumber)}</p>
         </div>
         <div className="absolute top-0 left-0 flex gap-1 text-xs p-2">
-          <p className="opacity-50 font-bold">
-            {battle.raidedAmount ? "RAID" : "INVASION"}
-          </p>
+          <p className="opacity-50 font-bold">{battle.raidedAmount ? "RAID" : "INVASION"}</p>
         </div>
       </div>
     </div>

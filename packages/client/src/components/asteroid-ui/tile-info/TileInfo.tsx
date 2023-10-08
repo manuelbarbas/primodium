@@ -1,12 +1,8 @@
 import { motion } from "framer-motion";
+import { SelectedAction, SelectedBuilding, SelectedTile } from "src/network/components/clientComponents";
+import { BlueprintInfo } from "./BlueprintInfo";
 import { BuildingInfo } from "./BuildingInfo";
 import { TerrainInfo } from "./TerrainInfo";
-import { BlueprintInfo } from "./BlueprintInfo";
-import {
-  SelectedAction,
-  SelectedBuilding,
-  SelectedTile,
-} from "src/network/components/clientComponents";
 
 export const TileInfo: React.FC = () => {
   const selectedTile = SelectedTile.use();
@@ -23,17 +19,11 @@ export const TileInfo: React.FC = () => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0, y: -200 }}
           >
-            {selectedBuilding && !selectedAction && (
-              <BuildingInfo building={selectedBuilding} />
-            )}
+            {selectedBuilding && !selectedAction && <BuildingInfo building={selectedBuilding} />}
 
-            {selectedBuilding && selectedAction && (
-              <BlueprintInfo buildingType={selectedBuilding} />
-            )}
+            {selectedBuilding && selectedAction && <BlueprintInfo buildingType={selectedBuilding} />}
 
-            {!selectedBuilding && selectedTile && (
-              <TerrainInfo coord={selectedTile} />
-            )}
+            {!selectedBuilding && selectedTile && <TerrainInfo coord={selectedTile} />}
           </motion.div>
         </div>
       }

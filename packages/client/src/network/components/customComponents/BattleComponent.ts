@@ -1,9 +1,9 @@
 import { ComponentValue, Type } from "@latticexyz/recs";
 import { world } from "src/network/world";
-import newComponent from "./ExtendedComponent";
+import { createExtendedComponent } from "./ExtendedComponent";
 
-export const BattleComponent = () => {
-  const component = newComponent(world, {
+export const createBattleComponent = () => {
+  const component = createExtendedComponent(world, {
     attacker: Type.Entity,
     defender: Type.Entity,
     winner: Type.Entity,

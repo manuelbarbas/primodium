@@ -4,13 +4,10 @@ import { starmapSceneConfig } from "../../config/starmapScene";
 
 import { runSystems } from "./systems";
 
-import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
 import { createGame } from "engine/api";
+import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
 
-export const initStarmapScene = async (
-  game: Awaited<ReturnType<typeof createGame>>,
-  network: Network
-) => {
+export const initStarmapScene = async (game: Awaited<ReturnType<typeof createGame>>, network: Network) => {
   const { world } = network;
 
   const scene = await game.sceneManager.addScene(starmapSceneConfig, false);

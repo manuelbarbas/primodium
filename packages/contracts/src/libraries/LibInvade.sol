@@ -19,7 +19,7 @@ library LibInvade {
    * @param rockEntity The identifier of the target rock.
    */
   function invade(bytes32 invader, bytes32 rockEntity) internal {
-    require(RockType.get(rockEntity) == ERock.Motherlode, "[Invade] Can only invade motherlodes");
+    require(RockType.get(rockEntity) == uint8(ERock.Motherlode), "[Invade] Can only invade motherlodes");
 
     bytes32 defender = OwnedBy.get(rockEntity);
     if (defender == 0) return invadeNeutral(invader, rockEntity);

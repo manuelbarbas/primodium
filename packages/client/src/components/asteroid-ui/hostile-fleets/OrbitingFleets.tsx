@@ -1,14 +1,12 @@
-import { ESendType } from "src/util/web3/types";
+import { SingletonID } from "@latticexyz/network";
 import { EntityID } from "@latticexyz/recs";
+import { useMemo } from "react";
 import { Arrival } from "src/network/components/chainComponents";
 import { Account } from "src/network/components/clientComponents";
-import { SingletonID } from "@latticexyz/network";
-import { useMemo } from "react";
+import { ESendType } from "src/util/web3/types";
 import { AttackingFleet } from "./AttackingFleet";
 
-export const OrbitingFleets: React.FC<{ spaceRock: EntityID }> = ({
-  spaceRock,
-}) => {
+export const OrbitingFleets: React.FC<{ spaceRock: EntityID }> = ({ spaceRock }) => {
   const player = Account.use()?.value ?? SingletonID;
 
   const orbitingFleets = Arrival.use({
@@ -36,9 +34,7 @@ export const OrbitingFleets: React.FC<{ spaceRock: EntityID }> = ({
       {attackingOrbitingFleets.length !== 0 &&
         attackingOrbitingFleets.map((fleet, index) => {
           if (!fleet) return;
-          return (
-            <AttackingFleet key={index} fleet={fleet} spaceRock={spaceRock} />
-          );
+          return <AttackingFleet key={index} fleet={fleet} spaceRock={spaceRock} />;
         })}
     </div>
   );

@@ -1,15 +1,11 @@
+import { EntityID } from "@latticexyz/recs";
 import { motion } from "framer-motion";
-import { BackgroundImage } from "src/util/constants";
-import { getBlockTypeName } from "src/util/common";
 import { useEffect, useMemo, useState } from "react";
 import { FaEye, FaInfoCircle } from "react-icons/fa";
+import { BlockNumber, Hangar, Send } from "src/network/components/clientComponents";
+import { getBlockTypeName } from "src/util/common";
+import { BackgroundImage } from "src/util/constants";
 import { UnitPane } from "./UnitPane";
-import {
-  BlockNumber,
-  Hangar,
-  Send,
-} from "src/network/components/clientComponents";
-import { EntityID } from "@latticexyz/recs";
 
 export const HangarPane: React.FC<{
   show: boolean;
@@ -70,10 +66,7 @@ export const HangarPane: React.FC<{
                       onClick={() => setSelectedUnit(unit.type)}
                     >
                       <img
-                        src={
-                          BackgroundImage.get(unit.type)?.at(0) ??
-                          "/img/icons/debugicon.png"
-                        }
+                        src={BackgroundImage.get(unit.type)?.at(0) ?? "/img/icons/debugicon.png"}
                         className="border border-cyan-400 w-[64px] h-[64px] group-hover:opacity-50 rounded-xl"
                       />
                       <FaEye className="absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 opacity-0 group-hover:opacity-100" />
@@ -89,8 +82,7 @@ export const HangarPane: React.FC<{
               </div>
               <hr className="border-t border-cyan-600 w-full" />
               <p className="opacity-50 text-xs italic mb-2 flex gap-2 z-10">
-                <FaInfoCircle size={16} /> Click on one of the ships to add it
-                to your fleet.
+                <FaInfoCircle size={16} /> Click on one of the ships to add it to your fleet.
               </p>
             </div>
           )}

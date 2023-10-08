@@ -33,9 +33,7 @@ export const BuildQueue: React.FC<{ building: EntityID }> = ({ building }) => {
       <SecondaryCard className="h-44 overflow-y-auto scrollbar w-full">
         {(!queue || queue.length === 0) && (
           <p className="text-sm font-bold text-slate-400 h-full flex items-center justify-center">
-            {transactionLoading
-              ? "QUEUING TRAINING ORDER..."
-              : "NO TRAINING ORDERS QUEUED"}
+            {transactionLoading ? "QUEUING TRAINING ORDER..." : "NO TRAINING ORDERS QUEUED"}
           </p>
         )}
         {queue && queue.length !== 0 && (
@@ -74,26 +72,17 @@ const ProgressBar: React.FC<{
   const unitsLeft = Math.ceil((1 - progress) * count);
   if (index === 0) {
     return (
-      <SecondaryCard
-        key={index}
-        className={`w-full text-sm flex-row justify-between p-2`}
-      >
-        <div className="flex gap-2 items-center justify-center">
-          {getBlockTypeName(unit)}
-        </div>
+      <SecondaryCard key={index} className={`w-full text-sm flex-row justify-between p-2`}>
+        <div className="flex gap-2 items-center justify-center">{getBlockTypeName(unit)}</div>
         <div>
           <div className="relative flex gap-1 p-1 bg-slate-600 rounded-md items-center">
             <img
               key={`unit-${index}`}
-              src={
-                BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"
-              }
+              src={BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"}
               className={`border border-cyan-400 w-7 h-7 rounded-xs`}
             />
 
-            <p className="rounded-md bg-cyan-700 text-xs p-1">
-              x{unitsLeft} REMAINING
-            </p>
+            <p className="rounded-md bg-cyan-700 text-xs p-1">x{unitsLeft} REMAINING</p>
           </div>
           <p className="min-w-fit w-full bg-slate-900 text-xs text-center rounded-md mt-1">
             {timeRemaining} BLOCKS TILL NEXT
@@ -104,10 +93,7 @@ const ProgressBar: React.FC<{
   }
 
   return (
-    <SecondaryCard
-      key={index}
-      className="flex flex-row justify-between p-2 w-full text-xs bg-neutral"
-    >
+    <SecondaryCard key={index} className="flex flex-row justify-between p-2 w-full text-xs bg-neutral">
       <div className="flex gap-2 items-center justify-center">
         <p className="text-slate-400"> {index}.</p>
         {getBlockTypeName(unit)}

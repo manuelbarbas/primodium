@@ -1,7 +1,4 @@
-import {
-  Account,
-  Leaderboard as _Leaderboard,
-} from "src/network/components/clientComponents";
+import { Account, Leaderboard as _Leaderboard } from "src/network/components/clientComponents";
 import { Card } from "../core/Card";
 
 export const Score = () => {
@@ -15,11 +12,7 @@ export const Score = () => {
         <p className="bg-error px-2 rounded-md font-bold">
           <span>RANK #{data.playerRank}</span>
         </p>
-        <span>
-          {data.scores.length >= data.playerRank
-            ? data.scores[data.playerRank - 1].toLocaleString()
-            : 0}
-        </span>
+        <span>{data.scores.length >= data.playerRank ? data.scores[data.playerRank - 1].toLocaleString() : 0}</span>
         <p className="text-xs opacity-50"> POINTS </p>
       </div>
     </Card>

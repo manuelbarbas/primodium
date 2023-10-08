@@ -1,4 +1,4 @@
-import { EntityID, ComponentValue } from "@latticexyz/recs";
+import { ComponentValue, EntityID } from "@latticexyz/recs";
 import { BiSolidInvader } from "react-icons/bi";
 import { Arrival, Position } from "src/network/components/chainComponents";
 import { BlockNumber } from "src/network/components/clientComponents";
@@ -64,9 +64,7 @@ export const AttackingFleet: React.FC<{
         {!arrived && (
           <LabeledValue label="ETA">
             <div className="flex gap-1 text-right w-full">
-              <p className="w-full">
-                {Math.max(Number(arrivalBlock) - blockNumber, 0)} BLOCKS
-              </p>
+              <p className="w-full">{Math.max(Number(arrivalBlock) - blockNumber, 0)} BLOCKS</p>
             </div>
           </LabeledValue>
         )}

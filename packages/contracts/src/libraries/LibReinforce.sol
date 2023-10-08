@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { Arrival, EResource, ESendType } from "src/Types.sol";
+import { Arrival, ESendType } from "src/Types.sol";
 import { ArrivalCount, P_RequiredResourcesData, P_UnitPrototypes, P_RequiredResources, P_IsUtility, ResourceCount, OwnedBy, Home } from "codegen/index.sol";
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 import { LibUnit } from "libraries/LibUnit.sol";

@@ -9,17 +9,13 @@ export const linkAddress = async () => {
     return;
   }
 
-  const wallet = new ethers.Wallet(
-    localStorage.getItem("privateKey") as string
-  );
+  const wallet = new ethers.Wallet(localStorage.getItem("privateKey") as string);
 
   const localAddress = wallet.address;
   const localSignature = await wallet.signMessage(localAddress);
 
   // Opens the linking page in a new window served from the following repo: account-link-vercel
   return window.open(
-    `${
-      import.meta.env.VITE_ACCOUNT_LINK_VERCEL_URL
-    }/?localAddress=${localAddress}&localSignature=${localSignature}`
+    `${import.meta.env.VITE_ACCOUNT_LINK_VERCEL_URL}/?localAddress=${localAddress}&localSignature=${localSignature}`
   );
 };

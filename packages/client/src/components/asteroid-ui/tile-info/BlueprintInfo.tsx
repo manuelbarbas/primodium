@@ -1,22 +1,13 @@
 import { EntityID } from "@latticexyz/recs";
 import React, { useMemo } from "react";
 
-import {
-  BackgroundImage,
-  RESOURCE_SCALE,
-  ResourceImage,
-  ResourceType,
-} from "src/util/constants";
-import { getRecipe } from "src/util/resource";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
-import { hashAndTrimKeyEntity, hashKeyEntity } from "src/util/encode";
-import { formatNumber, getBlockTypeName } from "src/util/common";
+import { Level, P_Production, P_ProductionDependencies } from "src/network/components/chainComponents";
 import { Account, BlockNumber } from "src/network/components/clientComponents";
-import {
-  Level,
-  P_Production,
-  P_ProductionDependencies,
-} from "src/network/components/chainComponents";
+import { formatNumber, getBlockTypeName } from "src/util/common";
+import { BackgroundImage, RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
+import { hashAndTrimKeyEntity, hashKeyEntity } from "src/util/encode";
+import { getRecipe } from "src/util/resource";
 
 export const BlueprintInfo: React.FC<{
   buildingType: EntityID;
@@ -38,13 +29,10 @@ export const BlueprintInfo: React.FC<{
   const dependencies =
     prodDependencies?.resources.map((resource, index) => ({
       resource,
-      value:
-        (prodDependencies.values[index] * RESOURCE_SCALE * 60) / avgBlockTime,
+      value: (prodDependencies.values[index] * RESOURCE_SCALE * 60) / avgBlockTime,
     })) ?? [];
   const production = P_Production.use(buildingLevelEntity);
-  const productionRate =
-    ((production?.resourceProductionRate ?? 0) * RESOURCE_SCALE * 60) /
-    avgBlockTime;
+  const productionRate = ((production?.resourceProductionRate ?? 0) * RESOURCE_SCALE * 60) / avgBlockTime;
 
   return (
     <div className="flex flex-col w-fit">
@@ -54,11 +42,7 @@ export const BlueprintInfo: React.FC<{
             className={`relative flex flex-col text-sm items-center cursor-pointer w-16 h-12 border rounded border-cyan-400`}
           >
             <img
-              src={
-                BackgroundImage.get(buildingType) !== undefined
-                  ? BackgroundImage.get(buildingType)![0]
-                  : undefined
-              }
+              src={BackgroundImage.get(buildingType) !== undefined ? BackgroundImage.get(buildingType)![0] : undefined}
               className={`absolute bottom-0 w-14 pixel-images rounded-md`}
             />
           </div>
@@ -81,23 +65,19 @@ export const BlueprintInfo: React.FC<{
                           resourceId={resource.id}
                           name={resourceName}
                           amount={resource.amount}
-                          scale={
-                            resource.type === ResourceType.Resource
-                              ? RESOURCE_SCALE
-                              : 1
-                          }
+                          scale={resource.type === ResourceType.Resource ? RESOURCE_SCALE : 1}
                           fontSize={"xs"}
                         />
                       );
                     })}
                   </div>
                   {dependencies &&
-                    dependencies.map((dep) => (
-                      <div className="flex items-center gap-2 text-xs bg-red-800/60 p-1 border border-red-600 rounded-md">
-                        <img
-                          className="inline-block h-4"
-                          src={ResourceImage.get(dep.resource)}
-                        ></img>
+                    dependencies.map((dep, i) => (
+                      <div
+                        key={`dep-${i}`}
+                        className="flex items-center gap-2 text-xs bg-red-800/60 p-1 border border-red-600 rounded-md"
+                      >
+                        <img className="inline-block h-4" src={ResourceImage.get(dep.resource)}></img>
                         {formatNumber(dep.value)}/MIN
                       </div>
                     ))}
@@ -108,10 +88,7 @@ export const BlueprintInfo: React.FC<{
                   OUTPUT
                   {production && (
                     <div className="flex items-center gap-2 text-xs bg-green-800/60 p-1 border border-green-600 rounded-md">
-                      <img
-                        className="inline-block h-4"
-                        src={ResourceImage.get(production.resourceID)}
-                      ></img>
+                      <img className="inline-block h-4" src={ResourceImage.get(production.resourceID)}></img>
                       {formatNumber(productionRate)}/MIN
                     </div>
                   )}

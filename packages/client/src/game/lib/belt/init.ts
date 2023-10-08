@@ -15,11 +15,7 @@ export const initBeltView = async (_: EntityID, network: Network) => {
   const { world } = network;
 
   const game = await engine.createGame(gameConfig);
-  const scene = await game.sceneManager.addScene(
-    Scenes.Main,
-    mainSceneConfig,
-    true
-  );
+  const scene = await game.sceneManager.addScene(Scenes.Main, mainSceneConfig, true);
 
   scene.camera.phaserCamera.fadeIn(1000);
 

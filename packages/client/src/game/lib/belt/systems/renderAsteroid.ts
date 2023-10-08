@@ -1,32 +1,16 @@
-import { Scene } from "engine/types";
-import {
-  namespaceWorld,
-  Has,
-  defineEnterSystem,
-  defineComponentSystem,
-  HasValue,
-  EntityID,
-} from "@latticexyz/recs";
-import {
-  ObjectPosition,
-  OnClick,
-  SetValue,
-} from "../../common/object-components/common";
-import { Outline, Texture } from "../../common/object-components/sprite";
-import {
-  AsteroidType,
-  OwnedBy,
-  Position,
-  ReversePosition,
-} from "src/network/components/chainComponents";
-import { world } from "src/network/world";
-import { Send } from "src/network/components/clientComponents";
-import { initializeMotherlodes } from "../utils/initializeMotherlodes";
-import { ESpaceRockType } from "src/util/web3/types";
+import { BeltMap } from "@game/constants";
+import { EntityID, Has, HasValue, defineComponentSystem, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { Scene } from "engine/types";
+import { AsteroidType, OwnedBy, Position, ReversePosition } from "src/network/components/chainComponents";
+import { Send } from "src/network/components/clientComponents";
+import { world } from "src/network/world";
 import { encodeAndTrimCoord, encodeCoord } from "src/util/encode";
 import { ActiveButton } from "src/util/types";
-import { BeltMap } from "@game/constants";
+import { ESpaceRockType } from "src/util/web3/types";
+import { ObjectPosition, OnClick, SetValue } from "../../common/object-components/common";
+import { Outline, Texture } from "../../common/object-components/sprite";
+import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 
 const { DepthLayers } = BeltMap;
 
@@ -39,20 +23,14 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
     const asteroidType = AsteroidType.get(entityId)?.value;
 
     if (asteroidType !== ESpaceRockType.Asteroid) return;
-    const asteroidObjectGroup = scene.objectPool.getGroup(
-      "asteroid_" + entityId
-    );
+    const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entityId);
 
     const origin = Send.getOrigin();
     const destination = Send.getDestination();
     const owner = OwnedBy.get(entityId)?.value;
 
-    const originEntity = origin
-      ? ReversePosition.get(encodeCoord(origin))
-      : undefined;
-    const destinationEntity = destination
-      ? ReversePosition.get(encodeCoord(destination))
-      : undefined;
+    const originEntity = origin ? ReversePosition.get(encodeCoord(origin)) : undefined;
+    const destinationEntity = destination ? ReversePosition.get(encodeCoord(destination)) : undefined;
 
     let outline: ReturnType<typeof Outline> | undefined;
 
@@ -83,10 +61,7 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
         const activeButton = Send.get()?.activeButton ?? ActiveButton.NONE;
         if (activeButton === ActiveButton.ORIGIN) {
           Send.setOrigin(coord);
-        } else if (
-          activeButton === ActiveButton.DESTINATION ||
-          activeButton === ActiveButton.NONE
-        ) {
+        } else if (activeButton === ActiveButton.DESTINATION || activeButton === ActiveButton.NONE) {
           Send.setDestination(coord);
         }
         Send.update({ activeButton: ActiveButton.NONE });

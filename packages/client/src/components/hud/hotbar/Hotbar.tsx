@@ -5,14 +5,11 @@ import HotbarBody from "./HotbarBody";
 import HotbarLabel from "./HotbarLabel";
 import { useHotbarContent } from "./useHotbarContent";
 
-import {
-  SelectedAction,
-  SelectedBuilding,
-} from "src/network/components/clientComponents";
-import { wrap } from "src/util/common";
-import { Join } from "src/components/core/Join";
-import { Button } from "src/components/core/Button";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { Button } from "src/components/core/Button";
+import { Join } from "src/components/core/Join";
+import { SelectedAction, SelectedBuilding } from "src/network/components/clientComponents";
+import { wrap } from "src/util/common";
 
 export const Hotbar: React.FC = () => {
   const hotbarContent = useHotbarContent();
@@ -90,10 +87,7 @@ export const Hotbar: React.FC = () => {
         </Button>
       </div>
 
-      <HotbarBody
-        activeBar={activeBarRef.current}
-        setActiveBar={setActiveBar}
-      />
+      <HotbarBody activeBar={activeBarRef.current} setActiveBar={setActiveBar} />
     </div>
   );
 };
