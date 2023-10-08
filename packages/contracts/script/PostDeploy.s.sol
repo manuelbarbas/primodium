@@ -39,11 +39,11 @@ contract PostDeploy is Script {
     createTerrain(world);
     console.log("Terrain created");
 
-    OnBuild_PlaceOnTile placeOnTile = new OnBuild_PlaceOnTile();
-    world.grantAccess(ChildrenTableId, address(placeOnTile));
-    world.grantAccess(OwnedByTableId, address(placeOnTile));
-    world.grantAccess(PositionTableId, address(placeOnTile));
-    world.registerSystemHook(getSystemResourceId("BuildSystem"), placeOnTile, ALL);
+    // OnBuild_PlaceOnTile placeOnTile = new OnBuild_PlaceOnTile();
+    // world.grantAccess(ChildrenTableId, address(placeOnTile));
+    // world.grantAccess(OwnedByTableId, address(placeOnTile));
+    // world.grantAccess(PositionTableId, address(placeOnTile));
+    // world.registerSystemHook(getSystemResourceId("BuildSystem"), placeOnTile, ALL);
 
     vm.stopBroadcast();
   }
