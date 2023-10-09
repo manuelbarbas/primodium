@@ -16,17 +16,19 @@ import { Bounds } from "libraries/LibBuilding.sol";
 import { OnHookChangedValue, OnHookChangedValueTableId } from "codegen/tables/OnHookChangedValue.sol";
 import { ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
 import { BuildOrder, BuildOrderTableId, BuildOrderData } from "codegen/tables/BuildOrder.sol";
+import { Home } from "codegen/tables/Home.sol";
 import { EBuilding } from "src/Types.sol";
 import { BuildSystem } from "systems/BuildSystem.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
-import { BuildingKey } from "src/Keys.sol";
+import { UnitKey } from "src/Keys.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import "forge-std/console.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
+import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 
-contract OnDestroy_ClearUtility is SystemHook {
+contract OnSpawn_BuildMainBase is SystemHook {
   constructor() {}
 
   function onBeforeCallSystem(
@@ -36,17 +38,12 @@ contract OnDestroy_ClearUtility is SystemHook {
   ) public {
     console.log("called before call system");
     //(EBuilding buildingType, PositionData memory coord) = abi.decode(callData, (EBuilding, PositionData));
-    (uint8 buildingType, int32 x, int32 y, bytes32 parent) = abi.decode(callData, (uint8, int32, int32, bytes32));
+    bytes32 playerEntity = addressToEntity(msgSender);
+    bytes32 asteroid = Home.getAsteroid(playerEntity);
+    PositionData memory position = Position.get(MainBasePrototypeId);
+    position.parent = asteroid;
     console.log("called before call system 2");
-    bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
-    require(
-      LibBuilding.canBuildOnTile(
-        buildingPrototype,
-        //coord
-        PositionData(x, y, parent)
-      ),
-      "[BuildSystem] Cannot build on this tile"
-    );
+    LibBuilding.build(playerEntity, MainBasePrototypeId, position);
     console.log("called before call system ");
   }
 

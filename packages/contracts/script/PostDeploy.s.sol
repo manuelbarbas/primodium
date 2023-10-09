@@ -17,8 +17,23 @@ import { OnHookChangedValue, OnHookChangedValueTableId } from "codegen/tables/On
 import { Children, ChildrenTableId } from "codegen/tables/Children.sol";
 import { OwnedBy, OwnedByTableId } from "codegen/tables/OwnedBy.sol";
 import { Position, PositionTableId, PositionData } from "codegen/tables/Position.sol";
-import { OnBuild_PlaceOnTile } from "libraries/hooks/OnBuild_PlaceOnTile.sol";
 import { BuildOrder, BuildOrderTableId, BuildOrderData } from "codegen/tables/BuildOrder.sol";
+import { SetUtilities, SetUtilitiesTableId } from "codegen/tables/SetUtilities.sol";
+import { SetItemUtilities, SetItemUtilitiesTableId } from "codegen/tables/SetItemUtilities.sol";
+import { ResourceCount, ResourceCountTableId } from "codegen/tables/ResourceCount.sol";
+import { MaxResourceCount, MaxResourceCountTableId } from "codegen/tables/MaxResourceCount.sol";
+import { SpawnedTableId } from "codegen/tables/Spawned.sol";
+import { ProductionRate, ProductionRateTableId } from "codegen/tables/ProductionRate.sol";
+import { OnBuild_PlaceOnTile } from "src/hooks/systemHooks/OnBuild_PlaceOnTile.sol";
+import { OnBuild_Spawn } from "src/hooks/systemHooks/OnBuild_Spawn.sol";
+import { OnBuild_Home } from "src/hooks/systemHooks/OnBuild_Home.sol";
+import { OnBuild_MainBaseLevel } from "src/hooks/systemHooks/OnBuild_MainBaseLevel.sol";
+import { OnBuild_MainBase } from "src/hooks/systemHooks/OnBuild_MainBase.sol";
+import { OnBuild_BuildingType } from "src/hooks/systemHooks/OnBuild_BuildingType.sol";
+import { OnBuild_PlayerSpawned } from "src/hooks/systemHooks/OnBuild_PlayerSpawned.sol";
+import { OnBuild_SpendResources } from "src/hooks/systemHooks/OnBuild_SpendResources.sol";
+import { OnBuild_MaxStorage } from "src/hooks/systemHooks/OnBuild_MaxStorage.sol";
+import { OnBuild_ProductionRate } from "src/hooks/systemHooks/OnBuild_ProductionRate.sol";
 
 import { ALL } from "@latticexyz/world/src/systemHookTypes.sol";
 
@@ -38,13 +53,51 @@ contract PostDeploy is Script {
     console.log("Prototypes created");
     createTerrain(world);
     console.log("Terrain created");
-
-    // OnBuild_PlaceOnTile placeOnTile = new OnBuild_PlaceOnTile();
-    // world.grantAccess(ChildrenTableId, address(placeOnTile));
-    // world.grantAccess(OwnedByTableId, address(placeOnTile));
-    // world.grantAccess(PositionTableId, address(placeOnTile));
-    // world.registerSystemHook(getSystemResourceId("BuildSystem"), placeOnTile, ALL);
-
+    //OnSpawn_BuildMainBase buildMainBase = new OnSpawn_BuildMainBase();
+    registerBuildHooks(world);
     vm.stopBroadcast();
+  }
+
+  function registerBuildHooks(IWorld world) internal {
+    OnBuild_PlayerSpawned onBuild_PlayerSpawned = new OnBuild_PlayerSpawned();
+    world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_PlayerSpawned, ALL);
+
+    OnBuild_Home onBuild_Home = new OnBuild_Home();
+    world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_Home, ALL);
+
+    OnBuild_MainBase onBuild_MainBase = new OnBuild_MainBase();
+    world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_MainBase, ALL);
+
+    OnBuild_BuildingType onBuild_BuildingType = new OnBuild_BuildingType();
+    world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_BuildingType, ALL);
+
+    OnBuild_Spawn onBuild_Spawn = new OnBuild_Spawn();
+    world.grantAccess(SpawnedTableId, address(onBuild_Spawn));
+    world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_Spawn, ALL);
+
+    OnBuild_MainBaseLevel onBuild_MainBaseLevel = new OnBuild_MainBaseLevel();
+    world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_MainBaseLevel, ALL);
+
+    OnBuild_PlaceOnTile placeOnTile = new OnBuild_PlaceOnTile();
+    world.grantAccess(ChildrenTableId, address(placeOnTile));
+    world.grantAccess(OwnedByTableId, address(placeOnTile));
+    world.grantAccess(PositionTableId, address(placeOnTile));
+    world.registerSystemHook(getSystemResourceId("BuildSystem"), placeOnTile, ALL);
+
+    OnBuild_SpendResources onBuild_SpendResources = new OnBuild_SpendResources();
+    world.grantAccess(ResourceCountTableId, address(onBuild_SpendResources));
+    world.grantAccess(SetItemUtilitiesTableId, address(onBuild_SpendResources));
+    world.grantAccess(SetUtilitiesTableId, address(onBuild_SpendResources));
+
+    world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_SpendResources, ALL);
+
+    OnBuild_MaxStorage onBuild_MaxStorage = new OnBuild_MaxStorage();
+    world.grantAccess(ResourceCountTableId, address(onBuild_MaxStorage));
+    world.grantAccess(MaxResourceCountTableId, address(onBuild_MaxStorage));
+    world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_MaxStorage, ALL);
+
+    OnBuild_ProductionRate onBuild_ProductionRate = new OnBuild_ProductionRate();
+    world.grantAccess(ProductionRateTableId, address(onBuild_ProductionRate));
+    world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_ProductionRate, ALL);
   }
 }

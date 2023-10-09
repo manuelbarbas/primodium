@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
+import { addressToEntity, entityToAddress, getSystemResourceId, bytes32ToString } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 // tables
 import { Home, P_RequiredTile, P_ProducesUnits, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/index.sol";
@@ -22,6 +22,7 @@ import { S_ResourceProductionSystem } from "systems/subsystems/S_ResourceProduct
 import { BuildingKey, BuildingTileKey, ExpansionKey } from "src/Keys.sol";
 import { Bounds, EBuilding, EResource } from "src/Types.sol";
 import { BuildOrder, BuildOrderTableId, BuildOrderData } from "codegen/tables/BuildOrder.sol";
+import "forge-std/console.sol";
 
 library LibBuilding {
   /// @notice Builds a building at a specified coordinate
@@ -34,59 +35,59 @@ library LibBuilding {
     bytes32 buildingPrototype,
     PositionData memory coord
   ) internal returns (bytes32 buildingEntity) {
+    console.log("build called");
     buildingEntity = LibEncode.getHash(BuildingKey, coord);
-    require(!Spawned.get(buildingEntity), "[BuildSystem] Building already exists");
+    //require(!Spawned.get(buildingEntity), "[BuildSystem] Building already exists");
+    console.log("build called after spawned requirement");
+    // require(
+    //   coord.parent == Home.getAsteroid(playerEntity),
+    //   "[BuildSystem] Building must be built on your home asteroid"
+    // );
 
-    require(
-      coord.parent == Home.getAsteroid(playerEntity),
-      "[BuildSystem] Building must be built on your home asteroid"
-    );
-
-    require(
-      hasRequiredBaseLevel(playerEntity, buildingPrototype, 1),
-      "[BuildSystem] MainBase level requirement not met"
-    );
-    BuildOrder.set(BuildOrderData(playerEntity, buildingEntity, buildingPrototype, coord.x, coord.y, coord.parent));
-    require(canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
+    // require(
+    //   hasRequiredBaseLevel(playerEntity, buildingPrototype, 1),
+    //   "[BuildSystem] MainBase level requirement not met"
+    // );
+    //BuildOrder.set(BuildOrderData(playerEntity, buildingEntity, buildingPrototype, coord.x, coord.y, coord.parent));
+    //require(canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
     Position.set(buildingEntity, coord);
-    Spawned.set(buildingEntity, true);
+    //Spawned.set(buildingEntity, true);
     BuildingType.set(buildingEntity, buildingPrototype);
     Level.set(buildingEntity, 1);
-
     LastClaimedAt.set(buildingEntity, block.timestamp);
     OwnedBy.set(buildingEntity, playerEntity);
 
-    placeBuildingTiles(playerEntity, buildingEntity, buildingPrototype, coord);
+    //placeBuildingTiles(playerEntity, buildingPrototype, coord);
 
     address playerAddress = entityToAddress(playerEntity);
 
-    SystemCall.callWithHooksOrRevert(
-      playerAddress,
-      getSystemResourceId("S_SpendResourcesSystem"),
-      abi.encodeCall(S_SpendResourcesSystem.spendBuildingRequiredResources, (buildingEntity, 1)),
-      0
-    );
+    // SystemCall.callWithHooksOrRevert(
+    //   playerAddress,
+    //   getSystemResourceId("S_SpendResourcesSystem"),
+    //   abi.encodeCall(S_SpendResourcesSystem.spendBuildingRequiredResources, (buildingEntity, 1)),
+    //   0
+    // );
 
-    SystemCall.callWithHooksOrRevert(
-      entityToAddress(playerEntity),
-      getSystemResourceId("S_MaxStorageSystem"),
-      abi.encodeCall(S_MaxStorageSystem.increaseMaxStorage, (playerEntity, buildingEntity, 1)),
-      0
-    );
+    // SystemCall.callWithHooksOrRevert(
+    //   entityToAddress(playerEntity),
+    //   getSystemResourceId("S_MaxStorageSystem"),
+    //   abi.encodeCall(S_MaxStorageSystem.increaseMaxStorage, (playerEntity, buildingEntity, 1)),
+    //   0
+    // );
 
-    SystemCall.callWithHooksOrRevert(
-      entityToAddress(playerEntity),
-      getSystemResourceId("S_ReduceProductionRateSystem"),
-      abi.encodeCall(S_ReduceProductionRateSystem.reduceProductionRate, (playerEntity, buildingEntity, 1)),
-      0
-    );
+    // SystemCall.callWithHooksOrRevert(
+    //   entityToAddress(playerEntity),
+    //   getSystemResourceId("S_ReduceProductionRateSystem"),
+    //   abi.encodeCall(S_ReduceProductionRateSystem.reduceProductionRate, (playerEntity, buildingEntity, 1)),
+    //   0
+    // );
 
-    SystemCall.callWithHooksOrRevert(
-      entityToAddress(playerEntity),
-      getSystemResourceId("S_ResourceProductionSystem"),
-      abi.encodeCall(S_ResourceProductionSystem.upgradeResourceProduction, (playerEntity, buildingEntity, 1)),
-      0
-    );
+    // SystemCall.callWithHooksOrRevert(
+    //   entityToAddress(playerEntity),
+    //   getSystemResourceId("S_ResourceProductionSystem"),
+    //   abi.encodeCall(S_ResourceProductionSystem.upgradeResourceProduction, (playerEntity, buildingEntity, 1)),
+    //   0
+    // );
 
     if (P_ProducesUnits.get(buildingPrototype)) {
       UnitFactorySet.add(playerEntity, buildingEntity);
@@ -103,6 +104,8 @@ library LibBuilding {
     PositionData memory position
   ) public {
     bytes32 buildingEntity = LibEncode.getHash(BuildingKey, position);
+    console.log("place building: buildingEntity: %s", bytes32ToString(buildingEntity));
+    console.log("place building: playerEntity: %s", bytes32ToString(playerEntity));
     int32[] memory blueprint = P_Blueprint.get(buildingPrototype);
     Bounds memory bounds = getPlayerBounds(playerEntity);
 
@@ -130,6 +133,8 @@ library LibBuilding {
     PositionData memory coord
   ) private returns (bytes32 tileEntity) {
     tileEntity = LibEncode.getHash(BuildingTileKey, coord);
+    console.log("tileEntity: %s", bytes32ToString(tileEntity));
+    console.log("buildingEntity: %s", bytes32ToString(OwnedBy.get(tileEntity)));
     require(OwnedBy.get(tileEntity) == 0, "[BuildSystem] Cannot build tile on a non-empty coordinate");
     require(
       bounds.minX <= coord.x && bounds.minY <= coord.y && bounds.maxX >= coord.x && bounds.maxY >= coord.y,

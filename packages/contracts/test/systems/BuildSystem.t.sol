@@ -10,6 +10,7 @@ contract BuildSystemTest is PrimodiumTest {
     super.setUp();
     // init other
     spawn(creator);
+    spawn(bob);
     playerEntity = addressToEntity(creator);
     vm.startPrank(creator);
   }
@@ -61,7 +62,7 @@ contract BuildSystemTest is PrimodiumTest {
     PositionData memory ironPositionData = getIronPosition(creator);
     world.build(EBuilding.IronMine, ironPositionData);
     vm.stopPrank();
-    spawn(bob);
+
     vm.startPrank(bob);
     ironPositionData = getIronPosition(bob);
     world.build(EBuilding.IronMine, ironPositionData);
@@ -76,8 +77,8 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testBuiltOnWrongAsteroid() public {
-    PositionData memory coord = getPosition2(creator);
-    coord.parent = bytes32(uint256(69));
+    PositionData memory coord = getIronPosition(bob);
+    //coord.parent = addressToEntity(bob);
 
     vm.expectRevert(bytes("[BuildSystem] Building must be built on your home asteroid"));
     world.build(EBuilding.IronMine, coord);
@@ -122,13 +123,15 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testBuildWithRequiredResources() public {
     ResourceCount.set(playerEntity, Iron, 100);
-
+    console.log("in test playerEntity iron : %s", ResourceCount.get(playerEntity, Iron));
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(Iron);
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(IronMinePrototypeId, 1, requiredResourcesData);
 
     world.build(EBuilding.IronMine, getIronPosition(creator));
+    console.log("in test playerEntity: %s", bytes32ToString(playerEntity));
+
     assertEq(ResourceCount.get(playerEntity, Iron), 50);
   }
 
