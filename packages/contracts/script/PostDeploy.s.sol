@@ -38,6 +38,7 @@ import { OnDestroy_ClearUtility } from "src/hooks/systemHooks/destroy/OnDestroy_
 import { OnDestroy_MaxStorage } from "src/hooks/systemHooks/destroy/OnDestroy_MaxStorage.sol";
 import { OnDestroy_ProductionRate } from "src/hooks/systemHooks/destroy/OnDestroy_ProductionRate.sol";
 import { OnDestroy_Requirements } from "src/hooks/systemHooks/destroy/OnDestroy_Requirements.sol";
+import { OnDestroy_RemoveFromTiles } from "src/hooks/systemHooks/destroy/OnDestroy_RemoveFromTiles.sol";
 
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
 
@@ -127,5 +128,10 @@ contract PostDeploy is Script {
     OnDestroy_ProductionRate onDestroy_ProductionRate = new OnDestroy_ProductionRate();
     world.grantAccess(ProductionRateTableId, address(onDestroy_ProductionRate));
     world.registerSystemHook(getSystemResourceId("DestroySystem"), onDestroy_ProductionRate, BEFORE_CALL_SYSTEM);
+
+    OnDestroy_RemoveFromTiles onDestroy_RemoveFromTiles = new OnDestroy_RemoveFromTiles();
+    world.grantAccess(ChildrenTableId, address(onDestroy_RemoveFromTiles));
+    world.grantAccess(OwnedByTableId, address(onDestroy_RemoveFromTiles));
+    world.registerSystemHook(getSystemResourceId("DestroySystem"), onDestroy_RemoveFromTiles, AFTER_CALL_SYSTEM);
   }
 }

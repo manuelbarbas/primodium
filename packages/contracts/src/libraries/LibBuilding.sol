@@ -34,17 +34,7 @@ library LibBuilding {
     PositionData memory coord
   ) internal returns (bytes32 buildingEntity) {
     buildingEntity = LibEncode.getHash(BuildingKey, coord);
-    //require(!Spawned.get(buildingEntity), "[BuildSystem] Building already exists");
-    // require(
-    //   coord.parent == Home.getAsteroid(playerEntity),
-    //   "[BuildSystem] Building must be built on your home asteroid"
-    // );
 
-    // require(
-    //   hasRequiredBaseLevel(playerEntity, buildingPrototype, 1),
-    //   "[BuildSystem] MainBase level requirement not met"
-    // );
-    //require(canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
     Position.set(buildingEntity, coord);
     Spawned.set(buildingEntity, true);
     BuildingType.set(buildingEntity, buildingPrototype);
@@ -52,37 +42,7 @@ library LibBuilding {
     LastClaimedAt.set(buildingEntity, block.timestamp);
     OwnedBy.set(buildingEntity, playerEntity);
 
-    //placeBuildingTiles(playerEntity, buildingPrototype, coord);
-
     address playerAddress = entityToAddress(playerEntity);
-
-    // SystemCall.callWithHooksOrRevert(
-    //   playerAddress,
-    //   getSystemResourceId("S_SpendResourcesSystem"),
-    //   abi.encodeCall(S_SpendResourcesSystem.spendBuildingRequiredResources, (buildingEntity, 1)),
-    //   0
-    // );
-
-    // SystemCall.callWithHooksOrRevert(
-    //   entityToAddress(playerEntity),
-    //   getSystemResourceId("S_MaxStorageSystem"),
-    //   abi.encodeCall(S_MaxStorageSystem.increaseMaxStorage, (playerEntity, buildingEntity, 1)),
-    //   0
-    // );
-
-    // SystemCall.callWithHooksOrRevert(
-    //   entityToAddress(playerEntity),
-    //   getSystemResourceId("S_ReduceProductionRateSystem"),
-    //   abi.encodeCall(S_ReduceProductionRateSystem.reduceProductionRate, (playerEntity, buildingEntity, 1)),
-    //   0
-    // );
-
-    // SystemCall.callWithHooksOrRevert(
-    //   entityToAddress(playerEntity),
-    //   getSystemResourceId("S_ResourceProductionSystem"),
-    //   abi.encodeCall(S_ResourceProductionSystem.upgradeResourceProduction, (playerEntity, buildingEntity, 1)),
-    //   0
-    // );
 
     if (P_ProducesUnits.get(buildingPrototype)) {
       UnitFactorySet.add(playerEntity, buildingEntity);
