@@ -1,6 +1,6 @@
 pragma solidity >=0.8.21;
 
-import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
+import { addressToEntity, entityToAddress, getSystemResourceId, bytes32ToString } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
@@ -22,9 +22,14 @@ import { BuildingKey } from "src/Keys.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
+import { LibResource } from "libraries/LibResource.sol";
+import { LibStorage } from "libraries/LibStorage.sol";
+import { LibReduceProductionRate } from "libraries/LibReduceProductionRate.sol";
+import { LibProduction } from "libraries/LibProduction.sol";
+import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
 
-contract OnDestroy_ClearUtility is SystemHook {
+contract OnDestroy_ProductionRate is SystemHook {
   constructor() {}
 
   function onBeforeCallSystem(
@@ -32,8 +37,12 @@ contract OnDestroy_ClearUtility is SystemHook {
     ResourceId systemId,
     bytes memory callData
   ) public {
-    (uint8 buildingType, int32 x, int32 y, bytes32 parent) = abi.decode(callData, (uint8, int32, int32, bytes32));
-    bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
+    bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
+    PositionData memory coord = abi.decode(args, (PositionData));
+    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
+    bytes32 playerEntity = addressToEntity(msgSender);
+    LibReduceProductionRate.clearProductionRateReduction(playerEntity, buildingEntity);
+    LibProduction.clearResourceProduction(playerEntity, buildingEntity);
   }
 
   function onAfterCallSystem(

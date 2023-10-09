@@ -22,13 +22,13 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { BuildingKey } from "src/Keys.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
 import { Spawned } from "codegen/tables/Spawned.sol";
+import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 
-contract OnBuild_Home is SystemHook {
+contract OnDestroy_Requirements is SystemHook {
   constructor() {}
 
   function onBeforeCallSystem(
@@ -37,12 +37,13 @@ contract OnBuild_Home is SystemHook {
     bytes memory callData
   ) public {
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
-    (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
+    PositionData memory coord = abi.decode(args, (PositionData));
+    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
     bytes32 playerEntity = addressToEntity(msgSender);
-    require(
-      coord.parent == Home.getAsteroid(playerEntity),
-      "[BuildSystem] Building must be built on your home asteroid"
-    );
+    bytes32 buildingPrototype = BuildingType.get(buildingEntity);
+
+    require(buildingPrototype != MainBasePrototypeId, "[Destroy] Cannot destroy main base");
+    require(OwnedBy.get(buildingEntity) == playerEntity, "[Destroy] : only owner can destroy building");
   }
 
   function onAfterCallSystem(

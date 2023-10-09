@@ -22,12 +22,12 @@ import { BuildingKey } from "src/Keys.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
+import { LibResource } from "libraries/LibResource.sol";
+import { LibStorage } from "libraries/LibStorage.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
-import { Spawned } from "codegen/tables/Spawned.sol";
-import { EBuilding } from "src/Types.sol";
 
-contract OnBuild_MainBase is SystemHook {
+contract OnDestroy_MaxStorage is SystemHook {
   constructor() {}
 
   function onBeforeCallSystem(
@@ -36,9 +36,10 @@ contract OnBuild_MainBase is SystemHook {
     bytes memory callData
   ) public {
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
-    (uint8 buildingTypeRaw, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
-    EBuilding buildingType = EBuilding(buildingTypeRaw);
-    require(buildingType != EBuilding.MainBase, "[BuildSystem] Cannot build more than one main base per wallet");
+    PositionData memory coord = abi.decode(args, (PositionData));
+    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
+    bytes32 playerEntity = addressToEntity(msgSender);
+    LibStorage.clearMaxStorageIncrease(playerEntity, buildingEntity);
   }
 
   function onAfterCallSystem(

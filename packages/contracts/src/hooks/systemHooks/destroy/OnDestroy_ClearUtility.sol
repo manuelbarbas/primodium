@@ -1,6 +1,6 @@
 pragma solidity >=0.8.21;
 
-import { addressToEntity, entityToAddress, getSystemResourceId, bytes32ToString } from "src/utils.sol";
+import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
@@ -22,11 +22,11 @@ import { BuildingKey } from "src/Keys.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
-import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
+import { LibResource } from "libraries/LibResource.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
-import { Spawned } from "codegen/tables/Spawned.sol";
+import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 
-contract OnBuild_MainBaseLevel is SystemHook {
+contract OnDestroy_ClearUtility is SystemHook {
   constructor() {}
 
   function onBeforeCallSystem(
@@ -35,13 +35,10 @@ contract OnBuild_MainBaseLevel is SystemHook {
     bytes memory callData
   ) public {
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
-    (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
-    bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, buildingType);
+    PositionData memory coord = abi.decode(args, (PositionData));
+    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
     bytes32 playerEntity = addressToEntity(msgSender);
-    require(
-      LibBuilding.hasRequiredBaseLevel(playerEntity, buildingPrototype, 1),
-      "[BuildSystem] MainBase level requirement not met"
-    );
+    LibResource.clearUtilityUsage(playerEntity, buildingEntity);
   }
 
   function onAfterCallSystem(

@@ -24,38 +24,12 @@ contract DestroySystem is PrimodiumSystem {
     bytes32 playerEntity = addressToEntity(msg.sender);
     bytes32 buildingType = BuildingType.get(buildingEntity);
 
-    require(buildingType != MainBasePrototypeId, "[Destroy] Cannot destroy main base");
-    require(OwnedBy.get(buildingEntity) == playerEntity, "[Destroy] : only owner can destroy building");
-
     bytes32[] memory children = Children.get(buildingEntity);
     for (uint256 i = 0; i < children.length; i++) {
       require(OwnedBy.get(children[i]) != 0, "[Destroy] Cannot destroy unowned coordinate");
       OwnedBy.deleteRecord(children[i]);
     }
     Children.deleteRecord(buildingEntity);
-
-    SystemCall.callWithHooksOrRevert(
-      entityToAddress(playerEntity),
-      getSystemResourceId("S_MaxStorageSystem"),
-      abi.encodeCall(S_MaxStorageSystem.clearMaxStorageIncrease, (playerEntity, buildingEntity)),
-      0
-    );
-
-    SystemCall.callWithHooksOrRevert(
-      entityToAddress(playerEntity),
-      getSystemResourceId("S_ReduceProductionRateSystem"),
-      abi.encodeCall(S_ReduceProductionRateSystem.clearProductionRateReduction, (playerEntity, buildingEntity)),
-      0
-    );
-
-    SystemCall.callWithHooksOrRevert(
-      entityToAddress(playerEntity),
-      getSystemResourceId("S_ResourceProductionSystem"),
-      abi.encodeCall(S_ResourceProductionSystem.clearResourceProduction, (playerEntity, buildingEntity)),
-      0
-    );
-
-    LibResource.clearUtilityUsage(playerEntity, buildingEntity);
 
     Level.deleteRecord(buildingEntity);
     BuildingType.deleteRecord(buildingEntity);

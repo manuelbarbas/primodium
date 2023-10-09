@@ -24,20 +24,21 @@ import { MaxResourceCount, MaxResourceCountTableId } from "codegen/tables/MaxRes
 import { SpawnedTableId } from "codegen/tables/Spawned.sol";
 import { ProductionRate, ProductionRateTableId } from "codegen/tables/ProductionRate.sol";
 import { OnBuild_PlaceOnTile } from "src/hooks/systemHooks/build/OnBuild_PlaceOnTile.sol";
-import { OnBuild_Spawn } from "src/hooks/systemHooks/build/OnBuild_Spawn.sol";
-import { OnBuild_Home } from "src/hooks/systemHooks/build/OnBuild_Home.sol";
-import { OnBuild_MainBaseLevel } from "src/hooks/systemHooks/build/OnBuild_MainBaseLevel.sol";
-import { OnBuild_MainBase } from "src/hooks/systemHooks/build/OnBuild_MainBase.sol";
-import { OnBuild_BuildingType } from "src/hooks/systemHooks/build/OnBuild_BuildingType.sol";
-import { OnBuild_PlayerSpawned } from "src/hooks/systemHooks/build/OnBuild_PlayerSpawned.sol";
 import { OnBuild_SpendResources } from "src/hooks/systemHooks/build/OnBuild_SpendResources.sol";
 import { OnBuild_MaxStorage } from "src/hooks/systemHooks/build/OnBuild_MaxStorage.sol";
 import { OnBuild_ProductionRate } from "src/hooks/systemHooks/build/OnBuild_ProductionRate.sol";
 import { OnBuild_Requirements } from "src/hooks/systemHooks/build/OnBuild_Requirements.sol";
+
 import { OnUpgrade_Requirements } from "src/hooks/systemHooks/upgrade/OnUpgrade_Requirements.sol";
 import { OnUpgrade_ProductionRate } from "src/hooks/systemHooks/upgrade/OnUpgrade_ProductionRate.sol";
 import { OnUpgrade_MaxStorage } from "src/hooks/systemHooks/upgrade/OnUpgrade_MaxStorage.sol";
 import { OnUpgrade_SpendResources } from "src/hooks/systemHooks/upgrade/OnUpgrade_SpendResources.sol";
+
+import { OnDestroy_ClearUtility } from "src/hooks/systemHooks/destroy/OnDestroy_ClearUtility.sol";
+import { OnDestroy_MaxStorage } from "src/hooks/systemHooks/destroy/OnDestroy_MaxStorage.sol";
+import { OnDestroy_ProductionRate } from "src/hooks/systemHooks/destroy/OnDestroy_ProductionRate.sol";
+import { OnDestroy_Requirements } from "src/hooks/systemHooks/destroy/OnDestroy_Requirements.sol";
+
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
 
 contract PostDeploy is Script {
@@ -58,49 +59,11 @@ contract PostDeploy is Script {
     console.log("Terrain created");
     registerBuildHooks(world);
     registerUpgradeHooks(world);
+    registerDestroyHooks(world);
     vm.stopBroadcast();
   }
 
-  function registerUpgradeHooks(IWorld world) internal {
-    OnUpgrade_Requirements onUpgrade_Requirements = new OnUpgrade_Requirements();
-    world.registerSystemHook(getSystemResourceId("UpgradeBuildingSystem"), onUpgrade_Requirements, BEFORE_CALL_SYSTEM);
-
-    OnUpgrade_ProductionRate onUpgrade_ProductionRate = new OnUpgrade_ProductionRate();
-    world.grantAccess(ProductionRateTableId, address(onUpgrade_ProductionRate));
-    world.registerSystemHook(getSystemResourceId("UpgradeBuildingSystem"), onUpgrade_ProductionRate, AFTER_CALL_SYSTEM);
-
-    OnUpgrade_MaxStorage onUpgrade_MaxStorage = new OnUpgrade_MaxStorage();
-    world.grantAccess(ResourceCountTableId, address(onUpgrade_MaxStorage));
-    world.grantAccess(MaxResourceCountTableId, address(onUpgrade_MaxStorage));
-    world.registerSystemHook(getSystemResourceId("UpgradeBuildingSystem"), onUpgrade_MaxStorage, AFTER_CALL_SYSTEM);
-
-    OnUpgrade_SpendResources onUpgrade_SpendResources = new OnUpgrade_SpendResources();
-    world.grantAccess(ResourceCountTableId, address(onUpgrade_SpendResources));
-    world.grantAccess(SetItemUtilitiesTableId, address(onUpgrade_SpendResources));
-    world.grantAccess(SetUtilitiesTableId, address(onUpgrade_SpendResources));
-    world.registerSystemHook(getSystemResourceId("UpgradeBuildingSystem"), onUpgrade_SpendResources, AFTER_CALL_SYSTEM);
-  }
-
   function registerBuildHooks(IWorld world) internal {
-    // OnBuild_PlayerSpawned onBuild_PlayerSpawned = new OnBuild_PlayerSpawned();
-    // world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_PlayerSpawned, ALL);
-
-    // OnBuild_Home onBuild_Home = new OnBuild_Home();
-    // world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_Home, ALL);
-
-    // OnBuild_MainBase onBuild_MainBase = new OnBuild_MainBase();
-    // world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_MainBase, ALL);
-
-    // OnBuild_BuildingType onBuild_BuildingType = new OnBuild_BuildingType();
-    // world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_BuildingType, ALL);
-
-    // OnBuild_Spawn onBuild_Spawn = new OnBuild_Spawn();
-    // world.grantAccess(SpawnedTableId, address(onBuild_Spawn));
-    // world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_Spawn, ALL);
-
-    // OnBuild_MainBaseLevel onBuild_MainBaseLevel = new OnBuild_MainBaseLevel();
-    // world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_MainBaseLevel, ALL);
-
     OnBuild_Requirements onBuild_Requirements = new OnBuild_Requirements();
     world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_Requirements, BEFORE_CALL_SYSTEM);
 
@@ -125,5 +88,44 @@ contract PostDeploy is Script {
     OnBuild_ProductionRate onBuild_ProductionRate = new OnBuild_ProductionRate();
     world.grantAccess(ProductionRateTableId, address(onBuild_ProductionRate));
     world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_ProductionRate, AFTER_CALL_SYSTEM);
+  }
+
+  function registerUpgradeHooks(IWorld world) internal {
+    OnUpgrade_Requirements onUpgrade_Requirements = new OnUpgrade_Requirements();
+    world.registerSystemHook(getSystemResourceId("UpgradeBuildingSystem"), onUpgrade_Requirements, BEFORE_CALL_SYSTEM);
+
+    OnUpgrade_ProductionRate onUpgrade_ProductionRate = new OnUpgrade_ProductionRate();
+    world.grantAccess(ProductionRateTableId, address(onUpgrade_ProductionRate));
+    world.registerSystemHook(getSystemResourceId("UpgradeBuildingSystem"), onUpgrade_ProductionRate, AFTER_CALL_SYSTEM);
+
+    OnUpgrade_MaxStorage onUpgrade_MaxStorage = new OnUpgrade_MaxStorage();
+    world.grantAccess(ResourceCountTableId, address(onUpgrade_MaxStorage));
+    world.grantAccess(MaxResourceCountTableId, address(onUpgrade_MaxStorage));
+    world.registerSystemHook(getSystemResourceId("UpgradeBuildingSystem"), onUpgrade_MaxStorage, AFTER_CALL_SYSTEM);
+
+    OnUpgrade_SpendResources onUpgrade_SpendResources = new OnUpgrade_SpendResources();
+    world.grantAccess(ResourceCountTableId, address(onUpgrade_SpendResources));
+    world.grantAccess(SetItemUtilitiesTableId, address(onUpgrade_SpendResources));
+    world.grantAccess(SetUtilitiesTableId, address(onUpgrade_SpendResources));
+    world.registerSystemHook(getSystemResourceId("UpgradeBuildingSystem"), onUpgrade_SpendResources, AFTER_CALL_SYSTEM);
+  }
+
+  function registerDestroyHooks(IWorld world) internal {
+    OnDestroy_Requirements onDestroy_Requirements = new OnDestroy_Requirements();
+    world.registerSystemHook(getSystemResourceId("DestroySystem"), onDestroy_Requirements, BEFORE_CALL_SYSTEM);
+
+    OnDestroy_ClearUtility onDestroy_ClearUtility = new OnDestroy_ClearUtility();
+    world.grantAccess(SetItemUtilitiesTableId, address(onDestroy_ClearUtility));
+    world.grantAccess(SetUtilitiesTableId, address(onDestroy_ClearUtility));
+    world.registerSystemHook(getSystemResourceId("DestroySystem"), onDestroy_ClearUtility, BEFORE_CALL_SYSTEM);
+
+    OnDestroy_MaxStorage onDestroy_MaxStorage = new OnDestroy_MaxStorage();
+    world.grantAccess(ResourceCountTableId, address(onDestroy_MaxStorage));
+    world.grantAccess(MaxResourceCountTableId, address(onDestroy_MaxStorage));
+    world.registerSystemHook(getSystemResourceId("DestroySystem"), onDestroy_MaxStorage, BEFORE_CALL_SYSTEM);
+
+    OnDestroy_ProductionRate onDestroy_ProductionRate = new OnDestroy_ProductionRate();
+    world.grantAccess(ProductionRateTableId, address(onDestroy_ProductionRate));
+    world.registerSystemHook(getSystemResourceId("DestroySystem"), onDestroy_ProductionRate, BEFORE_CALL_SYSTEM);
   }
 }
