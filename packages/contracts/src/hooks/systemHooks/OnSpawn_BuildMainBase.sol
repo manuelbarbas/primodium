@@ -46,7 +46,5 @@ contract OnSpawn_BuildMainBase is SystemHook {
     address msgSender,
     ResourceId systemId,
     bytes memory callData
-  ) public {
-    console.log("called after call system 1");
-  }
+  ) public {}
 }
