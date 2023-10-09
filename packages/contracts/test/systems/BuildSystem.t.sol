@@ -123,14 +123,12 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testBuildWithRequiredResources() public {
     ResourceCount.set(playerEntity, Iron, 100);
-    console.log("in test playerEntity iron : %s", ResourceCount.get(playerEntity, Iron));
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(Iron);
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(IronMinePrototypeId, 1, requiredResourcesData);
 
     world.build(EBuilding.IronMine, getIronPosition(creator));
-    console.log("in test playerEntity: %s", bytes32ToString(playerEntity));
 
     assertEq(ResourceCount.get(playerEntity, Iron), 50);
   }

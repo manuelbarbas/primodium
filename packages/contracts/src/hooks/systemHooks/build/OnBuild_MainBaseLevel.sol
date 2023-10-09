@@ -38,7 +38,7 @@ contract OnBuild_MainBaseLevel is SystemHook {
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
     (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
     bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, buildingType);
-    bytes32 playerEntity = OwnedBy.get(coord.parent);
+    bytes32 playerEntity = addressToEntity(msgSender);
     require(
       LibBuilding.hasRequiredBaseLevel(playerEntity, buildingPrototype, 1),
       "[BuildSystem] MainBase level requirement not met"

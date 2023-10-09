@@ -43,9 +43,8 @@ contract OnBuild_PlaceOnTile is SystemHook {
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
     (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
     bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, buildingType);
-    bytes32 playerEntity = OwnedBy.get(coord.parent);
+    bytes32 playerEntity = addressToEntity(msgSender);
     bytes32 buildingEntity = LibEncode.getHash(BuildingKey, coord);
-    require(LibBuilding.canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
     LibBuilding.placeBuildingTiles(playerEntity, buildingPrototype, coord);
   }
 }
