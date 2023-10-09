@@ -45,7 +45,6 @@ contract OnBuild_SpendResources is SystemHook {
     (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
     bytes32 buildingEntity = LibEncode.getHash(BuildingKey, coord);
     bytes32 playerEntity = OwnedBy.get(coord.parent);
-    console.log("in spend playerEntity: %s", bytes32ToString(playerEntity));
     LibResource.spendBuildingRequiredResources(buildingEntity, 1);
   }
 }
