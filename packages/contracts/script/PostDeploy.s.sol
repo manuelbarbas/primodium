@@ -34,7 +34,10 @@ import { OnBuild_SpendResources } from "src/hooks/systemHooks/build/OnBuild_Spen
 import { OnBuild_MaxStorage } from "src/hooks/systemHooks/build/OnBuild_MaxStorage.sol";
 import { OnBuild_ProductionRate } from "src/hooks/systemHooks/build/OnBuild_ProductionRate.sol";
 import { OnBuild_Requirements } from "src/hooks/systemHooks/build/OnBuild_Requirements.sol";
-
+import { OnUpgrade_Requirements } from "src/hooks/systemHooks/upgrade/OnUpgrade_Requirements.sol";
+import { OnUpgrade_ProductionRate } from "src/hooks/systemHooks/upgrade/OnUpgrade_ProductionRate.sol";
+import { OnUpgrade_MaxStorage } from "src/hooks/systemHooks/upgrade/OnUpgrade_MaxStorage.sol";
+import { OnUpgrade_SpendResources } from "src/hooks/systemHooks/upgrade/OnUpgrade_SpendResources.sol";
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
 
 contract PostDeploy is Script {
@@ -54,7 +57,28 @@ contract PostDeploy is Script {
     createTerrain(world);
     console.log("Terrain created");
     registerBuildHooks(world);
+    registerUpgradeHooks(world);
     vm.stopBroadcast();
+  }
+
+  function registerUpgradeHooks(IWorld world) internal {
+    OnUpgrade_Requirements onUpgrade_Requirements = new OnUpgrade_Requirements();
+    world.registerSystemHook(getSystemResourceId("UpgradeBuildingSystem"), onUpgrade_Requirements, BEFORE_CALL_SYSTEM);
+
+    OnUpgrade_ProductionRate onUpgrade_ProductionRate = new OnUpgrade_ProductionRate();
+    world.grantAccess(ProductionRateTableId, address(onUpgrade_ProductionRate));
+    world.registerSystemHook(getSystemResourceId("UpgradeBuildingSystem"), onUpgrade_ProductionRate, AFTER_CALL_SYSTEM);
+
+    OnUpgrade_MaxStorage onUpgrade_MaxStorage = new OnUpgrade_MaxStorage();
+    world.grantAccess(ResourceCountTableId, address(onUpgrade_MaxStorage));
+    world.grantAccess(MaxResourceCountTableId, address(onUpgrade_MaxStorage));
+    world.registerSystemHook(getSystemResourceId("UpgradeBuildingSystem"), onUpgrade_MaxStorage, AFTER_CALL_SYSTEM);
+
+    OnUpgrade_SpendResources onUpgrade_SpendResources = new OnUpgrade_SpendResources();
+    world.grantAccess(ResourceCountTableId, address(onUpgrade_SpendResources));
+    world.grantAccess(SetItemUtilitiesTableId, address(onUpgrade_SpendResources));
+    world.grantAccess(SetUtilitiesTableId, address(onUpgrade_SpendResources));
+    world.registerSystemHook(getSystemResourceId("UpgradeBuildingSystem"), onUpgrade_SpendResources, AFTER_CALL_SYSTEM);
   }
 
   function registerBuildHooks(IWorld world) internal {

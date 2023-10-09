@@ -15,7 +15,6 @@ import { OwnedBy, OwnedByTableId } from "codegen/tables/OwnedBy.sol";
 import { Bounds } from "libraries/LibBuilding.sol";
 import { OnHookChangedValue, OnHookChangedValueTableId } from "codegen/tables/OnHookChangedValue.sol";
 import { ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
-import { BuildOrder, BuildOrderTableId, BuildOrderData } from "codegen/tables/BuildOrder.sol";
 import { EBuilding } from "src/Types.sol";
 import { BuildSystem } from "systems/BuildSystem.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
