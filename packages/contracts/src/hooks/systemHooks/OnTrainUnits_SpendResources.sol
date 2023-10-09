@@ -22,7 +22,6 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { UnitKey } from "src/Keys.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import "forge-std/console.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
 
@@ -33,33 +32,11 @@ contract OnTrainUnits_SpendResources is SystemHook {
     address msgSender,
     ResourceId systemId,
     bytes memory callData
-  ) public {
-    console.log("called before call system");
-    //(EBuilding buildingType, PositionData memory coord) = abi.decode(callData, (EBuilding, PositionData));
-
-    (bytes32 buildingEntity, uint8 rawUnitType, uint256 count) = abi.decode(callData, (bytes32, uint8, uint256));
-    P_EnumToPrototype.get(UnitKey, rawUnitType);
-    console.log("called before call system 2");
-
-    console.log("called before call system ");
-  }
+  ) public {}
 
   function onAfterCallSystem(
     address msgSender,
     ResourceId systemId,
     bytes memory callData
-  ) public {
-    console.log("called after call system 1");
-    // (uint8 buildingType, {int32 x, int32 y, bytes32 parent}) = abi.decode(callData, (uint8, (int32,int32,bytes32)));
-    // PositionData memory coord = PositionData(x, y, parent);
-    // console.log("called after call system 2");
-    // bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, buildingType);
-    // bytes32 playerEntity = OwnedBy.get(parent);
-    // bytes32 buildingEntity = LibEncode.getHash(BuildingKey, coord);
-    // LibBuilding.placeBuildingTiles(
-    //   playerEntity,
-    //   buildingPrototype,
-    //   coord
-    // );
-  }
+  ) public {}
 }

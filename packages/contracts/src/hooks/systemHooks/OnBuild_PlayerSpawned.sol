@@ -22,7 +22,6 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { BuildingKey } from "src/Keys.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import "forge-std/console.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";

@@ -22,7 +22,6 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { BuildingKey } from "src/Keys.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import "forge-std/console.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
@@ -47,7 +46,6 @@ contract OnBuild_Spawn is SystemHook {
     ResourceId systemId,
     bytes memory callData
   ) public {
-    console.log("called after call system 1");
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
     (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
     bytes32 buildingEntity = LibEncode.getHash(BuildingKey, coord);

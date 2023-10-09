@@ -14,14 +14,11 @@ import { LibEncode, LibBuilding, LibResource } from "codegen/Libraries.sol";
 import { BuildingKey } from "src/Keys.sol";
 import { EBuilding } from "src/Types.sol";
 import { bytes32ToString } from "src/utils.sol";
-import "forge-std/console.sol";
 
 contract BuildSystem is PrimodiumSystem {
   function build(EBuilding buildingType, PositionData memory coord) public returns (bytes32 buildingEntity) {
     bytes32 playerEntity = addressToEntity(_msgSender());
     bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
-
-    console.log("playerEntity: %s", bytes32ToString(playerEntity));
     return LibBuilding.build(playerEntity, buildingPrototype, coord);
   }
 }

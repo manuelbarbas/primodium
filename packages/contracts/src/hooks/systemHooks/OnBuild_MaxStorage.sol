@@ -22,7 +22,6 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { BuildingKey } from "src/Keys.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import "forge-std/console.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibStorage } from "libraries/LibStorage.sol";

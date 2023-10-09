@@ -22,7 +22,6 @@ import { S_ResourceProductionSystem } from "systems/subsystems/S_ResourceProduct
 import { BuildingKey, BuildingTileKey, ExpansionKey } from "src/Keys.sol";
 import { Bounds, EBuilding, EResource } from "src/Types.sol";
 import { BuildOrder, BuildOrderTableId, BuildOrderData } from "codegen/tables/BuildOrder.sol";
-import "forge-std/console.sol";
 
 library LibBuilding {
   /// @notice Builds a building at a specified coordinate
@@ -35,10 +34,8 @@ library LibBuilding {
     bytes32 buildingPrototype,
     PositionData memory coord
   ) internal returns (bytes32 buildingEntity) {
-    console.log("build called");
     buildingEntity = LibEncode.getHash(BuildingKey, coord);
     //require(!Spawned.get(buildingEntity), "[BuildSystem] Building already exists");
-    console.log("build called after spawned requirement");
     // require(
     //   coord.parent == Home.getAsteroid(playerEntity),
     //   "[BuildSystem] Building must be built on your home asteroid"
@@ -104,8 +101,6 @@ library LibBuilding {
     PositionData memory position
   ) public {
     bytes32 buildingEntity = LibEncode.getHash(BuildingKey, position);
-    console.log("place building: buildingEntity: %s", bytes32ToString(buildingEntity));
-    console.log("place building: playerEntity: %s", bytes32ToString(playerEntity));
     int32[] memory blueprint = P_Blueprint.get(buildingPrototype);
     Bounds memory bounds = getPlayerBounds(playerEntity);
 
@@ -133,8 +128,6 @@ library LibBuilding {
     PositionData memory coord
   ) private returns (bytes32 tileEntity) {
     tileEntity = LibEncode.getHash(BuildingTileKey, coord);
-    console.log("tileEntity: %s", bytes32ToString(tileEntity));
-    console.log("buildingEntity: %s", bytes32ToString(OwnedBy.get(tileEntity)));
     require(OwnedBy.get(tileEntity) == 0, "[BuildSystem] Cannot build tile on a non-empty coordinate");
     require(
       bounds.minX <= coord.x && bounds.minY <= coord.y && bounds.maxX >= coord.x && bounds.maxY >= coord.y,
