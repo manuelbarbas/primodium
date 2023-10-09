@@ -24,16 +24,16 @@ import { ResourceCount, ResourceCountTableId } from "codegen/tables/ResourceCoun
 import { MaxResourceCount, MaxResourceCountTableId } from "codegen/tables/MaxResourceCount.sol";
 import { SpawnedTableId } from "codegen/tables/Spawned.sol";
 import { ProductionRate, ProductionRateTableId } from "codegen/tables/ProductionRate.sol";
-import { OnBuild_PlaceOnTile } from "src/hooks/systemHooks/OnBuild_PlaceOnTile.sol";
-import { OnBuild_Spawn } from "src/hooks/systemHooks/OnBuild_Spawn.sol";
-import { OnBuild_Home } from "src/hooks/systemHooks/OnBuild_Home.sol";
-import { OnBuild_MainBaseLevel } from "src/hooks/systemHooks/OnBuild_MainBaseLevel.sol";
-import { OnBuild_MainBase } from "src/hooks/systemHooks/OnBuild_MainBase.sol";
-import { OnBuild_BuildingType } from "src/hooks/systemHooks/OnBuild_BuildingType.sol";
-import { OnBuild_PlayerSpawned } from "src/hooks/systemHooks/OnBuild_PlayerSpawned.sol";
-import { OnBuild_SpendResources } from "src/hooks/systemHooks/OnBuild_SpendResources.sol";
-import { OnBuild_MaxStorage } from "src/hooks/systemHooks/OnBuild_MaxStorage.sol";
-import { OnBuild_ProductionRate } from "src/hooks/systemHooks/OnBuild_ProductionRate.sol";
+import { OnBuild_PlaceOnTile } from "src/hooks/systemHooks/build/OnBuild_PlaceOnTile.sol";
+import { OnBuild_Spawn } from "src/hooks/systemHooks/build/OnBuild_Spawn.sol";
+import { OnBuild_Home } from "src/hooks/systemHooks/build/OnBuild_Home.sol";
+import { OnBuild_MainBaseLevel } from "src/hooks/systemHooks/build/OnBuild_MainBaseLevel.sol";
+import { OnBuild_MainBase } from "src/hooks/systemHooks/build/OnBuild_MainBase.sol";
+import { OnBuild_BuildingType } from "src/hooks/systemHooks/build/OnBuild_BuildingType.sol";
+import { OnBuild_PlayerSpawned } from "src/hooks/systemHooks/build/OnBuild_PlayerSpawned.sol";
+import { OnBuild_SpendResources } from "src/hooks/systemHooks/build/OnBuild_SpendResources.sol";
+import { OnBuild_MaxStorage } from "src/hooks/systemHooks/build/OnBuild_MaxStorage.sol";
+import { OnBuild_ProductionRate } from "src/hooks/systemHooks/build/OnBuild_ProductionRate.sol";
 
 import { ALL } from "@latticexyz/world/src/systemHookTypes.sol";
 
