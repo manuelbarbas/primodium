@@ -5,6 +5,7 @@ import { useMud } from "src/hooks/useMud";
 import { primodium } from "@game/api";
 import { GameReady } from "src/network/components/clientComponents";
 import { Progress } from "src/components/core/Progress";
+import { GameHUD } from "src/components/hud/HUD";
 
 const params = new URLSearchParams(window.location.search);
 
@@ -25,7 +26,7 @@ export const Game = () => {
       {/* cannot unmount. needs to be visible for phaser to attach to DOM element */}
       <div id="game-container relative ">
         <PhaserWrapper />
-        {/* {gameReady && <GameHUD />} */}
+        {gameReady && <GameHUD />}
       </div>
     </div>
   );

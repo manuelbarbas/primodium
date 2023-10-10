@@ -2,7 +2,7 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { comlink } from "vite-plugin-comlink";
 import tsconfigPaths from "vite-tsconfig-paths";
-import postcss from "./postcss.config.js";
+import postcss from "./postcss.config";
 
 export default defineConfig({
   plugins: [react(), comlink(), tsconfigPaths()],

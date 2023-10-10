@@ -48,6 +48,10 @@ export function createContractCalls(
     });
   }
 
+  /* -------------------------------------------------------------------------- */
+  /*                                GAME SYSTEMS                                */
+  /* -------------------------------------------------------------------------- */
+
   async function spawn() {
     CurrentTransaction.set({ value: true });
     const tx = await worldContract.write.spawn();

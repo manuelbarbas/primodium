@@ -1,18 +1,14 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { ampli } from "src/ampli";
-import { Account } from "src/network/components/clientComponents";
 import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
 import { setupDoubleCounter } from "src/network/systems/setupDoubleCounter";
 import { useMud } from "./useMud";
+import { components } from "src/network/components";
 
 export const useInit = () => {
   const mud = useMud();
-
-  Account.set({ value: mud.network.playerEntity });
-
-  const initialized = useMemo(() => {
-    return true;
-  }, []);
+  const playerEntity = mud.network.playerEntity;
+  const initialized = !!components.Home.use(playerEntity)?.asteroid;
 
   //initialize systems
   useEffect(() => {

@@ -1,8 +1,6 @@
 import { Entity, Has, HasValue, Not, runQuery } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { MUDEnums } from "contracts/config/enums";
 import { components } from "src/network/components";
-import { BlockType } from "./constants";
 
 export function getResourceKey(coord: Coord) {
   const resourceDimensions = { width: 37, length: 25 };
@@ -12,10 +10,6 @@ export function getResourceKey(coord: Coord) {
   }
 
   const resource = components.P_Terrain.getWithKeys(coord, { value: 0 })?.value;
-
-  if (MUDEnums.EResource[resource] == BlockType.Air) {
-    return 0;
-  }
 
   return resource;
 }

@@ -1,26 +1,26 @@
-import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { Hex } from "viem";
 import { BigNumber } from "ethers";
 import { ampli } from "src/ampli";
 import { components } from "src/network/components";
 import { SetupNetworkResult } from "src/network/types";
 import { parseReceipt } from "../../analytics/parseReceipt";
-import { BlockIdToKey } from "../../constants";
+import { EBuilding, MUDEnums } from "contracts/config/enums";
 
-export const buildBuilding = async (network: SetupNetworkResult, coord: Coord, blockType: Entity) => {
+export const buildBuilding = async (network: SetupNetworkResult, building: EBuilding, coord: Coord) => {
   // todo: find a cleaner way to extract this value in all web3 functions
-  const activeAsteroid = components.Home.get()?.asteroid;
+  const activeAsteroid = components.Home.get(network.playerEntity)?.asteroid;
   if (!activeAsteroid) return;
 
-  const position = { ...coord, parent: activeAsteroid };
+  const position = { ...coord, parent: activeAsteroid as Hex };
 
-  const tx = await network.worldContract.write.build([BigNumber.from(blockType), position]);
+  const tx = await network.worldContract.write.build([building, position]);
 
   await network.waitForTransaction(tx);
 
   ampli.systemBuild({
     asteroidCoord: BigNumber.from(activeAsteroid).toString(),
-    buildingType: BlockIdToKey[blockType],
+    buildingType: MUDEnums.EBuilding[building],
     coord: [coord.x, coord.y],
     currLevel: 0,
     ...parseReceipt(undefined),

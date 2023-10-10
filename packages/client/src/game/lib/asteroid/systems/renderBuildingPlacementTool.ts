@@ -2,7 +2,7 @@ import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { ComponentUpdate, Entity, Has, HasValue } from "@latticexyz/recs";
 import { defineEnterSystem, defineExitSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { Action } from "src/util/constants";
+import { Action, BuildingTypes } from "src/util/constants";
 import { world } from "src/network/world";
 import { ObjectPosition, OnClick, SetValue } from "../../common/object-components/common";
 import { Texture, Animation, Outline } from "../../common/object-components/sprite";
@@ -14,6 +14,7 @@ import { Assets, DepthLayers, EntityIDtoAnimationKey, EntityIDtoSpriteKey, Sprit
 import { components } from "src/network/components";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { SetupResult } from "src/network/types";
+import { buildBuilding } from "src/util/web3/contractCalls/buildBuilding";
 
 export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -93,7 +94,8 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
 
           const buildingOrigin = getBuildingOrigin(tileCoord, selectedBuilding);
           if (!buildingOrigin) return;
-          // buildBuilding(buildingOrigin, selectedBuilding, player, network);
+
+          buildBuilding(mud.network, BuildingTypes[selectedBuilding], buildingOrigin);
           components.SelectedAction.remove();
         },
         true
