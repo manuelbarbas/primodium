@@ -7,6 +7,7 @@ import { world } from "./network/world";
 import { Increment } from "./screens/Increment";
 import { Landing } from "./screens/Landing";
 import { setupCheatcodes } from "./util/cheatcodes";
+import { Game } from "./screens/Game";
 
 const DEV = import.meta.env.PRI_DEV === "true";
 
@@ -45,7 +46,7 @@ export default function AppLoadingState() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Landing />} />
-            {/* <Route path="/game" element={<Game />} /> */}
+            <Route path="/game" element={<Game />} />
             <Route path="/increment" element={<Increment />} />
           </Routes>
         </BrowserRouter>

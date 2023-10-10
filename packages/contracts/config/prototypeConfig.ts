@@ -161,7 +161,11 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   MainBase: {
     tables: {
-      Position: { x: Math.floor(maxRange.xBounds / 2), y: Math.floor(maxRange.yBounds / 2), parent: encodeBytes32(0) },
+      Position: {
+        x: Math.floor(maxRange.xBounds / 2) + 1,
+        y: Math.floor(maxRange.yBounds / 2) + 1,
+        parent: encodeBytes32(0),
+      },
       P_Blueprint: { value: getBlueprint(3, 3) },
       P_MaxLevel: { value: 8n },
     },

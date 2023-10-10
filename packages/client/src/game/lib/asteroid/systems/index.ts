@@ -1,20 +1,20 @@
-import { EntityID } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { focusMainbase } from "./focusMainbase";
-import { renderBuilding } from "./renderBuilding";
 import { renderBuildingPlacementTool } from "./renderBuildingPlacementTool";
-import { renderFog } from "./renderFog";
+import { renderBuilding } from "./renderBuilding";
 import { renderHoverTile } from "./renderHoverTile";
 import { renderSelectedTile } from "./renderSelectedTile";
+import { focusMainbase } from "./focusMainbase";
+import { renderFog } from "./renderFog";
+import { SetupResult } from "src/network/types";
 
-export const runSystems = (scene: Scene, player: EntityID) => {
+export const runSystems = (scene: Scene, mud: SetupResult) => {
   //Render world entity's sprites
-  renderBuilding(scene);
+  renderBuilding(scene, mud);
 
   // Render map utility elements, placement indicators, etc
   renderSelectedTile(scene);
   renderHoverTile(scene);
-  renderBuildingPlacementTool(scene);
-  focusMainbase(scene, player);
-  renderFog(scene, player);
+  renderBuildingPlacementTool(scene, mud);
+  focusMainbase(scene, mud);
+  renderFog(scene, mud);
 };

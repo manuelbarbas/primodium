@@ -9,10 +9,18 @@ import {
   Position,
   ReversePosition,
 } from "src/network/components/chainComponents";
-import { world } from "src/network/world";
-import { encodeCoord, getMotherlodeEntity, hashKeyEntity } from "src/util/encode";
+import {
+  encodeCoord,
+  getMotherlodeEntity,
+  hashKeyEntity,
+} from "src/util/encode";
 import { getPositionByVector } from "src/util/vector";
-import { EMotherlodeSize, EMotherlodeType, ESpaceRockType } from "src/util/web3/types";
+import { world } from "src/network/world";
+import {
+  EMotherlodeSize,
+  EMotherlodeType,
+  ESpaceRockType,
+} from "src/util/web3/types";
 
 export function initializeMotherlodes(sourceEntity: EntityID, source: Coord) {
   const config = GameConfig.get();
@@ -24,7 +32,10 @@ export function initializeMotherlodes(sourceEntity: EntityID, source: Coord) {
       source
     );
     if (ReversePosition.has(encodeCoord(motherlodePosition))) continue;
-    const motherlodeEntity = getMotherlodeEntity(sourceEntity, motherlodePosition);
+    const motherlodeEntity = getMotherlodeEntity(
+      sourceEntity,
+      motherlodePosition
+    );
     const encodedPosition = encodeCoord(motherlodePosition);
     world.registerEntity({ id: encodedPosition });
     ReversePosition.set({ value: motherlodeEntity }, encodedPosition);
@@ -39,12 +50,21 @@ export function initializeMotherlodes(sourceEntity: EntityID, source: Coord) {
     } = getMotherlodeRawPrototype(motherlodeEntity);
     const motherlodeType = getMotherlodeType(rawMotherlodeType);
     const size = getSize(rawSize);
-    Motherlode.set({ size, motherlodeType, cooldownBlocks: cooldownBlocks.toString() }, motherlodeEntity);
-    Position.set({ ...motherlodePosition, parent: "0" as EntityID }, motherlodeEntity);
+    Motherlode.set(
+      { size, motherlodeType, cooldownBlocks: cooldownBlocks.toString() },
+      motherlodeEntity
+    );
+    Position.set(
+      { ...motherlodePosition, parent: "0" as EntityID },
+      motherlodeEntity
+    );
 
-    const resource = P_MotherlodeResource.get(hashKeyEntity(motherlodeType, size))?.resource;
+    const resource = P_MotherlodeResource.get(
+      hashKeyEntity(motherlodeType, size)
+    )?.resource;
 
-    if (!resource) throw new Error("no resource found for this motherlode type and size");
+    if (!resource)
+      throw new Error("no resource found for this motherlode type and size");
     const resourceMotherlodeEntity = hashKeyEntity(resource, motherlodeEntity);
     world.registerEntity({ id: resourceMotherlodeEntity });
     MotherlodeResource.set({ value: 0 }, resourceMotherlodeEntity);

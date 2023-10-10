@@ -2,8 +2,14 @@ import { removeAllTweens } from "@latticexyz/phaserx";
 import { PixelCoord } from "@latticexyz/phaserx/dist/types";
 import { observable, runInAction } from "mobx";
 
-import { EmbodiedEntity, GameObject, GameObjectComponent, GameObjectFunction, GameObjectTypes } from "../../types";
-import { isGraphics, isRectangle, isSprite } from "../util/guards";
+import { isRectangle, isSprite, isGraphics } from "../util/guards";
+import {
+  EmbodiedEntity,
+  GameObject,
+  GameObjectComponent,
+  GameObjectFunction,
+  GameObjectTypes,
+} from "../../types";
 
 export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
   id: string,
@@ -14,6 +20,7 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
   const position: PixelCoord = observable({ x: 0, y: 0 });
   const onOnce = new Map<string, GameObjectFunction<Type>>();
   const onUpdate = new Map<string, GameObjectFunction<Type>>();
+  const onExit = new Map<string, GameObjectFunction<Type>>();
   let activeGameObject: GameObject<Type> | undefined;
   const cameraFilter = { current: currentCameraFilter };
 
@@ -26,14 +33,21 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
       { x: undefined, y: undefined },
       {
         get: (_, prop) => {
-          if (prop === "setPosition") return (x: number, y: number) => (newPosition = { x, y });
+          if (prop === "setPosition")
+            return (x: number, y: number) => (newPosition = { x, y });
           if (prop === "setX") return (x: number) => (newPosition = { x });
           if (prop === "setY") return (y: number) => (newPosition = { y });
           return () => void 0;
         },
         set: (_, prop, value) => {
-          if (prop === "x") newPosition = newPosition ? { ...newPosition, x: value } : { x: value };
-          if (prop === "y") newPosition = newPosition ? { ...newPosition, y: value } : { y: value };
+          if (prop === "x")
+            newPosition = newPosition
+              ? { ...newPosition, x: value }
+              : { x: value };
+          if (prop === "y")
+            newPosition = newPosition
+              ? { ...newPosition, y: value }
+              : { y: value };
           return true;
         },
       }
@@ -45,7 +59,9 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
   /**
    * Syncronizes updates to game object positions to the EmbodiedEntity's position
    */
-  function trackPositionUpdates(func: GameObjectFunction<Type>): GameObjectFunction<Type> {
+  function trackPositionUpdates(
+    func: GameObjectFunction<Type>
+  ): GameObjectFunction<Type> {
     if (!modifiesPosition(func)) return func;
 
     return (gameObject, time, delta) => {
@@ -64,7 +80,13 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
    * Now is executed first and awaited, before Once is executed.
    * @param component: GameObjectComponent definition, including id, and optional functions for now, once and update
    */
-  async function setComponent({ id, now, once, update }: GameObjectComponent<Type>) {
+  async function setComponent({
+    id,
+    now,
+    once,
+    update,
+    exit,
+  }: GameObjectComponent<Type>) {
     // Handle position update when setting the component
     const newPosition = once && modifiesPosition(once);
     if (newPosition) {
@@ -77,6 +99,7 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     // Store functions
     once && onOnce.set(id, trackPositionUpdates(once));
     update && onUpdate.set(id, trackPositionUpdates(update));
+    exit && onExit.set(id, trackPositionUpdates(exit));
 
     // Execute functions
     if (activeGameObject && now) {
@@ -87,7 +110,7 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
   }
 
   function hasComponent(id: string): boolean {
-    return onOnce.has(id) || onUpdate.has(id);
+    return onOnce.has(id) || onUpdate.has(id) || onExit.has(id);
   }
 
   function removeComponent(id: string, stop?: boolean) {
@@ -98,6 +121,7 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
 
     onOnce.delete(id);
     onUpdate.delete(id);
+    onExit.delete(id);
 
     // Reset the entity and reapply all onOnce components
     if (activeGameObject) {
@@ -106,7 +130,9 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     }
   }
 
-  async function setComponents(components: (GameObjectComponent<Type> | undefined)[]) {
+  async function setComponents(
+    components: (GameObjectComponent<Type> | undefined)[]
+  ) {
     for (const component of components) {
       if (!component) continue;
       await setComponent(component);
@@ -123,6 +149,7 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     gameObject.resetPipeline(true);
     gameObject.setScale(1, 1);
     gameObject.setAlpha(1);
+    gameObject.setRotation(0);
     gameObject.setScrollFactor(1);
     gameObject.clearMask();
     gameObject.setData("objectPoolId", null);
@@ -179,6 +206,9 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     if (activeGameObject) {
       // Deregister the update handler
       activeGameObject.scene.events.off("update", handleUpdate);
+
+      // Run exit funcitons
+      executeGameObjectFunctions(activeGameObject, onExit.values());
 
       group.killAndHide(activeGameObject);
     }

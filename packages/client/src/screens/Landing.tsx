@@ -2,23 +2,30 @@ import { AnimatePresence, motion } from "framer-motion";
 import { MouseEvent, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMud } from "src/hooks/useMud";
+import { components } from "src/network/components";
 
 export const Landing: React.FC = () => {
   const [message, setMessage] = useState<string | null>();
-  const { contractCalls } = useMud();
+  const {
+    contractCalls,
+    network: { playerEntity },
+  } = useMud();
   const navigate = useNavigate();
   const location = useLocation();
-  // const hasSpawned = !!Position.use(address);
+  const hasSpawned = !!components.Home.use(playerEntity)?.asteroid;
 
   const handlePlay = async (e: MouseEvent<HTMLButtonElement>) => {
     setMessage("Spawning Player Asteroid...");
     e.preventDefault();
-    try {
-      await contractCalls.spawn();
-    } catch (e) {
-      console.log(e);
-      setMessage("Failed to spawn asteroid...Retry");
+    if (!hasSpawned) {
+      try {
+        await contractCalls.spawn();
+      } catch (e) {
+        console.log(e);
+        setMessage("Failed to spawn asteroid...Retry");
+      }
     }
+
     navigate("/game" + location.search);
   };
 
