@@ -879,6 +879,11 @@ export const ResourceTypes: { [x: Entity]: EResource } = {
   [EntityType.PVCell]: EResource.PVCell,
   [EntityType.RocketFuel]: EResource.RocketFuel,
   [EntityType.IronPlate]: EResource.IronPlate,
+
+  [EntityType.Electricity]: EResource.U_Electricity,
+  [EntityType.Housing]: EResource.U_Housing,
+  [EntityType.VesselCapacity]: EResource.U_Vessel,
+  [EntityType.FleetMoves]: EResource.U_MaxMoves,
 };
 
 export const BuildingTypes: { [x: Entity]: EBuilding } = {

@@ -1,8 +1,7 @@
-import { Entity, Has, HasValue, Schema, runQuery } from "@latticexyz/recs";
+import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
 import { MUDEnums } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
-import { ExtendedContractComponent } from "src/network/components/customComponents/ExtendedComponent";
 import { Hex } from "viem";
 import { EntityType, ResourceCategory, ResourceTypes, SPEED_SCALE } from "./constants";
 import { getNow } from "./time";
