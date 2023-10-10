@@ -8,9 +8,6 @@ import { LibUnit, UnitProductionQueue } from "codegen/Libraries.sol";
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 
-import { S_UpdateRockSystem } from "systems/subsystems/S_UpdateRockSystem.sol";
-import { S_SpendResourcesSystem } from "systems/subsystems/S_SpendResourcesSystem.sol";
-
 import { EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 

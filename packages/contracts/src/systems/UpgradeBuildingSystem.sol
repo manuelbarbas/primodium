@@ -9,9 +9,6 @@ import { EBuilding } from "src/Types.sol";
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 
-import { S_SpendResourcesSystem } from "systems/subsystems/S_SpendResourcesSystem.sol";
-import { S_ReduceProductionRateSystem } from "systems/subsystems/S_ReduceProductionRateSystem.sol";
-
 contract UpgradeBuildingSystem is PrimodiumSystem {
   /// @notice Upgrades the building at the specified coordinate
   /// @param coord Coordinate of the building to be upgraded
