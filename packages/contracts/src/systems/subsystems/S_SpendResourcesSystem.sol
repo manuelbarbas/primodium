@@ -10,7 +10,11 @@ contract S_SpendResourcesSystem is PrimodiumSystem {
     LibResource.spendBuildingRequiredResources(entity, level);
   }
 
-  function spendUnitRequiredResources(bytes32 player, bytes32 unitPrototype) public {
-    LibResource.spendUnitRequiredResources(player, unitPrototype);
+  function spendUnitRequiredResources(
+    bytes32 player,
+    bytes32 unitPrototype,
+    uint256 count
+  ) public {
+    LibResource.spendUnitRequiredResources(player, unitPrototype, count);
   }
 }

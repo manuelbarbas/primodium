@@ -30,19 +30,19 @@ contract TrainUnitsSystem is PrimodiumSystem {
     require(unit > EUnit.NULL && unit < EUnit.LENGTH, "[TrainUnitsSystem] Unit does not exist");
     require(LibUnit.canProduceUnit(buildingEntity, unitPrototype), "[TrainUnitsSystem] Building cannot produce unit");
 
-    SystemCall.callWithHooksOrRevert(
-      entityToAddress(playerEntity),
-      getSystemResourceId("S_UpdateRockSystem"),
-      abi.encodeCall(S_UpdateRockSystem.updateHomeRock, (playerEntity)),
-      0
-    );
+    // SystemCall.callWithHooksOrRevert(
+    //   entityToAddress(playerEntity),
+    //   getSystemResourceId("S_UpdateRockSystem"),
+    //   abi.encodeCall(S_UpdateRockSystem.updateHomeRock, (playerEntity)),
+    //   0
+    // );
 
-    SystemCall.callWithHooksOrRevert(
-      entityToAddress(playerEntity),
-      getSystemResourceId("S_SpendResourcesSystem"),
-      abi.encodeCall(S_SpendResourcesSystem.spendUnitRequiredResources, (playerEntity, unitPrototype)),
-      0
-    );
+    // SystemCall.callWithHooksOrRevert(
+    //   entityToAddress(playerEntity),
+    //   getSystemResourceId("S_SpendResourcesSystem"),
+    //   abi.encodeCall(S_SpendResourcesSystem.spendUnitRequiredResources, (playerEntity, unitPrototype, count)),
+    //   0
+    // );
 
     if (count == 0) {
       return;

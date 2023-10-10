@@ -49,6 +49,9 @@ import { OnSendUnits_Requirements } from "src/hooks/systemHooks/sendUnits/OnSend
 import { OnSendUnits_UpdateRock } from "src/hooks/systemHooks/sendUnits/OnSendUnits_UpdateRock.sol";
 import { OnSendUnits_UnitCount } from "src/hooks/systemHooks/sendUnits/OnSendUnits_UnitCount.sol";
 
+import { OnTrainUnits_SpendResources } from "src/hooks/systemHooks/trainUnits/OnTrainUnits_SpendResources.sol";
+import { OnTrainUnits_UpdateRock } from "src/hooks/systemHooks/trainUnits/OnTrainUnits_UpdateRock.sol";
+
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
 
 contract PostDeploy is Script {
@@ -71,6 +74,7 @@ contract PostDeploy is Script {
     registerUpgradeHooks(world);
     registerDestroyHooks(world);
     registerSendUnits(world);
+    registerTrainUnits(world);
     vm.stopBroadcast();
   }
 
@@ -154,11 +158,30 @@ contract PostDeploy is Script {
     world.registerSystemHook(getSystemResourceId("SendUnitsSystem"), onSendUnits_UnitCount, BEFORE_CALL_SYSTEM);
 
     OnSendUnits_UpdateRock onSendUnits_UpdateRock = new OnSendUnits_UpdateRock();
+    world.grantAccess(ResourceCountTableId, address(onSendUnits_UpdateRock));
     world.grantAccess(LastClaimedAtTableId, address(onSendUnits_UpdateRock));
     world.grantAccess(QueueItemUnitsTableId, address(onSendUnits_UpdateRock));
     world.grantAccess(QueueUnitsTableId, address(onSendUnits_UpdateRock));
     world.grantAccess(UnitCountTableId, address(onSendUnits_UpdateRock));
     world.grantAccess(ProductionRateTableId, address(onSendUnits_UpdateRock));
     world.registerSystemHook(getSystemResourceId("SendUnitsSystem"), onSendUnits_UpdateRock, AFTER_CALL_SYSTEM);
+  }
+
+  function registerTrainUnits(IWorld world) internal {
+    OnTrainUnits_UpdateRock onTrainUnits_UpdateRock = new OnTrainUnits_UpdateRock();
+
+    world.grantAccess(ResourceCountTableId, address(onTrainUnits_UpdateRock));
+    world.grantAccess(LastClaimedAtTableId, address(onTrainUnits_UpdateRock));
+    world.grantAccess(QueueItemUnitsTableId, address(onTrainUnits_UpdateRock));
+    world.grantAccess(QueueUnitsTableId, address(onTrainUnits_UpdateRock));
+    world.grantAccess(UnitCountTableId, address(onTrainUnits_UpdateRock));
+    world.grantAccess(ProductionRateTableId, address(onTrainUnits_UpdateRock));
+    world.registerSystemHook(getSystemResourceId("TrainUnitsSystem"), onTrainUnits_UpdateRock, BEFORE_CALL_SYSTEM);
+
+    OnTrainUnits_SpendResources onTrainUnits_SpendResources = new OnTrainUnits_SpendResources();
+    world.grantAccess(ResourceCountTableId, address(onTrainUnits_SpendResources));
+    world.grantAccess(SetItemUtilitiesTableId, address(onTrainUnits_SpendResources));
+    world.grantAccess(SetUtilitiesTableId, address(onTrainUnits_SpendResources));
+    world.registerSystemHook(getSystemResourceId("TrainUnitsSystem"), onTrainUnits_SpendResources, BEFORE_CALL_SYSTEM);
   }
 }

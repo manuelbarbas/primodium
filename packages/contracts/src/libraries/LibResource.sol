@@ -41,12 +41,17 @@ library LibResource {
   /// @notice claims all resources beforehand
   /// @param playerEntity Entity ID of the player
   /// @param prototype Unit Prototype
-  function spendUnitRequiredResources(bytes32 playerEntity, bytes32 prototype) internal {
+  /// @param count Quantity of units to be trained
+  function spendUnitRequiredResources(
+    bytes32 playerEntity,
+    bytes32 prototype,
+    uint256 count
+  ) internal {
     uint256 level = UnitLevel.get(playerEntity, prototype);
     claimAllResources(playerEntity);
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(prototype, level);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
-      spendResource(playerEntity, prototype, requiredResources.resources[i], requiredResources.amounts[i]);
+      spendResource(playerEntity, prototype, requiredResources.resources[i], requiredResources.amounts[i] * count);
     }
   }
 
