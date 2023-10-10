@@ -17,14 +17,7 @@ contract RaidSystem is PrimodiumSystem {
    */
   function raid(bytes32 rockEntity) public {
     bytes32 playerEntity = addressToEntity(_msgSender());
-    if (OwnedBy.get(rockEntity) != 0) {
-      SystemCall.callWithHooksOrRevert(
-        entityToAddress(playerEntity),
-        getSystemResourceId("S_UpdateRockSystem"),
-        abi.encodeCall(S_UpdateRockSystem.updateRock, (playerEntity, rockEntity)),
-        0
-      );
-    }
+
     LibRaid.raid(playerEntity, rockEntity);
   }
 }

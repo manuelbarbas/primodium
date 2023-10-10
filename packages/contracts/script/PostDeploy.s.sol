@@ -53,6 +53,12 @@ import { OnTrainUnits_SpendResources } from "src/hooks/systemHooks/trainUnits/On
 import { OnTrainUnits_UpdateRock } from "src/hooks/systemHooks/trainUnits/OnTrainUnits_UpdateRock.sol";
 import { OnTrainUnits_Requirements } from "src/hooks/systemHooks/trainUnits/OnTrainUnits_Requirements.sol";
 
+import { OnInvade_UpdateRock } from "src/hooks/systemHooks/invade/OnInvade_UpdateRock.sol";
+
+import { OnRaid_UpdateRock } from "src/hooks/systemHooks/raid/OnRaid_UpdateRock.sol";
+
+import { OnReinforce_UpdateRock } from "src/hooks/systemHooks/reinforce/OnReinforce_UpdateRock.sol";
+
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
 
 contract PostDeploy is Script {
@@ -76,6 +82,10 @@ contract PostDeploy is Script {
     registerDestroyHooks(world);
     registerSendUnits(world);
     registerTrainUnits(world);
+    registerInvade(world);
+    registerRaid(world);
+    registerReinforce(world);
+
     vm.stopBroadcast();
   }
 
@@ -187,5 +197,38 @@ contract PostDeploy is Script {
     world.grantAccess(SetItemUtilitiesTableId, address(onTrainUnits_SpendResources));
     world.grantAccess(SetUtilitiesTableId, address(onTrainUnits_SpendResources));
     world.registerSystemHook(getSystemResourceId("TrainUnitsSystem"), onTrainUnits_SpendResources, BEFORE_CALL_SYSTEM);
+  }
+
+  function registerInvade(IWorld world) internal {
+    OnInvade_UpdateRock onInvade_UpdateRock = new OnInvade_UpdateRock();
+    world.grantAccess(ResourceCountTableId, address(onInvade_UpdateRock));
+    world.grantAccess(LastClaimedAtTableId, address(onInvade_UpdateRock));
+    world.grantAccess(QueueItemUnitsTableId, address(onInvade_UpdateRock));
+    world.grantAccess(QueueUnitsTableId, address(onInvade_UpdateRock));
+    world.grantAccess(UnitCountTableId, address(onInvade_UpdateRock));
+    world.grantAccess(ProductionRateTableId, address(onInvade_UpdateRock));
+    world.registerSystemHook(getSystemResourceId("InvadeSystem"), onInvade_UpdateRock, BEFORE_CALL_SYSTEM);
+  }
+
+  function registerRaid(IWorld world) internal {
+    OnRaid_UpdateRock onRaid_UpdateRock = new OnRaid_UpdateRock();
+    world.grantAccess(ResourceCountTableId, address(onRaid_UpdateRock));
+    world.grantAccess(LastClaimedAtTableId, address(onRaid_UpdateRock));
+    world.grantAccess(QueueItemUnitsTableId, address(onRaid_UpdateRock));
+    world.grantAccess(QueueUnitsTableId, address(onRaid_UpdateRock));
+    world.grantAccess(UnitCountTableId, address(onRaid_UpdateRock));
+    world.grantAccess(ProductionRateTableId, address(onRaid_UpdateRock));
+    world.registerSystemHook(getSystemResourceId("RaidSystem"), onRaid_UpdateRock, BEFORE_CALL_SYSTEM);
+  }
+
+  function registerReinforce(IWorld world) internal {
+    OnReinforce_UpdateRock onReinforce_UpdateRock = new OnReinforce_UpdateRock();
+    world.grantAccess(ResourceCountTableId, address(onReinforce_UpdateRock));
+    world.grantAccess(LastClaimedAtTableId, address(onReinforce_UpdateRock));
+    world.grantAccess(QueueItemUnitsTableId, address(onReinforce_UpdateRock));
+    world.grantAccess(QueueUnitsTableId, address(onReinforce_UpdateRock));
+    world.grantAccess(UnitCountTableId, address(onReinforce_UpdateRock));
+    world.grantAccess(ProductionRateTableId, address(onReinforce_UpdateRock));
+    world.registerSystemHook(getSystemResourceId("ReinforceSystem"), onReinforce_UpdateRock, BEFORE_CALL_SYSTEM);
   }
 }
