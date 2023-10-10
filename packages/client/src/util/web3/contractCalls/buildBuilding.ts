@@ -5,9 +5,9 @@ import { ampli } from "src/ampli";
 import { components } from "src/network/components";
 import { SetupNetworkResult } from "src/network/types";
 import { parseReceipt } from "../../analytics/parseReceipt";
-import { MUDEnums } from "contracts/config/enums";
+import { EBuilding, MUDEnums } from "contracts/config/enums";
 
-export const buildBuilding = async (network: SetupNetworkResult, building: number, coord: Coord) => {
+export const buildBuilding = async (network: SetupNetworkResult, building: EBuilding, coord: Coord) => {
   // todo: find a cleaner way to extract this value in all web3 functions
   const activeAsteroid = components.Home.get(network.playerEntity)?.asteroid;
   if (!activeAsteroid) return;
