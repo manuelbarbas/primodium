@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { encodeEntity } from "@latticexyz/store-sync/recs";
-import { EBuilding, MUDEnums } from "contracts/config/enums";
+import { EBuilding, EResource } from "contracts/config/enums";
 import { Key } from "engine/types";
 import { EMotherlodeType, ERock, ESize } from "src/util/web3/types";
 import { toHex } from "viem";
@@ -15,17 +15,15 @@ export enum Action {
   SelectBuilding,
   PlaceBuilding,
 }
-export enum ResourceType {
+export enum ResourceCategory {
   Resource,
   ResourceRate,
   Utility,
 }
 
-export const SPEED_SCALE = BigInt(10000);
+export const SPEED_SCALE = BigInt(100);
 export const RESOURCE_SCALE = BigInt(100);
 export const PIRATE_KEY = "pirate";
-
-export const EResource = MUDEnums.EResource as string[];
 
 export enum RewardType {
   Resource,
@@ -109,10 +107,10 @@ export const EntityType = {
   PVCell: toHex32("PVCell") as Entity,
 
   RocketFuel: toHex32("RocketFuel") as Entity,
-  U_Electricity: toHex32("U_Electricity") as Entity,
-  U_Housing: toHex32("U_Housing") as Entity,
-  U_VesselCapacity: toHex32("U_Vessel") as Entity,
-  U_FleetMoves: toHex32("U_FleetMoves") as Entity,
+  Electricity: toHex32("U_Electricity") as Entity,
+  Housing: toHex32("U_Housing") as Entity,
+  VesselCapacity: toHex32("U_Vessel") as Entity,
+  FleetMoves: toHex32("U_FleetMoves") as Entity,
 
   Bullet: toHex32("Bullet") as Entity,
   IronPlate: toHex32("IronPlate") as Entity,
@@ -787,9 +785,9 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.PVCell, "/img/resource/photovoltaiccell_resource.png"],
   [EntityType.RocketFuel, "/img/crafted/refinedosmium.png"],
 
-  [EntityType.U_Electricity, "/img/icons/powericon.png"],
-  [EntityType.U_Housing, "/img/icons/utilitiesicon.png"],
-  [EntityType.U_VesselCapacity, "/img/unit/miningvessel.png"],
+  [EntityType.Electricity, "/img/icons/powericon.png"],
+  [EntityType.Housing, "/img/icons/utilitiesicon.png"],
+  [EntityType.VesselCapacity, "/img/unit/miningvessel.png"],
 
   // debug
   [EntityType.Bullet, "/img/crafted/bullet.png"],
@@ -858,11 +856,30 @@ export const ResourceStorages = [
 ];
 
 export const UtilityStorages = [
-  EntityType.U_Housing,
-  EntityType.U_Electricity,
-  EntityType.U_VesselCapacity,
-  EntityType.U_FleetMoves,
+  EntityType.Housing,
+  EntityType.Electricity,
+  EntityType.VesselCapacity,
+  EntityType.FleetMoves,
 ];
+
+export const ResourceTypes: { [x: Entity]: EResource } = {
+  [EntityType.Iron]: EResource.Iron,
+  [EntityType.Copper]: EResource.Copper,
+  [EntityType.Lithium]: EResource.Lithium,
+  [EntityType.Sulfur]: EResource.Sulfur,
+  [EntityType.Titanium]: EResource.Titanium,
+  [EntityType.Iridium]: EResource.Iridium,
+  [EntityType.Platinum]: EResource.Platinum,
+  [EntityType.Kimberlite]: EResource.Kimberlite,
+  [EntityType.Uraninite]: EResource.Uraninite,
+  [EntityType.Bolutite]: EResource.Bolutite,
+  [EntityType.Osmium]: EResource.Osmium,
+  [EntityType.Tungsten]: EResource.Tungsten,
+  [EntityType.Alloy]: EResource.Alloy,
+  [EntityType.PVCell]: EResource.PVCell,
+  [EntityType.RocketFuel]: EResource.RocketFuel,
+  [EntityType.IronPlate]: EResource.IronPlate,
+};
 
 export const BuildingTypes: { [x: Entity]: EBuilding } = {
   [EntityType.IronMine]: EBuilding.IronMine,

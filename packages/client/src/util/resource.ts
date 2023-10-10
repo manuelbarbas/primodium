@@ -1,10 +1,10 @@
 import { Entity, Has, HasValue, Schema, runQuery } from "@latticexyz/recs";
 import { MUDEnums } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
-import { Account, Hangar } from "src/network/components/clientComponents";
+import { Hangar } from "src/network/components/clientComponents";
 import { ExtendedContractComponent } from "src/network/components/customComponents/ExtendedComponent";
 import { Hex } from "viem";
-import { EntityType, ResourceType, SPEED_SCALE } from "./constants";
+import { EntityType, ResourceCategory, ResourceTypes, SPEED_SCALE } from "./constants";
 import { getNow } from "./time";
 import { getUnitStats } from "./trainUnits";
 import { ERock } from "./web3/types";
@@ -30,13 +30,16 @@ export function getRecipe(rawBuildingType: Entity, level: bigint) {
 
   const resources = requiredResources.resources.map((resource: number, index: number) => ({
     id: MUDEnums.EResource[resource] as Entity,
-    type: comps.P_IsUtility.getWithKeys({ id: resource })?.value == true ? ResourceType.Utility : ResourceType.Resource,
+    type:
+      comps.P_IsUtility.getWithKeys({ id: resource })?.value == true
+        ? ResourceCategory.Utility
+        : ResourceCategory.Resource,
     amount: requiredResources.amounts[index],
   }));
 
   const resourceRate = requiredProduction.resources.map((resource, index) => ({
     id: MUDEnums.EResource[resource] as Entity,
-    type: ResourceType.ResourceRate,
+    type: ResourceCategory.ResourceRate,
     amount: requiredProduction.amounts[index],
   }));
 
@@ -51,31 +54,10 @@ export function getMotherlodeResource(entity: Entity) {
   return MUDEnums.EResource[resource] as Entity;
 }
 
-export default function getResourceCount<S extends Schema>(
-  resourceComponent: ExtendedContractComponent<S, { resource: "uint8"; entity: "bytes32" }>,
-  resourceId: Entity
-) {
-  const address = Account.get()?.value;
-  if (!address) return 0n;
-
-  const resource = resourceComponent.getWithKeys({
-    resource: MUDEnums.EResource.indexOf(resourceId),
-    entity: address as Hex,
-  });
-
-  if (resource) {
-    return BigInt(resource.toString());
-  } else {
-    return 0n;
-  }
-}
-
-export function getFullResourceCount(resourceID: Entity) {
-  const player = Account.get()?.value;
-
+export function getFullResourceCount(resourceID: Entity, playerEntity: Entity) {
   const query = [
     Has(comps.RockType),
-    HasValue(comps.OwnedBy, { value: player }),
+    HasValue(comps.OwnedBy, { value: playerEntity }),
     HasValue(comps.RockType, { value: ERock.Motherlode }),
   ];
   // const worldSpeed = comps.P_WorldSpeed.get()?.value ?? SPEED_SCALE;
@@ -100,35 +82,42 @@ export function getFullResourceCount(resourceID: Entity) {
     }, 0n);
   }
 
-  const resourceCount = getResourceCount(comps.ResourceCount, resourceID);
-  const maxStorage = getResourceCount(comps.MaxResourceCount, resourceID);
+  const resourceCount =
+    comps.ResourceCount.getWithKeys({ entity: playerEntity as Hex, resource: ResourceTypes[resourceID] })?.value ?? 0n;
 
-  const buildingProduction = getResourceCount(comps.ProductionRate, resourceID);
+  const maxStorage =
+    comps.MaxResourceCount.getWithKeys({
+      entity: playerEntity as Hex,
+      resource: ResourceTypes[resourceID],
+    })?.value ?? 0n;
+
+  const buildingProduction =
+    comps.ProductionRate.getWithKeys({ entity: playerEntity as Hex, resource: ResourceTypes[resourceID] })?.value ?? 0n;
 
   const production = (() => {
     return buildingProduction + motherlodeProduction;
   })();
 
-  const playerLastClaimed = comps.LastClaimedAt.get(player)?.value ?? 0n;
+  const playerLastClaimed = comps.LastClaimedAt.get(playerEntity)?.value ?? 0n;
 
   const resourcesToClaimFromBuilding = (() => {
     const toClaim = ((getNow() - playerLastClaimed) * buildingProduction * SPEED_SCALE) / worldSpeed;
-    if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
+    // if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
     return toClaim;
   })();
 
   const resourcesToClaim = (() => {
     const toClaim = resourcesToClaimFromBuilding;
-    if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
+    // if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
     return toClaim;
   })();
 
   return { resourceCount, resourcesToClaim, maxStorage, production };
 }
 
-export function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, count = 1n) {
+export function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, playerEntity: Entity, count = 1n) {
   const resourceAmounts = recipe.map((resource) => {
-    return getFullResourceCount(resource.id);
+    return getFullResourceCount(resource.id, playerEntity);
   });
 
   for (const [index, resource] of recipe.entries()) {
@@ -136,13 +125,13 @@ export function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, count =
     const { resourceCount, resourcesToClaim, production, maxStorage } = resourceAmount;
 
     switch (resource.type) {
-      case ResourceType.Resource:
+      case ResourceCategory.Resource:
         if (resourceCount + resourcesToClaim < resource.amount * count) return false;
         break;
-      case ResourceType.ResourceRate:
+      case ResourceCategory.ResourceRate:
         if (production < resource.amount * count) return false;
         break;
-      case ResourceType.Utility:
+      case ResourceCategory.Utility:
         if (maxStorage - (resourceCount + resourcesToClaim) < resource.amount * count) return false;
         break;
       default:
@@ -159,7 +148,7 @@ export function getRecipeDifference(
 ) {
   const difference = firstRecipe.map((resource) => {
     let amount = resource.amount;
-    if (resource.type == ResourceType.Utility) {
+    if (resource.type == ResourceCategory.Utility) {
       const secondResource = secondRecipe.find((secondResource) => resource.id === secondResource.id);
 
       if (secondResource) {

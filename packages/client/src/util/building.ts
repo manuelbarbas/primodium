@@ -8,7 +8,7 @@ import { components as comps } from "src/network/components";
 import { Account } from "src/network/components/clientComponents";
 import { Hex } from "viem";
 import { clampedIndex, getBlockTypeName, toRomanNumeral } from "./common";
-import { ResourceType } from "./constants";
+import { ResourceCategory } from "./constants";
 import { outOfBounds } from "./outOfBounds";
 import { getRecipe, getRecipeDifference } from "./resource";
 import { getBuildingAtCoord, getResourceKey } from "./tile";
@@ -136,14 +136,14 @@ export const getBuildingStorages = (building: Hex, level: bigint) => {
 
     return {
       resourceId: resource as Entity,
-      resourceType: comps.P_IsUtility.getWithKeys({ id: i }) ? ResourceType.Resource : ResourceType.Utility,
+      resourceType: comps.P_IsUtility.getWithKeys({ id: i }) ? ResourceCategory.Resource : ResourceCategory.Utility,
       amount: storage,
     };
   });
 
   return resourceStorages.filter((storage) => !!storage) as {
     resourceId: Entity;
-    resourceType: ResourceType;
+    resourceType: ResourceCategory;
     amount: bigint;
   }[];
 };

@@ -8,16 +8,16 @@ import { getBlockTypeName } from "src/util/common";
 import { useGameStore } from "../../store/GameStore";
 import { HUD } from "../core/HUD";
 import { BrandingLabel } from "../shared/BrandingLabel";
-import { LoadingIndication } from "./LoadingIndication";
-import { Score } from "./Score";
-import { ViewStarmap } from "./ViewStarmap";
-import { BuildingMenu } from "./building-menu/BuildingMenu";
+// import { LoadingIndication } from "./LoadingIndication";
+// import { Score } from "./Score";
+// import { ViewStarmap } from "./ViewStarmap";
+// import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { Hotbar } from "./hotbar/Hotbar";
-import { Panes } from "./panes/Panes";
+// import { Panes } from "./panes/Panes";
 import { Resources } from "./resources/Resources";
-import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
-import { BlueprintInfo } from "./tile-info/BlueprintInfo";
-import { Units } from "./units/Units";
+// import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
+// import { BlueprintInfo } from "./tile-info/BlueprintInfo";
+// import { Units } from "./units/Units";
 
 export const GameHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [state.showUI, state.toggleShowUI]);
@@ -59,11 +59,11 @@ export const GameHUD = () => {
             </HUD.TopLeft> */}
             {/* <HUD.TopRight>
               <Panes />
-            </HUD.TopRight>
+            </HUD.TopRight> */}
             <HUD.BottomLeft>
               <Resources />
             </HUD.BottomLeft>
-            <HUD.BottomRight>
+            {/* <HUD.BottomRight>
               <Units />
             </HUD.BottomRight> */}
           </HUD>

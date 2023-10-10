@@ -11,7 +11,7 @@ import { Level, MainBase } from "src/network/components/chainComponents";
 import { Account } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
 import { getBlockTypeName } from "src/util/common";
-import { RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
+import { RESOURCE_SCALE, ResourceImage, ResourceCategory } from "src/util/constants";
 import { upgradeBuilding } from "src/util/web3";
 
 export const Upgrade: React.FC<{ building: EntityID }> = ({ building }) => {
@@ -60,10 +60,10 @@ export const Upgrade: React.FC<{ building: EntityID }> = ({ building }) => {
                       <ResourceIconTooltip
                         name={getBlockTypeName(resource.id)}
                         image={ResourceImage.get(resource.id) ?? ""}
-                        resourceId={resource.id}
+                        resource={resource.id}
                         amount={resource.amount}
                         resourceType={resource.type}
-                        scale={resource.type === ResourceType.Utility ? 1 : RESOURCE_SCALE}
+                        scale={resource.type === ResourceCategory.Utility ? 1 : RESOURCE_SCALE}
                         direction="top"
                         validate
                       />

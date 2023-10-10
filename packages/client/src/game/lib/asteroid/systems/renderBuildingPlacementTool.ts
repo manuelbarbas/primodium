@@ -50,7 +50,7 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
 
     const buildingDimensions = getBuildingDimensions(selectedBuilding);
 
-    const hasEnough = hasEnoughResources(getRecipe(selectedBuilding, 1n));
+    const hasEnough = hasEnoughResources(getRecipe(selectedBuilding, 1n), mud.network.playerEntity);
     const validPlacement = validateBuildingPlacement(
       tileCoord,
       selectedBuilding,

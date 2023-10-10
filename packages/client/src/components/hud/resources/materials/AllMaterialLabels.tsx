@@ -5,22 +5,17 @@ import { MaterialLabel } from "./MaterialLabel";
 export const AllMaterialLabels = () => {
   return (
     <SecondaryCard className="grid grid-cols-1 gap-1">
-      <MaterialLabel name={"Iron"} resourceId={EntityType.Iron} />
-      <MaterialLabel name={"Copper"} resourceId={EntityType.Copper} />
-      <MaterialLabel name={"Lithium"} resourceId={EntityType.Lithium} />
-      <MaterialLabel name={"Sulfur"} resourceId={EntityType.Sulfur} />
-      <MaterialLabel name={"Iron Plate"} resourceId={EntityType.IronPlate} />
-      <MaterialLabel name={"Alloy"} resourceId={EntityType.Alloy} />
-      <MaterialLabel name={"Photovoltaic Cell"} resourceId={EntityType.PhotovoltaicCell} />
-      <MaterialLabel name={"Titanium"} resourceId={EntityType.Titanium} />
-      <MaterialLabel name={"Platinum"} resourceId={EntityType.Platinum} />
-      <MaterialLabel name={"Iridium"} resourceId={EntityType.Iridium} />
-      <MaterialLabel name={"Kimberlite"} resourceId={EntityType.Kimberlite} />
-      <MaterialLabel name={"Bolutite"} resourceId={EntityType.Bolutite} />
-      <MaterialLabel name={"Osmium"} resourceId={EntityType.Osmium} />
-      <MaterialLabel name={"Tungsten"} resourceId={EntityType.Tungsten} />
-      <MaterialLabel name={"Uraninite"} resourceId={EntityType.Uraninite} />
-      <MaterialLabel name={"Bullet"} resourceId={EntityType.BulletCrafted} />
+      <MaterialLabel name={"Iron"} resource={EntityType.Iron} />
+      <MaterialLabel name={"Copper"} resource={EntityType.Copper} />
+      <MaterialLabel name={"Lithium"} resource={EntityType.Lithium} />
+      <MaterialLabel name={"Sulfur"} resource={EntityType.Sulfur} />
+      <MaterialLabel name={"Iron Plate"} resource={EntityType.IronPlate} />
+      <MaterialLabel name={"Alloy"} resource={EntityType.Alloy} />
+      <MaterialLabel name={"Photovoltaic Cell"} resource={EntityType.PVCell} />
+      <MaterialLabel name={"Titanium"} resource={EntityType.Titanium} />
+      <MaterialLabel name={"Platinum"} resource={EntityType.Platinum} />
+      <MaterialLabel name={"Iridium"} resource={EntityType.Iridium} />
+      <MaterialLabel name={"Kimberlite"} resource={EntityType.Kimberlite} />
     </SecondaryCard>
   );
 };

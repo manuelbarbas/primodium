@@ -85,7 +85,7 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = memo(({ data }
                 <ResourceIconTooltip
                   key={resource.id}
                   image={resourceImage}
-                  resourceId={resource.id}
+                  resource={resource.id}
                   name={resourceName}
                   amount={resource.amount}
                   fontSize="xs"
