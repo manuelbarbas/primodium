@@ -172,7 +172,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
 
   function testSendUnitsNoUnits() public {
     setupValidInvade();
-    vm.expectRevert(bytes("[LibSend] No units"));
+    vm.expectRevert(bytes("[SendUnits] No units sent"));
     world.sendUnits(unitCounts, ESendType.Invade, originPosition, destinationPosition, bytes32(0));
   }
 

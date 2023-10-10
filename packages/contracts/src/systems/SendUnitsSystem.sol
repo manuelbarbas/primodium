@@ -20,15 +20,13 @@ contract SendUnitsSystem is PrimodiumSystem {
     bytes32 origin = ReversePosition.get(sendArgs.originPosition.x, sendArgs.originPosition.y);
     bytes32 destination = ReversePosition.get(sendArgs.destinationPosition.x, sendArgs.destinationPosition.y);
     bytes32 playerEntity = addressToEntity(_msgSender());
-    SystemCall.callWithHooksOrRevert(
-      entityToAddress(playerEntity),
-      getSystemResourceId("S_UpdateRockSystem"),
-      abi.encodeCall(S_UpdateRockSystem.updateRock, (playerEntity, origin)),
-      0
-    );
+    // SystemCall.callWithHooksOrRevert(
+    //   entityToAddress(playerEntity),
+    //   getSystemResourceId("S_UpdateRockSystem"),
+    //   abi.encodeCall(S_UpdateRockSystem.updateRock, (playerEntity, origin)),
+    //   0
+    // );
     if (destination == 0) destination = LibMotherlode.createMotherlode(sendArgs.destinationPosition);
-
-    LibSend.checkMovementRules(origin, destination, playerEntity, sendArgs.to, sendArgs.sendType);
 
     bool anyUnitsSent = false;
 

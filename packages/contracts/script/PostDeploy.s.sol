@@ -23,6 +23,11 @@ import { ResourceCount, ResourceCountTableId } from "codegen/tables/ResourceCoun
 import { MaxResourceCount, MaxResourceCountTableId } from "codegen/tables/MaxResourceCount.sol";
 import { SpawnedTableId } from "codegen/tables/Spawned.sol";
 import { ProductionRate, ProductionRateTableId } from "codegen/tables/ProductionRate.sol";
+import { UnitCount, UnitCountTableId } from "codegen/tables/UnitCount.sol";
+import { LastClaimedAt, LastClaimedAtTableId } from "codegen/tables/LastClaimedAt.sol";
+import { QueueItemUnits, QueueItemUnitsTableId } from "codegen/tables/QueueItemUnits.sol";
+import { QueueUnits, QueueUnitsTableId } from "codegen/tables/QueueUnits.sol";
+import { ProductionRateTableId } from "codegen/tables/ProductionRate.sol";
 import { OnBuild_PlaceOnTile } from "src/hooks/systemHooks/build/OnBuild_PlaceOnTile.sol";
 import { OnBuild_SpendResources } from "src/hooks/systemHooks/build/OnBuild_SpendResources.sol";
 import { OnBuild_MaxStorage } from "src/hooks/systemHooks/build/OnBuild_MaxStorage.sol";
@@ -39,6 +44,10 @@ import { OnDestroy_MaxStorage } from "src/hooks/systemHooks/destroy/OnDestroy_Ma
 import { OnDestroy_ProductionRate } from "src/hooks/systemHooks/destroy/OnDestroy_ProductionRate.sol";
 import { OnDestroy_Requirements } from "src/hooks/systemHooks/destroy/OnDestroy_Requirements.sol";
 import { OnDestroy_RemoveFromTiles } from "src/hooks/systemHooks/destroy/OnDestroy_RemoveFromTiles.sol";
+
+import { OnSendUnits_Requirements } from "src/hooks/systemHooks/sendUnits/OnSendUnits_Requirements.sol";
+import { OnSendUnits_UpdateRock } from "src/hooks/systemHooks/sendUnits/OnSendUnits_UpdateRock.sol";
+import { OnSendUnits_UnitCount } from "src/hooks/systemHooks/sendUnits/OnSendUnits_UnitCount.sol";
 
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
 
@@ -61,6 +70,7 @@ contract PostDeploy is Script {
     registerBuildHooks(world);
     registerUpgradeHooks(world);
     registerDestroyHooks(world);
+    registerSendUnits(world);
     vm.stopBroadcast();
   }
 
@@ -133,5 +143,22 @@ contract PostDeploy is Script {
     world.grantAccess(ChildrenTableId, address(onDestroy_RemoveFromTiles));
     world.grantAccess(OwnedByTableId, address(onDestroy_RemoveFromTiles));
     world.registerSystemHook(getSystemResourceId("DestroySystem"), onDestroy_RemoveFromTiles, AFTER_CALL_SYSTEM);
+  }
+
+  function registerSendUnits(IWorld world) internal {
+    OnSendUnits_Requirements onSendUnits_Requirements = new OnSendUnits_Requirements();
+    world.registerSystemHook(getSystemResourceId("SendUnitsSystem"), onSendUnits_Requirements, BEFORE_CALL_SYSTEM);
+
+    OnSendUnits_UnitCount onSendUnits_UnitCount = new OnSendUnits_UnitCount();
+    world.grantAccess(UnitCountTableId, address(onSendUnits_UnitCount));
+    world.registerSystemHook(getSystemResourceId("SendUnitsSystem"), onSendUnits_UnitCount, BEFORE_CALL_SYSTEM);
+
+    OnSendUnits_UpdateRock onSendUnits_UpdateRock = new OnSendUnits_UpdateRock();
+    world.grantAccess(LastClaimedAtTableId, address(onSendUnits_UpdateRock));
+    world.grantAccess(QueueItemUnitsTableId, address(onSendUnits_UpdateRock));
+    world.grantAccess(QueueUnitsTableId, address(onSendUnits_UpdateRock));
+    world.grantAccess(UnitCountTableId, address(onSendUnits_UpdateRock));
+    world.grantAccess(ProductionRateTableId, address(onSendUnits_UpdateRock));
+    world.registerSystemHook(getSystemResourceId("SendUnitsSystem"), onSendUnits_UpdateRock, AFTER_CALL_SYSTEM);
   }
 }
