@@ -6,7 +6,7 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { components as comps } from "src/network/components";
 import { BlockNumber, Hangar } from "src/network/components/clientComponents";
 import { clampedIndex, getBlockTypeName } from "./common";
-import { BlockType, MotherlodeSizeNames, MotherlodeTypeNames, ResourceStorages } from "./constants";
+import { EntityType, MotherlodeSizeNames, MotherlodeTypeNames, ResourceStorages } from "./constants";
 import { getFullResourceCount, getMotherlodeResource } from "./resource";
 import { ERock } from "./web3/types";
 
@@ -29,8 +29,8 @@ function getSpaceRockImage(spaceRock: Entity, type: ERock) {
     }).value;
 
     const spriteKey =
-      EntitytoSpriteKey[BlockType.Asteroid][
-        clampedIndex(mainBaseLevel - 1n, EntitytoSpriteKey[BlockType.Asteroid].length)
+      EntitytoSpriteKey[EntityType.Asteroid][
+        clampedIndex(mainBaseLevel - 1n, EntitytoSpriteKey[EntityType.Asteroid].length)
       ];
 
     return getSpriteBase64(spriteKey, Assets.SpriteAtlas);

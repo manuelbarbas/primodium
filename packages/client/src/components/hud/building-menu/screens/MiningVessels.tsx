@@ -9,7 +9,7 @@ import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 import { Level } from "src/network/components/chainComponents";
 import { Account } from "src/network/components/clientComponents";
 import { getBlockTypeName } from "src/util/common";
-import { BlockType, RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
+import { EntityType, RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
 import { getRecipe } from "src/util/resource";
 import { UpgradeMiningVessel } from "../widgets/UpgradeMiningVessel";
@@ -17,9 +17,9 @@ import { VesselSlots } from "../widgets/VesselSlots";
 
 export const CommissionCost: React.FC<{ player: EntityID }> = ({ player }) => {
   const recipe = useMemo(() => {
-    const playerUnitEntity = hashKeyEntity(BlockType.MiningVessel, player);
+    const playerUnitEntity = hashKeyEntity(EntityType.MiningVessel, player);
     const level = Level.get(playerUnitEntity, { value: 0 }).value;
-    const unitEntity = hashKeyEntity(BlockType.MiningVessel, level);
+    const unitEntity = hashKeyEntity(EntityType.MiningVessel, level);
 
     return getRecipe(unitEntity);
   }, [player]);

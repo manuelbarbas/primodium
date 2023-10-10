@@ -3,7 +3,7 @@ import { Entity } from "@latticexyz/recs";
 import { useEffect, useState } from "react";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { BlockType } from "src/util/constants";
+import { EntityType } from "src/util/constants";
 import { Hotbar } from "src/util/types";
 import { Hex } from "viem";
 
@@ -12,23 +12,23 @@ const buildingHotbar: Hotbar = {
   icon: "/img/icons/minersicon.png",
   items: [
     {
-      blockType: BlockType.IronMine,
+      blockType: EntityType.IronMine,
       keybind: KeybindActions.Hotbar0,
     },
     {
-      blockType: BlockType.CopperMine,
+      blockType: EntityType.CopperMine,
       keybind: KeybindActions.Hotbar1,
     },
     {
-      blockType: BlockType.LithiumMine,
+      blockType: EntityType.LithiumMine,
       keybind: KeybindActions.Hotbar2,
     },
     {
-      blockType: BlockType.SulfurMine,
+      blockType: EntityType.SulfurMine,
       keybind: KeybindActions.Hotbar3,
     },
     {
-      blockType: BlockType.IronPlateFactory,
+      blockType: EntityType.IronPlateFactory,
       keybind: KeybindActions.Hotbar4,
     },
     // {
@@ -40,7 +40,7 @@ const buildingHotbar: Hotbar = {
     //   keybind: KeybindActions.Hotbar6,
     // },
     {
-      blockType: BlockType.StorageUnit,
+      blockType: EntityType.StorageUnit,
       keybind: KeybindActions.Hotbar7,
     },
   ],
@@ -51,11 +51,11 @@ const advancedBuildingHotbar: Hotbar = {
   icon: "/img/icons/weaponryicon.png",
   items: [
     {
-      blockType: BlockType.PVCellFactory,
+      blockType: EntityType.PVCellFactory,
       keybind: KeybindActions.Hotbar1,
     },
     {
-      blockType: BlockType.SolarPanel,
+      blockType: EntityType.SolarPanel,
       keybind: KeybindActions.Hotbar2,
     },
     // {
@@ -63,19 +63,19 @@ const advancedBuildingHotbar: Hotbar = {
     //   keybind: KeybindActions.Hotbar3,
     // },
     {
-      blockType: BlockType.Hangar,
+      blockType: EntityType.Hangar,
       keybind: KeybindActions.Hotbar4,
     },
     {
-      blockType: BlockType.DroneFactory,
+      blockType: EntityType.DroneFactory,
       keybind: KeybindActions.Hotbar5,
     },
     {
-      blockType: BlockType.AlloyFactory,
+      blockType: EntityType.AlloyFactory,
       keybind: KeybindActions.Hotbar6,
     },
     {
-      blockType: BlockType.StarmapperStation,
+      blockType: EntityType.StarmapperStation,
       keybind: KeybindActions.Hotbar7,
     },
   ],
@@ -90,7 +90,7 @@ export const useHotbarContent = () => {
   const playerLevel = components.Level.use(playerMainbase)?.value ?? 1n;
 
   const minAdvancedLevel =
-    components.P_RequiredBaseLevel.getWithKeys({ prototype: BlockType.PVCellFactory as Hex, level: 1n })?.value ?? 1n;
+    components.P_RequiredBaseLevel.getWithKeys({ prototype: EntityType.PVCellFactory as Hex, level: 1n })?.value ?? 1n;
 
   useEffect(() => {
     setHotbarContent(

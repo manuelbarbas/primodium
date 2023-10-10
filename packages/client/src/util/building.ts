@@ -110,13 +110,13 @@ export const validateBuildingPlacement = (coord: Coord, building: Entity, astero
   for (let x = 0; x < buildingDimensions.width; x++) {
     for (let y = 0; y < buildingDimensions.height; y++) {
       const buildingCoord = { x: coord.x + x, y: coord.y - y };
-      if (getBuildingAtCoord(buildingCoord, asteroid)) return true;
-      if (outOfBounds(buildingCoord, player)) return true;
-      if (requiredTile && requiredTile !== getResourceKey(buildingCoord)) return true;
+      if (getBuildingAtCoord(buildingCoord, asteroid)) return false;
+      if (outOfBounds(buildingCoord, player)) return false;
+      if (requiredTile && requiredTile !== getResourceKey(buildingCoord)) return false;
     }
   }
 
-  return false;
+  return true;
 };
 
 export const getBuildingName = (building: Entity) => {

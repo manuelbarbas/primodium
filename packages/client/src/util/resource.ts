@@ -4,7 +4,7 @@ import { components as comps } from "src/network/components";
 import { Account, Hangar } from "src/network/components/clientComponents";
 import { ExtendedContractComponent } from "src/network/components/customComponents/ExtendedComponent";
 import { Hex } from "viem";
-import { BlockType, ResourceType, SPEED_SCALE } from "./constants";
+import { EntityType, ResourceType, SPEED_SCALE } from "./constants";
 import { getNow } from "./time";
 import { getUnitStats } from "./trainUnits";
 import { ERock } from "./web3/types";
@@ -43,7 +43,7 @@ export function getRecipe(rawBuildingType: Entity, level: bigint) {
   return [...resources, ...resourceRate];
 }
 
-export const mineableResources = [BlockType.Titanium, BlockType.Iridium, BlockType.Platinum, BlockType.Kimberlite];
+export const mineableResources = [EntityType.Titanium, EntityType.Iridium, EntityType.Platinum, EntityType.Kimberlite];
 
 export function getMotherlodeResource(entity: Entity) {
   const resource = comps.Motherlode.get(entity)?.motherlodeType;

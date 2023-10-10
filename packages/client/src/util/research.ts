@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { BlockType } from "./constants";
+import { EntityType } from "./constants";
 
 export type ResearchTreeType = ResearchCategoryType[];
 
@@ -23,32 +23,32 @@ export type ResearchItemLevelType = {
 
 export const MiningResearchTree: ResearchItemType = {
   name: "Mining Vessel Capacity",
-  id: BlockType.MiningResearch1,
+  id: EntityType.MiningResearch1,
   description: "Provides Mining Vessel Capacity, allowing you to build more Mining Vessels",
 
   levels: [
     {
-      id: BlockType.MiningResearch1,
+      id: EntityType.MiningResearch1,
       subtitle: "Level 1",
       description: "Provides Mining Vessel Capacity, allowing you to build more Mining Vessels",
     },
     {
-      id: BlockType.MiningResearch2,
+      id: EntityType.MiningResearch2,
       subtitle: "Level 2",
       description: "Provides Mining Vessel Capacity, allowing you to build more Mining Vessels",
     },
     {
-      id: BlockType.MiningResearch3,
+      id: EntityType.MiningResearch3,
       subtitle: "Level 3",
       description: "Provides Mining Vessel Capacity, allowing you to build more Mining Vessels",
     },
     {
-      id: BlockType.MiningResearch4,
+      id: EntityType.MiningResearch4,
       subtitle: "Level 4",
       description: "Provides Mining Vessel Capacity, allowing you to build more Mining Vessels",
     },
     {
-      id: BlockType.MiningResearch5,
+      id: EntityType.MiningResearch5,
       subtitle: "Level 5",
       description: "Provides Mining Vessel Capacity, allowing you to build more Mining Vessels",
     },
@@ -57,32 +57,32 @@ export const MiningResearchTree: ResearchItemType = {
 
 export const AnvilDroneUpgradeTree: ResearchItemType = {
   name: "Anvil",
-  id: BlockType.AnvilDroneUpgrade1,
+  id: EntityType.AnvilDroneUpgrade1,
   description: "Upgrades the Attack and Defence attributes of Anvil Drone units.",
 
   levels: [
     {
-      id: BlockType.AnvilDroneUpgrade1,
+      id: EntityType.AnvilDroneUpgrade1,
       subtitle: "Level 1",
       description: "Upgrades the Attack and Defence attributes of Anvil Drone units.",
     },
     {
-      id: BlockType.AnvilDroneUpgrade2,
+      id: EntityType.AnvilDroneUpgrade2,
       subtitle: "Level 2",
       description: "Upgrades the Attack and Defence attributes of Anvil Drone units.",
     },
     {
-      id: BlockType.AnvilDroneUpgrade3,
+      id: EntityType.AnvilDroneUpgrade3,
       subtitle: "Level 3",
       description: "Upgrades the Attack and Defence attributes of Anvil Drone units.",
     },
     {
-      id: BlockType.AnvilDroneUpgrade4,
+      id: EntityType.AnvilDroneUpgrade4,
       subtitle: "Level 4",
       description: "Upgrades the Attack and Defence attributes of Anvil Drone units.",
     },
     {
-      id: BlockType.AnvilDroneUpgrade5,
+      id: EntityType.AnvilDroneUpgrade5,
       subtitle: "Level 5",
       description: "Upgrades the Attack and Defence attributes of Anvil Drone units.",
     },
@@ -91,32 +91,32 @@ export const AnvilDroneUpgradeTree: ResearchItemType = {
 
 export const HammerDroneUpgradeTree: ResearchItemType = {
   name: "Hammer",
-  id: BlockType.HammerDroneUpgrade1,
+  id: EntityType.HammerDroneUpgrade1,
   description: "Upgrades the Attack and Defence attributes of Hammer Drone units.",
 
   levels: [
     {
-      id: BlockType.HammerDroneUpgrade1,
+      id: EntityType.HammerDroneUpgrade1,
       subtitle: "Level 1",
       description: "Upgrades the Attack and Defence attributes of Hammer Drone units.",
     },
     {
-      id: BlockType.HammerDroneUpgrade2,
+      id: EntityType.HammerDroneUpgrade2,
       subtitle: "Level 2",
       description: "Upgrades the Attack and Defence attributes of Hammer Drone units.",
     },
     {
-      id: BlockType.HammerDroneUpgrade3,
+      id: EntityType.HammerDroneUpgrade3,
       subtitle: "Level 3",
       description: "Upgrades the Attack and Defence attributes of Hammer Drone units.",
     },
     {
-      id: BlockType.HammerDroneUpgrade4,
+      id: EntityType.HammerDroneUpgrade4,
       subtitle: "Level 4",
       description: "Upgrades the Attack and Defence attributes of Hammer Drone units.",
     },
     {
-      id: BlockType.HammerDroneUpgrade5,
+      id: EntityType.HammerDroneUpgrade5,
       subtitle: "Level 5",
       description: "Upgrades the Attack and Defence attributes of Hammer Drone units.",
     },
@@ -125,32 +125,32 @@ export const HammerDroneUpgradeTree: ResearchItemType = {
 
 export const AegisDroneUpgradeTree: ResearchItemType = {
   name: "Aegis",
-  id: BlockType.AegisDroneUpgrade1,
+  id: EntityType.AegisDroneUpgrade1,
   description: "Upgrades the Attack and Defence attributes of Aegis Drone units.",
 
   levels: [
     {
-      id: BlockType.AegisDroneUpgrade1,
+      id: EntityType.AegisDroneUpgrade1,
       subtitle: "Level 1",
       description: "Upgrades the Attack and Defence attributes of Aegis Drone units.",
     },
     {
-      id: BlockType.AegisDroneUpgrade2,
+      id: EntityType.AegisDroneUpgrade2,
       subtitle: "Level 2",
       description: "Upgrades the Attack and Defence attributes of Aegis Drone units.",
     },
     {
-      id: BlockType.AegisDroneUpgrade3,
+      id: EntityType.AegisDroneUpgrade3,
       subtitle: "Level 3",
       description: "Upgrades the Attack and Defence attributes of Aegis Drone units.",
     },
     {
-      id: BlockType.AegisDroneUpgrade4,
+      id: EntityType.AegisDroneUpgrade4,
       subtitle: "Level 4",
       description: "Upgrades the Attack and Defence attributes of Aegis Drone units.",
     },
     {
-      id: BlockType.AegisDroneUpgrade5,
+      id: EntityType.AegisDroneUpgrade5,
       subtitle: "Level 5",
       description: "Upgrades the Attack and Defence attributes of Aegis Drone units.",
     },
@@ -159,32 +159,32 @@ export const AegisDroneUpgradeTree: ResearchItemType = {
 
 export const StingerDroneUpgradeTree: ResearchItemType = {
   name: "Stinger",
-  id: BlockType.StingerDroneUpgrade1,
+  id: EntityType.StingerDroneUpgrade1,
   description: "Upgrades the Attack and Defence attributes of Stinger Drone units.",
 
   levels: [
     {
-      id: BlockType.StingerDroneUpgrade1,
+      id: EntityType.StingerDroneUpgrade1,
       subtitle: "Level 1",
       description: "Upgrades the Attack and Defence attributes of Stinger Drone units.",
     },
     {
-      id: BlockType.StingerDroneUpgrade2,
+      id: EntityType.StingerDroneUpgrade2,
       subtitle: "Level 2",
       description: "Upgrades the Attack and Defence attributes of Stinger Drone units.",
     },
     {
-      id: BlockType.StingerDroneUpgrade3,
+      id: EntityType.StingerDroneUpgrade3,
       subtitle: "Level 3",
       description: "Upgrades the Attack and Defence attributes of Stinger Drone units.",
     },
     {
-      id: BlockType.StingerDroneUpgrade4,
+      id: EntityType.StingerDroneUpgrade4,
       subtitle: "Level 4",
       description: "Upgrades the Attack and Defence attributes of Stinger Drone units.",
     },
     {
-      id: BlockType.StingerDroneUpgrade5,
+      id: EntityType.StingerDroneUpgrade5,
       subtitle: "Level 5",
       description: "Upgrades the Attack and Defence attributes of Stinger Drone units.",
     },
@@ -193,32 +193,32 @@ export const StingerDroneUpgradeTree: ResearchItemType = {
 
 export const MiningVesselUpgradeTree: ResearchItemType = {
   name: "Mining Vessel",
-  id: BlockType.MiningVesselUpgrade1,
+  id: EntityType.MiningVesselUpgrade1,
   description: "Increases the Mining Vessel's Mining Power by 1. ",
 
   levels: [
     {
-      id: BlockType.MiningVesselUpgrade1,
+      id: EntityType.MiningVesselUpgrade1,
       subtitle: "Level 1",
       description: "Increases the Mining Vessel's Mining Power by 1. ",
     },
     {
-      id: BlockType.MiningVesselUpgrade2,
+      id: EntityType.MiningVesselUpgrade2,
       subtitle: "Level 2",
       description: "Increases the Mining Vessel's Mining Power by 1. ",
     },
     {
-      id: BlockType.MiningVesselUpgrade3,
+      id: EntityType.MiningVesselUpgrade3,
       subtitle: "Level 3",
       description: "Increases the Mining Vessel's Mining Power by 1. ",
     },
     {
-      id: BlockType.MiningVesselUpgrade4,
+      id: EntityType.MiningVesselUpgrade4,
       subtitle: "Level 4",
       description: "Increases the Mining Vessel's Mining Power by 1. ",
     },
     {
-      id: BlockType.MiningVesselUpgrade5,
+      id: EntityType.MiningVesselUpgrade5,
       subtitle: "Level 5",
       description: "Increases the Mining Vessel's Mining Power by 1. ",
     },
@@ -227,31 +227,31 @@ export const MiningVesselUpgradeTree: ResearchItemType = {
 
 export const MinutemanMarineUpgradeTree: ResearchItemType = {
   name: "Minuteman",
-  id: BlockType.MinutemanMarineUpgrade1,
+  id: EntityType.MinutemanMarineUpgrade1,
   description: "Increases the Minuteman Marine's stats. ",
   levels: [
     {
-      id: BlockType.MinutemanMarineUpgrade1,
+      id: EntityType.MinutemanMarineUpgrade1,
       subtitle: "Level 1",
       description: "Upgrades the Attack and Defence attributes of Minuteman Marines.",
     },
     {
-      id: BlockType.MinutemanMarineUpgrade2,
+      id: EntityType.MinutemanMarineUpgrade2,
       subtitle: "Level 2",
       description: "Upgrades the Attack and Defence attributes of Minuteman Marines.",
     },
     {
-      id: BlockType.MinutemanMarineUpgrade3,
+      id: EntityType.MinutemanMarineUpgrade3,
       subtitle: "Level 3",
       description: "Upgrades the Attack and Defence attributes of Minuteman Marines.",
     },
     {
-      id: BlockType.MinutemanMarineUpgrade4,
+      id: EntityType.MinutemanMarineUpgrade4,
       subtitle: "Level 4",
       description: "Upgrades the Attack and Defence attributes of Minuteman Marines.",
     },
     {
-      id: BlockType.MinutemanMarineUpgrade5,
+      id: EntityType.MinutemanMarineUpgrade5,
       subtitle: "Level 5",
       description: "Upgrades the Attack and Defence attributes of Minuteman Marines.",
     },
@@ -260,31 +260,31 @@ export const MinutemanMarineUpgradeTree: ResearchItemType = {
 
 export const TridentMarineUpgradeTree: ResearchItemType = {
   name: "Trident",
-  id: BlockType.TridentMarineUpgrade1,
+  id: EntityType.TridentMarineUpgrade1,
   description: "Increases the Trident Marine's stats. ",
   levels: [
     {
-      id: BlockType.TridentMarineUpgrade1,
+      id: EntityType.TridentMarineUpgrade1,
       subtitle: "Level 1",
       description: "Upgrades the Attack and Defence attributes of Trident Marines.",
     },
     {
-      id: BlockType.TridentMarineUpgrade2,
+      id: EntityType.TridentMarineUpgrade2,
       subtitle: "Level 2",
       description: "Upgrades the Attack and Defence attributes of Trident Marines.",
     },
     {
-      id: BlockType.TridentMarineUpgrade3,
+      id: EntityType.TridentMarineUpgrade3,
       subtitle: "Level 3",
       description: "Upgrades the Attack and Defence attributes of Trident Marines.",
     },
     {
-      id: BlockType.TridentMarineUpgrade4,
+      id: EntityType.TridentMarineUpgrade4,
       subtitle: "Level 4",
       description: "Upgrades the Attack and Defence attributes of Trident Marines.",
     },
     {
-      id: BlockType.TridentMarineUpgrade5,
+      id: EntityType.TridentMarineUpgrade5,
       subtitle: "Level 5",
       description: "Upgrades the Attack and Defence attributes of Trident Marines.",
     },
@@ -315,42 +315,42 @@ export const ResearchTree: ResearchTreeType = [
 // duplicate above but for ExpansionResearch, up to level 7
 export const ExpansionResearchTree: ResearchItemType = {
   name: "Expand Range",
-  id: BlockType.ExpansionResearch1,
+  id: EntityType.ExpansionResearch1,
   description: "Unlocks expansion research — allows you to start expanding your base.",
 
   levels: [
     {
-      id: BlockType.ExpansionResearch1,
+      id: EntityType.ExpansionResearch1,
       subtitle: "Level 1",
       description: "Unlocks expansion research — allows you to start expanding your base.",
     },
     {
-      id: BlockType.ExpansionResearch2,
+      id: EntityType.ExpansionResearch2,
       subtitle: "Level 2",
       description: "Unlocks expansion research — allows you to start expanding your base.",
     },
     {
-      id: BlockType.ExpansionResearch3,
+      id: EntityType.ExpansionResearch3,
       subtitle: "Level 3",
       description: "Unlocks expansion research — allows you to start expanding your base.",
     },
     {
-      id: BlockType.ExpansionResearch4,
+      id: EntityType.ExpansionResearch4,
       subtitle: "Level 4",
       description: "Unlocks expansion research — allows you to start expanding your base.",
     },
     {
-      id: BlockType.ExpansionResearch5,
+      id: EntityType.ExpansionResearch5,
       subtitle: "Level 5",
       description: "Unlocks expansion research — allows you to start expanding your base.",
     },
     {
-      id: BlockType.ExpansionResearch6,
+      id: EntityType.ExpansionResearch6,
       subtitle: "Level 6",
       description: "Unlocks expansion research — allows you to start expanding your base.",
     },
     {
-      id: BlockType.ExpansionResearch7,
+      id: EntityType.ExpansionResearch7,
       subtitle: "Level 7",
       description: "Unlocks expansion research — allows you to start expanding your base.",
     },
