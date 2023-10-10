@@ -92,6 +92,8 @@ export const BlockType = {
   LithiumMine: toHex32("LithiumMine") as Entity,
   SulfurMine: toHex32("SulfurMine") as Entity,
   StorageUnit: toHex32("StorageUnit") as Entity,
+  Garage: toHex32("Garage") as Entity,
+  Workshop: toHex32("Workshop") as Entity,
 
   //Advanced Buildings
   IronPlateFactory: toHex32("IronPlateFactory") as Entity,
@@ -101,6 +103,7 @@ export const BlockType = {
   Hangar: toHex32("Hangar") as Entity,
   DroneFactory: toHex32("DroneFactory") as Entity,
   StarmapperStation: toHex32("Starmapper") as Entity,
+  SAMLauncher: toHex32("SAMLauncher") as Entity,
 
   Alloy: toHex32("Alloy") as Entity,
   PVCell: toHex32("PVCell") as Entity,

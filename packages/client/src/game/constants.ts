@@ -261,7 +261,7 @@ export const EntityIDtoSpriteKey = {
 
   [BlockType.AlloyFactory]: [SpriteKeys.AlloyFactory1],
 
-  [BlockType.PhotovoltaicCellFactory]: [SpriteKeys.PhotovoltaicCellFactory1, SpriteKeys.PhotovoltaicCellFactory2],
+  [BlockType.PVCellFactory]: [SpriteKeys.PhotovoltaicCellFactory1, SpriteKeys.PhotovoltaicCellFactory2],
 
   [BlockType.SolarPanel]: [SpriteKeys.SolarPanel1, SpriteKeys.SolarPanel2],
 
@@ -311,7 +311,7 @@ export const EntityIDtoAnimationKey = {
 
   [BlockType.AlloyFactory]: [AnimationKeys.AlloyFactory1],
 
-  [BlockType.PhotovoltaicCellFactory]: [AnimationKeys.PhotovoltaicCellFactory1, AnimationKeys.PhotovoltaicCellFactory2],
+  [BlockType.PVCellFactory]: [AnimationKeys.PhotovoltaicCellFactory1, AnimationKeys.PhotovoltaicCellFactory2],
 
   [BlockType.SolarPanel]: [AnimationKeys.SolarPanel1, AnimationKeys.SolarPanel2],
 
