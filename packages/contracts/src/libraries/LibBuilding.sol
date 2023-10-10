@@ -14,7 +14,6 @@ import { LibStorage } from "libraries/LibStorage.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 
 import { S_SpendResourcesSystem } from "systems/subsystems/S_SpendResourcesSystem.sol";
-import { S_MaxStorageSystem } from "systems/subsystems/S_MaxStorageSystem.sol";
 import { S_ReduceProductionRateSystem } from "systems/subsystems/S_ReduceProductionRateSystem.sol";
 import { S_ResourceProductionSystem } from "systems/subsystems/S_ResourceProductionSystem.sol";
 

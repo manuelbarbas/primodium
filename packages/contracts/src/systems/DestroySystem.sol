@@ -11,7 +11,6 @@ import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 import { LibBuilding, LibReduceProductionRate, LibResource, LibProduction, LibStorage, UnitFactorySet } from "codegen/Libraries.sol";
 
 import { S_SpendResourcesSystem } from "systems/subsystems/S_SpendResourcesSystem.sol";
-import { S_MaxStorageSystem } from "systems/subsystems/S_MaxStorageSystem.sol";
 import { S_ReduceProductionRateSystem } from "systems/subsystems/S_ReduceProductionRateSystem.sol";
 import { S_ResourceProductionSystem } from "systems/subsystems/S_ResourceProductionSystem.sol";
 import { console } from "forge-std/console.sol";
