@@ -51,6 +51,7 @@ import { OnSendUnits_UnitCount } from "src/hooks/systemHooks/sendUnits/OnSendUni
 
 import { OnTrainUnits_SpendResources } from "src/hooks/systemHooks/trainUnits/OnTrainUnits_SpendResources.sol";
 import { OnTrainUnits_UpdateRock } from "src/hooks/systemHooks/trainUnits/OnTrainUnits_UpdateRock.sol";
+import { OnTrainUnits_Requirements } from "src/hooks/systemHooks/trainUnits/OnTrainUnits_Requirements.sol";
 
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
 
@@ -168,6 +169,9 @@ contract PostDeploy is Script {
   }
 
   function registerTrainUnits(IWorld world) internal {
+    OnTrainUnits_Requirements onTrainUnits_Requirements = new OnTrainUnits_Requirements();
+    world.registerSystemHook(getSystemResourceId("TrainUnitsSystem"), onTrainUnits_Requirements, BEFORE_CALL_SYSTEM);
+
     OnTrainUnits_UpdateRock onTrainUnits_UpdateRock = new OnTrainUnits_UpdateRock();
 
     world.grantAccess(ResourceCountTableId, address(onTrainUnits_UpdateRock));
