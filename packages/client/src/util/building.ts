@@ -1,5 +1,5 @@
 import { primodium } from "@game/api";
-import { EntitytoSpriteKey } from "@game/constants";
+// import { EntitytoSpriteKey } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
@@ -12,6 +12,7 @@ import { ResourceType } from "./constants";
 import { outOfBounds } from "./outOfBounds";
 import { getRecipe, getRecipeDifference } from "./resource";
 import { getBuildingAtCoord, getResourceKey } from "./tile";
+import { EntityIDtoSpriteKey } from "@game/constants";
 
 type Dimensions = { width: number; height: number };
 export const blueprintCache = new Map<Entity, Dimensions>();
@@ -62,6 +63,7 @@ export function getBuildingOrigin(source: Coord, building: Entity) {
   const blueprint = comps.P_Blueprint.get(building)?.value;
   if (!blueprint) return;
   const topLeftCoord = getTopLeftCoord(convertToCoords(blueprint));
+
   if (!blueprint) return;
   return { x: source.x - topLeftCoord.x, y: source.y - topLeftCoord.y };
 }
@@ -69,7 +71,9 @@ export function getBuildingOrigin(source: Coord, building: Entity) {
 export function getBuildingTopLeft(origin: Coord, buildingType: Entity) {
   const rawBlueprint = comps.P_Blueprint.get(buildingType)?.value;
   if (!rawBlueprint) throw new Error("No blueprint found");
+
   const relativeTopLeft = getTopLeftCoord(convertToCoords(rawBlueprint));
+
   return { x: origin.x + relativeTopLeft.x, y: origin.y + relativeTopLeft.y };
 }
 
@@ -96,7 +100,7 @@ export function getBuildingDimensions(building: Entity) {
   return dimensions;
 }
 
-export const validateBuildingPlacement = (coord: Coord, building: Entity) => {
+export const validateBuildingPlacement = (coord: Coord, building: Entity, asteroid: Entity) => {
   //get building dimesions
   const buildingDimensions = getBuildingDimensions(building);
   const player = Account.get()?.value;
@@ -106,13 +110,13 @@ export const validateBuildingPlacement = (coord: Coord, building: Entity) => {
   for (let x = 0; x < buildingDimensions.width; x++) {
     for (let y = 0; y < buildingDimensions.height; y++) {
       const buildingCoord = { x: coord.x + x, y: coord.y - y };
-      if (getBuildingAtCoord(buildingCoord)) return true;
-      if (outOfBounds(buildingCoord, player)) return true;
-      if (requiredTile && requiredTile !== getResourceKey(buildingCoord)) return true;
+      if (getBuildingAtCoord(buildingCoord, asteroid)) return false;
+      if (outOfBounds(buildingCoord, player)) return false;
+      if (requiredTile && requiredTile !== getResourceKey(buildingCoord)) return false;
     }
   }
 
-  return false;
+  return true;
 };
 
 export const getBuildingName = (building: Entity) => {
@@ -174,11 +178,11 @@ export const getBuildingInfo = (building: Entity) => {
   const mainBaseLvlReq = comps.P_RequiredBaseLevel.getWithKeys(buildingNextLevelKeys)?.value ?? 1;
 
   let imageUri = "";
-  if (EntitytoSpriteKey[buildingType]) {
+  if (EntityIDtoSpriteKey[buildingType]) {
     const imageIndex = parseInt(level ? level.toString() : "1") - 1;
 
     imageUri = getSpriteBase64(
-      EntitytoSpriteKey[buildingType][clampedIndex(imageIndex, EntitytoSpriteKey[buildingType].length)]
+      EntityIDtoSpriteKey[buildingType][clampedIndex(imageIndex, EntityIDtoSpriteKey[buildingType].length)]
     );
   }
 

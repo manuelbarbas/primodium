@@ -1,17 +1,17 @@
-import { Assets, DepthLayers, EntityIDtoSpriteKey, SpriteKeys } from "@game/constants";
-import { SingletonID } from "@latticexyz/network";
-import { EntityID, Has, HasValue, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
-import { AsteroidType, Level, MainBase, OwnedBy, Pirate, Position } from "src/network/components/chainComponents";
-import { Send } from "src/network/components/clientComponents";
-import { world } from "src/network/world";
-import { clampedIndex } from "src/util/common";
-import { BlockType } from "src/util/constants";
-import { ESpaceRockType } from "src/util/web3/types";
+import { namespaceWorld, Has, defineEnterSystem, HasValue, EntityID, Not } from "@latticexyz/recs";
 import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
+import { AsteroidType, Level, MainBase, OwnedBy, Pirate, Position } from "src/network/components/chainComponents";
+import { world } from "src/network/world";
+import { Send } from "src/network/components/clientComponents";
 import { initializeMotherlodes } from "../utils/initializeMotherlodes";
+import { ESpaceRockType } from "src/util/web3/types";
+import { Coord } from "@latticexyz/utils";
+import { Assets, DepthLayers, EntityIDtoSpriteKey, SpriteKeys } from "@game/constants";
+import { EntityType } from "src/util/constants";
+import { clampedIndex } from "src/util/common";
+import { SingletonID } from "@latticexyz/network";
 
 export const renderAsteroid = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -56,8 +56,8 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
       ...sharedComponents,
       Texture(
         Assets.SpriteAtlas,
-        EntityIDtoSpriteKey[BlockType.Asteroid][
-          clampedIndex(mainBaseLevel - 1, EntityIDtoSpriteKey[BlockType.Asteroid].length)
+        EntityIDtoSpriteKey[EntityType.Asteroid][
+          clampedIndex(mainBaseLevel - 1, EntityIDtoSpriteKey[EntityType.Asteroid].length)
         ]
       ),
       OnClick(scene, () => {

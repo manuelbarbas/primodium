@@ -6,51 +6,47 @@ import createPhaserScene from "../util/createPhaserScene";
 import { getSceneLoadPromise } from "../util/getSceneLoadPromise";
 
 export const createGame = async (config: GameConfig) => {
-  try {
-    //Initialize Phaser Game
-    const phaserGame = new Phaser.Game(config);
+  //Initialize Phaser Game
+  const phaserGame = new Phaser.Game(config);
 
-    // Wait for phaser to boot
-    const [resolve, , promise] = deferred();
-    phaserGame.events.on("ready", resolve);
-    await promise;
+  // Wait for phaser to boot
+  const [resolve, , promise] = deferred();
+  phaserGame.events.on("ready", resolve);
+  await promise;
 
-    // Create scene for loading assets
-    const phaserScene = createPhaserScene({
-      key: "ROOT",
-      preload: (scene: Phaser.Scene) => {
-        scene.load.pack(config.key, config.assetPackUrl, config.key);
-      },
-    });
+  // Create scene for loading assets
+  const phaserScene = createPhaserScene({
+    key: "ROOT",
+    preload: (scene: Phaser.Scene) => {
+      scene.load.pack(config.key, config.assetPackUrl, config.key);
+    },
+  });
 
-    let loadScene = new phaserScene();
+  const loadScene = new phaserScene();
 
-    phaserGame.scene.add("ROOT", loadScene, true);
-    loadScene.input.enabled = false;
+  phaserGame.scene.add("ROOT", loadScene, true);
+  loadScene.input.enabled = false;
 
-    await getSceneLoadPromise(loadScene);
+  await getSceneLoadPromise(loadScene);
 
-    /* -------------------------- Create Scene Manager -------------------------- */
+  /* -------------------------- Create Scene Manager -------------------------- */
 
-    const sceneManager = createSceneManager(phaserGame);
+  const sceneManager = createSceneManager(phaserGame);
 
-    /* -------------------------------------------------------------------------- */
-    const context = {
-      phaserGame,
-      sceneManager,
-      dispose: () => {
-        console.log(config.key + ": Disposing");
-        phaserGame.destroy(true);
-        sceneManager.dispose();
-      },
-    };
+  /* -------------------------------------------------------------------------- */
+  const context = {
+    phaserGame,
+    sceneManager,
+    dispose: () => {
+      console.log(config.key + ": Disposing");
+      phaserGame.destroy(true);
+      sceneManager.dispose();
+    },
+  };
 
-    initializeContext(config.key, context);
+  initializeContext(config.key, context);
 
-    console.log(config.key + ": Created Instance");
+  console.log(config.key + ": Created Instance");
 
-    return context;
-  } catch (e) {
-    throw e;
-  }
+  return context;
 };

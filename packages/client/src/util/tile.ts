@@ -1,9 +1,6 @@
 import { Entity, Has, HasValue, Not, runQuery } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { MUDEnums } from "contracts/config/enums";
 import { components } from "src/network/components";
-import { ActiveAsteroid } from "src/network/components/clientComponents";
-import { BlockType } from "./constants";
 
 export function getResourceKey(coord: Coord) {
   const resourceDimensions = { width: 37, length: 25 };
@@ -12,15 +9,11 @@ export function getResourceKey(coord: Coord) {
     return null;
   }
 
-  const resource = components.P_Terrain.getWithKeys(coord, { value: 0 })?.value; // todo: pull this from the Dimensions component
-
-  // temp: until we have the sprites in the game
-  if (MUDEnums.EResource[resource] == BlockType.Air) {
-    return BlockType.Osmium;
-  }
+  const resource = components.P_Terrain.getWithKeys(coord, { value: 0 })?.value;
 
   return resource;
 }
+
 export function getBuildingsOfTypeInRange(origin: Coord, type: Entity, range: number) {
   const tiles: Coord[] = [];
 
@@ -55,12 +48,12 @@ export const getEntityTileAtCoord = (coord: Coord) => {
   return components.BuildingType.get(tileEntity)?.value;
 };
 
-export const getBuildingAtCoord = (coord: Coord) => {
+export const getBuildingAtCoord = (coord: Coord, asteroid: Entity) => {
   const entities = runQuery([
     HasValue(components.Position, {
       x: coord.x,
       y: coord.y,
-      parent: ActiveAsteroid.get()?.value,
+      parent: asteroid,
     }),
     Not(components.BuildingType),
   ]);

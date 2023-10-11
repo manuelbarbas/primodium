@@ -7,6 +7,8 @@ import { MudProvider } from "./hooks/providers/MudProvider";
 import { setup } from "./network/setup";
 import { SetupResult } from "./network/types";
 import { world } from "./network/world";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
 const DEV = import.meta.env.PRI_DEV === "true";
 
@@ -49,12 +51,9 @@ export default function App() {
 
   if (networkLayer === undefined) {
     return (
-      <div
-        style={{
-          backgroundImage: "url(/img/backgrounds/star.png)",
-        }}
-      >
-        <div className="flex items-center justify-center h-screen text-white font-mono">
+      <div className="relative bg-black">
+        <div className="absolute w-full h-full star-background opacity-50" />
+        <div className="relative flex items-center justify-center h-screen text-white font-mono">
           <div className="text-center">
             <p className="text-lg">Initializing...</p>
           </div>
@@ -64,6 +63,20 @@ export default function App() {
   } else {
     return (
       <MudProvider {...networkLayer}>
+        <ToastContainer
+          toastClassName={`font-mono text-xs border bg-neutral border-secondary rounded-box drop-shadow-2xl`}
+          progressClassName={"bg-accent"}
+          position="top-left"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
         <AppLoadingState />
       </MudProvider>
     );

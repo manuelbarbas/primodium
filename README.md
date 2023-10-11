@@ -48,18 +48,18 @@ To build packages, run `pnpm build`
 
 For production deployment on Caldera testnet:
 
-1. In `.env`:
+1. In `<top-level>/.env`:
    - Set `PRI_DEV="false"`
    - Set `PRI_CHAIN_ID="caldera"`
-2. Add a `.env` file in `<toplevel>/packages/contracts` with your private key:
+2. Add your private key to the `.env` file in `packages/contracts`:
    ```bash
-   echo "PRIVATEKEY="<your-private-key" >> ./packages/contracts.env
+   echo "PRIVATEKEY=<your-private-key>" >> ./packages/contracts/.env
    ```
-3. deploy your contracts:
+3. Deploy your contracts:
    `pnpm deploy:caldera`
-   \*\*\*Note: to update deployment information, modify the `[profile.caldera]` field in `packages/contracts/foundry.toml`
+   \*\*\*Note: to update deployment information, modify the `[profile.caldera]` field in `packages/contracts/foundry.toml`.
 
-The client is automatically deployed on Vercel from the main branch. The live instance is located at `testnet2.primodium.com/?worldAddress=<world_address>?chainid=caldera>` with the rpc settings to the Caldera testnet.
+The client is automatically deployed on Vercel from the main branch. The live instance is located at `testnet2.primodium.com/?worldAddress=<world_address>?chainid=caldera` with the rpc settings to the Caldera testnet.
 
 To clean types/ and abis/ in the git diff, run `pnpm clean` in the top level directory.
 

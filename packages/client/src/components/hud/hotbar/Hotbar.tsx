@@ -47,7 +47,7 @@ export const Hotbar: React.FC = () => {
       prevHotbar.dispose();
       esc.dispose();
     };
-  }, [keybinds, hotbarContent]);
+  }, [keybinds, hotbarContent, addListener]);
 
   return (
     <div className="flex flex-col items-center relative mb-2">

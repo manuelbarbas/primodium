@@ -2,6 +2,7 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { comlink } from "vite-plugin-comlink";
 import tsconfigPaths from "vite-tsconfig-paths";
+import postcss from "./postcss.config";
 
 export default defineConfig({
   plugins: [react(), comlink(), tsconfigPaths()],
@@ -62,4 +63,7 @@ export default defineConfig({
   },
   envPrefix: "PRI_",
   envDir: "../../",
+  css: {
+    postcss,
+  },
 });

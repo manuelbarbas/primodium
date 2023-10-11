@@ -1,20 +1,12 @@
-import { AsteroidMap } from "@game/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import {
-  ComponentUpdate,
-  Has,
-  defineEnterSystem,
-  defineExitSystem,
-  defineUpdateSystem,
-  namespaceWorld,
-} from "@latticexyz/recs";
+import { ComponentUpdate, Has } from "@latticexyz/recs";
+import { defineEnterSystem, defineExitSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { SelectedTile } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
+import { SelectedTile } from "src/network/components/clientComponents";
 import { ObjectPosition } from "../../common/object-components/common";
 import { Square } from "../../common/object-components/graphics";
-
-const { DepthLayers } = AsteroidMap;
+import { DepthLayers } from "@game/constants";
 
 export const renderSelectedTile = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -23,15 +15,9 @@ export const renderSelectedTile = (scene: Scene) => {
   const query = [Has(SelectedTile)];
 
   const render = (update: ComponentUpdate) => {
-    const entityIndex = update.entity;
     const objGraphicsIndex = update.entity + "_selectionTile" + "_graphics";
 
-    // Avoid updating on optimistic overrides
-    if (typeof entityIndex !== "number" || entityIndex >= world.entities.length) {
-      return;
-    }
-
-    const tileCoord = SelectedTile.get(world.entities[entityIndex]);
+    const tileCoord = SelectedTile.get();
 
     if (!tileCoord) return;
 
@@ -47,10 +33,11 @@ export const renderSelectedTile = (scene: Scene) => {
           x: Math.floor(pixelCoord.x / tileWidth) * tileWidth,
           y: -Math.floor(pixelCoord.y / tileWidth) * tileHeight,
         },
-        DepthLayers.Tooltip
+        DepthLayers.Path
       ),
       Square(tileWidth, tileHeight, {
-        color: 0xffff00,
+        borderThickness: 1,
+        color: 0x00ffff,
         alpha: 0.2,
       }),
     ]);
