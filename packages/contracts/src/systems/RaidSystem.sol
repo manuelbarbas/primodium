@@ -8,8 +8,6 @@ import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 import { OwnedBy } from "codegen/index.sol";
 import { LibRaid } from "codegen/Libraries.sol";
 
-import { S_UpdateRockSystem } from "systems/subsystems/S_UpdateRockSystem.sol";
-
 contract RaidSystem is PrimodiumSystem {
   /**
    * @dev Initiates a raid on a rock entity using the LibRaid library.

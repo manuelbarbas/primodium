@@ -18,21 +18,6 @@ export type Config = typeof config;
 export const config = mudConfig({
   excludeSystems: [...dev],
   overrideSystems: {
-    S_SpendResourcesSystem: {
-      openAccess: false,
-      accessList: ["BuildSystem", "UpgradeBuildingSystem"],
-      name: "S_SpendResourcesSystem",
-    },
-    S_ReduceProductionRateSystem: {
-      openAccess: false,
-      accessList: ["BuildSystem", "UpgradeBuildingSystem", "DestroySystem"],
-      name: "S_ReduceProductionRateSystem",
-    },
-    S_ResourceProductionSystem: {
-      openAccess: false,
-      accessList: ["BuildSystem", "UpgradeBuildingSystem", "DestroySystem"],
-      name: "S_ResourceProductionSystem",
-    },
     S_BattleSystem: {
       openAccess: false,
       accessList: ["RaidSystem", "InvadeSystem"],

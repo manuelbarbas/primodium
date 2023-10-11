@@ -13,8 +13,6 @@ import { ReversePosition, PositionData, UnitCount, OwnedBy, ResourceCount, Arriv
 import { LibMotherlode, LibSend, ArrivalsMap } from "codegen/Libraries.sol";
 import { UnitKey } from "src/Keys.sol";
 
-import { S_UpdateRockSystem } from "systems/subsystems/S_UpdateRockSystem.sol";
-
 contract SendUnitsSystem is PrimodiumSystem {
   function _sendUnits(SendArgs memory sendArgs) internal {
     bytes32 origin = ReversePosition.get(sendArgs.originPosition.x, sendArgs.originPosition.y);

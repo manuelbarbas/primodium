@@ -13,9 +13,6 @@ import { LibProduction } from "libraries/LibProduction.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 
-import { S_ReduceProductionRateSystem } from "systems/subsystems/S_ReduceProductionRateSystem.sol";
-import { S_ResourceProductionSystem } from "systems/subsystems/S_ResourceProductionSystem.sol";
-
 // types
 import { BuildingKey, BuildingTileKey, ExpansionKey } from "src/Keys.sol";
 import { Bounds, EBuilding, EResource } from "src/Types.sol";

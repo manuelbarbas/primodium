@@ -183,7 +183,6 @@ contract PostDeploy is Script {
     world.registerSystemHook(getSystemResourceId("TrainUnitsSystem"), onTrainUnits_Requirements, BEFORE_CALL_SYSTEM);
 
     OnTrainUnits_UpdateRock onTrainUnits_UpdateRock = new OnTrainUnits_UpdateRock();
-
     world.grantAccess(ResourceCountTableId, address(onTrainUnits_UpdateRock));
     world.grantAccess(LastClaimedAtTableId, address(onTrainUnits_UpdateRock));
     world.grantAccess(QueueItemUnitsTableId, address(onTrainUnits_UpdateRock));

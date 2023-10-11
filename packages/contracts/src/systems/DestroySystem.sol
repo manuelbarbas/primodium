@@ -10,8 +10,6 @@ import { P_ProducesUnits, Position, PositionData, BuildingType, OwnedBy, Childre
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 import { LibBuilding, LibReduceProductionRate, LibResource, LibProduction, LibStorage, UnitFactorySet } from "codegen/Libraries.sol";
 
-import { S_ReduceProductionRateSystem } from "systems/subsystems/S_ReduceProductionRateSystem.sol";
-import { S_ResourceProductionSystem } from "systems/subsystems/S_ResourceProductionSystem.sol";
 import { console } from "forge-std/console.sol";
 
 contract DestroySystem is PrimodiumSystem {
