@@ -3,12 +3,12 @@ import { primodium } from "@game/api";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
-import { MUDEnums } from "contracts/config/enums";
+import { EResource, MUDEnums } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
 import { Account } from "src/network/components/clientComponents";
 import { Hex } from "viem";
 import { clampedIndex, getBlockTypeName, toRomanNumeral } from "./common";
-import { ResourceTypes } from "./constants";
+import { ResourceEntityLookup, ResourceType } from "./constants";
 import { outOfBounds } from "./outOfBounds";
 import { getRecipe, getRecipeDifference } from "./resource";
 import { getBuildingAtCoord, getResourceKey } from "./tile";
@@ -144,22 +144,26 @@ export const getBuildingImage = (building: Entity) => {
   return "";
 };
 
-export const getBuildingStorages = (building: Hex, level: bigint) => {
-  const resourceStorages = MUDEnums.EResource.map((resource, i) => {
-    const storage = comps.P_ByLevelMaxResourceUpgrades.getWithKeys({ prototype: building, level, resource: i })?.value;
+export const getBuildingStorages = (buildingType: Entity, level: bigint) => {
+  const resourceStorages = MUDEnums.EResource.map((_, i) => {
+    const storage = comps.P_ByLevelMaxResourceUpgrades.getWithKeys({
+      prototype: buildingType as Hex,
+      level,
+      resource: i,
+    })?.value;
 
     if (!storage) return null;
 
     return {
-      resourceId: resource as Entity,
-      resourceType: comps.P_IsUtility.getWithKeys({ id: i }) ? ResourceTypes.Resource : ResourceTypes.Utility,
+      resource: ResourceEntityLookup[i as EResource],
+      resourceType: comps.P_IsUtility.getWithKeys({ id: i }) ? ResourceType.Resource : ResourceType.Utility,
       amount: storage,
     };
   });
 
   return resourceStorages.filter((storage) => !!storage) as {
-    resourceId: Entity;
-    resourceType: ResourceTypes;
+    resource: Entity;
+    resourceType: ResourceType;
     amount: bigint;
   }[];
 };
@@ -179,8 +183,8 @@ export const getBuildingInfo = (building: Entity) => {
   const production = comps.P_Production.getWithKeys(buildingLevelKeys);
   const nextLevelProduction = comps.P_Production.getWithKeys(buildingNextLevelKeys);
 
-  const storages = getBuildingStorages(buildingType, level);
-  const nextLevelStorages = getBuildingStorages(buildingType, level);
+  const storages = getBuildingStorages(buildingTypeEntity, level);
+  const nextLevelStorages = getBuildingStorages(buildingTypeEntity, level);
 
   const unitProductionMultiplier = comps.P_UnitProdMultiplier.getWithKeys(buildingLevelKeys)?.value;
   const nextLevelUnitProductionMultiplier = comps.P_UnitProdMultiplier.getWithKeys(buildingNextLevelKeys)?.value;
@@ -199,8 +203,6 @@ export const getBuildingInfo = (building: Entity) => {
     level,
     maxLevel,
     nextLevel,
-    buildingName: `${getBlockTypeName(buildingTypeEntity)} ${toRomanNumeral(Number(level))}`,
-    imageUri: getBuildingImage(building),
     production,
     storages,
     position,

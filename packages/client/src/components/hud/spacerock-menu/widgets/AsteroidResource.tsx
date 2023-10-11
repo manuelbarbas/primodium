@@ -1,6 +1,6 @@
 import { SecondaryCard } from "src/components/core/Card";
 
-import { RESOURCE_SCALE, ResourceImage, ResourceTypes } from "src/util/constants";
+import { RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
 import { getBlockTypeName } from "src/util/common";
 import { getSpaceRockInfo } from "src/util/spacerock";
 import { Badge } from "src/components/core/Badge";
@@ -30,7 +30,7 @@ export const AsteroidResource: React.FC<{
               image={ResourceImage.get(resource.id) ?? ""}
               resource={resource.id}
               amount={resource.amount}
-              resourceType={ResourceTypes.Resource}
+              resourceType={ResourceType.Resource}
               scale={RESOURCE_SCALE}
               direction="top"
             />

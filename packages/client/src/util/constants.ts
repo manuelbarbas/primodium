@@ -21,7 +21,7 @@ export const SPEED_SCALE = BigInt(100);
 export const RESOURCE_SCALE = BigInt(100);
 export const PIRATE_KEY = "pirate";
 
-export enum ResourceTypes {
+export enum ResourceType {
   Resource,
   ResourceRate,
   Utility,

@@ -3,7 +3,7 @@ import { MUDEnums } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
 import { Hex } from "viem";
-import { EntityType, ResourceTypes, ResourceEnumLookup, SPEED_SCALE } from "./constants";
+import { EntityType, ResourceType, ResourceEnumLookup, SPEED_SCALE } from "./constants";
 import { getNow } from "./time";
 import { getUnitStats } from "./trainUnits";
 import { ERock } from "./web3/types";
@@ -29,14 +29,13 @@ export function getRecipe(rawBuildingType: Entity, level: bigint) {
 
   const resources = requiredResources.resources.map((resource: number, index: number) => ({
     id: MUDEnums.EResource[resource] as Entity,
-    type:
-      comps.P_IsUtility.getWithKeys({ id: resource })?.value == true ? ResourceTypes.Utility : ResourceTypes.Resource,
+    type: comps.P_IsUtility.getWithKeys({ id: resource })?.value == true ? ResourceType.Utility : ResourceType.Resource,
     amount: requiredResources.amounts[index],
   }));
 
   const resourceRate = requiredProduction.resources.map((resource, index) => ({
     id: MUDEnums.EResource[resource] as Entity,
-    type: ResourceTypes.ResourceRate,
+    type: ResourceType.ResourceRate,
     amount: requiredProduction.amounts[index],
   }));
 
@@ -124,13 +123,13 @@ export function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, playerE
     const { resourceCount, resourcesToClaim, production, maxStorage } = resourceAmount;
 
     switch (resource.type) {
-      case ResourceTypes.Resource:
+      case ResourceType.Resource:
         if (resourceCount + resourcesToClaim < resource.amount * count) return false;
         break;
-      case ResourceTypes.ResourceRate:
+      case ResourceType.ResourceRate:
         if (production < resource.amount * count) return false;
         break;
-      case ResourceTypes.Utility:
+      case ResourceType.Utility:
         if (maxStorage - (resourceCount + resourcesToClaim) < resource.amount * count) return false;
         break;
       default:
@@ -147,7 +146,7 @@ export function getRecipeDifference(
 ) {
   const difference = firstRecipe.map((resource) => {
     let amount = resource.amount;
-    if (resource.type == ResourceTypes.Utility) {
+    if (resource.type == ResourceType.Utility) {
       const secondResource = secondRecipe.find((secondResource) => resource.id === secondResource.id);
 
       if (secondResource) {

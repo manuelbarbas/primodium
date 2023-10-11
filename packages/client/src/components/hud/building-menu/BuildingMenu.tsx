@@ -4,7 +4,7 @@ import { Navigator } from "src/components/core/Navigator";
 import { getBuildingName } from "src/util/building";
 import { EntityType } from "src/util/constants";
 import { Basic } from "./screens/Basic";
-// import { BuildingInfo } from "./screens/BuildingInfo";
+import { BuildingInfo } from "./screens/BuildingInfo";
 // import { Demolish } from "./screens/Demolish";
 // import { UnitFactory } from "./screens/UnitFactory";
 import { MainBase } from "./screens/Mainbase";
@@ -68,7 +68,7 @@ export const BuildingMenu: React.FC = () => {
 
       {/* Sub Screens */}
       {/* <Demolish building={selectedBuilding} /> */}
-      {/* <BuildingInfo building={selectedBuilding} /> */}
+      <BuildingInfo building={selectedBuilding} />
       {/* <BuildQueue building={selectedBuilding} /> */}
       {/* <BuildUnit building={selectedBuilding} /> */}
       {/* <UpgradeUnit building={selectedBuilding} /> */}
