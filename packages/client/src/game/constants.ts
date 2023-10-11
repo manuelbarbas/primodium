@@ -239,7 +239,7 @@ export const ResourceToTilesetKey: { [key: number]: ResourceTilekeys } = {
   [EResource.Sulfur]: ResourceTilekeys.Sulfur,
 };
 
-export const EntityIDtoSpriteKey = {
+export const EntitytoSpriteKey = {
   [EntityType.MainBase]: [
     SpriteKeys.Mainbase1,
     SpriteKeys.Mainbase2,

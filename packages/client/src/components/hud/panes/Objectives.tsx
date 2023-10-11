@@ -32,7 +32,7 @@ import {
   BackgroundImage,
   RESOURCE_SCALE,
   ResourceImage,
-  ResourceCategory,
+  ResourceTypes,
   getBlockTypeDescription,
 } from "src/util/constants";
 import { hashAndTrimKeyEntity } from "src/util/encode";
@@ -181,7 +181,7 @@ const Objective: React.FC<{
                     resource={resource.id}
                     amount={resource.amount}
                     resourceType={resource.type}
-                    scale={resource.type === ResourceCategory.Utility ? 1 : RESOURCE_SCALE}
+                    scale={resource.type === ResourceTypes.Utility ? 1 : RESOURCE_SCALE}
                     direction="top"
                   />
                 </Badge>

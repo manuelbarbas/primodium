@@ -3,7 +3,7 @@ import { MUDEnums } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
 import { Hex } from "viem";
-import { EntityType, ResourceCategory, ResourceTypes, SPEED_SCALE } from "./constants";
+import { EntityType, ResourceTypes, ResourceEnumLookup, SPEED_SCALE } from "./constants";
 import { getNow } from "./time";
 import { getUnitStats } from "./trainUnits";
 import { ERock } from "./web3/types";
@@ -30,15 +30,13 @@ export function getRecipe(rawBuildingType: Entity, level: bigint) {
   const resources = requiredResources.resources.map((resource: number, index: number) => ({
     id: MUDEnums.EResource[resource] as Entity,
     type:
-      comps.P_IsUtility.getWithKeys({ id: resource })?.value == true
-        ? ResourceCategory.Utility
-        : ResourceCategory.Resource,
+      comps.P_IsUtility.getWithKeys({ id: resource })?.value == true ? ResourceTypes.Utility : ResourceTypes.Resource,
     amount: requiredResources.amounts[index],
   }));
 
   const resourceRate = requiredProduction.resources.map((resource, index) => ({
     id: MUDEnums.EResource[resource] as Entity,
-    type: ResourceCategory.ResourceRate,
+    type: ResourceTypes.ResourceRate,
     amount: requiredProduction.amounts[index],
   }));
 
@@ -82,16 +80,18 @@ export function getFullResourceCount(resourceID: Entity, playerEntity: Entity) {
   }
 
   const resourceCount =
-    comps.ResourceCount.getWithKeys({ entity: playerEntity as Hex, resource: ResourceTypes[resourceID] })?.value ?? 0n;
+    comps.ResourceCount.getWithKeys({ entity: playerEntity as Hex, resource: ResourceEnumLookup[resourceID] })?.value ??
+    0n;
 
   const maxStorage =
     comps.MaxResourceCount.getWithKeys({
       entity: playerEntity as Hex,
-      resource: ResourceTypes[resourceID],
+      resource: ResourceEnumLookup[resourceID],
     })?.value ?? 0n;
 
   const buildingProduction =
-    comps.ProductionRate.getWithKeys({ entity: playerEntity as Hex, resource: ResourceTypes[resourceID] })?.value ?? 0n;
+    comps.ProductionRate.getWithKeys({ entity: playerEntity as Hex, resource: ResourceEnumLookup[resourceID] })
+      ?.value ?? 0n;
 
   const production = (() => {
     return buildingProduction + motherlodeProduction;
@@ -124,13 +124,13 @@ export function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, playerE
     const { resourceCount, resourcesToClaim, production, maxStorage } = resourceAmount;
 
     switch (resource.type) {
-      case ResourceCategory.Resource:
+      case ResourceTypes.Resource:
         if (resourceCount + resourcesToClaim < resource.amount * count) return false;
         break;
-      case ResourceCategory.ResourceRate:
+      case ResourceTypes.ResourceRate:
         if (production < resource.amount * count) return false;
         break;
-      case ResourceCategory.Utility:
+      case ResourceTypes.Utility:
         if (maxStorage - (resourceCount + resourcesToClaim) < resource.amount * count) return false;
         break;
       default:
@@ -147,7 +147,7 @@ export function getRecipeDifference(
 ) {
   const difference = firstRecipe.map((resource) => {
     let amount = resource.amount;
-    if (resource.type == ResourceCategory.Utility) {
+    if (resource.type == ResourceTypes.Utility) {
       const secondResource = secondRecipe.find((secondResource) => resource.id === secondResource.id);
 
       if (secondResource) {

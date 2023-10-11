@@ -9,7 +9,7 @@ import { safeIndex } from "src/util/array";
 import { Animation, Texture, Outline } from "../../common/object-components/sprite";
 import { ObjectPosition, OnComponentSystem, OnUpdateSystem, SetValue } from "../../common/object-components/common";
 import { getBuildingDimensions, getBuildingTopLeft } from "src/util/building";
-import { Assets, DepthLayers, EntityIDtoAnimationKey, EntityIDtoSpriteKey, SpriteKeys } from "@game/constants";
+import { Assets, DepthLayers, EntityIDtoAnimationKey, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
 import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
 
@@ -107,7 +107,7 @@ export const renderBuilding = (scene: Scene, { network: { playerEntity } }: Setu
 };
 
 function getAssetKeyPair(entityId: Entity, buildingType: Entity) {
-  const sprites = EntityIDtoSpriteKey[buildingType];
+  const sprites = EntitytoSpriteKey[buildingType];
   const animations = EntityIDtoAnimationKey[buildingType];
 
   const level = components.Level.get(entityId)?.value ? parseInt(components.Level.get(entityId)!.value.toString()) : 1;

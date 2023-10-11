@@ -10,7 +10,7 @@ import { Level, MainBase } from "src/network/components/chainComponents";
 import { Account } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
 import { getBlockTypeName } from "src/util/common";
-import { RESOURCE_SCALE, ResourceImage, ResourceCategory } from "src/util/constants";
+import { RESOURCE_SCALE, ResourceImage, ResourceTypes } from "src/util/constants";
 import { ExpansionResearchTree, getResearchInfo } from "src/util/research";
 import { upgradeRange } from "src/util/web3";
 
@@ -58,7 +58,7 @@ export const ExpandRange: React.FC = () => {
                         resource={resource.id}
                         amount={resource.amount}
                         resourceType={resource.type}
-                        scale={resource.type === ResourceCategory.Utility ? 1 : RESOURCE_SCALE}
+                        scale={resource.type === ResourceTypes.Utility ? 1 : RESOURCE_SCALE}
                         direction="top"
                         validate
                       />

@@ -1,21 +1,23 @@
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import React from "react";
 
-import { primodium } from "@game/api";
-import { EntityIDtoSpriteKey } from "@game/constants";
-import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
-import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
-import { Level, P_Production } from "src/network/components/chainComponents";
-import { Account, BlockNumber } from "src/network/components/clientComponents";
-import { formatNumber, getBlockTypeName } from "src/util/common";
-import { RESOURCE_SCALE, ResourceImage, ResourceCategory } from "src/util/constants";
-import { hashAndTrimKeyEntity, hashKeyEntity } from "src/util/encode";
+import { RESOURCE_SCALE, ResourceImage, ResourceTypes, ResourceEntityLookup } from "src/util/constants";
 import { getRecipe } from "src/util/resource";
+import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
+import { formatNumber, getBlockTypeName } from "src/util/common";
+import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
+import { EntitytoSpriteKey } from "@game/constants";
+import { primodium } from "@game/api";
+import { useMud } from "src/hooks";
+import { components } from "src/network/components";
+import { Hex } from "viem";
+import { EResource } from "contracts/config/enums";
 
 export const RecipeDisplay: React.FC<{
-  entity: EntityID;
-}> = ({ entity }) => {
-  const recipe = getRecipe(entity);
+  building: Entity;
+  playerEntity: Entity;
+}> = ({ building, playerEntity }) => {
+  const recipe = getRecipe(building, 1n);
 
   if (recipe.length === 0) return <></>;
 
@@ -28,12 +30,13 @@ export const RecipeDisplay: React.FC<{
           return (
             <ResourceIconTooltip
               key={resource.id + resource.type}
+              playerEntity={playerEntity}
               image={resourceImage}
               resource={resource.id}
               resourceType={resource.type}
               name={resourceName}
               amount={resource.amount}
-              scale={resource.type !== ResourceCategory.Utility ? RESOURCE_SCALE : 1}
+              scale={resource.type !== ResourceTypes.Utility ? RESOURCE_SCALE : 1n}
               validate
               fontSize={"xs"}
             />
@@ -46,25 +49,16 @@ export const RecipeDisplay: React.FC<{
 };
 
 export const BlueprintInfo: React.FC<{
-  buildingType: EntityID;
-}> = ({ buildingType }) => {
+  building: Entity;
+}> = ({ building }) => {
+  const playerEntity = useMud().network.playerEntity;
   const { getSpriteBase64 } = primodium.api().sprite;
-  const player = Account.use()?.value!;
-  const level = Level.use(hashKeyEntity(buildingType, player), {
-    value: 1,
-  })?.value;
-  const buildingLevelEntity = hashAndTrimKeyEntity(buildingType, level);
-  const { avgBlockTime } = BlockNumber.get(undefined, {
-    value: 0,
-    avgBlockTime: 1,
-  });
+  const production = components.P_Production.useWithKeys({ prototype: building as Hex, level: 1n });
+  const productionRate = ((production?.amount ?? 0n) * 60n) / RESOURCE_SCALE;
 
-  const production = P_Production.use(buildingLevelEntity);
-  const productionRate = ((production?.resourceProductionRate ?? 0) * RESOURCE_SCALE * 60) / avgBlockTime;
+  const hasEnough = useHasEnoughResources(getRecipe(building, 1n), playerEntity);
 
-  const hasEnough = useHasEnoughResources(getRecipe(buildingLevelEntity));
-
-  if (!getBlockTypeName(buildingType)) return <></>;
+  if (!getBlockTypeName(building)) return <></>;
 
   return (
     <div className="flex flex-col items-center gap-3">
@@ -76,8 +70,8 @@ export const BlueprintInfo: React.FC<{
             >
               <img
                 src={
-                  EntityIDtoSpriteKey[buildingType] !== undefined
-                    ? getSpriteBase64(EntityIDtoSpriteKey[buildingType][0])
+                  EntitytoSpriteKey[building] !== undefined
+                    ? getSpriteBase64(EntitytoSpriteKey[building][0])
                     : undefined
                 }
                 className={`absolute bottom-0 w-14 pixel-images rounded-md`}
@@ -88,7 +82,10 @@ export const BlueprintInfo: React.FC<{
                 {production && (
                   <>
                     <div className="flex items-center gap-2 text-xs bg-green-800/60 p-1 border border-green-600 rounded-md w-fit">
-                      <img className="inline-block h-4" src={ResourceImage.get(production.resourceID)}></img>
+                      <img
+                        className="inline-block h-4"
+                        src={ResourceImage.get(ResourceEntityLookup[production.resource as EResource])}
+                      ></img>
                       {formatNumber(productionRate)}/MIN
                     </div>
                     <p className="text-[.6rem] opacity-50">OUTPUT</p>
@@ -100,12 +97,12 @@ export const BlueprintInfo: React.FC<{
 
           <div className="flex flex-col items-center gap-2">
             <p className="flex justify-center align-center border border-cyan-700 bg-slate-700 rounded-md p-1 text-sm font-bold w-full text-center">
-              {getBlockTypeName(buildingType)}
+              {getBlockTypeName(building)}
             </p>
             <div className="flex gap-1 w-full">
               {
                 <div className="flex flex-col gap-1 w-18 text-xs w-full">
-                  <RecipeDisplay entity={buildingLevelEntity} />
+                  <RecipeDisplay building={building} playerEntity={playerEntity} />
                 </div>
               }
             </div>

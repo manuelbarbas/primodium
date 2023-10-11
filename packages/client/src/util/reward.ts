@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { components } from "src/network/components";
-import { ResourceCategory } from "./constants";
+import { ResourceTypes } from "./constants";
 
 export function getRewards(entityId: Entity) {
   const { P_ResourceReward, P_UnitReward } = components;
@@ -16,13 +16,13 @@ export function getRewards(entityId: Entity) {
 
   const resourceRewards = rawResourceRewards.resourceIDs.map((resource, index) => ({
     id: resource,
-    type: ResourceCategory.Resource,
+    type: ResourceTypes.Resource,
     amount: rawResourceRewards.requiredAmounts[index],
   }));
 
   const unitRewards = rawUnitRewards.resourceIDs.map((resource, index) => ({
     id: resource,
-    type: ResourceCategory.Utility,
+    type: ResourceTypes.Utility,
     amount: rawUnitRewards.requiredAmounts[index],
   }));
 

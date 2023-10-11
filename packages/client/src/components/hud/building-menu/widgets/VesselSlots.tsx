@@ -11,7 +11,7 @@ import { Level, MainBase } from "src/network/components/chainComponents";
 import { TrainingQueue } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
 import { getBlockTypeName } from "src/util/common";
-import { BackgroundImage, EntityType, RESOURCE_SCALE, ResourceImage, ResourceCategory } from "src/util/constants";
+import { BackgroundImage, EntityType, RESOURCE_SCALE, ResourceImage, ResourceTypes } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
 import { MiningResearchTree, getResearchInfo } from "src/util/research";
 import { getRecipe } from "src/util/resource";
@@ -20,7 +20,7 @@ import { research, train } from "src/util/web3";
 const AddSlot: React.FC<{
   recipe: {
     id: EntityID;
-    type: ResourceCategory;
+    type: ResourceTypes;
     amount: number;
   }[];
   level: number;
@@ -62,7 +62,7 @@ const AddSlot: React.FC<{
                     resource={resource.id}
                     amount={resource.amount}
                     resourceType={resource.type}
-                    scale={resource.type === ResourceCategory.Utility ? 1 : RESOURCE_SCALE}
+                    scale={resource.type === ResourceTypes.Utility ? 1 : RESOURCE_SCALE}
                     direction="top"
                     validate
                   />
@@ -139,7 +139,7 @@ export const VesselSlots: React.FC<{
   building: EntityID;
   player: EntityID;
 }> = ({ building, player }) => {
-  const { resourceCount, resourcesToClaim } = useFullResourceCount(EntityType.VesselCapacity, ResourceCategory.Utility);
+  const { resourceCount, resourcesToClaim } = useFullResourceCount(EntityType.VesselCapacity, ResourceTypes.Utility);
 
   const rawQueue = TrainingQueue.use(building);
 

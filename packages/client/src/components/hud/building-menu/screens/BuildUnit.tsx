@@ -18,7 +18,7 @@ import {
 import { Account } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
 import { getBlockTypeName } from "src/util/common";
-import { BackgroundImage, EntityType, ResourceImage, ResourceCategory } from "src/util/constants";
+import { BackgroundImage, EntityType, ResourceImage, ResourceTypes } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
 import { getRecipe } from "src/util/resource";
 import { getUnitStats, useTrainableUnits } from "src/util/trainUnits";
@@ -154,7 +154,7 @@ export const BuildUnit: React.FC<{
                         resource={EntityType.Housing}
                         name={getBlockTypeName(EntityType.Housing)}
                         amount={requiredHousing * count}
-                        resourceType={ResourceCategory.Utility}
+                        resourceType={ResourceTypes.Utility}
                         fontSize="sm"
                         validate
                       />
