@@ -48,7 +48,7 @@ export const RecipeDisplay: React.FC<{
   );
 };
 
-export const BlueprintInfo: React.FC<{
+export const PrototypeInfo: React.FC<{
   building: Entity;
 }> = ({ building }) => {
   const playerEntity = useMud().network.playerEntity;
