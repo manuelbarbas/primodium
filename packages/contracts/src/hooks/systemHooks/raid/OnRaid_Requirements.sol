@@ -4,17 +4,13 @@ import { addressToEntity } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
-
-import { EBuilding } from "src/Types.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
-import { BuildingKey } from "src/Keys.sol";
-import { LibBuilding } from "libraries/LibBuilding.sol";
-import { LibReduceProductionRate } from "libraries/LibReduceProductionRate.sol";
-import { LibProduction } from "libraries/LibProduction.sol";
+import { LibRaid } from "libraries/LibRaid.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
+import { ESendType, SendArgs, ERock, Arrival } from "src/Types.sol";
 
-contract OnDestroy_ProductionRate is SystemHook {
+contract OnRaid_Requirements is SystemHook {
   constructor() {}
 
   function onBeforeCallSystem(
@@ -23,11 +19,9 @@ contract OnDestroy_ProductionRate is SystemHook {
     bytes memory callData
   ) public {
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
-    PositionData memory coord = abi.decode(args, (PositionData));
-    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
+    bytes32 rockEntity = abi.decode(args, (bytes32));
     bytes32 playerEntity = addressToEntity(msgSender);
-    LibReduceProductionRate.clearProductionRateReduction(playerEntity, buildingEntity);
-    LibProduction.clearResourceProduction(playerEntity, buildingEntity);
+    LibRaid.checkRaidRequirements(playerEntity, rockEntity);
   }
 
   function onAfterCallSystem(

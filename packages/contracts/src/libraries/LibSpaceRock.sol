@@ -12,7 +12,7 @@ library LibSpaceRock {
   /// @notice update space rock
   /// @param playerEntity the player who owns the rock
   /// @param rock the space rock entity to update
-  function updateRock(bytes32 playerEntity, bytes32 rock) public {
+  function updateRock(bytes32 playerEntity, bytes32 rock) internal {
     ERock rockType = ERock(RockType.get(rock));
     require(rockType != ERock.NULL, "[UpdateRockSystem] Rock does not exist");
     LibResource.claimAllResources(playerEntity);
@@ -23,7 +23,7 @@ library LibSpaceRock {
 
   /// @notice update player home rock
   /// @param playerEntity the player whos home rock to update
-  function updateHomeRock(bytes32 playerEntity) public {
+  function updateHomeRock(bytes32 playerEntity) internal {
     bytes32 home = Home.getAsteroid(playerEntity);
     require(uint256(home) != 0, "[UpdateRockSystem] Player does not have a home asteroid");
     updateRock(playerEntity, home);

@@ -19,12 +19,8 @@ library LibInvade {
    * @param rockEntity The identifier of the target rock.
    */
   function invade(bytes32 invader, bytes32 rockEntity) internal {
-    require(RockType.get(rockEntity) == uint8(ERock.Motherlode), "[Invade] Can only invade motherlodes");
-
     bytes32 defender = OwnedBy.get(rockEntity);
     if (defender == 0) return invadeNeutral(invader, rockEntity);
-
-    require(defender != invader, "[Invade] can not invade your own rock");
 
     bytes memory rawBr = SystemCall.callWithHooksOrRevert(
       entityToAddress(invader),
@@ -48,6 +44,12 @@ library LibInvade {
     } else {
       LibReinforce.recallAllReinforcements(invader, rockEntity);
     }
+  }
+
+  function checkInvadeRequirements(bytes32 invader, bytes32 rockEntity) internal {
+    require(RockType.get(rockEntity) == uint8(ERock.Motherlode), "[Invade] Can only invade motherlodes");
+    bytes32 defender = OwnedBy.get(rockEntity);
+    if (defender != 0) require(defender != invader, "[Invade] can not invade your own rock");
   }
 
   /**

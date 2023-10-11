@@ -1,14 +1,23 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { Motherlode, ProductionRate, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_Unit, P_UnitProduction, P_UnitProdMultiplier, LastClaimedAt, RockType } from "codegen/index.sol";
-import { ERock } from "src/Types.sol";
+import { Motherlode, ProductionRate, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_Unit, P_UnitProduction, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
+import { ERock, EUnit } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
+import { UnitKey } from "src/Keys.sol";
 
 library LibUnit {
+  function checkTrainUnitsRequirements(bytes32 buildingEntity, EUnit unit) internal view {
+    require(unit > EUnit.NULL && unit < EUnit.LENGTH, "[TrainUnitsSystem] Unit does not exist");
+    require(
+      canProduceUnit(buildingEntity, P_EnumToPrototype.get(UnitKey, uint8(unit))),
+      "[TrainUnitsSystem] Building cannot produce unit"
+    );
+  }
+
   /// @notice Check if a building can produce a unit
   /// @param buildingEntity Entity ID of the building
   /// @param unitPrototype Unit prototype to check

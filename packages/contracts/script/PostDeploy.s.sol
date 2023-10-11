@@ -54,8 +54,10 @@ import { OnTrainUnits_UpdateRock } from "src/hooks/systemHooks/trainUnits/OnTrai
 import { OnTrainUnits_Requirements } from "src/hooks/systemHooks/trainUnits/OnTrainUnits_Requirements.sol";
 
 import { OnInvade_UpdateRock } from "src/hooks/systemHooks/invade/OnInvade_UpdateRock.sol";
+import { OnInvade_Requirements } from "src/hooks/systemHooks/invade/OnInvade_Requirements.sol";
 
 import { OnRaid_UpdateRock } from "src/hooks/systemHooks/raid/OnRaid_UpdateRock.sol";
+import { OnRaid_Requirements } from "src/hooks/systemHooks/raid/OnRaid_Requirements.sol";
 
 import { OnReinforce_UpdateRock } from "src/hooks/systemHooks/reinforce/OnReinforce_UpdateRock.sol";
 
@@ -199,6 +201,9 @@ contract PostDeploy is Script {
   }
 
   function registerInvade(IWorld world) internal {
+    OnInvade_Requirements onInvade_Requirements = new OnInvade_Requirements();
+    world.registerSystemHook(getSystemResourceId("InvadeSystem"), onInvade_Requirements, BEFORE_CALL_SYSTEM);
+
     OnInvade_UpdateRock onInvade_UpdateRock = new OnInvade_UpdateRock();
     world.grantAccess(ResourceCountTableId, address(onInvade_UpdateRock));
     world.grantAccess(LastClaimedAtTableId, address(onInvade_UpdateRock));
@@ -210,6 +215,9 @@ contract PostDeploy is Script {
   }
 
   function registerRaid(IWorld world) internal {
+    OnRaid_Requirements onRaid_Requirements = new OnRaid_Requirements();
+    world.registerSystemHook(getSystemResourceId("RaidSystem"), onRaid_Requirements, BEFORE_CALL_SYSTEM);
+
     OnRaid_UpdateRock onRaid_UpdateRock = new OnRaid_UpdateRock();
     world.grantAccess(ResourceCountTableId, address(onRaid_UpdateRock));
     world.grantAccess(LastClaimedAtTableId, address(onRaid_UpdateRock));
