@@ -1,19 +1,20 @@
+import { useCallback, memo, useState } from "react";
 import { EntityID } from "@latticexyz/recs";
-import { memo, useCallback, useState } from "react";
 
-import { SingletonID } from "@latticexyz/network";
-import { Button } from "src/components/core/Button";
-import { SecondaryCard } from "src/components/core/Card";
-import { IconLabel } from "src/components/core/IconLabel";
-import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
-import { useMud } from "src/hooks";
-import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
-import { Level, MainBase } from "src/network/components/chainComponents";
-import { Account } from "src/network/components/clientComponents";
-import { getBlockTypeName } from "src/util/common";
 import { ResearchImage, ResourceImage } from "src/util/constants";
-import { ResearchItemType, getResearchInfo } from "src/util/research";
+import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
+import { ResearchItemType } from "src/util/research";
 import { research } from "src/util/web3";
+import { Level, MainBase } from "src/network/components/chainComponents";
+import { SingletonID } from "@latticexyz/network";
+import { useMud } from "src/hooks";
+import { getBlockTypeName } from "src/util/common";
+import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
+import { getResearchInfo } from "src/util/research";
+import { Account } from "src/network/components/clientComponents";
+import { SecondaryCard } from "src/components/core/Card";
+import { Button } from "src/components/core/Button";
+import { IconLabel } from "src/components/core/IconLabel";
 
 export const ResearchItem: React.FC<{ data: ResearchItemType }> = memo(({ data }) => {
   // fetch whether research is completed
@@ -85,7 +86,7 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = memo(({ data }
                 <ResourceIconTooltip
                   key={resource.id}
                   image={resourceImage}
-                  resource={resource.id}
+                  resourceId={resource.id}
                   name={resourceName}
                   amount={resource.amount}
                   fontSize="xs"

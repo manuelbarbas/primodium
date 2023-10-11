@@ -128,6 +128,22 @@ export const getBuildingName = (building: Entity) => {
   return `${getBlockTypeName(buildingType)} ${toRomanNumeral(Number(level))}`;
 };
 
+export const getBuildingImage = (building: Entity) => {
+  const buildingType = comps.BuildingType.get(building)?.value as Entity;
+  const level = comps.Level.get(building)?.value ?? 1n;
+  const { getSpriteBase64 } = primodium.api().sprite;
+
+  if (EntitytoSpriteKey[buildingType]) {
+    const imageIndex = parseInt(level ? level.toString() : "1") - 1;
+
+    return getSpriteBase64(
+      EntitytoSpriteKey[buildingType][clampedIndex(imageIndex, EntitytoSpriteKey[buildingType].length)]
+    );
+  }
+
+  return "";
+};
+
 export const getBuildingStorages = (building: Hex, level: bigint) => {
   const resourceStorages = MUDEnums.EResource.map((resource, i) => {
     const storage = comps.P_ByLevelMaxResourceUpgrades.getWithKeys({ prototype: building, level, resource: i })?.value;
@@ -149,7 +165,6 @@ export const getBuildingStorages = (building: Hex, level: bigint) => {
 };
 
 export const getBuildingInfo = (building: Entity) => {
-  const { getSpriteBase64 } = primodium.api().sprite;
   const buildingType = (comps.BuildingType.get(building)?.value ?? singletonEntity) as Hex;
   const buildingTypeEntity = buildingType as Entity;
 
@@ -177,15 +192,6 @@ export const getBuildingInfo = (building: Entity) => {
 
   const mainBaseLvlReq = comps.P_RequiredBaseLevel.getWithKeys(buildingNextLevelKeys)?.value ?? 1;
 
-  let imageUri = "";
-  if (EntitytoSpriteKey[buildingType]) {
-    const imageIndex = parseInt(level ? level.toString() : "1") - 1;
-
-    imageUri = getSpriteBase64(
-      EntitytoSpriteKey[buildingType][clampedIndex(imageIndex, EntitytoSpriteKey[buildingType].length)]
-    );
-  }
-
   const position = comps.Position.get(building) ?? { x: 0, y: 0 };
 
   return {
@@ -194,7 +200,7 @@ export const getBuildingInfo = (building: Entity) => {
     maxLevel,
     nextLevel,
     buildingName: `${getBlockTypeName(buildingTypeEntity)} ${toRomanNumeral(Number(level))}`,
-    imageUri,
+    imageUri: getBuildingImage(building),
     production,
     storages,
     position,

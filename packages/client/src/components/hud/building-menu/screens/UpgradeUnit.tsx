@@ -11,7 +11,7 @@ import {
 import { EntityID } from "@latticexyz/recs";
 import { BuildingType } from "src/network/components/chainComponents";
 import { useMemo } from "react";
-import { EntityType } from "src/util/constants";
+import { BlockType } from "src/util/constants";
 
 export const UpgradeUnit: React.FC<{ building: EntityID }> = ({ building }) => {
   const buildingType = useMemo(() => {
@@ -23,7 +23,7 @@ export const UpgradeUnit: React.FC<{ building: EntityID }> = ({ building }) => {
   return (
     <Navigator.Screen title="UpgradeUnit" className="flex items-center">
       <div className="grid grid-cols-2 w-full mb-2 gap-1">
-        {EntityType.DroneFactory === buildingType && (
+        {BlockType.DroneFactory === buildingType && (
           <>
             <ResearchItem data={AnvilDroneUpgradeTree} />
             <ResearchItem data={HammerDroneUpgradeTree} />
@@ -31,7 +31,7 @@ export const UpgradeUnit: React.FC<{ building: EntityID }> = ({ building }) => {
             <ResearchItem data={AegisDroneUpgradeTree} />
           </>
         )}
-        {EntityType.Workshop === buildingType && (
+        {BlockType.Workshop === buildingType && (
           <>
             <ResearchItem data={MinutemanMarineUpgradeTree} />
             <ResearchItem data={TridentMarineUpgradeTree} />

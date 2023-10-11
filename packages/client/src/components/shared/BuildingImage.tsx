@@ -1,24 +1,15 @@
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { getBuildingInfo } from "src/util/building";
+import { getBuildingImage } from "src/util/building";
 
-export const BuildingImage: React.FC<{ building: EntityID }> = ({
-  building,
-}) => {
-  const buildingInfo = useMemo(() => {
-    return getBuildingInfo(building);
-  }, [building]);
-
-  if (!buildingInfo) return null;
+export const BuildingImage: React.FC<{ building: Entity }> = ({ building }) => {
+  const imageUri = useMemo(() => getBuildingImage(building), [building]);
 
   return (
     <div
       className={`relative flex flex-col text-sm items-center cursor-pointer min-w-[4rem] h-12 border rounded border-cyan-400`}
     >
-      <img
-        src={buildingInfo.imageUri}
-        className={`absolute bottom-0 w-14 pixel-images rounded-md`}
-      />
+      <img src={imageUri} className={`absolute bottom-0 w-14 pixel-images rounded-md`} />
     </div>
   );
 };

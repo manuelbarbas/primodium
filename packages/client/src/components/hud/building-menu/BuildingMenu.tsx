@@ -1,28 +1,27 @@
 import { useEffect, useMemo } from "react";
-import { FaTrash } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
-import { BuildingType } from "src/network/components/chainComponents";
-import { SelectedBuilding } from "src/network/components/clientComponents";
 import { getBuildingName } from "src/util/building";
 import { EntityType } from "src/util/constants";
 import { Basic } from "./screens/Basic";
-import { BuildQueue } from "./screens/BuildQueue";
-import { BuildUnit } from "./screens/BuildUnit";
-import { BuildingInfo } from "./screens/BuildingInfo";
-import { Demolish } from "./screens/Demolish";
+// import { BuildingInfo } from "./screens/BuildingInfo";
+// import { Demolish } from "./screens/Demolish";
+// import { UnitFactory } from "./screens/UnitFactory";
 import { MainBase } from "./screens/Mainbase";
-import { MiningVessels } from "./screens/MiningVessels";
-import { UnitFactory } from "./screens/UnitFactory";
-import { UpgradeUnit } from "./screens/UpgradeUnit";
+// import { BuildQueue } from "./screens/BuildQueue";
+// import { BuildUnit } from "./screens/BuildUnit";
+// import { UpgradeUnit } from "./screens/UpgradeUnit";
+import { FaTrash } from "react-icons/fa";
+import { components } from "src/network/components";
+// import { MiningVessels } from "./screens/MiningVessels";
 
 export const BuildingMenu: React.FC = () => {
-  const selectedBuilding = SelectedBuilding.use()?.value;
+  const selectedBuilding = components.SelectedBuilding.use()?.value;
 
   const buildingType = useMemo(() => {
     if (!selectedBuilding) return;
 
-    return BuildingType.get(selectedBuilding)?.value;
+    return components.BuildingType.get(selectedBuilding)?.value;
   }, [selectedBuilding]);
 
   const buildingName = useMemo(() => {
@@ -34,7 +33,7 @@ export const BuildingMenu: React.FC = () => {
   useEffect(() => {
     const removeSelectedBuildingOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        SelectedBuilding.remove();
+        components.SelectedBuilding.remove();
       }
     };
 
@@ -51,10 +50,10 @@ export const BuildingMenu: React.FC = () => {
     switch (buildingType) {
       case EntityType.MainBase:
         return <MainBase building={selectedBuilding} />;
-      case EntityType.DroneFactory:
-        return <UnitFactory building={selectedBuilding} />;
-      case EntityType.Workshop:
-        return <UnitFactory building={selectedBuilding} />;
+      // case EntityType.DroneFactory:
+      //   return <UnitFactory building={selectedBuilding} />;
+      // case EntityType.Workshop:
+      //   return <UnitFactory building={selectedBuilding} />;
       default:
         return <Basic building={selectedBuilding} />;
     }
@@ -68,17 +67,17 @@ export const BuildingMenu: React.FC = () => {
       {renderScreen()}
 
       {/* Sub Screens */}
-      <Demolish building={selectedBuilding} />
-      <BuildingInfo building={selectedBuilding} />
-      <BuildQueue building={selectedBuilding} />
-      <BuildUnit building={selectedBuilding} />
-      <UpgradeUnit building={selectedBuilding} />
-      <MiningVessels building={selectedBuilding} />
+      {/* <Demolish building={selectedBuilding} /> */}
+      {/* <BuildingInfo building={selectedBuilding} /> */}
+      {/* <BuildQueue building={selectedBuilding} /> */}
+      {/* <BuildUnit building={selectedBuilding} /> */}
+      {/* <UpgradeUnit building={selectedBuilding} /> */}
+      {/* <MiningVessels building={selectedBuilding} /> */}
 
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2">
         <Button
           className="btn-square btn-sm font-bold border border-secondary"
-          onClick={() => SelectedBuilding.remove()}
+          onClick={() => components.SelectedBuilding.remove()}
         >
           x
         </Button>

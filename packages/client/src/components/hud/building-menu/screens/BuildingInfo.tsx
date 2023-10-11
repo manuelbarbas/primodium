@@ -5,7 +5,7 @@ import { Navigator } from "src/components/core/Navigator";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 import { useBuildingInfo } from "src/hooks/useBuildingInfo";
 import { getBlockTypeName } from "src/util/common";
-import { ResourceImage, ResourceTypes, RESOURCE_SCALE } from "src/util/constants";
+import { ResourceImage, ResourceType, RESOURCE_SCALE } from "src/util/constants";
 
 const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (
@@ -45,9 +45,9 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({ building }) => 
               <ResourceIconTooltip
                 name={getBlockTypeName(production.resourceID)}
                 image={ResourceImage.get(production.resourceID) ?? ""}
-                resource={production.resourceID}
+                resourceId={production.resourceID}
                 amount={production.resourceProductionRate}
-                resourceType={ResourceTypes.ResourceRate}
+                resourceType={ResourceType.ResourceRate}
               />
             </Badge>
           </DataLabel>
@@ -59,9 +59,9 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({ building }) => 
                 <ResourceIconTooltip
                   name={getBlockTypeName(upgrade.production.resourceID)}
                   image={ResourceImage.get(upgrade.production.resourceID) ?? ""}
-                  resource={upgrade.production.resourceID}
+                  resourceId={upgrade.production.resourceID}
                   amount={upgrade.production.resourceProductionRate}
-                  resourceType={ResourceTypes.ResourceRate}
+                  resourceType={ResourceType.ResourceRate}
                 />
               </Badge>
             )}
@@ -91,10 +91,10 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({ building }) => 
                   <ResourceIconTooltip
                     name={getBlockTypeName(storage.resourceId)}
                     image={ResourceImage.get(storage.resourceId) ?? ""}
-                    resource={storage.resourceId}
+                    resourceId={storage.resourceId}
                     amount={storage.amount}
                     resourceType={storage.resourceType}
-                    scale={storage.resourceType === ResourceTypes.Utility ? 1 : RESOURCE_SCALE}
+                    scale={storage.resourceType === ResourceType.Utility ? 1 : RESOURCE_SCALE}
                     direction="top"
                   />
                 </Badge>
@@ -111,10 +111,10 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({ building }) => 
                     <ResourceIconTooltip
                       name={getBlockTypeName(storage.resourceId)}
                       image={ResourceImage.get(storage.resourceId) ?? ""}
-                      resource={storage.resourceId}
+                      resourceId={storage.resourceId}
                       amount={storage.amount}
                       resourceType={storage.resourceType}
-                      scale={storage.resourceType === ResourceTypes.Utility ? 1 : RESOURCE_SCALE}
+                      scale={storage.resourceType === ResourceType.Utility ? 1 : RESOURCE_SCALE}
                       direction="top"
                     />
                   </Badge>

@@ -1,13 +1,13 @@
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import { Navigator } from "src/components/core/Navigator";
 import { Header } from "../widgets/Header";
-import { Upgrade } from "../widgets/Upgrade";
+// import { Upgrade } from "../widgets/Upgrade";
 
-export const Basic: React.FC<{ building: EntityID }> = ({ building }) => {
+export const Basic: React.FC<{ building: Entity }> = ({ building }) => {
   return (
     <Navigator.Screen title={building}>
       <Header building={building} />
-      <Upgrade building={building} />
+      {/* <Upgrade building={building} /> */}
     </Navigator.Screen>
   );
 };
