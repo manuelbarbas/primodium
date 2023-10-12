@@ -28,9 +28,3 @@ struct SendArgs {
   PositionData destinationPosition;
   bytes32 to;
 }
-
-struct MyPosition {
-  int32 x;
-  int32 y;
-  bytes32 parrent;
-}
