@@ -45,13 +45,14 @@ contract SpawnSystemTest is PrimodiumTest {
   function testBuildMainBase() public {
     bytes32 asteroid = spawn(creator);
     vm.startPrank(creator);
-    P_AsteroidData memory maxRange = P_Asteroid.get();
-    PositionData memory calculatedPosition = PositionData(maxRange.xBounds / 2, maxRange.yBounds / 2, asteroid);
-    logPosition(calculatedPosition);
-    bytes32 buildingEntity = LibEncode.getHash(BuildingKey, calculatedPosition);
+    // P_AsteroidData memory maxRange = P_Asteroid.get();
+    // PositionData memory calculatedPosition = PositionData(maxRange.xBounds / 2, maxRange.yBounds / 2, asteroid);
+    // logPosition(calculatedPosition);
 
-    PositionData memory position = Position.get(world, buildingEntity);
     PositionData memory coord = Position.get(world, MainBasePrototypeId);
+    coord.parent = asteroid;
+    bytes32 buildingEntity = LibEncode.getHash(BuildingKey, coord);
+    PositionData memory position = Position.get(world, buildingEntity);
     assertEq(position.x, coord.x, "x values differ");
     assertEq(position.y, coord.y, "y values differ");
 
