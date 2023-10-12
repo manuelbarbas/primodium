@@ -5,7 +5,6 @@ import encodeBytes32 from "../../config/util/encodeBytes32";
 export const upgradesByLevel = (name: string, upgrades: Record<number, Record<string, number>>) =>
   Object.entries(upgrades).reduce((prev, [level, upgrades]) => {
     const name32 = encodeBytes32(name);
-    console.log(`${name}:${name32}`);
     const upgradesObject = Object.entries(upgrades).reduce((prev, [resource, max]) => {
       prev[`${name}${resource}L${level}Upgrade`] = {
         keys: [{ [name32]: "bytes32" }, { [MUDEnums.EResource.indexOf(resource)]: "uint8" }, { [level]: "uint32" }],
