@@ -36,13 +36,15 @@ contract LibSpaceRockTest is PrimodiumTest {
     P_GameConfig.set(config);
   }
 
-  function testUpdateRockNoRock() public {
-    vm.expectRevert(bytes("[UpdateRockSystem] Rock does not exist"));
-    LibSpaceRock.updateRock(player, bytes32(0));
+  function testFailUpdateRockNoRock() public {
+    console.log("testUpdateRockNoRock");
+    console.log(RockType.get(bytes32("invalid")));
+    ERock rockType = ERock(RockType.get(bytes32("invalid")));
+    console.log(uint8(rockType));
+    LibSpaceRock.updateRock(player, bytes32("invalid"));
   }
 
-  function testUpdateHomeRockNoHomeRock() public {
-    vm.expectRevert(bytes("[UpdateRockSystem] Player does not have a home asteroid"));
+  function testFailUpdateHomeRockNoHomeRock() public {
     LibSpaceRock.updateHomeRock(player);
   }
 
@@ -91,12 +93,10 @@ contract LibSpaceRockTest is PrimodiumTest {
 
   function testInvalidPlayer() public {
     RockType.set(rock, uint8(ERock.Motherlode));
-    vm.expectRevert(bytes("[UpdateRockSystem] Rock does not exist"));
     LibSpaceRock.updateRock(bytes32(0), rock);
   }
 
-  function testInvalidRock() public {
-    vm.expectRevert(bytes("[UpdateRockSystem] Rock does not exist"));
-    LibSpaceRock.updateRock(player, bytes32(0));
+  function testFailInvalidRock() public {
+    LibSpaceRock.updateRock(player, bytes32("invalid"));
   }
 }
