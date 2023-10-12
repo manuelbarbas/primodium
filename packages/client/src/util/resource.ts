@@ -27,14 +27,14 @@ export function getRecipe(rawBuildingType: Entity, level: bigint) {
     }
   );
 
-  const resources = requiredResources.resources.map((resource: number, index: number) => ({
-    id: ResourceEntityLookup[resource as EResource],
+  const resources = requiredResources.resources.map((resource: EResource, index: number) => ({
+    id: ResourceEntityLookup[resource],
     type: comps.P_IsUtility.getWithKeys({ id: resource })?.value == true ? ResourceType.Utility : ResourceType.Resource,
     amount: requiredResources.amounts[index],
   }));
 
-  const resourceRate = requiredProduction.resources.map((resource, index) => ({
-    id: ResourceEntityLookup[resource as EResource],
+  const resourceRate = requiredProduction.resources.map((resource: EResource, index: number) => ({
+    id: ResourceEntityLookup[resource],
     type: ResourceType.ResourceRate,
     amount: requiredProduction.amounts[index],
   }));
@@ -45,9 +45,9 @@ export function getRecipe(rawBuildingType: Entity, level: bigint) {
 export const mineableResources = [EntityType.Titanium, EntityType.Iridium, EntityType.Platinum, EntityType.Kimberlite];
 
 export function getMotherlodeResource(entity: Entity) {
-  const resource = comps.Motherlode.get(entity)?.motherlodeType;
+  const resource = comps.Motherlode.get(entity)?.motherlodeType as EResource;
   if (!resource || resource > MUDEnums.EResource.length) return MUDEnums.EResource[0] as Entity;
-  return ResourceEntityLookup[resource as EResource];
+  return ResourceEntityLookup[resource];
 }
 
 export function getFullResourceCount(resourceID: Entity, playerEntity: Entity) {
