@@ -10,17 +10,17 @@ import { ERock } from "./web3/types";
 
 // building a building requires resources
 // fetch directly from component data
-export function getRecipe(rawBuildingType: Entity, level: bigint) {
-  const buildingType = rawBuildingType as Hex;
+export function getRecipe(rawEntityType: Entity, level: bigint) {
+  const entityType = rawEntityType as Hex;
   const requiredResources = comps.P_RequiredResources.getWithKeys(
-    { prototype: buildingType, level: level },
+    { prototype: entityType, level: level },
     {
       resources: [],
       amounts: [],
     }
   );
   const requiredProduction = comps.P_RequiredDependencies.getWithKeys(
-    { prototype: buildingType, level: level },
+    { prototype: entityType, level: level },
     {
       resources: [],
       amounts: [],

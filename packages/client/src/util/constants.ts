@@ -131,6 +131,7 @@ export const EntityType = {
   MinutemanMarine: toHex32("unit.MinutemanMarine") as Entity,
   TridentMarine: toHex32("unit.TridentMarine") as Entity,
 
+  Expansion: toHex32("Expansion") as Entity,
   ExpansionResearch1: encodeEntityLevel("Expansion", 1) as Entity,
   ExpansionResearch2: encodeEntityLevel("Expansion", 2) as Entity,
   ExpansionResearch3: encodeEntityLevel("Expansion", 3) as Entity,

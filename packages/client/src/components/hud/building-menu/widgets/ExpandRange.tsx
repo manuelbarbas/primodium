@@ -1,42 +1,34 @@
-import { SingletonID } from "@latticexyz/network";
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import { Badge } from "src/components/core/Badge";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
-import { Level, MainBase } from "src/network/components/chainComponents";
-import { Account } from "src/network/components/clientComponents";
-import { useGameStore } from "src/store/GameStore";
+import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
-import { ResourceImage, ResourceType, RESOURCE_SCALE } from "src/util/constants";
-import { ExpansionResearchTree, getResearchInfo } from "src/util/research";
-import { upgradeRange } from "src/util/web3";
+import { ResourceImage, ResourceType, RESOURCE_SCALE, EntityType } from "src/util/constants";
+import { getUpgradeInfo } from "src/util/upgrade";
 
 export const ExpandRange: React.FC = () => {
-  const network = useMud();
-  const transactionLoading = useGameStore((state) => state.transactionLoading);
-  const { levels } = ExpansionResearchTree;
-  const player = Account.use()?.value ?? SingletonID;
-  const mainBaseEntity = MainBase.use(player, {
-    value: "-1" as EntityID,
-  }).value;
-  const mainBaseLevel = Level.use(mainBaseEntity, {
-    value: 0,
+  const { network } = useMud();
+  const playerEntity = network.playerEntity;
+  const mainBaseEntity = components.Home.use(playerEntity)?.mainBase as Entity;
+  const mainBaseLevel = components.Level.use(mainBaseEntity, {
+    value: 1n,
   }).value;
 
-  const { level, maxLevel, mainBaseLvlReq, recipe } = getResearchInfo(ExpansionResearchTree, player);
+  const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = getUpgradeInfo(EntityType.Expansion, playerEntity);
 
-  const hasEnough = useHasEnoughResources(recipe);
-  const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && level < maxLevel;
+  const hasEnough = useHasEnoughResources(recipe, playerEntity);
+  const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && !isResearched;
 
   let error = "";
   if (!hasEnough) {
     error = "Not enough resources";
   } else if (mainBaseLevel < mainBaseLvlReq) {
     error = `Mainbase lvl. ${mainBaseLvlReq} required`;
-  } else if (level >= maxLevel) {
+  } else if (isResearched) {
     error = "reached max expansion";
   }
 
@@ -54,11 +46,12 @@ export const ExpandRange: React.FC = () => {
                     <Badge key={resource.id + resource.type} className="text-xs gap-2">
                       <ResourceIconTooltip
                         name={getBlockTypeName(resource.id)}
+                        playerEntity={playerEntity}
                         image={ResourceImage.get(resource.id) ?? ""}
-                        resourceId={resource.id}
+                        resource={resource.id}
                         amount={resource.amount}
                         resourceType={resource.type}
-                        scale={resource.type === ResourceType.Utility ? 1 : RESOURCE_SCALE}
+                        scale={resource.type === ResourceType.Utility ? 1n : RESOURCE_SCALE}
                         direction="top"
                         validate
                       />
@@ -72,9 +65,9 @@ export const ExpandRange: React.FC = () => {
         <Button
           className="w-fit btn-secondary btn-sm"
           disabled={!canUpgrade}
-          loading={transactionLoading}
+          // loading={transactionLoading}
           onClick={() => {
-            upgradeRange(network);
+            // upgradeRange(network);
           }}
         >
           Expand
@@ -82,14 +75,16 @@ export const ExpandRange: React.FC = () => {
       </div>
       {error && <p className="animate-pulse text-error text-xs uppercase mt-2">{error}</p>}
       <div className="flex gap-1 mt-1">
-        {levels.map((_, index) => {
-          return (
-            <div
-              key={index}
-              className={`w-2 h-2 rounded-full ${level - 1 >= index ? "bg-green-600" : "bg-slate-500"}`}
-            />
-          );
-        })}
+        {Array(Number(maxLevel))
+          .fill(0n)
+          .map((_, index) => {
+            return (
+              <div
+                key={index}
+                className={`w-2 h-2 rounded-full ${level - 1n >= index ? "bg-green-600" : "bg-slate-500"}`}
+              />
+            );
+          })}
       </div>
     </SecondaryCard>
   );

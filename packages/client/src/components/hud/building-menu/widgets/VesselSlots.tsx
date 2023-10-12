@@ -13,7 +13,7 @@ import { useGameStore } from "src/store/GameStore";
 import { getBlockTypeName } from "src/util/common";
 import { ResourceType, ResourceImage, RESOURCE_SCALE, BlockType, BackgroundImage } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
-import { getResearchInfo, MiningResearchTree } from "src/util/research";
+import { getUpgradeInfo, MiningResearchTree } from "src/util/upgrade";
 import { getRecipe } from "src/util/resource";
 import { research, train } from "src/util/web3";
 
@@ -147,7 +147,7 @@ export const VesselSlots: React.FC<{
     return rawQueue ? convertTrainingQueue(rawQueue) : [];
   }, [rawQueue]);
 
-  const { level, maxLevel, recipe, id, mainBaseLvlReq } = getResearchInfo(MiningResearchTree, player);
+  const { level, maxLevel, recipe, id, mainBaseLvlReq } = getUpgradeInfo(MiningResearchTree, player);
 
   const miningVesselCount = resourceCount + resourcesToClaim - queue.length;
   const addSlots = maxLevel - level;

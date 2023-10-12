@@ -10,7 +10,7 @@ import { Hex } from "viem";
 import { clampedIndex, getBlockTypeName, toRomanNumeral } from "./common";
 import { ResourceEntityLookup, ResourceType } from "./constants";
 import { outOfBounds } from "./outOfBounds";
-import { getRecipe, getRecipeDifference } from "./resource";
+import { getRecipe } from "./resource";
 import { getBuildingAtCoord, getResourceKey } from "./tile";
 import { EntitytoSpriteKey } from "@game/constants";
 

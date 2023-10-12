@@ -3,14 +3,14 @@ import { EntityID } from "@latticexyz/recs";
 
 import { ResearchImage, ResourceImage } from "src/util/constants";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
-import { ResearchItemType } from "src/util/research";
+import { ResearchItemType } from "src/util/upgrade";
 import { research } from "src/util/web3";
 import { Level, MainBase } from "src/network/components/chainComponents";
 import { SingletonID } from "@latticexyz/network";
 import { useMud } from "src/hooks";
 import { getBlockTypeName } from "src/util/common";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
-import { getResearchInfo } from "src/util/research";
+import { getUpgradeInfo } from "src/util/upgrade";
 import { Account } from "src/network/components/clientComponents";
 import { SecondaryCard } from "src/components/core/Card";
 import { Button } from "src/components/core/Button";
@@ -21,7 +21,7 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = memo(({ data }
   const network = useMud();
   const player = Account.use()?.value ?? SingletonID;
   const { name, levels } = data;
-  const { level, mainBaseLvlReq, maxLevel, recipe } = getResearchInfo(data, player);
+  const { level, mainBaseLvlReq, maxLevel, recipe } = getUpgradeInfo(data, player);
 
   const mainBaseEntity = MainBase.use(player, {
     value: "-1" as EntityID,

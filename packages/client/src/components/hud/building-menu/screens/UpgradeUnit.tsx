@@ -7,7 +7,7 @@ import {
   TridentMarineUpgradeTree,
   MinutemanMarineUpgradeTree,
   StingerDroneUpgradeTree,
-} from "src/util/research";
+} from "src/util/upgrade";
 import { EntityID } from "@latticexyz/recs";
 import { BuildingType } from "src/network/components/chainComponents";
 import { useMemo } from "react";
