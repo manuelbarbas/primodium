@@ -1,5 +1,4 @@
-import { SingletonID } from "@latticexyz/network";
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import { Badge } from "src/components/core/Badge";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
@@ -7,23 +6,18 @@ import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
 import { useBuildingInfo } from "src/hooks/useBuildingInfo";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
-import { Level, MainBase } from "src/network/components/chainComponents";
-import { Account } from "src/network/components/clientComponents";
-import { useGameStore } from "src/store/GameStore";
+import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { ResourceImage, ResourceType, RESOURCE_SCALE } from "src/util/constants";
-import { upgradeBuilding } from "src/util/web3";
+import { upgradeBuilding } from "src/util/web3/contractCalls/upgradeBuilding";
 
-export const Upgrade: React.FC<{ building: EntityID }> = ({ building }) => {
-  const network = useMud();
-  const transactionLoading = useGameStore((state) => state.transactionLoading);
+export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
+  const { network } = useMud();
+  const playerEntity = network.playerEntity;
 
-  const player = Account.use()?.value ?? SingletonID;
-  const mainBaseEntity = MainBase.use(player, {
-    value: "-1" as EntityID,
-  }).value;
-  const mainBaseLevel = Level.use(mainBaseEntity, {
-    value: 0,
+  const mainBaseEntity = components.Home.use(playerEntity)?.mainBase as Entity;
+  const mainBaseLevel = components.Level.use(mainBaseEntity, {
+    value: 1n,
   }).value;
 
   const {
@@ -33,7 +27,7 @@ export const Upgrade: React.FC<{ building: EntityID }> = ({ building }) => {
     upgrade: { recipe, mainBaseLvlReq },
   } = useBuildingInfo(building);
 
-  const hasEnough = useHasEnoughResources(recipe);
+  const hasEnough = useHasEnoughResources(recipe, playerEntity);
   const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && level < maxLevel;
 
   let error = "";
@@ -59,11 +53,12 @@ export const Upgrade: React.FC<{ building: EntityID }> = ({ building }) => {
                     <Badge key={resource.id + resource.type} className="text-xs gap-2">
                       <ResourceIconTooltip
                         name={getBlockTypeName(resource.id)}
+                        playerEntity={playerEntity}
                         image={ResourceImage.get(resource.id) ?? ""}
-                        resourceId={resource.id}
+                        resource={resource.id}
                         amount={resource.amount}
                         resourceType={resource.type}
-                        scale={resource.type === ResourceType.Utility ? 1 : RESOURCE_SCALE}
+                        scale={resource.type === ResourceType.Utility ? 1n : RESOURCE_SCALE}
                         direction="top"
                         validate
                       />
@@ -78,20 +73,20 @@ export const Upgrade: React.FC<{ building: EntityID }> = ({ building }) => {
           className="w-fit btn-secondary btn-sm"
           disabled={!canUpgrade}
           onClick={() => upgradeBuilding(position, network)}
-          loading={transactionLoading}
+          // loading={transactionLoading}
         >
           Upgrade
         </Button>
       </div>
       {error && <p className="animate-pulse text-error text-xs uppercase mt-2">{error}</p>}
       <div className="flex gap-1 mt-1">
-        {Array(maxLevel)
-          .fill(0)
+        {Array(Number(maxLevel))
+          .fill(0n)
           .map((_, index) => {
             return (
               <div
                 key={index}
-                className={`w-2 h-2 rounded-full ${level - 1 >= index ? "bg-green-600" : "bg-slate-500"}`}
+                className={`w-2 h-2 rounded-full ${level - 1n >= index ? "bg-green-600" : "bg-slate-500"}`}
               />
             );
           })}

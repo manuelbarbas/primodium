@@ -176,7 +176,7 @@ export const getBuildingInfo = (building: Entity) => {
   let nextLevel = level + 1n;
 
   const maxLevel = comps.P_MaxLevel.getWithKeys({ prototype: buildingType })?.value ?? 1n;
-  nextLevel = maxLevel > nextLevel ? maxLevel : nextLevel;
+  nextLevel = nextLevel > maxLevel ? maxLevel : nextLevel;
 
   const buildingLevelKeys = { prototype: buildingType, level: level };
   const buildingNextLevelKeys = { prototype: buildingType, level: nextLevel };
@@ -189,10 +189,7 @@ export const getBuildingInfo = (building: Entity) => {
   const unitProductionMultiplier = comps.P_UnitProdMultiplier.getWithKeys(buildingLevelKeys)?.value;
   const nextLevelUnitProductionMultiplier = comps.P_UnitProdMultiplier.getWithKeys(buildingNextLevelKeys)?.value;
 
-  const upgradeRecipe = getRecipeDifference(
-    getRecipe(buildingTypeEntity, level),
-    getRecipe(buildingTypeEntity, nextLevel)
-  );
+  const upgradeRecipe = getRecipe(buildingTypeEntity, nextLevel);
 
   const mainBaseLvlReq = comps.P_RequiredBaseLevel.getWithKeys(buildingNextLevelKeys)?.value ?? 1;
 

@@ -1,9 +1,9 @@
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
-import { MUDEnums } from "contracts/config/enums";
+import { EResource, MUDEnums } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
 import { Hex } from "viem";
-import { EntityType, ResourceType, ResourceEnumLookup, SPEED_SCALE } from "./constants";
+import { EntityType, ResourceType, ResourceEnumLookup, SPEED_SCALE, ResourceEntityLookup } from "./constants";
 import { getNow } from "./time";
 import { getUnitStats } from "./trainUnits";
 import { ERock } from "./web3/types";
@@ -28,13 +28,13 @@ export function getRecipe(rawBuildingType: Entity, level: bigint) {
   );
 
   const resources = requiredResources.resources.map((resource: number, index: number) => ({
-    id: MUDEnums.EResource[resource] as Entity,
+    id: ResourceEntityLookup[resource as EResource],
     type: comps.P_IsUtility.getWithKeys({ id: resource })?.value == true ? ResourceType.Utility : ResourceType.Resource,
     amount: requiredResources.amounts[index],
   }));
 
   const resourceRate = requiredProduction.resources.map((resource, index) => ({
-    id: MUDEnums.EResource[resource] as Entity,
+    id: ResourceEntityLookup[resource as EResource],
     type: ResourceType.ResourceRate,
     amount: requiredProduction.amounts[index],
   }));
@@ -47,7 +47,7 @@ export const mineableResources = [EntityType.Titanium, EntityType.Iridium, Entit
 export function getMotherlodeResource(entity: Entity) {
   const resource = comps.Motherlode.get(entity)?.motherlodeType;
   if (!resource || resource > MUDEnums.EResource.length) return MUDEnums.EResource[0] as Entity;
-  return MUDEnums.EResource[resource] as Entity;
+  return ResourceEntityLookup[resource as EResource];
 }
 
 export function getFullResourceCount(resourceID: Entity, playerEntity: Entity) {
@@ -100,13 +100,13 @@ export function getFullResourceCount(resourceID: Entity, playerEntity: Entity) {
 
   const resourcesToClaimFromBuilding = (() => {
     const toClaim = ((getNow() - playerLastClaimed) * buildingProduction * SPEED_SCALE) / worldSpeed;
-    // if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
+    if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
     return toClaim;
   })();
 
   const resourcesToClaim = (() => {
     const toClaim = resourcesToClaimFromBuilding;
-    // if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
+    if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
     return toClaim;
   })();
 
