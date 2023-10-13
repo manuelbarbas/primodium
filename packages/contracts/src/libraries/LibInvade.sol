@@ -38,14 +38,19 @@ library LibInvade {
     );
 
     if (invader == br.winner) {
+      LibReinforce.recallAllReinforcements(defender, rockEntity);
       MotherlodeSet.add(invader, rockEntity);
       MotherlodeSet.remove(defender, rockEntity);
       OwnedBy.set(rockEntity, invader);
-    } else {
-      LibReinforce.recallAllReinforcements(invader, rockEntity);
     }
   }
 
+  /**
+   * @dev Checks the requirements for initiating an invasion.
+   * @param invader The identifier of the invader.
+   * @param rockEntity The identifier of the target rock.
+   * @notice Ensures that the target rock is a motherlode and not owned by the invader.
+   */
   function checkInvadeRequirements(bytes32 invader, bytes32 rockEntity) internal {
     require(RockType.get(rockEntity) == uint8(ERock.Motherlode), "[Invade] Can only invade motherlodes");
     bytes32 defender = OwnedBy.get(rockEntity);

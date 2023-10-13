@@ -72,23 +72,32 @@ library LibResource {
     }
   }
 
+  /**
+   * @dev Spends a specified amount of a resource by a player entity.
+   * @param playerEntity The identifier of the player entity.
+   * @param entity The identifier of the entity from which resources are spent.
+   * @param resource The type of the resource to be spent.
+   * @param resourceCost The amount of the resource to be spent.
+   * @notice Ensures that the player has enough of the specified resource and updates resource counts accordingly.
+   */
   function spendResource(
     bytes32 playerEntity,
     bytes32 entity,
     uint8 resource,
     uint256 resourceCost
   ) internal {
-    // check if player has enough resources
+    // Check if the player has enough resources.
     uint256 playerResourceCount = ResourceCount.get(playerEntity, resource);
     require(resourceCost <= playerResourceCount, "[SpendResources] Not enough resources to spend");
 
-    // add total utility usage to building
+    // If the spent resource is a utility, add its cost to the total utility usage of the entity.
     if (P_IsUtility.get(resource)) {
       uint256 prevUtilityUsage = UtilitySet.get(entity, resource);
-      // add to the total building utility usage
+      // Add the resourceCost to the total building utility usage.
       UtilitySet.set(entity, resource, prevUtilityUsage + resourceCost);
     }
-    // spend resources. note: this will also decrease available utilities
+
+    // Spend resources. This will decrease the available resources for the player.
     LibStorage.decreaseStoredResource(playerEntity, resource, resourceCost);
   }
 

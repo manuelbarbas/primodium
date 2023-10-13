@@ -91,6 +91,10 @@ contract PostDeploy is Script {
     vm.stopBroadcast();
   }
 
+  /**
+   * @dev Register system hooks for the build actions.
+   * @param world The World contract instance.
+   */
   function registerBuildHooks(IWorld world) internal {
     OnBuild_Requirements onBuild_Requirements = new OnBuild_Requirements();
     world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_Requirements, BEFORE_CALL_SYSTEM);
@@ -118,6 +122,10 @@ contract PostDeploy is Script {
     world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_ProductionRate, AFTER_CALL_SYSTEM);
   }
 
+  /**
+   * @dev Register system hooks for the upgrade actions.
+   * @param world The World contract instance.
+   */
   function registerUpgradeHooks(IWorld world) internal {
     OnUpgrade_Requirements onUpgrade_Requirements = new OnUpgrade_Requirements();
     world.registerSystemHook(getSystemResourceId("UpgradeBuildingSystem"), onUpgrade_Requirements, BEFORE_CALL_SYSTEM);
@@ -138,6 +146,10 @@ contract PostDeploy is Script {
     world.registerSystemHook(getSystemResourceId("UpgradeBuildingSystem"), onUpgrade_SpendResources, AFTER_CALL_SYSTEM);
   }
 
+  /**
+   * @dev Register system hooks for the destroy actions.
+   * @param world The World contract instance.
+   */
   function registerDestroyHooks(IWorld world) internal {
     OnDestroy_Requirements onDestroy_Requirements = new OnDestroy_Requirements();
     world.registerSystemHook(getSystemResourceId("DestroySystem"), onDestroy_Requirements, BEFORE_CALL_SYSTEM);
@@ -162,6 +174,10 @@ contract PostDeploy is Script {
     world.registerSystemHook(getSystemResourceId("DestroySystem"), onDestroy_RemoveFromTiles, AFTER_CALL_SYSTEM);
   }
 
+  /**
+   * @dev Register system hooks for sending units.
+   * @param world The World contract instance.
+   */
   function registerSendUnits(IWorld world) internal {
     OnSendUnits_Requirements onSendUnits_Requirements = new OnSendUnits_Requirements();
     world.registerSystemHook(getSystemResourceId("SendUnitsSystem"), onSendUnits_Requirements, BEFORE_CALL_SYSTEM);
@@ -180,6 +196,10 @@ contract PostDeploy is Script {
     world.registerSystemHook(getSystemResourceId("SendUnitsSystem"), onSendUnits_UpdateRock, AFTER_CALL_SYSTEM);
   }
 
+  /**
+   * @dev Register system hooks for training units.
+   * @param world The World contract instance.
+   */
   function registerTrainUnits(IWorld world) internal {
     OnTrainUnits_Requirements onTrainUnits_Requirements = new OnTrainUnits_Requirements();
     world.registerSystemHook(getSystemResourceId("TrainUnitsSystem"), onTrainUnits_Requirements, BEFORE_CALL_SYSTEM);
@@ -200,6 +220,10 @@ contract PostDeploy is Script {
     world.registerSystemHook(getSystemResourceId("TrainUnitsSystem"), onTrainUnits_SpendResources, BEFORE_CALL_SYSTEM);
   }
 
+  /**
+   * @dev Register system hooks for invading actions.
+   * @param world The World contract instance.
+   */
   function registerInvade(IWorld world) internal {
     OnInvade_Requirements onInvade_Requirements = new OnInvade_Requirements();
     world.registerSystemHook(getSystemResourceId("InvadeSystem"), onInvade_Requirements, BEFORE_CALL_SYSTEM);
@@ -214,6 +238,10 @@ contract PostDeploy is Script {
     world.registerSystemHook(getSystemResourceId("InvadeSystem"), onInvade_UpdateRock, BEFORE_CALL_SYSTEM);
   }
 
+  /**
+   * @dev Register system hooks for raid actions.
+   * @param world The World contract instance.
+   */
   function registerRaid(IWorld world) internal {
     OnRaid_Requirements onRaid_Requirements = new OnRaid_Requirements();
     world.registerSystemHook(getSystemResourceId("RaidSystem"), onRaid_Requirements, BEFORE_CALL_SYSTEM);
@@ -228,6 +256,10 @@ contract PostDeploy is Script {
     world.registerSystemHook(getSystemResourceId("RaidSystem"), onRaid_UpdateRock, BEFORE_CALL_SYSTEM);
   }
 
+  /**
+   * @dev Register system hooks for reinforcing actions.
+   * @param world The World contract instance.
+   */
   function registerReinforce(IWorld world) internal {
     OnReinforce_UpdateRock onReinforce_UpdateRock = new OnReinforce_UpdateRock();
     world.grantAccess(ResourceCountTableId, address(onReinforce_UpdateRock));

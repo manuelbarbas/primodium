@@ -20,6 +20,11 @@ import { Bounds, EBuilding, EResource } from "src/Types.sol";
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 
 library LibBuilding {
+  /**
+   * @dev Checks if the requirements for destroying a building are met.
+   * @param playerEntity The entity ID of the player.
+   * @param coord The coordinate of the building to be destroyed.
+   */
   function checkDestroyRequirements(bytes32 playerEntity, PositionData memory coord) internal view {
     bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
@@ -28,6 +33,12 @@ library LibBuilding {
     require(OwnedBy.get(buildingEntity) == playerEntity, "[Destroy] : only owner can destroy building");
   }
 
+  /**
+   * @dev Checks if the requirements for building a new building are met.
+   * @param playerEntity The entity ID of the player.
+   * @param buildingType The type of building to be constructed.
+   * @param coord The coordinate where the building should be placed.
+   */
   function checkBuildRequirements(
     bytes32 playerEntity,
     EBuilding buildingType,
@@ -50,6 +61,11 @@ library LibBuilding {
     require(LibBuilding.canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
   }
 
+  /**
+   * @dev Checks if the requirements for building a new building are met.
+   * @param playerEntity The entity ID of the player.
+   * @param coord The coordinate where the building should be placed.
+   */
   function checkUpgradeRequirements(bytes32 playerEntity, PositionData memory coord) internal view {
     bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
     require(buildingEntity != 0, "[UpgradeBuildingSystem] no building at this coordinate");

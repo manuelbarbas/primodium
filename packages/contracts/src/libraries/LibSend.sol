@@ -8,17 +8,30 @@ import { LibMath } from "libraries/LibMath.sol";
 import { SendArgs } from "src/Types.sol";
 
 library LibSend {
+  /**
+   * @dev Updates the unit count when units are sent from a specified origin by a player entity.
+   * @param playerEntity The identifier of the player entity.
+   * @param sendArgs The SendArgs struct containing information about the sent units.
+   * @notice Checks the availability of units, deducts the sent units, and ensures that at least one unit was sent.
+   */
   function updateUnitCountOnSend(bytes32 playerEntity, SendArgs memory sendArgs) internal {
+    // Calculate the origin based on the provided coordinates.
     bytes32 origin = ReversePosition.get(sendArgs.originPosition.x, sendArgs.originPosition.y);
     bool anyUnitsSent = false;
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+
+    // Iterate through unit prototypes and check the sent unit counts.
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (sendArgs.unitCounts[i] == 0) continue;
       uint256 count = UnitCount.get(playerEntity, origin, unitPrototypes[i]);
+      // Ensure that there are enough units to send.
       require(count >= sendArgs.unitCounts[i], "[SendUnits] Not enough units to send");
+      // Deduct the sent units from the unit count.
       UnitCount.set(playerEntity, origin, unitPrototypes[i], count - sendArgs.unitCounts[i]);
       anyUnitsSent = true;
     }
+
+    // Ensure that at least one unit was sent.
     require(anyUnitsSent, "[SendUnits] No units sent");
   }
 

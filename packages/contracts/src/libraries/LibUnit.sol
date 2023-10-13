@@ -10,12 +10,21 @@ import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProd
 import { UnitKey } from "src/Keys.sol";
 
 library LibUnit {
+  /**
+   * @dev Checks the requirements for training (producing) a specific unit in a building.
+   * @param buildingEntity The identifier of the building where the unit is being trained.
+   * @param unit The type of unit to be trained.
+   * @notice Checks if the unit exists and if the building can produce the specified unit.
+   */
   function checkTrainUnitsRequirements(bytes32 buildingEntity, EUnit unit) internal view {
+    // Ensure the unit is valid (within the defined range of unit types).
     require(unit > EUnit.NULL && unit < EUnit.LENGTH, "[TrainUnitsSystem] Unit does not exist");
-    require(
-      canProduceUnit(buildingEntity, P_EnumToPrototype.get(UnitKey, uint8(unit))),
-      "[TrainUnitsSystem] Building cannot produce unit"
-    );
+
+    // Determine the prototype of the unit based on its unit key.
+    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
+
+    // Check if the building can produce the specified unit based on its prototype.
+    require(canProduceUnit(buildingEntity, unitPrototype), "[TrainUnitsSystem] Building cannot produce unit");
   }
 
   /// @notice Check if a building can produce a unit
