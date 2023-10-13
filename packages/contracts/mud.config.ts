@@ -422,6 +422,48 @@ export const config = mudConfig({
       keySchema: { entity: "bytes32" },
       valueSchema: "uint256",
     },
+    /* ------------------------------ Objectives ----------------------------- */
+
+    P_RequiredObjectives: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: {
+        // mud doesnt recognize EObjective arrays so we will manually convert them
+        objectives: "uint8[]",
+      },
+    },
+
+    CompletedObjective: {
+      keySchema: { entity: "bytes32", objective: "uint8" },
+      valueSchema: "bool",
+    },
+
+    UnitReward: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: {
+        // mud doesnt recognize EUnit arrays so we will manually convert them
+        unitTypes: "uint8[]",
+        amounts: "uint256[]",
+      },
+    },
+
+    ResourceReward: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: {
+        // mud doesnt recognize EResource arrays so we will manually convert them
+        resources: "uint8[]",
+        amounts: "uint256[]",
+      },
+    },
+
+    P_HasBuiltBuildings: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: "uint8[]",
+    },
+
+    HasBuiltBuilding: {
+      keySchema: { entity: "bytes32", buildingType: "uint8" },
+      valueSchema: "bool",
+    },
   },
 });
 
