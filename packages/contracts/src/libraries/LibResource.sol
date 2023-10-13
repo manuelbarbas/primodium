@@ -41,12 +41,17 @@ library LibResource {
   /// @notice claims all resources beforehand
   /// @param playerEntity Entity ID of the player
   /// @param prototype Unit Prototype
-  function spendUnitRequiredResources(bytes32 playerEntity, bytes32 prototype) internal {
+  /// @param count Quantity of units to be trained
+  function spendUnitRequiredResources(
+    bytes32 playerEntity,
+    bytes32 prototype,
+    uint256 count
+  ) internal {
     uint256 level = UnitLevel.get(playerEntity, prototype);
     claimAllResources(playerEntity);
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(prototype, level);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
-      spendResource(playerEntity, prototype, requiredResources.resources[i], requiredResources.amounts[i]);
+      spendResource(playerEntity, prototype, requiredResources.resources[i], requiredResources.amounts[i] * count);
     }
   }
 
@@ -67,23 +72,32 @@ library LibResource {
     }
   }
 
+  /**
+   * @dev Spends a specified amount of a resource by a player entity.
+   * @param playerEntity The identifier of the player entity.
+   * @param entity The identifier of the entity from which resources are spent.
+   * @param resource The type of the resource to be spent.
+   * @param resourceCost The amount of the resource to be spent.
+   * @notice Ensures that the player has enough of the specified resource and updates resource counts accordingly.
+   */
   function spendResource(
     bytes32 playerEntity,
     bytes32 entity,
     uint8 resource,
     uint256 resourceCost
   ) internal {
-    // check if player has enough resources
+    // Check if the player has enough resources.
     uint256 playerResourceCount = ResourceCount.get(playerEntity, resource);
     require(resourceCost <= playerResourceCount, "[SpendResources] Not enough resources to spend");
 
-    // add total utility usage to building
+    // If the spent resource is a utility, add its cost to the total utility usage of the entity.
     if (P_IsUtility.get(resource)) {
       uint256 prevUtilityUsage = UtilitySet.get(entity, resource);
-      // add to the total building utility usage
+      // Add the resourceCost to the total building utility usage.
       UtilitySet.set(entity, resource, prevUtilityUsage + resourceCost);
     }
-    // spend resources. note: this will also decrease available utilities
+
+    // Spend resources. This will decrease the available resources for the player.
     LibStorage.decreaseStoredResource(playerEntity, resource, resourceCost);
   }
 
@@ -91,7 +105,13 @@ library LibResource {
   /// @param playerEntity ID of the player to claim
   function claimAllResources(bytes32 playerEntity) internal {
     uint256 lastClaimed = LastClaimedAt.get(playerEntity);
-    if (lastClaimed == 0 || lastClaimed == block.timestamp) return;
+    if (lastClaimed == block.timestamp) return;
+
+    if (lastClaimed == 0) {
+      LastClaimedAt.set(playerEntity, block.timestamp);
+      return;
+    }
+
     uint256 timeSinceClaimed = block.timestamp - lastClaimed;
     LastClaimedAt.set(playerEntity, block.timestamp);
     for (uint8 i = 1; i < uint8(EResource.LENGTH); i++) {

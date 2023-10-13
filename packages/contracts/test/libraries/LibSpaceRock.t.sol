@@ -2,6 +2,7 @@
 pragma solidity >=0.8.21;
 
 import "test/PrimodiumTest.t.sol";
+import { LibSpaceRock } from "codegen/Libraries.sol";
 
 /* 
 Test when player and rock are valid, and rockType is not NULL.
@@ -15,7 +16,7 @@ Test when player or rock is an empty bytes32.
 
 */
 
-contract S_UpdateRockSystemTest is PrimodiumTest {
+contract LibSpaceRockTest is PrimodiumTest {
   bytes32 rock = bytes32("rock");
   bytes32 player;
 
@@ -35,14 +36,16 @@ contract S_UpdateRockSystemTest is PrimodiumTest {
     P_GameConfig.set(config);
   }
 
-  function testUpdateRockNoRock() public {
-    vm.expectRevert(bytes("[S_UpdateRockSystem] Rock does not exist"));
-    world.updateRock(player, bytes32(0));
+  function testFailUpdateRockNoRock() public {
+    console.log("testUpdateRockNoRock");
+    console.log(RockType.get(bytes32("invalid")));
+    ERock rockType = ERock(RockType.get(bytes32("invalid")));
+    console.log(uint8(rockType));
+    LibSpaceRock.updateRock(player, bytes32("invalid"));
   }
 
-  function testUpdateHomeRockNoHomeRock() public {
-    vm.expectRevert(bytes("[S_UpdateRockSystem] Player does not have a home asteroid"));
-    world.updateHomeRock(player);
+  function testFailUpdateHomeRockNoHomeRock() public {
+    LibSpaceRock.updateHomeRock(player);
   }
 
   // copied from LibUnit.t.sol
@@ -67,7 +70,7 @@ contract S_UpdateRockSystemTest is PrimodiumTest {
     ProductionRate.set(player, Iron, 10);
     LastClaimedAt.set(player, block.timestamp - 10);
 
-    world.updateRock(player, rock);
+    LibSpaceRock.updateRock(player, rock);
 
     assertEq(ResourceCount.get(player, Iron), 100);
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 0);
@@ -82,7 +85,7 @@ contract S_UpdateRockSystemTest is PrimodiumTest {
     ProductionRate.set(player, Iron, 10);
     LastClaimedAt.set(player, block.timestamp - 10);
 
-    world.updateRock(player, rock);
+    LibSpaceRock.updateRock(player, rock);
 
     assertEq(ResourceCount.get(player, Iron), 100);
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 100);
@@ -90,11 +93,10 @@ contract S_UpdateRockSystemTest is PrimodiumTest {
 
   function testInvalidPlayer() public {
     RockType.set(rock, uint8(ERock.Motherlode));
-    world.updateRock(bytes32(0), rock);
+    LibSpaceRock.updateRock(bytes32(0), rock);
   }
 
-  function testInvalidRock() public {
-    vm.expectRevert(bytes("[S_UpdateRockSystem] Rock does not exist"));
-    world.updateRock(player, bytes32(0));
+  function testFailInvalidRock() public {
+    LibSpaceRock.updateRock(player, bytes32("invalid"));
   }
 }

@@ -7,8 +7,6 @@ import { LibReinforce } from "codegen/Libraries.sol";
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 
-import { S_UpdateRockSystem } from "systems/subsystems/S_UpdateRockSystem.sol";
-
 import { OwnedBy } from "codegen/index.sol";
 
 contract ReinforceSystem is PrimodiumSystem {
@@ -21,12 +19,6 @@ contract ReinforceSystem is PrimodiumSystem {
     bytes32 playerEntity = addressToEntity(_msgSender());
 
     require(OwnedBy.get(rockEntity) == playerEntity, "[Reinforce] Rock not owned by sender");
-    SystemCall.callWithHooksOrRevert(
-      entityToAddress(playerEntity),
-      getSystemResourceId("S_UpdateRockSystem"),
-      abi.encodeCall(S_UpdateRockSystem.updateRock, (playerEntity, rockEntity)),
-      0
-    );
 
     LibReinforce.reinforce(playerEntity, rockEntity, arrival);
   }

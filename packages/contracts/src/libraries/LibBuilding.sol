@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
+import { addressToEntity, entityToAddress, getSystemResourceId, bytes32ToString } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 // tables
-import { Home, P_RequiredTile, P_ProducesUnits, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/index.sol";
+import { P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_ProducesUnits, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/index.sol";
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -13,16 +13,80 @@ import { LibProduction } from "libraries/LibProduction.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 
-import { S_SpendResourcesSystem } from "systems/subsystems/S_SpendResourcesSystem.sol";
-import { S_MaxStorageSystem } from "systems/subsystems/S_MaxStorageSystem.sol";
-import { S_ReduceProductionRateSystem } from "systems/subsystems/S_ReduceProductionRateSystem.sol";
-import { S_ResourceProductionSystem } from "systems/subsystems/S_ResourceProductionSystem.sol";
-
 // types
 import { BuildingKey, BuildingTileKey, ExpansionKey } from "src/Keys.sol";
 import { Bounds, EBuilding, EResource } from "src/Types.sol";
 
+import { MainBasePrototypeId } from "codegen/Prototypes.sol";
+
 library LibBuilding {
+  /**
+   * @dev Checks if the requirements for destroying a building are met.
+   * @param playerEntity The entity ID of the player.
+   * @param coord The coordinate of the building to be destroyed.
+   */
+  function checkDestroyRequirements(bytes32 playerEntity, PositionData memory coord) internal view {
+    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
+    bytes32 buildingPrototype = BuildingType.get(buildingEntity);
+
+    require(buildingPrototype != MainBasePrototypeId, "[Destroy] Cannot destroy main base");
+    require(OwnedBy.get(buildingEntity) == playerEntity, "[Destroy] : only owner can destroy building");
+  }
+
+  /**
+   * @dev Checks if the requirements for building a new building are met.
+   * @param playerEntity The entity ID of the player.
+   * @param buildingType The type of building to be constructed.
+   * @param coord The coordinate where the building should be placed.
+   */
+  function checkBuildRequirements(
+    bytes32 playerEntity,
+    EBuilding buildingType,
+    PositionData memory coord
+  ) internal view {
+    bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
+    require(Spawned.get(playerEntity), "[BuildSystem] Player has not spawned");
+    require(buildingType > EBuilding.NULL && buildingType < EBuilding.LENGTH, "[BuildSystem] Invalid building type");
+    require(buildingType != EBuilding.MainBase, "[BuildSystem] Cannot build more than one main base per wallet");
+    require(
+      coord.parent == Home.getAsteroid(playerEntity),
+      "[BuildSystem] Building must be built on your home asteroid"
+    );
+
+    require(!Spawned.get(getBuildingFromCoord(coord)), "[BuildSystem] Building already exists");
+    require(
+      LibBuilding.hasRequiredBaseLevel(playerEntity, buildingPrototype, 1),
+      "[BuildSystem] MainBase level requirement not met"
+    );
+    require(LibBuilding.canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
+  }
+
+  /**
+   * @dev Checks if the requirements for building a new building are met.
+   * @param playerEntity The entity ID of the player.
+   * @param coord The coordinate where the building should be placed.
+   */
+  function checkUpgradeRequirements(bytes32 playerEntity, PositionData memory coord) internal view {
+    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
+    require(buildingEntity != 0, "[UpgradeBuildingSystem] no building at this coordinate");
+
+    uint256 targetLevel = Level.get(buildingEntity) + 1;
+    require(targetLevel > 1, "[UpgradeBuildingSystem] Cannot upgrade a non-building");
+    require(
+      OwnedBy.get(buildingEntity) == playerEntity,
+      "[UpgradeBuildingSystem] Cannot upgrade a building that is not owned by you"
+    );
+
+    bytes32 buildingPrototype = BuildingType.get(buildingEntity);
+    uint256 maxLevel = P_MaxLevel.get(buildingPrototype);
+    require((targetLevel <= maxLevel), "[UpgradeBuildingSystem] Building has reached max level");
+
+    require(
+      LibBuilding.hasRequiredBaseLevel(playerEntity, buildingPrototype, targetLevel),
+      "[UpgradeBuildingSystem] MainBase level requirement not met"
+    );
+  }
+
   /// @notice Builds a building at a specified coordinate
   /// @param playerEntity The entity ID of the player
   /// @param buildingPrototype The type of building to construct
@@ -34,58 +98,15 @@ library LibBuilding {
     PositionData memory coord
   ) internal returns (bytes32 buildingEntity) {
     buildingEntity = LibEncode.getHash(BuildingKey, coord);
-    require(!Spawned.get(buildingEntity), "[BuildSystem] Building already exists");
 
-    require(
-      coord.parent == Home.getAsteroid(playerEntity),
-      "[BuildSystem] Building must be built on your home asteroid"
-    );
-
-    require(
-      hasRequiredBaseLevel(playerEntity, buildingPrototype, 1),
-      "[BuildSystem] MainBase level requirement not met"
-    );
-
-    require(canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
-
+    Position.set(buildingEntity, coord);
     Spawned.set(buildingEntity, true);
     BuildingType.set(buildingEntity, buildingPrototype);
     Level.set(buildingEntity, 1);
-    Position.set(buildingEntity, coord);
     LastClaimedAt.set(buildingEntity, block.timestamp);
     OwnedBy.set(buildingEntity, playerEntity);
 
-    placeBuildingTiles(playerEntity, buildingEntity, buildingPrototype, coord);
-
     address playerAddress = entityToAddress(playerEntity);
-
-    SystemCall.callWithHooksOrRevert(
-      playerAddress,
-      getSystemResourceId("S_SpendResourcesSystem"),
-      abi.encodeCall(S_SpendResourcesSystem.spendBuildingRequiredResources, (buildingEntity, 1)),
-      0
-    );
-
-    SystemCall.callWithHooksOrRevert(
-      entityToAddress(playerEntity),
-      getSystemResourceId("S_MaxStorageSystem"),
-      abi.encodeCall(S_MaxStorageSystem.increaseMaxStorage, (playerEntity, buildingEntity, 1)),
-      0
-    );
-
-    SystemCall.callWithHooksOrRevert(
-      entityToAddress(playerEntity),
-      getSystemResourceId("S_ReduceProductionRateSystem"),
-      abi.encodeCall(S_ReduceProductionRateSystem.reduceProductionRate, (playerEntity, buildingEntity, 1)),
-      0
-    );
-
-    SystemCall.callWithHooksOrRevert(
-      entityToAddress(playerEntity),
-      getSystemResourceId("S_ResourceProductionSystem"),
-      abi.encodeCall(S_ResourceProductionSystem.upgradeResourceProduction, (playerEntity, buildingEntity, 1)),
-      0
-    );
 
     if (P_ProducesUnits.get(buildingPrototype)) {
       UnitFactorySet.add(playerEntity, buildingEntity);
@@ -94,15 +115,14 @@ library LibBuilding {
 
   /// @notice Places building tiles for a constructed building
   /// @param playerEntity The entity ID of the player
-  /// @param buildingEntity The entity ID of the building
   /// @param buildingPrototype The type of building to construct
   /// @param position The coordinate where the building should be placed
   function placeBuildingTiles(
     bytes32 playerEntity,
-    bytes32 buildingEntity,
     bytes32 buildingPrototype,
     PositionData memory position
   ) public {
+    bytes32 buildingEntity = LibEncode.getHash(BuildingKey, position);
     int32[] memory blueprint = P_Blueprint.get(buildingPrototype);
     Bounds memory bounds = getPlayerBounds(playerEntity);
 
@@ -117,6 +137,17 @@ library LibBuilding {
       tiles[i / 2] = placeBuildingTile(buildingEntity, bounds, absoluteCoord);
     }
     Children.set(buildingEntity, tiles);
+  }
+
+  function removeBuildingTiles(PositionData memory coord) internal {
+    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
+
+    bytes32[] memory children = Children.get(buildingEntity);
+    for (uint256 i = 0; i < children.length; i++) {
+      require(OwnedBy.get(children[i]) != 0, "[Destroy] Cannot destroy unowned coordinate");
+      OwnedBy.deleteRecord(children[i]);
+    }
+    Children.deleteRecord(buildingEntity);
   }
 
   /// @notice Places a single building tile at a coordinate
