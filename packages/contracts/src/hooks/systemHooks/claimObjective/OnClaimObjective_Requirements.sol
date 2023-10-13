@@ -10,6 +10,7 @@ import { EBuilding } from "src/Types.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { BuildingKey } from "src/Keys.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
+import { LibObjective } from "libraries/LibObjective.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
 
@@ -29,11 +30,11 @@ contract OnClaimObjective_Requirements is SystemHook {
   ) public {
     // Decode the coordinates from the callData
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
-    PositionData memory coord = abi.decode(args, (PositionData));
+    uint8 memory objective = abi.decode(args, (uint8));
 
     // Get the player's entity and check destroy requirements
     bytes32 playerEntity = addressToEntity(msgSender);
-    LibBuilding.checkDestroyRequirements(playerEntity, coord);
+    LibObjective.checkObjectiveRequirements(playerEntity, P_EnumToPrototype.get(ObjectiveKey, objective));
   }
 
   /**

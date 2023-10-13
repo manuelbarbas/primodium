@@ -61,6 +61,8 @@ import { OnRaid_Requirements } from "src/hooks/systemHooks/raid/OnRaid_Requireme
 
 import { OnReinforce_UpdateRock } from "src/hooks/systemHooks/reinforce/OnReinforce_UpdateRock.sol";
 
+import { OnClaimObjective_Requirements } from "src/hooks/systemHooks/claimObjective/OnClaimObjective_Requirements.sol";
+
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
 
 contract PostDeploy is Script {
@@ -269,5 +271,14 @@ contract PostDeploy is Script {
     world.grantAccess(UnitCountTableId, address(onReinforce_UpdateRock));
     world.grantAccess(ProductionRateTableId, address(onReinforce_UpdateRock));
     world.registerSystemHook(getSystemResourceId("ReinforceSystem"), onReinforce_UpdateRock, BEFORE_CALL_SYSTEM);
+  }
+
+  function registerClaimObjective(IWorld world) internal {
+    OnClaimObjective_Requirements onClaimObjective_Requirements = new OnClaimObjective_Requirements();
+    world.registerSystemHook(
+      getSystemResourceId("ClaimObjectiveSystem"),
+      onClaimObjective_Requirements,
+      BEFORE_CALL_SYSTEM
+    );
   }
 }
