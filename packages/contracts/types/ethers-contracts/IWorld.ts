@@ -97,9 +97,6 @@ export interface IWorldInterface extends utils.Interface {
     "build(uint8,(int32,int32,bytes32))": FunctionFragment;
     "call(bytes32,bytes)": FunctionFragment;
     "callFrom(address,bytes32,bytes)": FunctionFragment;
-    "clearMaxStorageIncrease(bytes32,bytes32)": FunctionFragment;
-    "clearProductionRateReduction(bytes32,bytes32)": FunctionFragment;
-    "clearResourceProduction(bytes32,bytes32)": FunctionFragment;
     "creator()": FunctionFragment;
     "deleteRecord(bytes32,bytes32[])": FunctionFragment;
     "destroy((int32,int32,bytes32))": FunctionFragment;
@@ -128,7 +125,6 @@ export interface IWorldInterface extends utils.Interface {
     "getStaticField(bytes32,bytes32[],uint8,bytes32)": FunctionFragment;
     "getValueSchema(bytes32)": FunctionFragment;
     "grantAccess(bytes32,address)": FunctionFragment;
-    "increaseMaxStorage(bytes32,bytes32,uint256)": FunctionFragment;
     "increment()": FunctionFragment;
     "initialize(address)": FunctionFragment;
     "installModule(address,bytes)": FunctionFragment;
@@ -139,7 +135,6 @@ export interface IWorldInterface extends utils.Interface {
     "raid(bytes32)": FunctionFragment;
     "recall(bytes32,bytes32)": FunctionFragment;
     "recallAll(bytes32)": FunctionFragment;
-    "reduceProductionRate(bytes32,bytes32,uint256)": FunctionFragment;
     "registerDelegation(address,bytes32,bytes)": FunctionFragment;
     "registerFunctionSelector(bytes32,string)": FunctionFragment;
     "registerNamespace(bytes32)": FunctionFragment;
@@ -158,8 +153,6 @@ export interface IWorldInterface extends utils.Interface {
     "setRecord(bytes32,bytes32[],bytes,bytes32,bytes)": FunctionFragment;
     "setStaticField(bytes32,bytes32[],uint8,bytes,bytes32)": FunctionFragment;
     "spawn()": FunctionFragment;
-    "spendBuildingRequiredResources(bytes32,uint256)": FunctionFragment;
-    "spendUnitRequiredResources(bytes32,bytes32)": FunctionFragment;
     "spliceDynamicData(bytes32,bytes32[],uint8,uint40,uint40,bytes)": FunctionFragment;
     "spliceStaticData(bytes32,bytes32[],uint48,bytes)": FunctionFragment;
     "storeVersion()": FunctionFragment;
@@ -169,12 +162,9 @@ export interface IWorldInterface extends utils.Interface {
     "transferOwnership(bytes32,address)": FunctionFragment;
     "unregisterStoreHook(bytes32,address)": FunctionFragment;
     "unregisterSystemHook(bytes32,address)": FunctionFragment;
-    "updateHomeRock(bytes32)": FunctionFragment;
-    "updateRock(bytes32,bytes32)": FunctionFragment;
     "updateUnitsAfterBattle((bytes32,bytes32,bytes32,bytes32,uint256,uint256,uint256[],uint256[],uint256[],uint256[]),uint8)": FunctionFragment;
     "upgradeBuilding((int32,int32,bytes32))": FunctionFragment;
     "upgradeRange()": FunctionFragment;
-    "upgradeResourceProduction(bytes32,bytes32,uint256)": FunctionFragment;
     "upgradeUnit(uint8)": FunctionFragment;
     "worldVersion()": FunctionFragment;
   };
@@ -187,9 +177,6 @@ export interface IWorldInterface extends utils.Interface {
       | "build"
       | "call"
       | "callFrom"
-      | "clearMaxStorageIncrease"
-      | "clearProductionRateReduction"
-      | "clearResourceProduction"
       | "creator"
       | "deleteRecord"
       | "destroy"
@@ -218,7 +205,6 @@ export interface IWorldInterface extends utils.Interface {
       | "getStaticField"
       | "getValueSchema"
       | "grantAccess"
-      | "increaseMaxStorage"
       | "increment"
       | "initialize"
       | "installModule"
@@ -229,7 +215,6 @@ export interface IWorldInterface extends utils.Interface {
       | "raid"
       | "recall"
       | "recallAll"
-      | "reduceProductionRate"
       | "registerDelegation"
       | "registerFunctionSelector"
       | "registerNamespace"
@@ -248,8 +233,6 @@ export interface IWorldInterface extends utils.Interface {
       | "setRecord"
       | "setStaticField"
       | "spawn"
-      | "spendBuildingRequiredResources"
-      | "spendUnitRequiredResources"
       | "spliceDynamicData"
       | "spliceStaticData"
       | "storeVersion"
@@ -259,12 +242,9 @@ export interface IWorldInterface extends utils.Interface {
       | "transferOwnership"
       | "unregisterStoreHook"
       | "unregisterSystemHook"
-      | "updateHomeRock"
-      | "updateRock"
       | "updateUnitsAfterBattle"
       | "upgradeBuilding"
       | "upgradeRange"
-      | "upgradeResourceProduction"
       | "upgradeUnit"
       | "worldVersion"
   ): FunctionFragment;
@@ -285,18 +265,6 @@ export interface IWorldInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "callFrom",
     values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "clearMaxStorageIncrease",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "clearProductionRateReduction",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "clearResourceProduction",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(functionFragment: "creator", values?: undefined): string;
   encodeFunctionData(
@@ -466,10 +434,6 @@ export interface IWorldInterface extends utils.Interface {
     functionFragment: "grantAccess",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
   ): string;
-  encodeFunctionData(
-    functionFragment: "increaseMaxStorage",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
-  ): string;
   encodeFunctionData(functionFragment: "increment", values?: undefined): string;
   encodeFunctionData(functionFragment: "initialize", values: [PromiseOrValue<string>]): string;
   encodeFunctionData(
@@ -505,10 +469,6 @@ export interface IWorldInterface extends utils.Interface {
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(functionFragment: "recallAll", values: [PromiseOrValue<BytesLike>]): string;
-  encodeFunctionData(
-    functionFragment: "reduceProductionRate",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
-  ): string;
   encodeFunctionData(
     functionFragment: "registerDelegation",
     values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
@@ -623,14 +583,6 @@ export interface IWorldInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "spawn", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "spendBuildingRequiredResources",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "spendUnitRequiredResources",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "spliceDynamicData",
     values: [
       PromiseOrValue<BytesLike>,
@@ -675,21 +627,12 @@ export interface IWorldInterface extends utils.Interface {
     functionFragment: "unregisterSystemHook",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
   ): string;
-  encodeFunctionData(functionFragment: "updateHomeRock", values: [PromiseOrValue<BytesLike>]): string;
-  encodeFunctionData(
-    functionFragment: "updateRock",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
-  ): string;
   encodeFunctionData(
     functionFragment: "updateUnitsAfterBattle",
     values: [BattleResultDataStruct, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(functionFragment: "upgradeBuilding", values: [PositionDataStruct]): string;
   encodeFunctionData(functionFragment: "upgradeRange", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "upgradeResourceProduction",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
-  ): string;
   encodeFunctionData(functionFragment: "upgradeUnit", values: [PromiseOrValue<BigNumberish>]): string;
   encodeFunctionData(functionFragment: "worldVersion", values?: undefined): string;
 
@@ -699,9 +642,6 @@ export interface IWorldInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "build", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "call", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "callFrom", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "clearMaxStorageIncrease", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "clearProductionRateReduction", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "clearResourceProduction", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "creator", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "deleteRecord", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "destroy", data: BytesLike): Result;
@@ -730,7 +670,6 @@ export interface IWorldInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "getStaticField", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getValueSchema", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "grantAccess", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "increaseMaxStorage", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "increment", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "installModule", data: BytesLike): Result;
@@ -741,7 +680,6 @@ export interface IWorldInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "raid", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "recall", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "recallAll", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "reduceProductionRate", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "registerDelegation", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "registerFunctionSelector", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "registerNamespace", data: BytesLike): Result;
@@ -760,8 +698,6 @@ export interface IWorldInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "setRecord", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setStaticField", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "spawn", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "spendBuildingRequiredResources", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "spendUnitRequiredResources", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "spliceDynamicData", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "spliceStaticData", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "storeVersion", data: BytesLike): Result;
@@ -771,12 +707,9 @@ export interface IWorldInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "transferOwnership", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "unregisterStoreHook", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "unregisterSystemHook", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "updateHomeRock", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "updateRock", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "updateUnitsAfterBattle", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "upgradeBuilding", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "upgradeRange", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "upgradeResourceProduction", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "upgradeUnit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "worldVersion", data: BytesLike): Result;
 
@@ -916,24 +849,6 @@ export interface IWorld extends BaseContract {
       systemId: PromiseOrValue<BytesLike>,
       callData: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    clearMaxStorageIncrease(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    clearProductionRateReduction(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    clearResourceProduction(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     creator(overrides?: CallOverrides): Promise<[string]>;
@@ -1146,13 +1061,6 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    increaseMaxStorage(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      level: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     increment(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
 
     initialize(
@@ -1206,13 +1114,6 @@ export interface IWorld extends BaseContract {
 
     recallAll(
       rockEntity: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    reduceProductionRate(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      level: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -1351,18 +1252,6 @@ export interface IWorld extends BaseContract {
 
     spawn(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
 
-    spendBuildingRequiredResources(
-      entity: PromiseOrValue<BytesLike>,
-      level: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    spendUnitRequiredResources(
-      player: PromiseOrValue<BytesLike>,
-      unitPrototype: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     spliceDynamicData(
       tableId: PromiseOrValue<BytesLike>,
       keyTuple: PromiseOrValue<BytesLike>[],
@@ -1422,17 +1311,6 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    updateHomeRock(
-      playerEntity: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    updateRock(
-      playerEntity: PromiseOrValue<BytesLike>,
-      rock: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     updateUnitsAfterBattle(
       br: BattleResultDataStruct,
       sendType: PromiseOrValue<BigNumberish>,
@@ -1445,13 +1323,6 @@ export interface IWorld extends BaseContract {
     ): Promise<ContractTransaction>;
 
     upgradeRange(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
-
-    upgradeResourceProduction(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      level: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
 
     upgradeUnit(
       unit: PromiseOrValue<BigNumberish>,
@@ -1496,24 +1367,6 @@ export interface IWorld extends BaseContract {
     systemId: PromiseOrValue<BytesLike>,
     callData: PromiseOrValue<BytesLike>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  clearMaxStorageIncrease(
-    playerEntity: PromiseOrValue<BytesLike>,
-    buildingEntity: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  clearProductionRateReduction(
-    playerEntity: PromiseOrValue<BytesLike>,
-    buildingEntity: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  clearResourceProduction(
-    playerEntity: PromiseOrValue<BytesLike>,
-    buildingEntity: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   creator(overrides?: CallOverrides): Promise<string>;
@@ -1717,13 +1570,6 @@ export interface IWorld extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  increaseMaxStorage(
-    playerEntity: PromiseOrValue<BytesLike>,
-    buildingEntity: PromiseOrValue<BytesLike>,
-    level: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   increment(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
 
   initialize(
@@ -1777,13 +1623,6 @@ export interface IWorld extends BaseContract {
 
   recallAll(
     rockEntity: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  reduceProductionRate(
-    playerEntity: PromiseOrValue<BytesLike>,
-    buildingEntity: PromiseOrValue<BytesLike>,
-    level: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1922,18 +1761,6 @@ export interface IWorld extends BaseContract {
 
   spawn(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
 
-  spendBuildingRequiredResources(
-    entity: PromiseOrValue<BytesLike>,
-    level: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  spendUnitRequiredResources(
-    player: PromiseOrValue<BytesLike>,
-    unitPrototype: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   spliceDynamicData(
     tableId: PromiseOrValue<BytesLike>,
     keyTuple: PromiseOrValue<BytesLike>[],
@@ -1993,17 +1820,6 @@ export interface IWorld extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  updateHomeRock(
-    playerEntity: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  updateRock(
-    playerEntity: PromiseOrValue<BytesLike>,
-    rock: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   updateUnitsAfterBattle(
     br: BattleResultDataStruct,
     sendType: PromiseOrValue<BigNumberish>,
@@ -2016,13 +1832,6 @@ export interface IWorld extends BaseContract {
   ): Promise<ContractTransaction>;
 
   upgradeRange(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
-
-  upgradeResourceProduction(
-    playerEntity: PromiseOrValue<BytesLike>,
-    buildingEntity: PromiseOrValue<BytesLike>,
-    level: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
 
   upgradeUnit(
     unit: PromiseOrValue<BigNumberish>,
@@ -2062,24 +1871,6 @@ export interface IWorld extends BaseContract {
       callData: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<string>;
-
-    clearMaxStorageIncrease(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    clearProductionRateReduction(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    clearResourceProduction(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     creator(overrides?: CallOverrides): Promise<string>;
 
@@ -2279,13 +2070,6 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    increaseMaxStorage(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      level: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     increment(overrides?: CallOverrides): Promise<BigNumber>;
 
     initialize(coreModule: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
@@ -2329,13 +2113,6 @@ export interface IWorld extends BaseContract {
     ): Promise<void>;
 
     recallAll(rockEntity: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
-
-    reduceProductionRate(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      level: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     registerDelegation(
       delegatee: PromiseOrValue<string>,
@@ -2469,18 +2246,6 @@ export interface IWorld extends BaseContract {
 
     spawn(overrides?: CallOverrides): Promise<string>;
 
-    spendBuildingRequiredResources(
-      entity: PromiseOrValue<BytesLike>,
-      level: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    spendUnitRequiredResources(
-      player: PromiseOrValue<BytesLike>,
-      unitPrototype: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     spliceDynamicData(
       tableId: PromiseOrValue<BytesLike>,
       keyTuple: PromiseOrValue<BytesLike>[],
@@ -2540,14 +2305,6 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    updateHomeRock(playerEntity: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
-
-    updateRock(
-      playerEntity: PromiseOrValue<BytesLike>,
-      rock: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     updateUnitsAfterBattle(
       br: BattleResultDataStruct,
       sendType: PromiseOrValue<BigNumberish>,
@@ -2557,13 +2314,6 @@ export interface IWorld extends BaseContract {
     upgradeBuilding(coord: PositionDataStruct, overrides?: CallOverrides): Promise<string>;
 
     upgradeRange(overrides?: CallOverrides): Promise<void>;
-
-    upgradeResourceProduction(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      level: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     upgradeUnit(unit: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>;
 
@@ -2665,24 +2415,6 @@ export interface IWorld extends BaseContract {
       systemId: PromiseOrValue<BytesLike>,
       callData: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    clearMaxStorageIncrease(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    clearProductionRateReduction(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    clearResourceProduction(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     creator(overrides?: CallOverrides): Promise<BigNumber>;
@@ -2871,13 +2603,6 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    increaseMaxStorage(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      level: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     increment(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>;
 
     initialize(
@@ -2931,13 +2656,6 @@ export interface IWorld extends BaseContract {
 
     recallAll(
       rockEntity: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    reduceProductionRate(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      level: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -3076,18 +2794,6 @@ export interface IWorld extends BaseContract {
 
     spawn(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>;
 
-    spendBuildingRequiredResources(
-      entity: PromiseOrValue<BytesLike>,
-      level: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    spendUnitRequiredResources(
-      player: PromiseOrValue<BytesLike>,
-      unitPrototype: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     spliceDynamicData(
       tableId: PromiseOrValue<BytesLike>,
       keyTuple: PromiseOrValue<BytesLike>[],
@@ -3147,17 +2853,6 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    updateHomeRock(
-      playerEntity: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    updateRock(
-      playerEntity: PromiseOrValue<BytesLike>,
-      rock: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     updateUnitsAfterBattle(
       br: BattleResultDataStruct,
       sendType: PromiseOrValue<BigNumberish>,
@@ -3170,13 +2865,6 @@ export interface IWorld extends BaseContract {
     ): Promise<BigNumber>;
 
     upgradeRange(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>;
-
-    upgradeResourceProduction(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      level: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
 
     upgradeUnit(
       unit: PromiseOrValue<BigNumberish>,
@@ -3222,24 +2910,6 @@ export interface IWorld extends BaseContract {
       systemId: PromiseOrValue<BytesLike>,
       callData: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    clearMaxStorageIncrease(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    clearProductionRateReduction(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    clearResourceProduction(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     creator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -3431,13 +3101,6 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    increaseMaxStorage(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      level: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     increment(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>;
 
     initialize(
@@ -3491,13 +3154,6 @@ export interface IWorld extends BaseContract {
 
     recallAll(
       rockEntity: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    reduceProductionRate(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      level: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -3636,18 +3292,6 @@ export interface IWorld extends BaseContract {
 
     spawn(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>;
 
-    spendBuildingRequiredResources(
-      entity: PromiseOrValue<BytesLike>,
-      level: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    spendUnitRequiredResources(
-      player: PromiseOrValue<BytesLike>,
-      unitPrototype: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     spliceDynamicData(
       tableId: PromiseOrValue<BytesLike>,
       keyTuple: PromiseOrValue<BytesLike>[],
@@ -3707,17 +3351,6 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    updateHomeRock(
-      playerEntity: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    updateRock(
-      playerEntity: PromiseOrValue<BytesLike>,
-      rock: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     updateUnitsAfterBattle(
       br: BattleResultDataStruct,
       sendType: PromiseOrValue<BigNumberish>,
@@ -3730,13 +3363,6 @@ export interface IWorld extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     upgradeRange(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>;
-
-    upgradeResourceProduction(
-      playerEntity: PromiseOrValue<BytesLike>,
-      buildingEntity: PromiseOrValue<BytesLike>,
-      level: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
 
     upgradeUnit(
       unit: PromiseOrValue<BigNumberish>,
