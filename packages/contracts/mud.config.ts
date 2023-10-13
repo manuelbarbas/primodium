@@ -437,7 +437,7 @@ export const config = mudConfig({
       valueSchema: "bool",
     },
 
-    UnitReward: {
+    P_UnitReward: {
       keySchema: { prototype: "bytes32" },
       valueSchema: {
         // mud doesnt recognize EUnit arrays so we will manually convert them
@@ -446,7 +446,7 @@ export const config = mudConfig({
       },
     },
 
-    ResourceReward: {
+    P_ResourceReward: {
       keySchema: { prototype: "bytes32" },
       valueSchema: {
         // mud doesnt recognize EResource arrays so we will manually convert them

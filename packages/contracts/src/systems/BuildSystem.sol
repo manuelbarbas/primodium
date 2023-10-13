@@ -5,7 +5,7 @@ pragma solidity >=0.8.21;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 // tables
-import { P_EnumToPrototype, Position, PositionData, Spawned, Home } from "codegen/index.sol";
+import { HasBuiltBuilding, P_EnumToPrototype, Position, PositionData, Spawned, Home } from "codegen/index.sol";
 
 // libraries
 import { LibEncode, LibBuilding, LibResource } from "codegen/Libraries.sol";

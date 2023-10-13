@@ -6,15 +6,15 @@ import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
 
-import { EObjectives } from "src/Types.sol";
+import { EBuilding } from "src/Types.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
-import { BuildingKey } from "src/Keys.sol";
+import { ObjectiveKey } from "src/Keys.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
-import { LibObjectives } from "libraries/LibObjectives.sol";
+import { LibReward } from "libraries/LibReward.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
 
-contract OnClaimObjective_Requirements is SystemHook {
+contract OnClaimObjective_ReceiveRewards is SystemHook {
   constructor() {}
 
   /**
@@ -28,13 +28,7 @@ contract OnClaimObjective_Requirements is SystemHook {
     ResourceId systemId,
     bytes memory callData
   ) public {
-    // Decode the coordinates from the callData
-    bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
-    EObjectives objective = abi.decode(args, (EObjectives));
-
-    // Get the player's entity and check destroy requirements
-    bytes32 playerEntity = addressToEntity(msgSender);
-    LibObjectives.checkObjectiveRequirements(playerEntity, objective);
+    // This function doesn't perform any actions in this case.
   }
 
   /**
@@ -48,6 +42,12 @@ contract OnClaimObjective_Requirements is SystemHook {
     ResourceId systemId,
     bytes memory callData
   ) public {
-    // This function doesn't perform any actions in this case.
+    // Decode the coordinates from the callData
+    bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
+    uint8 objective = abi.decode(args, (uint8));
+
+    // Get the player's entity and check destroy requirements
+    bytes32 playerEntity = addressToEntity(msgSender);
+    LibReward.receiveRewards(playerEntity, P_EnumToPrototype.get(ObjectiveKey, objective));
   }
 }
