@@ -16,3 +16,11 @@ function addressToEntity(address a) pure returns (bytes32) {
 function entityToAddress(bytes32 a) pure returns (address) {
   return address(uint160(uint256((a))));
 }
+
+function bytes32ToString(bytes32 data) pure returns (string memory) {
+  bytes memory bytesString = new bytes(32);
+  for (uint256 i = 0; i < 32; i++) {
+    bytesString[i] = data[i];
+  }
+  return string(bytesString);
+}
