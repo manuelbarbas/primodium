@@ -10,6 +10,10 @@ import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProd
 import { UnitKey } from "src/Keys.sol";
 
 library LibUnit {
+  function getUnitCountOnHomeAsteroid(bytes32 playerEntity, bytes32 unitType) internal view returns (uint256) {
+    return UnitCount.get(playerEntity, Home.getAsteroid(playerEntity), unitType);
+  }
+
   /**
    * @dev Checks the requirements for training (producing) a specific unit in a building.
    * @param buildingEntity The identifier of the building where the unit is being trained.

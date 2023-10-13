@@ -82,6 +82,16 @@ export enum ESendType {
   Raid,
 }
 
+export enum EPirateAsteroid {
+  FirstPirateAsteroid,
+  SecondPirateAsteroid,
+  ThirdPirateAsteroid,
+  FourthPirateAsteroid,
+  FifthPirateAsteroid,
+  SixthPirateAsteroid,
+  SeventhPirateAsteroid,
+}
+
 export enum EObjectives {
   BuildFirstIronMine,
   BuildFirstCopperMine,
@@ -171,6 +181,7 @@ export const MUDEnums = {
   EUnit: enumToArray(EUnit),
   ESendType: enumToArray(ESendType),
   EObjectives: enumToArray(EObjectives),
+  EPirateAsteroid: enumToArray(EPirateAsteroid),
 };
 
 function enumToArray(enumObj: object): string[] {

@@ -464,6 +464,67 @@ export const config = mudConfig({
       keySchema: { entity: "bytes32", buildingType: "uint8" },
       valueSchema: "bool",
     },
+
+    P_ProducedResources: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: {
+        // mud doesnt recognize EResource arrays so we will manually convert them
+        resources: "uint8[]",
+        amounts: "uint256[]",
+      },
+    },
+
+    ProducedResource: {
+      keySchema: { entity: "bytes32", resource: "uint8" },
+      valueSchema: "uint256",
+    },
+
+    P_DestroyedUnits: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: {
+        // mud doesnt recognize EUnit arrays so we will manually convert them
+        units: "uint8[]",
+        amounts: "uint256[]",
+      },
+    },
+
+    DestroyedUnit: {
+      keySchema: { entity: "bytes32", unit: "uint8" },
+      valueSchema: "uint256",
+    },
+
+    P_RaidedResources: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: {
+        // mud doesnt recognize EResource arrays so we will manually convert them
+        resources: "uint8[]",
+        amounts: "uint256[]",
+      },
+    },
+
+    RaidedResource: {
+      keySchema: { entity: "bytes32", resource: "uint8" },
+      valueSchema: "uint256",
+    },
+
+    P_SpawnPirateAsteroids: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: "uint8",
+    },
+
+    P_DefeatedPirates: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: "uint8[]",
+    },
+
+    P_RequiredUnits: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: {
+        // mud doesnt recognize EUnit arrays so we will manually convert them
+        units: "uint8[]",
+        amounts: "uint256[]",
+      },
+    },
   },
 });
 
