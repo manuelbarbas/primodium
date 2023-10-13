@@ -105,7 +105,13 @@ library LibResource {
   /// @param playerEntity ID of the player to claim
   function claimAllResources(bytes32 playerEntity) internal {
     uint256 lastClaimed = LastClaimedAt.get(playerEntity);
-    if (lastClaimed == 0 || lastClaimed == block.timestamp) return;
+    if (lastClaimed == block.timestamp) return;
+
+    if (lastClaimed == 0) {
+      LastClaimedAt.set(playerEntity, block.timestamp);
+      return;
+    }
+
     uint256 timeSinceClaimed = block.timestamp - lastClaimed;
     LastClaimedAt.set(playerEntity, block.timestamp);
     for (uint8 i = 1; i < uint8(EResource.LENGTH); i++) {
