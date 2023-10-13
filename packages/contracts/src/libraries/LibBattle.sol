@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { ESendType, Arrival } from "src/Types.sol";
-import { UnitCount, UnitLevel, BattleResult, BattleResultData, P_UnitPrototypes, P_Unit, ArrivalCount, UnitCount, Home } from "codegen/index.sol";
+import { DestroyedUnit, UnitCount, UnitLevel, BattleResult, BattleResultData, P_UnitPrototypes, P_Unit, ArrivalCount, UnitCount, Home } from "codegen/index.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 
@@ -45,13 +45,26 @@ library LibBattle {
     uint256 lossRatio;
     if (isAttackerWinner) {
       lossRatio = 100 - (attackPoints == 0 ? 0 : ((defensePoints * 100) / attackPoints));
+
       for (uint256 i = 0; i < unitPrototypes.length; i++) {
         battleResult.attackerUnitsLeft[i] = (attackCounts[i] * lossRatio) / 100;
+        DestroyedUnit.set(attackerEntity, uint8(i), DestroyedUnit.get(attackerEntity, uint8(i)) + defenseCounts[i]);
+        DestroyedUnit.set(
+          defenderEntity,
+          uint8(i),
+          DestroyedUnit.get(defenderEntity, uint8(i)) + ((attackCounts[i] * (100 - lossRatio)) / 100)
+        );
       }
     } else {
       lossRatio = 100 - (defensePoints == 0 ? 0 : ((attackPoints * 100) / defensePoints));
       for (uint256 i = 0; i < unitPrototypes.length; i++) {
         battleResult.defenderUnitsLeft[i] = (defenseCounts[i] * lossRatio) / 100;
+        DestroyedUnit.set(
+          attackerEntity,
+          uint8(i),
+          DestroyedUnit.get(attackerEntity, uint8(i)) + ((defenseCounts[i] * (100 - lossRatio)) / 100)
+        );
+        DestroyedUnit.set(defenderEntity, uint8(i), DestroyedUnit.get(defenderEntity, uint8(i)) + attackCounts[i]);
       }
     }
 

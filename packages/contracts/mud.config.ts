@@ -517,6 +517,11 @@ export const config = mudConfig({
       valueSchema: "uint8[]",
     },
 
+    DefeatedPirate: {
+      keySchema: { entity: "bytes32", pirate: "uint8" },
+      valueSchema: "bool",
+    },
+
     P_RequiredUnits: {
       keySchema: { prototype: "bytes32" },
       valueSchema: {

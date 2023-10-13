@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 
-import { RockType, OwnedBy, BattleResultData, RaidResult, RaidResultData, P_IsUtility, P_UnitPrototypes, Home } from "codegen/index.sol";
+import { RaidedResource, RockType, OwnedBy, BattleResultData, RaidResult, RaidResultData, P_IsUtility, P_UnitPrototypes, Home } from "codegen/index.sol";
 import { ERock, ESendType } from "src/Types.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
 import { LibResource } from "libraries/LibResource.sol";
@@ -52,6 +52,7 @@ library LibRaid {
    */
   function resolveRaid(BattleResultData memory br) internal returns (RaidResultData memory) {
     LibBattle.updateUnitsAfterBattle(br, ESendType.Raid);
+    if (br.winner != br.attacker) return RaidResultData();
 
     (uint256 totalResources, uint256[] memory defenderResources) = LibResource.getAllResourceCounts(br.defender);
 
@@ -68,7 +69,11 @@ library LibRaid {
 
       uint256 raidAmount = LibMath.min(defenderResources[i], (br.totalCargo * defenderResources[i]) / totalResources);
       if (raidAmount == 0) continue;
-
+      RaidedResource.set(
+        br.attacker,
+        defenderResources[i],
+        RaidedResource.get(br.attacker, defenderResources[i]) + raidAmount
+      );
       raidResult.defenderValuesBeforeRaid[i] = defenderResources[i];
       raidResult.raidedAmount[i] = raidAmount;
       LibStorage.increaseStoredResource(br.attacker, resource, raidAmount);
