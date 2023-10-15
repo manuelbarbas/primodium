@@ -28,22 +28,26 @@ import { LastClaimedAt, LastClaimedAtTableId } from "codegen/tables/LastClaimedA
 import { QueueItemUnits, QueueItemUnitsTableId } from "codegen/tables/QueueItemUnits.sol";
 import { QueueUnits, QueueUnitsTableId } from "codegen/tables/QueueUnits.sol";
 import { ProductionRateTableId } from "codegen/tables/ProductionRate.sol";
+
 import { OnBuild_PlaceOnTile } from "src/hooks/systemHooks/build/OnBuild_PlaceOnTile.sol";
 import { OnBuild_SpendResources } from "src/hooks/systemHooks/build/OnBuild_SpendResources.sol";
 import { OnBuild_MaxStorage } from "src/hooks/systemHooks/build/OnBuild_MaxStorage.sol";
 import { OnBuild_ProductionRate } from "src/hooks/systemHooks/build/OnBuild_ProductionRate.sol";
 import { OnBuild_Requirements } from "src/hooks/systemHooks/build/OnBuild_Requirements.sol";
+import { OnBuild_ClaimResources } from "src/hooks/systemHooks/build/OnBuild_ClaimResources.sol";
 
 import { OnUpgrade_Requirements } from "src/hooks/systemHooks/upgrade/OnUpgrade_Requirements.sol";
 import { OnUpgrade_ProductionRate } from "src/hooks/systemHooks/upgrade/OnUpgrade_ProductionRate.sol";
 import { OnUpgrade_MaxStorage } from "src/hooks/systemHooks/upgrade/OnUpgrade_MaxStorage.sol";
 import { OnUpgrade_SpendResources } from "src/hooks/systemHooks/upgrade/OnUpgrade_SpendResources.sol";
+import { OnUpgrade_ClaimResources } from "src/hooks/systemHooks/upgrade/OnUpgrade_ClaimResources.sol";
 
 import { OnDestroy_ClearUtility } from "src/hooks/systemHooks/destroy/OnDestroy_ClearUtility.sol";
 import { OnDestroy_MaxStorage } from "src/hooks/systemHooks/destroy/OnDestroy_MaxStorage.sol";
 import { OnDestroy_ProductionRate } from "src/hooks/systemHooks/destroy/OnDestroy_ProductionRate.sol";
 import { OnDestroy_Requirements } from "src/hooks/systemHooks/destroy/OnDestroy_Requirements.sol";
 import { OnDestroy_RemoveFromTiles } from "src/hooks/systemHooks/destroy/OnDestroy_RemoveFromTiles.sol";
+import { OnDestroy_ClaimResources } from "src/hooks/systemHooks/destroy/OnDestroy_ClaimResources.sol";
 
 import { OnSendUnits_Requirements } from "src/hooks/systemHooks/sendUnits/OnSendUnits_Requirements.sol";
 import { OnSendUnits_UpdateRock } from "src/hooks/systemHooks/sendUnits/OnSendUnits_UpdateRock.sol";
@@ -96,6 +100,13 @@ contract PostDeploy is Script {
    * @param world The World contract instance.
    */
   function registerBuildHooks(IWorld world) internal {
+    OnBuild_ClaimResources onBuild_ClaimResources = new OnBuild_ClaimResources();
+    world.grantAccess(ResourceCountTableId, address(onBuild_ClaimResources));
+    world.grantAccess(SetItemUtilitiesTableId, address(onBuild_ClaimResources));
+    world.grantAccess(SetUtilitiesTableId, address(onBuild_ClaimResources));
+    world.grantAccess(LastClaimedAtTableId, address(onBuild_ClaimResources));
+    world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_ClaimResources, BEFORE_CALL_SYSTEM);
+
     OnBuild_Requirements onBuild_Requirements = new OnBuild_Requirements();
     world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_Requirements, BEFORE_CALL_SYSTEM);
 
@@ -109,7 +120,6 @@ contract PostDeploy is Script {
     world.grantAccess(ResourceCountTableId, address(onBuild_SpendResources));
     world.grantAccess(SetItemUtilitiesTableId, address(onBuild_SpendResources));
     world.grantAccess(SetUtilitiesTableId, address(onBuild_SpendResources));
-
     world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_SpendResources, AFTER_CALL_SYSTEM);
 
     OnBuild_MaxStorage onBuild_MaxStorage = new OnBuild_MaxStorage();
@@ -127,6 +137,17 @@ contract PostDeploy is Script {
    * @param world The World contract instance.
    */
   function registerUpgradeHooks(IWorld world) internal {
+    OnUpgrade_ClaimResources onUpgrade_ClaimResources = new OnUpgrade_ClaimResources();
+    world.grantAccess(ResourceCountTableId, address(onUpgrade_ClaimResources));
+    world.grantAccess(SetItemUtilitiesTableId, address(onUpgrade_ClaimResources));
+    world.grantAccess(SetUtilitiesTableId, address(onUpgrade_ClaimResources));
+    world.grantAccess(LastClaimedAtTableId, address(onUpgrade_ClaimResources));
+    world.registerSystemHook(
+      getSystemResourceId("UpgradeBuildingSystem"),
+      onUpgrade_ClaimResources,
+      BEFORE_CALL_SYSTEM
+    );
+
     OnUpgrade_Requirements onUpgrade_Requirements = new OnUpgrade_Requirements();
     world.registerSystemHook(getSystemResourceId("UpgradeBuildingSystem"), onUpgrade_Requirements, BEFORE_CALL_SYSTEM);
 
@@ -151,6 +172,13 @@ contract PostDeploy is Script {
    * @param world The World contract instance.
    */
   function registerDestroyHooks(IWorld world) internal {
+    OnDestroy_ClaimResources onDestroy_ClaimResources = new OnDestroy_ClaimResources();
+    world.grantAccess(ResourceCountTableId, address(onDestroy_ClaimResources));
+    world.grantAccess(SetItemUtilitiesTableId, address(onDestroy_ClaimResources));
+    world.grantAccess(SetUtilitiesTableId, address(onDestroy_ClaimResources));
+    world.grantAccess(LastClaimedAtTableId, address(onDestroy_ClaimResources));
+    world.registerSystemHook(getSystemResourceId("DestroySystem"), onDestroy_ClaimResources, BEFORE_CALL_SYSTEM);
+
     OnDestroy_Requirements onDestroy_Requirements = new OnDestroy_Requirements();
     world.registerSystemHook(getSystemResourceId("DestroySystem"), onDestroy_Requirements, BEFORE_CALL_SYSTEM);
 

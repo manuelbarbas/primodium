@@ -166,7 +166,7 @@ contract BuildSystemTest is PrimodiumTest {
     data[0] = uint8(Iron);
     P_ListMaxResourceUpgrades.set(IronMinePrototypeId, 1, data);
     P_ByLevelMaxResourceUpgrades.set(IronMinePrototypeId, Iron, 1, 50);
-
+    MaxResourceCount.set(playerEntity, Iron, 0);
     world.build(EBuilding.IronMine, getIronPosition(creator));
     assertEq(MaxResourceCount.get(playerEntity, Iron), 50);
   }
