@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import { addressToEntity, entityToAddress, getSystemResourceId, bytes32ToString } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 // tables
-import { P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_ProducesUnits, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/index.sol";
+import { HasBuiltBuilding, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_ProducesUnits, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/index.sol";
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -47,7 +47,10 @@ library LibBuilding {
     bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
     require(Spawned.get(playerEntity), "[BuildSystem] Player has not spawned");
     require(buildingType > EBuilding.NULL && buildingType < EBuilding.LENGTH, "[BuildSystem] Invalid building type");
-    require(buildingType != EBuilding.MainBase, "[BuildSystem] Cannot build more than one main base per wallet");
+    require(
+      buildingType != EBuilding.MainBase || !HasBuiltBuilding.get(playerEntity, buildingPrototype),
+      "[BuildSystem] Cannot build more than one main base per wallet"
+    );
     require(
       coord.parent == Home.getAsteroid(playerEntity),
       "[BuildSystem] Building must be built on your home asteroid"
@@ -105,7 +108,7 @@ library LibBuilding {
     Level.set(buildingEntity, 1);
     LastClaimedAt.set(buildingEntity, block.timestamp);
     OwnedBy.set(buildingEntity, playerEntity);
-
+    HasBuiltBuilding.set(playerEntity, buildingPrototype, true);
     address playerAddress = entityToAddress(playerEntity);
 
     if (P_ProducesUnits.get(buildingPrototype)) {
