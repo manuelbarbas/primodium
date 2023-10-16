@@ -120,7 +120,7 @@ export function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, playerE
 
   for (const [index, resource] of recipe.entries()) {
     const resourceAmount = resourceAmounts[index];
-    const { resourceCount, resourcesToClaim, production, maxStorage } = resourceAmount;
+    const { resourceCount, resourcesToClaim, production } = resourceAmount;
 
     switch (resource.type) {
       case ResourceType.Resource:
@@ -130,7 +130,8 @@ export function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, playerE
         if (production < resource.amount * count) return false;
         break;
       case ResourceType.Utility:
-        if (maxStorage - (resourceCount + resourcesToClaim) < resource.amount * count) return false;
+        if (resourceCount < resource.amount * count) return false;
+
         break;
       default:
         return false;

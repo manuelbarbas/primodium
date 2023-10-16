@@ -863,6 +863,7 @@ export const BuildingEnumLookup: Record<Entity, EBuilding> = {
   [EntityType.PVCellFactory]: EBuilding.PVCellFactory,
   // [BlockType.Garage]: EBuilding.Garage,
   // [BlockType.Workshop]: EBuilding.Workshop,
+  [EntityType.StorageUnit]: EBuilding.StorageUnit,
   [EntityType.SolarPanel]: EBuilding.SolarPanel,
   [EntityType.DroneFactory]: EBuilding.DroneFactory,
   [EntityType.Hangar]: EBuilding.Hangar,

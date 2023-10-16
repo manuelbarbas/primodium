@@ -50,6 +50,29 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
         mud.contractCalls.removeComponent(mud.components.Counter, singletonEntity);
       },
     },
+
+    getResource: {
+      params: [{ name: "resource", type: "string" }],
+      function: async (resource: string) => {
+        const player = mud.network.playerEntity;
+        if (!player) throw new Error("No player found");
+
+        const resourceEntity = resources[resource.toLowerCase()];
+
+        if (!resourceEntity) throw new Error("Resource not found");
+
+        await mud.contractCalls.setComponentValue(
+          mud.components.ResourceCount,
+          encodeEntity(
+            { entity: "bytes32", resource: "uint8" },
+            { entity: player as Hex, resource: ResourceEnumLookup[resourceEntity] }
+          ),
+          {
+            value: 10000000n,
+          }
+        );
+      },
+    },
     getTesterPack: {
       params: [],
       function: async () => {
@@ -75,6 +98,21 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
 
           await mud.contractCalls.setComponentValue(
             mud.components.MaxResourceCount,
+            encodeEntity(
+              { entity: "bytes32", resource: "uint8" },
+              { entity: player as Hex, resource: ResourceEnumLookup[resource] }
+            ),
+            {
+              value: 10000000n,
+            }
+          );
+        });
+
+        UtilityStorages.forEach(async (resource) => {
+          if (!player) throw new Error("No player found");
+
+          await mud.contractCalls.setComponentValue(
+            mud.components.ResourceCount,
             encodeEntity(
               { entity: "bytes32", resource: "uint8" },
               { entity: player as Hex, resource: ResourceEnumLookup[resource] }

@@ -8,7 +8,7 @@ export function useHasEnoughOfResource(
   playerEntity: Entity,
   resourceType = ResourceType.Resource
 ) {
-  const { resourceCount, resourcesToClaim, production, maxStorage } = useFullResourceCount(resource, playerEntity);
+  const { resourceCount, resourcesToClaim, production } = useFullResourceCount(resource, playerEntity);
 
   switch (resourceType) {
     case ResourceType.Resource:
@@ -16,7 +16,7 @@ export function useHasEnoughOfResource(
     case ResourceType.ResourceRate:
       return production >= amount;
     case ResourceType.Utility:
-      return maxStorage - (resourceCount + resourcesToClaim) >= amount;
+      return resourceCount >= amount;
     default:
       return false;
   }
