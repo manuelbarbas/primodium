@@ -6,7 +6,7 @@ import { P_RequiredObjectives } from "codegen/tables/P_RequiredObjectives.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
 import "test/PrimodiumTest.t.sol";
 
-contract LibObjectiveTest is PrimodiumTest {
+contract ClaimObjectiveSystemTest is PrimodiumTest {
   bytes32 playerEntity = "playerEntity";
   bytes32 buildingPrototype = "buildingPrototype";
   bytes32 unitPrototype = "unitPrototype";
