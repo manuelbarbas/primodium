@@ -9,6 +9,7 @@ import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { ResourceImage, ResourceType, RESOURCE_SCALE, EntityType } from "src/util/constants";
 import { getUpgradeInfo } from "src/util/upgrade";
+import { upgradeRange } from "src/util/web3/contractCalls/upgradeRange";
 
 export const ExpandRange: React.FC = () => {
   const { network } = useMud();
@@ -67,7 +68,7 @@ export const ExpandRange: React.FC = () => {
           disabled={!canUpgrade}
           // loading={transactionLoading}
           onClick={() => {
-            // upgradeRange(network);
+            upgradeRange(network);
           }}
         >
           Expand
