@@ -16,6 +16,7 @@ import { Hotbar } from "./hotbar/Hotbar";
 // import { Panes } from "./panes/Panes";
 import { Resources } from "./resources/Resources";
 import { PrototypeInfo } from "./PrototypeInfo";
+import { ViewStarmap } from "./ViewStarmap";
 // import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 // import { BlueprintInfo } from "./tile-info/BlueprintInfo";
 // import { Units } from "./units/Units";
@@ -42,15 +43,15 @@ export const GameHUD = () => {
     <div className="screen-container font-mono">
       <>
         {/* ASTEROID HUD */}
-        {!mapOpen && showUI && (
+        {showUI && (
           <HUD scale={1} pad>
             <HUD.BottomMiddle>
-              {(getBlockTypeName(selectedBuilding) || !selectedBuilding) && <Hotbar />}
+              {(getBlockTypeName(selectedBuilding) || !selectedBuilding) && !mapOpen && <Hotbar />}
               {/* {!getBlockTypeName(selectedBuilding) && <BuildingMenu />} */}
             </HUD.BottomMiddle>
             <HUD.TopMiddle>
               {getBlockTypeName(selectedBuilding) && selectedBuilding && <PrototypeInfo building={selectedBuilding} />}
-              {/* {(!selectedBuilding || !getBlockTypeName(selectedBuilding)) && <ViewStarmap />} */}
+              {(!selectedBuilding || !getBlockTypeName(selectedBuilding)) && <ViewStarmap />}
             </HUD.TopMiddle>
             {/* <HUD.TopLeft>
               <Score />z
@@ -63,31 +64,6 @@ export const GameHUD = () => {
               <Resources />
             </HUD.BottomLeft>
             {/* <HUD.BottomRight>
-              <Units />
-            </HUD.BottomRight> */}
-          </HUD>
-        )}
-
-        {/* STARMAP HUD */}
-        {mapOpen && showUI && (
-          <HUD scale={1} pad>
-            {/* <HUD.BottomMiddle>
-              <SpacerockMenu />
-            </HUD.BottomMiddle> */}
-            {/* <HUD.TopMiddle>
-              <ViewStarmap />
-            </HUD.TopMiddle> */}
-            {/* <HUD.TopLeft>
-              <Score />
-              <LoadingIndication />
-            </HUD.TopLeft>
-            <HUD.TopRight>
-              <Panes />
-            </HUD.TopRight>
-            <HUD.BottomLeft>
-              <Resources />
-            </HUD.BottomLeft>
-            <HUD.BottomRight>
               <Units />
             </HUD.BottomRight> */}
           </HUD>

@@ -10,7 +10,7 @@ import { renderPirateAsteroid } from "./renderPirateAsteroid";
 import { SetupResult } from "src/network/types";
 
 export const runSystems = (scene: Scene, mud: SetupResult) => {
-  // focusAsteroid(scene);
+  focusAsteroid(scene, mud);
 
   renderAsteroid(scene, mud);
   // renderMotherlode(scene, player);
