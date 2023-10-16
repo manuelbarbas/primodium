@@ -35,9 +35,14 @@ library LibRaid {
     );
     BattleResultData memory br = abi.decode(rawBr, (BattleResultData));
 
-    for (uint256 i = 0; i < br.attackerStartingUnits.length; i++) {}
-
     resolveRaid(br);
+  }
+
+  function checkRaidRequirements(bytes32 raider, bytes32 rockEntity) internal view {
+    require(RockType.get(rockEntity) == uint8(ERock.Asteroid), "[LibRaid] Can only raid asteroids");
+    bytes32 defenderEntity = OwnedBy.get(rockEntity);
+    require(defenderEntity != 0, "[LibRaid] Can not raid unowned rock");
+    require(defenderEntity != raider, "[LibRaid] Can not raid your own rock");
   }
 
   /**
