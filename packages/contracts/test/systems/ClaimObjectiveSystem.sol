@@ -4,6 +4,11 @@ import { EObjectives } from "src/Types.sol";
 import { ObjectiveKey } from "src/Keys.sol";
 import { P_RequiredObjectives } from "codegen/tables/P_RequiredObjectives.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
+import { CompletedObjective } from "codegen/tables/CompletedObjective.sol";
+import { OwnedBy } from "codegen/tables/OwnedBy.sol";
+import { BuildingType } from "codegen/tables/BuildingType.sol";
+import { P_HasBuiltBuildings } from "codegen/tables/P_HasBuiltBuildings.sol";
+
 import "test/PrimodiumTest.t.sol";
 
 contract ClaimObjectiveSystemTest is PrimodiumTest {
@@ -28,6 +33,24 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     bytes32[] memory objectives = new bytes32[](1);
     objectives[0] = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine));
     P_RequiredObjectives.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)), objectives);
+    world.claimObjective(EObjectives.BuildFirstCopperMine);
+  }
+
+  function testClaimObjective() public {
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)));
+    world.claimObjective(EObjectives.BuildFirstIronMine);
+  }
+
+  function testClaimObjectiveRequiredObjectives() public {
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)));
+    bytes32[] memory objectives = new bytes32[](1);
+    objectives[0] = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine));
+    P_RequiredObjectives.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)), objectives);
+    CompletedObjective.set(
+      addressToEntity(creator),
+      P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)),
+      true
+    );
     world.claimObjective(EObjectives.BuildFirstCopperMine);
   }
 }

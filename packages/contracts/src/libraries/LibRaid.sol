@@ -3,7 +3,6 @@ pragma solidity >=0.8.21;
 
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
-
 import { RaidedResource, RockType, OwnedBy, BattleResultData, RaidResult, RaidResultData, P_IsUtility, P_UnitPrototypes, Home } from "codegen/index.sol";
 import { ERock, ESendType, EResource } from "src/Types.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
@@ -52,14 +51,12 @@ library LibRaid {
    */
   function resolveRaid(BattleResultData memory br) internal returns (RaidResultData memory) {
     LibBattle.updateUnitsAfterBattle(br, ESendType.Raid);
-    RaidResultData memory raidResult = RaidResultData({
-      defenderValuesBeforeRaid: new uint256[](uint8(EResource.LENGTH)),
-      raidedAmount: new uint256[](uint8(EResource.LENGTH))
-    });
-
-    if (br.winner != br.attacker) return raidResult;
-
     (uint256 totalResources, uint256[] memory defenderResources) = LibResource.getAllResourceCounts(br.defender);
+    RaidResultData memory raidResult = RaidResultData({
+      defenderValuesBeforeRaid: new uint256[](defenderResources.length),
+      raidedAmount: new uint256[](defenderResources.length)
+    });
+    if (br.winner != br.attacker) return raidResult;
 
     if (br.totalCargo == 0 || totalResources == 0) return raidResult;
 
