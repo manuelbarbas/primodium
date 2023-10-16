@@ -46,11 +46,49 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     bytes32[] memory objectives = new bytes32[](1);
     objectives[0] = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine));
     P_RequiredObjectives.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)), objectives);
+    console.log(uint8(EObjectives.BuildFirstIronMine));
+    console.log(uint8(EObjectives.BuildFirstCopperMine));
+    console.log(
+      CompletedObjective.get(
+        addressToEntity(creator),
+        P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine))
+      )
+    );
+    console.log(
+      CompletedObjective.get(
+        addressToEntity(creator),
+        P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine))
+      )
+    );
     CompletedObjective.set(
       addressToEntity(creator),
       P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)),
       true
     );
+    console.log(
+      CompletedObjective.get(
+        addressToEntity(creator),
+        P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine))
+      )
+    );
+    console.log(
+      CompletedObjective.get(
+        addressToEntity(creator),
+        P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine))
+      )
+    );
     world.claimObjective(EObjectives.BuildFirstCopperMine);
+    console.log(
+      CompletedObjective.get(
+        addressToEntity(creator),
+        P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine))
+      )
+    );
+    console.log(
+      CompletedObjective.get(
+        addressToEntity(creator),
+        P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine))
+      )
+    );
   }
 }
