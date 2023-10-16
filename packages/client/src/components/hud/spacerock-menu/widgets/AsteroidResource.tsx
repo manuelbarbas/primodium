@@ -1,19 +1,12 @@
 import { SecondaryCard } from "src/components/core/Card";
 
-import {
-  RESOURCE_SCALE,
-  ResourceImage,
-  ResourceType,
-} from "src/util/constants";
+import { RESOURCE_SCALE, ResourceImage, ResourceTypes } from "src/util/constants";
 import { getBlockTypeName } from "src/util/common";
 import { getSpaceRockInfo } from "src/util/spacerock";
 import { Badge } from "src/components/core/Badge";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 
-const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({
-  label,
-  children,
-}) => {
+const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (
     <SecondaryCard className="text-xs gap-2 w-full">
       <p className="text-xs opacity-75 mb-1 uppercase">{label}</p>
@@ -35,9 +28,9 @@ export const AsteroidResource: React.FC<{
             <ResourceIconTooltip
               name={getBlockTypeName(resource.id)}
               image={ResourceImage.get(resource.id) ?? ""}
-              resourceId={resource.id}
+              resource={resource.id}
               amount={resource.amount}
-              resourceType={ResourceType.Resource}
+              resourceType={ResourceTypes.Resource}
               scale={RESOURCE_SCALE}
               direction="top"
             />

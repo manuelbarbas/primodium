@@ -5,16 +5,9 @@ import { Navigator } from "src/components/core/Navigator";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 import { useBuildingInfo } from "src/hooks/useBuildingInfo";
 import { getBlockTypeName } from "src/util/common";
-import {
-  ResourceImage,
-  ResourceType,
-  RESOURCE_SCALE,
-} from "src/util/constants";
+import { ResourceImage, ResourceTypes, RESOURCE_SCALE } from "src/util/constants";
 
-const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({
-  label,
-  children,
-}) => {
+const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (
     <SecondaryCard className="text-xs gap-2 w-full">
       <p className="text-xs opacity-75 mb-1 uppercase">{label}</p>
@@ -23,19 +16,9 @@ const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({
   );
 };
 
-export const BuildingInfo: React.FC<{ building: EntityID }> = ({
-  building,
-}) => {
-  const {
-    buildingType,
-    level,
-    maxLevel,
-    position,
-    production,
-    upgrade,
-    unitProductionMultiplier,
-    storages,
-  } = useBuildingInfo(building);
+export const BuildingInfo: React.FC<{ building: EntityID }> = ({ building }) => {
+  const { buildingType, level, maxLevel, position, production, upgrade, unitProductionMultiplier, storages } =
+    useBuildingInfo(building);
 
   return (
     <Navigator.Screen title="BuildingInfo" className="w-full">
@@ -62,9 +45,9 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({
               <ResourceIconTooltip
                 name={getBlockTypeName(production.resourceID)}
                 image={ResourceImage.get(production.resourceID) ?? ""}
-                resourceId={production.resourceID}
+                resource={production.resourceID}
                 amount={production.resourceProductionRate}
-                resourceType={ResourceType.ResourceRate}
+                resourceType={ResourceTypes.ResourceRate}
               />
             </Badge>
           </DataLabel>
@@ -76,9 +59,9 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({
                 <ResourceIconTooltip
                   name={getBlockTypeName(upgrade.production.resourceID)}
                   image={ResourceImage.get(upgrade.production.resourceID) ?? ""}
-                  resourceId={upgrade.production.resourceID}
+                  resource={upgrade.production.resourceID}
                   amount={upgrade.production.resourceProductionRate}
-                  resourceType={ResourceType.ResourceRate}
+                  resourceType={ResourceTypes.ResourceRate}
                 />
               </Badge>
             )}
@@ -91,13 +74,10 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({
             <b>x{unitProductionMultiplier * RESOURCE_SCALE}</b>{" "}
           </DataLabel>
           <DataLabel label="next level speed">
-            {!upgrade.nextLevelUnitProductionMultiplier ||
-            level === maxLevel ? (
+            {!upgrade.nextLevelUnitProductionMultiplier || level === maxLevel ? (
               <b>N/A</b>
             ) : (
-              <b>
-                x{upgrade.nextLevelUnitProductionMultiplier * RESOURCE_SCALE}
-              </b>
+              <b>x{upgrade.nextLevelUnitProductionMultiplier * RESOURCE_SCALE}</b>
             )}
           </DataLabel>
         </div>
@@ -111,14 +91,10 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({
                   <ResourceIconTooltip
                     name={getBlockTypeName(storage.resourceId)}
                     image={ResourceImage.get(storage.resourceId) ?? ""}
-                    resourceId={storage.resourceId}
+                    resource={storage.resourceId}
                     amount={storage.amount}
                     resourceType={storage.resourceType}
-                    scale={
-                      storage.resourceType === ResourceType.Utility
-                        ? 1
-                        : RESOURCE_SCALE
-                    }
+                    scale={storage.resourceType === ResourceTypes.Utility ? 1 : RESOURCE_SCALE}
                     direction="top"
                   />
                 </Badge>
@@ -126,9 +102,7 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({
             })}
           </DataLabel>
           <DataLabel label="next level storage">
-            {!upgrade.storages ||
-            upgrade.storages.length === 0 ||
-            level === maxLevel ? (
+            {!upgrade.storages || upgrade.storages.length === 0 || level === maxLevel ? (
               <b>N/A</b>
             ) : (
               upgrade.storages.map((storage) => {
@@ -137,14 +111,10 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({
                     <ResourceIconTooltip
                       name={getBlockTypeName(storage.resourceId)}
                       image={ResourceImage.get(storage.resourceId) ?? ""}
-                      resourceId={storage.resourceId}
+                      resource={storage.resourceId}
                       amount={storage.amount}
                       resourceType={storage.resourceType}
-                      scale={
-                        storage.resourceType === ResourceType.Utility
-                          ? 1
-                          : RESOURCE_SCALE
-                      }
+                      scale={storage.resourceType === ResourceTypes.Utility ? 1 : RESOURCE_SCALE}
                       direction="top"
                     />
                   </Badge>

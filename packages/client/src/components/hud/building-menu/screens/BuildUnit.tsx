@@ -18,7 +18,7 @@ import {
 import { Account } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
 import { getBlockTypeName } from "src/util/common";
-import { BackgroundImage, BlockType, ResourceImage, ResourceType } from "src/util/constants";
+import { BackgroundImage, EntityType, ResourceImage, ResourceTypes } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
 import { getRecipe } from "src/util/resource";
 import { getUnitStats, useTrainableUnits } from "src/util/trainUnits";
@@ -38,7 +38,7 @@ export const BuildUnit: React.FC<{
     setCount(1);
   }, [selectedUnit]);
 
-  const playerResourceEntity = hashKeyEntity(BlockType.Housing, account);
+  const playerResourceEntity = hashKeyEntity(EntityType.Housing, account);
 
   const totalUnits = OccupiedUtilityResource.use(playerResourceEntity, {
     value: 0,
@@ -57,7 +57,7 @@ export const BuildUnit: React.FC<{
     if (!unitLevelEntity) return 0;
     const raw = P_RequiredUtility.get(unitLevelEntity);
     if (!raw) return 0;
-    const amountIndex = raw.resourceIDs.indexOf(BlockType.Housing);
+    const amountIndex = raw.resourceIDs.indexOf(EntityType.Housing);
     return amountIndex == -1 ? 0 : raw.requiredAmounts[amountIndex];
   }, [unitLevelEntity]);
 
@@ -138,7 +138,7 @@ export const BuildUnit: React.FC<{
                     <Badge key={`resource-${i}`}>
                       <ResourceIconTooltip
                         image={ResourceImage.get(resource.resource)!}
-                        resourceId={resource.resource}
+                        resource={resource.resource}
                         name={getBlockTypeName(resource.resource)}
                         amount={resource.amount * count}
                         fontSize="sm"
@@ -149,12 +149,12 @@ export const BuildUnit: React.FC<{
                   {requiredHousing > 0 && (
                     <Badge>
                       <ResourceIconTooltip
-                        image={ResourceImage.get(BlockType.Housing) ?? ""}
+                        image={ResourceImage.get(EntityType.Housing) ?? ""}
                         scale={1}
-                        resourceId={BlockType.Housing}
-                        name={getBlockTypeName(BlockType.Housing)}
+                        resource={EntityType.Housing}
+                        name={getBlockTypeName(EntityType.Housing)}
                         amount={requiredHousing * count}
-                        resourceType={ResourceType.Utility}
+                        resourceType={ResourceTypes.Utility}
                         fontSize="sm"
                         validate
                       />

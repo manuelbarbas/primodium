@@ -2,7 +2,7 @@ import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { ComponentUpdate, Entity, Has, HasValue } from "@latticexyz/recs";
 import { defineEnterSystem, defineExitSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { Action } from "src/util/constants";
+import { Action, BuildingEnumLookup } from "src/util/constants";
 import { world } from "src/network/world";
 import { ObjectPosition, OnClick, SetValue } from "../../common/object-components/common";
 import { Texture, Animation, Outline } from "../../common/object-components/sprite";
@@ -10,10 +10,11 @@ import { validateBuildingPlacement, getBuildingDimensions, getBuildingOrigin } f
 import { getRecipe, hasEnoughResources } from "src/util/resource";
 import { toast } from "react-toastify";
 import { getBlockTypeName } from "src/util/common";
-import { Assets, DepthLayers, EntityIDtoAnimationKey, EntityIDtoSpriteKey, SpriteKeys } from "@game/constants";
+import { Assets, DepthLayers, EntityIDtoAnimationKey, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
 import { components } from "src/network/components";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { SetupResult } from "src/network/types";
+import { buildBuilding } from "src/util/web3/contractCalls/buildBuilding";
 
 export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -42,14 +43,14 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
 
     const buildingTool = scene.objectPool.get(objIndex, "Sprite");
 
-    const sprite = EntityIDtoSpriteKey[selectedBuilding][0];
+    const sprite = EntitytoSpriteKey[selectedBuilding][0];
     const animation = EntityIDtoAnimationKey[selectedBuilding]
       ? EntityIDtoAnimationKey[selectedBuilding][0]
       : undefined;
 
     const buildingDimensions = getBuildingDimensions(selectedBuilding);
 
-    const hasEnough = hasEnoughResources(getRecipe(selectedBuilding, 1n));
+    const hasEnough = hasEnoughResources(getRecipe(selectedBuilding, 1n), mud.network.playerEntity);
     const validPlacement = validateBuildingPlacement(
       tileCoord,
       selectedBuilding,
@@ -93,7 +94,8 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
 
           const buildingOrigin = getBuildingOrigin(tileCoord, selectedBuilding);
           if (!buildingOrigin) return;
-          // buildBuilding(buildingOrigin, selectedBuilding, player, network);
+
+          buildBuilding(mud.network, BuildingEnumLookup[selectedBuilding], buildingOrigin);
           components.SelectedAction.remove();
         },
         true

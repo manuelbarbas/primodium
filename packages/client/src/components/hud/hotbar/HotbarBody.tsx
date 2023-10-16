@@ -16,7 +16,7 @@ const HotbarBody: React.FC<{
           <HotbarItem
             key={index}
             index={index}
-            blockType={item.blockType}
+            building={item.blockType}
             action={item.action ?? Action.PlaceBuilding}
           />
         );

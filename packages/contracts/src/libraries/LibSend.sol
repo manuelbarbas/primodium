@@ -2,11 +2,39 @@
 pragma solidity >=0.8.21;
 
 import { ESendType, Arrival, ERock, EResource } from "src/Types.sol";
-import { RockType, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ArrivalCount, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { UnitCount, ReversePosition, RockType, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ArrivalCount, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 import { LibMath } from "libraries/LibMath.sol";
+import { SendArgs } from "src/Types.sol";
 
 library LibSend {
+  /**
+   * @dev Updates the unit count when units are sent from a specified origin by a player entity.
+   * @param playerEntity The identifier of the player entity.
+   * @param sendArgs The SendArgs struct containing information about the sent units.
+   * @notice Checks the availability of units, deducts the sent units, and ensures that at least one unit was sent.
+   */
+  function updateUnitCountOnSend(bytes32 playerEntity, SendArgs memory sendArgs) internal {
+    // Calculate the origin based on the provided coordinates.
+    bytes32 origin = ReversePosition.get(sendArgs.originPosition.x, sendArgs.originPosition.y);
+    bool anyUnitsSent = false;
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+
+    // Iterate through unit prototypes and check the sent unit counts.
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (sendArgs.unitCounts[i] == 0) continue;
+      uint256 count = UnitCount.get(playerEntity, origin, unitPrototypes[i]);
+      // Ensure that there are enough units to send.
+      require(count >= sendArgs.unitCounts[i], "[SendUnits] Not enough units to send");
+      // Deduct the sent units from the unit count.
+      UnitCount.set(playerEntity, origin, unitPrototypes[i], count - sendArgs.unitCounts[i]);
+      anyUnitsSent = true;
+    }
+
+    // Ensure that at least one unit was sent.
+    require(anyUnitsSent, "[SendUnits] No units sent");
+  }
+
   /// @notice Adds a new arrival.
   /// @param arrival The Arrival object to add.
   function sendUnits(Arrival memory arrival) internal {
@@ -54,7 +82,7 @@ library LibSend {
   ) internal view returns (uint256) {
     P_GameConfigData memory config = P_GameConfig.get();
     uint256 unitSpeed = getSlowestUnitSpeed(playerEntity, unitCounts);
-    require(unitSpeed > 0 && config.moveSpeed > 0, "[LibSend] No units");
+    require(unitSpeed > 0 && config.moveSpeed > 0, "[SendUnits] Slowest unit speed must be greater than 0");
     return block.timestamp + ((LibMath.distance(origin, destination) * 100 * 100) / (config.moveSpeed * unitSpeed));
   }
 

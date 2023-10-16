@@ -5,7 +5,7 @@ import { Navigator } from "src/components/core/Navigator";
 import { BuildingType } from "src/network/components/chainComponents";
 import { SelectedBuilding } from "src/network/components/clientComponents";
 import { getBuildingName } from "src/util/building";
-import { BlockType } from "src/util/constants";
+import { EntityType } from "src/util/constants";
 import { Basic } from "./screens/Basic";
 import { BuildQueue } from "./screens/BuildQueue";
 import { BuildUnit } from "./screens/BuildUnit";
@@ -49,11 +49,11 @@ export const BuildingMenu: React.FC = () => {
 
   const renderScreen = () => {
     switch (buildingType) {
-      case BlockType.MainBase:
+      case EntityType.MainBase:
         return <MainBase building={selectedBuilding} />;
-      case BlockType.DroneFactory:
+      case EntityType.DroneFactory:
         return <UnitFactory building={selectedBuilding} />;
-      case BlockType.Workshop:
+      case EntityType.Workshop:
         return <UnitFactory building={selectedBuilding} />;
       default:
         return <Basic building={selectedBuilding} />;
@@ -84,7 +84,7 @@ export const BuildingMenu: React.FC = () => {
         </Button>
       </div>
 
-      {buildingType !== BlockType.MainBase && (
+      {buildingType !== EntityType.MainBase && (
         <div className="absolute top-0 right-9 -translate-y-1/2 translate-x-1/2">
           <Navigator.NavButton className=" btn-square btn-sm font-bold border border-error inline-flex" to="Demolish">
             <FaTrash size={12} />

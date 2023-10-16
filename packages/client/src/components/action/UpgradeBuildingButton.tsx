@@ -9,7 +9,7 @@ import { hashAndTrimKeyEntity } from "src/util/encode";
 import { upgradeBuilding } from "src/util/web3";
 import { useAccount } from "../../hooks/useAccount";
 import { useGameStore } from "../../store/GameStore";
-import { RESOURCE_SCALE, ResourceImage, ResourceType } from "../../util/constants";
+import { RESOURCE_SCALE, ResourceImage, ResourceTypes } from "../../util/constants";
 import { getBuildingResearchRequirement } from "../../util/research";
 import { getRecipe } from "../../util/resource";
 import { GameButton } from "../shared/GameButton";
@@ -96,9 +96,9 @@ export default function UpgradeBuildingButton({
             <ResourceIconTooltip
               key={resource.id}
               image={resourceImage}
-              resourceId={resource.id}
+              resource={resource.id}
               name={resourceName}
-              scale={resource.type === ResourceType.Resource ? RESOURCE_SCALE : 1}
+              scale={resource.type === ResourceTypes.Resource ? RESOURCE_SCALE : 1}
               amount={resource.amount}
             />
           );
