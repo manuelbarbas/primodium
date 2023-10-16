@@ -131,7 +131,8 @@ export function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, playerE
         if (production < resource.amount * count) return false;
         break;
       case ResourceTypes.Utility:
-        if (maxStorage - (resourceCount + resourcesToClaim) < resource.amount * count) return false;
+        if (resourceCount < resource.amount * count) return false;
+
         break;
       default:
         return false;

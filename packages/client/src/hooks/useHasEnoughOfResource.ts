@@ -16,7 +16,7 @@ export function useHasEnoughOfResource(
     case ResourceTypes.ResourceRate:
       return production >= amount;
     case ResourceTypes.Utility:
-      return maxStorage - (resourceCount + resourcesToClaim) >= amount;
+      return resourceCount >= amount;
     default:
       return false;
   }

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { BuildingType, Level, P_Production, P_ProductionData, P_IsUtility, ProductionRate } from "codegen/index.sol";
+import { ResourceCount, BuildingType, Level, P_Production, P_ProductionData, P_IsUtility, ProductionRate } from "codegen/index.sol";
 import { EResource } from "src/Types.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 
@@ -26,6 +26,7 @@ library LibProduction {
     uint256 addedProductionRate = prototypeProduction.amount - prevLevelPrototypeProduction;
     if (P_IsUtility.get(resource)) {
       LibStorage.increaseMaxUtility(playerEntity, resource, addedProductionRate);
+      LibStorage.increaseStoredResource(playerEntity, resource, addedProductionRate);
       return;
     }
     uint256 productionRate = ProductionRate.get(playerEntity, resource) + addedProductionRate;
@@ -43,6 +44,9 @@ library LibProduction {
     if (prototypeProduction.amount == 0) return;
     uint8 resource = prototypeProduction.resource;
     if (P_IsUtility.get(uint8(resource))) {
+      uint256 availableUtility = ResourceCount.get(playerEntity, uint8(resource));
+      require(availableUtility >= prototypeProduction.amount, "[UtilityUsage] not enough available utility production");
+      LibStorage.decreaseStoredResource(playerEntity, resource, prototypeProduction.amount);
       LibStorage.decreaseMaxUtility(playerEntity, resource, prototypeProduction.amount);
       return;
     }

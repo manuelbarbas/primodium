@@ -15,7 +15,7 @@ export const UtilityLabel = ({ name, resourceId }: { name: string; resourceId: E
       <ResourceIconTooltip
         name={name}
         playerEntity={playerEntity}
-        amount={maxStorage - (resourceCount + resourcesToClaim)}
+        amount={resourceCount}
         resource={resourceId}
         scale={1n}
         image={resourceIcon ?? ""}
