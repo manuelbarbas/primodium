@@ -1,25 +1,29 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { addressToEntity } from "src/utils.sol";
+import { addressToEntity, entityToAddress, getSystemResourceId, bytes32ToString } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
+import { PositionData } from "codegen/tables/Position.sol";
+
 import { LibEncode } from "libraries/LibEncode.sol";
-import { LibSpaceRock } from "libraries/LibSpaceRock.sol";
+import { BuildingKey } from "src/Keys.sol";
+import { LibResource } from "libraries/LibResource.sol";
+import { LibUnit } from "libraries/LibUnit.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
 import { ESendType, SendArgs, ERock, Arrival } from "src/Types.sol";
 import { OwnedBy } from "codegen/tables/OwnedBy.sol";
 
 /**
- * @title OnRaid_UpdateRock
- * @dev This contract is a system hook that updates a space rock's status before or after raiding it.
+ * @title OnRaid_TargetClaimResourcesAndUnits
+ * @dev This contract is a system hook that claims resources for target player.
  */
-contract OnRaid_UpdateRock is SystemHook {
+contract OnRaid_TargetClaimResourcesAndUnits is SystemHook {
   constructor() {}
 
   /**
-   * @dev This function is called before the system's main logic is executed. It updates the status of a space rock if it's owned by a player.
+   * @dev This function is called before the system's main logic is executed. It updates information about the space rock after an invasion if it is owned.
    * @param msgSender The address of the message sender.
    * @param systemId The identifier of the system.
    * @param callData The data passed to the system, including the identifier of the space rock.
@@ -29,14 +33,15 @@ contract OnRaid_UpdateRock is SystemHook {
     ResourceId systemId,
     bytes memory callData
   ) public {
-    // Decode the space rock identifier and the player's entity from the callData
+    // Get the player's entity and decode the space rock identifier from the callData
     bytes32 playerEntity = addressToEntity(msgSender);
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
     bytes32 rockEntity = abi.decode(args, (bytes32));
 
-    // Check if the space rock is owned by a player, and if so, update its status
+    // Check if the space rock is owned and claim resources for owner
     if (OwnedBy.get(rockEntity) != 0) {
-      LibSpaceRock.updateRock(playerEntity, rockEntity);
+      LibResource.claimAllResources(OwnedBy.get(rockEntity));
+      LibUnit.claimUnits(OwnedBy.get(rockEntity));
     }
   }
 

@@ -51,20 +51,21 @@ import { OnDestroy_RemoveFromTiles } from "src/hooks/systemHooks/destroy/OnDestr
 import { OnDestroy_ClaimResources } from "src/hooks/systemHooks/destroy/OnDestroy_ClaimResources.sol";
 
 import { OnSendUnits_Requirements } from "src/hooks/systemHooks/sendUnits/OnSendUnits_Requirements.sol";
-import { OnSendUnits_UpdateRock } from "src/hooks/systemHooks/sendUnits/OnSendUnits_UpdateRock.sol";
+import { OnSendUnits_ClaimUnits } from "src/hooks/systemHooks/sendUnits/OnSendUnits_ClaimUnits.sol";
 import { OnSendUnits_UnitCount } from "src/hooks/systemHooks/sendUnits/OnSendUnits_UnitCount.sol";
 
 import { OnTrainUnits_SpendResources } from "src/hooks/systemHooks/trainUnits/OnTrainUnits_SpendResources.sol";
-import { OnTrainUnits_UpdateRock } from "src/hooks/systemHooks/trainUnits/OnTrainUnits_UpdateRock.sol";
+import { OnTrainUnits_ClaimResources } from "src/hooks/systemHooks/trainUnits/OnTrainUnits_ClaimResources.sol";
 import { OnTrainUnits_Requirements } from "src/hooks/systemHooks/trainUnits/OnTrainUnits_Requirements.sol";
 
-import { OnInvade_UpdateRock } from "src/hooks/systemHooks/invade/OnInvade_UpdateRock.sol";
+import { OnInvade_TargetClaimResourcesAndUnits } from "src/hooks/systemHooks/invade/OnInvade_TargetClaimResourcesAndUnits.sol";
+import { OnInvade_ClaimResources } from "src/hooks/systemHooks/invade/OnInvade_ClaimResources.sol";
 import { OnInvade_Requirements } from "src/hooks/systemHooks/invade/OnInvade_Requirements.sol";
 
-import { OnRaid_UpdateRock } from "src/hooks/systemHooks/raid/OnRaid_UpdateRock.sol";
+import { OnRaid_TargetClaimResourcesAndUnits } from "src/hooks/systemHooks/raid/OnRaid_TargetClaimResourcesAndUnits.sol";
 import { OnRaid_Requirements } from "src/hooks/systemHooks/raid/OnRaid_Requirements.sol";
 
-import { OnReinforce_UpdateRock } from "src/hooks/systemHooks/reinforce/OnReinforce_UpdateRock.sol";
+import { OnReinforce_TargetClaimResources } from "src/hooks/systemHooks/reinforce/OnReinforce_TargetClaimResources.sol";
 
 import { OnClaimObjective_Requirements } from "src/hooks/systemHooks/claimObjective/OnClaimObjective_Requirements.sol";
 import { OnClaimObjective_ReceiveRewards } from "src/hooks/systemHooks/claimObjective/OnClaimObjective_ReceiveRewards.sol";
@@ -223,15 +224,12 @@ contract PostDeploy is Script {
     world.grantAccess(UnitCountTableId, address(onSendUnits_UnitCount));
     world.registerSystemHook(getSystemResourceId("SendUnitsSystem"), onSendUnits_UnitCount, BEFORE_CALL_SYSTEM);
 
-    OnSendUnits_UpdateRock onSendUnits_UpdateRock = new OnSendUnits_UpdateRock();
-    world.grantAccess(ResourceCountTableId, address(onSendUnits_UpdateRock));
-    world.grantAccess(LastClaimedAtTableId, address(onSendUnits_UpdateRock));
-    world.grantAccess(QueueItemUnitsTableId, address(onSendUnits_UpdateRock));
-    world.grantAccess(QueueUnitsTableId, address(onSendUnits_UpdateRock));
-    world.grantAccess(UnitCountTableId, address(onSendUnits_UpdateRock));
-    world.grantAccess(ProductionRateTableId, address(onSendUnits_UpdateRock));
-    world.grantAccess(ProducedResourceTableId, address(onSendUnits_UpdateRock));
-    world.registerSystemHook(getSystemResourceId("SendUnitsSystem"), onSendUnits_UpdateRock, AFTER_CALL_SYSTEM);
+    OnSendUnits_ClaimUnits onSendUnits_ClaimUnits = new OnSendUnits_ClaimUnits();
+    world.grantAccess(LastClaimedAtTableId, address(onSendUnits_ClaimUnits));
+    world.grantAccess(QueueItemUnitsTableId, address(onSendUnits_ClaimUnits));
+    world.grantAccess(QueueUnitsTableId, address(onSendUnits_ClaimUnits));
+    world.grantAccess(UnitCountTableId, address(onSendUnits_ClaimUnits));
+    world.registerSystemHook(getSystemResourceId("SendUnitsSystem"), onSendUnits_ClaimUnits, AFTER_CALL_SYSTEM);
   }
 
   /**
@@ -242,16 +240,12 @@ contract PostDeploy is Script {
     OnTrainUnits_Requirements onTrainUnits_Requirements = new OnTrainUnits_Requirements();
     world.registerSystemHook(getSystemResourceId("TrainUnitsSystem"), onTrainUnits_Requirements, BEFORE_CALL_SYSTEM);
 
-    OnTrainUnits_UpdateRock onTrainUnits_UpdateRock = new OnTrainUnits_UpdateRock();
-    world.grantAccess(ResourceCountTableId, address(onTrainUnits_UpdateRock));
-    world.grantAccess(LastClaimedAtTableId, address(onTrainUnits_UpdateRock));
-    world.grantAccess(QueueItemUnitsTableId, address(onTrainUnits_UpdateRock));
-    world.grantAccess(QueueUnitsTableId, address(onTrainUnits_UpdateRock));
-    world.grantAccess(UnitCountTableId, address(onTrainUnits_UpdateRock));
-    world.grantAccess(ProductionRateTableId, address(onTrainUnits_UpdateRock));
-    world.grantAccess(ProducedResourceTableId, address(onTrainUnits_UpdateRock));
+    OnTrainUnits_ClaimResources onTrainUnits_ClaimResources = new OnTrainUnits_ClaimResources();
+    world.grantAccess(ResourceCountTableId, address(onTrainUnits_ClaimResources));
+    world.grantAccess(LastClaimedAtTableId, address(onTrainUnits_ClaimResources));
+    world.grantAccess(ProducedResourceTableId, address(onTrainUnits_ClaimResources));
 
-    world.registerSystemHook(getSystemResourceId("TrainUnitsSystem"), onTrainUnits_UpdateRock, BEFORE_CALL_SYSTEM);
+    world.registerSystemHook(getSystemResourceId("TrainUnitsSystem"), onTrainUnits_ClaimResources, BEFORE_CALL_SYSTEM);
 
     OnTrainUnits_SpendResources onTrainUnits_SpendResources = new OnTrainUnits_SpendResources();
     world.grantAccess(ResourceCountTableId, address(onTrainUnits_SpendResources));
@@ -268,15 +262,25 @@ contract PostDeploy is Script {
     OnInvade_Requirements onInvade_Requirements = new OnInvade_Requirements();
     world.registerSystemHook(getSystemResourceId("InvadeSystem"), onInvade_Requirements, BEFORE_CALL_SYSTEM);
 
-    OnInvade_UpdateRock onInvade_UpdateRock = new OnInvade_UpdateRock();
-    world.grantAccess(ResourceCountTableId, address(onInvade_UpdateRock));
-    world.grantAccess(LastClaimedAtTableId, address(onInvade_UpdateRock));
-    world.grantAccess(QueueItemUnitsTableId, address(onInvade_UpdateRock));
-    world.grantAccess(QueueUnitsTableId, address(onInvade_UpdateRock));
-    world.grantAccess(UnitCountTableId, address(onInvade_UpdateRock));
-    world.grantAccess(ProductionRateTableId, address(onInvade_UpdateRock));
-    world.grantAccess(ProducedResourceTableId, address(onInvade_UpdateRock));
-    world.registerSystemHook(getSystemResourceId("InvadeSystem"), onInvade_UpdateRock, BEFORE_CALL_SYSTEM);
+    OnInvade_ClaimResources onInvade_ClaimResources = new OnInvade_ClaimResources();
+    world.grantAccess(ResourceCountTableId, address(onInvade_ClaimResources));
+    world.grantAccess(LastClaimedAtTableId, address(onInvade_ClaimResources));
+    world.grantAccess(ProducedResourceTableId, address(onInvade_ClaimResources));
+    world.registerSystemHook(getSystemResourceId("InvadeSystem"), onInvade_ClaimResources, BEFORE_CALL_SYSTEM);
+
+    OnInvade_TargetClaimResourcesAndUnits OnInvade_TargetClaimResourcesAndUnits = new OnInvade_TargetClaimResourcesAndUnits();
+    world.grantAccess(ResourceCountTableId, address(OnInvade_TargetClaimResourcesAndUnits));
+    world.grantAccess(LastClaimedAtTableId, address(OnInvade_TargetClaimResourcesAndUnits));
+    world.grantAccess(QueueItemUnitsTableId, address(OnInvade_TargetClaimResourcesAndUnits));
+    world.grantAccess(QueueUnitsTableId, address(OnInvade_TargetClaimResourcesAndUnits));
+    world.grantAccess(UnitCountTableId, address(OnInvade_TargetClaimResourcesAndUnits));
+    world.grantAccess(ProductionRateTableId, address(OnInvade_TargetClaimResourcesAndUnits));
+    world.grantAccess(ProducedResourceTableId, address(OnInvade_TargetClaimResourcesAndUnits));
+    world.registerSystemHook(
+      getSystemResourceId("InvadeSystem"),
+      OnInvade_TargetClaimResourcesAndUnits,
+      BEFORE_CALL_SYSTEM
+    );
   }
 
   /**
@@ -287,15 +291,19 @@ contract PostDeploy is Script {
     OnRaid_Requirements onRaid_Requirements = new OnRaid_Requirements();
     world.registerSystemHook(getSystemResourceId("RaidSystem"), onRaid_Requirements, BEFORE_CALL_SYSTEM);
 
-    OnRaid_UpdateRock onRaid_UpdateRock = new OnRaid_UpdateRock();
-    world.grantAccess(ResourceCountTableId, address(onRaid_UpdateRock));
-    world.grantAccess(LastClaimedAtTableId, address(onRaid_UpdateRock));
-    world.grantAccess(QueueItemUnitsTableId, address(onRaid_UpdateRock));
-    world.grantAccess(QueueUnitsTableId, address(onRaid_UpdateRock));
-    world.grantAccess(UnitCountTableId, address(onRaid_UpdateRock));
-    world.grantAccess(ProductionRateTableId, address(onRaid_UpdateRock));
-    world.grantAccess(ProducedResourceTableId, address(onRaid_UpdateRock));
-    world.registerSystemHook(getSystemResourceId("RaidSystem"), onRaid_UpdateRock, BEFORE_CALL_SYSTEM);
+    OnRaid_TargetClaimResourcesAndUnits onRaid_TargetClaimResourcesAndUnits = new OnRaid_TargetClaimResourcesAndUnits();
+    world.grantAccess(ResourceCountTableId, address(onRaid_TargetClaimResourcesAndUnits));
+    world.grantAccess(LastClaimedAtTableId, address(onRaid_TargetClaimResourcesAndUnits));
+    world.grantAccess(QueueItemUnitsTableId, address(onRaid_TargetClaimResourcesAndUnits));
+    world.grantAccess(QueueUnitsTableId, address(onRaid_TargetClaimResourcesAndUnits));
+    world.grantAccess(UnitCountTableId, address(onRaid_TargetClaimResourcesAndUnits));
+    world.grantAccess(ProductionRateTableId, address(onRaid_TargetClaimResourcesAndUnits));
+    world.grantAccess(ProducedResourceTableId, address(onRaid_TargetClaimResourcesAndUnits));
+    world.registerSystemHook(
+      getSystemResourceId("RaidSystem"),
+      onRaid_TargetClaimResourcesAndUnits,
+      BEFORE_CALL_SYSTEM
+    );
   }
 
   /**
@@ -303,12 +311,9 @@ contract PostDeploy is Script {
    * @param world The World contract instance.
    */
   function registerReinforce(IWorld world) internal {
-    OnReinforce_UpdateRock onReinforce_UpdateRock = new OnReinforce_UpdateRock();
+    OnReinforce_TargetClaimResources onReinforce_UpdateRock = new OnReinforce_TargetClaimResources();
     world.grantAccess(ResourceCountTableId, address(onReinforce_UpdateRock));
     world.grantAccess(LastClaimedAtTableId, address(onReinforce_UpdateRock));
-    world.grantAccess(QueueItemUnitsTableId, address(onReinforce_UpdateRock));
-    world.grantAccess(QueueUnitsTableId, address(onReinforce_UpdateRock));
-    world.grantAccess(UnitCountTableId, address(onReinforce_UpdateRock));
     world.grantAccess(ProductionRateTableId, address(onReinforce_UpdateRock));
     world.grantAccess(ProducedResourceTableId, address(onReinforce_UpdateRock));
     world.registerSystemHook(getSystemResourceId("ReinforceSystem"), onReinforce_UpdateRock, BEFORE_CALL_SYSTEM);

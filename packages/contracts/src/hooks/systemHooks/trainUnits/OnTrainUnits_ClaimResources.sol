@@ -1,55 +1,40 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { addressToEntity } from "src/utils.sol";
+import { addressToEntity, entityToAddress, getSystemResourceId, bytes32ToString } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
+
 import { LibEncode } from "libraries/LibEncode.sol";
 import { BuildingKey } from "src/Keys.sol";
-import { LibSpaceRock } from "libraries/LibSpaceRock.sol";
+import { LibResource } from "libraries/LibResource.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
 import { ESendType, SendArgs, ERock, Arrival } from "src/Types.sol";
 import { OwnedBy } from "codegen/tables/OwnedBy.sol";
 
 /**
- * @title OnReinforce_UpdateRock
- * @dev This contract is a system hook that updates a space rock's status before reinforcing it.
+ * @title OnTrainUnits_ClaimResources
+ * @dev This contract is a system hook that claims resources for target player.
  */
-contract OnReinforce_UpdateRock is SystemHook {
+contract OnTrainUnits_ClaimResources is SystemHook {
   constructor() {}
 
   /**
-   * @dev This function is called before the system's main logic is executed. It updates the status of a space rock if it's owned by a player and is being reinforced.
+   * @dev This function is called before the system's main logic is executed. It updates information about the space rock after an invasion if it is owned.
    * @param msgSender The address of the message sender.
    * @param systemId The identifier of the system.
-   * @param callData The data passed to the system, including the parameters of the reinforcement function.
+   * @param callData The data passed to the system, including the identifier of the space rock.
    */
   function onBeforeCallSystem(
     address msgSender,
     ResourceId systemId,
     bytes memory callData
   ) public {
-    // Extract the function selector from the call data
-    bytes memory functionSelector = SliceInstance.toBytes(SliceLib.getSubslice(callData, 0, 4));
-
-    // Check if the function being called is "reinforce(uint256,uint256)"
-    if (keccak256(functionSelector) != keccak256("reinforce(uint256,uint256)")) {
-      return;
-    }
-
-    // Decode the player's entity from the message sender's address
+    // Get the player's entity and decode the space rock identifier from the callData
     bytes32 playerEntity = addressToEntity(msgSender);
-
-    // Decode the parameters of the reinforce function
-    bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
-    (bytes32 rockEntity, bytes32 arrival) = abi.decode(args, (bytes32, bytes32));
-
-    // Check if the space rock is owned by a player, and if so, update its status
-    if (OwnedBy.get(rockEntity) != 0) {
-      LibSpaceRock.updateRock(playerEntity, rockEntity);
-    }
+    LibResource.claimAllResources(playerEntity);
   }
 
   /**

@@ -8,17 +8,17 @@ import { PositionData } from "codegen/tables/Position.sol";
 
 import { LibEncode } from "libraries/LibEncode.sol";
 import { BuildingKey } from "src/Keys.sol";
-import { LibSpaceRock } from "libraries/LibSpaceRock.sol";
+import { LibResource } from "libraries/LibResource.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
 import { ESendType, SendArgs, ERock, Arrival } from "src/Types.sol";
 import { OwnedBy } from "codegen/tables/OwnedBy.sol";
 
 /**
- * @title OnInvade_UpdateRock
- * @dev This contract is a system hook that updates information about a space rock after an invasion.
+ * @title OnReinforce_TargetClaimResources
+ * @dev This contract is a system hook that claims resources for target player.
  */
-contract OnInvade_UpdateRock is SystemHook {
+contract OnReinforce_TargetClaimResources is SystemHook {
   constructor() {}
 
   /**
@@ -37,9 +37,9 @@ contract OnInvade_UpdateRock is SystemHook {
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
     bytes32 rockEntity = abi.decode(args, (bytes32));
 
-    // Check if the space rock is owned and update its information
+    // Check if the space rock is owned and claim resources for owner
     if (OwnedBy.get(rockEntity) != 0) {
-      LibSpaceRock.updateRock(playerEntity, rockEntity);
+      LibResource.claimAllResources(OwnedBy.get(rockEntity));
     }
   }
 
