@@ -422,6 +422,11 @@ export const config = mudConfig({
       keySchema: { entity: "bytes32" },
       valueSchema: "uint256",
     },
+
+    HasBuiltBuilding: {
+      keySchema: { entity: "bytes32", building: "bytes32" },
+      valueSchema: "bool",
+    },
   },
 });
 
