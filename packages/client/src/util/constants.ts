@@ -1,8 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { encodeEntity } from "@latticexyz/store-sync/recs";
-import { EBuilding, EResource } from "contracts/config/enums";
+import { EBuilding, EResource, ERock, ESize } from "contracts/config/enums";
 import { Key } from "engine/types";
-import { EMotherlodeType, ERock, ESize } from "src/util/web3/types";
 import { toHex } from "viem";
 import { reverseRecord } from "./common";
 
@@ -825,17 +824,17 @@ export const KeyImages = new Map<Key, string>([
 ]);
 
 export const MotherlodeSizeNames: Record<number, string> = {
-  [ESize.SMALL]: "Small",
-  [ESize.MEDIUM]: "Medium",
-  [ESize.LARGE]: "Large",
+  [ESize.Small]: "Small",
+  [ESize.Medium]: "Medium",
+  [ESize.Large]: "Large",
 };
 
 // do the same for types
 export const MotherlodeTypeNames: Record<number, string> = {
-  [EMotherlodeType.TITANIUM]: "Titanium",
-  [EMotherlodeType.IRIDIUM]: "Iridium",
-  [EMotherlodeType.PLATINUM]: "Platinum",
-  [EMotherlodeType.KIMBERLITE]: "Kimberlite",
+  [EResource.Titanium]: "Titanium",
+  [EResource.Iridium]: "Iridium",
+  [EResource.Platinum]: "Platinum",
+  [EResource.Kimberlite]: "Kimberlite",
 };
 
 export const SpaceRockTypeNames: Record<number, string> = {

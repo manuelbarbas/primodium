@@ -1,10 +1,10 @@
 import { Coord } from "@latticexyz/utils";
-import { encodeCoord, getMotherlodeEntity, hashKeyEntity } from "src/util/encode";
+import { encodeCoord, getMotherlodeEntity } from "src/util/encode";
 import { getPositionByVector } from "src/util/vector";
 import { world } from "src/network/world";
 import { Entity } from "@latticexyz/recs";
 import { components } from "src/network/components";
-import { EMotherlodeType } from "src/util/web3/types";
+import { EResource, ERock, ESize } from "contracts/config/enums";
 
 export function initializeMotherlodes(sourceEntity: Entity, source: Coord) {
   const config = components.P_GameConfig.get();
@@ -20,7 +20,10 @@ export function initializeMotherlodes(sourceEntity: Entity, source: Coord) {
     const motherlodeEntity = getMotherlodeEntity(sourceEntity, motherlodePosition);
     const encodedPosition = encodeCoord(motherlodePosition);
     world.registerEntity({ id: encodedPosition });
-    components.ReversePosition.update({ entity: motherlodeEntity as string }, encodedPosition);
+    components.ReversePosition.set(
+      { entity: motherlodeEntity as string, __staticData: "", __encodedLengths: "", __dynamicData: "" },
+      encodedPosition
+    );
 
     if (!isMotherlode(motherlodeEntity, Number(config.motherlodeChanceInv))) continue;
 
@@ -28,16 +31,24 @@ export function initializeMotherlodes(sourceEntity: Entity, source: Coord) {
     const { size: rawSize, motherlodeType: rawMotherlodeType } = getMotherlodeRawPrototype(motherlodeEntity);
     const motherlodeType = getMotherlodeType(rawMotherlodeType);
     const size = getSize(rawSize);
-    components.Motherlode.update({ size, motherlodeType }, motherlodeEntity);
-    components.Position.update({ ...motherlodePosition, parent: "0" }, motherlodeEntity);
-
-    // const resource = components.P_MotherlodeResource.get(hashKeyEntity(motherlodeType, size))?.resource;
-
-    // if (!resource) throw new Error("no resource found for this motherlode type and size");
-    // const resourceMotherlodeEntity = hashKeyEntity(resource, motherlodeEntity);
-    // world.registerEntity({ id: resourceMotherlodeEntity });
-    // components.MotherlodeResource.set({ value: 0 }, resourceMotherlodeEntity);
-    components.RockType.set({ value: 2 }, motherlodeEntity);
+    components.Motherlode.set(
+      {
+        size,
+        motherlodeType,
+        __staticData: "",
+        __encodedLengths: "",
+        __dynamicData: "",
+      },
+      motherlodeEntity
+    );
+    components.Position.set(
+      { ...motherlodePosition, parent: "0", __staticData: "", __encodedLengths: "", __dynamicData: "" },
+      motherlodeEntity
+    );
+    components.RockType.set(
+      { value: ERock.Motherlode, __staticData: "", __encodedLengths: "", __dynamicData: "" },
+      motherlodeEntity
+    );
   }
 }
 
@@ -47,16 +58,16 @@ function isMotherlode(entity: Entity, chanceInv: number) {
 }
 
 function getSize(size: number) {
-  if (size <= 16) return EMotherlodeSize.SMALL;
-  if (size <= 26) return EMotherlodeSize.MEDIUM;
-  return EMotherlodeSize.LARGE;
+  if (size <= 16) return ESize.Small;
+  if (size <= 26) return ESize.Medium;
+  return ESize.Large;
 }
 
 function getMotherlodeType(motherlodeType: number) {
-  if (motherlodeType <= 11) return EMotherlodeType.TITANIUM;
-  if (motherlodeType < 21) return EMotherlodeType.IRIDIUM;
-  if (motherlodeType < 27) return EMotherlodeType.PLATINUM;
-  return EMotherlodeType.KIMBERLITE;
+  if (motherlodeType <= 11) return EResource.Titanium;
+  if (motherlodeType < 21) return EResource.Iridium;
+  if (motherlodeType < 27) return EResource.Platinum;
+  return EResource.Kimberlite;
 }
 
 const ONE = BigInt(1);

@@ -13,6 +13,7 @@ import { clampedIndex } from "src/util/common";
 import { SetupResult } from "src/network/types";
 import { components } from "src/network/components";
 import { MUDEnums } from "contracts/config/enums";
+import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 
 export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -108,6 +109,6 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
     if (!coord) return;
 
     render(entity, coord);
-    // initializeMotherlodes(entity, coord);
+    initializeMotherlodes(entity, coord);
   });
 };

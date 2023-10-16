@@ -35,8 +35,6 @@ export const ViewStarmap = () => {
     };
   }, []);
 
-  console.log(mapOpen);
-
   return (
     <>
       {mapOpen && (
