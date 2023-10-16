@@ -8,11 +8,11 @@ import { components as comps } from "src/network/components";
 import { Account } from "src/network/components/clientComponents";
 import { Hex } from "viem";
 import { clampedIndex, getBlockTypeName, toRomanNumeral } from "./common";
-import { ResourceCategory } from "./constants";
+import { ResourceTypes } from "./constants";
 import { outOfBounds } from "./outOfBounds";
 import { getRecipe, getRecipeDifference } from "./resource";
 import { getBuildingAtCoord, getResourceKey } from "./tile";
-import { EntityIDtoSpriteKey } from "@game/constants";
+import { EntitytoSpriteKey } from "@game/constants";
 
 type Dimensions = { width: number; height: number };
 export const blueprintCache = new Map<Entity, Dimensions>();
@@ -136,14 +136,14 @@ export const getBuildingStorages = (building: Hex, level: bigint) => {
 
     return {
       resourceId: resource as Entity,
-      resourceType: comps.P_IsUtility.getWithKeys({ id: i }) ? ResourceCategory.Resource : ResourceCategory.Utility,
+      resourceType: comps.P_IsUtility.getWithKeys({ id: i }) ? ResourceTypes.Resource : ResourceTypes.Utility,
       amount: storage,
     };
   });
 
   return resourceStorages.filter((storage) => !!storage) as {
     resourceId: Entity;
-    resourceType: ResourceCategory;
+    resourceType: ResourceTypes;
     amount: bigint;
   }[];
 };
@@ -178,11 +178,11 @@ export const getBuildingInfo = (building: Entity) => {
   const mainBaseLvlReq = comps.P_RequiredBaseLevel.getWithKeys(buildingNextLevelKeys)?.value ?? 1;
 
   let imageUri = "";
-  if (EntityIDtoSpriteKey[buildingType]) {
+  if (EntitytoSpriteKey[buildingType]) {
     const imageIndex = parseInt(level ? level.toString() : "1") - 1;
 
     imageUri = getSpriteBase64(
-      EntityIDtoSpriteKey[buildingType][clampedIndex(imageIndex, EntityIDtoSpriteKey[buildingType].length)]
+      EntitytoSpriteKey[buildingType][clampedIndex(imageIndex, EntitytoSpriteKey[buildingType].length)]
     );
   }
 

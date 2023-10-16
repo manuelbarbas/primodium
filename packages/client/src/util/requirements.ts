@@ -25,7 +25,7 @@ import {
   TotalUnitsDestroyed,
 } from "src/network/components/chainComponents";
 import { Account, Hangar, HomeAsteroid } from "src/network/components/clientComponents";
-import { RESOURCE_SCALE, RequirementType, ResourceCategory } from "./constants";
+import { RESOURCE_SCALE, RequirementType, ResourceTypes } from "./constants";
 import { hashAndTrimKeyEntity } from "./encode";
 import { getFullResourceCount, getRecipe, hasEnoughResources } from "./resource";
 
@@ -257,7 +257,7 @@ export function getResourceRequirement(entityID: EntityID): Requirement | null {
   const requiredResources = rawRequiredResources.resources.map((resource, index) => ({
     id: resource,
     requiredValue: rawRequiredResources.values[index],
-    currentValue: getFullResourceCount(resource, ResourceCategory.Resource).resourceCount,
+    currentValue: getFullResourceCount(resource, ResourceTypes.Resource).resourceCount,
     scale: RESOURCE_SCALE,
   }));
 
@@ -278,7 +278,7 @@ export function getResourceProductionRequirement(entityID: EntityID): Requiremen
   const requiredProduction = rawRequiredProduction.resources.map((resource, index) => ({
     id: resource,
     requiredValue: rawRequiredProduction.values[index],
-    currentValue: getFullResourceCount(resource, ResourceCategory.Resource).production,
+    currentValue: getFullResourceCount(resource, ResourceTypes.Resource).production,
     scale: RESOURCE_SCALE,
   }));
 
@@ -299,7 +299,7 @@ export function getMaxUtilityRequirement(entityID: EntityID): Requirement | null
   const requiredMaxUtility = rawUtilityRequirement.resourceIDs.map((resource, index) => ({
     id: resource,
     requiredValue: rawUtilityRequirement.requiredAmounts[index],
-    currentValue: getFullResourceCount(resource, ResourceCategory.Utility).maxStorage,
+    currentValue: getFullResourceCount(resource, ResourceTypes.Utility).maxStorage,
     scale: 1,
   }));
 

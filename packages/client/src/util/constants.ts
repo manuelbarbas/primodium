@@ -4,6 +4,7 @@ import { EBuilding, EResource } from "contracts/config/enums";
 import { Key } from "engine/types";
 import { EMotherlodeType, ERock, ESize } from "src/util/web3/types";
 import { toHex } from "viem";
+import { reverseRecord } from "./common";
 
 export const toHex32 = (input: string) => toHex(input, { size: 32 });
 export const encodeEntityLevel = (entity: string, level: number) => {
@@ -15,15 +16,16 @@ export enum Action {
   SelectBuilding,
   PlaceBuilding,
 }
-export enum ResourceCategory {
-  Resource,
-  ResourceRate,
-  Utility,
-}
 
 export const SPEED_SCALE = BigInt(100);
 export const RESOURCE_SCALE = BigInt(100);
 export const PIRATE_KEY = "pirate";
+
+export enum ResourceTypes {
+  Resource,
+  ResourceRate,
+  Utility,
+}
 
 export enum RewardType {
   Resource,
@@ -862,7 +864,7 @@ export const UtilityStorages = [
   EntityType.FleetMoves,
 ];
 
-export const ResourceTypes: { [x: Entity]: EResource } = {
+export const ResourceEnumLookup: Record<Entity, EResource> = {
   [EntityType.Iron]: EResource.Iron,
   [EntityType.Copper]: EResource.Copper,
   [EntityType.Lithium]: EResource.Lithium,
@@ -886,7 +888,9 @@ export const ResourceTypes: { [x: Entity]: EResource } = {
   [EntityType.FleetMoves]: EResource.U_MaxMoves,
 };
 
-export const BuildingTypes: { [x: Entity]: EBuilding } = {
+export const ResourceEntityLookup = reverseRecord(ResourceEnumLookup);
+
+export const BuildingEnumLookup: Record<Entity, EBuilding> = {
   [EntityType.IronMine]: EBuilding.IronMine,
   [EntityType.CopperMine]: EBuilding.CopperMine,
   [EntityType.LithiumMine]: EBuilding.LithiumMine,
@@ -901,3 +905,5 @@ export const BuildingTypes: { [x: Entity]: EBuilding } = {
   [EntityType.Hangar]: EBuilding.Hangar,
   [EntityType.MainBase]: EBuilding.MainBase,
 };
+
+export const BuildingEntityLookup = reverseRecord(BuildingEnumLookup);

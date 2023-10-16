@@ -5,7 +5,7 @@ import { Navigator } from "src/components/core/Navigator";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 import { useBuildingInfo } from "src/hooks/useBuildingInfo";
 import { getBlockTypeName } from "src/util/common";
-import { ResourceImage, ResourceCategory, RESOURCE_SCALE } from "src/util/constants";
+import { ResourceImage, ResourceTypes, RESOURCE_SCALE } from "src/util/constants";
 
 const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (
@@ -47,7 +47,7 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({ building }) => 
                 image={ResourceImage.get(production.resourceID) ?? ""}
                 resource={production.resourceID}
                 amount={production.resourceProductionRate}
-                resourceType={ResourceCategory.ResourceRate}
+                resourceType={ResourceTypes.ResourceRate}
               />
             </Badge>
           </DataLabel>
@@ -61,7 +61,7 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({ building }) => 
                   image={ResourceImage.get(upgrade.production.resourceID) ?? ""}
                   resource={upgrade.production.resourceID}
                   amount={upgrade.production.resourceProductionRate}
-                  resourceType={ResourceCategory.ResourceRate}
+                  resourceType={ResourceTypes.ResourceRate}
                 />
               </Badge>
             )}
@@ -94,7 +94,7 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({ building }) => 
                     resource={storage.resourceId}
                     amount={storage.amount}
                     resourceType={storage.resourceType}
-                    scale={storage.resourceType === ResourceCategory.Utility ? 1 : RESOURCE_SCALE}
+                    scale={storage.resourceType === ResourceTypes.Utility ? 1 : RESOURCE_SCALE}
                     direction="top"
                   />
                 </Badge>
@@ -114,7 +114,7 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({ building }) => 
                       resource={storage.resourceId}
                       amount={storage.amount}
                       resourceType={storage.resourceType}
-                      scale={storage.resourceType === ResourceCategory.Utility ? 1 : RESOURCE_SCALE}
+                      scale={storage.resourceType === ResourceTypes.Utility ? 1 : RESOURCE_SCALE}
                       direction="top"
                     />
                   </Badge>

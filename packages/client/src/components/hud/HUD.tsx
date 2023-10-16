@@ -15,6 +15,7 @@ import { BrandingLabel } from "../shared/BrandingLabel";
 import { Hotbar } from "./hotbar/Hotbar";
 // import { Panes } from "./panes/Panes";
 import { Resources } from "./resources/Resources";
+import { PrototypeInfo } from "./PrototypeInfo";
 // import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 // import { BlueprintInfo } from "./tile-info/BlueprintInfo";
 // import { Units } from "./units/Units";
@@ -35,7 +36,7 @@ export const GameHUD = () => {
       asteroidListener.dispose();
       starmapListener.dispose();
     };
-  }, []);
+  }, [toggleShowUI]);
 
   return (
     <div className="screen-container font-mono">
@@ -48,9 +49,7 @@ export const GameHUD = () => {
               {/* {!getBlockTypeName(selectedBuilding) && <BuildingMenu />} */}
             </HUD.BottomMiddle>
             <HUD.TopMiddle>
-              {/* {getBlockTypeName(selectedBuilding) && selectedBuilding && (
-                <BlueprintInfo buildingType={selectedBuilding} />
-              )} */}
+              {getBlockTypeName(selectedBuilding) && selectedBuilding && <PrototypeInfo building={selectedBuilding} />}
               {/* {(!selectedBuilding || !getBlockTypeName(selectedBuilding)) && <ViewStarmap />} */}
             </HUD.TopMiddle>
             {/* <HUD.TopLeft>
