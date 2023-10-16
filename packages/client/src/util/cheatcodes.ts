@@ -1,8 +1,10 @@
 import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { encodeEntity, singletonEntity } from "@latticexyz/store-sync/recs";
 import { Cheatcodes } from "@primodiumxyz/mud-game-tools";
 import { SetupResult } from "src/network/types";
-import { EntityType } from "./constants";
+import { EntityType, ResourceEnumLookup, ResourceStorages, UtilityStorages, toHex32 } from "./constants";
+import { hashKeyEntity } from "./encode";
+import { Hex } from "viem";
 const resources: Record<string, Entity> = {
   iron: EntityType.Iron,
   copper: EntityType.Copper,
@@ -20,9 +22,9 @@ const resources: Record<string, Entity> = {
   platinum: EntityType.Platinum,
   alloy: EntityType.Alloy,
   pvcell: EntityType.PVCell,
-  housing: EntityType.U_Housing,
+  housing: EntityType.Housing,
   // vessel: BlockType.VesselCapacity,
-  electricity: EntityType.U_Electricity,
+  electricity: EntityType.Electricity,
 };
 
 const units: Record<string, Entity> = {
@@ -46,6 +48,42 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
       params: [],
       function: async () => {
         mud.contractCalls.removeComponent(mud.components.Counter, singletonEntity);
+      },
+    },
+    getTesterPack: {
+      params: [],
+      function: async () => {
+        const player = mud.network.playerEntity;
+
+        ResourceStorages.forEach(async (resource) => {
+          if (!player) throw new Error("No player found");
+
+          await mud.contractCalls.setComponentValue(
+            mud.components.ResourceCount,
+            encodeEntity(
+              { entity: "bytes32", resource: "uint8" },
+              { entity: player as Hex, resource: ResourceEnumLookup[resource] }
+            ),
+            {
+              value: 10000000n,
+            }
+          );
+        });
+
+        UtilityStorages.forEach(async (resource) => {
+          if (!player) throw new Error("No player found");
+
+          await mud.contractCalls.setComponentValue(
+            mud.components.MaxResourceCount,
+            encodeEntity(
+              { entity: "bytes32", resource: "uint8" },
+              { entity: player as Hex, resource: ResourceEnumLookup[resource] }
+            ),
+            {
+              value: 10000000n,
+            }
+          );
+        });
       },
     },
   };
