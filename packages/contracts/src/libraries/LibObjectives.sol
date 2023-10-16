@@ -24,10 +24,10 @@ import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 library LibObjectives {
   function checkObjectiveRequirements(bytes32 playerEntity, EObjectives objectiveType) internal {
     checkIsValidObjective(objectiveType);
-    checkHasNotCompletedObjective(playerEntity, objectiveType);
 
     bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(objectiveType));
 
+    checkHasNotCompletedObjective(playerEntity, objectivePrototype);
     checkHasCompletedRequiredObjectives(playerEntity, objectivePrototype);
     checkObjectiveMainBaseLevelRequirement(playerEntity, objectivePrototype);
     checkHasBuiltRequiredBuildings(playerEntity, objectivePrototype);
@@ -45,15 +45,15 @@ library LibObjectives {
     );
   }
 
-  function checkHasNotCompletedObjective(bytes32 playerEntity, EObjectives objectiveType) internal {
+  function checkHasNotCompletedObjective(bytes32 playerEntity, bytes32 objectivePrototype) internal {
     require(
-      !CompletedObjective.get(playerEntity, uint8(objectiveType)),
+      !CompletedObjective.get(playerEntity, objectivePrototype),
       "[LibObjectives] Player has already completed objective"
     );
   }
 
   function checkHasCompletedRequiredObjectives(bytes32 playerEntity, bytes32 objective) internal {
-    uint8[] memory requiredObjectives = P_RequiredObjectives.get(objective);
+    bytes32[] memory requiredObjectives = P_RequiredObjectives.get(objective);
     for (uint256 i = 0; i < requiredObjectives.length; i++) {
       require(
         CompletedObjective.get(playerEntity, requiredObjectives[i]),
@@ -73,7 +73,7 @@ library LibObjectives {
   }
 
   function checkHasBuiltRequiredBuildings(bytes32 playerEntity, bytes32 objective) internal {
-    uint8[] memory requiredBuiltBuildings = P_HasBuiltBuildings.get(objective);
+    bytes32[] memory requiredBuiltBuildings = P_HasBuiltBuildings.get(objective);
     for (uint256 i = 0; i < requiredBuiltBuildings.length; i++) {
       require(
         HasBuiltBuilding.get(playerEntity, requiredBuiltBuildings[i]),
@@ -116,15 +116,14 @@ library LibObjectives {
     P_RequiredUnitsData memory requiredUnits = P_RequiredUnits.get(objective);
     for (uint256 i = 0; i < requiredUnits.units.length; i++) {
       require(
-        LibUnit.getUnitCountOnHomeAsteroid(playerEntity, P_EnumToPrototype.get(UnitKey, requiredUnits.units[i])) >=
-          requiredUnits.amounts[i],
+        LibUnit.getUnitCountOnHomeAsteroid(playerEntity, requiredUnits.units[i]) >= requiredUnits.amounts[i],
         "[LibObjectives] Player does not have the required units"
       );
     }
   }
 
   function checkDefeatedPirateAsteroidRequirement(bytes32 playerEntity, bytes32 objective) internal {
-    uint8[] memory requiredDefeatedPirates = P_DefeatedPirates.get(objective);
+    bytes32[] memory requiredDefeatedPirates = P_DefeatedPirates.get(objective);
     for (uint256 i = 0; i < requiredDefeatedPirates.length; i++) {
       require(
         DefeatedPirate.get(playerEntity, requiredDefeatedPirates[i]),

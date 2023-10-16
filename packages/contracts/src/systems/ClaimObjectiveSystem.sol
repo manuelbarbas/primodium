@@ -5,7 +5,7 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { EObjectives } from "src/Types.sol";
 
 contract ClaimObjectiveSystem is PrimodiumSystem {
-  function ClaimObjective(bytes32 objective) public {
+  function claimObjective(EObjectives objective) public {
     // P_IsObjectiveComponent isObjectiveComponent = P_IsObjectiveComponent(
     //   getAddressById(components, P_IsObjectiveComponentID)
     // );

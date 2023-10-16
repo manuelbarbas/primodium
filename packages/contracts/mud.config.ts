@@ -428,12 +428,12 @@ export const config = mudConfig({
       keySchema: { prototype: "bytes32" },
       valueSchema: {
         // mud doesnt recognize EObjective arrays so we will manually convert them
-        objectives: "uint8[]",
+        objectives: "bytes32[]",
       },
     },
 
     CompletedObjective: {
-      keySchema: { entity: "bytes32", objective: "uint8" },
+      keySchema: { entity: "bytes32", objective: "bytes32" },
       valueSchema: "bool",
     },
 
@@ -441,7 +441,7 @@ export const config = mudConfig({
       keySchema: { prototype: "bytes32" },
       valueSchema: {
         // mud doesnt recognize EUnit arrays so we will manually convert them
-        unitTypes: "uint8[]",
+        unitTypes: "bytes32[]",
         amounts: "uint256[]",
       },
     },
@@ -457,11 +457,11 @@ export const config = mudConfig({
 
     P_HasBuiltBuildings: {
       keySchema: { prototype: "bytes32" },
-      valueSchema: "uint8[]",
+      valueSchema: "bytes32[]",
     },
 
     HasBuiltBuilding: {
-      keySchema: { entity: "bytes32", buildingType: "uint8" },
+      keySchema: { entity: "bytes32", buildingType: "bytes32" },
       valueSchema: "bool",
     },
 
@@ -483,13 +483,13 @@ export const config = mudConfig({
       keySchema: { prototype: "bytes32" },
       valueSchema: {
         // mud doesnt recognize EUnit arrays so we will manually convert them
-        units: "uint8[]",
+        units: "bytes32[]",
         amounts: "uint256[]",
       },
     },
 
     DestroyedUnit: {
-      keySchema: { entity: "bytes32", unit: "uint8" },
+      keySchema: { entity: "bytes32", unit: "bytes32" },
       valueSchema: "uint256",
     },
 
@@ -509,16 +509,16 @@ export const config = mudConfig({
 
     P_SpawnPirateAsteroids: {
       keySchema: { prototype: "bytes32" },
-      valueSchema: "uint8",
+      valueSchema: "bytes32",
     },
 
     P_DefeatedPirates: {
       keySchema: { prototype: "bytes32" },
-      valueSchema: "uint8[]",
+      valueSchema: "bytes32[]",
     },
 
     DefeatedPirate: {
-      keySchema: { entity: "bytes32", pirate: "uint8" },
+      keySchema: { entity: "bytes32", pirate: "bytes32" },
       valueSchema: "bool",
     },
 
@@ -526,7 +526,7 @@ export const config = mudConfig({
       keySchema: { prototype: "bytes32" },
       valueSchema: {
         // mud doesnt recognize EUnit arrays so we will manually convert them
-        units: "uint8[]",
+        units: "bytes32[]",
         amounts: "uint256[]",
       },
     },

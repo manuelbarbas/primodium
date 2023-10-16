@@ -117,7 +117,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     P_ListMaxResourceUpgrades.set(IronMinePrototypeId, 2, data);
     P_ByLevelMaxResourceUpgrades.set(IronMinePrototypeId, Iron, 1, 50);
     P_ByLevelMaxResourceUpgrades.set(IronMinePrototypeId, Iron, 2, 100);
-
+    MaxResourceCount.set(playerEntity, Iron, 0);
     switchPrank(creator);
     world.build(EBuilding.IronMine, getIronPosition(creator));
     world.upgradeBuilding(getIronPosition(creator));

@@ -99,6 +99,7 @@ contract DestroySystemTest is PrimodiumTest {
     P_ByLevelMaxResourceUpgrades.set(IronMinePrototypeId, uint8(EResource.Iron), 1, 50);
 
     switchPrank(creator);
+    MaxResourceCount.set(playerEntity, uint8(EResource.Iron), 0);
     world.build(EBuilding.IronMine, getIronPosition(creator));
     assertEq(MaxResourceCount.get(playerEntity, uint8(EResource.Iron)), 50);
 

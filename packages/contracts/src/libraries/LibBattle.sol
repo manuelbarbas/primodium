@@ -48,23 +48,11 @@ library LibBattle {
 
       for (uint256 i = 0; i < unitPrototypes.length; i++) {
         battleResult.attackerUnitsLeft[i] = (attackCounts[i] * lossRatio) / 100;
-        DestroyedUnit.set(attackerEntity, uint8(i), DestroyedUnit.get(attackerEntity, uint8(i)) + defenseCounts[i]);
-        DestroyedUnit.set(
-          defenderEntity,
-          uint8(i),
-          DestroyedUnit.get(defenderEntity, uint8(i)) + ((attackCounts[i] * (100 - lossRatio)) / 100)
-        );
       }
     } else {
       lossRatio = 100 - (defensePoints == 0 ? 0 : ((attackPoints * 100) / defensePoints));
       for (uint256 i = 0; i < unitPrototypes.length; i++) {
         battleResult.defenderUnitsLeft[i] = (defenseCounts[i] * lossRatio) / 100;
-        DestroyedUnit.set(
-          attackerEntity,
-          uint8(i),
-          DestroyedUnit.get(attackerEntity, uint8(i)) + ((defenseCounts[i] * (100 - lossRatio)) / 100)
-        );
-        DestroyedUnit.set(defenderEntity, uint8(i), DestroyedUnit.get(defenderEntity, uint8(i)) + attackCounts[i]);
       }
     }
 
@@ -154,6 +142,10 @@ library LibBattle {
       LibUnit.decreaseUnitCount(br.defender, br.rock, unitTypes[i], defenderUnitsLost);
       LibUnit.updateStoredUtilities(br.attacker, unitTypes[i], attackerUnitsLost, false);
       LibUnit.updateStoredUtilities(br.defender, unitTypes[i], defenderUnitsLost, false);
+
+      DestroyedUnit.set(br.attacker, unitTypes[i], DestroyedUnit.get(br.attacker, unitTypes[i]) + defenderUnitsLost);
+      DestroyedUnit.set(br.defender, unitTypes[i], DestroyedUnit.get(br.defender, unitTypes[i]) + attackerUnitsLost);
+
       if (br.winner == br.attacker) {
         bytes32 attackerRock = (br.attacker == br.winner && sendType == ESendType.Raid)
           ? Home.getAsteroid(br.attacker)

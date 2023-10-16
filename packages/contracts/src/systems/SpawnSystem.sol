@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
+import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-
+import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
+import { BuildSystem } from "systems/BuildSystem.sol";
 import { Spawned, Position, PositionData, Level, Home, P_EnumToPrototype } from "codegen/index.sol";
 import { LibAsteroid, LibBuilding, LibEncode } from "codegen/Libraries.sol";
 import { EBuilding } from "src/Types.sol";
@@ -26,8 +28,15 @@ contract SpawnSystem is PrimodiumSystem {
     bytes32 asteroid = LibAsteroid.createAsteroid(playerEntity);
     PositionData memory position = Position.get(MainBasePrototypeId);
     position.parent = asteroid;
+
     Home.set(playerEntity, asteroid, LibEncode.getHash(BuildingKey, position));
-    LibBuilding.build(playerEntity, MainBasePrototypeId, position);
+    SystemCall.callWithHooksOrRevert(
+      _msgSender(),
+      getSystemResourceId("BuildSystem"),
+      abi.encodeCall(BuildSystem.build, (EBuilding.MainBase, position)),
+      0
+    );
+
     return asteroid;
   }
 }

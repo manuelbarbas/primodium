@@ -19,7 +19,6 @@ contract BuildSystem is PrimodiumSystem {
   function build(EBuilding buildingType, PositionData memory coord) public returns (bytes32 buildingEntity) {
     bytes32 playerEntity = addressToEntity(_msgSender());
     bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
-    HasBuiltBuilding.set(playerEntity, uint8(buildingType), true);
     return LibBuilding.build(playerEntity, buildingPrototype, coord);
   }
 }

@@ -5,7 +5,7 @@ import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 
 import { RaidedResource, RockType, OwnedBy, BattleResultData, RaidResult, RaidResultData, P_IsUtility, P_UnitPrototypes, Home } from "codegen/index.sol";
-import { ERock, ESendType } from "src/Types.sol";
+import { ERock, ESendType, EResource } from "src/Types.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
@@ -52,14 +52,14 @@ library LibRaid {
    */
   function resolveRaid(BattleResultData memory br) internal returns (RaidResultData memory) {
     LibBattle.updateUnitsAfterBattle(br, ESendType.Raid);
-    if (br.winner != br.attacker) return RaidResultData();
+    RaidResultData memory raidResult = RaidResultData({
+      defenderValuesBeforeRaid: new uint256[](uint8(EResource.LENGTH)),
+      raidedAmount: new uint256[](uint8(EResource.LENGTH))
+    });
+
+    if (br.winner != br.attacker) return raidResult;
 
     (uint256 totalResources, uint256[] memory defenderResources) = LibResource.getAllResourceCounts(br.defender);
-
-    RaidResultData memory raidResult = RaidResultData({
-      defenderValuesBeforeRaid: new uint256[](defenderResources.length),
-      raidedAmount: new uint256[](defenderResources.length)
-    });
 
     if (br.totalCargo == 0 || totalResources == 0) return raidResult;
 
@@ -69,11 +69,7 @@ library LibRaid {
 
       uint256 raidAmount = LibMath.min(defenderResources[i], (br.totalCargo * defenderResources[i]) / totalResources);
       if (raidAmount == 0) continue;
-      RaidedResource.set(
-        br.attacker,
-        defenderResources[i],
-        RaidedResource.get(br.attacker, defenderResources[i]) + raidAmount
-      );
+      RaidedResource.set(br.attacker, resource, RaidedResource.get(br.attacker, resource) + raidAmount);
       raidResult.defenderValuesBeforeRaid[i] = defenderResources[i];
       raidResult.raidedAmount[i] = raidAmount;
       LibStorage.increaseStoredResource(br.attacker, resource, raidAmount);

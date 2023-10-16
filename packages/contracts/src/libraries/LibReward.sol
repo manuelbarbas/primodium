@@ -30,9 +30,8 @@ library LibReward {
     bytes32 homeAsteroid = Home.get(playerEntity).asteroid;
     P_UnitRewardData memory rewardData = P_UnitReward.get(prototype);
     for (uint256 i = 0; i < rewardData.unitTypes.length; i++) {
-      bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(rewardData.unitTypes[i]));
-      LibUnit.updateStoredUtilities(playerEntity, unitPrototype, rewardData.amounts[i], true);
-      LibUnit.increaseUnitCount(playerEntity, homeAsteroid, unitPrototype, rewardData.amounts[i]);
+      LibUnit.updateStoredUtilities(playerEntity, rewardData.unitTypes[i], rewardData.amounts[i], true);
+      LibUnit.increaseUnitCount(playerEntity, homeAsteroid, rewardData.unitTypes[i], rewardData.amounts[i]);
     }
   }
 

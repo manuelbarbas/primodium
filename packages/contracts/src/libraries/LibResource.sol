@@ -28,7 +28,6 @@ library LibResource {
   /// @param level Target level for the building
   function spendBuildingRequiredResources(bytes32 entity, uint256 level) internal {
     bytes32 playerEntity = OwnedBy.get(entity);
-    claimAllResources(playerEntity);
     bytes32 buildingPrototype = BuildingType.get(entity);
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(buildingPrototype, level);
 
@@ -48,7 +47,6 @@ library LibResource {
     uint256 count
   ) internal {
     uint256 level = UnitLevel.get(playerEntity, prototype);
-    claimAllResources(playerEntity);
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(prototype, level);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       spendResource(playerEntity, prototype, requiredResources.resources[i], requiredResources.amounts[i] * count);
@@ -65,7 +63,6 @@ library LibResource {
     bytes32 unitPrototype,
     uint256 level
   ) internal {
-    claimAllResources(playerEntity);
     P_RequiredUpgradeResourcesData memory requiredResources = P_RequiredUpgradeResources.get(unitPrototype, level);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       spendResource(playerEntity, unitPrototype, requiredResources.resources[i], requiredResources.amounts[i]);
@@ -105,7 +102,13 @@ library LibResource {
   /// @param playerEntity ID of the player to claim
   function claimAllResources(bytes32 playerEntity) internal {
     uint256 lastClaimed = LastClaimedAt.get(playerEntity);
-    if (lastClaimed == 0 || lastClaimed == block.timestamp) return;
+    if (lastClaimed == block.timestamp) return;
+
+    if (lastClaimed == 0) {
+      LastClaimedAt.set(playerEntity, block.timestamp);
+      return;
+    }
+
     uint256 timeSinceClaimed = block.timestamp - lastClaimed;
     LastClaimedAt.set(playerEntity, block.timestamp);
     for (uint8 i = 1; i < uint8(EResource.LENGTH); i++) {
