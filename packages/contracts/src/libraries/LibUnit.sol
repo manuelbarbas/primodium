@@ -1,14 +1,32 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { Motherlode, ProductionRate, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_Unit, P_UnitProduction, P_UnitProdMultiplier, LastClaimedAt, RockType } from "codegen/index.sol";
-import { ERock } from "src/Types.sol";
+import { Motherlode, ProductionRate, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_Unit, P_UnitProduction, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
+import { ERock, EUnit } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
+import { UnitKey } from "src/Keys.sol";
 
 library LibUnit {
+  /**
+   * @dev Checks the requirements for training (producing) a specific unit in a building.
+   * @param buildingEntity The identifier of the building where the unit is being trained.
+   * @param unit The type of unit to be trained.
+   * @notice Checks if the unit exists and if the building can produce the specified unit.
+   */
+  function checkTrainUnitsRequirements(bytes32 buildingEntity, EUnit unit) internal view {
+    // Ensure the unit is valid (within the defined range of unit types).
+    require(unit > EUnit.NULL && unit < EUnit.LENGTH, "[TrainUnitsSystem] Unit does not exist");
+
+    // Determine the prototype of the unit based on its unit key.
+    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
+
+    // Check if the building can produce the specified unit based on its prototype.
+    require(canProduceUnit(buildingEntity, unitPrototype), "[TrainUnitsSystem] Building cannot produce unit");
+  }
+
   /// @notice Check if a building can produce a unit
   /// @param buildingEntity Entity ID of the building
   /// @param unitPrototype Unit prototype to check

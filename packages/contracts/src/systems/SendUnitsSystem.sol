@@ -13,34 +13,14 @@ import { ReversePosition, PositionData, UnitCount, OwnedBy, ResourceCount, Arriv
 import { LibMotherlode, LibSend, ArrivalsMap } from "codegen/Libraries.sol";
 import { UnitKey } from "src/Keys.sol";
 
-import { S_UpdateRockSystem } from "systems/subsystems/S_UpdateRockSystem.sol";
-
 contract SendUnitsSystem is PrimodiumSystem {
   function _sendUnits(SendArgs memory sendArgs) internal {
     bytes32 origin = ReversePosition.get(sendArgs.originPosition.x, sendArgs.originPosition.y);
     bytes32 destination = ReversePosition.get(sendArgs.destinationPosition.x, sendArgs.destinationPosition.y);
     bytes32 playerEntity = addressToEntity(_msgSender());
-    SystemCall.callWithHooksOrRevert(
-      entityToAddress(playerEntity),
-      getSystemResourceId("S_UpdateRockSystem"),
-      abi.encodeCall(S_UpdateRockSystem.updateRock, (playerEntity, origin)),
-      0
-    );
+
     if (destination == 0) destination = LibMotherlode.createMotherlode(sendArgs.destinationPosition);
 
-    LibSend.checkMovementRules(origin, destination, playerEntity, sendArgs.to, sendArgs.sendType);
-
-    bool anyUnitsSent = false;
-
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-
-    for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      if (sendArgs.unitCounts[i] == 0) continue;
-      uint256 count = UnitCount.get(playerEntity, origin, unitPrototypes[i]);
-      require(count >= sendArgs.unitCounts[i], "[SendUnits] Not enough units to send");
-      UnitCount.set(playerEntity, origin, unitPrototypes[i], count - sendArgs.unitCounts[i]);
-      anyUnitsSent = true;
-    }
     uint256 arrivalTime = LibSend.getArrivalTime(
       sendArgs.originPosition,
       sendArgs.destinationPosition,

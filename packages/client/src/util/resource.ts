@@ -101,13 +101,13 @@ export function getFullResourceCount(resourceID: Entity, playerEntity: Entity) {
 
   const resourcesToClaimFromBuilding = (() => {
     const toClaim = ((getNow() - playerLastClaimed) * buildingProduction * SPEED_SCALE) / worldSpeed;
-    // if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
+    if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
     return toClaim;
   })();
 
   const resourcesToClaim = (() => {
     const toClaim = resourcesToClaimFromBuilding;
-    // if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
+    if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
     return toClaim;
   })();
 

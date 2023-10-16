@@ -752,60 +752,6 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "playerEntity",
-        type: "bytes32",
-      },
-      {
-        internalType: "bytes32",
-        name: "buildingEntity",
-        type: "bytes32",
-      },
-    ],
-    name: "clearMaxStorageIncrease",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "playerEntity",
-        type: "bytes32",
-      },
-      {
-        internalType: "bytes32",
-        name: "buildingEntity",
-        type: "bytes32",
-      },
-    ],
-    name: "clearProductionRateReduction",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "playerEntity",
-        type: "bytes32",
-      },
-      {
-        internalType: "bytes32",
-        name: "buildingEntity",
-        type: "bytes32",
-      },
-    ],
-    name: "clearResourceProduction",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [],
     name: "creator",
     outputs: [
@@ -1612,29 +1558,6 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "playerEntity",
-        type: "bytes32",
-      },
-      {
-        internalType: "bytes32",
-        name: "buildingEntity",
-        type: "bytes32",
-      },
-      {
-        internalType: "uint256",
-        name: "level",
-        type: "uint256",
-      },
-    ],
-    name: "increaseMaxStorage",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [],
     name: "increment",
     outputs: [
@@ -1805,29 +1728,6 @@ const _abi = [
       },
     ],
     name: "recallAll",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "playerEntity",
-        type: "bytes32",
-      },
-      {
-        internalType: "bytes32",
-        name: "buildingEntity",
-        type: "bytes32",
-      },
-      {
-        internalType: "uint256",
-        name: "level",
-        type: "uint256",
-      },
-    ],
-    name: "reduceProductionRate",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -2325,42 +2225,6 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "bytes32",
-        name: "entity",
-        type: "bytes32",
-      },
-      {
-        internalType: "uint256",
-        name: "level",
-        type: "uint256",
-      },
-    ],
-    name: "spendBuildingRequiredResources",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "player",
-        type: "bytes32",
-      },
-      {
-        internalType: "bytes32",
-        name: "unitPrototype",
-        type: "bytes32",
-      },
-    ],
-    name: "spendUnitRequiredResources",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "ResourceId",
         name: "tableId",
         type: "bytes32",
@@ -2563,37 +2427,6 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "bytes32",
-        name: "playerEntity",
-        type: "bytes32",
-      },
-    ],
-    name: "updateHomeRock",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "playerEntity",
-        type: "bytes32",
-      },
-      {
-        internalType: "bytes32",
-        name: "rock",
-        type: "bytes32",
-      },
-    ],
-    name: "updateRock",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         components: [
           {
             internalType: "bytes32",
@@ -2700,29 +2533,6 @@ const _abi = [
   {
     inputs: [],
     name: "upgradeRange",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "playerEntity",
-        type: "bytes32",
-      },
-      {
-        internalType: "bytes32",
-        name: "buildingEntity",
-        type: "bytes32",
-      },
-      {
-        internalType: "uint256",
-        name: "level",
-        type: "uint256",
-      },
-    ],
-    name: "upgradeResourceProduction",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
