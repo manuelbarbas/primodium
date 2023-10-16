@@ -9,7 +9,7 @@ import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 import { Level } from "src/network/components/chainComponents";
 import { Account } from "src/network/components/clientComponents";
 import { getBlockTypeName } from "src/util/common";
-import { EntityType, RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
+import { EntityType, RESOURCE_SCALE, ResourceImage, ResourceCategory } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
 import { getRecipe } from "src/util/resource";
 import { UpgradeMiningVessel } from "../widgets/UpgradeMiningVessel";
@@ -30,14 +30,14 @@ export const CommissionCost: React.FC<{ player: EntityID }> = ({ player }) => {
       <div className="flex flex-wrap gap-1 px-2">
         {recipe.length !== 0 &&
           recipe.map((resource) => {
-            if (resource.type === ResourceType.Utility) return;
+            if (resource.type === ResourceCategory.Utility) return;
 
             return (
               <Badge key={resource.id + resource.type} className="text-xs gap-2">
                 <ResourceIconTooltip
                   name={getBlockTypeName(resource.id)}
                   image={ResourceImage.get(resource.id) ?? ""}
-                  resourceId={resource.id}
+                  resource={resource.id}
                   amount={resource.amount}
                   resourceType={resource.type}
                   scale={RESOURCE_SCALE}

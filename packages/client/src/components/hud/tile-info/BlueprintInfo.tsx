@@ -8,7 +8,7 @@ import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { Level, P_Production } from "src/network/components/chainComponents";
 import { Account, BlockNumber } from "src/network/components/clientComponents";
 import { formatNumber, getBlockTypeName } from "src/util/common";
-import { RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
+import { RESOURCE_SCALE, ResourceImage, ResourceCategory } from "src/util/constants";
 import { hashAndTrimKeyEntity, hashKeyEntity } from "src/util/encode";
 import { getRecipe } from "src/util/resource";
 
@@ -29,11 +29,11 @@ export const RecipeDisplay: React.FC<{
             <ResourceIconTooltip
               key={resource.id + resource.type}
               image={resourceImage}
-              resourceId={resource.id}
+              resource={resource.id}
               resourceType={resource.type}
               name={resourceName}
               amount={resource.amount}
-              scale={resource.type !== ResourceType.Utility ? RESOURCE_SCALE : 1}
+              scale={resource.type !== ResourceCategory.Utility ? RESOURCE_SCALE : 1}
               validate
               fontSize={"xs"}
             />

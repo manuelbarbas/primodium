@@ -1,6 +1,7 @@
 import { EntityType } from "../util/constants";
 import AsteroidTiledMap from "../maps/asteroid_0.7.json";
 import { find } from "lodash";
+import { EResource } from "contracts/config/enums";
 export const ASSET_PACK = "/assets/pack.json";
 
 export const TILE_HEIGHT = 16;
@@ -231,11 +232,11 @@ export enum AnimationKeys {
   SAMLauncher3 = "samlauncher/level3",
 }
 
-export const ResourceToTilesetKey: { [key: string]: ResourceTilekeys } = {
-  Iron: ResourceTilekeys.Iron,
-  Copper: ResourceTilekeys.Copper,
-  Lithium: ResourceTilekeys.Lithium,
-  Sulfur: ResourceTilekeys.Sulfur,
+export const ResourceToTilesetKey: { [key: number]: ResourceTilekeys } = {
+  [EResource.Iron]: ResourceTilekeys.Iron,
+  [EResource.Copper]: ResourceTilekeys.Copper,
+  [EResource.Lithium]: ResourceTilekeys.Lithium,
+  [EResource.Sulfur]: ResourceTilekeys.Sulfur,
 };
 
 export const EntityIDtoSpriteKey = {

@@ -1,21 +1,21 @@
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import { useFullResourceCount } from "./useFullResourceCount";
-import { ResourceType } from "src/util/constants";
+import { ResourceCategory } from "src/util/constants";
 
 export function useHasEnoughOfResource(
-  resourceID: EntityID,
-  amount: number,
-  resourceType = ResourceType.Resource
+  resource: Entity,
+  amount: bigint,
+  playerEntity: Entity,
+  resourceType = ResourceCategory.Resource
 ) {
-  const { resourceCount, resourcesToClaim, production, maxStorage } =
-    useFullResourceCount(resourceID, resourceType);
+  const { resourceCount, resourcesToClaim, production, maxStorage } = useFullResourceCount(resource, playerEntity);
 
   switch (resourceType) {
-    case ResourceType.Resource:
+    case ResourceCategory.Resource:
       return resourceCount + resourcesToClaim >= amount;
-    case ResourceType.ResourceRate:
+    case ResourceCategory.ResourceRate:
       return production >= amount;
-    case ResourceType.Utility:
+    case ResourceCategory.Utility:
       return maxStorage - (resourceCount + resourcesToClaim) >= amount;
     default:
       return false;

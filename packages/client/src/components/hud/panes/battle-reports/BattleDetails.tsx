@@ -103,7 +103,7 @@ export const BattleDetails: React.FC<{
                     <ResourceIconTooltip
                       key={`resource-${i}`}
                       image={ResourceImage.get(resource)!}
-                      resourceId={resource}
+                      resource={resource}
                       name={getBlockTypeName(resource)}
                       amount={Number(Math.round(raid.raidedAmount?.at(i) ?? 0))}
                     />
