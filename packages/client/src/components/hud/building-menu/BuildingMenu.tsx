@@ -13,6 +13,8 @@ import { MainBase } from "./screens/Mainbase";
 // import { UpgradeUnit } from "./screens/UpgradeUnit";
 import { FaTrash } from "react-icons/fa";
 import { components } from "src/network/components";
+import { UnitFactory } from "./screens/UnitFactory";
+import { UpgradeUnit } from "./screens/UpgradeUnit";
 // import { MiningVessels } from "./screens/MiningVessels";
 
 export const BuildingMenu: React.FC = () => {
@@ -50,8 +52,8 @@ export const BuildingMenu: React.FC = () => {
     switch (buildingType) {
       case EntityType.MainBase:
         return <MainBase building={selectedBuilding} />;
-      // case EntityType.DroneFactory:
-      //   return <UnitFactory building={selectedBuilding} />;
+      case EntityType.DroneFactory:
+        return <UnitFactory building={selectedBuilding} />;
       // case EntityType.Workshop:
       //   return <UnitFactory building={selectedBuilding} />;
       default:
@@ -71,7 +73,7 @@ export const BuildingMenu: React.FC = () => {
       <BuildingInfo building={selectedBuilding} />
       {/* <BuildQueue building={selectedBuilding} /> */}
       {/* <BuildUnit building={selectedBuilding} /> */}
-      {/* <UpgradeUnit building={selectedBuilding} /> */}
+      <UpgradeUnit building={selectedBuilding} />
       {/* <MiningVessels building={selectedBuilding} /> */}
 
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2">

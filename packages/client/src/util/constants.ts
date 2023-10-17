@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { encodeEntity } from "@latticexyz/store-sync/recs";
-import { EBuilding, EResource } from "contracts/config/enums";
+import { EBuilding, EResource, EUnit } from "contracts/config/enums";
 import { Key } from "engine/types";
 import { EMotherlodeType, ERock, ESize } from "src/util/web3/types";
 import { toHex } from "viem";
@@ -868,6 +868,18 @@ export const BuildingEnumLookup: Record<Entity, EBuilding> = {
   [EntityType.DroneFactory]: EBuilding.DroneFactory,
   [EntityType.Hangar]: EBuilding.Hangar,
   [EntityType.MainBase]: EBuilding.MainBase,
+  // [EntityType.SAMSite]: EBuilding.SAMSite,
+  [EntityType.StarmapperStation]: EBuilding.Starmapper,
 };
 
 export const BuildingEntityLookup = reverseRecord(BuildingEnumLookup);
+
+export const UnitEnumLookup: Record<Entity, EUnit> = {
+  [EntityType.HammerLightDrone]: EUnit.HammerDrone,
+  [EntityType.StingerDrone]: EUnit.StingerDrone,
+  [EntityType.AnvilLightDrone]: EUnit.AnvilDrone,
+  [EntityType.AegisDrone]: EUnit.AegisDrone,
+  [EntityType.MiningVessel]: EUnit.MiningVessel,
+  // [EntityType.MinutemanMarine]: EUnit.MinutemanMarine,
+  // [EntityType.TridentMarine]: EUnit.TridentMarine,
+};
