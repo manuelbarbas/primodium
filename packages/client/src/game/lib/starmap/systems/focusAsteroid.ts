@@ -1,27 +1,25 @@
-import { Has, defineEnterSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
+import { Entity, Has, defineEnterSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 
 import { world } from "src/network/world";
 
-import { Position } from "src/network/components/chainComponents";
 import { createCameraApi } from "src/game/api/camera";
-import { HomeAsteroid } from "src/network/components/clientComponents";
+import { components } from "src/network/components";
+import { SetupResult } from "src/network/types";
 
-export const focusAsteroid = (scene: Scene) => {
+export const focusAsteroid = (scene: Scene, mud: SetupResult) => {
   const { pan } = createCameraApi(scene);
   const gameWorld = namespaceWorld(world, "game");
 
-  const query = [Has(HomeAsteroid)];
+  const query = [Has(components.Home)];
 
   const handleMove = async () => {
-    // sleep 100 ms to properly pan
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    const activeAsteroid = HomeAsteroid.get()?.value;
+    const playerEntity = mud.network.playerEntity;
+    const activeAsteroid = components.Home.get(playerEntity)?.asteroid as Entity;
 
     if (!activeAsteroid) return;
 
-    const coord = Position.get(activeAsteroid);
+    const coord = components.Position.get(activeAsteroid);
     if (!coord) return;
 
     pan(coord, 0);
