@@ -1,7 +1,6 @@
 import { formatAndWriteSolidity } from "@latticexyz/common/codegen";
 import fs from "fs";
 import path from "path";
-import { MUDEnums } from "../../config/enums";
 
 type JsonCoords = ReturnType<typeof csvToJsonCoords>;
 
@@ -46,7 +45,7 @@ function csvToJsonCoords(csvUrl: string) {
 
 function generateContent(jsonContent: JsonCoords) {
   return jsonContent
-    .map((elem) => `P_Terrain.set(store, ${elem.coord.x}, ${elem.coord.y}, ${MUDEnums.EResource.indexOf(elem.value)});`)
+    .map((elem) => `P_Terrain.set(${elem.coord.x}, ${elem.coord.y}, uint8(EResource.${elem.value}));`)
     .join("");
 }
 
