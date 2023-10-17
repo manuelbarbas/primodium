@@ -1,4 +1,4 @@
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import { Navigator } from "src/components/core/Navigator";
 import { Header } from "../widgets/Header";
 import { ExpandRange } from "../widgets/ExpandRange";
@@ -6,7 +6,7 @@ import { Upgrade } from "../widgets/Upgrade";
 import { MiningVessels } from "../widgets/MiningVessels";
 import { SpecialTech } from "../widgets/SpecialTech";
 
-export const MainBase: React.FC<{ building: EntityID }> = ({ building }) => {
+export const MainBase: React.FC<{ building: Entity }> = ({ building }) => {
   return (
     <Navigator.Screen title={building} className="w-fit">
       <Header building={building} />

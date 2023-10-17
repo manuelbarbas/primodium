@@ -11,7 +11,7 @@ import { BrandingLabel } from "../shared/BrandingLabel";
 // import { LoadingIndication } from "./LoadingIndication";
 // import { Score } from "./Score";
 // import { ViewStarmap } from "./ViewStarmap";
-// import { BuildingMenu } from "./building-menu/BuildingMenu";
+import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { Hotbar } from "./hotbar/Hotbar";
 // import { Panes } from "./panes/Panes";
 import { Resources } from "./resources/Resources";
@@ -47,7 +47,7 @@ export const GameHUD = () => {
           <HUD scale={1} pad>
             <HUD.BottomMiddle>
               {(getBlockTypeName(selectedBuilding) || !selectedBuilding) && !mapOpen && <Hotbar />}
-              {/* {!getBlockTypeName(selectedBuilding) && <BuildingMenu />} */}
+              {!getBlockTypeName(selectedBuilding) && <BuildingMenu />}
             </HUD.BottomMiddle>
             <HUD.TopMiddle>
               {getBlockTypeName(selectedBuilding) && selectedBuilding && <PrototypeInfo building={selectedBuilding} />}

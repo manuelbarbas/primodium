@@ -11,16 +11,16 @@ import { Level, MainBase } from "src/network/components/chainComponents";
 import { TrainingQueue } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
 import { getBlockTypeName } from "src/util/common";
-import { BackgroundImage, EntityType, RESOURCE_SCALE, ResourceImage, ResourceTypes } from "src/util/constants";
+import { ResourceType, ResourceImage, RESOURCE_SCALE, BlockType, BackgroundImage } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
-import { MiningResearchTree, getResearchInfo } from "src/util/research";
+import { getUpgradeInfo, MiningResearchTree } from "src/util/upgrade";
 import { getRecipe } from "src/util/resource";
 import { research, train } from "src/util/web3";
 
 const AddSlot: React.FC<{
   recipe: {
     id: EntityID;
-    type: ResourceTypes;
+    type: ResourceType;
     amount: number;
   }[];
   level: number;
@@ -59,10 +59,10 @@ const AddSlot: React.FC<{
                   <ResourceIconTooltip
                     name={getBlockTypeName(resource.id)}
                     image={ResourceImage.get(resource.id) ?? ""}
-                    resource={resource.id}
+                    resourceId={resource.id}
                     amount={resource.amount}
                     resourceType={resource.type}
-                    scale={resource.type === ResourceTypes.Utility ? 1 : RESOURCE_SCALE}
+                    scale={resource.type === ResourceType.Utility ? 1 : RESOURCE_SCALE}
                     direction="top"
                     validate
                   />
@@ -82,9 +82,9 @@ const CommissionVessel: React.FC<{
   const network = useMud();
   const transactionLoading = useGameStore((state) => state.transactionLoading);
   const recipe = useMemo(() => {
-    const playerUnitEntity = hashKeyEntity(EntityType.MiningVessel, player);
+    const playerUnitEntity = hashKeyEntity(BlockType.MiningVessel, player);
     const level = Level.get(playerUnitEntity, { value: 0 }).value;
-    const unitEntity = hashKeyEntity(EntityType.MiningVessel, level);
+    const unitEntity = hashKeyEntity(BlockType.MiningVessel, level);
 
     return getRecipe(unitEntity);
   }, [player]);
@@ -97,7 +97,7 @@ const CommissionVessel: React.FC<{
         className={`w-[5.2rem] h-[5.2rem] flex-row items-center justify-center border-secondary p-1`}
         loading={transactionLoading}
         disabled={!hasEnough}
-        onClick={() => train(building, EntityType.MiningVessel, 1, network)}
+        onClick={() => train(building, BlockType.MiningVessel, 1, network)}
       >
         <p className="text-[.7rem] text-center">+ COMMISSION VESSEL</p>
       </Button>
@@ -116,7 +116,7 @@ const QueuedVessel: React.FC<{
       <Button
         className={`w-[5.2rem] h-[5.2rem] flex-row items-center justify-center border-secondary p-1 animate-pulse inline-flex`}
       >
-        <img src={BackgroundImage.get(EntityType.MiningVessel)?.at(0)} className="h-8 pixel-images" />
+        <img src={BackgroundImage.get(BlockType.MiningVessel)?.at(0)} className="h-8 pixel-images" />
       </Button>
       <p className="min-w-fit w-full bg-slate-900 text-xs text-center rounded-md mt-1">
         {active ? queuedItem.timeRemaining + " BLOCKS LEFT" : "QUEUED"}
@@ -129,7 +129,7 @@ const BuiltVessel = () => {
   return (
     <div className="space-y-1">
       <Button className={`w-[5.2rem] h-[5.2rem] flex-row items-center justify-center border-secondary p-1 inline-flex`}>
-        <img src={BackgroundImage.get(EntityType.MiningVessel)?.at(0)} className="h-8 pixel-images" />
+        <img src={BackgroundImage.get(BlockType.MiningVessel)?.at(0)} className="h-8 pixel-images" />
       </Button>
     </div>
   );
@@ -139,7 +139,7 @@ export const VesselSlots: React.FC<{
   building: EntityID;
   player: EntityID;
 }> = ({ building, player }) => {
-  const { resourceCount, resourcesToClaim } = useFullResourceCount(EntityType.VesselCapacity, ResourceTypes.Utility);
+  const { resourceCount, resourcesToClaim } = useFullResourceCount(BlockType.VesselCapacity, ResourceType.Utility);
 
   const rawQueue = TrainingQueue.use(building);
 
@@ -147,7 +147,7 @@ export const VesselSlots: React.FC<{
     return rawQueue ? convertTrainingQueue(rawQueue) : [];
   }, [rawQueue]);
 
-  const { level, maxLevel, recipe, id, mainBaseLvlReq } = getResearchInfo(MiningResearchTree, player);
+  const { level, maxLevel, recipe, id, mainBaseLvlReq } = getUpgradeInfo(MiningResearchTree, player);
 
   const miningVesselCount = resourceCount + resourcesToClaim - queue.length;
   const addSlots = maxLevel - level;

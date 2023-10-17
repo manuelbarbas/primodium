@@ -120,6 +120,7 @@ contract PostDeploy is Script {
     world.grantAccess(ResourceCountTableId, address(onBuild_SpendResources));
     world.grantAccess(SetItemUtilitiesTableId, address(onBuild_SpendResources));
     world.grantAccess(SetUtilitiesTableId, address(onBuild_SpendResources));
+    world.grantAccess(MaxResourceCountTableId, address(onBuild_SpendResources));
     world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_SpendResources, AFTER_CALL_SYSTEM);
 
     OnBuild_MaxStorage onBuild_MaxStorage = new OnBuild_MaxStorage();
@@ -129,6 +130,8 @@ contract PostDeploy is Script {
 
     OnBuild_ProductionRate onBuild_ProductionRate = new OnBuild_ProductionRate();
     world.grantAccess(ProductionRateTableId, address(onBuild_ProductionRate));
+    world.grantAccess(MaxResourceCountTableId, address(onBuild_ProductionRate));
+    world.grantAccess(ResourceCountTableId, address(onBuild_ProductionRate));
     world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_ProductionRate, AFTER_CALL_SYSTEM);
   }
 
@@ -153,6 +156,8 @@ contract PostDeploy is Script {
 
     OnUpgrade_ProductionRate onUpgrade_ProductionRate = new OnUpgrade_ProductionRate();
     world.grantAccess(ProductionRateTableId, address(onUpgrade_ProductionRate));
+    world.grantAccess(MaxResourceCountTableId, address(onUpgrade_ProductionRate));
+    world.grantAccess(ResourceCountTableId, address(onUpgrade_ProductionRate));
     world.registerSystemHook(getSystemResourceId("UpgradeBuildingSystem"), onUpgrade_ProductionRate, AFTER_CALL_SYSTEM);
 
     OnUpgrade_MaxStorage onUpgrade_MaxStorage = new OnUpgrade_MaxStorage();
@@ -164,6 +169,7 @@ contract PostDeploy is Script {
     world.grantAccess(ResourceCountTableId, address(onUpgrade_SpendResources));
     world.grantAccess(SetItemUtilitiesTableId, address(onUpgrade_SpendResources));
     world.grantAccess(SetUtilitiesTableId, address(onUpgrade_SpendResources));
+    world.grantAccess(MaxResourceCountTableId, address(onUpgrade_SpendResources));
     world.registerSystemHook(getSystemResourceId("UpgradeBuildingSystem"), onUpgrade_SpendResources, AFTER_CALL_SYSTEM);
   }
 
@@ -185,6 +191,8 @@ contract PostDeploy is Script {
     OnDestroy_ClearUtility onDestroy_ClearUtility = new OnDestroy_ClearUtility();
     world.grantAccess(SetItemUtilitiesTableId, address(onDestroy_ClearUtility));
     world.grantAccess(SetUtilitiesTableId, address(onDestroy_ClearUtility));
+    world.grantAccess(MaxResourceCountTableId, address(onDestroy_ClearUtility));
+    world.grantAccess(ResourceCountTableId, address(onDestroy_ClearUtility));
     world.registerSystemHook(getSystemResourceId("DestroySystem"), onDestroy_ClearUtility, BEFORE_CALL_SYSTEM);
 
     OnDestroy_MaxStorage onDestroy_MaxStorage = new OnDestroy_MaxStorage();
@@ -194,6 +202,8 @@ contract PostDeploy is Script {
 
     OnDestroy_ProductionRate onDestroy_ProductionRate = new OnDestroy_ProductionRate();
     world.grantAccess(ProductionRateTableId, address(onDestroy_ProductionRate));
+    world.grantAccess(MaxResourceCountTableId, address(onDestroy_ProductionRate));
+    world.grantAccess(ResourceCountTableId, address(onDestroy_ProductionRate));
     world.registerSystemHook(getSystemResourceId("DestroySystem"), onDestroy_ProductionRate, BEFORE_CALL_SYSTEM);
 
     OnDestroy_RemoveFromTiles onDestroy_RemoveFromTiles = new OnDestroy_RemoveFromTiles();

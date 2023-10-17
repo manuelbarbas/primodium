@@ -1,42 +1,41 @@
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
-import { MUDEnums } from "contracts/config/enums";
+import { EResource, MUDEnums } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
 import { Hex } from "viem";
-import { EntityType, ResourceTypes, ResourceEnumLookup, SPEED_SCALE } from "./constants";
+import { EntityType, ResourceType, ResourceEnumLookup, SPEED_SCALE, ResourceEntityLookup } from "./constants";
 import { getNow } from "./time";
 import { getUnitStats } from "./trainUnits";
 import { ERock } from "./web3/types";
 
 // building a building requires resources
 // fetch directly from component data
-export function getRecipe(rawBuildingType: Entity, level: bigint) {
-  const buildingType = rawBuildingType as Hex;
-  const requiredResources = comps.P_RequiredResources.getWithKeys(
-    { prototype: buildingType, level: level },
+export function getRecipe(rawEntityType: Entity, level: bigint, upgrade = false) {
+  const entityType = rawEntityType as Hex;
+  const requiredResources = (upgrade ? comps.P_RequiredUpgradeResources : comps.P_RequiredResources).getWithKeys(
+    { prototype: entityType, level: level },
     {
       resources: [],
       amounts: [],
     }
   );
   const requiredProduction = comps.P_RequiredDependencies.getWithKeys(
-    { prototype: buildingType, level: level },
+    { prototype: entityType, level: level },
     {
       resources: [],
       amounts: [],
     }
   );
 
-  const resources = requiredResources.resources.map((resource: number, index: number) => ({
-    id: MUDEnums.EResource[resource] as Entity,
-    type:
-      comps.P_IsUtility.getWithKeys({ id: resource })?.value == true ? ResourceTypes.Utility : ResourceTypes.Resource,
+  const resources = requiredResources.resources.map((resource: EResource, index: number) => ({
+    id: ResourceEntityLookup[resource],
+    type: comps.P_IsUtility.getWithKeys({ id: resource })?.value == true ? ResourceType.Utility : ResourceType.Resource,
     amount: requiredResources.amounts[index],
   }));
 
-  const resourceRate = requiredProduction.resources.map((resource, index) => ({
-    id: MUDEnums.EResource[resource] as Entity,
-    type: ResourceTypes.ResourceRate,
+  const resourceRate = requiredProduction.resources.map((resource: EResource, index: number) => ({
+    id: ResourceEntityLookup[resource],
+    type: ResourceType.ResourceRate,
     amount: requiredProduction.amounts[index],
   }));
 
@@ -46,9 +45,9 @@ export function getRecipe(rawBuildingType: Entity, level: bigint) {
 export const mineableResources = [EntityType.Titanium, EntityType.Iridium, EntityType.Platinum, EntityType.Kimberlite];
 
 export function getMotherlodeResource(entity: Entity) {
-  const resource = comps.Motherlode.get(entity)?.motherlodeType;
+  const resource = comps.Motherlode.get(entity)?.motherlodeType as EResource;
   if (!resource || resource > MUDEnums.EResource.length) return MUDEnums.EResource[0] as Entity;
-  return MUDEnums.EResource[resource] as Entity;
+  return ResourceEntityLookup[resource];
 }
 
 export function getFullResourceCount(resourceID: Entity, playerEntity: Entity) {
@@ -121,17 +120,18 @@ export function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, playerE
 
   for (const [index, resource] of recipe.entries()) {
     const resourceAmount = resourceAmounts[index];
-    const { resourceCount, resourcesToClaim, production, maxStorage } = resourceAmount;
+    const { resourceCount, resourcesToClaim, production } = resourceAmount;
 
     switch (resource.type) {
-      case ResourceTypes.Resource:
+      case ResourceType.Resource:
         if (resourceCount + resourcesToClaim < resource.amount * count) return false;
         break;
-      case ResourceTypes.ResourceRate:
+      case ResourceType.ResourceRate:
         if (production < resource.amount * count) return false;
         break;
-      case ResourceTypes.Utility:
-        if (maxStorage - (resourceCount + resourcesToClaim) < resource.amount * count) return false;
+      case ResourceType.Utility:
+        if (resourceCount < resource.amount * count) return false;
+
         break;
       default:
         return false;
@@ -147,7 +147,7 @@ export function getRecipeDifference(
 ) {
   const difference = firstRecipe.map((resource) => {
     let amount = resource.amount;
-    if (resource.type == ResourceTypes.Utility) {
+    if (resource.type == ResourceType.Utility) {
       const secondResource = secondRecipe.find((secondResource) => resource.id === secondResource.id);
 
       if (secondResource) {

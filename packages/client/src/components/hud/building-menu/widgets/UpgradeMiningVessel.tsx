@@ -10,8 +10,8 @@ import { Level, MainBase } from "src/network/components/chainComponents";
 import { Account } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
 import { getBlockTypeName } from "src/util/common";
-import { RESOURCE_SCALE, ResourceImage, ResourceTypes } from "src/util/constants";
-import { MiningVesselUpgradeTree, getResearchInfo } from "src/util/research";
+import { ResourceImage, ResourceType, RESOURCE_SCALE } from "src/util/constants";
+import { MiningVesselUpgradeTree, getUpgradeInfo } from "src/util/upgrade";
 import { research } from "src/util/web3";
 
 export const UpgradeMiningVessel: React.FC = () => {
@@ -26,7 +26,7 @@ export const UpgradeMiningVessel: React.FC = () => {
     value: 0,
   }).value;
 
-  const { level, maxLevel, mainBaseLvlReq, recipe, id } = getResearchInfo(MiningVesselUpgradeTree, player);
+  const { level, maxLevel, mainBaseLvlReq, recipe, id } = getUpgradeInfo(MiningVesselUpgradeTree, player);
 
   const hasEnough = useHasEnoughResources(recipe);
 
@@ -56,10 +56,10 @@ export const UpgradeMiningVessel: React.FC = () => {
                       <ResourceIconTooltip
                         name={getBlockTypeName(resource.id)}
                         image={ResourceImage.get(resource.id) ?? ""}
-                        resource={resource.id}
+                        resourceId={resource.id}
                         amount={resource.amount}
                         resourceType={resource.type}
-                        scale={resource.type === ResourceTypes.Utility ? 1 : RESOURCE_SCALE}
+                        scale={resource.type === ResourceType.Utility ? 1 : RESOURCE_SCALE}
                         direction="top"
                         validate
                       />
