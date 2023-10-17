@@ -1,15 +1,15 @@
+import { Entity, Has, HasValue, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { namespaceWorld, Has, defineEnterSystem, HasValue, Entity } from "@latticexyz/recs";
-import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
-import { Texture } from "../../common/object-components/sprite";
 import { world } from "src/network/world";
 import { MotherlodeSizeNames, MotherlodeTypeNames } from "src/util/constants";
+import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
+import { Texture } from "../../common/object-components/sprite";
 // import { Send } from "src/network/components/clientComponents";
-import { Coord } from "@latticexyz/utils";
 import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
-import { SetupResult } from "src/network/types";
-import { components } from "src/network/components";
+import { Coord } from "@latticexyz/utils";
 import { ERock } from "contracts/config/enums";
+import { components } from "src/network/components";
+import { SetupResult } from "src/network/types";
 
 export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;

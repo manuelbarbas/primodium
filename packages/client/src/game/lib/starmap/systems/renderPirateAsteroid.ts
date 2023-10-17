@@ -8,20 +8,9 @@ import {
   defineComponentSystem,
   defineUpdateSystem,
 } from "@latticexyz/recs";
-import {
-  ObjectPosition,
-  OnClick,
-  OnComponentSystem,
-  SetValue,
-} from "../../common/object-components/common";
+import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
-import {
-  P_SpawnPirateAsteroid,
-  AsteroidType,
-  OwnedBy,
-  Pirate,
-  Position,
-} from "src/network/components/chainComponents";
+import { P_SpawnPirateAsteroid, AsteroidType, OwnedBy, Pirate, Position } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
 import { Send } from "src/network/components/clientComponents";
 import { ESpaceRockType } from "src/util/web3/types";
@@ -46,9 +35,7 @@ export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
     if (hashStringEntity(PIRATE_KEY, player) !== ownedBy) return;
 
     if (asteroidType !== ESpaceRockType.Asteroid) return;
-    const asteroidObjectGroup = scene.objectPool.getGroup(
-      "asteroid_" + entityId
-    );
+    const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entityId);
 
     const sharedComponents = [
       ObjectPosition(
@@ -72,12 +59,7 @@ export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
       }),
     ]);
 
-    const outlineSprite =
-      SpriteKeys[
-        `Asteroid${
-          ownedBy === player ? "Player" : "Enemy"
-        }` as keyof typeof SpriteKeys
-      ];
+    const outlineSprite = SpriteKeys[`Asteroid${ownedBy === player ? "Player" : "Enemy"}` as keyof typeof SpriteKeys];
 
     const asteroidOutline = asteroidObjectGroup.add("Sprite");
 
@@ -86,9 +68,7 @@ export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
       OnComponentSystem(Send, () => {
         if (Send.get()?.destination === entityId) {
           if (asteroidOutline.hasComponent(Outline().id)) return;
-          asteroidOutline.setComponent(
-            Outline({ thickness: 1.5, color: 0xffa500 })
-          );
+          asteroidOutline.setComponent(Outline({ thickness: 1.5, color: 0xffa500 }));
           return;
         }
 

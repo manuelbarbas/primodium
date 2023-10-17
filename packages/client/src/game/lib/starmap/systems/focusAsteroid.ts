@@ -4,8 +4,8 @@ import { Scene } from "engine/types";
 import { world } from "src/network/world";
 
 import { createCameraApi } from "src/game/api/camera";
-import { SetupResult } from "src/network/types";
 import { components } from "src/network/components";
+import { SetupResult } from "src/network/types";
 
 export const focusAsteroid = (scene: Scene, mud: SetupResult) => {
   const { pan } = createCameraApi(scene);

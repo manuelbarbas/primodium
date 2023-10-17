@@ -88,11 +88,11 @@ contract LibResourceTest is PrimodiumTest {
 
     LibResource.spendBuildingRequiredResources(buildingEntity, level);
     assertEq(ResourceCount.get(playerEntity, Iron), 50);
-    assertEq(UtilitySet.get(buildingEntity, Iron), 50);
+    assertEq(UtilityMap.get(buildingEntity, Iron), 50);
 
     LibResource.spendBuildingRequiredResources(buildingEntity, level + 1);
     assertEq(ResourceCount.get(playerEntity, Iron), 0);
-    assertEq(UtilitySet.get(buildingEntity, Iron), 100);
+    assertEq(UtilityMap.get(buildingEntity, Iron), 100);
   }
 
   function testFailSpendBuildingRequiredUtilityInsufficient() public {
@@ -156,13 +156,13 @@ contract LibResourceTest is PrimodiumTest {
   function testClearUtilityUsage() public {
     MaxResourceCount.set(playerEntity, Iron, 1000);
     P_IsUtility.set(Iron, true);
-    UtilitySet.set(buildingEntity, Iron, 50);
+    UtilityMap.set(buildingEntity, Iron, 50);
     ResourceCount.set(playerEntity, Iron, 100);
 
     LibResource.clearUtilityUsage(playerEntity, buildingEntity);
 
     assertEq(ResourceCount.get(playerEntity, Iron), 150);
-    assertEq(UtilitySet.get(buildingEntity, Iron), 0);
+    assertEq(UtilityMap.get(buildingEntity, Iron), 0);
   }
 
   function testGetAllResourceCounts() public {

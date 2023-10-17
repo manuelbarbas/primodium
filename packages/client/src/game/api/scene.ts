@@ -13,13 +13,7 @@ export function createSceneApi(game: Awaited<ReturnType<typeof createGame>>) {
     onTransitionStart?: () => void,
     onTransitionEnd?: () => void
   ) {
-    await game.sceneManager.transitionToScene(
-      origin,
-      target,
-      duration,
-      onTransitionStart,
-      onTransitionEnd
-    );
+    await game.sceneManager.transitionToScene(origin, target, duration, onTransitionStart, onTransitionEnd);
   }
 
   return {

@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import { EBuilding, EResource } from "src/Types.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
-import { UtilitySet } from "libraries/UtilitySet.sol";
+import { UtilityMap } from "libraries/UtilityMap.sol";
 import { P_IsUtility, P_RequiredResources, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
 import { BuildingKey } from "src/Keys.sol";
 
@@ -89,9 +89,9 @@ library LibResource {
 
     // If the spent resource is a utility, add its cost to the total utility usage of the entity.
     if (P_IsUtility.get(resource)) {
-      uint256 prevUtilityUsage = UtilitySet.get(entity, resource);
-      // Add the resourceCost to the total building utility usage.
-      UtilitySet.set(entity, resource, prevUtilityUsage + resourceCost);
+      uint256 prevUtilityUsage = UtilityMap.get(entity, resource);
+      // add to the total building utility usage
+      UtilityMap.set(entity, resource, prevUtilityUsage + resourceCost);
     }
 
     // Spend resources. This will decrease the available resources for the player.
@@ -130,11 +130,11 @@ library LibResource {
   /// @param playerEntity ID of the owner of the building
   /// @param buildingEntity ID of the building to clear
   function clearUtilityUsage(bytes32 playerEntity, bytes32 buildingEntity) internal {
-    uint8[] memory utilities = UtilitySet.getAll(buildingEntity);
+    uint8[] memory utilities = UtilityMap.keys(buildingEntity);
     for (uint256 i = 0; i < utilities.length; i++) {
       uint8 utility = utilities[i];
-      uint256 utilityUsage = UtilitySet.get(buildingEntity, utility);
-      UtilitySet.remove(buildingEntity, utility);
+      uint256 utilityUsage = UtilityMap.get(buildingEntity, utility);
+      UtilityMap.remove(buildingEntity, utility);
       LibStorage.increaseStoredResource(playerEntity, utility, utilityUsage);
     }
   }

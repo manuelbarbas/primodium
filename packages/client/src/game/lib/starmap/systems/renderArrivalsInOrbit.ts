@@ -13,12 +13,7 @@ import { world } from "src/network/world";
 import { ObjectPosition, Tween } from "../../common/object-components/common";
 import { Circle } from "../../common/object-components/graphics";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import {
-  Arrival,
-  OwnedBy,
-  Pirate,
-  Position,
-} from "src/network/components/chainComponents";
+import { Arrival, OwnedBy, Pirate, Position } from "src/network/components/chainComponents";
 import { DepthLayers } from "@game/constants";
 import { hashStringEntity } from "src/util/encode";
 import { PIRATE_KEY } from "src/util/constants";
@@ -44,8 +39,7 @@ export const renderArrivalsInOrbit = (scene: Scene, player: EntityID) => {
     //render personal pirate only
     if (
       Pirate.has(arrival.destination) &&
-      hashStringEntity(PIRATE_KEY, player) !==
-        OwnedBy.get(arrival.destination)?.value
+      hashStringEntity(PIRATE_KEY, player) !== OwnedBy.get(arrival.destination)?.value
     )
       return;
 
@@ -53,11 +47,7 @@ export const renderArrivalsInOrbit = (scene: Scene, player: EntityID) => {
 
     if (!destination) return;
 
-    const destinationPixelCoord = tileCoordToPixelCoord(
-      { x: destination.x, y: -destination.y },
-      tileWidth,
-      tileHeight
-    );
+    const destinationPixelCoord = tileCoordToPixelCoord({ x: destination.x, y: -destination.y }, tileWidth, tileHeight);
 
     const arrivalOrbit = scene.objectPool.getGroup(entityId + objIndexSuffix);
 

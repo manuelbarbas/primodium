@@ -1,10 +1,10 @@
+import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { EResource, ERock, ESize } from "contracts/config/enums";
+import { components } from "src/network/components";
+import { world } from "src/network/world";
 import { encodeCoord, getMotherlodeEntity } from "src/util/encode";
 import { getPositionByVector } from "src/util/vector";
-import { world } from "src/network/world";
-import { Entity } from "@latticexyz/recs";
-import { components } from "src/network/components";
-import { EResource, ERock, ESize } from "contracts/config/enums";
 
 export function initializeMotherlodes(sourceEntity: Entity, source: Coord) {
   const config = components.P_GameConfig.get();
