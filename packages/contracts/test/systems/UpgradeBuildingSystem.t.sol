@@ -16,7 +16,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
   function testUpgradeMaxedBuildingFail() public {
     PositionData memory coord = getIronPosition(creator);
     bytes32 ironMine = world.build(EBuilding.IronMine, coord);
-    uint256 ironMineMaxLevel = P_MaxLevel.get(world, IronMinePrototypeId);
+    uint256 ironMineMaxLevel = P_MaxLevel.get(IronMinePrototypeId);
 
     Level.set(ironMine, ironMineMaxLevel);
 
@@ -28,7 +28,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
   function testUpgradeToMaxLevel() public {
     removeRequiredResources(EBuilding.IronMine);
     removeRequiredMainBase(EBuilding.IronMine);
-    uint256 ironMineMaxLevel = P_MaxLevel.get(world, IronMinePrototypeId);
+    uint256 ironMineMaxLevel = P_MaxLevel.get(IronMinePrototypeId);
     PositionData memory coord = getIronPosition(creator);
     world.build(EBuilding.IronMine, coord);
     for (uint256 i = 1; i < ironMineMaxLevel; i++) {

@@ -19,12 +19,12 @@ contract CounterTest is PrimodiumTest {
 
   function testCounter() public {
     // Expect the counter to be 1 because it was incremented in the PostDeploy script.
-    uint256 counter = Counter.get(world);
+    uint256 counter = Counter.get();
     assertEq(counter, 1);
 
     // Expect the counter to be 2 after calling increment.
     world.increment();
-    counter = Counter.get(world);
+    counter = Counter.get();
     assertEq(counter, 2);
   }
 }
