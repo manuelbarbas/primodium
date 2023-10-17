@@ -17,8 +17,8 @@ import { OnHookChangedValue, OnHookChangedValueTableId } from "codegen/tables/On
 import { Children, ChildrenTableId } from "codegen/tables/Children.sol";
 import { OwnedBy, OwnedByTableId } from "codegen/tables/OwnedBy.sol";
 import { Position, PositionTableId, PositionData } from "codegen/tables/Position.sol";
-import { SetUtilities, SetUtilitiesTableId } from "codegen/tables/SetUtilities.sol";
-import { SetItemUtilities, SetItemUtilitiesTableId } from "codegen/tables/SetItemUtilities.sol";
+import { MapUtilities, MapUtilitiesTableId } from "codegen/tables/MapUtilities.sol";
+import { MapItemUtilities, MapItemUtilitiesTableId } from "codegen/tables/MapItemUtilities.sol";
 import { ResourceCount, ResourceCountTableId } from "codegen/tables/ResourceCount.sol";
 import { MaxResourceCount, MaxResourceCountTableId } from "codegen/tables/MaxResourceCount.sol";
 import { SpawnedTableId } from "codegen/tables/Spawned.sol";
@@ -102,8 +102,8 @@ contract PostDeploy is Script {
   function registerBuildHooks(IWorld world) internal {
     OnBuild_ClaimResources onBuild_ClaimResources = new OnBuild_ClaimResources();
     world.grantAccess(ResourceCountTableId, address(onBuild_ClaimResources));
-    world.grantAccess(SetItemUtilitiesTableId, address(onBuild_ClaimResources));
-    world.grantAccess(SetUtilitiesTableId, address(onBuild_ClaimResources));
+    world.grantAccess(MapItemUtilitiesTableId, address(onBuild_ClaimResources));
+    world.grantAccess(MapUtilitiesTableId, address(onBuild_ClaimResources));
     world.grantAccess(LastClaimedAtTableId, address(onBuild_ClaimResources));
     world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_ClaimResources, BEFORE_CALL_SYSTEM);
 
@@ -118,8 +118,8 @@ contract PostDeploy is Script {
 
     OnBuild_SpendResources onBuild_SpendResources = new OnBuild_SpendResources();
     world.grantAccess(ResourceCountTableId, address(onBuild_SpendResources));
-    world.grantAccess(SetItemUtilitiesTableId, address(onBuild_SpendResources));
-    world.grantAccess(SetUtilitiesTableId, address(onBuild_SpendResources));
+    world.grantAccess(MapItemUtilitiesTableId, address(onBuild_SpendResources));
+    world.grantAccess(MapUtilitiesTableId, address(onBuild_SpendResources));
     world.grantAccess(MaxResourceCountTableId, address(onBuild_SpendResources));
     world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_SpendResources, AFTER_CALL_SYSTEM);
 
@@ -142,8 +142,8 @@ contract PostDeploy is Script {
   function registerUpgradeHooks(IWorld world) internal {
     OnUpgrade_ClaimResources onUpgrade_ClaimResources = new OnUpgrade_ClaimResources();
     world.grantAccess(ResourceCountTableId, address(onUpgrade_ClaimResources));
-    world.grantAccess(SetItemUtilitiesTableId, address(onUpgrade_ClaimResources));
-    world.grantAccess(SetUtilitiesTableId, address(onUpgrade_ClaimResources));
+    world.grantAccess(MapItemUtilitiesTableId, address(onUpgrade_ClaimResources));
+    world.grantAccess(MapUtilitiesTableId, address(onUpgrade_ClaimResources));
     world.grantAccess(LastClaimedAtTableId, address(onUpgrade_ClaimResources));
     world.registerSystemHook(
       getSystemResourceId("UpgradeBuildingSystem"),
@@ -167,8 +167,8 @@ contract PostDeploy is Script {
 
     OnUpgrade_SpendResources onUpgrade_SpendResources = new OnUpgrade_SpendResources();
     world.grantAccess(ResourceCountTableId, address(onUpgrade_SpendResources));
-    world.grantAccess(SetItemUtilitiesTableId, address(onUpgrade_SpendResources));
-    world.grantAccess(SetUtilitiesTableId, address(onUpgrade_SpendResources));
+    world.grantAccess(MapItemUtilitiesTableId, address(onUpgrade_SpendResources));
+    world.grantAccess(MapUtilitiesTableId, address(onUpgrade_SpendResources));
     world.grantAccess(MaxResourceCountTableId, address(onUpgrade_SpendResources));
     world.registerSystemHook(getSystemResourceId("UpgradeBuildingSystem"), onUpgrade_SpendResources, AFTER_CALL_SYSTEM);
   }
@@ -180,8 +180,8 @@ contract PostDeploy is Script {
   function registerDestroyHooks(IWorld world) internal {
     OnDestroy_ClaimResources onDestroy_ClaimResources = new OnDestroy_ClaimResources();
     world.grantAccess(ResourceCountTableId, address(onDestroy_ClaimResources));
-    world.grantAccess(SetItemUtilitiesTableId, address(onDestroy_ClaimResources));
-    world.grantAccess(SetUtilitiesTableId, address(onDestroy_ClaimResources));
+    world.grantAccess(MapItemUtilitiesTableId, address(onDestroy_ClaimResources));
+    world.grantAccess(MapUtilitiesTableId, address(onDestroy_ClaimResources));
     world.grantAccess(LastClaimedAtTableId, address(onDestroy_ClaimResources));
     world.registerSystemHook(getSystemResourceId("DestroySystem"), onDestroy_ClaimResources, BEFORE_CALL_SYSTEM);
 
@@ -189,8 +189,8 @@ contract PostDeploy is Script {
     world.registerSystemHook(getSystemResourceId("DestroySystem"), onDestroy_Requirements, BEFORE_CALL_SYSTEM);
 
     OnDestroy_ClearUtility onDestroy_ClearUtility = new OnDestroy_ClearUtility();
-    world.grantAccess(SetItemUtilitiesTableId, address(onDestroy_ClearUtility));
-    world.grantAccess(SetUtilitiesTableId, address(onDestroy_ClearUtility));
+    world.grantAccess(MapItemUtilitiesTableId, address(onDestroy_ClearUtility));
+    world.grantAccess(MapUtilitiesTableId, address(onDestroy_ClearUtility));
     world.grantAccess(MaxResourceCountTableId, address(onDestroy_ClearUtility));
     world.grantAccess(ResourceCountTableId, address(onDestroy_ClearUtility));
     world.registerSystemHook(getSystemResourceId("DestroySystem"), onDestroy_ClearUtility, BEFORE_CALL_SYSTEM);
@@ -253,8 +253,8 @@ contract PostDeploy is Script {
 
     OnTrainUnits_SpendResources onTrainUnits_SpendResources = new OnTrainUnits_SpendResources();
     world.grantAccess(ResourceCountTableId, address(onTrainUnits_SpendResources));
-    world.grantAccess(SetItemUtilitiesTableId, address(onTrainUnits_SpendResources));
-    world.grantAccess(SetUtilitiesTableId, address(onTrainUnits_SpendResources));
+    world.grantAccess(MapItemUtilitiesTableId, address(onTrainUnits_SpendResources));
+    world.grantAccess(MapUtilitiesTableId, address(onTrainUnits_SpendResources));
     world.registerSystemHook(getSystemResourceId("TrainUnitsSystem"), onTrainUnits_SpendResources, BEFORE_CALL_SYSTEM);
   }
 
