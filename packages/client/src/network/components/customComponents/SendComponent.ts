@@ -1,36 +1,27 @@
 import { Entity, Type } from "@latticexyz/recs";
-
-import { Coord } from "@latticexyz/utils";
 import { world } from "src/network/world";
-import { ActiveButton } from "src/util/types";
 import { SetupNetworkResult } from "../../types";
-import { ActiveAsteroid } from "../clientComponents";
 import { createExtendedComponent } from "./ExtendedComponent";
 import { ExtendedContractComponents } from "./extendComponents";
 
 function createSendComponent(contractComponents: ExtendedContractComponents<SetupNetworkResult["components"]>) {
-  const { Position, ReversePosition } = contractComponents;
+  const { Position, ActiveAsteroid } = contractComponents;
   const component = createExtendedComponent(world, {
-    originX: Type.OptionalNumber,
-    originY: Type.OptionalNumber,
-    destinationX: Type.OptionalNumber,
-    destinationY: Type.OptionalNumber,
+    origin: Type.OptionalEntity,
+    destination: Type.OptionalEntity,
     to: Type.OptionalEntity,
     units: Type.OptionalEntityArray,
     count: Type.OptionalNumberArray,
     sendType: Type.OptionalNumber,
-    activeButton: Type.Number,
   });
+
   const emptyComponent = {
-    originX: undefined,
-    originY: undefined,
-    destinationX: undefined,
-    destinationY: undefined,
+    origin: undefined,
+    destination: undefined,
     to: undefined,
     units: undefined,
     count: undefined,
     sendType: undefined,
-    activeButton: ActiveButton.DESTINATION,
   };
 
   const getUnitCount = (entity: Entity) => {
@@ -50,14 +41,10 @@ function createSendComponent(contractComponents: ExtendedContractComponents<Setu
 
   const reset = () => {
     const activeAsteroid = ActiveAsteroid.get()?.value;
-    if (!activeAsteroid) return;
-    const position = Position.get(activeAsteroid);
+
     component.set({
-      originX: position?.x,
-      originY: position?.y,
-      destinationX: undefined,
-      destinationY: undefined,
-      activeButton: ActiveButton.DESTINATION,
+      origin: activeAsteroid,
+      destination: undefined,
       units: undefined,
       count: undefined,
       to: undefined,
@@ -81,61 +68,12 @@ function createSendComponent(contractComponents: ExtendedContractComponents<Setu
     component.update({ units, count });
   };
 
-  const setOrigin = (position: Coord | undefined) => {
-    if (!position)
-      return component.update({
-        originX: undefined,
-        originY: undefined,
-      });
-    component.set({
-      ...(component.get() || emptyComponent),
-      originX: position.x,
-      originY: position.y,
-    });
+  const setOrigin = (spaceRock: Entity | undefined) => {
+    component.update({ origin: spaceRock });
   };
 
-  const setDestination = (position: Coord | undefined) => {
-    if (!position)
-      return component.update({
-        destinationX: undefined,
-        destinationY: undefined,
-      });
-    component.set({
-      ...(component.get() || emptyComponent),
-      destinationX: position.x,
-      destinationY: position.y,
-    });
-  };
-
-  const getOrigin = () => {
-    const componentValue = component.get();
-    if (!componentValue || !componentValue.originX || !componentValue.originY) return undefined;
-    const coord = { x: componentValue.originX, y: componentValue.originY };
-    const entities = Position.getAllWith(coord);
-    if (entities.length === 0) return;
-
-    const Entity = entities[0];
-    if (!Entity) return;
-
-    const entity = ReversePosition.getWithKeys(coord)?.entity;
-    if (!entity) return undefined;
-    return { ...coord, entity: entity as Entity };
-  };
-
-  const getDestination = () => {
-    const componentValue = component.get();
-    if (!componentValue || !componentValue.destinationX || !componentValue.destinationY) return undefined;
-    const coord = {
-      x: componentValue.destinationX,
-      y: componentValue.destinationY,
-    };
-    const entities = Position.getAllWith(coord);
-    if (entities.length === 0) return;
-
-    const entity = entities[0];
-    if (!entity) return;
-
-    return { ...coord, entity };
+  const setDestination = (spaceRock: Entity | undefined) => {
+    component.update({ destination: spaceRock });
   };
 
   const setUnitCount = (entity: Entity, count: number) => {
@@ -169,14 +107,30 @@ function createSendComponent(contractComponents: ExtendedContractComponents<Setu
     component.update({ units: currentUnits, count: currentCount });
   };
 
+  const getDestinationCoord = () => {
+    const destination = component.get()?.destination;
+
+    const coord = Position.get(destination);
+
+    return coord;
+  };
+
+  const getOriginCoord = () => {
+    const origin = component.get()?.origin;
+
+    const coord = Position.get(origin);
+
+    return coord;
+  };
+
   return {
     ...component,
     getUnitCount,
-    getOrigin,
-    getDestination,
     setUnitCount,
     setOrigin,
     setDestination,
+    getDestinationCoord,
+    getOriginCoord,
     removeUnit,
     reset,
   };
