@@ -314,11 +314,11 @@ importers:
         specifier: ^3.3.7
         version: 3.3.7
       solhint-config-mud:
-        specifier: 2.0.0-next.5
-        version: 2.0.0-next.5
+        specifier: 2.0.0-main-a5e8a6d5
+        version: 2.0.0-main-a5e8a6d5
       solhint-plugin-mud:
-        specifier: 2.0.0-next.5
-        version: 2.0.0-next.5
+        specifier: 2.0.0-main-a5e8a6d5
+        version: 2.0.0-main-a5e8a6d5
       solidity-trigonometry:
         specifier: https://github.com/mds1/solidity-trigonometry.git
         version: github.com/mds1/solidity-trigonometry/58af3a912ab3e2203cf21189012caefe24471e29
@@ -6825,12 +6825,12 @@ packages:
       is-fullwidth-code-point: 4.0.0
     dev: true
 
-  /solhint-config-mud@2.0.0-next.5:
-    resolution: {integrity: sha512-nM4lJk62cSSiS2TH/hc+QzGUfnS7Yhf31hPGvnnNFH4/sUuOjqH99xzWl+sMnxBmQrufTwqIZeWw1yiFzlky8w==}
+  /solhint-config-mud@2.0.0-main-a5e8a6d5:
+    resolution: {integrity: sha512-4OO2D7lkMbRjvM5u7vTe/DHJ9JF44giQYPVdbTrHhEQwWITvkZO6KJ7t6fOlByLIBBcnTgfuhpQLa45J3c5Fcw==}
     dev: true
 
-  /solhint-plugin-mud@2.0.0-next.5:
-    resolution: {integrity: sha512-gBnZki8L4w2zgIGvQmw7goSRqSSXibkpbKLCt/LcfFlmNhKbrwYRKJ/p4BW1UkHq6iV9IGchlJStT4aEo4j6OA==}
+  /solhint-plugin-mud@2.0.0-main-a5e8a6d5:
+    resolution: {integrity: sha512-szv2oESnJpv2VDCElLhjQIwFTKI+3bG0AqUm/Rnk+fs0JTlMS5XtPLu2cJDAYbFFlnGJ3ah1sRiPAkh02YJRDA==}
     dependencies:
       '@solidity-parser/parser': 0.16.1
     dev: true
