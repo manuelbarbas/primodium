@@ -46,6 +46,6 @@ contract OnBuild_ClaimResources is SystemHook {
     ResourceId systemId,
     bytes memory callData
   ) public {
-   // This function doesn't perform any actions in this case.
+    // This function doesn't perform any actions in this case.
   }
 }

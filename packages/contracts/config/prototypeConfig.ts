@@ -125,6 +125,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         motherlodeChanceInv: 4n,
         unitProductionRate: 100n,
         moveSpeed: 100n,
+        worldSpeed: 100n,
       },
       P_UnitPrototypes: {
         value: MUDEnums.EUnit.reduce(

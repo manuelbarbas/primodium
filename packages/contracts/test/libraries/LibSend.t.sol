@@ -118,18 +118,21 @@ contract LibSendTest is PrimodiumTest {
   function testGetArrivalTime(
     uint256 moveSpeed,
     uint256 distance,
-    uint256 unitSpeed
+    uint256 unitSpeed,
+    uint256 worldSpeed
   ) public {
     vm.assume(moveSpeed < 10000);
     vm.assume(distance < 10000);
     vm.assume(unitSpeed < 10000);
+    vm.assume(worldSpeed < 10000);
     vm.assume(moveSpeed > 0);
     vm.assume(distance > 0);
     vm.assume(unitSpeed > 0);
+    vm.assume(worldSpeed > 0);
 
     Arrival memory testArrival = setupArrivalLength(moveSpeed, distance, unitSpeed);
 
-    uint256 expected = block.timestamp + ((distance * 100 * 100) / (moveSpeed * unitSpeed));
+    uint256 expected = block.timestamp + ((distance * 100 * 100 * 100) / (worldSpeed * moveSpeed * unitSpeed));
     assertEq(
       LibSend.getArrivalTime(
         Position.get(testArrival.origin),
