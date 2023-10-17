@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { encodeEntity } from "@latticexyz/store-sync/recs";
-import { EBuilding, EResource } from "contracts/config/enums";
+import { EBuilding, EResource, EUnit } from "contracts/config/enums";
 import { Key } from "engine/types";
 import { EMotherlodeType, ERock, ESize } from "src/util/web3/types";
 import { toHex } from "viem";
@@ -21,7 +21,7 @@ export const SPEED_SCALE = BigInt(100);
 export const RESOURCE_SCALE = BigInt(100);
 export const PIRATE_KEY = "pirate";
 
-export enum ResourceTypes {
+export enum ResourceType {
   Resource,
   ResourceRate,
   Utility,
@@ -56,28 +56,20 @@ export const key = {
 };
 
 export const EntityType = {
-  // Landscape blocks
-  Sandstone: "Sandstone" as Entity,
-  Biofilm: "Biofilm" as Entity,
-  Alluvium: "Alluvium" as Entity,
-  Regolith: "Regolith" as Entity,
-  Bedrock: "Bedrock" as Entity,
-  Air: "Air" as Entity,
-
   // Ores
-  Water: "Water" as Entity,
-  Lithium: "Lithium" as Entity,
-  Iron: "Iron" as Entity,
-  Copper: "Copper" as Entity,
-  Titanium: "Titanium" as Entity,
-  Iridium: "Iridium" as Entity,
-  Sulfur: "Sulfur" as Entity,
-  Osmium: "Osmium" as Entity,
-  Tungsten: "Tungsten" as Entity,
-  Kimberlite: "Kimberlite" as Entity,
-  Uraninite: "Uraninite" as Entity,
-  Bolutite: "Bolutite" as Entity,
-  Platinum: "Platinum" as Entity,
+  Water: toHex32("Water") as Entity,
+  Lithium: toHex32("Lithium") as Entity,
+  Iron: toHex32("Iron") as Entity,
+  Copper: toHex32("Copper") as Entity,
+  Titanium: toHex32("Titanium") as Entity,
+  Iridium: toHex32("Iridium") as Entity,
+  Sulfur: toHex32("Sulfur") as Entity,
+  Osmium: toHex32("Osmium") as Entity,
+  Tungsten: toHex32("Tungsten") as Entity,
+  Kimberlite: toHex32("Kimberlite") as Entity,
+  Uraninite: toHex32("Uraninite") as Entity,
+  Bolutite: toHex32("Bolutite") as Entity,
+  Platinum: toHex32("Platinum") as Entity,
 
   MainBase: toHex32("MainBase") as Entity,
   DebugNode: toHex32("DebugNode") as Entity,
@@ -139,6 +131,7 @@ export const EntityType = {
   MinutemanMarine: toHex32("unit.MinutemanMarine") as Entity,
   TridentMarine: toHex32("unit.TridentMarine") as Entity,
 
+  Expansion: toHex32("Expansion") as Entity,
   ExpansionResearch1: encodeEntityLevel("Expansion", 1) as Entity,
   ExpansionResearch2: encodeEntityLevel("Expansion", 2) as Entity,
   ExpansionResearch3: encodeEntityLevel("Expansion", 3) as Entity,
@@ -644,36 +637,6 @@ export const BlockIdToKey = Object.entries(EntityType).reduce<{
 //   [BlockType.DestroyEnemyUnits5, "Attack and defend against enemy units and destroy your enemies' armies."],
 // ]);
 
-// Terrain Tile colors
-//todo: pick ore block colors
-export const BlockColors = new Map<Entity, string>([
-  //landscape blocks
-  [EntityType.Water, "#0369a1"],
-  [EntityType.Sandstone, "#a8a29e"],
-  [EntityType.Biofilm, "#10b981"],
-  [EntityType.Alluvium, "#34d399"],
-  [EntityType.Regolith, "#71717a"],
-  [EntityType.Bedrock, "#52525b"],
-  [EntityType.Air, "#FFFFFF00"],
-
-  //metal ores
-  [EntityType.Lithium, "#d8b4fe"],
-  [EntityType.Iron, "#44403c"],
-  [EntityType.Copper, "#047857"],
-  [EntityType.Titanium, "#60a5fa"],
-  [EntityType.Iridium, "#fce7f3"],
-  [EntityType.Osmium, "#164e63"],
-  [EntityType.Tungsten, "#94a3b8"],
-
-  //mineral ores
-  [EntityType.Kimberlite, "#e0f2fe"],
-  [EntityType.Uraninite, "#d9f99d"],
-  [EntityType.Bolutite, "#a21caf"],
-
-  // Resource
-  [EntityType.MainBase, "#8676c0"],
-]);
-
 export const BackgroundImage = new Map<Entity, string[]>([
   //units
   [EntityType.HammerLightDrone, ["/img/unit/hammerdrone.png"]],
@@ -905,6 +868,18 @@ export const BuildingEnumLookup: Record<Entity, EBuilding> = {
   [EntityType.DroneFactory]: EBuilding.DroneFactory,
   [EntityType.Hangar]: EBuilding.Hangar,
   [EntityType.MainBase]: EBuilding.MainBase,
+  // [EntityType.SAMSite]: EBuilding.SAMSite,
+  [EntityType.StarmapperStation]: EBuilding.Starmapper,
 };
 
 export const BuildingEntityLookup = reverseRecord(BuildingEnumLookup);
+
+export const UnitEnumLookup: Record<Entity, EUnit> = {
+  [EntityType.HammerLightDrone]: EUnit.HammerDrone,
+  [EntityType.StingerDrone]: EUnit.StingerDrone,
+  [EntityType.AnvilLightDrone]: EUnit.AnvilDrone,
+  [EntityType.AegisDrone]: EUnit.AegisDrone,
+  [EntityType.MiningVessel]: EUnit.MiningVessel,
+  // [EntityType.MinutemanMarine]: EUnit.MinutemanMarine,
+  // [EntityType.TridentMarine]: EUnit.TridentMarine,
+};

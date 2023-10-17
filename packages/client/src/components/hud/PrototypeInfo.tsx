@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import React from "react";
 
-import { RESOURCE_SCALE, ResourceImage, ResourceTypes, ResourceEntityLookup } from "src/util/constants";
+import { RESOURCE_SCALE, ResourceImage, ResourceType, ResourceEntityLookup } from "src/util/constants";
 import { getRecipe } from "src/util/resource";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 import { formatNumber, getBlockTypeName } from "src/util/common";
@@ -36,7 +36,7 @@ export const RecipeDisplay: React.FC<{
               resourceType={resource.type}
               name={resourceName}
               amount={resource.amount}
-              scale={resource.type !== ResourceTypes.Utility ? RESOURCE_SCALE : 1n}
+              scale={resource.type !== ResourceType.Utility ? RESOURCE_SCALE : 1n}
               validate
               fontSize={"xs"}
             />

@@ -7,7 +7,7 @@ import { UpgradeUnit } from "../widgets/UpgradeUnit";
 
 export const UnitFactory: React.FC<{ building: EntityID }> = ({ building }) => {
   return (
-    <Navigator.Screen title={building} className="w-fit">
+    <Navigator.Screen title={building} className="w-full">
       <Header building={building} />
       <Upgrade building={building} />
       <div className="grid grid-cols-2 w-full">

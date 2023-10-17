@@ -3,14 +3,14 @@ import { primodium } from "@game/api";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
-import { MUDEnums } from "contracts/config/enums";
+import { EResource, MUDEnums } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
 import { Account } from "src/network/components/clientComponents";
 import { Hex } from "viem";
 import { clampedIndex, getBlockTypeName, toRomanNumeral } from "./common";
-import { ResourceTypes } from "./constants";
+import { ResourceEntityLookup, ResourceType } from "./constants";
 import { outOfBounds } from "./outOfBounds";
-import { getRecipe, getRecipeDifference } from "./resource";
+import { getRecipe } from "./resource";
 import { getBuildingAtCoord, getResourceKey } from "./tile";
 import { EntitytoSpriteKey } from "@game/constants";
 
@@ -128,28 +128,47 @@ export const getBuildingName = (building: Entity) => {
   return `${getBlockTypeName(buildingType)} ${toRomanNumeral(Number(level))}`;
 };
 
-export const getBuildingStorages = (building: Hex, level: bigint) => {
-  const resourceStorages = MUDEnums.EResource.map((resource, i) => {
-    const storage = comps.P_ByLevelMaxResourceUpgrades.getWithKeys({ prototype: building, level, resource: i })?.value;
+export const getBuildingImage = (building: Entity) => {
+  const buildingType = comps.BuildingType.get(building)?.value as Entity;
+  const level = comps.Level.get(building)?.value ?? 1n;
+  const { getSpriteBase64 } = primodium.api().sprite;
+
+  if (EntitytoSpriteKey[buildingType]) {
+    const imageIndex = parseInt(level ? level.toString() : "1") - 1;
+
+    return getSpriteBase64(
+      EntitytoSpriteKey[buildingType][clampedIndex(imageIndex, EntitytoSpriteKey[buildingType].length)]
+    );
+  }
+
+  return "";
+};
+
+export const getBuildingStorages = (buildingType: Entity, level: bigint) => {
+  const resourceStorages = MUDEnums.EResource.map((_, i) => {
+    const storage = comps.P_ByLevelMaxResourceUpgrades.getWithKeys({
+      prototype: buildingType as Hex,
+      level,
+      resource: i,
+    })?.value;
 
     if (!storage) return null;
 
     return {
-      resourceId: resource as Entity,
-      resourceType: comps.P_IsUtility.getWithKeys({ id: i }) ? ResourceTypes.Resource : ResourceTypes.Utility,
+      resource: ResourceEntityLookup[i as EResource],
+      resourceType: comps.P_IsUtility.getWithKeys({ id: i }) ? ResourceType.Resource : ResourceType.Utility,
       amount: storage,
     };
   });
 
   return resourceStorages.filter((storage) => !!storage) as {
-    resourceId: Entity;
-    resourceType: ResourceTypes;
+    resource: Entity;
+    resourceType: ResourceType;
     amount: bigint;
   }[];
 };
 
 export const getBuildingInfo = (building: Entity) => {
-  const { getSpriteBase64 } = primodium.api().sprite;
   const buildingType = (comps.BuildingType.get(building)?.value ?? singletonEntity) as Hex;
   const buildingTypeEntity = buildingType as Entity;
 
@@ -157,34 +176,22 @@ export const getBuildingInfo = (building: Entity) => {
   let nextLevel = level + 1n;
 
   const maxLevel = comps.P_MaxLevel.getWithKeys({ prototype: buildingType })?.value ?? 1n;
-  nextLevel = maxLevel > nextLevel ? maxLevel : nextLevel;
+  nextLevel = nextLevel > maxLevel ? maxLevel : nextLevel;
 
   const buildingLevelKeys = { prototype: buildingType, level: level };
   const buildingNextLevelKeys = { prototype: buildingType, level: nextLevel };
   const production = comps.P_Production.getWithKeys(buildingLevelKeys);
   const nextLevelProduction = comps.P_Production.getWithKeys(buildingNextLevelKeys);
 
-  const storages = getBuildingStorages(buildingType, level);
-  const nextLevelStorages = getBuildingStorages(buildingType, level);
+  const storages = getBuildingStorages(buildingTypeEntity, level);
+  const nextLevelStorages = getBuildingStorages(buildingTypeEntity, level);
 
   const unitProductionMultiplier = comps.P_UnitProdMultiplier.getWithKeys(buildingLevelKeys)?.value;
   const nextLevelUnitProductionMultiplier = comps.P_UnitProdMultiplier.getWithKeys(buildingNextLevelKeys)?.value;
 
-  const upgradeRecipe = getRecipeDifference(
-    getRecipe(buildingTypeEntity, level),
-    getRecipe(buildingTypeEntity, nextLevel)
-  );
+  const upgradeRecipe = getRecipe(buildingTypeEntity, nextLevel);
 
   const mainBaseLvlReq = comps.P_RequiredBaseLevel.getWithKeys(buildingNextLevelKeys)?.value ?? 1;
-
-  let imageUri = "";
-  if (EntitytoSpriteKey[buildingType]) {
-    const imageIndex = parseInt(level ? level.toString() : "1") - 1;
-
-    imageUri = getSpriteBase64(
-      EntitytoSpriteKey[buildingType][clampedIndex(imageIndex, EntitytoSpriteKey[buildingType].length)]
-    );
-  }
 
   const position = comps.Position.get(building) ?? { x: 0, y: 0 };
 
@@ -193,8 +200,6 @@ export const getBuildingInfo = (building: Entity) => {
     level,
     maxLevel,
     nextLevel,
-    buildingName: `${getBlockTypeName(buildingTypeEntity)} ${toRomanNumeral(Number(level))}`,
-    imageUri,
     production,
     storages,
     position,

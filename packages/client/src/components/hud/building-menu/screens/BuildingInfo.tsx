@@ -1,11 +1,13 @@
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
+import { EResource } from "contracts/config/enums";
 import { Badge } from "src/components/core/Badge";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 import { useBuildingInfo } from "src/hooks/useBuildingInfo";
+import { useMud } from "src/hooks/useMud";
 import { getBlockTypeName } from "src/util/common";
-import { ResourceImage, ResourceTypes, RESOURCE_SCALE } from "src/util/constants";
+import { ResourceImage, ResourceType, RESOURCE_SCALE, ResourceEntityLookup } from "src/util/constants";
 
 const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (
@@ -16,21 +18,22 @@ const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ lab
   );
 };
 
-export const BuildingInfo: React.FC<{ building: EntityID }> = ({ building }) => {
+export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
+  const playerEntity = useMud().network.playerEntity;
   const { buildingType, level, maxLevel, position, production, upgrade, unitProductionMultiplier, storages } =
     useBuildingInfo(building);
 
   return (
     <Navigator.Screen title="BuildingInfo" className="w-full">
       <DataLabel label="building type">
-        <b>{getBlockTypeName(buildingType)}</b>
+        <b>{getBlockTypeName(buildingType as Entity)}</b>
       </DataLabel>
       <div className="grid grid-cols-3 w-full">
         <DataLabel label="level">
-          <b>{level}</b>
+          <b>{level.toString()}</b>
         </DataLabel>
         <DataLabel label="max level">
-          <b>{maxLevel}</b>
+          <b>{maxLevel.toString()}</b>
         </DataLabel>
         <DataLabel label="coord">
           <b>
@@ -43,11 +46,12 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({ building }) => 
           <DataLabel label="PRODUCTION">
             <Badge className="text-xs gap-2">
               <ResourceIconTooltip
-                name={getBlockTypeName(production.resourceID)}
-                image={ResourceImage.get(production.resourceID) ?? ""}
-                resource={production.resourceID}
-                amount={production.resourceProductionRate}
-                resourceType={ResourceTypes.ResourceRate}
+                name={getBlockTypeName(ResourceEntityLookup[production.resource as EResource])}
+                image={ResourceImage.get(ResourceEntityLookup[production.resource as EResource]) ?? ""}
+                resource={ResourceEntityLookup[production.resource as EResource]}
+                playerEntity={playerEntity}
+                amount={production.amount}
+                resourceType={ResourceType.ResourceRate}
               />
             </Badge>
           </DataLabel>
@@ -57,27 +61,28 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({ building }) => 
             ) : (
               <Badge className="text-xs gap-2">
                 <ResourceIconTooltip
-                  name={getBlockTypeName(upgrade.production.resourceID)}
-                  image={ResourceImage.get(upgrade.production.resourceID) ?? ""}
-                  resource={upgrade.production.resourceID}
-                  amount={upgrade.production.resourceProductionRate}
-                  resourceType={ResourceTypes.ResourceRate}
+                  name={getBlockTypeName(ResourceEntityLookup[upgrade.production.resource as EResource])}
+                  image={ResourceImage.get(ResourceEntityLookup[upgrade.production.resource as EResource]) ?? ""}
+                  resource={ResourceEntityLookup[upgrade.production.resource as EResource]}
+                  playerEntity={playerEntity}
+                  amount={upgrade.production.amount}
+                  resourceType={ResourceType.ResourceRate}
                 />
               </Badge>
             )}
           </DataLabel>
         </div>
       )}
-      {unitProductionMultiplier && (
+      {unitProductionMultiplier !== undefined && (
         <div className="grid grid-cols-2 w-full ">
           <DataLabel label="speed">
-            <b>x{unitProductionMultiplier * RESOURCE_SCALE}</b>{" "}
+            <b>x{(unitProductionMultiplier / RESOURCE_SCALE).toString()}</b>
           </DataLabel>
           <DataLabel label="next level speed">
             {!upgrade.nextLevelUnitProductionMultiplier || level === maxLevel ? (
               <b>N/A</b>
             ) : (
-              <b>x{upgrade.nextLevelUnitProductionMultiplier * RESOURCE_SCALE}</b>
+              <b>x{(upgrade.nextLevelUnitProductionMultiplier / RESOURCE_SCALE).toString()}</b>
             )}
           </DataLabel>
         </div>
@@ -87,14 +92,15 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({ building }) => 
           <DataLabel label="storage">
             {storages.map((storage) => {
               return (
-                <Badge key={storage.resourceId} className="text-xs gap-2">
+                <Badge key={storage.resource} className="text-xs gap-2">
                   <ResourceIconTooltip
-                    name={getBlockTypeName(storage.resourceId)}
-                    image={ResourceImage.get(storage.resourceId) ?? ""}
-                    resource={storage.resourceId}
+                    name={getBlockTypeName(storage.resource)}
+                    playerEntity={playerEntity}
+                    image={ResourceImage.get(storage.resource) ?? ""}
+                    resource={storage.resource}
                     amount={storage.amount}
                     resourceType={storage.resourceType}
-                    scale={storage.resourceType === ResourceTypes.Utility ? 1 : RESOURCE_SCALE}
+                    scale={storage.resourceType === ResourceType.Utility ? 1n : RESOURCE_SCALE}
                     direction="top"
                   />
                 </Badge>
@@ -107,14 +113,15 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({ building }) => 
             ) : (
               upgrade.storages.map((storage) => {
                 return (
-                  <Badge key={storage.resourceId} className="text-xs gap-2">
+                  <Badge key={storage.resource} className="text-xs gap-2">
                     <ResourceIconTooltip
-                      name={getBlockTypeName(storage.resourceId)}
-                      image={ResourceImage.get(storage.resourceId) ?? ""}
-                      resource={storage.resourceId}
+                      name={getBlockTypeName(storage.resource)}
+                      playerEntity={playerEntity}
+                      image={ResourceImage.get(storage.resource) ?? ""}
+                      resource={storage.resource}
                       amount={storage.amount}
                       resourceType={storage.resourceType}
-                      scale={storage.resourceType === ResourceTypes.Utility ? 1 : RESOURCE_SCALE}
+                      scale={storage.resourceType === ResourceType.Utility ? 1n : RESOURCE_SCALE}
                       direction="top"
                     />
                   </Badge>
