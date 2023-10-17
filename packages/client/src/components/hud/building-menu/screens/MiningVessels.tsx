@@ -1,25 +1,25 @@
-import { SingletonID } from "@latticexyz/network";
-import { EntityID } from "@latticexyz/recs";
-import { useMemo } from "react";
-import { FaInfoCircle } from "react-icons/fa";
-import { Badge } from "src/components/core/Badge";
-import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
-import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
-import { Level } from "src/network/components/chainComponents";
+import { SingletonID } from "@latticexyz/network";
 import { Account } from "src/network/components/clientComponents";
+import { EntityID } from "@latticexyz/recs";
+import { BlockType, RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
+import { Badge } from "src/components/core/Badge";
+import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 import { getBlockTypeName } from "src/util/common";
-import { EntityType, RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
+import { SecondaryCard } from "src/components/core/Card";
+import { useMemo } from "react";
 import { hashKeyEntity } from "src/util/encode";
+import { Level } from "src/network/components/chainComponents";
 import { getRecipe } from "src/util/resource";
 import { UpgradeMiningVessel } from "../widgets/UpgradeMiningVessel";
+import { FaInfoCircle } from "react-icons/fa";
 import { VesselSlots } from "../widgets/VesselSlots";
 
 export const CommissionCost: React.FC<{ player: EntityID }> = ({ player }) => {
   const recipe = useMemo(() => {
-    const playerUnitEntity = hashKeyEntity(EntityType.MiningVessel, player);
+    const playerUnitEntity = hashKeyEntity(BlockType.MiningVessel, player);
     const level = Level.get(playerUnitEntity, { value: 0 }).value;
-    const unitEntity = hashKeyEntity(EntityType.MiningVessel, level);
+    const unitEntity = hashKeyEntity(BlockType.MiningVessel, level);
 
     return getRecipe(unitEntity);
   }, [player]);

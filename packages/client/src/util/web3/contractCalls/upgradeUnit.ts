@@ -1,12 +1,13 @@
+import { EUnit } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { SetupNetworkResult } from "src/network/types";
 
-export const upgradeRange = async (network: SetupNetworkResult) => {
+export const upgradeUnit = async (unit: EUnit, network: SetupNetworkResult) => {
   const activeAsteroid = components.Home.get(network.playerEntity)?.asteroid;
 
   if (!activeAsteroid) return;
 
-  const tx = await network.worldContract.write.upgradeRange();
+  const tx = await network.worldContract.write.upgradeUnit([unit]);
   await network.waitForTransaction(tx);
 
   // ampli.systemUpgradeRange({

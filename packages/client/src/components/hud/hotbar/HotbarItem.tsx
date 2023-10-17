@@ -1,5 +1,5 @@
 import { primodium } from "@game/api";
-import { EntityIDtoSpriteKey, KeybindActions } from "@game/constants";
+import { EntitytoSpriteKey, KeybindActions } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { Key } from "engine/types";
 import { motion } from "framer-motion";
@@ -36,7 +36,7 @@ const HotbarItem: React.FC<{
   const requiredLevel = components.P_RequiredBaseLevel.getWithKeys({ prototype: building as Hex, level: 1n })?.value;
   const unlocked = playerLevel >= (requiredLevel ?? 0n);
 
-  const hasEnough = useHasEnoughResources(getRecipe(building, 1n));
+  const hasEnough = useHasEnoughResources(getRecipe(building, 1n), playerEntity);
 
   const keybindAction = useMemo(() => {
     if (!keybinds) return;
@@ -107,9 +107,7 @@ const HotbarItem: React.FC<{
         } ${hasEnough ? "" : " border-rose-500"}`}
       >
         <img
-          src={
-            EntityIDtoSpriteKey[building] !== undefined ? getSpriteBase64(EntityIDtoSpriteKey[building][0]) : undefined
-          }
+          src={EntitytoSpriteKey[building] !== undefined ? getSpriteBase64(EntitytoSpriteKey[building][0]) : undefined}
           className={`absolute bottom-0 w-14 pixel-images rounded-md`}
         />
         {selectedBuilding === building && (

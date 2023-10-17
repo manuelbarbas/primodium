@@ -1,13 +1,11 @@
-import { SingletonID } from "@latticexyz/network";
-import { EntityID } from "@latticexyz/recs";
+import { BackgroundImage, BlockType, ResourceImage, ResourceType } from "src/util/constants";
+import { getBlockTypeName } from "src/util/common";
 import { useEffect, useMemo, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
-import { Badge } from "src/components/core/Badge";
-import { SecondaryCard } from "src/components/core/Card";
-import { Navigator } from "src/components/core/Navigator";
-import { NumberInput } from "src/components/shared/NumberInput";
+import { EntityID } from "@latticexyz/recs";
+import { train } from "src/util/web3";
 import { useMud } from "src/hooks";
-import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
+import { getUnitStats, useTrainableUnits } from "src/util/trainUnits";
 import {
   Level,
   MaxUtility,
@@ -15,15 +13,17 @@ import {
   P_RequiredResources,
   P_RequiredUtility,
 } from "src/network/components/chainComponents";
+import { hashKeyEntity } from "src/util/encode";
+import ResourceIconTooltip from "../../../shared/ResourceIconTooltip";
 import { Account } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
-import { getBlockTypeName } from "src/util/common";
-import { BackgroundImage, EntityType, ResourceImage, ResourceType } from "src/util/constants";
-import { hashKeyEntity } from "src/util/encode";
+import { NumberInput } from "src/components/shared/NumberInput";
+import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
+import { SingletonID } from "@latticexyz/network";
 import { getRecipe } from "src/util/resource";
-import { getUnitStats, useTrainableUnits } from "src/util/trainUnits";
-import { train } from "src/util/web3";
-import ResourceIconTooltip from "../../../shared/ResourceIconTooltip";
+import { Navigator } from "src/components/core/Navigator";
+import { SecondaryCard } from "src/components/core/Card";
+import { Badge } from "src/components/core/Badge";
 
 export const BuildUnit: React.FC<{
   building: EntityID;
@@ -38,7 +38,7 @@ export const BuildUnit: React.FC<{
     setCount(1);
   }, [selectedUnit]);
 
-  const playerResourceEntity = hashKeyEntity(EntityType.Housing, account);
+  const playerResourceEntity = hashKeyEntity(BlockType.Housing, account);
 
   const totalUnits = OccupiedUtilityResource.use(playerResourceEntity, {
     value: 0,
@@ -57,7 +57,7 @@ export const BuildUnit: React.FC<{
     if (!unitLevelEntity) return 0;
     const raw = P_RequiredUtility.get(unitLevelEntity);
     if (!raw) return 0;
-    const amountIndex = raw.resourceIDs.indexOf(EntityType.Housing);
+    const amountIndex = raw.resourceIDs.indexOf(BlockType.Housing);
     return amountIndex == -1 ? 0 : raw.requiredAmounts[amountIndex];
   }, [unitLevelEntity]);
 
@@ -149,10 +149,10 @@ export const BuildUnit: React.FC<{
                   {requiredHousing > 0 && (
                     <Badge>
                       <ResourceIconTooltip
-                        image={ResourceImage.get(EntityType.Housing) ?? ""}
+                        image={ResourceImage.get(BlockType.Housing) ?? ""}
                         scale={1}
-                        resourceId={EntityType.Housing}
-                        name={getBlockTypeName(EntityType.Housing)}
+                        resourceId={BlockType.Housing}
+                        name={getBlockTypeName(BlockType.Housing)}
                         amount={requiredHousing * count}
                         resourceType={ResourceType.Utility}
                         fontSize="sm"

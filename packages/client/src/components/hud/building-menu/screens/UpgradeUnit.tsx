@@ -1,23 +1,15 @@
 import { Navigator } from "src/components/core/Navigator";
 import { ResearchItem } from "../widgets/ResearchItem";
-import {
-  AegisDroneUpgradeTree,
-  AnvilDroneUpgradeTree,
-  HammerDroneUpgradeTree,
-  TridentMarineUpgradeTree,
-  MinutemanMarineUpgradeTree,
-  StingerDroneUpgradeTree,
-} from "src/util/research";
-import { EntityID } from "@latticexyz/recs";
-import { BuildingType } from "src/network/components/chainComponents";
+import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
+import { components } from "src/network/components";
 import { EntityType } from "src/util/constants";
 
-export const UpgradeUnit: React.FC<{ building: EntityID }> = ({ building }) => {
+export const UpgradeUnit: React.FC<{ building: Entity }> = ({ building }) => {
   const buildingType = useMemo(() => {
     if (!building) return;
 
-    return BuildingType.get(building)?.value;
+    return components.BuildingType.get(building)?.value;
   }, [building]);
 
   return (
@@ -25,16 +17,16 @@ export const UpgradeUnit: React.FC<{ building: EntityID }> = ({ building }) => {
       <div className="grid grid-cols-2 w-full mb-2 gap-1">
         {EntityType.DroneFactory === buildingType && (
           <>
-            <ResearchItem data={AnvilDroneUpgradeTree} />
-            <ResearchItem data={HammerDroneUpgradeTree} />
-            <ResearchItem data={StingerDroneUpgradeTree} />
-            <ResearchItem data={AegisDroneUpgradeTree} />
+            <ResearchItem type={EntityType.AnvilLightDrone} />
+            <ResearchItem type={EntityType.HammerLightDrone} />
+            <ResearchItem type={EntityType.StingerDrone} />
+            <ResearchItem type={EntityType.AegisDrone} />
           </>
         )}
         {EntityType.Workshop === buildingType && (
           <>
-            <ResearchItem data={MinutemanMarineUpgradeTree} />
-            <ResearchItem data={TridentMarineUpgradeTree} />
+            <ResearchItem type={EntityType.MinutemanMarine} />
+            <ResearchItem type={EntityType.TridentMarine} />
           </>
         )}
       </div>

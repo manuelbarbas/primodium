@@ -66,13 +66,22 @@ contract LibProductionTest is PrimodiumTest {
     LibProduction.clearResourceProduction(playerEntity, buildingEntity);
     uint256 startingAmount = 50;
     uint256 amountCleared = 20;
-    MaxResourceCount.set(playerEntity, uint8(EResource.Iron), 50);
-
+    MaxResourceCount.set(playerEntity, uint8(EResource.Iron), startingAmount);
+    ResourceCount.set(playerEntity, uint8(EResource.Iron), startingAmount);
     P_ProductionData memory data1 = P_ProductionData(uint8(EResource.Iron), amountCleared);
     P_Production.set(buildingPrototype, level, data1);
 
     LibProduction.clearResourceProduction(playerEntity, buildingEntity);
-    assertEq(MaxResourceCount.get(playerEntity, uint8(EResource.Iron)), startingAmount - amountCleared);
+    assertEq(
+      MaxResourceCount.get(playerEntity, uint8(EResource.Iron)),
+      startingAmount - amountCleared,
+      "max resource count not as expected"
+    );
+    assertEq(
+      ResourceCount.get(playerEntity, uint8(EResource.Iron)),
+      startingAmount - amountCleared,
+      "resource count not as expected"
+    );
   }
 
   function testClearResourceProductionNonUtility() public {

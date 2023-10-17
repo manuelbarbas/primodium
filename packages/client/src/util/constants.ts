@@ -1,9 +1,10 @@
 import { Entity } from "@latticexyz/recs";
 import { encodeEntity } from "@latticexyz/store-sync/recs";
-import { EBuilding, MUDEnums } from "contracts/config/enums";
+import { EBuilding, EResource, EUnit } from "contracts/config/enums";
 import { Key } from "engine/types";
 import { EMotherlodeType, ERock, ESize } from "src/util/web3/types";
 import { toHex } from "viem";
+import { reverseRecord } from "./common";
 
 export const toHex32 = (input: string) => toHex(input, { size: 32 });
 export const encodeEntityLevel = (entity: string, level: number) => {
@@ -15,17 +16,16 @@ export enum Action {
   SelectBuilding,
   PlaceBuilding,
 }
+
+export const SPEED_SCALE = BigInt(100);
+export const RESOURCE_SCALE = BigInt(100);
+export const PIRATE_KEY = "pirate";
+
 export enum ResourceType {
   Resource,
   ResourceRate,
   Utility,
 }
-
-export const SPEED_SCALE = BigInt(10000);
-export const RESOURCE_SCALE = BigInt(100);
-export const PIRATE_KEY = "pirate";
-
-export const EResource = MUDEnums.EResource as string[];
 
 export enum RewardType {
   Resource,
@@ -56,28 +56,20 @@ export const key = {
 };
 
 export const EntityType = {
-  // Landscape blocks
-  Sandstone: "Sandstone" as Entity,
-  Biofilm: "Biofilm" as Entity,
-  Alluvium: "Alluvium" as Entity,
-  Regolith: "Regolith" as Entity,
-  Bedrock: "Bedrock" as Entity,
-  Air: "Air" as Entity,
-
   // Ores
-  Water: "Water" as Entity,
-  Lithium: "Lithium" as Entity,
-  Iron: "Iron" as Entity,
-  Copper: "Copper" as Entity,
-  Titanium: "Titanium" as Entity,
-  Iridium: "Iridium" as Entity,
-  Sulfur: "Sulfur" as Entity,
-  Osmium: "Osmium" as Entity,
-  Tungsten: "Tungsten" as Entity,
-  Kimberlite: "Kimberlite" as Entity,
-  Uraninite: "Uraninite" as Entity,
-  Bolutite: "Bolutite" as Entity,
-  Platinum: "Platinum" as Entity,
+  Water: toHex32("Water") as Entity,
+  Lithium: toHex32("Lithium") as Entity,
+  Iron: toHex32("Iron") as Entity,
+  Copper: toHex32("Copper") as Entity,
+  Titanium: toHex32("Titanium") as Entity,
+  Iridium: toHex32("Iridium") as Entity,
+  Sulfur: toHex32("Sulfur") as Entity,
+  Osmium: toHex32("Osmium") as Entity,
+  Tungsten: toHex32("Tungsten") as Entity,
+  Kimberlite: toHex32("Kimberlite") as Entity,
+  Uraninite: toHex32("Uraninite") as Entity,
+  Bolutite: toHex32("Bolutite") as Entity,
+  Platinum: toHex32("Platinum") as Entity,
 
   MainBase: toHex32("MainBase") as Entity,
   DebugNode: toHex32("DebugNode") as Entity,
@@ -109,10 +101,10 @@ export const EntityType = {
   PVCell: toHex32("PVCell") as Entity,
 
   RocketFuel: toHex32("RocketFuel") as Entity,
-  U_Electricity: toHex32("U_Electricity") as Entity,
-  U_Housing: toHex32("U_Housing") as Entity,
-  U_VesselCapacity: toHex32("U_Vessel") as Entity,
-  U_FleetMoves: toHex32("U_FleetMoves") as Entity,
+  Electricity: toHex32("U_Electricity") as Entity,
+  Housing: toHex32("U_Housing") as Entity,
+  VesselCapacity: toHex32("U_Vessel") as Entity,
+  FleetMoves: toHex32("U_FleetMoves") as Entity,
 
   Bullet: toHex32("Bullet") as Entity,
   IronPlate: toHex32("IronPlate") as Entity,
@@ -139,6 +131,7 @@ export const EntityType = {
   MinutemanMarine: toHex32("unit.MinutemanMarine") as Entity,
   TridentMarine: toHex32("unit.TridentMarine") as Entity,
 
+  Expansion: toHex32("Expansion") as Entity,
   ExpansionResearch1: encodeEntityLevel("Expansion", 1) as Entity,
   ExpansionResearch2: encodeEntityLevel("Expansion", 2) as Entity,
   ExpansionResearch3: encodeEntityLevel("Expansion", 3) as Entity,
@@ -644,36 +637,6 @@ export const BlockIdToKey = Object.entries(EntityType).reduce<{
 //   [BlockType.DestroyEnemyUnits5, "Attack and defend against enemy units and destroy your enemies' armies."],
 // ]);
 
-// Terrain Tile colors
-//todo: pick ore block colors
-export const BlockColors = new Map<Entity, string>([
-  //landscape blocks
-  [EntityType.Water, "#0369a1"],
-  [EntityType.Sandstone, "#a8a29e"],
-  [EntityType.Biofilm, "#10b981"],
-  [EntityType.Alluvium, "#34d399"],
-  [EntityType.Regolith, "#71717a"],
-  [EntityType.Bedrock, "#52525b"],
-  [EntityType.Air, "#FFFFFF00"],
-
-  //metal ores
-  [EntityType.Lithium, "#d8b4fe"],
-  [EntityType.Iron, "#44403c"],
-  [EntityType.Copper, "#047857"],
-  [EntityType.Titanium, "#60a5fa"],
-  [EntityType.Iridium, "#fce7f3"],
-  [EntityType.Osmium, "#164e63"],
-  [EntityType.Tungsten, "#94a3b8"],
-
-  //mineral ores
-  [EntityType.Kimberlite, "#e0f2fe"],
-  [EntityType.Uraninite, "#d9f99d"],
-  [EntityType.Bolutite, "#a21caf"],
-
-  // Resource
-  [EntityType.MainBase, "#8676c0"],
-]);
-
 export const BackgroundImage = new Map<Entity, string[]>([
   //units
   [EntityType.HammerLightDrone, ["/img/unit/hammerdrone.png"]],
@@ -787,9 +750,9 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.PVCell, "/img/resource/photovoltaiccell_resource.png"],
   [EntityType.RocketFuel, "/img/crafted/refinedosmium.png"],
 
-  [EntityType.U_Electricity, "/img/icons/powericon.png"],
-  [EntityType.U_Housing, "/img/icons/utilitiesicon.png"],
-  [EntityType.U_VesselCapacity, "/img/unit/miningvessel.png"],
+  [EntityType.Electricity, "/img/icons/powericon.png"],
+  [EntityType.Housing, "/img/icons/utilitiesicon.png"],
+  [EntityType.VesselCapacity, "/img/unit/miningvessel.png"],
 
   // debug
   [EntityType.Bullet, "/img/crafted/bullet.png"],
@@ -858,13 +821,39 @@ export const ResourceStorages = [
 ];
 
 export const UtilityStorages = [
-  EntityType.U_Housing,
-  EntityType.U_Electricity,
-  EntityType.U_VesselCapacity,
-  EntityType.U_FleetMoves,
+  EntityType.Housing,
+  EntityType.Electricity,
+  EntityType.VesselCapacity,
+  EntityType.FleetMoves,
 ];
 
-export const BuildingTypes: { [x: Entity]: EBuilding } = {
+export const ResourceEnumLookup: Record<Entity, EResource> = {
+  [EntityType.Iron]: EResource.Iron,
+  [EntityType.Copper]: EResource.Copper,
+  [EntityType.Lithium]: EResource.Lithium,
+  [EntityType.Sulfur]: EResource.Sulfur,
+  [EntityType.Titanium]: EResource.Titanium,
+  [EntityType.Iridium]: EResource.Iridium,
+  [EntityType.Platinum]: EResource.Platinum,
+  [EntityType.Kimberlite]: EResource.Kimberlite,
+  [EntityType.Uraninite]: EResource.Uraninite,
+  [EntityType.Bolutite]: EResource.Bolutite,
+  [EntityType.Osmium]: EResource.Osmium,
+  [EntityType.Tungsten]: EResource.Tungsten,
+  [EntityType.Alloy]: EResource.Alloy,
+  [EntityType.PVCell]: EResource.PVCell,
+  [EntityType.RocketFuel]: EResource.RocketFuel,
+  [EntityType.IronPlate]: EResource.IronPlate,
+
+  [EntityType.Electricity]: EResource.U_Electricity,
+  [EntityType.Housing]: EResource.U_Housing,
+  [EntityType.VesselCapacity]: EResource.U_Vessel,
+  [EntityType.FleetMoves]: EResource.U_MaxMoves,
+};
+
+export const ResourceEntityLookup = reverseRecord(ResourceEnumLookup);
+
+export const BuildingEnumLookup: Record<Entity, EBuilding> = {
   [EntityType.IronMine]: EBuilding.IronMine,
   [EntityType.CopperMine]: EBuilding.CopperMine,
   [EntityType.LithiumMine]: EBuilding.LithiumMine,
@@ -874,8 +863,23 @@ export const BuildingTypes: { [x: Entity]: EBuilding } = {
   [EntityType.PVCellFactory]: EBuilding.PVCellFactory,
   // [BlockType.Garage]: EBuilding.Garage,
   // [BlockType.Workshop]: EBuilding.Workshop,
+  [EntityType.StorageUnit]: EBuilding.StorageUnit,
   [EntityType.SolarPanel]: EBuilding.SolarPanel,
   [EntityType.DroneFactory]: EBuilding.DroneFactory,
   [EntityType.Hangar]: EBuilding.Hangar,
   [EntityType.MainBase]: EBuilding.MainBase,
+  // [EntityType.SAMSite]: EBuilding.SAMSite,
+  [EntityType.StarmapperStation]: EBuilding.Starmapper,
+};
+
+export const BuildingEntityLookup = reverseRecord(BuildingEnumLookup);
+
+export const UnitEnumLookup: Record<Entity, EUnit> = {
+  [EntityType.HammerLightDrone]: EUnit.HammerDrone,
+  [EntityType.StingerDrone]: EUnit.StingerDrone,
+  [EntityType.AnvilLightDrone]: EUnit.AnvilDrone,
+  [EntityType.AegisDrone]: EUnit.AegisDrone,
+  [EntityType.MiningVessel]: EUnit.MiningVessel,
+  // [EntityType.MinutemanMarine]: EUnit.MinutemanMarine,
+  // [EntityType.TridentMarine]: EUnit.TridentMarine,
 };

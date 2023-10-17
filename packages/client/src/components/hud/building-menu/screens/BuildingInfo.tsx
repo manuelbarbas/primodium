@@ -1,20 +1,15 @@
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
+import { EResource } from "contracts/config/enums";
 import { Badge } from "src/components/core/Badge";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 import { useBuildingInfo } from "src/hooks/useBuildingInfo";
+import { useMud } from "src/hooks/useMud";
 import { getBlockTypeName } from "src/util/common";
-import {
-  ResourceImage,
-  ResourceType,
-  RESOURCE_SCALE,
-} from "src/util/constants";
+import { ResourceImage, ResourceType, RESOURCE_SCALE, ResourceEntityLookup } from "src/util/constants";
 
-const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({
-  label,
-  children,
-}) => {
+const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (
     <SecondaryCard className="text-xs gap-2 w-full">
       <p className="text-xs opacity-75 mb-1 uppercase">{label}</p>
@@ -23,31 +18,22 @@ const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({
   );
 };
 
-export const BuildingInfo: React.FC<{ building: EntityID }> = ({
-  building,
-}) => {
-  const {
-    buildingType,
-    level,
-    maxLevel,
-    position,
-    production,
-    upgrade,
-    unitProductionMultiplier,
-    storages,
-  } = useBuildingInfo(building);
+export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
+  const playerEntity = useMud().network.playerEntity;
+  const { buildingType, level, maxLevel, position, production, upgrade, unitProductionMultiplier, storages } =
+    useBuildingInfo(building);
 
   return (
     <Navigator.Screen title="BuildingInfo" className="w-full">
       <DataLabel label="building type">
-        <b>{getBlockTypeName(buildingType)}</b>
+        <b>{getBlockTypeName(buildingType as Entity)}</b>
       </DataLabel>
       <div className="grid grid-cols-3 w-full">
         <DataLabel label="level">
-          <b>{level}</b>
+          <b>{level.toString()}</b>
         </DataLabel>
         <DataLabel label="max level">
-          <b>{maxLevel}</b>
+          <b>{maxLevel.toString()}</b>
         </DataLabel>
         <DataLabel label="coord">
           <b>
@@ -60,10 +46,11 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({
           <DataLabel label="PRODUCTION">
             <Badge className="text-xs gap-2">
               <ResourceIconTooltip
-                name={getBlockTypeName(production.resourceID)}
-                image={ResourceImage.get(production.resourceID) ?? ""}
-                resourceId={production.resourceID}
-                amount={production.resourceProductionRate}
+                name={getBlockTypeName(ResourceEntityLookup[production.resource as EResource])}
+                image={ResourceImage.get(ResourceEntityLookup[production.resource as EResource]) ?? ""}
+                resource={ResourceEntityLookup[production.resource as EResource]}
+                playerEntity={playerEntity}
+                amount={production.amount}
                 resourceType={ResourceType.ResourceRate}
               />
             </Badge>
@@ -74,10 +61,11 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({
             ) : (
               <Badge className="text-xs gap-2">
                 <ResourceIconTooltip
-                  name={getBlockTypeName(upgrade.production.resourceID)}
-                  image={ResourceImage.get(upgrade.production.resourceID) ?? ""}
-                  resourceId={upgrade.production.resourceID}
-                  amount={upgrade.production.resourceProductionRate}
+                  name={getBlockTypeName(ResourceEntityLookup[upgrade.production.resource as EResource])}
+                  image={ResourceImage.get(ResourceEntityLookup[upgrade.production.resource as EResource]) ?? ""}
+                  resource={ResourceEntityLookup[upgrade.production.resource as EResource]}
+                  playerEntity={playerEntity}
+                  amount={upgrade.production.amount}
                   resourceType={ResourceType.ResourceRate}
                 />
               </Badge>
@@ -85,19 +73,16 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({
           </DataLabel>
         </div>
       )}
-      {unitProductionMultiplier && (
+      {unitProductionMultiplier !== undefined && (
         <div className="grid grid-cols-2 w-full ">
           <DataLabel label="speed">
-            <b>x{unitProductionMultiplier * RESOURCE_SCALE}</b>{" "}
+            <b>x{(unitProductionMultiplier / RESOURCE_SCALE).toString()}</b>
           </DataLabel>
           <DataLabel label="next level speed">
-            {!upgrade.nextLevelUnitProductionMultiplier ||
-            level === maxLevel ? (
+            {!upgrade.nextLevelUnitProductionMultiplier || level === maxLevel ? (
               <b>N/A</b>
             ) : (
-              <b>
-                x{upgrade.nextLevelUnitProductionMultiplier * RESOURCE_SCALE}
-              </b>
+              <b>x{(upgrade.nextLevelUnitProductionMultiplier / RESOURCE_SCALE).toString()}</b>
             )}
           </DataLabel>
         </div>
@@ -107,18 +92,15 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({
           <DataLabel label="storage">
             {storages.map((storage) => {
               return (
-                <Badge key={storage.resourceId} className="text-xs gap-2">
+                <Badge key={storage.resource} className="text-xs gap-2">
                   <ResourceIconTooltip
-                    name={getBlockTypeName(storage.resourceId)}
-                    image={ResourceImage.get(storage.resourceId) ?? ""}
-                    resourceId={storage.resourceId}
+                    name={getBlockTypeName(storage.resource)}
+                    playerEntity={playerEntity}
+                    image={ResourceImage.get(storage.resource) ?? ""}
+                    resource={storage.resource}
                     amount={storage.amount}
                     resourceType={storage.resourceType}
-                    scale={
-                      storage.resourceType === ResourceType.Utility
-                        ? 1
-                        : RESOURCE_SCALE
-                    }
+                    scale={storage.resourceType === ResourceType.Utility ? 1n : RESOURCE_SCALE}
                     direction="top"
                   />
                 </Badge>
@@ -126,25 +108,20 @@ export const BuildingInfo: React.FC<{ building: EntityID }> = ({
             })}
           </DataLabel>
           <DataLabel label="next level storage">
-            {!upgrade.storages ||
-            upgrade.storages.length === 0 ||
-            level === maxLevel ? (
+            {!upgrade.storages || upgrade.storages.length === 0 || level === maxLevel ? (
               <b>N/A</b>
             ) : (
               upgrade.storages.map((storage) => {
                 return (
-                  <Badge key={storage.resourceId} className="text-xs gap-2">
+                  <Badge key={storage.resource} className="text-xs gap-2">
                     <ResourceIconTooltip
-                      name={getBlockTypeName(storage.resourceId)}
-                      image={ResourceImage.get(storage.resourceId) ?? ""}
-                      resourceId={storage.resourceId}
+                      name={getBlockTypeName(storage.resource)}
+                      playerEntity={playerEntity}
+                      image={ResourceImage.get(storage.resource) ?? ""}
+                      resource={storage.resource}
                       amount={storage.amount}
                       resourceType={storage.resourceType}
-                      scale={
-                        storage.resourceType === ResourceType.Utility
-                          ? 1
-                          : RESOURCE_SCALE
-                      }
+                      scale={storage.resourceType === ResourceType.Utility ? 1n : RESOURCE_SCALE}
                       direction="top"
                     />
                   </Badge>

@@ -8,7 +8,7 @@ import { Send } from "src/network/components/clientComponents";
 import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 import { ESpaceRockType } from "src/util/web3/types";
 import { Coord } from "@latticexyz/utils";
-import { Assets, DepthLayers, EntityIDtoSpriteKey, SpriteKeys } from "@game/constants";
+import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
 import { EntityType } from "src/util/constants";
 import { clampedIndex } from "src/util/common";
 import { SingletonID } from "@latticexyz/network";
@@ -56,8 +56,8 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
       ...sharedComponents,
       Texture(
         Assets.SpriteAtlas,
-        EntityIDtoSpriteKey[EntityType.Asteroid][
-          clampedIndex(mainBaseLevel - 1, EntityIDtoSpriteKey[EntityType.Asteroid].length)
+        EntitytoSpriteKey[EntityType.Asteroid][
+          clampedIndex(mainBaseLevel - 1, EntitytoSpriteKey[EntityType.Asteroid].length)
         ]
       ),
       OnClick(scene, () => {
