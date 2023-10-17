@@ -1,11 +1,11 @@
 import { Entity, Has, HasValue, defineComponentSystem, runQuery } from "@latticexyz/recs";
 import { getNow } from "src/util/time";
 import { getUnitTrainingTime } from "src/util/trainUnits";
-import { ERock } from "src/util/web3/types";
 import { Hex } from "viem";
 import { components } from "../components";
-import { Account, BlockNumber, Hangar } from "../components/clientComponents";
 import { world } from "../world";
+// import { SetupResult } from "../types";
+import { ERock } from "contracts/config/enums";
 
 export function setupHangar() {
   const {
@@ -19,7 +19,11 @@ export function setupHangar() {
     LastClaimedAt,
     QueueUnits,
     QueueItemUnits,
+    Hangar,
   } = components;
+
+  // const playerEntity = mud.network.playerEntity;
+
   function getTrainedUnclaimedUnits(spaceRock: Entity) {
     const units = new Map<Entity, bigint>();
     const query = [
@@ -91,31 +95,27 @@ export function setupHangar() {
   }
 
   defineComponentSystem(world, Send, () => {
-    const blockNumber = BlockNumber.get()?.value;
-    if (!blockNumber) return;
-    const origin = Send.getOrigin()?.entity;
-    const destination = Send.getDestination()?.entity;
+    const origin = Send.get()?.origin;
+    const destination = Send.get()?.destination;
     if (origin) setupHangar(origin);
     if (destination) setupHangar(destination);
   });
 
-  defineComponentSystem(world, BlockNumber, () => {
-    const origin = Send.getOrigin()?.entity;
-    const destination = Send.getDestination()?.entity;
-    if (origin) setupHangar(origin);
-    if (destination) setupHangar(destination);
-    // maintain hangars for all player motherlodes to track mining production
-    const account = Account.get()?.value;
-    if (!account) return;
-    const query = [
-      Has(RockType),
-      HasValue(OwnedBy, { value: account }),
-      HasValue(RockType, { value: ERock.Motherlode }),
-    ];
+  // defineComponentSystem(world, BlockNumber, () => {
+  //   const origin = Send.get()?.origin;
+  //   const destination = Send.get()?.destination;
+  //   if (origin) setupHangar(origin);
+  //   if (destination) setupHangar(destination);
+  //   // maintain hangars for all player motherlodes to track mining production
+  //   const query = [
+  //     Has(RockType),
+  //     HasValue(OwnedBy, { value: playerEntity }),
+  //     HasValue(RockType, { value: ERock.Motherlode }),
+  //   ];
 
-    const motherlodes = runQuery(query);
-    motherlodes.forEach((motherlode) => {
-      setupHangar(motherlode);
-    });
-  });
+  //   const motherlodes = runQuery(query);
+  //   motherlodes.forEach((motherlode) => {
+  //     setupHangar(motherlode);
+  //   });
+  // });
 }

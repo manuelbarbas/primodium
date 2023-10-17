@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { Entity } from "@latticexyz/recs";
 import { BackgroundImage, ResourceImage, UnitEnumLookup } from "src/util/constants";
-import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
+import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
 import { getBlockTypeName } from "src/util/common";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";

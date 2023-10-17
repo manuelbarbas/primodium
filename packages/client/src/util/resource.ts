@@ -1,12 +1,9 @@
-import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import { EResource, MUDEnums } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
-import { Hangar } from "src/network/components/clientComponents";
 import { Hex } from "viem";
-import { EntityType, ResourceType, ResourceEnumLookup, SPEED_SCALE, ResourceEntityLookup } from "./constants";
+import { ResourceType, ResourceEnumLookup, SPEED_SCALE, ResourceEntityLookup } from "./constants";
 import { getNow } from "./time";
-import { getUnitStats } from "./trainUnits";
-import { ERock } from "./web3/types";
 
 // building a building requires resources
 // fetch directly from component data
@@ -42,8 +39,6 @@ export function getRecipe(rawEntityType: Entity, level: bigint, upgrade = false)
   return [...resources, ...resourceRate];
 }
 
-export const mineableResources = [EntityType.Titanium, EntityType.Iridium, EntityType.Platinum, EntityType.Kimberlite];
-
 export function getMotherlodeResource(entity: Entity) {
   const resource = comps.Motherlode.get(entity)?.motherlodeType as EResource;
   if (!resource || resource > MUDEnums.EResource.length) return MUDEnums.EResource[0] as Entity;
@@ -51,66 +46,36 @@ export function getMotherlodeResource(entity: Entity) {
 }
 
 export function getFullResourceCount(resourceID: Entity, playerEntity: Entity) {
-  const query = [
-    Has(comps.RockType),
-    HasValue(comps.OwnedBy, { value: playerEntity }),
-    HasValue(comps.RockType, { value: ERock.Motherlode }),
-  ];
   // const worldSpeed = comps.P_WorldSpeed.get()?.value ?? SPEED_SCALE;
   const worldSpeed = 100n;
-  const motherlodes = Array.from(runQuery(query));
-
-  let motherlodeProduction = 0n;
-
-  if (mineableResources.includes(resourceID)) {
-    motherlodeProduction = motherlodes.reduce((prev: bigint, entity: Entity) => {
-      const resource = getMotherlodeResource(entity);
-
-      const hangar = Hangar.get(entity);
-
-      if (!hangar || resource !== resourceID) return prev;
-
-      let total = 0n;
-      for (let i = 0; i < hangar.units.length; i++) {
-        total += getUnitStats(hangar.units[i]).MIN * hangar.counts[i];
-      }
-      return prev + total;
-    }, 0n);
-  }
 
   const resourceCount =
-    comps.ResourceCount.getWithKeys({ entity: playerEntity as Hex, resource: ResourceEnumLookup[resourceID] })?.value ??
-    0n;
+    comps.ResourceCount.getWithKeys({
+      entity: playerEntity as Hex,
+      resource: ResourceEnumLookup[resourceID] ?? EResource.Iron,
+    })?.value ?? 0n;
 
   const maxStorage =
     comps.MaxResourceCount.getWithKeys({
       entity: playerEntity as Hex,
-      resource: ResourceEnumLookup[resourceID],
+      resource: ResourceEnumLookup[resourceID] ?? EResource.Iron,
     })?.value ?? 0n;
 
-  const buildingProduction =
-    comps.ProductionRate.getWithKeys({ entity: playerEntity as Hex, resource: ResourceEnumLookup[resourceID] })
-      ?.value ?? 0n;
-
-  const production = (() => {
-    return buildingProduction + motherlodeProduction;
-  })();
+  const production =
+    comps.ProductionRate.getWithKeys({
+      entity: playerEntity as Hex,
+      resource: ResourceEnumLookup[resourceID] ?? EResource.Iron,
+    })?.value ?? 0n;
 
   const playerLastClaimed = comps.LastClaimedAt.get(playerEntity)?.value ?? 0n;
 
   const resourcesToClaimFromBuilding = (() => {
-    const toClaim = ((getNow() - playerLastClaimed) * buildingProduction * SPEED_SCALE) / worldSpeed;
+    const toClaim = ((getNow() - playerLastClaimed) * production * SPEED_SCALE) / worldSpeed;
     if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
     return toClaim;
   })();
 
-  const resourcesToClaim = (() => {
-    const toClaim = resourcesToClaimFromBuilding;
-    if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
-    return toClaim;
-  })();
-
-  return { resourceCount, resourcesToClaim, maxStorage, production };
+  return { resourceCount, resourcesToClaim: resourcesToClaimFromBuilding, maxStorage, production };
 }
 
 export function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, playerEntity: Entity, count = 1n) {
@@ -131,7 +96,6 @@ export function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, playerE
         break;
       case ResourceType.Utility:
         if (resourceCount < resource.amount * count) return false;
-
         break;
       default:
         return false;
