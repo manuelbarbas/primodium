@@ -9,9 +9,9 @@ import {
   Position,
   ReversePosition,
 } from "src/network/components/chainComponents";
-import { world } from "src/network/world";
 import { encodeCoord, getMotherlodeEntity, hashKeyEntity } from "src/util/encode";
 import { getPositionByVector } from "src/util/vector";
+import { world } from "src/network/world";
 import { EMotherlodeSize, EMotherlodeType, ESpaceRockType } from "src/util/web3/types";
 
 export function initializeMotherlodes(sourceEntity: EntityID, source: Coord) {

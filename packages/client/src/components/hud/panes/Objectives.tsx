@@ -153,7 +153,7 @@ const Objective: React.FC<{
                             BackgroundImage.get(_req.id)?.at(0) ??
                             "/img/icons/minersicon.png"
                           }
-                          resourceId={_req.id}
+                          resource={_req.id}
                           amount={_req.currentValue}
                           scale={_req.scale}
                           direction="top"
@@ -178,7 +178,7 @@ const Objective: React.FC<{
                   <ResourceIconTooltip
                     name={getBlockTypeName(resource.id)}
                     image={ResourceImage.get(resource.id) ?? BackgroundImage.get(resource.id)?.at(0) ?? ""}
-                    resourceId={resource.id}
+                    resource={resource.id}
                     amount={resource.amount}
                     resourceType={resource.type}
                     scale={resource.type === ResourceType.Utility ? 1 : RESOURCE_SCALE}

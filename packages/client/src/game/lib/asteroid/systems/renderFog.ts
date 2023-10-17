@@ -1,16 +1,15 @@
-import { AsteroidMap } from "@game/constants";
-import { EntityID, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
+import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { Level } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
-import { getAsteroidBounds, getPlayerBounds, getPlayerNextBounds } from "src/util/outOfBounds";
-import { ObjectPosition, SetValue } from "../../common/object-components/common";
+import { getAsteroidBounds, getPlayerBounds } from "src/util/outOfBounds";
 import { Square } from "../../common/object-components/graphics";
+import { ObjectPosition, SetValue } from "../../common/object-components/common";
 import { ObjectText } from "../../common/object-components/text";
+import { DepthLayers, FogTilekeys } from "@game/constants";
+import { SetupResult } from "src/network/types";
+import { components } from "src/network/components";
 
-const { FogTilekeys, DepthLayers } = AsteroidMap;
-
-export function renderFog(scene: Scene, player: EntityID) {
+export function renderFog(scene: Scene, { network: { playerEntity } }: SetupResult) {
   const { tileWidth, tileHeight } = scene.tilemap;
   const objSuffix = "_fog";
   const gameWorld = namespaceWorld(world, "game");
@@ -34,14 +33,15 @@ export function renderFog(scene: Scene, player: EntityID) {
       else if (maxTop) index = FogTilekeys.OuterTop;
       else if (maxBottom) index = FogTilekeys.OuterBottom;
 
-      scene.tilemap.map.putTileAt({ x, y: -y }, index, "GameFog");
+      scene.tilemap.map?.putTileAt({ x, y: -y }, index, "GameFog");
     }
   }
 
-  defineComponentSystem(gameWorld, Level, ({ entity }) => {
-    if (world.entities[entity] !== player) return;
-    const bounds = getPlayerBounds(player);
-    const nextBounds = getPlayerNextBounds(player);
+  defineComponentSystem(gameWorld, components.Level, ({ entity }) => {
+    if (entity !== playerEntity) return;
+
+    const bounds = getPlayerBounds(playerEntity);
+    const nextBounds = getPlayerBounds(playerEntity, true);
 
     const objIndex = entity + objSuffix;
     if (scene.objectPool.objects.has(objIndex)) {
@@ -112,7 +112,7 @@ export function renderFog(scene: Scene, player: EntityID) {
           else if (maxBottom) index = FogTilekeys.Bottom;
         }
 
-        scene.tilemap.map.putTileAt({ x, y: -y }, index, "GameFog");
+        scene.tilemap.map?.putTileAt({ x, y: -y }, index, "GameFog");
       }
     }
   });

@@ -3,7 +3,7 @@ import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 
 export const createCameraApi = (targetScene: Scene) => {
-  function pan(coord: Coord, duration: number = 1000, ease: string = "Power2") {
+  function pan(coord: Coord, duration = 1000, ease = "Power2") {
     const { phaserScene, camera, tilemap } = targetScene;
 
     const pixelCoord = tileCoordToPixelCoord(coord, tilemap.tileWidth, tilemap.tileHeight);
@@ -15,7 +15,7 @@ export const createCameraApi = (targetScene: Scene) => {
       const currentTween = phaserScene.tweens.getTweensOf(camera.phaserCamera)[0];
 
       const endCoord = {
-        //@ts-ignore
+        // @ts-ignore
         x: currentTween.data[0].end,
         //@ts-ignore
         y: currentTween.data[1].end,
@@ -38,12 +38,21 @@ export const createCameraApi = (targetScene: Scene) => {
     });
   }
 
+  function zoomTo(zoom: number, duration = 1000, ease = "Power2") {
+    const { camera } = targetScene;
+
+    camera.phaserCamera.zoomTo(zoom, duration, ease, false, () => {
+      updateWorldView();
+    });
+  }
+
   function getPosition() {
     const { camera, tilemap } = targetScene;
 
-    const { centerX: x, centerY: y } = camera?.phaserCamera.worldView!;
+    const coord = camera?.phaserCamera.worldView;
+    if (!coord) throw new Error("Camera not found.");
 
-    const tileCoord = pixelCoordToTileCoord({ x, y }, tilemap.tileWidth, tilemap.tileHeight);
+    const tileCoord = pixelCoordToTileCoord(coord, tilemap.tileWidth, tilemap.tileHeight);
 
     return {
       x: tileCoord.x,
@@ -65,6 +74,7 @@ export const createCameraApi = (targetScene: Scene) => {
 
   return {
     pan,
+    zoomTo,
     getPosition,
     updateWorldView,
     shake,

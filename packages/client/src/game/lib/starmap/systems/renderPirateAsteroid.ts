@@ -1,24 +1,24 @@
-import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
-import { SingletonID } from "@latticexyz/network";
-import {
-  EntityID,
-  Has,
-  HasValue,
-  defineComponentSystem,
-  defineEnterSystem,
-  defineUpdateSystem,
-  namespaceWorld,
-} from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
-import { AsteroidType, OwnedBy, P_SpawnPirateAsteroid, Pirate, Position } from "src/network/components/chainComponents";
-import { Send } from "src/network/components/clientComponents";
-import { world } from "src/network/world";
-import { PIRATE_KEY } from "src/util/constants";
-import { hashStringEntity } from "src/util/encode";
-import { ESpaceRockType } from "src/util/web3/types";
+import {
+  namespaceWorld,
+  Has,
+  defineEnterSystem,
+  HasValue,
+  EntityID,
+  defineComponentSystem,
+  defineUpdateSystem,
+} from "@latticexyz/recs";
 import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
+import { P_SpawnPirateAsteroid, AsteroidType, OwnedBy, Pirate, Position } from "src/network/components/chainComponents";
+import { world } from "src/network/world";
+import { Send } from "src/network/components/clientComponents";
+import { ESpaceRockType } from "src/util/web3/types";
+import { Coord } from "@latticexyz/utils";
+import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
+import { SingletonID } from "@latticexyz/network";
+import { hashStringEntity } from "src/util/encode";
+import { PIRATE_KEY } from "src/util/constants";
 
 export const renderPirateAsteroid = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;

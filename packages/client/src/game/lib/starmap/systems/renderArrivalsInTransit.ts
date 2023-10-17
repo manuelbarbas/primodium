@@ -1,22 +1,22 @@
-import { DepthLayers } from "@game/constants";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   ComponentUpdate,
-  EntityID,
   Has,
-  Not,
   defineEnterSystem,
   defineExitSystem,
   namespaceWorld,
+  Not,
+  EntityID,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { Arrival, OwnedBy, Pirate, Position } from "src/network/components/chainComponents";
 import { BlockNumber } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
-import { PIRATE_KEY } from "src/util/constants";
-import { hashStringEntity } from "src/util/encode";
 import { ObjectPosition, OnComponentSystem, Tween } from "../../common/object-components/common";
 import { Circle, Line } from "../../common/object-components/graphics";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { Arrival, OwnedBy, Pirate, Position } from "src/network/components/chainComponents";
+import { DepthLayers } from "@game/constants";
+import { hashStringEntity } from "src/util/encode";
+import { PIRATE_KEY } from "src/util/constants";
 
 export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;

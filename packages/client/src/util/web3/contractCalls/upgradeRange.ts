@@ -1,17 +1,14 @@
+import { components } from "src/network/components";
 import { SetupNetworkResult } from "src/network/types";
 
 export const upgradeRange = async (network: SetupNetworkResult) => {
-  // const activeAsteroid = HomeAsteroid.get()?.value;
-  // const player = Account.get()?.value;
-  // const level = Level.get(player, { value: 1 }).value;
-  // const bounds = getPlayerBounds(player!);
-  // if (!activeAsteroid) return;
-  // const receipt = await execute(
-  //   systems["system.UpgradeRange"].executeTyped({
-  //     gasLimit: 5_000_000,
-  //   }),
-  //   providers
-  // );
+  const activeAsteroid = components.Home.get(network.playerEntity)?.asteroid;
+
+  if (!activeAsteroid) return;
+
+  const tx = await network.worldContract.write.upgradeRange();
+  await network.waitForTransaction(tx);
+
   // ampli.systemUpgradeRange({
   //   asteroidCoord: BigNumber.from(activeAsteroid).toString(),
   //   currLevel: level,

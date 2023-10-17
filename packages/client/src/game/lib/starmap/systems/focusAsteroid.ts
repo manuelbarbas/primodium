@@ -3,8 +3,8 @@ import { Scene } from "engine/types";
 
 import { world } from "src/network/world";
 
-import { createCameraApi } from "src/game/api/camera";
 import { Position } from "src/network/components/chainComponents";
+import { createCameraApi } from "src/game/api/camera";
 import { HomeAsteroid } from "src/network/components/clientComponents";
 
 export const focusAsteroid = (scene: Scene) => {

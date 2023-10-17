@@ -2,7 +2,7 @@ import { KeySchema, SchemaToPrimitives, ValueSchema } from "@latticexyz/protocol
 import { Schema } from "@latticexyz/recs";
 import { hexKeyTupleToEntity } from "@latticexyz/store-sync/recs";
 import { SchemaAbiTypeToRecsType } from "@latticexyz/store-sync/src/recs/schemaAbiTypeToRecsType";
-import { ContractComponent } from "@primodiumxyz/mud-game-tools";
+import { ContractComponent } from "src/network/types";
 import { encodeAbiParameters } from "viem";
 
 export function encodeEntity<S extends Schema, TKeySchema extends KeySchema>(

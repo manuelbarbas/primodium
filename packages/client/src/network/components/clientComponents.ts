@@ -45,6 +45,7 @@ export const SelectedBuilding = createExtendedComponent(world, { value: Type.Ent
 export const SelectedAction = createExtendedNumberComponent(world, {
   id: "SelectedAction",
 });
+export const MapOpen = createExtendedBoolComponent(world, { id: "MapOpen" });
 
 /* -------------------------------------------------------------------------- */
 /*                                    Units                                   */
@@ -130,6 +131,7 @@ export default {
   HoverTile,
   SelectedBuilding,
   SelectedAction,
+  MapOpen,
 
   /* ---------------------------------- Units --------------------------------- */
   TrainingQueue,

@@ -1,16 +1,18 @@
 import { Coord, coordEq, pixelCoordToTileCoord } from "@latticexyz/phaserx";
-import { EntityID } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { HoverTile, SelectedAction, SelectedBuilding, SelectedTile } from "src/network/components/clientComponents";
-import { Network } from "src/network/setupNetworkOld";
-import { world } from "src/network/world";
-import { getBuildingOrigin } from "src/util/building";
 import { Action } from "src/util/constants";
-import { outOfBounds } from "src/util/outOfBounds";
 import { getBuildingAtCoord } from "src/util/tile";
-import { buildBuilding, demolishBuilding } from "src/util/web3";
 
-export const setupMouseInputs = (scene: Scene, network: Network, player: EntityID) => {
+import { world } from "src/network/world";
+import { outOfBounds } from "src/util/outOfBounds";
+import { SetupResult } from "src/network/types";
+import { components } from "src/network/components";
+import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
+
+export const setupMouseInputs = (scene: Scene, mud: SetupResult) => {
+  const playerEntity = mud.network.playerEntity;
+
   const clickSub = scene.input.click$.subscribe((event) => {
     const { x, y } = pixelCoordToTileCoord(
       { x: event.worldX, y: event.worldY },
@@ -20,47 +22,43 @@ export const setupMouseInputs = (scene: Scene, network: Network, player: EntityI
 
     const gameCoord = { x, y: -y };
 
-    if (outOfBounds(gameCoord, player)) {
-      SelectedBuilding.remove();
-      SelectedTile.remove();
+    if (outOfBounds(gameCoord, playerEntity)) {
+      components.SelectedBuilding.remove();
+      components.SelectedTile.remove();
       return;
     }
 
-    const selectedAction = SelectedAction.get()?.value;
+    const selectedAction = components.SelectedAction.get()?.value;
 
     //handle web3 mutations
     switch (selectedAction) {
       case undefined:
         break;
       case Action.DemolishBuilding:
-        demolishBuilding(gameCoord, network);
         break;
-      case Action.PlaceBuilding:
-        const selectedBuilding = SelectedBuilding.get()?.value;
-        if (!selectedBuilding) return;
-        SelectedBuilding.remove();
-        const buildingOrigin = getBuildingOrigin(gameCoord, selectedBuilding);
-        if (!buildingOrigin) return;
-        buildBuilding(buildingOrigin, selectedBuilding, player, network);
     }
 
-    if (selectedAction !== undefined) SelectedAction.remove();
+    if (selectedAction !== undefined) return;
 
     // update selected building
-    const building = getBuildingAtCoord(gameCoord);
+    //TODO - fix converting to entity
+    const building = getBuildingAtCoord(
+      gameCoord,
+      (components.Home.get(playerEntity)?.asteroid as Entity) ?? singletonEntity
+    ) as Entity;
 
     if (!building) {
-      SelectedBuilding.remove();
-      SelectedTile.set(gameCoord);
+      components.SelectedBuilding.remove();
+      components.SelectedTile.set(gameCoord);
     } else {
-      SelectedBuilding.set({ value: building });
-      SelectedTile.remove();
+      components.SelectedBuilding.set({ value: building });
+      components.SelectedTile.remove();
     }
   });
 
   const pointerMoveSub = scene.input.pointermove$.pipe().subscribe((event) => {
     const { x, y } = pixelCoordToTileCoord(
-      { x: event.pointer.worldX, y: event.pointer.worldY },
+      { x: event.worldX, y: event.worldY },
       scene.tilemap.tileWidth,
       scene.tilemap.tileHeight
     );
@@ -68,15 +66,15 @@ export const setupMouseInputs = (scene: Scene, network: Network, player: EntityI
     const mouseCoord = { x, y: -y } as Coord;
 
     //set hover tile if it is different
-    const currentHoverTile = HoverTile.get();
+    const currentHoverTile = components.HoverTile.get();
     if (coordEq(currentHoverTile, mouseCoord)) return;
 
-    if (outOfBounds(mouseCoord, player)) {
-      HoverTile.remove();
+    if (outOfBounds(mouseCoord, playerEntity)) {
+      components.HoverTile.remove();
       return;
     }
 
-    HoverTile.set(mouseCoord);
+    components.HoverTile.set(mouseCoord);
   });
 
   world.registerDisposer(() => {

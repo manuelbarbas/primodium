@@ -6,9 +6,9 @@ export type Scene = Awaited<ReturnType<typeof createScene>>;
 export const createSceneManager = (phaserGame: Phaser.Game) => {
   const scenes = new Map<string, Scene>();
 
-  const addScene = async (key: string, config: Parameters<typeof createScene>[1], autoStart: boolean = true) => {
+  const addScene = async (config: Parameters<typeof createScene>[1], autoStart = true) => {
     const scene = await createScene(phaserGame, config, autoStart);
-    scenes.set(key, scene);
+    scenes.set(config.key, scene);
 
     return scene;
   };
@@ -25,8 +25,8 @@ export const createSceneManager = (phaserGame: Phaser.Game) => {
     key: string,
     target: string,
     duration = 1000,
-    onTransitionStart = () => {},
-    onTransitionComplete = () => {},
+    onTransitionStart = () => null,
+    onTransitionComplete = () => null,
     sleep = true
   ) => {
     const [resolve, , promise] = deferred();

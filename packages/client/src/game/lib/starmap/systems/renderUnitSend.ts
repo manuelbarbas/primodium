@@ -1,19 +1,13 @@
 // import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { DepthLayers } from "@game/constants";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import {
-  ComponentUpdate,
-  Has,
-  defineEnterSystem,
-  defineExitSystem,
-  defineUpdateSystem,
-  namespaceWorld,
-} from "@latticexyz/recs";
+import { ComponentUpdate, Has } from "@latticexyz/recs";
+import { defineEnterSystem, defineExitSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { Send } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
 import { ObjectPosition } from "../../common/object-components/common";
 import { Circle, Line } from "../../common/object-components/graphics";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { DepthLayers } from "@game/constants";
 
 export const renderUnitSend = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;

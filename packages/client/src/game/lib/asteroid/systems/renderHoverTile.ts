@@ -1,33 +1,22 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import {
-  EntityIndex,
-  Has,
-  defineEnterSystem,
-  defineExitSystem,
-  defineUpdateSystem,
-  namespaceWorld,
-} from "@latticexyz/recs";
+import { Entity, Has } from "@latticexyz/recs";
+import { defineEnterSystem, defineExitSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { HoverTile } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
 import { ObjectPosition } from "../../common/object-components/common";
 import { Square } from "../../common/object-components/graphics";
+import { components } from "src/network/components";
 
-const objGraphicsIndex = (entity: EntityIndex) => `${entity}_hoverTile_graphics`;
+const objGraphicsIndex = (entity: Entity) => `${entity}_hoverTile_graphics`;
 
 export const renderHoverTile = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
 
-  const query = [Has(HoverTile)];
+  const query = [Has(components.HoverTile)];
 
-  const render = ({ entity }: { entity: EntityIndex }) => {
-    // Avoid updating on optimistic overrides
-    if (typeof entity !== "number" || entity >= world.entities.length) {
-      return;
-    }
-
-    const tileCoord = HoverTile.get();
+  const render = ({ entity }: { entity: Entity }) => {
+    const tileCoord = components.HoverTile.get();
 
     if (!tileCoord) return;
 

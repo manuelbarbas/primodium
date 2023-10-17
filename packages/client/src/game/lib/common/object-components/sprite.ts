@@ -1,4 +1,3 @@
-import { uuid } from "@latticexyz/utils";
 import { GameObjectComponent } from "engine/types";
 import { createFxApi } from "src/game/api/fx";
 
@@ -24,7 +23,7 @@ export const Animation = (key: string): GameObjectComponent<"Sprite"> => {
 
 export const Outline = (options?: Parameters<typeof outline>[1]): GameObjectComponent<"Sprite"> => {
   return {
-    id: uuid(),
+    id: "outline",
     once: (gameObject) => {
       outline(gameObject, options);
     },

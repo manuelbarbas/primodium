@@ -8,16 +8,17 @@ import { getBlockTypeName } from "src/util/common";
 import { useGameStore } from "../../store/GameStore";
 import { HUD } from "../core/HUD";
 import { BrandingLabel } from "../shared/BrandingLabel";
-import { LoadingIndication } from "./LoadingIndication";
-import { Score } from "./Score";
-import { ViewStarmap } from "./ViewStarmap";
+// import { LoadingIndication } from "./LoadingIndication";
+// import { Score } from "./Score";
+// import { ViewStarmap } from "./ViewStarmap";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { Hotbar } from "./hotbar/Hotbar";
-import { Panes } from "./panes/Panes";
+// import { Panes } from "./panes/Panes";
 import { Resources } from "./resources/Resources";
-import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
-import { BlueprintInfo } from "./tile-info/BlueprintInfo";
-import { Units } from "./units/Units";
+import { PrototypeInfo } from "./PrototypeInfo";
+// import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
+// import { BlueprintInfo } from "./tile-info/BlueprintInfo";
+// import { Units } from "./units/Units";
 
 export const GameHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [state.showUI, state.toggleShowUI]);
@@ -35,7 +36,7 @@ export const GameHUD = () => {
       asteroidListener.dispose();
       starmapListener.dispose();
     };
-  }, []);
+  }, [toggleShowUI]);
 
   return (
     <div className="screen-container font-mono">
@@ -48,41 +49,37 @@ export const GameHUD = () => {
               {!getBlockTypeName(selectedBuilding) && <BuildingMenu />}
             </HUD.BottomMiddle>
             <HUD.TopMiddle>
-              {getBlockTypeName(selectedBuilding) && selectedBuilding && (
-                <BlueprintInfo buildingType={selectedBuilding} />
-              )}
-              {(!selectedBuilding || !getBlockTypeName(selectedBuilding)) && <ViewStarmap />}
+              {getBlockTypeName(selectedBuilding) && selectedBuilding && <PrototypeInfo building={selectedBuilding} />}
+              {/* {(!selectedBuilding || !getBlockTypeName(selectedBuilding)) && <ViewStarmap />} */}
             </HUD.TopMiddle>
-            <HUD.TopLeft>
-              <Score />
+            {/* <HUD.TopLeft>
+              <Score />z
               <LoadingIndication />
-              {/* <CurrentObjective /> */}
-            </HUD.TopLeft>
-            <HUD.TopRight>
+            </HUD.TopLeft> */}
+            {/* <HUD.TopRight>
               <Panes />
-            </HUD.TopRight>
+            </HUD.TopRight> */}
             <HUD.BottomLeft>
               <Resources />
             </HUD.BottomLeft>
-            <HUD.BottomRight>
+            {/* <HUD.BottomRight>
               <Units />
-            </HUD.BottomRight>
+            </HUD.BottomRight> */}
           </HUD>
         )}
 
         {/* STARMAP HUD */}
         {mapOpen && showUI && (
           <HUD scale={1} pad>
-            <HUD.BottomMiddle>
+            {/* <HUD.BottomMiddle>
               <SpacerockMenu />
-            </HUD.BottomMiddle>
-            <HUD.TopMiddle>
+            </HUD.BottomMiddle> */}
+            {/* <HUD.TopMiddle>
               <ViewStarmap />
-            </HUD.TopMiddle>
-            <HUD.TopLeft>
+            </HUD.TopMiddle> */}
+            {/* <HUD.TopLeft>
               <Score />
               <LoadingIndication />
-              {/* <CurrentObjective /> */}
             </HUD.TopLeft>
             <HUD.TopRight>
               <Panes />
@@ -92,7 +89,7 @@ export const GameHUD = () => {
             </HUD.BottomLeft>
             <HUD.BottomRight>
               <Units />
-            </HUD.BottomRight>
+            </HUD.BottomRight> */}
           </HUD>
         )}
 

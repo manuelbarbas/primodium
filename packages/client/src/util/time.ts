@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export const getNow = () => {
-  return BigInt(Date.now() / 1000);
+  return BigInt(Math.floor(Date.now() / 1000));
 };
 
 export const useNow = () => {

@@ -1,51 +1,31 @@
 // ASTEROID MAP ENTRY POINT
-import { EntityID } from "@latticexyz/recs";
-import engine from "engine";
-import { Network } from "../../../network/setupNetworkOld";
-import gameConfig from "../../config/asteroid/game";
-import mainSceneConfig from "../../config/asteroid/mainScene";
-import { AsteroidMap } from "../../constants";
-import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
-import { setupKeybinds } from "./setup/setupKeybinds";
-import { setupMouseInputs } from "./setup/setupMouseInputs";
-import { setupTileManager } from "./setup/setupTileManager";
+import { asteroidSceneConfig } from "../../config/asteroidScene";
 import { runSystems } from "./systems";
+import { setupTileManager } from "./setup/setupTileManager";
+import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
+import { setupMouseInputs } from "./setup/setupMouseInputs";
+import { setupKeybinds } from "./setup/setupKeybinds";
+import { SetupResult } from "src/network/types";
+import { Game } from "engine/types";
 
-export const initAsteroidView = async (player: EntityID, network: Network) => {
-  const { Scenes } = AsteroidMap;
-  const { world } = network;
+export const initAsteroidScene = async (game: Game, mud: SetupResult) => {
+  const { world } = mud.network;
 
-  const game = await engine.createGame(gameConfig);
-  const scene = await game.sceneManager.addScene(Scenes.Main, mainSceneConfig, true);
+  const scene = await game.sceneManager.addScene(asteroidSceneConfig, true);
 
   scene.camera.phaserCamera.setRoundPixels(false);
 
-  scene.phaserScene.lights.addLight(18 * 32, -10 * 32, 1000, 0x5a848a, 1.5);
-  scene.phaserScene.lights.setAmbientColor(0xb1b1cc);
-  scene.phaserScene.lights.enable();
-
-  // scene.camera.phaserCamera.postFX.addGradient(
-  //   0x0000ff,
-  //   undefined,
-  //   0.92,
-  //   undefined,
-  //   undefined,
-  //   undefined,
-  //   undefined,
-  //   50
-  // );
-
   const tileManager = await setupTileManager(scene.tilemap);
-  tileManager.renderInitialChunks();
-  tileManager.startChunkRenderer();
+  tileManager?.renderInitialChunks();
+  tileManager?.startChunkRenderer();
 
   scene.camera.phaserCamera.fadeIn(1000);
 
-  setupMouseInputs(scene, network, player);
+  setupMouseInputs(scene, mud);
   setupBasicCameraMovement(scene);
-  setupKeybinds(scene, player);
+  setupKeybinds(scene, mud);
 
-  runSystems(scene, player);
+  runSystems(scene, mud);
 
   world.registerDisposer(() => {
     game.dispose();

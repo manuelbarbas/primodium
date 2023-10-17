@@ -115,7 +115,7 @@ contract LibResourceTest is PrimodiumTest {
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(unitPrototype, 0, requiredResourcesData);
 
-    LibResource.spendUnitRequiredResources(playerEntity, unitPrototype);
+    LibResource.spendUnitRequiredResources(playerEntity, unitPrototype, 1);
     assertEq(ResourceCount.get(playerEntity, Iron), 50);
   }
 
@@ -127,7 +127,7 @@ contract LibResourceTest is PrimodiumTest {
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(unitPrototype, 0, requiredResourcesData);
 
-    LibResource.spendUnitRequiredResources(playerEntity, unitPrototype);
+    LibResource.spendUnitRequiredResources(playerEntity, unitPrototype, 1);
   }
 
   function testSpendUnitRequiredUtility() public {
@@ -138,7 +138,7 @@ contract LibResourceTest is PrimodiumTest {
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(unitPrototype, 0, requiredResourcesData);
 
-    LibResource.spendUnitRequiredResources(playerEntity, unitPrototype);
+    LibResource.spendUnitRequiredResources(playerEntity, unitPrototype, 1);
     assertEq(ResourceCount.get(playerEntity, Iron), 50);
   }
 
@@ -150,7 +150,7 @@ contract LibResourceTest is PrimodiumTest {
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(unitPrototype, 0, requiredResourcesData);
 
-    LibResource.spendUnitRequiredResources(playerEntity, unitPrototype);
+    LibResource.spendUnitRequiredResources(playerEntity, unitPrototype, 1);
   }
 
   function testClearUtilityUsage() public {

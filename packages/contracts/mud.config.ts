@@ -18,26 +18,6 @@ export type Config = typeof config;
 export const config = mudConfig({
   excludeSystems: [...dev],
   overrideSystems: {
-    S_SpendResourcesSystem: {
-      openAccess: false,
-      accessList: ["BuildSystem", "UpgradeBuildingSystem"],
-      name: "S_SpendResourcesSystem",
-    },
-    S_ReduceProductionRateSystem: {
-      openAccess: false,
-      accessList: ["BuildSystem", "UpgradeBuildingSystem", "DestroySystem"],
-      name: "S_ReduceProductionRateSystem",
-    },
-    S_ResourceProductionSystem: {
-      openAccess: false,
-      accessList: ["BuildSystem", "UpgradeBuildingSystem", "DestroySystem"],
-      name: "S_ResourceProductionSystem",
-    },
-    S_MaxStorageSystem: {
-      openAccess: false,
-      accessList: ["BuildSystem", "UpgradeBuildingSystem", "DestroySystem"],
-      name: "S_MaxStorageSystem",
-    },
     S_BattleSystem: {
       openAccess: false,
       accessList: ["RaidSystem", "InvadeSystem"],
@@ -436,6 +416,22 @@ export const config = mudConfig({
         raidedAmount: "uint256[]",
       },
       offchainOnly: true,
+    },
+
+    /* ------------------------------ Test Hook ----------------------------- */
+    HookedValue: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "uint256",
+    },
+
+    OnHookChangedValue: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "uint256",
+    },
+
+    HasBuiltBuilding: {
+      keySchema: { entity: "bytes32", building: "bytes32" },
+      valueSchema: "bool",
     },
   },
 });

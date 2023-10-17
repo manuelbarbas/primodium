@@ -17,10 +17,7 @@ export type CameraConfig = {
   defaultZoom: number;
 };
 
-export type Key =
-  | keyof typeof Phaser.Input.Keyboard.KeyCodes
-  | "POINTER_LEFT"
-  | "POINTER_RIGHT";
+export type Key = keyof typeof Phaser.Input.Keyboard.KeyCodes | "POINTER_LEFT" | "POINTER_RIGHT";
 
 export type GameConfig = Phaser.Types.Core.GameConfig & {
   key: string;
@@ -47,17 +44,10 @@ export interface SceneConfig {
     chunkSize: number;
     tileWidth: number;
     tileHeight: number;
-<<<<<<< HEAD
     tilesets?: TilesetConfig;
     layerConfig?: Parameters<typeof createAnimatedTilemap>[0]["layerConfig"];
     backgroundTile?: [number, ...number[]];
     animationInterval?: number;
-=======
-    tilesets: TilesetConfig;
-    layerConfig: Parameters<typeof createAnimatedTilemap>[0]["layerConfig"];
-    backgroundTile?: [number, ...number[]];
-    animationInterval: number;
->>>>>>> 1c951942 (fix: don't pnpm run clean on pnpm prepare such that types aren't deleted)
   };
 }
 
@@ -67,9 +57,7 @@ export interface TileAnimation {
 }
 
 export type GameObjectTypes = typeof GameObjectClasses;
-export type GameObject<Type extends keyof GameObjectTypes> = InstanceType<
-  GameObjectTypes[Type]
->;
+export type GameObject<Type extends keyof GameObjectTypes> = InstanceType<GameObjectTypes[Type]>;
 
 /**
  * @id: Unique id of the component to handle updating the same component
@@ -82,10 +70,7 @@ export type GameObjectComponent<Type extends keyof GameObjectTypes> = {
   now?: GameObjectFunction<Type>;
   once?: GameObjectFunction<Type>;
   update?: GameObjectFunction<Type>;
-<<<<<<< HEAD
   exit?: GameObjectFunction<Type>;
-=======
->>>>>>> 1c951942 (fix: don't pnpm run clean on pnpm prepare such that types aren't deleted)
 };
 
 export declare type ObjectPool = ReturnType<typeof createObjectPool>;
@@ -98,9 +83,7 @@ export type GameObjectFunction<Type extends keyof GameObjectTypes> = (
 
 export type EmbodiedEntity<Type extends keyof GameObjectTypes> = {
   setComponent: (component: GameObjectComponent<Type>) => void;
-  setComponents: (
-    components: (GameObjectComponent<Type> | undefined)[]
-  ) => void;
+  setComponents: (components: (GameObjectComponent<Type> | undefined)[]) => void;
   hasComponent: (id: string) => boolean;
   removeComponent: (id: string, stop?: boolean) => void;
   spawn: () => void;

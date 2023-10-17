@@ -6,13 +6,14 @@ import { mountStoreDevtool } from "simple-zustand-devtools";
 import { KeybindActions } from "@game/constants";
 import { Key } from "engine/types";
 
-const VERSION = 2;
+const VERSION = 4;
 
 type Keybinds = Partial<{
   [key in KeybindActions]: Set<Key>;
 }>;
 
 type SettingsState = {
+  newPlayer: boolean;
   keybinds: Keybinds;
 };
 
@@ -21,9 +22,11 @@ type SettingsActions = {
   addKey: (keybindAction: KeybindActions, key: Key) => void;
   removeKey: (keybindAction: KeybindActions, key: Key) => void;
   setKeybind: (keybindAction: KeybindActions, keys: Set<Key>) => void;
+  setNewPlayer: (val: boolean) => void;
 };
 
 const defaults: SettingsState = {
+  newPlayer: true,
   keybinds: {
     [KeybindActions.RightClick]: new Set(["POINTER_RIGHT"]),
     [KeybindActions.LeftClick]: new Set(["POINTER_LEFT"]),
@@ -52,6 +55,7 @@ const defaults: SettingsState = {
     [KeybindActions.Esc]: new Set(["ESC"]),
     [KeybindActions.Inventory]: new Set(["I", "TAB"]),
     [KeybindActions.Research]: new Set(["R"]),
+    [KeybindActions.Map]: new Set(["M"]),
   },
 };
 
@@ -59,6 +63,9 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
   persist(
     (set, get) => ({
       ...defaults,
+      setNewPlayer: (val: boolean) => {
+        set({ newPlayer: val });
+      },
       replaceKey: (keybindAction, oldKey, newKey) => {
         const set = get().keybinds[keybindAction];
 
@@ -150,6 +157,6 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
 );
 
 //store dev tools
-if (import.meta.env.PRI_DEV === "true") {
+if (import.meta.env.VITE_DEV === "true") {
   mountStoreDevtool("SettingsStore", useSettingsStore);
 }

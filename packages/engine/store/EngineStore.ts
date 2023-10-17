@@ -1,5 +1,5 @@
-import { mountStoreDevtool } from "simple-zustand-devtools";
 import { create } from "zustand";
+import { mountStoreDevtool } from "simple-zustand-devtools";
 import { Game } from "../types";
 
 type EngineState = {
@@ -25,6 +25,6 @@ export const useEngineStore = create<EngineState & EngineActions>()((set) => ({
 }));
 
 // store dev tools
-if (import.meta.env.PRI_DEV === "true") {
+if (import.meta.env.VITE_DEV === "true") {
   mountStoreDevtool("EngineStore", useEngineStore);
 }

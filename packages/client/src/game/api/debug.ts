@@ -2,15 +2,11 @@ import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { BytesLike } from "ethers";
 import { Position } from "src/network/components/chainComponents";
-import { Network } from "src/network/setupNetworkOld";
+import { Network } from "src/network/layer";
 import { debugComponentDevSystem } from "src/util/web3/debug";
 
 export const debug = (network: Network) => {
-  const debugSetComponentValue = async (
-    componentId: EntityID,
-    entity: EntityID,
-    value: BytesLike
-  ) => {
+  const debugSetComponentValue = async (componentId: EntityID, entity: EntityID, value: BytesLike) => {
     await debugComponentDevSystem(componentId, entity, value, network);
   };
 

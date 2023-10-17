@@ -1,14 +1,14 @@
-import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
-import { EntityID, Has, HasValue, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
+import { namespaceWorld, Has, defineEnterSystem, HasValue, EntityID } from "@latticexyz/recs";
+import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
+import { Outline, Texture } from "../../common/object-components/sprite";
 import { AsteroidType, Motherlode, OwnedBy, Position } from "src/network/components/chainComponents";
-import { Send } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
 import { MotherlodeSizeNames, MotherlodeTypeNames } from "src/util/constants";
 import { ESpaceRockType } from "src/util/web3/types";
-import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
-import { Outline, Texture } from "../../common/object-components/sprite";
+import { Send } from "src/network/components/clientComponents";
+import { Coord } from "@latticexyz/utils";
+import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 
 export const renderMotherlode = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;

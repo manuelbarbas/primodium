@@ -1,9 +1,10 @@
 import { Entity } from "@latticexyz/recs";
 import { encodeEntity } from "@latticexyz/store-sync/recs";
-import { MUDEnums } from "contracts/config/enums";
+import { EBuilding, EResource, EUnit } from "contracts/config/enums";
 import { Key } from "engine/types";
 import { EMotherlodeType, ERock, ESize } from "src/util/web3/types";
 import { toHex } from "viem";
+import { reverseRecord } from "./common";
 
 export const toHex32 = (input: string) => toHex(input, { size: 32 });
 export const encodeEntityLevel = (entity: string, level: number) => {
@@ -15,17 +16,16 @@ export enum Action {
   SelectBuilding,
   PlaceBuilding,
 }
+
+export const SPEED_SCALE = BigInt(100);
+export const RESOURCE_SCALE = BigInt(100);
+export const PIRATE_KEY = "pirate";
+
 export enum ResourceType {
   Resource,
   ResourceRate,
   Utility,
 }
-
-export const SPEED_SCALE = BigInt(10000);
-export const RESOURCE_SCALE = BigInt(100);
-export const PIRATE_KEY = "pirate";
-
-export const EResource = MUDEnums.EResource as Entity[];
 
 export enum RewardType {
   Resource,
@@ -55,29 +55,21 @@ export const key = {
   UnitKey: toHex32("Unit"),
 };
 
-export const BlockType = {
-  // Landscape blocks
-  Sandstone: "Sandstone" as Entity,
-  Biofilm: "Biofilm" as Entity,
-  Alluvium: "Alluvium" as Entity,
-  Regolith: "Regolith" as Entity,
-  Bedrock: "Bedrock" as Entity,
-  Air: "Air" as Entity,
-
+export const EntityType = {
   // Ores
-  Water: "Water" as Entity,
-  Lithium: "Lithium" as Entity,
-  Iron: "Iron" as Entity,
-  Copper: "Copper" as Entity,
-  Titanium: "Titanium" as Entity,
-  Iridium: "Iridium" as Entity,
-  Sulfur: "Sulfur" as Entity,
-  Osmium: "Osmium" as Entity,
-  Tungsten: "Tungsten" as Entity,
-  Kimberlite: "Kimberlite" as Entity,
-  Uraninite: "Uraninite" as Entity,
-  Bolutite: "Bolutite" as Entity,
-  Platinum: "Platinum" as Entity,
+  Water: toHex32("Water") as Entity,
+  Lithium: toHex32("Lithium") as Entity,
+  Iron: toHex32("Iron") as Entity,
+  Copper: toHex32("Copper") as Entity,
+  Titanium: toHex32("Titanium") as Entity,
+  Iridium: toHex32("Iridium") as Entity,
+  Sulfur: toHex32("Sulfur") as Entity,
+  Osmium: toHex32("Osmium") as Entity,
+  Tungsten: toHex32("Tungsten") as Entity,
+  Kimberlite: toHex32("Kimberlite") as Entity,
+  Uraninite: toHex32("Uraninite") as Entity,
+  Bolutite: toHex32("Bolutite") as Entity,
+  Platinum: toHex32("Platinum") as Entity,
 
   MainBase: toHex32("MainBase") as Entity,
   DebugNode: toHex32("DebugNode") as Entity,
@@ -92,6 +84,8 @@ export const BlockType = {
   LithiumMine: toHex32("LithiumMine") as Entity,
   SulfurMine: toHex32("SulfurMine") as Entity,
   StorageUnit: toHex32("StorageUnit") as Entity,
+  Garage: toHex32("Garage") as Entity,
+  Workshop: toHex32("Workshop") as Entity,
 
   //Advanced Buildings
   IronPlateFactory: toHex32("IronPlateFactory") as Entity,
@@ -101,15 +95,16 @@ export const BlockType = {
   Hangar: toHex32("Hangar") as Entity,
   DroneFactory: toHex32("DroneFactory") as Entity,
   StarmapperStation: toHex32("Starmapper") as Entity,
+  SAMLauncher: toHex32("SAMLauncher") as Entity,
 
   Alloy: toHex32("Alloy") as Entity,
   PVCell: toHex32("PVCell") as Entity,
 
   RocketFuel: toHex32("RocketFuel") as Entity,
-  U_Electricity: toHex32("U_Electricity") as Entity,
-  U_Housing: toHex32("U_Housing") as Entity,
-  U_VesselCapacity: toHex32("U_Vessel") as Entity,
-  U_FleetMoves: toHex32("U_FleetMoves") as Entity,
+  Electricity: toHex32("U_Electricity") as Entity,
+  Housing: toHex32("U_Housing") as Entity,
+  VesselCapacity: toHex32("U_Vessel") as Entity,
+  FleetMoves: toHex32("U_FleetMoves") as Entity,
 
   Bullet: toHex32("Bullet") as Entity,
   IronPlate: toHex32("IronPlate") as Entity,
@@ -136,6 +131,7 @@ export const BlockType = {
   MinutemanMarine: toHex32("unit.MinutemanMarine") as Entity,
   TridentMarine: toHex32("unit.TridentMarine") as Entity,
 
+  Expansion: toHex32("Expansion") as Entity,
   ExpansionResearch1: encodeEntityLevel("Expansion", 1) as Entity,
   ExpansionResearch2: encodeEntityLevel("Expansion", 2) as Entity,
   ExpansionResearch3: encodeEntityLevel("Expansion", 3) as Entity,
@@ -212,7 +208,7 @@ export const BlockType = {
   DebugResourceRewardObjectiveID: toHex32("DebugResourceRewardObj") as Entity,
   DebugUnitsRewardObjectiveID: toHex32("DebugUnitsRewardObjID") as Entity,
 
-  DebugSpawnPirateAsteroid: toHex32("block.DebugSpawnPirateAsteroid") as Entity,
+  // DebugSpawnPirateAsteroid: toHex32("block.DebugSpawnPirateAsteroid") as Entity,
 
   DebugSpawnPirateAsteroidObjective: toHex32("block.DebugSpawnPirateObj") as Entity,
 
@@ -321,484 +317,454 @@ export const BlockType = {
   Asteroid: toHex32("spacerock.Asteroid") as Entity,
 };
 
-export const getBlockTypeDescription = (blockType: Entity | undefined) => {
-  if (blockType === undefined || !BlockDescriptions.has(blockType)) return "";
+// export const getBlockTypeDescription = (blockType: Entity | undefined) => {
+//   if (blockType === undefined || !BlockDescriptions.has(blockType)) return "";
 
-  return BlockDescriptions.get(blockType);
-};
+//   return BlockDescriptions.get(blockType);
+// };
 
-export const BlockIdToKey = Object.entries(BlockType).reduce<{
+export const BlockIdToKey = Object.entries(EntityType).reduce<{
   [key: Entity]: string;
 }>((acc, [key, id]) => {
   acc[id] = key;
   return acc;
 }, {});
 
-export const BlockDescriptions = new Map<Entity, string>([
-  //landscape blocks
-  [
-    BlockType.BuildFirstIronMine,
-    "Select the iron mine on the building menu below and place it on the iron ore tile. Iron mines produce iron.",
-  ],
-  [
-    BlockType.BuildFirstCopperMine,
-    "Select the copper mine on the building menu below and place it on the copper ore tile. Copper mines produce copper.",
-  ],
-  [
-    BlockType.BuildFirstLithiumMine,
-    "Select the lithium mine on the building menu below and place it on the lithium ore tile. Lithium mines produce lithium.",
-  ],
-  [
-    BlockType.BuildFirstSulfurMine,
-    "Select the sulfur mine on the building menu below and place it on the sulfur ore tile. Sulfur mines produce sulfur.",
-  ],
-  [
-    BlockType.BuildFirstIronPlateFactory,
-    "Select the plating factory on the building menu and place it on an empty tile. It produces iron plates by consuming iron production.",
-  ],
-  [
-    BlockType.BuildFirstAlloyFactory,
-    "Select the alloy factory on the building menu and place it on an empty tile. It produces alloy by consuming iron and copper production.",
-  ],
-  [
-    BlockType.BuildFirstPVCellFactory,
-    "Select the photovoltaic cell factory on the building menu and place it on an empty tile. It produces photovoltaic cells by consuming copper and lithium production.",
-  ],
-  [
-    BlockType.BuildGarage,
-    "Select the garage from the building menu and place it on an empty tile. Garages provide housing for units. ",
-  ],
-  [
-    BlockType.BuildWorkshop,
-    "Select the workshop from the building menu and place it on an empty tile. Workshops train basic units, like marines.",
-  ],
-  [
-    BlockType.BuildSolarPanel,
-    "Select the solar panel from the building menu and place it on an empty tile. Solar panels provide electricity, which is used for advanced buildings.",
-  ],
-  [
-    BlockType.BuildDroneFactory,
-    "Select the drone factory from the building menu and place it on an empty tile. Drone factories train drones, which travel faster and are stronger.",
-  ],
-  [
-    BlockType.BuildHangar,
-    "Select the hangar from the building menu and place it on an empty tile. Hangars provide more housing than garages for units.",
-  ],
-  [
-    BlockType.TrainMinutemanMarine,
-    "Select the workshop you placed on the map to train Minuteman marines. Minutemen are basic defensive marines.",
-  ],
-  [
-    BlockType.TrainMinutemanMarine2,
-    "Select the workshop you placed on the map to train Minuteman marines. Minutemen are basic defensive marines.",
-  ],
-  [
-    BlockType.TrainMinutemanMarine3,
-    "Select the workshop you placed on the map to train Minuteman marines. Minutemen are basic defensive marines.",
-  ],
+// export const BlockDescriptions = new Map<Entity, string>([
+//   //landscape blocks
+//   [
+//     BlockType.BuildFirstIronMine,
+//     "Select the iron mine on the building menu below and place it on the iron ore tile. Iron mines produce iron.",
+//   ],
+//   [
+//     BlockType.BuildFirstCopperMine,
+//     "Select the copper mine on the building menu below and place it on the copper ore tile. Copper mines produce copper.",
+//   ],
+//   [
+//     BlockType.BuildFirstLithiumMine,
+//     "Select the lithium mine on the building menu below and place it on the lithium ore tile. Lithium mines produce lithium.",
+//   ],
+//   [
+//     BlockType.BuildFirstSulfurMine,
+//     "Select the sulfur mine on the building menu below and place it on the sulfur ore tile. Sulfur mines produce sulfur.",
+//   ],
+//   [
+//     BlockType.BuildFirstIronPlateFactory,
+//     "Select the plating factory on the building menu and place it on an empty tile. It produces iron plates by consuming iron production.",
+//   ],
+//   [
+//     BlockType.BuildFirstAlloyFactory,
+//     "Select the alloy factory on the building menu and place it on an empty tile. It produces alloy by consuming iron and copper production.",
+//   ],
+//   [
+//     BlockType.BuildFirstPVCellFactory,
+//     "Select the photovoltaic cell factory on the building menu and place it on an empty tile. It produces photovoltaic cells by consuming copper and lithium production.",
+//   ],
+//   [
+//     BlockType.BuildGarage,
+//     "Select the garage from the building menu and place it on an empty tile. Garages provide housing for units. ",
+//   ],
+//   [
+//     BlockType.BuildWorkshop,
+//     "Select the workshop from the building menu and place it on an empty tile. Workshops train basic units, like marines.",
+//   ],
+//   [
+//     BlockType.BuildSolarPanel,
+//     "Select the solar panel from the building menu and place it on an empty tile. Solar panels provide electricity, which is used for advanced buildings.",
+//   ],
+//   [
+//     BlockType.BuildDroneFactory,
+//     "Select the drone factory from the building menu and place it on an empty tile. Drone factories train drones, which travel faster and are stronger.",
+//   ],
+//   [
+//     BlockType.BuildHangar,
+//     "Select the hangar from the building menu and place it on an empty tile. Hangars provide more housing than garages for units.",
+//   ],
+//   [
+//     BlockType.TrainMinutemanMarine,
+//     "Select the workshop you placed on the map to train Minuteman marines. Minutemen are basic defensive marines.",
+//   ],
+//   [
+//     BlockType.TrainMinutemanMarine2,
+//     "Select the workshop you placed on the map to train Minuteman marines. Minutemen are basic defensive marines.",
+//   ],
+//   [
+//     BlockType.TrainMinutemanMarine3,
+//     "Select the workshop you placed on the map to train Minuteman marines. Minutemen are basic defensive marines.",
+//   ],
 
-  [
-    BlockType.TrainTridentMarine,
-    "Select the workshop you placed on the map to train Trident marines. Trident marines are basic offensive units.",
-  ],
-  [
-    BlockType.TrainTridentMarine2,
-    "Select the workshop you placed on the map to train Trident marines. Trident marines are basic offensive units.",
-  ],
-  [
-    BlockType.TrainTridentMarine3,
-    "Select the workshop you placed on the map to train Trident marines. Trident marines are basic offensive units.",
-  ],
-  [
-    BlockType.TrainAnvilDrone,
-    "Select the drone factory you placed on the map to train anvil drones. Anvil drones are basic defensive drones.",
-  ],
-  [
-    BlockType.TrainAnvilDrone2,
-    "Select the drone factory you placed on the map to train anvil drones. Anvil drones are basic defensive drones.",
-  ],
-  [
-    BlockType.TrainAnvilDrone3,
-    "Select the drone factory you placed on the map to train anvil drones. Anvil drones are basic defensive drones.",
-  ],
-  [
-    BlockType.DefeatFirstPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.DefeatSecondPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.DefeatThirdPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.DefeatFourthPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.DefeatFifthPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.DefeatSixthPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.DefeatSeventhPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.DefeatEighthPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.DefeatNinthPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.DefeatTenthPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.DefeatEleventhPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.ExpandBase,
-    "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
-  ],
-  [
-    BlockType.ExpandBase2,
-    "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
-  ],
-  [
-    BlockType.ExpandBase3,
-    "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
-  ],
-  [
-    BlockType.ExpandBase4,
-    "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
-  ],
-  [
-    BlockType.ExpandBase5,
-    "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
-  ],
-  [
-    BlockType.ExpandBase6,
-    "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
-  ],
-  [
-    BlockType.MineTitanium1,
-    "Go to the star map and send a mining vessel along with a few defending units to a Titanium motherlode. ",
-  ],
-  [
-    BlockType.MineTitanium2,
-    "Go to the star map and send a mining vessel along with a few defending units to a Titanium motherlode. ",
-  ],
-  [
-    BlockType.MineTitanium3,
-    "Go to the star map and send a mining vessel along with a few defending units to a Titanium motherlode. ",
-  ],
+//   [
+//     BlockType.TrainTridentMarine,
+//     "Select the workshop you placed on the map to train Trident marines. Trident marines are basic offensive units.",
+//   ],
+//   [
+//     BlockType.TrainTridentMarine2,
+//     "Select the workshop you placed on the map to train Trident marines. Trident marines are basic offensive units.",
+//   ],
+//   [
+//     BlockType.TrainTridentMarine3,
+//     "Select the workshop you placed on the map to train Trident marines. Trident marines are basic offensive units.",
+//   ],
+//   [
+//     BlockType.TrainAnvilDrone,
+//     "Select the drone factory you placed on the map to train anvil drones. Anvil drones are basic defensive drones.",
+//   ],
+//   [
+//     BlockType.TrainAnvilDrone2,
+//     "Select the drone factory you placed on the map to train anvil drones. Anvil drones are basic defensive drones.",
+//   ],
+//   [
+//     BlockType.TrainAnvilDrone3,
+//     "Select the drone factory you placed on the map to train anvil drones. Anvil drones are basic defensive drones.",
+//   ],
+//   [
+//     BlockType.DefeatFirstPirateBase,
+//     "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+//   ],
+//   [
+//     BlockType.DefeatSecondPirateBase,
+//     "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+//   ],
+//   [
+//     BlockType.DefeatThirdPirateBase,
+//     "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+//   ],
+//   [
+//     BlockType.DefeatFourthPirateBase,
+//     "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+//   ],
+//   [
+//     BlockType.DefeatFifthPirateBase,
+//     "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+//   ],
+//   [
+//     BlockType.DefeatSixthPirateBase,
+//     "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+//   ],
+//   [
+//     BlockType.DefeatSeventhPirateBase,
+//     "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+//   ],
+//   [
+//     BlockType.DefeatEighthPirateBase,
+//     "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+//   ],
+//   [
+//     BlockType.DefeatNinthPirateBase,
+//     "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+//   ],
+//   [
+//     BlockType.DefeatTenthPirateBase,
+//     "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+//   ],
+//   [
+//     BlockType.DefeatEleventhPirateBase,
+//     "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+//   ],
+//   [
+//     BlockType.ExpandBase,
+//     "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
+//   ],
+//   [
+//     BlockType.ExpandBase2,
+//     "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
+//   ],
+//   [
+//     BlockType.ExpandBase3,
+//     "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
+//   ],
+//   [
+//     BlockType.ExpandBase4,
+//     "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
+//   ],
+//   [
+//     BlockType.ExpandBase5,
+//     "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
+//   ],
+//   [
+//     BlockType.ExpandBase6,
+//     "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
+//   ],
+//   [
+//     BlockType.MineTitanium1,
+//     "Go to the star map and send a mining vessel along with a few defending units to a Titanium motherlode. ",
+//   ],
+//   [
+//     BlockType.MineTitanium2,
+//     "Go to the star map and send a mining vessel along with a few defending units to a Titanium motherlode. ",
+//   ],
+//   [
+//     BlockType.MineTitanium3,
+//     "Go to the star map and send a mining vessel along with a few defending units to a Titanium motherlode. ",
+//   ],
 
-  [
-    BlockType.MinePlatinum1,
-    "Go to the star map and send a mining vessel along with a few defending units to a Platinum motherlode. ",
-  ],
-  [
-    BlockType.MinePlatinum2,
-    "Go to the star map and send a mining vessel along with a few defending units to a Platinum motherlode. ",
-  ],
-  [
-    BlockType.MinePlatinum3,
-    "Go to the star map and send a mining vessel along with a few defending units to a Platinum motherlode. ",
-  ],
+//   [
+//     BlockType.MinePlatinum1,
+//     "Go to the star map and send a mining vessel along with a few defending units to a Platinum motherlode. ",
+//   ],
+//   [
+//     BlockType.MinePlatinum2,
+//     "Go to the star map and send a mining vessel along with a few defending units to a Platinum motherlode. ",
+//   ],
+//   [
+//     BlockType.MinePlatinum3,
+//     "Go to the star map and send a mining vessel along with a few defending units to a Platinum motherlode. ",
+//   ],
 
-  [
-    BlockType.MineIridium1,
-    "Go to the star map and send a mining vessel along with a few defending units to a Iridium motherlode. ",
-  ],
-  [
-    BlockType.MineIridium2,
-    "Go to the star map and send a mining vessel along with a few defending units to a Iridium motherlode. ",
-  ],
-  [
-    BlockType.MineIridium3,
-    "Go to the star map and send a mining vessel along with a few defending units to a Iridium motherlode. ",
-  ],
+//   [
+//     BlockType.MineIridium1,
+//     "Go to the star map and send a mining vessel along with a few defending units to a Iridium motherlode. ",
+//   ],
+//   [
+//     BlockType.MineIridium2,
+//     "Go to the star map and send a mining vessel along with a few defending units to a Iridium motherlode. ",
+//   ],
+//   [
+//     BlockType.MineIridium3,
+//     "Go to the star map and send a mining vessel along with a few defending units to a Iridium motherlode. ",
+//   ],
 
-  [
-    BlockType.MineKimberlite1,
-    "Go to the star map and send a mining vessel along with a few defending units to a Kimberlite motherlode. ",
-  ],
-  [
-    BlockType.MineKimberlite2,
-    "Go to the star map and send a mining vessel along with a few defending units to a Kimberlite motherlode. ",
-  ],
-  [
-    BlockType.MineKimberlite3,
-    "Go to the star map and send a mining vessel along with a few defending units to a Kimberlite motherlode. ",
-  ],
+//   [
+//     BlockType.MineKimberlite1,
+//     "Go to the star map and send a mining vessel along with a few defending units to a Kimberlite motherlode. ",
+//   ],
+//   [
+//     BlockType.MineKimberlite2,
+//     "Go to the star map and send a mining vessel along with a few defending units to a Kimberlite motherlode. ",
+//   ],
+//   [
+//     BlockType.MineKimberlite3,
+//     "Go to the star map and send a mining vessel along with a few defending units to a Kimberlite motherlode. ",
+//   ],
 
-  [
-    BlockType.TrainHammerDrone,
-    "Select the drone factory you placed on the map to train hammer drones. Hammer drones are used for attacking.",
-  ],
-  [
-    BlockType.TrainHammerDrone2,
-    "Select the drone factory you placed on the map to train hammer drones. Hammer drones are used for attacking.",
-  ],
-  [
-    BlockType.TrainHammerDrone3,
-    "Select the drone factory you placed on the map to train hammer drones. Hammer drones are used for attacking.",
-  ],
+//   [
+//     BlockType.TrainHammerDrone,
+//     "Select the drone factory you placed on the map to train hammer drones. Hammer drones are used for attacking.",
+//   ],
+//   [
+//     BlockType.TrainHammerDrone2,
+//     "Select the drone factory you placed on the map to train hammer drones. Hammer drones are used for attacking.",
+//   ],
+//   [
+//     BlockType.TrainHammerDrone3,
+//     "Select the drone factory you placed on the map to train hammer drones. Hammer drones are used for attacking.",
+//   ],
 
-  [
-    BlockType.TrainAegisDrone,
-    "Select the drone factory you placed on the map to train aegis drones. Aegis drones are strong defensive units, but take up more housing.",
-  ],
-  [
-    BlockType.TrainAegisDrone2,
-    "Select the drone factory you placed on the map to train aegis drones. Aegis drones are strong defensive units, but take up more housing.",
-  ],
-  [
-    BlockType.TrainAegisDrone3,
-    "Select the drone factory you placed on the map to train aegis drones. Aegis drones are strong defensive units, but take up more housing.",
-  ],
+//   [
+//     BlockType.TrainAegisDrone,
+//     "Select the drone factory you placed on the map to train aegis drones. Aegis drones are strong defensive units, but take up more housing.",
+//   ],
+//   [
+//     BlockType.TrainAegisDrone2,
+//     "Select the drone factory you placed on the map to train aegis drones. Aegis drones are strong defensive units, but take up more housing.",
+//   ],
+//   [
+//     BlockType.TrainAegisDrone3,
+//     "Select the drone factory you placed on the map to train aegis drones. Aegis drones are strong defensive units, but take up more housing.",
+//   ],
 
-  [
-    BlockType.TrainStingerDrone,
-    "Select the drone factory you placed on the map to train aegis drones. Stinger drones are strong and fast offensive units, but take up more housing.",
-  ],
-  [
-    BlockType.TrainStingerDrone2,
-    "Select the drone factory you placed on the map to train aegis drones. Stinger drones are strong and fast offensive units, but take up more housing.",
-  ],
-  [
-    BlockType.TrainStingerDrone3,
-    "Select the drone factory you placed on the map to train aegis drones. Stinger drones are strong and fast offensive units, but take up more housing.",
-  ],
+//   [
+//     BlockType.TrainStingerDrone,
+//     "Select the drone factory you placed on the map to train aegis drones. Stinger drones are strong and fast offensive units, but take up more housing.",
+//   ],
+//   [
+//     BlockType.TrainStingerDrone2,
+//     "Select the drone factory you placed on the map to train aegis drones. Stinger drones are strong and fast offensive units, but take up more housing.",
+//   ],
+//   [
+//     BlockType.TrainStingerDrone3,
+//     "Select the drone factory you placed on the map to train aegis drones. Stinger drones are strong and fast offensive units, but take up more housing.",
+//   ],
 
-  [BlockType.UpgradeMainBase, "Upgrade your main base by clicking on the upgrade button in your main base."],
+//   [BlockType.UpgradeMainBase, "Upgrade your main base by clicking on the upgrade button in your main base."],
 
-  [
-    BlockType.CommissionMiningVessel,
-    "Commission one mining vessel at your main base by first adding a slot and then building one mining vessel.",
-  ],
+//   [
+//     BlockType.CommissionMiningVessel,
+//     "Commission one mining vessel at your main base by first adding a slot and then building one mining vessel.",
+//   ],
 
-  [
-    BlockType.BuildStarmap,
-    "Construct a starmapper station. A starmapper station increases the number of fleets you can send at a time.",
-  ],
+//   [
+//     BlockType.BuildStarmap,
+//     "Construct a starmapper station. A starmapper station increases the number of fleets you can send at a time.",
+//   ],
 
-  [
-    BlockType.BuildSAMLauncher,
-    "Construct a SAM site. SAM sites protect you from enemy attacks and raids by providing a base level of defense.",
-  ],
-  [
-    BlockType.RaidRawResources,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-  [
-    BlockType.RaidRawResources2,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-  [
-    BlockType.RaidRawResources3,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
+//   [
+//     BlockType.BuildSAMLauncher,
+//     "Construct a SAM site. SAM sites protect you from enemy attacks and raids by providing a base level of defense.",
+//   ],
+//   [
+//     BlockType.RaidRawResources,
+//     "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
+//   ],
+//   [
+//     BlockType.RaidRawResources2,
+//     "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
+//   ],
+//   [
+//     BlockType.RaidRawResources3,
+//     "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
+//   ],
 
-  [
-    BlockType.RaidFactoryResources,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-  [
-    BlockType.RaidFactoryResources2,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-  [
-    BlockType.RaidFactoryResources3,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
+//   [
+//     BlockType.RaidFactoryResources,
+//     "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
+//   ],
+//   [
+//     BlockType.RaidFactoryResources2,
+//     "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
+//   ],
+//   [
+//     BlockType.RaidFactoryResources3,
+//     "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
+//   ],
 
-  [
-    BlockType.RaidMotherlodeResources,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-  [
-    BlockType.RaidMotherlodeResources2,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-  [
-    BlockType.RaidMotherlodeResources3,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-  [BlockType.DestroyEnemyUnits, "Attack and defend against enemy units and destroy your enemies' armies."],
-  [BlockType.DestroyEnemyUnits2, "Attack and defend against enemy units and destroy your enemies' armies."],
-  [BlockType.DestroyEnemyUnits3, "Attack and defend against enemy units and destroy your enemies' armies."],
-  [BlockType.DestroyEnemyUnits4, "Attack and defend against enemy units and destroy your enemies' armies."],
-  [BlockType.DestroyEnemyUnits5, "Attack and defend against enemy units and destroy your enemies' armies."],
-]);
-
-// Terrain Tile colors
-//todo: pick ore block colors
-export const BlockColors = new Map<Entity, string>([
-  //landscape blocks
-  [BlockType.Water, "#0369a1"],
-  [BlockType.Sandstone, "#a8a29e"],
-  [BlockType.Biofilm, "#10b981"],
-  [BlockType.Alluvium, "#34d399"],
-  [BlockType.Regolith, "#71717a"],
-  [BlockType.Bedrock, "#52525b"],
-  [BlockType.Air, "#FFFFFF00"],
-
-  //metal ores
-  [BlockType.Lithium, "#d8b4fe"],
-  [BlockType.Iron, "#44403c"],
-  [BlockType.Copper, "#047857"],
-  [BlockType.Titanium, "#60a5fa"],
-  [BlockType.Iridium, "#fce7f3"],
-  [BlockType.Osmium, "#164e63"],
-  [BlockType.Tungsten, "#94a3b8"],
-
-  //mineral ores
-  [BlockType.Kimberlite, "#e0f2fe"],
-  [BlockType.Uraninite, "#d9f99d"],
-  [BlockType.Bolutite, "#a21caf"],
-
-  // Resource
-  [BlockType.MainBase, "#8676c0"],
-]);
+//   [
+//     BlockType.RaidMotherlodeResources,
+//     "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
+//   ],
+//   [
+//     BlockType.RaidMotherlodeResources2,
+//     "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
+//   ],
+//   [
+//     BlockType.RaidMotherlodeResources3,
+//     "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
+//   ],
+//   [BlockType.DestroyEnemyUnits, "Attack and defend against enemy units and destroy your enemies' armies."],
+//   [BlockType.DestroyEnemyUnits2, "Attack and defend against enemy units and destroy your enemies' armies."],
+//   [BlockType.DestroyEnemyUnits3, "Attack and defend against enemy units and destroy your enemies' armies."],
+//   [BlockType.DestroyEnemyUnits4, "Attack and defend against enemy units and destroy your enemies' armies."],
+//   [BlockType.DestroyEnemyUnits5, "Attack and defend against enemy units and destroy your enemies' armies."],
+// ]);
 
 export const BackgroundImage = new Map<Entity, string[]>([
   //units
-  [BlockType.HammerLightDrone, ["/img/unit/hammerdrone.png"]],
-  [BlockType.StingerDrone, ["/img/unit/stingerdrone.png"]],
-  [BlockType.AnvilLightDrone, ["/img/unit/anvildrone.png"]],
-  [BlockType.AegisDrone, ["/img/unit/aegisdrone.png"]],
-  [BlockType.MiningVessel, ["/img/unit/miningvessel.png"]],
+  [EntityType.HammerLightDrone, ["/img/unit/hammerdrone.png"]],
+  [EntityType.StingerDrone, ["/img/unit/stingerdrone.png"]],
+  [EntityType.AnvilLightDrone, ["/img/unit/anvildrone.png"]],
+  [EntityType.AegisDrone, ["/img/unit/aegisdrone.png"]],
+  [EntityType.MiningVessel, ["/img/unit/miningvessel.png"]],
 
-  [BlockType.MinutemanMarine, ["/img/unit/minutemen_marine.png"]],
-  [BlockType.TridentMarine, ["/img/unit/trident_marine.png"]],
+  [EntityType.MinutemanMarine, ["/img/unit/minutemen_marine.png"]],
+  [EntityType.TridentMarine, ["/img/unit/trident_marine.png"]],
 ]);
 
 export const ResearchImage = new Map<Entity, string>([
-  [BlockType.Iron, "/img/resource/iron_resource.png"],
-  [BlockType.Copper, "/img/resource/copper_resource.png"],
-  [BlockType.Lithium, "/img/resource/lithium_resource.png"],
-  [BlockType.Sulfur, "/img/resource/sulfur_resource.png"],
-  [BlockType.Titanium, "/img/resource/titanium_resource.png"],
-  [BlockType.Osmium, "/img/resource/osmium_resource.png"],
-  [BlockType.Tungsten, "/img/resource/tungsten_resource.png"],
-  [BlockType.Iridium, "/img/resource/iridium_resource.png"],
-  [BlockType.Kimberlite, "/img/resource/kimberlite_resource.png"],
+  [EntityType.Iron, "/img/resource/iron_resource.png"],
+  [EntityType.Copper, "/img/resource/copper_resource.png"],
+  [EntityType.Lithium, "/img/resource/lithium_resource.png"],
+  [EntityType.Sulfur, "/img/resource/sulfur_resource.png"],
+  [EntityType.Titanium, "/img/resource/titanium_resource.png"],
+  [EntityType.Osmium, "/img/resource/osmium_resource.png"],
+  [EntityType.Tungsten, "/img/resource/tungsten_resource.png"],
+  [EntityType.Iridium, "/img/resource/iridium_resource.png"],
+  [EntityType.Kimberlite, "/img/resource/kimberlite_resource.png"],
 
-  [BlockType.ExpansionResearch1, "/img/icons/mainbaseicon.png"],
-  [BlockType.ExpansionResearch2, "/img/icons/mainbaseicon.png"],
-  [BlockType.ExpansionResearch3, "/img/icons/mainbaseicon.png"],
-  [BlockType.ExpansionResearch4, "/img/icons/mainbaseicon.png"],
-  [BlockType.ExpansionResearch5, "/img/icons/mainbaseicon.png"],
-  [BlockType.ExpansionResearch6, "/img/icons/mainbaseicon.png"],
-  [BlockType.ExpansionResearch7, "/img/icons/mainbaseicon.png"],
+  [EntityType.ExpansionResearch1, "/img/icons/mainbaseicon.png"],
+  [EntityType.ExpansionResearch2, "/img/icons/mainbaseicon.png"],
+  [EntityType.ExpansionResearch3, "/img/icons/mainbaseicon.png"],
+  [EntityType.ExpansionResearch4, "/img/icons/mainbaseicon.png"],
+  [EntityType.ExpansionResearch5, "/img/icons/mainbaseicon.png"],
+  [EntityType.ExpansionResearch6, "/img/icons/mainbaseicon.png"],
+  [EntityType.ExpansionResearch7, "/img/icons/mainbaseicon.png"],
 
-  [BlockType.AnvilDroneUpgrade1, "/img/unit/anvildrone.png"],
-  [BlockType.AnvilDroneUpgrade2, "/img/unit/anvildrone.png"],
-  [BlockType.AnvilDroneUpgrade3, "/img/unit/anvildrone.png"],
-  [BlockType.AnvilDroneUpgrade4, "/img/unit/anvildrone.png"],
-  [BlockType.AnvilDroneUpgrade5, "/img/unit/anvildrone.png"],
+  [EntityType.AnvilDroneUpgrade1, "/img/unit/anvildrone.png"],
+  [EntityType.AnvilDroneUpgrade2, "/img/unit/anvildrone.png"],
+  [EntityType.AnvilDroneUpgrade3, "/img/unit/anvildrone.png"],
+  [EntityType.AnvilDroneUpgrade4, "/img/unit/anvildrone.png"],
+  [EntityType.AnvilDroneUpgrade5, "/img/unit/anvildrone.png"],
 
-  [BlockType.HammerDroneUpgrade1, "/img/unit/hammerdrone.png"],
-  [BlockType.HammerDroneUpgrade2, "/img/unit/hammerdrone.png"],
-  [BlockType.HammerDroneUpgrade3, "/img/unit/hammerdrone.png"],
-  [BlockType.HammerDroneUpgrade4, "/img/unit/hammerdrone.png"],
-  [BlockType.HammerDroneUpgrade5, "/img/unit/hammerdrone.png"],
+  [EntityType.HammerDroneUpgrade1, "/img/unit/hammerdrone.png"],
+  [EntityType.HammerDroneUpgrade2, "/img/unit/hammerdrone.png"],
+  [EntityType.HammerDroneUpgrade3, "/img/unit/hammerdrone.png"],
+  [EntityType.HammerDroneUpgrade4, "/img/unit/hammerdrone.png"],
+  [EntityType.HammerDroneUpgrade5, "/img/unit/hammerdrone.png"],
 
-  [BlockType.AegisDroneUpgrade1, "/img/unit/aegisdrone.png"],
-  [BlockType.AegisDroneUpgrade2, "/img/unit/aegisdrone.png"],
-  [BlockType.AegisDroneUpgrade3, "/img/unit/aegisdrone.png"],
-  [BlockType.AegisDroneUpgrade4, "/img/unit/aegisdrone.png"],
-  [BlockType.AegisDroneUpgrade5, "/img/unit/aegisdrone.png"],
+  [EntityType.AegisDroneUpgrade1, "/img/unit/aegisdrone.png"],
+  [EntityType.AegisDroneUpgrade2, "/img/unit/aegisdrone.png"],
+  [EntityType.AegisDroneUpgrade3, "/img/unit/aegisdrone.png"],
+  [EntityType.AegisDroneUpgrade4, "/img/unit/aegisdrone.png"],
+  [EntityType.AegisDroneUpgrade5, "/img/unit/aegisdrone.png"],
 
-  [BlockType.StingerDroneUpgrade1, "/img/unit/stingerdrone.png"],
-  [BlockType.StingerDroneUpgrade2, "/img/unit/stingerdrone.png"],
-  [BlockType.StingerDroneUpgrade3, "/img/unit/stingerdrone.png"],
-  [BlockType.StingerDroneUpgrade4, "/img/unit/stingerdrone.png"],
-  [BlockType.StingerDroneUpgrade5, "/img/unit/stingerdrone.png"],
+  [EntityType.StingerDroneUpgrade1, "/img/unit/stingerdrone.png"],
+  [EntityType.StingerDroneUpgrade2, "/img/unit/stingerdrone.png"],
+  [EntityType.StingerDroneUpgrade3, "/img/unit/stingerdrone.png"],
+  [EntityType.StingerDroneUpgrade4, "/img/unit/stingerdrone.png"],
+  [EntityType.StingerDroneUpgrade5, "/img/unit/stingerdrone.png"],
 
-  [BlockType.MiningResearch1, "/img/unit/miningvessel.png"],
-  [BlockType.MiningResearch2, "/img/unit/miningvessel.png"],
-  [BlockType.MiningResearch3, "/img/unit/miningvessel.png"],
-  [BlockType.MiningResearch4, "/img/unit/miningvessel.png"],
-  [BlockType.MiningResearch5, "/img/unit/miningvessel.png"],
+  [EntityType.MiningResearch1, "/img/unit/miningvessel.png"],
+  [EntityType.MiningResearch2, "/img/unit/miningvessel.png"],
+  [EntityType.MiningResearch3, "/img/unit/miningvessel.png"],
+  [EntityType.MiningResearch4, "/img/unit/miningvessel.png"],
+  [EntityType.MiningResearch5, "/img/unit/miningvessel.png"],
 
-  [BlockType.MiningVesselUpgrade1, "/img/unit/miningvessel.png"],
-  [BlockType.MiningVesselUpgrade2, "/img/unit/miningvessel.png"],
-  [BlockType.MiningVesselUpgrade3, "/img/unit/miningvessel.png"],
-  [BlockType.MiningVesselUpgrade4, "/img/unit/miningvessel.png"],
-  [BlockType.MiningVesselUpgrade5, "/img/unit/miningvessel.png"],
+  [EntityType.MiningVesselUpgrade1, "/img/unit/miningvessel.png"],
+  [EntityType.MiningVesselUpgrade2, "/img/unit/miningvessel.png"],
+  [EntityType.MiningVesselUpgrade3, "/img/unit/miningvessel.png"],
+  [EntityType.MiningVesselUpgrade4, "/img/unit/miningvessel.png"],
+  [EntityType.MiningVesselUpgrade5, "/img/unit/miningvessel.png"],
 
-  [BlockType.TridentMarineUpgrade1, "img/unit/trident_marine.png"],
-  [BlockType.TridentMarineUpgrade2, "img/unit/trident_marine.png"],
-  [BlockType.TridentMarineUpgrade3, "img/unit/trident_marine.png"],
-  [BlockType.TridentMarineUpgrade4, "img/unit/trident_marine.png"],
-  [BlockType.TridentMarineUpgrade5, "img/unit/trident_marine.png"],
+  [EntityType.TridentMarineUpgrade1, "img/unit/trident_marine.png"],
+  [EntityType.TridentMarineUpgrade2, "img/unit/trident_marine.png"],
+  [EntityType.TridentMarineUpgrade3, "img/unit/trident_marine.png"],
+  [EntityType.TridentMarineUpgrade4, "img/unit/trident_marine.png"],
+  [EntityType.TridentMarineUpgrade5, "img/unit/trident_marine.png"],
 
-  [BlockType.MinutemanMarineUpgrade1, "img/unit/minutemen_marine.png"],
-  [BlockType.MinutemanMarineUpgrade2, "img/unit/minutemen_marine.png"],
-  [BlockType.MinutemanMarineUpgrade3, "img/unit/minutemen_marine.png"],
-  [BlockType.MinutemanMarineUpgrade4, "img/unit/minutemen_marine.png"],
-  [BlockType.MinutemanMarineUpgrade5, "img/unit/minutemen_marine.png"],
+  [EntityType.MinutemanMarineUpgrade1, "img/unit/minutemen_marine.png"],
+  [EntityType.MinutemanMarineUpgrade2, "img/unit/minutemen_marine.png"],
+  [EntityType.MinutemanMarineUpgrade3, "img/unit/minutemen_marine.png"],
+  [EntityType.MinutemanMarineUpgrade4, "img/unit/minutemen_marine.png"],
+  [EntityType.MinutemanMarineUpgrade5, "img/unit/minutemen_marine.png"],
 ]);
 //images of resource items (think of them like minecraft entities)
 export const ResourceImage = new Map<Entity, string>([
-  [BlockType.Iron, "/img/resource/iron_resource.png"],
-  [BlockType.Copper, "/img/resource/copper_resource.png"],
-  [BlockType.Lithium, "/img/resource/lithium_resource.png"],
-  [BlockType.Titanium, "/img/resource/titanium_resource.png"],
-  [BlockType.Sulfur, "/img/resource/sulfur_resource.png"],
-  [BlockType.Osmium, "/img/resource/osmium_resource.png"],
-  [BlockType.Tungsten, "/img/resource/tungsten_resource.png"],
-  [BlockType.Iridium, "/img/resource/iridium_resource.png"],
-  [BlockType.Kimberlite, "/img/resource/kimberlite_resource.png"],
-  [BlockType.Uraninite, "/img/resource/uraninite_resource.png"],
-  [BlockType.Bolutite, "/img/resource/bolutite_resource.png"],
-  [BlockType.Platinum, "/img/resource/platinum_resource.png"],
+  [EntityType.Iron, "/img/resource/iron_resource.png"],
+  [EntityType.Copper, "/img/resource/copper_resource.png"],
+  [EntityType.Lithium, "/img/resource/lithium_resource.png"],
+  [EntityType.Titanium, "/img/resource/titanium_resource.png"],
+  [EntityType.Sulfur, "/img/resource/sulfur_resource.png"],
+  [EntityType.Osmium, "/img/resource/osmium_resource.png"],
+  [EntityType.Tungsten, "/img/resource/tungsten_resource.png"],
+  [EntityType.Iridium, "/img/resource/iridium_resource.png"],
+  [EntityType.Kimberlite, "/img/resource/kimberlite_resource.png"],
+  [EntityType.Uraninite, "/img/resource/uraninite_resource.png"],
+  [EntityType.Bolutite, "/img/resource/bolutite_resource.png"],
+  [EntityType.Platinum, "/img/resource/platinum_resource.png"],
 
-  [BlockType.IronPlate, "/img/crafted/ironplate.png"],
-  [BlockType.BasicPowerSource, "/img/crafted/basicbattery.png"],
-  [BlockType.AdvancedPowerSource, "/img/crafted/photovoltaiccell.png"],
-  [BlockType.IridiumCrystal, "/img/crafted/iridiumcrystal.png"],
-  [BlockType.IridiumDrillbit, "/img/crafted/iridiumdrillbit.png"],
-  [BlockType.LaserPowerSource, "/img/crafted/laserbattery.png"],
-  [BlockType.KimberliteCrystalCatalyst, "/img/crafted/kimberlitecatalyst.png"],
-  [BlockType.RefinedOsmium, "/img/crafted/refinedosmium.png"],
-  [BlockType.TungstenRods, "/img/crafted/tungstenrod.png"],
-  [BlockType.KineticMissile, "/img/crafted/kineticmissile.png"],
-  [BlockType.PenetratingWarhead, "/img/crafted/penetratingwarhead.png"],
-  [BlockType.PenetratingMissile, "/img/crafted/penetratingmissile.png"],
-  [BlockType.ThermobaricWarhead, "/img/crafted/thermobaricwarhead.png"],
-  [BlockType.ThermobaricMissile, "/img/crafted/thermobaricmissile.png"],
+  [EntityType.IronPlate, "/img/crafted/ironplate.png"],
+  [EntityType.BasicPowerSource, "/img/crafted/basicbattery.png"],
+  [EntityType.AdvancedPowerSource, "/img/crafted/photovoltaiccell.png"],
+  [EntityType.IridiumCrystal, "/img/crafted/iridiumcrystal.png"],
+  [EntityType.IridiumDrillbit, "/img/crafted/iridiumdrillbit.png"],
+  [EntityType.LaserPowerSource, "/img/crafted/laserbattery.png"],
+  [EntityType.KimberliteCrystalCatalyst, "/img/crafted/kimberlitecatalyst.png"],
+  [EntityType.RefinedOsmium, "/img/crafted/refinedosmium.png"],
+  [EntityType.TungstenRods, "/img/crafted/tungstenrod.png"],
+  [EntityType.KineticMissile, "/img/crafted/kineticmissile.png"],
+  [EntityType.PenetratingWarhead, "/img/crafted/penetratingwarhead.png"],
+  [EntityType.PenetratingMissile, "/img/crafted/penetratingmissile.png"],
+  [EntityType.ThermobaricWarhead, "/img/crafted/thermobaricwarhead.png"],
+  [EntityType.ThermobaricMissile, "/img/crafted/thermobaricmissile.png"],
 
-  [BlockType.Alloy, "/img/resource/alloy_resource.png"],
-  [BlockType.PVCell, "/img/resource/photovoltaiccell_resource.png"],
-  [BlockType.RocketFuel, "/img/crafted/refinedosmium.png"],
+  [EntityType.Alloy, "/img/resource/alloy_resource.png"],
+  [EntityType.PVCell, "/img/resource/photovoltaiccell_resource.png"],
+  [EntityType.RocketFuel, "/img/crafted/refinedosmium.png"],
 
-  [BlockType.U_Electricity, "/img/icons/powericon.png"],
-  [BlockType.U_Housing, "/img/icons/utilitiesicon.png"],
-  [BlockType.U_VesselCapacity, "/img/unit/miningvessel.png"],
+  [EntityType.Electricity, "/img/icons/powericon.png"],
+  [EntityType.Housing, "/img/icons/utilitiesicon.png"],
+  [EntityType.VesselCapacity, "/img/unit/miningvessel.png"],
 
   // debug
-  [BlockType.Bullet, "/img/crafted/bullet.png"],
+  [EntityType.Bullet, "/img/crafted/bullet.png"],
 
   //units
-  [BlockType.HammerLightDrone, "/img/unit/hammerdrone.png"],
-  [BlockType.StingerDrone, "/img/unit/stingerdrone.png"],
-  [BlockType.AnvilLightDrone, "/img/unit/anvildrone.png"],
-  [BlockType.AegisDrone, "/img/unit/aegisdrone.png"],
-  [BlockType.MiningVessel, "/img/unit/miningvessel.png"],
-  [BlockType.MinutemanMarine, "img/unit/minutemen_marine.png"],
-  [BlockType.TridentMarine, "img/unit/trident_marine.png"],
+  [EntityType.HammerLightDrone, "/img/unit/hammerdrone.png"],
+  [EntityType.StingerDrone, "/img/unit/stingerdrone.png"],
+  [EntityType.AnvilLightDrone, "/img/unit/anvildrone.png"],
+  [EntityType.AegisDrone, "/img/unit/aegisdrone.png"],
+  [EntityType.MiningVessel, "/img/unit/miningvessel.png"],
+  [EntityType.MinutemanMarine, "img/unit/minutemen_marine.png"],
+  [EntityType.TridentMarine, "img/unit/trident_marine.png"],
 ]);
 
 export type DisplayKeyPair = {
@@ -841,22 +807,79 @@ export const SpaceRockTypeNames: Record<number, string> = {
 };
 
 export const ResourceStorages = [
-  BlockType.Iron,
-  BlockType.Copper,
-  BlockType.Lithium,
-  BlockType.IronPlate,
-  BlockType.Alloy,
-  BlockType.PVCell,
-  BlockType.Sulfur,
-  BlockType.Titanium,
-  BlockType.Iridium,
-  BlockType.Platinum,
-  BlockType.Kimberlite,
+  EntityType.Iron,
+  EntityType.Copper,
+  EntityType.Lithium,
+  EntityType.IronPlate,
+  EntityType.Alloy,
+  EntityType.PVCell,
+  EntityType.Sulfur,
+  EntityType.Titanium,
+  EntityType.Iridium,
+  EntityType.Platinum,
+  EntityType.Kimberlite,
 ];
 
 export const UtilityStorages = [
-  BlockType.U_Housing,
-  BlockType.U_Electricity,
-  BlockType.U_VesselCapacity,
-  BlockType.U_FleetMoves,
+  EntityType.Housing,
+  EntityType.Electricity,
+  EntityType.VesselCapacity,
+  EntityType.FleetMoves,
 ];
+
+export const ResourceEnumLookup: Record<Entity, EResource> = {
+  [EntityType.Iron]: EResource.Iron,
+  [EntityType.Copper]: EResource.Copper,
+  [EntityType.Lithium]: EResource.Lithium,
+  [EntityType.Sulfur]: EResource.Sulfur,
+  [EntityType.Titanium]: EResource.Titanium,
+  [EntityType.Iridium]: EResource.Iridium,
+  [EntityType.Platinum]: EResource.Platinum,
+  [EntityType.Kimberlite]: EResource.Kimberlite,
+  [EntityType.Uraninite]: EResource.Uraninite,
+  [EntityType.Bolutite]: EResource.Bolutite,
+  [EntityType.Osmium]: EResource.Osmium,
+  [EntityType.Tungsten]: EResource.Tungsten,
+  [EntityType.Alloy]: EResource.Alloy,
+  [EntityType.PVCell]: EResource.PVCell,
+  [EntityType.RocketFuel]: EResource.RocketFuel,
+  [EntityType.IronPlate]: EResource.IronPlate,
+
+  [EntityType.Electricity]: EResource.U_Electricity,
+  [EntityType.Housing]: EResource.U_Housing,
+  [EntityType.VesselCapacity]: EResource.U_Vessel,
+  [EntityType.FleetMoves]: EResource.U_MaxMoves,
+};
+
+export const ResourceEntityLookup = reverseRecord(ResourceEnumLookup);
+
+export const BuildingEnumLookup: Record<Entity, EBuilding> = {
+  [EntityType.IronMine]: EBuilding.IronMine,
+  [EntityType.CopperMine]: EBuilding.CopperMine,
+  [EntityType.LithiumMine]: EBuilding.LithiumMine,
+  [EntityType.SulfurMine]: EBuilding.SulfurMine,
+  [EntityType.IronPlateFactory]: EBuilding.IronPlateFactory,
+  [EntityType.AlloyFactory]: EBuilding.AlloyFactory,
+  [EntityType.PVCellFactory]: EBuilding.PVCellFactory,
+  // [BlockType.Garage]: EBuilding.Garage,
+  // [BlockType.Workshop]: EBuilding.Workshop,
+  [EntityType.StorageUnit]: EBuilding.StorageUnit,
+  [EntityType.SolarPanel]: EBuilding.SolarPanel,
+  [EntityType.DroneFactory]: EBuilding.DroneFactory,
+  [EntityType.Hangar]: EBuilding.Hangar,
+  [EntityType.MainBase]: EBuilding.MainBase,
+  // [EntityType.SAMSite]: EBuilding.SAMSite,
+  [EntityType.StarmapperStation]: EBuilding.Starmapper,
+};
+
+export const BuildingEntityLookup = reverseRecord(BuildingEnumLookup);
+
+export const UnitEnumLookup: Record<Entity, EUnit> = {
+  [EntityType.HammerLightDrone]: EUnit.HammerDrone,
+  [EntityType.StingerDrone]: EUnit.StingerDrone,
+  [EntityType.AnvilLightDrone]: EUnit.AnvilDrone,
+  [EntityType.AegisDrone]: EUnit.AegisDrone,
+  [EntityType.MiningVessel]: EUnit.MiningVessel,
+  // [EntityType.MinutemanMarine]: EUnit.MinutemanMarine,
+  // [EntityType.TridentMarine]: EUnit.TridentMarine,
+};

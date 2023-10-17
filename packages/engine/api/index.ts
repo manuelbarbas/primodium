@@ -23,4 +23,6 @@ const api = {
 };
 
 //expose api to window for debugging
-if (import.meta.env.PRI_DEV === "true") (window as any).engine = api;
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+if (import.meta.env.VITE_DEV === "true") window.engine = api;
