@@ -20,6 +20,8 @@ import { QueueUnits, QueueUnitsTableId } from "codegen/tables/QueueUnits.sol";
 import { ProducedResourceTableId } from "codegen/tables/ProducedResource.sol";
 import { ProductionRateTableId } from "codegen/tables/ProductionRate.sol";
 import { ProducedUnitTableId } from "codegen/tables/ProducedUnit.sol";
+
+import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
 import { OnBefore_ClaimResources } from "src/hooks/systemHooks/OnBefore_ClaimResources.sol";
 import { OnBefore_ClaimUnits } from "src/hooks/systemHooks/OnBefore_ClaimUnits.sol";
 import { OnBefore_SpendResources } from "src/hooks/systemHooks/OnBefore_SpendResources.sol";
@@ -61,6 +63,7 @@ function setupHooks(IWorld world) {
   world.grantAccess(ResourceCountTableId, address(onBefore_ClaimResources));
   world.grantAccess(MapItemUtilitiesTableId, address(onBefore_ClaimResources));
   world.grantAccess(MapUtilitiesTableId, address(onBefore_ClaimResources));
+  world.grantAccess(MapItemStoredUtilitiesTableId, address(onBefore_ClaimResources));
   world.grantAccess(LastClaimedAtTableId, address(onBefore_ClaimResources));
   world.grantAccess(ProducedResourceTableId, address(onBefore_ClaimResources));
 
@@ -75,6 +78,7 @@ function setupHooks(IWorld world) {
   world.grantAccess(ResourceCountTableId, address(onBefore_SpendResources));
   world.grantAccess(MapItemUtilitiesTableId, address(onBefore_SpendResources));
   world.grantAccess(MapUtilitiesTableId, address(onBefore_SpendResources));
+  world.grantAccess(MapItemStoredUtilitiesTableId, address(onBefore_ClaimResources));
   world.grantAccess(MaxResourceCountTableId, address(onBefore_SpendResources));
 
   OnAfter_MaxStorage onAfter_MaxStorage = new OnAfter_MaxStorage();
@@ -85,6 +89,9 @@ function setupHooks(IWorld world) {
   world.grantAccess(ProductionRateTableId, address(onAfter_ProductionRate));
   world.grantAccess(MaxResourceCountTableId, address(onAfter_ProductionRate));
   world.grantAccess(ResourceCountTableId, address(onAfter_ProductionRate));
+  world.grantAccess(MapItemUtilitiesTableId, address(onAfter_ProductionRate));
+  world.grantAccess(MapUtilitiesTableId, address(onAfter_ProductionRate));
+  world.grantAccess(MapItemStoredUtilitiesTableId, address(onAfter_ProductionRate));
 
   registerBuildHooks(
     world,
@@ -177,8 +184,10 @@ function registerDestroyHooks(IWorld world, OnBefore_ClaimResources onBefore_Cla
   OnDestroy_ClearUtility onDestroy_ClearUtility = new OnDestroy_ClearUtility();
   world.grantAccess(MapItemUtilitiesTableId, address(onDestroy_ClearUtility));
   world.grantAccess(MapUtilitiesTableId, address(onDestroy_ClearUtility));
+  world.grantAccess(MapItemStoredUtilitiesTableId, address(onDestroy_ClearUtility));
   world.grantAccess(MaxResourceCountTableId, address(onDestroy_ClearUtility));
   world.grantAccess(ResourceCountTableId, address(onDestroy_ClearUtility));
+
   world.registerSystemHook(systemId, onDestroy_ClearUtility, BEFORE_CALL_SYSTEM);
 
   OnDestroy_MaxStorage onDestroy_MaxStorage = new OnDestroy_MaxStorage();
@@ -189,6 +198,7 @@ function registerDestroyHooks(IWorld world, OnBefore_ClaimResources onBefore_Cla
   OnDestroy_ProductionRate onDestroy_ProductionRate = new OnDestroy_ProductionRate();
   world.grantAccess(ProductionRateTableId, address(onDestroy_ProductionRate));
   world.grantAccess(MaxResourceCountTableId, address(onDestroy_ProductionRate));
+  world.grantAccess(MapItemStoredUtilitiesTableId, address(onDestroy_ProductionRate));
   world.grantAccess(ResourceCountTableId, address(onDestroy_ProductionRate));
   world.registerSystemHook(systemId, onDestroy_ProductionRate, BEFORE_CALL_SYSTEM);
 
@@ -332,6 +342,7 @@ function registerClaimObjective(
   world.grantAccess(ResourceCountTableId, address(onClaimObjective_ReceiveRewards));
   world.grantAccess(MapItemUtilitiesTableId, address(onClaimObjective_ReceiveRewards));
   world.grantAccess(MapUtilitiesTableId, address(onClaimObjective_ReceiveRewards));
+  world.grantAccess(MapItemStoredUtilitiesTableId, address(onClaimObjective_ReceiveRewards));
   world.grantAccess(UnitCountTableId, address(onClaimObjective_ReceiveRewards));
   world.grantAccess(ProducedResourceTableId, address(onClaimObjective_ReceiveRewards));
   world.registerSystemHook(systemId, onClaimObjective_ReceiveRewards, AFTER_CALL_SYSTEM);

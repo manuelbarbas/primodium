@@ -167,7 +167,6 @@ export const config = mudConfig({
       keySchema: { entity: "bytes32", utility: "uint8" }, // EResource
       valueSchema: "uint256",
     },
-
     MapItemStoredUtilities: {
       keySchema: { entity: "bytes32", utility: "uint8" }, // EResource
       valueSchema: {
