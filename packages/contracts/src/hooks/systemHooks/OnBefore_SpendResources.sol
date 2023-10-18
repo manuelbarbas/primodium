@@ -38,7 +38,10 @@ contract OnBefore_SpendResources is SystemHook {
   ) public {
     // Decode the arguments from the callData
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
-    if (ResourceIdInstance.getType(systemId) == ResourceIdInstance.getType(getSystemResourceId("TrainUnitsSystem"))) {
+    if (
+      WorldResourceIdInstance.getName(systemId) ==
+      WorldResourceIdInstance.getName(getSystemResourceId("TrainUnitsSystem"))
+    ) {
       (bytes32 buildingEntity, uint8 unit, uint256 count) = abi.decode(args, (bytes32, uint8, uint256));
 
       // Spend the required resources for training units
@@ -60,9 +63,14 @@ contract OnBefore_SpendResources is SystemHook {
     ResourceId systemId,
     bytes memory callData
   ) public {
+    console.log("On After System call");
+    console.log(WorldResourceIdInstance.toString(systemId));
     // Decode the arguments from the callData
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
-    if (ResourceIdInstance.getType(systemId) == ResourceIdInstance.getType(getSystemResourceId("BuildSystem"))) {
+    if (
+      WorldResourceIdInstance.getName(systemId) == WorldResourceIdInstance.getName(getSystemResourceId("BuildSystem"))
+    ) {
+      console.log("On After BuildSystem call");
       (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
 
       // Generate the unique building entity key
@@ -71,7 +79,8 @@ contract OnBefore_SpendResources is SystemHook {
       // Spend the required resources for the building
       LibResource.spendBuildingRequiredResources(buildingEntity, 1);
     } else if (
-      ResourceIdInstance.getType(systemId) == ResourceIdInstance.getType(getSystemResourceId("UpgradeBuildingSystem"))
+      WorldResourceIdInstance.getName(systemId) ==
+      WorldResourceIdInstance.getName(getSystemResourceId("UpgradeBuildingSystem"))
     ) {
       console.log("On After UpgradeBuildingSystem");
       PositionData memory coord = abi.decode(args, (PositionData));
@@ -86,6 +95,7 @@ contract OnBefore_SpendResources is SystemHook {
       LibResource.spendBuildingRequiredResources(buildingEntity, level);
       console.log("On After After UpgradeBuildingSystem");
     } else {
+      console.log("On After undefined system call");
       revert("[OnBefore_SpendResources]: Invalid systemId");
     }
   }

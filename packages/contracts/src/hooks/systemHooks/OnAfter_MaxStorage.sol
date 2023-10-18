@@ -1,5 +1,6 @@
 pragma solidity >=0.8.21;
 
+import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
 import { addressToEntity, getSystemResourceId } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId, ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
@@ -40,14 +41,17 @@ contract OnAfter_MaxStorage is SystemHook {
     bytes32 playerEntity = addressToEntity(msgSender);
     // Decode the arguments from the callData
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
-    if (ResourceIdInstance.getType(systemId) == ResourceIdInstance.getType(getSystemResourceId("BuildSystem"))) {
+    if (
+      WorldResourceIdInstance.getName(systemId) == WorldResourceIdInstance.getName(getSystemResourceId("BuildSystem"))
+    ) {
       (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
       // Generate the unique building entity key
       bytes32 buildingEntity = LibEncode.getHash(BuildingKey, coord);
       // Increase the max storage capacity for the player's building entity
       LibStorage.increaseMaxStorage(playerEntity, buildingEntity, 1);
     } else if (
-      ResourceIdInstance.getType(systemId) == ResourceIdInstance.getType(getSystemResourceId("UpgradeBuildingSystem"))
+      WorldResourceIdInstance.getName(systemId) ==
+      WorldResourceIdInstance.getName(getSystemResourceId("UpgradeBuildingSystem"))
     ) {
       PositionData memory coord = abi.decode(args, (PositionData));
 

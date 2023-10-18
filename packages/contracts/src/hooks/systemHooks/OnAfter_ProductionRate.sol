@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
+import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
 import { addressToEntity, getSystemResourceId } from "src/utils.sol";
 import { ResourceId, ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
@@ -49,7 +50,9 @@ contract OnAfter_ProductionRate is SystemHook {
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
     // Convert the player's address to an entity
     bytes32 playerEntity = addressToEntity(msgSender);
-    if (ResourceIdInstance.getType(systemId) == ResourceIdInstance.getType(getSystemResourceId("BuildSystem"))) {
+    if (
+      WorldResourceIdInstance.getName(systemId) == WorldResourceIdInstance.getName(getSystemResourceId("BuildSystem"))
+    ) {
       (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
 
       // Generate the unique building entity key
@@ -61,7 +64,8 @@ contract OnAfter_ProductionRate is SystemHook {
       // Upgrade resource production for the player's building entity
       LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 1);
     } else if (
-      ResourceIdInstance.getType(systemId) == ResourceIdInstance.getType(getSystemResourceId("UpgradeBuildingSystem"))
+      WorldResourceIdInstance.getName(systemId) ==
+      WorldResourceIdInstance.getName(getSystemResourceId("UpgradeBuildingSystem"))
     ) {
       PositionData memory coord = abi.decode(args, (PositionData));
 
