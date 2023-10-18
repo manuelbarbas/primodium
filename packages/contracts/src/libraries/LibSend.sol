@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { ESendType, Arrival, ERock, EResource } from "src/Types.sol";
-import { UnitCount, ReversePosition, RockType, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ArrivalCount, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ArrivalCount, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { SendArgs } from "src/Types.sol";
@@ -103,6 +103,18 @@ library LibSend {
       ResourceCount.get(playerEntity, uint8(EResource.U_MaxMoves)) > ArrivalCount.get(playerEntity),
       "[SendUnits] Reached max move count"
     );
+
+    if (PirateAsteroid.get(destination).playerEntity != 0) {
+      require(
+        !DefeatedPirate.get(playerEntity, PirateAsteroid.get(destination).prototype),
+        "[SendUnits] Cannot send to defeated pirate"
+      );
+      require(sendType == ESendType.Raid, "[SendUnits] Can only send to pirate asteroid to raid");
+      require(
+        PirateAsteroid.get(destination).playerEntity == playerEntity,
+        "[SendUnits] Cannot send to other player pirate asteroid"
+      );
+    }
 
     ERock originType = ERock(RockType.get(origin));
     ERock destinationType = ERock(RockType.get(destination));

@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import { addressToEntity, entityToAddress, getSystemResourceId, bytes32ToString } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 // tables
-import { DefeatedPirate, P_DefeatedPirates, P_RequiredUnits, P_RequiredUnitsData, DestroyedUnit, P_DestroyedUnits, P_DestroyedUnitsData, P_ProducedResources, P_ProducedResourcesData, ProducedResource, RaidedResource, P_RaidedResources, P_RaidedResourcesData, P_EnumToPrototype, HasBuiltBuilding, P_HasBuiltBuildings, P_RequiredObjectives, CompletedObjective, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_ProducesUnits, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/index.sol";
+import { ProducedUnit, P_ProducedUnits, P_ProducedUnitsData, DefeatedPirate, P_DefeatedPirates, P_RequiredUnits, P_RequiredUnitsData, DestroyedUnit, P_DestroyedUnits, P_DestroyedUnitsData, P_ProducedResources, P_ProducedResourcesData, ProducedResource, RaidedResource, P_RaidedResources, P_RaidedResourcesData, P_EnumToPrototype, HasBuiltBuilding, P_HasBuiltBuildings, P_RequiredObjectives, CompletedObjective, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_ProducesUnits, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/index.sol";
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -34,6 +34,7 @@ library LibObjectives {
     checkProducedResources(playerEntity, objectivePrototype);
     checkRaidedResources(playerEntity, objectivePrototype);
     checkDestroyedUnits(playerEntity, objectivePrototype);
+    checkProducedUnits(playerEntity, objectivePrototype);
     checkHasRequiredUnits(playerEntity, objectivePrototype);
     checkDefeatedPirateAsteroidRequirement(playerEntity, objectivePrototype);
   }
@@ -108,6 +109,16 @@ library LibObjectives {
       require(
         DestroyedUnit.get(playerEntity, destroyedUnits.units[i]) >= destroyedUnits.amounts[i],
         "[LibObjectives] Player has not destroyed the required units"
+      );
+    }
+  }
+
+  function checkProducedUnits(bytes32 playerEntity, bytes32 objective) internal {
+    P_ProducedUnitsData memory producedUnits = P_ProducedUnits.get(objective);
+    for (uint256 i = 0; i < producedUnits.units.length; i++) {
+      require(
+        ProducedUnit.get(playerEntity, producedUnits.units[i]) >= producedUnits.amounts[i],
+        "[LibObjectives] Player has not produced the required units"
       );
     }
   }

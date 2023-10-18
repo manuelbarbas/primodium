@@ -435,9 +435,9 @@ export const config = mudConfig({
       valueSchema: {
         x: "int32",
         y: "int32",
-        resourceTypes: "uint8[]",
+        resources: "uint8[]",
         resourceAmounts: "uint256[]",
-        unitTypes: "bytes32[]",
+        units: "bytes32[]",
         unitAmounts: "uint256[]",
       },
     },
@@ -447,7 +447,6 @@ export const config = mudConfig({
       valueSchema: {
         playerEntity: "bytes32",
         prototype: "bytes32",
-        defeated: "bool",
       },
     },
 
@@ -553,6 +552,20 @@ export const config = mudConfig({
         units: "bytes32[]",
         amounts: "uint256[]",
       },
+    },
+
+    P_ProducedUnits: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: {
+        // mud doesnt recognize EUnit arrays so we will manually convert them
+        units: "bytes32[]",
+        amounts: "uint256[]",
+      },
+    },
+
+    ProducedUnit: {
+      keySchema: { entity: "bytes32", unit: "bytes32" },
+      valueSchema: "uint256",
     },
   },
 });

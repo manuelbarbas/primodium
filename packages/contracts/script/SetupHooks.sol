@@ -19,7 +19,7 @@ import { QueueItemUnits, QueueItemUnitsTableId } from "codegen/tables/QueueItemU
 import { QueueUnits, QueueUnitsTableId } from "codegen/tables/QueueUnits.sol";
 import { ProducedResourceTableId } from "codegen/tables/ProducedResource.sol";
 import { ProductionRateTableId } from "codegen/tables/ProductionRate.sol";
-
+import { ProducedUnitTableId } from "codegen/tables/ProducedUnit.sol";
 import { OnBefore_ClaimResources } from "src/hooks/systemHooks/OnBefore_ClaimResources.sol";
 import { OnBefore_ClaimUnits } from "src/hooks/systemHooks/OnBefore_ClaimUnits.sol";
 import { OnBefore_SpendResources } from "src/hooks/systemHooks/OnBefore_SpendResources.sol";
@@ -69,6 +69,7 @@ function setupHooks(IWorld world) {
   world.grantAccess(LastClaimedAtTableId, address(onBefore_ClaimUnits));
   world.grantAccess(QueueItemUnitsTableId, address(onBefore_ClaimUnits));
   world.grantAccess(QueueUnitsTableId, address(onBefore_ClaimUnits));
+  world.grantAccess(ProducedUnitTableId, address(onBefore_ClaimUnits));
 
   OnBefore_SpendResources onBefore_SpendResources = new OnBefore_SpendResources();
   world.grantAccess(ResourceCountTableId, address(onBefore_SpendResources));
@@ -262,6 +263,7 @@ function registerInvade(
   world.grantAccess(UnitCountTableId, address(onInvade_TargetClaimResourcesAndUnits));
   world.grantAccess(ProductionRateTableId, address(onInvade_TargetClaimResourcesAndUnits));
   world.grantAccess(ProducedResourceTableId, address(onInvade_TargetClaimResourcesAndUnits));
+  world.grantAccess(ProducedUnitTableId, address(onInvade_TargetClaimResourcesAndUnits));
   world.registerSystemHook(systemId, onInvade_TargetClaimResourcesAndUnits, BEFORE_CALL_SYSTEM);
 }
 
@@ -291,6 +293,7 @@ function registerRaid(
   world.grantAccess(UnitCountTableId, address(onRaid_TargetClaimResourcesAndUnits));
   world.grantAccess(ProductionRateTableId, address(onRaid_TargetClaimResourcesAndUnits));
   world.grantAccess(ProducedResourceTableId, address(onRaid_TargetClaimResourcesAndUnits));
+  world.grantAccess(ProducedUnitTableId, address(onRaid_TargetClaimResourcesAndUnits));
   world.registerSystemHook(systemId, onRaid_TargetClaimResourcesAndUnits, BEFORE_CALL_SYSTEM);
 }
 
