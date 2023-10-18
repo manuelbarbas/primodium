@@ -46,8 +46,7 @@ export function getMotherlodeResource(entity: Entity) {
 }
 
 export function getFullResourceCount(resourceID: Entity, playerEntity: Entity) {
-  // const worldSpeed = comps.P_WorldSpeed.get()?.value ?? SPEED_SCALE;
-  const worldSpeed = 100n;
+  const worldSpeed = comps.P_GameConfig.get()?.worldSpeed ?? 100n;
 
   const resourceCount =
     comps.ResourceCount.getWithKeys({
@@ -70,12 +69,17 @@ export function getFullResourceCount(resourceID: Entity, playerEntity: Entity) {
   const playerLastClaimed = comps.LastClaimedAt.get(playerEntity)?.value ?? 0n;
 
   const resourcesToClaimFromBuilding = (() => {
-    const toClaim = ((getNow() - playerLastClaimed) * production * SPEED_SCALE) / worldSpeed;
+    const toClaim = ((getNow() - playerLastClaimed) * production * worldSpeed) / SPEED_SCALE;
     if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
     return toClaim;
   })();
 
-  return { resourceCount, resourcesToClaim: resourcesToClaimFromBuilding, maxStorage, production };
+  return {
+    resourceCount,
+    resourcesToClaim: resourcesToClaimFromBuilding,
+    maxStorage,
+    production: (production * worldSpeed) / SPEED_SCALE,
+  };
 }
 
 export function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, playerEntity: Entity, count = 1n) {

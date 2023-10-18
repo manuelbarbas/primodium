@@ -2,6 +2,8 @@
 pragma solidity >=0.8.21;
 
 import "test/PrimodiumTest.t.sol";
+import { WorldResourceIdInstance, WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
+import { AccessControl } from "@latticexyz/world/src/AccessControl.sol";
 
 contract BuildSystemTest is PrimodiumTest {
   bytes32 playerEntity;
@@ -18,6 +20,7 @@ contract BuildSystemTest is PrimodiumTest {
   // todo: sort these tests. the first test should be a vanilla build system call
 
   function testBuildLargeBuilding() public {
+    ResourceAccess.set(ROOT_NAMESPACE_ID, creator, true);
     int32[] memory blueprint = get2x2Blueprint();
     bytes32[] memory keys = new bytes32[](1);
     keys[0] = IronMinePrototypeId;
@@ -26,9 +29,9 @@ contract BuildSystemTest is PrimodiumTest {
 
     bytes32 buildingEntity = world.build(EBuilding.IronMine, getIronPosition(creator));
 
-    PositionData memory buildingPosition = Position.get(world, buildingEntity);
+    PositionData memory buildingPosition = Position.get(buildingEntity);
     logPosition(buildingPosition);
-    bytes32[] memory children = Children.get(world, buildingEntity);
+    bytes32[] memory children = Children.get(buildingEntity);
     assertEq(blueprint.length, children.length * 2);
 
     for (uint256 i = 0; i < children.length; i++) {
@@ -115,7 +118,7 @@ contract BuildSystemTest is PrimodiumTest {
     world.build(EBuilding.IronMine, getIronPosition(creator));
     bytes32 ironMinePrototype = P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.IronMine));
     assertGe(
-      P_RequiredResources.lengthResources(world, ironMinePrototype, 2),
+      P_RequiredResources.lengthResources(ironMinePrototype, 2),
       0,
       "Iron Mine Level 2 should have resource requirements"
     );

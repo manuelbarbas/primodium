@@ -12,12 +12,12 @@ contract LibMotherlodeTest is PrimodiumTest {
     gameConfig.maxMotherlodesPerAsteroid = 12;
     gameConfig.motherlodeChanceInv = 2;
     vm.startPrank(creator);
-    P_GameConfig.set(world, gameConfig);
+    P_GameConfig.set(gameConfig);
     vm.stopPrank();
   }
 
   function testIsMotherlode() public {
-    uint256 chanceInv = P_GameConfig.get(world).motherlodeChanceInv;
+    uint256 chanceInv = P_GameConfig.get().motherlodeChanceInv;
     bytes32 entity = 0 << 128;
     assertFalse(LibMotherlode.isMotherlode(entity, chanceInv));
     entity = bytes32(uint256(1 << 128));
@@ -33,7 +33,7 @@ contract LibMotherlodeTest is PrimodiumTest {
   }
 
   function findMotherlode() public returns (bytes32, PositionData memory) {
-    P_GameConfigData memory config = P_GameConfig.get(world);
+    P_GameConfigData memory config = P_GameConfig.get();
     address player = alice;
     bytes32 asteroid = spawn(player);
     PositionData memory sourcePosition = getHomeAsteroidPosition(player);

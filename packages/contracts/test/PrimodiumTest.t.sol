@@ -2,6 +2,10 @@
 pragma solidity >=0.8.21;
 import "forge-std/Test.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
+import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
+import { ResourceAccess, NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
+import { ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
+import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 import "src/utils.sol";
 import "codegen/world/IWorld.sol";
@@ -43,6 +47,11 @@ contract PrimodiumTest is MudTest {
     super.setUp();
     world = IWorld(worldAddress);
     creator = world.creator();
+
+    vm.startPrank(creator);
+    ResourceAccess.set(ROOT_NAMESPACE_ID, creator, true);
+    NamespaceOwner.set(ROOT_NAMESPACE_ID, creator);
+    vm.stopPrank();
 
     alice = getUser();
     bob = getUser();
@@ -109,8 +118,8 @@ contract PrimodiumTest is MudTest {
   }
 
   function getHomeAsteroidPosition(address player) public view returns (PositionData memory) {
-    bytes32 asteroid = Home.get(world, addressToEntity(player)).asteroid;
-    return Position.get(world, asteroid);
+    bytes32 asteroid = Home.get(addressToEntity(player)).asteroid;
+    return Position.get(asteroid);
   }
 
   function getMainBasePosition(address player) internal view returns (PositionData memory) {
@@ -176,7 +185,7 @@ contract PrimodiumTest is MudTest {
     vm.prank(player);
     world.spawn();
     bytes32 playerEntity = addressToEntity(player);
-    return Home.getAsteroid(world, playerEntity);
+    return Home.getAsteroid(playerEntity);
   }
 
   function get2x2Blueprint() internal pure returns (int32[] memory blueprint) {
@@ -197,22 +206,22 @@ contract PrimodiumTest is MudTest {
 
   function removeRequiredTile(EBuilding building) internal {
     bytes32 buildingEntity = P_EnumToPrototype.get(BuildingKey, uint8(building));
-    P_RequiredTile.deleteRecord(world, buildingEntity);
+    P_RequiredTile.deleteRecord(buildingEntity);
   }
 
   function removeRequiredResources(EBuilding building) internal {
     bytes32 buildingEntity = P_EnumToPrototype.get(BuildingKey, uint8(building));
-    uint256 buildingMaxLevel = P_MaxLevel.get(world, buildingEntity);
+    uint256 buildingMaxLevel = P_MaxLevel.get(buildingEntity);
     for (uint256 i = 0; i <= buildingMaxLevel; i++) {
-      P_RequiredResources.deleteRecord(world, buildingEntity, i);
+      P_RequiredResources.deleteRecord(buildingEntity, i);
     }
   }
 
   function removeRequiredMainBase(EBuilding building) internal {
-    bytes32 buildingEntity = P_EnumToPrototype.get(world, BuildingKey, uint8(building));
-    uint256 buildingMaxLevel = P_MaxLevel.get(world, buildingEntity);
+    bytes32 buildingEntity = P_EnumToPrototype.get(BuildingKey, uint8(building));
+    uint256 buildingMaxLevel = P_MaxLevel.get(buildingEntity);
     for (uint256 i = 0; i <= buildingMaxLevel; i++) {
-      P_RequiredBaseLevel.deleteRecord(world, buildingEntity, i);
+      P_RequiredBaseLevel.deleteRecord(buildingEntity, i);
     }
   }
 
