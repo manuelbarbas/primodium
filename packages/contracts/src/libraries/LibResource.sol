@@ -5,7 +5,7 @@ import { EBuilding, EResource } from "src/Types.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { UtilityMap } from "libraries/UtilityMap.sol";
-import { P_IsUtility, P_RequiredResources, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+import { P_IsUtility, Score, P_ScoreMultiplier, P_RequiredResources, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
 import { BuildingKey } from "src/Keys.sol";
 
 library LibResource {
@@ -160,23 +160,23 @@ library LibResource {
 
   function updateScore(
     bytes32 player,
-    bytes32 resource,
-    uint32 value
+    uint8 resource,
+    uint256 value
   ) internal {
     uint256 count = ResourceCount.get(player, resource);
     uint256 currentScore = Score.get(player);
-    uint256 multiplier = P_ScoreMultiplier.get(resource);
+    uint256 scoreChangeAmount = P_ScoreMultiplier.get(resource);
 
-    if (value < currentAmount) {
-      scoreChangeAmount *= (currentAmount - value);
+    if (value < currentScore) {
+      scoreChangeAmount *= (currentScore - value);
       if (scoreChangeAmount > currentScore) {
         scoreChangeAmount = currentScore;
       }
       currentScore -= scoreChangeAmount;
     } else {
-      scoreChangeAmount *= (value - currentAmount);
+      scoreChangeAmount *= (value - currentScore);
       currentScore += scoreChangeAmount;
     }
-    scoreComponent.set(entity, currentScore);
+    Score.set(player, currentScore);
   }
 }

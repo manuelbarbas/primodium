@@ -28,7 +28,6 @@ library LibStorage {
       if (level > 1) {
         maxResourceIncrease -= P_ByLevelMaxResourceUpgrades.get(buildingType, resource, level - 1);
       }
-      LibResource.updateScore(playerEntity, resource, newResourceCount);
       setMaxStorage(playerEntity, resource, maxResource + maxResourceIncrease);
     }
   }

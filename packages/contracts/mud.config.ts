@@ -421,7 +421,7 @@ export const config = mudConfig({
     /* ---------------------------------- Score --------------------------------- */
 
     P_ScoreMultiplier: {
-      keySchema: { entity: "bytes32" },
+      keySchema: { entity: "uint8" },
       valueSchema: "uint256",
     },
     Score: {
