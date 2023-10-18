@@ -3,22 +3,22 @@ pragma solidity >=0.8.21;
 
 import { addressToEntity, entityToAddress, getSystemResourceId, bytes32ToString } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
-import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
+import { ResourceId, ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
 
 import { LibEncode } from "libraries/LibEncode.sol";
 import { BuildingKey } from "src/Keys.sol";
-import { LibResource } from "libraries/LibResource.sol";
+import { LibUnit } from "libraries/LibUnit.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
 import { ESendType, SendArgs, ERock, Arrival } from "src/Types.sol";
 import { OwnedBy } from "codegen/tables/OwnedBy.sol";
 
 /**
- * @title OnTrainUnits_ClaimResources
- * @dev This contract is a system hook that claims resources for target player.
+ * @title OnBefore_ClaimUnits
+ * @dev This contract is a system hook that claims resources for player.
  */
-contract OnTrainUnits_ClaimResources is SystemHook {
+contract OnBefore_ClaimUnits is SystemHook {
   constructor() {}
 
   /**
@@ -32,9 +32,10 @@ contract OnTrainUnits_ClaimResources is SystemHook {
     ResourceId systemId,
     bytes memory callData
   ) public {
-    // Get the player's entity and decode the space rock identifier from the callData
+    // Get the player's entity
     bytes32 playerEntity = addressToEntity(msgSender);
-    LibResource.claimAllResources(playerEntity);
+
+    LibUnit.claimUnits(playerEntity);
   }
 
   /**
