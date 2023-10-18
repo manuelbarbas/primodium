@@ -43,6 +43,7 @@ export const config = mudConfig({
         motherlodeChanceInv: "uint256",
         motherlodeDistance: "uint256",
         moveSpeed: "uint256",
+        worldSpeed: "uint256",
       },
     },
 

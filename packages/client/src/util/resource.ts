@@ -3,7 +3,7 @@ import { EResource, MUDEnums } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
 import { Hex } from "viem";
-import { EntityType, ResourceType, ResourceEnumLookup, SPEED_SCALE, ResourceEntityLookup } from "./constants";
+import { EntityType, ResourceEntityLookup, ResourceEnumLookup, ResourceType, SPEED_SCALE } from "./constants";
 import { getNow } from "./time";
 import { getUnitStats } from "./trainUnits";
 import { ERock } from "./web3/types";
@@ -56,8 +56,7 @@ export function getFullResourceCount(resourceID: Entity, playerEntity: Entity) {
     HasValue(comps.OwnedBy, { value: playerEntity }),
     HasValue(comps.RockType, { value: ERock.Motherlode }),
   ];
-  // const worldSpeed = comps.P_WorldSpeed.get()?.value ?? SPEED_SCALE;
-  const worldSpeed = 100n;
+  const worldSpeed = comps.P_GameConfig.get()?.worldSpeed ?? 100n;
   const motherlodes = Array.from(runQuery(query));
 
   let motherlodeProduction = 0n;
@@ -93,13 +92,13 @@ export function getFullResourceCount(resourceID: Entity, playerEntity: Entity) {
       ?.value ?? 0n;
 
   const production = (() => {
-    return buildingProduction + motherlodeProduction;
+    return (worldSpeed * (buildingProduction + motherlodeProduction)) / SPEED_SCALE;
   })();
 
   const playerLastClaimed = comps.LastClaimedAt.get(playerEntity)?.value ?? 0n;
 
   const resourcesToClaimFromBuilding = (() => {
-    const toClaim = ((getNow() - playerLastClaimed) * buildingProduction * SPEED_SCALE) / worldSpeed;
+    const toClaim = ((getNow() - playerLastClaimed) * buildingProduction * worldSpeed) / SPEED_SCALE;
     if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
     return toClaim;
   })();

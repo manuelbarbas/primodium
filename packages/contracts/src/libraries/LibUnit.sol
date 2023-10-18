@@ -3,12 +3,15 @@ pragma solidity >=0.8.21;
 
 import { console } from "forge-std/console.sol";
 import { BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
+import { BuildingType, Motherlode, ProductionRate, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProduction, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
+
 import { ERock, EUnit } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
 import { UnitKey } from "src/Keys.sol";
+import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 library LibUnit {
   /**
@@ -70,9 +73,11 @@ library LibUnit {
     while (stillClaiming) {
       UnitProductionQueueData memory item = UnitProductionQueue.peek(building);
       uint256 trainingTime = getUnitBuildTime(playerEntity, building, item.unitId);
+      P_GameConfigData memory config = P_GameConfig.get();
       uint256 trainedUnits = LibMath.min(
         item.quantity,
-        ((block.timestamp - startTime) * 100) / (trainingTime * P_GameConfig.getUnitProductionRate())
+        ((block.timestamp - startTime) * config.worldSpeed * 100) /
+          (trainingTime * config.unitProductionRate * WORLD_SPEED_SCALE)
       );
 
       if (trainedUnits == 0) return;
