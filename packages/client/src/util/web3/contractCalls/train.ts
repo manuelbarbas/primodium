@@ -1,17 +1,9 @@
 import { Entity } from "@latticexyz/recs";
+import { EUnit } from "contracts/config/enums";
 import { SetupNetworkResult } from "src/network/types";
+import { Hex } from "viem";
 
-export const train = async (buildingEntity: Entity, type: Entity, count: number, network: SetupNetworkResult) => {
-  // const receipt = await execute(
-  //   systems["system.TrainUnits"].executeTyped(buildingEntity, type, count, {
-  //     gasLimit: 28_000_000,
-  //   }),
-  //   providers
-  // );
-  // ampli.systemTrainUnits({
-  //   buildingName: BlockIdToKey[buildingEntity],
-  //   unitName: BlockIdToKey[type],
-  //   unitCount: count,
-  //   ...parseReceipt(receipt),
-  // });
+export const train = async (buildingEntity: Entity, unit: EUnit, count: bigint, network: SetupNetworkResult) => {
+  const tx = await network.worldContract.write.trainUnits([buildingEntity as Hex, unit, count]);
+  await network.waitForTransaction(tx);
 };

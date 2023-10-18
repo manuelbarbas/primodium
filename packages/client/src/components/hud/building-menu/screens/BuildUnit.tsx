@@ -1,4 +1,11 @@
-import { BackgroundImage, EntityType, RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
+import {
+  BackgroundImage,
+  EntityType,
+  RESOURCE_SCALE,
+  ResourceImage,
+  ResourceType,
+  UnitEnumLookup,
+} from "src/util/constants";
 import { getBlockTypeName } from "src/util/common";
 import { useEffect, useMemo, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
@@ -14,6 +21,7 @@ import { SecondaryCard } from "src/components/core/Card";
 import { Badge } from "src/components/core/Badge";
 import { components } from "src/network/components";
 import { useMaxCountOfRecipe } from "src/hooks/useMaxCountOfRecipe";
+import { train } from "src/util/web3/contractCalls/train";
 
 export const BuildUnit: React.FC<{
   building: Entity;
@@ -123,7 +131,9 @@ export const BuildUnit: React.FC<{
                   className="btn-sm btn-secondary"
                   disabled={maximum < count || count < 1}
                   onClick={() => {
-                    // train(building, selectedUnit, count, network);
+                    if (!selectedUnit) return;
+
+                    train(building, UnitEnumLookup[selectedUnit], BigInt(count), mud.network);
                   }}
                 >
                   Train
