@@ -71,6 +71,78 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     world.claimObjective(EObjectives.BuildFirstIronMine);
   }
 
+  function testClaimObjectiveReceiveResourceRewards() public {
+    ResourceCount.set(playerEntity, uint8(EResource.Iron), 0);
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)));
+    P_ResourceRewardData memory resourceRewardData = P_ResourceRewardData(new uint8[](1), new uint256[](1));
+    resourceRewardData.resources[0] = uint8(EResource.Iron);
+    resourceRewardData.amounts[0] = 100;
+    P_ResourceReward.set(
+      P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)),
+      resourceRewardData
+    );
+    world.claimObjective(EObjectives.BuildFirstIronMine);
+    assertEq(
+      ResourceCount.get(playerEntity, uint8(EResource.Iron)),
+      resourceRewardData.amounts[0],
+      "Resource does not match"
+    );
+  }
+
+  function testFailClaimObjectiveReceiveResourceRewards() public {
+    ResourceCount.set(playerEntity, uint8(EResource.Iron), 0);
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)));
+    P_ResourceRewardData memory resourceRewardData = P_ResourceRewardData(new uint8[](1), new uint256[](1));
+    resourceRewardData.resources[0] = uint8(EResource.Iron);
+    resourceRewardData.amounts[0] = 100;
+    P_ResourceReward.set(
+      P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)),
+      resourceRewardData
+    );
+    MaxResourceCount.set(playerEntity, uint8(EResource.Iron), 0);
+    world.claimObjective(EObjectives.BuildFirstIronMine);
+  }
+
+  function testClaimObjectiveReceiveUnitRewards() public {
+    UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit1, 0);
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)));
+    P_UnitRewardData memory unitRewardData = P_UnitRewardData(new bytes32[](1), new uint256[](1));
+    unitRewardData.unitTypes[0] = unit1;
+    unitRewardData.amounts[0] = 100;
+    P_UnitReward.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)), unitRewardData);
+
+    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
+    requiredResourcesData.resources[0] = uint8(EResource.U_Housing);
+    requiredResourcesData.amounts[0] = 1;
+    P_RequiredResources.set(unit1, 1, requiredResourcesData);
+
+    // provide the required housing
+    LibProduction.increaseResourceProduction(playerEntity, EResource.U_Housing, 100);
+
+    world.claimObjective(EObjectives.BuildFirstIronMine);
+    assertEq(
+      UnitCount.get(playerEntity, Home.get(playerEntity).asteroid, unit1),
+      unitRewardData.amounts[0],
+      "Unit count does not match"
+    );
+  }
+
+  function testFailClaimObjectiveReceiveUnitRewards() public {
+    UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit1, 0);
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)));
+    P_UnitRewardData memory unitRewardData = P_UnitRewardData(new bytes32[](1), new uint256[](1));
+    unitRewardData.unitTypes[0] = unit1;
+    unitRewardData.amounts[0] = 100;
+    P_UnitReward.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)), unitRewardData);
+
+    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
+    requiredResourcesData.resources[0] = uint8(EResource.U_Housing);
+    requiredResourcesData.amounts[0] = 1;
+    P_RequiredResources.set(unit1, 1, requiredResourcesData);
+
+    world.claimObjective(EObjectives.BuildFirstIronMine);
+  }
+
   function testFailClaimObjectiveTwice() public {
     P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)));
     world.claimObjective(EObjectives.BuildFirstIronMine);

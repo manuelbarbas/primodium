@@ -23,6 +23,11 @@ export const config = mudConfig({
       accessList: ["RaidSystem", "InvadeSystem"],
       name: "S_BattleSystem",
     },
+    S_SpawnPirateAsteroid: {
+      openAccess: false,
+      accessList: ["ClaimObjectiveSystem"],
+      name: "S_SpawnPirateAsteroid",
+    },
   },
 
   enums: MUDEnums,

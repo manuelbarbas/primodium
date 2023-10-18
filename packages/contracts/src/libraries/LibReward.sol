@@ -24,6 +24,7 @@ import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 library LibReward {
   function receiveRewards(bytes32 playerEntity, bytes32 prototype) internal {
     receiveUnitRewards(playerEntity, prototype);
+    receiveResourceRewards(playerEntity, prototype);
   }
 
   function receiveUnitRewards(bytes32 playerEntity, bytes32 prototype) internal {

@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
-import { RaidedResource, RockType, OwnedBy, BattleResultData, RaidResult, RaidResultData, P_IsUtility, P_UnitPrototypes, Home } from "codegen/index.sol";
+import { PirateAsteroid, DefeatedPirate, RaidedResource, RockType, OwnedBy, BattleResultData, RaidResult, RaidResultData, P_IsUtility, P_UnitPrototypes, Home } from "codegen/index.sol";
 import { ERock, ESendType, EResource } from "src/Types.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
 import { LibResource } from "libraries/LibResource.sol";
@@ -57,7 +57,8 @@ library LibRaid {
       raidedAmount: new uint256[](defenderResources.length)
     });
     if (br.winner != br.attacker) return raidResult;
-
+    if (PirateAsteroid.get(br.rock).playerEntity == br.attacker)
+      DefeatedPirate.set(br.attacker, PirateAsteroid.get(br.rock).prototype, true);
     if (br.totalCargo == 0 || totalResources == 0) return raidResult;
 
     for (uint8 i = 1; i < defenderResources.length; i++) {
