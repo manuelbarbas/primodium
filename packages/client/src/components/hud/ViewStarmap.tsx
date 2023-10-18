@@ -1,26 +1,27 @@
 import { primodium } from "@game/api";
 import { KeybindActions, Scenes } from "@game/constants";
-import { SingletonID } from "@latticexyz/network";
 import { useEffect } from "react";
 import { FaCrosshairs } from "react-icons/fa";
-import { Position } from "src/network/components/chainComponents";
-import { HomeAsteroid, MapOpen, Send } from "src/network/components/clientComponents";
 import { Button } from "../core/Button";
+import { components } from "src/network/components";
+import { Entity } from "@latticexyz/recs";
+import { useMud } from "src/hooks";
 
 export const ViewStarmap = () => {
-  const mapOpen = MapOpen.use(SingletonID, {
+  const mud = useMud();
+  const mapOpen = components.MapOpen.use(undefined, {
     value: false,
   }).value;
   const { transitionToScene } = primodium.api().scene;
 
   const closeMap = async () => {
     await transitionToScene(Scenes.Starmap, Scenes.Asteroid, 0);
-    MapOpen.set({ value: false });
+    components.MapOpen.set({ value: false });
   };
 
   const openMap = async () => {
     await transitionToScene(Scenes.Asteroid, Scenes.Starmap, 0);
-    MapOpen.set({ value: true });
+    components.MapOpen.set({ value: true });
   };
 
   useEffect(() => {
@@ -49,9 +50,10 @@ export const ViewStarmap = () => {
             className="btn-sm flex border border-secondary"
             onClick={() => {
               const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
-              const homeAsteroid = HomeAsteroid.get()?.value;
-              Send.setDestination(homeAsteroid);
-              const coord = Position.get(homeAsteroid) ?? { x: 0, y: 0 };
+              //TODO - fix entity conversion
+              const homeAsteroid = components.Home.get(mud.network.playerEntity)?.asteroid as Entity | undefined;
+              // Send.setDestination(homeAsteroid);
+              const coord = components.Position.get(homeAsteroid) ?? { x: 0, y: 0 };
               pan(coord);
               zoomTo(2);
             }}

@@ -53,3 +53,9 @@ export function getUnitTrainingTime(rawPlayer: Entity, rawBuilding: Entity, rawU
 
   return time;
 }
+
+export function isUnitFactory(building: Entity) {
+  const buildingType = comps.BuildingType.get(building)?.value;
+  if (!buildingType) return false;
+  return !comps.P_ProducesUnits.getWithKeys({ prototype: buildingType as Hex })?.value;
+}

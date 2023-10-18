@@ -16,10 +16,7 @@ export const createTilemap = (
   backgroundTile: [number, ...number[]] = [0]
 ) => {
   //create empty tilemap to create tilesets
-  const emptyMap = new Phaser.Tilemaps.Tilemap(
-    scene,
-    new Phaser.Tilemaps.MapData()
-  );
+  const emptyMap = new Phaser.Tilemaps.Tilemap(scene, new Phaser.Tilemaps.MapData());
 
   const generatedTilesets: Record<string, Phaser.Tilemaps.Tileset> = {};
 

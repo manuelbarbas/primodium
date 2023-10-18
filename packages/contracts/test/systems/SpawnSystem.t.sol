@@ -14,12 +14,12 @@ contract SpawnSystemTest is PrimodiumTest {
     spawn(creator);
     vm.startPrank(creator);
 
-    bool spawned = Spawned.get(world, playerEntity);
+    bool spawned = Spawned.get(playerEntity);
     assertTrue(spawned, "Player should have spawned");
-    assertEq(Home.getAsteroid(world, playerEntity), asteroidEntity, "Player should have spawned on their own asteroid");
-    assertEq(RockType.get(world, asteroidEntity), uint8(ERock.Asteroid), "Asteroid should be a normal asteroid");
+    assertEq(Home.getAsteroid(playerEntity), asteroidEntity, "Player should have spawned on their own asteroid");
+    assertEq(RockType.get(asteroidEntity), uint8(ERock.Asteroid), "Asteroid should be a normal asteroid");
 
-    assertEq(Level.get(world, playerEntity), 1, "Player should have level 1");
+    assertEq(Level.get(playerEntity), 1, "Player should have level 1");
   }
 
   function testSpawnTwice() public {
@@ -36,8 +36,8 @@ contract SpawnSystemTest is PrimodiumTest {
       bytes32 playerEntity = addressToEntity(newAddress);
       PositionData memory position = LibAsteroid.getUniqueAsteroidPosition(i);
       spawn(newAddress);
-      bytes32 asteroid = Home.getAsteroid(world, playerEntity);
-      PositionData memory retrievedPosition = Position.get(world, asteroid);
+      bytes32 asteroid = Home.getAsteroid(playerEntity);
+      PositionData memory retrievedPosition = Position.get(asteroid);
       assertEq(position, retrievedPosition);
     }
   }
@@ -49,15 +49,15 @@ contract SpawnSystemTest is PrimodiumTest {
     // PositionData memory calculatedPosition = PositionData(maxRange.xBounds / 2, maxRange.yBounds / 2, asteroid);
     // logPosition(calculatedPosition);
 
-    PositionData memory coord = Position.get(world, MainBasePrototypeId);
+    PositionData memory coord = Position.get(MainBasePrototypeId);
     coord.parent = asteroid;
     bytes32 buildingEntity = LibEncode.getHash(BuildingKey, coord);
-    PositionData memory position = Position.get(world, buildingEntity);
+    PositionData memory position = Position.get(buildingEntity);
     assertEq(position.x, coord.x, "x values differ");
     assertEq(position.y, coord.y, "y values differ");
 
-    assertTrue(OwnedBy.get(world, buildingEntity) != 0);
-    assertEq(OwnedBy.get(world, buildingEntity), addressToEntity(creator));
+    assertTrue(OwnedBy.get(buildingEntity) != 0);
+    assertEq(OwnedBy.get(buildingEntity), addressToEntity(creator));
   }
 
   function testBuildBeforeSpawnFail() public {
