@@ -14,9 +14,9 @@ import { getBlueprint } from "./util/blueprints";
 import encodeBytes32 from "./util/encodeBytes32";
 
 const mainBaseMaxResourceUpgrades = {
-  1: { Iron: 175000, Copper: 135000, Lithium: 54000, IronPlate: 30000 },
-  2: { Iron: 540000, Copper: 270000, Lithium: 100000, IronPlate: 70000, PVCell: 27000 },
-  3: { Iron: 1440000, Copper: 720000, Sulfur: 144000, IronPlate: 155200, Alloy: 72000, PVCell: 50000 },
+  1: { Iron: 175000, Copper: 135000, Lithium: 54000, IronPlate: 30000, U_Vessel: 1 },
+  2: { Iron: 540000, Copper: 270000, Lithium: 100000, IronPlate: 70000, PVCell: 27000, U_Vessel: 1 },
+  3: { Iron: 1440000, Copper: 720000, Sulfur: 144000, IronPlate: 155200, Alloy: 72000, PVCell: 50000, U_Vessel: 1 },
   4: {
     Iron: 3600000,
     Copper: 1800000,
@@ -29,6 +29,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 40000,
     Iridium: 25000,
     Kimberlite: 10000,
+    U_Vessel: 1,
   },
   5: {
     Iron: 5760000,
@@ -42,6 +43,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 300000,
     Iridium: 200000,
     Kimberlite: 100000,
+    U_Vessel: 1,
   },
   6: {
     Iron: 8640000,
@@ -55,6 +57,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 600000,
     Iridium: 600000,
     Kimberlite: 250000,
+    U_Vessel: 1,
   },
   7: {
     Iron: 17280000,
@@ -68,6 +71,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 700000,
     Iridium: 700000,
     Kimberlite: 700000,
+    U_Vessel: 1,
   },
   8: {
     Iron: 34560000,
@@ -81,6 +85,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 800000,
     Iridium: 800000,
     Kimberlite: 800000,
+    U_Vessel: 1,
   },
 };
 
@@ -905,7 +910,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       5: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 220000 }),
         P_RequiredBaseLevel: { value: 8n },
-        P_RequiredResources: getResourceValues({ Platinum: 500, Titanium: 1500, U_Housing: 2 }),
+        P_RequiredResources: getResourceValues({ Platinum: 500, Titanium: 1500, U_Vessel: 2 }),
         P_Unit: {
           attack: 737n,
           defense: 187n,
@@ -922,7 +927,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
     levels: {
       0: {
-        P_RequiredResources: getResourceValues({ Sulfur: 2000, IronPlate: 3000, PVCell: 5000, U_Housing: 1 }),
+        P_RequiredResources: getResourceValues({ Sulfur: 2000, IronPlate: 3000, PVCell: 5000, U_Vessel: 1 }),
         P_MiningRate: { value: 1n },
         P_Unit: {
           attack: 20n,
@@ -935,7 +940,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredUpgradeResources: getResourceValues({ Titanium: 10000 }),
         P_RequiredBaseLevel: { value: 3n },
-        P_RequiredResources: getResourceValues({ Sulfur: 2000, IronPlate: 3000, PVCell: 5000, U_Housing: 1 }),
+        P_RequiredResources: getResourceValues({ Sulfur: 2000, IronPlate: 3000, PVCell: 5000, U_Vessel: 1 }),
         P_MiningRate: { value: 2n },
         P_Unit: {
           attack: 25n,
@@ -948,7 +953,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       2: {
         P_RequiredUpgradeResources: getResourceValues({ Platinum: 10000 }),
         P_RequiredBaseLevel: { value: 4n },
-        P_RequiredResources: getResourceValues({ Sulfur: 2000, IronPlate: 3000, PVCell: 5000, U_Housing: 1 }),
+        P_RequiredResources: getResourceValues({ Sulfur: 2000, IronPlate: 3000, PVCell: 5000, U_Vessel: 1 }),
         P_MiningRate: { value: 3n },
         P_Unit: {
           attack: 35n,
@@ -961,7 +966,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       3: {
         P_RequiredUpgradeResources: getResourceValues({ Iridium: 10000 }),
         P_RequiredBaseLevel: { value: 6n },
-        P_RequiredResources: getResourceValues({ Sulfur: 2000, IronPlate: 3000, PVCell: 5000, U_Housing: 1 }),
+        P_RequiredResources: getResourceValues({ Sulfur: 2000, IronPlate: 3000, PVCell: 5000, U_Vessel: 1 }),
         P_MiningRate: { value: 4n },
         P_Unit: {
           attack: 45n,
@@ -974,7 +979,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       4: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 20000 }),
         P_RequiredBaseLevel: { value: 7n },
-        P_RequiredResources: getResourceValues({ Sulfur: 2000, IronPlate: 3000, PVCell: 5000, U_Housing: 1 }),
+        P_RequiredResources: getResourceValues({ Sulfur: 2000, IronPlate: 3000, PVCell: 5000, U_Vessel: 1 }),
         P_MiningRate: { value: 5n },
         P_Unit: {
           attack: 55n,
@@ -987,7 +992,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       5: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 50000 }),
         P_RequiredBaseLevel: { value: 8n },
-        P_RequiredResources: getResourceValues({ Sulfur: 2000, IronPlate: 3000, PVCell: 5000, U_Housing: 3 }),
+        P_RequiredResources: getResourceValues({ Sulfur: 2000, IronPlate: 3000, PVCell: 5000, U_Vessel: 3 }),
         P_MiningRate: { value: 6n },
         P_Unit: {
           attack: 55n,
