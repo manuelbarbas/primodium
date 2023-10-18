@@ -96,12 +96,14 @@ contract LibSendTest is PrimodiumTest {
   }
 
   function setupArrivalLength(
+    uint256 worldSpeed,
     uint256 moveSpeed,
     uint256 distance,
     uint256 unitSpeed
   ) private returns (Arrival memory) {
     P_GameConfigData memory config = P_GameConfig.get();
     config.moveSpeed = moveSpeed;
+    config.worldSpeed = worldSpeed;
 
     P_GameConfig.set(config);
     Position.set(arrival.origin, 0, 0, 0);
@@ -117,26 +119,23 @@ contract LibSendTest is PrimodiumTest {
 
   function testGetArrivalTime(
     uint256 moveSpeed,
-    uint256 distance,
-    uint256 unitSpeed,
+    uint32 distance,
     uint256 worldSpeed
   ) public {
-    vm.assume(moveSpeed < 10000);
-    vm.assume(distance < 10000);
-    vm.assume(unitSpeed < 10000);
-    vm.assume(worldSpeed < 10000);
+    uint256 unitSpeed = 100;
+    vm.assume(moveSpeed < 1000);
+    vm.assume(distance < 1000);
+    vm.assume(worldSpeed < 1000);
     vm.assume(moveSpeed > 0);
-    vm.assume(distance > 0);
-    vm.assume(unitSpeed > 0);
     vm.assume(worldSpeed > 0);
 
-    Arrival memory testArrival = setupArrivalLength(moveSpeed, distance, unitSpeed);
+    Arrival memory testArrival = setupArrivalLength(worldSpeed, moveSpeed, distance, unitSpeed);
 
     uint256 expected = block.timestamp + ((distance * 100 * 100 * 100) / (worldSpeed * moveSpeed * unitSpeed));
     assertEq(
       LibSend.getArrivalTime(
-        Position.get(testArrival.origin),
-        Position.get(testArrival.destination),
+        PositionData(0, 0, 0),
+        PositionData(0, int32(distance), 0),
         testArrival.from,
         testArrival.unitCounts
       ),
