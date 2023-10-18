@@ -13,7 +13,6 @@ import { Navigator } from "src/components/core/Navigator";
 import { SecondaryCard } from "src/components/core/Card";
 import { Badge } from "src/components/core/Badge";
 import { components } from "src/network/components";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useMaxCountOfRecipe } from "src/hooks/useMaxCountOfRecipe";
 
 export const BuildUnit: React.FC<{
@@ -38,7 +37,7 @@ export const BuildUnit: React.FC<{
   }, [selectedUnit, UnitLevel, playerEntity]);
 
   const requiredResources = useMemo(() => {
-    return getRecipe(selectedUnit ?? singletonEntity, unitLevel);
+    return getRecipe(selectedUnit ?? EntityType.NULL, unitLevel);
   }, [selectedUnit, unitLevel]);
 
   const maximum = useMaxCountOfRecipe(requiredResources, playerEntity);
@@ -86,7 +85,7 @@ export const BuildUnit: React.FC<{
               <p className="uppercase font-bold">{getBlockTypeName(selectedUnit)}</p>
 
               <div className="grid grid-cols-5 gap-2 border-y border-cyan-400/30">
-                {Object.entries(getUnitStats(selectedUnit)).map(([name, value]) => (
+                {Object.entries(getUnitStats(selectedUnit, playerEntity)).map(([name, value]) => (
                   <div key={name} className="flex flex-col items-center">
                     <p className="text-xs opacity-50">{name}</p>
                     <p>{value.toLocaleString()}</p>

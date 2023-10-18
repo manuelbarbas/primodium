@@ -1,15 +1,15 @@
 import { Entity } from "@latticexyz/recs";
 import { components as comps } from "src/network/components";
-import { Account } from "src/network/components/clientComponents";
 import { Hex } from "viem";
 import { RESOURCE_SCALE } from "./constants";
 
-export function getUnitStats(rawUnitEntity: Entity) {
-  const player = Account.get()?.value as Hex;
+export function getUnitStats(rawUnitEntity: Entity, playerEntity: Entity) {
   const unitEntity = rawUnitEntity as Hex;
-  if (!player) throw new Error("No player account");
 
-  const unitLevel = comps.UnitLevel.getWithKeys({ entity: player, unit: unitEntity }, { value: 0n })?.value;
+  const unitLevel = comps.UnitLevel.getWithKeys(
+    { entity: playerEntity as Hex, unit: unitEntity },
+    { value: 0n }
+  )?.value;
   const unitLevelKeys = { entity: unitEntity, level: unitLevel };
 
   const { attack, defense, speed, cargo } = comps.P_Unit.getWithKeys(unitLevelKeys, {
