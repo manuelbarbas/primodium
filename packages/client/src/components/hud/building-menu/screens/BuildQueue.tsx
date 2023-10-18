@@ -1,16 +1,16 @@
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import { SecondaryCard } from "src/components/core/Card";
 import { Loader } from "src/components/core/Loader";
 import { Navigator } from "src/components/core/Navigator";
-import { TrainingQueue } from "src/network/components/clientComponents";
+import { components } from "src/network/components";
 import { useGameStore } from "src/store/GameStore";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage } from "src/util/constants";
 
-export const BuildQueue: React.FC<{ building: EntityID }> = ({ building }) => {
+export const BuildQueue: React.FC<{ building: Entity }> = ({ building }) => {
   const transactionLoading = useGameStore((state) => state.transactionLoading);
 
-  const rawQueue = TrainingQueue.use(building);
+  const rawQueue = components.TrainingQueue.use(building);
 
   const queue = rawQueue ? convertTrainingQueue(rawQueue) : [];
 
@@ -64,12 +64,12 @@ export const BuildQueue: React.FC<{ building: EntityID }> = ({ building }) => {
 
 const ProgressBar: React.FC<{
   index: number;
-  unit: EntityID;
+  unit: Entity;
   progress: number;
-  count: number;
-  timeRemaining: number;
+  count: bigint;
+  timeRemaining: bigint;
 }> = ({ index, unit, count, progress, timeRemaining }) => {
-  const unitsLeft = Math.ceil((1 - progress) * count);
+  const unitsLeft = Math.ceil((1 - progress) * Number(count));
   if (index === 0) {
     return (
       <SecondaryCard key={index} className={`w-full text-sm flex-row justify-between p-2`}>
@@ -85,7 +85,7 @@ const ProgressBar: React.FC<{
             <p className="rounded-md bg-cyan-700 text-xs p-1">x{unitsLeft} REMAINING</p>
           </div>
           <p className="min-w-fit w-full bg-slate-900 text-xs text-center rounded-md mt-1">
-            {timeRemaining} BLOCKS TILL NEXT
+            {Number(timeRemaining)} BLOCKS TILL NEXT
           </p>
         </div>
       </SecondaryCard>
@@ -104,7 +104,7 @@ const ProgressBar: React.FC<{
           src={BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"}
           className={`border border-cyan-400 w-4 h-4 rounded-xs`}
         />
-        <p className="rounded-md bg-cyan-700 text-xs p-1">x{count}</p>
+        <p className="rounded-md bg-cyan-700 text-xs p-1">x{count.toLocaleString()}</p>
       </div>
     </SecondaryCard>
   );
@@ -125,10 +125,10 @@ const TrainingProgressSpinner: React.FC = () => {
 };
 
 const convertTrainingQueue = (raw: {
-  units: EntityID[];
+  units: Entity[];
   progress: number[];
-  timeRemaining: number[];
-  counts: number[];
+  timeRemaining: bigint[];
+  counts: bigint[];
 }) => {
   return raw.units.map((unit, index) => ({
     unit,

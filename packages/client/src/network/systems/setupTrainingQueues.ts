@@ -3,11 +3,13 @@ import { getNow } from "src/util/time";
 import { getUnitTrainingTime } from "src/util/trainUnits";
 import { Hex } from "viem";
 import { components } from "../components";
-import { ActiveAsteroid, BlockNumber } from "../components/clientComponents";
+import { BlockNumber } from "../components/clientComponents";
 import { world } from "../world";
+import { SetupResult } from "../types";
 
-export function setupTrainingQueues() {
-  const { BuildingType, LastClaimedAt, OwnedBy, Position, Hangar, QueueUnits, QueueItemUnits, TrainingQueue } =
+export function setupTrainingQueues(mud: SetupResult) {
+  const playerEntity = mud.network.playerEntity;
+  const { BuildingType, LastClaimedAt, OwnedBy, Position, Hangar, QueueUnits, QueueItemUnits, TrainingQueue, Home } =
     components;
 
   function peek(queueId: Entity) {
@@ -36,7 +38,7 @@ export function setupTrainingQueues() {
 
   function updateFront(
     queueId: Entity,
-    item: { unit: Entity; count: bigint; progress: bigint; timeRemaining: bigint }
+    item: { unit: Entity; count: bigint; progress: number; timeRemaining: bigint }
   ) {
     const trainingQueueData = TrainingQueue.get(queueId);
     if (!trainingQueueData || trainingQueueData.units.length == 0) throw new Error("trainingQueue empty");
@@ -86,7 +88,7 @@ export function setupTrainingQueues() {
       // }
     }
 
-    data.progress.push(0n);
+    data.progress.push(0);
     data.timeRemaining.push(0n);
     TrainingQueue.set(data, queueId);
     updateTrainingQueue(queueId);
@@ -124,7 +126,7 @@ export function setupTrainingQueues() {
   defineComponentSystem(world, BlockNumber, (update) => {
     const query = [
       HasValue(Position, {
-        parent: ActiveAsteroid.get()?.value,
+        parent: Home.get(playerEntity)?.asteroid,
       }),
       Has(BuildingType),
     ];

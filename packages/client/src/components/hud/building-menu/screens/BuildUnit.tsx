@@ -1,91 +1,55 @@
-import { BackgroundImage, BlockType, ResourceImage, ResourceType } from "src/util/constants";
+import { BackgroundImage, EntityType, RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
 import { getBlockTypeName } from "src/util/common";
 import { useEffect, useMemo, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
-import { EntityID } from "@latticexyz/recs";
-import { train } from "src/util/web3";
+import { Entity } from "@latticexyz/recs";
 import { useMud } from "src/hooks";
-import { getUnitStats, useTrainableUnits } from "src/util/trainUnits";
-import {
-  Level,
-  MaxUtility,
-  OccupiedUtilityResource,
-  P_RequiredResources,
-  P_RequiredUtility,
-} from "src/network/components/chainComponents";
-import { hashKeyEntity } from "src/util/encode";
-import ResourceIconTooltip from "../../../shared/ResourceIconTooltip";
-import { Account } from "src/network/components/clientComponents";
-import { useGameStore } from "src/store/GameStore";
+import { Hex } from "viem";
+import { getUnitStats } from "src/util/trainUnits";
+import { ResourceIconTooltip } from "../../../shared/ResourceIconTooltip";
 import { NumberInput } from "src/components/shared/NumberInput";
-import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
-import { SingletonID } from "@latticexyz/network";
 import { getRecipe } from "src/util/resource";
 import { Navigator } from "src/components/core/Navigator";
 import { SecondaryCard } from "src/components/core/Card";
 import { Badge } from "src/components/core/Badge";
+import { components } from "src/network/components";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { useMaxCountOfRecipe } from "src/hooks/useMaxCountOfRecipe";
 
 export const BuildUnit: React.FC<{
-  building: EntityID;
+  building: Entity;
 }> = ({ building }) => {
-  const network = useMud();
-  const [selectedUnit, setSelectedUnit] = useState<EntityID>();
+  const mud = useMud();
+  const [selectedUnit, setSelectedUnit] = useState<Entity>();
   const [count, setCount] = useState(1);
-  const transactionLoading = useGameStore((state) => state.transactionLoading);
-  const account = Account.use(undefined, { value: "0" as EntityID }).value;
+  const playerEntity = mud.network.playerEntity;
+  const trainableUnits = [EntityType.AnvilLightDrone, EntityType.HammerLightDrone, EntityType.StingerDrone];
+
+  const { UnitLevel } = components;
 
   useEffect(() => {
     setCount(1);
   }, [selectedUnit]);
 
-  const playerResourceEntity = hashKeyEntity(BlockType.Housing, account);
+  const unitLevel = useMemo(() => {
+    if (!selectedUnit) return 1n;
 
-  const totalUnits = OccupiedUtilityResource.use(playerResourceEntity, {
-    value: 0,
-  }).value;
-  const maximum = MaxUtility.use(playerResourceEntity, { value: 0 }).value;
-  const trainableUnits = useTrainableUnits(building);
-
-  const unitLevelEntity = useMemo(() => {
-    if (!selectedUnit) return undefined;
-    const playerUnitEntity = hashKeyEntity(selectedUnit, account);
-    const level = Level.get(playerUnitEntity, { value: 0 }).value;
-    return hashKeyEntity(selectedUnit, level);
-  }, [selectedUnit]);
-
-  const requiredHousing = useMemo(() => {
-    if (!unitLevelEntity) return 0;
-    const raw = P_RequiredUtility.get(unitLevelEntity);
-    if (!raw) return 0;
-    const amountIndex = raw.resourceIDs.indexOf(BlockType.Housing);
-    return amountIndex == -1 ? 0 : raw.requiredAmounts[amountIndex];
-  }, [unitLevelEntity]);
+    return UnitLevel.getWithKeys({ entity: playerEntity as Hex, unit: selectedUnit as Hex })?.value ?? 1n;
+  }, [selectedUnit, UnitLevel, playerEntity]);
 
   const requiredResources = useMemo(() => {
-    if (!unitLevelEntity) return null;
-    const raw = P_RequiredResources.get(unitLevelEntity);
-    if (!raw) return null;
-    return raw.resources.map((resource, i) => {
-      return {
-        resource,
-        amount: raw.values[i],
-      };
-    });
-  }, [unitLevelEntity]);
+    return getRecipe(selectedUnit ?? singletonEntity, unitLevel);
+  }, [selectedUnit, unitLevel]);
 
-  const unitsTaken = useMemo(() => {
-    return totalUnits + count * (requiredHousing ?? 0);
-  }, [count, requiredHousing, totalUnits]);
-
-  const hasEnough = useHasEnoughResources(getRecipe(unitLevelEntity ?? SingletonID), count);
+  const maximum = useMaxCountOfRecipe(requiredResources, playerEntity);
 
   useEffect(() => {
     if (trainableUnits.length == 0) return;
 
     setSelectedUnit(trainableUnits[0]);
-  }, [trainableUnits]);
+  }, []);
 
-  if (trainableUnits.length == 0 || maximum == 0) return null;
+  if (trainableUnits.length === 0) return null;
 
   return (
     <Navigator.Screen title="BuildUnit" className="relative flex flex-col  items-center text-white w-96">
@@ -113,7 +77,7 @@ export const BuildUnit: React.FC<{
             })}
           </div>
           <hr className="border-t border-cyan-600 w-full" />
-          {!unitLevelEntity || !selectedUnit ? (
+          {!selectedUnit ? (
             <p className="opacity-50 text-xs italic mb-2 flex gap-2 z-10">
               <FaInfoCircle size={16} /> Select a unit to start building drones.
             </p>
@@ -125,7 +89,7 @@ export const BuildUnit: React.FC<{
                 {Object.entries(getUnitStats(selectedUnit)).map(([name, value]) => (
                   <div key={name} className="flex flex-col items-center">
                     <p className="text-xs opacity-50">{name}</p>
-                    <p>{value}</p>
+                    <p>{value.toLocaleString()}</p>
                   </div>
                 ))}
               </div>
@@ -137,46 +101,30 @@ export const BuildUnit: React.FC<{
                   {requiredResources.map((resource, i) => (
                     <Badge key={`resource-${i}`}>
                       <ResourceIconTooltip
-                        image={ResourceImage.get(resource.resource)!}
-                        resourceId={resource.resource}
-                        name={getBlockTypeName(resource.resource)}
-                        amount={resource.amount * count}
+                        image={ResourceImage.get(resource.id) ?? ""}
+                        playerEntity={playerEntity}
+                        resource={resource.id}
+                        name={getBlockTypeName(resource.id)}
+                        amount={resource.amount * BigInt(count)}
+                        scale={ResourceType.Utility === resource.type ? 1n : RESOURCE_SCALE}
                         fontSize="sm"
                         validate
                       />
                     </Badge>
                   ))}
-                  {requiredHousing > 0 && (
-                    <Badge>
-                      <ResourceIconTooltip
-                        image={ResourceImage.get(BlockType.Housing) ?? ""}
-                        scale={1}
-                        resourceId={BlockType.Housing}
-                        name={getBlockTypeName(BlockType.Housing)}
-                        amount={requiredHousing * count}
-                        resourceType={ResourceType.Utility}
-                        fontSize="sm"
-                        validate
-                      />
-                    </Badge>
-                  )}
                 </div>
               )}
 
               <hr className="border-t border-cyan-600 w-full" />
 
-              <NumberInput
-                min={1}
-                max={Math.floor((maximum - totalUnits) / requiredHousing)}
-                onChange={(val) => setCount(val)}
-              />
+              <NumberInput min={1} max={maximum} onChange={(val) => setCount(val)} />
 
               <div className="flex gap-2">
                 <Navigator.BackButton
                   className="btn-sm btn-secondary"
-                  disabled={maximum - unitsTaken < 0 || transactionLoading || !hasEnough || count < 1}
+                  disabled={maximum < count || count < 1}
                   onClick={() => {
-                    train(building, selectedUnit, count, network);
+                    // train(building, selectedUnit, count, network);
                   }}
                 >
                   Train
@@ -185,7 +133,7 @@ export const BuildUnit: React.FC<{
               </div>
             </>
           )}
-          <p className="opacity-50 text-xs">{Math.max(maximum - unitsTaken, 0)} housing left</p>
+          {/* <p className="opacity-50 text-xs">{Math.max(maximum - unitsTaken, 0)} housing left</p> */}
         </div>
       </SecondaryCard>
     </Navigator.Screen>
