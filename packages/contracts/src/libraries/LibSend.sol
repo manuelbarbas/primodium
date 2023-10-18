@@ -83,6 +83,7 @@ library LibSend {
     P_GameConfigData memory config = P_GameConfig.get();
     uint256 unitSpeed = getSlowestUnitSpeed(playerEntity, unitCounts);
     require(unitSpeed > 0 && config.moveSpeed > 0, "[SendUnits] Slowest unit speed must be greater than 0");
+
     return
       block.timestamp +
       ((LibMath.distance(origin, destination) * 100 * 100 * 100) / (config.moveSpeed * unitSpeed * config.worldSpeed));

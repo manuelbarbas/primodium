@@ -4,7 +4,7 @@ import { Entity } from "@latticexyz/recs";
 import { Assets, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { components as comps } from "src/network/components";
-import { BlockNumber, Hangar } from "src/network/components/clientComponents";
+import { Hangar } from "src/network/components/clientComponents";
 import { clampedIndex, getBlockTypeName } from "./common";
 import { EntityType, MotherlodeSizeNames, MotherlodeTypeNames, ResourceStorages } from "./constants";
 import { getFullResourceCount, getMotherlodeResource } from "./resource";
@@ -55,10 +55,6 @@ function getSpaceRockImage(spaceRock: Entity, type: ERock) {
 
 export function getSpaceRockInfo(spaceRock: Entity) {
   const type = comps.RockType.get(spaceRock, { value: ERock.Asteroid }).value as ERock;
-  const { value: blockNumber } = BlockNumber.get(undefined, {
-    value: 0n,
-    avgBlockTime: 1,
-  });
 
   const imageUri = getSpaceRockImage(spaceRock, type);
 
