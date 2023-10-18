@@ -30,16 +30,18 @@ contract LibUnitTest is PrimodiumTest {
   }
 
   function testCanProduceUnit() public {
-    P_UnitProduction.set(buildingPrototype, unitPrototype, true);
-    assertTrue(LibUnit.canProduceUnit(building, unitPrototype));
+    bytes32[] memory unitPrototypes = new bytes32[](1);
+    unitPrototypes[0] = unitPrototype;
+    P_UnitProdTypes.set(buildingPrototype, 0, unitPrototypes);
+    assertTrue(LibUnit.canProduceUnit(buildingPrototype, 0, unitPrototype));
   }
 
   function testCanProduceUnitInvalidBuilding() public {
-    assertFalse(LibUnit.canProduceUnit(bytes32(0), unitPrototype));
+    assertFalse(LibUnit.canProduceUnit(bytes32(0), 0, unitPrototype));
   }
 
   function testCanProduceUnitInvalidUnit() public {
-    assertFalse(LibUnit.canProduceUnit(building, bytes32(0)));
+    assertFalse(LibUnit.canProduceUnit(building, 0, bytes32(0)));
   }
 
   function testClaimUnits() public {

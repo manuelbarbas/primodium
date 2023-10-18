@@ -1,7 +1,7 @@
 import { Hex } from "viem";
 import { config } from "../mud.config";
 import {
-  buildingUnitProduction,
+  encodeArray,
   getResourceValue,
   getResourceValues,
   idsToPrototypes,
@@ -174,48 +174,56 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[1]),
         },
+        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
       },
       2: {
         P_RequiredResources: getResourceValues({ IronPlate: 6000, Copper: 10000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[2]),
         },
+        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
       },
       3: {
         P_RequiredResources: getResourceValues({ Sulfur: 12000, PVCell: 6000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[3]),
         },
+        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
       },
       4: {
         P_RequiredResources: getResourceValues({ Alloy: 10000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[4]),
         },
+        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
       },
       5: {
         P_RequiredResources: getResourceValues({ Titanium: 80000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[5]),
         },
+        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
       },
       6: {
         P_RequiredResources: getResourceValues({ Platinum: 250000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[6]),
         },
+        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
       },
       7: {
         P_RequiredResources: getResourceValues({ Iridium: 420000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[7]),
         },
+        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
       },
       8: {
         P_RequiredResources: getResourceValues({ Kimberlite: 590000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[8]),
         },
+        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
       },
     },
   },
@@ -540,32 +548,34 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_Blueprint: { value: getBlueprint(3, 3) },
       P_MaxLevel: { value: 4n },
-      P_ProducesUnits: { value: true },
     },
     levels: {
       1: {
         P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Lithium: 5000, U_Electricity: 100 }),
         P_UnitProdMultiplier: { value: 100n },
+        P_UnitProdTypes: { value: encodeArray(["AnvilDrone", "HammerDrone"]) },
       },
       2: {
         P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Sulfur: 25000, U_Electricity: 200 }),
         P_UnitProdMultiplier: { value: 110n },
+        P_UnitProdTypes: { value: encodeArray(["AnvilDrone", "HammerDrone", "AegisDrone"]) },
       },
       3: {
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Sulfur: 100000, Iridium: 20000, U_Electricity: 350 }),
         P_UnitProdMultiplier: { value: 130n },
+        P_UnitProdTypes: { value: encodeArray(["AnvilDrone", "HammerDrone", "AegisDrone", "StingerDrone"]) },
       },
       4: {
         P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Sulfur: 275000, Kimberlite: 10000, U_Electricity: 500 }),
         P_UnitProdMultiplier: { value: 150n },
+        P_UnitProdTypes: { value: encodeArray(["AnvilDrone", "HammerDrone", "AegisDrone", "StingerDrone"]) },
       },
     },
   },
-  ...buildingUnitProduction("DroneFactory", ["AnvilDrone", "HammerDrone", "MiningVessel", "StingerDrone"]),
   Starmapper: {
     tables: {
       P_Blueprint: { value: getBlueprint(3, 2) },
