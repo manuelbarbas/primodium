@@ -29,6 +29,7 @@ import { LastClaimedAt, LastClaimedAtTableId } from "codegen/tables/LastClaimedA
 import { QueueItemUnits, QueueItemUnitsTableId } from "codegen/tables/QueueItemUnits.sol";
 import { QueueUnits, QueueUnitsTableId } from "codegen/tables/QueueUnits.sol";
 import { ProductionRateTableId } from "codegen/tables/ProductionRate.sol";
+import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
 
 import { OnBuild_PlaceOnTile } from "src/hooks/systemHooks/build/OnBuild_PlaceOnTile.sol";
 import { OnBuild_SpendResources } from "src/hooks/systemHooks/build/OnBuild_SpendResources.sol";
@@ -105,6 +106,7 @@ contract PostDeploy is Script {
     world.grantAccess(ResourceCountTableId, address(onBuild_ClaimResources));
     world.grantAccess(MapItemUtilitiesTableId, address(onBuild_ClaimResources));
     world.grantAccess(MapUtilitiesTableId, address(onBuild_ClaimResources));
+    world.grantAccess(MapItemStoredUtilitiesTableId, address(onBuild_ClaimResources));
     world.grantAccess(LastClaimedAtTableId, address(onBuild_ClaimResources));
     world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_ClaimResources, BEFORE_CALL_SYSTEM);
 
@@ -121,6 +123,7 @@ contract PostDeploy is Script {
     world.grantAccess(ResourceCountTableId, address(onBuild_SpendResources));
     world.grantAccess(MapItemUtilitiesTableId, address(onBuild_SpendResources));
     world.grantAccess(MapUtilitiesTableId, address(onBuild_SpendResources));
+    world.grantAccess(MapItemStoredUtilitiesTableId, address(onBuild_SpendResources));
     world.grantAccess(MaxResourceCountTableId, address(onBuild_SpendResources));
     world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_SpendResources, AFTER_CALL_SYSTEM);
 
@@ -135,6 +138,7 @@ contract PostDeploy is Script {
     world.grantAccess(ResourceCountTableId, address(onBuild_ProductionRate));
     world.grantAccess(MapItemUtilitiesTableId, address(onBuild_ProductionRate));
     world.grantAccess(MapUtilitiesTableId, address(onBuild_ProductionRate));
+    world.grantAccess(MapItemStoredUtilitiesTableId, address(onBuild_ProductionRate));
     world.registerSystemHook(getSystemResourceId("BuildSystem"), onBuild_ProductionRate, AFTER_CALL_SYSTEM);
   }
 
@@ -147,6 +151,7 @@ contract PostDeploy is Script {
     world.grantAccess(ResourceCountTableId, address(onUpgrade_ClaimResources));
     world.grantAccess(MapItemUtilitiesTableId, address(onUpgrade_ClaimResources));
     world.grantAccess(MapUtilitiesTableId, address(onUpgrade_ClaimResources));
+    world.grantAccess(MapItemStoredUtilitiesTableId, address(onUpgrade_ClaimResources));
     world.grantAccess(LastClaimedAtTableId, address(onUpgrade_ClaimResources));
     world.registerSystemHook(
       getSystemResourceId("UpgradeBuildingSystem"),
@@ -163,6 +168,7 @@ contract PostDeploy is Script {
     world.grantAccess(ResourceCountTableId, address(onUpgrade_ProductionRate));
     world.grantAccess(MapItemUtilitiesTableId, address(onUpgrade_ProductionRate));
     world.grantAccess(MapUtilitiesTableId, address(onUpgrade_ProductionRate));
+    world.grantAccess(MapItemStoredUtilitiesTableId, address(onUpgrade_ProductionRate));
     world.registerSystemHook(getSystemResourceId("UpgradeBuildingSystem"), onUpgrade_ProductionRate, AFTER_CALL_SYSTEM);
 
     OnUpgrade_MaxStorage onUpgrade_MaxStorage = new OnUpgrade_MaxStorage();
@@ -175,6 +181,7 @@ contract PostDeploy is Script {
     world.grantAccess(MapItemUtilitiesTableId, address(onUpgrade_SpendResources));
     world.grantAccess(MapUtilitiesTableId, address(onUpgrade_SpendResources));
     world.grantAccess(MaxResourceCountTableId, address(onUpgrade_SpendResources));
+    world.grantAccess(MapItemStoredUtilitiesTableId, address(onUpgrade_SpendResources));
     world.registerSystemHook(getSystemResourceId("UpgradeBuildingSystem"), onUpgrade_SpendResources, AFTER_CALL_SYSTEM);
   }
 
@@ -188,6 +195,7 @@ contract PostDeploy is Script {
     world.grantAccess(MapItemUtilitiesTableId, address(onDestroy_ClaimResources));
     world.grantAccess(MapUtilitiesTableId, address(onDestroy_ClaimResources));
     world.grantAccess(LastClaimedAtTableId, address(onDestroy_ClaimResources));
+    world.grantAccess(MapItemStoredUtilitiesTableId, address(onDestroy_ClaimResources));
     world.registerSystemHook(getSystemResourceId("DestroySystem"), onDestroy_ClaimResources, BEFORE_CALL_SYSTEM);
 
     OnDestroy_Requirements onDestroy_Requirements = new OnDestroy_Requirements();
@@ -198,6 +206,7 @@ contract PostDeploy is Script {
     world.grantAccess(MapUtilitiesTableId, address(onDestroy_ClearUtility));
     world.grantAccess(MaxResourceCountTableId, address(onDestroy_ClearUtility));
     world.grantAccess(ResourceCountTableId, address(onDestroy_ClearUtility));
+    world.grantAccess(MapItemStoredUtilitiesTableId, address(onDestroy_ClearUtility));
     world.registerSystemHook(getSystemResourceId("DestroySystem"), onDestroy_ClearUtility, BEFORE_CALL_SYSTEM);
 
     OnDestroy_MaxStorage onDestroy_MaxStorage = new OnDestroy_MaxStorage();
@@ -211,6 +220,7 @@ contract PostDeploy is Script {
     world.grantAccess(ResourceCountTableId, address(onDestroy_ProductionRate));
     world.grantAccess(MapItemUtilitiesTableId, address(onDestroy_ProductionRate));
     world.grantAccess(MapUtilitiesTableId, address(onDestroy_ProductionRate));
+    world.grantAccess(MapItemStoredUtilitiesTableId, address(onDestroy_ProductionRate));
 
     world.registerSystemHook(getSystemResourceId("DestroySystem"), onDestroy_ProductionRate, BEFORE_CALL_SYSTEM);
 
@@ -263,6 +273,7 @@ contract PostDeploy is Script {
     world.grantAccess(ResourceCountTableId, address(onTrainUnits_SpendResources));
     world.grantAccess(MapItemUtilitiesTableId, address(onTrainUnits_SpendResources));
     world.grantAccess(MapUtilitiesTableId, address(onTrainUnits_SpendResources));
+    world.grantAccess(MapItemStoredUtilitiesTableId, address(onTrainUnits_SpendResources));
     world.registerSystemHook(getSystemResourceId("TrainUnitsSystem"), onTrainUnits_SpendResources, BEFORE_CALL_SYSTEM);
   }
 
