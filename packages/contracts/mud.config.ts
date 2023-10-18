@@ -428,6 +428,29 @@ export const config = mudConfig({
       keySchema: { entity: "bytes32" },
       valueSchema: "uint256",
     },
+    /* ------------------------------ Pirate Asteroids ----------------------------- */
+
+    P_SpawnPirateAsteroid: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: {
+        x: "int32",
+        y: "int32",
+        resourceTypes: "uint8[]",
+        resourceAmounts: "uint256[]",
+        unitTypes: "bytes32[]",
+        unitAmounts: "uint256[]",
+      },
+    },
+
+    PirateAsteroid: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: {
+        playerEntity: "bytes32",
+        prototype: "bytes32",
+        defeated: "bool",
+      },
+    },
+
     /* ------------------------------ Objectives ----------------------------- */
 
     P_RequiredObjectives: {
@@ -511,11 +534,6 @@ export const config = mudConfig({
     RaidedResource: {
       keySchema: { entity: "bytes32", resource: "uint8" },
       valueSchema: "uint256",
-    },
-
-    P_SpawnPirateAsteroids: {
-      keySchema: { prototype: "bytes32" },
-      valueSchema: "bytes32",
     },
 
     P_DefeatedPirates: {

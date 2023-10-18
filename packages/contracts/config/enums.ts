@@ -83,7 +83,7 @@ export enum ESendType {
 }
 
 export enum EPirateAsteroid {
-  FirstPirateAsteroid,
+  FirstPirateAsteroid = 1,
   SecondPirateAsteroid,
   ThirdPirateAsteroid,
   FourthPirateAsteroid,
@@ -93,7 +93,7 @@ export enum EPirateAsteroid {
 }
 
 export enum EObjectives {
-  BuildFirstIronMine,
+  BuildFirstIronMine = 1,
   BuildFirstCopperMine,
   BuildFirstLithiumMine,
   BuildFirstSulfurMine,
