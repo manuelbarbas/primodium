@@ -418,6 +418,17 @@ export const config = mudConfig({
       offchainOnly: true,
     },
 
+    /* ---------------------------------- Score --------------------------------- */
+
+    P_ScoreMultiplier: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "uint256",
+    },
+    Score: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "uint256",
+    },
+
     /* ------------------------------ Test Hook ----------------------------- */
     HookedValue: {
       keySchema: { entity: "bytes32" },

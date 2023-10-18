@@ -28,6 +28,7 @@ library LibStorage {
       if (level > 1) {
         maxResourceIncrease -= P_ByLevelMaxResourceUpgrades.get(buildingType, resource, level - 1);
       }
+      LibResource.updateScore(playerEntity, resource, newResourceCount);
       setMaxStorage(playerEntity, resource, maxResource + maxResourceIncrease);
     }
   }
@@ -60,6 +61,7 @@ library LibStorage {
   ) internal {
     uint256 resourceCount = ResourceCount.get(playerEntity, resource);
     uint256 newResourceCount = resourceCount < resourceToDecrease ? 0 : resourceCount - resourceToDecrease;
+    LibResource.updateScore(playerEntity, resource, newResourceCount);
     ResourceCount.set(playerEntity, resource, newResourceCount);
   }
 
@@ -75,6 +77,7 @@ library LibStorage {
     uint256 resourceCount = ResourceCount.get(playerEntity, resource);
     uint256 maxResources = MaxResourceCount.get(playerEntity, resource);
     uint256 newResourceCount = LibMath.min(resourceCount + resourceToAdd, maxResources);
+    LibResource.updateScore(playerEntity, resource, newResourceCount);
     ResourceCount.set(playerEntity, resource, newResourceCount);
   }
 
@@ -91,6 +94,7 @@ library LibStorage {
     uint256 playerResourceAmount = ResourceCount.get(playerEntity, resource);
     if (playerResourceAmount > newMaxStorage) {
       ResourceCount.set(playerEntity, resource, newMaxStorage);
+      LibResource.updateScore(playerEntity, resource, newMaxStorage);
     }
   }
 
