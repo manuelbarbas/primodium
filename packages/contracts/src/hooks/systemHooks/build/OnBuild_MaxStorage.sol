@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 import { addressToEntity } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
-import {  PositionData } from "codegen/tables/Position.sol";
+import { PositionData } from "codegen/tables/Position.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { BuildingKey } from "src/Keys.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
@@ -22,9 +22,7 @@ contract OnBuild_MaxStorage is SystemHook {
     bytes memory callData
   ) public {}
 
-
-
-/**
+  /**
    * @dev This function is called after the system's main logic is executed.
    * It increases the max storage capacity of a player's building entity.
    * @param msgSender The address of the message sender.
