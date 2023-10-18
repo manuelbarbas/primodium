@@ -23,7 +23,7 @@
     "package.json": "pnpm sort-package-json"
   },
   "devDependencies": {
-    "@latticexyz/cli": "2.0.0-next.11",
+    "@latticexyz/cli": "2.0.0-main-a5e8a6d5",
     "@typescript-eslint/eslint-plugin": "5.46.1",
     "@typescript-eslint/parser": "5.46.1",
     "concurrently": "^8.0.1",

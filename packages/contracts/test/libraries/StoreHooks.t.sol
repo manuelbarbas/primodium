@@ -28,13 +28,13 @@ contract TestStoreHooks is PrimodiumTest {
   function testStoreHooks(uint256 unitCount, uint256 defense) public returns (uint256) {
     vm.startPrank(creator);
 
-    HookedValue.setValue(IStore(world), bytes32("test"), 1);
+    HookedValue.setValue(bytes32("test"), 1);
     console.log("Hooked value set");
 
-    console.log(OnHookChangedValue.getValue(IStore(world), bytes32("test")));
+    console.log(OnHookChangedValue.getValue(bytes32("test")));
     assertEq(
-      HookedValue.getValue(IStore(world), bytes32("test")),
-      OnHookChangedValue.getValue(IStore(world), bytes32("test")),
+      HookedValue.getValue(bytes32("test")),
+      OnHookChangedValue.getValue(bytes32("test")),
       "Hooked value should equal onHookChangedValue"
     );
   }
