@@ -42,9 +42,7 @@ export const setupBasicCameraMovement = (
 
   function handleZoom(delta: number) {
     const zoom = scene.camera.phaserCamera.zoom;
-    const zoomSpeed = isDown(KeybindActions.Modifier)
-      ? ZOOM_SPEED / 3
-      : ZOOM_SPEED;
+    const zoomSpeed = isDown(KeybindActions.Modifier) ? ZOOM_SPEED / 3 : ZOOM_SPEED;
 
     const zoomAmount = zoomSpeed * (delta / 1000);
     if (isDown(KeybindActions.ZoomIn)) {
@@ -94,10 +92,7 @@ export const setupBasicCameraMovement = (
     if (isDown(KeybindActions.Right)) moveX++;
 
     //only register movement when no tweens are running
-    if (
-      (moveX !== 0 || moveY !== 0) &&
-      !scene.phaserScene.tweens.getTweensOf(scene.camera.phaserCamera).length
-    ) {
+    if ((moveX !== 0 || moveY !== 0) && !scene.phaserScene.tweens.getTweensOf(scene.camera.phaserCamera).length) {
       const length = Math.sqrt(moveX * moveX + moveY * moveY);
       accumulatedX += (moveX / length) * moveDistance;
       accumulatedY += (moveY / length) * moveDistance;
@@ -152,41 +147,28 @@ export const setupBasicCameraMovement = (
     const gameCoord = { x, y: -y } as Coord;
 
     //set to default zoomTo and pan to mouse position
-    scene.camera.phaserCamera.zoomTo(
-      scene.config.camera.defaultZoom,
-      1000,
-      undefined,
-      undefined,
-      () => updateWorldView()
+    scene.camera.phaserCamera.zoomTo(scene.config.camera.defaultZoom, 1000, undefined, undefined, () =>
+      updateWorldView()
     );
     pan(gameCoord);
   });
 
   //handle zooming with mouse wheel
-  scene.input.phaserInput.on(
-    "wheel",
-    ({ deltaY }: { deltaY: number; event: any }) => {
-      if (!wheel) return;
+  scene.input.phaserInput.on("wheel", ({ deltaY }: { deltaY: number; event: any }) => {
+    if (!wheel) return;
 
-      let scale = 0.02;
+    let scale = 0.02;
 
-      if (isDown(KeybindActions.Modifier)) scale /= 2;
+    if (isDown(KeybindActions.Modifier)) scale /= 2;
 
-      if (deltaY < 0) {
-        const zoom = Math.min(
-          scene.camera.phaserCamera.zoom + wheelSpeed * scale,
-          maxZoom
-        );
-        scene.camera.setZoom(zoom);
-      } else if (deltaY > 0) {
-        const zoom = Math.max(
-          scene.camera.phaserCamera.zoom - wheelSpeed * scale,
-          minZoom
-        );
-        scene.camera.setZoom(zoom);
-      }
+    if (deltaY < 0) {
+      const zoom = Math.min(scene.camera.phaserCamera.zoom + wheelSpeed * scale, maxZoom);
+      scene.camera.setZoom(zoom);
+    } else if (deltaY > 0) {
+      const zoom = Math.max(scene.camera.phaserCamera.zoom - wheelSpeed * scale, minZoom);
+      scene.camera.setZoom(zoom);
     }
-  );
+  });
 
   world.registerDisposer(() => {
     doubleClickSub.unsubscribe();

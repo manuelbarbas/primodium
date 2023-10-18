@@ -1,11 +1,6 @@
 // import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { ComponentUpdate, Has } from "@latticexyz/recs";
-import {
-  defineEnterSystem,
-  defineExitSystem,
-  defineUpdateSystem,
-  namespaceWorld,
-} from "@latticexyz/recs";
+import { defineEnterSystem, defineExitSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { Send } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
@@ -29,17 +24,9 @@ export const renderUnitSend = (scene: Scene) => {
 
     if (!origin || !destination) return;
 
-    const originPixelCoord = tileCoordToPixelCoord(
-      { x: origin.x, y: -origin.y },
-      tileWidth,
-      tileHeight
-    );
+    const originPixelCoord = tileCoordToPixelCoord({ x: origin.x, y: -origin.y }, tileWidth, tileHeight);
 
-    const destinationPixelCoord = tileCoordToPixelCoord(
-      { x: destination.x, y: -destination.y },
-      tileWidth,
-      tileHeight
-    );
+    const destinationPixelCoord = tileCoordToPixelCoord({ x: destination.x, y: -destination.y }, tileWidth, tileHeight);
 
     const sendTrajectory = scene.objectPool.getGroup(entityId + objIndexSuffix);
 
@@ -65,9 +52,7 @@ export const renderUnitSend = (scene: Scene) => {
   defineEnterSystem(gameWorld, query, (update) => {
     render(update);
 
-    console.info(
-      "[ENTER SYSTEM](renderSendUnitsTool) Send units tool has been added"
-    );
+    console.info("[ENTER SYSTEM](renderSendUnitsTool) Send units tool has been added");
   });
 
   defineUpdateSystem(gameWorld, query, render);
@@ -78,8 +63,6 @@ export const renderUnitSend = (scene: Scene) => {
 
     scene.objectPool.removeGroup(objIndex);
 
-    console.info(
-      "[EXIT SYSTEM](renderSendUnitsTool) Send units tool has been removed"
-    );
+    console.info("[EXIT SYSTEM](renderSendUnitsTool) Send units tool has been removed");
   });
 };

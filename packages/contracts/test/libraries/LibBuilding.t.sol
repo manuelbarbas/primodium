@@ -25,9 +25,9 @@ contract LibBuildingTest is PrimodiumTest {
     P_Asteroid.set(maxX, maxY);
 
     bytes32 playerEntity = addressToEntity(creator);
-    uint256 playerLevel = Level.get(world, playerEntity);
+    uint256 playerLevel = Level.get(playerEntity);
 
-    Dimensions.set(world, ExpansionKey, playerLevel, currX, currY);
+    Dimensions.set(ExpansionKey, playerLevel, currX, currY);
 
     Bounds memory bounds = LibBuilding.getPlayerBounds(playerEntity);
 

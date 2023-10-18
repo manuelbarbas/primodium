@@ -1,17 +1,12 @@
-import {
-  generateFrames,
-  createCulling,
-  createChunks,
-  // createDebugger,
-} from "@latticexyz/phaserx";
+import { createChunks, createCulling, generateFrames } from "@latticexyz/phaserx";
 
-import createInput from "./createInput";
+import { SceneConfig } from "../../types";
 import { createPhaserScene } from "../util/createPhaserScene";
 import { createCamera } from "./createCamera";
+import createInput from "./createInput";
+import { createObjectPool } from "./createObjectPool";
 import { createScriptManager } from "./createScriptManager";
 import { createTilemap } from "./createTilemap";
-import { SceneConfig } from "../../types";
-import { createObjectPool } from "./createObjectPool";
 
 export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, autoStart = true) => {
   const {
@@ -50,6 +45,7 @@ export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, 
 
   const tilemap = createTilemap(
     scene,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     camera,
     tileWidth,

@@ -23,17 +23,17 @@ contract DestroySystemTest is PrimodiumTest {
   }
 
   function destroy(bytes32 buildingEntity, PositionData memory _coord) public {
-    bytes32[] memory children = Children.get(world, buildingEntity);
+    bytes32[] memory children = Children.get(buildingEntity);
     world.destroy(_coord);
 
     for (uint256 i = 0; i < children.length; i++) {
-      assertTrue(OwnedBy.get(world, children[i]) == 0);
-      assertTrue(BuildingType.get(world, children[i]) == 0);
+      assertTrue(OwnedBy.get(children[i]) == 0);
+      assertTrue(BuildingType.get(children[i]) == 0);
     }
 
-    assertTrue(OwnedBy.get(world, buildingEntity) == 0, "has ownedby");
-    assertTrue(BuildingType.get(world, buildingEntity) == 0, "has tile");
-    assertTrue(Level.get(world, buildingEntity) == 0, "has level");
+    assertTrue(OwnedBy.get(buildingEntity) == 0, "has ownedby");
+    assertTrue(BuildingType.get(buildingEntity) == 0, "has tile");
+    assertTrue(Level.get(buildingEntity) == 0, "has level");
   }
 
   function testDestroyWithBuildingOrigin() public {
@@ -43,7 +43,7 @@ contract DestroySystemTest is PrimodiumTest {
 
   function testDestroyWithTile() public {
     bytes32 buildingEntity = buildIronMine();
-    bytes32 asteroid = Home.getAsteroid(world, playerEntity);
+    bytes32 asteroid = Home.getAsteroid(playerEntity);
     position.parent = asteroid;
     destroy(buildingEntity, position);
   }

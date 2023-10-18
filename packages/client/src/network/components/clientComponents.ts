@@ -55,9 +55,9 @@ export const TrainingQueue = createExtendedComponent(
   world,
   {
     units: Type.EntityArray,
-    counts: Type.NumberArray,
-    progress: Type.NumberArray,
-    timeRemaining: Type.NumberArray,
+    counts: Type.BigIntArray,
+    progress: Type.BigIntArray,
+    timeRemaining: Type.BigIntArray,
   },
   {
     id: "TrainingQueue",
@@ -105,6 +105,16 @@ export const BattleReport = createExtendedComponent(
   }
 );
 
+const Arrival = createExtendedComponent(world, {
+  sendType: Type.Number,
+  unitCounts: Type.BigIntArray,
+  arrivalTime: Type.BigInt,
+  from: Type.Entity,
+  to: Type.Entity,
+  origin: Type.Entity,
+  destination: Type.Entity,
+});
+
 export default {
   /* ----------------------------------- Dev ---------------------------------- */
   DoubleCounter,
@@ -131,5 +141,6 @@ export default {
   Leaderboard,
 
   /* --------------------------------- Battle --------------------------------- */
+  Arrival,
   BattleReport,
 };

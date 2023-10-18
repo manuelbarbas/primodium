@@ -7,8 +7,8 @@ import { IWorld } from "codegen/world/IWorld.sol";
 import { Children, ChildrenTableId } from "codegen/tables/Children.sol";
 import { OwnedBy, OwnedByTableId } from "codegen/tables/OwnedBy.sol";
 import { Position, PositionTableId, PositionData } from "codegen/tables/Position.sol";
-import { SetUtilities, SetUtilitiesTableId } from "codegen/tables/SetUtilities.sol";
-import { SetItemUtilities, SetItemUtilitiesTableId } from "codegen/tables/SetItemUtilities.sol";
+import { MapUtilities, MapUtilitiesTableId } from "codegen/tables/MapUtilities.sol";
+import { MapItemUtilities, MapItemUtilitiesTableId } from "codegen/tables/MapItemUtilities.sol";
 import { ResourceCount, ResourceCountTableId } from "codegen/tables/ResourceCount.sol";
 import { MaxResourceCount, MaxResourceCountTableId } from "codegen/tables/MaxResourceCount.sol";
 import { SpawnedTableId } from "codegen/tables/Spawned.sol";
@@ -59,8 +59,8 @@ import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/sr
 function setupHooks(IWorld world) {
   OnBefore_ClaimResources onBefore_ClaimResources = new OnBefore_ClaimResources();
   world.grantAccess(ResourceCountTableId, address(onBefore_ClaimResources));
-  world.grantAccess(SetItemUtilitiesTableId, address(onBefore_ClaimResources));
-  world.grantAccess(SetUtilitiesTableId, address(onBefore_ClaimResources));
+  world.grantAccess(MapItemUtilitiesTableId, address(onBefore_ClaimResources));
+  world.grantAccess(MapUtilitiesTableId, address(onBefore_ClaimResources));
   world.grantAccess(LastClaimedAtTableId, address(onBefore_ClaimResources));
   world.grantAccess(ProducedResourceTableId, address(onBefore_ClaimResources));
 
@@ -72,8 +72,8 @@ function setupHooks(IWorld world) {
 
   OnBefore_SpendResources onBefore_SpendResources = new OnBefore_SpendResources();
   world.grantAccess(ResourceCountTableId, address(onBefore_SpendResources));
-  world.grantAccess(SetItemUtilitiesTableId, address(onBefore_SpendResources));
-  world.grantAccess(SetUtilitiesTableId, address(onBefore_SpendResources));
+  world.grantAccess(MapItemUtilitiesTableId, address(onBefore_SpendResources));
+  world.grantAccess(MapUtilitiesTableId, address(onBefore_SpendResources));
   world.grantAccess(MaxResourceCountTableId, address(onBefore_SpendResources));
 
   OnAfter_MaxStorage onAfter_MaxStorage = new OnAfter_MaxStorage();
@@ -174,8 +174,8 @@ function registerDestroyHooks(IWorld world, OnBefore_ClaimResources onBefore_Cla
   world.registerSystemHook(systemId, onDestroy_Requirements, BEFORE_CALL_SYSTEM);
 
   OnDestroy_ClearUtility onDestroy_ClearUtility = new OnDestroy_ClearUtility();
-  world.grantAccess(SetItemUtilitiesTableId, address(onDestroy_ClearUtility));
-  world.grantAccess(SetUtilitiesTableId, address(onDestroy_ClearUtility));
+  world.grantAccess(MapItemUtilitiesTableId, address(onDestroy_ClearUtility));
+  world.grantAccess(MapUtilitiesTableId, address(onDestroy_ClearUtility));
   world.grantAccess(MaxResourceCountTableId, address(onDestroy_ClearUtility));
   world.grantAccess(ResourceCountTableId, address(onDestroy_ClearUtility));
   world.registerSystemHook(systemId, onDestroy_ClearUtility, BEFORE_CALL_SYSTEM);
@@ -327,8 +327,8 @@ function registerClaimObjective(
 
   OnClaimObjective_ReceiveRewards onClaimObjective_ReceiveRewards = new OnClaimObjective_ReceiveRewards();
   world.grantAccess(ResourceCountTableId, address(onClaimObjective_ReceiveRewards));
-  world.grantAccess(SetItemUtilitiesTableId, address(onClaimObjective_ReceiveRewards));
-  world.grantAccess(SetUtilitiesTableId, address(onClaimObjective_ReceiveRewards));
+  world.grantAccess(MapItemUtilitiesTableId, address(onClaimObjective_ReceiveRewards));
+  world.grantAccess(MapUtilitiesTableId, address(onClaimObjective_ReceiveRewards));
   world.grantAccess(UnitCountTableId, address(onClaimObjective_ReceiveRewards));
   world.grantAccess(ProducedResourceTableId, address(onClaimObjective_ReceiveRewards));
   world.registerSystemHook(systemId, onClaimObjective_ReceiveRewards, AFTER_CALL_SYSTEM);

@@ -1,40 +1,51 @@
 import { Scene } from "engine/types";
-import { namespaceWorld, Has, defineEnterSystem, HasValue, EntityID, Not } from "@latticexyz/recs";
-import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
-import { Outline, Texture } from "../../common/object-components/sprite";
-import { AsteroidType, Level, MainBase, OwnedBy, Pirate, Position } from "src/network/components/chainComponents";
-import { world } from "src/network/world";
-import { Send } from "src/network/components/clientComponents";
-import { initializeMotherlodes } from "../utils/initializeMotherlodes";
-import { ESpaceRockType } from "src/util/web3/types";
+import { namespaceWorld, Has, defineEnterSystem, Entity } from "@latticexyz/recs";
+import { ObjectPosition, SetValue } from "../../common/object-components/common";
+import { Texture } from "../../common/object-components/sprite";
+import { singletonIndex, world } from "src/network/world";
+// import { Send } from "src/network/components/clientComponents";
+// import { initializeMotherlodes } from "../utils/initializeMotherlodes";
+
 import { Coord } from "@latticexyz/utils";
 import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
 import { EntityType } from "src/util/constants";
 import { clampedIndex } from "src/util/common";
-import { SingletonID } from "@latticexyz/network";
+import { SetupResult } from "src/network/types";
+import { components } from "src/network/components";
+import { MUDEnums } from "contracts/config/enums";
+import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 
-export const renderAsteroid = (scene: Scene, player: EntityID) => {
+export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
+  const playerEntity = mud.network.playerEntity;
 
-  const render = (entityId: EntityID, coord: Coord) => {
-    scene.objectPool.removeGroup("asteroid_" + entityId);
-    const asteroidType = AsteroidType.get(entityId)?.value;
+  const render = (entity: Entity, coord: Coord) => {
+    scene.objectPool.removeGroup("asteroid_" + entity);
+    const asteroidType =
+      MUDEnums.ERock[
+        components.RockType.get(entity, {
+          value: 1,
+        }).value
+      ];
 
-    const ownedBy = OwnedBy.get(entityId, {
-      value: SingletonID,
+    if (asteroidType !== MUDEnums.ERock[1]) return;
+
+    //TODO - fix conversion to Entity
+    const ownedBy = components.OwnedBy.get(entity, {
+      value: singletonIndex,
+    }).value as Entity;
+
+    const mainBaseEntity = components.Home.get(ownedBy, {
+      mainBase: "-1" as Entity,
+      asteroid: "-1" as Entity,
+    }).mainBase as Entity;
+
+    const mainBaseLevel = components.Level.get(mainBaseEntity, {
+      value: 1n,
     }).value;
 
-    const mainBaseEntity = MainBase.get(ownedBy, {
-      value: "-1" as EntityID,
-    }).value;
-
-    const mainBaseLevel = Level.get(mainBaseEntity, {
-      value: 1,
-    }).value;
-
-    if (asteroidType !== ESpaceRockType.Asteroid) return;
-    const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entityId);
+    const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entity);
 
     const sharedComponents = [
       ObjectPosition(
@@ -57,52 +68,47 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
       Texture(
         Assets.SpriteAtlas,
         EntitytoSpriteKey[EntityType.Asteroid][
-          clampedIndex(mainBaseLevel - 1, EntitytoSpriteKey[EntityType.Asteroid].length)
+          clampedIndex(Number(mainBaseLevel) - 1, EntitytoSpriteKey[EntityType.Asteroid].length)
         ]
       ),
-      OnClick(scene, () => {
-        Send.setDestination(entityId);
-      }),
+      // OnClick(scene, () => {
+      //   Send.setDestination(entityId);
+      // }),
     ]);
 
-    const outlineSprite = SpriteKeys[`Asteroid${ownedBy === player ? "Player" : "Enemy"}` as keyof typeof SpriteKeys];
+    const outlineSprite =
+      SpriteKeys[`Asteroid${ownedBy === playerEntity ? "Player" : "Enemy"}` as keyof typeof SpriteKeys];
 
     const asteroidOutline = asteroidObjectGroup.add("Sprite");
 
     asteroidOutline.setComponents([
       ...sharedComponents,
-      OnComponentSystem(Send, () => {
-        if (Send.get()?.destination === entityId) {
-          if (asteroidOutline.hasComponent(Outline().id)) return;
-          asteroidOutline.setComponent(Outline({ thickness: 1.5, color: 0xffa500 }));
-          return;
-        }
+      // OnComponentSystem(Send, () => {
+      //   if (Send.get()?.destination === entity) {
+      //     if (asteroidOutline.hasComponent(Outline().id)) return;
+      //     asteroidOutline.setComponent(Outline({ thickness: 1.5, color: 0xffa500 }));
+      //     return;
+      //   }
 
-        if (asteroidOutline.hasComponent(Outline().id)) {
-          asteroidOutline.removeComponent(Outline().id);
-        }
-      }),
+      //   if (asteroidOutline.hasComponent(Outline().id)) {
+      //     asteroidOutline.removeComponent(Outline().id);
+      //   }
+      // }),
       Texture(Assets.SpriteAtlas, outlineSprite),
     ]);
   };
 
   const query = [
-    Has(AsteroidType),
-    HasValue(AsteroidType, {
-      value: ESpaceRockType.Asteroid,
-    }),
-    Has(Position),
-    Not(Pirate),
+    Has(components.RockType),
+    // Not(components.Pirate),
   ];
 
   defineEnterSystem(gameWorld, query, ({ entity }) => {
-    const entityId = world.entities[entity];
-
-    const coord = Position.get(entityId);
+    const coord = components.Position.get(entity);
 
     if (!coord) return;
 
-    render(entityId, coord);
-    initializeMotherlodes(entityId, coord);
+    render(entity, coord);
+    initializeMotherlodes(entity, coord);
   });
 };
