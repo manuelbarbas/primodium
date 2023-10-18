@@ -2,7 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { components as comps } from "src/network/components";
 import { Account } from "src/network/components/clientComponents";
 import { Hex } from "viem";
-import { RESOURCE_SCALE } from "./constants";
+import { RESOURCE_SCALE, SPEED_SCALE } from "./constants";
 
 export function getUnitStats(rawUnitEntity: Entity) {
   const player = Account.get()?.value as Hex;
@@ -52,7 +52,8 @@ export function getUnitTrainingTime(rawPlayer: Entity, rawBuilding: Entity, rawU
   ).value;
   const trainingTime = comps.P_Unit.getWithKeys({ entity: unitEntity, level: unitLevel })?.trainingTime ?? 0n;
 
-  const time = (100n * 100n * 100n) / (trainingTime * config.unitProductionRate * config.worldSpeed * multiplier);
+  const time =
+    (config.worldSpeed * 100n * 100n) / (trainingTime * config.unitProductionRate * SPEED_SCALE * multiplier);
 
   return time;
 }

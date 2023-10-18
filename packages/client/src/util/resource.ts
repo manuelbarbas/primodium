@@ -92,13 +92,13 @@ export function getFullResourceCount(resourceID: Entity, playerEntity: Entity) {
       ?.value ?? 0n;
 
   const production = (() => {
-    return (100n * (buildingProduction + motherlodeProduction)) / worldSpeed;
+    return (worldSpeed * (buildingProduction + motherlodeProduction)) / SPEED_SCALE;
   })();
 
   const playerLastClaimed = comps.LastClaimedAt.get(playerEntity)?.value ?? 0n;
 
   const resourcesToClaimFromBuilding = (() => {
-    const toClaim = ((getNow() - playerLastClaimed) * buildingProduction * SPEED_SCALE) / worldSpeed;
+    const toClaim = ((getNow() - playerLastClaimed) * buildingProduction * worldSpeed) / SPEED_SCALE;
     if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
     return toClaim;
   })();

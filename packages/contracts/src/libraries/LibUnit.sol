@@ -8,6 +8,7 @@ import { LibMath } from "libraries/LibMath.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
 import { UnitKey } from "src/Keys.sol";
+import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 library LibUnit {
   /**
@@ -61,7 +62,8 @@ library LibUnit {
       P_GameConfigData memory config = P_GameConfig.get();
       uint256 trainedUnits = LibMath.min(
         item.quantity,
-        ((block.timestamp - startTime) * 100 * 100) / (trainingTime * config.unitProductionRate * config.worldSpeed)
+        ((block.timestamp - startTime) * config.worldSpeed * 100) /
+          (trainingTime * config.unitProductionRate * WORLD_SPEED_SCALE)
       );
 
       if (trainedUnits == 0) return;

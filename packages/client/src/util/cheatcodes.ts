@@ -39,7 +39,6 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
     setWorldSpeed: {
       params: [{ name: "value", type: "number" }],
       function: async (value: number) => {
-        value = 100 / value;
         await mud.contractCalls.setComponentValue(mud.components.P_GameConfig, singletonEntity, {
           worldSpeed: BigInt(value),
         });

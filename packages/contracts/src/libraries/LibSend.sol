@@ -6,6 +6,7 @@ import { UnitCount, ReversePosition, RockType, PositionData, P_Unit, UnitLevel, 
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { SendArgs } from "src/Types.sol";
+import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 library LibSend {
   /**
@@ -86,7 +87,8 @@ library LibSend {
 
     return
       block.timestamp +
-      ((LibMath.distance(origin, destination) * 100 * 100 * 100) / (config.moveSpeed * unitSpeed * config.worldSpeed));
+      ((LibMath.distance(origin, destination) * config.worldSpeed * 100 * 100) /
+        (config.moveSpeed * unitSpeed * WORLD_SPEED_SCALE));
   }
 
   /// @notice Checks if movement between two positions is allowed.
