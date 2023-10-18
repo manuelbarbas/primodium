@@ -238,15 +238,9 @@ export const config = mudConfig({
       },
     },
 
-    // tracks if a building (prototype) can produce a unit (id)
-    P_UnitProduction: {
-      keySchema: { prototype: "bytes32", id: "bytes32" },
-      valueSchema: "bool",
-    },
-
-    P_ProducesUnits: {
-      keySchema: { prototype: "bytes32" },
-      valueSchema: "bool",
+    P_UnitProdTypes: {
+      keySchema: { prototype: "bytes32", level: "uint256" },
+      valueSchema: "bytes32[]",
     },
 
     P_UnitProdMultiplier: {

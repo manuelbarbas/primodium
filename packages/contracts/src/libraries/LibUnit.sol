@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { Motherlode, ProductionRate, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProduction, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
+import { console } from "forge-std/console.sol";
+import { BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
+
 import { ERock, EUnit } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
@@ -23,18 +25,29 @@ library LibUnit {
 
     // Determine the prototype of the unit based on its unit key.
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
+    bytes32 buildingType = BuildingType.get(buildingEntity);
 
+    uint256 level = Level.get(buildingEntity);
     // Check if the building can produce the specified unit based on its prototype.
-    require(canProduceUnit(buildingEntity, unitPrototype), "[TrainUnitsSystem] Building cannot produce unit");
+    require(canProduceUnit(buildingType, level, unitPrototype), "[TrainUnitsSystem] Building cannot produce unit");
   }
 
   /// @notice Check if a building can produce a unit
   /// @param buildingEntity Entity ID of the building
+  /// @param level Level of the building
   /// @param unitPrototype Unit prototype to check
   /// @return True if unit can be produced, false otherwise
-  function canProduceUnit(bytes32 buildingEntity, bytes32 unitPrototype) internal view returns (bool) {
-    bytes32 buildingPrototype = BuildingType.get(buildingEntity);
-    return P_UnitProduction.get(buildingPrototype, unitPrototype);
+  function canProduceUnit(
+    bytes32 buildingEntity,
+    uint256 level,
+    bytes32 unitPrototype
+  ) internal view returns (bool) {
+    if (P_UnitProdTypes.length(buildingEntity, level) == 0) return false;
+    bytes32[] memory unitTypes = P_UnitProdTypes.get(buildingEntity, level);
+    for (uint256 i = 0; i < unitTypes.length; i++) {
+      if (unitTypes[i] == unitPrototype) return true;
+    }
+    return false;
   }
 
   /// @notice Claim units from all player's buildings
