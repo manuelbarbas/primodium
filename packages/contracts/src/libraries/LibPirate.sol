@@ -27,7 +27,7 @@ library LibPirate {
     asteroidEntity = LibEncode.getHash(ownerEntity);
     PositionData memory playerHomeAsteroidPosition = Position.get(LibEncode.getHash(playerEntity));
     bytes32 playerHomeAsteroidEntity = LibEncode.getHash(playerEntity);
-    if (Spawned.get(asteroidEntity)) {
+    if (Spawned.get(ownerEntity)) {
       PositionData memory Pos = Position.get(asteroidEntity);
       ReversePosition.deleteRecord(Pos.x, Pos.y);
       Position.deleteRecord(asteroidEntity);

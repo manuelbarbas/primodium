@@ -336,28 +336,44 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     world.claimObjective(EObjectives.BuildFirstCopperMine);
   }
 
-  function testClaimObjectiveSpawnPirateAsteroid() public {
-    bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine));
-
+  function setupSpawnPirateAsteroid(
+    bytes32 objectivePrototype,
+    int32 x,
+    int32 y,
+    uint256 unit1Count,
+    uint256 ironCount
+  ) internal returns (P_SpawnPirateAsteroidData memory spawnPirateAsteroid) {
     bytes32[] memory unitTypes = new bytes32[](unitPrototypeCount);
     unitTypes[0] = unit1;
     unitTypes[1] = unit2;
     P_UnitPrototypes.set(unitTypes);
-
     P_HasBuiltBuildings.deleteRecord(objectivePrototype);
-    P_SpawnPirateAsteroidData memory spawnPirateAsteroid;
-    spawnPirateAsteroid.x = 10;
-    spawnPirateAsteroid.y = -10;
+
+    spawnPirateAsteroid.x = x;
+    spawnPirateAsteroid.y = y;
     spawnPirateAsteroid.resources = new uint8[](1);
     spawnPirateAsteroid.resources[0] = uint8(EResource.Iron);
     spawnPirateAsteroid.resourceAmounts = new uint256[](1);
-    spawnPirateAsteroid.resourceAmounts[0] = 100;
+    spawnPirateAsteroid.resourceAmounts[0] = ironCount;
     spawnPirateAsteroid.units = new bytes32[](1);
     spawnPirateAsteroid.units[0] = unit1;
     spawnPirateAsteroid.unitAmounts = new uint256[](1);
-    spawnPirateAsteroid.unitAmounts[0] = 10;
+    spawnPirateAsteroid.unitAmounts[0] = unit1Count;
 
     P_SpawnPirateAsteroid.set(objectivePrototype, spawnPirateAsteroid);
+  }
+
+  function setupSpawnPirateAsteroid(bytes32 objectivePrototype)
+    internal
+    returns (P_SpawnPirateAsteroidData memory spawnPirateAsteroid)
+  {
+    spawnPirateAsteroid = setupSpawnPirateAsteroid(objectivePrototype, 10, -10, 10, 100);
+  }
+
+  function testClaimObjectiveSpawnPirateAsteroid() public {
+    bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine));
+    P_SpawnPirateAsteroidData memory spawnPirateAsteroid = setupSpawnPirateAsteroid(objectivePrototype);
+
     world.claimObjective(EObjectives.BuildFirstIronMine);
     console.log("pirate asteroid spawned");
 
@@ -448,5 +464,89 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
       "Resource count does not match"
     );
     assertEq(DefeatedPirate.get(playerEntity, objectivePrototype), true, "Pirate not defeated");
+  }
+
+  function tesFailtCannotAttackOtherPlayerPirateAsteroid() public {
+    UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit1, 100);
+    UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit2, 50);
+    LibProduction.increaseResourceProduction(playerEntity, EResource.U_MaxMoves, 100);
+
+    bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine));
+    setupSpawnPirateAsteroid(objectivePrototype);
+    vm.stopPrank();
+    spawn(alice);
+
+    vm.startPrank(alice);
+
+    world.claimObjective(EObjectives.BuildFirstIronMine);
+
+    bytes32 personalPirateEntity = LibEncode.getHash(PirateKey, addressToEntity(alice));
+    bytes32 pirateAsteroidEntity = LibEncode.getHash(personalPirateEntity);
+
+    vm.startPrank(creator);
+    uint256[5] memory unitCounts;
+    unitCounts[0] = 100;
+    unitCounts[1] = 50;
+
+    world.sendUnits(
+      unitCounts,
+      ESendType.Raid,
+      Position.get(Home.get(playerEntity).asteroid),
+      Position.get(pirateAsteroidEntity),
+      personalPirateEntity
+    );
+  }
+
+  function testSendUnitsPirateAsteroid() public {
+    UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit1, 100);
+    UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit2, 50);
+    LibProduction.increaseResourceProduction(playerEntity, EResource.U_MaxMoves, 100);
+
+    bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine));
+    setupSpawnPirateAsteroid(objectivePrototype);
+
+    world.claimObjective(EObjectives.BuildFirstIronMine);
+
+    bytes32 personalPirateEntity = LibEncode.getHash(PirateKey, playerEntity);
+    bytes32 pirateAsteroidEntity = LibEncode.getHash(personalPirateEntity);
+
+    uint256[5] memory unitCounts;
+    unitCounts[0] = 100;
+    unitCounts[1] = 50;
+
+    P_Unit.setSpeed(unit1, 0, 100);
+    P_Unit.setSpeed(unit2, 0, 100);
+    world.sendUnits(
+      unitCounts,
+      ESendType.Raid,
+      Position.get(Home.get(playerEntity).asteroid),
+      Position.get(pirateAsteroidEntity),
+      personalPirateEntity
+    );
+  }
+
+  function testSecondPirateAsteroid() public {
+    bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine));
+    setupSpawnPirateAsteroid(objectivePrototype);
+
+    world.claimObjective(EObjectives.BuildFirstIronMine);
+
+    bytes32 personalPirateEntity = LibEncode.getHash(PirateKey, playerEntity);
+    bytes32 pirateAsteroidEntity = LibEncode.getHash(personalPirateEntity);
+
+    PositionData memory pirateAsteroidPosition = Position.get(pirateAsteroidEntity);
+
+    objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine));
+    setupSpawnPirateAsteroid(objectivePrototype, 100, 100, 10, 300);
+
+    world.claimObjective(EObjectives.BuildFirstCopperMine);
+    assertEq(
+      ReversePosition.get(pirateAsteroidPosition.x, pirateAsteroidPosition.y) != pirateAsteroidEntity,
+      true,
+      "Pirate asteroid not moved"
+    );
+    assertTrue(Position.get(pirateAsteroidEntity).x != pirateAsteroidPosition.x, "Pirate asteroid not moved");
+    assertEq(ResourceCount.get(personalPirateEntity, uint8(Iron)), 400, "Resource count does not match");
+    assertEq(UnitCount.get(personalPirateEntity, pirateAsteroidEntity, unit1), 10, "Unit count does not match");
   }
 }
