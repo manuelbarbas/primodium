@@ -1,21 +1,22 @@
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import { useCallback } from "react";
 import { SecondaryCard } from "src/components/core/Card";
 import { useFleetMoves } from "src/hooks/useFleetMoves";
-import { Hangar, HomeAsteroid } from "src/network/components/clientComponents";
+
 import { EntityType } from "src/util/constants";
 import { UnitLabel } from "./UnitLabel";
+import { components } from "src/network/components";
 
 export const AllUnitLabels = () => {
-  const activeAsteroid = HomeAsteroid.use()?.value;
-  const units = Hangar.use(activeAsteroid);
+  const homeAsteroid = components.Home.use()?.asteroid as Entity;
+  const units = components.Hangar.use(homeAsteroid);
   const fleetMoves = useFleetMoves();
 
   const getUnitCount = useCallback(
-    (unit: EntityID) => {
-      if (!units) return 0;
+    (unit: Entity) => {
+      if (!units) return 0n;
       const index = units.units.indexOf(unit);
-      if (index === -1) return 0;
+      if (index === -1) return 0n;
       return units.counts[index];
     },
     [units]
@@ -24,43 +25,39 @@ export const AllUnitLabels = () => {
   return (
     <>
       <SecondaryCard className="grid grid-cols-1 gap-1">
-        <UnitLabel name={"Fleet Moves"} count={fleetMoves ?? 0} resourceId={EntityType.FleetMoves} />
+        <UnitLabel name={"Fleet Moves"} count={fleetMoves ?? 0} resource={EntityType.FleetMoves} />
       </SecondaryCard>
       <SecondaryCard className="grid grid-cols-1 gap-1">
         <UnitLabel
           name={"Minutemen Marine"}
           count={getUnitCount(EntityType.MinutemanMarine)}
-          resourceId={EntityType.MinutemanMarine}
+          resource={EntityType.MinutemanMarine}
         />
         <UnitLabel
           name={"Trident Marine"}
           count={getUnitCount(EntityType.TridentMarine)}
-          resourceId={EntityType.TridentMarine}
+          resource={EntityType.TridentMarine}
         />
         <UnitLabel
           name={"Anvil Light Drone"}
           count={getUnitCount(EntityType.AnvilLightDrone)}
-          resourceId={EntityType.AnvilLightDrone}
+          resource={EntityType.AnvilLightDrone}
         />
         <UnitLabel
           name={"Hammer Drone"}
           count={getUnitCount(EntityType.HammerLightDrone)}
-          resourceId={EntityType.HammerLightDrone}
+          resource={EntityType.HammerLightDrone}
         />
         <UnitLabel
           name={"Stinger Drone"}
           count={getUnitCount(EntityType.StingerDrone)}
-          resourceId={EntityType.StingerDrone}
+          resource={EntityType.StingerDrone}
         />
-        <UnitLabel
-          name={"Aegis Drone"}
-          count={getUnitCount(EntityType.AegisDrone)}
-          resourceId={EntityType.AegisDrone}
-        />
+        <UnitLabel name={"Aegis Drone"} count={getUnitCount(EntityType.AegisDrone)} resource={EntityType.AegisDrone} />
         <UnitLabel
           name={"Mining Vessel"}
           count={getUnitCount(EntityType.MiningVessel)}
-          resourceId={EntityType.MiningVessel}
+          resource={EntityType.MiningVessel}
         />
       </SecondaryCard>
     </>
