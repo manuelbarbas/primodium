@@ -90,27 +90,5 @@ contract TestLibStorage is PrimodiumTest {
     assertEq(MaxResourceCount.get(playerEntity, mockResource), 0);
   }
 
-  function testSetMaxStorageUpdateScore() public {
-    P_ScoreMultiplier.set(mockResource, 100);
-    uint8[] memory data = new uint8[](1);
-    data[0] = uint8(mockResource);
-    P_ListMaxResourceUpgrades.set(buildingPrototype, level, data);
-    P_ByLevelMaxResourceUpgrades.set(buildingPrototype, mockResource, level, 100);
-
-    LibStorage.increaseMaxStorage(playerEntity, buildingEntity, level);
-    assertEq(Score.get(playerEntity), 100);
-  }
-
-  function testIncreaseResourceUpdateScore() public {
-    P_ScoreMultiplier.set(mockResource, 100);
-    uint8[] memory data = new uint8[](1);
-    data[0] = uint8(mockResource);
-    P_ListMaxResourceUpgrades.set(buildingPrototype, level, data);
-    P_ByLevelMaxResourceUpgrades.set(buildingPrototype, mockResource, level, 100);
-
-    LibStorage.increaseMaxStorage(playerEntity, buildingEntity, level);
-    assertEq(Score.get(playerEntity), 100);
-  }
-
   function testDecreaseResourceUpdateScore() public {}
 }

@@ -29,6 +29,7 @@ import { LastClaimedAt, LastClaimedAtTableId } from "codegen/tables/LastClaimedA
 import { QueueItemUnits, QueueItemUnitsTableId } from "codegen/tables/QueueItemUnits.sol";
 import { QueueUnits, QueueUnitsTableId } from "codegen/tables/QueueUnits.sol";
 import { ProductionRateTableId } from "codegen/tables/ProductionRate.sol";
+import { ScoreTableId } from "codegen/tables/Score.sol";
 
 import { OnBuild_PlaceOnTile } from "src/hooks/systemHooks/build/OnBuild_PlaceOnTile.sol";
 import { OnBuild_SpendResources } from "src/hooks/systemHooks/build/OnBuild_SpendResources.sol";
@@ -66,7 +67,10 @@ import { OnRaid_Requirements } from "src/hooks/systemHooks/raid/OnRaid_Requireme
 
 import { OnReinforce_UpdateRock } from "src/hooks/systemHooks/reinforce/OnReinforce_UpdateRock.sol";
 
+import { OnResourceCount_Score } from "src/hooks/storeHooks/OnResourceCount_Score.sol";
+
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
+import { ALL as STORE_ALL, BEFORE_SPLICE_STATIC_DATA } from "@latticexyz/store/src/storeHookTypes.sol";
 
 contract PostDeploy is Script {
   function run(address worldAddress) external {
@@ -92,8 +96,14 @@ contract PostDeploy is Script {
     registerInvade(world);
     registerRaid(world);
     registerReinforce(world);
-
+    registerScoreHook(world);
     vm.stopBroadcast();
+  }
+
+  function registerScoreHook(IWorld world) internal {
+    OnResourceCount_Score onResourceCount_Score = new OnResourceCount_Score();
+    world.grantAccess(ScoreTableId, address(onResourceCount_Score));
+    world.registerStoreHook(ResourceCountTableId, onResourceCount_Score, BEFORE_SPLICE_STATIC_DATA);
   }
 
   /**
