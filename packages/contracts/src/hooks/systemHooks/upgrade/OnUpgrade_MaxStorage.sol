@@ -13,10 +13,10 @@ import { LibStorage } from "libraries/LibStorage.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 
 /**
- * @title OnAfter_MaxStorage
- * @dev This contract is a system hook that handles the max storage capacity of a building when it is constructed in the game world.
+ * @title OnUpgrade_MaxStorage
+ * @dev This contract is a system hook that handles the max storage capacity of a building when it is upgraded in the game world.
  */
-contract OnAfter_MaxStorage is SystemHook {
+contract OnUpgrade_MaxStorage is SystemHook {
   constructor() {}
 
   function onBeforeCallSystem(
@@ -27,7 +27,6 @@ contract OnAfter_MaxStorage is SystemHook {
 
   /**
    * @dev This function is called after the system's main logic is executed.
-   * It increases the max storage capacity of a player's building entity.
    * @param msgSender The address of the message sender.
    * @param systemId The identifier of the system.
    * @param callData The data passed to the system.
@@ -41,29 +40,15 @@ contract OnAfter_MaxStorage is SystemHook {
     bytes32 playerEntity = addressToEntity(msgSender);
     // Decode the arguments from the callData
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
-    if (
-      WorldResourceIdInstance.getName(systemId) == WorldResourceIdInstance.getName(getSystemResourceId("BuildSystem"))
-    ) {
-      (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
-      // Generate the unique building entity key
-      bytes32 buildingEntity = LibEncode.getHash(BuildingKey, coord);
-      // Increase the max storage capacity for the player's building entity
-      LibStorage.increaseMaxStorage(playerEntity, buildingEntity, 1);
-    } else if (
-      WorldResourceIdInstance.getName(systemId) ==
-      WorldResourceIdInstance.getName(getSystemResourceId("UpgradeBuildingSystem"))
-    ) {
-      PositionData memory coord = abi.decode(args, (PositionData));
 
-      // Get the building entity from the coordinates
-      bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
+    PositionData memory coord = abi.decode(args, (PositionData));
 
-      // Get the level of the building
-      uint256 level = Level.get(buildingEntity);
-      // Increase the maximum storage capacity
-      LibStorage.increaseMaxStorage(playerEntity, buildingEntity, level);
-    } else {
-      revert("[OnAfter_MaxStorage]: Invalid system ID");
-    }
+    // Get the building entity from the coordinates
+    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
+
+    // Get the level of the building
+    uint256 level = Level.get(buildingEntity);
+    // Increase the maximum storage capacity
+    LibStorage.increaseMaxStorage(playerEntity, buildingEntity, level);
   }
 }

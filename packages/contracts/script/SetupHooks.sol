@@ -24,15 +24,17 @@ import { ProducedUnitTableId } from "codegen/tables/ProducedUnit.sol";
 import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
 import { OnBefore_ClaimResources } from "src/hooks/systemHooks/OnBefore_ClaimResources.sol";
 import { OnBefore_ClaimUnits } from "src/hooks/systemHooks/OnBefore_ClaimUnits.sol";
-import { OnBefore_SpendResources } from "src/hooks/systemHooks/OnBefore_SpendResources.sol";
-
-import { OnAfter_MaxStorage } from "src/hooks/systemHooks/OnAfter_MaxStorage.sol";
-import { OnAfter_ProductionRate } from "src/hooks/systemHooks/OnAfter_ProductionRate.sol";
 
 import { OnBuild_PlaceOnTile } from "src/hooks/systemHooks/build/OnBuild_PlaceOnTile.sol";
 import { OnBuild_Requirements } from "src/hooks/systemHooks/build/OnBuild_Requirements.sol";
+import { OnBuild_SpendResources } from "src/hooks/systemHooks/build/OnBuild_SpendResources.sol";
+import { OnBuild_MaxStorage } from "src/hooks/systemHooks/build/OnBuild_MaxStorage.sol";
+import { OnBuild_ProductionRate } from "src/hooks/systemHooks/build/OnBuild_ProductionRate.sol";
 
 import { OnUpgrade_Requirements } from "src/hooks/systemHooks/upgrade/OnUpgrade_Requirements.sol";
+import { OnUpgrade_SpendResources } from "src/hooks/systemHooks/upgrade/OnUpgrade_SpendResources.sol";
+import { OnUpgrade_MaxStorage } from "src/hooks/systemHooks/upgrade/OnUpgrade_MaxStorage.sol";
+import { OnUpgrade_ProductionRate } from "src/hooks/systemHooks/upgrade/OnUpgrade_ProductionRate.sol";
 
 import { OnDestroy_ClearUtility } from "src/hooks/systemHooks/destroy/OnDestroy_ClearUtility.sol";
 import { OnDestroy_MaxStorage } from "src/hooks/systemHooks/destroy/OnDestroy_MaxStorage.sol";
@@ -44,6 +46,7 @@ import { OnSendUnits_Requirements } from "src/hooks/systemHooks/sendUnits/OnSend
 import { OnSendUnits_UnitCount } from "src/hooks/systemHooks/sendUnits/OnSendUnits_UnitCount.sol";
 
 import { OnTrainUnits_Requirements } from "src/hooks/systemHooks/trainUnits/OnTrainUnits_Requirements.sol";
+import { OnTrainUnits_SpendResources } from "src/hooks/systemHooks/trainUnits/OnTrainUnits_SpendResources.sol";
 
 import { OnInvade_TargetClaimResourcesAndUnits } from "src/hooks/systemHooks/invade/OnInvade_TargetClaimResourcesAndUnits.sol";
 import { OnInvade_Requirements } from "src/hooks/systemHooks/invade/OnInvade_Requirements.sol";
@@ -74,42 +77,11 @@ function setupHooks(IWorld world) {
   world.grantAccess(QueueUnitsTableId, address(onBefore_ClaimUnits));
   world.grantAccess(ProducedUnitTableId, address(onBefore_ClaimUnits));
 
-  OnBefore_SpendResources onBefore_SpendResources = new OnBefore_SpendResources();
-  world.grantAccess(ResourceCountTableId, address(onBefore_SpendResources));
-  world.grantAccess(MapItemUtilitiesTableId, address(onBefore_SpendResources));
-  world.grantAccess(MapUtilitiesTableId, address(onBefore_SpendResources));
-  world.grantAccess(MapItemStoredUtilitiesTableId, address(onBefore_ClaimResources));
-  world.grantAccess(MaxResourceCountTableId, address(onBefore_SpendResources));
-
-  OnAfter_MaxStorage onAfter_MaxStorage = new OnAfter_MaxStorage();
-  world.grantAccess(ResourceCountTableId, address(onAfter_MaxStorage));
-  world.grantAccess(MaxResourceCountTableId, address(onAfter_MaxStorage));
-
-  OnAfter_ProductionRate onAfter_ProductionRate = new OnAfter_ProductionRate();
-  world.grantAccess(ProductionRateTableId, address(onAfter_ProductionRate));
-  world.grantAccess(MaxResourceCountTableId, address(onAfter_ProductionRate));
-  world.grantAccess(ResourceCountTableId, address(onAfter_ProductionRate));
-  world.grantAccess(MapItemUtilitiesTableId, address(onAfter_ProductionRate));
-  world.grantAccess(MapUtilitiesTableId, address(onAfter_ProductionRate));
-  world.grantAccess(MapItemStoredUtilitiesTableId, address(onAfter_ProductionRate));
-
-  registerBuildHooks(
-    world,
-    onBefore_ClaimResources,
-    onBefore_SpendResources,
-    onAfter_MaxStorage,
-    onAfter_ProductionRate
-  );
-  registerUpgradeHooks(
-    world,
-    onBefore_ClaimResources,
-    onBefore_SpendResources,
-    onAfter_MaxStorage,
-    onAfter_ProductionRate
-  );
+  registerBuildHooks(world, onBefore_ClaimResources);
+  registerUpgradeHooks(world, onBefore_ClaimResources);
   registerDestroyHooks(world, onBefore_ClaimResources);
   registerSendUnits(world, onBefore_ClaimUnits);
-  registerTrainUnits(world, onBefore_ClaimResources, onBefore_ClaimUnits, onBefore_SpendResources);
+  registerTrainUnits(world, onBefore_ClaimResources, onBefore_ClaimUnits);
   registerInvade(world, onBefore_ClaimResources, onBefore_ClaimUnits);
   registerRaid(world, onBefore_ClaimResources, onBefore_ClaimUnits);
   registerReinforce(world, onBefore_ClaimUnits);
@@ -120,20 +92,20 @@ function setupHooks(IWorld world) {
  * @dev Register system hooks for the build actions.
  * @param world The World contract instance.
  */
-function registerBuildHooks(
-  IWorld world,
-  OnBefore_ClaimResources onBefore_ClaimResources,
-  OnBefore_SpendResources onBefore_SpendResources,
-  OnAfter_MaxStorage onAfter_MaxStorage,
-  OnAfter_ProductionRate onAfter_ProductionRate
-) {
+function registerBuildHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
   ResourceId systemId = getSystemResourceId("BuildSystem");
   world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
 
   OnBuild_Requirements onBuild_Requirements = new OnBuild_Requirements();
   world.registerSystemHook(systemId, onBuild_Requirements, BEFORE_CALL_SYSTEM);
 
-  world.registerSystemHook(systemId, onBefore_SpendResources, AFTER_CALL_SYSTEM);
+  OnBuild_SpendResources onBuild_SpendResources = new OnBuild_SpendResources();
+  world.grantAccess(ResourceCountTableId, address(onBuild_SpendResources));
+  world.grantAccess(MapItemUtilitiesTableId, address(onBuild_SpendResources));
+  world.grantAccess(MapUtilitiesTableId, address(onBuild_SpendResources));
+  world.grantAccess(MapItemStoredUtilitiesTableId, address(onBuild_SpendResources));
+  world.grantAccess(MaxResourceCountTableId, address(onBuild_SpendResources));
+  world.registerSystemHook(systemId, onBuild_SpendResources, AFTER_CALL_SYSTEM);
 
   OnBuild_PlaceOnTile onBuild_PlaceOnTile = new OnBuild_PlaceOnTile();
   world.grantAccess(ChildrenTableId, address(onBuild_PlaceOnTile));
@@ -141,33 +113,53 @@ function registerBuildHooks(
   world.grantAccess(PositionTableId, address(onBuild_PlaceOnTile));
   world.registerSystemHook(systemId, onBuild_PlaceOnTile, AFTER_CALL_SYSTEM);
 
-  world.registerSystemHook(systemId, onAfter_MaxStorage, AFTER_CALL_SYSTEM);
+  OnBuild_MaxStorage onBuild_MaxStorage = new OnBuild_MaxStorage();
+  world.grantAccess(ResourceCountTableId, address(onBuild_MaxStorage));
+  world.grantAccess(MaxResourceCountTableId, address(onBuild_MaxStorage));
+  world.registerSystemHook(systemId, onBuild_MaxStorage, AFTER_CALL_SYSTEM);
 
-  world.registerSystemHook(systemId, onAfter_ProductionRate, AFTER_CALL_SYSTEM);
+  OnBuild_ProductionRate onBuild_ProductionRate = new OnBuild_ProductionRate();
+  world.grantAccess(ProductionRateTableId, address(onBuild_ProductionRate));
+  world.grantAccess(MaxResourceCountTableId, address(onBuild_ProductionRate));
+  world.grantAccess(ResourceCountTableId, address(onBuild_ProductionRate));
+  world.grantAccess(MapItemUtilitiesTableId, address(onBuild_ProductionRate));
+  world.grantAccess(MapUtilitiesTableId, address(onBuild_ProductionRate));
+  world.grantAccess(MapItemStoredUtilitiesTableId, address(onBuild_ProductionRate));
+  world.registerSystemHook(systemId, onBuild_ProductionRate, AFTER_CALL_SYSTEM);
 }
 
 /**
  * @dev Register system hooks for the upgrade actions.
  * @param world The World contract instance.
  */
-function registerUpgradeHooks(
-  IWorld world,
-  OnBefore_ClaimResources onBefore_ClaimResources,
-  OnBefore_SpendResources onBefore_SpendResources,
-  OnAfter_MaxStorage onAfter_MaxStorage,
-  OnAfter_ProductionRate onAfter_ProductionRate
-) {
+function registerUpgradeHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
   ResourceId systemId = getSystemResourceId("UpgradeBuildingSystem");
   world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
 
   OnUpgrade_Requirements onUpgrade_Requirements = new OnUpgrade_Requirements();
   world.registerSystemHook(systemId, onUpgrade_Requirements, BEFORE_CALL_SYSTEM);
 
-  world.registerSystemHook(systemId, onBefore_SpendResources, AFTER_CALL_SYSTEM);
+  OnUpgrade_SpendResources onUpgrade_SpendResources = new OnUpgrade_SpendResources();
+  world.grantAccess(ResourceCountTableId, address(onUpgrade_SpendResources));
+  world.grantAccess(MapItemUtilitiesTableId, address(onUpgrade_SpendResources));
+  world.grantAccess(MapUtilitiesTableId, address(onUpgrade_SpendResources));
+  world.grantAccess(MapItemStoredUtilitiesTableId, address(onUpgrade_SpendResources));
+  world.grantAccess(MaxResourceCountTableId, address(onUpgrade_SpendResources));
+  world.registerSystemHook(systemId, onUpgrade_SpendResources, AFTER_CALL_SYSTEM);
 
-  world.registerSystemHook(systemId, onAfter_MaxStorage, AFTER_CALL_SYSTEM);
+  OnUpgrade_MaxStorage onUpgrade_MaxStorage = new OnUpgrade_MaxStorage();
+  world.grantAccess(ResourceCountTableId, address(onUpgrade_MaxStorage));
+  world.grantAccess(MaxResourceCountTableId, address(onUpgrade_MaxStorage));
+  world.registerSystemHook(systemId, onUpgrade_MaxStorage, AFTER_CALL_SYSTEM);
 
-  world.registerSystemHook(systemId, onAfter_ProductionRate, AFTER_CALL_SYSTEM);
+  OnUpgrade_ProductionRate onUpgrade_ProductionRate = new OnUpgrade_ProductionRate();
+  world.grantAccess(ProductionRateTableId, address(onUpgrade_ProductionRate));
+  world.grantAccess(MaxResourceCountTableId, address(onUpgrade_ProductionRate));
+  world.grantAccess(ResourceCountTableId, address(onUpgrade_ProductionRate));
+  world.grantAccess(MapItemUtilitiesTableId, address(onUpgrade_ProductionRate));
+  world.grantAccess(MapUtilitiesTableId, address(onUpgrade_ProductionRate));
+  world.grantAccess(MapItemStoredUtilitiesTableId, address(onUpgrade_ProductionRate));
+  world.registerSystemHook(systemId, onUpgrade_ProductionRate, AFTER_CALL_SYSTEM);
 }
 
 /**
@@ -232,8 +224,7 @@ function registerSendUnits(IWorld world, OnBefore_ClaimUnits onBefore_ClaimUnits
 function registerTrainUnits(
   IWorld world,
   OnBefore_ClaimResources onBefore_ClaimResources,
-  OnBefore_ClaimUnits onBefore_ClaimUnits,
-  OnBefore_SpendResources onBefore_SpendResources
+  OnBefore_ClaimUnits onBefore_ClaimUnits
 ) {
   ResourceId systemId = getSystemResourceId("TrainUnitsSystem");
 
@@ -241,7 +232,13 @@ function registerTrainUnits(
 
   world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
 
-  world.registerSystemHook(systemId, onBefore_SpendResources, BEFORE_CALL_SYSTEM);
+  OnTrainUnits_SpendResources onTrainUnits_SpendResources = new OnTrainUnits_SpendResources();
+  world.grantAccess(ResourceCountTableId, address(onTrainUnits_SpendResources));
+  world.grantAccess(MapItemUtilitiesTableId, address(onTrainUnits_SpendResources));
+  world.grantAccess(MapUtilitiesTableId, address(onTrainUnits_SpendResources));
+  world.grantAccess(MapItemStoredUtilitiesTableId, address(onTrainUnits_SpendResources));
+  world.grantAccess(MaxResourceCountTableId, address(onTrainUnits_SpendResources));
+  world.registerSystemHook(systemId, onTrainUnits_SpendResources, BEFORE_CALL_SYSTEM);
 
   OnTrainUnits_Requirements onTrainUnits_Requirements = new OnTrainUnits_Requirements();
   world.registerSystemHook(systemId, onTrainUnits_Requirements, BEFORE_CALL_SYSTEM);

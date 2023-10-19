@@ -16,10 +16,10 @@ import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
 
 /**
- * @title OnAfter_ProductionRate
+ * @title OnBuild_ProductionRate
  * @dev This contract is a system hook that handles the production rate of a building when it is constructed in the game world.
  */
-contract OnAfter_ProductionRate is SystemHook {
+contract OnBuild_ProductionRate is SystemHook {
   constructor() {}
 
   /**
@@ -50,9 +50,7 @@ contract OnAfter_ProductionRate is SystemHook {
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
     // Convert the player's address to an entity
     bytes32 playerEntity = addressToEntity(msgSender);
-    if (
-      WorldResourceIdInstance.getName(systemId) == WorldResourceIdInstance.getName(getSystemResourceId("BuildSystem"))
-    ) {
+    
       (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
 
       // Generate the unique building entity key
@@ -63,23 +61,6 @@ contract OnAfter_ProductionRate is SystemHook {
 
       // Upgrade resource production for the player's building entity
       LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 1);
-    } else if (
-      WorldResourceIdInstance.getName(systemId) ==
-      WorldResourceIdInstance.getName(getSystemResourceId("UpgradeBuildingSystem"))
-    ) {
-      PositionData memory coord = abi.decode(args, (PositionData));
-
-      // Get the building entity from the coordinates
-      bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
-
-      // Get the level of the building
-      uint256 level = Level.get(buildingEntity);
-
-      // Adjust the production rate and resource production
-      LibReduceProductionRate.reduceProductionRate(playerEntity, buildingEntity, level);
-      LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, level);
-    } else {
-      revert("[OnAfter_ProductionRate]: Invalid system ID");
-    }
+    
   }
 }
