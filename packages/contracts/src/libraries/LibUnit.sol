@@ -88,7 +88,8 @@ library LibUnit {
     bytes32 unitPrototype
   ) internal view returns (uint256) {
     uint256 buildingLevel = Level.get(building);
-    uint256 multiplier = P_UnitProdMultiplier.get(building, buildingLevel);
+    bytes32 buildingType = BuildingType.get(building);
+    uint256 multiplier = P_UnitProdMultiplier.get(buildingType, buildingLevel);
     uint256 unitLevel = UnitLevel.get(playerEntity, unitPrototype);
     uint256 rawTrainingTime = P_Unit.getTrainingTime(unitPrototype, unitLevel);
     require(rawTrainingTime > 0 && multiplier > 0, "Training time is invalid");

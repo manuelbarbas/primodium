@@ -45,11 +45,10 @@ contract LibUnitTest is PrimodiumTest {
   function testClaimUnits() public {
     Level.set(building, 1);
     LastClaimedAt.set(building, block.timestamp);
-    P_UnitProdMultiplier.set(building, 1, 100);
+    P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
 
     Level.set(building2, 1);
     LastClaimedAt.set(building2, block.timestamp);
-    P_UnitProdMultiplier.set(building2, 1, 100);
 
     UnitFactorySet.add(player, building);
     UnitFactorySet.add(player, building2);
@@ -67,7 +66,7 @@ contract LibUnitTest is PrimodiumTest {
   function testClaimBuildingUnitsSingleAll() public {
     Level.set(building, 1);
     LastClaimedAt.set(building, block.timestamp);
-    P_UnitProdMultiplier.set(building, 1, 100);
+    P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
     P_Unit.setTrainingTime(unitPrototype, 0, 1);
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
     UnitProductionQueue.enqueue(building, item);
@@ -80,7 +79,7 @@ contract LibUnitTest is PrimodiumTest {
   function testClaimBuildingUnitsSinglePart() public {
     Level.set(building, 1);
     LastClaimedAt.set(building, block.timestamp);
-    P_UnitProdMultiplier.set(building, 1, 100);
+    P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
     P_Unit.setTrainingTime(unitPrototype, 0, 1);
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
     UnitProductionQueue.enqueue(building, item);
@@ -94,7 +93,7 @@ contract LibUnitTest is PrimodiumTest {
   function testClaimBuildingUnitsDouble() public {
     Level.set(building, 1);
     LastClaimedAt.set(building, block.timestamp);
-    P_UnitProdMultiplier.set(building, 1, 100);
+    P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
 
     P_Unit.setTrainingTime(unitPrototype, 0, 1);
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
@@ -114,7 +113,7 @@ contract LibUnitTest is PrimodiumTest {
   function testClaimBuildingUnitsDoublePart() public {
     Level.set(building, 1);
     LastClaimedAt.set(building, block.timestamp);
-    P_UnitProdMultiplier.set(building, 1, 100);
+    P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
 
     P_Unit.setTrainingTime(unitPrototype, 0, 1);
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
@@ -146,17 +145,17 @@ contract LibUnitTest is PrimodiumTest {
   }
 
   function testGetUnitBuildTime() public {
-    P_UnitProdMultiplier.set(building, 1, 100);
+    P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
     P_Unit.setTrainingTime(unitPrototype, 0, 100);
     Level.set(building, 1);
     assertEq(LibUnit.getUnitBuildTime(player, building, unitPrototype), 100);
 
-    P_UnitProdMultiplier.set(building, 1, 50);
+    P_UnitProdMultiplier.set(buildingPrototype, 1, 50);
     P_Unit.setTrainingTime(unitPrototype, 0, 100);
     Level.set(building, 1);
     assertEq(LibUnit.getUnitBuildTime(player, building, unitPrototype), 200);
 
-    P_UnitProdMultiplier.set(building, 1, 100);
+    P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
     P_Unit.setTrainingTime(unitPrototype, 0, 200);
     Level.set(building, 1);
     assertEq(LibUnit.getUnitBuildTime(player, building, unitPrototype), 200);
