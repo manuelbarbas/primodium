@@ -36,7 +36,7 @@ library LibPirate {
         LibUnit.updateStoredUtilities(
           ownerEntity,
           units[i],
-          UnitCount.get(ownerEntity, playerHomeAsteroidEntity, units[i]),
+          UnitCount.get(ownerEntity, asteroidEntity, units[i]),
           false
         );
         UnitCount.set(ownerEntity, asteroidEntity, units[i], 0);
