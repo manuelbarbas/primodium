@@ -23,10 +23,12 @@ export enum EBuilding {
 
   // Units
   Hangar,
-  UnitTrainingBuilding,
+  Garage,
   StorageUnit,
+  Workshop,
   DroneFactory,
   Starmapper,
+  SAM,
 }
 
 export enum EResource {
@@ -74,6 +76,8 @@ export enum EUnit {
   HammerDrone,
   StingerDrone,
   AnvilDrone,
+  MinutemanMarine,
+  TridentMarine,
 }
 
 export enum ESendType {
