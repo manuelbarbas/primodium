@@ -3,7 +3,7 @@ import React from "react";
 
 import { RESOURCE_SCALE, ResourceImage, ResourceType, ResourceEntityLookup } from "src/util/constants";
 import { getRecipe } from "src/util/resource";
-import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
+import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { formatNumber, getBlockTypeName } from "src/util/common";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { EntitytoSpriteKey } from "@game/constants";

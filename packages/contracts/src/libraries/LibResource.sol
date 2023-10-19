@@ -5,8 +5,9 @@ import { EBuilding, EResource } from "src/Types.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { UtilityMap } from "libraries/UtilityMap.sol";
-import { P_IsUtility, Score, P_ScoreMultiplier, P_RequiredResources, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+import { Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
 import { BuildingKey } from "src/Keys.sol";
+import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 library LibResource {
   /**
@@ -110,6 +111,8 @@ library LibResource {
     }
 
     uint256 timeSinceClaimed = block.timestamp - lastClaimed;
+    timeSinceClaimed = (timeSinceClaimed * P_GameConfig.getWorldSpeed()) / WORLD_SPEED_SCALE;
+
     LastClaimedAt.set(playerEntity, block.timestamp);
     for (uint8 i = 1; i < uint8(EResource.LENGTH); i++) {
       uint8 resource = i;

@@ -1,22 +1,10 @@
 import { Entity } from "@latticexyz/recs";
-import { useHasEnoughOfResource } from "src/hooks/useHasEnoughOfResource";
 import { formatNumber } from "src/util/common";
 import { RESOURCE_SCALE, ResourceType } from "src/util/constants";
 import { IconLabel } from "../core/IconLabel";
+import { useHasEnoughOfResource } from "src/hooks/useHasEnoughOfResource";
 
-export default function ResourceIconTooltip({
-  image,
-  resource,
-  name,
-  amount,
-  scale = RESOURCE_SCALE,
-  fontSize = "md",
-  resourceType = ResourceType.Resource,
-  validate = false,
-  direction = "right",
-  className,
-  playerEntity,
-}: {
+type ResourceIconProps = {
   image: string;
   resource: Entity;
   resourceType?: ResourceType;
@@ -25,13 +13,23 @@ export default function ResourceIconTooltip({
   inline?: boolean;
   scale?: bigint;
   fontSize?: string;
-  validate?: boolean;
   direction?: "top" | "bottom" | "right" | "left";
   className?: string;
   playerEntity: Entity;
-}) {
-  const hasEnough = useHasEnoughOfResource(resource, amount, playerEntity, resourceType);
+  validate?: boolean;
+};
 
+const ResourceIconTooltipContent = ({
+  resourceType,
+  amount,
+  scale = RESOURCE_SCALE,
+  image,
+  name,
+  direction,
+  fontSize = "md",
+  className,
+  hasEnough,
+}: ResourceIconProps & { hasEnough: boolean }) => {
   const label =
     ResourceType.ResourceRate !== resourceType
       ? amount !== 0n
@@ -45,7 +43,20 @@ export default function ResourceIconTooltip({
       text={label}
       tooltipDirection={direction}
       tooltipText={name}
-      className={`text-${fontSize} font-bold ${className} ${!hasEnough && validate ? `text-error animate-pulse ` : ""}`}
+      className={`text-${fontSize} font-bold ${className} ${!hasEnough ? `text-error animate-pulse ` : ""}`}
     />
   );
-}
+};
+
+const ResourceIconTooltipValidate = (props: ResourceIconProps) => {
+  const hasEnough = useHasEnoughOfResource(props.resource, props.amount, props.playerEntity, props.resourceType);
+  return <ResourceIconTooltipContent {...props} hasEnough={hasEnough} />;
+};
+
+export const ResourceIconTooltip = (props: ResourceIconProps) => {
+  if (props.validate) {
+    return <ResourceIconTooltipValidate {...props} />;
+  } else {
+    return <ResourceIconTooltipContent {...props} hasEnough={true} />;
+  }
+};

@@ -5,11 +5,9 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { addressToEntity, entityToAddress, getSystemResourceId, bytes32ToString } from "src/utils.sol";
 
-import { P_ProducesUnits, Position, PositionData, BuildingType, OwnedBy, Children, Spawned, Level, BuildingType } from "codegen/index.sol";
+import { P_UnitProdTypes, Position, PositionData, BuildingType, OwnedBy, Children, Spawned, Level, BuildingType } from "codegen/index.sol";
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 import { LibBuilding, LibReduceProductionRate, LibResource, LibProduction, LibStorage, UnitFactorySet } from "codegen/Libraries.sol";
-
-import { console } from "forge-std/console.sol";
 
 contract DestroySystem is PrimodiumSystem {
   /// @notice Destroys a building entity
@@ -19,14 +17,14 @@ contract DestroySystem is PrimodiumSystem {
     buildingEntity = LibBuilding.getBuildingFromCoord(coord);
     bytes32 playerEntity = addressToEntity(msg.sender);
     bytes32 buildingType = BuildingType.get(buildingEntity);
+    uint256 level = Level.get(buildingEntity);
 
-    console.log("Destroying building %s", bytes32ToString(buildingEntity));
     Level.deleteRecord(buildingEntity);
     BuildingType.deleteRecord(buildingEntity);
     OwnedBy.deleteRecord(buildingEntity);
     Position.deleteRecord(buildingEntity);
 
-    if (P_ProducesUnits.get(buildingType)) {
+    if (P_UnitProdTypes.length(buildingType, level) != 0) {
       UnitFactorySet.remove(playerEntity, buildingEntity);
     }
     return buildingEntity;
