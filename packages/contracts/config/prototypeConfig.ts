@@ -1,7 +1,7 @@
 import { Hex } from "viem";
 import { config } from "../mud.config";
 import {
-  buildingUnitProduction,
+  encodeArray,
   getResourceValue,
   getResourceValues,
   idsToPrototypes,
@@ -175,6 +175,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[1]),
         },
+        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
         P_Production: getResourceValue({ U_Vessel: 1 }),
       },
       2: {
@@ -182,6 +183,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[2]),
         },
+        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
         P_Production: getResourceValue({ U_Vessel: 1 }),
       },
       3: {
@@ -189,6 +191,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[3]),
         },
+        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
         P_Production: getResourceValue({ U_Vessel: 1 }),
       },
       4: {
@@ -196,13 +199,14 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[4]),
         },
+        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
         P_Production: getResourceValue({ U_Vessel: 1 }),
       },
       5: {
-        P_RequiredResources: getResourceValues({ Titanium: 80000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[5]),
         },
+        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
         P_Production: getResourceValue({ U_Vessel: 1 }),
       },
       6: {
@@ -210,6 +214,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[6]),
         },
+        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
         P_Production: getResourceValue({ U_Vessel: 1 }),
       },
       7: {
@@ -217,6 +222,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[7]),
         },
+        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
         P_Production: getResourceValue({ U_Vessel: 1 }),
       },
       8: {
@@ -224,6 +230,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[8]),
         },
+        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
         P_Production: getResourceValue({ U_Vessel: 1 }),
       },
     },
@@ -549,32 +556,34 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_Blueprint: { value: getBlueprint(3, 3) },
       P_MaxLevel: { value: 4n },
-      P_ProducesUnits: { value: true },
     },
     levels: {
       1: {
         P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Lithium: 5000, U_Electricity: 100 }),
         P_UnitProdMultiplier: { value: 100n },
+        P_UnitProdTypes: { value: encodeArray(["AnvilDrone", "HammerDrone"]) },
       },
       2: {
         P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Sulfur: 25000, U_Electricity: 200 }),
         P_UnitProdMultiplier: { value: 110n },
+        P_UnitProdTypes: { value: encodeArray(["AnvilDrone", "HammerDrone", "AegisDrone"]) },
       },
       3: {
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Sulfur: 100000, Iridium: 20000, U_Electricity: 350 }),
         P_UnitProdMultiplier: { value: 130n },
+        P_UnitProdTypes: { value: encodeArray(["AnvilDrone", "HammerDrone", "AegisDrone", "StingerDrone"]) },
       },
       4: {
         P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Sulfur: 275000, Kimberlite: 10000, U_Electricity: 500 }),
         P_UnitProdMultiplier: { value: 150n },
+        P_UnitProdTypes: { value: encodeArray(["AnvilDrone", "HammerDrone", "AegisDrone", "StingerDrone"]) },
       },
     },
   },
-  ...buildingUnitProduction("DroneFactory", ["AnvilDrone", "HammerDrone", "MiningVessel", "StingerDrone"]),
   Starmapper: {
     tables: {
       P_Blueprint: { value: getBlueprint(3, 2) },
