@@ -138,23 +138,25 @@ export function getMaxCountOfRecipe(recipe: ReturnType<typeof getRecipe>, player
     return getFullResourceCount(resource.id, playerEntity);
   });
 
-  let count = 0;
+  let count;
   for (const [index, resource] of recipe.entries()) {
     const resourceAmount = resourceAmounts[index];
     const { resourceCount, resourcesToClaim, production } = resourceAmount;
-
+    let maxOfResource = 0n;
     switch (resource.type) {
       case ResourceType.Resource:
-        count = Math.min(count, Number((resourceCount + resourcesToClaim) / resource.amount));
+        maxOfResource = (resourceCount + resourcesToClaim) / resource.amount;
         break;
       case ResourceType.ResourceRate:
-        count = Math.min(count, Number(production / resource.amount));
+        maxOfResource = production / resource.amount;
         break;
       case ResourceType.Utility:
-        count = Math.min(count, Number(resourceCount / resource.amount));
+        maxOfResource = resourceCount / resource.amount;
         break;
     }
+    if (!count) count = Number(maxOfResource);
+    else count = Math.min(count, Number(maxOfResource));
   }
 
-  return count;
+  return count ?? 0;
 }

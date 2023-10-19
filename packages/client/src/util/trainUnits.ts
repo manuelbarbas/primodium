@@ -25,7 +25,7 @@ export function getUnitStats(rawUnitEntity: Entity, playerEntity: Entity) {
     DEF: defense,
     SPD: speed,
     MIN: mining,
-    CRG: cargo * RESOURCE_SCALE,
+    CRG: cargo / RESOURCE_SCALE,
   };
 }
 
@@ -56,10 +56,4 @@ export function getUnitTrainingTime(rawPlayer: Entity, rawBuilding: Entity, rawU
     (config.worldSpeed * 100n * 100n) / (trainingTime * config.unitProductionRate * SPEED_SCALE * multiplier);
 
   return time;
-}
-
-export function isUnitFactory(building: Entity) {
-  const buildingType = comps.BuildingType.get(building)?.value;
-  if (!buildingType) return false;
-  return !comps.P_ProducesUnits.getWithKeys({ prototype: buildingType as Hex })?.value;
 }
