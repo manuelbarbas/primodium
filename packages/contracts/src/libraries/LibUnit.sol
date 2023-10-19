@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { ProducedUnit, BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
+import { MaxResourceCount, ProducedUnit, BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
 
 import { ERock, EUnit } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
@@ -140,15 +140,14 @@ library LibUnit {
       uint256 currentAmount = ResourceCount.get(playerEntity, resource);
 
       if (add) {
-        require(
-          LibResource.getResourceCountAvailable(playerEntity, resource) >= requiredAmount,
-          "[Reinforce] Not enough resources"
-        );
-        ResourceCount.set(playerEntity, resource, currentAmount + requiredAmount);
-      } else if (requiredAmount < currentAmount) {
+        require(currentAmount >= requiredAmount, "[Reinforce] Not enough resources");
         ResourceCount.set(playerEntity, resource, currentAmount - requiredAmount);
       } else {
-        ResourceCount.set(playerEntity, resource, 0);
+        require(
+          currentAmount + requiredAmount <= MaxResourceCount.get(playerEntity, resource),
+          "Can't store more resources"
+        );
+        ResourceCount.set(playerEntity, resource, currentAmount + requiredAmount);
       }
     }
   }

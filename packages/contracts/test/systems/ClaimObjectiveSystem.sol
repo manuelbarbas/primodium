@@ -127,7 +127,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.U_Housing);
     requiredResourcesData.amounts[0] = 1;
-    P_RequiredResources.set(unit1, 1, requiredResourcesData);
+    P_RequiredResources.set(unit1, 0, requiredResourcesData);
 
     // provide the required housing
     LibProduction.increaseResourceProduction(playerEntity, EResource.U_Housing, 100);
@@ -151,7 +151,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.U_Housing);
     requiredResourcesData.amounts[0] = 1;
-    P_RequiredResources.set(unit1, 1, requiredResourcesData);
+    P_RequiredResources.set(unit1, 0, requiredResourcesData);
 
     world.claimObjective(EObjectives.BuildFirstIronMine);
   }
