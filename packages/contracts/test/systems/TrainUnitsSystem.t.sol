@@ -45,7 +45,10 @@ contract TrainUnitsSystemTest is PrimodiumTest {
   }
 
   function testTrainUnits() public {
-    P_UnitProduction.set(buildingPrototype, unitPrototype, true);
+    bytes32[] memory unitPrototypes = new bytes32[](1);
+    unitPrototypes[0] = unitPrototype;
+    P_UnitProdTypes.set(buildingPrototype, 0, unitPrototypes);
+
     world.trainUnits(building, unit, 1);
     QueueItemUnitsData memory data = UnitProductionQueue.peek(building);
     assertEq(toString(data.unitId), toString(unitPrototype));
@@ -63,14 +66,19 @@ contract TrainUnitsSystemTest is PrimodiumTest {
       0,
       P_RequiredResourcesData(p_requiredresources_resources_level_0, p_requiredresources_amounts_level_0)
     );
+    bytes32[] memory unitPrototypes = new bytes32[](1);
+    unitPrototypes[0] = unitPrototype;
+    P_UnitProdTypes.set(buildingPrototype, 0, unitPrototypes);
 
-    P_UnitProduction.set(buildingPrototype, unitPrototype, true);
     vm.expectRevert(bytes("[SpendResources] Not enough resources to spend"));
     world.trainUnits(building, unit, 1);
   }
 
   function testTrainUnitsUpdateAsteroid() public {
-    P_UnitProduction.set(buildingPrototype, unitPrototype, true);
+    bytes32[] memory unitPrototypes = new bytes32[](1);
+    unitPrototypes[0] = unitPrototype;
+    P_UnitProdTypes.set(buildingPrototype, 1, unitPrototypes);
+
     RockType.set(rock, uint8(ERock.Asteroid));
 
     setupClaimUnits();
