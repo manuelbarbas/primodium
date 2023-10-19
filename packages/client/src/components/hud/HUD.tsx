@@ -9,7 +9,7 @@ import { useGameStore } from "../../store/GameStore";
 import { HUD } from "../core/HUD";
 import { BrandingLabel } from "../shared/BrandingLabel";
 // import { LoadingIndication } from "./LoadingIndication";
-// import { Score } from "./Score";
+import { Score } from "./Score";
 // import { ViewStarmap } from "./ViewStarmap";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { Hotbar } from "./hotbar/Hotbar";
@@ -53,10 +53,10 @@ export const GameHUD = () => {
               {getBlockTypeName(selectedBuilding) && selectedBuilding && <PrototypeInfo building={selectedBuilding} />}
               {(!selectedBuilding || !getBlockTypeName(selectedBuilding)) && <ViewStarmap />}
             </HUD.TopMiddle>
-            {/* <HUD.TopLeft>
-              <Score />z
-              <LoadingIndication />
-            </HUD.TopLeft> */}
+            <HUD.TopLeft>
+              <Score />
+              {/* <LoadingIndication /> */}
+            </HUD.TopLeft>
             {/* <HUD.TopRight>
               <Panes />
             </HUD.TopRight> */}
