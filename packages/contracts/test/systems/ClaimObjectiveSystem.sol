@@ -338,6 +338,12 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
   function testClaimObjectiveSpawnPirateAsteroid() public {
     bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine));
+
+    bytes32[] memory unitTypes = new bytes32[](unitPrototypeCount);
+    unitTypes[0] = unit1;
+    unitTypes[1] = unit2;
+    P_UnitPrototypes.set(unitTypes);
+
     P_HasBuiltBuildings.deleteRecord(objectivePrototype);
     P_SpawnPirateAsteroidData memory spawnPirateAsteroid;
     spawnPirateAsteroid.x = 10;
@@ -407,6 +413,8 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
           EResource(requiredResourcesData.resources[i]),
           requiredResourcesData.amounts[i] * 100
         );
+        console.log("utility for unit1 provided");
+        console.log(requiredResourcesData.amounts[i] * 100);
       }
       LibUnit.updateStoredUtilities(playerEntity, unit1, requiredResourcesData.amounts[i] * 100, true);
     }
@@ -420,6 +428,8 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
           requiredResourcesData.amounts[i] * 50
         );
         LibUnit.updateStoredUtilities(playerEntity, unit2, requiredResourcesData.amounts[i] * 50, true);
+        console.log("utility for unit2 provided");
+        console.log(requiredResourcesData.amounts[i] * 50);
       }
     }
     console.log("utility for unit2 provided");
