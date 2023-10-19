@@ -3,8 +3,8 @@ pragma solidity >=0.8.21;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
+import { IWorld } from "codegen/world/IWorld.sol";
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
-import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 
 import { OwnedBy } from "codegen/index.sol";
 import { LibInvade } from "codegen/Libraries.sol";
@@ -16,6 +16,6 @@ contract InvadeSystem is PrimodiumSystem {
    */
   function invade(bytes32 rockEntity) public {
     bytes32 playerEntity = addressToEntity(_msgSender());
-    LibInvade.invade(playerEntity, rockEntity);
+    LibInvade.invade(IWorld(_world()), playerEntity, rockEntity);
   }
 }
