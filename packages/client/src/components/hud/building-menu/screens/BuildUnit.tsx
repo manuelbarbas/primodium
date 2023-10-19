@@ -30,9 +30,16 @@ export const BuildUnit: React.FC<{
   const [selectedUnit, setSelectedUnit] = useState<Entity>();
   const [count, setCount] = useState(1);
   const playerEntity = mud.network.playerEntity;
-  const trainableUnits = [EntityType.AnvilLightDrone, EntityType.HammerLightDrone, EntityType.StingerDrone];
 
-  const { UnitLevel } = components;
+  const { UnitLevel, P_UnitProdTypes, BuildingType, Level } = components;
+
+  const buildingType = (BuildingType.get(building)?.value as Entity) ?? EntityType.NULL;
+  const buildingLevel = Level.use(building)?.value ?? 1n;
+  const trainableUnits = useMemo(() => {
+    return (
+      (P_UnitProdTypes.getWithKeys({ prototype: buildingType as Hex, level: buildingLevel })?.value as Entity[]) ?? []
+    );
+  }, [buildingType, buildingLevel, P_UnitProdTypes]);
 
   useEffect(() => {
     setCount(1);
@@ -54,12 +61,12 @@ export const BuildUnit: React.FC<{
     if (trainableUnits.length == 0) return;
 
     setSelectedUnit(trainableUnits[0]);
-  }, []);
+  }, [trainableUnits]);
 
   if (trainableUnits.length === 0) return null;
 
   return (
-    <Navigator.Screen title="BuildUnit" className="relative flex flex-col  items-center text-white w-96">
+    <Navigator.Screen title="BuildUnit" className="relative flex flex-col w-full">
       <SecondaryCard className="pixel-images w-full pointer-events-auto">
         <div className="flex flex-col items-center space-y-3">
           <div className="flex flex-wrap gap-2 items-center justify-center">

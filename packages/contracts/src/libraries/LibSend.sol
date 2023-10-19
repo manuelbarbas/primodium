@@ -6,6 +6,7 @@ import { UnitCount, ReversePosition, RockType, PositionData, P_Unit, UnitLevel, 
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { SendArgs } from "src/Types.sol";
+import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 library LibSend {
   /**
@@ -83,7 +84,11 @@ library LibSend {
     P_GameConfigData memory config = P_GameConfig.get();
     uint256 unitSpeed = getSlowestUnitSpeed(playerEntity, unitCounts);
     require(unitSpeed > 0 && config.moveSpeed > 0, "[SendUnits] Slowest unit speed must be greater than 0");
-    return block.timestamp + ((LibMath.distance(origin, destination) * 100 * 100) / (config.moveSpeed * unitSpeed));
+
+    return
+      block.timestamp +
+      ((LibMath.distance(origin, destination) * config.worldSpeed * 100 * 100) /
+        (config.moveSpeed * unitSpeed * WORLD_SPEED_SCALE));
   }
 
   /// @notice Checks if movement between two positions is allowed.

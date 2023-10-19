@@ -2,9 +2,8 @@ import { Entity } from "@latticexyz/recs";
 import { encodeEntity, singletonEntity } from "@latticexyz/store-sync/recs";
 import { Cheatcodes } from "@primodiumxyz/mud-game-tools";
 import { SetupResult } from "src/network/types";
-import { EntityType, ResourceEnumLookup, ResourceStorages, UtilityStorages, toHex32 } from "./constants";
-import { hashKeyEntity } from "./encode";
 import { Hex } from "viem";
+import { EntityType, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
 const resources: Record<string, Entity> = {
   iron: EntityType.Iron,
   copper: EntityType.Copper,
@@ -37,17 +36,12 @@ const units: Record<string, Entity> = {
 
 export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
   return {
-    setCounter: {
+    setWorldSpeed: {
       params: [{ name: "value", type: "number" }],
       function: async (value: number) => {
-        console.log("value:", value);
-        mud.contractCalls.setComponentValue(mud.components.Counter, singletonEntity, { value: BigInt(value) });
-      },
-    },
-    removeCounter: {
-      params: [],
-      function: async () => {
-        mud.contractCalls.removeComponent(mud.components.Counter, singletonEntity);
+        await mud.contractCalls.setComponentValue(mud.components.P_GameConfig, singletonEntity, {
+          worldSpeed: BigInt(value),
+        });
       },
     },
     getResource: {
@@ -98,10 +92,8 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
       params: [],
       function: async () => {
         const player = mud.network.playerEntity;
-
-        ResourceStorages.forEach(async (resource) => {
-          if (!player) throw new Error("No player found");
-
+        if (!player) throw new Error("No player found");
+        for (const resource of ResourceStorages) {
           await mud.contractCalls.setComponentValue(
             mud.components.ResourceCount,
             encodeEntity(
@@ -112,7 +104,7 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
               value: 10000000n,
             }
           );
-        });
+        }
 
         UtilityStorages.forEach(async (resource) => {
           if (!player) throw new Error("No player found");

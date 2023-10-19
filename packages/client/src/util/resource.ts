@@ -46,8 +46,7 @@ export function getMotherlodeResource(entity: Entity) {
 }
 
 export function getFullResourceCount(resourceID: Entity, playerEntity: Entity) {
-  // const worldSpeed = comps.P_WorldSpeed.get()?.value ?? SPEED_SCALE;
-  const worldSpeed = 100n;
+  const worldSpeed = comps.P_GameConfig.get()?.worldSpeed ?? 100n;
 
   const resourceCount =
     comps.ResourceCount.getWithKeys({
@@ -70,12 +69,17 @@ export function getFullResourceCount(resourceID: Entity, playerEntity: Entity) {
   const playerLastClaimed = comps.LastClaimedAt.get(playerEntity)?.value ?? 0n;
 
   const resourcesToClaimFromBuilding = (() => {
-    const toClaim = ((getNow() - playerLastClaimed) * production * SPEED_SCALE) / worldSpeed;
+    const toClaim = ((getNow() - playerLastClaimed) * production * worldSpeed) / SPEED_SCALE;
     if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
     return toClaim;
   })();
 
-  return { resourceCount, resourcesToClaim: resourcesToClaimFromBuilding, maxStorage, production };
+  return {
+    resourceCount,
+    resourcesToClaim: resourcesToClaimFromBuilding,
+    maxStorage,
+    production: (production * worldSpeed) / SPEED_SCALE,
+  };
 }
 
 export function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, playerEntity: Entity, count = 1n) {
@@ -134,23 +138,25 @@ export function getMaxCountOfRecipe(recipe: ReturnType<typeof getRecipe>, player
     return getFullResourceCount(resource.id, playerEntity);
   });
 
-  let count = 0;
+  let count;
   for (const [index, resource] of recipe.entries()) {
     const resourceAmount = resourceAmounts[index];
     const { resourceCount, resourcesToClaim, production } = resourceAmount;
-
+    let maxOfResource = 0n;
     switch (resource.type) {
       case ResourceType.Resource:
-        count = Math.min(count, Number((resourceCount + resourcesToClaim) / resource.amount));
+        maxOfResource = (resourceCount + resourcesToClaim) / resource.amount;
         break;
       case ResourceType.ResourceRate:
-        count = Math.min(count, Number(production / resource.amount));
+        maxOfResource = production / resource.amount;
         break;
       case ResourceType.Utility:
-        count = Math.min(count, Number(resourceCount / resource.amount));
+        maxOfResource = resourceCount / resource.amount;
         break;
     }
+    if (!count) count = Number(maxOfResource);
+    else count = Math.min(count, Number(maxOfResource));
   }
 
-  return count;
+  return count ?? 0;
 }
