@@ -55,6 +55,19 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     LibResource.claimAllResources(enemy);
   }
 
+  function testClaimMainBaseLevelObjective() public {
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)));
+    P_RequiredBaseLevel.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)), 1, 2);
+    Level.set(Home.getMainBase(playerEntity), 2);
+    world.claimObjective(EObjectives.BuildFirstIronMine);
+  }
+
+  function testFailClaimMainBaseLevelObjective() public {
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)));
+    P_RequiredBaseLevel.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)), 1, 2);
+    world.claimObjective(EObjectives.BuildFirstIronMine);
+  }
+
   function testFailClaimInvalidObjective() public {
     world.claimObjective(EObjectives.LENGTH);
   }

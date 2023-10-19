@@ -67,7 +67,7 @@ library LibObjectives {
     uint256 requiredMainBaseLevel = P_RequiredBaseLevel.get(objective, 1);
     if (requiredMainBaseLevel > 1) {
       require(
-        LibBuilding.getBaseLevel(playerEntity) > requiredMainBaseLevel,
+        LibBuilding.getBaseLevel(playerEntity) >= requiredMainBaseLevel,
         "[LibObjectives] MainBase level requirement not met"
       );
     }
