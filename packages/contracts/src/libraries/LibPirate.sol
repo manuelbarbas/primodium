@@ -25,11 +25,11 @@ library LibPirate {
     P_SpawnPirateAsteroidData memory spawnPirateAsteroid = P_SpawnPirateAsteroid.get(prototype);
     bytes32 ownerEntity = LibEncode.getHash(PirateKey, playerEntity);
     asteroidEntity = LibEncode.getHash(ownerEntity);
-    PositionData memory playerHomeAsteroidPosition = Position.get(LibEncode.getHash(playerEntity));
-    bytes32 playerHomeAsteroidEntity = LibEncode.getHash(playerEntity);
+    PositionData memory playerHomeAsteroidCoord = Position.get(LibEncode.getHash(playerEntity));
+    bytes32 playerHomeAsteroidEntity = Home.get(playerEntity).asteroid;
     if (Spawned.get(ownerEntity)) {
-      PositionData memory Pos = Position.get(asteroidEntity);
-      ReversePosition.deleteRecord(Pos.x, Pos.y);
+      PositionData memory lastCoord = Position.get(asteroidEntity);
+      ReversePosition.deleteRecord(lastCoord.x, lastCoord.y);
       Position.deleteRecord(asteroidEntity);
       bytes32[] memory units = P_UnitPrototypes.get();
       for (uint8 i = 0; i < units.length; i++) {
@@ -51,16 +51,16 @@ library LibPirate {
         }
       }
     }
-    PositionData memory position = PositionData({
-      x: playerHomeAsteroidPosition.x + spawnPirateAsteroid.x,
-      y: playerHomeAsteroidPosition.y + spawnPirateAsteroid.y,
+    PositionData memory coord = PositionData({
+      x: playerHomeAsteroidCoord.x + spawnPirateAsteroid.x,
+      y: playerHomeAsteroidCoord.y + spawnPirateAsteroid.y,
       parent: 0
     });
 
-    Position.set(asteroidEntity, position);
+    Position.set(asteroidEntity, coord);
     RockType.set(asteroidEntity, uint8(ERock.Asteroid));
     Spawned.set(ownerEntity, true);
-    ReversePosition.set(position.x, position.y, asteroidEntity);
+    ReversePosition.set(coord.x, coord.y, asteroidEntity);
     OwnedBy.set(asteroidEntity, ownerEntity);
     PirateAsteroid.set(asteroidEntity, PirateAsteroidData({ prototype: prototype, playerEntity: playerEntity }));
 
@@ -75,19 +75,6 @@ library LibPirate {
       uint256 amount = spawnPirateAsteroid.unitAmounts[i];
       UnitCount.set(ownerEntity, asteroidEntity, unit, UnitCount.get(ownerEntity, asteroidEntity, unit) + amount);
       LibUnit.updateStoredUtilities(ownerEntity, unit, amount, true);
-    }
-  }
-
-  /// @notice Generates unique asteroid position
-  /// @notice Ensures asteroid positions do not overlap
-  /// @return position Generated unique position
-  function getUniqueAsteroidPosition(uint256 asteroidCount) internal view returns (PositionData memory position) {
-    position = LibMath.getPositionByVector(
-      LibMath.getSpawnDistance(asteroidCount),
-      LibMath.getSpawnDirection(asteroidCount)
-    );
-    while (ReversePosition.get(position.x, position.y) != 0) {
-      position.y += 5;
     }
   }
 }
