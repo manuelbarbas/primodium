@@ -113,7 +113,9 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
       resourceRewardData
     );
     MaxResourceCount.set(playerEntity, uint8(EResource.Iron), 0);
+    console.log(ResourceCount.get(playerEntity, uint8(EResource.Iron)));
     world.claimObjective(EObjectives.BuildFirstIronMine);
+    console.log(ResourceCount.get(playerEntity, uint8(EResource.Iron)));
   }
 
   function testClaimObjectiveReceiveUnitRewards() public {

@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import { addressToEntity, entityToAddress, getSystemResourceId, bytes32ToString } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 // tables
-import { P_ResourceReward, P_ResourceRewardData, P_UnitReward, P_UnitRewardData, P_RequiredObjectives, CompletedObjective, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/index.sol";
+import { P_IsUtility, MaxResourceCount, ResourceCount, P_ResourceReward, P_ResourceRewardData, P_UnitReward, P_UnitRewardData, P_RequiredObjectives, CompletedObjective, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/index.sol";
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -40,7 +40,20 @@ library LibReward {
     bytes32 homeAsteroid = Home.get(playerEntity).asteroid;
     P_ResourceRewardData memory rewardData = P_ResourceReward.get(prototype);
     for (uint256 i = 0; i < rewardData.resources.length; i++) {
-      LibStorage.increaseStoredResource(playerEntity, rewardData.resources[i], rewardData.amounts[i]);
+      if (P_IsUtility.get(rewardData.resources[i])) {
+        LibProduction.increaseResourceProduction(
+          playerEntity,
+          EResource(rewardData.resources[i]),
+          rewardData.amounts[i]
+        );
+      } else {
+        require(
+          rewardData.amounts[i] + ResourceCount.get(playerEntity, rewardData.resources[i]) <=
+            MaxResourceCount.get(playerEntity, rewardData.resources[i]),
+          "[LibReward] Resource count exceeds max"
+        );
+        LibStorage.increaseStoredResource(playerEntity, rewardData.resources[i], rewardData.amounts[i]);
+      }
     }
   }
 }
