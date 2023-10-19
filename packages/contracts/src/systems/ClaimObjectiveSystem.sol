@@ -5,7 +5,7 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { EObjectives } from "src/Types.sol";
 import { CompletedObjective, P_EnumToPrototype, P_SpawnPirateAsteroidData, P_SpawnPirateAsteroid } from "codegen/index.sol";
 import { ObjectiveKey } from "src/Keys.sol";
-import { S_SpawnPirateAsteroid } from "systems/subsystems/S_SpawnPirateAsteroid.sol";
+import { S_SpawnPirateAsteroidSystem } from "systems/subsystems/S_SpawnPirateAsteroidSystem.sol";
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 
@@ -17,8 +17,8 @@ contract ClaimObjectiveSystem is PrimodiumSystem {
     if (spawnPirateAsteroid.x != 0 || spawnPirateAsteroid.y != 0) {
       SystemCall.callWithHooksOrRevert(
         _msgSender(),
-        getSystemResourceId("S_SpawnPirateAsteroid"),
-        abi.encodeCall(S_SpawnPirateAsteroid.spawnPirateAsteroid, (objectivePrototype)),
+        getSystemResourceId("S_SpawnPirateAsteroidSystem"),
+        abi.encodeCall(S_SpawnPirateAsteroidSystem.spawnPirateAsteroid, (objectivePrototype)),
         0
       );
     }

@@ -8,7 +8,7 @@ import { ESendType } from "src/Types.sol";
 import { BattleResultData } from "codegen/index.sol";
 import { LibPirate } from "libraries/LibPirate.sol";
 
-contract S_SpawnPirateAsteroid is PrimodiumSystem {
+contract S_SpawnPirateAsteroidSystem is PrimodiumSystem {
   /**
    * @dev Initiates a battle between two entities using the LibBattle library.
    * @param prototypeEntity The prototype which the pirate is spawned by.

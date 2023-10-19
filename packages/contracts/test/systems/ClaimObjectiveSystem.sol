@@ -335,4 +335,108 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
     world.claimObjective(EObjectives.BuildFirstCopperMine);
   }
+
+  function testClaimObjectiveSpawnPirateAsteroid() public {
+    bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine));
+    P_HasBuiltBuildings.deleteRecord(objectivePrototype);
+    P_SpawnPirateAsteroidData memory spawnPirateAsteroid;
+    spawnPirateAsteroid.x = 10;
+    spawnPirateAsteroid.y = -10;
+    spawnPirateAsteroid.resources = new uint8[](1);
+    spawnPirateAsteroid.resources[0] = uint8(EResource.Iron);
+    spawnPirateAsteroid.resourceAmounts = new uint256[](1);
+    spawnPirateAsteroid.resourceAmounts[0] = 100;
+    spawnPirateAsteroid.units = new bytes32[](1);
+    spawnPirateAsteroid.units[0] = unit1;
+    spawnPirateAsteroid.unitAmounts = new uint256[](1);
+    spawnPirateAsteroid.unitAmounts[0] = 10;
+
+    P_SpawnPirateAsteroid.set(objectivePrototype, spawnPirateAsteroid);
+    world.claimObjective(EObjectives.BuildFirstIronMine);
+    console.log("pirate asteroid spawned");
+
+    bytes32 personalPirateEntity = LibEncode.getHash(PirateKey, playerEntity);
+    bytes32 pirateAsteroidEntity = LibEncode.getHash(personalPirateEntity);
+
+    assertEq(
+      Position.get(pirateAsteroidEntity).x,
+      Position.get(Home.get(playerEntity).asteroid).x + spawnPirateAsteroid.x,
+      "X position does not match"
+    );
+    assertEq(
+      Position.get(pirateAsteroidEntity).y,
+      Position.get(Home.get(playerEntity).asteroid).y + spawnPirateAsteroid.y,
+      "Y position does not match"
+    );
+
+    assertEq(
+      ResourceCount.get(personalPirateEntity, uint8(EResource.Iron)),
+      spawnPirateAsteroid.resourceAmounts[0],
+      "Resource count does not match"
+    );
+    assertEq(
+      UnitCount.get(personalPirateEntity, pirateAsteroidEntity, unit1),
+      spawnPirateAsteroid.unitAmounts[0],
+      "Unit count does not match"
+    );
+    assertEq(PirateAsteroid.get(pirateAsteroidEntity).playerEntity, playerEntity, "Player entity does not match");
+    assertEq(PirateAsteroid.get(pirateAsteroidEntity).prototype, objectivePrototype, "Prototype does not match");
+
+    MaxResourceCount.set(playerEntity, uint8(EResource.Iron), 100);
+    ResourceCount.set(playerEntity, uint8(EResource.Iron), 0);
+
+    br = BattleResultData({
+      attacker: playerEntity,
+      defender: personalPirateEntity,
+      winner: playerEntity,
+      rock: pirateAsteroidEntity,
+      totalCargo: 100,
+      timestamp: block.timestamp,
+      attackerStartingUnits: getUnitArray(100, 50),
+      defenderStartingUnits: getUnitArray(100, 10),
+      attackerUnitsLeft: getUnitArray(50, 20),
+      defenderUnitsLeft: getUnitArray(0, 0)
+    });
+
+    // setup utility for player
+    P_RequiredResourcesData memory requiredResourcesData = P_RequiredResources.get(unit1, Level.get(playerEntity));
+    for (uint8 i = 0; i < requiredResourcesData.resources.length; i++) {
+      if (P_IsUtility.get(requiredResourcesData.resources[i])) {
+        LibProduction.increaseResourceProduction(
+          playerEntity,
+          EResource(requiredResourcesData.resources[i]),
+          requiredResourcesData.amounts[i] * 100
+        );
+      }
+      LibUnit.updateStoredUtilities(playerEntity, unit1, requiredResourcesData.amounts[i] * 100, true);
+    }
+    console.log("utility for unit1 provided");
+    requiredResourcesData = P_RequiredResources.get(unit2, Level.get(playerEntity));
+    for (uint8 i = 0; i < requiredResourcesData.resources.length; i++) {
+      if (P_IsUtility.get(requiredResourcesData.resources[i])) {
+        LibProduction.increaseResourceProduction(
+          playerEntity,
+          EResource(requiredResourcesData.resources[i]),
+          requiredResourcesData.amounts[i] * 50
+        );
+        LibUnit.updateStoredUtilities(playerEntity, unit2, requiredResourcesData.amounts[i] * 50, true);
+      }
+    }
+    console.log("utility for unit2 provided");
+
+    LibRaid.resolveRaid(br);
+
+    console.log("raid resolved");
+
+    assertEq(ResourceCount.get(personalPirateEntity, uint8(EResource.Iron)), 0, "Resource count does not match");
+    assertEq(UnitCount.get(personalPirateEntity, pirateAsteroidEntity, unit1), 0, "Unit count does not match");
+    assertEq(UnitCount.get(personalPirateEntity, pirateAsteroidEntity, unit2), 0, "Unit count does not match");
+
+    assertEq(
+      ResourceCount.get(playerEntity, uint8(EResource.Iron)),
+      spawnPirateAsteroid.resourceAmounts[0],
+      "Resource count does not match"
+    );
+    assertEq(DefeatedPirate.get(playerEntity, objectivePrototype), true, "Pirate not defeated");
+  }
 }
