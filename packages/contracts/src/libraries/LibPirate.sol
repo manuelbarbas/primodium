@@ -2,7 +2,7 @@
 pragma solidity ^0.8.21;
 
 // tables
-import { P_IsUtility, P_UnitPrototypes, MaxResourceCount, ResourceCount, UnitCount, PirateAsteroidData, P_SpawnPirateAsteroid, P_SpawnPirateAsteroidData, PirateAsteroid, DefeatedPirate, Spawned, ReversePosition, OwnedBy, Position, PositionData, AsteroidCount, RockType, PositionData } from "codegen/index.sol";
+import { Home, P_IsUtility, P_UnitPrototypes, MaxResourceCount, ResourceCount, UnitCount, PirateAsteroidData, P_SpawnPirateAsteroid, P_SpawnPirateAsteroidData, PirateAsteroid, DefeatedPirate, Spawned, ReversePosition, OwnedBy, Position, PositionData, AsteroidCount, RockType, PositionData } from "codegen/index.sol";
 
 // types
 import { ERock, EResource } from "src/Types.sol";
@@ -42,6 +42,7 @@ library LibPirate {
         UnitCount.set(ownerEntity, asteroidEntity, units[i], 0);
       }
     } else {
+      Home.setAsteroid(ownerEntity, asteroidEntity);
       uint8 resourceCount = uint8(EResource.LENGTH);
       for (uint8 i = 1; i < resourceCount; i++) {
         if (P_IsUtility.get(i)) {

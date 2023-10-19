@@ -466,7 +466,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     assertEq(DefeatedPirate.get(playerEntity, objectivePrototype), true, "Pirate not defeated");
   }
 
-  function tesFailtCannotAttackOtherPlayerPirateAsteroid() public {
+  function tesFailCannotAttackOtherPlayerPirateAsteroid() public {
     UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit1, 100);
     UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit2, 50);
     LibProduction.increaseResourceProduction(playerEntity, EResource.U_MaxMoves, 100);

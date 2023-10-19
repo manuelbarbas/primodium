@@ -140,12 +140,12 @@ library LibUnit {
       uint256 currentAmount = ResourceCount.get(playerEntity, resource);
 
       if (add) {
-        require(currentAmount >= requiredAmount, "[Reinforce] Not enough resources");
+        require(currentAmount >= requiredAmount, "[LibUnit] Not enough utility resources");
         ResourceCount.set(playerEntity, resource, currentAmount - requiredAmount);
       } else {
         require(
           currentAmount + requiredAmount <= MaxResourceCount.get(playerEntity, resource),
-          "Can't store more resources"
+          "[LibUnit] Can't store more utility resources"
         );
         ResourceCount.set(playerEntity, resource, currentAmount + requiredAmount);
       }
