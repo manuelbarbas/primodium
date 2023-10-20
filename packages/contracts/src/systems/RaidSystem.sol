@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
-import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
+import { IWorld } from "codegen/world/IWorld.sol";
 
 import { OwnedBy } from "codegen/index.sol";
 import { LibRaid } from "codegen/Libraries.sol";
@@ -16,6 +16,6 @@ contract RaidSystem is PrimodiumSystem {
   function raid(bytes32 rockEntity) public {
     bytes32 playerEntity = addressToEntity(_msgSender());
 
-    LibRaid.raid(playerEntity, rockEntity);
+    LibRaid.raid(IWorld(_world()), playerEntity, rockEntity);
   }
 }

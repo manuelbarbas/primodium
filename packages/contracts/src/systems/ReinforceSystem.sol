@@ -5,7 +5,6 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibReinforce } from "codegen/Libraries.sol";
 
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
-import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 
 import { OwnedBy } from "codegen/index.sol";
 

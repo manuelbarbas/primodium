@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
+import { IWorld } from "codegen/world/IWorld.sol";
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
-import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 import { RockType, OwnedBy, BattleResultData, P_UnitPrototypes } from "codegen/index.sol";
 import { ERock, ESendType } from "src/Types.sol";
 import { LibReinforce } from "libraries/LibReinforce.sol";
@@ -10,6 +10,7 @@ import { LibMotherlode } from "libraries/LibMotherlode.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { S_BattleSystem } from "systems/subsystems/S_BattleSystem.sol";
+import { SystemSwitch } from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 
 library LibInvade {
   /**
@@ -17,24 +18,19 @@ library LibInvade {
    * @param invader The identifier of the invader.
    * @param rockEntity The identifier of the target rock.
    */
-  function invade(bytes32 invader, bytes32 rockEntity) internal {
+  function invade(
+    IWorld world,
+    bytes32 invader,
+    bytes32 rockEntity
+  ) internal {
     bytes32 defender = OwnedBy.get(rockEntity);
-    if (defender == 0) return invadeNeutral(invader, rockEntity);
-
-    bytes memory rawBr = SystemCall.callWithHooksOrRevert(
-      entityToAddress(invader),
-      getSystemResourceId("S_BattleSystem"),
-      abi.encodeCall(S_BattleSystem.battle, (invader, defender, rockEntity, ESendType.Invade)),
-      0
+    if (defender == 0) return invadeNeutral(world, invader, rockEntity);
+    bytes memory rawBr = SystemSwitch.call(
+      abi.encodeCall(world.battle, (invader, defender, rockEntity, ESendType.Invade))
     );
     BattleResultData memory br = abi.decode(rawBr, (BattleResultData));
 
-    SystemCall.callWithHooksOrRevert(
-      entityToAddress(invader),
-      getSystemResourceId("S_BattleSystem"),
-      abi.encodeCall(S_BattleSystem.updateUnitsAfterBattle, (br, ESendType.Invade)),
-      0
-    );
+    SystemSwitch.call(abi.encodeCall(world.updateUnitsAfterBattle, (br, ESendType.Invade)));
 
     if (invader == br.winner) {
       LibReinforce.recallAllReinforcements(defender, rockEntity);
@@ -59,15 +55,17 @@ library LibInvade {
    * @param invader The identifier of the invader.
    * @param rockEntity The identifier of the target rock.
    */
-  function invadeNeutral(bytes32 invader, bytes32 rockEntity) internal {
+  function invadeNeutral(
+    IWorld world,
+    bytes32 invader,
+    bytes32 rockEntity
+  ) internal {
     OwnedBy.set(rockEntity, invader);
     bytes32[] memory unitTypes = P_UnitPrototypes.get();
-    bytes memory rawAttackCounts = SystemCall.callWithHooksOrRevert(
-      entityToAddress(invader),
-      getSystemResourceId("S_BattleSystem"),
-      abi.encodeCall(S_BattleSystem.getAttackPoints, (invader, rockEntity, ESendType.Invade)),
-      0
+    bytes memory rawAttackCounts = SystemSwitch.call(
+      abi.encodeCall(world.getAttackPoints, (invader, rockEntity, ESendType.Invade))
     );
+
     (uint256[] memory attackCounts, , ) = abi.decode(rawAttackCounts, (uint256[], uint256, uint256));
     for (uint256 i = 0; i < unitTypes.length; i++) {
       LibUnit.increaseUnitCount(invader, rockEntity, unitTypes[i], attackCounts[i]);
