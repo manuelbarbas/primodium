@@ -6,17 +6,12 @@ import { Tabs } from "../../core/Tabs";
 // import { Objectives } from "./Objectives";
 import { Outgoingfleets } from "./OutgoingFleets";
 import { OwnedMotherlodes } from "./OwnedMotherlodes";
-// import { Reinforcementfleets } from "./ReinforcementFleet";
+import { ReinforcementFleets } from "./ReinforcementFleets";
 import { Settings } from "./Settings";
 // import { BattleReports } from "./battle-reports/BattleReports";
 // import { HostileFleets } from "./hostile-fleets/HostileFleets";
-import { useMud } from "src/hooks";
-import { components } from "src/network/components";
 
 export const Panes: React.FC = () => {
-  const mud = useMud();
-  const playerEntity = mud.network.playerEntity;
-  const playerAstroid = components.Home.get(playerEntity)?.asteroid;
   const [newPlayer, setNewPlayer] = useSettingsStore((state) => [state.newPlayer, state.setNewPlayer]);
 
   return (
@@ -29,7 +24,7 @@ export const Panes: React.FC = () => {
         <Outgoingfleets />
       </Tabs.Pane>
       <Tabs.Pane index={1} className="w-96">
-        {/* <Reinforcementfleets user={player ?? SingletonID} /> */}
+        <ReinforcementFleets />
       </Tabs.Pane>
       <Tabs.Pane index={2} className="w-96">
         {/* <HostileFleets spacerock={playerAstroid ?? SingletonID} /> */}
