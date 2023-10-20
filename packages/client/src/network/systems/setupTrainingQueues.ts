@@ -4,8 +4,8 @@ import { getUnitTrainingTime } from "src/util/trainUnits";
 import { Hex } from "viem";
 import { components } from "../components";
 import { BlockNumber } from "../components/clientComponents";
-import { world } from "../world";
 import { SetupResult } from "../types";
+import { world } from "../world";
 
 export function setupTrainingQueues(mud: SetupResult) {
   const playerEntity = mud.network.playerEntity;
@@ -62,34 +62,36 @@ export function setupTrainingQueues(mud: SetupResult) {
       progress: [],
       timeRemaining: [],
     };
+    console.log("queue units:", queueUnits);
     for (let i = 0; i < queueUnits.back - queueUnits.front; i++) {
+      console.log("i:", i + Number(queueUnits.front));
       const value = QueueItemUnits.getWithKeys({
         entity: queueId as Hex,
         index: (queueUnits.front + BigInt(i)) as bigint,
       });
       if (!value) throw new Error("Queue item not found");
-      data.units.push(value.unitId as Entity);
-      data.counts.push(value.quantity);
-      // if (i == 0) {
-      //   const owner = OwnedBy.get(queueId)?.value as Entity | undefined;
-      //   const startTime = LastClaimedAt.get(queueId)?.value;
-      //   if (!owner || !startTime) throw new Error("No owner");
-      //   const trainingTime = getUnitTrainingTime(owner, queueId, value.unitId as Entity);
-      //   const timeRemaining = trainingTime - ((getNow() - startTime) % trainingTime);
-      //   const trainedUnits = (getNow() - startTime) / trainingTime;
-      //   const progress = trainedUnits / value.quantity;
+      const unitId = value.unitId as Entity;
+      if (i == 0) {
+        const owner = OwnedBy.get(queueId)?.value as Entity | undefined;
+        const startTime = LastClaimedAt.get(queueId)?.value;
+        if (!owner || !startTime) throw new Error("No owner");
+        const trainingTime = getUnitTrainingTime(owner, queueId, unitId);
+        const timeRemaining = trainingTime - ((getNow() - startTime) % trainingTime);
+        const trainedUnits = (getNow() - startTime) / trainingTime;
+        const progress = trainedUnits / value.quantity;
 
-      //   data.progress.push(progress);
-
-      //   data.timeRemaining.push(timeRemaining);
-      // } else {
-      //   data.progress.push(0n);
-      //   data.timeRemaining.push(0n);
-      // }
+        data.progress.push(Number(progress));
+        data.timeRemaining.push(timeRemaining);
+        data.units.push(unitId);
+        data.counts.push(value.quantity - trainedUnits);
+      } else {
+        data.progress.push(0);
+        data.timeRemaining.push(0n);
+        data.units.push(unitId);
+        data.counts.push(value.quantity);
+      }
     }
 
-    data.progress.push(0);
-    data.timeRemaining.push(0n);
     TrainingQueue.set(data, queueId);
     updateTrainingQueue(queueId);
   }
@@ -104,7 +106,7 @@ export function setupTrainingQueues(mud: SetupResult) {
       const trainingTime = getUnitTrainingTime(owner, building, item.unit);
 
       const trainedUnits = (getNow() - startTime) / trainingTime;
-      if (trainedUnits == item.count) {
+      if (trainedUnits >= item.count) {
         dequeue(building);
         stillClaiming = size(building) != 0;
       } else {
@@ -117,8 +119,9 @@ export function setupTrainingQueues(mud: SetupResult) {
   }
 
   // when on chain queues update, we need to update our local queues
-  const updateQuery = [Has(QueueUnits), Has(QueueItemUnits)];
+  const updateQuery = [Has(QueueUnits)];
   defineSystem(world, updateQuery, ({ entity }) => {
+    console.log("queue units updated", entity);
     syncToChain(entity);
   });
 
