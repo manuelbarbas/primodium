@@ -12,7 +12,7 @@ import { BrandingLabel } from "../shared/BrandingLabel";
 // import { Score } from "./Score";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { Hotbar } from "./hotbar/Hotbar";
-// import { Panes } from "./panes/Panes";
+import { Panes } from "./panes/Panes";
 import { Resources } from "./resources/Resources";
 import { PrototypeInfo } from "./PrototypeInfo";
 import { ViewStarmap } from "./ViewStarmap";
@@ -55,9 +55,9 @@ export const GameHUD = () => {
               <Score />z
               <LoadingIndication />
             </HUD.TopLeft> */}
-            {/* <HUD.TopRight>
+            <HUD.TopRight>
               <Panes />
-            </HUD.TopRight> */}
+            </HUD.TopRight>
             <HUD.BottomLeft>
               <Resources />
             </HUD.BottomLeft>

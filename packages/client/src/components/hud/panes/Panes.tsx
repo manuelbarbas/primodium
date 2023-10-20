@@ -1,23 +1,22 @@
-import { SingletonID } from "@latticexyz/network";
 import { Divider } from "src/components/core/Divider";
 import { useSettingsStore } from "src/game/stores/SettingsStore";
-import { Account, HomeAsteroid } from "src/network/components/clientComponents";
 import { Join } from "../../core/Join";
 import { Tabs } from "../../core/Tabs";
-import { Leaderboard } from "./Leaderboard";
-import { Objectives } from "./Objectives";
-import { Outgoingfleets } from "./OutgoingFleets";
+// import { Leaderboard } from "./Leaderboard";
+// import { Objectives } from "./Objectives";
+// import { Outgoingfleets } from "./OutgoingFleets";
 import { OwnedMotherlodes } from "./OwnedMotherlodes";
-import { Reinforcementfleets } from "./ReinforcementFleet";
+// import { Reinforcementfleets } from "./ReinforcementFleet";
 import { Settings } from "./Settings";
-import { BattleReports } from "./battle-reports/BattleReports";
-import { HostileFleets } from "./hostile-fleets/HostileFleets";
+// import { BattleReports } from "./battle-reports/BattleReports";
+// import { HostileFleets } from "./hostile-fleets/HostileFleets";
+import { useMud } from "src/hooks";
+import { components } from "src/network/components";
 
 export const Panes: React.FC = () => {
-  const playerAstroid = HomeAsteroid.use()?.value;
-  const player = Account.use(undefined, {
-    value: SingletonID,
-  }).value;
+  const mud = useMud();
+  const playerEntity = mud.network.playerEntity;
+  const playerAstroid = components.Home.get(playerEntity)?.asteroid;
   const [newPlayer, setNewPlayer] = useSettingsStore((state) => [state.newPlayer, state.setNewPlayer]);
 
   return (
@@ -27,25 +26,25 @@ export const Panes: React.FC = () => {
       onChange={() => setNewPlayer(false)}
     >
       <Tabs.Pane index={0} className="w-96">
-        <Outgoingfleets user={player ?? SingletonID} />
+        {/* <Outgoingfleets user={player ?? SingletonID} />s */}
       </Tabs.Pane>
       <Tabs.Pane index={1} className="w-96">
-        <Reinforcementfleets user={player ?? SingletonID} />
+        {/* <Reinforcementfleets user={player ?? SingletonID} /> */}
       </Tabs.Pane>
       <Tabs.Pane index={2} className="w-96">
-        <HostileFleets spacerock={playerAstroid ?? SingletonID} />
+        {/* <HostileFleets spacerock={playerAstroid ?? SingletonID} /> */}
       </Tabs.Pane>
       <Tabs.Pane index={3} className="w-96">
-        <BattleReports />
+        {/* <BattleReports /> */}
       </Tabs.Pane>
       <Tabs.Pane index={4} className="w-96">
-        <Objectives />
+        {/* <Objectives /> */}
       </Tabs.Pane>
       <Tabs.Pane index={5} className="w-96">
         <OwnedMotherlodes />
       </Tabs.Pane>
       <Tabs.Pane index={6} className="w-96">
-        <Leaderboard />
+        {/* <Leaderboard /> */}
       </Tabs.Pane>
       <Tabs.Pane index={7} className="w-96">
         <Settings />
