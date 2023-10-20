@@ -16,7 +16,7 @@ export const ReinforcementFleets: React.FC = () => {
     <div className="w-full text-xs space-y-2 h-full overflow-y-auto">
       {fleets.length === 0 ? (
         <SecondaryCard className="h-full flex items-center justify-center font-bold">
-          <p className="opacity-50">NO OUTGOING FLEETS</p>
+          <p className="opacity-50">NO REINFORCMENTS</p>
         </SecondaryCard>
       ) : (
         fleets.map((entity) => {

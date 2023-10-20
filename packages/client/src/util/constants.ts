@@ -883,3 +883,5 @@ export const UnitEnumLookup: Record<Entity, EUnit> = {
   // [EntityType.MinutemanMarine]: EUnit.MinutemanMarine,
   // [EntityType.TridentMarine]: EUnit.TridentMarine,
 };
+
+export const UnitEntityLookup = reverseRecord(UnitEnumLookup);

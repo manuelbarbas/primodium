@@ -8,7 +8,7 @@ import { Outgoingfleets } from "./OutgoingFleets";
 import { OwnedMotherlodes } from "./OwnedMotherlodes";
 import { ReinforcementFleets } from "./ReinforcementFleets";
 import { Settings } from "./Settings";
-// import { BattleReports } from "./battle-reports/BattleReports";
+import { BattleReports } from "./battle-reports/BattleReports";
 import { HostileFleets } from "./hostile-fleets/HostileFleets";
 
 export const Panes: React.FC = () => {
@@ -30,7 +30,7 @@ export const Panes: React.FC = () => {
         <HostileFleets />
       </Tabs.Pane>
       <Tabs.Pane index={3} className="w-96">
-        {/* <BattleReports /> */}
+        <BattleReports />
       </Tabs.Pane>
       <Tabs.Pane index={4} className="w-96">
         {/* <Objectives /> */}

@@ -90,21 +90,6 @@ export const Leaderboard = createExtendedComponent(
   }
 );
 
-/* -------------------------------------------------------------------------- */
-/*                                   Battle                                   */
-/* -------------------------------------------------------------------------- */
-export const Battle = createBattleComponent();
-export const BattleReport = createExtendedComponent(
-  world,
-  {
-    show: Type.Boolean,
-    battle: Type.OptionalEntity,
-  },
-  {
-    id: "Battle",
-  }
-);
-
 const Arrival = createExtendedComponent(world, {
   sendType: Type.Number,
   unitCounts: Type.BigIntArray,
@@ -142,5 +127,5 @@ export default {
 
   /* --------------------------------- Battle --------------------------------- */
   Arrival,
-  BattleReport,
+  // BattleReport,
 };
