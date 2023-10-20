@@ -11,11 +11,11 @@ import { BrandingLabel } from "../shared/BrandingLabel";
 // import { LoadingIndication } from "./LoadingIndication";
 import { Score } from "./Score";
 // import { ViewStarmap } from "./ViewStarmap";
-import { BuildingMenu } from "./building-menu/BuildingMenu";
-import { Hotbar } from "./hotbar/Hotbar";
-// import { Panes } from "./panes/Panes";
 import { PrototypeInfo } from "./PrototypeInfo";
 import { ViewStarmap } from "./ViewStarmap";
+import { BuildingMenu } from "./building-menu/BuildingMenu";
+import { Hotbar } from "./hotbar/Hotbar";
+import { Panes } from "./panes/Panes";
 import { Resources } from "./resources/Resources";
 // import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 import { Units } from "./units/Units";
@@ -56,9 +56,9 @@ export const GameHUD = () => {
               <Score />
               {/* <LoadingIndication /> */}
             </HUD.TopLeft>
-            {/* <HUD.TopRight>
+            <HUD.TopRight>
               <Panes />
-            </HUD.TopRight> */}
+            </HUD.TopRight>
             <HUD.BottomLeft>
               <Resources />
             </HUD.BottomLeft>
