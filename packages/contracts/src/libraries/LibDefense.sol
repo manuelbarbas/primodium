@@ -34,7 +34,6 @@ library LibDefense {
   /// @notice increases the resource production for the player
   /// @param playerEntity Entity ID of the player owning the building
   /// @param buildingEntity Entity ID of the building which is increasing the defense
-  /// @param level the level of the building for which the defense is increased
   function clearBuildingDefenses(bytes32 playerEntity, bytes32 buildingEntity) internal {
     bytes32 buildingType = BuildingType.get(buildingEntity);
     uint256 level = Level.get(buildingEntity);
@@ -64,6 +63,10 @@ library LibDefense {
     TotalDefenseMultiplier.set(playerEntity, TotalDefenseMultiplier.get(playerEntity) + defenseMultiplierIncrease);
   }
 
+  /// @notice increases the resource production for the player
+  /// @param playerEntity Entity ID of the player owning the building
+  /// @param buildingType Entity ID of the building which is clearing the defense
+  /// @param level the level of the building for which the defense is cleared
   function clearPlayerDefense(
     bytes32 playerEntity,
     bytes32 buildingType,
@@ -89,6 +92,10 @@ library LibDefense {
     TotalDefenseMultiplier.set(playerEntity, TotalDefenseMultiplier.get(playerEntity) + defenseMultiplierIncrease);
   }
 
+  /// @notice increases the resource production for the player
+  /// @param playerEntity Entity ID of the player owning the building
+  /// @param buildingType Entity ID of the building which is clearing the defense
+  /// @param level the level of the building for which the defense is cleared
   function clearPlayerDefenseMultiplier(
     bytes32 playerEntity,
     bytes32 buildingType,
@@ -120,6 +127,10 @@ library LibDefense {
     }
   }
 
+  /// @notice increases the resource production for the player
+  /// @param playerEntity Entity ID of the player owning the building
+  /// @param buildingType Entity ID of the building which is clearing the defense
+  /// @param level the level of the building for which the defense is cleared
   function clearPlayerVault(
     bytes32 playerEntity,
     bytes32 buildingType,

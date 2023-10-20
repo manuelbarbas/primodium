@@ -20,8 +20,11 @@ import { QueueUnits, QueueUnitsTableId } from "codegen/tables/QueueUnits.sol";
 import { ProducedResourceTableId } from "codegen/tables/ProducedResource.sol";
 import { ProductionRateTableId } from "codegen/tables/ProductionRate.sol";
 import { ProducedUnitTableId } from "codegen/tables/ProducedUnit.sol";
-
+import { TotalDefenseTableId } from "codegen/tables/TotalDefense.sol";
+import { TotalDefenseMultiplierTableId } from "codegen/tables/TotalDefenseMultiplier.sol";
+import { TotalVaultTableId } from "codegen/tables/TotalVault.sol";
 import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
+
 import { OnBefore_ClaimResources } from "src/hooks/systemHooks/OnBefore_ClaimResources.sol";
 import { OnBefore_ClaimUnits } from "src/hooks/systemHooks/OnBefore_ClaimUnits.sol";
 
@@ -30,17 +33,20 @@ import { OnBuild_Requirements } from "src/hooks/systemHooks/build/OnBuild_Requir
 import { OnBuild_SpendResources } from "src/hooks/systemHooks/build/OnBuild_SpendResources.sol";
 import { OnBuild_MaxStorage } from "src/hooks/systemHooks/build/OnBuild_MaxStorage.sol";
 import { OnBuild_ProductionRate } from "src/hooks/systemHooks/build/OnBuild_ProductionRate.sol";
+import { OnBuild_Defense } from "src/hooks/systemHooks/build/OnBuild_Defense.sol";
 
 import { OnUpgrade_Requirements } from "src/hooks/systemHooks/upgrade/OnUpgrade_Requirements.sol";
 import { OnUpgrade_SpendResources } from "src/hooks/systemHooks/upgrade/OnUpgrade_SpendResources.sol";
 import { OnUpgrade_MaxStorage } from "src/hooks/systemHooks/upgrade/OnUpgrade_MaxStorage.sol";
 import { OnUpgrade_ProductionRate } from "src/hooks/systemHooks/upgrade/OnUpgrade_ProductionRate.sol";
+import { OnUpgrade_Defense } from "src/hooks/systemHooks/upgrade/OnUpgrade_Defense.sol";
 
 import { OnDestroy_ClearUtility } from "src/hooks/systemHooks/destroy/OnDestroy_ClearUtility.sol";
 import { OnDestroy_MaxStorage } from "src/hooks/systemHooks/destroy/OnDestroy_MaxStorage.sol";
 import { OnDestroy_ProductionRate } from "src/hooks/systemHooks/destroy/OnDestroy_ProductionRate.sol";
 import { OnDestroy_Requirements } from "src/hooks/systemHooks/destroy/OnDestroy_Requirements.sol";
 import { OnDestroy_RemoveFromTiles } from "src/hooks/systemHooks/destroy/OnDestroy_RemoveFromTiles.sol";
+import { OnDestroy_Defense } from "src/hooks/systemHooks/destroy/OnDestroy_Defense.sol";
 
 import { OnSendUnits_Requirements } from "src/hooks/systemHooks/sendUnits/OnSendUnits_Requirements.sol";
 import { OnSendUnits_UnitCount } from "src/hooks/systemHooks/sendUnits/OnSendUnits_UnitCount.sol";
@@ -126,6 +132,12 @@ function registerBuildHooks(IWorld world, OnBefore_ClaimResources onBefore_Claim
   world.grantAccess(MapUtilitiesTableId, address(onBuild_ProductionRate));
   world.grantAccess(MapItemStoredUtilitiesTableId, address(onBuild_ProductionRate));
   world.registerSystemHook(systemId, onBuild_ProductionRate, AFTER_CALL_SYSTEM);
+
+  OnBuild_Defense onBuild_Defense = new OnBuild_Defense();
+  world.grantAccess(TotalDefenseTableId, address(onBuild_Defense));
+  world.grantAccess(TotalDefenseMultiplierTableId, address(onBuild_Defense));
+  world.grantAccess(TotalVaultTableId, address(onBuild_Defense));
+  world.registerSystemHook(systemId, onBuild_Defense, AFTER_CALL_SYSTEM);
 }
 
 /**
@@ -160,6 +172,12 @@ function registerUpgradeHooks(IWorld world, OnBefore_ClaimResources onBefore_Cla
   world.grantAccess(MapUtilitiesTableId, address(onUpgrade_ProductionRate));
   world.grantAccess(MapItemStoredUtilitiesTableId, address(onUpgrade_ProductionRate));
   world.registerSystemHook(systemId, onUpgrade_ProductionRate, AFTER_CALL_SYSTEM);
+
+  OnUpgrade_Defense onUpgrade_Defense = new OnUpgrade_Defense();
+  world.grantAccess(TotalDefenseTableId, address(onUpgrade_Defense));
+  world.grantAccess(TotalDefenseMultiplierTableId, address(onUpgrade_Defense));
+  world.grantAccess(TotalVaultTableId, address(onUpgrade_Defense));
+  world.registerSystemHook(systemId, onUpgrade_Defense, AFTER_CALL_SYSTEM);
 }
 
 /**
@@ -193,6 +211,12 @@ function registerDestroyHooks(IWorld world, OnBefore_ClaimResources onBefore_Cla
   world.grantAccess(MapItemStoredUtilitiesTableId, address(onDestroy_ProductionRate));
   world.grantAccess(ResourceCountTableId, address(onDestroy_ProductionRate));
   world.registerSystemHook(systemId, onDestroy_ProductionRate, BEFORE_CALL_SYSTEM);
+
+  OnDestroy_Defense onDestroy_Defense = new OnDestroy_Defense();
+  world.grantAccess(TotalDefenseTableId, address(onDestroy_Defense));
+  world.grantAccess(TotalDefenseMultiplierTableId, address(onDestroy_Defense));
+  world.grantAccess(TotalVaultTableId, address(onDestroy_Defense));
+  world.registerSystemHook(systemId, onDestroy_Defense, BEFORE_CALL_SYSTEM);
 
   OnDestroy_RemoveFromTiles onDestroy_RemoveFromTiles = new OnDestroy_RemoveFromTiles();
   world.grantAccess(ChildrenTableId, address(onDestroy_RemoveFromTiles));

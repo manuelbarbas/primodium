@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
+import { DEFENSE_MULTIPLIER_SCALE } from "src/constants.sol";
 import { ESendType, Arrival } from "src/Types.sol";
-import { DestroyedUnit, UnitCount, UnitLevel, BattleResult, BattleResultData, P_UnitPrototypes, P_Unit, ArrivalCount, UnitCount, Home } from "codegen/index.sol";
+import { TotalDefense, TotalDefenseMultiplier, DestroyedUnit, UnitCount, UnitLevel, BattleResult, BattleResultData, P_UnitPrototypes, P_Unit, ArrivalCount, UnitCount, Home } from "codegen/index.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 
