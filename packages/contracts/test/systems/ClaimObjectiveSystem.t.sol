@@ -86,6 +86,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
   function testClaimObjectiveReceiveResourceRewards() public {
     ResourceCount.set(playerEntity, uint8(EResource.Iron), 0);
+    MaxResourceCount.set(playerEntity, uint8(EResource.Iron), 100);
     P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)));
     P_ResourceRewardData memory resourceRewardData = P_ResourceRewardData(new uint8[](1), new uint256[](1));
     resourceRewardData.resources[0] = uint8(EResource.Iron);
@@ -181,6 +182,11 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
       P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)),
       producedResourcesData
     );
+    MaxResourceCount.set(
+      playerEntity,
+      uint8(EResource.Iron),
+      P_Production.get(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.IronMine)), 1).amount * 10
+    );
     P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)));
     LastClaimedAt.set(playerEntity, block.timestamp - 10);
 
@@ -233,7 +239,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
       raidedResourcesData
     );
     P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)));
-
+    MaxResourceCount.set(playerEntity, uint8(EResource.Iron), 100);
     setupRaid();
     RaidResultData memory raidResult = LibRaid.resolveRaid(br);
     world.claimObjective(EObjectives.BuildFirstCopperMine);
