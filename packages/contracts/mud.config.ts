@@ -23,6 +23,11 @@ export const config = mudConfig({
       accessList: ["RaidSystem", "InvadeSystem"],
       name: "S_BattleSystem",
     },
+    S_SpawnPirateAsteroidSystem: {
+      openAccess: false,
+      accessList: ["ClaimObjectiveSystem"],
+      name: "S_SpawnPirateAsteroidSystem",
+    },
   },
 
   enums: MUDEnums,
@@ -167,7 +172,6 @@ export const config = mudConfig({
       keySchema: { entity: "bytes32", utility: "uint8" }, // EResource
       valueSchema: "uint256",
     },
-
     MapItemStoredUtilities: {
       keySchema: { entity: "bytes32", utility: "uint8" }, // EResource
       valueSchema: {
@@ -423,10 +427,144 @@ export const config = mudConfig({
       keySchema: { entity: "bytes32" },
       valueSchema: "uint256",
     },
+    /* ------------------------------ Pirate Asteroids ----------------------------- */
+
+    P_SpawnPirateAsteroid: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: {
+        x: "int32",
+        y: "int32",
+        resources: "uint8[]",
+        resourceAmounts: "uint256[]",
+        units: "bytes32[]",
+        unitAmounts: "uint256[]",
+      },
+    },
+
+    PirateAsteroid: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: {
+        playerEntity: "bytes32",
+        prototype: "bytes32",
+      },
+    },
+
+    /* ------------------------------ Objectives ----------------------------- */
+
+    P_RequiredObjectives: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: {
+        // mud doesnt recognize EObjective arrays so we will manually convert them
+        objectives: "bytes32[]",
+      },
+    },
+
+    CompletedObjective: {
+      keySchema: { entity: "bytes32", objective: "bytes32" },
+      valueSchema: "bool",
+    },
+
+    P_UnitReward: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: {
+        // mud doesnt recognize EUnit arrays so we will manually convert them
+        unitTypes: "bytes32[]",
+        amounts: "uint256[]",
+      },
+    },
+
+    P_ResourceReward: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: {
+        // mud doesnt recognize EResource arrays so we will manually convert them
+        resources: "uint8[]",
+        amounts: "uint256[]",
+      },
+    },
+
+    P_HasBuiltBuildings: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: "bytes32[]",
+    },
 
     HasBuiltBuilding: {
-      keySchema: { entity: "bytes32", building: "bytes32" },
+      keySchema: { entity: "bytes32", buildingType: "bytes32" },
       valueSchema: "bool",
+    },
+
+    P_ProducedResources: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: {
+        // mud doesnt recognize EResource arrays so we will manually convert them
+        resources: "uint8[]",
+        amounts: "uint256[]",
+      },
+    },
+
+    ProducedResource: {
+      keySchema: { entity: "bytes32", resource: "uint8" },
+      valueSchema: "uint256",
+    },
+
+    P_DestroyedUnits: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: {
+        // mud doesnt recognize EUnit arrays so we will manually convert them
+        units: "bytes32[]",
+        amounts: "uint256[]",
+      },
+    },
+
+    DestroyedUnit: {
+      keySchema: { entity: "bytes32", unit: "bytes32" },
+      valueSchema: "uint256",
+    },
+
+    P_RaidedResources: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: {
+        // mud doesnt recognize EResource arrays so we will manually convert them
+        resources: "uint8[]",
+        amounts: "uint256[]",
+      },
+    },
+
+    RaidedResource: {
+      keySchema: { entity: "bytes32", resource: "uint8" },
+      valueSchema: "uint256",
+    },
+
+    P_DefeatedPirates: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: "bytes32[]",
+    },
+
+    DefeatedPirate: {
+      keySchema: { entity: "bytes32", pirate: "bytes32" },
+      valueSchema: "bool",
+    },
+
+    P_RequiredUnits: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: {
+        // mud doesnt recognize EUnit arrays so we will manually convert them
+        units: "bytes32[]",
+        amounts: "uint256[]",
+      },
+    },
+
+    P_ProducedUnits: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: {
+        // mud doesnt recognize EUnit arrays so we will manually convert them
+        units: "bytes32[]",
+        amounts: "uint256[]",
+      },
+    },
+
+    ProducedUnit: {
+      keySchema: { entity: "bytes32", unit: "bytes32" },
+      valueSchema: "uint256",
     },
   },
 });

@@ -23,26 +23,26 @@ library LibAsteroid {
     require(RockType.get(asteroidEntity) == uint8(ERock.NULL), "[LibAsteroid] asteroid already exists");
 
     uint256 asteroidCount = AsteroidCount.get() + 1;
-    PositionData memory position = getUniqueAsteroidPosition(asteroidCount);
+    PositionData memory coord = getUniqueAsteroidPosition(asteroidCount);
 
-    Position.set(asteroidEntity, position);
+    Position.set(asteroidEntity, coord);
     RockType.set(asteroidEntity, uint8(ERock.Asteroid));
     Spawned.set(ownerEntity, true);
-    ReversePosition.set(position.x, position.y, asteroidEntity);
+    ReversePosition.set(coord.x, coord.y, asteroidEntity);
     OwnedBy.set(asteroidEntity, ownerEntity);
     AsteroidCount.set(asteroidCount);
   }
 
-  /// @notice Generates unique asteroid position
-  /// @notice Ensures asteroid positions do not overlap
-  /// @return position Generated unique position
-  function getUniqueAsteroidPosition(uint256 asteroidCount) internal view returns (PositionData memory position) {
-    position = LibMath.getPositionByVector(
+  /// @notice Generates unique asteroid coord
+  /// @notice Ensures asteroid coords do not overlap
+  /// @return coord Generated unique coord
+  function getUniqueAsteroidPosition(uint256 asteroidCount) internal view returns (PositionData memory coord) {
+    coord = LibMath.getPositionByVector(
       LibMath.getSpawnDistance(asteroidCount),
       LibMath.getSpawnDirection(asteroidCount)
     );
-    while (ReversePosition.get(position.x, position.y) != 0) {
-      position.y += 5;
+    while (ReversePosition.get(coord.x, coord.y) != 0) {
+      coord.y += 5;
     }
   }
 }

@@ -1018,5 +1018,9 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
   },
 
+  Objectives: {
+    levels: idsToPrototypes(MUDEnums.EObjectives),
+  },
+
   // Building unit production
 };
