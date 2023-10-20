@@ -89,4 +89,6 @@ contract TestLibStorage is PrimodiumTest {
     LibStorage.decreaseMaxUtility(playerEntity, mockResource, 20);
     assertEq(MaxResourceCount.get(playerEntity, mockResource), 0);
   }
+
+  function testDecreaseResourceUpdateScore() public {}
 }

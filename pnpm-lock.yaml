@@ -275,7 +275,10 @@ importers:
         version: 2.0.0-main-a5e8a6d5(typescript@5.2.2)
       '@latticexyz/world':
         specifier: 2.0.0-main-a5e8a6d5
-        version: 2.0.0-main-a5e8a6d5(typescript@5.2.2)
+        version: 2.0.0-main-a5e8a6d5(typescript@4.7.4)
+      '@latticexyz/world-modules':
+        specifier: 2.0.0-main-a5e8a6d5
+        version: 2.0.0-main-a5e8a6d5(typescript@4.7.4)
       dotenv:
         specifier: ^16.3.1
         version: 16.3.1
@@ -2192,6 +2195,22 @@ packages:
       rxjs: 7.5.5
     transitivePeerDependencies:
       - bufferutil
+      - utf-8-validate
+    dev: false
+
+  /@latticexyz/world-modules@2.0.0-main-a5e8a6d5(typescript@4.7.4):
+    resolution: {integrity: sha512-148jpfJiTB7L7SrYuKgEOJdmkqx9rcjjJhtELyG7JPsn6kbTBVNcTj8fLOKPu5YmWX066+hW3XLfXhZ0nVzCxQ==}
+    dependencies:
+      '@latticexyz/common': 2.0.0-main-a5e8a6d5(typescript@4.7.4)(zod@3.22.2)
+      '@latticexyz/config': 2.0.0-main-a5e8a6d5(typescript@4.7.4)
+      '@latticexyz/schema-type': 2.0.0-main-a5e8a6d5(typescript@4.7.4)(zod@3.22.2)
+      '@latticexyz/store': 2.0.0-main-a5e8a6d5(typescript@4.7.4)
+      '@latticexyz/world': 2.0.0-main-a5e8a6d5(typescript@4.7.4)
+      zod: 3.22.2
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - typescript
       - utf-8-validate
     dev: false
 
