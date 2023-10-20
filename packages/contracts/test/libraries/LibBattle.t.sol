@@ -67,7 +67,7 @@ contract LibBattleTest is PrimodiumTest {
     UnitCount.set(player, rock, unit1, unitCount);
     setupUnit(unit1, 0, defense);
     TotalDefenseMultiplier.set(player, 200);
-    uint256 expected = (unitCount * defense) * 2;
+    uint256 expected = (unitCount * defense) * 3;
     (uint256[] memory count, uint256 actual) = LibBattle.getDefensePoints(player, rock);
     assertEq(count[0], unitCount);
     assertEq(actual, expected, "Defense points should be equal to unitCount * defense");
