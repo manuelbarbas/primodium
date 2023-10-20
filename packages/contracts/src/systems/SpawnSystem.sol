@@ -5,12 +5,13 @@ import { IWorld } from "codegen/world/IWorld.sol";
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { BuildSystem } from "systems/BuildSystem.sol";
+import { IWorld } from "codegen/world/IWorld.sol";
+import { SystemSwitch } from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import { Spawned, Position, PositionData, Level, Home, P_EnumToPrototype } from "codegen/index.sol";
 import { LibAsteroid, LibBuilding, LibEncode } from "codegen/Libraries.sol";
 import { EBuilding } from "src/Types.sol";
 import { BuildingKey } from "src/Keys.sol";
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
-import { SystemSwitch } from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 
 /// @title Spawn System for Primodium Game
 /// @notice Handles player spawning in the game world

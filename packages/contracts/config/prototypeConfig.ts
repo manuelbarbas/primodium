@@ -1098,4 +1098,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_ScoreMultiplier: { value: 200n },
     },
   },
+  Objectives: {
+    levels: idsToPrototypes(MUDEnums.EObjectives),
+  },
 };
