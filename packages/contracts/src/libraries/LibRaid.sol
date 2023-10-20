@@ -51,7 +51,7 @@ library LibRaid {
    */
   function resolveRaid(BattleResultData memory br) internal returns (RaidResultData memory) {
     LibBattle.updateUnitsAfterBattle(br, ESendType.Raid);
-    (uint256 totalResources, uint256[] memory defenderResources) = LibResource.getAllResourceCounts(br.defender);
+    (uint256 totalResources, uint256[] memory defenderResources) = LibResource.getAllResourceCountsVaulted(br.defender);
     RaidResultData memory raidResult = RaidResultData({
       defenderValuesBeforeRaid: new uint256[](defenderResources.length),
       raidedAmount: new uint256[](defenderResources.length)

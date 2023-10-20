@@ -7,7 +7,7 @@ import { LibStorage } from "libraries/LibStorage.sol";
 
 import { UtilityMap } from "libraries/UtilityMap.sol";
 
-import { ProducedResource, P_RequiredResources, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+import { TotalVault, ProducedResource, P_RequiredResources, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
 import { BuildingKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -160,6 +160,28 @@ library LibResource {
     for (uint8 i = 1; i < resourceCounts.length; i++) {
       if (P_IsUtility.get(i)) continue;
       resourceCounts[i] = ResourceCount.get(playerEntity, i);
+      totalResources += resourceCounts[i];
+    }
+  }
+
+  /**
+   * @dev Retrieves the counts of all non-utility resources for a player and calculates the total.
+   * @param playerEntity The identifier of the player.
+   * @return totalResources The total count of non-utility resources.
+   * @return resourceCounts An array containing the counts of each non-utility resource.
+   */
+  function getAllResourceCountsVaulted(bytes32 playerEntity)
+    internal
+    view
+    returns (uint256 totalResources, uint256[] memory resourceCounts)
+  {
+    resourceCounts = new uint256[](uint8(EResource.LENGTH));
+    for (uint8 i = 1; i < resourceCounts.length; i++) {
+      if (P_IsUtility.get(i)) continue;
+      resourceCounts[i] = ResourceCount.get(playerEntity, i);
+      uint256 vaulted = TotalVault.get(playerEntity, i);
+      if (vaulted > resourceCounts[i]) resourceCounts[i] = 0;
+      else resourceCounts[i] -= vaulted;
       totalResources += resourceCounts[i];
     }
   }

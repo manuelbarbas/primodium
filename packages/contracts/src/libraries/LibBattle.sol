@@ -31,6 +31,7 @@ library LibBattle {
       sendType
     );
     (uint256[] memory defenseCounts, uint256 defensePoints) = getDefensePoints(defenderEntity, rockEntity);
+
     bool isAttackerWinner = attackPoints > defensePoints;
 
     battleResult.attacker = attackerEntity;
@@ -80,6 +81,11 @@ library LibBattle {
       uint256 defenderLevel = UnitLevel.get(defenderEntity, unitPrototypes[i]);
       defensePoints += defenderUnitCount * P_Unit.get(unitPrototypes[i], defenderLevel).defense;
       defenseCounts[i] += defenderUnitCount;
+    }
+
+    if (Home.get(defenderEntity).asteroid == rockEntity) {
+      defensePoints += TotalDefense.get(defenderEntity);
+      defensePoints += (defensePoints * TotalDefenseMultiplier.get(defenderEntity)) / DEFENSE_MULTIPLIER_SCALE;
     }
   }
 
