@@ -9,7 +9,7 @@ import { OwnedMotherlodes } from "./OwnedMotherlodes";
 import { ReinforcementFleets } from "./ReinforcementFleets";
 import { Settings } from "./Settings";
 // import { BattleReports } from "./battle-reports/BattleReports";
-// import { HostileFleets } from "./hostile-fleets/HostileFleets";
+import { HostileFleets } from "./hostile-fleets/HostileFleets";
 
 export const Panes: React.FC = () => {
   const [newPlayer, setNewPlayer] = useSettingsStore((state) => [state.newPlayer, state.setNewPlayer]);
@@ -27,7 +27,7 @@ export const Panes: React.FC = () => {
         <ReinforcementFleets />
       </Tabs.Pane>
       <Tabs.Pane index={2} className="w-96">
-        {/* <HostileFleets spacerock={playerAstroid ?? SingletonID} /> */}
+        <HostileFleets />
       </Tabs.Pane>
       <Tabs.Pane index={3} className="w-96">
         {/* <BattleReports /> */}
