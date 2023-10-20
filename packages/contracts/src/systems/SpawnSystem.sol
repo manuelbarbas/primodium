@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
+import { IWorld } from "codegen/world/IWorld.sol";
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
+import { BuildSystem } from "systems/BuildSystem.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { SystemSwitch } from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import { Spawned, Position, PositionData, Level, Home, P_EnumToPrototype } from "codegen/index.sol";
