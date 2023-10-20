@@ -1,15 +1,16 @@
 import { Entity, defineComponentSystem } from "@latticexyz/recs";
 import { world } from "src/network/world";
-import { Account, Leaderboard } from "../components/clientComponents";
+import { Leaderboard } from "../components/clientComponents";
 import { SetupResult } from "../types";
 
 export const setupLeaderboard = (mud: SetupResult) => {
   const leaderboardMap = new Map<Entity, number>();
 
   defineComponentSystem(world, mud.components.Score, ({ entity, value }) => {
-    const player = Account.get()?.value;
+    const player = mud.network.playerEntity;
 
     const scoreValue = parseInt(value?.at(0)?.value.toString() ?? "0");
+    console.log("scoreValue", scoreValue);
     leaderboardMap.set(entity, scoreValue);
 
     const leaderboardArray = [...leaderboardMap.entries()].sort((a, b) => b[1] - a[1]);
@@ -35,6 +36,7 @@ export const setupLeaderboard = (mud: SetupResult) => {
       playerRank,
     });
   });
+  console.log("leaderboardMap", leaderboardMap);
 
   return leaderboardMap;
 };
