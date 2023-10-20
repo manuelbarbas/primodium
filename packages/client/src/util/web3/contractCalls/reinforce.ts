@@ -1,16 +1,8 @@
 import { Entity } from "@latticexyz/recs";
 import { SetupNetworkResult } from "src/network/types";
+import { Hex } from "viem";
 
-export const reinforce = async (rockEntity: Entity, arrivalIndex: number, network: SetupNetworkResult) => {
-  // const receipt = await execute(
-  //   systems["system.ReceiveReinforcement"].executeTyped(rockEntity, arrivalIndex, {
-  //     gasLimit: 4_000_000,
-  //   }),
-  //   providers
-  // );
-  // ampli.systemReceiveReinforcement({
-  //   asteroidCoord: rockEntity,
-  //   arrivalIndex,
-  //   ...parseReceipt(receipt),
-  // });
+export const reinforce = async (rockEntity: Entity, arrivalEntity: Entity, network: SetupNetworkResult) => {
+  const tx = await network.worldContract.write.reinforce([rockEntity as Hex, arrivalEntity as Hex]);
+  await network.waitForTransaction(tx);
 };

@@ -1,11 +1,13 @@
-import { EntityID } from "@latticexyz/recs";
 import { SecondaryCard } from "src/components/core/Card";
-import { Arrival } from "src/network/components/chainComponents";
 import { Fleet } from "./Fleet";
+import { components } from "src/network/components";
+import { useMud } from "src/hooks";
 
-export const Outgoingfleets: React.FC<{ user: EntityID }> = ({ user }) => {
-  const fleets = Arrival.use({
-    from: user,
+export const Outgoingfleets: React.FC = () => {
+  const playerEntity = useMud().network.playerEntity;
+
+  const fleets = components.Arrival.useAllWith({
+    from: playerEntity,
   });
 
   return (
@@ -15,13 +17,16 @@ export const Outgoingfleets: React.FC<{ user: EntityID }> = ({ user }) => {
           <p className="opacity-50">NO OUTGOING FLEETS</p>
         </SecondaryCard>
       ) : (
-        fleets.map((fleet, i) => {
+        fleets.map((entity) => {
+          const fleet = components.Arrival.get(entity);
+
           if (!fleet) return null;
+
           return (
             <Fleet
-              key={i}
-              arrivalEntity={fleet.entity}
-              arrivalBlock={fleet.arrivalBlock}
+              key={entity}
+              arrivalEntity={entity}
+              arrivalTime={fleet.arrivalTime}
               destination={fleet.destination}
               sendType={fleet.sendType}
               outgoing={true}

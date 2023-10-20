@@ -4,7 +4,7 @@ import { Join } from "../../core/Join";
 import { Tabs } from "../../core/Tabs";
 // import { Leaderboard } from "./Leaderboard";
 // import { Objectives } from "./Objectives";
-// import { Outgoingfleets } from "./OutgoingFleets";
+import { Outgoingfleets } from "./OutgoingFleets";
 import { OwnedMotherlodes } from "./OwnedMotherlodes";
 // import { Reinforcementfleets } from "./ReinforcementFleet";
 import { Settings } from "./Settings";
@@ -26,7 +26,7 @@ export const Panes: React.FC = () => {
       onChange={() => setNewPlayer(false)}
     >
       <Tabs.Pane index={0} className="w-96">
-        {/* <Outgoingfleets user={player ?? SingletonID} />s */}
+        <Outgoingfleets />
       </Tabs.Pane>
       <Tabs.Pane index={1} className="w-96">
         {/* <Reinforcementfleets user={player ?? SingletonID} /> */}
