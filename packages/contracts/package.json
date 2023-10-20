@@ -32,6 +32,7 @@
     "@latticexyz/schema-type": "2.0.0-main-a5e8a6d5",
     "@latticexyz/store": "2.0.0-main-a5e8a6d5",
     "@latticexyz/world": "2.0.0-main-a5e8a6d5",
+    "@latticexyz/world-modules": "2.0.0-main-a5e8a6d5",
     "dotenv": "^16.3.1",
     "ethers": "^5.7.2",
     "tsx": "^3.12.8",

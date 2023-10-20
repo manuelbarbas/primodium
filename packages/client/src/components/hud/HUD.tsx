@@ -14,12 +14,11 @@ import { Score } from "./Score";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { Hotbar } from "./hotbar/Hotbar";
 // import { Panes } from "./panes/Panes";
-import { Resources } from "./resources/Resources";
 import { PrototypeInfo } from "./PrototypeInfo";
 import { ViewStarmap } from "./ViewStarmap";
+import { Resources } from "./resources/Resources";
 // import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
-// import { BlueprintInfo } from "./tile-info/BlueprintInfo";
-// import { Units } from "./units/Units";
+import { Units } from "./units/Units";
 
 export const GameHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [state.showUI, state.toggleShowUI]);
@@ -63,9 +62,9 @@ export const GameHUD = () => {
             <HUD.BottomLeft>
               <Resources />
             </HUD.BottomLeft>
-            {/* <HUD.BottomRight>
+            <HUD.BottomRight>
               <Units />
-            </HUD.BottomRight> */}
+            </HUD.BottomRight>
           </HUD>
         )}
 
