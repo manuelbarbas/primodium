@@ -7,7 +7,8 @@ import { LibStorage } from "libraries/LibStorage.sol";
 
 import { UtilityMap } from "libraries/UtilityMap.sol";
 
-import { TotalVault, ProducedResource, P_RequiredResources, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+import { TotalVault, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+
 import { BuildingKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -184,5 +185,27 @@ library LibResource {
       else resourceCounts[i] -= vaulted;
       totalResources += resourceCounts[i];
     }
+  }
+
+  function updateScore(
+    bytes32 player,
+    uint8 resource,
+    uint256 value
+  ) internal {
+    uint256 count = ResourceCount.get(player, resource);
+    uint256 currentScore = Score.get(player);
+    uint256 scoreChangeAmount = P_ScoreMultiplier.get(resource);
+
+    if (value < currentScore) {
+      scoreChangeAmount *= (currentScore - value);
+      if (scoreChangeAmount > currentScore) {
+        scoreChangeAmount = currentScore;
+      }
+      currentScore -= scoreChangeAmount;
+    } else {
+      scoreChangeAmount *= (value - currentScore);
+      currentScore += scoreChangeAmount;
+    }
+    Score.set(player, currentScore);
   }
 }

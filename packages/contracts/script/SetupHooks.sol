@@ -24,6 +24,10 @@ import { TotalDefenseTableId } from "codegen/tables/TotalDefense.sol";
 import { TotalDefenseMultiplierTableId } from "codegen/tables/TotalDefenseMultiplier.sol";
 import { TotalVaultTableId } from "codegen/tables/TotalVault.sol";
 import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
+import { ScoreTableId } from "codegen/tables/Score.sol";
+import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
+
+import { OnResourceCount_Score } from "src/hooks/storeHooks/OnResourceCount_Score.sol";
 
 import { OnBefore_ClaimResources } from "src/hooks/systemHooks/OnBefore_ClaimResources.sol";
 import { OnBefore_ClaimUnits } from "src/hooks/systemHooks/OnBefore_ClaimUnits.sol";
@@ -66,6 +70,7 @@ import { OnClaimObjective_Requirements } from "src/hooks/systemHooks/claimObject
 import { OnClaimObjective_ReceiveRewards } from "src/hooks/systemHooks/claimObjective/OnClaimObjective_ReceiveRewards.sol";
 
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
+import { BEFORE_SPLICE_STATIC_DATA } from "@latticexyz/store/src/storeHookTypes.sol";
 
 function setupHooks(IWorld world) {
   OnBefore_ClaimResources onBefore_ClaimResources = new OnBefore_ClaimResources();
@@ -92,6 +97,17 @@ function setupHooks(IWorld world) {
   registerRaid(world, onBefore_ClaimResources, onBefore_ClaimUnits);
   registerReinforce(world, onBefore_ClaimUnits);
   registerClaimObjective(world, onBefore_ClaimResources, onBefore_ClaimUnits);
+  registerScoreHook(world);
+}
+
+/**
+ * @dev Registers a store hook for between ResourceCount and the Score tables.
+ * @param world The World contract instance.
+ */
+function registerScoreHook(IWorld world) {
+  OnResourceCount_Score onResourceCount_Score = new OnResourceCount_Score();
+  world.grantAccess(ScoreTableId, address(onResourceCount_Score));
+  world.registerStoreHook(ResourceCountTableId, onResourceCount_Score, BEFORE_SPLICE_STATIC_DATA);
 }
 
 /**

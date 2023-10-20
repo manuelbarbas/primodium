@@ -1018,9 +1018,87 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
   },
 
+  Iron: {
+    tables: {
+      P_ScoreMultiplier: { value: 10n },
+    },
+  },
+  Copper: {
+    tables: {
+      P_ScoreMultiplier: { value: 15n },
+    },
+  },
+  Lithium: {
+    tables: {
+      P_ScoreMultiplier: { value: 20n },
+    },
+  },
+  Sulfur: {
+    tables: {
+      P_ScoreMultiplier: { value: 30n },
+    },
+  },
+  Titanium: {
+    tables: {
+      P_ScoreMultiplier: { value: 100n },
+    },
+  },
+  Iridium: {
+    tables: {
+      P_ScoreMultiplier: { value: 200n },
+    },
+  },
+  Osmium: {
+    tables: {
+      P_ScoreMultiplier: { value: 300n },
+    },
+  },
+  Tungsten: {
+    tables: {
+      P_ScoreMultiplier: { value: 400n },
+    },
+  },
+  Kimberlite: {
+    tables: {
+      P_ScoreMultiplier: { value: 1000n },
+    },
+  },
+  Platinum: {
+    tables: {
+      P_ScoreMultiplier: { value: 1500n },
+    },
+  },
+  Uraninite: {
+    tables: {
+      P_ScoreMultiplier: { value: 2000n },
+    },
+  },
+  Bolutite: {
+    tables: {
+      P_ScoreMultiplier: { value: 2500n },
+    },
+  },
+  IronPlate: {
+    tables: {
+      P_ScoreMultiplier: { value: 30n },
+    },
+  },
+  PVCell: {
+    tables: {
+      P_ScoreMultiplier: { value: 60n },
+    },
+  },
+  Alloy: {
+    tables: {
+      P_ScoreMultiplier: { value: 100n },
+    },
+  },
+  RocketFuel: {
+    tables: {
+      P_ScoreMultiplier: { value: 200n },
+    },
+  },
   Objectives: {
     levels: idsToPrototypes(MUDEnums.EObjectives),
   },
-
-  // Building unit production
 };
