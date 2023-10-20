@@ -2294,7 +2294,7 @@ const _abi = [
     outputs: [
       {
         internalType: "bytes32",
-        name: "",
+        name: "version",
         type: "bytes32",
       },
     ],

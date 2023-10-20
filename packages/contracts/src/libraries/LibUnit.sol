@@ -71,12 +71,7 @@ library LibUnit {
     while (stillClaiming) {
       UnitProductionQueueData memory item = UnitProductionQueue.peek(building);
       uint256 trainingTime = getUnitBuildTime(playerEntity, building, item.unitId);
-      P_GameConfigData memory config = P_GameConfig.get();
-      uint256 trainedUnits = LibMath.min(
-        item.quantity,
-        ((block.timestamp - startTime) * config.worldSpeed * 100) /
-          (trainingTime * config.unitProductionRate * WORLD_SPEED_SCALE)
-      );
+      uint256 trainedUnits = LibMath.min(item.quantity, ((block.timestamp - startTime) / (trainingTime)));
 
       if (trainedUnits == 0) return;
       if (trainedUnits == item.quantity) {
@@ -107,8 +102,10 @@ library LibUnit {
     uint256 multiplier = P_UnitProdMultiplier.get(buildingType, buildingLevel);
     uint256 unitLevel = UnitLevel.get(playerEntity, unitPrototype);
     uint256 rawTrainingTime = P_Unit.getTrainingTime(unitPrototype, unitLevel);
-    require(rawTrainingTime > 0 && multiplier > 0, "Training time is invalid");
-    return (rawTrainingTime * 100) / multiplier;
+    require(multiplier > 0, "Building has no unit production multiplier");
+    P_GameConfigData memory config = P_GameConfig.get();
+    return
+      (rawTrainingTime * 100 * 100 * WORLD_SPEED_SCALE) / (multiplier * config.unitProductionRate * config.worldSpeed);
   }
 
   /**

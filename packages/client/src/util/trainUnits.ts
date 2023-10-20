@@ -53,10 +53,6 @@ export function getUnitTrainingTime(rawPlayer: Entity, rawBuilding: Entity, rawU
     }
   ).value;
 
-  const trainingTime = comps.P_Unit.getWithKeys({ entity: unitEntity, level: unitLevel })?.trainingTime ?? 0n;
-
-  const time =
-    (config.worldSpeed * 100n * 100n * 100n) / (trainingTime * config.unitProductionRate * SPEED_SCALE * multiplier);
-
-  return time;
+  const rawTrainingTime = comps.P_Unit.getWithKeys({ entity: unitEntity, level: unitLevel })?.trainingTime ?? 0n;
+  return (rawTrainingTime * 100n * 100n * SPEED_SCALE) / (multiplier * config.unitProductionRate * config.worldSpeed);
 }

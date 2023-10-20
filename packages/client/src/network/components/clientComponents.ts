@@ -56,8 +56,9 @@ export const TrainingQueue = createExtendedComponent(
   {
     units: Type.EntityArray,
     counts: Type.BigIntArray,
-    progress: Type.NumberArray,
+    progress: Type.BigIntArray,
     timeRemaining: Type.BigIntArray,
+    totalQuantity: Type.BigIntArray,
   },
   {
     id: "TrainingQueue",

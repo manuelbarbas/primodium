@@ -31,9 +31,6 @@ contract LibSpaceRockTest is PrimodiumTest {
     vm.startPrank(creator);
     player = addressToEntity(worldAddress);
     BuildingType.set(building, buildingPrototype);
-    P_GameConfigData memory config = P_GameConfig.get();
-    config.unitProductionRate = 100;
-    P_GameConfig.set(config);
   }
 
   function testFailUpdateRockNoRock() public {

@@ -65,11 +65,11 @@ export const BuildQueue: React.FC<{ building: Entity }> = ({ building }) => {
 const ProgressBar: React.FC<{
   index: number;
   unit: Entity;
-  progress: number;
+  progress: bigint;
   count: bigint;
   timeRemaining: bigint;
 }> = ({ index, unit, count, progress, timeRemaining }) => {
-  const unitsLeft = Math.ceil((1 - progress) * Number(count));
+  const unitsLeft = Math.ceil(Number((100n - progress) * count) / 100);
   if (index === 0) {
     return (
       <SecondaryCard key={index} className={`w-full text-sm flex-row justify-between p-2`}>
@@ -82,10 +82,10 @@ const ProgressBar: React.FC<{
               className={`border border-cyan-400 w-7 h-7 rounded-xs`}
             />
 
-            <p className="rounded-md bg-cyan-700 text-xs p-1">x{unitsLeft} REMAINING</p>
+            <p className="rounded-md bg-cyan-700 text-xs p-1">x{unitsLeft.toString()} REMAINING</p>
           </div>
           <p className="min-w-fit w-full bg-slate-900 text-xs text-center rounded-md mt-1">
-            {Number(timeRemaining)} BLOCKS TILL NEXT
+            {Number(timeRemaining)} SECS TILL NEXT
           </p>
         </div>
       </SecondaryCard>
@@ -126,7 +126,7 @@ const TrainingProgressSpinner: React.FC = () => {
 
 const convertTrainingQueue = (raw: {
   units: Entity[];
-  progress: number[];
+  progress: bigint[];
   timeRemaining: bigint[];
   counts: bigint[];
 }) => {
