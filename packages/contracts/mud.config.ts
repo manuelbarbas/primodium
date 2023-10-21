@@ -616,6 +616,16 @@ export const config = mudConfig({
       keySchema: { entity: "bytes32" },
       valueSchema: "uint256",
     },
+
+    P_GracePeriod: {
+      keySchema: {},
+      valueSchema: "uint256",
+    },
+
+    GracePeriod: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "uint256",
+    },
   },
 });
 
