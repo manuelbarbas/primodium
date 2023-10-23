@@ -56,16 +56,16 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   }
 
   function testClaimMainBaseLevelObjective() public {
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)));
-    P_RequiredBaseLevel.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)), 1, 2);
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)));
+    P_RequiredBaseLevel.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)), 1, 2);
     Level.set(Home.getMainBase(playerEntity), 2);
-    world.claimObjective(EObjectives.BuildFirstIronMine);
+    world.claimObjective(EObjectives.BuildIronMine);
   }
 
   function testFailClaimMainBaseLevelObjective() public {
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)));
-    P_RequiredBaseLevel.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)), 1, 2);
-    world.claimObjective(EObjectives.BuildFirstIronMine);
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)));
+    P_RequiredBaseLevel.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)), 1, 2);
+    world.claimObjective(EObjectives.BuildIronMine);
   }
 
   function testFailClaimInvalidObjective() public {
@@ -74,28 +74,25 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
   function testFailRequiredClaimObjective() public {
     bytes32[] memory objectives = new bytes32[](1);
-    objectives[0] = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine));
-    P_RequiredObjectives.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)), objectives);
-    world.claimObjective(EObjectives.BuildFirstCopperMine);
+    objectives[0] = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine));
+    P_RequiredObjectives.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)), objectives);
+    world.claimObjective(EObjectives.BuildCopperMine);
   }
 
   function testClaimObjective() public {
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)));
-    world.claimObjective(EObjectives.BuildFirstIronMine);
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)));
+    world.claimObjective(EObjectives.BuildIronMine);
   }
 
   function testClaimObjectiveReceiveResourceRewards() public {
     ResourceCount.set(playerEntity, uint8(EResource.Iron), 0);
     MaxResourceCount.set(playerEntity, uint8(EResource.Iron), 100);
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)));
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)));
     P_ResourceRewardData memory resourceRewardData = P_ResourceRewardData(new uint8[](1), new uint256[](1));
     resourceRewardData.resources[0] = uint8(EResource.Iron);
     resourceRewardData.amounts[0] = 100;
-    P_ResourceReward.set(
-      P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)),
-      resourceRewardData
-    );
-    world.claimObjective(EObjectives.BuildFirstIronMine);
+    P_ResourceReward.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)), resourceRewardData);
+    world.claimObjective(EObjectives.BuildIronMine);
     assertEq(
       ResourceCount.get(playerEntity, uint8(EResource.Iron)),
       resourceRewardData.amounts[0],
@@ -105,27 +102,24 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
   function testFailClaimObjectiveReceiveResourceRewards() public {
     ResourceCount.set(playerEntity, uint8(EResource.Iron), 0);
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)));
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)));
     P_ResourceRewardData memory resourceRewardData = P_ResourceRewardData(new uint8[](1), new uint256[](1));
     resourceRewardData.resources[0] = uint8(EResource.Iron);
     resourceRewardData.amounts[0] = 100;
-    P_ResourceReward.set(
-      P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)),
-      resourceRewardData
-    );
+    P_ResourceReward.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)), resourceRewardData);
     MaxResourceCount.set(playerEntity, uint8(EResource.Iron), 0);
     console.log(ResourceCount.get(playerEntity, uint8(EResource.Iron)));
-    world.claimObjective(EObjectives.BuildFirstIronMine);
+    world.claimObjective(EObjectives.BuildIronMine);
     console.log(ResourceCount.get(playerEntity, uint8(EResource.Iron)));
   }
 
   function testClaimObjectiveReceiveUnitRewards() public {
     UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit1, 0);
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)));
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)));
     P_UnitRewardData memory unitRewardData = P_UnitRewardData(new bytes32[](1), new uint256[](1));
-    unitRewardData.unitTypes[0] = unit1;
+    unitRewardData.units[0] = unit1;
     unitRewardData.amounts[0] = 100;
-    P_UnitReward.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)), unitRewardData);
+    P_UnitReward.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)), unitRewardData);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.U_Housing);
@@ -135,7 +129,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     // provide the required housing
     LibProduction.increaseResourceProduction(playerEntity, EResource.U_Housing, 100);
 
-    world.claimObjective(EObjectives.BuildFirstIronMine);
+    world.claimObjective(EObjectives.BuildIronMine);
     assertEq(
       UnitCount.get(playerEntity, Home.get(playerEntity).asteroid, unit1),
       unitRewardData.amounts[0],
@@ -145,41 +139,41 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
   function testFailClaimObjectiveReceiveUnitRewards() public {
     UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit1, 0);
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)));
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)));
     P_UnitRewardData memory unitRewardData = P_UnitRewardData(new bytes32[](1), new uint256[](1));
-    unitRewardData.unitTypes[0] = unit1;
+    unitRewardData.units[0] = unit1;
     unitRewardData.amounts[0] = 100;
-    P_UnitReward.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)), unitRewardData);
+    P_UnitReward.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)), unitRewardData);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.U_Housing);
     requiredResourcesData.amounts[0] = 1;
     P_RequiredResources.set(unit1, 0, requiredResourcesData);
 
-    world.claimObjective(EObjectives.BuildFirstIronMine);
+    world.claimObjective(EObjectives.BuildIronMine);
   }
 
   function testFailClaimObjectiveTwice() public {
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)));
-    world.claimObjective(EObjectives.BuildFirstIronMine);
-    world.claimObjective(EObjectives.BuildFirstIronMine);
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)));
+    world.claimObjective(EObjectives.BuildIronMine);
+    world.claimObjective(EObjectives.BuildIronMine);
   }
 
   function testClaimObjectiveHasBuiltBuilding() public {
     world.build(EBuilding.IronMine, getIronPosition(creator));
-    world.claimObjective(EObjectives.BuildFirstIronMine);
+    world.claimObjective(EObjectives.BuildIronMine);
   }
 
   function testClaimObjectiveHasProducedResources() public {
     world.build(EBuilding.IronMine, getIronPosition(creator));
-    world.claimObjective(EObjectives.BuildFirstIronMine);
+    world.claimObjective(EObjectives.BuildIronMine);
     P_ProducedResourcesData memory producedResourcesData = P_ProducedResourcesData(new uint8[](1), new uint256[](1));
     producedResourcesData.resources[0] = uint8(EResource.Iron);
     producedResourcesData.amounts[0] =
       P_Production.get(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.IronMine)), 1).amount *
       10;
     P_ProducedResources.set(
-      P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)),
+      P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)),
       producedResourcesData
     );
     MaxResourceCount.set(
@@ -187,10 +181,10 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
       uint8(EResource.Iron),
       P_Production.get(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.IronMine)), 1).amount * 10
     );
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)));
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)));
     LastClaimedAt.set(playerEntity, block.timestamp - 10);
 
-    world.claimObjective(EObjectives.BuildFirstCopperMine);
+    world.claimObjective(EObjectives.BuildCopperMine);
 
     assertEq(
       ResourceCount.get(playerEntity, uint8(EResource.Iron)),
@@ -201,48 +195,45 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
   function testFailClaimObjectiveHasProducedResources() public {
     world.build(EBuilding.IronMine, getIronPosition(creator));
-    world.claimObjective(EObjectives.BuildFirstIronMine);
+    world.claimObjective(EObjectives.BuildIronMine);
     P_ProducedResourcesData memory producedResourcesData = P_ProducedResourcesData(new uint8[](1), new uint256[](1));
     producedResourcesData.resources[0] = uint8(EResource.Iron);
     producedResourcesData.amounts[0] =
       P_Production.get(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.IronMine)), 1).amount *
       10;
     P_ProducedResources.set(
-      P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)),
+      P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)),
       producedResourcesData
     );
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)));
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)));
     LastClaimedAt.set(playerEntity, block.timestamp - 5);
-    world.claimObjective(EObjectives.BuildFirstCopperMine);
+    world.claimObjective(EObjectives.BuildCopperMine);
   }
 
   function testClaimObjectiveRequiredObjectives() public {
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)));
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)));
     bytes32[] memory objectives = new bytes32[](1);
-    objectives[0] = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine));
-    P_RequiredObjectives.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)), objectives);
+    objectives[0] = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine));
+    P_RequiredObjectives.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)), objectives);
 
     CompletedObjective.set(
       addressToEntity(creator),
-      P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine)),
+      P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)),
       true
     );
-    world.claimObjective(EObjectives.BuildFirstCopperMine);
+    world.claimObjective(EObjectives.BuildCopperMine);
   }
 
   function testClaimObjectiveRaidedResources() public {
     P_RaidedResourcesData memory raidedResourcesData = P_RaidedResourcesData(new uint8[](1), new uint256[](1));
     raidedResourcesData.resources[0] = uint8(EResource.Iron);
     raidedResourcesData.amounts[0] = 100;
-    P_RaidedResources.set(
-      P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)),
-      raidedResourcesData
-    );
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)));
+    P_RaidedResources.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)), raidedResourcesData);
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)));
     MaxResourceCount.set(playerEntity, uint8(EResource.Iron), 100);
     setupRaid();
     RaidResultData memory raidResult = LibRaid.resolveRaid(br);
-    world.claimObjective(EObjectives.BuildFirstCopperMine);
+    world.claimObjective(EObjectives.BuildCopperMine);
     assertEq(
       ResourceCount.get(playerEntity, uint8(EResource.Iron)),
       raidedResourcesData.amounts[0],
@@ -254,92 +245,71 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     P_RaidedResourcesData memory raidedResourcesData = P_RaidedResourcesData(new uint8[](1), new uint256[](1));
     raidedResourcesData.resources[0] = uint8(EResource.Iron);
     raidedResourcesData.amounts[0] = 100;
-    P_RaidedResources.set(
-      P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)),
-      raidedResourcesData
-    );
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)));
-    world.claimObjective(EObjectives.BuildFirstCopperMine);
+    P_RaidedResources.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)), raidedResourcesData);
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)));
+    world.claimObjective(EObjectives.BuildCopperMine);
   }
 
   function testClaimObjectiveDestroyedUnits() public {
     P_DestroyedUnitsData memory destroyedUnitsData = P_DestroyedUnitsData(new bytes32[](1), new uint256[](1));
     destroyedUnitsData.units[0] = unit1;
     destroyedUnitsData.amounts[0] = 100;
-    P_DestroyedUnits.set(
-      P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)),
-      destroyedUnitsData
-    );
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)));
+    P_DestroyedUnits.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)), destroyedUnitsData);
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)));
 
     setupRaid();
     RaidResultData memory raidResult = LibRaid.resolveRaid(br);
-    world.claimObjective(EObjectives.BuildFirstCopperMine);
+    world.claimObjective(EObjectives.BuildCopperMine);
   }
 
   function testFailClaimObjectiveDestroyedUnits() public {
     P_DestroyedUnitsData memory destroyedUnitsData = P_DestroyedUnitsData(new bytes32[](1), new uint256[](1));
     destroyedUnitsData.units[0] = unit1;
     destroyedUnitsData.amounts[0] = 100;
-    P_DestroyedUnits.set(
-      P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)),
-      destroyedUnitsData
-    );
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)));
+    P_DestroyedUnits.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)), destroyedUnitsData);
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)));
 
-    world.claimObjective(EObjectives.BuildFirstCopperMine);
+    world.claimObjective(EObjectives.BuildCopperMine);
   }
 
   function testClaimObjectiveRequiredUnits() public {
     P_RequiredUnitsData memory requiredUnitsData = P_RequiredUnitsData(new bytes32[](1), new uint256[](1));
     requiredUnitsData.units[0] = unit1;
     requiredUnitsData.amounts[0] = 100;
-    P_RequiredUnits.set(
-      P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)),
-      requiredUnitsData
-    );
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)));
+    P_RequiredUnits.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)), requiredUnitsData);
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)));
     UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit1, 100);
-    world.claimObjective(EObjectives.BuildFirstCopperMine);
+    world.claimObjective(EObjectives.BuildCopperMine);
   }
 
   function testFailClaimObjectiveRequiredUnits() public {
     P_RequiredUnitsData memory requiredUnitsData = P_RequiredUnitsData(new bytes32[](1), new uint256[](1));
     requiredUnitsData.units[0] = unit1;
     requiredUnitsData.amounts[0] = 100;
-    P_RequiredUnits.set(
-      P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)),
-      requiredUnitsData
-    );
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)));
+    P_RequiredUnits.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)), requiredUnitsData);
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)));
 
-    world.claimObjective(EObjectives.BuildFirstCopperMine);
+    world.claimObjective(EObjectives.BuildCopperMine);
   }
 
   function testClaimObjectiveProducedUnits() public {
     P_ProducedUnitsData memory producedUnitsData = P_ProducedUnitsData(new bytes32[](1), new uint256[](1));
     producedUnitsData.units[0] = unit1;
     producedUnitsData.amounts[0] = 100;
-    P_ProducedUnits.set(
-      P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)),
-      producedUnitsData
-    );
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)));
+    P_ProducedUnits.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)), producedUnitsData);
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)));
     ProducedUnit.set(playerEntity, unit1, 100);
-    world.claimObjective(EObjectives.BuildFirstCopperMine);
+    world.claimObjective(EObjectives.BuildCopperMine);
   }
 
   function testFailClaimObjectiveProducedUnits() public {
     P_ProducedUnitsData memory producedUnitsData = P_ProducedUnitsData(new bytes32[](1), new uint256[](1));
     producedUnitsData.units[0] = unit1;
     producedUnitsData.amounts[0] = 100;
-    P_ProducedUnits.set(
-      P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)),
-      producedUnitsData
-    );
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine)));
+    P_ProducedUnits.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)), producedUnitsData);
+    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)));
 
-    world.claimObjective(EObjectives.BuildFirstCopperMine);
+    world.claimObjective(EObjectives.BuildCopperMine);
   }
 
   function setupSpawnPirateAsteroid(
@@ -377,10 +347,10 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   }
 
   function testClaimObjectiveSpawnPirateAsteroid() public {
-    bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine));
+    bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine));
     P_SpawnPirateAsteroidData memory spawnPirateAsteroid = setupSpawnPirateAsteroid(objectivePrototype);
 
-    world.claimObjective(EObjectives.BuildFirstIronMine);
+    world.claimObjective(EObjectives.BuildIronMine);
     console.log("pirate asteroid spawned");
 
     bytes32 personalPirateEntity = LibEncode.getHash(PirateKey, playerEntity);
@@ -477,14 +447,14 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit2, 50);
     LibProduction.increaseResourceProduction(playerEntity, EResource.U_MaxMoves, 100);
 
-    bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine));
+    bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine));
     setupSpawnPirateAsteroid(objectivePrototype);
     vm.stopPrank();
     spawn(alice);
 
     vm.startPrank(alice);
 
-    world.claimObjective(EObjectives.BuildFirstIronMine);
+    world.claimObjective(EObjectives.BuildIronMine);
 
     bytes32 personalPirateEntity = LibEncode.getHash(PirateKey, addressToEntity(alice));
     bytes32 pirateAsteroidEntity = LibEncode.getHash(personalPirateEntity);
@@ -508,10 +478,10 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit2, 50);
     LibProduction.increaseResourceProduction(playerEntity, EResource.U_MaxMoves, 100);
 
-    bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine));
+    bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine));
     setupSpawnPirateAsteroid(objectivePrototype);
 
-    world.claimObjective(EObjectives.BuildFirstIronMine);
+    world.claimObjective(EObjectives.BuildIronMine);
 
     bytes32 personalPirateEntity = LibEncode.getHash(PirateKey, playerEntity);
     bytes32 pirateAsteroidEntity = LibEncode.getHash(personalPirateEntity);
@@ -532,20 +502,20 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   }
 
   function testSecondPirateAsteroid() public {
-    bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstIronMine));
+    bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine));
     setupSpawnPirateAsteroid(objectivePrototype);
 
-    world.claimObjective(EObjectives.BuildFirstIronMine);
+    world.claimObjective(EObjectives.BuildIronMine);
 
     bytes32 personalPirateEntity = LibEncode.getHash(PirateKey, playerEntity);
     bytes32 pirateAsteroidEntity = LibEncode.getHash(personalPirateEntity);
 
     PositionData memory pirateAsteroidPosition = Position.get(pirateAsteroidEntity);
 
-    objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildFirstCopperMine));
+    objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine));
     setupSpawnPirateAsteroid(objectivePrototype, 100, 100, 10, 300);
 
-    world.claimObjective(EObjectives.BuildFirstCopperMine);
+    world.claimObjective(EObjectives.BuildCopperMine);
     assertEq(
       ReversePosition.get(pirateAsteroidPosition.x, pirateAsteroidPosition.y) != pirateAsteroidEntity,
       true,

@@ -19,8 +19,6 @@ import { LibBuilding } from "libraries/LibBuilding.sol";
 import { UnitKey, BuildingKey, BuildingTileKey, ExpansionKey, ObjectiveKey } from "src/Keys.sol";
 import { Bounds, EBuilding, EResource, EObjectives } from "src/Types.sol";
 
-import { MainBasePrototypeId } from "codegen/Prototypes.sol";
-
 library LibObjectives {
   function checkObjectiveRequirements(bytes32 playerEntity, EObjectives objectiveType) internal {
     checkIsValidObjective(objectiveType);

@@ -1,6 +1,7 @@
 import { renderList, renderedSolidityHeader } from "@latticexyz/common/codegen";
 import { StaticAbiType } from "@latticexyz/schema-type";
 import { StoreConfig } from "@latticexyz/store";
+import { renderPrototypeScript } from "./renderPrototypeScript";
 import { StoreConfigWithPrototypes } from "./types";
 
 const formatValue = (config: StoreConfig, fieldType: string, value: number | string) => {
@@ -13,6 +14,31 @@ const formatValue = (config: StoreConfig, fieldType: string, value: number | str
   }
   return `${value}`;
 };
+
+export function renderPrototypes(config: StoreConfigWithPrototypes) {
+  const names = Object.keys(config.prototypeConfig);
+  const outputs = names.map((name) => renderPrototype(config, name)).join("\n");
+  const script = renderPrototypeScript(config.prototypeConfig);
+
+  return `
+  ${renderedSolidityHeader}
+
+  import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
+  import { IStore } from "@latticexyz/store/src/IStore.sol";
+  import { createPrototype } from "../../libraries/prototypes/createPrototype.sol";
+  import { PackedCounter } from "@latticexyz/store/src/PackedCounter.sol";
+  ${
+    Object.keys(config.enums).length > 0
+      ? `import { ${Object.keys(config.enums)
+          .map((e) => e)
+          .join(",")} } from "../common.sol";`
+      : ""
+  }
+  import  "../index.sol";
+  ${script}
+  ${outputs}
+  `;
+}
 
 export const renderSetLevelRecord = (
   config: StoreConfig,
@@ -59,7 +85,7 @@ export function renderLevelPrototype(config: StoreConfigWithPrototypes, name: st
   const prototype = config.prototypeConfig[name];
 
   const keys: { [x: string]: StaticAbiType }[] =
-    prototype.keys !== undefined ? prototype.keys : [{ prototypeId: "bytes32" }];
+    prototype.keys !== undefined ? prototype.keys : [{ [`${name}PrototypeId`]: "bytes32" }];
   keys.push({ level: "uint32" });
   const values = prototype.levels;
   if (!values) return undefined;
@@ -158,7 +184,7 @@ export const renderSetRecord = (config: StoreConfig, tableName: string, value: {
 
 export function renderPrototype(config: StoreConfigWithPrototypes, name: string) {
   const prototype = config.prototypeConfig[name];
-  const keys = prototype.keys !== undefined ? prototype.keys : [{ prototypeId: "bytes32" }];
+  const keys = prototype.keys !== undefined ? prototype.keys : [{ [`${name}PrototypeId`]: "bytes32" }];
 
   const values = prototype.tables ?? {};
 
@@ -185,29 +211,10 @@ export function renderPrototype(config: StoreConfigWithPrototypes, name: string)
     .flat();
   const levelPrototype = renderLevelPrototype(config, name);
 
-  const allImportedTableIds = [...Object.keys(prototype.tables ?? {}), ...levelTables]
-    .map((tableName) => `${tableName}, ${tableName}TableId`)
-    .join(",");
+  const length = Object.keys(values).length;
 
   return `
-  ${renderedSolidityHeader}
-
-  import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
-  import { IStore } from "@latticexyz/store/src/IStore.sol";
-  import { createPrototype } from "../../libraries/prototypes/createPrototype.sol";
-  import { PackedCounter } from "@latticexyz/store/src/PackedCounter.sol";
-  ${
-    Object.keys(config.enums).length > 0
-      ? `import { ${Object.keys(config.enums)
-          .map((e) => e)
-          .join(",")} } from "../common.sol";`
-      : ""
-  }
-  import {${allImportedTableIds}} from "../index.sol";
-  
-  bytes32 constant prototypeId = "${name}";
-  bytes32 constant ${name}PrototypeId = prototypeId;
-  uint256 constant LENGTH = ${Object.keys(values).length};
+  bytes32 constant ${name}PrototypeId = "${name}";
 
   function ${name}Keys() pure returns (bytes32[] memory) {
     ${keyTupleDefinition}
@@ -217,10 +224,10 @@ export function renderPrototype(config: StoreConfigWithPrototypes, name: string)
   ${levelPrototype ? levelPrototype.levelKeys : ""}
   function ${name}Prototype(IStore store) {
     bytes32[] memory keys = ${name}Keys();
-    ResourceId[] memory tableIds = new ResourceId[](LENGTH);
-    bytes[] memory staticData =  new bytes[](LENGTH);
-      PackedCounter[] memory encodedLengths = new PackedCounter[](LENGTH);
-      bytes[] memory dynamicData = new bytes[](LENGTH);
+    ResourceId[] memory tableIds = new ResourceId[](${length});
+    bytes[] memory staticData =  new bytes[](${length});
+      PackedCounter[] memory encodedLengths = new PackedCounter[](${length});
+      bytes[] memory dynamicData = new bytes[](${length});
 
     ${Object.keys(values)
       .map((key, i) => `tableIds[${i}] = ${key}TableId;`)
