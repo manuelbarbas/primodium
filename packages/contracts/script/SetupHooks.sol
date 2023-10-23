@@ -71,6 +71,8 @@ import { OnReinforce_TargetClaimResources } from "src/hooks/systemHooks/reinforc
 import { OnClaimObjective_Requirements } from "src/hooks/systemHooks/claimObjective/OnClaimObjective_Requirements.sol";
 import { OnClaimObjective_ReceiveRewards } from "src/hooks/systemHooks/claimObjective/OnClaimObjective_ReceiveRewards.sol";
 
+import { OnAlliance_TargetClaimResources } from "src/hooks/systemHooks/alliance/OnAlliance_TargetClaimResources.sol";
+
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
 import { BEFORE_SPLICE_STATIC_DATA } from "@latticexyz/store/src/storeHookTypes.sol";
 
@@ -100,6 +102,17 @@ function setupHooks(IWorld world) {
   registerReinforce(world, onBefore_ClaimUnits);
   registerClaimObjective(world, onBefore_ClaimResources, onBefore_ClaimUnits);
   registerScoreHook(world);
+  registerAllianceHooks(world);
+}
+
+function registerAllianceHooks(IWorld world) {
+  OnAlliance_TargetClaimResources onAlliance_TargetClaimResources = new OnAlliance_TargetClaimResources();
+  world.grantAccess(ResourceCountTableId, address(onAlliance_TargetClaimResources));
+  world.grantAccess(MapItemUtilitiesTableId, address(onAlliance_TargetClaimResources));
+  world.grantAccess(MapUtilitiesTableId, address(onAlliance_TargetClaimResources));
+  world.grantAccess(MapItemStoredUtilitiesTableId, address(onAlliance_TargetClaimResources));
+  world.grantAccess(LastClaimedAtTableId, address(onAlliance_TargetClaimResources));
+  world.grantAccess(ProducedResourceTableId, address(onAlliance_TargetClaimResources));
 }
 
 /**
