@@ -10,7 +10,7 @@ import { LibMotherlode } from "libraries/LibMotherlode.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { S_BattleSystem } from "systems/subsystems/S_BattleSystem.sol";
-import { SystemSwitch } from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
+import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 
 library LibInvade {
   /**
@@ -25,13 +25,20 @@ library LibInvade {
   ) internal {
     bytes32 defender = OwnedBy.get(rockEntity);
     if (defender == 0) return invadeNeutral(world, invader, rockEntity);
-    bytes memory rawBr = SystemSwitch.call(
-      abi.encodeCall(world.battle, (invader, defender, rockEntity, ESendType.Invade))
+
+    bytes memory rawBr = SystemCall.callWithHooksOrRevert(
+      entityToAddress(invader),
+      getSystemResourceId("S_BattleSystem"),
+      abi.encodeCall(S_BattleSystem.battle, (invader, defender, rockEntity, ESendType.Invade)),
+      0
     );
     BattleResultData memory br = abi.decode(rawBr, (BattleResultData));
-
-    SystemSwitch.call(abi.encodeCall(world.updateUnitsAfterBattle, (br, ESendType.Invade)));
-
+    SystemCall.callWithHooksOrRevert(
+      entityToAddress(invader),
+      getSystemResourceId("S_BattleSystem"),
+      abi.encodeCall(S_BattleSystem.updateUnitsAfterBattle, (br, ESendType.Invade)),
+      0
+    );
     if (invader == br.winner) {
       LibReinforce.recallAllReinforcements(defender, rockEntity);
       OwnedBy.set(rockEntity, invader);
@@ -62,8 +69,12 @@ library LibInvade {
   ) internal {
     OwnedBy.set(rockEntity, invader);
     bytes32[] memory unitTypes = P_UnitPrototypes.get();
-    bytes memory rawAttackCounts = SystemSwitch.call(
-      abi.encodeCall(world.getAttackPoints, (invader, rockEntity, ESendType.Invade))
+
+    bytes memory rawAttackCounts = SystemCall.callWithHooksOrRevert(
+      entityToAddress(invader),
+      getSystemResourceId("S_BattleSystem"),
+      abi.encodeCall(S_BattleSystem.getAttackPoints, (invader, rockEntity, ESendType.Invade)),
+      0
     );
 
     (uint256[] memory attackCounts, , ) = abi.decode(rawAttackCounts, (uint256[], uint256, uint256));
