@@ -33,6 +33,7 @@ contract LibRaidTest is PrimodiumTest {
     player = addressToEntity(creator);
     Home.setAsteroid(player, homeRock);
     br.attacker = player;
+    br.winner = player;
     bytes32[] memory unitTypes = new bytes32[](unitPrototypeCount);
     unitTypes[0] = unit1;
     P_UnitPrototypes.set(unitTypes);
@@ -68,8 +69,11 @@ contract LibRaidTest is PrimodiumTest {
     ResourceCount.set(enemy, Copper, 200);
     P_IsUtility.set(Platinum, true);
     ResourceCount.set(enemy, Platinum, 500);
-
+    LibResource.claimAllResources(player);
+    LibResource.claimAllResources(enemy);
     RaidResultData memory raidResult = LibRaid.resolveRaid(br);
+    LibResource.claimAllResources(player);
+    LibResource.claimAllResources(enemy);
 
     assertEq(raidResult.defenderValuesBeforeRaid[uint256(Iron)], 100);
     assertEq(raidResult.defenderValuesBeforeRaid[uint256(Copper)], 200);
@@ -103,7 +107,11 @@ contract LibRaidTest is PrimodiumTest {
     ResourceCount.set(enemy, Iron, 10);
 
     br.totalCargo = 10;
+    LibResource.claimAllResources(player);
+    LibResource.claimAllResources(enemy);
     RaidResultData memory raidResult = LibRaid.resolveRaid(br);
+    LibResource.claimAllResources(player);
+    LibResource.claimAllResources(enemy);
 
     assertEq(raidResult.defenderValuesBeforeRaid[uint256(Iron)], 10);
     assertEq(raidResult.raidedAmount[uint256(Iron)], 10, "Iron raided amount");
@@ -138,6 +146,37 @@ contract LibRaidTest is PrimodiumTest {
     assertEq(UnitCount.get(player, homeRock, unit1), 100, "Player units");
     assertEq(UnitCount.get(enemy, rock, unit1), 0, "Enemy units");
     assertEq(ResourceCount.get(enemy, Iron), 0, "Enemy Iron");
+  }
+
+  function testRaidVault() public {
+    ResourceCount.set(enemy, Iron, 100);
+    MaxResourceCount.set(player, Iron, 100);
+    TotalVault.set(enemy, Iron, 100);
+    Home.setAsteroid(enemy, rock);
+    OwnedBy.set(rock, enemy);
+    RockType.set(rock, uint8(ERock.Asteroid));
+    RockType.set(homeRock, uint8(ERock.Asteroid));
+    UnitCount.set(enemy, rock, unit1, 100);
+    vm.warp(1000);
+    Arrival memory arrival = Arrival({
+      sendType: ESendType.Raid,
+      arrivalTime: 2,
+      from: player,
+      to: enemy,
+      origin: homeRock,
+      destination: rock,
+      unitCounts: [uint256(200), 0, 0, 0, 0]
+    });
+
+    ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);
+    P_Unit.set(unit1, 0, P_UnitData({ attack: 100, defense: 100, speed: 200, cargo: 100, trainingTime: 0 }));
+
+    world.raid(rock);
+
+    assertEq(ResourceCount.get(player, Iron), 0, "Player Iron");
+    assertEq(UnitCount.get(player, homeRock, unit1), 100, "Player units");
+    assertEq(UnitCount.get(enemy, rock, unit1), 0, "Enemy units");
+    assertEq(ResourceCount.get(enemy, Iron), 100, "Enemy Iron");
   }
 
   function testFailRaidMotherlode() public {

@@ -7,7 +7,6 @@ import { LibBuilding, LibResource, LibReduceProductionRate, LibProduction, LibSt
 import { EBuilding } from "src/Types.sol";
 
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
-import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 
 contract UpgradeBuildingSystem is PrimodiumSystem {
   /// @notice Upgrades the building at the specified coordinate

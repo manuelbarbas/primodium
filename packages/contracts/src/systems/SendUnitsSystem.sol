@@ -6,7 +6,6 @@ import { System } from "@latticexyz/world/src/System.sol";
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
-import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 
 import { ESendType, SendArgs, ERock, Arrival } from "src/Types.sol";
 import { ReversePosition, PositionData, UnitCount, OwnedBy, ResourceCount, ArrivalCount, P_EnumToPrototype, P_UnitPrototypes } from "codegen/index.sol";

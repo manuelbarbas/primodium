@@ -751,6 +751,7 @@ export const ResourceImage = new Map<Entity, string>([
 
   [EntityType.Electricity, "/img/icons/powericon.png"],
   [EntityType.Housing, "/img/icons/utilitiesicon.png"],
+  [EntityType.FleetMoves, "/img/icons/moveicon.png"],
   [EntityType.VesselCapacity, "/img/unit/miningvessel.png"],
 
   // debug

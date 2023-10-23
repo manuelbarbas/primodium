@@ -4,8 +4,11 @@ pragma solidity >=0.8.21;
 import { EBuilding, EResource } from "src/Types.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
+
 import { UtilityMap } from "libraries/UtilityMap.sol";
-import { P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+
+import { TotalVault, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+
 import { BuildingKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -125,6 +128,7 @@ library LibResource {
 
       // add resource to storage
       uint256 increase = productionRate * timeSinceClaimed;
+      ProducedResource.set(playerEntity, resource, ProducedResource.get(playerEntity, resource) + increase);
       LibStorage.increaseStoredResource(playerEntity, resource, increase);
     }
   }
@@ -159,5 +163,49 @@ library LibResource {
       resourceCounts[i] = ResourceCount.get(playerEntity, i);
       totalResources += resourceCounts[i];
     }
+  }
+
+  /**
+   * @dev Retrieves the counts of all non-utility resources for a player and calculates the total.
+   * @param playerEntity The identifier of the player.
+   * @return totalResources The total count of non-utility resources.
+   * @return resourceCounts An array containing the counts of each non-utility resource.
+   */
+  function getAllResourceCountsVaulted(bytes32 playerEntity)
+    internal
+    view
+    returns (uint256 totalResources, uint256[] memory resourceCounts)
+  {
+    resourceCounts = new uint256[](uint8(EResource.LENGTH));
+    for (uint8 i = 1; i < resourceCounts.length; i++) {
+      if (P_IsUtility.get(i)) continue;
+      resourceCounts[i] = ResourceCount.get(playerEntity, i);
+      uint256 vaulted = TotalVault.get(playerEntity, i);
+      if (vaulted > resourceCounts[i]) resourceCounts[i] = 0;
+      else resourceCounts[i] -= vaulted;
+      totalResources += resourceCounts[i];
+    }
+  }
+
+  function updateScore(
+    bytes32 player,
+    uint8 resource,
+    uint256 value
+  ) internal {
+    uint256 count = ResourceCount.get(player, resource);
+    uint256 currentScore = Score.get(player);
+    uint256 scoreChangeAmount = P_ScoreMultiplier.get(resource);
+
+    if (value < currentScore) {
+      scoreChangeAmount *= (currentScore - value);
+      if (scoreChangeAmount > currentScore) {
+        scoreChangeAmount = currentScore;
+      }
+      currentScore -= scoreChangeAmount;
+    } else {
+      scoreChangeAmount *= (value - currentScore);
+      currentScore += scoreChangeAmount;
+    }
+    Score.set(player, currentScore);
   }
 }

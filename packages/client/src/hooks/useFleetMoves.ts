@@ -1,18 +1,15 @@
-import { SingletonID } from "@latticexyz/network";
-import { ArrivalsSize, MaxMoves } from "src/network/components/chainComponents";
-import { Account } from "src/network/components/clientComponents";
+import { components } from "src/network/components";
+import { useMud } from "./useMud";
 
 export const useFleetMoves = () => {
-  const player = Account.use(undefined, {
-    value: SingletonID,
+  const playerEntity = useMud().network.playerEntity;
+
+  const maxMoves = components.MaxMoves.use(playerEntity, {
+    value: 0n,
   }).value;
 
-  const maxMoves = MaxMoves.use(player, {
-    value: 0,
-  }).value;
-
-  const movesUsed = ArrivalsSize.use(player, {
-    value: 0,
+  const movesUsed = components.ArrivalCount.use(playerEntity, {
+    value: 0n,
   }).value;
 
   return maxMoves - movesUsed;

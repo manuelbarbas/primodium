@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
+import { DEFENSE_MULTIPLIER_SCALE } from "src/constants.sol";
 import { ESendType, Arrival } from "src/Types.sol";
-import { UnitCount, UnitLevel, BattleResult, BattleResultData, P_UnitPrototypes, P_Unit, ArrivalCount, UnitCount, Home } from "codegen/index.sol";
+import { TotalDefense, TotalDefenseMultiplier, DestroyedUnit, UnitCount, UnitLevel, BattleResult, BattleResultData, P_UnitPrototypes, P_Unit, ArrivalCount, UnitCount, Home } from "codegen/index.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 
@@ -31,6 +32,7 @@ library LibBattle {
       sendType
     );
     (uint256[] memory defenseCounts, uint256 defensePoints) = getDefensePoints(defenderEntity, rockEntity);
+
     bool isAttackerWinner = attackPoints > defensePoints;
 
     battleResult.attacker = attackerEntity;
@@ -45,6 +47,7 @@ library LibBattle {
     uint256 lossRatio;
     if (isAttackerWinner) {
       lossRatio = 100 - (attackPoints == 0 ? 0 : ((defensePoints * 100) / attackPoints));
+
       for (uint256 i = 0; i < unitPrototypes.length; i++) {
         battleResult.attackerUnitsLeft[i] = (attackCounts[i] * lossRatio) / 100;
       }
@@ -79,6 +82,11 @@ library LibBattle {
       uint256 defenderLevel = UnitLevel.get(defenderEntity, unitPrototypes[i]);
       defensePoints += defenderUnitCount * P_Unit.get(unitPrototypes[i], defenderLevel).defense;
       defenseCounts[i] += defenderUnitCount;
+    }
+
+    if (Home.get(defenderEntity).asteroid == rockEntity) {
+      defensePoints += TotalDefense.get(defenderEntity);
+      defensePoints += (defensePoints * TotalDefenseMultiplier.get(defenderEntity)) / DEFENSE_MULTIPLIER_SCALE;
     }
   }
 
@@ -141,6 +149,10 @@ library LibBattle {
       LibUnit.decreaseUnitCount(br.defender, br.rock, unitTypes[i], defenderUnitsLost);
       LibUnit.updateStoredUtilities(br.attacker, unitTypes[i], attackerUnitsLost, false);
       LibUnit.updateStoredUtilities(br.defender, unitTypes[i], defenderUnitsLost, false);
+
+      DestroyedUnit.set(br.attacker, unitTypes[i], DestroyedUnit.get(br.attacker, unitTypes[i]) + defenderUnitsLost);
+      DestroyedUnit.set(br.defender, unitTypes[i], DestroyedUnit.get(br.defender, unitTypes[i]) + attackerUnitsLost);
+
       if (br.winner == br.attacker) {
         bytes32 attackerRock = (br.attacker == br.winner && sendType == ESendType.Raid)
           ? Home.getAsteroid(br.attacker)

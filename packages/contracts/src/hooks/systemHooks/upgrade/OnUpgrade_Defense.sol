@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
 import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
@@ -6,40 +5,30 @@ import { addressToEntity, getSystemResourceId } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId, ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
-
-import { EBuilding } from "src/Types.sol";
-import { LibEncode } from "libraries/LibEncode.sol";
-import { BuildingKey, UnitKey } from "src/Keys.sol";
-import { LibResource } from "libraries/LibResource.sol";
-import { LibBuilding } from "libraries/LibBuilding.sol";
 import { Level } from "codegen/tables/Level.sol";
+import { LibEncode } from "libraries/LibEncode.sol";
+import { LibBuilding } from "libraries/LibBuilding.sol";
+import { BuildingKey } from "src/Keys.sol";
+import { LibStorage } from "libraries/LibStorage.sol";
+import { LibDefense } from "libraries/LibDefense.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
-import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
 
 /**
- * @title OnBuild_SpendResources
- * @dev This contract is a system hook that handles resource spending when a building is constructed in the game world.
+ * @title OnUpgrade_Defense
+ * @dev This contract is a system hook that handles the max storage capacity of a building when it is constructed in the game world.
  */
-contract OnBuild_SpendResources is SystemHook {
+contract OnUpgrade_Defense is SystemHook {
   constructor() {}
 
-  /**
-   * @dev This function is called before the system's main logic is executed.
-   * @param msgSender The address of the message sender.
-   * @param systemId The identifier of the system.
-   * @param callData The data passed to the system.
-   */
   function onBeforeCallSystem(
     address msgSender,
     ResourceId systemId,
     bytes memory callData
-  ) public {
-    
-  }
+  ) public {}
 
   /**
    * @dev This function is called after the system's main logic is executed.
-   * It spends the required resources when a building is constructed.
+   * It increases the max storage capacity of a player's building entity.
    * @param msgSender The address of the message sender.
    * @param systemId The identifier of the system.
    * @param callData The data passed to the system.
@@ -49,15 +38,20 @@ contract OnBuild_SpendResources is SystemHook {
     ResourceId systemId,
     bytes memory callData
   ) public {
+    // Convert the player's address to an entity
+    bytes32 playerEntity = addressToEntity(msgSender);
+
     // Decode the arguments from the callData
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
-    
-      (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
 
-      // Generate the unique building entity key
-      bytes32 buildingEntity = LibEncode.getHash(BuildingKey, coord);
+    PositionData memory coord = abi.decode(args, (PositionData));
 
-      // Spend the required resources for the building
-      LibResource.spendBuildingRequiredResources(buildingEntity, 1);
+    // Get the building entity from the coordinates
+    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
+
+    // Get the level of the building
+    uint256 level = Level.get(buildingEntity);
+
+    LibDefense.upgradeBuildingDefenses(playerEntity, buildingEntity, level);
   }
 }

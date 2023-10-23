@@ -72,16 +72,16 @@ contract LibReinforceTest is PrimodiumTest {
     requiredResourcesData.resources[0] = uint8(Iron);
     requiredResourcesData.amounts[0] = 33;
     P_RequiredResources.set(unit, 0, requiredResourcesData);
-
+    P_RequiredResources.set(unit, 1, requiredResourcesData);
     uint256 before = 75;
-    MaxResourceCount.set(player, Iron, before + 33);
-    ResourceCount.set(player, Iron, before);
-    ResourceCount.set(arrival.from, Iron, before);
+    LibProduction.increaseResourceProduction(player, EResource(Iron), before);
+    LibProduction.increaseResourceProduction(arrival.from, EResource(Iron), before);
+    LibResource.spendUnitRequiredResources(arrival.from, unit, 1);
 
     LibReinforce.reinforce(player, destination, arrivalId);
 
-    assertEq(ResourceCount.get(arrival.from, Iron), before - 33);
-    assertEq(ResourceCount.get(player, Iron), before + 33);
+    assertEq(ResourceCount.get(arrival.from, Iron), before);
+    assertEq(ResourceCount.get(player, Iron), before - 33);
   }
 
   function testFailReinforceWrongSendType() public {
