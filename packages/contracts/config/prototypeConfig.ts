@@ -4,7 +4,9 @@ import {
   encodeArray,
   getResourceValue,
   getResourceValues,
+  getUnitValues,
   idsToPrototypes,
+  indexifyResourceArray,
   upgradesByLevel,
   upgradesToList,
 } from "../ts/prototypes/prototypeGenUtils";
@@ -745,20 +747,17 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ Titanium: 70000, U_Electricity: 100 }),
-        P_Production: getResourceValue({ U_MaxMoves: 1 }),
-        // P_Defence: { value: 900n },
+        P_Defense: { defenseValue: 900n },
       },
       2: {
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Sulfur: 3000000, Platinum: 250000, U_Electricity: 150 }),
-        P_Production: getResourceValue({ U_MaxMoves: 2 }),
-        // P_Defence: { value: 900n },
+        P_Defense: { defenseValue: 900n },
       },
       3: {
         P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Sulfur: 7000000, Iridium: 100000, U_Electricity: 200 }),
-        P_Production: getResourceValue({ U_MaxMoves: 3 }),
-        // P_Defence: { value: 900n },
+        P_Defense: { defenseValue: 900n },
       },
     },
   },
@@ -1337,7 +1336,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       },
     },
   },
-
+  /* ------------------------------- Multipliers ------------------------------ */
   Iron: {
     tables: {
       P_ScoreMultiplier: { value: 10n },
@@ -1418,7 +1417,580 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_ScoreMultiplier: { value: 200n },
     },
   },
+
+  /* ------------------------------- Objectives ------------------------------- */
   Objectives: {
     levels: idsToPrototypes(MUDEnums.EObjectives),
+  },
+
+  UpgradeMainBase: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 300000 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 2n } },
+    },
+  },
+
+  DefeatPirateBase1: {
+    tables: {
+      P_HasBuiltBuildings: { value: encodeArray(["Workshop"]) },
+      P_DefeatedPirates: { value: encodeArray(["DefeatPirateBase1"]) },
+      P_SpawnPirateAsteroid: {
+        x: 10,
+        y: 10,
+        units: encodeArray(["MinutemanMarine"]),
+        unitAmounts: [10n],
+        resources: indexifyResourceArray(["Copper", "Iron", "IronPlate"]),
+        resourceAmounts: [50000n, 50000n, 50000n],
+      },
+      P_ResourceReward: getResourceValues({ Copper: 100000, Iron: 100000 }),
+    },
+  },
+  DefeatPirateBase2: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["DefeatPirateBase1"]) },
+      P_DefeatedPirates: { value: encodeArray(["DefeatPirateBase2"]) },
+      P_SpawnPirateAsteroid: {
+        x: -20,
+        y: 10,
+        units: encodeArray(["MinutemanMarine"]),
+        unitAmounts: [40n],
+        resources: indexifyResourceArray(["Copper", "Iron", "IronPlate"]),
+        resourceAmounts: [50000n, 50000n, 50000n],
+      },
+      P_UnitReward: getUnitValues({ MinutemanMarine: 200000 }),
+    },
+  },
+  DefeatPirateBase3: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["DefeatPirateBase2"]) },
+      P_DefeatedPirates: { value: encodeArray(["DefeatPirateBase3"]) },
+      P_SpawnPirateAsteroid: {
+        x: -12,
+        y: -15,
+        units: encodeArray(["AnvilDrone", "MinutemanMarine"]),
+        unitAmounts: [20n, 120n],
+        resources: indexifyResourceArray(["PVCell", "Lithium", "Sulfur"]),
+        resourceAmounts: [100000n, 100000n, 100000n],
+      },
+      P_UnitReward: getUnitValues({ MinutemanMarine: 100 }),
+    },
+  },
+  DefeatPirateBase4: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["DefeatPirateBase3"]) },
+      P_DefeatedPirates: { value: encodeArray(["DefeatPirateBase4"]) },
+      P_SpawnPirateAsteroid: {
+        x: -3,
+        y: -15,
+        units: encodeArray(["MinutemanMarine"]),
+        unitAmounts: [400n],
+        resources: indexifyResourceArray(["PVCell", "Copper", "Sulfur"]),
+        resourceAmounts: [100000n, 200000n, 100000n],
+      },
+      P_UnitReward: getUnitValues({ AnvilDrone: 70 }),
+    },
+  },
+  DefeatPirateBase5: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["DefeatPirateBase4"]) },
+      P_DefeatedPirates: { value: encodeArray(["DefeatPirateBase5"]) },
+      P_SpawnPirateAsteroid: {
+        x: -3,
+        y: -15,
+        units: encodeArray(["MinutemanMarine"]),
+        unitAmounts: [400n],
+        resources: indexifyResourceArray(["PVCell", "Copper", "Sulfur"]),
+        resourceAmounts: [100000n, 200000n, 100000n],
+      },
+      P_UnitReward: getUnitValues({ AnvilDrone: 70 }),
+    },
+  },
+
+  BuildIronMine: {
+    tables: {
+      P_HasBuiltBuildings: { value: encodeArray(["IronMine"]) },
+      P_ResourceReward: getResourceValues({ Iron: 20000 }),
+    },
+  },
+
+  BuildCopperMine: {
+    tables: {
+      P_HasBuiltBuildings: { value: encodeArray(["CopperMine"]) },
+      P_ResourceReward: getResourceValues({ Copper: 20000, Iron: 20000 }),
+    },
+  },
+
+  BuildLithiumMine: {
+    tables: {
+      P_HasBuiltBuildings: { value: encodeArray(["LithiumMine"]) },
+      P_ResourceReward: getResourceValues({ Lithium: 50000 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
+  },
+
+  BuildSulfurMine: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildSolarPanel"]) },
+      P_HasBuiltBuildings: { value: encodeArray(["SulfurMine"]) },
+      P_ResourceReward: getResourceValues({ Sulfur: 50000, Copper: 100000 }),
+    },
+  },
+  BuildIronPlateFactory: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildIronMine"]) },
+      P_HasBuiltBuildings: { value: encodeArray(["IronPlateFactory"]) },
+      P_ResourceReward: getResourceValues({ Iron: 50000 }),
+    },
+  },
+
+  BuildGarage: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildIronMine"]) },
+      P_HasBuiltBuildings: { value: encodeArray(["Garage"]) },
+      P_UnitReward: getUnitValues({ MinutemanMarine: 10 }),
+    },
+  },
+
+  BuildWorkshop: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildGarage"]) },
+      P_HasBuiltBuildings: { value: encodeArray(["Workshop"]) },
+      P_SpawnPirateAsteroid: {
+        x: 10,
+        y: 10,
+        units: encodeArray(["MinutemanMarine"]),
+        unitAmounts: [10n],
+        resources: indexifyResourceArray(["Copper", "Iron", "IronPlate"]),
+        resourceAmounts: [50000n, 50000n, 50000n],
+      },
+      P_ResourceReward: getResourceValues({ IronPlate: 50000 }),
+    },
+  },
+
+  BuildPVCellFactory: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildLithiumMine"]) },
+      P_HasBuiltBuildings: { value: encodeArray(["PVCellFactory"]) },
+      P_ResourceReward: getResourceValues({ PVCell: 20000 }),
+    },
+  },
+  BuildSolarPanel: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildPVCellFactory"]) },
+      P_HasBuiltBuildings: { value: encodeArray(["SolarPanel"]) },
+      P_ResourceReward: getResourceValues({ Iron: 100000, Copper: 100000 }),
+    },
+  },
+
+  BuildDroneFactory: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildSolarPanel"]) },
+      P_HasBuiltBuildings: { value: encodeArray(["DroneFactory"]) },
+      P_UnitReward: getUnitValues({ MinutemanMarine: 100 }),
+    },
+  },
+
+  BuildStarmapper: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["Starmapper"]) },
+      P_UnitReward: getUnitValues({ HammerDrone: 10 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
+  },
+  BuildSAMLauncher: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildStarmapper"]) },
+      P_HasBuiltBuildings: { value: encodeArray(["SAM"]) },
+      P_UnitReward: getUnitValues({ AnvilDrone: 150 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 5n } } },
+  },
+
+  CommissionMiningVessel: {
+    tables: {
+      P_RequiredUnits: getUnitValues({ MiningVessel: 1 }),
+      P_ResourceReward: getResourceValues({ Alloy: 100000 }),
+    },
+
+    levels: { 1: { P_RequiredBaseLevel: { value: 4n } } },
+  },
+
+  TrainMinutemanMarine1: {
+    tables: {
+      P_HasBuiltBuildings: { value: encodeArray(["BuildWorkshop"]) },
+      P_RequiredUnits: getUnitValues({ MinutemanMarine: 50 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 50000 }),
+    },
+  },
+  TrainMinutemanMarine2: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["TrainMinutemanMarine1"]) },
+      P_RequiredUnits: getUnitValues({ MinutemanMarine: 100 }),
+      P_ResourceReward: getResourceValues({ Sulfur: 100000 }),
+    },
+  },
+  TrainMinutemanMarine3: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["TrainMinutemanMarine2"]) },
+      P_RequiredUnits: getUnitValues({ MinutemanMarine: 200 }),
+      P_ResourceReward: getResourceValues({ Sulfur: 300000 }),
+    },
+  },
+
+  TrainTridentMarine1: {
+    tables: {
+      P_HasBuiltBuildings: { value: encodeArray(["BuildWorkshop"]) },
+      P_RequiredUnits: getUnitValues({ TridentMarine: 50 }),
+      P_ResourceReward: getResourceValues({ Lithium: 100000 }),
+    },
+  },
+  TrainTridentMarine2: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["TrainTridentMarine1"]) },
+      P_RequiredUnits: getUnitValues({ TridentMarine: 100 }),
+      P_ResourceReward: getResourceValues({ Lithium: 500000 }),
+    },
+  },
+  TrainTridentMarine3: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["TrainTridentMarine2"]) },
+      P_RequiredUnits: getUnitValues({ TridentMarine: 200 }),
+      P_ResourceReward: getResourceValues({ Sulfur: 1000000 }),
+    },
+  },
+
+  TrainAnvilDrone1: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildDroneFactory"]) },
+      P_RequiredUnits: getUnitValues({ AnvilDrone: 20 }),
+      P_ResourceReward: getResourceValues({ PVCell: 50000 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
+  },
+  TrainAnvilDrone2: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["TrainAnvilDrone1"]) },
+      P_RequiredUnits: getUnitValues({ AnvilDrone: 50 }),
+      P_ResourceReward: getResourceValues({ PVCell: 200000 }),
+    },
+  },
+  TrainAnvilDrone3: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["TrainAnvilDrone2"]) },
+      P_RequiredUnits: getUnitValues({ AnvilDrone: 100 }),
+      P_ResourceReward: getResourceValues({ PVCell: 500000 }),
+    },
+  },
+
+  TrainHammerDrone1: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildDroneFactory"]) },
+      P_RequiredUnits: getUnitValues({ HammerDrone: 20 }),
+      P_ResourceReward: getResourceValues({ PVCell: 50000 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
+  },
+  TrainHammerDrone2: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["TrainHammerDrone1"]) },
+      P_RequiredUnits: getUnitValues({ HammerDrone: 50 }),
+      P_ResourceReward: getResourceValues({ PVCell: 500000 }),
+    },
+  },
+  TrainHammerDrone3: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["TrainHammerDrone2"]) },
+      P_RequiredUnits: getUnitValues({ HammerDrone: 100 }),
+      P_ResourceReward: getResourceValues({ PVCell: 1000000 }),
+    },
+  },
+
+  TrainAegisDrone1: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildDroneFactory"]) },
+      P_RequiredUnits: getUnitValues({ AegisDrone: 20 }),
+      P_ResourceReward: getResourceValues({ Alloy: 50000 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 4n } } },
+  },
+  TrainAegisDrone2: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["TrainAegisDrone1"]) },
+      P_RequiredUnits: getUnitValues({ AegisDrone: 50 }),
+      P_ResourceReward: getResourceValues({ Alloy: 500000 }),
+    },
+  },
+  TrainAegisDrone3: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["TrainAegisDrone2"]) },
+      P_RequiredUnits: getUnitValues({ HammerDrone: 100 }),
+      P_ResourceReward: getResourceValues({ Alloy: 1000000 }),
+    },
+  },
+
+  TrainStingerDrone1: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildDroneFactory"]) },
+      P_RequiredUnits: getUnitValues({ StingerDrone: 20 }),
+      P_ResourceReward: getResourceValues({ Iron: 500000, Copper: 500000, Lithium: 500000, Sulfur: 500000 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 5n } } },
+  },
+  TrainStingerDrone2: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["TrainStingerDrone1"]) },
+      P_RequiredUnits: getUnitValues({ StingerDrone: 50 }),
+      P_ResourceReward: getResourceValues({ Iron: 1500000, Copper: 1500000, Lithium: 1500000, Sulfur: 1500000 }),
+    },
+  },
+  TrainStingerDrone3: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["TrainStingerDrone2"]) },
+      P_RequiredUnits: getUnitValues({ HammerDrone: 100 }),
+      P_ResourceReward: getResourceValues({ Iron: 7500000, Copper: 7500000, Lithium: 7500000, Sulfur: 7500000 }),
+    },
+  },
+
+  MineTitanium1: {
+    tables: {
+      P_ProducedResources: getResourceValues({ Titanium: 100000 }),
+      P_UnitReward: getUnitValues({ AnvilDrone: 30 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 4n } } },
+  },
+  MineTitanium2: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["MineTitanium1"]) },
+      P_ProducedResources: getResourceValues({ Titanium: 300000 }),
+      P_UnitReward: getUnitValues({ AnvilDrone: 100 }),
+    },
+  },
+  MineTitanium3: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["MineTitanium2"]) },
+      P_ProducedResources: getResourceValues({ Titanium: 1000000 }),
+      P_UnitReward: getUnitValues({ AnvilDrone: 250 }),
+    },
+  },
+
+  MinePlatinum1: {
+    tables: {
+      P_ProducedResources: getResourceValues({ Platinum: 100000 }),
+      P_UnitReward: getUnitValues({ HammerDrone: 30 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 4n } } },
+  },
+  MinePlatinum2: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["MinePlatinum1"]) },
+      P_ProducedResources: getResourceValues({ Platinum: 300000 }),
+      P_UnitReward: getUnitValues({ HammerDrone: 100 }),
+    },
+  },
+  MinePlatinum3: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["MinePlatinum2"]) },
+      P_ProducedResources: getResourceValues({ Platinum: 1000000 }),
+      P_UnitReward: getUnitValues({ HammerDrone: 100 }),
+    },
+  },
+
+  MineIridium1: {
+    tables: {
+      P_ProducedResources: getResourceValues({ Iridium: 100000 }),
+      P_UnitReward: getUnitValues({ AegisDrone: 30 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 4n } } },
+  },
+  MineIridium2: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["MineIridium1"]) },
+      P_ProducedResources: getResourceValues({ Iridium: 300000 }),
+      P_UnitReward: getUnitValues({ AegisDrone: 100 }),
+    },
+  },
+  MineIridium3: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["MineIridium2"]) },
+      P_ProducedResources: getResourceValues({ Iridium: 1000000 }),
+      P_UnitReward: getUnitValues({ AegisDrone: 250 }),
+    },
+  },
+
+  MineKimberlite1: {
+    tables: {
+      P_ProducedResources: getResourceValues({ Kimberlite: 100000 }),
+      P_UnitReward: getUnitValues({ AnvilDrone: 15, HammerDrone: 15, AegisDrone: 15 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 4n } } },
+  },
+  MineKimberlite2: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["MineKimberlite1"]) },
+      P_ProducedResources: getResourceValues({ Kimberlite: 300000 }),
+      P_UnitReward: getUnitValues({ AnvilDrone: 50, HammerDrone: 50, AegisDrone: 50 }),
+    },
+  },
+  MineKimberlite3: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["MineKimberlite2"]) },
+      P_ProducedResources: getResourceValues({ Kimberlite: 1000000 }),
+      P_UnitReward: getUnitValues({ AnvilDrone: 100, HammerDrone: 100, AegisDrone: 100 }),
+    },
+  },
+
+  RaidRawResources1: {
+    tables: {
+      P_RaidedResources: getResourceValues({ Iron: 200000, Copper: 200000, Lithium: 200000, Sulfur: 200000 }),
+      P_UnitReward: getUnitValues({ HammerDrone: 30 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 1n } } },
+  },
+  RaidRawResources2: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["RaidRawResources1"]) },
+      P_RaidedResources: getResourceValues({ Iron: 500000, Copper: 500000, Lithium: 500000, Sulfur: 500000 }),
+      P_UnitReward: getUnitValues({ HammerDrone: 100 }),
+    },
+  },
+  RaidRawResources3: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["RaidRawResources2"]) },
+      P_RaidedResources: getResourceValues({ Iron: 2500000, Copper: 2500000, Lithium: 2500000, Sulfur: 2500000 }),
+      P_UnitReward: getUnitValues({ HammerDrone: 300 }),
+    },
+  },
+
+  RaidFactoryResources1: {
+    tables: {
+      P_RequiredUnits: getUnitValues({ MinutemanMarine: 100 }),
+      P_RaidedResources: getResourceValues({ Iron: 200000, Copper: 200000, Alloy: 200000 }),
+      P_UnitReward: getUnitValues({ AegisDrone: 30 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 1n } } },
+  },
+  RaidFactoryResources2: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["RaidFactoryResources1"]) },
+      P_RaidedResources: getResourceValues({ IronPlate: 500000, PVCell: 500000, Alloy: 500000 }),
+      P_UnitReward: getUnitValues({ AegisDrone: 100 }),
+    },
+  },
+  RaidFactoryResources3: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["RaidFactoryResources2"]) },
+      P_RaidedResources: getResourceValues({ IronPlate: 2500000, PVCell: 2500000, Alloy: 2500000 }),
+      P_UnitReward: getUnitValues({ AegisDrone: 300 }),
+    },
+  },
+
+  RaidMotherlodeResources1: {
+    tables: {
+      P_RequiredUnits: getUnitValues({ StingerDrone: 30 }),
+      P_RaidedResources: getResourceValues({ Titanium: 200000, Platinum: 200000, Iridium: 200000, Kimberlite: 200000 }),
+      P_UnitReward: getUnitValues({ StingerDrone: 30 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 1n } } },
+  },
+  RaidMotherlodeResources2: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["RaidMotherlodeResource1"]) },
+      P_RaidedResources: getResourceValues({ Titanium: 500000, Platinum: 500000, Iridium: 500000, Kimberlite: 500000 }),
+      P_UnitReward: getUnitValues({ StingerDrone: 100 }),
+    },
+  },
+  RaidMotherlodeResources3: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["RaidMotherlodeResources2"]) },
+      P_RaidedResources: getResourceValues({
+        Titanium: 2500000,
+        Platinum: 2500000,
+        Iridium: 2500000,
+        Kimberlite: 2500000,
+      }),
+      P_UnitReward: getUnitValues({ StingerDrone: 300 }),
+    },
+  },
+
+  DestroyEnemyUnits1: {
+    tables: {
+      P_DestroyedUnits: getUnitValues({ MinutemanMarine: 500 }),
+      P_ResourceReward: getResourceValues({ Copper: 300000, Sulfur: 300000 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 1n } } },
+  },
+  DestroyEnemyUnits2: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["DestroyEnemyUnits1"]) },
+      P_DestroyedUnits: getUnitValues({ TridentMarine: 500 }),
+      P_ResourceReward: getResourceValues({ Copper: 1000000, Sulfur: 1000000 }),
+    },
+  },
+  DestroyEnemyUnits3: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["DestroyEnemyUnits2"]) },
+      P_DestroyedUnits: getUnitValues({ AnvilDrone: 300 }),
+      P_ResourceReward: getResourceValues({ Copper: 3000000, Sulfur: 3000000 }),
+    },
+  },
+  DestroyEnemyUnits4: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["DestroyEnemyUnits3"]) },
+      P_DestroyedUnits: getUnitValues({ AegisDrone: 300 }),
+      P_ResourceReward: getResourceValues({ Copper: 30000000, Sulfur: 30000000 }),
+    },
+  },
+  DestroyEnemyUnits5: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["DestroyEnemyUnits4"]) },
+      P_DestroyedUnits: getUnitValues({ StingerDrone: 300 }),
+      P_ResourceReward: getResourceValues({ Copper: 50000000, Titanium: 300000, Platinum: 300000 }),
+    },
+  },
+
+  // todo: expand base logic
+  ExpandBase1: {
+    tables: {
+      P_RequiredExpansion: { value: 2n },
+      P_ResourceReward: getResourceValues({ Iron: 200000 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
+  },
+  ExpandBase2: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["ExpandBase1"]) },
+      P_RequiredExpansion: { value: 3n },
+      P_ResourceReward: getResourceValues({ Iron: 500000, Copper: 500000 }),
+    },
+  },
+  ExpandBase3: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["ExpandBase2"]) },
+      P_RequiredExpansion: { value: 4n },
+      P_ResourceReward: getResourceValues({ Iron: 500000, Copper: 500000 }),
+    },
+  },
+  ExpandBase4: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["ExpandBase3"]) },
+      P_RequiredExpansion: { value: 5n },
+      P_ResourceReward: getResourceValues({ Iron: 1000000, Copper: 1000000 }),
+    },
+  },
+  ExpandBase5: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["ExpandBase4"]) },
+      P_RequiredExpansion: { value: 6n },
+      P_ResourceReward: getResourceValues({ Iron: 2000000, Copper: 2000000 }),
+    },
+  },
+  ExpandBase6: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["ExpandBase5"]) },
+      P_RequiredExpansion: { value: 7n },
+      P_ResourceReward: getResourceValues({ Iron: 10000000, Copper: 10000000 }),
+    },
   },
 };
