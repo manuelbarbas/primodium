@@ -8,7 +8,7 @@ import { Scenes } from "@game/constants";
 import { FaCrosshairs } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
-import { shortenAddress } from "src/util/common";
+import { entityToAddress, shortenAddress } from "src/util/common";
 import { getLinkedAddress } from "src/util/web2/getLinkedAddress";
 import { linkAddress } from "src/util/web2/linkAddress";
 import { useMud } from "src/hooks";
@@ -96,16 +96,16 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
     if (fetchedExternalWallet.ensName) {
       return fetchedExternalWallet.ensName;
     } else if (fetchedExternalWallet.address) {
-      return shortenAddress(fetchedExternalWallet.address);
+      return shortenAddress(entityToAddress(fetchedExternalWallet.address));
     } else {
-      return shortenAddress(player);
+      return shortenAddress(entityToAddress(player));
     }
   }, [fetchedExternalWallet, player]);
 
   return (
-    <SecondaryCard className="grid grid-cols-6 w-full border rounded-md border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30">
+    <SecondaryCard className="grid grid-cols-6 w-full border rounded-md border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center">
       <div>{index + 1}.</div>
-      <div className="col-span-5 flex justify-between">
+      <div className="col-span-5 flex justify-between items-center">
         <div>{playerDisplay}</div>
         <div className="flex items-center gap-1">
           <p className="font-bold rounded-md bg-cyan-700 px-2 ">{score.toLocaleString()}</p>
