@@ -1,4 +1,8 @@
+// SPDX-License-Identifier: MIT
+// This contract handles resource counting and scoring.
+
 pragma solidity >=0.8.21;
+
 import { StoreHook } from "@latticexyz/store/src/StoreHook.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
@@ -15,9 +19,15 @@ import { System } from "@latticexyz/world/src/System.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 
+/// @title OnResourceCount_Score - Handles updating score when resource count is updated.
 contract OnResourceCount_Score is StoreHook {
   constructor() {}
 
+  /// @dev This function is called before splicing static data.
+  /// @param tableId The ID of the table being operated on.
+  /// @param keyTuple The key tuple of the resource count.
+  /// @param start The start position of the data.
+  /// @param data The data to be processed.
   function onBeforeSpliceStaticData(
     ResourceId tableId,
     bytes32[] memory keyTuple,
