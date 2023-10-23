@@ -23,9 +23,17 @@ library LibAlliance {
    * @dev Checks if a new player can join an alliance.
    * @param alliance The entity ID of the alliance.
    */
+  function checkPlayerPartOfAlliance(bytes32 playerEntity, bytes32 alliance) internal view {
+    require(PlayerAlliance.getAlliance(playerEntity) == alliance, "[Alliance] : player is not part of alliance");
+  }
+
+  /**
+   * @dev Checks if a new player can join an alliance.
+   * @param alliance The entity ID of the alliance.
+   */
   function checkCanNewPlayerJoinAlliance(bytes32 alliance) internal view {
     // we can cap number of players in an alliance
-    return true;
+    return;
   }
 
   /**
@@ -33,7 +41,7 @@ library LibAlliance {
    * @param playerEntity The entity ID of the player granting the role.
    */
   function checkCanGrantRole(bytes32 playerEntity) internal view {
-    uint8 role = PlayerAlliance.get(playerEntity).role;
+    uint8 role = PlayerAlliance.getRole(playerEntity);
     require(
       role > 0 && role <= uint8(EAllianceRole.CanGrantRole),
       "[Alliance] : does not have permission to grant role"
@@ -45,7 +53,7 @@ library LibAlliance {
    * @param playerEntity The entity ID of the player.
    */
   function checkCanKick(bytes32 playerEntity) internal view {
-    uint8 role = PlayerAlliance.get(playerEntity).role;
+    uint8 role = PlayerAlliance.getRole(playerEntity);
     require(role > 0 && role <= uint8(EAllianceRole.CanKick), "[Alliance] : does not have permission to grant role");
   }
 
@@ -54,7 +62,7 @@ library LibAlliance {
    * @param playerEntity The entity ID of the player.
    */
   function checkCanInviteOrAcceptJoinRequest(bytes32 playerEntity) internal view {
-    uint8 role = PlayerAlliance.get(playerEntity).role;
+    uint8 role = PlayerAlliance.getRole(playerEntity);
     require(role > 0 && role <= uint8(EAllianceRole.CanInvite), "[Alliance] : does not have permission to grant role");
   }
 
@@ -63,9 +71,10 @@ library LibAlliance {
    * @param playerEntity The entity ID of the player.
    */
   function checkCanRevokeInvite(bytes32 playerEntity, bytes32 invitee) internal view {
+    uint8 role = PlayerAlliance.getRole(playerEntity);
     require(
-      checkCanKick(playerEntity) ||
-        AllianceInvitation.getInviter(invitee, PlayerAlliance.getAlliance(playerEntity)) == playerEntity,
+      (role > 0 && role <= uint8(EAllianceRole.CanKick)) ||
+        AllianceInvitation.get(invitee, PlayerAlliance.getAlliance(playerEntity)) == playerEntity,
       "[Alliance] : does not have permission to revoke invite"
     );
   }
@@ -81,7 +90,7 @@ library LibAlliance {
    * @dev create an alliance
    * @param player The entity ID of the player.
    */
-  function create(bytes32 player) internal {}
+  function create(bytes32 player) internal returns (bytes32 allianceEntity) {}
 
   /**
    * @dev leave an alliance
@@ -127,4 +136,11 @@ library LibAlliance {
    * @param alliance The entity ID of the alliance the player has requested to join.
    */
   function requestToJoin(bytes32 player, bytes32 alliance) internal {}
+
+  /**
+   * @dev reject a player's request to join an alliance
+   * @param player The entity ID of the player who is requesting to join.
+   * @param rejectee The entity ID of the the player who has requested to join.
+   */
+  function rejectRequestToJoin(bytes32 player, bytes32 rejectee) internal {}
 }
