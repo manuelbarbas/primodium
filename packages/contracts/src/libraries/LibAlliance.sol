@@ -20,6 +20,22 @@ import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 
 library LibAlliance {
   /**
+   * @dev Checks for player to be part of an alliance
+   * @param playerEntity The entity ID of the player.
+   */
+  function checkPlayerOfAnAlliance(bytes32 playerEntity) internal view {
+    require(PlayerAlliance.getAlliance(playerEntity) != 0, "[Alliance] : player is no part of any alliance");
+  }
+
+  /**
+   * @dev Checks for a player not to be part of an alliance.
+   * @param playerEntity The entity ID of the player.
+   */
+  function checkPlayerNotPartOfAnyAlliance(bytes32 playerEntity) internal view {
+    require(PlayerAlliance.getAlliance(playerEntity) == 0, "[Alliance] : player is already part of an alliance");
+  }
+
+  /**
    * @dev Checks if a player is part of an alliance.
    * @param playerEntity The entity ID of the player.
    * @param allianceEntity The entity ID of the alliance.
@@ -88,23 +104,23 @@ library LibAlliance {
     );
   }
 
+  function checkCanCreateAlliance(bytes32 playerEntity) internal view {
+    require(PlayerAlliance.getAlliance(playerEntity) == 0, "[Alliance] : player is already part of an alliance");
+  }
+
   /**
    * @dev try to join an alliance
    * @param player The entity ID of the player.
    * @param allianceEntity the entity ID of the alliance.
    */
   function join(bytes32 player, bytes32 allianceEntity) internal {
+    checkPlayerNotPartOfAnyAlliance(player);
     checkCanNewPlayerJoinAlliance(player, allianceEntity);
 
-    if (
-      Alliance.getInviteMode(allianceEntity) == uint8(EAllianceInviteMode.Open) ||
-      AllianceInvitation.get(player, allianceEntity) != 0
-    ) {
-      PlayerAlliance.set(player, allianceEntity, uint8(EAllianceRole.Member));
-      AllianceInvitation.set(player, allianceEntity, 0);
-      uint256 playerScore = Score.get(player);
-      Alliance.setScore(allianceEntity, Alliance.getScore(allianceEntity) + playerScore);
-    }
+    PlayerAlliance.set(player, allianceEntity, uint8(EAllianceRole.Member));
+    AllianceInvitation.set(player, allianceEntity, 0);
+    uint256 playerScore = Score.get(player);
+    Alliance.setScore(allianceEntity, Alliance.getScore(allianceEntity) + playerScore);
   }
 
   /**
@@ -116,6 +132,8 @@ library LibAlliance {
     bytes32 name,
     EAllianceInviteMode allianceInviteMode
   ) internal returns (bytes32 allianceEntity) {
+    checkPlayerNotPartOfAnyAlliance(player);
+
     allianceEntity = LibEncode.getHash(AllianceKey, player);
     PlayerAlliance.set(player, allianceEntity, uint8(EAllianceRole.Owner));
     Alliance.set(allianceEntity, AllianceData(name, 0, uint8(allianceInviteMode)));
