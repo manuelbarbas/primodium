@@ -40,20 +40,19 @@ export function getUnitTrainingTime(rawPlayer: Entity, rawBuilding: Entity, rawU
   const unitLevel = comps.UnitLevel.getWithKeys({ entity: player, unit: unitEntity }, { value: 0n })?.value;
 
   const buildingLevel = comps.Level.get(rawBuilding, { value: 1n }).value;
+  const prototype = comps.BuildingType.getWithKeys({ entity: building })?.value as Hex | undefined;
+  if (!prototype) throw new Error("No building type found");
 
   const multiplier = comps.P_UnitProdMultiplier.getWithKeys(
     {
-      prototype: building,
+      prototype,
       level: buildingLevel,
     },
     {
       value: 100n,
     }
   ).value;
-  const trainingTime = comps.P_Unit.getWithKeys({ entity: unitEntity, level: unitLevel })?.trainingTime ?? 0n;
 
-  const time =
-    (config.worldSpeed * 100n * 100n) / (trainingTime * config.unitProductionRate * SPEED_SCALE * multiplier);
-
-  return time;
+  const rawTrainingTime = comps.P_Unit.getWithKeys({ entity: unitEntity, level: unitLevel })?.trainingTime ?? 0n;
+  return (rawTrainingTime * 100n * 100n * SPEED_SCALE) / (multiplier * config.unitProductionRate * config.worldSpeed);
 }
