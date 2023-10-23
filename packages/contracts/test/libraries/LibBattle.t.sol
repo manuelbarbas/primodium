@@ -46,6 +46,34 @@ contract LibBattleTest is PrimodiumTest {
     P_Unit.set(unit, 0, P_UnitData({ attack: attack, defense: defense, speed: 0, cargo: 0, trainingTime: 0 }));
   }
 
+  function testGetDefensePointsDefenseBuildings(uint256 unitCount, uint256 defense) public returns (uint256) {
+    vm.assume(unitCount < 10000);
+    vm.assume(defense < 10000);
+    Home.setAsteroid(player, rock);
+    UnitCount.set(player, rock, unit1, unitCount);
+    setupUnit(unit1, 0, defense);
+    TotalDefense.set(player, 100);
+    uint256 expected = (unitCount * defense) + 100;
+    (uint256[] memory count, uint256 actual) = LibBattle.getDefensePoints(player, rock);
+    assertEq(count[0], unitCount);
+    assertEq(actual, expected, "Defense points should be equal to unitCount * defense");
+    return expected;
+  }
+
+  function testGetDefensePointsDefenseMultiplierBuildings(uint256 unitCount, uint256 defense) public returns (uint256) {
+    vm.assume(unitCount < 10000);
+    vm.assume(defense < 10000);
+    Home.setAsteroid(player, rock);
+    UnitCount.set(player, rock, unit1, unitCount);
+    setupUnit(unit1, 0, defense);
+    TotalDefenseMultiplier.set(player, 200);
+    uint256 expected = (unitCount * defense) * 3;
+    (uint256[] memory count, uint256 actual) = LibBattle.getDefensePoints(player, rock);
+    assertEq(count[0], unitCount);
+    assertEq(actual, expected, "Defense points should be equal to unitCount * defense");
+    return expected;
+  }
+
   function testGetDefensePoints(uint256 unitCount, uint256 defense) public returns (uint256) {
     vm.assume(unitCount < 10000);
     vm.assume(defense < 10000);
