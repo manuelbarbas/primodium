@@ -3,9 +3,10 @@ import { world } from "src/network/world";
 import { SetupNetworkResult } from "../../types";
 import { createExtendedComponent } from "./ExtendedComponent";
 import { ExtendedContractComponents } from "./extendComponents";
+import { components } from "src/network/components";
 
 function createSendComponent(contractComponents: ExtendedContractComponents<SetupNetworkResult["components"]>) {
-  const { Position, ActiveAsteroid } = contractComponents;
+  const { Position } = contractComponents;
   const component = createExtendedComponent(world, {
     origin: Type.OptionalEntity,
     destination: Type.OptionalEntity,
@@ -39,11 +40,11 @@ function createSendComponent(contractComponents: ExtendedContractComponents<Setu
     return count[index];
   };
 
-  const reset = () => {
-    const activeAsteroid = ActiveAsteroid.get()?.value;
+  const reset = (playerEntity: Entity) => {
+    const origin = components.Home.get(playerEntity)?.asteroid as Entity | undefined;
 
     component.set({
-      origin: activeAsteroid,
+      origin,
       destination: undefined,
       units: undefined,
       count: undefined,

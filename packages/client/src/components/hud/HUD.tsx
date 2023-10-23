@@ -16,7 +16,7 @@ import { Hotbar } from "./hotbar/Hotbar";
 import { Resources } from "./resources/Resources";
 import { PrototypeInfo } from "./PrototypeInfo";
 import { ViewStarmap } from "./ViewStarmap";
-// import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
+import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 import { Units } from "./units/Units";
 
 export const GameHUD = () => {
@@ -46,6 +46,7 @@ export const GameHUD = () => {
             <HUD.BottomMiddle>
               {(getBlockTypeName(selectedBuilding) || !selectedBuilding) && !mapOpen && <Hotbar />}
               {!getBlockTypeName(selectedBuilding) && <BuildingMenu />}
+              {mapOpen && <SpacerockMenu />}
             </HUD.BottomMiddle>
             <HUD.TopMiddle>
               {getBlockTypeName(selectedBuilding) && selectedBuilding && <PrototypeInfo building={selectedBuilding} />}

@@ -1,49 +1,42 @@
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
+import { ESendType } from "contracts/config/enums";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { useMud } from "src/hooks";
-import { OwnedBy, Position } from "src/network/components/chainComponents";
-import { Account, Send } from "src/network/components/clientComponents";
+import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage } from "src/util/constants";
-import { send } from "src/util/web3/send";
-import { ESendType } from "src/util/web3/types";
+import { send } from "src/util/web3/contractCalls/send";
 
 export const SendFleet: React.FC = () => {
-  const network = useMud();
-  const sendType = Send.get()?.sendType ?? ESendType.INVADE;
-  const units = Send.use()?.units ?? [];
-  const count = Send.use()?.count ?? [];
+  const network = useMud().network;
+  const playerEntity = network.playerEntity;
+  const sendType = components.Send.get()?.sendType ?? ESendType.Invade;
+  const units = components.Send.use()?.units ?? [];
+  const count = components.Send.use()?.count ?? [];
 
   const sendFleet = (sendType: ESendType) => {
-    const account = Account.get()?.value;
-    const origin = Send.get()?.origin;
-    const destination = Send.get()?.destination;
+    const origin = components.Send.get()?.origin;
+    const destination = components.Send.get()?.destination;
 
-    if (
-      account == undefined ||
-      origin == undefined ||
-      units === undefined ||
-      units.length === 0 ||
-      destination === undefined
-    )
-      return;
+    if (origin == undefined || units === undefined || units.length === 0 || destination === undefined) return;
 
-    const arrivalUnits = units.map((unit, index) => ({
-      unitType: unit,
-      count: count?.at(index) ?? 0,
-    }));
+    // const arrivalUnits = units.map((unit, index) => ({
+    //   unitType: unit,
+    //   count: count?.at(index) ?? 0,
+    // }));
 
-    const originCoord = Position.get(origin) ?? { x: 0, y: 0 };
-    const destinationCoord = Position.get(destination) ?? { x: 0, y: 0 };
+    const originCoord = components.Position.get(origin) ?? { x: 0, y: 0 };
+    const destinationCoord = components.Position.get(destination) ?? { x: 0, y: 0 };
 
-    const to = OwnedBy.get(destination)?.value;
+    const to = components.OwnedBy.get(destination)?.value as Entity | undefined;
 
-    send(arrivalUnits, sendType, originCoord, destinationCoord, to ?? ("0x00" as EntityID), network);
+    //TODO: fix arrival units
+    send([1n, 1n, 1n, 1n, 1n], sendType, originCoord, destinationCoord, to ?? ("0x00" as Entity), network);
 
-    Send.reset();
+    components.Send.reset(playerEntity);
   };
 
   return (
@@ -56,7 +49,7 @@ export const SendFleet: React.FC = () => {
                 <Button
                   key={index}
                   className="btn-square inline-flex items-center group hover:scale-110 transition-transform border-secondary"
-                  onClick={() => Send.removeUnit(unit)}
+                  onClick={() => components.Send.removeUnit(unit)}
                 >
                   <div className="relative">
                     <img
@@ -64,7 +57,7 @@ export const SendFleet: React.FC = () => {
                       className="w-full h-full"
                     />
                     <p className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 font-bold text-xs bg-slate-900 border-cyan-400/30 px-1 rounded-md border group-hover:opacity-0">
-                      {Send.getUnitCount(unit)}
+                      {components.Send.getUnitCount(unit)}
                     </p>
                   </div>
 
@@ -90,18 +83,18 @@ export const SendFleet: React.FC = () => {
         )}
       </SecondaryCard>
       <div className="flex gap-2 mt-1">
-        {sendType === ESendType.INVADE && (
-          <Navigator.BackButton className="btn-error border-none" onClick={() => sendFleet(ESendType.INVADE)}>
+        {sendType === ESendType.Invade && (
+          <Navigator.BackButton className="btn-error border-none" onClick={() => sendFleet(ESendType.Invade)}>
             INVADE
           </Navigator.BackButton>
         )}
-        {sendType === ESendType.REINFORCE && (
-          <Navigator.BackButton className="btn-success border-none" onClick={() => sendFleet(ESendType.REINFORCE)}>
+        {sendType === ESendType.Reinforce && (
+          <Navigator.BackButton className="btn-success border-none" onClick={() => sendFleet(ESendType.Reinforce)}>
             REINFORCE
           </Navigator.BackButton>
         )}
-        {sendType === ESendType.RAID && (
-          <Navigator.BackButton className="btn-error border-none" onClick={() => sendFleet(ESendType.RAID)}>
+        {sendType === ESendType.Raid && (
+          <Navigator.BackButton className="btn-error border-none" onClick={() => sendFleet(ESendType.Raid)}>
             RAID
           </Navigator.BackButton>
         )}
