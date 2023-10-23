@@ -17,6 +17,8 @@ contract AllianceSystem is PrimodiumSystem {
 
   /**
    * @dev create an alliance
+   * @param name the name of the alliance
+   * @param allianceInviteMode the invite mode of the alliance
    */
   function create(bytes32 name, EAllianceInviteMode allianceInviteMode) public returns (bytes32 allianceEntity) {
     return LibAlliance.create(addressToEntity(_msgSender()), name, allianceInviteMode);
@@ -31,6 +33,7 @@ contract AllianceSystem is PrimodiumSystem {
 
   /**
    * @dev invite a player to an alliance
+   * @param target the entity ID of the player to invite
    */
   function invite(bytes32 target) public {
     LibAlliance.invite(addressToEntity(_msgSender()), target);
@@ -75,5 +78,13 @@ contract AllianceSystem is PrimodiumSystem {
    */
   function rejectRequestToJoin(bytes32 rejectee) public {
     LibAlliance.rejectRequestToJoin(addressToEntity(_msgSender()), rejectee);
+  }
+
+  /**
+   * @dev accept a player's request to join an alliance
+   * @param accepted The entity ID of the the player who has requested to join.
+   */
+  function acceptRequestToJoin(bytes32 accepted) public {
+    LibAlliance.acceptRequestToJoin(addressToEntity(_msgSender()), accepted);
   }
 }
