@@ -9,10 +9,10 @@ library UnitProductionQueue {
   /// @param queueItem Unit to be produced
   /// todo: make custom queue type
   function enqueue(bytes32 queueId, UnitProductionQueueData memory queueItem) internal {
-    QueueUnits.pushQueue(queueId, queueItem.unitId);
     QueueUnitsData memory queueData = QueueUnits.get(queueId);
-    QueueUnits.setBack(queueId, queueData.back + 1);
     QueueItemUnits.set(queueId, queueData.back, queueItem);
+    QueueUnits.setBack(queueId, queueData.back + 1);
+    QueueUnits.pushQueue(queueId, queueItem.unitId);
   }
 
   /// @notice Dequeue unit from production queue
