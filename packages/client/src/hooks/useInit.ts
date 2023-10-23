@@ -6,6 +6,7 @@ import { setupDoubleCounter } from "src/network/systems/setupDoubleCounter";
 import { setupHangar } from "src/network/systems/setupHangar";
 import { useMud } from "./useMud";
 import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
+import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
 
 export const useInit = () => {
   const mud = useMud();
@@ -16,8 +17,9 @@ export const useInit = () => {
   useEffect(() => {
     setupBlockNumber(mud.network.latestBlockNumber$);
     setupDoubleCounter(mud);
-    setupHangar();
     setupLeaderboard(mud);
+    setupTrainingQueues(mud);
+    setupHangar(mud);
   }, [mud]);
 
   // The network object and user wallet will have been loaded by the time the loading state is ready

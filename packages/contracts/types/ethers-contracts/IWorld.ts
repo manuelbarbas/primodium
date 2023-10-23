@@ -1270,7 +1270,7 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    storeVersion(overrides?: CallOverrides): Promise<[string]>;
+    storeVersion(overrides?: CallOverrides): Promise<[string] & { version: string }>;
 
     trainUnits(
       buildingEntity: PromiseOrValue<BytesLike>,
