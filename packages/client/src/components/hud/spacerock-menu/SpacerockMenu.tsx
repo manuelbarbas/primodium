@@ -4,10 +4,10 @@ import { Navigator } from "src/components/core/Navigator";
 import { getSpaceRockInfo } from "src/util/spacerock";
 import { Asteroid } from "./screens/Asteroid";
 import { Motherlode } from "./screens/Motherlode";
-// import { SendFleet } from "./screens/SendFleet";
+import { SendFleet } from "./screens/SendFleet";
 import { SpacerockInfo } from "./screens/SpaceRockInfo";
-// import { StationedUnits } from "./screens/StationedUnits";
-// import { UnitSelection } from "./screens/UnitSelection";
+import { StationedUnits } from "./screens/StationedUnits";
+import { UnitSelection } from "./screens/UnitSelection";
 import { ERock } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { useMud } from "src/hooks";
@@ -54,9 +54,9 @@ export const SpacerockMenu: React.FC = () => {
 
       {/* Sub Screens */}
       <SpacerockInfo data={spaceRockInfo} />
-      {/* <SendFleet /> */}
-      {/* <UnitSelection /> */}
-      {/* <StationedUnits /> */}
+      <SendFleet />
+      <UnitSelection />
+      <StationedUnits />
 
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2">
         <Button
