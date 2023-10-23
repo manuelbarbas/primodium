@@ -10,7 +10,6 @@ export const setupLeaderboard = (mud: SetupResult) => {
     const player = mud.network.playerEntity;
 
     const scoreValue = parseInt(value?.at(0)?.value.toString() ?? "0");
-    console.log("scoreValue", scoreValue);
     leaderboardMap.set(entity, scoreValue);
 
     const leaderboardArray = [...leaderboardMap.entries()].sort((a, b) => b[1] - a[1]);
@@ -36,7 +35,6 @@ export const setupLeaderboard = (mud: SetupResult) => {
       playerRank,
     });
   });
-  console.log("leaderboardMap", leaderboardMap);
 
   return leaderboardMap;
 };
