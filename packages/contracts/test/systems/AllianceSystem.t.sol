@@ -22,8 +22,7 @@ contract BuildSystemTest is PrimodiumTest {
   // todo: sort these tests. the first test should be a vanilla build system call
 
   function testCreateAlliance() public {
-    bytes rawAllianceEntity = world.create(creator, bytes32("myAliance"), EAllianceInviteMode.Open);
-    bytes32 allianceEntity = abi.decode(rawAllianceEntity, (bytes32));
+    bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
     assertEq(Alliance.getName(allianceEntity), bytes32("myAliance"), "alliance name should be set");
     assertEq(
       Alliance.getInviteMode(allianceEntity),
@@ -35,8 +34,7 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testCreateAllianceClosed() public {
-    bytes rawAllianceEntity = world.create(creator, bytes32("myAliance"), EAllianceInviteMode.Closed);
-    bytes32 allianceEntity = abi.decode(rawAllianceEntity, (bytes32));
+    bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Closed);
     assertEq(Alliance.getName(allianceEntity), bytes32("myAliance"), "alliance name should be set");
     assertEq(
       Alliance.getInviteMode(allianceEntity),
@@ -48,8 +46,7 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testJoinOpenAlliance() public {
-    bytes rawAllianceEntity = world.create(creator, bytes32("myAliance"), EAllianceInviteMode.Open);
-    bytes32 allianceEntity = abi.decode(rawAllianceEntity, (bytes32));
+    bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
 
     vm.stopPrank();
     vm.startPrank(bob);
@@ -60,8 +57,7 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testFailJoinClosedAlliance() public {
-    bytes rawAllianceEntity = world.create(creator, bytes32("myAliance"), EAllianceInviteMode.Closed);
-    bytes32 allianceEntity = abi.decode(rawAllianceEntity, (bytes32));
+    bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Closed);
 
     vm.stopPrank();
     vm.startPrank(bob);
@@ -69,9 +65,8 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testInviteAndJoinAlliance() public {
-    bytes rawAllianceEntity = world.create(creator, bytes32("myAliance"), EAllianceInviteMode.Closed);
-    bytes32 allianceEntity = abi.decode(rawAllianceEntity, (bytes32));
-    world.invite(allianceEntity, bobEntity);
+    bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Closed);
+    world.invite(bobEntity);
     assertEq(
       AllianceInvitation.get(bobEntity, allianceEntity),
       playerEntity,
@@ -85,8 +80,7 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testRequestToJoinAlliance() public {
-    bytes rawAllianceEntity = world.create(creator, bytes32("myAliance"), EAllianceInviteMode.Closed);
-    bytes32 allianceEntity = abi.decode(rawAllianceEntity, (bytes32));
+    bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Closed);
     vm.stopPrank();
     vm.startPrank(bob);
     world.requestToJoin(allianceEntity);
@@ -99,8 +93,8 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testRejectRequestToJoinAlliance() public {
-    bytes rawAllianceEntity = world.create(creator, bytes32("myAliance"), EAllianceInviteMode.Closed);
-    bytes32 allianceEntity = abi.decode(rawAllianceEntity, (bytes32));
+    bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Closed);
+
     vm.stopPrank();
     vm.startPrank(bob);
     world.requestToJoin(allianceEntity);
