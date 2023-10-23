@@ -3,38 +3,40 @@ pragma solidity >=0.8.21;
 
 import { addressToEntity } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
-import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
+import { ResourceId, ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
+import { PositionData } from "codegen/tables/Position.sol";
+
+import { EBuilding } from "src/Types.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
-import { LibSpaceRock } from "libraries/LibSpaceRock.sol";
+import { BuildingKey } from "src/Keys.sol";
+import { LibResource } from "libraries/LibResource.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
-import { ESendType, SendArgs, ERock, Arrival } from "src/Types.sol";
 
 /**
- * @title OnTrainUnits_UpdateRock
- * @dev This contract is a system hook that updates the home rock when units are trained.
+ * @title OnBefore_ClaimResources
+ * @dev This contract is a system hook that handles claiming resources
  */
-contract OnTrainUnits_UpdateRock is SystemHook {
+contract OnBefore_ClaimResources is SystemHook {
   constructor() {}
 
   /**
-   * @dev This function is called before the system's main logic is executed. It updates the home rock of the player when units are trained.
+   * @dev This function is called before the system's main logic is executed.
    * @param msgSender The address of the message sender.
    * @param systemId The identifier of the system.
-   * @param callData The data passed to the system, including the parameters of the train units function.
+   * @param callData The data passed to the system.
    */
   function onBeforeCallSystem(
     address msgSender,
     ResourceId systemId,
     bytes memory callData
   ) public {
-    // Update the home rock of the player
-    bytes32 playerEntity = addressToEntity(msgSender);
-    LibSpaceRock.updateHomeRock(playerEntity);
+    LibResource.claimAllResources(addressToEntity(msgSender));
   }
 
   /**
-   * @dev This function is called after the system's main logic is executed. It doesn't perform any specific actions in this case.
+   * @dev This function is called after the system's main logic is executed.
+   * It spends the required resources when a building is constructed.
    * @param msgSender The address of the message sender.
    * @param systemId The identifier of the system.
    * @param callData The data passed to the system.

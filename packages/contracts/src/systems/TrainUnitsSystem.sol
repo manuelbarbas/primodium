@@ -6,7 +6,6 @@ import { P_EnumToPrototype, QueueItemUnitsData } from "codegen/index.sol";
 import { LibUnit, UnitProductionQueue } from "codegen/Libraries.sol";
 
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
-import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 
 import { EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";

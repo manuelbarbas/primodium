@@ -24,13 +24,27 @@ library LibProduction {
       ? P_Production.get(buildingPrototype, targetLevel - 1).amount
       : 0;
     uint256 addedProductionRate = prototypeProduction.amount - prevLevelPrototypeProduction;
-    if (P_IsUtility.get(resource)) {
-      LibStorage.increaseMaxUtility(playerEntity, resource, addedProductionRate);
-      LibStorage.increaseStoredResource(playerEntity, resource, addedProductionRate);
+
+    increaseResourceProduction(playerEntity, EResource(resource), addedProductionRate);
+  }
+
+  /// @notice increases the resource production for the player
+  /// @param playerEntity Entity ID of the player owning the building
+  /// @param resource the resource the production is increased for
+  /// @param amount the amount the production is increased by
+  function increaseResourceProduction(
+    bytes32 playerEntity,
+    EResource resource,
+    uint256 amount
+  ) internal {
+    uint8 resourceIndex = uint8(resource);
+    if (P_IsUtility.get(resourceIndex)) {
+      LibStorage.increaseMaxUtility(playerEntity, resourceIndex, amount);
+      LibStorage.increaseStoredResource(playerEntity, resourceIndex, amount);
       return;
     }
-    uint256 productionRate = ProductionRate.get(playerEntity, resource) + addedProductionRate;
-    ProductionRate.set(playerEntity, resource, productionRate);
+    uint256 prevProductionRate = ProductionRate.get(playerEntity, resourceIndex);
+    ProductionRate.set(playerEntity, resourceIndex, prevProductionRate + amount);
   }
 
   /// @notice Clears the resource production of a building, used when the building is destroyed
@@ -43,19 +57,28 @@ library LibProduction {
     P_ProductionData memory prototypeProduction = P_Production.get(buildingPrototype, buildingLevel);
     if (prototypeProduction.amount == 0) return;
     uint8 resource = prototypeProduction.resource;
-    if (P_IsUtility.get(uint8(resource))) {
-      uint256 availableUtility = ResourceCount.get(playerEntity, uint8(resource));
-      require(availableUtility >= prototypeProduction.amount, "[UtilityUsage] not enough available utility production");
-      LibStorage.decreaseStoredResource(playerEntity, resource, prototypeProduction.amount);
-      LibStorage.decreaseMaxUtility(playerEntity, resource, prototypeProduction.amount);
+    decreaseResourceProduction(playerEntity, EResource(resource), prototypeProduction.amount);
+  }
+
+  /// @notice Reduces the resource production for the player
+  /// @param playerEntity Entity ID of the player owning the building
+  /// @param resource the resource the production is reduced for
+  /// @param amount the amount the production is reduced by
+  function decreaseResourceProduction(
+    bytes32 playerEntity,
+    EResource resource,
+    uint256 amount
+  ) internal {
+    uint8 resourceIndex = uint8(resource);
+    if (P_IsUtility.get(resourceIndex)) {
+      uint256 availableUtility = ResourceCount.get(playerEntity, resourceIndex);
+      require(availableUtility >= amount, "[UtilityUsage] not enough available utility production");
+      LibStorage.decreaseStoredResource(playerEntity, resourceIndex, amount);
+      LibStorage.decreaseMaxUtility(playerEntity, resourceIndex, amount);
       return;
     }
-
-    uint256 prevProductionRate = ProductionRate.get(playerEntity, resource);
-    require(
-      prevProductionRate >= prototypeProduction.amount,
-      "[ProductionUsage] not enough production rate to reduce usage"
-    );
-    ProductionRate.set(playerEntity, resource, prevProductionRate - prototypeProduction.amount);
+    uint256 prevProductionRate = ProductionRate.get(playerEntity, resourceIndex);
+    require(prevProductionRate >= amount, "[ProductionUsage] not enough production rate to reduce usage");
+    ProductionRate.set(playerEntity, resourceIndex, prevProductionRate - amount);
   }
 }

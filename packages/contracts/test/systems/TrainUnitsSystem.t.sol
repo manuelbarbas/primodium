@@ -88,7 +88,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     LastClaimedAt.set(player, block.timestamp - 10);
 
     world.trainUnits(building, unit, 1);
-
+    LibUnit.claimUnits(player);
     assertEq(ResourceCount.get(player, Iron), 100);
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 100);
   }

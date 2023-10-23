@@ -33,6 +33,7 @@ contract LibRaidTest is PrimodiumTest {
     player = addressToEntity(creator);
     Home.setAsteroid(player, homeRock);
     br.attacker = player;
+    br.winner = player;
     bytes32[] memory unitTypes = new bytes32[](unitPrototypeCount);
     unitTypes[0] = unit1;
     P_UnitPrototypes.set(unitTypes);
@@ -68,8 +69,11 @@ contract LibRaidTest is PrimodiumTest {
     ResourceCount.set(enemy, Copper, 200);
     P_IsUtility.set(Platinum, true);
     ResourceCount.set(enemy, Platinum, 500);
-
+    LibResource.claimAllResources(player);
+    LibResource.claimAllResources(enemy);
     RaidResultData memory raidResult = LibRaid.resolveRaid(br);
+    LibResource.claimAllResources(player);
+    LibResource.claimAllResources(enemy);
 
     assertEq(raidResult.defenderValuesBeforeRaid[uint256(Iron)], 100);
     assertEq(raidResult.defenderValuesBeforeRaid[uint256(Copper)], 200);
@@ -103,7 +107,11 @@ contract LibRaidTest is PrimodiumTest {
     ResourceCount.set(enemy, Iron, 10);
 
     br.totalCargo = 10;
+    LibResource.claimAllResources(player);
+    LibResource.claimAllResources(enemy);
     RaidResultData memory raidResult = LibRaid.resolveRaid(br);
+    LibResource.claimAllResources(player);
+    LibResource.claimAllResources(enemy);
 
     assertEq(raidResult.defenderValuesBeforeRaid[uint256(Iron)], 10);
     assertEq(raidResult.raidedAmount[uint256(Iron)], 10, "Iron raided amount");
