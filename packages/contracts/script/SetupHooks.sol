@@ -102,10 +102,12 @@ function setupHooks(IWorld world) {
   registerReinforce(world, onBefore_ClaimUnits);
   registerClaimObjective(world, onBefore_ClaimResources, onBefore_ClaimUnits);
   registerScoreHook(world);
-  registerAllianceHooks(world);
+  registerAllianceHooks(world, onBefore_ClaimResources);
 }
 
-function registerAllianceHooks(IWorld world) {
+function registerAllianceHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
+  world.registerSystemHook(getSystemResourceId("AllianceSystem"), onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
+
   OnAlliance_TargetClaimResources onAlliance_TargetClaimResources = new OnAlliance_TargetClaimResources();
   world.grantAccess(ResourceCountTableId, address(onAlliance_TargetClaimResources));
   world.grantAccess(MapItemUtilitiesTableId, address(onAlliance_TargetClaimResources));
@@ -113,6 +115,7 @@ function registerAllianceHooks(IWorld world) {
   world.grantAccess(MapItemStoredUtilitiesTableId, address(onAlliance_TargetClaimResources));
   world.grantAccess(LastClaimedAtTableId, address(onAlliance_TargetClaimResources));
   world.grantAccess(ProducedResourceTableId, address(onAlliance_TargetClaimResources));
+  world.registerSystemHook(getSystemResourceId("AllianceSystem"), onAlliance_TargetClaimResources, BEFORE_CALL_SYSTEM);
 }
 
 /**
