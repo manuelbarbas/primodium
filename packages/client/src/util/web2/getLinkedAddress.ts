@@ -4,7 +4,7 @@ import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 export const getLinkedAddress = async () => {
   const networkConfig = getNetworkConfig();
   // Fetch linked address from server using the local browser wallet address
-  const wallet = new ethers.Wallet(localStorage.getItem(networkConfig.privateKey) as string);
+  const wallet = new ethers.Wallet(networkConfig.privateKey);
 
   const localAddress = wallet.address;
 
