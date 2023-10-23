@@ -25,9 +25,11 @@ import { TotalDefenseMultiplierTableId } from "codegen/tables/TotalDefenseMultip
 import { TotalVaultTableId } from "codegen/tables/TotalVault.sol";
 import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
 import { ScoreTableId } from "codegen/tables/Score.sol";
+import { AllianceTableId } from "codegen/tables/Alliance.sol";
 import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
 
 import { OnResourceCount_Score } from "src/hooks/storeHooks/OnResourceCount_Score.sol";
+import { OnScore_Alliance_Score } from "src/hooks/storeHooks/OnScore_Alliance_Score.sol";
 
 import { OnBefore_ClaimResources } from "src/hooks/systemHooks/OnBefore_ClaimResources.sol";
 import { OnBefore_ClaimUnits } from "src/hooks/systemHooks/OnBefore_ClaimUnits.sol";
@@ -108,6 +110,10 @@ function registerScoreHook(IWorld world) {
   OnResourceCount_Score onResourceCount_Score = new OnResourceCount_Score();
   world.grantAccess(ScoreTableId, address(onResourceCount_Score));
   world.registerStoreHook(ResourceCountTableId, onResourceCount_Score, BEFORE_SPLICE_STATIC_DATA);
+
+  OnScore_Alliance_Score onScore_Alliance_Score = new OnScore_Alliance_Score();
+  world.grantAccess(AllianceTableId, address(onScore_Alliance_Score));
+  world.registerStoreHook(ScoreTableId, onScore_Alliance_Score, BEFORE_SPLICE_STATIC_DATA);
 }
 
 /**
