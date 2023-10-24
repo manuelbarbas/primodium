@@ -3,12 +3,14 @@ import { useCallback } from "react";
 import { SecondaryCard } from "src/components/core/Card";
 import { useFleetMoves } from "src/hooks/useFleetMoves";
 
+import { useMud } from "src/hooks";
+import { components } from "src/network/components";
 import { EntityType } from "src/util/constants";
 import { UnitLabel } from "./UnitLabel";
-import { components } from "src/network/components";
 
 export const AllUnitLabels = () => {
-  const homeAsteroid = components.Home.use()?.asteroid as Entity;
+  const { playerEntity } = useMud().network;
+  const homeAsteroid = components.Home.use(playerEntity)?.asteroid as Entity;
   const units = components.Hangar.use(homeAsteroid);
   const fleetMoves = useFleetMoves();
 

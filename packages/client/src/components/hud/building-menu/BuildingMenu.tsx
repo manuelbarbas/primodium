@@ -8,8 +8,8 @@ import { BuildingInfo } from "./screens/BuildingInfo";
 import { Demolish } from "./screens/Demolish";
 // import { UnitFactory } from "./screens/UnitFactory";
 import { MainBase } from "./screens/Mainbase";
-// import { BuildQueue } from "./screens/BuildQueue";
-// import { BuildUnit } from "./screens/BuildUnit";
+import { BuildQueue } from "./screens/BuildQueue";
+import { BuildUnit } from "./screens/BuildUnit";
 // import { UpgradeUnit } from "./screens/UpgradeUnit";
 import { FaTrash } from "react-icons/fa";
 import { components } from "src/network/components";
@@ -71,8 +71,8 @@ export const BuildingMenu: React.FC = () => {
       {/* Sub Screens */}
       <Demolish building={selectedBuilding} />
       <BuildingInfo building={selectedBuilding} />
-      {/* <BuildQueue building={selectedBuilding} /> */}
-      {/* <BuildUnit building={selectedBuilding} /> */}
+      <BuildQueue building={selectedBuilding} />
+      <BuildUnit building={selectedBuilding} />
       <UpgradeUnit building={selectedBuilding} />
       {/* <MiningVessels building={selectedBuilding} /> */}
 
