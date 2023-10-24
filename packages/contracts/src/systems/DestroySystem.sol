@@ -6,7 +6,6 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { addressToEntity, entityToAddress, getSystemResourceId, bytes32ToString } from "src/utils.sol";
 
 import { P_UnitProdTypes, Position, PositionData, BuildingType, OwnedBy, Children, Spawned, Level, BuildingType } from "codegen/index.sol";
-import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 import { LibBuilding, LibReduceProductionRate, LibResource, LibProduction, LibStorage, UnitFactorySet } from "codegen/Libraries.sol";
 
 contract DestroySystem is PrimodiumSystem {

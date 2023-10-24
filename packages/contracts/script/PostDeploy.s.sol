@@ -7,7 +7,7 @@ import { console } from "forge-std/console.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { setupHooks } from "script/SetupHooks.sol";
-import { createPrototypes } from "codegen/scripts/CreatePrototypes.sol";
+import { createPrototypes } from "codegen/Prototypes.sol";
 import { createTerrain } from "codegen/scripts/CreateTerrain.sol";
 
 contract PostDeploy is Script {
