@@ -479,7 +479,7 @@ export const config = mudConfig({
       keySchema: { prototype: "bytes32" },
       valueSchema: {
         // mud doesnt recognize EUnit arrays so we will manually convert them
-        unitTypes: "bytes32[]",
+        units: "bytes32[]",
         amounts: "uint256[]",
       },
     },
@@ -575,6 +575,11 @@ export const config = mudConfig({
 
     ProducedUnit: {
       keySchema: { entity: "bytes32", unit: "bytes32" },
+      valueSchema: "uint256",
+    },
+
+    P_RequiredExpansion: {
+      keySchema: { prototype: "bytes32" },
       valueSchema: "uint256",
     },
 

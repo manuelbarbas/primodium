@@ -1,7 +1,7 @@
 import { formatAndWriteSolidity } from "@latticexyz/common/codegen";
 import { StoreConfig } from "@latticexyz/store";
 import path from "path";
-import { renderPrototype } from "./renderPrototype";
+import { renderPrototypes } from "./renderPrototype";
 import { renderPrototypeIndex } from "./renderPrototypeIndex";
 import { renderPrototypeScript } from "./renderPrototypeScript";
 import { PrototypesConfig, StoreConfigWithPrototypes } from "./types";
@@ -21,16 +21,13 @@ const generateSystem = async (prototypes: PrototypesConfig<StoreConfig>, outputB
 };
 
 const generatePrototypes = async (config: StoreConfigWithPrototypes, outputBaseDirectory: string) => {
-  for (const name of Object.keys(config.prototypeConfig)) {
-    const output = renderPrototype(config, name);
-    const fullOutputPath = path.join(outputBaseDirectory, `prototypes/${name}Prototype.sol`);
-
-    await formatAndWriteSolidity(output, fullOutputPath, `Generated prototype ${name}`);
-  }
+  const output = renderPrototypes(config);
+  const name = "All";
+  const fullOutputPath = path.join(outputBaseDirectory, `prototypes/${name}Prototype.sol`);
+  await formatAndWriteSolidity(output, fullOutputPath, `Generated prototype ${name}`);
 };
 
 export async function prototypegen(config: StoreConfigWithPrototypes, outputBaseDirectory: string) {
-  generateSystem(config.prototypeConfig, outputBaseDirectory);
   generateIndex(config.prototypeConfig, outputBaseDirectory);
   generatePrototypes(config, outputBaseDirectory);
 }
