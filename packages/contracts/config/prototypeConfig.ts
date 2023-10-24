@@ -1434,7 +1434,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   DefeatPirateBase1: {
     tables: {
-      P_HasBuiltBuildings: { value: encodeArray(["Workshop"]) },
       P_DefeatedPirates: { value: encodeArray(["BuildWorkshop"]) },
       P_SpawnPirateAsteroid: {
         x: 10,
@@ -1586,14 +1585,13 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   BuildStarmapper: {
     tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["Starmapper"]) },
+      P_HasBuiltBuildings: { value: encodeArray(["Starmapper"]) },
       P_UnitReward: getUnitValues({ HammerDrone: 10 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
   },
   BuildSAMLauncher: {
     tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildStarmapper"]) },
       P_HasBuiltBuildings: { value: encodeArray(["SAM"]) },
       P_UnitReward: getUnitValues({ AnvilDrone: 150 }),
     },
@@ -1611,7 +1609,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   TrainMinutemanMarine1: {
     tables: {
-      P_HasBuiltBuildings: { value: encodeArray(["BuildWorkshop"]) },
+      P_RequiredObjectives: { value: encodeArray(["BuildWorkshop"]) },
       P_RequiredUnits: getUnitValues({ MinutemanMarine: 50 }),
       P_ResourceReward: getResourceValues({ IronPlate: 50000 }),
     },
@@ -1633,7 +1631,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   TrainTridentMarine1: {
     tables: {
-      P_HasBuiltBuildings: { value: encodeArray(["BuildWorkshop"]) },
+      P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
       P_RequiredUnits: getUnitValues({ TridentMarine: 50 }),
       P_ResourceReward: getResourceValues({ Lithium: 100000 }),
     },
