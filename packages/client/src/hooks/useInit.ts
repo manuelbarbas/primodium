@@ -4,8 +4,9 @@ import { components } from "src/network/components";
 import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
 import { setupDoubleCounter } from "src/network/systems/setupDoubleCounter";
 import { setupHangar } from "src/network/systems/setupHangar";
-import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
 import { useMud } from "./useMud";
+import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
+import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
 
 export const useInit = () => {
   const mud = useMud();
@@ -16,6 +17,7 @@ export const useInit = () => {
   useEffect(() => {
     setupBlockNumber(mud.network.latestBlockNumber$);
     setupDoubleCounter(mud);
+    setupLeaderboard(mud);
     setupTrainingQueues(mud);
     setupHangar(mud);
   }, [mud]);

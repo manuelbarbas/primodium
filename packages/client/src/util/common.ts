@@ -1,5 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { BlockIdToKey } from "./constants";
+import { Hex, trim } from "viem";
 
 export function hasCommonElement(setA: Set<any>, setB: Set<any>) {
   for (const element of setA) {
@@ -82,3 +83,7 @@ export const shortenAddress = (address: string) => {
 export function reverseRecord<T extends PropertyKey, U extends PropertyKey>(input: Record<T, U>) {
   return Object.fromEntries(Object.entries(input).map(([key, value]) => [value, key])) as Record<U, T>;
 }
+
+export const entityToAddress = (entity: Entity | string) => {
+  return trim(entity as Hex);
+};
