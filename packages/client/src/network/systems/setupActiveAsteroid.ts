@@ -4,13 +4,14 @@ import { world } from "src/network/world";
 import { components } from "../components";
 
 export const setupActiveAsteroid = (player: Entity) => {
-  defineComponentSystem(world, components.Position, ({ entity, value }) => {
-    const asteroid = value[0]?.parent;
+  defineComponentSystem(world, components.Home, ({ entity, value }) => {
+    if (entity != player) return;
+    const asteroid = value[0]?.asteroid as Entity | undefined;
     if (!asteroid) return;
-    ActiveAsteroid.set({ value: asteroid as Entity });
+    ActiveAsteroid.set({ value: asteroid });
 
     // temp so we can test without the set origin ui
-    const position = components.Position.get(asteroid as Entity);
-    // Send.setOrigin(position);
+    components.Send.setOrigin(asteroid);
+    console.log("setting origin");
   });
 };

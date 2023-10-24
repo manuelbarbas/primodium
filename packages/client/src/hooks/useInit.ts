@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { ampli } from "src/ampli";
 import { components } from "src/network/components";
+import { setupActiveAsteroid } from "src/network/systems/setupActiveAsteroid";
 import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
 import { setupDoubleCounter } from "src/network/systems/setupDoubleCounter";
 import { setupHangar } from "src/network/systems/setupHangar";
@@ -18,6 +19,7 @@ export const useInit = () => {
     setupDoubleCounter(mud);
     setupTrainingQueues(mud);
     setupHangar(mud);
+    setupActiveAsteroid(playerEntity);
   }, [mud]);
 
   // The network object and user wallet will have been loaded by the time the loading state is ready
