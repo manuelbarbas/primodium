@@ -6,8 +6,10 @@ import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { BuildSystem } from "systems/BuildSystem.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
-import { SystemSwitch } from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
+
+import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 import { GracePeriod, P_GracePeriod, Spawned, Position, PositionData, Level, Home, P_EnumToPrototype } from "codegen/index.sol";
+
 import { LibAsteroid, LibBuilding, LibEncode } from "codegen/Libraries.sol";
 import { EBuilding } from "src/Types.sol";
 import { BuildingKey } from "src/Keys.sol";
@@ -32,7 +34,12 @@ contract SpawnSystem is PrimodiumSystem {
     position.parent = asteroid;
 
     Home.set(playerEntity, asteroid, LibEncode.getHash(BuildingKey, position));
-    SystemSwitch.call(abi.encodeCall(IWorld(_world()).build, (EBuilding.MainBase, position)));
+    SystemCall.callWithHooksOrRevert(
+      _msgSender(),
+      getSystemResourceId("BuildSystem"),
+      abi.encodeCall(BuildSystem.build, (EBuilding.MainBase, position)),
+      0
+    );
 
     return asteroid;
   }
