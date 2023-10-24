@@ -62,21 +62,23 @@ library LibAlliance {
    * @dev Checks if the player can grant a role to another player.
    * @param playerEntity The entity ID of the player granting the role.
    */
-  function checkCanGrantRole(bytes32 playerEntity) internal view {
+  function checkCanGrantRole(bytes32 playerEntity, bytes32 toBeGranted) internal view {
     uint8 role = PlayerAlliance.getRole(playerEntity);
     require(
       role > 0 && role <= uint8(EAllianceRole.CanGrantRole),
       "[Alliance] : does not have permission to grant role"
     );
+    require(role < PlayerAlliance.getRole(toBeGranted), "[Alliance] : can not change role of superior");
   }
 
   /**
    * @dev Checks if the player can kick another player from the alliance.
    * @param playerEntity The entity ID of the player.
    */
-  function checkCanKick(bytes32 playerEntity) internal view {
+  function checkCanKick(bytes32 playerEntity, bytes32 toBeKicked) internal view {
     uint8 role = PlayerAlliance.getRole(playerEntity);
     require(role > 0 && role <= uint8(EAllianceRole.CanKick), "[Alliance] : does not have permission to grant role");
+    require(role < PlayerAlliance.getRole(toBeKicked), "[Alliance] : can not kick superior");
   }
 
   /**
