@@ -16,7 +16,7 @@ import "codegen/Libraries.sol";
 import "src/Keys.sol";
 import "src/Types.sol";
 
-uint256 constant unitPrototypeCount = 5;
+uint256 constant unitPrototypeCount = NUM_UNITS;
 
 struct PositionData2D {
   int32 x;

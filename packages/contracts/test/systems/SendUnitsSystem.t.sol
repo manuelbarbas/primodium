@@ -15,6 +15,10 @@ contract SendUnitsSystemTest is PrimodiumTest {
   EUnit unit = EUnit.AegisDrone;
   uint256[unitPrototypeCount] unitCounts;
 
+  bytes32 building = "building";
+  bytes32 buildingPrototype = "buildingPrototype";
+  bytes32 rock = bytes32("rock");
+
   P_UnitData unitData = P_UnitData({ attack: 0, defense: 0, speed: 0, cargo: 0, trainingTime: 0 });
 
   function setUp() public override {
@@ -27,6 +31,8 @@ contract SendUnitsSystemTest is PrimodiumTest {
     bytes32[] memory unitTypes = new bytes32[](unitPrototypeCount);
     unitTypes[0] = unitPrototype;
     P_UnitPrototypes.set(unitTypes);
+    BuildingType.set(building, buildingPrototype);
+    OwnedBy.set(building, player);
   }
 
   function prepareTestMovementRules() public {
@@ -337,5 +343,30 @@ contract SendUnitsSystemTest is PrimodiumTest {
 
     Arrival memory arrival = ArrivalsMap.values(player, origin)[0];
     assertEq(arrival, expectedArrival);
+  }
+
+  function testClaimUnitsHook() public {
+    setupValidInvade();
+    OwnedBy.set(destination, to);
+    RockType.set(destination, uint8(ERock.Asteroid));
+
+    Level.set(building, 1);
+    LastClaimedAt.set(building, block.timestamp - 100);
+    P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
+    P_Unit.setTrainingTime(unitPrototype, 0, 1);
+
+    QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
+    UnitProductionQueue.enqueue(building, item);
+    UnitFactorySet.add(player, building);
+
+    Home.setAsteroid(player, rock);
+    MaxResourceCount.set(player, Iron, 1000);
+    ProductionRate.set(player, Iron, 10);
+    LastClaimedAt.set(player, block.timestamp - 10);
+
+    unitCounts[0] = 1;
+    world.sendUnits(unitCounts, ESendType.Raid, originPosition, destinationPosition, to);
+    assertEq(ResourceCount.get(player, Iron), 100);
+    assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 100);
   }
 }

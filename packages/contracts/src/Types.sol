@@ -2,6 +2,7 @@
 pragma solidity >=0.8.0;
 
 import "codegen/common.sol";
+import { NUM_UNITS } from "src/constants.sol";
 import { PositionData } from "codegen/index.sol";
 
 struct Bounds {
@@ -18,11 +19,11 @@ struct Arrival {
   bytes32 to;
   bytes32 origin;
   bytes32 destination;
-  uint256[5] unitCounts; // corresponds to EUnit: ["MiningVessel", "AegisDrone", "HammerDrone", "StingerDrone", "AnvilDrone"]
+  uint256[NUM_UNITS] unitCounts; // corresponds to EUnit: ["MiningVessel", "AegisDrone", "HammerDrone", "StingerDrone", "AnvilDrone"]
 }
 
 struct SendArgs {
-  uint256[5] unitCounts;
+  uint256[NUM_UNITS] unitCounts;
   ESendType sendType;
   PositionData originPosition;
   PositionData destinationPosition;

@@ -21,7 +21,7 @@ contract LibBattleTest is PrimodiumTest {
       to: "to",
       origin: "origin",
       destination: "destination",
-      unitCounts: [uint256(0), 0, 0, 0, 0]
+      unitCounts: [uint256(0), 0, 0, 0, 0, 0, 0]
     });
   bytes32 arrivalId = keccak256(abi.encode(arrival));
 
@@ -140,7 +140,7 @@ contract LibBattleTest is PrimodiumTest {
     arrival.arrivalTime = 0;
     arrival.unitCounts[0] = unitCount;
 
-    uint256[5] memory newUnitCounts;
+    uint256[NUM_UNITS] memory newUnitCounts;
     newUnitCounts[1] = unitCount2;
 
     setupUnit(unit1, attack, 0);

@@ -134,7 +134,7 @@ contract LibRaidTest is PrimodiumTest {
       to: enemy,
       origin: homeRock,
       destination: rock,
-      unitCounts: [uint256(200), 0, 0, 0, 0]
+      unitCounts: [uint256(200), 0, 0, 0, 0, 0, 0]
     });
 
     ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);
@@ -165,7 +165,7 @@ contract LibRaidTest is PrimodiumTest {
       to: enemy,
       origin: homeRock,
       destination: rock,
-      unitCounts: [uint256(200), 0, 0, 0, 0]
+      unitCounts: [uint256(200), 0, 0, 0, 0, 0, 0]
     });
 
     ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);

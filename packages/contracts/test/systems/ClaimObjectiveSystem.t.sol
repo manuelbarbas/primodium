@@ -542,7 +542,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     bytes32 pirateAsteroidEntity = LibEncode.getHash(personalPirateEntity);
 
     vm.startPrank(creator);
-    uint256[5] memory unitCounts;
+    uint256[NUM_UNITS] memory unitCounts;
     unitCounts[0] = 100;
     unitCounts[1] = 50;
 
@@ -574,7 +574,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     bytes32 personalPirateEntity = LibEncode.getHash(PirateKey, playerEntity);
     bytes32 pirateAsteroidEntity = LibEncode.getHash(personalPirateEntity);
 
-    uint256[5] memory unitCounts;
+    uint256[NUM_UNITS] memory unitCounts;
     unitCounts[0] = 100;
     unitCounts[1] = 50;
 
