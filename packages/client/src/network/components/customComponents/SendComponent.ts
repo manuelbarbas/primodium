@@ -1,7 +1,8 @@
 import { Entity, Type } from "@latticexyz/recs";
+import { EUnit } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
-import { UnitEnumLookup } from "src/util/constants";
+import { UnitEntityLookup, UnitEnumLookup } from "src/util/constants";
 import { toUnitCountArray } from "src/util/send";
 import { SetupNetworkResult } from "../../types";
 import { createExtendedComponent } from "./ExtendedComponent";
@@ -107,8 +108,17 @@ function createSendComponent(contractComponents: ExtendedContractComponents<Setu
     return coord;
   };
 
+  const getUnits = () => {
+    const unitCounts = component.get()?.count ?? [];
+    return unitCounts.reduce((acc, curr, index) => {
+      if (curr === 0n) return acc;
+      return { ...acc, [UnitEntityLookup[(index + 1) as EUnit]]: curr };
+    }, {} as Record<Entity, bigint>);
+  };
+
   return {
     ...component,
+    getUnits,
     getUnitCount,
     setUnitCount,
     setOrigin,

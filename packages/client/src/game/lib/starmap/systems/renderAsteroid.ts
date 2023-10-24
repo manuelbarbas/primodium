@@ -1,16 +1,16 @@
+import { Entity, Has, HasValue, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { namespaceWorld, Has, defineEnterSystem, Entity } from "@latticexyz/recs";
+import { singletonIndex, world } from "src/network/world";
 import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
-import { singletonIndex, world } from "src/network/world";
 
-import { Coord } from "@latticexyz/utils";
 import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
-import { EntityType } from "src/util/constants";
-import { clampedIndex } from "src/util/common";
-import { SetupResult } from "src/network/types";
-import { components } from "src/network/components";
+import { Coord } from "@latticexyz/utils";
 import { MUDEnums } from "contracts/config/enums";
+import { components } from "src/network/components";
+import { SetupResult } from "src/network/types";
+import { clampedIndex } from "src/util/common";
+import { EntityType } from "src/util/constants";
 import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 
 export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
@@ -98,7 +98,9 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
 
   const query = [
     Has(components.RockType),
-    // Not(components.Pirate),
+    HasValue(components.RockType, { value: MUDEnums.ERock.indexOf("Asteroid") }),
+    Has(components.Position),
+    Not(components.PirateAsteroid),
   ];
 
   defineEnterSystem(gameWorld, query, ({ entity }) => {
