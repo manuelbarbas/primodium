@@ -8,14 +8,17 @@ import { AccessControl } from "@latticexyz/world/src/AccessControl.sol";
 contract BuildSystemTest is PrimodiumTest {
   bytes32 playerEntity;
   bytes32 bobEntity;
+  bytes32 aliceEntity;
 
   function setUp() public override {
     super.setUp();
     // init other
     spawn(creator);
     spawn(bob);
+    spawn(alice);
     playerEntity = addressToEntity(creator);
     bobEntity = addressToEntity(bob);
+    aliceEntity = addressToEntity(alice);
     vm.startPrank(creator);
   }
 
@@ -107,5 +110,216 @@ contract BuildSystemTest is PrimodiumTest {
       "bobs request to join alliance should have been rejected"
     );
     assertEq(PlayerAlliance.getAlliance(bobEntity), 0, "bob should not be in alliance");
+  }
+
+  function testCanInviteAlliance() public {
+    bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(creator);
+    world.grantRole(bobEntity, EAllianceRole.CanInvite);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.invite(aliceEntity);
+    vm.stopPrank();
+    assertEq(
+      AllianceInvitation.get(aliceEntity, allianceEntity),
+      bobEntity,
+      "alice should be invited to alliance by bob"
+    );
+  }
+
+  function testCanKickAlliance() public {
+    bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(creator);
+    world.grantRole(bobEntity, EAllianceRole.CanKick);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.kick(aliceEntity);
+    vm.stopPrank();
+  }
+
+  function testCanGrantRoleAlliance() public {
+    bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(creator);
+    world.grantRole(bobEntity, EAllianceRole.CanGrantRole);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.grantRole(aliceEntity, EAllianceRole.CanKick);
+    assertEq(PlayerAlliance.getRole(aliceEntity), uint8(EAllianceRole.CanKick), "alice should be able to kick");
+    vm.stopPrank();
+  }
+
+  function tesFailCantGrantRoleAlliance() public {
+    bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(creator);
+    world.grantRole(bobEntity, EAllianceRole.CanKick);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.grantRole(aliceEntity, EAllianceRole.CanKick);
+    vm.stopPrank();
+  }
+
+  function tesFailCantGrantRoleToSuperiorAlliance() public {
+    bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(creator);
+    world.grantRole(bobEntity, EAllianceRole.CanKick);
+    world.grantRole(bobEntity, EAllianceRole.CanKick);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.grantRole(aliceEntity, EAllianceRole.CanKick);
+    vm.stopPrank();
+  }
+
+  function tesFailKickAlliance() public {
+    bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(creator);
+    world.grantRole(bobEntity, EAllianceRole.CanInvite);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.kick(aliceEntity);
+    vm.stopPrank();
+  }
+
+  function tesFailKickWithoutRequiredRoleAlliance() public {
+    bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(creator);
+    world.grantRole(bobEntity, EAllianceRole.CanInvite);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.kick(aliceEntity);
+    vm.stopPrank();
+  }
+
+  function tesFailKickSuperiorRoleAlliance() public {
+    bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(creator);
+    world.grantRole(bobEntity, EAllianceRole.CanKick);
+    world.grantRole(aliceEntity, EAllianceRole.CanKick);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.kick(aliceEntity);
+    vm.stopPrank();
+  }
+
+  function tesFailGrantRoleHigherkAlliance() public {
+    bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(creator);
+    world.grantRole(bobEntity, EAllianceRole.CanGrantRole);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.grantRole(aliceEntity, EAllianceRole.Owner);
+    vm.stopPrank();
+  }
+
+  function tesGrantOwnerRoleAlliance() public {
+    bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(creator);
+    world.grantRole(bobEntity, EAllianceRole.Owner);
+    assertEq(PlayerAlliance.getRole(bobEntity), uint8(EAllianceRole.Owner), "bob should be owner");
+    vm.stopPrank();
   }
 }

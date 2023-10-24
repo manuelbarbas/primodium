@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 // external
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibAlliance } from "codegen/Libraries.sol";
-import { EAllianceInviteMode } from "src/Types.sol";
+import { EAllianceInviteMode, EAllianceRole } from "src/Types.sol";
 
 contract AllianceSystem is PrimodiumSystem {
   /**
@@ -60,7 +60,7 @@ contract AllianceSystem is PrimodiumSystem {
    * @param target The entity ID of the player being granted the role.
    * @param role The role to grant.
    */
-  function grantRole(bytes32 target, uint8 role) public {
+  function grantRole(bytes32 target, EAllianceRole role) public {
     LibAlliance.grantRole(addressToEntity(_msgSender()), target, role);
   }
 

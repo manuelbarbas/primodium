@@ -62,8 +62,13 @@ library LibAlliance {
    * @dev Checks if the player can grant a role to another player.
    * @param playerEntity The entity ID of the player granting the role.
    */
-  function checkCanGrantRole(bytes32 playerEntity, bytes32 toBeGranted) internal view {
+  function checkCanGrantRole(
+    bytes32 playerEntity,
+    bytes32 toBeGranted,
+    EAllianceRole roleToBeGranted
+  ) internal view {
     uint8 role = PlayerAlliance.getRole(playerEntity);
+    require(role <= uint8(roleToBeGranted), "[Alliance] : can not grant role higher then your own");
     require(
       role > 0 && role <= uint8(EAllianceRole.CanGrantRole),
       "[Alliance] : does not have permission to grant role"
@@ -77,8 +82,13 @@ library LibAlliance {
    */
   function checkCanKick(bytes32 playerEntity, bytes32 toBeKicked) internal view {
     uint8 role = PlayerAlliance.getRole(playerEntity);
-    require(role > 0 && role <= uint8(EAllianceRole.CanKick), "[Alliance] : does not have permission to grant role");
+    require(role > 0 && role <= uint8(EAllianceRole.CanKick), "[Alliance] : does not have permission to kick");
     require(role < PlayerAlliance.getRole(toBeKicked), "[Alliance] : can not kick superior");
+  }
+
+  function checkCanReject(bytes32 playerEntity) internal view {
+    uint8 role = PlayerAlliance.getRole(playerEntity);
+    require(role > 0 && role <= uint8(EAllianceRole.CanKick), "[Alliance] : does not have permission to reject");
   }
 
   /**
@@ -183,7 +193,7 @@ library LibAlliance {
    * @param target the entity id of the player to kick
    */
   function kick(bytes32 player, bytes32 target) internal {
-    checkCanKick(player);
+    checkCanKick(player, target);
     bytes32 allianceEntity = PlayerAlliance.getAlliance(player);
     PlayerAlliance.set(target, 0, uint8(EAllianceRole.NULL));
     uint256 playerScore = Score.get(target);
@@ -199,11 +209,11 @@ library LibAlliance {
   function grantRole(
     bytes32 granter,
     bytes32 target,
-    uint8 role
+    EAllianceRole role
   ) internal {
-    checkCanGrantRole(granter);
+    checkCanGrantRole(granter, target, role);
     bytes32 allianceEntity = PlayerAlliance.getAlliance(granter);
-    PlayerAlliance.set(target, allianceEntity, role);
+    PlayerAlliance.set(target, allianceEntity, uint8(role));
   }
 
   /**
@@ -221,7 +231,7 @@ library LibAlliance {
    * @param rejectee The entity ID of the the player who has requested to join.
    */
   function rejectRequestToJoin(bytes32 player, bytes32 rejectee) internal {
-    checkCanKick(player);
+    checkCanReject(player);
     bytes32 allianceEntity = PlayerAlliance.getAlliance(player);
     AllianceJoinRequest.set(rejectee, allianceEntity, false);
   }
