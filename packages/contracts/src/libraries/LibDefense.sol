@@ -17,8 +17,6 @@ import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { BuildingKey, BuildingTileKey, ExpansionKey } from "src/Keys.sol";
 import { Bounds, EBuilding, EResource } from "src/Types.sol";
 
-import { MainBasePrototypeId } from "codegen/Prototypes.sol";
-
 library LibDefense {
   function upgradeBuildingDefenses(
     bytes32 playerEntity,
