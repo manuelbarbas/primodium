@@ -1,8 +1,11 @@
 import { StaticAbiType } from "@latticexyz/schema-type";
+import { Hex } from "viem";
 import { MUDEnums } from "../../config/enums";
 import encodeBytes32 from "../../config/util/encodeBytes32";
 
 export const encodeArray = (names: string[]) => names.map(encodeBytes32);
+export const indexifyResourceArray = (resources: string[]) =>
+  resources.map((resource) => MUDEnums.EResource.indexOf(resource));
 
 export const upgradesByLevel = (name: string, upgrades: Record<number, Record<string, number>>) =>
   Object.entries(upgrades).reduce((prev, [level, upgrades]) => {
@@ -33,6 +36,18 @@ export const getResourceValues = (resourceValues: Record<string, number>) => {
     [[], []] as [number[], bigint[]]
   );
   return { resources, amounts };
+};
+
+export const getUnitValues = (unitValues: Record<string, number>) => {
+  const [units, amounts] = Object.entries(unitValues).reduce(
+    (acc, [resource, amount]) => {
+      acc[0].push(encodeBytes32(resource));
+      acc[1].push(BigInt(amount));
+      return acc;
+    },
+    [[], []] as [Hex[], bigint[]]
+  );
+  return { units, amounts };
 };
 
 export const upgradesToList = (upgrades: Record<string, number>) => {
