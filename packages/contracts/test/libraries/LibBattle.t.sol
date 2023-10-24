@@ -17,6 +17,7 @@ contract LibBattleTest is PrimodiumTest {
     Arrival({
       sendType: ESendType.Invade,
       arrivalTime: 2,
+      sendTime: block.timestamp,
       from: "from",
       to: "to",
       origin: "origin",
@@ -148,6 +149,7 @@ contract LibBattleTest is PrimodiumTest {
 
     ArrivalsMap.set(player, rock, arrivalId, arrival);
     Arrival memory arrival2 = Arrival({
+      sendTime: block.timestamp,
       sendType: ESendType.Invade,
       arrivalTime: 2,
       from: "from",

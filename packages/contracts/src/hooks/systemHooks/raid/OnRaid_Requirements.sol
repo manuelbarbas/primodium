@@ -9,7 +9,7 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { LibRaid } from "libraries/LibRaid.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
-import { ESendType, SendArgs, ERock, Arrival } from "src/Types.sol";
+import { ESendType, SendArgs, ERock } from "src/Types.sol";
 
 /**
  * @title OnRaid_Requirements

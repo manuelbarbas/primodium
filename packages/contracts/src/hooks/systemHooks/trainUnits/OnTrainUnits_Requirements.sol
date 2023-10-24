@@ -9,7 +9,7 @@ import { UnitKey } from "src/Keys.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
-import { ESendType, SendArgs, ERock, Arrival, EUnit } from "src/Types.sol";
+import { ESendType, SendArgs, ERock, EUnit } from "src/Types.sol";
 
 /**
  * @title OnTrainUnits_Requirements

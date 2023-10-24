@@ -19,6 +19,7 @@ contract ArrivalsMapTest is PrimodiumTest {
   function testSet() public {
     Arrival memory item = Arrival({
       sendType: ESendType.Invade,
+      sendTime: block.timestamp,
       arrivalTime: 2,
       from: "from",
       to: "to",
@@ -41,6 +42,7 @@ contract ArrivalsMapTest is PrimodiumTest {
   function testSize() public {
     Arrival memory item = Arrival({
       sendType: ESendType.Invade,
+      sendTime: block.timestamp,
       arrivalTime: 2,
       from: "from",
       to: "to",
@@ -65,6 +67,7 @@ contract ArrivalsMapTest is PrimodiumTest {
   function testGetAll() public {
     Arrival memory item = Arrival({
       sendType: ESendType.Invade,
+      sendTime: block.timestamp,
       arrivalTime: 2,
       from: "from",
       to: "to",
@@ -75,6 +78,7 @@ contract ArrivalsMapTest is PrimodiumTest {
     bytes32 key = keccak256(abi.encode(item));
     Arrival memory item2 = Arrival({
       sendType: ESendType.Invade,
+      sendTime: block.timestamp,
       arrivalTime: 3,
       from: "from",
       to: "to",
@@ -95,6 +99,7 @@ contract ArrivalsMapTest is PrimodiumTest {
   function testRemove() public {
     Arrival memory item = Arrival({
       sendType: ESendType.Invade,
+      sendTime: block.timestamp,
       arrivalTime: 2,
       from: "from",
       to: "to",
@@ -105,6 +110,7 @@ contract ArrivalsMapTest is PrimodiumTest {
     bytes32 key = keccak256(abi.encode(item));
     Arrival memory item2 = Arrival({
       sendType: ESendType.Invade,
+      sendTime: block.timestamp,
       arrivalTime: 3,
       from: "from",
       to: "to",
@@ -133,6 +139,7 @@ contract ArrivalsMapTest is PrimodiumTest {
   function testClear() public {
     Arrival memory item = Arrival({
       sendType: ESendType.Invade,
+      sendTime: block.timestamp,
       arrivalTime: 2,
       from: "from",
       to: "to",
@@ -143,6 +150,7 @@ contract ArrivalsMapTest is PrimodiumTest {
     bytes32 key = keccak256(abi.encode(item));
     Arrival memory item2 = Arrival({
       sendType: ESendType.Invade,
+      sendTime: block.timestamp,
       arrivalTime: 3,
       from: "from",
       to: "to",

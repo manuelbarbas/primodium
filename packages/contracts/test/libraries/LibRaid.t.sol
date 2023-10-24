@@ -128,6 +128,7 @@ contract LibRaidTest is PrimodiumTest {
     UnitCount.set(enemy, rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
+      sendTime: block.timestamp,
       sendType: ESendType.Raid,
       arrivalTime: 2,
       from: player,
@@ -159,6 +160,7 @@ contract LibRaidTest is PrimodiumTest {
     UnitCount.set(enemy, rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
+      sendTime: block.timestamp,
       sendType: ESendType.Raid,
       arrivalTime: 2,
       from: player,

@@ -11,6 +11,7 @@ contract LibSendTest is PrimodiumTest {
     Arrival({
       sendType: ESendType.Invade,
       arrivalTime: 2,
+      sendTime: block.timestamp,
       from: "from",
       to: "to",
       origin: "origin",

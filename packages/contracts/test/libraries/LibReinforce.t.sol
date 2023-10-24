@@ -18,6 +18,7 @@ contract LibReinforceTest is PrimodiumTest {
     Arrival({
       sendType: ESendType.Invade,
       arrivalTime: 2,
+      sendTime: block.timestamp,
       from: "from",
       to: "to",
       origin: origin,
@@ -183,6 +184,7 @@ contract LibReinforceTest is PrimodiumTest {
     LibReinforce.recallAllReinforcements(player, destination);
 
     Arrival memory arrival2 = Arrival({
+      sendTime: block.timestamp,
       sendType: ESendType.Reinforce,
       arrivalTime: block.timestamp - 1,
       from: player,

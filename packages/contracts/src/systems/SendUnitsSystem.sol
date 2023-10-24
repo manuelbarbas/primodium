@@ -29,6 +29,7 @@ contract SendUnitsSystem is PrimodiumSystem {
     LibSend.sendUnits(
       Arrival({
         unitCounts: sendArgs.unitCounts,
+        sendTime: block.timestamp,
         sendType: sendArgs.sendType,
         arrivalTime: arrivalTime,
         from: playerEntity,

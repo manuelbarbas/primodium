@@ -238,6 +238,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
 
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.Invade,
+      sendTime: block.timestamp,
       arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitCounts),
       from: player,
       to: to,
@@ -270,6 +271,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.Reinforce,
       arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitCounts),
+      sendTime: block.timestamp,
       from: player,
       to: player,
       origin: origin,
@@ -301,6 +303,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.Reinforce,
       arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitCounts),
+      sendTime: block.timestamp,
       from: player,
       to: to,
       origin: origin,
@@ -334,6 +337,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.Raid,
       arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitCounts),
+      sendTime: block.timestamp,
       from: player,
       to: to,
       origin: origin,

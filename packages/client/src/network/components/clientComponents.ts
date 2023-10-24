@@ -108,6 +108,7 @@ export const BattleReport = createExtendedComponent(
 const Arrival = createExtendedComponent(world, {
   sendType: Type.Number,
   unitCounts: Type.BigIntArray,
+  sendTime: Type.BigInt,
   arrivalTime: Type.BigInt,
   from: Type.Entity,
   to: Type.Entity,

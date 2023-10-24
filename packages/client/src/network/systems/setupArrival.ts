@@ -1,6 +1,5 @@
 import { Entity, defineComponentSystem } from "@latticexyz/recs";
-import { MUDEnums } from "contracts/config/enums";
-import { ESendType } from "src/util/web3/types";
+import { ESendType, MUDEnums } from "contracts/config/enums";
 import { Hex, decodeAbiParameters } from "viem";
 import { components } from "../components";
 import { world } from "../world";
@@ -10,6 +9,10 @@ const ArrivalAbi = {
     {
       name: "sendType",
       type: "uint8",
+    },
+    {
+      name: "sendTime",
+      type: "uint256",
     },
     {
       name: "arrivalTime",
@@ -43,18 +46,22 @@ const ArrivalAbi = {
 type Arrival = {
   sendType: ESendType;
   arrivalTime: bigint;
+  sendTime: bigint;
   from: Entity;
   to: Entity;
   origin: Entity;
   destination: Entity;
   unitCounts: bigint[]; // corresponds to EUnit: ["MiningVessel", "AegisDrone", "HammerDrone", "StingerDrone", "AnvilDrone"]
 };
+
+const decodeArrival = (rawArrival: Hex) => {
+  console.log("raw arrival:,", rawArrival);
+  return decodeAbiParameters([ArrivalAbi], rawArrival)[0] as Arrival;
+};
+
 export const setupArrival = () => {
   const { Arrival, MapItemArrivals } = components;
 
-  const decodeArrival = (rawArrival: Hex) => {
-    return decodeAbiParameters([ArrivalAbi], rawArrival)[0] as Arrival;
-  };
   defineComponentSystem(world, MapItemArrivals, ({ entity, value: [newValue] }) => {
     const newVal = newValue?.value;
     if (!newVal) return Arrival.remove(entity);

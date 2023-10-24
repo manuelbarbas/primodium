@@ -42,7 +42,10 @@ contract LibInvadeTest is PrimodiumTest {
   function testInvadeNeutral() public {
     vm.warp(1000);
     RockType.set(rock, uint8(ERock.Motherlode));
+
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     Arrival memory arrival = Arrival({
+      sendTime: block.timestamp,
       sendType: ESendType.Invade,
       arrivalTime: 2,
       from: player,
@@ -52,6 +55,7 @@ contract LibInvadeTest is PrimodiumTest {
       unitCounts: [uint256(200), 100, 0, 0, 0, 0, 0]
     });
     ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);
+
     world.invade(rock);
     assertEq(OwnedBy.get(rock), player, "OwnedBy");
     assertEq(UnitCount.get(player, rock, unit1), 200, "Unit1 Count");
@@ -68,6 +72,7 @@ contract LibInvadeTest is PrimodiumTest {
     UnitCount.set(enemy, rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
+      sendTime: block.timestamp,
       sendType: ESendType.Invade,
       arrivalTime: 2,
       from: player,
@@ -99,6 +104,7 @@ contract LibInvadeTest is PrimodiumTest {
     UnitCount.set(enemy, rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
+      sendTime: block.timestamp,
       sendType: ESendType.Invade,
       arrivalTime: 2,
       from: player,

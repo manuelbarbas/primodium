@@ -15,6 +15,7 @@ struct Bounds {
 struct Arrival {
   ESendType sendType;
   uint256 arrivalTime;
+  uint256 sendTime;
   bytes32 from;
   bytes32 to;
   bytes32 origin;
