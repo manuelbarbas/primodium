@@ -11,7 +11,7 @@ import {
   upgradesToList,
 } from "../ts/prototypes/prototypeGenUtils";
 import { PrototypesConfig } from "../ts/prototypes/types";
-import { MUDEnums } from "./enums";
+import { MUDEnums, EResource } from "./enums";
 import { getBlueprint } from "./util/blueprints";
 import encodeBytes32 from "./util/encodeBytes32";
 
@@ -1338,81 +1338,97 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   },
   /* ------------------------------- Multipliers ------------------------------ */
   Iron: {
+    keys: [{ [EResource.Iron]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 10n },
     },
   },
   Copper: {
+    keys: [{ [EResource.Copper]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 15n },
     },
   },
   Lithium: {
+    keys: [{ [EResource.Lithium]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 20n },
     },
   },
   Sulfur: {
+    keys: [{ [EResource.Sulfur]: "uint8" }],
     tables: {
-      P_ScoreMultiplier: { value: 30n },
+      P_ScoreMultiplier: { value: 50n },
     },
   },
   Titanium: {
+    keys: [{ [EResource.Titanium]: "uint8" }],
     tables: {
-      P_ScoreMultiplier: { value: 100n },
+      P_ScoreMultiplier: { value: 500n },
     },
   },
   Iridium: {
+    keys: [{ [EResource.Iridium]: "uint8" }],
     tables: {
-      P_ScoreMultiplier: { value: 200n },
+      P_ScoreMultiplier: { value: 1500n },
     },
   },
   Osmium: {
+    keys: [{ [EResource.Osmium]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 300n },
     },
   },
   Tungsten: {
+    keys: [{ [EResource.Tungsten]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 400n },
     },
   },
   Kimberlite: {
+    keys: [{ [EResource.Kimberlite]: "uint8" }],
     tables: {
-      P_ScoreMultiplier: { value: 1000n },
+      P_ScoreMultiplier: { value: 10000n },
     },
   },
   Platinum: {
+    keys: [{ [EResource.Platinum]: "uint8" }],
     tables: {
-      P_ScoreMultiplier: { value: 1500n },
+      P_ScoreMultiplier: { value: 5000n },
     },
   },
   Uraninite: {
+    keys: [{ [EResource.Uraninite]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 2000n },
     },
   },
   Bolutite: {
+    keys: [{ [EResource.Bolutite]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 2500n },
     },
   },
   IronPlate: {
+    keys: [{ [EResource.IronPlate]: "uint8" }],
     tables: {
-      P_ScoreMultiplier: { value: 30n },
+      P_ScoreMultiplier: { value: 40n },
     },
   },
   PVCell: {
-    tables: {
-      P_ScoreMultiplier: { value: 60n },
-    },
-  },
-  Alloy: {
+    keys: [{ [EResource.PVCell]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 100n },
     },
   },
+  Alloy: {
+    keys: [{ [EResource.Alloy]: "uint8" }],
+    tables: {
+      P_ScoreMultiplier: { value: 170n },
+    },
+  },
   RocketFuel: {
+    keys: [{ [EResource.RocketFuel]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 200n },
     },
