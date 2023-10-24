@@ -1,58 +1,53 @@
-import {
-  ComponentUpdate,
-  Has,
-  defineEnterSystem,
-  defineExitSystem,
-  namespaceWorld,
-  Not,
-  EntityID,
-} from "@latticexyz/recs";
+import { ComponentUpdate, Has, defineEnterSystem, defineExitSystem, namespaceWorld, Not } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { BlockNumber } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
 import { ObjectPosition, OnComponentSystem, Tween } from "../../common/object-components/common";
 import { Circle, Line } from "../../common/object-components/graphics";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Arrival, OwnedBy, Pirate, Position } from "src/network/components/chainComponents";
 import { DepthLayers } from "@game/constants";
 import { hashStringEntity } from "src/util/encode";
 import { PIRATE_KEY } from "src/util/constants";
+import { SetupResult } from "src/network/types";
+import { components } from "src/network/components";
+import { getNow } from "src/util/time";
 
-export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
+export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
+  const playerEntity = mud.network.playerEntity;
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_arrival";
 
-  const query = [Has(Arrival), Not(Pirate)];
+  const query = [
+    Has(components.Arrival),
+    // Not(components.Pirate)
+  ];
 
-  const render = (update: ComponentUpdate) => {
-    const entityId = world.entities[update.entity];
-    scene.objectPool.removeGroup(entityId + objIndexSuffix);
-    const arrival = Arrival.getEntity(entityId);
-    const blockInfo = BlockNumber.get();
+  const render = ({ entity }: ComponentUpdate) => {
+    scene.objectPool.removeGroup(entity + objIndexSuffix);
+    const arrival = components.Arrival.get(entity);
 
-    if (!arrival || !blockInfo) return;
+    if (!arrival) return;
 
     //don't render if arrival is already in orbit
-    if (Number(arrival.arrivalBlock) < blockInfo.value) return;
+    if (arrival.arrivalTime < getNow()) return;
 
-    const origin = Position.get(arrival.origin);
-    const destination = Position.get(arrival.destination);
+    const origin = components.Position.get(arrival.origin);
+    const destination = components.Position.get(arrival.destination);
 
     if (!origin || !destination) return;
 
     //render personal pirates only
-    if (
-      Pirate.has(arrival.destination) &&
-      hashStringEntity(PIRATE_KEY, player) !== OwnedBy.get(arrival.destination)?.value
-    )
-      return;
+    // if (
+    //   components.Pirate.has(arrival.destination) &&
+    //   hashStringEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(arrival.destination)?.value
+    // )
+    //   return;
 
     const originPixelCoord = tileCoordToPixelCoord({ x: origin.x, y: -origin.y }, tileWidth, tileHeight);
 
     const destinationPixelCoord = tileCoordToPixelCoord({ x: destination.x, y: -destination.y }, tileWidth, tileHeight);
 
-    const sendTrajectory = scene.objectPool.getGroup(entityId + objIndexSuffix);
+    const sendTrajectory = scene.objectPool.getGroup(entity + objIndexSuffix);
 
     const trajectory = sendTrajectory.add("Graphics");
     trajectory.setComponents([
@@ -78,13 +73,11 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
         borderThickness: 1,
         alpha: 0.75,
       }),
-      OnComponentSystem(BlockNumber, (gameObject, { value }, systemId) => {
-        const blockNumber = (value[0]?.value as number) ?? 0;
-        // const remainingBlocks = Number(arrival.arrivalBlock) - blockNumber;
-        const blocksTraveled = blockNumber - Number(arrival.timestamp);
-        const totalBlocks = Number(arrival.arrivalBlock) - Number(arrival.timestamp);
+      OnComponentSystem(components.BlockNumber, (gameObject, _, systemId) => {
+        const timeTraveled = getNow() - arrival.timestamp;
+        const totaltime = arrival.arrivalTime - arrival.timestamp;
 
-        const progress = blocksTraveled / totalBlocks;
+        const progress = Number(timeTraveled) / Number(totaltime);
 
         if (progress >= 1) {
           //remove trajectory
@@ -139,9 +132,8 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
     render(update);
   });
 
-  defineExitSystem(gameWorld, query, (update) => {
-    const entityId = world.entities[update.entity];
-    const objIndex = entityId + objIndexSuffix;
+  defineExitSystem(gameWorld, query, ({ entity }) => {
+    const objIndex = entity + objIndexSuffix;
 
     scene.objectPool.removeGroup(objIndex);
   });
