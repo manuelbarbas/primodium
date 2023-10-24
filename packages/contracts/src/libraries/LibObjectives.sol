@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
+import { console } from "forge-std/console.sol";
 import { addressToEntity, entityToAddress, getSystemResourceId, bytes32ToString } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 // tables
@@ -82,10 +83,12 @@ library LibObjectives {
   function checkHasBuiltRequiredBuildings(bytes32 playerEntity, bytes32 objective) internal {
     bytes32[] memory requiredBuiltBuildings = P_HasBuiltBuildings.get(objective);
     for (uint256 i = 0; i < requiredBuiltBuildings.length; i++) {
+      console.log("checking if has built", uint256(requiredBuiltBuildings[i]));
       require(
         HasBuiltBuilding.get(playerEntity, requiredBuiltBuildings[i]),
         "[LibObjectives] Player has not built the required buildings"
       );
+      console.log("success!");
     }
   }
 
