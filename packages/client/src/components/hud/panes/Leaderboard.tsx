@@ -38,13 +38,13 @@ export const Leaderboard = () => {
   if (!data || !address) return null;
 
   return (
-    <div className="flex flex-col items-center w-full text-xs pointer-events-auto scrollbar">
-      <List height={323} width="100%" itemCount={data.players.length} itemSize={35}>
+    <div className="flex flex-col items-center w-full text-xs pointer-events-auto">
+      <List height={323} width="100%" itemCount={data.players.length} itemSize={47} className="scrollbar">
         {({ index, style }) => {
           const player = data.players[index];
           const score = data.scores[index];
           return (
-            <div style={style}>
+            <div style={style} className="pr-2">
               <LeaderboardItem key={index} player={player} index={index} score={score} />
             </div>
           );
