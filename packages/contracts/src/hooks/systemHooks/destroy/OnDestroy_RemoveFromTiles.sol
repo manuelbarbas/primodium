@@ -12,7 +12,6 @@ import { BuildingKey } from "src/Keys.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
-import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 
 /**
  * @title OnDestroy_RemoveFromTiles

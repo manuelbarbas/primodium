@@ -6,8 +6,9 @@ export function renderPrototypeIndex(prototypes: PrototypesConfig<StoreConfig>) 
   return `
   ${renderedSolidityHeader}
   
+  import { createPrototypes } from "./prototypes/AllPrototype.sol";
   ${Object.keys(prototypes)
-    .map((key) => `import {${key}Prototype, ${key}PrototypeId} from "./prototypes/${key}Prototype.sol"`)
+    .map((key) => `import {${key}Prototype, ${key}PrototypeId} from "./prototypes/AllPrototype.sol"`)
     .join(";")};
   `;
 }
