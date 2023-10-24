@@ -1609,7 +1609,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   TrainMinutemanMarine1: {
     tables: {
-      P_RequiredObjectives: { value: encodeArray(["BuildWorkshop"]) },
+      P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
       P_RequiredUnits: getUnitValues({ MinutemanMarine: 50 }),
       P_ResourceReward: getResourceValues({ IronPlate: 50000 }),
     },
