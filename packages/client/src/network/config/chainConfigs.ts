@@ -2,7 +2,7 @@ import { MUDChain, latticeTestnet, mudFoundry } from "@latticexyz/common/chains"
 
 export const caldera = {
   name: "Caldera",
-  id: 12543,
+  id: 12523,
   network: "caldera",
   nativeCurrency: { decimals: 18, name: "Ether", symbol: "ETH" },
   rpcUrls: {
