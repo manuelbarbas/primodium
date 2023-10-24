@@ -1,5 +1,6 @@
 import { Entity, defineComponentSystem } from "@latticexyz/recs";
-import { ESendType, MUDEnums } from "contracts/config/enums";
+import { ESendType } from "contracts/config/enums";
+import { UnitCountTuple } from "src/util/web3/types";
 import { Hex, decodeAbiParameters } from "viem";
 import { components } from "../components";
 import { world } from "../world";
@@ -11,11 +12,11 @@ const ArrivalAbi = {
       type: "uint8",
     },
     {
-      name: "sendTime",
+      name: "arrivalTime",
       type: "uint256",
     },
     {
-      name: "arrivalTime",
+      name: "sendTime",
       type: "uint256",
     },
     {
@@ -36,7 +37,7 @@ const ArrivalAbi = {
     },
     {
       name: "unitCounts",
-      type: `uint256[${MUDEnums.EUnit.length}]`,
+      type: `uint256[7]`,
     },
   ],
   name: "arrival",
@@ -51,11 +52,10 @@ type Arrival = {
   to: Entity;
   origin: Entity;
   destination: Entity;
-  unitCounts: bigint[]; // corresponds to EUnit: ["MiningVessel", "AegisDrone", "HammerDrone", "StingerDrone", "AnvilDrone"]
+  unitCounts: UnitCountTuple;
 };
 
 const decodeArrival = (rawArrival: Hex) => {
-  console.log("raw arrival:,", rawArrival);
   return decodeAbiParameters([ArrivalAbi], rawArrival)[0] as Arrival;
 };
 
