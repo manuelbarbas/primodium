@@ -479,7 +479,7 @@ export const config = mudConfig({
       keySchema: { prototype: "bytes32" },
       valueSchema: {
         // mud doesnt recognize EUnit arrays so we will manually convert them
-        unitTypes: "bytes32[]",
+        units: "bytes32[]",
         amounts: "uint256[]",
       },
     },
@@ -575,6 +575,50 @@ export const config = mudConfig({
 
     ProducedUnit: {
       keySchema: { entity: "bytes32", unit: "bytes32" },
+      valueSchema: "uint256",
+    },
+
+    P_RequiredExpansion: {
+      keySchema: { prototype: "bytes32" },
+      valueSchema: "uint256",
+    },
+
+    /* ------------------------------ Defensive Buildings ----------------------------- */
+
+    P_Defense: {
+      keySchema: { prototype: "bytes32", level: "uint256" },
+      valueSchema: {
+        defenseValue: "uint256",
+      },
+    },
+
+    P_DefenseMultiplier: {
+      keySchema: { prototype: "bytes32", level: "uint256" },
+      valueSchema: {
+        defenseMultiplier: "uint256",
+      },
+    },
+    P_Vault: {
+      keySchema: { entity: "bytes32", level: "uint256" },
+      valueSchema: {
+        // mud doesnt recognize EResource arrays so we will manually convert them
+        resources: "uint8[]",
+        amounts: "uint256[]",
+      },
+    },
+
+    TotalVault: {
+      keySchema: { entity: "bytes32", resource: "uint8" },
+      valueSchema: "uint256",
+    },
+
+    TotalDefense: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "uint256",
+    },
+
+    TotalDefenseMultiplier: {
+      keySchema: { entity: "bytes32" },
       valueSchema: "uint256",
     },
   },

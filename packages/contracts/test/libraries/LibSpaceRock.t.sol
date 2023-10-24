@@ -31,9 +31,6 @@ contract LibSpaceRockTest is PrimodiumTest {
     vm.startPrank(creator);
     player = addressToEntity(worldAddress);
     BuildingType.set(building, buildingPrototype);
-    P_GameConfigData memory config = P_GameConfig.get();
-    config.unitProductionRate = 100;
-    P_GameConfig.set(config);
   }
 
   function testFailUpdateRockNoRock() public {
@@ -52,7 +49,7 @@ contract LibSpaceRockTest is PrimodiumTest {
   function setupClaimUnits() public {
     Level.set(building, 1);
     LastClaimedAt.set(building, block.timestamp - 100);
-    P_UnitProdMultiplier.set(building, 1, 100);
+    P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
     P_Unit.setTrainingTime(unitPrototype, 0, 1);
 
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);

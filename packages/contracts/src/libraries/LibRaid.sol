@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
 
-import { SystemSwitch } from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
+import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 import { PirateAsteroid, DefeatedPirate, RaidedResource, RockType, OwnedBy, BattleResultData, RaidResult, RaidResultData, P_IsUtility, P_UnitPrototypes, Home } from "codegen/index.sol";
 import { ERock, ESendType, EResource } from "src/Types.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
@@ -31,8 +31,12 @@ library LibRaid {
     bytes32 defenderEntity = OwnedBy.get(rockEntity);
     require(defenderEntity != 0, "[LibRaid] Can not raid unowned rock");
     require(defenderEntity != playerEntity, "[LibRaid] Can not raid your own rock");
-    bytes memory rawBr = SystemSwitch.call(
-      abi.encodeCall(world.battle, (playerEntity, defenderEntity, rockEntity, ESendType.Raid))
+
+    bytes memory rawBr = SystemCall.callWithHooksOrRevert(
+      entityToAddress(playerEntity),
+      getSystemResourceId("S_BattleSystem"),
+      abi.encodeCall(S_BattleSystem.battle, (playerEntity, defenderEntity, rockEntity, ESendType.Raid)),
+      0
     );
 
     BattleResultData memory br = abi.decode(rawBr, (BattleResultData));
@@ -54,7 +58,7 @@ library LibRaid {
    */
   function resolveRaid(BattleResultData memory br) internal returns (RaidResultData memory) {
     LibBattle.updateUnitsAfterBattle(br, ESendType.Raid);
-    (uint256 totalResources, uint256[] memory defenderResources) = LibResource.getAllResourceCounts(br.defender);
+    (uint256 totalResources, uint256[] memory defenderResources) = LibResource.getAllResourceCountsVaulted(br.defender);
     RaidResultData memory raidResult = RaidResultData({
       defenderValuesBeforeRaid: new uint256[](defenderResources.length),
       raidedAmount: new uint256[](defenderResources.length)

@@ -314,6 +314,8 @@ export const EntityType = {
 
   //Starmap
   Asteroid: toHex32("spacerock.Asteroid") as Entity,
+
+  NULL: toHex32("NULL") as Entity,
 };
 
 // export const getBlockTypeDescription = (blockType: Entity | undefined) => {
