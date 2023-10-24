@@ -39,6 +39,8 @@ contract SendUnitsSystemTest is PrimodiumTest {
     RockType.set(origin, uint8(ERock.Asteroid));
     RockType.set(destination, uint8(ERock.Asteroid));
     ReversePosition.set(originPosition.x, originPosition.y, origin);
+    Position.set(origin, originPosition);
+    Position.set(destination, destinationPosition);
     ReversePosition.set(destinationPosition.x, destinationPosition.y, destination);
     ResourceCount.set(player, U_MaxMoves, 10);
   }
@@ -363,14 +365,21 @@ contract SendUnitsSystemTest is PrimodiumTest {
     UnitProductionQueue.enqueue(building, item);
     UnitFactorySet.add(player, building);
 
-    Home.setAsteroid(player, rock);
+    Home.setAsteroid(player, origin);
     MaxResourceCount.set(player, Iron, 1000);
     ProductionRate.set(player, Iron, 10);
     LastClaimedAt.set(player, block.timestamp - 10);
 
     unitCounts[0] = 1;
+    unitData.speed = 100;
+    unitData.trainingTime = 100;
+    P_Unit.set(unitPrototype, 0, unitData);
+
+    console.log("home:", uint256(Home.getAsteroid(player)));
+    console.log("origin", uint256(origin));
     world.sendUnits(unitCounts, ESendType.Raid, originPosition, destinationPosition, to);
-    assertEq(ResourceCount.get(player, Iron), 100);
-    assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 100);
+    assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 0);
+    vm.expectRevert();
+    world.sendUnits(unitCounts, ESendType.Raid, originPosition, destinationPosition, to);
   }
 }

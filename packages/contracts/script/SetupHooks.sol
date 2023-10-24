@@ -227,6 +227,8 @@ function registerDestroyHooks(IWorld world, OnBefore_ClaimResources onBefore_Cla
 function registerSendUnits(IWorld world, OnBefore_ClaimUnits onBefore_ClaimUnits) {
   ResourceId systemId = getSystemResourceId("SendUnitsSystem");
 
+  world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
+
   OnSendUnits_InitMotherlode onSendUnits_InitMotherlode = new OnSendUnits_InitMotherlode();
   world.registerSystemHook(systemId, onSendUnits_InitMotherlode, BEFORE_CALL_SYSTEM);
   world.grantAccess(MotherlodeTableId, address(onSendUnits_InitMotherlode));
@@ -244,8 +246,6 @@ function registerSendUnits(IWorld world, OnBefore_ClaimUnits onBefore_ClaimUnits
 
   OnSendUnits_Requirements onSendUnits_Requirements = new OnSendUnits_Requirements();
   world.registerSystemHook(systemId, onSendUnits_Requirements, BEFORE_CALL_SYSTEM);
-
-  world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
 
   OnSendUnits_UnitCount onSendUnits_UnitCount = new OnSendUnits_UnitCount();
   world.grantAccess(UnitCountTableId, address(onSendUnits_UnitCount));

@@ -31,7 +31,6 @@ contract OnSendUnits_InitMotherlode is SystemHook {
     SendArgs memory sendArgs = abi.decode(args, (SendArgs));
 
     bytes32 origin = ReversePosition.get(sendArgs.originPosition.x, sendArgs.originPosition.y);
-    LibUnit.claimUnits(origin);
     bytes32 destination = ReversePosition.get(sendArgs.destinationPosition.x, sendArgs.destinationPosition.y);
     if (destination == 0) LibMotherlode.createMotherlode(sendArgs.destinationPosition);
   }
