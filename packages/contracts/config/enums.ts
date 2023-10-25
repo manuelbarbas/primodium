@@ -110,6 +110,8 @@ export enum EObjectives {
   BuildDroneFactory,
   BuildStarmapper,
   BuildSAMLauncher,
+  BuildVault,
+  BuildShieldGenerator,
 
   CommissionMiningVessel,
   TrainMinutemanMarine1,
