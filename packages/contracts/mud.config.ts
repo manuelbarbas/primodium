@@ -621,6 +621,34 @@ export const config = mudConfig({
       keySchema: { entity: "bytes32" },
       valueSchema: "uint256",
     },
+    /* ------------------------------ Alliance ----------------------------- */
+
+    PlayerAlliance: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: {
+        alliance: "bytes32",
+        role: "uint8",
+      },
+    },
+
+    Alliance: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: {
+        name: "bytes32",
+        score: "uint256",
+        inviteMode: "uint8",
+      },
+    },
+
+    AllianceInvitation: {
+      keySchema: { entity: "bytes32", alliance: "bytes32" },
+      valueSchema: "bytes32",
+    },
+
+    AllianceJoinRequest: {
+      keySchema: { entity: "bytes32", alliance: "bytes32" },
+      valueSchema: "bool",
+    },
   },
 });
 
