@@ -29,6 +29,9 @@ export enum EBuilding {
   DroneFactory,
   Starmapper,
   SAM,
+
+  ShieldGenerator,
+  Vault,
 }
 
 export enum EResource {
