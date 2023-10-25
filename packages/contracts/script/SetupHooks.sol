@@ -25,9 +25,11 @@ import { TotalDefenseMultiplierTableId } from "codegen/tables/TotalDefenseMultip
 import { TotalVaultTableId } from "codegen/tables/TotalVault.sol";
 import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
 import { ScoreTableId } from "codegen/tables/Score.sol";
+import { AllianceTableId } from "codegen/tables/Alliance.sol";
 import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
 
 import { OnResourceCount_Score } from "src/hooks/storeHooks/OnResourceCount_Score.sol";
+import { OnScore_Alliance_Score } from "src/hooks/storeHooks/OnScore_Alliance_Score.sol";
 
 import { OnBefore_ClaimResources } from "src/hooks/systemHooks/OnBefore_ClaimResources.sol";
 import { OnBefore_ClaimUnits } from "src/hooks/systemHooks/OnBefore_ClaimUnits.sol";
@@ -73,6 +75,8 @@ import { OnUpgradeUnit_SpendResources } from "src/hooks/systemHooks/upgradeUnit/
 
 import { OnUpgradeRange_SpendResources } from "src/hooks/systemHooks/upgradeRange/OnUpgradeRange_SpendResources.sol";
 
+import { OnAlliance_TargetClaimResources } from "src/hooks/systemHooks/alliance/OnAlliance_TargetClaimResources.sol";
+
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
 import { BEFORE_SPLICE_STATIC_DATA } from "@latticexyz/store/src/storeHookTypes.sol";
 
@@ -105,8 +109,23 @@ function setupHooks(IWorld world) {
   registerUpgradeRangeHook(world, onBefore_ClaimResources);
   registerUpgradeUnitHook(world, onBefore_ClaimResources);
 
+  registerAllianceHooks(world, onBefore_ClaimResources);
+
   //Store Hooks
   registerScoreHook(world);
+}
+
+function registerAllianceHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
+  world.registerSystemHook(getSystemResourceId("AllianceSystem"), onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
+
+  OnAlliance_TargetClaimResources onAlliance_TargetClaimResources = new OnAlliance_TargetClaimResources();
+  world.grantAccess(ResourceCountTableId, address(onAlliance_TargetClaimResources));
+  world.grantAccess(MapItemUtilitiesTableId, address(onAlliance_TargetClaimResources));
+  world.grantAccess(MapUtilitiesTableId, address(onAlliance_TargetClaimResources));
+  world.grantAccess(MapItemStoredUtilitiesTableId, address(onAlliance_TargetClaimResources));
+  world.grantAccess(LastClaimedAtTableId, address(onAlliance_TargetClaimResources));
+  world.grantAccess(ProducedResourceTableId, address(onAlliance_TargetClaimResources));
+  world.registerSystemHook(getSystemResourceId("AllianceSystem"), onAlliance_TargetClaimResources, BEFORE_CALL_SYSTEM);
 }
 
 /**
@@ -152,6 +171,10 @@ function registerScoreHook(IWorld world) {
   OnResourceCount_Score onResourceCount_Score = new OnResourceCount_Score();
   world.grantAccess(ScoreTableId, address(onResourceCount_Score));
   world.registerStoreHook(ResourceCountTableId, onResourceCount_Score, BEFORE_SPLICE_STATIC_DATA);
+
+  OnScore_Alliance_Score onScore_Alliance_Score = new OnScore_Alliance_Score();
+  world.grantAccess(AllianceTableId, address(onScore_Alliance_Score));
+  world.registerStoreHook(ScoreTableId, onScore_Alliance_Score, BEFORE_SPLICE_STATIC_DATA);
 }
 
 /**
