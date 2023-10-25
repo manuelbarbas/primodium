@@ -20,10 +20,15 @@ contract LibProductionTest is PrimodiumTest {
     uint256 amount1 = 20;
     uint256 amount2 = 40;
     uint256 amount3 = 57;
-
-    P_ProductionData memory data1 = P_ProductionData(uint8(EResource.Iron), amount1);
-    P_ProductionData memory data2 = P_ProductionData(uint8(EResource.Iron), amount2);
-    P_ProductionData memory data3 = P_ProductionData(uint8(EResource.Iron), amount3);
+    P_ProductionData memory data1 = P_ProductionData(new uint8[](1), new uint256[](1));
+    data1.resources[0] = uint8(EResource.Iron);
+    data1.amounts[0] = amount1;
+    P_ProductionData memory data2 = P_ProductionData(new uint8[](1), new uint256[](1));
+    data2.resources[0] = uint8(EResource.Iron);
+    data2.amounts[0] = amount2;
+    P_ProductionData memory data3 = P_ProductionData(new uint8[](1), new uint256[](1));
+    data3.resources[0] = uint8(EResource.Iron);
+    data3.amounts[0] = amount3;
 
     P_Production.set(buildingPrototype, 1, data1);
     P_Production.set(buildingPrototype, 2, data2);
@@ -43,9 +48,15 @@ contract LibProductionTest is PrimodiumTest {
     uint256 amount1 = 20;
     uint256 amount2 = 40;
     uint256 amount3 = 57;
-    P_ProductionData memory data1 = P_ProductionData(uint8(EResource.Iron), amount1);
-    P_ProductionData memory data2 = P_ProductionData(uint8(EResource.Iron), amount2);
-    P_ProductionData memory data3 = P_ProductionData(uint8(EResource.Iron), amount3);
+    P_ProductionData memory data1 = P_ProductionData(new uint8[](1), new uint256[](1));
+    data1.resources[0] = uint8(EResource.Iron);
+    data1.amounts[0] = amount1;
+    P_ProductionData memory data2 = P_ProductionData(new uint8[](1), new uint256[](1));
+    data2.resources[0] = uint8(EResource.Iron);
+    data2.amounts[0] = amount2;
+    P_ProductionData memory data3 = P_ProductionData(new uint8[](1), new uint256[](1));
+    data3.resources[0] = uint8(EResource.Iron);
+    data3.amounts[0] = amount3;
 
     P_Production.set(buildingPrototype, 1, data1);
     P_Production.set(buildingPrototype, 2, data2);
@@ -68,7 +79,10 @@ contract LibProductionTest is PrimodiumTest {
     uint256 amountCleared = 20;
     MaxResourceCount.set(playerEntity, uint8(EResource.Iron), startingAmount);
     ResourceCount.set(playerEntity, uint8(EResource.Iron), startingAmount);
-    P_ProductionData memory data1 = P_ProductionData(uint8(EResource.Iron), amountCleared);
+    P_ProductionData memory data1 = P_ProductionData(new uint8[](1), new uint256[](1));
+    data1.resources[0] = uint8(EResource.Iron);
+    data1.amounts[0] = amountCleared;
+
     P_Production.set(buildingPrototype, level, data1);
 
     LibProduction.clearResourceProduction(playerEntity, buildingEntity);
@@ -89,7 +103,9 @@ contract LibProductionTest is PrimodiumTest {
     uint256 amountCleared = 20;
     ProductionRate.set(playerEntity, uint8(EResource.Iron), 50);
 
-    P_ProductionData memory data1 = P_ProductionData(uint8(EResource.Iron), amountCleared);
+    P_ProductionData memory data1 = P_ProductionData(new uint8[](1), new uint256[](1));
+    data1.resources[0] = uint8(EResource.Iron);
+    data1.amounts[0] = amountCleared;
     P_Production.set(buildingPrototype, level, data1);
 
     LibProduction.clearResourceProduction(playerEntity, buildingEntity);

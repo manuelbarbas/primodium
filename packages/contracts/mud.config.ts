@@ -237,8 +237,8 @@ export const config = mudConfig({
       valueSchema: {
         // mud doesnt recognize EResource arrays so we will manually convert them
         // EResource
-        resource: "uint8",
-        amount: "uint256",
+        resources: "uint8[]",
+        amounts: "uint256[]",
       },
     },
 
