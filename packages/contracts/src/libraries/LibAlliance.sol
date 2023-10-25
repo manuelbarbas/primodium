@@ -24,7 +24,7 @@ library LibAlliance {
    * @param playerEntity The entity ID of the player.
    */
   function checkNotMemberOfAnyAlliance(bytes32 playerEntity) internal view {
-    require(PlayerAlliance.getAlliance(playerEntity) == 0, "[Alliance] : player is already part of an alliance");
+    require(PlayerAlliance.getAlliance(playerEntity) == 0, "[Alliance] Player is already part of an alliance");
   }
 
   /**
@@ -33,7 +33,10 @@ library LibAlliance {
    * @param allianceEntity The entity ID of the alliance.
    */
   function checkPlayerPartOfAlliance(bytes32 playerEntity, bytes32 allianceEntity) internal view {
-    require(PlayerAlliance.getAlliance(playerEntity) == allianceEntity, "[Alliance] : player is not part of alliance");
+    require(
+      PlayerAlliance.getAlliance(playerEntity) == allianceEntity,
+      "[Alliance] Player is not part of the alliance"
+    );
   }
 
   /**
@@ -45,7 +48,7 @@ library LibAlliance {
     bytes32 inviter = AllianceInvitation.get(playerEntity, allianceEntity);
     require(
       Alliance.getInviteMode(allianceEntity) == uint8(EAllianceInviteMode.Open) || inviter != 0,
-      "[Alliance] : Either alliance is not open or player has not been invited"
+      "[Alliance] Either alliance is not open or player has not been invited"
     );
     return;
   }
@@ -60,12 +63,9 @@ library LibAlliance {
     EAllianceRole roleToBeGranted
   ) internal view {
     uint8 role = PlayerAlliance.getRole(playerEntity);
-    require(role <= uint8(roleToBeGranted), "[Alliance] : can not grant role higher then your own");
-    require(
-      role > 0 && role <= uint8(EAllianceRole.CanGrantRole),
-      "[Alliance] : does not have permission to grant role"
-    );
-    require(role < PlayerAlliance.getRole(toBeGranted), "[Alliance] : can not change role of superior");
+    require(role <= uint8(roleToBeGranted), "[Alliance] Can not grant role higher then your own");
+    require(role > 0 && role <= uint8(EAllianceRole.CanGrantRole), "[Alliance] Does not have permission to grant role");
+    require(role < PlayerAlliance.getRole(toBeGranted), "[Alliance] Can not change role of superior");
   }
 
   /**
@@ -74,13 +74,13 @@ library LibAlliance {
    */
   function checkCanKick(bytes32 playerEntity, bytes32 toBeKicked) internal view {
     uint8 role = PlayerAlliance.getRole(playerEntity);
-    require(role > 0 && role <= uint8(EAllianceRole.CanKick), "[Alliance] : does not have permission to kick");
-    require(role < PlayerAlliance.getRole(toBeKicked), "[Alliance] : can not kick superior");
+    require(role > 0 && role <= uint8(EAllianceRole.CanKick), "[Alliance] Player does not have permission to kick");
+    require(role < PlayerAlliance.getRole(toBeKicked), "[Alliance] Can not kick superior");
   }
 
   function checkCanReject(bytes32 playerEntity) internal view {
     uint8 role = PlayerAlliance.getRole(playerEntity);
-    require(role > 0 && role <= uint8(EAllianceRole.CanKick), "[Alliance] : does not have permission to reject");
+    require(role > 0 && role <= uint8(EAllianceRole.CanKick), "[Alliance] Does not have permission to reject");
   }
 
   /**
@@ -91,7 +91,7 @@ library LibAlliance {
     uint8 role = PlayerAlliance.getRole(playerEntity);
     require(
       role > 0 && role <= uint8(EAllianceRole.CanInvite),
-      "[Alliance] : the inviter does not have permission to invite players"
+      "[Alliance] Does not have permission to invite players"
     );
   }
 
@@ -104,12 +104,12 @@ library LibAlliance {
     require(
       (role > 0 && role <= uint8(EAllianceRole.CanKick)) ||
         AllianceInvitation.get(invitee, PlayerAlliance.getAlliance(playerEntity)) == playerEntity,
-      "[Alliance] : does not have permission to revoke invite"
+      "[Alliance] Does not have permission to revoke invite"
     );
   }
 
   function checkCanCreateAlliance(bytes32 playerEntity) internal view {
-    require(PlayerAlliance.getAlliance(playerEntity) == 0, "[Alliance] : player is already part of an alliance");
+    require(PlayerAlliance.getAlliance(playerEntity) == 0, "[Alliance] Player is already part of an alliance");
   }
 
   /**
