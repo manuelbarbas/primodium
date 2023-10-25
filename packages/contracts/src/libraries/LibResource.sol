@@ -196,14 +196,14 @@ library LibResource {
     uint256 currentScore = Score.get(player);
     uint256 scoreChangeAmount = P_ScoreMultiplier.get(resource);
 
-    if (value < currentScore) {
-      scoreChangeAmount *= (currentScore - value);
+    if (value < count) {
+      scoreChangeAmount *= (count - value);
       if (scoreChangeAmount > currentScore) {
         scoreChangeAmount = currentScore;
       }
       currentScore -= scoreChangeAmount;
     } else {
-      scoreChangeAmount *= (value - currentScore);
+      scoreChangeAmount *= (value - count);
       currentScore += scoreChangeAmount;
     }
     Score.set(player, currentScore);

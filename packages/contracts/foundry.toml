@@ -25,4 +25,4 @@ chain_id = 4242
 
 [profile.caldera]
 eth_rpc_url = "https://primodium-bedrock.calderachain.xyz/replica-http"
-chain_id = 12543
+chain_id = 12523
