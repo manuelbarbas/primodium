@@ -395,26 +395,11 @@ contract SendUnitsSystemTest is PrimodiumTest {
     P_Unit.set(unitPrototype, 0, unitData);
 
     unitCounts[0] = 1;
+    GracePeriod.set(player, block.timestamp + 10);
     GracePeriod.set(to, block.timestamp + 10);
     vm.warp(block.timestamp + 10);
     world.sendUnits(unitCounts, ESendType.Invade, originPosition, destinationPosition, to);
 
-    assertEq(ArrivalsMap.size(player, origin), 1);
-    assertEq(ArrivalCount.get(player), 1);
-
-    unitCounts[0] = 1;
-
-    Arrival memory expectedArrival = Arrival({
-      sendType: ESendType.Invade,
-      arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitCounts),
-      from: player,
-      to: to,
-      origin: origin,
-      destination: destination,
-      unitCounts: unitCounts
-    });
-
-    Arrival memory arrival = ArrivalsMap.values(player, origin)[0];
-    assertEq(arrival, expectedArrival);
+    assertEq(GracePeriod.get(player), 0, "Grace period should be reset after attack");
   }
 }
