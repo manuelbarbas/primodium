@@ -45,7 +45,7 @@ library LibAlliance {
     bytes32 inviter = AllianceInvitation.get(playerEntity, allianceEntity);
     require(
       Alliance.getInviteMode(allianceEntity) == uint8(EAllianceInviteMode.Open) || inviter != 0,
-      "[Alliance] : either alliance is not open or player has not been invited"
+      "[Alliance] : Either alliance is not open or player has not been invited"
     );
     return;
   }
