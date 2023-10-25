@@ -20,18 +20,10 @@ import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 
 library LibAlliance {
   /**
-   * @dev Checks for player to be part of an alliance
-   * @param playerEntity The entity ID of the player.
-   */
-  function checkPlayerOfAnAlliance(bytes32 playerEntity) internal view {
-    require(PlayerAlliance.getAlliance(playerEntity) != 0, "[Alliance] : player is not a member of any alliance");
-  }
-
-  /**
    * @dev Checks for a player not to be part of an alliance.
    * @param playerEntity The entity ID of the player.
    */
-  function checkPlayerNotPartOfAnyAlliance(bytes32 playerEntity) internal view {
+  function checkNotMemberOfAnyAlliance(bytes32 playerEntity) internal view {
     require(PlayerAlliance.getAlliance(playerEntity) == 0, "[Alliance] : player is already part of an alliance");
   }
 
@@ -126,7 +118,7 @@ library LibAlliance {
    * @param allianceEntity the entity ID of the alliance.
    */
   function join(bytes32 player, bytes32 allianceEntity) internal {
-    checkPlayerNotPartOfAnyAlliance(player);
+    checkNotMemberOfAnyAlliance(player);
     checkCanNewPlayerJoinAlliance(player, allianceEntity);
 
     PlayerAlliance.set(player, allianceEntity, uint8(EAllianceRole.Member));
@@ -144,7 +136,7 @@ library LibAlliance {
     bytes32 name,
     EAllianceInviteMode allianceInviteMode
   ) internal returns (bytes32 allianceEntity) {
-    checkPlayerNotPartOfAnyAlliance(player);
+    checkNotMemberOfAnyAlliance(player);
 
     allianceEntity = LibEncode.getHash(AllianceKey, player);
     PlayerAlliance.set(player, allianceEntity, uint8(EAllianceRole.Owner));
