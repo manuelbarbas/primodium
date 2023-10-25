@@ -2,6 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
 import { Hex } from "viem";
+import { getBlockTypeName } from "./common";
 import { EntityType, RESOURCE_SCALE, RequirementType, ResourceEntityLookup } from "./constants";
 import { getFullResourceCount } from "./resource";
 
@@ -12,13 +13,13 @@ type Requirement = {
   scale: bigint;
 };
 
-export function getMainBaseRequirement(objective: Entity): Requirement[] | null {
+export function getMainBaseRequirement(objective: Entity): Requirement[] | undefined {
   const levelRequirement =
     comps.P_RequiredBaseLevel.getWithKeys({ prototype: objective as Hex, level: 1n })?.value ?? 1n;
-  if (!levelRequirement) return null;
+  if (!levelRequirement) return;
 
   const player = comps.Account.get()?.value;
-  if (!player) return null;
+  if (!player) return;
 
   const mainBase = comps.Home.get(player)?.mainBase;
   const level = comps.Level.get(mainBase as Entity)?.value ?? 1n;
@@ -33,11 +34,11 @@ export function getMainBaseRequirement(objective: Entity): Requirement[] | null 
   ];
 }
 
-export function getObjectivesRequirement(objective: Entity): Requirement[] | null {
+export function getObjectivesRequirement(objective: Entity): Requirement[] | undefined {
   const objectives = comps.P_RequiredObjectives.get(objective)?.objectives;
-  if (!objectives) return null;
+  if (!objectives) return;
   const player = comps.Account.get()?.value;
-  if (!player) return null;
+  if (!player) return;
 
   return objectives.map((objective) => ({
     id: objective as Entity,
@@ -49,11 +50,11 @@ export function getObjectivesRequirement(objective: Entity): Requirement[] | nul
   }));
 }
 
-export function getExpansionRequirement(objective: Entity): Requirement[] | null {
+export function getExpansionRequirement(objective: Entity): Requirement[] | undefined {
   const requiredExpansion = comps.P_RequiredExpansion.get(objective)?.value;
-  if (!requiredExpansion) return null;
+  if (!requiredExpansion) return;
   const player = comps.Account.get()?.value;
-  if (!player) return null;
+  if (!player) return;
   const playerExpansion = comps.Level.get(player, { value: 0n }).value;
 
   return [
@@ -66,14 +67,14 @@ export function getExpansionRequirement(objective: Entity): Requirement[] | null
   ];
 }
 
-export function getResourceRequirement(objective: Entity): Requirement[] | null {
+export function getResourceRequirement(objective: Entity): Requirement[] | undefined {
   const rawRequiredProduction = comps.P_ProducedResources.get(objective, {
     resources: [],
     amounts: [],
   });
-  if (!rawRequiredProduction) return null;
+  if (!rawRequiredProduction) return;
   const player = comps.Account.get()?.value;
-  if (!player) return null;
+  if (!player) return;
 
   return rawRequiredProduction.resources.map((resource, index) => ({
     id: ResourceEntityLookup[resource as EResource],
@@ -83,12 +84,12 @@ export function getResourceRequirement(objective: Entity): Requirement[] | null 
   }));
 }
 
-export function getBuildingCountRequirement(objective: Entity): Requirement[] | null {
+export function getBuildingCountRequirement(objective: Entity): Requirement[] | undefined {
   const rawRequiredBuildings = comps.P_HasBuiltBuildings.get(objective)?.value;
-  if (!rawRequiredBuildings) return null;
+  if (!rawRequiredBuildings) return;
 
   const player = comps.Account.get()?.value;
-  if (!player) return null;
+  if (!player) return;
 
   return rawRequiredBuildings.map((building) => ({
     id: building as Entity,
@@ -100,13 +101,13 @@ export function getBuildingCountRequirement(objective: Entity): Requirement[] | 
   }));
 }
 
-export function getHasDefeatedPirateRequirement(objective: Entity): Requirement[] | null {
+export function getHasDefeatedPirateRequirement(objective: Entity): Requirement[] | undefined {
   const defeatedPirates = comps.P_DefeatedPirates.get(objective)?.value;
 
-  if (!defeatedPirates) return null;
+  if (!defeatedPirates) return;
 
   const player = comps.Account.get()?.value;
-  if (!player) return null;
+  if (!player) return;
 
   return defeatedPirates.map((pirate) => ({
     id: pirate as Entity,
@@ -116,17 +117,17 @@ export function getHasDefeatedPirateRequirement(objective: Entity): Requirement[
   }));
 }
 
-export function getRequiredUnitsRequirement(objective: Entity): Requirement[] | null {
+export function getRequiredUnitsRequirement(objective: Entity): Requirement[] | undefined {
   const rawRequiredUnits = comps.P_RequiredUnits.get(objective, {
     units: [],
     amounts: [],
   });
 
   const player = comps.Account.get()?.value;
-  if (!player) return null;
+  if (!player) return;
 
   const homeAsteroid = comps.Home.get(player)?.asteroid;
-  if (!homeAsteroid) return null;
+  if (!homeAsteroid) return;
   const units = comps.Hangar.get(homeAsteroid as Entity);
 
   return rawRequiredUnits.units.map((unit, index) => {
@@ -144,12 +145,12 @@ export function getRequiredUnitsRequirement(objective: Entity): Requirement[] | 
   });
 }
 
-export function getProducedUnitsRequirement(objective: Entity): Requirement[] | null {
+export function getProducedUnitsRequirement(objective: Entity): Requirement[] | undefined {
   const producedUnits = comps.P_ProducedUnits.get(objective);
-  if (!producedUnits) return null;
+  if (!producedUnits) return;
 
   const player = comps.Account.get()?.value;
-  if (!player) return null;
+  if (!player) return;
 
   return producedUnits.units.map((unit, index) => ({
     id: unit as Entity,
@@ -158,14 +159,14 @@ export function getProducedUnitsRequirement(objective: Entity): Requirement[] | 
     scale: 1n,
   }));
 }
-export function getRaidRequirement(objective: Entity): Requirement[] | null {
+export function getRaidRequirement(objective: Entity): Requirement[] | undefined {
   const rawRaid = comps.P_RaidedResources.get(objective, {
     resources: [],
     amounts: [],
   });
 
   const player = comps.Account.get()?.value;
-  if (!player) return null;
+  if (!player) return;
 
   return rawRaid.resources.map((resource, index) => ({
     id: ResourceEntityLookup[resource as EResource] as Entity,
@@ -175,15 +176,15 @@ export function getRaidRequirement(objective: Entity): Requirement[] | null {
   }));
 }
 
-export function getDestroyedUnitsRequirement(objective: Entity): Requirement[] | null {
+export function getDestroyedUnitsRequirement(objective: Entity): Requirement[] | undefined {
   const rawRequiredDestroyedUnits = comps.P_DestroyedUnits.get(objective, {
     units: [],
     amounts: [],
   });
-  if (!rawRequiredDestroyedUnits) return null;
+  if (!rawRequiredDestroyedUnits) return;
 
   const player = comps.Account.get()?.value;
-  if (!player) return null;
+  if (!player) return;
 
   return rawRequiredDestroyedUnits.units.map((unit, index) => ({
     id: unit as Entity,
@@ -201,8 +202,6 @@ export const isAllRequirementsMet = (requirements: Requirement[] | undefined) =>
 
 export function getAllRequirements(objective: Entity): Record<RequirementType, Requirement[]> {
   const requirements = {
-    [RequirementType.MainBase]: getMainBaseRequirement(objective),
-    [RequirementType.Objectives]: getObjectivesRequirement(objective),
     [RequirementType.Expansion]: getExpansionRequirement(objective),
     [RequirementType.ProducedResources]: getResourceRequirement(objective),
     [RequirementType.Buildings]: getBuildingCountRequirement(objective),
@@ -212,7 +211,8 @@ export function getAllRequirements(objective: Entity): Record<RequirementType, R
     [RequirementType.ProducedUnits]: getProducedUnitsRequirement(objective),
     [RequirementType.DestroyedUnits]: getDestroyedUnitsRequirement(objective),
   };
-  return Object.fromEntries(Object.entries(requirements).filter(([_, value]) => value !== null)) as Record<
+  console.log("objective:", getBlockTypeName(objective), "requirements:", requirements);
+  return Object.fromEntries(Object.entries(requirements).filter(([_, value]) => value !== undefined)) as Record<
     RequirementType,
     Requirement[]
   >;
@@ -220,11 +220,10 @@ export function getAllRequirements(objective: Entity): Record<RequirementType, R
 
 export function getIsObjectiveAvailable(objective: Entity) {
   const requirements = getAllRequirements(objective);
+  const mainbaseRequirement = getMainBaseRequirement(objective);
+  const objectivesRequirement = getObjectivesRequirement(objective);
   if (Object.keys(requirements).length == 0) return true;
-  return (
-    isAllRequirementsMet(requirements[RequirementType.MainBase]) &&
-    isAllRequirementsMet(requirements[RequirementType.Objectives])
-  );
+  return isAllRequirementsMet(mainbaseRequirement) && isAllRequirementsMet(objectivesRequirement);
 }
 
 export function getCanClaimObjective(objective: Entity) {
