@@ -18,10 +18,18 @@ library LibProduction {
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
 
     P_ProductionData memory prototypeProduction = P_Production.get(buildingPrototype, targetLevel);
+
+    uint256 lastLevelResourceLength;
+    uint256[] memory lastLevelAmounts;
+
+    if (targetLevel > 1) {
+      lastLevelResourceLength = P_Production.lengthAmounts(buildingPrototype, targetLevel - 1);
+      lastLevelAmounts = P_Production.get(buildingPrototype, targetLevel - 1).amounts;
+    }
     for (uint8 i = 0; i < prototypeProduction.resources.length; i++) {
       uint256 prevLevelPrototypeProduction = 0;
-      if (targetLevel > 1 && P_Production.lengthAmounts(buildingPrototype, targetLevel - 1) > i) {
-        prevLevelPrototypeProduction = P_Production.get(buildingPrototype, targetLevel - 1).amounts[i];
+      if (targetLevel > 1 && lastLevelResourceLength > i) {
+        prevLevelPrototypeProduction = lastLevelAmounts[i];
       }
       uint256 addedProductionRate = prototypeProduction.amounts[i] - prevLevelPrototypeProduction;
       increaseResourceProduction(playerEntity, EResource(prototypeProduction.resources[i]), addedProductionRate);
