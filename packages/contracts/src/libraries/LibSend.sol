@@ -40,7 +40,7 @@ library LibSend {
   /// @param arrival The Arrival object to add.
   function sendUnits(Arrival memory arrival) internal {
     if (arrival.sendType != ESendType.Reinforce && PirateAsteroid.get(arrival.destination).playerEntity == 0) {
-      GracePeriod.remove(arrival.from);
+      GracePeriod.deleteRecord(arrival.from);
     }
 
     bytes32 player = arrival.sendType == ESendType.Reinforce ? arrival.to : arrival.from;
