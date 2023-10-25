@@ -745,22 +745,122 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 5n },
-        P_RequiredResources: getResourceValues({ Titanium: 70000, U_Electricity: 100 }),
-        P_Defense: { defenseValue: 900n },
+        P_RequiredBaseLevel: { value: 2n },
+        P_RequiredResources: getResourceValues({ Sulfur: 500000, Alloy: 200000, U_Electricity: 100 }),
+        P_Defense: { defenseValue: 2000n },
       },
       2: {
-        P_RequiredBaseLevel: { value: 6n },
-        P_RequiredResources: getResourceValues({ Sulfur: 3000000, Platinum: 250000, U_Electricity: 150 }),
-        P_Defense: { defenseValue: 900n },
+        P_RequiredBaseLevel: { value: 4n },
+        P_RequiredResources: getResourceValues({ Platinum: 50000, Sulfur: 500000, Alloy: 200000, U_Electricity: 200 }),
+        P_Defense: { defenseValue: 10000n },
       },
       3: {
-        P_RequiredBaseLevel: { value: 8n },
-        P_RequiredResources: getResourceValues({ Sulfur: 7000000, Iridium: 100000, U_Electricity: 200 }),
-        P_Defense: { defenseValue: 900n },
+        P_RequiredBaseLevel: { value: 6n },
+        P_RequiredResources: getResourceValues({ Iridium: 100000, Sulfur: 500000, Alloy: 200000, U_Electricity: 300 }),
+        P_Defense: { defenseValue: 250000n },
       },
     },
   },
+
+  ShieldGenerator: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(3, 3) },
+      P_MaxLevel: { value: 3n },
+    },
+    levels: {
+      1: {
+        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredResources: getResourceValues({ Sulfur: 1000000, Alloy: 500000, U_Electricity: 100 }),
+        P_DefenseMultiplier: { defenseMultiplier: 5n },
+      },
+      2: {
+        P_RequiredBaseLevel: { value: 5n },
+        P_RequiredResources: getResourceValues({
+          Platinum: 50000,
+          Sulfur: 2000000,
+          Alloy: 1000000,
+          U_Electricity: 100,
+        }),
+        P_DefenseMultiplier: { defenseMultiplier: 10n },
+      },
+      3: {
+        P_RequiredBaseLevel: { value: 7n },
+        P_RequiredResources: getResourceValues({
+          Iridium: 100000,
+          Sulfur: 5000000,
+          Alloy: 2000000,
+          U_Electricity: 100,
+        }),
+        P_DefenseMultiplier: { defenseMultiplier: 15n },
+      },
+    },
+  },
+
+  Vault: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(3, 3) },
+      P_MaxLevel: { value: 3n },
+    },
+    levels: {
+      1: {
+        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredResources: getResourceValues({ PVCell: 200000, Sulfur: 150000, U_Electricity: 100 }),
+        P_Vault: getResourceValues({
+          Iron: 500000,
+          Copper: 50000,
+          IronPlate: 30000,
+          Lithium: 20000,
+          Sulfur: 20000,
+          PVCell: 10000,
+        }),
+      },
+      2: {
+        P_RequiredBaseLevel: { value: 5n },
+        P_RequiredResources: getResourceValues({
+          Titanium: 50000,
+          PVCell: 200000,
+          Sulfur: 150000,
+          U_Electricity: 150,
+        }),
+        P_Vault: getResourceValues({
+          Iron: 200000,
+          Copper: 200000,
+          Lithium: 100000,
+          IronPlate: 100000,
+          Sulfur: 100000,
+          PVCell: 50000,
+          Alloy: 20000,
+          Titanium: 10000,
+          Platinum: 10000,
+          Iridium: 10000,
+          Kimberlite: 10000,
+        }),
+      },
+      3: {
+        P_RequiredBaseLevel: { value: 7n },
+        P_RequiredResources: getResourceValues({
+          Titanium: 150000,
+          PVCell: 2000000,
+          Sulfur: 1500000,
+          U_Electricity: 200,
+        }),
+        P_Vault: getResourceValues({
+          Iron: 500000,
+          Copper: 500000,
+          IronPlate: 250000,
+          Lithium: 250000,
+          Sulfur: 250000,
+          PVCell: 100000,
+          Alloy: 50000,
+          Titanium: 30000,
+          Platinum: 30000,
+          Iridium: 30000,
+          Kimberlite: 30000,
+        }),
+      },
+    },
+  },
+
   /* -------------------------------- Resources ------------------------------- */
   // NOTE: To check if a resource is a utility, call P_IsUtility(EResource.<resource>);
   IsUtility: {
@@ -1611,7 +1711,21 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_HasBuiltBuildings: { value: encodeArray(["SAM"]) },
       P_UnitReward: getUnitValues({ AnvilDrone: 150 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 5n } } },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
+  },
+  BuildVault: {
+    tables: {
+      P_HasBuiltBuildings: { value: encodeArray(["Vault"]) },
+      P_UnitReward: getUnitValues({ AnvilDrone: 50 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
+  },
+  BuildShieldGenerator: {
+    tables: {
+      P_HasBuiltBuildings: { value: encodeArray(["ShieldGenerator"]) },
+      P_UnitReward: getUnitValues({ AegisDrone: 150 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
   },
 
   CommissionMiningVessel: {
