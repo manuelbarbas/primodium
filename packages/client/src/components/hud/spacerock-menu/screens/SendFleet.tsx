@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { ESendType, EUnit } from "contracts/config/enums";
+import { ESendType } from "contracts/config/enums";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
@@ -7,7 +7,7 @@ import { Navigator } from "src/components/core/Navigator";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
-import { BackgroundImage, UnitEntityLookup } from "src/util/constants";
+import { BackgroundImage } from "src/util/constants";
 import { toUnitCountArray } from "src/util/send";
 import { send } from "src/util/web3/contractCalls/send";
 
@@ -15,8 +15,8 @@ export const SendFleet: React.FC = () => {
   const network = useMud().network;
   const playerEntity = network.playerEntity;
   const sendType = components.Send.get()?.sendType ?? ESendType.Invade;
-  const count = components.Send.use()?.count ?? [];
-  const noUnits = count.every((c) => c == 0n);
+  const units = components.Send.useUnits();
+  const numUnits = Object.keys(units).length;
 
   const sendFleet = (sendType: ESendType) => {
     const origin = components.Send.get()?.origin;
@@ -30,7 +30,7 @@ export const SendFleet: React.FC = () => {
     const to = components.OwnedBy.get(destination)?.value as Entity | undefined;
 
     //TODO: fix arrival units
-    send(toUnitCountArray(count), sendType, originCoord, destinationCoord, to ?? ("0x00" as Entity), network);
+    send(toUnitCountArray(units), sendType, originCoord, destinationCoord, to ?? ("0x00" as Entity), network);
 
     components.Send.reset(playerEntity);
   };
@@ -38,11 +38,11 @@ export const SendFleet: React.FC = () => {
   return (
     <Navigator.Screen title="Send" className="">
       <SecondaryCard className="w-full items-center">
-        {!noUnits && (
+        {numUnits !== 0 && (
           <div className="relative grid grid-cols-8 gap-2 items-center justify-center min-h-full w-full p-1">
-            {count.map((value, index) => {
+            {Object.entries(units).map(([rawUnit, value], index) => {
               if (value == 0n) return null;
-              const unit = UnitEntityLookup[(index + 1) as EUnit];
+              const unit = rawUnit as Entity;
               return (
                 <Button
                   key={index}
@@ -55,7 +55,7 @@ export const SendFleet: React.FC = () => {
                       className="w-full h-full"
                     />
                     <p className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 font-bold text-xs bg-slate-900 border-cyan-400/30 px-1 rounded-md border group-hover:opacity-0">
-                      {components.Send.getUnitCount(unit).toString()}
+                      {value.toString()}
                     </p>
                   </div>
 
@@ -74,7 +74,7 @@ export const SendFleet: React.FC = () => {
             </Navigator.NavButton>
           </div>
         )}
-        {noUnits && (
+        {numUnits === 0 && (
           <Navigator.NavButton to="UnitSelection" className="btn-secondary w-fit m-4">
             + Add units from hangar
           </Navigator.NavButton>

@@ -27,12 +27,11 @@ function createSendComponent(contractComponents: ExtendedContractComponents<Setu
   };
 
   const getUnitCount = (entity: Entity) => {
+    if (UnitEnumLookup[entity] === undefined) throw new Error("Invalid unit entity");
     const count = component.get()?.count;
-
     if (!count) return 0;
 
     const index = UnitEnumLookup[entity] - 1;
-    if (index === undefined || index < 0 || index >= count.length) return 0;
 
     return count[index];
   };
@@ -43,7 +42,7 @@ function createSendComponent(contractComponents: ExtendedContractComponents<Setu
     component.set({
       origin,
       destination: undefined,
-      count: toUnitCountArray([]),
+      count: toUnitCountArray({}),
       to: undefined,
       sendType: undefined,
     });
@@ -71,12 +70,13 @@ function createSendComponent(contractComponents: ExtendedContractComponents<Setu
   };
 
   const setUnitCount = (entity: Entity, count: bigint) => {
+    if (UnitEnumLookup[entity] === undefined) throw new Error("Invalid unit entity");
     if (!component.get()) reset();
     let currentCount = component.get()?.count;
 
     //initialize if null
     if (!currentCount) {
-      (currentCount = toUnitCountArray([])),
+      (currentCount = toUnitCountArray({})),
         component.set({
           ...(component.get() || emptyComponent),
           count: currentCount,
@@ -116,9 +116,15 @@ function createSendComponent(contractComponents: ExtendedContractComponents<Setu
     }, {} as Record<Entity, bigint>);
   };
 
+  const useUnits = () => {
+    component.use()?.count;
+    return getUnits();
+  };
+
   return {
     ...component,
     getUnits,
+    useUnits,
     getUnitCount,
     setUnitCount,
     setOrigin,

@@ -1,6 +1,13 @@
+import { Entity } from "@latticexyz/recs";
+import { UnitEnumLookup } from "./constants";
 import { UnitCountTuple } from "./web3/types";
 
-export function toUnitCountArray(rawArr: bigint[]): UnitCountTuple {
-  const arr = [...rawArr, 0n, 0n, 0n, 0n, 0n, 0n, 0n].slice(0, 7);
-  return [arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6]];
+export function toUnitCountArray(map: Record<Entity, bigint>): UnitCountTuple {
+  const arr: UnitCountTuple = [0n, 0n, 0n, 0n, 0n, 0n, 0n];
+  Object.entries(map).forEach(([key, value]) => {
+    const index = UnitEnumLookup[key as Entity];
+    if (index === undefined) throw new Error("Invalid unit entity");
+    arr[index - 1] = value;
+  });
+  return arr;
 }
