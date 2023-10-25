@@ -85,7 +85,7 @@ export const Panes: React.FC = () => {
 
         <Divider />
         <Join direction="vertical" className="z-10 border-secondary">
-          {/* <Tabs.IconButton
+          <Tabs.IconButton
             index={4}
             imageUri="/img/icons/objectiveicon.png"
             hideText
@@ -93,7 +93,7 @@ export const Panes: React.FC = () => {
             tooltipText="Objectives"
             tooltipDirection="left"
           />
-          <Tabs.IconButton
+          {/* <Tabs.IconButton
             index={5}
             imageUri="/img/icons/asteroidicon.png"
             text="Owned Asteroids"

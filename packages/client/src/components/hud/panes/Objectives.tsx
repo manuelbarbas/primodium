@@ -191,7 +191,7 @@ const Objective: React.FC<{
 };
 
 const UnclaimedObjective: React.FC = () => {
-  const player = Account.use()?.value ?? singletonEntity;
+  const player = Account.use()?.value;
   const blockNumber = BlockNumber.use()?.value;
   const objectives = Object.values(ObjectiveEntityLookup);
 

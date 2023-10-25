@@ -453,8 +453,9 @@ export const UnitEnumLookup: Record<Entity, EUnit> = {
 
 export const ObjectiveEnumLookup: Record<Entity, EObjectives> = {
   ...Object.keys(EObjectives).reduce((acc, key) => {
-    if (typeof EObjectives[key as keyof typeof EObjectives] === "number") {
-      return { ...acc, [key]: EObjectives[key as keyof typeof EObjectives] };
+    const elem = EObjectives[key as keyof typeof EObjectives];
+    if (typeof elem === "number") {
+      return { ...acc, [toHex32(key)]: elem };
     }
     return acc;
   }, {} as Record<string, EObjectives>),

@@ -1,29 +1,30 @@
 import { Entity } from "@latticexyz/recs";
+import { EResource } from "contracts/config/enums";
 import { components } from "src/network/components";
-import { ResourceType } from "./constants";
+import { ResourceEntityLookup, ResourceType } from "./constants";
 
 export function getRewards(entityId: Entity) {
   const { P_ResourceReward, P_UnitReward } = components;
   const rawResourceRewards = P_ResourceReward.get(entityId, {
-    resourceIDs: [],
-    requiredAmounts: [],
+    resources: [],
+    amounts: [],
   });
 
   const rawUnitRewards = P_UnitReward.get(entityId, {
-    resourceIDs: [],
-    requiredAmounts: [],
+    units: [],
+    amounts: [],
   });
 
-  const resourceRewards = rawResourceRewards.resourceIDs.map((resource, index) => ({
-    id: resource,
+  const resourceRewards = rawResourceRewards.resources.map((resource, index) => ({
+    id: ResourceEntityLookup[resource as EResource],
     type: ResourceType.Resource,
-    amount: rawResourceRewards.requiredAmounts[index],
+    amount: rawResourceRewards.amounts[index],
   }));
 
-  const unitRewards = rawUnitRewards.resourceIDs.map((resource, index) => ({
-    id: resource,
+  const unitRewards = rawUnitRewards.units.map((unit, index) => ({
+    id: unit as Entity,
     type: ResourceType.Utility,
-    amount: rawUnitRewards.requiredAmounts[index],
+    amount: rawUnitRewards.amounts[index],
   }));
 
   return [...resourceRewards, ...unitRewards];
