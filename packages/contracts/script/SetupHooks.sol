@@ -71,6 +71,10 @@ import { OnReinforce_TargetClaimResources } from "src/hooks/systemHooks/reinforc
 import { OnClaimObjective_Requirements } from "src/hooks/systemHooks/claimObjective/OnClaimObjective_Requirements.sol";
 import { OnClaimObjective_ReceiveRewards } from "src/hooks/systemHooks/claimObjective/OnClaimObjective_ReceiveRewards.sol";
 
+import { OnUpgradeUnit_SpendResources } from "src/hooks/systemHooks/upgradeUnit/OnUpgradeUnit_SpendResources.sol";
+
+import { OnUpgradeRange_SpendResources } from "src/hooks/systemHooks/upgradeRange/OnUpgradeRange_SpendResources.sol";
+
 import { OnAlliance_TargetClaimResources } from "src/hooks/systemHooks/alliance/OnAlliance_TargetClaimResources.sol";
 
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
@@ -92,6 +96,7 @@ function setupHooks(IWorld world) {
   world.grantAccess(QueueUnitsTableId, address(onBefore_ClaimUnits));
   world.grantAccess(ProducedUnitTableId, address(onBefore_ClaimUnits));
 
+  //System Hooks
   registerBuildHooks(world, onBefore_ClaimResources);
   registerUpgradeHooks(world, onBefore_ClaimResources);
   registerDestroyHooks(world, onBefore_ClaimResources);
@@ -101,8 +106,13 @@ function setupHooks(IWorld world) {
   registerRaid(world, onBefore_ClaimResources, onBefore_ClaimUnits);
   registerReinforce(world, onBefore_ClaimUnits);
   registerClaimObjective(world, onBefore_ClaimResources, onBefore_ClaimUnits);
-  registerScoreHook(world);
+  registerUpgradeRangeHook(world, onBefore_ClaimResources);
+  registerUpgradeUnitHook(world, onBefore_ClaimResources);
+
   registerAllianceHooks(world, onBefore_ClaimResources);
+
+  //Store Hooks
+  registerScoreHook(world);
 }
 
 function registerAllianceHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
@@ -116,6 +126,41 @@ function registerAllianceHooks(IWorld world, OnBefore_ClaimResources onBefore_Cl
   world.grantAccess(LastClaimedAtTableId, address(onAlliance_TargetClaimResources));
   world.grantAccess(ProducedResourceTableId, address(onAlliance_TargetClaimResources));
   world.registerSystemHook(getSystemResourceId("AllianceSystem"), onAlliance_TargetClaimResources, BEFORE_CALL_SYSTEM);
+}
+
+/**
+ * @dev Registers a system hook for when range is upgraded
+ * @param world The World contract instance.
+ */
+function registerUpgradeRangeHook(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
+  ResourceId systemId = getSystemResourceId("UpgradeRangeSystem");
+  world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
+
+  OnUpgradeRange_SpendResources onUpgradeRange_SpendResources = new OnUpgradeRange_SpendResources();
+  world.grantAccess(ResourceCountTableId, address(onUpgradeRange_SpendResources));
+  world.grantAccess(MapItemUtilitiesTableId, address(onUpgradeRange_SpendResources));
+  world.grantAccess(MapUtilitiesTableId, address(onUpgradeRange_SpendResources));
+  world.grantAccess(MapItemStoredUtilitiesTableId, address(onUpgradeRange_SpendResources));
+  world.grantAccess(MaxResourceCountTableId, address(onUpgradeRange_SpendResources));
+  world.registerSystemHook(systemId, onUpgradeRange_SpendResources, AFTER_CALL_SYSTEM);
+}
+
+/**
+ * @dev Registers a system hook for when unit is upgraded
+ * @param world The World contract instance.
+ */
+function registerUpgradeUnitHook(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
+  ResourceId systemId = getSystemResourceId("UpgradeUnitSystem");
+
+  world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
+
+  OnUpgradeUnit_SpendResources onUpgradeUnit_SpendResources = new OnUpgradeUnit_SpendResources();
+  world.grantAccess(ResourceCountTableId, address(onUpgradeUnit_SpendResources));
+  world.grantAccess(MapItemUtilitiesTableId, address(onUpgradeUnit_SpendResources));
+  world.grantAccess(MapUtilitiesTableId, address(onUpgradeUnit_SpendResources));
+  world.grantAccess(MapItemStoredUtilitiesTableId, address(onUpgradeUnit_SpendResources));
+  world.grantAccess(MaxResourceCountTableId, address(onUpgradeUnit_SpendResources));
+  world.registerSystemHook(systemId, onUpgradeUnit_SpendResources, AFTER_CALL_SYSTEM);
 }
 
 /**
