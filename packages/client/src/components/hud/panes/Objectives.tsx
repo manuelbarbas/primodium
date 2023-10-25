@@ -23,7 +23,6 @@ import {
   ResourceImage,
   ResourceType,
 } from "src/util/constants";
-import { hashAndTrimKeyEntity } from "src/util/encode";
 import { getObjectiveDescription } from "src/util/objectiveDescriptions";
 import {
   getAllRequirements,
@@ -50,7 +49,7 @@ const ClaimObjectiveButton: React.FC<{
   const unitRequirement = comps.P_ProducedUnits.use(objectiveEntity);
   const player = Account.use()?.value ?? singletonEntity;
   const hasCompletedObjective =
-    comps.CompletedObjective.use(hashAndTrimKeyEntity(objectiveEntity, player))?.value ?? false;
+    comps.CompletedObjective.useWithKeys({ objective: objectiveEntity as Hex, entity: player as Hex })?.value ?? false;
 
   const canClaim = useMemo(() => {
     return getCanClaimObjective(objectiveEntity);
