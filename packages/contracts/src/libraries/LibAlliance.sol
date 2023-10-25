@@ -24,7 +24,7 @@ library LibAlliance {
    * @param playerEntity The entity ID of the player.
    */
   function checkPlayerOfAnAlliance(bytes32 playerEntity) internal view {
-    require(PlayerAlliance.getAlliance(playerEntity) != 0, "[Alliance] : player is no part of any alliance");
+    require(PlayerAlliance.getAlliance(playerEntity) != 0, "[Alliance] : player is not a member of any alliance");
   }
 
   /**
