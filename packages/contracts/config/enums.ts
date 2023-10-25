@@ -29,6 +29,9 @@ export enum EBuilding {
   DroneFactory,
   Starmapper,
   SAM,
+
+  ShieldGenerator,
+  Vault,
 }
 
 export enum EResource {
@@ -107,6 +110,8 @@ export enum EObjectives {
   BuildDroneFactory,
   BuildStarmapper,
   BuildSAMLauncher,
+  BuildVault,
+  BuildShieldGenerator,
 
   CommissionMiningVessel,
   TrainMinutemanMarine1,
