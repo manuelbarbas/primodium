@@ -6,7 +6,7 @@ import "test/PrimodiumTest.t.sol";
 contract ArrivalsMapTest is PrimodiumTest {
   bytes32 playerEntity = "playerEntity";
   bytes32 asteroidEntity = "asteroidEntity";
-  uint256[unitPrototypeCount] unitCounts;
+  uint256[NUM_UNITS] unitCounts;
 
   function setUp() public override {
     super.setUp();

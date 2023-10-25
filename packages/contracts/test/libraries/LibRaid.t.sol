@@ -34,7 +34,7 @@ contract LibRaidTest is PrimodiumTest {
     Home.setAsteroid(player, homeRock);
     br.attacker = player;
     br.winner = player;
-    bytes32[] memory unitTypes = new bytes32[](unitPrototypeCount);
+    bytes32[] memory unitTypes = new bytes32[](NUM_UNITS);
     unitTypes[0] = unit1;
     P_UnitPrototypes.set(unitTypes);
   }

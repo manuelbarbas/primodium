@@ -32,7 +32,7 @@ contract LibBattleTest is PrimodiumTest {
     super.setUp();
     vm.startPrank(creator);
     player = addressToEntity(worldAddress);
-    bytes32[] memory unitTypes = new bytes32[](unitPrototypeCount);
+    bytes32[] memory unitTypes = new bytes32[](NUM_UNITS);
     unitTypes[0] = unit1;
     unitTypes[1] = unit2;
     P_UnitPrototypes.set(unitTypes);

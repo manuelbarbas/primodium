@@ -13,7 +13,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
 
   bytes32 unitPrototype = "unitPrototype";
   EUnit unit = EUnit.AegisDrone;
-  uint256[unitPrototypeCount] unitCounts;
+  uint256[NUM_UNITS] unitCounts;
 
   bytes32 building = "building";
   bytes32 buildingPrototype = "buildingPrototype";
@@ -28,7 +28,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     to = addressToEntity(alice);
     P_EnumToPrototype.set(UnitKey, uint8(unit), unitPrototype);
 
-    bytes32[] memory unitTypes = new bytes32[](unitPrototypeCount);
+    bytes32[] memory unitTypes = new bytes32[](NUM_UNITS);
     unitTypes[0] = unitPrototype;
     P_UnitPrototypes.set(unitTypes);
     BuildingType.set(building, buildingPrototype);

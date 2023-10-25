@@ -1,5 +1,6 @@
 import { Entity, defineComponentSystem } from "@latticexyz/recs";
 import { ESendType } from "contracts/config/enums";
+import { NUM_UNITS } from "src/util/constants";
 import { UnitCountTuple } from "src/util/web3/types";
 import { Hex, decodeAbiParameters } from "viem";
 import { components } from "../components";
@@ -37,7 +38,7 @@ const ArrivalAbi = {
     },
     {
       name: "unitCounts",
-      type: `uint256[7]`,
+      type: `uint256[${NUM_UNITS}]`,
     },
   ],
   name: "arrival",

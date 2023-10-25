@@ -12,6 +12,5 @@ export const setupActiveAsteroid = (player: Entity) => {
 
     // temp so we can test without the set origin ui
     components.Send.setOrigin(asteroid);
-    console.log("setting origin");
   });
 };

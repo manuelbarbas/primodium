@@ -5,7 +5,7 @@ import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 import { ResourceAccess, NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
 import { ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
-import { WORLD_SPEED_SCALE } from "src/constants.sol";
+import { WORLD_SPEED_SCALE, NUM_UNITS } from "src/constants.sol";
 
 import "src/utils.sol";
 import "codegen/world/IWorld.sol";
@@ -15,8 +15,6 @@ import "codegen/Prototypes.sol";
 import "codegen/Libraries.sol";
 import "src/Keys.sol";
 import "src/Types.sol";
-
-uint256 constant unitPrototypeCount = NUM_UNITS;
 
 struct PositionData2D {
   int32 x;
@@ -230,7 +228,7 @@ contract PrimodiumTest is MudTest {
   }
 
   function getUnitArray(uint256 unit1Count, uint256 unit2Count) internal returns (uint256[] memory) {
-    uint256[] memory unitArray = new uint256[](unitPrototypeCount);
+    uint256[] memory unitArray = new uint256[](NUM_UNITS);
     unitArray[0] = unit1Count;
     unitArray[1] = unit2Count;
     return unitArray;
