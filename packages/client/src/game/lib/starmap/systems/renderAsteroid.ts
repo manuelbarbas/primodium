@@ -6,7 +6,7 @@ import { Outline, Texture } from "../../common/object-components/sprite";
 
 import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
 import { Coord } from "@latticexyz/utils";
-import { MUDEnums } from "contracts/config/enums";
+import { ERock, MUDEnums } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
 import { clampedIndex } from "src/util/common";
@@ -98,7 +98,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
 
   const query = [
     Has(components.RockType),
-    HasValue(components.RockType, { value: MUDEnums.ERock.indexOf("Asteroid") }),
+    HasValue(components.RockType, { value: ERock.Asteroid }),
     Has(components.Position),
     Not(components.PirateAsteroid),
   ];
