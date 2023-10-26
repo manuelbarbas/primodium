@@ -14,9 +14,15 @@ import { SetupNetworkResult } from "./types";
 
 export async function execute(
   txHash: `0x${string}`,
-  network: SetupNetworkResult
-  // setNotification?: (message: string) => void
+  network: SetupNetworkResult,
+  setNotification?: (message: string) => void
 ): Promise<TransactionReceipt | undefined> {
+  if (setNotification) {
+    setNotification("Transaction Executed");
+  } else {
+    alert("Transaction Executed");
+  }
+
   try {
     await network.waitForTransaction(txHash);
     const receipt = await network.publicClient.getTransactionReceipt({ hash: txHash });
