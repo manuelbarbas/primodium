@@ -5,13 +5,19 @@ import { Tabs } from "../../core/Tabs";
 // import { Leaderboard } from "./Leaderboard";
 // import { Objectives } from "./Objectives";
 import { Outgoingfleets } from "./OutgoingFleets";
-import { OwnedMotherlodes } from "./OwnedMotherlodes";
 import { ReinforcementFleets } from "./ReinforcementFleets";
-import { Settings } from "./Settings";
 import { BattleReports } from "./battle-reports/BattleReports";
 import { HostileFleets } from "./hostile-fleets/HostileFleets";
 
+import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { components } from "src/network/components";
+import { Account } from "src/network/components/clientComponents";
+
 export const Panes: React.FC = () => {
+  const playerAstroid = components.Home.use()?.asteroid;
+  const player = Account.use(undefined, {
+    value: singletonEntity,
+  }).value;
   const [newPlayer, setNewPlayer] = useSettingsStore((state) => [state.newPlayer, state.setNewPlayer]);
 
   return (
@@ -35,17 +41,17 @@ export const Panes: React.FC = () => {
       <Tabs.Pane index={4} className="w-96">
         {/* <Objectives /> */}
       </Tabs.Pane>
-      <Tabs.Pane index={5} className="w-96">
+      {/*<Tabs.Pane index={5} className="w-96">
         <OwnedMotherlodes />
-      </Tabs.Pane>
+    </Tabs.Pane> */}
       <Tabs.Pane index={6} className="w-96">
         {/* <Leaderboard /> */}
       </Tabs.Pane>
-      <Tabs.Pane index={7} className="w-96">
+      {/* <Tabs.Pane index={7} className="w-96">
         <Settings />
-      </Tabs.Pane>
+      </Tabs.Pane> */}
       <div className="flex flex-col gap-2">
-        <div>
+        {/* <div>
           <Join direction="vertical" className="z-10 border-secondary">
             <Tabs.IconButton
               index={0}
@@ -80,7 +86,7 @@ export const Panes: React.FC = () => {
               tooltipText="Battle Reports"
             />
           </Join>
-        </div>
+        </div> */}
 
         <Divider />
         <Join direction="vertical" className="z-10 border-secondary">
@@ -92,14 +98,14 @@ export const Panes: React.FC = () => {
             tooltipText="Objectives"
             tooltipDirection="left"
           />
-          <Tabs.IconButton
+          {/* <Tabs.IconButton
             index={5}
             imageUri="/img/icons/asteroidicon.png"
             text="Owned Asteroids"
             hideText
             tooltipDirection="left"
             tooltipText="Owned Motherlodes"
-          />
+          /> */}
           <Tabs.IconButton
             index={6}
             imageUri="/img/icons/leaderboardicon.png"
@@ -108,14 +114,14 @@ export const Panes: React.FC = () => {
             tooltipText="Leaderboard"
             tooltipDirection="left"
           />
-          <Tabs.IconButton
+          {/* <Tabs.IconButton
             index={7}
             imageUri="/img/icons/settingsicon.png"
             hideText
             text="Settings"
             tooltipText="Settings"
             tooltipDirection="left"
-          />
+          /> */}
         </Join>
       </div>
     </Tabs>

@@ -29,6 +29,9 @@ export enum EBuilding {
   DroneFactory,
   Starmapper,
   SAM,
+
+  ShieldGenerator,
+  Vault,
 }
 
 export enum EResource {
@@ -103,10 +106,11 @@ export enum EObjectives {
   BuildWorkshop,
   BuildPVCellFactory,
   BuildSolarPanel,
-  BuildAlloyFactory,
   BuildDroneFactory,
   BuildStarmapper,
   BuildSAMLauncher,
+  BuildVault,
+  BuildShieldGenerator,
 
   CommissionMiningVessel,
   TrainMinutemanMarine1,
@@ -165,6 +169,19 @@ export enum EObjectives {
   ExpandBase6,
 }
 
+export enum EAllianceInviteMode {
+  Open = 1,
+  Closed,
+}
+
+export enum EAllianceRole {
+  Owner = 1, // has all access
+  CanGrantRole, //can grant roles except the grant role role
+  CanKick, // can invite and kick members
+  CanInvite, //can only invite members
+  Member, // simple member with no special access
+}
+
 export const MUDEnums = {
   ERock: enumToArray(ERock),
   EBuilding: enumToArray(EBuilding),
@@ -173,6 +190,8 @@ export const MUDEnums = {
   EUnit: enumToArray(EUnit),
   ESendType: enumToArray(ESendType),
   EObjectives: enumToArray(EObjectives),
+  EAllianceInviteMode: enumToArray(EAllianceInviteMode),
+  EAllianceRole: enumToArray(EAllianceRole),
 };
 
 function enumToArray(enumObj: object): string[] {

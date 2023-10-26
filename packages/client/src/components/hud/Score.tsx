@@ -1,9 +1,10 @@
-import { Account, Leaderboard as _Leaderboard } from "src/network/components/clientComponents";
+import { useMud } from "src/hooks";
 import { Card } from "../core/Card";
+import { components } from "src/network/components";
 
 export const Score = () => {
-  const address = Account.use()?.value;
-  const data = _Leaderboard.use();
+  const address = useMud().network.address;
+  const data = components.Leaderboard.use();
   if (!data || !address) return null;
 
   return (

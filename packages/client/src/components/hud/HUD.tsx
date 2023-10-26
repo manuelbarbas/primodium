@@ -14,6 +14,8 @@ import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { Hotbar } from "./hotbar/Hotbar";
 import { Panes } from "./panes/Panes";
 import { Resources } from "./resources/Resources";
+import { Score } from "./Score";
+// import { ViewStarmap } from "./ViewStarmap";
 import { PrototypeInfo } from "./PrototypeInfo";
 import { ViewStarmap } from "./ViewStarmap";
 // import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
@@ -51,10 +53,10 @@ export const GameHUD = () => {
               {getBlockTypeName(selectedBuilding) && selectedBuilding && <PrototypeInfo building={selectedBuilding} />}
               {(!selectedBuilding || !getBlockTypeName(selectedBuilding)) && <ViewStarmap />}
             </HUD.TopMiddle>
-            {/* <HUD.TopLeft>
-              <Score />z
-              <LoadingIndication />
-            </HUD.TopLeft> */}
+            <HUD.TopLeft>
+              <Score />
+              {/* <LoadingIndication /> */}
+            </HUD.TopLeft>
             <HUD.TopRight>
               <Panes />
             </HUD.TopRight>

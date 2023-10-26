@@ -65,7 +65,7 @@ contract DestroySystemTest is PrimodiumTest {
     switchPrank(creator);
 
     world.build(EBuilding.IronMine, getIronPosition(creator));
-    uint256 productionIncrease = P_Production.get(IronMinePrototypeId, 1).amount;
+    uint256 productionIncrease = P_Production.getAmounts(IronMinePrototypeId, 1)[0];
     assertEq(
       ProductionRate.get(playerEntity, uint8(EResource.Iron)),
       originalProduction - productionReduction + productionIncrease
@@ -79,7 +79,9 @@ contract DestroySystemTest is PrimodiumTest {
     switchPrank(address(creator));
 
     uint256 increase = 69;
-    P_ProductionData memory data = P_ProductionData(uint8(EResource.Iron), increase);
+    P_ProductionData memory data = P_ProductionData(new uint8[](1), new uint256[](1));
+    data.resources[0] = uint8(EResource.Iron);
+    data.amounts[0] = increase;
     P_Production.set(IronMinePrototypeId, 1, data);
     switchPrank(creator);
 
