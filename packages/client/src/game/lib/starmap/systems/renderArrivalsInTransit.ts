@@ -1,15 +1,15 @@
-import { ComponentUpdate, Has, defineEnterSystem, defineExitSystem, namespaceWorld, Not } from "@latticexyz/recs";
+import { DepthLayers } from "@game/constants";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { ComponentUpdate, Has, defineEnterSystem, defineExitSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
+import { components } from "src/network/components";
+import { SetupResult } from "src/network/types";
 import { world } from "src/network/world";
+import { PIRATE_KEY } from "src/util/constants";
+import { hashStringEntity } from "src/util/encode";
+import { getNow } from "src/util/time";
 import { ObjectPosition, OnComponentSystem, Tween } from "../../common/object-components/common";
 import { Circle, Line } from "../../common/object-components/graphics";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { DepthLayers } from "@game/constants";
-import { hashStringEntity } from "src/util/encode";
-import { PIRATE_KEY } from "src/util/constants";
-import { SetupResult } from "src/network/types";
-import { components } from "src/network/components";
-import { getNow } from "src/util/time";
 
 export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
   const playerEntity = mud.network.playerEntity;
@@ -17,31 +17,29 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
   const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_arrival";
 
-  const query = [
-    Has(components.Arrival),
-    // Not(components.Pirate)
-  ];
-
   const render = ({ entity }: ComponentUpdate) => {
     scene.objectPool.removeGroup(entity + objIndexSuffix);
     const arrival = components.Arrival.get(entity);
 
+    console.log("arrival:", arrival);
     if (!arrival) return;
 
     //don't render if arrival is already in orbit
+    console.log("arrival time:", arrival.arrivalTime, getNow());
     if (arrival.arrivalTime < getNow()) return;
 
     const origin = components.Position.get(arrival.origin);
     const destination = components.Position.get(arrival.destination);
 
+    console.log("destination:", destination);
     if (!origin || !destination) return;
 
     //render personal pirates only
-    // if (
-    //   components.Pirate.has(arrival.destination) &&
-    //   hashStringEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(arrival.destination)?.value
-    // )
-    //   return;
+    if (
+      components.PirateAsteroid.has(arrival.destination) &&
+      hashStringEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(arrival.destination)?.value
+    )
+      return;
 
     const originPixelCoord = tileCoordToPixelCoord({ x: origin.x, y: -origin.y }, tileWidth, tileHeight);
 
@@ -50,6 +48,7 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
     const sendTrajectory = scene.objectPool.getGroup(entity + objIndexSuffix);
 
     const trajectory = sendTrajectory.add("Graphics");
+    console.log("rendering arrival in transit");
     trajectory.setComponents([
       ObjectPosition(originPixelCoord, DepthLayers.Marker),
       Line(destinationPixelCoord, {
@@ -74,8 +73,8 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
         alpha: 0.75,
       }),
       OnComponentSystem(components.BlockNumber, (gameObject, _, systemId) => {
-        const timeTraveled = getNow() - arrival.timestamp;
-        const totaltime = arrival.arrivalTime - arrival.timestamp;
+        const timeTraveled = getNow() - arrival.sendTime;
+        const totaltime = arrival.arrivalTime - arrival.sendTime;
 
         const progress = Number(timeTraveled) / Number(totaltime);
 
@@ -128,7 +127,13 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
     ]);
   };
 
+  const query = [
+    Has(components.Arrival),
+    // Not(components.Pirate)
+  ];
+
   defineEnterSystem(gameWorld, query, (update) => {
+    console.log("arrival created");
     render(update);
   });
 

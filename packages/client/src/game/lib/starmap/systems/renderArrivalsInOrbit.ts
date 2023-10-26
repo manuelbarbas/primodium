@@ -1,23 +1,22 @@
+import { DepthLayers } from "@game/constants";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   ComponentUpdate,
   Has,
-  defineUpdateSystem,
   defineEnterSystem,
   defineExitSystem,
+  defineUpdateSystem,
   namespaceWorld,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { BlockNumber } from "src/network/components/clientComponents";
+import { components } from "src/network/components";
+import { SetupResult } from "src/network/types";
 import { world } from "src/network/world";
+import { PIRATE_KEY } from "src/util/constants";
+import { hashStringEntity } from "src/util/encode";
+import { getNow } from "src/util/time";
 import { ObjectPosition, Tween } from "../../common/object-components/common";
 import { Circle } from "../../common/object-components/graphics";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { DepthLayers } from "@game/constants";
-import { hashStringEntity } from "src/util/encode";
-import { PIRATE_KEY } from "src/util/constants";
-import { SetupResult } from "src/network/types";
-import { components } from "src/network/components";
-import { getNow } from "src/util/time";
 
 export const renderArrivalsInOrbit = (scene: Scene, mud: SetupResult) => {
   const playerEntity = mud.network.playerEntity;
@@ -38,11 +37,11 @@ export const renderArrivalsInOrbit = (scene: Scene, mud: SetupResult) => {
     if (arrival.arrivalTime >= getNow()) return;
 
     //render personal pirate only
-    // if (
-    //   components.Pirate.has(arrival.destination) &&
-    //   hashStringEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(arrival.destination)?.value
-    // )
-    //   return;
+    if (
+      components.PirateAsteroid.has(arrival.destination) &&
+      hashStringEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(arrival.destination)?.value
+    )
+      return;
 
     const destination = components.Position.get(arrival.destination);
 
