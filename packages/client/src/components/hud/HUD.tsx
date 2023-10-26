@@ -8,7 +8,7 @@ import { getBlockTypeName } from "src/util/common";
 import { useGameStore } from "../../store/GameStore";
 import { HUD } from "../core/HUD";
 import { BrandingLabel } from "../shared/BrandingLabel";
-// import { LoadingIndication } from "./LoadingIndication";
+import { LoadingIndication } from "./LoadingIndication";
 import { Score } from "./Score";
 // import { ViewStarmap } from "./ViewStarmap";
 import { PrototypeInfo } from "./PrototypeInfo";
@@ -54,7 +54,7 @@ export const GameHUD = () => {
             </HUD.TopMiddle>
             <HUD.TopLeft>
               <Score />
-              {/* <LoadingIndication /> */}
+              <LoadingIndication />
             </HUD.TopLeft>
             <HUD.TopRight>
               <Panes />
