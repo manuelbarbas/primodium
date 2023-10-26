@@ -7,6 +7,7 @@ import { setupHangar } from "src/network/systems/setupHangar";
 import { useMud } from "./useMud";
 import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
 import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
+import { setupAllianceLeaderboard } from "src/network/systems/setupAllianceLeaderboard";
 
 export const useInit = () => {
   const mud = useMud();
