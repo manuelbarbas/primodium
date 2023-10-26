@@ -106,11 +106,6 @@ export const config = mudConfig({
       },
     },
 
-    MaxMoves: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "uint256",
-    },
-
     /* ---------------------------------- Rocks --------------------------------- */
     P_Asteroid: {
       keySchema: {},

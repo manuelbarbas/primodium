@@ -8,25 +8,21 @@ import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage } from "src/util/constants";
+import { toUnitCountArray } from "src/util/send";
 import { send } from "src/util/web3/contractCalls/send";
 
 export const SendFleet: React.FC = () => {
   const network = useMud().network;
   const playerEntity = network.playerEntity;
   const sendType = components.Send.get()?.sendType ?? ESendType.Invade;
-  const units = components.Send.use()?.units ?? [];
-  const count = components.Send.use()?.count ?? [];
+  const units = components.Send.useUnits();
+  const numUnits = Object.keys(units).length;
 
   const sendFleet = (sendType: ESendType) => {
     const origin = components.Send.get()?.origin;
     const destination = components.Send.get()?.destination;
 
-    if (origin == undefined || units === undefined || units.length === 0 || destination === undefined) return;
-
-    // const arrivalUnits = units.map((unit, index) => ({
-    //   unitType: unit,
-    //   count: count?.at(index) ?? 0,
-    // }));
+    if (origin == undefined || destination === undefined) return;
 
     const originCoord = components.Position.get(origin) ?? { x: 0, y: 0 };
     const destinationCoord = components.Position.get(destination) ?? { x: 0, y: 0 };
@@ -34,7 +30,7 @@ export const SendFleet: React.FC = () => {
     const to = components.OwnedBy.get(destination)?.value as Entity | undefined;
 
     //TODO: fix arrival units
-    send([1n, 1n, 1n, 1n, 1n], sendType, originCoord, destinationCoord, to ?? ("0x00" as Entity), network);
+    send(toUnitCountArray(units), sendType, originCoord, destinationCoord, to ?? ("0x00" as Entity), network);
 
     components.Send.reset(playerEntity);
   };
@@ -42,9 +38,11 @@ export const SendFleet: React.FC = () => {
   return (
     <Navigator.Screen title="Send" className="">
       <SecondaryCard className="w-full items-center">
-        {units.length !== 0 && (
+        {numUnits !== 0 && (
           <div className="relative grid grid-cols-8 gap-2 items-center justify-center min-h-full w-full p-1">
-            {units.map((unit, index) => {
+            {Object.entries(units).map(([rawUnit, value], index) => {
+              if (value == 0n) return null;
+              const unit = rawUnit as Entity;
               return (
                 <Button
                   key={index}
@@ -57,7 +55,7 @@ export const SendFleet: React.FC = () => {
                       className="w-full h-full"
                     />
                     <p className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 font-bold text-xs bg-slate-900 border-cyan-400/30 px-1 rounded-md border group-hover:opacity-0">
-                      {components.Send.getUnitCount(unit)}
+                      {value.toString()}
                     </p>
                   </div>
 
@@ -76,7 +74,7 @@ export const SendFleet: React.FC = () => {
             </Navigator.NavButton>
           </div>
         )}
-        {units.length === 0 && (
+        {numUnits === 0 && (
           <Navigator.NavButton to="UnitSelection" className="btn-secondary w-fit m-4">
             + Add units from hangar
           </Navigator.NavButton>

@@ -19,6 +19,7 @@ export enum Action {
 export const SPEED_SCALE = BigInt(100);
 export const RESOURCE_SCALE = BigInt(100);
 export const PIRATE_KEY = "pirate";
+export const NUM_UNITS = Object.keys(EUnit).length / 2;
 
 export enum ResourceType {
   Resource,
@@ -103,7 +104,7 @@ export const EntityType = {
   Electricity: toHex32("U_Electricity") as Entity,
   Housing: toHex32("U_Housing") as Entity,
   VesselCapacity: toHex32("U_Vessel") as Entity,
-  FleetMoves: toHex32("U_FleetMoves") as Entity,
+  FleetMoves: toHex32("U_MaxMoves") as Entity,
 
   Bullet: toHex32("Bullet") as Entity,
   IronPlate: toHex32("IronPlate") as Entity,
@@ -882,6 +883,8 @@ export const UnitEnumLookup: Record<Entity, EUnit> = {
   [EntityType.AnvilLightDrone]: EUnit.AnvilDrone,
   [EntityType.AegisDrone]: EUnit.AegisDrone,
   [EntityType.MiningVessel]: EUnit.MiningVessel,
-  // [EntityType.MinutemanMarine]: EUnit.MinutemanMarine,
-  // [EntityType.TridentMarine]: EUnit.TridentMarine,
+  [EntityType.MinutemanMarine]: EUnit.MinutemanMarine,
+  [EntityType.TridentMarine]: EUnit.TridentMarine,
 };
+
+export const UnitEntityLookup = reverseRecord(UnitEnumLookup);

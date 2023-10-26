@@ -4,29 +4,8 @@ pragma solidity >=0.8.21;
 import { ResourceId, ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
-import { Children, ChildrenTableId } from "codegen/tables/Children.sol";
-import { OwnedBy, OwnedByTableId } from "codegen/tables/OwnedBy.sol";
-import { Position, PositionTableId, PositionData } from "codegen/tables/Position.sol";
-import { MapUtilities, MapUtilitiesTableId } from "codegen/tables/MapUtilities.sol";
-import { MapItemUtilities, MapItemUtilitiesTableId } from "codegen/tables/MapItemUtilities.sol";
-import { ResourceCount, ResourceCountTableId } from "codegen/tables/ResourceCount.sol";
-import { MaxResourceCount, MaxResourceCountTableId } from "codegen/tables/MaxResourceCount.sol";
-import { SpawnedTableId } from "codegen/tables/Spawned.sol";
-import { ProductionRate, ProductionRateTableId } from "codegen/tables/ProductionRate.sol";
-import { UnitCount, UnitCountTableId } from "codegen/tables/UnitCount.sol";
-import { LastClaimedAt, LastClaimedAtTableId } from "codegen/tables/LastClaimedAt.sol";
-import { QueueItemUnits, QueueItemUnitsTableId } from "codegen/tables/QueueItemUnits.sol";
-import { QueueUnits, QueueUnitsTableId } from "codegen/tables/QueueUnits.sol";
-import { ProducedResourceTableId } from "codegen/tables/ProducedResource.sol";
-import { ProductionRateTableId } from "codegen/tables/ProductionRate.sol";
-import { ProducedUnitTableId } from "codegen/tables/ProducedUnit.sol";
-import { TotalDefenseTableId } from "codegen/tables/TotalDefense.sol";
-import { TotalDefenseMultiplierTableId } from "codegen/tables/TotalDefenseMultiplier.sol";
-import { TotalVaultTableId } from "codegen/tables/TotalVault.sol";
-import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
-import { ScoreTableId } from "codegen/tables/Score.sol";
-import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
 
+import "codegen/index.sol";
 import { OnResourceCount_Score } from "src/hooks/storeHooks/OnResourceCount_Score.sol";
 
 import { OnBefore_ClaimResources } from "src/hooks/systemHooks/OnBefore_ClaimResources.sol";
@@ -52,6 +31,7 @@ import { OnDestroy_Requirements } from "src/hooks/systemHooks/destroy/OnDestroy_
 import { OnDestroy_RemoveFromTiles } from "src/hooks/systemHooks/destroy/OnDestroy_RemoveFromTiles.sol";
 import { OnDestroy_Defense } from "src/hooks/systemHooks/destroy/OnDestroy_Defense.sol";
 
+import { OnSendUnits_InitMotherlode } from "src/hooks/systemHooks/sendUnits/OnSendUnits_InitMotherlode.sol";
 import { OnSendUnits_Requirements } from "src/hooks/systemHooks/sendUnits/OnSendUnits_Requirements.sol";
 import { OnSendUnits_UnitCount } from "src/hooks/systemHooks/sendUnits/OnSendUnits_UnitCount.sol";
 
@@ -247,10 +227,25 @@ function registerDestroyHooks(IWorld world, OnBefore_ClaimResources onBefore_Cla
 function registerSendUnits(IWorld world, OnBefore_ClaimUnits onBefore_ClaimUnits) {
   ResourceId systemId = getSystemResourceId("SendUnitsSystem");
 
+  world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
+
+  OnSendUnits_InitMotherlode onSendUnits_InitMotherlode = new OnSendUnits_InitMotherlode();
+  world.registerSystemHook(systemId, onSendUnits_InitMotherlode, BEFORE_CALL_SYSTEM);
+  world.grantAccess(MotherlodeTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(PositionTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(ReversePositionTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(LastClaimedAtTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(RockTypeTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(LastClaimedAtTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(QueueUnitsTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(QueueItemUnitsTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(ProducedUnitTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(ProducedUnitTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(UnitCountTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(ProductionRateTableId, address(onSendUnits_InitMotherlode));
+
   OnSendUnits_Requirements onSendUnits_Requirements = new OnSendUnits_Requirements();
   world.registerSystemHook(systemId, onSendUnits_Requirements, BEFORE_CALL_SYSTEM);
-
-  world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
 
   OnSendUnits_UnitCount onSendUnits_UnitCount = new OnSendUnits_UnitCount();
   world.grantAccess(UnitCountTableId, address(onSendUnits_UnitCount));

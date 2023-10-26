@@ -1,8 +1,8 @@
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { SetupNetworkResult } from "src/network/types";
 import { ESendType } from "contracts/config/enums";
-import { Hex } from "viem";
+import { SetupNetworkResult } from "src/network/types";
+import { toHex32 } from "src/util/constants";
 import { UnitCountTuple } from "../types";
 
 export const send = async (
@@ -16,9 +16,9 @@ export const send = async (
   const tx = await network.worldContract.write.sendUnits([
     unitCounts,
     sendType,
-    { ...origin, parent: "0x" },
-    { ...destination, parent: "0x" },
-    to as Hex,
+    { ...origin, parent: toHex32("0") },
+    { ...destination, parent: toHex32("0") },
+    toHex32(to),
   ]);
   await network.waitForTransaction(tx);
 };

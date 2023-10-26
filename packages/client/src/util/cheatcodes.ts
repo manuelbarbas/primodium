@@ -44,6 +44,17 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
         });
       },
     },
+    maxMainBaseLevel: {
+      params: [],
+      function: async () => {
+        const mainBase = mud.components.Home.get(mud.network.playerEntity)?.mainBase as Entity | undefined;
+        if (!mainBase) throw new Error("No main base found");
+        const maxLevel = mud.components.P_MaxLevel.get(mainBase)?.value ?? 8n;
+        await mud.contractCalls.setComponentValue(mud.components.Level, mainBase, {
+          value: maxLevel,
+        });
+      },
+    },
     getResource: {
       params: [{ name: "resource", type: "string" }],
       function: async (resource: string) => {

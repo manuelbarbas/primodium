@@ -6,7 +6,7 @@ import { PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, P
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { SendArgs } from "src/Types.sol";
-import { WORLD_SPEED_SCALE } from "src/constants.sol";
+import { WORLD_SPEED_SCALE, NUM_UNITS } from "src/constants.sol";
 
 library LibSend {
   /**
@@ -49,7 +49,7 @@ library LibSend {
   /// @param playerEntity Entity initiating send.
   /// @param unitCounts Array of unit counts being sent.
   /// @return slowestSpeed Slowest unit speed among the types.
-  function getSlowestUnitSpeed(bytes32 playerEntity, uint256[5] memory unitCounts)
+  function getSlowestUnitSpeed(bytes32 playerEntity, uint256[NUM_UNITS] memory unitCounts)
     internal
     view
     returns (uint256 slowestSpeed)
@@ -79,7 +79,7 @@ library LibSend {
     PositionData memory origin,
     PositionData memory destination,
     bytes32 playerEntity,
-    uint256[5] memory unitCounts
+    uint256[NUM_UNITS] memory unitCounts
   ) internal view returns (uint256) {
     P_GameConfigData memory config = P_GameConfig.get();
     uint256 unitSpeed = getSlowestUnitSpeed(playerEntity, unitCounts);
