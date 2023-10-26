@@ -6,6 +6,7 @@ import { Account } from "src/network/components/clientComponents";
 import { Join } from "../../core/Join";
 import { Tabs } from "../../core/Tabs";
 import { Leaderboard } from "./Leaderboard";
+import { Objectives } from "./Objectives";
 
 export const Panes: React.FC = () => {
   const playerAstroid = components.Home.use()?.asteroid;
@@ -31,13 +32,13 @@ export const Panes: React.FC = () => {
       </Tabs.Pane>
       <Tabs.Pane index={3} className="w-96">
         <BattleReports />
-      </Tabs.Pane>
+      </Tabs.Pane>*/}
       <Tabs.Pane index={4} className="w-96">
         <Objectives />
       </Tabs.Pane>
-      <Tabs.Pane index={5} className="w-96">
+      {/*<Tabs.Pane index={5} className="w-96">
         <OwnedMotherlodes />
-      </Tabs.Pane> */}
+    </Tabs.Pane> */}
       <Tabs.Pane index={6} className="w-96">
         <Leaderboard />
       </Tabs.Pane>
@@ -84,7 +85,7 @@ export const Panes: React.FC = () => {
 
         <Divider />
         <Join direction="vertical" className="z-10 border-secondary">
-          {/* <Tabs.IconButton
+          <Tabs.IconButton
             index={4}
             imageUri="/img/icons/objectiveicon.png"
             hideText
@@ -92,7 +93,7 @@ export const Panes: React.FC = () => {
             tooltipText="Objectives"
             tooltipDirection="left"
           />
-          <Tabs.IconButton
+          {/* <Tabs.IconButton
             index={5}
             imageUri="/img/icons/asteroidicon.png"
             text="Owned Asteroids"

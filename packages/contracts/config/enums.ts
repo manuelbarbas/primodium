@@ -106,7 +106,6 @@ export enum EObjectives {
   BuildWorkshop,
   BuildPVCellFactory,
   BuildSolarPanel,
-  BuildAlloyFactory,
   BuildDroneFactory,
   BuildStarmapper,
   BuildSAMLauncher,
