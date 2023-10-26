@@ -16,4 +16,20 @@ contract MoveSystemTest is PrimodiumTest {
     playerEntity = addressToEntity(creator);
     vm.startPrank(creator);
   }
+
+  function testMove() public {
+    bytes32 mainBaseEntity = Home.get(playerEntity).mainBase;
+    PositionData memory mainBasePosition = Position.get(mainBaseEntity);
+    PositionData memory newPosition = PositionData(
+      mainBasePosition.x + 3,
+      mainBasePosition.y + 3,
+      mainBasePosition.parent
+    );
+
+    world.move(mainBasePosition, newPosition);
+    mainBasePosition = Position.get(mainBaseEntity);
+    assertEq(mainBasePosition.x, newPosition.x, "building position should have updated");
+    assertEq(mainBasePosition.y, newPosition.y, "building position should have updated");
+    assertEq(mainBasePosition.parent, newPosition.parent, "building position should have updated");
+  }
 }
