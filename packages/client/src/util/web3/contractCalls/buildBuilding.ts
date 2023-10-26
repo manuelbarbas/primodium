@@ -16,14 +16,13 @@ export const buildBuilding = async (network: SetupNetworkResult, building: EBuil
 
   const position = { ...coord, parent: activeAsteroid as Hex };
 
-  const txHash = await network.worldContract.write.build([building, position]);
-  const receipt = await execute(txHash, network, toast.error);
+  const receipt = await execute(network.worldContract.write.build([building, position]), network, toast.error);
 
   ampli.systemBuild({
     asteroidCoord: BigNumber.from(activeAsteroid).toString(),
     buildingType: MUDEnums.EBuilding[building],
     coord: [coord.x, coord.y],
     currLevel: 0,
-    ...parseReceipt(undefined),
+    ...parseReceipt(receipt),
   });
 };
