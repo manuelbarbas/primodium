@@ -6,7 +6,6 @@ import { components } from "src/network/components";
 import { SetupNetworkResult } from "src/network/types";
 import { parseReceipt } from "../../analytics/parseReceipt";
 import { EBuilding, MUDEnums } from "contracts/config/enums";
-import { toast } from "react-toastify";
 import { execute } from "src/network/actions";
 
 export const buildBuilding = async (network: SetupNetworkResult, building: EBuilding, coord: Coord) => {
@@ -16,7 +15,7 @@ export const buildBuilding = async (network: SetupNetworkResult, building: EBuil
 
   const position = { ...coord, parent: activeAsteroid as Hex };
 
-  const receipt = await execute(network.worldContract.write.build([building, position]), network, toast.error);
+  const receipt = await execute(network.worldContract.write.build([building, position]), network);
 
   ampli.systemBuild({
     asteroidCoord: BigNumber.from(activeAsteroid).toString(),
