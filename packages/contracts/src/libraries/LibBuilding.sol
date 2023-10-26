@@ -123,7 +123,7 @@ library LibBuilding {
     bytes32 playerEntity,
     bytes32 buildingPrototype,
     PositionData memory position
-  ) public {
+  ) internal {
     bytes32 buildingEntity = LibEncode.getHash(BuildingKey, position);
     int32[] memory blueprint = P_Blueprint.get(buildingPrototype);
     Bounds memory bounds = getPlayerBounds(playerEntity);
