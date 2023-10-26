@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
 import { addressToEntity, getSystemResourceId } from "src/utils.sol";
 import { ResourceId, ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";

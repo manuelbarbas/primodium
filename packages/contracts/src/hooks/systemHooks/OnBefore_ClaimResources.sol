@@ -3,15 +3,9 @@ pragma solidity >=0.8.21;
 
 import { addressToEntity } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
-import { ResourceId, ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
-import { PositionData } from "codegen/tables/Position.sol";
-
-import { EBuilding } from "src/Types.sol";
-import { LibEncode } from "libraries/LibEncode.sol";
-import { BuildingKey } from "src/Keys.sol";
+import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
-import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
 
 /**
  * @title OnBefore_ClaimResources

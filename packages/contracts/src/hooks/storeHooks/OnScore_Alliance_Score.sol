@@ -4,20 +4,11 @@
 pragma solidity >=0.8.21;
 
 import { StoreHook } from "@latticexyz/store/src/StoreHook.sol";
-import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
-import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
-import { IStore } from "@latticexyz/store/src/IStore.sol";
-import { StoreCore } from "@latticexyz/store/src/StoreCore.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
-import { PackedCounter } from "@latticexyz/store/src/PackedCounter.sol";
-import { FieldLayout } from "@latticexyz/store/src/FieldLayout.sol";
-import { OnHookChangedValue, OnHookChangedValueTableId } from "codegen/tables/OnHookChangedValue.sol";
 import { Score } from "codegen/tables/Score.sol";
 import { Alliance } from "codegen/tables/Alliance.sol";
 import { PlayerAlliance } from "codegen/tables/PlayerAlliance.sol";
 import { ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
-import { IWorld } from "codegen/world/IWorld.sol";
-import { System } from "@latticexyz/world/src/System.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 

@@ -1,15 +1,11 @@
 pragma solidity >=0.8.21;
 
-import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
-import { addressToEntity, getSystemResourceId } from "src/utils.sol";
+import { addressToEntity } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
-import { ResourceId, ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
+import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
-import { Level } from "codegen/tables/Level.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
-import { LibBuilding } from "libraries/LibBuilding.sol";
 import { BuildingKey } from "src/Keys.sol";
-import { LibStorage } from "libraries/LibStorage.sol";
 import {LibDefense} from "libraries/LibDefense.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 
