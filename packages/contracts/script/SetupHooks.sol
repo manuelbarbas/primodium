@@ -316,23 +316,6 @@ function registerDestroyHooks(IWorld world, OnBefore_ClaimResources onBefore_Cla
 function registerSendUnits(IWorld world, OnBefore_ClaimUnits onBefore_ClaimUnits) {
   ResourceId systemId = getSystemResourceId("SendUnitsSystem");
 
-  world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
-
-  OnSendUnits_InitMotherlode onSendUnits_InitMotherlode = new OnSendUnits_InitMotherlode();
-  world.registerSystemHook(systemId, onSendUnits_InitMotherlode, BEFORE_CALL_SYSTEM);
-  world.grantAccess(MotherlodeTableId, address(onSendUnits_InitMotherlode));
-  world.grantAccess(PositionTableId, address(onSendUnits_InitMotherlode));
-  world.grantAccess(ReversePositionTableId, address(onSendUnits_InitMotherlode));
-  world.grantAccess(RockTypeTableId, address(onSendUnits_InitMotherlode));
-  world.grantAccess(LastClaimedAtTableId, address(onSendUnits_InitMotherlode));
-  world.grantAccess(ClaimOffsetTableId, address(onSendUnits_InitMotherlode));
-  world.grantAccess(QueueUnitsTableId, address(onSendUnits_InitMotherlode));
-  world.grantAccess(QueueItemUnitsTableId, address(onSendUnits_InitMotherlode));
-  world.grantAccess(ProducedUnitTableId, address(onSendUnits_InitMotherlode));
-  world.grantAccess(ProducedUnitTableId, address(onSendUnits_InitMotherlode));
-  world.grantAccess(UnitCountTableId, address(onSendUnits_InitMotherlode));
-  world.grantAccess(ProductionRateTableId, address(onSendUnits_InitMotherlode));
-
   OnSendUnits_Requirements onSendUnits_Requirements = new OnSendUnits_Requirements();
   world.registerSystemHook(systemId, onSendUnits_Requirements, BEFORE_CALL_SYSTEM);
 
