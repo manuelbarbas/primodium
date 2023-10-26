@@ -19,6 +19,7 @@ import { Panes } from "./panes/Panes";
 import { Resources } from "./resources/Resources";
 // import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 import { Units } from "./units/Units";
+import { GracePeriod } from "./GracePeroid";
 
 export const GameHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [state.showUI, state.toggleShowUI]);
@@ -51,6 +52,7 @@ export const GameHUD = () => {
             <HUD.TopMiddle>
               {getBlockTypeName(selectedBuilding) && selectedBuilding && <PrototypeInfo building={selectedBuilding} />}
               {(!selectedBuilding || !getBlockTypeName(selectedBuilding)) && <ViewStarmap />}
+              <GracePeriod />
             </HUD.TopMiddle>
             <HUD.TopLeft>
               <Score />

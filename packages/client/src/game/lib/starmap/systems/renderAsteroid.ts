@@ -1,6 +1,6 @@
 import { Scene } from "engine/types";
-import { namespaceWorld, Has, defineEnterSystem, Entity } from "@latticexyz/recs";
-import { ObjectPosition, SetValue } from "../../common/object-components/common";
+import { namespaceWorld, defineEnterSystem, Entity, HasValue, Has } from "@latticexyz/recs";
+import { ObjectPosition, OnComponentSystem, SetValue } from "../../common/object-components/common";
 import { Texture } from "../../common/object-components/sprite";
 import { singletonIndex, world } from "src/network/world";
 // import { Send } from "src/network/components/clientComponents";
@@ -12,8 +12,9 @@ import { EntityType } from "src/util/constants";
 import { clampedIndex } from "src/util/common";
 import { SetupResult } from "src/network/types";
 import { components } from "src/network/components";
-import { MUDEnums } from "contracts/config/enums";
+import { ERock } from "contracts/config/enums";
 import { initializeMotherlodes } from "../utils/initializeMotherlodes";
+import { getNow } from "src/util/time";
 
 export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -22,14 +23,6 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
 
   const render = (entity: Entity, coord: Coord) => {
     scene.objectPool.removeGroup("asteroid_" + entity);
-    const asteroidType =
-      MUDEnums.ERock[
-        components.RockType.get(entity, {
-          value: 1,
-        }).value
-      ];
-
-    if (asteroidType !== MUDEnums.ERock[1]) return;
 
     //TODO - fix conversion to Entity
     const ownedBy = components.OwnedBy.get(entity, {
@@ -65,6 +58,20 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
 
     asteroidObject.setComponents([
       ...sharedComponents,
+      //fade out asteroids that are in grace period
+      OnComponentSystem(components.BlockNumber, (gameObject) => {
+        const graceTime = components.GracePeriod.get(playerEntity)?.value ?? 0n;
+        const time = getNow();
+
+        //don't fade out asteroids that are owned by the player
+        if (components.OwnedBy.get(entity)?.value === playerEntity) return;
+
+        if (time >= graceTime) {
+          gameObject.alpha = 1;
+        } else {
+          gameObject.alpha = 0.25;
+        }
+      }),
       Texture(
         Assets.SpriteAtlas,
         EntitytoSpriteKey[EntityType.Asteroid][
@@ -99,7 +106,8 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
   };
 
   const query = [
-    Has(components.RockType),
+    HasValue(components.RockType, { value: ERock.Asteroid }),
+    Has(components.Position),
     // Not(components.Pirate),
   ];
 
