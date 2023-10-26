@@ -1,0 +1,12 @@
+import { Entity, defineComponentSystem } from "@latticexyz/recs";
+import { world } from "src/network/world";
+import { components } from "../components";
+export const setupSend = (player: Entity) => {
+  defineComponentSystem(world, components.Home, ({ entity, value }) => {
+    if (entity != player) return;
+    const asteroid = value[0]?.asteroid as Entity | undefined;
+    if (!asteroid) return;
+    // temp so we can test without the set origin ui
+    components.Send.setOrigin(asteroid);
+  });
+};

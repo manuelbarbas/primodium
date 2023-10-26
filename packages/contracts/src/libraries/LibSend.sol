@@ -2,11 +2,11 @@
 pragma solidity >=0.8.21;
 
 import { ESendType, Arrival, ERock, EResource } from "src/Types.sol";
-import { PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ArrivalCount, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { GracePeriod, P_GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ArrivalCount, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { SendArgs } from "src/Types.sol";
-import { WORLD_SPEED_SCALE } from "src/constants.sol";
+import { WORLD_SPEED_SCALE, NUM_UNITS } from "src/constants.sol";
 
 library LibSend {
   /**
@@ -39,6 +39,10 @@ library LibSend {
   /// @notice Adds a new arrival.
   /// @param arrival The Arrival object to add.
   function sendUnits(Arrival memory arrival) internal {
+    if (arrival.sendType != ESendType.Reinforce && PirateAsteroid.get(arrival.destination).playerEntity == 0) {
+      GracePeriod.deleteRecord(arrival.from);
+    }
+
     bytes32 player = arrival.sendType == ESendType.Reinforce ? arrival.to : arrival.from;
     bytes32 asteroid = arrival.sendType == ESendType.Reinforce ? arrival.destination : arrival.origin;
     ArrivalsMap.set(player, asteroid, keccak256(abi.encode(arrival)), arrival);
@@ -49,7 +53,7 @@ library LibSend {
   /// @param playerEntity Entity initiating send.
   /// @param unitCounts Array of unit counts being sent.
   /// @return slowestSpeed Slowest unit speed among the types.
-  function getSlowestUnitSpeed(bytes32 playerEntity, uint256[5] memory unitCounts)
+  function getSlowestUnitSpeed(bytes32 playerEntity, uint256[NUM_UNITS] memory unitCounts)
     internal
     view
     returns (uint256 slowestSpeed)
@@ -79,7 +83,7 @@ library LibSend {
     PositionData memory origin,
     PositionData memory destination,
     bytes32 playerEntity,
-    uint256[5] memory unitCounts
+    uint256[NUM_UNITS] memory unitCounts
   ) internal view returns (uint256) {
     P_GameConfigData memory config = P_GameConfig.get();
     uint256 unitSpeed = getSlowestUnitSpeed(playerEntity, unitCounts);
@@ -119,6 +123,8 @@ library LibSend {
         PirateAsteroid.get(destination).playerEntity == playerEntity,
         "[SendUnits] Cannot send to other player pirate asteroid"
       );
+    } else if (sendType != ESendType.Reinforce) {
+      require(GracePeriod.get(to) <= block.timestamp, "[SendUnits] Cannot send to player in grace period");
     }
 
     ERock originType = ERock(RockType.get(origin));

@@ -4,30 +4,10 @@ pragma solidity >=0.8.21;
 import { ResourceId, ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
-import { Children, ChildrenTableId } from "codegen/tables/Children.sol";
-import { OwnedBy, OwnedByTableId } from "codegen/tables/OwnedBy.sol";
-import { Position, PositionTableId, PositionData } from "codegen/tables/Position.sol";
-import { MapUtilities, MapUtilitiesTableId } from "codegen/tables/MapUtilities.sol";
-import { MapItemUtilities, MapItemUtilitiesTableId } from "codegen/tables/MapItemUtilities.sol";
-import { ResourceCount, ResourceCountTableId } from "codegen/tables/ResourceCount.sol";
-import { MaxResourceCount, MaxResourceCountTableId } from "codegen/tables/MaxResourceCount.sol";
-import { SpawnedTableId } from "codegen/tables/Spawned.sol";
-import { ProductionRate, ProductionRateTableId } from "codegen/tables/ProductionRate.sol";
-import { UnitCount, UnitCountTableId } from "codegen/tables/UnitCount.sol";
-import { LastClaimedAt, LastClaimedAtTableId } from "codegen/tables/LastClaimedAt.sol";
-import { QueueItemUnits, QueueItemUnitsTableId } from "codegen/tables/QueueItemUnits.sol";
-import { QueueUnits, QueueUnitsTableId } from "codegen/tables/QueueUnits.sol";
-import { ProducedResourceTableId } from "codegen/tables/ProducedResource.sol";
-import { ProductionRateTableId } from "codegen/tables/ProductionRate.sol";
-import { ProducedUnitTableId } from "codegen/tables/ProducedUnit.sol";
-import { TotalDefenseTableId } from "codegen/tables/TotalDefense.sol";
-import { TotalDefenseMultiplierTableId } from "codegen/tables/TotalDefenseMultiplier.sol";
-import { TotalVaultTableId } from "codegen/tables/TotalVault.sol";
-import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
-import { ScoreTableId } from "codegen/tables/Score.sol";
-import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
 
+import "codegen/index.sol";
 import { OnResourceCount_Score } from "src/hooks/storeHooks/OnResourceCount_Score.sol";
+import { OnScore_Alliance_Score } from "src/hooks/storeHooks/OnScore_Alliance_Score.sol";
 
 import { OnBefore_ClaimResources } from "src/hooks/systemHooks/OnBefore_ClaimResources.sol";
 import { OnBefore_ClaimUnits } from "src/hooks/systemHooks/OnBefore_ClaimUnits.sol";
@@ -52,6 +32,7 @@ import { OnDestroy_Requirements } from "src/hooks/systemHooks/destroy/OnDestroy_
 import { OnDestroy_RemoveFromTiles } from "src/hooks/systemHooks/destroy/OnDestroy_RemoveFromTiles.sol";
 import { OnDestroy_Defense } from "src/hooks/systemHooks/destroy/OnDestroy_Defense.sol";
 
+import { OnSendUnits_InitMotherlode } from "src/hooks/systemHooks/sendUnits/OnSendUnits_InitMotherlode.sol";
 import { OnSendUnits_Requirements } from "src/hooks/systemHooks/sendUnits/OnSendUnits_Requirements.sol";
 import { OnSendUnits_UnitCount } from "src/hooks/systemHooks/sendUnits/OnSendUnits_UnitCount.sol";
 
@@ -68,6 +49,12 @@ import { OnReinforce_TargetClaimResources } from "src/hooks/systemHooks/reinforc
 
 import { OnClaimObjective_Requirements } from "src/hooks/systemHooks/claimObjective/OnClaimObjective_Requirements.sol";
 import { OnClaimObjective_ReceiveRewards } from "src/hooks/systemHooks/claimObjective/OnClaimObjective_ReceiveRewards.sol";
+
+import { OnUpgradeUnit_SpendResources } from "src/hooks/systemHooks/upgradeUnit/OnUpgradeUnit_SpendResources.sol";
+
+import { OnUpgradeRange_SpendResources } from "src/hooks/systemHooks/upgradeRange/OnUpgradeRange_SpendResources.sol";
+
+import { OnAlliance_TargetClaimResources } from "src/hooks/systemHooks/alliance/OnAlliance_TargetClaimResources.sol";
 
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
 import { BEFORE_SPLICE_STATIC_DATA } from "@latticexyz/store/src/storeHookTypes.sol";
@@ -88,6 +75,7 @@ function setupHooks(IWorld world) {
   world.grantAccess(QueueUnitsTableId, address(onBefore_ClaimUnits));
   world.grantAccess(ProducedUnitTableId, address(onBefore_ClaimUnits));
 
+  //System Hooks
   registerBuildHooks(world, onBefore_ClaimResources);
   registerUpgradeHooks(world, onBefore_ClaimResources);
   registerDestroyHooks(world, onBefore_ClaimResources);
@@ -97,7 +85,61 @@ function setupHooks(IWorld world) {
   registerRaid(world, onBefore_ClaimResources, onBefore_ClaimUnits);
   registerReinforce(world, onBefore_ClaimUnits);
   registerClaimObjective(world, onBefore_ClaimResources, onBefore_ClaimUnits);
+  registerUpgradeRangeHook(world, onBefore_ClaimResources);
+  registerUpgradeUnitHook(world, onBefore_ClaimResources);
+
+  registerAllianceHooks(world, onBefore_ClaimResources);
+
+  //Store Hooks
   registerScoreHook(world);
+}
+
+function registerAllianceHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
+  world.registerSystemHook(getSystemResourceId("AllianceSystem"), onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
+
+  OnAlliance_TargetClaimResources onAlliance_TargetClaimResources = new OnAlliance_TargetClaimResources();
+  world.grantAccess(ResourceCountTableId, address(onAlliance_TargetClaimResources));
+  world.grantAccess(MapItemUtilitiesTableId, address(onAlliance_TargetClaimResources));
+  world.grantAccess(MapUtilitiesTableId, address(onAlliance_TargetClaimResources));
+  world.grantAccess(MapItemStoredUtilitiesTableId, address(onAlliance_TargetClaimResources));
+  world.grantAccess(LastClaimedAtTableId, address(onAlliance_TargetClaimResources));
+  world.grantAccess(ProducedResourceTableId, address(onAlliance_TargetClaimResources));
+  world.registerSystemHook(getSystemResourceId("AllianceSystem"), onAlliance_TargetClaimResources, BEFORE_CALL_SYSTEM);
+}
+
+/**
+ * @dev Registers a system hook for when range is upgraded
+ * @param world The World contract instance.
+ */
+function registerUpgradeRangeHook(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
+  ResourceId systemId = getSystemResourceId("UpgradeRangeSystem");
+  world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
+
+  OnUpgradeRange_SpendResources onUpgradeRange_SpendResources = new OnUpgradeRange_SpendResources();
+  world.grantAccess(ResourceCountTableId, address(onUpgradeRange_SpendResources));
+  world.grantAccess(MapItemUtilitiesTableId, address(onUpgradeRange_SpendResources));
+  world.grantAccess(MapUtilitiesTableId, address(onUpgradeRange_SpendResources));
+  world.grantAccess(MapItemStoredUtilitiesTableId, address(onUpgradeRange_SpendResources));
+  world.grantAccess(MaxResourceCountTableId, address(onUpgradeRange_SpendResources));
+  world.registerSystemHook(systemId, onUpgradeRange_SpendResources, AFTER_CALL_SYSTEM);
+}
+
+/**
+ * @dev Registers a system hook for when unit is upgraded
+ * @param world The World contract instance.
+ */
+function registerUpgradeUnitHook(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
+  ResourceId systemId = getSystemResourceId("UpgradeUnitSystem");
+
+  world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
+
+  OnUpgradeUnit_SpendResources onUpgradeUnit_SpendResources = new OnUpgradeUnit_SpendResources();
+  world.grantAccess(ResourceCountTableId, address(onUpgradeUnit_SpendResources));
+  world.grantAccess(MapItemUtilitiesTableId, address(onUpgradeUnit_SpendResources));
+  world.grantAccess(MapUtilitiesTableId, address(onUpgradeUnit_SpendResources));
+  world.grantAccess(MapItemStoredUtilitiesTableId, address(onUpgradeUnit_SpendResources));
+  world.grantAccess(MaxResourceCountTableId, address(onUpgradeUnit_SpendResources));
+  world.registerSystemHook(systemId, onUpgradeUnit_SpendResources, AFTER_CALL_SYSTEM);
 }
 
 /**
@@ -108,6 +150,10 @@ function registerScoreHook(IWorld world) {
   OnResourceCount_Score onResourceCount_Score = new OnResourceCount_Score();
   world.grantAccess(ScoreTableId, address(onResourceCount_Score));
   world.registerStoreHook(ResourceCountTableId, onResourceCount_Score, BEFORE_SPLICE_STATIC_DATA);
+
+  OnScore_Alliance_Score onScore_Alliance_Score = new OnScore_Alliance_Score();
+  world.grantAccess(AllianceTableId, address(onScore_Alliance_Score));
+  world.registerStoreHook(ScoreTableId, onScore_Alliance_Score, BEFORE_SPLICE_STATIC_DATA);
 }
 
 /**
@@ -247,10 +293,25 @@ function registerDestroyHooks(IWorld world, OnBefore_ClaimResources onBefore_Cla
 function registerSendUnits(IWorld world, OnBefore_ClaimUnits onBefore_ClaimUnits) {
   ResourceId systemId = getSystemResourceId("SendUnitsSystem");
 
+  world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
+
+  OnSendUnits_InitMotherlode onSendUnits_InitMotherlode = new OnSendUnits_InitMotherlode();
+  world.registerSystemHook(systemId, onSendUnits_InitMotherlode, BEFORE_CALL_SYSTEM);
+  world.grantAccess(MotherlodeTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(PositionTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(ReversePositionTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(LastClaimedAtTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(RockTypeTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(LastClaimedAtTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(QueueUnitsTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(QueueItemUnitsTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(ProducedUnitTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(ProducedUnitTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(UnitCountTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(ProductionRateTableId, address(onSendUnits_InitMotherlode));
+
   OnSendUnits_Requirements onSendUnits_Requirements = new OnSendUnits_Requirements();
   world.registerSystemHook(systemId, onSendUnits_Requirements, BEFORE_CALL_SYSTEM);
-
-  world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
 
   OnSendUnits_UnitCount onSendUnits_UnitCount = new OnSendUnits_UnitCount();
   world.grantAccess(UnitCountTableId, address(onSendUnits_UnitCount));

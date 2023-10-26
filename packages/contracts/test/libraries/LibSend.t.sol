@@ -5,12 +5,13 @@ import "test/PrimodiumTest.t.sol";
 
 // Note checkMovementRules tests are in SendUnitsSystem.t.sol to verify revert statements
 contract LibSendTest is PrimodiumTest {
-  uint256[unitPrototypeCount] unitCounts;
+  uint256[NUM_UNITS] unitCounts;
 
   Arrival arrival =
     Arrival({
       sendType: ESendType.Invade,
       arrivalTime: 2,
+      sendTime: block.timestamp,
       from: "from",
       to: "to",
       origin: "origin",
@@ -23,7 +24,7 @@ contract LibSendTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
     vm.startPrank(creator);
-    bytes32[] memory unitTypes = new bytes32[](unitPrototypeCount);
+    bytes32[] memory unitTypes = new bytes32[](NUM_UNITS);
     unitTypes[0] = "unit1";
     unitTypes[1] = "unit2";
     unitTypes[2] = "unit3";
@@ -108,7 +109,7 @@ contract LibSendTest is PrimodiumTest {
     P_GameConfig.set(config);
     Position.set(arrival.origin, 0, 0, 0);
     Position.set(arrival.destination, int32(int256(distance)), 0, 0);
-    uint256[unitPrototypeCount] memory counts;
+    uint256[NUM_UNITS] memory counts;
 
     counts[0] = 100;
     unitData.speed = unitSpeed;

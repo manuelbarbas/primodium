@@ -96,10 +96,15 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
     uint256 increase = 69;
     uint256 increase2 = 71;
-    P_ProductionData memory data = P_ProductionData(uint8(Iron), increase);
-    P_Production.set(IronMinePrototypeId, 1, data);
-    data = P_ProductionData(uint8(Iron), increase2);
-    P_Production.set(IronMinePrototypeId, 2, data);
+    P_ProductionData memory data1 = P_ProductionData(new uint8[](1), new uint256[](1));
+    data1.resources[0] = uint8(EResource.Iron);
+    data1.amounts[0] = increase;
+    P_Production.set(IronMinePrototypeId, 1, data1);
+
+    data1 = P_ProductionData(new uint8[](1), new uint256[](1));
+    data1.resources[0] = uint8(EResource.Iron);
+    data1.amounts[0] = increase2;
+    P_Production.set(IronMinePrototypeId, 2, data1);
 
     switchPrank(creator);
 

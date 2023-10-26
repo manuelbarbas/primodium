@@ -1,9 +1,12 @@
 import { useEffect } from "react";
 import { ampli } from "src/ampli";
 import { components } from "src/network/components";
+import { setupArrival } from "src/network/systems/setupArrival";
 import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
 import { setupDoubleCounter } from "src/network/systems/setupDoubleCounter";
 import { setupHangar } from "src/network/systems/setupHangar";
+import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
+import { setupSend } from "src/network/systems/setupSend";
 import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
 import { useMud } from "./useMud";
 
@@ -14,11 +17,15 @@ export const useInit = () => {
 
   //initialize systems
   useEffect(() => {
+    mud.components.Account.set({ value: playerEntity });
     setupBlockNumber(mud.network.latestBlockNumber$);
     setupDoubleCounter(mud);
+    setupLeaderboard(mud);
     setupTrainingQueues(mud);
     setupHangar(mud);
-  }, [mud]);
+    setupArrival();
+    setupSend(playerEntity);
+  }, [mud, playerEntity]);
 
   // The network object and user wallet will have been loaded by the time the loading state is ready
   // So we can use the user wallet to identify the user

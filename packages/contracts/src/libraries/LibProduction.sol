@@ -18,14 +18,22 @@ library LibProduction {
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
 
     P_ProductionData memory prototypeProduction = P_Production.get(buildingPrototype, targetLevel);
-    if (prototypeProduction.amount == 0) return;
-    uint8 resource = prototypeProduction.resource;
-    uint256 prevLevelPrototypeProduction = targetLevel > 1
-      ? P_Production.get(buildingPrototype, targetLevel - 1).amount
-      : 0;
-    uint256 addedProductionRate = prototypeProduction.amount - prevLevelPrototypeProduction;
 
-    increaseResourceProduction(playerEntity, EResource(resource), addedProductionRate);
+    uint256 lastLevelResourceLength;
+    uint256[] memory lastLevelAmounts;
+
+    if (targetLevel > 1) {
+      lastLevelResourceLength = P_Production.lengthAmounts(buildingPrototype, targetLevel - 1);
+      lastLevelAmounts = P_Production.get(buildingPrototype, targetLevel - 1).amounts;
+    }
+    for (uint8 i = 0; i < prototypeProduction.resources.length; i++) {
+      uint256 prevLevelPrototypeProduction = 0;
+      if (targetLevel > 1 && lastLevelResourceLength > i) {
+        prevLevelPrototypeProduction = lastLevelAmounts[i];
+      }
+      uint256 addedProductionRate = prototypeProduction.amounts[i] - prevLevelPrototypeProduction;
+      increaseResourceProduction(playerEntity, EResource(prototypeProduction.resources[i]), addedProductionRate);
+    }
   }
 
   /// @notice increases the resource production for the player
@@ -53,11 +61,14 @@ library LibProduction {
   function clearResourceProduction(bytes32 playerEntity, bytes32 buildingEntity) internal {
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
     uint256 buildingLevel = Level.get(buildingEntity);
-
     P_ProductionData memory prototypeProduction = P_Production.get(buildingPrototype, buildingLevel);
-    if (prototypeProduction.amount == 0) return;
-    uint8 resource = prototypeProduction.resource;
-    decreaseResourceProduction(playerEntity, EResource(resource), prototypeProduction.amount);
+    for (uint8 i = 0; i < prototypeProduction.resources.length; i++) {
+      decreaseResourceProduction(
+        playerEntity,
+        EResource(prototypeProduction.resources[i]),
+        prototypeProduction.amounts[i]
+      );
+    }
   }
 
   /// @notice Reduces the resource production for the player
