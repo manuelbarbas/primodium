@@ -6,17 +6,20 @@ import { components } from "src/network/components";
 import { SetupNetworkResult } from "src/network/types";
 import { parseReceipt } from "../../analytics/parseReceipt";
 import { EBuilding, MUDEnums } from "contracts/config/enums";
+import { toast } from "react-toastify";
+import { execute } from "src/network/actions";
 
 export const buildBuilding = async (network: SetupNetworkResult, building: EBuilding, coord: Coord) => {
+  toast.warning("nabs is genius");
+
   // todo: find a cleaner way to extract this value in all web3 functions
   const activeAsteroid = components.Home.get(network.playerEntity)?.asteroid;
   if (!activeAsteroid) return;
 
   const position = { ...coord, parent: activeAsteroid as Hex };
 
-  const tx = await network.worldContract.write.build([building, position]);
-
-  await network.waitForTransaction(tx);
+  const txHash = await network.worldContract.write.build([building, position]);
+  const receipt = await execute(txHash, network);
 
   ampli.systemBuild({
     asteroidCoord: BigNumber.from(activeAsteroid).toString(),

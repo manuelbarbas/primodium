@@ -211,7 +211,7 @@ export function getAllRequirements(objective: Entity): Record<RequirementType, R
     [RequirementType.ProducedUnits]: getProducedUnitsRequirement(objective),
     [RequirementType.DestroyedUnits]: getDestroyedUnitsRequirement(objective),
   };
-  console.log("objective:", getBlockTypeName(objective), "requirements:", requirements);
+  // console.log("objective:", getBlockTypeName(objective), "requirements:", requirements);
   return Object.fromEntries(Object.entries(requirements).filter(([_, value]) => value !== undefined)) as Record<
     RequirementType,
     Requirement[]
