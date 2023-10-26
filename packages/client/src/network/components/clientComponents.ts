@@ -31,7 +31,6 @@ export const BlockNumber = createExtendedComponent(
 );
 export const Account = createExtendedEntityComponent(world, { id: "Account" });
 export const GameReady = createExtendedBoolComponent(world, { id: "GameReady" });
-export const ActiveAsteroid = createExtendedComponent(world, { value: Type.Entity }, { id: "ActiveAsteroid" });
 
 // Todo: extend this with relevant tx data
 export const CurrentTransaction = createExtendedBoolComponent(world, { id: "CurrentTransaction" });
@@ -124,7 +123,6 @@ export default {
   BlockNumber,
   Account,
   GameReady,
-  ActiveAsteroid,
   CurrentTransaction,
 
   /* ---------------------------------- Input --------------------------------- */
