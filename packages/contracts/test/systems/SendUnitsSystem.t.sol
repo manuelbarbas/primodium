@@ -382,4 +382,69 @@ contract SendUnitsSystemTest is PrimodiumTest {
     vm.expectRevert();
     world.sendUnits(unitCounts, ESendType.Raid, originPosition, destinationPosition, to);
   }
+
+  function testSendUnitsReinforceOtherGracePeriod() public {
+    setupValidInvade();
+    OwnedBy.set(destination, to);
+    UnitCount.set(player, origin, unitPrototype, 100);
+
+    unitData.speed = 100;
+    P_Unit.set(unitPrototype, 0, unitData);
+
+    unitCounts[0] = 1;
+    GracePeriod.set(to, block.timestamp + 100);
+    GracePeriod.set(player, block.timestamp + 100);
+    world.sendUnits(unitCounts, ESendType.Reinforce, originPosition, destinationPosition, to);
+    assertEq(GracePeriod.get(to), block.timestamp + 100, "Grace period should not be reset");
+    assertEq(GracePeriod.get(player), block.timestamp + 100, "Grace period should not be reset");
+  }
+
+  function testFailInvadeEnemyGracePeriod() public {
+    setupValidInvade();
+    OwnedBy.set(destination, to);
+    UnitCount.set(player, origin, unitPrototype, 100);
+
+    unitData.speed = 100;
+    P_Unit.set(unitPrototype, 0, unitData);
+
+    unitCounts[0] = 1;
+    GracePeriod.set(to, block.timestamp + 10);
+    world.sendUnits(unitCounts, ESendType.Invade, originPosition, destinationPosition, to);
+
+    assertEq(ArrivalsMap.size(player, origin), 1);
+    assertEq(ArrivalCount.get(player), 1);
+
+    unitCounts[0] = 1;
+
+    Arrival memory expectedArrival = Arrival({
+      sendType: ESendType.Invade,
+      arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitCounts),
+      sendTime: block.timestamp,
+      from: player,
+      to: to,
+      origin: origin,
+      destination: destination,
+      unitCounts: unitCounts
+    });
+
+    Arrival memory arrival = ArrivalsMap.values(player, origin)[0];
+    assertEq(arrival, expectedArrival);
+  }
+
+  function testInvadeEnemyGracePeriod() public {
+    setupValidInvade();
+    OwnedBy.set(destination, to);
+    UnitCount.set(player, origin, unitPrototype, 100);
+
+    unitData.speed = 100;
+    P_Unit.set(unitPrototype, 0, unitData);
+
+    unitCounts[0] = 1;
+    GracePeriod.set(player, block.timestamp + 10);
+    GracePeriod.set(to, block.timestamp + 10);
+    vm.warp(block.timestamp + 10);
+    world.sendUnits(unitCounts, ESendType.Invade, originPosition, destinationPosition, to);
+
+    assertEq(GracePeriod.get(player), 0, "Grace period should be reset after attack");
+  }
 }

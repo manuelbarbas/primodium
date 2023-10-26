@@ -17,7 +17,6 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      external: ["#ansi-styles", "#supports-color"],
       output: {
         manualChunks: {
           react: ["react", "react-dom"],

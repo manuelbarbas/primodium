@@ -6,8 +6,10 @@ import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { BuildSystem } from "systems/BuildSystem.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
+
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
-import { Spawned, Position, PositionData, Level, Home, P_EnumToPrototype } from "codegen/index.sol";
+import { GracePeriod, P_GracePeriod, Spawned, Position, PositionData, Level, Home, P_EnumToPrototype } from "codegen/index.sol";
+
 import { LibAsteroid, LibBuilding, LibEncode } from "codegen/Libraries.sol";
 import { EBuilding } from "src/Types.sol";
 import { BuildingKey } from "src/Keys.sol";
@@ -24,7 +26,7 @@ contract SpawnSystem is PrimodiumSystem {
     bytes32 playerEntity = addressToEntity(_msgSender());
 
     require(!Spawned.get(playerEntity), "[SpawnSystem] Already spawned");
-
+    GracePeriod.set(playerEntity, block.timestamp + P_GracePeriod.get());
     Level.set(playerEntity, 1);
 
     bytes32 asteroid = LibAsteroid.createAsteroid(playerEntity);

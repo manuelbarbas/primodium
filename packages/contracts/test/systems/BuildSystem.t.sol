@@ -151,14 +151,16 @@ contract BuildSystemTest is PrimodiumTest {
     P_RequiredDependencies.set(IronMinePrototypeId, 1, requiredDependenciesData);
 
     world.build(EBuilding.IronMine, getIronPosition(creator));
-    uint256 productionIncrease = P_Production.get(IronMinePrototypeId, 1).amount;
+    uint256 productionIncrease = P_Production.getAmounts(IronMinePrototypeId, 1)[0];
     assertEq(ProductionRate.get(playerEntity, Iron), originalProduction - productionReduction + productionIncrease);
   }
 
   function testBuildWithResourceProductionIncrease() public {
     uint256 increase = 69;
-    P_ProductionData memory data = P_ProductionData(uint8(Iron), increase);
-    P_Production.set(IronMinePrototypeId, 1, data);
+    P_ProductionData memory data1 = P_ProductionData(new uint8[](1), new uint256[](1));
+    data1.resources[0] = uint8(EResource.Iron);
+    data1.amounts[0] = increase;
+    P_Production.set(IronMinePrototypeId, 1, data1);
 
     world.build(EBuilding.IronMine, getIronPosition(creator));
     assertEq(ProductionRate.get(playerEntity, Iron), increase);

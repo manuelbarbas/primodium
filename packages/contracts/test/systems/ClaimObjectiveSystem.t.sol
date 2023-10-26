@@ -212,7 +212,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     P_ProducedResourcesData memory producedResourcesData = P_ProducedResourcesData(new uint8[](1), new uint256[](1));
     producedResourcesData.resources[0] = uint8(EResource.Iron);
     producedResourcesData.amounts[0] =
-      P_Production.get(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.IronMine)), 1).amount *
+      P_Production.getAmounts(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.IronMine)), 1)[0] *
       10;
     P_ProducedResources.set(
       P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)),
@@ -221,7 +221,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     MaxResourceCount.set(
       playerEntity,
       uint8(EResource.Iron),
-      P_Production.get(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.IronMine)), 1).amount * 100
+      P_Production.getAmounts(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.IronMine)), 1)[0] * 100
     );
     P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)));
     LastClaimedAt.set(playerEntity, block.timestamp - 10);
@@ -243,7 +243,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     P_ProducedResourcesData memory producedResourcesData = P_ProducedResourcesData(new uint8[](1), new uint256[](1));
     producedResourcesData.resources[0] = uint8(EResource.Iron);
     producedResourcesData.amounts[0] =
-      P_Production.get(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.IronMine)), 1).amount *
+      P_Production.getAmounts(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.IronMine)), 1)[0] *
       10;
     P_ProducedResources.set(
       P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)),

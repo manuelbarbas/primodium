@@ -232,8 +232,8 @@ export const config = mudConfig({
       valueSchema: {
         // mud doesnt recognize EResource arrays so we will manually convert them
         // EResource
-        resource: "uint8",
-        amount: "uint256",
+        resources: "uint8[]",
+        amounts: "uint256[]",
       },
     },
 
@@ -615,6 +615,44 @@ export const config = mudConfig({
     TotalDefenseMultiplier: {
       keySchema: { entity: "bytes32" },
       valueSchema: "uint256",
+    },
+
+    P_GracePeriod: {
+      keySchema: {},
+      valueSchema: "uint256",
+    },
+
+    GracePeriod: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "uint256",
+    },
+    /* ------------------------------ Alliance ----------------------------- */
+
+    PlayerAlliance: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: {
+        alliance: "bytes32",
+        role: "uint8",
+      },
+    },
+
+    Alliance: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: {
+        name: "bytes32",
+        score: "uint256",
+        inviteMode: "uint8",
+      },
+    },
+
+    AllianceInvitation: {
+      keySchema: { entity: "bytes32", alliance: "bytes32" },
+      valueSchema: "bytes32",
+    },
+
+    AllianceJoinRequest: {
+      keySchema: { entity: "bytes32", alliance: "bytes32" },
+      valueSchema: "bool",
     },
   },
 });
