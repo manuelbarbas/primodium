@@ -14,7 +14,7 @@ import { LibStorage } from "libraries/LibStorage.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 
 // types
-import { BuildingKey, BuildingTileKey, ExpansionKey } from "src/Keys.sol";
+import { BuildingTileKey, ExpansionKey } from "src/Keys.sol";
 import { Bounds, EBuilding, EResource } from "src/Types.sol";
 
 library LibDefense {
