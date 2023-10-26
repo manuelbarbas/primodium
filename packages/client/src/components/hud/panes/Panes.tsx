@@ -1,17 +1,14 @@
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Divider } from "src/components/core/Divider";
 import { useSettingsStore } from "src/game/stores/SettingsStore";
-import { components } from "src/network/components";
-import { Account } from "src/network/components/clientComponents";
 import { Join } from "../../core/Join";
 import { Tabs } from "../../core/Tabs";
-import { Leaderboard } from "./Leaderboard";
+import { Leaderboard } from "./leaderboard/Leaderboard";
 
 export const Panes: React.FC = () => {
-  const playerAstroid = components.Home.use()?.asteroid;
-  const player = Account.use(undefined, {
-    value: singletonEntity,
-  }).value;
+  // const playerAstroid = components.Home.use()?.asteroid;
+  // const player = Account.use(undefined, {
+  //   value: singletonEntity,
+  // }).value;
   const [newPlayer, setNewPlayer] = useSettingsStore((state) => [state.newPlayer, state.setNewPlayer]);
 
   return (
