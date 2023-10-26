@@ -18,6 +18,7 @@ export const useInit = () => {
     setupBlockNumber(mud.network.latestBlockNumber$);
     setupDoubleCounter(mud);
     setupLeaderboard(mud);
+    setupAllianceLeaderboard(mud);
     setupTrainingQueues(mud);
     setupHangar(mud);
   }, [mud]);
