@@ -362,6 +362,12 @@ export const config = mudConfig({
       valueSchema: "uint256",
     },
 
+    // used to record the progress of claiming the current unit
+    ClaimOffset: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "uint256",
+    },
+
     /* ------------------------------ Sending Units ----------------------------- */
     ArrivalCount: {
       keySchema: { entity: "bytes32" },

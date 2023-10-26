@@ -87,11 +87,13 @@ function setupHooks(IWorld world) {
   world.grantAccess(MapUtilitiesTableId, address(onBefore_ClaimResources));
   world.grantAccess(MapItemStoredUtilitiesTableId, address(onBefore_ClaimResources));
   world.grantAccess(LastClaimedAtTableId, address(onBefore_ClaimResources));
+  world.grantAccess(ClaimOffsetTableId, address(onBefore_ClaimResources));
   world.grantAccess(ProducedResourceTableId, address(onBefore_ClaimResources));
 
   OnBefore_ClaimUnits onBefore_ClaimUnits = new OnBefore_ClaimUnits();
   world.grantAccess(UnitCountTableId, address(onBefore_ClaimUnits));
   world.grantAccess(LastClaimedAtTableId, address(onBefore_ClaimUnits));
+  world.grantAccess(ClaimOffsetTableId, address(onBefore_ClaimUnits));
   world.grantAccess(QueueItemUnitsTableId, address(onBefore_ClaimUnits));
   world.grantAccess(QueueUnitsTableId, address(onBefore_ClaimUnits));
   world.grantAccess(ProducedUnitTableId, address(onBefore_ClaimUnits));
@@ -314,6 +316,23 @@ function registerDestroyHooks(IWorld world, OnBefore_ClaimResources onBefore_Cla
 function registerSendUnits(IWorld world, OnBefore_ClaimUnits onBefore_ClaimUnits) {
   ResourceId systemId = getSystemResourceId("SendUnitsSystem");
 
+  world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
+
+  OnSendUnits_InitMotherlode onSendUnits_InitMotherlode = new OnSendUnits_InitMotherlode();
+  world.registerSystemHook(systemId, onSendUnits_InitMotherlode, BEFORE_CALL_SYSTEM);
+  world.grantAccess(MotherlodeTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(PositionTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(ReversePositionTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(RockTypeTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(LastClaimedAtTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(ClaimOffsetTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(QueueUnitsTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(QueueItemUnitsTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(ProducedUnitTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(ProducedUnitTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(UnitCountTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(ProductionRateTableId, address(onSendUnits_InitMotherlode));
+
   OnSendUnits_Requirements onSendUnits_Requirements = new OnSendUnits_Requirements();
   world.registerSystemHook(systemId, onSendUnits_Requirements, BEFORE_CALL_SYSTEM);
 
@@ -372,6 +391,7 @@ function registerInvade(
   OnInvade_TargetClaimResourcesAndUnits onInvade_TargetClaimResourcesAndUnits = new OnInvade_TargetClaimResourcesAndUnits();
   world.grantAccess(ResourceCountTableId, address(onInvade_TargetClaimResourcesAndUnits));
   world.grantAccess(LastClaimedAtTableId, address(onInvade_TargetClaimResourcesAndUnits));
+  world.grantAccess(ClaimOffsetTableId, address(onInvade_TargetClaimResourcesAndUnits));
   world.grantAccess(QueueItemUnitsTableId, address(onInvade_TargetClaimResourcesAndUnits));
   world.grantAccess(QueueUnitsTableId, address(onInvade_TargetClaimResourcesAndUnits));
   world.grantAccess(UnitCountTableId, address(onInvade_TargetClaimResourcesAndUnits));
@@ -402,6 +422,7 @@ function registerRaid(
   OnRaid_TargetClaimResourcesAndUnits onRaid_TargetClaimResourcesAndUnits = new OnRaid_TargetClaimResourcesAndUnits();
   world.grantAccess(ResourceCountTableId, address(onRaid_TargetClaimResourcesAndUnits));
   world.grantAccess(LastClaimedAtTableId, address(onRaid_TargetClaimResourcesAndUnits));
+  world.grantAccess(ClaimOffsetTableId, address(onRaid_TargetClaimResourcesAndUnits));
   world.grantAccess(QueueItemUnitsTableId, address(onRaid_TargetClaimResourcesAndUnits));
   world.grantAccess(QueueUnitsTableId, address(onRaid_TargetClaimResourcesAndUnits));
   world.grantAccess(UnitCountTableId, address(onRaid_TargetClaimResourcesAndUnits));
@@ -423,6 +444,7 @@ function registerReinforce(IWorld world, OnBefore_ClaimUnits onBefore_ClaimUnits
   OnReinforce_TargetClaimResources onReinforce_TargetClaimResources = new OnReinforce_TargetClaimResources();
   world.grantAccess(ResourceCountTableId, address(onReinforce_TargetClaimResources));
   world.grantAccess(LastClaimedAtTableId, address(onReinforce_TargetClaimResources));
+  world.grantAccess(ClaimOffsetTableId, address(onReinforce_TargetClaimResources));
   world.grantAccess(ProductionRateTableId, address(onReinforce_TargetClaimResources));
   world.grantAccess(ProducedResourceTableId, address(onReinforce_TargetClaimResources));
   world.registerSystemHook(systemId, onReinforce_TargetClaimResources, BEFORE_CALL_SYSTEM);
