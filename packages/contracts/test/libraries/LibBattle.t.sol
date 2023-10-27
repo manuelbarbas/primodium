@@ -123,6 +123,8 @@ contract LibBattleTest is PrimodiumTest {
     (uint256[] memory count, uint256 actual, uint256 cargo) = LibBattle.getAttackPoints(player, rock, ESendType.Invade);
     assertEq(count[0], unitCount);
     assertEq(actual, expected, "Attack points should be equal to unitCount * attack");
+    assertEq(ArrivalsMap.size(player, rock), 0);
+    assertEq(string(MapItemArrivals.get(player, rock, arrivalId)), "");
     return expected;
   }
 
