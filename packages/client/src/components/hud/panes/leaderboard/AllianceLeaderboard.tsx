@@ -1,77 +1,123 @@
 import { ComponentValue, Entity } from "@latticexyz/recs";
-import { getAddress } from "ethers/lib/utils.js";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { FixedSizeList as List } from "react-window";
-import { FaEnvelope, FaUserPlus } from "react-icons/fa";
+import { FaCog, FaEnvelope, FaUserPlus } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
-import { entityToAddress, shortenAddress } from "src/util/common";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { Tooltip } from "src/components/core/Tooltip";
+import { Navigator } from "src/components/core/Navigator";
+import { TextInput } from "src/components/core/TextInput";
+import { Checkbox } from "src/components/core/Checkbox";
+import { createAlliance } from "src/util/web3/contractCalls/alliance";
+import { hexToString, Hex } from "viem";
+
+const ALLIANCE_TAG_SIZE = 6;
 
 export const AllianceLeaderboard = () => {
-  const mud = useMud();
-  const address = mud.network.address;
-  const data = components.Leaderboard.use();
+  return (
+    <Navigator initialScreen="score" className="border-none p-0! h-full">
+      <ScoreScreen />
+      <CreateScreen />
+      <InvitesScreen />
+    </Navigator>
+  );
+};
 
-  if (!data || !address) return null;
+export const ScoreScreen = () => {
+  const data = components.AllianceLeaderboard.use();
+
+  if (!data) return <></>;
 
   return (
-    <div className="flex flex-col items-center w-full text-xs pointer-events-auto">
-      <List height={285} width="100%" itemCount={data.players.length} itemSize={47} className="scrollbar">
+    <Navigator.Screen title="score" className="flex flex-col items-center w-full text-xs pointer-events-auto">
+      <List height={285} width="100%" itemCount={data.alliances.length} itemSize={47} className="scrollbar">
         {({ index, style }) => {
-          const player = data.players[index];
+          const alliance = data.alliances[index];
           const score = data.scores[index];
+          const allianceName = (components.Alliance.get(alliance)?.name ?? "") as Hex;
           return (
             <div style={style} className="pr-2">
-              <LeaderboardItem key={index} player={player} index={index} score={score} />
+              <LeaderboardItem key={index} alliance={allianceName} index={index} score={Number(score)} />
             </div>
           );
         }}
       </List>
       <hr className="w-full border-t border-cyan-800 my-2" />
       <PlayerInfo data={data} />
-    </div>
+    </Navigator.Screen>
   );
 };
 
-const LeaderboardItem = ({ player, index, score }: { player: Entity; index: number; score: number }) => {
-  const [fetchedExternalWallet, setFetchedExternalWallet] = useState<{
-    address: string | null;
-    ensName: string | null;
-  }>({ address: player, ensName: null });
+export const CreateScreen = () => {
+  const [inviteOnly, setInviteOnly] = useState(true);
+  const [allianceTag, setAllianceTag] = useState("");
+  const data = components.Leaderboard.use();
+  const network = useMud().network;
 
-  useEffect(() => {
-    const fetchLocalLinkedAddress = async () => {
-      try {
-        const res = await fetch(
-          `${import.meta.env.VITE_ACCOUNT_LINK_VERCEL_URL}/linked-address/local-to-external/${getAddress(player)}`
-        );
-        const jsonRes = await res.json();
-        setFetchedExternalWallet(jsonRes);
-      } catch (error) {
-        return;
-      }
-    };
-    fetchLocalLinkedAddress();
-  }, [player]);
+  if (!data) return <></>;
 
-  const playerDisplay: string = useMemo(() => {
-    if (fetchedExternalWallet.ensName) {
-      return fetchedExternalWallet.ensName;
-    } else if (fetchedExternalWallet.address) {
-      return shortenAddress(entityToAddress(fetchedExternalWallet.address));
-    } else {
-      return shortenAddress(entityToAddress(player));
-    }
-  }, [fetchedExternalWallet, player]);
+  return (
+    <Navigator.Screen
+      title="create"
+      className="flex flex-col items-center w-full text-xs pointer-events-auto h-full my-5"
+    >
+      <div className="flex items-center gap-2">
+        <b className="text-2xl">[</b>
+        <TextInput
+          placeholder=""
+          bottomLeftLabel={`MAX ${ALLIANCE_TAG_SIZE} CHAR.`}
+          topLeftLabel="ENTER ALLIANCE TAG"
+          maxLength={ALLIANCE_TAG_SIZE}
+          onChange={(e) => {
+            setAllianceTag(e.target.value);
+          }}
+          className="text-center font-bold uppercase"
+        />
+        <b className="text-2xl">]</b>
+      </div>
 
+      <Checkbox label="INVITE ONLY" className="checkbox-error" defaultChecked onChange={setInviteOnly} />
+
+      <div className="flex gap-1 mt-auto">
+        <Navigator.BackButton
+          disabled={!allianceTag}
+          className="btn-primary btn-sm"
+          onClick={() => {
+            createAlliance(allianceTag, inviteOnly, network);
+          }}
+        >
+          Create
+        </Navigator.BackButton>
+        <Navigator.BackButton>Back</Navigator.BackButton>
+      </div>
+    </Navigator.Screen>
+  );
+};
+
+export const InvitesScreen = () => {
+  const data = components.Leaderboard.use();
+
+  if (!data) return <></>;
+
+  return (
+    <Navigator.Screen title="invites" className="flex flex-col items-center w-full text-xs pointer-events-auto">
+      <TextInput placeholder="Enter Alliance Name" />
+      <div>
+        <Button>Create</Button>
+        <Navigator.BackButton>Back</Navigator.BackButton>
+      </div>
+    </Navigator.Screen>
+  );
+};
+
+const LeaderboardItem = ({ alliance, index, score }: { alliance: Hex; index: number; score: number }) => {
   return (
     <SecondaryCard className="grid grid-cols-6 w-full border rounded-md border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center">
       <div>{index + 1}.</div>
       <div className="col-span-5 flex justify-between items-center">
-        <div>{playerDisplay}</div>
+        <div>{hexToString(alliance, { size: 32 }).substring(0, 5)}</div>
         <div className="flex items-center gap-1">
           <p className="font-bold rounded-md bg-cyan-700 px-2 ">{score.toLocaleString()}</p>
           <Tooltip text="Join" direction="left">
@@ -90,21 +136,26 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
   );
 };
 
-const PlayerInfo = ({ data }: { data: ComponentValue<typeof components.Leaderboard.schema> }) => {
+const PlayerInfo = ({ data }: { data: ComponentValue<typeof components.AllianceLeaderboard.schema> }) => {
   const playerEntity = useMud().network.playerEntity;
 
-  const allianceEntity = components.PlayerAlliance.use(playerEntity)?.alliance as Entity | undefined;
-  // const alliance = components.Alliance.use(allianceEntity);
+  const score = data.scores[data.playerAllianceRank - 1];
+  const rank = data.playerAllianceRank;
+  const allianceEntity = data.alliances[data.playerAllianceRank - 1];
+  const alliance = components.Alliance.get(allianceEntity);
+  const allianceName = (alliance?.name ?? "") as Hex;
 
   if (!allianceEntity) {
     return (
       <SecondaryCard className="w-full overflow-y-auto border border-slate-700 rounded-md p-2 bg-slate-800">
         {
           <div className="grid grid-cols-6 w-full items-center gap-2">
-            <Button className="btn-xs btn-secondary col-span-5">+ Create Alliance</Button>
-            <Button className="btn-xs flex">
+            <Navigator.NavButton to="create" className="btn-xs btn-secondary col-span-5">
+              + Create Alliance
+            </Navigator.NavButton>
+            <Navigator.NavButton to="invites" className="btn-xs flex">
               <FaEnvelope /> <b>0</b>
-            </Button>
+            </Navigator.NavButton>
           </div>
         }
       </SecondaryCard>
@@ -114,15 +165,18 @@ const PlayerInfo = ({ data }: { data: ComponentValue<typeof components.Leaderboa
   return (
     <SecondaryCard className="w-full overflow-y-auto border border-slate-700 rounded-md p-2 bg-slate-800">
       {
-        <div className="grid grid-cols-6 w-full items-center">
-          <div>{data.playerRank}.</div>
-          <div className="col-span-5 flex justify-between">
-            <p className="bg-rose-800 px-2 rounded-md flex items-center">You</p>
-            <Button className="btn-xs btn-secondary">+ Create Alliance</Button>
-            <p className="font-bold rounded-md bg-cyan-700 px-2 flex items-center">
-              {data.scores.length >= data.playerRank ? data.scores[data.playerRank - 1].toLocaleString() : 0}
-            </p>
+        <div className="grid grid-cols-6 w-full items-center gap-2">
+          <div className="col-span-4 bg-neutral rounded-box p-1">
+            <b className="text-accent">{rank}.</b>{" "}
+            <b className="text-error">[{hexToString(allianceName, { size: 32 }).substring(0, 5)}]</b>{" "}
+            {score.toLocaleString()}
           </div>
+          <Navigator.NavButton to="manage" className="btn-xs flex bg-secondary">
+            <FaCog />
+          </Navigator.NavButton>
+          <Navigator.NavButton to="invites" className="btn-xs flex bg-secondary">
+            <FaEnvelope /> <b>0</b>
+          </Navigator.NavButton>
         </div>
       }
     </SecondaryCard>
