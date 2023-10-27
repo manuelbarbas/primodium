@@ -3,7 +3,7 @@ import { Scene } from "engine/types";
 import { world } from "src/network/world";
 import { MotherlodeSizeNames, MotherlodeTypeNames } from "src/util/constants";
 import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
-import { Texture } from "../../common/object-components/sprite";
+import { Outline, Texture } from "../../common/object-components/sprite";
 // import { Send } from "src/network/components/clientComponents";
 import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 import { Coord } from "@latticexyz/utils";
@@ -50,7 +50,7 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
       ...sharedComponents,
       Texture(Assets.SpriteAtlas, sprite),
       OnClick(scene, () => {
-        // Send.setDestination(entityId);
+        components.Send.setDestination(entity);
       }),
     ]);
 
@@ -66,16 +66,16 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
     motherlodeOutline.setComponents([
       ...sharedComponents,
       Texture(Assets.SpriteAtlas, outlineSprite),
-      // OnComponentSystem(components.Send, () => {
-      // if (Send.get()?.destination === entityId) {
-      //   if (motherlodeOutline.hasComponent(Outline().id)) return;
-      //   motherlodeOutline.setComponent(Outline({ thickness: 1.5, color: 0xffa500 }));
-      //   return;
-      // }
-      // if (motherlodeOutline.hasComponent(Outline().id)) {
-      //   motherlodeOutline.removeComponent(Outline().id);
-      // }
-      // }),
+      OnComponentSystem(components.Send, () => {
+        if (components.Send.get()?.destination === entity) {
+          if (motherlodeOutline.hasComponent(Outline().id)) return;
+          motherlodeOutline.setComponent(Outline({ thickness: 1.5, color: 0xffa500 }));
+          return;
+        }
+        if (motherlodeOutline.hasComponent(Outline().id)) {
+          motherlodeOutline.removeComponent(Outline().id);
+        }
+      }),
       OnComponentSystem(components.OwnedBy, (_, { entity: _entity }) => {
         if (entity === _entity) return;
         const ownedBy = components.OwnedBy.get(_entity)?.value;

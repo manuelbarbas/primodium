@@ -42,6 +42,32 @@ contract LibProductionTest is PrimodiumTest {
     assertEq(ProductionRate.get(playerEntity, uint8(EResource.Iron)), amount3);
   }
 
+  function testUpgradeUtilityProductionNoEarlyLevel() public {
+    P_IsUtility.set(uint8(EResource.Iron), true);
+    uint256 amount2 = 40;
+    uint256 amount3 = 57;
+    P_ProductionData memory data1 = P_ProductionData(new uint8[](0), new uint256[](0));
+    P_ProductionData memory data2 = P_ProductionData(new uint8[](1), new uint256[](1));
+    data2.resources[0] = uint8(EResource.Iron);
+    data2.amounts[0] = amount2;
+    P_ProductionData memory data3 = P_ProductionData(new uint8[](1), new uint256[](1));
+    data3.resources[0] = uint8(EResource.Iron);
+    data3.amounts[0] = amount3;
+
+    P_Production.set(buildingPrototype, 1, data1);
+    P_Production.set(buildingPrototype, 2, data2);
+    P_Production.set(buildingPrototype, 3, data3);
+
+    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 1);
+    assertEq(MaxResourceCount.get(playerEntity, uint8(EResource.Iron)), 0);
+    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 2);
+    assertEq(MaxResourceCount.get(playerEntity, uint8(EResource.Iron)), amount2);
+    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 3);
+    assertEq(MaxResourceCount.get(playerEntity, uint8(EResource.Iron)), amount3);
+
+    assertEq(ProductionRate.get(buildingEntity, uint8(EResource.Iron)), 0);
+  }
+
   function testUpgradeMultipleResourceProductionNonUtility() public {
     uint256 amount1 = 20;
     uint256 amount2 = 40;

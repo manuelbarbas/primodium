@@ -10,7 +10,7 @@ export const Asteroid: React.FC<{
   data: ReturnType<typeof getSpaceRockInfo>;
 }> = ({ data }) => {
   return (
-    <Navigator.Screen title={data.entity} className="w-fit">
+    <Navigator.Screen title={data.entity} className="w-full">
       <Header name={data.name} imageUri={data.imageUri} />
       <AsteroidResource resources={data.resources} />
       <div className="grid grid-cols-2 w-full">

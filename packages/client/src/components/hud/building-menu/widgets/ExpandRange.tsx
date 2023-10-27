@@ -7,7 +7,7 @@ import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
-import { ResourceImage, ResourceType, RESOURCE_SCALE, EntityType } from "src/util/constants";
+import { EntityType, RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
 import { getUpgradeInfo } from "src/util/upgrade";
 import { upgradeRange } from "src/util/web3/contractCalls/upgradeRange";
 
@@ -77,7 +77,7 @@ export const ExpandRange: React.FC = () => {
       {error && <p className="animate-pulse text-error text-xs uppercase mt-2">{error}</p>}
       <div className="flex gap-1 mt-1">
         {Array(Number(maxLevel))
-          .fill(0n)
+          .fill(0)
           .map((_, index) => {
             return (
               <div

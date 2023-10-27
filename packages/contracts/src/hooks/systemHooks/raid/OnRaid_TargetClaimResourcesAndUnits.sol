@@ -11,7 +11,7 @@ import { LibResource } from "libraries/LibResource.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
-import { ESendType, SendArgs, ERock, Arrival } from "src/Types.sol";
+import { ESendType, SendArgs, ERock } from "src/Types.sol";
 import { OwnedBy } from "codegen/tables/OwnedBy.sol";
 
 /**

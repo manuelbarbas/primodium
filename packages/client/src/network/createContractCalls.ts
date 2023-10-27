@@ -4,7 +4,7 @@ import { StaticAbiType } from "@latticexyz/schema-type";
 import { entityToHexKeyTuple } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
 import { Hex } from "viem";
-import { ActiveAsteroid } from "./components/clientComponents";
+import { components } from "./components";
 import { Components, ContractComponent, SetupNetworkResult } from "./types";
 export function createContractCalls(
   { worldContract, waitForTransaction }: SetupNetworkResult,
@@ -61,7 +61,7 @@ export function createContractCalls(
 
   async function demolishBuilding(coord: Coord) {
     CurrentTransaction.set({ value: true });
-    const activeAsteroid = ActiveAsteroid.get()?.value;
+    const activeAsteroid = components.Home.get()?.asteroid;
     if (!activeAsteroid) return;
 
     const position = { ...coord, parent: activeAsteroid as Hex };

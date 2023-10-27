@@ -1,9 +1,10 @@
-import { ComponentValue, EntityID } from "@latticexyz/recs";
+import { ComponentValue } from "@latticexyz/recs";
+import { ESendType } from "contracts/config/enums";
 import { BiSolidInvader } from "react-icons/bi";
-import { Arrival, Position } from "src/network/components/chainComponents";
-import { BlockNumber } from "src/network/components/clientComponents";
+import { useMud } from "src/hooks";
+import { components } from "src/network/components";
 import { shortenAddress } from "src/util/common";
-import { ESendType } from "src/util/web3/types";
+import { useNow } from "src/util/time";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -18,17 +19,16 @@ export const LabeledValue: React.FC<{
 };
 
 export const AttackingFleet: React.FC<{
-  spaceRock: EntityID;
-  fleet: ComponentValue<typeof Arrival.schema>;
-}> = ({ fleet, spaceRock }) => {
-  const { sendType, destination, arrivalBlock } = fleet;
-  const blockNumber = BlockNumber.use()?.value ?? 0;
+  fleet: ComponentValue<typeof components.Arrival.schema>;
+}> = ({ fleet }) => {
+  const playerEntity = useMud().network.playerEntity;
+  const { sendType, destination, arrivalTime } = fleet;
 
-  const coord = Position.use(destination);
+  const coord = components.Position.use(destination);
 
-  const isHomeAsteroid = spaceRock === destination;
+  const isHomeAsteroid = components.Home.get(playerEntity)?.asteroid === destination;
 
-  const arrived = blockNumber >= Number(arrivalBlock);
+  const timeRemaining = arrivalTime - useNow();
 
   return (
     <div
@@ -40,8 +40,8 @@ export const AttackingFleet: React.FC<{
         <div className="rounded-md bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
           <BiSolidInvader size={16} />
           <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">
-            {sendType === ESendType.INVADE && "INVADE"}
-            {sendType === ESendType.RAID && "RAID"}
+            {sendType === ESendType.Invade && "INVADE"}
+            {sendType === ESendType.Raid && "RAID"}
           </p>
         </div>
         <LabeledValue label="TARGET">
@@ -54,17 +54,17 @@ export const AttackingFleet: React.FC<{
         </LabeledValue>
       </div>
       <div className="text-right">
-        {arrived && (
+        {timeRemaining <= 0n && (
           <LabeledValue label="ATTACKER">
             <div className="flex gap-1 text-right w-full">
               <p className="w-full">{shortenAddress(fleet.from)}</p>
             </div>
           </LabeledValue>
         )}
-        {!arrived && (
+        {timeRemaining > 0n && (
           <LabeledValue label="ETA">
             <div className="flex gap-1 text-right w-full">
-              <p className="w-full">{Math.max(Number(arrivalBlock) - blockNumber, 0)} BLOCKS</p>
+              <p className="w-full">{Math.max(Number(timeRemaining), 0)} SEC</p>
             </div>
           </LabeledValue>
         )}

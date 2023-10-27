@@ -68,7 +68,6 @@ export function setupTrainingQueues(mud: SetupResult) {
       }
       startTime += trainingTime * trainedUnits;
     }
-    console.log("queue:", queue);
     const units = queue.map((update) => update.unit as Entity);
     const counts = queue.map((update) => update.count);
     const progress = queue.map((update) => update.progress);
