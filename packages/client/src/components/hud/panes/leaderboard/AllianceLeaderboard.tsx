@@ -1,4 +1,4 @@
-import { ComponentValue, Entity } from "@latticexyz/recs";
+import { ComponentValue, Entity, HasValue } from "@latticexyz/recs";
 import { useState } from "react";
 import { FixedSizeList as List } from "react-window";
 import { FaCog, FaEnvelope, FaUserPlus } from "react-icons/fa";
@@ -10,8 +10,9 @@ import { Tooltip } from "src/components/core/Tooltip";
 import { Navigator } from "src/components/core/Navigator";
 import { TextInput } from "src/components/core/TextInput";
 import { Checkbox } from "src/components/core/Checkbox";
-import { createAlliance } from "src/util/web3/contractCalls/alliance";
+import { createAlliance, leaveAlliance } from "src/util/web3/contractCalls/alliance";
 import { hexToString, Hex } from "viem";
+import { useEntityQuery } from "@latticexyz/react";
 
 const ALLIANCE_TAG_SIZE = 6;
 
@@ -21,6 +22,7 @@ export const AllianceLeaderboard = () => {
       <ScoreScreen />
       <CreateScreen />
       <InvitesScreen />
+      <ManageScreen />
     </Navigator>
   );
 };
@@ -53,10 +55,7 @@ export const ScoreScreen = () => {
 export const CreateScreen = () => {
   const [inviteOnly, setInviteOnly] = useState(true);
   const [allianceTag, setAllianceTag] = useState("");
-  const data = components.Leaderboard.use();
   const network = useMud().network;
-
-  if (!data) return <></>;
 
   return (
     <Navigator.Screen
@@ -96,6 +95,30 @@ export const CreateScreen = () => {
   );
 };
 
+export const ManageScreen: React.FC = () => {
+  const network = useMud().network;
+  const data = components.AllianceLeaderboard.use();
+  const allianceEntity = data?.alliances[data?.playerAllianceRank - 1];
+  const query = useEntityQuery([
+    HasValue(components.PlayerAlliance, {
+      alliance: allianceEntity,
+    }),
+  ]);
+
+  if (!data) return <></>;
+
+  return (
+    <Navigator.Screen
+      title="manage"
+      className="flex flex-col items-center w-full text-xs pointer-events-auto h-full my-5"
+    >
+      <Navigator.BackButton className="btn-error border-none" onClick={() => leaveAlliance(network)}>
+        LEAVE ALLIANCE
+      </Navigator.BackButton>
+    </Navigator.Screen>
+  );
+};
+
 export const InvitesScreen = () => {
   const data = components.Leaderboard.use();
 
@@ -117,7 +140,7 @@ const LeaderboardItem = ({ alliance, index, score }: { alliance: Hex; index: num
     <SecondaryCard className="grid grid-cols-6 w-full border rounded-md border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center">
       <div>{index + 1}.</div>
       <div className="col-span-5 flex justify-between items-center">
-        <div>{hexToString(alliance, { size: 32 }).substring(0, 5)}</div>
+        <div>{hexToString(alliance, { size: 32 }).substring(0, 6)}</div>
         <div className="flex items-center gap-1">
           <p className="font-bold rounded-md bg-cyan-700 px-2 ">{score.toLocaleString()}</p>
           <Tooltip text="Join" direction="left">
@@ -168,8 +191,7 @@ const PlayerInfo = ({ data }: { data: ComponentValue<typeof components.AllianceL
         <div className="grid grid-cols-6 w-full items-center gap-2">
           <div className="col-span-4 bg-neutral rounded-box p-1">
             <b className="text-accent">{rank}.</b>{" "}
-            <b className="text-error">[{hexToString(allianceName, { size: 32 }).substring(0, 5)}]</b>{" "}
-            {score.toLocaleString()}
+            <b className="text-error">[{hexToString(allianceName, { size: 32 })}]</b> {score.toLocaleString()}
           </div>
           <Navigator.NavButton to="manage" className="btn-xs flex bg-secondary">
             <FaCog />
