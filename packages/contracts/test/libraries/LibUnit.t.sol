@@ -146,6 +146,36 @@ contract LibUnitTest is PrimodiumTest {
     assertTrue(UnitProductionQueue.isEmpty(building));
   }
 
+  function testClaimUnitsOffset() public {
+    Level.set(building, 1);
+    LastClaimedAt.set(building, block.timestamp);
+    P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
+
+    P_Unit.setTrainingTime(unitPrototype, 0, 100);
+    QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
+    UnitProductionQueue.enqueue(building, item);
+
+    vm.warp(block.timestamp + 25);
+    LibUnit.claimBuildingUnits(player, building);
+    assertEq(ClaimOffset.get(building), 25, "offset 1 should be 25");
+    assertEq(UnitProductionQueue.peek(building).quantity, 100, "queue should have 100 units");
+
+    vm.warp(block.timestamp + 50);
+    LibUnit.claimBuildingUnits(player, building);
+    assertEq(ClaimOffset.get(building), 75, "offset 2 should be 75");
+    assertEq(UnitProductionQueue.peek(building).quantity, 100, "queue should have 100 units");
+
+    vm.warp(block.timestamp + 50);
+    LibUnit.claimBuildingUnits(player, building);
+    assertEq(ClaimOffset.get(building), 25, "offset 3 should be 25");
+    assertEq(UnitProductionQueue.peek(building).quantity, 99, "queue should have 99 units");
+
+    vm.warp(block.timestamp + 174);
+    LibUnit.claimBuildingUnits(player, building);
+    assertEq(ClaimOffset.get(building), 99, "offset 3 should be 25");
+    assertEq(UnitProductionQueue.peek(building).quantity, 98, "queue should have 98 units");
+  }
+
   function testGetUnitBuildTime() public {
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
     P_Unit.setTrainingTime(unitPrototype, 0, 100);
