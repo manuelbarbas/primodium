@@ -227,7 +227,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           value: upgradesToList(mainBaseMaxResourceUpgrades[1]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_Vessel: 1, U_MaxMoves: 1 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1 }),
         P_UnitProdMultiplier: { value: 100n },
       },
       2: {
