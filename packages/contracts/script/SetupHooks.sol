@@ -4,6 +4,30 @@ pragma solidity >=0.8.21;
 import { ResourceId, ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
+import { Children, ChildrenTableId } from "codegen/tables/Children.sol";
+import { OwnedBy, OwnedByTableId } from "codegen/tables/OwnedBy.sol";
+import { Position, PositionTableId, PositionData } from "codegen/tables/Position.sol";
+import { MapUtilities, MapUtilitiesTableId } from "codegen/tables/MapUtilities.sol";
+import { MapItemUtilities, MapItemUtilitiesTableId } from "codegen/tables/MapItemUtilities.sol";
+import { ResourceCount, ResourceCountTableId } from "codegen/tables/ResourceCount.sol";
+import { MaxResourceCount, MaxResourceCountTableId } from "codegen/tables/MaxResourceCount.sol";
+import { SpawnedTableId } from "codegen/tables/Spawned.sol";
+import { ProductionRate, ProductionRateTableId } from "codegen/tables/ProductionRate.sol";
+import { UnitCount, UnitCountTableId } from "codegen/tables/UnitCount.sol";
+import { LastClaimedAt, LastClaimedAtTableId } from "codegen/tables/LastClaimedAt.sol";
+import { QueueItemUnits, QueueItemUnitsTableId } from "codegen/tables/QueueItemUnits.sol";
+import { QueueUnits, QueueUnitsTableId } from "codegen/tables/QueueUnits.sol";
+import { ProducedResourceTableId } from "codegen/tables/ProducedResource.sol";
+import { ProductionRateTableId } from "codegen/tables/ProductionRate.sol";
+import { ProducedUnitTableId } from "codegen/tables/ProducedUnit.sol";
+import { TotalDefenseTableId } from "codegen/tables/TotalDefense.sol";
+import { TotalDefenseMultiplierTableId } from "codegen/tables/TotalDefenseMultiplier.sol";
+import { TotalVaultTableId } from "codegen/tables/TotalVault.sol";
+import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
+import { ScoreTableId } from "codegen/tables/Score.sol";
+import { AllianceTableId } from "codegen/tables/Alliance.sol";
+import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
+import { ClaimOffsetTableId } from "codegen/tables/ClaimOffset.sol";
 
 import "codegen/index.sol";
 import { OnResourceCount_Score } from "src/hooks/storeHooks/OnResourceCount_Score.sol";
@@ -66,11 +90,13 @@ function setupHooks(IWorld world) {
   world.grantAccess(MapUtilitiesTableId, address(onBefore_ClaimResources));
   world.grantAccess(MapItemStoredUtilitiesTableId, address(onBefore_ClaimResources));
   world.grantAccess(LastClaimedAtTableId, address(onBefore_ClaimResources));
+  world.grantAccess(ClaimOffsetTableId, address(onBefore_ClaimResources));
   world.grantAccess(ProducedResourceTableId, address(onBefore_ClaimResources));
 
   OnBefore_ClaimUnits onBefore_ClaimUnits = new OnBefore_ClaimUnits();
   world.grantAccess(UnitCountTableId, address(onBefore_ClaimUnits));
   world.grantAccess(LastClaimedAtTableId, address(onBefore_ClaimUnits));
+  world.grantAccess(ClaimOffsetTableId, address(onBefore_ClaimUnits));
   world.grantAccess(QueueItemUnitsTableId, address(onBefore_ClaimUnits));
   world.grantAccess(QueueUnitsTableId, address(onBefore_ClaimUnits));
   world.grantAccess(ProducedUnitTableId, address(onBefore_ClaimUnits));
@@ -366,6 +392,7 @@ function registerInvade(
   OnInvade_TargetClaimResourcesAndUnits onInvade_TargetClaimResourcesAndUnits = new OnInvade_TargetClaimResourcesAndUnits();
   world.grantAccess(ResourceCountTableId, address(onInvade_TargetClaimResourcesAndUnits));
   world.grantAccess(LastClaimedAtTableId, address(onInvade_TargetClaimResourcesAndUnits));
+  world.grantAccess(ClaimOffsetTableId, address(onInvade_TargetClaimResourcesAndUnits));
   world.grantAccess(QueueItemUnitsTableId, address(onInvade_TargetClaimResourcesAndUnits));
   world.grantAccess(QueueUnitsTableId, address(onInvade_TargetClaimResourcesAndUnits));
   world.grantAccess(UnitCountTableId, address(onInvade_TargetClaimResourcesAndUnits));
@@ -396,6 +423,7 @@ function registerRaid(
   OnRaid_TargetClaimResourcesAndUnits onRaid_TargetClaimResourcesAndUnits = new OnRaid_TargetClaimResourcesAndUnits();
   world.grantAccess(ResourceCountTableId, address(onRaid_TargetClaimResourcesAndUnits));
   world.grantAccess(LastClaimedAtTableId, address(onRaid_TargetClaimResourcesAndUnits));
+  world.grantAccess(ClaimOffsetTableId, address(onRaid_TargetClaimResourcesAndUnits));
   world.grantAccess(QueueItemUnitsTableId, address(onRaid_TargetClaimResourcesAndUnits));
   world.grantAccess(QueueUnitsTableId, address(onRaid_TargetClaimResourcesAndUnits));
   world.grantAccess(UnitCountTableId, address(onRaid_TargetClaimResourcesAndUnits));
@@ -417,6 +445,7 @@ function registerReinforce(IWorld world, OnBefore_ClaimUnits onBefore_ClaimUnits
   OnReinforce_TargetClaimResources onReinforce_TargetClaimResources = new OnReinforce_TargetClaimResources();
   world.grantAccess(ResourceCountTableId, address(onReinforce_TargetClaimResources));
   world.grantAccess(LastClaimedAtTableId, address(onReinforce_TargetClaimResources));
+  world.grantAccess(ClaimOffsetTableId, address(onReinforce_TargetClaimResources));
   world.grantAccess(ProductionRateTableId, address(onReinforce_TargetClaimResources));
   world.grantAccess(ProducedResourceTableId, address(onReinforce_TargetClaimResources));
   world.registerSystemHook(systemId, onReinforce_TargetClaimResources, BEFORE_CALL_SYSTEM);

@@ -7,12 +7,13 @@ import {
   createExtendedCoordComponent,
   createExtendedEntityComponent,
   createExtendedNumberComponent,
+  createExtendedBigIntComponent,
 } from "./customComponents/ExtendedComponent";
 
 /* -------------------------------------------------------------------------- */
 /*                                     Dev                                    */
 /* -------------------------------------------------------------------------- */
-export const DoubleCounter = createExtendedNumberComponent(world, {
+export const DoubleCounter = createExtendedBigIntComponent(world, {
   id: "DoubleCounter",
 });
 
@@ -89,21 +90,6 @@ export const Leaderboard = createExtendedComponent(
   }
 );
 
-/* -------------------------------------------------------------------------- */
-/*                                   Battle                                   */
-/* -------------------------------------------------------------------------- */
-export const Battle = createBattleComponent();
-export const BattleReport = createExtendedComponent(
-  world,
-  {
-    show: Type.Boolean,
-    battle: Type.OptionalEntity,
-  },
-  {
-    id: "Battle",
-  }
-);
-
 const Arrival = createExtendedComponent(world, {
   sendType: Type.Number,
   unitCounts: Type.BigIntArray,
@@ -141,5 +127,5 @@ export default {
 
   /* --------------------------------- Battle --------------------------------- */
   Arrival,
-  BattleReport,
+  // BattleReport,
 };

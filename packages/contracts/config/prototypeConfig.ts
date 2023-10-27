@@ -231,7 +231,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_UnitProdMultiplier: { value: 100n },
       },
       2: {
-        P_RequiredResources: getResourceValues({ Copper: 1500000 }),
+        P_RequiredResources: getResourceValues({ Copper: 150000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[2]),
         },
@@ -249,7 +249,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_UnitProdMultiplier: { value: 100n },
       },
       4: {
-        P_RequiredResources: getResourceValues({ Copper: 700000, Alloy: 60000 }),
+        P_RequiredResources: getResourceValues({ Copper: 700000, Alloy: 60000, PVCell: 500000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[4]),
         },

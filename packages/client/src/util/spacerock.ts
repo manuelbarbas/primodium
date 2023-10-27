@@ -96,7 +96,6 @@ export function getSpaceRockInfo(spaceRock: Entity) {
       name = `${MotherlodeSizeNames[motherlodeData?.size ?? 0]} ${getBlockTypeName(motherlodeResource)} Motherlode`;
       break;
     case ERock.Asteroid:
-      // name = Pirate.get(spaceRock) ? "Pirate Asteroid" : "Player Asteroid";
       name = "Player Asteroid";
       break;
     default:
