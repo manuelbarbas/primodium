@@ -91,8 +91,8 @@ library LibSend {
 
     return
       block.timestamp +
-      ((LibMath.distance(origin, destination) * config.worldSpeed * 100 * 100) /
-        (config.moveSpeed * unitSpeed * WORLD_SPEED_SCALE));
+      ((LibMath.distance(origin, destination) * 100 * WORLD_SPEED_SCALE * 100) /
+        (config.moveSpeed * config.worldSpeed * unitSpeed));
   }
 
   /// @notice Checks if movement between two positions is allowed.
