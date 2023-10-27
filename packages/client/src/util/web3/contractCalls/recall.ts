@@ -6,3 +6,8 @@ export const recall = async (rockEntity: Entity, arrivalEntity: Entity, network:
   const tx = await network.worldContract.write.recall([rockEntity as Hex, arrivalEntity as Hex]);
   await network.waitForTransaction(tx);
 };
+
+export const recallAll = async (rockEntity: Entity, network: SetupNetworkResult) => {
+  const tx = await network.worldContract.write.recallAll([rockEntity as Hex]);
+  await network.waitForTransaction(tx);
+};

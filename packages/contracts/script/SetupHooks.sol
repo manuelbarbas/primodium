@@ -29,6 +29,7 @@ import { AllianceTableId } from "codegen/tables/Alliance.sol";
 import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
 import { ClaimOffsetTableId } from "codegen/tables/ClaimOffset.sol";
 
+import "codegen/index.sol";
 import { OnResourceCount_Score } from "src/hooks/storeHooks/OnResourceCount_Score.sol";
 import { OnScore_Alliance_Score } from "src/hooks/storeHooks/OnScore_Alliance_Score.sol";
 
@@ -55,6 +56,7 @@ import { OnDestroy_Requirements } from "src/hooks/systemHooks/destroy/OnDestroy_
 import { OnDestroy_RemoveFromTiles } from "src/hooks/systemHooks/destroy/OnDestroy_RemoveFromTiles.sol";
 import { OnDestroy_Defense } from "src/hooks/systemHooks/destroy/OnDestroy_Defense.sol";
 
+import { OnSendUnits_InitMotherlode } from "src/hooks/systemHooks/sendUnits/OnSendUnits_InitMotherlode.sol";
 import { OnSendUnits_Requirements } from "src/hooks/systemHooks/sendUnits/OnSendUnits_Requirements.sol";
 import { OnSendUnits_UnitCount } from "src/hooks/systemHooks/sendUnits/OnSendUnits_UnitCount.sol";
 
@@ -317,10 +319,25 @@ function registerDestroyHooks(IWorld world, OnBefore_ClaimResources onBefore_Cla
 function registerSendUnits(IWorld world, OnBefore_ClaimUnits onBefore_ClaimUnits) {
   ResourceId systemId = getSystemResourceId("SendUnitsSystem");
 
+  world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
+
+  OnSendUnits_InitMotherlode onSendUnits_InitMotherlode = new OnSendUnits_InitMotherlode();
+  world.registerSystemHook(systemId, onSendUnits_InitMotherlode, BEFORE_CALL_SYSTEM);
+  world.grantAccess(MotherlodeTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(PositionTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(ReversePositionTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(LastClaimedAtTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(RockTypeTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(LastClaimedAtTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(QueueUnitsTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(QueueItemUnitsTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(ProducedUnitTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(ProducedUnitTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(UnitCountTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(ProductionRateTableId, address(onSendUnits_InitMotherlode));
+
   OnSendUnits_Requirements onSendUnits_Requirements = new OnSendUnits_Requirements();
   world.registerSystemHook(systemId, onSendUnits_Requirements, BEFORE_CALL_SYSTEM);
-
-  world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
 
   OnSendUnits_UnitCount onSendUnits_UnitCount = new OnSendUnits_UnitCount();
   world.grantAccess(UnitCountTableId, address(onSendUnits_UnitCount));

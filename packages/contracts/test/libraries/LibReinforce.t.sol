@@ -12,12 +12,13 @@ contract LibReinforceTest is PrimodiumTest {
   bytes32 unit = "unit";
 
   bytes32 unit2 = "unit2";
-  uint256[unitPrototypeCount] unitCounts;
+  uint256[NUM_UNITS] unitCounts;
 
   Arrival arrival =
     Arrival({
       sendType: ESendType.Invade,
       arrivalTime: 2,
+      sendTime: block.timestamp,
       from: "from",
       to: "to",
       origin: origin,
@@ -34,7 +35,7 @@ contract LibReinforceTest is PrimodiumTest {
     vm.startPrank(creator);
     player = addressToEntity(worldAddress);
     arrival.from = player;
-    bytes32[] memory unitTypes = new bytes32[](unitPrototypeCount);
+    bytes32[] memory unitTypes = new bytes32[](NUM_UNITS);
     unitTypes[0] = unit;
     unitTypes[1] = unit2;
     P_UnitPrototypes.set(unitTypes);
@@ -183,6 +184,7 @@ contract LibReinforceTest is PrimodiumTest {
     LibReinforce.recallAllReinforcements(player, destination);
 
     Arrival memory arrival2 = Arrival({
+      sendTime: block.timestamp,
       sendType: ESendType.Reinforce,
       arrivalTime: block.timestamp - 1,
       from: player,
@@ -191,7 +193,7 @@ contract LibReinforceTest is PrimodiumTest {
       destination: destination,
       unitCounts: unitCounts
     });
-    uint256[unitPrototypeCount] memory unitCounts2;
+    uint256[NUM_UNITS] memory unitCounts2;
     unitCounts2[0] = 53;
 
     arrival2.unitCounts = unitCounts2;

@@ -12,7 +12,6 @@ import { OnHookChangedValue, OnHookChangedValueTableId } from "codegen/tables/On
 import { ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import "forge-std/console.sol";
 
 contract MirrorSubscriber is IStoreHook {
   constructor(ResourceId tableId, IWorld world) {}
@@ -23,14 +22,11 @@ contract MirrorSubscriber is IStoreHook {
     uint48 start,
     bytes memory data
   ) public {
-    console.log("called before onAfterSpliceStaticData");
     StoreSwitch.spliceStaticData(OnHookChangedValueTableId, keyTuple, start, data);
-    console.log("called after onAfterSpliceStaticData");
     return;
   }
 
   function supportsInterface(bytes4 interfaceID) public view returns (bool) {
-    console.log("called supportsInterface");
     return true;
   }
 
@@ -42,7 +38,6 @@ contract MirrorSubscriber is IStoreHook {
     bytes memory dynamicData,
     FieldLayout fieldLayout
   ) public {
-    console.log("called before set record");
     //  if (ResourceIdInstance.getType(_tableId) != ResourceIdInstance.getType(tableId)) revert("invalid tableId");
   }
 
@@ -54,9 +49,7 @@ contract MirrorSubscriber is IStoreHook {
     bytes memory dynamicData,
     FieldLayout fieldLayout
   ) public {
-    console.log("called after set record");
     StoreSwitch.setRecord(OnHookChangedValueTableId, keyTuple, staticData, encodedLengths, dynamicData);
-    console.log("called after set record 2");
   }
 
   function onBeforeSpliceStaticData(
@@ -65,7 +58,6 @@ contract MirrorSubscriber is IStoreHook {
     uint48 start,
     bytes memory data
   ) public {
-    console.log("called after onBeforeSpliceStaticData");
     //  if (ResourceIdInstance.getType(_tableId) != ResourceIdInstance.getType(tableId)) revert("invalid tableId");
     return;
   }
@@ -79,7 +71,6 @@ contract MirrorSubscriber is IStoreHook {
     PackedCounter encodedLengths,
     bytes memory data
   ) public {
-    console.log("called after onBeforeSpliceDynamicData");
     return;
   }
 
@@ -92,7 +83,6 @@ contract MirrorSubscriber is IStoreHook {
     PackedCounter encodedLengths,
     bytes memory data
   ) public {
-    console.log("called after onAfterSpliceDynamicData");
     return;
   }
 
@@ -101,7 +91,6 @@ contract MirrorSubscriber is IStoreHook {
     bytes32[] memory keyTuple,
     FieldLayout fieldLayout
   ) public {
-    console.log("called before delete record");
     //  if (ResourceIdInstance.getType(_tableId) != ResourceIdInstance.getType(tableId)) revert("invalid tableId");
   }
 
@@ -110,7 +99,6 @@ contract MirrorSubscriber is IStoreHook {
     bytes32[] memory keyTuple,
     FieldLayout fieldLayout
   ) public {
-    console.log("called after delete record");
     StoreSwitch.deleteRecord(OnHookChangedValueTableId, keyTuple);
   }
 }

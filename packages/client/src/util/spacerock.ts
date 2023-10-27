@@ -8,7 +8,7 @@ import { Hangar } from "src/network/components/clientComponents";
 import { clampedIndex, getBlockTypeName } from "./common";
 import { EntityType, MotherlodeSizeNames, MotherlodeTypeNames, ResourceStorages } from "./constants";
 import { getFullResourceCount, getMotherlodeResource } from "./resource";
-import { ERock } from "./web3/types";
+import { ERock } from "contracts/config/enums";
 
 function getSpaceRockImage(spaceRock: Entity, type: ERock) {
   const { getSpriteBase64 } = primodium.api().sprite;

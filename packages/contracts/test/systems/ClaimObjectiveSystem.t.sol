@@ -44,7 +44,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   function setupRaid() internal {
     br.attacker = playerEntity;
     br.winner = playerEntity;
-    bytes32[] memory unitTypes = new bytes32[](unitPrototypeCount);
+    bytes32[] memory unitTypes = new bytes32[](NUM_UNITS);
     unitTypes[0] = unit1;
     P_UnitPrototypes.set(unitTypes);
 
@@ -395,7 +395,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     uint256 unit1Count,
     uint256 ironCount
   ) internal returns (P_SpawnPirateAsteroidData memory spawnPirateAsteroid) {
-    bytes32[] memory unitTypes = new bytes32[](unitPrototypeCount);
+    bytes32[] memory unitTypes = new bytes32[](NUM_UNITS);
     unitTypes[0] = unit1;
     unitTypes[1] = unit2;
     P_UnitPrototypes.set(unitTypes);
@@ -542,7 +542,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     bytes32 pirateAsteroidEntity = LibEncode.getHash(personalPirateEntity);
 
     vm.startPrank(creator);
-    uint256[5] memory unitCounts;
+    uint256[NUM_UNITS] memory unitCounts;
     unitCounts[0] = 100;
     unitCounts[1] = 50;
 
@@ -574,7 +574,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     bytes32 personalPirateEntity = LibEncode.getHash(PirateKey, playerEntity);
     bytes32 pirateAsteroidEntity = LibEncode.getHash(personalPirateEntity);
 
-    uint256[5] memory unitCounts;
+    uint256[NUM_UNITS] memory unitCounts;
     unitCounts[0] = 100;
     unitCounts[1] = 50;
 

@@ -34,7 +34,7 @@ contract LibRaidTest is PrimodiumTest {
     Home.setAsteroid(player, homeRock);
     br.attacker = player;
     br.winner = player;
-    bytes32[] memory unitTypes = new bytes32[](unitPrototypeCount);
+    bytes32[] memory unitTypes = new bytes32[](NUM_UNITS);
     unitTypes[0] = unit1;
     P_UnitPrototypes.set(unitTypes);
   }
@@ -128,13 +128,14 @@ contract LibRaidTest is PrimodiumTest {
     UnitCount.set(enemy, rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
+      sendTime: block.timestamp,
       sendType: ESendType.Raid,
       arrivalTime: 2,
       from: player,
       to: enemy,
       origin: homeRock,
       destination: rock,
-      unitCounts: [uint256(200), 0, 0, 0, 0]
+      unitCounts: [uint256(200), 0, 0, 0, 0, 0, 0]
     });
 
     ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);
@@ -159,13 +160,14 @@ contract LibRaidTest is PrimodiumTest {
     UnitCount.set(enemy, rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
+      sendTime: block.timestamp,
       sendType: ESendType.Raid,
       arrivalTime: 2,
       from: player,
       to: enemy,
       origin: homeRock,
       destination: rock,
-      unitCounts: [uint256(200), 0, 0, 0, 0]
+      unitCounts: [uint256(200), 0, 0, 0, 0, 0, 0]
     });
 
     ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);
