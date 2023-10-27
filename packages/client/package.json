@@ -30,7 +30,7 @@
     "@latticexyz/store-sync": "2.0.0-main-3e057061",
     "@latticexyz/utils": "2.0.0-main-3e057061",
     "@latticexyz/world": "2.0.0-main-3e057061",
-    "@primodiumxyz/mud-game-tools": "^1.0.6",
+    "@primodiumxyz/mud-game-tools": "^1.0.7",
     "@vercel/analytics": "^1.0.1",
     "async-mutex": "^0.4.0",
     "comlink": "^4.4.1",
@@ -57,7 +57,7 @@
     "react-window": "^1.8.9",
     "rxjs": "^7.5.5",
     "threads": "^1.7.0",
-    "viem": "1.6.0",
+    "viem": "1.14.0",
     "zustand": "^4.3.9"
   },
   "devDependencies": {
