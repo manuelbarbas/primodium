@@ -1,6 +1,9 @@
+import { ERock } from "contracts/config/enums";
 import { useEffect } from "react";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
+import { useMud } from "src/hooks";
+import { components } from "src/network/components";
 import { getSpaceRockInfo } from "src/util/spacerock";
 import { Asteroid } from "./screens/Asteroid";
 import { Motherlode } from "./screens/Motherlode";
@@ -8,9 +11,6 @@ import { SendFleet } from "./screens/SendFleet";
 import { SpacerockInfo } from "./screens/SpaceRockInfo";
 import { StationedUnits } from "./screens/StationedUnits";
 import { UnitSelection } from "./screens/UnitSelection";
-import { ERock } from "contracts/config/enums";
-import { components } from "src/network/components";
-import { useMud } from "src/hooks";
 
 export const SpacerockMenu: React.FC = () => {
   const playerEntity = useMud().network.playerEntity;
