@@ -32,10 +32,6 @@ export const ObjectiveDescriptions = new Map<EObjectives, string>([
     "Select the plating factory on the building menu and place it on an empty tile. It produces iron plates by consuming iron production.",
   ],
   [
-    EObjectives.BuildAlloyFactory,
-    "Select the alloy factory on the building menu and place it on an empty tile. It produces alloy by consuming iron and copper production.",
-  ],
-  [
     EObjectives.BuildPVCellFactory,
     "Select the photovoltaic cell factory on the building menu and place it on an empty tile. It produces photovoltaic cells by consuming copper and lithium production.",
   ],

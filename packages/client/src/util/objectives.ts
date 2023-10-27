@@ -2,7 +2,6 @@ import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
 import { Hex } from "viem";
-import { getBlockTypeName } from "./common";
 import { EntityType, RESOURCE_SCALE, RequirementType, ResourceEntityLookup } from "./constants";
 import { getFullResourceCount } from "./resource";
 
@@ -211,7 +210,6 @@ export function getAllRequirements(objective: Entity): Record<RequirementType, R
     [RequirementType.ProducedUnits]: getProducedUnitsRequirement(objective),
     [RequirementType.DestroyedUnits]: getDestroyedUnitsRequirement(objective),
   };
-  // console.log("objective:", getBlockTypeName(objective), "requirements:", requirements);
   return Object.fromEntries(Object.entries(requirements).filter(([_, value]) => value !== undefined)) as Record<
     RequirementType,
     Requirement[]

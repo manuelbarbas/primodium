@@ -8,16 +8,13 @@ import { getBlockTypeName } from "src/util/common";
 import { useGameStore } from "../../store/GameStore";
 import { HUD } from "../core/HUD";
 import { BrandingLabel } from "../shared/BrandingLabel";
-import { LoadingIndication } from "./LoadingIndication";
-import { Score } from "./Score";
-// import { ViewStarmap } from "./ViewStarmap";
-import { PrototypeInfo } from "./PrototypeInfo";
-import { ViewStarmap } from "./ViewStarmap";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { Hotbar } from "./hotbar/Hotbar";
 import { Panes } from "./panes/Panes";
 import { Resources } from "./resources/Resources";
-// import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
+import { Score } from "./Score";
+import { PrototypeInfo } from "./PrototypeInfo";
+import { ViewStarmap } from "./ViewStarmap";
 import { Units } from "./units/Units";
 
 export const GameHUD = () => {
@@ -54,7 +51,7 @@ export const GameHUD = () => {
             </HUD.TopMiddle>
             <HUD.TopLeft>
               <Score />
-              <LoadingIndication />
+              {/* <LoadingIndication /> */}
             </HUD.TopLeft>
             <HUD.TopRight>
               <Panes />
