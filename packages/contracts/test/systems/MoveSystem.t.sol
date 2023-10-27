@@ -86,4 +86,40 @@ contract MoveSystemTest is PrimodiumTest {
       assertEq(mainBaseEntity, OwnedBy.get(children[i]), "children should be owned by the building");
     }
   }
+
+  function testMoveBuildTiles() public {
+    bytes32 mainBaseEntity = Home.get(playerEntity).mainBase;
+    PositionData memory mainBasePosition = Position.get(mainBaseEntity);
+    PositionData memory newPosition = PositionData(
+      mainBasePosition.x + 1,
+      mainBasePosition.y + 1,
+      mainBasePosition.parent
+    );
+    bytes32[] memory oldChildren = Children.get(mainBaseEntity);
+
+    world.move(mainBasePosition, newPosition);
+    vm.warp(block.timestamp + 1);
+    P_RequiredTile.deleteRecord(IronMinePrototypeId);
+    world.build(EBuilding.IronMine, mainBasePosition);
+    assertTrue(
+      LibBuilding.getBuildingFromCoord(mainBasePosition) != LibBuilding.getBuildingFromCoord(newPosition),
+      "the two buildings should be different"
+    );
+    assertEq(
+      BuildingType.get(LibBuilding.getBuildingFromCoord(mainBasePosition)),
+      IronMinePrototypeId,
+      "the building should be an iron mine"
+    );
+    assertEq(
+      BuildingType.get(LibBuilding.getBuildingFromCoord(newPosition)),
+      MainBasePrototypeId,
+      "the building should be MainBase"
+    );
+    PositionData memory newPositionOffset = PositionData(newPosition.x + 1, newPosition.y + 1, newPosition.parent);
+    assertEq(
+      BuildingType.get(LibBuilding.getBuildingFromCoord(newPositionOffset)),
+      MainBasePrototypeId,
+      "the building should be MainBase"
+    );
+  }
 }

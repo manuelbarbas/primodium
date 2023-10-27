@@ -25,7 +25,7 @@ library LibEncode {
   }
 
   function getHash(bytes32 key, PositionData memory position) internal view returns (bytes32) {
-    return keccak256(abi.encode(key, position.x, position.y, position.parent));
+    return keccak256(abi.encode(key, position.x, position.y, position.parent, block.timestamp));
   }
 
   /**
