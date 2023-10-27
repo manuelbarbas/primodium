@@ -27,6 +27,7 @@ import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtili
 import { ScoreTableId } from "codegen/tables/Score.sol";
 import { AllianceTableId } from "codegen/tables/Alliance.sol";
 import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
+import { ClaimOffsetTableId } from "codegen/tables/ClaimOffset.sol";
 
 import { OnResourceCount_Score } from "src/hooks/storeHooks/OnResourceCount_Score.sol";
 import { OnScore_Alliance_Score } from "src/hooks/storeHooks/OnScore_Alliance_Score.sol";
