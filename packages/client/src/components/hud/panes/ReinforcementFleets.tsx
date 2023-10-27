@@ -1,8 +1,8 @@
-import { SecondaryCard } from "src/components/core/Card";
-import { Fleet } from "./Fleet";
-import { components } from "src/network/components";
-import { useMud } from "src/hooks";
 import { ESendType } from "contracts/config/enums";
+import { SecondaryCard } from "src/components/core/Card";
+import { useMud } from "src/hooks";
+import { components } from "src/network/components";
+import { Fleet } from "./Fleet";
 
 export const ReinforcementFleets: React.FC = () => {
   const playerEntity = useMud().network.playerEntity;
@@ -20,7 +20,7 @@ export const ReinforcementFleets: React.FC = () => {
         </SecondaryCard>
       ) : (
         fleets.map((entity) => {
-          const fleet = components.Arrival.get(entity);
+          const fleet = components.Arrival.getEntity(entity);
 
           if (!fleet) return null;
 

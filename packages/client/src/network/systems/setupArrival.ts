@@ -65,7 +65,9 @@ export const setupArrival = () => {
 
   defineComponentSystem(world, MapItemArrivals, ({ entity, value: [newValue] }) => {
     const newVal = newValue?.value;
-    if (!newVal) return Arrival.remove(entity);
+    if (!newVal) {
+      return Arrival.remove(entity);
+    }
     const arrival = decodeArrival(newVal as Hex);
     Arrival.set(arrival, entity);
   });

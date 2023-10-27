@@ -1,7 +1,7 @@
 import { SecondaryCard } from "src/components/core/Card";
-import { Fleet } from "./Fleet";
-import { components } from "src/network/components";
 import { useMud } from "src/hooks";
+import { components } from "src/network/components";
+import { Fleet } from "./Fleet";
 
 export const Outgoingfleets: React.FC = () => {
   const playerEntity = useMud().network.playerEntity;
@@ -18,7 +18,7 @@ export const Outgoingfleets: React.FC = () => {
         </SecondaryCard>
       ) : (
         fleets.map((entity) => {
-          const fleet = components.Arrival.get(entity);
+          const fleet = components.Arrival.getEntity(entity);
 
           if (!fleet) return null;
 
