@@ -1,10 +1,10 @@
 import { ComponentValue } from "@latticexyz/recs";
+import { ESendType } from "contracts/config/enums";
 import { BiSolidInvader } from "react-icons/bi";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { shortenAddress } from "src/util/common";
 import { useNow } from "src/util/time";
-import { ESendType } from "src/util/web3/types";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -40,8 +40,8 @@ export const AttackingFleet: React.FC<{
         <div className="rounded-md bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
           <BiSolidInvader size={16} />
           <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">
-            {sendType === ESendType.INVADE && "INVADE"}
-            {sendType === ESendType.RAID && "RAID"}
+            {sendType === ESendType.Invade && "INVADE"}
+            {sendType === ESendType.Raid && "RAID"}
           </p>
         </div>
         <LabeledValue label="TARGET">
