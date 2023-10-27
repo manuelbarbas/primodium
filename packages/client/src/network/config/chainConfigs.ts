@@ -16,7 +16,7 @@ export const caldera = {
     },
   },
   faucetUrl: "https://primodium-services.caldera.gg/faucet",
-  indexerUrl: "https://primodium-services.caldera.gg/trpc",
+  indexerUrl: "http://0.0.0.0:3001/trpc",
   blockExplorers: {
     default: {
       name: "Blockscout",

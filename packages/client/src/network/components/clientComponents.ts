@@ -7,12 +7,13 @@ import {
   createExtendedCoordComponent,
   createExtendedEntityComponent,
   createExtendedNumberComponent,
+  createExtendedBigIntComponent,
 } from "./customComponents/ExtendedComponent";
 
 /* -------------------------------------------------------------------------- */
 /*                                     Dev                                    */
 /* -------------------------------------------------------------------------- */
-export const DoubleCounter = createExtendedNumberComponent(world, {
+export const DoubleCounter = createExtendedBigIntComponent(world, {
   id: "DoubleCounter",
 });
 

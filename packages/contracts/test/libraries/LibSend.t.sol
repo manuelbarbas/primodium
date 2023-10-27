@@ -133,7 +133,7 @@ contract LibSendTest is PrimodiumTest {
     Arrival memory testArrival = setupArrivalLength(worldSpeed, moveSpeed, distance, unitSpeed);
 
     uint256 expected = block.timestamp +
-      ((distance * worldSpeed * 100 * 100) / (WORLD_SPEED_SCALE * moveSpeed * unitSpeed));
+      ((distance * WORLD_SPEED_SCALE * 100 * 100) / (worldSpeed * moveSpeed * unitSpeed));
     assertEq(
       LibSend.getArrivalTime(
         PositionData(0, 0, 0),

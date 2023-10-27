@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { MaxResourceCount, ProducedUnit, BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
+import { MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
 
 import { ERock, EUnit } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
@@ -68,7 +68,7 @@ library LibUnit {
   /// @param playerEntity Entity ID of the player
   /// @param building Entity ID of the building
   function claimBuildingUnits(bytes32 playerEntity, bytes32 building) internal {
-    uint256 startTime = LastClaimedAt.get(building);
+    uint256 startTime = LastClaimedAt.get(building) - ClaimOffset.get(building);
     LastClaimedAt.set(building, block.timestamp);
 
     bool stillClaiming = !UnitProductionQueue.isEmpty(building);
@@ -77,17 +77,21 @@ library LibUnit {
       uint256 trainingTime = getUnitBuildTime(playerEntity, building, item.unitId);
       uint256 trainedUnits = LibMath.min(item.quantity, ((block.timestamp - startTime) / (trainingTime)));
 
-      if (trainedUnits == 0) return;
+      if (trainedUnits == 0) {
+        ClaimOffset.set(building, (block.timestamp - startTime) % trainingTime);
+        return;
+      }
       if (trainedUnits == item.quantity) {
         UnitProductionQueue.dequeue(building);
         stillClaiming = !UnitProductionQueue.isEmpty(building);
+        startTime += trainingTime * trainedUnits;
       } else {
         item.quantity -= trainedUnits;
         UnitProductionQueue.updateFront(building, item);
+        ClaimOffset.set(building, (block.timestamp - startTime) % trainingTime);
         stillClaiming = false;
       }
       ProducedUnit.set(playerEntity, item.unitId, ProducedUnit.get(playerEntity, item.unitId) + trainedUnits);
-      startTime += trainingTime * trainedUnits;
       increaseUnitCount(playerEntity, Home.getAsteroid(playerEntity), item.unitId, trainedUnits);
     }
   }
