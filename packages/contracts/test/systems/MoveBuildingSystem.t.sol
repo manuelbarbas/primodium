@@ -5,7 +5,7 @@ import "test/PrimodiumTest.t.sol";
 import { WorldResourceIdInstance, WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { AccessControl } from "@latticexyz/world/src/AccessControl.sol";
 
-contract MoveSystemTest is PrimodiumTest {
+contract MoveBuildingSystemTest is PrimodiumTest {
   bytes32 playerEntity;
 
   function setUp() public override {
@@ -27,7 +27,7 @@ contract MoveSystemTest is PrimodiumTest {
     );
     bytes32[] memory oldChildren = Children.get(mainBaseEntity);
 
-    world.move(mainBasePosition, newPosition);
+    world.moveBuilding(mainBasePosition, newPosition);
     assertEq(
       mainBaseEntity,
       LibBuilding.getBuildingFromCoord(newPosition),
@@ -59,6 +59,19 @@ contract MoveSystemTest is PrimodiumTest {
     }
   }
 
+  function testFailMoveOutOfBounds() public {
+    bytes32 mainBaseEntity = Home.get(playerEntity).mainBase;
+    PositionData memory mainBasePosition = Position.get(mainBaseEntity);
+    PositionData memory newPosition = PositionData(
+      mainBasePosition.x + 15,
+      mainBasePosition.y + 15,
+      mainBasePosition.parent
+    );
+    bytes32[] memory oldChildren = Children.get(mainBaseEntity);
+
+    world.moveBuilding(mainBasePosition, newPosition);
+  }
+
   function testMoveSomeSameTiles() public {
     bytes32 mainBaseEntity = Home.get(playerEntity).mainBase;
     PositionData memory mainBasePosition = Position.get(mainBaseEntity);
@@ -69,7 +82,7 @@ contract MoveSystemTest is PrimodiumTest {
     );
     bytes32[] memory oldChildren = Children.get(mainBaseEntity);
 
-    world.move(mainBasePosition, newPosition);
+    world.moveBuilding(mainBasePosition, newPosition);
     mainBasePosition = Position.get(mainBaseEntity);
     assertEq(mainBasePosition.x, newPosition.x, "building position should have updated");
     assertEq(mainBasePosition.y, newPosition.y, "building position should have updated");
@@ -103,7 +116,7 @@ contract MoveSystemTest is PrimodiumTest {
     );
     bytes32[] memory oldChildren = Children.get(mainBaseEntity);
 
-    world.move(mainBasePosition, newPosition);
+    world.moveBuilding(mainBasePosition, newPosition);
     console.log("moved success");
     uint256 timestamp = block.timestamp;
     vm.warp(block.timestamp + 1);
@@ -129,6 +142,71 @@ contract MoveSystemTest is PrimodiumTest {
     assertEq(0, LibBuilding.getBuildingFromCoord(mainBasePosition), "there should be no building at the old position");
 
     P_RequiredTile.deleteRecord(IronMinePrototypeId);
+    world.build(EBuilding.IronMine, mainBasePosition);
+
+    assertTrue(
+      LibBuilding.getBuildingFromCoord(mainBasePosition) != LibBuilding.getBuildingFromCoord(newPosition),
+      "the two buildings should be different"
+    );
+    assertEq(
+      BuildingType.get(LibBuilding.getBuildingFromCoord(mainBasePosition)),
+      IronMinePrototypeId,
+      "the building should be an iron mine"
+    );
+    assertEq(
+      BuildingType.get(LibBuilding.getBuildingFromCoord(newPosition)),
+      MainBasePrototypeId,
+      "the building should be MainBase"
+    );
+  }
+
+  function testFailMoveOnTopOfBuildingTiles() public {
+    P_RequiredTile.deleteRecord(IronMinePrototypeId);
+
+    console.log("testMoveBuildTiles");
+    bytes32 mainBaseEntity = Home.get(playerEntity).mainBase;
+    PositionData memory mainBasePosition = Position.get(mainBaseEntity);
+
+    PositionData memory overlappedPosition = PositionData(
+      mainBasePosition.x - 3,
+      mainBasePosition.y - 3,
+      mainBasePosition.parent
+    );
+    world.build(EBuilding.IronMine, overlappedPosition);
+
+    PositionData memory newPosition = PositionData(
+      mainBasePosition.x - 1,
+      mainBasePosition.y - 1,
+      mainBasePosition.parent
+    );
+
+    bytes32[] memory oldChildren = Children.get(mainBaseEntity);
+
+    world.moveBuilding(mainBasePosition, newPosition);
+    console.log("moved success");
+    uint256 timestamp = block.timestamp;
+    vm.warp(block.timestamp + 1);
+    assertTrue(timestamp != block.timestamp, "timestamp should have updated");
+    assertEq(
+      Spawned.get(LibEncode.getTimedHash(BuildingKey, mainBasePosition)),
+      false,
+      "new building should not be spawned"
+    );
+    assertTrue(
+      LibEncode.getTimedHash(BuildingKey, mainBasePosition) != LibBuilding.getBuildingFromCoord(mainBasePosition),
+      "building entity should be different at new timestamp"
+    );
+    assertTrue(
+      mainBaseEntity != LibBuilding.getBuildingFromCoord(mainBasePosition),
+      "old tile owner should not be main base"
+    );
+    assertEq(
+      mainBaseEntity,
+      LibBuilding.getBuildingFromCoord(newPosition),
+      " building entity should be same at new position"
+    );
+    assertEq(0, LibBuilding.getBuildingFromCoord(mainBasePosition), "there should be no building at the old position");
+
     world.build(EBuilding.IronMine, mainBasePosition);
 
     assertTrue(

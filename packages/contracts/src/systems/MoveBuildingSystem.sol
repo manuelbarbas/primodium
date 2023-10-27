@@ -10,16 +10,19 @@ import { OwnedBy, BuildingType, HasBuiltBuilding, P_EnumToPrototype, Position, P
 // libraries
 import { LibEncode, LibBuilding, LibResource } from "codegen/Libraries.sol";
 
-contract MoveSystem is PrimodiumSystem {
-  function move(PositionData memory fromCoord, PositionData memory toCoord) public {
+contract MoveBuildingSystem is PrimodiumSystem {
+  function moveBuilding(PositionData memory fromCoord, PositionData memory toCoord) public {
     toCoord.parent = fromCoord.parent;
     bytes32 playerEntity = addressToEntity(_msgSender());
     bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(fromCoord);
-    require(OwnedBy.get(buildingEntity) == playerEntity, "[MoveSystem] the building is not owned by the player");
+    require(
+      OwnedBy.get(buildingEntity) == playerEntity,
+      "[MoveBuildingSystem] the building is not owned by the player"
+    );
     bytes32 buildingType = BuildingType.get(buildingEntity);
     require(
       LibBuilding.canBuildOnTile(buildingType, toCoord),
-      "[MoveSystem] the building cannot be moved to the specified coordinates"
+      "[MoveBuildingSystem] the building cannot be moved to the specified coordinates"
     );
     LibBuilding.removeBuildingTiles(fromCoord);
     Position.set(buildingEntity, toCoord);
