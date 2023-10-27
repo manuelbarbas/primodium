@@ -245,7 +245,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           value: upgradesToList(mainBaseMaxResourceUpgrades[3]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 2 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 1 }),
         P_UnitProdMultiplier: { value: 100n },
       },
       4: {
@@ -254,7 +254,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           value: upgradesToList(mainBaseMaxResourceUpgrades[4]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 3 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 2 }),
         P_UnitProdMultiplier: { value: 100n },
       },
       5: {
@@ -263,7 +263,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           value: upgradesToList(mainBaseMaxResourceUpgrades[5]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 4 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 3 }),
         P_UnitProdMultiplier: { value: 100n },
       },
       6: {
@@ -272,7 +272,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           value: upgradesToList(mainBaseMaxResourceUpgrades[6]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 5 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 4 }),
         P_UnitProdMultiplier: { value: 100n },
       },
       7: {
@@ -286,7 +286,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           value: upgradesToList(mainBaseMaxResourceUpgrades[7]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 6 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 5 }),
         P_UnitProdMultiplier: { value: 100n },
       },
       8: {
@@ -295,7 +295,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           value: upgradesToList(mainBaseMaxResourceUpgrades[8]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 7 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 6 }),
         P_UnitProdMultiplier: { value: 100n },
       },
     },
