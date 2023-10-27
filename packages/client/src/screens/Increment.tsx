@@ -14,9 +14,9 @@ export function Increment() {
         <br />
         Account: <span>{account?.value.toString() ?? "??"}</span>
         <br />
-        Counter: <span>{counter?.value ?? "??"}</span>
+        Counter: <span>{counter?.value.toString() ?? "??"}</span>
         <br />
-        Double Counter!: <span>{doubleCounter?.value ?? "??"}</span>
+        Double Counter!: <span>{doubleCounter?.value.toString() ?? "??"}</span>
       </div>
       <button type="button" onClick={contractCalls.increment}>
         Increment
