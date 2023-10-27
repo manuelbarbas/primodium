@@ -1,4 +1,4 @@
-import { ContractWrite, createBurnerAccount, createContract, transportObserver } from "@latticexyz/common";
+import { ContractWrite, createBurnerAccount, getContract, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { createFaucetService } from "@latticexyz/services/faucet";
 import { syncToRecs } from "@latticexyz/store-sync/recs";
@@ -34,7 +34,7 @@ export async function setupNetwork(networkConfig: NetworkConfig) {
   });
 
   const write$ = new Subject<ContractWrite>();
-  const worldContract = createContract({
+  const worldContract = getContract({
     address: networkConfig.worldAddress as Hex,
     abi: IWorld__factory.abi,
     publicClient,
