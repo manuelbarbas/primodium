@@ -117,14 +117,15 @@ library LibBuilding {
 
   /// @notice Places building tiles for a constructed building
   /// @param playerEntity The entity ID of the player
+  /// @param buildingEntity The entity ID of the building
   /// @param buildingPrototype The type of building to construct
   /// @param position The coordinate where the building should be placed
   function placeBuildingTiles(
     bytes32 playerEntity,
+    bytes32 buildingEntity,
     bytes32 buildingPrototype,
     PositionData memory position
   ) internal {
-    bytes32 buildingEntity = LibEncode.getHash(BuildingKey, position);
     int32[] memory blueprint = P_Blueprint.get(buildingPrototype);
     Bounds memory bounds = getPlayerBounds(playerEntity);
 

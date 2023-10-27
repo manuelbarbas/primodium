@@ -23,6 +23,6 @@ contract MoveSystem is PrimodiumSystem {
     );
     LibBuilding.removeBuildingTiles(fromCoord);
     Position.set(buildingEntity, toCoord);
-    LibBuilding.placeBuildingTiles(buildingEntity, buildingType, toCoord);
+    LibBuilding.placeBuildingTiles(playerEntity, buildingEntity, buildingType, toCoord);
   }
 }
