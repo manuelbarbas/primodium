@@ -1,11 +1,11 @@
 import { primodium } from "@game/api";
 import { KeybindActions, Scenes } from "@game/constants";
+import { Entity } from "@latticexyz/recs";
 import { useEffect } from "react";
 import { FaCrosshairs } from "react-icons/fa";
-import { Button } from "../core/Button";
-import { components } from "src/network/components";
-import { Entity } from "@latticexyz/recs";
 import { useMud } from "src/hooks";
+import { components } from "src/network/components";
+import { Button } from "../core/Button";
 
 export const ViewStarmap = () => {
   const mud = useMud();
@@ -22,6 +22,7 @@ export const ViewStarmap = () => {
   const openMap = async () => {
     await transitionToScene(Scenes.Asteroid, Scenes.Starmap, 0);
     components.MapOpen.set({ value: true });
+    components.SelectedBuilding.remove();
   };
 
   useEffect(() => {
