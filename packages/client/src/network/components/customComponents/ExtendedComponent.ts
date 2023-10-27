@@ -23,6 +23,7 @@ import {
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect, useState } from "react";
 import { encodeEntity } from "./util";
+import { useEntityQuery } from "@latticexyz/react";
 
 export interface Options<M extends Metadata> {
   id: string;
@@ -40,6 +41,9 @@ export type ExtendedComponent<S extends Schema, M extends Metadata, T = unknown>
   getAll: () => Entity[];
   getAllWith: (value: Partial<ComponentValue<S>>) => Entity[];
   getAllWithout: (value: Partial<ComponentValue<S>>) => Entity[];
+  useAll: () => Entity[];
+  useAllWith: (value: Partial<ComponentValue<S>>) => Entity[];
+  useAllWithout: (value: Partial<ComponentValue<S>>) => Entity[];
   remove: (entity?: Entity) => void;
   clear: () => void;
   update: (value: Partial<ComponentValue<S, T>>, entity?: Entity) => void;
@@ -123,13 +127,28 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
     return [...entities];
   }
 
+  function useAll() {
+    const entitites = useEntityQuery([Has(component)]);
+    return [...entitites];
+  }
+
   function getAllWith(value: Partial<ComponentValue<S>>) {
     const entities = runQuery([HasValue(component, value)]);
     return [...entities];
   }
 
+  function useAllWith(value: Partial<ComponentValue<S>>) {
+    const entities = useEntityQuery([HasValue(component, value)]);
+    return [...entities];
+  }
+
   function getAllWithout(value: Partial<ComponentValue<S>>) {
     const entities = runQuery([NotValue(component, value)]);
+    return [...entities];
+  }
+
+  function useAllWithout(value: Partial<ComponentValue<S>>) {
+    const entities = useEntityQuery([NotValue(component, value)]);
     return [...entities];
   }
 
@@ -191,6 +210,9 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
     getAll,
     getAllWith,
     getAllWithout,
+    useAll,
+    useAllWith,
+    useAllWithout,
     remove,
     clear,
     update,

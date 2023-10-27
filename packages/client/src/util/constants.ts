@@ -447,10 +447,11 @@ export const UnitEnumLookup: Record<Entity, EUnit> = {
   [EntityType.AnvilLightDrone]: EUnit.AnvilDrone,
   [EntityType.AegisDrone]: EUnit.AegisDrone,
   [EntityType.MiningVessel]: EUnit.MiningVessel,
-  // [EntityType.MinutemanMarine]: EUnit.MinutemanMarine,
-  // [EntityType.TridentMarine]: EUnit.TridentMarine,
+  [EntityType.MinutemanMarine]: EUnit.MinutemanMarine,
+  [EntityType.TridentMarine]: EUnit.TridentMarine,
 };
 
+export const UnitEntityLookup = reverseRecord(UnitEnumLookup);
 export const ObjectiveEnumLookup: Record<Entity, EObjectives> = {
   ...Object.keys(EObjectives).reduce((acc, key) => {
     const elem = EObjectives[key as keyof typeof EObjectives];
