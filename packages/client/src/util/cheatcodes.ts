@@ -22,7 +22,7 @@ const resources: Record<string, Entity> = {
   alloy: EntityType.Alloy,
   pvcell: EntityType.PVCell,
   housing: EntityType.Housing,
-  // vessel: BlockType.VesselCapacity,
+  vessel: EntityType.VesselCapacity,
   electricity: EntityType.Electricity,
 };
 
@@ -116,8 +116,8 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
             }
           );
         }
-
         UtilityStorages.forEach(async (resource) => {
+          if (resource == EntityType.VesselCapacity) return;
           if (!player) throw new Error("No player found");
 
           await mud.contractCalls.setComponentValue(
@@ -131,8 +131,8 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
             }
           );
         });
-
         UtilityStorages.forEach(async (resource) => {
+          if (resource == EntityType.VesselCapacity) return;
           if (!player) throw new Error("No player found");
 
           await mud.contractCalls.setComponentValue(

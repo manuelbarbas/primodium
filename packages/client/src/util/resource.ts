@@ -2,7 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { EResource, MUDEnums } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
 import { Hex } from "viem";
-import { ResourceType, ResourceEnumLookup, SPEED_SCALE, ResourceEntityLookup } from "./constants";
+import { ResourceEntityLookup, ResourceEnumLookup, ResourceType, SPEED_SCALE } from "./constants";
 import { getNow } from "./time";
 
 // building a building requires resources
@@ -47,23 +47,25 @@ export function getMotherlodeResource(entity: Entity) {
 
 export function getFullResourceCount(resourceID: Entity, playerEntity: Entity) {
   const worldSpeed = comps.P_GameConfig.get()?.worldSpeed ?? 100n;
+  const resource = ResourceEnumLookup[resourceID];
+  if (resource == undefined) throw new Error("Resource not found");
 
   const resourceCount =
     comps.ResourceCount.getWithKeys({
       entity: playerEntity as Hex,
-      resource: ResourceEnumLookup[resourceID] ?? EResource.Iron,
+      resource,
     })?.value ?? 0n;
 
   const maxStorage =
     comps.MaxResourceCount.getWithKeys({
       entity: playerEntity as Hex,
-      resource: ResourceEnumLookup[resourceID] ?? EResource.Iron,
+      resource,
     })?.value ?? 0n;
 
   const production =
     comps.ProductionRate.getWithKeys({
       entity: playerEntity as Hex,
-      resource: ResourceEnumLookup[resourceID] ?? EResource.Iron,
+      resource,
     })?.value ?? 0n;
 
   const playerLastClaimed = comps.LastClaimedAt.get(playerEntity)?.value ?? 0n;

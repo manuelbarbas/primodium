@@ -2,7 +2,6 @@ import { Hex } from "viem";
 import { config } from "../mud.config";
 import {
   encodeArray,
-  getResourceValue,
   getResourceValues,
   getUnitValues,
   idsToPrototypes,
@@ -11,7 +10,7 @@ import {
   upgradesToList,
 } from "../ts/prototypes/prototypeGenUtils";
 import { PrototypesConfig } from "../ts/prototypes/types";
-import { MUDEnums, EResource } from "./enums";
+import { EResource, MUDEnums } from "./enums";
 import { getBlueprint } from "./util/blueprints";
 import encodeBytes32 from "./util/encodeBytes32";
 
@@ -1219,6 +1218,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     levels: {
       0: {
         P_RequiredResources: getResourceValues({ Sulfur: 100000, IronPlate: 200000, PVCell: 15000, U_Vessel: 1 }),
+        P_RequiredBaseLevel: { value: 3n },
         P_MiningRate: { value: 1n },
         P_Unit: {
           attack: 20n,

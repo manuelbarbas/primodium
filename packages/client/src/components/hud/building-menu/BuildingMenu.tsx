@@ -7,15 +7,15 @@ import { Basic } from "./screens/Basic";
 import { BuildingInfo } from "./screens/BuildingInfo";
 import { Demolish } from "./screens/Demolish";
 // import { UnitFactory } from "./screens/UnitFactory";
-import { MainBase } from "./screens/Mainbase";
 import { BuildQueue } from "./screens/BuildQueue";
 import { BuildUnit } from "./screens/BuildUnit";
+import { MainBase } from "./screens/Mainbase";
 // import { UpgradeUnit } from "./screens/UpgradeUnit";
 import { FaTrash } from "react-icons/fa";
 import { components } from "src/network/components";
+import { MiningVessels } from "./screens/MiningVessels";
 import { UnitFactory } from "./screens/UnitFactory";
 import { UpgradeUnit } from "./screens/UpgradeUnit";
-// import { MiningVessels } from "./screens/MiningVessels";
 
 export const BuildingMenu: React.FC = () => {
   const selectedBuilding = components.SelectedBuilding.use()?.value;
@@ -74,7 +74,7 @@ export const BuildingMenu: React.FC = () => {
       <BuildQueue building={selectedBuilding} />
       <BuildUnit building={selectedBuilding} />
       <UpgradeUnit building={selectedBuilding} />
-      {/* <MiningVessels building={selectedBuilding} /> */}
+      <MiningVessels building={selectedBuilding} />
 
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2">
         <Button
