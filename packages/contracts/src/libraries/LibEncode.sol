@@ -24,7 +24,11 @@ library LibEncode {
     return keccak256(abi.encode(entity1, entity2, entity3));
   }
 
-  function getHash(bytes32 key, PositionData memory position) internal view returns (bytes32) {
+  function getHash(bytes32 key, PositionData memory position) internal pure returns (bytes32) {
+    return keccak256(abi.encode(key, position.x, position.y, position.parent));
+  }
+
+  function getTimedHash(bytes32 key, PositionData memory position) internal view returns (bytes32) {
     return keccak256(abi.encode(key, position.x, position.y, position.parent, block.timestamp));
   }
 

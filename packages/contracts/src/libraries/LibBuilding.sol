@@ -20,6 +20,14 @@ import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 
 library LibBuilding {
   /**
+   * @dev gets a unique building entity ID from a coordinate.
+   * @param coord The coordinate of the building to be destroyed.
+   */
+  function getUniqueBuildingEntity(PositionData memory coord) internal view returns (bytes32) {
+    return LibEncode.getTimedHash(BuildingKey, coord);
+  }
+
+  /**
    * @dev Checks if the requirements for destroying a building are met.
    * @param playerEntity The entity ID of the player.
    * @param coord The coordinate of the building to be destroyed.
@@ -99,7 +107,7 @@ library LibBuilding {
     bytes32 buildingPrototype,
     PositionData memory coord
   ) internal returns (bytes32 buildingEntity) {
-    buildingEntity = LibEncode.getHash(BuildingKey, coord);
+    buildingEntity = LibEncode.getTimedHash(BuildingKey, coord);
 
     Position.set(buildingEntity, coord);
     Spawned.set(buildingEntity, true);

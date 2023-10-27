@@ -33,7 +33,7 @@ contract SpawnSystem is PrimodiumSystem {
     PositionData memory position = Position.get(MainBasePrototypeId);
     position.parent = asteroid;
 
-    Home.set(playerEntity, asteroid, LibEncode.getHash(BuildingKey, position));
+    Home.set(playerEntity, asteroid, LibEncode.getTimedHash(BuildingKey, position));
     SystemCall.callWithHooksOrRevert(
       _msgSender(),
       getSystemResourceId("BuildSystem"),

@@ -53,7 +53,7 @@ contract OnBuild_ProductionRate is SystemHook {
       (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
 
       // Generate the unique building entity key
-      bytes32 buildingEntity = LibEncode.getHash(BuildingKey, coord);
+      bytes32 buildingEntity = LibEncode.getTimedHash(BuildingKey, coord);
 
       // Reduce the production rate of resources the building requires
       LibReduceProductionRate.reduceProductionRate(playerEntity, buildingEntity, 1);
