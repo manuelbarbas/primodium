@@ -1,47 +1,42 @@
-import { SingletonID } from "@latticexyz/network";
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
+import { ERock } from "contracts/config/enums";
 import { Button } from "src/components/core/Button";
 import { useMud } from "src/hooks";
-import { Arrival, OwnedBy } from "src/network/components/chainComponents";
-import { Account } from "src/network/components/clientComponents";
-import { useGameStore } from "src/store/GameStore";
-
-import { invade, raid } from "src/util/web3";
-import { ESendType, ESpaceRockType } from "src/util/web3/types";
+import { components } from "src/network/components";
+import { invade } from "src/util/web3/contractCalls/invade";
+import { raid } from "src/util/web3/contractCalls/raid";
 
 export const Land: React.FC<{
-  destination: EntityID;
-  rockType: ESpaceRockType;
+  destination: Entity;
+  rockType: ERock;
 }> = ({ destination, rockType }) => {
-  const network = useMud();
-  const player = Account.use(undefined, {
-    value: SingletonID,
-  }).value;
-  const destinationOwner = OwnedBy.use(destination)?.value;
-  const transactionLoading = useGameStore((state) => state.transactionLoading);
-  const orbiting = Arrival.get({
-    from: player,
-    onlyOrbiting: true,
-    destination: destination,
-  }).filter((elem) => elem?.sendType !== ESendType.REINFORCE);
+  const network = useMud().network;
+  const playerEntity = network.playerEntity;
+  const destinationOwner = components.OwnedBy.use(destination)?.value;
+  // const orbiting = components.Arrival.get({
+  //   from: player,
+  //   onlyOrbiting: true,
+  //   destination: destination,
+  // }).filter((elem) => elem?.sendType !== ESendType.Reinforce);
+  const orbiting = [];
 
-  const isNeutral = destinationOwner === player || !destinationOwner;
+  const isNeutral = destinationOwner === playerEntity || !destinationOwner;
 
   if (!orbiting.length) return <></>;
 
   return (
     <div className="w-full flex justify-center mt-2">
       <Button
-        disabled={transactionLoading}
-        loading={transactionLoading}
+        // disabled={transactionLoading}
+        // loading={transactionLoading}
         className={`btn-sm w-44 ${isNeutral ? "btn-secondary" : "btn-error"} flex items-center `}
         onClick={() => {
-          if (ESpaceRockType.Motherlode === rockType) {
+          if (ERock.Motherlode === rockType) {
             invade(destination, network);
             return;
           }
 
-          if (ESpaceRockType.Asteroid === rockType) {
+          if (ERock.Asteroid === rockType) {
             raid(destination, network);
             return;
           }

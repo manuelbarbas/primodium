@@ -43,6 +43,8 @@ export const PlayerLeaderboard = () => {
         {({ index, style }) => {
           const player = data.players[index];
           const score = data.scores[index];
+
+
           return (
             <div style={style} className="pr-2">
               <LeaderboardItem key={index} player={player} index={index} score={score} />

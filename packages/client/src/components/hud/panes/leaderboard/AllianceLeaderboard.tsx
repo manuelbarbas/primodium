@@ -1,4 +1,4 @@
-import { ComponentValue, Entity, HasValue } from "@latticexyz/recs";
+import { ComponentValue, HasValue } from "@latticexyz/recs";
 import { useState } from "react";
 import { FixedSizeList as List } from "react-window";
 import { FaCog, FaEnvelope, FaUserPlus } from "react-icons/fa";
@@ -30,24 +30,29 @@ export const AllianceLeaderboard = () => {
 export const ScoreScreen = () => {
   const data = components.AllianceLeaderboard.use();
 
-  if (!data) return <></>;
-
   return (
-    <Navigator.Screen title="score" className="flex flex-col items-center w-full text-xs pointer-events-auto">
-      <List height={285} width="100%" itemCount={data.alliances.length} itemSize={47} className="scrollbar">
-        {({ index, style }) => {
-          const alliance = data.alliances[index];
-          const score = data.scores[index];
-          const allianceName = (components.Alliance.get(alliance)?.name ?? "") as Hex;
-          return (
-            <div style={style} className="pr-2">
-              <LeaderboardItem key={index} alliance={allianceName} index={index} score={Number(score)} />
-            </div>
-          );
-        }}
-      </List>
+    <Navigator.Screen title="score" className="flex flex-col items-center w-full h-full text-xs pointer-events-auto">
+      {data && (
+        <List height={285} width="100%" itemCount={data.alliances.length} itemSize={47} className="scrollbar">
+          {({ index, style }) => {
+            const alliance = data.alliances[index];
+            const score = data.scores[index];
+            const allianceName = (components.Alliance.get(alliance)?.name ?? "") as Hex;
+            return (
+              <div style={style} className="pr-2">
+                <LeaderboardItem key={index} alliance={allianceName} index={index} score={Number(score)} />
+              </div>
+            );
+          }}
+        </List>
+      )}
+      {!data && (
+        <SecondaryCard className="w-full flex-grow items-center justify-center font-bold opacity-50">
+          NO ALLIANCES
+        </SecondaryCard>
+      )}
       <hr className="w-full border-t border-cyan-800 my-2" />
-      <PlayerInfo data={data} />
+      <InfoRow data={data} />
     </Navigator.Screen>
   );
 };
@@ -159,8 +164,8 @@ const LeaderboardItem = ({ alliance, index, score }: { alliance: Hex; index: num
   );
 };
 
-const PlayerInfo = ({ data }: { data: ComponentValue<typeof components.AllianceLeaderboard.schema> }) => {
-  const playerEntity = useMud().network.playerEntity;
+const InfoRow = ({ data }: { data?: ComponentValue<typeof components.AllianceLeaderboard.schema> }) => {
+  if (!data) return <SoloPlayerInfo />;
 
   const score = data.scores[data.playerAllianceRank - 1];
   const rank = data.playerAllianceRank;
@@ -168,35 +173,41 @@ const PlayerInfo = ({ data }: { data: ComponentValue<typeof components.AllianceL
   const alliance = components.Alliance.get(allianceEntity);
   const allianceName = (alliance?.name ?? "") as Hex;
 
-  if (!allianceEntity) {
-    return (
-      <SecondaryCard className="w-full overflow-y-auto border border-slate-700 rounded-md p-2 bg-slate-800">
-        {
-          <div className="grid grid-cols-6 w-full items-center gap-2">
-            <Navigator.NavButton to="create" className="btn-xs btn-secondary col-span-5">
-              + Create Alliance
-            </Navigator.NavButton>
-            <Navigator.NavButton to="invites" className="btn-xs flex">
-              <FaEnvelope /> <b>0</b>
-            </Navigator.NavButton>
-          </div>
-        }
-      </SecondaryCard>
-    );
-  }
+  if (!allianceEntity) return <SoloPlayerInfo />;
 
+  return <PlayerInfo rank={rank} allianceName={hexToString(allianceName, { size: 32 })} score={Number(score)} />;
+};
+
+const PlayerInfo = ({ rank, allianceName, score }: { rank: number; allianceName: string; score: number }) => {
   return (
     <SecondaryCard className="w-full overflow-y-auto border border-slate-700 rounded-md p-2 bg-slate-800">
       {
         <div className="grid grid-cols-6 w-full items-center gap-2">
           <div className="col-span-4 bg-neutral rounded-box p-1">
-            <b className="text-accent">{rank}.</b>{" "}
-            <b className="text-error">[{hexToString(allianceName, { size: 32 })}]</b> {score.toLocaleString()}
+            <b className="text-accent">{rank}.</b> <b className="text-error">[{allianceName}]</b>{" "}
+            {score.toLocaleString()}
           </div>
           <Navigator.NavButton to="manage" className="btn-xs flex bg-secondary">
             <FaCog />
           </Navigator.NavButton>
           <Navigator.NavButton to="invites" className="btn-xs flex bg-secondary">
+            <FaEnvelope /> <b>0</b>
+          </Navigator.NavButton>
+        </div>
+      }
+    </SecondaryCard>
+  );
+};
+
+const SoloPlayerInfo = () => {
+  return (
+    <SecondaryCard className="w-full overflow-y-auto border border-slate-700 rounded-md p-2 bg-slate-800">
+      {
+        <div className="grid grid-cols-6 w-full items-center gap-2">
+          <Navigator.NavButton to="create" className="btn-xs btn-secondary col-span-5">
+            + Create Alliance
+          </Navigator.NavButton>
+          <Navigator.NavButton to="invites" className="btn-xs flex">
             <FaEnvelope /> <b>0</b>
           </Navigator.NavButton>
         </div>

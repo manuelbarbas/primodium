@@ -1,18 +1,16 @@
+import { Entity, Has, HasValue, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { namespaceWorld, Has, defineEnterSystem, Entity } from "@latticexyz/recs";
-import { ObjectPosition, SetValue } from "../../common/object-components/common";
-import { Texture } from "../../common/object-components/sprite";
 import { singletonIndex, world } from "src/network/world";
-// import { Send } from "src/network/components/clientComponents";
-// import { initializeMotherlodes } from "../utils/initializeMotherlodes";
+import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
+import { Outline, Texture } from "../../common/object-components/sprite";
 
-import { Coord } from "@latticexyz/utils";
 import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
-import { EntityType } from "src/util/constants";
-import { clampedIndex } from "src/util/common";
-import { SetupResult } from "src/network/types";
+import { Coord } from "@latticexyz/utils";
+import { ERock, MUDEnums } from "contracts/config/enums";
 import { components } from "src/network/components";
-import { MUDEnums } from "contracts/config/enums";
+import { SetupResult } from "src/network/types";
+import { clampedIndex } from "src/util/common";
+import { EntityType } from "src/util/constants";
 import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 
 export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
@@ -71,9 +69,9 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
           clampedIndex(Number(mainBaseLevel) - 1, EntitytoSpriteKey[EntityType.Asteroid].length)
         ]
       ),
-      // OnClick(scene, () => {
-      //   Send.setDestination(entityId);
-      // }),
+      OnClick(scene, () => {
+        components.Send.setDestination(entity);
+      }),
     ]);
 
     const outlineSprite =
@@ -83,24 +81,26 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
 
     asteroidOutline.setComponents([
       ...sharedComponents,
-      // OnComponentSystem(Send, () => {
-      //   if (Send.get()?.destination === entity) {
-      //     if (asteroidOutline.hasComponent(Outline().id)) return;
-      //     asteroidOutline.setComponent(Outline({ thickness: 1.5, color: 0xffa500 }));
-      //     return;
-      //   }
+      OnComponentSystem(components.Send, () => {
+        if (components.Send.get()?.destination === entity) {
+          if (asteroidOutline.hasComponent(Outline().id)) return;
+          asteroidOutline.setComponent(Outline({ thickness: 1.5, color: 0xffa500 }));
+          return;
+        }
 
-      //   if (asteroidOutline.hasComponent(Outline().id)) {
-      //     asteroidOutline.removeComponent(Outline().id);
-      //   }
-      // }),
+        if (asteroidOutline.hasComponent(Outline().id)) {
+          asteroidOutline.removeComponent(Outline().id);
+        }
+      }),
       Texture(Assets.SpriteAtlas, outlineSprite),
     ]);
   };
 
   const query = [
     Has(components.RockType),
-    // Not(components.Pirate),
+    HasValue(components.RockType, { value: ERock.Asteroid }),
+    Has(components.Position),
+    Not(components.PirateAsteroid),
   ];
 
   defineEnterSystem(gameWorld, query, ({ entity }) => {

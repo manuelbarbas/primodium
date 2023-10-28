@@ -8,7 +8,7 @@ import { Hangar } from "src/network/components/clientComponents";
 import { clampedIndex, getBlockTypeName } from "./common";
 import { EntityType, MotherlodeSizeNames, MotherlodeTypeNames, ResourceStorages } from "./constants";
 import { getFullResourceCount, getMotherlodeResource } from "./resource";
-import { ERock } from "./web3/types";
+import { ERock } from "contracts/config/enums";
 
 function getSpaceRockImage(spaceRock: Entity, type: ERock) {
   const { getSpriteBase64 } = primodium.api().sprite;
@@ -30,7 +30,7 @@ function getSpaceRockImage(spaceRock: Entity, type: ERock) {
 
     const spriteKey =
       EntitytoSpriteKey[EntityType.Asteroid][
-        clampedIndex(mainBaseLevel - 1n, EntitytoSpriteKey[EntityType.Asteroid].length)
+        clampedIndex(Number(mainBaseLevel - 1n), EntitytoSpriteKey[EntityType.Asteroid].length)
       ];
 
     return getSpriteBase64(spriteKey, Assets.SpriteAtlas);
@@ -75,7 +75,7 @@ export function getSpaceRockInfo(spaceRock: Entity) {
 
   const resources = ownedBy
     ? ResourceStorages.map((resource) => {
-        const { resourceCount, resourcesToClaim } = getFullResourceCount(resource);
+        const { resourceCount, resourcesToClaim } = getFullResourceCount(resource, ownedBy);
 
         const amount = resourceCount + resourcesToClaim;
 
@@ -90,26 +90,12 @@ export function getSpaceRockInfo(spaceRock: Entity) {
 
   const hangar = Hangar.get(spaceRock);
 
-  // todo: change this to calculate the motherlode production rate based on the vessels in the hangar
-  const production = 0;
-  // if (hangar && motherlodeResource) {
-  //   const lastClaimedAt = comps.LastClaimedAt.get(spaceRock)?.value ?? 0;
-  //   for (let i = 0; i < hangar.units.length; i++) {
-  //     production += getUnitStats(hangar.units[i]).MIN * hangar.counts[i];
-  //   }
-
-  //   production *= blockNumber - lastClaimedAt;
-  //   if (production + resourceMined > motherlodeResource.maxAmount)
-  //     production = motherlodeResource.maxAmount - resourceMined;
-  // }
-
   let name = "";
   switch (type) {
     case ERock.Motherlode:
       name = `${MotherlodeSizeNames[motherlodeData?.size ?? 0]} ${getBlockTypeName(motherlodeResource)} Motherlode`;
       break;
     case ERock.Asteroid:
-      // name = Pirate.get(spaceRock) ? "Pirate Asteroid" : "Player Asteroid";
       name = "Player Asteroid";
       break;
     default:

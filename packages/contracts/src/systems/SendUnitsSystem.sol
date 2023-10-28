@@ -9,16 +9,15 @@ import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils
 
 import { ESendType, SendArgs, ERock, Arrival } from "src/Types.sol";
 import { ReversePosition, PositionData, UnitCount, OwnedBy, ResourceCount, ArrivalCount, P_EnumToPrototype, P_UnitPrototypes } from "codegen/index.sol";
-import { LibMotherlode, LibSend, ArrivalsMap } from "codegen/Libraries.sol";
+import { LibSend, ArrivalsMap } from "codegen/Libraries.sol";
 import { UnitKey } from "src/Keys.sol";
+import { NUM_UNITS } from "src/constants.sol";
 
 contract SendUnitsSystem is PrimodiumSystem {
   function _sendUnits(SendArgs memory sendArgs) internal {
     bytes32 origin = ReversePosition.get(sendArgs.originPosition.x, sendArgs.originPosition.y);
     bytes32 destination = ReversePosition.get(sendArgs.destinationPosition.x, sendArgs.destinationPosition.y);
     bytes32 playerEntity = addressToEntity(_msgSender());
-
-    if (destination == 0) destination = LibMotherlode.createMotherlode(sendArgs.destinationPosition);
 
     uint256 arrivalTime = LibSend.getArrivalTime(
       sendArgs.originPosition,
@@ -30,6 +29,7 @@ contract SendUnitsSystem is PrimodiumSystem {
     LibSend.sendUnits(
       Arrival({
         unitCounts: sendArgs.unitCounts,
+        sendTime: block.timestamp,
         sendType: sendArgs.sendType,
         arrivalTime: arrivalTime,
         from: playerEntity,
@@ -41,7 +41,7 @@ contract SendUnitsSystem is PrimodiumSystem {
   }
 
   function sendUnits(
-    uint256[5] calldata unitCounts,
+    uint256[NUM_UNITS] calldata unitCounts,
     ESendType sendType,
     PositionData memory origin,
     PositionData memory destination,

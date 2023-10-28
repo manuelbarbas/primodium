@@ -1,18 +1,18 @@
-import { SingletonID } from "@latticexyz/network";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { useMud } from "src/hooks";
-import { Hangar, Send } from "src/network/components/clientComponents";
+import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage } from "src/util/constants";
-import { recallUnitsFromMotherlode } from "src/util/web3";
+import { recallAll } from "src/util/web3/contractCalls/recall";
 
 export const StationedUnits: React.FC = () => {
-  const network = useMud();
+  const network = useMud().network;
 
-  const destination = Send.get()?.destination;
-  const { units, counts } = Hangar.use(destination, {
+  const destination = components.Send.get()?.destination;
+  const { units, counts } = components.Hangar.use(destination, {
     units: [],
     counts: [],
   });
@@ -35,7 +35,7 @@ export const StationedUnits: React.FC = () => {
                       className="w-full h-full"
                     />
                     <p className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 font-bold text-xs bg-slate-900 border-cyan-400/30 px-1 rounded-md border group-hover:opacity-0">
-                      {counts[index]}
+                      {Number(counts[index])}
                     </p>
                   </div>
 
@@ -51,7 +51,7 @@ export const StationedUnits: React.FC = () => {
       <div className="flex gap-2 mt-1">
         <Navigator.BackButton
           className="btn-secondary border-none"
-          onClick={() => recallUnitsFromMotherlode(destination ?? SingletonID, network)}
+          onClick={() => recallAll(destination ?? singletonEntity, network)}
         >
           RECALL
         </Navigator.BackButton>

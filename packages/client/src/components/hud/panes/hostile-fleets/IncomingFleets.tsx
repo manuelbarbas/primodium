@@ -1,30 +1,33 @@
-import { SingletonID } from "@latticexyz/network";
-import { EntityID } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { Arrival, OwnedBy } from "src/network/components/chainComponents";
-import { Account } from "src/network/components/clientComponents";
-import { ESendType } from "src/util/web3/types";
 import { AttackingFleet } from "./AttackingFleet";
+import { components } from "src/network/components";
+import { useMud } from "src/hooks";
+import { ESendType } from "contracts/config/enums";
+import { useNow } from "src/util/time";
 
-export const IncomingFleets: React.FC<{ spaceRock: EntityID }> = ({ spaceRock }) => {
-  const player = Account.use()?.value ?? SingletonID;
-
-  const orbitingFleets = Arrival.use({
-    to: player,
-    onlyTransit: true,
+export const IncomingFleets: React.FC = () => {
+  const playerEntity = useMud().network.playerEntity;
+  const fleets = components.Arrival.useAllWith({
+    to: playerEntity,
   });
+  const now = useNow();
 
-  //filter collection where sendType is not REINFORCE
   const attackingIncomingFleets = useMemo(
     () =>
-      orbitingFleets.filter((fleet) => {
-        if (!fleet) return false;
+      fleets.map((entity) => {
+        const fleet = components.Arrival.get(entity);
 
-        if (OwnedBy.get(fleet.destination)?.value !== player) return false;
+        if (!fleet) return null;
 
-        return fleet.sendType !== ESendType.REINFORCE;
+        // remove reinforcement arrivals
+        if (fleet.sendType === ESendType.Reinforce) return null;
+
+        //remove orbiting arrivals
+        if (fleet.arrivalTime >= now) return null;
+
+        return fleet;
       }),
-    [orbitingFleets]
+    [now, fleets]
   );
 
   return (
@@ -37,7 +40,7 @@ export const IncomingFleets: React.FC<{ spaceRock: EntityID }> = ({ spaceRock })
       {attackingIncomingFleets.length !== 0 &&
         attackingIncomingFleets.map((fleet, index) => {
           if (!fleet) return;
-          return <AttackingFleet key={index} fleet={fleet} spaceRock={spaceRock} />;
+          return <AttackingFleet key={index} fleet={fleet} />;
         })}
     </div>
   );
