@@ -84,6 +84,8 @@ export function reverseRecord<T extends PropertyKey, U extends PropertyKey>(inpu
   return Object.fromEntries(Object.entries(input).map(([key, value]) => [value, key])) as Record<U, T>;
 }
 
-export const entityToAddress = (entity: Entity | string) => {
-  return trim(entity as Hex);
+export const entityToAddress = (entity: Entity | string, shorten = false) => {
+  const trimmed = trim(entity as Hex);
+
+  return shorten ? shortenAddress(trimmed) : trimmed;
 };

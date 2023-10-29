@@ -3,14 +3,11 @@ import React from "react";
 interface TooltipProps {
   children: React.ReactNode;
   text?: string;
+  className?: string;
   direction?: "left" | "right" | "top" | "bottom";
 }
 
-export const Tooltip: React.FC<TooltipProps> = ({
-  children,
-  text,
-  direction = "right",
-}) => {
+export const Tooltip: React.FC<TooltipProps> = ({ children, text, direction = "right", className }) => {
   const getTooltipClass = () => {
     switch (direction) {
       case "left":
@@ -28,7 +25,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
 
   return (
     <div
-      className={`before:z-50 before:content-[attr(data-tip)] tooltip ${getTooltipClass()} pointer-events-auto`}
+      className={`before:z-50 before:content-[attr(data-tip)] tooltip ${getTooltipClass()} ${className} pointer-events-auto`}
       data-tip={text}
     >
       {children}
