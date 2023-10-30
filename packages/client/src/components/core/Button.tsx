@@ -1,5 +1,6 @@
 import { IconLabel } from "./IconLabel";
 import { Loader } from "./Loader";
+import { Tooltip } from "./Tooltip";
 
 export const Button: React.FC<{
   children: React.ReactNode;
@@ -8,6 +9,8 @@ export const Button: React.FC<{
   disabled?: boolean;
   selected?: boolean;
   loading?: boolean;
+  tooltip?: string;
+  tooltipDirection?: "right" | "left" | "top" | "bottom";
 }> = ({
   children,
   className,
@@ -15,18 +18,22 @@ export const Button: React.FC<{
   disabled,
   selected = false,
   loading = false,
+  tooltip,
+  tooltipDirection = "right",
 }) => {
   return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className={`btn join-item inline pointer-events-auto font-bold outline-non ${className} ${
-        disabled ? "opacity-50" : ""
-      } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
-    >
-      {loading && <Loader />}
-      {!loading && children}
-    </button>
+    <Tooltip text={tooltip} direction={tooltipDirection}>
+      <button
+        onClick={onClick}
+        disabled={disabled}
+        className={`btn join-item inline pointer-events-auto font-bold outline-non ${className} ${
+          disabled ? "opacity-50" : ""
+        } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
+      >
+        {loading && <Loader />}
+        {!loading && children}
+      </button>
+    </Tooltip>
   );
 };
 

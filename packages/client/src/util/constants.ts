@@ -14,6 +14,7 @@ export enum Action {
   DemolishBuilding,
   SelectBuilding,
   PlaceBuilding,
+  MoveBuilding,
 }
 
 export const SPEED_SCALE = BigInt(100);
