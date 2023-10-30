@@ -772,17 +772,17 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Sulfur: 500000, Alloy: 200000, U_Electricity: 100 }),
-        P_Defense: { defenseValue: 2000n },
+        P_Production: getResourceValues({ U_Defense: 2000 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Platinum: 50000, Sulfur: 500000, Alloy: 200000, U_Electricity: 200 }),
-        P_Defense: { defenseValue: 10000n },
+        P_Production: getResourceValues({ U_Defense: 10000 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Iridium: 100000, Sulfur: 500000, Alloy: 200000, U_Electricity: 300 }),
-        P_Defense: { defenseValue: 250000n },
+        P_Production: getResourceValues({ U_Defense: 250000 }),
       },
     },
   },
@@ -796,7 +796,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ Sulfur: 1000000, Alloy: 500000, U_Electricity: 100 }),
-        P_DefenseMultiplier: { defenseMultiplier: 5n },
+        P_Production: getResourceValues({ M_DefenseMultiplier: 5 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 5n },
@@ -806,7 +806,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           Alloy: 1000000,
           U_Electricity: 100,
         }),
-        P_DefenseMultiplier: { defenseMultiplier: 10n },
+
+        P_Production: getResourceValues({ M_DefenseMultiplier: 5 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 7n },
@@ -816,7 +817,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           Alloy: 2000000,
           U_Electricity: 100,
         }),
-        P_DefenseMultiplier: { defenseMultiplier: 15n },
+        P_Production: getResourceValues({ M_DefenseMultiplier: 5 }),
       },
     },
   },

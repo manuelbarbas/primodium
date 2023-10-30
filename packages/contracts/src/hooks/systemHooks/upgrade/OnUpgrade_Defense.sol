@@ -3,10 +3,9 @@ pragma solidity >=0.8.21;
 import { addressToEntity } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
-import { PositionData } from "codegen/tables/Position.sol";
-import { Level } from "codegen/tables/Level.sol";
+import { Level, PositionData, BuildingType } from "codegen/index.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
-import { LibDefense } from "libraries/LibDefense.sol";
+import { LibVault } from "libraries/LibVault.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 
 /**
@@ -48,6 +47,6 @@ contract OnUpgrade_Defense is SystemHook {
     // Get the level of the building
     uint256 level = Level.get(buildingEntity);
 
-    LibDefense.upgradeBuildingDefenses(playerEntity, buildingEntity, level);
+    LibVault.increasePlayerVault(playerEntity, BuildingType.get(buildingEntity), level);
   }
 }

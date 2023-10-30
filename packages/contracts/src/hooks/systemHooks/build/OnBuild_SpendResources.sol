@@ -28,9 +28,7 @@ contract OnBuild_SpendResources is SystemHook {
     address msgSender,
     ResourceId systemId,
     bytes memory callData
-  ) public {
-    
-  }
+  ) public {}
 
   /**
    * @dev This function is called after the system's main logic is executed.
@@ -46,13 +44,13 @@ contract OnBuild_SpendResources is SystemHook {
   ) public {
     // Decode the arguments from the callData
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
-    
-      (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
 
-      // Generate the unique building entity key
-      bytes32 buildingEntity = LibEncode.getTimedHash(BuildingKey, coord);
+    (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
 
-      // Spend the required resources for the building
-      LibResource.spendBuildingRequiredResources(buildingEntity, 1);
+    // Generate the unique building entity key
+    bytes32 buildingEntity = LibEncode.getTimedHash(BuildingKey, coord);
+
+    // Spend the required resources for the building
+    LibResource.spendBuildingRequiredResources(buildingEntity, 1);
   }
 }
