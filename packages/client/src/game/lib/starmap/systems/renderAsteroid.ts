@@ -58,11 +58,12 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       ...sharedComponents,
       //fade out asteroids that are in grace period
       OnComponentSystem(components.BlockNumber, (gameObject) => {
-        const graceTime = components.GracePeriod.get(playerEntity)?.value ?? 0n;
+        const player = components.OwnedBy.get(entity)?.value as Entity | undefined;
+        const graceTime = components.GracePeriod.get(player)?.value ?? 0n;
         const time = getNow();
 
         //don't fade out asteroids that are owned by the player
-        if (components.OwnedBy.get(entity)?.value === playerEntity) return;
+        if (player === playerEntity) return;
 
         if (time >= graceTime) {
           gameObject.alpha = 1;
@@ -77,6 +78,12 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         ]
       ),
       OnClick(scene, () => {
+        const player = components.OwnedBy.get(entity)?.value as Entity | undefined;
+        const graceTime = components.GracePeriod.get(player)?.value ?? 0n;
+        const time = getNow();
+
+        if (time < graceTime && player !== playerEntity) return;
+
         components.Send.setDestination(entity);
       }),
     ]);
