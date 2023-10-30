@@ -6,12 +6,13 @@ import { Outline, Texture } from "../../common/object-components/sprite";
 
 import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
 import { Coord } from "@latticexyz/utils";
-import { ERock, MUDEnums } from "contracts/config/enums";
+import { ERock } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
 import { clampedIndex } from "src/util/common";
 import { EntityType } from "src/util/constants";
 import { initializeMotherlodes } from "../utils/initializeMotherlodes";
+import { getNow } from "src/util/time";
 
 export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -20,14 +21,6 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
 
   const render = (entity: Entity, coord: Coord) => {
     scene.objectPool.removeGroup("asteroid_" + entity);
-    const asteroidType =
-      MUDEnums.ERock[
-        components.RockType.get(entity, {
-          value: 1,
-        }).value
-      ];
-
-    if (asteroidType !== MUDEnums.ERock[1]) return;
 
     //TODO - fix conversion to Entity
     const ownedBy = components.OwnedBy.get(entity, {
@@ -63,6 +56,21 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
 
     asteroidObject.setComponents([
       ...sharedComponents,
+      //fade out asteroids that are in grace period
+      OnComponentSystem(components.BlockNumber, (gameObject) => {
+        const player = components.OwnedBy.get(entity)?.value as Entity | undefined;
+        const graceTime = components.GracePeriod.get(player)?.value ?? 0n;
+        const time = getNow();
+
+        //don't fade out asteroids that are owned by the player
+        if (player === playerEntity) return;
+
+        if (time >= graceTime) {
+          gameObject.alpha = 1;
+        } else {
+          gameObject.alpha = 0.25;
+        }
+      }),
       Texture(
         Assets.SpriteAtlas,
         EntitytoSpriteKey[EntityType.Asteroid][
@@ -70,6 +78,12 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         ]
       ),
       OnClick(scene, () => {
+        const player = components.OwnedBy.get(entity)?.value as Entity | undefined;
+        const graceTime = components.GracePeriod.get(player)?.value ?? 0n;
+        const time = getNow();
+
+        if (time < graceTime && player !== playerEntity) return;
+
         components.Send.setDestination(entity);
       }),
     ]);

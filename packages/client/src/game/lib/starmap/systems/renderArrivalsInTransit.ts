@@ -19,13 +19,11 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
 
   const render = ({ entity }: ComponentUpdate) => {
     scene.objectPool.removeGroup(entity + objIndexSuffix);
-    const arrival = components.Arrival.get(entity);
+    const arrival = components.Arrival.getEntity(entity);
 
-    console.log("arrival:", arrival);
     if (!arrival) return;
 
     //don't render if arrival is already in orbit
-    console.log("arrival time:", arrival.arrivalTime, getNow());
     if (arrival.arrivalTime < getNow()) return;
 
     const origin = components.Position.get(arrival.origin);
@@ -48,7 +46,6 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
     const sendTrajectory = scene.objectPool.getGroup(entity + objIndexSuffix);
 
     const trajectory = sendTrajectory.add("Graphics");
-    console.log("rendering arrival in transit");
     trajectory.setComponents([
       ObjectPosition(originPixelCoord, DepthLayers.Marker),
       Line(destinationPixelCoord, {
@@ -133,7 +130,6 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
   ];
 
   defineEnterSystem(gameWorld, query, (update) => {
-    console.log("arrival created");
     render(update);
   });
 

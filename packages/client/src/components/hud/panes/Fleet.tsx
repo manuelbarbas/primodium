@@ -2,13 +2,13 @@ import { primodium } from "@game/api";
 import { Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { ESendType } from "contracts/config/enums";
+import { BiSolidInvader } from "react-icons/bi";
 import { FaCrosshairs, FaShieldAlt } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
-import { OrbitActionButton } from "./OrbitActionButton";
-import { ESendType } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { useNow } from "src/util/time";
-import { BiSolidInvader } from "react-icons/bi";
+import { OrbitActionButton } from "./OrbitActionButton";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -90,33 +90,29 @@ export const Fleet: React.FC<{
             <p className="bg-green-900 border border-green-500  rounded-md px-1 text-[.6rem]">REINFORCE</p>
           </div>
         )}
-        <LabeledValue label={`${arrivalTime > 0 ? "IN-TRANSIT" : "ORBITING"}`}>
+        <LabeledValue label={`${timeRemaining > 0 ? "IN-TRANSIT" : "ORBITING"}`}>
           <p>
             [{destinationPosition.x}, {destinationPosition.y}]
           </p>
         </LabeledValue>
       </div>
       <div className="text-right mr-2">
-        {arrivalTime > 0 ? (
+        {timeRemaining > 0 ? (
           <LabeledValue label="ETA">
             <div className="flex gap-1">
               <p>{timeRemaining.toLocaleString()}</p>
               <span className="opacity-50">SEC</span>
             </div>
           </LabeledValue>
+        ) : ESendType.Reinforce === sendType ? (
+          <OrbitActionButton
+            arrivalEntity={arrivalEntity}
+            destination={destination}
+            sendType={sendType}
+            outgoing={outgoing}
+          />
         ) : (
-          <>
-            {ESendType.Reinforce === sendType ? (
-              <OrbitActionButton
-                arrivalEntity={arrivalEntity}
-                destination={destination}
-                sendType={sendType}
-                outgoing={outgoing}
-              />
-            ) : (
-              <LocateButton destination={destination} coord={destinationPosition} />
-            )}
-          </>
+          <LocateButton destination={destination} coord={destinationPosition} />
         )}
       </div>
     </div>

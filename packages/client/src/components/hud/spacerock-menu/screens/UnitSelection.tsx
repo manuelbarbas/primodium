@@ -79,7 +79,7 @@ export const UnitSelection = () => {
                 <Navigator.BackButton
                   className="btn-sm btn-secondary"
                   onClick={() => {
-                    components.Send.setUnitCount(selectedUnit, count);
+                    components.Send.setUnitCount(selectedUnit, BigInt(count));
                   }}
                 >
                   Add to fleet

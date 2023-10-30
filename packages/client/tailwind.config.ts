@@ -30,7 +30,7 @@ export default {
           neutral: colors.slate[900],
           "base-100": colors.slate[800],
           info: colors.indigo[600],
-          success: colors.emerald[600],
+          success: colors.teal[400],
           warning: colors.amber[600],
           error: colors.rose[700],
 

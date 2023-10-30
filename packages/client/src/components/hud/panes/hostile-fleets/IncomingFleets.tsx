@@ -1,9 +1,9 @@
-import { useMemo } from "react";
-import { AttackingFleet } from "./AttackingFleet";
-import { components } from "src/network/components";
-import { useMud } from "src/hooks";
 import { ESendType } from "contracts/config/enums";
+import { useMemo } from "react";
+import { useMud } from "src/hooks";
+import { components } from "src/network/components";
 import { useNow } from "src/util/time";
+import { AttackingFleet } from "./AttackingFleet";
 
 export const IncomingFleets: React.FC = () => {
   const playerEntity = useMud().network.playerEntity;
@@ -15,7 +15,7 @@ export const IncomingFleets: React.FC = () => {
   const attackingIncomingFleets = useMemo(
     () =>
       fleets.map((entity) => {
-        const fleet = components.Arrival.get(entity);
+        const fleet = components.Arrival.getEntity(entity);
 
         if (!fleet) return null;
 

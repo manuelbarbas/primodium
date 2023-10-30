@@ -44,8 +44,7 @@ library LibSend {
     }
 
     bytes32 player = arrival.sendType == ESendType.Reinforce ? arrival.to : arrival.from;
-    bytes32 asteroid = arrival.sendType == ESendType.Reinforce ? arrival.destination : arrival.origin;
-    ArrivalsMap.set(player, asteroid, keccak256(abi.encode(arrival)), arrival);
+    ArrivalsMap.set(player, arrival.destination, keccak256(abi.encode(arrival)), arrival);
     ArrivalCount.set(arrival.from, ArrivalCount.get(arrival.from) + 1);
   }
 

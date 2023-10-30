@@ -68,7 +68,6 @@ library LibInvade {
     bytes32 invader,
     bytes32 rockEntity
   ) internal {
-    OwnedBy.set(rockEntity, invader);
     bytes32[] memory unitTypes = P_UnitPrototypes.get();
 
     bytes memory rawAttackCounts = SystemCall.callWithHooksOrRevert(
@@ -78,10 +77,15 @@ library LibInvade {
       0
     );
 
-    (uint256[] memory attackCounts, , ) = abi.decode(rawAttackCounts, (uint256[], uint256, uint256));
+    (uint256[] memory attackCounts, uint256 attackPoints, ) = abi.decode(
+      rawAttackCounts,
+      (uint256[], uint256, uint256)
+    );
     for (uint256 i = 0; i < unitTypes.length; i++) {
       LibUnit.increaseUnitCount(invader, rockEntity, unitTypes[i], attackCounts[i]);
     }
+    require(attackPoints > 0, "[Invade] Can not invade with 0 attack points");
+    OwnedBy.set(rockEntity, invader);
   }
 
   /**

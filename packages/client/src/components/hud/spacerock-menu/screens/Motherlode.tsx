@@ -1,10 +1,10 @@
 import { Navigator } from "src/components/core/Navigator";
-import { Header } from "../widgets/Header";
 import { getSpaceRockInfo } from "src/util/spacerock";
+import { Header } from "../widgets/Header";
 import { Invade } from "../widgets/Invade";
+import { Land } from "../widgets/Land";
 import { Reinforce } from "../widgets/Reinforce";
 import { StationedUnits } from "../widgets/StationedUnits";
-import { Land } from "../widgets/Land";
 
 export const Motherlode: React.FC<{
   data: ReturnType<typeof getSpaceRockInfo>;
