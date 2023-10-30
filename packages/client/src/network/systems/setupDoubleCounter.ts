@@ -8,6 +8,6 @@ export const setupDoubleCounter = ({ components }: SetupResult) => {
 
   defineComponentSystem(world, Counter, (update) => {
     const value = update?.value[0]?.value ?? 0;
-    DoubleCounter.set({ value: Number(value) * 2 });
+    DoubleCounter.set({ value: BigInt(value) * BigInt(2) });
   });
 };
