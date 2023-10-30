@@ -634,6 +634,13 @@ export const config = mudConfig({
     },
     /* ------------------------------ Alliance ----------------------------- */
 
+    P_AllianceConfig: {
+      keySchema: {},
+      valueSchema: {
+        maxAllianceMembers: "uint256",
+      },
+    },
+
     PlayerAlliance: {
       keySchema: { entity: "bytes32" },
       valueSchema: {
@@ -651,14 +658,29 @@ export const config = mudConfig({
       },
     },
 
+    SetAllianceMembers: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: {
+        memberKeys: "bytes32[]",
+      },
+    },
+
+    SetIndexForAllianceMembers: {
+      keySchema: { entity: "bytes32", memberKey: "bytes32" },
+      valueSchema: {
+        stored: "bool",
+        index: "uint256",
+      },
+    },
+
     AllianceInvitation: {
       keySchema: { entity: "bytes32", alliance: "bytes32" },
-      valueSchema: "bytes32",
+      valueSchema: { inviter: "bytes32", timeStamp: "uint256" },
     },
 
     AllianceJoinRequest: {
       keySchema: { entity: "bytes32", alliance: "bytes32" },
-      valueSchema: "bool",
+      valueSchema: { timeStamp: "uint256" },
     },
   },
 });
