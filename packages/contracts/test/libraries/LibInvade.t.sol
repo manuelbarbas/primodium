@@ -14,6 +14,10 @@ contract LibInvadeTest is PrimodiumTest {
   bytes32 homeRock = "homeRock";
   bytes32 rock = "rock";
 
+  uint256[NUM_UNITS] unitCounts;
+
+  PositionData originPosition = PositionData(0, 0, 0);
+  PositionData destinationPosition = PositionData(0, 10, 0);
   BattleResultData br =
     BattleResultData({
       attacker: player,
@@ -37,6 +41,10 @@ contract LibInvadeTest is PrimodiumTest {
     unitTypes[0] = unit1;
     unitTypes[1] = unit2;
     P_UnitPrototypes.set(unitTypes);
+    ReversePosition.set(originPosition.x, originPosition.y, homeRock);
+    Position.set(homeRock, originPosition);
+    Position.set(rock, destinationPosition);
+    ReversePosition.set(destinationPosition.x, destinationPosition.y, rock);
   }
 
   function testInvadeNeutral() public {
@@ -71,6 +79,28 @@ contract LibInvadeTest is PrimodiumTest {
 
     vm.expectRevert("[Invade] Can not invade with 0 attack points");
     world.invade(rock);
+  }
+
+  function testInvadeNeutralWithUnitSend() public {
+    OwnedBy.set(homeRock, player);
+    ResourceCount.set(player, U_MaxMoves, 10);
+    RockType.set(homeRock, uint8(ERock.Asteroid));
+    RockType.set(rock, uint8(ERock.Motherlode));
+
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    P_Unit.set(unit1, 0, P_UnitData({ attack: 100, defense: 100, speed: 200, cargo: 100, trainingTime: 0 }));
+
+    UnitCount.set(player, homeRock, unit1, 100);
+
+    unitCounts[0] = 10;
+
+    world.sendUnits(unitCounts, ESendType.Invade, originPosition, destinationPosition, bytes32(""));
+
+    vm.warp(block.timestamp + 1000);
+
+    world.invade(rock);
+    assertEq(OwnedBy.get(rock), player, "OwnedBy");
+    assertEq(UnitCount.get(player, rock, unit1), 10, "Unit1 Count");
   }
 
   function testInvadeAttackerWins() public {
