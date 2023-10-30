@@ -272,7 +272,7 @@ export const InvitesScreen: React.FC = () => {
   const network = useMud().network;
   const playerEntity = network.playerEntity;
   const playerAlliance = components.PlayerAlliance.get(playerEntity)?.alliance as Entity | undefined;
-
+  const role = components.PlayerAlliance.get(playerEntity)?.role ?? EAllianceRole.Member;
   const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
   const joinRequests = components.AllianceRequest.useAllWith({ alliance: playerAlliance ?? singletonEntity }) ?? [];
 
@@ -282,7 +282,7 @@ export const InvitesScreen: React.FC = () => {
       className="flex flex-col items-center w-full text-xs pointer-events-auto h-full overflow-hidden"
     >
       <div className="grid grid-cols-2 w-full gap-2 mb-2">
-        <div className="w-full flex flex-col flex-grow">
+        <div className={`w-full flex flex-col flex-grow ${role > EAllianceRole.CanInvite ? "col-span-2" : ""}`}>
           <div className="flex justify-between items-center">
             <p className="font-bold p-1 opacity-75">INVITES</p>
           </div>
@@ -322,22 +322,21 @@ export const InvitesScreen: React.FC = () => {
           </Join>
           <p className="p-1 opacity-50 text-right">{invites.length} invites(s)</p>
         </div>
-        <div className="w-full flex flex-col flex-grow">
-          <div className="flex justify-between items-center">
-            <p className="font-bold p-1 opacity-75">REQUESTS</p>
-          </div>
+        {role <= EAllianceRole.CanInvite && (
+          <div className="w-full flex flex-col flex-grow">
+            <div className="flex justify-between items-center">
+              <p className="font-bold p-1 opacity-75">REQUESTS</p>
+            </div>
+            <Join direction="vertical" className="overflow-auto w-full h-56 scrollbar">
+              {joinRequests.map((entity) => {
+                const request = components.AllianceRequest.get(entity);
 
-          <Join direction="vertical" className="overflow-auto w-full h-56 scrollbar">
-            {joinRequests.map((entity) => {
-              const request = components.AllianceRequest.get(entity);
-              const role = components.PlayerAlliance.get(playerEntity)?.role ?? EAllianceRole.Member;
+                if (!request?.player) return <></>;
 
-              if (!request?.player) return <></>;
+                return (
+                  <SecondaryCard key={entity} className="border-b rounded-none flex-row justify-between items-center">
+                    {entityToAddress(request.player ?? singletonEntity, true)}
 
-              return (
-                <SecondaryCard key={entity} className="border-b rounded-none flex-row justify-between items-center">
-                  {entityToAddress(request.player ?? singletonEntity, true)}
-                  {role <= EAllianceRole.CanInvite && (
                     <div className="flex gap-1">
                       {/* only kick if not current player, has the ability to kick, and current player is higher than member */}
                       <Tooltip text="Decline" direction="left">
@@ -357,13 +356,13 @@ export const InvitesScreen: React.FC = () => {
                         </Button>
                       </Tooltip>
                     </div>
-                  )}
-                </SecondaryCard>
-              );
-            })}
-          </Join>
-          <p className="p-1 opacity-50 text-right">{joinRequests.length} requests(s)</p>
-        </div>
+                  </SecondaryCard>
+                );
+              })}
+            </Join>
+            <p className="p-1 opacity-50 text-right">{joinRequests.length} requests(s)</p>
+          </div>
+        )}
       </div>
 
       <div className="flex gap-1">
