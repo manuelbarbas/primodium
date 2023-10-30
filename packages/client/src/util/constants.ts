@@ -329,8 +329,8 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.Housing, "/img/icons/utilitiesicon.png"],
   [EntityType.FleetMoves, "/img/icons/moveicon.png"],
   [EntityType.VesselCapacity, "/img/unit/miningvessel.png"],
-  [EntityType.Defense, "/img/unit/miningvessel.png"],
-  [EntityType.DefenseMultiplier, "/img/unit/miningvessel.png"],
+  [EntityType.Defense, "/img/resource/defense_resource.png"],
+  [EntityType.DefenseMultiplier, "/img/resource/defense_resource.png"],
 
   // debug
   [EntityType.Bullet, "/img/crafted/bullet.png"],
@@ -343,6 +343,7 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.MiningVessel, "/img/unit/miningvessel.png"],
   [EntityType.MinutemanMarine, "img/unit/minutemen_marine.png"],
   [EntityType.TridentMarine, "img/unit/trident_marine.png"],
+  [EntityType.Vault, "img/vault.png"],
 ]);
 
 export type DisplayKeyPair = {

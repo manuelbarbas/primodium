@@ -587,7 +587,7 @@ export const config = mudConfig({
     /* ------------------------------ Defense ----------------------------- */
 
     P_Vault: {
-      keySchema: { entity: "bytes32", level: "uint256" },
+      keySchema: { prototype: "bytes32", level: "uint256" },
       valueSchema: {
         // mud doesnt recognize EResource arrays so we will manually convert them
         resources: "uint8[]",

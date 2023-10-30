@@ -13,6 +13,7 @@ export const UtilityLabel = ({ name, resourceId }: { name: string; resourceId: E
   return (
     <div className="mx-1">
       <ResourceIconTooltip
+        short={false}
         name={name}
         playerEntity={playerEntity}
         amount={resourceCount}

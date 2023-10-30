@@ -17,6 +17,7 @@ type ResourceIconProps = {
   className?: string;
   playerEntity: Entity;
   validate?: boolean;
+  short?: boolean;
 };
 
 const suffixes = {
@@ -36,9 +37,10 @@ const ResourceIconTooltipContent = ({
   fontSize = "md",
   className,
   hasEnough,
+  short = true,
 }: ResourceIconProps & { hasEnough: boolean }) => {
   const value = ResourceType.ResourceRate == resourceType ? Number((amount * 60n) / scale) : Number(amount / scale);
-  const label = formatNumber(value) + suffixes[resourceType || ResourceType.Resource];
+  const label = formatNumber(value, { short }) + suffixes[resourceType || ResourceType.Resource];
 
   return (
     <IconLabel

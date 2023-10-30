@@ -54,12 +54,26 @@ export function toRomanNumeral(number: number) {
   return result;
 }
 
-export function formatNumber(num: number | bigint, fractionDigits = 2): string {
+export function formatNumber(num: number | bigint, options?: { fractionDigits?: number; short?: boolean }): string {
+  const digits = options?.fractionDigits ?? 2;
   if (num === 0 || num === 0n) return "--";
+
+  const shorten = (n: number): string => {
+    const units = ["", "K", "M", "B", "T"];
+    let unitIndex = 0;
+    while (n >= 1000 && unitIndex < units.length - 1) {
+      n /= 1000;
+      unitIndex++;
+    }
+    return n.toFixed(options?.fractionDigits) + units[unitIndex];
+  };
+
   if (typeof num === "number") {
-    const fixedNum = num.toFixed(fractionDigits);
+    if (options?.short) return shorten(num);
+    const fixedNum = num.toFixed(digits);
     return String(parseFloat(fixedNum).toLocaleString());
   } else if (typeof num === "bigint") {
+    if (options?.short) return shorten(Number(num));
     return num.toLocaleString();
   }
   return "";

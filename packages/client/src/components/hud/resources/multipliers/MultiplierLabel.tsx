@@ -13,6 +13,7 @@ export const MultiplierLabel = ({ name, resource }: { name: string; resource: En
   return (
     <div className="mx-1">
       <ResourceIconTooltip
+        short={false}
         name={name}
         playerEntity={playerEntity}
         amount={resourceCount}

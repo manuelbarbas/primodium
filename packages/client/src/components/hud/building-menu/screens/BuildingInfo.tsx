@@ -19,7 +19,7 @@ const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ lab
 
 export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
   const playerEntity = useMud().network.playerEntity;
-  const { buildingType, level, maxLevel, position, production, upgrade, unitProductionMultiplier, storages } =
+  const { buildingType, level, maxLevel, position, production, upgrade, unitProductionMultiplier, storages, vault } =
     useBuildingInfo(building);
 
   return (
@@ -40,42 +40,48 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
           </b>
         </DataLabel>
       </div>
-      <div className="grid grid-cols-2 w-full mb-1">
-        {production.map(({ resource, amount, type }) => (
-          <DataLabel label="PRODUCTION" key={`production-${resource}`}>
-            <Badge className="text-xs gap-2">
-              <ResourceIconTooltip
-                name={getBlockTypeName(resource)}
-                image={ResourceImage.get(resource) ?? ""}
-                resource={resource}
-                playerEntity={playerEntity}
-                amount={amount}
-                resourceType={type}
-                scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
-              />
-            </Badge>
+      {(production.length !== 0 || upgrade.production.length !== 0) && (
+        <div className="grid grid-cols-2 w-full mb-1">
+          <DataLabel label="PRODUCTION">
+            {!upgrade.production.length ? (
+              <b>N/A</b>
+            ) : (
+              production.map(({ resource, amount, type }) => (
+                <Badge className="text-xs gap-2" key={`production-${resource}`}>
+                  <ResourceIconTooltip
+                    name={getBlockTypeName(resource)}
+                    image={ResourceImage.get(resource) ?? ""}
+                    resource={resource}
+                    playerEntity={playerEntity}
+                    amount={amount}
+                    resourceType={type}
+                    scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
+                  />
+                </Badge>
+              ))
+            )}
           </DataLabel>
-        ))}
-        <DataLabel label="next level production">
-          {!upgrade.production || level === maxLevel ? (
-            <b>N/A</b>
-          ) : (
-            upgrade.production.map(({ resource, amount, type }) => (
-              <Badge className="text-xs gap-2" key={`next-production-${resource}`}>
-                <ResourceIconTooltip
-                  name={getBlockTypeName(resource)}
-                  image={ResourceImage.get(resource) ?? ""}
-                  resource={resource}
-                  playerEntity={playerEntity}
-                  amount={amount}
-                  resourceType={type}
-                  scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
-                />
-              </Badge>
-            ))
-          )}
-        </DataLabel>
-      </div>
+          <DataLabel label="next level production">
+            {!upgrade.production.length || level === maxLevel ? (
+              <b>N/A</b>
+            ) : (
+              upgrade.production.map(({ resource, amount, type }) => (
+                <Badge className="text-xs gap-2" key={`next-production-${resource}`}>
+                  <ResourceIconTooltip
+                    name={getBlockTypeName(resource)}
+                    image={ResourceImage.get(resource) ?? ""}
+                    resource={resource}
+                    playerEntity={playerEntity}
+                    amount={amount}
+                    resourceType={type}
+                    scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
+                  />
+                </Badge>
+              ))
+            )}
+          </DataLabel>
+        </div>
+      )}
       {unitProductionMultiplier !== undefined && (
         <div className="grid grid-cols-2 w-full ">
           <DataLabel label="speed">
@@ -134,7 +140,50 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
           </DataLabel>
         </div>
       )}
-
+      {vault && vault.length !== 0 && (
+        <div className="grid grid-cols-1 w-full mb-1">
+          <DataLabel label="storage">
+            {vault.map((v) => {
+              return (
+                <Badge key={v.resource} className="text-xs gap-2">
+                  <ResourceIconTooltip
+                    name={getBlockTypeName(v.resource)}
+                    playerEntity={playerEntity}
+                    image={ResourceImage.get(v.resource) ?? ""}
+                    resource={v.resource}
+                    amount={v.amount}
+                    resourceType={v.type}
+                    scale={v.type === ResourceType.Utility ? 1n : RESOURCE_SCALE}
+                    direction="top"
+                  />
+                </Badge>
+              );
+            })}
+          </DataLabel>
+          <DataLabel label="next level storage">
+            {!upgrade.vault || upgrade.vault.length === 0 || level === maxLevel ? (
+              <b>N/A</b>
+            ) : (
+              upgrade.vault.map((v) => {
+                return (
+                  <Badge key={v.resource} className="text-xs gap-2">
+                    <ResourceIconTooltip
+                      name={getBlockTypeName(v.resource)}
+                      playerEntity={playerEntity}
+                      image={ResourceImage.get(v.resource) ?? ""}
+                      resource={v.resource}
+                      amount={v.amount}
+                      resourceType={v.type}
+                      scale={v.type === ResourceType.Utility ? 1n : RESOURCE_SCALE}
+                      direction="top"
+                    />
+                  </Badge>
+                );
+              })
+            )}
+          </DataLabel>
+        </div>
+      )}
       <Navigator.BackButton />
     </Navigator.Screen>
   );

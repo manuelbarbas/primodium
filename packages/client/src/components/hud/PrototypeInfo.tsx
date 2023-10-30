@@ -7,12 +7,13 @@ import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
-import { transformProductionData } from "src/util/building";
+import { getBuildingLevelStorageUpgrades, transformProductionData } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
 import { RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
 import { getRecipe } from "src/util/resource";
 import { Hex } from "viem";
 import { Badge } from "../core/Badge";
+import { IconLabel } from "../core/IconLabel";
 
 export const RecipeDisplay: React.FC<{
   building: Entity;
@@ -57,6 +58,10 @@ export const PrototypeInfo: React.FC<{
   const rawProduction = components.P_Production.useWithKeys({ prototype: building as Hex, level: 1n });
   const production = useMemo(() => transformProductionData(rawProduction), [rawProduction]);
 
+  const unitProduction = components.P_UnitProdTypes.useWithKeys({ prototype: building as Hex, level: 1n });
+  const vault = transformProductionData(components.P_Vault.useWithKeys({ prototype: building as Hex, level: 1n }));
+  const storageUpgrades = useMemo(() => getBuildingLevelStorageUpgrades(building, 1n), [building]);
+
   const hasEnough = useHasEnoughResources(getRecipe(building, 1n), playerEntity);
 
   if (!getBlockTypeName(building)) return <></>;
@@ -94,6 +99,63 @@ export const PrototypeInfo: React.FC<{
                 />
               </Badge>
             ))}
+            {!!unitProduction && (
+              <Badge className="text-xs gap-2 bg-green-800/60 py-3 border border-green-600 rounded-md w-fit justify-center">
+                {unitProduction?.value.map((unit) => (
+                  <IconLabel
+                    className={`text-xs font-bold justify-center`}
+                    imageUri={ResourceImage.get(unit as Entity) ?? ""}
+                    key={`unitProduction-${unit}`}
+                    tooltipDirection={"bottom"}
+                    tooltipText={getBlockTypeName(unit as Entity)}
+                    text={""}
+                    hideText
+                  />
+                ))}
+              </Badge>
+            )}
+            {!!vault.length && (
+              <div className="flex flex-col text-xs gap-1 bg-green-800/60 p-2 border border-green-600 rounded-md w-fit justify-center">
+                Vault Increase
+                {vault.map(({ resource, amount, type }) => (
+                  <Badge
+                    key={`vault-${resource}`}
+                    className="text-xs gap-2 bg-green-800/60 py-3 border border-green-600 rounded-md w-full"
+                  >
+                    <ResourceIconTooltip
+                      name={getBlockTypeName(resource)}
+                      image={ResourceImage.get(resource) ?? ""}
+                      resource={resource}
+                      playerEntity={playerEntity}
+                      amount={amount}
+                      resourceType={ResourceType.Resource}
+                      scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
+                    />
+                  </Badge>
+                ))}
+              </div>
+            )}
+            {!!storageUpgrades.length && (
+              <div className="flex flex-col text-xs gap-1 bg-green-800/60 p-2 border border-green-600 rounded-md w-fit justify-center">
+                Storage Increase
+                {storageUpgrades.map(({ resource, amount }) => (
+                  <Badge
+                    key={`vault-${resource}`}
+                    className="text-xs gap-2 bg-green-800/60 py-3 border border-green-600 rounded-md w-full"
+                  >
+                    <ResourceIconTooltip
+                      name={getBlockTypeName(resource)}
+                      image={ResourceImage.get(resource) ?? ""}
+                      resource={resource}
+                      playerEntity={playerEntity}
+                      amount={amount}
+                      resourceType={ResourceType.Resource}
+                      scale={1n}
+                    />
+                  </Badge>
+                ))}
+              </div>
+            )}
             <p className="text-[.6rem] opacity-50">OUTPUT</p>
           </div>
 

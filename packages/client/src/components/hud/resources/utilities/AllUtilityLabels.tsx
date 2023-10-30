@@ -7,6 +7,7 @@ export const AllUtilityLabels = () => {
     <SecondaryCard className="grid grid-cols-1 gap-1">
       <UtilityLabel name={"Electricity"} resourceId={EntityType.Electricity} />
       <UtilityLabel name={"Housing"} resourceId={EntityType.Housing} />
+      <UtilityLabel name={"Defense"} resourceId={EntityType.Defense} />
     </SecondaryCard>
   );
 };
