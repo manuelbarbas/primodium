@@ -8,10 +8,11 @@ import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { transformProductionData } from "src/util/building";
-import { formatNumber, getBlockTypeName } from "src/util/common";
+import { getBlockTypeName } from "src/util/common";
 import { RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
 import { getRecipe } from "src/util/resource";
 import { Hex } from "viem";
+import { Badge } from "../core/Badge";
 
 export const RecipeDisplay: React.FC<{
   building: Entity;
@@ -77,22 +78,22 @@ export const PrototypeInfo: React.FC<{
                 className={`absolute bottom-0 w-14 pixel-images rounded-md`}
               />
             </div>
-            {production.map(({ resource, amount }) => (
-              <div
-                className="relative flex flex-col gap-1 text-xs items-center w-24"
+            {production.map(({ resource, amount, type }) => (
+              <Badge
                 key={`prototypeproduction-${resource}`}
+                className="text-xs gap-2 bg-green-800/60 py-3 border border-green-600 rounded-md w-fit"
               >
-                {production && (
-                  <>
-                    <div className="flex items-center gap-2 text-xs bg-green-800/60 p-1 border border-green-600 rounded-md w-fit">
-                      <img className="inline-block h-4" src={ResourceImage.get(resource)}></img>
-                      {formatNumber(amount)}/MIN
-                    </div>
-                    <p className="text-[.6rem] opacity-50">OUTPUT</p>
-                  </>
-                )}
-              </div>
+                <ResourceIconTooltip
+                  name={getBlockTypeName(resource)}
+                  image={ResourceImage.get(resource) ?? ""}
+                  resource={resource}
+                  playerEntity={playerEntity}
+                  amount={amount}
+                  resourceType={type}
+                />
+              </Badge>
             ))}
+            <p className="text-[.6rem] opacity-50">OUTPUT</p>
           </div>
 
           <div className="flex flex-col items-center gap-2">

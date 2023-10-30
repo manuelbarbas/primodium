@@ -40,9 +40,9 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
           </b>
         </DataLabel>
       </div>
-      {production.map(({ resource, amount }) => (
-        <div className="grid grid-cols-2 w-full mb-1" key={`production-${resource}`}>
-          <DataLabel label="PRODUCTION">
+      <div className="grid grid-cols-2 w-full mb-1">
+        {production.map(({ resource, amount, type }) => (
+          <DataLabel label="PRODUCTION" key={`production-${resource}`}>
             <Badge className="text-xs gap-2">
               <ResourceIconTooltip
                 name={getBlockTypeName(resource)}
@@ -50,28 +50,30 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                 resource={resource}
                 playerEntity={playerEntity}
                 amount={amount}
-                resourceType={ResourceType.ResourceRate}
+                resourceType={type}
               />
             </Badge>
           </DataLabel>
-          <DataLabel label="next level production">
-            {!upgrade.production || level === maxLevel ? (
-              <b>N/A</b>
-            ) : (
-              <Badge className="text-xs gap-2">
+        ))}
+        <DataLabel label="next level production">
+          {!upgrade.production || level === maxLevel ? (
+            <b>N/A</b>
+          ) : (
+            upgrade.production.map(({ resource, amount, type }) => (
+              <Badge className="text-xs gap-2" key={`next-production-${resource}`}>
                 <ResourceIconTooltip
                   name={getBlockTypeName(resource)}
                   image={ResourceImage.get(resource) ?? ""}
                   resource={resource}
                   playerEntity={playerEntity}
                   amount={amount}
-                  resourceType={ResourceType.ResourceRate}
+                  resourceType={type}
                 />
               </Badge>
-            )}
-          </DataLabel>
-        </div>
-      ))}
+            ))
+          )}
+        </DataLabel>
+      </div>
       {unitProductionMultiplier !== undefined && (
         <div className="grid grid-cols-2 w-full ">
           <DataLabel label="speed">

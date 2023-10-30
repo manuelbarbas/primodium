@@ -376,7 +376,7 @@ export const SpaceRockTypeNames: Record<number, string> = {
   [ERock.Motherlode]: "Motherlode",
 };
 
-export const ResourceStorages = [
+export const ResourceStorages = new Set([
   EntityType.Iron,
   EntityType.Copper,
   EntityType.Lithium,
@@ -388,14 +388,14 @@ export const ResourceStorages = [
   EntityType.Iridium,
   EntityType.Platinum,
   EntityType.Kimberlite,
-];
+]);
 
-export const UtilityStorages = [
+export const UtilityStorages = new Set([
   EntityType.Housing,
   EntityType.Electricity,
   EntityType.VesselCapacity,
   EntityType.FleetMoves,
-];
+]);
 
 export const ResourceEnumLookup: Record<Entity, EResource> = {
   [EntityType.Iron]: EResource.Iron,

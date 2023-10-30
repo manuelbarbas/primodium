@@ -9,7 +9,7 @@ import { components as comps } from "src/network/components";
 import { Account } from "src/network/components/clientComponents";
 import { Hex } from "viem";
 import { clampedIndex, getBlockTypeName, toRomanNumeral } from "./common";
-import { RESOURCE_SCALE, ResourceEntityLookup, ResourceType } from "./constants";
+import { ResourceEntityLookup, ResourceStorages, ResourceType } from "./constants";
 import { outOfBounds } from "./outOfBounds";
 import { getRecipe } from "./resource";
 import { getBuildingAtCoord, getResourceKey } from "./tile";
@@ -170,11 +170,15 @@ export const getBuildingStorages = (buildingType: Entity, level: bigint) => {
 
 export function transformProductionData(
   production: { resources: number[]; amounts: bigint[] } | undefined
-): { resource: Entity; amount: bigint }[] {
+): { resource: Entity; amount: bigint; type: ResourceType }[] {
   if (!production) return [];
+
   return production.resources.map((curr, i) => ({
     resource: ResourceEntityLookup[curr as EResource],
-    amount: (production.amounts[i] * 60n) / RESOURCE_SCALE,
+    amount: production.amounts[i],
+    type: ResourceStorages.has(ResourceEntityLookup[curr as EResource])
+      ? ResourceType.ResourceRate
+      : ResourceType.Utility,
   }));
 }
 
@@ -192,8 +196,6 @@ export const getBuildingInfo = (building: Entity) => {
   const buildingNextLevelKeys = { prototype: buildingType, level: nextLevel };
   const production = transformProductionData(comps.P_Production.getWithKeys(buildingLevelKeys));
   const nextLevelProduction = transformProductionData(comps.P_Production.getWithKeys(buildingNextLevelKeys));
-
-  console.log("production:", production);
 
   const storages = getBuildingStorages(buildingTypeEntity, level);
   const nextLevelStorages = getBuildingStorages(buildingTypeEntity, level);

@@ -104,7 +104,7 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
       function: async () => {
         const player = mud.network.playerEntity;
         if (!player) throw new Error("No player found");
-        for (const resource of ResourceStorages) {
+        for (const resource of [...ResourceStorages]) {
           await mud.contractCalls.setComponentValue(
             mud.components.ResourceCount,
             encodeEntity(
