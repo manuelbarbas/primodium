@@ -651,6 +651,21 @@ export const config = mudConfig({
       },
     },
 
+    SetAllianceMembers: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: {
+        memberKeys: "bytes32[]",
+      },
+    },
+
+    SetIndexForAllianceMembers: {
+      keySchema: { entity: "bytes32", member: "bytes32" },
+      valueSchema: {
+        stored: "bool",
+        index: "uint256",
+      },
+    },
+
     AllianceInvitation: {
       keySchema: { entity: "bytes32", alliance: "bytes32" },
       valueSchema: "bytes32",

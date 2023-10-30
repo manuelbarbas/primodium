@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import { addressToEntity, entityToAddress, getSystemResourceId, bytes32ToString } from "src/utils.sol";
 // tables
-import { Score, AllianceJoinRequest, PlayerAlliance, Alliance, AllianceData, AllianceInvitation, HasBuiltBuilding, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/index.sol";
+import { AllianceMembers, Score, AllianceJoinRequest, PlayerAlliance, Alliance, AllianceData, AllianceInvitation, HasBuiltBuilding, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/index.sol";
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -62,6 +62,7 @@ library LibAlliance {
     bytes32 toBeGranted,
     EAllianceRole roleToBeGranted
   ) internal view {
+    require(playerEntity != toBeGranted, "[Alliance] Can not grant role to self");
     uint8 role = PlayerAlliance.getRole(playerEntity);
     require(role <= uint8(roleToBeGranted), "[Alliance] Can not grant role higher then your own");
     require(role > 0 && role <= uint8(EAllianceRole.CanGrantRole), "[Alliance] Does not have permission to grant role");
@@ -112,6 +113,10 @@ library LibAlliance {
     require(PlayerAlliance.getAlliance(playerEntity) == 0, "[Alliance] Player is already part of an alliance");
   }
 
+  function checkCanLeaveAlliance(bytes32 playerEntity) internal view {
+    require(PlayerAlliance.getRole(playerEntity) != EAllianceRole.Owner, "[Alliance] Owner can not leave");
+  }
+
   /**
    * @dev try to join an alliance
    * @param player The entity ID of the player.
@@ -156,6 +161,12 @@ library LibAlliance {
     PlayerAlliance.set(player, 0, uint8(EAllianceRole.NULL));
     uint256 playerScore = Score.get(player);
     Alliance.setScore(allianceEntity, Alliance.getScore(allianceEntity) - playerScore);
+
+    if (AllianceMembers.length(allianceEntity) > 1) {
+      bytes32 replacement = AllianceMembers.getMember(allianceEntity, AllianceMembers.length(allianceEntity) - 1);
+      MapArrivals.update(allianceEntity, index, replacement);
+    }
+    MapArrivals.pop(allianceEntity);
   }
 
   /**
@@ -206,6 +217,11 @@ library LibAlliance {
     checkCanGrantRole(granter, target, role);
     bytes32 allianceEntity = PlayerAlliance.getAlliance(granter);
     PlayerAlliance.set(target, allianceEntity, uint8(role));
+
+    //if the role being granted is Owner, then the granter loses that role and becomes CanGrantRole
+    if (role == EAllianceRole.Owner) {
+      PlayerAlliance.set(granter, allianceEntity, uint8(EAllianceRole.CanGrantRole));
+    }
   }
 
   /**
