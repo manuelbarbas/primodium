@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { DEFENSE_MULTIPLIER_SCALE } from "src/constants.sol";
+import { MULTIPLIER_SCALE } from "src/constants.sol";
 import { ESendType, Arrival, EResource } from "src/Types.sol";
 import { DestroyedUnit, ResourceCount, UnitCount, UnitLevel, BattleResult, BattleResultData, P_UnitPrototypes, P_Unit, ArrivalCount, UnitCount, Home } from "codegen/index.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
@@ -88,7 +88,7 @@ library LibBattle {
       defensePoints += ResourceCount.get(defenderEntity, uint8(EResource.U_Defense));
       defensePoints +=
         (defensePoints * ResourceCount.get(defenderEntity, uint8(EResource.M_DefenseMultiplier))) /
-        DEFENSE_MULTIPLIER_SCALE;
+        MULTIPLIER_SCALE;
     }
   }
 

@@ -51,6 +51,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                 playerEntity={playerEntity}
                 amount={amount}
                 resourceType={type}
+                scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
               />
             </Badge>
           </DataLabel>
@@ -68,6 +69,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                   playerEntity={playerEntity}
                   amount={amount}
                   resourceType={type}
+                  scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
                 />
               </Badge>
             ))

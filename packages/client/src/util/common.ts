@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
-import { BlockIdToKey } from "./constants";
 import { Hex, trim } from "viem";
+import { BlockIdToKey } from "./constants";
 
 export function hasCommonElement(setA: Set<any>, setB: Set<any>) {
   for (const element of setA) {
@@ -55,6 +55,7 @@ export function toRomanNumeral(number: number) {
 }
 
 export function formatNumber(num: number | bigint, fractionDigits = 2): string {
+  if (num === 0 || num === 0n) return "--";
   if (typeof num === "number") {
     const fixedNum = num.toFixed(fractionDigits);
     return String(parseFloat(fixedNum).toLocaleString());

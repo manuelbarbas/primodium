@@ -9,7 +9,7 @@ import { components as comps } from "src/network/components";
 import { Account } from "src/network/components/clientComponents";
 import { Hex } from "viem";
 import { clampedIndex, getBlockTypeName, toRomanNumeral } from "./common";
-import { ResourceEntityLookup, ResourceStorages, ResourceType } from "./constants";
+import { ResourceEntityLookup, ResourceStorages, ResourceType, UtilityStorages } from "./constants";
 import { outOfBounds } from "./outOfBounds";
 import { getRecipe } from "./resource";
 import { getBuildingAtCoord, getResourceKey } from "./tile";
@@ -173,13 +173,19 @@ export function transformProductionData(
 ): { resource: Entity; amount: bigint; type: ResourceType }[] {
   if (!production) return [];
 
-  return production.resources.map((curr, i) => ({
-    resource: ResourceEntityLookup[curr as EResource],
-    amount: production.amounts[i],
-    type: ResourceStorages.has(ResourceEntityLookup[curr as EResource])
+  return production.resources.map((curr, i) => {
+    const type = ResourceStorages.has(ResourceEntityLookup[curr as EResource])
       ? ResourceType.ResourceRate
-      : ResourceType.Utility,
-  }));
+      : UtilityStorages.has(ResourceEntityLookup[curr as EResource])
+      ? ResourceType.Utility
+      : ResourceType.Multiplier;
+
+    return {
+      resource: ResourceEntityLookup[curr as EResource],
+      amount: production.amounts[i],
+      type,
+    };
+  });
 }
 
 export const getBuildingInfo = (building: Entity) => {

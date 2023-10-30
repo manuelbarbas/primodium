@@ -90,6 +90,7 @@ export const PrototypeInfo: React.FC<{
                   playerEntity={playerEntity}
                   amount={amount}
                   resourceType={type}
+                  scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
                 />
               </Badge>
             ))}
