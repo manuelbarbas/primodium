@@ -17,33 +17,26 @@ import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
 import { world } from "src/network/world";
 import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
-import { getBlockTypeName } from "src/util/common";
-import { Action, BuildingEnumLookup } from "src/util/constants";
-import { getRecipe, hasEnoughResources } from "src/util/resource";
-import { buildBuilding } from "src/util/web3/contractCalls/buildBuilding";
+import { Action } from "src/util/constants";
+import { moveBuilding } from "src/util/web3/contractCalls/moveBuilding";
 import { ObjectPosition, OnClick, SetValue } from "../../common/object-components/common";
 import { Animation, Outline, Texture } from "../../common/object-components/sprite";
 
-export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
+export const renderBuildingMoveTool = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
-  const objIndexSuffix = "_buildingPlacement";
+  const objIndexSuffix = "_buildingMove";
   const playerEntity = mud.network.playerEntity;
-
-  const query = [
-    Has(components.HoverTile),
-    HasValue(components.SelectedAction, {
-      value: Action.PlaceBuilding,
-    }),
-  ];
 
   const render = (update: ComponentUpdate) => {
     const objIndex = update.entity + objIndexSuffix;
     const selectedBuilding = components.SelectedBuilding.get()?.value;
+    if (!selectedBuilding) return;
+    const buildingPrototype = components.BuildingType.get(selectedBuilding)?.value as Entity | undefined;
 
     const tileCoord = components.HoverTile.get();
 
-    if (!tileCoord || !selectedBuilding) return;
+    if (!tileCoord || !buildingPrototype) return;
 
     const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);
 
@@ -51,17 +44,16 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
 
     const buildingTool = scene.objectPool.get(objIndex, "Sprite");
 
-    const sprite = EntitytoSpriteKey[selectedBuilding][0];
-    const animation = EntityIDtoAnimationKey[selectedBuilding]
-      ? EntityIDtoAnimationKey[selectedBuilding][0]
+    const sprite = EntitytoSpriteKey[buildingPrototype][0];
+    const animation = EntityIDtoAnimationKey[buildingPrototype]
+      ? EntityIDtoAnimationKey[buildingPrototype][0]
       : undefined;
 
-    const buildingDimensions = getBuildingDimensions(selectedBuilding);
+    const buildingDimensions = getBuildingDimensions(buildingPrototype);
 
-    const hasEnough = hasEnoughResources(getRecipe(selectedBuilding, 1n), mud.network.playerEntity);
     const validPlacement = validateBuildingPlacement(
       tileCoord,
-      selectedBuilding,
+      buildingPrototype,
       (components.Home.get(playerEntity)?.asteroid as Entity | undefined) ?? singletonEntity
     );
 
@@ -76,13 +68,13 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
       SetValue({
         alpha: 0.9,
         originY: 1,
-        tint: hasEnough ? 0xffffff : 0xff0000,
+        tint: 0xffffff,
       }),
       Texture(Assets.SpriteAtlas, sprite ?? SpriteKeys.IronMine1),
       animation ? Animation(animation) : undefined,
       Outline({
         thickness: 3,
-        color: hasEnough && validPlacement ? undefined : 0xff0000,
+        color: validPlacement ? undefined : 0xff0000,
       }),
       OnClick(
         scene,
@@ -93,17 +85,16 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
             return;
           }
 
-          if (!hasEnough || !validPlacement) {
-            if (!hasEnough) toast.error("Not enough resources to build " + getBlockTypeName(selectedBuilding));
-            if (!validPlacement) toast.error("Cannot place building here");
+          if (!validPlacement) {
+            toast.error("Cannot place building here");
             scene.camera.phaserCamera.shake(200, 0.001);
             return;
           }
 
-          const buildingOrigin = getBuildingOrigin(tileCoord, selectedBuilding);
+          const buildingOrigin = getBuildingOrigin(tileCoord, buildingPrototype);
           if (!buildingOrigin) return;
 
-          buildBuilding(mud.network, BuildingEnumLookup[selectedBuilding], buildingOrigin);
+          moveBuilding(mud.network, selectedBuilding, buildingOrigin);
           components.SelectedAction.remove();
         },
         true
@@ -111,19 +102,19 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
     ]);
   };
 
-  defineEnterSystem(gameWorld, query, (update) => {
-    render(update);
+  const query = [
+    Has(components.HoverTile),
+    HasValue(components.SelectedAction, {
+      value: Action.MoveBuilding,
+    }),
+  ];
 
-    console.info("[ENTER SYSTEM](renderBuildingPlacement) Building placement tool has been added");
-  });
-
+  defineEnterSystem(gameWorld, query, render);
   defineUpdateSystem(gameWorld, query, render);
 
   defineExitSystem(gameWorld, query, (update) => {
     const objIndex = update.entity + objIndexSuffix;
 
     scene.objectPool.remove(objIndex);
-
-    console.info("[EXIT SYSTEM](renderBuildingPlacement) Building placement tool has been removed");
   });
 };

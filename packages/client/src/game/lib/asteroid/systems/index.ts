@@ -1,11 +1,12 @@
 import { Scene } from "engine/types";
-import { renderBuildingPlacementTool } from "./renderBuildingPlacementTool";
+import { SetupResult } from "src/network/types";
+import { focusMainbase } from "./focusMainbase";
 import { renderBuilding } from "./renderBuilding";
+import { renderBuildingMoveTool } from "./renderBuildingMoveTool";
+import { renderBuildingPlacementTool } from "./renderBuildingPlacementTool";
+import { renderFog } from "./renderFog";
 import { renderHoverTile } from "./renderHoverTile";
 import { renderSelectedTile } from "./renderSelectedTile";
-import { focusMainbase } from "./focusMainbase";
-import { renderFog } from "./renderFog";
-import { SetupResult } from "src/network/types";
 
 export const runSystems = (scene: Scene, mud: SetupResult) => {
   //Render world entity's sprites
@@ -15,6 +16,7 @@ export const runSystems = (scene: Scene, mud: SetupResult) => {
   renderSelectedTile(scene);
   renderHoverTile(scene);
   renderBuildingPlacementTool(scene, mud);
+  renderBuildingMoveTool(scene, mud);
   focusMainbase(scene, mud);
   renderFog(scene, mud);
 };

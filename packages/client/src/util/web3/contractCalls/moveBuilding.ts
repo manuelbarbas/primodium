@@ -13,7 +13,6 @@ export const moveBuilding = async (network: SetupNetworkResult, building: Entity
 
   const prevPosition = components.Position.get(building);
   const position = { ...coord, parent: activeAsteroid as Hex };
-  console.log(building, position);
 
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
   setTransactionLoading(true);
