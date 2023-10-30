@@ -93,6 +93,8 @@ export const EntityType = {
   DroneFactory: toHex32("DroneFactory") as Entity,
   StarmapperStation: toHex32("Starmapper") as Entity,
   SAMLauncher: toHex32("SAMLauncher") as Entity,
+  ShieldGenerator: toHex32("ShieldGenerator") as Entity,
+  Vault: toHex32("Vault") as Entity,
 
   Alloy: toHex32("Alloy") as Entity,
   PVCell: toHex32("PVCell") as Entity,
@@ -429,15 +431,17 @@ export const BuildingEnumLookup: Record<Entity, EBuilding> = {
   [EntityType.IronPlateFactory]: EBuilding.IronPlateFactory,
   [EntityType.AlloyFactory]: EBuilding.AlloyFactory,
   [EntityType.PVCellFactory]: EBuilding.PVCellFactory,
-  // [BlockType.Garage]: EBuilding.Garage,
-  // [BlockType.Workshop]: EBuilding.Workshop,
+  [EntityType.Garage]: EBuilding.Garage,
+  [EntityType.Workshop]: EBuilding.Workshop,
   [EntityType.StorageUnit]: EBuilding.StorageUnit,
   [EntityType.SolarPanel]: EBuilding.SolarPanel,
   [EntityType.DroneFactory]: EBuilding.DroneFactory,
   [EntityType.Hangar]: EBuilding.Hangar,
   [EntityType.MainBase]: EBuilding.MainBase,
-  // [EntityType.SAMSite]: EBuilding.SAMSite,
+  [EntityType.SAMLauncher]: EBuilding.SAM,
   [EntityType.StarmapperStation]: EBuilding.Starmapper,
+  [EntityType.ShieldGenerator]: EBuilding.ShieldGenerator,
+  [EntityType.Vault]: EBuilding.Vault,
 };
 
 export const BuildingEntityLookup = reverseRecord(BuildingEnumLookup);

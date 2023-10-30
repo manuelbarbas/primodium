@@ -54,8 +54,8 @@ export const BuildingMenu: React.FC = () => {
         return <MainBase building={selectedBuilding} />;
       case EntityType.DroneFactory:
         return <UnitFactory building={selectedBuilding} />;
-      // case EntityType.Workshop:
-      //   return <UnitFactory building={selectedBuilding} />;
+      case EntityType.Workshop:
+        return <UnitFactory building={selectedBuilding} />;
       default:
         return <Basic building={selectedBuilding} />;
     }
