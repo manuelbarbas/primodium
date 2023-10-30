@@ -6,7 +6,7 @@ import { GracePeriod, P_GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, 
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { SendArgs } from "src/Types.sol";
-import { WORLD_SPEED_SCALE } from "src/constants.sol";
+import { WORLD_SPEED_SCALE, NUM_UNITS } from "src/constants.sol";
 
 library LibSend {
   /**
@@ -44,8 +44,7 @@ library LibSend {
     }
 
     bytes32 player = arrival.sendType == ESendType.Reinforce ? arrival.to : arrival.from;
-    bytes32 asteroid = arrival.sendType == ESendType.Reinforce ? arrival.destination : arrival.origin;
-    ArrivalsMap.set(player, asteroid, keccak256(abi.encode(arrival)), arrival);
+    ArrivalsMap.set(player, arrival.destination, keccak256(abi.encode(arrival)), arrival);
     ArrivalCount.set(arrival.from, ArrivalCount.get(arrival.from) + 1);
   }
 
@@ -53,7 +52,7 @@ library LibSend {
   /// @param playerEntity Entity initiating send.
   /// @param unitCounts Array of unit counts being sent.
   /// @return slowestSpeed Slowest unit speed among the types.
-  function getSlowestUnitSpeed(bytes32 playerEntity, uint256[5] memory unitCounts)
+  function getSlowestUnitSpeed(bytes32 playerEntity, uint256[NUM_UNITS] memory unitCounts)
     internal
     view
     returns (uint256 slowestSpeed)
@@ -83,7 +82,7 @@ library LibSend {
     PositionData memory origin,
     PositionData memory destination,
     bytes32 playerEntity,
-    uint256[5] memory unitCounts
+    uint256[NUM_UNITS] memory unitCounts
   ) internal view returns (uint256) {
     P_GameConfigData memory config = P_GameConfig.get();
     uint256 unitSpeed = getSlowestUnitSpeed(playerEntity, unitCounts);
@@ -91,8 +90,8 @@ library LibSend {
 
     return
       block.timestamp +
-      ((LibMath.distance(origin, destination) * config.worldSpeed * 100 * 100) /
-        (config.moveSpeed * unitSpeed * WORLD_SPEED_SCALE));
+      ((LibMath.distance(origin, destination) * 100 * WORLD_SPEED_SCALE * 100) /
+        (config.moveSpeed * config.worldSpeed * unitSpeed));
   }
 
   /// @notice Checks if movement between two positions is allowed.

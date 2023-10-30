@@ -31,14 +31,14 @@ const buildingHotbar: Hotbar = {
       blockType: EntityType.IronPlateFactory,
       keybind: KeybindActions.Hotbar4,
     },
-    // {
-    //   blockType: BlockType.Garage,
-    //   keybind: KeybindActions.Hotbar5,
-    // },
-    // {
-    //   blockType: BlockType.Workshop,
-    //   keybind: KeybindActions.Hotbar6,
-    // },
+    {
+      blockType: EntityType.Garage,
+      keybind: KeybindActions.Hotbar5,
+    },
+    {
+      blockType: EntityType.Workshop,
+      keybind: KeybindActions.Hotbar6,
+    },
     {
       blockType: EntityType.StorageUnit,
       keybind: KeybindActions.Hotbar7,
@@ -58,10 +58,10 @@ const advancedBuildingHotbar: Hotbar = {
       blockType: EntityType.SolarPanel,
       keybind: KeybindActions.Hotbar2,
     },
-    // {
-    //   blockType: BlockType.SAMLauncher,
-    //   keybind: KeybindActions.Hotbar3,
-    // },
+    {
+      blockType: EntityType.SAMLauncher,
+      keybind: KeybindActions.Hotbar3,
+    },
     {
       blockType: EntityType.Hangar,
       keybind: KeybindActions.Hotbar4,
@@ -77,6 +77,14 @@ const advancedBuildingHotbar: Hotbar = {
     {
       blockType: EntityType.StarmapperStation,
       keybind: KeybindActions.Hotbar7,
+    },
+    {
+      blockType: EntityType.ShieldGenerator,
+      keybind: KeybindActions.Hotbar8,
+    },
+    {
+      blockType: EntityType.Vault,
+      keybind: KeybindActions.Hotbar9,
     },
   ],
 };

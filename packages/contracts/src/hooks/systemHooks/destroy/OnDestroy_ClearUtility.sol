@@ -8,7 +8,6 @@ import { PositionData } from "codegen/tables/Position.sol";
 
 import { EBuilding } from "src/Types.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
-import { BuildingKey } from "src/Keys.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";

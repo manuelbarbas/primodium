@@ -1,16 +1,17 @@
 import { Entity, Type } from "@latticexyz/recs";
+import { ESendType } from "contracts/config/enums";
 import { useMemo } from "react";
 import { world } from "src/network/world";
-import { ESendType } from "src/util/web3/types";
+import { getNow } from "src/util/time";
 import { BlockNumber } from "../clientComponents";
 import { createExtendedComponent } from "./ExtendedComponent";
 
-export const newArrivalComponent = () => {
+export const createArrivalComponent = () => {
   const component = createExtendedComponent(world, {
     sendType: Type.Number,
-    unitCounts: Type.NumberArray,
-    unitTypes: Type.StringArray,
-    arrivalBlock: Type.String,
+    unitCounts: Type.BigIntArray,
+    sendTime: Type.BigInt,
+    arrivalTime: Type.BigInt,
     from: Type.Entity,
     to: Type.Entity,
     origin: Type.Entity,
@@ -31,7 +32,6 @@ export const newArrivalComponent = () => {
     onlyTransit?: boolean;
   }) => {
     if (filters?.onlyOrbiting && filters?.onlyTransit) throw new Error("Cannot filter for both orbiting and transit");
-    const blockNumber = BlockNumber.get()?.value ?? 0;
     const all = component.getAll().map((entity) => {
       const comp = component.get(entity);
       if (!comp) return undefined;
@@ -49,8 +49,9 @@ export const newArrivalComponent = () => {
       if (filters.origin && elem?.origin !== filters.origin) return false;
       if (filters.destination && elem?.destination !== filters.destination) return false;
       if (filters.sendType && elem?.sendType !== filters.sendType) return false;
-      if (filters.onlyOrbiting && Number(elem.arrivalBlock) >= blockNumber) return false;
-      if (filters.onlyTransit && Number(elem.arrivalBlock) < blockNumber) {
+      const now = getNow();
+      if (filters.onlyOrbiting && Number(elem.arrivalTime) >= now) return false;
+      if (filters.onlyTransit && Number(elem.arrivalTime) < now) {
         return false;
       }
       return true;

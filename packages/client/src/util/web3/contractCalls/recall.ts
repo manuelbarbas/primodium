@@ -1,31 +1,16 @@
 import { Entity } from "@latticexyz/recs";
+import { decodeEntity } from "@latticexyz/store-sync/recs";
+import { components } from "src/network/components";
 import { SetupNetworkResult } from "src/network/types";
+import { Hex } from "viem";
 
-export const recall = async (rockEntity: Entity, network: SetupNetworkResult) => {
-  //   const receipt = await execute(
-  //     systems["system.RecallReinforcements"].executeTyped(rockEntity, {
-  //       gasLimit: 4_000_000,
-  //     }),
-  //     providers
-  //   );
-  //   ampli.systemRecallReinforcements({
-  //     asteroidCoord: rockEntity,
-  //     ...parseReceipt(receipt),
-  //   });
-  //   setTransactionLoading(false);
-  // };
-  // export const recallUnitsFromMotherlode = async (rockEntity: Entity, network: SetupNetworkResult) => {
-  //   const { providers, systems } = network;
-  //   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
-  //   setTransactionLoading(true);
-  //   const receipt = await execute(
-  //     systems["system.RecallUnitsFromMotherlode"].executeTyped(rockEntity, {
-  //       gasLimit: 4_000_000,
-  //     }),
-  //     providers
-  //   );
-  //   ampli.systemRecallReinforcements({
-  //     asteroidCoord: rockEntity,
-  //     ...parseReceipt(receipt),
-  //   });
+export const recall = async (rockEntity: Entity, arrivalEntity: Entity, network: SetupNetworkResult) => {
+  const { key } = decodeEntity(components.MapItemArrivals.metadata.keySchema, arrivalEntity);
+  const tx = await network.worldContract.write.recall([rockEntity as Hex, key as Hex]);
+  await network.waitForTransaction(tx);
+};
+
+export const recallAll = async (rockEntity: Entity, network: SetupNetworkResult) => {
+  const tx = await network.worldContract.write.recallAll([rockEntity as Hex]);
+  await network.waitForTransaction(tx);
 };

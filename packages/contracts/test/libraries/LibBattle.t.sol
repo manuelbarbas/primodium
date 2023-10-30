@@ -17,11 +17,12 @@ contract LibBattleTest is PrimodiumTest {
     Arrival({
       sendType: ESendType.Invade,
       arrivalTime: 2,
+      sendTime: block.timestamp,
       from: "from",
       to: "to",
       origin: "origin",
       destination: "destination",
-      unitCounts: [uint256(0), 0, 0, 0, 0]
+      unitCounts: [uint256(0), 0, 0, 0, 0, 0, 0]
     });
   bytes32 arrivalId = keccak256(abi.encode(arrival));
 
@@ -31,7 +32,7 @@ contract LibBattleTest is PrimodiumTest {
     super.setUp();
     vm.startPrank(creator);
     player = addressToEntity(worldAddress);
-    bytes32[] memory unitTypes = new bytes32[](unitPrototypeCount);
+    bytes32[] memory unitTypes = new bytes32[](NUM_UNITS);
     unitTypes[0] = unit1;
     unitTypes[1] = unit2;
     P_UnitPrototypes.set(unitTypes);
@@ -122,6 +123,8 @@ contract LibBattleTest is PrimodiumTest {
     (uint256[] memory count, uint256 actual, uint256 cargo) = LibBattle.getAttackPoints(player, rock, ESendType.Invade);
     assertEq(count[0], unitCount);
     assertEq(actual, expected, "Attack points should be equal to unitCount * attack");
+    assertEq(ArrivalsMap.size(player, rock), 0);
+    assertEq(string(MapItemArrivals.get(player, rock, arrivalId)), "");
     return expected;
   }
 
@@ -140,7 +143,7 @@ contract LibBattleTest is PrimodiumTest {
     arrival.arrivalTime = 0;
     arrival.unitCounts[0] = unitCount;
 
-    uint256[5] memory newUnitCounts;
+    uint256[NUM_UNITS] memory newUnitCounts;
     newUnitCounts[1] = unitCount2;
 
     setupUnit(unit1, attack, 0);
@@ -148,6 +151,7 @@ contract LibBattleTest is PrimodiumTest {
 
     ArrivalsMap.set(player, rock, arrivalId, arrival);
     Arrival memory arrival2 = Arrival({
+      sendTime: block.timestamp,
       sendType: ESendType.Invade,
       arrivalTime: 2,
       from: "from",

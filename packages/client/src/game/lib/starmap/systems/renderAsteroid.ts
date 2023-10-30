@@ -1,19 +1,18 @@
+import { Entity, Has, HasValue, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { namespaceWorld, Has, defineEnterSystem, Entity } from "@latticexyz/recs";
-import { ObjectPosition, SetValue } from "../../common/object-components/common";
-import { Texture } from "../../common/object-components/sprite";
 import { singletonIndex, world } from "src/network/world";
-// import { Send } from "src/network/components/clientComponents";
-// import { initializeMotherlodes } from "../utils/initializeMotherlodes";
+import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
+import { Outline, Texture } from "../../common/object-components/sprite";
 
-import { Coord } from "@latticexyz/utils";
 import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
-import { EntityType } from "src/util/constants";
-import { clampedIndex } from "src/util/common";
-import { SetupResult } from "src/network/types";
+import { Coord } from "@latticexyz/utils";
+import { ERock } from "contracts/config/enums";
 import { components } from "src/network/components";
-import { MUDEnums } from "contracts/config/enums";
+import { SetupResult } from "src/network/types";
+import { clampedIndex } from "src/util/common";
+import { EntityType } from "src/util/constants";
 import { initializeMotherlodes } from "../utils/initializeMotherlodes";
+import { getNow } from "src/util/time";
 
 export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -22,14 +21,6 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
 
   const render = (entity: Entity, coord: Coord) => {
     scene.objectPool.removeGroup("asteroid_" + entity);
-    const asteroidType =
-      MUDEnums.ERock[
-        components.RockType.get(entity, {
-          value: 1,
-        }).value
-      ];
-
-    if (asteroidType !== MUDEnums.ERock[1]) return;
 
     //TODO - fix conversion to Entity
     const ownedBy = components.OwnedBy.get(entity, {
@@ -65,15 +56,36 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
 
     asteroidObject.setComponents([
       ...sharedComponents,
+      //fade out asteroids that are in grace period
+      OnComponentSystem(components.BlockNumber, (gameObject) => {
+        const player = components.OwnedBy.get(entity)?.value as Entity | undefined;
+        const graceTime = components.GracePeriod.get(player)?.value ?? 0n;
+        const time = getNow();
+
+        //don't fade out asteroids that are owned by the player
+        if (player === playerEntity) return;
+
+        if (time >= graceTime) {
+          gameObject.alpha = 1;
+        } else {
+          gameObject.alpha = 0.25;
+        }
+      }),
       Texture(
         Assets.SpriteAtlas,
         EntitytoSpriteKey[EntityType.Asteroid][
           clampedIndex(Number(mainBaseLevel) - 1, EntitytoSpriteKey[EntityType.Asteroid].length)
         ]
       ),
-      // OnClick(scene, () => {
-      //   Send.setDestination(entityId);
-      // }),
+      OnClick(scene, () => {
+        const player = components.OwnedBy.get(entity)?.value as Entity | undefined;
+        const graceTime = components.GracePeriod.get(player)?.value ?? 0n;
+        const time = getNow();
+
+        if (time < graceTime && player !== playerEntity) return;
+
+        components.Send.setDestination(entity);
+      }),
     ]);
 
     const outlineSprite =
@@ -83,24 +95,26 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
 
     asteroidOutline.setComponents([
       ...sharedComponents,
-      // OnComponentSystem(Send, () => {
-      //   if (Send.get()?.destination === entity) {
-      //     if (asteroidOutline.hasComponent(Outline().id)) return;
-      //     asteroidOutline.setComponent(Outline({ thickness: 1.5, color: 0xffa500 }));
-      //     return;
-      //   }
+      OnComponentSystem(components.Send, () => {
+        if (components.Send.get()?.destination === entity) {
+          if (asteroidOutline.hasComponent(Outline().id)) return;
+          asteroidOutline.setComponent(Outline({ thickness: 1.5, color: 0xffa500 }));
+          return;
+        }
 
-      //   if (asteroidOutline.hasComponent(Outline().id)) {
-      //     asteroidOutline.removeComponent(Outline().id);
-      //   }
-      // }),
+        if (asteroidOutline.hasComponent(Outline().id)) {
+          asteroidOutline.removeComponent(Outline().id);
+        }
+      }),
       Texture(Assets.SpriteAtlas, outlineSprite),
     ]);
   };
 
   const query = [
     Has(components.RockType),
-    // Not(components.Pirate),
+    HasValue(components.RockType, { value: ERock.Asteroid }),
+    Has(components.Position),
+    Not(components.PirateAsteroid),
   ];
 
   defineEnterSystem(gameWorld, query, ({ entity }) => {

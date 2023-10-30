@@ -22,7 +22,7 @@ const resources: Record<string, Entity> = {
   alloy: EntityType.Alloy,
   pvcell: EntityType.PVCell,
   housing: EntityType.Housing,
-  // vessel: BlockType.VesselCapacity,
+  vessel: EntityType.VesselCapacity,
   electricity: EntityType.Electricity,
 };
 
@@ -41,6 +41,17 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
       function: async (value: number) => {
         await mud.contractCalls.setComponentValue(mud.components.P_GameConfig, singletonEntity, {
           worldSpeed: BigInt(value),
+        });
+      },
+    },
+    maxMainBaseLevel: {
+      params: [],
+      function: async () => {
+        const mainBase = mud.components.Home.get(mud.network.playerEntity)?.mainBase as Entity | undefined;
+        if (!mainBase) throw new Error("No main base found");
+        const maxLevel = mud.components.P_MaxLevel.get(mainBase)?.value ?? 8n;
+        await mud.contractCalls.setComponentValue(mud.components.Level, mainBase, {
+          value: maxLevel,
         });
       },
     },
@@ -105,8 +116,8 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
             }
           );
         }
-
         UtilityStorages.forEach(async (resource) => {
+          if (resource == EntityType.VesselCapacity) return;
           if (!player) throw new Error("No player found");
 
           await mud.contractCalls.setComponentValue(
@@ -120,8 +131,8 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
             }
           );
         });
-
         UtilityStorages.forEach(async (resource) => {
+          if (resource == EntityType.VesselCapacity) return;
           if (!player) throw new Error("No player found");
 
           await mud.contractCalls.setComponentValue(

@@ -51,7 +51,7 @@ contract SpawnSystemTest is PrimodiumTest {
 
     PositionData memory coord = Position.get(MainBasePrototypeId);
     coord.parent = asteroid;
-    bytes32 buildingEntity = LibEncode.getHash(BuildingKey, coord);
+    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
     PositionData memory position = Position.get(buildingEntity);
     assertEq(position.x, coord.x, "x values differ");
     assertEq(position.y, coord.y, "y values differ");

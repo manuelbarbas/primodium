@@ -1,7 +1,8 @@
 import { Type } from "@latticexyz/recs";
 import { world } from "../world";
-import { createBattleComponent } from "./customComponents/BattleComponent";
+import { createArrivalComponent } from "./customComponents/ArrivalComponent";
 import {
+  createExtendedBigIntComponent,
   createExtendedBoolComponent,
   createExtendedComponent,
   createExtendedCoordComponent,
@@ -13,7 +14,7 @@ import { createTransactionQueueComponent } from "./customComponents/TransactionQ
 /* -------------------------------------------------------------------------- */
 /*                                     Dev                                    */
 /* -------------------------------------------------------------------------- */
-export const DoubleCounter = createExtendedNumberComponent(world, {
+export const DoubleCounter = createExtendedBigIntComponent(world, {
   id: "DoubleCounter",
 });
 
@@ -32,7 +33,6 @@ export const BlockNumber = createExtendedComponent(
 );
 export const Account = createExtendedEntityComponent(world, { id: "Account" });
 export const GameReady = createExtendedBoolComponent(world, { id: "GameReady" });
-export const ActiveAsteroid = createExtendedComponent(world, { value: Type.Entity }, { id: "ActiveAsteroid" });
 
 // Todo: extend this with relevant tx data
 export const CurrentTransaction = createExtendedBoolComponent(world, { id: "CurrentTransaction" });
@@ -91,30 +91,7 @@ export const Leaderboard = createExtendedComponent(
   }
 );
 
-/* -------------------------------------------------------------------------- */
-/*                                   Battle                                   */
-/* -------------------------------------------------------------------------- */
-export const Battle = createBattleComponent();
-export const BattleReport = createExtendedComponent(
-  world,
-  {
-    show: Type.Boolean,
-    battle: Type.OptionalEntity,
-  },
-  {
-    id: "Battle",
-  }
-);
-
-const Arrival = createExtendedComponent(world, {
-  sendType: Type.Number,
-  unitCounts: Type.BigIntArray,
-  arrivalTime: Type.BigInt,
-  from: Type.Entity,
-  to: Type.Entity,
-  origin: Type.Entity,
-  destination: Type.Entity,
-});
+const Arrival = createArrivalComponent();
 
 /* -------------------------------------------------------------------------- */
 /*                              TRANSACTION QUEUE                             */
@@ -129,7 +106,6 @@ export default {
   BlockNumber,
   Account,
   GameReady,
-  ActiveAsteroid,
   CurrentTransaction,
 
   /* ---------------------------------- Input --------------------------------- */
@@ -148,7 +124,6 @@ export default {
 
   /* --------------------------------- Battle --------------------------------- */
   Arrival,
-  BattleReport,
 
   /* ----------------------------- Transaction ------------------------------- */
   TransactionQueue,

@@ -2,7 +2,6 @@ import { Hex } from "viem";
 import { config } from "../mud.config";
 import {
   encodeArray,
-  getResourceValue,
   getResourceValues,
   getUnitValues,
   idsToPrototypes,
@@ -11,7 +10,7 @@ import {
   upgradesToList,
 } from "../ts/prototypes/prototypeGenUtils";
 import { PrototypesConfig } from "../ts/prototypes/types";
-import { MUDEnums, EResource } from "./enums";
+import { EResource, MUDEnums } from "./enums";
 import { getBlueprint } from "./util/blueprints";
 import encodeBytes32 from "./util/encodeBytes32";
 
@@ -144,6 +143,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   World: {
     keys: [],
     tables: {
+      P_AllianceConfig: { maxAllianceMembers: 20n },
       P_GracePeriod: { value: 60n * 60n * 24n * 3n },
       P_Asteroid: maxRange,
       P_GameConfig: {
@@ -227,16 +227,16 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           value: upgradesToList(mainBaseMaxResourceUpgrades[1]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_Vessel: 1, U_MaxMoves: 1 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1 }),
         P_UnitProdMultiplier: { value: 100n },
       },
       2: {
-        P_RequiredResources: getResourceValues({ Copper: 1500000 }),
+        P_RequiredResources: getResourceValues({ Copper: 150000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[2]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_Vessel: 1, U_MaxMoves: 1 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1 }),
         P_UnitProdMultiplier: { value: 100n },
       },
       3: {
@@ -245,16 +245,16 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           value: upgradesToList(mainBaseMaxResourceUpgrades[3]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_Vessel: 1, U_MaxMoves: 1 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 1 }),
         P_UnitProdMultiplier: { value: 100n },
       },
       4: {
-        P_RequiredResources: getResourceValues({ Copper: 700000, Alloy: 60000 }),
+        P_RequiredResources: getResourceValues({ Copper: 700000, Alloy: 60000, PVCell: 250000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[4]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_Vessel: 1, U_MaxMoves: 1 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 2 }),
         P_UnitProdMultiplier: { value: 100n },
       },
       5: {
@@ -263,7 +263,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           value: upgradesToList(mainBaseMaxResourceUpgrades[5]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_Vessel: 1, U_MaxMoves: 1 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 3 }),
         P_UnitProdMultiplier: { value: 100n },
       },
       6: {
@@ -272,7 +272,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           value: upgradesToList(mainBaseMaxResourceUpgrades[6]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_Vessel: 1, U_MaxMoves: 1 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 4 }),
         P_UnitProdMultiplier: { value: 100n },
       },
       7: {
@@ -286,7 +286,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           value: upgradesToList(mainBaseMaxResourceUpgrades[7]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_Vessel: 1, U_MaxMoves: 1 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 5 }),
         P_UnitProdMultiplier: { value: 100n },
       },
       8: {
@@ -295,7 +295,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           value: upgradesToList(mainBaseMaxResourceUpgrades[8]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_Vessel: 1, U_MaxMoves: 1 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 6 }),
         P_UnitProdMultiplier: { value: 100n },
       },
     },
@@ -1219,6 +1219,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     levels: {
       0: {
         P_RequiredResources: getResourceValues({ Sulfur: 100000, IronPlate: 200000, PVCell: 15000, U_Vessel: 1 }),
+        P_RequiredBaseLevel: { value: 3n },
         P_MiningRate: { value: 1n },
         P_Unit: {
           attack: 20n,
@@ -2010,8 +2011,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   RaidFactoryResources1: {
     tables: {
-      P_RequiredUnits: getUnitValues({ MinutemanMarine: 100 }),
-      P_RaidedResources: getResourceValues({ Iron: 200000, Copper: 200000, Alloy: 200000 }),
+      P_RaidedResources: getResourceValues({ IronPlate: 200000, PVCell: 200000, Alloy: 200000 }),
       P_UnitReward: getUnitValues({ AegisDrone: 30 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 1n } } },
@@ -2033,7 +2033,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   RaidMotherlodeResources1: {
     tables: {
-      P_RequiredUnits: getUnitValues({ StingerDrone: 30 }),
       P_RaidedResources: getResourceValues({ Titanium: 200000, Platinum: 200000, Iridium: 200000, Kimberlite: 200000 }),
       P_UnitReward: getUnitValues({ StingerDrone: 30 }),
     },

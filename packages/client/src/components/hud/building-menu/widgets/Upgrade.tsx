@@ -8,7 +8,7 @@ import { useBuildingInfo } from "src/hooks/useBuildingInfo";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
-import { ResourceImage, ResourceType, RESOURCE_SCALE } from "src/util/constants";
+import { RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
 import { upgradeBuilding } from "src/util/web3/contractCalls/upgradeBuilding";
 
 export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
@@ -81,7 +81,7 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
       {error && <p className="animate-pulse text-error text-xs uppercase mt-2">{error}</p>}
       <div className="flex gap-1 mt-1">
         {Array(Number(maxLevel))
-          .fill(0n)
+          .fill(0)
           .map((_, index) => {
             return (
               <div

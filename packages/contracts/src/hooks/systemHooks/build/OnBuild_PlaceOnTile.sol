@@ -53,9 +53,9 @@ contract OnBuild_PlaceOnTile is SystemHook {
     bytes32 playerEntity = addressToEntity(msgSender);
 
     // Generate the unique building entity key
-    bytes32 buildingEntity = LibEncode.getHash(BuildingKey, coord);
+    bytes32 buildingEntity = LibEncode.getTimedHash(BuildingKey, coord);
 
     // Place the building on the game tile
-    LibBuilding.placeBuildingTiles(playerEntity, buildingPrototype, coord);
+    LibBuilding.placeBuildingTiles(playerEntity, buildingEntity, buildingPrototype, coord);
   }
 }

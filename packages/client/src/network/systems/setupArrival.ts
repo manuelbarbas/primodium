@@ -1,6 +1,7 @@
 import { Entity, defineComponentSystem } from "@latticexyz/recs";
-import { MUDEnums } from "contracts/config/enums";
-import { ESendType } from "src/util/web3/types";
+import { ESendType } from "contracts/config/enums";
+import { NUM_UNITS } from "src/util/constants";
+import { UnitCountTuple } from "src/util/web3/types";
 import { Hex, decodeAbiParameters } from "viem";
 import { components } from "../components";
 import { world } from "../world";
@@ -13,6 +14,10 @@ const ArrivalAbi = {
     },
     {
       name: "arrivalTime",
+      type: "uint256",
+    },
+    {
+      name: "sendTime",
       type: "uint256",
     },
     {
@@ -33,7 +38,7 @@ const ArrivalAbi = {
     },
     {
       name: "unitCounts",
-      type: `uint256[${MUDEnums.EUnit.length}]`,
+      type: `uint256[${NUM_UNITS}]`,
     },
   ],
   name: "arrival",
@@ -43,21 +48,26 @@ const ArrivalAbi = {
 type Arrival = {
   sendType: ESendType;
   arrivalTime: bigint;
+  sendTime: bigint;
   from: Entity;
   to: Entity;
   origin: Entity;
   destination: Entity;
-  unitCounts: bigint[]; // corresponds to EUnit: ["MiningVessel", "AegisDrone", "HammerDrone", "StingerDrone", "AnvilDrone"]
+  unitCounts: UnitCountTuple;
 };
+
+const decodeArrival = (rawArrival: Hex) => {
+  return decodeAbiParameters([ArrivalAbi], rawArrival)[0] as Arrival;
+};
+
 export const setupArrival = () => {
   const { Arrival, MapItemArrivals } = components;
 
-  const decodeArrival = (rawArrival: Hex) => {
-    return decodeAbiParameters([ArrivalAbi], rawArrival)[0] as Arrival;
-  };
   defineComponentSystem(world, MapItemArrivals, ({ entity, value: [newValue] }) => {
     const newVal = newValue?.value;
-    if (!newVal) return Arrival.remove(entity);
+    if (!newVal) {
+      return Arrival.remove(entity);
+    }
     const arrival = decodeArrival(newVal as Hex);
     Arrival.set(arrival, entity);
   });

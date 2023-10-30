@@ -13,7 +13,11 @@ contract SendUnitsSystemTest is PrimodiumTest {
 
   bytes32 unitPrototype = "unitPrototype";
   EUnit unit = EUnit.AegisDrone;
-  uint256[unitPrototypeCount] unitCounts;
+  uint256[NUM_UNITS] unitCounts;
+
+  bytes32 building = "building";
+  bytes32 buildingPrototype = "buildingPrototype";
+  bytes32 rock = bytes32("rock");
 
   P_UnitData unitData = P_UnitData({ attack: 0, defense: 0, speed: 0, cargo: 0, trainingTime: 0 });
 
@@ -24,15 +28,19 @@ contract SendUnitsSystemTest is PrimodiumTest {
     to = addressToEntity(alice);
     P_EnumToPrototype.set(UnitKey, uint8(unit), unitPrototype);
 
-    bytes32[] memory unitTypes = new bytes32[](unitPrototypeCount);
+    bytes32[] memory unitTypes = new bytes32[](NUM_UNITS);
     unitTypes[0] = unitPrototype;
     P_UnitPrototypes.set(unitTypes);
+    BuildingType.set(building, buildingPrototype);
+    OwnedBy.set(building, player);
   }
 
   function prepareTestMovementRules() public {
     RockType.set(origin, uint8(ERock.Asteroid));
     RockType.set(destination, uint8(ERock.Asteroid));
     ReversePosition.set(originPosition.x, originPosition.y, origin);
+    Position.set(origin, originPosition);
+    Position.set(destination, destinationPosition);
     ReversePosition.set(destinationPosition.x, destinationPosition.y, destination);
     ResourceCount.set(player, U_MaxMoves, 10);
   }
@@ -194,23 +202,24 @@ contract SendUnitsSystemTest is PrimodiumTest {
 
     world.sendUnits(unitCounts, ESendType.Invade, originPosition, destinationPosition, bytes32(0));
 
-    assertEq(ArrivalsMap.size(player, origin), 1);
+    assertEq(ArrivalsMap.size(player, destination), 1);
     assertEq(ArrivalCount.get(player), 1);
 
     unitCounts[0] = 1;
 
-    // Arrival memory expectedArrival = Arrival({
-    //   sendType: ESendType.Invade,
-    //   arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitCounts),
-    //   from: player,
-    //   to: bytes32(0),
-    //   origin: origin,
-    //   destination: destination,
-    //   unitCounts: unitCounts
-    // });
+    Arrival memory expectedArrival = Arrival({
+      sendType: ESendType.Invade,
+      sendTime: block.timestamp,
+      arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitCounts),
+      from: player,
+      to: bytes32(0),
+      origin: origin,
+      destination: destination,
+      unitCounts: unitCounts
+    });
 
-    // Arrival memory arrival = ArrivalsMap.values(player, origin)[0];
-    // assertEq(arrival, expectedArrival);
+    Arrival memory arrival = ArrivalsMap.values(player, destination)[0];
+    assertEq(arrival, expectedArrival);
   }
 
   function testSendUnitsInvadeEnemy() public {
@@ -225,13 +234,14 @@ contract SendUnitsSystemTest is PrimodiumTest {
 
     world.sendUnits(unitCounts, ESendType.Invade, originPosition, destinationPosition, to);
 
-    assertEq(ArrivalsMap.size(player, origin), 1);
+    assertEq(ArrivalsMap.size(player, destination), 1);
     assertEq(ArrivalCount.get(player), 1);
 
     unitCounts[0] = 1;
 
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.Invade,
+      sendTime: block.timestamp,
       arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitCounts),
       from: player,
       to: to,
@@ -240,7 +250,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
       unitCounts: unitCounts
     });
 
-    Arrival memory arrival = ArrivalsMap.values(player, origin)[0];
+    Arrival memory arrival = ArrivalsMap.values(player, destination)[0];
     assertEq(arrival, expectedArrival);
   }
 
@@ -264,6 +274,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.Reinforce,
       arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitCounts),
+      sendTime: block.timestamp,
       from: player,
       to: player,
       origin: origin,
@@ -295,6 +306,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.Reinforce,
       arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitCounts),
+      sendTime: block.timestamp,
       from: player,
       to: to,
       origin: origin,
@@ -320,7 +332,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
 
     world.sendUnits(unitCounts, ESendType.Raid, originPosition, destinationPosition, to);
 
-    assertEq(ArrivalsMap.size(player, origin), 1);
+    assertEq(ArrivalsMap.size(player, destination), 1);
     assertEq(ArrivalCount.get(player), 1);
 
     unitCounts[0] = 1;
@@ -328,6 +340,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.Raid,
       arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitCounts),
+      sendTime: block.timestamp,
       from: player,
       to: to,
       origin: origin,
@@ -335,8 +348,40 @@ contract SendUnitsSystemTest is PrimodiumTest {
       unitCounts: unitCounts
     });
 
-    Arrival memory arrival = ArrivalsMap.values(player, origin)[0];
+    Arrival memory arrival = ArrivalsMap.values(player, destination)[0];
     assertEq(arrival, expectedArrival);
+  }
+
+  function testClaimUnitsHook() public {
+    setupValidInvade();
+    OwnedBy.set(destination, to);
+    RockType.set(destination, uint8(ERock.Asteroid));
+
+    Level.set(building, 1);
+    LastClaimedAt.set(building, block.timestamp - 100);
+    P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
+    P_Unit.setTrainingTime(unitPrototype, 0, 1);
+
+    QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
+    UnitProductionQueue.enqueue(building, item);
+    UnitFactorySet.add(player, building);
+
+    Home.setAsteroid(player, origin);
+    MaxResourceCount.set(player, Iron, 1000);
+    ProductionRate.set(player, Iron, 10);
+    LastClaimedAt.set(player, block.timestamp - 10);
+
+    unitCounts[0] = 1;
+    unitData.speed = 100;
+    unitData.trainingTime = 100;
+    P_Unit.set(unitPrototype, 0, unitData);
+
+    console.log("home:", uint256(Home.getAsteroid(player)));
+    console.log("origin", uint256(origin));
+    world.sendUnits(unitCounts, ESendType.Raid, originPosition, destinationPosition, to);
+    assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 0);
+    vm.expectRevert();
+    world.sendUnits(unitCounts, ESendType.Raid, originPosition, destinationPosition, to);
   }
 
   function testSendUnitsReinforceOtherGracePeriod() public {
@@ -375,6 +420,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.Invade,
       arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitCounts),
+      sendTime: block.timestamp,
       from: player,
       to: to,
       origin: origin,
