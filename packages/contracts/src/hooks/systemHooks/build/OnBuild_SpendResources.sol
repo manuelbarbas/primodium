@@ -1,18 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
-import { addressToEntity, getSystemResourceId } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
-import { ResourceId, ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
+import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
 
-import { EBuilding } from "src/Types.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
-import { BuildingKey, UnitKey } from "src/Keys.sol";
+import { BuildingKey } from "src/Keys.sol";
 import { LibResource } from "libraries/LibResource.sol";
-import { LibBuilding } from "libraries/LibBuilding.sol";
-import { Level } from "codegen/tables/Level.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
 
@@ -55,7 +50,7 @@ contract OnBuild_SpendResources is SystemHook {
       (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
 
       // Generate the unique building entity key
-      bytes32 buildingEntity = LibEncode.getHash(BuildingKey, coord);
+      bytes32 buildingEntity = LibEncode.getTimedHash(BuildingKey, coord);
 
       // Spend the required resources for the building
       LibResource.spendBuildingRequiredResources(buildingEntity, 1);

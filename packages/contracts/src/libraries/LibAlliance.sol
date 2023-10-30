@@ -13,7 +13,7 @@ import { LibStorage } from "libraries/LibStorage.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 
 // types
-import { BuildingKey, BuildingTileKey, ExpansionKey, AllianceKey } from "src/Keys.sol";
+import { BuildingTileKey, ExpansionKey, AllianceKey } from "src/Keys.sol";
 import { Bounds, EBuilding, EResource, EAllianceRole, EAllianceInviteMode } from "src/Types.sol";
 
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
