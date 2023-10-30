@@ -8,6 +8,7 @@ import {
   createExtendedEntityComponent,
   createExtendedNumberComponent,
 } from "./customComponents/ExtendedComponent";
+import { createTransactionQueueComponent } from "./customComponents/TransactionQueueComponent";
 
 /* -------------------------------------------------------------------------- */
 /*                                     Dev                                    */
@@ -115,6 +116,11 @@ const Arrival = createExtendedComponent(world, {
   destination: Type.Entity,
 });
 
+/* -------------------------------------------------------------------------- */
+/*                              TRANSACTION QUEUE                             */
+/* -------------------------------------------------------------------------- */
+export const TransactionQueue = createTransactionQueueComponent();
+
 export default {
   /* ----------------------------------- Dev ---------------------------------- */
   DoubleCounter,
@@ -143,4 +149,7 @@ export default {
   /* --------------------------------- Battle --------------------------------- */
   Arrival,
   BattleReport,
+
+  /* ----------------------------- Transaction ------------------------------- */
+  TransactionQueue,
 };
