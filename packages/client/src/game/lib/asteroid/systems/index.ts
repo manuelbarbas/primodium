@@ -6,6 +6,7 @@ import { renderSelectedTile } from "./renderSelectedTile";
 import { focusMainbase } from "./focusMainbase";
 import { renderFog } from "./renderFog";
 import { SetupResult } from "src/network/types";
+import { renderQueuedBuildings } from "./renderQueuedBuildings";
 
 export const runSystems = (scene: Scene, mud: SetupResult) => {
   //Render world entity's sprites
@@ -17,4 +18,5 @@ export const runSystems = (scene: Scene, mud: SetupResult) => {
   renderBuildingPlacementTool(scene, mud);
   focusMainbase(scene, mud);
   renderFog(scene, mud);
+  renderQueuedBuildings(scene, mud);
 };

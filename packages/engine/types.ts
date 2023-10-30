@@ -1,7 +1,7 @@
 import { Coord } from "@latticexyz/utils";
 import { GameObjectClasses } from "./constants";
 import { createObjectPool } from "./lib/core/createObjectPool";
-import { Animation } from "@latticexyz/phaserx/dist/types";
+import { Animation } from "@latticexyz/phaserx/src/types";
 import { createGame } from "./lib/core/createGame";
 import { createScene } from "./lib/core/createScene";
 import { createAnimatedTilemap } from "./lib/core/tilemap/createAnimatedTilemap";

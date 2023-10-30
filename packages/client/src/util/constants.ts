@@ -45,6 +45,16 @@ export enum RequirementType {
   DefeatedPirates,
 }
 
+export enum TransactionQueueType {
+  Build,
+  Train,
+  Research,
+  Upgrade,
+  Raid,
+  Attack,
+  Defend,
+}
+
 export const key = {
   BuildingTileKey: toHex32("building:tile"),
   ExpansionKey: toHex32("Expansion"),

@@ -96,7 +96,9 @@ const Arrival = createArrivalComponent();
 /* -------------------------------------------------------------------------- */
 /*                              TRANSACTION QUEUE                             */
 /* -------------------------------------------------------------------------- */
-export const TransactionQueue = createTransactionQueueComponent();
+export const TransactionQueue = createTransactionQueueComponent({
+  id: "TransactionQueue",
+});
 
 export default {
   /* ----------------------------------- Dev ---------------------------------- */
