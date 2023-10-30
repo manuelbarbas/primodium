@@ -350,4 +350,17 @@ contract BuildSystemTest is PrimodiumTest {
     world.leave();
     assertEq(PlayerAlliance.getRole(bobEntity), uint8(EAllianceRole.Owner), "bob should be owner");
   }
+
+  function tesFailAllianceFull() public {
+    P_AllianceConfig.set(2);
+    bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+    world.join(allianceEntity);
+  }
 }

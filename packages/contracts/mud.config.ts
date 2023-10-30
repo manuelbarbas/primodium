@@ -634,6 +634,13 @@ export const config = mudConfig({
     },
     /* ------------------------------ Alliance ----------------------------- */
 
+    P_AllianceConfig: {
+      keySchema: {},
+      valueSchema: {
+        maxAllianceMembers: "uint256",
+      },
+    },
+
     PlayerAlliance: {
       keySchema: { entity: "bytes32" },
       valueSchema: {

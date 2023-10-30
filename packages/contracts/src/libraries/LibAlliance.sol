@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import { addressToEntity, entityToAddress, getSystemResourceId, bytes32ToString } from "src/utils.sol";
 // tables
-import { Score, AllianceJoinRequest, PlayerAlliance, Alliance, AllianceData, AllianceInvitation, HasBuiltBuilding, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/index.sol";
+import { P_AllianceConfig, Score, AllianceJoinRequest, PlayerAlliance, Alliance, AllianceData, AllianceInvitation, HasBuiltBuilding, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/index.sol";
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -51,6 +51,7 @@ library LibAlliance {
       Alliance.getInviteMode(allianceEntity) == uint8(EAllianceInviteMode.Open) || inviter != 0,
       "[Alliance] Either alliance is not open or player has not been invited"
     );
+    require(AllianceMembersSet.length(allianceEntity) < P_AllianceConfig.get(), "[Alliance] Alliance is full");
     return;
   }
 
