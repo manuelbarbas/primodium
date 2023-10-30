@@ -10,6 +10,9 @@ import {
   FaUserPlus,
   FaInfoCircle,
   FaArrowLeft,
+  FaCheck,
+  FaTimes,
+  FaCopy,
 } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
@@ -26,12 +29,16 @@ import {
   leaveAlliance,
   grantRole,
   requestToJoin,
+  rejectJoinRequest,
+  acceptJoinRequest,
+  invite,
 } from "src/util/web3/contractCalls/alliance";
 import { GiRank1, GiRank2, GiRank3 } from "react-icons/gi";
-import { hexToString, Hex } from "viem";
+import { hexToString, Hex, padHex, isAddress } from "viem";
 import { entityToAddress } from "src/util/common";
 import { Join } from "src/components/core/Join";
 import { EAllianceInviteMode, EAllianceRole } from "contracts/config/enums";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 
 const ALLIANCE_TAG_SIZE = 6;
 
@@ -41,6 +48,7 @@ export const AllianceLeaderboard = () => {
       <ScoreScreen />
       <CreateScreen />
       <InvitesScreen />
+      <SendInviteScreen />
       <ManageScreen />
     </Navigator>
   );
@@ -260,16 +268,155 @@ export const ManageScreen: React.FC = () => {
   );
 };
 
-export const InvitesScreen = () => {
-  const data = components.Leaderboard.use();
+export const InvitesScreen: React.FC = () => {
+  const network = useMud().network;
+  const playerEntity = network.playerEntity;
+  const playerAlliance = components.PlayerAlliance.get(playerEntity)?.alliance as Entity | undefined;
 
-  if (!data) return <></>;
+  const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
+  const joinRequests = components.AllianceRequest.useAllWith({ alliance: playerAlliance ?? singletonEntity }) ?? [];
 
   return (
-    <Navigator.Screen title="invites" className="flex flex-col items-center w-full text-xs pointer-events-auto">
-      <TextInput placeholder="Enter Alliance Name" />
-      <div>
-        <Button>Create</Button>
+    <Navigator.Screen
+      title="invites"
+      className="flex flex-col items-center w-full text-xs pointer-events-auto h-full overflow-hidden"
+    >
+      <div className="grid grid-cols-2 w-full gap-2 mb-2">
+        <div className="w-full flex flex-col flex-grow">
+          <div className="flex justify-between items-center">
+            <p className="font-bold p-1 opacity-75">INVITES</p>
+          </div>
+
+          <Join direction="vertical" className="overflow-auto w-full h-56 scrollbar">
+            {invites.map((entity) => {
+              const playerInvite = components.PlayerInvite.get(entity);
+              const alliance = components.Alliance.get(playerInvite?.alliance);
+
+              if (!playerInvite?.alliance || !alliance?.name) return <></>;
+
+              const name = hexToString(alliance.name as Hex, { size: 32 });
+
+              return (
+                <SecondaryCard key={entity} className="border-b rounded-none flex-row justify-between items-center">
+                  {name}
+                  <div className="flex gap-1">
+                    {/* only kick if not current player, has the ability to kick, and current player is higher than member */}
+
+                    <Tooltip text="Decline" direction="left">
+                      <Button className="btn-xs !rounded-box border-error" onClick={() => console.log("decline")}>
+                        <FaTimes className="rounded-none" size={10} />
+                      </Button>
+                    </Tooltip>
+                    <Tooltip text="Accept" direction="left">
+                      <Button
+                        className="btn-xs !rounded-box border-success"
+                        onClick={() => joinAlliance(playerInvite.alliance, network)}
+                      >
+                        <FaCheck className="rounded-none" size={10} />
+                      </Button>
+                    </Tooltip>
+                  </div>
+                </SecondaryCard>
+              );
+            })}
+          </Join>
+          <p className="p-1 opacity-50 text-right">{invites.length} invites(s)</p>
+        </div>
+        <div className="w-full flex flex-col flex-grow">
+          <div className="flex justify-between items-center">
+            <p className="font-bold p-1 opacity-75">REQUESTS</p>
+          </div>
+
+          <Join direction="vertical" className="overflow-auto w-full h-56 scrollbar">
+            {joinRequests.map((entity) => {
+              const request = components.AllianceRequest.get(entity);
+              const role = components.PlayerAlliance.get(playerEntity)?.role ?? EAllianceRole.Member;
+
+              if (!request?.player) return <></>;
+
+              return (
+                <SecondaryCard key={entity} className="border-b rounded-none flex-row justify-between items-center">
+                  {entityToAddress(request.player ?? singletonEntity, true)}
+                  {role <= EAllianceRole.CanInvite && (
+                    <div className="flex gap-1">
+                      {/* only kick if not current player, has the ability to kick, and current player is higher than member */}
+                      <Tooltip text="Decline" direction="left">
+                        <Button
+                          className="btn-xs !rounded-box border-error"
+                          onClick={() => acceptJoinRequest(request.player, network)}
+                        >
+                          <FaTimes className="rounded-none" size={10} />
+                        </Button>
+                      </Tooltip>
+                      <Tooltip text="Accept" direction="left">
+                        <Button
+                          className="btn-xs !rounded-box border-success"
+                          onClick={() => rejectJoinRequest(request.player, network)}
+                        >
+                          <FaCheck className="rounded-none" size={10} />
+                        </Button>
+                      </Tooltip>
+                    </div>
+                  )}
+                </SecondaryCard>
+              );
+            })}
+          </Join>
+          <p className="p-1 opacity-50 text-right">{joinRequests.length} requests(s)</p>
+        </div>
+      </div>
+
+      <div className="flex gap-1">
+        <Navigator.NavButton to="send" className="btn-secondary btn-sm border-none">
+          SEND INVITE
+        </Navigator.NavButton>
+        <Navigator.BackButton>
+          <FaArrowLeft />
+        </Navigator.BackButton>
+      </div>
+      <div className="flex gap-1 p-2 opacity-50 items-center">
+        WALLET: {entityToAddress(playerEntity, true)}
+        <Tooltip text="Click to copy" direction="left">
+          <Button className="btn-xs" onClick={() => navigator.clipboard.writeText(entityToAddress(playerEntity))}>
+            <FaCopy />
+          </Button>
+        </Tooltip>
+      </div>
+    </Navigator.Screen>
+  );
+};
+
+export const SendInviteScreen = () => {
+  const [targetAddress, setTargetAddress] = useState("");
+  const network = useMud().network;
+
+  return (
+    <Navigator.Screen
+      title="send"
+      className="flex flex-col items-center w-full text-xs pointer-events-auto h-full my-5"
+    >
+      <div className="flex items-center gap-2">
+        <TextInput
+          placeholder="0x..."
+          topLeftLabel="ENTER PLAYER ADDRESS"
+          maxLength={42}
+          onChange={(e) => {
+            setTargetAddress(e.target.value);
+          }}
+          className="text-center font-bold"
+        />
+      </div>
+
+      <div className="flex gap-1 mt-auto">
+        <Navigator.BackButton
+          disabled={!targetAddress || !isAddress(targetAddress)}
+          className="btn-primary btn-sm"
+          onClick={() => {
+            invite(padHex(targetAddress as Hex, { size: 32 }) as Entity, network);
+          }}
+        >
+          Invite
+        </Navigator.BackButton>
         <Navigator.BackButton>Back</Navigator.BackButton>
       </div>
     </Navigator.Screen>
@@ -307,7 +454,7 @@ const LeaderboardItem = ({
           {playerAlliance !== entity && (
             <Tooltip text={inviteOnly ? "Request to Join" : "Join"} direction="left">
               <Button
-                className="btn-xs flex border border-secondary"
+                className={`btn-xs flex border ${inviteOnly ? "border-warning" : "border-secondary"}`}
                 onClick={() => {
                   inviteOnly ? requestToJoin(entity, network) : joinAlliance(entity, network);
                 }}
@@ -337,6 +484,9 @@ const InfoRow = ({ data }: { data?: ComponentValue<typeof components.AllianceLea
 };
 
 const PlayerInfo = ({ rank, allianceName, score }: { rank: number; allianceName: string; score: number }) => {
+  const playerEntity = useMud().network.playerEntity;
+  const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
+
   return (
     <SecondaryCard className="w-full overflow-y-auto border border-slate-700 rounded-md p-2 bg-slate-800">
       {
@@ -349,7 +499,7 @@ const PlayerInfo = ({ rank, allianceName, score }: { rank: number; allianceName:
             <FaCog />
           </Navigator.NavButton>
           <Navigator.NavButton to="invites" className="btn-xs flex bg-secondary">
-            <FaEnvelope /> <b>0</b>
+            <FaEnvelope /> <b>{invites.length}</b>
           </Navigator.NavButton>
         </div>
       }
@@ -358,6 +508,9 @@ const PlayerInfo = ({ rank, allianceName, score }: { rank: number; allianceName:
 };
 
 const SoloPlayerInfo = () => {
+  const playerEntity = useMud().network.playerEntity;
+  const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
+
   return (
     <SecondaryCard className="w-full overflow-y-auto border border-slate-700 rounded-md p-2 bg-slate-800">
       {
@@ -366,7 +519,7 @@ const SoloPlayerInfo = () => {
             + Create Alliance
           </Navigator.NavButton>
           <Navigator.NavButton to="invites" className="btn-xs flex">
-            <FaEnvelope /> <b>0</b>
+            <FaEnvelope /> <b>{invites.length}</b>
           </Navigator.NavButton>
         </div>
       }

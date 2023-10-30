@@ -36,3 +36,18 @@ export const grantRole = async (player: Entity, role: EAllianceRole, network: Se
   const tx = await network.worldContract.write.grantRole([player as Hex, role]);
   await network.waitForTransaction(tx);
 };
+
+export const acceptJoinRequest = async (target: Entity, network: SetupNetworkResult) => {
+  const tx = await network.worldContract.write.acceptRequestToJoin([target as Hex]);
+  await network.waitForTransaction(tx);
+};
+
+export const rejectJoinRequest = async (target: Entity, network: SetupNetworkResult) => {
+  const tx = await network.worldContract.write.rejectRequestToJoin([target as Hex]);
+  await network.waitForTransaction(tx);
+};
+
+export const invite = async (target: Entity, network: SetupNetworkResult) => {
+  const tx = await network.worldContract.write.invite([target as Hex]);
+  await network.waitForTransaction(tx);
+};

@@ -117,16 +117,48 @@ export const BattleReport = createExtendedComponent(
   }
 );
 
-const Arrival = createExtendedComponent(world, {
-  sendType: Type.Number,
-  unitCounts: Type.BigIntArray,
-  sendTime: Type.BigInt,
-  arrivalTime: Type.BigInt,
-  from: Type.Entity,
-  to: Type.Entity,
-  origin: Type.Entity,
-  destination: Type.Entity,
-});
+const Arrival = createExtendedComponent(
+  world,
+  {
+    sendType: Type.Number,
+    unitCounts: Type.BigIntArray,
+    sendTime: Type.BigInt,
+    arrivalTime: Type.BigInt,
+    from: Type.Entity,
+    to: Type.Entity,
+    origin: Type.Entity,
+    destination: Type.Entity,
+  },
+  {
+    id: "Arrival",
+  }
+);
+
+/* -------------------------------------------------------------------------- */
+/*                                  ALLIANCES                                 */
+/* -------------------------------------------------------------------------- */
+export const PlayerInvite = createExtendedComponent(
+  world,
+  {
+    target: Type.Entity,
+    alliance: Type.Entity,
+    player: Type.Entity,
+  },
+  {
+    id: "PlayerInvites",
+  }
+);
+
+export const AllianceRequest = createExtendedComponent(
+  world,
+  {
+    player: Type.Entity,
+    alliance: Type.Entity,
+  },
+  {
+    id: "AllianceRequests",
+  }
+);
 
 export default {
   /* ----------------------------------- Dev ---------------------------------- */
@@ -157,4 +189,8 @@ export default {
   Arrival,
   BattleReport,
   Battle,
+
+  /* ------------------------------- Alliances -------------------------------- */
+  PlayerInvite,
+  AllianceRequest,
 };
