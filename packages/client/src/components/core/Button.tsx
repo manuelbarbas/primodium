@@ -27,7 +27,7 @@ export const Button: React.FC<{
         onClick={onClick}
         disabled={disabled}
         className={`btn join-item inline pointer-events-auto font-bold outline-non ${className} ${
-          disabled ? "opacity-50" : ""
+          disabled ? "opacity-80" : ""
         } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
       >
         {loading && <Loader />}
@@ -65,7 +65,7 @@ export const IconButton: React.FC<{
       onClick={onClick}
       disabled={disabled}
       className={`btn join-item inline gap-1 pointer-events-auto font-bold outline-none ${className} ${
-        disabled ? "opacity-50" : ""
+        disabled ? "opacity-80" : ""
       } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
     >
       {loading && <Loader />}

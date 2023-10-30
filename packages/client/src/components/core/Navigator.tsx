@@ -87,8 +87,6 @@ const NavButton: FC<{
 }> = ({ to, className, children, disabled, onClick, tooltip, tooltipDirection = "right" }) => {
   const { navigateTo, history } = useNavigation();
 
-  if (to === history[history.length - 1]) return <></>;
-
   return (
     <Tooltip text={tooltip} direction={tooltipDirection}>
       <Button
@@ -97,7 +95,7 @@ const NavButton: FC<{
           if (onClick) onClick();
           navigateTo(to, true);
         }}
-        disabled={disabled}
+        disabled={disabled || to === history[history.length - 1]}
       >
         {children}
       </Button>
