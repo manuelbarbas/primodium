@@ -1,5 +1,4 @@
 import { Entity } from "@latticexyz/recs";
-import { EResource } from "contracts/config/enums";
 import { Badge } from "src/components/core/Badge";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
@@ -7,7 +6,7 @@ import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useBuildingInfo } from "src/hooks/useBuildingInfo";
 import { useMud } from "src/hooks/useMud";
 import { getBlockTypeName } from "src/util/common";
-import { ResourceImage, ResourceType, RESOURCE_SCALE, ResourceEntityLookup } from "src/util/constants";
+import { RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
 
 const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (
@@ -41,16 +40,16 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
           </b>
         </DataLabel>
       </div>
-      {production && (
-        <div className="grid grid-cols-2 w-full mb-1">
+      {production.map(({ resource, amount }) => (
+        <div className="grid grid-cols-2 w-full mb-1" key={`production-${resource}`}>
           <DataLabel label="PRODUCTION">
             <Badge className="text-xs gap-2">
               <ResourceIconTooltip
-                name={getBlockTypeName(ResourceEntityLookup[production.resource as EResource])}
-                image={ResourceImage.get(ResourceEntityLookup[production.resource as EResource]) ?? ""}
-                resource={ResourceEntityLookup[production.resource as EResource]}
+                name={getBlockTypeName(resource)}
+                image={ResourceImage.get(resource) ?? ""}
+                resource={resource}
                 playerEntity={playerEntity}
-                amount={production.amount}
+                amount={amount}
                 resourceType={ResourceType.ResourceRate}
               />
             </Badge>
@@ -61,18 +60,18 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
             ) : (
               <Badge className="text-xs gap-2">
                 <ResourceIconTooltip
-                  name={getBlockTypeName(ResourceEntityLookup[upgrade.production.resource as EResource])}
-                  image={ResourceImage.get(ResourceEntityLookup[upgrade.production.resource as EResource]) ?? ""}
-                  resource={ResourceEntityLookup[upgrade.production.resource as EResource]}
+                  name={getBlockTypeName(resource)}
+                  image={ResourceImage.get(resource) ?? ""}
+                  resource={resource}
                   playerEntity={playerEntity}
-                  amount={upgrade.production.amount}
+                  amount={amount}
                   resourceType={ResourceType.ResourceRate}
                 />
               </Badge>
             )}
           </DataLabel>
         </div>
-      )}
+      ))}
       {unitProductionMultiplier !== undefined && (
         <div className="grid grid-cols-2 w-full ">
           <DataLabel label="speed">

@@ -1,17 +1,17 @@
 import { Entity } from "@latticexyz/recs";
-import React from "react";
+import React, { useMemo } from "react";
 
-import { RESOURCE_SCALE, ResourceImage, ResourceType, ResourceEntityLookup } from "src/util/constants";
-import { getRecipe } from "src/util/resource";
-import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
-import { formatNumber, getBlockTypeName } from "src/util/common";
-import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
-import { EntitytoSpriteKey } from "@game/constants";
 import { primodium } from "@game/api";
+import { EntitytoSpriteKey } from "@game/constants";
+import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
+import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
+import { transformProductionData } from "src/util/building";
+import { formatNumber, getBlockTypeName } from "src/util/common";
+import { RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
+import { getRecipe } from "src/util/resource";
 import { Hex } from "viem";
-import { EResource } from "contracts/config/enums";
 
 export const RecipeDisplay: React.FC<{
   building: Entity;
@@ -53,8 +53,8 @@ export const PrototypeInfo: React.FC<{
 }> = ({ building }) => {
   const playerEntity = useMud().network.playerEntity;
   const { getSpriteBase64 } = primodium.api().sprite;
-  const production = components.P_Production.useWithKeys({ prototype: building as Hex, level: 1n });
-  const productionRate = ((production?.amount ?? 0n) * 60n) / RESOURCE_SCALE;
+  const rawProduction = components.P_Production.useWithKeys({ prototype: building as Hex, level: 1n });
+  const production = useMemo(() => transformProductionData(rawProduction), [rawProduction]);
 
   const hasEnough = useHasEnoughResources(getRecipe(building, 1n), playerEntity);
 
@@ -77,22 +77,22 @@ export const PrototypeInfo: React.FC<{
                 className={`absolute bottom-0 w-14 pixel-images rounded-md`}
               />
             </div>
-            {!!production && (
-              <div className="relative flex flex-col gap-1 text-xs items-center w-24">
+            {production.map(({ resource, amount }) => (
+              <div
+                className="relative flex flex-col gap-1 text-xs items-center w-24"
+                key={`prototypeproduction-${resource}`}
+              >
                 {production && (
                   <>
                     <div className="flex items-center gap-2 text-xs bg-green-800/60 p-1 border border-green-600 rounded-md w-fit">
-                      <img
-                        className="inline-block h-4"
-                        src={ResourceImage.get(ResourceEntityLookup[production.resource as EResource])}
-                      ></img>
-                      {formatNumber(productionRate)}/MIN
+                      <img className="inline-block h-4" src={ResourceImage.get(resource)}></img>
+                      {formatNumber(amount)}/MIN
                     </div>
                     <p className="text-[.6rem] opacity-50">OUTPUT</p>
                   </>
                 )}
               </div>
-            )}
+            ))}
           </div>
 
           <div className="flex flex-col items-center gap-2">
