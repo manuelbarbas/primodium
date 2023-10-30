@@ -248,7 +248,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_UnitProdMultiplier: { value: 100n },
       },
       4: {
-        P_RequiredResources: getResourceValues({ Copper: 700000, Alloy: 60000, PVCell: 500000 }),
+        P_RequiredResources: getResourceValues({ Copper: 700000, Alloy: 60000, PVCell: 250000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[4]),
         },
@@ -2010,8 +2010,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   RaidFactoryResources1: {
     tables: {
-      P_RequiredUnits: getUnitValues({ MinutemanMarine: 100 }),
-      P_RaidedResources: getResourceValues({ Iron: 200000, Copper: 200000, Alloy: 200000 }),
+      P_RaidedResources: getResourceValues({ IronPlate: 200000, PVCell: 200000, Alloy: 200000 }),
       P_UnitReward: getUnitValues({ AegisDrone: 30 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 1n } } },
@@ -2033,7 +2032,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   RaidMotherlodeResources1: {
     tables: {
-      P_RequiredUnits: getUnitValues({ StingerDrone: 30 }),
       P_RaidedResources: getResourceValues({ Titanium: 200000, Platinum: 200000, Iridium: 200000, Kimberlite: 200000 }),
       P_UnitReward: getUnitValues({ StingerDrone: 30 }),
     },
