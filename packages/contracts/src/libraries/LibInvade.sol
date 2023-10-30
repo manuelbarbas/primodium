@@ -3,12 +3,13 @@ pragma solidity >=0.8.21;
 
 import { IWorld } from "codegen/world/IWorld.sol";
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
-import { RockType, OwnedBy, BattleResultData, P_UnitPrototypes } from "codegen/index.sol";
-import { ERock, ESendType } from "src/Types.sol";
+import { Home, ArrivalCount, RockType, OwnedBy, BattleResultData, P_UnitPrototypes } from "codegen/index.sol";
+import { ERock, ESendType, Arrival } from "src/Types.sol";
 import { LibReinforce } from "libraries/LibReinforce.sol";
 import { LibMotherlode } from "libraries/LibMotherlode.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
+import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 import { S_BattleSystem } from "systems/subsystems/S_BattleSystem.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 
@@ -80,6 +81,45 @@ library LibInvade {
     (uint256[] memory attackCounts, , ) = abi.decode(rawAttackCounts, (uint256[], uint256, uint256));
     for (uint256 i = 0; i < unitTypes.length; i++) {
       LibUnit.increaseUnitCount(invader, rockEntity, unitTypes[i], attackCounts[i]);
+    }
+  }
+
+  /**
+   * @dev Recalls a reinforcement sent by a player.
+   * @param playerEntity The identifier of the player.
+   * @param rockEntity The identifier of the target rock.
+   * @param arrivalId The identifier of the arrival to recall.
+   */
+  function recallInvade(
+    bytes32 playerEntity,
+    bytes32 rockEntity,
+    bytes32 arrivalId
+  ) internal {
+    Arrival memory arrival = ArrivalsMap.get(playerEntity, rockEntity, arrivalId);
+    if (arrival.sendType != ESendType.Invade || arrival.from != playerEntity || arrival.arrivalTime > block.timestamp) {
+      return;
+    }
+
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (arrival.unitCounts[i] == 0) continue;
+      LibUnit.increaseUnitCount(playerEntity, Home.getAsteroid(playerEntity), unitPrototypes[i], arrival.unitCounts[i]);
+    }
+    ArrivalCount.set(arrival.from, ArrivalCount.get(arrival.from) - 1);
+    ArrivalsMap.remove(playerEntity, rockEntity, arrivalId);
+  }
+
+  /**
+   * @dev Recalls all reinforcements sent by a player to a specific rock.
+   * @param playerEntity The identifier of the player.
+   * @param rockEntity The identifier of the target rock.
+   */
+  function recallAllInvades(bytes32 playerEntity, bytes32 rockEntity) internal {
+    bytes32 owner = OwnedBy.get(rockEntity);
+    bytes32[] memory arrivalKeys = ArrivalsMap.keys(playerEntity, rockEntity);
+
+    for (uint256 i = 0; i < arrivalKeys.length; i++) {
+      recallInvade(playerEntity, rockEntity, arrivalKeys[i]);
     }
   }
 }

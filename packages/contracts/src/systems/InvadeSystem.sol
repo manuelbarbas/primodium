@@ -18,4 +18,23 @@ contract InvadeSystem is PrimodiumSystem {
     bytes32 playerEntity = addressToEntity(_msgSender());
     LibInvade.invade(IWorld(_world()), playerEntity, rockEntity);
   }
+
+  /**
+   * @dev Initiates a recall of all invasions of a rock entity using the LibInvade library.
+   * @param rockEntity The identifier of the target rock entity.
+   */
+  function recallAllInvades(bytes32 rockEntity) public {
+    bytes32 playerEntity = addressToEntity(_msgSender());
+    LibInvade.recallAllInvades(playerEntity, rockEntity);
+  }
+
+  /**
+   * @dev Initiates a recall of an invasion of a rock entity using the LibInvade library.
+   * @param rockEntity The identifier of the target rock entity.
+   * @param arrivalId The id of the arrival to recalled.
+   */
+  function recallInvade(bytes32 rockEntity, bytes32 arrivalId) public {
+    bytes32 playerEntity = addressToEntity(_msgSender());
+    LibInvade.recallInvade(playerEntity, rockEntity, arrivalId);
+  }
 }

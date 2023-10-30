@@ -4,15 +4,15 @@ pragma solidity >=0.8.21;
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
 
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
-import { PirateAsteroid, DefeatedPirate, RaidedResource, RockType, OwnedBy, BattleResultData, RaidResult, RaidResultData, P_IsUtility, P_UnitPrototypes, Home } from "codegen/index.sol";
-import { ERock, ESendType, EResource } from "src/Types.sol";
+import { ArrivalCount, PirateAsteroid, DefeatedPirate, RaidedResource, RockType, OwnedBy, BattleResultData, RaidResult, RaidResultData, P_IsUtility, P_UnitPrototypes, Home } from "codegen/index.sol";
+import { ERock, ESendType, EResource, Arrival } from "src/Types.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibMath } from "libraries/LibMath.sol";
+import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
-
 import { S_BattleSystem } from "systems/subsystems/S_BattleSystem.sol";
 
 library LibRaid {
@@ -82,5 +82,44 @@ library LibRaid {
     }
     RaidResult.set(keccak256(abi.encode(br)), raidResult);
     return raidResult;
+  }
+
+  /**
+   * @dev Recalls target raid sent by a player to a specific rock.
+   * @param playerEntity The identifier of the player.
+   * @param rockEntity The identifier of the target rock.
+   * @param arrivalId The identifier of the arrival to recall.
+   */
+  function recallRaid(
+    bytes32 playerEntity,
+    bytes32 rockEntity,
+    bytes32 arrivalId
+  ) internal {
+    Arrival memory arrival = ArrivalsMap.get(playerEntity, rockEntity, arrivalId);
+    if (arrival.sendType != ESendType.Raid || arrival.from != playerEntity || arrival.arrivalTime > block.timestamp) {
+      return;
+    }
+
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (arrival.unitCounts[i] == 0) continue;
+      LibUnit.increaseUnitCount(playerEntity, Home.getAsteroid(playerEntity), unitPrototypes[i], arrival.unitCounts[i]);
+    }
+    ArrivalCount.set(arrival.from, ArrivalCount.get(arrival.from) - 1);
+    ArrivalsMap.remove(playerEntity, rockEntity, arrivalId);
+  }
+
+  /**
+   * @dev Recalls all raids sent by a player to a specific rock.
+   * @param playerEntity The identifier of the player.
+   * @param rockEntity The identifier of the target rock.
+   */
+  function recallAllRaids(bytes32 playerEntity, bytes32 rockEntity) internal {
+    bytes32 owner = OwnedBy.get(rockEntity);
+    bytes32[] memory arrivalKeys = ArrivalsMap.keys(playerEntity, rockEntity);
+
+    for (uint256 i = 0; i < arrivalKeys.length; i++) {
+      recallRaid(playerEntity, rockEntity, arrivalKeys[i]);
+    }
   }
 }
