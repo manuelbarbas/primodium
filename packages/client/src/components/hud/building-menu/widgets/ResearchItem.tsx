@@ -1,15 +1,15 @@
-import { memo } from "react";
 import { Entity } from "@latticexyz/recs";
-import { BackgroundImage, ResourceImage, UnitEnumLookup } from "src/util/constants";
+import { memo } from "react";
+import { Button } from "src/components/core/Button";
+import { SecondaryCard } from "src/components/core/Card";
+import { IconLabel } from "src/components/core/IconLabel";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
-import { getBlockTypeName } from "src/util/common";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
-import { getUpgradeInfo } from "src/util/upgrade";
-import { SecondaryCard } from "src/components/core/Card";
-import { Button } from "src/components/core/Button";
-import { IconLabel } from "src/components/core/IconLabel";
 import { components } from "src/network/components";
+import { getBlockTypeName } from "src/util/common";
+import { BackgroundImage, ResourceImage, UnitEnumLookup } from "src/util/constants";
+import { getUpgradeInfo } from "src/util/upgrade";
 import { upgradeUnit } from "src/util/web3/contractCalls/upgradeUnit";
 
 export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
@@ -39,7 +39,7 @@ export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
       <div className="flex flex-col w-full p-2 items-center pb-4">
         <div className="flex gap-1 absolute top-2 left-1/2 -translate-x-1/2">
           {Array(Number(maxLevel))
-            .fill(0n)
+            .fill(0)
             .map((_, index) => {
               return (
                 <div

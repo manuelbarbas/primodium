@@ -106,11 +106,6 @@ export const config = mudConfig({
       },
     },
 
-    MaxMoves: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "uint256",
-    },
-
     /* ---------------------------------- Rocks --------------------------------- */
     P_Asteroid: {
       keySchema: {},
@@ -359,6 +354,12 @@ export const config = mudConfig({
 
     UnitCount: {
       keySchema: { player: "bytes32", rock: "bytes32", unit: "bytes32" },
+      valueSchema: "uint256",
+    },
+
+    // used to record the progress of claiming the current unit
+    ClaimOffset: {
+      keySchema: { entity: "bytes32" },
       valueSchema: "uint256",
     },
 

@@ -1,11 +1,11 @@
 import { FaArrowRight } from "react-icons/fa";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
-import { Hangar, Send } from "src/network/components/clientComponents";
+import { components } from "src/network/components";
 
 export const StationedUnits: React.FC = () => {
-  const destination = Send.get()?.destination;
-  const units = Hangar.use(destination, {
+  const destination = components.Send.get()?.destination;
+  const units = components.Hangar.use(destination, {
     units: [],
     counts: [],
   }).units;

@@ -8,16 +8,14 @@ import { getBlockTypeName } from "src/util/common";
 import { useGameStore } from "../../store/GameStore";
 import { HUD } from "../core/HUD";
 import { BrandingLabel } from "../shared/BrandingLabel";
-// import { LoadingIndication } from "./LoadingIndication";
-import { Score } from "./Score";
-// import { ViewStarmap } from "./ViewStarmap";
 import { PrototypeInfo } from "./PrototypeInfo";
+import { Score } from "./Score";
 import { ViewStarmap } from "./ViewStarmap";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { Hotbar } from "./hotbar/Hotbar";
 import { Panes } from "./panes/Panes";
 import { Resources } from "./resources/Resources";
-// import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
+import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 import { Units } from "./units/Units";
 import { GracePeriod } from "./GracePeroid";
 
@@ -48,6 +46,7 @@ export const GameHUD = () => {
             <HUD.BottomMiddle>
               {(getBlockTypeName(selectedBuilding) || !selectedBuilding) && !mapOpen && <Hotbar />}
               {!getBlockTypeName(selectedBuilding) && <BuildingMenu />}
+              {mapOpen && <SpacerockMenu />}
             </HUD.BottomMiddle>
             <HUD.TopMiddle>
               {getBlockTypeName(selectedBuilding) && selectedBuilding && <PrototypeInfo building={selectedBuilding} />}

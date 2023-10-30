@@ -1,17 +1,18 @@
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Divider } from "src/components/core/Divider";
 import { useSettingsStore } from "src/game/stores/SettingsStore";
-import { components } from "src/network/components";
-import { Account } from "src/network/components/clientComponents";
 import { Join } from "../../core/Join";
 import { Tabs } from "../../core/Tabs";
 import { Leaderboard } from "./Leaderboard";
+import { Outgoingfleets } from "./OutgoingFleets";
+import { ReinforcementFleets } from "./ReinforcementFleets";
+import { BattleReports } from "./battle-reports/BattleReports";
+import { HostileFleets } from "./hostile-fleets/HostileFleets";
+
+import { Objectives } from "./Objectives";
+import { OwnedMotherlodes } from "./OwnedMotherlodes";
+import { Settings } from "./Settings";
 
 export const Panes: React.FC = () => {
-  const playerAstroid = components.Home.use()?.asteroid;
-  const player = Account.use(undefined, {
-    value: singletonEntity,
-  }).value;
   const [newPlayer, setNewPlayer] = useSettingsStore((state) => [state.newPlayer, state.setNewPlayer]);
 
   return (
@@ -20,14 +21,14 @@ export const Panes: React.FC = () => {
       defaultIndex={newPlayer ? 4 : -1}
       onChange={() => setNewPlayer(false)}
     >
-      {/* <Tabs.Pane index={0} className="w-96">
-        <Outgoingfleets user={player ?? SingletonID} />
+      <Tabs.Pane index={0} className="w-96">
+        <Outgoingfleets />
       </Tabs.Pane>
       <Tabs.Pane index={1} className="w-96">
-        <Reinforcementfleets user={player ?? SingletonID} />
+        <ReinforcementFleets />
       </Tabs.Pane>
       <Tabs.Pane index={2} className="w-96">
-        <HostileFleets spacerock={playerAstroid ?? SingletonID} />
+        <HostileFleets />
       </Tabs.Pane>
       <Tabs.Pane index={3} className="w-96">
         <BattleReports />
@@ -37,15 +38,15 @@ export const Panes: React.FC = () => {
       </Tabs.Pane>
       <Tabs.Pane index={5} className="w-96">
         <OwnedMotherlodes />
-      </Tabs.Pane> */}
+      </Tabs.Pane>
       <Tabs.Pane index={6} className="w-96">
         <Leaderboard />
       </Tabs.Pane>
-      {/* <Tabs.Pane index={7} className="w-96">
+      <Tabs.Pane index={7} className="w-96">
         <Settings />
-      </Tabs.Pane> */}
+      </Tabs.Pane>
       <div className="flex flex-col gap-2">
-        {/* <div>
+        <div>
           <Join direction="vertical" className="z-10 border-secondary">
             <Tabs.IconButton
               index={0}
@@ -80,11 +81,11 @@ export const Panes: React.FC = () => {
               tooltipText="Battle Reports"
             />
           </Join>
-        </div> */}
+        </div>
 
         <Divider />
         <Join direction="vertical" className="z-10 border-secondary">
-          {/* <Tabs.IconButton
+          <Tabs.IconButton
             index={4}
             imageUri="/img/icons/objectiveicon.png"
             hideText
@@ -99,7 +100,7 @@ export const Panes: React.FC = () => {
             hideText
             tooltipDirection="left"
             tooltipText="Owned Motherlodes"
-          /> */}
+          />
           <Tabs.IconButton
             index={6}
             imageUri="/img/icons/leaderboardicon.png"
@@ -108,14 +109,14 @@ export const Panes: React.FC = () => {
             tooltipText="Leaderboard"
             tooltipDirection="left"
           />
-          {/* <Tabs.IconButton
+          <Tabs.IconButton
             index={7}
             imageUri="/img/icons/settingsicon.png"
             hideText
             text="Settings"
             tooltipText="Settings"
             tooltipDirection="left"
-          /> */}
+          />
         </Join>
       </div>
     </Tabs>

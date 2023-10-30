@@ -1,19 +1,18 @@
+import { ESendType } from "contracts/config/enums";
 import { FaArrowRight } from "react-icons/fa";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { useFleetMoves } from "src/hooks/useFleetMoves";
-import { OwnedBy } from "src/network/components/chainComponents";
-import { Hangar, Send } from "src/network/components/clientComponents";
-import { ESendType } from "src/util/web3/types";
+import { components } from "src/network/components";
 
 export const Reinforce = () => {
-  const origin = Send.get()?.origin;
-  const destination = Send.get()?.destination;
-  const units = Hangar.use(origin, {
+  const origin = components.Send.get()?.origin;
+  const destination = components.Send.get()?.destination;
+  const units = components.Hangar.use(origin, {
     units: [],
     counts: [],
   }).units;
-  const ownedBy = OwnedBy.get(destination)?.value;
+  const ownedBy = components.OwnedBy.get(destination)?.value;
   const fleetMoves = useFleetMoves();
 
   return (
@@ -28,7 +27,7 @@ export const Reinforce = () => {
         to="Send"
         className="btn-sm w-fit btn-success"
         disabled={units.length === 0 || !ownedBy || origin === destination || !fleetMoves}
-        onClick={() => Send.update({ sendType: ESendType.REINFORCE })}
+        onClick={() => components.Send.update({ sendType: ESendType.Reinforce })}
       >
         <FaArrowRight />
       </Navigator.NavButton>
