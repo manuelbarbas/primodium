@@ -1,13 +1,13 @@
 import { Type } from "@latticexyz/recs";
 import { world } from "../world";
-import { createBattleComponent } from "./customComponents/BattleComponent";
+import { createArrivalComponent } from "./customComponents/ArrivalComponent";
 import {
+  createExtendedBigIntComponent,
   createExtendedBoolComponent,
   createExtendedComponent,
   createExtendedCoordComponent,
   createExtendedEntityComponent,
   createExtendedNumberComponent,
-  createExtendedBigIntComponent,
 } from "./customComponents/ExtendedComponent";
 
 /* -------------------------------------------------------------------------- */
@@ -90,16 +90,7 @@ export const Leaderboard = createExtendedComponent(
   }
 );
 
-const Arrival = createExtendedComponent(world, {
-  sendType: Type.Number,
-  unitCounts: Type.BigIntArray,
-  sendTime: Type.BigInt,
-  arrivalTime: Type.BigInt,
-  from: Type.Entity,
-  to: Type.Entity,
-  origin: Type.Entity,
-  destination: Type.Entity,
-});
+const Arrival = createArrivalComponent();
 
 export default {
   /* ----------------------------------- Dev ---------------------------------- */

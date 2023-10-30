@@ -7,9 +7,10 @@ import { Navigator } from "src/components/core/Navigator";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
-import { BackgroundImage } from "src/util/constants";
+import { BackgroundImage, toHex32 } from "src/util/constants";
 import { toUnitCountArray } from "src/util/send";
 import { send } from "src/util/web3/contractCalls/send";
+import { Hex } from "viem";
 
 export const SendFleet: React.FC = () => {
   const network = useMud().network;
@@ -30,7 +31,7 @@ export const SendFleet: React.FC = () => {
     const to = components.OwnedBy.get(destination)?.value as Entity | undefined;
 
     //TODO: fix arrival units
-    send(toUnitCountArray(units), sendType, originCoord, destinationCoord, to ?? ("0x00" as Entity), network);
+    send(toUnitCountArray(units), sendType, originCoord, destinationCoord, (to as Hex) ?? toHex32("0"), network);
 
     components.Send.reset(playerEntity);
   };

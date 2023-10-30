@@ -48,8 +48,8 @@ contract LibSendTest is PrimodiumTest {
   function testSendUnitsNonReinforce() public {
     arrival.sendType = ESendType.Invade;
     LibSend.sendUnits(arrival);
-    assertEq(ArrivalsMap.size(arrival.from, arrival.origin), 1);
-    assertEq(ArrivalsMap.size(arrival.from, arrival.destination), 0);
+    assertEq(ArrivalsMap.size(arrival.from, arrival.origin), 0);
+    assertEq(ArrivalsMap.size(arrival.from, arrival.destination), 1);
     assertEq(ArrivalsMap.size(arrival.to, arrival.origin), 0);
     assertEq(ArrivalsMap.size(arrival.to, arrival.destination), 0);
 

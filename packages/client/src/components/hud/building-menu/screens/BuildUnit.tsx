@@ -1,3 +1,14 @@
+import { Entity } from "@latticexyz/recs";
+import { useEffect, useMemo, useState } from "react";
+import { FaInfoCircle } from "react-icons/fa";
+import { Badge } from "src/components/core/Badge";
+import { SecondaryCard } from "src/components/core/Card";
+import { Navigator } from "src/components/core/Navigator";
+import { NumberInput } from "src/components/shared/NumberInput";
+import { useMud } from "src/hooks";
+import { useMaxCountOfRecipe } from "src/hooks/useMaxCountOfRecipe";
+import { components } from "src/network/components";
+import { getBlockTypeName } from "src/util/common";
 import {
   BackgroundImage,
   EntityType,
@@ -6,22 +17,11 @@ import {
   ResourceType,
   UnitEnumLookup,
 } from "src/util/constants";
-import { getBlockTypeName } from "src/util/common";
-import { useEffect, useMemo, useState } from "react";
-import { FaInfoCircle } from "react-icons/fa";
-import { Entity } from "@latticexyz/recs";
-import { useMud } from "src/hooks";
-import { Hex } from "viem";
-import { getUnitStats } from "src/util/trainUnits";
-import { ResourceIconTooltip } from "../../../shared/ResourceIconTooltip";
-import { NumberInput } from "src/components/shared/NumberInput";
 import { getRecipe } from "src/util/resource";
-import { Navigator } from "src/components/core/Navigator";
-import { SecondaryCard } from "src/components/core/Card";
-import { Badge } from "src/components/core/Badge";
-import { components } from "src/network/components";
-import { useMaxCountOfRecipe } from "src/hooks/useMaxCountOfRecipe";
+import { getUnitStats } from "src/util/trainUnits";
 import { train } from "src/util/web3/contractCalls/train";
+import { Hex } from "viem";
+import { ResourceIconTooltip } from "../../../shared/ResourceIconTooltip";
 
 export const BuildUnit: React.FC<{
   building: Entity;
@@ -131,7 +131,7 @@ export const BuildUnit: React.FC<{
 
               <hr className="border-t border-cyan-600 w-full" />
 
-              <NumberInput min={1} max={maximum} onChange={(val) => setCount(val)} />
+              <NumberInput max={maximum} onChange={(val) => setCount(val)} />
 
               <div className="flex gap-2">
                 <Navigator.BackButton

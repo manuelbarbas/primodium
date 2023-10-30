@@ -202,23 +202,24 @@ contract SendUnitsSystemTest is PrimodiumTest {
 
     world.sendUnits(unitCounts, ESendType.Invade, originPosition, destinationPosition, bytes32(0));
 
-    assertEq(ArrivalsMap.size(player, origin), 1);
+    assertEq(ArrivalsMap.size(player, destination), 1);
     assertEq(ArrivalCount.get(player), 1);
 
     unitCounts[0] = 1;
 
-    // Arrival memory expectedArrival = Arrival({
-    //   sendType: ESendType.Invade,
-    //   arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitCounts),
-    //   from: player,
-    //   to: bytes32(0),
-    //   origin: origin,
-    //   destination: destination,
-    //   unitCounts: unitCounts
-    // });
+    Arrival memory expectedArrival = Arrival({
+      sendType: ESendType.Invade,
+      sendTime: block.timestamp,
+      arrivalTime: LibSend.getArrivalTime(originPosition, destinationPosition, player, unitCounts),
+      from: player,
+      to: bytes32(0),
+      origin: origin,
+      destination: destination,
+      unitCounts: unitCounts
+    });
 
-    // Arrival memory arrival = ArrivalsMap.values(player, origin)[0];
-    // assertEq(arrival, expectedArrival);
+    Arrival memory arrival = ArrivalsMap.values(player, destination)[0];
+    assertEq(arrival, expectedArrival);
   }
 
   function testSendUnitsInvadeEnemy() public {
@@ -233,7 +234,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
 
     world.sendUnits(unitCounts, ESendType.Invade, originPosition, destinationPosition, to);
 
-    assertEq(ArrivalsMap.size(player, origin), 1);
+    assertEq(ArrivalsMap.size(player, destination), 1);
     assertEq(ArrivalCount.get(player), 1);
 
     unitCounts[0] = 1;
@@ -249,7 +250,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
       unitCounts: unitCounts
     });
 
-    Arrival memory arrival = ArrivalsMap.values(player, origin)[0];
+    Arrival memory arrival = ArrivalsMap.values(player, destination)[0];
     assertEq(arrival, expectedArrival);
   }
 
@@ -331,7 +332,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
 
     world.sendUnits(unitCounts, ESendType.Raid, originPosition, destinationPosition, to);
 
-    assertEq(ArrivalsMap.size(player, origin), 1);
+    assertEq(ArrivalsMap.size(player, destination), 1);
     assertEq(ArrivalCount.get(player), 1);
 
     unitCounts[0] = 1;
@@ -347,7 +348,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
       unitCounts: unitCounts
     });
 
-    Arrival memory arrival = ArrivalsMap.values(player, origin)[0];
+    Arrival memory arrival = ArrivalsMap.values(player, destination)[0];
     assertEq(arrival, expectedArrival);
   }
 

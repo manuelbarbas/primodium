@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { ERock } from "contracts/config/enums";
+import { ERock, ESendType } from "contracts/config/enums";
 import { Button } from "src/components/core/Button";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
@@ -13,12 +13,11 @@ export const Land: React.FC<{
   const network = useMud().network;
   const playerEntity = network.playerEntity;
   const destinationOwner = components.OwnedBy.use(destination)?.value;
-  // const orbiting = components.Arrival.get({
-  //   from: player,
-  //   onlyOrbiting: true,
-  //   destination: destination,
-  // }).filter((elem) => elem?.sendType !== ESendType.Reinforce);
-  const orbiting = [];
+  const orbiting = components.Arrival.get({
+    from: playerEntity,
+    onlyOrbiting: true,
+    destination: destination,
+  }).filter((elem) => elem?.sendType !== ESendType.Reinforce);
 
   const isNeutral = destinationOwner === playerEntity || !destinationOwner;
 
