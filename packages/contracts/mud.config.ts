@@ -659,7 +659,7 @@ export const config = mudConfig({
     },
 
     SetIndexForAllianceMembers: {
-      keySchema: { entity: "bytes32", member: "bytes32" },
+      keySchema: { entity: "bytes32", memberKey: "bytes32" },
       valueSchema: {
         stored: "bool",
         index: "uint256",
@@ -668,12 +668,12 @@ export const config = mudConfig({
 
     AllianceInvitation: {
       keySchema: { entity: "bytes32", alliance: "bytes32" },
-      valueSchema: "bytes32",
+      valueSchema: { inviter: "bytes32", timeStamp: "uint256" },
     },
 
     AllianceJoinRequest: {
       keySchema: { entity: "bytes32", alliance: "bytes32" },
-      valueSchema: "bool",
+      valueSchema: { timeStamp: "uint256" },
     },
   },
 });

@@ -3,17 +3,18 @@ pragma solidity >=0.8.21;
 
 import { addressToEntity, entityToAddress, getSystemResourceId, bytes32ToString } from "src/utils.sol";
 // tables
-import { AllianceMembers, Score, AllianceJoinRequest, PlayerAlliance, Alliance, AllianceData, AllianceInvitation, HasBuiltBuilding, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/index.sol";
+import { Score, AllianceJoinRequest, PlayerAlliance, Alliance, AllianceData, AllianceInvitation, HasBuiltBuilding, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/index.sol";
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibReduceProductionRate } from "libraries/LibReduceProductionRate.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
+import { AllianceMembersSet } from "libraries/AllianceMembersSet.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 
 // types
-import { BuildingTileKey, ExpansionKey, AllianceKey } from "src/Keys.sol";
+import { BuildingKey, BuildingTileKey, ExpansionKey, AllianceKey } from "src/Keys.sol";
 import { Bounds, EBuilding, EResource, EAllianceRole, EAllianceInviteMode } from "src/Types.sol";
 
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
@@ -45,7 +46,7 @@ library LibAlliance {
    * @param allianceEntity The entity ID of the alliance.
    */
   function checkCanNewPlayerJoinAlliance(bytes32 playerEntity, bytes32 allianceEntity) internal view {
-    bytes32 inviter = AllianceInvitation.get(playerEntity, allianceEntity);
+    bytes32 inviter = AllianceInvitation.getInviter(playerEntity, allianceEntity);
     require(
       Alliance.getInviteMode(allianceEntity) == uint8(EAllianceInviteMode.Open) || inviter != 0,
       "[Alliance] Either alliance is not open or player has not been invited"
@@ -88,11 +89,15 @@ library LibAlliance {
    * @dev Checks if the player can invite another player to the alliance or accept a join request.
    * @param playerEntity The entity ID of the player.
    */
-  function checkCanInviteOrAcceptJoinRequest(bytes32 playerEntity) internal view {
+  function checkCanInviteOrAcceptJoinRequest(bytes32 playerEntity, bytes32 target) internal view {
     uint8 role = PlayerAlliance.getRole(playerEntity);
     require(
       role > 0 && role <= uint8(EAllianceRole.CanInvite),
       "[Alliance] Does not have permission to invite players"
+    );
+    require(
+      PlayerAlliance.getAlliance(target) != PlayerAlliance.getAlliance(playerEntity),
+      "[Alliance] Player is already part of the alliance"
     );
   }
 
@@ -104,7 +109,7 @@ library LibAlliance {
     uint8 role = PlayerAlliance.getRole(playerEntity);
     require(
       (role > 0 && role <= uint8(EAllianceRole.CanKick)) ||
-        AllianceInvitation.get(invitee, PlayerAlliance.getAlliance(playerEntity)) == playerEntity,
+        AllianceInvitation.getInviter(invitee, PlayerAlliance.getAlliance(playerEntity)) == playerEntity,
       "[Alliance] Does not have permission to revoke invite"
     );
   }
@@ -114,7 +119,7 @@ library LibAlliance {
   }
 
   function checkCanLeaveAlliance(bytes32 playerEntity) internal view {
-    require(PlayerAlliance.getRole(playerEntity) != EAllianceRole.Owner, "[Alliance] Owner can not leave");
+    require(PlayerAlliance.getRole(playerEntity) != uint8(EAllianceRole.Owner), "[Alliance] Owner can not leave");
   }
 
   /**
@@ -127,9 +132,10 @@ library LibAlliance {
     checkCanNewPlayerJoinAlliance(player, allianceEntity);
 
     PlayerAlliance.set(player, allianceEntity, uint8(EAllianceRole.Member));
-    AllianceInvitation.set(player, allianceEntity, 0);
+    AllianceInvitation.deleteRecord(player, allianceEntity);
     uint256 playerScore = Score.get(player);
     Alliance.setScore(allianceEntity, Alliance.getScore(allianceEntity) + playerScore);
+    AllianceMembersSet.add(allianceEntity, player);
   }
 
   /**
@@ -149,6 +155,7 @@ library LibAlliance {
     uint256 playerScore = Score.get(player);
     Alliance.setScore(allianceEntity, Alliance.getScore(allianceEntity) + playerScore);
     Score.set(allianceEntity, Score.get(allianceEntity) + playerScore);
+    AllianceMembersSet.add(allianceEntity, player);
   }
 
   /**
@@ -158,15 +165,24 @@ library LibAlliance {
   function leave(bytes32 player) internal {
     bytes32 allianceEntity = PlayerAlliance.getAlliance(player);
     if (allianceEntity == 0) return;
-    PlayerAlliance.set(player, 0, uint8(EAllianceRole.NULL));
+    AllianceMembersSet.remove(allianceEntity, player);
+    if (PlayerAlliance.getRole(player) == uint8(EAllianceRole.Owner)) {
+      if (AllianceMembersSet.length(allianceEntity) == 0) {
+        Alliance.deleteRecord(allianceEntity);
+        return;
+      }
+      bytes32[] memory members = AllianceMembersSet.getMembers(allianceEntity);
+      bytes32 nextInLine = members[0];
+      for (uint256 i = 0; i < members.length; i++) {
+        if (PlayerAlliance.getRole(members[i]) < PlayerAlliance.getRole(nextInLine)) {
+          nextInLine = members[i];
+        }
+      }
+      PlayerAlliance.set(nextInLine, allianceEntity, uint8(EAllianceRole.Owner));
+    }
+    PlayerAlliance.deleteRecord(player);
     uint256 playerScore = Score.get(player);
     Alliance.setScore(allianceEntity, Alliance.getScore(allianceEntity) - playerScore);
-
-    if (AllianceMembers.length(allianceEntity) > 1) {
-      bytes32 replacement = AllianceMembers.getMember(allianceEntity, AllianceMembers.length(allianceEntity) - 1);
-      MapArrivals.update(allianceEntity, index, replacement);
-    }
-    MapArrivals.pop(allianceEntity);
   }
 
   /**
@@ -174,9 +190,9 @@ library LibAlliance {
    * @param player The entity ID of the player.
    */
   function invite(bytes32 player, bytes32 target) internal {
-    checkCanInviteOrAcceptJoinRequest(player);
+    checkCanInviteOrAcceptJoinRequest(player, target);
     bytes32 allianceEntity = PlayerAlliance.getAlliance(player);
-    AllianceInvitation.set(target, allianceEntity, player);
+    AllianceInvitation.set(target, allianceEntity, player, block.timestamp);
   }
 
   /**
@@ -187,7 +203,7 @@ library LibAlliance {
   function revokeInvite(bytes32 player, bytes32 target) internal {
     checkCanRevokeInvite(player, target);
     bytes32 allianceEntity = PlayerAlliance.getAlliance(player);
-    AllianceInvitation.set(target, allianceEntity, 0);
+    AllianceInvitation.deleteRecord(target, allianceEntity);
   }
 
   /**
@@ -198,9 +214,10 @@ library LibAlliance {
   function kick(bytes32 player, bytes32 target) internal {
     checkCanKick(player, target);
     bytes32 allianceEntity = PlayerAlliance.getAlliance(player);
-    PlayerAlliance.set(target, 0, uint8(EAllianceRole.NULL));
+    PlayerAlliance.deleteRecord(target);
     uint256 playerScore = Score.get(target);
     Alliance.setScore(allianceEntity, Alliance.getScore(allianceEntity) - playerScore);
+    AllianceMembersSet.remove(allianceEntity, target);
   }
 
   /**
@@ -230,7 +247,7 @@ library LibAlliance {
    * @param alliance The entity ID of the alliance the player has requested to join.
    */
   function requestToJoin(bytes32 player, bytes32 alliance) internal {
-    AllianceJoinRequest.set(player, alliance, true);
+    AllianceJoinRequest.set(player, alliance, block.timestamp);
   }
 
   /**
@@ -241,7 +258,7 @@ library LibAlliance {
   function rejectRequestToJoin(bytes32 player, bytes32 rejectee) internal {
     checkCanReject(player);
     bytes32 allianceEntity = PlayerAlliance.getAlliance(player);
-    AllianceJoinRequest.set(rejectee, allianceEntity, false);
+    AllianceJoinRequest.deleteRecord(rejectee, allianceEntity);
   }
 
   /**
@@ -250,7 +267,7 @@ library LibAlliance {
    * @param accepted The entity ID of the the player who has requested to join.
    */
   function acceptRequestToJoin(bytes32 player, bytes32 accepted) internal {
-    checkCanInviteOrAcceptJoinRequest(player);
+    checkCanInviteOrAcceptJoinRequest(player, accepted);
 
     bytes32 allianceEntity = PlayerAlliance.getAlliance(player);
 
@@ -259,6 +276,7 @@ library LibAlliance {
     uint256 playerScore = Score.get(accepted);
     Alliance.setScore(allianceEntity, Alliance.getScore(allianceEntity) + playerScore);
 
-    AllianceJoinRequest.set(accepted, allianceEntity, false);
+    AllianceJoinRequest.deleteRecord(accepted, allianceEntity);
+    AllianceMembersSet.add(allianceEntity, accepted);
   }
 }

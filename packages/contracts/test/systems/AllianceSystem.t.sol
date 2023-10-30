@@ -34,6 +34,7 @@ contract BuildSystemTest is PrimodiumTest {
     );
     assertEq(PlayerAlliance.getAlliance(playerEntity), allianceEntity, "player should be in alliance");
     assertEq(PlayerAlliance.getRole(playerEntity), uint8(EAllianceRole.Owner), "player should be alliance owner");
+    assertEq(AllianceMembersSet.length(allianceEntity), 1, "alliance should have 1 member");
   }
 
   function testCreateAllianceClosed() public {
@@ -57,6 +58,7 @@ contract BuildSystemTest is PrimodiumTest {
 
     assertEq(PlayerAlliance.getAlliance(bobEntity), allianceEntity, "bob should be in alliance");
     assertEq(PlayerAlliance.getRole(bobEntity), uint8(EAllianceRole.Member), "bob should be member");
+    assertEq(AllianceMembersSet.length(allianceEntity), 2, "alliance should have 2 member");
   }
 
   function testFailJoinClosedAlliance() public {
@@ -65,13 +67,14 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
     vm.startPrank(bob);
     world.join(allianceEntity);
+    assertEq(AllianceMembersSet.length(allianceEntity), 1, "alliance should have 1 member");
   }
 
   function testInviteAndJoinAlliance() public {
     bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Closed);
     world.invite(bobEntity);
     assertEq(
-      AllianceInvitation.get(bobEntity, allianceEntity),
+      AllianceInvitation.getInviter(bobEntity, allianceEntity),
       playerEntity,
       "bob should be invited to alliance by player"
     );
@@ -80,6 +83,7 @@ contract BuildSystemTest is PrimodiumTest {
     world.join(allianceEntity);
     assertEq(PlayerAlliance.getAlliance(bobEntity), allianceEntity, "bob should be in alliance");
     assertEq(PlayerAlliance.getRole(bobEntity), uint8(EAllianceRole.Member), "bob should be member");
+    assertEq(AllianceMembersSet.length(allianceEntity), 2, "alliance should have 2 member");
   }
 
   function testRequestToJoinAlliance() public {
@@ -87,7 +91,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
     vm.startPrank(bob);
     world.requestToJoin(allianceEntity);
-    assertTrue(AllianceJoinRequest.get(bobEntity, allianceEntity), "bob should have requested to join alliance");
+    assertTrue(AllianceJoinRequest.get(bobEntity, allianceEntity) != 0, "bob should have requested to join alliance");
     vm.stopPrank();
     vm.startPrank(creator);
     world.acceptRequestToJoin(bobEntity);
@@ -101,12 +105,12 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
     vm.startPrank(bob);
     world.requestToJoin(allianceEntity);
-    assertTrue(AllianceJoinRequest.get(bobEntity, allianceEntity), "bob should have requested to join alliance");
+    assertTrue(AllianceJoinRequest.get(bobEntity, allianceEntity) != 0, "bob should have requested to join alliance");
     vm.stopPrank();
     vm.startPrank(creator);
     world.rejectRequestToJoin(bobEntity);
     assertTrue(
-      !AllianceJoinRequest.get(bobEntity, allianceEntity),
+      AllianceJoinRequest.get(bobEntity, allianceEntity) == 0,
       "bobs request to join alliance should have been rejected"
     );
     assertEq(PlayerAlliance.getAlliance(bobEntity), 0, "bob should not be in alliance");
@@ -128,7 +132,7 @@ contract BuildSystemTest is PrimodiumTest {
     world.invite(aliceEntity);
     vm.stopPrank();
     assertEq(
-      AllianceInvitation.get(aliceEntity, allianceEntity),
+      AllianceInvitation.getInviter(aliceEntity, allianceEntity),
       bobEntity,
       "alice should be invited to alliance by bob"
     );
@@ -146,6 +150,7 @@ contract BuildSystemTest is PrimodiumTest {
     world.join(allianceEntity);
     vm.stopPrank();
 
+    assertEq(AllianceMembersSet.length(allianceEntity), 3, "alliance should have 3 member");
     vm.startPrank(creator);
     world.grantRole(bobEntity, EAllianceRole.CanKick);
     vm.stopPrank();
@@ -153,6 +158,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.startPrank(bob);
     world.kick(aliceEntity);
     vm.stopPrank();
+    assertEq(AllianceMembersSet.length(allianceEntity), 2, "alliance should have 2 member");
   }
 
   function testCanGrantRoleAlliance() public {
@@ -321,5 +327,27 @@ contract BuildSystemTest is PrimodiumTest {
     world.grantRole(bobEntity, EAllianceRole.Owner);
     assertEq(PlayerAlliance.getRole(bobEntity), uint8(EAllianceRole.Owner), "bob should be owner");
     vm.stopPrank();
+  }
+
+  function tesOwnerLeaveAlliance() public {
+    bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+    world.join(allianceEntity);
+    vm.stopPrank();
+
+    vm.startPrank(creator);
+    world.grantRole(bobEntity, EAllianceRole.CanGrantRole);
+    assertEq(PlayerAlliance.getRole(bobEntity), uint8(EAllianceRole.CanGrantRole), "bob should be can grant role");
+    vm.stopPrank();
+
+    vm.startPrank(creator);
+    world.leave();
+    assertEq(PlayerAlliance.getRole(bobEntity), uint8(EAllianceRole.Owner), "bob should be owner");
   }
 }
