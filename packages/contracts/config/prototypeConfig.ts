@@ -143,6 +143,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   World: {
     keys: [],
     tables: {
+      P_AllianceConfig: { maxAllianceMembers: 20n },
       P_GracePeriod: { value: 60n * 60n * 24n * 3n },
       P_Asteroid: maxRange,
       P_GameConfig: {
