@@ -278,6 +278,9 @@ export const EntitytoSpriteKey = {
 
   [EntityType.DroneFactory]: [SpriteKeys.DroneFactory1],
 
+  [EntityType.ShieldGenerator]: [SpriteKeys.DroneFactory1],
+  [EntityType.Vault]: [SpriteKeys.StorageUnit1, SpriteKeys.StorageUnit2, SpriteKeys.StorageUnit3],
+
   //STARMAP
   [EntityType.Asteroid]: [
     SpriteKeys.Asteroid1,
@@ -327,6 +330,10 @@ export const EntityIDtoAnimationKey = {
   [EntityType.DroneFactory]: [AnimationKeys.DroneFactory1],
 
   [EntityType.SAMLauncher]: [AnimationKeys.SAMLauncher1, AnimationKeys.SAMLauncher2, AnimationKeys.SAMLauncher3],
+
+  [EntityType.ShieldGenerator]: [AnimationKeys.DroneFactory1],
+
+  [EntityType.Vault]: [undefined, undefined, AnimationKeys.StorageUnit3],
 };
 
 export enum KeybindActions {
