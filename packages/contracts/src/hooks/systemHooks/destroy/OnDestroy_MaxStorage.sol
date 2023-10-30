@@ -8,7 +8,6 @@ import { PositionData } from "codegen/tables/Position.sol";
 
 import { EBuilding } from "src/Types.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
-import { BuildingKey } from "src/Keys.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";

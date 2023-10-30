@@ -28,6 +28,10 @@ library LibEncode {
     return keccak256(abi.encode(key, position.x, position.y, position.parent));
   }
 
+  function getTimedHash(bytes32 key, PositionData memory position) internal view returns (bytes32) {
+    return keccak256(abi.encode(key, position.x, position.y, position.parent, block.timestamp));
+  }
+
   /**
    * @notice  masks a bit string based on length and shift
    * @param   _b  bit string to mask

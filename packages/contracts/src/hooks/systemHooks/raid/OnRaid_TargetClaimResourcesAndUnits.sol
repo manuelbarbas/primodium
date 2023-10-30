@@ -7,7 +7,6 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
 
 import { LibEncode } from "libraries/LibEncode.sol";
-import { BuildingKey } from "src/Keys.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
