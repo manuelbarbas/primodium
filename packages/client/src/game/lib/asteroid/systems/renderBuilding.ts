@@ -1,5 +1,13 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Entity, Has, HasValue, defineEnterSystem, defineExitSystem, namespaceWorld } from "@latticexyz/recs";
+import {
+  Entity,
+  Has,
+  HasValue,
+  defineEnterSystem,
+  defineExitSystem,
+  defineUpdateSystem,
+  namespaceWorld,
+} from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 
 import { Scene } from "engine/types";
@@ -123,6 +131,7 @@ export const renderBuilding = (scene: Scene, { network: { playerEntity } }: Setu
   ];
 
   defineEnterSystem(gameWorld, positionQuery, render);
+  defineUpdateSystem(gameWorld, positionQuery, render);
   //dust particle animation on new building
   defineEnterSystem(gameWorld, positionQuery, throwDust, { runOnInit: false });
 
