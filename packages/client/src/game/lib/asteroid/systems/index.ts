@@ -18,5 +18,5 @@ export const runSystems = (scene: Scene, mud: SetupResult) => {
   renderBuildingPlacementTool(scene, mud);
   focusMainbase(scene, mud);
   renderFog(scene, mud);
-  renderQueuedBuildings(scene, mud);
+  renderQueuedBuildings(scene);
 };

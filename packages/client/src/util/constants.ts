@@ -1,4 +1,5 @@
 import { Entity } from "@latticexyz/recs";
+import { Coord } from "@latticexyz/utils";
 import { encodeEntity } from "@latticexyz/store-sync/recs";
 import { EBuilding, EObjectives, EResource, ERock, ESize, EUnit } from "contracts/config/enums";
 import { Key } from "engine/types";
@@ -54,6 +55,13 @@ export enum TransactionQueueType {
   Attack,
   Defend,
 }
+
+export type TransactionQueueMetadataTypes = {
+  [TransactionQueueType.Build]: {
+    coord: Coord;
+    buildingType: Entity;
+  };
+};
 
 export const key = {
   BuildingTileKey: toHex32("building:tile"),

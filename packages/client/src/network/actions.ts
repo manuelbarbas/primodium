@@ -1,8 +1,9 @@
 import { Hex, TransactionReceipt } from "viem";
-import { Entity, ComponentValue } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import { SetupNetworkResult } from "./types";
 import { toast } from "react-toastify";
 import { components } from "./components";
+import { MetadataTypes } from "./components/customComponents/TransactionQueueComponent";
 
 export async function _execute(txPromise: Promise<Hex>, network: SetupNetworkResult) {
   try {
@@ -28,23 +29,25 @@ export async function _execute(txPromise: Promise<Hex>, network: SetupNetworkRes
 // Function that takes in a transaction promise that resolves to a completed transaction
 // Alerts the user if the transaction failed
 // Providers renamed to client: https://viem.sh/docs/ethers-migration.html
-export async function execute(
+export async function execute<T extends keyof MetadataTypes>(
   txPromise: Promise<Hex>,
   network: SetupNetworkResult,
-  queueData?: ComponentValue<typeof components.TransactionQueue.schema> & {
+  queueConfig?: {
     id: Entity;
+    type?: T;
+    metadata?: MetadataTypes[T];
   },
   onComplete?: (receipt: TransactionReceipt | undefined) => void
 ) {
-  if (queueData)
+  if (queueConfig)
     components.TransactionQueue.enqueue(
       async () => {
         const receipt = await _execute(txPromise, network);
         onComplete?.(receipt);
       },
-      queueData.id,
-      queueData.type,
-      queueData.value
+      queueConfig.id,
+      queueConfig.type,
+      queueConfig.metadata
     );
   else {
     const receipt = await _execute(txPromise, network);

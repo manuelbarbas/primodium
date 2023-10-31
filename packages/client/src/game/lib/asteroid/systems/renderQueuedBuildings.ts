@@ -1,6 +1,5 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { ComponentUpdate, Has, HasValue } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
 import { defineEnterSystem, defineExitSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { TransactionQueueType } from "src/util/constants";
@@ -8,13 +7,11 @@ import { world } from "src/network/world";
 import { components } from "src/network/components";
 import { ObjectPosition, OnExitSystem } from "../../common/object-components/common";
 import { ObjectText } from "../../common/object-components/text";
-import { SetupResult } from "src/network/types";
 
-export const renderQueuedBuildings = (scene: Scene, mud: SetupResult) => {
+export const renderQueuedBuildings = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_buildingQueued";
-  // const playerEntity = mud.network.playerEntity;
 
   const query = [
     Has(components.TransactionQueue),
@@ -25,15 +22,14 @@ export const renderQueuedBuildings = (scene: Scene, mud: SetupResult) => {
 
   const render = ({ entity }: ComponentUpdate) => {
     const objIndex = entity + objIndexSuffix;
-    const rawValue = components.TransactionQueue.get(entity)?.value;
+    const metadata = components.TransactionQueue.getMetadata<TransactionQueueType.Build>(entity);
 
-    if (!rawValue) return;
+    if (!metadata) return;
 
     scene.objectPool.remove(objIndex);
     const textRenderObject = scene.objectPool.get(objIndex, "Text");
 
-    const coord = JSON.parse(rawValue) as Coord;
-    const pixelCoord = tileCoordToPixelCoord(coord, tileWidth, tileHeight);
+    const pixelCoord = tileCoordToPixelCoord(metadata.coord, tileWidth, tileHeight);
 
     textRenderObject.setComponents([
       ObjectPosition({
@@ -59,7 +55,7 @@ export const renderQueuedBuildings = (scene: Scene, mud: SetupResult) => {
   defineEnterSystem(gameWorld, query, (update) => {
     render(update);
 
-    console.info("[ENTER SYSTEM](renderBuildingPlacement) Building placement tool has been added");
+    console.info("[ENTER SYSTEM](transaction queued)");
   });
 
   defineExitSystem(gameWorld, query, (update) => {
@@ -67,6 +63,6 @@ export const renderQueuedBuildings = (scene: Scene, mud: SetupResult) => {
 
     scene.objectPool.remove(objIndex);
 
-    console.info("[EXIT SYSTEM](renderBuildingPlacement) Building placement tool has been removed");
+    console.info("[EXIT SYSTEM](transaction completed)");
   });
 };

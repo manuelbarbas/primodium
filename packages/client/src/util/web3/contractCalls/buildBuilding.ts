@@ -8,7 +8,7 @@ import { components } from "src/network/components";
 import { SetupNetworkResult } from "src/network/types";
 import { execute } from "src/network/actions";
 import { parseReceipt } from "../../analytics/parseReceipt";
-import { TransactionQueueType } from "src/util/constants";
+import { BuildingEntityLookup, TransactionQueueType } from "src/util/constants";
 
 export const buildBuilding = async (network: SetupNetworkResult, building: EBuilding, coord: Coord) => {
   const activeAsteroid = components.Home.get(network.playerEntity)?.asteroid;
@@ -22,7 +22,10 @@ export const buildBuilding = async (network: SetupNetworkResult, building: EBuil
     {
       id: uuid() as Entity,
       type: TransactionQueueType.Build,
-      value: JSON.stringify(coord),
+      metadata: {
+        coord,
+        buildingType: BuildingEntityLookup[building],
+      },
     },
     (receipt) => {
       ampli.systemBuild({

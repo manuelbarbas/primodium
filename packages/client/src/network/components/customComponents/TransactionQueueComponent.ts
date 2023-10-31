@@ -3,7 +3,13 @@ import { Metadata, Type, Entity } from "@latticexyz/recs";
 import { world } from "src/network/world";
 import { Options, createExtendedComponent } from "./ExtendedComponent";
 import { TransactionQueue } from "../clientComponents";
-import { TransactionQueueType } from "src/util/constants";
+import { TransactionQueueType, TransactionQueueMetadataTypes } from "src/util/constants";
+
+export type MetadataTypes = {
+  [K in TransactionQueueType]: K extends keyof TransactionQueueMetadataTypes
+    ? TransactionQueueMetadataTypes[K]
+    : unknown;
+};
 
 export function createTransactionQueueComponent<M extends Metadata>(options?: Options<M>) {
   const queue: { id: Entity; fn: () => Promise<void> }[] = [];
@@ -12,15 +18,21 @@ export function createTransactionQueueComponent<M extends Metadata>(options?: Op
   const component = createExtendedComponent(
     world,
     {
-      value: Type.OptionalString,
-      type: Type.Number,
+      metadata: Type.OptionalString,
+      type: Type.OptionalNumber,
     },
     options
   );
 
   // Add a function to the queue
-  async function enqueue(fn: () => Promise<void>, id: Entity, type: TransactionQueueType, value?: string) {
+  async function enqueue<T extends keyof MetadataTypes>(
+    fn: () => Promise<void>,
+    id: Entity,
+    type?: T,
+    metadata?: MetadataTypes[T]
+  ) {
     if (component.has(id)) return;
+
     queue.push({
       id,
       fn,
@@ -28,7 +40,7 @@ export function createTransactionQueueComponent<M extends Metadata>(options?: Op
 
     component.set(
       {
-        value,
+        metadata: JSON.stringify(metadata),
         type,
       },
       id
@@ -67,6 +79,12 @@ export function createTransactionQueueComponent<M extends Metadata>(options?: Op
     return queue.findIndex((item) => item.id === id);
   }
 
+  function getMetadata<T extends keyof MetadataTypes>(id: Entity): MetadataTypes[T] | undefined {
+    const index = getIndex(id);
+    if (index === -1) return undefined;
+    return JSON.parse(component.get(id)?.metadata || "");
+  }
+
   function useIndex(id: Entity) {
     const [position, setPosition] = useState<number>(-1);
 
@@ -79,7 +97,7 @@ export function createTransactionQueueComponent<M extends Metadata>(options?: Op
       return () => {
         sub.unsubscribe();
       };
-    }, []);
+    }, [id]);
 
     return position;
   }
@@ -90,5 +108,6 @@ export function createTransactionQueueComponent<M extends Metadata>(options?: Op
     run,
     getIndex,
     useIndex,
+    getMetadata,
   };
 }
