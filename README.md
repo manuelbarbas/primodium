@@ -49,7 +49,7 @@ To build packages, run `pnpm build`
 For production deployment on Caldera testnet:
 
 1. In `<top-level>/.env`:
-   - Set `PRI_DEV="false"`
+   - Set `PRI_DEV="false"`. NOTE: this is necessary for `DevSystem` to be excluded from production.
    - Set `PRI_CHAIN_ID="caldera"`
 2. Add your private key to the `.env` file in `packages/contracts`:
    ```bash
