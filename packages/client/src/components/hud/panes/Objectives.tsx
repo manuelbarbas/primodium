@@ -20,6 +20,7 @@ import {
   BackgroundImage,
   ObjectiveEntityLookup,
   RESOURCE_SCALE,
+  ResourceEnumLookup,
   ResourceImage,
   ResourceType,
 } from "src/util/constants";
@@ -52,7 +53,7 @@ const ClaimObjectiveButton: React.FC<{
     comps.CompletedObjective.useWithKeys({ objective: objectiveEntity as Hex, entity: player as Hex })?.value ?? false;
 
   const canClaim = useMemo(() => {
-    return getCanClaimObjective(objectiveEntity);
+    return getCanClaimObjective(objectiveEntity, player);
   }, [
     levelRequirement,
     objectiveClaimedRequirement,
@@ -167,8 +168,26 @@ const Objective: React.FC<{
             </span>
 
             {rewardRecipe.map((resource) => {
+              let canClaim = true;
+              if (resource.type === ResourceType.Resource) {
+                const maxResource =
+                  comps.MaxResourceCount.getWithKeys({
+                    entity: playerEntity as Hex,
+                    resource: ResourceEnumLookup[resource.id],
+                  })?.value ?? 0n;
+                const finalResource =
+                  comps.ResourceCount.getWithKeys({
+                    entity: playerEntity as Hex,
+                    resource: ResourceEnumLookup[resource.id],
+                  })?.value ?? 0n + resource.amount;
+
+                canClaim = finalResource <= maxResource;
+              }
               return (
-                <Badge key={resource.id} className="text-xs gap-2 badge-neutral">
+                <Badge
+                  key={resource.id}
+                  className={`text-xs gap-2 badge-neutral ${!canClaim ? "border-error opacity-60 bg-error" : ""}`}
+                >
                   <ResourceIconTooltip
                     playerEntity={playerEntity}
                     name={getBlockTypeName(resource.id)}

@@ -507,6 +507,19 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "bytes32",
+        name: "accepted",
+        type: "bytes32",
+      },
+    ],
+    name: "acceptRequestToJoin",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         components: [
           {
             internalType: "ResourceId",
@@ -749,6 +762,43 @@ const _abi = [
       },
     ],
     stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "enum EObjectives",
+        name: "objective",
+        type: "uint8",
+      },
+    ],
+    name: "claimObjective",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "name",
+        type: "bytes32",
+      },
+      {
+        internalType: "enum EAllianceInviteMode",
+        name: "allianceInviteMode",
+        type: "uint8",
+      },
+    ],
+    name: "create",
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "allianceEntity",
+        type: "bytes32",
+      },
+    ],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -1558,6 +1608,24 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "target",
+        type: "bytes32",
+      },
+      {
+        internalType: "enum EAllianceRole",
+        name: "role",
+        type: "uint8",
+      },
+    ],
+    name: "grantRole",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "increment",
     outputs: [
@@ -1628,6 +1696,104 @@ const _abi = [
       },
     ],
     name: "invade",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "target",
+        type: "bytes32",
+      },
+    ],
+    name: "invite",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "alliance",
+        type: "bytes32",
+      },
+    ],
+    name: "join",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "target",
+        type: "bytes32",
+      },
+    ],
+    name: "kick",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "leave",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: "int32",
+            name: "x",
+            type: "int32",
+          },
+          {
+            internalType: "int32",
+            name: "y",
+            type: "int32",
+          },
+          {
+            internalType: "bytes32",
+            name: "parent",
+            type: "bytes32",
+          },
+        ],
+        internalType: "struct PositionData",
+        name: "fromCoord",
+        type: "tuple",
+      },
+      {
+        components: [
+          {
+            internalType: "int32",
+            name: "x",
+            type: "int32",
+          },
+          {
+            internalType: "int32",
+            name: "y",
+            type: "int32",
+          },
+          {
+            internalType: "bytes32",
+            name: "parent",
+            type: "bytes32",
+          },
+        ],
+        internalType: "struct PositionData",
+        name: "toCoord",
+        type: "tuple",
+      },
+    ],
+    name: "moveBuilding",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -1972,6 +2138,32 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "bytes32",
+        name: "rejectee",
+        type: "bytes32",
+      },
+    ],
+    name: "rejectRequestToJoin",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "alliance",
+        type: "bytes32",
+      },
+    ],
+    name: "requestToJoin",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "ResourceId",
         name: "resourceId",
         type: "bytes32",
@@ -1990,9 +2182,22 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "uint256[5]",
+        internalType: "bytes32",
+        name: "target",
+        type: "bytes32",
+      },
+    ],
+    name: "revokeInvite",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256[7]",
         name: "unitCounts",
-        type: "uint256[5]",
+        type: "uint256[7]",
       },
       {
         internalType: "enum ESendType",
@@ -2216,6 +2421,25 @@ const _abi = [
       {
         internalType: "bytes32",
         name: "",
+        type: "bytes32",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "prototypeEntity",
+        type: "bytes32",
+      },
+    ],
+    name: "spawnPirateAsteroid",
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "asteroidEntity",
         type: "bytes32",
       },
     ],
