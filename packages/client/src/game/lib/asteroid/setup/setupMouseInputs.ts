@@ -1,14 +1,13 @@
 import { Coord, coordEq, pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { Scene } from "engine/types";
-import { Action } from "src/util/constants";
 import { getBuildingAtCoord } from "src/util/tile";
 
-import { world } from "src/network/world";
-import { outOfBounds } from "src/util/outOfBounds";
-import { SetupResult } from "src/network/types";
-import { components } from "src/network/components";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { components } from "src/network/components";
+import { SetupResult } from "src/network/types";
+import { world } from "src/network/world";
+import { outOfBounds } from "src/util/outOfBounds";
 
 export const setupMouseInputs = (scene: Scene, mud: SetupResult) => {
   const playerEntity = mud.network.playerEntity;
@@ -29,14 +28,6 @@ export const setupMouseInputs = (scene: Scene, mud: SetupResult) => {
     }
 
     const selectedAction = components.SelectedAction.get()?.value;
-
-    //handle web3 mutations
-    switch (selectedAction) {
-      case undefined:
-        break;
-      case Action.DemolishBuilding:
-        break;
-    }
 
     if (selectedAction !== undefined) return;
 

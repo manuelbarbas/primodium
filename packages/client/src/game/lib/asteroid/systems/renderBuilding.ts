@@ -1,17 +1,17 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Entity, Has, HasValue, defineEnterSystem, defineExitSystem, namespaceWorld } from "@latticexyz/recs";
+import { Entity, Has, HasValue, defineSystem, namespaceWorld } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 
 import { Scene } from "engine/types";
 import { singletonIndex, world } from "src/network/world";
 import { safeIndex } from "src/util/array";
 
-import { Animation, Texture, Outline } from "../../common/object-components/sprite";
-import { ObjectPosition, OnComponentSystem, OnUpdateSystem, SetValue } from "../../common/object-components/common";
-import { getBuildingDimensions, getBuildingTopLeft } from "src/util/building";
 import { Assets, DepthLayers, EntityIDtoAnimationKey, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
 import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
+import { getBuildingDimensions, getBuildingTopLeft } from "src/util/building";
+import { ObjectPosition, OnComponentSystem, OnUpdateSystem, SetValue } from "../../common/object-components/common";
+import { Animation, Outline, Texture } from "../../common/object-components/sprite";
 
 const MAX_SIZE = 2 ** 15 - 1;
 export const renderBuilding = (scene: Scene, { network: { playerEntity } }: SetupResult) => {
@@ -98,11 +98,14 @@ export const renderBuilding = (scene: Scene, { network: { playerEntity } }: Setu
     Has(components.BuildingType),
   ];
 
-  defineEnterSystem(gameWorld, positionQuery, render);
-
-  defineExitSystem(gameWorld, positionQuery, ({ entity }) => {
-    const renderId = `${entity}_entitySprite`;
-    scene.objectPool.removeGroup(renderId);
+  defineSystem(gameWorld, positionQuery, ({ entity, value: [newVal, oldVal] }) => {
+    if (oldVal) {
+      const renderId = `${entity}_entitySprite`;
+      scene.objectPool.removeGroup(renderId);
+    }
+    if (newVal) {
+      render({ entity });
+    }
   });
 };
 
