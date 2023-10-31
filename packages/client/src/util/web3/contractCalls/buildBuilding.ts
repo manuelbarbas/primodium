@@ -11,15 +11,20 @@ import { parseReceipt } from "../../analytics/parseReceipt";
 import { TransactionQueueType } from "src/util/constants";
 
 export const buildBuilding = async (network: SetupNetworkResult, building: EBuilding, coord: Coord) => {
-  await components.TransactionQueue.enqueue(
-    async () => {
-      const activeAsteroid = components.Home.get(network.playerEntity)?.asteroid;
-      if (!activeAsteroid) return;
+  const activeAsteroid = components.Home.get(network.playerEntity)?.asteroid;
+  if (!activeAsteroid) return;
 
-      const position = { ...coord, parent: activeAsteroid as Hex };
+  const position = { ...coord, parent: activeAsteroid as Hex };
 
-      const receipt = await execute(network.worldContract.write.build([building, position]), network);
-
+  await execute(
+    network.worldContract.write.build([building, position]),
+    network,
+    {
+      id: uuid() as Entity,
+      type: TransactionQueueType.Build,
+      value: JSON.stringify(coord),
+    },
+    (receipt) => {
       ampli.systemBuild({
         asteroidCoord: BigNumber.from(activeAsteroid).toString(),
         buildingType: MUDEnums.EBuilding[building],
@@ -27,9 +32,6 @@ export const buildBuilding = async (network: SetupNetworkResult, building: EBuil
         currLevel: 0,
         ...parseReceipt(receipt),
       });
-    },
-    uuid() as Entity,
-    TransactionQueueType.Build,
-    JSON.stringify(coord)
+    }
   );
 };
