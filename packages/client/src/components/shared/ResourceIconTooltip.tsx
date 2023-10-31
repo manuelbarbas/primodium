@@ -37,7 +37,7 @@ const ResourceIconTooltipContent = ({
   fontSize = "md",
   className,
   hasEnough,
-  short = true,
+  short = false,
 }: ResourceIconProps & { hasEnough: boolean }) => {
   const value = ResourceType.ResourceRate == resourceType ? Number((amount * 60n) / scale) : Number(amount / scale);
   const label = formatNumber(value, { short }) + suffixes[resourceType || ResourceType.Resource];

@@ -3,6 +3,7 @@ import React, { useMemo } from "react";
 
 import { primodium } from "@game/api";
 import { EntitytoSpriteKey } from "@game/constants";
+import _ from "lodash";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
@@ -41,6 +42,7 @@ export const RecipeDisplay: React.FC<{
               scale={resource.type !== ResourceType.Utility ? RESOURCE_SCALE : 1n}
               validate
               fontSize={"xs"}
+              short
             />
           );
         })}
@@ -96,6 +98,7 @@ export const PrototypeInfo: React.FC<{
                   amount={amount}
                   resourceType={type}
                   scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
+                  short
                 />
               </Badge>
             ))}
@@ -115,44 +118,54 @@ export const PrototypeInfo: React.FC<{
               </Badge>
             )}
             {!!vault.length && (
-              <div className="flex flex-col text-xs gap-1 bg-green-800/60 p-2 border border-green-600 rounded-md w-fit justify-center">
-                Vault Increase
-                {vault.map(({ resource, amount, type }) => (
-                  <Badge
-                    key={`vault-${resource}`}
-                    className="text-xs gap-2 bg-green-800/60 py-3 border border-green-600 rounded-md w-full"
-                  >
-                    <ResourceIconTooltip
-                      name={getBlockTypeName(resource)}
-                      image={ResourceImage.get(resource) ?? ""}
-                      resource={resource}
-                      playerEntity={playerEntity}
-                      amount={amount}
-                      resourceType={ResourceType.Resource}
-                      scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
-                    />
-                  </Badge>
+              <div className="flex flex-col text-xs gap-1 bg-green-800/60 p-2 border border-green-600 rounded-md w-fit justify-center text-center">
+                Vault
+                {_.chunk(vault, 2).map((chunk, i) => (
+                  <div key={`vault-chunk-${i}`} className="flex flex-row gap-1">
+                    {chunk.map(({ resource, amount, type }) => (
+                      <Badge
+                        key={`vault-${resource}`}
+                        className="text-xs gap-2 bg-green-800/60 py-3 border border-green-600 rounded-md w-full"
+                      >
+                        <ResourceIconTooltip
+                          name={getBlockTypeName(resource)}
+                          image={ResourceImage.get(resource) ?? ""}
+                          resource={resource}
+                          playerEntity={playerEntity}
+                          amount={amount}
+                          resourceType={ResourceType.Resource}
+                          scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
+                          short
+                        />
+                      </Badge>
+                    ))}
+                  </div>
                 ))}
               </div>
             )}
             {!!storageUpgrades.length && (
-              <div className="flex flex-col text-xs gap-1 bg-green-800/60 p-2 border border-green-600 rounded-md w-fit justify-center">
-                Storage Increase
-                {storageUpgrades.map(({ resource, amount }) => (
-                  <Badge
-                    key={`vault-${resource}`}
-                    className="text-xs gap-2 bg-green-800/60 py-3 border border-green-600 rounded-md w-full"
-                  >
-                    <ResourceIconTooltip
-                      name={getBlockTypeName(resource)}
-                      image={ResourceImage.get(resource) ?? ""}
-                      resource={resource}
-                      playerEntity={playerEntity}
-                      amount={amount}
-                      resourceType={ResourceType.Resource}
-                      scale={1n}
-                    />
-                  </Badge>
+              <div className="flex flex-col text-xs gap-1 bg-green-800/60 p-2 border border-green-600 rounded-md w-fit justify-center text-center">
+                Storage
+                {_.chunk(storageUpgrades, 2).map((chunk, i) => (
+                  <div key={`storage-chunk-${i}`} className="flex flex-row gap-1">
+                    {chunk.map(({ resource, amount }) => (
+                      <Badge
+                        key={`storage-${resource}`}
+                        className="text-xs gap-2 bg-green-800/60 py-3 border border-green-600 rounded-md w-full"
+                      >
+                        <ResourceIconTooltip
+                          name={getBlockTypeName(resource)}
+                          image={ResourceImage.get(resource) ?? ""}
+                          resource={resource}
+                          playerEntity={playerEntity}
+                          amount={amount}
+                          resourceType={ResourceType.Resource}
+                          scale={1n}
+                          short
+                        />
+                      </Badge>
+                    ))}
+                  </div>
                 ))}
               </div>
             )}
