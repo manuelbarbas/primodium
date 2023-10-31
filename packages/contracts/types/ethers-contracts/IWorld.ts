@@ -91,12 +91,15 @@ export type PositionDataStructOutput = [number, number, string] & {
 
 export interface IWorldInterface extends utils.Interface {
   functions: {
+    "acceptRequestToJoin(bytes32)": FunctionFragment;
     "batchCall((bytes32,bytes)[])": FunctionFragment;
     "batchCallFrom((address,bytes32,bytes)[])": FunctionFragment;
     "battle(bytes32,bytes32,bytes32,uint8)": FunctionFragment;
     "build(uint8,(int32,int32,bytes32))": FunctionFragment;
     "call(bytes32,bytes)": FunctionFragment;
     "callFrom(address,bytes32,bytes)": FunctionFragment;
+    "claimObjective(uint8)": FunctionFragment;
+    "create(bytes32,uint8)": FunctionFragment;
     "creator()": FunctionFragment;
     "deleteRecord(bytes32,bytes32[])": FunctionFragment;
     "destroy((int32,int32,bytes32))": FunctionFragment;
@@ -125,11 +128,17 @@ export interface IWorldInterface extends utils.Interface {
     "getStaticField(bytes32,bytes32[],uint8,bytes32)": FunctionFragment;
     "getValueSchema(bytes32)": FunctionFragment;
     "grantAccess(bytes32,address)": FunctionFragment;
+    "grantRole(bytes32,uint8)": FunctionFragment;
     "increment()": FunctionFragment;
     "initialize(address)": FunctionFragment;
     "installModule(address,bytes)": FunctionFragment;
     "installRootModule(address,bytes)": FunctionFragment;
     "invade(bytes32)": FunctionFragment;
+    "invite(bytes32)": FunctionFragment;
+    "join(bytes32)": FunctionFragment;
+    "kick(bytes32)": FunctionFragment;
+    "leave()": FunctionFragment;
+    "moveBuilding((int32,int32,bytes32),(int32,int32,bytes32))": FunctionFragment;
     "popFromDynamicField(bytes32,bytes32[],uint8,uint256)": FunctionFragment;
     "pushToDynamicField(bytes32,bytes32[],uint8,bytes)": FunctionFragment;
     "raid(bytes32)": FunctionFragment;
@@ -145,14 +154,18 @@ export interface IWorldInterface extends utils.Interface {
     "registerSystemHook(bytes32,address,uint8)": FunctionFragment;
     "registerTable(bytes32,bytes32,bytes32,bytes32,string[],string[])": FunctionFragment;
     "reinforce(bytes32,bytes32)": FunctionFragment;
+    "rejectRequestToJoin(bytes32)": FunctionFragment;
+    "requestToJoin(bytes32)": FunctionFragment;
     "revokeAccess(bytes32,address)": FunctionFragment;
-    "sendUnits(uint256[5],uint8,(int32,int32,bytes32),(int32,int32,bytes32),bytes32)": FunctionFragment;
+    "revokeInvite(bytes32)": FunctionFragment;
+    "sendUnits(uint256[7],uint8,(int32,int32,bytes32),(int32,int32,bytes32),bytes32)": FunctionFragment;
     "setDynamicField(bytes32,bytes32[],uint8,bytes)": FunctionFragment;
     "setField(bytes32,bytes32[],uint8,bytes)": FunctionFragment;
     "setField(bytes32,bytes32[],uint8,bytes,bytes32)": FunctionFragment;
     "setRecord(bytes32,bytes32[],bytes,bytes32,bytes)": FunctionFragment;
     "setStaticField(bytes32,bytes32[],uint8,bytes,bytes32)": FunctionFragment;
     "spawn()": FunctionFragment;
+    "spawnPirateAsteroid(bytes32)": FunctionFragment;
     "spliceDynamicData(bytes32,bytes32[],uint8,uint40,uint40,bytes)": FunctionFragment;
     "spliceStaticData(bytes32,bytes32[],uint48,bytes)": FunctionFragment;
     "storeVersion()": FunctionFragment;
@@ -171,12 +184,15 @@ export interface IWorldInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "acceptRequestToJoin"
       | "batchCall"
       | "batchCallFrom"
       | "battle"
       | "build"
       | "call"
       | "callFrom"
+      | "claimObjective"
+      | "create"
       | "creator"
       | "deleteRecord"
       | "destroy"
@@ -205,11 +221,17 @@ export interface IWorldInterface extends utils.Interface {
       | "getStaticField"
       | "getValueSchema"
       | "grantAccess"
+      | "grantRole"
       | "increment"
       | "initialize"
       | "installModule"
       | "installRootModule"
       | "invade"
+      | "invite"
+      | "join"
+      | "kick"
+      | "leave"
+      | "moveBuilding"
       | "popFromDynamicField"
       | "pushToDynamicField"
       | "raid"
@@ -225,7 +247,10 @@ export interface IWorldInterface extends utils.Interface {
       | "registerSystemHook"
       | "registerTable"
       | "reinforce"
+      | "rejectRequestToJoin"
+      | "requestToJoin"
       | "revokeAccess"
+      | "revokeInvite"
       | "sendUnits"
       | "setDynamicField"
       | "setField(bytes32,bytes32[],uint8,bytes)"
@@ -233,6 +258,7 @@ export interface IWorldInterface extends utils.Interface {
       | "setRecord"
       | "setStaticField"
       | "spawn"
+      | "spawnPirateAsteroid"
       | "spliceDynamicData"
       | "spliceStaticData"
       | "storeVersion"
@@ -249,6 +275,7 @@ export interface IWorldInterface extends utils.Interface {
       | "worldVersion"
   ): FunctionFragment;
 
+  encodeFunctionData(functionFragment: "acceptRequestToJoin", values: [PromiseOrValue<BytesLike>]): string;
   encodeFunctionData(functionFragment: "batchCall", values: [SystemCallDataStruct[]]): string;
   encodeFunctionData(functionFragment: "batchCallFrom", values: [SystemCallFromDataStruct[]]): string;
   encodeFunctionData(
@@ -265,6 +292,11 @@ export interface IWorldInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "callFrom",
     values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(functionFragment: "claimObjective", values: [PromiseOrValue<BigNumberish>]): string;
+  encodeFunctionData(
+    functionFragment: "create",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(functionFragment: "creator", values?: undefined): string;
   encodeFunctionData(
@@ -434,6 +466,10 @@ export interface IWorldInterface extends utils.Interface {
     functionFragment: "grantAccess",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "grantRole",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
+  ): string;
   encodeFunctionData(functionFragment: "increment", values?: undefined): string;
   encodeFunctionData(functionFragment: "initialize", values: [PromiseOrValue<string>]): string;
   encodeFunctionData(
@@ -445,6 +481,11 @@ export interface IWorldInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(functionFragment: "invade", values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(functionFragment: "invite", values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(functionFragment: "join", values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(functionFragment: "kick", values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(functionFragment: "leave", values?: undefined): string;
+  encodeFunctionData(functionFragment: "moveBuilding", values: [PositionDataStruct, PositionDataStruct]): string;
   encodeFunctionData(
     functionFragment: "popFromDynamicField",
     values: [
@@ -513,20 +554,17 @@ export interface IWorldInterface extends utils.Interface {
     functionFragment: "reinforce",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
   ): string;
+  encodeFunctionData(functionFragment: "rejectRequestToJoin", values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(functionFragment: "requestToJoin", values: [PromiseOrValue<BytesLike>]): string;
   encodeFunctionData(
     functionFragment: "revokeAccess",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
   ): string;
+  encodeFunctionData(functionFragment: "revokeInvite", values: [PromiseOrValue<BytesLike>]): string;
   encodeFunctionData(
     functionFragment: "sendUnits",
     values: [
-      [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      PromiseOrValue<BigNumberish>[],
       PromiseOrValue<BigNumberish>,
       PositionDataStruct,
       PositionDataStruct,
@@ -582,6 +620,7 @@ export interface IWorldInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(functionFragment: "spawn", values?: undefined): string;
+  encodeFunctionData(functionFragment: "spawnPirateAsteroid", values: [PromiseOrValue<BytesLike>]): string;
   encodeFunctionData(
     functionFragment: "spliceDynamicData",
     values: [
@@ -636,12 +675,15 @@ export interface IWorldInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "upgradeUnit", values: [PromiseOrValue<BigNumberish>]): string;
   encodeFunctionData(functionFragment: "worldVersion", values?: undefined): string;
 
+  decodeFunctionResult(functionFragment: "acceptRequestToJoin", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "batchCall", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "batchCallFrom", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "battle", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "build", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "call", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "callFrom", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "claimObjective", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "create", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "creator", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "deleteRecord", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "destroy", data: BytesLike): Result;
@@ -670,11 +712,17 @@ export interface IWorldInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "getStaticField", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getValueSchema", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "grantAccess", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "increment", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "installModule", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "installRootModule", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "invade", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "invite", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "join", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "kick", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "leave", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "moveBuilding", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "popFromDynamicField", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pushToDynamicField", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "raid", data: BytesLike): Result;
@@ -690,7 +738,10 @@ export interface IWorldInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "registerSystemHook", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "registerTable", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "reinforce", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "rejectRequestToJoin", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "requestToJoin", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "revokeAccess", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "revokeInvite", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "sendUnits", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setDynamicField", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setField(bytes32,bytes32[],uint8,bytes)", data: BytesLike): Result;
@@ -698,6 +749,7 @@ export interface IWorldInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "setRecord", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setStaticField", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "spawn", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "spawnPirateAsteroid", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "spliceDynamicData", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "spliceStaticData", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "storeVersion", data: BytesLike): Result;
@@ -814,6 +866,11 @@ export interface IWorld extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    acceptRequestToJoin(
+      accepted: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     batchCall(
       systemCalls: SystemCallDataStruct[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -849,6 +906,17 @@ export interface IWorld extends BaseContract {
       systemId: PromiseOrValue<BytesLike>,
       callData: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    claimObjective(
+      objective: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    create(
+      name: PromiseOrValue<BytesLike>,
+      allianceInviteMode: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     creator(overrides?: CallOverrides): Promise<[string]>;
@@ -1061,6 +1129,12 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    grantRole(
+      target: PromiseOrValue<BytesLike>,
+      role: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     increment(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
 
     initialize(
@@ -1082,6 +1156,29 @@ export interface IWorld extends BaseContract {
 
     invade(
       rockEntity: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    invite(
+      target: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    join(
+      alliance: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    kick(
+      target: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    leave(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
+
+    moveBuilding(
+      fromCoord: PositionDataStruct,
+      toCoord: PositionDataStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -1186,20 +1283,29 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    rejectRequestToJoin(
+      rejectee: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    requestToJoin(
+      alliance: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     revokeAccess(
       resourceId: PromiseOrValue<BytesLike>,
       grantee: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    revokeInvite(
+      target: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     sendUnits(
-      unitCounts: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      unitCounts: PromiseOrValue<BigNumberish>[],
       sendType: PromiseOrValue<BigNumberish>,
       origin: PositionDataStruct,
       destination: PositionDataStruct,
@@ -1251,6 +1357,11 @@ export interface IWorld extends BaseContract {
     ): Promise<ContractTransaction>;
 
     spawn(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
+
+    spawnPirateAsteroid(
+      prototypeEntity: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     spliceDynamicData(
       tableId: PromiseOrValue<BytesLike>,
@@ -1332,6 +1443,11 @@ export interface IWorld extends BaseContract {
     worldVersion(overrides?: CallOverrides): Promise<[string]>;
   };
 
+  acceptRequestToJoin(
+    accepted: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   batchCall(
     systemCalls: SystemCallDataStruct[],
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1367,6 +1483,17 @@ export interface IWorld extends BaseContract {
     systemId: PromiseOrValue<BytesLike>,
     callData: PromiseOrValue<BytesLike>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  claimObjective(
+    objective: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  create(
+    name: PromiseOrValue<BytesLike>,
+    allianceInviteMode: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   creator(overrides?: CallOverrides): Promise<string>;
@@ -1570,6 +1697,12 @@ export interface IWorld extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  grantRole(
+    target: PromiseOrValue<BytesLike>,
+    role: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   increment(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
 
   initialize(
@@ -1591,6 +1724,29 @@ export interface IWorld extends BaseContract {
 
   invade(
     rockEntity: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  invite(
+    target: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  join(
+    alliance: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  kick(
+    target: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  leave(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
+
+  moveBuilding(
+    fromCoord: PositionDataStruct,
+    toCoord: PositionDataStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1695,20 +1851,29 @@ export interface IWorld extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  rejectRequestToJoin(
+    rejectee: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  requestToJoin(
+    alliance: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   revokeAccess(
     resourceId: PromiseOrValue<BytesLike>,
     grantee: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  revokeInvite(
+    target: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   sendUnits(
-    unitCounts: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ],
+    unitCounts: PromiseOrValue<BigNumberish>[],
     sendType: PromiseOrValue<BigNumberish>,
     origin: PositionDataStruct,
     destination: PositionDataStruct,
@@ -1760,6 +1925,11 @@ export interface IWorld extends BaseContract {
   ): Promise<ContractTransaction>;
 
   spawn(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
+
+  spawnPirateAsteroid(
+    prototypeEntity: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   spliceDynamicData(
     tableId: PromiseOrValue<BytesLike>,
@@ -1841,6 +2011,8 @@ export interface IWorld extends BaseContract {
   worldVersion(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
+    acceptRequestToJoin(accepted: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
+
     batchCall(systemCalls: SystemCallDataStruct[], overrides?: CallOverrides): Promise<string[]>;
 
     batchCallFrom(systemCalls: SystemCallFromDataStruct[], overrides?: CallOverrides): Promise<string[]>;
@@ -1869,6 +2041,14 @@ export interface IWorld extends BaseContract {
       delegator: PromiseOrValue<string>,
       systemId: PromiseOrValue<BytesLike>,
       callData: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    claimObjective(objective: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>;
+
+    create(
+      name: PromiseOrValue<BytesLike>,
+      allianceInviteMode: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -2070,6 +2250,12 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    grantRole(
+      target: PromiseOrValue<BytesLike>,
+      role: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     increment(overrides?: CallOverrides): Promise<BigNumber>;
 
     initialize(coreModule: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
@@ -2087,6 +2273,16 @@ export interface IWorld extends BaseContract {
     ): Promise<void>;
 
     invade(rockEntity: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
+
+    invite(target: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
+
+    join(alliance: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
+
+    kick(target: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
+
+    leave(overrides?: CallOverrides): Promise<void>;
+
+    moveBuilding(fromCoord: PositionDataStruct, toCoord: PositionDataStruct, overrides?: CallOverrides): Promise<void>;
 
     popFromDynamicField(
       tableId: PromiseOrValue<BytesLike>,
@@ -2180,20 +2376,20 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    rejectRequestToJoin(rejectee: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
+
+    requestToJoin(alliance: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
+
     revokeAccess(
       resourceId: PromiseOrValue<BytesLike>,
       grantee: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
+    revokeInvite(target: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
+
     sendUnits(
-      unitCounts: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      unitCounts: PromiseOrValue<BigNumberish>[],
       sendType: PromiseOrValue<BigNumberish>,
       origin: PositionDataStruct,
       destination: PositionDataStruct,
@@ -2245,6 +2441,8 @@ export interface IWorld extends BaseContract {
     ): Promise<void>;
 
     spawn(overrides?: CallOverrides): Promise<string>;
+
+    spawnPirateAsteroid(prototypeEntity: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
 
     spliceDynamicData(
       tableId: PromiseOrValue<BytesLike>,
@@ -2380,6 +2578,11 @@ export interface IWorld extends BaseContract {
   };
 
   estimateGas: {
+    acceptRequestToJoin(
+      accepted: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     batchCall(
       systemCalls: SystemCallDataStruct[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -2415,6 +2618,17 @@ export interface IWorld extends BaseContract {
       systemId: PromiseOrValue<BytesLike>,
       callData: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    claimObjective(
+      objective: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    create(
+      name: PromiseOrValue<BytesLike>,
+      allianceInviteMode: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     creator(overrides?: CallOverrides): Promise<BigNumber>;
@@ -2603,6 +2817,12 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    grantRole(
+      target: PromiseOrValue<BytesLike>,
+      role: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     increment(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>;
 
     initialize(
@@ -2624,6 +2844,29 @@ export interface IWorld extends BaseContract {
 
     invade(
       rockEntity: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    invite(
+      target: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    join(
+      alliance: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    kick(
+      target: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    leave(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>;
+
+    moveBuilding(
+      fromCoord: PositionDataStruct,
+      toCoord: PositionDataStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -2728,20 +2971,29 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    rejectRequestToJoin(
+      rejectee: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    requestToJoin(
+      alliance: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     revokeAccess(
       resourceId: PromiseOrValue<BytesLike>,
       grantee: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    revokeInvite(
+      target: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     sendUnits(
-      unitCounts: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      unitCounts: PromiseOrValue<BigNumberish>[],
       sendType: PromiseOrValue<BigNumberish>,
       origin: PositionDataStruct,
       destination: PositionDataStruct,
@@ -2793,6 +3045,11 @@ export interface IWorld extends BaseContract {
     ): Promise<BigNumber>;
 
     spawn(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>;
+
+    spawnPirateAsteroid(
+      prototypeEntity: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
 
     spliceDynamicData(
       tableId: PromiseOrValue<BytesLike>,
@@ -2875,6 +3132,11 @@ export interface IWorld extends BaseContract {
   };
 
   populateTransaction: {
+    acceptRequestToJoin(
+      accepted: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     batchCall(
       systemCalls: SystemCallDataStruct[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -2910,6 +3172,17 @@ export interface IWorld extends BaseContract {
       systemId: PromiseOrValue<BytesLike>,
       callData: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    claimObjective(
+      objective: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    create(
+      name: PromiseOrValue<BytesLike>,
+      allianceInviteMode: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     creator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -3101,6 +3374,12 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    grantRole(
+      target: PromiseOrValue<BytesLike>,
+      role: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     increment(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>;
 
     initialize(
@@ -3122,6 +3401,29 @@ export interface IWorld extends BaseContract {
 
     invade(
       rockEntity: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    invite(
+      target: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    join(
+      alliance: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    kick(
+      target: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    leave(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>;
+
+    moveBuilding(
+      fromCoord: PositionDataStruct,
+      toCoord: PositionDataStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -3226,20 +3528,29 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    rejectRequestToJoin(
+      rejectee: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    requestToJoin(
+      alliance: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     revokeAccess(
       resourceId: PromiseOrValue<BytesLike>,
       grantee: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    revokeInvite(
+      target: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     sendUnits(
-      unitCounts: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      unitCounts: PromiseOrValue<BigNumberish>[],
       sendType: PromiseOrValue<BigNumberish>,
       origin: PositionDataStruct,
       destination: PositionDataStruct,
@@ -3291,6 +3602,11 @@ export interface IWorld extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     spawn(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>;
+
+    spawnPirateAsteroid(
+      prototypeEntity: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
 
     spliceDynamicData(
       tableId: PromiseOrValue<BytesLike>,
