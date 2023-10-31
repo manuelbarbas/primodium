@@ -92,7 +92,7 @@ export const EntityType = {
   Hangar: toHex32("Hangar") as Entity,
   DroneFactory: toHex32("DroneFactory") as Entity,
   StarmapperStation: toHex32("Starmapper") as Entity,
-  SAMLauncher: toHex32("SAMLauncher") as Entity,
+  SAMLauncher: toHex32("SAM") as Entity,
   ShieldGenerator: toHex32("ShieldGenerator") as Entity,
   Vault: toHex32("Vault") as Entity,
 
@@ -127,8 +127,8 @@ export const EntityType = {
   AegisDrone: toHex32("AegisDrone") as Entity,
   MiningVessel: toHex32("MiningVessel") as Entity,
 
-  MinutemanMarine: toHex32("unit.MinutemanMarine") as Entity,
-  TridentMarine: toHex32("unit.TridentMarine") as Entity,
+  MinutemanMarine: toHex32("MinutemanMarine") as Entity,
+  TridentMarine: toHex32("TridentMarine") as Entity,
 
   Expansion: toHex32("Expansion") as Entity,
   ExpansionResearch1: encodeEntityLevel("Expansion", 1) as Entity,
