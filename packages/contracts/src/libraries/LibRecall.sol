@@ -45,8 +45,8 @@ library LibRecall {
    */
   function recallArrival(bytes32 playerEntity, bytes32 rockEntity, bytes32 arrivalId) internal {
     Arrival memory arrival = ArrivalsMap.get(playerEntity, rockEntity, arrivalId);
-    require(arrival.from != playerEntity, "[Recall] Arrival not owned by sender");
-    require(arrival.arrivalTime > block.timestamp, "[Recall] Arrival not arrived yet");
+    require(arrival.from == playerEntity, "[Recall] Arrival not owned by sender");
+    require(arrival.arrivalTime < block.timestamp, "[Recall] Arrival not arrived yet");
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (arrival.unitCounts[i] == 0) continue;

@@ -110,9 +110,19 @@ export const Fleet: React.FC<{
             destination={destination}
             sendType={sendType}
             outgoing={outgoing}
+            recall={false}
           />
         ) : (
-          <LocateButton destination={destination} coord={destinationPosition} />
+          <div className="flex items-center">
+            <LocateButton destination={destination} coord={destinationPosition} />
+            <OrbitActionButton
+              arrivalEntity={arrivalEntity}
+              destination={destination}
+              sendType={sendType}
+              outgoing={outgoing}
+              recall={true}
+            />
+          </div>
         )}
       </div>
     </div>
