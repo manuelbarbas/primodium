@@ -14,7 +14,7 @@ library LibRecall {
    * @param rockEntity The identifier of the target rock.
    **/
   function recallStationedUnits(bytes32 playerEntity, bytes32 rockEntity) internal {
-    require(OwnedBy.get(rockEntity) == playerEntity, "[Recall] Rock not owned by sender");
+    require(OwnedBy.get(rockEntity) == playerEntity, "[Recall] Rock not owned by player");
     bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
     require(homeAsteroid != rockEntity, "[Recall] Can not recall units from home asteroid");
     bool foundUnitToRecall = false;
