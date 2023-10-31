@@ -50,11 +50,11 @@ export function createTransactionQueueComponent<M extends Metadata>(options?: Op
   }
 
   async function run() {
-    if (isRunning) return; // If it's already running, don't start another process
+    if (isRunning) return;
     isRunning = true;
 
     while (queue.length) {
-      const tx = queue[0]; // Get the first function from the queue
+      const tx = queue[0];
 
       if (!tx) continue;
 
@@ -62,11 +62,11 @@ export function createTransactionQueueComponent<M extends Metadata>(options?: Op
 
       if (fn) {
         try {
-          await fn(); // Run the function and await its completion
+          await fn();
         } catch (error) {
           console.error("Error executing function:", error);
         } finally {
-          queue.shift(); // Remove the function from the queue
+          queue.shift();
           component.remove(id);
         }
       }
@@ -77,6 +77,10 @@ export function createTransactionQueueComponent<M extends Metadata>(options?: Op
 
   function getIndex(id: Entity) {
     return queue.findIndex((item) => item.id === id);
+  }
+
+  function getSize() {
+    return queue.length;
   }
 
   function getMetadata<T extends keyof MetadataTypes>(id: Entity): MetadataTypes[T] | undefined {
@@ -102,12 +106,31 @@ export function createTransactionQueueComponent<M extends Metadata>(options?: Op
     return position;
   }
 
+  function useSize() {
+    const [size, setSize] = useState<number>(getSize());
+
+    useEffect(() => {
+      const sub = TransactionQueue.update$.subscribe(() => {
+        const size = getSize();
+        setSize(size);
+      });
+
+      return () => {
+        sub.unsubscribe();
+      };
+    }, []);
+
+    return size;
+  }
+
   return {
     ...component,
     enqueue,
     run,
     getIndex,
     useIndex,
+    useSize,
+    getSize,
     getMetadata,
   };
 }
