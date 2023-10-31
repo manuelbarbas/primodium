@@ -1,19 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
-
-import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
-import { UnitCount, ArrivalCount, PirateAsteroid, DefeatedPirate, RaidedResource, RockType, OwnedBy, BattleResultData, RaidResult, RaidResultData, P_IsUtility, P_UnitPrototypes, Home } from "codegen/index.sol";
-import { ERock, ESendType, EResource, Arrival } from "src/Types.sol";
-import { LibBattle } from "libraries/LibBattle.sol";
-import { LibResource } from "libraries/LibResource.sol";
-import { LibStorage } from "libraries/LibStorage.sol";
+import { UnitCount, ArrivalCount, OwnedBy, P_UnitPrototypes, Home } from "codegen/index.sol";
+import { ESendType } from "src/Types.sol";
+import { Arrival } from "src/Types.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
-import { LibMath } from "libraries/LibMath.sol";
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
-import { IWorld } from "codegen/world/IWorld.sol";
-import { S_BattleSystem } from "systems/subsystems/S_BattleSystem.sol";
 
 library LibRecall {
   /**
@@ -22,7 +14,7 @@ library LibRecall {
    * @param rockEntity The identifier of the target rock.
    **/
   function recallStationedUnits(bytes32 playerEntity, bytes32 rockEntity) internal {
-    require(OwnedBy.get(rockEntity) == playerEntity, "[Recall] Rock not owned by sender");
+    require(OwnedBy.get(rockEntity) == playerEntity, "[Recall] Rock not owned by player");
     bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
     require(homeAsteroid != rockEntity, "[Recall] Can not recall units from home asteroid");
     bool foundUnitToRecall = false;
@@ -43,7 +35,11 @@ library LibRecall {
    * @param rockEntity The identifier of the target rock.
    * @param arrivalId The identifier of the arrival to recall.
    */
-  function recallArrival(bytes32 playerEntity, bytes32 rockEntity, bytes32 arrivalId) internal {
+  function recallArrival(
+    bytes32 playerEntity,
+    bytes32 rockEntity,
+    bytes32 arrivalId
+  ) internal {
     Arrival memory arrival = ArrivalsMap.get(playerEntity, rockEntity, arrivalId);
     require(arrival.from == playerEntity, "[Recall] Arrival not owned by sender");
     require(arrival.arrivalTime < block.timestamp, "[Recall] Arrival not arrived yet");
@@ -83,7 +79,11 @@ library LibRecall {
    * @param rockEntity The identifier of the target rock.
    * @param sendType the type of send to recall
    */
-  function recallAllArrivalsOfSendType(bytes32 playerEntity, bytes32 rockEntity, ESendType sendType) internal {
+  function recallAllArrivalsOfSendType(
+    bytes32 playerEntity,
+    bytes32 rockEntity,
+    ESendType sendType
+  ) internal {
     bytes32[] memory arrivalKeys = ArrivalsMap.keys(playerEntity, rockEntity);
     bool foundArrivalToRecall = false;
     for (uint256 i = 0; i < arrivalKeys.length; i++) {

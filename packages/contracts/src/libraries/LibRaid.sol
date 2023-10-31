@@ -4,14 +4,13 @@ pragma solidity >=0.8.21;
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
 
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
-import { ArrivalCount, PirateAsteroid, DefeatedPirate, RaidedResource, RockType, OwnedBy, BattleResultData, RaidResult, RaidResultData, P_IsUtility, P_UnitPrototypes, Home } from "codegen/index.sol";
-import { ERock, ESendType, EResource, Arrival } from "src/Types.sol";
+import { PirateAsteroid, DefeatedPirate, RaidedResource, RockType, OwnedBy, BattleResultData, RaidResult, RaidResultData, P_IsUtility, P_UnitPrototypes, Home } from "codegen/index.sol";
+import { ERock, ESendType, EResource } from "src/Types.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibMath } from "libraries/LibMath.sol";
-import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { S_BattleSystem } from "systems/subsystems/S_BattleSystem.sol";
 
@@ -21,7 +20,11 @@ library LibRaid {
    * @param playerEntity The identifier of the player initiating the raid.
    * @param rockEntity The identifier of the target asteroid rock.
    */
-  function raid(IWorld world, bytes32 playerEntity, bytes32 rockEntity) internal {
+  function raid(
+    IWorld world,
+    bytes32 playerEntity,
+    bytes32 rockEntity
+  ) internal {
     require(RockType.get(rockEntity) == uint8(ERock.Asteroid), "[LibRaid] Can only raid asteroids");
 
     bytes32 defenderEntity = OwnedBy.get(rockEntity);

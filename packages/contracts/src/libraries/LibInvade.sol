@@ -3,13 +3,12 @@ pragma solidity >=0.8.21;
 
 import { IWorld } from "codegen/world/IWorld.sol";
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
-import { Home, ArrivalCount, RockType, OwnedBy, BattleResultData, P_UnitPrototypes } from "codegen/index.sol";
-import { ERock, ESendType, Arrival } from "src/Types.sol";
+import { Home, RockType, OwnedBy, BattleResultData, P_UnitPrototypes } from "codegen/index.sol";
+import { ERock, ESendType } from "src/Types.sol";
 import { LibReinforce } from "libraries/LibReinforce.sol";
 import { LibMotherlode } from "libraries/LibMotherlode.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
-import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 import { S_BattleSystem } from "systems/subsystems/S_BattleSystem.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 
@@ -19,7 +18,11 @@ library LibInvade {
    * @param invader The identifier of the invader.
    * @param rockEntity The identifier of the target rock.
    */
-  function invade(IWorld world, bytes32 invader, bytes32 rockEntity) internal {
+  function invade(
+    IWorld world,
+    bytes32 invader,
+    bytes32 rockEntity
+  ) internal {
     bytes32 defender = OwnedBy.get(rockEntity);
     if (defender == 0) return invadeNeutral(world, invader, rockEntity);
 
@@ -59,7 +62,11 @@ library LibInvade {
    * @param invader The identifier of the invader.
    * @param rockEntity The identifier of the target rock.
    */
-  function invadeNeutral(IWorld world, bytes32 invader, bytes32 rockEntity) internal {
+  function invadeNeutral(
+    IWorld world,
+    bytes32 invader,
+    bytes32 rockEntity
+  ) internal {
     bytes32[] memory unitTypes = P_UnitPrototypes.get();
 
     bytes memory rawAttackCounts = SystemCall.callWithHooksOrRevert(
