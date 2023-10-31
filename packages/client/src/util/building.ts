@@ -1,5 +1,6 @@
 import { primodium } from "@game/api";
 // import { EntitytoSpriteKey } from "@game/constants";
+import { EntitytoSpriteKey } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
@@ -8,11 +9,10 @@ import { components as comps } from "src/network/components";
 import { Account } from "src/network/components/clientComponents";
 import { Hex } from "viem";
 import { clampedIndex, getBlockTypeName, toRomanNumeral } from "./common";
-import { ResourceEntityLookup, ResourceType } from "./constants";
+import { ResourceEntityLookup, ResourceStorages, ResourceType, UtilityStorages } from "./constants";
 import { outOfBounds } from "./outOfBounds";
 import { getRecipe } from "./resource";
 import { getBuildingAtCoord, getResourceKey } from "./tile";
-import { EntitytoSpriteKey } from "@game/constants";
 
 type Dimensions = { width: number; height: number };
 export const blueprintCache = new Map<Entity, Dimensions>();
@@ -168,6 +168,40 @@ export const getBuildingStorages = (buildingType: Entity, level: bigint) => {
   }[];
 };
 
+export function getBuildingLevelStorageUpgrades(buildingType: Entity, level: bigint) {
+  const storageUpgrade = comps.P_ListMaxResourceUpgrades.getWithKeys({
+    prototype: buildingType as Hex,
+    level: level,
+  })?.value as EResource[] | undefined;
+  if (!storageUpgrade) return [];
+  return storageUpgrade.map((resource) => ({
+    resource: ResourceEntityLookup[resource],
+    amount:
+      comps.P_ByLevelMaxResourceUpgrades.getWithKeys({ prototype: buildingType as Hex, level: 1n, resource })?.value ??
+      0n,
+  }));
+}
+
+export function transformProductionData(
+  production: { resources: number[]; amounts: bigint[] } | undefined
+): { resource: Entity; amount: bigint; type: ResourceType }[] {
+  if (!production) return [];
+
+  return production.resources.map((curr, i) => {
+    const type = ResourceStorages.has(ResourceEntityLookup[curr as EResource])
+      ? ResourceType.ResourceRate
+      : UtilityStorages.has(ResourceEntityLookup[curr as EResource])
+      ? ResourceType.Utility
+      : ResourceType.Multiplier;
+
+    return {
+      resource: ResourceEntityLookup[curr as EResource],
+      amount: production.amounts[i],
+      type,
+    };
+  });
+}
+
 export const getBuildingInfo = (building: Entity) => {
   const buildingType = (comps.BuildingType.get(building)?.value ?? singletonEntity) as Hex;
   const buildingTypeEntity = buildingType as Entity;
@@ -180,12 +214,16 @@ export const getBuildingInfo = (building: Entity) => {
 
   const buildingLevelKeys = { prototype: buildingType, level: level };
   const buildingNextLevelKeys = { prototype: buildingType, level: nextLevel };
-  const production = comps.P_Production.getWithKeys(buildingLevelKeys);
-  const nextLevelProduction = comps.P_Production.getWithKeys(buildingNextLevelKeys);
+  const production = transformProductionData(comps.P_Production.getWithKeys(buildingLevelKeys));
+  const nextLevelProduction = transformProductionData(comps.P_Production.getWithKeys(buildingNextLevelKeys));
 
+  const unitProduction = comps.P_UnitProdTypes.getWithKeys(buildingLevelKeys)?.value;
+  const unitNextLevelProduction = comps.P_UnitProdTypes.getWithKeys(buildingNextLevelKeys)?.value;
   const storages = getBuildingStorages(buildingTypeEntity, level);
   const nextLevelStorages = getBuildingStorages(buildingTypeEntity, level);
 
+  const vault = transformProductionData(comps.P_Vault.getWithKeys(buildingLevelKeys));
+  const vaultNext = transformProductionData(comps.P_Vault.getWithKeys(buildingNextLevelKeys));
   const unitProductionMultiplier = comps.P_UnitProdMultiplier.getWithKeys(buildingLevelKeys)?.value;
   const nextLevelUnitProductionMultiplier = comps.P_UnitProdMultiplier.getWithKeys(buildingNextLevelKeys)?.value;
 
@@ -201,10 +239,14 @@ export const getBuildingInfo = (building: Entity) => {
     maxLevel,
     nextLevel,
     production,
+    unitProduction,
     storages,
+    vault,
     position,
     unitProductionMultiplier,
     upgrade: {
+      unitProduction: unitNextLevelProduction,
+      vault: vaultNext,
       production: nextLevelProduction,
       storages: nextLevelStorages,
       recipe: upgradeRecipe,

@@ -75,7 +75,8 @@ library LibUnit {
     while (stillClaiming) {
       UnitProductionQueueData memory item = UnitProductionQueue.peek(building);
       uint256 trainingTime = getUnitBuildTime(playerEntity, building, item.unitId);
-      uint256 trainedUnits = LibMath.min(item.quantity, ((block.timestamp - startTime) / (trainingTime)));
+      uint256 trainedUnits = item.quantity;
+      if (trainingTime > 0) trainedUnits = LibMath.min(item.quantity, ((block.timestamp - startTime) / (trainingTime)));
 
       if (trainedUnits == 0) {
         ClaimOffset.set(building, (block.timestamp - startTime) % trainingTime);

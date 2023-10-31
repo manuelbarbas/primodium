@@ -21,6 +21,7 @@ export function setupHangar(mud: SetupResult) {
     QueueUnits,
     QueueItemUnits,
     Hangar,
+    ClaimOffset,
   } = components;
 
   const playerEntity = mud.network.playerEntity;
@@ -39,7 +40,7 @@ export function setupHangar(mud: SetupResult) {
     buildings.forEach((building) => {
       const owner = OwnedBy.get(building)?.value;
 
-      let startTime = LastClaimedAt.get(building)?.value;
+      let startTime = LastClaimedAt.get(building, { value: 0n }).value - ClaimOffset.get(building, { value: 0n }).value;
 
       const queueUnits = QueueUnits.getWithKeys({ entity: building as Hex });
       if (!queueUnits || !owner || !startTime) return Hangar.remove(building);
@@ -48,7 +49,8 @@ export function setupHangar(mud: SetupResult) {
         if (!update) continue;
 
         const trainingTime = getUnitTrainingTime(owner as Entity, building, update.unitId as Entity);
-        let trainedUnits = (getNow() - startTime) / trainingTime;
+        let trainedUnits = update.quantity;
+        if (trainingTime > 0) trainedUnits = (getNow() - startTime) / trainingTime;
 
         if (trainedUnits == 0n) return;
 

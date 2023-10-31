@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { DEFENSE_MULTIPLIER_SCALE } from "src/constants.sol";
-import { ESendType, Arrival } from "src/Types.sol";
-import { TotalDefense, TotalDefenseMultiplier, DestroyedUnit, UnitCount, UnitLevel, BattleResult, BattleResultData, P_UnitPrototypes, P_Unit, ArrivalCount, UnitCount, Home } from "codegen/index.sol";
+import { MULTIPLIER_SCALE } from "src/constants.sol";
+import { ESendType, Arrival, EResource } from "src/Types.sol";
+import { DestroyedUnit, ResourceCount, UnitCount, UnitLevel, BattleResult, BattleResultData, P_UnitPrototypes, P_Unit, ArrivalCount, UnitCount, Home } from "codegen/index.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 
@@ -85,8 +85,10 @@ library LibBattle {
     }
 
     if (Home.get(defenderEntity).asteroid == rockEntity) {
-      defensePoints += TotalDefense.get(defenderEntity);
-      defensePoints += (defensePoints * TotalDefenseMultiplier.get(defenderEntity)) / DEFENSE_MULTIPLIER_SCALE;
+      defensePoints += ResourceCount.get(defenderEntity, uint8(EResource.U_Defense));
+      defensePoints +=
+        (defensePoints * ResourceCount.get(defenderEntity, uint8(EResource.M_DefenseMultiplier))) /
+        MULTIPLIER_SCALE;
     }
   }
 

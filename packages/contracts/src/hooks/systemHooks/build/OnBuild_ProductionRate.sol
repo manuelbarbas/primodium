@@ -49,17 +49,16 @@ contract OnBuild_ProductionRate is SystemHook {
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
     // Convert the player's address to an entity
     bytes32 playerEntity = addressToEntity(msgSender);
-    
-      (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
 
-      // Generate the unique building entity key
-      bytes32 buildingEntity = LibEncode.getTimedHash(BuildingKey, coord);
+    (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
 
-      // Reduce the production rate of resources the building requires
-      LibReduceProductionRate.reduceProductionRate(playerEntity, buildingEntity, 1);
+    // Generate the unique building entity key
+    bytes32 buildingEntity = LibEncode.getTimedHash(BuildingKey, coord);
 
-      // Upgrade resource production for the player's building entity
-      LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 1);
-    
+    // Reduce the production rate of resources the building requires
+    LibReduceProductionRate.reduceProductionRate(playerEntity, buildingEntity, 1);
+
+    // Upgrade resource production for the player's building entity
+    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 1);
   }
 }

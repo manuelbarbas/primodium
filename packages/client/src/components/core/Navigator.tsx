@@ -1,14 +1,7 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  FC,
-  useCallback,
-  useLayoutEffect,
-} from "react";
+import { FC, ReactNode, createContext, useCallback, useContext, useLayoutEffect, useState } from "react";
 import { Button } from "./Button";
 import { Card, SecondaryCard } from "./Card";
+import { Tooltip } from "./Tooltip";
 
 interface NavigationContextValue {
   navigateTo: (screenTitle: string, replace?: boolean) => void;
@@ -16,9 +9,7 @@ interface NavigationContextValue {
   history: string[];
 }
 
-const NavigationContext = createContext<NavigationContextValue | undefined>(
-  undefined
-);
+const NavigationContext = createContext<NavigationContextValue | undefined>(undefined);
 
 export const Navigator: FC<{
   initialScreen?: string;
@@ -82,11 +73,7 @@ const Screen: FC<{
 }> = ({ title, className, children }) => {
   const { history } = useNavigation();
   if (history[history.length - 1] !== title) return null;
-  return (
-    <div className={`flex flex-col items-center w-full ${className}`}>
-      {children}
-    </div>
-  );
+  return <div className={`flex flex-col items-center w-full ${className}`}>{children}</div>;
 };
 
 const NavButton: FC<{
@@ -94,23 +81,25 @@ const NavButton: FC<{
   children?: ReactNode;
   className?: string;
   disabled?: boolean;
+  tooltip?: string;
+  tooltipDirection?: "top" | "bottom" | "right" | "left";
   onClick?: () => void;
-}> = ({ to, className, children, disabled, onClick }) => {
+}> = ({ to, className, children, disabled, onClick, tooltip, tooltipDirection = "right" }) => {
   const { navigateTo, history } = useNavigation();
 
-  if (to === history[history.length - 1]) return <></>;
-
   return (
-    <Button
-      className={className}
-      onClick={() => {
-        if (onClick) onClick();
-        navigateTo(to, true);
-      }}
-      disabled={disabled}
-    >
-      {children}
-    </Button>
+    <Tooltip text={tooltip} direction={tooltipDirection}>
+      <Button
+        className={className}
+        onClick={() => {
+          if (onClick) onClick();
+          navigateTo(to, true);
+        }}
+        disabled={disabled || to === history[history.length - 1]}
+      >
+        {children}
+      </Button>
+    </Tooltip>
   );
 };
 

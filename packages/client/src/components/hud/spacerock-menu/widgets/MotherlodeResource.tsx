@@ -1,9 +1,9 @@
-import { SecondaryCard } from "src/components/core/Card";
-import { Progress } from "src/components/core/Progress";
-import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
-import { IconLabel } from "src/components/core/IconLabel";
-import { formatNumber, getBlockTypeName } from "src/util/common";
 import { Entity } from "@latticexyz/recs";
+import { SecondaryCard } from "src/components/core/Card";
+import { IconLabel } from "src/components/core/IconLabel";
+import { Progress } from "src/components/core/Progress";
+import { formatNumber, getBlockTypeName } from "src/util/common";
+import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
 
 export const MotherlodeResource: React.FC<{
   resource: Entity;
@@ -18,7 +18,8 @@ export const MotherlodeResource: React.FC<{
       <div className="flex justify-between text-xs opacity-75 px-1">
         <IconLabel imageUri={ResourceImage.get(resource) ?? ""} text={getBlockTypeName(resource)} />
         <p>
-          {formatNumber(remaining / RESOURCE_SCALE, 0)}/{formatNumber(max / RESOURCE_SCALE, 0)}
+          {formatNumber(remaining / RESOURCE_SCALE, { fractionDigits: 0 })}/
+          {formatNumber(max / RESOURCE_SCALE, { fractionDigits: 0 })}
         </p>
       </div>
     </SecondaryCard>
