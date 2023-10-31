@@ -88,6 +88,33 @@ export const renderBuilding = (scene: Scene, { network: { playerEntity } }: Setu
     ]);
   };
 
+  const throwDust = ({ entity }: { entity: Entity }) => {
+    const buildingType = components.BuildingType.get(entity)?.value as Entity | undefined;
+
+    if (!buildingType) return;
+
+    const origin = components.Position.get(entity);
+    if (!origin) return;
+    const tilePosition = getBuildingTopLeft(origin, buildingType);
+
+    // don't render beyond coord map limitation
+    if (Math.abs(tilePosition.x) > MAX_SIZE || Math.abs(tilePosition.y) > MAX_SIZE) return;
+
+    const pixelCoord = tileCoordToPixelCoord(tilePosition as Coord, tileWidth, tileHeight);
+
+    const buildingDimensions = getBuildingDimensions(buildingType);
+
+    //throw up dust on build
+    flare(
+      scene,
+      {
+        x: pixelCoord.x + (tileWidth * buildingDimensions.width) / 2,
+        y: -pixelCoord.y + (tileHeight * buildingDimensions.height) / 2,
+      },
+      buildingDimensions.width
+    );
+  };
+
   const positionQuery = [
     HasValue(components.Position, {
       parent: components.Home.get(playerEntity)?.asteroid,
@@ -96,6 +123,8 @@ export const renderBuilding = (scene: Scene, { network: { playerEntity } }: Setu
   ];
 
   defineEnterSystem(gameWorld, positionQuery, render);
+  //dust particle animation on new building
+  defineEnterSystem(gameWorld, positionQuery, throwDust, { runOnInit: false });
 
   defineExitSystem(gameWorld, positionQuery, ({ entity }) => {
     const renderId = `${entity}_entitySprite`;
@@ -118,3 +147,20 @@ function getAssetKeyPair(entityId: Entity, buildingType: Entity) {
     animation: animationKey,
   };
 }
+
+//temporary dust particle animation to test
+const flare = (scene: Scene, coord: Coord, size = 1) => {
+  scene.phaserScene.add
+    .particles(coord.x, coord.y, "flare", {
+      speed: 100,
+      lifespan: 300 * size,
+      quantity: 10,
+      scale: { start: 0.3, end: 0 },
+      tintFill: true,
+      // emitting: true,
+      color: [0x828282, 0xbfbfbf, 0xe8e8e8],
+      // emitZone: { type: 'edge', source: , quantity: 42 },
+      duration: 100,
+    })
+    .start();
+};
