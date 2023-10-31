@@ -28,14 +28,15 @@ export const renderArrivalsInOrbit = (scene: Scene, mud: SetupResult) => {
 
   const render = ({ entity }: ComponentUpdate) => {
     scene.objectPool.removeGroup(entity + objIndexSuffix);
-    const blockInfo = components.BlockNumber.get();
-    const arrival = components.Arrival.get(entity);
+    const arrival = components.Arrival.getEntity(entity);
 
-    if (!arrival || !blockInfo) return;
+    if (!arrival) return;
 
     //don't render if arrival is in transit
+    console.log("arrival:", arrival.arrivalTime, "now:", getNow());
     if (arrival.arrivalTime >= getNow()) return;
 
+    console.log("here");
     //render personal pirate only
     if (
       components.PirateAsteroid.has(arrival.destination) &&
