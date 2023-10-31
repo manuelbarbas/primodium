@@ -3,7 +3,7 @@ import { Entity, Has, HasValue, defineEnterSystem, defineExitSystem, namespaceWo
 import { Coord } from "@latticexyz/utils";
 
 import { Scene } from "engine/types";
-import { singletonIndex, world } from "src/network/world";
+import { world } from "src/network/world";
 import { safeIndex } from "src/util/array";
 
 import { Animation, Texture, Outline } from "../../common/object-components/sprite";
@@ -23,8 +23,6 @@ export const renderBuilding = (scene: Scene, { network: { playerEntity } }: Setu
     const renderId = `${entity}_entitySprite`;
 
     const buildingType = components.BuildingType.get(entity)?.value as Entity | undefined;
-
-    const isOptimisticUpdate = entity === singletonIndex;
 
     if (!buildingType) return;
 
@@ -68,7 +66,6 @@ export const renderBuilding = (scene: Scene, { network: { playerEntity } }: Setu
     buildingSprite.setComponents([
       SetValue({
         depth: DepthLayers.Building - tilePosition.y + buildingDimensions.height,
-        alpha: isOptimisticUpdate ? 0.5 : 1,
       }),
       ...sharedComponents,
     ]);

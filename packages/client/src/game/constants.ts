@@ -180,6 +180,13 @@ export enum SpriteKeys {
   MotherlodeEnemySmall = "sprites/spacerocks/borders/Border_Enemy_Motherlode1.png",
   MotherlodeEnemyMedium = "sprites/spacerocks/borders/Border_Enemy_Motherlode2.png",
   MotherlodeEnemyLarge = "sprites/spacerocks/borders/Border_Enemy_Motherlode3.png",
+
+  //CONSTRUCTION
+  Construction1x1 = "sprites/construction/1x1.png",
+  Construction2x2 = "sprites/construction/2x2.png",
+  Construction3x3 = "sprites/construction/3x3.png",
+  Construction4x4 = "sprites/construction/4x4.png",
+  Construction2x3 = "sprites/construction/2x3.png",
 }
 
 export enum AnimationKeys {

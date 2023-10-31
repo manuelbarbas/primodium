@@ -9,6 +9,7 @@ import { SetupNetworkResult } from "src/network/types";
 import { execute } from "src/network/actions";
 import { parseReceipt } from "../../analytics/parseReceipt";
 import { BuildingEntityLookup, TransactionQueueType } from "src/util/constants";
+import { getBuildingTopLeft } from "src/util/building";
 
 export const buildBuilding = async (network: SetupNetworkResult, building: EBuilding, coord: Coord) => {
   const activeAsteroid = components.Home.get(network.playerEntity)?.asteroid;
@@ -17,13 +18,13 @@ export const buildBuilding = async (network: SetupNetworkResult, building: EBuil
   const position = { ...coord, parent: activeAsteroid as Hex };
 
   await execute(
-    network.worldContract.write.build([building, position]),
+    network.worldContract.write.build.bind(null, [building, position]),
     network,
     {
       id: uuid() as Entity,
       type: TransactionQueueType.Build,
       metadata: {
-        coord,
+        coord: getBuildingTopLeft(coord, BuildingEntityLookup[building]),
         buildingType: BuildingEntityLookup[building],
       },
     },

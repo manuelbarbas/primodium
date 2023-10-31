@@ -30,7 +30,7 @@ export async function _execute(txPromise: Promise<Hex>, network: SetupNetworkRes
 // Alerts the user if the transaction failed
 // Providers renamed to client: https://viem.sh/docs/ethers-migration.html
 export async function execute<T extends keyof MetadataTypes>(
-  txPromise: Promise<Hex>,
+  queuedTx: () => Promise<Hex>,
   network: SetupNetworkResult,
   queueConfig?: {
     id: Entity;
@@ -42,6 +42,7 @@ export async function execute<T extends keyof MetadataTypes>(
   if (queueConfig)
     components.TransactionQueue.enqueue(
       async () => {
+        const txPromise = queuedTx();
         const receipt = await _execute(txPromise, network);
         onComplete?.(receipt);
       },
@@ -50,6 +51,7 @@ export async function execute<T extends keyof MetadataTypes>(
       queueConfig.metadata
     );
   else {
+    const txPromise = queuedTx();
     const receipt = await _execute(txPromise, network);
     onComplete?.(receipt);
   }
