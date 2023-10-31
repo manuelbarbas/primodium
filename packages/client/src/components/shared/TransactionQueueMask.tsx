@@ -4,9 +4,9 @@ import { Loader } from "../core/Loader";
 
 export const TransactionQueueMask: React.FC<{
   children: React.ReactNode;
-  queueItemId: string;
+  queueItemId: Entity;
 }> = ({ children, queueItemId }) => {
-  const queuePosition = components.TransactionQueue.useIndex(queueItemId as Entity);
+  const queuePosition = components.TransactionQueue.useIndex(queueItemId);
 
   if (queuePosition === -1) return <>{children}</>;
 
