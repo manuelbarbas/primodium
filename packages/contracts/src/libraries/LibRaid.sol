@@ -21,11 +21,7 @@ library LibRaid {
    * @param playerEntity The identifier of the player initiating the raid.
    * @param rockEntity The identifier of the target asteroid rock.
    */
-  function raid(
-    IWorld world,
-    bytes32 playerEntity,
-    bytes32 rockEntity
-  ) internal {
+  function raid(IWorld world, bytes32 playerEntity, bytes32 rockEntity) internal {
     require(RockType.get(rockEntity) == uint8(ERock.Asteroid), "[LibRaid] Can only raid asteroids");
 
     bytes32 defenderEntity = OwnedBy.get(rockEntity);
@@ -82,44 +78,5 @@ library LibRaid {
     }
     RaidResult.set(keccak256(abi.encode(br)), raidResult);
     return raidResult;
-  }
-
-  /**
-   * @dev Recalls target raid sent by a player to a specific rock.
-   * @param playerEntity The identifier of the player.
-   * @param rockEntity The identifier of the target rock.
-   * @param arrivalId The identifier of the arrival to recall.
-   */
-  function recallRaid(
-    bytes32 playerEntity,
-    bytes32 rockEntity,
-    bytes32 arrivalId
-  ) internal {
-    Arrival memory arrival = ArrivalsMap.get(playerEntity, rockEntity, arrivalId);
-    if (arrival.sendType != ESendType.Raid || arrival.from != playerEntity || arrival.arrivalTime > block.timestamp) {
-      return;
-    }
-
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      if (arrival.unitCounts[i] == 0) continue;
-      LibUnit.increaseUnitCount(playerEntity, Home.getAsteroid(playerEntity), unitPrototypes[i], arrival.unitCounts[i]);
-    }
-    ArrivalCount.set(arrival.from, ArrivalCount.get(arrival.from) - 1);
-    ArrivalsMap.remove(playerEntity, rockEntity, arrivalId);
-  }
-
-  /**
-   * @dev Recalls all raids sent by a player to a specific rock.
-   * @param playerEntity The identifier of the player.
-   * @param rockEntity The identifier of the target rock.
-   */
-  function recallAllRaids(bytes32 playerEntity, bytes32 rockEntity) internal {
-    bytes32 owner = OwnedBy.get(rockEntity);
-    bytes32[] memory arrivalKeys = ArrivalsMap.keys(playerEntity, rockEntity);
-
-    for (uint256 i = 0; i < arrivalKeys.length; i++) {
-      recallRaid(playerEntity, rockEntity, arrivalKeys[i]);
-    }
   }
 }
