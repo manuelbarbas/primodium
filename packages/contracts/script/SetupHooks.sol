@@ -45,7 +45,7 @@ import { OnUpgrade_Requirements } from "src/hooks/systemHooks/upgrade/OnUpgrade_
 import { OnUpgrade_SpendResources } from "src/hooks/systemHooks/upgrade/OnUpgrade_SpendResources.sol";
 import { OnUpgrade_MaxStorage } from "src/hooks/systemHooks/upgrade/OnUpgrade_MaxStorage.sol";
 import { OnUpgrade_ProductionRate } from "src/hooks/systemHooks/upgrade/OnUpgrade_ProductionRate.sol";
-import { OnUpgrade_Defense } from "src/hooks/systemHooks/upgrade/OnUpgrade_Defense.sol";
+import { OnUpgrade_Vault } from "src/hooks/systemHooks/upgrade/OnUpgrade_Vault.sol";
 
 import { OnDestroy_ClearUtility } from "src/hooks/systemHooks/destroy/OnDestroy_ClearUtility.sol";
 import { OnDestroy_MaxStorage } from "src/hooks/systemHooks/destroy/OnDestroy_MaxStorage.sol";
@@ -257,9 +257,9 @@ function registerUpgradeHooks(IWorld world, OnBefore_ClaimResources onBefore_Cla
   world.grantAccess(MapItemStoredUtilitiesTableId, address(onUpgrade_ProductionRate));
   world.registerSystemHook(systemId, onUpgrade_ProductionRate, AFTER_CALL_SYSTEM);
 
-  OnUpgrade_Defense onUpgrade_Defense = new OnUpgrade_Defense();
-  world.grantAccess(TotalVaultTableId, address(onUpgrade_Defense));
-  world.registerSystemHook(systemId, onUpgrade_Defense, AFTER_CALL_SYSTEM);
+  OnUpgrade_Vault onUpgrade_Vault = new OnUpgrade_Vault();
+  world.grantAccess(TotalVaultTableId, address(onUpgrade_Vault));
+  world.registerSystemHook(systemId, onUpgrade_Vault, AFTER_CALL_SYSTEM);
 }
 
 /**

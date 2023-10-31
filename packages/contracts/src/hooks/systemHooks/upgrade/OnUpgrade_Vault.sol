@@ -9,10 +9,10 @@ import { LibVault } from "libraries/LibVault.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 
 /**
- * @title OnUpgrade_Defense
+ * @title OnUpgrade_Vault
  * @dev This contract is a system hook that handles the max storage capacity of a building when it is constructed in the game world.
  */
-contract OnUpgrade_Defense is SystemHook {
+contract OnUpgrade_Vault is SystemHook {
   constructor() {}
 
   function onBeforeCallSystem(

@@ -25,7 +25,6 @@ export function getRockDefense(rockEntity: Entity, defenderEntity?: Entity): big
   if (components.Home.get(player as Entity)?.asteroid === rockEntity) {
     defensePoints +=
       components.ResourceCount.getWithKeys({ entity: player, resource: EResource.U_Defense })?.value ?? 0n;
-    console.log("prev defense points", defensePoints);
     defensePoints +=
       (defensePoints *
         (components.ResourceCount.getWithKeys({ entity: player, resource: EResource.M_DefenseMultiplier })?.value ??
