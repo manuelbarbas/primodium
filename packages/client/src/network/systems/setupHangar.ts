@@ -48,7 +48,8 @@ export function setupHangar(mud: SetupResult) {
         if (!update) continue;
 
         const trainingTime = getUnitTrainingTime(owner as Entity, building, update.unitId as Entity);
-        let trainedUnits = (getNow() - startTime) / trainingTime;
+        let trainedUnits = update.quantity;
+        if (trainingTime > 0) trainedUnits = (getNow() - startTime) / trainingTime;
 
         if (trainedUnits == 0n) return;
 
