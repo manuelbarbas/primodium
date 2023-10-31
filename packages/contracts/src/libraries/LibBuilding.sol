@@ -109,9 +109,9 @@ library LibBuilding {
   ) internal returns (bytes32 buildingEntity) {
     buildingEntity = LibEncode.getTimedHash(BuildingKey, coord);
 
-    Position.set(buildingEntity, coord);
     Spawned.set(buildingEntity, true);
     BuildingType.set(buildingEntity, buildingPrototype);
+    Position.set(buildingEntity, coord);
     Level.set(buildingEntity, 1);
     LastClaimedAt.set(buildingEntity, block.timestamp);
     OwnedBy.set(buildingEntity, playerEntity);

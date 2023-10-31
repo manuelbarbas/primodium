@@ -4,19 +4,18 @@ import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.s
 import { addressToEntity, getSystemResourceId } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId, ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
-import { PositionData } from "codegen/tables/Position.sol";
-import { Level } from "codegen/tables/Level.sol";
+import { PositionData, Level, BuildingType } from "codegen/index.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
-import { LibDefense } from "libraries/LibDefense.sol";
+import { LibVault } from "libraries/LibVault.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 
 /**
- * @title OnDestroy_Defense
+ * @title OnDestroy_Vault
  * @dev This contract is a system hook that handles the max storage capacity of a building when it is constructed in the game world.
  */
-contract OnDestroy_Defense is SystemHook {
+contract OnDestroy_Vault is SystemHook {
   constructor() {}
 
   function onBeforeCallSystem(
@@ -35,7 +34,7 @@ contract OnDestroy_Defense is SystemHook {
     bytes32 playerEntity = addressToEntity(msgSender);
 
     // Clear utility usage for the building
-    LibDefense.clearBuildingDefenses(playerEntity, buildingEntity);
+    LibVault.clearPlayerVault(playerEntity, buildingEntity);
   }
 
   /**

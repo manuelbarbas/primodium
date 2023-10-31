@@ -22,7 +22,7 @@ contract MoveBuildingSystem is PrimodiumSystem {
     bytes32 buildingType = BuildingType.get(buildingEntity);
     require(
       LibBuilding.canBuildOnTile(buildingType, toCoord),
-      "[MoveBuildingSystem] the building cannot be moved to the specified coordinates"
+      "[MoveBuildingSystem] the building cannot be placed on this resource"
     );
     LibBuilding.removeBuildingTiles(fromCoord);
     Position.set(buildingEntity, toCoord);

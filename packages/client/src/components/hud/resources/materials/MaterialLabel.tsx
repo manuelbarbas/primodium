@@ -30,6 +30,7 @@ export const MaterialLabel = ({ name, resource }: { name: string; resource: Enti
     return (
       <div className="gap-1 mx-1 group pointer-events-auto">
         <ResourceIconTooltip
+          short={false}
           name={name}
           playerEntity={playerEntity}
           amount={resourceCount + resourcesToClaim}
@@ -41,7 +42,7 @@ export const MaterialLabel = ({ name, resource }: { name: string; resource: Enti
         />
         {production !== 0n && (
           <p className="opacity-50 text-[0rem] group-hover:text-xs transition-all">
-            +{formatNumber(Number((production * 60n) / RESOURCE_SCALE), 1)}
+            +{formatNumber(Number((production * 60n) / RESOURCE_SCALE), { fractionDigits: 1 })}
             /MIN <b>({Number(maxStorage / RESOURCE_SCALE)})</b>
           </p>
         )}

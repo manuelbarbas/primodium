@@ -3,12 +3,12 @@ import { Entity } from "@latticexyz/recs";
 
 import { Assets, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { ERock } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
 import { clampedIndex, getBlockTypeName } from "./common";
 import { EntityType, MotherlodeSizeNames, MotherlodeTypeNames, ResourceStorages } from "./constants";
 import { getFullResourceCount, getMotherlodeResource } from "./resource";
-import { ERock } from "contracts/config/enums";
 
 function getSpaceRockImage(spaceRock: Entity, type: ERock) {
   const { getSpriteBase64 } = primodium.api().sprite;
@@ -74,16 +74,18 @@ export function getSpaceRockInfo(spaceRock: Entity) {
   });
 
   const resources = ownedBy
-    ? ResourceStorages.map((resource) => {
-        const { resourceCount, resourcesToClaim } = getFullResourceCount(resource, ownedBy);
+    ? [...ResourceStorages]
+        .map((resource) => {
+          const { resourceCount, resourcesToClaim } = getFullResourceCount(resource, ownedBy);
 
-        const amount = resourceCount + resourcesToClaim;
+          const amount = resourceCount + resourcesToClaim;
 
-        return {
-          id: resource,
-          amount,
-        };
-      }).filter((resource) => resource.amount)
+          return {
+            id: resource,
+            amount,
+          };
+        })
+        .filter((resource) => resource.amount)
     : [];
 
   const motherlodeResource = getMotherlodeResource(spaceRock);

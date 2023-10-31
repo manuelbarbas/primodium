@@ -3,17 +3,17 @@ pragma solidity >=0.8.21;
 import { addressToEntity } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
-import { PositionData } from "codegen/tables/Position.sol";
-import { Level } from "codegen/tables/Level.sol";
-import { LibBuilding } from "libraries/LibBuilding.sol";
-import { LibDefense } from "libraries/LibDefense.sol";
+import { PositionData, P_EnumToPrototype } from "codegen/index.sol";
+import { LibEncode } from "libraries/LibEncode.sol";
+import { BuildingKey } from "src/Keys.sol";
+import { LibVault } from "libraries/LibVault.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 
 /**
- * @title OnUpgrade_Defense
+ * @title OnBuild_Vault
  * @dev This contract is a system hook that handles the max storage capacity of a building when it is constructed in the game world.
  */
-contract OnUpgrade_Defense is SystemHook {
+contract OnBuild_Vault is SystemHook {
   constructor() {}
 
   function onBeforeCallSystem(
@@ -36,18 +36,13 @@ contract OnUpgrade_Defense is SystemHook {
   ) public {
     // Convert the player's address to an entity
     bytes32 playerEntity = addressToEntity(msgSender);
-
     // Decode the arguments from the callData
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
 
-    PositionData memory coord = abi.decode(args, (PositionData));
+    (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
+    // Generate the unique building entity key
+    bytes32 buildingEntity = LibEncode.getTimedHash(BuildingKey, coord);
 
-    // Get the building entity from the coordinates
-    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
-
-    // Get the level of the building
-    uint256 level = Level.get(buildingEntity);
-
-    LibDefense.upgradeBuildingDefenses(playerEntity, buildingEntity, level);
+    LibVault.increasePlayerVault(playerEntity, P_EnumToPrototype.get(BuildingKey, buildingType), 1);
   }
 }
