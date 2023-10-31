@@ -98,8 +98,7 @@ export const renderBuilding = (scene: Scene, { network: { playerEntity } }: Setu
     Has(components.BuildingType),
   ];
 
-  defineSystem(gameWorld, positionQuery, ({ entity, component, value: [newVal, oldVal] }) => {
-    if (component.id !== components.Position.id) return;
+  defineSystem(gameWorld, positionQuery, ({ entity, value: [newVal, oldVal] }) => {
     if (oldVal) {
       const renderId = `${entity}_entitySprite`;
       scene.objectPool.removeGroup(renderId);

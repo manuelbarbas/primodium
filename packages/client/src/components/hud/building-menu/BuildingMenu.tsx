@@ -49,6 +49,11 @@ export const BuildingMenu: React.FC = () => {
 
   if (!buildingName || !selectedBuilding) return null;
 
+  const handleClose = () => {
+    components.SelectedBuilding.remove();
+    components.SelectedAction.remove();
+  };
+
   const renderScreen = () => {
     switch (buildingType) {
       case EntityType.MainBase:
@@ -83,7 +88,7 @@ export const BuildingMenu: React.FC = () => {
           tooltip="Close"
           tooltipDirection="top"
           className="btn-square btn-sm font-bold border border-secondary"
-          onClick={() => components.SelectedBuilding.remove()}
+          onClick={handleClose}
         >
           x
         </Button>
