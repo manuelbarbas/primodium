@@ -8,8 +8,6 @@ export const TransactionQueueMask: React.FC<{
 }> = ({ children, queueItemId }) => {
   const queuePosition = components.TransactionQueue.useIndex(queueItemId as Entity);
 
-  console.log(queuePosition);
-
   if (queuePosition === -1) return <>{children}</>;
 
   return (
