@@ -897,7 +897,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       [MUDEnums.EResource.indexOf("U_Vessel")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_MaxMoves")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Defense")]: { P_IsUtility: { value: true } },
-      [MUDEnums.EResource.indexOf("U_DefenseMultiplier")]: { P_IsUtility: { value: true } },
+      [MUDEnums.EResource.indexOf("M_DefenseMultiplier")]: { P_IsUtility: { value: true } },
     },
   },
 

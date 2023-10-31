@@ -27,27 +27,31 @@ export const RecipeDisplay: React.FC<{
   return (
     <div className="flex flex-col items-center gap-1">
       <div className="flex justify-center items-center text-sm bg-slate-800/60 p-1 border border-slate-500 rounded-md gap-2 flex-wrap w-full">
-        {recipe.map((resource) => {
-          const resourceImage = ResourceImage.get(resource.id)!;
-          const resourceName = getBlockTypeName(resource.id);
-          return (
-            <ResourceIconTooltip
-              key={resource.id + resource.type}
-              playerEntity={playerEntity}
-              image={resourceImage}
-              resource={resource.id}
-              resourceType={resource.type}
-              name={resourceName}
-              amount={resource.amount}
-              scale={resource.type !== ResourceType.Utility ? RESOURCE_SCALE : 1n}
-              validate
-              fontSize={"xs"}
-              short
-            />
-          );
-        })}
+        {_.chunk(recipe, 2).map((chunk, i) => (
+          <div key={`recipe-chunk-${i}`} className="flex flex-row gap-1">
+            {chunk.map((resource) => {
+              const resourceImage = ResourceImage.get(resource.id)!;
+              const resourceName = getBlockTypeName(resource.id);
+              return (
+                <ResourceIconTooltip
+                  key={resource.id + resource.type}
+                  playerEntity={playerEntity}
+                  image={resourceImage}
+                  resource={resource.id}
+                  resourceType={resource.type}
+                  name={resourceName}
+                  amount={resource.amount}
+                  scale={resource.type !== ResourceType.Utility ? RESOURCE_SCALE : 1n}
+                  validate
+                  fontSize={"xs"}
+                  short
+                />
+              );
+            })}
+          </div>
+        ))}
+        <p className="text-[.6rem] opacity-50">COST</p>
       </div>
-      <p className="text-[.6rem] opacity-50">COST</p>
     </div>
   );
 };
