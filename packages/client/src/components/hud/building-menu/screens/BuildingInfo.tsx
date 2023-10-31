@@ -109,7 +109,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     resource={storage.resource}
                     amount={storage.amount}
                     resourceType={storage.resourceType}
-                    scale={storage.resourceType === ResourceType.Utility ? 1n : RESOURCE_SCALE}
+                    scale={RESOURCE_SCALE}
                     direction="top"
                     short
                   />
@@ -131,7 +131,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                       resource={storage.resource}
                       amount={storage.amount}
                       resourceType={storage.resourceType}
-                      scale={storage.resourceType === ResourceType.Utility ? 1n : RESOURCE_SCALE}
+                      scale={RESOURCE_SCALE}
                       direction="top"
                       short
                     />
@@ -144,7 +144,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
       )}
       {vault && vault.length !== 0 && (
         <div className="grid grid-cols-1 w-full mb-1">
-          <DataLabel label="storage">
+          <DataLabel label="vault">
             {vault.map((v) => {
               return (
                 <Badge key={v.resource} className="text-xs gap-2">
@@ -155,14 +155,14 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     resource={v.resource}
                     amount={v.amount}
                     resourceType={v.type}
-                    scale={v.type === ResourceType.Utility ? 1n : RESOURCE_SCALE}
+                    scale={RESOURCE_SCALE}
                     direction="top"
                   />
                 </Badge>
               );
             })}
           </DataLabel>
-          <DataLabel label="next level storage">
+          <DataLabel label="next level vault">
             {!upgrade.vault || upgrade.vault.length === 0 || level === maxLevel ? (
               <b>N/A</b>
             ) : (
@@ -176,7 +176,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                       resource={v.resource}
                       amount={v.amount}
                       resourceType={v.type}
-                      scale={v.type === ResourceType.Utility ? 1n : RESOURCE_SCALE}
+                      scale={RESOURCE_SCALE}
                       direction="top"
                     />
                   </Badge>

@@ -888,7 +888,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   },
 
   /* -------------------------------- Resources ------------------------------- */
-  // NOTE: To check if a resource is a utility, call P_IsUtility(EResource.<resource>);
+  // NOTE: To check if a resource is a utility, call P_IsUtility.get(EResource.<resource>);
   IsUtility: {
     keys: [],
     levels: {

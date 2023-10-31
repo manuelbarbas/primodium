@@ -164,7 +164,7 @@ export const PrototypeInfo: React.FC<{
                           playerEntity={playerEntity}
                           amount={amount}
                           resourceType={ResourceType.Resource}
-                          scale={1n}
+                          scale={RESOURCE_SCALE}
                           short
                         />
                       </Badge>
