@@ -18,7 +18,7 @@ export const buildBuilding = async (network: SetupNetworkResult, building: EBuil
   const position = { ...coord, parent: activeAsteroid as Hex };
 
   await execute(
-    network.worldContract.write.build.bind(null, [building, position]),
+    () => network.worldContract.write.build([building, position]),
     network,
     {
       id: uuid() as Entity,

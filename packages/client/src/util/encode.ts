@@ -1,13 +1,18 @@
 import { BigNumber, utils } from "ethers";
 import { defaultAbiCoder, solidityKeccak256 } from "ethers/lib/utils";
-
+import { encodeEntity } from "@latticexyz/store-sync/recs";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { ContractCoord } from "./types";
+import { toHex32 } from "./constants";
 
 // use this when you want to pass the entity to world.getEntityIndex
 export function encodeAndTrimCoord(coord: Coord): Entity {
   return trim(encodeCoord(coord));
+}
+
+export function encodeNumberEntity(key: number, entity: string): Entity {
+  return encodeEntity({ entity: "bytes32", key: "uint16" }, { entity: toHex32(entity), key });
 }
 
 // convert the following solidity function to typescript:

@@ -86,7 +86,7 @@ export function createTransactionQueueComponent<M extends Metadata>(options?: Op
   }
 
   function useIndex(id: Entity) {
-    const [position, setPosition] = useState<number>(-1);
+    const [position, setPosition] = useState<number>(getIndex(id));
 
     useEffect(() => {
       const sub = TransactionQueue.update$.subscribe(() => {

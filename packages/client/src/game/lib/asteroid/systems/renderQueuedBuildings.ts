@@ -58,7 +58,7 @@ export const renderQueuedBuildings = (scene: Scene) => {
         alpha: 0.5,
       }),
       //update text when item on queued is popped
-      OnExitSystem(query, () => {
+      OnExitSystem([Has(components.TransactionQueue)], () => {
         textRenderObject.setComponent(
           ObjectText(getQueuePositionString(entity), {
             align: "center",
@@ -82,7 +82,7 @@ export const renderQueuedBuildings = (scene: Scene) => {
           x: pixelCoord.x,
           y: -pixelCoord.y + dimensions.height * tileHeight,
         },
-        DepthLayers.Building
+        DepthLayers.Building - metadata.coord.y + dimensions.height
       ),
       SetValue({
         originY: 1,
