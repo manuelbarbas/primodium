@@ -24,7 +24,7 @@ const suffixes = {
   [ResourceType.Utility]: "",
   [ResourceType.ResourceRate]: "/MIN",
   [ResourceType.Resource]: "",
-  [ResourceType.Multiplier]: "X",
+  [ResourceType.Multiplier]: "x",
 };
 
 const ResourceIconTooltipContent = ({
@@ -39,8 +39,12 @@ const ResourceIconTooltipContent = ({
   hasEnough,
   short = false,
 }: ResourceIconProps & { hasEnough: boolean }) => {
-  const value = ResourceType.ResourceRate == resourceType ? Number((amount * 60n) / scale) : Number(amount / scale);
-  const label = formatNumber(value, { short }) + suffixes[resourceType || ResourceType.Resource];
+  let value = Number((amount * 60n) / scale);
+  if (resourceType !== ResourceType.ResourceRate) value = value / 60;
+  if (resourceType == ResourceType.Multiplier) value = (value + 100) / 100;
+  const label =
+    formatNumber(value, { short: short && resourceType !== ResourceType.Multiplier }) +
+    suffixes[resourceType || ResourceType.Resource];
 
   return (
     <IconLabel

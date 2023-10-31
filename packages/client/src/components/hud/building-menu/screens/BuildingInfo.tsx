@@ -111,6 +111,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     resourceType={storage.resourceType}
                     scale={storage.resourceType === ResourceType.Utility ? 1n : RESOURCE_SCALE}
                     direction="top"
+                    short
                   />
                 </Badge>
               );
@@ -132,6 +133,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                       resourceType={storage.resourceType}
                       scale={storage.resourceType === ResourceType.Utility ? 1n : RESOURCE_SCALE}
                       direction="top"
+                      short
                     />
                   </Badge>
                 );
