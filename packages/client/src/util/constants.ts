@@ -18,6 +18,8 @@ export enum Action {
 
 export const SPEED_SCALE = BigInt(100);
 export const RESOURCE_SCALE = BigInt(100);
+export const MULTIPLIER_SCALE = BigInt(100);
+
 export const PIRATE_KEY = "pirate";
 export const NUM_UNITS = Object.keys(EUnit).length / 2;
 
@@ -25,6 +27,7 @@ export enum ResourceType {
   Resource,
   ResourceRate,
   Utility,
+  Multiplier,
 }
 
 export enum RewardType {
@@ -92,7 +95,7 @@ export const EntityType = {
   Hangar: toHex32("Hangar") as Entity,
   DroneFactory: toHex32("DroneFactory") as Entity,
   StarmapperStation: toHex32("Starmapper") as Entity,
-  SAMLauncher: toHex32("SAMLauncher") as Entity,
+  SAMLauncher: toHex32("SAM") as Entity,
   ShieldGenerator: toHex32("ShieldGenerator") as Entity,
   Vault: toHex32("Vault") as Entity,
 
@@ -104,6 +107,9 @@ export const EntityType = {
   Housing: toHex32("U_Housing") as Entity,
   VesselCapacity: toHex32("U_Vessel") as Entity,
   FleetMoves: toHex32("U_MaxMoves") as Entity,
+
+  Defense: toHex32("U_Defense") as Entity,
+  DefenseMultiplier: toHex32("M_DefenseMultiplier") as Entity,
 
   Bullet: toHex32("Bullet") as Entity,
   IronPlate: toHex32("IronPlate") as Entity,
@@ -127,8 +133,8 @@ export const EntityType = {
   AegisDrone: toHex32("AegisDrone") as Entity,
   MiningVessel: toHex32("MiningVessel") as Entity,
 
-  MinutemanMarine: toHex32("unit.MinutemanMarine") as Entity,
-  TridentMarine: toHex32("unit.TridentMarine") as Entity,
+  MinutemanMarine: toHex32("MinutemanMarine") as Entity,
+  TridentMarine: toHex32("TridentMarine") as Entity,
 
   Expansion: toHex32("Expansion") as Entity,
   ExpansionResearch1: encodeEntityLevel("Expansion", 1) as Entity,
@@ -323,6 +329,8 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.Housing, "/img/icons/utilitiesicon.png"],
   [EntityType.FleetMoves, "/img/icons/moveicon.png"],
   [EntityType.VesselCapacity, "/img/unit/miningvessel.png"],
+  [EntityType.Defense, "/img/resource/defense_resource.png"],
+  [EntityType.DefenseMultiplier, "/img/resource/defense_resource.png"],
 
   // debug
   [EntityType.Bullet, "/img/crafted/bullet.png"],
@@ -335,6 +343,7 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.MiningVessel, "/img/unit/miningvessel.png"],
   [EntityType.MinutemanMarine, "img/unit/minutemen_marine.png"],
   [EntityType.TridentMarine, "img/unit/trident_marine.png"],
+  [EntityType.Vault, "img/vault.png"],
 ]);
 
 export type DisplayKeyPair = {
@@ -376,7 +385,7 @@ export const SpaceRockTypeNames: Record<number, string> = {
   [ERock.Motherlode]: "Motherlode",
 };
 
-export const ResourceStorages = [
+export const ResourceStorages = new Set([
   EntityType.Iron,
   EntityType.Copper,
   EntityType.Lithium,
@@ -388,14 +397,17 @@ export const ResourceStorages = [
   EntityType.Iridium,
   EntityType.Platinum,
   EntityType.Kimberlite,
-];
+]);
 
-export const UtilityStorages = [
+export const UtilityStorages = new Set([
   EntityType.Housing,
   EntityType.Electricity,
   EntityType.VesselCapacity,
   EntityType.FleetMoves,
-];
+  EntityType.Defense,
+]);
+
+export const MultiplierStorages = new Set([EntityType.DefenseMultiplier]);
 
 export const ResourceEnumLookup: Record<Entity, EResource> = {
   [EntityType.Iron]: EResource.Iron,
@@ -419,6 +431,9 @@ export const ResourceEnumLookup: Record<Entity, EResource> = {
   [EntityType.Housing]: EResource.U_Housing,
   [EntityType.VesselCapacity]: EResource.U_Vessel,
   [EntityType.FleetMoves]: EResource.U_MaxMoves,
+  [EntityType.Defense]: EResource.U_Defense,
+
+  [EntityType.DefenseMultiplier]: EResource.M_DefenseMultiplier,
 };
 
 export const ResourceEntityLookup = reverseRecord(ResourceEnumLookup);

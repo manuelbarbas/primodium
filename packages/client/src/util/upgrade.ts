@@ -15,7 +15,7 @@ export function getUpgradeInfo(research: Entity, playerEntity: Entity) {
   const maxLevel = components.P_MaxLevel.getWithKeys({ prototype: research as Hex })?.value ?? 0n;
   nextLevel = nextLevel > maxLevel ? maxLevel : nextLevel;
 
-  const recipe = getRecipe(research, nextLevel, true);
+  const recipe = getRecipe(research, nextLevel, research !== EntityType.Expansion);
 
   const isResearched = level >= maxLevel;
 

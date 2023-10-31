@@ -150,7 +150,9 @@ const Objective: React.FC<{
                         scale={_req.scale}
                         direction="top"
                       />
-                      <span className="font-bold">/ {formatNumber(_req.requiredValue / _req.scale, 1)}</span>
+                      <span className="font-bold">
+                        / {formatNumber(_req.requiredValue / _req.scale, { fractionDigits: 1 })}
+                      </span>
                     </Badge>
                   );
                 })}
