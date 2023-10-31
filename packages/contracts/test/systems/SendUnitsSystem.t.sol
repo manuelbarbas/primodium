@@ -258,7 +258,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     setupValidInvade();
     OwnedBy.set(destination, to);
     UnitCount.set(player, origin, unitPrototype, 100);
-
+    Home.setAsteroid(player, origin);
     unitData.speed = 100;
     P_Unit.set(unitPrototype, 0, unitData);
 
@@ -285,7 +285,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     setupValidInvade();
     OwnedBy.set(destination, to);
     UnitCount.set(player, origin, unitPrototype, 100);
-
+    Home.setAsteroid(player, origin);
     unitData.speed = 100;
     P_Unit.set(unitPrototype, 0, unitData);
 
@@ -299,7 +299,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     unitCounts[0] = 1;
 
     Arrival memory arrival = ArrivalsMap.values(player, destination)[0];
-    vm.warp(arrival.arrivalTime);
+    vm.warp(arrival.arrivalTime + 1);
 
     world.recallAllOfSendType(destination, ESendType.Invade);
     assertEq(ArrivalsMap.size(player, destination), 0);

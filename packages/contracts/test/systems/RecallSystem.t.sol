@@ -37,6 +37,7 @@ contract RecallSystemTest is PrimodiumTest {
 
   function testRecallUnitsFromMotherlode() public {
     setupRecall();
+    Home.setAsteroid(player, origin);
     world.recallStationedUnits(destination);
     assertEq(UnitCount.get(player, destination, unitPrototype), 0);
     assertEq(UnitCount.get(player, origin, unitPrototype), 70);
@@ -44,7 +45,8 @@ contract RecallSystemTest is PrimodiumTest {
 
   function testRecallUnitsProductionFromMotherlode() public {
     setupRecall();
-    P_MiningRate.set(unitPrototype, 1, 1);
+    Home.setAsteroid(player, origin);
+    P_MiningRate.set(unitPrototype, 0, 1);
     Motherlode.set(destination, uint8(ESize.Medium), uint8(EResource.Iron));
     ProductionRate.set(player, uint8(EResource.Iron), 50);
     world.recallStationedUnits(destination);
@@ -53,10 +55,12 @@ contract RecallSystemTest is PrimodiumTest {
 
   function testRecallUnitsProductionClaimFromMotherlode() public {
     setupRecall();
-    P_MiningRate.set(unitPrototype, 1, 1);
+    Home.setAsteroid(player, origin);
+    P_MiningRate.set(unitPrototype, 0, 1);
     Motherlode.set(destination, uint8(ESize.Medium), uint8(EResource.Iron));
     MaxResourceCount.set(player, uint8(EResource.Iron), 100000);
     ProductionRate.set(player, uint8(EResource.Iron), 50);
+    LastClaimedAt.set(player, block.timestamp);
     vm.warp(block.timestamp + 10);
     world.recallStationedUnits(destination);
     assertEq(ResourceCount.get(player, uint8(EResource.Iron)), 500);

@@ -149,7 +149,7 @@ function registerAllianceHooks(IWorld world, OnBefore_ClaimResources onBefore_Cl
 }
 
 function registerRecallHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
-  world.registerSystemHook(getSystemResourceId("AllianceSystem"), onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
+  world.registerSystemHook(getSystemResourceId("RecallSystem"), onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
 }
 
 /**
