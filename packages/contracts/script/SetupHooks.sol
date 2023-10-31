@@ -116,7 +116,7 @@ function setupHooks(IWorld world) {
   registerUpgradeUnitHook(world, onBefore_ClaimResources);
 
   registerAllianceHooks(world, onBefore_ClaimResources);
-
+  registerRecallHooks(world, onBefore_ClaimResources);
   //Store Hooks
   registerScoreHook(world);
 }
@@ -146,6 +146,10 @@ function registerAllianceHooks(IWorld world, OnBefore_ClaimResources onBefore_Cl
   world.grantAccess(LastClaimedAtTableId, address(onAlliance_TargetClaimResources));
   world.grantAccess(ProducedResourceTableId, address(onAlliance_TargetClaimResources));
   world.registerSystemHook(getSystemResourceId("AllianceSystem"), onAlliance_TargetClaimResources, BEFORE_CALL_SYSTEM);
+}
+
+function registerRecallHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
+  world.registerSystemHook(getSystemResourceId("AllianceSystem"), onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
 }
 
 /**
