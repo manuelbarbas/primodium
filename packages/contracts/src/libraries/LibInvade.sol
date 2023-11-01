@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import { IWorld } from "codegen/world/IWorld.sol";
 import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
-import { RockType, OwnedBy, BattleResultData, P_UnitPrototypes } from "codegen/index.sol";
+import { Home, RockType, OwnedBy, BattleResultData, P_UnitPrototypes } from "codegen/index.sol";
 import { ERock, ESendType } from "src/Types.sol";
 import { LibReinforce } from "libraries/LibReinforce.sol";
 import { LibMotherlode } from "libraries/LibMotherlode.sol";

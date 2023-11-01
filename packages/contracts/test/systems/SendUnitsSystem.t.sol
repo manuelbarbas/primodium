@@ -254,6 +254,83 @@ contract SendUnitsSystemTest is PrimodiumTest {
     assertEq(arrival, expectedArrival);
   }
 
+  function testRecallSentUnitsInvadeEnemy() public {
+    setupValidInvade();
+    OwnedBy.set(destination, to);
+    UnitCount.set(player, origin, unitPrototype, 100);
+    Home.setAsteroid(player, origin);
+    unitData.speed = 100;
+    P_Unit.set(unitPrototype, 0, unitData);
+
+    unitCounts[0] = 1;
+
+    world.sendUnits(unitCounts, ESendType.Invade, originPosition, destinationPosition, to);
+
+    assertEq(ArrivalsMap.size(player, destination), 1);
+    assertEq(ArrivalCount.get(player), 1);
+
+    unitCounts[0] = 1;
+
+    Arrival memory arrival = ArrivalsMap.values(player, destination)[0];
+    vm.warp(arrival.arrivalTime);
+
+    world.recallAll(destination);
+    assertEq(ArrivalsMap.size(player, destination), 0);
+    assertEq(ArrivalCount.get(player), 0);
+    assertEq(UnitCount.get(player, destination, unitPrototype), 0);
+    assertEq(UnitCount.get(player, origin, unitPrototype), 100);
+  }
+
+  function testRecallSpecificSentUnitsInvadeEnemy() public {
+    setupValidInvade();
+    OwnedBy.set(destination, to);
+    UnitCount.set(player, origin, unitPrototype, 100);
+    Home.setAsteroid(player, origin);
+    unitData.speed = 100;
+    P_Unit.set(unitPrototype, 0, unitData);
+
+    unitCounts[0] = 1;
+
+    world.sendUnits(unitCounts, ESendType.Invade, originPosition, destinationPosition, to);
+
+    assertEq(ArrivalsMap.size(player, destination), 1);
+    assertEq(ArrivalCount.get(player), 1);
+
+    unitCounts[0] = 1;
+
+    Arrival memory arrival = ArrivalsMap.values(player, destination)[0];
+    vm.warp(arrival.arrivalTime + 1);
+
+    world.recallAllOfSendType(destination, ESendType.Invade);
+    assertEq(ArrivalsMap.size(player, destination), 0);
+    assertEq(ArrivalCount.get(player), 0);
+    assertEq(UnitCount.get(player, destination, unitPrototype), 0);
+    assertEq(UnitCount.get(player, origin, unitPrototype), 100);
+  }
+
+  function testFailRecallSpecificSentUnitsInvadeEnemy() public {
+    setupValidInvade();
+    OwnedBy.set(destination, to);
+    UnitCount.set(player, origin, unitPrototype, 100);
+
+    unitData.speed = 100;
+    P_Unit.set(unitPrototype, 0, unitData);
+
+    unitCounts[0] = 1;
+
+    world.sendUnits(unitCounts, ESendType.Invade, originPosition, destinationPosition, to);
+
+    assertEq(ArrivalsMap.size(player, destination), 1);
+    assertEq(ArrivalCount.get(player), 1);
+
+    unitCounts[0] = 1;
+
+    Arrival memory arrival = ArrivalsMap.values(player, destination)[0];
+    vm.warp(arrival.arrivalTime);
+
+    world.recallAllOfSendType(destination, ESendType.Raid);
+  }
+
   function testSendUnitsReinforceSelf() public {
     setupValidInvade();
     OwnedBy.set(destination, player);

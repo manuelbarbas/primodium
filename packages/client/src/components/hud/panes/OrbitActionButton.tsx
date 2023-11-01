@@ -5,7 +5,7 @@ import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { invade } from "src/util/web3/contractCalls/invade";
 import { raid } from "src/util/web3/contractCalls/raid";
-import { recall } from "src/util/web3/contractCalls/recall";
+import { recallArrival } from "src/util/web3/contractCalls/recall";
 import { reinforce } from "src/util/web3/contractCalls/reinforce";
 
 export const OrbitActionButton: React.FC<{
@@ -13,7 +13,8 @@ export const OrbitActionButton: React.FC<{
   destination: Entity;
   sendType: ESendType;
   outgoing: boolean;
-}> = ({ arrivalEntity, destination, sendType, outgoing }) => {
+  recall?: boolean;
+}> = ({ arrivalEntity, destination, sendType, outgoing, recall }) => {
   const network = useMud().network;
   const destinationOwner = components.OwnedBy.use(destination)?.value;
   const playerEntity = network.playerEntity;
@@ -24,6 +25,10 @@ export const OrbitActionButton: React.FC<{
       // loading={transactionLoading}
       className={`btn-sm ${isNeutral || sendType === ESendType.Reinforce ? "btn-secondary" : "btn-error"} `}
       onClick={() => {
+        if (recall) {
+          recallArrival(destination, arrivalEntity, network);
+          return;
+        }
         switch (sendType) {
           case ESendType.Invade:
             invade(destination, network);
@@ -33,7 +38,7 @@ export const OrbitActionButton: React.FC<{
             return;
           case ESendType.Reinforce:
             if (!isNeutral || outgoing) {
-              recall(destination, arrivalEntity, network);
+              recallArrival(destination, arrivalEntity, network);
               return;
             }
 
@@ -41,8 +46,9 @@ export const OrbitActionButton: React.FC<{
         }
       }}
     >
-      {isNeutral && (sendType === ESendType.Reinforce ? (!outgoing ? "ACCEPT" : "RECALL") : "LAND")}
-      {!isNeutral && (sendType === ESendType.Reinforce ? "RECALL" : "ATTACK")}
+      {recall && "RECALL"}
+      {!recall && isNeutral && (sendType === ESendType.Reinforce ? (!outgoing ? "ACCEPT" : "RECALL") : "LAND")}
+      {!recall && !isNeutral && (sendType === ESendType.Reinforce ? "RECALL" : "ATTACK")}
     </Button>
   );
 };
