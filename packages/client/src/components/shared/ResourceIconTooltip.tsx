@@ -43,7 +43,7 @@ const ResourceIconTooltipContent = ({
   if (resourceType !== ResourceType.ResourceRate) value = value / 60;
   if (resourceType == ResourceType.Multiplier) value = (value + 100) / 100;
   const label =
-    formatNumber(value, { short: short && resourceType !== ResourceType.Multiplier }) +
+    formatNumber(value, { short: short && resourceType !== ResourceType.Multiplier, fractionDigits: 0 }) +
     suffixes[resourceType || ResourceType.Resource];
 
   return (
