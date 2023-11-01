@@ -7,6 +7,7 @@ import { getBlockTypeName } from "src/util/common";
 import { useGameStore } from "../../store/GameStore";
 import { HUD } from "../core/HUD";
 import { BrandingLabel } from "../shared/BrandingLabel";
+import { GracePeriod } from "./GracePeriod";
 import { PrototypeInfo } from "./PrototypeInfo";
 import { Score } from "./Score";
 import { ViewStarmap } from "./ViewStarmap";
@@ -16,7 +17,6 @@ import { Panes } from "./panes/Panes";
 import { Resources } from "./resources/Resources";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 import { Units } from "./units/Units";
-import { GracePeriod } from "./GracePeroid";
 import { LoadingIndication } from "./LoadingIndication";
 
 export const GameHUD = () => {

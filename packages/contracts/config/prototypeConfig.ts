@@ -1579,10 +1579,11 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   DefeatPirateBase1: {
     tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
       P_DefeatedPirates: { value: encodeArray(["BuildWorkshop"]) },
       P_SpawnPirateAsteroid: {
-        x: 10,
-        y: 10,
+        x: -10,
+        y: 22,
         units: encodeArray(["MinutemanMarine"]),
         unitAmounts: [10n],
         resources: indexifyResourceArray(["Copper", "Iron", "IronPlate"]),

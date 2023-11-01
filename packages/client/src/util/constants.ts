@@ -22,7 +22,7 @@ export const SPEED_SCALE = BigInt(100);
 export const RESOURCE_SCALE = BigInt(100);
 export const MULTIPLIER_SCALE = BigInt(100);
 
-export const PIRATE_KEY = "pirate";
+export const PIRATE_KEY = toHex32("pirate");
 export const NUM_UNITS = Object.keys(EUnit).length / 2;
 
 export enum ResourceType {
@@ -148,9 +148,9 @@ export const EntityType = {
   ThermobaricMissile: toHex32("ThermobaricMissile") as Entity,
   KimberliteCrystalCatalyst: toHex32("KimberliteCrystalCatalyst") as Entity,
 
-  HammerLightDrone: toHex32("HammerDrone") as Entity,
+  HammerDrone: toHex32("HammerDrone") as Entity,
   StingerDrone: toHex32("StingerDrone") as Entity,
-  AnvilLightDrone: toHex32("AnvilDrone") as Entity,
+  AnvilDrone: toHex32("AnvilDrone") as Entity,
   AegisDrone: toHex32("AegisDrone") as Entity,
   MiningVessel: toHex32("MiningVessel") as Entity,
 
@@ -235,9 +235,9 @@ export const BlockIdToKey = Object.entries(EntityType).reduce<{
 
 export const BackgroundImage = new Map<Entity, string[]>([
   //units
-  [EntityType.HammerLightDrone, ["/img/unit/hammerdrone.png"]],
+  [EntityType.HammerDrone, ["/img/unit/hammerdrone.png"]],
   [EntityType.StingerDrone, ["/img/unit/stingerdrone.png"]],
-  [EntityType.AnvilLightDrone, ["/img/unit/anvildrone.png"]],
+  [EntityType.AnvilDrone, ["/img/unit/anvildrone.png"]],
   [EntityType.AegisDrone, ["/img/unit/aegisdrone.png"]],
   [EntityType.MiningVessel, ["/img/unit/miningvessel.png"]],
 
@@ -357,9 +357,9 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.Bullet, "/img/crafted/bullet.png"],
 
   //units
-  [EntityType.HammerLightDrone, "/img/unit/hammerdrone.png"],
+  [EntityType.HammerDrone, "/img/unit/hammerdrone.png"],
   [EntityType.StingerDrone, "/img/unit/stingerdrone.png"],
-  [EntityType.AnvilLightDrone, "/img/unit/anvildrone.png"],
+  [EntityType.AnvilDrone, "/img/unit/anvildrone.png"],
   [EntityType.AegisDrone, "/img/unit/aegisdrone.png"],
   [EntityType.MiningVessel, "/img/unit/miningvessel.png"],
   [EntityType.MinutemanMarine, "img/unit/minutemen_marine.png"],
@@ -483,9 +483,9 @@ export const BuildingEnumLookup: Record<Entity, EBuilding> = {
 export const BuildingEntityLookup = reverseRecord(BuildingEnumLookup);
 
 export const UnitEnumLookup: Record<Entity, EUnit> = {
-  [EntityType.HammerLightDrone]: EUnit.HammerDrone,
+  [EntityType.HammerDrone]: EUnit.HammerDrone,
   [EntityType.StingerDrone]: EUnit.StingerDrone,
-  [EntityType.AnvilLightDrone]: EUnit.AnvilDrone,
+  [EntityType.AnvilDrone]: EUnit.AnvilDrone,
   [EntityType.AegisDrone]: EUnit.AegisDrone,
   [EntityType.MiningVessel]: EUnit.MiningVessel,
   [EntityType.MinutemanMarine]: EUnit.MinutemanMarine,

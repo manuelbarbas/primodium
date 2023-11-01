@@ -4,7 +4,7 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
-import { recall } from "src/util/web3/contractCalls/recall";
+import { recallArrival } from "src/util/web3/contractCalls/recall";
 import { reinforce } from "src/util/web3/contractCalls/reinforce";
 
 export const OrbitActionButton: React.FC<{
@@ -21,7 +21,7 @@ export const OrbitActionButton: React.FC<{
         className={`btn-sm btn-seoncdary `}
         onClick={() => {
           if (outgoing) {
-            recall(destination, arrivalEntity, network);
+            recallArrival(destination, arrivalEntity, network);
             return;
           }
 

@@ -7,16 +7,16 @@ import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { Hex } from "viem";
 
-export const recall = async (rockEntity: Entity, arrivalEntity: Entity, network: SetupNetworkResult) => {
+export const recallArrival = async (rockEntity: Entity, arrivalEntity: Entity, network: SetupNetworkResult) => {
   const { key } = decodeEntity(components.MapItemArrivals.metadata.keySchema, arrivalEntity);
 
-  await execute(() => network.worldContract.write.recall([rockEntity as Hex, key as Hex]), network, {
+  await execute(() => network.worldContract.write.recallArrival([rockEntity as Hex, key as Hex]), network, {
     id: hashEntities(TransactionQueueType.Recall, arrivalEntity, rockEntity),
   });
 };
 
-export const recallAll = async (rockEntity: Entity, network: SetupNetworkResult) => {
-  await execute(() => network.worldContract.write.recallAll([rockEntity as Hex]), network, {
+export const recallStationedUnits = async (rockEntity: Entity, network: SetupNetworkResult) => {
+  await execute(() => network.worldContract.write.recallStationedUnits([rockEntity as Hex]), network, {
     id: hashEntities(TransactionQueueType.Recall, rockEntity),
   });
 };

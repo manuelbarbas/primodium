@@ -26,6 +26,7 @@ import { ScoreTableId } from "codegen/tables/Score.sol";
 import { AllianceTableId } from "codegen/tables/Alliance.sol";
 import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
 import { ClaimOffsetTableId } from "codegen/tables/ClaimOffset.sol";
+import { BattleResultTableId } from "codegen/tables/BattleResult.sol";
 
 import "codegen/index.sol";
 import { OnResourceCount_Score } from "src/hooks/storeHooks/OnResourceCount_Score.sol";
@@ -79,7 +80,7 @@ import { OnUpgradeRange_SpendResources } from "src/hooks/systemHooks/upgradeRang
 import { OnAlliance_TargetClaimResources } from "src/hooks/systemHooks/alliance/OnAlliance_TargetClaimResources.sol";
 
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
-import { BEFORE_SPLICE_STATIC_DATA } from "@latticexyz/store/src/storeHookTypes.sol";
+import { BEFORE_SPLICE_STATIC_DATA, AFTER_SET_RECORD, ALL as STORE_ALL } from "@latticexyz/store/src/storeHookTypes.sol";
 
 function setupHooks(IWorld world) {
   OnBefore_ClaimResources onBefore_ClaimResources = new OnBefore_ClaimResources();
@@ -113,9 +114,23 @@ function setupHooks(IWorld world) {
   registerUpgradeUnitHook(world, onBefore_ClaimResources);
 
   registerAllianceHooks(world, onBefore_ClaimResources);
-
+  registerRecallHooks(world, onBefore_ClaimResources);
   //Store Hooks
   registerScoreHook(world);
+}
+
+/**
+ * @dev Registers a store hook for between ResourceCount and the Score tables.
+ * @param world The World contract instance.
+ */
+function registerScoreHook(IWorld world) {
+  OnResourceCount_Score onResourceCount_Score = new OnResourceCount_Score();
+  world.grantAccess(ScoreTableId, address(onResourceCount_Score));
+  world.registerStoreHook(ResourceCountTableId, onResourceCount_Score, BEFORE_SPLICE_STATIC_DATA);
+
+  OnScore_Alliance_Score onScore_Alliance_Score = new OnScore_Alliance_Score();
+  world.grantAccess(AllianceTableId, address(onScore_Alliance_Score));
+  world.registerStoreHook(ScoreTableId, onScore_Alliance_Score, BEFORE_SPLICE_STATIC_DATA);
 }
 
 function registerAllianceHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
@@ -129,6 +144,10 @@ function registerAllianceHooks(IWorld world, OnBefore_ClaimResources onBefore_Cl
   world.grantAccess(LastClaimedAtTableId, address(onAlliance_TargetClaimResources));
   world.grantAccess(ProducedResourceTableId, address(onAlliance_TargetClaimResources));
   world.registerSystemHook(getSystemResourceId("AllianceSystem"), onAlliance_TargetClaimResources, BEFORE_CALL_SYSTEM);
+}
+
+function registerRecallHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
+  world.registerSystemHook(getSystemResourceId("RecallSystem"), onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
 }
 
 /**
@@ -164,20 +183,6 @@ function registerUpgradeUnitHook(IWorld world, OnBefore_ClaimResources onBefore_
   world.grantAccess(MapItemStoredUtilitiesTableId, address(onUpgradeUnit_SpendResources));
   world.grantAccess(MaxResourceCountTableId, address(onUpgradeUnit_SpendResources));
   world.registerSystemHook(systemId, onUpgradeUnit_SpendResources, AFTER_CALL_SYSTEM);
-}
-
-/**
- * @dev Registers a store hook for between ResourceCount and the Score tables.
- * @param world The World contract instance.
- */
-function registerScoreHook(IWorld world) {
-  OnResourceCount_Score onResourceCount_Score = new OnResourceCount_Score();
-  world.grantAccess(ScoreTableId, address(onResourceCount_Score));
-  world.registerStoreHook(ResourceCountTableId, onResourceCount_Score, BEFORE_SPLICE_STATIC_DATA);
-
-  OnScore_Alliance_Score onScore_Alliance_Score = new OnScore_Alliance_Score();
-  world.grantAccess(AllianceTableId, address(onScore_Alliance_Score));
-  world.registerStoreHook(ScoreTableId, onScore_Alliance_Score, BEFORE_SPLICE_STATIC_DATA);
 }
 
 /**
