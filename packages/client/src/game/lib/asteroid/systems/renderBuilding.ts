@@ -131,9 +131,13 @@ export const renderBuilding = (scene: Scene, { network: { playerEntity } }: Setu
   ];
 
   defineEnterSystem(gameWorld, positionQuery, render);
-  defineUpdateSystem(gameWorld, positionQuery, render);
   //dust particle animation on new building
   defineEnterSystem(gameWorld, positionQuery, throwDust, { runOnInit: false });
+
+  defineUpdateSystem(gameWorld, positionQuery, (update) => {
+    render(update);
+    throwDust(update);
+  });
 
   defineExitSystem(gameWorld, positionQuery, ({ entity }) => {
     const renderId = `${entity}_entitySprite`;

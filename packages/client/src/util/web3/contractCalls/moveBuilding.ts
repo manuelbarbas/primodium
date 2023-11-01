@@ -1,9 +1,10 @@
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
+import { Coord, uuid } from "@latticexyz/utils";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
 import { SetupNetworkResult } from "src/network/types";
-import { useGameStore } from "src/store/GameStore";
+import { getBuildingTopLeft } from "src/util/building";
+import { EntityType, TransactionQueueType } from "src/util/constants";
 import { Hex } from "viem";
 
 export const moveBuilding = async (network: SetupNetworkResult, building: Entity, coord: Coord) => {
@@ -13,10 +14,20 @@ export const moveBuilding = async (network: SetupNetworkResult, building: Entity
 
   const prevPosition = components.Position.get(building);
   const position = { ...coord, parent: activeAsteroid as Hex };
+  const buildingType = components.BuildingType.get(building)?.value as Entity;
 
-  const setTransactionLoading = useGameStore.getState().setTransactionLoading;
-  setTransactionLoading(true);
-  await execute(network.worldContract.write.moveBuilding([prevPosition, position]), network);
+  if (!prevPosition || !buildingType) return;
 
-  setTransactionLoading(false);
+  await execute(
+    () => network.worldContract.write.moveBuilding([{ ...prevPosition, parent: prevPosition.parent as Hex }, position]),
+    network,
+    {
+      id: uuid() as Entity,
+      type: TransactionQueueType.Build,
+      metadata: {
+        buildingType,
+        coord: getBuildingTopLeft(coord, buildingType),
+      },
+    }
+  );
 };
