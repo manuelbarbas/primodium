@@ -22,6 +22,7 @@ export const UnitStatus: React.FC<{
   count: bigint;
   level: bigint;
 }> = ({ unit, unitsLeft, count, level }) => {
+  console.log("unit:", unit);
   if (unitsLeft - count <= 0n && count === 0n) return <></>;
 
   return (
@@ -57,6 +58,7 @@ export const BattleDetails: React.FC<{
   if (!battle) return <></>;
 
   const playersUnits = playerEntity === battle.attacker ? battle.attackerUnits : battle.defenderUnits;
+  console.log("players units:", playersUnits);
   const enemyUnits = playerEntity === battle.attacker ? battle.defenderUnits : battle.attackerUnits;
 
   return (
@@ -184,7 +186,7 @@ const format = (battleEntity: Entity) => {
   if (!battle) return null;
 
   const attackerUnits = battle.attackerStartingUnits.map((startingUnitCount, i) => {
-    const unitEntity = UnitEntityLookup[i as EUnit];
+    const unitEntity = UnitEntityLookup[(i + 1) as EUnit];
     if (!unitEntity) return;
 
     return {
@@ -196,7 +198,7 @@ const format = (battleEntity: Entity) => {
   });
 
   const defenderUnits = battle.defenderStartingUnits.map((startingUnitCount, i) => {
-    const unitEntity = UnitEntityLookup[i as EUnit];
+    const unitEntity = UnitEntityLookup[(i + 1) as EUnit];
     if (!unitEntity) return;
 
     return {
