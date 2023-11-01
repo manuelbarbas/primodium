@@ -5,15 +5,16 @@ import { SetupResult } from "../types";
 import { decodeEntity } from "@latticexyz/store-sync/recs";
 import { Hex, hexToString, padHex, zeroAddress } from "viem";
 import { toast } from "react-toastify";
+import { getNow } from "src/util/time";
 
 export function setupInvitations(mud: SetupResult) {
   const { AllianceInvitation, PlayerInvite, Alliance, AllianceJoinRequest, AllianceRequest } = components;
   const playerEntity = mud.network.playerEntity;
 
   defineComponentSystem(world, AllianceInvitation, ({ entity, value }) => {
-    const { alliance, entity: player } = decodeEntity({ entity: "bytes32", alliance: "bytes32" }, entity);
+    const { alliance, entity: player } = decodeEntity(AllianceInvitation.metadata.keySchema, entity);
 
-    if (value[0]?.value === padHex(zeroAddress, { size: 32 })) {
+    if (value[0]?.inviter === padHex(zeroAddress, { size: 32 })) {
       PlayerInvite.remove(entity);
       return;
     }
@@ -22,7 +23,8 @@ export function setupInvitations(mud: SetupResult) {
       {
         target: player as Entity,
         alliance: alliance as Entity,
-        player: value[0]?.value as Entity,
+        player: value[0]?.inviter as Entity,
+        timestamp: value[0]?.timeStamp ?? 0n,
       },
       entity
     );
@@ -31,7 +33,7 @@ export function setupInvitations(mud: SetupResult) {
   defineComponentSystem(world, AllianceJoinRequest, ({ entity, value }) => {
     const { alliance, entity: player } = decodeEntity({ entity: "bytes32", alliance: "bytes32" }, entity);
 
-    if (!value[0]?.value) {
+    if (!value[0]?.timeStamp) {
       AllianceRequest.remove(entity);
       return;
     }
@@ -40,28 +42,29 @@ export function setupInvitations(mud: SetupResult) {
       {
         player: player as Entity,
         alliance: alliance as Entity,
+        timestamp: value[0]?.timeStamp ?? 0n,
       },
       entity
     );
   });
 
-  defineComponentSystem(
-    world,
-    PlayerInvite,
-    ({ entity, value }) => {
-      if (value[0]?.player === padHex(zeroAddress, { size: 32 })) {
-        return;
-      }
+  defineComponentSystem(world, PlayerInvite, ({ entity, value }) => {
+    if (!value[0]) return;
 
-      const invite = PlayerInvite.get(entity);
-      const inviteAlliance = Alliance.get(invite?.alliance as Entity)?.name as Hex | undefined;
+    if (value[0]?.player === padHex(zeroAddress, { size: 32 })) {
+      return;
+    }
 
-      if (!inviteAlliance || invite?.target !== playerEntity) return;
+    // 30 sec buffer
+    if (value[0]?.timestamp + 30n < getNow()) return;
 
-      const allianceName = hexToString(inviteAlliance, { size: 32 });
+    const invite = PlayerInvite.get(entity);
+    const inviteAlliance = Alliance.get(invite?.alliance as Entity)?.name as Hex | undefined;
 
-      toast.info(`You have been invited to join [${allianceName}]`);
-    },
-    { runOnInit: false }
-  );
+    if (!inviteAlliance || invite?.target !== playerEntity) return;
+
+    const allianceName = hexToString(inviteAlliance, { size: 32 });
+
+    toast.info(`You have been invited to join [${allianceName}]`);
+  });
 }

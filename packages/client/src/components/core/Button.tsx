@@ -19,7 +19,7 @@ export const Button: React.FC<{
   selected = false,
   loading = false,
   tooltip,
-  tooltipDirection = "right",
+  tooltipDirection = "top",
 }) => {
   return (
     <Tooltip text={tooltip} direction={tooltipDirection}>

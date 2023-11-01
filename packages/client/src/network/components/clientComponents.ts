@@ -116,6 +116,7 @@ export const PlayerInvite = createExtendedComponent(
     target: Type.Entity,
     alliance: Type.Entity,
     player: Type.Entity,
+    timestamp: Type.BigInt,
   },
   {
     id: "PlayerInvites",
@@ -127,6 +128,7 @@ export const AllianceRequest = createExtendedComponent(
   {
     player: Type.Entity,
     alliance: Type.Entity,
+    timestamp: Type.BigInt,
   },
   {
     id: "AllianceRequests",

@@ -7,7 +7,7 @@ interface TooltipProps {
   direction?: "left" | "right" | "top" | "bottom";
 }
 
-export const Tooltip: React.FC<TooltipProps> = ({ children, text, direction = "right", className }) => {
+export const Tooltip: React.FC<TooltipProps> = ({ children, text, direction = "right" }) => {
   const getTooltipClass = () => {
     switch (direction) {
       case "left":
