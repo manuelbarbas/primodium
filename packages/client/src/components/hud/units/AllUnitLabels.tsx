@@ -42,13 +42,13 @@ export const AllUnitLabels = () => {
         />
         <UnitLabel
           name={"Anvil Light Drone"}
-          count={getUnitCount(EntityType.AnvilLightDrone)}
-          resource={EntityType.AnvilLightDrone}
+          count={getUnitCount(EntityType.AnvilDrone)}
+          resource={EntityType.AnvilDrone}
         />
         <UnitLabel
           name={"Hammer Drone"}
-          count={getUnitCount(EntityType.HammerLightDrone)}
-          resource={EntityType.HammerLightDrone}
+          count={getUnitCount(EntityType.HammerDrone)}
+          resource={EntityType.HammerDrone}
         />
         <UnitLabel
           name={"Stinger Drone"}

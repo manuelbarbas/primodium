@@ -21,21 +21,4 @@ contract ReinforceSystem is PrimodiumSystem {
 
     LibReinforce.reinforce(playerEntity, rockEntity, arrival);
   }
-
-  /**
-   * @dev Recalls all reinforcements sent by the sender to a specific rock entity.
-   * @param rockEntity The identifier of the target rock entity.
-   */
-  function recallAll(bytes32 rockEntity) public {
-    LibReinforce.recallAllReinforcements(addressToEntity(_msgSender()), rockEntity);
-  }
-
-  /**
-   * @dev Recalls a specific reinforcement sent by the sender to a rock entity.
-   * @param rockEntity The identifier of the target rock entity.
-   * @param arrivalEntity The identifier of the arrival to recall.
-   */
-  function recall(bytes32 rockEntity, bytes32 arrivalEntity) public {
-    LibReinforce.recallReinforcement(addressToEntity(_msgSender()), rockEntity, arrivalEntity);
-  }
 }
