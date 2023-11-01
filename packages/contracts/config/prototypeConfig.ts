@@ -1579,6 +1579,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   DefeatPirateBase1: {
     tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
       P_DefeatedPirates: { value: encodeArray(["DefeatPirateBase1"]) },
       P_SpawnPirateAsteroid: {
         x: 10,
