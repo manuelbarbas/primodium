@@ -1,14 +1,7 @@
 import { Entity, Has, HasValue, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { singletonIndex, world } from "src/network/world";
-import {
-  Alpha,
-  Depth,
-  ObjectPosition,
-  OnClick,
-  OnComponentSystem,
-  SetValue,
-} from "../../common/object-components/common";
+import { Depth, ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
 
 import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
@@ -111,13 +104,14 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
     ]);
 
     const gracePeriod = asteroidObjectGroup.add("Sprite");
-    const gp = components.GracePeriod.get(ownedBy)?.value;
-    const showGracePeriod = gp && gp !== 0n;
     gracePeriod.setComponents([
       ...sharedComponents,
-      OnComponentSystem(components.GracePeriod, (gameObject, { entity: gracePeriodEntity, value }) => {
-        if (gracePeriodEntity !== ownedBy) return;
-        if (value[0] === undefined || value[0].value === 0n) {
+      OnComponentSystem(components.BlockNumber, (gameObject) => {
+        const player = components.OwnedBy.get(entity)?.value as Entity | undefined;
+        const graceTime = components.GracePeriod.get(player)?.value ?? 0n;
+        const time = getNow();
+
+        if (time >= graceTime) {
           gameObject.alpha = 0;
         } else {
           gameObject.alpha = 1;
@@ -125,7 +119,6 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       }),
       Texture(Assets.SpriteAtlas, SpriteKeys.GracePeriod),
       Depth(DepthLayers.Marker + 1),
-      Alpha(showGracePeriod ? 1 : 0),
     ]);
   };
 
