@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { ESendType, Arrival, ERock, EResource } from "src/Types.sol";
-import { GracePeriod, P_GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ArrivalCount, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { Spawned, GracePeriod, P_GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ArrivalCount, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { SendArgs } from "src/Types.sol";
@@ -39,7 +39,12 @@ library LibSend {
   /// @notice Adds a new arrival.
   /// @param arrival The Arrival object to add.
   function sendUnits(Arrival memory arrival) internal {
-    if (arrival.sendType != ESendType.Reinforce && PirateAsteroid.get(arrival.destination).playerEntity == 0) {
+    if (
+      arrival.sendType != ESendType.Reinforce && // reinforce does not remove grace period
+      PirateAsteroid.get(arrival.destination).playerEntity == 0 && // pirate asteroid does not remove grace period
+      Spawned.get(arrival.to)
+    ) // sending to space rock without owner does not remove grace period
+    {
       GracePeriod.deleteRecord(arrival.from);
     }
 
@@ -52,11 +57,10 @@ library LibSend {
   /// @param playerEntity Entity initiating send.
   /// @param unitCounts Array of unit counts being sent.
   /// @return slowestSpeed Slowest unit speed among the types.
-  function getSlowestUnitSpeed(bytes32 playerEntity, uint256[NUM_UNITS] memory unitCounts)
-    internal
-    view
-    returns (uint256 slowestSpeed)
-  {
+  function getSlowestUnitSpeed(
+    bytes32 playerEntity,
+    uint256[NUM_UNITS] memory unitCounts
+  ) internal view returns (uint256 slowestSpeed) {
     uint256 bignum = 115792089237316195423570985008687907853269984665640564039457584007913129639935;
     slowestSpeed = bignum;
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();

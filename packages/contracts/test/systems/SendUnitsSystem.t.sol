@@ -435,6 +435,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
   function testInvadeEnemyGracePeriod() public {
     setupValidInvade();
     OwnedBy.set(destination, to);
+    Spawned.set(to, true);
     UnitCount.set(player, origin, unitPrototype, 100);
 
     unitData.speed = 100;
