@@ -55,9 +55,9 @@ export enum TransactionQueueType {
   Train,
   Research,
   Upgrade,
-  Raid,
-  Attack,
-  Defend,
+  Recall,
+  Reinforce,
+  Land,
 }
 
 export type TransactionQueueMetadataTypes = {

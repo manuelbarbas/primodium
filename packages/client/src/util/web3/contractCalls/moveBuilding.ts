@@ -4,7 +4,7 @@ import { execute } from "src/network/actions";
 import { components } from "src/network/components";
 import { SetupNetworkResult } from "src/network/types";
 import { getBuildingTopLeft } from "src/util/building";
-import { EntityType, TransactionQueueType } from "src/util/constants";
+import { TransactionQueueType } from "src/util/constants";
 import { Hex } from "viem";
 
 export const moveBuilding = async (network: SetupNetworkResult, building: Entity, coord: Coord) => {

@@ -12,7 +12,11 @@ export function encodeAndTrimCoord(coord: Coord): Entity {
 }
 
 export function encodeNumberEntity(key: number, entity: string): Entity {
-  return encodeEntity({ entity: "bytes32", key: "uint16" }, { entity: toHex32(entity), key });
+  return encodeEntity({ key: "uint16", entity: "bytes32" }, { key, entity: toHex32(entity) });
+}
+
+export function encodeKeyEntity(key: string, entity: string): Entity {
+  return encodeEntity({ key: "bytes32", entity: "bytes32" }, { key: toHex32(key), entity: toHex32(entity) });
 }
 
 // convert the following solidity function to typescript:
