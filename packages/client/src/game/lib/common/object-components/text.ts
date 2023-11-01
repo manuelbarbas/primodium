@@ -11,13 +11,7 @@ export const ObjectText = (
     backgroundColor?: string;
   } = {}
 ): GameObjectComponent<"Text"> => {
-  const {
-    id,
-    fontSize = 5,
-    align = "center",
-    backgroundColor,
-    color,
-  } = options;
+  const { id, fontSize = 5, align = "center", backgroundColor, color } = options;
 
   return {
     id: id ?? uuid(),

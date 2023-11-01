@@ -4,7 +4,6 @@ import { Account, BlockNumber } from "src/network/components/clientComponents";
 
 import { useMemo } from "react";
 import { useMud } from "src/hooks/useMud";
-import { useGameStore } from "src/store/GameStore";
 
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { FaCheck, FaGift, FaMedal, FaSpinner } from "react-icons/fa";
@@ -22,6 +21,7 @@ import {
   RESOURCE_SCALE,
   ResourceImage,
   ResourceType,
+  TransactionQueueType,
 } from "src/util/constants";
 import { getObjectiveDescription } from "src/util/objectiveDescriptions";
 import {
@@ -34,6 +34,8 @@ import { getFullResourceCount } from "src/util/resource";
 import { getRewards } from "src/util/reward";
 import { claimObjective } from "src/util/web3/contractCalls/claimObjective";
 import { Hex } from "viem";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { hashEntities } from "src/util/encode";
 
 const ClaimObjectiveButton: React.FC<{
   objectiveEntity: Entity;
@@ -66,20 +68,22 @@ const ClaimObjectiveButton: React.FC<{
     objectiveEntity,
   ]);
 
-  const transactionLoading = useGameStore((state) => state.transactionLoading);
-
   if (!hasCompletedObjective)
     return (
-      <Button
-        disabled={!canClaim}
-        className={`btn-sm btn-secondary border-accent w-full col-span-2 mt-2`}
-        loading={transactionLoading}
-        onClick={() => {
-          claimObjective(objectiveEntity, network.network);
-        }}
+      <TransactionQueueMask
+        className="w-full mt-2"
+        queueItemId={hashEntities(TransactionQueueType.ClaimObjective, objectiveEntity)}
       >
-        {"Claim"}
-      </Button>
+        <Button
+          disabled={!canClaim}
+          className={`btn-sm btn-secondary border-accent w-full`}
+          onClick={() => {
+            claimObjective(objectiveEntity, network.network);
+          }}
+        >
+          {"Claim"}
+        </Button>
+      </TransactionQueueMask>
     );
 
   return (

@@ -2,7 +2,6 @@ import { useEffect } from "react";
 
 import { primodium } from "@game/api";
 import { KeybindActions, Scenes } from "@game/constants";
-
 import { MapOpen, SelectedBuilding } from "src/network/components/clientComponents";
 import { getBlockTypeName } from "src/util/common";
 import { useGameStore } from "../../store/GameStore";
@@ -18,6 +17,7 @@ import { Panes } from "./panes/Panes";
 import { Resources } from "./resources/Resources";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 import { Units } from "./units/Units";
+import { LoadingIndication } from "./LoadingIndication";
 
 export const GameHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [state.showUI, state.toggleShowUI]);
@@ -55,7 +55,7 @@ export const GameHUD = () => {
             </HUD.TopMiddle>
             <HUD.TopLeft>
               <Score />
-              {/* <LoadingIndication /> */}
+              <LoadingIndication />
             </HUD.TopLeft>
             <HUD.TopRight>
               <Panes />

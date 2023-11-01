@@ -1,13 +1,17 @@
-import { Coord } from "@latticexyz/utils";
+import { execute } from "src/network/actions";
 import { components } from "src/network/components";
 import { SetupNetworkResult } from "src/network/types";
+import { TransactionQueueType } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
+import { Entity } from "@latticexyz/recs";
 import { Hex } from "viem";
 
-export async function demolishBuilding(coord: Coord, network: SetupNetworkResult) {
-  const asteroid = components.Home.get(network.playerEntity)?.asteroid;
-  if (!asteroid) return;
+export async function demolishBuilding(building: Entity, network: SetupNetworkResult) {
+  const position = components.Position.get(building);
 
-  const position = { ...coord, parent: asteroid as Hex };
-  const tx = await network.worldContract.write.destroy([position]);
-  await network.waitForTransaction(tx);
+  if (!position) return;
+
+  await execute(() => network.worldContract.write.destroy([{ ...position, parent: position.parent as Hex }]), network, {
+    id: hashEntities(TransactionQueueType.Demolish, building),
+  });
 }

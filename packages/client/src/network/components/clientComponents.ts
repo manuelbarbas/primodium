@@ -9,6 +9,7 @@ import {
   createExtendedEntityComponent,
   createExtendedNumberComponent,
 } from "./customComponents/ExtendedComponent";
+import { createTransactionQueueComponent } from "./customComponents/TransactionQueueComponent";
 
 /* -------------------------------------------------------------------------- */
 /*                                     Dev                                    */
@@ -132,6 +133,13 @@ export const AllianceRequest = createExtendedComponent(
   }
 );
 
+/* -------------------------------------------------------------------------- */
+/*                              TRANSACTION QUEUE                             */
+/* -------------------------------------------------------------------------- */
+export const TransactionQueue = createTransactionQueueComponent({
+  id: "TransactionQueue",
+});
+
 export default {
   /* ----------------------------------- Dev ---------------------------------- */
   DoubleCounter,
@@ -163,4 +171,6 @@ export default {
   /* ------------------------------- Alliances -------------------------------- */
   PlayerInvite,
   AllianceRequest,
+  /* ----------------------------- Transaction ------------------------------- */
+  TransactionQueue,
 };

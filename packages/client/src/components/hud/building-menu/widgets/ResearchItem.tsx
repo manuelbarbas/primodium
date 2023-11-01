@@ -4,11 +4,13 @@ import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { IconLabel } from "src/components/core/IconLabel";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
-import { BackgroundImage, ResourceImage, UnitEnumLookup } from "src/util/constants";
+import { BackgroundImage, ResourceImage, TransactionQueueType, UnitEnumLookup } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
 import { getUpgradeInfo } from "src/util/upgrade";
 import { upgradeUnit } from "src/util/web3/contractCalls/upgradeUnit";
 
@@ -76,15 +78,18 @@ export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
           </div>
         )}
       </div>
-      <Button
-        className="btn-sm btn-secondary"
-        disabled={!canUpgrade}
-        onClick={() => {
-          upgradeUnit(UnitEnumLookup[type], network);
-        }}
-      >
-        Upgrade
-      </Button>
+      <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, type)}>
+        <Button
+          className="btn-sm btn-secondary"
+          disabled={!canUpgrade}
+          onClick={() => {
+            upgradeUnit(UnitEnumLookup[type], network);
+          }}
+        >
+          Upgrade
+        </Button>
+      </TransactionQueueMask>
+
       {error && <p className="text-xs text-error animate-pulse uppercase py-1">{error}</p>}
     </SecondaryCard>
   );
