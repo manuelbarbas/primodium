@@ -10,6 +10,7 @@ import { clampedIndex, getBlockTypeName } from "./common";
 import { EntityType, MotherlodeSizeNames, MotherlodeTypeNames, PIRATE_KEY, ResourceStorages } from "./constants";
 import { hashKeyEntity } from "./encode";
 import { getFullResourceCount, getMotherlodeResource } from "./resource";
+import { getNow } from "./time";
 
 function getSpaceRockImage(spaceRock: Entity, type: ERock) {
   const { getSpriteBase64 } = primodium.api().sprite;
@@ -94,7 +95,7 @@ export function getSpaceRockInfo(spaceRock: Entity) {
   const hangar = Hangar.get(spaceRock);
 
   const gracePeriodValue = comps.GracePeriod.get(ownedBy)?.value ?? 0n;
-  const isInGracePeriod = gracePeriodValue > 0n;
+  const isInGracePeriod = gracePeriodValue > 0n && gracePeriodValue > getNow();
 
   let name = "";
   switch (type) {
