@@ -30,6 +30,7 @@ import {
   getIsObjectiveAvailable,
   isAllRequirementsMet,
 } from "src/util/objectives";
+import { getFullResourceCount } from "src/util/resource";
 import { getRewards } from "src/util/reward";
 import { claimObjective } from "src/util/web3/contractCalls/claimObjective";
 import { Hex } from "viem";
@@ -52,7 +53,7 @@ const ClaimObjectiveButton: React.FC<{
     comps.CompletedObjective.useWithKeys({ objective: objectiveEntity as Hex, entity: player as Hex })?.value ?? false;
 
   const canClaim = useMemo(() => {
-    return getCanClaimObjective(objectiveEntity);
+    return getCanClaimObjective(objectiveEntity, player);
   }, [
     levelRequirement,
     objectiveClaimedRequirement,
@@ -167,8 +168,17 @@ const Objective: React.FC<{
             </span>
 
             {rewardRecipe.map((resource) => {
+              let canClaim = true;
+              if (resource.type === ResourceType.Resource) {
+                const { resourceCount, resourcesToClaim, maxStorage } = getFullResourceCount(resource.id, playerEntity);
+
+                canClaim = resourceCount + resourcesToClaim + resource.amount <= maxStorage;
+              }
               return (
-                <Badge key={resource.id} className="text-xs gap-2 badge-neutral">
+                <Badge
+                  key={resource.id}
+                  className={`text-xs gap-2 badge-neutral ${!canClaim ? "border-error opacity-60 bg-error" : ""}`}
+                >
                   <ResourceIconTooltip
                     playerEntity={playerEntity}
                     name={getBlockTypeName(resource.id)}
