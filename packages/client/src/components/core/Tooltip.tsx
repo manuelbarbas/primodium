@@ -1,7 +1,7 @@
 import React from "react";
 
 interface TooltipProps {
-  children: React.ReactElement; // Note the type change
+  children: React.ReactElement;
   text?: string;
   direction?: "left" | "right" | "top" | "bottom";
 }
