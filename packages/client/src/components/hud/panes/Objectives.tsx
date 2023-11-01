@@ -20,7 +20,6 @@ import {
   BackgroundImage,
   ObjectiveEntityLookup,
   RESOURCE_SCALE,
-  ResourceEnumLookup,
   ResourceImage,
   ResourceType,
 } from "src/util/constants";
@@ -31,6 +30,7 @@ import {
   getIsObjectiveAvailable,
   isAllRequirementsMet,
 } from "src/util/objectives";
+import { getFullResourceCount } from "src/util/resource";
 import { getRewards } from "src/util/reward";
 import { claimObjective } from "src/util/web3/contractCalls/claimObjective";
 import { Hex } from "viem";
@@ -170,18 +170,9 @@ const Objective: React.FC<{
             {rewardRecipe.map((resource) => {
               let canClaim = true;
               if (resource.type === ResourceType.Resource) {
-                const maxResource =
-                  comps.MaxResourceCount.getWithKeys({
-                    entity: playerEntity as Hex,
-                    resource: ResourceEnumLookup[resource.id],
-                  })?.value ?? 0n;
-                const finalResource =
-                  comps.ResourceCount.getWithKeys({
-                    entity: playerEntity as Hex,
-                    resource: ResourceEnumLookup[resource.id],
-                  })?.value ?? 0n + resource.amount;
+                const { resourceCount, resourcesToClaim, maxStorage } = getFullResourceCount(resource.id, playerEntity);
 
-                canClaim = finalResource <= maxResource;
+                canClaim = resourceCount + resourcesToClaim + resource.amount <= maxStorage;
               }
               return (
                 <Badge

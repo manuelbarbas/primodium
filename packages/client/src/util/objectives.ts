@@ -230,7 +230,7 @@ export function getCanClaimObjective(objective: Entity, playerEntity: Entity) {
   const hasEnoughRewardResources = rewards.every((resource) => {
     if (resource.type !== ResourceType.Resource) return true;
     const { resourceCount, resourcesToClaim, maxStorage } = getFullResourceCount(resource.id, playerEntity);
-    return resourceCount + resourcesToClaim < maxStorage;
+    return resourceCount + resourcesToClaim + resource.amount < maxStorage;
   });
   return hasEnoughRewardResources && Object.values(getAllRequirements(objective)).every(isAllRequirementsMet);
 }
