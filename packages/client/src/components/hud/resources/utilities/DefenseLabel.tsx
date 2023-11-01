@@ -1,11 +1,10 @@
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
-import { useMemo } from "react";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
+import { useRockDefense } from "src/hooks/useRockDefense";
 import { components } from "src/network/components";
 import { EntityType, ResourceImage } from "src/util/constants";
-import { getRockDefense } from "src/util/defense";
 import { Hex } from "viem";
 
 export const DefenseLabel = ({ player }: { player?: Entity }) => {
@@ -13,9 +12,8 @@ export const DefenseLabel = ({ player }: { player?: Entity }) => {
   const resourceId = EntityType.Defense;
   player = player ?? components.Account.use()?.value ?? singletonEntity;
   const rock = components.Home.get(player)?.asteroid;
-  const defense = useMemo(() => {
-    return rock ? getRockDefense(rock as Entity) : 0n;
-  }, [rock]);
+  const defense = useRockDefense(rock as Entity, player);
+  if (!player || !rock) return null;
   const resourceIcon = ResourceImage.get(resourceId);
   const multiplierAmount =
     components.ResourceCount.useWithKeys({ entity: player as Hex, resource: EResource.M_DefenseMultiplier })?.value ??
