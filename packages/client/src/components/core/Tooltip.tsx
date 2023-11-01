@@ -1,7 +1,7 @@
 import React from "react";
 
 interface TooltipProps {
-  children: React.ReactNode;
+  children: React.ReactElement;
   text?: string;
   direction?: "left" | "right" | "top" | "bottom";
 }
@@ -22,12 +22,10 @@ export const Tooltip: React.FC<TooltipProps> = ({ children, text, direction = "r
     }
   };
 
-  return (
-    <div
-      className={`before:z-50 before:content-[attr(data-tip)] tooltip ${getTooltipClass()} pointer-events-auto`}
-      data-tip={text}
-    >
-      {children}
-    </div>
-  );
+  return React.cloneElement(children, {
+    "data-tip": text,
+    className: `${
+      children.props.className || ""
+    } before:z-50 before:content-[attr(data-tip)] tooltip ${getTooltipClass()} pointer-events-auto`,
+  });
 };

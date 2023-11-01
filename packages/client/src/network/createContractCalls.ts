@@ -2,10 +2,15 @@ import { encodeField } from "@latticexyz/protocol-parser";
 import { ComponentValue, Entity, Schema } from "@latticexyz/recs/src/types";
 import { StaticAbiType } from "@latticexyz/schema-type";
 import { entityToHexKeyTuple } from "@latticexyz/store-sync/recs";
-import { Coord } from "@latticexyz/utils";
 import { Hex } from "viem";
-import { components } from "./components";
 import { Components, ContractComponent, SetupNetworkResult } from "./types";
+
+//contract calls
+// import { spawn } from "src/util/web3/contractCalls/spawn";
+// import { demolishBuilding } from "src/util/web3/contractCalls/demolishBuilding";
+// import { buildBuilding } from "src/util/web3/contractCalls/buildBuilding";
+// import { claimObjective } from "src/util/web3/contractCalls/claimObjective";
+
 export function createContractCalls(
   { worldContract, waitForTransaction }: SetupNetworkResult,
   { Counter, CurrentTransaction }: Components
@@ -48,27 +53,6 @@ export function createContractCalls(
     });
   }
 
-  /* -------------------------------------------------------------------------- */
-  /*                                GAME SYSTEMS                                */
-  /* -------------------------------------------------------------------------- */
-
-  async function spawn() {
-    CurrentTransaction.set({ value: true });
-    const tx = await worldContract.write.spawn();
-    await waitForTransaction(tx);
-    CurrentTransaction.set({ value: false });
-  }
-
-  async function demolishBuilding(coord: Coord) {
-    CurrentTransaction.set({ value: true });
-    const activeAsteroid = components.Home.get()?.asteroid;
-    if (!activeAsteroid) return;
-
-    const position = { ...coord, parent: activeAsteroid as Hex };
-    const tx = await worldContract.write.destroy([position]);
-    await waitForTransaction(tx);
-    CurrentTransaction.set({ value: false });
-  }
   return {
     /* ------------------------------- Dev Systems ------------------------------ */
     increment,
@@ -76,7 +60,9 @@ export function createContractCalls(
     setComponentValue,
 
     /* ------------------------------- Game Systems ------------------------------ */
-    spawn,
-    demolishBuilding,
+    // spawn,
+    // demolishBuilding,
+    // buildBuilding,
+    // claimObjective,
   };
 }

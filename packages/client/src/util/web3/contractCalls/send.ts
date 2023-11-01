@@ -4,6 +4,7 @@ import { SetupNetworkResult } from "src/network/types";
 import { toHex32 } from "src/util/constants";
 import { Hex } from "viem";
 import { UnitCountTuple } from "../types";
+import { execute } from "src/network/actions";
 
 export const send = async (
   unitCounts: UnitCountTuple,
@@ -13,12 +14,15 @@ export const send = async (
   to: Hex,
   network: SetupNetworkResult
 ) => {
-  const tx = await network.worldContract.write.sendUnits([
-    unitCounts,
-    sendType,
-    { ...origin, parent: toHex32("0") },
-    { ...destination, parent: toHex32("0") },
-    to,
-  ]);
-  await network.waitForTransaction(tx);
+  await execute(
+    () =>
+      network.worldContract.write.sendUnits([
+        unitCounts,
+        sendType,
+        { ...origin, parent: toHex32("0") },
+        { ...destination, parent: toHex32("0") },
+        to,
+      ]),
+    network
+  );
 };

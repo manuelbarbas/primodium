@@ -3,12 +3,14 @@ import { Badge } from "src/components/core/Badge";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { useBuildingInfo } from "src/hooks/useBuildingInfo";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
-import { RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
+import { RESOURCE_SCALE, ResourceImage, ResourceType, TransactionQueueType } from "src/util/constants";
+import { encodeCoord, encodeNumberEntity } from "src/util/encode";
 import { upgradeBuilding } from "src/util/web3/contractCalls/upgradeBuilding";
 
 export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
@@ -68,15 +70,15 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
             </div>
           </div>
         </div>
-
-        <Button
-          className="w-fit btn-secondary btn-sm"
-          disabled={!canUpgrade}
-          onClick={() => upgradeBuilding(position, network)}
-          // loading={transactionLoading}
-        >
-          Upgrade
-        </Button>
+        <TransactionQueueMask queueItemId={encodeNumberEntity(TransactionQueueType.Upgrade, encodeCoord(position))}>
+          <Button
+            className="w-fit btn-secondary btn-sm"
+            disabled={!canUpgrade}
+            onClick={() => upgradeBuilding(position, network)}
+          >
+            Upgrade
+          </Button>
+        </TransactionQueueMask>
       </div>
       {error && <p className="animate-pulse text-error text-xs uppercase mt-2">{error}</p>}
       <div className="flex gap-1 mt-1">

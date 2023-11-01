@@ -9,7 +9,6 @@ import { demolishBuilding } from "src/util/web3/contractCalls/demolishBuilding";
 
 export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
   const network = useMud().network;
-  const position = components.Position.get(building) ?? { x: 0, y: 0 };
 
   return (
     <Navigator.Screen title="Demolish">
@@ -22,7 +21,7 @@ export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
           <Button
             className="btn-error btn-sm"
             onClick={() => {
-              demolishBuilding(position, network);
+              demolishBuilding(building, network);
               components.SelectedBuilding.remove();
             }}
           >
