@@ -13,7 +13,7 @@ export const OrbitActionButton: React.FC<{
   destination: Entity;
   sendType: ESendType;
   outgoing: boolean;
-  recall: boolean;
+  recall?: boolean;
 }> = ({ arrivalEntity, destination, sendType, outgoing, recall }) => {
   const network = useMud().network;
   const destinationOwner = components.OwnedBy.use(destination)?.value;
