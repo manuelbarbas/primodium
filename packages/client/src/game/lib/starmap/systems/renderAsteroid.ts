@@ -123,7 +123,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
           gameObject.alpha = 1;
         }
       }),
-      Texture(Assets.SpriteAtlas, SpriteKeys.CopperMine1),
+      Texture(Assets.SpriteAtlas, SpriteKeys.GracePeriod),
       Depth(DepthLayers.Marker + 1),
       Alpha(showGracePeriod ? 1 : 0),
     ]);
