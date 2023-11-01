@@ -1,7 +1,7 @@
-import { EntityType } from "../util/constants";
-import AsteroidTiledMap from "../maps/asteroid_0.7.json";
-import { find } from "lodash";
 import { EResource } from "contracts/config/enums";
+import { find } from "lodash";
+import AsteroidTiledMap from "../maps/asteroid_0.7.json";
+import { EntityType } from "../util/constants";
 export const ASSET_PACK = "/assets/pack.json";
 
 export const TILE_HEIGHT = 16;
@@ -180,6 +180,9 @@ export enum SpriteKeys {
   MotherlodeEnemySmall = "sprites/spacerocks/borders/Border_Enemy_Motherlode1.png",
   MotherlodeEnemyMedium = "sprites/spacerocks/borders/Border_Enemy_Motherlode2.png",
   MotherlodeEnemyLarge = "sprites/spacerocks/borders/Border_Enemy_Motherlode3.png",
+
+  // GRACE PERIOD
+  GracePeriod = "sprites/miners/coppermine/level1/Miner_Copper_LVL1_1.png",
 }
 
 export enum AnimationKeys {

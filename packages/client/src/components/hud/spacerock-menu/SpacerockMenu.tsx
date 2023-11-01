@@ -31,10 +31,9 @@ export const SpacerockMenu: React.FC = () => {
   }, []);
 
   if (!selectedSpacerock) return null;
-
   const spaceRockInfo = getSpaceRockInfo(selectedSpacerock);
 
-  const renderScreen = () => {
+  const RenderScreen = () => {
     switch (spaceRockInfo.type) {
       case ERock.Asteroid:
         return <Asteroid data={spaceRockInfo} />;
@@ -50,12 +49,16 @@ export const SpacerockMenu: React.FC = () => {
       {/* <Navigator.Breadcrumbs /> */}
 
       {/* Initial Screen */}
-      {renderScreen()}
+      <RenderScreen />
 
       {/* Sub Screens */}
       <SpacerockInfo data={spaceRockInfo} />
-      <SendFleet />
-      <UnitSelection />
+      {(!spaceRockInfo.isInGracePeriod || playerEntity == spaceRockInfo.ownedBy) && (
+        <>
+          <SendFleet />
+          <UnitSelection />
+        </>
+      )}
       <StationedUnits />
 
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2">

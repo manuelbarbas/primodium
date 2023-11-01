@@ -85,12 +85,6 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         ]
       ),
       OnClick(scene, () => {
-        const player = components.OwnedBy.get(entity)?.value as Entity | undefined;
-        const graceTime = components.GracePeriod.get(player)?.value ?? 0n;
-        const time = getNow();
-
-        if (time < graceTime && player !== playerEntity) return;
-
         components.Send.setDestination(entity);
       }),
     ]);
@@ -118,14 +112,12 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
 
     const gracePeriod = asteroidObjectGroup.add("Sprite");
     const gp = components.GracePeriod.get(ownedBy)?.value;
-    console.log("gp:", gp);
     const showGracePeriod = gp && gp !== 0n;
     gracePeriod.setComponents([
       ...sharedComponents,
       OnComponentSystem(components.GracePeriod, (gameObject, { entity: gracePeriodEntity, value }) => {
         if (gracePeriodEntity !== ownedBy) return;
         if (value[0] === undefined || value[0].value === 0n) {
-          console.log("removing grace period");
           gameObject.alpha = 0;
         } else {
           gameObject.alpha = 1;
