@@ -93,6 +93,9 @@ export function getSpaceRockInfo(spaceRock: Entity) {
 
   const hangar = Hangar.get(spaceRock);
 
+  const gracePeriodValue = comps.GracePeriod.get(ownedBy)?.value ?? 0n;
+  const isInGracePeriod = gracePeriodValue > 0n;
+
   let name = "";
   switch (type) {
     case ERock.Motherlode:
@@ -124,5 +127,7 @@ export function getSpaceRockInfo(spaceRock: Entity) {
     position,
     name,
     entity: spaceRock,
+    isInGracePeriod,
+    gracePeriodValue,
   };
 }
