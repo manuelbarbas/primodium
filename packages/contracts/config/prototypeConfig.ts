@@ -1579,7 +1579,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   DefeatPirateBase1: {
     tables: {
-      P_DefeatedPirates: { value: encodeArray(["BuildWorkshop"]) },
+      P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
+      P_DefeatedPirates: { value: encodeArray(["DefeatPirateBase1"]) },
       P_SpawnPirateAsteroid: {
         x: 10,
         y: 10,
@@ -1594,7 +1595,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   DefeatPirateBase2: {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["DefeatPirateBase1"]) },
-      P_DefeatedPirates: { value: encodeArray(["DefeatPirateBase1"]) },
+      P_DefeatedPirates: { value: encodeArray(["DefeatPirateBase2"]) },
       P_SpawnPirateAsteroid: {
         x: -20,
         y: 10,
@@ -1609,7 +1610,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   DefeatPirateBase3: {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["DefeatPirateBase2"]) },
-      P_DefeatedPirates: { value: encodeArray(["DefeatPirateBase2"]) },
+      P_DefeatedPirates: { value: encodeArray(["DefeatPirateBase3"]) },
       P_SpawnPirateAsteroid: {
         x: -12,
         y: -15,
@@ -1624,7 +1625,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   DefeatPirateBase4: {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["DefeatPirateBase3"]) },
-      P_DefeatedPirates: { value: encodeArray(["DefeatPirateBase3"]) },
+      P_DefeatedPirates: { value: encodeArray(["DefeatPirateBase4"]) },
       P_SpawnPirateAsteroid: {
         x: -3,
         y: -15,
@@ -1639,7 +1640,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   DefeatPirateBase5: {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["DefeatPirateBase4"]) },
-      P_DefeatedPirates: { value: encodeArray(["DefeatPirateBase4"]) },
+      P_DefeatedPirates: { value: encodeArray(["DefeatPirateBase5"]) },
       P_UnitReward: getUnitValues({ HammerDrone: 120 }),
     },
   },

@@ -3,6 +3,7 @@ import { defaultAbiCoder, solidityKeccak256 } from "ethers/lib/utils";
 
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { Hex } from "viem";
 import { ContractCoord } from "./types";
 
 // use this when you want to pass the entity to world.getEntityIndex
@@ -64,14 +65,14 @@ export function hashEntities(...args: (Entity | string | number)[]) {
   return solidityKeccak256(types, values) as Entity;
 }
 
-export function hashAndTrimKeyEntity(key: string | Entity | number, entity: Entity | string | number): Entity {
+export function hashAndTrimKeyEntity(key: Hex, entity: Entity | string | number): Entity {
   return trim(hashKeyEntity(key, entity));
 }
 
 // Identical to hashKeyEntity in packages/contracts/src/libraries/LibEncode.sol
-export function hashKeyEntity(key: Entity | string | number, entity: Entity | string | number): Entity {
+export function hashKeyEntity(key: Hex, entity: Entity | string | number): Entity {
   // Compute the Keccak-256 hash of the concatenated key and entity
-  return solidityKeccak256(["uint256", "uint256"], [BigNumber.from(key), BigNumber.from(entity)]) as Entity;
+  return solidityKeccak256(["bytes32", "uint256"], [BigNumber.from(key), BigNumber.from(entity)]) as Entity;
 }
 // Identical to hashKeyEntity (with string param) in packages/contracts/src/libraries/LibEncode.sol
 export function hashStringEntity(key: string, entity: Entity | string | number): Entity {

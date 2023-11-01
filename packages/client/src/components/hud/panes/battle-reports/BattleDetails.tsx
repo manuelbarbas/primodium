@@ -124,9 +124,17 @@ export const BattleDetails: React.FC<{
               )}
               {playersUnits.length !== 0 && (
                 <div className="w-full h-full">
-                  {playersUnits.map(({ type, unitsLeft, count, level }, i) => (
-                    <UnitStatus unit={type} unitsLeft={unitsLeft} count={count} level={level} key={`unit-${i + 1}`} />
-                  ))}
+                  {playersUnits.map((unit, i) =>
+                    unit ? (
+                      <UnitStatus
+                        unit={unit.type}
+                        unitsLeft={unit.unitsLeft}
+                        count={unit.count}
+                        level={unit.level}
+                        key={`unit-${i + 1}`}
+                      />
+                    ) : null
+                  )}
                 </div>
               )}
             </div>
@@ -139,9 +147,17 @@ export const BattleDetails: React.FC<{
               )}
               {enemyUnits.length !== 0 && (
                 <div className="w-full h-full">
-                  {enemyUnits.map(({ type, unitsLeft, count, level }, i) => (
-                    <UnitStatus unit={type} unitsLeft={unitsLeft} count={count} level={level} key={`unit-${i + 1}`} />
-                  ))}
+                  {enemyUnits.map((unit, i) =>
+                    unit ? (
+                      <UnitStatus
+                        unit={unit.type}
+                        unitsLeft={unit.unitsLeft}
+                        count={unit.count}
+                        level={unit.level}
+                        key={`unit-${i + 1}`}
+                      />
+                    ) : null
+                  )}
                 </div>
               )}
             </div>
@@ -169,6 +185,7 @@ const format = (battleEntity: Entity) => {
 
   const attackerUnits = battle.attackerStartingUnits.map((startingUnitCount, i) => {
     const unitEntity = UnitEntityLookup[i as EUnit];
+    if (!unitEntity) return;
 
     return {
       type: unitEntity,
@@ -180,6 +197,7 @@ const format = (battleEntity: Entity) => {
 
   const defenderUnits = battle.defenderStartingUnits.map((startingUnitCount, i) => {
     const unitEntity = UnitEntityLookup[i as EUnit];
+    if (!unitEntity) return;
 
     return {
       type: unitEntity,
