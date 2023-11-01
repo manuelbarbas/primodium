@@ -20,14 +20,13 @@ import { QueueUnits, QueueUnitsTableId } from "codegen/tables/QueueUnits.sol";
 import { ProducedResourceTableId } from "codegen/tables/ProducedResource.sol";
 import { ProductionRateTableId } from "codegen/tables/ProductionRate.sol";
 import { ProducedUnitTableId } from "codegen/tables/ProducedUnit.sol";
-import { TotalDefenseTableId } from "codegen/tables/TotalDefense.sol";
-import { TotalDefenseMultiplierTableId } from "codegen/tables/TotalDefenseMultiplier.sol";
 import { TotalVaultTableId } from "codegen/tables/TotalVault.sol";
 import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
 import { ScoreTableId } from "codegen/tables/Score.sol";
 import { AllianceTableId } from "codegen/tables/Alliance.sol";
 import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
 import { ClaimOffsetTableId } from "codegen/tables/ClaimOffset.sol";
+import { BattleResultTableId } from "codegen/tables/BattleResult.sol";
 
 import "codegen/index.sol";
 import { OnResourceCount_Score } from "src/hooks/storeHooks/OnResourceCount_Score.sol";
@@ -41,20 +40,20 @@ import { OnBuild_Requirements } from "src/hooks/systemHooks/build/OnBuild_Requir
 import { OnBuild_SpendResources } from "src/hooks/systemHooks/build/OnBuild_SpendResources.sol";
 import { OnBuild_MaxStorage } from "src/hooks/systemHooks/build/OnBuild_MaxStorage.sol";
 import { OnBuild_ProductionRate } from "src/hooks/systemHooks/build/OnBuild_ProductionRate.sol";
-import { OnBuild_Defense } from "src/hooks/systemHooks/build/OnBuild_Defense.sol";
+import { OnBuild_Vault } from "src/hooks/systemHooks/build/OnBuild_Vault.sol";
 
 import { OnUpgrade_Requirements } from "src/hooks/systemHooks/upgrade/OnUpgrade_Requirements.sol";
 import { OnUpgrade_SpendResources } from "src/hooks/systemHooks/upgrade/OnUpgrade_SpendResources.sol";
 import { OnUpgrade_MaxStorage } from "src/hooks/systemHooks/upgrade/OnUpgrade_MaxStorage.sol";
 import { OnUpgrade_ProductionRate } from "src/hooks/systemHooks/upgrade/OnUpgrade_ProductionRate.sol";
-import { OnUpgrade_Defense } from "src/hooks/systemHooks/upgrade/OnUpgrade_Defense.sol";
+import { OnUpgrade_Vault } from "src/hooks/systemHooks/upgrade/OnUpgrade_Vault.sol";
 
 import { OnDestroy_ClearUtility } from "src/hooks/systemHooks/destroy/OnDestroy_ClearUtility.sol";
 import { OnDestroy_MaxStorage } from "src/hooks/systemHooks/destroy/OnDestroy_MaxStorage.sol";
 import { OnDestroy_ProductionRate } from "src/hooks/systemHooks/destroy/OnDestroy_ProductionRate.sol";
 import { OnDestroy_Requirements } from "src/hooks/systemHooks/destroy/OnDestroy_Requirements.sol";
 import { OnDestroy_RemoveFromTiles } from "src/hooks/systemHooks/destroy/OnDestroy_RemoveFromTiles.sol";
-import { OnDestroy_Defense } from "src/hooks/systemHooks/destroy/OnDestroy_Defense.sol";
+import { OnDestroy_Vault } from "src/hooks/systemHooks/destroy/OnDestroy_Vault.sol";
 
 import { OnSendUnits_InitMotherlode } from "src/hooks/systemHooks/sendUnits/OnSendUnits_InitMotherlode.sol";
 import { OnSendUnits_Requirements } from "src/hooks/systemHooks/sendUnits/OnSendUnits_Requirements.sol";
@@ -81,7 +80,7 @@ import { OnUpgradeRange_SpendResources } from "src/hooks/systemHooks/upgradeRang
 import { OnAlliance_TargetClaimResources } from "src/hooks/systemHooks/alliance/OnAlliance_TargetClaimResources.sol";
 
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
-import { BEFORE_SPLICE_STATIC_DATA } from "@latticexyz/store/src/storeHookTypes.sol";
+import { BEFORE_SPLICE_STATIC_DATA, AFTER_SET_RECORD, ALL as STORE_ALL } from "@latticexyz/store/src/storeHookTypes.sol";
 
 function setupHooks(IWorld world) {
   OnBefore_ClaimResources onBefore_ClaimResources = new OnBefore_ClaimResources();
@@ -115,9 +114,23 @@ function setupHooks(IWorld world) {
   registerUpgradeUnitHook(world, onBefore_ClaimResources);
 
   registerAllianceHooks(world, onBefore_ClaimResources);
-
+  registerRecallHooks(world, onBefore_ClaimResources);
   //Store Hooks
   registerScoreHook(world);
+}
+
+/**
+ * @dev Registers a store hook for between ResourceCount and the Score tables.
+ * @param world The World contract instance.
+ */
+function registerScoreHook(IWorld world) {
+  OnResourceCount_Score onResourceCount_Score = new OnResourceCount_Score();
+  world.grantAccess(ScoreTableId, address(onResourceCount_Score));
+  world.registerStoreHook(ResourceCountTableId, onResourceCount_Score, BEFORE_SPLICE_STATIC_DATA);
+
+  OnScore_Alliance_Score onScore_Alliance_Score = new OnScore_Alliance_Score();
+  world.grantAccess(AllianceTableId, address(onScore_Alliance_Score));
+  world.registerStoreHook(ScoreTableId, onScore_Alliance_Score, BEFORE_SPLICE_STATIC_DATA);
 }
 
 function registerAllianceHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
@@ -131,6 +144,10 @@ function registerAllianceHooks(IWorld world, OnBefore_ClaimResources onBefore_Cl
   world.grantAccess(LastClaimedAtTableId, address(onAlliance_TargetClaimResources));
   world.grantAccess(ProducedResourceTableId, address(onAlliance_TargetClaimResources));
   world.registerSystemHook(getSystemResourceId("AllianceSystem"), onAlliance_TargetClaimResources, BEFORE_CALL_SYSTEM);
+}
+
+function registerRecallHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
+  world.registerSystemHook(getSystemResourceId("RecallSystem"), onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
 }
 
 /**
@@ -166,20 +183,6 @@ function registerUpgradeUnitHook(IWorld world, OnBefore_ClaimResources onBefore_
   world.grantAccess(MapItemStoredUtilitiesTableId, address(onUpgradeUnit_SpendResources));
   world.grantAccess(MaxResourceCountTableId, address(onUpgradeUnit_SpendResources));
   world.registerSystemHook(systemId, onUpgradeUnit_SpendResources, AFTER_CALL_SYSTEM);
-}
-
-/**
- * @dev Registers a store hook for between ResourceCount and the Score tables.
- * @param world The World contract instance.
- */
-function registerScoreHook(IWorld world) {
-  OnResourceCount_Score onResourceCount_Score = new OnResourceCount_Score();
-  world.grantAccess(ScoreTableId, address(onResourceCount_Score));
-  world.registerStoreHook(ResourceCountTableId, onResourceCount_Score, BEFORE_SPLICE_STATIC_DATA);
-
-  OnScore_Alliance_Score onScore_Alliance_Score = new OnScore_Alliance_Score();
-  world.grantAccess(AllianceTableId, address(onScore_Alliance_Score));
-  world.registerStoreHook(ScoreTableId, onScore_Alliance_Score, BEFORE_SPLICE_STATIC_DATA);
 }
 
 /**
@@ -221,11 +224,9 @@ function registerBuildHooks(IWorld world, OnBefore_ClaimResources onBefore_Claim
   world.grantAccess(MapItemStoredUtilitiesTableId, address(onBuild_ProductionRate));
   world.registerSystemHook(systemId, onBuild_ProductionRate, AFTER_CALL_SYSTEM);
 
-  OnBuild_Defense onBuild_Defense = new OnBuild_Defense();
-  world.grantAccess(TotalDefenseTableId, address(onBuild_Defense));
-  world.grantAccess(TotalDefenseMultiplierTableId, address(onBuild_Defense));
-  world.grantAccess(TotalVaultTableId, address(onBuild_Defense));
-  world.registerSystemHook(systemId, onBuild_Defense, AFTER_CALL_SYSTEM);
+  OnBuild_Vault onBuild_Vault = new OnBuild_Vault();
+  world.grantAccess(TotalVaultTableId, address(onBuild_Vault));
+  world.registerSystemHook(systemId, onBuild_Vault, AFTER_CALL_SYSTEM);
 }
 
 /**
@@ -261,11 +262,9 @@ function registerUpgradeHooks(IWorld world, OnBefore_ClaimResources onBefore_Cla
   world.grantAccess(MapItemStoredUtilitiesTableId, address(onUpgrade_ProductionRate));
   world.registerSystemHook(systemId, onUpgrade_ProductionRate, AFTER_CALL_SYSTEM);
 
-  OnUpgrade_Defense onUpgrade_Defense = new OnUpgrade_Defense();
-  world.grantAccess(TotalDefenseTableId, address(onUpgrade_Defense));
-  world.grantAccess(TotalDefenseMultiplierTableId, address(onUpgrade_Defense));
-  world.grantAccess(TotalVaultTableId, address(onUpgrade_Defense));
-  world.registerSystemHook(systemId, onUpgrade_Defense, AFTER_CALL_SYSTEM);
+  OnUpgrade_Vault onUpgrade_Vault = new OnUpgrade_Vault();
+  world.grantAccess(TotalVaultTableId, address(onUpgrade_Vault));
+  world.registerSystemHook(systemId, onUpgrade_Vault, AFTER_CALL_SYSTEM);
 }
 
 /**
@@ -300,11 +299,9 @@ function registerDestroyHooks(IWorld world, OnBefore_ClaimResources onBefore_Cla
   world.grantAccess(ResourceCountTableId, address(onDestroy_ProductionRate));
   world.registerSystemHook(systemId, onDestroy_ProductionRate, BEFORE_CALL_SYSTEM);
 
-  OnDestroy_Defense onDestroy_Defense = new OnDestroy_Defense();
-  world.grantAccess(TotalDefenseTableId, address(onDestroy_Defense));
-  world.grantAccess(TotalDefenseMultiplierTableId, address(onDestroy_Defense));
-  world.grantAccess(TotalVaultTableId, address(onDestroy_Defense));
-  world.registerSystemHook(systemId, onDestroy_Defense, BEFORE_CALL_SYSTEM);
+  OnDestroy_Vault onDestroy_Vault = new OnDestroy_Vault();
+  world.grantAccess(TotalVaultTableId, address(onDestroy_Vault));
+  world.registerSystemHook(systemId, onDestroy_Vault, BEFORE_CALL_SYSTEM);
 
   OnDestroy_RemoveFromTiles onDestroy_RemoveFromTiles = new OnDestroy_RemoveFromTiles();
   world.grantAccess(ChildrenTableId, address(onDestroy_RemoveFromTiles));

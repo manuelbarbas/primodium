@@ -1,7 +1,7 @@
-import { EntityType } from "../util/constants";
-import AsteroidTiledMap from "../maps/asteroid_0.7.json";
-import { find } from "lodash";
 import { EResource } from "contracts/config/enums";
+import { find } from "lodash";
+import AsteroidTiledMap from "../maps/asteroid_0.7.json";
+import { EntityType } from "../util/constants";
 export const ASSET_PACK = "/assets/pack.json";
 
 export const TILE_HEIGHT = 16;
@@ -180,6 +180,9 @@ export enum SpriteKeys {
   MotherlodeEnemySmall = "sprites/spacerocks/borders/Border_Enemy_Motherlode1.png",
   MotherlodeEnemyMedium = "sprites/spacerocks/borders/Border_Enemy_Motherlode2.png",
   MotherlodeEnemyLarge = "sprites/spacerocks/borders/Border_Enemy_Motherlode3.png",
+
+  // GRACE PERIOD
+  GracePeriod = "sprites/miners/coppermine/level1/Miner_Copper_LVL1_1.png",
 }
 
 export enum AnimationKeys {
@@ -278,6 +281,9 @@ export const EntitytoSpriteKey = {
 
   [EntityType.DroneFactory]: [SpriteKeys.DroneFactory1],
 
+  [EntityType.ShieldGenerator]: [SpriteKeys.DroneFactory1], //TODO
+  [EntityType.Vault]: [SpriteKeys.StorageUnit1, SpriteKeys.StorageUnit2, SpriteKeys.StorageUnit3], //TODO
+
   //STARMAP
   [EntityType.Asteroid]: [
     SpriteKeys.Asteroid1,
@@ -327,6 +333,10 @@ export const EntityIDtoAnimationKey = {
   [EntityType.DroneFactory]: [AnimationKeys.DroneFactory1],
 
   [EntityType.SAMLauncher]: [AnimationKeys.SAMLauncher1, AnimationKeys.SAMLauncher2, AnimationKeys.SAMLauncher3],
+
+  [EntityType.ShieldGenerator]: [AnimationKeys.DroneFactory1], //TODO
+
+  [EntityType.Vault]: [undefined, undefined, AnimationKeys.StorageUnit3], //TODO
 };
 
 export enum KeybindActions {

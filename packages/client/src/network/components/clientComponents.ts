@@ -1,13 +1,13 @@
 import { Type } from "@latticexyz/recs";
 import { world } from "../world";
-import { createBattleComponent } from "./customComponents/BattleComponent";
+import { createArrivalComponent } from "./customComponents/ArrivalComponent";
 import {
+  createExtendedBigIntComponent,
   createExtendedBoolComponent,
   createExtendedComponent,
   createExtendedCoordComponent,
   createExtendedEntityComponent,
   createExtendedNumberComponent,
-  createExtendedBigIntComponent,
 } from "./customComponents/ExtendedComponent";
 
 /* -------------------------------------------------------------------------- */
@@ -105,35 +105,7 @@ export const AllianceLeaderboard = createExtendedComponent(
 /* -------------------------------------------------------------------------- */
 /*                                   Battle                                   */
 /* -------------------------------------------------------------------------- */
-export const Battle = createBattleComponent();
-export const BattleReport = createExtendedComponent(
-  world,
-  {
-    show: Type.Boolean,
-    battle: Type.OptionalEntity,
-  },
-  {
-    id: "Battle",
-  }
-);
-
-const Arrival = createExtendedComponent(
-  world,
-  {
-    sendType: Type.Number,
-    unitCounts: Type.BigIntArray,
-    sendTime: Type.BigInt,
-    arrivalTime: Type.BigInt,
-    from: Type.Entity,
-    to: Type.Entity,
-    origin: Type.Entity,
-    destination: Type.Entity,
-  },
-  {
-    id: "Arrival",
-  }
-);
-
+const Arrival = createArrivalComponent();
 /* -------------------------------------------------------------------------- */
 /*                                  ALLIANCES                                 */
 /* -------------------------------------------------------------------------- */
@@ -187,8 +159,6 @@ export default {
 
   /* --------------------------------- Battle --------------------------------- */
   Arrival,
-  BattleReport,
-  Battle,
 
   /* ------------------------------- Alliances -------------------------------- */
   PlayerInvite,

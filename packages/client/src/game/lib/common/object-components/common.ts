@@ -59,6 +59,24 @@ export const ObjectPosition = <T extends keyof GameObjectTypes>(
   };
 };
 
+export const Depth = <T extends keyof GameObjectTypes>(depth: number): GameObjectComponent<T> => {
+  return {
+    id: "depth",
+    once: (gameObject) => {
+      gameObject.setDepth(depth);
+    },
+  };
+};
+
+export const Alpha = <T extends keyof GameObjectTypes>(alpha: number): GameObjectComponent<T> => {
+  return {
+    id: "alpha",
+    once: (gameObject) => {
+      gameObject.setAlpha(alpha);
+    },
+  };
+};
+
 export const SetValue = <T extends keyof GameObjectTypes>(
   properties: Partial<GameObjectInstances[T]>
 ): GameObjectComponent<T> => {

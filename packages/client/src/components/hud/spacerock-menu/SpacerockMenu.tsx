@@ -1,6 +1,9 @@
+import { ERock } from "contracts/config/enums";
 import { useEffect } from "react";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
+import { useMud } from "src/hooks";
+import { components } from "src/network/components";
 import { getSpaceRockInfo } from "src/util/spacerock";
 import { Asteroid } from "./screens/Asteroid";
 import { Motherlode } from "./screens/Motherlode";
@@ -8,9 +11,6 @@ import { SendFleet } from "./screens/SendFleet";
 import { SpacerockInfo } from "./screens/SpaceRockInfo";
 import { StationedUnits } from "./screens/StationedUnits";
 import { UnitSelection } from "./screens/UnitSelection";
-import { ERock } from "contracts/config/enums";
-import { components } from "src/network/components";
-import { useMud } from "src/hooks";
 
 export const SpacerockMenu: React.FC = () => {
   const playerEntity = useMud().network.playerEntity;
@@ -31,10 +31,9 @@ export const SpacerockMenu: React.FC = () => {
   }, []);
 
   if (!selectedSpacerock) return null;
-
   const spaceRockInfo = getSpaceRockInfo(selectedSpacerock);
 
-  const renderScreen = () => {
+  const RenderScreen = () => {
     switch (spaceRockInfo.type) {
       case ERock.Asteroid:
         return <Asteroid data={spaceRockInfo} />;
@@ -50,12 +49,16 @@ export const SpacerockMenu: React.FC = () => {
       {/* <Navigator.Breadcrumbs /> */}
 
       {/* Initial Screen */}
-      {renderScreen()}
+      <RenderScreen />
 
       {/* Sub Screens */}
       <SpacerockInfo data={spaceRockInfo} />
-      <SendFleet />
-      <UnitSelection />
+      {(!spaceRockInfo.isInGracePeriod || playerEntity == spaceRockInfo.ownedBy) && (
+        <>
+          <SendFleet />
+          <UnitSelection />
+        </>
+      )}
       <StationedUnits />
 
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2">

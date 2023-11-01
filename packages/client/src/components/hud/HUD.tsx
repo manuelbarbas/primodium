@@ -8,6 +8,7 @@ import { getBlockTypeName } from "src/util/common";
 import { useGameStore } from "../../store/GameStore";
 import { HUD } from "../core/HUD";
 import { BrandingLabel } from "../shared/BrandingLabel";
+import { GracePeriod } from "./GracePeriod";
 import { PrototypeInfo } from "./PrototypeInfo";
 import { Score } from "./Score";
 import { ViewStarmap } from "./ViewStarmap";
@@ -50,6 +51,7 @@ export const GameHUD = () => {
             <HUD.TopMiddle>
               {getBlockTypeName(selectedBuilding) && selectedBuilding && <PrototypeInfo building={selectedBuilding} />}
               {(!selectedBuilding || !getBlockTypeName(selectedBuilding)) && <ViewStarmap />}
+              <GracePeriod />
             </HUD.TopMiddle>
             <HUD.TopLeft>
               <Score />

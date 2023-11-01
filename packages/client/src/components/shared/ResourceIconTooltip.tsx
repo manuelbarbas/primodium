@@ -1,8 +1,8 @@
 import { Entity } from "@latticexyz/recs";
+import { useHasEnoughOfResource } from "src/hooks/useHasEnoughOfResource";
 import { formatNumber } from "src/util/common";
 import { RESOURCE_SCALE, ResourceType } from "src/util/constants";
 import { IconLabel } from "../core/IconLabel";
-import { useHasEnoughOfResource } from "src/hooks/useHasEnoughOfResource";
 
 type ResourceIconProps = {
   image: string;
@@ -17,6 +17,14 @@ type ResourceIconProps = {
   className?: string;
   playerEntity: Entity;
   validate?: boolean;
+  short?: boolean;
+};
+
+const suffixes = {
+  [ResourceType.Utility]: "",
+  [ResourceType.ResourceRate]: "/MIN",
+  [ResourceType.Resource]: "",
+  [ResourceType.Multiplier]: "x",
 };
 
 const ResourceIconTooltipContent = ({
@@ -29,13 +37,14 @@ const ResourceIconTooltipContent = ({
   fontSize = "md",
   className,
   hasEnough,
+  short = false,
 }: ResourceIconProps & { hasEnough: boolean }) => {
+  let value = Number((amount * 60n) / scale);
+  if (resourceType !== ResourceType.ResourceRate) value = value / 60;
+  if (resourceType == ResourceType.Multiplier) value = (value + 100) / 100;
   const label =
-    ResourceType.ResourceRate !== resourceType
-      ? amount !== 0n
-        ? formatNumber(amount / scale, 0)
-        : "--"
-      : `${formatNumber(Number((amount * 60n) / scale), 1)}/MIN`;
+    formatNumber(value, { short: short && resourceType !== ResourceType.Multiplier, fractionDigits: 0 }) +
+    suffixes[resourceType || ResourceType.Resource];
 
   return (
     <IconLabel

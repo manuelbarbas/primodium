@@ -65,6 +65,10 @@ export enum EResource {
   U_Housing,
   U_Vessel,
   U_MaxMoves,
+  U_Defense,
+
+  // Multipliers
+  M_DefenseMultiplier,
 }
 
 export enum ESize {

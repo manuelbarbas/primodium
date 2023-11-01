@@ -98,7 +98,6 @@ export const VesselSlots: React.FC<{
     resourcesToClaim: vesselsToClaim,
     maxStorage: maxVessels,
   } = useFullResourceCount(EntityType.VesselCapacity, player);
-  console.log("max storage:", maxVessels);
 
   const rawQueue = TrainingQueue.use(building);
   const queue = useMemo(() => {

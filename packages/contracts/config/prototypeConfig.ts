@@ -143,6 +143,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   World: {
     keys: [],
     tables: {
+      P_AllianceConfig: { maxAllianceMembers: 20n },
       P_GracePeriod: { value: 60n * 60n * 24n * 3n },
       P_Asteroid: maxRange,
       P_GameConfig: {
@@ -248,7 +249,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_UnitProdMultiplier: { value: 100n },
       },
       4: {
-        P_RequiredResources: getResourceValues({ Copper: 700000, Alloy: 60000, PVCell: 500000 }),
+        P_RequiredResources: getResourceValues({ Copper: 700000, Alloy: 60000, PVCell: 250000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[4]),
         },
@@ -771,17 +772,17 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Sulfur: 500000, Alloy: 200000, U_Electricity: 100 }),
-        P_Defense: { defenseValue: 2000n },
+        P_Production: getResourceValues({ U_Defense: 2000 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Platinum: 50000, Sulfur: 500000, Alloy: 200000, U_Electricity: 200 }),
-        P_Defense: { defenseValue: 10000n },
+        P_Production: getResourceValues({ U_Defense: 10000 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Iridium: 100000, Sulfur: 500000, Alloy: 200000, U_Electricity: 300 }),
-        P_Defense: { defenseValue: 250000n },
+        P_Production: getResourceValues({ U_Defense: 250000 }),
       },
     },
   },
@@ -795,7 +796,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ Sulfur: 1000000, Alloy: 500000, U_Electricity: 100 }),
-        P_DefenseMultiplier: { defenseMultiplier: 5n },
+        P_Production: getResourceValues({ M_DefenseMultiplier: 5 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 5n },
@@ -805,7 +806,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           Alloy: 1000000,
           U_Electricity: 100,
         }),
-        P_DefenseMultiplier: { defenseMultiplier: 10n },
+
+        P_Production: getResourceValues({ M_DefenseMultiplier: 5 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 7n },
@@ -815,7 +817,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           Alloy: 2000000,
           U_Electricity: 100,
         }),
-        P_DefenseMultiplier: { defenseMultiplier: 15n },
+        P_Production: getResourceValues({ M_DefenseMultiplier: 5 }),
       },
     },
   },
@@ -886,7 +888,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   },
 
   /* -------------------------------- Resources ------------------------------- */
-  // NOTE: To check if a resource is a utility, call P_IsUtility(EResource.<resource>);
+  // NOTE: To check if a resource is a utility, call P_IsUtility.get(EResource.<resource>);
   IsUtility: {
     keys: [],
     levels: {
@@ -894,6 +896,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       [MUDEnums.EResource.indexOf("U_Housing")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Vessel")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_MaxMoves")]: { P_IsUtility: { value: true } },
+      [MUDEnums.EResource.indexOf("U_Defense")]: { P_IsUtility: { value: true } },
+      [MUDEnums.EResource.indexOf("M_DefenseMultiplier")]: { P_IsUtility: { value: true } },
     },
   },
 
@@ -1575,10 +1579,11 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   DefeatPirateBase1: {
     tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
       P_DefeatedPirates: { value: encodeArray(["BuildWorkshop"]) },
       P_SpawnPirateAsteroid: {
-        x: 10,
-        y: 10,
+        x: -10,
+        y: 22,
         units: encodeArray(["MinutemanMarine"]),
         unitAmounts: [10n],
         resources: indexifyResourceArray(["Copper", "Iron", "IronPlate"]),
@@ -2010,8 +2015,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   RaidFactoryResources1: {
     tables: {
-      P_RequiredUnits: getUnitValues({ MinutemanMarine: 100 }),
-      P_RaidedResources: getResourceValues({ Iron: 200000, Copper: 200000, Alloy: 200000 }),
+      P_RaidedResources: getResourceValues({ IronPlate: 200000, PVCell: 200000, Alloy: 200000 }),
       P_UnitReward: getUnitValues({ AegisDrone: 30 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 1n } } },
@@ -2033,7 +2037,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   RaidMotherlodeResources1: {
     tables: {
-      P_RequiredUnits: getUnitValues({ StingerDrone: 30 }),
       P_RaidedResources: getResourceValues({ Titanium: 200000, Platinum: 200000, Iridium: 200000, Kimberlite: 200000 }),
       P_UnitReward: getUnitValues({ StingerDrone: 30 }),
     },

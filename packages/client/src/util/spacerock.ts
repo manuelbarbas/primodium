@@ -3,12 +3,14 @@ import { Entity } from "@latticexyz/recs";
 
 import { Assets, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { ERock } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
 import { clampedIndex, getBlockTypeName } from "./common";
-import { EntityType, MotherlodeSizeNames, MotherlodeTypeNames, ResourceStorages } from "./constants";
+import { EntityType, MotherlodeSizeNames, MotherlodeTypeNames, PIRATE_KEY, ResourceStorages } from "./constants";
+import { hashKeyEntity } from "./encode";
 import { getFullResourceCount, getMotherlodeResource } from "./resource";
-import { ERock } from "contracts/config/enums";
+import { getNow } from "./time";
 
 function getSpaceRockImage(spaceRock: Entity, type: ERock) {
   const { getSpriteBase64 } = primodium.api().sprite;
@@ -74,21 +76,26 @@ export function getSpaceRockInfo(spaceRock: Entity) {
   });
 
   const resources = ownedBy
-    ? ResourceStorages.map((resource) => {
-        const { resourceCount, resourcesToClaim } = getFullResourceCount(resource, ownedBy);
+    ? [...ResourceStorages]
+        .map((resource) => {
+          const { resourceCount, resourcesToClaim } = getFullResourceCount(resource, ownedBy);
 
-        const amount = resourceCount + resourcesToClaim;
+          const amount = resourceCount + resourcesToClaim;
 
-        return {
-          id: resource,
-          amount,
-        };
-      }).filter((resource) => resource.amount)
+          return {
+            id: resource,
+            amount,
+          };
+        })
+        .filter((resource) => resource.amount)
     : [];
 
   const motherlodeResource = getMotherlodeResource(spaceRock);
 
   const hangar = Hangar.get(spaceRock);
+
+  const gracePeriodValue = comps.GracePeriod.get(ownedBy)?.value ?? 0n;
+  const isInGracePeriod = gracePeriodValue > 0n && gracePeriodValue > getNow();
 
   let name = "";
   switch (type) {
@@ -96,7 +103,11 @@ export function getSpaceRockInfo(spaceRock: Entity) {
       name = `${MotherlodeSizeNames[motherlodeData?.size ?? 0]} ${getBlockTypeName(motherlodeResource)} Motherlode`;
       break;
     case ERock.Asteroid:
-      name = "Player Asteroid";
+      {
+        const player = comps.Account.get()?.value;
+        const hash = player ? hashKeyEntity(PIRATE_KEY, player) : undefined;
+        name = `${hash === ownedBy ? "Pirate" : "Player"} Asteroid`;
+      }
       break;
     default:
       name = "Unknown Spacerock";
@@ -117,5 +128,7 @@ export function getSpaceRockInfo(spaceRock: Entity) {
     position,
     name,
     entity: spaceRock,
+    isInGracePeriod,
+    gracePeriodValue,
   };
 }

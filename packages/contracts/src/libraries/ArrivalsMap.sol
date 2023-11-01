@@ -95,11 +95,11 @@ library ArrivalsMap {
     bytes32 asteroid,
     bytes32 key
   ) internal {
-    uint256 index = MapItemStoredArrivals.getIndex(player, asteroid, key);
     if (MapArrivals.length(player, asteroid) == 1) {
       clear(player, asteroid);
       return;
     }
+    uint256 index = MapItemStoredArrivals.getIndex(player, asteroid, key);
     bytes32 replacement = MapArrivals.getItem(player, asteroid, MapArrivals.length(player, asteroid) - 1);
     MapArrivals.update(player, asteroid, index, replacement);
     MapArrivals.pop(player, asteroid);
@@ -124,7 +124,7 @@ library ArrivalsMap {
    */
   function clear(bytes32 player, bytes32 asteroid) internal {
     for (uint256 i = 0; i < MapArrivals.length(player, asteroid); i++) {
-      bytes32 key = MapArrivals.getItem(player, asteroid, MapArrivals.length(player, asteroid) - 1);
+      bytes32 key = MapArrivals.getItem(player, asteroid, i);
       MapItemArrivals.deleteRecord(player, asteroid, key);
       MapItemStoredArrivals.deleteRecord(player, asteroid, key);
     }

@@ -14,17 +14,21 @@ export enum Action {
   DemolishBuilding,
   SelectBuilding,
   PlaceBuilding,
+  MoveBuilding,
 }
 
 export const SPEED_SCALE = BigInt(100);
 export const RESOURCE_SCALE = BigInt(100);
-export const PIRATE_KEY = "pirate";
+export const MULTIPLIER_SCALE = BigInt(100);
+
+export const PIRATE_KEY = toHex32("pirate");
 export const NUM_UNITS = Object.keys(EUnit).length / 2;
 
 export enum ResourceType {
   Resource,
   ResourceRate,
   Utility,
+  Multiplier,
 }
 
 export enum RewardType {
@@ -92,7 +96,9 @@ export const EntityType = {
   Hangar: toHex32("Hangar") as Entity,
   DroneFactory: toHex32("DroneFactory") as Entity,
   StarmapperStation: toHex32("Starmapper") as Entity,
-  SAMLauncher: toHex32("SAMLauncher") as Entity,
+  SAMLauncher: toHex32("SAM") as Entity,
+  ShieldGenerator: toHex32("ShieldGenerator") as Entity,
+  Vault: toHex32("Vault") as Entity,
 
   Alloy: toHex32("Alloy") as Entity,
   PVCell: toHex32("PVCell") as Entity,
@@ -102,6 +108,9 @@ export const EntityType = {
   Housing: toHex32("U_Housing") as Entity,
   VesselCapacity: toHex32("U_Vessel") as Entity,
   FleetMoves: toHex32("U_MaxMoves") as Entity,
+
+  Defense: toHex32("U_Defense") as Entity,
+  DefenseMultiplier: toHex32("M_DefenseMultiplier") as Entity,
 
   Bullet: toHex32("Bullet") as Entity,
   IronPlate: toHex32("IronPlate") as Entity,
@@ -119,14 +128,14 @@ export const EntityType = {
   ThermobaricMissile: toHex32("ThermobaricMissile") as Entity,
   KimberliteCrystalCatalyst: toHex32("KimberliteCrystalCatalyst") as Entity,
 
-  HammerLightDrone: toHex32("HammerDrone") as Entity,
+  HammerDrone: toHex32("HammerDrone") as Entity,
   StingerDrone: toHex32("StingerDrone") as Entity,
-  AnvilLightDrone: toHex32("AnvilDrone") as Entity,
+  AnvilDrone: toHex32("AnvilDrone") as Entity,
   AegisDrone: toHex32("AegisDrone") as Entity,
   MiningVessel: toHex32("MiningVessel") as Entity,
 
-  MinutemanMarine: toHex32("unit.MinutemanMarine") as Entity,
-  TridentMarine: toHex32("unit.TridentMarine") as Entity,
+  MinutemanMarine: toHex32("MinutemanMarine") as Entity,
+  TridentMarine: toHex32("TridentMarine") as Entity,
 
   Expansion: toHex32("Expansion") as Entity,
   ExpansionResearch1: encodeEntityLevel("Expansion", 1) as Entity,
@@ -206,9 +215,9 @@ export const BlockIdToKey = Object.entries(EntityType).reduce<{
 
 export const BackgroundImage = new Map<Entity, string[]>([
   //units
-  [EntityType.HammerLightDrone, ["/img/unit/hammerdrone.png"]],
+  [EntityType.HammerDrone, ["/img/unit/hammerdrone.png"]],
   [EntityType.StingerDrone, ["/img/unit/stingerdrone.png"]],
-  [EntityType.AnvilLightDrone, ["/img/unit/anvildrone.png"]],
+  [EntityType.AnvilDrone, ["/img/unit/anvildrone.png"]],
   [EntityType.AegisDrone, ["/img/unit/aegisdrone.png"]],
   [EntityType.MiningVessel, ["/img/unit/miningvessel.png"]],
 
@@ -321,18 +330,21 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.Housing, "/img/icons/utilitiesicon.png"],
   [EntityType.FleetMoves, "/img/icons/moveicon.png"],
   [EntityType.VesselCapacity, "/img/unit/miningvessel.png"],
+  [EntityType.Defense, "/img/resource/defense_resource.png"],
+  [EntityType.DefenseMultiplier, "/img/resource/defense_resource.png"],
 
   // debug
   [EntityType.Bullet, "/img/crafted/bullet.png"],
 
   //units
-  [EntityType.HammerLightDrone, "/img/unit/hammerdrone.png"],
+  [EntityType.HammerDrone, "/img/unit/hammerdrone.png"],
   [EntityType.StingerDrone, "/img/unit/stingerdrone.png"],
-  [EntityType.AnvilLightDrone, "/img/unit/anvildrone.png"],
+  [EntityType.AnvilDrone, "/img/unit/anvildrone.png"],
   [EntityType.AegisDrone, "/img/unit/aegisdrone.png"],
   [EntityType.MiningVessel, "/img/unit/miningvessel.png"],
   [EntityType.MinutemanMarine, "img/unit/minutemen_marine.png"],
   [EntityType.TridentMarine, "img/unit/trident_marine.png"],
+  [EntityType.Vault, "img/vault.png"],
 ]);
 
 export type DisplayKeyPair = {
@@ -374,7 +386,7 @@ export const SpaceRockTypeNames: Record<number, string> = {
   [ERock.Motherlode]: "Motherlode",
 };
 
-export const ResourceStorages = [
+export const ResourceStorages = new Set([
   EntityType.Iron,
   EntityType.Copper,
   EntityType.Lithium,
@@ -386,14 +398,17 @@ export const ResourceStorages = [
   EntityType.Iridium,
   EntityType.Platinum,
   EntityType.Kimberlite,
-];
+]);
 
-export const UtilityStorages = [
+export const UtilityStorages = new Set([
   EntityType.Housing,
   EntityType.Electricity,
   EntityType.VesselCapacity,
   EntityType.FleetMoves,
-];
+  EntityType.Defense,
+]);
+
+export const MultiplierStorages = new Set([EntityType.DefenseMultiplier]);
 
 export const ResourceEnumLookup: Record<Entity, EResource> = {
   [EntityType.Iron]: EResource.Iron,
@@ -417,6 +432,9 @@ export const ResourceEnumLookup: Record<Entity, EResource> = {
   [EntityType.Housing]: EResource.U_Housing,
   [EntityType.VesselCapacity]: EResource.U_Vessel,
   [EntityType.FleetMoves]: EResource.U_MaxMoves,
+  [EntityType.Defense]: EResource.U_Defense,
+
+  [EntityType.DefenseMultiplier]: EResource.M_DefenseMultiplier,
 };
 
 export const ResourceEntityLookup = reverseRecord(ResourceEnumLookup);
@@ -429,23 +447,25 @@ export const BuildingEnumLookup: Record<Entity, EBuilding> = {
   [EntityType.IronPlateFactory]: EBuilding.IronPlateFactory,
   [EntityType.AlloyFactory]: EBuilding.AlloyFactory,
   [EntityType.PVCellFactory]: EBuilding.PVCellFactory,
-  // [BlockType.Garage]: EBuilding.Garage,
-  // [BlockType.Workshop]: EBuilding.Workshop,
+  [EntityType.Garage]: EBuilding.Garage,
+  [EntityType.Workshop]: EBuilding.Workshop,
   [EntityType.StorageUnit]: EBuilding.StorageUnit,
   [EntityType.SolarPanel]: EBuilding.SolarPanel,
   [EntityType.DroneFactory]: EBuilding.DroneFactory,
   [EntityType.Hangar]: EBuilding.Hangar,
   [EntityType.MainBase]: EBuilding.MainBase,
-  // [EntityType.SAMSite]: EBuilding.SAMSite,
+  [EntityType.SAMLauncher]: EBuilding.SAM,
   [EntityType.StarmapperStation]: EBuilding.Starmapper,
+  [EntityType.ShieldGenerator]: EBuilding.ShieldGenerator,
+  [EntityType.Vault]: EBuilding.Vault,
 };
 
 export const BuildingEntityLookup = reverseRecord(BuildingEnumLookup);
 
 export const UnitEnumLookup: Record<Entity, EUnit> = {
-  [EntityType.HammerLightDrone]: EUnit.HammerDrone,
+  [EntityType.HammerDrone]: EUnit.HammerDrone,
   [EntityType.StingerDrone]: EUnit.StingerDrone,
-  [EntityType.AnvilLightDrone]: EUnit.AnvilDrone,
+  [EntityType.AnvilDrone]: EUnit.AnvilDrone,
   [EntityType.AegisDrone]: EUnit.AegisDrone,
   [EntityType.MiningVessel]: EUnit.MiningVessel,
   [EntityType.MinutemanMarine]: EUnit.MinutemanMarine,

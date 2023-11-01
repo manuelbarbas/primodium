@@ -4,12 +4,11 @@ pragma solidity >=0.8.21;
 import { addressToEntity } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
+
 import { LibEncode, LibMotherlode, LibSend } from "codegen/Libraries.sol";
-import { LibSend } from "libraries/LibSend.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { ReversePosition } from "codegen/tables/ReversePosition.sol";
-import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
-import { ESendType, SendArgs, ERock } from "src/Types.sol";
+import { SendArgs } from "src/Types.sol";
 
 /**
  * @title OnSendUnits_Requirements

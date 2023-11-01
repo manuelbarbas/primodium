@@ -176,6 +176,62 @@ contract LibUnitTest is PrimodiumTest {
     assertEq(UnitProductionQueue.peek(building).quantity, 98, "queue should have 98 units");
   }
 
+  function testClaimUnitsClearOffset() public {
+    Level.set(building, 1);
+    LastClaimedAt.set(building, block.timestamp);
+    P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
+
+    P_Unit.setTrainingTime(unitPrototype, 0, 10);
+    QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 10);
+    UnitProductionQueue.enqueue(building, item);
+
+    vm.warp(block.timestamp + 25);
+    LibUnit.claimBuildingUnits(player, building);
+    assertEq(ClaimOffset.get(building), 5, "offset 1 should be 5");
+    assertEq(UnitProductionQueue.peek(building).quantity, 8, "queue should have 8 units");
+
+    vm.warp(block.timestamp + 50);
+    LibUnit.claimBuildingUnits(player, building);
+    assertEq(ClaimOffset.get(building), 5, "offset 2 should be 5");
+    assertEq(UnitProductionQueue.peek(building).quantity, 3, "queue should have 3 units");
+
+    vm.warp(block.timestamp + 135);
+    LibUnit.claimBuildingUnits(player, building);
+    assertEq(ClaimOffset.get(building), 0, "offset 3 should be 0");
+    assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 10);
+  }
+
+  function testClaimMultipleUnitsClearOffset() public {
+    Level.set(building, 1);
+    LastClaimedAt.set(building, block.timestamp);
+    P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
+
+    P_Unit.setTrainingTime(unitPrototype, 0, 10);
+    QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 10);
+    UnitProductionQueue.enqueue(building, item);
+    UnitProductionQueue.enqueue(building, item);
+
+    vm.warp(block.timestamp + 125);
+    LibUnit.claimBuildingUnits(player, building);
+    assertEq(ClaimOffset.get(building), 5, "offset 1 should be 5");
+    assertEq(UnitProductionQueue.peek(building).quantity, 8, "queue should have 8 units");
+    assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 12);
+
+    vm.warp(block.timestamp + 135);
+    LibUnit.claimBuildingUnits(player, building);
+    assertEq(ClaimOffset.get(building), 0, "offset 2 should be 0");
+    assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 20);
+
+    UnitProductionQueue.enqueue(building, item);
+    UnitProductionQueue.enqueue(building, item);
+
+    vm.warp(block.timestamp + 203);
+    LibUnit.claimBuildingUnits(player, building);
+    assertEq(ClaimOffset.get(building), 0, "offset 2 should be 0");
+    assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 40);
+    assertTrue(UnitProductionQueue.isEmpty(building));
+  }
+
   function testGetUnitBuildTime() public {
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
     P_Unit.setTrainingTime(unitPrototype, 0, 100);

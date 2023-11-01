@@ -53,7 +53,7 @@ contract LibBattleTest is PrimodiumTest {
     Home.setAsteroid(player, rock);
     UnitCount.set(player, rock, unit1, unitCount);
     setupUnit(unit1, 0, defense);
-    TotalDefense.set(player, 100);
+    ResourceCount.set(player, uint8(EResource.U_Defense), 100);
     uint256 expected = (unitCount * defense) + 100;
     (uint256[] memory count, uint256 actual) = LibBattle.getDefensePoints(player, rock);
     assertEq(count[0], unitCount);
@@ -67,7 +67,7 @@ contract LibBattleTest is PrimodiumTest {
     Home.setAsteroid(player, rock);
     UnitCount.set(player, rock, unit1, unitCount);
     setupUnit(unit1, 0, defense);
-    TotalDefenseMultiplier.set(player, 200);
+    ResourceCount.set(player, uint8(EResource.M_DefenseMultiplier), 200);
     uint256 expected = (unitCount * defense) * 3;
     (uint256[] memory count, uint256 actual) = LibBattle.getDefensePoints(player, rock);
     assertEq(count[0], unitCount);
@@ -123,6 +123,8 @@ contract LibBattleTest is PrimodiumTest {
     (uint256[] memory count, uint256 actual, uint256 cargo) = LibBattle.getAttackPoints(player, rock, ESendType.Invade);
     assertEq(count[0], unitCount);
     assertEq(actual, expected, "Attack points should be equal to unitCount * attack");
+    assertEq(ArrivalsMap.size(player, rock), 0);
+    assertEq(string(MapItemArrivals.get(player, rock, arrivalId)), "");
     return expected;
   }
 

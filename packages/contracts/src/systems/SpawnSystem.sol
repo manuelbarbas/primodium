@@ -8,12 +8,13 @@ import { BuildSystem } from "systems/BuildSystem.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
-import { GracePeriod, P_GracePeriod, Spawned, Position, PositionData, Level, Home, P_EnumToPrototype } from "codegen/index.sol";
+import { P_GameConfig, GracePeriod, P_GracePeriod, Spawned, Position, PositionData, Level, Home, P_EnumToPrototype } from "codegen/index.sol";
 
 import { LibAsteroid, LibBuilding, LibEncode } from "codegen/Libraries.sol";
 import { EBuilding } from "src/Types.sol";
 import { BuildingKey } from "src/Keys.sol";
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
+import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 /// @title Spawn System for Primodium Game
 /// @notice Handles player spawning in the game world
@@ -26,14 +27,15 @@ contract SpawnSystem is PrimodiumSystem {
     bytes32 playerEntity = addressToEntity(_msgSender());
 
     require(!Spawned.get(playerEntity), "[SpawnSystem] Already spawned");
-    GracePeriod.set(playerEntity, block.timestamp + P_GracePeriod.get());
+    uint256 gracePeriodLength = (P_GracePeriod.get() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
+    GracePeriod.set(playerEntity, block.timestamp + gracePeriodLength);
     Level.set(playerEntity, 1);
 
     bytes32 asteroid = LibAsteroid.createAsteroid(playerEntity);
     PositionData memory position = Position.get(MainBasePrototypeId);
     position.parent = asteroid;
 
-    Home.set(playerEntity, asteroid, LibEncode.getHash(BuildingKey, position));
+    Home.set(playerEntity, asteroid, LibEncode.getTimedHash(BuildingKey, position));
     SystemCall.callWithHooksOrRevert(
       _msgSender(),
       getSystemResourceId("BuildSystem"),

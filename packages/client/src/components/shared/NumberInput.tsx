@@ -1,11 +1,11 @@
 import { useState } from "react";
 
 export const NumberInput: React.FC<{
-  min: number;
+  min?: number;
   max: number;
   onChange: (val: number) => void;
-}> = ({ min, max, onChange }) => {
-  const [count, setCount] = useState<number | "">(0);
+}> = ({ min = 0, max, onChange }) => {
+  const [count, setCount] = useState<number | "">(min);
 
   return (
     <div className="flex gap-2 mt-4 mb-2">
@@ -58,8 +58,8 @@ export const NumberInput: React.FC<{
       {/* add to count */}
       <button
         onClick={() => {
-          setCount(Math.min(max, count === "" ? 1 : count + 1));
-          onChange(Math.min(max, count === "" ? 1 : count + 1));
+          setCount(Math.min(max, count === "" ? min : count + 1));
+          onChange(Math.min(max, count === "" ? min : count + 1));
         }}
       >
         +

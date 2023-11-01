@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
 import { addressToEntity, getSystemResourceId } from "src/utils.sol";
 import { ResourceId, ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
@@ -50,17 +49,16 @@ contract OnBuild_ProductionRate is SystemHook {
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
     // Convert the player's address to an entity
     bytes32 playerEntity = addressToEntity(msgSender);
-    
-      (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
 
-      // Generate the unique building entity key
-      bytes32 buildingEntity = LibEncode.getHash(BuildingKey, coord);
+    (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
 
-      // Reduce the production rate of resources the building requires
-      LibReduceProductionRate.reduceProductionRate(playerEntity, buildingEntity, 1);
+    // Generate the unique building entity key
+    bytes32 buildingEntity = LibEncode.getTimedHash(BuildingKey, coord);
 
-      // Upgrade resource production for the player's building entity
-      LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 1);
-    
+    // Reduce the production rate of resources the building requires
+    LibReduceProductionRate.reduceProductionRate(playerEntity, buildingEntity, 1);
+
+    // Upgrade resource production for the player's building entity
+    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 1);
   }
 }

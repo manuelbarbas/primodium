@@ -1,20 +1,28 @@
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { ComponentUpdate, Entity, Has, HasValue } from "@latticexyz/recs";
-import { defineEnterSystem, defineExitSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
-import { Scene } from "engine/types";
-import { Action, BuildingEnumLookup } from "src/util/constants";
-import { world } from "src/network/world";
-import { ObjectPosition, OnClick, SetValue } from "../../common/object-components/common";
-import { Texture, Animation, Outline } from "../../common/object-components/sprite";
-import { validateBuildingPlacement, getBuildingDimensions, getBuildingOrigin } from "src/util/building";
-import { getRecipe, hasEnoughResources } from "src/util/resource";
-import { toast } from "react-toastify";
-import { getBlockTypeName } from "src/util/common";
 import { Assets, DepthLayers, EntityIDtoAnimationKey, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
-import { components } from "src/network/components";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import {
+  ComponentUpdate,
+  Entity,
+  Has,
+  HasValue,
+  defineEnterSystem,
+  defineExitSystem,
+  defineUpdateSystem,
+  namespaceWorld,
+} from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { Scene } from "engine/types";
+import { toast } from "react-toastify";
+import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
+import { world } from "src/network/world";
+import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
+import { getBlockTypeName } from "src/util/common";
+import { Action, BuildingEnumLookup } from "src/util/constants";
+import { getRecipe, hasEnoughResources } from "src/util/resource";
 import { buildBuilding } from "src/util/web3/contractCalls/buildBuilding";
+import { ObjectPosition, OnClick, SetValue } from "../../common/object-components/common";
+import { Animation, Outline, Texture } from "../../common/object-components/sprite";
 
 export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;

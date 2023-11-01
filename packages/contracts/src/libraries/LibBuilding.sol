@@ -20,6 +20,14 @@ import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 
 library LibBuilding {
   /**
+   * @dev gets a unique building entity ID from a coordinate.
+   * @param coord The coordinate of the building to be destroyed.
+   */
+  function getUniqueBuildingEntity(PositionData memory coord) internal view returns (bytes32) {
+    return LibEncode.getTimedHash(BuildingKey, coord);
+  }
+
+  /**
    * @dev Checks if the requirements for destroying a building are met.
    * @param playerEntity The entity ID of the player.
    * @param coord The coordinate of the building to be destroyed.
@@ -99,11 +107,11 @@ library LibBuilding {
     bytes32 buildingPrototype,
     PositionData memory coord
   ) internal returns (bytes32 buildingEntity) {
-    buildingEntity = LibEncode.getHash(BuildingKey, coord);
+    buildingEntity = LibEncode.getTimedHash(BuildingKey, coord);
 
-    Position.set(buildingEntity, coord);
     Spawned.set(buildingEntity, true);
     BuildingType.set(buildingEntity, buildingPrototype);
+    Position.set(buildingEntity, coord);
     Level.set(buildingEntity, 1);
     LastClaimedAt.set(buildingEntity, block.timestamp);
     OwnedBy.set(buildingEntity, playerEntity);
@@ -117,14 +125,15 @@ library LibBuilding {
 
   /// @notice Places building tiles for a constructed building
   /// @param playerEntity The entity ID of the player
+  /// @param buildingEntity The entity ID of the building
   /// @param buildingPrototype The type of building to construct
   /// @param position The coordinate where the building should be placed
   function placeBuildingTiles(
     bytes32 playerEntity,
+    bytes32 buildingEntity,
     bytes32 buildingPrototype,
     PositionData memory position
-  ) public {
-    bytes32 buildingEntity = LibEncode.getHash(BuildingKey, position);
+  ) internal {
     int32[] memory blueprint = P_Blueprint.get(buildingPrototype);
     Bounds memory bounds = getPlayerBounds(playerEntity);
 

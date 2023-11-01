@@ -4,27 +4,38 @@ import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.s
 import { addressToEntity, getSystemResourceId } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId, ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
-import { PositionData } from "codegen/tables/Position.sol";
-import { Level } from "codegen/tables/Level.sol";
+import { PositionData, Level, BuildingType } from "codegen/index.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
-import { BuildingKey } from "src/Keys.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
-import { LibDefense } from "libraries/LibDefense.sol";
+import { LibVault } from "libraries/LibVault.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 
 /**
- * @title OnUpgrade_Defense
+ * @title OnDestroy_Vault
  * @dev This contract is a system hook that handles the max storage capacity of a building when it is constructed in the game world.
  */
-contract OnUpgrade_Defense is SystemHook {
+contract OnDestroy_Vault is SystemHook {
   constructor() {}
 
   function onBeforeCallSystem(
     address msgSender,
     ResourceId systemId,
     bytes memory callData
-  ) public {}
+  ) public {
+    // Decode the arguments from the callData
+    bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
+    PositionData memory coord = abi.decode(args, (PositionData));
+
+    // Get the building entity from the coordinates
+    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
+
+    // Convert the player's address to an entity
+    bytes32 playerEntity = addressToEntity(msgSender);
+
+    // Clear utility usage for the building
+    LibVault.clearPlayerVault(playerEntity, buildingEntity);
+  }
 
   /**
    * @dev This function is called after the system's main logic is executed.
@@ -37,21 +48,5 @@ contract OnUpgrade_Defense is SystemHook {
     address msgSender,
     ResourceId systemId,
     bytes memory callData
-  ) public {
-    // Convert the player's address to an entity
-    bytes32 playerEntity = addressToEntity(msgSender);
-
-    // Decode the arguments from the callData
-    bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
-
-    PositionData memory coord = abi.decode(args, (PositionData));
-
-    // Get the building entity from the coordinates
-    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
-
-    // Get the level of the building
-    uint256 level = Level.get(buildingEntity);
-
-    LibDefense.upgradeBuildingDefenses(playerEntity, buildingEntity, level);
-  }
+  ) public {}
 }

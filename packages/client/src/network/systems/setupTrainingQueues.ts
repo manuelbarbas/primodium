@@ -30,7 +30,8 @@ export function setupTrainingQueues(mud: SetupResult) {
     const queueUnits = QueueUnits.getWithKeys({
       entity: building as Hex,
     });
-    if (!queueUnits) return TrainingQueue.remove(building);
+    if (!queueUnits || queueUnits.back == queueUnits.front) return TrainingQueue.remove(building);
+    console.log("offset: " + ClaimOffset.get(building, { value: 0n }).value);
     let foundUnfinished = false;
     const queue = [];
     for (let i = queueUnits.front; i < queueUnits.back; i++) {
@@ -49,9 +50,12 @@ export function setupTrainingQueues(mud: SetupResult) {
         continue;
       }
       const trainingTime = getUnitTrainingTime(owner, building, item.unitId as Entity);
-      let trainedUnits = (now - startTime) / trainingTime;
-
-      const timeRemaining = trainingTime - ((now - startTime) % trainingTime);
+      let trainedUnits = item.quantity;
+      let timeRemaining = 0n;
+      if (trainingTime > 0) {
+        trainedUnits = (now - startTime) / trainingTime;
+        timeRemaining = trainingTime - ((now - startTime) % trainingTime);
+      }
 
       if (trainedUnits == 0n) foundUnfinished = true;
       if (trainedUnits >= item.quantity) {

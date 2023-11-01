@@ -6,7 +6,7 @@ import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage } from "src/util/constants";
-import { recallAll } from "src/util/web3/contractCalls/recall";
+import { recallStationedUnits } from "src/util/web3/contractCalls/recall";
 
 export const StationedUnits: React.FC = () => {
   const network = useMud().network;
@@ -51,7 +51,7 @@ export const StationedUnits: React.FC = () => {
       <div className="flex gap-2 mt-1">
         <Navigator.BackButton
           className="btn-secondary border-none"
-          onClick={() => recallAll(destination ?? singletonEntity, network)}
+          onClick={() => recallStationedUnits(destination ?? singletonEntity, network)}
         >
           RECALL
         </Navigator.BackButton>
