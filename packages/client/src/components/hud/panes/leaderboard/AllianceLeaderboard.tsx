@@ -373,10 +373,14 @@ export const InvitesScreen: React.FC = () => {
           <FaArrowLeft />
         </Navigator.BackButton>
       </div>
-      <div className="flex gap-1 p-2 opacity-50 items-center">
-        WALLET: {entityToAddress(playerEntity, true)}
-        <Tooltip text="Click to copy" direction="left">
-          <Button className="btn-xs" onClick={() => navigator.clipboard.writeText(entityToAddress(playerEntity))}>
+      <div className="flex p-2 items-center">
+        FRIEND CODE:
+        <Tooltip text="Click to copy" direction="top">
+          <Button
+            className="btn-xs flex gap-1"
+            onClick={() => navigator.clipboard.writeText(entityToAddress(playerEntity))}
+          >
+            {entityToAddress(playerEntity, true)}
             <FaCopy />
           </Button>
         </Tooltip>
@@ -397,7 +401,7 @@ export const SendInviteScreen = () => {
       <div className="flex items-center gap-2">
         <TextInput
           placeholder="0x..."
-          topLeftLabel="ENTER PLAYER ADDRESS"
+          topLeftLabel="ENTER FRIEND CODE"
           maxLength={42}
           onChange={(e) => {
             setTargetAddress(e.target.value);
