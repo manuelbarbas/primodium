@@ -2,8 +2,9 @@ import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
 import { Hex } from "viem";
-import { EntityType, RESOURCE_SCALE, RequirementType, ResourceEntityLookup } from "./constants";
+import { EntityType, RESOURCE_SCALE, RequirementType, ResourceEntityLookup, ResourceType } from "./constants";
 import { getFullResourceCount } from "./resource";
+import { getRewards } from "./reward";
 
 type Requirement = {
   id: Entity;
@@ -224,6 +225,12 @@ export function getIsObjectiveAvailable(objective: Entity) {
   return isAllRequirementsMet(mainbaseRequirement) && isAllRequirementsMet(objectivesRequirement);
 }
 
-export function getCanClaimObjective(objective: Entity) {
-  return Object.values(getAllRequirements(objective)).every(isAllRequirementsMet);
+export function getCanClaimObjective(objective: Entity, playerEntity: Entity) {
+  const rewards = getRewards(objective);
+  const hasEnoughRewardResources = rewards.every((resource) => {
+    if (resource.type !== ResourceType.Resource) return true;
+    const { resourceCount, resourcesToClaim, maxStorage } = getFullResourceCount(resource.id, playerEntity);
+    return resourceCount + resourcesToClaim + resource.amount < maxStorage;
+  });
+  return hasEnoughRewardResources && Object.values(getAllRequirements(objective)).every(isAllRequirementsMet);
 }

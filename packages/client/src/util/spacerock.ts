@@ -7,7 +7,8 @@ import { ERock } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
 import { clampedIndex, getBlockTypeName } from "./common";
-import { EntityType, MotherlodeSizeNames, MotherlodeTypeNames, ResourceStorages } from "./constants";
+import { EntityType, MotherlodeSizeNames, MotherlodeTypeNames, PIRATE_KEY, ResourceStorages } from "./constants";
+import { hashKeyEntity } from "./encode";
 import { getFullResourceCount, getMotherlodeResource } from "./resource";
 
 function getSpaceRockImage(spaceRock: Entity, type: ERock) {
@@ -98,7 +99,11 @@ export function getSpaceRockInfo(spaceRock: Entity) {
       name = `${MotherlodeSizeNames[motherlodeData?.size ?? 0]} ${getBlockTypeName(motherlodeResource)} Motherlode`;
       break;
     case ERock.Asteroid:
-      name = "Player Asteroid";
+      {
+        const player = comps.Account.get()?.value;
+        const hash = player ? hashKeyEntity(PIRATE_KEY, player) : undefined;
+        name = `${hash === ownedBy ? "Pirate" : "Player"} Asteroid`;
+      }
       break;
     default:
       name = "Unknown Spacerock";
