@@ -94,7 +94,7 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
             { entity: player as Hex, resource: ResourceEnumLookup[resourceEntity] }
           ),
           {
-            value: 20000n,
+            value: 2000000n,
           }
         );
       },
