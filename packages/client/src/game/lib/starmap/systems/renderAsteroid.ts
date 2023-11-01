@@ -1,7 +1,14 @@
 import { Entity, Has, HasValue, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { singletonIndex, world } from "src/network/world";
-import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
+import {
+  Alpha,
+  Depth,
+  ObjectPosition,
+  OnClick,
+  OnComponentSystem,
+  SetValue,
+} from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
 
 import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
@@ -11,8 +18,8 @@ import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
 import { clampedIndex } from "src/util/common";
 import { EntityType } from "src/util/constants";
-import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 import { getNow } from "src/util/time";
+import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 
 export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -108,12 +115,33 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       }),
       Texture(Assets.SpriteAtlas, outlineSprite),
     ]);
+
+    const gracePeriod = asteroidObjectGroup.add("Sprite");
+    const gp = components.GracePeriod.get(ownedBy)?.value;
+    console.log("gp:", gp);
+    const showGracePeriod = gp && gp !== 0n;
+    gracePeriod.setComponents([
+      ...sharedComponents,
+      OnComponentSystem(components.GracePeriod, (gameObject, { entity: gracePeriodEntity, value }) => {
+        if (gracePeriodEntity !== ownedBy) return;
+        if (value[0] === undefined || value[0].value === 0n) {
+          console.log("removing grace period");
+          gameObject.alpha = 0;
+        } else {
+          gameObject.alpha = 1;
+        }
+      }),
+      Texture(Assets.SpriteAtlas, SpriteKeys.CopperMine1),
+      Depth(DepthLayers.Marker + 1),
+      Alpha(showGracePeriod ? 1 : 0),
+    ]);
   };
 
   const query = [
     Has(components.RockType),
     HasValue(components.RockType, { value: ERock.Asteroid }),
     Has(components.Position),
+    Has(components.OwnedBy),
     Not(components.PirateAsteroid),
   ];
 
