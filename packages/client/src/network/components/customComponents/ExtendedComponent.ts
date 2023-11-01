@@ -1,4 +1,5 @@
 import { KeySchema, SchemaToPrimitives } from "@latticexyz/protocol-parser";
+import { useEntityQuery } from "@latticexyz/react";
 import {
   Component,
   ComponentUpdate,
@@ -23,7 +24,6 @@ import {
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect, useState } from "react";
 import { encodeEntity } from "./util";
-import { useEntityQuery } from "@latticexyz/react";
 
 export interface Options<M extends Metadata> {
   id: string;

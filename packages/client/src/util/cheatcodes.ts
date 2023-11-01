@@ -94,7 +94,37 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
             { entity: player as Hex, resource: ResourceEnumLookup[resourceEntity] }
           ),
           {
-            value: 10000000n,
+            value: 20000n,
+          }
+        );
+      },
+    },
+    getUnits: {
+      params: [
+        { name: "unit", type: "string" },
+        { name: "count", type: "number" },
+      ],
+      function: async (unit: string, count: number) => {
+        const player = mud.network.playerEntity;
+        if (!player) throw new Error("No player found");
+
+        const unitEntity = units[unit.toLowerCase()];
+
+        if (!unitEntity) throw new Error("Unit not found");
+
+        const rock = mud.components.Home.get(player)?.asteroid as Entity | undefined;
+
+        if (!rock) throw new Error("No asteroid found");
+
+        await mud.contractCalls.setComponentValue(
+          mud.components.UnitCount,
+          encodeEntity(mud.components.UnitCount.metadata.keySchema, {
+            player: player as Hex,
+            unit: unitEntity as Hex,
+            rock: rock as Hex,
+          }),
+          {
+            value: BigInt(count),
           }
         );
       },

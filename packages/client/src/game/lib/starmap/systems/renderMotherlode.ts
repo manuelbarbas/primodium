@@ -77,7 +77,7 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
         }
       }),
       OnComponentSystem(components.OwnedBy, (_, { entity: _entity }) => {
-        if (entity === _entity) return;
+        if (entity !== _entity) return;
         const ownedBy = components.OwnedBy.get(_entity)?.value;
 
         const outlineSprite =

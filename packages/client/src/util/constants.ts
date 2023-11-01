@@ -21,7 +21,7 @@ export const SPEED_SCALE = BigInt(100);
 export const RESOURCE_SCALE = BigInt(100);
 export const MULTIPLIER_SCALE = BigInt(100);
 
-export const PIRATE_KEY = "pirate";
+export const PIRATE_KEY = toHex32("pirate");
 export const NUM_UNITS = Object.keys(EUnit).length / 2;
 
 export enum ResourceType {

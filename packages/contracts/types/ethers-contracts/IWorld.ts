@@ -14,9 +14,19 @@ import type {
   Signer,
   utils,
 } from "ethers";
-import type { FunctionFragment, Result, EventFragment } from "@ethersproject/abi";
+import type {
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
 import type { Listener, Provider } from "@ethersproject/providers";
-import type { TypedEventFilter, TypedEvent, TypedListener, OnEvent, PromiseOrValue } from "./common";
+import type {
+  TypedEventFilter,
+  TypedEvent,
+  TypedListener,
+  OnEvent,
+  PromiseOrValue,
+} from "./common";
 
 export type SystemCallDataStruct = {
   systemId: PromiseOrValue<BytesLike>;
@@ -275,9 +285,18 @@ export interface IWorldInterface extends utils.Interface {
       | "worldVersion"
   ): FunctionFragment;
 
-  encodeFunctionData(functionFragment: "acceptRequestToJoin", values: [PromiseOrValue<BytesLike>]): string;
-  encodeFunctionData(functionFragment: "batchCall", values: [SystemCallDataStruct[]]): string;
-  encodeFunctionData(functionFragment: "batchCallFrom", values: [SystemCallFromDataStruct[]]): string;
+  encodeFunctionData(
+    functionFragment: "acceptRequestToJoin",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "batchCall",
+    values: [SystemCallDataStruct[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "batchCallFrom",
+    values: [SystemCallFromDataStruct[]]
+  ): string;
   encodeFunctionData(
     functionFragment: "battle",
     values: [
@@ -287,13 +306,26 @@ export interface IWorldInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>
     ]
   ): string;
-  encodeFunctionData(functionFragment: "build", values: [PromiseOrValue<BigNumberish>, PositionDataStruct]): string;
-  encodeFunctionData(functionFragment: "call", values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(
+    functionFragment: "build",
+    values: [PromiseOrValue<BigNumberish>, PositionDataStruct]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "call",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
+  ): string;
   encodeFunctionData(
     functionFragment: "callFrom",
-    values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
   ): string;
-  encodeFunctionData(functionFragment: "claimObjective", values: [PromiseOrValue<BigNumberish>]): string;
+  encodeFunctionData(
+    functionFragment: "claimObjective",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
   encodeFunctionData(
     functionFragment: "create",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
@@ -303,7 +335,10 @@ export interface IWorldInterface extends utils.Interface {
     functionFragment: "deleteRecord",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>[]]
   ): string;
-  encodeFunctionData(functionFragment: "destroy", values: [PositionDataStruct]): string;
+  encodeFunctionData(
+    functionFragment: "destroy",
+    values: [PositionDataStruct]
+  ): string;
   encodeFunctionData(
     functionFragment: "devDeleteRecord",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>[]]
@@ -396,15 +431,27 @@ export interface IWorldInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getAttackPoints",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "getDynamicField",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>[], PromiseOrValue<BigNumberish>]
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "getDynamicFieldLength",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>[], PromiseOrValue<BigNumberish>]
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "getDynamicFieldSlice",
@@ -427,9 +474,16 @@ export interface IWorldInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getField(bytes32,bytes32[],uint8)",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>[], PromiseOrValue<BigNumberish>]
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
-  encodeFunctionData(functionFragment: "getFieldLayout", values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(
+    functionFragment: "getFieldLayout",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
   encodeFunctionData(
     functionFragment: "getFieldLength(bytes32,bytes32[],uint8,bytes32)",
     values: [
@@ -441,12 +495,23 @@ export interface IWorldInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getFieldLength(bytes32,bytes32[],uint8)",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>[], PromiseOrValue<BigNumberish>]
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
-  encodeFunctionData(functionFragment: "getKeySchema", values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(
+    functionFragment: "getKeySchema",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
   encodeFunctionData(
     functionFragment: "getRecord(bytes32,bytes32[],bytes32)",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>[], PromiseOrValue<BytesLike>]
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BytesLike>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "getRecord(bytes32,bytes32[])",
@@ -461,7 +526,10 @@ export interface IWorldInterface extends utils.Interface {
       PromiseOrValue<BytesLike>
     ]
   ): string;
-  encodeFunctionData(functionFragment: "getValueSchema", values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(
+    functionFragment: "getValueSchema",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
   encodeFunctionData(
     functionFragment: "grantAccess",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
@@ -471,7 +539,10 @@ export interface IWorldInterface extends utils.Interface {
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(functionFragment: "increment", values?: undefined): string;
-  encodeFunctionData(functionFragment: "initialize", values: [PromiseOrValue<string>]): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values: [PromiseOrValue<string>]
+  ): string;
   encodeFunctionData(
     functionFragment: "installModule",
     values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
@@ -480,12 +551,27 @@ export interface IWorldInterface extends utils.Interface {
     functionFragment: "installRootModule",
     values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
   ): string;
-  encodeFunctionData(functionFragment: "invade", values: [PromiseOrValue<BytesLike>]): string;
-  encodeFunctionData(functionFragment: "invite", values: [PromiseOrValue<BytesLike>]): string;
-  encodeFunctionData(functionFragment: "join", values: [PromiseOrValue<BytesLike>]): string;
-  encodeFunctionData(functionFragment: "kick", values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(
+    functionFragment: "invade",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "invite",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "join",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "kick",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
   encodeFunctionData(functionFragment: "leave", values?: undefined): string;
-  encodeFunctionData(functionFragment: "moveBuilding", values: [PositionDataStruct, PositionDataStruct]): string;
+  encodeFunctionData(
+    functionFragment: "moveBuilding",
+    values: [PositionDataStruct, PositionDataStruct]
+  ): string;
   encodeFunctionData(
     functionFragment: "popFromDynamicField",
     values: [
@@ -504,40 +590,73 @@ export interface IWorldInterface extends utils.Interface {
       PromiseOrValue<BytesLike>
     ]
   ): string;
-  encodeFunctionData(functionFragment: "raid", values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(
+    functionFragment: "raid",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
   encodeFunctionData(
     functionFragment: "recall",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
   ): string;
-  encodeFunctionData(functionFragment: "recallAll", values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(
+    functionFragment: "recallAll",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
   encodeFunctionData(
     functionFragment: "registerDelegation",
-    values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "registerFunctionSelector",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
   ): string;
-  encodeFunctionData(functionFragment: "registerNamespace", values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(
+    functionFragment: "registerNamespace",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
   encodeFunctionData(
     functionFragment: "registerNamespaceDelegation",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "registerRootFunctionSelector",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>, PromiseOrValue<BytesLike>]
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BytesLike>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "registerStoreHook",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "registerSystem",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>, PromiseOrValue<boolean>]
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<string>,
+      PromiseOrValue<boolean>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "registerSystemHook",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "registerTable",
@@ -554,13 +673,22 @@ export interface IWorldInterface extends utils.Interface {
     functionFragment: "reinforce",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
   ): string;
-  encodeFunctionData(functionFragment: "rejectRequestToJoin", values: [PromiseOrValue<BytesLike>]): string;
-  encodeFunctionData(functionFragment: "requestToJoin", values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(
+    functionFragment: "rejectRequestToJoin",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "requestToJoin",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
   encodeFunctionData(
     functionFragment: "revokeAccess",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
   ): string;
-  encodeFunctionData(functionFragment: "revokeInvite", values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(
+    functionFragment: "revokeInvite",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
   encodeFunctionData(
     functionFragment: "sendUnits",
     values: [
@@ -620,7 +748,10 @@ export interface IWorldInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(functionFragment: "spawn", values?: undefined): string;
-  encodeFunctionData(functionFragment: "spawnPirateAsteroid", values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(
+    functionFragment: "spawnPirateAsteroid",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
   encodeFunctionData(
     functionFragment: "spliceDynamicData",
     values: [
@@ -641,18 +772,33 @@ export interface IWorldInterface extends utils.Interface {
       PromiseOrValue<BytesLike>
     ]
   ): string;
-  encodeFunctionData(functionFragment: "storeVersion", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "storeVersion",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "trainUnits",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "transferBalanceToAddress",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "transferBalanceToNamespace",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
@@ -670,100 +816,307 @@ export interface IWorldInterface extends utils.Interface {
     functionFragment: "updateUnitsAfterBattle",
     values: [BattleResultDataStruct, PromiseOrValue<BigNumberish>]
   ): string;
-  encodeFunctionData(functionFragment: "upgradeBuilding", values: [PositionDataStruct]): string;
-  encodeFunctionData(functionFragment: "upgradeRange", values?: undefined): string;
-  encodeFunctionData(functionFragment: "upgradeUnit", values: [PromiseOrValue<BigNumberish>]): string;
-  encodeFunctionData(functionFragment: "worldVersion", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "upgradeBuilding",
+    values: [PositionDataStruct]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "upgradeRange",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "upgradeUnit",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "worldVersion",
+    values?: undefined
+  ): string;
 
-  decodeFunctionResult(functionFragment: "acceptRequestToJoin", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "acceptRequestToJoin",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "batchCall", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "batchCallFrom", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "batchCallFrom",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "battle", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "build", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "call", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "callFrom", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "claimObjective", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "claimObjective",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "create", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "creator", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "deleteRecord", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "deleteRecord",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "destroy", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "devDeleteRecord", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "devPopFromDynamicField", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "devPushToDynamicField", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "devSetDynamicField", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "devSetField(bytes32,bytes32[],uint8,bytes,bytes32)", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "devSetField(bytes32,bytes32[],uint8,bytes)", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "devSetRecord", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "devSetStaticField", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "devSpliceDynamicData", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "devSpliceStaticData", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getAttackPoints", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getDynamicField", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getDynamicFieldLength", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getDynamicFieldSlice", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getField(bytes32,bytes32[],uint8,bytes32)", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getField(bytes32,bytes32[],uint8)", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getFieldLayout", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getFieldLength(bytes32,bytes32[],uint8,bytes32)", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getFieldLength(bytes32,bytes32[],uint8)", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getKeySchema", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getRecord(bytes32,bytes32[],bytes32)", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getRecord(bytes32,bytes32[])", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getStaticField", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getValueSchema", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "grantAccess", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "devDeleteRecord",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "devPopFromDynamicField",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "devPushToDynamicField",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "devSetDynamicField",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "devSetField(bytes32,bytes32[],uint8,bytes,bytes32)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "devSetField(bytes32,bytes32[],uint8,bytes)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "devSetRecord",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "devSetStaticField",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "devSpliceDynamicData",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "devSpliceStaticData",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getAttackPoints",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getDynamicField",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getDynamicFieldLength",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getDynamicFieldSlice",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getField(bytes32,bytes32[],uint8,bytes32)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getField(bytes32,bytes32[],uint8)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getFieldLayout",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getFieldLength(bytes32,bytes32[],uint8,bytes32)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getFieldLength(bytes32,bytes32[],uint8)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getKeySchema",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getRecord(bytes32,bytes32[],bytes32)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getRecord(bytes32,bytes32[])",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getStaticField",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getValueSchema",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "grantAccess",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "increment", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "installModule", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "installRootModule", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "installModule",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "installRootModule",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "invade", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "invite", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "join", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "kick", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "leave", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "moveBuilding", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "popFromDynamicField", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "pushToDynamicField", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "moveBuilding",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "popFromDynamicField",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "pushToDynamicField",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "raid", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "recall", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "recallAll", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "registerDelegation", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "registerFunctionSelector", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "registerNamespace", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "registerNamespaceDelegation", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "registerRootFunctionSelector", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "registerStoreHook", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "registerSystem", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "registerSystemHook", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "registerTable", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "registerDelegation",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "registerFunctionSelector",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "registerNamespace",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "registerNamespaceDelegation",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "registerRootFunctionSelector",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "registerStoreHook",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "registerSystem",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "registerSystemHook",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "registerTable",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "reinforce", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "rejectRequestToJoin", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "requestToJoin", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "revokeAccess", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "revokeInvite", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "rejectRequestToJoin",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "requestToJoin",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "revokeAccess",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "revokeInvite",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "sendUnits", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "setDynamicField", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "setField(bytes32,bytes32[],uint8,bytes)", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "setField(bytes32,bytes32[],uint8,bytes,bytes32)", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "setDynamicField",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setField(bytes32,bytes32[],uint8,bytes)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setField(bytes32,bytes32[],uint8,bytes,bytes32)",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "setRecord", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "setStaticField", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "setStaticField",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "spawn", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "spawnPirateAsteroid", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "spliceDynamicData", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "spliceStaticData", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "storeVersion", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "spawnPirateAsteroid",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "spliceDynamicData",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "spliceStaticData",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "storeVersion",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "trainUnits", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "transferBalanceToAddress", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "transferBalanceToNamespace", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "transferOwnership", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "unregisterStoreHook", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "unregisterSystemHook", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "updateUnitsAfterBattle", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "upgradeBuilding", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "upgradeRange", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "upgradeUnit", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "worldVersion", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "transferBalanceToAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferBalanceToNamespace",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "unregisterStoreHook",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "unregisterSystemHook",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateUnitsAfterBattle",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "upgradeBuilding",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "upgradeRange",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "upgradeUnit",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "worldVersion",
+    data: BytesLike
+  ): Result;
 
   events: {
     "HelloStore(bytes32)": EventFragment;
@@ -800,9 +1153,13 @@ export interface Store_DeleteRecordEventObject {
   tableId: string;
   keyTuple: string[];
 }
-export type Store_DeleteRecordEvent = TypedEvent<[string, string[]], Store_DeleteRecordEventObject>;
+export type Store_DeleteRecordEvent = TypedEvent<
+  [string, string[]],
+  Store_DeleteRecordEventObject
+>;
 
-export type Store_DeleteRecordEventFilter = TypedEventFilter<Store_DeleteRecordEvent>;
+export type Store_DeleteRecordEventFilter =
+  TypedEventFilter<Store_DeleteRecordEvent>;
 
 export interface Store_SetRecordEventObject {
   tableId: string;
@@ -811,7 +1168,10 @@ export interface Store_SetRecordEventObject {
   encodedLengths: string;
   dynamicData: string;
 }
-export type Store_SetRecordEvent = TypedEvent<[string, string[], string, string, string], Store_SetRecordEventObject>;
+export type Store_SetRecordEvent = TypedEvent<
+  [string, string[], string, string, string],
+  Store_SetRecordEventObject
+>;
 
 export type Store_SetRecordEventFilter = TypedEventFilter<Store_SetRecordEvent>;
 
@@ -828,7 +1188,8 @@ export type Store_SpliceDynamicDataEvent = TypedEvent<
   Store_SpliceDynamicDataEventObject
 >;
 
-export type Store_SpliceDynamicDataEventFilter = TypedEventFilter<Store_SpliceDynamicDataEvent>;
+export type Store_SpliceDynamicDataEventFilter =
+  TypedEventFilter<Store_SpliceDynamicDataEvent>;
 
 export interface Store_SpliceStaticDataEventObject {
   tableId: string;
@@ -841,7 +1202,8 @@ export type Store_SpliceStaticDataEvent = TypedEvent<
   Store_SpliceStaticDataEventObject
 >;
 
-export type Store_SpliceStaticDataEventFilter = TypedEventFilter<Store_SpliceStaticDataEvent>;
+export type Store_SpliceStaticDataEventFilter =
+  TypedEventFilter<Store_SpliceStaticDataEvent>;
 
 export interface IWorld extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -856,9 +1218,13 @@ export interface IWorld extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TEvent>>;
 
-  listeners<TEvent extends TypedEvent>(eventFilter?: TypedEventFilter<TEvent>): Array<TypedListener<TEvent>>;
+  listeners<TEvent extends TypedEvent>(
+    eventFilter?: TypedEventFilter<TEvent>
+  ): Array<TypedListener<TEvent>>;
   listeners(eventName?: string): Array<Listener>;
-  removeAllListeners<TEvent extends TypedEvent>(eventFilter: TypedEventFilter<TEvent>): this;
+  removeAllListeners<TEvent extends TypedEvent>(
+    eventFilter: TypedEventFilter<TEvent>
+  ): this;
   removeAllListeners(eventName?: string): this;
   off: OnEvent<this>;
   on: OnEvent<this>;
@@ -1135,7 +1501,9 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    increment(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
+    increment(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     initialize(
       coreModule: PromiseOrValue<string>,
@@ -1174,7 +1542,9 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    leave(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
+    leave(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     moveBuilding(
       fromCoord: PositionDataStruct,
@@ -1356,7 +1726,9 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    spawn(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
+    spawn(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     spawnPirateAsteroid(
       prototypeEntity: PromiseOrValue<BytesLike>,
@@ -1381,7 +1753,9 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    storeVersion(overrides?: CallOverrides): Promise<[string] & { version: string }>;
+    storeVersion(
+      overrides?: CallOverrides
+    ): Promise<[string] & { version: string }>;
 
     trainUnits(
       buildingEntity: PromiseOrValue<BytesLike>,
@@ -1433,7 +1807,9 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    upgradeRange(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
+    upgradeRange(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     upgradeUnit(
       unit: PromiseOrValue<BigNumberish>,
@@ -1637,7 +2013,10 @@ export interface IWorld extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
-  getFieldLayout(tableId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
+  getFieldLayout(
+    tableId: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   "getFieldLength(bytes32,bytes32[],uint8,bytes32)"(
     tableId: PromiseOrValue<BytesLike>,
@@ -1654,7 +2033,10 @@ export interface IWorld extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  getKeySchema(tableId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
+  getKeySchema(
+    tableId: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   "getRecord(bytes32,bytes32[],bytes32)"(
     tableId: PromiseOrValue<BytesLike>,
@@ -1689,7 +2071,10 @@ export interface IWorld extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
-  getValueSchema(tableId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
+  getValueSchema(
+    tableId: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   grantAccess(
     resourceId: PromiseOrValue<BytesLike>,
@@ -1703,7 +2088,9 @@ export interface IWorld extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  increment(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
+  increment(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   initialize(
     coreModule: PromiseOrValue<string>,
@@ -1742,7 +2129,9 @@ export interface IWorld extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  leave(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
+  leave(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   moveBuilding(
     fromCoord: PositionDataStruct,
@@ -1924,7 +2313,9 @@ export interface IWorld extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  spawn(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
+  spawn(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   spawnPirateAsteroid(
     prototypeEntity: PromiseOrValue<BytesLike>,
@@ -2001,7 +2392,9 @@ export interface IWorld extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  upgradeRange(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
+  upgradeRange(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   upgradeUnit(
     unit: PromiseOrValue<BigNumberish>,
@@ -2011,11 +2404,20 @@ export interface IWorld extends BaseContract {
   worldVersion(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
-    acceptRequestToJoin(accepted: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
+    acceptRequestToJoin(
+      accepted: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
-    batchCall(systemCalls: SystemCallDataStruct[], overrides?: CallOverrides): Promise<string[]>;
+    batchCall(
+      systemCalls: SystemCallDataStruct[],
+      overrides?: CallOverrides
+    ): Promise<string[]>;
 
-    batchCallFrom(systemCalls: SystemCallFromDataStruct[], overrides?: CallOverrides): Promise<string[]>;
+    batchCallFrom(
+      systemCalls: SystemCallFromDataStruct[],
+      overrides?: CallOverrides
+    ): Promise<string[]>;
 
     battle(
       attackerEntity: PromiseOrValue<BytesLike>,
@@ -2044,7 +2446,10 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    claimObjective(objective: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>;
+    claimObjective(
+      objective: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     create(
       name: PromiseOrValue<BytesLike>,
@@ -2060,7 +2465,10 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    destroy(coord: PositionDataStruct, overrides?: CallOverrides): Promise<string>;
+    destroy(
+      coord: PositionDataStruct,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     devDeleteRecord(
       tableId: PromiseOrValue<BytesLike>,
@@ -2190,7 +2598,10 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    getFieldLayout(tableId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
+    getFieldLayout(
+      tableId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     "getFieldLength(bytes32,bytes32[],uint8,bytes32)"(
       tableId: PromiseOrValue<BytesLike>,
@@ -2207,7 +2618,10 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getKeySchema(tableId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
+    getKeySchema(
+      tableId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     "getRecord(bytes32,bytes32[],bytes32)"(
       tableId: PromiseOrValue<BytesLike>,
@@ -2242,7 +2656,10 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    getValueSchema(tableId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
+    getValueSchema(
+      tableId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     grantAccess(
       resourceId: PromiseOrValue<BytesLike>,
@@ -2258,7 +2675,10 @@ export interface IWorld extends BaseContract {
 
     increment(overrides?: CallOverrides): Promise<BigNumber>;
 
-    initialize(coreModule: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
+    initialize(
+      coreModule: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     installModule(
       module: PromiseOrValue<string>,
@@ -2272,17 +2692,33 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    invade(rockEntity: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
+    invade(
+      rockEntity: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
-    invite(target: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
+    invite(
+      target: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
-    join(alliance: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
+    join(
+      alliance: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
-    kick(target: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
+    kick(
+      target: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     leave(overrides?: CallOverrides): Promise<void>;
 
-    moveBuilding(fromCoord: PositionDataStruct, toCoord: PositionDataStruct, overrides?: CallOverrides): Promise<void>;
+    moveBuilding(
+      fromCoord: PositionDataStruct,
+      toCoord: PositionDataStruct,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     popFromDynamicField(
       tableId: PromiseOrValue<BytesLike>,
@@ -2300,7 +2736,10 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    raid(rockEntity: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
+    raid(
+      rockEntity: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     recall(
       rockEntity: PromiseOrValue<BytesLike>,
@@ -2308,7 +2747,10 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    recallAll(rockEntity: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
+    recallAll(
+      rockEntity: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     registerDelegation(
       delegatee: PromiseOrValue<string>,
@@ -2323,7 +2765,10 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    registerNamespace(namespaceId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
+    registerNamespace(
+      namespaceId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     registerNamespaceDelegation(
       namespaceId: PromiseOrValue<BytesLike>,
@@ -2376,9 +2821,15 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    rejectRequestToJoin(rejectee: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
+    rejectRequestToJoin(
+      rejectee: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
-    requestToJoin(alliance: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
+    requestToJoin(
+      alliance: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     revokeAccess(
       resourceId: PromiseOrValue<BytesLike>,
@@ -2386,7 +2837,10 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    revokeInvite(target: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<void>;
+    revokeInvite(
+      target: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     sendUnits(
       unitCounts: PromiseOrValue<BigNumberish>[],
@@ -2442,7 +2896,10 @@ export interface IWorld extends BaseContract {
 
     spawn(overrides?: CallOverrides): Promise<string>;
 
-    spawnPirateAsteroid(prototypeEntity: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
+    spawnPirateAsteroid(
+      prototypeEntity: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     spliceDynamicData(
       tableId: PromiseOrValue<BytesLike>,
@@ -2509,27 +2966,44 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    upgradeBuilding(coord: PositionDataStruct, overrides?: CallOverrides): Promise<string>;
+    upgradeBuilding(
+      coord: PositionDataStruct,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     upgradeRange(overrides?: CallOverrides): Promise<void>;
 
-    upgradeUnit(unit: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>;
+    upgradeUnit(
+      unit: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     worldVersion(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {
-    "HelloStore(bytes32)"(storeVersion?: PromiseOrValue<BytesLike> | null): HelloStoreEventFilter;
-    HelloStore(storeVersion?: PromiseOrValue<BytesLike> | null): HelloStoreEventFilter;
+    "HelloStore(bytes32)"(
+      storeVersion?: PromiseOrValue<BytesLike> | null
+    ): HelloStoreEventFilter;
+    HelloStore(
+      storeVersion?: PromiseOrValue<BytesLike> | null
+    ): HelloStoreEventFilter;
 
-    "HelloWorld(bytes32)"(worldVersion?: PromiseOrValue<BytesLike> | null): HelloWorldEventFilter;
-    HelloWorld(worldVersion?: PromiseOrValue<BytesLike> | null): HelloWorldEventFilter;
+    "HelloWorld(bytes32)"(
+      worldVersion?: PromiseOrValue<BytesLike> | null
+    ): HelloWorldEventFilter;
+    HelloWorld(
+      worldVersion?: PromiseOrValue<BytesLike> | null
+    ): HelloWorldEventFilter;
 
     "Store_DeleteRecord(bytes32,bytes32[])"(
       tableId?: PromiseOrValue<BytesLike> | null,
       keyTuple?: null
     ): Store_DeleteRecordEventFilter;
-    Store_DeleteRecord(tableId?: PromiseOrValue<BytesLike> | null, keyTuple?: null): Store_DeleteRecordEventFilter;
+    Store_DeleteRecord(
+      tableId?: PromiseOrValue<BytesLike> | null,
+      keyTuple?: null
+    ): Store_DeleteRecordEventFilter;
 
     "Store_SetRecord(bytes32,bytes32[],bytes,bytes32,bytes)"(
       tableId?: PromiseOrValue<BytesLike> | null,
@@ -2639,7 +3113,10 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    destroy(coord: PositionDataStruct, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>;
+    destroy(
+      coord: PositionDataStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
 
     devDeleteRecord(
       tableId: PromiseOrValue<BytesLike>,
@@ -2769,7 +3246,10 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getFieldLayout(tableId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<BigNumber>;
+    getFieldLayout(
+      tableId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     "getFieldLength(bytes32,bytes32[],uint8,bytes32)"(
       tableId: PromiseOrValue<BytesLike>,
@@ -2786,7 +3266,10 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getKeySchema(tableId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<BigNumber>;
+    getKeySchema(
+      tableId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     "getRecord(bytes32,bytes32[],bytes32)"(
       tableId: PromiseOrValue<BytesLike>,
@@ -2809,7 +3292,10 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getValueSchema(tableId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<BigNumber>;
+    getValueSchema(
+      tableId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     grantAccess(
       resourceId: PromiseOrValue<BytesLike>,
@@ -2823,7 +3309,9 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    increment(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>;
+    increment(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
 
     initialize(
       coreModule: PromiseOrValue<string>,
@@ -2862,7 +3350,9 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    leave(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>;
+    leave(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
 
     moveBuilding(
       fromCoord: PositionDataStruct,
@@ -3044,7 +3534,9 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    spawn(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>;
+    spawn(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
 
     spawnPirateAsteroid(
       prototypeEntity: PromiseOrValue<BytesLike>,
@@ -3121,7 +3613,9 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    upgradeRange(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>;
+    upgradeRange(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
 
     upgradeUnit(
       unit: PromiseOrValue<BigNumberish>,
@@ -3326,7 +3820,10 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getFieldLayout(tableId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getFieldLayout(
+      tableId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     "getFieldLength(bytes32,bytes32[],uint8,bytes32)"(
       tableId: PromiseOrValue<BytesLike>,
@@ -3343,7 +3840,10 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getKeySchema(tableId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getKeySchema(
+      tableId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     "getRecord(bytes32,bytes32[],bytes32)"(
       tableId: PromiseOrValue<BytesLike>,
@@ -3366,7 +3866,10 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getValueSchema(tableId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getValueSchema(
+      tableId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     grantAccess(
       resourceId: PromiseOrValue<BytesLike>,
@@ -3380,7 +3883,9 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    increment(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>;
+    increment(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
 
     initialize(
       coreModule: PromiseOrValue<string>,
@@ -3419,7 +3924,9 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    leave(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>;
+    leave(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
 
     moveBuilding(
       fromCoord: PositionDataStruct,
@@ -3601,7 +4108,9 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    spawn(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>;
+    spawn(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
 
     spawnPirateAsteroid(
       prototypeEntity: PromiseOrValue<BytesLike>,
@@ -3678,7 +4187,9 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    upgradeRange(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>;
+    upgradeRange(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
 
     upgradeUnit(
       unit: PromiseOrValue<BigNumberish>,
