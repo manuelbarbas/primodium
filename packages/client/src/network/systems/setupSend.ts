@@ -9,4 +9,8 @@ export const setupSend = (player: Entity) => {
     // temp so we can test without the set origin ui
     components.Send.setOrigin(asteroid);
   });
+  defineComponentSystem(world, components.GracePeriod, ({ entity, value }) => {
+    if (!value[0])
+      components.GracePeriod.set({ value: 0n, __dynamicData: "", __encodedLengths: "", __staticData: "" }, entity);
+  });
 };
