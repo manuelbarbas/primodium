@@ -29,8 +29,8 @@ const resources: Record<string, Entity> = {
 const units: Record<string, Entity> = {
   stinger: EntityType.StingerDrone,
   aegis: EntityType.AegisDrone,
-  anvillight: EntityType.AnvilLightDrone,
-  hammerlight: EntityType.HammerLightDrone,
+  anvil: EntityType.AnvilDrone,
+  hammer: EntityType.HammerDrone,
   mining: EntityType.MiningVessel,
 };
 
