@@ -1,10 +1,11 @@
 import { Entity } from "@latticexyz/recs";
-import { Coord, uuid } from "@latticexyz/utils";
+import { Coord } from "@latticexyz/utils";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
 import { SetupNetworkResult } from "src/network/types";
 import { getBuildingTopLeft } from "src/util/building";
 import { TransactionQueueType } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
 import { Hex } from "viem";
 
 export const moveBuilding = async (network: SetupNetworkResult, building: Entity, coord: Coord) => {
@@ -22,7 +23,7 @@ export const moveBuilding = async (network: SetupNetworkResult, building: Entity
     () => network.worldContract.write.moveBuilding([{ ...prevPosition, parent: prevPosition.parent as Hex }, position]),
     network,
     {
-      id: uuid() as Entity,
+      id: hashEntities(TransactionQueueType.Build, building),
       type: TransactionQueueType.Build,
       metadata: {
         buildingType,

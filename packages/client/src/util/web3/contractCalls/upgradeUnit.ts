@@ -2,14 +2,14 @@ import { EUnit } from "contracts/config/enums";
 import { execute } from "src/network/actions";
 import { SetupNetworkResult } from "src/network/types";
 import { TransactionQueueType, UnitEntityLookup } from "src/util/constants";
-import { encodeNumberEntity } from "src/util/encode";
+import { hashEntities } from "src/util/encode";
 
 export const upgradeUnit = async (unit: EUnit, network: SetupNetworkResult) => {
   await execute(
     () => network.worldContract.write.upgradeUnit([unit]),
     network,
     {
-      id: encodeNumberEntity(TransactionQueueType.Upgrade, UnitEntityLookup[unit]),
+      id: hashEntities(TransactionQueueType.Upgrade, UnitEntityLookup[unit]),
     },
     (receipt) => {
       // ampli.systemUpgradeRange({

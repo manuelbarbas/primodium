@@ -3,11 +3,13 @@ import { Badge } from "src/components/core/Badge";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
-import { EntityType, RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
+import { EntityType, RESOURCE_SCALE, ResourceImage, ResourceType, TransactionQueueType } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
 import { getUpgradeInfo } from "src/util/upgrade";
 import { upgradeRange } from "src/util/web3/contractCalls/upgradeRange";
 
@@ -62,17 +64,18 @@ export const ExpandRange: React.FC = () => {
             </div>
           </div>
         </div>
-
-        <Button
-          className="w-fit btn-secondary btn-sm"
-          disabled={!canUpgrade}
-          // loading={transactionLoading}
-          onClick={() => {
-            upgradeRange(network);
-          }}
-        >
-          Expand
-        </Button>
+        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, playerEntity)}>
+          <Button
+            className="w-fit btn-secondary btn-sm"
+            disabled={!canUpgrade}
+            // loading={transactionLoading}
+            onClick={() => {
+              upgradeRange(network);
+            }}
+          >
+            Expand
+          </Button>
+        </TransactionQueueMask>
       </div>
       {error && <p className="animate-pulse text-error text-xs uppercase mt-2">{error}</p>}
       <div className="flex gap-1 mt-1">

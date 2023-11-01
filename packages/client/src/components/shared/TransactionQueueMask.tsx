@@ -5,14 +5,16 @@ import { Loader } from "../core/Loader";
 export const TransactionQueueMask: React.FC<{
   children: React.ReactNode;
   queueItemId: Entity;
-}> = ({ children, queueItemId }) => {
+  className?: string;
+}> = ({ children, queueItemId, className }) => {
   const queuePosition = components.TransactionQueue.useIndex(queueItemId);
 
-  if (queuePosition === -1) return <>{children}</>;
+  if (queuePosition === -1) return <div className={className}>{children}</div>;
 
   return (
-    <div className="relative w-fit h-fit">
-      <div className="absolute inset-0 bg-black/75 rounded-box z-[1000]">
+    <div className={`relative ${className}`}>
+      {children}
+      <div className="absolute inset-0 bg-black/75 rounded-box">
         {queuePosition !== 0 && (
           <div className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-black rounded-full px-2 border border-secondary text-xs">
             {queuePosition}
@@ -24,8 +26,6 @@ export const TransactionQueueMask: React.FC<{
           </div>
         )}
       </div>
-
-      {children}
     </div>
   );
 };

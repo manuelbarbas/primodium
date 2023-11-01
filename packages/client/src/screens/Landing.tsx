@@ -3,13 +3,12 @@ import { MouseEvent, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMud } from "src/hooks/useMud";
 import { components } from "src/network/components";
+import { spawn } from "src/util/web3/contractCalls/spawn";
 
 export const Landing: React.FC = () => {
   const [message, setMessage] = useState<string | null>();
-  const {
-    contractCalls,
-    network: { playerEntity },
-  } = useMud();
+  const { network } = useMud();
+  const playerEntity = network.playerEntity;
   const navigate = useNavigate();
   const location = useLocation();
   const hasSpawned = !!components.Home.use(playerEntity)?.asteroid;
@@ -19,7 +18,7 @@ export const Landing: React.FC = () => {
     e.preventDefault();
     if (!hasSpawned) {
       try {
-        await contractCalls.spawn();
+        await spawn(network);
       } catch (e) {
         console.log(e);
         setMessage("Failed to spawn asteroid...Retry");

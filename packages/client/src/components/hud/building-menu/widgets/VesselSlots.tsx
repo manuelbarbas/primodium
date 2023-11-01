@@ -3,13 +3,14 @@ import { EResource, EUnit } from "contracts/config/enums";
 import React, { useMemo } from "react";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components, components as comps } from "src/network/components";
 import { TrainingQueue } from "src/network/components/clientComponents";
-import { useGameStore } from "src/store/GameStore";
-import { BackgroundImage, EntityType } from "src/util/constants";
+import { BackgroundImage, EntityType, TransactionQueueType } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
 import { getRecipe } from "src/util/resource";
 import { train } from "src/util/web3/contractCalls/train";
 import { Hex } from "viem";
@@ -28,11 +29,11 @@ const AddSlot: React.FC = () => {
 };
 
 const CommissionVessel: React.FC<{
+  index: number;
   player: Entity;
   building: Entity;
-}> = ({ player, building }) => {
-  const network = useMud();
-  const transactionLoading = useGameStore((state) => state.transactionLoading);
+}> = ({ player, building, index }) => {
+  const { network } = useMud();
   const recipe = useMemo(() => {
     const level = comps.UnitLevel.getWithKeys(
       { entity: player as Hex, unit: EntityType.MiningVessel as Hex },
@@ -44,16 +45,19 @@ const CommissionVessel: React.FC<{
 
   const hasEnough = useHasEnoughResources(recipe, player);
 
+  const queueIdHash = hashEntities(TransactionQueueType.Train, building, index);
+
   return (
     <div className="space-y-1">
-      <Button
-        className={`w-[5.2rem] h-[5.2rem] flex-row items-center justify-center border-secondary p-1`}
-        loading={transactionLoading}
-        disabled={!hasEnough}
-        onClick={() => train(building, EUnit.MiningVessel, 1n, network.network)}
-      >
-        <p className="text-[.7rem] text-center">+ COMMISSION VESSEL</p>
-      </Button>
+      <TransactionQueueMask queueItemId={queueIdHash}>
+        <Button
+          className={`w-[5.2rem] h-[5.2rem] flex-row items-center justify-center border-secondary p-1`}
+          disabled={!hasEnough}
+          onClick={() => train(building, EUnit.MiningVessel, 1n, network)}
+        >
+          <p className="text-[.7rem] text-center">+ COMMISSION VESSEL</p>
+        </Button>
+      </TransactionQueueMask>
     </div>
   );
 };
@@ -131,7 +135,7 @@ export const VesselSlots: React.FC<{
         Array(Number(availableVessels))
           .fill(0)
           .map((_, index) => {
-            return <CommissionVessel key={index} player={player} building={building} />;
+            return <CommissionVessel key={index} player={player} building={building} index={index} />;
           })}
       {nextLevelMaxVesselsIncrease > 0n &&
         Array(Number(nextLevelMaxVesselsIncrease))

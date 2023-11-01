@@ -58,6 +58,8 @@ export enum TransactionQueueType {
   Recall,
   Reinforce,
   Land,
+  Demolish,
+  ClaimObjective,
 }
 
 export type TransactionQueueMetadataTypes = {

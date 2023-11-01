@@ -105,12 +105,7 @@ export const Fleet: React.FC<{
             </div>
           </LabeledValue>
         ) : ESendType.Reinforce === sendType ? (
-          <OrbitActionButton
-            arrivalEntity={arrivalEntity}
-            destination={destination}
-            sendType={sendType}
-            outgoing={outgoing}
-          />
+          <OrbitActionButton arrivalEntity={arrivalEntity} destination={destination} outgoing={outgoing} />
         ) : (
           <LocateButton destination={destination} coord={destinationPosition} />
         )}

@@ -1,10 +1,14 @@
 import { Entity } from "@latticexyz/recs";
+import { execute } from "src/network/actions";
 import { SetupNetworkResult } from "src/network/types";
-import { ObjectiveEnumLookup } from "src/util/constants";
+import { ObjectiveEnumLookup, TransactionQueueType } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
 
 export const claimObjective = async (rawObjective: Entity, network: SetupNetworkResult) => {
   const objective = ObjectiveEnumLookup[rawObjective];
   if (!objective) throw new Error(`Objective ${rawObjective} not found in ObjectiveEnumLookup`);
-  const tx = await network.worldContract.write.claimObjective([objective]);
-  await network.waitForTransaction(tx);
+
+  await execute(() => network.worldContract.write.claimObjective([objective]), network, {
+    id: hashEntities(TransactionQueueType.ClaimObjective, rawObjective),
+  });
 };

@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
 import { getBuildingName } from "src/util/building";
-import { Action, EntityType } from "src/util/constants";
+import { Action, EntityType, TransactionQueueType } from "src/util/constants";
 import { Basic } from "./screens/Basic";
 import { BuildingInfo } from "./screens/BuildingInfo";
 import { Demolish } from "./screens/Demolish";
@@ -17,6 +17,8 @@ import { MiningVessels } from "./screens/MiningVessels";
 import { Move } from "./screens/Move";
 import { UnitFactory } from "./screens/UnitFactory";
 import { UpgradeUnit } from "./screens/UpgradeUnit";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { hashEntities } from "src/util/encode";
 
 export const BuildingMenu: React.FC = () => {
   const selectedBuilding = components.SelectedBuilding.use()?.value;
@@ -97,26 +99,30 @@ export const BuildingMenu: React.FC = () => {
       {buildingType !== EntityType.MainBase && (
         <>
           <div className="absolute top-0 right-[4.5rem] -translate-y-1/2 translate-x-1/2">
-            <Navigator.NavButton
-              tooltip="Move"
-              tooltipDirection="top"
-              className=" btn-square btn-sm font-bold border border-secondary inline-flex"
-              to="Move"
-              onClick={() => components.SelectedAction.set({ value: Action.MoveBuilding })}
-            >
-              <FaArrowsAlt size={12} />
-            </Navigator.NavButton>
+            <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Build, selectedBuilding)}>
+              <Navigator.NavButton
+                tooltip="Move"
+                tooltipDirection="top"
+                className=" btn-square btn-sm font-bold border border-secondary inline-flex"
+                to="Move"
+                onClick={() => components.SelectedAction.set({ value: Action.MoveBuilding })}
+              >
+                <FaArrowsAlt size={12} />
+              </Navigator.NavButton>
+            </TransactionQueueMask>
           </div>
 
           <div className="absolute top-0 right-9 -translate-y-1/2 translate-x-1/2">
-            <Navigator.NavButton
-              tooltip="Demolish"
-              tooltipDirection="top"
-              className="btn-square btn-sm font-bold border border-error inline-flex"
-              to="Demolish"
-            >
-              <FaTrash size={12} />
-            </Navigator.NavButton>
+            <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Demolish, selectedBuilding)}>
+              <Navigator.NavButton
+                tooltip="Demolish"
+                tooltipDirection="top"
+                className="btn-square btn-sm font-bold border border-error inline-flex"
+                to="Demolish"
+              >
+                <FaTrash size={12} />
+              </Navigator.NavButton>
+            </TransactionQueueMask>
           </div>
         </>
       )}
