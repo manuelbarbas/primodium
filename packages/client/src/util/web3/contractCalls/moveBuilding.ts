@@ -31,7 +31,7 @@ export const moveBuilding = async (network: SetupNetworkResult, building: Entity
       },
     },
     (receipt) => {
-      // TODO: parse receipt
+      // handle amplitude here
     }
   );
 };

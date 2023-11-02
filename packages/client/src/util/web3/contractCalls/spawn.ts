@@ -7,7 +7,7 @@ export const spawn = async (network: SetupNetworkResult) => {
     network,
     { id: "spawn" },
     (receipt) => {
-      // TODO: parse receipt
+      // handle amplitude here
     }
   );
 };

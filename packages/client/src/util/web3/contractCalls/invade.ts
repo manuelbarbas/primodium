@@ -13,7 +13,7 @@ export const invade = async (rockEntity: Entity, network: SetupNetworkResult) =>
       id: hashEntities(TransactionQueueType.Land, rockEntity),
     },
     (receipt) => {
-      // TODO: parse receipt
+      // handle amplitude here
     }
   );
 };

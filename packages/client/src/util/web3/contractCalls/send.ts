@@ -30,7 +30,7 @@ export const send = async (
       id: hashEntities(unitCounts.toString(), sendType, origin, destination),
     },
     (receipt) => {
-      // TODO: parse receipt
+      // handle amplitude here
     }
   );
 };

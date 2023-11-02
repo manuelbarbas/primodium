@@ -17,7 +17,7 @@ export const reinforce = async (rockEntity: Entity, arrivalEntity: Entity, netwo
       id: hashEntities(TransactionQueueType.Reinforce, arrivalEntity, rockEntity),
     },
     (receipt) => {
-      // TODO: parse receipt
+      // handle amplitude here
     }
   );
 };
