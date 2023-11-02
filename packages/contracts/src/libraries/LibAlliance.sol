@@ -58,12 +58,10 @@ library LibAlliance {
   /**
    * @dev Checks if the player can grant a role to another player.
    * @param playerEntity The entity ID of the player granting the role.
+   * @param toBeGranted The entity ID of the player receiving the new role.
+   * @param roleToBeGranted The role.
    */
-  function checkCanGrantRole(
-    bytes32 playerEntity,
-    bytes32 toBeGranted,
-    EAllianceRole roleToBeGranted
-  ) internal view {
+  function checkCanGrantRole(bytes32 playerEntity, bytes32 toBeGranted, EAllianceRole roleToBeGranted) internal view {
     require(playerEntity != toBeGranted, "[Alliance] Can not grant role to self");
     uint8 role = PlayerAlliance.getRole(playerEntity);
     require(role <= uint8(roleToBeGranted), "[Alliance] Can not grant role higher then your own");
@@ -74,6 +72,7 @@ library LibAlliance {
   /**
    * @dev Checks if the player can kick another player from the alliance.
    * @param playerEntity The entity ID of the player.
+   * @param toBeKicked The entity ID of the player getting KICKED
    */
   function checkCanKick(bytes32 playerEntity, bytes32 toBeKicked) internal view {
     uint8 role = PlayerAlliance.getRole(playerEntity);
@@ -89,6 +88,7 @@ library LibAlliance {
   /**
    * @dev Checks if the player can invite another player to the alliance or accept a join request.
    * @param playerEntity The entity ID of the player.
+   * @param target The entity ID of the request target.
    */
   function checkCanInviteOrAcceptJoinRequest(bytes32 playerEntity, bytes32 target) internal view {
     uint8 role = PlayerAlliance.getRole(playerEntity);
@@ -104,13 +104,14 @@ library LibAlliance {
 
   /**
    * @dev Checks if the player can revoke the invite to another player or reject a join request.
-   * @param playerEntity The entity ID of the player.
+   * @param inviter The entity ID of the inviter.
+   * @param invitee The entity ID of the invitee.
    */
-  function checkCanRevokeInvite(bytes32 playerEntity, bytes32 invitee) internal view {
-    uint8 role = PlayerAlliance.getRole(playerEntity);
+  function checkCanRevokeInvite(bytes32 inviter, bytes32 invitee) internal view {
+    uint8 role = PlayerAlliance.getRole(inviter);
     require(
       (role > 0 && role <= uint8(EAllianceRole.CanKick)) ||
-        AllianceInvitation.getInviter(invitee, PlayerAlliance.getAlliance(playerEntity)) == playerEntity,
+        AllianceInvitation.getInviter(invitee, PlayerAlliance.getAlliance(inviter)) == inviter,
       "[Alliance] Does not have permission to revoke invite"
     );
   }
@@ -142,6 +143,8 @@ library LibAlliance {
   /**
    * @dev create an alliance
    * @param player The entity ID of the player.
+   * @param name The name of the alliance.
+   * @param allianceInviteMode The mode of the alliance invite
    */
   function create(
     bytes32 player,
@@ -170,6 +173,7 @@ library LibAlliance {
     if (PlayerAlliance.getRole(player) == uint8(EAllianceRole.Owner)) {
       if (AllianceMembersSet.length(allianceEntity) == 0) {
         Alliance.deleteRecord(allianceEntity);
+        PlayerAlliance.deleteRecord(player);
         return;
       }
       bytes32[] memory members = AllianceMembersSet.getMembers(allianceEntity);
@@ -189,6 +193,7 @@ library LibAlliance {
   /**
    * @dev invite a player to an alliance
    * @param player The entity ID of the player.
+   * @param target The entity ID of the target.
    */
   function invite(bytes32 player, bytes32 target) internal {
     checkCanInviteOrAcceptJoinRequest(player, target);
@@ -198,13 +203,13 @@ library LibAlliance {
 
   /**
    * @dev revoke an invite to an alliance
-   * @param player The entity ID of the player revoking the invite.
-   * @param target the entity id of the player to revoke the invite from
+   * @param inviter The entity ID of the player who created invite.
+   * @param invitee the entity id of the player invited to join
    */
-  function revokeInvite(bytes32 player, bytes32 target) internal {
-    checkCanRevokeInvite(player, target);
-    bytes32 allianceEntity = PlayerAlliance.getAlliance(player);
-    AllianceInvitation.deleteRecord(target, allianceEntity);
+  function revokeInvite(bytes32 inviter, bytes32 invitee) internal {
+    checkCanRevokeInvite(inviter, invitee);
+    bytes32 allianceEntity = PlayerAlliance.getAlliance(inviter);
+    AllianceInvitation.deleteRecord(invitee, allianceEntity);
   }
 
   /**
@@ -227,11 +232,7 @@ library LibAlliance {
    * @param target The entity ID of the player being granted the role.
    * @param role The role to grant.
    */
-  function grantRole(
-    bytes32 granter,
-    bytes32 target,
-    EAllianceRole role
-  ) internal {
+  function grantRole(bytes32 granter, bytes32 target, EAllianceRole role) internal {
     checkCanGrantRole(granter, target, role);
     bytes32 allianceEntity = PlayerAlliance.getAlliance(granter);
     PlayerAlliance.set(target, allianceEntity, uint8(role));

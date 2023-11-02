@@ -109,13 +109,7 @@ export const Fleet: React.FC<{
         ) : (
           <div className="flex items-center gap-2">
             <LocateButton destination={destination} coord={destinationPosition} />
-            <OrbitActionButton
-              arrivalEntity={arrivalEntity}
-              destination={destination}
-              sendType={sendType}
-              outgoing={outgoing}
-              recall
-            />
+            <OrbitActionButton arrivalEntity={arrivalEntity} destination={destination} outgoing={outgoing} />
           </div>
         )}
       </div>
