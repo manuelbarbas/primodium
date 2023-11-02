@@ -152,8 +152,10 @@ export interface IWorldInterface extends utils.Interface {
     "popFromDynamicField(bytes32,bytes32[],uint8,uint256)": FunctionFragment;
     "pushToDynamicField(bytes32,bytes32[],uint8,bytes)": FunctionFragment;
     "raid(bytes32)": FunctionFragment;
-    "recall(bytes32,bytes32)": FunctionFragment;
     "recallAll(bytes32)": FunctionFragment;
+    "recallAllOfSendType(bytes32,uint8)": FunctionFragment;
+    "recallArrival(bytes32,bytes32)": FunctionFragment;
+    "recallStationedUnits(bytes32)": FunctionFragment;
     "registerDelegation(address,bytes32,bytes)": FunctionFragment;
     "registerFunctionSelector(bytes32,string)": FunctionFragment;
     "registerNamespace(bytes32)": FunctionFragment;
@@ -245,8 +247,10 @@ export interface IWorldInterface extends utils.Interface {
       | "popFromDynamicField"
       | "pushToDynamicField"
       | "raid"
-      | "recall"
       | "recallAll"
+      | "recallAllOfSendType"
+      | "recallArrival"
+      | "recallStationedUnits"
       | "registerDelegation"
       | "registerFunctionSelector"
       | "registerNamespace"
@@ -595,11 +599,19 @@ export interface IWorldInterface extends utils.Interface {
     values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "recall",
+    functionFragment: "recallAll",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "recallAllOfSendType",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "recallArrival",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "recallAll",
+    functionFragment: "recallStationedUnits",
     values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
@@ -986,8 +998,19 @@ export interface IWorldInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "raid", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "recall", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "recallAll", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "recallAllOfSendType",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "recallArrival",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "recallStationedUnits",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "registerDelegation",
     data: BytesLike
@@ -1573,13 +1596,24 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    recall(
+    recallAll(
       rockEntity: PromiseOrValue<BytesLike>,
-      arrivalEntity: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    recallAll(
+    recallAllOfSendType(
+      rockEntity: PromiseOrValue<BytesLike>,
+      sendType: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    recallArrival(
+      rockEntity: PromiseOrValue<BytesLike>,
+      arrivalId: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    recallStationedUnits(
       rockEntity: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -2160,13 +2194,24 @@ export interface IWorld extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  recall(
+  recallAll(
     rockEntity: PromiseOrValue<BytesLike>,
-    arrivalEntity: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  recallAll(
+  recallAllOfSendType(
+    rockEntity: PromiseOrValue<BytesLike>,
+    sendType: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  recallArrival(
+    rockEntity: PromiseOrValue<BytesLike>,
+    arrivalId: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  recallStationedUnits(
     rockEntity: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -2741,13 +2786,24 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    recall(
+    recallAll(
       rockEntity: PromiseOrValue<BytesLike>,
-      arrivalEntity: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    recallAll(
+    recallAllOfSendType(
+      rockEntity: PromiseOrValue<BytesLike>,
+      sendType: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    recallArrival(
+      rockEntity: PromiseOrValue<BytesLike>,
+      arrivalId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    recallStationedUnits(
       rockEntity: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -3381,13 +3437,24 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    recall(
+    recallAll(
       rockEntity: PromiseOrValue<BytesLike>,
-      arrivalEntity: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    recallAll(
+    recallAllOfSendType(
+      rockEntity: PromiseOrValue<BytesLike>,
+      sendType: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    recallArrival(
+      rockEntity: PromiseOrValue<BytesLike>,
+      arrivalId: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    recallStationedUnits(
       rockEntity: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -3955,13 +4022,24 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    recall(
+    recallAll(
       rockEntity: PromiseOrValue<BytesLike>,
-      arrivalEntity: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    recallAll(
+    recallAllOfSendType(
+      rockEntity: PromiseOrValue<BytesLike>,
+      sendType: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    recallArrival(
+      rockEntity: PromiseOrValue<BytesLike>,
+      arrivalId: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    recallStationedUnits(
       rockEntity: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
