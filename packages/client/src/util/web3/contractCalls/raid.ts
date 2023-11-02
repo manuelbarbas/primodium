@@ -6,14 +6,7 @@ import { hashEntities } from "src/util/encode";
 import { Hex } from "viem";
 
 export const raid = async (rockEntity: Entity, network: SetupNetworkResult) => {
-  await execute(
-    () => network.worldContract.write.raid([rockEntity as Hex]),
-    network,
-    {
-      id: hashEntities(TransactionQueueType.Land, rockEntity),
-    },
-    (receipt) => {
-      // handle amplitude here
-    }
-  );
+  await execute(() => network.worldContract.write.raid([rockEntity as Hex]), network, {
+    id: hashEntities(TransactionQueueType.Land, rockEntity),
+  });
 };

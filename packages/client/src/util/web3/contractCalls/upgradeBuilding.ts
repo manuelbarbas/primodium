@@ -19,7 +19,7 @@ export const upgradeBuilding = async (coord: Coord, network: SetupNetworkResult)
       type: TransactionQueueType.Upgrade,
     },
     (receipt) => {
-      // handle amplitude here
+      //handle amplitude here
     }
   );
 };

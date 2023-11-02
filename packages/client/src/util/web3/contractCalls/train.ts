@@ -7,14 +7,7 @@ import { uuid } from "@latticexyz/utils";
 import { Hex } from "viem";
 
 export const train = async (buildingEntity: Entity, unit: EUnit, count: bigint, network: SetupNetworkResult) => {
-  await execute(
-    () => network.worldContract.write.trainUnits([buildingEntity as Hex, unit, count]),
-    network,
-    {
-      id: hashEntities(uuid()),
-    },
-    (receipt) => {
-      // handle amplitude here
-    }
-  );
+  await execute(() => network.worldContract.write.trainUnits([buildingEntity as Hex, unit, count]), network, {
+    id: hashEntities(uuid()),
+  });
 };
