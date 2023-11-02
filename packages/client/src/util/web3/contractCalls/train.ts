@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { EUnit, MUDEnums } from "contracts/config/enums";
+import { EUnit } from "contracts/config/enums";
 import { execute } from "src/network/actions";
 import { SetupNetworkResult } from "src/network/types";
 import { hashEntities } from "src/util/encode";
@@ -22,7 +22,7 @@ export const train = async (buildingEntity: Entity, unit: EUnit, count: bigint, 
 
       ampli.systemTrainUnits({
         buildingName: getBlockTypeName(buildingType),
-        unitName: MUDEnums.EUnit[unit],
+        unitName: EUnit[unit],
         unitCount: bigintToNumber(count),
         ...parseReceipt(receipt),
       });

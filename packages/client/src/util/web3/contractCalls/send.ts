@@ -9,7 +9,6 @@ import { encodeCoord, hashEntities } from "src/util/encode";
 import { components } from "src/network/components";
 import { parseReceipt } from "../../analytics/parseReceipt";
 import { ampli } from "src/ampli";
-import { getBlockTypeName } from "src/util/common";
 
 export const send = async (
   unitCounts: UnitCountTuple,
@@ -41,7 +40,7 @@ export const send = async (
         asteroidCoord: originAsteroid!,
         destinationAsteroidCoord: destinationAsteroid!,
         destinationAsteroidOwner: to,
-        sendType: MUDEnums.ESendType[sendType],
+        sendType: ESendType[sendType],
         unitCounts: unitCounts.map((count) => bigintToNumber(count)),
         unitTypes: MUDEnums.EUnit,
         ...parseReceipt(receipt),

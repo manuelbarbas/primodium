@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { MUDEnums } from "contracts/config/enums";
+import { EObjectives } from "contracts/config/enums";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { SetupNetworkResult } from "src/network/types";
@@ -19,7 +19,7 @@ export const claimObjective = async (rawObjective: Entity, network: SetupNetwork
     },
     (receipt) => {
       ampli.systemClaimObjective({
-        objectiveType: MUDEnums.EObjectives[objective],
+        objectiveType: EObjectives[objective],
         ...parseReceipt(receipt),
       });
     }
