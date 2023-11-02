@@ -183,7 +183,20 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
-  function tesFailCantGrantRoleAlliance() public {
+  function testDeclineInvitation() public {
+    bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
+    world.invite(bobEntity);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.declineInvite(playerEntity);
+    vm.stopPrank();
+
+    assertEq(AllianceInvitation.getInviter(allianceEntity, playerEntity), 0);
+    assertEq(AllianceInvitation.getTimeStamp(allianceEntity, playerEntity), 0);
+  }
+
+  function testFailCantGrantRoleAlliance() public {
     bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
 
@@ -204,7 +217,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
-  function tesFailCantGrantRoleToSuperiorAlliance() public {
+  function testFailCantGrantRoleToSuperiorAlliance() public {
     bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
 
@@ -226,7 +239,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
-  function tesFailKickAlliance() public {
+  function testFailKickAlliance() public {
     bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
 
@@ -247,7 +260,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
-  function tesFailKickWithoutRequiredRoleAlliance() public {
+  function testFailKickWithoutRequiredRoleAlliance() public {
     bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
 
@@ -268,7 +281,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
-  function tesFailKickSuperiorRoleAlliance() public {
+  function testFailKickSuperiorRoleAlliance() public {
     bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
 
@@ -290,7 +303,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
-  function tesFailGrantRoleHigherkAlliance() public {
+  function testFailGrantRoleHigherAlliance() public {
     bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
 
@@ -311,7 +324,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
-  function tesGrantOwnerRoleAlliance() public {
+  function testGrantOwnerRoleAlliance() public {
     bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
 
@@ -329,7 +342,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
-  function tesOwnerLeaveAlliance() public {
+  function testOwnerLeaveAlliance() public {
     bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
 
@@ -351,7 +364,7 @@ contract BuildSystemTest is PrimodiumTest {
     assertEq(PlayerAlliance.getRole(bobEntity), uint8(EAllianceRole.Owner), "bob should be owner");
   }
 
-  function tesFailAllianceFull() public {
+  function testFailAllianceFull() public {
     P_AllianceConfig.set(2);
     bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
