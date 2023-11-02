@@ -61,11 +61,7 @@ library LibAlliance {
    * @param toBeGranted The entity ID of the player receiving the new role.
    * @param roleToBeGranted The role.
    */
-  function checkCanGrantRole(
-    bytes32 playerEntity,
-    bytes32 toBeGranted,
-    EAllianceRole roleToBeGranted
-  ) internal view {
+  function checkCanGrantRole(bytes32 playerEntity, bytes32 toBeGranted, EAllianceRole roleToBeGranted) internal view {
     require(playerEntity != toBeGranted, "[Alliance] Can not grant role to self");
     uint8 role = PlayerAlliance.getRole(playerEntity);
     require(role <= uint8(roleToBeGranted), "[Alliance] Can not grant role higher then your own");
@@ -177,6 +173,7 @@ library LibAlliance {
     if (PlayerAlliance.getRole(player) == uint8(EAllianceRole.Owner)) {
       if (AllianceMembersSet.length(allianceEntity) == 0) {
         Alliance.deleteRecord(allianceEntity);
+        PlayerAlliance.deleteRecord(player);
         return;
       }
       bytes32[] memory members = AllianceMembersSet.getMembers(allianceEntity);
@@ -235,11 +232,7 @@ library LibAlliance {
    * @param target The entity ID of the player being granted the role.
    * @param role The role to grant.
    */
-  function grantRole(
-    bytes32 granter,
-    bytes32 target,
-    EAllianceRole role
-  ) internal {
+  function grantRole(bytes32 granter, bytes32 target, EAllianceRole role) internal {
     checkCanGrantRole(granter, target, role);
     bytes32 allianceEntity = PlayerAlliance.getAlliance(granter);
     PlayerAlliance.set(target, allianceEntity, uint8(role));
