@@ -14,6 +14,7 @@
     "mud:up": "pnpm mud set-version --tag main && pnpm install",
     "prepare": "husky install && (forge --version || pnpm foundry:up)",
     "sort-package-json": "npx sort-package-json package.json 'packages/*/package.json'",
+    "sprites:export": "pnpm --filter 'sprites' export",
     "test": "pnpm recursive run test",
     "upgrade:mud": "pnpm mud set-version --tag=next"
   },
