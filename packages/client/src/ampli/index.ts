@@ -809,12 +809,8 @@ export interface SystemSendUnitsProperties {
   destinationAsteroidOwner: string;
   /**
    * Enum of the type of a `system.SendUnit` transaction. This is specified in the client as an `ESendType` enum.
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Enum Values | INVADE, REINFORCE, RAID |
    */
-  sendType: "INVADE" | "REINFORCE" | "RAID";
+  sendType: string;
   /**
    * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
    */
