@@ -11,7 +11,7 @@ export const recallArrival = async (rockEntity: Entity, arrivalEntity: Entity, n
   const { key } = decodeEntity(components.MapItemArrivals.metadata.keySchema, arrivalEntity);
 
   await execute(() => network.worldContract.write.recallArrival([rockEntity as Hex, key as Hex]), network, {
-    id: hashEntities(TransactionQueueType.Recall, arrivalEntity, rockEntity),
+    id: hashEntities(TransactionQueueType.Recall, key, rockEntity),
   });
 };
 
