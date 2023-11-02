@@ -45,6 +45,7 @@ export const RecipeDisplay: React.FC<{
                   validate
                   fontSize={"xs"}
                   short
+                  fractionDigits={3}
                 />
               );
             })}

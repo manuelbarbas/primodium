@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
+import { hexlify, randomBytes } from "ethers/lib/utils";
 import { Hex, trim } from "viem";
 import { BlockIdToKey } from "./constants";
-import { hexlify, randomBytes } from "ethers/lib/utils";
 
 export function hasCommonElement<T>(setA: Set<T>, setB: Set<T>) {
   for (const element of setA) {
@@ -55,8 +55,14 @@ export function toRomanNumeral(number: number) {
   return result;
 }
 
+function getDecimals(num: number, max = 3) {
+  const parts = num.toString().split(".");
+  const digits = parts[1] ? (parts[1].length > max ? max : parts[1].length) : 0;
+  return num.toFixed(digits);
+}
+
 export function formatNumber(num: number | bigint, options?: { fractionDigits?: number; short?: boolean }): string {
-  const digits = options?.fractionDigits ?? 2;
+  const digits = options?.fractionDigits === undefined ? 0 : options.fractionDigits;
   if (num === 0 || num === 0n) return "--";
 
   const shorten = (n: number): string => {
@@ -66,7 +72,7 @@ export function formatNumber(num: number | bigint, options?: { fractionDigits?: 
       n /= 1000;
       unitIndex++;
     }
-    return n.toFixed(Number.isInteger(n) ? 0 : options?.fractionDigits) + units[unitIndex];
+    return getDecimals(n, digits) + units[unitIndex];
   };
 
   if (typeof num === "number") {
