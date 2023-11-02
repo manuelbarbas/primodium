@@ -416,7 +416,7 @@ export const InvitesScreen: React.FC = () => {
       </div>
 
       <div className="flex gap-1">
-        <Navigator.NavButton to="send" className="btn-secondary btn-sm border-none" disabled={full}>
+        <Navigator.NavButton to="send" className="btn-secondary btn-sm border-none" disabled={full || !playerAlliance}>
           SEND INVITE
         </Navigator.NavButton>
         <Navigator.BackButton>
