@@ -183,6 +183,19 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
+  function testDeclineInvitation() public {
+    bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
+    world.invite(bobEntity);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    world.declineInvite(playerEntity);
+    vm.stopPrank();
+
+    assertEq(AllianceInvitation.getInviter(allianceEntity, playerEntity), 0);
+    assertEq(AllianceInvitation.getTimeStamp(allianceEntity, playerEntity), 0);
+  }
+
   function testFailCantGrantRoleAlliance() public {
     bytes32 allianceEntity = world.create(bytes32("myAliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
