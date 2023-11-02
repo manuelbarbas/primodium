@@ -29,6 +29,9 @@ export const moveBuilding = async (network: SetupNetworkResult, building: Entity
         buildingType,
         coord: getBuildingTopLeft(coord, buildingType),
       },
+    },
+    (receipt) => {
+      // handle amplitude here
     }
   );
 };

@@ -8,7 +8,14 @@ export const claimObjective = async (rawObjective: Entity, network: SetupNetwork
   const objective = ObjectiveEnumLookup[rawObjective];
   if (!objective) throw new Error(`Objective ${rawObjective} not found in ObjectiveEnumLookup`);
 
-  await execute(() => network.worldContract.write.claimObjective([objective]), network, {
-    id: hashEntities(TransactionQueueType.ClaimObjective, rawObjective),
-  });
+  await execute(
+    () => network.worldContract.write.claimObjective([objective]),
+    network,
+    {
+      id: hashEntities(TransactionQueueType.ClaimObjective, rawObjective),
+    },
+    (receipt) => {
+      // handle amplitude here
+    }
+  );
 };

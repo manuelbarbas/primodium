@@ -11,7 +11,14 @@ export async function demolishBuilding(building: Entity, network: SetupNetworkRe
 
   if (!position) return;
 
-  await execute(() => network.worldContract.write.destroy([{ ...position, parent: position.parent as Hex }]), network, {
-    id: hashEntities(TransactionQueueType.Demolish, building),
-  });
+  await execute(
+    () => network.worldContract.write.destroy([{ ...position, parent: position.parent as Hex }]),
+    network,
+    {
+      id: hashEntities(TransactionQueueType.Demolish, building),
+    },
+    (receipt) => {
+      // handle amplitude here
+    }
+  );
 }
