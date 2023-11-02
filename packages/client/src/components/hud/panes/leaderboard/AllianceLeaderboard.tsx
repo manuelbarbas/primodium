@@ -146,6 +146,7 @@ export const ManageScreen: React.FC = () => {
   const playerEntities = components.PlayerAlliance.useAllWith({
     alliance: allianceEntity,
   });
+  const maxAllianceMembers = components.P_AllianceConfig.get()?.maxAllianceMembers ?? 1n;
 
   if (!data) return <></>;
 
@@ -266,7 +267,9 @@ export const ManageScreen: React.FC = () => {
             );
           })}
         </Join>
-        <p className="p-1 opacity-50 text-right">{players.length} member(s)</p>
+        <p className="p-1 opacity-50 text-right">
+          {players.length}/{maxAllianceMembers?.toLocaleString()} member(s)
+        </p>
       </div>
 
       <div className="flex gap-1">
@@ -288,101 +291,59 @@ export const InvitesScreen: React.FC = () => {
   const role = components.PlayerAlliance.get(playerEntity)?.role ?? EAllianceRole.Member;
   const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
   const joinRequests = components.AllianceRequest.useAllWith({ alliance: playerAlliance ?? singletonEntity }) ?? [];
+  const playerEntities = components.PlayerAlliance.useAllWith({
+    alliance: playerAlliance,
+  });
+  const maxAllianceMembers = components.P_AllianceConfig.get()?.maxAllianceMembers ?? 1n;
+
+  const full = playerEntities.length >= Number(maxAllianceMembers);
 
   return (
     <Navigator.Screen
       title="invites"
       className="flex flex-col items-center w-full text-xs pointer-events-auto h-full overflow-hidden"
     >
-      <div className="grid grid-cols-2 w-full gap-2 mb-2">
-        <div className={`w-full flex flex-col flex-grow ${role > EAllianceRole.CanInvite ? "col-span-2" : ""}`}>
-          <div className="flex justify-between items-center">
-            <p className="font-bold p-1 opacity-75">INVITES</p>
-          </div>
-
-          <Join direction="vertical" className="overflow-auto w-full h-56 scrollbar">
-            {invites.map((entity) => {
-              const playerInvite = components.PlayerInvite.get(entity);
-              const alliance = components.Alliance.get(playerInvite?.alliance);
-
-              if (!playerInvite?.alliance || !alliance?.name) return <></>;
-
-              const name = hexToString(alliance.name as Hex, { size: 32 });
-
-              return (
-                <SecondaryCard key={entity} className="border-b rounded-none flex-row justify-between items-center">
-                  {name}
-                  <div className="flex gap-1">
-                    {/* only kick if not current player, has the ability to kick, and current player is higher than member */}
-                    <TransactionQueueMask
-                      queueItemId={hashEntities(TransactionQueueType.DeclineInvite, playerInvite.alliance)}
-                    >
-                      <Button
-                        tooltip="Decline"
-                        tooltipDirection="left"
-                        className="btn-xs !rounded-box border-error"
-                        onClick={() => declineInvite(playerInvite.alliance, network)}
-                      >
-                        <FaTimes className="rounded-none" size={10} />
-                      </Button>
-                    </TransactionQueueMask>
-                    <TransactionQueueMask
-                      queueItemId={hashEntities(TransactionQueueType.JoinAlliance, playerInvite.alliance)}
-                    >
-                      <Button
-                        tooltip="Accept"
-                        tooltipDirection="left"
-                        className="btn-xs !rounded-box border-success"
-                        onClick={() => joinAlliance(playerInvite.alliance, network)}
-                      >
-                        <FaCheck className="rounded-none" size={10} />
-                      </Button>
-                    </TransactionQueueMask>
-                  </div>
-                </SecondaryCard>
-              );
-            })}
-          </Join>
-          <p className="p-1 opacity-50 text-right">{invites.length} invites(s)</p>
-        </div>
-        {role <= EAllianceRole.CanInvite && (
-          <div className="w-full flex flex-col flex-grow">
+      <div className="w-full gap-2 mb-2">
+        {!playerAlliance && (
+          <div className={`w-full flex flex-col flex-grow`}>
             <div className="flex justify-between items-center">
-              <p className="font-bold p-1 opacity-75">REQUESTS</p>
+              <p className="font-bold p-1 opacity-75">INVITES</p>
             </div>
-            <Join direction="vertical" className="overflow-auto w-full h-56 scrollbar">
-              {joinRequests.map((entity) => {
-                const request = components.AllianceRequest.get(entity);
 
-                if (!request?.player) return <></>;
+            <Join direction="vertical" className="overflow-auto w-full h-56 scrollbar">
+              {invites.map((entity) => {
+                const playerInvite = components.PlayerInvite.get(entity);
+                const alliance = components.Alliance.get(playerInvite?.alliance);
+
+                if (!playerInvite?.alliance || !alliance?.name) return <></>;
+
+                const name = hexToString(alliance.name as Hex, { size: 32 });
 
                 return (
                   <SecondaryCard key={entity} className="border-b rounded-none flex-row justify-between items-center">
-                    {entityToAddress(request.player ?? singletonEntity, true)}
-
+                    {name}
                     <div className="flex gap-1">
                       {/* only kick if not current player, has the ability to kick, and current player is higher than member */}
                       <TransactionQueueMask
-                        queueItemId={hashEntities(TransactionQueueType.RejectRequest, request.player)}
+                        queueItemId={hashEntities(TransactionQueueType.DeclineInvite, playerInvite.player)}
                       >
                         <Button
                           tooltip="Decline"
                           tooltipDirection="left"
                           className="btn-xs !rounded-box border-error"
-                          onClick={() => rejectJoinRequest(request.player, network)}
+                          onClick={() => declineInvite(playerInvite.player, network)}
                         >
                           <FaTimes className="rounded-none" size={10} />
                         </Button>
                       </TransactionQueueMask>
-
                       <TransactionQueueMask
-                        queueItemId={hashEntities(TransactionQueueType.AcceptRequest, request.player)}
+                        queueItemId={hashEntities(TransactionQueueType.JoinAlliance, playerInvite.alliance)}
                       >
                         <Button
                           tooltip="Accept"
                           tooltipDirection="left"
                           className="btn-xs !rounded-box border-success"
-                          onClick={() => acceptJoinRequest(request.player, network)}
+                          onClick={() => joinAlliance(playerInvite.alliance, network)}
                         >
                           <FaCheck className="rounded-none" size={10} />
                         </Button>
@@ -392,13 +353,70 @@ export const InvitesScreen: React.FC = () => {
                 );
               })}
             </Join>
+            <p className="p-1 opacity-50 text-right">{invites.length} invites(s)</p>
+          </div>
+        )}
+        {role <= EAllianceRole.CanInvite && (
+          <div className="w-full flex flex-col flex-grow">
+            <div className="flex justify-between items-center">
+              <p className="font-bold p-1 opacity-75">REQUESTS</p>
+            </div>
+            {full && (
+              <SecondaryCard className="w-full h-56 font-bold items-center justify-center opacity-75 uppercase">
+                alliance full
+              </SecondaryCard>
+            )}
+            {!full && (
+              <Join direction="vertical" className="overflow-auto w-full h-56 scrollbar">
+                {joinRequests.map((entity) => {
+                  const request = components.AllianceRequest.get(entity);
+
+                  if (!request?.player) return <></>;
+
+                  return (
+                    <SecondaryCard key={entity} className="border-b rounded-none flex-row justify-between items-center">
+                      {entityToAddress(request.player ?? singletonEntity, true)}
+
+                      <div className="flex gap-1">
+                        {/* only kick if not current player, has the ability to kick, and current player is higher than member */}
+                        <TransactionQueueMask
+                          queueItemId={hashEntities(TransactionQueueType.RejectRequest, request.player)}
+                        >
+                          <Button
+                            tooltip="Decline"
+                            tooltipDirection="left"
+                            className="btn-xs !rounded-box border-error"
+                            onClick={() => rejectJoinRequest(request.player, network)}
+                          >
+                            <FaTimes className="rounded-none" size={10} />
+                          </Button>
+                        </TransactionQueueMask>
+
+                        <TransactionQueueMask
+                          queueItemId={hashEntities(TransactionQueueType.AcceptRequest, request.player)}
+                        >
+                          <Button
+                            tooltip="Accept"
+                            tooltipDirection="left"
+                            className="btn-xs !rounded-box border-success"
+                            onClick={() => acceptJoinRequest(request.player, network)}
+                          >
+                            <FaCheck className="rounded-none" size={10} />
+                          </Button>
+                        </TransactionQueueMask>
+                      </div>
+                    </SecondaryCard>
+                  );
+                })}
+              </Join>
+            )}
             <p className="p-1 opacity-50 text-right">{joinRequests.length} requests(s)</p>
           </div>
         )}
       </div>
 
       <div className="flex gap-1">
-        <Navigator.NavButton to="send" className="btn-secondary btn-sm border-none">
+        <Navigator.NavButton to="send" className="btn-secondary btn-sm border-none" disabled={full}>
           SEND INVITE
         </Navigator.NavButton>
         <Navigator.BackButton>
