@@ -30,7 +30,6 @@ export const SendFleet: React.FC = () => {
 
     const to = components.OwnedBy.get(destination)?.value as Entity | undefined;
 
-    //TODO: fix arrival units
     send(toUnitCountArray(units), sendType, originCoord, destinationCoord, (to as Hex) ?? toHex32("0"), network);
 
     components.Send.reset(playerEntity);

@@ -1,11 +1,13 @@
+import { Hex } from "viem";
 import { Entity } from "@latticexyz/recs";
 import { decodeEntity } from "@latticexyz/store-sync/recs";
+import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
 import { SetupNetworkResult } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
-import { Hex } from "viem";
+import { parseReceipt } from "../../analytics/parseReceipt";
 
 export const reinforce = async (rockEntity: Entity, arrivalEntity: Entity, network: SetupNetworkResult) => {
   const { key } = decodeEntity(components.MapItemArrivals.metadata.keySchema, arrivalEntity);
@@ -17,7 +19,11 @@ export const reinforce = async (rockEntity: Entity, arrivalEntity: Entity, netwo
       id: hashEntities(TransactionQueueType.Reinforce, arrivalEntity, rockEntity),
     },
     (receipt) => {
-      // handle amplitude here
+      ampli.systemReceiveReinforcement({
+        asteroidCoord: rockEntity,
+        arrivalIndex: bigintToNumber(BigInt(arrivalEntity)),
+        ...parseReceipt(receipt),
+      });
     }
   );
 };

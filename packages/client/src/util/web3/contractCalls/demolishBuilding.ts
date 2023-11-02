@@ -5,6 +5,9 @@ import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { Entity } from "@latticexyz/recs";
 import { Hex } from "viem";
+import { ampli } from "src/ampli";
+import { EBuilding, MUDEnums } from "contracts/config/enums";
+import { parseReceipt } from "../../analytics/parseReceipt";
 
 export async function demolishBuilding(building: Entity, network: SetupNetworkResult) {
   const position = components.Position.get(building);
@@ -18,7 +21,17 @@ export async function demolishBuilding(building: Entity, network: SetupNetworkRe
       id: hashEntities(TransactionQueueType.Demolish, building),
     },
     (receipt) => {
-      // handle amplitude here
+      const asteroid = components.Home.get(network.playerEntity)?.asteroid;
+      const buildingType = components.BuildingType.get(building)?.value as unknown as EBuilding;
+      const currLevel = components.Level.get(building)?.value || 0;
+
+      ampli.systemDestroy({
+        asteroidCoord: asteroid!,
+        buildingType: MUDEnums.EBuilding[buildingType],
+        coord: [position.x, position.y],
+        currLevel: bigintToNumber(currLevel),
+        ...parseReceipt(receipt),
+      });
     }
   );
 }

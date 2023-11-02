@@ -1,8 +1,11 @@
 import { Entity } from "@latticexyz/recs";
+import { MUDEnums } from "contracts/config/enums";
+import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { SetupNetworkResult } from "src/network/types";
 import { ObjectiveEnumLookup, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
+import { parseReceipt } from "../../analytics/parseReceipt";
 
 export const claimObjective = async (rawObjective: Entity, network: SetupNetworkResult) => {
   const objective = ObjectiveEnumLookup[rawObjective];
@@ -15,7 +18,10 @@ export const claimObjective = async (rawObjective: Entity, network: SetupNetwork
       id: hashEntities(TransactionQueueType.ClaimObjective, rawObjective),
     },
     (receipt) => {
-      // handle amplitude here
+      ampli.systemClaimObjective({
+        objectiveType: MUDEnums.EObjectives[objective],
+        ...parseReceipt(receipt),
+      });
     }
   );
 };
