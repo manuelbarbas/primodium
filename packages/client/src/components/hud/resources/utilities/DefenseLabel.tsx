@@ -20,7 +20,7 @@ export const DefenseLabel = ({ player }: { player?: Entity }) => {
     0n;
 
   return (
-    <div className="flex flex-row gap-1 mx-1 group pointer-events-auto items-center">
+    <div className="gap-1 mx-1 group pointer-events-auto">
       <ResourceIconTooltip
         short={false}
         name={name}
