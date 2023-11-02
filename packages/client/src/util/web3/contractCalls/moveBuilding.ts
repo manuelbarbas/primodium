@@ -8,8 +8,8 @@ import { SetupNetworkResult } from "src/network/types";
 import { getBuildingTopLeft } from "src/util/building";
 import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
-import { EBuilding, MUDEnums } from "contracts/config/enums";
 import { parseReceipt } from "../../analytics/parseReceipt";
+import { getBlockTypeName } from "src/util/common";
 
 export const moveBuilding = async (network: SetupNetworkResult, building: Entity, coord: Coord) => {
   // todo: find a cleaner way to extract this value in all web3 functions
@@ -35,12 +35,12 @@ export const moveBuilding = async (network: SetupNetworkResult, building: Entity
     },
     (receipt) => {
       const asteroid = components.Home.get(network.playerEntity)?.asteroid;
-      const buildingType = components.BuildingType.get(building)?.value as unknown as EBuilding;
+      const buildingType = components.BuildingType.get(building)?.value as Entity;
       const currLevel = components.Level.get(building)?.value || 0;
 
       ampli.systemMoveBuilding({
         asteroidCoord: asteroid!,
-        buildingType: MUDEnums.EBuilding[buildingType],
+        buildingType: getBlockTypeName(buildingType),
         coord: [prevPosition.x, prevPosition.y],
         endCoord: [position.x, position.y],
         currLevel: bigintToNumber(currLevel),

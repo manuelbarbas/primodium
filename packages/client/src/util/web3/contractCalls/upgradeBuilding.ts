@@ -6,8 +6,9 @@ import { TransactionQueueType } from "src/util/constants";
 import { Hex } from "viem";
 import { encodeCoord, encodeNumberEntity } from "src/util/encode";
 import { ampli } from "src/ampli";
-import { EBuilding, MUDEnums } from "contracts/config/enums";
 import { parseReceipt } from "../../analytics/parseReceipt";
+import { getBlockTypeName } from "src/util/common";
+import { Entity } from "@latticexyz/recs";
 
 export const upgradeBuilding = async (coord: Coord, network: SetupNetworkResult) => {
   const asteroid = components.Home.get(network.playerEntity)?.asteroid;
@@ -23,12 +24,12 @@ export const upgradeBuilding = async (coord: Coord, network: SetupNetworkResult)
     },
     (receipt) => {
       const building = components.SelectedBuilding.get()?.value;
-      const buildingType = components.BuildingType.get(building)?.value as unknown as EBuilding;
+      const buildingType = components.BuildingType.get(building)?.value as Entity;
       const currLevel = components.Level.get(building)?.value || 0n;
 
       ampli.systemUpgrade({
         asteroidCoord: asteroid!,
-        buildingType: MUDEnums.EBuilding[buildingType!],
+        buildingType: getBlockTypeName(buildingType),
         coord: [coord.x, coord.y],
         currLevel: bigintToNumber(currLevel),
         ...parseReceipt(receipt),
