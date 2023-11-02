@@ -191,7 +191,7 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
       setValue(entity != null ? getComponentValue(component, entity) : undefined);
       if (entity == null) return;
       // fix: if pre-populated with state, useComponentValue doesn’t update when there’s a component that has been removed.
-      const queryResult = defineQuery([Has(component)], { runOnInit: false });
+      const queryResult = defineQuery([Has(component)], { runOnInit: true });
       const subscription = queryResult.update$.subscribe((update) => {
         if (isComponentUpdate(update, component) && update.entity === entity) {
           const [nextValue] = update.value;
