@@ -223,6 +223,11 @@ export const getBuildingInfo = (building: Entity) => {
   const production = transformProductionData(comps.P_Production.getWithKeys(buildingLevelKeys));
   const nextLevelProduction = transformProductionData(comps.P_Production.getWithKeys(buildingNextLevelKeys));
 
+  const requiredDependencies = transformProductionData(comps.P_RequiredDependencies.getWithKeys(buildingLevelKeys));
+  const nextLevelRequiredDependencies = transformProductionData(
+    comps.P_RequiredDependencies.getWithKeys(buildingNextLevelKeys)
+  );
+
   const unitProduction = comps.P_UnitProdTypes.getWithKeys(buildingLevelKeys)?.value;
   const unitNextLevelProduction = comps.P_UnitProdTypes.getWithKeys(buildingNextLevelKeys)?.value;
   const storages = getBuildingStorages(buildingTypeEntity, level);
@@ -250,6 +255,7 @@ export const getBuildingInfo = (building: Entity) => {
     vault,
     position,
     unitProductionMultiplier,
+    requiredDependencies,
     upgrade: {
       unitProduction: unitNextLevelProduction,
       vault: vaultNext,
@@ -258,6 +264,7 @@ export const getBuildingInfo = (building: Entity) => {
       recipe: upgradeRecipe,
       mainBaseLvlReq,
       nextLevelUnitProductionMultiplier,
+      requiredDependencies: nextLevelRequiredDependencies,
     },
   };
 };
