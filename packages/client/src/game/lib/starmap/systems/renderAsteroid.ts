@@ -1,7 +1,7 @@
 import { Entity, Has, HasValue, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { singletonIndex, world } from "src/network/world";
-import { Depth, ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
+import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
 
 import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
@@ -62,13 +62,9 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
           clampedIndex(Number(mainBaseLevel) - 1, EntitytoSpriteKey[EntityType.Asteroid].length)
         ]
       ),
-      OnClick(
-        scene,
-        () => {
-          components.Send.setDestination(entity);
-        },
-        true
-      ),
+      SetValue({
+        depth: DepthLayers.Rock,
+      }),
     ]);
 
     const outlineSprite =
@@ -90,6 +86,12 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         }
       }),
       Texture(Assets.SpriteAtlas, outlineSprite),
+      OnClick(scene, () => {
+        components.Send.setDestination(entity);
+      }),
+      SetValue({
+        depth: DepthLayers.Rock + 1,
+      }),
     ]);
 
     const gracePeriod = asteroidObjectGroup.add("Sprite");
@@ -110,7 +112,9 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         }
       }),
       Texture(Assets.SpriteAtlas, SpriteKeys.GracePeriod),
-      Depth(DepthLayers.Marker + 1),
+      SetValue({
+        depth: DepthLayers.Marker,
+      }),
     ]);
   };
 
