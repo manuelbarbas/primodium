@@ -10,13 +10,27 @@ import { Hex } from "viem";
 export const recallArrival = async (rockEntity: Entity, arrivalEntity: Entity, network: SetupNetworkResult) => {
   const { key } = decodeEntity(components.MapItemArrivals.metadata.keySchema, arrivalEntity);
 
-  await execute(() => network.worldContract.write.recallArrival([rockEntity as Hex, key as Hex]), network, {
-    id: hashEntities(TransactionQueueType.Recall, arrivalEntity, rockEntity),
-  });
+  await execute(
+    () => network.worldContract.write.recallArrival([rockEntity as Hex, key as Hex]),
+    network,
+    {
+      id: hashEntities(TransactionQueueType.Recall, arrivalEntity, rockEntity),
+    },
+    (receipt) => {
+      // handle amplitude here
+    }
+  );
 };
 
 export const recallStationedUnits = async (rockEntity: Entity, network: SetupNetworkResult) => {
-  await execute(() => network.worldContract.write.recallStationedUnits([rockEntity as Hex]), network, {
-    id: hashEntities(TransactionQueueType.Recall, rockEntity),
-  });
+  await execute(
+    () => network.worldContract.write.recallStationedUnits([rockEntity as Hex]),
+    network,
+    {
+      id: hashEntities(TransactionQueueType.Recall, rockEntity),
+    },
+    (receipt) => {
+      // handle amplitude here
+    }
+  );
 };

@@ -10,7 +10,14 @@ import { Hex } from "viem";
 export const reinforce = async (rockEntity: Entity, arrivalEntity: Entity, network: SetupNetworkResult) => {
   const { key } = decodeEntity(components.MapItemArrivals.metadata.keySchema, arrivalEntity);
 
-  await execute(() => network.worldContract.write.reinforce([rockEntity as Hex, key as Hex]), network, {
-    id: hashEntities(TransactionQueueType.Reinforce, arrivalEntity, rockEntity),
-  });
+  await execute(
+    () => network.worldContract.write.reinforce([rockEntity as Hex, key as Hex]),
+    network,
+    {
+      id: hashEntities(TransactionQueueType.Reinforce, arrivalEntity, rockEntity),
+    },
+    (receipt) => {
+      // handle amplitude here
+    }
+  );
 };

@@ -5,6 +5,7 @@ import { toHex32 } from "src/util/constants";
 import { Hex } from "viem";
 import { UnitCountTuple } from "../types";
 import { execute } from "src/network/actions";
+import { hashEntities } from "src/util/encode";
 
 export const send = async (
   unitCounts: UnitCountTuple,
@@ -23,6 +24,13 @@ export const send = async (
         { ...destination, parent: toHex32("0") },
         to,
       ]),
-    network
+    network,
+    {
+      // todo: random bytes?
+      id: hashEntities(unitCounts.toString(), sendType, origin, destination),
+    },
+    (receipt) => {
+      // handle amplitude here
+    }
   );
 };
