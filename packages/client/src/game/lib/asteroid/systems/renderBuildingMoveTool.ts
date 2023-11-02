@@ -54,7 +54,8 @@ export const renderBuildingMoveTool = (scene: Scene, mud: SetupResult) => {
     const validPlacement = validateBuildingPlacement(
       tileCoord,
       buildingPrototype,
-      (components.Home.get(playerEntity)?.asteroid as Entity | undefined) ?? singletonEntity
+      (components.Home.get(playerEntity)?.asteroid as Entity | undefined) ?? singletonEntity,
+      selectedBuilding
     );
 
     buildingTool.setComponents([
