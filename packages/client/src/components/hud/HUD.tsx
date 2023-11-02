@@ -18,10 +18,11 @@ import { Resources } from "./resources/Resources";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 import { Units } from "./units/Units";
 import { LoadingIndication } from "./LoadingIndication";
+import { useMud } from "src/hooks";
 
 export const GameHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [state.showUI, state.toggleShowUI]);
-
+  const playerEntity = useMud().network.playerEntity;
   const selectedBuilding = SelectedBuilding.use()?.value;
   const mapOpen = MapOpen.use(undefined, {
     value: false,
@@ -51,7 +52,7 @@ export const GameHUD = () => {
             <HUD.TopMiddle>
               {getBlockTypeName(selectedBuilding) && selectedBuilding && <PrototypeInfo building={selectedBuilding} />}
               {(!selectedBuilding || !getBlockTypeName(selectedBuilding)) && <ViewStarmap />}
-              <GracePeriod />
+              <GracePeriod player={playerEntity} />
             </HUD.TopMiddle>
             <HUD.TopLeft>
               <Score />

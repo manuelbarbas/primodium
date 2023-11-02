@@ -350,8 +350,8 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.Housing, "/img/icons/utilitiesicon.png"],
   [EntityType.FleetMoves, "/img/icons/moveicon.png"],
   [EntityType.VesselCapacity, "/img/unit/miningvessel.png"],
-  [EntityType.Defense, "/img/resource/defense_resource.png"],
-  [EntityType.DefenseMultiplier, "/img/resource/defense_resource.png"],
+  [EntityType.Defense, "/img/icons/defenseicon.png"],
+  [EntityType.DefenseMultiplier, "/img/icons/defenseicon.png"],
 
   // debug
   [EntityType.Bullet, "/img/crafted/bullet.png"],
