@@ -80,8 +80,6 @@ const ClaimObjectiveButton: React.FC<{
           onClick={() => {
             claimObjective(objectiveEntity, network.network);
           }}
-          tooltip="test"
-          tooltipDirection="top"
         >
           {"Claim"}
         </Button>
