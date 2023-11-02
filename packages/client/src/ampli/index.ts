@@ -98,7 +98,7 @@ export interface SystemBuildProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -110,7 +110,7 @@ export interface SystemBuildProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -172,7 +172,7 @@ export interface SystemBuildPathProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -184,7 +184,7 @@ export interface SystemBuildPathProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -233,7 +233,7 @@ export interface SystemClaimFromMineProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -245,7 +245,53 @@ export interface SystemClaimFromMineProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemClaimObjectiveProperties {
+  /**
+   * Name of an objective in plaintext, as returned by \`BlockIdToKey\` in \`constants.ts\` when passing in an EntityID.
+   */
+  objectiveType: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -294,7 +340,7 @@ export interface SystemCraftProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -306,7 +352,7 @@ export interface SystemCraftProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -369,7 +415,7 @@ export interface SystemDestroyProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -381,7 +427,7 @@ export interface SystemDestroyProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -430,7 +476,7 @@ export interface SystemDestroyPathProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -442,7 +488,7 @@ export interface SystemDestroyPathProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -478,7 +524,7 @@ export interface SystemIncrementProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -490,7 +536,7 @@ export interface SystemIncrementProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -524,7 +570,7 @@ export interface SystemInvadeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -536,7 +582,7 @@ export interface SystemInvadeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -570,7 +616,7 @@ export interface SystemRaidProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -582,7 +628,7 @@ export interface SystemRaidProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -616,7 +662,7 @@ export interface SystemRecallReinforcementsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -628,7 +674,7 @@ export interface SystemRecallReinforcementsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -670,7 +716,7 @@ export interface SystemReceiveReinforcementProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -682,7 +728,7 @@ export interface SystemReceiveReinforcementProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -716,7 +762,7 @@ export interface SystemResearchProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -728,7 +774,7 @@ export interface SystemResearchProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -778,7 +824,7 @@ export interface SystemSendUnitsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -790,7 +836,7 @@ export interface SystemSendUnitsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -836,7 +882,7 @@ export interface SystemSpawnProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -848,7 +894,7 @@ export interface SystemSpawnProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -882,7 +928,7 @@ export interface SystemTrainUnitsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -894,7 +940,7 @@ export interface SystemTrainUnitsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -923,7 +969,7 @@ export interface SystemTrainUnitsProperties {
   /**
    * Name of a unit. On the client, this is fetched via its EntityID with `BlockIdToKey`.
    */
-  unitType: string;
+  unitName: string;
 }
 
 export interface SystemUpgradeProperties {
@@ -967,7 +1013,7 @@ export interface SystemUpgradeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -979,7 +1025,7 @@ export interface SystemUpgradeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -1034,7 +1080,7 @@ export interface SystemUpgradeRangeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -1046,7 +1092,7 @@ export interface SystemUpgradeRangeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -1086,6 +1132,14 @@ export class SystemClaimFromMine implements BaseEvent {
   event_type = "system.ClaimFromMine";
 
   constructor(public event_properties: SystemClaimFromMineProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemClaimObjective implements BaseEvent {
+  event_type = "system.ClaimObjective";
+
+  constructor(public event_properties: SystemClaimObjectiveProperties) {
     this.event_properties = event_properties;
   }
 }
@@ -1286,6 +1340,17 @@ export class Ampli {
     );
   }
 
+ /**
+  * Flush the event.
+  */
+  flush() : PromiseResult<Result> {
+    if (!this.isInitializedAndEnabled()) {
+      return getVoidPromiseResult();
+    }
+
+    return this.amplitude!.flush();
+  }
+
   /**
    * Track event
    *
@@ -1349,6 +1414,23 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SystemClaimFromMine(properties), options);
+  }
+
+  /**
+   * system.ClaimObjective
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.ClaimObjective)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. objectiveType)
+   * @param options Amplitude event options.
+   */
+  systemClaimObjective(
+    properties: SystemClaimObjectiveProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemClaimObjective(properties), options);
   }
 
   /**
