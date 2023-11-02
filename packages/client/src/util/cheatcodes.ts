@@ -136,6 +136,18 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
         if (!player) throw new Error("No player found");
         for (const resource of [...ResourceStorages]) {
           await mud.contractCalls.setComponentValue(
+            mud.components.MaxResourceCount,
+            encodeEntity(
+              { entity: "bytes32", resource: "uint8" },
+              { entity: player as Hex, resource: ResourceEnumLookup[resource] }
+            ),
+            {
+              value: 10000000n,
+            }
+          );
+        }
+        for (const resource of [...ResourceStorages]) {
+          await mud.contractCalls.setComponentValue(
             mud.components.ResourceCount,
             encodeEntity(
               { entity: "bytes32", resource: "uint8" },
