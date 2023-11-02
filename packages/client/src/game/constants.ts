@@ -168,6 +168,7 @@ export enum SpriteKeys {
   AsteroidPlayer = "sprites/spacerocks/borders/Border_Player.png",
   AsteroidEnemy = "sprites/spacerocks/borders/Border_Enemy.png",
   AsteroidPirate = "sprites/spacerocks/borders/Border_Pirate.png",
+  AsteroidAlliance = "sprites/spacerocks/borders/Border_Alliance.png",
 
   MotherlodePlayerSmall = "sprites/spacerocks/borders/Border_Player_Motherlode1.png",
   MotherlodePlayerMedium = "sprites/spacerocks/borders/Border_Player_Motherlode2.png",
@@ -180,6 +181,10 @@ export enum SpriteKeys {
   MotherlodeEnemySmall = "sprites/spacerocks/borders/Border_Enemy_Motherlode1.png",
   MotherlodeEnemyMedium = "sprites/spacerocks/borders/Border_Enemy_Motherlode2.png",
   MotherlodeEnemyLarge = "sprites/spacerocks/borders/Border_Enemy_Motherlode3.png",
+
+  MotherlodeAllianceSmall = "sprites/spacerocks/borders/Border_Alliance_Motherlode1.png",
+  MotherlodeAllianceMedium = "sprites/spacerocks/borders/Border_Alliance_Motherlode2.png",
+  MotherlodeAllianceLarge = "sprites/spacerocks/borders/Border_Alliance_Motherlode3.png",
 
   //CONSTRUCTION
   Construction1x1 = "sprites/construction/1x1.png",

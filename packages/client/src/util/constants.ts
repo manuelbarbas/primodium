@@ -62,6 +62,13 @@ export enum TransactionQueueType {
   ClaimObjective,
 }
 
+export enum RockRelationship {
+  Ally,
+  Enemy,
+  Neutral,
+  Self,
+}
+
 export type TransactionQueueMetadataTypes = {
   [TransactionQueueType.Build]: {
     coord: Coord;

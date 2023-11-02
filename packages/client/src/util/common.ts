@@ -1,7 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { Hex, trim } from "viem";
 import { BlockIdToKey } from "./constants";
-
 export function hasCommonElement<T>(setA: Set<T>, setB: Set<T>) {
   for (const element of setA) {
     if (setB.has(element)) {
