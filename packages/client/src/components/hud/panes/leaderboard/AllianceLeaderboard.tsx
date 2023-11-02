@@ -32,6 +32,7 @@ import {
   rejectJoinRequest,
   acceptJoinRequest,
   invite,
+  declineInvite,
 } from "src/util/web3/contractCalls/alliance";
 import { GiRank1, GiRank2, GiRank3 } from "react-icons/gi";
 import { hexToString, Hex, padHex, isAddress } from "viem";
@@ -39,6 +40,9 @@ import { entityToAddress } from "src/util/common";
 import { Join } from "src/components/core/Join";
 import { EAllianceInviteMode, EAllianceRole } from "contracts/config/enums";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { hashEntities } from "src/util/encode";
+import { TransactionQueueType } from "src/util/constants";
 
 const ALLIANCE_TAG_SIZE = 6;
 
@@ -220,33 +224,42 @@ export const ManageScreen: React.FC = () => {
                 <div className="flex gap-1">
                   {/* only kick if not current player, has the ability to kick, and current player is higher than member */}
                   {entity !== playerEntity && playerRole <= EAllianceRole.CanKick && role > playerRole && (
-                    <Tooltip text="Kick" direction="left">
-                      <Button className="btn-xs !rounded-box border-error" onClick={() => kickPlayer(entity, network)}>
+                    <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.KickPlayer, entity)}>
+                      <Button
+                        tooltip="Kick"
+                        tooltipDirection="left"
+                        className="btn-xs !rounded-box border-error"
+                        onClick={() => kickPlayer(entity, network)}
+                      >
                         <FaUserMinus className="rounded-none" size={10} />
                       </Button>
-                    </Tooltip>
+                    </TransactionQueueMask>
                   )}
                   {/* only promote if not current player, has the ability to promote, and current player is higher than member */}
                   {entity !== playerEntity && playerRole <= EAllianceRole.CanGrantRole && role > playerRole && (
-                    <Tooltip text="Demote" direction="left">
+                    <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Demote, entity)}>
                       <Button
+                        tooltip="Demote"
+                        tooltipDirection="left"
                         className="btn-xs !rounded-box border-warning"
                         onClick={() => grantRole(entity, Math.min(role + 1, EAllianceRole.Member), network)}
                       >
                         <FaArrowDown />
                       </Button>
-                    </Tooltip>
+                    </TransactionQueueMask>
                   )}
                   {/* only promote if not current player, has the ability to promote, and current player is higher than member */}
                   {entity !== playerEntity && playerRole <= EAllianceRole.CanGrantRole && role > playerRole && (
-                    <Tooltip text="Promote" direction="left">
+                    <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Promote, entity)}>
                       <Button
+                        tooltip="Promote"
+                        tooltipDirection="left"
                         className="btn-xs !rounded-box border-success"
                         onClick={() => grantRole(entity, Math.max(role - 1, EAllianceRole.CanGrantRole), network)}
                       >
                         <FaArrowUp />
                       </Button>
-                    </Tooltip>
+                    </TransactionQueueMask>
                   )}
                 </div>
               </SecondaryCard>
@@ -301,20 +314,30 @@ export const InvitesScreen: React.FC = () => {
                   {name}
                   <div className="flex gap-1">
                     {/* only kick if not current player, has the ability to kick, and current player is higher than member */}
-
-                    <Tooltip text="Decline" direction="left">
-                      <Button className="btn-xs !rounded-box border-error" onClick={() => console.log("decline")}>
+                    <TransactionQueueMask
+                      queueItemId={hashEntities(TransactionQueueType.DeclineInvite, playerInvite.alliance)}
+                    >
+                      <Button
+                        tooltip="Decline"
+                        tooltipDirection="left"
+                        className="btn-xs !rounded-box border-error"
+                        onClick={() => declineInvite(playerInvite.alliance, network)}
+                      >
                         <FaTimes className="rounded-none" size={10} />
                       </Button>
-                    </Tooltip>
-                    <Tooltip text="Accept" direction="left">
+                    </TransactionQueueMask>
+                    <TransactionQueueMask
+                      queueItemId={hashEntities(TransactionQueueType.JoinAlliance, playerInvite.alliance)}
+                    >
                       <Button
+                        tooltip="Accept"
+                        tooltipDirection="left"
                         className="btn-xs !rounded-box border-success"
                         onClick={() => joinAlliance(playerInvite.alliance, network)}
                       >
                         <FaCheck className="rounded-none" size={10} />
                       </Button>
-                    </Tooltip>
+                    </TransactionQueueMask>
                   </div>
                 </SecondaryCard>
               );
@@ -339,22 +362,31 @@ export const InvitesScreen: React.FC = () => {
 
                     <div className="flex gap-1">
                       {/* only kick if not current player, has the ability to kick, and current player is higher than member */}
-                      <Tooltip text="Decline" direction="left">
+                      <TransactionQueueMask
+                        queueItemId={hashEntities(TransactionQueueType.RejectRequest, request.player)}
+                      >
                         <Button
+                          tooltip="Decline"
+                          tooltipDirection="left"
                           className="btn-xs !rounded-box border-error"
-                          onClick={() => acceptJoinRequest(request.player, network)}
+                          onClick={() => rejectJoinRequest(request.player, network)}
                         >
                           <FaTimes className="rounded-none" size={10} />
                         </Button>
-                      </Tooltip>
-                      <Tooltip text="Accept" direction="left">
+                      </TransactionQueueMask>
+
+                      <TransactionQueueMask
+                        queueItemId={hashEntities(TransactionQueueType.AcceptRequest, request.player)}
+                      >
                         <Button
+                          tooltip="Accept"
+                          tooltipDirection="left"
                           className="btn-xs !rounded-box border-success"
-                          onClick={() => rejectJoinRequest(request.player, network)}
+                          onClick={() => acceptJoinRequest(request.player, network)}
                         >
                           <FaCheck className="rounded-none" size={10} />
                         </Button>
-                      </Tooltip>
+                      </TransactionQueueMask>
                     </div>
                   </SecondaryCard>
                 );
@@ -455,8 +487,10 @@ const LeaderboardItem = ({
         <div className="flex items-center gap-1">
           <p className="font-bold rounded-md bg-cyan-700 px-2 ">{score.toLocaleString()}</p>
           {playerAlliance !== entity && (
-            <Tooltip text={inviteOnly ? "Request to Join" : "Join"} direction="left">
+            <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.JoinAlliance, entity)}>
               <Button
+                tooltip={inviteOnly ? "Request to Join" : "Join"}
+                tooltipDirection="left"
                 className={`btn-xs flex border ${inviteOnly ? "border-warning" : "border-secondary"}`}
                 onClick={() => {
                   inviteOnly ? requestToJoin(entity, network) : joinAlliance(entity, network);
@@ -464,7 +498,7 @@ const LeaderboardItem = ({
               >
                 <FaUserPlus />
               </Button>
-            </Tooltip>
+            </TransactionQueueMask>
           )}
         </div>
       </div>

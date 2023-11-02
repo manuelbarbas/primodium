@@ -37,9 +37,15 @@ export const joinAlliance = async (alliance: Entity, network: SetupNetworkResult
   });
 };
 
+export const declineInvite = async (alliance: Entity, network: SetupNetworkResult) => {
+  execute(() => network.worldContract.write.declineInvite([alliance as Hex]), network, {
+    id: hashEntities(TransactionQueueType.DeclineInvite, alliance),
+  });
+};
+
 export const requestToJoin = async (alliance: Entity, network: SetupNetworkResult) => {
   execute(() => network.worldContract.write.requestToJoin([alliance as Hex]), network, {
-    id: hashEntities(TransactionQueueType.RequestToJoin, alliance),
+    id: hashEntities(TransactionQueueType.JoinAlliance, alliance),
   });
 };
 

@@ -1,5 +1,5 @@
 import { removeAllTweens } from "@latticexyz/phaserx";
-import { PixelCoord } from "@latticexyz/phaserx/dist/types";
+import { PixelCoord } from "@latticexyz/phaserx/src/types";
 import { observable, runInAction } from "mobx";
 
 import { isRectangle, isSprite, isGraphics } from "../util/guards";
