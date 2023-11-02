@@ -14,7 +14,7 @@ export const train = async (buildingEntity: Entity, unit: EUnit, count: bigint, 
       id: hashEntities(uuid()),
     },
     (receipt) => {
-      // handle amplitude here
+      // TODO: parse receipt
     }
   );
 };

@@ -18,7 +18,7 @@ export async function demolishBuilding(building: Entity, network: SetupNetworkRe
       id: hashEntities(TransactionQueueType.Demolish, building),
     },
     (receipt) => {
-      // handle amplitude here
+      // TODO: parse receipt
     }
   );
 }

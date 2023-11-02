@@ -15,7 +15,7 @@ export const claimObjective = async (rawObjective: Entity, network: SetupNetwork
       id: hashEntities(TransactionQueueType.ClaimObjective, rawObjective),
     },
     (receipt) => {
-      // handle amplitude here
+      // TODO: parse receipt
     }
   );
 };

@@ -13,7 +13,7 @@ export const raid = async (rockEntity: Entity, network: SetupNetworkResult) => {
       id: hashEntities(TransactionQueueType.Land, rockEntity),
     },
     (receipt) => {
-      // handle amplitude here
+      // TODO: parse receipt
     }
   );
 };

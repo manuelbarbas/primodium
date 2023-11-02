@@ -17,7 +17,7 @@ export const recallArrival = async (rockEntity: Entity, arrivalEntity: Entity, n
       id: hashEntities(TransactionQueueType.Recall, arrivalEntity, rockEntity),
     },
     (receipt) => {
-      // handle amplitude here
+      // TODO: parse receipt
     }
   );
 };
@@ -30,7 +30,7 @@ export const recallStationedUnits = async (rockEntity: Entity, network: SetupNet
       id: hashEntities(TransactionQueueType.Recall, rockEntity),
     },
     (receipt) => {
-      // handle amplitude here
+      // TODO: parse receipt
     }
   );
 };

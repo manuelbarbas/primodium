@@ -11,7 +11,7 @@ export const upgradeRange = async (network: SetupNetworkResult) => {
       id: hashEntities(TransactionQueueType.Upgrade, network.playerEntity),
     },
     (receipt) => {
-      // handle amplitude here
+      // TODO: parse receipt
     }
   );
 };
