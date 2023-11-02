@@ -216,25 +216,6 @@ library LibAlliance {
   }
 
   /**
-   * @dev decline a request to join an alliance
-   * @param player The entity ID of the player who is accepting the request to join.
-   * @param accepted The entity ID of the the player who has requested to join.
-   */
-  function declineInvide(bytes32 player, bytes32 accepted) internal {
-    checkCanInviteOrAcceptJoinRequest(player, accepted);
-
-    bytes32 allianceEntity = PlayerAlliance.getAlliance(player);
-
-    PlayerAlliance.set(accepted, allianceEntity, uint8(EAllianceRole.Member));
-
-    uint256 playerScore = Score.get(accepted);
-    Alliance.setScore(allianceEntity, Alliance.getScore(allianceEntity) + playerScore);
-
-    AllianceJoinRequest.deleteRecord(accepted, allianceEntity);
-    AllianceMembersSet.add(allianceEntity, accepted);
-  }
-
-  /**
    * @dev kick a player from an alliance
    * @param player The entity ID of the player kicking.
    * @param target the entity id of the player to kick
