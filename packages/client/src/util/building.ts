@@ -220,7 +220,7 @@ export const getBuildingInfo = (building: Entity) => {
   const unitProduction = comps.P_UnitProdTypes.getWithKeys(buildingLevelKeys)?.value;
   const unitNextLevelProduction = comps.P_UnitProdTypes.getWithKeys(buildingNextLevelKeys)?.value;
   const storages = getBuildingStorages(buildingTypeEntity, level);
-  const nextLevelStorages = getBuildingStorages(buildingTypeEntity, level);
+  const nextLevelStorages = getBuildingStorages(buildingTypeEntity, nextLevel);
 
   const vault = transformProductionData(comps.P_Vault.getWithKeys(buildingLevelKeys));
   const vaultNext = transformProductionData(comps.P_Vault.getWithKeys(buildingNextLevelKeys));

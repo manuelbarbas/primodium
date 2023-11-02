@@ -65,7 +65,7 @@ export function formatNumber(num: number | bigint, options?: { fractionDigits?: 
       n /= 1000;
       unitIndex++;
     }
-    return n.toFixed(options?.fractionDigits) + units[unitIndex];
+    return n.toFixed(Number.isInteger(n) ? 0 : options?.fractionDigits) + units[unitIndex];
   };
 
   if (typeof num === "number") {
