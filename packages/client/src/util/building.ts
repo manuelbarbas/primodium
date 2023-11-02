@@ -100,17 +100,23 @@ export function getBuildingDimensions(building: Entity) {
   return dimensions;
 }
 
-export const validateBuildingPlacement = (coord: Coord, building: Entity, asteroid: Entity) => {
+export const validateBuildingPlacement = (
+  coord: Coord,
+  buildingPrototype: Entity,
+  asteroid: Entity,
+  building?: Entity
+) => {
   //get building dimesions
-  const buildingDimensions = getBuildingDimensions(building);
+  const buildingDimensions = getBuildingDimensions(buildingPrototype);
   const player = Account.get()?.value;
-  const requiredTile = comps.P_RequiredTile.get(building)?.value;
+  const requiredTile = comps.P_RequiredTile.get(buildingPrototype)?.value;
 
   //iterate over dimensions and check if there is a building there
   for (let x = 0; x < buildingDimensions.width; x++) {
     for (let y = 0; y < buildingDimensions.height; y++) {
       const buildingCoord = { x: coord.x + x, y: coord.y - y };
-      if (getBuildingAtCoord(buildingCoord, asteroid)) return false;
+      const buildingAtCoord = getBuildingAtCoord(buildingCoord, asteroid);
+      if (buildingAtCoord && buildingAtCoord !== building) return false;
       if (outOfBounds(buildingCoord, player)) return false;
       if (requiredTile && requiredTile !== getResourceKey(buildingCoord)) return false;
     }
@@ -217,10 +223,15 @@ export const getBuildingInfo = (building: Entity) => {
   const production = transformProductionData(comps.P_Production.getWithKeys(buildingLevelKeys));
   const nextLevelProduction = transformProductionData(comps.P_Production.getWithKeys(buildingNextLevelKeys));
 
+  const requiredDependencies = transformProductionData(comps.P_RequiredDependencies.getWithKeys(buildingLevelKeys));
+  const nextLevelRequiredDependencies = transformProductionData(
+    comps.P_RequiredDependencies.getWithKeys(buildingNextLevelKeys)
+  );
+
   const unitProduction = comps.P_UnitProdTypes.getWithKeys(buildingLevelKeys)?.value;
   const unitNextLevelProduction = comps.P_UnitProdTypes.getWithKeys(buildingNextLevelKeys)?.value;
   const storages = getBuildingStorages(buildingTypeEntity, level);
-  const nextLevelStorages = getBuildingStorages(buildingTypeEntity, level);
+  const nextLevelStorages = getBuildingStorages(buildingTypeEntity, nextLevel);
 
   const vault = transformProductionData(comps.P_Vault.getWithKeys(buildingLevelKeys));
   const vaultNext = transformProductionData(comps.P_Vault.getWithKeys(buildingNextLevelKeys));
@@ -244,6 +255,7 @@ export const getBuildingInfo = (building: Entity) => {
     vault,
     position,
     unitProductionMultiplier,
+    requiredDependencies,
     upgrade: {
       unitProduction: unitNextLevelProduction,
       vault: vaultNext,
@@ -252,6 +264,7 @@ export const getBuildingInfo = (building: Entity) => {
       recipe: upgradeRecipe,
       mainBaseLvlReq,
       nextLevelUnitProductionMultiplier,
+      requiredDependencies: nextLevelRequiredDependencies,
     },
   };
 };

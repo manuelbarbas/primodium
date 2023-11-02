@@ -9,14 +9,16 @@ export const StationedUnits: React.FC = () => {
     units: [],
     counts: [],
   }).units;
+  const player = components.Account.use()?.value;
+  const owner = components.OwnedBy.get(destination)?.value;
+
+  const disabled = units.length === 0 || player !== owner;
 
   return (
-    <SecondaryCard
-      className={`w-full flex-row items-center gap-2 justify-between ${units.length === 0 ? "opacity-20" : "0"}`}
-    >
+    <SecondaryCard className={`w-full flex-row items-center gap-2 justify-between ${disabled ? "opacity-20" : "0"}`}>
       <img src="/img/icons/mainbaseicon.png" className="w-8 h-8" />
       <p className="uppercase text-xs font-bold">manage stationed units</p>
-      <Navigator.NavButton to="StationedUnits" className="btn-sm w-fit btn-secondary" disabled={units.length === 0}>
+      <Navigator.NavButton to="StationedUnits" className="btn-sm w-fit btn-secondary" disabled={disabled}>
         <FaArrowRight />
       </Navigator.NavButton>
     </SecondaryCard>

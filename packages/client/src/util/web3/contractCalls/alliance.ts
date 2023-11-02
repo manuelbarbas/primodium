@@ -4,9 +4,9 @@ import { execute } from "src/network/actions";
 import { SetupNetworkResult } from "src/network/types";
 import { TransactionQueueType, toHex32 } from "src/util/constants";
 import { Hex } from "viem";
-import { uuid } from "@latticexyz/utils";
 import { hashEntities } from "src/util/encode";
 import { components } from "src/network/components";
+import { randomEntity } from "src/util/common";
 
 export const createAlliance = async (name: string, inviteOnly: boolean, network: SetupNetworkResult) => {
   await execute(
@@ -17,7 +17,7 @@ export const createAlliance = async (name: string, inviteOnly: boolean, network:
       ]),
     network,
     {
-      id: uuid() as Entity,
+      id: randomEntity(),
     }
   );
 };
@@ -27,7 +27,7 @@ export const leaveAlliance = async (network: SetupNetworkResult) => {
   await network.waitForTransaction(tx);
 
   execute(() => network.worldContract.write.leave(), network, {
-    id: uuid() as Entity,
+    id: randomEntity(),
   });
 };
 

@@ -177,6 +177,7 @@ library LibAlliance {
     if (PlayerAlliance.getRole(player) == uint8(EAllianceRole.Owner)) {
       if (AllianceMembersSet.length(allianceEntity) == 0) {
         Alliance.deleteRecord(allianceEntity);
+        PlayerAlliance.deleteRecord(player);
         return;
       }
       bytes32[] memory members = AllianceMembersSet.getMembers(allianceEntity);

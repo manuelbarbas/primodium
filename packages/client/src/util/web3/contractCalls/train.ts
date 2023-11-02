@@ -2,11 +2,12 @@ import { Entity } from "@latticexyz/recs";
 import { EUnit } from "contracts/config/enums";
 import { execute } from "src/network/actions";
 import { SetupNetworkResult } from "src/network/types";
-import { uuid } from "@latticexyz/utils";
+
 import { Hex } from "viem";
+import { randomEntity } from "src/util/common";
 
 export const train = async (buildingEntity: Entity, unit: EUnit, count: bigint, network: SetupNetworkResult) => {
   await execute(() => network.worldContract.write.trainUnits([buildingEntity as Hex, unit, count]), network, {
-    id: uuid() as Entity,
+    id: randomEntity(),
   });
 };

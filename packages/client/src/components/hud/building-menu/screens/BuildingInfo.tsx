@@ -19,8 +19,18 @@ const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ lab
 
 export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
   const playerEntity = useMud().network.playerEntity;
-  const { buildingType, level, maxLevel, position, production, upgrade, unitProductionMultiplier, storages, vault } =
-    useBuildingInfo(building);
+  const {
+    buildingType,
+    level,
+    maxLevel,
+    position,
+    production,
+    upgrade,
+    requiredDependencies,
+    unitProductionMultiplier,
+    storages,
+    vault,
+  } = useBuildingInfo(building);
 
   return (
     <Navigator.Screen title="BuildingInfo" className="w-full">
@@ -41,7 +51,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
         </DataLabel>
       </div>
       {(production.length !== 0 || upgrade.production.length !== 0) && (
-        <div className="grid grid-cols-2 w-full mb-1">
+        <div className="grid grid-cols-2 w-full">
           <DataLabel label="PRODUCTION">
             {!upgrade.production.length ? (
               <b>N/A</b>
@@ -82,12 +92,54 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
           </DataLabel>
         </div>
       )}
+      {(requiredDependencies.length !== 0 || upgrade.requiredDependencies.length !== 0) && (
+        <div className="grid grid-cols-2 w-full ">
+          <DataLabel label="resource usage">
+            {!upgrade.production.length ? (
+              <b>N/A</b>
+            ) : (
+              requiredDependencies.map(({ resource, amount, type }) => (
+                <Badge className="text-xs gap-2" key={`production-${resource}`}>
+                  <ResourceIconTooltip
+                    name={getBlockTypeName(resource)}
+                    image={ResourceImage.get(resource) ?? ""}
+                    resource={resource}
+                    playerEntity={playerEntity}
+                    amount={amount}
+                    resourceType={type}
+                    scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
+                  />
+                </Badge>
+              ))
+            )}
+          </DataLabel>
+          <DataLabel label="next level resource Usage">
+            {!upgrade.production.length || level === maxLevel ? (
+              <b>N/A</b>
+            ) : (
+              upgrade.requiredDependencies.map(({ resource, amount, type }) => (
+                <Badge className="text-xs gap-2" key={`next-production-${resource}`}>
+                  <ResourceIconTooltip
+                    name={getBlockTypeName(resource)}
+                    image={ResourceImage.get(resource) ?? ""}
+                    resource={resource}
+                    playerEntity={playerEntity}
+                    amount={amount}
+                    resourceType={type}
+                    scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
+                  />
+                </Badge>
+              ))
+            )}
+          </DataLabel>
+        </div>
+      )}
       {unitProductionMultiplier !== undefined && (
         <div className="grid grid-cols-2 w-full ">
-          <DataLabel label="speed">
+          <DataLabel label="unit prod speed">
             <b>x{(unitProductionMultiplier / RESOURCE_SCALE).toString()}</b>
           </DataLabel>
-          <DataLabel label="next level speed">
+          <DataLabel label="next level unit prod speed">
             {!upgrade.nextLevelUnitProductionMultiplier || level === maxLevel ? (
               <b>N/A</b>
             ) : (
@@ -97,7 +149,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
         </div>
       )}
       {storages && storages.length !== 0 && (
-        <div className="grid grid-cols-1 w-full mb-1">
+        <div className="grid grid-cols-1 w-full">
           <DataLabel label="storage">
             {storages.map((storage) => {
               return (
@@ -143,7 +195,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
         </div>
       )}
       {vault && vault.length !== 0 && (
-        <div className="grid grid-cols-1 w-full mb-1">
+        <div className="grid grid-cols-1 w-full">
           <DataLabel label="vault">
             {vault.map((v) => {
               return (

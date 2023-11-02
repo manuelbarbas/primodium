@@ -789,7 +789,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   ShieldGenerator: {
     tables: {
-      P_Blueprint: { value: getBlueprint(3, 3) },
+      P_Blueprint: { value: getBlueprint(4, 4) },
       P_MaxLevel: { value: 3n },
     },
     levels: {

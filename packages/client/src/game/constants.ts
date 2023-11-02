@@ -91,6 +91,9 @@ export enum SpriteKeys {
   Mainbase3 = "sprites/mainbase/level3/Main_Base_LVL3_1.png",
   Mainbase4 = "sprites/mainbase/level4/Main_Base_LVL4_1.png",
   Mainbase5 = "sprites/mainbase/level5/Main_Base_LVL5_1.png",
+  Mainbase6 = "sprites/mainbase/level6/Main_Base_LVL6_1.png",
+  Mainbase7 = "sprites/mainbase/level7/Main_Base_LVL7_1.png",
+  Mainbase8 = "sprites/mainbase/level8/Main_Base_LVL8_1.png",
 
   IronMine1 = "sprites/miners/ironmine/level1/Miner_Iron_LVL1_1.png",
   IronMine2 = "sprites/miners/ironmine/level2/Miner_Iron_LVL2_1.png",
@@ -112,6 +115,8 @@ export enum SpriteKeys {
   IronPlateFactory2 = "sprites/plating-factory/level1/Plating_Factory_LVL1_2.png",
 
   AlloyFactory1 = "sprites/alloy-factory/level1/Alloy_Factory1.png",
+  AlloyFactory2 = "sprites/alloy-factory/level2/Alloy_Factory_LVL2_1.png",
+  AlloyFactory3 = "sprites/alloy-factory/level3/Alloy_Factory_LVL3_1.png",
 
   SolarPanel1 = "sprites/solar-panels/level1/Solar_Panels_LVL1_1.png",
   SolarPanel2 = "sprites/solar-panels/level2/Solar_Panels_LVL2_1.png",
@@ -135,6 +140,14 @@ export enum SpriteKeys {
   SAMLauncher1 = "sprites/sam_launcher/level1/SAM_Launcher_LVL1_1.png",
   SAMLauncher2 = "sprites/sam_launcher/level2/SAM_Launcher_LVL2_1.png",
   SAMLauncher3 = "sprites/sam_launcher/level3/SAM_Launcher_LVL3_1.png",
+
+  ShieldGenerator1 = "sprites/shield-generator/level1/Shield_Generator_LVL1_1.png",
+  ShieldGenerator2 = "sprites/shield-generator/level2/Shield_Generator_LVL2_1.png",
+  ShieldGenerator3 = "sprites/shield-generator/level3/Shield_Generator_LVL3_1.png",
+
+  Vault1 = "sprites/vault/level1/Vault_LVL1_1.png",
+  Vault2 = "sprites/vault/level2/Vault_LVL2_1.png",
+  Vault3 = "sprites/vault/level3/Vault_LVL3_1.png",
 
   //ASTEROIDS
   Asteroid1 = "sprites/spacerocks/asteroids/asteroid1.png",
@@ -194,7 +207,7 @@ export enum SpriteKeys {
   Construction2x3 = "sprites/construction/2x3.png",
 
   // GRACE PERIOD
-  GracePeriod = "sprites/miners/coppermine/level1/Miner_Copper_LVL1_1.png",
+  GracePeriod = "sprites/icons/grace.png",
 }
 
 export enum AnimationKeys {
@@ -203,6 +216,9 @@ export enum AnimationKeys {
   Mainbase3 = "mainbase/level3",
   Mainbase4 = "mainbase/level4",
   Mainbase5 = "mainbase/level5",
+  Mainbase6 = "mainbase/level6",
+  Mainbase7 = "mainbase/level7",
+  Mainbase8 = "mainbase/level8",
 
   IronMine1 = "ironmine/level1",
   IronMine2 = "ironmine/level2",
@@ -222,6 +238,8 @@ export enum AnimationKeys {
   IronPlateFactory2 = "ironplatefactory/level2",
 
   AlloyFactory1 = "alloyfactory/level1",
+  AlloyFactory2 = "alloyfactory/level2",
+  AlloyFactory3 = "alloyfactory/level3",
 
   PhotovoltaicCellFactory1 = "pvcfactory/level1",
   PhotovoltaicCellFactory2 = "pvcfactory/level2",
@@ -245,6 +263,14 @@ export enum AnimationKeys {
   SAMLauncher1 = "samlauncher/level1",
   SAMLauncher2 = "samlauncher/level2",
   SAMLauncher3 = "samlauncher/level3",
+
+  ShieldGenerator1 = "shieldgenerator/level1",
+  ShieldGenerator2 = "shieldgenerator/level2",
+  ShieldGenerator3 = "shieldgenerator/level3",
+
+  Vault1 = "vault/level1",
+  Vault2 = "vault/level2",
+  Vault3 = "vault/level3",
 }
 
 export const ResourceToTilesetKey: { [key: number]: ResourceTilekeys } = {
@@ -261,6 +287,9 @@ export const EntitytoSpriteKey = {
     SpriteKeys.Mainbase3,
     SpriteKeys.Mainbase4,
     SpriteKeys.Mainbase5,
+    SpriteKeys.Mainbase6,
+    SpriteKeys.Mainbase7,
+    SpriteKeys.Mainbase8,
   ],
 
   [EntityType.IronMine]: [SpriteKeys.IronMine1, SpriteKeys.IronMine2, SpriteKeys.IronMine3],
@@ -275,7 +304,7 @@ export const EntitytoSpriteKey = {
 
   [EntityType.IronPlateFactory]: [SpriteKeys.IronPlateFactory1, SpriteKeys.IronPlateFactory2],
 
-  [EntityType.AlloyFactory]: [SpriteKeys.AlloyFactory1],
+  [EntityType.AlloyFactory]: [SpriteKeys.AlloyFactory1, SpriteKeys.AlloyFactory2, SpriteKeys.AlloyFactory3],
 
   [EntityType.PVCellFactory]: [SpriteKeys.PhotovoltaicCellFactory1, SpriteKeys.PhotovoltaicCellFactory2],
 
@@ -293,8 +322,8 @@ export const EntitytoSpriteKey = {
 
   [EntityType.DroneFactory]: [SpriteKeys.DroneFactory1],
 
-  [EntityType.ShieldGenerator]: [SpriteKeys.DroneFactory1], //TODO
-  [EntityType.Vault]: [SpriteKeys.StorageUnit1, SpriteKeys.StorageUnit2, SpriteKeys.StorageUnit3], //TODO
+  [EntityType.ShieldGenerator]: [SpriteKeys.ShieldGenerator1, SpriteKeys.ShieldGenerator2, SpriteKeys.ShieldGenerator3],
+  [EntityType.Vault]: [SpriteKeys.Vault1, SpriteKeys.Vault2, SpriteKeys.Vault3],
 
   //STARMAP
   [EntityType.Asteroid]: [
@@ -318,6 +347,9 @@ export const EntityIDtoAnimationKey = {
     AnimationKeys.Mainbase3,
     AnimationKeys.Mainbase4,
     AnimationKeys.Mainbase5,
+    AnimationKeys.Mainbase6,
+    AnimationKeys.Mainbase7,
+    AnimationKeys.Mainbase8,
   ],
 
   [EntityType.IronMine]: [AnimationKeys.IronMine1, AnimationKeys.IronMine2, AnimationKeys.IronMine3],
@@ -328,7 +360,7 @@ export const EntityIDtoAnimationKey = {
 
   [EntityType.IronPlateFactory]: [AnimationKeys.IronPlateFactory1, AnimationKeys.IronPlateFactory2],
 
-  [EntityType.AlloyFactory]: [AnimationKeys.AlloyFactory1],
+  [EntityType.AlloyFactory]: [AnimationKeys.AlloyFactory1, AnimationKeys.AlloyFactory2, AnimationKeys.AlloyFactory3],
 
   [EntityType.PVCellFactory]: [AnimationKeys.PhotovoltaicCellFactory1, AnimationKeys.PhotovoltaicCellFactory2],
 
@@ -346,9 +378,13 @@ export const EntityIDtoAnimationKey = {
 
   [EntityType.SAMLauncher]: [AnimationKeys.SAMLauncher1, AnimationKeys.SAMLauncher2, AnimationKeys.SAMLauncher3],
 
-  [EntityType.ShieldGenerator]: [AnimationKeys.DroneFactory1], //TODO
+  [EntityType.ShieldGenerator]: [
+    AnimationKeys.ShieldGenerator1,
+    AnimationKeys.ShieldGenerator2,
+    AnimationKeys.ShieldGenerator3,
+  ],
 
-  [EntityType.Vault]: [undefined, undefined, AnimationKeys.StorageUnit3], //TODO
+  [EntityType.Vault]: [AnimationKeys.Vault1, AnimationKeys.Vault2, AnimationKeys.Vault3],
 };
 
 export enum KeybindActions {

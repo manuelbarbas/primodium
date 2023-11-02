@@ -1,6 +1,8 @@
 import { Entity } from "@latticexyz/recs";
 import { Hex, trim } from "viem";
 import { BlockIdToKey } from "./constants";
+import { hexlify, randomBytes } from "ethers/lib/utils";
+
 export function hasCommonElement<T>(setA: Set<T>, setB: Set<T>) {
   for (const element of setA) {
     if (setB.has(element)) {
@@ -64,7 +66,7 @@ export function formatNumber(num: number | bigint, options?: { fractionDigits?: 
       n /= 1000;
       unitIndex++;
     }
-    return n.toFixed(options?.fractionDigits) + units[unitIndex];
+    return n.toFixed(Number.isInteger(n) ? 0 : options?.fractionDigits) + units[unitIndex];
   };
 
   if (typeof num === "number") {
@@ -103,3 +105,5 @@ export const entityToAddress = (entity: Entity | string, shorten = false) => {
 
   return shorten ? shortenAddress(trimmed) : trimmed;
 };
+
+export const randomEntity = () => hexlify(randomBytes(32)) as Entity;
