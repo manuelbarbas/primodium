@@ -62,9 +62,13 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
           clampedIndex(Number(mainBaseLevel) - 1, EntitytoSpriteKey[EntityType.Asteroid].length)
         ]
       ),
-      OnClick(scene, () => {
-        components.Send.setDestination(entity);
-      }),
+      OnClick(
+        scene,
+        () => {
+          components.Send.setDestination(entity);
+        },
+        true
+      ),
     ]);
 
     const outlineSprite =

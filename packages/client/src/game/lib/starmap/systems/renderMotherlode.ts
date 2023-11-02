@@ -49,9 +49,13 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
     motherlodeObjectGroup.add("Sprite").setComponents([
       ...sharedComponents,
       Texture(Assets.SpriteAtlas, sprite),
-      OnClick(scene, () => {
-        components.Send.setDestination(entity);
-      }),
+      OnClick(
+        scene,
+        () => {
+          components.Send.setDestination(entity);
+        },
+        true
+      ),
     ]);
 
     const ownedBy = components.OwnedBy.get(entity)?.value;
