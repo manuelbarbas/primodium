@@ -1,4 +1,5 @@
-import { Coord } from "@latticexyz/utils";
+import { Coord, uuid } from "@latticexyz/utils";
+import { Entity } from "@latticexyz/recs";
 import { Hex } from "viem";
 import { BigNumber } from "ethers";
 import { ampli } from "src/ampli";
