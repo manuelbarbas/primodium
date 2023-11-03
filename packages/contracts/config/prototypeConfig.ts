@@ -151,7 +151,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         maxMotherlodesPerAsteroid: 6n,
         motherlodeChanceInv: 4n,
         unitProductionRate: 100n,
-        moveSpeed: 10000n,
+        travelTime: 200n,
         worldSpeed: 100n,
       },
       P_UnitPrototypes: {
