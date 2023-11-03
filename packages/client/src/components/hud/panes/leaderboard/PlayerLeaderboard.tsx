@@ -1,5 +1,4 @@
 import { Entity } from "@latticexyz/recs";
-import { getAddress } from "ethers/lib/utils.js";
 import { useEffect, useMemo, useState } from "react";
 import { FixedSizeList as List } from "react-window";
 
@@ -83,7 +82,7 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
     const fetchLocalLinkedAddress = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL}/linked-address/local-to-external/${getAddress(player)}`
+          `${import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL}/linked-address/local-to-external/${entityToAddress(player)}`
         );
         const jsonRes = await res.json();
         setFetchedExternalWallet(jsonRes);
