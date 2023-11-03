@@ -287,8 +287,8 @@ export const ManageScreen: React.FC = () => {
 export const InvitesScreen: React.FC = () => {
   const network = useMud().network;
   const playerEntity = network.playerEntity;
-  const playerAlliance = components.PlayerAlliance.get(playerEntity)?.alliance as Entity | undefined;
-  const role = components.PlayerAlliance.get(playerEntity)?.role ?? EAllianceRole.Member;
+  const playerAlliance = components.PlayerAlliance.use(playerEntity)?.alliance as Entity | undefined;
+  const role = components.PlayerAlliance.use(playerEntity)?.role ?? EAllianceRole.Member;
   const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
   const joinRequests = components.AllianceRequest.useAllWith({ alliance: playerAlliance ?? singletonEntity }) ?? [];
   const playerEntities = components.PlayerAlliance.useAllWith({
@@ -415,7 +415,7 @@ export const InvitesScreen: React.FC = () => {
         )}
       </div>
 
-      {role > EAllianceRole.CanInvite && (
+      {role > EAllianceRole.CanInvite && playerAlliance && (
         <SecondaryCard className="w-full flex-grow items-center justify-center font-bold opacity-50 mb-2 text-center">
           NEED INVITE ROLE TO SEND INVITES OR ACCEPT JOIN REQUESTS
         </SecondaryCard>
@@ -501,7 +501,7 @@ const LeaderboardItem = ({
 
   return (
     <SecondaryCard
-      className={`grid grid-cols-6 w-full border rounded-md border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center ${
+      className={`grid grid-cols-6 w-full border rounded-md border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center h-10 ${
         inviteOnly ? "border-warning" : ""
       }`}
     >
@@ -510,7 +510,7 @@ const LeaderboardItem = ({
         <div>{hexToString(alliance, { size: 32 }).substring(0, 6)}</div>
         <div className="flex items-center gap-1">
           <p className="font-bold rounded-md bg-cyan-700 px-2 ">{score.toLocaleString()}</p>
-          {playerAlliance !== entity && (
+          {!playerAlliance && (
             <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.JoinAlliance, entity)}>
               <Button
                 tooltip={inviteOnly ? "Request to Join" : "Join"}
@@ -549,7 +549,7 @@ const PlayerInfo = ({ rank, allianceName, score }: { rank: number; allianceName:
   const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
 
   return (
-    <SecondaryCard className="w-full overflow-y-auto border border-slate-700 rounded-md p-2 bg-slate-800">
+    <SecondaryCard className="w-full border border-slate-700 rounded-md p-2 bg-slate-800">
       {
         <div className="grid grid-cols-6 w-full items-center gap-2">
           <div className="col-span-4 bg-neutral rounded-box p-1">
@@ -573,7 +573,7 @@ const SoloPlayerInfo = () => {
   const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
 
   return (
-    <SecondaryCard className="w-full overflow-y-auto border border-slate-700 rounded-md p-2 bg-slate-800">
+    <SecondaryCard className="w-full border border-slate-700 rounded-md p-2 bg-slate-800">
       {
         <div className="grid grid-cols-6 w-full items-center gap-2">
           <Navigator.NavButton to="create" className="btn-xs btn-secondary col-span-5">
