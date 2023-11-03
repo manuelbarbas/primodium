@@ -7,6 +7,7 @@ import { getBlockTypeName, randomEntity } from "src/util/common";
 import { ampli } from "src/ampli";
 import { components } from "src/network/components";
 import { parseReceipt } from "../../analytics/parseReceipt";
+import { UnitEntityLookup } from "src/util/constants";
 
 export const train = async (buildingEntity: Entity, unit: EUnit, count: bigint, network: SetupNetworkResult) => {
   await execute(
@@ -20,7 +21,7 @@ export const train = async (buildingEntity: Entity, unit: EUnit, count: bigint, 
 
       ampli.systemTrainUnits({
         buildingName: getBlockTypeName(buildingType),
-        unitName: EUnit[unit],
+        unitName: getBlockTypeName(UnitEntityLookup[unit]),
         unitCount: bigintToNumber(count),
         ...parseReceipt(receipt),
       });

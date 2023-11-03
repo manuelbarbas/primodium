@@ -1,11 +1,11 @@
 import { Entity } from "@latticexyz/recs";
-import { EObjectives } from "contracts/config/enums";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { SetupNetworkResult } from "src/network/types";
-import { ObjectiveEnumLookup, TransactionQueueType } from "src/util/constants";
+import { ObjectiveEntityLookup, ObjectiveEnumLookup, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { parseReceipt } from "../../analytics/parseReceipt";
+import { getBlockTypeName } from "src/util/common";
 
 export const claimObjective = async (rawObjective: Entity, network: SetupNetworkResult) => {
   const objective = ObjectiveEnumLookup[rawObjective];
@@ -19,7 +19,7 @@ export const claimObjective = async (rawObjective: Entity, network: SetupNetwork
     },
     (receipt) => {
       ampli.systemClaimObjective({
-        objectiveType: EObjectives[objective],
+        objectiveType: getBlockTypeName(ObjectiveEntityLookup[objective]),
         ...parseReceipt(receipt),
       });
     }

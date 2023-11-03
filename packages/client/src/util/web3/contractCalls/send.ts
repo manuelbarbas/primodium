@@ -1,7 +1,7 @@
 import { Coord } from "@latticexyz/utils";
-import { ESendType, MUDEnums } from "contracts/config/enums";
+import { ESendType } from "contracts/config/enums";
 import { SetupNetworkResult } from "src/network/types";
-import { toHex32 } from "src/util/constants";
+import { UnitEnumLookup, toHex32 } from "src/util/constants";
 import { Hex } from "viem";
 import { UnitCountTuple } from "../types";
 import { execute } from "src/network/actions";
@@ -29,7 +29,7 @@ export const send = async (
       ]),
     network,
     {
-      // todo: random bytes?
+      // for Nabs todo: random bytes?
       id: hashEntities(unitCounts.toString(), sendType, JSON.stringify(origin), JSON.stringify(destination)),
     },
     (receipt) => {
@@ -42,7 +42,7 @@ export const send = async (
         destinationAsteroidOwner: to,
         sendType: ESendType[sendType],
         unitCounts: unitCounts.map((count) => bigintToNumber(count)),
-        unitTypes: MUDEnums.EUnit,
+        unitTypes: Object.keys(UnitEnumLookup).map((key) => key.toString()),
         ...parseReceipt(receipt),
       });
     }
