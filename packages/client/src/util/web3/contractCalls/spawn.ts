@@ -2,6 +2,7 @@ import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { SetupNetworkResult } from "src/network/types";
 import { parseReceipt } from "../../analytics/parseReceipt";
+import { hashEntities } from "src/util/encode";
 
 export const spawn = async (network: SetupNetworkResult) => {
   await execute(
