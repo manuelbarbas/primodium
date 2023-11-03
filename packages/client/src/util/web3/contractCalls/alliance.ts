@@ -23,9 +23,6 @@ export const createAlliance = async (name: string, inviteOnly: boolean, network:
 };
 
 export const leaveAlliance = async (network: SetupNetworkResult) => {
-  const tx = await network.worldContract.write.leave();
-  await network.waitForTransaction(tx);
-
   execute(() => network.worldContract.write.leave(), network, {
     id: randomEntity(),
   });
