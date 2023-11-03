@@ -60,6 +60,22 @@ export enum TransactionQueueType {
   Land,
   Demolish,
   ClaimObjective,
+  JoinAlliance,
+  RequestToJoin,
+  KickPlayer,
+  Promote,
+  Demote,
+  AcceptRequest,
+  RejectRequest,
+  Invite,
+  DeclineInvite,
+}
+
+export enum RockRelationship {
+  Ally,
+  Enemy,
+  Neutral,
+  Self,
 }
 
 export type TransactionQueueMetadataTypes = {

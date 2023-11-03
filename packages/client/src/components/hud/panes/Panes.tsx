@@ -2,7 +2,6 @@ import { Divider } from "src/components/core/Divider";
 import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { Join } from "../../core/Join";
 import { Tabs } from "../../core/Tabs";
-import { Leaderboard } from "./Leaderboard";
 import { Outgoingfleets } from "./OutgoingFleets";
 import { ReinforcementFleets } from "./ReinforcementFleets";
 import { BattleReports } from "./battle-reports/BattleReports";
@@ -11,6 +10,7 @@ import { HostileFleets } from "./hostile-fleets/HostileFleets";
 import { Objectives } from "./Objectives";
 import { OwnedMotherlodes } from "./OwnedMotherlodes";
 import { Settings } from "./Settings";
+import { Leaderboard } from "./leaderboard/Leaderboard";
 
 export const Panes: React.FC = () => {
   const [newPlayer, setNewPlayer] = useSettingsStore((state) => [state.newPlayer, state.setNewPlayer]);

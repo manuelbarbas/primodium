@@ -10,9 +10,10 @@ import { ERock } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
 import { clampedIndex } from "src/util/common";
-import { EntityType } from "src/util/constants";
+import { EntityType, RockRelationship } from "src/util/constants";
 import { getNow } from "src/util/time";
 import { initializeMotherlodes } from "../utils/initializeMotherlodes";
+import { getRockRelationship } from "src/util/spacerock";
 
 export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -64,11 +65,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       }),
     ]);
 
-    const outlineSprite =
-      SpriteKeys[`Asteroid${ownedBy === playerEntity ? "Player" : "Enemy"}` as keyof typeof SpriteKeys];
-
     const asteroidOutline = asteroidObjectGroup.add("Sprite");
-
     asteroidOutline.setComponents([
       ...sharedComponents,
       OnComponentSystem(components.Send, () => {
@@ -82,7 +79,12 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
           asteroidOutline.removeComponent(Outline().id);
         }
       }),
-      Texture(Assets.SpriteAtlas, outlineSprite),
+      OnComponentSystem(components.PlayerAlliance, (_, { entity: _entity }) => {
+        if (ownedBy !== _entity && playerEntity !== _entity) return;
+
+        asteroidOutline.setComponent(Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity)));
+      }),
+      Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity)),
       OnClick(scene, () => {
         components.Send.setDestination(entity);
       }),
@@ -131,4 +133,19 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
     render(entity, coord);
     initializeMotherlodes(entity, coord);
   });
+};
+
+const getOutlineSprite = (playerEntity: Entity, rock: Entity) => {
+  const rockRelationship = getRockRelationship(playerEntity, rock);
+
+  return SpriteKeys[
+    `Asteroid${
+      {
+        [RockRelationship.Ally]: "Alliance",
+        [RockRelationship.Enemy]: "Enemy",
+        [RockRelationship.Neutral]: "Enemy",
+        [RockRelationship.Self]: "Player",
+      }[rockRelationship]
+    }` as keyof typeof SpriteKeys
+  ];
 };

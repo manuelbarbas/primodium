@@ -44,6 +44,14 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
         });
       },
     },
+    setMaxAllianceCount: {
+      params: [{ name: "value", type: "number" }],
+      function: async (value: number) => {
+        await mud.contractCalls.setComponentValue(mud.components.P_AllianceConfig, singletonEntity, {
+          maxAllianceMembers: BigInt(value),
+        });
+      },
+    },
     maxMainBaseLevel: {
       params: [],
       function: async () => {
