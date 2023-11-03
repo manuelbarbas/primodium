@@ -1,14 +1,15 @@
 import { Entity, Has, HasValue, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { world } from "src/network/world";
-import { MotherlodeSizeNames, MotherlodeTypeNames } from "src/util/constants";
+import { MotherlodeSizeNames, MotherlodeTypeNames, RockRelationship } from "src/util/constants";
 import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
 import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 import { Coord } from "@latticexyz/utils";
-import { ERock } from "contracts/config/enums";
+import { ERock, ESize } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
+import { getRockRelationship } from "src/util/spacerock";
 
 export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -49,18 +50,10 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
       }),
     ]);
 
-    const ownedBy = components.OwnedBy.get(entity)?.value;
-
-    const outlineSprite =
-      SpriteKeys[
-        `Motherlode${ownedBy ? (ownedBy === playerEntity ? "Player" : "Enemy") : "Neutral"}${
-          MotherlodeSizeNames[motherlodeData.size]
-        }` as keyof typeof SpriteKeys
-      ];
     const motherlodeOutline = motherlodeObjectGroup.add("Sprite");
     motherlodeOutline.setComponents([
       ...sharedComponents,
-      Texture(Assets.SpriteAtlas, outlineSprite),
+      Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity, motherlodeData.size)),
       OnComponentSystem(components.Send, () => {
         if (components.Send.get()?.destination === entity) {
           if (motherlodeOutline.hasComponent(Outline().id)) return;
@@ -73,16 +66,18 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
       }),
       OnComponentSystem(components.OwnedBy, (_, { entity: _entity }) => {
         if (entity !== _entity) return;
-        const ownedBy = components.OwnedBy.get(_entity)?.value;
 
-        const outlineSprite =
-          SpriteKeys[
-            `Motherlode${ownedBy ? (ownedBy === playerEntity ? "Player" : "Enemy") : "Neutral"}${
-              MotherlodeSizeNames[motherlodeData.size]
-            }` as keyof typeof SpriteKeys
-          ];
+        motherlodeOutline.setComponent(
+          Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity, motherlodeData.size))
+        );
+      }),
+      OnComponentSystem(components.PlayerAlliance, (_, { entity: _entity }) => {
+        const ownedBy = components.OwnedBy.get(entity)?.value;
+        if (ownedBy !== _entity && playerEntity !== _entity) return;
 
-        motherlodeOutline.setComponent(Texture(Assets.SpriteAtlas, outlineSprite));
+        motherlodeOutline.setComponent(
+          Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity, motherlodeData.size))
+        );
       }),
       OnClick(scene, () => {
         components.Send.setDestination(entity);
@@ -100,4 +95,19 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
     if (!coord) return;
     render(entity, coord);
   });
+};
+
+const getOutlineSprite = (playerEntity: Entity, rock: Entity, size: ESize) => {
+  const rockRelationship = getRockRelationship(playerEntity, rock);
+
+  return SpriteKeys[
+    `Motherlode${
+      {
+        [RockRelationship.Ally]: "Alliance",
+        [RockRelationship.Enemy]: "Enemy",
+        [RockRelationship.Neutral]: "Neutral",
+        [RockRelationship.Self]: "Player",
+      }[rockRelationship]
+    }${MotherlodeSizeNames[size]}` as keyof typeof SpriteKeys
+  ];
 };

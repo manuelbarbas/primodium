@@ -14,7 +14,7 @@ import { linkAddress } from "src/util/web2/linkAddress";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 
-export const Leaderboard = () => {
+export const PlayerLeaderboard = () => {
   const address = useMud().network.address;
   const data = components.Leaderboard.use();
   const [linkedAddress, setLinkedAddress] = useState(null);
@@ -39,10 +39,11 @@ export const Leaderboard = () => {
 
   return (
     <div className="flex flex-col items-center w-full text-xs pointer-events-auto">
-      <List height={323} width="100%" itemCount={data.players.length} itemSize={47} className="scrollbar">
+      <List height={285} width="100%" itemCount={data.players.length} itemSize={47} className="scrollbar">
         {({ index, style }) => {
           const player = data.players[index];
           const score = data.scores[index];
+
           return (
             <div style={style} className="pr-2">
               <LeaderboardItem key={index} player={player} index={index} score={score} />

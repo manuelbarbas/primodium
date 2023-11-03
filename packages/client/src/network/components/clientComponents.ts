@@ -91,7 +91,49 @@ export const Leaderboard = createExtendedComponent(
   }
 );
 
+export const AllianceLeaderboard = createExtendedComponent(
+  world,
+  {
+    alliances: Type.EntityArray,
+    playerAllianceRank: Type.Number,
+    scores: Type.BigIntArray,
+  },
+  {
+    id: "AllianceLeaderboard",
+  }
+);
+
+/* -------------------------------------------------------------------------- */
+/*                                   Battle                                   */
+/* -------------------------------------------------------------------------- */
 const Arrival = createArrivalComponent();
+/* -------------------------------------------------------------------------- */
+/*                                  ALLIANCES                                 */
+/* -------------------------------------------------------------------------- */
+export const PlayerInvite = createExtendedComponent(
+  world,
+  {
+    target: Type.Entity,
+    alliance: Type.Entity,
+    player: Type.Entity,
+    timestamp: Type.BigInt,
+  },
+  {
+    id: "PlayerInvites",
+  }
+);
+
+export const AllianceRequest = createExtendedComponent(
+  world,
+  {
+    player: Type.Entity,
+    alliance: Type.Entity,
+    timestamp: Type.BigInt,
+  },
+  {
+    id: "AllianceRequests",
+  }
+);
 
 /* -------------------------------------------------------------------------- */
 /*                              TRANSACTION QUEUE                             */
@@ -123,10 +165,14 @@ export default {
 
   /* ------------------------------ Leaderboard ------------------------------- */
   Leaderboard,
+  AllianceLeaderboard,
 
   /* --------------------------------- Battle --------------------------------- */
   Arrival,
 
+  /* ------------------------------- Alliances -------------------------------- */
+  PlayerInvite,
+  AllianceRequest,
   /* ----------------------------- Transaction ------------------------------- */
   TransactionQueue,
 };

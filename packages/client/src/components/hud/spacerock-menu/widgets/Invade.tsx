@@ -1,4 +1,3 @@
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { ESendType } from "contracts/config/enums";
 import { FaArrowRight } from "react-icons/fa";
 import { SecondaryCard } from "src/components/core/Card";
@@ -11,19 +10,14 @@ export const Invade: React.FC = () => {
   const playerEntity = useMud().network.playerEntity;
   const origin = components.Send.get()?.origin;
   const destination = components.Send.get()?.destination;
-  const units = components.Hangar.use(origin, {
-    units: [],
-    counts: [],
-  }).units;
-  const ownedBy = components.OwnedBy.get(destination, {
-    value: singletonEntity,
-  }).value;
+  const unitCount = components.Hangar.use(origin)?.counts.reduce((acc, cur) => acc + cur, 0n) ?? 0n;
+  const ownedBy = components.OwnedBy.get(destination)?.value;
   const fleetMoves = useFleetMoves();
 
   return (
     <SecondaryCard
       className={`w-full flex-row items-center gap-2 justify-between ${
-        units.length === 0 || ownedBy === playerEntity || !fleetMoves ? "opacity-20" : "0"
+        unitCount === 0n || ownedBy === playerEntity || !fleetMoves ? "opacity-20" : "0"
       }`}
     >
       <img src="/img/icons/attackicon.png" className="w-8 h-8" />
@@ -31,7 +25,7 @@ export const Invade: React.FC = () => {
       <Navigator.NavButton
         to="Send"
         className="btn-sm w-fit btn-error"
-        disabled={units.length === 0 || ownedBy === playerEntity || !fleetMoves}
+        disabled={unitCount === 0n || ownedBy === playerEntity || !fleetMoves}
         onClick={() => components.Send.update({ sendType: ESendType.Invade })}
       >
         <FaArrowRight />

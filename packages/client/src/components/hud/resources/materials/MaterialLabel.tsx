@@ -30,7 +30,6 @@ export const MaterialLabel = ({ name, resource }: { name: string; resource: Enti
     return (
       <div className="gap-1 mx-1 group pointer-events-auto">
         <ResourceIconTooltip
-          short={false}
           name={name}
           playerEntity={playerEntity}
           amount={resourceCount + resourcesToClaim}

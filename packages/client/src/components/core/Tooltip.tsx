@@ -3,6 +3,7 @@ import React from "react";
 interface TooltipProps {
   children: React.ReactElement;
   text?: string;
+  className?: string;
   direction?: "left" | "right" | "top" | "bottom";
 }
 

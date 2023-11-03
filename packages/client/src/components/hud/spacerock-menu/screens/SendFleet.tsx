@@ -18,6 +18,7 @@ export const SendFleet: React.FC = () => {
   const sendType = components.Send.get()?.sendType ?? ESendType.Invade;
   const units = components.Send.useUnits();
   const numUnits = Object.keys(units).length;
+  const disabled = numUnits === 0;
 
   const sendFleet = (sendType: ESendType) => {
     const origin = components.Send.get()?.origin;
@@ -82,17 +83,29 @@ export const SendFleet: React.FC = () => {
       </SecondaryCard>
       <div className="flex gap-2 mt-1">
         {sendType === ESendType.Invade && (
-          <Navigator.BackButton className="btn-error border-none" onClick={() => sendFleet(ESendType.Invade)}>
+          <Navigator.BackButton
+            disabled={disabled}
+            className={`btn-error border-none ${disabled ? "opacity-70" : ""}`}
+            onClick={() => sendFleet(ESendType.Invade)}
+          >
             INVADE
           </Navigator.BackButton>
         )}
         {sendType === ESendType.Reinforce && (
-          <Navigator.BackButton className="btn-success border-none" onClick={() => sendFleet(ESendType.Reinforce)}>
+          <Navigator.BackButton
+            disabled={disabled}
+            className={`btn-error border-none ${disabled ? "opacity-70" : ""}`}
+            onClick={() => sendFleet(ESendType.Reinforce)}
+          >
             REINFORCE
           </Navigator.BackButton>
         )}
         {sendType === ESendType.Raid && (
-          <Navigator.BackButton className="btn-error border-none" onClick={() => sendFleet(ESendType.Raid)}>
+          <Navigator.BackButton
+            disabled={disabled}
+            className={`btn-error border-none ${disabled ? "opacity-70" : ""}`}
+            onClick={() => sendFleet(ESendType.Raid)}
+          >
             RAID
           </Navigator.BackButton>
         )}

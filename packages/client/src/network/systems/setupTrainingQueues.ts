@@ -31,7 +31,6 @@ export function setupTrainingQueues(mud: SetupResult) {
       entity: building as Hex,
     });
     if (!queueUnits || queueUnits.back == queueUnits.front) return TrainingQueue.remove(building);
-    console.log("offset: " + ClaimOffset.get(building, { value: 0n }).value);
     let foundUnfinished = false;
     const queue = [];
     for (let i = queueUnits.front; i < queueUnits.back; i++) {
