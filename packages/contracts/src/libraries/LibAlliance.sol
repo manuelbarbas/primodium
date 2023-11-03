@@ -41,6 +41,14 @@ library LibAlliance {
   }
 
   /**
+   * @dev Checks if a alliance has space for new member.
+   * @param allianceEntity The entity ID of the alliance.
+   */
+  function checkAllianceMaxJoinLimit(bytes32 allianceEntity) internal view {
+    require(AllianceMembersSet.length(allianceEntity) < P_AllianceConfig.get(), "[Alliance] Alliance is full");
+  }
+
+  /**
    * @dev Checks if a new player can join an alliance.
    * @param playerEntity The entity ID of the player.
    * @param allianceEntity The entity ID of the alliance.
@@ -51,7 +59,6 @@ library LibAlliance {
       Alliance.getInviteMode(allianceEntity) == uint8(EAllianceInviteMode.Open) || inviter != 0,
       "[Alliance] Either alliance is not open or player has not been invited"
     );
-    require(AllianceMembersSet.length(allianceEntity) < P_AllianceConfig.get(), "[Alliance] Alliance is full");
     return;
   }
 
@@ -135,8 +142,8 @@ library LibAlliance {
    */
   function join(bytes32 player, bytes32 allianceEntity) internal {
     checkNotMemberOfAnyAlliance(player);
+    checkAllianceMaxJoinLimit(allianceEntity);
     checkCanNewPlayerJoinAlliance(player, allianceEntity);
-
     PlayerAlliance.set(player, allianceEntity, uint8(EAllianceRole.Member));
     AllianceInvitation.deleteRecord(player, allianceEntity);
     uint256 playerScore = Score.get(player);
@@ -278,9 +285,8 @@ library LibAlliance {
    */
   function acceptRequestToJoin(bytes32 player, bytes32 accepted) internal {
     checkCanInviteOrAcceptJoinRequest(player, accepted);
-
     bytes32 allianceEntity = PlayerAlliance.getAlliance(player);
-
+    checkAllianceMaxJoinLimit(allianceEntity);
     PlayerAlliance.set(accepted, allianceEntity, uint8(EAllianceRole.Member));
 
     uint256 playerScore = Score.get(accepted);

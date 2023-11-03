@@ -46,7 +46,7 @@ export const GameHUD = () => {
           <HUD scale={1} pad>
             <HUD.BottomMiddle>
               {(getBlockTypeName(selectedBuilding) || !selectedBuilding) && !mapOpen && <Hotbar />}
-              {!getBlockTypeName(selectedBuilding) && <BuildingMenu />}
+              {!getBlockTypeName(selectedBuilding) && !mapOpen && <BuildingMenu />}
               {mapOpen && <SpacerockMenu />}
             </HUD.BottomMiddle>
             <HUD.TopMiddle>

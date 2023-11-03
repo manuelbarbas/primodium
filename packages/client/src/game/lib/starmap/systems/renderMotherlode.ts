@@ -4,7 +4,6 @@ import { world } from "src/network/world";
 import { MotherlodeSizeNames, MotherlodeTypeNames, RockRelationship } from "src/util/constants";
 import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
-// import { Send } from "src/network/components/clientComponents";
 import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 import { Coord } from "@latticexyz/utils";
 import { ERock, ESize } from "contracts/config/enums";
@@ -33,14 +32,10 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
       ];
 
     const sharedComponents = [
-      ObjectPosition(
-        {
-          x: coord.x * tileWidth,
-          y: -coord.y * tileHeight,
-        },
-        DepthLayers.Building
-      ),
-      // outline,
+      ObjectPosition({
+        x: coord.x * tileWidth,
+        y: -coord.y * tileHeight,
+      }),
       SetValue({
         originX: 0.5,
         originY: 0.5,
@@ -50,8 +45,8 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
     motherlodeObjectGroup.add("Sprite").setComponents([
       ...sharedComponents,
       Texture(Assets.SpriteAtlas, sprite),
-      OnClick(scene, () => {
-        components.Send.setDestination(entity);
+      SetValue({
+        depth: DepthLayers.Rock,
       }),
     ]);
 
@@ -75,6 +70,12 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
         motherlodeOutline.setComponent(
           Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity, motherlodeData.size))
         );
+      }),
+      OnClick(scene, () => {
+        components.Send.setDestination(entity);
+      }),
+      SetValue({
+        depth: DepthLayers.Rock + 1,
       }),
     ]);
   };
