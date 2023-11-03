@@ -12,6 +12,7 @@ import { getLinkedAddress } from "src/util/web2/getLinkedAddress";
 import { linkAddress } from "src/util/web2/linkAddress";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
+import { getAddress } from "viem";
 
 export const PlayerLeaderboard = () => {
   const network = useMud().network;
@@ -35,15 +36,40 @@ export const PlayerLeaderboard = () => {
     fetchLinkedAddress();
   }, []);
 
+  const filteredLeaderboardData = useMemo(() => {
+    // TODO: more reliable way of checking whether "player" is a valid player entity that can result in an address
+    // currently filters on data.players whether getAddress returns an error or not
+    if (data) {
+      const leaderboardData = data.players.map((player, index) => {
+        return {
+          player: player,
+          score: data.scores[index],
+        };
+      });
+
+      // filter out invalid players
+      const filteredLeaderboardData = leaderboardData.filter((playerData) => {
+        try {
+          entityToAddress(playerData.player);
+          return true;
+        } catch (error) {
+          return false;
+        }
+      });
+      return filteredLeaderboardData;
+    } else {
+      return [];
+    }
+  }, [data]);
+
   if (!data || !address) return null;
 
   return (
     <div className="flex flex-col items-center w-full text-xs pointer-events-auto">
-      <List height={285} width="100%" itemCount={data.players.length} itemSize={47} className="scrollbar">
+      <List height={285} width="100%" itemCount={filteredLeaderboardData.length} itemSize={47} className="scrollbar">
         {({ index, style }) => {
-          const player = data.players[index];
-          const score = data.scores[index];
-
+          const player = filteredLeaderboardData[index].player;
+          const score = filteredLeaderboardData[index].score;
           return (
             <div style={style} className="pr-2">
               <LeaderboardItem key={index} player={player} index={index} score={score} />
