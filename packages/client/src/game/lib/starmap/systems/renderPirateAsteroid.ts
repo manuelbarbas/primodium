@@ -31,22 +31,16 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
       value: singletonEntity,
     }).value;
 
-    console.log("ownedby:", ownedBy, hashKeyEntity(PIRATE_KEY, player));
     if (hashKeyEntity(PIRATE_KEY, player) !== ownedBy) return;
-    console.log("string entity correct");
 
     if (asteroidType !== ERock.Asteroid) return;
-    console.log("asteroid type correct");
     const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entity);
 
     const sharedComponents = [
-      ObjectPosition(
-        {
-          x: coord.x * tileWidth,
-          y: -coord.y * tileHeight,
-        },
-        DepthLayers.Marker
-      ),
+      ObjectPosition({
+        x: coord.x * tileWidth,
+        y: -coord.y * tileHeight,
+      }),
       SetValue({
         originX: 0.5,
         originY: 0.5,
@@ -58,6 +52,9 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
       Texture(Assets.SpriteAtlas, SpriteKeys.PirateAsteroid1),
       OnClick(scene, () => {
         components.Send.setDestination(entity);
+      }),
+      SetValue({
+        depth: DepthLayers.Rock,
       }),
     ]);
 
@@ -79,6 +76,12 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
         }
       }),
       Texture(Assets.SpriteAtlas, outlineSprite),
+      OnClick(scene, () => {
+        components.Send.setDestination(entity);
+      }),
+      SetValue({
+        depth: DepthLayers.Rock + 1,
+      }),
     ]);
   };
 
