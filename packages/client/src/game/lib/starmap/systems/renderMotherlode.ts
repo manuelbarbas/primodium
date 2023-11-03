@@ -71,6 +71,14 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
           Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity, motherlodeData.size))
         );
       }),
+      OnComponentSystem(components.PlayerAlliance, (_, { entity: _entity }) => {
+        const ownedBy = components.OwnedBy.get(entity)?.value;
+        if (ownedBy !== _entity && playerEntity !== _entity) return;
+
+        motherlodeOutline.setComponent(
+          Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity, motherlodeData.size))
+        );
+      }),
       OnClick(scene, () => {
         components.Send.setDestination(entity);
       }),

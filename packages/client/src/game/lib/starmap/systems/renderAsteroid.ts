@@ -80,9 +80,9 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         }
       }),
       OnComponentSystem(components.PlayerAlliance, (_, { entity: _entity }) => {
-        if (ownedBy !== _entity) return;
+        if (ownedBy !== _entity && playerEntity !== _entity) return;
 
-        asteroidOutline.setComponent(Texture(Assets.SpriteAtlas, getOutlineSprite(_entity, entity)));
+        asteroidOutline.setComponent(Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity)));
       }),
       Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity)),
       OnClick(scene, () => {
