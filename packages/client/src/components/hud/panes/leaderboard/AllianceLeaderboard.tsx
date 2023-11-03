@@ -287,8 +287,8 @@ export const ManageScreen: React.FC = () => {
 export const InvitesScreen: React.FC = () => {
   const network = useMud().network;
   const playerEntity = network.playerEntity;
-  const playerAlliance = components.PlayerAlliance.get(playerEntity)?.alliance as Entity | undefined;
-  const role = components.PlayerAlliance.get(playerEntity)?.role ?? EAllianceRole.Member;
+  const playerAlliance = components.PlayerAlliance.use(playerEntity)?.alliance as Entity | undefined;
+  const role = components.PlayerAlliance.use(playerEntity)?.role ?? EAllianceRole.Member;
   const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
   const joinRequests = components.AllianceRequest.useAllWith({ alliance: playerAlliance ?? singletonEntity }) ?? [];
   const playerEntities = components.PlayerAlliance.useAllWith({
@@ -549,7 +549,7 @@ const PlayerInfo = ({ rank, allianceName, score }: { rank: number; allianceName:
   const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
 
   return (
-    <SecondaryCard className="w-full overflow-y-auto border border-slate-700 rounded-md p-2 bg-slate-800">
+    <SecondaryCard className="w-full border border-slate-700 rounded-md p-2 bg-slate-800">
       {
         <div className="grid grid-cols-6 w-full items-center gap-2">
           <div className="col-span-4 bg-neutral rounded-box p-1">
@@ -573,7 +573,7 @@ const SoloPlayerInfo = () => {
   const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
 
   return (
-    <SecondaryCard className="w-full overflow-y-auto border border-slate-700 rounded-md p-2 bg-slate-800">
+    <SecondaryCard className="w-full border border-slate-700 rounded-md p-2 bg-slate-800">
       {
         <div className="grid grid-cols-6 w-full items-center gap-2">
           <Navigator.NavButton to="create" className="btn-xs btn-secondary col-span-5">
