@@ -1,5 +1,4 @@
 import { Entity } from "@latticexyz/recs";
-import { getAddress } from "ethers/lib/utils.js";
 import { useEffect, useMemo, useState } from "react";
 import { FixedSizeList as List } from "react-window";
 
@@ -15,7 +14,8 @@ import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 
 export const PlayerLeaderboard = () => {
-  const address = useMud().network.address;
+  const network = useMud().network;
+  const address = network.address;
   const data = components.Leaderboard.use();
   const [linkedAddress, setLinkedAddress] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -44,7 +44,6 @@ export const PlayerLeaderboard = () => {
           const player = data.players[index];
           const score = data.scores[index];
 
-
           return (
             <div style={style} className="pr-2">
               <LeaderboardItem key={index} player={player} index={index} score={score} />
@@ -59,7 +58,7 @@ export const PlayerLeaderboard = () => {
             <div>{data.playerRank}.</div>
             <div className="col-span-5 flex justify-between">
               <p className="bg-rose-800 px-2 rounded-md flex items-center">You</p>
-              <Button className="btn-xs btn-secondary" onClick={linkAddress}>
+              <Button className="btn-xs btn-secondary" onClick={() => linkAddress(network)}>
                 {loading ? "..." : linkedAddress ? "Wallet Linked" : "Link Wallet"}
               </Button>
               <p className="font-bold rounded-md bg-cyan-700 px-2 flex items-center">
@@ -83,7 +82,7 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
     const fetchLocalLinkedAddress = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_ACCOUNT_LINK_VERCEL_URL}/linked-address/local-to-external/${getAddress(player)}`
+          `${import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL}/linked-address/local-to-external/${entityToAddress(player)}`
         );
         const jsonRes = await res.json();
         setFetchedExternalWallet(jsonRes);
