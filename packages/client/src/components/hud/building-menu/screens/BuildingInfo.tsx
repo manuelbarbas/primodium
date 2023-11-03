@@ -108,6 +108,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     amount={amount}
                     resourceType={type}
                     scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
+                    fractionDigits={3}
                   />
                 </Badge>
               ))
@@ -120,6 +121,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
               upgrade.requiredDependencies.map(({ resource, amount, type }) => (
                 <Badge className="text-xs gap-2" key={`next-production-${resource}`}>
                   <ResourceIconTooltip
+                    fractionDigits={3}
                     name={getBlockTypeName(resource)}
                     image={ResourceImage.get(resource) ?? ""}
                     resource={resource}
@@ -155,6 +157,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
               return (
                 <Badge key={storage.resource} className="text-xs gap-2">
                   <ResourceIconTooltip
+                    fractionDigits={3}
                     name={getBlockTypeName(storage.resource)}
                     playerEntity={playerEntity}
                     image={ResourceImage.get(storage.resource) ?? ""}
@@ -177,6 +180,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                 return (
                   <Badge key={storage.resource} className="text-xs gap-2">
                     <ResourceIconTooltip
+                      fractionDigits={3}
                       name={getBlockTypeName(storage.resource)}
                       playerEntity={playerEntity}
                       image={ResourceImage.get(storage.resource) ?? ""}
@@ -201,6 +205,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
               return (
                 <Badge key={v.resource} className="text-xs gap-2">
                   <ResourceIconTooltip
+                    fractionDigits={3}
                     name={getBlockTypeName(v.resource)}
                     playerEntity={playerEntity}
                     image={ResourceImage.get(v.resource) ?? ""}
@@ -222,6 +227,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                 return (
                   <Badge key={v.resource} className="text-xs gap-2">
                     <ResourceIconTooltip
+                      fractionDigits={3}
                       name={getBlockTypeName(v.resource)}
                       playerEntity={playerEntity}
                       image={ResourceImage.get(v.resource) ?? ""}
