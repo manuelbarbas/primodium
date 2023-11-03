@@ -1,12 +1,12 @@
 import { Navigator } from "src/components/core/Navigator";
 import { useMud } from "src/hooks";
 import { getSpaceRockInfo } from "src/util/spacerock";
+import { GracePeriod } from "../../GracePeriod";
 import { AsteroidResource } from "../widgets/AsteroidResource";
 import { Header } from "../widgets/Header";
 import { Land } from "../widgets/Land";
 import { Raid } from "../widgets/Raid";
 import { Reinforce } from "../widgets/Reinforce";
-import { GracePeriod } from "../../GracePeriod";
 
 export const Asteroid: React.FC<{
   data: ReturnType<typeof getSpaceRockInfo>;
@@ -15,7 +15,7 @@ export const Asteroid: React.FC<{
 
   return (
     <Navigator.Screen title={data.entity} className="w-full">
-      <Header name={data.name} imageUri={data.imageUri} />
+      <Header entity={data.entity} name={data.name} imageUri={data.imageUri} />
       <AsteroidResource resources={data.resources} />
       {data.ownedBy && playerEntity !== data.ownedBy && <GracePeriod player={data.ownedBy} />}
       {(!data.isInGracePeriod || playerEntity === data.ownedBy) && (

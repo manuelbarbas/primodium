@@ -12,7 +12,7 @@ export const DefenseLabel = ({ player }: { player?: Entity }) => {
   const resourceId = EntityType.Defense;
   player = player ?? components.Account.use()?.value ?? singletonEntity;
   const rock = components.Home.get(player)?.asteroid;
-  const defense = useRockDefense(rock as Entity, player);
+  const defense = useRockDefense(rock as Entity);
   if (!player || !rock) return null;
   const resourceIcon = ResourceImage.get(resourceId);
   const multiplierAmount =
@@ -25,7 +25,7 @@ export const DefenseLabel = ({ player }: { player?: Entity }) => {
         short={false}
         name={name}
         playerEntity={player}
-        amount={defense}
+        amount={defense.points}
         resource={resourceId}
         scale={1n}
         image={resourceIcon ?? ""}
