@@ -1,7 +1,9 @@
 import { Entity } from "@latticexyz/recs";
+import { decodeEntity } from "@latticexyz/store-sync/recs";
 import { Button } from "src/components/core/Button";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
+import { components } from "src/network/components";
 import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { recallArrival } from "src/util/web3/contractCalls/recall";
@@ -15,8 +17,9 @@ export const OrbitActionButton: React.FC<{
   const network = useMud().network;
 
   const queueType = outgoing ? TransactionQueueType.Recall : TransactionQueueType.Reinforce;
+  const { key } = decodeEntity(components.MapItemArrivals.metadata.keySchema, arrivalEntity);
   return (
-    <TransactionQueueMask queueItemId={hashEntities(queueType, arrivalEntity, destination)}>
+    <TransactionQueueMask queueItemId={hashEntities(queueType, key, destination)}>
       <Button
         className={`btn-sm btn-seoncdary `}
         onClick={() => {

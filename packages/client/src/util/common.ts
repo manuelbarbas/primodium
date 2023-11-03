@@ -1,6 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { Hex, trim } from "viem";
 import { BlockIdToKey } from "./constants";
+import { hexlify, randomBytes } from "ethers/lib/utils";
 
 export function hasCommonElement<T>(setA: Set<T>, setB: Set<T>) {
   for (const element of setA) {
@@ -65,7 +66,7 @@ export function formatNumber(num: number | bigint, options?: { fractionDigits?: 
       n /= 1000;
       unitIndex++;
     }
-    return n.toFixed(options?.fractionDigits) + units[unitIndex];
+    return n.toFixed(Number.isInteger(n) ? 0 : options?.fractionDigits) + units[unitIndex];
   };
 
   if (typeof num === "number") {
@@ -102,3 +103,5 @@ export function reverseRecord<T extends PropertyKey, U extends PropertyKey>(inpu
 export const entityToAddress = (entity: Entity | string) => {
   return trim(entity as Hex);
 };
+
+export const randomEntity = () => hexlify(randomBytes(32));

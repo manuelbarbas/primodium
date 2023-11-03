@@ -5,7 +5,7 @@
   "types": "./types",
   "scripts": {
     "copy-tileset-images": "cp tilesets/images/* ../client/public/assets/tilesets/",
-    "export": "yarn generate-multiatlas-sprites && yarn copy-tileset-images",
+    "export": "pnpm generate-multiatlas-sprites && pnpm copy-tileset-images",
     "generate-multiatlas-sprites": "node ./scripts/cli.mjs --project ./config-sprites.json"
   },
   "devDependencies": {

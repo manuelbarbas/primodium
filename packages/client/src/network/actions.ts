@@ -9,14 +9,17 @@ export async function _execute(txPromise: Promise<Hex>, network: SetupNetworkRes
   try {
     const txHash = await txPromise;
     await network.waitForTransaction(txHash);
+    console.log("Transaction Hash: ", txHash);
     const receipt = await network.publicClient.getTransactionReceipt({ hash: txHash });
     return receipt;
   } catch (error: any) {
+    console.error(error);
     try {
       const reason = error.cause.reason;
       toast.warn(reason);
       return undefined;
     } catch (error: any) {
+      console.error(error);
       // This is most likely a gas error. i.e.:
       //     TypeError: Cannot set properties of null (setting 'gasPrice')
       // so we tell the user to try again

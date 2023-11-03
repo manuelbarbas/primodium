@@ -1,10 +1,11 @@
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { ERock } from "contracts/config/enums";
 import { useEffect } from "react";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
 import { useMud } from "src/hooks";
+import { useSpaceRock } from "src/hooks/useSpaceRock";
 import { components } from "src/network/components";
-import { getSpaceRockInfo } from "src/util/spacerock";
 import { Asteroid } from "./screens/Asteroid";
 import { Motherlode } from "./screens/Motherlode";
 import { SendFleet } from "./screens/SendFleet";
@@ -30,8 +31,8 @@ export const SpacerockMenu: React.FC = () => {
     };
   }, []);
 
+  const spaceRockInfo = useSpaceRock(selectedSpacerock ?? singletonEntity);
   if (!selectedSpacerock) return null;
-  const spaceRockInfo = getSpaceRockInfo(selectedSpacerock);
 
   const RenderScreen = () => {
     switch (spaceRockInfo.type) {

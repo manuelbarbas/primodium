@@ -1,7 +1,7 @@
 import { Entity, Has, HasValue, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { singletonIndex, world } from "src/network/world";
-import { Depth, ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
+import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
 
 import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
@@ -39,13 +39,10 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
     const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entity);
 
     const sharedComponents = [
-      ObjectPosition(
-        {
-          x: coord.x * tileWidth,
-          y: -coord.y * tileHeight,
-        },
-        DepthLayers.Marker
-      ),
+      ObjectPosition({
+        x: coord.x * tileWidth,
+        y: -coord.y * tileHeight,
+      }),
       SetValue({
         originX: 0.5,
         originY: 0.5,
@@ -56,29 +53,14 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
 
     asteroidObject.setComponents([
       ...sharedComponents,
-      //fade out asteroids that are in grace period
-      OnComponentSystem(components.BlockNumber, (gameObject) => {
-        const player = components.OwnedBy.get(entity)?.value as Entity | undefined;
-        const graceTime = components.GracePeriod.get(player)?.value ?? 0n;
-        const time = getNow();
-
-        //don't fade out asteroids that are owned by the player
-        if (player === playerEntity) return;
-
-        if (time >= graceTime) {
-          gameObject.alpha = 1;
-        } else {
-          gameObject.alpha = 0.25;
-        }
-      }),
       Texture(
         Assets.SpriteAtlas,
         EntitytoSpriteKey[EntityType.Asteroid][
           clampedIndex(Number(mainBaseLevel) - 1, EntitytoSpriteKey[EntityType.Asteroid].length)
         ]
       ),
-      OnClick(scene, () => {
-        components.Send.setDestination(entity);
+      SetValue({
+        depth: DepthLayers.Rock,
       }),
     ]);
 
@@ -101,6 +83,12 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         }
       }),
       Texture(Assets.SpriteAtlas, outlineSprite),
+      OnClick(scene, () => {
+        components.Send.setDestination(entity);
+      }),
+      SetValue({
+        depth: DepthLayers.Rock + 1,
+      }),
     ]);
 
     const gracePeriod = asteroidObjectGroup.add("Sprite");
@@ -114,11 +102,15 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         if (time >= graceTime) {
           gameObject.alpha = 0;
         } else {
-          gameObject.alpha = 1;
+          gameObject.alpha = 0.6;
         }
       }),
       Texture(Assets.SpriteAtlas, SpriteKeys.GracePeriod),
-      Depth(DepthLayers.Marker + 1),
+      SetValue({
+        scale: 0.75,
+        depth: DepthLayers.Marker,
+        input: null,
+      }),
     ]);
   };
 

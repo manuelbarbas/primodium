@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
@@ -20,6 +20,11 @@ export const UnitSelection = () => {
     units: [],
     counts: [],
   });
+
+  useEffect(() => {
+    console.log("updating selected unit");
+    setCount(1);
+  }, [selectedUnit]);
 
   const unitCount = useMemo(() => {
     if (!units) return 0;
@@ -80,6 +85,7 @@ export const UnitSelection = () => {
                   className="btn-sm btn-secondary"
                   onClick={() => {
                     components.Send.setUnitCount(selectedUnit, BigInt(count));
+                    setSelectedUnit(undefined);
                   }}
                 >
                   Add to fleet

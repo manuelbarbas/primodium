@@ -1,5 +1,5 @@
 import { removeAllTweens } from "@latticexyz/phaserx";
-import { PixelCoord } from "@latticexyz/phaserx/dist/types";
+import { PixelCoord } from "@latticexyz/phaserx/src/types";
 import { observable, runInAction } from "mobx";
 
 import { isRectangle, isSprite, isGraphics } from "../util/guards";
@@ -141,7 +141,8 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     if (isSprite(gameObject, type)) {
       gameObject.clearTint();
       gameObject.setTexture("");
-      gameObject.preFX?.clear();
+      // gameObject.postFX?.clear();
+      gameObject.clearFX();
     }
     if (isRectangle(gameObject, type)) {
       gameObject.width = 0;

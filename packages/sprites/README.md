@@ -33,6 +33,6 @@ Export does a few things:
 2. Creates an atlas manifest json file that maps the animation names to the frames in the atlas
 3. Moves all created files into your game client package
 
-To export, run `yarn workspace sprites export`.
+To export, run `pnpm run export`.
 
 Borrowed from, [MUD Phaser Template](https://github.com/latticexyz/mud/tree/086be4ef4f3c1ecb3eac0e9554d7d4eb64531fc2/templates/phaser/packages/art).

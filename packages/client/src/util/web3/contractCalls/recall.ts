@@ -16,7 +16,7 @@ export const recallArrival = async (rockEntity: Entity, arrivalEntity: Entity, n
     () => network.worldContract.write.recallArrival([rockEntity as Hex, key as Hex]),
     network,
     {
-      id: hashEntities(TransactionQueueType.Recall, arrivalEntity, rockEntity),
+      id: hashEntities(TransactionQueueType.Recall, key, rockEntity),
     },
     (receipt) => {
       const asteroid = components.Home.get(network.playerEntity)?.asteroid;

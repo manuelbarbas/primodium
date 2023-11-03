@@ -48,6 +48,14 @@ contract AllianceSystem is PrimodiumSystem {
   }
 
   /**
+   * @dev revoke an invite to an alliance
+   * @param inviter the entity id of the player to revoke the invite from
+   */
+  function declineInvite(bytes32 inviter) public {
+    LibAlliance.revokeInvite(inviter, addressToEntity(_msgSender()));
+  }
+
+  /**
    * @dev kick a player from an alliance
    * @param target the entity id of the player to kick
    */
