@@ -11,6 +11,7 @@ import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
 import { setupAllianceLeaderboard } from "src/network/systems/setupAllianceLeaderboard";
 import { useMud } from "./useMud";
 import { setupInvitations } from "src/network/systems/setupPlayerInvites";
+import { setupBattleNotifications } from "src/network/systems/setupBattleNotifications";
 
 export const useInit = () => {
   const mud = useMud();
@@ -29,6 +30,7 @@ export const useInit = () => {
     setupArrival();
     setupSend(playerEntity);
     setupInvitations(mud);
+    setupBattleNotifications(mud);
   }, [mud, playerEntity]);
 
   // The network object and user wallet will have been loaded by the time the loading state is ready
