@@ -92,6 +92,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
     ]);
 
     const gracePeriod = asteroidObjectGroup.add("Sprite");
+
     gracePeriod.setComponents([
       ...sharedComponents,
       OnComponentSystem(components.BlockNumber, (gameObject) => {
@@ -102,12 +103,12 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         if (time >= graceTime) {
           gameObject.alpha = 0;
         } else {
-          gameObject.alpha = 0.6;
+          gameObject.alpha = 0.8;
         }
       }),
       Texture(Assets.SpriteAtlas, SpriteKeys.GracePeriod),
       SetValue({
-        scale: 0.75,
+        scale: 1.1,
         depth: DepthLayers.Marker,
         input: null,
       }),
