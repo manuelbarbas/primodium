@@ -136,49 +136,6 @@ const storageUnitMaxResourceUpgrades = {
   },
 };
 
-const vaultResourceUpgrades = {
-  1: { Iron: 100000, Copper: 100000, Lithium: 50000, Sulfur: 50000, IronPlate: 7200, PVCell: 50000, Alloy: 4500 },
-  2: {
-    Iron: 250000,
-    Copper: 250000,
-    Lithium: 100000,
-    Sulfur: 100000,
-    IronPlate: 100000,
-    PVCell: 100000,
-    Alloy: 100000,
-    Titanium: 25000,
-    Platinum: 25000,
-    Iridium: 25000,
-    Kimberlite: 25000,
-  },
-  3: {
-    Iron: 500000,
-    Copper: 500000,
-    Lithium: 250000,
-    Sulfur: 250000,
-    IronPlate: 250000,
-    PVCell: 250000,
-    Alloy: 250000,
-    Titanium: 50000,
-    Platinum: 50000,
-    Iridium: 50000,
-    Kimberlite: 50000,
-  },
-  4: {
-    Iron: 100000,
-    Copper: 100000,
-    Lithium: 500000,
-    Sulfur: 500000,
-    IronPlate: 500000,
-    PVCell: 500000,
-    Alloy: 500000,
-    Titanium: 100000,
-    Platinum: 100000,
-    Iridium: 100000,
-    Kimberlite: 100000,
-  },
-};
-
 const maxRange = { xBounds: 37, yBounds: 25 };
 
 export const prototypeConfig: PrototypesConfig<typeof config> = {
