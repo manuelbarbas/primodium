@@ -19,9 +19,11 @@ export const GracePeriod: React.FC<{ player: Entity }> = ({ player }) => {
   return (
     <div className="flex flex-col items-center justify-center my-2 space-y-1 drop-shadow-2xl pointer-events-auto">
       <Tooltip text="Grace Period" direction="bottom">
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
           <IconLabel text="Grace Period" imageUri="img/icons/graceicon.png" hideText />
-          <p className="text-sm text-success font-bold">{duration.format("H [hrs] mm [min] ss [sec]")} </p>
+          <p className="text-sm text-success font-bold">
+            {duration.asHours().toFixed()} hrs {duration.minutes()} min {duration.seconds()} sec
+          </p>
         </div>
       </Tooltip>
     </div>
