@@ -57,11 +57,10 @@ library LibSend {
   /// @param playerEntity Entity initiating send.
   /// @param unitCounts Array of unit counts being sent.
   /// @return slowestSpeed Slowest unit speed among the types.
-  function getSlowestUnitSpeed(bytes32 playerEntity, uint256[NUM_UNITS] memory unitCounts)
-    internal
-    view
-    returns (uint256 slowestSpeed)
-  {
+  function getSlowestUnitSpeed(
+    bytes32 playerEntity,
+    uint256[NUM_UNITS] memory unitCounts
+  ) internal view returns (uint256 slowestSpeed) {
     uint256 bignum = 115792089237316195423570985008687907853269984665640564039457584007913129639935;
     slowestSpeed = bignum;
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
@@ -127,7 +126,7 @@ library LibSend {
         PirateAsteroid.get(destination).playerEntity == playerEntity,
         "[SendUnits] Cannot send to other player pirate asteroid"
       );
-    } else if (sendType != ESendType.Reinforce) {
+    } else if (sendType != ESendType.Reinforce && RockType.get(destination) == uint8(ERock.Asteroid)) {
       require(GracePeriod.get(to) <= block.timestamp, "[SendUnits] Cannot send to player in grace period");
     }
 
