@@ -83,7 +83,7 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
     const fetchLocalLinkedAddress = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_ACCOUNT_LINK_VERCEL_URL}/linked-address/local-to-external/${getAddress(player)}`
+          `${import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL}/linked-address/local-to-external/${getAddress(player)}`
         );
         const jsonRes = await res.json();
         setFetchedExternalWallet(jsonRes);
