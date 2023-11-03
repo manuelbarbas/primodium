@@ -501,7 +501,7 @@ const LeaderboardItem = ({
 
   return (
     <SecondaryCard
-      className={`grid grid-cols-6 w-full border rounded-md border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center ${
+      className={`grid grid-cols-6 w-full border rounded-md border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center h-10 ${
         inviteOnly ? "border-warning" : ""
       }`}
     >
@@ -510,7 +510,7 @@ const LeaderboardItem = ({
         <div>{hexToString(alliance, { size: 32 }).substring(0, 6)}</div>
         <div className="flex items-center gap-1">
           <p className="font-bold rounded-md bg-cyan-700 px-2 ">{score.toLocaleString()}</p>
-          {playerAlliance !== entity && (
+          {!playerAlliance && (
             <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.JoinAlliance, entity)}>
               <Button
                 tooltip={inviteOnly ? "Request to Join" : "Join"}
