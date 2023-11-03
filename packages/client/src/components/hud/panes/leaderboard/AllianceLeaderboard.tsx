@@ -415,7 +415,7 @@ export const InvitesScreen: React.FC = () => {
         )}
       </div>
 
-      {role > EAllianceRole.CanInvite && (
+      {role > EAllianceRole.CanInvite && playerAlliance && (
         <SecondaryCard className="w-full flex-grow items-center justify-center font-bold opacity-50 mb-2 text-center">
           NEED INVITE ROLE TO SEND INVITES OR ACCEPT JOIN REQUESTS
         </SecondaryCard>
