@@ -149,7 +149,6 @@ export const BuildUnit: React.FC<{
               </div>
             </>
           )}
-          {/* <p className="opacity-50 text-xs">{Math.max(maximum - unitsTaken, 0)} housing left</p> */}
         </div>
       </SecondaryCard>
     </Navigator.Screen>
