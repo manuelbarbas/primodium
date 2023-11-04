@@ -128,5 +128,6 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
     if (values.length === 0) return;
 
     scene.objectPool.removeGroup("asteroid_" + values[0]);
+    components.Send.setDestination(undefined);
   });
 };
