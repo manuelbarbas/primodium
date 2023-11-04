@@ -9,7 +9,7 @@ import { components as comps } from "src/network/components";
 import { Account } from "src/network/components/clientComponents";
 import { Hex } from "viem";
 import { clampedIndex, getBlockTypeName, toRomanNumeral } from "./common";
-import { ResourceEntityLookup, ResourceStorages, ResourceType, UtilityStorages } from "./constants";
+import { ResourceEntityLookup, ResourceStorages, ResourceType, SPEED_SCALE, UtilityStorages } from "./constants";
 import { outOfBounds } from "./outOfBounds";
 import { getRecipe } from "./resource";
 import { getBuildingAtCoord, getResourceKey } from "./tile";
@@ -200,9 +200,14 @@ export function transformProductionData(
       ? ResourceType.Utility
       : ResourceType.Multiplier;
 
+    let amount = production.amounts[i];
+    if (type === ResourceType.ResourceRate) {
+      const worldSpeed = comps.P_GameConfig.get()?.worldSpeed ?? 100n;
+      amount = (amount * worldSpeed) / SPEED_SCALE;
+    }
     return {
       resource: ResourceEntityLookup[curr as EResource],
-      amount: production.amounts[i],
+      amount,
       type,
     };
   });
