@@ -9,9 +9,8 @@ export const NumberInput: React.FC<{
 
   const handleUpdate = (newCount: number) => {
     if (isNaN(newCount) || newCount == 0) {
-      newCount = min;
       setCount("");
-      onChange(newCount);
+      onChange(min);
       return;
     }
 
@@ -20,10 +19,7 @@ export const NumberInput: React.FC<{
     setCount(newCount);
     onChange(newCount);
   };
-  const removeLeadingZeroes = (str: string) => {
-    str = `${str}`.toString();
-    return parseInt(str, 10).toString();
-  };
+
   return (
     <div className={`flex gap-2 mt-4 mb-2 `}>
       <button
@@ -37,13 +33,10 @@ export const NumberInput: React.FC<{
         type="number"
         className="bg-transparent text-center w-fit outline-none border-b border-pink-900"
         value={count}
-        placeholder="0"
+        placeholder={min.toString()}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           e.preventDefault();
-          const value = removeLeadingZeroes(e.target.value);
-
-          console.log("value:", value);
-          handleUpdate(Number(value));
+          handleUpdate(Number(e.target.value));
         }}
         min={0}
         max={max}
@@ -51,7 +44,7 @@ export const NumberInput: React.FC<{
       <button
         className={`${count == max ? "opacity-50" : ""}`}
         disabled={count == max}
-        onClick={() => handleUpdate(Math.min(max, count == "" ? 1 : count + 1))}
+        onClick={() => handleUpdate(Math.min(max, count == "" ? min + 1 : count + 1))}
       >
         +
       </button>
