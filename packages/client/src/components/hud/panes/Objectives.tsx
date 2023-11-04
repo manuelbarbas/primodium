@@ -20,6 +20,7 @@ import {
   BackgroundImage,
   ObjectiveEntityLookup,
   RESOURCE_SCALE,
+  RequirementType,
   ResourceImage,
   ResourceType,
   TransactionQueueType,
@@ -150,7 +151,9 @@ const Objective: React.FC<{
                       className={`text-xs gap-2 ${isAllRequirementsMet(req) ? "badge-success" : "badge-neutral"}`}
                     >
                       <ResourceIconTooltip
-                        name={getBlockTypeName(_req.id)}
+                        name={
+                          _req.type === RequirementType.DefeatedPirates ? "Defeated Pirates" : getBlockTypeName(_req.id)
+                        }
                         playerEntity={playerEntity}
                         image={
                           ResourceImage.get(_req.id) ??
