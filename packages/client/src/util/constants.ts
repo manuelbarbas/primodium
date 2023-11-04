@@ -380,7 +380,6 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.MiningVessel, "/img/unit/miningvessel.png"],
   [EntityType.MinutemanMarine, "img/unit/minutemen_marine.png"],
   [EntityType.TridentMarine, "img/unit/trident_marine.png"],
-  [EntityType.Vault, "img/vault.png"],
 ]);
 
 export type DisplayKeyPair = {
