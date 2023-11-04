@@ -5,10 +5,11 @@ import { UnitEnumLookup, toHex32 } from "src/util/constants";
 import { Hex } from "viem";
 import { UnitCountTuple } from "../types";
 import { execute } from "src/network/actions";
-import { encodeCoord, hashEntities } from "src/util/encode";
+import { encodeCoord } from "src/util/encode";
 import { components } from "src/network/components";
 import { parseReceipt } from "../../analytics/parseReceipt";
 import { ampli } from "src/ampli";
+import { randomEntity } from "src/util/common";
 
 export const send = async (
   unitCounts: UnitCountTuple,
@@ -29,8 +30,7 @@ export const send = async (
       ]),
     network,
     {
-      // for Nabs todo: random bytes?
-      id: hashEntities(unitCounts.toString(), sendType, JSON.stringify(origin), JSON.stringify(destination)),
+      id: randomEntity(),
     },
     (receipt) => {
       const originAsteroid = components.ReversePosition.get(encodeCoord(origin))?.entity;
