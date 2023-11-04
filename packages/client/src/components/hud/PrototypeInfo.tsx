@@ -104,6 +104,7 @@ export const PrototypeInfo: React.FC<{
                   resourceType={type}
                   scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
                   short
+                  fractionDigits={3}
                 />
               </Badge>
             ))}
@@ -141,6 +142,7 @@ export const PrototypeInfo: React.FC<{
                           resourceType={ResourceType.Resource}
                           scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
                           short
+                          fractionDigits={3}
                         />
                       </Badge>
                     ))}
@@ -167,6 +169,7 @@ export const PrototypeInfo: React.FC<{
                           resourceType={ResourceType.Resource}
                           scale={RESOURCE_SCALE}
                           short
+                          fractionDigits={3}
                         />
                       </Badge>
                     ))}
