@@ -13,6 +13,7 @@ import { SecondaryCard } from "src/components/core/Card";
 import { Join } from "src/components/core/Join";
 import { Tabs } from "src/components/core/Tabs";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { components as comps } from "src/network/components";
 import { formatNumber, getBlockTypeName } from "src/util/common";
 import {
@@ -22,7 +23,9 @@ import {
   ResourceImage,
   ResourceType,
   TransactionQueueType,
+  toHex32,
 } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
 import { getObjectiveDescription } from "src/util/objectiveDescriptions";
 import {
   getAllRequirements,
@@ -34,8 +37,6 @@ import { getFullResourceCount } from "src/util/resource";
 import { getRewards } from "src/util/reward";
 import { claimObjective } from "src/util/web3/contractCalls/claimObjective";
 import { Hex } from "viem";
-import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
-import { hashEntities } from "src/util/encode";
 
 const ClaimObjectiveButton: React.FC<{
   objectiveEntity: Entity;
@@ -108,13 +109,18 @@ const Objective: React.FC<{
   }, [objective]);
   const rewardRecipe = useMemo(() => {
     if (!objective) return;
+    if (objective == toHex32("DefeatPirateBase1")) console.log("rewards:", getRewards(objective));
     return getRewards(objective);
   }, [objective]);
 
   const requirements = useMemo(() => {
     if (!objective) return;
-    return getAllRequirements(objective);
-  }, [objective, blockNumber]);
+    const reqs = getAllRequirements(objective, playerEntity);
+    if (objective == toHex32("DefeatPirateBase1")) console.log("reqs:", reqs);
+    return reqs;
+  }, [objective, blockNumber, playerEntity]);
+
+  if (playerEntity === singletonEntity) return <></>;
 
   return (
     <SecondaryCard className="text-xs w-full">
@@ -137,6 +143,7 @@ const Objective: React.FC<{
             return (
               <div key={index} className="flex flex-wrap gap-1">
                 {req.map((_req, index) => {
+                  const value = _req.currentValue > _req.requiredValue ? _req.requiredValue : _req.currentValue;
                   return (
                     <Badge
                       key={index}
@@ -151,7 +158,7 @@ const Objective: React.FC<{
                           "/img/icons/minersicon.png"
                         }
                         resource={_req.id}
-                        amount={_req.currentValue}
+                        amount={value}
                         scale={_req.scale}
                         direction="top"
                       />
@@ -206,13 +213,13 @@ const Objective: React.FC<{
 };
 
 const UnclaimedObjective: React.FC = () => {
-  const player = Account.use()?.value;
+  const player = Account.use()?.value ?? singletonEntity;
   const blockNumber = BlockNumber.use()?.value;
   const objectives = Object.values(ObjectiveEntityLookup);
 
   const filteredObjectives = useMemo(() => {
     return objectives.filter((objective) => {
-      const isAvailable = getIsObjectiveAvailable(objective);
+      const isAvailable = getIsObjectiveAvailable(objective, player);
 
       const claimed =
         comps.CompletedObjective.getWithKeys({ entity: player as Hex, objective: objective as Hex })?.value ?? false;
@@ -220,6 +227,8 @@ const UnclaimedObjective: React.FC = () => {
       return isAvailable && !claimed;
     });
   }, [blockNumber]);
+
+  if (player === singletonEntity) return <></>;
 
   return (
     <div className="w-full h-full">
