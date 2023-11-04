@@ -5,6 +5,7 @@ import { Coord } from "@latticexyz/utils";
 import { ESendType } from "contracts/config/enums";
 import { BiSolidInvader } from "react-icons/bi";
 import { FaCrosshairs, FaShieldAlt } from "react-icons/fa";
+import { Badge } from "src/components/core/Badge";
 import { Button } from "src/components/core/Button";
 import { components } from "src/network/components";
 import { useNow } from "src/util/time";
@@ -69,6 +70,10 @@ export const Fleet: React.FC<{
   });
   const timeRemaining = arrivalTime - useNow();
 
+  const arrival = components.Arrival.getEntity(arrivalEntity);
+
+  const unitTotal = arrival?.unitCounts.reduce((acc, curr) => acc + curr, 0n) ?? 0n;
+
   return (
     <div className="flex items-center justify-between w-full border rounded-md border-slate-700 bg-slate-800 ">
       <div className="flex gap-1 items-center">
@@ -96,6 +101,7 @@ export const Fleet: React.FC<{
           </p>
         </LabeledValue>
       </div>
+      <Badge className="text-xs">{unitTotal.toLocaleString()} UNITS</Badge>
       <div className="text-right mr-2">
         {timeRemaining > 0 ? (
           <LabeledValue label="ETA">

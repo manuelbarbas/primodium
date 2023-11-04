@@ -1,12 +1,12 @@
 import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums"; // Assuming EResource is imported this way
 import { components } from "src/network/components";
-import { Account } from "src/network/components/clientComponents"; // Assuming Account is imported this way
 import { Hex } from "viem";
 import { MULTIPLIER_SCALE } from "./constants";
 
-export function getRockDefense(rockEntity: Entity, defenderEntity?: Entity): bigint {
-  const player = (defenderEntity ?? Account.get()?.value) as Hex;
+export function getRockDefense(rockEntity: Entity) {
+  const player = components.OwnedBy.get(rockEntity)?.value as Hex | undefined;
+  if (!player) return { points: 0n, multiplier: 1n };
   const unitPrototypes = (components.P_UnitPrototypes.get()?.value as Hex[]) ?? [];
   let defensePoints = 0n;
 
@@ -22,6 +22,15 @@ export function getRockDefense(rockEntity: Entity, defenderEntity?: Entity): big
     }
   }
 
+  let multiplier = 1n;
+  if (components.Home.get(player as Entity)?.asteroid === rockEntity) {
+    multiplier =
+      (defensePoints *
+        (components.ResourceCount.getWithKeys({ entity: player, resource: EResource.M_DefenseMultiplier })?.value ??
+          0n)) /
+      MULTIPLIER_SCALE;
+  }
+
   if (components.Home.get(player as Entity)?.asteroid === rockEntity) {
     defensePoints +=
       components.ResourceCount.getWithKeys({ entity: player, resource: EResource.U_Defense })?.value ?? 0n;
@@ -32,5 +41,5 @@ export function getRockDefense(rockEntity: Entity, defenderEntity?: Entity): big
       MULTIPLIER_SCALE;
   }
 
-  return defensePoints;
+  return { points: defensePoints, multiplier };
 }
