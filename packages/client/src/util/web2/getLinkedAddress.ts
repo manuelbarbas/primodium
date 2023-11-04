@@ -10,7 +10,7 @@ export const getLinkedAddress = async () => {
 
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_ACCOUNT_LINK_VERCEL_URL}/linked-address/local-to-external/${localAddress}`
+      `${import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL}/linked-address/local-to-external/${localAddress}`
     );
 
     const jsonRes = await res.json();

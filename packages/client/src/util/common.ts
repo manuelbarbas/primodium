@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { hexlify, randomBytes } from "ethers/lib/utils";
-import { Hex, trim } from "viem";
+import { Hex, trim, getAddress, isAddress } from "viem";
 import { BlockIdToKey } from "./constants";
 
 export function hasCommonElement<T>(setA: Set<T>, setB: Set<T>) {
@@ -107,9 +107,15 @@ export function reverseRecord<T extends PropertyKey, U extends PropertyKey>(inpu
 }
 
 export const entityToAddress = (entity: Entity | string, shorten = false) => {
-  const trimmed = trim(entity as Hex);
+  const checksumAddress = getAddress(trim(entity as Hex));
 
-  return shorten ? shortenAddress(trimmed) : trimmed;
+  return shorten ? shortenAddress(checksumAddress) : checksumAddress;
+};
+
+export const isPlayer = (entity: Entity) => {
+  const trimmedAddress = trim(entity as Hex);
+
+  return isAddress(trimmedAddress);
 };
 
 export const randomEntity = () => hexlify(randomBytes(32)) as Entity;

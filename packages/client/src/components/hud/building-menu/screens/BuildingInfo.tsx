@@ -66,6 +66,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     amount={amount}
                     resourceType={type}
                     scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
+                    fractionDigits={3}
                   />
                 </Badge>
               ))
@@ -85,6 +86,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     amount={amount}
                     resourceType={type}
                     scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
+                    fractionDigits={3}
                   />
                 </Badge>
               ))

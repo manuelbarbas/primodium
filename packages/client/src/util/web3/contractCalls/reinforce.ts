@@ -16,7 +16,7 @@ export const reinforce = async (rockEntity: Entity, arrivalEntity: Entity, netwo
     () => network.worldContract.write.reinforce([rockEntity as Hex, key as Hex]),
     network,
     {
-      id: hashEntities(TransactionQueueType.Reinforce, arrivalEntity, rockEntity),
+      id: hashEntities(TransactionQueueType.Reinforce, key, rockEntity),
     },
     (receipt) => {
       ampli.systemReceiveReinforcement({

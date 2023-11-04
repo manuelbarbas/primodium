@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
 import { encodeEntity } from "@latticexyz/store-sync/recs";
+import { Coord } from "@latticexyz/utils";
 import { EBuilding, EObjectives, EResource, ERock, ESize, EUnit } from "contracts/config/enums";
 import { Key } from "engine/types";
 import { toHex } from "viem";
@@ -48,6 +48,7 @@ export enum RequirementType {
   ProducedUnits,
   RequiredUnits,
   DefeatedPirates,
+  RewardUtilities,
 }
 
 export enum TransactionQueueType {
@@ -380,7 +381,6 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.MiningVessel, "/img/unit/miningvessel.png"],
   [EntityType.MinutemanMarine, "img/unit/minutemen_marine.png"],
   [EntityType.TridentMarine, "img/unit/trident_marine.png"],
-  [EntityType.Vault, "img/vault.png"],
 ]);
 
 export type DisplayKeyPair = {
