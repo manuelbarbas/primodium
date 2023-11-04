@@ -9,7 +9,7 @@ import { components } from "src/network/components";
 import { randomEntity } from "src/util/common";
 import { ampli } from "src/ampli";
 import { parseReceipt } from "../../analytics/parseReceipt";
-import { hexToString } from "viem/_types/utils/encoding/fromHex";
+import { hexToString } from "viem";
 
 const getAllianceName = (alliance: Entity) => {
   const allianceData = components.Alliance.get(alliance);
