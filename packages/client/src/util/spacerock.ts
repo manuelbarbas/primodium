@@ -102,7 +102,7 @@ export function getSpaceRockInfo(spaceRock: Entity) {
   const hangar = Hangar.get(spaceRock);
 
   const gracePeriodValue = comps.GracePeriod.get(ownedBy)?.value ?? 0n;
-  const isInGracePeriod = gracePeriodValue > 0n && gracePeriodValue > getNow();
+  const isInGracePeriod = type === ERock.Asteroid ? gracePeriodValue > 0n && gracePeriodValue > getNow() : 0n;
 
   let name = "";
   switch (type) {

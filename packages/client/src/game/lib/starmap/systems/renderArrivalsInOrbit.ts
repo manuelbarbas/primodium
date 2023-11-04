@@ -33,10 +33,8 @@ export const renderArrivalsInOrbit = (scene: Scene, mud: SetupResult) => {
     if (!arrival) return;
 
     //don't render if arrival is in transit
-    console.log("arrival:", arrival.arrivalTime, "now:", getNow());
     if (arrival.arrivalTime >= getNow()) return;
 
-    console.log("here");
     //render personal pirate only
     if (
       components.PirateAsteroid.has(arrival.destination) &&
