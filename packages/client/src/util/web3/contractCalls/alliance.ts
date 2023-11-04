@@ -9,6 +9,20 @@ import { components } from "src/network/components";
 import { randomEntity } from "src/util/common";
 import { ampli } from "src/ampli";
 import { parseReceipt } from "../../analytics/parseReceipt";
+import { hexToString } from "viem/_types/utils/encoding/fromHex";
+
+const getAllianceName = (alliance: Entity) => {
+  const allianceData = components.Alliance.get(alliance);
+  const allianceName = hexToString(allianceData!.name as Hex, { size: 32 });
+  return allianceName;
+};
+
+const getAllianceNameFromPlayer = (player: Entity) => {
+  const alliance = components.PlayerAlliance.get(player)?.alliance as Entity;
+  const allianceData = components.Alliance.get(alliance);
+  const allianceName = hexToString(allianceData!.name as Hex, { size: 32 });
+  return allianceName;
+};
 
 export const createAlliance = async (name: string, inviteOnly: boolean, network: SetupNetworkResult) => {
   await execute(
@@ -32,6 +46,9 @@ export const createAlliance = async (name: string, inviteOnly: boolean, network:
 };
 
 export const leaveAlliance = async (network: SetupNetworkResult) => {
+  // Fetch alliance name before leaving
+  const allianceName = getAllianceNameFromPlayer(network.playerEntity);
+
   execute(
     () => network.worldContract.write.leave(),
     network,
@@ -39,10 +56,8 @@ export const leaveAlliance = async (network: SetupNetworkResult) => {
       id: randomEntity(),
     },
     (receipt) => {
-      const allianceName = components.PlayerAlliance.get(network.playerEntity)?.alliance as Entity;
-
       ampli.systemLeave({
-        allianceName: allianceName!,
+        allianceName: allianceName,
         ...parseReceipt(receipt),
       });
     }
@@ -58,7 +73,7 @@ export const joinAlliance = async (alliance: Entity, network: SetupNetworkResult
     },
     (receipt) => {
       ampli.systemJoin({
-        allianceName: alliance,
+        allianceName: getAllianceName(alliance),
         ...parseReceipt(receipt),
       });
     }
@@ -73,10 +88,8 @@ export const declineInvite = async (inviter: Entity, network: SetupNetworkResult
       id: hashEntities(TransactionQueueType.DeclineInvite, inviter),
     },
     (receipt) => {
-      const inviterAllianceName = components.PlayerAlliance.get(inviter)?.alliance as Entity;
-
       ampli.systemDeclineInvite({
-        allianceName: inviterAllianceName,
+        allianceName: getAllianceName(inviter),
         allianceInviter: inviter,
         ...parseReceipt(receipt),
       });
@@ -93,7 +106,7 @@ export const requestToJoin = async (alliance: Entity, network: SetupNetworkResul
     },
     (receipt) => {
       ampli.systemRequestToJoin({
-        allianceName: alliance,
+        allianceName: getAllianceName(alliance),
         ...parseReceipt(receipt),
       });
     }
@@ -102,7 +115,7 @@ export const requestToJoin = async (alliance: Entity, network: SetupNetworkResul
 
 export const kickPlayer = async (player: Entity, network: SetupNetworkResult) => {
   // Fetch alliance name before kicking
-  const allianceName = components.PlayerAlliance.get(player)?.alliance as Entity;
+  const allianceName = getAllianceNameFromPlayer(player);
 
   execute(
     () => network.worldContract.write.kick([player as Hex]),
@@ -112,7 +125,7 @@ export const kickPlayer = async (player: Entity, network: SetupNetworkResult) =>
     },
     (receipt) => {
       ampli.systemKick({
-        allianceName: allianceName!,
+        allianceName: allianceName,
         allianceRejectee: player,
         ...parseReceipt(receipt),
       });
@@ -130,10 +143,8 @@ export const grantRole = async (player: Entity, role: EAllianceRole, network: Se
       id: hashEntities(role < currentRole ? TransactionQueueType.Promote : TransactionQueueType.Demote, player),
     },
     (receipt) => {
-      const allianceName = components.PlayerAlliance.get(player)?.alliance as Entity;
-
       ampli.systemGrantRole({
-        allianceName: allianceName!,
+        allianceName: getAllianceNameFromPlayer(player),
         allianceRole: EAllianceRole[role],
         allianceMember: player,
         ...parseReceipt(receipt),
@@ -150,10 +161,8 @@ export const acceptJoinRequest = async (target: Entity, network: SetupNetworkRes
       id: hashEntities(TransactionQueueType.AcceptRequest, target),
     },
     (receipt) => {
-      const allianceName = components.PlayerAlliance.get(target)?.alliance as Entity;
-
       ampli.systemAcceptJoinRequest({
-        allianceName: allianceName!,
+        allianceName: getAllianceNameFromPlayer(target),
         allianceAcceptee: target,
         ...parseReceipt(receipt),
       });
@@ -169,10 +178,8 @@ export const rejectJoinRequest = async (target: Entity, network: SetupNetworkRes
       id: hashEntities(TransactionQueueType.RejectRequest, target),
     },
     (receipt) => {
-      const allianceName = components.PlayerAlliance.get(target)?.alliance as Entity;
-
       ampli.systemRejectJoinRequest({
-        allianceName: allianceName!,
+        allianceName: getAllianceNameFromPlayer(target),
         allianceRejectee: target,
         ...parseReceipt(receipt),
       });
@@ -188,10 +195,8 @@ export const invite = async (target: Entity, network: SetupNetworkResult) => {
       id: hashEntities(TransactionQueueType.Invite, target),
     },
     (receipt) => {
-      const allianceName = components.PlayerAlliance.get(network.playerEntity)?.alliance as Entity;
-
       ampli.systemInvite({
-        allianceName: allianceName!,
+        allianceName: getAllianceNameFromPlayer(target),
         allianceAcceptee: target,
         ...parseReceipt(receipt),
       });
