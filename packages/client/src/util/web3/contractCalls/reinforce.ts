@@ -11,6 +11,6 @@ export const reinforce = async (rockEntity: Entity, arrivalEntity: Entity, netwo
   const { key } = decodeEntity(components.MapItemArrivals.metadata.keySchema, arrivalEntity);
 
   await execute(() => network.worldContract.write.reinforce([rockEntity as Hex, key as Hex]), network, {
-    id: hashEntities(TransactionQueueType.Reinforce, arrivalEntity, rockEntity),
+    id: hashEntities(TransactionQueueType.Reinforce, key, rockEntity),
   });
 };
