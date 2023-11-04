@@ -138,6 +138,9 @@ export const setupBasicCameraMovement = (
   const doubleClickSub = scene.input.doubleClick$.subscribe((event) => {
     if (!doubleClickZoom) return;
 
+    //check if scene is active
+    if (!scene.phaserScene.scene.isActive()) return;
+
     const { x, y } = pixelCoordToTileCoord(
       { x: event.worldX, y: event.worldY },
       scene.tilemap.tileWidth,

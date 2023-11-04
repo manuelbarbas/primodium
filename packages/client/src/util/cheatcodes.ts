@@ -24,6 +24,7 @@ const resources: Record<string, Entity> = {
   housing: EntityType.Housing,
   vessel: EntityType.VesselCapacity,
   electricity: EntityType.Electricity,
+  defense: EntityType.Defense,
 };
 
 const units: Record<string, Entity> = {
