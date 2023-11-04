@@ -69,7 +69,9 @@ export const createCameraApi = (targetScene: Scene) => {
   const shake = () => {
     const { camera } = targetScene;
 
-    camera.phaserCamera.shake(200, 0.001 / camera.phaserCamera.zoom, true);
+    if (!targetScene.phaserScene.scene.isActive()) return;
+
+    camera.phaserCamera.shake(300, 0.01 / camera.phaserCamera.zoom);
   };
 
   return {

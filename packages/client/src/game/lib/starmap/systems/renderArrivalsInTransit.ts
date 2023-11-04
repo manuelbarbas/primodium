@@ -29,7 +29,6 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
     const origin = components.Position.get(arrival.origin);
     const destination = components.Position.get(arrival.destination);
 
-    console.log("destination:", destination);
     if (!origin || !destination) return;
 
     //render personal pirates only

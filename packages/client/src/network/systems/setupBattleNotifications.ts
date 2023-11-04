@@ -5,18 +5,19 @@ import { components } from "../components";
 import { SetupResult } from "../types";
 import { toast } from "react-toastify";
 import { entityToAddress } from "src/util/common";
-import { SyncStep } from "@latticexyz/store-sync";
 import { getNow } from "src/util/time";
 
 export function setupBattleNotifications(mud: SetupResult) {
   const playerEntity = mud.network.playerEntity;
-  const { BattleResult, SyncProgress, Arrival, BlockNumber, Position } = components;
+  const { BattleResult, Arrival, BlockNumber, Position } = components;
   defineComponentSystem(world, BattleResult, (update) => {
-    if (SyncProgress.get()?.step !== SyncStep.LIVE) return;
+    const now = getNow();
 
     const battle = update.value[0];
 
     if (!battle) return;
+
+    if (battle.timestamp + 30n < now) return;
 
     const winner = battle.winner;
     if (battle.attacker === playerEntity) {
@@ -54,8 +55,6 @@ export function setupBattleNotifications(mud: SetupResult) {
 
   const orbitingQueue = new Map<Entity, bigint>();
   defineComponentSystem(world, Arrival, (update) => {
-    if (SyncProgress.get()?.step !== SyncStep.LIVE || !update.value[0]) return;
-
     const now = getNow();
     const entity = update.entity;
 
@@ -64,15 +63,13 @@ export function setupBattleNotifications(mud: SetupResult) {
     if (arrival?.from !== playerEntity && arrival?.to !== playerEntity) return;
 
     //it has arrived
-    if (arrival.arrivalTime < now) return;
+    if (arrival.sendTime + 30n < now) return;
 
     toast.info(`Your fleet is en route and will arrive in ${(arrival.arrivalTime - now) / 60n} minute(s).`);
     orbitingQueue.set(entity, arrival.arrivalTime);
   });
 
   defineComponentSystem(world, BlockNumber, () => {
-    if (SyncProgress.get()?.step !== SyncStep.LIVE) return;
-
     const now = getNow();
 
     orbitingQueue.forEach((arrivalTime, entityId) => {
