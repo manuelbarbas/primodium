@@ -8,6 +8,7 @@ import { Hex } from "viem";
 import { ampli } from "src/ampli";
 import { parseReceipt } from "../../analytics/parseReceipt";
 import { getBlockTypeName } from "src/util/common";
+import { bigintToNumber } from "src/util/bigint";
 
 export async function demolishBuilding(building: Entity, network: SetupNetworkResult) {
   const position = components.Position.get(building);

@@ -8,6 +8,7 @@ import { hashEntities } from "src/util/encode";
 import { getBlockTypeName } from "src/util/common";
 import { components } from "src/network/components";
 import { parseReceipt } from "../../analytics/parseReceipt";
+import { bigintToNumber } from "src/util/bigint";
 
 export const upgradeUnit = async (unit: EUnit, network: SetupNetworkResult) => {
   await execute(

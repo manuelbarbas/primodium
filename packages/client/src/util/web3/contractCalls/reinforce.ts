@@ -8,6 +8,7 @@ import { SetupNetworkResult } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { parseReceipt } from "../../analytics/parseReceipt";
+import { bigintToNumber } from "src/util/bigint";
 
 export const reinforce = async (rockEntity: Entity, arrivalEntity: Entity, network: SetupNetworkResult) => {
   const { key } = decodeEntity(components.MapItemArrivals.metadata.keySchema, arrivalEntity);

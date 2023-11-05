@@ -9,6 +9,7 @@ import { ampli } from "src/ampli";
 import { parseReceipt } from "../../analytics/parseReceipt";
 import { getBlockTypeName } from "src/util/common";
 import { Entity } from "@latticexyz/recs";
+import { bigintToNumber } from "src/util/bigint";
 
 export const upgradeBuilding = async (coord: Coord, network: SetupNetworkResult) => {
   const asteroid = components.Home.get(network.playerEntity)?.asteroid;

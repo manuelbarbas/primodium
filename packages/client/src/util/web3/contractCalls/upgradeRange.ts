@@ -6,6 +6,7 @@ import { hashEntities } from "src/util/encode";
 import { components } from "src/network/components";
 import { parseReceipt } from "../../analytics/parseReceipt";
 import { getPlayerBounds } from "src/util/outOfBounds";
+import { bigintToNumber } from "src/util/bigint";
 
 export const upgradeRange = async (network: SetupNetworkResult) => {
   await execute(

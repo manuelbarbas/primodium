@@ -10,6 +10,7 @@ import { components } from "src/network/components";
 import { parseReceipt } from "../../analytics/parseReceipt";
 import { ampli } from "src/ampli";
 import { randomEntity } from "src/util/common";
+import { bigintToNumber } from "src/util/bigint";
 
 export const send = async (
   unitCounts: UnitCountTuple,

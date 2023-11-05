@@ -8,6 +8,7 @@ import { ampli } from "src/ampli";
 import { components } from "src/network/components";
 import { parseReceipt } from "../../analytics/parseReceipt";
 import { UnitEntityLookup } from "src/util/constants";
+import { bigintToNumber } from "src/util/bigint";
 
 export const train = async (buildingEntity: Entity, unit: EUnit, count: bigint, network: SetupNetworkResult) => {
   await execute(

@@ -10,6 +10,7 @@ import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { parseReceipt } from "../../analytics/parseReceipt";
 import { getBlockTypeName } from "src/util/common";
+import { bigintToNumber } from "src/util/bigint";
 
 export const moveBuilding = async (network: SetupNetworkResult, building: Entity, coord: Coord) => {
   // todo: find a cleaner way to extract this value in all web3 functions
