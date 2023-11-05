@@ -19,7 +19,7 @@ export const buildBuilding = async (network: SetupNetworkResult, building: EBuil
   const position = { ...coord, parent: activeAsteroid as Hex };
 
   await execute(
-    () => network.worldContract.write.build([building, position]),
+    () => network.worldContract.write.build([building, position], { gas: 2000000n }),
     network,
     {
       id: hashEntities(TransactionQueueType.Build, encodeCoord(coord)),
