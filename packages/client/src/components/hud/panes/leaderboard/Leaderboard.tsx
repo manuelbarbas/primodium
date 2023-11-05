@@ -8,18 +8,18 @@ export const Leaderboard: React.FC = () => {
     <Tabs className="flex flex-col items-center gap-2 w-full h-full">
       <Join>
         <Tabs.Button index={0} className="btn-sm">
-          Players
+          Alliances
         </Tabs.Button>
         <Tabs.Button index={1} className="btn-sm">
-          Alliances
+          All Players
         </Tabs.Button>
       </Join>
 
       <Tabs.Pane index={0} className="w-full h-full p-0 border-none">
-        <PlayerLeaderboard />
+        <AllianceLeaderboard />
       </Tabs.Pane>
       <Tabs.Pane index={1} className="w-full h-full p-0 border-none">
-        <AllianceLeaderboard />
+        <PlayerLeaderboard />
       </Tabs.Pane>
     </Tabs>
   );
