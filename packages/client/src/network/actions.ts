@@ -11,18 +11,29 @@ export async function _execute(txPromise: Promise<Hex>, network: SetupNetworkRes
     await network.waitForTransaction(txHash);
     console.log("Transaction Hash: ", txHash);
     const receipt = await network.publicClient.getTransactionReceipt({ hash: txHash });
+
+    // If the transaction runs out of gas, status will be reverted
+    // receipt.status is of type TStatus = 'success' | 'reverted' defined in TransactionReceipt
+    if (receipt.status === "reverted") {
+      toast.error("You're moving fast! Please wait a moment and then try again.");
+    }
+    // Even if the transaction fails, we still want to return the receipt to log gas usage etc.
     return receipt;
   } catch (error: any) {
     console.error(error);
     try {
+      // error is of type ContractFunctionExecutionError;
       const reason = error.cause.reason;
       toast.warn(reason);
       return undefined;
     } catch (error: any) {
       console.error(error);
-      // This is most likely a gas error. i.e.:
+      // As of MUDv1, this would most likely be a gas error. i.e.:
       //     TypeError: Cannot set properties of null (setting 'gasPrice')
-      // so we tell the user to try again
+      // so we told the user to try again.
+      // However, this is not the case for MUDv2, as network.waitForTransaction no longer
+      // throws an error if the transaction fails.
+      // We should be on the lookout for other errors that could be thrown here.
       toast.error(`${error}`);
       return undefined;
     }
