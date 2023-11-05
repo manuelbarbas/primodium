@@ -57,6 +57,56 @@ export type LoadOptionsWithClientInstance = LoadOptionsBase & { client: { instan
 
 export type LoadOptions = LoadOptionsWithEnvironment | LoadOptionsWithApiKey | LoadOptionsWithClientInstance;
 
+export interface SystemAcceptJoinRequestProperties {
+  /**
+   * Player accepted or invited to an alliance.
+   */
+  allianceAcceptee: string;
+  /**
+   * Name of an alliance.
+   */
+  allianceName: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
 export interface SystemBuildProperties {
   /**
    * Location of an asteroid represented as the \[z\] element in the Position component. This is stored as a single string because the asteroid location is greater than the int32 number limit and has type BigNumber in the client.
@@ -98,7 +148,7 @@ export interface SystemBuildProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -110,7 +160,7 @@ export interface SystemBuildProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -151,7 +201,7 @@ export interface SystemBuildPathProperties {
    */
   coord: [number, number];
   /**
-   * Coordinates at which a path ends. The starting coordinates are recorded by the `coord` property.
+   * Coordinates at which a path ends or the destination where something is moved to (e.g. a building). The starting coordinates are recorded by the `coord` property.
    *
    * | Rule | Value |
    * |---|---|
@@ -172,7 +222,7 @@ export interface SystemBuildPathProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -184,7 +234,7 @@ export interface SystemBuildPathProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -233,7 +283,7 @@ export interface SystemClaimFromMineProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -245,7 +295,53 @@ export interface SystemClaimFromMineProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemClaimObjectiveProperties {
+  /**
+   * Name of an objective in plaintext, as returned by \`BlockIdToKey\` in \`constants.ts\` when passing in an EntityID.
+   */
+  objectiveType: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -294,7 +390,7 @@ export interface SystemCraftProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -306,7 +402,107 @@ export interface SystemCraftProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemCreateProperties {
+  /**
+   * Whether an alliance is invite only
+   */
+  allianceInviteOnly: boolean;
+  /**
+   * Name of an alliance.
+   */
+  allianceName: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemDeclineInviteProperties {
+  /**
+   * A player that invites another player to join another alliance.
+   */
+  allianceInviter: string;
+  /**
+   * Name of an alliance.
+   */
+  allianceName: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -369,7 +565,7 @@ export interface SystemDestroyProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -381,7 +577,7 @@ export interface SystemDestroyProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -430,7 +626,7 @@ export interface SystemDestroyPathProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -442,7 +638,71 @@ export interface SystemDestroyPathProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemGrantRoleProperties {
+  /**
+   * A member of an alliance that has been granted a role. Currently only used by `system.GrantRole`.
+   */
+  allianceMember: string;
+  /**
+   * Name of an alliance.
+   */
+  allianceName: string;
+  /**
+   * A member role in an alliance that has been granted. Currently only used by `system.GrantRole`. Defined as the following:
+   *
+   * ```
+   * enum EAllianceRole {
+   *   Owner = 1, // has all access
+   *   CanGrantRole, //can grant roles except the grant role role
+   *   CanKick, // can invite and kick members
+   *   CanInvite, //can only invite members
+   *   Member, // simple member with no special access
+   * }
+   * ```
+   */
+  allianceRole: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -478,7 +738,7 @@ export interface SystemIncrementProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -490,7 +750,7 @@ export interface SystemIncrementProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -524,7 +784,7 @@ export interface SystemInvadeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -536,7 +796,285 @@ export interface SystemInvadeProperties {
    *
    * | Rule | Value |
    * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemInviteProperties {
+  /**
+   * Player accepted or invited to an alliance.
+   */
+  allianceAcceptee: string;
+  /**
+   * Name of an alliance.
+   */
+  allianceName: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemJoinProperties {
+  /**
+   * Name of an alliance.
+   */
+  allianceName: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemKickProperties {
+  /**
+   * Name of an alliance.
+   */
+  allianceName: string;
+  /**
+   * Player rejected or kicked from an alliance.
+   */
+  allianceRejectee: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemLeaveProperties {
+  /**
+   * Name of an alliance.
+   */
+  allianceName: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemMoveBuildingProperties {
+  /**
+   * Location of an asteroid represented as the \[z\] element in the Position component. This is stored as a single string because the asteroid location is greater than the int32 number limit and has type BigNumber in the client.
+   */
+  asteroidCoord: string;
+  /**
+   * Name of a building in plaintext, as returned by `BlockIdToKey` in `constants.ts` when passing in an EntityID.
+   */
+  buildingType: string;
+  /**
+   * Most systems take a coordinate as a parameter and read the specific building and related metadata during contract execution. Even though such metadata (eg building type and level) aren't passed into the system, we fetch them manually and pass them into Amplitude properties for easier analysis.
+   *
+   * Stored in the format of \[x, y\]. The \[z\] element that represents the asteroid location is stored in `asteroidCoord`.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Min Items | 2 |
+   * | Max Items | 2 |
+   * | Item Type | number |
+   *
+   * @minItems 2
+   * @maxItems 2
+   */
+  coord: [number, number];
+  /**
+   * Current level of the building being upgraded. If there is a duplicate event, then the user failed to upgrade the building in the previous action. Also refers to the level of building expansion on an asteroid.
+   *
+   * | Rule | Value |
+   * |---|---|
    * | Type | number |
+   */
+  currLevel: number;
+  /**
+   * Coordinates at which a path ends or the destination where something is moved to (e.g. a building). The starting coordinates are recorded by the `coord` property.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Min Items | 2 |
+   * | Max Items | 2 |
+   * | Item Type | number |
+   *
+   * @minItems 2
+   * @maxItems 2
+   */
+  endCoord: [number, number];
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -570,7 +1108,7 @@ export interface SystemRaidProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -582,7 +1120,53 @@ export interface SystemRaidProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemRecallArrivalProperties {
+  /**
+   * Location of an asteroid represented as the \[z\] element in the Position component. This is stored as a single string because the asteroid location is greater than the int32 number limit and has type BigNumber in the client.
+   */
+  asteroidCoord: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -616,7 +1200,7 @@ export interface SystemRecallReinforcementsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -628,7 +1212,53 @@ export interface SystemRecallReinforcementsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemRecallStationedUnitsProperties {
+  /**
+   * Location of an asteroid represented as the \[z\] element in the Position component. This is stored as a single string because the asteroid location is greater than the int32 number limit and has type BigNumber in the client.
+   */
+  asteroidCoord: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -670,7 +1300,7 @@ export interface SystemReceiveReinforcementProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -682,7 +1312,103 @@ export interface SystemReceiveReinforcementProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemRejectJoinRequestProperties {
+  /**
+   * Name of an alliance.
+   */
+  allianceName: string;
+  /**
+   * Player rejected or kicked from an alliance.
+   */
+  allianceRejectee: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemRequestToJoinProperties {
+  /**
+   * Name of an alliance.
+   */
+  allianceName: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -716,7 +1442,7 @@ export interface SystemResearchProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -728,7 +1454,7 @@ export interface SystemResearchProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -762,13 +1488,17 @@ export interface SystemSendUnitsProperties {
    */
   destinationAsteroidOwner: string;
   /**
-   * Enum of the type of a `system.SendUnit` transaction. This is specified in the client as an `ESendType` enum.
+   * Enum of the type of a `system.SendUnit` transaction. This is specified in the client as an `ESendType` enum. Defined as the following:
    *
-   * | Rule | Value |
-   * |---|---|
-   * | Enum Values | INVADE, REINFORCE, RAID |
+   * ```
+   * enum ESendType {
+   *   Reinforce = 1,
+   *   Invade,
+   *   Raid,
+   * }
+   * ```
    */
-  sendType: "INVADE" | "REINFORCE" | "RAID";
+  sendType: string;
   /**
    * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
    */
@@ -778,7 +1508,7 @@ export interface SystemSendUnitsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -790,7 +1520,7 @@ export interface SystemSendUnitsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -836,7 +1566,7 @@ export interface SystemSpawnProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -848,7 +1578,7 @@ export interface SystemSpawnProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -882,7 +1612,7 @@ export interface SystemTrainUnitsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -894,7 +1624,7 @@ export interface SystemTrainUnitsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -923,7 +1653,7 @@ export interface SystemTrainUnitsProperties {
   /**
    * Name of a unit. On the client, this is fetched via its EntityID with `BlockIdToKey`.
    */
-  unitType: string;
+  unitName: string;
 }
 
 export interface SystemUpgradeProperties {
@@ -967,7 +1697,7 @@ export interface SystemUpgradeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -979,7 +1709,7 @@ export interface SystemUpgradeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -1034,7 +1764,7 @@ export interface SystemUpgradeRangeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    */
   transactionGasUsed?: number;
   /**
@@ -1046,7 +1776,7 @@ export interface SystemUpgradeRangeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | integer |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -1064,6 +1794,68 @@ export interface SystemUpgradeRangeProperties {
    * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
    */
   transactionValid: boolean;
+}
+
+export interface SystemUpgradeUnitProperties {
+  /**
+   * Current level of the building being upgraded. If there is a duplicate event, then the user failed to upgrade the building in the previous action. Also refers to the level of building expansion on an asteroid.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | number |
+   */
+  currLevel: number;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+  /**
+   * Name of a unit. On the client, this is fetched via its EntityID with `BlockIdToKey`.
+   */
+  unitName: string;
+}
+
+export class SystemAcceptJoinRequest implements BaseEvent {
+  event_type = "system.AcceptJoinRequest";
+
+  constructor(public event_properties: SystemAcceptJoinRequestProperties) {
+    this.event_properties = event_properties;
+  }
 }
 
 export class SystemBuild implements BaseEvent {
@@ -1090,10 +1882,34 @@ export class SystemClaimFromMine implements BaseEvent {
   }
 }
 
+export class SystemClaimObjective implements BaseEvent {
+  event_type = "system.ClaimObjective";
+
+  constructor(public event_properties: SystemClaimObjectiveProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
 export class SystemCraft implements BaseEvent {
   event_type = "system.Craft";
 
   constructor(public event_properties: SystemCraftProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemCreate implements BaseEvent {
+  event_type = "system.Create";
+
+  constructor(public event_properties: SystemCreateProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemDeclineInvite implements BaseEvent {
+  event_type = "system.DeclineInvite";
+
+  constructor(public event_properties: SystemDeclineInviteProperties) {
     this.event_properties = event_properties;
   }
 }
@@ -1114,6 +1930,14 @@ export class SystemDestroyPath implements BaseEvent {
   }
 }
 
+export class SystemGrantRole implements BaseEvent {
+  event_type = "system.GrantRole";
+
+  constructor(public event_properties: SystemGrantRoleProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
 export class SystemIncrement implements BaseEvent {
   event_type = "system.Increment";
 
@@ -1130,10 +1954,58 @@ export class SystemInvade implements BaseEvent {
   }
 }
 
+export class SystemInvite implements BaseEvent {
+  event_type = "system.Invite";
+
+  constructor(public event_properties: SystemInviteProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemJoin implements BaseEvent {
+  event_type = "system.Join";
+
+  constructor(public event_properties: SystemJoinProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemKick implements BaseEvent {
+  event_type = "system.Kick";
+
+  constructor(public event_properties: SystemKickProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemLeave implements BaseEvent {
+  event_type = "system.Leave";
+
+  constructor(public event_properties: SystemLeaveProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemMoveBuilding implements BaseEvent {
+  event_type = "system.MoveBuilding";
+
+  constructor(public event_properties: SystemMoveBuildingProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
 export class SystemRaid implements BaseEvent {
   event_type = "system.Raid";
 
   constructor(public event_properties: SystemRaidProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemRecallArrival implements BaseEvent {
+  event_type = "system.RecallArrival";
+
+  constructor(public event_properties: SystemRecallArrivalProperties) {
     this.event_properties = event_properties;
   }
 }
@@ -1146,10 +2018,34 @@ export class SystemRecallReinforcements implements BaseEvent {
   }
 }
 
+export class SystemRecallStationedUnits implements BaseEvent {
+  event_type = "system.RecallStationedUnits";
+
+  constructor(public event_properties: SystemRecallStationedUnitsProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
 export class SystemReceiveReinforcement implements BaseEvent {
   event_type = "system.ReceiveReinforcement";
 
   constructor(public event_properties: SystemReceiveReinforcementProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemRejectJoinRequest implements BaseEvent {
+  event_type = "system.RejectJoinRequest";
+
+  constructor(public event_properties: SystemRejectJoinRequestProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemRequestToJoin implements BaseEvent {
+  event_type = "system.RequestToJoin";
+
+  constructor(public event_properties: SystemRequestToJoinProperties) {
     this.event_properties = event_properties;
   }
 }
@@ -1198,6 +2094,14 @@ export class SystemUpgradeRange implements BaseEvent {
   event_type = "system.UpgradeRange";
 
   constructor(public event_properties: SystemUpgradeRangeProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemUpgradeUnit implements BaseEvent {
+  event_type = "system.UpgradeUnit";
+
+  constructor(public event_properties: SystemUpgradeUnitProperties) {
     this.event_properties = event_properties;
   }
 }
@@ -1286,6 +2190,17 @@ export class Ampli {
     );
   }
 
+ /**
+  * Flush the event.
+  */
+  flush() : PromiseResult<Result> {
+    if (!this.isInitializedAndEnabled()) {
+      return getVoidPromiseResult();
+    }
+
+    return this.amplitude!.flush();
+  }
+
   /**
    * Track event
    *
@@ -1298,6 +2213,23 @@ export class Ampli {
     }
 
     return this.amplitude!.track(event, undefined, options);
+  }
+
+  /**
+   * system.AcceptJoinRequest
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.AcceptJoinRequest)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. allianceAcceptee)
+   * @param options Amplitude event options.
+   */
+  systemAcceptJoinRequest(
+    properties: SystemAcceptJoinRequestProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemAcceptJoinRequest(properties), options);
   }
 
   /**
@@ -1352,6 +2284,23 @@ export class Ampli {
   }
 
   /**
+   * system.ClaimObjective
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.ClaimObjective)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. objectiveType)
+   * @param options Amplitude event options.
+   */
+  systemClaimObjective(
+    properties: SystemClaimObjectiveProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemClaimObjective(properties), options);
+  }
+
+  /**
    * system.Craft
    *
    * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.Craft)
@@ -1366,6 +2315,40 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SystemCraft(properties), options);
+  }
+
+  /**
+   * system.Create
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.Create)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. allianceInviteOnly)
+   * @param options Amplitude event options.
+   */
+  systemCreate(
+    properties: SystemCreateProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemCreate(properties), options);
+  }
+
+  /**
+   * system.DeclineInvite
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.DeclineInvite)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. allianceInviter)
+   * @param options Amplitude event options.
+   */
+  systemDeclineInvite(
+    properties: SystemDeclineInviteProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemDeclineInvite(properties), options);
   }
 
   /**
@@ -1403,6 +2386,23 @@ export class Ampli {
   }
 
   /**
+   * system.GrantRole
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.GrantRole)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. allianceMember)
+   * @param options Amplitude event options.
+   */
+  systemGrantRole(
+    properties: SystemGrantRoleProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemGrantRole(properties), options);
+  }
+
+  /**
    * system.Increment
    *
    * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.Increment)
@@ -1437,6 +2437,91 @@ export class Ampli {
   }
 
   /**
+   * system.Invite
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.Invite)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. allianceAcceptee)
+   * @param options Amplitude event options.
+   */
+  systemInvite(
+    properties: SystemInviteProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemInvite(properties), options);
+  }
+
+  /**
+   * system.Join
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.Join)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. allianceName)
+   * @param options Amplitude event options.
+   */
+  systemJoin(
+    properties: SystemJoinProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemJoin(properties), options);
+  }
+
+  /**
+   * system.Kick
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.Kick)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. allianceName)
+   * @param options Amplitude event options.
+   */
+  systemKick(
+    properties: SystemKickProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemKick(properties), options);
+  }
+
+  /**
+   * system.Leave
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.Leave)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. allianceName)
+   * @param options Amplitude event options.
+   */
+  systemLeave(
+    properties: SystemLeaveProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemLeave(properties), options);
+  }
+
+  /**
+   * system.MoveBuilding
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.MoveBuilding)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. asteroidCoord)
+   * @param options Amplitude event options.
+   */
+  systemMoveBuilding(
+    properties: SystemMoveBuildingProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemMoveBuilding(properties), options);
+  }
+
+  /**
    * system.Raid
    *
    * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.Raid)
@@ -1451,6 +2536,23 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SystemRaid(properties), options);
+  }
+
+  /**
+   * system.RecallArrival
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.RecallArrival)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. asteroidCoord)
+   * @param options Amplitude event options.
+   */
+  systemRecallArrival(
+    properties: SystemRecallArrivalProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemRecallArrival(properties), options);
   }
 
   /**
@@ -1471,6 +2573,23 @@ export class Ampli {
   }
 
   /**
+   * system.RecallStationedUnits
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.RecallStationedUnits)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. asteroidCoord)
+   * @param options Amplitude event options.
+   */
+  systemRecallStationedUnits(
+    properties: SystemRecallStationedUnitsProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemRecallStationedUnits(properties), options);
+  }
+
+  /**
    * system.ReceiveReinforcement
    *
    * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.ReceiveReinforcement)
@@ -1485,6 +2604,40 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SystemReceiveReinforcement(properties), options);
+  }
+
+  /**
+   * system.RejectJoinRequest
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.RejectJoinRequest)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. allianceName)
+   * @param options Amplitude event options.
+   */
+  systemRejectJoinRequest(
+    properties: SystemRejectJoinRequestProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemRejectJoinRequest(properties), options);
+  }
+
+  /**
+   * system.RequestToJoin
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.RequestToJoin)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. allianceName)
+   * @param options Amplitude event options.
+   */
+  systemRequestToJoin(
+    properties: SystemRequestToJoinProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemRequestToJoin(properties), options);
   }
 
   /**
@@ -1587,6 +2740,23 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SystemUpgradeRange(properties), options);
+  }
+
+  /**
+   * system.UpgradeUnit
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.UpgradeUnit)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. currLevel)
+   * @param options Amplitude event options.
+   */
+  systemUpgradeUnit(
+    properties: SystemUpgradeUnitProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemUpgradeUnit(properties), options);
   }
 }
 
