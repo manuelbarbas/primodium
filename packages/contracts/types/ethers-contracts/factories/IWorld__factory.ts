@@ -817,6 +817,19 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "bytes32",
+        name: "inviter",
+        type: "bytes32",
+      },
+    ],
+    name: "declineInvite",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "ResourceId",
         name: "tableId",
         type: "bytes32",
