@@ -57,12 +57,12 @@ library LibPirate {
       parent: 0
     });
 
+    PirateAsteroid.set(asteroidEntity, PirateAsteroidData({ prototype: prototype, playerEntity: playerEntity }));
     Position.set(asteroidEntity, coord);
     RockType.set(asteroidEntity, uint8(ERock.Asteroid));
     Spawned.set(ownerEntity, true);
     ReversePosition.set(coord.x, coord.y, asteroidEntity);
     OwnedBy.set(asteroidEntity, ownerEntity);
-    PirateAsteroid.set(asteroidEntity, PirateAsteroidData({ prototype: prototype, playerEntity: playerEntity }));
 
     for (uint8 i = 0; i < spawnPirateAsteroid.resources.length; i++) {
       uint8 resource = spawnPirateAsteroid.resources[i];

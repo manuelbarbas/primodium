@@ -18,6 +18,7 @@ type Requirement = {
   requiredValue: bigint;
   currentValue: bigint;
   scale: bigint;
+  type: RequirementType;
 };
 
 export function getMainBaseRequirement(objective: Entity): Requirement[] | undefined {
@@ -37,6 +38,7 @@ export function getMainBaseRequirement(objective: Entity): Requirement[] | undef
       requiredValue: levelRequirement,
       currentValue: level,
       scale: 1n,
+      type: RequirementType.MainBase,
     },
   ];
 }
@@ -54,6 +56,7 @@ export function getObjectivesRequirement(objective: Entity): Requirement[] | und
       ? 1n
       : 0n,
     scale: 1n,
+    type: RequirementType.Objectives,
   }));
 }
 
@@ -70,6 +73,7 @@ export function getExpansionRequirement(objective: Entity): Requirement[] | unde
       requiredValue: requiredExpansion,
       currentValue: playerExpansion,
       scale: 1n,
+      type: RequirementType.Expansion,
     },
   ];
 }
@@ -88,6 +92,7 @@ export function getResourceRequirement(objective: Entity): Requirement[] | undef
     requiredValue: rawRequiredProduction.amounts[index],
     currentValue: getFullResourceCount(ResourceEntityLookup[resource as EResource], player).resourceCount,
     scale: RESOURCE_SCALE,
+    type: RequirementType.ProducedResources,
   }));
 }
 
@@ -105,6 +110,7 @@ export function getBuildingCountRequirement(objective: Entity): Requirement[] | 
       ? 1n
       : 0n,
     scale: 1n,
+    type: RequirementType.Buildings,
   }));
 }
 
@@ -121,6 +127,7 @@ export function getHasDefeatedPirateRequirement(objective: Entity): Requirement[
     requiredValue: 1n,
     currentValue: comps.DefeatedPirate.getWithKeys({ pirate: pirate as Hex, entity: player as Hex })?.value ? 1n : 0n,
     scale: 1n,
+    type: RequirementType.DefeatedPirates,
   }));
 }
 
@@ -148,6 +155,7 @@ export function getRequiredUnitsRequirement(objective: Entity): Requirement[] | 
       requiredValue: rawRequiredUnits.amounts[index],
       currentValue: unitCount,
       scale: 1n,
+      type: RequirementType.RequiredUnits,
     };
   });
 }
@@ -164,6 +172,7 @@ export function getProducedUnitsRequirement(objective: Entity): Requirement[] | 
     requiredValue: producedUnits.amounts[index],
     currentValue: comps.ProducedUnit.getWithKeys({ unit: unit as Hex, entity: player as Hex })?.value ?? 0n,
     scale: 1n,
+    type: RequirementType.ProducedUnits,
   }));
 }
 export function getRaidRequirement(objective: Entity): Requirement[] | undefined {
@@ -180,6 +189,7 @@ export function getRaidRequirement(objective: Entity): Requirement[] | undefined
     requiredValue: rawRaid.amounts[index],
     currentValue: comps.RaidedResource.getWithKeys({ resource, entity: player as Hex })?.value ?? 0n,
     scale: RESOURCE_SCALE,
+    type: RequirementType.RaidedResources,
   }));
 }
 
@@ -198,6 +208,7 @@ export function getDestroyedUnitsRequirement(objective: Entity): Requirement[] |
     requiredValue: rawRequiredDestroyedUnits.amounts[index],
     currentValue: comps.DestroyedUnit.getWithKeys({ unit: unit as Hex, entity: player as Hex })?.value ?? 0n,
     scale: 1n,
+    type: RequirementType.DestroyedUnits,
   }));
 }
 
@@ -221,6 +232,7 @@ export function getRewardUtilitiesRequirement(objective: Entity, playerEntity: E
     requiredValue,
     currentValue: getFullResourceCount(id as Entity, playerEntity).resourceCount,
     scale: 1n,
+    type: RequirementType.RewardUtilities,
   }));
 }
 
