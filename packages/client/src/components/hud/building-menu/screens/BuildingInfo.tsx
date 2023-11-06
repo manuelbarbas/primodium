@@ -29,7 +29,6 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
     requiredDependencies,
     unitProductionMultiplier,
     storages,
-    vault,
   } = useBuildingInfo(building);
 
   return (
@@ -192,52 +191,6 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                       scale={RESOURCE_SCALE}
                       direction="top"
                       short
-                    />
-                  </Badge>
-                );
-              })
-            )}
-          </DataLabel>
-        </div>
-      )}
-      {vault && vault.length !== 0 && (
-        <div className="grid grid-cols-1 w-full">
-          <DataLabel label="vault">
-            {vault.map((v) => {
-              return (
-                <Badge key={v.resource} className="text-xs gap-2">
-                  <ResourceIconTooltip
-                    fractionDigits={3}
-                    name={getBlockTypeName(v.resource)}
-                    playerEntity={playerEntity}
-                    image={ResourceImage.get(v.resource) ?? ""}
-                    resource={v.resource}
-                    amount={v.amount}
-                    resourceType={v.type}
-                    scale={RESOURCE_SCALE}
-                    direction="top"
-                  />
-                </Badge>
-              );
-            })}
-          </DataLabel>
-          <DataLabel label="next level vault">
-            {!upgrade.vault || upgrade.vault.length === 0 || level === maxLevel ? (
-              <b>N/A</b>
-            ) : (
-              upgrade.vault.map((v) => {
-                return (
-                  <Badge key={v.resource} className="text-xs gap-2">
-                    <ResourceIconTooltip
-                      fractionDigits={3}
-                      name={getBlockTypeName(v.resource)}
-                      playerEntity={playerEntity}
-                      image={ResourceImage.get(v.resource) ?? ""}
-                      resource={v.resource}
-                      amount={v.amount}
-                      resourceType={v.type}
-                      scale={RESOURCE_SCALE}
-                      direction="top"
                     />
                   </Badge>
                 );
