@@ -310,7 +310,7 @@ export const InvitesScreen: React.FC = () => {
             <Join direction="vertical" className="overflow-auto w-full h-56 scrollbar">
               {invites.map((entity) => {
                 const playerInvite = components.PlayerInvite.get(entity);
-                const alliance = components.Alliance.use(playerInvite?.alliance);
+                const alliance = components.Alliance.get(playerInvite?.alliance);
 
                 if (!playerInvite?.alliance || !alliance?.name) return <></>;
 
