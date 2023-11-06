@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
-import { BackgroundImage, ResourceImage } from "src/util/constants";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
+import { BackgroundImage, ResourceImage } from "src/util/constants";
 
 export const UnitLabel = ({ name, resource, count }: { name: string; count: bigint; resource: Entity }) => {
   const resourceIcon = BackgroundImage.get(resource)?.at(0) ?? ResourceImage.get(resource);
@@ -13,7 +13,6 @@ export const UnitLabel = ({ name, resource, count }: { name: string; count: bigi
         name={name}
         playerEntity={playerEntity}
         amount={count}
-        scale={1n}
         resource={resource}
         image={resourceIcon ?? ""}
         validate={false}

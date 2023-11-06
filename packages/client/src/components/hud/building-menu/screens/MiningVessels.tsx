@@ -9,7 +9,7 @@ import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { components } from "src/network/components";
 import { Account } from "src/network/components/clientComponents";
 import { getBlockTypeName } from "src/util/common";
-import { EntityType, RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
+import { EntityType, ResourceImage, ResourceType } from "src/util/constants";
 import { getRecipe } from "src/util/resource";
 import { Hex } from "viem";
 import { UpgradeMiningVessel } from "../widgets/UpgradeMiningVessel";
@@ -42,7 +42,6 @@ export const CommissionCost: React.FC<{ player: Entity }> = ({ player }) => {
                   resource={resource.id}
                   amount={resource.amount}
                   resourceType={resource.type}
-                  scale={RESOURCE_SCALE}
                   direction="top"
                   validate
                 />

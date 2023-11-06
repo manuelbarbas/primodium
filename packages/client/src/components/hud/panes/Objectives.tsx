@@ -19,7 +19,6 @@ import { formatNumber, getBlockTypeName } from "src/util/common";
 import {
   BackgroundImage,
   ObjectiveEntityLookup,
-  RESOURCE_SCALE,
   RequirementType,
   ResourceImage,
   ResourceType,
@@ -162,7 +161,6 @@ const Objective: React.FC<{
                         }
                         resource={_req.id}
                         amount={value}
-                        scale={_req.scale}
                         direction="top"
                       />
                       <span className="font-bold">
@@ -200,7 +198,6 @@ const Objective: React.FC<{
                     resource={resource.id}
                     amount={resource.amount}
                     resourceType={resource.type}
-                    scale={resource.type === ResourceType.Utility ? 1n : RESOURCE_SCALE}
                     direction="top"
                   />
                 </Badge>

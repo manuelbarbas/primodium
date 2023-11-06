@@ -11,7 +11,7 @@ import { components } from "src/network/components";
 import { Account } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
 import { getBlockTypeName } from "src/util/common";
-import { EntityType, RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
+import { EntityType, ResourceImage } from "src/util/constants";
 import { getUpgradeInfo } from "src/util/upgrade";
 import { upgradeUnit } from "src/util/web3/contractCalls/upgradeUnit";
 
@@ -59,7 +59,6 @@ export const UpgradeMiningVessel: React.FC = () => {
                         resource={resource.id}
                         amount={resource.amount}
                         resourceType={resource.type}
-                        scale={resource.type === ResourceType.Utility ? 1n : RESOURCE_SCALE}
                         direction="top"
                         validate
                       />

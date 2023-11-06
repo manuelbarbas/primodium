@@ -27,7 +27,6 @@ export const DefenseLabel = ({ player }: { player?: Entity }) => {
         playerEntity={player}
         amount={defense.points}
         resource={resourceId}
-        scale={1n}
         image={resourceIcon ?? ""}
         validate={false}
         fontSize={"sm"}

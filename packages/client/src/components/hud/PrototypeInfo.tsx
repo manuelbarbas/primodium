@@ -10,7 +10,7 @@ import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { getBuildingLevelStorageUpgrades, transformProductionData } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
-import { RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
+import { ResourceImage, ResourceType } from "src/util/constants";
 import { getRecipe } from "src/util/resource";
 import { Hex } from "viem";
 import { Badge } from "../core/Badge";
@@ -41,7 +41,6 @@ export const RecipeDisplay: React.FC<{
                   resourceType={resource.type}
                   name={resourceName}
                   amount={resource.amount}
-                  scale={resource.type !== ResourceType.Utility ? RESOURCE_SCALE : 1n}
                   validate
                   fontSize={"xs"}
                   short
@@ -101,7 +100,6 @@ export const PrototypeInfo: React.FC<{
                   playerEntity={playerEntity}
                   amount={amount}
                   resourceType={type}
-                  scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
                   short
                   fractionDigits={3}
                 />
@@ -139,7 +137,6 @@ export const PrototypeInfo: React.FC<{
                           playerEntity={playerEntity}
                           amount={amount}
                           resourceType={ResourceType.Resource}
-                          scale={RESOURCE_SCALE}
                           short
                           fractionDigits={3}
                         />

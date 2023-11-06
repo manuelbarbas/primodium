@@ -2,8 +2,20 @@ import { Entity } from "@latticexyz/recs";
 import { EResource, MUDEnums } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
 import { Hex } from "viem";
-import { ResourceEntityLookup, ResourceEnumLookup, ResourceType, SPEED_SCALE } from "./constants";
+import {
+  EntityType,
+  RESOURCE_SCALE,
+  ResourceEntityLookup,
+  ResourceEnumLookup,
+  ResourceType,
+  SPEED_SCALE,
+} from "./constants";
 import { getNow } from "./time";
+
+export const getScale = (resource: Entity) => {
+  if (resource === EntityType.FleetMoves) return 1n;
+  return RESOURCE_SCALE;
+};
 
 // building a building requires resources
 // fetch directly from component data
