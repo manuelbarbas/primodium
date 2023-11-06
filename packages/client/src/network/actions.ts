@@ -1,10 +1,10 @@
 import { Hex, TransactionReceipt, ContractFunctionExecutionError, CallExecutionError } from "viem";
+import { PublicClient } from "viem/_types/clients/createPublicClient";
 import { Entity } from "@latticexyz/recs";
 import { SetupNetworkResult } from "./types";
 import { toast } from "react-toastify";
 import { components } from "./components";
 import { MetadataTypes } from "./components/customComponents/TransactionQueueComponent";
-import { callTransaction } from "src/util/analytics/parseReceipt";
 
 export async function _execute(txPromise: Promise<Hex>, network: SetupNetworkResult) {
   let receipt: TransactionReceipt | undefined = undefined;
@@ -83,4 +83,15 @@ export async function execute<T extends keyof MetadataTypes>(
     const receipt = await _execute(txPromise, network);
     onComplete?.(receipt);
   }
+}
+
+// Call from a hash to force a CallExecutionError such that we can get the revert reason
+export async function callTransaction(txHash: Hex, publicClient: PublicClient): Promise<void> {
+  const tx = await publicClient.getTransaction({ hash: txHash });
+  if (!tx) throw new Error("Transaction does not exist");
+  await publicClient.call({
+    account: tx.from!,
+    to: tx.to!,
+    data: tx.input,
+  });
 }
