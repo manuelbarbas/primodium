@@ -95,8 +95,10 @@ contract LibInvadeTest is PrimodiumTest {
     unitCounts[0] = 10;
 
     world.sendUnits(unitCounts, ESendType.Invade, originPosition, destinationPosition, bytes32(""));
-
-    vm.warp(block.timestamp + 1000);
+    uint256 distance = LibMath.distance(originPosition, destinationPosition);
+    uint256 travelTime = (distance * P_GameConfig.getTravelTime() * WORLD_SPEED_SCALE * UNIT_SPEED_SCALE) /
+      (P_GameConfig.getWorldSpeed() * P_Unit.getSpeed(unit1, 0));
+    vm.warp(block.timestamp + travelTime);
 
     world.invade(rock);
     assertEq(OwnedBy.get(rock), player, "OwnedBy");

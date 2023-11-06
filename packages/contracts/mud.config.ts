@@ -47,7 +47,7 @@ export const config = mudConfig({
         maxMotherlodesPerAsteroid: "uint256",
         motherlodeChanceInv: "uint256",
         motherlodeDistance: "uint256",
-        moveSpeed: "uint256",
+        travelTime: "uint256",
         worldSpeed: "uint256",
       },
     },
