@@ -141,7 +141,7 @@ export const config = mudConfig({
 
     /* -------------------------------- Resources ------------------------------- */
     P_IsAdvancedResource: {
-      keySchema: { resource: "uint8" }, // EResource
+      keySchema: { id: "uint8" }, // EResource
       valueSchema: "bool",
     },
 
