@@ -34,6 +34,9 @@ export async function _execute(txPromise: Promise<Hex>, network: SetupNetworkRes
         const reason = error.cause.shortMessage;
         toast.warn(reason);
         return receipt;
+      } else {
+        toast.error(`${error}`);
+        return receipt;
       }
     } catch (error) {
       console.error(error);
