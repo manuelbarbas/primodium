@@ -66,6 +66,8 @@ export enum EResource {
   U_Vessel,
   U_MaxMoves,
   U_Defense,
+  U_Vault,
+  U_AdvancedVault,
 
   // Multipliers
   M_DefenseMultiplier,

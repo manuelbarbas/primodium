@@ -7,7 +7,7 @@ import { LibStorage } from "libraries/LibStorage.sol";
 
 import { UtilityMap } from "libraries/UtilityMap.sol";
 
-import { TotalVault, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+import { ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
 
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -44,11 +44,7 @@ library LibResource {
   /// @param playerEntity Entity ID of the player
   /// @param prototype Unit Prototype
   /// @param count Quantity of units to be trained
-  function spendUnitRequiredResources(
-    bytes32 playerEntity,
-    bytes32 prototype,
-    uint256 count
-  ) internal {
+  function spendUnitRequiredResources(bytes32 playerEntity, bytes32 prototype, uint256 count) internal {
     uint256 level = UnitLevel.get(playerEntity, prototype);
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(prototype, level);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
@@ -61,11 +57,7 @@ library LibResource {
   /// @param playerEntity ID of the player upgrading
   /// @param unitPrototype Prototype ID of the unit to upgrade
   /// @param level Target level for the building
-  function spendUpgradeResources(
-    bytes32 playerEntity,
-    bytes32 unitPrototype,
-    uint256 level
-  ) internal {
+  function spendUpgradeResources(bytes32 playerEntity, bytes32 unitPrototype, uint256 level) internal {
     P_RequiredUpgradeResourcesData memory requiredResources = P_RequiredUpgradeResources.get(unitPrototype, level);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       spendResource(playerEntity, unitPrototype, requiredResources.resources[i], requiredResources.amounts[i]);
@@ -80,12 +72,7 @@ library LibResource {
    * @param resourceCost The amount of the resource to be spent.
    * @notice Ensures that the player has enough of the specified resource and updates resource counts accordingly.
    */
-  function spendResource(
-    bytes32 playerEntity,
-    bytes32 entity,
-    uint8 resource,
-    uint256 resourceCost
-  ) internal {
+  function spendResource(bytes32 playerEntity, bytes32 entity, uint8 resource, uint256 resourceCost) internal {
     // Check if the player has enough resources.
     uint256 playerResourceCount = ResourceCount.get(playerEntity, resource);
     require(resourceCost <= playerResourceCount, "[SpendResources] Not enough resources to spend");
@@ -151,11 +138,9 @@ library LibResource {
    * @return totalResources The total count of non-utility resources.
    * @return resourceCounts An array containing the counts of each non-utility resource.
    */
-  function getAllResourceCounts(bytes32 playerEntity)
-    internal
-    view
-    returns (uint256 totalResources, uint256[] memory resourceCounts)
-  {
+  function getAllResourceCounts(
+    bytes32 playerEntity
+  ) internal view returns (uint256 totalResources, uint256[] memory resourceCounts) {
     resourceCounts = new uint256[](uint8(EResource.LENGTH));
     for (uint8 i = 1; i < resourceCounts.length; i++) {
       if (P_IsUtility.get(i)) continue;
@@ -170,11 +155,9 @@ library LibResource {
    * @return totalResources The total count of non-utility resources.
    * @return resourceCounts An array containing the counts of each non-utility resource.
    */
-  function getAllResourceCountsVaulted(bytes32 playerEntity)
-    internal
-    view
-    returns (uint256 totalResources, uint256[] memory resourceCounts)
-  {
+  function getAllResourceCountsVaulted(
+    bytes32 playerEntity
+  ) internal view returns (uint256 totalResources, uint256[] memory resourceCounts) {
     resourceCounts = new uint256[](uint8(EResource.LENGTH));
     for (uint8 i = 1; i < resourceCounts.length; i++) {
       if (P_IsUtility.get(i)) continue;
@@ -186,11 +169,7 @@ library LibResource {
     }
   }
 
-  function updateScore(
-    bytes32 player,
-    uint8 resource,
-    uint256 value
-  ) internal {
+  function updateScore(bytes32 player, uint8 resource, uint256 value) internal {
     uint256 count = ResourceCount.get(player, resource);
     uint256 currentScore = Score.get(player);
     uint256 scoreChangeAmount = P_ScoreMultiplier.get(resource);

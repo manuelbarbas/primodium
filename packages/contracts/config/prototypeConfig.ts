@@ -831,14 +831,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ PVCell: 200000, Sulfur: 150000, U_Electricity: 100 }),
-        P_Vault: getResourceValues({
-          Iron: 200000,
-          Copper: 200000,
-          Lithium: 200000,
-          IronPlate: 100000,
-          Sulfur: 100000,
-          PVCell: 100000,
-        }),
+        P_Production: getResourceValues({ U_Vault: 100000 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 5n },
@@ -848,19 +841,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           Sulfur: 150000,
           U_Electricity: 150,
         }),
-        P_Vault: getResourceValues({
-          Iron: 500000,
-          Copper: 500000,
-          Lithium: 500000,
-          IronPlate: 200000,
-          Sulfur: 200000,
-          PVCell: 200000,
-          Alloy: 100000,
-          Titanium: 20000,
-          Platinum: 20000,
-          Iridium: 20000,
-          Kimberlite: 20000,
-        }),
+        P_Production: getResourceValues({ U_Vault: 1000000, U_AdvancedVault: 20000 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 7n },
@@ -870,19 +851,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           Sulfur: 1500000,
           U_Electricity: 200,
         }),
-        P_Vault: getResourceValues({
-          Iron: 1000000,
-          Copper: 1000000,
-          Lithium: 1000000,
-          IronPlate: 500000,
-          Sulfur: 500000,
-          PVCell: 500000,
-          Alloy: 200000,
-          Titanium: 50000,
-          Platinum: 50000,
-          Iridium: 50000,
-          Kimberlite: 50000,
-        }),
+        P_Production: getResourceValues({ U_Vault: 5000000, U_AdvancedVault: 100000 }),
       },
     },
   },
@@ -898,9 +867,20 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       [MUDEnums.EResource.indexOf("U_MaxMoves")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Defense")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("M_DefenseMultiplier")]: { P_IsUtility: { value: true } },
+      [MUDEnums.EResource.indexOf("U_Vault")]: { P_IsUtility: { value: true } },
+      [MUDEnums.EResource.indexOf("U_AdvancedVault")]: { P_IsUtility: { value: true } },
     },
   },
 
+  IsMotherlodeResource: {
+    keys: [],
+    levels: {
+      [MUDEnums.EResource.indexOf("Titanium")]: { P_IsMotherlodeResource: { value: true } },
+      [MUDEnums.EResource.indexOf("Platinum")]: { P_IsMotherlodeResource: { value: true } },
+      [MUDEnums.EResource.indexOf("Iridium")]: { P_IsMotherlodeResource: { value: true } },
+      [MUDEnums.EResource.indexOf("Kimberlite")]: { P_IsMotherlodeResource: { value: true } },
+    },
+  },
   /* --------------------------------- Units --------------------------------- */
   Unit: {
     levels: idsToPrototypes(MUDEnums.EUnit),
