@@ -829,18 +829,16 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 3n },
-        P_RequiredResources: getResourceValues({ PVCell: 200000, Sulfur: 150000, U_Electricity: 100 }),
-        P_Vault: getResourceValues({
-          Iron: 200000,
-          Copper: 200000,
-          Lithium: 200000,
-          IronPlate: 100000,
-          Sulfur: 100000,
-          PVCell: 100000,
-        }),
+        P_RequiredBaseLevel: { value: 1n },
+        P_RequiredResources: getResourceValues({ PVCell: 100000, Sulfur: 50000, U_Electricity: 50 }),
+        P_Production: getResourceValues({ U_Unraidable: 200000 }),
       },
       2: {
+        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredResources: getResourceValues({ PVCell: 200000, Sulfur: 150000, U_Electricity: 100 }),
+        P_Production: getResourceValues({ U_Unraidable: 1000000, U_AdvancedUnraidable: 10000 }),
+      },
+      3: {
         P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({
           Titanium: 50000,
@@ -848,21 +846,9 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           Sulfur: 150000,
           U_Electricity: 150,
         }),
-        P_Vault: getResourceValues({
-          Iron: 500000,
-          Copper: 500000,
-          Lithium: 500000,
-          IronPlate: 200000,
-          Sulfur: 200000,
-          PVCell: 200000,
-          Alloy: 100000,
-          Titanium: 20000,
-          Platinum: 20000,
-          Iridium: 20000,
-          Kimberlite: 20000,
-        }),
+        P_Production: getResourceValues({ U_Unraidable: 10000000, U_AdvancedUnraidable: 50000 }),
       },
-      3: {
+      4: {
         P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({
           Titanium: 150000,
@@ -870,19 +856,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           Sulfur: 1500000,
           U_Electricity: 200,
         }),
-        P_Vault: getResourceValues({
-          Iron: 1000000,
-          Copper: 1000000,
-          Lithium: 1000000,
-          IronPlate: 500000,
-          Sulfur: 500000,
-          PVCell: 500000,
-          Alloy: 200000,
-          Titanium: 50000,
-          Platinum: 50000,
-          Iridium: 50000,
-          Kimberlite: 50000,
-        }),
+        P_Production: getResourceValues({ U_Unraidable: 5000000, U_AdvancedUnraidable: 100000 }),
       },
     },
   },
@@ -898,9 +872,20 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       [MUDEnums.EResource.indexOf("U_MaxMoves")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Defense")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("M_DefenseMultiplier")]: { P_IsUtility: { value: true } },
+      [MUDEnums.EResource.indexOf("U_Unraidable")]: { P_IsUtility: { value: true } },
+      [MUDEnums.EResource.indexOf("U_AdvancedUnraidable")]: { P_IsUtility: { value: true } },
     },
   },
 
+  IsAdvancedResource: {
+    keys: [],
+    levels: {
+      [MUDEnums.EResource.indexOf("Titanium")]: { P_IsAdvancedResource: { value: true } },
+      [MUDEnums.EResource.indexOf("Platinum")]: { P_IsAdvancedResource: { value: true } },
+      [MUDEnums.EResource.indexOf("Iridium")]: { P_IsAdvancedResource: { value: true } },
+      [MUDEnums.EResource.indexOf("Kimberlite")]: { P_IsAdvancedResource: { value: true } },
+    },
+  },
   /* --------------------------------- Units --------------------------------- */
   Unit: {
     levels: idsToPrototypes(MUDEnums.EUnit),
