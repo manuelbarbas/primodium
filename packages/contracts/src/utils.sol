@@ -1,10 +1,26 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
-function initializeArray(uint256 x, uint256 y) pure returns (uint256[][] memory) {
-  uint256[][] memory arr = new uint256[][](x);
-  for (uint256 i; i < x; i++) {
-    arr[i] = new uint256[](y);
+import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
+import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
+import { ResourceId } from "@latticexyz/world/src/SystemCall.sol";
+
+function getSystemResourceId(string memory rawName) pure returns (ResourceId) {
+  return WorldResourceIdLib.encode(RESOURCE_SYSTEM, "", bytes16(bytes32(bytes(rawName))));
+}
+
+function addressToEntity(address a) pure returns (bytes32) {
+  return bytes32(uint256(uint160((a))));
+}
+
+function entityToAddress(bytes32 a) pure returns (address) {
+  return address(uint160(uint256((a))));
+}
+
+function bytes32ToString(bytes32 data) pure returns (string memory) {
+  bytes memory bytesString = new bytes(32);
+  for (uint256 i = 0; i < 32; i++) {
+    bytesString[i] = data[i];
   }
-  return arr;
+  return string(bytesString);
 }

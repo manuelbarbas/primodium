@@ -1,7 +1,7 @@
 import { Coord } from "@latticexyz/utils";
 import { GameObjectClasses } from "./constants";
 import { createObjectPool } from "./lib/core/createObjectPool";
-import { Animation } from "@latticexyz/phaserx/dist/types";
+import { Animation } from "@latticexyz/phaserx/src/types";
 import { createGame } from "./lib/core/createGame";
 import { createScene } from "./lib/core/createScene";
 import { createAnimatedTilemap } from "./lib/core/tilemap/createAnimatedTilemap";
@@ -17,10 +17,7 @@ export type CameraConfig = {
   defaultZoom: number;
 };
 
-export type Key =
-  | keyof typeof Phaser.Input.Keyboard.KeyCodes
-  | "POINTER_LEFT"
-  | "POINTER_RIGHT";
+export type Key = keyof typeof Phaser.Input.Keyboard.KeyCodes | "POINTER_LEFT" | "POINTER_RIGHT";
 
 export type GameConfig = Phaser.Types.Core.GameConfig & {
   key: string;
@@ -60,9 +57,7 @@ export interface TileAnimation {
 }
 
 export type GameObjectTypes = typeof GameObjectClasses;
-export type GameObject<Type extends keyof GameObjectTypes> = InstanceType<
-  GameObjectTypes[Type]
->;
+export type GameObject<Type extends keyof GameObjectTypes> = InstanceType<GameObjectTypes[Type]>;
 
 /**
  * @id: Unique id of the component to handle updating the same component
@@ -88,9 +83,7 @@ export type GameObjectFunction<Type extends keyof GameObjectTypes> = (
 
 export type EmbodiedEntity<Type extends keyof GameObjectTypes> = {
   setComponent: (component: GameObjectComponent<Type>) => void;
-  setComponents: (
-    components: (GameObjectComponent<Type> | undefined)[]
-  ) => void;
+  setComponents: (components: (GameObjectComponent<Type> | undefined)[]) => void;
   hasComponent: (id: string) => boolean;
   removeComponent: (id: string, stop?: boolean) => void;
   spawn: () => void;

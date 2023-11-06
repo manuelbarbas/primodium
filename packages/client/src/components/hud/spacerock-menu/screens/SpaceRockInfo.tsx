@@ -1,16 +1,12 @@
-import { SingletonID } from "@latticexyz/network";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
-import { Account } from "src/network/components/clientComponents";
+import { useMud } from "src/hooks";
 import { shortenAddress } from "src/util/common";
-import { SpaceRockTypeNames } from "src/util/constants";
+import { PIRATE_KEY, SpaceRockTypeNames } from "src/util/constants";
+import { hashKeyEntity } from "src/util/encode";
 import { getSpaceRockInfo } from "src/util/spacerock";
-import { ESpaceRockType } from "src/util/web3/types";
 
-const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({
-  label,
-  children,
-}) => {
+const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (
     <SecondaryCard className="text-xs gap-2 w-full">
       <p className="text-xs opacity-75 mb-1 uppercase">{label}</p>
@@ -21,43 +17,30 @@ const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({
 
 export const SpacerockInfo: React.FC<{
   data: ReturnType<typeof getSpaceRockInfo>;
-}> = ({ data }) => {
-  const player = Account.use(undefined, {
-    value: SingletonID,
-  }).value;
+}> = ({ data: { ownedBy, type, position, mainBaseLevel } }) => {
+  const playerEntity = useMud().network.playerEntity;
+  let owner = "Neutral";
+  if (ownedBy === playerEntity) owner = "You";
+  else if (ownedBy === hashKeyEntity(PIRATE_KEY, playerEntity)) owner = "Pirates!";
+  else if (ownedBy && ownedBy !== playerEntity) owner = shortenAddress(ownedBy);
 
   return (
     <Navigator.Screen title="SpaceRockInfo" className="w-full">
       <DataLabel label="spacerock type">
-        <b>{SpaceRockTypeNames[data.type]}</b>
+        <b>{SpaceRockTypeNames[type]}</b>
       </DataLabel>
       <DataLabel label="owned by">
-        <b>
-          {data.ownedBy
-            ? data.ownedBy === player
-              ? "You"
-              : shortenAddress(data.ownedBy)
-            : "Neutral"}
-        </b>
+        <b>{owner}</b>
       </DataLabel>
       <div className="grid grid-cols-2 w-full">
-        {data.mainBaseLevel && (
+        {mainBaseLevel !== undefined && (
           <DataLabel label="level">
-            <b>{data.mainBaseLevel}</b>
-          </DataLabel>
-        )}
-        {data.type === ESpaceRockType.Motherlode && (
-          <DataLabel label="COOLDOWN">
-            <b>
-              {data.motherlodeData.blocksLeft > 0
-                ? data.motherlodeData.blocksLeft
-                : "N/A"}
-            </b>
+            <b>{mainBaseLevel.toString() ?? 1}</b>
           </DataLabel>
         )}
         <DataLabel label="coord">
           <b>
-            [{data.position.x}, {data.position.y}]
+            [{position.x}, {position.y}]
           </b>
         </DataLabel>
       </div>

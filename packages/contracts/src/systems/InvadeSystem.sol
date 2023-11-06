@@ -1,40 +1,21 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
-// external
-import { PrimodiumSystem, IWorld, addressToEntity, getAddressById, entityToAddress } from "./internal/PrimodiumSystem.sol";
+import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
-//systems
-import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
-import { ID as S_UpdatePlayerSpaceRockSystemID } from "systems/S_UpdatePlayerSpaceRockSystem.sol";
+import { IWorld } from "codegen/world/IWorld.sol";
+import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
 
-// components
-
-import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-
-// libraries
-import { LibInvade } from "../libraries/LibInvade.sol";
-
-uint256 constant ID = uint256(keccak256("system.Invade"));
+import { OwnedBy } from "codegen/index.sol";
+import { LibInvade } from "codegen/Libraries.sol";
 
 contract InvadeSystem is PrimodiumSystem {
-  constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
-
-  function executeTyped(uint256 rockEntity) public returns (bytes memory) {
-    return execute(abi.encode(rockEntity));
-  }
-
-  function execute(bytes memory args) public override returns (bytes memory) {
-    uint256 rockEntity = abi.decode(args, (uint256));
-
-    OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
-    if (ownedByComponent.has(rockEntity)) {
-      IOnEntitySubsystem(getAddressById(world.systems(), S_UpdatePlayerSpaceRockSystemID)).executeTyped(
-        entityToAddress(ownedByComponent.getValue(rockEntity)),
-        rockEntity
-      );
-    }
-    LibInvade.invade(world, addressToEntity(msg.sender), rockEntity);
-    return abi.encode(rockEntity);
+  /**
+   * @dev Initiates an invasion of a rock entity using the LibInvade library.
+   * @param rockEntity The identifier of the target rock entity.
+   */
+  function invade(bytes32 rockEntity) public {
+    bytes32 playerEntity = addressToEntity(_msgSender());
+    LibInvade.invade(IWorld(_world()), playerEntity, rockEntity);
   }
 }

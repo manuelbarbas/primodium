@@ -3,14 +3,19 @@
   "version": "1.0.0",
   "license": "MIT",
   "main": "index.ts",
+  "dependencies": {
+    "@latticexyz/phaserx": "2.0.0-main-3e057061",
+    "@latticexyz/utils": "2.0.0-main-3e057061",
+    "@use-gesture/vanilla": "^10.2.27",
+    "mobx": "^6.7.0",
+    "phaser": "3.61.0-beta.4",
+    "rxjs": "^7.5.5",
+    "zustand": "^4.3.9"
+  },
   "devDependencies": {
     "@types/node": "^18.0.3",
+    "simple-zustand-devtools": "^1.1.0",
     "ts-node": "^10.8.2",
     "typescript": "^4.7.4"
-  },
-  "dependencies": {
-    "@latticexyz/phaserx": "^1.43.0",
-    "@use-gesture/vanilla": "^10.2.27",
-    "phaser": "3.61.0-beta.1"
   }
 }

@@ -1,33 +1,30 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { MouseEvent, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useAccount } from "src/hooks";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useMud } from "src/hooks/useMud";
-import { Position } from "src/network/components/chainComponents";
-import { spawn } from "src/util/web3/spawn";
+import { components } from "src/network/components";
+import { spawn } from "src/util/web3/contractCalls/spawn";
 
 export const Landing: React.FC = () => {
   const [message, setMessage] = useState<string | null>();
-  const network = useMud();
-  const { address } = useAccount();
+  const { network } = useMud();
+  const playerEntity = network.playerEntity;
   const navigate = useNavigate();
   const location = useLocation();
-  const hasSpawned = !!Position.use(address);
+  const hasSpawned = !!components.Home.use(playerEntity)?.asteroid;
 
   const handlePlay = async (e: MouseEvent<HTMLButtonElement>) => {
-    if (hasSpawned) {
-      navigate("/game" + location.search);
-      return;
-    }
-
     setMessage("Spawning Player Asteroid...");
     e.preventDefault();
-    try {
-      await spawn(network);
-    } catch (e) {
-      console.log(e);
-      setMessage("Failed to spawn asteroid...Retry");
+    if (!hasSpawned) {
+      try {
+        await spawn(network);
+      } catch (e) {
+        console.log(e);
+        setMessage("Failed to spawn asteroid...Retry");
+      }
     }
+
     navigate("/game" + location.search);
   };
 

@@ -1,287 +1,202 @@
-import {
-  BuildingType,
-  Item,
-  Level,
-  MainBase,
-  MaxMoves,
-  MaxUtility,
-  OccupiedUtilityResource,
-  P_MaxStorage,
-  P_ScoreMultiplier,
-  Position,
-  Units,
-  P_WorldSpeed,
-} from "src/network/components/chainComponents";
-import { SingletonID } from "@latticexyz/network";
-import { Cheatcode, Cheatcodes } from "src/components/dev/Cheatcodes";
-import { Network } from "src/network/layer";
-import { BlockType, ResourceStorages } from "./constants";
-import {
-  Account,
-  HomeAsteroid,
-  SelectedBuilding,
-  Send,
-} from "src/network/components/clientComponents";
-import { hashEntities, hashKeyEntity } from "./encode";
-import { EntityID } from "@latticexyz/recs";
-import { updateSpaceRock } from "./web3/updateSpaceRock";
-import { SPEED_SCALE } from "./constants";
-const resources: Record<string, EntityID> = {
-  iron: BlockType.Iron,
-  copper: BlockType.Copper,
-  lithium: BlockType.Lithium,
-  water: BlockType.Water,
-  titanium: BlockType.Titanium,
-  iridium: BlockType.Iridium,
-  sulfur: BlockType.Sulfur,
-  osmium: BlockType.Osmium,
-  tungsten: BlockType.Tungsten,
-  kimberlite: BlockType.Kimberlite,
-  uraninite: BlockType.Uraninite,
-  bolutite: BlockType.Bolutite,
-  ironplate: BlockType.IronPlate,
-  platinum: BlockType.Platinum,
-  alloy: BlockType.Alloy,
-  pvcell: BlockType.PhotovoltaicCell,
-  housing: BlockType.Housing,
-  vessel: BlockType.VesselCapacity,
-  electricity: BlockType.Electricity,
+import { Entity } from "@latticexyz/recs";
+import { encodeEntity, singletonEntity } from "@latticexyz/store-sync/recs";
+import { Cheatcodes } from "@primodiumxyz/mud-game-tools";
+import { SetupResult } from "src/network/types";
+import { Hex } from "viem";
+import { EntityType, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
+const resources: Record<string, Entity> = {
+  iron: EntityType.Iron,
+  copper: EntityType.Copper,
+  lithium: EntityType.Lithium,
+  water: EntityType.Water,
+  titanium: EntityType.Titanium,
+  iridium: EntityType.Iridium,
+  sulfur: EntityType.Sulfur,
+  osmium: EntityType.Osmium,
+  tungsten: EntityType.Tungsten,
+  kimberlite: EntityType.Kimberlite,
+  uraninite: EntityType.Uraninite,
+  bolutite: EntityType.Bolutite,
+  ironplate: EntityType.IronPlate,
+  platinum: EntityType.Platinum,
+  alloy: EntityType.Alloy,
+  pvcell: EntityType.PVCell,
+  housing: EntityType.Housing,
+  vessel: EntityType.VesselCapacity,
+  electricity: EntityType.Electricity,
+  defense: EntityType.Defense,
 };
 
-const units: Record<string, EntityID> = {
-  stinger: BlockType.StingerDrone,
-  aegis: BlockType.AegisDrone,
-  anvillight: BlockType.AnvilLightDrone,
-  hammerlight: BlockType.HammerLightDrone,
-  mining: BlockType.MiningVessel,
+const units: Record<string, Entity> = {
+  stinger: EntityType.StingerDrone,
+  aegis: EntityType.AegisDrone,
+  anvil: EntityType.AnvilDrone,
+  hammer: EntityType.HammerDrone,
+  mining: EntityType.MiningVessel,
 };
 
-export const setupCheatcodes = (mud: Network): Cheatcodes => {
-  const setMaxUtility: Cheatcode = {
-    params: [
-      { name: "resource", type: "string" },
-      { name: "max", type: "number" },
-    ],
-    function: async (resource: string, max: number) => {
-      const player = Account.get()?.value;
-      if (!player) throw new Error("No player found");
-      const playerResource = hashKeyEntity(
-        resources[resource.toLowerCase()],
-        player
-      );
-      await mud.dev.setEntityContractComponentValue(
-        playerResource,
-        MaxUtility,
-        {
-          value: max,
-        }
-      );
-    },
-  };
-
-  const setMaxResource: Cheatcode = {
-    params: [
-      { name: "resource", type: "string" },
-      { name: "max", type: "number" },
-    ],
-    function: async (resource: string, max: number) => {
-      const player = Account.get()?.value;
-      if (!player) throw new Error("No player found");
-      const playerResource = hashKeyEntity(
-        resources[resource.toLowerCase()],
-        player
-      );
-      await mud.dev.setEntityContractComponentValue(
-        playerResource,
-        P_MaxStorage,
-        {
-          value: max,
-        }
-      );
-    },
-  };
-
-  const getResourcePack: Cheatcode = {
-    params: [],
-    function: async () => {
-      ResourceStorages.forEach(async (resource) => {
-        const player = Account.get()?.value;
-        if (!player) throw new Error("No player found");
-        const playerResource = hashKeyEntity(resource, player);
-
-        await mud.dev.setEntityContractComponentValue(
-          playerResource,
-          P_MaxStorage,
-          {
-            value: 100000 * 100,
-          }
-        );
-
-        await mud.dev.setEntityContractComponentValue(playerResource, Item, {
-          value: 100000 * 100,
-        });
-      });
-    },
-  };
-
-  const getUtilityPack: Cheatcode = {
-    params: [],
-    function: async () => {
-      [BlockType.Housing, BlockType.Electricity].forEach(async (resource) => {
-        const player = Account.get()?.value;
-        if (!player) throw new Error("No player found");
-        const playerResource = hashKeyEntity(resource, player);
-
-        await mud.dev.setEntityContractComponentValue(
-          playerResource,
-          MaxUtility,
-          {
-            value: 10000,
-          }
-        );
-
-        mud.dev.setEntityContractComponentValue(
-          playerResource,
-          OccupiedUtilityResource,
-          {
-            value: 0,
-          }
-        );
-      });
-    },
-  };
-
+export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
   return {
-    getUtilityPack,
-    getResourcePack,
-    setMaxUtility,
-    setMaxResource,
-    maxMainBase: {
-      params: [],
-      function: async () => {
-        const entity = Account.get()?.value;
-        const building = MainBase.get(entity)?.value;
-        if (!building) throw new Error("No main base found for player");
-
-        await mud.dev.setEntityContractComponentValue(building, Level, {
-          value: 6,
-        });
-      },
-    },
-    setMultiplier: {
-      params: [{ name: "multiplier", type: "number" }],
-      function: async (multiplier: number) => {
-        const building = SelectedBuilding.get()?.value;
-        const type = BuildingType.get(building)?.value;
-        const level = Level.get(building)?.value;
-        if (!type || !level) throw new Error("No player found");
-
-        await mud.dev.setEntityContractComponentValue(
-          hashKeyEntity(type, level),
-          P_ScoreMultiplier,
-          {
-            value: multiplier,
-          }
-        );
-      },
-    },
-    updateSpaceRock: {
-      params: [],
-      function: async () => {
-        await updateSpaceRock(mud);
-      },
-    },
-    giveResource: {
-      params: [
-        { name: "name", type: "string" },
-        { name: "count", type: "number" },
-      ],
-      function: async (name: string, count: number) => {
-        const entity = Account.get()?.value;
-        const resource = resources[name.toLowerCase()];
-        if (!entity) throw new Error("No resource with that name");
-        const playerResource = hashKeyEntity(resource, entity);
-
-        await mud.dev.setEntityContractComponentValue(playerResource, Item, {
-          value: count * 100,
-        });
-      },
-    },
-    giveUnit: {
-      params: [
-        { name: "name", type: "string" },
-        { name: "count", type: "number" },
-      ],
-      function: async (name: string, count: number) => {
-        const entity = Account.get()?.value;
-        const resource = units[name.toLowerCase()];
-        const asteroid = HomeAsteroid.get()?.value;
-        if (!entity || !asteroid || !resource)
-          throw new Error("No unitwith that name");
-        const playerResource = hashEntities(resource, entity, asteroid);
-
-        await mud.dev.setEntityContractComponentValue(playerResource, Units, {
-          value: count * 100,
-        });
-      },
-    },
-    addMinerToDestination: {
-      params: [{ name: "count", type: "number" }],
-      function: async (count: number) => {
-        const destination = Send.get()?.destination;
-        if (!destination) throw new Error("No destination set");
-        console.log("destination", Position.get(destination));
-        const entity = Account.get()?.value;
-        const resource = BlockType.MiningVessel;
-        if (!entity) throw new Error("No player");
-
-        const playerResource = hashEntities(resource, entity, destination);
-        await mud.dev.setEntityContractComponentValue(playerResource, Units, {
-          value: count,
-        });
-      },
-    },
-    setUtility: {
-      params: [
-        { name: "utility", type: "string" },
-        { name: "value", type: "number" },
-      ],
-      function: (name: string, value: number) => {
-        const player = Account.get()?.value;
-        if (!player) throw new Error("No player found");
-        const playerResource = hashKeyEntity(resources[name], player);
-        mud.dev.setEntityContractComponentValue(
-          playerResource,
-          OccupiedUtilityResource,
-          {
-            value,
-          }
-        );
-      },
-    },
-
-    increaseMaxMoves: {
-      params: [{ name: "value", type: "number" }],
-      function: async (value: number) => {
-        const player = Account.get()?.value;
-        if (!player) throw new Error("No player found");
-        await mud.dev.setEntityContractComponentValue(player, MaxMoves, {
-          value,
-        });
-      },
-    },
-
     setWorldSpeed: {
       params: [{ name: "value", type: "number" }],
       function: async (value: number) => {
-        value = SPEED_SCALE / value;
-        await mud.dev.setEntityContractComponentValue(
-          SingletonID,
-          P_WorldSpeed,
+        await mud.contractCalls.setComponentValue(mud.components.P_GameConfig, singletonEntity, {
+          worldSpeed: BigInt(value),
+        });
+      },
+    },
+    setMaxAllianceCount: {
+      params: [{ name: "value", type: "number" }],
+      function: async (value: number) => {
+        await mud.contractCalls.setComponentValue(mud.components.P_AllianceConfig, singletonEntity, {
+          maxAllianceMembers: BigInt(value),
+        });
+      },
+    },
+    maxMainBaseLevel: {
+      params: [],
+      function: async () => {
+        const mainBase = mud.components.Home.get(mud.network.playerEntity)?.mainBase as Entity | undefined;
+        if (!mainBase) throw new Error("No main base found");
+        const maxLevel = mud.components.P_MaxLevel.get(mainBase)?.value ?? 8n;
+        await mud.contractCalls.setComponentValue(mud.components.Level, mainBase, {
+          value: maxLevel,
+        });
+      },
+    },
+    getResource: {
+      params: [{ name: "resource", type: "string" }],
+      function: async (resource: string) => {
+        const player = mud.network.playerEntity;
+        if (!player) throw new Error("No player found");
+
+        const resourceEntity = resources[resource.toLowerCase()];
+
+        if (!resourceEntity) throw new Error("Resource not found");
+
+        await mud.contractCalls.setComponentValue(
+          mud.components.ResourceCount,
+          encodeEntity(
+            { entity: "bytes32", resource: "uint8" },
+            { entity: player as Hex, resource: ResourceEnumLookup[resourceEntity] }
+          ),
           {
-            value,
+            value: 10000000n,
           }
         );
+      },
+    },
+    getMaxResource: {
+      params: [{ name: "resource", type: "string" }],
+      function: async (resource: string) => {
+        const player = mud.network.playerEntity;
+        if (!player) throw new Error("No player found");
+
+        const resourceEntity = resources[resource.toLowerCase()];
+
+        if (!resourceEntity) throw new Error("Resource not found");
+
+        await mud.contractCalls.setComponentValue(
+          mud.components.MaxResourceCount,
+          encodeEntity(
+            { entity: "bytes32", resource: "uint8" },
+            { entity: player as Hex, resource: ResourceEnumLookup[resourceEntity] }
+          ),
+          {
+            value: 2000000n,
+          }
+        );
+      },
+    },
+    getUnits: {
+      params: [
+        { name: "unit", type: "string" },
+        { name: "count", type: "number" },
+      ],
+      function: async (unit: string, count: number) => {
+        const player = mud.network.playerEntity;
+        if (!player) throw new Error("No player found");
+
+        const unitEntity = units[unit.toLowerCase()];
+
+        if (!unitEntity) throw new Error("Unit not found");
+
+        const rock = mud.components.Home.get(player)?.asteroid as Entity | undefined;
+
+        if (!rock) throw new Error("No asteroid found");
+
+        await mud.contractCalls.setComponentValue(
+          mud.components.UnitCount,
+          encodeEntity(mud.components.UnitCount.metadata.keySchema, {
+            player: player as Hex,
+            unit: unitEntity as Hex,
+            rock: rock as Hex,
+          }),
+          {
+            value: BigInt(count),
+          }
+        );
+      },
+    },
+    getTesterPack: {
+      params: [],
+      function: async () => {
+        const player = mud.network.playerEntity;
+        if (!player) throw new Error("No player found");
+        for (const resource of [...ResourceStorages]) {
+          await mud.contractCalls.setComponentValue(
+            mud.components.MaxResourceCount,
+            encodeEntity(
+              { entity: "bytes32", resource: "uint8" },
+              { entity: player as Hex, resource: ResourceEnumLookup[resource] }
+            ),
+            {
+              value: 10000000n,
+            }
+          );
+        }
+        for (const resource of [...ResourceStorages]) {
+          await mud.contractCalls.setComponentValue(
+            mud.components.ResourceCount,
+            encodeEntity(
+              { entity: "bytes32", resource: "uint8" },
+              { entity: player as Hex, resource: ResourceEnumLookup[resource] }
+            ),
+            {
+              value: 10000000n,
+            }
+          );
+        }
+        UtilityStorages.forEach(async (resource) => {
+          if (resource == EntityType.VesselCapacity) return;
+          if (!player) throw new Error("No player found");
+
+          await mud.contractCalls.setComponentValue(
+            mud.components.MaxResourceCount,
+            encodeEntity(
+              { entity: "bytes32", resource: "uint8" },
+              { entity: player as Hex, resource: ResourceEnumLookup[resource] }
+            ),
+            {
+              value: 10000000n,
+            }
+          );
+        });
+        UtilityStorages.forEach(async (resource) => {
+          if (resource == EntityType.VesselCapacity) return;
+          if (!player) throw new Error("No player found");
+
+          await mud.contractCalls.setComponentValue(
+            mud.components.ResourceCount,
+            encodeEntity(
+              { entity: "bytes32", resource: "uint8" },
+              { entity: player as Hex, resource: ResourceEnumLookup[resource] }
+            ),
+            {
+              value: 10000000n,
+            }
+          );
+        });
       },
     },
   };

@@ -1,30 +1,37 @@
-import { SingletonID } from "@latticexyz/network";
-import { EntityID } from "@latticexyz/recs";
-import { useState, useMemo } from "react";
+import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { useEffect, useMemo, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { NumberInput } from "src/components/shared/NumberInput";
-import { Hangar, Send } from "src/network/components/clientComponents";
+import { useMud } from "src/hooks";
+import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage } from "src/util/constants";
 import { getUnitStats } from "src/util/trainUnits";
 
 export const UnitSelection = () => {
-  const origin = Send.get()?.origin;
-  const [selectedUnit, setSelectedUnit] = useState<EntityID>();
+  const playerEntity = useMud().network.playerEntity;
+  const origin = components.Send.get()?.origin;
+  const [selectedUnit, setSelectedUnit] = useState<Entity>();
   const [count, setCount] = useState(1);
-  const { units, counts } = Hangar.use(origin, {
+  const { units, counts } = components.Hangar.use(origin, {
     units: [],
     counts: [],
   });
 
+  useEffect(() => {
+    console.log("updating selected unit");
+    setCount(1);
+  }, [selectedUnit]);
+
   const unitCount = useMemo(() => {
     if (!units) return 0;
-    const index = units.indexOf(selectedUnit ?? SingletonID);
+    const index = units.indexOf(selectedUnit ?? singletonEntity);
     if (index === -1) return 0;
     return counts[index];
-  }, [selectedUnit, units]);
+  }, [selectedUnit, units, counts]);
 
   return (
     <Navigator.Screen title="UnitSelection">
@@ -36,21 +43,12 @@ export const UnitSelection = () => {
                 <button
                   key={index}
                   className="relative flex flex-col items-center group hover:scale-110 transition-transform hover:z-50"
-                  onClick={() =>
-                    selectedUnit == unit
-                      ? setSelectedUnit(undefined)
-                      : setSelectedUnit(unit)
-                  }
+                  onClick={() => (selectedUnit == unit ? setSelectedUnit(undefined) : setSelectedUnit(unit))}
                 >
                   <img
-                    src={
-                      BackgroundImage.get(unit)?.at(0) ??
-                      "/img/icons/debugicon.png"
-                    }
+                    src={BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"}
                     className={`border w-[64px] h-[64px] group-hover:opacity-50 rounded-xl ${
-                      selectedUnit == unit
-                        ? "border-2 border-accent"
-                        : "border-secondary/75"
+                      selectedUnit == unit ? "border-2 border-accent" : "border-secondary/75"
                     }`}
                   />
                   <p className="opacity-0 absolute -bottom-4 text-xs bg-error rounded-box px-1 group-hover:opacity-100 whitespace-nowrap transition-opacity">
@@ -67,43 +65,34 @@ export const UnitSelection = () => {
             </p>
           ) : (
             <>
-              <p className="uppercase font-bold">
-                {getBlockTypeName(selectedUnit)}
-              </p>
+              <p className="uppercase font-bold">{getBlockTypeName(selectedUnit)}</p>
 
               <div className="grid grid-cols-5 gap-2 border-y border-cyan-400/30">
-                {Object.entries(getUnitStats(selectedUnit)).map(
-                  ([name, value]) => (
-                    <div key={name} className="flex flex-col items-center">
-                      <p className="text-xs opacity-50">{name}</p>
-                      <p>{value}</p>
-                    </div>
-                  )
-                )}
+                {Object.entries(getUnitStats(selectedUnit, playerEntity)).map(([name, value]) => (
+                  <div key={name} className="flex flex-col items-center">
+                    <p className="text-xs opacity-50">{name}</p>
+                    <p>{value.toLocaleString()}</p>
+                  </div>
+                ))}
               </div>
 
               <hr className="border-t border-cyan-600 w-full" />
 
-              <NumberInput
-                min={1}
-                max={unitCount}
-                onChange={(val) => setCount(val)}
-              />
+              <NumberInput min={1} max={Number(unitCount)} onChange={(val) => setCount(val)} />
 
               <div className="flex gap-2">
                 <Navigator.BackButton
                   className="btn-sm btn-secondary"
                   onClick={() => {
-                    Send.setUnitCount(selectedUnit, count);
+                    components.Send.setUnitCount(selectedUnit, BigInt(count));
+                    setSelectedUnit(undefined);
                   }}
                 >
                   Add to fleet
                 </Navigator.BackButton>
                 <Navigator.BackButton className="btn-sm border-secondary" />
               </div>
-              <p className="opacity-50 text-xs">
-                {Math.max(unitCount - count, 0)} units left
-              </p>
+              <p className="opacity-50 text-xs">{Math.max(Number(unitCount) - count, 0)} units left</p>
             </>
           )}
         </div>

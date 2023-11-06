@@ -1,79 +1,49 @@
+import { Assets, DepthLayers, EntityIDtoAnimationKey, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { ComponentUpdate, Has, HasValue } from "@latticexyz/recs";
 import {
+  ComponentUpdate,
+  Entity,
+  Has,
+  HasValue,
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
   namespaceWorld,
 } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Scene } from "engine/types";
-import { Action } from "src/util/constants";
-import {
-  Account,
-  HoverTile,
-  SelectedAction,
-  SelectedBuilding,
-} from "src/network/components/clientComponents";
-import { world } from "src/network/world";
-import {
-  ObjectPosition,
-  OnClick,
-  SetValue,
-} from "../../common/object-components/common";
-import {
-  Texture,
-  Animation,
-  Outline,
-} from "../../common/object-components/sprite";
-import {
-  validateBuildingPlacement,
-  getBuildingDimensions,
-  getBuildingOrigin,
-} from "src/util/building";
-import { getRecipe, hasEnoughResources } from "src/util/resource";
-import { hashAndTrimKeyEntity, hashKeyEntity } from "src/util/encode";
-import { Level } from "src/network/components/chainComponents";
-import { buildBuilding } from "src/util/web3";
-import { Network } from "src/network/layer";
 import { toast } from "react-toastify";
+import { components } from "src/network/components";
+import { SetupResult } from "src/network/types";
+import { world } from "src/network/world";
+import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
-import {
-  Assets,
-  DepthLayers,
-  EntityIDtoAnimationKey,
-  EntityIDtoSpriteKey,
-  SpriteKeys,
-} from "@game/constants";
+import { Action, BuildingEnumLookup } from "src/util/constants";
+import { getRecipe, hasEnoughResources } from "src/util/resource";
+import { buildBuilding } from "src/util/web3/contractCalls/buildBuilding";
+import { ObjectPosition, OnClick, SetValue } from "../../common/object-components/common";
+import { Animation, Outline, Texture } from "../../common/object-components/sprite";
 
-export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
+export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_buildingPlacement";
+  const playerEntity = mud.network.playerEntity;
 
   const query = [
-    Has(HoverTile),
-    HasValue(SelectedAction, {
+    Has(components.HoverTile),
+    HasValue(components.SelectedAction, {
       value: Action.PlaceBuilding,
     }),
   ];
 
   const render = (update: ComponentUpdate) => {
-    const entityIndex = update.entity;
     const objIndex = update.entity + objIndexSuffix;
-    const selectedBuilding = SelectedBuilding.get()?.value;
-    const player = Account.get()?.value!;
+    const selectedBuilding = components.SelectedBuilding.get()?.value;
 
-    // Avoid updating on optimistic overrides
-    if (
-      !selectedBuilding ||
-      typeof entityIndex !== "number" ||
-      entityIndex >= world.entities.length
-    ) {
-      return;
-    }
+    const tileCoord = components.HoverTile.get();
 
-    const tileCoord = HoverTile.get(world.entities[entityIndex]);
-    if (!tileCoord) return;
+    if (!tileCoord || !selectedBuilding) return;
 
     const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);
 
@@ -81,21 +51,18 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
 
     const buildingTool = scene.objectPool.get(objIndex, "Sprite");
 
-    const sprite = EntityIDtoSpriteKey[selectedBuilding][0];
+    const sprite = EntitytoSpriteKey[selectedBuilding][0];
     const animation = EntityIDtoAnimationKey[selectedBuilding]
       ? EntityIDtoAnimationKey[selectedBuilding][0]
       : undefined;
 
     const buildingDimensions = getBuildingDimensions(selectedBuilding);
 
-    const level =
-      Level.get(hashKeyEntity(selectedBuilding, player))?.value ?? 1;
-    const buildingLevelEntity = hashAndTrimKeyEntity(selectedBuilding, level);
-
-    const hasEnough = hasEnoughResources(getRecipe(buildingLevelEntity));
+    const hasEnough = hasEnoughResources(getRecipe(selectedBuilding, 1n), mud.network.playerEntity);
     const validPlacement = validateBuildingPlacement(
       tileCoord,
-      selectedBuilding
+      selectedBuilding,
+      (components.Home.get(playerEntity)?.asteroid as Entity | undefined) ?? singletonEntity
     );
 
     buildingTool.setComponents([
@@ -104,9 +71,7 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
           x: pixelCoord.x,
           y: -pixelCoord.y + buildingDimensions.height * tileHeight,
         },
-        !validPlacement
-          ? DepthLayers.Building
-          : DepthLayers.Building - tileCoord.y + buildingDimensions.height
+        !validPlacement ? DepthLayers.Building : DepthLayers.Building - tileCoord.y + buildingDimensions.height
       ),
       SetValue({
         alpha: 0.9,
@@ -124,16 +89,12 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
         (_, pointer) => {
           //remove tooltip on right click
           if (pointer?.rightButtonDown()) {
-            SelectedAction.remove();
+            components.SelectedAction.remove();
             return;
           }
 
           if (!hasEnough || !validPlacement) {
-            if (!hasEnough)
-              toast.error(
-                "Not enough resources to build " +
-                  getBlockTypeName(selectedBuilding)
-              );
+            if (!hasEnough) toast.error("Not enough resources to build " + getBlockTypeName(selectedBuilding));
             if (!validPlacement) toast.error("Cannot place building here");
             scene.camera.phaserCamera.shake(200, 0.001);
             return;
@@ -141,8 +102,9 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
 
           const buildingOrigin = getBuildingOrigin(tileCoord, selectedBuilding);
           if (!buildingOrigin) return;
-          buildBuilding(buildingOrigin, selectedBuilding, player, network);
-          SelectedAction.remove();
+
+          buildBuilding(mud.network, BuildingEnumLookup[selectedBuilding], buildingOrigin);
+          components.SelectedAction.remove();
         },
         true
       ),
@@ -152,9 +114,7 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
   defineEnterSystem(gameWorld, query, (update) => {
     render(update);
 
-    console.info(
-      "[ENTER SYSTEM](renderBuildingPlacement) Building placement tool has been added"
-    );
+    console.info("[ENTER SYSTEM](renderBuildingPlacement) Building placement tool has been added");
   });
 
   defineUpdateSystem(gameWorld, query, render);
@@ -164,8 +124,6 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
 
     scene.objectPool.remove(objIndex);
 
-    console.info(
-      "[EXIT SYSTEM](renderBuildingPlacement) Building placement tool has been removed"
-    );
+    console.info("[EXIT SYSTEM](renderBuildingPlacement) Building placement tool has been removed");
   });
 };

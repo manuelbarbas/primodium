@@ -1,26 +1,19 @@
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
+import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
+import { useMud } from "src/hooks";
 import { BackgroundImage, ResourceImage } from "src/util/constants";
-import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 
-export const UnitLabel = ({
-  name,
-  resourceId,
-  count,
-}: {
-  name: string;
-  count: number;
-  resourceId: EntityID;
-}) => {
-  const resourceIcon =
-    BackgroundImage.get(resourceId)?.at(0) ?? ResourceImage.get(resourceId);
+export const UnitLabel = ({ name, resource, count }: { name: string; count: bigint; resource: Entity }) => {
+  const resourceIcon = BackgroundImage.get(resource)?.at(0) ?? ResourceImage.get(resource);
+  const playerEntity = useMud().network.playerEntity;
 
   return (
     <div className="mx-1">
       <ResourceIconTooltip
         name={name}
+        playerEntity={playerEntity}
         amount={count}
-        scale={1}
-        resourceId={resourceId}
+        resource={resource}
         image={resourceIcon ?? ""}
         validate={false}
         fontSize={"sm"}

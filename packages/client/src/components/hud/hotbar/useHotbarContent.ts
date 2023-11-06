@@ -1,46 +1,46 @@
 import { KeybindActions } from "@game/constants";
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import { useEffect, useState } from "react";
-import { useMainBaseCoord } from "src/hooks/useMainBase";
-import { Level } from "src/network/components/chainComponents";
-import { BlockType } from "src/util/constants";
-import { hashAndTrimKeyCoord, hashKeyEntity } from "src/util/encode";
+import { useMud } from "src/hooks";
+import { components } from "src/network/components";
+import { EntityType } from "src/util/constants";
 import { Hotbar } from "src/util/types";
+import { Hex } from "viem";
 
 const buildingHotbar: Hotbar = {
   name: "Basic Buildings",
   icon: "/img/icons/minersicon.png",
   items: [
     {
-      blockType: BlockType.IronMine,
+      blockType: EntityType.IronMine,
       keybind: KeybindActions.Hotbar0,
     },
     {
-      blockType: BlockType.CopperMine,
+      blockType: EntityType.CopperMine,
       keybind: KeybindActions.Hotbar1,
     },
     {
-      blockType: BlockType.LithiumMine,
+      blockType: EntityType.LithiumMine,
       keybind: KeybindActions.Hotbar2,
     },
     {
-      blockType: BlockType.SulfurMine,
+      blockType: EntityType.SulfurMine,
       keybind: KeybindActions.Hotbar3,
     },
     {
-      blockType: BlockType.IronPlateFactory,
+      blockType: EntityType.IronPlateFactory,
       keybind: KeybindActions.Hotbar4,
     },
     {
-      blockType: BlockType.Garage,
+      blockType: EntityType.Garage,
       keybind: KeybindActions.Hotbar5,
     },
     {
-      blockType: BlockType.Workshop,
+      blockType: EntityType.Workshop,
       keybind: KeybindActions.Hotbar6,
     },
     {
-      blockType: BlockType.StorageUnit,
+      blockType: EntityType.StorageUnit,
       keybind: KeybindActions.Hotbar7,
     },
   ],
@@ -51,66 +51,60 @@ const advancedBuildingHotbar: Hotbar = {
   icon: "/img/icons/weaponryicon.png",
   items: [
     {
-      blockType: BlockType.PhotovoltaicCellFactory,
+      blockType: EntityType.PVCellFactory,
       keybind: KeybindActions.Hotbar1,
     },
     {
-      blockType: BlockType.SolarPanel,
+      blockType: EntityType.SolarPanel,
       keybind: KeybindActions.Hotbar2,
     },
     {
-      blockType: BlockType.SAMLauncher,
+      blockType: EntityType.SAMLauncher,
       keybind: KeybindActions.Hotbar3,
     },
     {
-      blockType: BlockType.Hangar,
+      blockType: EntityType.Hangar,
       keybind: KeybindActions.Hotbar4,
     },
     {
-      blockType: BlockType.DroneFactory,
+      blockType: EntityType.DroneFactory,
       keybind: KeybindActions.Hotbar5,
     },
     {
-      blockType: BlockType.AlloyFactory,
+      blockType: EntityType.AlloyFactory,
       keybind: KeybindActions.Hotbar6,
     },
     {
-      blockType: BlockType.StarmapperStation,
+      blockType: EntityType.StarmapperStation,
       keybind: KeybindActions.Hotbar7,
+    },
+    {
+      blockType: EntityType.ShieldGenerator,
+      keybind: KeybindActions.Hotbar8,
+    },
+    {
+      blockType: EntityType.Vault,
+      keybind: KeybindActions.Hotbar9,
     },
   ],
 };
 
 export const useHotbarContent = () => {
-  const mainBaseCoord = useMainBaseCoord();
-  const [hotbarContent, setHotbarContent] = useState<Hotbar[]>([
-    buildingHotbar,
-  ]);
-  const coordEntity = hashAndTrimKeyCoord(BlockType.BuildingKey, {
-    x: mainBaseCoord?.x ?? 0,
-    y: mainBaseCoord?.y ?? 0,
-    parent: mainBaseCoord?.parent ?? ("0" as EntityID),
-  });
+  const {
+    network: { playerEntity },
+  } = useMud();
+  const [hotbarContent, setHotbarContent] = useState<Hotbar[]>([buildingHotbar]);
+  const playerMainbase = components.Home.use(playerEntity)?.mainBase as Entity | undefined;
+  const playerLevel = components.Level.use(playerMainbase)?.value ?? 1n;
 
-  const mainBaseLevel = Level.use(coordEntity, {
-    value: 0,
-  }).value;
-
-  const minAdvancedLevel = Level.use(
-    hashKeyEntity(BlockType.PhotovoltaicCellFactory, 1),
-    {
-      value: 0,
-    }
-  ).value;
+  const minAdvancedLevel =
+    components.P_RequiredBaseLevel.getWithKeys({ prototype: EntityType.PVCellFactory as Hex, level: 1n })?.value ?? 1n;
 
   useEffect(() => {
     setHotbarContent(
-      [
-        buildingHotbar,
-        mainBaseLevel >= minAdvancedLevel ? advancedBuildingHotbar : undefined,
-      ].filter(Boolean) as Hotbar[]
+      [buildingHotbar, playerLevel >= minAdvancedLevel ? advancedBuildingHotbar : undefined].filter(Boolean) as Hotbar[]
     );
-  }, [mainBaseLevel]);
+  }, [playerLevel, minAdvancedLevel]);
 
   return hotbarContent;
 };

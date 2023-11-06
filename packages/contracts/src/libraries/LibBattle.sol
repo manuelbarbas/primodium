@@ -1,311 +1,166 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity >=0.8.21;
 
-import { IWorld } from "solecs/System.sol";
-import { addressToEntity } from "solecs/utils.sol";
-//components
-import { BattleSpaceRockComponent, ID as BattleSpaceRockComponentID } from "components/BattleSpaceRockComponent.sol";
-import { P_BuildingDefenceComponent, ID as P_BuildingDefenceComponentID } from "components/P_BuildingDefenceComponent.sol";
-import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
-import { P_UnitAttackComponent, ID as P_UnitAttackComponentID } from "components/P_UnitAttackComponent.sol";
-import { P_UnitDefenceComponent, ID as P_UnitDefenceComponentID } from "components/P_UnitDefenceComponent.sol";
-import { P_UnitCargoComponent, ID as P_UnitCargoComponentID } from "components/P_UnitCargoComponent.sol";
-import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
-import { BattleAttackerComponent, ID as BattleAttackerComponentID } from "components/BattleAttackerComponent.sol";
-import { BattleDefenderComponent, ID as BattleDefenderComponentID } from "components/BattleDefenderComponent.sol";
-import { ArrivalsSizeComponent, ID as ArrivalsSizeComponentID } from "components/ArrivalsSizeComponent.sol";
-import { BattleResult, BattleParticipant, Arrival, ESendType } from "../types.sol";
-import { TotalUnitsDestroyedComponent, ID as TotalUnitsDestroyedComponentID } from "components/TotalUnitsDestroyedComponent.sol";
-import { P_DestroyedUnitsRequirementComponent, ID as P_DestroyedUnitsRequirementComponentID } from "components/P_DestroyedUnitsRequirementComponent.sol";
-import { PirateComponent, ID as PirateComponentID } from "components/PirateComponent.sol";
-import { P_SpawnPirateAsteroidComponent, ID as P_SpawnPirateAsteroidComponentID } from "components/P_SpawnPirateAsteroidComponent.sol";
-import { DefeatedSpawnedPirateAsteroidComponent, ID as DefeatedSpawnedPirateAsteroidComponentID } from "components/DefeatedSpawnedPirateAsteroidComponent.sol";
-import { ArrivalsList } from "libraries/ArrivalsList.sol";
-import { LibUnits } from "./LibUnits.sol";
-import { LibStorage } from "libraries/LibStorage.sol";
-import { LibResource } from "libraries/LibResource.sol";
-import { LibEncode } from "libraries/LibEncode.sol";
-import { LibMath } from "libraries/LibMath.sol";
-import { LibUpdateSpaceRock } from "libraries/LibUpdateSpaceRock.sol";
-import { ResourceValues } from "../types.sol";
+import { MULTIPLIER_SCALE } from "src/constants.sol";
+import { ESendType, Arrival, EResource } from "src/Types.sol";
+import { DestroyedUnit, ResourceCount, UnitCount, UnitLevel, BattleResult, BattleResultData, P_UnitPrototypes, P_Unit, ArrivalCount, UnitCount, Home } from "codegen/index.sol";
+import { LibUnit } from "libraries/LibUnit.sol";
+import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 
 library LibBattle {
-  function setupBattleDefender(IWorld world, uint256 battleEntity, uint256 defenderEntity, uint256 spaceRock) internal {
-    BattleDefenderComponent battleDefenderComponent = BattleDefenderComponent(
-      world.getComponent(BattleDefenderComponentID)
-    );
-
-    BattleParticipant memory defender;
-    defender.participantEntity = defenderEntity;
-    defender.unitTypes = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).getEntitiesWithValue(true);
-    defender.unitCounts = new uint32[](defender.unitTypes.length);
-    defender.unitLevels = new uint32[](defender.unitTypes.length);
-    for (uint i = 0; i < defender.unitTypes.length; i++) {
-      defender.unitCounts[i] = (LibUnits.getUnitCountOnRock(world, defenderEntity, spaceRock, defender.unitTypes[i]));
-      defender.unitLevels[i] = LibUnits.getPlayerUnitTypeLevel(world, defenderEntity, defender.unitTypes[i]);
-    }
-    battleDefenderComponent.set(battleEntity, defender);
-  }
-
-  function setupBattleAttacker(
-    IWorld world,
-    uint256 battleEntity,
-    uint256 attackerEntity,
-    uint256 spaceRock,
+  /**
+   * @dev Initiates a battle between two entities and calculates the outcome.
+   * @param attackerEntity The identifier of the attacker entity.
+   * @param defenderEntity The identifier of the defender entity.
+   * @param rockEntity The identifier of the asteroid/rock involved in the battle.
+   * @param sendType The type of the battle, e.g., Raid or other.
+   * @return battleResult The battle result data including units left, winner, and cargo.
+   */
+  function battle(
+    bytes32 attackerEntity,
+    bytes32 defenderEntity,
+    bytes32 rockEntity,
     ESendType sendType
-  ) internal {
-    BattleAttackerComponent battleAttackerComponent = BattleAttackerComponent(
-      world.getComponent(BattleAttackerComponentID)
+  ) internal returns (BattleResultData memory battleResult) {
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    battleResult.attackerUnitsLeft = new uint256[](unitPrototypes.length);
+    battleResult.defenderUnitsLeft = new uint256[](unitPrototypes.length);
+
+    (uint256[] memory attackCounts, uint256 attackPoints, uint256 cargo) = getAttackPoints(
+      attackerEntity,
+      rockEntity,
+      sendType
     );
+    (uint256[] memory defenseCounts, uint256 defensePoints) = getDefensePoints(defenderEntity, rockEntity);
 
-    BattleParticipant memory attacker;
-    attacker.participantEntity = attackerEntity;
-    attacker.unitTypes = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).getEntities();
-    attacker.unitCounts = new uint32[](attacker.unitTypes.length);
-    attacker.unitLevels = new uint32[](attacker.unitTypes.length);
-    for (uint i = 0; i < attacker.unitTypes.length; i++) {
-      attacker.unitLevels[i] = LibUnits.getPlayerUnitTypeLevel(world, attackerEntity, attacker.unitTypes[i]);
-    }
-    uint256 playerAsteroidEntity = LibEncode.hashKeyEntity(attackerEntity, spaceRock);
-    uint256 size = LibMath.getSafe(
-      ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)),
-      playerAsteroidEntity
-    );
-    uint256 index = 0;
-    while (index < size) {
-      Arrival memory arrival = ArrivalsList.get(world, playerAsteroidEntity, index);
+    bool isAttackerWinner = attackPoints > defensePoints;
 
-      if (arrival.sendType != sendType) {
-        index++;
+    battleResult.attacker = attackerEntity;
+    battleResult.defender = defenderEntity;
+    battleResult.attackerStartingUnits = attackCounts;
+    battleResult.defenderStartingUnits = defenseCounts;
+    battleResult.winner = isAttackerWinner ? attackerEntity : defenderEntity;
+    battleResult.totalCargo = cargo;
+    battleResult.rock = rockEntity;
+    battleResult.timestamp = block.timestamp;
 
-        continue;
-      }
-      if (arrival.arrivalBlock <= block.number) {
-        for (uint i = 0; i < arrival.units.length; i++) {
-          for (uint j = 0; j < attacker.unitTypes.length; j++) {
-            if (arrival.units[i].unitType == attacker.unitTypes[j]) {
-              attacker.unitCounts[j] += arrival.units[i].count;
-              break;
-            }
-          }
-        }
-        ArrivalsList.remove(world, playerAsteroidEntity, index);
-        LibMath.subtract(ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)), attackerEntity, 1);
-        size--;
-      } else {
-        index++;
-      }
-    }
-    battleAttackerComponent.set(battleEntity, attacker);
-  }
-
-  function resolveBattle(IWorld world, uint256 battleEntity) internal returns (BattleResult memory) {
-    BattleResult memory battleResult;
-
-    BattleParticipant memory attacker = BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(
-      battleEntity
-    );
-
-    BattleParticipant memory defender = BattleDefenderComponent(world.getComponent(BattleDefenderComponentID)).getValue(
-      battleEntity
-    );
-
-    battleResult.attackerUnitsLeft = new uint32[](attacker.unitCounts.length);
-    battleResult.defenderUnitsLeft = new uint32[](defender.unitCounts.length);
-
-    uint32 totalAttackValue = getTotalAttackValue(world, battleEntity);
-    uint32 totalDefenceValue = getTotalDefenceValue(world, battleEntity);
-    bool isAttackerWinner = totalAttackValue > totalDefenceValue;
-
-    battleResult.winnerEntity = isAttackerWinner ? attacker.participantEntity : defender.participantEntity;
-    TotalUnitsDestroyedComponent totalUnitsDestroyedComponent = TotalUnitsDestroyedComponent(
-      world.getComponent(TotalUnitsDestroyedComponentID)
-    );
-    uint32 lossRatio;
+    uint256 lossRatio;
     if (isAttackerWinner) {
-      for (uint256 i = 0; i < defender.unitTypes.length; i++) {
-        LibMath.add(
-          totalUnitsDestroyedComponent,
-          LibEncode.hashKeyEntity(defender.unitTypes[i], attacker.participantEntity),
-          defender.unitCounts[i]
-        );
-      }
-      lossRatio = 100 - ((totalDefenceValue * 100) / totalAttackValue);
-      for (uint256 i = 0; i < attacker.unitCounts.length; i++) {
-        battleResult.attackerUnitsLeft[i] = (attacker.unitCounts[i] * lossRatio) / 100;
-        LibMath.add(
-          totalUnitsDestroyedComponent,
-          LibEncode.hashKeyEntity(attacker.unitTypes[i], defender.participantEntity),
-          attacker.unitCounts[i] - battleResult.attackerUnitsLeft[i]
-        );
+      lossRatio = 100 - (attackPoints == 0 ? 0 : ((defensePoints * 100) / attackPoints));
+
+      for (uint256 i = 0; i < unitPrototypes.length; i++) {
+        battleResult.attackerUnitsLeft[i] = (attackCounts[i] * lossRatio) / 100;
       }
     } else {
-      lossRatio = 100 - ((totalAttackValue * 100) / totalDefenceValue);
-      for (uint256 i = 0; i < attacker.unitTypes.length; i++) {
-        LibMath.add(
-          totalUnitsDestroyedComponent,
-          LibEncode.hashKeyEntity(attacker.unitTypes[i], defender.participantEntity),
-          attacker.unitCounts[i]
-        );
-      }
-      for (uint256 i = 0; i < defender.unitCounts.length; i++) {
-        battleResult.defenderUnitsLeft[i] = (defender.unitCounts[i] * lossRatio) / 100;
-        LibMath.add(
-          totalUnitsDestroyedComponent,
-          LibEncode.hashKeyEntity(defender.unitTypes[i], attacker.participantEntity),
-          defender.unitCounts[i] - battleResult.defenderUnitsLeft[i]
-        );
+      lossRatio = 100 - (defensePoints == 0 ? 0 : ((attackPoints * 100) / defensePoints));
+      for (uint256 i = 0; i < unitPrototypes.length; i++) {
+        battleResult.defenderUnitsLeft[i] = (defenseCounts[i] * lossRatio) / 100;
       }
     }
-    PirateComponent pirateComponent = PirateComponent(world.getComponent(PirateComponentID));
-    uint256 defenderHomeAsteroid = LibUpdateSpaceRock.getPlayerAsteroidEntity(world, defender.participantEntity);
-    if (pirateComponent.has(defenderHomeAsteroid)) {
-      DefeatedSpawnedPirateAsteroidComponent defeatedSpawnedPirateAsteroidComponent = DefeatedSpawnedPirateAsteroidComponent(
-          world.getComponent(DefeatedSpawnedPirateAsteroidComponentID)
-        );
-      P_SpawnPirateAsteroidComponent spawnPirateAsteroidComponent = P_SpawnPirateAsteroidComponent(
-        world.getComponent(P_SpawnPirateAsteroidComponentID)
-      );
-      defeatedSpawnedPirateAsteroidComponent.set(
-        LibEncode.hashKeyEntity(spawnPirateAsteroidComponent.getValue(defenderHomeAsteroid), attacker.participantEntity)
-      );
-    }
+
+    BattleResult.set(keccak256(abi.encode(battleResult)), battleResult);
+
     return battleResult;
   }
 
-  function getWinner(
-    IWorld world,
-    uint256 battleEntity,
-    BattleResult memory battleResult
-  ) internal view returns (uint256 winner) {
-    BattleAttackerComponent battleAttackerComponent = BattleAttackerComponent(
-      world.getComponent(BattleAttackerComponentID)
-    );
-    BattleDefenderComponent battleDefenderComponent = BattleDefenderComponent(
-      world.getComponent(BattleDefenderComponentID)
-    );
-
-    BattleParticipant memory attacker = battleAttackerComponent.getValue(battleEntity);
-    BattleParticipant memory defender = battleDefenderComponent.getValue(battleEntity);
-
-    if (
-      getTotalRemainingAttack(world, battleEntity, battleResult.attackerUnitsLeft) >
-      getTotalRemainingDefence(world, battleEntity, battleResult.defenderUnitsLeft)
-    ) {
-      winner = attacker.participantEntity;
-    } else {
-      winner = defender.participantEntity;
-    }
-    return winner;
-  }
-
-  function getTotalRemainingAttack(
-    IWorld world,
-    uint256 battleEntity,
-    uint32[] memory attackerUnitsLeft
-  ) internal view returns (uint32) {
-    P_UnitAttackComponent unitAttackComponent = P_UnitAttackComponent(world.getComponent(P_UnitAttackComponentID));
-    BattleAttackerComponent battleAttackerComponent = BattleAttackerComponent(
-      world.getComponent(BattleAttackerComponentID)
-    );
-    BattleParticipant memory attacker = battleAttackerComponent.getValue(battleEntity);
-    uint32 totalAttackValue = 0;
-    for (uint256 i = 0; i < attacker.unitTypes.length; i++) {
-      if (attackerUnitsLeft[i] <= 0) continue;
-      uint32 level = LibUnits.getPlayerUnitTypeLevel(world, attacker.participantEntity, attacker.unitTypes[i]);
-      totalAttackValue +=
-        attackerUnitsLeft[i] *
-        unitAttackComponent.getValue(LibEncode.hashKeyEntity(attacker.unitTypes[i], level));
-    }
-    return totalAttackValue;
-  }
-
-  function getTotalRemainingDefence(
-    IWorld world,
-    uint256 battleEntity,
-    uint32[] memory defenderUnitsLeft
-  ) internal view returns (uint32) {
-    P_UnitDefenceComponent unitDefenceComponent = P_UnitDefenceComponent(world.getComponent(P_UnitDefenceComponentID));
-    BattleDefenderComponent battleDefenderComponent = BattleDefenderComponent(
-      world.getComponent(BattleDefenderComponentID)
-    );
-
-    BattleParticipant memory defender = battleDefenderComponent.getValue(battleEntity);
-    uint32 totalDefenceValue = 0;
-    for (uint256 i = 0; i < defender.unitTypes.length; i++) {
-      if (defenderUnitsLeft[i] <= 0) continue;
-      uint32 level = LibUnits.getPlayerUnitTypeLevel(world, defender.participantEntity, defender.unitTypes[i]);
-      totalDefenceValue +=
-        defenderUnitsLeft[i] *
-        unitDefenceComponent.getValue(LibEncode.hashKeyEntity(defender.unitTypes[i], level));
-    }
-    return totalDefenceValue;
-  }
-
-  function getTotalDefenceValue(IWorld world, uint256 battleEntity) internal view returns (uint32 totalDefenceValue) {
-    P_UnitDefenceComponent unitDefenceComponent = P_UnitDefenceComponent(world.getComponent(P_UnitDefenceComponentID));
-    BattleDefenderComponent battleDefenderComponent = BattleDefenderComponent(
-      world.getComponent(BattleDefenderComponentID)
-    );
-    BattleParticipant memory defender = battleDefenderComponent.getValue(battleEntity);
-    totalDefenceValue = 0;
-    for (uint256 i = 0; i < defender.unitTypes.length; i++) {
-      if (defender.unitCounts[i] <= 0) continue;
-      uint32 level = LibUnits.getPlayerUnitTypeLevel(world, defender.participantEntity, defender.unitTypes[i]);
-      totalDefenceValue +=
-        defender.unitCounts[i] *
-        unitDefenceComponent.getValue(LibEncode.hashKeyEntity(defender.unitTypes[i], level));
-    }
-    totalDefenceValue += LibMath.getSafe(
-      P_BuildingDefenceComponent(world.getComponent(P_BuildingDefenceComponentID)),
-      BattleSpaceRockComponent(world.getComponent(BattleSpaceRockComponentID)).getValue(battleEntity)
-    );
-    return totalDefenceValue;
-  }
-
-  function getTotalAttackValue(IWorld world, uint256 battleEntity) internal view returns (uint32 totalAttackValue) {
-    P_UnitAttackComponent unitAttackComponent = P_UnitAttackComponent(world.getComponent(P_UnitAttackComponentID));
-    BattleAttackerComponent battleAttackerComponent = BattleAttackerComponent(
-      world.getComponent(BattleAttackerComponentID)
-    );
-    BattleParticipant memory attacker = battleAttackerComponent.getValue(battleEntity);
-
-    totalAttackValue = 0;
-    for (uint256 i = 0; i < attacker.unitTypes.length; i++) {
-      if (attacker.unitCounts[i] <= 0) continue;
-      uint32 level = LibUnits.getPlayerUnitTypeLevel(world, attacker.participantEntity, attacker.unitTypes[i]);
-      totalAttackValue +=
-        attacker.unitCounts[i] *
-        unitAttackComponent.getValue(LibEncode.hashKeyEntity(attacker.unitTypes[i], level));
+  /**
+   * @dev Calculates the defense points for a defender entity and rock.
+   * @param defenderEntity The identifier of the defender entity.
+   * @param rockEntity The identifier of the asteroid/rock.
+   * @return defenseCounts The counts of defending units.
+   * @return defensePoints The total defense points.
+   */
+  function getDefensePoints(bytes32 defenderEntity, bytes32 rockEntity)
+    internal
+    view
+    returns (uint256[] memory defenseCounts, uint256 defensePoints)
+  {
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    defenseCounts = new uint256[](unitPrototypes.length);
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      uint256 defenderUnitCount = UnitCount.get(defenderEntity, rockEntity, unitPrototypes[i]);
+      uint256 defenderLevel = UnitLevel.get(defenderEntity, unitPrototypes[i]);
+      defensePoints += defenderUnitCount * P_Unit.get(unitPrototypes[i], defenderLevel).defense;
+      defenseCounts[i] += defenderUnitCount;
     }
 
-    return (totalAttackValue);
+    if (Home.get(defenderEntity).asteroid == rockEntity) {
+      defensePoints += ResourceCount.get(defenderEntity, uint8(EResource.U_Defense));
+      defensePoints +=
+        (defensePoints * ResourceCount.get(defenderEntity, uint8(EResource.M_DefenseMultiplier))) /
+        MULTIPLIER_SCALE;
+    }
   }
 
-  function checkDestroyedUnitsRequirement(
-    IWorld world,
-    uint256 playerEntity,
-    uint256 objectiveEntity
-  ) internal view returns (bool) {
-    P_DestroyedUnitsRequirementComponent destroyedUnitsRequirementComponent = P_DestroyedUnitsRequirementComponent(
-      world.getComponent(P_DestroyedUnitsRequirementComponentID)
-    );
-    if (!destroyedUnitsRequirementComponent.has(objectiveEntity)) return true;
-    TotalUnitsDestroyedComponent totalUnitsDestroyedComponent = TotalUnitsDestroyedComponent(
-      world.getComponent(TotalUnitsDestroyedComponentID)
-    );
-    ResourceValues memory destroyedUnitsRequirements = destroyedUnitsRequirementComponent.getValue(objectiveEntity);
-    for (uint256 i = 0; i < destroyedUnitsRequirements.resources.length; i++) {
-      if (
-        LibMath.getSafe(
-          totalUnitsDestroyedComponent,
-          LibEncode.hashKeyEntity(destroyedUnitsRequirements.resources[i], playerEntity)
-        ) < destroyedUnitsRequirements.values[i]
-      ) {
-        return false;
+  /**
+   * @dev Calculates the attack points for an attacker entity based on arrivals and send type.
+   * @param attackerEntity The identifier of the attacker entity.
+   * @param rockEntity The identifier of the asteroid/rock.
+   * @param sendType The type of the send, e.g., Raid or other.
+   * @return attackCounts The counts of attacking units.
+   * @return attackPoints The total attack points.
+   * @return cargo The total cargo points.
+   */
+  function getAttackPoints(
+    bytes32 attackerEntity,
+    bytes32 rockEntity,
+    ESendType sendType
+  )
+    internal
+    returns (
+      uint256[] memory attackCounts,
+      uint256 attackPoints,
+      uint256 cargo
+    )
+  {
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    attackCounts = new uint256[](unitPrototypes.length);
+    bytes32[] memory arrivalKeys = ArrivalsMap.keys(attackerEntity, rockEntity);
+    uint256 arrivalsApplied = 0;
+    for (uint256 i = 0; i < arrivalKeys.length; i++) {
+      Arrival memory arrival = ArrivalsMap.get(attackerEntity, rockEntity, arrivalKeys[i]);
+
+      if (arrival.sendType != sendType || arrival.arrivalTime > block.timestamp) continue;
+
+      for (uint256 j = 0; j < unitPrototypes.length; j++) {
+        if (arrival.unitCounts[j] == 0) continue;
+        uint256 unitLevel = UnitLevel.get(attackerEntity, unitPrototypes[j]);
+        attackPoints += arrival.unitCounts[j] * P_Unit.get(unitPrototypes[j], unitLevel).attack;
+        cargo += arrival.unitCounts[j] * P_Unit.get(unitPrototypes[j], unitLevel).cargo;
+        attackCounts[j] += arrival.unitCounts[j];
+      }
+
+      ArrivalsMap.remove(attackerEntity, rockEntity, arrivalKeys[i]);
+      arrivalsApplied++;
+    }
+    ArrivalCount.set(attackerEntity, arrivalKeys.length - arrivalsApplied);
+  }
+
+  /**
+   * @dev Updates units and utilities after a battle.
+   * @param br The battle result data.
+   * @param sendType The type of the send, e.g., Raid or other.
+   */
+  function updateUnitsAfterBattle(BattleResultData memory br, ESendType sendType) internal {
+    bytes32[] memory unitTypes = P_UnitPrototypes.get();
+
+    for (uint256 i = 0; i < unitTypes.length; i++) {
+      uint256 attackerUnitsLost = br.attackerStartingUnits[i] - br.attackerUnitsLeft[i];
+      uint256 defenderUnitsLost = br.defenderStartingUnits[i] - br.defenderUnitsLeft[i];
+
+      LibUnit.decreaseUnitCount(br.defender, br.rock, unitTypes[i], defenderUnitsLost);
+      LibUnit.updateStoredUtilities(br.attacker, unitTypes[i], attackerUnitsLost, false);
+      LibUnit.updateStoredUtilities(br.defender, unitTypes[i], defenderUnitsLost, false);
+
+      DestroyedUnit.set(br.attacker, unitTypes[i], DestroyedUnit.get(br.attacker, unitTypes[i]) + defenderUnitsLost);
+      DestroyedUnit.set(br.defender, unitTypes[i], DestroyedUnit.get(br.defender, unitTypes[i]) + attackerUnitsLost);
+
+      if (br.winner == br.attacker) {
+        bytes32 attackerRock = (br.attacker == br.winner && sendType == ESendType.Raid)
+          ? Home.getAsteroid(br.attacker)
+          : br.rock;
+        LibUnit.increaseUnitCount(br.winner, attackerRock, unitTypes[i], br.attackerUnitsLeft[i]);
       }
     }
-    return true;
   }
 }

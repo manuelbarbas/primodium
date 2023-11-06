@@ -1,28 +1,14 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
-import { System, IWorld } from "solecs/System.sol";
-import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
-import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-
-import { Coord } from "../../types.sol";
-import { BuildingTileKey } from "../../prototypes.sol";
-
-import { LibEncode } from "../../libraries/LibEncode.sol";
+import { System } from "@latticexyz/world/src/System.sol";
 
 contract PrimodiumSystem is System {
-  constructor(IWorld _world, address _components) System(_world, _components) {}
-
-  function getC(uint256 id) internal view returns (address) {
-    return getAddressById(components, id);
+  function addressToEntity(address a) internal pure returns (bytes32) {
+    return bytes32(uint256(uint160((a))));
   }
 
-  function getBuildingFromCoord(Coord memory coord) internal view returns (uint256) {
-    OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
-    uint256 buildingTile = LibEncode.hashKeyCoord(BuildingTileKey, coord);
-    if (!ownedByComponent.has(buildingTile)) return 0;
-    return ownedByComponent.getValue(buildingTile);
+  function entityToAddress(bytes32 a) internal pure returns (address) {
+    return address(uint160(uint256((a))));
   }
-
-  function execute(bytes memory args) public virtual returns (bytes memory) {}
 }

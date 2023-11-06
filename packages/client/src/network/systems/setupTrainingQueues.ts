@@ -1,109 +1,94 @@
-import {
-  EntityID,
-  Has,
-  HasValue,
-  defineComponentSystem,
-  runQuery,
-} from "@latticexyz/recs";
-import { world } from "../world";
-import {
-  HomeAsteroid,
-  BlockNumber,
-  TrainingQueue,
-} from "../components/clientComponents";
-import {
-  BuildingType,
-  LastClaimedAt,
-  OwnedBy,
-  Position,
-  UnitProductionLastQueueIndex,
-  UnitProductionQueue,
-  UnitProductionQueueIndex,
-} from "../components/chainComponents";
-import { hashKeyEntity } from "src/util/encode";
+import { Entity, Has, HasValue, defineComponentSystem, runQuery } from "@latticexyz/recs";
+import { getNow } from "src/util/time";
 import { getUnitTrainingTime } from "src/util/trainUnits";
+import { Hex } from "viem";
+import { components } from "../components";
+import { BlockNumber } from "../components/clientComponents";
+import { SetupResult } from "../types";
+import { world } from "../world";
 
-export function setupTrainingQueues() {
-  function updateTrainingQueue(blockNumber: number, building: EntityID) {
-    const startingIndex = UnitProductionQueueIndex.get(building)?.value;
-    const finalIndex = UnitProductionLastQueueIndex.get(building)?.value;
+export function setupTrainingQueues(mud: SetupResult) {
+  const playerEntity = mud.network.playerEntity;
+  const {
+    BuildingType,
+    LastClaimedAt,
+    ClaimOffset,
+    OwnedBy,
+    Position,
+    QueueUnits,
+    QueueItemUnits,
+    TrainingQueue,
+    Home,
+  } = components;
 
-    const owner = OwnedBy.get(building)?.value;
-
-    let startTime = LastClaimedAt.get(building)?.value;
-    if (
-      startingIndex == undefined ||
-      finalIndex == undefined ||
-      !owner ||
-      startTime == undefined
-    )
-      return;
-    startTime = Number(startTime);
-    const queue = [];
+  function updateTrainingQueue(building: Entity) {
+    const owner = OwnedBy.get(building)?.value as Entity | undefined;
+    const config = components.P_GameConfig.get();
+    let startTime = LastClaimedAt.get(building, { value: 0n }).value - ClaimOffset.get(building, { value: 0n }).value;
+    if (!owner || !startTime || !config) return;
+    const now = getNow();
+    const queueUnits = QueueUnits.getWithKeys({
+      entity: building as Hex,
+    });
+    if (!queueUnits || queueUnits.back == queueUnits.front) return TrainingQueue.remove(building);
     let foundUnfinished = false;
-    for (let i = startingIndex; i <= finalIndex; i++) {
-      const queueIndex = i;
-      const buildingQueueEntity = hashKeyEntity(building, queueIndex);
-      const update = UnitProductionQueue.get(buildingQueueEntity);
-      if (!update) return;
+    const queue = [];
+    for (let i = queueUnits.front; i < queueUnits.back; i++) {
+      const item = QueueItemUnits.getWithKeys({
+        entity: building as Hex,
+        index: i,
+      });
+      if (!item) return;
       if (foundUnfinished) {
         queue.push({
-          unit: update.unitEntity,
-          count: update.count,
-          progress: 0,
-          timeRemaining: 0,
+          unit: item.unitId,
+          count: item.quantity,
+          progress: 0n,
+          timeRemaining: 0n,
         });
         continue;
       }
-      const trainingTime = getUnitTrainingTime(
-        owner,
-        building,
-        update.unitEntity
-      );
-      let trainedUnits = (blockNumber - startTime) / trainingTime;
+      const trainingTime = getUnitTrainingTime(owner, building, item.unitId as Entity);
+      let trainedUnits = item.quantity;
+      let timeRemaining = 0n;
+      if (trainingTime > 0) {
+        trainedUnits = (now - startTime) / trainingTime;
+        timeRemaining = trainingTime - ((now - startTime) % trainingTime);
+      }
 
-      const timeRemaining =
-        trainingTime - ((blockNumber - startTime) % trainingTime);
+      if (trainedUnits == 0n) foundUnfinished = true;
+      if (trainedUnits >= item.quantity) {
+        trainedUnits = item.quantity;
+      } else {
+        queue.push({
+          unit: item.unitId,
+          count: item.quantity,
+          progress: (100n * trainedUnits) / item.quantity,
+          timeRemaining: timeRemaining,
+        });
 
-      if (trainedUnits == 0) foundUnfinished = true;
-      else {
-        if (trainedUnits > update.count) {
-          trainedUnits = update.count;
-        } else {
-          queue.push({
-            unit: update.unitEntity,
-            count: update.count,
-            progress: trainedUnits / update.count,
-            timeRemaining: timeRemaining,
-          });
-
-          foundUnfinished = true;
-        }
+        foundUnfinished = true;
       }
       startTime += trainingTime * trainedUnits;
     }
-    const units = queue.map((update) => update.unit);
+    const units = queue.map((update) => update.unit as Entity);
     const counts = queue.map((update) => update.count);
     const progress = queue.map((update) => update.progress);
     const timeRemaining = queue.map((update) => update.timeRemaining);
     TrainingQueue.set({ units, counts, progress, timeRemaining }, building);
   }
 
+  // update local queues each second
   defineComponentSystem(world, BlockNumber, (update) => {
     const query = [
-      Has(UnitProductionQueueIndex),
-      Has(UnitProductionLastQueueIndex),
-      Has(LastClaimedAt),
       HasValue(Position, {
-        parent: HomeAsteroid.get()?.value,
+        parent: Home.get(playerEntity)?.asteroid,
       }),
       Has(BuildingType),
     ];
     const blockNumber = update?.value[0]?.value;
     if (!blockNumber) return;
-    const buildings = [...runQuery(query)].map(
-      (entity) => world.entities[entity]
-    );
-    buildings.forEach((building) => updateTrainingQueue(blockNumber, building));
+    const buildings = [...runQuery(query)];
+    buildings.forEach((building) => updateTrainingQueue(building));
   });
 }

@@ -1,118 +1,48 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.21;
 
-import { IWorld } from "solecs/System.sol";
-import { SingletonID } from "solecs/SingletonID.sol";
+// tables
+import { Spawned, ReversePosition, OwnedBy, Position, PositionData, AsteroidCount, RockType, PositionData } from "codegen/index.sol";
 
-//components
-import { ReversePositionComponent, ID as ReversePositionComponentID } from "components/ReversePositionComponent.sol";
-import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
-import { AsteroidCountComponent, ID as AsteroidCountComponentID } from "components/AsteroidCountComponent.sol";
-import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
+// types
+import { ERock } from "src/Types.sol";
 
-import { Coord, ESpaceRockType } from "../types.sol";
-
-import { Trigonometry as Trig } from "trig/src/Trigonometry.sol";
-import { LibEncode } from "libraries/LibEncode.sol";
+// libraries
 import { LibMath } from "libraries/LibMath.sol";
-import { ABDKMath64x64 as Math } from "abdk-libraries-solidity/ABDKMath64x64.sol";
+import { LibEncode } from "libraries/LibEncode.sol";
+import { Trigonometry as Trig } from "trig/src/Trigonometry.sol";
+import { ABDKMath64x64 as Math } from "abdk/ABDKMath64x64.sol";
 
 library LibAsteroid {
-  /**
-   * @dev Creates a new asteroid for a player in the given world.
-   * @param world The World contract address.
-   * @param ownerEntity The entity ID of the owner player.
-   * @return asteroidEntity The entity ID of the created asteroid.
-   */
-  function createAsteroid(IWorld world, uint256 ownerEntity) internal returns (uint256 asteroidEntity) {
-    asteroidEntity = LibEncode.hashEntity(world, ownerEntity);
+  /// @notice Creates new asteroid for player in world
+  /// @notice Checks if asteroid already exists, sets position and other properties
+  /// @param ownerEntity Owner's entity ID
+  /// @return asteroidEntity Created asteroid's entity ID
+  function createAsteroid(bytes32 ownerEntity) internal returns (bytes32 asteroidEntity) {
+    asteroidEntity = LibEncode.getHash(ownerEntity);
+    require(RockType.get(asteroidEntity) == uint8(ERock.NULL), "[LibAsteroid] asteroid already exists");
 
-    AsteroidTypeComponent asteroidTypeComponent = AsteroidTypeComponent(world.getComponent(AsteroidTypeComponentID));
-    PositionComponent positionComponent = PositionComponent(world.getComponent(PositionComponentID));
-    AsteroidCountComponent asteroidCountComponent = AsteroidCountComponent(
-      world.getComponent(AsteroidCountComponentID)
-    );
-    uint32 asteroidCount = LibMath.increment(asteroidCountComponent, SingletonID);
-    require(!asteroidTypeComponent.has(asteroidEntity), "[LibAsteroid] asteroid already exists");
+    uint256 asteroidCount = AsteroidCount.get() + 1;
+    PositionData memory coord = getUniqueAsteroidPosition(asteroidCount);
 
-    Coord memory position = getUniqueAsteroidPosition(world, asteroidCount);
-
-    positionComponent.set(asteroidEntity, position);
-    asteroidTypeComponent.set(asteroidEntity, ESpaceRockType.ASTEROID);
-
-    // For now, we will use this component to ensure the owner can only build on their asteroid.
-    // TODO: remove this component later as it might be for temporary use.
-    positionComponent.set(ownerEntity, 0, 0, asteroidEntity);
-    uint256 encodedPosition = LibEncode.encodeCoord(position);
-
-    // Mark the asteroid's position as active in the ReversePositionComponent.
-    ReversePositionComponent(world.getComponent(ReversePositionComponentID)).set(encodedPosition, asteroidEntity);
-    OwnedByComponent(world.getComponent(OwnedByComponentID)).set(asteroidEntity, ownerEntity);
-
-    asteroidCountComponent.set(SingletonID, asteroidCount);
+    Position.set(asteroidEntity, coord);
+    RockType.set(asteroidEntity, uint8(ERock.Asteroid));
+    Spawned.set(ownerEntity, true);
+    ReversePosition.set(coord.x, coord.y, asteroidEntity);
+    OwnedBy.set(asteroidEntity, ownerEntity);
+    AsteroidCount.set(asteroidCount);
   }
 
-  /**
-   * @dev Gets a unique asteroid position for the player in the given world.
-   * @return position The unique position (Coord) for the asteroid.
-   */
-
-  function getUniqueAsteroidPosition(IWorld world, uint32 asteroidCount) internal view returns (Coord memory position) {
-    position = getPositionByVector(getDistance(asteroidCount), getDirection(asteroidCount));
-    ReversePositionComponent reversePositionComponent = ReversePositionComponent(
-      world.getComponent(ReversePositionComponentID)
+  /// @notice Generates unique asteroid coord
+  /// @notice Ensures asteroid coords do not overlap
+  /// @return coord Generated unique coord
+  function getUniqueAsteroidPosition(uint256 asteroidCount) internal view returns (PositionData memory coord) {
+    coord = LibMath.getPositionByVector(
+      LibMath.getSpawnDistance(asteroidCount),
+      LibMath.getSpawnDirection(asteroidCount)
     );
-    while (reversePositionComponent.has(LibEncode.encodeCoord(position))) {
-      position.y += 5;
+    while (ReversePosition.get(coord.x, coord.y) != 0) {
+      coord.y += 5;
     }
-  }
-
-  /**
-   * todo: move this function to a separate library
-   * @dev Calculates the position (x, y) based on a given distance and direction.
-   * @param _distance The distance to be moved.
-   * @param direction The direction angle in degrees.
-   * @return Coord Returns a struct containing x and y coordinates.
-   */
-  function getPositionByVector(uint32 _distance, uint32 direction) internal pure returns (Coord memory) {
-    direction = direction % 360;
-    bool flip = direction >= 180;
-    direction = direction % 180;
-    uint256 angleDegsTimes10000 = direction * 1745;
-
-    uint256 angleRads = angleDegsTimes10000 * 1e13 + Trig.TWO_PI;
-
-    int256 newX = Trig.cos(angleRads) * int32(_distance);
-    int256 newY = Trig.sin(angleRads) * int32(_distance);
-    int32 x = int32((newX / 1e18));
-    int32 y = int32((newY / 1e18));
-    return Coord({ x: flip ? -x : x, y: flip ? -y : y, parent: 0 });
-  }
-
-  /**
-   * @dev Calculates the distance based on the given asteroid count.
-   *      The equation is 260 * ln((asteroidCount + 105) / 10) - 580
-   * @param asteroidCount Number of asteroids.
-   * @return uint32 Returns the calculated distance.
-   */
-  function getDistance(uint32 asteroidCount) internal pure returns (uint32) {
-    int128 value = Math.add(Math.fromUInt(asteroidCount), Math.fromUInt(105));
-    value = Math.div(value, Math.fromUInt(10));
-    value = Math.ln(value);
-    uint256 integer = Math.mulu(value, 260);
-    return uint32(integer - 580);
-  }
-
-  /**
-   * @dev Determines the general direction based on the given asteroid count.
-   * @param asteroidCount Number of asteroids.
-   * @return uint32 Returns the calculated direction.
-   */
-  function getDirection(uint32 asteroidCount) internal pure returns (uint32) {
-    uint32 countMod27 = asteroidCount % 27;
-    uint32 countMod3 = asteroidCount % 3;
-    uint32 generalDirection = asteroidCount % 4;
-    return generalDirection * 90 + countMod3 * 30 + countMod27;
   }
 }

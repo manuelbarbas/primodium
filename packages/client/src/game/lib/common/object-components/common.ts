@@ -29,10 +29,7 @@ type ComponentSystemMap = Map<
   Map<string, (update: ComponentUpdate<Schema>) => void>
 >;
 
-type QuerySystemMap = Map<
-  QueryFragment[],
-  Map<string, (update: ComponentUpdate<Schema>) => void>
->;
+type QuerySystemMap = Map<QueryFragment[], Map<string, (update: ComponentUpdate<Schema>) => void>>;
 
 const gameWorld = namespaceWorld(world, "game");
 
@@ -42,8 +39,7 @@ function updateGameObject<T extends keyof GameObjectTypes>(
 ): void {
   for (const key in properties) {
     if (key in gameObject) {
-      gameObject[key as keyof GameObjectInstances[T]] =
-        properties[key as keyof GameObjectInstances[T]]!;
+      gameObject[key as keyof GameObjectInstances[T]] = properties[key as keyof GameObjectInstances[T]]!;
     }
   }
 }
@@ -76,17 +72,13 @@ export const SetValue = <T extends keyof GameObjectTypes>(
 
 export const OnClick = <T extends keyof GameObjectTypes>(
   scene: Scene,
-  callback: (
-    gameObject?: GameObjectInstances[T],
-    e?: Phaser.Input.Pointer
-  ) => void,
+  callback: (gameObject?: GameObjectInstances[T], e?: Phaser.Input.Pointer) => void,
   pixelPerfect = false
 ): GameObjectComponent<T> => {
   return {
     id: uuid(),
     once: (gameObject) => {
-      if (pixelPerfect)
-        gameObject.setInteractive(scene.input.phaserInput.makePixelPerfect());
+      if (pixelPerfect) gameObject.setInteractive(scene.input.phaserInput.makePixelPerfect());
       else gameObject.setInteractive();
       gameObject.on("pointerdown", (e: Phaser.Input.Pointer) => {
         if (e.downElement.nodeName !== "CANVAS") return;
@@ -131,10 +123,7 @@ export const Tween = <T extends keyof GameObjectTypes>(
 };
 
 const componentMap: ComponentSystemMap = new Map();
-export const OnComponentSystem = <
-  T extends keyof GameObjectTypes,
-  S extends Schema
->(
+export const OnComponentSystem = <T extends keyof GameObjectTypes, S extends Schema>(
   component: Component<S, Metadata, undefined>,
   callback: SystemCallback<T>,
   options?: { runOnInit?: boolean }
@@ -166,9 +155,7 @@ export const OnComponentSystem = <
       }
 
       //subscribe to component updates
-      componentMap
-        .get(component)
-        ?.set(id, (update) => callback(gameObject, update, id));
+      componentMap.get(component)?.set(id, (update) => callback(gameObject, update, id));
     },
     exit: () => {
       //unsub from component updates
@@ -208,9 +195,7 @@ export const OnEnterSystem = <T extends keyof GameObjectTypes>(
         );
       }
       //subscribe to component updates
-      enterMap
-        .get(query)
-        ?.set(id, (update) => callback(gameObject, update, id));
+      enterMap.get(query)?.set(id, (update) => callback(gameObject, update, id));
     },
     exit: () => {
       //unsub from component updates
@@ -251,9 +236,7 @@ export const OnUpdateSystem = <T extends keyof GameObjectTypes>(
       }
 
       //subscribe to component updates
-      updateMap
-        .get(query)
-        ?.set(id, (update) => callback(gameObject, update, id));
+      updateMap.get(query)?.set(id, (update) => callback(gameObject, update, id));
     },
     exit: () => {
       //unsub from component updates

@@ -1,23 +1,14 @@
-import {
-  generateFrames,
-  createCulling,
-  createChunks,
-  // createDebugger,
-} from "@latticexyz/phaserx";
+import { createChunks, createCulling, generateFrames } from "@latticexyz/phaserx";
 
-import createInput from "./createInput";
+import { SceneConfig } from "../../types";
 import { createPhaserScene } from "../util/createPhaserScene";
 import { createCamera } from "./createCamera";
+import createInput from "./createInput";
+import { createObjectPool } from "./createObjectPool";
 import { createScriptManager } from "./createScriptManager";
 import { createTilemap } from "./createTilemap";
-import { SceneConfig } from "../../types";
-import { createObjectPool } from "./createObjectPool";
 
-export const createScene = async (
-  phaserGame: Phaser.Game,
-  config: SceneConfig,
-  autoStart: boolean = true
-) => {
+export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, autoStart = true) => {
   const {
     camera: { minZoom, maxZoom, pinchSpeed, wheelSpeed, defaultZoom },
     tilemap: {
@@ -40,7 +31,7 @@ export const createScene = async (
     key: config.key,
   });
 
-  let scene = new phaserScene();
+  const scene = new phaserScene();
 
   phaserGame.scene.add(config.key, scene, autoStart);
 
@@ -54,6 +45,7 @@ export const createScene = async (
 
   const tilemap = createTilemap(
     scene,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     camera,
     tileWidth,
@@ -82,10 +74,7 @@ export const createScene = async (
   const objectPool = createObjectPool(scene);
 
   // Setup chunks for viewport culling
-  const cullingChunks = createChunks(
-    camera.worldView$,
-    cullingChunkSize * tileWidth
-  );
+  const cullingChunks = createChunks(camera.worldView$, cullingChunkSize * tileWidth);
 
   const scriptManager = createScriptManager(scene);
 

@@ -1,15 +1,9 @@
 import { removeAllTweens } from "@latticexyz/phaserx";
-import { PixelCoord } from "@latticexyz/phaserx/dist/types";
+import { PixelCoord } from "@latticexyz/phaserx/src/types";
 import { observable, runInAction } from "mobx";
 
 import { isRectangle, isSprite, isGraphics } from "../util/guards";
-import {
-  EmbodiedEntity,
-  GameObject,
-  GameObjectComponent,
-  GameObjectFunction,
-  GameObjectTypes,
-} from "../../types";
+import { EmbodiedEntity, GameObject, GameObjectComponent, GameObjectFunction, GameObjectTypes } from "../../types";
 
 export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
   id: string,
@@ -33,21 +27,14 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
       { x: undefined, y: undefined },
       {
         get: (_, prop) => {
-          if (prop === "setPosition")
-            return (x: number, y: number) => (newPosition = { x, y });
+          if (prop === "setPosition") return (x: number, y: number) => (newPosition = { x, y });
           if (prop === "setX") return (x: number) => (newPosition = { x });
           if (prop === "setY") return (y: number) => (newPosition = { y });
           return () => void 0;
         },
         set: (_, prop, value) => {
-          if (prop === "x")
-            newPosition = newPosition
-              ? { ...newPosition, x: value }
-              : { x: value };
-          if (prop === "y")
-            newPosition = newPosition
-              ? { ...newPosition, y: value }
-              : { y: value };
+          if (prop === "x") newPosition = newPosition ? { ...newPosition, x: value } : { x: value };
+          if (prop === "y") newPosition = newPosition ? { ...newPosition, y: value } : { y: value };
           return true;
         },
       }
@@ -59,9 +46,7 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
   /**
    * Syncronizes updates to game object positions to the EmbodiedEntity's position
    */
-  function trackPositionUpdates(
-    func: GameObjectFunction<Type>
-  ): GameObjectFunction<Type> {
+  function trackPositionUpdates(func: GameObjectFunction<Type>): GameObjectFunction<Type> {
     if (!modifiesPosition(func)) return func;
 
     return (gameObject, time, delta) => {
@@ -80,13 +65,7 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
    * Now is executed first and awaited, before Once is executed.
    * @param component: GameObjectComponent definition, including id, and optional functions for now, once and update
    */
-  async function setComponent({
-    id,
-    now,
-    once,
-    update,
-    exit,
-  }: GameObjectComponent<Type>) {
+  async function setComponent({ id, now, once, update, exit }: GameObjectComponent<Type>) {
     // Handle position update when setting the component
     const newPosition = once && modifiesPosition(once);
     if (newPosition) {
@@ -130,9 +109,7 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     }
   }
 
-  async function setComponents(
-    components: (GameObjectComponent<Type> | undefined)[]
-  ) {
+  async function setComponents(components: (GameObjectComponent<Type> | undefined)[]) {
     for (const component of components) {
       if (!component) continue;
       await setComponent(component);
@@ -164,7 +141,8 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     if (isSprite(gameObject, type)) {
       gameObject.clearTint();
       gameObject.setTexture("");
-      gameObject.preFX?.clear();
+      // gameObject.postFX?.clear();
+      gameObject.clearFX();
     }
     if (isRectangle(gameObject, type)) {
       gameObject.width = 0;

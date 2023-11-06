@@ -1,22 +1,22 @@
 import { Scene } from "engine/types";
-import { renderAsteroid } from "./renderAsteroid";
 import { focusAsteroid } from "./focusAsteroid";
+import { renderAsteroid } from "./renderAsteroid";
 import { renderMotherlode } from "./renderMotherlode";
-// import { renderUnitSend } from "./renderUnitSend";
-import { renderArrivalsInTransit } from "./renderArrivalsInTransit";
 import { renderArrivalsInOrbit } from "./renderArrivalsInOrbit";
-import { Account } from "src/network/components/clientComponents";
+import { renderArrivalsInTransit } from "./renderArrivalsInTransit";
+import { SetupResult } from "src/network/types";
 import { renderPirateAsteroid } from "./renderPirateAsteroid";
+import { renderEffects } from "./renderEffects";
 
-export const runSystems = (scene: Scene) => {
-  const player = Account.get()?.value!;
+export const runSystems = (scene: Scene, mud: SetupResult) => {
+  focusAsteroid(scene, mud);
 
-  focusAsteroid(scene);
+  renderAsteroid(scene, mud);
+  renderMotherlode(scene, mud);
+  renderPirateAsteroid(scene, mud.network.playerEntity);
 
-  renderAsteroid(scene, player);
-  renderMotherlode(scene, player);
-  renderPirateAsteroid(scene, player);
+  renderArrivalsInTransit(scene, mud);
+  renderArrivalsInOrbit(scene, mud);
 
-  renderArrivalsInTransit(scene, player);
-  renderArrivalsInOrbit(scene, player);
+  renderEffects(scene, mud);
 };

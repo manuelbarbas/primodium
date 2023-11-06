@@ -1,23 +1,26 @@
+import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { ERock } from "contracts/config/enums";
 import { useEffect } from "react";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
-import { Send } from "src/network/components/clientComponents";
+import { useMud } from "src/hooks";
+import { components } from "src/network/components";
 import { getSpaceRockInfo } from "src/util/spacerock";
-import { ESpaceRockType } from "src/util/web3/types";
 import { Asteroid } from "./screens/Asteroid";
 import { Motherlode } from "./screens/Motherlode";
-import { SpacerockInfo } from "./screens/SpaceRockInfo";
 import { SendFleet } from "./screens/SendFleet";
-import { UnitSelection } from "./screens/UnitSelection";
+import { SpacerockInfo } from "./screens/SpaceRockInfo";
 import { StationedUnits } from "./screens/StationedUnits";
+import { UnitSelection } from "./screens/UnitSelection";
 
 export const SpacerockMenu: React.FC = () => {
-  const selectedSpacerock = Send.use()?.destination;
+  const playerEntity = useMud().network.playerEntity;
+  const selectedSpacerock = components.Send.use()?.destination;
 
   useEffect(() => {
     const resetSendOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        Send.reset();
+        components.Send.reset(playerEntity);
       }
     };
 
@@ -28,15 +31,14 @@ export const SpacerockMenu: React.FC = () => {
     };
   }, []);
 
+  const spaceRockInfo = getSpaceRockInfo(selectedSpacerock ?? singletonEntity);
   if (!selectedSpacerock) return null;
 
-  const spaceRockInfo = getSpaceRockInfo(selectedSpacerock);
-
-  const renderScreen = () => {
+  const RenderScreen = () => {
     switch (spaceRockInfo.type) {
-      case ESpaceRockType.Asteroid:
+      case ERock.Asteroid:
         return <Asteroid data={spaceRockInfo} />;
-      case ESpaceRockType.Motherlode:
+      case ERock.Motherlode:
         return <Motherlode data={spaceRockInfo} />;
       default:
         return <></>;
@@ -48,18 +50,22 @@ export const SpacerockMenu: React.FC = () => {
       {/* <Navigator.Breadcrumbs /> */}
 
       {/* Initial Screen */}
-      {renderScreen()}
+      <RenderScreen />
 
       {/* Sub Screens */}
       <SpacerockInfo data={spaceRockInfo} />
-      <SendFleet />
-      <UnitSelection />
+      {(!spaceRockInfo.isInGracePeriod || playerEntity == spaceRockInfo.ownedBy) && (
+        <>
+          <SendFleet />
+          <UnitSelection />
+        </>
+      )}
       <StationedUnits />
 
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2">
         <Button
           className="btn-square btn-sm font-bold border border-secondary"
-          onClick={() => Send.reset()}
+          onClick={() => components.Send.reset(playerEntity)}
         >
           x
         </Button>

@@ -1,15 +1,4 @@
 {
-  "solidity.remappings": [
-    "components/=./packages/contracts/src/components",
-    "systems/=./packages/contracts/src/systems",
-    "libraries/=./packages/contracts/src/libraries",
-    "std-contracts/=./node_modules/@latticexyz/std-contracts/src/",
-    "solecs/=./node_modules/@latticexyz/solecs/src/",
-    "memmove/=./node_modules/memmove/src/",
-    "ds-test/=./node_modules/ds-test/src/",
-    "solmate/=./node_modules/@rari-capital/solmate/src/",
-    "forge-std/=./node_modules/forge-std/src/",
-    "noise/=node_modules/@latticexyz/noise/contracts/",
-    "abdk-libraries-solidity/=node_modules/abdk-libraries-solidity/"
-  ]
+  "solidity.monoRepoSupport": true,
+  "solidity.compileUsingRemoteVersion": "v0.8.21+commit.d9974bed"
 }

@@ -1,84 +1,24 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
 // external
-import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
+import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
-// components
-import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
-import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "components/P_IsBuildingTypeComponent.sol";
-import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
-import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
+// tables
+import { HasBuiltBuilding, P_EnumToPrototype, Position, PositionData, Spawned, Home } from "codegen/index.sol";
 
 // libraries
-import { LibBuilding } from "../libraries/LibBuilding.sol";
-import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibResearch } from "../libraries/LibResearch.sol";
-import { LibUtilityResource } from "../libraries/LibUtilityResource.sol";
-import { LibResource } from "../libraries/LibResource.sol";
+import { LibEncode, LibBuilding, LibResource } from "codegen/Libraries.sol";
 
 // types
-import { Coord } from "../types.sol";
-import { MainBaseID, BuildingKey } from "../prototypes.sol";
-
-uint256 constant ID = uint256(keccak256("system.Build"));
+import { BuildingKey } from "src/Keys.sol";
+import { EBuilding } from "src/Types.sol";
+import { bytes32ToString } from "src/utils.sol";
 
 contract BuildSystem is PrimodiumSystem {
-  constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
-
-  function executeTyped(uint256 buildingType, Coord memory coord) public returns (bytes memory) {
-    return execute(abi.encode(buildingType, coord));
-  }
-
-  function execute(bytes memory args) public override returns (bytes memory) {
-    (uint256 buildingType, Coord memory coord) = abi.decode(args, (uint256, Coord));
-
-    require(
-      P_IsBuildingTypeComponent(getC(P_IsBuildingTypeComponentID)).has(buildingType),
-      "[BuildSystem] Invalid building type"
-    );
-
-    PositionComponent positionComponent = PositionComponent(getC(PositionComponentID));
-    uint256 buildingTypeLevelEntity = LibEncode.hashKeyEntity(buildingType, 1);
-
-    uint256 playerEntity = addressToEntity(msg.sender);
-    bool spawned = positionComponent.has(playerEntity);
-    require(spawned, "[BuildSystem] Player has not spawned");
-
-    uint256 buildingEntity = LibEncode.hashKeyCoord(BuildingKey, coord);
-    require(!positionComponent.has(buildingEntity), "[BuildSystem] Building already exists");
-
-    require(
-      coord.parent == positionComponent.getValue(playerEntity).parent,
-      "[BuildSystem] Building must be built on your main asteroid"
-    );
-
-    require(
-      LibBuilding.checkMainBaseLevelRequirement(world, playerEntity, buildingTypeLevelEntity),
-      "[BuildSystem] MainBase level requirement not met"
-    );
-
-    require(
-      LibResearch.hasResearched(world, buildingTypeLevelEntity, playerEntity),
-      "[BuildSystem] You have not researched the required technology"
-    );
-
-    require(
-      LibUtilityResource.checkUtilityResourceReqs(world, playerEntity, buildingType, 1),
-      "[BuildSystem] You do not have the required Utility resources"
-    );
-
-    require(
-      LibResource.checkResourceProductionRequirements(world, playerEntity, buildingType, 1),
-      "[BuildSystem] You do not have the required production resources"
-    );
-
-    require(LibBuilding.canBuildOnTile(world, buildingType, coord), "[BuildSystem] Cannot build on this tile");
-
-    require(buildingType != MainBaseID, "[BuildSystem] Cannot build more than one main base per wallet");
-
-    LibBuilding.build(world, buildingType, coord);
-
-    return abi.encode(buildingEntity);
+  function build(EBuilding buildingType, PositionData memory coord) public returns (bytes32 buildingEntity) {
+    bytes32 playerEntity = addressToEntity(_msgSender());
+    bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
+    return LibBuilding.build(playerEntity, buildingPrototype, coord);
   }
 }

@@ -1,7 +1,9 @@
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
+import { hexlify, randomBytes } from "ethers/lib/utils";
+import { Hex, trim, getAddress, isAddress } from "viem";
 import { BlockIdToKey } from "./constants";
 
-export function hasCommonElement(setA: Set<any>, setB: Set<any>) {
+export function hasCommonElement<T>(setA: Set<T>, setB: Set<T>) {
   for (const element of setA) {
     if (setB.has(element)) {
       return true; // Found a common element
@@ -53,18 +55,39 @@ export function toRomanNumeral(number: number) {
   return result;
 }
 
-export function formatNumber(num: number, fractionDigits = 2) {
-  const fixedNum = num.toFixed(fractionDigits);
-
-  // Convert it back to a number to remove trailing zeroes,
-  const trimmedNum = String(parseFloat(fixedNum).toLocaleString());
-
-  return trimmedNum;
+function getDecimals(num: number, max = 3) {
+  const parts = num.toString().split(".");
+  const digits = parts[1] ? (parts[1].length > max ? max : parts[1].length) : 0;
+  return num.toFixed(digits);
 }
 
-export const getBlockTypeName = (blockType: EntityID | undefined) => {
-  if (blockType === undefined || BlockIdToKey[blockType] == undefined)
-    return "";
+export function formatNumber(num: number | bigint, options?: { fractionDigits?: number; short?: boolean }): string {
+  const digits = options?.fractionDigits === undefined ? 0 : options.fractionDigits;
+  if (num === 0 || num === 0n) return "--";
+
+  const shorten = (n: number): string => {
+    const units = ["", "K", "M", "B", "T"];
+    let unitIndex = 0;
+    while (n >= 1000 && unitIndex < units.length - 1) {
+      n /= 1000;
+      unitIndex++;
+    }
+    return getDecimals(n, digits) + units[unitIndex];
+  };
+
+  if (typeof num === "number") {
+    if (options?.short) return shorten(num);
+    const fixedNum = num.toFixed(digits);
+    return String(parseFloat(fixedNum).toLocaleString());
+  } else if (typeof num === "bigint") {
+    if (options?.short) return shorten(Number(num));
+    return num.toLocaleString();
+  }
+  return "";
+}
+
+export const getBlockTypeName = (blockType: Entity | undefined) => {
+  if (blockType === undefined || BlockIdToKey[blockType] == undefined) return "";
 
   return BlockIdToKey[blockType]
     .replace(/([A-Z])([0-9])/g, "$1 $2") // Insert a space between an uppercase letter and a number.
@@ -78,3 +101,21 @@ export const getBlockTypeName = (blockType: EntityID | undefined) => {
 export const shortenAddress = (address: string) => {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 };
+
+export function reverseRecord<T extends PropertyKey, U extends PropertyKey>(input: Record<T, U>) {
+  return Object.fromEntries(Object.entries(input).map(([key, value]) => [value, key])) as Record<U, T>;
+}
+
+export const entityToAddress = (entity: Entity | string, shorten = false) => {
+  const checksumAddress = getAddress(trim(entity as Hex));
+
+  return shorten ? shortenAddress(checksumAddress) : checksumAddress;
+};
+
+export const isPlayer = (entity: Entity) => {
+  const trimmedAddress = trim(entity as Hex);
+
+  return isAddress(trimmedAddress);
+};
+
+export const randomEntity = () => hexlify(randomBytes(32)) as Entity;

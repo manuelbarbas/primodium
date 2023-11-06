@@ -1,108 +1,95 @@
-import {
-  EntityID,
-  Has,
-  HasValue,
-  defineComponentSystem,
-  runQuery,
-} from "@latticexyz/recs";
-import {
-  Account,
-  BlockNumber,
-  Hangar,
-  Send,
-} from "../components/clientComponents";
-import { world } from "../world";
-import {
-  AsteroidType,
-  BuildingType,
-  LastClaimedAt,
-  OwnedBy,
-  P_IsUnit,
-  Position,
-  UnitProductionLastQueueIndex,
-  UnitProductionQueue,
-  UnitProductionQueueIndex,
-  Units,
-} from "../components/chainComponents";
-import { hashEntities, hashKeyEntity } from "src/util/encode";
+import { Entity, Has, HasValue, defineComponentSystem, runQuery } from "@latticexyz/recs";
+import { getNow } from "src/util/time";
 import { getUnitTrainingTime } from "src/util/trainUnits";
-import { ESpaceRockType } from "src/util/web3/types";
+import { Hex } from "viem";
+import { components } from "../components";
+import { world } from "../world";
+// import { SetupResult } from "../types";
+import { ERock } from "contracts/config/enums";
+import { SetupResult } from "../types";
 
-export function setupHangar() {
-  function getTrainedUnclaimedUnits(
-    units: Map<EntityID, number>,
-    blockNumber: number,
-    spaceRock: EntityID
-  ) {
+export function setupHangar(mud: SetupResult) {
+  const {
+    TrainingQueue,
+    Position,
+    OwnedBy,
+    P_UnitPrototypes,
+    UnitCount,
+    RockType,
+    Send,
+    LastClaimedAt,
+    QueueUnits,
+    QueueItemUnits,
+    Hangar,
+    ClaimOffset,
+  } = components;
+
+  const playerEntity = mud.network.playerEntity;
+
+  function getTrainedUnclaimedUnits(spaceRock: Entity) {
+    const units = new Map<Entity, bigint>();
     const query = [
-      Has(UnitProductionQueueIndex),
-      Has(UnitProductionLastQueueIndex),
-      Has(LastClaimedAt),
+      Has(TrainingQueue),
       HasValue(Position, {
         parent: spaceRock,
       }),
-      Has(BuildingType),
     ];
     const buildings = runQuery(query);
-    buildings.forEach((rawBuilding) => {
-      const building = world.entities[rawBuilding];
-      const startingIndex = UnitProductionQueueIndex.get(building)?.value;
-      const finalIndex = UnitProductionLastQueueIndex.get(building)?.value;
-
+    const config = components.P_GameConfig.get();
+    if (!config) return units;
+    buildings.forEach((building) => {
       const owner = OwnedBy.get(building)?.value;
 
-      let startTime = LastClaimedAt.get(building)?.value;
-      if (
-        startingIndex == undefined ||
-        finalIndex == undefined ||
-        !owner ||
-        startTime == undefined
-      )
-        return;
-      startTime = Number(startTime);
-      for (let i = startingIndex; i <= finalIndex; i++) {
-        const buildingQueueEntity = hashKeyEntity(building, i);
-        const update = UnitProductionQueue.get(buildingQueueEntity);
-        if (!update) return;
+      let startTime = LastClaimedAt.get(building, { value: 0n }).value - ClaimOffset.get(building, { value: 0n }).value;
 
-        const trainingTime = getUnitTrainingTime(
-          owner,
-          building,
-          update.unitEntity
-        );
-        let trainedUnits = Math.floor((blockNumber - startTime) / trainingTime);
-        if (trainedUnits == 0) return;
+      const queueUnits = QueueUnits.getWithKeys({ entity: building as Hex });
+      if (!queueUnits || !owner || !startTime) return Hangar.remove(building);
+      for (let i = queueUnits.front; i <= queueUnits.back; i++) {
+        const update = QueueItemUnits.getWithKeys({ entity: building as Hex, index: i });
+        if (!update) continue;
 
-        if (trainedUnits > update.count) {
-          trainedUnits = update.count;
+        const trainingTime = getUnitTrainingTime(owner as Entity, building, update.unitId as Entity);
+        let trainedUnits = update.quantity;
+        if (trainingTime > 0) trainedUnits = (getNow() - startTime) / trainingTime;
+
+        if (trainedUnits == 0n) return;
+
+        if (trainedUnits > update.quantity) {
+          trainedUnits = update.quantity;
         }
-        const prev = units.get(update.unitEntity) || 0;
-        units.set(update.unitEntity, prev + trainedUnits);
+        units.set(update.unitId as Entity, trainedUnits);
 
         startTime += trainingTime * trainedUnits;
       }
     });
+    return units;
   }
-  function setupHangar(blockNumber: number, spaceRock: EntityID) {
+
+  function setupHangar(spaceRock: Entity) {
     const player = OwnedBy.get(spaceRock)?.value;
     if (!player) return;
-    const units: Map<EntityID, number> = new Map();
+    const units: Map<Entity, bigint> = new Map();
 
     // get all units and find their counts on the space rock
-    P_IsUnit.getAll().forEach((entity) => {
-      const hashedEntity = hashEntities(entity, player, spaceRock);
-      const unitCount = Units.get(hashedEntity)?.value;
+    P_UnitPrototypes.get()?.value.forEach((entity) => {
+      const unitCount = UnitCount.getWithKeys({
+        player: player as Hex,
+        rock: spaceRock as Hex,
+        unit: entity as Hex,
+      })?.value;
       if (!unitCount) return;
-      const prev = units.get(entity) || 0;
-      units.set(entity, prev + unitCount);
+      const prev = units.get(entity as Entity) || 0n;
+      units.set(entity as Entity, prev + unitCount);
     });
 
-    const type = AsteroidType.get(spaceRock, {
-      value: ESpaceRockType.Motherlode,
-    }).value;
+    const type = RockType.get(spaceRock)?.value;
 
-    if (type == ESpaceRockType.Asteroid)
-      getTrainedUnclaimedUnits(units, blockNumber, spaceRock);
+    if (type == ERock.Asteroid) {
+      const trainedUnclaimedUnits = getTrainedUnclaimedUnits(spaceRock);
+      Array.from(trainedUnclaimedUnits).map(([unit, count]) => {
+        units.set(unit as Entity, (units.get(unit as Entity) ?? 0n) + count);
+      });
+    }
 
     Hangar.set(
       {
@@ -112,35 +99,31 @@ export function setupHangar() {
       spaceRock
     );
   }
+
   defineComponentSystem(world, Send, () => {
-    const blockNumber = BlockNumber.get()?.value;
-    if (!blockNumber) return;
     const origin = Send.get()?.origin;
     const destination = Send.get()?.destination;
-    if (origin) setupHangar(blockNumber, origin);
-    if (destination) setupHangar(blockNumber, destination);
+    if (origin) setupHangar(origin);
+    if (destination) setupHangar(destination);
   });
 
-  defineComponentSystem(world, BlockNumber, ({ value: [rawBlockNumber] }) => {
-    if (!rawBlockNumber) return;
-    const blockNumber = rawBlockNumber.value;
+  defineComponentSystem(world, components.BlockNumber, () => {
+    const home = components.Home.get(playerEntity)?.asteroid;
+    if (home) setupHangar(home as Entity);
     const origin = Send.get()?.origin;
     const destination = Send.get()?.destination;
-    if (origin) setupHangar(blockNumber, origin);
-    if (destination) setupHangar(blockNumber, destination);
+    if (origin && origin != home) setupHangar(origin);
+    if (destination && origin != home) setupHangar(destination);
     // maintain hangars for all player motherlodes to track mining production
-    const account = Account.get()?.value;
-    if (!account) return;
     const query = [
-      Has(AsteroidType),
-      HasValue(OwnedBy, { value: account }),
-      HasValue(AsteroidType, { value: ESpaceRockType.Motherlode }),
+      Has(RockType),
+      HasValue(OwnedBy, { value: playerEntity }),
+      HasValue(RockType, { value: ERock.Motherlode }),
     ];
 
     const motherlodes = runQuery(query);
-    motherlodes.forEach((rawMotherlode) => {
-      const motherlode = world.entities[rawMotherlode];
-      setupHangar(blockNumber, motherlode);
+    motherlodes.forEach((motherlode) => {
+      setupHangar(motherlode);
     });
   });
 }

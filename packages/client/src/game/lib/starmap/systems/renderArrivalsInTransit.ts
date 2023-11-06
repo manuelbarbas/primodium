@@ -1,76 +1,48 @@
-import {
-  ComponentUpdate,
-  Has,
-  defineEnterSystem,
-  defineExitSystem,
-  namespaceWorld,
-  Not,
-  EntityID,
-} from "@latticexyz/recs";
-import { Scene } from "engine/types";
-import { BlockNumber } from "src/network/components/clientComponents";
-import { world } from "src/network/world";
-import {
-  ObjectPosition,
-  OnComponentSystem,
-  Tween,
-} from "../../common/object-components/common";
-import { Circle, Line } from "../../common/object-components/graphics";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import {
-  Arrival,
-  OwnedBy,
-  Pirate,
-  Position,
-} from "src/network/components/chainComponents";
 import { DepthLayers } from "@game/constants";
-import { hashStringEntity } from "src/util/encode";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { ComponentUpdate, Has, defineEnterSystem, defineExitSystem, namespaceWorld } from "@latticexyz/recs";
+import { Scene } from "engine/types";
+import { components } from "src/network/components";
+import { SetupResult } from "src/network/types";
+import { world } from "src/network/world";
 import { PIRATE_KEY } from "src/util/constants";
+import { hashKeyEntity } from "src/util/encode";
+import { getNow } from "src/util/time";
+import { ObjectPosition, OnComponentSystem, Tween } from "../../common/object-components/common";
+import { Circle, Line } from "../../common/object-components/graphics";
 
-export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
+export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
+  const playerEntity = mud.network.playerEntity;
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_arrival";
 
-  const query = [Has(Arrival), Not(Pirate)];
+  const render = ({ entity }: ComponentUpdate) => {
+    scene.objectPool.removeGroup(entity + objIndexSuffix);
+    const arrival = components.Arrival.getEntity(entity);
 
-  const render = (update: ComponentUpdate) => {
-    const entityId = world.entities[update.entity];
-    scene.objectPool.removeGroup(entityId + objIndexSuffix);
-    const arrival = Arrival.getEntity(entityId);
-    const blockInfo = BlockNumber.get();
-
-    if (!arrival || !blockInfo) return;
+    if (!arrival) return;
 
     //don't render if arrival is already in orbit
-    if (Number(arrival.arrivalBlock) < blockInfo.value) return;
+    if (arrival.arrivalTime < getNow()) return;
 
-    const origin = Position.get(arrival.origin);
-    const destination = Position.get(arrival.destination);
+    const origin = components.Position.get(arrival.origin);
+    const destination = components.Position.get(arrival.destination);
 
     if (!origin || !destination) return;
 
     //render personal pirates only
     if (
-      Pirate.has(arrival.destination) &&
-      hashStringEntity(PIRATE_KEY, player) !==
-        OwnedBy.get(arrival.destination)?.value
+      components.PirateAsteroid.has(arrival.destination) &&
+      hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(arrival.destination)?.value
     )
       return;
 
-    const originPixelCoord = tileCoordToPixelCoord(
-      { x: origin.x, y: -origin.y },
-      tileWidth,
-      tileHeight
-    );
+    const originPixelCoord = tileCoordToPixelCoord({ x: origin.x, y: -origin.y }, tileWidth, tileHeight);
 
-    const destinationPixelCoord = tileCoordToPixelCoord(
-      { x: destination.x, y: -destination.y },
-      tileWidth,
-      tileHeight
-    );
+    const destinationPixelCoord = tileCoordToPixelCoord({ x: destination.x, y: -destination.y }, tileWidth, tileHeight);
 
-    const sendTrajectory = scene.objectPool.getGroup(entityId + objIndexSuffix);
+    const sendTrajectory = scene.objectPool.getGroup(entity + objIndexSuffix);
 
     const trajectory = sendTrajectory.add("Graphics");
     trajectory.setComponents([
@@ -96,14 +68,11 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
         borderThickness: 1,
         alpha: 0.75,
       }),
-      OnComponentSystem(BlockNumber, (gameObject, { value }, systemId) => {
-        const blockNumber = (value[0]?.value as number) ?? 0;
-        // const remainingBlocks = Number(arrival.arrivalBlock) - blockNumber;
-        const blocksTraveled = blockNumber - Number(arrival.timestamp);
-        const totalBlocks =
-          Number(arrival.arrivalBlock) - Number(arrival.timestamp);
+      OnComponentSystem(components.BlockNumber, (gameObject, _, systemId) => {
+        const timeTraveled = getNow() - arrival.sendTime;
+        const totaltime = arrival.arrivalTime - arrival.sendTime;
 
-        const progress = blocksTraveled / totalBlocks;
+        const progress = Number(timeTraveled) / Number(totaltime);
 
         if (progress >= 1) {
           //remove trajectory
@@ -144,12 +113,8 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
         }
 
         // Calculate the starting position based on progress
-        const startX =
-          originPixelCoord.x +
-          (destinationPixelCoord.x - originPixelCoord.x) * progress;
-        const startY =
-          originPixelCoord.y +
-          (destinationPixelCoord.y - originPixelCoord.y) * progress;
+        const startX = originPixelCoord.x + (destinationPixelCoord.x - originPixelCoord.x) * progress;
+        const startY = originPixelCoord.y + (destinationPixelCoord.y - originPixelCoord.y) * progress;
 
         gameObject.x = startX;
         gameObject.y = startY;
@@ -158,13 +123,17 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
     ]);
   };
 
+  const query = [
+    Has(components.Arrival),
+    // Not(components.Pirate)
+  ];
+
   defineEnterSystem(gameWorld, query, (update) => {
     render(update);
   });
 
-  defineExitSystem(gameWorld, query, (update) => {
-    const entityId = world.entities[update.entity];
-    const objIndex = entityId + objIndexSuffix;
+  defineExitSystem(gameWorld, query, ({ entity }) => {
+    const objIndex = entity + objIndexSuffix;
 
     scene.objectPool.removeGroup(objIndex);
   });

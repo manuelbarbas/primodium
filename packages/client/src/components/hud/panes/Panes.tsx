@@ -1,27 +1,19 @@
-import { SingletonID } from "@latticexyz/network";
-import { Account, HomeAsteroid } from "src/network/components/clientComponents";
+import { Divider } from "src/components/core/Divider";
+import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { Join } from "../../core/Join";
 import { Tabs } from "../../core/Tabs";
+import { Outgoingfleets } from "./OutgoingFleets";
+import { ReinforcementFleets } from "./ReinforcementFleets";
 import { BattleReports } from "./battle-reports/BattleReports";
 import { HostileFleets } from "./hostile-fleets/HostileFleets";
-import { Leaderboard } from "./Leaderboard";
-import { Settings } from "./Settings";
-import { Divider } from "src/components/core/Divider";
-import { Outgoingfleets } from "./OutgoingFleets";
-import { Reinforcementfleets } from "./ReinforcementFleet";
-import { OwnedMotherlodes } from "./OwnedMotherlodes";
+
 import { Objectives } from "./Objectives";
-import { useSettingsStore } from "src/game/stores/SettingsStore";
+import { OwnedMotherlodes } from "./OwnedMotherlodes";
+import { Settings } from "./Settings";
+import { Leaderboard } from "./leaderboard/Leaderboard";
 
 export const Panes: React.FC = () => {
-  const playerAstroid = HomeAsteroid.use()?.value;
-  const player = Account.use(undefined, {
-    value: SingletonID,
-  }).value;
-  const [newPlayer, setNewPlayer] = useSettingsStore((state) => [
-    state.newPlayer,
-    state.setNewPlayer,
-  ]);
+  const [newPlayer, setNewPlayer] = useSettingsStore((state) => [state.newPlayer, state.setNewPlayer]);
 
   return (
     <Tabs
@@ -29,28 +21,28 @@ export const Panes: React.FC = () => {
       defaultIndex={newPlayer ? 4 : -1}
       onChange={() => setNewPlayer(false)}
     >
-      <Tabs.Pane index={0} className="w-96">
-        <Outgoingfleets user={player ?? SingletonID} />
+      <Tabs.Pane index={0} className="w-108">
+        <Outgoingfleets />
       </Tabs.Pane>
-      <Tabs.Pane index={1} className="w-96">
-        <Reinforcementfleets user={player ?? SingletonID} />
+      <Tabs.Pane index={1} className="w-108">
+        <ReinforcementFleets />
       </Tabs.Pane>
-      <Tabs.Pane index={2} className="w-96">
-        <HostileFleets spacerock={playerAstroid ?? SingletonID} />
+      <Tabs.Pane index={2} className="w-108">
+        <HostileFleets />
       </Tabs.Pane>
-      <Tabs.Pane index={3} className="w-96">
+      <Tabs.Pane index={3} className="w-108">
         <BattleReports />
       </Tabs.Pane>
-      <Tabs.Pane index={4} className="w-96">
+      <Tabs.Pane index={4} className="w-108">
         <Objectives />
       </Tabs.Pane>
-      <Tabs.Pane index={5} className="w-96">
+      <Tabs.Pane index={5} className="w-108">
         <OwnedMotherlodes />
       </Tabs.Pane>
-      <Tabs.Pane index={6} className="w-96">
+      <Tabs.Pane index={6} className="w-120">
         <Leaderboard />
       </Tabs.Pane>
-      <Tabs.Pane index={7} className="w-96">
+      <Tabs.Pane index={7} className="w-108">
         <Settings />
       </Tabs.Pane>
       <div className="flex flex-col gap-2">
@@ -113,8 +105,8 @@ export const Panes: React.FC = () => {
             index={6}
             imageUri="/img/icons/leaderboardicon.png"
             hideText
-            text="Leaderboard"
-            tooltipText="Leaderboard"
+            text="Alliances & Leaderboard"
+            tooltipText="Alliances & Leaderboard"
             tooltipDirection="left"
           />
           <Tabs.IconButton

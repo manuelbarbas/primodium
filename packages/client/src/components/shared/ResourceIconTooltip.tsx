@@ -1,46 +1,53 @@
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import { useHasEnoughOfResource } from "src/hooks/useHasEnoughOfResource";
-import { BlockNumber } from "src/network/components/clientComponents";
 import { formatNumber } from "src/util/common";
-import { RESOURCE_SCALE, ResourceType } from "src/util/constants";
+import { ResourceType } from "src/util/constants";
+import { getScale } from "src/util/resource";
 import { IconLabel } from "../core/IconLabel";
 
-export default function ResourceIconTooltip({
-  image,
-  resourceId,
-  name,
-  amount,
-  scale = RESOURCE_SCALE,
-  fontSize = "md",
-  resourceType = ResourceType.Resource,
-  validate = false,
-  direction = "right",
-  className,
-}: {
+type ResourceIconProps = {
   image: string;
-  resourceId: EntityID;
+  resource: Entity;
   resourceType?: ResourceType;
   name: string;
-  amount: number;
+  amount: bigint;
   inline?: boolean;
-  scale?: number;
   fontSize?: string;
-  validate?: boolean;
   direction?: "top" | "bottom" | "right" | "left";
   className?: string;
-}) {
-  const hasEnough = useHasEnoughOfResource(resourceId, amount, resourceType);
-  const { avgBlockTime } = BlockNumber.use(undefined, {
-    value: 0,
-    avgBlockTime: 1,
-  });
+  playerEntity: Entity;
+  validate?: boolean;
+  short?: boolean;
+  fractionDigits?: number;
+};
 
+const suffixes = {
+  [ResourceType.Utility]: "",
+  [ResourceType.ResourceRate]: "/MIN",
+  [ResourceType.Resource]: "",
+  [ResourceType.Multiplier]: "x",
+};
+
+const ResourceIconTooltipContent = ({
+  resourceType,
+  amount,
+  image,
+  name,
+  direction,
+  fontSize = "md",
+  className,
+  hasEnough,
+  short = false,
+  fractionDigits = 0,
+  resource,
+}: ResourceIconProps & { hasEnough: boolean }) => {
+  const scale = getScale(resource);
+  let value = Number((amount * 60n) / scale);
+  if (resourceType !== ResourceType.ResourceRate) value = value / 60;
+  if (resourceType == ResourceType.Multiplier) value = (value + 100) / 100;
   const label =
-    ResourceType.ResourceRate !== resourceType
-      ? amount * scale !== 0
-        ? formatNumber(amount * scale, 0)
-        : "--"
-      : `${formatNumber((amount * scale * 60) / avgBlockTime, 1)}/MIN`;
+    formatNumber(value, { short: short && resourceType !== ResourceType.Multiplier, fractionDigits }) +
+    suffixes[resourceType || ResourceType.Resource];
 
   return (
     <IconLabel
@@ -48,9 +55,20 @@ export default function ResourceIconTooltip({
       text={label}
       tooltipDirection={direction}
       tooltipText={name}
-      className={`text-${fontSize} font-bold ${className} ${
-        !hasEnough && validate ? `text-error animate-pulse ` : ""
-      }`}
+      className={`text-${fontSize} font-bold ${className} ${!hasEnough ? `text-error animate-pulse ` : ""}`}
     />
   );
-}
+};
+
+const ResourceIconTooltipValidate = (props: ResourceIconProps) => {
+  const hasEnough = useHasEnoughOfResource(props.resource, props.amount, props.playerEntity, props.resourceType);
+  return <ResourceIconTooltipContent {...props} hasEnough={hasEnough} />;
+};
+
+export const ResourceIconTooltip = (props: ResourceIconProps) => {
+  if (props.validate) {
+    return <ResourceIconTooltipValidate {...props} />;
+  } else {
+    return <ResourceIconTooltipContent {...props} hasEnough={true} />;
+  }
+};

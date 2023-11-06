@@ -1,101 +1,91 @@
-import { EntityID, Has, HasValue, Not } from "@latticexyz/recs";
-import {
-  HasCompletedObjective,
-  IsDebug,
-  Level,
-  P_BuildingCountRequirement,
-  P_HasBuiltBuilding,
-  P_IsObjective,
-  P_RaidRequirement,
-  P_RequiredResources,
-  P_RequiredUtility,
-  P_UnitRequirement,
-} from "src/network/components/chainComponents";
+import { Entity } from "@latticexyz/recs";
+
 import { Account, BlockNumber } from "src/network/components/clientComponents";
 
-import { SingletonID } from "@latticexyz/network";
-import { useGameStore } from "src/store/GameStore";
-import { useMud } from "src/hooks/useMud";
 import { useMemo } from "react";
+import { useMud } from "src/hooks/useMud";
 
-import {
-  getCanClaimObjective,
-  getIsObjectiveAvailable,
-} from "src/util/objectives";
-import { claimObjective } from "src/util/web3/claimObjective";
-import { useEntityQuery } from "@latticexyz/react";
-import { world } from "src/network/world";
-import { hashAndTrimKeyEntity } from "src/util/encode";
-import { formatNumber, getBlockTypeName } from "src/util/common";
-import { getRewards } from "src/util/reward";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { FaCheck, FaGift, FaMedal, FaSpinner } from "react-icons/fa";
+import { Badge } from "src/components/core/Badge";
+import { Button } from "src/components/core/Button";
+import { SecondaryCard } from "src/components/core/Card";
+import { IconLabel } from "src/components/core/IconLabel";
 import { Join } from "src/components/core/Join";
 import { Tabs } from "src/components/core/Tabs";
-import { SecondaryCard } from "src/components/core/Card";
-import { Button } from "src/components/core/Button";
-import { Badge } from "src/components/core/Badge";
-import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
+import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { components as comps } from "src/network/components";
+import { formatNumber, getBlockTypeName } from "src/util/common";
 import {
   BackgroundImage,
-  RESOURCE_SCALE,
+  ObjectiveEntityLookup,
+  RequirementType,
   ResourceImage,
   ResourceType,
-  getBlockTypeDescription,
+  TransactionQueueType,
+  toHex32,
 } from "src/util/constants";
-import { FaCheck, FaGift, FaMedal, FaSpinner } from "react-icons/fa";
-import { getAllRequirements } from "src/util/requirements";
+import { hashEntities } from "src/util/encode";
+import { getObjectiveDescription } from "src/util/objectiveDescriptions";
+import {
+  getAllRequirements,
+  getCanClaimObjective,
+  getIsObjectiveAvailable,
+  isAllRequirementsMet,
+} from "src/util/objectives";
+import { getFullResourceCount } from "src/util/resource";
+import { getRewards } from "src/util/reward";
+import { claimObjective } from "src/util/web3/contractCalls/claimObjective";
+import { Hex } from "viem";
 
 const ClaimObjectiveButton: React.FC<{
-  objectiveEntity: EntityID;
+  objectiveEntity: Entity;
 }> = ({ objectiveEntity }) => {
   const network = useMud();
   const blockNumber = BlockNumber.use()?.value;
-  const levelRequirement = Level.use(objectiveEntity);
-  const objectiveClaimedRequirement =
-    HasCompletedObjective.use(objectiveEntity);
+  const levelRequirement = comps.Level.use(objectiveEntity);
+  const objectiveClaimedRequirement = comps.CompletedObjective.use(objectiveEntity);
 
-  const hasBuiltBuildingRequirement = P_HasBuiltBuilding.use(objectiveEntity);
-  const buildingCountRequirement =
-    P_BuildingCountRequirement.use(objectiveEntity);
-  const raidRequirement = P_RaidRequirement.use(objectiveEntity);
+  const hasBuiltBuildingRequirement = comps.P_HasBuiltBuildings.use(objectiveEntity);
+  const raidRequirement = comps.P_RaidedResources.use(objectiveEntity);
 
-  const resourceRequirement = P_RequiredResources.use(objectiveEntity);
-  const utilityRequirement = P_RequiredUtility.use(objectiveEntity);
-  const unitRequirement = P_UnitRequirement.use(objectiveEntity);
-  const player = Account.use()?.value ?? SingletonID;
+  const resourceRequirement = comps.P_RequiredResources.use(objectiveEntity);
+  const unitRequirement = comps.P_ProducedUnits.use(objectiveEntity);
+  const player = Account.use()?.value ?? singletonEntity;
   const hasCompletedObjective =
-    HasCompletedObjective.use(hashAndTrimKeyEntity(objectiveEntity, player))
-      ?.value ?? false;
+    comps.CompletedObjective.useWithKeys({ objective: objectiveEntity as Hex, entity: player as Hex })?.value ?? false;
 
   const canClaim = useMemo(() => {
-    return getCanClaimObjective(objectiveEntity);
+    return getCanClaimObjective(objectiveEntity, player);
   }, [
     levelRequirement,
     objectiveClaimedRequirement,
     hasBuiltBuildingRequirement,
-    buildingCountRequirement,
     raidRequirement,
-    buildingCountRequirement,
     resourceRequirement,
     resourceRequirement,
-    utilityRequirement,
     unitRequirement,
     blockNumber,
+    objectiveEntity,
   ]);
-
-  const transactionLoading = useGameStore((state) => state.transactionLoading);
 
   if (!hasCompletedObjective)
     return (
-      <Button
-        disabled={!canClaim}
-        className={`btn-sm btn-secondary border-accent w-full col-span-2 mt-2`}
-        loading={transactionLoading}
-        onClick={() => {
-          claimObjective(objectiveEntity, network);
-        }}
+      <TransactionQueueMask
+        className="w-full mt-2"
+        queueItemId={hashEntities(TransactionQueueType.ClaimObjective, objectiveEntity)}
       >
-        {"Claim"}
-      </Button>
+        <Button
+          disabled={!canClaim}
+          className={`btn-sm btn-secondary border-accent w-full`}
+          onClick={() => {
+            claimObjective(objectiveEntity, network.network);
+          }}
+        >
+          {"Claim"}
+        </Button>
+      </TransactionQueueMask>
     );
 
   return (
@@ -106,26 +96,31 @@ const ClaimObjectiveButton: React.FC<{
 };
 
 const Objective: React.FC<{
-  objective: EntityID;
+  objective: Entity;
 }> = ({ objective }) => {
   const blockNumber = BlockNumber.use()?.value;
+  const playerEntity = Account.use()?.value ?? singletonEntity;
   const objectiveName = useMemo(() => {
     if (!objective) return;
     return getBlockTypeName(objective);
   }, [objective]);
   const objectiveDescription = useMemo(() => {
     if (!objective) return;
-    return getBlockTypeDescription(objective);
+    return getObjectiveDescription(objective);
   }, [objective]);
   const rewardRecipe = useMemo(() => {
     if (!objective) return;
+    if (objective == toHex32("DefeatPirateBase1")) console.log("rewards:", getRewards(objective));
     return getRewards(objective);
   }, [objective]);
 
   const requirements = useMemo(() => {
     if (!objective) return;
-    return getAllRequirements(objective);
-  }, [objective, blockNumber]);
+    const reqs = getAllRequirements(objective, playerEntity);
+    return reqs;
+  }, [objective, blockNumber, playerEntity]);
+
+  if (playerEntity === singletonEntity) return <></>;
 
   return (
     <SecondaryCard className="text-xs w-full">
@@ -133,55 +128,48 @@ const Objective: React.FC<{
         <div className="flex items-center col-span-1">
           <FaMedal className="text-accent" />
         </div>
-        <p className=" col-span-7 font-bold flex items-center px-1">
-          {objectiveName}
-        </p>
+        <p className=" col-span-7 font-bold flex items-center px-1">{objectiveName}</p>
       </div>
 
       <div className="flex flex-wrap gap-1 items-center">
         <hr className="border-t border-accent/20 w-full mb-1 mt-3" />
-        <p className=" col-span-7 flex items-center px-1 opacity-75 font-normal">
-          {objectiveDescription}
-        </p>
+        <p className=" col-span-7 flex items-center px-1 opacity-75 font-normal">{objectiveDescription}</p>
         <hr className="border-t border-accent/20 w-full mb-1 mt-3" />
         <div className="col-span-10 w-full flex flex-wrap gap-1">
           <span className="flex gap-1 items-center opacity-75">
             <FaSpinner /> PROGRESS:
           </span>
-          {requirements &&
-            requirements.length !== 0 &&
-            requirements.map((req, index) => {
-              return (
-                <div key={index} className="flex flex-wrap gap-1">
-                  {req.requirements.map((_req, index) => {
-                    return (
-                      <Badge
-                        key={index}
-                        className={`text-xs gap-2 ${
-                          req.isMet ? "badge-success" : "badge-neutral"
-                        }`}
-                      >
-                        <ResourceIconTooltip
-                          name={getBlockTypeName(_req.id)}
-                          image={
-                            ResourceImage.get(_req.id) ??
-                            BackgroundImage.get(_req.id)?.at(0) ??
-                            "/img/icons/minersicon.png"
-                          }
-                          resourceId={_req.id}
-                          amount={_req.currentValue}
-                          scale={_req.scale}
-                          direction="top"
-                        />
-                        <span className="font-bold">
-                          / {formatNumber(_req.requiredValue * _req.scale, 1)}
-                        </span>
-                      </Badge>
-                    );
-                  })}
-                </div>
-              );
-            })}
+          {Object.entries(requirements ?? {}).map(([key, req], index) => {
+            const complete = isAllRequirementsMet(req);
+            return (
+              <div key={index} className="flex flex-wrap gap-1">
+                {req.map((_req, index) => {
+                  const value = _req.currentValue > _req.requiredValue ? _req.requiredValue : _req.currentValue;
+                  return (
+                    <Badge key={index} className={`text-xs gap-2 ${complete ? "badge-success" : "badge-neutral"}`}>
+                      <IconLabel
+                        imageUri={
+                          ResourceImage.get(_req.id) ??
+                          BackgroundImage.get(_req.id)?.at(0) ??
+                          "/img/icons/minersicon.png"
+                        }
+                        text={formatNumber(value / _req.scale, { short: true, fractionDigits: 3 })}
+                        tooltipDirection={"bottom"}
+                        tooltipText={
+                          _req.type === RequirementType.DefeatedPirates ? "Defeated Pirates" : getBlockTypeName(_req.id)
+                        }
+                        className="text-xs font-bold"
+                      />
+
+                      <span className="font-bold">
+                        / {formatNumber(_req.requiredValue / _req.scale, { short: true, fractionDigits: 1 })}
+                      </span>
+                    </Badge>
+                  );
+                })}
+              </div>
+            );
+          })}
         </div>
         {rewardRecipe && rewardRecipe.length !== 0 && (
           <div className="col-span-10 w-full flex flex-wrap gap-1">
@@ -190,26 +178,24 @@ const Objective: React.FC<{
             </span>
 
             {rewardRecipe.map((resource) => {
+              let canClaim = true;
+              if (resource.type === ResourceType.Resource) {
+                const { resourceCount, resourcesToClaim, maxStorage } = getFullResourceCount(resource.id, playerEntity);
+
+                canClaim = resourceCount + resourcesToClaim + resource.amount <= maxStorage;
+              }
               return (
                 <Badge
                   key={resource.id}
-                  className="text-xs gap-2 badge-neutral"
+                  className={`text-xs gap-2 badge-neutral ${!canClaim ? "border-error opacity-60 bg-error" : ""}`}
                 >
                   <ResourceIconTooltip
+                    playerEntity={playerEntity}
                     name={getBlockTypeName(resource.id)}
-                    image={
-                      ResourceImage.get(resource.id) ??
-                      BackgroundImage.get(resource.id)?.at(0) ??
-                      ""
-                    }
-                    resourceId={resource.id}
+                    image={ResourceImage.get(resource.id) ?? BackgroundImage.get(resource.id)?.at(0) ?? ""}
+                    resource={resource.id}
                     amount={resource.amount}
                     resourceType={resource.type}
-                    scale={
-                      resource.type === ResourceType.Utility
-                        ? 1
-                        : RESOURCE_SCALE
-                    }
                     direction="top"
                   />
                 </Badge>
@@ -225,25 +211,22 @@ const Objective: React.FC<{
 };
 
 const UnclaimedObjective: React.FC = () => {
-  const objectives = useEntityQuery([
-    HasValue(P_IsObjective, { value: true }),
-    Not(IsDebug),
-  ]);
-  const player = Account.use()?.value ?? SingletonID;
+  const player = Account.use()?.value ?? singletonEntity;
   const blockNumber = BlockNumber.use()?.value;
+  const objectives = Object.values(ObjectiveEntityLookup);
 
   const filteredObjectives = useMemo(() => {
     return objectives.filter((objective) => {
-      const isAvailable = getIsObjectiveAvailable(world.entities[objective]);
+      const isAvailable = getIsObjectiveAvailable(objective, player);
 
       const claimed =
-        HasCompletedObjective.get(
-          hashAndTrimKeyEntity(world.entities[objective], player)
-        )?.value ?? false;
+        comps.CompletedObjective.getWithKeys({ entity: player as Hex, objective: objective as Hex })?.value ?? false;
 
       return isAvailable && !claimed;
     });
-  }, [objectives, blockNumber]);
+  }, [blockNumber]);
+
+  if (player === singletonEntity) return <></>;
 
   return (
     <div className="w-full h-full">
@@ -253,7 +236,7 @@ const UnclaimedObjective: React.FC = () => {
         </SecondaryCard>
       ) : (
         filteredObjectives.map((objective, i) => {
-          return <Objective key={i} objective={world.entities[objective]} />;
+          return <Objective key={i} objective={objective} />;
         })
       )}
     </div>
@@ -261,22 +244,14 @@ const UnclaimedObjective: React.FC = () => {
 };
 
 const ClaimedObjective: React.FC = () => {
-  const objectives = useEntityQuery([Has(P_IsObjective)], {
-    updateOnValueChange: true,
+  const player = Account.use()?.value ?? singletonEntity;
+
+  const filteredObjectives = Object.values(ObjectiveEntityLookup).filter((objective) => {
+    const claimed =
+      comps.CompletedObjective.getWithKeys({ entity: player as Hex, objective: objective as Hex })?.value ?? false;
+
+    return claimed;
   });
-
-  const player = Account.use()?.value ?? SingletonID;
-
-  const filteredObjectives = useMemo(() => {
-    return objectives.filter((objective) => {
-      const claimed =
-        HasCompletedObjective.get(
-          hashAndTrimKeyEntity(world.entities[objective], player)
-        )?.value ?? false;
-
-      return claimed;
-    });
-  }, [objectives]);
 
   return (
     <div className="w-full h-full">
@@ -286,7 +261,7 @@ const ClaimedObjective: React.FC = () => {
         </SecondaryCard>
       ) : (
         filteredObjectives.map((objective, i) => {
-          return <Objective key={i} objective={world.entities[objective]} />;
+          return <Objective key={i} objective={objective} />;
         })
       )}
     </div>

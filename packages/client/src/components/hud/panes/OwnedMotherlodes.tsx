@@ -1,22 +1,16 @@
-import { EntityID, Has, HasValue } from "@latticexyz/recs";
-import { FaCrosshairs } from "react-icons/fa";
-import {
-  Account,
-  MapOpen,
-  Send,
-} from "src/network/components/clientComponents";
-import { ESpaceRockType } from "src/util/web3/types";
-import { AsteroidType, OwnedBy } from "src/network/components/chainComponents";
 import { primodium } from "@game/api";
-import { SingletonID } from "@latticexyz/network";
+import { Scenes } from "@game/constants";
 import { useEntityQuery } from "@latticexyz/react";
-import { SecondaryCard } from "src/components/core/Card";
-import { world } from "src/network/world";
-import { getSpaceRockInfo } from "src/util/spacerock";
+import { Entity, HasValue } from "@latticexyz/recs";
+import { ERock } from "contracts/config/enums";
+import { FaCrosshairs } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
+import { SecondaryCard } from "src/components/core/Card";
+import { useMud } from "src/hooks";
+import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { MotherlodeSizeNames } from "src/util/constants";
-import { Scenes } from "@game/constants";
+import { getSpaceRockInfo } from "src/util/spacerock";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -30,7 +24,7 @@ export const LabeledValue: React.FC<{
   );
 };
 
-const Motherlode: React.FC<{ motherlodeId: EntityID }> = ({ motherlodeId }) => {
+const Motherlode: React.FC<{ motherlodeId: Entity }> = ({ motherlodeId }) => {
   const motherlodeInfo = getSpaceRockInfo(motherlodeId);
 
   return (
@@ -38,7 +32,7 @@ const Motherlode: React.FC<{ motherlodeId: EntityID }> = ({ motherlodeId }) => {
       <img src={motherlodeInfo.imageUri} className="w-8 h-8" />
       <div className="flex items-center gap-4 flex-grow justify-between px-4">
         <LabeledValue label={`RESOURCE`}>
-          <p>{getBlockTypeName(motherlodeInfo.motherlodeData.resource)}</p>
+          <p>{getBlockTypeName(motherlodeInfo.motherlodeData.motherlodeResource)}</p>
         </LabeledValue>
         <LabeledValue label={`SIZE`}>
           <p>{MotherlodeSizeNames[motherlodeInfo.motherlodeData.size ?? 0]}</p>
@@ -53,7 +47,7 @@ const Motherlode: React.FC<{ motherlodeId: EntityID }> = ({ motherlodeId }) => {
       <Button
         className="btn-secondary btn-sm btn-square flex"
         onClick={async () => {
-          const mapOpen = MapOpen.get(undefined, {
+          const mapOpen = components.MapOpen.get(undefined, {
             value: false,
           }).value;
 
@@ -61,12 +55,12 @@ const Motherlode: React.FC<{ motherlodeId: EntityID }> = ({ motherlodeId }) => {
             const { transitionToScene } = primodium.api().scene;
 
             await transitionToScene(Scenes.Asteroid, Scenes.Starmap);
-            MapOpen.set({ value: true });
+            components.MapOpen.set({ value: true });
           }
 
           const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
 
-          Send.setDestination(motherlodeInfo.entity);
+          components.Send.setDestination(motherlodeInfo.entity);
 
           pan({
             x: motherlodeInfo.position.x,
@@ -83,14 +77,11 @@ const Motherlode: React.FC<{ motherlodeId: EntityID }> = ({ motherlodeId }) => {
 };
 
 export const OwnedMotherlodes: React.FC = () => {
-  const player = Account.use(undefined, {
-    value: SingletonID,
-  }).value;
+  const playerEntity = useMud().network.playerEntity;
 
   const query = [
-    Has(AsteroidType),
-    HasValue(OwnedBy, { value: player }),
-    HasValue(AsteroidType, { value: ESpaceRockType.Motherlode }),
+    HasValue(components.OwnedBy, { value: playerEntity }),
+    HasValue(components.RockType, { value: ERock.Motherlode }),
   ];
 
   const motherlodes = useEntityQuery(query);
@@ -102,10 +93,8 @@ export const OwnedMotherlodes: React.FC = () => {
           <p className="opacity-50">NO OWNED MOTHERLODES</p>
         </SecondaryCard>
       )}
-      {motherlodes.map((entityIndex) => {
-        const entityId = world.entities[entityIndex];
-
-        return <Motherlode key={entityId} motherlodeId={entityId} />;
+      {motherlodes.map((entity) => {
+        return <Motherlode key={entity} motherlodeId={entity} />;
       })}
     </>
   );

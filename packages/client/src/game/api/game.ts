@@ -34,10 +34,7 @@ export function createGameApi(game: Game) {
 
     target.appendChild(div);
 
-    setResolution(
-      target.offsetWidth * window.devicePixelRatio,
-      target.offsetHeight * window.devicePixelRatio
-    );
+    setResolution(target.offsetWidth * window.devicePixelRatio, target.offsetHeight * window.devicePixelRatio);
   }
 
   function getConfig() {

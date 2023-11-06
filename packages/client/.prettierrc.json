@@ -1,6 +1,7 @@
 {
   "tabWidth": 2,
   "proseWrap": "preserve",
+  "printWidth": 120,
   "bracketSpacing": true,
   "arrowParens": "always",
   "htmlWhitespaceSensitivity": "css",

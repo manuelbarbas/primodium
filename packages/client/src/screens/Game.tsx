@@ -1,10 +1,11 @@
 import { useEffect } from "react";
-import { GameHUD } from "src/components/hud/HUD";
+// import { GameHUD } from "src/components/hud/HUD";
 import { useMud } from "src/hooks/useMud";
 
 import { primodium } from "@game/api";
 import { GameReady } from "src/network/components/clientComponents";
 import { Progress } from "src/components/core/Progress";
+import { GameHUD } from "src/components/hud/HUD";
 
 const params = new URLSearchParams(window.location.search);
 
@@ -32,17 +33,14 @@ export const Game = () => {
 };
 
 const PhaserWrapper = () => {
-  const network = useMud();
+  const mud = useMud();
 
   useEffect(() => {
     (async () => {
       try {
-        if (!network) return;
+        if (!mud) return;
 
-        await primodium.init(
-          network,
-          params.get("version") ? params.get("version")! : "🔥"
-        );
+        await primodium.init(mud, params.get("version") ? params.get("version")! : "🔥");
       } catch (e) {
         console.log(e);
       }
@@ -52,12 +50,7 @@ const PhaserWrapper = () => {
       primodium.destroy();
       GameReady.set({ value: false });
     };
-  }, [network]);
+  }, [mud]);
 
-  return (
-    <div
-      id="phaser-container"
-      className="absolute cursor-pointer screen-container"
-    />
-  );
+  return <div id="phaser-container" className="absolute cursor-pointer screen-container" />;
 };

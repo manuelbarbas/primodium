@@ -1,57 +1,75 @@
-import { SingletonID } from "@latticexyz/network";
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
+import { ERock, ESendType, EUnit } from "contracts/config/enums";
+import { useMemo } from "react";
 import { Button } from "src/components/core/Button";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
-import { Arrival, OwnedBy } from "src/network/components/chainComponents";
-import { Account } from "src/network/components/clientComponents";
-import { useGameStore } from "src/store/GameStore";
-
-import { invade, raid } from "src/util/web3";
-import { ESendType, ESpaceRockType } from "src/util/web3/types";
+import { components } from "src/network/components";
+import { TransactionQueueType, UnitEntityLookup } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
+import { invade } from "src/util/web3/contractCalls/invade";
+import { raid } from "src/util/web3/contractCalls/raid";
+import { Hex } from "viem";
 
 export const Land: React.FC<{
-  destination: EntityID;
-  rockType: ESpaceRockType;
+  destination: Entity;
+  rockType: ERock;
 }> = ({ destination, rockType }) => {
-  const network = useMud();
-  const player = Account.use(undefined, {
-    value: SingletonID,
-  }).value;
-  const destinationOwner = OwnedBy.use(destination)?.value;
-  const transactionLoading = useGameStore((state) => state.transactionLoading);
-  const orbiting = Arrival.get({
-    from: player,
+  const network = useMud().network;
+  const playerEntity = network.playerEntity;
+  const destinationOwner = components.OwnedBy.use(destination)?.value;
+  const orbiting = components.Arrival.use({
+    from: playerEntity,
     onlyOrbiting: true,
     destination: destination,
-  }).filter((elem) => elem?.sendType !== ESendType.REINFORCE);
+  }).filter((elem) => elem?.sendType !== ESendType.Reinforce);
 
-  const isNeutral = destinationOwner === player || !destinationOwner;
+  const attack = useMemo(
+    () =>
+      orbiting.reduce((acc, arrival) => {
+        if (!arrival) return acc;
+        const arrivalAttack = arrival.unitCounts.reduce((acc2, count, i) => {
+          if (count == 0n) return acc2;
+          const unit = UnitEntityLookup[(i + 1) as EUnit];
+          const level =
+            components.UnitLevel.getWithKeys({ entity: playerEntity as Hex, unit: unit as Hex })?.value ?? 0n;
+          return acc2 + (components.P_Unit.getWithKeys({ entity: unit as Hex, level })?.attack ?? 0n) * count;
+        }, 0n);
+        return acc + arrivalAttack;
+      }, 0n),
+    [orbiting, playerEntity]
+  );
+
+  const isNeutral = destinationOwner === playerEntity || !destinationOwner;
 
   if (!orbiting.length) return <></>;
 
   return (
     <div className="w-full flex justify-center mt-2">
-      <Button
-        disabled={transactionLoading}
-        loading={transactionLoading}
-        className={`btn-sm w-44 ${
-          isNeutral ? "btn-secondary" : "btn-error"
-        } flex items-center `}
-        onClick={() => {
-          if (ESpaceRockType.Motherlode === rockType) {
-            invade(destination, network);
-            return;
-          }
+      <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Land, destination)}>
+        <Button
+          className={`gap-2 w-44 ${isNeutral ? "btn-secondary" : "btn-error"} flex flex-col items-center `}
+          onClick={() => {
+            if (ERock.Motherlode === rockType) {
+              invade(destination, network);
+              return;
+            }
 
-          if (ESpaceRockType.Asteroid === rockType) {
-            raid(destination, network);
-            return;
-          }
-        }}
-      >
-        {isNeutral && "LAND"}
-        {!isNeutral && "ATTACK"}
-      </Button>
+            if (ERock.Asteroid === rockType) {
+              raid(destination, network);
+              return;
+            }
+          }}
+        >
+          <div className="flex flex-col p-1">
+            <p className="text-lg">
+              {isNeutral && "LAND"}
+              {!isNeutral && "ATTACK"}
+            </p>
+            {attack > 0n && <p className="font-normal text-xs">{attack.toLocaleString()} ATK</p>}
+          </div>
+        </Button>
+      </TransactionQueueMask>
     </div>
   );
 };

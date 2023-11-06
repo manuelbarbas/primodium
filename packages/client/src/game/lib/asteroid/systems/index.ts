@@ -1,22 +1,24 @@
 import { Scene } from "engine/types";
-import { renderBuildingPlacementTool } from "./renderBuildingPlacementTool";
+import { SetupResult } from "src/network/types";
+import { focusMainbase } from "./focusMainbase";
 import { renderBuilding } from "./renderBuilding";
+import { renderBuildingMoveTool } from "./renderBuildingMoveTool";
+import { renderBuildingPlacementTool } from "./renderBuildingPlacementTool";
+import { renderFog } from "./renderFog";
 import { renderHoverTile } from "./renderHoverTile";
 import { renderSelectedTile } from "./renderSelectedTile";
-import { focusMainbase } from "./focusMainbase";
-import { renderFog } from "./renderFog";
-import { Network } from "src/network/layer";
-import { Account } from "src/network/components/clientComponents";
+import { renderQueuedBuildings } from "./renderQueuedBuildings";
 
-export const runSystems = (scene: Scene, network: Network) => {
-  const player = Account.get()?.value!;
+export const runSystems = (scene: Scene, mud: SetupResult) => {
   //Render world entity's sprites
-  renderBuilding(scene);
+  renderBuilding(scene, mud);
 
   // Render map utility elements, placement indicators, etc
   renderSelectedTile(scene);
   renderHoverTile(scene);
-  renderBuildingPlacementTool(scene, network);
-  focusMainbase(scene, player);
-  renderFog(scene, player);
+  renderBuildingPlacementTool(scene, mud);
+  renderBuildingMoveTool(scene, mud);
+  focusMainbase(scene, mud);
+  renderFog(scene, mud);
+  renderQueuedBuildings(scene);
 };

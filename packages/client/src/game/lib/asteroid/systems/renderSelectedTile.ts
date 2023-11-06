@@ -1,11 +1,6 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { ComponentUpdate, Has } from "@latticexyz/recs";
-import {
-  defineEnterSystem,
-  defineExitSystem,
-  defineUpdateSystem,
-  namespaceWorld,
-} from "@latticexyz/recs";
+import { defineEnterSystem, defineExitSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { world } from "src/network/world";
 import { SelectedTile } from "src/network/components/clientComponents";
@@ -20,18 +15,9 @@ export const renderSelectedTile = (scene: Scene) => {
   const query = [Has(SelectedTile)];
 
   const render = (update: ComponentUpdate) => {
-    const entityIndex = update.entity;
     const objGraphicsIndex = update.entity + "_selectionTile" + "_graphics";
 
-    // Avoid updating on optimistic overrides
-    if (
-      typeof entityIndex !== "number" ||
-      entityIndex >= world.entities.length
-    ) {
-      return;
-    }
-
-    const tileCoord = SelectedTile.get(world.entities[entityIndex]);
+    const tileCoord = SelectedTile.get();
 
     if (!tileCoord) return;
 
@@ -39,10 +25,7 @@ export const renderSelectedTile = (scene: Scene) => {
 
     scene.objectPool.remove(objGraphicsIndex);
 
-    const selectionTileGraphicsEmbodiedEntity = scene.objectPool.get(
-      objGraphicsIndex,
-      "Graphics"
-    );
+    const selectionTileGraphicsEmbodiedEntity = scene.objectPool.get(objGraphicsIndex, "Graphics");
 
     selectionTileGraphicsEmbodiedEntity.setComponents([
       ObjectPosition(
@@ -62,9 +45,7 @@ export const renderSelectedTile = (scene: Scene) => {
 
   defineEnterSystem(gameWorld, query, (update) => {
     render(update);
-    console.info(
-      "[ENTER SYSTEM](renderSelectionTile) Selection tile has been added"
-    );
+    console.info("[ENTER SYSTEM](renderSelectionTile) Selection tile has been added");
   });
 
   defineUpdateSystem(gameWorld, query, render);
@@ -73,8 +54,6 @@ export const renderSelectedTile = (scene: Scene) => {
     const objGraphicsIndex = update.entity + "_selectionTile" + "_graphics";
     scene.objectPool.remove(objGraphicsIndex);
 
-    console.info(
-      "[EXIT SYSTEM](renderSelectionTile) Selection tile has been removed"
-    );
+    console.info("[EXIT SYSTEM](renderSelectionTile) Selection tile has been removed");
   });
 };

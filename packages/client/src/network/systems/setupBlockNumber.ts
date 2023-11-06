@@ -2,7 +2,7 @@ import { Observable } from "rxjs";
 import { BlockNumber } from "../components/clientComponents";
 import { world } from "../world";
 
-export const setupBlockNumber = (blockNumber$: Observable<number>) => {
+export const setupBlockNumber = (blockNumber$: Observable<bigint>) => {
   const span = 100;
   const blockTimes: number[] = [];
   let prevBlockTime: number | undefined = undefined;

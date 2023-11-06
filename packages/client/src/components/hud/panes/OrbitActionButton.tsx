@@ -1,63 +1,38 @@
-import { SingletonID } from "@latticexyz/network";
-import { EntityID } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
+import { decodeEntity } from "@latticexyz/store-sync/recs";
 import { Button } from "src/components/core/Button";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
-import { OwnedBy } from "src/network/components/chainComponents";
-import { Account } from "src/network/components/clientComponents";
-import { useGameStore } from "src/store/GameStore";
-import { getIndex } from "src/util/arrival";
-import { invade, raid, recall, reinforce } from "src/util/web3";
-import { ESendType } from "src/util/web3/types";
+import { components } from "src/network/components";
+import { TransactionQueueType } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
+import { recallArrival } from "src/util/web3/contractCalls/recall";
+import { reinforce } from "src/util/web3/contractCalls/reinforce";
 
 export const OrbitActionButton: React.FC<{
-  entity: EntityID;
-  destination: EntityID;
-  sendType: ESendType;
+  arrivalEntity: Entity;
+  destination: Entity;
   outgoing: boolean;
-}> = ({ entity, destination, sendType, outgoing }) => {
-  const network = useMud();
-  const destinationOwner = OwnedBy.use(destination)?.value;
-  const player = Account.use()?.value ?? SingletonID;
-  const transactionLoading = useGameStore((state) => state.transactionLoading);
+}> = ({ arrivalEntity, destination, outgoing }) => {
+  const network = useMud().network;
 
-  const isNeutral = destinationOwner === player || !destinationOwner;
-
-  const index = getIndex(entity);
+  const queueType = outgoing ? TransactionQueueType.Recall : TransactionQueueType.Reinforce;
+  const { key } = decodeEntity(components.MapItemArrivals.metadata.keySchema, arrivalEntity);
   return (
-    <Button
-      disabled={transactionLoading || index === undefined}
-      loading={transactionLoading}
-      className={`btn-sm ${
-        isNeutral || sendType === ESendType.REINFORCE
-          ? "btn-secondary"
-          : "btn-error"
-      } `}
-      onClick={() => {
-        switch (sendType) {
-          case ESendType.INVADE:
-            invade(destination, network);
+    <TransactionQueueMask queueItemId={hashEntities(queueType, key, destination)}>
+      <Button
+        className={`btn-sm btn-seoncdary `}
+        onClick={() => {
+          if (outgoing) {
+            recallArrival(destination, arrivalEntity, network);
             return;
-          case ESendType.RAID:
-            raid(destination, network);
-            return;
-          case ESendType.REINFORCE:
-            if (!isNeutral || outgoing) {
-              recall(destination, network);
-              return;
-            }
+          }
 
-            if (index == undefined) return;
-            reinforce(destination, index, network);
-        }
-      }}
-    >
-      {isNeutral &&
-        (sendType === ESendType.REINFORCE
-          ? !outgoing
-            ? "ACCEPT"
-            : "RECALL"
-          : "LAND")}
-      {!isNeutral && (sendType === ESendType.REINFORCE ? "RECALL" : "ATTACK")}
-    </Button>
+          reinforce(destination, arrivalEntity, network);
+        }}
+      >
+        {!outgoing ? "ACCEPT" : "RECALL"}
+      </Button>
+    </TransactionQueueMask>
   );
 };

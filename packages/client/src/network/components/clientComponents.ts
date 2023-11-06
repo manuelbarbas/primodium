@@ -1,68 +1,85 @@
 import { Type } from "@latticexyz/recs";
 import { world } from "../world";
-import newComponent, {
-  newBoolComponent,
-  newCoordComponent,
-  newEntityComponent,
-  newNumberComponent,
-} from "./customComponents/Component";
-import newMarkerComponent from "./customComponents/MarkerComponent";
-import newSendComponent from "./customComponents/SendComponent";
-import { BattleComponent } from "./customComponents/BattleComponent";
-import { NotificationQueueComponent } from "./customComponents/NotificationQueueComponent";
+import { createArrivalComponent } from "./customComponents/ArrivalComponent";
+import {
+  createExtendedBigIntComponent,
+  createExtendedBoolComponent,
+  createExtendedComponent,
+  createExtendedCoordComponent,
+  createExtendedEntityComponent,
+  createExtendedNumberComponent,
+} from "./customComponents/ExtendedComponent";
+import { createTransactionQueueComponent } from "./customComponents/TransactionQueueComponent";
 
-export const Account = newEntityComponent(world, { id: "Account" });
+/* -------------------------------------------------------------------------- */
+/*                                     Dev                                    */
+/* -------------------------------------------------------------------------- */
+export const DoubleCounter = createExtendedBigIntComponent(world, {
+  id: "DoubleCounter",
+});
 
-export const HomeAsteroid = newComponent(
-  world,
-  { value: Type.Entity },
-  { id: "HomeAsteroid" }
-);
-
-export const Battle = BattleComponent();
-
-export const BattleReport = newComponent(
-  world,
-  {
-    show: Type.Boolean,
-    battle: Type.OptionalEntity,
-  },
-  {
-    id: "Battle",
-  }
-);
-
-export const BlockNumber = newComponent(
+/* -------------------------------------------------------------------------- */
+/*                                 Chain State                                */
+/* -------------------------------------------------------------------------- */
+export const BlockNumber = createExtendedComponent(
   world,
   {
-    value: Type.Number,
+    value: Type.BigInt,
     avgBlockTime: Type.Number, //seconds
   },
   {
     id: "BlockNumber",
   }
 );
+export const Account = createExtendedEntityComponent(world, { id: "Account" });
+export const GameReady = createExtendedBoolComponent(world, { id: "GameReady" });
 
-export const DoubleCounter = newNumberComponent(world, {
-  id: "DoubleCounter",
+// Todo: extend this with relevant tx data
+export const CurrentTransaction = createExtendedBoolComponent(world, { id: "CurrentTransaction" });
+
+/* -------------------------------------------------------------------------- */
+/*                                    Input                                   */
+/* -------------------------------------------------------------------------- */
+export const SelectedTile = createExtendedCoordComponent(world, { id: "SelectedTile" });
+export const HoverTile = createExtendedCoordComponent(world, { id: "HoverTile" });
+export const SelectedBuilding = createExtendedComponent(world, { value: Type.Entity }, { id: "SelectedBuilding" });
+export const SelectedAction = createExtendedNumberComponent(world, {
+  id: "SelectedAction",
 });
+export const MapOpen = createExtendedBoolComponent(world, { id: "MapOpen" });
 
-export const GameReady = newBoolComponent(world, { id: "GameReady" });
+/* -------------------------------------------------------------------------- */
+/*                                    Units                                   */
+/* -------------------------------------------------------------------------- */
 
-export const Hangar = newComponent(
+export const TrainingQueue = createExtendedComponent(
   world,
   {
     units: Type.EntityArray,
-    counts: Type.NumberArray,
+    counts: Type.BigIntArray,
+    progress: Type.BigIntArray,
+    timeRemaining: Type.BigIntArray,
+  },
+  {
+    id: "TrainingQueue",
+  }
+);
+
+export const Hangar = createExtendedComponent(
+  world,
+  {
+    units: Type.EntityArray,
+    counts: Type.BigIntArray,
   },
   {
     id: "Hangar",
   }
 );
 
-export const HoverTile = newCoordComponent(world, { id: "HoverTile" });
-
-export const Leaderboard = newComponent(
+/* -------------------------------------------------------------------------- */
+/*                                 Leaderboard                                */
+/* -------------------------------------------------------------------------- */
+export const Leaderboard = createExtendedComponent(
   world,
   {
     players: Type.EntityArray,
@@ -74,60 +91,88 @@ export const Leaderboard = newComponent(
   }
 );
 
-export const MapOpen = newBoolComponent(world, {
-  id: "MapOpen",
-});
-
-export const Marker = newMarkerComponent(world, {
-  id: "MarkerTypeComponent",
-});
-
-export const NotificationQueue = NotificationQueueComponent();
-
-export const SelectedAction = newNumberComponent(world, {
-  id: "SelectedAction",
-});
-
-export const SelectedBuilding = newComponent(
-  world,
-  { value: Type.Entity },
-  { id: "SelectedBuilding" }
-);
-
-export const SelectedTile = newCoordComponent(world, { id: "SelectedTile" });
-
-export const Send = newSendComponent(world);
-
-export const TrainingQueue = newComponent(
+export const AllianceLeaderboard = createExtendedComponent(
   world,
   {
-    units: Type.EntityArray,
-    counts: Type.NumberArray,
-    progress: Type.NumberArray,
-    timeRemaining: Type.NumberArray,
+    alliances: Type.EntityArray,
+    playerAllianceRank: Type.Number,
+    scores: Type.BigIntArray,
   },
   {
-    id: "TrainingQueue",
+    id: "AllianceLeaderboard",
   }
 );
 
+/* -------------------------------------------------------------------------- */
+/*                                   Battle                                   */
+/* -------------------------------------------------------------------------- */
+const Arrival = createArrivalComponent();
+/* -------------------------------------------------------------------------- */
+/*                                  ALLIANCES                                 */
+/* -------------------------------------------------------------------------- */
+export const PlayerInvite = createExtendedComponent(
+  world,
+  {
+    target: Type.Entity,
+    alliance: Type.Entity,
+    player: Type.Entity,
+    timestamp: Type.BigInt,
+  },
+  {
+    id: "PlayerInvites",
+  }
+);
+
+export const AllianceRequest = createExtendedComponent(
+  world,
+  {
+    player: Type.Entity,
+    alliance: Type.Entity,
+    timestamp: Type.BigInt,
+  },
+  {
+    id: "AllianceRequests",
+  }
+);
+
+/* -------------------------------------------------------------------------- */
+/*                              TRANSACTION QUEUE                             */
+/* -------------------------------------------------------------------------- */
+export const TransactionQueue = createTransactionQueueComponent({
+  id: "TransactionQueue",
+});
+
 export default {
-  Account,
-  HomeAsteroid,
-  Battle,
-  BattleReport,
-  BlockNumber,
+  /* ----------------------------------- Dev ---------------------------------- */
   DoubleCounter,
+
+  /* ------------------------------ Chain State ------------------------------- */
+  BlockNumber,
+  Account,
   GameReady,
-  Hangar,
-  HoverTile,
-  Leaderboard,
-  MapOpen,
-  Marker,
-  NotificationQueue,
-  SelectedAction,
-  SelectedBuilding,
+  CurrentTransaction,
+
+  /* ---------------------------------- Input --------------------------------- */
   SelectedTile,
-  Send,
+  HoverTile,
+  SelectedBuilding,
+  SelectedAction,
+  MapOpen,
+
+  /* ---------------------------------- Units --------------------------------- */
   TrainingQueue,
+  Hangar,
+
+  /* ------------------------------ Leaderboard ------------------------------- */
+  Leaderboard,
+  AllianceLeaderboard,
+
+  /* --------------------------------- Battle --------------------------------- */
+  Arrival,
+
+  /* ------------------------------- Alliances -------------------------------- */
+  PlayerInvite,
+  AllianceRequest,
+  /* ----------------------------- Transaction ------------------------------- */
+  TransactionQueue,
 };

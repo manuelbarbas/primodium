@@ -1,230 +1,240 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.21;
 
-import { getAddressById, addressToEntity } from "solecs/utils.sol";
-import { IWorld } from "solecs/System.sol";
-import { SingletonID } from "solecs/SingletonID.sol";
-// components
-import { P_BuildingDefenceComponent, ID as P_BuildingDefenceComponentID } from "components/P_BuildingDefenceComponent.sol";
-import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
-import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
-import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
-import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
-import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
-import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
-import { P_MaxMovesComponent, ID as P_MaxMovesComponentID } from "components/P_MaxMovesComponent.sol";
-import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMovesComponent.sol";
-import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
-import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
-import { P_RequiredTileComponent, ID as P_RequiredTileComponentID } from "components/P_RequiredTileComponent.sol";
-import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID, ResourceValues } from "components/P_RequiredUtilityComponent.sol";
-import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID } from "components/P_UnitProductionTypesComponent.sol";
-import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
-import { P_ProductionComponent, ID as P_ProductionComponentID } from "components/P_ProductionComponent.sol";
-import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
-import { UnitProductionOwnedByComponent, ID as UnitProductionOwnedByComponentID } from "components/UnitProductionOwnedByComponent.sol";
-import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
-import { HasBuiltBuildingComponent, ID as HasBuiltBuildingComponentID } from "components/HasBuiltBuildingComponent.sol";
-import { P_BuildingCountRequirementComponent, ID as P_BuildingCountRequirementComponentID } from "components/P_BuildingCountRequirementComponent.sol";
-import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
-import { P_HasBuiltBuildingComponent, ID as P_HasBuiltBuildingComponentID } from "components/P_HasBuiltBuildingComponent.sol";
+import { addressToEntity, entityToAddress, getSystemResourceId, bytes32ToString } from "src/utils.sol";
+// tables
+import { HasBuiltBuilding, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/index.sol";
+
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
-import { LibMath } from "libraries/LibMath.sol";
-import { LibResource } from "libraries/LibResource.sol";
-import { LibTerrain } from "libraries/LibTerrain.sol";
-import { LibDefence } from "libraries/LibDefence.sol";
-// types
-import { BuildingKey, ExpansionKey } from "../prototypes.sol";
-import { Coord, Bounds, Dimensions } from "src/types.sol";
+import { LibReduceProductionRate } from "libraries/LibReduceProductionRate.sol";
+import { LibProduction } from "libraries/LibProduction.sol";
+import { LibStorage } from "libraries/LibStorage.sol";
+import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 
-// Subsystems
-import { EActionType, IOnBuildingSubsystem } from "../interfaces/IOnBuildingSubsystem.sol";
-import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
-import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
-import { ID as PlaceBuildingTilesSystemID } from "systems/S_PlaceBuildingTilesSystem.sol";
-import { ID as SpendRequiredResourcesSystemID } from "systems/S_SpendRequiredResourcesSystem.sol";
-import { ID as UpdateOccupiedUtilitySystemID } from "systems/S_UpdateOccupiedUtilitySystem.sol";
-import { ID as UpdatePlayerStorageSystemID } from "systems/S_UpdatePlayerStorageSystem.sol";
-import { ID as UpdateUtilityProductionSystemID } from "systems/S_UpdateUtilityProductionSystem.sol";
-import { ID as S_UpdatePlayerResourceProductionSystemID } from "systems/S_UpdatePlayerResourceProductionSystem.sol";
+// types
+import { BuildingKey, BuildingTileKey, ExpansionKey } from "src/Keys.sol";
+import { Bounds, EBuilding, EResource } from "src/Types.sol";
+
+import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 
 library LibBuilding {
-  function checkHasBuiltBuildingRequirement(
-    IWorld world,
-    uint256 playerEntity,
-    uint256 objectiveEntity
-  ) internal view returns (bool) {
-    P_HasBuiltBuildingComponent hasBuiltBuildingComponent = P_HasBuiltBuildingComponent(
-      world.getComponent(P_HasBuiltBuildingComponentID)
-    );
-    if (!hasBuiltBuildingComponent.has(objectiveEntity)) return true;
-    return
-      HasBuiltBuildingComponent(getAddressById(world.components(), HasBuiltBuildingComponentID)).has(
-        LibEncode.hashKeyEntity(hasBuiltBuildingComponent.getValue(objectiveEntity), playerEntity)
-      );
+  /**
+   * @dev gets a unique building entity ID from a coordinate.
+   * @param coord The coordinate of the building to be destroyed.
+   */
+  function getUniqueBuildingEntity(PositionData memory coord) internal view returns (bytes32) {
+    return LibEncode.getTimedHash(BuildingKey, coord);
   }
 
-  function checkBuildingCountRequirement(
-    IWorld world,
-    uint256 playerEntity,
-    uint256 objectiveEntity
-  ) internal view returns (bool) {
-    P_BuildingCountRequirementComponent buildingCountRequirementComponent = P_BuildingCountRequirementComponent(
-      getAddressById(world.components(), P_BuildingCountRequirementComponentID)
+  /**
+   * @dev Checks if the requirements for destroying a building are met.
+   * @param playerEntity The entity ID of the player.
+   * @param coord The coordinate of the building to be destroyed.
+   */
+  function checkDestroyRequirements(bytes32 playerEntity, PositionData memory coord) internal view {
+    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
+    bytes32 buildingPrototype = BuildingType.get(buildingEntity);
+
+    require(buildingPrototype != MainBasePrototypeId, "[Destroy] Cannot destroy main base");
+    require(OwnedBy.get(buildingEntity) == playerEntity, "[Destroy] : only owner can destroy building");
+  }
+
+  /**
+   * @dev Checks if the requirements for building a new building are met.
+   * @param playerEntity The entity ID of the player.
+   * @param buildingType The type of building to be constructed.
+   * @param coord The coordinate where the building should be placed.
+   */
+  function checkBuildRequirements(
+    bytes32 playerEntity,
+    EBuilding buildingType,
+    PositionData memory coord
+  ) internal view {
+    bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
+    require(Spawned.get(playerEntity), "[BuildSystem] Player has not spawned");
+    require(buildingType > EBuilding.NULL && buildingType < EBuilding.LENGTH, "[BuildSystem] Invalid building type");
+    require(
+      buildingType != EBuilding.MainBase || !HasBuiltBuilding.get(playerEntity, buildingPrototype),
+      "[BuildSystem] Cannot build more than one main base per wallet"
     );
-    if (!buildingCountRequirementComponent.has(objectiveEntity)) return true;
+    require(
+      coord.parent == Home.getAsteroid(playerEntity),
+      "[BuildSystem] Building must be built on your home asteroid"
+    );
 
-    ResourceValues memory buildingCountRequirement = buildingCountRequirementComponent.getValue(objectiveEntity);
-    for (uint256 i = 0; i < buildingCountRequirement.resources.length; i++) {
-      uint256 buildingType = buildingCountRequirement.resources[i];
-      uint32 requiredBuildingCount = buildingCountRequirement.values[i];
+    require(!Spawned.get(getBuildingFromCoord(coord)), "[BuildSystem] Building already exists");
+    require(
+      LibBuilding.hasRequiredBaseLevel(playerEntity, buildingPrototype, 1),
+      "[BuildSystem] MainBase level requirement not met"
+    );
+    require(LibBuilding.canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
+  }
 
-      uint32 currBuildingCount = LibMath.getSafe(
-        BuildingCountComponent(getAddressById(world.components(), BuildingCountComponentID)),
-        LibEncode.hashKeyEntity(buildingType, playerEntity)
-      );
+  /**
+   * @dev Checks if the requirements for building a new building are met.
+   * @param playerEntity The entity ID of the player.
+   * @param coord The coordinate where the building should be placed.
+   */
+  function checkUpgradeRequirements(bytes32 playerEntity, PositionData memory coord) internal view {
+    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
+    require(buildingEntity != 0, "[UpgradeBuildingSystem] no building at this coordinate");
 
-      if (currBuildingCount < requiredBuildingCount) return false;
+    uint256 targetLevel = Level.get(buildingEntity) + 1;
+    require(targetLevel > 1, "[UpgradeBuildingSystem] Cannot upgrade a non-building");
+    require(
+      OwnedBy.get(buildingEntity) == playerEntity,
+      "[UpgradeBuildingSystem] Cannot upgrade a building that is not owned by you"
+    );
+
+    bytes32 buildingPrototype = BuildingType.get(buildingEntity);
+    uint256 maxLevel = P_MaxLevel.get(buildingPrototype);
+    require((targetLevel <= maxLevel), "[UpgradeBuildingSystem] Building has reached max level");
+
+    require(
+      LibBuilding.hasRequiredBaseLevel(playerEntity, buildingPrototype, targetLevel),
+      "[UpgradeBuildingSystem] MainBase level requirement not met"
+    );
+  }
+
+  /// @notice Builds a building at a specified coordinate
+  /// @param playerEntity The entity ID of the player
+  /// @param buildingPrototype The type of building to construct
+  /// @param coord The coordinate where the building should be placed
+  /// @return buildingEntity The entity ID of the newly constructed building
+  function build(
+    bytes32 playerEntity,
+    bytes32 buildingPrototype,
+    PositionData memory coord
+  ) internal returns (bytes32 buildingEntity) {
+    buildingEntity = LibEncode.getTimedHash(BuildingKey, coord);
+
+    Spawned.set(buildingEntity, true);
+    BuildingType.set(buildingEntity, buildingPrototype);
+    Position.set(buildingEntity, coord);
+    Level.set(buildingEntity, 1);
+    LastClaimedAt.set(buildingEntity, block.timestamp);
+    OwnedBy.set(buildingEntity, playerEntity);
+    HasBuiltBuilding.set(playerEntity, buildingPrototype, true);
+    address playerAddress = entityToAddress(playerEntity);
+
+    if (P_UnitProdTypes.length(buildingPrototype, 1) != 0) {
+      UnitFactorySet.add(playerEntity, buildingEntity);
     }
-    return true;
   }
 
-  function checkMainBaseLevelRequirement(
-    IWorld world,
-    uint256 playerEntity,
-    uint256 entity
-  ) internal view returns (bool) {
-    LevelComponent levelComponent = LevelComponent(getAddressById(world.components(), LevelComponentID));
-    if (!levelComponent.has(entity)) return true;
-    uint256 mainLevel = getBaseLevel(world, playerEntity);
-    return mainLevel >= levelComponent.getValue(entity);
+  /// @notice Places building tiles for a constructed building
+  /// @param playerEntity The entity ID of the player
+  /// @param buildingEntity The entity ID of the building
+  /// @param buildingPrototype The type of building to construct
+  /// @param position The coordinate where the building should be placed
+  function placeBuildingTiles(
+    bytes32 playerEntity,
+    bytes32 buildingEntity,
+    bytes32 buildingPrototype,
+    PositionData memory position
+  ) internal {
+    int32[] memory blueprint = P_Blueprint.get(buildingPrototype);
+    Bounds memory bounds = getPlayerBounds(playerEntity);
+
+    bytes32[] memory tiles = new bytes32[](blueprint.length / 2);
+    for (uint256 i = 0; i < blueprint.length; i += 2) {
+      PositionData memory relativeCoord = PositionData(blueprint[i], blueprint[i + 1], 0);
+      PositionData memory absoluteCoord = PositionData(
+        position.x + relativeCoord.x,
+        position.y + relativeCoord.y,
+        position.parent
+      );
+      tiles[i / 2] = placeBuildingTile(buildingEntity, bounds, absoluteCoord);
+    }
+    Children.set(buildingEntity, tiles);
   }
 
-  function canBuildOnTile(IWorld world, uint256 buildingType, Coord memory coord) internal view returns (bool) {
-    P_RequiredTileComponent requiredTileComponent = P_RequiredTileComponent(
-      world.getComponent(P_RequiredTileComponentID)
+  function removeBuildingTiles(PositionData memory coord) internal {
+    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
+
+    bytes32[] memory children = Children.get(buildingEntity);
+    for (uint256 i = 0; i < children.length; i++) {
+      require(OwnedBy.get(children[i]) != 0, "[Destroy] Cannot destroy unowned coordinate");
+      OwnedBy.deleteRecord(children[i]);
+    }
+    Children.deleteRecord(buildingEntity);
+  }
+
+  /// @notice Places a single building tile at a coordinate
+  /// @param buildingEntity The entity ID of the building
+  /// @param bounds The boundary limits for placing the tile
+  /// @param coord The coordinate where the tile should be placed
+  /// @return tileEntity The entity ID of the newly placed tile
+  function placeBuildingTile(
+    bytes32 buildingEntity,
+    Bounds memory bounds,
+    PositionData memory coord
+  ) private returns (bytes32 tileEntity) {
+    tileEntity = LibEncode.getHash(BuildingTileKey, coord);
+    require(OwnedBy.get(tileEntity) == 0, "[BuildSystem] Cannot build tile on a non-empty coordinate");
+    require(
+      bounds.minX <= coord.x && bounds.minY <= coord.y && bounds.maxX >= coord.x && bounds.maxY >= coord.y,
+      "[BuildSystem] Building out of bounds"
     );
-    return
-      !requiredTileComponent.has(buildingType) ||
-      requiredTileComponent.getValue(buildingType) == LibTerrain.getResourceByCoord(world, coord);
+    OwnedBy.set(tileEntity, buildingEntity);
+    Position.set(tileEntity, coord);
   }
 
-  function getBaseLevel(IWorld world, uint256 playerEntity) internal view returns (uint32) {
-    MainBaseComponent mainBaseComponent = MainBaseComponent(world.getComponent(MainBaseComponentID));
+  /// @notice Gets the boundary limits for a player
+  /// @param playerEntity The entity ID of the player
+  /// @return bounds The boundary limits
+  function getPlayerBounds(bytes32 playerEntity) internal view returns (Bounds memory bounds) {
+    uint256 playerLevel = Level.get(playerEntity);
+    P_AsteroidData memory asteroidDims = P_Asteroid.get();
+    DimensionsData memory range = Dimensions.get(ExpansionKey, playerLevel);
 
-    if (!mainBaseComponent.has(playerEntity)) return 0;
-    uint256 mainBase = mainBaseComponent.getValue(playerEntity);
-    return LevelComponent(world.getComponent(LevelComponentID)).getValue(mainBase);
-  }
-
-  function getPlayerBounds(IWorld world, uint256 playerEntity) internal view returns (Bounds memory bounds) {
-    uint32 playerLevel = LevelComponent(getAddressById(world.components(), LevelComponentID)).getValue(playerEntity);
-    uint256 researchLevelEntity = LibEncode.hashKeyEntity(ExpansionKey, playerLevel);
-
-    DimensionsComponent dimensionsComponent = DimensionsComponent(
-      getAddressById(world.components(), DimensionsComponentID)
-    );
-    Dimensions memory asteroidDims = dimensionsComponent.getValue(SingletonID);
-    Dimensions memory range = dimensionsComponent.getValue(researchLevelEntity);
     return
       Bounds({
-        maxX: (asteroidDims.x + range.x) / 2 - 1,
-        maxY: (asteroidDims.y + range.y) / 2 - 1,
-        minX: (asteroidDims.x - range.x) / 2,
-        minY: (asteroidDims.y - range.y) / 2
+        maxX: (asteroidDims.xBounds + range.width) / 2 - 1,
+        maxY: (asteroidDims.yBounds + range.height) / 2 - 1,
+        minX: (asteroidDims.xBounds - range.width) / 2,
+        minY: (asteroidDims.yBounds - range.height) / 2
       });
   }
 
-  function build(IWorld world, uint256 buildingType, Coord memory coord) internal {
-    uint256 playerEntity = addressToEntity(msg.sender);
+  /// @notice Gets the building entity ID from a coordinate
+  /// @param coord The coordinate to look up
+  /// @return The building entity ID
+  function getBuildingFromCoord(PositionData memory coord) internal view returns (bytes32) {
+    bytes32 buildingTile = LibEncode.getHash(BuildingTileKey, coord);
+    return OwnedBy.get(buildingTile);
+  }
 
-    uint256 buildingEntity = LibEncode.hashKeyCoord(BuildingKey, coord);
-    uint256 buildingTypeLevelEntity = LibEncode.hashKeyEntity(buildingType, 1);
-    BuildingTypeComponent(world.getComponent(BuildingTypeComponentID)).set(buildingEntity, buildingType);
-    LevelComponent(world.getComponent(LevelComponentID)).set(buildingEntity, 1);
-    PositionComponent(world.getComponent(PositionComponentID)).set(buildingEntity, coord);
-    LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).set(buildingEntity, block.number);
+  /// @notice Gets the base level for a player
+  /// @param playerEntity The entity ID of the player
+  /// @return The base level
+  function getBaseLevel(bytes32 playerEntity) internal view returns (uint256) {
+    if (!Spawned.get(playerEntity)) return 0;
+    bytes32 mainBase = Home.getMainBase(playerEntity);
+    return Level.get(mainBase);
+  }
 
-    IOnEntitySubsystem(getAddressById(world.systems(), PlaceBuildingTilesSystemID)).executeTyped(
-      msg.sender,
-      buildingEntity
-    );
+  /// @notice Checks if a player meets the base level requirements to build a building
+  /// @param playerEntity The entity ID of the player
+  /// @param prototype The type of building
+  /// @param level The level of the building
+  /// @return True if requirements are met, false otherwise
+  function hasRequiredBaseLevel(
+    bytes32 playerEntity,
+    bytes32 prototype,
+    uint256 level
+  ) internal view returns (bool) {
+    uint256 mainLevel = getBaseLevel(playerEntity);
+    return mainLevel >= P_RequiredBaseLevel.get(prototype, level);
+  }
 
-    if (P_RequiredResourcesComponent(world.getComponent(P_RequiredResourcesComponentID)).has(buildingTypeLevelEntity)) {
-      require(
-        LibResource.hasRequiredResources(world, playerEntity, buildingTypeLevelEntity, 1),
-        "[BuildSystem] You do not have the required resources"
-      );
-      IOnEntitySubsystem(getAddressById(world.systems(), SpendRequiredResourcesSystemID)).executeTyped(
-        msg.sender,
-        buildingTypeLevelEntity
-      );
-    }
-
-    OwnedByComponent(world.getComponent(OwnedByComponentID)).set(buildingEntity, playerEntity);
-    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, 1);
-
-    // Starmapper Update
-    if (P_MaxMovesComponent(world.getComponent(P_MaxMovesComponentID)).has(buildingLevelEntity)) {
-      uint32 movesToAdd = P_MaxMovesComponent(world.getComponent(P_MaxMovesComponentID)).getValue(buildingLevelEntity);
-      LibMath.add(MaxMovesComponent(world.getComponent(MaxMovesComponentID)), playerEntity, movesToAdd);
-    }
-
-    //Utility Production Update
-    if (P_UtilityProductionComponent(world.getComponent(P_UtilityProductionComponentID)).has(buildingLevelEntity)) {
-      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateUtilityProductionSystemID)).executeTyped(
-        msg.sender,
-        buildingEntity,
-        EActionType.Build
-      );
-    }
-    //Occupied Utility Update
-    if (P_RequiredUtilityComponent(world.getComponent(P_RequiredUtilityComponentID)).has(buildingLevelEntity)) {
-      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateOccupiedUtilitySystemID)).executeTyped(
-        msg.sender,
-        buildingEntity,
-        EActionType.Build
-      );
-    }
-    //Resource Storage Update
-    if (P_MaxResourceStorageComponent(world.getComponent(P_MaxResourceStorageComponentID)).has(buildingLevelEntity)) {
-      IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerStorageSystemID)).executeTyped(
-        msg.sender,
-        buildingEntity,
-        EActionType.Build
-      );
-    }
-
-    if (P_UnitProductionTypesComponent(world.getComponent(P_UnitProductionTypesComponentID)).has(buildingLevelEntity)) {
-      UnitProductionOwnedByComponent(world.getComponent(UnitProductionOwnedByComponentID)).set(
-        buildingEntity,
-        playerEntity
-      );
-    }
-    //Resource Production Update
-    if (P_ProductionComponent(world.getComponent(P_ProductionComponentID)).has(buildingLevelEntity)) {
-      IOnBuildingSubsystem(getAddressById(world.systems(), S_UpdatePlayerResourceProductionSystemID)).executeTyped(
-        msg.sender,
-        buildingEntity,
-        EActionType.Build
-      );
-    }
-
-    HasBuiltBuildingComponent(getAddressById(world.components(), HasBuiltBuildingComponentID)).set(
-      LibEncode.hashKeyEntity(buildingType, playerEntity)
-    );
-
-    LibMath.add(
-      BuildingCountComponent(getAddressById(world.components(), BuildingCountComponentID)),
-      LibEncode.hashKeyEntity(buildingType, playerEntity),
-      1
-    );
-
-    LibDefence.updateBuildingDefence(world, playerEntity, buildingType, 1, EActionType.Build);
-
-    //required production update
-    LibResource.updateRequiredProduction(world, playerEntity, buildingType, 1, true);
+  /// @notice Checks if a building can be constructed on a specific tile
+  /// @param prototype The type of building
+  /// @param coord The coordinate to check
+  /// @return True if the building's required terrain matches the terrain of the given coord
+  function canBuildOnTile(bytes32 prototype, PositionData memory coord) internal view returns (bool) {
+    EResource resource = EResource(P_RequiredTile.get(prototype));
+    return resource == EResource.NULL || uint8(resource) == P_Terrain.get(coord.x, coord.y);
   }
 }

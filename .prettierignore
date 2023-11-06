@@ -1,5 +1,5 @@
 # Ignore artifacts:
 build
 coverage
-# contracts
 node_modules
+packages/contracts/types/ethers-contracts

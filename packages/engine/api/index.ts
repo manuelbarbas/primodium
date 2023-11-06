@@ -1,6 +1,6 @@
+import { createGame as _createGame } from "../lib/core/createGame";
 import { useEngineStore } from "../store/EngineStore";
 import { Game, GameConfig } from "../types";
-import { createGame as _createGame } from "../lib/core/createGame";
 
 export const initializeContext = (key: string, game: Game) => {
   const setGame = useEngineStore.getState().setGame;
@@ -23,5 +23,6 @@ const api = {
 };
 
 //expose api to window for debugging
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 if (import.meta.env.VITE_DEV === "true") window.engine = api;

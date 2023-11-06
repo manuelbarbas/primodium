@@ -87,8 +87,7 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
 
         set.delete(key);
       },
-      setKeybind: (keybindAction, keys) =>
-        set({ keybinds: { [keybindAction]: keys } }),
+      setKeybind: (keybindAction, keys) => set({ keybinds: { [keybindAction]: keys } }),
     }),
     {
       name: "settings-storage",
@@ -151,8 +150,7 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
       migrate: (persistedStore: any, version) => {
         if (version === VERSION) return persistedStore;
 
-        return { ...persistedStore!, ...defaults } as SettingsState &
-          SettingsActions;
+        return { ...persistedStore!, ...defaults } as SettingsState & SettingsActions;
       },
     }
   )

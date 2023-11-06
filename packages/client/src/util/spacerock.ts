@@ -1,68 +1,52 @@
-import { EntityID } from "@latticexyz/recs";
-import { ESpaceRockType } from "./web3/types";
+import { primodium } from "@game/api";
+import { Entity } from "@latticexyz/recs";
+
+import { Assets, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { ERock } from "contracts/config/enums";
+import { components, components as comps } from "src/network/components";
+import { Hangar } from "src/network/components/clientComponents";
+import { clampedIndex, getBlockTypeName } from "./common";
 import {
-  AsteroidType,
-  IsMineableAt,
-  LastClaimedAt,
-  Level,
-  MainBase,
-  Motherlode,
-  MotherlodeResource,
-  OwnedBy,
-  P_WorldSpeed,
-  Pirate,
-  Position,
-} from "src/network/components/chainComponents";
-import {
-  BlockType,
+  EntityType,
   MotherlodeSizeNames,
   MotherlodeTypeNames,
+  PIRATE_KEY,
   ResourceStorages,
-  ResourceType,
-  SPEED_SCALE,
+  RockRelationship,
 } from "./constants";
-import { clampedIndex, getBlockTypeName } from "./common";
-import { Assets, EntityIDtoSpriteKey, SpriteKeys } from "@game/constants";
-import { SingletonID } from "@latticexyz/network";
-import { primodium } from "@game/api";
+import { hashKeyEntity } from "./encode";
 import { getFullResourceCount, getMotherlodeResource } from "./resource";
-import { BlockNumber, Hangar } from "src/network/components/clientComponents";
-import { getUnitStats } from "./trainUnits";
+import { getNow } from "./time";
 
-function getSpaceRockImage(spaceRock: EntityID, type: ESpaceRockType) {
+function getSpaceRockImage(spaceRock: Entity, type: ERock) {
   const { getSpriteBase64 } = primodium.api().sprite;
 
-  if (type === ESpaceRockType.Asteroid) {
-    const pirate = Pirate.get(spaceRock);
+  if (type === ERock.Asteroid) {
+    // const pirate = Pirate.get(spaceRock);
 
-    if (pirate)
-      return getSpriteBase64(SpriteKeys.PirateAsteroid1, Assets.SpriteAtlas);
+    // if (pirate) return getSpriteBase64(SpriteKeys.PirateAsteroid1, Assets.SpriteAtlas);
 
-    const ownedBy = OwnedBy.get(spaceRock, {
-      value: SingletonID,
-    }).value;
+    const ownedBy = comps.OwnedBy.get(spaceRock, {
+      value: singletonEntity,
+    }).value as Entity;
 
-    const mainBaseEntity = MainBase.get(ownedBy, {
-      value: "-1" as EntityID,
-    }).value;
+    const mainBaseEntity = (comps.Home.get(ownedBy)?.mainBase ?? "-1") as Entity;
 
-    const mainBaseLevel = Level.get(mainBaseEntity, {
-      value: 1,
+    const mainBaseLevel = comps.Level.get(mainBaseEntity, {
+      value: 1n,
     }).value;
 
     const spriteKey =
-      EntityIDtoSpriteKey[BlockType.Asteroid][
-        clampedIndex(
-          mainBaseLevel - 1,
-          EntityIDtoSpriteKey[BlockType.Asteroid].length
-        )
+      EntitytoSpriteKey[EntityType.Asteroid][
+        clampedIndex(Number(mainBaseLevel - 1n), EntitytoSpriteKey[EntityType.Asteroid].length)
       ];
 
     return getSpriteBase64(spriteKey, Assets.SpriteAtlas);
   }
 
-  if (type === ESpaceRockType.Motherlode) {
-    const motherlodeData = Motherlode.get(spaceRock);
+  if (type === ERock.Motherlode) {
+    const motherlodeData = comps.Motherlode.get(spaceRock);
     if (!motherlodeData) return "";
 
     const spriteKey =
@@ -78,77 +62,59 @@ function getSpaceRockImage(spaceRock: EntityID, type: ESpaceRockType) {
   return "";
 }
 
-export function getSpaceRockInfo(spaceRock: EntityID) {
-  const type = AsteroidType.get(spaceRock, { value: ESpaceRockType.Asteroid })
-    .value as ESpaceRockType;
-  const { value: blockNumber } = BlockNumber.get(undefined, {
-    value: 0,
-    avgBlockTime: 1,
-  });
+export function getSpaceRockInfo(spaceRock: Entity) {
+  const type = comps.RockType.get(spaceRock, { value: ERock.Asteroid }).value as ERock;
 
   const imageUri = getSpaceRockImage(spaceRock, type);
 
-  const motherlodeData = Motherlode.get(spaceRock);
+  const motherlodeData = comps.Motherlode.get(spaceRock);
 
-  const ownedBy = OwnedBy.get(spaceRock)?.value;
-  const mainBaseEntity = MainBase.get(ownedBy, {
-    value: "-1" as EntityID,
-  }).value;
-  const mainBaseLevel = Level.get(mainBaseEntity)?.value;
+  const ownedBy = comps.OwnedBy.get(spaceRock)?.value as Entity | undefined;
+  const mainBaseEntity = comps.Home.get(ownedBy, {
+    mainBase: "-1" as Entity,
+    asteroid: "-1" as Entity,
+  }).mainBase as Entity;
+  const mainBaseLevel = comps.Level.get(mainBaseEntity)?.value;
 
-  const position = Position.get(spaceRock, {
+  const position = comps.Position.get(spaceRock, {
     x: 0,
     y: 0,
-    parent: "0" as EntityID,
+    parent: "0" as Entity,
   });
 
   const resources = ownedBy
-    ? ResourceStorages.map((resource) => {
-        const { resourceCount, resourcesToClaim } = getFullResourceCount(
-          resource,
-          ResourceType.Resource,
-          ownedBy
-        );
+    ? [...ResourceStorages]
+        .map((resource) => {
+          const { resourceCount, resourcesToClaim } = getFullResourceCount(resource, ownedBy);
 
-        const amount = resourceCount + resourcesToClaim;
+          const amount = resourceCount + resourcesToClaim;
 
-        return {
-          id: resource,
-          amount,
-        };
-      }).filter((resource) => resource.amount)
+          return {
+            id: resource,
+            amount,
+          };
+        })
+        .filter((resource) => resource.amount)
     : [];
 
   const motherlodeResource = getMotherlodeResource(spaceRock);
 
   const hangar = Hangar.get(spaceRock);
 
-  const mineableAt = Number(IsMineableAt.get(spaceRock, { value: "0" }).value);
-
-  const resourceMined = MotherlodeResource.get(spaceRock, { value: 0 }).value;
-
-  let production = 0;
-  if (hangar && motherlodeResource) {
-    const worldSpeed = P_WorldSpeed.get()?.value ?? SPEED_SCALE;
-    const lastClaimedAt = LastClaimedAt.get(spaceRock)?.value ?? 0;
-    for (let i = 0; i < hangar.units.length; i++) {
-      production += getUnitStats(hangar.units[i]).MIN * hangar.counts[i];
-    }
-
-    production *= ((blockNumber - lastClaimedAt) * SPEED_SCALE) / worldSpeed;
-    if (production + resourceMined > motherlodeResource.maxAmount)
-      production = motherlodeResource.maxAmount - resourceMined;
-  }
+  const gracePeriodValue = comps.GracePeriod.get(ownedBy)?.value ?? 0n;
+  const isInGracePeriod = type === ERock.Asteroid ? gracePeriodValue > 0n && gracePeriodValue > getNow() : false;
 
   let name = "";
   switch (type) {
-    case ESpaceRockType.Motherlode:
-      name = `${
-        MotherlodeSizeNames[motherlodeData?.size ?? 0]
-      } ${getBlockTypeName(motherlodeResource?.resource)} Motherlode`;
+    case ERock.Motherlode:
+      name = `${MotherlodeSizeNames[motherlodeData?.size ?? 0]} ${getBlockTypeName(motherlodeResource)} Motherlode`;
       break;
-    case ESpaceRockType.Asteroid:
-      name = Pirate.get(spaceRock) ? "Pirate Asteroid" : "Player Asteroid";
+    case ERock.Asteroid:
+      {
+        const player = comps.Account.get()?.value;
+        const hash = player ? hashKeyEntity(PIRATE_KEY, player) : undefined;
+        name = `${hash === ownedBy ? "Pirate" : "Player"} Asteroid`;
+      }
       break;
     default:
       name = "Unknown Spacerock";
@@ -160,12 +126,7 @@ export function getSpaceRockInfo(spaceRock: EntityID) {
     imageUri,
     motherlodeData: {
       ...motherlodeData,
-      ...motherlodeResource,
-      mineableAt,
-      blocksLeft: mineableAt - blockNumber,
-      resourceLeft: motherlodeResource
-        ? motherlodeResource.maxAmount - (resourceMined + production)
-        : 0,
+      motherlodeResource,
     },
     resources,
     ownedBy,
@@ -174,5 +135,20 @@ export function getSpaceRockInfo(spaceRock: EntityID) {
     position,
     name,
     entity: spaceRock,
+    isInGracePeriod,
+    gracePeriodValue,
   };
 }
+
+export const getRockRelationship = (player: Entity, rock: Entity) => {
+  const playerAlliance = components.PlayerAlliance.get(player)?.alliance;
+  const rockOwner = components.OwnedBy.get(rock)?.value as Entity;
+  const rockAlliance = components.PlayerAlliance.get(rockOwner)?.alliance;
+  const rocktype = components.RockType.get(rock)?.value as ERock;
+
+  if (player === rockOwner) return RockRelationship.Self;
+  if (playerAlliance && playerAlliance === rockAlliance) return RockRelationship.Ally;
+  if (rockOwner || rocktype === ERock.Asteroid) return RockRelationship.Enemy;
+
+  return RockRelationship.Neutral;
+};

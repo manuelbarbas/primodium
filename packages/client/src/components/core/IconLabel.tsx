@@ -7,22 +7,13 @@ export const IconLabel: React.FC<{
   className?: string;
   tooltipText?: string;
   tooltipDirection?: "top" | "bottom" | "right" | "left";
-}> = ({
-  imageUri,
-  text,
-  className,
-  hideText = false,
-  tooltipDirection = "right",
-  tooltipText,
-}) => {
+}> = ({ imageUri, text, className, hideText = false, tooltipDirection = "right", tooltipText }) => {
   return (
     <span className={`${className} inline-flex items-center gap-2`}>
       <Tooltip text={tooltipText} direction={tooltipDirection}>
-        <img
-          src={imageUri}
-          alt={text}
-          className={`pixel-images w-[1em] scale-150`}
-        />
+        <div>
+          <img src={imageUri} alt={text} className={`pixel-images w-[1.5em] scale-200`} />
+        </div>
       </Tooltip>
 
       {!hideText && <span>{text}</span>}

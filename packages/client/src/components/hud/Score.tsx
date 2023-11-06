@@ -1,12 +1,10 @@
-import {
-  Account,
-  Leaderboard as _Leaderboard,
-} from "src/network/components/clientComponents";
+import { useMud } from "src/hooks";
 import { Card } from "../core/Card";
+import { components } from "src/network/components";
 
 export const Score = () => {
-  const address = Account.use()?.value;
-  const data = _Leaderboard.use();
+  const address = useMud().network.address;
+  const data = components.Leaderboard.use();
   if (!data || !address) return null;
 
   return (
@@ -15,11 +13,7 @@ export const Score = () => {
         <p className="bg-error px-2 rounded-md font-bold">
           <span>RANK #{data.playerRank}</span>
         </p>
-        <span>
-          {data.scores.length >= data.playerRank
-            ? data.scores[data.playerRank - 1].toLocaleString()
-            : 0}
-        </span>
+        <span>{data.scores.length >= data.playerRank ? data.scores[data.playerRank - 1].toLocaleString() : 0}</span>
         <p className="text-xs opacity-50"> POINTS </p>
       </div>
     </Card>
