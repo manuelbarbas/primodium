@@ -24,6 +24,7 @@ const resources: Record<string, Entity> = {
   housing: EntityType.Housing,
   vessel: EntityType.VesselCapacity,
   electricity: EntityType.Electricity,
+  defense: EntityType.Defense,
 };
 
 const units: Record<string, Entity> = {
@@ -41,6 +42,14 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
       function: async (value: number) => {
         await mud.contractCalls.setComponentValue(mud.components.P_GameConfig, singletonEntity, {
           worldSpeed: BigInt(value),
+        });
+      },
+    },
+    setMaxAllianceCount: {
+      params: [{ name: "value", type: "number" }],
+      function: async (value: number) => {
+        await mud.contractCalls.setComponentValue(mud.components.P_AllianceConfig, singletonEntity, {
+          maxAllianceMembers: BigInt(value),
         });
       },
     },

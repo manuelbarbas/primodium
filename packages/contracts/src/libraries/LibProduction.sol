@@ -83,13 +83,13 @@ library LibProduction {
     uint8 resourceIndex = uint8(resource);
     if (P_IsUtility.get(resourceIndex)) {
       uint256 availableUtility = ResourceCount.get(playerEntity, resourceIndex);
-      require(availableUtility >= amount, "[UtilityUsage] not enough available utility production");
+      require(availableUtility >= amount, "[UtilityUsage] Not enough existing utility production");
       LibStorage.decreaseStoredResource(playerEntity, resourceIndex, amount);
       LibStorage.decreaseMaxUtility(playerEntity, resourceIndex, amount);
       return;
     }
     uint256 prevProductionRate = ProductionRate.get(playerEntity, resourceIndex);
-    require(prevProductionRate >= amount, "[ProductionUsage] not enough production rate to reduce usage");
+    require(prevProductionRate >= amount, "[ProductionUsage] Not enough existing resource production rate");
     ProductionRate.set(playerEntity, resourceIndex, prevProductionRate - amount);
   }
 }

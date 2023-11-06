@@ -45,6 +45,7 @@ export const RecipeDisplay: React.FC<{
                   validate
                   fontSize={"xs"}
                   short
+                  fractionDigits={3}
                 />
               );
             })}
@@ -65,7 +66,6 @@ export const PrototypeInfo: React.FC<{
   const production = useMemo(() => transformProductionData(rawProduction), [rawProduction]);
 
   const unitProduction = components.P_UnitProdTypes.useWithKeys({ prototype: building as Hex, level: 1n });
-  const vault = transformProductionData(components.P_Vault.useWithKeys({ prototype: building as Hex, level: 1n }));
   const storageUpgrades = useMemo(() => getBuildingLevelStorageUpgrades(building, 1n), [building]);
 
   const hasEnough = useHasEnoughResources(getRecipe(building, 1n), playerEntity);
@@ -103,6 +103,7 @@ export const PrototypeInfo: React.FC<{
                   resourceType={type}
                   scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
                   short
+                  fractionDigits={3}
                 />
               </Badge>
             ))}
@@ -120,32 +121,6 @@ export const PrototypeInfo: React.FC<{
                   />
                 ))}
               </Badge>
-            )}
-            {!!vault.length && (
-              <div className="flex flex-col text-xs gap-1 bg-green-800/60 p-2 border border-green-600 rounded-md w-fit justify-center text-center">
-                Vault
-                {_.chunk(vault, 2).map((chunk, i) => (
-                  <div key={`vault-chunk-${i}`} className="flex flex-row gap-1">
-                    {chunk.map(({ resource, amount, type }) => (
-                      <Badge
-                        key={`vault-${resource}`}
-                        className="text-xs gap-2 bg-green-800/60 py-3 border border-green-600 rounded-md w-full"
-                      >
-                        <ResourceIconTooltip
-                          name={getBlockTypeName(resource)}
-                          image={ResourceImage.get(resource) ?? ""}
-                          resource={resource}
-                          playerEntity={playerEntity}
-                          amount={amount}
-                          resourceType={ResourceType.Resource}
-                          scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
-                          short
-                        />
-                      </Badge>
-                    ))}
-                  </div>
-                ))}
-              </div>
             )}
             {!!storageUpgrades.length && (
               <div className="flex flex-col text-xs gap-1 bg-green-800/60 p-2 border border-green-600 rounded-md w-fit justify-center text-center">
@@ -166,6 +141,7 @@ export const PrototypeInfo: React.FC<{
                           resourceType={ResourceType.Resource}
                           scale={RESOURCE_SCALE}
                           short
+                          fractionDigits={3}
                         />
                       </Badge>
                     ))}

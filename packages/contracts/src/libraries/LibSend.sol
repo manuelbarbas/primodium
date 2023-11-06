@@ -6,7 +6,7 @@ import { Spawned, GracePeriod, P_GracePeriod, PirateAsteroid, DefeatedPirate, Un
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { SendArgs } from "src/Types.sol";
-import { WORLD_SPEED_SCALE, NUM_UNITS } from "src/constants.sol";
+import { WORLD_SPEED_SCALE, NUM_UNITS, UNIT_SPEED_SCALE } from "src/constants.sol";
 
 library LibSend {
   /**
@@ -91,12 +91,12 @@ library LibSend {
   ) internal view returns (uint256) {
     P_GameConfigData memory config = P_GameConfig.get();
     uint256 unitSpeed = getSlowestUnitSpeed(playerEntity, unitCounts);
-    require(unitSpeed > 0 && config.moveSpeed > 0, "[SendUnits] Slowest unit speed must be greater than 0");
+    require(unitSpeed > 0 && config.travelTime > 0, "[SendUnits] Slowest unit speed must be greater than 0");
 
     return
       block.timestamp +
-      ((LibMath.distance(origin, destination) * 100 * WORLD_SPEED_SCALE * 100) /
-        (config.moveSpeed * config.worldSpeed * unitSpeed));
+      ((LibMath.distance(origin, destination) * config.travelTime * WORLD_SPEED_SCALE * UNIT_SPEED_SCALE) /
+        (config.worldSpeed * unitSpeed));
   }
 
   /// @notice Checks if movement between two positions is allowed.
@@ -117,6 +117,9 @@ library LibSend {
       "[SendUnits] Reached max move count"
     );
 
+    ERock destinationType = ERock(RockType.get(destination));
+    ERock originType = ERock(RockType.get(origin));
+
     if (PirateAsteroid.get(destination).playerEntity != 0) {
       require(
         !DefeatedPirate.get(playerEntity, PirateAsteroid.get(destination).prototype),
@@ -127,12 +130,9 @@ library LibSend {
         PirateAsteroid.get(destination).playerEntity == playerEntity,
         "[SendUnits] Cannot send to other player pirate asteroid"
       );
-    } else if (sendType != ESendType.Reinforce) {
+    } else if (sendType != ESendType.Reinforce && destinationType == ERock.Asteroid) {
       require(GracePeriod.get(to) <= block.timestamp, "[SendUnits] Cannot send to player in grace period");
     }
-
-    ERock originType = ERock(RockType.get(origin));
-    ERock destinationType = ERock(RockType.get(destination));
 
     require(originType != ERock.NULL && destinationType != ERock.NULL, "[SendUnits] Must travel between rocks");
     bytes32 destinationOwner = OwnedBy.get(destination);

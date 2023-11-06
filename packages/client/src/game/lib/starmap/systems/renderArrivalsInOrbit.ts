@@ -13,7 +13,7 @@ import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
 import { world } from "src/network/world";
 import { PIRATE_KEY } from "src/util/constants";
-import { hashStringEntity } from "src/util/encode";
+import { hashKeyEntity } from "src/util/encode";
 import { getNow } from "src/util/time";
 import { ObjectPosition, Tween } from "../../common/object-components/common";
 import { Circle } from "../../common/object-components/graphics";
@@ -33,14 +33,12 @@ export const renderArrivalsInOrbit = (scene: Scene, mud: SetupResult) => {
     if (!arrival) return;
 
     //don't render if arrival is in transit
-    console.log("arrival:", arrival.arrivalTime, "now:", getNow());
     if (arrival.arrivalTime >= getNow()) return;
 
-    console.log("here");
     //render personal pirate only
     if (
       components.PirateAsteroid.has(arrival.destination) &&
-      hashStringEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(arrival.destination)?.value
+      hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(arrival.destination)?.value
     )
       return;
 

@@ -69,7 +69,7 @@ function api(sceneKey = "MAIN", instance: string | Game = "MAIN") {
     hooks: createHooksApi(scene),
     input: createInputApi(scene),
     scene: createSceneApi(_instance),
-    fx: createFxApi(),
+    fx: createFxApi(scene),
     sprite: createSpriteApi(scene),
   };
 }

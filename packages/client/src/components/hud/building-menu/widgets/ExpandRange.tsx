@@ -25,16 +25,16 @@ export const ExpandRange: React.FC = () => {
 
   const hasEnough = useHasEnoughResources(recipe, playerEntity);
   const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && !isResearched;
+  const atMaxLevel = level >= maxLevel;
 
   let error = "";
-  if (!hasEnough) {
+  if (atMaxLevel) {
+    error = "reached max expansion";
+  } else if (!hasEnough) {
     error = "Not enough resources";
   } else if (mainBaseLevel < mainBaseLvlReq) {
     error = `Mainbase lvl. ${mainBaseLvlReq} required`;
-  } else if (isResearched) {
-    error = "reached max expansion";
   }
-
   return (
     <SecondaryCard className="w-full items-center">
       <div className="flex items-center justify-between w-full">
@@ -43,7 +43,8 @@ export const ExpandRange: React.FC = () => {
           <div>
             {recipe.length !== 0 && <p className="text-xs opacity-75 px-2 mb-1">EXPANSION COST</p>}
             <div className="flex flex-wrap gap-1 px-2">
-              {recipe.length !== 0 &&
+              {!atMaxLevel &&
+                recipe.length !== 0 &&
                 recipe.map((resource) => {
                   return (
                     <Badge key={resource.id + resource.type} className="text-xs gap-2">

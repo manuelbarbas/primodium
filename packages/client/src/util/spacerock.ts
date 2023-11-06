@@ -4,10 +4,17 @@ import { Entity } from "@latticexyz/recs";
 import { Assets, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { ERock } from "contracts/config/enums";
-import { components as comps } from "src/network/components";
+import { components, components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
 import { clampedIndex, getBlockTypeName } from "./common";
-import { EntityType, MotherlodeSizeNames, MotherlodeTypeNames, PIRATE_KEY, ResourceStorages } from "./constants";
+import {
+  EntityType,
+  MotherlodeSizeNames,
+  MotherlodeTypeNames,
+  PIRATE_KEY,
+  ResourceStorages,
+  RockRelationship,
+} from "./constants";
 import { hashKeyEntity } from "./encode";
 import { getFullResourceCount, getMotherlodeResource } from "./resource";
 import { getNow } from "./time";
@@ -95,7 +102,7 @@ export function getSpaceRockInfo(spaceRock: Entity) {
   const hangar = Hangar.get(spaceRock);
 
   const gracePeriodValue = comps.GracePeriod.get(ownedBy)?.value ?? 0n;
-  const isInGracePeriod = gracePeriodValue > 0n && gracePeriodValue > getNow();
+  const isInGracePeriod = type === ERock.Asteroid ? gracePeriodValue > 0n && gracePeriodValue > getNow() : false;
 
   let name = "";
   switch (type) {
@@ -132,3 +139,16 @@ export function getSpaceRockInfo(spaceRock: Entity) {
     gracePeriodValue,
   };
 }
+
+export const getRockRelationship = (player: Entity, rock: Entity) => {
+  const playerAlliance = components.PlayerAlliance.get(player)?.alliance;
+  const rockOwner = components.OwnedBy.get(rock)?.value as Entity;
+  const rockAlliance = components.PlayerAlliance.get(rockOwner)?.alliance;
+  const rocktype = components.RockType.get(rock)?.value as ERock;
+
+  if (player === rockOwner) return RockRelationship.Self;
+  if (playerAlliance && playerAlliance === rockAlliance) return RockRelationship.Ally;
+  if (rockOwner || rocktype === ERock.Asteroid) return RockRelationship.Enemy;
+
+  return RockRelationship.Neutral;
+};

@@ -151,7 +151,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         maxMotherlodesPerAsteroid: 6n,
         motherlodeChanceInv: 4n,
         unitProductionRate: 100n,
-        moveSpeed: 10000n,
+        travelTime: 10n,
         worldSpeed: 100n,
       },
       P_UnitPrototypes: {
@@ -195,7 +195,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       },
       6: {
         P_RequiredResources: getResourceValues({ Iridium: 100000 }),
-        Dimensions: { width: 33, height: 13 },
+        Dimensions: { width: 33, height: 23 },
         P_RequiredBaseLevel: { value: 6n },
       },
       7: {
@@ -834,18 +834,16 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 3n },
-        P_RequiredResources: getResourceValues({ PVCell: 200000, Sulfur: 150000, U_Electricity: 100 }),
-        P_Vault: getResourceValues({
-          Iron: 500000,
-          Copper: 50000,
-          IronPlate: 30000,
-          Lithium: 20000,
-          Sulfur: 20000,
-          PVCell: 10000,
-        }),
+        P_RequiredBaseLevel: { value: 1n },
+        P_RequiredResources: getResourceValues({ PVCell: 100000, Sulfur: 50000, U_Electricity: 50 }),
+        P_Production: getResourceValues({ U_Unraidable: 200000 }),
       },
       2: {
+        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredResources: getResourceValues({ PVCell: 200000, Sulfur: 150000, U_Electricity: 100 }),
+        P_Production: getResourceValues({ U_Unraidable: 1000000, U_AdvancedUnraidable: 10000 }),
+      },
+      3: {
         P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({
           Titanium: 50000,
@@ -853,21 +851,9 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           Sulfur: 150000,
           U_Electricity: 150,
         }),
-        P_Vault: getResourceValues({
-          Iron: 200000,
-          Copper: 200000,
-          Lithium: 100000,
-          IronPlate: 100000,
-          Sulfur: 100000,
-          PVCell: 50000,
-          Alloy: 20000,
-          Titanium: 10000,
-          Platinum: 10000,
-          Iridium: 10000,
-          Kimberlite: 10000,
-        }),
+        P_Production: getResourceValues({ U_Unraidable: 10000000, U_AdvancedUnraidable: 50000 }),
       },
-      3: {
+      4: {
         P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({
           Titanium: 150000,
@@ -875,19 +861,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           Sulfur: 1500000,
           U_Electricity: 200,
         }),
-        P_Vault: getResourceValues({
-          Iron: 500000,
-          Copper: 500000,
-          IronPlate: 250000,
-          Lithium: 250000,
-          Sulfur: 250000,
-          PVCell: 100000,
-          Alloy: 50000,
-          Titanium: 30000,
-          Platinum: 30000,
-          Iridium: 30000,
-          Kimberlite: 30000,
-        }),
+        P_Production: getResourceValues({ U_Unraidable: 5000000, U_AdvancedUnraidable: 100000 }),
       },
     },
   },
@@ -903,9 +877,20 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       [MUDEnums.EResource.indexOf("U_MaxMoves")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Defense")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("M_DefenseMultiplier")]: { P_IsUtility: { value: true } },
+      [MUDEnums.EResource.indexOf("U_Unraidable")]: { P_IsUtility: { value: true } },
+      [MUDEnums.EResource.indexOf("U_AdvancedUnraidable")]: { P_IsUtility: { value: true } },
     },
   },
 
+  IsAdvancedResource: {
+    keys: [],
+    levels: {
+      [MUDEnums.EResource.indexOf("Titanium")]: { P_IsAdvancedResource: { value: true } },
+      [MUDEnums.EResource.indexOf("Platinum")]: { P_IsAdvancedResource: { value: true } },
+      [MUDEnums.EResource.indexOf("Iridium")]: { P_IsAdvancedResource: { value: true } },
+      [MUDEnums.EResource.indexOf("Kimberlite")]: { P_IsAdvancedResource: { value: true } },
+    },
+  },
   /* --------------------------------- Units --------------------------------- */
   Unit: {
     levels: idsToPrototypes(MUDEnums.EUnit),

@@ -43,10 +43,9 @@ library LibPirate {
     } else {
       Home.setAsteroid(ownerEntity, asteroidEntity);
       uint8 resourceCount = uint8(EResource.LENGTH);
+      LibProduction.increaseResourceProduction(ownerEntity, EResource.U_Housing, 100000000);
       for (uint8 i = 1; i < resourceCount; i++) {
-        if (P_IsUtility.get(i) && i != uint8(EResource.U_Defense) && i != uint8(EResource.M_DefenseMultiplier)) {
-          LibProduction.increaseResourceProduction(ownerEntity, EResource(i), 100000000);
-        } else {
+        if (!P_IsUtility.get(i)) {
           MaxResourceCount.set(ownerEntity, i, 100000000);
         }
       }
@@ -57,12 +56,12 @@ library LibPirate {
       parent: 0
     });
 
+    PirateAsteroid.set(asteroidEntity, PirateAsteroidData({ prototype: prototype, playerEntity: playerEntity }));
     Position.set(asteroidEntity, coord);
     RockType.set(asteroidEntity, uint8(ERock.Asteroid));
     Spawned.set(ownerEntity, true);
     ReversePosition.set(coord.x, coord.y, asteroidEntity);
     OwnedBy.set(asteroidEntity, ownerEntity);
-    PirateAsteroid.set(asteroidEntity, PirateAsteroidData({ prototype: prototype, playerEntity: playerEntity }));
 
     for (uint8 i = 0; i < spawnPirateAsteroid.resources.length; i++) {
       uint8 resource = spawnPirateAsteroid.resources[i];

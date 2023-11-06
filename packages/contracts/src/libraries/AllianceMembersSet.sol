@@ -20,15 +20,17 @@ library AllianceMembersSet {
 
   function remove(bytes32 alliance, bytes32 member) internal {
     require(SetIndexForAllianceMembers.getStored(alliance, member), "[Alliance]: member not part of Alliance");
-    if (SetAllianceMembers.length(alliance) == 1) {
+    uint256 index = SetIndexForAllianceMembers.getIndex(alliance, member);
+    if (index == SetAllianceMembers.length(alliance) - 1) {
       SetAllianceMembers.pop(alliance);
       SetIndexForAllianceMembers.deleteRecord(alliance, member);
       return;
     }
-    uint256 index = SetIndexForAllianceMembers.getIndex(alliance, member);
+    SetIndexForAllianceMembers.deleteRecord(alliance, member);
     bytes32 lastMember = SetAllianceMembers.getItem(alliance, SetAllianceMembers.length(alliance) - 1);
     SetAllianceMembers.pop(alliance);
     SetAllianceMembers.update(alliance, index, lastMember);
+    SetIndexForAllianceMembers.set(alliance, lastMember, true, index);
   }
 
   function getMembers(bytes32 alliance) internal view returns (bytes32[] memory) {

@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
 import { encodeEntity } from "@latticexyz/store-sync/recs";
+import { Coord } from "@latticexyz/utils";
 import { EBuilding, EObjectives, EResource, ERock, ESize, EUnit } from "contracts/config/enums";
 import { Key } from "engine/types";
 import { toHex } from "viem";
@@ -48,6 +48,7 @@ export enum RequirementType {
   ProducedUnits,
   RequiredUnits,
   DefeatedPirates,
+  RewardUtilities,
 }
 
 export enum TransactionQueueType {
@@ -60,6 +61,22 @@ export enum TransactionQueueType {
   Land,
   Demolish,
   ClaimObjective,
+  JoinAlliance,
+  RequestToJoin,
+  KickPlayer,
+  Promote,
+  Demote,
+  AcceptRequest,
+  RejectRequest,
+  Invite,
+  DeclineInvite,
+}
+
+export enum RockRelationship {
+  Ally,
+  Enemy,
+  Neutral,
+  Self,
 }
 
 export type TransactionQueueMetadataTypes = {
@@ -128,6 +145,8 @@ export const EntityType = {
   Housing: toHex32("U_Housing") as Entity,
   VesselCapacity: toHex32("U_Vessel") as Entity,
   FleetMoves: toHex32("U_MaxMoves") as Entity,
+  Unraidable: toHex32("U_Unraidable") as Entity,
+  AdvancedUnraidable: toHex32("U_AdvancedUnraidable") as Entity,
 
   Defense: toHex32("U_Defense") as Entity,
   DefenseMultiplier: toHex32("M_DefenseMultiplier") as Entity,
@@ -352,6 +371,8 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.VesselCapacity, "/img/unit/miningvessel.png"],
   [EntityType.Defense, "/img/icons/defenseicon.png"],
   [EntityType.DefenseMultiplier, "/img/icons/defenseicon.png"],
+  [EntityType.Unraidable, "/img/icons/unraidableicon.png"],
+  [EntityType.AdvancedUnraidable, "/img/icons/advancedunraidableicon.png"],
 
   // debug
   [EntityType.Bullet, "/img/crafted/bullet.png"],
@@ -364,7 +385,6 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.MiningVessel, "/img/unit/miningvessel.png"],
   [EntityType.MinutemanMarine, "img/unit/minutemen_marine.png"],
   [EntityType.TridentMarine, "img/unit/trident_marine.png"],
-  [EntityType.Vault, "img/vault.png"],
 ]);
 
 export type DisplayKeyPair = {
@@ -426,6 +446,8 @@ export const UtilityStorages = new Set([
   EntityType.VesselCapacity,
   EntityType.FleetMoves,
   EntityType.Defense,
+  EntityType.Unraidable,
+  EntityType.AdvancedUnraidable,
 ]);
 
 export const MultiplierStorages = new Set([EntityType.DefenseMultiplier]);
@@ -453,6 +475,8 @@ export const ResourceEnumLookup: Record<Entity, EResource> = {
   [EntityType.VesselCapacity]: EResource.U_Vessel,
   [EntityType.FleetMoves]: EResource.U_MaxMoves,
   [EntityType.Defense]: EResource.U_Defense,
+  [EntityType.Unraidable]: EResource.U_Unraidable,
+  [EntityType.AdvancedUnraidable]: EResource.U_AdvancedUnraidable,
 
   [EntityType.DefenseMultiplier]: EResource.M_DefenseMultiplier,
 };

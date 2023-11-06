@@ -9,7 +9,7 @@ import { components as comps } from "src/network/components";
 import { Account } from "src/network/components/clientComponents";
 import { Hex } from "viem";
 import { clampedIndex, getBlockTypeName, toRomanNumeral } from "./common";
-import { ResourceEntityLookup, ResourceStorages, ResourceType, UtilityStorages } from "./constants";
+import { ResourceEntityLookup, ResourceStorages, ResourceType, SPEED_SCALE, UtilityStorages } from "./constants";
 import { outOfBounds } from "./outOfBounds";
 import { getRecipe } from "./resource";
 import { getBuildingAtCoord, getResourceKey } from "./tile";
@@ -200,9 +200,14 @@ export function transformProductionData(
       ? ResourceType.Utility
       : ResourceType.Multiplier;
 
+    let amount = production.amounts[i];
+    if (type === ResourceType.ResourceRate) {
+      const worldSpeed = comps.P_GameConfig.get()?.worldSpeed ?? 100n;
+      amount = (amount * worldSpeed) / SPEED_SCALE;
+    }
     return {
       resource: ResourceEntityLookup[curr as EResource],
-      amount: production.amounts[i],
+      amount,
       type,
     };
   });
@@ -233,8 +238,6 @@ export const getBuildingInfo = (building: Entity) => {
   const storages = getBuildingStorages(buildingTypeEntity, level);
   const nextLevelStorages = getBuildingStorages(buildingTypeEntity, nextLevel);
 
-  const vault = transformProductionData(comps.P_Vault.getWithKeys(buildingLevelKeys));
-  const vaultNext = transformProductionData(comps.P_Vault.getWithKeys(buildingNextLevelKeys));
   const unitProductionMultiplier = comps.P_UnitProdMultiplier.getWithKeys(buildingLevelKeys)?.value;
   const nextLevelUnitProductionMultiplier = comps.P_UnitProdMultiplier.getWithKeys(buildingNextLevelKeys)?.value;
 
@@ -252,13 +255,11 @@ export const getBuildingInfo = (building: Entity) => {
     production,
     unitProduction,
     storages,
-    vault,
     position,
     unitProductionMultiplier,
     requiredDependencies,
     upgrade: {
       unitProduction: unitNextLevelProduction,
-      vault: vaultNext,
       production: nextLevelProduction,
       storages: nextLevelStorages,
       recipe: upgradeRecipe,

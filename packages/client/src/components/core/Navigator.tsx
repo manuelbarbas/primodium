@@ -84,7 +84,7 @@ const NavButton: FC<{
   tooltip?: string;
   tooltipDirection?: "top" | "bottom" | "right" | "left";
   onClick?: () => void;
-}> = ({ to, className, children, disabled, onClick, tooltip, tooltipDirection = "right" }) => {
+}> = ({ to, className, children, disabled, onClick, tooltip, tooltipDirection = "top" }) => {
   const { navigateTo, history } = useNavigation();
 
   return (

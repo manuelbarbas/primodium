@@ -11,7 +11,7 @@ export const Motherlode: React.FC<{
 }> = ({ data }) => {
   return (
     <Navigator.Screen title={data.entity} className="w-full">
-      <Header name={data.name} imageUri={data.imageUri} />
+      <Header entity={data.entity} name={data.name} imageUri={data.imageUri} />
       <div className="grid grid-cols-2 w-full">
         <Invade />
         <Reinforce />

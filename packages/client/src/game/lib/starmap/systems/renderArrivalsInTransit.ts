@@ -6,7 +6,7 @@ import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
 import { world } from "src/network/world";
 import { PIRATE_KEY } from "src/util/constants";
-import { hashStringEntity } from "src/util/encode";
+import { hashKeyEntity } from "src/util/encode";
 import { getNow } from "src/util/time";
 import { ObjectPosition, OnComponentSystem, Tween } from "../../common/object-components/common";
 import { Circle, Line } from "../../common/object-components/graphics";
@@ -29,13 +29,12 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
     const origin = components.Position.get(arrival.origin);
     const destination = components.Position.get(arrival.destination);
 
-    console.log("destination:", destination);
     if (!origin || !destination) return;
 
     //render personal pirates only
     if (
       components.PirateAsteroid.has(arrival.destination) &&
-      hashStringEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(arrival.destination)?.value
+      hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(arrival.destination)?.value
     )
       return;
 

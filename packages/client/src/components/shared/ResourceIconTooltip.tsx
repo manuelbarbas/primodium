@@ -18,6 +18,7 @@ type ResourceIconProps = {
   playerEntity: Entity;
   validate?: boolean;
   short?: boolean;
+  fractionDigits?: number;
 };
 
 const suffixes = {
@@ -38,12 +39,13 @@ const ResourceIconTooltipContent = ({
   className,
   hasEnough,
   short = false,
+  fractionDigits = 0,
 }: ResourceIconProps & { hasEnough: boolean }) => {
   let value = Number((amount * 60n) / scale);
   if (resourceType !== ResourceType.ResourceRate) value = value / 60;
   if (resourceType == ResourceType.Multiplier) value = (value + 100) / 100;
   const label =
-    formatNumber(value, { short: short && resourceType !== ResourceType.Multiplier, fractionDigits: 1 }) +
+    formatNumber(value, { short: short && resourceType !== ResourceType.Multiplier, fractionDigits }) +
     suffixes[resourceType || ResourceType.Resource];
 
   return (

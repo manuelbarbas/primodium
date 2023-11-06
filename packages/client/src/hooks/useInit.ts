@@ -8,7 +8,10 @@ import { setupHangar } from "src/network/systems/setupHangar";
 import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
 import { setupSend } from "src/network/systems/setupSend";
 import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
+import { setupAllianceLeaderboard } from "src/network/systems/setupAllianceLeaderboard";
 import { useMud } from "./useMud";
+import { setupInvitations } from "src/network/systems/setupPlayerInvites";
+import { setupBattleNotifications } from "src/network/systems/setupBattleNotifications";
 
 export const useInit = () => {
   const mud = useMud();
@@ -21,10 +24,13 @@ export const useInit = () => {
     setupBlockNumber(mud.network.latestBlockNumber$);
     setupDoubleCounter(mud);
     setupLeaderboard(mud);
+    setupAllianceLeaderboard(mud);
     setupTrainingQueues(mud);
     setupHangar(mud);
     setupArrival();
     setupSend(playerEntity);
+    setupInvitations(mud);
+    setupBattleNotifications(mud);
   }, [mud, playerEntity]);
 
   // The network object and user wallet will have been loaded by the time the loading state is ready

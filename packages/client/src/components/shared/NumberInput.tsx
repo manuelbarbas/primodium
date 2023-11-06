@@ -1,24 +1,31 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export const NumberInput: React.FC<{
   min?: number;
   max: number;
   onChange: (val: number) => void;
 }> = ({ min = 0, max, onChange }) => {
-  const [count, setCount] = useState(min);
-  useEffect(() => {
-    if (isNaN(count)) setCount(min);
-    if (count > max) setCount(max);
-    if (count < min) setCount(min);
-  }, [max, count, min]);
+  const [count, setCount] = useState<number | "">(min);
+
+  const handleUpdate = (newCount: number) => {
+    if (isNaN(newCount) || newCount == 0) {
+      setCount("");
+      onChange(min);
+      return;
+    }
+
+    if (newCount > max) newCount = max;
+    else if (newCount < min) newCount = min;
+    setCount(newCount);
+    onChange(newCount);
+  };
 
   return (
-    <div className="flex gap-2 mt-4 mb-2">
+    <div className={`flex gap-2 mt-4 mb-2 `}>
       <button
-        onClick={() => {
-          setCount(Math.max(min, count - 1));
-          onChange(Math.max(min, count - 1));
-        }}
+        className={`${count == min ? "opacity-50" : ""}`}
+        disabled={count == min}
+        onClick={() => handleUpdate(Math.max(min, count == "" ? 0 : count - 1))}
       >
         -
       </button>
@@ -26,24 +33,18 @@ export const NumberInput: React.FC<{
         type="number"
         className="bg-transparent text-center w-fit outline-none border-b border-pink-900"
         value={count}
-        placeholder="0"
+        placeholder={min.toString()}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           e.preventDefault();
-
-          const value = parseInt(e.target.value);
-
-          setCount(value);
-          onChange(value);
+          handleUpdate(Number(e.target.value));
         }}
         min={0}
         max={max}
       />
-      {/* add to count */}
       <button
-        onClick={() => {
-          setCount(Math.min(max, count + 1));
-          onChange(Math.min(max, count + 1));
-        }}
+        className={`${count == max ? "opacity-50" : ""}`}
+        disabled={count == max}
+        onClick={() => handleUpdate(Math.min(max, count == "" ? min + 1 : count + 1))}
       >
         +
       </button>

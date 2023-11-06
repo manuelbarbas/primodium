@@ -31,16 +31,16 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
 
   const hasEnough = useHasEnoughResources(recipe, playerEntity);
   const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && level < maxLevel;
+  const atMaxLevel = level >= maxLevel;
 
   let error = "";
-  if (!hasEnough) {
-    error = "Not enough resources";
+  if (atMaxLevel) {
+    error = "Building max level";
   } else if (mainBaseLevel < mainBaseLvlReq) {
     error = `Mainbase lvl. ${mainBaseLvlReq} required`;
-  } else if (level >= maxLevel) {
-    error = "Building max level";
+  } else if (!hasEnough) {
+    error = "Not enough resources";
   }
-
   return (
     <SecondaryCard className="w-full items-center">
       <div className="flex items-center justify-between w-full">
@@ -49,7 +49,8 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
           <div>
             {recipe.length !== 0 && <p className="text-xs opacity-75 px-2 mb-1">UPGRADE COST</p>}
             <div className="flex flex-wrap gap-1 px-2">
-              {recipe.length !== 0 &&
+              {!atMaxLevel &&
+                recipe.length !== 0 &&
                 recipe.map((resource) => {
                   return (
                     <Badge key={resource.id + resource.type} className="text-xs gap-2">

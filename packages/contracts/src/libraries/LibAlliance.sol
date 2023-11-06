@@ -41,6 +41,14 @@ library LibAlliance {
   }
 
   /**
+   * @dev Checks if a alliance has space for new member.
+   * @param allianceEntity The entity ID of the alliance.
+   */
+  function checkAllianceMaxJoinLimit(bytes32 allianceEntity) internal view {
+    require(AllianceMembersSet.length(allianceEntity) < P_AllianceConfig.get(), "[Alliance] Alliance is full");
+  }
+
+  /**
    * @dev Checks if a new player can join an alliance.
    * @param playerEntity The entity ID of the player.
    * @param allianceEntity The entity ID of the alliance.
@@ -51,7 +59,6 @@ library LibAlliance {
       Alliance.getInviteMode(allianceEntity) == uint8(EAllianceInviteMode.Open) || inviter != 0,
       "[Alliance] Either alliance is not open or player has not been invited"
     );
-    require(AllianceMembersSet.length(allianceEntity) < P_AllianceConfig.get(), "[Alliance] Alliance is full");
     return;
   }
 
@@ -61,7 +68,11 @@ library LibAlliance {
    * @param toBeGranted The entity ID of the player receiving the new role.
    * @param roleToBeGranted The role.
    */
-  function checkCanGrantRole(bytes32 playerEntity, bytes32 toBeGranted, EAllianceRole roleToBeGranted) internal view {
+  function checkCanGrantRole(
+    bytes32 playerEntity,
+    bytes32 toBeGranted,
+    EAllianceRole roleToBeGranted
+  ) internal view {
     require(playerEntity != toBeGranted, "[Alliance] Can not grant role to self");
     uint8 role = PlayerAlliance.getRole(playerEntity);
     require(role <= uint8(roleToBeGranted), "[Alliance] Can not grant role higher then your own");
@@ -131,8 +142,8 @@ library LibAlliance {
    */
   function join(bytes32 player, bytes32 allianceEntity) internal {
     checkNotMemberOfAnyAlliance(player);
+    checkAllianceMaxJoinLimit(allianceEntity);
     checkCanNewPlayerJoinAlliance(player, allianceEntity);
-
     PlayerAlliance.set(player, allianceEntity, uint8(EAllianceRole.Member));
     AllianceInvitation.deleteRecord(player, allianceEntity);
     uint256 playerScore = Score.get(player);
@@ -232,7 +243,11 @@ library LibAlliance {
    * @param target The entity ID of the player being granted the role.
    * @param role The role to grant.
    */
-  function grantRole(bytes32 granter, bytes32 target, EAllianceRole role) internal {
+  function grantRole(
+    bytes32 granter,
+    bytes32 target,
+    EAllianceRole role
+  ) internal {
     checkCanGrantRole(granter, target, role);
     bytes32 allianceEntity = PlayerAlliance.getAlliance(granter);
     PlayerAlliance.set(target, allianceEntity, uint8(role));
@@ -270,9 +285,8 @@ library LibAlliance {
    */
   function acceptRequestToJoin(bytes32 player, bytes32 accepted) internal {
     checkCanInviteOrAcceptJoinRequest(player, accepted);
-
     bytes32 allianceEntity = PlayerAlliance.getAlliance(player);
-
+    checkAllianceMaxJoinLimit(allianceEntity);
     PlayerAlliance.set(accepted, allianceEntity, uint8(EAllianceRole.Member));
 
     uint256 playerScore = Score.get(accepted);

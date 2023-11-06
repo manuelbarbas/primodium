@@ -47,7 +47,7 @@ export const config = mudConfig({
         maxMotherlodesPerAsteroid: "uint256",
         motherlodeChanceInv: "uint256",
         motherlodeDistance: "uint256",
-        moveSpeed: "uint256",
+        travelTime: "uint256",
         worldSpeed: "uint256",
       },
     },
@@ -140,6 +140,10 @@ export const config = mudConfig({
     },
 
     /* -------------------------------- Resources ------------------------------- */
+    P_IsAdvancedResource: {
+      keySchema: { id: "uint8" }, // EResource
+      valueSchema: "bool",
+    },
 
     P_IsUtility: {
       keySchema: { id: "uint8" }, // EResource
@@ -585,20 +589,6 @@ export const config = mudConfig({
     },
 
     /* ------------------------------ Defense ----------------------------- */
-
-    P_Vault: {
-      keySchema: { prototype: "bytes32", level: "uint256" },
-      valueSchema: {
-        // mud doesnt recognize EResource arrays so we will manually convert them
-        resources: "uint8[]",
-        amounts: "uint256[]",
-      },
-    },
-
-    TotalVault: {
-      keySchema: { entity: "bytes32", resource: "uint8" },
-      valueSchema: "uint256",
-    },
 
     P_GracePeriod: {
       keySchema: {},
