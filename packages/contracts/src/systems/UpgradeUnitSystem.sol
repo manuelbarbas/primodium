@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { P_EnumToPrototype, P_MaxLevel, UnitLevel } from "codegen/index.sol";
-import { LibBuilding, LibResource } from "codegen/Libraries.sol";
+import { LibBuilding, LibResource, LibProduction } from "codegen/Libraries.sol";
 import { EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
@@ -27,6 +27,10 @@ contract UpgradeUnitSystem is PrimodiumSystem {
     require(targetLevel <= P_MaxLevel.get(unitPrototype), "[UpgradeUnitSystem] Max level reached");
 
     UnitLevel.set(playerEntity, unitPrototype, targetLevel);
+
+    //TODO: this is a HotFix for upgrading mining vessels it works as the only unit which mines resources is the mining vessel
+    // should be replaced by generalized logic
+    LibProduction.upgradeUnitResourceProduction(playerEntity, unitPrototype, targetLevel);
 
     LibResource.spendUpgradeResources(playerEntity, unitPrototype, targetLevel);
   }
