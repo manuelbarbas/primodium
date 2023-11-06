@@ -831,12 +831,12 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredBaseLevel: { value: 1n },
         P_RequiredResources: getResourceValues({ PVCell: 100000, Sulfur: 50000, U_Electricity: 50 }),
-        P_Production: getResourceValues({ U_Vault: 200000 }),
+        P_Production: getResourceValues({ U_Unraidable: 200000 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ PVCell: 200000, Sulfur: 150000, U_Electricity: 100 }),
-        P_Production: getResourceValues({ U_Vault: 1000000, U_AdvancedVault: 10000 }),
+        P_Production: getResourceValues({ U_Unraidable: 1000000, U_AdvancedUnraidable: 10000 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 5n },
@@ -846,7 +846,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           Sulfur: 150000,
           U_Electricity: 150,
         }),
-        P_Production: getResourceValues({ U_Vault: 10000000, U_AdvancedVault: 50000 }),
+        P_Production: getResourceValues({ U_Unraidable: 10000000, U_AdvancedUnraidable: 50000 }),
       },
       4: {
         P_RequiredBaseLevel: { value: 7n },
@@ -856,7 +856,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           Sulfur: 1500000,
           U_Electricity: 200,
         }),
-        P_Production: getResourceValues({ U_Vault: 5000000, U_AdvancedVault: 100000 }),
+        P_Production: getResourceValues({ U_Unraidable: 5000000, U_AdvancedUnraidable: 100000 }),
       },
     },
   },
@@ -872,8 +872,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       [MUDEnums.EResource.indexOf("U_MaxMoves")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Defense")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("M_DefenseMultiplier")]: { P_IsUtility: { value: true } },
-      [MUDEnums.EResource.indexOf("U_Vault")]: { P_IsUtility: { value: true } },
-      [MUDEnums.EResource.indexOf("U_AdvancedVault")]: { P_IsUtility: { value: true } },
+      [MUDEnums.EResource.indexOf("U_Unraidable")]: { P_IsUtility: { value: true } },
+      [MUDEnums.EResource.indexOf("U_AdvancedUnraidable")]: { P_IsUtility: { value: true } },
     },
   },
 

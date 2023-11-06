@@ -152,7 +152,7 @@ contract LibRaidTest is PrimodiumTest {
   function testRaidVault() public {
     ResourceCount.set(enemy, Iron, 100);
     MaxResourceCount.set(player, Iron, 100);
-    ResourceCount.set(enemy, uint8(EResource.U_Vault), 100);
+    ResourceCount.set(enemy, uint8(EResource.U_Unraidable), 100);
     Home.setAsteroid(enemy, rock);
     OwnedBy.set(rock, enemy);
     RockType.set(rock, uint8(ERock.Asteroid));
@@ -184,7 +184,7 @@ contract LibRaidTest is PrimodiumTest {
   function testRaidAdvancedVault() public {
     ResourceCount.set(enemy, Iron, 100);
     MaxResourceCount.set(player, Iron, 100);
-    ResourceCount.set(enemy, uint8(EResource.U_AdvancedVault), 100);
+    ResourceCount.set(enemy, uint8(EResource.U_AdvancedUnraidable), 100);
     P_IsAdvancedResource.set(Iron, true);
     Home.setAsteroid(enemy, rock);
     OwnedBy.set(rock, enemy);
