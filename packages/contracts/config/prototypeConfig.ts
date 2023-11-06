@@ -785,7 +785,12 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       },
       2: {
         P_RequiredBaseLevel: { value: 4n },
-        P_RequiredResources: getResourceValues({ Platinum: 50000, Sulfur: 800000, Alloy: 500000, U_Electricity: 200 }),
+        P_RequiredResources: getResourceValues({
+          Platinum: 50000,
+          Sulfur: 800000,
+          Alloy: 500000,
+          U_Electricity: 20000,
+        }),
         P_Production: getResourceValues({ U_Defense: 15000 }),
       },
       3: {
