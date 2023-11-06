@@ -1,5 +1,6 @@
-import { TransactionReceipt, zeroAddress } from "viem";
+import { Hex, TransactionReceipt, zeroAddress, decodeAbiParameters } from "viem";
 import { bigintToNumber } from "../bigint";
+import { PublicClient } from "viem/_types/clients/createPublicClient";
 
 // See Amplitude dashboard for more details on the event properties:
 type ParsedReceipt =
@@ -31,3 +32,14 @@ export const parseReceipt = (receipt: TransactionReceipt | undefined): ParsedRec
     };
   }
 };
+
+// Call from a hash to force a CallExecutionError such that we can get the revert reason
+export async function callTransaction(txHash: Hex, publicClient: PublicClient): Promise<void> {
+  const tx = await publicClient.getTransaction({ hash: txHash });
+  if (!tx) throw new Error("This transaction doesn't exist. Can't get the revert reason");
+  await publicClient.call({
+    account: tx.from!,
+    to: tx.to!,
+    data: tx.input,
+  });
+}
