@@ -1592,7 +1592,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         units: encodeArray(["MinutemanMarine"]),
         unitAmounts: [40n],
         resources: indexifyResourceArray(["Copper", "Iron", "IronPlate"]),
-        resourceAmounts: [50000n, 50000n, 50000n],
+        resourceAmounts: [150000n, 150000n, 150000n],
       },
       P_UnitReward: getUnitValues({ MinutemanMarine: 50 }),
     },
@@ -1619,10 +1619,10 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_SpawnPirateAsteroid: {
         x: -3,
         y: -15,
-        units: encodeArray(["MinutemanMarine"]),
-        unitAmounts: [400n],
-        resources: indexifyResourceArray(["PVCell", "Copper", "Sulfur"]),
-        resourceAmounts: [100000n, 200000n, 100000n],
+        units: encodeArray(["AnvilDrone", "MinutemanMarine"]),
+        unitAmounts: [50n, 400n],
+        resources: indexifyResourceArray(["Alloy", "Copper", "Sulfur"]),
+        resourceAmounts: [100000n, 500000n, 200000n],
       },
       P_UnitReward: getUnitValues({ AnvilDrone: 70 }),
     },
@@ -1631,7 +1631,38 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["DefeatPirateBase4"]) },
       P_DefeatedPirates: { value: encodeArray(["DefeatPirateBase4"]) },
+      P_SpawnPirateAsteroid: {
+        x: -12,
+        y: 17,
+        units: encodeArray(["AegisDrone", "TridentMarine"]),
+        unitAmounts: [50n, 250n],
+        resources: indexifyResourceArray(["Alloy", "PVCell", "Copper"]),
+        resourceAmounts: [200000n, 200000n, 1000000n],
+      },
       P_UnitReward: getUnitValues({ HammerDrone: 120 }),
+    },
+  },
+  DefeatPirateBase6: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["DefeatPirateBase5"]) },
+      P_DefeatedPirates: { value: encodeArray(["DefeatPirateBase5"]) },
+      P_SpawnPirateAsteroid: {
+        x: -12,
+        y: 17,
+        units: encodeArray(["AegisDrone", "TridentMarine"]),
+        unitAmounts: [50n, 250n],
+        resources: indexifyResourceArray(["Iron", "Copper", "Lithium", "Sulfur"]),
+        resourceAmounts: [1000000n, 1000000n, 1000000n, 1000000n],
+      },
+      P_UnitReward: getUnitValues({ AegisDrone: 30 }),
+    },
+  },
+  DefeatPirateBase7: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["DefeatPirateBase6"]) },
+      P_DefeatedPirates: { value: encodeArray(["DefeatPirateBase6"]) },
+      P_UnitReward: getUnitValues({ AegisDrone: 30 }),
+      P_ResourceReward: getResourceValues({ Titanium: 20000 }),
     },
   },
 
@@ -1729,7 +1760,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   BuildSAMLauncher: {
     tables: {
       P_HasBuiltBuildings: { value: encodeArray(["SAM"]) },
-      P_UnitReward: getUnitValues({ AnvilDrone: 150 }),
+      P_UnitReward: getUnitValues({ AnvilDrone: 50 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
