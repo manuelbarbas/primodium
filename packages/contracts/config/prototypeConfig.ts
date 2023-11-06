@@ -1675,7 +1675,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["DefeatPirateBase6"]) },
       P_DefeatedPirates: { value: encodeArray(["DefeatPirateBase6"]) },
-      P_UnitReward: getUnitValues({ AegisDrone: 30 }),
+      P_UnitReward: getUnitValues({ AegisDrone: 60 }),
       P_ResourceReward: getResourceValues({ Titanium: 20000 }),
     },
   },
