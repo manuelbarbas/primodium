@@ -310,15 +310,17 @@ export const InvitesScreen: React.FC = () => {
             <Join direction="vertical" className="overflow-auto w-full h-56 scrollbar">
               {invites.map((entity) => {
                 const playerInvite = components.PlayerInvite.get(entity);
-                const alliance = components.Alliance.get(playerInvite?.alliance);
+                const playerEntities = components.PlayerAlliance.getAllWith({
+                  alliance: playerInvite?.alliance,
+                });
 
-                if (!playerInvite?.alliance || !alliance?.name) return <></>;
+                if (!playerInvite?.alliance) return <></>;
 
                 return (
                   <SecondaryCard key={entity} className="border-b rounded-none flex-row justify-between items-center">
                     <div className="flex gap-2 items-center">
                       <b>[{getAllianceName(playerInvite.alliance, true)}]</b>
-                      <Badge className="badge-secondary badge-sm">{alliance.score.toLocaleString()}</Badge>
+                      <b className="opacity-75">{playerEntities.length} MEMBER(S)</b>
                     </div>
 
                     <div className="flex gap-1">
