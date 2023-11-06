@@ -27,10 +27,12 @@ export async function _execute(txPromise: Promise<Hex>, network: SetupNetworkRes
     console.error(error);
     try {
       if (error instanceof ContractFunctionExecutionError) {
+        // Thrown by network.waitForTransaction, no receipt is returned
         const reason = error.cause.shortMessage;
         toast.warn(reason);
         return receipt;
       } else if (error instanceof CallExecutionError) {
+        // Thrown by callTransaction, receipt is returned
         const reason = error.cause.shortMessage;
         toast.warn(reason);
         return receipt;
