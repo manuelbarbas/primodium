@@ -46,6 +46,7 @@ import { hashEntities } from "src/util/encode";
 import { TransactionQueueType } from "src/util/constants";
 import { getAllianceName } from "src/util/alliance";
 import { isProfane } from "src/util/profanity";
+import { Badge } from "src/components/core/Badge";
 
 const ALLIANCE_TAG_SIZE = 6;
 
@@ -309,15 +310,17 @@ export const InvitesScreen: React.FC = () => {
             <Join direction="vertical" className="overflow-auto w-full h-56 scrollbar">
               {invites.map((entity) => {
                 const playerInvite = components.PlayerInvite.get(entity);
-                const alliance = components.Alliance.get(playerInvite?.alliance);
+                const alliance = components.Alliance.use(playerInvite?.alliance);
 
                 if (!playerInvite?.alliance || !alliance?.name) return <></>;
 
-                const name = hexToString(alliance.name as Hex, { size: 32 });
-
                 return (
                   <SecondaryCard key={entity} className="border-b rounded-none flex-row justify-between items-center">
-                    {name}
+                    <div className="flex gap-2 items-center">
+                      <b>[{getAllianceName(playerInvite.alliance, true)}]</b>
+                      <Badge className="badge-secondary badge-sm">{alliance.score.toLocaleString()}</Badge>
+                    </div>
+
                     <div className="flex gap-1">
                       {/* only kick if not current player, has the ability to kick, and current player is higher than member */}
                       <TransactionQueueMask
