@@ -13,7 +13,7 @@ import {
 import { getNow } from "./time";
 
 export const getScale = (resource: Entity) => {
-  if (resource === EntityType.FleetMoves) return 1n;
+  if (resource === EntityType.FleetMoves || resource === EntityType.VesselCapacity) return 1n;
   return RESOURCE_SCALE;
 };
 
