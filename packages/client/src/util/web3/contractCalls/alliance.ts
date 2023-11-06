@@ -9,20 +9,7 @@ import { components } from "src/network/components";
 import { randomEntity } from "src/util/common";
 import { ampli } from "src/ampli";
 import { parseReceipt } from "../../analytics/parseReceipt";
-import { hexToString } from "viem";
-
-const getAllianceName = (alliance: Entity) => {
-  const allianceData = components.Alliance.get(alliance);
-  const allianceName = hexToString(allianceData!.name as Hex, { size: 32 });
-  return allianceName;
-};
-
-const getAllianceNameFromPlayer = (player: Entity) => {
-  const alliance = components.PlayerAlliance.get(player)?.alliance as Entity;
-  const allianceData = components.Alliance.get(alliance);
-  const allianceName = hexToString(allianceData!.name as Hex, { size: 32 });
-  return allianceName;
-};
+import { getAllianceName, getAllianceNameFromPlayer } from "src/util/alliance";
 
 export const createAlliance = async (name: string, inviteOnly: boolean, network: SetupNetworkResult) => {
   await execute(
