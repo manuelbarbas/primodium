@@ -1,13 +1,13 @@
 import { Entity } from "@latticexyz/recs";
-import { SecondaryCard } from "src/components/core/Card";
-import { Badge } from "src/components/core/Badge";
-import { BuildingImage } from "src/components/shared/BuildingImage";
-import { Navigator } from "src/components/core/Navigator";
 import { FaInfoCircle } from "react-icons/fa";
-import { getBuildingName } from "src/util/building";
+import { Badge } from "src/components/core/Badge";
+import { SecondaryCard } from "src/components/core/Card";
+import { Navigator } from "src/components/core/Navigator";
+import { BuildingImage } from "src/components/shared/BuildingImage";
+import { useBuildingName } from "src/hooks/useBuildingName";
 
 export const Header: React.FC<{ building: Entity }> = ({ building }) => {
-  const buildingName = getBuildingName(building);
+  const buildingName = useBuildingName(building);
 
   return (
     <SecondaryCard className="w-full">
