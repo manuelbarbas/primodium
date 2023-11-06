@@ -13,6 +13,7 @@ import {
   FaCheck,
   FaTimes,
   FaCopy,
+  FaLock,
 } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
@@ -43,6 +44,8 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { hashEntities } from "src/util/encode";
 import { TransactionQueueType } from "src/util/constants";
+import { getAllianceName } from "src/util/alliance";
+import { isProfane } from "src/util/profanity";
 
 const ALLIANCE_TAG_SIZE = 6;
 
@@ -68,16 +71,9 @@ export const ScoreScreen = () => {
           {({ index, style }) => {
             const alliance = data.alliances[index];
             const score = data.scores[index];
-            const allianceName = (components.Alliance.get(alliance)?.name ?? "") as Hex;
             return (
               <div style={style} className="pr-2">
-                <LeaderboardItem
-                  key={index}
-                  alliance={allianceName}
-                  index={index}
-                  score={Number(score)}
-                  entity={alliance}
-                />
+                <LeaderboardItem key={index} index={index} score={Number(score)} entity={alliance} />
               </div>
             );
           }}
@@ -123,7 +119,7 @@ export const CreateScreen = () => {
 
       <div className="flex gap-1 mt-auto">
         <Navigator.BackButton
-          disabled={!allianceTag}
+          disabled={!allianceTag || isProfane(allianceTag)}
           className="btn-primary btn-sm"
           onClick={() => {
             createAlliance(allianceTag, inviteOnly, network);
@@ -482,17 +478,7 @@ export const SendInviteScreen = () => {
   );
 };
 
-const LeaderboardItem = ({
-  alliance,
-  index,
-  score,
-  entity,
-}: {
-  alliance: Hex;
-  index: number;
-  score: number;
-  entity: Entity;
-}) => {
+const LeaderboardItem = ({ index, score, entity }: { index: number; score: number; entity: Entity }) => {
   const network = useMud().network;
   const playerEntity = network.playerEntity;
   const allianceMode = components.Alliance.get(entity)?.inviteMode as EAllianceInviteMode | undefined;
@@ -501,13 +487,16 @@ const LeaderboardItem = ({
 
   return (
     <SecondaryCard
-      className={`grid grid-cols-6 w-full border rounded-md border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center h-10 ${
-        inviteOnly ? "border-warning" : ""
+      className={`grid grid-cols-7 w-full border rounded-md border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center h-10 ${
+        playerAlliance === entity ? "border-success" : ""
       }`}
     >
       <div>{index + 1}.</div>
-      <div className="col-span-5 flex justify-between items-center">
-        <div>{hexToString(alliance, { size: 32 }).substring(0, 6)}</div>
+      <div className="col-span-6 flex justify-between items-center">
+        <div className="flex gap-1 items-center">
+          <FaLock className="text-warning opacity-75" />
+          {getAllianceName(entity, true)}
+        </div>
         <div className="flex items-center gap-1">
           <p className="font-bold rounded-md bg-cyan-700 px-2 ">{score.toLocaleString()}</p>
           {!playerAlliance && (
@@ -536,12 +525,10 @@ const InfoRow = ({ data }: { data?: ComponentValue<typeof components.AllianceLea
   const score = data.scores[data.playerAllianceRank - 1];
   const rank = data.playerAllianceRank;
   const allianceEntity = data.alliances[data.playerAllianceRank - 1];
-  const alliance = components.Alliance.get(allianceEntity);
-  const allianceName = (alliance?.name ?? "") as Hex;
 
   if (!allianceEntity) return <SoloPlayerInfo />;
 
-  return <PlayerInfo rank={rank} allianceName={hexToString(allianceName, { size: 32 })} score={Number(score)} />;
+  return <PlayerInfo rank={rank} allianceName={getAllianceName(allianceEntity, true)} score={Number(score)} />;
 };
 
 const PlayerInfo = ({ rank, allianceName, score }: { rank: number; allianceName: string; score: number }) => {

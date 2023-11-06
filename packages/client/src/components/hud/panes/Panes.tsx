@@ -21,28 +21,28 @@ export const Panes: React.FC = () => {
       defaultIndex={newPlayer ? 4 : -1}
       onChange={() => setNewPlayer(false)}
     >
-      <Tabs.Pane index={0} className="w-96">
+      <Tabs.Pane index={0} className="w-108">
         <Outgoingfleets />
       </Tabs.Pane>
-      <Tabs.Pane index={1} className="w-96">
+      <Tabs.Pane index={1} className="w-108">
         <ReinforcementFleets />
       </Tabs.Pane>
-      <Tabs.Pane index={2} className="w-96">
+      <Tabs.Pane index={2} className="w-108">
         <HostileFleets />
       </Tabs.Pane>
-      <Tabs.Pane index={3} className="w-96">
+      <Tabs.Pane index={3} className="w-108">
         <BattleReports />
       </Tabs.Pane>
-      <Tabs.Pane index={4} className="w-96">
+      <Tabs.Pane index={4} className="w-108">
         <Objectives />
       </Tabs.Pane>
-      <Tabs.Pane index={5} className="w-96">
+      <Tabs.Pane index={5} className="w-108">
         <OwnedMotherlodes />
       </Tabs.Pane>
-      <Tabs.Pane index={6} className="w-96">
+      <Tabs.Pane index={6} className="w-120">
         <Leaderboard />
       </Tabs.Pane>
-      <Tabs.Pane index={7} className="w-96">
+      <Tabs.Pane index={7} className="w-108">
         <Settings />
       </Tabs.Pane>
       <div className="flex flex-col gap-2">

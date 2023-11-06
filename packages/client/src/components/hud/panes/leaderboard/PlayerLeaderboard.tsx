@@ -4,7 +4,7 @@ import { FixedSizeList as List } from "react-window";
 
 import { primodium } from "@game/api";
 import { Scenes } from "@game/constants";
-import { FaCrosshairs } from "react-icons/fa";
+import { FaCrosshairs, FaEnvelope } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { entityToAddress, shortenAddress } from "src/util/common";
@@ -12,6 +12,12 @@ import { getLinkedAddress } from "src/util/web2/getLinkedAddress";
 import { linkAddress } from "src/util/web2/linkAddress";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
+import { getAllianceName } from "src/util/alliance";
+import { EAllianceRole } from "contracts/config/enums";
+import { invite } from "src/util/web3/contractCalls/alliance";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { hashEntities } from "src/util/encode";
+import { TransactionQueueType } from "src/util/constants";
 
 export const PlayerLeaderboard = () => {
   const network = useMud().network;
@@ -73,6 +79,9 @@ export const PlayerLeaderboard = () => {
 };
 
 const LeaderboardItem = ({ player, index, score }: { player: Entity; index: number; score: number }) => {
+  const network = useMud().network;
+  const playerEntity = network.playerEntity;
+  const role = components.PlayerAlliance.use(playerEntity)?.role ?? EAllianceRole.Member;
   const [fetchedExternalWallet, setFetchedExternalWallet] = useState<{
     address: string | null;
     ensName: string | null;
@@ -94,20 +103,34 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
   }, [player]);
 
   const playerDisplay: string = useMemo(() => {
-    if (fetchedExternalWallet.ensName) {
-      return fetchedExternalWallet.ensName;
-    } else if (fetchedExternalWallet.address) {
-      return shortenAddress(entityToAddress(fetchedExternalWallet.address));
-    } else {
-      return shortenAddress(entityToAddress(player));
-    }
-  }, [fetchedExternalWallet, player]);
+    if (player === playerEntity) return "You";
+
+    if (fetchedExternalWallet.ensName) return fetchedExternalWallet.ensName;
+
+    if (fetchedExternalWallet.address) return shortenAddress(entityToAddress(fetchedExternalWallet.address));
+
+    return shortenAddress(entityToAddress(player));
+  }, [fetchedExternalWallet, player, playerEntity]);
+
+  const playerAllianceDisplay = useMemo(() => {
+    const playerAlliance = components.PlayerAlliance.get(player)?.alliance as Entity | undefined;
+
+    if (playerAlliance) return getAllianceName(playerAlliance, true);
+    else return undefined;
+  }, [player]);
 
   return (
-    <SecondaryCard className="grid grid-cols-6 w-full border rounded-md border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center">
+    <SecondaryCard
+      className={`grid grid-cols-7 w-full border rounded-md border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center h-10 ${
+        player === playerEntity ? "border-success" : ""
+      }`}
+    >
       <div>{index + 1}.</div>
-      <div className="col-span-5 flex justify-between items-center">
-        <div>{playerDisplay}</div>
+      <div className="col-span-6 flex justify-between items-center">
+        <div className="flex gap-1">
+          {playerAllianceDisplay && <b className="text-accent">[{playerAllianceDisplay}]</b>}
+          {playerDisplay}
+        </div>
         <div className="flex items-center gap-1">
           <p className="font-bold rounded-md bg-cyan-700 px-2 ">{score.toLocaleString()}</p>
           <Button
@@ -134,6 +157,20 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
           >
             <FaCrosshairs />
           </Button>
+          {role <= EAllianceRole.CanInvite && player !== playerEntity && (
+            <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Invite, player)}>
+              <Button
+                className="btn-xs flex border border-secondary"
+                tooltip="Invite"
+                tooltipDirection="left"
+                onClick={async () => {
+                  invite(player, network);
+                }}
+              >
+                <FaEnvelope />
+              </Button>
+            </TransactionQueueMask>
+          )}
         </div>
       </div>
     </SecondaryCard>

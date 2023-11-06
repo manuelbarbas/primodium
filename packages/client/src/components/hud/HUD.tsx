@@ -58,15 +58,16 @@ export const GameHUD = () => {
               <Score />
               <LoadingIndication />
             </HUD.TopLeft>
-            <HUD.TopRight>
-              <Panes />
-            </HUD.TopRight>
+
             <HUD.BottomLeft>
               <Resources />
             </HUD.BottomLeft>
             <HUD.BottomRight>
               <Units />
             </HUD.BottomRight>
+            <HUD.TopRight>
+              <Panes />
+            </HUD.TopRight>
           </HUD>
         )}
 
