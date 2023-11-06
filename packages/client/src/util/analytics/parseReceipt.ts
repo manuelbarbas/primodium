@@ -1,4 +1,4 @@
-import { Hex, TransactionReceipt, zeroAddress, decodeAbiParameters } from "viem";
+import { Hex, TransactionReceipt, zeroAddress } from "viem";
 import { bigintToNumber } from "../bigint";
 import { PublicClient } from "viem/_types/clients/createPublicClient";
 

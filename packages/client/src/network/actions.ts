@@ -7,34 +7,33 @@ import { MetadataTypes } from "./components/customComponents/TransactionQueueCom
 import { callTransaction } from "src/util/analytics/parseReceipt";
 
 export async function _execute(txPromise: Promise<Hex>, network: SetupNetworkResult) {
+  let receipt: TransactionReceipt | undefined = undefined;
+
   try {
     const txHash = await txPromise;
     await network.waitForTransaction(txHash);
     console.log("Transaction Hash: ", txHash);
-    const receipt = await network.publicClient.getTransactionReceipt({ hash: txHash });
 
     // If the transaction runs out of gas, status will be reverted
     // receipt.status is of type TStatus = 'success' | 'reverted' defined in TransactionReceipt
-    if (receipt.status === "reverted") {
+    receipt = await network.publicClient.getTransactionReceipt({ hash: txHash });
+    if (receipt && receipt.status === "reverted") {
       // Force a CallExecutionError such that we can get the revert reason
       await callTransaction(txHash, network.publicClient);
       toast.error("You're moving fast! Please wait a moment and then try again.");
     }
-    // Even if the transaction fails, we still want to return the receipt to log gas usage etc.
     return receipt;
   } catch (error) {
     console.error(error);
     try {
       if (error instanceof ContractFunctionExecutionError) {
         const reason = error.cause.shortMessage;
-        console.log("reason: ", reason);
         toast.warn(reason);
-        return undefined;
+        return receipt;
       } else if (error instanceof CallExecutionError) {
         const reason = error.cause.shortMessage;
-        console.log("reason: ", reason);
         toast.warn(reason);
-        return undefined;
+        return receipt;
       }
     } catch (error) {
       console.error(error);
@@ -45,7 +44,7 @@ export async function _execute(txPromise: Promise<Hex>, network: SetupNetworkRes
       // throws an error if the transaction fails.
       // We should be on the lookout for other errors that could be thrown here.
       toast.error(`${error}`);
-      return undefined;
+      return receipt;
     }
   }
 }
