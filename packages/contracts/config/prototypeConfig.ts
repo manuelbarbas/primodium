@@ -777,7 +777,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Sulfur: 500000, Alloy: 200000, U_Electricity: 10000 }),
-        P_Production: getResourceValues({ U_Defense: 200000 }),
+        P_Production: getResourceValues({ U_Defense: 2000 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 4n },
@@ -787,7 +787,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           Alloy: 200000,
           U_Electricity: 20000,
         }),
-        P_Production: getResourceValues({ U_Defense: 1000000 }),
+        P_Production: getResourceValues({ U_Defense: 10000 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 6n },
@@ -797,7 +797,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           Alloy: 200000,
           U_Electricity: 30000,
         }),
-        P_Production: getResourceValues({ U_Defense: 25000000 }),
+        P_Production: getResourceValues({ U_Defense: 250000 }),
       },
     },
   },

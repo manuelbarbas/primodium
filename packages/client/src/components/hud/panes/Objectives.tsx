@@ -10,6 +10,7 @@ import { FaCheck, FaGift, FaMedal, FaSpinner } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
+import { IconLabel } from "src/components/core/IconLabel";
 import { Join } from "src/components/core/Join";
 import { Tabs } from "src/components/core/Tabs";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
@@ -116,7 +117,6 @@ const Objective: React.FC<{
   const requirements = useMemo(() => {
     if (!objective) return;
     const reqs = getAllRequirements(objective, playerEntity);
-    if (objective == toHex32("DefeatPirateBase1")) console.log("reqs:", reqs);
     return reqs;
   }, [objective, blockNumber, playerEntity]);
 
@@ -140,31 +140,29 @@ const Objective: React.FC<{
             <FaSpinner /> PROGRESS:
           </span>
           {Object.entries(requirements ?? {}).map(([key, req], index) => {
+            const complete = isAllRequirementsMet(req);
             return (
               <div key={index} className="flex flex-wrap gap-1">
                 {req.map((_req, index) => {
                   const value = _req.currentValue > _req.requiredValue ? _req.requiredValue : _req.currentValue;
                   return (
-                    <Badge
-                      key={index}
-                      className={`text-xs gap-2 ${isAllRequirementsMet(req) ? "badge-success" : "badge-neutral"}`}
-                    >
-                      <ResourceIconTooltip
-                        name={
-                          _req.type === RequirementType.DefeatedPirates ? "Defeated Pirates" : getBlockTypeName(_req.id)
-                        }
-                        playerEntity={playerEntity}
-                        image={
+                    <Badge key={index} className={`text-xs gap-2 ${complete ? "badge-success" : "badge-neutral"}`}>
+                      <IconLabel
+                        imageUri={
                           ResourceImage.get(_req.id) ??
                           BackgroundImage.get(_req.id)?.at(0) ??
                           "/img/icons/minersicon.png"
                         }
-                        resource={_req.id}
-                        amount={value}
-                        direction="top"
+                        text={formatNumber(value / _req.scale, { short: true, fractionDigits: 3 })}
+                        tooltipDirection={"bottom"}
+                        tooltipText={
+                          _req.type === RequirementType.DefeatedPirates ? "Defeated Pirates" : getBlockTypeName(_req.id)
+                        }
+                        className="text-xs font-bold"
                       />
+
                       <span className="font-bold">
-                        / {formatNumber(_req.requiredValue / _req.scale, { fractionDigits: 1 })}
+                        / {formatNumber(_req.requiredValue / _req.scale, { short: true, fractionDigits: 1 })}
                       </span>
                     </Badge>
                   );

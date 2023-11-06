@@ -9,11 +9,18 @@ import {
   ResourceEnumLookup,
   ResourceType,
   SPEED_SCALE,
+  UnitEnumLookup,
 } from "./constants";
 import { getNow } from "./time";
 
 export const getScale = (resource: Entity) => {
-  if (resource === EntityType.FleetMoves || resource === EntityType.VesselCapacity) return 1n;
+  if (
+    UnitEnumLookup[resource] !== undefined ||
+    resource === EntityType.FleetMoves ||
+    resource === EntityType.VesselCapacity ||
+    resource === EntityType.Defense
+  )
+    return 1n;
   return RESOURCE_SCALE;
 };
 
