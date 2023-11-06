@@ -1310,7 +1310,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     levels: {
       0: {
         P_RequiredResources: getResourceValues({ Iron: 6000, U_Housing: 100 }),
-        P_MiningRate: { value: 1n },
         P_Unit: {
           attack: 40n,
           defense: 20n,
@@ -1323,7 +1322,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredUpgradeResources: getResourceValues({ Sulfur: 500000, Iron: 500000 }),
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ Iron: 6000, U_Housing: 100 }),
-        P_MiningRate: { value: 2n },
         P_Unit: {
           attack: 42n,
           defense: 21n,
@@ -1336,7 +1334,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredUpgradeResources: getResourceValues({ Sulfur: 5000000, Iron: 5000000 }),
         P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Iron: 6000, U_Housing: 100 }),
-        P_MiningRate: { value: 3n },
         P_Unit: {
           attack: 44n,
           defense: 23n,
@@ -1349,7 +1346,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredUpgradeResources: getResourceValues({ Sulfur: 10000000, Iron: 10000000 }),
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Iron: 6000, U_Housing: 100 }),
-        P_MiningRate: { value: 4n },
         P_Unit: {
           attack: 46n,
           defense: 25n,
@@ -1362,7 +1358,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredUpgradeResources: getResourceValues({ Sulfur: 25000000, Iron: 25000000 }),
         P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ Iron: 6000, U_Housing: 100 }),
-        P_MiningRate: { value: 5n },
         P_Unit: {
           attack: 48n,
           defense: 27n,
@@ -1375,7 +1370,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredUpgradeResources: getResourceValues({ Sulfur: 50000000, Iron: 50000000 }),
         P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Iron: 6000, U_Housing: 100 }),
-        P_MiningRate: { value: 6n },
         P_Unit: {
           attack: 50n,
           defense: 30n,
@@ -1393,7 +1387,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     levels: {
       0: {
         P_RequiredResources: getResourceValues({ IronPlate: 3500, U_Housing: 100 }),
-        P_MiningRate: { value: 1n },
         P_Unit: {
           attack: 80n,
           defense: 100n,
@@ -1406,7 +1399,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredUpgradeResources: getResourceValues({ Lithium: 500000, IronPlate: 5000000 }),
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ IronPlate: 3500, U_Housing: 100 }),
-        P_MiningRate: { value: 2n },
         P_Unit: {
           attack: 84n,
           defense: 105n,
@@ -1419,7 +1411,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredUpgradeResources: getResourceValues({ Lithium: 5000000, IronPlate: 50000000 }),
         P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ IronPlate: 3500, U_Housing: 100 }),
-        P_MiningRate: { value: 3n },
         P_Unit: {
           attack: 90n,
           defense: 110n,
@@ -1432,7 +1423,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredUpgradeResources: getResourceValues({ Lithium: 10000000, IronPlate: 10000000 }),
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ IronPlate: 3500, U_Housing: 100 }),
-        P_MiningRate: { value: 4n },
         P_Unit: {
           attack: 95n,
           defense: 115n,
@@ -1445,7 +1435,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredUpgradeResources: getResourceValues({ Lithium: 25000000, IronPlate: 25000000 }),
         P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ IronPlate: 3500, U_Housing: 100 }),
-        P_MiningRate: { value: 5n },
         P_Unit: {
           attack: 100n,
           defense: 120n,
@@ -1458,7 +1447,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredUpgradeResources: getResourceValues({ Lithium: 50000000, IronPlate: 5000000 }),
         P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ IronPlate: 3500, U_Housing: 100 }),
-        P_MiningRate: { value: 6n },
         P_Unit: {
           attack: 110n,
           defense: 125n,
