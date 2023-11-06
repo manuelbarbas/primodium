@@ -9,7 +9,7 @@ import { useBuildingInfo } from "src/hooks/useBuildingInfo";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
-import { RESOURCE_SCALE, ResourceImage, ResourceType, TransactionQueueType } from "src/util/constants";
+import { ResourceImage, TransactionQueueType } from "src/util/constants";
 import { encodeCoord, encodeNumberEntity } from "src/util/encode";
 import { upgradeBuilding } from "src/util/web3/contractCalls/upgradeBuilding";
 
@@ -61,7 +61,6 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
                         resource={resource.id}
                         amount={resource.amount}
                         resourceType={resource.type}
-                        scale={resource.type === ResourceType.Utility ? 1n : RESOURCE_SCALE}
                         direction="top"
                         validate
                       />

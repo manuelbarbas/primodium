@@ -1,11 +1,11 @@
 import { SecondaryCard } from "src/components/core/Card";
 
-import { RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
-import { getBlockTypeName } from "src/util/common";
-import { getSpaceRockInfo } from "src/util/spacerock";
 import { Badge } from "src/components/core/Badge";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
+import { getBlockTypeName } from "src/util/common";
+import { ResourceImage, ResourceType } from "src/util/constants";
+import { getSpaceRockInfo } from "src/util/spacerock";
 
 const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (
@@ -34,7 +34,6 @@ export const AsteroidResource: React.FC<{
               playerEntity={playerEntity}
               amount={resource.amount}
               resourceType={ResourceType.Resource}
-              scale={RESOURCE_SCALE}
               direction="top"
             />
           </Badge>

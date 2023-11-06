@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { ResourceCount, BuildingType, Level, P_Production, P_ProductionData, P_IsUtility, ProductionRate } from "codegen/index.sol";
+import { P_IsAdvancedResource, P_MiningRate, ResourceCount, BuildingType, Level, P_Production, P_ProductionData, P_IsUtility, ProductionRate } from "codegen/index.sol";
 import { EResource } from "src/Types.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 
@@ -33,6 +33,25 @@ library LibProduction {
       }
       uint256 addedProductionRate = prototypeProduction.amounts[i] - prevLevelPrototypeProduction;
       increaseResourceProduction(playerEntity, EResource(prototypeProduction.resources[i]), addedProductionRate);
+    }
+  }
+
+  function upgradeUnitResourceProduction(
+    bytes32 playerEntity,
+    bytes32 unitPrototype,
+    uint256 level
+  ) internal {
+    uint256 miningRate = P_MiningRate.get(unitPrototype, level);
+    if (miningRate > 0) {
+      uint256 lastLevelMiningRate = P_MiningRate.get(unitPrototype, level - 1);
+      for (uint8 resource = 1; resource < uint8(EResource.LENGTH); resource++) {
+        if (P_IsAdvancedResource.get(resource)) {
+          uint256 currProduction = ProductionRate.get(playerEntity, resource);
+          if (currProduction > 0) {
+            ProductionRate.set(playerEntity, resource, ((currProduction * miningRate) / lastLevelMiningRate));
+          }
+        }
+      }
     }
   }
 

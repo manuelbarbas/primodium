@@ -1,7 +1,8 @@
 import { Entity } from "@latticexyz/recs";
 import { useHasEnoughOfResource } from "src/hooks/useHasEnoughOfResource";
 import { formatNumber } from "src/util/common";
-import { RESOURCE_SCALE, ResourceType } from "src/util/constants";
+import { ResourceType } from "src/util/constants";
+import { getScale } from "src/util/resource";
 import { IconLabel } from "../core/IconLabel";
 
 type ResourceIconProps = {
@@ -11,7 +12,6 @@ type ResourceIconProps = {
   name: string;
   amount: bigint;
   inline?: boolean;
-  scale?: bigint;
   fontSize?: string;
   direction?: "top" | "bottom" | "right" | "left";
   className?: string;
@@ -31,7 +31,6 @@ const suffixes = {
 const ResourceIconTooltipContent = ({
   resourceType,
   amount,
-  scale = RESOURCE_SCALE,
   image,
   name,
   direction,
@@ -40,7 +39,9 @@ const ResourceIconTooltipContent = ({
   hasEnough,
   short = false,
   fractionDigits = 0,
+  resource,
 }: ResourceIconProps & { hasEnough: boolean }) => {
+  const scale = getScale(resource);
   let value = Number((amount * 60n) / scale);
   if (resourceType !== ResourceType.ResourceRate) value = value / 60;
   if (resourceType == ResourceType.Multiplier) value = (value + 100) / 100;

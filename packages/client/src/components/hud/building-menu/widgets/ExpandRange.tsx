@@ -8,7 +8,7 @@ import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
-import { EntityType, RESOURCE_SCALE, ResourceImage, ResourceType, TransactionQueueType } from "src/util/constants";
+import { EntityType, ResourceImage, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { getUpgradeInfo } from "src/util/upgrade";
 import { upgradeRange } from "src/util/web3/contractCalls/upgradeRange";
@@ -55,7 +55,6 @@ export const ExpandRange: React.FC = () => {
                         resource={resource.id}
                         amount={resource.amount}
                         resourceType={resource.type}
-                        scale={resource.type === ResourceType.Utility ? 1n : RESOURCE_SCALE}
                         direction="top"
                         validate
                       />

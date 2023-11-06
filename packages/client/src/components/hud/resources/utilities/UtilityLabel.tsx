@@ -17,7 +17,6 @@ export const UtilityLabel = ({ name, resourceId }: { name: string; resourceId: E
         playerEntity={playerEntity}
         amount={resourceCount}
         resource={resourceId}
-        scale={1n}
         image={resourceIcon ?? ""}
         validate={false}
         fontSize={"sm"}

@@ -29,7 +29,6 @@ export const Header: React.FC<{ entity: Entity; name: string; imageUri: string }
                   playerEntity={playerEntity as Entity}
                   amount={defense.points}
                   resource={EntityType.Defense}
-                  scale={1n}
                   image={ResourceImage.get(EntityType.Defense) ?? ""}
                   validate={false}
                   fontSize={"sm"}

@@ -231,7 +231,7 @@ export function getRewardUtilitiesRequirement(objective: Entity, playerEntity: E
     id: id as Entity,
     requiredValue,
     currentValue: getFullResourceCount(id as Entity, playerEntity).resourceCount,
-    scale: 1n,
+    scale: 100n,
     type: RequirementType.RewardUtilities,
   }));
 }
