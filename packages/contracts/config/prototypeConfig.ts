@@ -829,11 +829,16 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredBaseLevel: { value: 1n },
         P_RequiredResources: getResourceValues({ PVCell: 200000, Sulfur: 150000, U_Electricity: 100 }),
-        P_Production: getResourceValues({ U_Vault: 100000 }),
+        P_Production: getResourceValues({ U_Vault: 200000 }),
       },
       2: {
+        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredResources: getResourceValues({ PVCell: 200000, Sulfur: 150000, U_Electricity: 100 }),
+        P_Production: getResourceValues({ U_Vault: 1000000 }),
+      },
+      3: {
         P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({
           Titanium: 50000,
@@ -843,7 +848,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         }),
         P_Production: getResourceValues({ U_Vault: 1000000, U_AdvancedVault: 20000 }),
       },
-      3: {
+      4: {
         P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({
           Titanium: 150000,
