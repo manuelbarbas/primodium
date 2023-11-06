@@ -1,7 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
-import { getBuildingName } from "src/util/building";
 import { Action, EntityType, TransactionQueueType } from "src/util/constants";
 import { Basic } from "./screens/Basic";
 import { BuildingInfo } from "./screens/BuildingInfo";
@@ -12,13 +11,14 @@ import { BuildUnit } from "./screens/BuildUnit";
 import { MainBase } from "./screens/Mainbase";
 // import { UpgradeUnit } from "./screens/UpgradeUnit";
 import { FaArrowsAlt, FaTrash } from "react-icons/fa";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { useBuildingName } from "src/hooks/useBuildingName";
 import { components } from "src/network/components";
+import { hashEntities } from "src/util/encode";
 import { MiningVessels } from "./screens/MiningVessels";
 import { Move } from "./screens/Move";
 import { UnitFactory } from "./screens/UnitFactory";
 import { UpgradeUnit } from "./screens/UpgradeUnit";
-import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
-import { hashEntities } from "src/util/encode";
 
 export const BuildingMenu: React.FC = () => {
   const selectedBuilding = components.SelectedBuilding.use()?.value;
@@ -29,11 +29,7 @@ export const BuildingMenu: React.FC = () => {
     return components.BuildingType.get(selectedBuilding)?.value;
   }, [selectedBuilding]);
 
-  const buildingName = useMemo(() => {
-    if (!selectedBuilding) return;
-
-    return getBuildingName(selectedBuilding);
-  }, [selectedBuilding]);
+  const buildingName = useBuildingName(selectedBuilding);
 
   useEffect(() => {
     const removeSelectedBuildingOnEscape = (event: KeyboardEvent) => {
