@@ -830,13 +830,13 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     levels: {
       1: {
         P_RequiredBaseLevel: { value: 1n },
-        P_RequiredResources: getResourceValues({ PVCell: 200000, Sulfur: 150000, U_Electricity: 100 }),
+        P_RequiredResources: getResourceValues({ PVCell: 100000, Sulfur: 50000, U_Electricity: 50 }),
         P_Production: getResourceValues({ U_Vault: 200000 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ PVCell: 200000, Sulfur: 150000, U_Electricity: 100 }),
-        P_Production: getResourceValues({ U_Vault: 1000000 }),
+        P_Production: getResourceValues({ U_Vault: 1000000, U_AdvancedVault: 10000 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 5n },
@@ -846,7 +846,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           Sulfur: 150000,
           U_Electricity: 150,
         }),
-        P_Production: getResourceValues({ U_Vault: 1000000, U_AdvancedVault: 20000 }),
+        P_Production: getResourceValues({ U_Vault: 10000000, U_AdvancedVault: 50000 }),
       },
       4: {
         P_RequiredBaseLevel: { value: 7n },
@@ -877,13 +877,13 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
   },
 
-  IsMotherlodeResource: {
+  IsAdvancedResource: {
     keys: [],
     levels: {
-      [MUDEnums.EResource.indexOf("Titanium")]: { P_IsMotherlodeResource: { value: true } },
-      [MUDEnums.EResource.indexOf("Platinum")]: { P_IsMotherlodeResource: { value: true } },
-      [MUDEnums.EResource.indexOf("Iridium")]: { P_IsMotherlodeResource: { value: true } },
-      [MUDEnums.EResource.indexOf("Kimberlite")]: { P_IsMotherlodeResource: { value: true } },
+      [MUDEnums.EResource.indexOf("Titanium")]: { P_IsAdvancedResource: { value: true } },
+      [MUDEnums.EResource.indexOf("Platinum")]: { P_IsAdvancedResource: { value: true } },
+      [MUDEnums.EResource.indexOf("Iridium")]: { P_IsAdvancedResource: { value: true } },
+      [MUDEnums.EResource.indexOf("Kimberlite")]: { P_IsAdvancedResource: { value: true } },
     },
   },
   /* --------------------------------- Units --------------------------------- */

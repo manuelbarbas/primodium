@@ -7,7 +7,7 @@ import { LibStorage } from "libraries/LibStorage.sol";
 
 import { UtilityMap } from "libraries/UtilityMap.sol";
 
-import { ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+import { P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
 
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -162,7 +162,10 @@ library LibResource {
     for (uint8 i = 1; i < resourceCounts.length; i++) {
       if (P_IsUtility.get(i)) continue;
       resourceCounts[i] = ResourceCount.get(playerEntity, i);
-      uint256 vaulted = TotalVault.get(playerEntity, i);
+      uint256 vaulted = ResourceCount.get(
+        playerEntity,
+        P_IsAdvancedResource.get(i) ? uint8(EResource.U_AdvancedVault) : uint8(EResource.U_Vault)
+      );
       if (vaulted > resourceCounts[i]) resourceCounts[i] = 0;
       else resourceCounts[i] -= vaulted;
       totalResources += resourceCounts[i];

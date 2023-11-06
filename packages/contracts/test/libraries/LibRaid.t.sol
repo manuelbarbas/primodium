@@ -152,7 +152,40 @@ contract LibRaidTest is PrimodiumTest {
   function testRaidVault() public {
     ResourceCount.set(enemy, Iron, 100);
     MaxResourceCount.set(player, Iron, 100);
-    TotalVault.set(enemy, Iron, 100);
+    ResourceCount.set(enemy, uint8(EResource.U_Vault), 100);
+    Home.setAsteroid(enemy, rock);
+    OwnedBy.set(rock, enemy);
+    RockType.set(rock, uint8(ERock.Asteroid));
+    RockType.set(homeRock, uint8(ERock.Asteroid));
+    UnitCount.set(enemy, rock, unit1, 100);
+    vm.warp(1000);
+    Arrival memory arrival = Arrival({
+      sendTime: block.timestamp,
+      sendType: ESendType.Raid,
+      arrivalTime: 2,
+      from: player,
+      to: enemy,
+      origin: homeRock,
+      destination: rock,
+      unitCounts: [uint256(200), 0, 0, 0, 0, 0, 0]
+    });
+
+    ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);
+    P_Unit.set(unit1, 0, P_UnitData({ attack: 100, defense: 100, speed: 200, cargo: 100, trainingTime: 0 }));
+
+    world.raid(rock);
+
+    assertEq(ResourceCount.get(player, Iron), 0, "Player Iron");
+    assertEq(UnitCount.get(player, homeRock, unit1), 100, "Player units");
+    assertEq(UnitCount.get(enemy, rock, unit1), 0, "Enemy units");
+    assertEq(ResourceCount.get(enemy, Iron), 100, "Enemy Iron");
+  }
+
+  function testRaidAdvancedVault() public {
+    ResourceCount.set(enemy, Iron, 100);
+    MaxResourceCount.set(player, Iron, 100);
+    ResourceCount.set(enemy, uint8(EResource.U_AdvancedVault), 100);
+    P_IsAdvancedResource.set(Iron, true);
     Home.setAsteroid(enemy, rock);
     OwnedBy.set(rock, enemy);
     RockType.set(rock, uint8(ERock.Asteroid));

@@ -20,7 +20,6 @@ import { QueueUnits, QueueUnitsTableId } from "codegen/tables/QueueUnits.sol";
 import { ProducedResourceTableId } from "codegen/tables/ProducedResource.sol";
 import { ProductionRateTableId } from "codegen/tables/ProductionRate.sol";
 import { ProducedUnitTableId } from "codegen/tables/ProducedUnit.sol";
-import { TotalVaultTableId } from "codegen/tables/TotalVault.sol";
 import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
 import { ScoreTableId } from "codegen/tables/Score.sol";
 import { AllianceTableId } from "codegen/tables/Alliance.sol";
@@ -220,10 +219,6 @@ function registerBuildHooks(IWorld world, OnBefore_ClaimResources onBefore_Claim
   world.grantAccess(MapUtilitiesTableId, address(onBuild_ProductionRate));
   world.grantAccess(MapItemStoredUtilitiesTableId, address(onBuild_ProductionRate));
   world.registerSystemHook(systemId, onBuild_ProductionRate, AFTER_CALL_SYSTEM);
-
-  OnBuild_Vault onBuild_Vault = new OnBuild_Vault();
-  world.grantAccess(TotalVaultTableId, address(onBuild_Vault));
-  world.registerSystemHook(systemId, onBuild_Vault, AFTER_CALL_SYSTEM);
 }
 
 /**
@@ -258,10 +253,6 @@ function registerUpgradeHooks(IWorld world, OnBefore_ClaimResources onBefore_Cla
   world.grantAccess(MapUtilitiesTableId, address(onUpgrade_ProductionRate));
   world.grantAccess(MapItemStoredUtilitiesTableId, address(onUpgrade_ProductionRate));
   world.registerSystemHook(systemId, onUpgrade_ProductionRate, AFTER_CALL_SYSTEM);
-
-  OnUpgrade_Vault onUpgrade_Vault = new OnUpgrade_Vault();
-  world.grantAccess(TotalVaultTableId, address(onUpgrade_Vault));
-  world.registerSystemHook(systemId, onUpgrade_Vault, AFTER_CALL_SYSTEM);
 }
 
 /**
@@ -295,10 +286,6 @@ function registerDestroyHooks(IWorld world, OnBefore_ClaimResources onBefore_Cla
   world.grantAccess(MapItemStoredUtilitiesTableId, address(onDestroy_ProductionRate));
   world.grantAccess(ResourceCountTableId, address(onDestroy_ProductionRate));
   world.registerSystemHook(systemId, onDestroy_ProductionRate, BEFORE_CALL_SYSTEM);
-
-  OnDestroy_Vault onDestroy_Vault = new OnDestroy_Vault();
-  world.grantAccess(TotalVaultTableId, address(onDestroy_Vault));
-  world.registerSystemHook(systemId, onDestroy_Vault, BEFORE_CALL_SYSTEM);
 
   OnDestroy_RemoveFromTiles onDestroy_RemoveFromTiles = new OnDestroy_RemoveFromTiles();
   world.grantAccess(ChildrenTableId, address(onDestroy_RemoveFromTiles));

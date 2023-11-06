@@ -43,10 +43,9 @@ library LibPirate {
     } else {
       Home.setAsteroid(ownerEntity, asteroidEntity);
       uint8 resourceCount = uint8(EResource.LENGTH);
+      LibProduction.increaseResourceProduction(ownerEntity, EResource.U_Housing, 100000000);
       for (uint8 i = 1; i < resourceCount; i++) {
-        if (P_IsUtility.get(i) && i != uint8(EResource.U_Defense) && i != uint8(EResource.M_DefenseMultiplier)) {
-          LibProduction.increaseResourceProduction(ownerEntity, EResource(i), 100000000);
-        } else {
+        if (!P_IsUtility.get(i)) {
           MaxResourceCount.set(ownerEntity, i, 100000000);
         }
       }

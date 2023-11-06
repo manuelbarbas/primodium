@@ -140,7 +140,7 @@ export const config = mudConfig({
     },
 
     /* -------------------------------- Resources ------------------------------- */
-    P_IsMotherlodeResource: {
+    P_IsAdvancedResource: {
       keySchema: { resource: "uint8" }, // EResource
       valueSchema: "bool",
     },
