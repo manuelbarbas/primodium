@@ -25,6 +25,10 @@ const mainBaseMaxResourceUpgrades = {
     Sulfur: 500000,
     PVCell: 200000,
     Alloy: 200000,
+    Titanium: 50000,
+    Platinum: 50000,
+    Iridium: 50000,
+    Kimberlite: 50000,
   },
   4: {
     Iron: 2000000,
