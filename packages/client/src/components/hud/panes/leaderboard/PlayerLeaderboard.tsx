@@ -82,6 +82,8 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
   const network = useMud().network;
   const playerEntity = network.playerEntity;
   const role = components.PlayerAlliance.use(playerEntity)?.role ?? EAllianceRole.Member;
+  const alliance = components.PlayerAlliance.use(playerEntity)?.alliance as Entity | undefined;
+  const playerAlliance = components.PlayerAlliance.use(player)?.alliance as Entity | undefined;
   const [fetchedExternalWallet, setFetchedExternalWallet] = useState<{
     address: string | null;
     ensName: string | null;
@@ -113,11 +115,9 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
   }, [fetchedExternalWallet, player, playerEntity]);
 
   const playerAllianceDisplay = useMemo(() => {
-    const playerAlliance = components.PlayerAlliance.get(player)?.alliance as Entity | undefined;
-
     if (playerAlliance) return getAllianceName(playerAlliance, true);
     else return undefined;
-  }, [player]);
+  }, [playerAlliance]);
 
   return (
     <SecondaryCard
@@ -157,7 +157,7 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
           >
             <FaCrosshairs />
           </Button>
-          {role <= EAllianceRole.CanInvite && player !== playerEntity && (
+          {role <= EAllianceRole.CanInvite && player !== playerEntity && playerAlliance !== alliance && (
             <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Invite, player)}>
               <Button
                 className="btn-xs flex border border-secondary"
