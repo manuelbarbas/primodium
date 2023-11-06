@@ -20,7 +20,7 @@ export async function _execute(txPromise: Promise<Hex>, network: SetupNetworkRes
     if (receipt && receipt.status === "reverted") {
       // Force a CallExecutionError such that we can get the revert reason
       await callTransaction(txHash, network.publicClient);
-      toast.error("You're moving fast! Please wait a moment and then try again.");
+      toast.error("[Insufficient Gas Limit] You're moving fast! Please wait a moment and then try again.");
     }
     return receipt;
   } catch (error) {
