@@ -148,7 +148,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     keys: [],
     tables: {
       P_AllianceConfig: { maxAllianceMembers: 20n },
-      P_GracePeriod: { value: 60n * 60n * 24n * 3n },
+      P_GracePeriod: { value: 60n * 60n * 12n },
       P_Asteroid: maxRange,
       P_GameConfig: {
         motherlodeDistance: 10n,
@@ -840,12 +840,12 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredBaseLevel: { value: 1n },
         P_RequiredResources: getResourceValues({ PVCell: 100000, Sulfur: 50000, U_Electricity: 50 }),
-        P_Production: getResourceValues({ U_Unraidable: 200000 }),
+        P_Production: getResourceValues({ U_Unraidable: 75000 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ PVCell: 200000, Sulfur: 150000, U_Electricity: 100 }),
-        P_Production: getResourceValues({ U_Unraidable: 1000000, U_AdvancedUnraidable: 10000 }),
+        P_Production: getResourceValues({ U_Unraidable: 200000, U_AdvancedUnraidable: 10000 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 5n },
@@ -855,7 +855,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           Sulfur: 150000,
           U_Electricity: 150,
         }),
-        P_Production: getResourceValues({ U_Unraidable: 10000000, U_AdvancedUnraidable: 50000 }),
+        P_Production: getResourceValues({ U_Unraidable: 300000, U_AdvancedUnraidable: 20000 }),
       },
       4: {
         P_RequiredBaseLevel: { value: 7n },
@@ -865,7 +865,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           Sulfur: 1500000,
           U_Electricity: 200,
         }),
-        P_Production: getResourceValues({ U_Unraidable: 5000000, U_AdvancedUnraidable: 100000 }),
+        P_Production: getResourceValues({ U_Unraidable: 500000, U_AdvancedUnraidable: 50000 }),
       },
     },
   },
