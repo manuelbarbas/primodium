@@ -6,7 +6,7 @@ import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useBuildingInfo } from "src/hooks/useBuildingInfo";
 import { useMud } from "src/hooks/useMud";
 import { getBlockTypeName } from "src/util/common";
-import { RESOURCE_SCALE, ResourceImage, ResourceType } from "src/util/constants";
+import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
 
 const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (
@@ -64,7 +64,6 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     playerEntity={playerEntity}
                     amount={amount}
                     resourceType={type}
-                    scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
                     fractionDigits={3}
                   />
                 </Badge>
@@ -84,7 +83,6 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     playerEntity={playerEntity}
                     amount={amount}
                     resourceType={type}
-                    scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
                     fractionDigits={3}
                   />
                 </Badge>
@@ -108,7 +106,6 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     playerEntity={playerEntity}
                     amount={amount}
                     resourceType={type}
-                    scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
                     fractionDigits={3}
                   />
                 </Badge>
@@ -129,7 +126,6 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     playerEntity={playerEntity}
                     amount={amount}
                     resourceType={type}
-                    scale={type == ResourceType.ResourceRate ? RESOURCE_SCALE : 1n}
                   />
                 </Badge>
               ))
@@ -165,7 +161,6 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     resource={storage.resource}
                     amount={storage.amount}
                     resourceType={storage.resourceType}
-                    scale={RESOURCE_SCALE}
                     direction="top"
                     short
                   />
@@ -188,7 +183,6 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                       resource={storage.resource}
                       amount={storage.amount}
                       resourceType={storage.resourceType}
-                      scale={RESOURCE_SCALE}
                       direction="top"
                       short
                     />

@@ -9,14 +9,7 @@ import { useMud } from "src/hooks";
 import { useMaxCountOfRecipe } from "src/hooks/useMaxCountOfRecipe";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
-import {
-  BackgroundImage,
-  EntityType,
-  RESOURCE_SCALE,
-  ResourceImage,
-  ResourceType,
-  UnitEnumLookup,
-} from "src/util/constants";
+import { BackgroundImage, EntityType, ResourceImage, UnitEnumLookup } from "src/util/constants";
 import { getRecipe } from "src/util/resource";
 import { getUnitStats } from "src/util/trainUnits";
 import { train } from "src/util/web3/contractCalls/train";
@@ -120,7 +113,6 @@ export const BuildUnit: React.FC<{
                         resource={resource.id}
                         name={getBlockTypeName(resource.id)}
                         amount={resource.amount * BigInt(count)}
-                        scale={ResourceType.Utility === resource.type ? 1n : RESOURCE_SCALE}
                         fontSize="sm"
                         validate
                       />
