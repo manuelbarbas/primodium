@@ -12,13 +12,14 @@ export const Reinforce = () => {
     units: [],
     counts: [],
   }).units;
-  const ownedBy = components.OwnedBy.get(destination)?.value;
+  const playerEntity = components.Account.use()?.value;
+  const ownedBy = components.OwnedBy.use(destination)?.value;
   const fleetMoves = useFleetMoves();
 
   return (
     <SecondaryCard
       className={`w-full flex-row items-center gap-2 justify-between ${
-        units.length === 0 || !ownedBy || origin === destination || !fleetMoves ? "opacity-20" : "0"
+        units.length === 0 || ownedBy !== playerEntity || origin === destination || !fleetMoves ? "opacity-20" : "0"
       }`}
     >
       <img src="/img/icons/reinforcementicon.png" className="w-8 h-8" />
@@ -26,7 +27,7 @@ export const Reinforce = () => {
       <Navigator.NavButton
         to="Send"
         className="btn-sm w-fit btn-success"
-        disabled={units.length === 0 || !ownedBy || origin === destination || !fleetMoves}
+        disabled={units.length === 0 || ownedBy !== playerEntity || origin === destination || !fleetMoves}
         onClick={() => components.Send.update({ sendType: ESendType.Reinforce })}
       >
         <FaArrowRight />

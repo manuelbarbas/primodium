@@ -2,7 +2,14 @@ import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
 import { Hex } from "viem";
-import { EntityType, RESOURCE_SCALE, RequirementType, ResourceEntityLookup, ResourceType } from "./constants";
+import {
+  EntityType,
+  RESOURCE_SCALE,
+  RequirementType,
+  ResourceEntityLookup,
+  ResourceType,
+  UtilityStorages,
+} from "./constants";
 import { getFullResourceCount } from "./resource";
 import { getRewards } from "./reward";
 
@@ -11,6 +18,7 @@ type Requirement = {
   requiredValue: bigint;
   currentValue: bigint;
   scale: bigint;
+  type: RequirementType;
 };
 
 export function getMainBaseRequirement(objective: Entity): Requirement[] | undefined {
@@ -30,6 +38,7 @@ export function getMainBaseRequirement(objective: Entity): Requirement[] | undef
       requiredValue: levelRequirement,
       currentValue: level,
       scale: 1n,
+      type: RequirementType.MainBase,
     },
   ];
 }
@@ -47,6 +56,7 @@ export function getObjectivesRequirement(objective: Entity): Requirement[] | und
       ? 1n
       : 0n,
     scale: 1n,
+    type: RequirementType.Objectives,
   }));
 }
 
@@ -63,6 +73,7 @@ export function getExpansionRequirement(objective: Entity): Requirement[] | unde
       requiredValue: requiredExpansion,
       currentValue: playerExpansion,
       scale: 1n,
+      type: RequirementType.Expansion,
     },
   ];
 }
@@ -81,6 +92,7 @@ export function getResourceRequirement(objective: Entity): Requirement[] | undef
     requiredValue: rawRequiredProduction.amounts[index],
     currentValue: getFullResourceCount(ResourceEntityLookup[resource as EResource], player).resourceCount,
     scale: RESOURCE_SCALE,
+    type: RequirementType.ProducedResources,
   }));
 }
 
@@ -98,6 +110,7 @@ export function getBuildingCountRequirement(objective: Entity): Requirement[] | 
       ? 1n
       : 0n,
     scale: 1n,
+    type: RequirementType.Buildings,
   }));
 }
 
@@ -114,6 +127,7 @@ export function getHasDefeatedPirateRequirement(objective: Entity): Requirement[
     requiredValue: 1n,
     currentValue: comps.DefeatedPirate.getWithKeys({ pirate: pirate as Hex, entity: player as Hex })?.value ? 1n : 0n,
     scale: 1n,
+    type: RequirementType.DefeatedPirates,
   }));
 }
 
@@ -141,6 +155,7 @@ export function getRequiredUnitsRequirement(objective: Entity): Requirement[] | 
       requiredValue: rawRequiredUnits.amounts[index],
       currentValue: unitCount,
       scale: 1n,
+      type: RequirementType.RequiredUnits,
     };
   });
 }
@@ -157,6 +172,7 @@ export function getProducedUnitsRequirement(objective: Entity): Requirement[] | 
     requiredValue: producedUnits.amounts[index],
     currentValue: comps.ProducedUnit.getWithKeys({ unit: unit as Hex, entity: player as Hex })?.value ?? 0n,
     scale: 1n,
+    type: RequirementType.ProducedUnits,
   }));
 }
 export function getRaidRequirement(objective: Entity): Requirement[] | undefined {
@@ -173,6 +189,7 @@ export function getRaidRequirement(objective: Entity): Requirement[] | undefined
     requiredValue: rawRaid.amounts[index],
     currentValue: comps.RaidedResource.getWithKeys({ resource, entity: player as Hex })?.value ?? 0n,
     scale: RESOURCE_SCALE,
+    type: RequirementType.RaidedResources,
   }));
 }
 
@@ -191,6 +208,31 @@ export function getDestroyedUnitsRequirement(objective: Entity): Requirement[] |
     requiredValue: rawRequiredDestroyedUnits.amounts[index],
     currentValue: comps.DestroyedUnit.getWithKeys({ unit: unit as Hex, entity: player as Hex })?.value ?? 0n,
     scale: 1n,
+    type: RequirementType.DestroyedUnits,
+  }));
+}
+
+export function getRewardUtilitiesRequirement(objective: Entity, playerEntity: Entity): Requirement[] | undefined {
+  const requiredUtilities = getRewards(objective).reduce((acc, cur, i) => {
+    if (cur.type !== ResourceType.Utility) return acc;
+    const prototype = cur.id as Hex;
+    const level = comps.UnitLevel.getWithKeys({ unit: prototype, entity: playerEntity as Hex })?.value ?? 0n;
+    const requiredResources = comps.P_RequiredResources.getWithKeys({ prototype, level });
+    if (!requiredResources) return acc;
+    requiredResources.resources.forEach((rawResource, i) => {
+      const resource = ResourceEntityLookup[rawResource as EResource];
+      const amount = requiredResources.amounts[i] * cur.amount;
+      if (!UtilityStorages.has(resource)) return;
+      acc[resource] ? (acc[resource] += amount) : (acc[resource] = amount);
+    });
+    return acc;
+  }, {} as Record<Entity, bigint>);
+  return Object.entries(requiredUtilities).map(([id, requiredValue]) => ({
+    id: id as Entity,
+    requiredValue,
+    currentValue: getFullResourceCount(id as Entity, playerEntity).resourceCount,
+    scale: 1n,
+    type: RequirementType.RewardUtilities,
   }));
 }
 
@@ -200,7 +242,7 @@ export const isRequirementMet = (requirement: Requirement | undefined) =>
 export const isAllRequirementsMet = (requirements: Requirement[] | undefined) =>
   !requirements || requirements.every(isRequirementMet);
 
-export function getAllRequirements(objective: Entity): Record<RequirementType, Requirement[]> {
+export function getAllRequirements(objective: Entity, playerEntity: Entity): Record<RequirementType, Requirement[]> {
   const requirements = {
     [RequirementType.Expansion]: getExpansionRequirement(objective),
     [RequirementType.ProducedResources]: getResourceRequirement(objective),
@@ -210,15 +252,15 @@ export function getAllRequirements(objective: Entity): Record<RequirementType, R
     [RequirementType.RequiredUnits]: getRequiredUnitsRequirement(objective),
     [RequirementType.ProducedUnits]: getProducedUnitsRequirement(objective),
     [RequirementType.DestroyedUnits]: getDestroyedUnitsRequirement(objective),
+    [RequirementType.RewardUtilities]: getRewardUtilitiesRequirement(objective, playerEntity),
   };
-  return Object.fromEntries(Object.entries(requirements).filter(([_, value]) => value !== undefined)) as Record<
-    RequirementType,
-    Requirement[]
-  >;
+  return Object.fromEntries(
+    Object.entries(requirements).filter(([_, value]) => value !== undefined && value.length > 0)
+  ) as Record<RequirementType, Requirement[]>;
 }
 
-export function getIsObjectiveAvailable(objective: Entity) {
-  const requirements = getAllRequirements(objective);
+export function getIsObjectiveAvailable(objective: Entity, playerEntity: Entity) {
+  const requirements = getAllRequirements(objective, playerEntity);
   const mainbaseRequirement = getMainBaseRequirement(objective);
   const objectivesRequirement = getObjectivesRequirement(objective);
   if (Object.keys(requirements).length == 0) return true;
@@ -232,5 +274,7 @@ export function getCanClaimObjective(objective: Entity, playerEntity: Entity) {
     const { resourceCount, resourcesToClaim, maxStorage } = getFullResourceCount(resource.id, playerEntity);
     return resourceCount + resourcesToClaim + resource.amount < maxStorage;
   });
-  return hasEnoughRewardResources && Object.values(getAllRequirements(objective)).every(isAllRequirementsMet);
+  return (
+    hasEnoughRewardResources && Object.values(getAllRequirements(objective, playerEntity)).every(isAllRequirementsMet)
+  );
 }

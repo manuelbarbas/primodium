@@ -105,8 +105,8 @@ export const Panes: React.FC = () => {
             index={6}
             imageUri="/img/icons/leaderboardicon.png"
             hideText
-            text="Leaderboard"
-            tooltipText="Leaderboard"
+            text="Alliances & Leaderboard"
+            tooltipText="Alliances & Leaderboard"
             tooltipDirection="left"
           />
           <Tabs.IconButton

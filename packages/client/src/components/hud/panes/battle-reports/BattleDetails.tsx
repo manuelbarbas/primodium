@@ -219,6 +219,13 @@ const format = (battleEntity: Entity) => {
     };
   });
 
+  const defense =
+    components.ResourceCount.getWithKeys({ entity: battle.defender as Hex, resource: EResource.U_Defense })?.value ??
+    0n;
+  const defenseMultiplier =
+    components.ResourceCount.getWithKeys({ entity: battle.defender as Hex, resource: EResource.M_DefenseMultiplier })
+      ?.value ?? 0n;
+
   return {
     entity: battleEntity,
     attacker: battle.attacker,
@@ -230,5 +237,7 @@ const format = (battleEntity: Entity) => {
     totalCargo: battle.totalCargo,
     timestamp: battle.timestamp,
     spaceRock: battle.rock,
+    defense,
+    defenseMultiplier,
   };
 };

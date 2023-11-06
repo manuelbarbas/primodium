@@ -1,4 +1,5 @@
 import { TransactionReceipt, zeroAddress } from "viem";
+import { bigintToNumber } from "../bigint";
 
 // See Amplitude dashboard for more details on the event properties:
 type ParsedReceipt =
@@ -20,10 +21,9 @@ export const parseReceipt = (receipt: TransactionReceipt | undefined): ParsedRec
       transactionValid: false,
     };
   } else {
-    // NOTE: assuming that the gasUsed does not exceed the bigInt limit.
     return {
       transactionFrom: receipt.from,
-      transactionGasUsed: Number(receipt.gasUsed),
+      transactionGasUsed: bigintToNumber(receipt.gasUsed),
       transactionHash: receipt.transactionHash,
       transactionStatus: receipt.status === "success" ? 1 : 0,
       transactionTo: receipt.to || zeroAddress,

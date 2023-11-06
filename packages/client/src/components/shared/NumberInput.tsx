@@ -5,11 +5,16 @@ export const NumberInput: React.FC<{
   max: number;
   onChange: (val: number) => void;
 }> = ({ min = 0, max, onChange }) => {
-  const [count, setCount] = useState(min);
+  const [count, setCount] = useState<number | "">(min);
 
   const handleUpdate = (newCount: number) => {
-    if (isNaN(newCount)) newCount = min;
-    else if (newCount > max) newCount = max;
+    if (isNaN(newCount) || newCount == 0) {
+      setCount("");
+      onChange(min);
+      return;
+    }
+
+    if (newCount > max) newCount = max;
     else if (newCount < min) newCount = min;
     setCount(newCount);
     onChange(newCount);
@@ -20,7 +25,7 @@ export const NumberInput: React.FC<{
       <button
         className={`${count == min ? "opacity-50" : ""}`}
         disabled={count == min}
-        onClick={() => handleUpdate(Math.max(min, count - 1))}
+        onClick={() => handleUpdate(Math.max(min, count == "" ? 0 : count - 1))}
       >
         -
       </button>
@@ -28,11 +33,10 @@ export const NumberInput: React.FC<{
         type="number"
         className="bg-transparent text-center w-fit outline-none border-b border-pink-900"
         value={count}
-        placeholder="0"
+        placeholder={min.toString()}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           e.preventDefault();
-          const value = Number(e.target.value);
-          handleUpdate(value);
+          handleUpdate(Number(e.target.value));
         }}
         min={0}
         max={max}
@@ -40,7 +44,7 @@ export const NumberInput: React.FC<{
       <button
         className={`${count == max ? "opacity-50" : ""}`}
         disabled={count == max}
-        onClick={() => handleUpdate(Math.min(max, count + 1))}
+        onClick={() => handleUpdate(Math.min(max, count == "" ? min + 1 : count + 1))}
       >
         +
       </button>

@@ -111,6 +111,7 @@ export interface IWorldInterface extends utils.Interface {
     "claimObjective(uint8)": FunctionFragment;
     "create(bytes32,uint8)": FunctionFragment;
     "creator()": FunctionFragment;
+    "declineInvite(bytes32)": FunctionFragment;
     "deleteRecord(bytes32,bytes32[])": FunctionFragment;
     "destroy((int32,int32,bytes32))": FunctionFragment;
     "devDeleteRecord(bytes32,bytes32[])": FunctionFragment;
@@ -206,6 +207,7 @@ export interface IWorldInterface extends utils.Interface {
       | "claimObjective"
       | "create"
       | "creator"
+      | "declineInvite"
       | "deleteRecord"
       | "destroy"
       | "devDeleteRecord"
@@ -335,6 +337,10 @@ export interface IWorldInterface extends utils.Interface {
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(functionFragment: "creator", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "declineInvite",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
   encodeFunctionData(
     functionFragment: "deleteRecord",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>[]]
@@ -865,6 +871,10 @@ export interface IWorldInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "create", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "creator", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "declineInvite",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "deleteRecord",
     data: BytesLike
   ): Result;
@@ -1309,6 +1319,11 @@ export interface IWorld extends BaseContract {
     ): Promise<ContractTransaction>;
 
     creator(overrides?: CallOverrides): Promise<[string]>;
+
+    declineInvite(
+      inviter: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     deleteRecord(
       tableId: PromiseOrValue<BytesLike>,
@@ -1908,6 +1923,11 @@ export interface IWorld extends BaseContract {
 
   creator(overrides?: CallOverrides): Promise<string>;
 
+  declineInvite(
+    inviter: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   deleteRecord(
     tableId: PromiseOrValue<BytesLike>,
     keyTuple: PromiseOrValue<BytesLike>[],
@@ -2503,6 +2523,11 @@ export interface IWorld extends BaseContract {
     ): Promise<string>;
 
     creator(overrides?: CallOverrides): Promise<string>;
+
+    declineInvite(
+      inviter: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     deleteRecord(
       tableId: PromiseOrValue<BytesLike>,
@@ -3163,6 +3188,11 @@ export interface IWorld extends BaseContract {
 
     creator(overrides?: CallOverrides): Promise<BigNumber>;
 
+    declineInvite(
+      inviter: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     deleteRecord(
       tableId: PromiseOrValue<BytesLike>,
       keyTuple: PromiseOrValue<BytesLike>[],
@@ -3747,6 +3777,11 @@ export interface IWorld extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     creator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    declineInvite(
+      inviter: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
 
     deleteRecord(
       tableId: PromiseOrValue<BytesLike>,
