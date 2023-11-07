@@ -18,7 +18,7 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { hashEntities } from "src/util/encode";
 import { TransactionQueueType } from "src/util/constants";
 import { Hex } from "viem";
-import { PlayerLinkedAddress } from "../../PlayerLinkedAddress";
+import { LinkedAddressDisplay } from "../../LinkedAddressDisplay";
 
 export const PlayerLeaderboard = () => {
   const network = useMud().network;
@@ -101,7 +101,7 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
       <div className="col-span-6 flex justify-between items-center">
         <div className="flex gap-1">
           {playerAllianceDisplay && <b className="text-accent">[{playerAllianceDisplay}]</b>}
-          <PlayerLinkedAddress player={player} />
+          <LinkedAddressDisplay entity={player} />
         </div>
         <div className="flex items-center gap-1">
           <p className="font-bold rounded-md bg-cyan-700 px-2 ">{score.toLocaleString()}</p>
