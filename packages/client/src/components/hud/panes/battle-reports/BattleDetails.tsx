@@ -6,7 +6,7 @@ import { Navigator } from "src/components/core/Navigator";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { entityToAddress, getBlockTypeName, toRomanNumeral } from "src/util/common";
+import { entityToAddress, getBlockTypeName, isPlayer, shortenAddress, toRomanNumeral } from "src/util/common";
 import {
   BackgroundImage,
   ResourceEntityLookup,
@@ -23,7 +23,6 @@ export const UnitStatus: React.FC<{
   count: bigint;
   level: bigint;
 }> = ({ unit, unitsLeft, count, level }) => {
-  console.log("unit:", unit);
   if (unitsLeft - count <= 0n && count === 0n) return <></>;
 
   return (
@@ -89,17 +88,18 @@ export const BattleDetails: React.FC<{
       }
     };
     fetchLocalLinkedAddress();
-  }, [battle, battle?.attacker, battle?.defender]);
+  }, [battle]);
 
   const playerDisplays: { attacker: string; defender: string } = useMemo(() => {
     if (!battle) return { attacker: "", defender: "" };
-    const attacker =
-      fetchedExternalWallets.attacker.ensName ??
-      entityToAddress(fetchedExternalWallets.attacker.address ?? battle.attacker, true);
-    const defender =
-      fetchedExternalWallets.defender.ensName ??
-      entityToAddress(fetchedExternalWallets.defender.address ?? battle.defender, true);
-
+    const attacker = isPlayer(battle.attacker as Entity)
+      ? fetchedExternalWallets.attacker.ensName ??
+        entityToAddress(fetchedExternalWallets.attacker.address ?? battle.attacker, true)
+      : shortenAddress(battle.attacker as Hex);
+    const defender = isPlayer(battle.defender as Entity)
+      ? fetchedExternalWallets.defender.ensName ??
+        entityToAddress(fetchedExternalWallets.defender.address ?? battle.defender, true)
+      : shortenAddress(battle.defender as Hex);
     return {
       attacker: battle.attacker === playerEntity ? "You" : attacker,
       defender: battle.defender === playerEntity ? "You" : defender,
@@ -111,7 +111,6 @@ export const BattleDetails: React.FC<{
   if (!battle) return <></>;
 
   const playersUnits = playerEntity === battle.attacker ? battle.attackerUnits : battle.defenderUnits;
-  console.log("players units:", playersUnits);
   const enemyUnits = playerEntity === battle.attacker ? battle.defenderUnits : battle.attackerUnits;
 
   return (
