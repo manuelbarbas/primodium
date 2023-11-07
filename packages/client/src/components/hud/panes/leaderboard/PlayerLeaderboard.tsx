@@ -7,8 +7,7 @@ import { Scenes } from "@game/constants";
 import { FaCrosshairs, FaEnvelope } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
-import { entityToAddress } from "src/util/common";
-import { LinkedAddressResult, getLinkedAddress } from "src/util/web2/getLinkedAddress";
+import { getLinkedAddress } from "src/util/web2/getLinkedAddress";
 import { linkAddress } from "src/util/web2/linkAddress";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
@@ -19,6 +18,7 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { hashEntities } from "src/util/encode";
 import { TransactionQueueType } from "src/util/constants";
 import { Hex } from "viem";
+import { PlayerLinkedAddress } from "../../PlayerLinkedAddress";
 
 export const PlayerLeaderboard = () => {
   const network = useMud().network;
@@ -85,27 +85,6 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
   const role = components.PlayerAlliance.use(playerEntity)?.role ?? EAllianceRole.Member;
   const alliance = components.PlayerAlliance.use(playerEntity)?.alliance as Entity | undefined;
   const playerAlliance = components.PlayerAlliance.use(player)?.alliance as Entity | undefined;
-  const [fetchedExternalWallet, setFetchedExternalWallet] = useState<LinkedAddressResult>({
-    address: entityToAddress(player),
-    ensName: null,
-  });
-
-  useEffect(() => {
-    const fetchLocalLinkedAddress = async () => {
-      try {
-        const jsonRes = await getLinkedAddress(entityToAddress(player));
-        setFetchedExternalWallet(jsonRes);
-      } catch (error) {
-        return;
-      }
-    };
-    fetchLocalLinkedAddress();
-  }, [player]);
-
-  const playerDisplay: string = useMemo(() => {
-    if (player === playerEntity) return "You";
-    return fetchedExternalWallet.ensName ?? entityToAddress(fetchedExternalWallet.address ?? player, true);
-  }, [fetchedExternalWallet, player, playerEntity]);
 
   const playerAllianceDisplay = useMemo(() => {
     if (playerAlliance) return getAllianceName(playerAlliance, true);
@@ -122,7 +101,7 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
       <div className="col-span-6 flex justify-between items-center">
         <div className="flex gap-1">
           {playerAllianceDisplay && <b className="text-accent">[{playerAllianceDisplay}]</b>}
-          {playerDisplay}
+          <PlayerLinkedAddress player={player} />
         </div>
         <div className="flex items-center gap-1">
           <p className="font-bold rounded-md bg-cyan-700 px-2 ">{score.toLocaleString()}</p>
