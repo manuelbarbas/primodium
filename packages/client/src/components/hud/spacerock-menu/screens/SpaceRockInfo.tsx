@@ -1,12 +1,14 @@
+import { Entity } from "@latticexyz/recs";
 import { useEffect, useMemo, useState } from "react";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { useMud } from "src/hooks";
-import { entityToAddress } from "src/util/common";
+import { entityToAddress, isPlayer, shortenAddress } from "src/util/common";
 import { PIRATE_KEY, SpaceRockTypeNames } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
 import { getSpaceRockInfo } from "src/util/spacerock";
 import { LinkedAddressResult, getLinkedAddress } from "src/util/web2/getLinkedAddress";
+import { Hex } from "viem";
 
 const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (
@@ -45,6 +47,7 @@ export const SpacerockInfo: React.FC<{
     let owner = "Neutral";
     if (ownedBy === playerEntity) owner = "You";
     else if (ownedBy === hashKeyEntity(PIRATE_KEY, playerEntity)) owner = "Pirates!";
+    else if (ownedBy && !isPlayer(ownedBy as Entity)) owner = shortenAddress(ownedBy as Hex);
     else if (ownedBy && ownedBy !== playerEntity)
       owner = fetchedExternalWallet.ensName ?? entityToAddress(fetchedExternalWallet.address ?? ownedBy, true);
     return owner;
