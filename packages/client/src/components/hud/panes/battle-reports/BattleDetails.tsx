@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { EResource, EUnit } from "contracts/config/enums";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaTimes, FaTrophy } from "react-icons/fa";
 import { Navigator } from "src/components/core/Navigator";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
@@ -14,6 +14,7 @@ import {
   ResourceType,
   UnitEntityLookup,
 } from "src/util/constants";
+import { LinkedAddressResult, getLinkedAddress } from "src/util/web2/getLinkedAddress";
 import { Hex } from "viem";
 
 export const UnitStatus: React.FC<{
@@ -55,6 +56,58 @@ export const BattleDetails: React.FC<{
   const raid = components.RaidResult.use(battleEntity);
   const battle = useMemo(() => format(battleEntity), [battleEntity]);
 
+  // Fetch externally linked addresses
+  const [fetchedExternalWallets, setFetchedExternalWallets] = useState<{
+    attacker: LinkedAddressResult;
+    defender: LinkedAddressResult;
+  }>({
+    attacker: {
+      address: null,
+      ensName: null,
+    },
+    defender: {
+      address: null,
+      ensName: null,
+    },
+  });
+
+  useEffect(() => {
+    const fetchLocalLinkedAddress = async () => {
+      if (battle) {
+        try {
+          const fetchedExternalWallets = await Promise.all([
+            getLinkedAddress(entityToAddress(battle.attacker) as Hex),
+            getLinkedAddress(entityToAddress(battle.defender) as Hex),
+          ]);
+          setFetchedExternalWallets({
+            attacker: fetchedExternalWallets[0],
+            defender: fetchedExternalWallets[1],
+          });
+        } catch (error) {
+          return;
+        }
+      }
+    };
+    fetchLocalLinkedAddress();
+  }, [battle, battle?.attacker, battle?.defender]);
+
+  const playerDisplays: { attacker: string; defender: string } = useMemo(() => {
+    if (!battle) return { attacker: "", defender: "" };
+    const attacker =
+      fetchedExternalWallets.attacker.ensName ??
+      entityToAddress(fetchedExternalWallets.attacker.address ?? battle.attacker, true);
+    const defender =
+      fetchedExternalWallets.defender.ensName ??
+      entityToAddress(fetchedExternalWallets.defender.address ?? battle.defender, true);
+
+    return {
+      attacker: battle.attacker === playerEntity ? "You" : attacker,
+      defender: battle.defender === playerEntity ? "You" : defender,
+    };
+  }, [battle, fetchedExternalWallets, playerEntity]);
+  // End fetch externally linked addresses
+
+  // Conditional rendering
   if (!battle) return <></>;
 
   const playersUnits = playerEntity === battle.attacker ? battle.attackerUnits : battle.defenderUnits;
@@ -85,12 +138,12 @@ export const BattleDetails: React.FC<{
           <div className="flex gap-2 text-sm items-center justify-center">
             <div className="bg-slate-700 p-2 rounded-md border border-rose-500 w-32">
               <p className="font-bold text-xs text-cyan-400">ATTACKER</p>
-              {battle.attacker === playerEntity ? "You" : entityToAddress(battle.attacker, true)}
+              {playerDisplays.attacker}
             </div>
             vs
             <div className="bg-slate-700 p-2 rounded-md border border-green-600 w-32">
               <p className="font-bold text-xs text-cyan-400">DEFENDER</p>
-              {battle.defender === playerEntity ? "You" : entityToAddress(battle.defender, true)}
+              {playerDisplays.defender}
             </div>
           </div>
 

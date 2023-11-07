@@ -2,7 +2,7 @@ import { Hex } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 
-type LinkedAddressResult = {
+export type LinkedAddressResult = {
   address: Hex | null;
   ensName: Hex | null;
 };

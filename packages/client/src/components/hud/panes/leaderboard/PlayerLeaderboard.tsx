@@ -8,7 +8,7 @@ import { FaCrosshairs, FaEnvelope } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { entityToAddress } from "src/util/common";
-import { getLinkedAddress } from "src/util/web2/getLinkedAddress";
+import { LinkedAddressResult, getLinkedAddress } from "src/util/web2/getLinkedAddress";
 import { linkAddress } from "src/util/web2/linkAddress";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
@@ -85,15 +85,15 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
   const role = components.PlayerAlliance.use(playerEntity)?.role ?? EAllianceRole.Member;
   const alliance = components.PlayerAlliance.use(playerEntity)?.alliance as Entity | undefined;
   const playerAlliance = components.PlayerAlliance.use(player)?.alliance as Entity | undefined;
-  const [fetchedExternalWallet, setFetchedExternalWallet] = useState<{
-    address: string | null;
-    ensName: string | null;
-  }>({ address: player, ensName: null });
+  const [fetchedExternalWallet, setFetchedExternalWallet] = useState<LinkedAddressResult>({
+    address: entityToAddress(player),
+    ensName: null,
+  });
 
   useEffect(() => {
     const fetchLocalLinkedAddress = async () => {
       try {
-        const jsonRes = await getLinkedAddress(entityToAddress(player) as Hex);
+        const jsonRes = await getLinkedAddress(entityToAddress(player));
         setFetchedExternalWallet(jsonRes);
       } catch (error) {
         return;
@@ -104,12 +104,7 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
 
   const playerDisplay: string = useMemo(() => {
     if (player === playerEntity) return "You";
-
-    if (fetchedExternalWallet.ensName) return fetchedExternalWallet.ensName;
-
-    if (fetchedExternalWallet.address) return entityToAddress(fetchedExternalWallet.address, true);
-
-    return entityToAddress(player, true);
+    return fetchedExternalWallet.ensName ?? entityToAddress(fetchedExternalWallet.address ?? player, true);
   }, [fetchedExternalWallet, player, playerEntity]);
 
   const playerAllianceDisplay = useMemo(() => {
