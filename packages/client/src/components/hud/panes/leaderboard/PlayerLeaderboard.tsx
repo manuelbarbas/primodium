@@ -7,7 +7,7 @@ import { Scenes } from "@game/constants";
 import { FaCrosshairs, FaEnvelope } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
-import { entityToAddress, shortenAddress } from "src/util/common";
+import { entityToAddress } from "src/util/common";
 import { getLinkedAddress } from "src/util/web2/getLinkedAddress";
 import { linkAddress } from "src/util/web2/linkAddress";
 import { useMud } from "src/hooks";
@@ -107,9 +107,9 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
 
     if (fetchedExternalWallet.ensName) return fetchedExternalWallet.ensName;
 
-    if (fetchedExternalWallet.address) return shortenAddress(entityToAddress(fetchedExternalWallet.address));
+    if (fetchedExternalWallet.address) return entityToAddress(fetchedExternalWallet.address, true);
 
-    return shortenAddress(entityToAddress(player));
+    return entityToAddress(player, true);
   }, [fetchedExternalWallet, player, playerEntity]);
 
   const playerAllianceDisplay = useMemo(() => {

@@ -1,7 +1,7 @@
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { useMud } from "src/hooks";
-import { shortenAddress } from "src/util/common";
+import { entityToAddress } from "src/util/common";
 import { PIRATE_KEY, SpaceRockTypeNames } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
 import { getSpaceRockInfo } from "src/util/spacerock";
@@ -22,7 +22,7 @@ export const SpacerockInfo: React.FC<{
   let owner = "Neutral";
   if (ownedBy === playerEntity) owner = "You";
   else if (ownedBy === hashKeyEntity(PIRATE_KEY, playerEntity)) owner = "Pirates!";
-  else if (ownedBy && ownedBy !== playerEntity) owner = shortenAddress(ownedBy);
+  else if (ownedBy && ownedBy !== playerEntity) owner = entityToAddress(ownedBy, true);
 
   return (
     <Navigator.Screen title="SpaceRockInfo" className="w-full">

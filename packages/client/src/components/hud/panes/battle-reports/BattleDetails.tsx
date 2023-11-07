@@ -6,7 +6,7 @@ import { Navigator } from "src/components/core/Navigator";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { getBlockTypeName, shortenAddress, toRomanNumeral } from "src/util/common";
+import { entityToAddress, getBlockTypeName, toRomanNumeral } from "src/util/common";
 import {
   BackgroundImage,
   ResourceEntityLookup,
@@ -85,12 +85,12 @@ export const BattleDetails: React.FC<{
           <div className="flex gap-2 text-sm items-center justify-center">
             <div className="bg-slate-700 p-2 rounded-md border border-rose-500 w-32">
               <p className="font-bold text-xs text-cyan-400">ATTACKER</p>
-              {battle.attacker === playerEntity ? "You" : shortenAddress(battle.attacker)}
+              {battle.attacker === playerEntity ? "You" : entityToAddress(battle.attacker, true)}
             </div>
             vs
             <div className="bg-slate-700 p-2 rounded-md border border-green-600 w-32">
               <p className="font-bold text-xs text-cyan-400">DEFENDER</p>
-              {battle.defender === playerEntity ? "You" : shortenAddress(battle.defender)}
+              {battle.defender === playerEntity ? "You" : entityToAddress(battle.defender, true)}
             </div>
           </div>
 
