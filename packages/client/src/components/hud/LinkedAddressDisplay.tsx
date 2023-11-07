@@ -12,13 +12,14 @@ export const LinkedAddressDisplay = ({ entity }: { entity: Entity }) => {
   const playerEntity = network.playerEntity;
 
   const [fetchedExternalWallet, setFetchedExternalWallet] = useState<LinkedAddressResult>({
-    address: entityToAddress(entity),
+    address: null,
     ensName: null,
   });
 
   useEffect(() => {
     const fetchLocalLinkedAddress = async () => {
       try {
+        if (!isPlayer(entity)) return;
         const jsonRes = await getLinkedAddress(entityToAddress(entity));
         setFetchedExternalWallet(jsonRes);
       } catch (error) {
