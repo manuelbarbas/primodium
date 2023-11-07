@@ -18,12 +18,13 @@ import { invite } from "src/util/web3/contractCalls/alliance";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { hashEntities } from "src/util/encode";
 import { TransactionQueueType } from "src/util/constants";
+import { Hex } from "viem";
 
 export const PlayerLeaderboard = () => {
   const network = useMud().network;
   const address = network.address;
   const data = components.Leaderboard.use();
-  const [linkedAddress, setLinkedAddress] = useState(null);
+  const [linkedAddress, setLinkedAddress] = useState<Hex | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -92,10 +93,7 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
   useEffect(() => {
     const fetchLocalLinkedAddress = async () => {
       try {
-        const res = await fetch(
-          `${import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL}/linked-address/local-to-external/${entityToAddress(player)}`
-        );
-        const jsonRes = await res.json();
+        const jsonRes = await getLinkedAddress(entityToAddress(player) as Hex);
         setFetchedExternalWallet(jsonRes);
       } catch (error) {
         return;
