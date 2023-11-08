@@ -1,22 +1,29 @@
-import { ethers } from "ethers";
+import { Hex } from "viem";
+import { privateKeyToAccount } from "viem/accounts";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 
-export const getLinkedAddress = async () => {
-  const networkConfig = getNetworkConfig();
-  // Fetch linked address from server using the local browser wallet address
-  const wallet = new ethers.Wallet(networkConfig.privateKey);
+export type LinkedAddressResult = {
+  address: Hex | null;
+  ensName: Hex | null;
+};
 
-  const localAddress = wallet.address;
+// NOTE: This function will be replaced with account abstraction in a future update.
+export const getLinkedAddress = async (address?: Hex): Promise<LinkedAddressResult> => {
+  let localAddress = address;
+  if (!address) {
+    // Fetch linked address from server using the local browser wallet address
+    const networkConfig = getNetworkConfig();
+    const wallet = privateKeyToAccount(networkConfig.privateKey);
+    localAddress = wallet.address;
+  }
 
   try {
     const res = await fetch(
       `${import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL}/linked-address/local-to-external/${localAddress}`
     );
-
     const jsonRes = await res.json();
-
-    return jsonRes;
+    return jsonRes as LinkedAddressResult;
   } catch (error) {
-    return { address: "", ens: "" };
+    return { address: null, ensName: null } as LinkedAddressResult;
   }
 };
