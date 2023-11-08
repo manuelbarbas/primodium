@@ -12,6 +12,12 @@ import { Hex } from "viem";
 import { parseReceipt } from "../../analytics/parseReceipt";
 import { UnitCountTuple } from "../types";
 
+(window as any).checkValue = () => {
+  const playerEntity = components.Account.get()?.value;
+  if (!playerEntity) throw new Error("No player entity found");
+  const arrivalCount = components.ArrivalCount.getWithKeys({ entity: playerEntity as Hex })?.value;
+  console.log("arrivalCount:", arrivalCount);
+};
 export const send = async (
   unitCounts: UnitCountTuple,
   sendType: ESendType,
@@ -34,8 +40,11 @@ export const send = async (
       id: world.registerEntity(),
     },
     (receipt) => {
-      const originAsteroid = components.ReversePosition.getWithKeys(origin)?.entity;
-      const destinationAsteroid = components.ReversePosition.getWithKeys(destination)?.entity;
+      const originAsteroid = components.ReversePosition.getWithKeys({ x: origin.x, y: origin.y })?.entity;
+      const destinationAsteroid = components.ReversePosition.getWithKeys({
+        x: destination.x,
+        y: destination.y,
+      })?.entity;
 
       ampli.systemSendUnits({
         asteroidCoord: originAsteroid!,
