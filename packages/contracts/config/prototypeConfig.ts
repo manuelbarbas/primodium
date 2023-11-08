@@ -98,7 +98,7 @@ const mainBaseMaxResourceUpgrades = {
 };
 
 const storageUnitMaxResourceUpgrades = {
-  1: { Iron: 100000, Copper: 100000, Lithium: 50000, Sulfur: 50000, IronPlate: 7200, PVCell: 50000, Alloy: 4500 },
+  1: { Iron: 100000, Copper: 100000, Lithium: 50000, Sulfur: 50000, IronPlate: 50000, PVCell: 50000, Alloy: 50000 },
   2: {
     Iron: 250000,
     Copper: 250000,
@@ -126,8 +126,8 @@ const storageUnitMaxResourceUpgrades = {
     Kimberlite: 50000,
   },
   4: {
-    Iron: 100000,
-    Copper: 100000,
+    Iron: 1000000,
+    Copper: 1000000,
     Lithium: 500000,
     Sulfur: 500000,
     IronPlate: 500000,
@@ -1295,7 +1295,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_MiningRate: { value: 6n },
         P_Unit: {
           attack: 55n,
-          defense: 750n,
+          defense: 7500n,
           cargo: 100000n,
           speed: 16n,
           trainingTime: 1000n,
