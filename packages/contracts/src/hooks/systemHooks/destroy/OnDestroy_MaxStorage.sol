@@ -6,8 +6,6 @@ import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
 
-import { EBuilding } from "src/Types.sol";
-import { LibEncode } from "libraries/LibEncode.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";

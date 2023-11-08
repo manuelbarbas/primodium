@@ -2,12 +2,10 @@
 pragma solidity >=0.8.21;
 
 import { IWorld } from "codegen/world/IWorld.sol";
-import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
-import { Home, RockType, OwnedBy, BattleResultData, P_UnitPrototypes } from "codegen/index.sol";
+import { entityToAddress, getSystemResourceId } from "src/utils.sol";
+import { RockType, OwnedBy, BattleResultData, P_UnitPrototypes } from "codegen/index.sol";
 import { ERock, ESendType } from "src/Types.sol";
 import { LibReinforce } from "libraries/LibReinforce.sol";
-import { LibMotherlode } from "libraries/LibMotherlode.sol";
-import { LibBattle } from "libraries/LibBattle.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { S_BattleSystem } from "systems/subsystems/S_BattleSystem.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";

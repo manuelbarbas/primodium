@@ -6,7 +6,6 @@ import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 import { EObjectives } from "src/Types.sol";
-import { LibEncode } from "libraries/LibEncode.sol";
 import { LibObjectives } from "libraries/LibObjectives.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 

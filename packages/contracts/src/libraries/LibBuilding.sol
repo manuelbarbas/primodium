@@ -1,15 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { addressToEntity, entityToAddress, getSystemResourceId, bytes32ToString } from "src/utils.sol";
+import { entityToAddress } from "src/utils.sol";
 // tables
-import { HasBuiltBuilding, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/index.sol";
+import { HasBuiltBuilding, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint } from "codegen/index.sol";
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
-import { LibReduceProductionRate } from "libraries/LibReduceProductionRate.sol";
-import { LibProduction } from "libraries/LibProduction.sol";
-import { LibStorage } from "libraries/LibStorage.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 
 // types

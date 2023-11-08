@@ -6,7 +6,6 @@ import { MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, Motherlode, 
 import { ERock, EUnit } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
-import { LibResource } from "libraries/LibResource.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
 import { UnitKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";

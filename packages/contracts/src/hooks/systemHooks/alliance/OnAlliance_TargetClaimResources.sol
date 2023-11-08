@@ -3,11 +3,8 @@ pragma solidity >=0.8.21;
 
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
-import { PositionData } from "codegen/tables/Position.sol";
-
 import { LibResource } from "libraries/LibResource.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
-import { OwnedBy } from "codegen/tables/OwnedBy.sol";
 
 /**
  * @title OnAlliance_TargetClaimResources

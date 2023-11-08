@@ -5,9 +5,7 @@ pragma solidity >=0.8.21;
 
 import { StoreHook } from "@latticexyz/store/src/StoreHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
-import { Score } from "codegen/tables/Score.sol";
-import { Alliance } from "codegen/tables/Alliance.sol";
-import { PlayerAlliance } from "codegen/tables/PlayerAlliance.sol";
+import { Score, Alliance, PlayerAlliance } from "codegen/index.sol";
 import { ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
