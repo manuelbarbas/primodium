@@ -9,6 +9,7 @@ import { LibMath } from "libraries/LibMath.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
 import { UnitKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
+import { console } from "forge-std/console.sol";
 
 library LibUnit {
   function getUnitCountOnHomeAsteroid(bytes32 playerEntity, bytes32 unitType) internal view returns (uint256) {
@@ -142,6 +143,10 @@ library LibUnit {
       uint256 requiredAmount = resources.amounts[i] * count;
       uint256 currentAmount = ResourceCount.get(playerEntity, resource);
 
+      console.log("count:", count);
+      console.log("required amount:", resources.amounts[i]);
+      console.log("current amount:", currentAmount);
+      console.log("max amount:", MaxResourceCount.get(playerEntity, resource));
       if (add) {
         require(currentAmount >= requiredAmount, "[LibUnit] Not enough utility resources");
         ResourceCount.set(playerEntity, resource, currentAmount - requiredAmount);

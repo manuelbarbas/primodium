@@ -55,6 +55,7 @@ library ArrivalsMap {
     bytes32 asteroid,
     bytes32 key
   ) internal view returns (Arrival memory) {
+    require(has(player, asteroid, key), "Arrival does not exist");
     bytes memory encoding = MapItemArrivals.get(player, asteroid, key);
     return abi.decode(encoding, (Arrival));
   }

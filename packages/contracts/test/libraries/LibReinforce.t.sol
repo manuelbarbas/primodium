@@ -10,6 +10,7 @@ contract LibReinforceTest is PrimodiumTest {
   bytes32 destination = "destination";
 
   bytes32 unit = "unit";
+  bytes32 arrivalId = "arrivalId";
 
   bytes32 unit2 = "unit2";
   uint256[NUM_UNITS] unitCounts;
@@ -25,8 +26,6 @@ contract LibReinforceTest is PrimodiumTest {
       destination: destination,
       unitCounts: unitCounts
     });
-
-  bytes32 arrivalId = "arrival";
 
   P_UnitData unitData = P_UnitData({ attack: 0, defense: 0, speed: 0, cargo: 0, trainingTime: 0 });
 
@@ -47,6 +46,7 @@ contract LibReinforceTest is PrimodiumTest {
 
     unitCounts[0] = (47);
     arrival.unitCounts = unitCounts;
+    arrival.to = player;
 
     ArrivalsMap.set(player, destination, arrivalId, arrival);
     LibReinforce.reinforce(player, destination, arrivalId);
@@ -58,14 +58,15 @@ contract LibReinforceTest is PrimodiumTest {
 
   function testReinforceAnotherPlayer() public {
     arrival.sendType = ESendType.Reinforce;
-    arrival.from = "anotherPlayer";
+    bytes32 anotherPlayer = "anotherPlayer";
+    arrival.to = anotherPlayer;
+    arrival.from = player;
 
     unitCounts[0] = (1);
     arrival.unitCounts = unitCounts;
-    ArrivalsMap.set(player, destination, arrivalId, arrival);
+    arrivalId = LibSend.sendUnits(arrival);
 
-    ArrivalCount.set(player, 10);
-    ArrivalCount.set(arrival.from, 10);
+    vm.warp(block.timestamp + 1);
 
     P_IsUtility.set(Iron, true);
 
@@ -73,16 +74,16 @@ contract LibReinforceTest is PrimodiumTest {
     requiredResourcesData.resources[0] = uint8(Iron);
     requiredResourcesData.amounts[0] = 33;
     P_RequiredResources.set(unit, 0, requiredResourcesData);
-    P_RequiredResources.set(unit, 1, requiredResourcesData);
     uint256 before = 75;
+
     LibProduction.increaseResourceProduction(player, EResource(Iron), before);
-    LibProduction.increaseResourceProduction(arrival.from, EResource(Iron), before);
-    LibResource.spendUnitRequiredResources(arrival.from, unit, 1);
+    LibProduction.increaseResourceProduction(anotherPlayer, EResource(Iron), before);
+    LibResource.spendUnitRequiredResources(player, unit, 1);
 
-    LibReinforce.reinforce(player, destination, arrivalId);
+    LibReinforce.reinforce(anotherPlayer, destination, arrivalId);
 
-    assertEq(ResourceCount.get(arrival.from, Iron), before);
-    assertEq(ResourceCount.get(player, Iron), before - 33);
+    assertEq(ResourceCount.get(anotherPlayer, Iron), before - 33);
+    assertEq(ResourceCount.get(player, Iron), before);
   }
 
   function testFailReinforceWrongSendType() public {
@@ -106,6 +107,7 @@ contract LibReinforceTest is PrimodiumTest {
     ArrivalCount.set(player, 10);
     arrival.sendType = ESendType.Reinforce;
     arrival.arrivalTime = block.timestamp - 1;
+    arrival.to = player;
 
     unitCounts[0] = (47);
 
@@ -176,6 +178,7 @@ contract LibReinforceTest is PrimodiumTest {
     OwnedBy.set(destination, player);
     arrival.sendType = ESendType.Reinforce;
     arrival.arrivalTime = block.timestamp - 1;
+    arrival.to = player;
 
     unitCounts[0] = (47);
     arrival.unitCounts = unitCounts;
@@ -188,7 +191,7 @@ contract LibReinforceTest is PrimodiumTest {
       sendType: ESendType.Reinforce,
       arrivalTime: block.timestamp - 1,
       from: player,
-      to: "to",
+      to: player,
       origin: origin,
       destination: destination,
       unitCounts: unitCounts
