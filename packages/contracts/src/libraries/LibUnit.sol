@@ -182,8 +182,9 @@ library LibUnit {
     if (productionRate == 0) return;
 
     uint8 resource = (Motherlode.getMotherlodeType(rockEntity));
+    uint8 size = Motherlode.getSize(rockEntity);
     uint256 prevProductionRate = ProductionRate.get(playerEntity, resource);
-    ProductionRate.set(playerEntity, resource, prevProductionRate + (productionRate * unitCount));
+    ProductionRate.set(playerEntity, resource, prevProductionRate + (productionRate * unitCount * size));
   }
 
   /**
@@ -213,7 +214,8 @@ library LibUnit {
     if (productionRate == 0) return;
 
     uint8 resource = (Motherlode.getMotherlodeType(rockEntity));
+    uint8 size = Motherlode.getSize(rockEntity);
     uint256 prevProductionRate = ProductionRate.get(playerEntity, resource);
-    ProductionRate.set(playerEntity, resource, prevProductionRate - (productionRate * unitCount));
+    ProductionRate.set(playerEntity, resource, prevProductionRate - (productionRate * unitCount * size));
   }
 }
