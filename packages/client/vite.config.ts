@@ -17,6 +17,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
+      external: [/^contracts:.*/],
       output: {
         manualChunks: {
           react: ["react", "react-dom"],
