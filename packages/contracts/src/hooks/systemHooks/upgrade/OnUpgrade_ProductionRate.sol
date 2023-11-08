@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { addressToEntity } from "src/utils.sol";
-import { ResourceId, ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
+import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";

@@ -6,7 +6,7 @@ import { Navigator } from "src/components/core/Navigator";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { getBlockTypeName, shortenAddress, toRomanNumeral } from "src/util/common";
+import { getBlockTypeName, toRomanNumeral } from "src/util/common";
 import {
   BackgroundImage,
   ResourceEntityLookup,
@@ -15,6 +15,7 @@ import {
   UnitEntityLookup,
 } from "src/util/constants";
 import { Hex } from "viem";
+import { LinkedAddressDisplay } from "../../LinkedAddressDisplay";
 
 export const UnitStatus: React.FC<{
   unit: Entity;
@@ -22,7 +23,6 @@ export const UnitStatus: React.FC<{
   count: bigint;
   level: bigint;
 }> = ({ unit, unitsLeft, count, level }) => {
-  console.log("unit:", unit);
   if (unitsLeft - count <= 0n && count === 0n) return <></>;
 
   return (
@@ -58,7 +58,6 @@ export const BattleDetails: React.FC<{
   if (!battle) return <></>;
 
   const playersUnits = playerEntity === battle.attacker ? battle.attackerUnits : battle.defenderUnits;
-  console.log("players units:", playersUnits);
   const enemyUnits = playerEntity === battle.attacker ? battle.defenderUnits : battle.attackerUnits;
 
   return (
@@ -85,12 +84,12 @@ export const BattleDetails: React.FC<{
           <div className="flex gap-2 text-sm items-center justify-center">
             <div className="bg-slate-700 p-2 rounded-md border border-rose-500 w-32">
               <p className="font-bold text-xs text-cyan-400">ATTACKER</p>
-              {battle.attacker === playerEntity ? "You" : shortenAddress(battle.attacker)}
+              <LinkedAddressDisplay entity={battle.attacker as Entity} />
             </div>
             vs
             <div className="bg-slate-700 p-2 rounded-md border border-green-600 w-32">
               <p className="font-bold text-xs text-cyan-400">DEFENDER</p>
-              {battle.defender === playerEntity ? "You" : shortenAddress(battle.defender)}
+              <LinkedAddressDisplay entity={battle.defender as Entity} />
             </div>
           </div>
 

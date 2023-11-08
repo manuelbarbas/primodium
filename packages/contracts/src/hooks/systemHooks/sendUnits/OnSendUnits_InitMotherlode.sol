@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
-import { LibMotherlode, LibSend, LibUnit } from "codegen/Libraries.sol";
+import { LibMotherlode } from "codegen/Libraries.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { ReversePosition } from "codegen/tables/ReversePosition.sol";
 import { SendArgs } from "src/Types.sol";
