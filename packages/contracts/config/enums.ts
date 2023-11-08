@@ -102,6 +102,10 @@ export enum EObjectives {
   DefeatPirateBase3,
   DefeatPirateBase4,
   DefeatPirateBase5,
+  DefeatPirateBase6,
+  DefeatPirateBase7,
+  DefeatPirateBase8,
+  DefeatPirateBase9,
 
   BuildIronMine,
   BuildCopperMine,
@@ -110,6 +114,7 @@ export enum EObjectives {
   BuildIronPlateFactory,
   BuildGarage,
   BuildWorkshop,
+  BuildHangar,
   BuildPVCellFactory,
   BuildSolarPanel,
   BuildDroneFactory,
