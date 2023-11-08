@@ -42,16 +42,13 @@ library LibProduction {
     uint256 level
   ) internal {
     uint256 miningRate = P_MiningRate.get(unitPrototype, level);
-    if (miningRate > 0) {
-      uint256 lastLevelMiningRate = P_MiningRate.get(unitPrototype, level - 1);
-      for (uint8 resource = 1; resource < uint8(EResource.LENGTH); resource++) {
-        if (P_IsAdvancedResource.get(resource)) {
-          uint256 currProduction = ProductionRate.get(playerEntity, resource);
-          if (currProduction > 0) {
-            ProductionRate.set(playerEntity, resource, ((currProduction * miningRate) / lastLevelMiningRate));
-          }
-        }
-      }
+    if (miningRate == 0) return;
+    uint256 lastLevelMiningRate = P_MiningRate.get(unitPrototype, level - 1);
+    for (uint8 resource = 1; resource < uint8(EResource.LENGTH); resource++) {
+      if (!P_IsAdvancedResource.get(resource)) continue;
+      uint256 currProduction = ProductionRate.get(playerEntity, resource);
+      if (currProduction > 0)
+        ProductionRate.set(playerEntity, resource, ((currProduction * miningRate) / lastLevelMiningRate));
     }
   }
 
