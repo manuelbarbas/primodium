@@ -1,16 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { System } from "@latticexyz/world/src/System.sol";
-
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
-import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
+import { addressToEntity } from "src/utils.sol";
 
-import { ESendType, SendArgs, ERock, Arrival } from "src/Types.sol";
-import { ReversePosition, PositionData, UnitCount, OwnedBy, ResourceCount, ArrivalCount, P_EnumToPrototype, P_UnitPrototypes } from "codegen/index.sol";
-import { LibSend, ArrivalsMap } from "codegen/Libraries.sol";
-import { UnitKey } from "src/Keys.sol";
+import { ESendType, SendArgs, Arrival } from "src/Types.sol";
+import { ReversePosition, PositionData, UnitCount } from "codegen/index.sol";
+import { LibSend } from "codegen/Libraries.sol";
 import { NUM_UNITS } from "src/constants.sol";
 
 contract SendUnitsSystem is PrimodiumSystem {

@@ -1,15 +1,15 @@
+import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
 import { SetupNetworkResult } from "src/network/types";
-import { TransactionQueueType } from "src/util/constants";
-import { Hex } from "viem";
-import { encodeCoord, encodeNumberEntity } from "src/util/encode";
-import { ampli } from "src/ampli";
-import { parseReceipt } from "../../analytics/parseReceipt";
-import { getBlockTypeName } from "src/util/common";
-import { Entity } from "@latticexyz/recs";
 import { bigintToNumber } from "src/util/bigint";
+import { getBlockTypeName } from "src/util/common";
+import { TransactionQueueType } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
+import { Hex } from "viem";
+import { parseReceipt } from "../../analytics/parseReceipt";
 
 export const upgradeBuilding = async (coord: Coord, network: SetupNetworkResult) => {
   const asteroid = components.Home.get(network.playerEntity)?.asteroid;
@@ -20,7 +20,7 @@ export const upgradeBuilding = async (coord: Coord, network: SetupNetworkResult)
     () => network.worldContract.write.upgradeBuilding([position]),
     network,
     {
-      id: encodeNumberEntity(TransactionQueueType.Upgrade, encodeCoord(coord)),
+      id: hashEntities(TransactionQueueType.Upgrade, coord.x, coord.y),
       type: TransactionQueueType.Upgrade,
     },
     (receipt) => {

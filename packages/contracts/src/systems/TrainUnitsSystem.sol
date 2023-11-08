@@ -3,9 +3,9 @@ pragma solidity >=0.8.21;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { P_EnumToPrototype, QueueItemUnitsData } from "codegen/index.sol";
-import { LibUnit, UnitProductionQueue } from "codegen/Libraries.sol";
+import { UnitProductionQueue } from "codegen/Libraries.sol";
 
-import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
+import { addressToEntity } from "src/utils.sol";
 
 import { EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";

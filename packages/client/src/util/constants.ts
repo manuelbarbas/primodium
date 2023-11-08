@@ -3,10 +3,9 @@ import { encodeEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
 import { EBuilding, EObjectives, EResource, ERock, ESize, EUnit } from "contracts/config/enums";
 import { Key } from "engine/types";
-import { toHex } from "viem";
 import { reverseRecord } from "./common";
+import { toHex32 } from "./encode";
 
-export const toHex32 = (input: string) => toHex(input, { size: 32 });
 export const encodeEntityLevel = (entity: string, level: number) => {
   return encodeEntity({ entity: "bytes32", level: "uint256" }, { entity: toHex32(entity), level: BigInt(level) });
 };

@@ -1,16 +1,15 @@
 import { Coord } from "@latticexyz/utils";
-import { Hex } from "viem";
-import { BigNumber } from "ethers";
-import { ampli } from "src/ampli";
 import { EBuilding } from "contracts/config/enums";
+import { ampli } from "src/ampli";
+import { execute } from "src/network/actions";
 import { components } from "src/network/components";
 import { SetupNetworkResult } from "src/network/types";
-import { execute } from "src/network/actions";
-import { parseReceipt } from "../../analytics/parseReceipt";
-import { BuildingEntityLookup, TransactionQueueType } from "src/util/constants";
 import { getBuildingTopLeft } from "src/util/building";
-import { encodeCoord, hashEntities } from "src/util/encode";
 import { getBlockTypeName } from "src/util/common";
+import { BuildingEntityLookup, TransactionQueueType } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
+import { Hex } from "viem";
+import { parseReceipt } from "../../analytics/parseReceipt";
 
 export const buildBuilding = async (network: SetupNetworkResult, building: EBuilding, coord: Coord) => {
   const activeAsteroid = components.Home.get(network.playerEntity)?.asteroid;
@@ -22,7 +21,7 @@ export const buildBuilding = async (network: SetupNetworkResult, building: EBuil
     () => network.worldContract.write.build([building, position], { gas: 7000000n }),
     network,
     {
-      id: hashEntities(TransactionQueueType.Build, encodeCoord(coord)),
+      id: hashEntities(TransactionQueueType.Build, coord.x, coord.y),
       type: TransactionQueueType.Build,
       metadata: {
         coord: getBuildingTopLeft(coord, BuildingEntityLookup[building]),
@@ -31,7 +30,7 @@ export const buildBuilding = async (network: SetupNetworkResult, building: EBuil
     },
     (receipt) => {
       ampli.systemBuild({
-        asteroidCoord: BigNumber.from(activeAsteroid).toString(),
+        asteroidCoord: activeAsteroid,
         buildingType: getBlockTypeName(BuildingEntityLookup[building]),
         coord: [coord.x, coord.y],
         currLevel: 0,

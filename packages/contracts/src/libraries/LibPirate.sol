@@ -2,19 +2,15 @@
 pragma solidity ^0.8.21;
 
 // tables
-import { Home, P_IsUtility, P_UnitPrototypes, MaxResourceCount, ResourceCount, UnitCount, PirateAsteroidData, P_SpawnPirateAsteroid, P_SpawnPirateAsteroidData, PirateAsteroid, DefeatedPirate, Spawned, ReversePosition, OwnedBy, Position, PositionData, AsteroidCount, RockType, PositionData } from "codegen/index.sol";
+import { Home, P_IsUtility, P_UnitPrototypes, MaxResourceCount, ResourceCount, UnitCount, PirateAsteroidData, P_SpawnPirateAsteroid, P_SpawnPirateAsteroidData, PirateAsteroid, Spawned, ReversePosition, OwnedBy, Position, PositionData, RockType } from "codegen/index.sol";
 
 // types
 import { ERock, EResource } from "src/Types.sol";
 import { PirateKey } from "src/Keys.sol";
 // libraries
-import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
-
-import { Trigonometry as Trig } from "trig/src/Trigonometry.sol";
-import { ABDKMath64x64 as Math } from "abdk/ABDKMath64x64.sol";
 
 library LibPirate {
   /// @notice spawns new pirate asteroid for player in world
