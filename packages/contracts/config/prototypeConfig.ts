@@ -178,32 +178,32 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     levels: {
       1: { Dimensions: { width: 13, height: 11 }, P_RequiredBaseLevel: { value: 1n } },
       2: {
-        P_RequiredResources: getResourceValues({ Lithium: 150000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Lithium: 150000 }),
         Dimensions: { width: 17, height: 13 },
         P_RequiredBaseLevel: { value: 2n },
       },
       3: {
-        P_RequiredResources: getResourceValues({ Alloy: 100000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Alloy: 100000 }),
         Dimensions: { width: 21, height: 15 },
         P_RequiredBaseLevel: { value: 3n },
       },
       4: {
-        P_RequiredResources: getResourceValues({ Titanium: 50000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Titanium: 50000 }),
         Dimensions: { width: 25, height: 17 },
         P_RequiredBaseLevel: { value: 4n },
       },
       5: {
-        P_RequiredResources: getResourceValues({ Platinum: 100000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Platinum: 100000 }),
         Dimensions: { width: 29, height: 19 },
         P_RequiredBaseLevel: { value: 5n },
       },
       6: {
-        P_RequiredResources: getResourceValues({ Iridium: 100000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Iridium: 100000 }),
         Dimensions: { width: 33, height: 23 },
         P_RequiredBaseLevel: { value: 6n },
       },
       7: {
-        P_RequiredResources: getResourceValues({ Kimberlite: 100000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 100000 }),
         Dimensions: { width: maxRange.xBounds, height: maxRange.yBounds },
         P_RequiredBaseLevel: { value: 7n },
       },
