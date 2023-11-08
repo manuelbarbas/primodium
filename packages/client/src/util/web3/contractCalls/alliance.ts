@@ -6,8 +6,8 @@ import { components } from "src/network/components";
 import { SetupNetworkResult } from "src/network/types";
 import { world } from "src/network/world";
 import { getAllianceName, getAllianceNameFromPlayer } from "src/util/alliance";
-import { TransactionQueueType, toHex32 } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
+import { TransactionQueueType } from "src/util/constants";
+import { hashEntities, toHex32 } from "src/util/encode";
 import { Hex } from "viem";
 import { parseReceipt } from "../../analytics/parseReceipt";
 

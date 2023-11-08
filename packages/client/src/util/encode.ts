@@ -1,8 +1,9 @@
 import { Entity } from "@latticexyz/recs";
 import { encodeEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
-import { Hex, encodeAbiParameters, keccak256, trim } from "viem";
-import { toHex32 } from "./constants";
+import { Hex, encodeAbiParameters, keccak256, toHex, trim } from "viem";
+
+export const toHex32 = (input: string) => toHex(input, { size: 32 });
 
 export function encodeNumberEntity(key: number, entity: string): Entity {
   return encodeEntity({ key: "uint16", entity: "bytes32" }, { key, entity: toHex32(entity) });
