@@ -1,6 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { hexlify, randomBytes } from "ethers/lib/utils";
-import { Hex, trim, getAddress, isAddress } from "viem";
+import { Hex, getAddress, isAddress, trim } from "viem";
 import { BlockIdToKey } from "./constants";
 
 export function hasCommonElement<T>(setA: Set<T>, setB: Set<T>) {
@@ -117,5 +116,3 @@ export const isPlayer = (entity: Entity) => {
 
   return isAddress(trimmedAddress);
 };
-
-export const randomEntity = () => hexlify(randomBytes(32)) as Entity;

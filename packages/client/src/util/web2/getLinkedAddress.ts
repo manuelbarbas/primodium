@@ -1,12 +1,8 @@
-import { ethers } from "ethers";
-import { getNetworkConfig } from "src/network/config/getNetworkConfig";
+import { components } from "src/network/components";
 
 export const getLinkedAddress = async () => {
-  const networkConfig = getNetworkConfig();
-  // Fetch linked address from server using the local browser wallet address
-  const wallet = new ethers.Wallet(networkConfig.privateKey);
-
-  const localAddress = wallet.address;
+  const localAddress = components.Account.get()?.value;
+  if (!localAddress) return { address: "", ens: "" };
 
   try {
     const res = await fetch(

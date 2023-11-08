@@ -1,16 +1,8 @@
-import { BigNumber, utils } from "ethers";
-import { defaultAbiCoder, solidityKeccak256 } from "ethers/lib/utils";
-import { encodeEntity } from "@latticexyz/store-sync/recs";
 import { Entity } from "@latticexyz/recs";
+import { encodeEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
-import { Hex } from "viem";
-import { ContractCoord } from "./types";
+import { Hex, encodeAbiParameters, keccak256, trim } from "viem";
 import { toHex32 } from "./constants";
-
-// use this when you want to pass the entity to world.getEntityIndex
-export function encodeAndTrimCoord(coord: Coord): Entity {
-  return trim(encodeCoord(coord));
-}
 
 export function encodeNumberEntity(key: number, entity: string): Entity {
   return encodeEntity({ key: "uint16", entity: "bytes32" }, { key, entity: toHex32(entity) });
@@ -21,7 +13,7 @@ export function encodeKeyEntity(key: string, entity: string): Entity {
 }
 
 // convert the following solidity function to typescript:
-export function encodeCoord(coord: Coord): Entity {
+export function encodeCoord(coord: Coord) {
   let x: number = coord.x;
   let y: number = coord.y;
 
@@ -36,7 +28,7 @@ export function encodeCoord(coord: Coord): Entity {
 
   // Shift the bits of the first int32 32 bits to the left and OR it with the second int32
   const result = (BigInt(x) << BigInt(32)) | BigInt(y);
-  return trim(("0x" + result.toString(16).padStart(64, "0")) as Entity);
+  return trim(("0x" + result.toString(16).padStart(64, "0")) as Hex);
 }
 
 export function decodeCoord(encodedValue: Entity) {
@@ -56,65 +48,27 @@ export function decodeCoord(encodedValue: Entity) {
     y: int32_y,
   };
 }
-export function getMotherlodeEntity(sourceEntity: Entity, position: Coord) {
-  return solidityKeccak256(
-    ["bytes"],
-    [
-      defaultAbiCoder.encode(
-        ["uint256", "string", "int32", "int32"],
-        [sourceEntity, "motherlode", position.x, position.y]
-      ),
-    ]
-  ) as Entity;
-}
+export const getMotherlodeEntity = (sourceEntity: Entity, position: Coord) =>
+  encodeEntity(
+    { sourceEntity: "bytes32", motherlode: "bytes32", x: "int32", y: "int32" },
+    { sourceEntity: sourceEntity as Hex, motherlode: toHex32("motherlode"), x: position.x, y: position.y }
+  );
 
 export function hashEntities(...args: (Entity | string | number)[]) {
-  const types = args.map(() => "uint256");
-  const values = args.map((arg) => BigNumber.from(arg));
-  return solidityKeccak256(types, values) as Entity;
-}
-
-export function hashAndTrimKeyEntity(key: Hex, entity: Entity | string | number): Entity {
-  return trim(hashKeyEntity(key, entity));
+  const values = args.reduce((prev, arg) => `${prev}${arg}`, "") as Hex;
+  return keccak256(values) as Entity;
 }
 
 // Identical to hashKeyEntity in packages/contracts/src/libraries/LibEncode.sol
-export function hashKeyEntity(key: Hex, entity: Entity | string | number): Entity {
+export function hashKeyEntity(key: Hex, entity: Entity): Entity {
   // Compute the Keccak-256 hash of the concatenated key and entity
-  return solidityKeccak256(["bytes32", "uint256"], [BigNumber.from(key), BigNumber.from(entity)]) as Entity;
-}
-// Identical to hashKeyEntity (with string param) in packages/contracts/src/libraries/LibEncode.sol
-export function hashStringEntity(key: string, entity: Entity | string | number): Entity {
-  // Compute the Keccak-256 hash of the concatenated key and entity
-  return solidityKeccak256(["bytes", "uint256"], [utils.toUtf8Bytes(key), BigNumber.from(entity)]) as Entity;
-}
-// Remove leading zeros due to mudv1 hashing behavior
-// if there are leading zeroes, the key in world.entityToIndex will be trimmed
-export function trim(entity: Entity): Entity {
-  return BigNumber.from(entity).toHexString() as Entity;
-}
-
-export function hashEntity(entity: Entity) {
-  return solidityKeccak256(["uint256"], [BigNumber.from(entity)]) as Entity;
-}
-
-export function hashAndTrimKeyCoord(key: string, coord: ContractCoord): Entity {
-  return trim(hashKeyCoord(key, coord));
-}
-
-export function hashKeyCoord(key: string, coord: ContractCoord): Entity {
-  return solidityKeccak256(
-    ["string", "int32", "int32", "uint256"],
-    [key, coord.x, coord.y, trim(coord.parent)]
+  return keccak256(
+    encodeAbiParameters(
+      [
+        { name: "key", type: "bytes32" },
+        { name: "entity", type: "bytes32" },
+      ],
+      [key, entity as Hex]
+    )
   ) as Entity;
-}
-
-export function padTo64Bytes(hex: string): string {
-  // Remove "0x" prefix if present
-  const cleanHex = hex.startsWith("0x") ? hex.slice(2) : hex;
-  // Pad the hex string with zeros to 64 characters (32 bytes)
-  const paddedHex = cleanHex.padStart(64, "0");
-  // Add "0x" prefix back
-  const result = "0x" + paddedHex;
-  return result;
 }

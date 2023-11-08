@@ -47,7 +47,6 @@ export default defineConfig({
 
     include: [
       "proxy-deep",
-      "ethers/lib/utils",
       "bn.js",
       "js-sha3",
       "hash.js",
