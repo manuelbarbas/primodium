@@ -76,6 +76,7 @@ export async function setupNetwork(networkConfig: NetworkConfig) {
 
   return {
     world,
+    mudConfig,
     components,
     playerEntity: encodeAbiParameters([{ type: "address" }], [burnerWalletClient.account.address]) as Entity,
     address: burnerWalletClient.account.address,

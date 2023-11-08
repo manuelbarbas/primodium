@@ -1,4 +1,3 @@
-import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { ESendType } from "contracts/config/enums";
 import { ampli } from "src/ampli";
@@ -8,7 +7,7 @@ import { SetupNetworkResult } from "src/network/types";
 import { world } from "src/network/world";
 import { bigintToNumber } from "src/util/bigint";
 import { UnitEnumLookup } from "src/util/constants";
-import { encodeCoord, toHex32 } from "src/util/encode";
+import { toHex32 } from "src/util/encode";
 import { Hex } from "viem";
 import { parseReceipt } from "../../analytics/parseReceipt";
 import { UnitCountTuple } from "../types";
@@ -35,8 +34,8 @@ export const send = async (
       id: world.registerEntity(),
     },
     (receipt) => {
-      const originAsteroid = components.ReversePosition.get(encodeCoord(origin) as Entity)?.entity;
-      const destinationAsteroid = components.ReversePosition.get(encodeCoord(destination) as Entity)?.entity;
+      const originAsteroid = components.ReversePosition.getWithKeys(origin)?.entity;
+      const destinationAsteroid = components.ReversePosition.getWithKeys(destination)?.entity;
 
       ampli.systemSendUnits({
         asteroidCoord: originAsteroid!,

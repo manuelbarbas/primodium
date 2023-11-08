@@ -19,7 +19,7 @@ library LibMotherlode {
       bytes32 sourceAsteroid = ReversePosition.get(sourcePosition.x, sourcePosition.y);
       if (sourceAsteroid == 0) continue;
       if (RockType.get(sourceAsteroid) == uint8(ERock.Motherlode)) continue;
-      bytes32 motherlodeSeed = keccak256(abi.encode(sourceAsteroid, "motherlode", position.x, position.y));
+      bytes32 motherlodeSeed = keccak256(abi.encode(sourceAsteroid, bytes32("motherlode"), position.x, position.y));
       if (!isMotherlode(motherlodeSeed, config.motherlodeChanceInv)) continue;
       initMotherlode(position, motherlodeSeed);
       return motherlodeSeed;

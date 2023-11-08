@@ -1,217 +1,77 @@
-import { EntityID } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
-import { BigNumber } from "ethers";
-import { expect, test } from "vitest";
-import { decodeCoord, encodeCoord, getMotherlodeEntity, hashKeyCoord, hashKeyEntity } from "../util/encode";
+import { Entity } from "@latticexyz/recs";
+import { getMotherlodeEntity, hashKeyEntity, toHex32 } from "../util/encode";
 
 // Outputs of LibEncode.sol's hashKeyEntity function
-// E.g. console.logBytes32(bytes32(LibEncode.hashKeyEntity(0, 0)));
-const hashKeyEntityOutputs = [
-  {
-    key: 0,
-    entity: 0,
-    output: "0xad3228b676f7d3cd4284a5443f17f1962b36e491b30a40b2405849e597ba5fb5",
-  },
-  {
-    key: 90,
-    entity: 2,
-    output: "0x045e11159efe5db0ada3cb8d2e196919e1d0ef71b9b06d0d60609840a64719a3",
-  },
-  {
-    key: 10,
-    entity: 100,
-    output: "0x6b17b8cb5e84a99ff8477b1ce6041bf12d9716e79d07056760acebbb8354fbd1",
-  },
-  {
-    key: 12345,
-    entity: 678910,
-    output: "0x0c5c051a91a8ab2d13ce6a81f1030321cbaa0af9e7d9b7f67acbfeb12def84d3",
-  },
-  {
-    key: 25262728,
-    entity: 30313233,
-    output: "0xf7eea64553e727e221059874c9505c46a9e9ec09f44b6527830b639b77cb4ddd",
-  },
-  {
-    key: "11699589371590179690663298539456535383454944084246709593455824231284844824000",
-    entity: "97993341068949256531366201596922953741936964741343840392882074207030726058262",
-    output: "0x000af0440d92c89680faa8b8c174a3d9e85853d832be6c58b4aa6d745554b924",
-  },
-  {
-    key: "29592648218955693310631313341848988444781730640864177349094518031889847668484",
-    entity: "115710791415720365844662016873039814882667321015852259562238368675311117449333",
-    output: "0x001cb5c6e893b51d92e512213945e99c9341f84f69f9128a2184c70b4e196249",
-  },
-];
+const hashKeyEntityOutputs = {
+  key: "KEY",
+  entities: [
+    {
+      entity: toHex32(0) as Entity,
+      output: "0xdbb5031518f04b153063fe2bbe179cbadc73d8a5c2e3ca18e1f4efabb1a25ab1",
+    },
+    {
+      entity: toHex32(1) as Entity,
+      output: "0xddd5c55844434152e840f9136df112e1922d082f0d7618a38da73c3c354b7272",
+    },
+    {
+      entity: toHex32(2) as Entity,
+      output: "0xe251a7b45234bace2bedecff795c58f94fb8e7d699fbc2e204e90b15d6d9980e",
+    },
+    {
+      entity: toHex32(3) as Entity,
+      output: "0x7072887f652397c0aa343de18e995fe0dfd22c8eb69882b343382f67743f0aeb",
+    },
+    {
+      entity: toHex32(4) as Entity,
+      output: "0x7d569a14c4775da03c33be7e3dc686662a4060d159393e6a38070847c9b0f9b2",
+    },
+  ],
+};
 
-test("hashKeyEntity matches LibEncode outputs", () => {
-  // Check with second argument padded to 160 bits (as if address)
-  for (const example of hashKeyEntityOutputs) {
-    expect(example.output).eq(
-      hashKeyEntity(
-        example.key,
-        // 20 bytes = 160 bits
-        example.entity
-      )
-    );
-  }
-
-  // Check with second argument padded to 256 bits (as if entity)
-  for (const example of hashKeyEntityOutputs) {
-    expect(example.output).eq(hashKeyEntity(example.key, example.entity));
-  }
-});
-
-// Outputs of LibEncode.sol's encodeCoordEntity function
-// E.g. console.logBytes32(bytes32(LibEncode.encodeCoordEntity(Coord({ x: 0, y: 0 }), "primodium")));
-const encodeCoordEntityOutputs = [
-  {
-    coord: { x: 0, y: 0, parent: BigNumber.from("0").toHexString() },
-    output: "0",
-  },
-  {
-    coord: { x: 1, y: 5, parent: BigNumber.from(0).toHexString() },
-    output: "4294967301",
-  },
-  {
-    coord: { x: -1, y: 10, parent: BigNumber.from(0).toHexString() },
-    output: "18446744069414584330",
-  },
-  {
-    coord: { x: 123458, y: -22324234, parent: BigNumber.from(0).toHexString() },
-    output: "530252345072630",
-  },
-  {
-    coord: { x: -929331, y: -723932, parent: BigNumber.from(0).toHexString() },
-    output: "18442752631751636004",
-  },
-];
-
-function formattedString(input: string) {
-  return "0x" + BigInt(input).toString(16).padStart(64, "0");
-}
-test("encodeCoordEntity matches LibEncode outputs", () => {
-  for (const example of encodeCoordEntityOutputs) {
-    expect(formattedString(example.output)).eq(encodeCoord(example.coord));
-    expect(example.output).not.eq(
-      encodeCoord({
-        x: example.coord.x - 10,
-        y: example.coord.y,
-      })
-    );
-  }
-});
-
-test("decodeCoordEntity matches LibEncode outputs", () => {
-  const coordToKey = (coord: Coord) => `${coord.x};;${coord.y}`;
-  for (const example of encodeCoordEntityOutputs) {
-    expect(coordToKey(example.coord)).eq(coordToKey(decodeCoord(example.output as EntityID)));
-  }
-});
-
-const hashEntityCoords = [
-  {
-    coord: { x: 0, y: 0, parent: BigNumber.from("0").toHexString() },
-    key: "building",
-    output: "19828691625151199819925894263310015295956025344535852370549237859831322790673",
-  },
-  {
-    coord: { x: 1, y: 5, parent: BigNumber.from(123).toHexString() },
-    key: "building",
-    output: "109148753008226741991702484166202944633515591219524242558445782281528478512641",
-  },
-  {
-    coord: { x: -1, y: 10, parent: BigNumber.from(0).toHexString() },
-    key: "building",
-    output: "103533954559848020612050344332934577129382484874517710751975151449750747241804",
-  },
-  {
-    coord: { x: 123458, y: -22324234, parent: BigNumber.from(0).toHexString() },
-    key: "building",
-    output: "111518471964263571474455470130025425666986359214977074161153522376787685319637",
-  },
-  {
-    coord: { x: -929331, y: -723932, parent: BigNumber.from(0).toHexString() },
-    key: "building",
-    output: "32215382666935507160146267019595249092158368377584145094984290894592005171865",
-  },
-];
-
-test("hashKeyCoord", () => {
-  for (const example of hashEntityCoords) {
-    expect(formattedString(example.output)).eq(
-      hashKeyCoord(example.key, {
-        ...example.coord,
-        parent: example.coord.parent as EntityID,
-      })
-    );
-    expect(example.output).not.eq(
-      hashKeyCoord(example.key, {
-        x: example.coord.x - 10,
-        y: example.coord.y,
-        parent: "0" as EntityID,
-      })
-    );
+// Check with second argument padded to 160 bits (as if address)
+hashKeyEntityOutputs.entities.forEach((example) => {
+  if (hashKeyEntity(toHex32(hashKeyEntityOutputs.key), example.entity) != example.output) {
+    console.log("entity: ", example.entity);
+    console.log("expected:", example.output);
+    console.log("actual:", hashKeyEntity(toHex32(hashKeyEntityOutputs.key), example.entity));
+    throw new Error();
   }
 });
 
 const motherlodeHashes = [
   {
-    Coord: { x: 0, y: 0 },
+    coord: { x: 0, y: 0 },
     i: 0,
-    motherlodeEntity: "29890671933111895212135880125759349577539333039780540095697413485225524862294",
+    motherlodeEntity: "0x31770bdcdd8f48847479fa8ca640ecbe14466cede049528f865644c388bc0c3b",
   },
   {
-    Coord: { x: 7, y: 11 },
+    coord: { x: 7, y: 3 },
     i: 1,
-    motherlodeEntity: "75606207422227065766018308945694276188648012329425277151450290581228475266037",
+    motherlodeEntity: "0x20699780b0d5ba058f9782c9a3b3c87328057c8cb3a38a5ecc7b977910107928",
   },
   {
-    Coord: { x: 14, y: 22 },
+    coord: { x: 4, y: 6 },
     i: 2,
-    motherlodeEntity: "56818282599026547950251730660126348339991771193204857755929908828156211116710",
+    motherlodeEntity: "0x3c80a0f6580607445ba6728fac1b7b9eabe5c274a9aac7487fb4a072f5a976a7",
   },
   {
-    Coord: { x: 21, y: 33 },
+    coord: { x: 1, y: 9 },
     i: 3,
-    motherlodeEntity: "50119512804716241922711369707996643928211381710707999263237442351073138882659",
+    motherlodeEntity: "0x3080552ec4d2adddeb2b880dfce67d93fec01178a0b7a14d0a9633e4c010800a",
   },
   {
-    Coord: { x: 28, y: 44 },
+    coord: { x: 8, y: 2 },
     i: 4,
-    motherlodeEntity: "24953602701218774071661218245244089959347974787123319957308740685889942288097",
-  },
-  {
-    Coord: { x: 35, y: 55 },
-    i: 5,
-    motherlodeEntity: "62203979884552515419306819601663628921764661747695825520162909926398563680261",
-  },
-  {
-    Coord: { x: 42, y: 66 },
-    i: 6,
-    motherlodeEntity: "61023907394037091164063286689280021119480536360456167865958464494379419734754",
-  },
-  {
-    Coord: { x: 49, y: 77 },
-    i: 7,
-    motherlodeEntity: "90508163938610830355933897832649707000695036410292051183282052463317229956842",
-  },
-  {
-    Coord: { x: 56, y: 88 },
-    i: 8,
-    motherlodeEntity: "76146543010518759282207936544077963635482501210780896454104642223317087727027",
-  },
-  {
-    Coord: { x: 63, y: 99 },
-    i: 9,
-    motherlodeEntity: "33174019957925864689236368538552968135614427705135003245843141467571433069036",
+    motherlodeEntity: "0xe8b2f565dd510cf0775141614f9f8fbc0dcdb90ac8e563914cac2b0541d156ae",
   },
 ];
 
-test("motherlodeHashes", () => {
-  for (const example of motherlodeHashes) {
-    expect(formattedString(example.motherlodeEntity)).eq(
-      getMotherlodeEntity(example.i.toString() as EntityID, example.Coord)
-    );
+for (const example of motherlodeHashes) {
+  const motherlodeEntity = getMotherlodeEntity(toHex32(example.i) as Entity, example.coord);
+  if (example.motherlodeEntity !== motherlodeEntity) {
+    console.log("i:", example.i);
+    console.log("motherlodeEntity:", example.motherlodeEntity);
+    console.log("getMotherlodeEntity:", motherlodeEntity);
+    throw new Error();
   }
-});
+}
