@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import { addressToEntity } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
-import { ResourceId, ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
+import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { UnitKey } from "src/Keys.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { Level } from "codegen/tables/Level.sol";

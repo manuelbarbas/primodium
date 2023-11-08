@@ -1,6 +1,6 @@
+import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 import { Hex } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 
 export type LinkedAddressResult = {
   address: Hex | null;

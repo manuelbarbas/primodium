@@ -1,15 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
+import { entityToAddress, getSystemResourceId } from "src/utils.sol";
 
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 import { PirateAsteroid, DefeatedPirate, RaidedResource, RockType, OwnedBy, BattleResultData, RaidResult, RaidResultData, P_IsUtility, P_UnitPrototypes, Home } from "codegen/index.sol";
-import { ERock, ESendType, EResource } from "src/Types.sol";
+import { ERock, ESendType } from "src/Types.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
-import { LibUnit } from "libraries/LibUnit.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { S_BattleSystem } from "systems/subsystems/S_BattleSystem.sol";

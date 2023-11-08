@@ -1,16 +1,16 @@
 import { Coord } from "@latticexyz/utils";
 import { ESendType } from "contracts/config/enums";
-import { SetupNetworkResult } from "src/network/types";
-import { UnitEnumLookup, toHex32 } from "src/util/constants";
-import { Hex } from "viem";
-import { UnitCountTuple } from "../types";
-import { execute } from "src/network/actions";
-import { encodeCoord } from "src/util/encode";
-import { components } from "src/network/components";
-import { parseReceipt } from "../../analytics/parseReceipt";
 import { ampli } from "src/ampli";
-import { randomEntity } from "src/util/common";
+import { execute } from "src/network/actions";
+import { components } from "src/network/components";
+import { SetupNetworkResult } from "src/network/types";
+import { world } from "src/network/world";
 import { bigintToNumber } from "src/util/bigint";
+import { UnitEnumLookup } from "src/util/constants";
+import { toHex32 } from "src/util/encode";
+import { Hex } from "viem";
+import { parseReceipt } from "../../analytics/parseReceipt";
+import { UnitCountTuple } from "../types";
 
 export const send = async (
   unitCounts: UnitCountTuple,
@@ -31,11 +31,11 @@ export const send = async (
       ]),
     network,
     {
-      id: randomEntity(),
+      id: world.registerEntity(),
     },
     (receipt) => {
-      const originAsteroid = components.ReversePosition.get(encodeCoord(origin))?.entity;
-      const destinationAsteroid = components.ReversePosition.get(encodeCoord(destination))?.entity;
+      const originAsteroid = components.ReversePosition.getWithKeys(origin)?.entity;
+      const destinationAsteroid = components.ReversePosition.getWithKeys(destination)?.entity;
 
       ampli.systemSendUnits({
         asteroidCoord: originAsteroid!,

@@ -5,15 +5,14 @@ pragma solidity >=0.8.21;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 // tables
-import { HasBuiltBuilding, P_EnumToPrototype, Position, PositionData, Spawned, Home } from "codegen/index.sol";
+import { P_EnumToPrototype, PositionData } from "codegen/index.sol";
 
 // libraries
-import { LibEncode, LibBuilding, LibResource } from "codegen/Libraries.sol";
+import { LibBuilding } from "codegen/Libraries.sol";
 
 // types
 import { BuildingKey } from "src/Keys.sol";
 import { EBuilding } from "src/Types.sol";
-import { bytes32ToString } from "src/utils.sol";
 
 contract BuildSystem is PrimodiumSystem {
   function build(EBuilding buildingType, PositionData memory coord) public returns (bytes32 buildingEntity) {

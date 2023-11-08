@@ -17,6 +17,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
+      external: [/^contracts:.*/],
       output: {
         manualChunks: {
           react: ["react", "react-dom"],
@@ -47,7 +48,6 @@ export default defineConfig({
 
     include: [
       "proxy-deep",
-      "ethers/lib/utils",
       "bn.js",
       "js-sha3",
       "hash.js",

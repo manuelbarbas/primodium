@@ -5,10 +5,10 @@ pragma solidity >=0.8.21;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 // tables
-import { OwnedBy, BuildingType, HasBuiltBuilding, P_EnumToPrototype, Position, PositionData, Spawned, Home } from "codegen/index.sol";
+import { OwnedBy, BuildingType, Position, PositionData } from "codegen/index.sol";
 
 // libraries
-import { LibEncode, LibBuilding, LibResource } from "codegen/Libraries.sol";
+import { LibBuilding } from "codegen/Libraries.sol";
 
 contract MoveBuildingSystem is PrimodiumSystem {
   function moveBuilding(PositionData memory fromCoord, PositionData memory toCoord) public {

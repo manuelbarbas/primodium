@@ -4,8 +4,6 @@ pragma solidity >=0.8.21;
 import { P_ListMaxResourceUpgrades, P_ByLevelMaxResourceUpgrades, MaxResourceCount, Level, ResourceCount, BuildingType } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
-import { LibEncode } from "libraries/LibEncode.sol";
-import { LibResource } from "libraries/LibResource.sol";
 
 library LibStorage {
   /// @notice Increases the max storage of resources based on building prototype data
