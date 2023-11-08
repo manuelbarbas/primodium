@@ -2,10 +2,9 @@
 pragma solidity >=0.8.21;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
+import { addressToEntity } from "src/utils.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 
-import { OwnedBy } from "codegen/index.sol";
 import { LibRaid } from "codegen/Libraries.sol";
 
 contract RaidSystem is PrimodiumSystem {

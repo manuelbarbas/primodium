@@ -1,15 +1,15 @@
 import { Entity } from "@latticexyz/recs";
 import { EAllianceInviteMode, EAllianceRole } from "contracts/config/enums";
-import { execute } from "src/network/actions";
-import { SetupNetworkResult } from "src/network/types";
-import { TransactionQueueType, toHex32 } from "src/util/constants";
-import { Hex } from "viem";
-import { hashEntities } from "src/util/encode";
-import { components } from "src/network/components";
-import { randomEntity } from "src/util/common";
 import { ampli } from "src/ampli";
-import { parseReceipt } from "../../analytics/parseReceipt";
+import { execute } from "src/network/actions";
+import { components } from "src/network/components";
+import { SetupNetworkResult } from "src/network/types";
+import { world } from "src/network/world";
 import { getAllianceName, getAllianceNameFromPlayer } from "src/util/alliance";
+import { TransactionQueueType } from "src/util/constants";
+import { hashEntities, toHex32 } from "src/util/encode";
+import { Hex } from "viem";
+import { parseReceipt } from "../../analytics/parseReceipt";
 
 export const createAlliance = async (name: string, inviteOnly: boolean, network: SetupNetworkResult) => {
   await execute(
@@ -20,7 +20,7 @@ export const createAlliance = async (name: string, inviteOnly: boolean, network:
       ]),
     network,
     {
-      id: randomEntity(),
+      id: world.registerEntity(),
     },
     (receipt) => {
       ampli.systemCreate({
@@ -40,7 +40,7 @@ export const leaveAlliance = async (network: SetupNetworkResult) => {
     () => network.worldContract.write.leave(),
     network,
     {
-      id: randomEntity(),
+      id: world.registerEntity(),
     },
     (receipt) => {
       ampli.systemLeave({

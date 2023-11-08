@@ -9,7 +9,6 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { BuildingKey } from "src/Keys.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
-import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
 
 /**
  * @title OnBuild_SpendResources

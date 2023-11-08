@@ -3,7 +3,7 @@ import { Entity } from "@latticexyz/recs";
 import { createFaucetService } from "@latticexyz/services/faucet";
 import { syncToRecs } from "@latticexyz/store-sync/recs";
 import mudConfig from "contracts/mud.config";
-import { IWorld__factory } from "contracts/types/ethers-contracts";
+import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { Subject, share } from "rxjs";
 import {
   Hex,
@@ -36,7 +36,7 @@ export async function setupNetwork(networkConfig: NetworkConfig) {
   const write$ = new Subject<ContractWrite>();
   const worldContract = getContract({
     address: networkConfig.worldAddress as Hex,
-    abi: IWorld__factory.abi,
+    abi: IWorldAbi,
     publicClient,
     walletClient: burnerWalletClient,
     onWrite: (write) => write$.next(write),
@@ -76,6 +76,7 @@ export async function setupNetwork(networkConfig: NetworkConfig) {
 
   return {
     world,
+    mudConfig,
     components,
     playerEntity: encodeAbiParameters([{ type: "address" }], [burnerWalletClient.account.address]) as Entity,
     address: burnerWalletClient.account.address,

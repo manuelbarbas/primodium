@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibReinforce } from "codegen/Libraries.sol";
 
-import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
+import { addressToEntity } from "src/utils.sol";
 
 import { OwnedBy } from "codegen/index.sol";
 
