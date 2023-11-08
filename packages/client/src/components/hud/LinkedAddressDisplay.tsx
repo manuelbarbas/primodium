@@ -36,7 +36,7 @@ export const LinkedAddressDisplay = ({ entity }: { entity: Entity }) => {
       entityDisplay = "You";
     } else if (entity === hashKeyEntity(PIRATE_KEY, playerEntity)) {
       entityDisplay = "Pirates!";
-    } else if (entity && !isPlayer(entity as Entity)) {
+    } else if (entity && !isPlayer(entity)) {
       entityDisplay = shortenAddress(entity as Hex);
     } else if (entity && entity !== playerEntity) {
       entityDisplay = fetchedExternalWallet.ensName ?? entityToAddress(fetchedExternalWallet.address ?? entity, true);
