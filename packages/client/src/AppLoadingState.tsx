@@ -34,7 +34,11 @@ export default function AppLoadingState() {
             <div className="flex flex-col items-center gap-4">
               <p className="text-lg text-white">
                 <span className="font-mono">{loadingState.message}</span>
-                &hellip;
+                {loadingState.percentage > 0 ? (
+                  <span className="font-mono">&nbsp;({Math.floor(loadingState.percentage)}%)</span>
+                ) : (
+                  <span>&hellip;</span>
+                )}
               </p>
               {loadingState.percentage === 0 ? (
                 <Progress value={100} max={100} className="animate-pulse" />
