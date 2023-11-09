@@ -23,7 +23,7 @@ export const IncomingFleets: React.FC = () => {
         if (fleet.sendType === ESendType.Reinforce) return null;
 
         //remove orbiting arrivals
-        if (fleet.arrivalTime >= now) return null;
+        if (fleet.arrivalTime < now) return null;
 
         return fleet;
       }),

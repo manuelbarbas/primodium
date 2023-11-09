@@ -56,7 +56,7 @@ contract LibMotherlodeTest is PrimodiumTest {
       );
       logPosition(targetPosition);
 
-      motherlodeSeed = keccak256(abi.encode(asteroid, "motherlode", targetPosition.x, targetPosition.y));
+      motherlodeSeed = keccak256(abi.encode(asteroid, bytes32("motherlode"), targetPosition.x, targetPosition.y));
       found = LibMotherlode.isMotherlode(motherlodeSeed, config.motherlodeChanceInv);
       i++;
     }
@@ -68,7 +68,7 @@ contract LibMotherlodeTest is PrimodiumTest {
     (bytes32 asteroid, PositionData memory position) = findMotherlode();
     vm.startPrank(creator);
     LibMotherlode.createMotherlode(position);
-    bytes32 motherlodeEntity = keccak256(abi.encode(asteroid, "motherlode", position.x, position.y));
+    bytes32 motherlodeEntity = keccak256(abi.encode(asteroid, bytes32("motherlode"), position.x, position.y));
     (uint8 size, uint8 motherlodeType) = LibMotherlode.getMotherlodeRawPrototype(motherlodeEntity);
 
     assertEq(Position.get(motherlodeEntity), position);

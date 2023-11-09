@@ -30,13 +30,21 @@ export default function AppLoadingState() {
       <div className="absolute w-full h-full star-background opacity-50" />
       <div className="relative">
         {loadingState.step !== SyncStep.LIVE && (
-          <div className="flex items-center justify-center h-screen text-white font-mono">
-            <div className="flex flex-col items-center gap-2">
-              <Progress value={loadingState.percentage} max={100} />
-
-              <p className="text-lg">
-                {loadingState.message} ({Math.floor(loadingState.percentage)}%)
+          <div className="flex items-center justify-center h-screen">
+            <div className="flex flex-col items-center gap-4">
+              <p className="text-lg text-white">
+                <span className="font-mono">{loadingState.message}</span>
+                {loadingState.percentage > 0 ? (
+                  <span className="font-mono">&nbsp;({Math.floor(loadingState.percentage)}%)</span>
+                ) : (
+                  <span>&hellip;</span>
+                )}
               </p>
+              {loadingState.percentage === 0 ? (
+                <Progress value={100} max={100} className="animate-pulse" />
+              ) : (
+                <Progress value={loadingState.percentage} max={100} />
+              )}
             </div>
           </div>
         )}

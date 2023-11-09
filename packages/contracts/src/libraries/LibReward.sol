@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 // tables
-import { P_IsUtility, MaxResourceCount, ResourceCount, P_ResourceReward, P_ResourceRewardData, P_UnitReward, P_UnitRewardData, Home, Spawned, PositionData, Position } from "codegen/index.sol";
+import { P_IsUtility, MaxResourceCount, ResourceCount, P_ResourceReward, P_ResourceRewardData, P_UnitReward, P_UnitRewardData, Home } from "codegen/index.sol";
 
 // libraries
 import { LibProduction } from "libraries/LibProduction.sol";

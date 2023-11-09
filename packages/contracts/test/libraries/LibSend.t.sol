@@ -118,7 +118,11 @@ contract LibSendTest is PrimodiumTest {
     return arrival;
   }
 
-  function testGetArrivalTime(uint256 travelTime, uint32 distance, uint256 worldSpeed) public {
+  function testGetArrivalTime(
+    uint256 travelTime,
+    uint32 distance,
+    uint256 worldSpeed
+  ) public {
     uint256 unitSpeed = 100;
     vm.assume(travelTime < 1000);
     vm.assume(distance < 1000);

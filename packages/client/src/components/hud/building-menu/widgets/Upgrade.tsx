@@ -10,7 +10,7 @@ import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { ResourceImage, TransactionQueueType } from "src/util/constants";
-import { encodeCoord, encodeNumberEntity } from "src/util/encode";
+import { hashEntities } from "src/util/encode";
 import { upgradeBuilding } from "src/util/web3/contractCalls/upgradeBuilding";
 
 export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
@@ -70,7 +70,7 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
             </div>
           </div>
         </div>
-        <TransactionQueueMask queueItemId={encodeNumberEntity(TransactionQueueType.Upgrade, encodeCoord(position))}>
+        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, position.x, position.y)}>
           <Button
             className="w-fit btn-secondary btn-sm"
             disabled={!canUpgrade}

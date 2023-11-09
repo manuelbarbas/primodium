@@ -72,6 +72,8 @@ export type ExtendedContractComponent<
 
   useWithKeys(keys?: SchemaToPrimitives<TKeySchema>): ComponentValue<S> | undefined;
   useWithKeys(keys?: SchemaToPrimitives<TKeySchema>, defaultValue?: NewType<S>): ComponentValue<S>;
+
+  setWithKeys(value: ComponentValue<S>, keys?: SchemaToPrimitives<TKeySchema>): void;
 };
 
 export function extendContractComponent<S extends Schema, TKeySchema extends KeySchema, T = unknown>(
@@ -96,11 +98,17 @@ export function extendContractComponent<S extends Schema, TKeySchema extends Key
     const entity = key ? encodeEntity(component, key) : singletonEntity;
     return extendedComponent.use(entity, defaultValue);
   }
+
+  function setWithKeys(value: ComponentValue<S, T>, key: SchemaToPrimitives<TKeySchema>) {
+    const entity = key ? encodeEntity(component, key) : singletonEntity;
+    return extendedComponent.set(value, entity);
+  }
   return {
     ...extendedComponent,
     getWithKeys,
     hasWithKeys,
     useWithKeys,
+    setWithKeys,
   } as ExtendedContractComponent<S, TKeySchema>;
 }
 export function extendComponent<S extends Schema, M extends Metadata, T = unknown>(

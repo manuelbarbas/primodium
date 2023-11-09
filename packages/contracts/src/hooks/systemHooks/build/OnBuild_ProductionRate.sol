@@ -1,18 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { addressToEntity, getSystemResourceId } from "src/utils.sol";
-import { ResourceId, ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
+import { addressToEntity } from "src/utils.sol";
+import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
-import { LibBuilding } from "libraries/LibBuilding.sol";
-import { Level } from "src/codegen/tables/Level.sol";
 import { BuildingKey } from "src/Keys.sol";
 import { LibReduceProductionRate } from "libraries/LibReduceProductionRate.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
-import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
 
 /**
  * @title OnBuild_ProductionRate

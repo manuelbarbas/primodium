@@ -272,7 +272,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     unitCounts[0] = 1;
 
     Arrival memory arrival = ArrivalsMap.values(player, destination)[0];
-    vm.warp(arrival.arrivalTime);
+    vm.warp(arrival.arrivalTime + 1);
 
     world.recallAll(destination);
     assertEq(ArrivalsMap.size(player, destination), 0);

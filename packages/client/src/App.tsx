@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 
-import mudConfig from "contracts/mud.config";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 import AppLoadingState from "./AppLoadingState";
 import { ampli } from "./ampli";
 import { MudProvider } from "./hooks/providers/MudProvider";
 import { setup } from "./network/setup";
 import { SetupResult } from "./network/types";
 import { world } from "./network/world";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.min.css";
 
 const DEV = import.meta.env.PRI_DEV === "true";
 
@@ -35,7 +34,7 @@ export default function App() {
     if (import.meta.env.DEV) {
       import("@latticexyz/dev-tools").then(({ mount: mountDevTools }) =>
         mountDevTools({
-          config: mudConfig,
+          config: networkLayer.network.mudConfig,
           publicClient: networkLayer.network.publicClient,
           walletClient: networkLayer.network.walletClient,
           latestBlock$: networkLayer.network.latestBlock$,

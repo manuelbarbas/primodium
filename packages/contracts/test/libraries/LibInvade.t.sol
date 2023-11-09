@@ -64,6 +64,7 @@ contract LibInvadeTest is PrimodiumTest {
       unitCounts: [uint256(200), 100, 0, 0, 0, 0, 0]
     });
     ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);
+    ArrivalCount.set(player, 1);
 
     world.invade(rock);
     assertEq(OwnedBy.get(rock), player, "OwnedBy");
@@ -126,6 +127,7 @@ contract LibInvadeTest is PrimodiumTest {
     });
 
     ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);
+    ArrivalCount.set(player, 1);
     P_Unit.set(unit1, 0, P_UnitData({ attack: 100, defense: 100, speed: 200, cargo: 100, trainingTime: 0 }));
 
     world.invade(rock);
@@ -158,6 +160,7 @@ contract LibInvadeTest is PrimodiumTest {
     });
 
     ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);
+    ArrivalCount.set(player, 1);
     P_Unit.set(unit1, 0, P_UnitData({ attack: 100, defense: 100, speed: 200, cargo: 100, trainingTime: 0 }));
 
     world.invade(rock);
