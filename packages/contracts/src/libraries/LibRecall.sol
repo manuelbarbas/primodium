@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-
 import { UnitCount, ArrivalCount, OwnedBy, P_UnitPrototypes, Home } from "codegen/index.sol";
 import { ESendType } from "src/Types.sol";
 import { Arrival } from "src/Types.sol";
