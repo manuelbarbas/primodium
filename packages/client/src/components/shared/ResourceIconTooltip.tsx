@@ -41,10 +41,14 @@ const ResourceIconTooltipContent = ({
   fractionDigits = 0,
   resource,
 }: ResourceIconProps & { hasEnough: boolean }) => {
-  const scale = getScale(resource);
-  let value = Number((amount * 60n) / scale);
-  if (resourceType !== ResourceType.ResourceRate) value = value / 60;
+  let value = Number(amount);
   if (resourceType == ResourceType.Multiplier) value = (value + 100) / 100;
+  else {
+    const scale = getScale(resource);
+    value = value / Number(scale);
+    if (resourceType == ResourceType.ResourceRate) value = value * 60;
+  }
+
   const label =
     formatNumber(value, { short: short && resourceType !== ResourceType.Multiplier, fractionDigits }) +
     suffixes[resourceType || ResourceType.Resource];
