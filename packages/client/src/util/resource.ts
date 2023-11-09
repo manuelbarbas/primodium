@@ -64,7 +64,9 @@ export function getMotherlodeResource(entity: Entity) {
   return ResourceEntityLookup[resource];
 }
 
-export function getFullResourceCount(resourceID: Entity, playerEntity: Entity) {
+export function getFullResourceCount(resourceID: Entity, playerEntity?: Entity) {
+  playerEntity = playerEntity ?? comps.Account.get()?.value;
+  if (!playerEntity) throw new Error("No player entity");
   const worldSpeed = comps.P_GameConfig.get()?.worldSpeed ?? 100n;
   const resource = ResourceEnumLookup[resourceID];
   if (resource == undefined) throw new Error("Resource not found");
