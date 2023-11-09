@@ -826,7 +826,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           U_Electricity: 10000,
         }),
 
-        P_Production: getResourceValues({ M_DefenseMultiplier: 5 }),
+        P_Production: getResourceValues({ M_DefenseMultiplier: 10 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 7n },
@@ -836,7 +836,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           Alloy: 2000000,
           U_Electricity: 10000,
         }),
-        P_Production: getResourceValues({ M_DefenseMultiplier: 5 }),
+        P_Production: getResourceValues({ M_DefenseMultiplier: 15 }),
       },
     },
   },
