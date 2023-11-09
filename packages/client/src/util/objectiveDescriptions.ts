@@ -51,10 +51,10 @@ export const ObjectiveDescriptions = new Map<EObjectives, string>([
     EObjectives.BuildDroneFactory,
     "Select the drone factory from the building menu and place it on an empty tile. Drone factories train drones, which travel faster and are stronger.",
   ],
-  // [
-  //   EObjectives.BuildHangar,
-  //   "Select the hangar from the building menu and place it on an empty tile. Hangars provide more housing than garages for units.",
-  // ],
+  [
+    EObjectives.BuildHangar,
+    "Select the hangar from the building menu and place it on an empty tile. Hangars provide more housing than garages for units.",
+  ],
   [
     EObjectives.TrainMinutemanMarine1,
     "Select the workshop you placed on the map to train Minuteman marines. Minutemen are basic defensive marines.",
@@ -110,6 +110,22 @@ export const ObjectiveDescriptions = new Map<EObjectives, string>([
   ],
   [
     EObjectives.DefeatPirateBase5,
+    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+  ],
+  [
+    EObjectives.DefeatPirateBase6,
+    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+  ],
+  [
+    EObjectives.DefeatPirateBase7,
+    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+  ],
+  [
+    EObjectives.DefeatPirateBase8,
+    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
+  ],
+  [
+    EObjectives.DefeatPirateBase9,
     "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
   ],
   [
