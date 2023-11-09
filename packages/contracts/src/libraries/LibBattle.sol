@@ -133,7 +133,7 @@ library LibBattle {
       ArrivalsMap.remove(attackerEntity, rockEntity, arrivalKeys[i]);
       arrivalsApplied++;
     }
-    ArrivalCount.set(attackerEntity, arrivalKeys.length - arrivalsApplied);
+    ArrivalCount.set(attackerEntity, ArrivalCount.get(attackerEntity) - arrivalsApplied);
   }
 
   /**
