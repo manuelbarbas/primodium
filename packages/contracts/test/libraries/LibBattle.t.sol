@@ -117,6 +117,8 @@ contract LibBattleTest is PrimodiumTest {
     arrival.unitCounts[0] = unitCount;
 
     ArrivalsMap.set(player, rock, arrivalId, arrival);
+    ArrivalCount.set(player, 1);
+
     setupUnit(unit1, attack, 0);
 
     uint256 expected = unitCount * attack;
@@ -124,6 +126,7 @@ contract LibBattleTest is PrimodiumTest {
     assertEq(count[0], unitCount);
     assertEq(actual, expected, "Attack points should be equal to unitCount * attack");
     assertEq(ArrivalsMap.size(player, rock), 0);
+    assertEq(ArrivalCount.get(player), 0);
     assertEq(string(MapItemArrivals.get(player, rock, arrivalId)), "");
     return expected;
   }
@@ -162,12 +165,15 @@ contract LibBattleTest is PrimodiumTest {
     });
 
     ArrivalsMap.set(player, rock, "arrival2", arrival2);
+    ArrivalCount.set(player, 2);
 
     uint256 expected = unitCount * attack + unitCount2 * attack2;
     (uint256[] memory count, uint256 actual, uint256 cargo) = LibBattle.getAttackPoints(player, rock, ESendType.Invade);
     assertEq(count[0], unitCount);
     assertEq(count[1], unitCount2);
     assertEq(actual, expected, "Attack points should be equal to unitCount * attack");
+    assertEq(ArrivalsMap.size(player, rock), 0);
+    assertEq(ArrivalCount.get(player), 0);
   }
 
   function testBattleAttackerWins() public {
@@ -180,6 +186,7 @@ contract LibBattleTest is PrimodiumTest {
     arrival.unitCounts[0] = attackerUnitCount;
 
     ArrivalsMap.set(player, rock, arrivalId, arrival);
+    ArrivalCount.set(player, 1);
 
     // setup defender
     uint256 defenderUnitCount = 100;
@@ -198,6 +205,7 @@ contract LibBattleTest is PrimodiumTest {
 
     // getAttackPoints removes the arrival from the map so we readd it here
     ArrivalsMap.set(player, rock, arrivalId, arrival);
+    ArrivalCount.set(player, 1);
 
     BattleResultData memory result = LibBattle.battle(player, enemy, rock, ESendType.Invade);
     assertEq(toString(result.winner), toString(player), "Attacker should win");
@@ -217,6 +225,7 @@ contract LibBattleTest is PrimodiumTest {
     arrival.unitCounts[0] = attackerUnitCount;
 
     ArrivalsMap.set(player, rock, arrivalId, arrival);
+    ArrivalCount.set(player, 1);
 
     // setup defender
     uint256 defenderUnitCount = 250;
@@ -235,6 +244,7 @@ contract LibBattleTest is PrimodiumTest {
 
     // getAttackPoints removes the arrival from the map so we read it here
     ArrivalsMap.set(player, rock, arrivalId, arrival);
+    ArrivalCount.set(player, 1);
 
     BattleResultData memory result = LibBattle.battle(player, enemy, rock, ESendType.Invade);
     assertEq(toString(result.winner), toString(enemy), "Attacker should win");

@@ -11,6 +11,8 @@ contract LibRaidTest is PrimodiumTest {
   bytes32 unit2 = "unit2";
 
   bytes32 rock = "rock";
+  bytes32 rock2 = "rock2";
+  bytes32 rock3 = "rock3";
   bytes32 homeRock = "homeRock";
 
   BattleResultData br =
@@ -36,6 +38,7 @@ contract LibRaidTest is PrimodiumTest {
     br.winner = player;
     bytes32[] memory unitTypes = new bytes32[](NUM_UNITS);
     unitTypes[0] = unit1;
+    unitTypes[1] = unit2;
     P_UnitPrototypes.set(unitTypes);
   }
 
@@ -139,6 +142,7 @@ contract LibRaidTest is PrimodiumTest {
     });
 
     ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);
+    ArrivalCount.set(player, 1);
     P_Unit.set(unit1, 0, P_UnitData({ attack: 100, defense: 100, speed: 200, cargo: 100, trainingTime: 0 }));
 
     world.raid(rock);
@@ -171,6 +175,7 @@ contract LibRaidTest is PrimodiumTest {
     });
 
     ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);
+    ArrivalCount.set(player, 1);
     P_Unit.set(unit1, 0, P_UnitData({ attack: 100, defense: 100, speed: 200, cargo: 100, trainingTime: 0 }));
 
     world.raid(rock);
@@ -204,6 +209,7 @@ contract LibRaidTest is PrimodiumTest {
     });
 
     ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);
+    ArrivalCount.set(player, 1);
     P_Unit.set(unit1, 0, P_UnitData({ attack: 100, defense: 100, speed: 200, cargo: 100, trainingTime: 0 }));
 
     world.raid(rock);
@@ -228,5 +234,58 @@ contract LibRaidTest is PrimodiumTest {
     RockType.set(rock, uint8(ERock.Asteroid));
     OwnedBy.set(rock, player);
     world.raid(rock);
+  }
+
+  function testRaidArrivalCount() public {
+    MaxResourceCount.set(player, uint8(EResource.U_Vessel), 2);
+    RockType.set(rock, uint8(ERock.Motherlode));
+
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    P_Unit.set(unit1, 0, P_UnitData({ attack: 100, defense: 100, speed: 200, cargo: 100, trainingTime: 0 }));
+    Arrival memory arrival = Arrival({
+      sendTime: block.timestamp,
+      sendType: ESendType.Invade,
+      arrivalTime: block.timestamp,
+      from: player,
+      to: bytes32(""),
+      origin: homeRock,
+      destination: rock,
+      unitCounts: [uint256(200), 100, 0, 0, 0, 0, 0]
+    });
+    LibSend.sendUnits(arrival);
+
+    vm.warp(block.timestamp + 1);
+    assertEq(ArrivalCount.get(player), 1);
+
+    world.invade(rock);
+    assertEq(ArrivalCount.get(player), 0);
+
+    assertEq(OwnedBy.get(rock), player, "OwnedBy");
+    assertEq(UnitCount.get(player, rock, unit1), 200, "Unit1 Count");
+    assertEq(UnitCount.get(player, rock, unit2), 100, "Unit2 Count");
+
+    vm.stopPrank();
+    rock2 = spawn(bob);
+    arrival.sendType = ESendType.Raid;
+    arrival.to = addressToEntity(bob);
+    arrival.destination = rock2;
+
+    vm.startPrank(creator);
+    bytes32 arrival2 = LibSend.sendUnits(arrival);
+
+    assertEq(ArrivalCount.get(player), 1, "ArrivalCount 1");
+
+    arrival.sendType = ESendType.Reinforce;
+    arrival.to = player;
+    arrival.destination = rock;
+
+    bytes32 arrival3 = LibSend.sendUnits(arrival);
+
+    assertEq(ArrivalCount.get(player), 2, "ArrivalCount 2");
+
+    bytes32[] memory arrivalKeys = ArrivalsMap.keys(player, rock2);
+    uint256 arrivals = ArrivalCount.get(player);
+    world.raid(rock2);
+    assertEq(ArrivalCount.get(player), 1, "ARrival count 3");
   }
 }

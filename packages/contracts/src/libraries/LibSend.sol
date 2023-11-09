@@ -38,7 +38,7 @@ library LibSend {
 
   /// @notice Adds a new arrival.
   /// @param arrival The Arrival object to add.
-  function sendUnits(Arrival memory arrival) internal {
+  function sendUnits(Arrival memory arrival) internal returns (bytes32 arrivalId) {
     if (
       arrival.sendType != ESendType.Reinforce && // reinforce does not remove grace period
       PirateAsteroid.get(arrival.destination).playerEntity == 0 && // pirate asteroid does not remove grace period
@@ -48,8 +48,9 @@ library LibSend {
       GracePeriod.deleteRecord(arrival.from);
     }
 
+    arrivalId = keccak256(abi.encode(arrival));
     bytes32 player = arrival.sendType == ESendType.Reinforce ? arrival.to : arrival.from;
-    ArrivalsMap.set(player, arrival.destination, keccak256(abi.encode(arrival)), arrival);
+    ArrivalsMap.set(player, arrival.destination, arrivalId, arrival);
     ArrivalCount.set(arrival.from, ArrivalCount.get(arrival.from) + 1);
   }
 
