@@ -30,6 +30,7 @@ export const DefenseLabel = ({ player }: { player?: Entity }) => {
         image={resourceIcon ?? ""}
         validate={false}
         fontSize={"sm"}
+        fractionDigits={1}
       />
       {multiplierAmount !== 0n && (
         <p className="opacity-50 text-[0] group-hover:text-xs transition-all">{1 + Number(multiplierAmount) / 100}x</p>

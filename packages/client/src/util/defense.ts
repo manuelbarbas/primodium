@@ -7,7 +7,7 @@ import { MULTIPLIER_SCALE } from "./constants";
 export function getRockDefense(rockEntity: Entity) {
   const player = components.OwnedBy.get(rockEntity)?.value as Hex | undefined;
   const units = components.Hangar.get(rockEntity);
-  if (!player || !units) return { points: 0n, multiplier: 1n };
+  if (!player || !units) return { points: 0n, multiplier: 100n };
 
   let defensePoints = 0n;
 
@@ -20,23 +20,18 @@ export function getRockDefense(rockEntity: Entity) {
     }
   });
 
-  let multiplier = 1n;
+  let multiplier = 100n;
   if (components.Home.get(player as Entity)?.asteroid === rockEntity) {
-    multiplier =
-      (defensePoints *
-        (components.ResourceCount.getWithKeys({ entity: player, resource: EResource.M_DefenseMultiplier })?.value ??
-          0n)) /
-      MULTIPLIER_SCALE;
-  }
+    const rawMultiplier = components.ResourceCount.getWithKeys({
+      entity: player,
+      resource: EResource.M_DefenseMultiplier,
+    })?.value;
 
-  if (components.Home.get(player as Entity)?.asteroid === rockEntity) {
+    multiplier = (rawMultiplier ?? 0n) + 100n;
+
     defensePoints +=
       components.ResourceCount.getWithKeys({ entity: player, resource: EResource.U_Defense })?.value ?? 0n;
-    defensePoints +=
-      (defensePoints *
-        (components.ResourceCount.getWithKeys({ entity: player, resource: EResource.M_DefenseMultiplier })?.value ??
-          0n)) /
-      MULTIPLIER_SCALE;
+    defensePoints = (defensePoints * multiplier) / MULTIPLIER_SCALE;
   }
 
   return { points: defensePoints, multiplier };
