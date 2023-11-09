@@ -37,7 +37,7 @@ export default function AppLoadingState() {
                 &hellip;
               </p>
               {loadingState.percentage === 0 ? (
-                <Progress value={100} max={100} animatePulse />
+                <Progress value={100} max={100} className="animate-pulse" />
               ) : (
                 <Progress value={loadingState.percentage} max={100} />
               )}
