@@ -8,6 +8,7 @@ import { MudProvider } from "./hooks/providers/MudProvider";
 import { setup } from "./network/setup";
 import { SetupResult } from "./network/types";
 import { world } from "./network/world";
+import { Progress } from "./components/core/Progress";
 
 const DEV = import.meta.env.PRI_DEV === "true";
 
@@ -52,10 +53,12 @@ export default function App() {
     return (
       <div className="relative bg-black">
         <div className="absolute w-full h-full star-background opacity-50" />
-        <div className="relative flex items-center justify-center h-screen text-white font-mono">
-          <div className="text-center">
-            <p className="text-lg">Initializing...</p>
-          </div>
+        <div className="flex flex-col items-center justify-center h-screen text-white font-mono gap-4">
+          <p className="text-lg text-white">
+            <span className="font-mono">Initializing</span>
+            <span>&hellip;</span>
+          </p>
+          <Progress value={100} max={100} className="animate-pulse" />
         </div>
       </div>
     );
