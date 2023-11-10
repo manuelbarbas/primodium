@@ -166,6 +166,11 @@ export const config = mudConfig({
       valueSchema: "uint256",
     },
 
+    TransferAllowance: {
+      keySchema: { owner: "bytes32", spender: "bytes32", resource: "uint8" }, //EResource
+      valueSchema: "uint256",
+    },
+
     // Used in the building utilities set
     MapItemUtilities: {
       keySchema: { entity: "bytes32", utility: "uint8" }, // EResource
