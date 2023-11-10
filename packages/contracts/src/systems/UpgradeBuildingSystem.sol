@@ -2,11 +2,10 @@
 pragma solidity >=0.8.21;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { P_MaxLevel, BuildingType, PositionData, Level, P_MaxLevel, P_RequiredResources, OwnedBy } from "codegen/index.sol";
-import { LibBuilding, LibResource, LibReduceProductionRate, LibProduction, LibStorage } from "codegen/Libraries.sol";
-import { EBuilding } from "src/Types.sol";
+import { PositionData, Level } from "codegen/index.sol";
+import { LibBuilding } from "codegen/Libraries.sol";
 
-import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
+import { addressToEntity } from "src/utils.sol";
 
 contract UpgradeBuildingSystem is PrimodiumSystem {
   /// @notice Upgrades the building at the specified coordinate

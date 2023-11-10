@@ -10,7 +10,7 @@ import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { ResourceImage, TransactionQueueType } from "src/util/constants";
-import { encodeCoord, encodeNumberEntity } from "src/util/encode";
+import { hashEntities } from "src/util/encode";
 import { upgradeBuilding } from "src/util/web3/contractCalls/upgradeBuilding";
 
 export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
@@ -41,6 +41,7 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
   } else if (!hasEnough) {
     error = "Not enough resources";
   }
+
   return (
     <SecondaryCard className="w-full items-center">
       <div className="flex items-center justify-between w-full">
@@ -49,7 +50,7 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
           <div>
             {recipe.length !== 0 && <p className="text-xs opacity-75 px-2 mb-1">UPGRADE COST</p>}
             <div className="flex flex-wrap gap-1 px-2">
-              {!atMaxLevel &&
+              {!atMaxLevel ? (
                 recipe.length !== 0 &&
                 recipe.map((resource) => {
                   return (
@@ -66,11 +67,14 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
                       />
                     </Badge>
                   );
-                })}
+                })
+              ) : (
+                <p className="text-xs opacity-75">-</p>
+              )}
             </div>
           </div>
         </div>
-        <TransactionQueueMask queueItemId={encodeNumberEntity(TransactionQueueType.Upgrade, encodeCoord(position))}>
+        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, position.x, position.y)}>
           <Button
             className="w-fit btn-secondary btn-sm"
             disabled={!canUpgrade}

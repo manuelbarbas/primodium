@@ -24,6 +24,7 @@ library LibReinforce {
     bytes32 arrivalId
   ) internal {
     Arrival memory arrival = ArrivalsMap.get(playerEntity, rockEntity, arrivalId);
+    require(playerEntity == arrival.to, "[Reinforce] Player does not control these units");
     require(
       arrival.sendType == ESendType.Reinforce && arrival.arrivalTime < block.timestamp,
       "[Reinforce] Invalid send type"
@@ -56,7 +57,7 @@ library LibReinforce {
   ) internal {
     Arrival memory arrival = ArrivalsMap.get(playerEntity, rockEntity, arrivalId);
     if (
-      arrival.sendType != ESendType.Reinforce || arrival.from != playerEntity || arrival.arrivalTime > block.timestamp
+      arrival.sendType != ESendType.Reinforce || arrival.to != playerEntity || arrival.arrivalTime > block.timestamp
     ) {
       return;
     }

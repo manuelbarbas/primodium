@@ -1,23 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { addressToEntity, entityToAddress, getSystemResourceId, bytes32ToString } from "src/utils.sol";
 // tables
-import { P_AllianceConfig, Score, AllianceJoinRequest, PlayerAlliance, Alliance, AllianceData, AllianceInvitation, HasBuiltBuilding, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/index.sol";
+import { P_AllianceConfig, Score, AllianceJoinRequest, PlayerAlliance, Alliance, AllianceData, AllianceInvitation } from "codegen/index.sol";
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
-import { LibReduceProductionRate } from "libraries/LibReduceProductionRate.sol";
-import { LibProduction } from "libraries/LibProduction.sol";
-import { LibStorage } from "libraries/LibStorage.sol";
 import { AllianceMembersSet } from "libraries/AllianceMembersSet.sol";
-import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 
 // types
-import { BuildingKey, BuildingTileKey, ExpansionKey, AllianceKey } from "src/Keys.sol";
-import { Bounds, EBuilding, EResource, EAllianceRole, EAllianceInviteMode } from "src/Types.sol";
-
-import { MainBasePrototypeId } from "codegen/Prototypes.sol";
+import { AllianceKey } from "src/Keys.sol";
+import { EAllianceRole, EAllianceInviteMode } from "src/Types.sol";
 
 library LibAlliance {
   /**

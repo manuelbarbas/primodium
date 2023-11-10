@@ -1,6 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { hexlify, randomBytes } from "ethers/lib/utils";
-import { Hex, trim, getAddress, isAddress } from "viem";
+import { Hex, getAddress, isAddress, trim } from "viem";
 import { BlockIdToKey } from "./constants";
 
 export function hasCommonElement<T>(setA: Set<T>, setB: Set<T>) {
@@ -98,15 +97,15 @@ export const getBlockTypeName = (blockType: Entity | undefined) => {
     .trimStart();
 };
 
-export const shortenAddress = (address: string) => {
-  return `${address.slice(0, 6)}...${address.slice(-4)}`;
+export const shortenAddress = (address: Hex): Hex => {
+  return `0x${address.slice(2, 6)}...${address.slice(-4)}`;
 };
 
 export function reverseRecord<T extends PropertyKey, U extends PropertyKey>(input: Record<T, U>) {
   return Object.fromEntries(Object.entries(input).map(([key, value]) => [value, key])) as Record<U, T>;
 }
 
-export const entityToAddress = (entity: Entity | string, shorten = false) => {
+export const entityToAddress = (entity: Entity | string, shorten = false): Hex => {
   const checksumAddress = getAddress(trim(entity as Hex));
 
   return shorten ? shortenAddress(checksumAddress) : checksumAddress;
@@ -117,5 +116,3 @@ export const isPlayer = (entity: Entity) => {
 
   return isAddress(trimmedAddress);
 };
-
-export const randomEntity = () => hexlify(randomBytes(32)) as Entity;
