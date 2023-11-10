@@ -133,7 +133,7 @@ export enum SpriteKeys {
 
   Workshop1 = "sprites/workshop/level1/Workshop_LVL1_1.png",
   Workshop2 = "sprites/workshop/level2/Workshop_LVL2_1.png",
-  Workshop3 = "sprites/workshop/level3/Workshop_LVL1_3.png",
+  Workshop3 = "sprites/workshop/level3/Workshop_LVL3_1.png",
 
   DroneFactory1 = "sprites/drone-factory/normal/Drone_Factory1.png",
 
