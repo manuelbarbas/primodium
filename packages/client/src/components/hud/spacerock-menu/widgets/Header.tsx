@@ -32,6 +32,7 @@ export const Header: React.FC<{ entity: Entity; name: string; imageUri: string }
                   image={ResourceImage.get(EntityType.Defense) ?? ""}
                   validate={false}
                   fontSize={"sm"}
+                  fractionDigits={1}
                 />
               </Badge>
             )}
