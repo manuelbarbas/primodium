@@ -5,7 +5,7 @@ pragma solidity >=0.8.21;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibStorage } from "codegen/libraries.sol";
 import { EResource } from "src/Types.sol";
-import { TransferAllowance } from "codegen/index.sol";
+import { TransferAllowance, ResourceCount } from "codegen/index.sol";
 
 contract ResourceSystem is PrimodiumSystem {
   function transfer(
@@ -51,6 +51,7 @@ contract ResourceSystem is PrimodiumSystem {
     uint256 amount
   ) internal {
     require(from != to, "[ResourceSystem] Cannot transfer to the same entity");
+    require(ResourceCount.get(from, uint8(resource)) >= amount, "[ResourceSystem] Not enough resources");
     require(amount > 0, "[ResourceSystem] Cannot transfer zero");
 
     LibStorage.decreaseStoredResource(from, uint8(resource), amount);
@@ -65,7 +66,7 @@ contract ResourceSystem is PrimodiumSystem {
   ) internal {
     uint256 currentAllowance = TransferAllowance.get(owner, spender, uint8(resource));
     if (currentAllowance != type(uint256).max) {
-      require(currentAllowance > amount, "[ResourceSystem] Not enough allowance");
+      require(currentAllowance >= amount, "[ResourceSystem] Not enough allowance");
     }
     TransferAllowance.set(owner, spender, uint8(resource), currentAllowance - amount);
   }
