@@ -41,6 +41,7 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
   } else if (!hasEnough) {
     error = "Not enough resources";
   }
+
   return (
     <SecondaryCard className="w-full items-center">
       <div className="flex items-center justify-between w-full">
@@ -49,7 +50,7 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
           <div>
             {recipe.length !== 0 && <p className="text-xs opacity-75 px-2 mb-1">UPGRADE COST</p>}
             <div className="flex flex-wrap gap-1 px-2">
-              {!atMaxLevel &&
+              {!atMaxLevel ? (
                 recipe.length !== 0 &&
                 recipe.map((resource) => {
                   return (
@@ -66,7 +67,10 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
                       />
                     </Badge>
                   );
-                })}
+                })
+              ) : (
+                <p className="text-xs opacity-75">-</p>
+              )}
             </div>
           </div>
         </div>

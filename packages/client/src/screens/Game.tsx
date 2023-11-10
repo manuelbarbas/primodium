@@ -15,11 +15,12 @@ export const Game = () => {
   return (
     <div>
       {!gameReady && (
-        <div className="flex flex-col items-center justify-center h-screen text-white font-mono gap-2">
-          <Progress />
-          <div className="text-center">
-            <p className="text-lg">Initializing Game World...</p>
-          </div>
+        <div className="flex flex-col items-center justify-center h-screen text-white font-mono gap-4">
+          <p className="text-lg text-white">
+            <span className="font-mono">Initializing Game World</span>
+            <span>&hellip;</span>
+          </p>
+          <Progress value={100} max={100} className="animate-pulse" />
         </div>
       )}
 
