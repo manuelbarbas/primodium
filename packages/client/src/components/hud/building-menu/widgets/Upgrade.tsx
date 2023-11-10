@@ -22,22 +22,19 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
     value: 1n,
   }).value;
 
-  const {
-    position,
-    level,
-    maxLevel,
-    upgrade: { recipe, mainBaseLvlReq },
-  } = useBuildingInfo(building);
+  const buildingInfo = useBuildingInfo(building);
+  const hasEnough = useHasEnoughResources(buildingInfo?.upgrade?.recipe ?? [], playerEntity);
 
-  const hasEnough = useHasEnoughResources(recipe, playerEntity);
-  const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && level < maxLevel;
+  if (!buildingInfo) return null;
+  const { position, level, maxLevel, upgrade } = buildingInfo;
+  const canUpgrade = hasEnough && upgrade && level < maxLevel && mainBaseLevel >= upgrade.mainBaseLvlReq;
   const atMaxLevel = level >= maxLevel;
 
   let error = "";
   if (atMaxLevel) {
     error = "Building max level";
-  } else if (mainBaseLevel < mainBaseLvlReq) {
-    error = `Mainbase lvl. ${mainBaseLvlReq} required`;
+  } else if (upgrade && mainBaseLevel < upgrade.mainBaseLvlReq) {
+    error = `Mainbase lvl. ${upgrade.mainBaseLvlReq} required`;
   } else if (!hasEnough) {
     error = "Not enough resources";
   }
@@ -47,11 +44,11 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
         <div className="flex gap-2 items-center">
           <img src="img/icons/minersicon.png" className="pixel-images h-8 w-8" />
           <div>
-            {recipe.length !== 0 && <p className="text-xs opacity-75 px-2 mb-1">UPGRADE COST</p>}
+            {upgrade?.recipe.length !== 0 && <p className="text-xs opacity-75 px-2 mb-1">UPGRADE COST</p>}
             <div className="flex flex-wrap gap-1 px-2">
               {!atMaxLevel &&
-                recipe.length !== 0 &&
-                recipe.map((resource) => {
+                upgrade?.recipe.length !== 0 &&
+                upgrade?.recipe.map((resource) => {
                   return (
                     <Badge key={resource.id + resource.type} className="text-xs gap-2">
                       <ResourceIconTooltip
