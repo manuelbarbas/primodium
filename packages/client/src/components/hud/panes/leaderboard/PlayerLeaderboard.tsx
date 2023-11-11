@@ -45,7 +45,7 @@ export const PlayerLeaderboard = () => {
   if (!data || !address) return null;
 
   return (
-    <div className="flex flex-col items-center w-full text-xs pointer-events-auto">
+    <div className="flex flex-col items-center w-full h-full text-xs pointer-events-auto">
       <List height={285} width="100%" itemCount={data.players.length} itemSize={47} className="scrollbar">
         {({ index, style }) => {
           const player = data.players[index];
