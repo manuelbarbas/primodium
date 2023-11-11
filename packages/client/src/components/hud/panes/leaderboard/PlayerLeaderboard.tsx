@@ -6,6 +6,7 @@ import { primodium } from "@game/api";
 import { Scenes } from "@game/constants";
 import { FaCrosshairs, FaEnvelope } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
+import { Navigator } from "src/components/core/Navigator";
 import { SecondaryCard } from "src/components/core/Card";
 import { getLinkedAddress } from "src/util/web2/getLinkedAddress";
 import { linkAddress } from "src/util/web2/linkAddress";
@@ -45,7 +46,7 @@ export const PlayerLeaderboard = () => {
   if (!data || !address) return null;
 
   return (
-    <div className="flex flex-col items-center w-full text-xs pointer-events-auto">
+    <div className="flex flex-col items-center w-full h-full text-xs pointer-events-auto">
       <List height={285} width="100%" itemCount={data.players.length} itemSize={47} className="scrollbar">
         {({ index, style }) => {
           const player = data.players[index];
