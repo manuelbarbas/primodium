@@ -19,6 +19,8 @@ const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ lab
 
 export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
   const playerEntity = useMud().network.playerEntity;
+  const buildingInfo = useBuildingInfo(building);
+  if (!buildingInfo) return null;
   const {
     buildingType,
     level,
@@ -29,7 +31,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
     requiredDependencies,
     unitProductionMultiplier,
     storages,
-  } = useBuildingInfo(building);
+  } = buildingInfo;
 
   return (
     <Navigator.Screen title="BuildingInfo" className="w-full">
@@ -49,10 +51,10 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
           </b>
         </DataLabel>
       </div>
-      {(production.length !== 0 || upgrade.production.length !== 0) && (
+      {(production.length !== 0 || upgrade?.production.length !== 0) && (
         <div className="grid grid-cols-2 w-full">
           <DataLabel label="PRODUCTION">
-            {!upgrade.production.length ? (
+            {!production.length ? (
               <b>N/A</b>
             ) : (
               production.map(({ resource, amount, type }) => (
@@ -71,10 +73,10 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
             )}
           </DataLabel>
           <DataLabel label="next level production">
-            {!upgrade.production.length || level === maxLevel ? (
+            {!upgrade?.production.length || level === maxLevel ? (
               <b>N/A</b>
             ) : (
-              upgrade.production.map(({ resource, amount, type }) => (
+              upgrade?.production.map(({ resource, amount, type }) => (
                 <Badge className="text-xs gap-2" key={`next-production-${resource}`}>
                   <ResourceIconTooltip
                     name={getBlockTypeName(resource)}
@@ -91,10 +93,10 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
           </DataLabel>
         </div>
       )}
-      {(requiredDependencies.length !== 0 || upgrade.requiredDependencies.length !== 0) && (
+      {(requiredDependencies.length !== 0 || (!!upgrade && upgrade.requiredDependencies.length !== 0)) && (
         <div className="grid grid-cols-2 w-full ">
           <DataLabel label="resource usage">
-            {!upgrade.production.length ? (
+            {!requiredDependencies.length ? (
               <b>N/A</b>
             ) : (
               requiredDependencies.map(({ resource, amount, type }) => (
@@ -113,10 +115,10 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
             )}
           </DataLabel>
           <DataLabel label="next level resource Usage">
-            {!upgrade.production.length || level === maxLevel ? (
+            {!upgrade?.requiredDependencies.length || level === maxLevel ? (
               <b>N/A</b>
             ) : (
-              upgrade.requiredDependencies.map(({ resource, amount, type }) => (
+              upgrade?.requiredDependencies.map(({ resource, amount, type }) => (
                 <Badge className="text-xs gap-2" key={`next-production-${resource}`}>
                   <ResourceIconTooltip
                     fractionDigits={3}
@@ -139,10 +141,10 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
             <b>x{(unitProductionMultiplier / RESOURCE_SCALE).toString()}</b>
           </DataLabel>
           <DataLabel label="next level unit prod speed">
-            {!upgrade.nextLevelUnitProductionMultiplier || level === maxLevel ? (
+            {!upgrade?.nextLevelUnitProductionMultiplier || level === maxLevel ? (
               <b>N/A</b>
             ) : (
-              <b>x{(upgrade.nextLevelUnitProductionMultiplier / RESOURCE_SCALE).toString()}</b>
+              <b>x{(upgrade?.nextLevelUnitProductionMultiplier / RESOURCE_SCALE).toString()}</b>
             )}
           </DataLabel>
         </div>
@@ -169,10 +171,10 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
             })}
           </DataLabel>
           <DataLabel label="next level storage">
-            {!upgrade.storages || upgrade.storages.length === 0 || level === maxLevel ? (
+            {!upgrade?.storages || upgrade?.storages.length === 0 ? (
               <b>N/A</b>
             ) : (
-              upgrade.storages.map((storage) => {
+              upgrade?.storages.map((storage) => {
                 return (
                   <Badge key={storage.resource} className="text-xs gap-2">
                     <ResourceIconTooltip
