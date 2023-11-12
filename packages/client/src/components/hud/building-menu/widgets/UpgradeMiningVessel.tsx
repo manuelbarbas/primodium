@@ -28,16 +28,16 @@ export const UpgradeMiningVessel: React.FC = () => {
   const { level, maxLevel, mainBaseLvlReq, recipe } = getUpgradeInfo(EntityType.MiningVessel, player);
 
   const hasEnough = useHasEnoughResources(recipe, player);
-
   const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && level < maxLevel;
+  const atMaxLevel = level >= maxLevel;
 
   let error = "";
-  if (!hasEnough) {
-    error = "Not enough resources";
+  if (atMaxLevel) {
+    error = "Reached max upgrade";
   } else if (mainBaseLevel < mainBaseLvlReq) {
     error = `Mainbase lvl. ${mainBaseLvlReq} required`;
-  } else if (level >= maxLevel) {
-    error = "reached max upgrade";
+  } else if (!hasEnough) {
+    error = "Not enough resources";
   }
 
   return (
@@ -48,7 +48,8 @@ export const UpgradeMiningVessel: React.FC = () => {
           <div>
             {recipe.length !== 0 && <p className="text-xs opacity-75 px-2 mb-1">UPGRADE VESSEL COST</p>}
             <div className="flex flex-wrap gap-1 px-2">
-              {recipe.length !== 0 &&
+              {!atMaxLevel ? (
+                recipe.length !== 0 &&
                 recipe.map((resource) => {
                   return (
                     <Badge key={resource.id + resource.type} className="text-xs gap-2">
@@ -64,7 +65,10 @@ export const UpgradeMiningVessel: React.FC = () => {
                       />
                     </Badge>
                   );
-                })}
+                })
+              ) : (
+                <p className="text-xs opacity-75">-</p>
+              )}
             </div>
           </div>
         </div>
