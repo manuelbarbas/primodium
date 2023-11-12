@@ -18,7 +18,7 @@ export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
 
   const name = useBuildingName(building);
 
-  const blockingResource = useBuildingInfo(building).production.find((production) => {
+  const blockingResource = useBuildingInfo(building)?.production.find((production) => {
     if (production.type !== ResourceType.Utility) return false;
     const { resourceCount } = getFullResourceCount(production.resource);
     return resourceCount < production.amount;

@@ -2,7 +2,6 @@ import { primodium } from "@game/api";
 // import { EntitytoSpriteKey } from "@game/constants";
 import { EntitytoSpriteKey } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
 import { EResource, MUDEnums } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
@@ -214,38 +213,44 @@ export function transformProductionData(
 }
 
 export const getBuildingInfo = (building: Entity) => {
-  const buildingType = (comps.BuildingType.get(building)?.value ?? singletonEntity) as Hex;
+  const buildingType = comps.BuildingType.get(building)?.value as Hex | undefined;
+  if (!buildingType) return undefined;
   const buildingTypeEntity = buildingType as Entity;
 
   const level = comps.Level.get(building)?.value ?? 1n;
-  let nextLevel = level + 1n;
-
-  const maxLevel = comps.P_MaxLevel.getWithKeys({ prototype: buildingType })?.value ?? 1n;
-  nextLevel = nextLevel > maxLevel ? maxLevel : nextLevel;
-
   const buildingLevelKeys = { prototype: buildingType, level: level };
-  const buildingNextLevelKeys = { prototype: buildingType, level: nextLevel };
   const production = transformProductionData(comps.P_Production.getWithKeys(buildingLevelKeys));
-  const nextLevelProduction = transformProductionData(comps.P_Production.getWithKeys(buildingNextLevelKeys));
-
   const requiredDependencies = transformProductionData(comps.P_RequiredDependencies.getWithKeys(buildingLevelKeys));
-  const nextLevelRequiredDependencies = transformProductionData(
-    comps.P_RequiredDependencies.getWithKeys(buildingNextLevelKeys)
-  );
-
   const unitProduction = comps.P_UnitProdTypes.getWithKeys(buildingLevelKeys)?.value;
-  const unitNextLevelProduction = comps.P_UnitProdTypes.getWithKeys(buildingNextLevelKeys)?.value;
   const storages = getBuildingStorages(buildingTypeEntity, level);
-  const nextLevelStorages = getBuildingStorages(buildingTypeEntity, nextLevel);
-
   const unitProductionMultiplier = comps.P_UnitProdMultiplier.getWithKeys(buildingLevelKeys)?.value;
-  const nextLevelUnitProductionMultiplier = comps.P_UnitProdMultiplier.getWithKeys(buildingNextLevelKeys)?.value;
-
-  const upgradeRecipe = getRecipe(buildingTypeEntity, nextLevel);
-
-  const mainBaseLvlReq = comps.P_RequiredBaseLevel.getWithKeys(buildingNextLevelKeys)?.value ?? 1;
-
   const position = comps.Position.get(building) ?? { x: 0, y: 0 };
+
+  const nextLevel = level + 1n;
+  const maxLevel = comps.P_MaxLevel.getWithKeys({ prototype: buildingType })?.value ?? 1n;
+
+  let upgrade = undefined;
+  if (nextLevel <= maxLevel) {
+    const buildingNextLevelKeys = { prototype: buildingType, level: nextLevel };
+    const nextLevelProduction = transformProductionData(comps.P_Production.getWithKeys(buildingNextLevelKeys));
+    const nextLevelRequiredDependencies = transformProductionData(
+      comps.P_RequiredDependencies.getWithKeys(buildingNextLevelKeys)
+    );
+    const unitNextLevelProduction = comps.P_UnitProdTypes.getWithKeys(buildingNextLevelKeys)?.value;
+    const nextLevelStorages = getBuildingStorages(buildingTypeEntity, nextLevel);
+    const nextLevelUnitProductionMultiplier = comps.P_UnitProdMultiplier.getWithKeys(buildingNextLevelKeys)?.value;
+    const upgradeRecipe = getRecipe(buildingTypeEntity, nextLevel);
+    const mainBaseLvlReq = comps.P_RequiredBaseLevel.getWithKeys(buildingNextLevelKeys)?.value ?? 1;
+    upgrade = {
+      unitProduction: unitNextLevelProduction,
+      production: nextLevelProduction,
+      storages: nextLevelStorages,
+      recipe: upgradeRecipe,
+      mainBaseLvlReq,
+      nextLevelUnitProductionMultiplier,
+      requiredDependencies: nextLevelRequiredDependencies,
+    };
+  }
 
   return {
     buildingType,
@@ -258,14 +263,6 @@ export const getBuildingInfo = (building: Entity) => {
     position,
     unitProductionMultiplier,
     requiredDependencies,
-    upgrade: {
-      unitProduction: unitNextLevelProduction,
-      production: nextLevelProduction,
-      storages: nextLevelStorages,
-      recipe: upgradeRecipe,
-      mainBaseLvlReq,
-      nextLevelUnitProductionMultiplier,
-      requiredDependencies: nextLevelRequiredDependencies,
-    },
+    upgrade,
   };
 };
