@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { primodium } from "@game/api";
 import { KeybindActions, Scenes } from "@game/constants";
 import { MapOpen, SelectedBuilding } from "src/network/components/clientComponents";
-import { getBlockTypeName } from "src/util/common";
+import { entityToAddress, getBlockTypeName, shortenAddress } from "src/util/common";
 import { useGameStore } from "../../store/GameStore";
 import { HUD } from "../core/HUD";
 import { BrandingLabel } from "../shared/BrandingLabel";
@@ -19,14 +19,18 @@ import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 import { Units } from "./units/Units";
 import { LoadingIndication } from "./LoadingIndication";
 import { useMud } from "src/hooks";
+import { components } from "src/network/components";
 
 export const GameHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [state.showUI, state.toggleShowUI]);
   const playerEntity = useMud().network.playerEntity;
   const selectedBuilding = SelectedBuilding.use()?.value;
+  const spectatingAccount = components.SpectateAccount.use()?.value;
   const mapOpen = MapOpen.use(undefined, {
     value: false,
   }).value;
+
+  const isSpectating = spectatingAccount !== playerEntity;
 
   useEffect(() => {
     const asteroidListener = primodium.api(Scenes.Asteroid).input.addListener(KeybindActions.ToggleUI, toggleShowUI);
@@ -42,7 +46,7 @@ export const GameHUD = () => {
     <div className="screen-container font-mono">
       <>
         {/* ASTEROID HUD */}
-        {showUI && (
+        {showUI && !isSpectating && (
           <HUD scale={1} pad>
             <HUD.BottomMiddle>
               {(getBlockTypeName(selectedBuilding) || !selectedBuilding) && !mapOpen && <Hotbar />}
@@ -68,6 +72,18 @@ export const GameHUD = () => {
             <HUD.TopRight>
               <Panes />
             </HUD.TopRight>
+          </HUD>
+        )}
+
+        {showUI && isSpectating && !mapOpen && (
+          <HUD scale={1} pad>
+            <HUD.BottomMiddle>
+              <p className="font-bold text-accent">SPECTATING {shortenAddress(entityToAddress(spectatingAccount!))}</p>
+            </HUD.BottomMiddle>
+            <HUD.TopMiddle>
+              {<ViewStarmap />}
+              <GracePeriod player={spectatingAccount!} />
+            </HUD.TopMiddle>
           </HUD>
         )}
 

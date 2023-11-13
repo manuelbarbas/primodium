@@ -9,10 +9,12 @@ import { Button } from "../core/Button";
 
 export const ViewStarmap = () => {
   const mud = useMud();
+  const playerEntity = mud.network.playerEntity;
   const mapOpen = components.MapOpen.use(undefined, {
     value: false,
   }).value;
   const { transitionToScene } = primodium.api().scene;
+  const specatatingAccount = components.SpectateAccount.use()?.value;
 
   const closeMap = async () => {
     await transitionToScene(Scenes.Starmap, Scenes.Asteroid, 0);
@@ -22,6 +24,7 @@ export const ViewStarmap = () => {
   const openMap = async () => {
     await transitionToScene(Scenes.Asteroid, Scenes.Starmap, 0);
     components.MapOpen.set({ value: true });
+    components.SpectateAccount.set({ value: playerEntity });
     components.SelectedBuilding.remove();
   };
 
@@ -70,7 +73,9 @@ export const ViewStarmap = () => {
         >
           <span className="absolute bg-orange-400/50 -right-96 -bottom-0 group-hover:-right-16 group-hover:bottom-0 h-32 w-32 rounded-full mix-blend-overlay transition-all duration-200" />
           <img src="img/icons/starmapicon.png" className="pixel-images w-8 h-8" />
-          <span className="flex font-bold gap-1">OPEN STAR MAP</span>
+          <span className="flex font-bold gap-1">
+            {specatatingAccount === playerEntity ? "OPEN STAR MAP" : "STOP SPECTATING"}
+          </span>
         </Button>
       )}
     </>

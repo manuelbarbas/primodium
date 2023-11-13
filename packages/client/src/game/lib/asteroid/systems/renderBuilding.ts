@@ -32,8 +32,6 @@ export const renderBuilding = (scene: Scene, { network: { playerEntity } }: Setu
   defineComponentSystem(gameWorld, components.SpectateAccount, ({ value }) => {
     world.dispose("game_specate");
 
-    console.log(value[0]?.value);
-
     const positionQuery = [
       HasValue(components.Position, {
         parent: components.Home.get(value[0]?.value ?? playerEntity)?.asteroid,
