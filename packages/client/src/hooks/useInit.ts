@@ -21,6 +21,7 @@ export const useInit = () => {
   //initialize systems
   useEffect(() => {
     mud.components.Account.set({ value: playerEntity });
+    mud.components.SpectateAccount.set({ value: playerEntity });
     setupBlockNumber(mud.network.latestBlockNumber$);
     setupDoubleCounter(mud);
     setupLeaderboard(mud);
