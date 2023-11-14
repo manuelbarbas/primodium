@@ -6,15 +6,23 @@ import { mountStoreDevtool } from "simple-zustand-devtools";
 import { KeybindActions } from "@game/constants";
 import { Key } from "engine/types";
 
-const VERSION = 4;
+const VERSION = 5;
 
 type Keybinds = Partial<{
   [key in KeybindActions]: Set<Key>;
 }>;
 
+type Volume = {
+  master: number;
+  music: number;
+  sfx: number;
+  ui: number;
+};
+
 type SettingsState = {
   newPlayer: boolean;
   keybinds: Keybinds;
+  volume: Volume;
 };
 
 type SettingsActions = {
@@ -27,6 +35,12 @@ type SettingsActions = {
 
 const defaults: SettingsState = {
   newPlayer: true,
+  volume: {
+    master: 1,
+    music: 1,
+    sfx: 1,
+    ui: 1,
+  },
   keybinds: {
     [KeybindActions.RightClick]: new Set(["POINTER_RIGHT"]),
     [KeybindActions.LeftClick]: new Set(["POINTER_LEFT"]),

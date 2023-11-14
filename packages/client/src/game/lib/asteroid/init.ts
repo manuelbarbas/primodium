@@ -7,6 +7,7 @@ import { setupMouseInputs } from "./setup/setupMouseInputs";
 import { setupKeybinds } from "./setup/setupKeybinds";
 import { SetupResult } from "src/network/types";
 import { Game } from "engine/types";
+import { Assets, AudioKeys } from "@game/constants";
 
 export const initAsteroidScene = async (game: Game, mud: SetupResult) => {
   const { world } = mud.network;
@@ -20,6 +21,7 @@ export const initAsteroidScene = async (game: Game, mud: SetupResult) => {
   tileManager?.startChunkRenderer();
 
   scene.camera.phaserCamera.fadeIn(1000);
+  scene.audio.music.playAudioSprite(Assets.AudioAtlas, AudioKeys.Background);
 
   setupMouseInputs(scene, mud);
   setupBasicCameraMovement(scene);
