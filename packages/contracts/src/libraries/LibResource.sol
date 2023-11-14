@@ -7,7 +7,7 @@ import { LibStorage } from "libraries/LibStorage.sol";
 
 import { UtilityMap } from "libraries/UtilityMap.sol";
 
-import { P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+import { TransferAllowance, P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
 
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -209,5 +209,32 @@ library LibResource {
       currentScore += scoreChangeAmount;
     }
     Score.set(player, currentScore);
+  }
+
+  function transfer(
+    bytes32 from,
+    bytes32 to,
+    EResource resource,
+    uint256 amount
+  ) internal {
+    require(from != to, "[ResourceSystem] Cannot transfer to the same entity");
+    require(ResourceCount.get(from, uint8(resource)) >= amount, "[ResourceSystem] Not enough resources");
+    require(amount > 0, "[ResourceSystem] Cannot transfer zero");
+
+    LibStorage.decreaseStoredResource(from, uint8(resource), amount);
+    LibStorage.increaseStoredResource(to, uint8(resource), amount);
+  }
+
+  function spendTransferAllowance(
+    bytes32 owner,
+    bytes32 spender,
+    EResource resource,
+    uint256 amount
+  ) internal {
+    uint256 currentAllowance = TransferAllowance.get(owner, spender, uint8(resource));
+    if (currentAllowance != type(uint256).max) {
+      require(currentAllowance >= amount, "[ResourceSystem] Not enough allowance");
+    }
+    TransferAllowance.set(owner, spender, uint8(resource), currentAllowance - amount);
   }
 }
