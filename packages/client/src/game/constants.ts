@@ -276,6 +276,11 @@ export enum AnimationKeys {
 
 export enum AudioKeys {
   Background = "background",
+  Click = "Click_01",
+  Click2 = "Click_02",
+  Click3 = "Click_03",
+  Sequence = "Sequence_01",
+  Sequence2 = "Sequence_02",
 }
 
 export const ResourceToTilesetKey: { [key: number]: ResourceTilekeys } = {
