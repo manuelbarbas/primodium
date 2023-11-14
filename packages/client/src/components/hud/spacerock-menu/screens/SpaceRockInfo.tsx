@@ -1,10 +1,9 @@
+import { Entity } from "@latticexyz/recs";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
-import { useMud } from "src/hooks";
-import { shortenAddress } from "src/util/common";
-import { PIRATE_KEY, SpaceRockTypeNames } from "src/util/constants";
-import { hashKeyEntity } from "src/util/encode";
+import { SpaceRockTypeNames } from "src/util/constants";
 import { getSpaceRockInfo } from "src/util/spacerock";
+import { LinkedAddressDisplay } from "../../LinkedAddressDisplay";
 
 const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (
@@ -18,19 +17,15 @@ const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ lab
 export const SpacerockInfo: React.FC<{
   data: ReturnType<typeof getSpaceRockInfo>;
 }> = ({ data: { ownedBy, type, position, mainBaseLevel } }) => {
-  const playerEntity = useMud().network.playerEntity;
-  let owner = "Neutral";
-  if (ownedBy === playerEntity) owner = "You";
-  else if (ownedBy === hashKeyEntity(PIRATE_KEY, playerEntity)) owner = "Pirates!";
-  else if (ownedBy && ownedBy !== playerEntity) owner = shortenAddress(ownedBy);
-
   return (
     <Navigator.Screen title="SpaceRockInfo" className="w-full">
       <DataLabel label="spacerock type">
         <b>{SpaceRockTypeNames[type]}</b>
       </DataLabel>
       <DataLabel label="owned by">
-        <b>{owner}</b>
+        <b>
+          <LinkedAddressDisplay entity={ownedBy as Entity} />
+        </b>
       </DataLabel>
       <div className="grid grid-cols-2 w-full">
         {mainBaseLevel !== undefined && (

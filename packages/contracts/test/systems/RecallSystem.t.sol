@@ -15,10 +15,6 @@ contract RecallSystemTest is PrimodiumTest {
   EUnit unit = EUnit.AegisDrone;
   uint256[NUM_UNITS] unitCounts;
 
-  bytes32 building = "building";
-  bytes32 buildingPrototype = "buildingPrototype";
-  bytes32 rock = bytes32("rock");
-
   P_UnitData unitData = P_UnitData({ attack: 0, defense: 0, speed: 0, cargo: 0, trainingTime: 0 });
 
   function setUp() public override {
@@ -31,8 +27,6 @@ contract RecallSystemTest is PrimodiumTest {
     bytes32[] memory unitTypes = new bytes32[](NUM_UNITS);
     unitTypes[0] = unitPrototype;
     P_UnitPrototypes.set(unitTypes);
-    BuildingType.set(building, buildingPrototype);
-    OwnedBy.set(building, player);
   }
 
   function testRecallUnitsFromMotherlode() public {
@@ -48,7 +42,7 @@ contract RecallSystemTest is PrimodiumTest {
     Home.setAsteroid(player, origin);
     P_MiningRate.set(unitPrototype, 0, 1);
     Motherlode.set(destination, uint8(ESize.Medium), uint8(EResource.Iron));
-    ProductionRate.set(player, uint8(EResource.Iron), 50);
+    ProductionRate.set(player, uint8(EResource.Iron), 50 * uint8(ESize.Medium));
     world.recallStationedUnits(destination);
     assertEq(ProductionRate.get(player, uint8(EResource.Iron)), 0);
   }
@@ -57,14 +51,21 @@ contract RecallSystemTest is PrimodiumTest {
     setupRecall();
     Home.setAsteroid(player, origin);
     P_MiningRate.set(unitPrototype, 0, 1);
-    Motherlode.set(destination, uint8(ESize.Medium), uint8(EResource.Iron));
-    MaxResourceCount.set(player, uint8(EResource.Iron), 100000);
-    ProductionRate.set(player, uint8(EResource.Iron), 50);
+    Motherlode.set(destination, uint8(ESize.Small), uint8(EResource.Iron));
+    MaxResourceCount.set(player, uint8(EResource.Iron), 10000000);
+    ProductionRate.set(player, uint8(EResource.Iron), 50 * uint8(ESize.Small));
     LastClaimedAt.set(player, block.timestamp);
+    console.log("before warp ", block.timestamp);
     vm.warp(block.timestamp + 10);
+    console.log("warped to ", block.timestamp);
     world.recallStationedUnits(destination);
-    assertEq(ResourceCount.get(player, uint8(EResource.Iron)), 500);
-    assertEq(ProductionRate.get(player, uint8(EResource.Iron)), 0);
+    console.log("after recall");
+    assertEq(
+      ResourceCount.get(player, uint8(EResource.Iron)),
+      uint256(ESize.Small) * 500,
+      "produced resources does not match"
+    );
+    assertEq(ProductionRate.get(player, uint8(EResource.Iron)), 0, "production rate does not match");
   }
 
   function setupRecall() public {

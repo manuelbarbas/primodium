@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { ESendType, Arrival, ERock, EResource } from "src/Types.sol";
-import { RockType, Home, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ArrivalCount, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
-import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
-import { LibMath } from "libraries/LibMath.sol";
+import { ERock } from "src/Types.sol";
+import { RockType, Home } from "codegen/index.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 

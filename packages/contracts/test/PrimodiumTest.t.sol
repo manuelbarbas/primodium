@@ -99,7 +99,11 @@ contract PrimodiumTest is MudTest {
     }
   }
 
-  function assertEq(ERock a, ERock b, string memory context) internal {
+  function assertEq(
+    ERock a,
+    ERock b,
+    string memory context
+  ) internal {
     assertEq(uint256(a), uint256(b), context);
   }
 
@@ -156,14 +160,19 @@ contract PrimodiumTest is MudTest {
     return getPosition(coord, player);
   }
 
-  function getPosition(int32 x, int32 y, address player) internal view returns (PositionData memory coord) {
+  function getPosition(
+    int32 x,
+    int32 y,
+    address player
+  ) internal view returns (PositionData memory coord) {
     return getPosition(PositionData2D(x, y), player);
   }
 
-  function getPosition(
-    PositionData2D memory coord2D,
-    address player
-  ) internal view returns (PositionData memory coord) {
+  function getPosition(PositionData2D memory coord2D, address player)
+    internal
+    view
+    returns (PositionData memory coord)
+  {
     bytes32 playerEntity = addressToEntity(player);
     bytes32 asteroid = LibEncode.getHash(playerEntity);
 

@@ -49,15 +49,16 @@ To build packages, run `pnpm build`
 For production deployment on Caldera testnet:
 
 1. In `<top-level>/.env`:
-   - Set `PRI_DEV="false"`. NOTE: this is necessary for `DevSystem` to be excluded from production.
+   - Set `PRI_DEV="false"`.
    - Set `PRI_CHAIN_ID="caldera"`
 2. Add your private key to the `.env` file in `packages/contracts`:
    ```bash
    echo "PRIVATEKEY=<your-private-key>" >> ./packages/contracts/.env
    ```
-3. Deploy your contracts:
+3. Comment out the content of the `packages/contracts/src/systems/DevSystem.sol` contract. **TODO:** fix `mud.config.ts` for `DevSystem` to automatically be excluded from production with `PRI_DEV="false"`.
+4. Deploy your contracts:
    `pnpm deploy:caldera`
-   \*\*\*Note: to update deployment information, modify the `[profile.caldera]` field in `packages/contracts/foundry.toml`.
+   **Note:** to update deployment information, modify the `[profile.caldera]` field in `packages/contracts/foundry.toml`.
 
 The client is automatically deployed on Vercel from the main branch. The live instance is located at `testnet2.primodium.com/?worldAddress=<world_address>?chainid=caldera` with the rpc settings to the Caldera testnet.
 

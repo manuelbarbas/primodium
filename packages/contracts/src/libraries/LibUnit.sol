@@ -6,7 +6,6 @@ import { MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, Motherlode, 
 import { ERock, EUnit } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
-import { LibResource } from "libraries/LibResource.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
 import { UnitKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
@@ -170,20 +169,18 @@ library LibUnit {
     uint256 unitCount
   ) internal {
     if (unitCount == 0) return;
-
     uint256 prevUnitCount = UnitCount.get(playerEntity, rockEntity, unitType);
     UnitCount.set(playerEntity, rockEntity, unitType, prevUnitCount + unitCount);
 
     // update production rate
     if (RockType.get(rockEntity) != uint8(ERock.Motherlode)) return;
-
     uint256 level = UnitLevel.get(playerEntity, unitType);
     uint256 productionRate = P_MiningRate.get(unitType, level);
     if (productionRate == 0) return;
-
     uint8 resource = (Motherlode.getMotherlodeType(rockEntity));
+    uint8 size = Motherlode.getSize(rockEntity);
     uint256 prevProductionRate = ProductionRate.get(playerEntity, resource);
-    ProductionRate.set(playerEntity, resource, prevProductionRate + (productionRate * unitCount));
+    ProductionRate.set(playerEntity, resource, prevProductionRate + (productionRate * unitCount * size));
   }
 
   /**
@@ -207,13 +204,13 @@ library LibUnit {
 
     // update production rate
     if (RockType.get(rockEntity) != uint8(ERock.Motherlode)) return;
-
     uint256 level = UnitLevel.get(playerEntity, unitType);
     uint256 productionRate = P_MiningRate.get(unitType, level);
     if (productionRate == 0) return;
-
     uint8 resource = (Motherlode.getMotherlodeType(rockEntity));
+    uint8 size = Motherlode.getSize(rockEntity);
     uint256 prevProductionRate = ProductionRate.get(playerEntity, resource);
-    ProductionRate.set(playerEntity, resource, prevProductionRate - (productionRate * unitCount));
+    require(prevProductionRate >= productionRate * unitCount * size, "[LibUnit] Production rate cannot be negative");
+    ProductionRate.set(playerEntity, resource, prevProductionRate - (productionRate * unitCount * size));
   }
 }

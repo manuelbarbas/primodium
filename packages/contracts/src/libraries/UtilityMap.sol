@@ -44,8 +44,13 @@ library UtilityMap {
       clear(player);
       return;
     }
+
+    // update replacement data
     uint8 replacement = MapUtilities.getItem(player, MapUtilities.length(player) - 1);
     MapUtilities.update(player, index, replacement);
+    MapItemStoredUtilities.set(player, replacement, true, index);
+
+    // remove utility
     MapUtilities.pop(player);
     MapItemUtilities.deleteRecord(player, utility);
     MapItemStoredUtilities.deleteRecord(player, utility);

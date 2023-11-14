@@ -3,7 +3,7 @@ import { ESendType } from "contracts/config/enums";
 import { BiSolidInvader } from "react-icons/bi";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { shortenAddress } from "src/util/common";
+import { entityToAddress } from "src/util/common";
 import { useNow } from "src/util/time";
 
 export const LabeledValue: React.FC<{
@@ -57,7 +57,7 @@ export const AttackingFleet: React.FC<{
         {timeRemaining <= 0n && (
           <LabeledValue label="ATTACKER">
             <div className="flex gap-1 text-right w-full">
-              <p className="w-full">{shortenAddress(fleet.from)}</p>
+              <p className="w-full">{entityToAddress(fleet.from, true)}</p>
             </div>
           </LabeledValue>
         )}

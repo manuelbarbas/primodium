@@ -24,9 +24,8 @@ import {
   ResourceImage,
   ResourceType,
   TransactionQueueType,
-  toHex32,
 } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
+import { hashEntities, toHex32 } from "src/util/encode";
 import { getObjectiveDescription } from "src/util/objectiveDescriptions";
 import {
   getAllRequirements,

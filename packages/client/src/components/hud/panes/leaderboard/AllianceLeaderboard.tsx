@@ -36,7 +36,7 @@ import {
   declineInvite,
 } from "src/util/web3/contractCalls/alliance";
 import { GiRank1, GiRank2, GiRank3 } from "react-icons/gi";
-import { hexToString, Hex, padHex, isAddress } from "viem";
+import { Hex, padHex, isAddress } from "viem";
 import { entityToAddress } from "src/util/common";
 import { Join } from "src/components/core/Join";
 import { EAllianceInviteMode, EAllianceRole } from "contracts/config/enums";
@@ -46,7 +46,6 @@ import { hashEntities } from "src/util/encode";
 import { TransactionQueueType } from "src/util/constants";
 import { getAllianceName } from "src/util/alliance";
 import { isProfane } from "src/util/profanity";
-import { Badge } from "src/components/core/Badge";
 
 const ALLIANCE_TAG_SIZE = 6;
 

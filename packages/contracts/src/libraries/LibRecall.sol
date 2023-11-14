@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-
 import { UnitCount, ArrivalCount, OwnedBy, P_UnitPrototypes, Home } from "codegen/index.sol";
 import { ESendType } from "src/Types.sol";
 import { Arrival } from "src/Types.sol";
@@ -41,15 +40,7 @@ library LibRecall {
     bytes32 arrivalId
   ) internal {
     Arrival memory arrival = ArrivalsMap.get(playerEntity, rockEntity, arrivalId);
-    require(arrival.from == playerEntity, "[Recall] Arrival not owned by sender");
-    require(arrival.arrivalTime < block.timestamp, "[Recall] Arrival not arrived yet");
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      if (arrival.unitCounts[i] == 0) continue;
-      LibUnit.increaseUnitCount(playerEntity, Home.getAsteroid(playerEntity), unitPrototypes[i], arrival.unitCounts[i]);
-    }
-    ArrivalCount.set(arrival.from, ArrivalCount.get(arrival.from) - 1);
-    ArrivalsMap.remove(playerEntity, rockEntity, arrivalId);
+    recallArrivalRaw(playerEntity, rockEntity, arrivalId, arrival);
   }
 
   /**
@@ -64,6 +55,10 @@ library LibRecall {
     bytes32 arrivalId,
     Arrival memory arrival
   ) internal {
+    bytes32 controller = arrival.sendType == ESendType.Reinforce ? arrival.to : arrival.from;
+    require(controller == playerEntity, "[Recall] Arrival not owned by sender");
+    require(arrival.arrivalTime < block.timestamp, "[Recall] Arrival not arrived yet");
+
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (arrival.unitCounts[i] == 0) continue;
