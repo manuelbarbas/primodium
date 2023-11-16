@@ -1,5 +1,4 @@
 import { primodium } from "@game/api";
-import { AsteroidMap } from "@game/constants";
 import React, { useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 
@@ -11,13 +10,7 @@ interface ModalProps {
   title?: string;
 }
 
-const PortalModal: React.FC<ModalProps> = ({
-  show,
-  onClose,
-  children,
-  title,
-  fullscreen = false,
-}) => {
+const PortalModal: React.FC<ModalProps> = ({ show, onClose, children, title, fullscreen = false }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const { enableInput, disableInput } = primodium.api(AsteroidMap.KEY)!.input;
 
@@ -60,20 +53,13 @@ const PortalModal: React.FC<ModalProps> = ({
             }`}
           >
             <div className="bg-slate-700 flex justify-between items-center px-2 py-2 w-full text-sm bg-gradient-to-b from-transparent to-slate-900/20">
-              <div className="flex items-center text-pink-50">
-                &nbsp;{title}
-              </div>
+              <div className="flex items-center text-pink-50">&nbsp;{title}</div>
               <div className="flex space-x-1">
-                <button
-                  className="w-3 h-3 bg-red-400 rounded-full"
-                  onClick={onClose}
-                />
+                <button className="w-3 h-3 bg-red-400 rounded-full" onClick={onClose} />
               </div>
             </div>
 
-            <div className="w-full overflow-y-auto scrollbar flex-grow">
-              {children}
-            </div>
+            <div className="w-full overflow-y-auto scrollbar flex-grow">{children}</div>
           </div>
         </div>
       )}
