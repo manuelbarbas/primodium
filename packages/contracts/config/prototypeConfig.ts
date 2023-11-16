@@ -157,8 +157,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         unitProductionRate: 100n,
         travelTime: 10n,
         worldSpeed: 100n,
-        taxRate: 10n, // out of 1000
-        maxOrders: 5n,
+        burn: 10n, // out of 1000
       },
       P_UnitPrototypes: {
         value: MUDEnums.EUnit.reduce(

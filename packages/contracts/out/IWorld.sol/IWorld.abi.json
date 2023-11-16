@@ -735,9 +735,22 @@
   {
     "inputs": [
       {
-        "internalType": "enum EResource",
-        "name": "resource",
-        "type": "uint8"
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "burn",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "entity",
+        "type": "bytes32"
       },
       {
         "internalType": "uint256",
@@ -745,7 +758,7 @@
         "type": "uint256"
       }
     ],
-    "name": "burn",
+    "name": "burnEntity",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1814,6 +1827,24 @@
   {
     "inputs": [
       {
+        "internalType": "bytes32",
+        "name": "to",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "mint",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "components": [
           {
             "internalType": "int32",
@@ -2518,11 +2549,6 @@
         "type": "bytes32"
       },
       {
-        "internalType": "enum EResource",
-        "name": "resource",
-        "type": "uint8"
-      },
-      {
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
@@ -2659,7 +2685,7 @@
     ],
     "name": "takeOrder",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -2709,11 +2735,6 @@
         "internalType": "bytes32",
         "name": "to",
         "type": "bytes32"
-      },
-      {
-        "internalType": "enum EResource",
-        "name": "resource",
-        "type": "uint8"
       },
       {
         "internalType": "uint256",
@@ -2783,11 +2804,6 @@
         "internalType": "bytes32",
         "name": "to",
         "type": "bytes32"
-      },
-      {
-        "internalType": "enum EResource",
-        "name": "resource",
-        "type": "uint8"
       },
       {
         "internalType": "uint256",
@@ -2931,7 +2947,7 @@
         "type": "uint8"
       }
     ],
-    "name": "updateOrderresource",
+    "name": "updateOrderResource",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

@@ -28,7 +28,6 @@ contract PostDeploy is Script {
     console.log("Terrain created");
 
     setupHooks(world);
-
     vm.stopBroadcast();
   }
 }
