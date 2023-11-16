@@ -49,6 +49,8 @@ export const config = mudConfig({
         motherlodeDistance: "uint256",
         travelTime: "uint256",
         worldSpeed: "uint256",
+        taxRate: "uint256", // out of 1000
+        maxOrders: "uint256",
       },
     },
 
@@ -162,11 +164,6 @@ export const config = mudConfig({
     },
 
     ResourceCount: {
-      keySchema: { entity: "bytes32", resource: "uint8" }, //EResource
-      valueSchema: "uint256",
-    },
-
-    ResourceInEscrow: {
       keySchema: { entity: "bytes32", resource: "uint8" }, //EResource
       valueSchema: "uint256",
     },
@@ -658,6 +655,22 @@ export const config = mudConfig({
     AllianceJoinRequest: {
       keySchema: { entity: "bytes32", alliance: "bytes32" },
       valueSchema: { timeStamp: "uint256" },
+    },
+    /* ------------------------------- Marketplace ------------------------------ */
+
+    MarketplaceOrder: {
+      keySchema: { id: "bytes32" },
+      valueSchema: {
+        seller: "bytes32",
+        resource: "uint8",
+        count: "uint256",
+        price: "uint256",
+      },
+    },
+
+    OrderCount: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "uint256",
     },
   },
 });

@@ -18,7 +18,6 @@ contract ResourceSystem is PrimodiumSystem {
 
   function burn(EResource resource, uint256 amount) public {
     require(amount > 0, "[ResourceSystem] Cannot burn zero");
-
     LibStorage.decreaseStoredResource(addressToEntity(_msgSender()), uint8(resource), amount);
   }
 
@@ -29,7 +28,6 @@ contract ResourceSystem is PrimodiumSystem {
   ) public {
     bytes32 from = addressToEntity(_msgSender());
     require(from != to, "[ResourceSystem] Cannot set transfer allowance to the same entity");
-
     TransferAllowance.set(from, to, uint8(resource), amount);
   }
 
