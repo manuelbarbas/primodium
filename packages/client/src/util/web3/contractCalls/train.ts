@@ -1,21 +1,22 @@
-import { Hex } from "viem";
 import { Entity } from "@latticexyz/recs";
 import { EUnit } from "contracts/config/enums";
-import { execute } from "src/network/actions";
-import { SetupNetworkResult } from "src/network/types";
-import { getBlockTypeName, randomEntity } from "src/util/common";
 import { ampli } from "src/ampli";
+import { execute } from "src/network/actions";
 import { components } from "src/network/components";
-import { parseReceipt } from "../../analytics/parseReceipt";
-import { UnitEntityLookup } from "src/util/constants";
+import { SetupNetworkResult } from "src/network/types";
+import { world } from "src/network/world";
 import { bigintToNumber } from "src/util/bigint";
+import { getBlockTypeName } from "src/util/common";
+import { UnitEntityLookup } from "src/util/constants";
+import { Hex } from "viem";
+import { parseReceipt } from "../../analytics/parseReceipt";
 
 export const train = async (buildingEntity: Entity, unit: EUnit, count: bigint, network: SetupNetworkResult) => {
   await execute(
     () => network.worldContract.write.trainUnits([buildingEntity as Hex, unit, count]),
     network,
     {
-      id: randomEntity(),
+      id: world.registerEntity(),
     },
     (receipt) => {
       const buildingType = components.BuildingType.get(buildingEntity)?.value as Entity;

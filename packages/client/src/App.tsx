@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 
-import mudConfig from "contracts/mud.config";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 import AppLoadingState from "./AppLoadingState";
 import { ampli } from "./ampli";
 import { MudProvider } from "./hooks/providers/MudProvider";
 import { setup } from "./network/setup";
 import { SetupResult } from "./network/types";
 import { world } from "./network/world";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.min.css";
+import { Progress } from "./components/core/Progress";
 
 const DEV = import.meta.env.PRI_DEV === "true";
 
@@ -35,7 +35,7 @@ export default function App() {
     if (import.meta.env.DEV) {
       import("@latticexyz/dev-tools").then(({ mount: mountDevTools }) =>
         mountDevTools({
-          config: mudConfig,
+          config: networkLayer.network.mudConfig,
           publicClient: networkLayer.network.publicClient,
           walletClient: networkLayer.network.walletClient,
           latestBlock$: networkLayer.network.latestBlock$,
@@ -51,11 +51,17 @@ export default function App() {
 
   if (networkLayer === undefined) {
     return (
-      <div className="relative bg-black">
+      <div className="bg-black h-screen">
         <div className="absolute w-full h-full star-background opacity-50" />
-        <div className="relative flex items-center justify-center h-screen text-white font-mono">
-          <div className="text-center">
-            <p className="text-lg">Initializing...</p>
+        <div className="relative">
+          <div className="flex items-center justify-center h-screen">
+            <div className="flex flex-col items-center gap-4">
+              <p className="text-lg text-white">
+                <span className="font-mono">Initializing</span>
+                <span>&hellip;</span>
+              </p>
+              <Progress value={100} max={100} className="animate-pulse" />
+            </div>
           </div>
         </div>
       </div>

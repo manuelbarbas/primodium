@@ -113,7 +113,8 @@ export function setupHangar(mud: SetupResult) {
     const origin = Send.get()?.origin;
     const destination = Send.get()?.destination;
     if (origin && origin != home) setupHangar(origin);
-    if (destination && origin != home) setupHangar(destination);
+    if (destination && destination != home) setupHangar(destination);
+
     // maintain hangars for all player motherlodes to track mining production
     const query = [
       Has(RockType),

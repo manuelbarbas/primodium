@@ -45,7 +45,7 @@ library LibReduceProductionRate {
       if (requiredValue == 0) continue;
 
       uint256 productionRate = ProductionRate.get(playerEntity, resource);
-      require(productionRate >= requiredValue, "[ProductionUsage] Not enough existing resource production rate");
+      require(productionRate >= requiredValue, "[ProductionUsage] Not enough resource production rate");
       ProductionRate.set(playerEntity, resource, productionRate - requiredValue);
     }
   }

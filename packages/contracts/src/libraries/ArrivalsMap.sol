@@ -55,6 +55,7 @@ library ArrivalsMap {
     bytes32 asteroid,
     bytes32 key
   ) internal view returns (Arrival memory) {
+    require(has(player, asteroid, key), "Arrival does not exist");
     bytes memory encoding = MapItemArrivals.get(player, asteroid, key);
     return abi.decode(encoding, (Arrival));
   }
@@ -101,7 +102,12 @@ library ArrivalsMap {
     }
     uint256 index = MapItemStoredArrivals.getIndex(player, asteroid, key);
     bytes32 replacement = MapArrivals.getItem(player, asteroid, MapArrivals.length(player, asteroid) - 1);
+
+    // update replacement data
     MapArrivals.update(player, asteroid, index, replacement);
+    MapItemStoredArrivals.set(player, asteroid, replacement, true, index);
+
+    // delete arrival data
     MapArrivals.pop(player, asteroid);
     MapItemArrivals.deleteRecord(player, asteroid, key);
     MapItemStoredArrivals.deleteRecord(player, asteroid, key);

@@ -1,17 +1,23 @@
 import { Coord } from "@latticexyz/utils";
 import { ESendType } from "contracts/config/enums";
-import { SetupNetworkResult } from "src/network/types";
-import { UnitEnumLookup, toHex32 } from "src/util/constants";
-import { Hex } from "viem";
-import { UnitCountTuple } from "../types";
-import { execute } from "src/network/actions";
-import { encodeCoord } from "src/util/encode";
-import { components } from "src/network/components";
-import { parseReceipt } from "../../analytics/parseReceipt";
 import { ampli } from "src/ampli";
-import { randomEntity } from "src/util/common";
+import { execute } from "src/network/actions";
+import { components } from "src/network/components";
+import { SetupNetworkResult } from "src/network/types";
+import { world } from "src/network/world";
 import { bigintToNumber } from "src/util/bigint";
+import { UnitEnumLookup } from "src/util/constants";
+import { toHex32 } from "src/util/encode";
+import { Hex } from "viem";
+import { parseReceipt } from "../../analytics/parseReceipt";
+import { UnitCountTuple } from "../types";
 
+(window as any).checkValue = () => {
+  const playerEntity = components.Account.get()?.value;
+  if (!playerEntity) throw new Error("No player entity found");
+  const arrivalCount = components.ArrivalCount.getWithKeys({ entity: playerEntity as Hex })?.value;
+  console.log("arrivalCount:", arrivalCount);
+};
 export const send = async (
   unitCounts: UnitCountTuple,
   sendType: ESendType,
@@ -31,11 +37,14 @@ export const send = async (
       ]),
     network,
     {
-      id: randomEntity(),
+      id: world.registerEntity(),
     },
     (receipt) => {
-      const originAsteroid = components.ReversePosition.get(encodeCoord(origin))?.entity;
-      const destinationAsteroid = components.ReversePosition.get(encodeCoord(destination))?.entity;
+      const originAsteroid = components.ReversePosition.getWithKeys({ x: origin.x, y: origin.y })?.entity;
+      const destinationAsteroid = components.ReversePosition.getWithKeys({
+        x: destination.x,
+        y: destination.y,
+      })?.entity;
 
       ampli.systemSendUnits({
         asteroidCoord: originAsteroid!,

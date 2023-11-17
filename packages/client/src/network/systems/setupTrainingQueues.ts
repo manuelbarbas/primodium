@@ -19,6 +19,7 @@ export function setupTrainingQueues(mud: SetupResult) {
     QueueItemUnits,
     TrainingQueue,
     Home,
+    Send,
   } = components;
 
   function updateTrainingQueue(building: Entity) {
@@ -79,16 +80,25 @@ export function setupTrainingQueues(mud: SetupResult) {
   }
 
   // update local queues each second
+  // todo: create a component that tracks active asteroids (to be updated each second)
   defineComponentSystem(world, BlockNumber, (update) => {
-    const query = [
+    const home = Home.get(playerEntity)?.asteroid;
+    const origin = Send.get()?.origin;
+    const destination = Send.get()?.destination;
+    const parents: string[] = [];
+    if (home) parents.push(home);
+    if (origin && home !== origin) parents.push(origin);
+    if (destination && home !== destination) parents.push(destination);
+
+    const queries = parents.map((parent) => [
       HasValue(Position, {
-        parent: Home.get(playerEntity)?.asteroid,
+        parent,
       }),
       Has(BuildingType),
-    ];
+    ]);
     const blockNumber = update?.value[0]?.value;
     if (!blockNumber) return;
-    const buildings = [...runQuery(query)];
+    const buildings = queries.reduce((acc, query) => [...acc, ...runQuery(query)], [] as Entity[]);
     buildings.forEach((building) => updateTrainingQueue(building));
   });
 }

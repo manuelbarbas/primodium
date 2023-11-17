@@ -19,6 +19,7 @@ export enum Scenes {
 export enum Assets {
   SpriteAtlas = "sprite-atlas",
   ResourceTileset = "resource",
+  AudioAtlas = "audio-atlas",
 }
 
 export enum Tilesets {
@@ -133,7 +134,7 @@ export enum SpriteKeys {
 
   Workshop1 = "sprites/workshop/level1/Workshop_LVL1_1.png",
   Workshop2 = "sprites/workshop/level2/Workshop_LVL2_1.png",
-  Workshop3 = "sprites/workshop/level3/Workshop_LVL1_3.png",
+  Workshop3 = "sprites/workshop/level3/Workshop_LVL3_1.png",
 
   DroneFactory1 = "sprites/drone-factory/normal/Drone_Factory1.png",
 
@@ -271,6 +272,15 @@ export enum AnimationKeys {
   Vault1 = "vault/level1",
   Vault2 = "vault/level2",
   Vault3 = "vault/level3",
+}
+
+export enum AudioKeys {
+  Background = "background",
+  Click = "Click_01",
+  Click2 = "Click_02",
+  Click3 = "Click_03",
+  Sequence = "Sequence_01",
+  Sequence2 = "Sequence_02",
 }
 
 export const ResourceToTilesetKey: { [key: number]: ResourceTilekeys } = {

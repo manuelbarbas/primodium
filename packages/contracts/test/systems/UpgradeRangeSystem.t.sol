@@ -27,6 +27,7 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
     Level.set(creatorEntity, 5);
 
     assertTrue(P_RequiredBaseLevel.get(ExpansionKey, 5) != 0, "should have expansion level 5");
+    P_RequiredUpgradeResources.deleteRecord(ExpansionKey, 5);
     vm.expectRevert(bytes("[UpgradeRangeSystem] MainBase level requirement not met"));
     world.upgradeRange();
   }
@@ -40,7 +41,7 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
 
     Level.set(creatorEntity, maxLevel);
     assertEq(Level.get(creatorEntity), maxLevel);
-
+    P_RequiredUpgradeResources.deleteRecord(ExpansionKey, maxLevel);
     vm.expectRevert(bytes("[UpgradeRangeSystem] Max level reached"));
     world.upgradeRange();
   }
@@ -56,7 +57,7 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
     keys[0] = mainBase;
 
     Level.set(mainBase, level + 1);
-
+    P_RequiredUpgradeResources.deleteRecord(ExpansionKey, level + 1);
     world.upgradeRange();
     assertEq(Level.get(creatorEntity), level + 1);
   }

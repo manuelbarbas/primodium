@@ -3,7 +3,7 @@ import { Coord } from "@latticexyz/utils";
 import { EResource, ERock, ESize } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
-import { encodeCoord, getMotherlodeEntity } from "src/util/encode";
+import { getMotherlodeEntity } from "src/util/encode";
 import { getPositionByVector } from "src/util/vector";
 
 export function initializeMotherlodes(sourceEntity: Entity, source: Coord) {
@@ -18,11 +18,10 @@ export function initializeMotherlodes(sourceEntity: Entity, source: Coord) {
 
     if (components.ReversePosition.getWithKeys(motherlodePosition)) continue;
     const motherlodeEntity = getMotherlodeEntity(sourceEntity, motherlodePosition);
-    const encodedPosition = encodeCoord(motherlodePosition);
-    world.registerEntity({ id: encodedPosition });
-    components.ReversePosition.set(
+    world.registerEntity({ id: motherlodeEntity });
+    components.ReversePosition.setWithKeys(
       { entity: motherlodeEntity as string, __staticData: "", __encodedLengths: "", __dynamicData: "" },
-      encodedPosition
+      motherlodePosition
     );
 
     if (!isMotherlode(motherlodeEntity, Number(config.motherlodeChanceInv))) continue;

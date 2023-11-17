@@ -1,14 +1,14 @@
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { SetupNetworkResult } from "src/network/types";
+import { world } from "src/network/world";
 import { parseReceipt } from "../../analytics/parseReceipt";
-import { randomEntity } from "src/util/common";
 
 export const spawn = async (network: SetupNetworkResult) => {
   await execute(
     () => network.worldContract.write.spawn(),
     network,
-    { id: randomEntity() },
+    { id: world.registerEntity() },
     (receipt) => {
       ampli.systemSpawn({
         ...parseReceipt(receipt),

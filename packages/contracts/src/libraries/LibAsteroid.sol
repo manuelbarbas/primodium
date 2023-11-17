@@ -10,8 +10,6 @@ import { ERock } from "src/Types.sol";
 // libraries
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
-import { Trigonometry as Trig } from "trig/src/Trigonometry.sol";
-import { ABDKMath64x64 as Math } from "abdk/ABDKMath64x64.sol";
 
 library LibAsteroid {
   /// @notice Creates new asteroid for player in world

@@ -5,7 +5,7 @@ import { addressToEntity } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
-import { LibEncode, LibMotherlode, LibSend } from "codegen/Libraries.sol";
+import { LibMotherlode, LibSend } from "codegen/Libraries.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { ReversePosition } from "codegen/tables/ReversePosition.sol";
 import { SendArgs } from "src/Types.sol";

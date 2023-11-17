@@ -19,13 +19,11 @@ const moveResults = [
 ];
 
 test("hashKeyCoord", () => {
-  const distance: number = 100;
-  const max: number = 13;
+  const distance = 100;
+  const max = 13;
   for (let i = 0; i < max; i++) {
     const direction = Math.floor((i * 360) / max);
-    console.log("distance:", distance, "direction:", direction);
-    const coord: Coord = getPositionByVector(distance, direction);
-    console.log(coord);
+    const coord = getPositionByVector(distance, direction);
     expect(coord.x).eq(moveResults[i].x);
     expect(coord.y).eq(moveResults[i].y);
   }

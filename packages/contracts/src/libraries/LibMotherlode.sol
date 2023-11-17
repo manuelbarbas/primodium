@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { P_GameConfig, P_GameConfigData, UnitCount, LastClaimedAt, Motherlode, MotherlodeData, Position, PositionData, ReversePosition, RockType, P_Unit, UnitLevel } from "codegen/index.sol";
-import { ERock, EUnit, ESize, EResource } from "src/Types.sol";
+import { P_GameConfig, P_GameConfigData, LastClaimedAt, Motherlode, MotherlodeData, Position, PositionData, ReversePosition, RockType } from "codegen/index.sol";
+import { ERock, ESize, EResource } from "src/Types.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
 
@@ -19,7 +19,7 @@ library LibMotherlode {
       bytes32 sourceAsteroid = ReversePosition.get(sourcePosition.x, sourcePosition.y);
       if (sourceAsteroid == 0) continue;
       if (RockType.get(sourceAsteroid) == uint8(ERock.Motherlode)) continue;
-      bytes32 motherlodeSeed = keccak256(abi.encode(sourceAsteroid, "motherlode", position.x, position.y));
+      bytes32 motherlodeSeed = keccak256(abi.encode(sourceAsteroid, bytes32("motherlode"), position.x, position.y));
       if (!isMotherlode(motherlodeSeed, config.motherlodeChanceInv)) continue;
       initMotherlode(position, motherlodeSeed);
       return motherlodeSeed;

@@ -1,23 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { addressToEntity, entityToAddress, getSystemResourceId, bytes32ToString } from "src/utils.sol";
-import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 // tables
-import { ProducedUnit, P_ProducedUnits, P_RequiredExpansion, P_ProducedUnitsData, DefeatedPirate, P_DefeatedPirates, P_RequiredUnits, P_RequiredUnitsData, DestroyedUnit, P_DestroyedUnits, P_DestroyedUnitsData, P_ProducedResources, P_ProducedResourcesData, ProducedResource, RaidedResource, P_RaidedResources, P_RaidedResourcesData, P_EnumToPrototype, HasBuiltBuilding, P_HasBuiltBuildings, P_RequiredObjectives, CompletedObjective, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/index.sol";
+import { ProducedUnit, P_ProducedUnits, P_RequiredExpansion, P_ProducedUnitsData, DefeatedPirate, P_DefeatedPirates, P_RequiredUnits, P_RequiredUnitsData, DestroyedUnit, P_DestroyedUnits, P_DestroyedUnitsData, P_ProducedResources, P_ProducedResourcesData, ProducedResource, RaidedResource, P_RaidedResources, P_RaidedResourcesData, P_EnumToPrototype, HasBuiltBuilding, P_HasBuiltBuildings, P_RequiredObjectives, CompletedObjective, P_RequiredBaseLevel, Level } from "codegen/index.sol";
 
 // libraries
-import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
-import { LibReduceProductionRate } from "libraries/LibReduceProductionRate.sol";
-import { LibProduction } from "libraries/LibProduction.sol";
-import { LibStorage } from "libraries/LibStorage.sol";
-import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 
 // types
-import { UnitKey, BuildingKey, BuildingTileKey, ExpansionKey, ObjectiveKey } from "src/Keys.sol";
-import { Bounds, EBuilding, EResource, EObjectives } from "src/Types.sol";
+import { ObjectiveKey } from "src/Keys.sol";
+import { EObjectives } from "src/Types.sol";
 
 library LibObjectives {
   function checkObjectiveRequirements(bytes32 playerEntity, EObjectives objectiveType) internal {
