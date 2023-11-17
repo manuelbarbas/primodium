@@ -6,15 +6,25 @@ import { mountStoreDevtool } from "simple-zustand-devtools";
 import { KeybindActions } from "@game/constants";
 import { Key } from "engine/types";
 
-const VERSION = 4;
+const VERSION = 5;
 
 type Keybinds = Partial<{
   [key in KeybindActions]: Set<Key>;
 }>;
 
+type Volume = {
+  master: number;
+  music: number;
+  sfx: number;
+  ui: number;
+};
+
+type Channel = "music" | "sfx" | "ui" | "master";
+
 type SettingsState = {
   newPlayer: boolean;
   keybinds: Keybinds;
+  volume: Volume;
 };
 
 type SettingsActions = {
@@ -23,10 +33,17 @@ type SettingsActions = {
   removeKey: (keybindAction: KeybindActions, key: Key) => void;
   setKeybind: (keybindAction: KeybindActions, keys: Set<Key>) => void;
   setNewPlayer: (val: boolean) => void;
+  setVolume: (volume: number, channel: Channel) => void;
 };
 
 const defaults: SettingsState = {
   newPlayer: true,
+  volume: {
+    master: 1,
+    music: 0.5,
+    sfx: 0.75,
+    ui: 0.75,
+  },
   keybinds: {
     [KeybindActions.RightClick]: new Set(["POINTER_RIGHT"]),
     [KeybindActions.LeftClick]: new Set(["POINTER_LEFT"]),
@@ -88,6 +105,9 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
         set.delete(key);
       },
       setKeybind: (keybindAction, keys) => set({ keybinds: { [keybindAction]: keys } }),
+      setVolume: (volume, channel) => {
+        set({ volume: { ...get().volume, [channel]: volume } });
+      },
     }),
     {
       name: "settings-storage",
