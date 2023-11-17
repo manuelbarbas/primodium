@@ -123,6 +123,40 @@ contract MarketplaceSystemTest is PrimodiumTest {
     assertEq(wETH.balanceOf(alice), prevBuyerBalance - cost - tax, "buyer balance wrong");
   }
 
+  function testTakePartialOrder() public {
+    bytes32 orderId = testAddOrder();
+    wETH.transfer(alice, 10000);
+
+    MaxResourceCount.set(buyer, uint8(EResource.Iron), 100);
+
+    MaxResourceCount.set(player, uint8(EResource.Iron), 100);
+    ResourceCount.set(player, uint8(EResource.Iron), 100);
+
+    uint256 prevSellerBalance = wETH.balanceOf(creator);
+    uint256 prevBuyerBalance = wETH.balanceOf(alice);
+
+    switchPrank(alice);
+    world.takeOrder(orderId, 50);
+    uint256 postSellerBalance = wETH.balanceOf(creator);
+    uint256 postBuyerBalance = wETH.balanceOf(alice);
+
+    assertEq(MarketplaceOrder.getCount(orderId), 50, "count wrong");
+    assertEq(MarketplaceOrder.getPrice(orderId), 100, "price wrong");
+    assertEq(MarketplaceOrder.getResource(orderId), uint8(EResource.Iron), "resource wrong");
+    assertEq(MarketplaceOrder.getSeller(orderId), player, "seller wrong");
+
+    assertEq(ResourceCount.get(player, uint8(EResource.U_Orders)), 1, "seller order count wrong");
+    assertEq(ResourceCount.get(player, uint8(EResource.Iron)), 50, "seller resource count wrong");
+    assertEq(ResourceCount.get(buyer, uint8(EResource.Iron)), 50, "buyer resource count wrong");
+
+    uint256 cost = 100 * 50;
+    uint256 tax = (P_GameConfig.getTax() * cost) / 1000;
+    cost = cost - tax;
+
+    assertEq(wETH.balanceOf(creator), prevSellerBalance + cost, "seller balance wrong");
+    assertEq(wETH.balanceOf(alice), prevBuyerBalance - cost - tax, "buyer balance wrong");
+  }
+
   function testTakeOwnOrder() public {
     bytes32 orderId = testAddOrder();
     ResourceCount.set(buyer, uint8(EResource.Iron), 0);
