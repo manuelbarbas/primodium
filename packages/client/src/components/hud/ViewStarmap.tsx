@@ -13,6 +13,7 @@ export const ViewStarmap = () => {
   const mapOpen = components.MapOpen.use(undefined, {
     value: false,
   }).value;
+
   const { transitionToScene } = primodium.api().scene;
   const spectatingAccount = components.SpectateAccount.use()?.value;
 
