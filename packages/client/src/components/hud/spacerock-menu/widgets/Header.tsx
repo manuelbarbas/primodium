@@ -1,6 +1,7 @@
 import { primodium } from "@game/api";
 import { Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
+import { ERock } from "contracts/config/enums";
 import { FaEye, FaInfoCircle } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
 import { Button } from "src/components/core/Button";
@@ -41,17 +42,19 @@ export const Header: React.FC<{ entity: Entity; name: string; imageUri: string }
                 />
               </Badge>
             )}
-            <Button
-              className="btn-sm"
-              tooltip="spectate"
-              onClick={async () => {
-                components.SpectateAccount.set({ value: playerEntity as Entity });
-                await transitionToScene(Scenes.Starmap, Scenes.Asteroid, 0);
-                components.MapOpen.set({ value: false });
-              }}
-            >
-              <FaEye />
-            </Button>
+            {components.RockType.get(entity)?.value === ERock.Asteroid && (
+              <Button
+                className="btn-sm"
+                tooltip="spectate"
+                onClick={async () => {
+                  components.SpectateAccount.set({ value: playerEntity as Entity });
+                  await transitionToScene(Scenes.Starmap, Scenes.Asteroid, 0);
+                  components.MapOpen.set({ value: false });
+                }}
+              >
+                <FaEye />
+              </Button>
+            )}
           </div>
           <Navigator.NavButton to="SpaceRockInfo" className="btn-xs btn-ghost flex gap-2 w-fit opacity-75">
             <FaInfoCircle /> view more info
