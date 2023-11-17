@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { useState } from "react";
 import { IconButton } from "src/components/core/Button";
-import { Card, SecondaryCard } from "src/components/core/Card";
+import { SecondaryCard } from "src/components/core/Card";
 import { Join } from "src/components/core/Join";
 import { Tabs } from "src/components/core/Tabs";
 import { getBlockTypeName } from "src/util/common";
