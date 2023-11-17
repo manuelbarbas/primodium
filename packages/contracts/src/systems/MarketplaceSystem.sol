@@ -5,8 +5,10 @@ pragma solidity >=0.8.21;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { addressToEntity } from "src/utils.sol";
 import { ResourceCount, MarketplaceOrder, MaxResourceCount, MarketplaceOrderData, P_GameConfig } from "codegen/index.sol";
-import { LibResource, LibStorage, LibZogGem } from "codegen/Libraries.sol";
+import { LibResource, LibStorage } from "codegen/Libraries.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
+import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
+import { transferToken } from "src/libraries/transferToken.sol";
 
 import { EResource } from "src/Types.sol";
 
@@ -86,16 +88,11 @@ contract MarketplaceSystem is PrimodiumSystem {
   }
 
   function takeOrder(bytes32 orderId, uint256 countBought) public payable {
+    if (countBought == 0) return;
     bytes32 playerEntity = addressToEntity(_msgSender());
     MarketplaceOrderData memory order = MarketplaceOrder.get(orderId);
     require(order.seller != playerEntity, "[MarketplaceSystem] cannot take your own order");
     require(order.count >= countBought, "[MarketplaceSystem] not enough resource in order");
-
-    if (countBought == 0) return;
-
-    uint256 cost = countBought * order.price;
-    uint256 tax = (P_GameConfig.getBurn() * cost) / 1000;
-    cost = cost - tax;
 
     // transfer out resource
     require(
@@ -108,6 +105,15 @@ contract MarketplaceSystem is PrimodiumSystem {
       "[MarketplaceSystem] buyer doesn't have enough space"
     );
 
+    uint256 cost = countBought * order.price;
+    uint256 tax = (P_GameConfig.getTax() * cost) / 1000;
+    cost = cost - tax;
+
+    IERC20Mintable wETH = IERC20Mintable(P_GameConfig.getWETHAddress());
+
+    transferToken(_world(), entityToAddress(order.seller), cost);
+    transferToken(_world(), address(1), tax);
+
     LibStorage.decreaseStoredResource(order.seller, order.resource, countBought);
     LibStorage.increaseStoredResource(playerEntity, order.resource, countBought);
 
@@ -116,9 +122,6 @@ contract MarketplaceSystem is PrimodiumSystem {
     } else {
       _updateOrderCount(orderId, order.count - countBought);
     }
-
-    LibZogGem.transfer(playerEntity, order.seller, cost);
-    LibZogGem.burn(playerEntity, tax);
   }
 
   function takeOrderBulk(bytes32[] memory orderId, uint256[] memory count) public {

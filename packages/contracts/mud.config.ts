@@ -49,7 +49,8 @@ export const config = mudConfig({
         motherlodeDistance: "uint256",
         travelTime: "uint256",
         worldSpeed: "uint256",
-        burn: "uint256", // out of 1000
+        wETHAddress: "address",
+        tax: "uint256",
       },
     },
 
@@ -650,18 +651,8 @@ export const config = mudConfig({
       keySchema: { entity: "bytes32", alliance: "bytes32" },
       valueSchema: { timeStamp: "uint256" },
     },
+
     /* ------------------------------- Marketplace ------------------------------ */
-
-    Balance: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "uint256",
-    },
-
-    TransferAllowance: {
-      keySchema: { owner: "bytes32", spender: "bytes32" },
-      valueSchema: "uint256",
-    },
-
     MarketplaceOrder: {
       keySchema: { id: "bytes32" },
       valueSchema: {
