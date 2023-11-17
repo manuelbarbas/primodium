@@ -85,9 +85,9 @@ library LibBattle {
     }
 
     if (Home.get(defenderEntity).asteroid == rockEntity) {
-      defensePoints += ResourceCount.get(defenderEntity, uint8(EResource.U_Defense));
+      defensePoints += ResourceCount.get(rockEntity, uint8(EResource.U_Defense));
       defensePoints +=
-        (defensePoints * ResourceCount.get(defenderEntity, uint8(EResource.M_DefenseMultiplier))) /
+        (defensePoints * ResourceCount.get(rockEntity, uint8(EResource.M_DefenseMultiplier))) /
         MULTIPLIER_SCALE;
     }
   }
@@ -149,8 +149,8 @@ library LibBattle {
       uint256 defenderUnitsLost = br.defenderStartingUnits[i] - br.defenderUnitsLeft[i];
 
       LibUnit.decreaseUnitCount(br.defender, br.rock, unitTypes[i], defenderUnitsLost);
-      LibUnit.updateStoredUtilities(br.attacker, unitTypes[i], attackerUnitsLost, false);
-      LibUnit.updateStoredUtilities(br.defender, unitTypes[i], defenderUnitsLost, false);
+      LibUnit.updateStoredUtilities(Home.getAsteroid(br.attacker), unitTypes[i], attackerUnitsLost, false);
+      LibUnit.updateStoredUtilities(Home.getAsteroid(br.defender), unitTypes[i], defenderUnitsLost, false);
 
       DestroyedUnit.set(br.attacker, unitTypes[i], DestroyedUnit.get(br.attacker, unitTypes[i]) + defenderUnitsLost);
       DestroyedUnit.set(br.defender, unitTypes[i], DestroyedUnit.get(br.defender, unitTypes[i]) + attackerUnitsLost);

@@ -33,8 +33,6 @@ contract OnUpgrade_MaxStorage is SystemHook {
     ResourceId systemId,
     bytes memory callData
   ) public {
-    // Convert the player's address to an entity
-    bytes32 playerEntity = addressToEntity(msgSender);
     // Decode the arguments from the callData
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
 
@@ -46,6 +44,6 @@ contract OnUpgrade_MaxStorage is SystemHook {
     // Get the level of the building
     uint256 level = Level.get(buildingEntity);
     // Increase the maximum storage capacity
-    LibStorage.increaseMaxStorage(playerEntity, buildingEntity, level);
+    LibStorage.increaseMaxStorage(buildingEntity, level);
   }
 }

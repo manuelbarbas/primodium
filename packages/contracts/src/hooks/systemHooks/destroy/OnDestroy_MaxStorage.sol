@@ -39,7 +39,7 @@ contract OnDestroy_MaxStorage is SystemHook {
     bytes32 playerEntity = addressToEntity(msgSender);
 
     // Clear maximum storage increases for the building
-    LibStorage.clearMaxStorageIncrease(playerEntity, buildingEntity);
+    LibStorage.clearMaxStorageIncrease(buildingEntity);
   }
 
   /**

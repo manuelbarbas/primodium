@@ -14,7 +14,7 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
     bytes32 creatorEntity = addressToEntity(creator);
     bytes32 asteroid = Home.getAsteroid(creatorEntity);
 
-    Bounds memory bounds = LibBuilding.getPlayerBounds(creatorEntity);
+    Bounds memory bounds = LibBuilding.getSpaceRockBounds(asteroid);
 
     removeRequirements(EBuilding.IronMine);
 

@@ -75,6 +75,8 @@ import { OnUpgradeRange_SpendResources } from "src/hooks/systemHooks/upgradeRang
 
 import { OnAlliance_TargetClaimResources } from "src/hooks/systemHooks/alliance/OnAlliance_TargetClaimResources.sol";
 
+import { OnRecall_TargetClaimResources } from "src/hooks/systemHooks/recall/OnRecall_TargetClaimResources.sol";
+
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
 import { BEFORE_SPLICE_STATIC_DATA, AFTER_SET_RECORD, ALL as STORE_ALL } from "@latticexyz/store/src/storeHookTypes.sol";
 
@@ -144,6 +146,15 @@ function registerAllianceHooks(IWorld world, OnBefore_ClaimResources onBefore_Cl
 
 function registerRecallHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
   world.registerSystemHook(getSystemResourceId("RecallSystem"), onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
+
+  OnRecall_TargetClaimResources onRecall_TargetClaimResources = new OnRecall_TargetClaimResources();
+  world.grantAccess(ResourceCountTableId, address(onRecall_TargetClaimResources));
+  world.grantAccess(MapItemUtilitiesTableId, address(onRecall_TargetClaimResources));
+  world.grantAccess(MapUtilitiesTableId, address(onRecall_TargetClaimResources));
+  world.grantAccess(MapItemStoredUtilitiesTableId, address(onRecall_TargetClaimResources));
+  world.grantAccess(LastClaimedAtTableId, address(onRecall_TargetClaimResources));
+  world.grantAccess(ProducedResourceTableId, address(onRecall_TargetClaimResources));
+  world.registerSystemHook(getSystemResourceId("RecallSystem"), onRecall_TargetClaimResources, BEFORE_CALL_SYSTEM);
 }
 
 /**
