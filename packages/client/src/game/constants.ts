@@ -19,6 +19,7 @@ export enum Scenes {
 export enum Assets {
   SpriteAtlas = "sprite-atlas",
   ResourceTileset = "resource",
+  AudioAtlas = "audio-atlas",
 }
 
 export enum Tilesets {
@@ -271,6 +272,15 @@ export enum AnimationKeys {
   Vault1 = "vault/level1",
   Vault2 = "vault/level2",
   Vault3 = "vault/level3",
+}
+
+export enum AudioKeys {
+  Background = "background",
+  Click = "Click_01",
+  Click2 = "Click_02",
+  Click3 = "Click_03",
+  Sequence = "Sequence_01",
+  Sequence2 = "Sequence_02",
 }
 
 export const ResourceToTilesetKey: { [key: number]: ResourceTilekeys } = {
