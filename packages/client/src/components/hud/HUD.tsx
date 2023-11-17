@@ -19,6 +19,7 @@ import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 import { Units } from "./units/Units";
 import { LoadingIndication } from "./LoadingIndication";
 import { useMud } from "src/hooks";
+import { Chat } from "./chat/Chat";
 
 export const GameHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [state.showUI, state.toggleShowUI]);
@@ -57,6 +58,7 @@ export const GameHUD = () => {
             <HUD.TopLeft>
               <Score />
               <LoadingIndication />
+              <Chat />
             </HUD.TopLeft>
 
             <HUD.BottomLeft>
