@@ -32,6 +32,7 @@ export const BlockNumber = createExtendedComponent(
   }
 );
 export const Account = createExtendedEntityComponent(world, { id: "Account" });
+export const SpectateAccount = createExtendedEntityComponent(world, { id: "SpectateAccount" });
 export const GameReady = createExtendedBoolComponent(world, { id: "GameReady" });
 
 // Todo: extend this with relevant tx data
@@ -148,6 +149,7 @@ export default {
 
   /* ------------------------------ Chain State ------------------------------- */
   BlockNumber,
+  SpectateAccount,
   Account,
   GameReady,
   CurrentTransaction,
