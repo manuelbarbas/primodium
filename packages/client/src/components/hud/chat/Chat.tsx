@@ -130,7 +130,7 @@ export const Chat = ({ className }: ChatProps) => {
       onClick={() => {
         if (isMinimized) setIsMinimized(!isMinimized);
       }}
-      className={`${className} p-5 m-5 bg-neutral border border-accent rounded-xl duration-300 transition-all pointer-events-auto ${
+      className={`${className} p-5 m-5 bg-neutral border border-accent rounded-xl duration-300 transition-all pointer-events-auto text-xs ${
         isMinimized ? "w-20 scale-75 cursor-pointer" : " max-w-[30rem]"
       }`}
     >
