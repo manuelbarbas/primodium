@@ -31,6 +31,7 @@
     "@latticexyz/world": "2.0.0-next.13",
     "@primodiumxyz/mud-game-tools": "^1.0.7",
     "@vercel/analytics": "^1.0.1",
+    "@vercel/kv": "^1.0.0",
     "async-mutex": "^0.4.0",
     "comlink": "^4.4.1",
     "contracts": "workspace:*",
