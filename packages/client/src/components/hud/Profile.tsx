@@ -21,18 +21,12 @@ export const Profile = () => {
   }, [linkedAddress, playerEntity]);
 
   useEffect(() => {
-    const fetchLinkedAddress = async () => {
-      try {
-        const result = await getLinkedAddress();
-        setLinkedAddress(result);
-      } catch (error) {
-        console.error("Failed to get linked address:", error);
-      } finally {
-        setLoading(false);
-      }
+    const getAddressObj = async () => {
+      const addressObj = await getLinkedAddress();
+      setLinkedAddress(addressObj);
+      setLoading(false);
     };
-
-    fetchLinkedAddress();
+    getAddressObj();
   }, []);
 
   const address = useMud().network.address;
