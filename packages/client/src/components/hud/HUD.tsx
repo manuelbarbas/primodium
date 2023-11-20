@@ -19,6 +19,8 @@ import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 import { Units } from "./units/Units";
 import { LoadingIndication } from "./LoadingIndication";
 import { useMud } from "src/hooks";
+import { OverlayModal } from "../core/OverlayModal";
+import { Marketplace } from "./marketplace/Marketplace";
 
 export const GameHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [state.showUI, state.toggleShowUI]);
@@ -58,6 +60,14 @@ export const GameHUD = () => {
               <Score />
               <LoadingIndication />
             </HUD.TopLeft>
+            <HUD.Left>
+              <OverlayModal title="Marketplace">
+                <OverlayModal.Button>Marketplace</OverlayModal.Button>
+                <OverlayModal.Content>
+                  <Marketplace />
+                </OverlayModal.Content>
+              </OverlayModal>
+            </HUD.Left>
 
             <HUD.BottomLeft>
               <Resources />
