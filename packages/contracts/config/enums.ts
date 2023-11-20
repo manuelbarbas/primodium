@@ -32,6 +32,7 @@ export enum EBuilding {
 
   ShieldGenerator,
   Vault,
+  Market,
 }
 
 export enum EResource {

@@ -881,7 +881,38 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       },
     },
   },
-
+  Market: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(3, 3) },
+      P_MaxLevel: { value: 4n },
+    },
+    levels: {
+      1: {
+        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredResources: getResourceValues({ Iron: 100 }),
+        P_Production: getResourceValues({ U_Orders: 1 }),
+      },
+      2: {
+        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredResources: getResourceValues({ Iron: 100 }),
+        P_Production: getResourceValues({ U_Orders: 2 }),
+      },
+      3: {
+        P_RequiredBaseLevel: { value: 5n },
+        P_RequiredResources: getResourceValues({
+          Iron: 100,
+        }),
+        P_Production: getResourceValues({ U_Orders: 3 }),
+      },
+      4: {
+        P_RequiredBaseLevel: { value: 7n },
+        P_RequiredResources: getResourceValues({
+          Iron: 100,
+        }),
+        P_Production: getResourceValues({ U_Orders: 4 }),
+      },
+    },
+  },
   /* -------------------------------- Resources ------------------------------- */
   // NOTE: To check if a resource is a utility, call P_IsUtility.get(EResource.<resource>);
   IsUtility: {
@@ -891,6 +922,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       [MUDEnums.EResource.indexOf("U_Housing")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Vessel")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_MaxMoves")]: { P_IsUtility: { value: true } },
+      [MUDEnums.EResource.indexOf("U_Orders")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Defense")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("M_DefenseMultiplier")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Unraidable")]: { P_IsUtility: { value: true } },

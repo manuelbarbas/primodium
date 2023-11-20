@@ -2,7 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { encodeEntity, singletonEntity } from "@latticexyz/store-sync/recs";
 import { Cheatcodes } from "@primodiumxyz/mud-game-tools";
 import { SetupResult } from "src/network/types";
-import { Hex } from "viem";
+import { Hex, trim } from "viem";
 import { EntityType, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
 const resources: Record<string, Entity> = {
   iron: EntityType.Iron,
@@ -197,6 +197,20 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
             }
           );
         });
+      },
+    },
+    dripWETH: {
+      params: [],
+      function: async () => {
+        const player = mud.network.address;
+        if (!player) throw new Error("No player found");
+        await mud.contractCalls.setComponentValue(
+          mud.components.WETHBalance,
+          encodeEntity({ entity: "address" }, { entity: trim(player) as Hex }),
+          {
+            value: 2000000000000000000n,
+          }
+        );
       },
     },
   };
