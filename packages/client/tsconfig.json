@@ -20,5 +20,6 @@
       "@game/constants": ["src/game/constants"]
     }
   },
-  "include": ["src", "../game-tools/src/CheatcodesList.tsx"]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "dist"]
 }

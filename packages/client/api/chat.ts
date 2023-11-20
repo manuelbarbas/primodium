@@ -1,7 +1,9 @@
+import { verifyMessage } from "viem";
+import { Entity } from "@latticexyz/recs";
+import { ethers } from "ethers";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import Pusher from "pusher";
-import { isPlayer, entityToAddress } from "../src/util/common";
-import { recoverMessageAddress } from "viem";
+// import { shortenAddress } from "./common";
 
 export const pusher = new Pusher({
   appId: process.env.PRI_PUSHER_APP_ID!,
@@ -15,14 +17,16 @@ export const pusher = new Pusher({
 export default async function handleChatRequest(req: VercelRequest, res: VercelResponse) {
   const { user, message, signature, uuid, channel } = req.body;
 
-  if (!isPlayer(user)) return res.status(400).send("Invalid user");
+  // if (!isPlayer(user)) return res.status(400).send("Invalid user");
 
-  const signer = await recoverMessageAddress({
-    message,
-    signature,
-  });
+  // const validMessage = await verifyMessage({
+  //   address: entityToAddress(user),
+  //   message,
+  //   signature,
+  // });
 
-  if (signer !== entityToAddress(user)) return res.status(401).send("Invalid signature");
+  // ethers.utils.verifyMessage(message, signature);
+  // if (validMessage) return res.status(401).send("Invalid signature");
 
   if (message.length === 0) return res.status(200).send("OK");
 

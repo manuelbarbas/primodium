@@ -29,14 +29,15 @@ export const client = new PusherJS(import.meta.env.PRI_PUSHER_APP_KEY!, {
 });
 
 export const Chat = ({ className }: ChatProps) => {
-  const mud = useMud();
+  const {
+    network: { walletClient, playerEntity },
+  } = useMud();
   const [isMinimized, setIsMinimized] = useState(true);
   const [unread, setUnread] = useState(0);
   const [chatScroll, setChatScroll] = useState(false);
   const [chat, setChat] = useState<Map<string, message>>(new Map());
   const chatRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const playerEntity = mud.network.playerEntity;
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -47,13 +48,24 @@ export const Chat = ({ className }: ChatProps) => {
 
     const messageId = uuid();
 
+    const signedMessage = await walletClient.signMessage({
+      message: inputRef.current.value,
+      // account: entityToAddress(playerEntity),
+    });
+
     fetch("/api/chat", {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       method: "POST",
-      body: JSON.stringify({ user: playerEntity, message: inputRef.current.value, uuid }),
+      body: JSON.stringify({
+        user: playerEntity,
+        message: inputRef.current.value,
+        signature: signedMessage,
+        uuid,
+        channel: "chat",
+      }),
     });
 
     setChat(
@@ -169,7 +181,7 @@ export const Chat = ({ className }: ChatProps) => {
             <div ref={chatRef} className="overflow-y-scroll scroll-smooth">
               {Array.from(chat).map(([uuid, message], index) => {
                 return (
-                  <div key={uuid} className={`flex ${index % 2 === 0 ? "bg-base-100/50" : ""} rounded px-3 py-1d`}>
+                  <div key={uuid} className={`flex ${index % 2 === 0 ? "bg-base-100/50" : ""} rounded px-3 py-1`}>
                     <p
                       className={`${message.user === "unknown" ? "opacity-50" : ""} ${
                         message.pending ? " opacity-25 animate-pulse" : ""
