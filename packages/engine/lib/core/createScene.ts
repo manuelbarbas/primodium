@@ -8,6 +8,11 @@ import { createObjectPool } from "./createObjectPool";
 import { createScriptManager } from "./createScriptManager";
 import { createTilemap } from "./createTilemap";
 
+type PhaserAudio =
+  | Phaser.Sound.HTML5AudioSoundManager
+  | Phaser.Sound.WebAudioSoundManager
+  | Phaser.Sound.NoAudioSoundManager;
+
 export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, autoStart = true) => {
   const {
     camera: { minZoom, maxZoom, pinchSpeed, wheelSpeed, defaultZoom },
@@ -99,6 +104,17 @@ export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, 
   camera.centerOn(0, 0);
   camera.setZoom(defaultZoom);
 
+  /* -------------------------- Create Audio Channels ------------------------- */
+  /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+  //@ts-ignore
+  const music = Phaser.Sound.SoundManagerCreator.create(phaserGame) as PhaserAudio;
+  /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+  //@ts-ignore
+  const sfx = Phaser.Sound.SoundManagerCreator.create(phaserGame) as PhaserAudio;
+  /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+  //@ts-ignore
+  const ui = Phaser.Sound.SoundManagerCreator.create(phaserGame) as PhaserAudio;
+
   return {
     phaserScene: scene,
     tilemap,
@@ -108,11 +124,19 @@ export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, 
     objectPool,
     config,
     input,
+    audio: {
+      music,
+      sfx,
+      ui,
+    },
     dispose: () => {
       input.dispose();
       tilemap.dispose();
       camera.dispose();
       culling.dispose();
+      music.destroy();
+      sfx.destroy();
+      ui.destroy();
     },
   };
 };

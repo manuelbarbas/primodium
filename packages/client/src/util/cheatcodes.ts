@@ -1,8 +1,9 @@
 import { Entity } from "@latticexyz/recs";
 import { encodeEntity, singletonEntity } from "@latticexyz/store-sync/recs";
 import { Cheatcodes } from "@primodiumxyz/mud-game-tools";
+import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
-import { Hex, trim } from "viem";
+import { Hex, padHex, trim } from "viem";
 import { EntityType, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
 const resources: Record<string, Entity> = {
   iron: EntityType.Iron,
@@ -42,6 +43,21 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
       function: async (value: number) => {
         await mud.contractCalls.setComponentValue(mud.components.P_GameConfig, singletonEntity, {
           worldSpeed: BigInt(value),
+        });
+      },
+    },
+    setSpecate: {
+      params: [{ name: "value", type: "string" }],
+      function: async (value: string) => {
+        console.log(value);
+        if (!value) {
+          components.SpectateAccount.set({ value: mud.network.playerEntity });
+          return;
+        }
+        components.SpectateAccount.set({
+          value: padHex(value as Hex, {
+            size: 32,
+          }).toLowerCase() as Entity,
         });
       },
     },

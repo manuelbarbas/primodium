@@ -1,5 +1,5 @@
 {
-  "ASTEROID_MAP": {
+  "MAIN": {
     "files": [
       {
         "type": "image",
@@ -41,6 +41,11 @@
         "key": "sprite-atlas",
         "textureURL": "/assets/sprites/atlas.png",
         "atlasURL": "/assets/sprites/atlas.json"
+      },
+      {
+        "type": "audioAtlas",
+        "key": "audio-atlas",
+        "jsonURL": "/assets/audio/atlas.json"
       },
       {
         "type": "image",

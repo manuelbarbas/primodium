@@ -1,6 +1,8 @@
+import { primodium } from "@game/api";
 import { IconLabel } from "./IconLabel";
 import { Loader } from "./Loader";
 import { Tooltip } from "./Tooltip";
+import { AudioKeys } from "@game/constants";
 
 export const Button: React.FC<{
   children: React.ReactNode;
@@ -11,6 +13,8 @@ export const Button: React.FC<{
   loading?: boolean;
   tooltip?: string;
   tooltipDirection?: "right" | "left" | "top" | "bottom";
+  mute?: boolean;
+  clickSound?: AudioKeys;
 }> = ({
   children,
   className,
@@ -20,12 +24,22 @@ export const Button: React.FC<{
   loading = false,
   tooltip,
   tooltipDirection = "top",
+  mute = false,
+  clickSound = AudioKeys.Click2,
 }) => {
+  const { audio } = primodium.api();
+
   return (
     <Tooltip text={tooltip} direction={tooltipDirection}>
       <button
-        onClick={onClick}
+        onClick={() => {
+          !mute && audio.play(clickSound, "ui");
+          onClick && onClick();
+        }}
         disabled={disabled}
+        onPointerEnter={() => {
+          !mute && audio.play(AudioKeys.Click3, "ui");
+        }}
         className={`btn join-item inline pointer-events-auto font-bold outline-none ${className} ${
           disabled ? "opacity-80" : ""
         } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
@@ -48,6 +62,8 @@ export const IconButton: React.FC<{
   loading?: boolean;
   tooltipText?: string;
   tooltipDirection?: "right" | "left" | "top" | "bottom";
+  mute?: boolean;
+  clickSound?: AudioKeys;
 }> = ({
   imageUri,
   text,
@@ -59,11 +75,20 @@ export const IconButton: React.FC<{
   loading = false,
   tooltipDirection = "right",
   tooltipText,
+  mute = false,
+  clickSound = AudioKeys.Click2,
 }) => {
+  const { audio } = primodium.api();
   return (
     <button
-      onClick={onClick}
+      onClick={() => {
+        !mute && audio.play(clickSound, "ui");
+        onClick && onClick();
+      }}
       disabled={disabled}
+      onPointerEnter={() => {
+        !mute && audio.play(AudioKeys.Click3, "ui");
+      }}
       className={`btn join-item inline gap-1 pointer-events-auto font-bold outline-none ${className} ${
         disabled ? "opacity-80" : ""
       } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
