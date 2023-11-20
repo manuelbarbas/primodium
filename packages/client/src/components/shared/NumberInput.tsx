@@ -1,11 +1,12 @@
 import { useState } from "react";
 
 export const NumberInput: React.FC<{
+  startingValue?: number;
   min?: number;
   max: number;
   onChange: (val: number) => void;
-}> = ({ min = 0, max, onChange }) => {
-  const [count, setCount] = useState<number | "">(min);
+}> = ({ startingValue, min = 0, max, onChange }) => {
+  const [count, setCount] = useState<number | "">(startingValue || min);
 
   const handleUpdate = (newCount: number) => {
     if (isNaN(newCount) || newCount == 0) {

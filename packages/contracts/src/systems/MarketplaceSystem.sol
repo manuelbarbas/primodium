@@ -29,8 +29,7 @@ contract MarketplaceSystem is PrimodiumSystem {
     bytes32 playerEntity = addressToEntity(_msgSender());
 
     uint256 orderCount = ResourceCount.get(playerEntity, uint8(EResource.U_Orders));
-    uint256 maxOrders = MaxResourceCount.get(playerEntity, uint8(EResource.U_Orders));
-    require(orderCount < maxOrders, "[MarketplaceSystem] max orders reached");
+    require(orderCount > 0, "[MarketplaceSystem] max orders reached");
 
     orderId = keccak256(abi.encodePacked(resource, count, block.timestamp, msg.sender));
 
@@ -94,6 +93,8 @@ contract MarketplaceSystem is PrimodiumSystem {
     require(order.seller != playerEntity, "[MarketplaceSystem] cannot take your own order");
     require(order.count >= countBought, "[MarketplaceSystem] not enough resource in order");
 
+    LibResource.claimAllResources(order.seller);
+
     // transfer out resource
     require(
       ResourceCount.get(order.seller, order.resource) >= countBought,
@@ -105,11 +106,13 @@ contract MarketplaceSystem is PrimodiumSystem {
       "[MarketplaceSystem] buyer doesn't have enough space"
     );
 
+    IERC20Mintable wETH = IERC20Mintable(P_GameConfig.getWETHAddress());
+
     uint256 cost = countBought * order.price;
+    require(cost <= wETH.balanceOf(_msgSender()), "[MarketplaceSystem] not enough weth");
+
     uint256 tax = (P_GameConfig.getTax() * cost) / 1000;
     cost = cost - tax;
-
-    IERC20Mintable wETH = IERC20Mintable(P_GameConfig.getWETHAddress());
 
     transferToken(_world(), entityToAddress(order.seller), cost);
     transferToken(_world(), address(1), tax);

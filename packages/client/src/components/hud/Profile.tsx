@@ -44,9 +44,10 @@ export const Profile = () => {
     <Card className="flex gap-1 text-sm flex-grow items-center justify-between w-fit">
       <div className="flex flex-col gap-2">
         <div className="flex gap-2 items-center">
-          <p className="text-xs bg-warning px-2 rounded-md font-bold" style={{ width: "fit-content" }}>
-            {formatEther(wETHBalance)} WETH
-          </p>
+          <div className="flex gap-1 border border-accent rounded-md p-1">
+            {formatEther(wETHBalance)}
+            <p className="flex text-xs bg-warning px-1 rounded-sm font-bold items-center">WETH</p>
+          </div>
           <p>{entityDisplay}</p>
 
           {!linkedAddress?.ensName && (
