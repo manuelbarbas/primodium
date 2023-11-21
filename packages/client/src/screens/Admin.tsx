@@ -1,48 +1,120 @@
-import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import ERC20Abi from "contracts/out/ERC20System.sol/ERC20System.abi.json";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { GameButton } from "src/components/shared/GameButton";
 import { useMud } from "src/hooks";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 import { world } from "src/network/world";
+import { wagmiConfig } from "src/util/web3/wagmi";
 import {
+  BaseError,
   Hex,
   createPublicClient,
   createWalletClient,
+  custom,
   encodeAbiParameters,
-  fallback,
   formatEther,
   getContract,
-  http,
-  isHex,
   trim,
-  webSocket,
 } from "viem";
+import { toAccount } from "viem/accounts";
+import { WagmiConfig, useAccount, useConnect, useDisconnect, useNetwork, useSwitchNetwork } from "wagmi";
 
-const cacheKey = "adminPrivateKey";
+export function Connect() {
+  const { connector, isConnected } = useAccount();
+  const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
+  const { disconnect } = useDisconnect();
+
+  if (isConnected) {
+    return (
+      <div className="space-y-3 my-3 relative">
+        <GameButton className="absolute top-6 left-6 font-bold w-44" depth={5} onClick={() => disconnect()}>
+          <div className="font-bold leading-none h-8 flex justify-center items-center crt px-2">Disconnect</div>
+        </GameButton>
+      </div>
+    );
+  }
+  return (
+    <div className="space-y-3 my-3">
+      <p>Connect the wallet you want to display on the leaderboard.</p>
+      {connectors
+        .filter((x) => x.ready && x.id !== connector?.id)
+        .map((x) => (
+          <GameButton className="font-bold w-44" depth={5} key={x.id} onClick={() => connect({ connector: x })}>
+            <div className="font-bold leading-none h-8 flex justify-center items-center crt px-2">
+              {x.name}
+              {isLoading && x.id === pendingConnector?.id && " (connecting)"}
+            </div>
+          </GameButton>
+        ))}
+      {error && <p className="fixed top-6 right-6">{(error as BaseError).shortMessage}</p>}
+    </div>
+  );
+}
+
 export function Admin() {
-  const { network } = useMud();
+  return (
+    <WagmiConfig config={wagmiConfig}>
+      <div className="flex flex-col w-screen h-screen bg-black text-green-400 p-20 font-mono">
+        <Connect />
+        <Connected>
+          <ControlBooth />
+        </Connected>
+      </div>
+    </WagmiConfig>
+  );
+}
 
-  console.log("player address", network.playerEntity);
+export function Connected({ children }: { children: React.ReactNode }) {
+  const { isConnected, connector } = useAccount();
+  const chain = useNetwork().chain;
+  const expectedChain = connector?.chains[0].id;
+  const { chains, error, isLoading, pendingChainId, switchNetwork } = useSwitchNetwork();
+
+  if (!isConnected) return null;
+  if (chain?.id !== expectedChain) {
+    return (
+      <>
+        {chain && <div>Connected to {chain.name}</div>}
+
+        {chains.map((x) => (
+          <GameButton disabled={!switchNetwork || x.id === chain?.id} key={x.id} onClick={() => switchNetwork?.(x.id)}>
+            Switch to {x.name}
+            {isLoading && pendingChainId === x.id && " (switching)"}
+          </GameButton>
+        ))}
+
+        <div>{error && error.message}</div>
+      </>
+    );
+  }
+  return <>{children}</>;
+}
+
+function ControlBooth() {
+  const { network } = useMud();
+  const externalAccount = useAccount();
+
+  const externalAddress = externalAccount.address;
+  const externalEntity = externalAccount.address
+    ? (encodeAbiParameters([{ type: "address" }], [externalAccount.address]) as Entity)
+    : undefined;
+
   const adminAddress = components.P_GameConfig.get()?.admin;
-  const cachedPrivateKey = localStorage.getItem(cacheKey);
-  const [privateKey, setPrivateKey] = useState<Hex | undefined>((cachedPrivateKey as Hex) ?? undefined);
-  const [tempPrivateKey, setTempPrivateKey] = useState<string>("");
 
   const networkConfig = getNetworkConfig();
   const tokenAddress = components.P_GameConfig2.get()?.wETHAddress;
 
   const client = useMemo(() => {
-    if (!privateKey || !tokenAddress) return;
-    const burnerAccount = createBurnerAccount(privateKey as Hex);
+    if (!externalAccount || !externalAccount.address || !tokenAddress) return;
 
     const clientOptions = {
       chain: networkConfig.chain,
-      transport: transportObserver(fallback([webSocket(), http()])),
+      transport: custom(window.ethereum),
       pollingInterval: 1000,
-      account: burnerAccount,
+      account: toAccount(externalAccount.address),
     };
     const publicClient = createPublicClient(clientOptions);
     const walletClient = createWalletClient(clientOptions);
@@ -52,18 +124,12 @@ export function Admin() {
       publicClient,
       walletClient,
     });
-    return { publicClient, walletClient, tokenContract, account: burnerAccount };
-  }, [privateKey, networkConfig.chain, tokenAddress]);
+    return { publicClient, walletClient, tokenContract };
+  }, [networkConfig.chain, tokenAddress, externalAccount]);
 
-  const address = client?.account.address;
-  const entity = address ? (encodeAbiParameters([{ type: "address" }], [address]) as Entity) : undefined;
-  const balance = components.WETHBalance.use(entity)?.value ?? 0n;
-  const isAdmin = address === adminAddress;
-
-  useEffect(() => {
-    if (cachedPrivateKey) return;
-    setPrivateKey(networkConfig.privateKey);
-  }, [networkConfig.privateKey, cachedPrivateKey]);
+  const burnerAddress = trim(network.address);
+  const balance = components.WETHBalance.use(externalEntity)?.value ?? 0n;
+  const isAdmin = externalAddress === adminAddress;
 
   if (!client)
     return (
@@ -97,46 +163,36 @@ export function Admin() {
       }
     );
   };
+  const pad = 30;
   return (
     <div className="flex flex-col w-screen h-screen bg-black text-green-400 p-20 font-mono">
       {client && (
         <div className="flex flex-col gap-2">
           <p>
-            {"address".padEnd(20, ".")}
-            {client.account.address}
-            {adminAddress === client.account.address && " (admin)"}
+            {"external address".padEnd(pad, ".")}
+            {externalAddress}
+            {adminAddress === externalAddress && " (admin)"}
           </p>
           <p>
-            {"balance".padEnd(20, ".")}
+            {"Primodium (burner) address".padEnd(pad, ".")}
+            {burnerAddress}
+            {adminAddress === burnerAddress && " (admin)"}
+          </p>
+          <p>
+            {"balance".padEnd(pad, ".")}
             {formatEther(balance)}
           </p>
-          {!isAdmin && (
-            <>
-              <p className="lowercase">You do not have admin privileges. Sign in as {adminAddress} for access.</p>
-              <div className="flex gap-2">
-                <input
-                  className="w-3/4"
-                  placeholder="enter admin private key"
-                  onChange={(e) => setTempPrivateKey(e.target.value as Hex)}
-                  value={tempPrivateKey}
-                />
-                <button
-                  onClick={() => {
-                    if (!isHex(tempPrivateKey) || !tempPrivateKey) return;
 
-                    localStorage.setItem(cacheKey, tempPrivateKey);
-                    setPrivateKey(tempPrivateKey);
-                    setTempPrivateKey("");
-                  }}
-                >
-                  ok
-                </button>
-              </div>
-            </>
-          )}
           <div className="grid grid-cols-4 gap-4">
             {isAdmin && <MintToken onMint={onMint} className="col-span-2" />}
-            {entity && <TransferToken onTransfer={onTransfer} className="col-span-2" entity={entity} />}
+            {externalEntity && (
+              <TransferToken
+                onTransfer={onTransfer}
+                className="col-span-2"
+                burnerAddress={burnerAddress}
+                externalEntity={externalEntity}
+              />
+            )}
             {isAdmin && <PlayerBalancesTable className="col-span-4" />}
           </div>
         </div>
@@ -153,7 +209,8 @@ interface MintTokenProps {
 interface TransferTokenProps {
   onTransfer: (address: string, amount: number) => Promise<void>;
   className?: string;
-  entity: Entity;
+  burnerAddress: Hex;
+  externalEntity: Entity;
 }
 
 const MintToken: React.FC<MintTokenProps> = ({ onMint, className }) => {
@@ -194,11 +251,11 @@ const MintToken: React.FC<MintTokenProps> = ({ onMint, className }) => {
   );
 };
 
-const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, className, entity }) => {
-  const [address, setAddress] = useState<string>("");
+const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, className, burnerAddress, externalEntity }) => {
+  const [address, setAddress] = useState<string>(trim(burnerAddress) ?? "");
   const [amount, setAmount] = useState<string>("");
 
-  const balance = components.WETHBalance.use(entity)?.value ?? 0n;
+  const balance = components.WETHBalance.use(externalEntity)?.value ?? 0n;
 
   const handleTransfer = async () => {
     const amountNum = Math.round(Number(amount) * 1e18);
