@@ -19,10 +19,7 @@ const useScale = () => {
 const TopRight: FC<HUDProps> = memo(({ children }) => {
   const scale = useScale();
   return (
-    <div
-      style={{ transform: `scale(${scale})`, transformOrigin: "top right" }}
-      className="absolute top-0 right-0"
-    >
+    <div style={{ transform: `scale(${scale})`, transformOrigin: "top right" }} className="absolute top-0 right-0">
       {children}
     </div>
   );
@@ -31,10 +28,7 @@ const TopRight: FC<HUDProps> = memo(({ children }) => {
 const TopLeft: FC<HUDProps> = memo(({ children }) => {
   const scale = useScale();
   return (
-    <div
-      style={{ transform: `scale(${scale})`, transformOrigin: "top left" }}
-      className="absolute top-0 left-0"
-    >
+    <div style={{ transform: `scale(${scale})`, transformOrigin: "top left" }} className="absolute top-0 left-0">
       {children}
     </div>
   );
@@ -55,10 +49,7 @@ const BottomRight: FC<HUDProps> = memo(({ children }) => {
 const BottomLeft: FC<HUDProps> = memo(({ children }) => {
   const scale = useScale();
   return (
-    <div
-      style={{ transform: `scale(${scale})`, transformOrigin: "bottom left" }}
-      className="absolute bottom-0 left-0"
-    >
+    <div style={{ transform: `scale(${scale})`, transformOrigin: "bottom left" }} className="absolute bottom-0 left-0">
       {children}
     </div>
   );
@@ -94,6 +85,36 @@ const BottomMiddle: FC<HUDProps> = memo(({ children }) => {
   );
 });
 
+const Left: FC<HUDProps> = memo(({ children }) => {
+  const scale = useScale();
+  return (
+    <div
+      style={{
+        transform: `translateY(-50%) scale(${scale})`,
+        transformOrigin: "keft center",
+      }}
+      className="absolute left-0 bottom-1/2"
+    >
+      {children}
+    </div>
+  );
+});
+
+const Right: FC<HUDProps> = memo(({ children }) => {
+  const scale = useScale();
+  return (
+    <div
+      style={{
+        transform: `translateY(-50%) scale(${scale})`,
+        transformOrigin: "right center",
+      }}
+      className="absolute right-0 bottom-1/2"
+    >
+      {children}
+    </div>
+  );
+});
+
 export const HUD: FC<HUDProps> & {
   TopRight: typeof TopRight;
   TopLeft: typeof TopLeft;
@@ -101,13 +122,13 @@ export const HUD: FC<HUDProps> & {
   BottomLeft: typeof BottomLeft;
   TopMiddle: typeof TopMiddle;
   BottomMiddle: typeof BottomMiddle;
+  Left: typeof Left;
+  Right: typeof Right;
 } = ({ children, scale = 1, pad = false }) => {
   const paddingClass = pad ? "p-3" : "";
   return (
     <ScaleContext.Provider value={scale}>
-      <div
-        className={`screen-container ${paddingClass} absolute top-0 right-0 pointer-events-none`}
-      >
+      <div className={`screen-container ${paddingClass} absolute top-0 right-0 pointer-events-none`}>
         <div className={`h-full relative`}>{children}</div>
       </div>
     </ScaleContext.Provider>
@@ -120,3 +141,5 @@ HUD.BottomRight = BottomRight;
 HUD.BottomLeft = BottomLeft;
 HUD.TopMiddle = TopMiddle;
 HUD.BottomMiddle = BottomMiddle;
+HUD.Left = Left;
+HUD.Right = Right;
