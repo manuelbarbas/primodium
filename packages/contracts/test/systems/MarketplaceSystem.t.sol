@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import { console } from "forge-std/console.sol";
 
-import { PrimodiumTest, entityToAddress, MarketplaceOrder, P_GameConfig, addressToEntity, EResource, ResourceCount, MaxResourceCount } from "test/PrimodiumTest.t.sol";
+import { PrimodiumTest, entityToAddress, MarketplaceOrder, P_GameConfig, P_GameConfig2, addressToEntity, EResource, ResourceCount, MaxResourceCount } from "test/PrimodiumTest.t.sol";
 import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOwner.sol";
 import { ROOT_NAMESPACE, ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
@@ -17,7 +17,7 @@ contract MarketplaceSystemTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
     buyer = addressToEntity(alice);
-    wETH = IERC20Mintable(P_GameConfig.getWETHAddress());
+    wETH = IERC20Mintable(P_GameConfig2.getWETHAddress());
     player = addressToEntity(creator);
     vm.startPrank(creator);
     buyer = addressToEntity(alice);

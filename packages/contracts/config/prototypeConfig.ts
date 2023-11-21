@@ -151,15 +151,19 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_GracePeriod: { value: 60n * 60n * 12n },
       P_Asteroid: maxRange,
       P_GameConfig: {
+        admin: encodeAddress("0"),
         motherlodeDistance: 10n,
         maxMotherlodesPerAsteroid: 6n,
         motherlodeChanceInv: 4n,
         unitProductionRate: 100n,
         travelTime: 10n,
         worldSpeed: 100n,
-        wETHAddress: encodeAddress("0"),
         tax: 10n, // out of 1000
       },
+      P_GameConfig2: {
+        wETHAddress: encodeAddress("0"),
+      },
+
       P_UnitPrototypes: {
         value: MUDEnums.EUnit.reduce(
           (prev: Hex[], unit) => (unit == "NULL" || unit == "LENGTH" ? prev : [...prev, encodeBytes32(unit)]),

@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 // external
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { addressToEntity } from "src/utils.sol";
-import { ResourceCount, MarketplaceOrder, MaxResourceCount, MarketplaceOrderData, P_GameConfig } from "codegen/index.sol";
+import { ResourceCount, MarketplaceOrder, MaxResourceCount, MarketplaceOrderData, P_GameConfig, P_GameConfig2 } from "codegen/index.sol";
 import { LibResource, LibStorage } from "codegen/Libraries.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
@@ -106,7 +106,7 @@ contract MarketplaceSystem is PrimodiumSystem {
       "[MarketplaceSystem] buyer doesn't have enough space"
     );
 
-    IERC20Mintable wETH = IERC20Mintable(P_GameConfig.getWETHAddress());
+    IERC20Mintable wETH = IERC20Mintable(P_GameConfig2.getWETHAddress());
 
     uint256 cost = countBought * order.price;
     require(cost <= wETH.balanceOf(_msgSender()), "[MarketplaceSystem] not enough weth");
