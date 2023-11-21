@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import ERC20Abi from "contracts/out/ERC20System.sol/ERC20System.abi.json";
 import { useMemo, useState } from "react";
-import { GameButton } from "src/components/shared/GameButton";
+import { Button } from "src/components/core/Button";
 import { useMud } from "src/hooks";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
@@ -25,29 +25,23 @@ import { WagmiConfig, useAccount, useConnect, useDisconnect, useNetwork, useSwit
 export function Connect() {
   const { connector, isConnected } = useAccount();
   const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
-  const { disconnect } = useDisconnect();
 
-  if (isConnected) {
-    return (
-      <div className="space-y-3 my-3 relative">
-        <GameButton className="absolute top-6 left-6 font-bold w-44" depth={5} onClick={() => disconnect()}>
-          <div className="font-bold leading-none h-8 flex justify-center items-center crt px-2">Disconnect</div>
-        </GameButton>
-      </div>
-    );
-  }
+  if (isConnected) return null;
   return (
-    <div className="space-y-3 my-3">
-      <p>Connect the wallet you want to display on the leaderboard.</p>
+    <div className="card flex flex-col border border-secondary p-2 gap-2 w-72">
+      <p className="text-sm">Connect</p>
       {connectors
         .filter((x) => x.ready && x.id !== connector?.id)
         .map((x) => (
-          <GameButton className="font-bold w-44" depth={5} key={x.id} onClick={() => connect({ connector: x })}>
-            <div className="font-bold leading-none h-8 flex justify-center items-center crt px-2">
-              {x.name}
-              {isLoading && x.id === pendingConnector?.id && " (connecting)"}
-            </div>
-          </GameButton>
+          <Button
+            className="btn-secondary font-bold w-full"
+            key={x.id}
+            onClick={() => connect({ connector: x })}
+            disabled={isLoading && x.id !== pendingConnector?.id}
+          >
+            {x.name}
+            {isLoading && x.id === pendingConnector?.id && <p className="text-xs">(connecting)</p>}
+          </Button>
         ))}
       {error && <p className="fixed top-6 right-6">{(error as BaseError).shortMessage}</p>}
     </div>
@@ -57,45 +51,20 @@ export function Connect() {
 export function Admin() {
   return (
     <WagmiConfig config={wagmiConfig}>
-      <div className="flex flex-col w-screen h-screen bg-black text-green-400 p-20 font-mono">
+      <div className="flex flex-col justify-center items-center w-screen h-screen bg-neutral font-mono">
         <Connect />
-        <Connected>
-          <ControlBooth />
-        </Connected>
+        <ControlBooth />
       </div>
     </WagmiConfig>
   );
 }
 
-export function Connected({ children }: { children: React.ReactNode }) {
-  const { isConnected, connector } = useAccount();
-  const chain = useNetwork().chain;
-  const expectedChain = connector?.chains[0].id;
-  const { chains, error, isLoading, pendingChainId, switchNetwork } = useSwitchNetwork();
-
-  if (!isConnected) return null;
-  if (chain?.id !== expectedChain) {
-    return (
-      <>
-        {chain && <div>Connected to {chain.name}</div>}
-
-        {chains.map((x) => (
-          <GameButton disabled={!switchNetwork || x.id === chain?.id} key={x.id} onClick={() => switchNetwork?.(x.id)}>
-            Switch to {x.name}
-            {isLoading && pendingChainId === x.id && " (switching)"}
-          </GameButton>
-        ))}
-
-        <div>{error && error.message}</div>
-      </>
-    );
-  }
-  return <>{children}</>;
-}
-
+type Tab = "transfer" | "mint" | "balances";
 function ControlBooth() {
   const { network } = useMud();
   const externalAccount = useAccount();
+  const { disconnect } = useDisconnect();
+  const [tab, setTab] = useState<Tab>("transfer");
 
   const externalAddress = externalAccount.address;
   const externalEntity = externalAccount.address
@@ -128,15 +97,9 @@ function ControlBooth() {
   }, [networkConfig.chain, tokenAddress, externalAccount]);
 
   const burnerAddress = trim(network.address);
-  const balance = components.WETHBalance.use(externalEntity)?.value ?? 0n;
   const isAdmin = externalAddress === adminAddress;
 
-  if (!client)
-    return (
-      <div className="flex flex-col w-screen h-screen bg-black text-green-400 p-20 font-mono">
-        <p>loading...</p>
-      </div>
-    );
+  if (!client) return null;
 
   const onMint = async (address: string, amount: number) => {
     await execute(
@@ -145,7 +108,8 @@ function ControlBooth() {
       {
         id: world.registerEntity(),
       },
-      () => {
+      (receipt) => {
+        console.log(receipt);
         alert("Minted " + formatEther(BigInt(amount)) + " tokens to " + address);
       }
     );
@@ -163,40 +127,55 @@ function ControlBooth() {
       }
     );
   };
-  const pad = 30;
+  const tabs: Tab[] = isAdmin ? ["transfer", "mint", "balances"] : ["transfer"];
   return (
-    <div className="flex flex-col w-screen h-screen bg-black text-green-400 p-20 font-mono">
-      {client && (
-        <div className="flex flex-col gap-2">
-          <p>
-            {"external address".padEnd(pad, ".")}
-            {externalAddress}
-            {adminAddress === externalAddress && " (admin)"}
-          </p>
-          <p>
-            {"Primodium (burner) address".padEnd(pad, ".")}
-            {burnerAddress}
-            {adminAddress === burnerAddress && " (admin)"}
-          </p>
-          <p>
-            {"balance".padEnd(pad, ".")}
-            {formatEther(balance)}
-          </p>
-
-          <div className="grid grid-cols-4 gap-4">
-            {isAdmin && <MintToken onMint={onMint} className="col-span-2" />}
-            {externalEntity && (
-              <TransferToken
-                onTransfer={onTransfer}
-                className="col-span-2"
-                burnerAddress={burnerAddress}
-                externalEntity={externalEntity}
-              />
-            )}
-            {isAdmin && <PlayerBalancesTable className="col-span-4" />}
+    <div className="h-full w-full relative flex flex-col justify-center items-center">
+      {externalAccount.isConnected && (
+        <div className="absolute top-4 left-4 flex gap-4 items-center p-2 bg-base-100 rounded-md">
+          <Button className="font-bold btn-secondary btn-sm" onClick={() => disconnect()}>
+            Disconnect
+          </Button>
+          <div className="flex flex-col">
+            <div>
+              <p className="text-xs text-gray-400 ">Connected to</p>
+              <p className="text-sm">{externalAddress}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-400 ">Primodium (burner) account</p>
+              <p className="text-sm">{burnerAddress}</p>
+            </div>
           </div>
         </div>
       )}
+
+      <div
+        className={`card flex flex-col border border-secondary p-2 gap-2 transition-all ${
+          tab !== "balances" ? "w-[512px] h-72" : "w-3/4 h-3/4"
+        }`}
+      >
+        <div className="flex gap-6">
+          {tabs.map((tabName) => (
+            <button
+              key={tabName}
+              onClick={() => setTab(tabName)}
+              className={`${tab !== tabName ? "opacity-50" : ""}`}
+              disabled={tabName === tab}
+            >
+              {tabName}
+            </button>
+          ))}
+        </div>
+        {tab === "transfer" && externalEntity && (
+          <TransferToken
+            onTransfer={onTransfer}
+            className="col-span-2"
+            burnerAddress={burnerAddress}
+            externalEntity={externalEntity}
+          />
+        )}
+        {tab === "mint" && isAdmin && <MintToken onMint={onMint} className="col-span-2" />}
+        {tab === "balances" && isAdmin && <PlayerBalancesTable className="col-span-4" />}
+      </div>
     </div>
   );
 }
@@ -217,6 +196,11 @@ const MintToken: React.FC<MintTokenProps> = ({ onMint, className }) => {
   const adminAddress = components.P_GameConfig.get()?.admin;
   const [address, setAddress] = useState<string>(adminAddress ?? "");
   const [amount, setAmount] = useState<string>("");
+  const externalAccount = useAccount();
+  const chain = useNetwork().chain;
+  const expectedChain = externalAccount.connector?.chains[0];
+  const { chains, error, isLoading, pendingChainId, switchNetwork } = useSwitchNetwork();
+  const wrongChain = chain?.id !== expectedChain?.id;
 
   const handleMint = () => {
     const amountNum = Math.round(Number(amount) * 1e18);
@@ -227,26 +211,45 @@ const MintToken: React.FC<MintTokenProps> = ({ onMint, className }) => {
     }
   };
 
+  if (!expectedChain) return null;
+  const Btn = () =>
+    wrongChain ? (
+      <Button
+        disabled={!switchNetwork || expectedChain.id === chain?.id}
+        key={expectedChain.id}
+        onClick={() => switchNetwork?.(expectedChain.id)}
+        className="btn-secondary grow"
+      >
+        Switch to {expectedChain.name}
+        {isLoading && pendingChainId === expectedChain.id && " (switching)"}
+      </Button>
+    ) : (
+      <Button disabled={!amount || amount === "0" || !address} className="btn-secondary grow" onClick={handleMint}>
+        <p>mint</p>
+      </Button>
+    );
+
   return (
-    <div className={className + " flex flex-col gap-1"}>
-      <p>mint</p>
+    <div className={className + " flex flex-col gap-2 h-full"}>
       <input
         type="text"
-        className="p-2 border border-green-400 bg-black"
-        placeholder="address"
+        className="py-6 px-2 text-sm bg-base-100 border border-secondary/25 disabled:opacity-50"
+        placeholder="to"
         value={address}
         onChange={(e) => setAddress(e.target.value)}
+        disabled={wrongChain}
       />
       <input
         type="number"
-        className="p-2 border border-green-400 bg-black"
+        className="py-6 px-2 text-sm bg-base-100 border border-secondary/25 w-full disabled:opacity-50"
         placeholder="amount"
         value={amount}
-        onChange={(e) => setAmount(e.target.value)}
+        disabled={wrongChain}
+        onChange={(e) => {
+          setAmount(e.target.value);
+        }}
       />
-      <button className="p-2 bg-green-400 text-black " onClick={handleMint}>
-        mint token
-      </button>
+      <Btn />
     </div>
   );
 };
@@ -254,7 +257,12 @@ const MintToken: React.FC<MintTokenProps> = ({ onMint, className }) => {
 const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, className, burnerAddress, externalEntity }) => {
   const [address, setAddress] = useState<string>(trim(burnerAddress) ?? "");
   const [amount, setAmount] = useState<string>("");
+  const externalAccount = useAccount();
+  const chain = useNetwork().chain;
+  const expectedChain = externalAccount.connector?.chains[0];
+  const { chains, error, isLoading, pendingChainId, switchNetwork } = useSwitchNetwork();
 
+  const wrongChain = chain?.id !== expectedChain?.id;
   const balance = components.WETHBalance.use(externalEntity)?.value ?? 0n;
 
   const handleTransfer = async () => {
@@ -268,32 +276,54 @@ const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, className, bu
     }
   };
 
+  if (!expectedChain) return null;
+  const Btn = () =>
+    wrongChain ? (
+      <Button
+        disabled={!switchNetwork || expectedChain.id === chain?.id}
+        key={expectedChain.id}
+        onClick={() => switchNetwork?.(expectedChain.id)}
+        className="btn-secondary grow"
+      >
+        Switch to {expectedChain.name}
+        {isLoading && pendingChainId === expectedChain.id && " (switching)"}
+      </Button>
+    ) : (
+      <Button disabled={!amount || amount === "0" || !address} className="btn-secondary grow" onClick={handleTransfer}>
+        <p>transfer</p>
+      </Button>
+    );
+
   return (
-    <div className={className + " flex flex-col gap-1"}>
-      <p>transfer</p>
+    <div className={className + " flex flex-col gap-2 h-full"}>
       <input
         type="text"
-        className="p-2 border border-green-400 bg-black"
+        className="py-6 px-2 text-sm bg-base-100 border border-secondary/25 disabled:opacity-50"
         placeholder="to"
         value={address}
         onChange={(e) => setAddress(e.target.value)}
+        disabled={wrongChain}
       />
       <div className="relative flex items-center">
-        <button
-          className="absolute right-2 margin-auto bg-green-400 text-black px-2 flex items-center"
-          onClick={() => setAmount(formatEther(balance))}
-        >
-          max
-        </button>
+        <div className="absolute right-2 text-xs flex flex-col items-center">
+          <Button
+            className="btn-secondary btn-xs w-full disabled:opacity-50"
+            disabled={wrongChain || formatEther(balance) === amount}
+            onClick={() => setAmount(formatEther(balance))}
+          >
+            max
+          </Button>
+          {!wrongChain && <p className="text-gray-400">Balance: {formatEther(balance)}</p>}
+        </div>
         <input
           type="number"
-          className="p-2 border border-green-400 bg-black w-full"
+          className="py-6 px-2 text-sm bg-base-100 border border-secondary/25 w-full disabled:opacity-50"
           placeholder="amount"
           value={amount}
+          disabled={wrongChain}
           onChange={(e) => {
             const value = Number(e.target.value);
             const bal = Number(balance) / 1e18;
-            console.log("value", value, "balance", bal);
             if (value < 0) {
               setAmount("");
               return;
@@ -305,9 +335,7 @@ const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, className, bu
           }}
         />
       </div>
-      <button className="p-2 bg-green-400 text-black " onClick={handleTransfer}>
-        transfer token
-      </button>
+      <Btn />
     </div>
   );
 };
@@ -323,13 +351,12 @@ const PlayerBalancesTable = ({ className }: { className?: string }) => {
 
   return (
     <div className={className + " overflow-auto"}>
-      <p>balances</p>
-      <div className="flex justify-between items-center font-medium p-1 text-black uppercase bg-green-400">
+      <div className="flex justify-between items-center font-medium p-2 bg-primary">
         <div className="flex gap-10 items-center">
           <p>Address</p>
           <input
             type="text"
-            className="bg-transparent font-black placeholder-black p-1 text-xs font-light border border-black border-2"
+            className="p-1 text-sm bg-base-100 border border-secondary/25 w-full disabled:opacity-50"
             placeholder="search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -339,9 +366,8 @@ const PlayerBalancesTable = ({ className }: { className?: string }) => {
       </div>
       {[...filteredPlayers].map((player) => {
         return (
-          <div key={`balance-${player.entity}`} className="flex justify-between p-2 whitespace-nowrap text-green-400">
+          <div key={`balance-${player.entity}`} className="flex justify-between p-2 whitespace-nowrap border-b-2">
             <p>{trim(player.entity as Hex)}</p>
-
             <p>{formatEther(player.balance)}</p>
           </div>
         );

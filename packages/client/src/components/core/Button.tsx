@@ -1,13 +1,13 @@
 import { primodium } from "@game/api";
+import { AudioKeys } from "@game/constants";
 import { IconLabel } from "./IconLabel";
 import { Loader } from "./Loader";
 import { Tooltip } from "./Tooltip";
-import { AudioKeys } from "@game/constants";
 
 export const Button: React.FC<{
   children: React.ReactNode;
   className?: string;
-  onClick?: (e: React.MouseEvent | undefined) => void;
+  onClick?: (e?: React.MouseEvent | undefined) => void;
   disabled?: boolean;
   selected?: boolean;
   loading?: boolean;
@@ -27,19 +27,13 @@ export const Button: React.FC<{
   mute = false,
   clickSound = AudioKeys.Click2,
 }) => {
-  const { audio } = primodium.api();
-
   return (
     <Tooltip text={tooltip} direction={tooltipDirection}>
       <button
-        onClick={() => {
-          !mute && audio.play(clickSound, "ui");
-          onClick && onClick();
+        onClick={(e) => {
+          onClick && onClick(e);
         }}
         disabled={disabled}
-        onPointerEnter={() => {
-          !mute && audio.play(AudioKeys.Click3, "ui");
-        }}
         className={`btn join-item inline pointer-events-auto font-bold outline-none ${className} ${
           disabled ? "opacity-80" : ""
         } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
