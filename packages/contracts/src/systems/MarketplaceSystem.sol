@@ -88,7 +88,22 @@ contract MarketplaceSystem is PrimodiumSystem {
 
   function takeOrder(bytes32 orderId, uint256 countBought) public {
     bytes32 playerEntity = addressToEntity(_msgSender());
+    if (countBought == 0) revert("[MarketplaceSystem] Invalid count");
     MarketplaceOrderData memory order = MarketplaceOrder.get(orderId);
+    require(order.seller != playerEntity, "[MarketplaceSystem] Cannot take your own order");
+    require(order.count >= countBought, "[MarketplaceSystem] Not enough resource in order");
+
+    LibResource.claimAllResources(order.seller);
+    require(
+      ResourceCount.get(order.seller, order.resource) >= countBought,
+      "[MarketplaceSystem] Seller doesn't have enough resources"
+    );
+
+    require(
+      LibResource.getResourceCountAvailable(playerEntity, order.resource) >= countBought,
+      "[MarketplaceSystem] Buyer doesn't have enough space"
+    );
+
     IERC20Mintable wETH = IERC20Mintable(P_GameConfig2.getWETHAddress());
 
     uint256 cost = countBought * order.price;
