@@ -224,7 +224,7 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
           mud.components.WETHBalance,
           encodeEntity({ entity: "address" }, { entity: trim(player) as Hex }),
           {
-            value: 2000000000000000000n,
+            value: BigInt(2 * 1e18),
           }
         );
       },

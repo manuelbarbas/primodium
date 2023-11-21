@@ -120,7 +120,7 @@ export const TakeOrderForm = ({ selectedItem }: { selectedItem: Entity | undefin
   );
 };
 
-export const ResourceListings = ({
+const ResourceListings = ({
   listings,
   takenOrders,
   setOrder,

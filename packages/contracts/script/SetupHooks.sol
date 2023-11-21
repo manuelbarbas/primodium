@@ -75,6 +75,8 @@ import { OnUpgradeRange_SpendResources } from "src/hooks/systemHooks/upgradeRang
 
 import { OnAlliance_TargetClaimResources } from "src/hooks/systemHooks/alliance/OnAlliance_TargetClaimResources.sol";
 
+import { OnTakeOrder_ClaimResources } from "src/hooks/systemHooks/marketplace/OnTakeOrder_ClaimResources.sol";
+
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
 import { BEFORE_SPLICE_STATIC_DATA, AFTER_SET_RECORD, ALL as STORE_ALL } from "@latticexyz/store/src/storeHookTypes.sol";
 
@@ -108,6 +110,7 @@ function setupHooks(IWorld world) {
   registerClaimObjective(world, onBefore_ClaimResources, onBefore_ClaimUnits);
   registerUpgradeRangeHook(world, onBefore_ClaimResources);
   registerUpgradeUnitHook(world, onBefore_ClaimResources);
+  registerMarketplaceHooks(world);
 
   registerAllianceHooks(world, onBefore_ClaimResources);
   registerRecallHooks(world, onBefore_ClaimResources);
@@ -144,6 +147,20 @@ function registerAllianceHooks(IWorld world, OnBefore_ClaimResources onBefore_Cl
 
 function registerRecallHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
   world.registerSystemHook(getSystemResourceId("RecallSystem"), onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
+}
+
+function registerMarketplaceHooks(IWorld world) {
+  OnAlliance_TargetClaimResources onAlliance_TargetClaimResources = new OnAlliance_TargetClaimResources();
+  OnTakeOrder_ClaimResources onTakeOrder_ClaimResources = new OnTakeOrder_ClaimResources();
+  address addr = address(onTakeOrder_ClaimResources);
+  world.grantAccess(ResourceCountTableId, addr);
+  world.grantAccess(MapItemUtilitiesTableId, addr);
+  world.grantAccess(MapUtilitiesTableId, addr);
+  world.grantAccess(MapItemStoredUtilitiesTableId, addr);
+  world.grantAccess(LastClaimedAtTableId, addr);
+  world.grantAccess(ProducedResourceTableId, addr);
+
+  world.registerSystemHook(getSystemResourceId("MarketplaceSystem"), onTakeOrder_ClaimResources, BEFORE_CALL_SYSTEM);
 }
 
 /**
