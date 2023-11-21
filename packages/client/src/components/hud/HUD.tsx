@@ -2,24 +2,26 @@ import { useEffect } from "react";
 
 import { primodium } from "@game/api";
 import { KeybindActions, Scenes } from "@game/constants";
+import { useMud } from "src/hooks";
+import { components } from "src/network/components";
 import { MapOpen, SelectedBuilding } from "src/network/components/clientComponents";
 import { entityToAddress, getBlockTypeName, shortenAddress } from "src/util/common";
 import { useGameStore } from "../../store/GameStore";
 import { HUD } from "../core/HUD";
+import { OverlayModal } from "../core/OverlayModal";
 import { BrandingLabel } from "../shared/BrandingLabel";
 import { GracePeriod } from "./GracePeriod";
+import { LoadingIndication } from "./LoadingIndication";
+import { Profile } from "./Profile";
 import { PrototypeInfo } from "./PrototypeInfo";
-import { Score } from "./Score";
 import { ViewStarmap } from "./ViewStarmap";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { Hotbar } from "./hotbar/Hotbar";
+import { Marketplace } from "./marketplace/Marketplace";
 import { Panes } from "./panes/Panes";
 import { Resources } from "./resources/Resources";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 import { Units } from "./units/Units";
-import { LoadingIndication } from "./LoadingIndication";
-import { useMud } from "src/hooks";
-import { components } from "src/network/components";
 
 export const GameHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [state.showUI, state.toggleShowUI]);
@@ -59,9 +61,17 @@ export const GameHUD = () => {
               <GracePeriod player={playerEntity} />
             </HUD.TopMiddle>
             <HUD.TopLeft>
-              <Score />
+              <Profile />
               <LoadingIndication />
             </HUD.TopLeft>
+            <HUD.Left>
+              <OverlayModal title="Marketplace">
+                <OverlayModal.Button>Marketplace</OverlayModal.Button>
+                <OverlayModal.Content>
+                  <Marketplace />
+                </OverlayModal.Content>
+              </OverlayModal>
+            </HUD.Left>
 
             <HUD.BottomLeft>
               <Resources />

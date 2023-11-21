@@ -7,7 +7,7 @@ import { AudioKeys } from "@game/constants";
 export const Button: React.FC<{
   children: React.ReactNode;
   className?: string;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent | undefined) => void;
   disabled?: boolean;
   selected?: boolean;
   loading?: boolean;

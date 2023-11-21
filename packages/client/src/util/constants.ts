@@ -135,6 +135,7 @@ export const EntityType = {
   SAMLauncher: toHex32("SAM") as Entity,
   ShieldGenerator: toHex32("ShieldGenerator") as Entity,
   Vault: toHex32("Vault") as Entity,
+  Market: toHex32("Market") as Entity,
 
   Alloy: toHex32("Alloy") as Entity,
   PVCell: toHex32("PVCell") as Entity,
@@ -146,6 +147,7 @@ export const EntityType = {
   FleetMoves: toHex32("U_MaxMoves") as Entity,
   Unraidable: toHex32("U_Unraidable") as Entity,
   AdvancedUnraidable: toHex32("U_AdvancedUnraidable") as Entity,
+  MaxOrders: toHex32("U_Orders") as Entity,
 
   Defense: toHex32("U_Defense") as Entity,
   DefenseMultiplier: toHex32("M_DefenseMultiplier") as Entity,
@@ -372,6 +374,7 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.DefenseMultiplier, "/img/icons/defenseicon.png"],
   [EntityType.Unraidable, "/img/icons/unraidableicon.png"],
   [EntityType.AdvancedUnraidable, "/img/icons/advancedunraidableicon.png"],
+  [EntityType.MaxOrders, "/img/icons/ordericon.png"],
 
   // debug
   [EntityType.Bullet, "/img/crafted/bullet.png"],
@@ -447,6 +450,7 @@ export const UtilityStorages = new Set([
   EntityType.Defense,
   EntityType.Unraidable,
   EntityType.AdvancedUnraidable,
+  EntityType.MaxOrders,
 ]);
 
 export const MultiplierStorages = new Set([EntityType.DefenseMultiplier]);
@@ -476,6 +480,7 @@ export const ResourceEnumLookup: Record<Entity, EResource> = {
   [EntityType.Defense]: EResource.U_Defense,
   [EntityType.Unraidable]: EResource.U_Unraidable,
   [EntityType.AdvancedUnraidable]: EResource.U_AdvancedUnraidable,
+  [EntityType.MaxOrders]: EResource.U_Orders,
 
   [EntityType.DefenseMultiplier]: EResource.M_DefenseMultiplier,
 };
@@ -501,6 +506,7 @@ export const BuildingEnumLookup: Record<Entity, EBuilding> = {
   [EntityType.StarmapperStation]: EBuilding.Starmapper,
   [EntityType.ShieldGenerator]: EBuilding.ShieldGenerator,
   [EntityType.Vault]: EBuilding.Vault,
+  [EntityType.Market]: EBuilding.Market,
 };
 
 export const BuildingEntityLookup = reverseRecord(BuildingEnumLookup);
