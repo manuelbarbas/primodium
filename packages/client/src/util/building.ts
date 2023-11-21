@@ -220,7 +220,12 @@ export const getBuildingInfo = (building: Entity) => {
   const level = comps.Level.get(building)?.value ?? 1n;
   const buildingLevelKeys = { prototype: buildingType, level: level };
   const production = transformProductionData(comps.P_Production.getWithKeys(buildingLevelKeys));
-  const requiredDependencies = transformProductionData(comps.P_RequiredDependencies.getWithKeys(buildingLevelKeys));
+  const productionDep = comps.P_RequiredDependency.getWithKeys(buildingLevelKeys);
+
+  const requiredDependencies = transformProductionData({
+    resources: productionDep ? [productionDep.resource] : [],
+    amounts: productionDep ? [productionDep.amount] : [],
+  });
   const unitProduction = comps.P_UnitProdTypes.getWithKeys(buildingLevelKeys)?.value;
   const storages = getBuildingStorages(buildingTypeEntity, level);
   const unitProductionMultiplier = comps.P_UnitProdMultiplier.getWithKeys(buildingLevelKeys)?.value;
@@ -233,9 +238,11 @@ export const getBuildingInfo = (building: Entity) => {
   if (nextLevel <= maxLevel) {
     const buildingNextLevelKeys = { prototype: buildingType, level: nextLevel };
     const nextLevelProduction = transformProductionData(comps.P_Production.getWithKeys(buildingNextLevelKeys));
-    const nextLevelRequiredDependencies = transformProductionData(
-      comps.P_RequiredDependencies.getWithKeys(buildingNextLevelKeys)
-    );
+    const nextLevelProductionDep = comps.P_RequiredDependency.getWithKeys(buildingNextLevelKeys);
+    const nextLevelRequiredDependencies = transformProductionData({
+      resources: nextLevelProductionDep ? [nextLevelProductionDep.resource] : [],
+      amounts: nextLevelProductionDep ? [nextLevelProductionDep.amount] : [],
+    });
     const unitNextLevelProduction = comps.P_UnitProdTypes.getWithKeys(buildingNextLevelKeys)?.value;
     const nextLevelStorages = getBuildingStorages(buildingTypeEntity, nextLevel);
     const nextLevelUnitProductionMultiplier = comps.P_UnitProdMultiplier.getWithKeys(buildingNextLevelKeys)?.value;

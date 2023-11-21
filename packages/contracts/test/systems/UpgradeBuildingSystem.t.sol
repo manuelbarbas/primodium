@@ -73,18 +73,11 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     uint256 l2 = 12;
     ProductionRate.set(spaceRockEntity, Copper, originalProduction);
 
-    P_RequiredDependenciesData memory requiredDependenciesData = P_RequiredDependenciesData(
-      new uint8[](1),
-      new uint256[](1)
-    );
-    requiredDependenciesData.resources[0] = uint8(Copper);
-    requiredDependenciesData.amounts[0] = l1;
-    P_RequiredDependencies.set(IronMinePrototypeId, 1, requiredDependenciesData);
+    P_RequiredDependencyData memory requiredDependenciesData = P_RequiredDependencyData(uint8(Copper), l1);
+    P_RequiredDependency.set(IronMinePrototypeId, 1, requiredDependenciesData);
 
-    requiredDependenciesData = P_RequiredDependenciesData(new uint8[](1), new uint256[](1));
-    requiredDependenciesData.resources[0] = uint8(Copper);
-    requiredDependenciesData.amounts[0] = l2;
-    P_RequiredDependencies.set(IronMinePrototypeId, 2, requiredDependenciesData);
+    requiredDependenciesData = P_RequiredDependencyData(uint8(Copper), l2);
+    P_RequiredDependency.set(IronMinePrototypeId, 2, requiredDependenciesData);
 
     switchPrank(creator);
     world.build(EBuilding.IronMine, getIronPosition(creator));

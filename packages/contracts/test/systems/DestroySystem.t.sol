@@ -55,14 +55,12 @@ contract DestroySystemTest is PrimodiumTest {
     bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
     ProductionRate.set(spaceRockEntity, uint8(EResource.Iron), originalProduction);
 
-    P_RequiredDependenciesData memory requiredDependenciesData = P_RequiredDependenciesData(
-      new uint8[](1),
-      new uint256[](1)
+    P_RequiredDependencyData memory requiredDependenciesData = P_RequiredDependencyData(
+      uint8(Iron),
+      productionReduction
     );
-    requiredDependenciesData.resources[0] = uint8(EResource.Iron);
-    requiredDependenciesData.amounts[0] = productionReduction;
 
-    P_RequiredDependencies.set(IronMinePrototypeId, 1, requiredDependenciesData);
+    P_RequiredDependency.set(IronMinePrototypeId, 1, requiredDependenciesData);
     switchPrank(creator);
 
     world.build(EBuilding.IronMine, getIronPosition(creator));

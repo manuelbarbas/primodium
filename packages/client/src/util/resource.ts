@@ -35,13 +35,7 @@ export function getRecipe(rawEntityType: Entity, level: bigint, upgrade = false)
       amounts: [],
     }
   );
-  const requiredProduction = comps.P_RequiredDependencies.getWithKeys(
-    { prototype: entityType, level: level },
-    {
-      resources: [],
-      amounts: [],
-    }
-  );
+  const requiredProduction = comps.P_RequiredDependency.getWithKeys({ prototype: entityType, level: level }, undefined);
 
   const resources = requiredResources.resources.map((resource: EResource, index: number) => ({
     id: ResourceEntityLookup[resource],
@@ -49,11 +43,15 @@ export function getRecipe(rawEntityType: Entity, level: bigint, upgrade = false)
     amount: requiredResources.amounts[index],
   }));
 
-  const resourceRate = requiredProduction.resources.map((resource: EResource, index: number) => ({
-    id: ResourceEntityLookup[resource],
-    type: ResourceType.ResourceRate,
-    amount: requiredProduction.amounts[index],
-  }));
+  const resourceRate = requiredProduction
+    ? [
+        {
+          id: ResourceEntityLookup[requiredProduction.resource as EResource],
+          type: ResourceType.ResourceRate,
+          amount: requiredProduction.amount,
+        },
+      ]
+    : [];
 
   return [...resources, ...resourceRate];
 }

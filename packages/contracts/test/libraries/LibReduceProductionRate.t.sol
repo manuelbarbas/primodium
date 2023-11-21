@@ -16,14 +16,9 @@ contract LibReduceProductionRateTest is PrimodiumTest {
     vm.startPrank(creator);
     BuildingType.set(buildingEntity, buildingPrototype);
     Level.set(buildingEntity, level);
-    P_RequiredDependenciesData memory requiredDependenciesData = P_RequiredDependenciesData(
-      new uint8[](1),
-      new uint256[](1)
-    );
-    requiredDependenciesData.resources[0] = uint8(Iron);
-    requiredDependenciesData.amounts[0] = prevReduction;
+    P_RequiredDependencyData memory requiredDependenciesData = P_RequiredDependencyData(uint8(Iron), prevReduction);
 
-    P_RequiredDependencies.set(buildingPrototype, level - 1, requiredDependenciesData);
+    P_RequiredDependency.set(buildingPrototype, level - 1, requiredDependenciesData);
   }
 
   function testClearDependencyUsage() public {
@@ -33,14 +28,12 @@ contract LibReduceProductionRateTest is PrimodiumTest {
     bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
     ProductionRate.set(spaceRockEntity, Iron, originalProduction);
 
-    P_RequiredDependenciesData memory requiredDependenciesData = P_RequiredDependenciesData(
-      new uint8[](1),
-      new uint256[](1)
+    P_RequiredDependencyData memory requiredDependenciesData = P_RequiredDependencyData(
+      uint8(Iron),
+      productionReduction
     );
-    requiredDependenciesData.resources[0] = uint8(Iron);
-    requiredDependenciesData.amounts[0] = productionReduction;
 
-    P_RequiredDependencies.set(buildingPrototype, level, requiredDependenciesData);
+    P_RequiredDependency.set(buildingPrototype, level, requiredDependenciesData);
 
     LibReduceProductionRate.clearProductionRateReduction(buildingEntity);
 
@@ -54,14 +47,12 @@ contract LibReduceProductionRateTest is PrimodiumTest {
     bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
     ProductionRate.set(spaceRockEntity, Iron, originalProduction);
 
-    P_RequiredDependenciesData memory requiredDependenciesData = P_RequiredDependenciesData(
-      new uint8[](1),
-      new uint256[](1)
+    P_RequiredDependencyData memory requiredDependenciesData = P_RequiredDependencyData(
+      uint8(Iron),
+      productionReduction
     );
-    requiredDependenciesData.resources[0] = uint8(Iron);
-    requiredDependenciesData.amounts[0] = productionReduction;
 
-    P_RequiredDependencies.set(buildingPrototype, level, requiredDependenciesData);
+    P_RequiredDependency.set(buildingPrototype, level, requiredDependenciesData);
 
     LibReduceProductionRate.reduceProductionRate(buildingEntity, level);
 
@@ -75,14 +66,12 @@ contract LibReduceProductionRateTest is PrimodiumTest {
     bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
     ProductionRate.set(spaceRockEntity, Iron, originalProduction);
 
-    P_RequiredDependenciesData memory requiredDependenciesData = P_RequiredDependenciesData(
-      new uint8[](1),
-      new uint256[](1)
+    P_RequiredDependencyData memory requiredDependenciesData = P_RequiredDependencyData(
+      uint8(Iron),
+      productionReduction
     );
-    requiredDependenciesData.resources[0] = uint8(Iron);
-    requiredDependenciesData.amounts[0] = productionReduction;
 
-    P_RequiredDependencies.set(buildingPrototype, level, requiredDependenciesData);
+    P_RequiredDependency.set(buildingPrototype, level, requiredDependenciesData);
 
     LibReduceProductionRate.reduceProductionRate(buildingEntity, level);
   }

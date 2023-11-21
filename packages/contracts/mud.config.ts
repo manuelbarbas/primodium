@@ -203,12 +203,12 @@ export const config = mudConfig({
       },
     },
 
-    P_RequiredDependencies: {
+    P_RequiredDependency: {
       keySchema: { prototype: "bytes32", level: "uint256" },
       valueSchema: {
         // mud doesnt recognize EResource arrays so we will manually convert them
-        resources: "uint8[]",
-        amounts: "uint256[]",
+        resource: "uint8",
+        amount: "uint256",
       },
     },
 
