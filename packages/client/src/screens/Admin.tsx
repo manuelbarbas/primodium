@@ -1,7 +1,7 @@
-import { ContractWrite, createBurnerAccount, transportObserver } from "@latticexyz/common";
+import { createBurnerAccount, transportObserver } from "@latticexyz/common";
+import { Entity } from "@latticexyz/recs";
 import ERC20Abi from "contracts/out/ERC20System.sol/ERC20System.abi.json";
 import { useEffect, useMemo, useState } from "react";
-import { Subject } from "rxjs";
 import { useMud } from "src/hooks";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
@@ -11,6 +11,7 @@ import {
   Hex,
   createPublicClient,
   createWalletClient,
+  encodeAbiParameters,
   fallback,
   formatEther,
   getContract,
@@ -29,9 +30,9 @@ export function Admin() {
   const [privateKey, setPrivateKey] = useState<Hex | undefined>((cachedPrivateKey as Hex) ?? undefined);
   const [tempPrivateKey, setTempPrivateKey] = useState<string>("");
 
-  const balance = components.WETHBalance.use(network.playerEntity)?.value ?? 0n;
   const networkConfig = getNetworkConfig();
   const tokenAddress = components.P_GameConfig2.get()?.wETHAddress;
+
   const client = useMemo(() => {
     if (!privateKey || !tokenAddress) return;
     const burnerAccount = createBurnerAccount(privateKey as Hex);
@@ -44,7 +45,6 @@ export function Admin() {
     };
     const publicClient = createPublicClient(clientOptions);
     const walletClient = createWalletClient(clientOptions);
-    const write$ = new Subject<ContractWrite>();
     const tokenContract = getContract({
       address: tokenAddress as Hex,
       abi: ERC20Abi,
@@ -52,8 +52,11 @@ export function Admin() {
       walletClient,
     });
     return { publicClient, walletClient, tokenContract, account: burnerAccount };
-  }, [privateKey, networkConfig.chain]);
+  }, [privateKey, networkConfig.chain, tokenAddress]);
+
   const address = client?.account.address;
+  const entity = encodeAbiParameters([{ type: "address" }], [address ?? "0x"]) as Entity;
+  const balance = components.WETHBalance.use(entity)?.value ?? 0n;
 
   useEffect(() => {
     if (cachedPrivateKey) return;
@@ -63,20 +66,20 @@ export function Admin() {
   return (
     <div className="flex flex-col w-screen h-screen bg-black text-green-400 p-20 font-mono">
       {(!adminAddress || !client) && <p>loading...</p>}
-      {adminAddress && client && (
+      {client && (
         <div className="flex flex-col gap-2">
           <p>
-            {"admin".padEnd(20, ".")}
-            {adminAddress}
+            {"address".padEnd(20, ".")}
+            {client.account.address}
+            {adminAddress === client.account.address && " (admin)"}
           </p>
           <p>
-            {"your address".padEnd(20, ".")}
-            {client.account.address}
+            {"balance".padEnd(20, ".")}
+            {formatEther(balance)}
           </p>
-
           {address !== adminAddress && (
             <>
-              <p className="lowercase">You do not have admin privileges.</p>
+              <p className="lowercase">You do not have admin privileges. Sign in as {adminAddress} for access.</p>
               <div className="flex gap-2">
                 <input
                   className="w-3/4"
@@ -109,8 +112,7 @@ export function Admin() {
                       id: world.registerEntity(),
                     },
                     (receipt) => {
-                      console.log(receipt);
-                      alert("Minted " + amount + " tokens to " + address);
+                      alert("Minted " + formatEther(BigInt(amount)) + " tokens to " + address);
                     }
                   );
                 }}
@@ -133,7 +135,7 @@ const MintToken: React.FC<MintTokenProps> = ({ onMint }) => {
   const [amount, setAmount] = useState<string>("");
 
   const handleMint = () => {
-    const amountNum = Number(amount) * 1e18;
+    const amountNum = Math.round(Number(amount) * 1e18);
     if (address && amountNum > 0) {
       onMint(address, amountNum);
     } else {
@@ -142,11 +144,11 @@ const MintToken: React.FC<MintTokenProps> = ({ onMint }) => {
   };
 
   return (
-    <div className="p-2 flex flex-col gap-1 border border-green-400 w-96">
+    <div className="flex flex-col gap-1 w-96">
       <p>mint</p>
       <input
         type="text"
-        className="p-2 border border-green-400 text-xs"
+        className="p-2 border border-green-400"
         placeholder="address"
         value={address}
         onChange={(e) => setAddress(e.target.value)}
@@ -175,32 +177,32 @@ const PlayerBalancesTable = () => {
   const filteredPlayers = players.filter((player) => player.entity.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
-    <div className="overflow-auto h-96 border border-1 border-green-400">
-      <table className="min-w-full text-sm divide-y divide-green-400">
-        <thead className="bg-green-400 text-black">
-          <tr>
-            <th className="flex items-center ml-2 gap-2 text-left font-medium uppercase tracking-wider">
-              Address
-              <input
-                type="text"
-                className="bg-transparent font-black placeholder-black p-1 font-light border border-black border-2"
-                placeholder="search"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </th>
-            <th className="p-2 text-right font-medium uppercase tracking-wider">Balance (WETH)</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-green-400">
-          {[...filteredPlayers].map((player) => (
-            <tr key={player.entity}>
-              <td className="p-2 whitespace-nowrap text-green-400">{trim(player.entity as Hex)}</td>
-              <td className="p-2 whitespace-nowrap text-right text-green-400">{formatEther(player.balance)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="overflow-auto h-96" style={{ width: "fit-content" }}>
+      <p>balances</p>
+      <div className="flex justify-between items-center font-medium p-1 text-black uppercase bg-green-400">
+        <div className="flex gap-1 items-center">
+          <p>Address</p>
+          <input
+            type="text"
+            className="bg-transparent font-black placeholder-black p-1 text-xs font-light border border-black border-2"
+            placeholder="search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <p>Balance (WETH)</p>
+      </div>
+      {[...filteredPlayers].map((player) => {
+        const length = formatEther(player.balance).length;
+        const dots = ".".repeat(60 - length);
+        return (
+          <div key={`balance-${player}`} className="p-2 whitespace-nowrap text-green-400">
+            {trim(player.entity as Hex)}
+            {dots}
+            {formatEther(player.balance)}
+          </div>
+        );
+      })}
     </div>
   );
 };
