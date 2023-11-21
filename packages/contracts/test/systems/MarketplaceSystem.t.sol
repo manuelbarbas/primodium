@@ -162,4 +162,44 @@ contract MarketplaceSystemTest is PrimodiumTest {
     vm.expectRevert("[MarketplaceSystem] Cannot take your own order");
     world.takeOrder(orderId, 100 * 100);
   }
+
+  function testTakeOrderBulk() public {
+    bytes32 orderId = testAddOrder();
+    wETH.transfer(alice, 10000);
+
+    MaxResourceCount.set(buyer, uint8(EResource.Iron), 100);
+
+    MaxResourceCount.set(player, uint8(EResource.Iron), 100);
+    ResourceCount.set(player, uint8(EResource.Iron), 100);
+
+    uint256 prevSellerBalance = wETH.balanceOf(creator);
+    uint256 prevBuyerBalance = wETH.balanceOf(alice);
+
+    switchPrank(alice);
+    bytes32[] memory orders = new bytes32[](2);
+    uint256[] memory counts = new uint256[](2);
+    orders[0] = orderId;
+    orders[1] = orderId;
+    counts[0] = 50;
+    counts[1] = 50;
+    world.takeOrderBulk(orders, counts);
+    uint256 postSellerBalance = wETH.balanceOf(creator);
+    uint256 postBuyerBalance = wETH.balanceOf(alice);
+
+    assertEq(MarketplaceOrder.getCount(orderId), 0, "count wrong");
+    assertEq(MarketplaceOrder.getPrice(orderId), 0, "price wrong");
+    assertEq(MarketplaceOrder.getResource(orderId), 0, "resource wrong");
+    assertEq(MarketplaceOrder.getSeller(orderId), 0, "seller wrong");
+
+    assertEq(ResourceCount.get(player, uint8(EResource.U_Orders)), 1, "seller order count wrong");
+    assertEq(ResourceCount.get(player, uint8(EResource.Iron)), 0, "seller resource count wrong");
+    assertEq(ResourceCount.get(buyer, uint8(EResource.Iron)), 100, "buyer resource count wrong");
+
+    uint256 cost = 100 * 100;
+    uint256 tax = (P_GameConfig.getTax() * cost) / 1000;
+    cost = cost - tax;
+
+    assertEq(wETH.balanceOf(creator), prevSellerBalance + cost, "seller balance wrong");
+    assertEq(wETH.balanceOf(alice), prevBuyerBalance - cost - tax, "buyer balance wrong");
+  }
 }
