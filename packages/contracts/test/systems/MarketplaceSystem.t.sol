@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import { console } from "forge-std/console.sol";
 
-import { PrimodiumTest, entityToAddress, MarketplaceOrder, P_GameConfig, addressToEntity, EResource, ResourceCount, MaxResourceCount } from "test/PrimodiumTest.t.sol";
+import { PrimodiumTest, entityToAddress, MarketplaceOrder, P_GameConfig, addressToEntity, EResource, ResourceCount, MaxResourceCount, LibProduction } from "test/PrimodiumTest.t.sol";
 import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOwner.sol";
 import { ROOT_NAMESPACE, ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
@@ -21,10 +21,8 @@ contract MarketplaceSystemTest is PrimodiumTest {
     player = addressToEntity(creator);
     vm.startPrank(creator);
     buyer = addressToEntity(alice);
-    console.log("creator balalnce:", wETH.balanceOf(creator));
-    console.log("world balalnce:", wETH.balanceOf(worldAddress));
 
-    MaxResourceCount.set(player, uint8(EResource.U_Orders), 1);
+    LibProduction.increaseResourceProduction(player, EResource.U_Orders, 1);
   }
 
   function testAddOrder() public returns (bytes32) {
@@ -34,7 +32,7 @@ contract MarketplaceSystemTest is PrimodiumTest {
     assertEq(MarketplaceOrder.getResource(orderId), uint8(EResource.Iron));
     assertEq(MarketplaceOrder.getCount(orderId), 100);
     assertEq(MarketplaceOrder.getPrice(orderId), 100);
-    assertEq(ResourceCount.get(player, uint8(EResource.U_Orders)), 1);
+    assertEq(ResourceCount.get(player, uint8(EResource.U_Orders)), 0);
     return orderId;
   }
 
@@ -68,14 +66,14 @@ contract MarketplaceSystemTest is PrimodiumTest {
     bytes32 orderId = testAddOrder();
     assertEq(MarketplaceOrder.getSeller(orderId), player);
     switchPrank(alice);
-    vm.expectRevert("[MarketplaceSystem] you don't control this order");
+    vm.expectRevert("[MarketplaceSystem] You don't control this order");
     world.updateOrder(orderId, EResource.Copper, 49, 51);
   }
 
   function testAddMaxOrderReached() public {
     bytes32 orderId = testAddOrder();
     ResourceCount.set(player, uint8(EResource.Iron), 100);
-    vm.expectRevert("[MarketplaceSystem] max orders reached");
+    vm.expectRevert("[MarketplaceSystem] Max orders reached");
     world.addOrder(EResource.Iron, 1, 49);
   }
 
@@ -86,7 +84,7 @@ contract MarketplaceSystemTest is PrimodiumTest {
     assertEq(MarketplaceOrder.getPrice(orderId), 0);
     assertEq(MarketplaceOrder.getResource(orderId), 0);
     assertEq(MarketplaceOrder.getSeller(orderId), 0);
-    assertEq(ResourceCount.get(player, uint8(EResource.U_Orders)), 0);
+    assertEq(ResourceCount.get(player, uint8(EResource.U_Orders)), 1);
   }
 
   function testTakeOrder() public {
@@ -111,7 +109,7 @@ contract MarketplaceSystemTest is PrimodiumTest {
     assertEq(MarketplaceOrder.getResource(orderId), 0, "resource wrong");
     assertEq(MarketplaceOrder.getSeller(orderId), 0, "seller wrong");
 
-    assertEq(ResourceCount.get(player, uint8(EResource.U_Orders)), 0, "seller order count wrong");
+    assertEq(ResourceCount.get(player, uint8(EResource.U_Orders)), 1, "seller order count wrong");
     assertEq(ResourceCount.get(player, uint8(EResource.Iron)), 0, "seller resource count wrong");
     assertEq(ResourceCount.get(buyer, uint8(EResource.Iron)), 100, "buyer resource count wrong");
 
@@ -145,7 +143,7 @@ contract MarketplaceSystemTest is PrimodiumTest {
     assertEq(MarketplaceOrder.getResource(orderId), uint8(EResource.Iron), "resource wrong");
     assertEq(MarketplaceOrder.getSeller(orderId), player, "seller wrong");
 
-    assertEq(ResourceCount.get(player, uint8(EResource.U_Orders)), 1, "seller order count wrong");
+    assertEq(ResourceCount.get(player, uint8(EResource.U_Orders)), 0, "seller order count wrong");
     assertEq(ResourceCount.get(player, uint8(EResource.Iron)), 50, "seller resource count wrong");
     assertEq(ResourceCount.get(buyer, uint8(EResource.Iron)), 50, "buyer resource count wrong");
 
@@ -161,7 +159,7 @@ contract MarketplaceSystemTest is PrimodiumTest {
     bytes32 orderId = testAddOrder();
     ResourceCount.set(buyer, uint8(EResource.Iron), 0);
     MaxResourceCount.set(buyer, uint8(EResource.Iron), 100);
-    vm.expectRevert("[MarketplaceSystem] cannot take your own order");
+    vm.expectRevert("[MarketplaceSystem] Cannot take your own order");
     world.takeOrder(orderId, 100 * 100);
   }
 }

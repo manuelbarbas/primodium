@@ -16,7 +16,7 @@ contract MarketplaceSystem is PrimodiumSystem {
   modifier onlySeller(bytes32 orderId) {
     require(
       MarketplaceOrder.getSeller(orderId) == addressToEntity(_msgSender()),
-      "[MarketplaceSystem] you don't control this order"
+      "[MarketplaceSystem] You don't control this order"
     );
     _;
   }
@@ -29,13 +29,13 @@ contract MarketplaceSystem is PrimodiumSystem {
     bytes32 playerEntity = addressToEntity(_msgSender());
 
     uint256 orderCount = ResourceCount.get(playerEntity, uint8(EResource.U_Orders));
-    require(orderCount > 0, "[MarketplaceSystem] max orders reached");
+    require(orderCount > 0, "[MarketplaceSystem] Max orders reached");
 
     orderId = keccak256(abi.encodePacked(resource, count, block.timestamp, msg.sender));
 
     require(
       count > 0 && count <= ResourceCount.get(playerEntity, uint8(resource)),
-      "[MarketplaceSystem] invalid count"
+      "[MarketplaceSystem] Invalid count"
     );
 
     MarketplaceOrder.set(
@@ -43,7 +43,7 @@ contract MarketplaceSystem is PrimodiumSystem {
       MarketplaceOrderData({ seller: playerEntity, resource: uint8(resource), count: count, price: price })
     );
 
-    LibStorage.increaseStoredResource(playerEntity, uint8(EResource.U_Orders), orderCount + 1);
+    LibStorage.decreaseStoredResource(playerEntity, uint8(EResource.U_Orders), 1);
   }
 
   function cancelOrder(bytes32 orderId) public onlySeller(orderId) {
@@ -73,7 +73,7 @@ contract MarketplaceSystem is PrimodiumSystem {
     if (count == 0) return cancelOrder(orderId);
     uint256 playerBalance = ResourceCount.get(order.seller, order.resource);
 
-    require(count <= playerBalance, "[MarketplaceSystem] not enough resource in balance");
+    require(count <= playerBalance, "[MarketplaceSystem] Not enough resource in balance");
 
     MarketplaceOrder.setCount(orderId, count);
   }
@@ -86,30 +86,30 @@ contract MarketplaceSystem is PrimodiumSystem {
     MarketplaceOrder.setPrice(orderId, price);
   }
 
-  function takeOrder(bytes32 orderId, uint256 countBought) public payable {
-    if (countBought == 0) return;
+  function takeOrder(bytes32 orderId, uint256 countBought) public {
+    if (countBought == 0) revert("[MarketplaceSystem] Invalid count");
     bytes32 playerEntity = addressToEntity(_msgSender());
     MarketplaceOrderData memory order = MarketplaceOrder.get(orderId);
-    require(order.seller != playerEntity, "[MarketplaceSystem] cannot take your own order");
-    require(order.count >= countBought, "[MarketplaceSystem] not enough resource in order");
+    require(order.seller != playerEntity, "[MarketplaceSystem] Cannot take your own order");
+    require(order.count >= countBought, "[MarketplaceSystem] Not enough resource in order");
 
     LibResource.claimAllResources(order.seller);
 
     // transfer out resource
     require(
       ResourceCount.get(order.seller, order.resource) >= countBought,
-      "[MarketplaceSystem] seller doesn't have enough resources"
+      "[MarketplaceSystem] Seller doesn't have enough resources"
     );
 
     require(
       LibResource.getResourceCountAvailable(playerEntity, order.resource) >= countBought,
-      "[MarketplaceSystem] buyer doesn't have enough space"
+      "[MarketplaceSystem] Buyer doesn't have enough space"
     );
 
     IERC20Mintable wETH = IERC20Mintable(P_GameConfig.getWETHAddress());
 
     uint256 cost = countBought * order.price;
-    require(cost <= wETH.balanceOf(_msgSender()), "[MarketplaceSystem] not enough weth");
+    require(cost <= wETH.balanceOf(_msgSender()), "[MarketplaceSystem] Not enough weth");
 
     uint256 tax = (P_GameConfig.getTax() * cost) / 1000;
     cost = cost - tax;
@@ -128,7 +128,7 @@ contract MarketplaceSystem is PrimodiumSystem {
   }
 
   function takeOrderBulk(bytes32[] memory orderId, uint256[] memory count) public {
-    require(orderId.length == count.length, "[MarketplaceSystem] invalid input");
+    require(orderId.length == count.length, "[MarketplaceSystem] Invalid input");
     for (uint256 i = 0; i < orderId.length; i++) {
       takeOrder(orderId[i], count[i]);
     }
@@ -137,6 +137,6 @@ contract MarketplaceSystem is PrimodiumSystem {
   function _removeOrder(bytes32 orderId) internal {
     bytes32 seller = MarketplaceOrder.getSeller(orderId);
     MarketplaceOrder.deleteRecord(orderId);
-    LibStorage.decreaseStoredResource(seller, uint8(EResource.U_Orders), 1);
+    LibStorage.increaseStoredResource(seller, uint8(EResource.U_Orders), 1);
   }
 }
