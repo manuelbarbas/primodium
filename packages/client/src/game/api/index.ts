@@ -12,6 +12,7 @@ import { createFxApi } from "./fx";
 import { world } from "src/network/world";
 import { createSpriteApi } from "./sprite";
 import { SetupResult } from "src/network/types";
+import { createAudioApi } from "./audio";
 
 async function init(mud: SetupResult, version = "v1") {
   const asciiArt = `
@@ -71,6 +72,7 @@ function api(sceneKey = "MAIN", instance: string | Game = "MAIN") {
     scene: createSceneApi(_instance),
     fx: createFxApi(scene),
     sprite: createSpriteApi(scene),
+    audio: createAudioApi(scene),
   };
 }
 
