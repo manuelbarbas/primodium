@@ -56,7 +56,7 @@ export function Admin() {
   }, [privateKey, networkConfig.chain, tokenAddress]);
 
   const address = client?.account.address;
-  const entity = encodeAbiParameters([{ type: "address" }], [address ?? "0x"]) as Entity;
+  const entity = address ? (encodeAbiParameters([{ type: "address" }], [address]) as Entity) : undefined;
   const balance = components.WETHBalance.use(entity)?.value ?? 0n;
   const isAdmin = address === adminAddress;
 
@@ -134,13 +134,11 @@ export function Admin() {
               </div>
             </>
           )}
-          {address == adminAddress && (
-            <div className="grid grid-cols-4 gap-4">
-              <MintToken onMint={onMint} className="col-span-2" />
-              <TransferToken onTransfer={onTransfer} className="col-span-2" />
-              <PlayerBalancesTable className="col-span-4" />
-            </div>
-          )}
+          <div className="grid grid-cols-4 gap-4">
+            {isAdmin && <MintToken onMint={onMint} className="col-span-2" />}
+            {entity && <TransferToken onTransfer={onTransfer} className="col-span-2" entity={entity} />}
+            {isAdmin && <PlayerBalancesTable className="col-span-4" />}
+          </div>
         </div>
       )}
     </div>
@@ -148,13 +146,14 @@ export function Admin() {
 }
 
 interface MintTokenProps {
-  onMint: (address: string, amount: number) => void;
+  onMint: (address: string, amount: number) => Promise<void>;
   className?: string;
 }
 
 interface TransferTokenProps {
-  onTransfer: (address: string, amount: number) => void;
+  onTransfer: (address: string, amount: number) => Promise<void>;
   className?: string;
+  entity: Entity;
 }
 
 const MintToken: React.FC<MintTokenProps> = ({ onMint, className }) => {
@@ -195,14 +194,18 @@ const MintToken: React.FC<MintTokenProps> = ({ onMint, className }) => {
   );
 };
 
-const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, className }) => {
+const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, className, entity }) => {
   const [address, setAddress] = useState<string>("");
   const [amount, setAmount] = useState<string>("");
 
-  const handleTransfer = () => {
+  const balance = components.WETHBalance.use(entity)?.value ?? 0n;
+
+  const handleTransfer = async () => {
     const amountNum = Math.round(Number(amount) * 1e18);
     if (address && amountNum > 0) {
-      onTransfer(address, amountNum);
+      await onTransfer(address, amountNum);
+      setAmount("");
+      setAddress("");
     } else {
       alert("Please enter a valid address and amount.");
     }
@@ -218,13 +221,33 @@ const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, className }) 
         value={address}
         onChange={(e) => setAddress(e.target.value)}
       />
-      <input
-        type="number"
-        className="p-2 border border-green-400 bg-black"
-        placeholder="amount"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-      />
+      <div className="relative flex items-center">
+        <button
+          className="absolute right-2 margin-auto bg-green-400 text-black px-2 flex items-center"
+          onClick={() => setAmount(formatEther(balance))}
+        >
+          max
+        </button>
+        <input
+          type="number"
+          className="p-2 border border-green-400 bg-black w-full"
+          placeholder="amount"
+          value={amount}
+          onChange={(e) => {
+            const value = Number(e.target.value);
+            const bal = Number(balance) / 1e18;
+            console.log("value", value, "balance", bal);
+            if (value < 0) {
+              setAmount("");
+              return;
+            }
+            if (value > bal) {
+              return;
+            }
+            setAmount(e.target.value);
+          }}
+        />
+      </div>
       <button className="p-2 bg-green-400 text-black " onClick={handleTransfer}>
         transfer token
       </button>
