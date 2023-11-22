@@ -47,6 +47,7 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
       Texture(Assets.SpriteAtlas, sprite),
       SetValue({
         depth: DepthLayers.Rock,
+        scale: getSpriteScale(motherlodeData.size),
       }),
     ]);
 
@@ -84,6 +85,7 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
       }),
       SetValue({
         depth: DepthLayers.Rock + 1,
+        scale: getSpriteScale(motherlodeData.size),
       }),
     ]);
   };
@@ -110,4 +112,15 @@ const getOutlineSprite = (playerEntity: Entity, rock: Entity, size: ESize) => {
       }[rockRelationship]
     }${MotherlodeSizeNames[size]}` as keyof typeof SpriteKeys
   ];
+};
+
+const getSpriteScale = (size: ESize) => {
+  switch (size) {
+    case ESize.Small:
+      return 2;
+    case ESize.Medium:
+      return 3;
+    case ESize.Large:
+      return 6;
+  }
 };

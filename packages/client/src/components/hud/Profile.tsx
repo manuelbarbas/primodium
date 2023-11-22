@@ -31,9 +31,11 @@ export const Profile = () => {
 
   const address = useMud().network.address;
   const data = components.Leaderboard.use();
+
   if (!data || !address) return null;
 
   if (loading) return <Card>loading...</Card>;
+
   return (
     <Card className="flex gap-1 text-sm flex-grow items-center justify-between w-fit">
       <div className="flex flex-col gap-2">

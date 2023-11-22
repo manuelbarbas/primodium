@@ -14,7 +14,7 @@ import { GracePeriod } from "./GracePeriod";
 import { LoadingIndication } from "./LoadingIndication";
 import { Profile } from "./Profile";
 import { PrototypeInfo } from "./PrototypeInfo";
-import { ViewStarmap } from "./ViewStarmap";
+import { SelectAction } from "./SelectAction";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { Hotbar } from "./hotbar/Hotbar";
 import { Marketplace } from "./marketplace/Marketplace";
@@ -22,6 +22,12 @@ import { Panes } from "./panes/Panes";
 import { Resources } from "./resources/Resources";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 import { Units } from "./units/Units";
+import { Score } from "./Score";
+import { PlayerLeaderboard } from "./modals/leaderboard/PlayerLeaderboard";
+import { IconLabel } from "../core/IconLabel";
+import { Modal } from "../core/Modal";
+import { Settings } from "./modals/Settings";
+import { Objectives } from "./modals/Objectives";
 
 export const GameHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [state.showUI, state.toggleShowUI]);
@@ -47,55 +53,64 @@ export const GameHUD = () => {
   return (
     <div className="screen-container font-mono">
       <>
-        {/* ASTEROID HUD */}
-        {showUI && !isSpectating && (
-          <HUD scale={1} pad>
-            <HUD.BottomMiddle>
-              {(getBlockTypeName(selectedBuilding) || !selectedBuilding) && !mapOpen && <Hotbar />}
-              {!getBlockTypeName(selectedBuilding) && !mapOpen && <BuildingMenu />}
-              {mapOpen && <SpacerockMenu />}
-            </HUD.BottomMiddle>
-            <HUD.TopMiddle>
-              {getBlockTypeName(selectedBuilding) && selectedBuilding && <PrototypeInfo building={selectedBuilding} />}
-              {(!selectedBuilding || !getBlockTypeName(selectedBuilding)) && <ViewStarmap />}
-              <GracePeriod player={playerEntity} />
-            </HUD.TopMiddle>
-            <HUD.TopLeft>
-              <Profile />
-              <LoadingIndication />
-            </HUD.TopLeft>
-            <HUD.Left>
-              <OverlayModal title="Marketplace">
-                <OverlayModal.Button>Marketplace</OverlayModal.Button>
-                <OverlayModal.Content>
-                  <Marketplace />
-                </OverlayModal.Content>
-              </OverlayModal>
-            </HUD.Left>
-
-            <HUD.BottomLeft>
-              <Resources />
-            </HUD.BottomLeft>
-            <HUD.BottomRight>
-              <Units />
-            </HUD.BottomRight>
-            <HUD.TopRight>
-              <Panes />
-            </HUD.TopRight>
-          </HUD>
-        )}
-
-        {showUI && isSpectating && !mapOpen && (
-          <HUD scale={1} pad>
-            <HUD.BottomMiddle>
-              <p className="font-bold text-accent">SPECTATING {shortenAddress(entityToAddress(spectatingAccount!))}</p>
-            </HUD.BottomMiddle>
-            <HUD.TopMiddle>
-              {<ViewStarmap />}
-              <GracePeriod player={spectatingAccount!} />
-            </HUD.TopMiddle>
-          </HUD>
-        )}
+        <HUD>
+          <HUD.TopMiddle>
+            <div className="flex flex-col items-center">
+              <div className="flex z-10">
+                <span className="flex flex-col gap-1 mt-1">
+                  <Modal title="leaderboard">
+                    <Modal.Button className="rounded-r-none border border-secondary btn-sm">
+                      <IconLabel
+                        imageUri="/img/icons/leaderboardicon.png"
+                        tooltipText="leaderboard"
+                        tooltipDirection="left"
+                      />
+                    </Modal.Button>
+                    <Modal.Content className="w-[50rem] h-[50rem]">
+                      <PlayerLeaderboard />
+                    </Modal.Content>
+                  </Modal>
+                  <OverlayModal>
+                    <OverlayModal.Button className="rounded-r-none border border-secondary btn-sm">
+                      <IconLabel imageUri="/img/icons/reportsicon.png" tooltipText="messages" tooltipDirection="left" />
+                    </OverlayModal.Button>
+                    <OverlayModal.Content>
+                      <PlayerLeaderboard />
+                    </OverlayModal.Content>
+                  </OverlayModal>
+                </span>
+                <SelectAction />
+                <span className="flex flex-col gap-1 mt-1">
+                  <Modal title="objectives">
+                    <Modal.Button className="rounded-l-none border border-secondary btn-sm">
+                      <IconLabel
+                        imageUri="/img/icons/objectiveicon.png"
+                        tooltipText="objectives"
+                        tooltipDirection="right"
+                      />
+                    </Modal.Button>
+                    <Modal.Content className="w-[50rem] h-[50rem]">
+                      <Objectives />
+                    </Modal.Content>
+                  </Modal>
+                  <Modal title="settings">
+                    <Modal.Button className="rounded-l-none border border-secondary btn-sm">
+                      <IconLabel
+                        imageUri="/img/icons/settingsicon.png"
+                        tooltipText="settings"
+                        tooltipDirection="right"
+                      />
+                    </Modal.Button>
+                    <Modal.Content className="w-132 h-96">
+                      <Settings />
+                    </Modal.Content>
+                  </Modal>
+                </span>
+              </div>
+              <Score />
+            </div>
+          </HUD.TopMiddle>
+        </HUD>
 
         <HUD>
           <HUD.BottomRight>

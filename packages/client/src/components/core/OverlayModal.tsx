@@ -22,7 +22,7 @@ interface ModalProps {
 }
 
 export const OverlayModal: React.FC<ModalProps> & {
-  Button: React.FC<{ children: ReactNode }>;
+  Button: React.FC<{ children: ReactNode; className: string }>;
   Content: React.FC<{ children: ReactNode }>;
 } = ({ children, title }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,9 +50,13 @@ export const OverlayModal: React.FC<ModalProps> & {
   return <ModalContext.Provider value={{ isOpen, setIsOpen, title }}>{children}</ModalContext.Provider>;
 };
 
-OverlayModal.Button = function ModalButton({ children }) {
+OverlayModal.Button = function ModalButton({ children, className }) {
   const { setIsOpen } = useContext(ModalContext);
-  return <Button onClick={() => setIsOpen(true)}>{children}</Button>;
+  return (
+    <Button className={className} onClick={() => setIsOpen(true)}>
+      {children}
+    </Button>
+  );
 };
 
 OverlayModal.Content = function ModalContent({ children }) {

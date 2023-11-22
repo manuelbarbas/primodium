@@ -32,6 +32,10 @@
     cursor: url("/img/cursors/pointer.png") 12 0, auto;
   }
 
+  button:hover {
+    cursor: url("/img/cursors/pointer.png") 12 0, auto;
+  }
+
   button:active {
     cursor: url("/img/cursors/pointerdown.png") 12 0, auto;
   }

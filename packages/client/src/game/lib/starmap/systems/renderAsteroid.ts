@@ -62,6 +62,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       ),
       SetValue({
         depth: DepthLayers.Rock,
+        scale: 5,
       }),
     ]);
 
@@ -90,6 +91,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       }),
       SetValue({
         depth: DepthLayers.Rock + 1,
+        scale: 5,
       }),
     ]);
 
@@ -110,7 +112,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       }),
       Texture(Assets.SpriteAtlas, SpriteKeys.GracePeriod),
       SetValue({
-        scale: 1.1,
+        scale: 5,
         depth: DepthLayers.Marker,
         input: null,
       }),

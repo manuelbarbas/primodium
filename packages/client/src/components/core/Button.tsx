@@ -32,15 +32,15 @@ export const Button: React.FC<{
   return (
     <Tooltip text={tooltip} direction={tooltipDirection}>
       <button
-        onClick={() => {
+        onClick={(e) => {
           !mute && audio.play(clickSound, "ui");
-          onClick && onClick();
+          onClick && onClick(e);
         }}
         disabled={disabled}
         onPointerEnter={() => {
           !mute && audio.play(AudioKeys.Click3, "ui");
         }}
-        className={`btn join-item inline pointer-events-auto font-bold outline-none ${className} ${
+        className={`btn join-item inline pointer-events-auto font-bold outline-none h-fit ${className} ${
           disabled ? "opacity-80" : ""
         } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
       >
