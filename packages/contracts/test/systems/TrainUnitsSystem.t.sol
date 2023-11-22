@@ -25,6 +25,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     RockType.set(rock, uint8(ERock.Asteroid));
     Home.setAsteroid(player, rock);
     OwnedBy.set(building, rock);
+    Spawned.set(player, true);
   }
 
   // copied from LibUnit.t.sol
