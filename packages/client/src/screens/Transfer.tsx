@@ -2,6 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import ERC20Abi from "contracts/out/ERC20System.sol/ERC20System.abi.json";
 import { useMemo, useState } from "react";
 import { Button } from "src/components/core/Button";
+import { AddressDisplay } from "src/components/hud/AddressDisplay";
 import { useMud } from "src/hooks";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
@@ -22,7 +23,18 @@ import {
 import { toAccount } from "viem/accounts";
 import { WagmiConfig, useAccount, useConnect, useDisconnect, useNetwork, useSwitchNetwork } from "wagmi";
 
-export function Connect() {
+export function Transfer() {
+  return (
+    <WagmiConfig config={wagmiConfig}>
+      <div className="flex flex-col justify-center items-center w-screen h-screen bg-neutral font-mono">
+        <Connect />
+        <ControlBooth />
+      </div>
+    </WagmiConfig>
+  );
+}
+
+function Connect() {
   const { connector, isConnected } = useAccount();
   const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
 
@@ -45,17 +57,6 @@ export function Connect() {
         ))}
       {error && <p className="fixed top-6 right-6">{(error as BaseError).shortMessage}</p>}
     </div>
-  );
-}
-
-export function Admin() {
-  return (
-    <WagmiConfig config={wagmiConfig}>
-      <div className="flex flex-col justify-center items-center w-screen h-screen bg-neutral font-mono">
-        <Connect />
-        <ControlBooth />
-      </div>
-    </WagmiConfig>
   );
 }
 
@@ -102,35 +103,20 @@ function ControlBooth() {
   if (!client) return null;
 
   const onMint = async (address: string, amount: number) => {
-    await execute(
-      () => client.tokenContract.write.mint([address as Hex, BigInt(amount)]),
-      network,
-      {
-        id: world.registerEntity(),
-      },
-      (receipt) => {
-        console.log(receipt);
-        alert("Minted " + formatEther(BigInt(amount)) + " tokens to " + address);
-      }
-    );
+    await execute(() => client.tokenContract.write.mint([address as Hex, BigInt(amount)]), network, {
+      id: world.registerEntity(),
+    });
   };
 
   const onTransfer = async (address: string, amount: number) => {
-    await execute(
-      () => client.tokenContract.write.transfer([address as Hex, BigInt(amount)]),
-      network,
-      {
-        id: world.registerEntity(),
-      },
-      () => {
-        alert("Transferred " + formatEther(BigInt(amount)) + " tokens to " + address);
-      }
-    );
+    await execute(() => client.tokenContract.write.transfer([address as Hex, BigInt(amount)]), network, {
+      id: world.registerEntity(),
+    });
   };
   const tabs: Tab[] = isAdmin ? ["transfer", "mint", "balances"] : ["transfer"];
   return (
     <div className="h-full w-full relative flex flex-col justify-center items-center">
-      {externalAccount.isConnected && (
+      {externalAccount.isConnected && externalAddress && (
         <div className="absolute top-4 left-4 flex gap-4 items-center p-2 bg-base-100 rounded-md">
           <Button className="font-bold btn-secondary btn-sm" onClick={() => disconnect()}>
             Disconnect
@@ -138,11 +124,15 @@ function ControlBooth() {
           <div className="flex flex-col">
             <div>
               <p className="text-xs text-gray-400 ">Connected to</p>
-              <p className="text-sm">{externalAddress}</p>
+              <p className="text-sm">
+                <AddressDisplay address={externalAddress} />
+              </p>
             </div>
             <div>
               <p className="text-xs text-gray-400 ">Primodium (burner) account</p>
-              <p className="text-sm">{burnerAddress}</p>
+              <p className="text-sm">
+                <AddressDisplay address={burnerAddress} />
+              </p>
             </div>
           </div>
         </div>
@@ -199,7 +189,7 @@ const MintToken: React.FC<MintTokenProps> = ({ onMint, className }) => {
   const externalAccount = useAccount();
   const chain = useNetwork().chain;
   const expectedChain = externalAccount.connector?.chains[0];
-  const { chains, error, isLoading, pendingChainId, switchNetwork } = useSwitchNetwork();
+  const { isLoading, pendingChainId, switchNetwork } = useSwitchNetwork();
   const wrongChain = chain?.id !== expectedChain?.id;
 
   const handleMint = () => {
@@ -260,7 +250,7 @@ const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, className, bu
   const externalAccount = useAccount();
   const chain = useNetwork().chain;
   const expectedChain = externalAccount.connector?.chains[0];
-  const { chains, error, isLoading, pendingChainId, switchNetwork } = useSwitchNetwork();
+  const { isLoading, pendingChainId, switchNetwork } = useSwitchNetwork();
 
   const wrongChain = chain?.id !== expectedChain?.id;
   const balance = components.WETHBalance.use(externalEntity)?.value ?? 0n;
@@ -270,7 +260,6 @@ const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, className, bu
     if (address && amountNum > 0) {
       await onTransfer(address, amountNum);
       setAmount("");
-      setAddress("");
     } else {
       alert("Please enter a valid address and amount.");
     }
@@ -364,7 +353,7 @@ const PlayerBalancesTable = ({ className }: { className?: string }) => {
         </div>
         <p>Balance (WETH)</p>
       </div>
-      {[...filteredPlayers].map((player) => {
+      {filteredPlayers.map((player) => {
         return (
           <div key={`balance-${player.entity}`} className="flex justify-between p-2 whitespace-nowrap border-b-2">
             <p>{trim(player.entity as Hex)}</p>
