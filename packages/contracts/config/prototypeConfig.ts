@@ -13,7 +13,7 @@ import {
 import { PrototypesConfig } from "../ts/prototypes/types";
 import { EResource, MUDEnums } from "./enums";
 import { getBlueprint } from "./util/blueprints";
-import encodeBytes32 from "./util/encodeBytes32";
+import encodeBytes32, { encodeAddress } from "./util/encodeBytes32";
 
 const mainBaseMaxResourceUpgrades = {
   1: { Iron: 300000, Copper: 300000, IronPlate: 200000 },
@@ -158,6 +158,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         unitProductionRate: 100n,
         travelTime: 10n,
         worldSpeed: 100n,
+        wETHAddress: encodeAddress("0"),
+        tax: 10n, // out of 1000
       },
       P_UnitPrototypes: {
         value: MUDEnums.EUnit.reduce(
@@ -880,7 +882,38 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       },
     },
   },
-
+  Market: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(3, 3) },
+      P_MaxLevel: { value: 4n },
+    },
+    levels: {
+      1: {
+        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredResources: getResourceValues({ Iron: 100 }),
+        P_Production: getResourceValues({ U_Orders: 1 }),
+      },
+      2: {
+        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredResources: getResourceValues({ Iron: 100 }),
+        P_Production: getResourceValues({ U_Orders: 2 }),
+      },
+      3: {
+        P_RequiredBaseLevel: { value: 5n },
+        P_RequiredResources: getResourceValues({
+          Iron: 100,
+        }),
+        P_Production: getResourceValues({ U_Orders: 3 }),
+      },
+      4: {
+        P_RequiredBaseLevel: { value: 7n },
+        P_RequiredResources: getResourceValues({
+          Iron: 100,
+        }),
+        P_Production: getResourceValues({ U_Orders: 4 }),
+      },
+    },
+  },
   /* -------------------------------- Resources ------------------------------- */
   // NOTE: To check if a resource is a utility, call P_IsUtility.get(EResource.<resource>);
   IsUtility: {
@@ -890,6 +923,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       [MUDEnums.EResource.indexOf("U_Housing")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Vessel")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_MaxMoves")]: { P_IsUtility: { value: true } },
+      [MUDEnums.EResource.indexOf("U_Orders")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Defense")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("M_DefenseMultiplier")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Unraidable")]: { P_IsUtility: { value: true } },

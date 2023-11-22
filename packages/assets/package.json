@@ -5,10 +5,10 @@
   "types": "./types",
   "scripts": {
     "copy-tileset-images": "cp tilesets/images/* ../client/public/assets/tilesets/",
-    "export-sprites": "pnpm generate-multiatlas-sprites && pnpm copy-tileset-images",
-    "generate-multiatlas-sprites": "node ./scripts/cli.mjs --project ./config-sprites.json",
+    "export": "pnpm export-sprites && pnpm export-audio",
     "export-audio": "audiosprite --channels 2 --loop background --output ../client/public/assets/audio/atlas --path ./assets/audio/ audio/**/*.ogg audio/*.ogg",
-    "export": "pnpm export-sprites && pnpm export-audio"
+    "export-sprites": "pnpm generate-multiatlas-sprites && pnpm copy-tileset-images",
+    "generate-multiatlas-sprites": "node ./scripts/cli.mjs --project ./config-sprites.json"
   },
   "devDependencies": {
     "@mapeditor/tiled-api": "^1.8.2",
