@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { entityToAddress } from "src/util/common";
 import { LinkedAddressResult, getLinkedAddress } from "src/util/web2/getLinkedAddress";
-import { linkAddress } from "src/util/web2/linkAddress";
 import { formatEther } from "viem";
 import { Button } from "../core/Button";
 import { Card } from "../core/Card";
@@ -13,6 +13,7 @@ export const Profile = () => {
   const playerEntity = network.playerEntity;
   const [linkedAddress, setLinkedAddress] = useState<LinkedAddressResult>();
   const [loading, setLoading] = useState(true);
+  const { search } = useLocation();
   const wETHBalance = components.WETHBalance.use(playerEntity)?.value ?? 0n;
 
   const entityDisplay = useMemo(() => {
@@ -44,11 +45,10 @@ export const Profile = () => {
           </div>
           <p>{entityDisplay}</p>
 
-          {!linkedAddress?.ensName && (
-            <Button className="btn-xs btn-secondary" onClick={() => linkAddress(network)}>
-              Link Wallet
-            </Button>
-          )}
+          {!linkedAddress?.ensName && <Button className="btn-secondary btn-xs">Link Wallet</Button>}
+          <Link to={`/transfer${search}`}>
+            <Button className="btn-secondary btn-xs">Transfer WETH</Button>
+          </Link>
         </div>
         <div className="flex gap-2 items-center">
           <p className="bg-error px-2 rounded-md font-bold">

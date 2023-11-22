@@ -9,7 +9,7 @@ export const GameButton = ({
 }: {
   id?: string;
   children?: React.ReactNode;
-  onClick?: () => void;
+  onClick?: (e?: any) => void;
   className?: string;
   color?: string;
   depth?: number;
