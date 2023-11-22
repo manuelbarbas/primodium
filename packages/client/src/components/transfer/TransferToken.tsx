@@ -88,16 +88,21 @@ export const TransferToken: React.FC<TransferTokenProps> = ({
 
   return (
     <div className={className + " flex flex-col gap-2 h-full"}>
-      <input
-        type="text"
-        className={`py-6 px-2 text-sm rounded-md bg-base-100 border ${
-          valid ? "border-secondary/25 active:border-secondary/25" : "active:border-error border-error bg-error/25"
-        }  disabled:opacity-50`}
-        placeholder="enter 0x address or ens name"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        disabled={wrongChain}
-      />
+      <div className="relative flex items-center">
+        <input
+          type="text"
+          className={`py-6 px-2 text-sm rounded-md bg-base-100 w-full border ${
+            valid ? "border-secondary/25 active:border-secondary/25" : "active:border-error border-error bg-error/25"
+          }  disabled:opacity-50`}
+          placeholder="enter 0x address or ens name"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          disabled={wrongChain}
+        />
+        {address == burnerAddress && (
+          <div className="absolute left-2 top-10 text-xs text-gray-500 italic">your Primodium account</div>
+        )}
+      </div>
       <div className="relative flex items-center">
         <div className="absolute right-2 text-xs flex flex-col items-center">
           <Button
