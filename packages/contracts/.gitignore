@@ -1,6 +1,6 @@
 /out/*
 !/out/IWorld.sol/IWorld.abi.json
-!/out/ERC20System.sol/
+!/out/ERC20System.sol/ERC20System.abi.json
 cache/
 node_modules/
 bindings/
