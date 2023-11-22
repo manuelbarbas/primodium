@@ -81,9 +81,6 @@ export function ControlPanel() {
         </Link>
         {externalAccount.isConnected && externalAddress && (
           <div className="bg-base-100 rounded-md flex items-center p-2 gap-2 ">
-            <Button className="font-bold btn-secondary btn-sm" onClick={() => disconnect()}>
-              Disconnect
-            </Button>
             <div className="flex flex-col">
               <div>
                 <p className="text-xs text-gray-400 ">Connected to</p>
@@ -98,6 +95,9 @@ export function ControlPanel() {
                 </p>
               </div>
             </div>
+            <Button className="font-bold btn-secondary btn-sm h-full" onClick={() => disconnect()}>
+              Disconnect
+            </Button>
           </div>
         )}
       </div>

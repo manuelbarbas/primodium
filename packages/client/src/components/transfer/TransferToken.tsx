@@ -90,7 +90,7 @@ export const TransferToken: React.FC<TransferTokenProps> = ({
     <div className={className + " flex flex-col gap-2 h-full"}>
       <input
         type="text"
-        className={`py-6 px-2 text-sm bg-base-100 border ${
+        className={`py-6 px-2 text-sm rounded-md bg-base-100 border ${
           valid ? "border-secondary/25 active:border-secondary/25" : "active:border-error border-error bg-error/25"
         }  disabled:opacity-50`}
         placeholder="enter 0x address or ens name"
@@ -111,7 +111,7 @@ export const TransferToken: React.FC<TransferTokenProps> = ({
         </div>
         <input
           type="number"
-          className="py-6 px-2 text-sm bg-base-100 border border-secondary/25 w-full disabled:opacity-50"
+          className="py-6 px-2 text-sm rounded-md bg-base-100 border border-secondary/25 w-full disabled:opacity-50"
           placeholder="amount"
           value={amount}
           disabled={wrongChain}

@@ -28,9 +28,14 @@ export const PlayerBalances = ({ className }: { className?: string }) => {
         </div>
         <p>Balance (WETH)</p>
       </div>
-      {filteredPlayers.map((player) => {
+      {filteredPlayers.map((player, i) => {
         return (
-          <div key={`balance-${player.entity}`} className="flex justify-between p-2 whitespace-nowrap border-b-2">
+          <div
+            key={`balance-${player.entity}`}
+            className={`flex justify-between p-2 whitespace-nowrap border-b border-secondary ${
+              i % 2 ? "bg-base-100" : ""
+            }`}
+          >
             <AddressDisplay address={entityToAddress(player.entity)} notShort />
             <p>{formatEther(player.balance)}</p>
           </div>
