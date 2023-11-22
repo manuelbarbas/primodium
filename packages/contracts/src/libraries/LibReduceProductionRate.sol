@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { OwnedBy, P_RequiredDependency, P_RequiredDependencyData, P_Production, ProductionRate, Level, BuildingType } from "codegen/index.sol";
+import { ConsumptionRate, OwnedBy, P_RequiredDependency, P_RequiredDependencyData, P_Production, ProductionRate, Level, BuildingType } from "codegen/index.sol";
 
 library LibReduceProductionRate {
   /// @notice Restores production rate when a building is destroyed
@@ -14,8 +14,8 @@ library LibReduceProductionRate {
     uint8 resource = requiredDeps.resource;
     uint256 requiredValue = requiredDeps.amount;
     if (requiredValue == 0) return;
-    uint256 productionRate = ProductionRate.get(spaceRockEntity, resource);
-    ProductionRate.set(spaceRockEntity, resource, productionRate + requiredValue);
+    uint256 consumptionRate = ConsumptionRate.get(spaceRockEntity, resource);
+    ConsumptionRate.set(spaceRockEntity, resource, consumptionRate - requiredValue);
   }
 
   /// @notice Reduces production rate when building or upgrading
@@ -35,8 +35,7 @@ library LibReduceProductionRate {
     uint256 requiredValue = requiredDeps.amount - prevAmount;
     if (requiredValue == 0) return;
 
-    uint256 productionRate = ProductionRate.get(spaceRockEntity, resource);
-    require(productionRate >= requiredValue, "[ProductionUsage] Not enough resource production rate");
-    ProductionRate.set(spaceRockEntity, resource, productionRate - requiredValue);
+    uint256 consumptionRate = ConsumptionRate.get(spaceRockEntity, resource);
+    ConsumptionRate.set(spaceRockEntity, resource, consumptionRate + requiredValue);
   }
 }

@@ -276,6 +276,11 @@ export const config = mudConfig({
       valueSchema: "uint8[]",
     },
 
+    P_ConsumesResource: {
+      keySchema: { resource: "uint8" },
+      valueSchema: "uint8",
+    },
+
     BuildingType: {
       keySchema: { entity: "bytes32" },
       valueSchema: "bytes32",
@@ -287,6 +292,11 @@ export const config = mudConfig({
     },
 
     ProductionRate: {
+      keySchema: { entity: "bytes32", resource: "uint8" },
+      valueSchema: "uint256",
+    },
+
+    ConsumptionRate: {
       keySchema: { entity: "bytes32", resource: "uint8" },
       valueSchema: "uint256",
     },
@@ -312,6 +322,11 @@ export const config = mudConfig({
     SetMotherlodes: {
       keySchema: { entity: "bytes32" },
       valueSchema: "bytes32[]",
+    },
+
+    P_SizeToAmount: {
+      keySchema: { size: "uint8" },
+      valueSchema: "uint256",
     },
 
     /* ----------------------------- Unit Production ---------------------------- */

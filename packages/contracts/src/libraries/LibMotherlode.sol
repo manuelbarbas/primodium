@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { P_GameConfig, P_GameConfigData, LastClaimedAt, Motherlode, MotherlodeData, Position, PositionData, ReversePosition, RockType } from "codegen/index.sol";
+import { P_SizeToAmount, MaxResourceCount, ResourceCount, P_GameConfig, P_GameConfigData, LastClaimedAt, Motherlode, MotherlodeData, Position, PositionData, ReversePosition, RockType } from "codegen/index.sol";
 import { ERock, ESize, EResource } from "src/Types.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
@@ -45,7 +45,8 @@ library LibMotherlode {
     EResource motherlodeType = EResource(getMotherlodeType(rawMotherlodeType));
     ESize size = getSize(rawSize);
     Motherlode.set(motherlodeEntity, MotherlodeData({ size: uint8(size), motherlodeType: uint8(motherlodeType) }));
-
+    MaxResourceCount.set(motherlodeEntity, uint8(motherlodeType), P_SizeToAmount.get(uint8(size)));
+    ResourceCount.set(motherlodeEntity, uint8(motherlodeType), P_SizeToAmount.get(uint8(size)));
     Position.set(motherlodeEntity, position);
     ReversePosition.set(position.x, position.y, motherlodeEntity);
     LastClaimedAt.set(motherlodeEntity, block.timestamp);

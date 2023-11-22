@@ -11,7 +11,7 @@ import {
   upgradesToList,
 } from "../ts/prototypes/prototypeGenUtils";
 import { PrototypesConfig } from "../ts/prototypes/types";
-import { EResource, MUDEnums } from "./enums";
+import { EResource, ESize, MUDEnums } from "./enums";
 import { getBlueprint } from "./util/blueprints";
 import encodeBytes32, { encodeAddress } from "./util/encodeBytes32";
 
@@ -1521,12 +1521,14 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     keys: [{ [EResource.Titanium]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 750n },
+      P_ConsumesResource: { value: EResource.Titanium },
     },
   },
   Iridium: {
     keys: [{ [EResource.Iridium]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 3000n },
+      P_ConsumesResource: { value: EResource.Iridium },
     },
   },
   Osmium: {
@@ -1545,12 +1547,14 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     keys: [{ [EResource.Kimberlite]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 8000n },
+      P_ConsumesResource: { value: EResource.Kimberlite },
     },
   },
   Platinum: {
     keys: [{ [EResource.Platinum]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 1500n },
+      P_ConsumesResource: { value: EResource.Platinum },
     },
   },
   Uraninite: {
@@ -1569,24 +1573,48 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     keys: [{ [EResource.IronPlate]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 40n },
+      P_ConsumesResource: { value: EResource.Iron },
     },
   },
   PVCell: {
     keys: [{ [EResource.PVCell]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 100n },
+      P_ConsumesResource: { value: EResource.Lithium },
     },
   },
   Alloy: {
     keys: [{ [EResource.Alloy]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 170n },
+      P_ConsumesResource: { value: EResource.IronPlate },
     },
   },
   RocketFuel: {
     keys: [{ [EResource.RocketFuel]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 200n },
+    },
+  },
+
+  Small: {
+    keys: [{ [ESize.Small]: "uint8" }],
+    tables: {
+      P_SizeToAmount: { value: 100000n },
+    },
+  },
+
+  Medium: {
+    keys: [{ [ESize.Medium]: "uint8" }],
+    tables: {
+      P_SizeToAmount: { value: 250000n },
+    },
+  },
+
+  Large: {
+    keys: [{ [ESize.Large]: "uint8" }],
+    tables: {
+      P_SizeToAmount: { value: 500000n },
     },
   },
 

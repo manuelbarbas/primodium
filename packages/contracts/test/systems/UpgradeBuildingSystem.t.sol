@@ -83,7 +83,8 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     world.build(EBuilding.IronMine, getIronPosition(creator));
     world.upgradeBuilding(getIronPosition(creator));
 
-    assertEq(ProductionRate.get(spaceRockEntity, Copper), originalProduction - l2);
+    assertEq(ProductionRate.get(spaceRockEntity, Copper), originalProduction);
+    assertEq(ConsumptionRate.get(spaceRockEntity, Copper), l2);
   }
 
   function testUpgradeBuildingWithResourceProductionIncrease() public {

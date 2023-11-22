@@ -7,7 +7,7 @@ import { LibStorage } from "libraries/LibStorage.sol";
 
 import { UtilityMap } from "libraries/UtilityMap.sol";
 
-import { Home, P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+import { P_ConsumesResource, ConsumptionRate, Home, P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
 
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -118,6 +118,7 @@ library LibResource {
     bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
     bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
     LastClaimedAt.set(spaceRockEntity, block.timestamp);
+    uint256[] memory consumptionAmounts = new uint256[](uint8(EResource.LENGTH));
     for (uint8 i = 1; i < uint8(EResource.LENGTH); i++) {
       uint8 resource = i;
       // you can't claim utilities
@@ -130,9 +131,32 @@ library LibResource {
       // add resource to storage
       uint256 increase = productionRate * timeSinceClaimed;
 
+      uint8 consumedResource = P_ConsumesResource.get(resource);
+      if (consumedResource > 0) {
+        if (consumptionAmounts[consumedResource] == 0)
+          consumptionAmounts[consumedResource] = consumeResource(spaceRockEntity, consumedResource, timeSinceClaimed);
+        increase = productionRate * consumptionAmounts[consumedResource];
+      }
+
+      // add resource to storage
+
       ProducedResource.set(playerEntity, resource, ProducedResource.get(playerEntity, resource) + increase);
       LibStorage.increaseStoredResource(homeAsteroid, resource, increase);
     }
+  }
+
+  function consumeResource(
+    bytes32 spaceRock,
+    uint8 resource,
+    uint256 timePassed
+  ) internal returns (uint256) {
+    uint256 consumptionRate = ConsumptionRate.get(spaceRock, resource);
+    if (consumptionRate == 0) return 0;
+    uint256 resourceCount = ResourceCount.get(spaceRock, resource);
+    uint256 maxConsumed = resourceCount / consumptionRate;
+    if (maxConsumed < timePassed) timePassed = maxConsumed;
+    ResourceCount.set(spaceRock, resource, resourceCount - (consumptionRate * timePassed));
+    return timePassed;
   }
 
   /// @notice Clears utility usage of a building when it is destroyed
@@ -197,7 +221,7 @@ library LibResource {
     uint8 resource,
     uint256 value
   ) internal {
-    uint256 count = ResourceCount.get(player, resource);
+    uint256 count = ResourceCount.get(Home.getAsteroid(player), resource);
     uint256 currentScore = Score.get(player);
     uint256 scoreChangeAmount = P_ScoreMultiplier.get(resource);
 

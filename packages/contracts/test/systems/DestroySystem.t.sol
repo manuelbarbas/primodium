@@ -54,7 +54,6 @@ contract DestroySystemTest is PrimodiumTest {
     uint256 productionReduction = 10;
     bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
     ProductionRate.set(spaceRockEntity, uint8(EResource.Iron), originalProduction);
-
     P_RequiredDependencyData memory requiredDependenciesData = P_RequiredDependencyData(
       uint8(Iron),
       productionReduction
@@ -65,12 +64,11 @@ contract DestroySystemTest is PrimodiumTest {
 
     world.build(EBuilding.IronMine, getIronPosition(creator));
     uint256 productionIncrease = P_Production.getAmounts(IronMinePrototypeId, 1)[0];
-    assertEq(
-      ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)),
-      originalProduction - productionReduction + productionIncrease
-    );
+    assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), originalProduction + productionIncrease);
+    assertEq(ConsumptionRate.get(spaceRockEntity, uint8(EResource.Iron)), productionReduction);
 
     world.destroy(getIronPosition(creator));
+    assertEq(ConsumptionRate.get(spaceRockEntity, uint8(EResource.Iron)), 0);
     assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), originalProduction);
   }
 

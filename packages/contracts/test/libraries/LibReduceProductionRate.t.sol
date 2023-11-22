@@ -27,7 +27,7 @@ contract LibReduceProductionRateTest is PrimodiumTest {
     uint256 productionReduction = 10;
     bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
     ProductionRate.set(spaceRockEntity, Iron, originalProduction);
-
+    ConsumptionRate.set(spaceRockEntity, Iron, productionReduction);
     P_RequiredDependencyData memory requiredDependenciesData = P_RequiredDependencyData(
       uint8(Iron),
       productionReduction
@@ -37,7 +37,7 @@ contract LibReduceProductionRateTest is PrimodiumTest {
 
     LibReduceProductionRate.clearProductionRateReduction(buildingEntity);
 
-    assertEq(ProductionRate.get(spaceRockEntity, Iron), originalProduction + productionReduction);
+    assertEq(ConsumptionRate.get(spaceRockEntity, Iron), 0);
   }
 
   function testReduceProductionRate() public {
@@ -46,7 +46,7 @@ contract LibReduceProductionRateTest is PrimodiumTest {
     uint256 productionReduction = 10;
     bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
     ProductionRate.set(spaceRockEntity, Iron, originalProduction);
-
+    ConsumptionRate.set(spaceRockEntity, Iron, prevReduction);
     P_RequiredDependencyData memory requiredDependenciesData = P_RequiredDependencyData(
       uint8(Iron),
       productionReduction
@@ -56,23 +56,6 @@ contract LibReduceProductionRateTest is PrimodiumTest {
 
     LibReduceProductionRate.reduceProductionRate(buildingEntity, level);
 
-    assertEq(ProductionRate.get(spaceRockEntity, Iron), originalProduction - productionReduction + prevReduction);
-  }
-
-  function testFailReduceProductionRate() public {
-    // Set up mock data with insufficient production rate
-    uint256 originalProduction = 5;
-    uint256 productionReduction = originalProduction + prevReduction + 1;
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
-    ProductionRate.set(spaceRockEntity, Iron, originalProduction);
-
-    P_RequiredDependencyData memory requiredDependenciesData = P_RequiredDependencyData(
-      uint8(Iron),
-      productionReduction
-    );
-
-    P_RequiredDependency.set(buildingPrototype, level, requiredDependenciesData);
-
-    LibReduceProductionRate.reduceProductionRate(buildingEntity, level);
+    assertEq(ConsumptionRate.get(spaceRockEntity, Iron), productionReduction);
   }
 }

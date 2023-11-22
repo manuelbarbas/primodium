@@ -27,6 +27,37 @@ contract LibResourceTest is PrimodiumTest {
     assertEq(ResourceCount.get(spaceRockEntity, Iron), 100);
   }
 
+  function testClaimAllResourcesConsumptionBasic() public {
+    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    MaxResourceCount.set(spaceRockEntity, Iron, 1000);
+    ProductionRate.set(spaceRockEntity, Iron, 10);
+    P_ConsumesResource.set(Iron, Copper);
+
+    MaxResourceCount.set(spaceRockEntity, Copper, 1000);
+    ResourceCount.set(spaceRockEntity, Copper, 1000);
+
+    ConsumptionRate.set(spaceRockEntity, Copper, 100);
+    LastClaimedAt.set(spaceRockEntity, block.timestamp - 10);
+    LibResource.claimAllResources(spaceRockEntity);
+    assertEq(ResourceCount.get(spaceRockEntity, Iron), 100);
+    assertEq(ResourceCount.get(spaceRockEntity, Copper), 0);
+  }
+
+  function testClaimAllResourcesConsumptionRunOutBasic() public {
+    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    MaxResourceCount.set(spaceRockEntity, Iron, 1000);
+    ProductionRate.set(spaceRockEntity, Iron, 10);
+    P_ConsumesResource.set(Iron, Copper);
+    MaxResourceCount.set(spaceRockEntity, Copper, 1000);
+    ResourceCount.set(spaceRockEntity, Copper, 500);
+
+    ConsumptionRate.set(spaceRockEntity, Copper, 100);
+    LastClaimedAt.set(spaceRockEntity, block.timestamp - 10);
+    LibResource.claimAllResources(spaceRockEntity);
+    assertEq(ResourceCount.get(spaceRockEntity, Iron), 50);
+    assertEq(ResourceCount.get(spaceRockEntity, Copper), 0);
+  }
+
   function testClaimAllResourcesLessThanMax() public {
     bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
     MaxResourceCount.set(spaceRockEntity, Iron, 50);
