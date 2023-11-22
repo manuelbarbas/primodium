@@ -4,7 +4,6 @@ import { Button } from "./Button";
 import { primodium } from "@game/api";
 import { FaTimes } from "react-icons/fa";
 import { Card } from "./Card";
-import { IconLabel } from "./IconLabel";
 import { AudioKeys } from "@game/constants";
 
 interface ModalContextType {
@@ -30,10 +29,12 @@ export const Modal: React.FC<ModalProps> & {
 } = ({ children, title }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { enableInput, disableInput } = primodium.api().input;
+  const { audio } = primodium.api();
 
   useEffect(() => {
     const handleEscPress = (event: KeyboardEvent) => {
       if (isOpen && event.key === "Escape") {
+        audio.play(AudioKeys.Sequence2, "ui");
         setIsOpen(false);
       }
     };
@@ -55,14 +56,13 @@ export const Modal: React.FC<ModalProps> & {
 
 Modal.Button = function ModalButton({ children, className }) {
   const { setIsOpen } = useContext(ModalContext);
-  const { audio } = primodium.api();
 
   return (
     <Button
       className={className}
+      clickSound={AudioKeys.Sequence}
       onClick={() => {
         setIsOpen(true);
-        audio.play(AudioKeys.Sequence, "ui");
       }}
     >
       {children}
