@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useMud } from "src/hooks";
 import { shortenAddress } from "src/util/common";
 import { Hex } from "viem";
-import { getEnsName } from "viem/actions";
 
 const ensNames: Record<Hex, string | null> = {};
 export const AddressDisplay = ({ address, notShort }: { address: Hex; notShort?: boolean }) => {
@@ -18,7 +17,9 @@ export const AddressDisplay = ({ address, notShort }: { address: Hex; notShort?:
     }
     const fetchEnsName = async () => {
       try {
-        const name = await getEnsName(client, { address });
+        const res = await fetch(`${import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL}/ens/by-address/${address}`);
+        const { ensName: name } = (await res.json()) as { address: Hex; ensName: string | null };
+
         if (name) setEnsName(name);
         ensNames[address] = name;
       } catch (error) {

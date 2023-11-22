@@ -1,9 +1,8 @@
 import { Entity } from "@latticexyz/recs";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "src/components/core/Button";
 import { components } from "src/network/components";
 import { Hex, createPublicClient, formatEther, trim } from "viem";
-import { getEnsAddress } from "viem/ens";
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 
 interface TransferTokenProps {
@@ -26,12 +25,18 @@ export const TransferToken: React.FC<TransferTokenProps> = ({
   const [address, setAddress] = useState<string | null>(null);
   const [amount, setAmount] = useState<string>("");
 
+  useMemo(() => {
+    console.log("valid", valid);
+  }, [valid]);
+
   useEffect(() => {
     const fetchEnsName = async (address: string | null) => {
       if (address?.endsWith(".eth")) {
-        const addr = await getEnsAddress(client, { name: address });
+        const res = await fetch(`${import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL}/ens/by-name/${address}`);
+        const { address: addr } = (await res.json()) as { address: Hex; ensName: string | null };
         setValid(addr !== null);
         setAddress(addr);
+        if (addr !== null) return;
       }
 
       if (address?.startsWith("0x") && address.length === 42) {

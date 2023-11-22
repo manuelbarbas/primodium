@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Button } from "src/components/core/Button";
 import { components } from "src/network/components";
 import { Hex, createPublicClient, isHex } from "viem";
-import { getEnsAddress } from "viem/ens";
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 
 interface MintTokenProps {
@@ -26,7 +25,11 @@ export const MintToken: React.FC<MintTokenProps> = ({ onMint, className, client 
   useEffect(() => {
     const fetchEnsName = async (address: string | null) => {
       if (address?.endsWith(".eth")) {
-        const addr = await getEnsAddress(client, { name: address });
+        console.log("endpoint: ", `${import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL}/ens/by-name/${address}`);
+        const res = await fetch(`${import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL}/ens/by-name/${address}`);
+        console.log("res", res);
+        const { address: addr } = (await res.json()) as { address: Hex; ensName: string | null };
+
         setValid(addr !== null);
         setAddress(addr);
       }

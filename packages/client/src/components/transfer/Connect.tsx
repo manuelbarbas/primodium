@@ -16,14 +16,14 @@ export function Connect() {
           <Button
             className="btn-secondary font-bold w-full"
             key={x.id}
-            onClick={() => connect({ connector: x })}
+            onClick={() => !isLoading && connect({ connector: x })}
             disabled={isLoading && x.id !== pendingConnector?.id}
           >
             {x.name}
             {isLoading && x.id === pendingConnector?.id && <p className="text-xs">(connecting)</p>}
           </Button>
         ))}
-      {error && <p className="fixed top-6 right-6">{(error as BaseError).shortMessage}</p>}
+      {error && <p className="fixed bottom-6 right-6">{(error as BaseError).shortMessage}</p>}
     </div>
   );
 }
