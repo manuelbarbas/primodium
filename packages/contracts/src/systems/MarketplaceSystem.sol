@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 // external
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { addressToEntity } from "src/utils.sol";
-import { ResourceCount, MarketplaceOrder, MaxResourceCount, MarketplaceOrderData, P_GameConfig } from "codegen/index.sol";
+import { Home, ResourceCount, MarketplaceOrder, MaxResourceCount, MarketplaceOrderData, P_GameConfig } from "codegen/index.sol";
 import { LibResource, LibStorage } from "codegen/Libraries.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
@@ -27,14 +27,14 @@ contract MarketplaceSystem is PrimodiumSystem {
     uint256 price
   ) public returns (bytes32 orderId) {
     bytes32 playerEntity = addressToEntity(_msgSender());
-
-    uint256 orderCount = ResourceCount.get(playerEntity, uint8(EResource.U_Orders));
+    bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
+    uint256 orderCount = ResourceCount.get(homeAsteroid, uint8(EResource.U_Orders));
     require(orderCount > 0, "[MarketplaceSystem] Max orders reached");
 
     orderId = keccak256(abi.encodePacked(resource, count, block.timestamp, msg.sender));
 
     require(
-      count > 0 && count <= ResourceCount.get(playerEntity, uint8(resource)),
+      count > 0 && count <= ResourceCount.get(homeAsteroid, uint8(resource)),
       "[MarketplaceSystem] Invalid count"
     );
 
@@ -42,7 +42,6 @@ contract MarketplaceSystem is PrimodiumSystem {
       orderId,
       MarketplaceOrderData({ seller: playerEntity, resource: uint8(resource), count: count, price: price })
     );
-    bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
     LibStorage.decreaseStoredResource(homeAsteroid, uint8(EResource.U_Orders), 1);
   }
 
@@ -136,7 +135,7 @@ contract MarketplaceSystem is PrimodiumSystem {
 
   function _removeOrder(bytes32 orderId) internal {
     bytes32 seller = MarketplaceOrder.getSeller(orderId);
-    bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
+    bytes32 homeAsteroid = Home.getAsteroid(seller);
     MarketplaceOrder.deleteRecord(orderId);
     LibStorage.increaseStoredResource(homeAsteroid, uint8(EResource.U_Orders), 1);
   }
