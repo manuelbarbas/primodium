@@ -329,6 +329,11 @@ export const config = mudConfig({
       valueSchema: "uint256",
     },
 
+    OwnedMotherlodes: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "bytes32[]",
+    },
+
     /* ----------------------------- Unit Production ---------------------------- */
     // stores an array of all unit prototypes in the game
     P_UnitPrototypes: {

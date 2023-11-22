@@ -7,7 +7,7 @@ import { LibStorage } from "libraries/LibStorage.sol";
 
 import { UtilityMap } from "libraries/UtilityMap.sol";
 
-import { P_ConsumesResource, ConsumptionRate, Home, P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+import { OwnedMotherlodes, P_ConsumesResource, ConsumptionRate, Home, P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
 
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -100,6 +100,14 @@ library LibResource {
 
     // Spend resources. This will decrease the available resources for the spaceRock.
     LibStorage.decreaseStoredResource(spaceRockEntity, resource, resourceCost);
+  }
+
+  function claimAllPlayerResources(bytes32 playerEntity) internal {
+    bytes32[] memory ownedMotherlodes = OwnedMotherlodes.get(playerEntity);
+    for (uint256 i = 0; i < ownedMotherlodes.length; i++) {
+      claimAllResources(ownedMotherlodes[i]);
+    }
+    claimAllResources(Home.getAsteroid(playerEntity));
   }
 
   /// @notice Claims all unclaimed resources of a spaceRock
