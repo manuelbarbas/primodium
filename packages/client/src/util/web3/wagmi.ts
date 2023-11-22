@@ -1,11 +1,16 @@
+import { Buffer } from "buffer";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 import { configureChains, createConfig } from "wagmi";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
-
 import { publicProvider } from "wagmi/providers/public";
+
+// polyfill Buffer for client
+if (!window.Buffer) {
+  window.Buffer = Buffer;
+}
 
 const env = import.meta.env;
 const projectId = env.PRI_WALLETCONNECT_PROJECT_ID;
