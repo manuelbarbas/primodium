@@ -1,7 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { MouseEvent, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { GameButton } from "src/components/shared/GameButton";
 import { useMud } from "src/hooks/useMud";
 import { components } from "src/network/components";
 import { spawn } from "src/util/web3/contractCalls/spawn";
@@ -38,17 +37,21 @@ export const Landing: React.FC = () => {
         className="flex items-center justify-center h-screen text-white font-mono"
       >
         <div className="text-center space-y-2">
-          <div className="flex gap-2 p-4 mb-2 items-center">
-            <img src={"img/ios/mainbase-large-icon.png"} className={`w-20 h-20 pixel-images rounded-md`} />
-            <h1 className="text-8xl font-bold text-gray-300 stroke-cyan-400">Primodium</h1>
+          <div className="p-4 mb-2">
+            <h1 className="text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-cyan-200 to-pink-100 p-4 stroke stroke-slate-200 ">
+              Primodium
+            </h1>
           </div>
 
           {!message && (
-            <GameButton onClick={handlePlay}>
-              <p className="px-6 py-2 text-2xl">Play</p>
-            </GameButton>
+            <button
+              onClick={handlePlay}
+              className="text-2xl bg-slate-900 border border-cyan-400 p-2 px-4 hover:bg-cyan-800 hover:scale-105 transition-all"
+            >
+              Play
+            </button>
           )}
-          <p className="text-lg px-6 py-2">{message}</p>
+          <p className="text-lg">{message}</p>
         </div>
       </motion.div>
     </AnimatePresence>

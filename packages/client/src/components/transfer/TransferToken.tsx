@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "src/components/core/Button";
 import { components } from "src/network/components";
 import { Hex, createPublicClient, formatEther, trim } from "viem";
@@ -24,10 +24,6 @@ export const TransferToken: React.FC<TransferTokenProps> = ({
   const [valid, setValid] = useState<boolean>(true);
   const [address, setAddress] = useState<string | null>(null);
   const [amount, setAmount] = useState<string>("");
-
-  useMemo(() => {
-    console.log("valid", valid);
-  }, [valid]);
 
   useEffect(() => {
     const fetchEnsName = async (address: string | null) => {
