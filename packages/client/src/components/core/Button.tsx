@@ -27,13 +27,19 @@ export const Button: React.FC<{
   mute = false,
   clickSound = AudioKeys.Click2,
 }) => {
+  const api = primodium.apiOrUndefined();
+
   return (
     <Tooltip text={tooltip} direction={tooltipDirection}>
       <button
         onClick={(e) => {
+          !mute && api?.audio.play(clickSound, "ui");
           onClick && onClick(e);
         }}
         disabled={disabled}
+        onPointerEnter={() => {
+          !mute && api?.audio.play(AudioKeys.Click3, "ui");
+        }}
         className={`btn join-item inline pointer-events-auto font-bold outline-none ${className} ${
           disabled ? "opacity-80" : ""
         } ${selected ? "border-accent z-10 bg-base-100" : ""} `}

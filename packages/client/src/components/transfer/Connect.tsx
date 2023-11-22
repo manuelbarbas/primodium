@@ -1,10 +1,15 @@
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 import { Button } from "src/components/core/Button";
-import { BaseError } from "viem";
 import { useAccount, useConnect } from "wagmi";
 
 export function Connect() {
   const { connector, isConnected } = useAccount();
   const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
+
+  useEffect(() => {
+    if (error) toast.warn(error.message);
+  }, [error]);
 
   if (isConnected) return null;
   return (
@@ -23,7 +28,6 @@ export function Connect() {
             {isLoading && x.id === pendingConnector?.id && <p className="text-xs">(connecting)</p>}
           </Button>
         ))}
-      {error && <p className="fixed bottom-6 right-6">{(error as BaseError).shortMessage}</p>}
     </div>
   );
 }
