@@ -4,7 +4,6 @@ pragma solidity >=0.8.21;
 import { addressToEntity } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
-import { console } from "forge-std/console.sol";
 import { RecallSystem } from "systems/RecallSystem.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
@@ -28,10 +27,8 @@ contract OnRecall_TargetClaimResources is SystemHook {
     ResourceId systemId,
     bytes memory callData
   ) public {
-    console.log("before recall try claim resource on recall");
     bytes memory functionSelector = SliceInstance.toBytes(SliceLib.getSubslice(callData, 0, 4));
     if (bytes4(functionSelector) == RecallSystem.recallStationedUnits.selector) {
-      console.log("claimed resource on recall");
       bytes32 playerEntity = addressToEntity(msgSender);
       bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
       bytes32 rockEntity = abi.decode(args, (bytes32));

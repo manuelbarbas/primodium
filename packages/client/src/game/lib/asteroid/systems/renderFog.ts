@@ -1,14 +1,13 @@
+import { DepthLayers, FogTilekeys } from "@game/constants";
 import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
+import { components } from "src/network/components";
+import { SetupResult } from "src/network/types";
 import { world } from "src/network/world";
 import { getAsteroidBounds, getSpaceRockBounds } from "src/util/outOfBounds";
-import { Square } from "../../common/object-components/graphics";
 import { ObjectPosition, SetValue } from "../../common/object-components/common";
+import { Square } from "../../common/object-components/graphics";
 import { ObjectText } from "../../common/object-components/text";
-import { DepthLayers, FogTilekeys } from "@game/constants";
-import { SetupResult } from "src/network/types";
-import { components } from "src/network/components";
-import { BiHome } from "react-icons/bi";
 
 export function renderFog(scene: Scene, { network: { playerEntity } }: SetupResult) {
   const { tileWidth, tileHeight } = scene.tilemap;
