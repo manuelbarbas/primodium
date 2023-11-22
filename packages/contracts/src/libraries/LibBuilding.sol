@@ -80,7 +80,7 @@ library LibBuilding {
     uint256 targetLevel = Level.get(buildingEntity) + 1;
     require(targetLevel > 1, "[UpgradeBuildingSystem] Cannot upgrade a non-building");
     require(
-      OwnedBy.get(buildingEntity) == coord.parent,
+      OwnedBy.get(coord.parent) == playerEntity,
       "[UpgradeBuildingSystem] Cannot upgrade a building that is not owned by you"
     );
 
