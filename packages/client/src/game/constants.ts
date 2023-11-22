@@ -136,6 +136,11 @@ export enum SpriteKeys {
   Workshop2 = "sprites/workshop/level2/Workshop_LVL2_1.png",
   Workshop3 = "sprites/workshop/level3/Workshop_LVL3_1.png",
 
+  Market1 = "sprites/vault/level1/Vault_LVL1_1.png",
+  Market2 = "sprites/vault/level2/Vault_LVL2_1.png",
+  Market3 = "sprites/vault/level3/Vault_LVL3_1.png",
+  Market4 = "sprites/vault/level3/Vault_LVL3_1.png",
+
   DroneFactory1 = "sprites/drone-factory/normal/Drone_Factory1.png",
 
   SAMLauncher1 = "sprites/sam_launcher/level1/SAM_Launcher_LVL1_1.png",
@@ -272,6 +277,11 @@ export enum AnimationKeys {
   Vault1 = "vault/level1",
   Vault2 = "vault/level2",
   Vault3 = "vault/level3",
+
+  Market1 = "vault/level1",
+  Market2 = "vault/level2",
+  Market3 = "vault/level3",
+  Market4 = "vault/level3",
 }
 
 export enum AudioKeys {
@@ -334,6 +344,7 @@ export const EntitytoSpriteKey = {
 
   [EntityType.ShieldGenerator]: [SpriteKeys.ShieldGenerator1, SpriteKeys.ShieldGenerator2, SpriteKeys.ShieldGenerator3],
   [EntityType.Vault]: [SpriteKeys.Vault1, SpriteKeys.Vault2, SpriteKeys.Vault3],
+  [EntityType.Market]: [SpriteKeys.Market1, SpriteKeys.Market2, SpriteKeys.Market3, SpriteKeys.Market4],
 
   //STARMAP
   [EntityType.Asteroid]: [

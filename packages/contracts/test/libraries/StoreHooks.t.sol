@@ -26,8 +26,6 @@ contract TestStoreHooks is PrimodiumTest {
   }
 
   function testStoreHooks(uint256 unitCount, uint256 defense) public returns (uint256) {
-    vm.startPrank(creator);
-
     HookedValue.setValue(bytes32("test"), 1);
     console.log("Hooked value set");
 

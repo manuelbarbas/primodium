@@ -26,28 +26,25 @@ export const MaterialLabel = ({ name, resource }: { name: string; resource: Enti
     return;
   }, [resourceCount, resourcesToClaim, maxStorage]);
 
-  if (maxStorage > 0n) {
-    return (
-      <div className="gap-1 mx-1 group pointer-events-auto">
-        <ResourceIconTooltip
-          name={name}
-          playerEntity={playerEntity}
-          amount={resourceCount + resourcesToClaim}
-          resource={resource}
-          image={resourceIcon ?? ""}
-          validate={false}
-          fontSize={"sm"}
-          className={`${tooltipClass}`}
-        />
-        {production !== 0n && (
-          <p className="opacity-50 text-[0rem] group-hover:text-xs transition-all">
-            +{formatNumber((Number(production) * 60) / Number(RESOURCE_SCALE), { fractionDigits: 1 })}
-            /MIN <b>({Number(maxStorage / RESOURCE_SCALE)})</b>
-          </p>
-        )}
-      </div>
-    );
-  } else {
-    return <></>;
-  }
+  if (maxStorage === 0n) return null;
+  return (
+    <div className="gap-1 mx-1 group pointer-events-auto">
+      <ResourceIconTooltip
+        name={name}
+        playerEntity={playerEntity}
+        amount={resourceCount + resourcesToClaim}
+        resource={resource}
+        image={resourceIcon ?? ""}
+        validate={false}
+        fontSize={"sm"}
+        className={`${tooltipClass}`}
+      />
+      {production !== 0n && (
+        <p className="opacity-50 text-[0rem] group-hover:text-xs transition-all">
+          +{formatNumber((Number(production) * 60) / Number(RESOURCE_SCALE), { fractionDigits: 1 })}
+          /MIN <b>({Number(maxStorage / RESOURCE_SCALE)})</b>
+        </p>
+      )}
+    </div>
+  );
 };

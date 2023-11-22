@@ -86,6 +86,10 @@ const advancedBuildingHotbar: Hotbar = {
       blockType: EntityType.Vault,
       keybind: KeybindActions.Hotbar9,
     },
+    {
+      blockType: EntityType.Market,
+      keybind: KeybindActions.Hotbar0,
+    },
   ],
 };
 

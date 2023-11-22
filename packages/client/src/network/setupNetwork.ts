@@ -15,6 +15,7 @@ import {
   parseEther,
   webSocket,
 } from "viem";
+import { otherTables } from "./otherTables";
 import { NetworkConfig } from "./types";
 import { world } from "./world";
 
@@ -49,6 +50,7 @@ export async function setupNetwork(networkConfig: NetworkConfig) {
     publicClient,
     startBlock: BigInt(networkConfig.initialBlockNumber),
     indexerUrl: networkConfig.indexerUrl,
+    tables: otherTables,
   });
 
   // Request drip from faucet
