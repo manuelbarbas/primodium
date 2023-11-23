@@ -1,4 +1,6 @@
 /out/*
+!/out/IWorld.sol/
+/out/IWorld.sol/*
 !/out/IWorld.sol/IWorld.abi.json
 cache/
 node_modules/
