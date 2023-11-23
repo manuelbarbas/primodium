@@ -21,9 +21,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Prepare forge for tests
-        run: pnpm prepare
-        shell: bash
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
 
       - name: Build client bundle and contracts
         run: pnpm run build
