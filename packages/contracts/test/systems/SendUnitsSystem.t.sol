@@ -34,6 +34,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     BuildingType.set(building, buildingPrototype);
     OwnedBy.set(building, origin);
     OwnedBy.set(origin, player);
+    Spawned.set(player, true);
   }
 
   function prepareTestMovementRules() public {

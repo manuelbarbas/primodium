@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
+import { Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
 
 import { ERock, EUnit } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
@@ -69,6 +69,7 @@ library LibUnit {
     uint256 startTime = LastClaimedAt.get(building) - ClaimOffset.get(building);
     LastClaimedAt.set(building, block.timestamp);
     bytes32 playerEntity = OwnedBy.get(OwnedBy.get(building));
+    require(Spawned.get(playerEntity), "[ClaimBuildingUnits]: Owner does not exist");
     bool stillClaiming = !UnitProductionQueue.isEmpty(building);
     while (stillClaiming) {
       UnitProductionQueueData memory item = UnitProductionQueue.peek(building);

@@ -58,7 +58,7 @@ library LibBuilding {
       );
       require(coord.parent == Home.getAsteroid(playerEntity), "[BuildSystem] Can only build MainBase on home asteroid");
     }
-    require(OwnedBy.get(coord.parent) == playerEntity, "[BuildSystem] Building must be built on your home asteroid");
+    require(OwnedBy.get(coord.parent) == playerEntity, "[BuildSystem] You can only build on an asteroid you control");
 
     require(!Spawned.get(getBuildingFromCoord(coord)), "[BuildSystem] Building already exists");
     require(
@@ -80,7 +80,7 @@ library LibBuilding {
     uint256 targetLevel = Level.get(buildingEntity) + 1;
     require(targetLevel > 1, "[UpgradeBuildingSystem] Cannot upgrade a non-building");
     require(
-      OwnedBy.get(buildingEntity) == coord.parent,
+      OwnedBy.get(coord.parent) == playerEntity,
       "[UpgradeBuildingSystem] Cannot upgrade a building that is not owned by you"
     );
 

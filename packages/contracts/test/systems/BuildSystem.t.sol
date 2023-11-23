@@ -83,7 +83,7 @@ contract BuildSystemTest is PrimodiumTest {
     PositionData memory coord = getIronPosition(bob);
     //coord.parent = addressToEntity(bob);
 
-    vm.expectRevert(bytes("[BuildSystem] Building must be built on your home asteroid"));
+    vm.expectRevert(bytes("[BuildSystem] You can only build on an asteroid you control"));
     world.build(EBuilding.IronMine, coord);
   }
 

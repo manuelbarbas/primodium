@@ -22,6 +22,8 @@ contract LibUnitTest is PrimodiumTest {
     super.setUp();
     vm.startPrank(creator);
     player = addressToEntity(worldAddress);
+    Spawned.set(player, true);
+
     BuildingType.set(building, buildingPrototype);
     OwnedBy.set(Home.getAsteroid(player), player);
     OwnedBy.set(building, Home.getAsteroid(player));
