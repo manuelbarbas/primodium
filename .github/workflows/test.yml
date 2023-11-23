@@ -1,0 +1,36 @@
+name: Run all tests on creating a pull request and pushing to any branch
+
+on:
+  pull_request:
+    types: [opened, reopened]
+  push:
+    branches:
+      - "*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Prepare forge for tests
+        run: pnpm prepare
+
+      - name: Run tests in client
+        run: pnpm --filter client run test
+
+      - name: Run tests in client
+        run: pnpm --filter contracts run test
