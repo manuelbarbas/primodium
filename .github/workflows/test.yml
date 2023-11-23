@@ -1,4 +1,4 @@
-name: Run all tests on creating a pull request and pushing to any branch
+name: Test suites for client and contracts
 
 on: [push]
 
@@ -33,5 +33,8 @@ jobs:
       - name: Build contracts
         run: pnpm --filter contracts run build
 
-      - name: Run tests in client
+      - name: Create .env with anvil private key
+        run: echo "PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80" > packages/contracts/.env
+
+      - name: Run tests in contracts
         run: pnpm --filter contracts run test
