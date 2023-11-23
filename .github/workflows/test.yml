@@ -29,6 +29,9 @@ jobs:
       - name: Prepare forge for tests
         run: pnpm prepare
 
+      - name: Build client bundle and contracts
+        run: pnpm run build
+
       - name: Run tests in client
         run: pnpm --filter client run test
 
