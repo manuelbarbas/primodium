@@ -24,11 +24,14 @@ jobs:
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
 
-      - name: Build client bundle and contracts
-        run: pnpm run build
+      - name: Build client bundle
+        run: pnpm --filter client run build
 
       - name: Run tests in client
         run: pnpm --filter client run test
+
+      - name: Build contracts
+        run: pnpm --filter contracts run build
 
       - name: Run tests in client
         run: pnpm --filter contracts run test
