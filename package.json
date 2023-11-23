@@ -10,7 +10,7 @@
     "dev:contracts": "pnpm --filter 'contracts' deploy:local",
     "dev:node": "pnpm --filter 'contracts' devnode",
     "dev:pty": "run-pty % pnpm dev:node % pnpm dev:client % pnpm dev:contracts",
-    "foundry:up": "curl -L https://foundry.paradigm.xyz | bash && source ~/.bashrc && bash $HOME/.foundry/bin/foundryup",
+    "foundry:up": "curl -L https://foundry.paradigm.xyz | bash && ls -la $HOME/.foundry/ && ls -la $HOME/.foundry/bin/ && bash $HOME/.foundry/bin/foundryup",
     "mud:up": "pnpm mud set-version --tag main && pnpm install",
     "prepare": "husky install && (forge --version || pnpm foundry:up)",
     "sort-package-json": "npx sort-package-json package.json 'packages/*/package.json'",
