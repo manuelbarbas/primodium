@@ -1,11 +1,6 @@
 name: Run all tests on creating a pull request and pushing to any branch
 
-on:
-  pull_request:
-    types: [opened, reopened]
-  push:
-    branches:
-      - "*"
+on: [push]
 
 jobs:
   tests:
