@@ -40,6 +40,8 @@ contract PrimodiumTest is MudTest {
   uint8 U_MaxMoves = uint8(EResource.U_MaxMoves);
   uint8 Kimberlite = uint8(EResource.Kimberlite);
   uint8 Lithium = uint8(EResource.Lithium);
+  uint8 Titanium = uint8(EResource.Titanium);
+  uint8 R_Titanium = uint8(EResource.R_Titanium);
 
   function setUp() public virtual override {
     super.setUp();

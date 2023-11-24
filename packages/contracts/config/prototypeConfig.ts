@@ -1521,14 +1521,16 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     keys: [{ [EResource.Titanium]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 750n },
-      P_ConsumesResource: { value: EResource.Titanium },
+      P_RawResource: { value: EResource.R_Titanium },
+      P_ConsumesResource: { value: EResource.R_Titanium },
     },
   },
   Iridium: {
     keys: [{ [EResource.Iridium]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 3000n },
-      P_ConsumesResource: { value: EResource.Iridium },
+      P_RawResource: { value: EResource.R_Iridium },
+      P_ConsumesResource: { value: EResource.R_Iridium },
     },
   },
   Osmium: {
@@ -1547,14 +1549,16 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     keys: [{ [EResource.Kimberlite]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 8000n },
-      P_ConsumesResource: { value: EResource.Kimberlite },
+      P_RawResource: { value: EResource.R_Kimberlite },
+      P_ConsumesResource: { value: EResource.R_Kimberlite },
     },
   },
   Platinum: {
     keys: [{ [EResource.Platinum]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 1500n },
-      P_ConsumesResource: { value: EResource.Platinum },
+      P_RawResource: { value: EResource.R_Platinum },
+      P_ConsumesResource: { value: EResource.R_Platinum },
     },
   },
   Uraninite: {

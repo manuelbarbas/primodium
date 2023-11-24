@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-
+import { console } from "forge-std/console.sol";
+import { bytes32ToString } from "src/utils.sol";
 import { EResource } from "src/Types.sol";
 
 import { LibStorage } from "libraries/LibStorage.sol";
@@ -113,6 +114,7 @@ library LibResource {
   /// @notice Claims all unclaimed resources of a spaceRock
   /// @param spaceRockEntity ID of the spaceRock to claim
   function claimAllResources(bytes32 spaceRockEntity) internal {
+    console.log("claiming for %s", bytes32ToString(spaceRockEntity));
     uint256 lastClaimed = LastClaimedAt.get(spaceRockEntity);
     if (lastClaimed == block.timestamp) return;
 
@@ -124,48 +126,71 @@ library LibResource {
     uint256 timeSinceClaimed = block.timestamp - lastClaimed;
     timeSinceClaimed = (timeSinceClaimed * P_GameConfig.getWorldSpeed()) / WORLD_SPEED_SCALE;
     bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
-    bytes32 homeAsteroid = Home.getAsteroid();
+    bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
     LastClaimedAt.set(spaceRockEntity, block.timestamp);
     uint256[] memory consumptionTimeLengths = new uint256[](uint8(EResource.LENGTH));
 
-    for (uint8 i = 1; i < uint8(EResource.LENGTH); i++) {
-      uint8 resource = i;
+    for (uint8 resource = 1; resource < uint8(EResource.LENGTH); resource++) {
       // you can't claim utilities
       if (P_IsUtility.get(resource)) continue;
 
       //each resource has a production and consumption value. these values need to be seperate so we can calculate best outcome of production and consumption
       uint256 productionRate = ProductionRate.get(spaceRockEntity, resource);
+      uint256 consumptionRate = ConsumptionRate.get(spaceRockEntity, resource);
 
-      uint8 consumesResource = P_ConsumesResource.get(resource);
-      uint256 producedTime = timeSinceClaimed;
-      if (consumesResource > 0) {
-        if (consumptionTimeLengths[consumesResource] > 0) producedTime = consumptionTimeLengths[consumesResource];
+      //if they are both equal no change will be made
+      if (productionRate == 0 && consumptionRate == 0) continue;
+
+      //first we calculate production
+      uint256 increase = 0;
+      if (productionRate > 0) {
+        console.log("producing: %s", resource);
+        //check to see if this resource consumes another resource to be produced
+        uint8 consumesResource = P_ConsumesResource.get(resource);
+        //if this resource consumes another resource the maxium time it can be produced is the maximum time that the required resource is consumed
+        uint256 producedTime = consumesResource > 0 ? consumptionTimeLengths[consumesResource] : timeSinceClaimed;
+
+        //the amount of resource that has been produced
+        increase = productionRate * producedTime;
+        ProducedResource.set(playerEntity, resource, ProducedResource.get(playerEntity, resource) + increase);
       }
-      uint256 increase = ((productionRate * producedTime * P_GameConfig.getWorldSpeed()) / WORLD_SPEED_SCALE);
-      ProducedResource.set(playerEntity, resource, ProducedResource.get(playerEntity, resource) + increase);
 
-      uint256 consumptionRate = ConsumptionRate.get(playerEntity, resource);
+      // the maximum amount of resourecs that will decrease if there is enough of the resource available decrease < resourceCount + increase
+      uint256 decrease = (consumptionRate * timeSinceClaimed);
+
       //the maximum amount of time from the last update to this current time is the maximum amount of time this resource could have been consumed
       consumptionTimeLengths[resource] = timeSinceClaimed;
 
-      //check to see if this resource consumes another resource to be produced
+      //if increase and decrease match than nothing to update
+      if (increase == decrease) continue;
 
-      uint256 resourceCount = ResourceCount.get(homeAsteroid, resource);
-      uint256 decrease = ((consumptionRate * consumptionTimeLengths[resource] * P_GameConfig.getWorldSpeed()) /
-        WORLD_SPEED_SCALE);
-
-      if (increase >= decrease) {
+      uint256 resourceCount = ResourceCount.get(spaceRockEntity, resource);
+      if (increase > decrease) {
+        console.log("producing: %s", resource);
+        //if the increase is more than the decrease than we just increase by the difference
+        //todo currently we increase the resources for home asteroid as resource transfer is not a part of this update
         LibStorage.increaseStoredResource(homeAsteroid, resource, increase - decrease);
-      } else if (resourceCount + increase > decrease) {
-        LibStorage.decreaseStoredResource(homeAsteroid, resource, decrease - increase);
+      } else if (resourceCount + increase >= decrease) {
+        console.log("consuming: %s", resource);
+        //if sum of the increase and curr amount is more than the decrease we just decrease by the difference
+        //consumption is from current space rock and will be in the future
+        LibStorage.decreaseStoredResource(spaceRockEntity, resource, decrease - increase);
       } else {
-        consumptionTimeLengths[resource] = ((resourceCount) * P_GameConfig.getWorldSpeed()) / WORLD_SPEED_SCALE;
-        LibStorage.decreaseStoredResource(homeAsteroid, resource, resourceCount);
+        console.log("consuming partial: %s", resource);
+        //if the decrease is more than the sum of increase and current amount than the sum is tha maximum that can be consumed
+        // we use this amount to see how much time the resource can be consumed
+        consumptionTimeLengths[resource] =
+          ((resourceCount + increase) * WORLD_SPEED_SCALE) /
+          (P_GameConfig.getWorldSpeed() * consumptionRate);
+        //we use the time length to reduce current resource amount by the difference of the decrease and the increase
+        decrease = consumptionRate * consumptionTimeLengths[resource];
+        //consumption is from current space rock and will be in the future
+        LibStorage.decreaseStoredResource(spaceRockEntity, resource, decrease - increase);
       }
     }
   }
 
-  /// @notice Clears utility usage of a building when it is destroyed
+  /// @notice Clears utility usage of a building when it i s destroyed
   /// @param buildingEntity ID of the building to clear
   function clearUtilityUsage(bytes32 buildingEntity) internal {
     bytes32 spaceRockEntity = OwnedBy.get(buildingEntity);

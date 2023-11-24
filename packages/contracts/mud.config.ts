@@ -334,6 +334,11 @@ export const config = mudConfig({
       valueSchema: "bytes32[]",
     },
 
+    P_RawResource: {
+      keySchema: { resource: "uint8" },
+      valueSchema: "uint8",
+    },
+
     /* ----------------------------- Unit Production ---------------------------- */
     // stores an array of all unit prototypes in the game
     P_UnitPrototypes: {
