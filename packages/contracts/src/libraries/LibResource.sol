@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-import { console } from "forge-std/console.sol";
-import { bytes32ToString } from "src/utils.sol";
 import { EResource } from "src/Types.sol";
 
 import { LibStorage } from "libraries/LibStorage.sol";
@@ -114,7 +112,6 @@ library LibResource {
   /// @notice Claims all unclaimed resources of a spaceRock
   /// @param spaceRockEntity ID of the spaceRock to claim
   function claimAllResources(bytes32 spaceRockEntity) internal {
-    console.log("claiming for %s", bytes32ToString(spaceRockEntity));
     uint256 lastClaimed = LastClaimedAt.get(spaceRockEntity);
     if (lastClaimed == block.timestamp) return;
 
@@ -144,7 +141,6 @@ library LibResource {
       //first we calculate production
       uint256 increase = 0;
       if (productionRate > 0) {
-        console.log("producing: %s", resource);
         //check to see if this resource consumes another resource to be produced
         uint8 consumesResource = P_ConsumesResource.get(resource);
         //if this resource consumes another resource the maxium time it can be produced is the maximum time that the required resource is consumed
@@ -166,17 +162,14 @@ library LibResource {
 
       uint256 resourceCount = ResourceCount.get(spaceRockEntity, resource);
       if (increase > decrease) {
-        console.log("producing: %s", resource);
         //if the increase is more than the decrease than we just increase by the difference
         //todo currently we increase the resources for home asteroid as resource transfer is not a part of this update
         LibStorage.increaseStoredResource(homeAsteroid, resource, increase - decrease);
       } else if (resourceCount + increase >= decrease) {
-        console.log("consuming: %s", resource);
         //if sum of the increase and curr amount is more than the decrease we just decrease by the difference
         //consumption is from current space rock and will be in the future
         LibStorage.decreaseStoredResource(spaceRockEntity, resource, decrease - increase);
       } else {
-        console.log("consuming partial: %s", resource);
         //if the decrease is more than the sum of increase and current amount than the sum is tha maximum that can be consumed
         // we use this amount to see how much time the resource can be consumed
         consumptionTimeLengths[resource] =
