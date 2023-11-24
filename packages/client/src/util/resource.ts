@@ -90,16 +90,21 @@ export function getFullResourceCount(resourceID: Entity, playerEntity?: Entity) 
     })?.value ?? 0n;
 
   const production =
-    comps.ProductionRate.getWithKeys({
+    (comps.ProductionRate.getWithKeys({
       entity: activeAsteroid as Hex,
       resource,
-    })?.value ?? 0n;
+    })?.value ?? 0n) -
+    (comps.ConsumptionRate.getWithKeys({
+      entity: activeAsteroid as Hex,
+      resource,
+    })?.value ?? 0n);
 
   const playerLastClaimed = comps.LastClaimedAt.getWithKeys({ entity: activeAsteroid as Hex })?.value ?? 0n;
 
   const resourcesToClaimFromBuilding = (() => {
     const toClaim = ((getNow() - playerLastClaimed) * production * worldSpeed) / SPEED_SCALE;
     if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
+    else if (toClaim < 0n) return 0n;
     return toClaim;
   })();
 
