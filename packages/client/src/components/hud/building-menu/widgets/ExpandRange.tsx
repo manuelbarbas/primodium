@@ -20,7 +20,7 @@ export const ExpandRange: React.FC = () => {
   const mainBaseLevel = components.Level.use(mainBaseEntity, {
     value: 1n,
   }).value;
-
+  const homeAsteroid = components.Home.use(playerEntity)?.asteroid as Entity;
   const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = getUpgradeInfo(EntityType.Expansion, playerEntity);
 
   const hasEnough = useHasEnoughResources(recipe, playerEntity);
@@ -70,7 +70,7 @@ export const ExpandRange: React.FC = () => {
             disabled={!canUpgrade}
             // loading={transactionLoading}
             onClick={() => {
-              upgradeRange(network);
+              upgradeRange(homeAsteroid, network);
             }}
           >
             Expand

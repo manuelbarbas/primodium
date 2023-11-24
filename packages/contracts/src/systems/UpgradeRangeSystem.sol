@@ -8,7 +8,7 @@ import { ExpansionKey } from "src/Keys.sol";
 import { LibEncode, LibBuilding } from "codegen/Libraries.sol";
 
 contract UpgradeRangeSystem is PrimodiumSystem {
-  function upgradeRange() public {
+  function upgradeRange(bytes32 spaceRockEntity) public {
     bytes32 playerEntity = addressToEntity(msg.sender);
 
     uint256 targetLevel = Level.get(playerEntity) + 1;
@@ -18,6 +18,6 @@ contract UpgradeRangeSystem is PrimodiumSystem {
       "[UpgradeRangeSystem] MainBase level requirement not met"
     );
 
-    Level.set(playerEntity, targetLevel);
+    Level.set(spaceRockEntity, targetLevel);
   }
 }

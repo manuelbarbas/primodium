@@ -1,3 +1,5 @@
+import { Entity } from "@latticexyz/recs";
+import { Hex } from "viem";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { SetupNetworkResult } from "src/network/types";
@@ -8,9 +10,9 @@ import { parseReceipt } from "../../analytics/parseReceipt";
 import { getPlayerBounds } from "src/util/outOfBounds";
 import { bigintToNumber } from "src/util/bigint";
 
-export const upgradeRange = async (network: SetupNetworkResult) => {
+export const upgradeRange = async (asteroid: Entity, network: SetupNetworkResult) => {
   await execute(
-    () => network.worldContract.write.upgradeRange(),
+    () => network.worldContract.write.upgradeRange([asteroid as Hex]),
     network,
     {
       id: hashEntities(TransactionQueueType.Upgrade, network.playerEntity),
