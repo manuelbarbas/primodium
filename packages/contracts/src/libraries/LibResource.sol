@@ -124,47 +124,45 @@ library LibResource {
     uint256 timeSinceClaimed = block.timestamp - lastClaimed;
     timeSinceClaimed = (timeSinceClaimed * P_GameConfig.getWorldSpeed()) / WORLD_SPEED_SCALE;
     bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
-    bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
+    bytes32 homeAsteroid = Home.getAsteroid();
     LastClaimedAt.set(spaceRockEntity, block.timestamp);
-    uint256[] memory consumptionAmounts = new uint256[](uint8(EResource.LENGTH));
+    uint256[] memory consumptionTimeLengths = new uint256[](uint8(EResource.LENGTH));
+
     for (uint8 i = 1; i < uint8(EResource.LENGTH); i++) {
       uint8 resource = i;
       // you can't claim utilities
       if (P_IsUtility.get(resource)) continue;
 
-      // you have no production rate
+      //each resource has a production and consumption value. these values need to be seperate so we can calculate best outcome of production and consumption
       uint256 productionRate = ProductionRate.get(spaceRockEntity, resource);
-      if (productionRate == 0) continue;
 
-      // add resource to storage
-      uint256 increase = productionRate * timeSinceClaimed;
-
-      uint8 consumedResource = P_ConsumesResource.get(resource);
-      if (consumedResource > 0) {
-        if (consumptionAmounts[consumedResource] == 0)
-          consumptionAmounts[consumedResource] = consumeResource(spaceRockEntity, consumedResource, timeSinceClaimed);
-        increase = productionRate * consumptionAmounts[consumedResource];
+      uint8 consumesResource = P_ConsumesResource.get(resource);
+      uint256 producedTime = timeSinceClaimed;
+      if (consumesResource > 0) {
+        if (consumptionTimeLengths[consumesResource] > 0) producedTime = consumptionTimeLengths[consumesResource];
       }
-
-      // add resource to storage
-
+      uint256 increase = ((productionRate * producedTime * P_GameConfig.getWorldSpeed()) / WORLD_SPEED_SCALE);
       ProducedResource.set(playerEntity, resource, ProducedResource.get(playerEntity, resource) + increase);
-      LibStorage.increaseStoredResource(homeAsteroid, resource, increase);
-    }
-  }
 
-  function consumeResource(
-    bytes32 spaceRock,
-    uint8 resource,
-    uint256 timePassed
-  ) internal returns (uint256) {
-    uint256 consumptionRate = ConsumptionRate.get(spaceRock, resource);
-    if (consumptionRate == 0) return 0;
-    uint256 resourceCount = ResourceCount.get(spaceRock, resource);
-    uint256 maxConsumed = resourceCount / consumptionRate;
-    if (maxConsumed < timePassed) timePassed = maxConsumed;
-    ResourceCount.set(spaceRock, resource, resourceCount - (consumptionRate * timePassed));
-    return timePassed;
+      uint256 consumptionRate = ConsumptionRate.get(playerEntity, resource);
+      //the maximum amount of time from the last update to this current time is the maximum amount of time this resource could have been consumed
+      consumptionTimeLengths[resource] = timeSinceClaimed;
+
+      //check to see if this resource consumes another resource to be produced
+
+      uint256 resourceCount = ResourceCount.get(homeAsteroid, resource);
+      uint256 decrease = ((consumptionRate * consumptionTimeLengths[resource] * P_GameConfig.getWorldSpeed()) /
+        WORLD_SPEED_SCALE);
+
+      if (increase >= decrease) {
+        LibStorage.increaseStoredResource(homeAsteroid, resource, increase - decrease);
+      } else if (resourceCount + increase > decrease) {
+        LibStorage.decreaseStoredResource(homeAsteroid, resource, decrease - increase);
+      } else {
+        consumptionTimeLengths[resource] = ((resourceCount) * P_GameConfig.getWorldSpeed()) / WORLD_SPEED_SCALE;
+        LibStorage.decreaseStoredResource(homeAsteroid, resource, resourceCount);
+      }
+    }
   }
 
   /// @notice Clears utility usage of a building when it is destroyed
