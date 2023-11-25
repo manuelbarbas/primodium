@@ -64,14 +64,25 @@ export function getMotherlodeResource(entity: Entity) {
 }
 
 export function getFullResourceCount(resourceID: Entity, playerEntity?: Entity) {
+  const worldSpeed = comps.P_GameConfig.get()?.worldSpeed ?? 100n;
+  const resource = ResourceEnumLookup[resourceID];
+
+  if (resource == undefined) throw new Error("Resource not found" + resourceID);
+
   playerEntity = playerEntity ?? comps.Account.get()?.value;
   if (!playerEntity) throw new Error("No player entity");
   const activeAsteroid = comps.Home.get(playerEntity)?.asteroid;
   if (!activeAsteroid) throw new Error("No active asteroid");
 
-  const worldSpeed = comps.P_GameConfig.get()?.worldSpeed ?? 100n;
-  const resource = ResourceEnumLookup[resourceID];
-  if (resource == undefined) throw new Error("Resource not found");
+  const ownedMotherlodes = comps.OwnedMotherlodes.get(playerEntity)?.value;
+  let motherlodeProduction = 0n;
+  if (ownedMotherlodes) {
+    for (let i = 0; i < (ownedMotherlodes?.length ?? 0n); i++) {
+      motherlodeProduction +=
+        comps.ProductionRate.getWithKeys({ entity: ownedMotherlodes[i] as Hex, resource })?.value ?? 0n;
+    }
+  }
+
   const producedCount =
     comps.ProducedResource.getWithKeys({
       entity: playerEntity as Hex,
@@ -90,6 +101,7 @@ export function getFullResourceCount(resourceID: Entity, playerEntity?: Entity) 
     })?.value ?? 0n;
 
   const production =
+    motherlodeProduction +
     (comps.ProductionRate.getWithKeys({
       entity: activeAsteroid as Hex,
       resource,
@@ -104,7 +116,7 @@ export function getFullResourceCount(resourceID: Entity, playerEntity?: Entity) 
   const resourcesToClaimFromBuilding = (() => {
     const toClaim = ((getNow() - playerLastClaimed) * production * worldSpeed) / SPEED_SCALE;
     if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
-    else if (toClaim < 0n) return 0n;
+    else if (resourceCount + toClaim < 0n) return -resourceCount;
     return toClaim;
   })();
 
