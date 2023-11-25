@@ -18,6 +18,7 @@ export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
   const { network } = useMud();
   const playerEntity = network.playerEntity;
   const mainBaseEntity = components.Home.use(playerEntity)?.mainBase as Entity;
+  const homeAsteroid = components.Home.use(playerEntity)?.asteroid as Entity;
   const mainBaseLevel = components.Level.use(mainBaseEntity, {
     value: 1n,
   }).value;
@@ -83,7 +84,7 @@ export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
           className="btn-sm btn-secondary"
           disabled={!canUpgrade}
           onClick={() => {
-            upgradeUnit(UnitEnumLookup[type], network);
+            upgradeUnit(homeAsteroid, UnitEnumLookup[type], network);
           }}
         >
           Upgrade
