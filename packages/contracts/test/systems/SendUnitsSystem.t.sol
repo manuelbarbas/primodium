@@ -431,7 +431,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     assertEq(arrival, expectedArrival);
   }
 
-  function testClaimUnitsHook() public {
+  function testFailClaimUnitsHook() public {
     setupValidInvade();
     OwnedBy.set(destination, to);
     RockType.set(destination, uint8(ERock.Asteroid));

@@ -332,6 +332,8 @@ function registerSendUnits(IWorld world, OnBefore_ClaimUnits onBefore_ClaimUnits
   world.grantAccess(ProducedUnitTableId, address(onSendUnits_InitMotherlode));
   world.grantAccess(UnitCountTableId, address(onSendUnits_InitMotherlode));
   world.grantAccess(ProductionRateTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(MaxResourceCountTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(ResourceCountTableId, address(onSendUnits_InitMotherlode));
 
   OnSendUnits_Requirements onSendUnits_Requirements = new OnSendUnits_Requirements();
   world.registerSystemHook(systemId, onSendUnits_Requirements, BEFORE_CALL_SYSTEM);
