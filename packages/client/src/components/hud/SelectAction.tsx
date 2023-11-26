@@ -19,12 +19,50 @@ export const SelectAction = () => {
   const spectatingAccount = components.SpectateAccount.use()?.value;
 
   const closeMap = async () => {
-    await transitionToScene(Scenes.Starmap, Scenes.Asteroid, 0);
+    await transitionToScene(
+      Scenes.Starmap,
+      Scenes.Asteroid,
+      0,
+      (_, targetScene) => {
+        targetScene.camera.phaserCamera.fadeOut(0, 0, 0, 0);
+      },
+      (_, targetScene) => {
+        targetScene.phaserScene.add.tween({
+          targets: targetScene.camera.phaserCamera,
+          zoom: { from: 0.5, to: 1 },
+          duration: 500,
+          ease: "Cubic.easeInOut",
+          onComplete: () => {
+            requestAnimationFrame(() => targetScene.camera.worldView$.next(targetScene.camera.phaserCamera.worldView));
+          },
+        });
+        targetScene.camera.phaserCamera.fadeIn(500, 0, 0, 0);
+      }
+    );
     components.MapOpen.set({ value: false });
   };
 
   const openMap = async () => {
-    await transitionToScene(Scenes.Asteroid, Scenes.Starmap, 0);
+    await transitionToScene(
+      Scenes.Asteroid,
+      Scenes.Starmap,
+      0,
+      (_, targetScene) => {
+        targetScene.camera.phaserCamera.fadeOut(0, 0, 0, 0);
+      },
+      (_, targetScene) => {
+        targetScene.phaserScene.add.tween({
+          targets: targetScene.camera.phaserCamera,
+          zoom: { from: 2, to: 1 },
+          duration: 500,
+          ease: "Cubic.easeInOut",
+          onComplete: () => {
+            requestAnimationFrame(() => targetScene.camera.worldView$.next(targetScene.camera.phaserCamera.worldView));
+          },
+        });
+        targetScene.camera.phaserCamera.fadeIn(500, 0, 0, 0);
+      }
+    );
     components.MapOpen.set({ value: true });
     components.SpectateAccount.set({ value: playerEntity });
     components.SelectedBuilding.remove();
