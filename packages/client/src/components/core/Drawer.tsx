@@ -52,19 +52,7 @@ const Drawer: React.FC<DrawerProps> & {
     };
   }, [isOpen, disableInput, enableInput, audio]);
 
-  const drawerClasses = `drawer drawer-${direction} ${isOpen ? "open" : ""}`;
-
-  return ReactDOM.createPortal(
-    <DrawerContext.Provider value={{ isOpen, setIsOpen, direction }}>
-      <div className={drawerClasses} onClick={(e) => e.stopPropagation()}>
-        <Card className="drawer-content">{children}</Card>
-        <Button className="drawer-close" onClick={() => setIsOpen(false)}>
-          <FaTimes />
-        </Button>
-      </div>
-    </DrawerContext.Provider>,
-    document.body
-  );
+  return <DrawerContext.Provider value={{ isOpen, setIsOpen, direction }}>{children}</DrawerContext.Provider>;
 };
 
 Drawer.Button = function DrawerButton({ children, className }) {
@@ -78,11 +66,20 @@ Drawer.Button = function DrawerButton({ children, className }) {
 };
 
 Drawer.Content = function DrawerContent({ children, className }) {
-  const { isOpen } = useContext(DrawerContext);
+  const { isOpen, direction, setIsOpen } = useContext(DrawerContext);
 
   if (!isOpen) return null;
 
-  return <div className={`drawer-content ${className}`}>{children}</div>;
+  const drawerClasses = ` ${isOpen ? "" : ""}`;
+  return ReactDOM.createPortal(
+    <div className={drawerClasses}>
+      <Button className="" onClick={() => setIsOpen(false)}>
+        <FaTimes />
+      </Button>
+      <Card className="">{children}</Card>
+    </div>,
+    document.body
+  );
 };
 
 export default Drawer;

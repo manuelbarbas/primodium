@@ -28,6 +28,10 @@ import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
 import { Settings } from "./modals/Settings";
 import { Objectives } from "./modals/Objectives";
+import Drawer from "../core/Drawer";
+import { Tabs } from "../core/Tabs";
+import { FaCaretLeft, FaCaretRight, FaCaretUp } from "react-icons/fa";
+import { Leaderboard } from "./modals/leaderboard/Leaderboard";
 
 export const GameHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [state.showUI, state.toggleShowUI]);
@@ -67,7 +71,7 @@ export const GameHUD = () => {
                       />
                     </Modal.Button>
                     <Modal.Content className="w-[50rem] h-[50rem]">
-                      <PlayerLeaderboard />
+                      <Leaderboard />
                     </Modal.Content>
                   </Modal>
                   <OverlayModal>
@@ -110,6 +114,82 @@ export const GameHUD = () => {
               <Score />
             </div>
           </HUD.TopMiddle>
+          <HUD.TopLeft>
+            <Profile />
+          </HUD.TopLeft>
+          <HUD.Right>
+            <Tabs className="flex flex-row justify-center items-center gap-0">
+              <Tabs.Button
+                index={0}
+                className="rounded-r-none m-0 border-r-0 btn-md border-warning relative py-4 hover:text-accent group"
+              >
+                <FaCaretLeft
+                  size={22}
+                  className="text-accent absolute top-1/2 left-0  -translate-y-1/2 -translate-x-full "
+                />
+                <IconLabel imageUri="img/icons/minersicon.png" className="text-2xl" />
+                <p
+                  style={{
+                    writingMode: "vertical-rl",
+                    textOrientation: "sideways",
+                  }}
+                  className=" absolute tracking-widest uppercase font-bold -rotate-180 right-0 bottom-full my-4 mr-2 opacity-75 bg-secondary/25 rounded-box backdrop-blur-md p-2 group-hover:ring-1"
+                >
+                  blueprints
+                </p>
+              </Tabs.Button>
+
+              <Tabs.Pane index={0} className="rounded-r-none border-r-0 h-96 z-10">
+                blueprints placeholder
+              </Tabs.Pane>
+            </Tabs>
+          </HUD.Right>
+
+          <HUD.Left>
+            <Tabs className="flex flex-row justify-center items-center gap-0" defaultIndex={-1}>
+              <Tabs.Pane index={0} className="rounded-l-none border-l-0 h-96 z-10">
+                CHAT PLACEHOLDER
+              </Tabs.Pane>
+              <Tabs.Button
+                index={0}
+                className="rounded-l-none m-0 border-l-0 btn-md border-secondary relative py-4 hover:text-accent group"
+              >
+                <FaCaretRight
+                  size={22}
+                  className="text-accent absolute top-1/2 right-0  -translate-y-1/2 translate-x-full "
+                />
+                <IconLabel imageUri="img/icons/chaticon.png" className="text-2xl" />
+                <p
+                  style={{
+                    writingMode: "vertical-rl",
+                    textOrientation: "sideways",
+                  }}
+                  className=" absolute tracking-widest uppercase font-bold -rotate-180 left-0 bottom-full my-4 ml-2 opacity-75 bg-secondary/25 rounded-box backdrop-blur-md p-2 group-hover:ring-1"
+                >
+                  chat
+                </p>
+              </Tabs.Button>
+            </Tabs>
+          </HUD.Left>
+
+          <HUD.BottomMiddle>
+            <Tabs className="flex flex-col justify-center items-center gap-0">
+              <Tabs.Button
+                index={0}
+                className="rounded-b-none m-0 border-b-0 btn-md border-secondary relative hover:text-accent"
+              >
+                <FaCaretUp
+                  size={22}
+                  className="text-accent absolute top-0 right-1/2 translate-x-1/2 -translate-y-full "
+                />
+                <IconLabel imageUri="img/icons/asteroidicon.png" text="Spacerocks" />
+              </Tabs.Button>
+
+              <Tabs.Pane index={0} className="rounded-b-none border-b-0 outline outline-secondary z-10">
+                dasdasddasdasdsadadadasdadasdas
+              </Tabs.Pane>
+            </Tabs>
+          </HUD.BottomMiddle>
         </HUD>
 
         <HUD>

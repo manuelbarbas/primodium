@@ -3,8 +3,13 @@ import { encodeEntity, singletonEntity } from "@latticexyz/store-sync/recs";
 import { Cheatcodes } from "@primodiumxyz/mud-game-tools";
 import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
-import { Hex, padHex, trim } from "viem";
+import { Hex, createWalletClient, fallback, getContract, http, padHex, trim, webSocket } from "viem";
 import { EntityType, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
+import { generatePrivateKey } from "viem/accounts";
+import { getNetworkConfig } from "src/network/config/getNetworkConfig";
+import { createBurnerAccount, transportObserver } from "@latticexyz/common";
+import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
+import { world } from "src/network/world";
 const resources: Record<string, Entity> = {
   iron: EntityType.Iron,
   copper: EntityType.Copper,
@@ -227,6 +232,36 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
             value: BigInt(2 * 1e18),
           }
         );
+      },
+    },
+    spawnPlayers: {
+      params: [{ name: "count", type: "number" }],
+      function: async (count: number) => {
+        const networkConfig = getNetworkConfig();
+        const clientOptions = {
+          chain: networkConfig.chain,
+          transport: transportObserver(fallback([webSocket(), http()])),
+          pollingInterval: 1000,
+        };
+
+        for (let i = 0; i < count; i++) {
+          const privateKey = generatePrivateKey();
+          const burnerAccount = createBurnerAccount(privateKey as Hex);
+
+          const burnerWalletClient = createWalletClient({
+            ...clientOptions,
+            account: burnerAccount,
+          });
+
+          const worldContract = getContract({
+            address: networkConfig.worldAddress as Hex,
+            abi: IWorldAbi,
+            publicClient: mud.network.publicClient,
+            walletClient: burnerWalletClient,
+          });
+
+          await worldContract.write.spawn();
+        }
       },
     },
   };

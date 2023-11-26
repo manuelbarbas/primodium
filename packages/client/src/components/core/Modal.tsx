@@ -49,7 +49,7 @@ export const Modal: React.FC<ModalProps> & {
     return () => {
       window.removeEventListener("keydown", handleEscPress);
     };
-  }, [isOpen, disableInput, enableInput]);
+  }, [isOpen, disableInput, enableInput, audio]);
 
   return <ModalContext.Provider value={{ isOpen, setIsOpen, title }}>{children}</ModalContext.Provider>;
 };

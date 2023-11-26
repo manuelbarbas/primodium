@@ -102,7 +102,7 @@ export const getBlockTypeName = (blockType: Entity | undefined) => {
 };
 
 export const shortenAddress = (address: Hex): Hex => {
-  return `0x${address.slice(2, 7)}`;
+  return `0x${address.slice(2, 6)}...${address.slice(-4)}`;
 };
 
 export function reverseRecord<T extends PropertyKey, U extends PropertyKey>(input: Record<T, U>) {

@@ -19,6 +19,7 @@ export const SelectAction = () => {
   const spectatingAccount = components.SpectateAccount.use()?.value;
 
   const closeMap = async () => {
+    if (!mapOpen) return;
     await transitionToScene(
       Scenes.Starmap,
       Scenes.Asteroid,
@@ -43,6 +44,8 @@ export const SelectAction = () => {
   };
 
   const openMap = async () => {
+    if (mapOpen) return;
+
     await transitionToScene(
       Scenes.Asteroid,
       Scenes.Starmap,
@@ -111,7 +114,7 @@ export const SelectAction = () => {
         <Button
           clickSound={AudioKeys.Sequence}
           onClick={closeMap}
-          className={`relative rounded-t-none rounded-r-none ${mapOpen ? "opacity-75" : "ring ring-accent z-10"}`}
+          className={`relative rounded-t-none rounded-r-none ${mapOpen ? "opacity-50" : "ring ring-accent z-10"}`}
         >
           <div className="flex flex-col gap-2 items-center p-2">
             <img src="img/icons/minersicon.png" className="pixel-images w-12 h-12" />
@@ -122,7 +125,9 @@ export const SelectAction = () => {
         <Button
           clickSound={AudioKeys.Sequence}
           onClick={openMap}
-          className={`rounded-t-none rounded-l-none ${!mapOpen ? "opacity-75" : "ring ring-accent z-10"}`}
+          className={`rounded-t-none rounded-l-none disabled:opacity-100 ${
+            !mapOpen ? "opacity-50" : "ring ring-accent z-10"
+          }`}
         >
           <div className="flex flex-col gap-2 items-center p-2">
             <img src="img/icons/starmapicon.png" className="pixel-images w-12 h-12" />

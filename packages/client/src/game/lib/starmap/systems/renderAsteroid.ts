@@ -9,11 +9,13 @@ import { Coord } from "@latticexyz/utils";
 import { ERock } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
-import { clampedIndex, getRandomRange } from "src/util/common";
+import { clampedIndex, entityToAddress, getRandomRange, shortenAddress } from "src/util/common";
 import { EntityType, RockRelationship } from "src/util/constants";
 import { getNow } from "src/util/time";
 import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 import { getRockRelationship } from "src/util/spacerock";
+import { ObjectText } from "../../common/object-components/text";
+import { Hex } from "viem";
 
 export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -66,7 +68,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         repeat: -1, // Repeat indefinitely
       }),
       Tween(scene, {
-        scrollFactorX: { from: 1 - getRandomRange(0, 0.02), to: 1 + getRandomRange(0, 0.02) },
+        scrollFactorX: { from: 1 - getRandomRange(0, 0.005), to: 1 + getRandomRange(0, 0.005) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
         duration: 3000, // Duration of one wobble
@@ -74,7 +76,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         repeat: -1, // Repeat indefinitely
       }),
       Tween(scene, {
-        scrollFactorY: { from: 1 - getRandomRange(0, 0.02), to: 1 + getRandomRange(0, 0.02) },
+        scrollFactorY: { from: 1 - getRandomRange(0, 0.005), to: 1 + getRandomRange(0, 0.005) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
         duration: 5000, // Duration of one wobble
@@ -111,6 +113,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         if (asteroidOutline.hasComponent(Outline().id)) {
           asteroidOutline.removeComponent(Outline().id);
           asteroidObject.reset();
+          asteroidLabel.reset();
         }
       }),
       OnComponentSystem(components.PlayerAlliance, (_, { entity: _entity }) => {
@@ -146,6 +149,21 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       SetValue({
         depth: DepthLayers.Marker,
         input: null,
+      }),
+    ]);
+
+    const asteroidLabel = asteroidObjectGroup.add("Text");
+
+    asteroidLabel.setComponents([
+      ...sharedComponents,
+      SetValue({
+        originX: 0.5,
+        originY: -3,
+      }),
+      ObjectText(shortenAddress(entityToAddress(ownedBy) as Hex), {
+        backgroundColor: "#000000",
+        color: "cyan",
+        fontSize: 8,
       }),
     ]);
   };

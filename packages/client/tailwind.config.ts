@@ -31,7 +31,7 @@ export default {
           "base-100": colors.slate[800],
           info: colors.indigo[600],
           success: colors.emerald[400],
-          warning: colors.amber[600],
+          warning: colors.yellow[600],
           error: colors.rose[700],
 
           "--rounded-box": "1rem", // border radius rounded-box utility class, used in card and other large boxes

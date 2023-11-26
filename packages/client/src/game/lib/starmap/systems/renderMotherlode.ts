@@ -61,7 +61,7 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
         repeat: -1, // Repeat indefinitely
       }),
       Tween(scene, {
-        scrollFactorX: { from: 1 - getRandomRange(0, 0.02), to: 1 + getRandomRange(0, 0.02) },
+        scrollFactorX: { from: 1 - getRandomRange(0, 0.005), to: 1 + getRandomRange(0, 0.005) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
         duration: 3000, // Duration of one wobble
@@ -69,7 +69,7 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
         repeat: -1, // Repeat indefinitely
       }),
       Tween(scene, {
-        scrollFactorY: { from: 1 - getRandomRange(0, 0.02), to: 1 + getRandomRange(0, 0.02) },
+        scrollFactorY: { from: 1 - getRandomRange(0, 0.005), to: 1 + getRandomRange(0, 0.005) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
         duration: 5000, // Duration of one wobble
