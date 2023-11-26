@@ -3,11 +3,9 @@ import { Hex } from "viem";
 import { FaGift, FaMapPin } from "react-icons/fa";
 import { useEffect, useMemo, useState } from "react";
 import { components } from "src/network/components";
-import { Modal } from "../core/Modal";
-import { Objectives } from "./modals/Objectives";
 import { ObjectiveEntityLookup, TransactionQueueType } from "src/util/constants";
 import { EObjectives } from "contracts/config/enums";
-import { getBlockTypeName } from "src/util/common";
+import { clampedIndex, getBlockTypeName } from "src/util/common";
 import { ObjectiveDescriptions } from "src/util/objectiveDescriptions";
 import { getCanClaimObjective } from "src/util/objectives";
 import { TransactionQueueMask } from "../shared/TransactionQueueMask";
@@ -15,19 +13,22 @@ import { hashEntities } from "src/util/encode";
 import { claimObjective } from "src/util/web3/contractCalls/claimObjective";
 import { Button } from "../core/Button";
 import { Card } from "../core/Card";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 
 const tutorialObjectives = [
   EObjectives.BuildIronMine,
   EObjectives.BuildCopperMine,
   EObjectives.BuildGarage,
   EObjectives.BuildWorkshop,
+  EObjectives.BuildIronPlateFactory,
 ];
 
 export const CurrenObjective = () => {
   const { network } = useMud();
   const playerEntity = components.Account.use()?.value ?? singletonEntity;
   const [currentStep, setCurrentStep] = useState(0);
-  const objectiveEntity = ObjectiveEntityLookup[tutorialObjectives[currentStep]];
+  const objectiveEntity =
+    ObjectiveEntityLookup[tutorialObjectives[clampedIndex(currentStep, tutorialObjectives.length)]];
   const claimed =
     components.CompletedObjective.useWithKeys({ entity: playerEntity as Hex, objective: objectiveEntity as Hex })
       ?.value ?? false;
@@ -45,6 +46,7 @@ export const CurrenObjective = () => {
   const canClaim = useMemo(() => {
     return getCanClaimObjective(objectiveEntity, playerEntity);
   }, [
+    playerEntity,
     levelRequirement,
     objectiveClaimedRequirement,
     hasBuiltBuildingRequirement,
@@ -57,12 +59,26 @@ export const CurrenObjective = () => {
   ]);
 
   useEffect(() => {
-    if (claimed) {
-      setCurrentStep(currentStep + 1);
-    }
-  }, [claimed, currentStep, setCurrentStep]);
+    // Function to find the next unclaimed objective
+    const findNextUnclaimedObjective = () => {
+      console.log(playerEntity);
+      return tutorialObjectives.findIndex((objective) => {
+        const objectiveEntity = ObjectiveEntityLookup[objective];
+        const isClaimed =
+          components.CompletedObjective.getWithKeys({
+            entity: playerEntity as Hex,
+            objective: objectiveEntity as Hex,
+          })?.value ?? false;
+        return !isClaimed;
+      });
+    };
 
-  if (currentStep >= tutorialObjectives.length) return <></>;
+    const nextUnclaimedIndex = findNextUnclaimedObjective();
+
+    setCurrentStep(nextUnclaimedIndex);
+  }, [claimed, playerEntity]);
+
+  if (currentStep === -1) return <></>;
 
   return (
     <div className="flex flex-col items-center">
@@ -75,25 +91,30 @@ export const CurrenObjective = () => {
           <hr className="border-secondary/50" />
           <div className="flex gap-1 text-right w-full justify-end rounded-b-xl px-2 border-b border-secondary/50 p-1 w-72">
             <p className="text-xs text-success text-left normal-case font-normal">
-              {ObjectiveDescriptions.get(tutorialObjectives[0])}
+              {ObjectiveDescriptions.get(tutorialObjectives[currentStep])}
             </p>
           </div>
         </div>
       </Card>
-      <TransactionQueueMask
-        className="w-fit flex items-center justify-center"
-        queueItemId={hashEntities(TransactionQueueType.ClaimObjective, objectiveEntity)}
-      >
-        <Button
-          disabled={!canClaim}
-          className={`btn-xs btn-ghost mt-1 flex items-center justify-center gap-1 text-accent`}
-          onClick={() => {
-            claimObjective(objectiveEntity, network);
-          }}
+      <div className="flex justify-between w-full px-5 pt-2">
+        <TransactionQueueMask
+          className="w-fit flex items-center justify-center"
+          queueItemId={hashEntities(TransactionQueueType.ClaimObjective, objectiveEntity)}
         >
-          <FaGift /> {"Claim"}
-        </Button>
-      </TransactionQueueMask>
+          <Button
+            disabled={!canClaim}
+            className={`btn-xs btn-ghost flex items-center justify-center gap-1 text-accent`}
+            onClick={() => {
+              claimObjective(objectiveEntity, network);
+            }}
+          >
+            <FaGift /> {"Claim"}
+          </Button>
+        </TransactionQueueMask>
+        <p className="text-xs text-secondary">
+          {currentStep + 1} / {tutorialObjectives.length}
+        </p>
+      </div>
     </div>
   );
 };
