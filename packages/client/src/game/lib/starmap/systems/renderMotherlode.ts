@@ -32,6 +32,8 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
         }` as keyof typeof SpriteKeys
       ];
 
+    const spriteScale = getSpriteScale(motherlodeData.size);
+
     const sharedComponents = [
       ObjectPosition({
         x: coord.x * tileWidth,
@@ -40,10 +42,10 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
       SetValue({
         originX: 0.5,
         originY: 0.5,
-        scale: getSpriteScale(motherlodeData.size),
+        scale: spriteScale,
       }),
       Tween(scene, {
-        scale: { from: 1 - getRandomRange(0, 0.05), to: 1 + getRandomRange(0, 0.05) },
+        scale: { from: spriteScale - getRandomRange(0, 0.05), to: spriteScale + getRandomRange(0, 0.05) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
         duration: 5000, // Duration of one wobble
