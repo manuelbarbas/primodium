@@ -33,6 +33,7 @@ import { Tabs } from "../core/Tabs";
 import { FaCaretLeft, FaCaretRight, FaCaretUp } from "react-icons/fa";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
 import { CurrenObjective } from "./CurrentObjective";
+import { Blueprints } from "./Blueprints";
 
 export const GameHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [state.showUI, state.toggleShowUI]);
@@ -145,8 +146,8 @@ export const GameHUD = () => {
                 </p>
               </Tabs.Button>
 
-              <Tabs.Pane index={0} className="rounded-r-none border-r-0 h-96 z-10">
-                blueprints placeholder
+              <Tabs.Pane index={0} className="rounded-r-none border-r-0 z-10">
+                <Blueprints />
               </Tabs.Pane>
             </Tabs>
           </HUD.Right>
