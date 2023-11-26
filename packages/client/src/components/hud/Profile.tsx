@@ -2,7 +2,6 @@ import { useMud } from "src/hooks";
 import { linkAddress } from "src/util/web2/linkAddress";
 import { formatEther } from "viem";
 import { Button } from "../core/Button";
-import { Card } from "../core/Card";
 import { useAccount } from "src/hooks/useAccount";
 import { AccountDisplay } from "../shared/AccountDisplay";
 import { FaLink } from "react-icons/fa";

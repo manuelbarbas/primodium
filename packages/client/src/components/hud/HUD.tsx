@@ -32,6 +32,7 @@ import Drawer from "../core/Drawer";
 import { Tabs } from "../core/Tabs";
 import { FaCaretLeft, FaCaretRight, FaCaretUp } from "react-icons/fa";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
+import { CurrenObjective } from "./CurrentObjective";
 
 export const GameHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [state.showUI, state.toggleShowUI]);
@@ -114,9 +115,14 @@ export const GameHUD = () => {
               <Score />
             </div>
           </HUD.TopMiddle>
+
           <HUD.TopLeft>
             <Profile />
           </HUD.TopLeft>
+
+          <HUD.TopRight>
+            <CurrenObjective />
+          </HUD.TopRight>
           <HUD.Right>
             <Tabs className="flex flex-row justify-center items-center gap-0">
               <Tabs.Button
