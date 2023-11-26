@@ -7,6 +7,7 @@ import { components } from "src/network/components";
 import { Hex } from "viem";
 import { Button } from "../core/Button";
 import { getBlockTypeName } from "src/util/common";
+import { FaLock } from "react-icons/fa";
 
 const Blueprint: React.FC<{
   buildingType: Entity;
@@ -33,11 +34,18 @@ const Blueprint: React.FC<{
         components.SelectedBuilding.set({ value: buildingType });
         components.SelectedAction.set({ value: Action.PlaceBuilding });
       }}
-      className={`relative btn-ghost w-fit p-0 hover:bg-accent disabled:opacity-25 rounded border border-secondary ${
+      className={`relative btn-ghost w-fit p-0 hover:bg-accent disabled:opacity-50 rounded border border-secondary hover:z-10 ${
         selectedBuilding === buildingType ? " ring-2 ring-warning" : ""
       }`}
     >
       <BuildingImageFromType buildingType={buildingType} />
+      {mainbaseLevel < levelRequirement && (
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-error flex text-xs bg">
+          <p className="bg-neutral flex gap-1">
+            <FaLock /> LVL. {levelRequirement.toString()}
+          </p>
+        </div>
+      )}
     </Button>
   );
 };
