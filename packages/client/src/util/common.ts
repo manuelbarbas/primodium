@@ -25,6 +25,10 @@ export const wrap = (index: number, length: number) => {
   return ((index % length) + length) % length;
 };
 
+export const getRandomRange = (min: number, max: number) => {
+  return Math.random() * (max - min) + min;
+};
+
 export function toRomanNumeral(number: number) {
   const romanNumerals = [
     { value: 1000, symbol: "M" },

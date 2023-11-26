@@ -49,7 +49,8 @@ export const ObjectPosition = <T extends keyof GameObjectTypes>(
   depth?: number
 ): GameObjectComponent<T> => {
   return {
-    id: "position",
+    id: uuid(),
+    modifiesPosition: true,
     once: (gameObject) => {
       gameObject.x = coord.x;
       gameObject.y = coord.y;
@@ -132,7 +133,6 @@ export const OnComponentSystem = <T extends keyof GameObjectTypes, S extends Sch
 
   return {
     id,
-
     once: (gameObject) => {
       if (!componentMap.has(component)) {
         componentMap.set(component, new Map());
