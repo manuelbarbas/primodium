@@ -105,15 +105,15 @@ export const TransferToken: React.FC<TransferTokenProps> = ({
         )}
       </div>
       <div className="relative flex items-center">
-        <div className="absolute right-2 text-xs flex flex-col items-center">
+        <div className="absolute right-2 text-xs flex flex-col items-end">
           <Button
-            className="btn-secondary btn-xs w-full disabled:opacity-50"
+            className="btn-secondary btn-xs disabled:opacity-50"
             disabled={wrongChain || formatEther(balance) === amount}
             onClick={() => setAmount(formatEther(balance))}
           >
             max
           </Button>
-          {!wrongChain && <p className="text-gray-400">Balance: {formatEther(balance)}</p>}
+          {!wrongChain && <p className="text-gray-500 italic">Balance: {formatEther(balance)}</p>}
         </div>
         <input
           type="number"
