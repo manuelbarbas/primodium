@@ -2,18 +2,30 @@ import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
-import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { formatNumber } from "src/util/common";
 import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
 
-export const MaterialLabel = ({ name, resource }: { name: string; resource: Entity }) => {
+export const MaterialLabel = ({
+  name,
+  resource,
+  maxStorage,
+  resourceCount,
+  resourcesToClaim,
+  production,
+}: {
+  name: string;
+  resource: Entity;
+  maxStorage: bigint;
+  resourceCount: bigint;
+  resourcesToClaim: bigint;
+  production: bigint;
+}) => {
   const playerEntity = useMud().network.playerEntity;
-  const { maxStorage, resourceCount, resourcesToClaim, production } = useFullResourceCount(resource, playerEntity);
 
   const resourceIcon = ResourceImage.get(resource);
 
   const tooltipClass = useMemo(() => {
-    if (maxStorage <= 0n) return;
+    if (maxStorage <= BigInt(0)) return;
 
     const percentFull = (resourceCount + resourcesToClaim) / maxStorage;
 
