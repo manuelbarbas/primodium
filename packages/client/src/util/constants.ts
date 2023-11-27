@@ -1,8 +1,8 @@
 import { Entity } from "@latticexyz/recs";
-import { encodeEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
 import { EBuilding, EObjectives, EResource, ERock, ESize, EUnit } from "contracts/config/enums";
 import { Key } from "engine/types";
+import { encodeEntity } from "src/util/encode";
 import { reverseRecord } from "./common";
 import { toHex32 } from "./encode";
 
