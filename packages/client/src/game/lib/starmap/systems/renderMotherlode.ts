@@ -100,7 +100,6 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
         }
         if (motherlodeOutline.hasComponent(Outline().id)) {
           motherlodeOutline.removeComponent(Outline().id);
-          motherlodeObject.reset();
         }
       }),
       OnComponentSystem(components.OwnedBy, (_, { entity: _entity }) => {

@@ -112,8 +112,6 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
 
         if (asteroidOutline.hasComponent(Outline().id)) {
           asteroidOutline.removeComponent(Outline().id);
-          asteroidObject.reset();
-          asteroidLabel.reset();
         }
       }),
       OnComponentSystem(components.PlayerAlliance, (_, { entity: _entity }) => {
