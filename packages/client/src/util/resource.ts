@@ -93,8 +93,7 @@ export function getPlayerFullResourceCounts(playerEntity: Entity) {
 }
 
 export function getFullResourceCounts(spaceRockEntity: Entity) {
-  const consumptionTimeLengths: bigint[];
-  consumptionTimeLengths = [];
+  const consumptionTimeLengths: bigint[] = [];
   consumptionTimeLengths.length = MUDEnums.EResource.length;
   const player = comps.OwnedBy.getWithKeys({ entity: spaceRockEntity as Hex })?.value ?? comps.Account.get()?.value;
   const playerLastClaimed = comps.LastClaimedAt.getWithKeys({ entity: spaceRockEntity as Hex })?.value ?? 0n;
@@ -103,7 +102,7 @@ export function getFullResourceCounts(spaceRockEntity: Entity) {
   return MUDEnums.EResource.map((resource: string, index: number) => {
     if (index == 0 || index > MUDEnums.EResource.length) return {};
 
-    const resourceCount =
+    let resourceCount =
       comps.ResourceCount.getWithKeys({ entity: spaceRockEntity as Hex, resource: index as EResource })?.value ?? 0n;
 
     let resourceStorage =
@@ -165,9 +164,8 @@ export function getFullResourceCounts(spaceRockEntity: Entity) {
     if (resourceCount + increase < decrease) {
       //if the decrease is more than the sum of increase and current amount than the sum is tha maximum that can be consumed
       // we use this amount to see how much time the resource can be consumed
-      consumptionTimeLengths[index] =
-        ((resourceCount + increase) * SPEED_SCALE) /
-        ((comps.P_GameConfig?.get()?.worldSpeed ?? SPEED_SCALE) * consumptionRate);
+      consumptionTimeLengths[index] = (resourceCount + increase) / consumptionRate;
+      consumptionTimeLengths[index] *= (comps.P_GameConfig?.get()?.worldSpeed ?? SPEED_SCALE) / SPEED_SCALE;
       //we use the time length to reduce current resource amount by the difference of the decrease and the increase
       decrease = consumptionRate * consumptionTimeLengths[index];
       //consumption is from current space rock and will be in the future
@@ -181,12 +179,21 @@ export function getFullResourceCounts(spaceRockEntity: Entity) {
           entity: comps.Home.getWithKeys({ entity: player as Hex })?.asteroid as Hex,
           resource: index as EResource,
         })?.value ?? 0n;
+      resourceCount =
+        comps.ResourceCount.getWithKeys({
+          entity: comps.Home.getWithKeys({ entity: player as Hex })?.asteroid as Hex,
+          resource: index as EResource,
+        })?.value ?? 0n;
     }
 
     return {
       resourceCount: resourceCount,
       resourcesToClaim:
-        resourceCount + increase - decrease > resourceStorage ? resourceStorage - resourceCount : increase - decrease,
+        resourceCount + increase - decrease > resourceStorage
+          ? resourceStorage - resourceCount
+          : resourceCount + increase - decrease < 0
+          ? -resourceCount
+          : increase - decrease,
       resourceStorage: resourceStorage,
       production: productionRate - consumptionRate,
       producedResource: producedResource,
