@@ -43,14 +43,21 @@ export const config = mudConfig({
     P_GameConfig: {
       keySchema: {},
       valueSchema: {
+        admin: "address",
         unitProductionRate: "uint256",
         maxMotherlodesPerAsteroid: "uint256",
         motherlodeChanceInv: "uint256",
         motherlodeDistance: "uint256",
         travelTime: "uint256",
         worldSpeed: "uint256",
-        wETHAddress: "address",
         tax: "uint256",
+      },
+    },
+
+    P_GameConfig2: {
+      keySchema: {},
+      valueSchema: {
+        wETHAddress: "address",
       },
     },
 
