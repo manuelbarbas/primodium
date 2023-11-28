@@ -141,7 +141,7 @@ export function ControlPanel() {
               {tabs.map((tabName) => (
                 <NavLink
                   className={tab === tabName ? `opacity-50` : ""}
-                  key={`tabName-${tabName}`}
+                  key={`tabName-${tabName}!`}
                   to={`/account${convertObjToParams({ ...params, tab: tabName })}`}
                 >
                   {tabName}
