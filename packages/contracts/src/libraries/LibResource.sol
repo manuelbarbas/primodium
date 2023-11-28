@@ -194,6 +194,32 @@ library LibResource {
     }
   }
 
+  /// @notice deactivates utility usage of a building when it is toggled
+  /// @param buildingEntity ID of the building to clear
+  function deactivateUtilityUsage(bytes32 buildingEntity) internal {
+    bytes32 spaceRockEntity = OwnedBy.get(buildingEntity);
+    uint8[] memory utilities = UtilityMap.keys(buildingEntity);
+    for (uint256 i = 0; i < utilities.length; i++) {
+      uint8 utility = utilities[i];
+      uint256 utilityUsage = UtilityMap.get(buildingEntity, utility);
+      // remove utility usage
+      LibStorage.increaseStoredResource(spaceRockEntity, utility, utilityUsage);
+    }
+  }
+
+  /// @notice activates utility usage of a building when it is toggled
+  /// @param buildingEntity ID of the building to clear
+  function activateUtilityUsage(bytes32 buildingEntity) internal {
+    bytes32 spaceRockEntity = OwnedBy.get(buildingEntity);
+    uint8[] memory utilities = UtilityMap.keys(buildingEntity);
+    for (uint256 i = 0; i < utilities.length; i++) {
+      uint8 utility = utilities[i];
+      uint256 utilityUsage = UtilityMap.get(buildingEntity, utility);
+      // activate utility usage
+      LibStorage.decreaseStoredResource(spaceRockEntity, utility, utilityUsage);
+    }
+  }
+
   /**
    * @dev Retrieves the counts of all non-utility resources for a spaceRock and calculates the total.
    * @param spaceRockEntity The identifier of the spaceRock.

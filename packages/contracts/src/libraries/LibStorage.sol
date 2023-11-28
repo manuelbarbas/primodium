@@ -25,6 +25,22 @@ library LibStorage {
     }
   }
 
+  /// @notice activates the max storage of resources based on building prototype data
+  /// @notice uses P_ByLevelMaxResourceUpgrades and P_LisMaxResourceUpgrades to track storage upgrades
+  /// @param buildingEntity ID of the building to update
+  /// @param level of the building to pull prototype data from
+  function activateMaxStorage(bytes32 buildingEntity, uint256 level) internal {
+    bytes32 buildingType = BuildingType.get(buildingEntity);
+    bytes32 spaceRockEntity = OwnedBy.get(buildingEntity);
+    uint8[] memory storageResources = P_ListMaxResourceUpgrades.get(buildingType, level);
+    for (uint256 i = 0; i < storageResources.length; i++) {
+      uint8 resource = (storageResources[i]);
+      uint256 maxResource = MaxResourceCount.get(spaceRockEntity, resource);
+      uint256 maxResourceIncrease = P_ByLevelMaxResourceUpgrades.get(buildingType, resource, level);
+      setMaxStorage(spaceRockEntity, resource, maxResource + maxResourceIncrease);
+    }
+  }
+
   /// @notice clears max storage increase upon destroying a builing
   /// @param buildingEntity ID of the building to clear
   function clearMaxStorageIncrease(bytes32 buildingEntity) internal {

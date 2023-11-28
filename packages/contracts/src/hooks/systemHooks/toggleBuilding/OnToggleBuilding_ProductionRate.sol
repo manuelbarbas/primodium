@@ -5,6 +5,7 @@ import { addressToEntity } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
+import { IsActive, Level } from "src/codegen/index.sol";
 
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { LibReduceProductionRate } from "libraries/LibReduceProductionRate.sol";
@@ -28,27 +29,10 @@ contract OnToggleBuilding_ProductionRate is SystemHook {
     address msgSender,
     ResourceId systemId,
     bytes memory callData
-  ) public {
-    // Decode the arguments from the callData
-    bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
-    PositionData memory coord = abi.decode(args, (PositionData));
-
-    // Get the building entity from the coordinates
-    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
-
-    // Convert the player's address to an entity
-    bytes32 playerEntity = addressToEntity(msgSender);
-
-    // Clear production rate reductions for the building
-    LibReduceProductionRate.clearProductionRateReduction(buildingEntity);
-
-    // Clear resource production for the building
-    LibProduction.clearResourceProduction(buildingEntity);
-  }
+  ) public {}
 
   /**
    * @dev This function is called after the system's main logic is executed.
-   * It does not perform any actions in this case.
    * @param msgSender The address of the message sender.
    * @param systemId The identifier of the system.
    * @param callData The data passed to the system.
@@ -58,6 +42,28 @@ contract OnToggleBuilding_ProductionRate is SystemHook {
     ResourceId systemId,
     bytes memory callData
   ) public {
-    // This function does not perform any actions in this case.
+    // Decode the arguments from the callData
+    bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
+
+    PositionData memory coord = abi.decode(args, (PositionData));
+
+    // Get the building entity from the coordinates
+    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
+
+    // Get the level of the building
+    uint256 level = Level.get(buildingEntity);
+    if (IsActive.get(buildingEntity)) {
+      // Activate consumption
+      LibReduceProductionRate.reduceProductionRate(buildingEntity, level);
+
+      // Activate Production
+      LibProduction.upgradeResourceProduction(buildingEntity, level);
+    } else {
+      // Clear production rate reductions for the building
+      LibReduceProductionRate.clearProductionRateReduction(buildingEntity);
+
+      // Clear resource production for the building
+      LibProduction.clearResourceProduction(buildingEntity);
+    }
   }
 }
