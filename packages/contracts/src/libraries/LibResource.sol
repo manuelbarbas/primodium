@@ -132,6 +132,7 @@ library LibResource {
     uint256 productionRate = ProductionRate.get(spaceRockEntity, resource);
     uint256 consumptionRate = ConsumptionRate.get(spaceRockEntity, consumesResource);
 
+    // if both are zero then no need to update
     if (productionRate == 0 && consumptionRate == 0) return;
 
     // the maximum amount of resourecs that will minedAmount if there is enough of the resource available minedAmount < resourceCount
@@ -179,7 +180,7 @@ library LibResource {
       uint256 productionRate = ProductionRate.get(spaceRockEntity, resource);
       uint256 consumptionRate = ConsumptionRate.get(spaceRockEntity, resource);
 
-      //if they are both equal no change will be made
+      // if both are zero then no need to update
       if (productionRate == 0 && consumptionRate == 0) continue;
 
       //first we calculate production
