@@ -1,7 +1,6 @@
-import { Entity } from "@latticexyz/recs";
 import ERC20Abi from "contracts/out/ERC20System.sol/ERC20System.abi.json";
-import { useMemo, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useMemo } from "react";
+import { Link as NavLink, useLocation } from "react-router-dom";
 import { Button } from "src/components/core/Button";
 import { AddressDisplay } from "src/components/hud/AddressDisplay";
 import { useMud } from "src/hooks";
@@ -9,26 +8,55 @@ import { execute } from "src/network/actions";
 import { components } from "src/network/components";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 import { world } from "src/network/world";
-import { Hex, createPublicClient, createWalletClient, custom, encodeAbiParameters, getContract, trim } from "viem";
+import { Hex, createPublicClient, createWalletClient, custom, getContract, trim } from "viem";
 import { toAccount } from "viem/accounts";
 import { useAccount, useDisconnect } from "wagmi";
+import { Link } from "./Link";
 import { MintToken } from "./MintToken";
 import { PlayerBalances } from "./PlayerBalances";
 import { TransferToken } from "./TransferToken";
 
-type Tab = "transfer" | "mint" | "balances";
+type Tab = "transfer" | "mint" | "balances" | "link";
 
+function convertParamsToObj(paramString: string): Record<string, string> {
+  console.log("paramString:", paramString);
+  // Remove the initial '?' if present
+  if (paramString.startsWith("?")) {
+    paramString = paramString.slice(1);
+  }
+
+  // Split the string into key-value pairs
+  const pairs = paramString.split("&");
+
+  // Convert the pairs to an object
+  const params: Record<string, string> = {};
+  pairs.forEach((pair) => {
+    if (!pair) return;
+    const [key, value] = pair.split("=");
+    if (!key) return;
+    params[key] = value;
+  });
+
+  return params;
+}
+function convertObjToParams(obj: Record<string, string>) {
+  // Convert each key-value pair into a string and join them with '&'
+  const paramString = Object.keys(obj)
+    .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`)
+    .join("&");
+
+  return "?" + paramString;
+}
 export function ControlPanel() {
   const { network } = useMud();
   const externalAccount = useAccount();
   const { disconnect } = useDisconnect();
-  const [tab, setTab] = useState<Tab>("transfer");
   const { search } = useLocation();
+  const params = useMemo(() => convertParamsToObj(search), [search]);
+  console.log("params:", params);
+  const tab = params.tab as Tab | undefined;
 
   const externalAddress = externalAccount.address;
-  const externalEntity = externalAccount.address
-    ? (encodeAbiParameters([{ type: "address" }], [externalAccount.address]) as Entity)
-    : undefined;
 
   const adminAddress = components.P_GameConfig.get()?.admin;
 
@@ -72,13 +100,13 @@ export function ControlPanel() {
     });
   };
 
-  const tabs: Tab[] = isAdmin ? ["transfer", "mint", "balances"] : ["transfer"];
+  const tabs: Tab[] = isAdmin ? ["link", "transfer", "mint", "balances"] : ["transfer"];
   return (
     <>
       <div className="absolute top-4 margin-auto flex w-screen h-20 justify-between items-center p-4 z-10">
-        <Link to={`/game${search}`}>
+        <NavLink to={`/game${search}`}>
           <img src={"img/ios/mainbase-large-icon.png"} className={`w-20 pixel-images rounded-md`} />
-        </Link>
+        </NavLink>
         {externalAccount.isConnected && externalAddress && (
           <div className="bg-base-100 rounded-md flex items-center p-2 gap-2 ">
             <div className="flex flex-col">
@@ -111,29 +139,23 @@ export function ControlPanel() {
           >
             <div className="flex gap-6">
               {tabs.map((tabName) => (
-                <button
-                  key={tabName}
-                  onClick={() => setTab(tabName)}
-                  className={`${tab !== tabName ? "opacity-50" : ""}`}
-                  disabled={tabName === tab}
+                <NavLink
+                  className={tab === tabName ? `opacity-50` : ""}
+                  key={`tabName-${tabName}`}
+                  to={`/account${convertObjToParams({ ...params, tab: tabName })}`}
                 >
                   {tabName}
-                </button>
+                </NavLink>
               ))}
             </div>
-            {tab === "transfer" && externalEntity && (
-              <TransferToken
-                onTransfer={onTransfer}
-                className="col-span-2"
-                burnerAddress={burnerAddress}
-                externalEntity={externalEntity}
-                client={client.publicClient}
-              />
+            {tab === "transfer" && (
+              <TransferToken onTransfer={onTransfer} className="col-span-2" client={client.publicClient} />
             )}
             {tab === "mint" && isAdmin && (
               <MintToken onMint={onMint} client={client.publicClient} className="col-span-2" />
             )}
             {tab === "balances" && isAdmin && <PlayerBalances className="col-span-4" />}
+            {(!tab || tab === "link") && <Link />}
           </div>
         </div>
       )}

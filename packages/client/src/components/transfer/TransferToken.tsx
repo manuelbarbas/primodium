@@ -1,29 +1,28 @@
 import { Entity } from "@latticexyz/recs";
 import { useEffect, useState } from "react";
 import { Button } from "src/components/core/Button";
+import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { Hex, createPublicClient, formatEther, trim } from "viem";
+import { Hex, createPublicClient, encodeAbiParameters, formatEther, trim } from "viem";
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 
 interface TransferTokenProps {
   onTransfer: (address: string, amount: number) => Promise<void>;
   className?: string;
-  burnerAddress: Hex;
-  externalEntity: Entity;
   client: ReturnType<typeof createPublicClient>;
 }
 
-export const TransferToken: React.FC<TransferTokenProps> = ({
-  onTransfer,
-  className,
-  burnerAddress,
-  externalEntity,
-  client,
-}) => {
+export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, className, client }) => {
+  const { network } = useMud();
+  const burnerAddress = trim(network.address);
   const [input, setInput] = useState<string>(trim(burnerAddress) ?? "");
   const [valid, setValid] = useState<boolean>(true);
   const [address, setAddress] = useState<string | null>(null);
   const [amount, setAmount] = useState<string>("");
+  const externalAccount = useAccount();
+  const externalEntity = externalAccount.address
+    ? (encodeAbiParameters([{ type: "address" }], [externalAccount.address]) as Entity)
+    : undefined;
 
   useEffect(() => {
     const fetchEnsName = async (address: string | null) => {
@@ -47,7 +46,6 @@ export const TransferToken: React.FC<TransferTokenProps> = ({
     fetchEnsName(input);
   }, [input, client]);
 
-  const externalAccount = useAccount();
   const chain = useNetwork().chain;
   const expectedChain = externalAccount.connector?.chains[0];
   const { isLoading, pendingChainId, switchNetwork } = useSwitchNetwork();
