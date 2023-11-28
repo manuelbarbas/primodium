@@ -54,28 +54,29 @@ export const Blueprints = () => {
   return (
     <div className="flex h-fit w-full gap-1 items-start">
       <SecondaryCard className="gap-2 items-center">
-        <p className="text-xs opacity-50 font-bold pb-2">SMALL</p>
+        <p className="text-xs opacity-50 font-bold pb-2">BASIC</p>
         <Blueprint buildingType={EntityType.IronMine} />
         <Blueprint buildingType={EntityType.CopperMine} />
         <Blueprint buildingType={EntityType.LithiumMine} />
         <Blueprint buildingType={EntityType.SulfurMine} />
-        <Blueprint buildingType={EntityType.SolarPanel} />
+        <Blueprint buildingType={EntityType.Garage} />
+        <Blueprint buildingType={EntityType.Workshop} />
       </SecondaryCard>
       <SecondaryCard className="gap-2 items-center">
-        <p className="text-xs opacity-50 font-bold pb-2">MEDIUM</p>
-        <Blueprint tooltipDirection="top" buildingType={EntityType.Garage} />
-        <Blueprint tooltipDirection="top" buildingType={EntityType.Workshop} />
+        <p className="text-xs opacity-50 font-bold pb-2">ADVANCED</p>
+        <Blueprint tooltipDirection="top" buildingType={EntityType.SolarPanel} />
+        <Blueprint tooltipDirection="top" buildingType={EntityType.DroneFactory} />
         <Blueprint tooltipDirection="top" buildingType={EntityType.IronPlateFactory} />
-        <Blueprint tooltipDirection="top" buildingType={EntityType.AlloyFactory} />
-        <Blueprint tooltipDirection="top" buildingType={EntityType.StarmapperStation} />
+        <Blueprint tooltipDirection="top" buildingType={EntityType.PVCellFactory} />
+        <Blueprint tooltipDirection="top" buildingType={EntityType.SAMLauncher} />
         <Blueprint tooltipDirection="top" buildingType={EntityType.Vault} />
       </SecondaryCard>
       <SecondaryCard className="gap-2 items-center">
-        <p className="text-xs opacity-50 font-bold pb-2">LARGE</p>
+        <p className="text-xs opacity-50 font-bold pb-2">ELITE</p>
         <Blueprint tooltipDirection="left" buildingType={EntityType.Hangar} />
-        <Blueprint tooltipDirection="left" buildingType={EntityType.DroneFactory} />
+        <Blueprint tooltipDirection="left" buildingType={EntityType.AlloyFactory} />
+        <Blueprint tooltipDirection="left" buildingType={EntityType.StarmapperStation} />
         <Blueprint tooltipDirection="left" buildingType={EntityType.ShieldGenerator} />
-        <Blueprint tooltipDirection="left" buildingType={EntityType.SAMLauncher} />
         <Blueprint tooltipDirection="left" buildingType={EntityType.Market} />
       </SecondaryCard>
     </div>
