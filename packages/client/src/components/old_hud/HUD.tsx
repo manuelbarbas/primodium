@@ -21,7 +21,7 @@ import { Marketplace } from "./marketplace/Marketplace";
 import { Panes } from "./panes/Panes";
 import { Resources } from "./resources/Resources";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
-import { Units } from "./units/Units";
+import { Units } from "../hud/spacerock-menu/widgets/resources/units/Units";
 
 export const GameHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [state.showUI, state.toggleShowUI]);

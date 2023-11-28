@@ -1,14 +1,22 @@
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
+import { Badge } from "src/components/core/Badge";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
+import { components } from "src/network/components";
 import { formatNumber } from "src/util/common";
 import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
 
-export const MaterialLabel = ({ name, resource }: { name: string; resource: Entity }) => {
+export const OreLabel = ({ name, resource }: { name: string; resource: Entity }) => {
+  const selectedRock = components.SelectedRock.use()?.value;
+  const owner = components.OwnedBy.use(selectedRock)?.value as Entity | undefined;
   const playerEntity = useMud().network.playerEntity;
-  const { maxStorage, resourceCount, resourcesToClaim, production } = useFullResourceCount(resource, playerEntity);
+
+  const { maxStorage, resourceCount, resourcesToClaim, production } = useFullResourceCount(
+    resource,
+    owner ?? playerEntity
+  );
 
   const resourceIcon = ResourceImage.get(resource);
 
@@ -26,9 +34,9 @@ export const MaterialLabel = ({ name, resource }: { name: string; resource: Enti
     return;
   }, [resourceCount, resourcesToClaim, maxStorage]);
 
-  if (maxStorage === 0n) return null;
+  // if (maxStorage === 0n) return null;
   return (
-    <div className="gap-1 mx-1 group pointer-events-auto">
+    <Badge className={`gap-1 group pointer-events-auto ${maxStorage === 0n ? "badge-error opacity-25" : ""}`}>
       <ResourceIconTooltip
         name={name}
         playerEntity={playerEntity}
@@ -37,14 +45,15 @@ export const MaterialLabel = ({ name, resource }: { name: string; resource: Enti
         image={resourceIcon ?? ""}
         validate={false}
         fontSize={"sm"}
+        direction="top"
         className={`${tooltipClass}`}
       />
       {production !== 0n && (
-        <p className="opacity-50 text-[0rem] group-hover:text-xs transition-all">
+        <p className="opacity-50 text-xs transition-all">
           +{formatNumber((Number(production) * 60) / Number(RESOURCE_SCALE), { fractionDigits: 1 })}
           /MIN <b>({Number(maxStorage / RESOURCE_SCALE)})</b>
         </p>
       )}
-    </div>
+    </Badge>
   );
 };

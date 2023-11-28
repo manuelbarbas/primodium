@@ -1,4 +1,5 @@
 import { Entity } from "@latticexyz/recs";
+import { Badge } from "src/components/core/Badge";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
 import { BackgroundImage, ResourceImage } from "src/util/constants";
@@ -8,7 +9,7 @@ export const UnitLabel = ({ name, resource, count }: { name: string; count: bigi
   const playerEntity = useMud().network.playerEntity;
 
   return (
-    <div className="mx-1">
+    <Badge className="">
       <ResourceIconTooltip
         name={name}
         playerEntity={playerEntity}
@@ -17,8 +18,8 @@ export const UnitLabel = ({ name, resource, count }: { name: string; count: bigi
         image={resourceIcon ?? ""}
         validate={false}
         fontSize={"sm"}
-        direction="left"
+        direction="top"
       />
-    </div>
+    </Badge>
   );
 };

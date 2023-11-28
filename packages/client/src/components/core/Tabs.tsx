@@ -28,24 +28,35 @@ const Pane: FC<{
   index?: number;
   className?: string;
   children: ReactNode;
-}> = memo(({ index, children, className }) => {
+  fragment?: boolean;
+}> = memo(({ index, children, className, fragment = false }) => {
   const { index: currIndex } = useIndex();
 
   if (index === undefined || currIndex !== index) {
     return null;
   }
 
-  return <Card className={`overflow-y-auto scrollbar ${className} `}>{children}</Card>;
+  return fragment ? <>{children}</> : <Card className={`overflow-y-auto scrollbar ${className} `}>{children}</Card>;
 });
 
-const Button: FC<React.ComponentProps<typeof _Button> & { index: number; togglable?: boolean }> = memo((props) => {
-  const { index: currIndex, setIndex } = useIndex();
-  const { togglable = true, index } = props;
+const Button: FC<React.ComponentProps<typeof _Button> & { index: number; togglable?: boolean; showActive?: boolean }> =
+  memo((props) => {
+    const { index: currIndex, setIndex } = useIndex();
+    const { togglable = false, index, showActive = false } = props;
 
-  const selected = currIndex === index;
+    const selected = currIndex === index;
 
-  return <_Button {...props} selected={selected} onClick={() => setIndex(selected && togglable ? undefined : index)} />;
-});
+    return (
+      <_Button
+        {...props}
+        selected={selected && showActive}
+        onClick={(e) => {
+          setIndex(selected && togglable ? undefined : index);
+          if (props.onClick) props.onClick(e);
+        }}
+      />
+    );
+  });
 
 export const IconButton: React.FC<React.ComponentProps<typeof _IconButton> & { index: number }> = memo((props) => {
   const { index: currIndex, setIndex } = useIndex();

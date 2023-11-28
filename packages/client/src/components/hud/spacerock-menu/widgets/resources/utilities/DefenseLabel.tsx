@@ -1,6 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
+import { Badge } from "src/components/core/Badge";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useRockDefense } from "src/hooks/useRockDefense";
 import { components } from "src/network/components";
@@ -20,7 +21,7 @@ export const DefenseLabel = ({ player }: { player?: Entity }) => {
     0n;
 
   return (
-    <div className="gap-1 mx-1 group pointer-events-auto">
+    <Badge className="gap-1 group pointer-events-auto">
       <ResourceIconTooltip
         short={false}
         name={name}
@@ -35,6 +36,6 @@ export const DefenseLabel = ({ player }: { player?: Entity }) => {
       {multiplierAmount !== 0n && (
         <p className="opacity-50 text-[0] group-hover:text-xs transition-all">{1 + Number(multiplierAmount) / 100}x</p>
       )}
-    </div>
+    </Badge>
   );
 };

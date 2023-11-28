@@ -59,6 +59,7 @@ export const Blueprints = () => {
         <Blueprint buildingType={EntityType.CopperMine} />
         <Blueprint buildingType={EntityType.LithiumMine} />
         <Blueprint buildingType={EntityType.SulfurMine} />
+        <Blueprint buildingType={EntityType.SolarPanel} />
       </SecondaryCard>
       <SecondaryCard className="gap-2 items-center">
         <p className="text-xs opacity-50 font-bold pb-2">MEDIUM</p>
@@ -67,6 +68,7 @@ export const Blueprints = () => {
         <Blueprint tooltipDirection="top" buildingType={EntityType.IronPlateFactory} />
         <Blueprint tooltipDirection="top" buildingType={EntityType.AlloyFactory} />
         <Blueprint tooltipDirection="top" buildingType={EntityType.StarmapperStation} />
+        <Blueprint tooltipDirection="top" buildingType={EntityType.Vault} />
       </SecondaryCard>
       <SecondaryCard className="gap-2 items-center">
         <p className="text-xs opacity-50 font-bold pb-2">LARGE</p>
@@ -74,6 +76,7 @@ export const Blueprints = () => {
         <Blueprint tooltipDirection="left" buildingType={EntityType.DroneFactory} />
         <Blueprint tooltipDirection="left" buildingType={EntityType.ShieldGenerator} />
         <Blueprint tooltipDirection="left" buildingType={EntityType.SAMLauncher} />
+        <Blueprint tooltipDirection="left" buildingType={EntityType.Market} />
       </SecondaryCard>
     </div>
   );

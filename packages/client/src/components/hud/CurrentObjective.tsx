@@ -61,7 +61,6 @@ export const CurrenObjective = () => {
   useEffect(() => {
     // Function to find the next unclaimed objective
     const findNextUnclaimedObjective = () => {
-      console.log(playerEntity);
       return tutorialObjectives.findIndex((objective) => {
         const objectiveEntity = ObjectiveEntityLookup[objective];
         const isClaimed =

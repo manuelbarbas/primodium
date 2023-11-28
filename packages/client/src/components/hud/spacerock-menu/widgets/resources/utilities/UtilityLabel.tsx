@@ -1,4 +1,5 @@
 import { Entity } from "@latticexyz/recs";
+import { Badge } from "src/components/core/Badge";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
@@ -11,7 +12,7 @@ export const UtilityLabel = ({ name, resourceId }: { name: string; resourceId: E
   const resourceIcon = ResourceImage.get(resourceId);
 
   return (
-    <div className="mx-1">
+    <Badge className="gap-1">
       <ResourceIconTooltip
         name={name}
         playerEntity={playerEntity}
@@ -21,6 +22,6 @@ export const UtilityLabel = ({ name, resourceId }: { name: string; resourceId: E
         validate={false}
         fontSize={"sm"}
       />
-    </div>
+    </Badge>
   );
 };

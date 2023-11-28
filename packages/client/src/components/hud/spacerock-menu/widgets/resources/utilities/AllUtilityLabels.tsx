@@ -5,7 +5,7 @@ import { UtilityLabel } from "./UtilityLabel";
 
 export const AllUtilityLabels = () => {
   return (
-    <SecondaryCard className="grid grid-cols-1 gap-1">
+    <SecondaryCard className="flex flex-row w-fit gap-1 m-1">
       <UtilityLabel name={"Electricity"} resourceId={EntityType.Electricity} />
       <UtilityLabel name={"Housing"} resourceId={EntityType.Housing} />
       <DefenseLabel />
