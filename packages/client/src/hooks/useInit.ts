@@ -12,6 +12,8 @@ import { setupAllianceLeaderboard } from "src/network/systems/setupAllianceLeade
 import { useMud } from "./useMud";
 import { setupInvitations } from "src/network/systems/setupPlayerInvites";
 import { setupBattleNotifications } from "src/network/systems/setupBattleNotifications";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { Entity } from "@latticexyz/recs";
 
 export const useInit = () => {
   const mud = useMud();
@@ -22,6 +24,9 @@ export const useInit = () => {
   useEffect(() => {
     mud.components.Account.set({ value: playerEntity });
     mud.components.SpectateAccount.set({ value: playerEntity });
+    mud.components.SelectedRock.set({
+      value: (components.Home.get(playerEntity)?.asteroid ?? singletonEntity) as Entity,
+    });
     setupBlockNumber(mud.network.latestBlockNumber$);
     setupDoubleCounter(mud);
     setupLeaderboard(mud);

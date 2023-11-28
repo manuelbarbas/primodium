@@ -119,6 +119,7 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
       }),
       OnClick(scene, () => {
         components.Send.setDestination(entity);
+        components.SelectedRock.set({ value: entity });
       }),
       SetValue({
         depth: DepthLayers.Rock + 1,

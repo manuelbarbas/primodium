@@ -87,6 +87,7 @@ export function renderFog(scene: Scene, { network: { playerEntity } }: SetupResu
       }),
       ObjectText(bounds.maxX !== nextBounds.maxX ? "+ NEXT EXPANSION" : "FINAL EXPANSION", {
         color: "cyan",
+        fontSize: 10,
       }),
     ]);
 

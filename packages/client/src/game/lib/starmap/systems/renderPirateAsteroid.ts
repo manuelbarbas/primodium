@@ -16,8 +16,10 @@ import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { PIRATE_KEY } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
-import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
+import { ObjectPosition, OnClick, OnComponentSystem, SetValue, Tween } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
+import { ObjectText } from "../../common/object-components/text";
+import { getRandomRange } from "src/util/common";
 
 export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -45,6 +47,38 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
         originX: 0.5,
         originY: 0.5,
       }),
+      Tween(scene, {
+        scale: { from: 1 - getRandomRange(0, 0.05), to: 1 + getRandomRange(0, 0.05) },
+        ease: "Sine.easeInOut",
+        hold: getRandomRange(0, 1000),
+        duration: 5000, // Duration of one wobble
+        yoyo: true, // Go back to original scale
+        repeat: -1, // Repeat indefinitely
+      }),
+      Tween(scene, {
+        rotation: { from: -getRandomRange(0, Math.PI / 8), to: getRandomRange(0, Math.PI / 8) },
+        // ease: "Sine.easeInOut",
+        hold: getRandomRange(0, 10000),
+        duration: 5 * 1000, // Duration of one wobble
+        yoyo: true, // Go back to original scale
+        repeat: -1, // Repeat indefinitely
+      }),
+      Tween(scene, {
+        scrollFactorX: { from: 1 - getRandomRange(0, 0.005), to: 1 + getRandomRange(0, 0.005) },
+        ease: "Sine.easeInOut",
+        hold: getRandomRange(0, 1000),
+        duration: 3000, // Duration of one wobble
+        yoyo: true, // Go back to original scale
+        repeat: -1, // Repeat indefinitely
+      }),
+      Tween(scene, {
+        scrollFactorY: { from: 1 - getRandomRange(0, 0.005), to: 1 + getRandomRange(0, 0.005) },
+        ease: "Sine.easeInOut",
+        hold: getRandomRange(0, 1000),
+        duration: 5000, // Duration of one wobble
+        yoyo: true, // Go back to original scale
+        repeat: -1, // Repeat indefinitely
+      }),
     ];
 
     asteroidObjectGroup.add("Sprite").setComponents([
@@ -52,6 +86,7 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
       Texture(Assets.SpriteAtlas, SpriteKeys.PirateAsteroid1),
       OnClick(scene, () => {
         components.Send.setDestination(entity);
+        components.SelectedRock.set({ value: entity });
       }),
       SetValue({
         depth: DepthLayers.Rock,
@@ -81,6 +116,21 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
       }),
       SetValue({
         depth: DepthLayers.Rock + 1,
+      }),
+    ]);
+
+    const asteroidLabel = asteroidObjectGroup.add("Text");
+
+    asteroidLabel.setComponents([
+      ...sharedComponents,
+      SetValue({
+        originX: 0.5,
+        originY: -3,
+      }),
+      ObjectText("PIRATE", {
+        backgroundColor: "#000000",
+        color: "orange",
+        fontSize: 8,
       }),
     ]);
   };

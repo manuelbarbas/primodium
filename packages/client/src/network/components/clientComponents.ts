@@ -32,6 +32,7 @@ export const BlockNumber = createExtendedComponent(
   }
 );
 export const Account = createExtendedEntityComponent(world, { id: "Account" });
+export const SelectedRock = createExtendedEntityComponent(world, { id: "SelectedRock" });
 export const SpectateAccount = createExtendedEntityComponent(world, { id: "SpectateAccount" });
 export const GameReady = createExtendedBoolComponent(world, { id: "GameReady" });
 
@@ -159,6 +160,7 @@ export default {
   HoverTile,
   SelectedBuilding,
   SelectedAction,
+  SelectedRock,
   MapOpen,
 
   /* ---------------------------------- Units --------------------------------- */

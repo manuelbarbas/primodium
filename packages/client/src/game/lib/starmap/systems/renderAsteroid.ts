@@ -103,8 +103,8 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
     const asteroidOutline = asteroidObjectGroup.add("Sprite");
     asteroidOutline.setComponents([
       ...sharedComponents,
-      OnComponentSystem(components.Send, () => {
-        if (components.Send.get()?.destination === entity) {
+      OnComponentSystem(components.SelectedRock, () => {
+        if (components.SelectedRock.get()?.value === entity) {
           if (asteroidOutline.hasComponent(Outline().id)) return;
           asteroidOutline.setComponent(Outline({ thickness: 1.5, color: 0xffa500 }));
           return;
@@ -122,6 +122,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity)),
       OnClick(scene, () => {
         components.Send.setDestination(entity);
+        components.SelectedRock.set({ value: entity });
       }),
       SetValue({
         depth: DepthLayers.Rock + 1,
