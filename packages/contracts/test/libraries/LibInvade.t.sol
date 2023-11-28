@@ -84,7 +84,7 @@ contract LibInvadeTest is PrimodiumTest {
 
   function testInvadeNeutralWithUnitSend() public {
     OwnedBy.set(homeRock, player);
-    ResourceCount.set(player, U_MaxMoves, 10);
+    ResourceCount.set(homeRock, U_MaxMoves, 10);
     RockType.set(homeRock, uint8(ERock.Asteroid));
     RockType.set(rock, uint8(ERock.Motherlode));
 

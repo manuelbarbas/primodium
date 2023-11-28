@@ -35,11 +35,8 @@ contract OnDestroy_ClearUtility is SystemHook {
     // Get the building entity from the coordinates
     bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
 
-    // Convert the player's address to an entity
-    bytes32 playerEntity = addressToEntity(msgSender);
-
     // Clear utility usage for the building
-    LibResource.clearUtilityUsage(playerEntity, buildingEntity);
+    LibResource.clearUtilityUsage(buildingEntity);
   }
 
   /**

@@ -40,10 +40,10 @@ contract OnDestroy_ProductionRate is SystemHook {
     bytes32 playerEntity = addressToEntity(msgSender);
 
     // Clear production rate reductions for the building
-    LibReduceProductionRate.clearProductionRateReduction(playerEntity, buildingEntity);
+    LibReduceProductionRate.clearProductionRateReduction(buildingEntity);
 
     // Clear resource production for the building
-    LibProduction.clearResourceProduction(playerEntity, buildingEntity);
+    LibProduction.clearResourceProduction(buildingEntity);
   }
 
   /**

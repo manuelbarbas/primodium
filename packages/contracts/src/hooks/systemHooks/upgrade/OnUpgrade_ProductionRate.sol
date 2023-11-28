@@ -44,8 +44,6 @@ contract OnUpgrade_ProductionRate is SystemHook {
   ) public {
     // Decode the arguments from the callData
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
-    // Convert the player's address to an entity
-    bytes32 playerEntity = addressToEntity(msgSender);
 
     PositionData memory coord = abi.decode(args, (PositionData));
 
@@ -56,7 +54,7 @@ contract OnUpgrade_ProductionRate is SystemHook {
     uint256 level = Level.get(buildingEntity);
 
     // Adjust the production rate and resource production
-    LibReduceProductionRate.reduceProductionRate(playerEntity, buildingEntity, level);
-    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, level);
+    LibReduceProductionRate.reduceProductionRate(buildingEntity, level);
+    LibProduction.upgradeResourceProduction(buildingEntity, level);
   }
 }

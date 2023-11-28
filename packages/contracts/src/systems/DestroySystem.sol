@@ -24,7 +24,7 @@ contract DestroySystem is PrimodiumSystem {
     Position.deleteRecord(buildingEntity);
 
     if (P_UnitProdTypes.length(buildingType, level) != 0) {
-      UnitFactorySet.remove(playerEntity, buildingEntity);
+      UnitFactorySet.remove(coord.parent, buildingEntity);
     }
     return buildingEntity;
   }

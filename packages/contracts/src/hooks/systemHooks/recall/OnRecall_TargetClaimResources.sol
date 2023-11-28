@@ -4,16 +4,16 @@ pragma solidity >=0.8.21;
 import { addressToEntity } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
-
+import { RecallSystem } from "systems/RecallSystem.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { OwnedBy } from "codegen/tables/OwnedBy.sol";
 
 /**
- * @title OnReinforce_TargetClaimResources
+ * @title OnRecall_TargetClaimResources
  * @dev This contract is a system hook that claims resources for target player.
  */
-contract OnReinforce_TargetClaimResources is SystemHook {
+contract OnRecall_TargetClaimResources is SystemHook {
   constructor() {}
 
   /**
@@ -27,15 +27,16 @@ contract OnReinforce_TargetClaimResources is SystemHook {
     ResourceId systemId,
     bytes memory callData
   ) public {
-    // Get the player's entity and decode the space rock identifier from the callData
-    bytes32 playerEntity = addressToEntity(msgSender);
-    bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
-    bytes32 rockEntity = abi.decode(args, (bytes32));
+    bytes memory functionSelector = SliceInstance.toBytes(SliceLib.getSubslice(callData, 0, 4));
+    if (bytes4(functionSelector) == RecallSystem.recallStationedUnits.selector) {
+      bytes32 playerEntity = addressToEntity(msgSender);
+      bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
+      bytes32 rockEntity = abi.decode(args, (bytes32));
 
-    // Check if the space rock is owned and claim resources for owner
-    if (OwnedBy.get(rockEntity) != 0) {
       LibResource.claimAllResources(rockEntity);
     }
+
+    // Get the player's entity and decode the space rock identifier from the callData
   }
 
   /**

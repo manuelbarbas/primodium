@@ -24,7 +24,8 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     P_GameConfig.set(config);
     RockType.set(rock, uint8(ERock.Asteroid));
     Home.setAsteroid(player, rock);
-    OwnedBy.set(building, player);
+    OwnedBy.set(building, rock);
+    Spawned.set(player, true);
   }
 
   // copied from LibUnit.t.sol
@@ -83,14 +84,15 @@ contract TrainUnitsSystemTest is PrimodiumTest {
 
     setupClaimUnits();
     Home.setAsteroid(player, rock);
-    MaxResourceCount.set(player, Iron, 1000);
-    ProductionRate.set(player, Iron, 10);
-    LastClaimedAt.set(player, block.timestamp - 10);
+    OwnedBy.set(rock, player);
+    MaxResourceCount.set(rock, Iron, 1000);
+    ProductionRate.set(rock, Iron, 10);
+    LastClaimedAt.set(rock, block.timestamp - 10);
 
     world.trainUnits(building, unit, 1);
-    LibUnit.claimUnits(player);
-    assertEq(ResourceCount.get(player, Iron), 100);
-    assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 100);
+    LibUnit.claimUnits(Home.getAsteroid(player));
+    assertEq(ResourceCount.get(rock, Iron), 100, "resource count does not match");
+    assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 100, "unit count does not match");
   }
 
   function testInvalidBuilding() public {

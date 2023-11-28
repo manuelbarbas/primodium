@@ -30,7 +30,8 @@ contract LibReduceProductionRateTest is PrimodiumTest {
     // Set up mock data
     uint256 originalProduction = 100;
     uint256 productionReduction = 10;
-    ProductionRate.set(playerEntity, Iron, originalProduction);
+    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    ProductionRate.set(spaceRockEntity, Iron, originalProduction);
 
     P_RequiredDependenciesData memory requiredDependenciesData = P_RequiredDependenciesData(
       new uint8[](1),
@@ -41,16 +42,17 @@ contract LibReduceProductionRateTest is PrimodiumTest {
 
     P_RequiredDependencies.set(buildingPrototype, level, requiredDependenciesData);
 
-    LibReduceProductionRate.clearProductionRateReduction(playerEntity, buildingEntity);
+    LibReduceProductionRate.clearProductionRateReduction(buildingEntity);
 
-    assertEq(ProductionRate.get(playerEntity, Iron), originalProduction + productionReduction);
+    assertEq(ProductionRate.get(spaceRockEntity, Iron), originalProduction + productionReduction);
   }
 
   function testReduceProductionRate() public {
     // Set up mock data
     uint256 originalProduction = 100;
     uint256 productionReduction = 10;
-    ProductionRate.set(playerEntity, Iron, originalProduction);
+    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    ProductionRate.set(spaceRockEntity, Iron, originalProduction);
 
     P_RequiredDependenciesData memory requiredDependenciesData = P_RequiredDependenciesData(
       new uint8[](1),
@@ -61,16 +63,17 @@ contract LibReduceProductionRateTest is PrimodiumTest {
 
     P_RequiredDependencies.set(buildingPrototype, level, requiredDependenciesData);
 
-    LibReduceProductionRate.reduceProductionRate(playerEntity, buildingEntity, level);
+    LibReduceProductionRate.reduceProductionRate(buildingEntity, level);
 
-    assertEq(ProductionRate.get(playerEntity, Iron), originalProduction - productionReduction + prevReduction);
+    assertEq(ProductionRate.get(spaceRockEntity, Iron), originalProduction - productionReduction + prevReduction);
   }
 
   function testFailReduceProductionRate() public {
     // Set up mock data with insufficient production rate
     uint256 originalProduction = 5;
     uint256 productionReduction = originalProduction + prevReduction + 1;
-    ProductionRate.set(playerEntity, Iron, originalProduction);
+    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    ProductionRate.set(spaceRockEntity, Iron, originalProduction);
 
     P_RequiredDependenciesData memory requiredDependenciesData = P_RequiredDependenciesData(
       new uint8[](1),
@@ -81,6 +84,6 @@ contract LibReduceProductionRateTest is PrimodiumTest {
 
     P_RequiredDependencies.set(buildingPrototype, level, requiredDependenciesData);
 
-    LibReduceProductionRate.reduceProductionRate(playerEntity, buildingEntity, level);
+    LibReduceProductionRate.reduceProductionRate(buildingEntity, level);
   }
 }
