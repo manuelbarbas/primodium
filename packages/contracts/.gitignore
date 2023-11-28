@@ -2,6 +2,11 @@ out/*
 !out/IWorld.sol/
 out/IWorld.sol/*
 !out/IWorld.sol/IWorld.abi.json
+
+# ignores all files in out/ERC20System.sol/ except for ERC20System.abi.json
+!out/ERC20System.sol/  
+out/ERC20System.sol/*  
+!out/ERC20System.sol/ERC20System.abi.json  
 cache/
 node_modules/
 bindings/

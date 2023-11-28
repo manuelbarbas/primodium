@@ -1,11 +1,11 @@
 import { Entity, defineComponentSystem } from "@latticexyz/recs";
-import { components } from "../components";
-import { world } from "../world";
-import { SetupResult } from "../types";
-import { decodeEntity } from "@latticexyz/store-sync/recs";
-import { Hex, hexToString, padHex, zeroAddress } from "viem";
 import { toast } from "react-toastify";
+import { decodeEntity } from "src/util/encode";
 import { getNow } from "src/util/time";
+import { Hex, hexToString, padHex, zeroAddress } from "viem";
+import { components } from "../components";
+import { SetupResult } from "../types";
+import { world } from "../world";
 
 export function setupInvitations(mud: SetupResult) {
   const { AllianceInvitation, PlayerInvite, Alliance, AllianceJoinRequest, AllianceRequest } = components;

@@ -6,6 +6,7 @@ import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 import { ResourceAccess, NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
 import { ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
 import { WORLD_SPEED_SCALE, NUM_UNITS, UNIT_SPEED_SCALE } from "src/constants.sol";
+import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 
 import "src/utils.sol";
 import "codegen/world/IWorld.sol";
@@ -47,6 +48,12 @@ contract PrimodiumTest is MudTest {
     super.setUp();
     world = IWorld(worldAddress);
     creator = world.creator();
+
+    uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+    address admin = vm.addr(deployerPrivateKey);
+    IERC20Mintable wETH = IERC20Mintable(P_GameConfig2.getWETHAddress());
+    vm.prank(admin);
+    wETH.mint(creator, 100 ether);
 
     vm.startPrank(creator);
     ResourceAccess.set(ROOT_NAMESPACE_ID, creator, true);

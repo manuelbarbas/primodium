@@ -1,8 +1,9 @@
 import { Entity } from "@latticexyz/recs";
-import { encodeEntity, singletonEntity } from "@latticexyz/store-sync/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Cheatcodes } from "@primodiumxyz/mud-game-tools";
 import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
+import { encodeEntity } from "src/util/encode";
 import { Hex, padHex, trim } from "viem";
 import { EntityType, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
 const resources: Record<string, Entity> = {

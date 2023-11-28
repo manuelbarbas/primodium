@@ -1,11 +1,10 @@
 import { Entity } from "@latticexyz/recs";
-import { decodeEntity } from "@latticexyz/store-sync/recs";
 import { Button } from "src/components/core/Button";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { TransactionQueueType } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
+import { decodeEntity, hashEntities } from "src/util/encode";
 import { recallArrival } from "src/util/web3/contractCalls/recall";
 import { reinforce } from "src/util/web3/contractCalls/reinforce";
 
