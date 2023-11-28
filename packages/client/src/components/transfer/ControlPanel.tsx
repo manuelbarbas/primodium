@@ -100,7 +100,7 @@ export function ControlPanel() {
     });
   };
 
-  const tabs: Tab[] = isAdmin ? ["link", "transfer", "mint", "balances"] : ["transfer"];
+  const tabs: Tab[] = isAdmin ? ["link", "transfer", "mint", "balances"] : ["link", "transfer"];
   return (
     <>
       <div className="absolute top-4 margin-auto flex w-screen h-20 justify-between items-center p-4 z-10">
@@ -140,7 +140,7 @@ export function ControlPanel() {
             <div className="flex gap-6">
               {tabs.map((tabName) => (
                 <NavLink
-                  className={tab === tabName ? `opacity-50` : ""}
+                  className={tab === tabName ? "" : `opacity-50`}
                   key={`tabName-${tabName}`}
                   to={`/account${convertObjToParams({ ...params, tab: tabName })}`}
                 >
