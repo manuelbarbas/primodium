@@ -66,7 +66,7 @@ export function getMotherlodeResource(entity: Entity) {
 // This function exists temporarly as mined motherlode resources are claimed to hom asteroid directly
 // in the future we never have to resolve or take into account mutliple space rock resources as they have to manualy transported between space rocks
 export function getPlayerFullResourceCounts(playerEntity: Entity) {
-  const ownedMotherlodes = comps.OwnedMotherlodes?.getWithKeys({ entity: playerEntity as Hex })?.value ?? [];
+  const ownedMotherlodes = comps.OwnedMotherlodes.getWithKeys({ entity: playerEntity as Hex })?.value ?? [];
 
   const homeFullResourceCounts = getFullResourceCounts(comps.Home.get(playerEntity)?.asteroid as Entity);
 
