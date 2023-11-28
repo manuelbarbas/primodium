@@ -9,7 +9,7 @@ import { Puppet } from "@latticexyz/world-modules/src/modules/puppet/Puppet.sol"
 
 import { IERC20 } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20.sol";
 
-import { P_GameConfig } from "codegen/index.sol";
+import { P_GameConfig2 } from "codegen/index.sol";
 
 function transferToken(
   address worldAddress,
@@ -17,7 +17,7 @@ function transferToken(
   uint256 value
 ) {
   bytes memory callData = abi.encodeCall(IERC20.transfer, (to, value));
-  address token = P_GameConfig.getWETHAddress();
+  address token = P_GameConfig2.getWETHAddress();
   (bool success, bytes memory data) = worldAddress.delegatecall(
     abi.encodeCall(IBaseWorld(worldAddress).call, (Puppet(token).systemId(), callData))
   );
