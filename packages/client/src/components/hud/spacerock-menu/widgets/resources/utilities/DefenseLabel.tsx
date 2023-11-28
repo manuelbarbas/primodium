@@ -1,7 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
-import { Badge } from "src/components/core/Badge";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useRockDefense } from "src/hooks/useRockDefense";
 import { components } from "src/network/components";
@@ -12,7 +11,7 @@ export const DefenseLabel = ({ player }: { player?: Entity }) => {
   const name = "Defense";
   const resourceId = EntityType.Defense;
   player = player ?? components.Account.use()?.value ?? singletonEntity;
-  const rock = components.Home.get(player)?.asteroid;
+  const rock = components.SelectedRock.use()?.value;
   const defense = useRockDefense(rock as Entity);
   if (!player || !rock) return null;
   const resourceIcon = ResourceImage.get(resourceId);
@@ -21,7 +20,7 @@ export const DefenseLabel = ({ player }: { player?: Entity }) => {
     0n;
 
   return (
-    <Badge className="gap-1 group pointer-events-auto">
+    <div className="gap-1 group pointer-events-auto">
       <ResourceIconTooltip
         short={false}
         name={name}
@@ -36,6 +35,6 @@ export const DefenseLabel = ({ player }: { player?: Entity }) => {
       {multiplierAmount !== 0n && (
         <p className="opacity-50 text-[0] group-hover:text-xs transition-all">{1 + Number(multiplierAmount) / 100}x</p>
       )}
-    </Badge>
+    </div>
   );
 };

@@ -110,7 +110,9 @@ export function reverseRecord<T extends PropertyKey, U extends PropertyKey>(inpu
 }
 
 export const entityToAddress = (entity: Entity | string, shorten = false): Hex => {
-  const checksumAddress = getAddress(trim(entity as Hex));
+  const trimmedAddress = trim(entity as Hex);
+
+  const checksumAddress = isAddress(trimmedAddress) ? getAddress(trimmedAddress) : trimmedAddress;
 
   return shorten ? shortenAddress(checksumAddress) : checksumAddress;
 };

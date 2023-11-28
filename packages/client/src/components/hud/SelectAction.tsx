@@ -7,6 +7,7 @@ import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { Button } from "../core/Button";
 import { Join } from "../core/Join";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 
 export const SelectAction = () => {
   const mud = useMud();
@@ -17,6 +18,7 @@ export const SelectAction = () => {
 
   const { transitionToScene } = primodium.api().scene;
   const spectatingAccount = components.SpectateAccount.use()?.value;
+  const homeAsteroid = components.Home.use(playerEntity)?.asteroid as Entity | undefined;
 
   const closeMap = async () => {
     if (!mapOpen) return;
@@ -40,6 +42,7 @@ export const SelectAction = () => {
         targetScene.camera.phaserCamera.fadeIn(500, 0, 0, 0);
       }
     );
+    components.SelectedRock.set({ value: homeAsteroid ?? singletonEntity });
     components.MapOpen.set({ value: false });
   };
 
@@ -84,32 +87,6 @@ export const SelectAction = () => {
 
   return (
     <div className="flex z-10">
-      {/* {mapOpen && (
-        <div className="flex flex-col items-center gap-2">
-          <Button
-            className="w-full flex gap-2 btn-secondary bg-gradient-to-br from-cyan-700 to-cyan-800 border-2  border-accent drop-shadow-2xl text-base-content pixel-images group overflow-hidden"
-            clickSound={AudioKeys.Sequence2}
-            onClick={closeMap}
-          >
-            <img src="img/icons/asteroidicon.png" className="pixel-images w-8 h-8" />
-            <span className="flex font-bold gap-1">CLOSE STAR MAP</span>
-          </Button>
-          <Button
-            className="btn-sm flex border border-secondary"
-            onClick={() => {
-              const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
-              //TODO - fix entity conversion
-              const homeAsteroid = components.Home.get(mud.network.playerEntity)?.asteroid as Entity | undefined;
-              // Send.setDestination(homeAsteroid);
-              const coord = components.Position.get(homeAsteroid) ?? { x: 0, y: 0 };
-              pan(coord);
-              zoomTo(2);
-            }}
-          >
-            <FaCrosshairs /> HOME
-          </Button>
-        </div>
-      )} */}
       <Join className="border-b border-x border-secondary rounded-t-none">
         <Button
           clickSound={AudioKeys.Sequence}

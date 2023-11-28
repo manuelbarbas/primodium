@@ -3,12 +3,11 @@ import duration from "dayjs/plugin/duration";
 import { components } from "src/network/components";
 import { useNow } from "src/util/time";
 import { Hex } from "viem";
-import { Tooltip } from "../core/Tooltip";
 import { IconLabel } from "../core/IconLabel";
 import { Entity } from "@latticexyz/recs";
 dayjs.extend(duration);
 
-export const GracePeriod: React.FC<{ player: Entity }> = ({ player }) => {
+export const GracePeriod: React.FC<{ player: Entity; className?: string }> = ({ player, className }) => {
   const time = useNow();
   const endTime = components.GracePeriod.useWithKeys({ entity: player as Hex })?.value;
   if (!endTime) return null;
@@ -17,15 +16,18 @@ export const GracePeriod: React.FC<{ player: Entity }> = ({ player }) => {
   if (time >= endTime) return null;
 
   return (
-    <div className="flex flex-col items-center justify-center my-2 space-y-1 drop-shadow-2xl pointer-events-auto">
-      <Tooltip text="Grace Period" direction="bottom">
-        <div className="flex gap-2 items-center">
-          <IconLabel text="Grace Period" imageUri="img/icons/graceicon.png" hideText />
-          <p className="text-sm text-success font-bold">
-            {duration.asHours().toFixed()} hrs {duration.minutes()} min {duration.seconds()} sec
+    <div
+      className={`flex flex-col items-center justify-center space-y-1 drop-shadow-2xl pointer-events-auto ${className}`}
+    >
+      <div className="flex gap-2 items-center">
+        <IconLabel imageUri="img/icons/graceicon.png" tooltipText="Grace Period" />
+        {duration.minutes() !== 0 && (
+          <p className="">
+            {duration.asHours().toFixed()} hrs {duration.minutes()} min
           </p>
-        </div>
-      </Tooltip>
+        )}
+        {duration.minutes() === 0 && <p className="">{duration.seconds()} sec</p>}
+      </div>
     </div>
   );
 };

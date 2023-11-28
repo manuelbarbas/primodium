@@ -99,8 +99,8 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
 
     asteroidOutline.setComponents([
       ...sharedComponents,
-      OnComponentSystem(components.Send, () => {
-        if (components.Send.get()?.destination === entity) {
+      OnComponentSystem(components.SelectedRock, () => {
+        if (components.SelectedRock.get()?.value === entity) {
           if (asteroidOutline.hasComponent(Outline().id)) return;
           asteroidOutline.setComponent(Outline({ thickness: 1.5, color: 0xffa500 }));
           return;
@@ -112,7 +112,7 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
       }),
       Texture(Assets.SpriteAtlas, outlineSprite),
       OnClick(scene, () => {
-        components.Send.setDestination(entity);
+        components.SelectedRock.set({ value: entity });
       }),
       SetValue({
         depth: DepthLayers.Rock + 1,

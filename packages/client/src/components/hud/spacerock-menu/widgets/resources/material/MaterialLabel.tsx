@@ -8,7 +8,7 @@ import { components } from "src/network/components";
 import { formatNumber } from "src/util/common";
 import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
 
-export const OreLabel = ({ name, resource }: { name: string; resource: Entity }) => {
+export const MaterialLabel = ({ name, resource }: { name: string; resource: Entity }) => {
   const selectedRock = components.SelectedRock.use()?.value;
   const owner = components.OwnedBy.use(selectedRock)?.value as Entity | undefined;
   const playerEntity = useMud().network.playerEntity;
@@ -51,7 +51,7 @@ export const OreLabel = ({ name, resource }: { name: string; resource: Entity })
       {production !== 0n && (
         <p className="opacity-50 text-xs transition-all">
           +{formatNumber((Number(production) * 60) / Number(RESOURCE_SCALE), { fractionDigits: 1 })}
-          /MIN <b>({Number(maxStorage / RESOURCE_SCALE)})</b>
+          /MIN <b className="text-accent">[{Number(maxStorage / RESOURCE_SCALE)}]</b>
         </p>
       )}
     </Badge>
