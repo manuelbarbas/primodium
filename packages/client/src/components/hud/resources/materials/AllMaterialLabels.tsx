@@ -23,6 +23,7 @@ export const AllMaterialLabels = () => {
           (fullResourceCount?.resourceStorage ?? 0n) > 0n &&
           !components.P_IsUtility.getWithKeys({ id: index as EResource })?.value && (
             <MaterialLabel
+              key={index}
               name={getBlockTypeName(ResourceEntityLookup[index as EResource])}
               resource={ResourceEntityLookup[index as EResource]}
               maxStorage={fullResourceCount?.resourceStorage ?? 0n}

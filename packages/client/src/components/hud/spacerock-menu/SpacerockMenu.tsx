@@ -14,7 +14,7 @@ import { StationedUnits } from "./screens/StationedUnits";
 import { UnitSelection } from "./screens/UnitSelection";
 
 export const SpacerockMenu: React.FC = () => {
-  const playerEntity = useMud().network.playerEntity;
+  const playerEntity = components.Account.get()?.value;
   const selectedSpacerock = components.Send.use()?.destination;
 
   useEffect(() => {

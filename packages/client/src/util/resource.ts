@@ -165,7 +165,6 @@ export function getFullResourceCounts(spaceRockEntity: Entity) {
       //if the decrease is more than the sum of increase and current amount than the sum is tha maximum that can be consumed
       // we use this amount to see how much time the resource can be consumed
       consumptionTimeLengths[index] = (resourceCount + increase) / consumptionRate;
-      consumptionTimeLengths[index] *= (comps.P_GameConfig?.get()?.worldSpeed ?? SPEED_SCALE) / SPEED_SCALE;
       //we use the time length to reduce current resource amount by the difference of the decrease and the increase
       decrease = consumptionRate * consumptionTimeLengths[index];
       //consumption is from current space rock and will be in the future
