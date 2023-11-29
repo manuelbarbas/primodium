@@ -4,7 +4,15 @@ import { shortenAddress } from "src/util/common";
 import { Hex } from "viem";
 
 const ensNames: Record<Hex, string | null> = {};
-export const AddressDisplay = ({ address, notShort }: { address: Hex; notShort?: boolean }) => {
+export const AddressDisplay = ({
+  className = "",
+  address,
+  notShort,
+}: {
+  className?: string;
+  address: Hex;
+  notShort?: boolean;
+}) => {
   const client = useMud().network.publicClient;
 
   const [ensName, setEnsName] = useState<string>();
@@ -30,5 +38,5 @@ export const AddressDisplay = ({ address, notShort }: { address: Hex; notShort?:
   }, [address, client]);
 
   const addressDisplay = notShort ? address : shortenAddress(address);
-  return <>{ensName ?? addressDisplay}</>;
+  return <p className={className}>{ensName ?? addressDisplay}</p>;
 };
