@@ -9,23 +9,22 @@ import { AddressDisplay } from "../hud/AddressDisplay";
 type LocalToExternalResponse = { address: Hex | null; ensName: string | null };
 
 export function Link() {
-  const [linkedAddress, setLinkedAddress] = useState<LocalToExternalResponse>({ address: null, ensName: null });
+  const [linkedAddress, setLinkedAddress] = useState<LocalToExternalResponse>();
   const [signature, setSignature] = useState<string | null>(null);
   const { signMessageAsync } = useSignMessage();
   const externalAccount = useAccount();
   const { network } = useMud();
 
   const burnerAddress = trim(network.address);
-
+  const fetchLocalLinkedAddress = async () => {
+    const res = await fetch(
+      `${import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL}/linked-address/local-to-external/${burnerAddress}`
+    );
+    console.log("res:", res);
+    const responseJSON = await res.json();
+    setLinkedAddress(responseJSON);
+  };
   useEffect(() => {
-    const fetchLocalLinkedAddress = async () => {
-      const res = await fetch(
-        `${import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL}/linked-address/local-to-external/${burnerAddress}`
-      );
-      console.log("res:", res);
-      const responseJSON = await res.json();
-      setLinkedAddress(responseJSON);
-    };
     fetchLocalLinkedAddress();
   }, [externalAccount.address, burnerAddress]);
 
@@ -43,8 +42,8 @@ export function Link() {
       const externalSignature = await signMessageAsync({ message: externalAccount.address });
 
       const body = {
-        burnerAddress,
-        signature,
+        localAddress: burnerAddress,
+        localSignature: signature,
         externalAddress: externalAccount.address,
         externalSignature,
       };
@@ -73,16 +72,22 @@ export function Link() {
       } else {
         toast.error(JSON.stringify(error));
       }
+    } finally {
+      fetchLocalLinkedAddress();
     }
   };
 
   if (!externalAccount.address) return null;
+  if (!linkedAddress)
+    return <div className="text-gray-300 flex justify-center items-center font-bold h-full">Loading...</div>;
   if (linkedAddress.address === externalAccount.address)
-    return <div className="text-left text-gray-300">These accounts are linked</div>;
+    return (
+      <div className="text-gray-300 flex justify-center items-center font-bold h-full">These accounts are linked</div>
+    );
   return (
     <div className="flex flex-col h-full gap-2 text-left">
-      <div className="text-xs text-gray-300">
-        Link your account (
+      <div className="text-xs text-gray-300 inline flex gap-1">
+        Link your account <p>(</p>
         {linkedAddress.address ? (
           <>
             linked to
