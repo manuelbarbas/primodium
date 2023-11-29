@@ -26,7 +26,7 @@ export const ElectricityLabel = () => {
         <p className="text-xs opacity-75 font-bold uppercase">{percentFull}%</p>
       </SecondaryCard>
       <p className="text-xs opacity-75 font-bold">
-        {formatNumber(resourceCount / RESOURCE_SCALE)}/{formatNumber(maxStorage / RESOURCE_SCALE)} kWH
+        {formatNumber(resourceCount / RESOURCE_SCALE)}/{formatNumber(maxStorage / RESOURCE_SCALE)} mWH
       </p>
     </div>
   );

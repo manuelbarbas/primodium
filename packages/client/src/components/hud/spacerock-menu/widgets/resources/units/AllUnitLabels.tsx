@@ -4,19 +4,24 @@ import { SecondaryCard } from "src/components/core/Card";
 
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { EntityType } from "src/util/constants";
+import { EntityType, ResourceImage } from "src/util/constants";
 import { UnitLabel } from "./UnitLabel";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { DefenseLabel } from "../utilities/DefenseLabel";
 import { Hex } from "viem";
 import { IconLabel } from "src/components/core/IconLabel";
 import { formatNumber } from "src/util/common";
+import { useFleetMoves } from "src/hooks/useFleetMoves";
+import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
+import { Badge } from "src/components/core/Badge";
+import { FaExpand, FaExpandArrowsAlt, FaExternalLinkAlt } from "react-icons/fa";
 
 export const AllUnitLabels = () => {
   const { playerEntity } = useMud().network;
   const selectedAsteroid = components.SelectedRock.use()?.value as Entity | undefined;
   const owner = components.OwnedBy.use(selectedAsteroid)?.value as Entity | undefined;
   const units = components.Hangar.use(selectedAsteroid ?? singletonEntity);
+  const fleetCount = useFleetMoves();
 
   const getUnitCount = useCallback(
     (unit: Entity) => {
@@ -75,14 +80,29 @@ export const AllUnitLabels = () => {
           resource={EntityType.MiningVessel}
         />
       </SecondaryCard>
-      <div className="text-xs opacity-75 font-bold flex items-center mb-1 gap-2">
-        <DefenseLabel />
-        <IconLabel
-          imageUri="/img/icons/attackicon.png"
-          tooltipText="Attack"
-          className="text-sm"
-          text={attack ? formatNumber(attack, { short: true, fractionDigits: 2 }) : "-"}
-        />
+      <div className="text-xs opacity-75 font-bold w-full flex justify-around items-center mb-1 gap-2">
+        <Badge className="flex items-center gap-1">
+          <DefenseLabel />
+          <IconLabel
+            imageUri="/img/icons/attackicon.png"
+            tooltipText="Attack"
+            className="text-sm"
+            text={attack ? formatNumber(attack, { short: true, fractionDigits: 2 }) : "-"}
+          />
+          <ResourceIconTooltip
+            resource={EntityType.FleetMoves}
+            className="text-sm"
+            amount={fleetCount}
+            name="Fleet Moves"
+            playerEntity={playerEntity}
+            image={ResourceImage.get(EntityType.FleetMoves) ?? ""}
+          />
+        </Badge>
+
+        <Badge className="gap-1 items-center">
+          <div className="animate-pulse bg-success w-1 h-1 rounded-box" />0 ATTACKING FLEETS{" "}
+          <FaExternalLinkAlt className="opacity-75 scale-90" />
+        </Badge>
       </div>
     </div>
   );
