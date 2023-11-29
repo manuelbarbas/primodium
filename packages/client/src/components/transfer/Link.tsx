@@ -20,7 +20,6 @@ export function Link() {
     const res = await fetch(
       `${import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL}/linked-address/local-to-external/${burnerAddress}`
     );
-    console.log("res:", res);
     const responseJSON = await res.json();
     setLinkedAddress(responseJSON);
   };
@@ -47,7 +46,6 @@ export function Link() {
         externalAddress: externalAccount.address,
         externalSignature,
       };
-      console.log("body:", body);
       const res = await fetch(`${import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL}/link`, {
         headers: {
           "Content-Type": "application/json",
@@ -55,18 +53,14 @@ export function Link() {
         body: JSON.stringify(body),
         method: "POST",
       });
-      console.log("res:", res);
       const jsonRes = await res.json();
-      console.log("resjson:", jsonRes);
 
       if (res.status !== 200) {
-        console.log(jsonRes);
         toast.error(jsonRes.message);
       } else {
         toast.success(jsonRes.message);
       }
     } catch (error) {
-      console.log(error);
       if (error instanceof Error) {
         toast.error(error.message);
       } else {

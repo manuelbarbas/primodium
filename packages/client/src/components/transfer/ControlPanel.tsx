@@ -19,7 +19,6 @@ import { TransferToken } from "./TransferToken";
 type Tab = "transfer" | "mint" | "balances" | "link";
 
 function convertParamsToObj(paramString: string): Record<string, string> {
-  console.log("paramString:", paramString);
   // Remove the initial '?' if present
   if (paramString.startsWith("?")) {
     paramString = paramString.slice(1);
@@ -53,7 +52,6 @@ export function ControlPanel() {
   const { disconnect } = useDisconnect();
   const { search } = useLocation();
   const params = useMemo(() => convertParamsToObj(search), [search]);
-  console.log("params:", params);
   const tab = params.tab as Tab | undefined;
 
   const externalAddress = externalAccount.address;
@@ -112,15 +110,11 @@ export function ControlPanel() {
             <div className="flex flex-col">
               <div>
                 <p className="text-xs text-gray-400 ">Connected to</p>
-                <p className="text-sm">
-                  <AddressDisplay address={externalAddress} notShort />
-                </p>
+                <AddressDisplay className="text-sm" address={externalAddress} notShort />
               </div>
               <div>
                 <p className="text-xs text-gray-400 ">Primodium (burner) account</p>
-                <p className="text-sm">
-                  <AddressDisplay address={burnerAddress} notShort />
-                </p>
+                <AddressDisplay address={burnerAddress} notShort className="text-sm" />
               </div>
             </div>
             <Button className="font-bold btn-secondary btn-sm h-full" onClick={() => disconnect()}>
