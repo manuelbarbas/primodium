@@ -34,11 +34,11 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
   } = buildingInfo;
 
   return (
-    <Navigator.Screen title="BuildingInfo" className="w-full">
+    <Navigator.Screen title="BuildingInfo" className="w-full gap-1">
       <DataLabel label="building type">
         <b>{getBlockTypeName(buildingType as Entity)}</b>
       </DataLabel>
-      <div className="grid grid-cols-3 w-full">
+      <div className="grid grid-cols-3 w-full gap-1">
         <DataLabel label="level">
           <b>{level.toString()}</b>
         </DataLabel>
@@ -52,7 +52,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
         </DataLabel>
       </div>
       {(production.length !== 0 || upgrade?.production.length !== 0) && (
-        <div className="grid grid-cols-2 w-full">
+        <div className="grid grid-cols-2 w-full gap-1">
           <DataLabel label="PRODUCTION">
             {!production.length ? (
               <b>N/A</b>
