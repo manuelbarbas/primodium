@@ -12,6 +12,7 @@ import {
 } from "@latticexyz/recs";
 import { Coord, uuid } from "@latticexyz/utils";
 import { GameObjectComponent, GameObjectTypes, Scene } from "engine/types";
+import { Observable } from "rxjs";
 import { world } from "src/network/world";
 
 type GameObjectInstances = {
@@ -282,6 +283,24 @@ export const OnExitSystem = <T extends keyof GameObjectTypes>(
     exit: () => {
       //unsub from component updates
       exitMap.get(query)?.delete(id);
+    },
+  };
+};
+
+export const OnRxjsSystem = <T, GO extends keyof GameObjectTypes>(
+  observable$: Observable<T>,
+  callback: (event: T) => void
+): GameObjectComponent<GO> => {
+  const id = uuid();
+  const subscription = observable$.subscribe(callback);
+  return {
+    id,
+    once: () => {
+      //do nothing
+    },
+    exit: () => {
+      world.registerDisposer(() => subscription?.unsubscribe());
+      // do nothing
     },
   };
 };

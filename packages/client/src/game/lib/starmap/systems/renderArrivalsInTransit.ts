@@ -8,7 +8,7 @@ import { world } from "src/network/world";
 import { PIRATE_KEY } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
 import { getNow } from "src/util/time";
-import { ObjectPosition, OnComponentSystem } from "../../common/object-components/common";
+import { ObjectPosition, OnComponentSystem, OnRxjsSystem } from "../../common/object-components/common";
 import { Circle, Line } from "../../common/object-components/graphics";
 import { renderEntityOrbitingArrivals } from "./renderArrivalsInOrbit";
 
@@ -49,6 +49,7 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
     trajectory.setComponents([
       ObjectPosition(originPixelCoord, DepthLayers.Marker),
       Line(destinationPixelCoord, {
+        id: `${entity}-trajectoryline`,
         thickness: 2,
         alpha: 0.25,
         color: 0x00ffff,
@@ -57,6 +58,20 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
         position: destinationPixelCoord,
         alpha: 0.5,
         color: 0xff0000,
+      }),
+      OnRxjsSystem(scene.camera.zoom$, (zoom) => {
+        let thickness = 3 / zoom;
+        thickness = Math.min(10, thickness);
+
+        trajectory.removeComponent(`${entity}-trajectoryline`);
+        trajectory.setComponent(
+          Line(destinationPixelCoord, {
+            id: `${entity}-trajectoryline`,
+            thickness,
+            alpha: 0.25,
+            color: 0x00ffff,
+          })
+        );
       }),
     ]);
 
