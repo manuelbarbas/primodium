@@ -118,7 +118,7 @@ function setupHooks(IWorld world) {
 
   registerAllianceHooks(world, onBefore_ClaimResources);
   registerRecallHooks(world, onBefore_ClaimResources);
-  registerToggleBuildingHooks(world, onBefore_ClaimResources);
+  registerToggleBuildingHooks(world, onBefore_ClaimResources, onBefore_ClaimUnits);
   //Store Hooks
   registerScoreHook(world);
 }

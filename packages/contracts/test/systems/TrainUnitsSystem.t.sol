@@ -18,6 +18,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     vm.startPrank(creator);
     player = addressToEntity(creator);
     BuildingType.set(building, buildingPrototype);
+    IsActive.set(building, true);
     P_EnumToPrototype.set(UnitKey, uint8(unit), unitPrototype);
     P_GameConfigData memory config = P_GameConfig.get();
     config.unitProductionRate = 100;
@@ -96,7 +97,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
   }
 
   function testInvalidBuilding() public {
-    vm.expectRevert(bytes("[TrainUnitsSystem] Building cannot produce unit"));
+    vm.expectRevert(bytes("[TrainUnitsSystem] Can not train units using an in active building"));
     world.trainUnits(bytes32(0), unit, 1);
   }
 

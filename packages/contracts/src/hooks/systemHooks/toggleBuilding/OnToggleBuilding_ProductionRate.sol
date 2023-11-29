@@ -54,10 +54,10 @@ contract OnToggleBuilding_ProductionRate is SystemHook {
     uint256 level = Level.get(buildingEntity);
     if (IsActive.get(buildingEntity)) {
       // Activate consumption
-      LibReduceProductionRate.reduceProductionRate(buildingEntity, level);
+      LibReduceProductionRate.activateReduceProductionRate(buildingEntity, level);
 
       // Activate Production
-      LibProduction.upgradeResourceProduction(buildingEntity, level);
+      LibProduction.activateResourceProduction(buildingEntity, level);
     } else {
       // Clear production rate reductions for the building
       LibReduceProductionRate.clearProductionRateReduction(buildingEntity);

@@ -6,6 +6,23 @@ import { EResource } from "src/Types.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 
 library LibProduction {
+  /// @notice activates the resource production of a building
+  /// @param buildingEntity Entity ID of the building to upgrade
+  /// @param targetLevel Level to which the building is upgraded
+  function activateResourceProduction(bytes32 buildingEntity, uint256 targetLevel) internal {
+    bytes32 spaceRockEntity = OwnedBy.get(buildingEntity);
+    bytes32 buildingPrototype = BuildingType.get(buildingEntity);
+    P_ProductionData memory prototypeProduction = P_Production.get(buildingPrototype, targetLevel);
+
+    for (uint8 i = 0; i < prototypeProduction.resources.length; i++) {
+      increaseResourceProduction(
+        spaceRockEntity,
+        EResource(prototypeProduction.resources[i]),
+        prototypeProduction.amounts[i]
+      );
+    }
+  }
+
   /// @notice Upgrades the resource production of a building
   /// @param buildingEntity Entity ID of the building to upgrade
   /// @param targetLevel Level to which the building is upgraded
