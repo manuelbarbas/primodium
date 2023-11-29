@@ -19,6 +19,7 @@ import { QueueItemUnits, QueueItemUnitsTableId } from "codegen/tables/QueueItemU
 import { QueueUnits, QueueUnitsTableId } from "codegen/tables/QueueUnits.sol";
 import { ProducedResourceTableId } from "codegen/tables/ProducedResource.sol";
 import { ProductionRateTableId } from "codegen/tables/ProductionRate.sol";
+import { ConsumptionRateTableId } from "codegen/tables/ConsumptionRate.sol";
 import { ProducedUnitTableId } from "codegen/tables/ProducedUnit.sol";
 import { MapItemStoredUtilitiesTableId } from "codegen/tables/MapItemStoredUtilities.sol";
 import { ScoreTableId } from "codegen/tables/Score.sol";
@@ -229,6 +230,8 @@ function registerBuildHooks(IWorld world, OnBefore_ClaimResources onBefore_Claim
   world.grantAccess(MapItemUtilitiesTableId, address(onBuild_ProductionRate));
   world.grantAccess(MapUtilitiesTableId, address(onBuild_ProductionRate));
   world.grantAccess(MapItemStoredUtilitiesTableId, address(onBuild_ProductionRate));
+  world.grantAccess(ConsumptionRateTableId, address(onBuild_ProductionRate));
+
   world.registerSystemHook(systemId, onBuild_ProductionRate, AFTER_CALL_SYSTEM);
 }
 
@@ -263,6 +266,7 @@ function registerUpgradeHooks(IWorld world, OnBefore_ClaimResources onBefore_Cla
   world.grantAccess(MapItemUtilitiesTableId, address(onUpgrade_ProductionRate));
   world.grantAccess(MapUtilitiesTableId, address(onUpgrade_ProductionRate));
   world.grantAccess(MapItemStoredUtilitiesTableId, address(onUpgrade_ProductionRate));
+  world.grantAccess(ConsumptionRateTableId, address(onUpgrade_ProductionRate));
   world.registerSystemHook(systemId, onUpgrade_ProductionRate, AFTER_CALL_SYSTEM);
 }
 
@@ -296,6 +300,7 @@ function registerDestroyHooks(IWorld world, OnBefore_ClaimResources onBefore_Cla
   world.grantAccess(MaxResourceCountTableId, address(onDestroy_ProductionRate));
   world.grantAccess(MapItemStoredUtilitiesTableId, address(onDestroy_ProductionRate));
   world.grantAccess(ResourceCountTableId, address(onDestroy_ProductionRate));
+  world.grantAccess(ConsumptionRateTableId, address(onDestroy_ProductionRate));
   world.registerSystemHook(systemId, onDestroy_ProductionRate, BEFORE_CALL_SYSTEM);
 
   OnDestroy_RemoveFromTiles onDestroy_RemoveFromTiles = new OnDestroy_RemoveFromTiles();
@@ -327,6 +332,8 @@ function registerSendUnits(IWorld world, OnBefore_ClaimUnits onBefore_ClaimUnits
   world.grantAccess(ProducedUnitTableId, address(onSendUnits_InitMotherlode));
   world.grantAccess(UnitCountTableId, address(onSendUnits_InitMotherlode));
   world.grantAccess(ProductionRateTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(MaxResourceCountTableId, address(onSendUnits_InitMotherlode));
+  world.grantAccess(ResourceCountTableId, address(onSendUnits_InitMotherlode));
 
   OnSendUnits_Requirements onSendUnits_Requirements = new OnSendUnits_Requirements();
   world.registerSystemHook(systemId, onSendUnits_Requirements, BEFORE_CALL_SYSTEM);

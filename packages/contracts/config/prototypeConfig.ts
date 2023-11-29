@@ -3,6 +3,7 @@ import { config } from "../mud.config";
 import {
   encodeArray,
   getResourceValues,
+  getResourceValue,
   getUnitValues,
   idsToPrototypes,
   indexifyResourceArray,
@@ -10,7 +11,7 @@ import {
   upgradesToList,
 } from "../ts/prototypes/prototypeGenUtils";
 import { PrototypesConfig } from "../ts/prototypes/types";
-import { EResource, MUDEnums } from "./enums";
+import { EResource, ESize, MUDEnums } from "./enums";
 import { getBlueprint } from "./util/blueprints";
 import encodeBytes32, { encodeAddress } from "./util/encodeBytes32";
 
@@ -456,31 +457,31 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredBaseLevel: { value: 1n },
         P_RequiredResources: getResourceValues({ Iron: 45000, Copper: 10000 }),
-        P_RequiredDependencies: getResourceValues({ Iron: 35 }),
+        P_RequiredDependency: getResourceValue({ Iron: 35 }),
         P_Production: getResourceValues({ IronPlate: 8 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Copper: 200000, Lithium: 75000 }),
-        P_RequiredDependencies: getResourceValues({ Iron: 45 }),
+        P_RequiredDependency: getResourceValue({ Iron: 45 }),
         P_Production: getResourceValues({ IronPlate: 12 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ Copper: 5000000, Lithium: 2500000 }),
-        P_RequiredDependencies: getResourceValues({ Iron: 55 }),
+        P_RequiredDependency: getResourceValue({ Iron: 55 }),
         P_Production: getResourceValues({ IronPlate: 17 }),
       },
       4: {
         P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Copper: 15000000, Lithium: 7500000 }),
-        P_RequiredDependencies: getResourceValues({ Iron: 65 }),
+        P_RequiredDependency: getResourceValue({ Iron: 65 }),
         P_Production: getResourceValues({ IronPlate: 17 }),
       },
       5: {
         P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ Copper: 25000000, Titanium: 10000 }),
-        P_RequiredDependencies: getResourceValues({ Iron: 75 }),
+        P_RequiredDependency: getResourceValue({ Iron: 75 }),
         P_Production: getResourceValues({ IronPlate: 20 }),
       },
     },
@@ -494,19 +495,19 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ Iron: 500000, Lithium: 100000, U_Electricity: 10000 }),
-        P_RequiredDependencies: getResourceValues({ Iron: 35, Copper: 20 }),
+        P_RequiredDependency: getResourceValue({ Copper: 15 }),
         P_Production: getResourceValues({ Alloy: 5 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Iron: 5000000, Lithium: 500000, U_Electricity: 12000 }),
-        P_RequiredDependencies: getResourceValues({ Iron: 50, Copper: 30 }),
+        P_RequiredDependency: getResourceValue({ Copper: 20 }),
         P_Production: getResourceValues({ Alloy: 8 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Iron: 12500000, Lithium: 1500000, U_Electricity: 15000 }),
-        P_RequiredDependencies: getResourceValues({ Iron: 60, Copper: 35 }),
+        P_RequiredDependency: getResourceValue({ Copper: 25 }),
         P_Production: getResourceValues({ Alloy: 11 }),
       },
     },
@@ -520,19 +521,19 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Iron: 150000, Lithium: 20000 }),
-        P_RequiredDependencies: getResourceValues({ Lithium: 10, Copper: 20 }),
+        P_RequiredDependency: getResourceValue({ Lithium: 10 }),
         P_Production: getResourceValues({ PVCell: 5 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ Iron: 350000, Lithium: 250000 }),
-        P_RequiredDependencies: getResourceValues({ Lithium: 15, Copper: 30 }),
+        P_RequiredDependency: getResourceValue({ Lithium: 15 }),
         P_Production: getResourceValues({ PVCell: 8 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Iron: 750000, Lithium: 1000000 }),
-        P_RequiredDependencies: getResourceValues({ Lithium: 20, Copper: 35 }),
+        P_RequiredDependency: getResourceValue({ Lithium: 20 }),
         P_Production: getResourceValues({ PVCell: 11 }),
       },
     },
@@ -1524,12 +1525,16 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     keys: [{ [EResource.Titanium]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 750n },
+      P_RawResource: { value: EResource.R_Titanium },
+      P_ConsumesResource: { value: EResource.R_Titanium },
     },
   },
   Iridium: {
     keys: [{ [EResource.Iridium]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 3000n },
+      P_RawResource: { value: EResource.R_Iridium },
+      P_ConsumesResource: { value: EResource.R_Iridium },
     },
   },
   Osmium: {
@@ -1548,12 +1553,16 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     keys: [{ [EResource.Kimberlite]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 8000n },
+      P_RawResource: { value: EResource.R_Kimberlite },
+      P_ConsumesResource: { value: EResource.R_Kimberlite },
     },
   },
   Platinum: {
     keys: [{ [EResource.Platinum]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 1500n },
+      P_RawResource: { value: EResource.R_Platinum },
+      P_ConsumesResource: { value: EResource.R_Platinum },
     },
   },
   Uraninite: {
@@ -1572,24 +1581,48 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     keys: [{ [EResource.IronPlate]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 40n },
+      P_ConsumesResource: { value: EResource.Iron },
     },
   },
   PVCell: {
     keys: [{ [EResource.PVCell]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 100n },
+      P_ConsumesResource: { value: EResource.Lithium },
     },
   },
   Alloy: {
     keys: [{ [EResource.Alloy]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 170n },
+      P_ConsumesResource: { value: EResource.IronPlate },
     },
   },
   RocketFuel: {
     keys: [{ [EResource.RocketFuel]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 200n },
+    },
+  },
+
+  Small: {
+    keys: [{ [ESize.Small]: "uint8" }],
+    tables: {
+      P_SizeToAmount: { value: 100000n },
+    },
+  },
+
+  Medium: {
+    keys: [{ [ESize.Medium]: "uint8" }],
+    tables: {
+      P_SizeToAmount: { value: 250000n },
+    },
+  },
+
+  Large: {
+    keys: [{ [ESize.Large]: "uint8" }],
+    tables: {
+      P_SizeToAmount: { value: 500000n },
     },
   },
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { Spawned, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
+import { P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
 
 import { ERock, EUnit } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
@@ -181,6 +181,11 @@ library LibUnit {
     uint8 size = Motherlode.getSize(rockEntity);
     uint256 prevProductionRate = ProductionRate.get(rockEntity, resource);
     ProductionRate.set(rockEntity, resource, prevProductionRate + (productionRate * unitCount * size));
+    ConsumptionRate.set(
+      rockEntity,
+      P_RawResource.get(resource),
+      prevProductionRate + (productionRate * unitCount * size)
+    );
   }
 
   /**
@@ -212,5 +217,10 @@ library LibUnit {
     uint256 prevProductionRate = ProductionRate.get(rockEntity, resource);
     require(prevProductionRate >= productionRate * unitCount * size, "[LibUnit] Production rate cannot be negative");
     ProductionRate.set(rockEntity, resource, prevProductionRate - (productionRate * unitCount * size));
+    ConsumptionRate.set(
+      rockEntity,
+      P_RawResource.get(resource),
+      prevProductionRate - (productionRate * unitCount * size)
+    );
   }
 }

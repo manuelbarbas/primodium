@@ -40,12 +40,13 @@ contract OnUpgradeRange_SpendResources is SystemHook {
     ResourceId systemId,
     bytes memory callData
   ) public {
-    bytes32 playerEntity = addressToEntity(msgSender);
+    bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
+    bytes32 spaceRockEntity = abi.decode(args, (bytes32));
 
     // Get the player level
-    uint256 level = Level.get(playerEntity);
+    uint256 level = Level.get(spaceRockEntity);
 
     // Spend the required resources for upgrading the unit
-    LibResource.spendUpgradeResources(playerEntity, ExpansionKey, level);
+    LibResource.spendUpgradeResources(spaceRockEntity, ExpansionKey, level);
   }
 }

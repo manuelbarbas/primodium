@@ -36,7 +36,13 @@ export enum EBuilding {
 }
 
 export enum EResource {
-  Sandstone = 1,
+  //Raw
+  R_Titanium = 1,
+  R_Platinum,
+  R_Iridium,
+  R_Kimberlite,
+
+  Sandstone,
   Biofilm,
   Alluvium,
   Regolith,

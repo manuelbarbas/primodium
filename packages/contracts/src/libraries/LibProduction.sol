@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { OwnedBy, P_IsAdvancedResource, P_MiningRate, ResourceCount, BuildingType, Level, P_Production, P_ProductionData, P_IsUtility, ProductionRate } from "codegen/index.sol";
+import { Motherlode, P_ConsumesResource, ConsumptionRate, OwnedMotherlodes, OwnedBy, P_IsAdvancedResource, P_MiningRate, ResourceCount, BuildingType, Level, P_Production, P_ProductionData, P_IsUtility, ProductionRate } from "codegen/index.sol";
 import { EResource } from "src/Types.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 
@@ -12,7 +12,6 @@ library LibProduction {
   function upgradeResourceProduction(bytes32 buildingEntity, uint256 targetLevel) internal {
     bytes32 spaceRockEntity = OwnedBy.get(buildingEntity);
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
-
     P_ProductionData memory prototypeProduction = P_Production.get(buildingPrototype, targetLevel);
 
     uint256 lastLevelResourceLength;
@@ -33,18 +32,27 @@ library LibProduction {
   }
 
   function upgradeUnitResourceProduction(
-    bytes32 spaceRockEntity,
+    bytes32 playerEntity,
     bytes32 unitPrototype,
     uint256 level
   ) internal {
     uint256 miningRate = P_MiningRate.get(unitPrototype, level);
     if (miningRate == 0) return;
     uint256 lastLevelMiningRate = P_MiningRate.get(unitPrototype, level - 1);
-    for (uint8 resource = 1; resource < uint8(EResource.LENGTH); resource++) {
-      if (!P_IsAdvancedResource.get(resource)) continue;
-      uint256 currProduction = ProductionRate.get(spaceRockEntity, resource);
-      if (currProduction > 0)
-        ProductionRate.set(spaceRockEntity, resource, ((currProduction * miningRate) / lastLevelMiningRate));
+    bytes32[] memory ownedMotherlodes = OwnedMotherlodes.get(playerEntity);
+
+    for (uint8 motherlodeIndex = 0; motherlodeIndex < ownedMotherlodes.length; motherlodeIndex++) {
+      bytes32 motherlode = ownedMotherlodes[motherlodeIndex];
+      uint8 motherlodeResource = Motherlode.getMotherlodeType(motherlode);
+      uint256 currProduction = ProductionRate.get(motherlode, motherlodeResource);
+      if (currProduction > 0) {
+        ProductionRate.set(motherlode, motherlodeResource, ((currProduction * miningRate) / lastLevelMiningRate));
+        ConsumptionRate.set(
+          motherlode,
+          P_ConsumesResource.get(motherlodeResource),
+          ((currProduction * miningRate) / lastLevelMiningRate)
+        );
+      }
     }
   }
 

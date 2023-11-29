@@ -54,25 +54,21 @@ contract DestroySystemTest is PrimodiumTest {
     uint256 productionReduction = 10;
     bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
     ProductionRate.set(spaceRockEntity, uint8(EResource.Iron), originalProduction);
-
-    P_RequiredDependenciesData memory requiredDependenciesData = P_RequiredDependenciesData(
-      new uint8[](1),
-      new uint256[](1)
+    P_RequiredDependencyData memory requiredDependenciesData = P_RequiredDependencyData(
+      uint8(Iron),
+      productionReduction
     );
-    requiredDependenciesData.resources[0] = uint8(EResource.Iron);
-    requiredDependenciesData.amounts[0] = productionReduction;
 
-    P_RequiredDependencies.set(IronMinePrototypeId, 1, requiredDependenciesData);
+    P_RequiredDependency.set(IronMinePrototypeId, 1, requiredDependenciesData);
     switchPrank(creator);
 
     world.build(EBuilding.IronMine, getIronPosition(creator));
     uint256 productionIncrease = P_Production.getAmounts(IronMinePrototypeId, 1)[0];
-    assertEq(
-      ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)),
-      originalProduction - productionReduction + productionIncrease
-    );
+    assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), originalProduction + productionIncrease);
+    assertEq(ConsumptionRate.get(spaceRockEntity, uint8(EResource.Iron)), productionReduction);
 
     world.destroy(getIronPosition(creator));
+    assertEq(ConsumptionRate.get(spaceRockEntity, uint8(EResource.Iron)), 0);
     assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), originalProduction);
   }
 

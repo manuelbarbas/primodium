@@ -27,8 +27,7 @@ contract OnBefore_ClaimResources is SystemHook {
     bytes memory callData
   ) public {
     bytes32 playerEntity = addressToEntity(msgSender);
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
-    LibResource.claimAllResources(spaceRockEntity);
+    LibResource.claimAllPlayerResources(playerEntity);
   }
 
   /**

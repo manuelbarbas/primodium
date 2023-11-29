@@ -53,10 +53,12 @@ contract RecallSystemTest is PrimodiumTest {
     OwnedBy.set(origin, player);
     P_MiningRate.set(unitPrototype, 0, 1);
     OwnedBy.set(destination, player);
-    Motherlode.set(destination, uint8(ESize.Small), uint8(EResource.Iron));
-    MaxResourceCount.set(destination, uint8(EResource.Iron), 10000000);
-    MaxResourceCount.set(origin, uint8(EResource.Iron), 10000000);
-    ProductionRate.set(destination, uint8(EResource.Iron), 50 * uint8(ESize.Small));
+    Motherlode.set(destination, uint8(ESize.Small), uint8(EResource.Titanium));
+    MaxResourceCount.set(destination, uint8(EResource.Titanium), 10000000);
+    MaxResourceCount.set(origin, uint8(EResource.Titanium), 10000000);
+    ProductionRate.set(destination, uint8(EResource.Titanium), 50);
+    ConsumptionRate.set(destination, uint8(EResource.R_Titanium), 50);
+    ResourceCount.set(destination, uint8(EResource.R_Titanium), 10000000);
     LastClaimedAt.set(destination, block.timestamp);
     console.log("before warp ", block.timestamp);
     vm.warp(block.timestamp + 10);
@@ -64,16 +66,17 @@ contract RecallSystemTest is PrimodiumTest {
     world.recallStationedUnits(destination);
     console.log("after recall");
     assertEq(
-      ProducedResource.get(player, uint8(EResource.Iron)),
+      ProducedResource.get(player, uint8(EResource.Titanium)),
       500 * uint8(ESize.Small),
       "produced resources does not match"
     );
     assertEq(
-      ResourceCount.get(origin, uint8(EResource.Iron)),
+      ResourceCount.get(origin, uint8(EResource.Titanium)),
       uint256(ESize.Small) * 500,
       "resource count does not match"
     );
-    assertEq(ProductionRate.get(destination, uint8(EResource.Iron)), 0, "production rate does not match");
+    assertEq(ProductionRate.get(destination, uint8(EResource.Titanium)), 0, "production rate does not match");
+    assertEq(ConsumptionRate.get(destination, uint8(EResource.R_Titanium)), 0, "consumption rate does not match");
   }
 
   function setupRecall() public {

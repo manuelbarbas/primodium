@@ -93,6 +93,11 @@ export const key = {
 };
 
 export const EntityType = {
+  //Raw
+  R_Titanium: toHex32("R_Titanium") as Entity,
+  R_Platinum: toHex32("R_Platinum") as Entity,
+  R_Iridium: toHex32("R_Iridium") as Entity,
+  R_Kimberlite: toHex32("R_Kimberlite") as Entity,
   // Ores
   Water: toHex32("Water") as Entity,
   Lithium: toHex32("Lithium") as Entity,
@@ -271,10 +276,17 @@ export const ResearchImage = new Map<Entity, string>([
   [EntityType.Lithium, "/img/resource/lithium_resource.png"],
   [EntityType.Sulfur, "/img/resource/sulfur_resource.png"],
   [EntityType.Titanium, "/img/resource/titanium_resource.png"],
+  [EntityType.R_Titanium, "/img/resource/titanium_resource.png"],
+
   [EntityType.Osmium, "/img/resource/osmium_resource.png"],
   [EntityType.Tungsten, "/img/resource/tungsten_resource.png"],
   [EntityType.Iridium, "/img/resource/iridium_resource.png"],
+  [EntityType.R_Iridium, "/img/resource/iridium_resource.png"],
+
   [EntityType.Kimberlite, "/img/resource/kimberlite_resource.png"],
+  [EntityType.R_Kimberlite, "/img/resource/kimberlite_resource.png"],
+  [EntityType.Platinum, "/img/resource/platinum_resource.png"],
+  [EntityType.R_Platinum, "/img/resource/platinum_resource.png"],
 
   [EntityType.ExpansionResearch1, "/img/icons/mainbaseicon.png"],
   [EntityType.ExpansionResearch2, "/img/icons/mainbaseicon.png"],
@@ -338,14 +350,18 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.Copper, "/img/resource/copper_resource.png"],
   [EntityType.Lithium, "/img/resource/lithium_resource.png"],
   [EntityType.Titanium, "/img/resource/titanium_resource.png"],
+  [EntityType.R_Titanium, "/img/resource/titanium_resource.png"],
   [EntityType.Sulfur, "/img/resource/sulfur_resource.png"],
   [EntityType.Osmium, "/img/resource/osmium_resource.png"],
   [EntityType.Tungsten, "/img/resource/tungsten_resource.png"],
   [EntityType.Iridium, "/img/resource/iridium_resource.png"],
+  [EntityType.R_Iridium, "/img/resource/iridium_resource.png"],
   [EntityType.Kimberlite, "/img/resource/kimberlite_resource.png"],
+  [EntityType.R_Kimberlite, "/img/resource/kimberlite_resource.png"],
   [EntityType.Uraninite, "/img/resource/uraninite_resource.png"],
   [EntityType.Bolutite, "/img/resource/bolutite_resource.png"],
   [EntityType.Platinum, "/img/resource/platinum_resource.png"],
+  [EntityType.R_Platinum, "/img/resource/platinum_resource.png"],
 
   [EntityType.IronPlate, "/img/crafted/ironplate.png"],
   [EntityType.BasicPowerSource, "/img/crafted/basicbattery.png"],
@@ -456,6 +472,11 @@ export const UtilityStorages = new Set([
 export const MultiplierStorages = new Set([EntityType.DefenseMultiplier]);
 
 export const ResourceEnumLookup: Record<Entity, EResource> = {
+  [EntityType.R_Titanium]: EResource.R_Titanium,
+  [EntityType.R_Platinum]: EResource.R_Platinum,
+  [EntityType.R_Iridium]: EResource.R_Iridium,
+  [EntityType.R_Kimberlite]: EResource.R_Kimberlite,
+
   [EntityType.Iron]: EResource.Iron,
   [EntityType.Copper]: EResource.Copper,
   [EntityType.Lithium]: EResource.Lithium,

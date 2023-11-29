@@ -212,12 +212,12 @@ export const config = mudConfig({
       },
     },
 
-    P_RequiredDependencies: {
+    P_RequiredDependency: {
       keySchema: { prototype: "bytes32", level: "uint256" },
       valueSchema: {
         // mud doesnt recognize EResource arrays so we will manually convert them
-        resources: "uint8[]",
-        amounts: "uint256[]",
+        resource: "uint8",
+        amount: "uint256",
       },
     },
 
@@ -283,6 +283,11 @@ export const config = mudConfig({
       valueSchema: "uint8[]",
     },
 
+    P_ConsumesResource: {
+      keySchema: { resource: "uint8" },
+      valueSchema: "uint8",
+    },
+
     BuildingType: {
       keySchema: { entity: "bytes32" },
       valueSchema: "bytes32",
@@ -294,6 +299,11 @@ export const config = mudConfig({
     },
 
     ProductionRate: {
+      keySchema: { entity: "bytes32", resource: "uint8" },
+      valueSchema: "uint256",
+    },
+
+    ConsumptionRate: {
       keySchema: { entity: "bytes32", resource: "uint8" },
       valueSchema: "uint256",
     },
@@ -319,6 +329,21 @@ export const config = mudConfig({
     SetMotherlodes: {
       keySchema: { entity: "bytes32" },
       valueSchema: "bytes32[]",
+    },
+
+    P_SizeToAmount: {
+      keySchema: { size: "uint8" },
+      valueSchema: "uint256",
+    },
+
+    OwnedMotherlodes: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "bytes32[]",
+    },
+
+    P_RawResource: {
+      keySchema: { resource: "uint8" },
+      valueSchema: "uint8",
     },
 
     /* ----------------------------- Unit Production ---------------------------- */

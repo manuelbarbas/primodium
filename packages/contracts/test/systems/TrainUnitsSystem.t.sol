@@ -37,7 +37,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
 
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
     UnitProductionQueue.enqueue(building, item);
-    UnitFactorySet.add(player, building);
+    UnitFactorySet.add(rock, building);
   }
 
   function testCannotProduceUnit() public {
