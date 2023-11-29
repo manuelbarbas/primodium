@@ -19,8 +19,11 @@ import { MiningVessels } from "./screens/MiningVessels";
 import { Move } from "./screens/Move";
 import { UnitFactory } from "./screens/UnitFactory";
 import { UpgradeUnit } from "./screens/UpgradeUnit";
+import { toggleBuilding } from "src/util/web3/contractCalls/toggleBuilding";
+import { useMud } from "src/hooks";
 
 export const BuildingMenu: React.FC = () => {
+  const network = useMud().network;
   const selectedBuilding = components.SelectedBuilding.use()?.value;
 
   const buildingType = useMemo(() => {
@@ -118,6 +121,21 @@ export const BuildingMenu: React.FC = () => {
               >
                 <FaTrash size={12} />
               </Navigator.NavButton>
+            </TransactionQueueMask>
+          </div>
+
+          <div className="absolute top-0 right-[7rem] -translate-y-1/2 translate-x-1/2">
+            <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Toggle, selectedBuilding)}>
+              <Button
+                disabled={false}
+                className="btn-square btn-sm font-bold border border-error inline-flex"
+                onClick={() => {
+                  toggleBuilding(selectedBuilding, network);
+                  //components.SelectedBuilding.remove();
+                }}
+              >
+                {" "}
+              </Button>
             </TransactionQueueMask>
           </div>
         </>
