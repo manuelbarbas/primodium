@@ -8,8 +8,9 @@ import { world } from "src/network/world";
 import { PIRATE_KEY } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
 import { getNow } from "src/util/time";
-import { ObjectPosition, OnComponentSystem, Tween } from "../../common/object-components/common";
+import { ObjectPosition, OnComponentSystem } from "../../common/object-components/common";
 import { Circle, Line } from "../../common/object-components/graphics";
+import { renderEntityOrbitingArrivals } from "./renderArrivalsInOrbit";
 
 export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
   const playerEntity = mud.network.playerEntity;
@@ -74,7 +75,7 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
 
         const progress = Number(timeTraveled) / Number(totaltime);
 
-        if (progress >= 1) {
+        if (progress > 1) {
           //remove trajectory
           scene.objectPool.remove(trajectory.id);
 
@@ -82,29 +83,7 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
           fleetIcon.removeComponent("fleet");
 
           //change to orbit render
-          fleetIcon.setComponents([
-            ObjectPosition(destinationPixelCoord, DepthLayers.Marker),
-            Circle(50, {
-              color: 0x363636,
-              borderThickness: 1,
-              alpha: 0,
-            }),
-            Circle(5, {
-              color: 0x00ffff,
-              borderThickness: 1,
-              alpha: 0.75,
-              position: {
-                x: destinationPixelCoord.x + 50,
-                y: destinationPixelCoord.y,
-              },
-            }),
-            Tween(scene, {
-              angle: 360,
-              duration: 20 * 1000,
-              repeat: -1,
-              ease: "Linear",
-            }),
-          ]);
+          renderEntityOrbitingArrivals(arrival.destination, playerEntity, scene);
 
           //remove system
           fleetIcon.removeComponent(systemId);
