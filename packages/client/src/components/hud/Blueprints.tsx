@@ -64,15 +64,16 @@ export const Blueprints = () => {
       </SecondaryCard>
       <SecondaryCard className="gap-2 items-center">
         <p className="text-xs opacity-50 font-bold pb-2">ADVANCED</p>
+        <Blueprint tooltipDirection="top" buildingType={EntityType.StorageUnit} />
         <Blueprint tooltipDirection="top" buildingType={EntityType.SolarPanel} />
         <Blueprint tooltipDirection="top" buildingType={EntityType.DroneFactory} />
         <Blueprint tooltipDirection="top" buildingType={EntityType.IronPlateFactory} />
         <Blueprint tooltipDirection="top" buildingType={EntityType.PVCellFactory} />
-        <Blueprint tooltipDirection="top" buildingType={EntityType.SAMLauncher} />
         <Blueprint tooltipDirection="top" buildingType={EntityType.Vault} />
       </SecondaryCard>
       <SecondaryCard className="gap-2 items-center">
         <p className="text-xs opacity-50 font-bold pb-2">ELITE</p>
+        <Blueprint tooltipDirection="left" buildingType={EntityType.SAMLauncher} />
         <Blueprint tooltipDirection="left" buildingType={EntityType.Hangar} />
         <Blueprint tooltipDirection="left" buildingType={EntityType.AlloyFactory} />
         <Blueprint tooltipDirection="left" buildingType={EntityType.StarmapperStation} />

@@ -14,7 +14,7 @@ import { formatNumber } from "src/util/common";
 import { useFleetMoves } from "src/hooks/useFleetMoves";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { Badge } from "src/components/core/Badge";
-import { FaExpand, FaExpandArrowsAlt, FaExternalLinkAlt } from "react-icons/fa";
+import { FaExternalLinkAlt } from "react-icons/fa";
 
 export const AllUnitLabels = () => {
   const { playerEntity } = useMud().network;
