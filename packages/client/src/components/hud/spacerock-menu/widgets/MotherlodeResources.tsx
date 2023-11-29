@@ -34,15 +34,16 @@ export const MotherlodeResources: React.FC<{
   const { resourcesToClaim, resourceCount } = resources[rawResource];
   let currCount = (resourceCount ?? 0n) + (resourcesToClaim ?? 0n);
   if (currCount < 0n) currCount = 0n;
-  const resourceId = ResourceEntityLookup[rawResource as EResource];
+  const resourceId = ResourceEntityLookup[motherlodeType as EResource];
+  const rawResourceId = ResourceEntityLookup[rawResource as EResource];
   return (
     <DataLabel label="RESOURCES">
       {
-        <Badge key={resourceId} className="text-xs gap-2">
+        <Badge key={rawResourceId} className="text-xs gap-2">
           <ResourceIconTooltip
             name={getBlockTypeName(resourceId)}
             image={ResourceImage.get(resourceId) ?? ""}
-            resource={resourceId}
+            resource={rawResourceId}
             playerEntity={owner as Entity}
             amount={currCount}
             resourceType={ResourceType.Resource}
