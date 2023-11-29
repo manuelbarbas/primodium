@@ -5,6 +5,7 @@ import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { getMotherlodeEntity } from "src/util/encode";
 import { getPositionByVector } from "src/util/vector";
+import { Hex } from "viem";
 
 export function initializeMotherlodes(sourceEntity: Entity, source: Coord) {
   const config = components.P_GameConfig.get();
@@ -29,6 +30,7 @@ export function initializeMotherlodes(sourceEntity: Entity, source: Coord) {
     world.registerEntity({ id: motherlodeEntity });
     const { size: rawSize, motherlodeType: rawMotherlodeType } = getMotherlodeRawPrototype(motherlodeEntity);
     const motherlodeType = getMotherlodeType(rawMotherlodeType);
+    const rawResource = components.P_RawResource.getWithKeys({ resource: motherlodeType })?.value;
     const size = getSize(rawSize);
     components.Motherlode.set(
       {
@@ -48,6 +50,26 @@ export function initializeMotherlodes(sourceEntity: Entity, source: Coord) {
       { value: ERock.Motherlode, __staticData: "", __encodedLengths: "", __dynamicData: "" },
       motherlodeEntity
     );
+    if (rawResource) {
+      components.MaxResourceCount.setWithKeys(
+        {
+          value: components.P_SizeToAmount.getWithKeys({ size: size })?.value ?? 1n,
+          __staticData: "",
+          __encodedLengths: "",
+          __dynamicData: "",
+        },
+        { entity: motherlodeEntity as Hex, resource: rawResource }
+      );
+      components.ResourceCount.setWithKeys(
+        {
+          value: components.P_SizeToAmount.getWithKeys({ size: size })?.value ?? 1n,
+          __staticData: "",
+          __encodedLengths: "",
+          __dynamicData: "",
+        },
+        { entity: motherlodeEntity as Hex, resource: rawResource }
+      );
+    }
   }
 }
 
