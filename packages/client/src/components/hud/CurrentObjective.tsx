@@ -14,6 +14,9 @@ import { claimObjective } from "src/util/web3/contractCalls/claimObjective";
 import { Button } from "../core/Button";
 import { Card } from "../core/Card";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { Modal } from "../core/Modal";
+import { IconLabel } from "../core/IconLabel";
+import { Objectives } from "./modals/Objectives";
 
 const tutorialObjectives = [
   EObjectives.BuildIronMine,
@@ -77,7 +80,17 @@ export const CurrenObjective = () => {
     setCurrentStep(nextUnclaimedIndex);
   }, [claimed, playerEntity]);
 
-  if (currentStep === -1) return <></>;
+  if (currentStep === -1)
+    return (
+      <Modal title="objectives">
+        <Modal.Button className="border-secondary border-t-0 border-r-0 rounded-t-none rounded-r-none">
+          <IconLabel imageUri="img/icons/objectiveicon.png" className="text-sm" text="VIEW OBJECTIVES" />
+        </Modal.Button>
+        <Modal.Content className="w-[50rem] h-[50rem]">
+          <Objectives />
+        </Modal.Content>
+      </Modal>
+    );
 
   return (
     <div className="flex flex-col items-center">

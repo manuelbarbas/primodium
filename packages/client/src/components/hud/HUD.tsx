@@ -86,17 +86,11 @@ export const GameHUD = () => {
               </span>
               <SelectAction />
               <span className="flex flex-col gap-1 mt-1">
-                <Modal title="objectives">
+                <Modal title="Fleets">
                   <Modal.Button className="rounded-l-none border border-secondary btn-sm">
-                    <IconLabel
-                      imageUri="/img/icons/objectiveicon.png"
-                      tooltipText="objectives"
-                      tooltipDirection="right"
-                    />
+                    <IconLabel imageUri="/img/icons/outgoingicon.png" tooltipText="Fleets" tooltipDirection="right" />
                   </Modal.Button>
-                  <Modal.Content className="w-[50rem] h-[50rem]">
-                    <Objectives />
-                  </Modal.Content>
+                  <Modal.Content className="w-[50rem] h-[50rem]">{/* <Objectives /> */}</Modal.Content>
                 </Modal>
                 <Modal title="settings">
                   <Modal.Button className="rounded-l-none border border-secondary btn-sm">
