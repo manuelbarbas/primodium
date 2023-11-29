@@ -51,7 +51,15 @@ export const MaterialLabel = ({ name, resource }: { name: string; resource: Enti
       {production !== 0n && (
         <p className="opacity-50 text-xs transition-all">
           +{formatNumber((Number(production) * 60) / Number(RESOURCE_SCALE), { fractionDigits: 1 })}
-          /MIN <b className="text-accent">[{Number(maxStorage / RESOURCE_SCALE)}]</b>
+          /MIN{" "}
+          <b className="text-accent">
+            [
+            {formatNumber(maxStorage / RESOURCE_SCALE, {
+              short: true,
+              fractionDigits: 1,
+            })}
+            ]
+          </b>
         </p>
       )}
     </Badge>

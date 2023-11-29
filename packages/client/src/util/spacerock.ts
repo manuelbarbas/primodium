@@ -64,6 +64,7 @@ export function getSpaceRockImage(spaceRock: Entity) {
 }
 
 export function getSpaceRockName(spaceRock: Entity) {
+  const player = comps.Account.get()?.value;
   const type = comps.RockType.get(spaceRock, { value: ERock.Asteroid }).value as ERock;
   const motherlodeData = comps.Motherlode.get(spaceRock);
   const motherlodeResource = getMotherlodeResource(spaceRock);
@@ -73,6 +74,8 @@ export function getSpaceRockName(spaceRock: Entity) {
     asteroid: "-1" as Entity,
   }).mainBase as Entity;
   const mainBaseLevel = comps.Level.get(mainBaseEntity)?.value;
+
+  if (player === ownedBy) return "Home Asteroid";
 
   let name = "";
   switch (type) {

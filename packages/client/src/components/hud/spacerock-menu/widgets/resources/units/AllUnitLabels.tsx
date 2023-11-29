@@ -81,7 +81,7 @@ export const AllUnitLabels = () => {
           imageUri="/img/icons/attackicon.png"
           tooltipText="Attack"
           className="text-sm"
-          text={attack ? formatNumber(attack, { short: true }) : "-"}
+          text={attack ? formatNumber(attack, { short: true, fractionDigits: 2 }) : "-"}
         />
       </div>
     </div>

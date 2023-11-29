@@ -11,7 +11,6 @@ import { Resources } from "./widgets/resources/Resources";
 import { getSpaceRockImage, getSpaceRockName } from "src/util/spacerock";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Tabs } from "src/components/core/Tabs";
-import { FaCaretUp } from "react-icons/fa";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { Entity } from "@latticexyz/recs";
 import { GracePeriod } from "../GracePeriod";
@@ -22,7 +21,7 @@ export const SpacerockMenu: React.FC = () => {
   const ownedBy = components.OwnedBy.use(selectedSpacerock ?? singletonEntity)?.value ?? playerEntity;
   const img = getSpaceRockImage(selectedSpacerock ?? singletonEntity);
   const name = getSpaceRockName(selectedSpacerock ?? singletonEntity);
-
+  const coord = components.Position.get(selectedSpacerock ?? singletonEntity) ?? { x: 0, y: 0 };
   return (
     <div className="w-screen px-2 flex justify-center">
       <Tabs className="w-fit flex flex-col items-center gap-0">
@@ -36,17 +35,20 @@ export const SpacerockMenu: React.FC = () => {
           className="rounded-b-none border-b-0 btn-md border-secondary relative py-2 hover:text-accent group w-fit"
         >
           {/* <FaCaretUp size={22} className="text-accent absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full" /> */}
-          <IconLabel imageUri={img} className="" text={name} />
+          <IconLabel imageUri={img} className="" text={`${name}`} />
+          <p className="scale-95 opacity-50">
+            [{coord.x}, {coord.y}]
+          </p>
         </Tabs.Button>
         <Tabs.Pane index={0} className="w-full border-b-0 rounded-x-none rounded-b-none relative">
           <Resources />
           <AccountDisplay
             player={ownedBy as Entity}
-            className="absolute right-6 text-xs bg-base-100 p-2 rounded-box rounded-t-none"
+            className="absolute right-6 -top-1 border border-secondary text-xs bg-base-100 p-2 rounded-box rounded-t-none"
           />
           <GracePeriod
             player={ownedBy as Entity}
-            className="absolute left-6 text-xs p-2 bg-base-100 rounded-box rounded-t-none"
+            className="absolute left-6 -top-1 border border-secondary text-xs p-2 bg-base-100 rounded-box rounded-t-none"
           />
         </Tabs.Pane>
       </Tabs>
