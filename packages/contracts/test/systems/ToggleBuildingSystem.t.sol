@@ -201,15 +201,15 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
     world.trainUnits(workshop, EUnit.MinutemanMarine, 10);
   }
 
-  function testFailToggleBuildingTrainingUnits() public {
+  function testToggleBuildingTrainingUnits() public {
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Garage)), 1);
     bytes32 garage = world.build(EBuilding.Garage, getPosition1(creator));
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Workshop)), 1);
     bytes32 workshop = world.build(EBuilding.Workshop, getPosition2(creator));
 
-    P_RequiredResources.deleteRecord(P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine)), 1);
+    P_RequiredResources.deleteRecord(P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine)), 0);
     world.trainUnits(workshop, EUnit.MinutemanMarine, 10);
-
+    vm.expectRevert(bytes("[ToggleBuilding] Can not toggle building while it is training units"));
     world.toggleBuilding(getPosition2(creator));
   }
 
@@ -238,8 +238,8 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
     world.toggleBuilding(ironMinePostion);
   }
 
-  function testCannotToggleMainBase() public {
-    vm.expectRevert(bytes("[ToggleBuilding] Can not toggle main base"));
-    world.toggleBuilding(getMainBasePosition(creator));
+  function testFailToggleMainBase() public {
+    switchPrank(creator);
+    world.toggleBuilding(Position.get(Home.getMainBase(player)));
   }
 }
