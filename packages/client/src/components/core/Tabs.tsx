@@ -1,13 +1,4 @@
-import {
-  ReactNode,
-  memo,
-  createContext,
-  useContext,
-  useState,
-  FC,
-  useEffect,
-  useRef,
-} from "react";
+import { FC, ReactNode, createContext, memo, useContext, useEffect, useRef, useState } from "react";
 import { Button as _Button, IconButton as _IconButton } from "./Button";
 import { Card } from "./Card";
 
@@ -44,11 +35,7 @@ const Pane: FC<{
     return null;
   }
 
-  return (
-    <Card className={`overflow-y-auto scrollbar ${className} `}>
-      {children}
-    </Card>
-  );
+  return <Card className={`overflow-y-auto scrollbar ${className} `}>{children}</Card>;
 });
 
 const Button: FC<{
@@ -80,45 +67,33 @@ export const IconButton: FC<{
   tooltipDirection?: "right" | "left" | "top" | "bottom";
   tooltipText?: string;
   onClick?: () => void;
-}> = memo(
-  ({
-    index,
-    text,
-    imageUri,
-    hideText = false,
-    tooltipDirection = "right",
-    tooltipText,
-    onClick,
-  }) => {
-    const { index: currIndex, setIndex } = useIndex();
+}> = memo(({ index, text, imageUri, hideText = false, tooltipDirection = "right", tooltipText, onClick }) => {
+  const { index: currIndex, setIndex } = useIndex();
 
-    const selected = currIndex === index;
+  const selected = currIndex === index;
 
-    return (
-      <_IconButton
-        text={text}
-        selected={selected}
-        imageUri={imageUri}
-        hideText={hideText || !selected}
-        onClick={() => {
-          setIndex(selected ? undefined : index);
-          if (onClick) onClick();
-        }}
-        tooltipDirection={tooltipDirection}
-        tooltipText={tooltipText}
-      />
-    );
-  }
-);
+  return (
+    <_IconButton
+      text={text}
+      selected={selected}
+      imageUri={imageUri}
+      hideText={hideText || !selected}
+      onClick={() => {
+        setIndex(selected ? undefined : index);
+        if (onClick) onClick();
+      }}
+      tooltipDirection={tooltipDirection}
+      tooltipText={tooltipText}
+    />
+  );
+});
 
 export const Tabs: FC<TabProps> & {
   Button: typeof Button;
   IconButton: typeof IconButton;
   Pane: typeof Pane;
 } = ({ children, defaultIndex = 0, className, onChange }) => {
-  const [currentIndex, setCurrentIndex] = useState<number | undefined>(
-    defaultIndex
-  );
+  const [currentIndex, setCurrentIndex] = useState<number | undefined>(defaultIndex);
 
   // Ref to check if it's the first render
   const initialRender = useRef(true);
@@ -134,9 +109,7 @@ export const Tabs: FC<TabProps> & {
   }, [currentIndex]);
 
   return (
-    <IndexContext.Provider
-      value={{ index: currentIndex, setIndex: setCurrentIndex }}
-    >
+    <IndexContext.Provider value={{ index: currentIndex, setIndex: setCurrentIndex }}>
       <div className={`gap-1 ${className}`}>{children}</div>
     </IndexContext.Provider>
   );

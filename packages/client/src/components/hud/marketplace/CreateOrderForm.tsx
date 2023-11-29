@@ -1,6 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { useMemo, useState } from "react";
 import { Button } from "src/components/core/Button";
+import { SecondaryCard } from "src/components/core/Card";
 import { useMud } from "src/hooks";
 import { getBlockTypeName } from "src/util/common";
 import { RESOURCE_SCALE, ResourceStorages } from "src/util/constants";
@@ -24,31 +25,32 @@ export const CreateOrderForm = () => {
   };
 
   return (
-    <div className="w-full h-full flex justify-center">
-      <form className="max-w-lg flex flex-col gap-4">
-        <div>
-          <label htmlFor="resource" className="block text-sm font-medium text-gray-300">
-            Resource
-          </label>
-          <select
-            id="resource"
-            placeholder="Select Resource"
-            value={selectedResource}
-            onChange={(e) => setSelectedResource(e.target.value as Entity)}
-            className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-gray-300 rounded-md shadow-sm focus:outline-none text-gray-800 focus:ring-secondary focus:border-secondary"
-          >
-            <option className="text-gray-300" value="default" disabled hidden>
-              Select a resource
-            </option>
-            {resources.map((resource) => (
-              <option key={resource} value={resource}>
-                {getBlockTypeName(resource)}
+    <div className="w-full h-full grid grid-cols-10 flex justify-center gap-4">
+      <SecondaryCard className="col-span-3 flex flex-col items-center gap-2 overflow-auto scrollbar">
+        <p className="text-lg">New Order</p>
+        <form className="max-w-lg flex flex-col w-full gap-4">
+          <div>
+            <label htmlFor="resource" className="block text-sm font-medium text-gray-300">
+              Resource
+            </label>
+            <select
+              id="resource"
+              placeholder="Select Resource"
+              value={selectedResource}
+              onChange={(e) => setSelectedResource(e.target.value as Entity)}
+              className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-gray-300 rounded-md shadow-sm focus:outline-none text-gray-800 focus:ring-secondary focus:border-secondary"
+            >
+              <option className="text-gray-300" value="default" disabled hidden>
+                Select a resource
               </option>
-            ))}
-          </select>
-        </div>
+              {resources.map((resource) => (
+                <option key={resource} value={resource}>
+                  {getBlockTypeName(resource)}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <div className="flex gap-2 justify-between">
           <div>
             <label htmlFor="price" className="block text-sm font-medium text-gray-300">
               Price per unit
@@ -76,17 +78,20 @@ export const CreateOrderForm = () => {
               className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-gray-300 rounded-md shadow-sm focus:outline-none text-gray-800 focus:ring-secondary focus:border-secondary"
             />
           </div>
-        </div>
-        <div>
-          <Button
-            disabled={!price || !quantity || selectedResource == "default"}
-            onClick={handleSubmit}
-            className="w-full bg-secondary"
-          >
-            Submit
-          </Button>
-        </div>
-      </form>
+          <div>
+            <Button
+              disabled={!price || !quantity || selectedResource == "default"}
+              onClick={handleSubmit}
+              className="w-full bg-secondary"
+            >
+              Submit
+            </Button>
+          </div>
+        </form>
+      </SecondaryCard>
+      <SecondaryCard className="col-span-7 flex flex-col items-center gap-2 overflow-auto scrollbar">
+        <p className="text-lg">Manage Orders</p>
+      </SecondaryCard>
     </div>
   );
 };
