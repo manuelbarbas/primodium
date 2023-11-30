@@ -6,10 +6,10 @@ import { useMud } from "./hooks";
 import { useInit } from "./hooks/useInit";
 import { components } from "./network/components";
 import { world } from "./network/world";
+import { Account } from "./screens/Account";
 import { Game } from "./screens/Game";
 import { Increment } from "./screens/Increment";
 import { Landing } from "./screens/Landing";
-import { Transfer } from "./screens/Transfer";
 import { setupCheatcodes } from "./util/cheatcodes";
 
 const DEV = import.meta.env.PRI_DEV === "true";
@@ -55,7 +55,7 @@ export default function AppLoadingState() {
               <Route path="/" element={<Landing />} />
               <Route path="/game" element={initialized ? <Game /> : <Landing />} />
               <Route path="/increment" element={<Increment />} />
-              <Route path="/transfer" element={<Transfer />} />
+              <Route path="/account" element={<Account />} />
             </Routes>
           </BrowserRouter>
         )}
