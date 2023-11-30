@@ -7,6 +7,7 @@ import {
   defineComponentSystem,
   defineEnterSystem,
   defineExitSystem,
+  defineRxSystem,
   defineUpdateSystem,
   namespaceWorld,
 } from "@latticexyz/recs";
@@ -287,20 +288,34 @@ export const OnExitSystem = <T extends keyof GameObjectTypes>(
   };
 };
 
+const observableMap: Map<string, Map<string, (event: unknown) => void>> = new Map();
 export const OnRxjsSystem = <T, GO extends keyof GameObjectTypes>(
   observable$: Observable<T>,
   callback: (event: T) => void
 ): GameObjectComponent<GO> => {
   const id = uuid();
-  const subscription = observable$.subscribe(callback);
+  const observableKey = observable$.toString();
   return {
     id,
     once: () => {
-      //do nothing
+      if (!observableMap.has(observableKey)) {
+        observableMap.set(observableKey, new Map());
+      }
+
+      defineRxSystem(gameWorld, observable$, (value) => {
+        const fnMap = observableMap.get(observableKey);
+
+        if (!fnMap) return;
+
+        for (const fn of fnMap.values()) {
+          fn(value);
+        }
+      });
+
+      observableMap.get(observableKey)?.set(id, (update) => callback(update as T));
     },
     exit: () => {
-      world.registerDisposer(() => subscription?.unsubscribe());
-      // do nothing
+      observableMap.get(observableKey)?.delete(id);
     },
   };
 };
