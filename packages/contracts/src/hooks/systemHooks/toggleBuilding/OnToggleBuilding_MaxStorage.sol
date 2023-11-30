@@ -4,16 +4,16 @@ import { addressToEntity } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
-import { Level, IsActive } from "codegen/index.sol";
+import { IsActive, Level } from "src/codegen/index.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 
 /**
- * @title OnUpgrade_MaxStorage
- * @dev This contract is a system hook that handles the max storage capacity of a building when it is upgraded in the game world.
+ * @title OnToggleBuilding_MaxStorage
+ * @dev This contract is a system hook that handles the max storage capacity update when a building is toggled.
  */
-contract OnUpgrade_MaxStorage is SystemHook {
+contract OnToggleBuilding_MaxStorage is SystemHook {
   constructor() {}
 
   function onBeforeCallSystem(
@@ -43,7 +43,10 @@ contract OnUpgrade_MaxStorage is SystemHook {
 
     // Get the level of the building
     uint256 level = Level.get(buildingEntity);
-    // Increase the maximum storage capacity
-    if (IsActive.get(buildingEntity)) LibStorage.increaseMaxStorage(buildingEntity, level);
+    if (IsActive.get(buildingEntity)) {
+      LibStorage.activateMaxStorage(buildingEntity, level);
+    } else {
+      LibStorage.clearMaxStorageIncrease(buildingEntity);
+    }
   }
 }

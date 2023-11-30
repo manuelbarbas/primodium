@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import { entityToAddress } from "src/utils.sol";
 // tables
-import { HasBuiltBuilding, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint } from "codegen/index.sol";
+import { IsActive, HasBuiltBuilding, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint } from "codegen/index.sol";
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -34,7 +34,7 @@ library LibBuilding {
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
 
     require(buildingPrototype != MainBasePrototypeId, "[Destroy] Cannot destroy main base");
-    require(OwnedBy.get(coord.parent) == playerEntity, "[Destroy] : only owner can destroy building");
+    require(OwnedBy.get(coord.parent) == playerEntity, "[Destroy] Only owner can destroy building");
   }
 
   /**
@@ -113,7 +113,7 @@ library LibBuilding {
     LastClaimedAt.set(buildingEntity, block.timestamp);
     OwnedBy.set(buildingEntity, coord.parent);
     HasBuiltBuilding.set(playerEntity, buildingPrototype, true);
-
+    IsActive.set(buildingEntity, true);
     if (P_UnitProdTypes.length(buildingPrototype, 1) != 0) {
       UnitFactorySet.add(coord.parent, buildingEntity);
     }

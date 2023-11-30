@@ -308,6 +308,11 @@ export const config = mudConfig({
       valueSchema: "uint256",
     },
 
+    IsActive: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "bool",
+    },
+
     /* ------------------------------- Motherlode ------------------------------- */
 
     Motherlode: {

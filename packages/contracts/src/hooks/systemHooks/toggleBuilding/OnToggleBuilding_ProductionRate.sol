@@ -1,21 +1,30 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
 import { addressToEntity } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
-import { Level, IsActive } from "codegen/index.sol";
+import { IsActive, Level } from "src/codegen/index.sol";
+
 import { LibBuilding } from "libraries/LibBuilding.sol";
-import { LibStorage } from "libraries/LibStorage.sol";
+import { LibReduceProductionRate } from "libraries/LibReduceProductionRate.sol";
+import { LibProduction } from "libraries/LibProduction.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 
 /**
- * @title OnUpgrade_MaxStorage
- * @dev This contract is a system hook that handles the max storage capacity of a building when it is upgraded in the game world.
+ * @title OnToggleBuilding_ProductionRate
+ * @dev This contract is a system hook that handles production rate update when a building is toggled.
  */
-contract OnUpgrade_MaxStorage is SystemHook {
+contract OnToggleBuilding_ProductionRate is SystemHook {
   constructor() {}
 
+  /**
+   * @dev This function is called before the system's main logic is executed. It clears production rate reductions and resource production when a building is destroyed.
+   * @param msgSender The address of the message sender.
+   * @param systemId The identifier of the system.
+   * @param callData The data passed to the system.
+   */
   function onBeforeCallSystem(
     address msgSender,
     ResourceId systemId,
@@ -43,7 +52,18 @@ contract OnUpgrade_MaxStorage is SystemHook {
 
     // Get the level of the building
     uint256 level = Level.get(buildingEntity);
-    // Increase the maximum storage capacity
-    if (IsActive.get(buildingEntity)) LibStorage.increaseMaxStorage(buildingEntity, level);
+    if (IsActive.get(buildingEntity)) {
+      // Activate consumption
+      LibReduceProductionRate.activateReduceProductionRate(buildingEntity, level);
+
+      // Activate Production
+      LibProduction.activateResourceProduction(buildingEntity, level);
+    } else {
+      // Clear production rate reductions for the building
+      LibReduceProductionRate.clearProductionRateReduction(buildingEntity);
+
+      // Clear resource production for the building
+      LibProduction.clearResourceProduction(buildingEntity);
+    }
   }
 }
