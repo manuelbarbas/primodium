@@ -35,9 +35,10 @@ library LibReinforce {
       if (arrival.unitCounts[i] == 0) continue;
       uint256 count = arrival.unitCounts[i];
       LibUnit.increaseUnitCount(playerEntity, rockEntity, unitPrototypes[i], count);
+      //todo in future updates this condition will be removed and Home.getAsteroid will be the space rocks in the arrival
       if (arrival.from != playerEntity) {
-        LibUnit.updateStoredUtilities(arrival.destination, unitPrototypes[i], count, true);
-        LibUnit.updateStoredUtilities(arrival.origin, unitPrototypes[i], count, false);
+        LibUnit.updateStoredUtilities(Home.getAsteroid(arrival.to), unitPrototypes[i], count, true);
+        LibUnit.updateStoredUtilities(Home.getAsteroid(arrival.from), unitPrototypes[i], count, false);
       }
     }
     ArrivalCount.set(arrival.from, ArrivalCount.get(arrival.from) - 1);
