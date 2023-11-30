@@ -44,7 +44,7 @@ export const FleetActions = () => {
   return (
     <div className="flex flex-col items-center gap-1 m-1">
       <SecondaryCard className="flex flex-row w-fit gap-1 m-1">
-        <IconButton className="btn-sm" imageUri="/img/icons/outgoingicon.png" text="send fleet" />
+        <IconButton className="btn-sm btn-secondary" imageUri="/img/icons/outgoingicon.png" text="send fleet" />
       </SecondaryCard>
       <div className="text-xs opacity-75 font-bold w-full flex justify-around items-center mb-1 gap-2">
         <Badge className="flex items-center gap-1">
