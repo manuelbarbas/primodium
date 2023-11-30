@@ -20,7 +20,6 @@ import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { Hotbar } from "./hotbar/Hotbar";
 import { Marketplace } from "./marketplace/Marketplace";
 import { Panes } from "./panes/Panes";
-import { Resources } from "./resources/Resources";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 import { Units } from "./units/Units";
 
@@ -76,7 +75,7 @@ export const GameHUD = () => {
 
             <HUD.BottomLeft>
               <Minimap />
-              <Resources />
+              {/* <Resources /> */}
             </HUD.BottomLeft>
             <HUD.BottomRight>
               <Units />

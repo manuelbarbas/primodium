@@ -101,12 +101,12 @@ export const Voronoi = ({ points, width, height }: DotsProps) => {
 
   const xScale = useMemo(() => {
     const scale = scaleLinear<number>({
-      domain: [bounds.minY, bounds.maxY],
+      domain: [bounds.minX, bounds.maxX],
       range: [0, width],
       clamp: true,
     });
     return scale;
-  }, [width, bounds.minY, bounds.maxY]);
+  }, [width, bounds.minX, bounds.maxX]);
 
   const yScale = useMemo(
     () =>
@@ -115,7 +115,7 @@ export const Voronoi = ({ points, width, height }: DotsProps) => {
         range: [height, 0],
         clamp: true,
       }),
-    [height, bounds.minX, bounds.maxX]
+    [height, bounds.minY, bounds.maxY]
   );
 
   const voronoiLayout = useMemo(
