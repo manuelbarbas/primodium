@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { useMemo, useState } from "react";
-import { FaArrowDown, FaArrowUp, FaMinus, FaUndo } from "react-icons/fa";
+import { FaAngleDoubleRight, FaArrowDown, FaArrowLeft, FaArrowRight, FaArrowUp, FaMinus, FaUndo } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { IconLabel } from "src/components/core/IconLabel";
@@ -110,14 +110,66 @@ export const CreateOrderForm = () => {
   );
 };
 
-const ResourceListings = ({ listings }: { listings: Listing[] }) => {
+const ResourceListings = ({ listings, pageSize = 10 }: { listings: Listing[]; pageSize?: number }) => {
   const { network } = useMud();
   const [listingUpdates, setListingUpdates] = useState<{ [key: string]: { newPrice?: bigint; newCount?: bigint } }>({});
   const [sortConfig, setSortConfig] = useState<{ key: keyof Listing | null; direction: "ascending" | "descending" }>({
     key: null,
     direction: "ascending",
   });
+  const [currentPage, setCurrentPage] = useState(1);
 
+  const getCurrentListings = () => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return sortedListings.slice(startIndex, startIndex + pageSize);
+  };
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+  const PaginationControls = () => {
+    const totalPages = Math.ceil(sortedListings.length / pageSize);
+    return (
+      <div className="flex gap-2 items-center">
+        <Button className={`btn-sm`} onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage == 1}>
+          <FaArrowLeft />
+        </Button>
+
+        {[...Array(totalPages).keys()].map((page) => {
+          if (page > 13) return null;
+          return (
+            <Button
+              className={`btn-sm ${currentPage - 1 == page ? "btn-secondary" : ""}`}
+              key={page}
+              onClick={() => handlePageChange(page + 1)}
+            >
+              {page + 1}
+            </Button>
+          );
+        })}
+        {sortedListings.length > pageSize * 14 && (
+          <Button
+            className={`btn-sm ${currentPage > 14 ? "btn-secondary" : ""}`}
+            onClick={() => (currentPage <= 14 ? handlePageChange(15) : null)}
+          >
+            {currentPage > 14 ? currentPage : 15}
+          </Button>
+        )}
+        <Button
+          className={`btn-sm`}
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage == totalPages}
+        >
+          <FaArrowRight />
+        </Button>
+        <Button className={`btn-sm`} onClick={() => handlePageChange(totalPages)} disabled={currentPage == totalPages}>
+          <FaAngleDoubleRight className="pointer-events-none" />
+        </Button>
+        <div className="bg-black/10 rounded-md p-2 text-xs">
+          {currentPage} / {totalPages}
+        </div>
+      </div>
+    );
+  };
   const sortedListings = [...listings].sort((a, b) => {
     if (sortConfig.key === null) return 0;
     if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -146,7 +198,7 @@ const ResourceListings = ({ listings }: { listings: Listing[] }) => {
   if (listings.length === 0) return <div className="w-full h-full text-center p-20 uppercase bold">No listings</div>;
 
   return (
-    <div className="p-2">
+    <div className="p-2 flex flex-col justify-between h-full">
       <table className="min-w-full divide-y divide-accent">
         <thead>
           <tr>
@@ -180,7 +232,7 @@ const ResourceListings = ({ listings }: { listings: Listing[] }) => {
           </tr>
         </thead>
         <tbody>
-          {sortedListings.map((listing) => {
+          {getCurrentListings().map((listing) => {
             const newCount = listingUpdates[listing.id]?.newCount;
             const countDiff = !!newCount && newCount !== listing.count;
             const newPrice = listingUpdates[listing.id]?.newPrice;
@@ -275,6 +327,7 @@ const ResourceListings = ({ listings }: { listings: Listing[] }) => {
           })}
         </tbody>
       </table>
+      <PaginationControls />
     </div>
   );
 };
