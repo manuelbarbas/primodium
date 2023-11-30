@@ -34,7 +34,7 @@ const Blueprint: React.FC<{
         components.SelectedBuilding.set({ value: buildingType });
         components.SelectedAction.set({ value: Action.PlaceBuilding });
       }}
-      className={`relative btn-ghost w-fit p-0 hover:bg-accent disabled:opacity-50 rounded border border-secondary hover:z-10 ${
+      className={`relative btn-ghost w-fit p-0 hover:bg-accent disabled:opacity-50 border border-secondary hover:z-10 ${
         selectedBuilding === buildingType ? " ring-2 ring-warning" : ""
       }`}
     >

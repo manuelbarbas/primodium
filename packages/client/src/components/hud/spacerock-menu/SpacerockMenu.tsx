@@ -1,12 +1,7 @@
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { ERock } from "contracts/config/enums";
-import { useEffect } from "react";
-import { Button } from "src/components/core/Button";
-import { Navigator } from "src/components/core/Navigator";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 
-import { Card } from "src/components/core/Card";
 import { Resources } from "./widgets/resources/Resources";
 import { getSpaceRockImage, getSpaceRockName } from "src/util/spacerock";
 import { IconLabel } from "src/components/core/IconLabel";
@@ -24,7 +19,7 @@ export const SpacerockMenu: React.FC = () => {
   const coord = components.Position.get(selectedSpacerock ?? singletonEntity) ?? { x: 0, y: 0 };
   return (
     <div className="w-screen px-2 flex justify-center">
-      <Tabs className="w-fit flex flex-col items-center gap-0">
+      <Tabs className="min-w-[50%] flex flex-col items-center gap-0">
         <Tabs.Button
           index={0}
           togglable

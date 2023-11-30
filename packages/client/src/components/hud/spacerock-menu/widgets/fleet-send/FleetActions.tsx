@@ -4,17 +4,16 @@ import { SecondaryCard } from "src/components/core/Card";
 
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { EntityType } from "src/util/constants";
-import { UnitLabel } from "./UnitLabel";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { DefenseLabel } from "../utilities/DefenseLabel";
+import { DefenseLabel } from "../resources/utilities/DefenseLabel";
 import { Hex } from "viem";
 import { IconLabel } from "src/components/core/IconLabel";
 import { formatNumber } from "src/util/common";
 import { Badge } from "src/components/core/Badge";
 import { FaExternalLinkAlt } from "react-icons/fa";
+import { IconButton } from "src/components/core/Button";
 
-export const AllUnitLabels = () => {
+export const FleetActions = () => {
   const { playerEntity } = useMud().network;
   const selectedAsteroid = components.SelectedRock.use()?.value as Entity | undefined;
   const owner = components.OwnedBy.use(selectedAsteroid)?.value as Entity | undefined;
@@ -45,37 +44,7 @@ export const AllUnitLabels = () => {
   return (
     <div className="flex flex-col items-center gap-1 m-1">
       <SecondaryCard className="flex flex-row w-fit gap-1 m-1">
-        <UnitLabel
-          name={"Minutemen Marine"}
-          count={getUnitCount(EntityType.MinutemanMarine)}
-          resource={EntityType.MinutemanMarine}
-        />
-        <UnitLabel
-          name={"Trident Marine"}
-          count={getUnitCount(EntityType.TridentMarine)}
-          resource={EntityType.TridentMarine}
-        />
-        <UnitLabel
-          name={"Anvil Light Drone"}
-          count={getUnitCount(EntityType.AnvilDrone)}
-          resource={EntityType.AnvilDrone}
-        />
-        <UnitLabel
-          name={"Hammer Drone"}
-          count={getUnitCount(EntityType.HammerDrone)}
-          resource={EntityType.HammerDrone}
-        />
-        <UnitLabel
-          name={"Stinger Drone"}
-          count={getUnitCount(EntityType.StingerDrone)}
-          resource={EntityType.StingerDrone}
-        />
-        <UnitLabel name={"Aegis Drone"} count={getUnitCount(EntityType.AegisDrone)} resource={EntityType.AegisDrone} />
-        <UnitLabel
-          name={"Mining Vessel"}
-          count={getUnitCount(EntityType.MiningVessel)}
-          resource={EntityType.MiningVessel}
-        />
+        <IconButton className="btn-sm" imageUri="/img/icons/outgoingicon.png" text="send fleet" />
       </SecondaryCard>
       <div className="text-xs opacity-75 font-bold w-full flex justify-around items-center mb-1 gap-2">
         <Badge className="flex items-center gap-1">
