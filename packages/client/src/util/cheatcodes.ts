@@ -27,6 +27,7 @@ const resources: Record<string, Entity> = {
   vessel: EntityType.VesselCapacity,
   electricity: EntityType.Electricity,
   defense: EntityType.Defense,
+  orders: EntityType.MaxOrders,
 };
 
 const units: Record<string, Entity> = {
@@ -86,16 +87,18 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
       function: async (resource: string) => {
         const player = mud.network.playerEntity;
         if (!player) throw new Error("No player found");
+        const homeAsteroid = mud.components.Home.get(player)?.asteroid as Entity | undefined;
 
         const resourceEntity = resources[resource.toLowerCase()];
 
-        if (!resourceEntity) throw new Error("Resource not found");
+        if (!resourceEntity || !homeAsteroid) throw new Error("Resource not found");
 
+        console.log("getting", resource);
         await mud.contractCalls.setComponentValue(
           mud.components.ResourceCount,
           encodeEntity(
             { entity: "bytes32", resource: "uint8" },
-            { entity: player as Hex, resource: ResourceEnumLookup[resourceEntity] }
+            { entity: homeAsteroid as Hex, resource: ResourceEnumLookup[resourceEntity] }
           ),
           {
             value: 10000000n,

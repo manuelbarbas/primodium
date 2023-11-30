@@ -12,6 +12,7 @@ import { OverlayModal } from "../core/OverlayModal";
 import { BrandingLabel } from "../shared/BrandingLabel";
 import { GracePeriod } from "./GracePeriod";
 import { LoadingIndication } from "./LoadingIndication";
+import { Minimap } from "./Minimap";
 import { Profile } from "./Profile";
 import { PrototypeInfo } from "./PrototypeInfo";
 import { ViewStarmap } from "./ViewStarmap";
@@ -74,6 +75,7 @@ export const GameHUD = () => {
             </HUD.Left>
 
             <HUD.BottomLeft>
+              <Minimap />
               <Resources />
             </HUD.BottomLeft>
             <HUD.BottomRight>
