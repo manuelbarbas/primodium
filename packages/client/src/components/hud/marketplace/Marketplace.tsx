@@ -2,8 +2,6 @@ import { Entity } from "@latticexyz/recs";
 import { useState } from "react";
 import { Join } from "src/components/core/Join";
 import { Tabs } from "src/components/core/Tabs";
-import { components } from "src/network/components";
-import { ValueSansMetadata } from "src/network/components/customComponents/ExtendedComponent";
 import { CreateOrderForm } from "./CreateOrderForm";
 import { TakeOrderForm } from "./TakeOrderForm";
 

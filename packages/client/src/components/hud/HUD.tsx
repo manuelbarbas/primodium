@@ -65,8 +65,8 @@ export const GameHUD = () => {
               <LoadingIndication />
             </HUD.TopLeft>
             <HUD.Left>
-              <OverlayModal title="Primodium Grand Bazaar">
-                <OverlayModal.Button>Bazaar</OverlayModal.Button>
+              <OverlayModal title="Primodium Marketplace">
+                <OverlayModal.Button>Marketplace</OverlayModal.Button>
                 <OverlayModal.Content>
                   <Marketplace />
                 </OverlayModal.Content>
