@@ -11,6 +11,7 @@ import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
+import { ValueSansMetadata } from "src/network/components/customComponents/ExtendedComponent";
 import { getBlockTypeName } from "src/util/common";
 import {
   RESOURCE_SCALE,
@@ -23,7 +24,8 @@ import { hashEntities } from "src/util/encode";
 import { takeOrders } from "src/util/web3/contractCalls/takeOrders";
 import { formatEther } from "viem";
 import { LinkedAddressDisplay } from "../LinkedAddressDisplay";
-import { Listing } from "./Marketplace";
+
+type Listing = ValueSansMetadata<typeof components.MarketplaceOrder.schema> & { id: Entity };
 
 export function TakeOrderForm({
   orders: [takenOrders, setTakenOrders],
@@ -98,6 +100,7 @@ export function TakeOrderForm({
       </SecondaryCard>
 
       <SecondaryCard className="col-span-7 row-span-3 h-full w-full ">
+        <p className="text-lg">Listings</p>
         {selectedItem ? (
           <ResourceListings listings={itemListings} takenOrders={takenOrders} setOrder={handleTakeOrderChange} />
         ) : (

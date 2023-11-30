@@ -7,8 +7,6 @@ import { ValueSansMetadata } from "src/network/components/customComponents/Exten
 import { CreateOrderForm } from "./CreateOrderForm";
 import { TakeOrderForm } from "./TakeOrderForm";
 
-export type Listing = ValueSansMetadata<typeof components.MarketplaceOrder.schema> & { id: Entity };
-
 export const Marketplace = () => {
   const [takenOrders, setTakenOrders] = useState<Record<Entity, bigint>>({});
   return (
