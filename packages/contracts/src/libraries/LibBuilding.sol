@@ -35,7 +35,6 @@ library LibBuilding {
 
     require(buildingPrototype != MainBasePrototypeId, "[Destroy] Cannot destroy main base");
     require(OwnedBy.get(coord.parent) == playerEntity, "[Destroy] Only owner can destroy building");
-    require(IsActive.get(buildingEntity), "[Destroy] Can not destroy in active building");
   }
 
   /**
@@ -93,7 +92,6 @@ library LibBuilding {
       LibBuilding.hasRequiredBaseLevel(playerEntity, buildingPrototype, targetLevel),
       "[UpgradeBuildingSystem] MainBase level requirement not met"
     );
-    require(IsActive.get(buildingEntity), "[UpgradeBuildingSystem] Can not upgrade in active building");
   }
 
   /// @notice Builds a building at a specified coordinate

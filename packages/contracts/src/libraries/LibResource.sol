@@ -6,7 +6,7 @@ import { LibStorage } from "libraries/LibStorage.sol";
 
 import { UtilityMap } from "libraries/UtilityMap.sol";
 
-import { Motherlode, OwnedMotherlodes, P_ConsumesResource, ConsumptionRate, Home, P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+import { Level, IsActive, Motherlode, OwnedMotherlodes, P_ConsumesResource, ConsumptionRate, Home, P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
 
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -88,15 +88,17 @@ library LibResource {
   ) internal {
     // Check if the spaceRock has enough resources.
     uint256 spaceRockResourceCount = ResourceCount.get(spaceRockEntity, resource);
-    require(resourceCost <= spaceRockResourceCount, "[SpendResources] Not enough resources to spend");
-
-    // If the spent resource is a utility, add its cost to the total utility usage of the entity.
-    if (P_IsUtility.get(resource)) {
+    bool isUtility = P_IsUtility.get(resource);
+    if (isUtility) {
+      // If the spent resource is a utility, add its cost to the total utility usage of the entity.
       uint256 prevUtilityUsage = UtilityMap.get(entity, resource);
       // add to the total building utility usage
       UtilityMap.set(entity, resource, prevUtilityUsage + resourceCost);
     }
+    //since same function is being used for entities and prototypes level > 0 is used to know that the entity is not a prototype
+    if (isUtility && Level.get(entity) > 0 && !IsActive.get(entity)) return;
 
+    require(resourceCost <= spaceRockResourceCount, "[SpendResources] Not enough resources to spend");
     // Spend resources. This will decrease the available resources for the spaceRock.
     LibStorage.decreaseStoredResource(spaceRockEntity, resource, resourceCost);
   }
@@ -235,7 +237,7 @@ library LibResource {
       uint8 utility = utilities[i];
       uint256 utilityUsage = UtilityMap.get(buildingEntity, utility);
       UtilityMap.remove(buildingEntity, utility);
-      LibStorage.increaseStoredResource(spaceRockEntity, utility, utilityUsage);
+      if (IsActive.get(buildingEntity)) LibStorage.increaseStoredResource(spaceRockEntity, utility, utilityUsage);
     }
   }
 
@@ -260,6 +262,10 @@ library LibResource {
     for (uint256 i = 0; i < utilities.length; i++) {
       uint8 utility = utilities[i];
       uint256 utilityUsage = UtilityMap.get(buildingEntity, utility);
+      require(
+        ResourceCount.get(spaceRockEntity, utility) >= utilityUsage,
+        "[ToggleBuilding] Not enough available utility to activate building"
+      );
       // activate utility usage
       LibStorage.decreaseStoredResource(spaceRockEntity, utility, utilityUsage);
     }

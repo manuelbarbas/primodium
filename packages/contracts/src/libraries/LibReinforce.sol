@@ -36,8 +36,8 @@ library LibReinforce {
       uint256 count = arrival.unitCounts[i];
       LibUnit.increaseUnitCount(playerEntity, rockEntity, unitPrototypes[i], count);
       if (arrival.from != playerEntity) {
-        LibUnit.updateStoredUtilities(playerEntity, unitPrototypes[i], count, true);
-        LibUnit.updateStoredUtilities(arrival.from, unitPrototypes[i], count, false);
+        LibUnit.updateStoredUtilities(arrival.destination, unitPrototypes[i], count, true);
+        LibUnit.updateStoredUtilities(arrival.origin, unitPrototypes[i], count, false);
       }
     }
     ArrivalCount.set(arrival.from, ArrivalCount.get(arrival.from) - 1);
