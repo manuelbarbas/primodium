@@ -3,22 +3,28 @@ import { useState } from "react";
 export const NumberInput: React.FC<{
   startingValue?: number;
   min?: number;
-  max: number;
+  max?: number;
+  toFixed?: number;
   onChange: (val: number) => void;
-}> = ({ startingValue, min = 0, max, onChange }) => {
+}> = ({ startingValue, min = 0, max = Infinity, onChange, toFixed }) => {
   const [count, setCount] = useState<number | "">(startingValue || min);
 
-  const handleUpdate = (newCount: number) => {
-    if (isNaN(newCount) || newCount == 0) {
+  const handleUpdate = (newCount: string) => {
+    const allZeroes = newCount.split("").every((digit) => digit == "0");
+
+    if (isNaN(Number(newCount)) || allZeroes) {
       setCount("");
       onChange(min);
       return;
     }
 
-    if (newCount > max) newCount = max;
-    else if (newCount < min) newCount = min;
-    setCount(newCount);
-    onChange(newCount);
+    newCount = toFixed ? Number(newCount).toFixed(toFixed) : newCount;
+    let countNum = Number(newCount);
+
+    if (countNum > max) countNum = max;
+    else if (countNum < min) countNum = min;
+    setCount(countNum);
+    onChange(countNum);
   };
 
   return (
@@ -26,7 +32,7 @@ export const NumberInput: React.FC<{
       <button
         className={`${count == min ? "opacity-50" : ""}`}
         disabled={count == min}
-        onClick={() => handleUpdate(Math.max(min, count == "" ? 0 : count - 1))}
+        onClick={() => handleUpdate(Math.max(min, count == "" ? 0 : count - 1).toString())}
       >
         -
       </button>
@@ -37,7 +43,7 @@ export const NumberInput: React.FC<{
         placeholder={min.toString()}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           e.preventDefault();
-          handleUpdate(Number(e.target.value));
+          handleUpdate(e.target.value);
         }}
         min={0}
         max={max}
@@ -45,7 +51,7 @@ export const NumberInput: React.FC<{
       <button
         className={`${count == max ? "opacity-50" : ""}`}
         disabled={count == max}
-        onClick={() => handleUpdate(Math.min(max, count == "" ? min + 1 : count + 1))}
+        onClick={() => handleUpdate(Math.min(max, count == "" ? min + 1 : count + 1).toString())}
       >
         +
       </button>

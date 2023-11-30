@@ -127,7 +127,7 @@ export const CreateOrderForm = () => {
 };
 
 const ResourceListings = ({ listings }: { listings: Listing[] }) => {
-  const { network } = useMud();
+  const [listingUpdates, setListingUpdates] = useState<{ [key: string]: { newPrice?: bigint; newCount?: bigint } }>({});
   const [sortConfig, setSortConfig] = useState<{ key: keyof Listing | null; direction: "ascending" | "descending" }>({
     key: null,
     direction: "ascending",
@@ -187,6 +187,10 @@ const ResourceListings = ({ listings }: { listings: Listing[] }) => {
         <tbody>
           {sortedListings.map((listing) => {
             const scaledCount = Number(listing.count) / Number(RESOURCE_SCALE);
+            const newCount = listingUpdates[listing.id]?.newCount;
+            const scaledNewCount = newCount ? newCount / RESOURCE_SCALE : undefined;
+            const newPrice = listingUpdates[listing.id]?.newPrice;
+
             return (
               <tr key={`listing-${listing.id}`}>
                 <td className="py-4 whitespace-nowrap">
@@ -197,15 +201,36 @@ const ResourceListings = ({ listings }: { listings: Listing[] }) => {
                   />
                 </td>
 
-                <td className="py-4 whitespace-nowrap">{formatEther(listing.price * RESOURCE_SCALE)}</td>
+                <td className="py-4 whitespace-nowrap">
+                  <NumberInput
+                    toFixed={8}
+                    startingValue={Number(formatEther(listing.price * RESOURCE_SCALE))}
+                    onChange={function (val: number): void {
+                      setListingUpdates({
+                        ...listingUpdates,
+                        [listing.id]: { ...listingUpdates[listing.id], newPrice: BigInt(val * 1e18) / RESOURCE_SCALE },
+                      });
+                    }}
+                  />
+                  {!!newPrice && newPrice != listing.price && (
+                    <div className="text-xs">prev: {formatEther(listing.price)}</div>
+                  )}
+                </td>
                 <td className="py-4 whitespace-nowrap flex justify-center">
                   <NumberInput
                     startingValue={scaledCount}
                     max={scaledCount}
+                    toFixed={2}
                     onChange={function (val: number): void {
-                      throw new Error("Function not implemented.");
+                      setListingUpdates({
+                        ...listingUpdates,
+                        [listing.id]: { ...listingUpdates[listing.id], newCount: BigInt(val * Number(RESOURCE_SCALE)) },
+                      });
                     }}
                   />
+                  {!!scaledNewCount && scaledNewCount != BigInt(scaledCount) && (
+                    <div className="text-xs">prev: {scaledCount}</div>
+                  )}
                 </td>
                 <td>
                   <FaTrash />
