@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { useMemo, useState } from "react";
-import { FaArrowDown, FaArrowUp, FaMinus, FaTrash } from "react-icons/fa";
+import { FaArrowDown, FaArrowUp, FaMinus, FaUndo } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { IconLabel } from "src/components/core/IconLabel";
@@ -11,6 +11,7 @@ import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { RESOURCE_SCALE, ResourceEntityLookup, ResourceImage, ResourceStorages } from "src/util/constants";
 import { createOrder } from "src/util/web3/contractCalls/createOrder";
+import { cancelOrder, updateOrder } from "src/util/web3/contractCalls/updateOrder";
 import { formatEther } from "viem";
 
 type Listing = {
@@ -127,6 +128,7 @@ export const CreateOrderForm = () => {
 };
 
 const ResourceListings = ({ listings }: { listings: Listing[] }) => {
+  const { network } = useMud();
   const [listingUpdates, setListingUpdates] = useState<{ [key: string]: { newPrice?: bigint; newCount?: bigint } }>({});
   const [sortConfig, setSortConfig] = useState<{ key: keyof Listing | null; direction: "ascending" | "descending" }>({
     key: null,
@@ -166,34 +168,45 @@ const ResourceListings = ({ listings }: { listings: Listing[] }) => {
         <thead>
           <tr>
             <th className="sortable-header">
-              <div onClick={() => requestSort("resource")} className="flex gap-2 items-center cursor-pointer">
+              <div
+                onClick={() => requestSort("resource")}
+                className="flex gap-2 items-center justify-center cursor-pointer"
+              >
                 Resource {getSortIcon("resource")}
               </div>
             </th>
 
             <th className="sortable-header">
-              <div onClick={() => requestSort("price")} className="flex gap-2 items-center cursor-pointer">
+              <div
+                onClick={() => requestSort("price")}
+                className="flex gap-2 justify-center items-center cursor-pointer"
+              >
                 Price {getSortIcon("price")}
               </div>
             </th>
             <th className="sortable-header">
-              <div onClick={() => requestSort("count")} className="flex gap-2 items-center cursor-pointer">
+              <div
+                onClick={() => requestSort("count")}
+                className="flex gap-2 items-center justify-center cursor-pointer"
+              >
                 Count {getSortIcon("count")}
               </div>
             </th>
-            <th />
+            <th className="sortable-header">Update</th>
+            <th className="sortable-header">Delete</th>
           </tr>
         </thead>
         <tbody>
           {sortedListings.map((listing) => {
-            const scaledCount = Number(listing.count) / Number(RESOURCE_SCALE);
             const newCount = listingUpdates[listing.id]?.newCount;
-            const scaledNewCount = newCount ? newCount / RESOURCE_SCALE : undefined;
+            const countDiff = !!newCount && newCount !== listing.count;
             const newPrice = listingUpdates[listing.id]?.newPrice;
+            const priceDiff = !!newPrice && newPrice !== listing.price;
+            const scaledCount = Number(listing.count) / Number(RESOURCE_SCALE);
 
             return (
               <tr key={`listing-${listing.id}`}>
-                <td className="py-4 whitespace-nowrap">
+                <td className="text-center align-middle">
                   <IconLabel
                     imageUri={ResourceImage.get(listing.resource as Entity) ?? ""}
                     tooltipDirection={"right"}
@@ -201,39 +214,78 @@ const ResourceListings = ({ listings }: { listings: Listing[] }) => {
                   />
                 </td>
 
-                <td className="py-4 whitespace-nowrap">
-                  <NumberInput
-                    toFixed={8}
-                    startingValue={Number(formatEther(listing.price * RESOURCE_SCALE))}
-                    onChange={function (val: number): void {
-                      setListingUpdates({
-                        ...listingUpdates,
-                        [listing.id]: { ...listingUpdates[listing.id], newPrice: BigInt(val * 1e18) / RESOURCE_SCALE },
-                      });
-                    }}
-                  />
-                  {!!newPrice && newPrice != listing.price && (
-                    <div className="text-xs">prev: {formatEther(listing.price)}</div>
-                  )}
+                <td className="text-center align-middle py-1">
+                  <div className="w-full justify-center flex p-1 gap-1 items-center">
+                    <NumberInput
+                      toFixed={8}
+                      reset={!newPrice}
+                      startingValue={Number(formatEther(listing.price * RESOURCE_SCALE))}
+                      onChange={function (val: number): void {
+                        setListingUpdates({
+                          ...listingUpdates,
+                          [listing.id]: {
+                            ...listingUpdates[listing.id],
+                            newPrice: BigInt(val * 1e18) / RESOURCE_SCALE,
+                          },
+                        });
+                      }}
+                    />
+                    <FaUndo
+                      className={`${!priceDiff ? "opacity-25" : ""}`}
+                      onClick={() => {
+                        setListingUpdates({
+                          ...listingUpdates,
+                          [listing.id]: { ...listingUpdates[listing.id], newPrice: undefined },
+                        });
+                      }}
+                    />
+                  </div>
                 </td>
-                <td className="py-4 whitespace-nowrap flex justify-center">
-                  <NumberInput
-                    startingValue={scaledCount}
-                    max={scaledCount}
-                    toFixed={2}
-                    onChange={function (val: number): void {
-                      setListingUpdates({
-                        ...listingUpdates,
-                        [listing.id]: { ...listingUpdates[listing.id], newCount: BigInt(val * Number(RESOURCE_SCALE)) },
-                      });
-                    }}
-                  />
-                  {!!scaledNewCount && scaledNewCount != BigInt(scaledCount) && (
-                    <div className="text-xs">prev: {scaledCount}</div>
-                  )}
+                <td className="text-center align-middle">
+                  <div className="flex justify-center w-full p-1 gap-1 items-center">
+                    <NumberInput
+                      startingValue={scaledCount}
+                      toFixed={2}
+                      reset={!newCount}
+                      onChange={function (val: number): void {
+                        setListingUpdates({
+                          ...listingUpdates,
+                          [listing.id]: {
+                            ...listingUpdates[listing.id],
+                            newCount: BigInt(val * Number(RESOURCE_SCALE)),
+                          },
+                        });
+                      }}
+                    />
+                    <FaUndo
+                      className={`${!countDiff ? "opacity-25" : ""}`}
+                      onClick={() => {
+                        setListingUpdates({
+                          ...listingUpdates,
+                          [listing.id]: { ...listingUpdates[listing.id], newCount: undefined },
+                        });
+                      }}
+                    />
+                  </div>
                 </td>
-                <td>
-                  <FaTrash />
+                <td className="text-center">
+                  <Button
+                    disabled={!priceDiff && !countDiff}
+                    onClick={() => {
+                      updateOrder(
+                        listing.id,
+                        listing.resource,
+                        newPrice || listing.price,
+                        newCount || listing.count,
+                        network
+                      );
+                    }}
+                  >
+                    Update
+                  </Button>
+                </td>
+                <td className="text-center">
+                  <Button onClick={() => cancelOrder(listing.id, network)}>Delete</Button>
                 </td>
               </tr>
             );
