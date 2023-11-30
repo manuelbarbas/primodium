@@ -1,6 +1,6 @@
 import React, { useState, createContext, useContext, ReactNode, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
-import { Button } from "./Button";
+import { Button, IconButton } from "./Button";
 import { primodium } from "@game/api";
 import { FaTimes } from "react-icons/fa";
 import { Card } from "./Card";
@@ -26,6 +26,7 @@ interface ModalProps {
 export const Modal: React.FC<ModalProps> & {
   Button: React.FC<{ children: ReactNode; className?: string }>;
   Content: React.FC<{ children: ReactNode; className?: string }>;
+  IconButton: React.FC<React.ComponentProps<typeof IconButton>>;
 } = ({ children, title }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { enableInput, disableInput } = primodium.api().input;
@@ -67,6 +68,20 @@ Modal.Button = function ModalButton({ children, className }) {
     >
       {children}
     </Button>
+  );
+};
+
+Modal.IconButton = function ModalButton(props: React.ComponentProps<typeof IconButton>) {
+  const { setIsOpen } = useContext(ModalContext);
+
+  return (
+    <IconButton
+      onClick={() => {
+        setIsOpen(true);
+        if (props.onClick) props.onClick();
+      }}
+      {...props}
+    />
   );
 };
 

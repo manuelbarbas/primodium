@@ -1,7 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { useCallback, useMemo } from "react";
 import { SecondaryCard } from "src/components/core/Card";
-
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
@@ -11,7 +10,8 @@ import { IconLabel } from "src/components/core/IconLabel";
 import { formatNumber } from "src/util/common";
 import { Badge } from "src/components/core/Badge";
 import { FaExternalLinkAlt } from "react-icons/fa";
-import { IconButton } from "src/components/core/Button";
+import { Modal } from "src/components/core/Modal";
+import { SendFleet } from "./SendFleet";
 
 export const FleetActions = () => {
   const { playerEntity } = useMud().network;
@@ -44,7 +44,12 @@ export const FleetActions = () => {
   return (
     <div className="flex flex-col items-center gap-1 m-1">
       <SecondaryCard className="flex flex-row w-fit gap-1 m-1">
-        <IconButton className="btn-sm btn-secondary" imageUri="/img/icons/outgoingicon.png" text="send fleet" />
+        <Modal title="Send Fleet">
+          <Modal.Content className="w-[51rem] h-96">
+            <SendFleet />
+          </Modal.Content>
+          <Modal.IconButton className="btn-md btn-secondary" imageUri="/img/icons/outgoingicon.png" text="send fleet" />
+        </Modal>
       </SecondaryCard>
       <div className="text-xs opacity-75 font-bold w-full flex justify-around items-center mb-1 gap-2">
         <Badge className="flex items-center gap-1">

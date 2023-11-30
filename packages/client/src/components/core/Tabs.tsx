@@ -58,7 +58,7 @@ const Button: FC<React.ComponentProps<typeof _Button> & { index: number; togglab
     );
   });
 
-export const IconButton: React.FC<React.ComponentProps<typeof _IconButton> & { index: number }> = memo((props) => {
+const IconButton: React.FC<React.ComponentProps<typeof _IconButton> & { index: number }> = memo((props) => {
   const { index: currIndex, setIndex } = useIndex();
   const { index } = props;
 
