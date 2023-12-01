@@ -37,6 +37,7 @@ export const renderBuilding = (scene: Scene, { network: { playerEntity } }: Setu
         parent: components.Home.get(value[0]?.value ?? playerEntity)?.asteroid,
       }),
       Has(components.BuildingType),
+      Has(components.IsActive),
     ];
 
     const oldPositionQuery = [
@@ -44,6 +45,7 @@ export const renderBuilding = (scene: Scene, { network: { playerEntity } }: Setu
         parent: components.Home.get(value[1]?.value ?? playerEntity)?.asteroid,
       }),
       Has(components.BuildingType),
+      Has(components.IsActive),
     ];
 
     for (const entity of runQuery(oldPositionQuery)) {
@@ -82,6 +84,8 @@ export const renderBuilding = (scene: Scene, { network: { playerEntity } }: Setu
       const buildingDimensions = getBuildingDimensions(buildingType);
       const assetPair = getAssetKeyPair(entity, buildingType);
 
+      const active = components.IsActive.get(entity)?.value;
+      console.log("active", active);
       const sharedComponents = [
         ObjectPosition({
           x: pixelCoord.x,
@@ -91,14 +95,33 @@ export const renderBuilding = (scene: Scene, { network: { playerEntity } }: Setu
           originY: 1,
         }),
         OnUpdateSystem([...positionQuery, Has(components.Level)], () => {
+          const isActive = components.IsActive.get(entity)?.value;
           const updatedAssetPair = getAssetKeyPair(entity, buildingType);
           buildingSprite.setComponents([
             Texture(Assets.SpriteAtlas, updatedAssetPair.sprite),
-            updatedAssetPair.animation ? Animation(updatedAssetPair.animation) : undefined,
+            updatedAssetPair.animation ? Animation(updatedAssetPair.animation, !isActive) : undefined,
+            SetValue({ tint: isActive ? 0xffffff : 0x777777 }),
           ]);
         }),
+        SetValue({ tint: active ? 0xffffff : 0x777777 }),
+        assetPair.animation ? Animation(assetPair.animation, !active) : undefined,
+        OnComponentSystem(components.IsActive, (object, { entity: _entity }) => {
+          if (entity !== _entity) return;
+          const updatedAssetPair = getAssetKeyPair(entity, buildingType);
+          const isActive = components.IsActive.get(entity)?.value;
+          if (!isActive) {
+            buildingSprite.setComponents([
+              SetValue({ tint: 0x777777 }),
+              updatedAssetPair.animation ? Animation(updatedAssetPair.animation, true) : undefined,
+            ]);
+          } else {
+            buildingSprite.setComponents([
+              SetValue({ tint: 0xffffff }),
+              updatedAssetPair.animation ? Animation(updatedAssetPair.animation) : undefined,
+            ]);
+          }
+        }),
         Texture(Assets.SpriteAtlas, assetPair.sprite),
-        assetPair.animation ? Animation(assetPair.animation) : undefined,
       ];
 
       buildingSprite.setComponents([
