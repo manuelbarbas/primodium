@@ -1,37 +1,31 @@
-import { SecondaryCard } from "src/components/core/Card";
-import { EntityType, ResourceEntityLookup } from "src/util/constants";
-import { MaterialLabel } from "./MaterialLabel";
-import { usePlayerFullResourceCount } from "src/hooks/useFullResourceCount";
-import { useMud } from "src/hooks";
-import { getBlockTypeName } from "src/util/common";
-import { EResource, MUDEnums } from "contracts/config/enums";
-import { Account } from "src/network/components/clientComponents";
-import { components } from "src/network/components";
+import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { SecondaryCard } from "src/components/core/Card";
+import { usePlayerFullResourceCounts } from "src/hooks/useFullResourceCount";
+import { Account } from "src/network/components/clientComponents";
+import { getBlockTypeName } from "src/util/common";
+import { isUtility } from "src/util/resource";
+import { MaterialLabel } from "./MaterialLabel";
 
 export const AllMaterialLabels = () => {
   const playerEntity = Account.get()?.value ?? singletonEntity;
-  const playerFullResourceCount = usePlayerFullResourceCount(playerEntity);
+  const playerFullResourceCounts = usePlayerFullResourceCounts(playerEntity);
 
   return (
     <SecondaryCard className="grid grid-cols-1 gap-1">
-      {playerFullResourceCount.map((fullResourceCount, index) => {
+      {Object.entries(playerFullResourceCounts).map(([rawResource, fullResourceCount]) => {
+        const resource = rawResource as Entity;
+        if (isUtility(resource) || fullResourceCount.resourceStorage == 0n) return null;
         return (
-          index > 0 &&
-          index < MUDEnums.EResource.length &&
-          fullResourceCount &&
-          (fullResourceCount?.resourceStorage ?? 0n) > 0n &&
-          !components.P_IsUtility.getWithKeys({ id: index as EResource })?.value && (
-            <MaterialLabel
-              key={index}
-              name={getBlockTypeName(ResourceEntityLookup[index as EResource])}
-              resource={ResourceEntityLookup[index as EResource]}
-              maxStorage={fullResourceCount?.resourceStorage ?? 0n}
-              resourceCount={fullResourceCount?.resourceCount ?? 0n}
-              resourcesToClaim={fullResourceCount?.resourcesToClaim ?? 0n}
-              production={fullResourceCount?.production ?? 0n}
-            />
-          )
+          <MaterialLabel
+            key={`label-${resource}`}
+            name={getBlockTypeName(resource)}
+            resource={resource}
+            maxStorage={fullResourceCount.resourceStorage}
+            resourceCount={fullResourceCount.resourceCount}
+            resourcesToClaim={fullResourceCount.resourcesToClaim}
+            production={fullResourceCount.production}
+          />
         );
       })}
     </SecondaryCard>

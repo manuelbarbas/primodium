@@ -48,7 +48,7 @@ export const BuildUnit: React.FC<{
     return getRecipe(selectedUnit ?? EntityType.NULL, unitLevel);
   }, [selectedUnit, unitLevel]);
 
-  const maximum = useMaxCountOfRecipe(requiredResources, playerEntity);
+  const maximum = useMaxCountOfRecipe(requiredResources);
 
   useEffect(() => {
     if (trainableUnits.length == 0) return;

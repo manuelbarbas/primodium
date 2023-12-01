@@ -21,6 +21,7 @@ export const RecipeDisplay: React.FC<{
   playerEntity: Entity;
 }> = ({ building, playerEntity }) => {
   const recipe = getRecipe(building, 1n);
+  console.log("recipe:", recipe);
 
   if (recipe.length === 0) return <></>;
 
@@ -67,7 +68,7 @@ export const PrototypeInfo: React.FC<{
   const unitProduction = components.P_UnitProdTypes.useWithKeys({ prototype: building as Hex, level: 1n });
   const storageUpgrades = useMemo(() => getBuildingLevelStorageUpgrades(building, 1n), [building]);
 
-  const hasEnough = useHasEnoughResources(getRecipe(building, 1n), playerEntity);
+  const hasEnough = useHasEnoughResources(getRecipe(building, 1n));
 
   if (!getBlockTypeName(building)) return <></>;
 

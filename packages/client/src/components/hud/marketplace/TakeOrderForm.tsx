@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import _ from "lodash";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { FaAngleDoubleRight, FaArrowDown, FaArrowLeft, FaArrowRight, FaArrowUp, FaMinus } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
 import { Button, IconButton } from "src/components/core/Button";
@@ -27,12 +27,10 @@ import { LinkedAddressDisplay } from "../LinkedAddressDisplay";
 
 type Listing = ValueSansMetadata<typeof components.MarketplaceOrder.schema> & { id: Entity };
 
-export function TakeOrderForm({
-  orders: [takenOrders, setTakenOrders],
-}: {
-  orders: [Record<Entity, bigint>, Dispatch<SetStateAction<Record<Entity, bigint>>>];
-}) {
+export function TakeOrderForm() {
   const { network } = useMud();
+
+  const [takenOrders, setTakenOrders] = useState<Record<Entity, bigint>>({});
   const [selectedItem, setSelectedItem] = useState<Entity>(ResourceEntityLookup[EResource.Iron]);
 
   const allListings = components.MarketplaceOrder.useAll().map((order) => {
@@ -83,12 +81,12 @@ export function TakeOrderForm({
       <SecondaryCard className="col-span-3 row-span-2 flex flex-col gap-2 overflow-auto scrollbar ">
         <p className="text-lg">Resources</p>
         {_.chunk(Array.from(ResourceStorages), 2).map((chunk, i) => (
-          <div key={`chunk-${i}`} className="flex flex-row items-center gap-2 w-full">
+          <div key={`chunk-${i}`} className="flex flex-col lg:flex-row items-center gap-2 w-full">
             {chunk.map((resource) => (
               <IconButton
                 key={resource}
                 onClick={() => setSelectedItem(resource)}
-                className={`flex-1 flex-col items-center justify-center p-10 ${
+                className={`flex-1 flex-col w-full lg:w-auto items-center justify-center p-10 ${
                   selectedItem === resource ? "bg-base-300 border-accent" : ""
                 }`}
                 imageUri={ResourceImage.get(resource) ?? ""}
