@@ -10,7 +10,15 @@ import { cancelOrder, updateOrder } from "src/util/web3/contractCalls/updateOrde
 import { formatEther } from "viem";
 import { UserListing } from "./CreateOrderForm";
 
-export const ResourceListings = ({ listings, pageSize = 10 }: { listings: UserListing[]; pageSize?: number }) => {
+export const PlayerListings = ({
+  listings,
+  availableResources,
+  pageSize = 10,
+}: {
+  listings: UserListing[];
+  availableResources: Record<Entity, bigint>;
+  pageSize?: number;
+}) => {
   const [sortConfig, setSortConfig] = useState<{
     key: keyof UserListing | null;
     direction: "ascending" | "descending";
@@ -19,20 +27,6 @@ export const ResourceListings = ({ listings, pageSize = 10 }: { listings: UserLi
     direction: "ascending",
   });
   const [currentPage, setCurrentPage] = useState(1);
-
-  // const { resourceCount, resourcesToClaim } = useFullResourceCounts(
-  //   selectedResource == "default" ? EntityType.Iron : selectedResource,
-  // );
-  // const resourcesAvailable = useMemo(() => {
-  //   const totalResources = (resourceCount + resourcesToClaim) / RESOURCE_SCALE;
-  //   const allResourcesInListings =
-  //     itemListings.reduce((acc, listing) => {
-  //       if (listing.resource !== selectedResource) return acc;
-  //       return acc + listing.count;
-  //     }, 0n) / 100n;
-
-  //   return totalResources - allResourcesInListings;
-  // }, [selectedResource, resourceCount, resourcesToClaim, itemListings]);
 
   const getCurrentListings = () => {
     const startIndex = (currentPage - 1) * pageSize;
@@ -148,7 +142,11 @@ export const ResourceListings = ({ listings, pageSize = 10 }: { listings: UserLi
         </thead>
         <tbody>
           {getCurrentListings().map((listing) => (
-            <Listing key={`listing-${listing.id}`} listing={listing} />
+            <Listing
+              key={`listing-${listing.id}`}
+              listing={listing}
+              availableResource={availableResources[listing.resource]}
+            />
           ))}
         </tbody>
       </table>
@@ -157,7 +155,7 @@ export const ResourceListings = ({ listings, pageSize = 10 }: { listings: UserLi
   );
 };
 
-const Listing = ({ listing }: { listing: UserListing }) => {
+const Listing = ({ listing, availableResource }: { listing: UserListing; availableResource: bigint }) => {
   const { network } = useMud();
   const [listingUpdate, setListingUpdate] = useState<{ newPrice?: bigint; newCount?: bigint }>();
 
@@ -202,6 +200,7 @@ const Listing = ({ listing }: { listing: UserListing }) => {
         <div className="flex justify-center p-1 gap-1 items-center">
           <NumberInput
             startingValue={scaledCount}
+            max={Number(availableResource)}
             toFixed={2}
             reset={!newCount}
             onChange={function (val: number): void {

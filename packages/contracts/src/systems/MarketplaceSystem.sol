@@ -57,6 +57,10 @@ contract MarketplaceSystem is PrimodiumSystem {
     uint256 count,
     uint256 price
   ) public onlySeller(orderId) {
+    bytes32 playerEntity = addressToEntity(_msgSender());
+    bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
+    LibResource.claimAllResources(homeAsteroid);
+
     MarketplaceOrderData memory order = MarketplaceOrder.get(orderId);
     if (count == 0) return cancelOrder(orderId);
     order.resource = uint8(resource);

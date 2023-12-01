@@ -55,15 +55,17 @@ export const NumberInput: React.FC<{
   return (
     <div className={`flex gap-2 my-2`}>
       <button
-        className={`${count == minString ? "opacity-50" : ""}`}
-        disabled={count == minString}
+        className={`${Number(count) <= min ? "opacity-50" : ""}`}
+        disabled={Number(count) <= min}
         onClick={() => handleUpdate(Math.max(min, count == "" ? 0 : Number(count) - 1).toString())}
       >
         -
       </button>
       <input
         type="number"
-        className="bg-transparent text-center w-fit outline-none border-b border-pink-900"
+        className={`bg-transparent text-center w-fit outline-none border-b border-pink-900 ${
+          Number(count) > max ? "text-error" : ""
+        }`}
         value={count}
         placeholder={min.toString()}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,8 +76,8 @@ export const NumberInput: React.FC<{
         max={max}
       />
       <button
-        className={`${count == maxString ? "opacity-50" : ""}`}
-        disabled={count == maxString}
+        className={`${Number(count) >= max ? "opacity-50" : ""}`}
+        disabled={Number(count) >= max}
         onClick={() => handleUpdate(Math.min(max, count == "" ? min + 1 : Number(count) + 1).toString())}
       >
         +

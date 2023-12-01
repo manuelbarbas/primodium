@@ -4,12 +4,12 @@ import { useMemo, useState } from "react";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { useMud } from "src/hooks";
-import { useFullResourceCount } from "src/hooks/useFullResourceCount";
+import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { EntityType, RESOURCE_SCALE, ResourceEntityLookup, ResourceStorages } from "src/util/constants";
 import { createOrder } from "src/util/web3/contractCalls/createOrder";
-import { ResourceListings } from "./ManageListings";
+import { PlayerListings } from "./PlayerListings";
 
 export type UserListing = {
   resource: Entity;
@@ -47,27 +47,26 @@ export const CreateOrderForm = () => {
     };
   });
 
-  const ordersAvailable = useFullResourceCount(EntityType.MaxOrders).resourceCount;
-
-  const { resourceCount, resourcesToClaim } = useFullResourceCount(
-    selectedResource == "default" ? EntityType.Iron : selectedResource,
-    network.playerEntity
-  );
+  const resourceCounts = useFullResourceCounts();
+  const ordersAvailable = useMemo(() => resourceCounts[EntityType.MaxOrders].resourceCount, [resourceCounts]);
 
   const itemListings = useMemo(() => {
     return allListings.filter((listing) => network.playerEntity === listing.seller);
   }, [allListings, network.playerEntity]);
 
-  const resourcesAvailable = useMemo(() => {
-    const totalResources = (resourceCount + resourcesToClaim) / RESOURCE_SCALE;
-    const allResourcesInListings =
-      itemListings.reduce((acc, listing) => {
-        if (listing.resource !== selectedResource) return acc;
-        return acc + listing.count;
-      }, 0n) / 100n;
-
-    return totalResources - allResourcesInListings;
-  }, [selectedResource, resourceCount, resourcesToClaim, itemListings]);
+  const availableResources = useMemo(() => {
+    const resourcesUsed: Record<Entity, bigint> = {};
+    itemListings.forEach((listing) => {
+      if (!resourcesUsed[listing.resource]) resourcesUsed[listing.resource] = 0n;
+      resourcesUsed[listing.resource] += listing.count / RESOURCE_SCALE;
+    });
+    resources.forEach((resource) => {
+      const totalResources =
+        (resourceCounts[resource].resourceCount + resourceCounts[resource].resourcesToClaim) / RESOURCE_SCALE;
+      resourcesUsed[resource] = totalResources - (resourcesUsed[resource] ?? 0n);
+    });
+    return resourcesUsed;
+  }, [resourceCounts, resources, itemListings]);
 
   return (
     <div className="w-full h-full grid grid-cols-10 flex gap-4">
@@ -113,7 +112,7 @@ export const CreateOrderForm = () => {
               !price ||
               !quantity ||
               selectedResource == "default" ||
-              BigInt(quantity) > resourcesAvailable ||
+              BigInt(quantity) > availableResources[selectedResource] ||
               ordersAvailable == 0n
             }
             onClick={handleSubmit}
@@ -123,15 +122,19 @@ export const CreateOrderForm = () => {
           </Button>
           {ordersAvailable === 0n && <div className="text-center text-xs text-error">You have no orders available</div>}
           {selectedResource !== "default" && (
-            <div className={`text-center text-xs ${resourcesAvailable == 0n ? "text-error" : "font-gray-500"}`}>
-              {resourcesAvailable.toString()} {getBlockTypeName(selectedResource)} available
+            <div
+              className={`text-center text-xs ${
+                availableResources[selectedResource] == 0n ? "text-error" : "font-gray-500"
+              }`}
+            >
+              {availableResources[selectedResource].toString()} {getBlockTypeName(selectedResource)} available
             </div>
           )}
         </form>
       </SecondaryCard>
       <SecondaryCard className="col-span-7 flex flex-col gap-2 overflow-auto scrollbar">
         <p className="text-lg">Manage Listings</p>
-        <ResourceListings listings={itemListings} />
+        <PlayerListings listings={itemListings} availableResources={availableResources} />
       </SecondaryCard>
     </div>
   );
