@@ -30,7 +30,6 @@ export const Cart = ({
   });
 
   const takenOrdersFullData = useMemo(() => {
-    console.log(takenOrders);
     return Object.entries(takenOrders).map(([id, count]) => {
       const listing = allListings.find((listing) => listing.id === id)!;
       return { ...listing, count, resource: ResourceEntityLookup[listing.resource as EResource] };

@@ -183,7 +183,7 @@ const Objective: React.FC<{
                   resourceCount,
                   resourcesToClaim,
                   resourceStorage: maxStorage,
-                } = getFullResourceCount(resource.id, playerEntity);
+                } = getFullResourceCount(resource.id);
 
                 canClaim = resourceCount + resourcesToClaim + resource.amount <= maxStorage;
               }

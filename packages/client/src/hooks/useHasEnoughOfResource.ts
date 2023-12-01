@@ -5,10 +5,10 @@ import { useFullResourceCount } from "./useFullResourceCount";
 export function useHasEnoughOfResource(
   resource: Entity,
   amount: bigint,
-  playerEntity: Entity,
+  spaceRock?: Entity,
   resourceType = ResourceType.Resource
 ) {
-  const { resourceCount, resourcesToClaim, production } = useFullResourceCount(resource);
+  const { resourceCount, resourcesToClaim, production } = useFullResourceCount(resource, spaceRock);
   switch (resourceType) {
     case ResourceType.Resource:
       return resourceCount + resourcesToClaim >= amount;

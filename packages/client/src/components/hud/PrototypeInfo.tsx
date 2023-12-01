@@ -21,7 +21,6 @@ export const RecipeDisplay: React.FC<{
   playerEntity: Entity;
 }> = ({ building, playerEntity }) => {
   const recipe = getRecipe(building, 1n);
-  console.log("recipe:", recipe);
 
   if (recipe.length === 0) return <></>;
 

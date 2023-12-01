@@ -29,7 +29,6 @@ contract MarketplaceSystem is PrimodiumSystem {
   ) public returns (bytes32 orderId) {
     bytes32 playerEntity = addressToEntity(_msgSender());
     bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
-    LibResource.claimAllResources(homeAsteroid);
     uint256 orderCount = ResourceCount.get(homeAsteroid, uint8(EResource.U_Orders));
     require(orderCount > 0, "[MarketplaceSystem] Max orders reached");
 
@@ -57,10 +56,6 @@ contract MarketplaceSystem is PrimodiumSystem {
     uint256 count,
     uint256 price
   ) public onlySeller(orderId) {
-    bytes32 playerEntity = addressToEntity(_msgSender());
-    bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
-    LibResource.claimAllResources(homeAsteroid);
-
     MarketplaceOrderData memory order = MarketplaceOrder.get(orderId);
     if (count == 0) return cancelOrder(orderId);
     order.resource = uint8(resource);
