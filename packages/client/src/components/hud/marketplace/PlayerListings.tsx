@@ -167,12 +167,15 @@ const Listing = ({ listing, availableResource }: { listing: UserListing; availab
 
   return (
     <tr key={`listing-${listing.id}`}>
-      <td className="text-center align-middle">
-        <IconLabel
-          imageUri={ResourceImage.get(listing.resource as Entity) ?? ""}
-          tooltipDirection={"right"}
-          text={""}
-        />
+      <td className="text-center align-middle ">
+        <div className="flex items-center justify-center h-full">
+          <IconLabel
+            imageUri={ResourceImage.get(listing.resource as Entity) ?? ""}
+            tooltipDirection={"right"}
+            text={""}
+          />
+          <p className="text-xs text-gray-500">({availableResource.toString()})</p>
+        </div>
       </td>
 
       <td className="text-center align-middle py-1">
