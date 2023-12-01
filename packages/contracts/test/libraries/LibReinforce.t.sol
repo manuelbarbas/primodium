@@ -145,41 +145,6 @@ contract LibReinforceTest is PrimodiumTest {
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unit), 0);
   }
 
-  function testRecallNotFromPlayer() public {
-    ArrivalCount.set(player, 10);
-    arrival.sendType = ESendType.Reinforce;
-    arrival.arrivalTime = block.timestamp - 1;
-    arrival.from = "anotherPlayer";
-
-    unitCounts[0] = (47);
-
-    arrival.unitCounts = unitCounts;
-
-    ArrivalsMap.set(player, destination, arrivalId, arrival);
-    LibReinforce.recallReinforcement(player, destination, arrivalId);
-
-    assertEq(ArrivalCount.get(player), 10);
-    assertTrue(ArrivalsMap.has(player, destination, arrivalId));
-    assertEq(UnitCount.get(player, Home.getAsteroid(player), unit), 0);
-  }
-
-  function testRecallTooEarly() public {
-    ArrivalCount.set(player, 10);
-    arrival.sendType = ESendType.Reinforce;
-    arrival.arrivalTime = block.timestamp + 1;
-
-    unitCounts[0] = (47);
-
-    arrival.unitCounts = unitCounts;
-
-    ArrivalsMap.set(player, destination, arrivalId, arrival);
-    LibReinforce.recallReinforcement(player, destination, arrivalId);
-
-    assertEq(ArrivalCount.get(player), 10);
-    assertTrue(ArrivalsMap.has(player, destination, arrivalId));
-    assertEq(UnitCount.get(player, Home.getAsteroid(player), unit), 0);
-  }
-
   function testRecallAll() public {
     ArrivalCount.set(player, 10);
     OwnedBy.set(destination, player);
@@ -191,7 +156,7 @@ contract LibReinforceTest is PrimodiumTest {
     arrival.unitCounts = unitCounts;
 
     ArrivalsMap.set(player, destination, arrivalId, arrival);
-    LibReinforce.recallAllReinforcements(player, destination);
+    LibReinforce.recallAllReinforcements(destination);
 
     Arrival memory arrival2 = Arrival({
       sendTime: block.timestamp,
@@ -210,22 +175,10 @@ contract LibReinforceTest is PrimodiumTest {
     bytes32 key2 = keccak256(abi.encode(arrival));
 
     ArrivalsMap.set(player, destination, key2, arrival2);
-    LibReinforce.recallAllReinforcements(player, destination);
+    LibReinforce.recallAllReinforcements(destination);
 
     assertEq(ArrivalCount.get(player), 8);
     assertFalse(ArrivalsMap.has(player, destination, arrivalId));
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unit), 100);
-  }
-
-  function testFailRecallAllNoOriginOwner() public {
-    ArrivalCount.set(player, 10);
-    arrival.sendType = ESendType.Reinforce;
-    arrival.arrivalTime = block.timestamp - 1;
-
-    unitCounts[0] = (47);
-    arrival.unitCounts = unitCounts;
-
-    ArrivalsMap.set(player, destination, arrivalId, arrival);
-    LibReinforce.recallAllReinforcements(player, destination);
   }
 }
