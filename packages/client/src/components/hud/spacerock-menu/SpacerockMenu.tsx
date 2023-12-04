@@ -3,11 +3,9 @@ import { ERock } from "contracts/config/enums";
 import { useEffect } from "react";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
-import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { getSpaceRockInfo } from "src/util/spacerock";
 import { Asteroid } from "./screens/Asteroid";
-import { Motherlode } from "./screens/Motherlode";
 import { SendFleet } from "./screens/SendFleet";
 import { SpacerockInfo } from "./screens/SpaceRockInfo";
 import { StationedUnits } from "./screens/StationedUnits";
@@ -39,7 +37,8 @@ export const SpacerockMenu: React.FC = () => {
       case ERock.Asteroid:
         return <Asteroid data={spaceRockInfo} />;
       case ERock.Motherlode:
-        return <Motherlode data={spaceRockInfo} />;
+        return <> </>;
+      // return <Motherlode data={spaceRockInfo} />;
       default:
         return <></>;
     }

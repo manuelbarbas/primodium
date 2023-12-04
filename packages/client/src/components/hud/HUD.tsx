@@ -20,7 +20,6 @@ import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { Hotbar } from "./hotbar/Hotbar";
 import { Marketplace } from "./marketplace/Marketplace";
 import { Panes } from "./panes/Panes";
-import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 import { Units } from "./units/Units";
 
 export const GameHUD = () => {
@@ -53,7 +52,7 @@ export const GameHUD = () => {
             <HUD.BottomMiddle>
               {(getBlockTypeName(selectedBuilding) || !selectedBuilding) && !mapOpen && <Hotbar />}
               {!getBlockTypeName(selectedBuilding) && !mapOpen && <BuildingMenu />}
-              {mapOpen && <SpacerockMenu />}
+              {/* {mapOpen && <SpacerockMenu />} */}
             </HUD.BottomMiddle>
             <HUD.TopMiddle>
               {getBlockTypeName(selectedBuilding) && selectedBuilding && <PrototypeInfo building={selectedBuilding} />}
@@ -74,7 +73,7 @@ export const GameHUD = () => {
             </HUD.Left>
 
             <HUD.BottomLeft>
-              <Minimap />
+              {mapOpen && <Minimap />}
               {/* <Resources /> */}
             </HUD.BottomLeft>
             <HUD.BottomRight>

@@ -6,20 +6,28 @@ import { Group } from "@visx/group";
 import { scaleLinear } from "@visx/scale";
 import { Circle } from "@visx/shape";
 import { VoronoiPolygon, voronoi } from "@visx/voronoi";
-import { useMemo, useRef } from "react";
+import { ERock } from "contracts/config/enums";
+import { useMemo, useRef, useState } from "react";
 import { components } from "src/network/components";
 import { hashEntities } from "src/util/encode";
-import { Card } from "../core/Card";
 
 type DotPoint = {
   x: number;
   y: number;
   owner: Entity | undefined;
+  size: number;
 };
+
 type DotsProps = {
   points: DotPoint[];
   width: number;
   height: number;
+  view?: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
   showControls?: boolean;
 };
 
@@ -46,14 +54,15 @@ function calculateScaledBounds(coords: Coord[]): { minX: number; maxX: number; m
   const centerY = (minY + maxY) / 2;
 
   // Scale bounds by 1.25
-  const width = (maxX - minX) * 1.25;
-  const height = (maxY - minY) * 1.25;
+  const width = Math.min(500, (maxX - minX) * 1.25);
+  const height = Math.min(500, (maxY - minY) * 1.25);
+  const edgeLength = Math.max(width, height);
 
   // Calculate new bounds
-  const newMinX = centerX - width / 2;
-  const newMaxX = centerX + width / 2;
-  const newMinY = centerY - height / 2;
-  const newMaxY = centerY + height / 2;
+  const newMinX = centerX - edgeLength / 2;
+  const newMaxX = centerX + edgeLength / 2;
+  const newMinY = centerY - edgeLength / 2;
+  const newMaxY = centerY + edgeLength / 2;
 
   return { minX: newMinX, maxX: newMaxX, minY: newMinY, maxY: newMaxY };
 }
@@ -75,25 +84,38 @@ function entityToColor(address: Entity | undefined) {
   const hexG = g.toString(16).padStart(2, "0");
   const hexB = b.toString(16).padStart(2, "0");
 
-  console.log(`#${hexR}${hexG}${hexB}`);
   return `#${hexR}${hexG}${hexB}`;
 }
 
-export const Minimap = ({ width = 800, height = 800 }: { width?: number; height?: number }) => {
+export const Minimap = () => {
+  const hoverWidth = 450;
+  const normalWidth = 300;
+  const [hover, setHover] = useState<number>(normalWidth);
   const points = useEntityQuery([Has(components.Position), Has(components.RockType)]).map((entity) => {
+    const rockType = components.RockType.get(entity)?.value;
     const position = components.Position.get(entity);
     const owner = components.OwnedBy.get(entity)?.value as Entity | undefined;
-    return { ...position!, owner };
+    return { ...position!, owner, size: rockType === ERock.Asteroid ? 4 : 2 };
   });
-  console.log("points:", points);
+  const view = components.MapBounds.use();
+
   return (
-    <Card className="flex flex-col gap-1">
-      <Voronoi points={points} width={width} height={height} />
-    </Card>
+    <div
+      className={`card bg-neutral border border-secondary p-2 drop-shadow-2xl pointer-events-auto transition transition-all`}
+      style={{ width: hover, height: hover }}
+      onMouseEnter={(e) => {
+        setHover(hoverWidth);
+      }}
+      onMouseLeave={() => {
+        setHover(normalWidth);
+      }}
+    >
+      <Voronoi points={points} width={hover} height={hover} view={view} />
+    </div>
   );
 };
 
-export const Voronoi = ({ points, width, height }: DotsProps) => {
+export const Voronoi = ({ points, width, height, view }: DotsProps) => {
   if (width < 10) width = 100;
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -102,8 +124,7 @@ export const Voronoi = ({ points, width, height }: DotsProps) => {
   const xScale = useMemo(() => {
     const scale = scaleLinear<number>({
       domain: [bounds.minX, bounds.maxX],
-      range: [0, width],
-      clamp: true,
+      range: [0, width - 1],
     });
     return scale;
   }, [width, bounds.minX, bounds.maxX]);
@@ -112,12 +133,16 @@ export const Voronoi = ({ points, width, height }: DotsProps) => {
     () =>
       scaleLinear<number>({
         domain: [bounds.minY, bounds.maxY],
-        range: [height, 0],
-        clamp: true,
+        range: [height + 1, 0],
       }),
     [height, bounds.minY, bounds.maxY]
   );
 
+  console.log(`bounds: ${bounds.minX} ${bounds.maxX} ${bounds.minY} ${bounds.maxY}`);
+  view &&
+    console.log(
+      `view: ${JSON.stringify(view)} ${xScale(view.x)} ${yScale(view.y)} ${xScale(view.width)} ${yScale(view.height)}}`
+    );
   const voronoiLayout = useMemo(
     () =>
       voronoi<DotPoint>({
@@ -129,10 +154,15 @@ export const Voronoi = ({ points, width, height }: DotsProps) => {
     [width, height, xScale, yScale, points]
   );
 
+  const scaleToBounds = ({ width: w, height: h }: { width: number; height: number }) => ({
+    w: (w / (bounds.maxX - bounds.minX)) * width,
+    h: (h / (bounds.maxY - bounds.minY)) * height,
+  });
+
   return (
-    <svg width={width} height={height} ref={svgRef} color="black">
-      <RadialGradient id="bg-gradient" from="#000" to="#555" />;{/** capture all mouse events with a rect */}
-      <rect width={width} height={height} rx={14} fill="url(#bg-gradient)" />
+    <svg width={"100%"} height={"100%"} ref={svgRef} color="black">
+      <RadialGradient id="bg-gradient" from="#030305" to="0E0E19" />;{/** capture all mouse events with a rect */}
+      <rect width={width} height={height} fill="url(#bg-gradient)" />
       <Group pointerEvents="none">
         {voronoiLayout
           .polygons()
@@ -143,7 +173,7 @@ export const Voronoi = ({ points, width, height }: DotsProps) => {
                   key={`polygon-${i}`}
                   polygon={polygon}
                   fill={entityToColor(polygon.data.owner)}
-                  fillOpacity={0.7}
+                  fillOpacity={0.1}
                   stroke="white"
                   strokeWidth={1}
                   strokeOpacity={0.2}
@@ -158,13 +188,25 @@ export const Voronoi = ({ points, width, height }: DotsProps) => {
                 className="dot"
                 cx={xScale(point.x)}
                 cy={yScale(point.y)}
-                r={i % 3 === 0 ? 2 : 3}
+                r={point.size}
                 fill={"white"}
                 stroke={entityToColor(point.owner)}
               />
             ) as any
         )}
       </Group>
+      {view && (
+        <rect
+          x={xScale(view.x)}
+          y={yScale(-view.y)}
+          width={scaleToBounds(view).w}
+          height={scaleToBounds(view).h}
+          fill="rgba(255,255,255,10%)"
+          stroke="white"
+          strokeWidth={1}
+          strokeDasharray="4,4"
+        />
+      )}
     </svg>
   );
 };
