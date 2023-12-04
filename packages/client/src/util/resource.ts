@@ -132,7 +132,7 @@ export function getFullResourceCount(resourceID: Entity, spaceRock?: Entity): Re
     : comps.Account.get()?.value;
 
   spaceRock = spaceRock ?? (comps.Home.getWithKeys({ entity: player as Hex })?.asteroid as Entity | undefined);
-  if (!player || !spaceRock)
+  if (!spaceRock)
     return {
       resourceCount: 0n,
       resourcesToClaim: 0n,
@@ -148,27 +148,27 @@ export function getFullResourceCount(resourceID: Entity, spaceRock?: Entity): Re
 
   if (resource == undefined) throw new Error("Resource not found" + resourceID);
 
-  let resourceCount = comps.ResourceCount.getWithKeys({ entity: spaceRock as Hex, resource })?.value ?? 0n;
+  const resourceCount = comps.ResourceCount.getWithKeys({ entity: spaceRock as Hex, resource })?.value ?? 0n;
 
-  let resourceStorage =
+  const resourceStorage =
     comps.MaxResourceCount.getWithKeys({ entity: spaceRock as Hex, resource: resource })?.value ?? 0n;
 
-  const producedResource = comps.ProducedResource?.getWithKeys({ entity: player as Hex, resource })?.value ?? 0n;
   //each resource has a production and consumption value. these values need to be seperate so we can calculate best outcome of production and consumption
   let productionRate = comps.ProductionRate.getWithKeys({ entity: spaceRock as Hex, resource })?.value ?? 0n;
   let consumptionRate =
     comps.ConsumptionRate.getWithKeys({ entity: spaceRock as Hex, resource: resource })?.value ?? 0n;
 
   //if they are both equal no change will be made
-  if (productionRate == 0n && consumptionRate == 0n)
+  if (!player || (productionRate == 0n && consumptionRate == 0n))
     return {
       resourceCount,
       resourcesToClaim: 0n,
       resourceStorage,
       production: 0n,
-      producedResource,
+      producedResource: 0n,
     };
 
+  const producedResource = comps.ProducedResource?.getWithKeys({ entity: player as Hex, resource })?.value ?? 0n;
   //first we calculate production
   let increase = 0n;
   if (productionRate > 0n) {
@@ -214,13 +214,6 @@ export function getFullResourceCount(resourceID: Entity, spaceRock?: Entity): Re
     decrease = consumptionRate * consumptionTimeLength;
     //consumption is from current space rock and will be in the future
     consumptionRate = 0n;
-  }
-
-  const motherlode = comps.Motherlode.getWithKeys({ entity: spaceRock as Hex });
-  if (player && motherlode && motherlode.motherlodeType == resource) {
-    const home = comps.Home.getWithKeys({ entity: player as Hex })?.asteroid as Hex;
-    resourceStorage = comps.MaxResourceCount.getWithKeys({ entity: home, resource })?.value ?? 0n;
-    resourceCount = comps.ResourceCount.getWithKeys({ entity: home, resource })?.value ?? 0n;
   }
 
   return {
