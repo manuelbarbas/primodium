@@ -1,7 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
-import { useMud } from "src/hooks";
 import { formatNumber } from "src/util/common";
 import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
 
@@ -12,6 +11,7 @@ export const MaterialLabel = ({
   resourceCount,
   resourcesToClaim,
   production,
+  spaceRock,
 }: {
   name: string;
   resource: Entity;
@@ -19,9 +19,8 @@ export const MaterialLabel = ({
   resourceCount: bigint;
   resourcesToClaim: bigint;
   production: bigint;
+  spaceRock?: Entity;
 }) => {
-  const playerEntity = useMud().network.playerEntity;
-
   const resourceIcon = ResourceImage.get(resource);
 
   const tooltipClass = useMemo(() => {
@@ -42,18 +41,17 @@ export const MaterialLabel = ({
   return (
     <div className="gap-1 mx-1 group pointer-events-auto">
       <ResourceIconTooltip
+        spaceRock={spaceRock}
         name={name}
-        playerEntity={playerEntity}
         amount={resourceCount + resourcesToClaim}
         resource={resource}
         image={resourceIcon ?? ""}
-        validate={false}
         fontSize={"sm"}
         className={`${tooltipClass}`}
       />
       {production !== 0n && (
         <p className="opacity-50 text-[0rem] group-hover:text-xs transition-all">
-          +{formatNumber((Number(production) * 60) / Number(RESOURCE_SCALE), { fractionDigits: 1 })}
+          +{formatNumber(Number(production) * 6, { fractionDigits: 1 })}
           /MIN <b>({Number(maxStorage / RESOURCE_SCALE)})</b>
         </p>
       )}

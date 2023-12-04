@@ -83,6 +83,7 @@ export function getPlayerFullResourceCounts(playerEntity: Entity) {
           resourceStorage: 0n,
           production: 0n,
           producedResource: 0n,
+          consumptionTimeLength: 0n,
         };
       }
       combinedCounts[key].resourceCount += resourceCounts[key].resourceCount;
@@ -110,6 +111,7 @@ type ResourceCountData = {
   resourceStorage: bigint;
   production: bigint;
   producedResource: bigint;
+  consumptionTimeLength?: bigint;
 };
 
 export function getFullResourceCounts(spaceRockEntity?: Entity) {
@@ -123,7 +125,7 @@ export function getFullResourceCounts(spaceRockEntity?: Entity) {
   return counts;
 }
 
-export function getFullResourceCount(resourceID: Entity, spaceRock?: Entity) {
+export function getFullResourceCount(resourceID: Entity, spaceRock?: Entity): ResourceCountData {
   let consumptionTimeLength = 0n;
   const player = spaceRock
     ? comps.OwnedBy.getWithKeys({ entity: spaceRock as Hex })?.value
@@ -160,21 +162,25 @@ export function getFullResourceCount(resourceID: Entity, spaceRock?: Entity) {
   //if they are both equal no change will be made
   if (productionRate == 0n && consumptionRate == 0n)
     return {
-      resourceCount: comps.ResourceCount.getWithKeys({ entity: spaceRock as Hex, resource: resource })?.value ?? 0n,
+      resourceCount,
       resourcesToClaim: 0n,
-      resourceStorage: resourceStorage,
+      resourceStorage,
       production: 0n,
-      producedResource: producedResource,
+      producedResource,
     };
 
   //first we calculate production
   let increase = 0n;
   if (productionRate > 0n) {
     //check to see if this resource consumes another resource to be produced
-    const consumesResource = comps.P_ConsumesResource.getWithKeys({ resource })?.value ?? 0;
+    const consumedResource = comps.P_ConsumesResource.getWithKeys({ resource })?.value;
 
     //if this resource consumes another resource the maxium time it can be produced is the maximum time that the required resource is consumed
-    const producedTime = consumesResource > 0 ? consumptionTimeLength : timeSinceClaimed;
+
+    const producedTime = consumedResource
+      ? getFullResourceCount(ResourceEntityLookup[consumedResource as EResource], spaceRock).consumptionTimeLength ??
+        timeSinceClaimed
+      : timeSinceClaimed;
 
     //the amount of resource that has been produced
     increase = productionRate * producedTime;
@@ -197,6 +203,7 @@ export function getFullResourceCount(resourceID: Entity, spaceRock?: Entity) {
       resourceStorage: resourceStorage,
       production: 0n,
       producedResource: producedResource,
+      consumptionTimeLength,
     };
 
   if (resourceCount + increase < decrease) {
@@ -227,6 +234,7 @@ export function getFullResourceCount(resourceID: Entity, spaceRock?: Entity) {
     resourceStorage: resourceStorage,
     production: productionRate - consumptionRate,
     producedResource: producedResource,
+    consumptionTimeLength,
   };
 }
 

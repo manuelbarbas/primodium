@@ -5,6 +5,7 @@ import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
 import { encodeEntity } from "src/util/encode";
 import { Hex, padHex, trim } from "viem";
+import { getBlockTypeName } from "./common";
 import { EntityType, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
 const resources: Record<string, Entity> = {
   iron: EntityType.Iron,
@@ -28,6 +29,7 @@ const resources: Record<string, Entity> = {
   electricity: EntityType.Electricity,
   defense: EntityType.Defense,
   orders: EntityType.MaxOrders,
+  moves: EntityType.FleetMoves,
 };
 
 const units: Record<string, Entity> = {
@@ -93,6 +95,9 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
 
         if (!resourceEntity || !home) throw new Error("Resource not found");
 
+        const value = 10000000n;
+        console.log("setting resource", getBlockTypeName(resourceEntity), home, value);
+
         await mud.contractCalls.setComponentValue(
           mud.components.ResourceCount,
           encodeEntity(
@@ -100,7 +105,7 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
             { entity: home as Hex, resource: ResourceEnumLookup[resourceEntity] }
           ),
           {
-            value: 10000000n,
+            value,
           }
         );
       },

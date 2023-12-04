@@ -193,7 +193,6 @@ const Objective: React.FC<{
                   className={`text-xs gap-2 badge-neutral ${!canClaim ? "border-error opacity-60 bg-error" : ""}`}
                 >
                   <ResourceIconTooltip
-                    playerEntity={playerEntity}
                     name={getBlockTypeName(resource.id)}
                     image={ResourceImage.get(resource.id) ?? BackgroundImage.get(resource.id)?.at(0) ?? ""}
                     resource={resource.id}

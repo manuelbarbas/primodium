@@ -1,8 +1,8 @@
 import { SecondaryCard } from "src/components/core/Card";
 
+import { Entity } from "@latticexyz/recs";
 import { Badge } from "src/components/core/Badge";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
-import { useMud } from "src/hooks";
 import { getBlockTypeName } from "src/util/common";
 import { ResourceImage, ResourceType } from "src/util/constants";
 import { getSpaceRockInfo } from "src/util/spacerock";
@@ -18,8 +18,8 @@ const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ lab
 
 export const AsteroidResource: React.FC<{
   resources: ReturnType<typeof getSpaceRockInfo>["resources"];
-}> = ({ resources }) => {
-  const playerEntity = useMud().network.playerEntity;
+  spaceRock?: Entity;
+}> = ({ resources, spaceRock }) => {
   if (resources.length === 0) return <></>;
 
   return (
@@ -28,10 +28,10 @@ export const AsteroidResource: React.FC<{
         return (
           <Badge key={resource.id} className="text-xs gap-2">
             <ResourceIconTooltip
+              spaceRock={spaceRock}
               name={getBlockTypeName(resource.id)}
               image={ResourceImage.get(resource.id) ?? ""}
               resource={resource.id}
-              playerEntity={playerEntity}
               amount={resource.amount}
               resourceType={ResourceType.Resource}
               direction="top"

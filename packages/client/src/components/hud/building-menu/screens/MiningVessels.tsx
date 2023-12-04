@@ -25,6 +25,8 @@ export const CommissionCost: React.FC<{ player: Entity }> = ({ player }) => {
     return getRecipe(EntityType.MiningVessel, level);
   }, [player]);
 
+  const spaceRock = components.Home.use(player)?.asteroid as Entity | undefined;
+
   return (
     <SecondaryCard className="w-full">
       <p className="text-xs opacity-75 px-2 mb-1">COMMISSION COST</p>
@@ -36,7 +38,7 @@ export const CommissionCost: React.FC<{ player: Entity }> = ({ player }) => {
             return (
               <Badge key={resource.id + resource.type} className="text-xs gap-2">
                 <ResourceIconTooltip
-                  playerEntity={player}
+                  spaceRock={spaceRock}
                   name={getBlockTypeName(resource.id)}
                   image={ResourceImage.get(resource.id) ?? ""}
                   resource={resource.id}

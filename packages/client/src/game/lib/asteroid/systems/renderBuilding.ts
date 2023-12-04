@@ -85,7 +85,6 @@ export const renderBuilding = (scene: Scene, { network: { playerEntity } }: Setu
       const assetPair = getAssetKeyPair(entity, buildingType);
 
       const active = components.IsActive.get(entity)?.value;
-      console.log("active", active);
       const sharedComponents = [
         ObjectPosition({
           x: pixelCoord.x,

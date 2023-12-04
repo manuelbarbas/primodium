@@ -13,9 +13,14 @@ import { components } from "src/network/components";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { Hex } from "viem";
 
-export const Header: React.FC<{ entity: Entity; name: string; imageUri: string }> = ({ entity, name, imageUri }) => {
-  const defense = useRockDefense(entity);
-  const playerEntity = components.OwnedBy.useWithKeys({ entity: entity as Hex })?.value;
+export const Header: React.FC<{ spaceRock: Entity; name: string; imageUri: string }> = ({
+  spaceRock,
+  name,
+  imageUri,
+}) => {
+  const defense = useRockDefense(spaceRock);
+  console.log("spaceRock", spaceRock);
+  const playerEntity = components.OwnedBy.useWithKeys({ entity: spaceRock as Hex })?.value;
   const { transitionToScene } = primodium.api().scene;
 
   return (
@@ -32,7 +37,7 @@ export const Header: React.FC<{ entity: Entity; name: string; imageUri: string }
                   direction="bottom"
                   short={true}
                   name={"Defense"}
-                  playerEntity={playerEntity as Entity}
+                  spaceRock={spaceRock}
                   amount={defense.points}
                   resource={EntityType.Defense}
                   image={ResourceImage.get(EntityType.Defense) ?? ""}
@@ -42,7 +47,7 @@ export const Header: React.FC<{ entity: Entity; name: string; imageUri: string }
                 />
               </Badge>
             )}
-            {components.RockType.get(entity)?.value === ERock.Asteroid && (
+            {components.RockType.get(spaceRock)?.value === ERock.Asteroid && (
               <Button
                 className="btn-sm"
                 tooltip="spectate"

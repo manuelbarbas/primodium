@@ -1,34 +1,34 @@
 import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
+import { useMud } from "src/hooks";
 import { useRockDefense } from "src/hooks/useRockDefense";
 import { components } from "src/network/components";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { Hex } from "viem";
 
-export const DefenseLabel = ({ player }: { player?: Entity }) => {
+export const DefenseLabel = ({ spaceRock }: { spaceRock?: Entity }) => {
+  const player = useMud().network.playerEntity;
+  const homeRock = components.Home.use(player)?.asteroid as Entity | undefined;
+  const rock = spaceRock ?? homeRock;
+  if (!rock) throw new Error("No rock found");
+
   const name = "Defense";
   const resourceId = EntityType.Defense;
-  player = player ?? components.Account.use()?.value ?? singletonEntity;
-  const rock = components.Home.get(player)?.asteroid;
-  const defense = useRockDefense(rock as Entity);
-  if (!player || !rock) return null;
+  const defense = useRockDefense(rock);
   const resourceIcon = ResourceImage.get(resourceId);
   const multiplierAmount =
-    components.ResourceCount.useWithKeys({ entity: player as Hex, resource: EResource.M_DefenseMultiplier })?.value ??
-    0n;
+    components.ResourceCount.useWithKeys({ entity: rock as Hex, resource: EResource.M_DefenseMultiplier })?.value ?? 0n;
 
   return (
     <div className="gap-1 mx-1 group pointer-events-auto">
       <ResourceIconTooltip
         short={false}
         name={name}
-        playerEntity={player}
+        spaceRock={rock}
         amount={defense.points}
         resource={resourceId}
         image={resourceIcon ?? ""}
-        validate={false}
         fontSize={"sm"}
         fractionDigits={1}
       />
