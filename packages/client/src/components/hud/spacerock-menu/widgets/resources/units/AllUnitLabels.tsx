@@ -14,7 +14,7 @@ import { formatNumber } from "src/util/common";
 import { Badge } from "src/components/core/Badge";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { ERock } from "contracts/config/enums";
-import { Button, IconButton } from "src/components/core/Button";
+import { IconButton } from "src/components/core/Button";
 
 export const AllUnitLabels = () => {
   const { playerEntity } = useMud().network;
@@ -102,8 +102,8 @@ export const AllUnitLabels = () => {
 
         {playerEntity === owner && rockType === ERock.Motherlode && (
           <div className="flex gap-1">
-            <IconButton imageUri="img/icons/mainbaseicon.png" text="recall" className="btn-xs btn-warning" />
-            <IconButton imageUri="img/icons/reinforcementicon.png" text="reinforce" className="btn-xs btn-success" />
+            <IconButton imageUri="img/icons/mainbaseicon.png" text="recall" className="btn-xs " />
+            <IconButton imageUri="img/icons/reinforcementicon.png" text="reinforce" className="btn-xs" />
           </div>
         )}
       </div>

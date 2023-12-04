@@ -26,7 +26,7 @@ export const GracePeriod: React.FC<{ player: Entity; className?: string }> = ({ 
             {duration.asHours().toFixed()} hrs {duration.minutes()} min
           </p>
         )}
-        {duration.minutes() === 0 && <p className="">{duration.seconds()} sec</p>}
+        {duration.asMinutes() === 0 && <p className="">{duration.seconds()} sec</p>}
       </div>
     </div>
   );
