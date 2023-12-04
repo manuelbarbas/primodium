@@ -51,6 +51,23 @@ export const SelectedAction = createExtendedNumberComponent(world, {
 export const MapOpen = createExtendedBoolComponent(world, { id: "MapOpen" });
 
 /* -------------------------------------------------------------------------- */
+/*                                  RESOURCES                                 */
+/* -------------------------------------------------------------------------- */
+export const SelectedRockResources = createExtendedComponent(
+  world,
+  {
+    resourcesCount: Type.OptionalBigInt,
+    resourceToClaim: Type.OptionalBigInt,
+    resourceStorage: Type.OptionalBigInt,
+    production: Type.OptionalBigInt,
+    producedResource: Type.OptionalBigInt,
+  },
+  {
+    id: "SelectedRockResources",
+  }
+);
+
+/* -------------------------------------------------------------------------- */
 /*                                    Units                                   */
 /* -------------------------------------------------------------------------- */
 
@@ -154,6 +171,9 @@ export default {
   Account,
   GameReady,
   CurrentTransaction,
+
+  /* ------------------------------- Resources -------------------------------- */
+  SelectedRockResources,
 
   /* ---------------------------------- Input --------------------------------- */
   SelectedTile,
