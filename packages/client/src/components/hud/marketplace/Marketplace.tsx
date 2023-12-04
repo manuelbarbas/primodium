@@ -18,7 +18,7 @@ export const Marketplace = () => {
         <div className="flex gap-2 items-center">
           <Join className="w-fit">
             <Tabs.Button index={0}>Buy</Tabs.Button>
-            <Tabs.Button index={1}>Sell</Tabs.Button>
+            <Tabs.Button index={1}>Your Orders</Tabs.Button>
           </Join>
           <div className="absolute right-2 margin-auto my-2 flex flex-col items-end justify-center">
             <div className="flex justify-center items-center gap-1 rounded-md p-1 h-full">
