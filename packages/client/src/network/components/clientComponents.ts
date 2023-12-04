@@ -31,6 +31,8 @@ export const BlockNumber = createExtendedComponent(
     id: "BlockNumber",
   }
 );
+
+export const TimeMs = createExtendedBigIntComponent(world, { id: "Time" });
 export const Account = createExtendedEntityComponent(world, { id: "Account" });
 export const SpectateAccount = createExtendedEntityComponent(world, { id: "SpectateAccount" });
 export const GameReady = createExtendedBoolComponent(world, { id: "GameReady" });
@@ -149,6 +151,7 @@ export default {
 
   /* ------------------------------ Chain State ------------------------------- */
   BlockNumber,
+  TimeMs,
   SpectateAccount,
   Account,
   GameReady,
