@@ -10,7 +10,7 @@ import { setupHangar } from "src/network/systems/setupHangar";
 import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
 import { setupInvitations } from "src/network/systems/setupPlayerInvites";
 import { setupSend } from "src/network/systems/setupSend";
-import { setupTimeMs } from "src/network/systems/setupTimeMs";
+import { setupTime } from "src/network/systems/setupTime";
 import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
 import { useMud } from "./useMud";
 
@@ -33,7 +33,7 @@ export const useInit = () => {
     setupSend(playerEntity);
     setupInvitations(mud);
     setupBattleNotifications(mud);
-    setupTimeMs(mud);
+    setupTime(mud);
   }, [mud, playerEntity]);
 
   // The network object and user wallet will have been loaded by the time the loading state is ready

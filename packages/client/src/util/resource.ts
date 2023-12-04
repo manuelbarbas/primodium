@@ -11,7 +11,6 @@ import {
   SPEED_SCALE,
   UnitEnumLookup,
 } from "./constants";
-import { getNow } from "./time";
 
 export const getScale = (resource: Entity) => {
   if (
@@ -97,8 +96,9 @@ export function getFullResourceCounts(spaceRockEntity: Entity) {
   consumptionTimeLengths.length = MUDEnums.EResource.length;
   const player = comps.OwnedBy.getWithKeys({ entity: spaceRockEntity as Hex })?.value ?? comps.Account.get()?.value;
   const playerLastClaimed = comps.LastClaimedAt.getWithKeys({ entity: spaceRockEntity as Hex })?.value ?? 0n;
+  const now = comps.Time.get()?.value ?? 0n;
   const timeSinceClaimed =
-    ((getNow() - playerLastClaimed) * (comps.P_GameConfig?.get()?.worldSpeed ?? SPEED_SCALE)) / SPEED_SCALE;
+    ((now - playerLastClaimed) * (comps.P_GameConfig?.get()?.worldSpeed ?? SPEED_SCALE)) / SPEED_SCALE;
   return MUDEnums.EResource.map((resource: string, index: number) => {
     if (index == 0 || index > MUDEnums.EResource.length) return {};
 
@@ -252,8 +252,9 @@ export function getFullResourceCount(resourceID: Entity, playerEntity?: Entity) 
 
   const playerLastClaimed = comps.LastClaimedAt.getWithKeys({ entity: activeAsteroid as Hex })?.value ?? 0n;
 
+  const now = comps.Time.get()?.value ?? 0n;
   const resourcesToClaimFromBuilding = (() => {
-    const toClaim = ((getNow() - playerLastClaimed) * production * worldSpeed) / SPEED_SCALE;
+    const toClaim = ((now - playerLastClaimed) * production * worldSpeed) / SPEED_SCALE;
     if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
     else if (resourceCount + toClaim < 0n) return -resourceCount;
     return toClaim;
