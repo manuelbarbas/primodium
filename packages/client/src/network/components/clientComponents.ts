@@ -53,6 +53,20 @@ export const MapOpen = createExtendedBoolComponent(world, { id: "MapOpen" });
 /* -------------------------------------------------------------------------- */
 /*                                  RESOURCES                                 */
 /* -------------------------------------------------------------------------- */
+export const PlayerResources = createExtendedComponent(
+  world,
+  {
+    resourcesCount: Type.OptionalBigInt,
+    resourceToClaim: Type.OptionalBigInt,
+    resourceStorage: Type.OptionalBigInt,
+    production: Type.OptionalBigInt,
+    producedResource: Type.OptionalBigInt,
+  },
+  {
+    id: "PlayerResources",
+  }
+);
+
 export const SelectedRockResources = createExtendedComponent(
   world,
   {
@@ -173,6 +187,7 @@ export default {
   CurrentTransaction,
 
   /* ------------------------------- Resources -------------------------------- */
+  PlayerResources,
   SelectedRockResources,
 
   /* ---------------------------------- Input --------------------------------- */
