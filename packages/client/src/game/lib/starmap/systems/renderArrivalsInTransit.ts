@@ -59,9 +59,10 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
         alpha: 0.5,
         color: 0xff0000,
       }),
-      OnRxjsSystem(scene.camera.zoom$, (zoom) => {
+      OnRxjsSystem(scene.camera.zoom$, (_, zoom) => {
         let thickness = 3 / zoom;
         thickness = Math.min(10, thickness);
+        console.log("thickness:", thickness);
 
         trajectory.removeComponent(`${entity}-trajectoryline`);
         trajectory.setComponent(

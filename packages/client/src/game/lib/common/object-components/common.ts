@@ -288,34 +288,39 @@ export const OnExitSystem = <T extends keyof GameObjectTypes>(
   };
 };
 
-const observableMap: Map<string, Map<string, (event: unknown) => void>> = new Map();
+type RxCallback<T extends keyof GameObjectTypes, E = unknown> = (
+  gameObject: InstanceType<GameObjectTypes[T]>,
+  update: E,
+  systemId: string //manage callback lifecycle
+) => void;
+
+type RxSystemMap = Map<Observable<unknown>, Map<string, (update: unknown) => void>>;
+
+const observableMap: RxSystemMap = new Map();
 export const OnRxjsSystem = <T, GO extends keyof GameObjectTypes>(
   observable$: Observable<T>,
-  callback: (event: T) => void
+  callback: RxCallback<GO, T>
 ): GameObjectComponent<GO> => {
   const id = uuid();
-  const observableKey = observable$.toString();
   return {
     id,
-    once: () => {
-      if (!observableMap.has(observableKey)) {
-        observableMap.set(observableKey, new Map());
+    once: (gameObject) => {
+      if (!observableMap.has(observable$)) {
+        observableMap.set(observable$, new Map());
+
+        defineRxSystem(gameWorld, observable$, (value) => {
+          const fnMap = observableMap.get(observable$);
+
+          if (!fnMap) return;
+
+          for (const fn of fnMap.values()) {
+            fn(value);
+          }
+        });
       }
-
-      defineRxSystem(gameWorld, observable$, (value) => {
-        const fnMap = observableMap.get(observableKey);
-
-        if (!fnMap) return;
-
-        for (const fn of fnMap.values()) {
-          fn(value);
-        }
+      observableMap.get(observable$)?.set(id, (update) => {
+        callback(gameObject, update as T, id);
       });
-
-      observableMap.get(observableKey)?.set(id, (update) => callback(update as T));
-    },
-    exit: () => {
-      observableMap.get(observableKey)?.delete(id);
     },
   };
 };
