@@ -19,7 +19,7 @@ contract SpawnSystemTest is PrimodiumTest {
     assertEq(Home.getAsteroid(playerEntity), asteroidEntity, "Player should have spawned on their own asteroid");
     assertEq(RockType.get(asteroidEntity), uint8(ERock.Asteroid), "Asteroid should be a normal asteroid");
 
-    assertEq(Level.get(playerEntity), 1, "Player should have level 1");
+    assertEq(Level.get(asteroidEntity), 1, "Player should have level 1");
   }
 
   function testSpawnTwice() public {
@@ -57,7 +57,7 @@ contract SpawnSystemTest is PrimodiumTest {
     assertEq(position.y, coord.y, "y values differ");
 
     assertTrue(OwnedBy.get(buildingEntity) != 0);
-    assertEq(OwnedBy.get(buildingEntity), addressToEntity(creator));
+    assertEq(OwnedBy.get(buildingEntity), asteroid);
   }
 
   function testBuildBeforeSpawnFail() public {

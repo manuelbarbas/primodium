@@ -32,7 +32,7 @@ contract LibReinforceTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
     vm.startPrank(creator);
-    player = addressToEntity(worldAddress);
+    player = addressToEntity(creator);
     arrival.from = player;
     bytes32[] memory unitTypes = new bytes32[](NUM_UNITS);
     unitTypes[0] = unit;
@@ -59,9 +59,13 @@ contract LibReinforceTest is PrimodiumTest {
   function testReinforceAnotherPlayer() public {
     arrival.sendType = ESendType.Reinforce;
     bytes32 anotherPlayer = "anotherPlayer";
+    Home.setAsteroid(player, origin);
+    Home.setAsteroid(anotherPlayer, destination);
+
     arrival.to = anotherPlayer;
     arrival.from = player;
-
+    arrival.origin = origin;
+    arrival.destination = destination;
     unitCounts[0] = (1);
     arrival.unitCounts = unitCounts;
     arrivalId = LibSend.sendUnits(arrival);
@@ -76,14 +80,17 @@ contract LibReinforceTest is PrimodiumTest {
     P_RequiredResources.set(unit, 0, requiredResourcesData);
     uint256 before = 75;
 
-    LibProduction.increaseResourceProduction(player, EResource(Iron), before);
-    LibProduction.increaseResourceProduction(anotherPlayer, EResource(Iron), before);
-    LibResource.spendUnitRequiredResources(player, unit, 1);
-
+    console.log("before increase 1");
+    LibProduction.increaseResourceProduction(origin, EResource(Iron), before);
+    console.log("before increase 2");
+    LibProduction.increaseResourceProduction(destination, EResource(Iron), before);
+    console.log("before soend 1");
+    LibResource.spendUnitRequiredResources(origin, unit, 1);
+    console.log("before reinforce");
     LibReinforce.reinforce(anotherPlayer, destination, arrivalId);
-
-    assertEq(ResourceCount.get(anotherPlayer, Iron), before - 33);
-    assertEq(ResourceCount.get(player, Iron), before);
+    console.log("after reinforce");
+    assertEq(ResourceCount.get(destination, Iron), before - 33);
+    assertEq(ResourceCount.get(origin, Iron), before);
   }
 
   function testFailReinforceWrongSendType() public {

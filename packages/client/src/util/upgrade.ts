@@ -6,9 +6,10 @@ import { EntityType } from "./constants";
 import { getRecipe } from "./resource";
 
 export function getUpgradeInfo(research: Entity, playerEntity: Entity) {
+  const asteroid = components.Home.get(playerEntity)?.asteroid;
   const level =
     research === EntityType.Expansion
-      ? components.Level.get(playerEntity)?.value ?? 1n
+      ? components.Level.get(asteroid as Entity)?.value ?? 1n
       : components.UnitLevel.getWithKeys({ entity: playerEntity as Hex, unit: research as Hex })?.value ?? 0n;
   let nextLevel = level + 1n;
 

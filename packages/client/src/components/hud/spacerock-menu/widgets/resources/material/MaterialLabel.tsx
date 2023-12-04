@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { Badge } from "src/components/core/Badge";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
-import { useFullResourceCount } from "src/hooks/useFullResourceCount";
+import { useFullResourceCount, usePlayerFullResourceCount } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
 import { formatNumber } from "src/util/common";
 import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
@@ -13,15 +13,15 @@ export const MaterialLabel = ({ name, resource }: { name: string; resource: Enti
   const owner = components.OwnedBy.use(selectedRock)?.value as Entity | undefined;
   const playerEntity = useMud().network.playerEntity;
 
-  const { maxStorage, resourceCount, resourcesToClaim, production } = useFullResourceCount(
-    resource,
-    owner ?? playerEntity
-  );
+  // const { maxStorage, resourceCount, resourcesToClaim, production } = usePlayerFullResourceCount(
+  //   resource,
+  //   owner ?? playerEntity
+  // );
 
   const resourceIcon = ResourceImage.get(resource);
 
   const tooltipClass = useMemo(() => {
-    if (maxStorage <= 0n) return;
+    if (maxStorage <= BigInt(0)) return;
 
     const percentFull = (resourceCount + resourcesToClaim) / maxStorage;
 

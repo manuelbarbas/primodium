@@ -4,11 +4,11 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import AppLoadingState from "./AppLoadingState";
 import { ampli } from "./ampli";
+import { Progress } from "./components/core/Progress";
 import { MudProvider } from "./hooks/providers/MudProvider";
 import { setup } from "./network/setup";
 import { SetupResult } from "./network/types";
 import { world } from "./network/world";
-import { Progress } from "./components/core/Progress";
 
 const DEV = import.meta.env.PRI_DEV === "true";
 

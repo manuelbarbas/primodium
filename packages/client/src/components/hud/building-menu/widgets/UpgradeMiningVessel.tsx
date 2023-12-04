@@ -24,6 +24,7 @@ export const UpgradeMiningVessel: React.FC = () => {
   const mainBaseLevel = components.Level.use(mainBaseEntity, {
     value: 0n,
   }).value;
+  const homeAsteroid = components.Home.use(player)?.asteroid as Entity;
 
   const { level, maxLevel, mainBaseLvlReq, recipe } = getUpgradeInfo(EntityType.MiningVessel, player);
 
@@ -77,7 +78,7 @@ export const UpgradeMiningVessel: React.FC = () => {
           className="w-fit btn-secondary btn-sm"
           disabled={!canUpgrade}
           loading={transactionLoading}
-          onClick={() => upgradeUnit(EUnit.MiningVessel, network.network)}
+          onClick={() => upgradeUnit(homeAsteroid, EUnit.MiningVessel, network.network)}
         >
           UPGRADE
         </Button>

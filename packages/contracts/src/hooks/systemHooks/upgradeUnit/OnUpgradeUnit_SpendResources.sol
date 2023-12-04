@@ -7,6 +7,7 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { UnitKey } from "src/Keys.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { Level } from "codegen/tables/Level.sol";
+import { UnitLevel } from "codegen/tables/UnitLevel.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
 
@@ -45,13 +46,13 @@ contract OnUpgradeUnit_SpendResources is SystemHook {
     // Decode the arguments from the callData
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
 
-    uint8 unit = abi.decode(args, (uint8));
+    (bytes32 spaceRockEntity, uint8 unit) = abi.decode(args, (bytes32, uint8));
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, unit);
 
     // Get the unit level
-    uint256 level = Level.get(unitPrototype);
+    uint256 level = UnitLevel.get(playerEntity, unitPrototype);
 
     // Spend the required resources for upgrading the unit
-    LibResource.spendUpgradeResources(playerEntity, unitPrototype, level);
+    LibResource.spendUpgradeResources(spaceRockEntity, unitPrototype, level);
   }
 }

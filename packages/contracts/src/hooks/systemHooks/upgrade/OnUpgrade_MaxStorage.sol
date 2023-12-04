@@ -4,7 +4,7 @@ import { addressToEntity } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
-import { Level } from "codegen/tables/Level.sol";
+import { Level, IsActive } from "codegen/index.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
@@ -33,8 +33,6 @@ contract OnUpgrade_MaxStorage is SystemHook {
     ResourceId systemId,
     bytes memory callData
   ) public {
-    // Convert the player's address to an entity
-    bytes32 playerEntity = addressToEntity(msgSender);
     // Decode the arguments from the callData
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
 
@@ -46,6 +44,6 @@ contract OnUpgrade_MaxStorage is SystemHook {
     // Get the level of the building
     uint256 level = Level.get(buildingEntity);
     // Increase the maximum storage capacity
-    LibStorage.increaseMaxStorage(playerEntity, buildingEntity, level);
+    if (IsActive.get(buildingEntity)) LibStorage.increaseMaxStorage(buildingEntity, level);
   }
 }

@@ -53,7 +53,8 @@ contract LibBattleTest is PrimodiumTest {
     Home.setAsteroid(player, rock);
     UnitCount.set(player, rock, unit1, unitCount);
     setupUnit(unit1, 0, defense);
-    ResourceCount.set(player, uint8(EResource.U_Defense), 100);
+
+    ResourceCount.set(rock, uint8(EResource.U_Defense), 100);
     uint256 expected = (unitCount * defense) + 100;
     (uint256[] memory count, uint256 actual) = LibBattle.getDefensePoints(player, rock);
     assertEq(count[0], unitCount);
@@ -67,7 +68,7 @@ contract LibBattleTest is PrimodiumTest {
     Home.setAsteroid(player, rock);
     UnitCount.set(player, rock, unit1, unitCount);
     setupUnit(unit1, 0, defense);
-    ResourceCount.set(player, uint8(EResource.M_DefenseMultiplier), 200);
+    ResourceCount.set(rock, uint8(EResource.M_DefenseMultiplier), 200);
     uint256 expected = (unitCount * defense) * 3;
     (uint256[] memory count, uint256 actual) = LibBattle.getDefensePoints(player, rock);
     assertEq(count[0], unitCount);
@@ -275,10 +276,11 @@ contract LibBattleTest is PrimodiumTest {
   function setupUpdateUnitsAfterBattle() public {
     P_IsUtility.set(uint8(EResource.Iron), true);
     P_IsUtility.set(uint8(EResource.Copper), true);
-
+    Home.setAsteroid(enemy, rock);
+    Home.setAsteroid(player, homeRock);
     // unit1 requires 1 iron
-    LibProduction.increaseResourceProduction(player, EResource.Iron, playerOriginalIron);
-    LibProduction.increaseResourceProduction(player, EResource.Copper, playerOriginalCopper);
+    LibProduction.increaseResourceProduction(homeRock, EResource.Iron, playerOriginalIron);
+    LibProduction.increaseResourceProduction(homeRock, EResource.Copper, playerOriginalCopper);
     //ResourceCount.set(player, uint8(EResource.Iron), playerOriginalIron);
     //ResourceCount.set(player, uint8(EResource.Copper), playerOriginalCopper);
 
@@ -288,8 +290,8 @@ contract LibBattleTest is PrimodiumTest {
     P_RequiredResources.set(unit1, 0, requiredResourcesData);
 
     // unit2 requires 1 copper
-    LibProduction.increaseResourceProduction(enemy, EResource.Iron, enemyOriginalIron);
-    LibProduction.increaseResourceProduction(enemy, EResource.Copper, enemyOriginalCopper);
+    LibProduction.increaseResourceProduction(rock, EResource.Iron, enemyOriginalIron);
+    LibProduction.increaseResourceProduction(rock, EResource.Copper, enemyOriginalCopper);
 
     requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Copper);
@@ -300,22 +302,22 @@ contract LibBattleTest is PrimodiumTest {
   function testUpdateUnitsAfterBattleInvadeAttackerWins() public {
     setupUpdateUnitsAfterBattle();
 
-    LibUnit.updateStoredUtilities(enemy, unit1, 100, true);
-    LibUnit.updateStoredUtilities(enemy, unit2, 10, true);
+    LibUnit.updateStoredUtilities(rock, unit1, 100, true);
+    LibUnit.updateStoredUtilities(rock, unit2, 10, true);
 
     assertEq(
-      ResourceCount.get(enemy, uint8(EResource.Iron)),
+      ResourceCount.get(rock, uint8(EResource.Iron)),
       enemyOriginalIron - 100,
       "Enemy should have 100 consumed iron"
     );
     assertEq(
-      ResourceCount.get(enemy, uint8(EResource.Copper)),
+      ResourceCount.get(rock, uint8(EResource.Copper)),
       enemyOriginalCopper - 10,
       "Enemy should have consumed 10 copper"
     );
 
-    LibUnit.updateStoredUtilities(player, unit1, 100, true);
-    LibUnit.updateStoredUtilities(player, unit2, 50, true);
+    LibUnit.updateStoredUtilities(homeRock, unit1, 100, true);
+    LibUnit.updateStoredUtilities(homeRock, unit2, 50, true);
 
     BattleResultData memory br = BattleResultData({
       attacker: player,
@@ -340,25 +342,21 @@ contract LibBattleTest is PrimodiumTest {
 
     // diff from start to finish is 50
     assertEq(
-      ResourceCount.get(player, uint8(EResource.Iron)),
+      ResourceCount.get(homeRock, uint8(EResource.Iron)),
       playerOriginalIron - 50,
       "Attacker should gain back 50 iron"
     );
     // diff from start to finish is 30
     assertEq(
-      ResourceCount.get(player, uint8(EResource.Copper)),
+      ResourceCount.get(homeRock, uint8(EResource.Copper)),
       playerOriginalCopper - 20,
       "Attacker should gain back 30 copper"
     );
 
     // diff from start to finish is 30
-    assertEq(ResourceCount.get(enemy, uint8(EResource.Iron)), enemyOriginalIron, "Enemy should gain back 100 iron");
+    assertEq(ResourceCount.get(rock, uint8(EResource.Iron)), enemyOriginalIron, "Enemy should gain back 100 iron");
     // diff from start to finish is 30
-    assertEq(
-      ResourceCount.get(enemy, uint8(EResource.Copper)),
-      enemyOriginalCopper,
-      "Enemy should gain back 10 copper"
-    );
+    assertEq(ResourceCount.get(rock, uint8(EResource.Copper)), enemyOriginalCopper, "Enemy should gain back 10 copper");
   }
 
   function testUpdateUnitsAfterBattleInvadeDefenderWins() public {
@@ -366,30 +364,30 @@ contract LibBattleTest is PrimodiumTest {
     UnitCount.set(enemy, rock, unit1, 100);
     UnitCount.set(enemy, rock, unit2, 10);
 
-    LibUnit.updateStoredUtilities(enemy, unit1, 100, true);
-    LibUnit.updateStoredUtilities(enemy, unit2, 10, true);
+    LibUnit.updateStoredUtilities(rock, unit1, 100, true);
+    LibUnit.updateStoredUtilities(rock, unit2, 10, true);
 
     assertEq(
-      ResourceCount.get(enemy, uint8(EResource.Iron)),
+      ResourceCount.get(rock, uint8(EResource.Iron)),
       enemyOriginalIron - 100,
       "Enemy should have 100 consumed iron"
     );
     assertEq(
-      ResourceCount.get(enemy, uint8(EResource.Copper)),
+      ResourceCount.get(rock, uint8(EResource.Copper)),
       enemyOriginalCopper - 10,
       "Enemy should have consumed 10 copper"
     );
 
-    LibUnit.updateStoredUtilities(player, unit1, 100, true);
-    LibUnit.updateStoredUtilities(player, unit2, 50, true);
+    LibUnit.updateStoredUtilities(homeRock, unit1, 100, true);
+    LibUnit.updateStoredUtilities(homeRock, unit2, 50, true);
 
     assertEq(
-      ResourceCount.get(player, uint8(EResource.Iron)),
+      ResourceCount.get(homeRock, uint8(EResource.Iron)),
       playerOriginalIron - 100,
       "Attacker should have 100 consumed iron"
     );
     assertEq(
-      ResourceCount.get(player, uint8(EResource.Copper)),
+      ResourceCount.get(homeRock, uint8(EResource.Copper)),
       playerOriginalCopper - 50,
       "Attacker should have consumed 50 copper"
     );
@@ -416,23 +414,23 @@ contract LibBattleTest is PrimodiumTest {
     // both players should have their utilities removed
 
     assertEq(
-      ResourceCount.get(player, uint8(EResource.Iron)),
+      ResourceCount.get(homeRock, uint8(EResource.Iron)),
       playerOriginalIron,
       "Attacker should have gained back 100 iron"
     );
     assertEq(
-      ResourceCount.get(player, uint8(EResource.Copper)),
+      ResourceCount.get(homeRock, uint8(EResource.Copper)),
       playerOriginalCopper,
       "Attacker should have gained back 50 copper"
     );
 
     assertEq(
-      ResourceCount.get(enemy, uint8(EResource.Iron)),
+      ResourceCount.get(rock, uint8(EResource.Iron)),
       enemyOriginalIron - 70,
       "Defender should gain back 30 iron"
     );
     assertEq(
-      ResourceCount.get(enemy, uint8(EResource.Copper)),
+      ResourceCount.get(rock, uint8(EResource.Copper)),
       enemyOriginalCopper - 5,
       "Defender should gain back 5 copper"
     );
@@ -442,34 +440,34 @@ contract LibBattleTest is PrimodiumTest {
     setupUpdateUnitsAfterBattle();
     Home.setAsteroid(player, homeRock);
     UnitCount.set(enemy, rock, unit1, 100);
-    LibUnit.updateStoredUtilities(enemy, unit1, 100, true);
+    LibUnit.updateStoredUtilities(rock, unit1, 100, true);
     UnitCount.set(enemy, rock, unit2, 10);
-    LibUnit.updateStoredUtilities(enemy, unit2, 10, true);
+    LibUnit.updateStoredUtilities(rock, unit2, 10, true);
 
     assertEq(
-      ResourceCount.get(enemy, uint8(EResource.Iron)),
+      ResourceCount.get(rock, uint8(EResource.Iron)),
       enemyOriginalIron - 100,
       "Defender should have 100 consumed iron"
     );
 
     assertEq(
-      ResourceCount.get(enemy, uint8(EResource.Copper)),
+      ResourceCount.get(rock, uint8(EResource.Copper)),
       enemyOriginalCopper - 10,
       "Defender should have consumed 10 copper"
     );
 
-    LibUnit.updateStoredUtilities(player, unit1, 100, true);
-    LibUnit.updateStoredUtilities(player, unit2, 50, true);
+    LibUnit.updateStoredUtilities(homeRock, unit1, 100, true);
+    LibUnit.updateStoredUtilities(homeRock, unit2, 50, true);
 
     // diff from start to finish is 50
     assertEq(
-      ResourceCount.get(player, uint8(EResource.Iron)),
+      ResourceCount.get(homeRock, uint8(EResource.Iron)),
       playerOriginalIron - 100,
       "Attacker should have 100 consumed iron"
     );
     // diff from start to finish is 30
     assertEq(
-      ResourceCount.get(player, uint8(EResource.Copper)),
+      ResourceCount.get(homeRock, uint8(EResource.Copper)),
       playerOriginalCopper - 50,
       "Attacker should have consumed 30 copper"
     );
@@ -497,37 +495,33 @@ contract LibBattleTest is PrimodiumTest {
 
     // diff from start to finish is 50
     assertEq(
-      ResourceCount.get(player, uint8(EResource.Iron)),
+      ResourceCount.get(homeRock, uint8(EResource.Iron)),
       playerOriginalIron - 50,
       "Attacker should gain back 50 iron"
     );
     // diff from start to finish is 30
     assertEq(
-      ResourceCount.get(player, uint8(EResource.Copper)),
+      ResourceCount.get(homeRock, uint8(EResource.Copper)),
       playerOriginalCopper - 20,
       "Attacker should gain back 30 copper"
     );
 
     // diff from start to finish is 30
-    assertEq(ResourceCount.get(enemy, uint8(EResource.Iron)), enemyOriginalIron, "Enemy should gain back 100 iron");
+    assertEq(ResourceCount.get(rock, uint8(EResource.Iron)), enemyOriginalIron, "Enemy should gain back 100 iron");
     // diff from start to finish is 30
-    assertEq(
-      ResourceCount.get(enemy, uint8(EResource.Copper)),
-      enemyOriginalCopper,
-      "Enemy should gain back 10 copper"
-    );
+    assertEq(ResourceCount.get(rock, uint8(EResource.Copper)), enemyOriginalCopper, "Enemy should gain back 10 copper");
   }
 
   function testUpdateUnitsAfterBattleRaidDefenderWins() public {
     setupUpdateUnitsAfterBattle();
     Home.setAsteroid(player, homeRock);
     UnitCount.set(enemy, rock, unit1, 100);
-    LibUnit.updateStoredUtilities(enemy, unit1, 100, true);
+    LibUnit.updateStoredUtilities(rock, unit1, 100, true);
     UnitCount.set(enemy, rock, unit2, 10);
-    LibUnit.updateStoredUtilities(enemy, unit2, 10, true);
+    LibUnit.updateStoredUtilities(rock, unit2, 10, true);
 
-    LibUnit.updateStoredUtilities(player, unit1, 100, true);
-    LibUnit.updateStoredUtilities(player, unit2, 50, true);
+    LibUnit.updateStoredUtilities(homeRock, unit1, 100, true);
+    LibUnit.updateStoredUtilities(homeRock, unit2, 50, true);
 
     BattleResultData memory br = BattleResultData({
       attacker: player,
@@ -550,20 +544,20 @@ contract LibBattleTest is PrimodiumTest {
 
     // both players should have their utilities removed
 
-    assertEq(ResourceCount.get(player, uint8(EResource.Iron)), playerOriginalIron, "Attacker should lose 50 iron");
+    assertEq(ResourceCount.get(homeRock, uint8(EResource.Iron)), playerOriginalIron, "Attacker should lose 50 iron");
     assertEq(
-      ResourceCount.get(player, uint8(EResource.Copper)),
+      ResourceCount.get(homeRock, uint8(EResource.Copper)),
       playerOriginalCopper,
       "Attacker should lose 30 copper"
     );
 
     assertEq(
-      ResourceCount.get(enemy, uint8(EResource.Iron)),
+      ResourceCount.get(rock, uint8(EResource.Iron)),
       enemyOriginalIron - 70,
       "Defender should gain back 30 iron"
     );
     assertEq(
-      ResourceCount.get(enemy, uint8(EResource.Copper)),
+      ResourceCount.get(rock, uint8(EResource.Copper)),
       enemyOriginalCopper - 5,
       "Defender should gain back 5 copper"
     );
@@ -576,7 +570,7 @@ contract LibBattleTest is PrimodiumTest {
     Motherlode.set(rock, uint8(ESize.Large), uint8(EResource.Iron));
     P_IsUtility.set(uint8(EResource.Iron), false);
     P_MiningRate.set(unit1, 0, 1);
-    ProductionRate.set(enemy, uint8(EResource.Iron), 100 + (100 * uint256(ESize.Large)));
+    ProductionRate.set(rock, uint8(EResource.Iron), 100 + (100 * uint256(ESize.Large)));
 
     UnitCount.set(enemy, rock, unit1, 100);
 
@@ -594,11 +588,10 @@ contract LibBattleTest is PrimodiumTest {
     });
 
     LibBattle.updateUnitsAfterBattle(br, ESendType.Invade);
-    assertEq(ProductionRate.get(enemy, uint8(EResource.Iron)), 100, "Enemy should have 100 iron production");
     assertEq(
-      ProductionRate.get(player, uint8(EResource.Iron)),
-      70 * uint8(ESize.Large),
-      "Player should have 210 iron production"
+      ProductionRate.get(rock, uint8(EResource.Iron)),
+      (70 * uint256(ESize.Large)) + 100,
+      "Player should have 310 iron production"
     );
   }
 }

@@ -1,15 +1,16 @@
 import { Entity } from "@latticexyz/recs";
-import { encodeEntity, singletonEntity } from "@latticexyz/store-sync/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Cheatcodes } from "@primodiumxyz/mud-game-tools";
 import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
 import { Hex, createWalletClient, fallback, getContract, http, padHex, trim, webSocket } from "viem";
+import { encodeEntity } from "src/util/encode";
 import { EntityType, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
 import { generatePrivateKey } from "viem/accounts";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
-import { world } from "src/network/world";
+
 const resources: Record<string, Entity> = {
   iron: EntityType.Iron,
   copper: EntityType.Copper,

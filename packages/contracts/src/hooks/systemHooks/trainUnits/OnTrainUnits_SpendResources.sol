@@ -8,6 +8,7 @@ import { UnitKey } from "src/Keys.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
+import { OwnedBy } from "codegen/index.sol";
 
 /**
  * @title OnTrainUnits_SpendResources
@@ -33,7 +34,7 @@ contract OnTrainUnits_SpendResources is SystemHook {
     (bytes32 buildingEntity, uint8 unit, uint256 count) = abi.decode(args, (bytes32, uint8, uint256));
 
     // Spend the required resources for training units
-    LibResource.spendUnitRequiredResources(addressToEntity(msgSender), P_EnumToPrototype.get(UnitKey, unit), count);
+    LibResource.spendUnitRequiredResources(OwnedBy.get(buildingEntity), P_EnumToPrototype.get(UnitKey, unit), count);
   }
 
   /**

@@ -1,4 +1,5 @@
 import { Hex } from "viem";
+import { Entity } from "@latticexyz/recs";
 import { EUnit } from "contracts/config/enums";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
@@ -10,9 +11,9 @@ import { components } from "src/network/components";
 import { parseReceipt } from "../../analytics/parseReceipt";
 import { bigintToNumber } from "src/util/bigint";
 
-export const upgradeUnit = async (unit: EUnit, network: SetupNetworkResult) => {
+export const upgradeUnit = async (spaceRock: Entity, unit: EUnit, network: SetupNetworkResult) => {
   await execute(
-    () => network.worldContract.write.upgradeUnit([unit]),
+    () => network.worldContract.write.upgradeUnit([spaceRock as Hex, unit]),
     network,
     {
       id: hashEntities(TransactionQueueType.Upgrade, UnitEntityLookup[unit]),

@@ -17,31 +17,33 @@ contract UpgradeUnitSystemTest is PrimodiumTest {
   bytes32 unitPrototype = "unit";
   EUnit unit = EUnit(1);
   bytes32 player;
+  bytes32 homeAsteroid = "homeAsteroid";
 
   function setUp() public override {
     super.setUp();
     vm.startPrank(creator);
     player = addressToEntity(creator);
-
+    Home.setAsteroid(player, homeAsteroid);
+    OwnedBy.set(homeAsteroid, player);
     P_EnumToPrototype.set(UnitKey, uint8(unit), unitPrototype);
     P_MaxLevel.set(unitPrototype, 2);
   }
 
-  function testUpgradeUnit() public {
-    world.upgradeUnit(unit);
+  function testUpgradeUnit1() public {
+    world.upgradeUnit(homeAsteroid, unit);
     assertEq(UnitLevel.get(player, unitPrototype), 1);
   }
 
   function testUpgradeUnitMainBaseLevelRequirementNotMet() public {
     P_RequiredBaseLevel.set(unitPrototype, 1, 3);
     vm.expectRevert(bytes("[UpgradeUnitSystem] MainBase level requirement not met"));
-    world.upgradeUnit(unit);
+    world.upgradeUnit(homeAsteroid, unit);
   }
 
   function testUpgradeUnitMaxLevelReached() public {
     P_MaxLevel.set(unitPrototype, 0);
     vm.expectRevert(bytes("[UpgradeUnitSystem] Max level reached"));
-    world.upgradeUnit(unit);
+    world.upgradeUnit(homeAsteroid, unit);
   }
 
   function testUpgradeUnitHasRequiredResources() public {
@@ -50,9 +52,11 @@ contract UpgradeUnitSystemTest is PrimodiumTest {
     uint256[] memory requiredAmounts = new uint256[](1);
     requiredAmounts[0] = 100;
     P_RequiredUpgradeResources.set(unitPrototype, 1, requiredResources, requiredAmounts);
-    ResourceCount.set(player, Iron, 100);
-    world.upgradeUnit(unit);
-    assertEq(ResourceCount.get(player, Iron), 0);
+    MaxResourceCount.set(homeAsteroid, Iron, 100);
+    ResourceCount.set(homeAsteroid, Iron, 100);
+    UnitLevel.set(player, unitPrototype, 0);
+    world.upgradeUnit(homeAsteroid, unit);
+    assertEq(ResourceCount.get(homeAsteroid, Iron), 0);
   }
 
   function testUpgradeUnitWithoutRequiredResources() public {
@@ -63,11 +67,11 @@ contract UpgradeUnitSystemTest is PrimodiumTest {
     P_RequiredUpgradeResources.set(unitPrototype, 1, requiredResources, requiredAmounts);
 
     vm.expectRevert(bytes("[SpendResources] Not enough resources to spend"));
-    world.upgradeUnit(unit);
+    world.upgradeUnit(homeAsteroid, unit);
   }
 
   function invalidUnit() public {
     vm.expectRevert();
-    world.upgradeUnit(EUnit(uint8(100)));
+    world.upgradeUnit(homeAsteroid, EUnit(uint8(100)));
   }
 }

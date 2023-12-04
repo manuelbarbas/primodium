@@ -114,7 +114,7 @@ library LibSend {
     ESendType sendType
   ) internal view {
     require(
-      ResourceCount.get(playerEntity, uint8(EResource.U_MaxMoves)) > ArrivalCount.get(playerEntity),
+      ResourceCount.get(origin, uint8(EResource.U_MaxMoves)) > ArrivalCount.get(playerEntity),
       "[SendUnits] Reached max move count"
     );
 

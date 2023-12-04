@@ -8,15 +8,15 @@ import {
   defineUpdateSystem,
   namespaceWorld,
 } from "@latticexyz/recs";
-import { decodeEntity, singletonEntity } from "@latticexyz/store-sync/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
 import { ERock } from "contracts/config/enums";
 import { Scene } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { PIRATE_KEY } from "src/util/constants";
-import { hashKeyEntity } from "src/util/encode";
 import { ObjectPosition, OnClick, OnComponentSystem, SetValue, Tween } from "../../common/object-components/common";
+import { decodeEntity, hashKeyEntity } from "src/util/encode";
 import { Outline, Texture } from "../../common/object-components/sprite";
 import { ObjectText } from "../../common/object-components/text";
 import { getRandomRange } from "src/util/common";

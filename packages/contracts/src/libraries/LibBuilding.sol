@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import { entityToAddress } from "src/utils.sol";
 // tables
-import { HasBuiltBuilding, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint } from "codegen/index.sol";
+import { IsActive, HasBuiltBuilding, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint } from "codegen/index.sol";
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -34,7 +34,7 @@ library LibBuilding {
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
 
     require(buildingPrototype != MainBasePrototypeId, "[Destroy] Cannot destroy main base");
-    require(OwnedBy.get(buildingEntity) == playerEntity, "[Destroy] : only owner can destroy building");
+    require(OwnedBy.get(coord.parent) == playerEntity, "[Destroy] Only owner can destroy building");
   }
 
   /**
@@ -51,14 +51,14 @@ library LibBuilding {
     bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
     require(Spawned.get(playerEntity), "[BuildSystem] Player has not spawned");
     require(buildingType > EBuilding.NULL && buildingType < EBuilding.LENGTH, "[BuildSystem] Invalid building type");
-    require(
-      buildingType != EBuilding.MainBase || !HasBuiltBuilding.get(playerEntity, buildingPrototype),
-      "[BuildSystem] Cannot build more than one main base per wallet"
-    );
-    require(
-      coord.parent == Home.getAsteroid(playerEntity),
-      "[BuildSystem] Building must be built on your home asteroid"
-    );
+    if (buildingType == EBuilding.MainBase) {
+      require(
+        !HasBuiltBuilding.get(playerEntity, buildingPrototype),
+        "[BuildSystem] Cannot build more than one main base per wallet"
+      );
+      require(coord.parent == Home.getAsteroid(playerEntity), "[BuildSystem] Can only build MainBase on home asteroid");
+    }
+    require(OwnedBy.get(coord.parent) == playerEntity, "[BuildSystem] You can only build on an asteroid you control");
 
     require(!Spawned.get(getBuildingFromCoord(coord)), "[BuildSystem] Building already exists");
     require(
@@ -80,7 +80,7 @@ library LibBuilding {
     uint256 targetLevel = Level.get(buildingEntity) + 1;
     require(targetLevel > 1, "[UpgradeBuildingSystem] Cannot upgrade a non-building");
     require(
-      OwnedBy.get(buildingEntity) == playerEntity,
+      OwnedBy.get(coord.parent) == playerEntity,
       "[UpgradeBuildingSystem] Cannot upgrade a building that is not owned by you"
     );
 
@@ -111,28 +111,25 @@ library LibBuilding {
     Position.set(buildingEntity, coord);
     Level.set(buildingEntity, 1);
     LastClaimedAt.set(buildingEntity, block.timestamp);
-    OwnedBy.set(buildingEntity, playerEntity);
+    OwnedBy.set(buildingEntity, coord.parent);
     HasBuiltBuilding.set(playerEntity, buildingPrototype, true);
-    address playerAddress = entityToAddress(playerEntity);
-
+    IsActive.set(buildingEntity, true);
     if (P_UnitProdTypes.length(buildingPrototype, 1) != 0) {
-      UnitFactorySet.add(playerEntity, buildingEntity);
+      UnitFactorySet.add(coord.parent, buildingEntity);
     }
   }
 
   /// @notice Places building tiles for a constructed building
-  /// @param playerEntity The entity ID of the player
   /// @param buildingEntity The entity ID of the building
   /// @param buildingPrototype The type of building to construct
   /// @param position The coordinate where the building should be placed
   function placeBuildingTiles(
-    bytes32 playerEntity,
     bytes32 buildingEntity,
     bytes32 buildingPrototype,
     PositionData memory position
   ) internal {
     int32[] memory blueprint = P_Blueprint.get(buildingPrototype);
-    Bounds memory bounds = getPlayerBounds(playerEntity);
+    Bounds memory bounds = getSpaceRockBounds(position.parent);
 
     bytes32[] memory tiles = new bytes32[](blueprint.length / 2);
     for (uint256 i = 0; i < blueprint.length; i += 2) {
@@ -178,13 +175,13 @@ library LibBuilding {
     Position.set(tileEntity, coord);
   }
 
-  /// @notice Gets the boundary limits for a player
-  /// @param playerEntity The entity ID of the player
+  /// @notice Gets the boundary limits for a spaceRock
+  /// @param spaceRockEntity The entity ID of the spaceRock
   /// @return bounds The boundary limits
-  function getPlayerBounds(bytes32 playerEntity) internal view returns (Bounds memory bounds) {
-    uint256 playerLevel = Level.get(playerEntity);
+  function getSpaceRockBounds(bytes32 spaceRockEntity) internal view returns (Bounds memory bounds) {
+    uint256 spaceRockLevel = Level.get(spaceRockEntity);
     P_AsteroidData memory asteroidDims = P_Asteroid.get();
-    DimensionsData memory range = Dimensions.get(ExpansionKey, playerLevel);
+    DimensionsData memory range = Dimensions.get(ExpansionKey, spaceRockLevel);
 
     return
       Bounds({
