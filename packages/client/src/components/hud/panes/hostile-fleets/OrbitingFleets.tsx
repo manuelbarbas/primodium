@@ -2,7 +2,6 @@ import { ESendType } from "contracts/config/enums";
 import { useMemo } from "react";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { useNow } from "src/util/time";
 import { AttackingFleet } from "./AttackingFleet";
 
 export const OrbitingFleets: React.FC = () => {
@@ -10,7 +9,7 @@ export const OrbitingFleets: React.FC = () => {
   const fleets = components.Arrival.useAllWith({
     to: playerEntity,
   });
-  const now = useNow();
+  const now = components.Time.use()?.value ?? 0n;
 
   const attackingOrbitingFleets = useMemo(
     () =>

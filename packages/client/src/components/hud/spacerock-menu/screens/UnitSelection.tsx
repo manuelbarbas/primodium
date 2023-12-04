@@ -22,7 +22,6 @@ export const UnitSelection = () => {
   });
 
   useEffect(() => {
-    console.log("updating selected unit");
     setCount(1);
   }, [selectedUnit]);
 

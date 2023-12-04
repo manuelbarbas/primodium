@@ -43,7 +43,7 @@ const CommissionVessel: React.FC<{
     return getRecipe(EntityType.MiningVessel, level);
   }, [player]);
 
-  const hasEnough = useHasEnoughResources(recipe, player);
+  const hasEnough = useHasEnoughResources(recipe);
 
   const queueIdHash = hashEntities(TransactionQueueType.Train, building, index);
 
@@ -100,8 +100,8 @@ export const VesselSlots: React.FC<{
   const {
     resourceCount: vesselsAvailable,
     resourcesToClaim: vesselsToClaim,
-    maxStorage: maxVessels,
-  } = useFullResourceCount(EntityType.VesselCapacity, player);
+    resourceStorage: maxVessels,
+  } = useFullResourceCount(EntityType.VesselCapacity);
 
   const rawQueue = TrainingQueue.use(building);
   const queue = useMemo(() => {

@@ -31,6 +31,7 @@ export enum Tilesets {
 export enum DepthLayers {
   Rock = 0,
   Terrain = 0,
+  Tile = 1,
   Building = 400,
   Path = 500,
   Marker = 600,

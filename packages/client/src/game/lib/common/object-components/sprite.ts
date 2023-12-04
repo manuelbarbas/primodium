@@ -12,11 +12,11 @@ export const Texture = (key: string, frame?: string): GameObjectComponent<"Sprit
   };
 };
 
-export const Animation = (key: string): GameObjectComponent<"Sprite"> => {
+export const Animation = (key: string, stop?: boolean): GameObjectComponent<"Sprite"> => {
   return {
     id: "animation",
     once: (gameObject) => {
-      gameObject.play(key);
+      stop ? gameObject.stop() : gameObject.play(key);
     },
   };
 };

@@ -1,8 +1,8 @@
 import { Entity, Type } from "@latticexyz/recs";
 import { ESendType } from "contracts/config/enums";
 import { useMemo } from "react";
+import { components } from "src/network/components";
 import { world } from "src/network/world";
-import { getNow } from "src/util/time";
 import { BlockNumber } from "../clientComponents";
 import { createExtendedComponent } from "./ExtendedComponent";
 
@@ -49,7 +49,8 @@ export const createArrivalComponent = () => {
       if (filters.origin && elem?.origin !== filters.origin) return false;
       if (filters.destination && elem?.destination !== filters.destination) return false;
       if (filters.sendType && elem?.sendType !== filters.sendType) return false;
-      const now = getNow();
+
+      const now = components.Time.get()?.value ?? 0n;
       if (filters.onlyOrbiting && Number(elem.arrivalTime) >= now) return false;
       if (filters.onlyTransit && Number(elem.arrivalTime) < now) {
         return false;

@@ -34,7 +34,6 @@ contract OnDestroy_ClearUtility is SystemHook {
 
     // Get the building entity from the coordinates
     bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
-
     // Clear utility usage for the building
     LibResource.clearUtilityUsage(buildingEntity);
   }

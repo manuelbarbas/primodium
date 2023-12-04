@@ -11,7 +11,6 @@ import {
   SPEED_SCALE,
   UnitEnumLookup,
 } from "./constants";
-import { getNow } from "./time";
 
 export const getScale = (resource: Entity) => {
   if (
@@ -67,210 +66,173 @@ export function getMotherlodeResource(entity: Entity) {
 // in the future we never have to resolve or take into account mutliple space rock resources as they have to manualy transported between space rocks
 export function getPlayerFullResourceCounts(playerEntity: Entity) {
   const ownedMotherlodes = comps.OwnedMotherlodes.getWithKeys({ entity: playerEntity as Hex })?.value ?? [];
+  const motherlodeResources = ownedMotherlodes.map((value) => getFullResourceCounts(value as Entity));
+  const homeResources = getFullResourceCounts();
 
-  const homeFullResourceCounts = getFullResourceCounts(comps.Home.get(playerEntity)?.asteroid as Entity);
+  const combinedCounts: Record<Entity, ResourceCountData> = {};
 
-  const ownedMotherlodeFulLResourceCounts = ownedMotherlodes?.map((value) => {
-    return getFullResourceCounts(value as Entity);
-  });
-
-  return homeFullResourceCounts.map((value, index) => {
-    let resourcesToClaim = value?.resourcesToClaim ?? 0n;
-    let production = value?.production ?? 0n;
-    for (let i = 0; i < ownedMotherlodes.length; i++) {
-      resourcesToClaim += ownedMotherlodeFulLResourceCounts[i][index]?.resourcesToClaim ?? 0n;
-      const motherlodeProduction = ownedMotherlodeFulLResourceCounts[i][index].production ?? 0n;
-      if (motherlodeProduction > 0) production += motherlodeProduction;
+  // Function to sum resource counts
+  const sumResourceCounts = (resourceCounts: Record<Entity, ResourceCountData>) => {
+    for (const rawKey in resourceCounts) {
+      const key = rawKey as Entity;
+      if (!combinedCounts[key]) {
+        combinedCounts[key] = {
+          resourceCount: 0n,
+          resourcesToClaim: 0n,
+          resourceStorage: 0n,
+          production: 0n,
+          producedResource: 0n,
+        };
+      }
+      combinedCounts[key].resourceCount += resourceCounts[key].resourceCount;
+      combinedCounts[key].resourcesToClaim += resourceCounts[key].resourcesToClaim;
+      combinedCounts[key].resourceStorage += resourceCounts[key].resourceStorage;
+      combinedCounts[key].production += resourceCounts[key].production;
+      combinedCounts[key].producedResource += resourceCounts[key].producedResource;
     }
-    return {
-      resourceCount: value.resourceCount,
-      resourcesToClaim: resourcesToClaim,
-      resourceStorage: value.resourceStorage,
-      production: production,
-      producedResource: value.producedResource,
-    };
+  };
+
+  // Sum home resource counts
+  sumResourceCounts(homeResources);
+
+  // Sum each motherlode's resource counts
+  motherlodeResources.forEach((motherlodeResource) => {
+    sumResourceCounts(motherlodeResource);
   });
+
+  return combinedCounts;
 }
 
-export function getFullResourceCounts(spaceRockEntity: Entity) {
-  const consumptionTimeLengths: bigint[] = [];
-  consumptionTimeLengths.length = MUDEnums.EResource.length;
-  const player = comps.OwnedBy.getWithKeys({ entity: spaceRockEntity as Hex })?.value ?? comps.Account.get()?.value;
-  const playerLastClaimed = comps.LastClaimedAt.getWithKeys({ entity: spaceRockEntity as Hex })?.value ?? 0n;
-  const timeSinceClaimed =
-    ((getNow() - playerLastClaimed) * (comps.P_GameConfig?.get()?.worldSpeed ?? SPEED_SCALE)) / SPEED_SCALE;
-  return MUDEnums.EResource.map((resource: string, index: number) => {
+type ResourceCountData = {
+  resourceCount: bigint;
+  resourcesToClaim: bigint;
+  resourceStorage: bigint;
+  production: bigint;
+  producedResource: bigint;
+};
+
+export function getFullResourceCounts(spaceRockEntity?: Entity) {
+  const counts: Record<Entity, ResourceCountData> = {};
+  MUDEnums.EResource.forEach((_: string, index: number) => {
     if (index == 0 || index > MUDEnums.EResource.length) return {};
-
-    let resourceCount =
-      comps.ResourceCount.getWithKeys({ entity: spaceRockEntity as Hex, resource: index as EResource })?.value ?? 0n;
-
-    let resourceStorage =
-      comps.MaxResourceCount.getWithKeys({ entity: spaceRockEntity as Hex, resource: index as EResource })?.value ?? 0n;
-
-    const producedResource = player
-      ? comps.ProducedResource?.getWithKeys({ entity: player as Hex, resource: index as EResource })?.value ?? 0n
-      : 0n;
-    //each resource has a production and consumption value. these values need to be seperate so we can calculate best outcome of production and consumption
-    let productionRate =
-      comps.ProductionRate.getWithKeys({ entity: spaceRockEntity as Hex, resource: index as EResource })?.value ?? 0n;
-    let consumptionRate =
-      comps.ConsumptionRate.getWithKeys({ entity: spaceRockEntity as Hex, resource: index as EResource })?.value ?? 0n;
-
-    //if they are both equal no change will be made
-    if (productionRate == 0n && consumptionRate == 0n)
-      return {
-        resourceCount:
-          comps.ResourceCount.getWithKeys({ entity: spaceRockEntity as Hex, resource: index as EResource })?.value ??
-          0n,
-        resourcesToClaim: 0n,
-        resourceStorage: resourceStorage,
-        production: 0n,
-        producedResource: producedResource,
-      };
-
-    //first we calculate production
-    let increase = 0n;
-    if (productionRate > 0n) {
-      //check to see if this resource consumes another resource to be produced
-      const consumesResource = comps.P_ConsumesResource.getWithKeys({ resource: index as EResource })?.value ?? 0;
-
-      //if this resource consumes another resource the maxium time it can be produced is the maximum time that the required resource is consumed
-      const producedTime = consumesResource > 0 ? consumptionTimeLengths[consumesResource] : timeSinceClaimed;
-
-      //the amount of resource that has been produced
-      increase = productionRate * producedTime;
-
-      //if the condumption time for the required resource is less than the time passed than currently production is 0
-      if (producedTime < timeSinceClaimed) productionRate = 0n;
-    }
-
-    // the maximum amount of resourecs that will decrease if there is enough of the resource available decrease < resourceCount + increase
-    let decrease = consumptionRate * timeSinceClaimed;
-
-    //the maximum amount of time from the last update to this current time is the maximum amount of time this resource could have been consumed
-    consumptionTimeLengths[index] = timeSinceClaimed;
-
-    //if increase and decrease match than nothing to update
-    if (increase == decrease)
-      return {
-        resourceCount: resourceCount,
-        resourcesToClaim: 0n,
-        resourceStorage: resourceStorage,
-        production: 0n,
-        producedResource: producedResource,
-      };
-
-    if (resourceCount + increase < decrease) {
-      //if the decrease is more than the sum of increase and current amount than the sum is tha maximum that can be consumed
-      // we use this amount to see how much time the resource can be consumed
-      consumptionTimeLengths[index] = (resourceCount + increase) / consumptionRate;
-      //we use the time length to reduce current resource amount by the difference of the decrease and the increase
-      decrease = consumptionRate * consumptionTimeLengths[index];
-      //consumption is from current space rock and will be in the future
-      consumptionRate = 0n;
-    }
-
-    const motherlode = comps.Motherlode.getWithKeys({ entity: spaceRockEntity as Hex });
-    if (player && motherlode && motherlode.motherlodeType == index) {
-      resourceStorage =
-        comps.MaxResourceCount.getWithKeys({
-          entity: comps.Home.getWithKeys({ entity: player as Hex })?.asteroid as Hex,
-          resource: index as EResource,
-        })?.value ?? 0n;
-      resourceCount =
-        comps.ResourceCount.getWithKeys({
-          entity: comps.Home.getWithKeys({ entity: player as Hex })?.asteroid as Hex,
-          resource: index as EResource,
-        })?.value ?? 0n;
-    }
-
-    return {
-      resourceCount: resourceCount,
-      resourcesToClaim:
-        resourceCount + increase - decrease > resourceStorage
-          ? resourceStorage - resourceCount
-          : resourceCount + increase - decrease < 0
-          ? -resourceCount
-          : increase - decrease,
-      resourceStorage: resourceStorage,
-      production: productionRate - consumptionRate,
-      producedResource: producedResource,
-    };
+    const resourceEntity = ResourceEntityLookup[index as EResource];
+    if (!resourceEntity) return;
+    counts[resourceEntity] = getFullResourceCount(resourceEntity, spaceRockEntity);
   });
+  return counts;
 }
 
-export function getFullResourceCount(resourceID: Entity, playerEntity?: Entity) {
-  const worldSpeed = comps.P_GameConfig.get()?.worldSpeed ?? 100n;
+export function getFullResourceCount(resourceID: Entity, spaceRock?: Entity) {
+  let consumptionTimeLength = 0n;
+  const player = spaceRock
+    ? comps.OwnedBy.getWithKeys({ entity: spaceRock as Hex })?.value
+    : comps.Account.get()?.value;
+
+  spaceRock = spaceRock ?? (comps.Home.getWithKeys({ entity: player as Hex })?.asteroid as Entity | undefined);
+  if (!player || !spaceRock)
+    return {
+      resourceCount: 0n,
+      resourcesToClaim: 0n,
+      resourceStorage: 0n,
+      production: 0n,
+      producedResource: 0n,
+    };
+
+  const playerLastClaimed = comps.LastClaimedAt.getWithKeys({ entity: spaceRock as Hex })?.value ?? 0n;
+  const now = comps.Time.get()?.value ?? 0n;
+  const timeSinceClaimed =
+    ((now - playerLastClaimed) * (comps.P_GameConfig?.get()?.worldSpeed ?? SPEED_SCALE)) / SPEED_SCALE;
   const resource = ResourceEnumLookup[resourceID];
 
   if (resource == undefined) throw new Error("Resource not found" + resourceID);
 
-  playerEntity = playerEntity ?? comps.Account.get()?.value;
-  if (!playerEntity) throw new Error("No player entity");
-  const activeAsteroid = comps.Home.get(playerEntity)?.asteroid;
-  if (!activeAsteroid) throw new Error("No active asteroid");
+  let resourceCount = comps.ResourceCount.getWithKeys({ entity: spaceRock as Hex, resource })?.value ?? 0n;
 
-  const ownedMotherlodes = comps.OwnedMotherlodes.get(playerEntity)?.value;
-  let motherlodeProduction = 0n;
-  if (ownedMotherlodes) {
-    for (let i = 0; i < (ownedMotherlodes?.length ?? 0n); i++) {
-      motherlodeProduction +=
-        comps.ProductionRate.getWithKeys({ entity: ownedMotherlodes[i] as Hex, resource })?.value ?? 0n;
-    }
+  let resourceStorage =
+    comps.MaxResourceCount.getWithKeys({ entity: spaceRock as Hex, resource: resource })?.value ?? 0n;
+
+  const producedResource = comps.ProducedResource?.getWithKeys({ entity: player as Hex, resource })?.value ?? 0n;
+  //each resource has a production and consumption value. these values need to be seperate so we can calculate best outcome of production and consumption
+  let productionRate = comps.ProductionRate.getWithKeys({ entity: spaceRock as Hex, resource })?.value ?? 0n;
+  let consumptionRate =
+    comps.ConsumptionRate.getWithKeys({ entity: spaceRock as Hex, resource: resource })?.value ?? 0n;
+
+  //if they are both equal no change will be made
+  if (productionRate == 0n && consumptionRate == 0n)
+    return {
+      resourceCount: comps.ResourceCount.getWithKeys({ entity: spaceRock as Hex, resource: resource })?.value ?? 0n,
+      resourcesToClaim: 0n,
+      resourceStorage: resourceStorage,
+      production: 0n,
+      producedResource: producedResource,
+    };
+
+  //first we calculate production
+  let increase = 0n;
+  if (productionRate > 0n) {
+    //check to see if this resource consumes another resource to be produced
+    const consumesResource = comps.P_ConsumesResource.getWithKeys({ resource })?.value ?? 0;
+
+    //if this resource consumes another resource the maxium time it can be produced is the maximum time that the required resource is consumed
+    const producedTime = consumesResource > 0 ? consumptionTimeLength : timeSinceClaimed;
+
+    //the amount of resource that has been produced
+    increase = productionRate * producedTime;
+
+    //if the condumption time for the required resource is less than the time passed than currently production is 0
+    if (producedTime < timeSinceClaimed) productionRate = 0n;
   }
 
-  const producedCount =
-    comps.ProducedResource.getWithKeys({
-      entity: playerEntity as Hex,
-      resource,
-    })?.value ?? 0n;
-  const resourceCount =
-    comps.ResourceCount.getWithKeys({
-      entity: activeAsteroid as Hex,
-      resource,
-    })?.value ?? 0n;
+  // the maximum amount of resourecs that will decrease if there is enough of the resource available decrease < resourceCount + increase
+  let decrease = consumptionRate * timeSinceClaimed;
 
-  const maxStorage =
-    comps.MaxResourceCount.getWithKeys({
-      entity: activeAsteroid as Hex,
-      resource,
-    })?.value ?? 0n;
+  //the maximum amount of time from the last update to this current time is the maximum amount of time this resource could have been consumed
+  consumptionTimeLength = timeSinceClaimed;
 
-  const consumesResource = comps.P_ConsumesResource.getWithKeys({ resource });
+  //if increase and decrease match than nothing to update
+  if (increase == decrease)
+    return {
+      resourceCount: resourceCount,
+      resourcesToClaim: 0n,
+      resourceStorage: resourceStorage,
+      production: 0n,
+      producedResource: producedResource,
+    };
 
-  const production =
-    motherlodeProduction +
-    (comps.ProductionRate.getWithKeys({
-      entity: activeAsteroid as Hex,
-      resource,
-    })?.value ?? 0n) -
-    (comps.ConsumptionRate.getWithKeys({
-      entity: activeAsteroid as Hex,
-      resource,
-    })?.value ?? 0n);
+  if (resourceCount + increase < decrease) {
+    //if the decrease is more than the sum of increase and current amount than the sum is tha maximum that can be consumed
+    // we use this amount to see how much time the resource can be consumed
+    consumptionTimeLength = (resourceCount + increase) / consumptionRate;
+    //we use the time length to reduce current resource amount by the difference of the decrease and the increase
+    decrease = consumptionRate * consumptionTimeLength;
+    //consumption is from current space rock and will be in the future
+    consumptionRate = 0n;
+  }
 
-  const playerLastClaimed = comps.LastClaimedAt.getWithKeys({ entity: activeAsteroid as Hex })?.value ?? 0n;
-
-  const resourcesToClaimFromBuilding = (() => {
-    const toClaim = ((getNow() - playerLastClaimed) * production * worldSpeed) / SPEED_SCALE;
-    if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
-    else if (resourceCount + toClaim < 0n) return -resourceCount;
-    return toClaim;
-  })();
+  const motherlode = comps.Motherlode.getWithKeys({ entity: spaceRock as Hex });
+  if (player && motherlode && motherlode.motherlodeType == resource) {
+    const home = comps.Home.getWithKeys({ entity: player as Hex })?.asteroid as Hex;
+    resourceStorage = comps.MaxResourceCount.getWithKeys({ entity: home, resource })?.value ?? 0n;
+    resourceCount = comps.ResourceCount.getWithKeys({ entity: home, resource })?.value ?? 0n;
+  }
 
   return {
-    resourceCount,
-    resourcesToClaim: resourcesToClaimFromBuilding,
-    maxStorage,
-    production: (production * worldSpeed) / SPEED_SCALE,
-    producedCount,
+    resourceCount: resourceCount,
+    resourcesToClaim:
+      resourceCount + increase - decrease > resourceStorage
+        ? resourceStorage - resourceCount
+        : resourceCount + increase - decrease < 0
+        ? -resourceCount
+        : increase - decrease,
+    resourceStorage: resourceStorage,
+    production: productionRate - consumptionRate,
+    producedResource: producedResource,
   };
 }
 
-export function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, playerEntity: Entity, count = 1n) {
+export function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, spaceRock?: Entity, count = 1n) {
   const resourceAmounts = recipe.map((resource) => {
-    return getFullResourceCount(resource.id, playerEntity);
+    return getFullResourceCount(resource.id, spaceRock);
   });
 
   for (const [index, resource] of recipe.entries()) {
@@ -319,9 +281,10 @@ export function getRecipeDifference(
   return difference;
 }
 
-export function getMaxCountOfRecipe(recipe: ReturnType<typeof getRecipe>, playerEntity: Entity) {
+export function getMaxCountOfRecipe(recipe: ReturnType<typeof getRecipe>, spaceRock?: Entity) {
+  spaceRock = spaceRock ?? (comps.Home.getWithKeys({ entity: comps.Account.get()?.value as Hex })?.asteroid as Entity);
   const resourceAmounts = recipe.map((resource) => {
-    return getFullResourceCount(resource.id, playerEntity);
+    return getFullResourceCount(resource.id, spaceRock);
   });
 
   let count;
@@ -345,4 +308,9 @@ export function getMaxCountOfRecipe(recipe: ReturnType<typeof getRecipe>, player
   }
 
   return count ?? 0;
+}
+
+export function isUtility(resource: Entity) {
+  const id = ResourceEnumLookup[resource];
+  return comps.P_IsUtility.getWithKeys({ id })?.value ?? false;
 }

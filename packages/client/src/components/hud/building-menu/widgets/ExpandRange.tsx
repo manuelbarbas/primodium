@@ -23,7 +23,7 @@ export const ExpandRange: React.FC = () => {
   const homeAsteroid = components.Home.use(playerEntity)?.asteroid as Entity;
   const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = getUpgradeInfo(EntityType.Expansion, playerEntity);
 
-  const hasEnough = useHasEnoughResources(recipe, playerEntity);
+  const hasEnough = useHasEnoughResources(recipe);
   const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && !isResearched;
   const atMaxLevel = level >= maxLevel;
 

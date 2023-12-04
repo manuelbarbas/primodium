@@ -1,5 +1,4 @@
 import { Entity, Has, HasValue, defineComponentSystem, runQuery } from "@latticexyz/recs";
-import { getNow } from "src/util/time";
 import { getUnitTrainingTime } from "src/util/trainUnits";
 import { Hex } from "viem";
 import { components } from "../components";
@@ -27,7 +26,7 @@ export function setupTrainingQueues(mud: SetupResult) {
     const config = components.P_GameConfig.get();
     let startTime = LastClaimedAt.get(building, { value: 0n }).value - ClaimOffset.get(building, { value: 0n }).value;
     if (!owner || !startTime || !config) return;
-    const now = getNow();
+    const now = components.Time.get()?.value ?? 0n;
     const queueUnits = QueueUnits.getWithKeys({
       entity: building as Hex,
     });

@@ -38,7 +38,7 @@ library LibInvade {
       0
     );
     if (invader == br.winner) {
-      LibReinforce.recallAllReinforcements(defender, rockEntity);
+      LibReinforce.recallAllReinforcements(rockEntity);
       OwnedBy.set(rockEntity, invader);
 
       bytes32[] memory defenderOwnedMotherlodes = OwnedMotherlodes.get(defender);

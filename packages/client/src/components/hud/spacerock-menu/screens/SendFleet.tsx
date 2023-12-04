@@ -43,7 +43,6 @@ export const SendFleet: React.FC = () => {
   const attack = useMemo(
     () =>
       Object.entries(units).reduce((acc, [unit, count]) => {
-        console.log("unit:", getBlockTypeName(unit as Entity));
         const level = components.UnitLevel.getWithKeys({ entity: playerEntity as Hex, unit: unit as Hex })?.value ?? 0n;
         return acc + (components.P_Unit.getWithKeys({ entity: unit as Hex, level })?.attack ?? 0n) * count;
       }, 0n),
