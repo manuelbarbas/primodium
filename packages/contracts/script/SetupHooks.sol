@@ -176,7 +176,7 @@ function registerToggleBuildingHooks(
 }
 
 function registerMarketplaceHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
-  ResourceId systemId = getSystemResourceId("MarketplaceSystem");
+  ResourceId systemId = getSystemResourceId("MarketPlaceSystem");
   world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
 
   OnMarketPlace_TargetClaimResources onMarketPlace_TargetClaimResources = new OnMarketPlace_TargetClaimResources();
