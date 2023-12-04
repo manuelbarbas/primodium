@@ -57,31 +57,26 @@ library LibReinforce {
     bytes32 arrivalId
   ) internal {
     Arrival memory arrival = ArrivalsMap.get(playerEntity, rockEntity, arrivalId);
-    if (
-      arrival.sendType != ESendType.Reinforce || arrival.to != playerEntity || arrival.arrivalTime > block.timestamp
-    ) {
+    if (arrival.sendType != ESendType.Reinforce) {
       return;
     }
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (arrival.unitCounts[i] == 0) continue;
-      LibUnit.increaseUnitCount(playerEntity, Home.getAsteroid(playerEntity), unitPrototypes[i], arrival.unitCounts[i]);
+      LibUnit.increaseUnitCount(arrival.from, Home.getAsteroid(arrival.from), unitPrototypes[i], arrival.unitCounts[i]);
     }
     ArrivalCount.set(arrival.from, ArrivalCount.get(arrival.from) - 1);
     ArrivalsMap.remove(playerEntity, rockEntity, arrivalId);
   }
 
   /**
-   * @dev Recalls all reinforcements sent by a player to a specific rock.
-   * @param playerEntity The identifier of the player.
+   * @dev Recalls all reinforcements sent to a specific rock owned by some player.
    * @param rockEntity The identifier of the target rock.
    */
-  function recallAllReinforcements(bytes32 playerEntity, bytes32 rockEntity) internal {
-    bytes32 owner = OwnedBy.get(rockEntity);
-    require(owner != 0, "[Reinforce] Rock not owned");
+  function recallAllReinforcements(bytes32 rockEntity) internal {
+    bytes32 playerEntity = OwnedBy.get(rockEntity);
     bytes32[] memory arrivalKeys = ArrivalsMap.keys(playerEntity, rockEntity);
-
     for (uint256 i = 0; i < arrivalKeys.length; i++) {
       recallReinforcement(playerEntity, rockEntity, arrivalKeys[i]);
     }

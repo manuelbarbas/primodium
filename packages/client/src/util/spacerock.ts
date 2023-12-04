@@ -116,21 +116,17 @@ export function getSpaceRockInfo(spaceRock: Entity) {
     y: 0,
     parent: "0" as Entity,
   });
+  const resources = [...ResourceStorages].reduce((acc, resource) => {
+    const { resourceCount, resourcesToClaim } = getFullResourceCount(resource, spaceRock);
+    const amount = resourceCount + resourcesToClaim;
 
-  const resources = ownedBy
-    ? [...ResourceStorages]
-        .map((resource) => {
-          const { resourceCount, resourcesToClaim } = getFullResourceCount(resource, ownedBy);
+    if (amount) {
+      // only add to the array if amount is non-zero
+      acc.push({ id: resource, amount });
+    }
 
-          const amount = resourceCount + resourcesToClaim;
-
-          return {
-            id: resource,
-            amount,
-          };
-        })
-        .filter((resource) => resource.amount)
-    : [];
+    return acc;
+  }, [] as { id: Entity; amount: bigint }[]);
 
   const motherlodeResource = getMotherlodeResource(spaceRock);
 

@@ -1,8 +1,8 @@
-import React, { useState, createContext, useContext, ReactNode, useEffect } from "react";
-import ReactDOM from "react-dom";
-import { Button } from "./Button";
 import { primodium } from "@game/api";
+import React, { ReactNode, createContext, useContext, useEffect, useState } from "react";
+import ReactDOM from "react-dom";
 import { FaTimes } from "react-icons/fa";
+import { Button } from "./Button";
 
 interface ModalContextType {
   isOpen: boolean;
@@ -65,9 +65,9 @@ OverlayModal.Content = function ModalContent({ children }) {
   if (!isOpen) return null;
 
   return ReactDOM.createPortal(
-    <div className="h-screen w-screen absolute bg-neutral top-0 z-50 flex flex-col font-mono">
-      <div className="w-full bg-base-100 flex justify-between p-2 border-b border-secondary items-center">
-        <b>{title}</b>
+    <div className="h-screen w-screen absolute bg-primary top-0 z-50 flex flex-col font-mono">
+      <div className="w-full bg-base-100 flex justify-between p-2 items-center">
+        <p>{title}</p>
         <button className="btn btn-ghost btn-sm float-right" onClick={() => setIsOpen(false)}>
           <FaTimes />
         </button>

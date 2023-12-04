@@ -182,10 +182,11 @@ const Objective: React.FC<{
               {rewardRecipe.map((resource) => {
                 let canClaim = true;
                 if (resource.type === ResourceType.Resource) {
-                  const { resourceCount, resourcesToClaim, maxStorage } = getFullResourceCount(
-                    resource.id,
-                    playerEntity
-                  );
+                  const {
+                    resourceCount,
+                    resourcesToClaim,
+                    resourceStorage: maxStorage,
+                  } = getFullResourceCount(resource.id, playerEntity);
 
                   canClaim = resourceCount + resourcesToClaim + resource.amount <= maxStorage;
                 }

@@ -7,7 +7,7 @@ import { ResourceImage } from "src/util/constants";
 
 export const UtilityLabel = ({ name, resourceId }: { name: string; resourceId: Entity }) => {
   const playerEntity = useMud().network.playerEntity;
-  const { resourceCount } = useFullResourceCount(resourceId, playerEntity);
+  const { resourceCount } = useFullResourceCount(resourceId);
 
   const resourceIcon = ResourceImage.get(resourceId);
 

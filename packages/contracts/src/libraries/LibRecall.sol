@@ -39,24 +39,31 @@ library LibRecall {
     bytes32 rockEntity,
     bytes32 arrivalId
   ) internal {
-    Arrival memory arrival = ArrivalsMap.get(playerEntity, rockEntity, arrivalId);
-    recallArrivalRaw(playerEntity, rockEntity, arrivalId, arrival);
+    Arrival memory arrival;
+    bytes32 owner = OwnedBy.get(rockEntity);
+    if (ArrivalsMap.has(playerEntity, rockEntity, arrivalId)) {
+      arrival = ArrivalsMap.get(playerEntity, rockEntity, arrivalId);
+    } else if (owner > 0 && ArrivalsMap.has(owner, rockEntity, arrivalId)) {
+      arrival = ArrivalsMap.get(owner, rockEntity, arrivalId);
+    } else {
+      revert("[Recall] invalid arrival");
+    }
+    require(arrival.from == playerEntity, "[Recall] Arrival not sent by player");
+    recallArrivalRaw(rockEntity, arrivalId, arrival);
   }
 
   /**
    * @dev Recalls units sent by a player.
-   * @param playerEntity The identifier of the player.
    * @param rockEntity The identifier of the target rock.
+   * @param arrivalId The identifier of the arrival ro recall.
    * @param arrival The arrival to recall.
    */
   function recallArrivalRaw(
-    bytes32 playerEntity,
     bytes32 rockEntity,
     bytes32 arrivalId,
     Arrival memory arrival
   ) internal {
-    bytes32 controller = arrival.sendType == ESendType.Reinforce ? arrival.to : arrival.from;
-    require(controller == playerEntity, "[Recall] Arrival not owned by sender");
+    bytes32 playerEntity = arrival.from;
     require(arrival.arrivalTime < block.timestamp, "[Recall] Arrival not arrived yet");
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
@@ -65,7 +72,8 @@ library LibRecall {
       LibUnit.increaseUnitCount(playerEntity, Home.getAsteroid(playerEntity), unitPrototypes[i], arrival.unitCounts[i]);
     }
     ArrivalCount.set(arrival.from, ArrivalCount.get(arrival.from) - 1);
-    ArrivalsMap.remove(playerEntity, rockEntity, arrivalId);
+    bytes32 arrivalsMapPlayer = arrival.sendType == ESendType.Reinforce ? arrival.to : arrival.from;
+    ArrivalsMap.remove(arrivalsMapPlayer, rockEntity, arrivalId);
   }
 
   /**
@@ -79,14 +87,15 @@ library LibRecall {
     bytes32 rockEntity,
     ESendType sendType
   ) internal {
-    bytes32[] memory arrivalKeys = ArrivalsMap.keys(playerEntity, rockEntity);
+    bytes32 arrivalsMapPlayer = sendType == ESendType.Reinforce ? OwnedBy.get(rockEntity) : playerEntity;
+    bytes32[] memory arrivalKeys = ArrivalsMap.keys(arrivalsMapPlayer, rockEntity);
     bool foundArrivalToRecall = false;
     for (uint256 i = 0; i < arrivalKeys.length; i++) {
-      Arrival memory arrival = ArrivalsMap.get(playerEntity, rockEntity, arrivalKeys[i]);
+      Arrival memory arrival = ArrivalsMap.get(arrivalsMapPlayer, rockEntity, arrivalKeys[i]);
       if (arrival.from != playerEntity || arrival.arrivalTime > block.timestamp) continue;
       if (arrival.sendType != sendType) continue;
       foundArrivalToRecall = true;
-      recallArrivalRaw(playerEntity, rockEntity, arrivalKeys[i], arrival);
+      recallArrivalRaw(rockEntity, arrivalKeys[i], arrival);
     }
     require(foundArrivalToRecall, "[Recall] No compatible arrivals to recall");
   }
@@ -102,7 +111,16 @@ library LibRecall {
     for (uint256 i = 0; i < arrivalKeys.length; i++) {
       Arrival memory arrival = ArrivalsMap.get(playerEntity, rockEntity, arrivalKeys[i]);
       if (arrival.from != playerEntity || arrival.arrivalTime > block.timestamp) continue;
-      recallArrivalRaw(playerEntity, rockEntity, arrivalKeys[i], arrival);
+      recallArrivalRaw(rockEntity, arrivalKeys[i], arrival);
+    }
+    bytes32 owner = OwnedBy.get(rockEntity);
+    if (owner > 0 && owner != playerEntity) {
+      arrivalKeys = ArrivalsMap.keys(owner, rockEntity);
+      for (uint256 i = 0; i < arrivalKeys.length; i++) {
+        Arrival memory arrival = ArrivalsMap.get(owner, rockEntity, arrivalKeys[i]);
+        if (arrival.from != playerEntity || arrival.arrivalTime > block.timestamp) continue;
+        recallArrivalRaw(rockEntity, arrivalKeys[i], arrival);
+      }
     }
   }
 }
