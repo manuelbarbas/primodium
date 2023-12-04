@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { BlockNumber } from "src/network/components/clientComponents";
 import { getRecipe, hasEnoughResources } from "src/util/resource";
 
-export const useHasEnoughResources = (recipe: ReturnType<typeof getRecipe>, playerEntity: Entity, count = 1n) => {
+export const useHasEnoughResources = (recipe: ReturnType<typeof getRecipe>, spaceRock?: Entity, count = 1n) => {
   const [enoughResources, setEnoughResources] = useState(false);
   const { value: blockNumber } = BlockNumber.use(undefined, {
     value: 0n,
@@ -11,8 +11,8 @@ export const useHasEnoughResources = (recipe: ReturnType<typeof getRecipe>, play
   });
 
   useEffect(() => {
-    setEnoughResources(hasEnoughResources(recipe, playerEntity, count));
-  }, [blockNumber, recipe, count, playerEntity]);
+    setEnoughResources(hasEnoughResources(recipe, spaceRock, count));
+  }, [blockNumber, recipe, count, spaceRock]);
 
   return enoughResources;
 };

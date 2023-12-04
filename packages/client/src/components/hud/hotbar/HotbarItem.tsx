@@ -36,7 +36,7 @@ const HotbarItem: React.FC<{
   const requiredLevel = components.P_RequiredBaseLevel.getWithKeys({ prototype: building as Hex, level: 1n })?.value;
   const unlocked = playerLevel >= (requiredLevel ?? 0n);
 
-  const hasEnough = useHasEnoughResources(getRecipe(building, 1n), playerEntity);
+  const hasEnough = useHasEnoughResources(getRecipe(building, 1n));
 
   const keybindAction = useMemo(() => {
     if (!keybinds) return;

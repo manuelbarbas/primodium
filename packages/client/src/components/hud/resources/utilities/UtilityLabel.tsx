@@ -6,21 +6,20 @@ import { ResourceImage } from "src/util/constants";
 
 export const UtilityLabel = ({ name, resourceId }: { name: string; resourceId: Entity }) => {
   const playerEntity = useMud().network.playerEntity;
-  const { resourceCount } = useFullResourceCount(resourceId, playerEntity);
+  const { resourceCount } = useFullResourceCount(resourceId);
 
   const resourceIcon = ResourceImage.get(resourceId);
 
   return (
-    <div className="mx-1">
-      <ResourceIconTooltip
-        name={name}
-        playerEntity={playerEntity}
-        amount={resourceCount}
-        resource={resourceId}
-        image={resourceIcon ?? ""}
-        validate={false}
-        fontSize={"sm"}
-      />
-    </div>
+    <ResourceIconTooltip
+      name={name}
+      playerEntity={playerEntity}
+      amount={resourceCount}
+      resource={resourceId}
+      image={resourceIcon ?? ""}
+      validate={false}
+      fontSize={"sm"}
+      className="m-1"
+    />
   );
 };

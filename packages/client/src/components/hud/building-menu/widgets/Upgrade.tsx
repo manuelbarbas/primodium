@@ -23,7 +23,7 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
   }).value;
 
   const buildingInfo = useBuildingInfo(building);
-  const hasEnough = useHasEnoughResources(buildingInfo?.upgrade?.recipe ?? [], playerEntity);
+  const hasEnough = useHasEnoughResources(buildingInfo?.upgrade?.recipe ?? []);
 
   if (!buildingInfo) return null;
   const { position, level, maxLevel, upgrade } = buildingInfo;

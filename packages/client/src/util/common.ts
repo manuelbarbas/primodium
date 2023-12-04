@@ -60,9 +60,12 @@ function getDecimals(num: number, max = 3) {
   return num.toFixed(digits);
 }
 
-export function formatNumber(num: number | bigint, options?: { fractionDigits?: number; short?: boolean }): string {
+export function formatNumber(
+  num: number | bigint,
+  options?: { fractionDigits?: number; short?: boolean; showZero?: boolean }
+): string {
   const digits = options?.fractionDigits === undefined ? 0 : options.fractionDigits;
-  if (num === 0 || num === 0n) return "--";
+  if (num === 0 || num === 0n) return options?.showZero ? "0" : "--";
 
   const shorten = (n: number): string => {
     const units = ["", "K", "M", "B", "T"];
