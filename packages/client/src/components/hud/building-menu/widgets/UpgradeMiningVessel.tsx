@@ -28,7 +28,7 @@ export const UpgradeMiningVessel: React.FC = () => {
 
   const { level, maxLevel, mainBaseLvlReq, recipe } = getUpgradeInfo(EntityType.MiningVessel, player);
 
-  const hasEnough = useHasEnoughResources(recipe, player);
+  const hasEnough = useHasEnoughResources(recipe);
   const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && level < maxLevel;
   const atMaxLevel = level >= maxLevel;
 
