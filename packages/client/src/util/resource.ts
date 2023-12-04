@@ -11,7 +11,6 @@ import {
   SPEED_SCALE,
   UnitEnumLookup,
 } from "./constants";
-import { getNow } from "./time";
 
 export const getScale = (resource: Entity) => {
   if (
@@ -140,8 +139,9 @@ export function getFullResourceCount(resourceID: Entity, spaceRock?: Entity) {
     };
 
   const playerLastClaimed = comps.LastClaimedAt.getWithKeys({ entity: spaceRock as Hex })?.value ?? 0n;
+  const now = comps.Time.get()?.value ?? 0n;
   const timeSinceClaimed =
-    ((getNow() - playerLastClaimed) * (comps.P_GameConfig?.get()?.worldSpeed ?? SPEED_SCALE)) / SPEED_SCALE;
+    ((now - playerLastClaimed) * (comps.P_GameConfig?.get()?.worldSpeed ?? SPEED_SCALE)) / SPEED_SCALE;
   const resource = ResourceEnumLookup[resourceID];
 
   if (resource == undefined) throw new Error("Resource not found" + resourceID);

@@ -15,6 +15,7 @@ import {
   parseEther,
   webSocket,
 } from "viem";
+import { createClock } from "./createClock";
 import { otherTables } from "./otherTables";
 import { NetworkConfig } from "./types";
 import { world } from "./world";
@@ -76,6 +77,12 @@ export async function setupNetwork(networkConfig: NetworkConfig) {
     setInterval(requestDrip, 20000);
   }
 
+  const clock = createClock(latestBlock$, {
+    period: 1000,
+    initialTime: 0,
+    syncInterval: 10000,
+  });
+
   return {
     world,
     mudConfig,
@@ -90,5 +97,6 @@ export async function setupNetwork(networkConfig: NetworkConfig) {
     waitForTransaction,
     worldContract,
     write$: write$.asObservable().pipe(share()),
+    clock,
   };
 }

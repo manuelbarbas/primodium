@@ -8,7 +8,6 @@ import { FaCrosshairs, FaShieldAlt } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
 import { Button } from "src/components/core/Button";
 import { components } from "src/network/components";
-import { useNow } from "src/util/time";
 import { OrbitActionButton } from "./OrbitActionButton";
 
 export const LabeledValue: React.FC<{
@@ -68,7 +67,7 @@ export const Fleet: React.FC<{
     y: 0,
     parent: "0" as Entity,
   });
-  const timeRemaining = arrivalTime - useNow();
+  const timeRemaining = arrivalTime - (components.Time.use()?.value ?? 0n);
 
   const arrival = components.Arrival.getEntity(arrivalEntity);
 
