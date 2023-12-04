@@ -51,7 +51,7 @@ export function createClock(
 
   latestBlock$
     .pipe(
-      map((block) => Number(block.timestamp) * 1000), // Map to timestamp in ms
+      map((block) => Number(block.timestamp)), // Map to timestamp in ms
       filter((blockTimestamp) => blockTimestamp !== clock.lastUpdateTime), // Ignore if the clock was already refreshed with this block
       filter((blockTimestamp) => blockTimestamp !== clock.currentTime) // Ignore if the current local timestamp is correct
     )

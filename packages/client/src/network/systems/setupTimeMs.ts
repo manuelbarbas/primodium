@@ -3,12 +3,12 @@ import { components } from "../components";
 import { SetupResult } from "../types";
 import { world } from "../world";
 
-export function setupTimeMs({
+export function setupTime({
   network: {
     clock: { time$ },
   },
 }: SetupResult) {
   defineRxSystem(world, time$, (time) => {
-    components.TimeMs.set({ value: BigInt(time) });
+    components.Time.set({ value: BigInt(time) });
   });
 }

@@ -2,7 +2,6 @@ import { ESendType } from "contracts/config/enums";
 import { useMemo } from "react";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { useNow } from "src/util/time";
 import { AttackingFleet } from "./AttackingFleet";
 
 export const IncomingFleets: React.FC = () => {
@@ -10,7 +9,7 @@ export const IncomingFleets: React.FC = () => {
   const fleets = components.Arrival.useAllWith({
     to: playerEntity,
   });
-  const now = useNow();
+  const time = components.Time.use()?.value ?? 0n;
 
   const attackingIncomingFleets = useMemo(
     () =>
@@ -23,11 +22,11 @@ export const IncomingFleets: React.FC = () => {
         if (fleet.sendType === ESendType.Reinforce) return null;
 
         //remove orbiting arrivals
-        if (fleet.arrivalTime < now) return null;
+        if (fleet.arrivalTime < time) return null;
 
         return fleet;
       }),
-    [now, fleets]
+    [time, fleets]
   );
 
   return (
