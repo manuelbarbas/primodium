@@ -12,12 +12,21 @@ import { Badge } from "src/components/core/Badge";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { Modal } from "src/components/core/Modal";
 import { SendFleet } from "./SendFleet";
+import { useFleetMoves } from "src/hooks/useFleetMoves";
+import { ERock, ESendType } from "contracts/config/enums";
+import { Land } from "./Land";
 
 export const FleetActions = () => {
   const { playerEntity } = useMud().network;
   const selectedAsteroid = components.SelectedRock.use()?.value as Entity | undefined;
   const owner = components.OwnedBy.use(selectedAsteroid)?.value as Entity | undefined;
   const units = components.Hangar.use(selectedAsteroid ?? singletonEntity);
+  const fleetMoves = useFleetMoves();
+  const orbitingFleets = components.Arrival.use({
+    from: playerEntity,
+    onlyOrbiting: true,
+    destination: selectedAsteroid ?? singletonEntity,
+  }).filter((elem) => elem?.sendType !== ESendType.Reinforce);
 
   const getUnitCount = useCallback(
     (unit: Entity) => {
@@ -44,12 +53,23 @@ export const FleetActions = () => {
   return (
     <div className="flex flex-col items-center gap-1 m-1">
       <SecondaryCard className="flex flex-row w-fit gap-1 m-1">
-        <Modal title="Send Fleet">
-          <Modal.Content className="w-[51rem] h-96">
-            <SendFleet />
-          </Modal.Content>
-          <Modal.IconButton className="btn-md btn-secondary" imageUri="/img/icons/outgoingicon.png" text="send fleet" />
-        </Modal>
+        {orbitingFleets.length === 0 && (
+          <Modal title="Send Fleet">
+            <Modal.Content className="w-[51rem] h-96">
+              <SendFleet />
+            </Modal.Content>
+            <Modal.IconButton
+              disabled={!fleetMoves}
+              className="btn-md btn-secondary"
+              imageUri="/img/icons/outgoingicon.png"
+              text="send fleet"
+            />
+          </Modal>
+        )}
+        <Land
+          destination={selectedAsteroid ?? singletonEntity}
+          rockType={components.RockType.get(selectedAsteroid)?.value ?? ERock.Motherlode}
+        />
       </SecondaryCard>
       <div className="text-xs opacity-75 font-bold w-full flex justify-around items-center mb-1 gap-2">
         <Badge className="flex items-center gap-1">

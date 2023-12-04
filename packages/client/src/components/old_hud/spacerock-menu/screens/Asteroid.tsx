@@ -4,7 +4,7 @@ import { getSpaceRockInfo } from "src/util/spacerock";
 import { GracePeriod } from "../../GracePeriod";
 import { AsteroidResource } from "../widgets/AsteroidResource";
 import { Header } from "../widgets/Header";
-import { Land } from "../widgets/Land";
+import { Land } from "../../../hud/spacerock-menu/widgets/fleet-send/Land";
 import { Raid } from "../widgets/Raid";
 import { Reinforce } from "../widgets/Reinforce";
 

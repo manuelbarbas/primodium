@@ -13,11 +13,14 @@ import { IconLabel } from "src/components/core/IconLabel";
 import { formatNumber } from "src/util/common";
 import { Badge } from "src/components/core/Badge";
 import { FaExternalLinkAlt } from "react-icons/fa";
+import { ERock } from "contracts/config/enums";
+import { Button, IconButton } from "src/components/core/Button";
 
 export const AllUnitLabels = () => {
   const { playerEntity } = useMud().network;
   const selectedAsteroid = components.SelectedRock.use()?.value as Entity | undefined;
   const owner = components.OwnedBy.use(selectedAsteroid)?.value as Entity | undefined;
+  const rockType = components.RockType.get(selectedAsteroid ?? singletonEntity)?.value ?? ERock.Motherlode;
   const units = components.Hangar.use(selectedAsteroid ?? singletonEntity);
 
   const getUnitCount = useCallback(
@@ -90,11 +93,18 @@ export const AllUnitLabels = () => {
           )}
         </Badge>
 
-        {playerEntity === owner && (
+        {playerEntity === owner && rockType === ERock.Asteroid && (
           <Badge className="gap-1 items-center">
             <div className="animate-pulse bg-success w-1 h-1 rounded-box" />0 ATTACKING FLEETS{" "}
             <FaExternalLinkAlt className="opacity-75 scale-90" />
           </Badge>
+        )}
+
+        {playerEntity === owner && rockType === ERock.Motherlode && (
+          <div className="flex gap-1">
+            <IconButton imageUri="img/icons/mainbaseicon.png" text="recall" className="btn-xs btn-warning" />
+            <IconButton imageUri="img/icons/reinforcementicon.png" text="reinforce" className="btn-xs btn-success" />
+          </div>
         )}
       </div>
     </div>
