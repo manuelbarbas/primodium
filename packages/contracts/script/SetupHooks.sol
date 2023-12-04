@@ -82,7 +82,6 @@ import { OnToggleBuilding_MaxStorage } from "src/hooks/systemHooks/toggleBuildin
 import { OnToggleBuilding_ProductionRate } from "src/hooks/systemHooks/toggleBuilding/OnToggleBuilding_ProductionRate.sol";
 import { OnToggleBuilding_Utility } from "src/hooks/systemHooks/toggleBuilding/OnToggleBuilding_Utility.sol";
 
-import { OnMarketPlace_TargetClaimResources } from "src/hooks/systemHooks/marketPlace/OnMarketPlace_TargetClaimResources.sol";
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
 import { BEFORE_SPLICE_STATIC_DATA, AFTER_SET_RECORD, ALL as STORE_ALL } from "@latticexyz/store/src/storeHookTypes.sol";
 
@@ -136,58 +135,6 @@ function registerScoreHook(IWorld world) {
   OnScore_Alliance_Score onScore_Alliance_Score = new OnScore_Alliance_Score();
   world.grantAccess(AllianceTableId, address(onScore_Alliance_Score));
   world.registerStoreHook(ScoreTableId, onScore_Alliance_Score, BEFORE_SPLICE_STATIC_DATA);
-}
-
-function registerToggleBuildingHooks(
-  IWorld world,
-  OnBefore_ClaimResources onBefore_ClaimResources,
-  OnBefore_ClaimUnits onBefore_ClaimUnits
-) {
-  ResourceId systemId = getSystemResourceId("ToggleBuildingSystem");
-  world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
-
-  world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
-
-  OnToggleBuilding_MaxStorage onToggleBuilding_MaxStorage = new OnToggleBuilding_MaxStorage();
-  address hookAddress = address(onToggleBuilding_MaxStorage);
-  world.grantAccess(ResourceCountTableId, hookAddress);
-  world.grantAccess(MaxResourceCountTableId, hookAddress);
-  world.registerSystemHook(systemId, onToggleBuilding_MaxStorage, AFTER_CALL_SYSTEM);
-
-  OnToggleBuilding_ProductionRate onToggleBuilding_ProductionRate = new OnToggleBuilding_ProductionRate();
-  hookAddress = address(onToggleBuilding_ProductionRate);
-  world.grantAccess(ProductionRateTableId, hookAddress);
-  world.grantAccess(MaxResourceCountTableId, hookAddress);
-  world.grantAccess(ResourceCountTableId, hookAddress);
-  world.grantAccess(MapItemUtilitiesTableId, hookAddress);
-  world.grantAccess(MapUtilitiesTableId, hookAddress);
-  world.grantAccess(MapItemStoredUtilitiesTableId, hookAddress);
-  world.grantAccess(ConsumptionRateTableId, hookAddress);
-  world.registerSystemHook(systemId, onToggleBuilding_ProductionRate, AFTER_CALL_SYSTEM);
-
-  OnToggleBuilding_Utility onToggleBuilding_Utility = new OnToggleBuilding_Utility();
-  hookAddress = address(onToggleBuilding_Utility);
-  world.grantAccess(MapItemUtilitiesTableId, hookAddress);
-  world.grantAccess(MapUtilitiesTableId, hookAddress);
-  world.grantAccess(MapItemStoredUtilitiesTableId, hookAddress);
-  world.grantAccess(MaxResourceCountTableId, hookAddress);
-  world.grantAccess(ResourceCountTableId, hookAddress);
-  world.registerSystemHook(systemId, onToggleBuilding_Utility, AFTER_CALL_SYSTEM);
-}
-
-function registerMarketplaceHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
-  ResourceId systemId = getSystemResourceId("MarketPlaceSystem");
-  world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
-
-  OnMarketPlace_TargetClaimResources onMarketPlace_TargetClaimResources = new OnMarketPlace_TargetClaimResources();
-  world.grantAccess(ResourceCountTableId, address(onMarketPlace_TargetClaimResources));
-  world.grantAccess(MapItemUtilitiesTableId, address(onMarketPlace_TargetClaimResources));
-  world.grantAccess(MapUtilitiesTableId, address(onMarketPlace_TargetClaimResources));
-  world.grantAccess(MapItemStoredUtilitiesTableId, address(onMarketPlace_TargetClaimResources));
-  world.grantAccess(LastClaimedAtTableId, address(onMarketPlace_TargetClaimResources));
-  world.grantAccess(ClaimOffsetTableId, address(onMarketPlace_TargetClaimResources));
-  world.grantAccess(ProducedResourceTableId, address(onMarketPlace_TargetClaimResources));
-  world.registerSystemHook(systemId, onMarketPlace_TargetClaimResources, BEFORE_CALL_SYSTEM);
 }
 
 function registerToggleBuildingHooks(
