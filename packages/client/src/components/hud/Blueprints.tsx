@@ -8,6 +8,8 @@ import { Hex } from "viem";
 import { Button } from "../core/Button";
 import { getBlockTypeName } from "src/util/common";
 import { FaLock } from "react-icons/fa";
+import { BlueprintInfo } from "./BlueprintInfo";
+import { SelectedBuilding } from "src/network/components/clientComponents";
 
 const Blueprint: React.FC<{
   buildingType: Entity;
@@ -51,35 +53,52 @@ const Blueprint: React.FC<{
 };
 
 export const Blueprints = () => {
+  const selectedBuilding = components.SelectedBuilding.use()?.value;
+
   return (
-    <div className="flex h-fit w-full gap-1 items-start">
-      <SecondaryCard className="gap-2 items-center">
-        <p className="text-xs opacity-50 font-bold pb-2">BASIC</p>
-        <Blueprint buildingType={EntityType.IronMine} />
-        <Blueprint buildingType={EntityType.CopperMine} />
-        <Blueprint buildingType={EntityType.LithiumMine} />
-        <Blueprint buildingType={EntityType.SulfurMine} />
-        <Blueprint buildingType={EntityType.Garage} />
-        <Blueprint buildingType={EntityType.Workshop} />
-      </SecondaryCard>
-      <SecondaryCard className="gap-2 items-center">
-        <p className="text-xs opacity-50 font-bold pb-2">ADVANCED</p>
-        <Blueprint tooltipDirection="top" buildingType={EntityType.StorageUnit} />
-        <Blueprint tooltipDirection="top" buildingType={EntityType.SolarPanel} />
-        <Blueprint tooltipDirection="top" buildingType={EntityType.DroneFactory} />
-        <Blueprint tooltipDirection="top" buildingType={EntityType.IronPlateFactory} />
-        <Blueprint tooltipDirection="top" buildingType={EntityType.PVCellFactory} />
-        <Blueprint tooltipDirection="top" buildingType={EntityType.Vault} />
-      </SecondaryCard>
-      <SecondaryCard className="gap-2 items-center">
-        <p className="text-xs opacity-50 font-bold pb-2">ELITE</p>
-        <Blueprint tooltipDirection="left" buildingType={EntityType.SAMLauncher} />
-        <Blueprint tooltipDirection="left" buildingType={EntityType.Hangar} />
-        <Blueprint tooltipDirection="left" buildingType={EntityType.AlloyFactory} />
-        <Blueprint tooltipDirection="left" buildingType={EntityType.StarmapperStation} />
-        <Blueprint tooltipDirection="left" buildingType={EntityType.ShieldGenerator} />
-        <Blueprint tooltipDirection="left" buildingType={EntityType.Market} />
-      </SecondaryCard>
+    <div>
+      <Button
+        disabled={!selectedBuilding}
+        className="w-full btn-sm btn-secondary mb-1"
+        onClick={() => components.SelectedBuilding.remove()}
+      >
+        CLEAR SELECTION
+      </Button>
+      <div className="flex h-fit w-full gap-1 items-start">
+        <SecondaryCard className="gap-2 items-center">
+          <p className="text-xs opacity-50 font-bold pb-2">BASIC</p>
+          <Blueprint buildingType={EntityType.IronMine} />
+          <Blueprint buildingType={EntityType.CopperMine} />
+          <Blueprint buildingType={EntityType.LithiumMine} />
+          <Blueprint buildingType={EntityType.SulfurMine} />
+          <Blueprint buildingType={EntityType.Garage} />
+          <Blueprint buildingType={EntityType.Workshop} />
+        </SecondaryCard>
+        <SecondaryCard className="gap-2 items-center">
+          <p className="text-xs opacity-50 font-bold pb-2">ADVANCED</p>
+          <Blueprint tooltipDirection="top" buildingType={EntityType.StorageUnit} />
+          <Blueprint tooltipDirection="top" buildingType={EntityType.SolarPanel} />
+          <Blueprint tooltipDirection="top" buildingType={EntityType.DroneFactory} />
+          <Blueprint tooltipDirection="top" buildingType={EntityType.IronPlateFactory} />
+          <Blueprint tooltipDirection="top" buildingType={EntityType.PVCellFactory} />
+          <Blueprint tooltipDirection="top" buildingType={EntityType.Vault} />
+        </SecondaryCard>
+        <SecondaryCard className="gap-2 items-center">
+          <p className="text-xs opacity-50 font-bold pb-2">ELITE</p>
+          <Blueprint tooltipDirection="left" buildingType={EntityType.SAMLauncher} />
+          <Blueprint tooltipDirection="left" buildingType={EntityType.Hangar} />
+          <Blueprint tooltipDirection="left" buildingType={EntityType.AlloyFactory} />
+          <Blueprint tooltipDirection="left" buildingType={EntityType.StarmapperStation} />
+          <Blueprint tooltipDirection="left" buildingType={EntityType.ShieldGenerator} />
+          <Blueprint tooltipDirection="left" buildingType={EntityType.Market} />
+        </SecondaryCard>
+      </div>
+      {selectedBuilding && <BlueprintInfo building={selectedBuilding} />}
+      {!selectedBuilding && (
+        <SecondaryCard className="flex flex-col items-center justify-center gap-3 pt-2 mt-1 w-full text-xs h-16 font-bold opacity-25 topographic-background">
+          BLUEPRINT DETAILS
+        </SecondaryCard>
+      )}
     </div>
   );
 };
