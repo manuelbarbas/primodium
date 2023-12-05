@@ -3,11 +3,13 @@ pragma solidity >=0.8.21;
 
 import { console } from "forge-std/console.sol";
 
-import { Home, PrimodiumTest, entityToAddress, MarketplaceOrder, P_GameConfig, P_GameConfig2, addressToEntity, EResource, ResourceCount, MaxResourceCount, LibProduction } from "test/PrimodiumTest.t.sol";
-
+import { OwnedBy, ProductionRate, LastClaimedAt, Home, PrimodiumTest, entityToAddress, MarketplaceOrder, P_GameConfig, P_GameConfig2, addressToEntity, EResource, ResourceCount, MaxResourceCount, LibProduction } from "test/PrimodiumTest.t.sol";
+import { EBuilding } from "src/Types.sol";
 import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOwner.sol";
 import { ROOT_NAMESPACE, ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
+import { LibResource } from "src/libraries/LibResource.sol";
+import { LibStorage } from "src/libraries/LibStorage.sol";
 
 // NOTE: core functionality is tested in LibReinforceTest.t.sol
 contract MarketplaceSystemTest is PrimodiumTest {
@@ -26,12 +28,33 @@ contract MarketplaceSystemTest is PrimodiumTest {
     buyer = addressToEntity(alice);
     Home.setAsteroid(player, playerHome);
     Home.setAsteroid(buyer, buyerHome);
+    OwnedBy.set(playerHome, player);
     LibProduction.increaseResourceProduction(playerHome, EResource.U_Orders, 1);
   }
 
   function testAddOrder() public returns (bytes32) {
     ResourceCount.set(Home.getAsteroid(player), uint8(EResource.Iron), 100);
     bytes32 orderId = world.addOrder(EResource.Iron, 100, 100);
+    assertEq(MarketplaceOrder.getSeller(orderId), player);
+    assertEq(MarketplaceOrder.getResource(orderId), uint8(EResource.Iron));
+    assertEq(MarketplaceOrder.getCount(orderId), 100);
+    assertEq(MarketplaceOrder.getPrice(orderId), 100);
+    assertEq(ResourceCount.get(Home.getAsteroid(player), uint8(EResource.U_Orders)), 0);
+    return orderId;
+  }
+
+  function testAddOrderClaimResources() public returns (bytes32) {
+    LibStorage.setMaxStorage(playerHome, uint8(EResource.Iron), 100);
+
+    ProductionRate.set(playerHome, uint8(EResource.Iron), 100);
+    LastClaimedAt.set(playerHome, block.timestamp);
+    vm.warp(block.timestamp + 1);
+    assertEq(MaxResourceCount.get(playerHome, uint8(EResource.Iron)), 100, "before add order max iron not 100");
+    LibResource.claimAllPlayerResources(player);
+    assertEq(ResourceCount.get(playerHome, uint8(EResource.Iron)), 100, "before add order iron not 100");
+    switchPrank(creator);
+    bytes32 orderId = world.addOrder(EResource.Iron, 100, 100);
+    assertEq(ResourceCount.get(Home.getAsteroid(player), uint8(EResource.Iron)), 100, "after add order iron not 100");
     assertEq(MarketplaceOrder.getSeller(orderId), player);
     assertEq(MarketplaceOrder.getResource(orderId), uint8(EResource.Iron));
     assertEq(MarketplaceOrder.getCount(orderId), 100);
@@ -100,6 +123,40 @@ contract MarketplaceSystemTest is PrimodiumTest {
     MaxResourceCount.set(Home.getAsteroid(player), uint8(EResource.Iron), 100);
     ResourceCount.set(Home.getAsteroid(player), uint8(EResource.Iron), 100);
 
+    uint256 prevSellerBalance = wETH.balanceOf(creator);
+    uint256 prevBuyerBalance = wETH.balanceOf(alice);
+
+    switchPrank(alice);
+    world.takeOrder(orderId, 100);
+    uint256 postSellerBalance = wETH.balanceOf(creator);
+    uint256 postBuyerBalance = wETH.balanceOf(alice);
+
+    assertEq(MarketplaceOrder.getCount(orderId), 0, "count wrong");
+    assertEq(MarketplaceOrder.getPrice(orderId), 0, "price wrong");
+    assertEq(MarketplaceOrder.getResource(orderId), 0, "resource wrong");
+    assertEq(MarketplaceOrder.getSeller(orderId), 0, "seller wrong");
+
+    assertEq(ResourceCount.get(Home.getAsteroid(player), uint8(EResource.U_Orders)), 1, "seller order count wrong");
+    assertEq(ResourceCount.get(Home.getAsteroid(player), uint8(EResource.Iron)), 0, "seller resource count wrong");
+    assertEq(ResourceCount.get(Home.getAsteroid(buyer), uint8(EResource.Iron)), 100, "buyer resource count wrong");
+
+    uint256 cost = 100 * 100;
+    uint256 tax = (P_GameConfig.getTax() * cost) / 1000;
+    cost = cost - tax;
+
+    assertEq(wETH.balanceOf(creator), prevSellerBalance + cost, "seller balance wrong");
+    assertEq(wETH.balanceOf(alice), prevBuyerBalance - cost - tax, "buyer balance wrong");
+  }
+
+  function testTakeOrderClaim() public {
+    bytes32 orderId = testAddOrder();
+    wETH.transfer(alice, 10000);
+
+    MaxResourceCount.set(Home.getAsteroid(buyer), uint8(EResource.Iron), 100);
+
+    MaxResourceCount.set(Home.getAsteroid(player), uint8(EResource.Iron), 100);
+    ProductionRate.set(Home.getAsteroid(player), uint8(EResource.Iron), 100);
+    LastClaimedAt.set(Home.getAsteroid(player), block.timestamp - 1);
     uint256 prevSellerBalance = wETH.balanceOf(creator);
     uint256 prevBuyerBalance = wETH.balanceOf(alice);
 
