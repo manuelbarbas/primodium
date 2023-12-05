@@ -9,7 +9,6 @@ import { Button } from "../core/Button";
 import { getBlockTypeName } from "src/util/common";
 import { FaLock } from "react-icons/fa";
 import { BlueprintInfo } from "./BlueprintInfo";
-import { SelectedBuilding } from "src/network/components/clientComponents";
 
 const Blueprint: React.FC<{
   buildingType: Entity;
@@ -60,7 +59,10 @@ export const Blueprints = () => {
       <Button
         disabled={!selectedBuilding}
         className="w-full btn-sm btn-secondary mb-1"
-        onClick={() => components.SelectedBuilding.remove()}
+        onClick={() => {
+          components.SelectedBuilding.remove();
+          components.SelectedAction.remove();
+        }}
       >
         CLEAR SELECTION
       </Button>

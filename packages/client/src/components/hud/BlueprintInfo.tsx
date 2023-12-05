@@ -1,6 +1,5 @@
 import { Entity } from "@latticexyz/recs";
 import React, { useMemo } from "react";
-import _ from "lodash";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
