@@ -116,15 +116,16 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
         const player = mud.network.playerEntity;
         if (!player) throw new Error("No player found");
 
+        const home = mud.components.Home.get(player)?.asteroid as Entity | undefined;
         const resourceEntity = resources[resource.toLowerCase()];
 
-        if (!resourceEntity) throw new Error("Resource not found");
+        if (!resourceEntity || !home) throw new Error("Resource not found");
 
         await mud.contractCalls.setComponentValue(
           mud.components.MaxResourceCount,
           encodeEntity(
             { entity: "bytes32", resource: "uint8" },
-            { entity: player as Hex, resource: ResourceEnumLookup[resourceEntity] }
+            { entity: resourceEntity as Hex, resource: ResourceEnumLookup[resourceEntity] }
           ),
           {
             value: 2000000n,

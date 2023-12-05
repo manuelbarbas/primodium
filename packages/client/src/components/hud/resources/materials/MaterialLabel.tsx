@@ -1,8 +1,9 @@
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
+import { components } from "src/network/components";
 import { formatNumber } from "src/util/common";
-import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
+import { RESOURCE_SCALE, ResourceImage, SPEED_SCALE } from "src/util/constants";
 
 export const MaterialLabel = ({
   name,
@@ -22,6 +23,7 @@ export const MaterialLabel = ({
   spaceRock?: Entity;
 }) => {
   const resourceIcon = ResourceImage.get(resource);
+  const worldSpeed = components.P_GameConfig.use()?.worldSpeed ?? 100n;
 
   const tooltipClass = useMemo(() => {
     if (maxStorage <= BigInt(0)) return;
@@ -51,7 +53,7 @@ export const MaterialLabel = ({
       />
       {production !== 0n && (
         <p className="opacity-50 text-[0rem] group-hover:text-xs transition-all">
-          +{formatNumber(Number(production) * 6, { fractionDigits: 1 })}
+          +{formatNumber((production * 60n * worldSpeed) / (SPEED_SCALE * RESOURCE_SCALE), { fractionDigits: 1 })}
           /MIN <b>({Number(maxStorage / RESOURCE_SCALE)})</b>
         </p>
       )}

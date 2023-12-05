@@ -48,7 +48,10 @@ export const CreateOrderForm = () => {
   });
 
   const resourceCounts = useFullResourceCounts();
-  const ordersAvailable = useMemo(() => resourceCounts[EntityType.MaxOrders].resourceCount, [resourceCounts]);
+  const ordersAvailable = useMemo(
+    () => resourceCounts.get(EntityType.MaxOrders)?.resourceCount ?? 0n,
+    [resourceCounts]
+  );
 
   const itemListings = useMemo(() => {
     return allListings.filter((listing) => network.playerEntity === listing.seller);
@@ -61,8 +64,9 @@ export const CreateOrderForm = () => {
       resourcesUsed[listing.resource] += listing.count / RESOURCE_SCALE;
     });
     resources.forEach((resource) => {
-      const totalResources =
-        (resourceCounts[resource].resourceCount + resourceCounts[resource].resourcesToClaim) / RESOURCE_SCALE;
+      const resourceCount = resourceCounts.get(resource)?.resourceCount ?? 0n;
+      const resourcesToClaim = resourceCounts.get(resource)?.resourcesToClaim ?? 0n;
+      const totalResources = resourceCount + resourcesToClaim / RESOURCE_SCALE;
       resourcesUsed[resource] = totalResources - (resourcesUsed[resource] ?? 0n);
     });
     return resourcesUsed;
