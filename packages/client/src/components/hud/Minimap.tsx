@@ -57,8 +57,8 @@ function calculateScaledBounds(coords: Coord[]): { minX: number; maxX: number; m
   const centerY = (minY + maxY) / 2;
 
   // Scale bounds by 1.25
-  const width = Math.min(500, (maxX - minX) * 1.25);
-  const height = Math.min(500, (maxY - minY) * 1.25);
+  const width = (maxX - minX) * 1.2;
+  const height = (maxY - minY) * 1.2;
   const edgeLength = Math.max(width, height);
 
   // Calculate new bounds
