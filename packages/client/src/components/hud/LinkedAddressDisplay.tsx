@@ -7,7 +7,15 @@ import { hashKeyEntity } from "src/util/encode";
 import { LinkedAddressResult, getLinkedAddress } from "src/util/web2/getLinkedAddress";
 import { Hex } from "viem";
 
-export const LinkedAddressDisplay = ({ entity }: { entity: Entity }) => {
+export const LinkedAddressDisplay = ({
+  entity,
+  shorten = true,
+  displayReadable = true,
+}: {
+  entity: Entity;
+  shorten?: boolean;
+  displayReadable?: boolean;
+}) => {
   const network = useMud().network;
   const playerEntity = network.playerEntity;
 
@@ -33,16 +41,21 @@ export const LinkedAddressDisplay = ({ entity }: { entity: Entity }) => {
   const entityDisplay: string = useMemo(() => {
     let entityDisplay = "Neutral";
     if (entity === playerEntity) {
-      entityDisplay = "You";
+      entityDisplay = displayReadable
+        ? "You"
+        : fetchedExternalWallet.ensName ??
+          entityToAddress(fetchedExternalWallet.address ?? entity, shorten) ??
+          entityToAddress(entity);
     } else if (entity === hashKeyEntity(PIRATE_KEY, playerEntity)) {
-      entityDisplay = "Pirates!";
+      entityDisplay = displayReadable ? "Pirates!" : entity;
     } else if (entity && !isPlayer(entity)) {
-      entityDisplay = shortenAddress(entity as Hex);
+      entityDisplay = shorten ? shortenAddress(entity as Hex) : entityToAddress(entity);
     } else {
-      entityDisplay = fetchedExternalWallet.ensName ?? entityToAddress(fetchedExternalWallet.address ?? entity, true);
+      entityDisplay =
+        fetchedExternalWallet.ensName ?? entityToAddress(fetchedExternalWallet.address ?? entity, shorten);
     }
     return entityDisplay;
-  }, [fetchedExternalWallet, entity, playerEntity]);
+  }, [entity, playerEntity, displayReadable, shorten, fetchedExternalWallet.ensName, fetchedExternalWallet.address]);
 
   return <>{entityDisplay}</>;
 };
