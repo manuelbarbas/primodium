@@ -32,11 +32,6 @@ export const BlockNumber = createExtendedComponent(
   }
 );
 
-export const MapBounds = createExtendedComponent(
-  world,
-  { x: Type.Number, y: Type.Number, width: Type.Number, height: Type.Number },
-  { id: "MapBounds" }
-);
 export const Time = createExtendedBigIntComponent(world, { id: "Time" });
 export const Account = createExtendedEntityComponent(world, { id: "Account" });
 export const SelectedRock = createExtendedEntityComponent(world, { id: "SelectedRock" });
@@ -207,6 +202,4 @@ export default {
   AllianceRequest,
   /* ----------------------------- Transaction ------------------------------- */
   TransactionQueue,
-
-  MapBounds,
 };

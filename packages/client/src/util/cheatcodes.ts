@@ -1,15 +1,15 @@
+import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Cheatcodes } from "@primodiumxyz/mud-game-tools";
-import { components } from "src/network/components";
-import { SetupResult } from "src/network/types";
-import { Hex, createWalletClient, fallback, getContract, http, padHex, trim, webSocket } from "viem";
-import { encodeEntity } from "src/util/encode";
-import { EntityType, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
-import { generatePrivateKey } from "viem/accounts";
-import { getNetworkConfig } from "src/network/config/getNetworkConfig";
-import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
+import { components } from "src/network/components";
+import { getNetworkConfig } from "src/network/config/getNetworkConfig";
+import { SetupResult } from "src/network/types";
+import { encodeEntity } from "src/util/encode";
+import { Hex, createWalletClient, fallback, getContract, http, padHex, trim, webSocket } from "viem";
+import { generatePrivateKey } from "viem/accounts";
+import { EntityType, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
 
 const resources: Record<string, Entity> = {
   iron: EntityType.Iron,
@@ -98,7 +98,6 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
 
         if (!resourceEntity || !home) throw new Error("Resource not found");
 
-        console.log("getting", resource);
         await mud.contractCalls.setComponentValue(
           mud.components.ResourceCount,
           encodeEntity(

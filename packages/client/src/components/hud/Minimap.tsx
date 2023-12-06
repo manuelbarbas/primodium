@@ -1,3 +1,4 @@
+import { primodium } from "@game/api";
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
@@ -97,7 +98,7 @@ export const Minimap = () => {
     const owner = components.OwnedBy.get(entity)?.value as Entity | undefined;
     return { ...position!, owner, size: rockType === ERock.Asteroid ? 4 : 2 };
   });
-  const view = components.MapBounds.use();
+  const view = primodium.api().hooks.useCamera().worldView;
 
   return (
     <div
@@ -138,11 +139,6 @@ export const Voronoi = ({ points, width, height, view }: DotsProps) => {
     [height, bounds.minY, bounds.maxY]
   );
 
-  console.log(`bounds: ${bounds.minX} ${bounds.maxX} ${bounds.minY} ${bounds.maxY}`);
-  view &&
-    console.log(
-      `view: ${JSON.stringify(view)} ${xScale(view.x)} ${yScale(view.y)} ${xScale(view.width)} ${yScale(view.height)}}`
-    );
   const voronoiLayout = useMemo(
     () =>
       voronoi<DotPoint>({
