@@ -33,6 +33,7 @@ import { Leaderboard } from "./modals/leaderboard/Leaderboard";
 import { CurrenObjective } from "./CurrentObjective";
 import { Blueprints } from "./Blueprints";
 import { Action } from "src/util/constants";
+import { Outgoingfleets } from "./modals/fleets/OutgoingFleets";
 
 export const GameHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [state.showUI, state.toggleShowUI]);
@@ -90,7 +91,9 @@ export const GameHUD = () => {
                   <Modal.Button className="rounded-l-none border border-secondary btn-sm">
                     <IconLabel imageUri="/img/icons/outgoingicon.png" tooltipText="Fleets" tooltipDirection="right" />
                   </Modal.Button>
-                  <Modal.Content className="w-[50rem] h-[50rem]">{/* <Objectives /> */}</Modal.Content>
+                  <Modal.Content className="w-[50rem] h-[50rem]">
+                    <Outgoingfleets />
+                  </Modal.Content>
                 </Modal>
                 <Modal title="settings">
                   <Modal.Button className="rounded-l-none border border-secondary btn-sm">

@@ -2,7 +2,7 @@ import { ESendType } from "contracts/config/enums";
 import { SecondaryCard } from "src/components/core/Card";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { Fleet } from "./Fleet";
+import { Fleet } from "../modals/fleets/Fleet";
 
 export const ReinforcementFleets: React.FC = () => {
   const playerEntity = useMud().network.playerEntity;

@@ -8,7 +8,7 @@ import { FaCrosshairs, FaShieldAlt } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
 import { Button } from "src/components/core/Button";
 import { components } from "src/network/components";
-import { OrbitActionButton } from "./OrbitActionButton";
+import { OrbitActionButton } from "../../panes/OrbitActionButton";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -74,24 +74,24 @@ export const Fleet: React.FC<{
   const unitTotal = arrival?.unitCounts.reduce((acc, curr) => acc + curr, 0n) ?? 0n;
 
   return (
-    <div className="flex items-center justify-between w-full border rounded-md border-slate-700 bg-slate-800 ">
+    <div className="flex items-center justify-between w-full border rounded-box border-slate-700 bg-slate-800 ">
       <div className="flex gap-1 items-center">
         {sendType === ESendType.Invade && (
-          <div className="rounded-md bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
+          <div className="rounded-box bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
             <BiSolidInvader size={16} />
-            <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">INVADE</p>
+            <p className="bg-rose-900 border border-rose-500 rounded-box px-1 text-[.6rem]">INVADE</p>
           </div>
         )}
         {sendType === ESendType.Raid && (
-          <div className="rounded-md bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
+          <div className="rounded-box bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
             <BiSolidInvader size={16} />
-            <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">RAID</p>
+            <p className="bg-rose-900 border border-rose-500 rounded-box px-1 text-[.6rem]">RAID</p>
           </div>
         )}
         {sendType === ESendType.Reinforce && (
-          <div className="rounded-md bg-green-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
+          <div className="rounded-box bg-green-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
             <FaShieldAlt size={16} />
-            <p className="bg-green-900 border border-green-500  rounded-md px-1 text-[.6rem]">REINFORCE</p>
+            <p className="bg-green-900 border border-green-500  rounded-box px-1 text-[.6rem]">REINFORCE</p>
           </div>
         )}
         <LabeledValue label={`${timeRemaining > 0 ? "IN-TRANSIT" : "ORBITING"}`}>
