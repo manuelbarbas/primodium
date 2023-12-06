@@ -13,7 +13,7 @@ import { Resources } from "./widgets/resources/Resources";
 export const SpacerockMenu: React.FC = () => {
   const playerEntity = useMud().network.playerEntity;
   const selectedSpacerock = components.SelectedRock.use()?.value;
-  const ownedBy = components.OwnedBy.use(selectedSpacerock ?? singletonEntity)?.value ?? playerEntity;
+  const ownedBy = components.OwnedBy.use(selectedSpacerock)?.value ?? playerEntity;
   const img = getSpaceRockImage(selectedSpacerock ?? singletonEntity);
   const name = getSpaceRockName(selectedSpacerock ?? singletonEntity);
   const coord = components.Position.get(selectedSpacerock ?? singletonEntity) ?? { x: 0, y: 0 };
