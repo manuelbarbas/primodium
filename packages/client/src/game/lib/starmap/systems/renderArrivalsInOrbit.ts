@@ -14,7 +14,6 @@ import { SetupResult } from "src/network/types";
 import { world } from "src/network/world";
 import { PIRATE_KEY } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
-import { getNow } from "src/util/time";
 import { ObjectPosition, Tween } from "../../common/object-components/common";
 import { Circle } from "../../common/object-components/graphics";
 
@@ -33,7 +32,8 @@ export const renderArrivalsInOrbit = (scene: Scene, mud: SetupResult) => {
     if (!arrival) return;
 
     //don't render if arrival is in transit
-    if (arrival.arrivalTime >= getNow()) return;
+    const now = components.Time.get(entity)?.value ?? 0n;
+    if (arrival.arrivalTime >= now) return;
 
     //render personal pirate only
     if (

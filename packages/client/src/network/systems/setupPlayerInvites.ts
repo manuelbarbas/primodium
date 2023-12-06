@@ -1,7 +1,6 @@
 import { Entity, defineComponentSystem } from "@latticexyz/recs";
 import { toast } from "react-toastify";
 import { decodeEntity } from "src/util/encode";
-import { getNow } from "src/util/time";
 import { Hex, hexToString, padHex, zeroAddress } from "viem";
 import { components } from "../components";
 import { SetupResult } from "../types";
@@ -56,7 +55,8 @@ export function setupInvitations(mud: SetupResult) {
     }
 
     // 30 sec buffer
-    if (value[0]?.timestamp + 30n < getNow()) return;
+    const now = components.Time.get()?.value ?? 0n;
+    if (value[0]?.timestamp + 30n < now) return;
 
     const invite = PlayerInvite.get(entity);
     const inviteAlliance = Alliance.get(invite?.alliance as Entity)?.name as Hex | undefined;

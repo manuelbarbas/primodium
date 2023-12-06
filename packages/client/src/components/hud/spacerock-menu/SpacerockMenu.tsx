@@ -1,73 +1,52 @@
-import { ERock } from "contracts/config/enums";
-import { useEffect } from "react";
-import { Button } from "src/components/core/Button";
-import { Navigator } from "src/components/core/Navigator";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { getSpaceRockInfo } from "src/util/spacerock";
-import { Asteroid } from "./screens/Asteroid";
-import { Motherlode } from "./screens/Motherlode";
-import { SendFleet } from "./screens/SendFleet";
-import { SpacerockInfo } from "./screens/SpaceRockInfo";
-import { StationedUnits } from "./screens/StationedUnits";
-import { UnitSelection } from "./screens/UnitSelection";
+
+import { Entity } from "@latticexyz/recs";
+import { IconLabel } from "src/components/core/IconLabel";
+import { Tabs } from "src/components/core/Tabs";
+import { AccountDisplay } from "src/components/shared/AccountDisplay";
+import { getSpaceRockImage, getSpaceRockName } from "src/util/spacerock";
+import { GracePeriod } from "../GracePeriod";
+import { Resources } from "./widgets/resources/Resources";
 
 export const SpacerockMenu: React.FC = () => {
-  const playerEntity = components.Account.get()?.value;
-  const selectedSpacerock = components.Send.use()?.destination;
-
-  useEffect(() => {
-    const resetSendOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        components.Send.reset(playerEntity);
-      }
-    };
-
-    document.addEventListener("keydown", resetSendOnEscape);
-
-    return () => {
-      document.removeEventListener("keydown", resetSendOnEscape);
-    };
-  }, []);
-
-  if (!selectedSpacerock) return null;
-  const spaceRockInfo = getSpaceRockInfo(selectedSpacerock);
-
-  const RenderScreen = () => {
-    switch (spaceRockInfo.type) {
-      case ERock.Asteroid:
-        return <Asteroid data={spaceRockInfo} />;
-      case ERock.Motherlode:
-        return <Motherlode data={spaceRockInfo} />;
-      default:
-        return <></>;
-    }
-  };
-
+  const playerEntity = useMud().network.playerEntity;
+  const selectedSpacerock = components.SelectedRock.use()?.value;
+  const ownedBy = components.OwnedBy.use(selectedSpacerock ?? singletonEntity)?.value ?? playerEntity;
+  const img = getSpaceRockImage(selectedSpacerock ?? singletonEntity);
+  const name = getSpaceRockName(selectedSpacerock ?? singletonEntity);
+  const coord = components.Position.get(selectedSpacerock ?? singletonEntity) ?? { x: 0, y: 0 };
   return (
-    <Navigator initialScreen={selectedSpacerock} className="w-120">
-      {/* <Navigator.Breadcrumbs /> */}
-
-      {/* Initial Screen */}
-      <RenderScreen />
-
-      {/* Sub Screens */}
-      <SpacerockInfo data={spaceRockInfo} />
-      {(!spaceRockInfo.isInGracePeriod || playerEntity == spaceRockInfo.ownedBy) && (
-        <>
-          <SendFleet />
-          <UnitSelection />
-        </>
-      )}
-      <StationedUnits />
-
-      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2">
-        <Button
-          className="btn-square btn-sm font-bold border border-secondary"
-          onClick={() => components.Send.reset(playerEntity)}
+    <div className="w-screen px-2 flex justify-center">
+      <Tabs className="min-w-[50%] flex flex-col items-center gap-0">
+        <Tabs.Button
+          index={0}
+          togglable
+          onClick={() => {
+            components.SelectedBuilding.remove();
+            components.SelectedAction.remove();
+          }}
+          className="rounded-b-none border-b-0 btn-md border-secondary relative py-2 hover:text-accent group w-fit"
         >
-          x
-        </Button>
-      </div>
-    </Navigator>
+          {/* <FaCaretUp size={22} className="text-accent absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full" /> */}
+          <IconLabel imageUri={img} className="" text={`${name}`} />
+          <p className="scale-95 opacity-50">
+            [{coord.x}, {coord.y}]
+          </p>
+        </Tabs.Button>
+        <Tabs.Pane index={0} className="w-full border-b-0 rounded-x-none rounded-b-none relative">
+          <Resources />
+          <AccountDisplay
+            player={ownedBy as Entity}
+            className="absolute right-6 -top-1 border border-secondary text-xs bg-base-100 p-2 rounded-box rounded-t-none"
+          />
+          <GracePeriod
+            player={ownedBy as Entity}
+            className="absolute left-6 -top-1 border border-secondary text-xs p-2 bg-base-100 rounded-box rounded-t-none"
+          />
+        </Tabs.Pane>
+      </Tabs>
+    </div>
   );
 };

@@ -11,7 +11,6 @@ import {
   SPEED_SCALE,
   UnitEnumLookup,
 } from "./constants";
-import { getNow } from "./time";
 
 export const getScale = (resource: Entity) => {
   if (
@@ -68,7 +67,8 @@ export function getMotherlodeResource(entity: Entity) {
 export function getPlayerFullResourceCounts(playerEntity: Entity) {
   const ownedMotherlodes = comps.OwnedMotherlodes.getWithKeys({ entity: playerEntity as Hex })?.value ?? [];
   const motherlodeResources = ownedMotherlodes.map((value) => getFullResourceCounts(value as Entity));
-  const homeResources = getFullResourceCounts();
+  const homeAsteroid = comps.Home.get(playerEntity)?.asteroid as Entity | undefined;
+  const homeResources = getFullResourceCounts(homeAsteroid);
 
   const combinedCounts: Record<Entity, ResourceCountData> = {};
 
@@ -222,9 +222,9 @@ export function getFullResourceCount(resource: Entity, spaceRock?: Entity) {
 export function getFullResourceCounts(spaceRockEntity?: Entity) {
   spaceRockEntity =
     spaceRockEntity ?? (comps.Home.getWithKeys({ entity: comps.Account.get()?.value as Hex })?.asteroid as Entity);
-  const time = getNow();
+  const time = comps.Time.get()?.value ?? 0n;
   const memo = fullResourceValue.get(spaceRockEntity);
-  if (memo?.time == time) {
+  if (memo && memo?.time == time) {
     return memo.resources;
   }
   const consumptionTimeLengths: Record<number, bigint> = {};
@@ -233,7 +233,7 @@ export function getFullResourceCounts(spaceRockEntity?: Entity) {
   const player = comps.OwnedBy.getWithKeys({ entity: spaceRockEntity as Hex })?.value ?? comps.Account.get()?.value;
   const playerLastClaimed = comps.LastClaimedAt.getWithKeys({ entity: spaceRockEntity as Hex })?.value ?? 0n;
   const timeSinceClaimed =
-    ((getNow() - playerLastClaimed) * (comps.P_GameConfig?.get()?.worldSpeed ?? SPEED_SCALE)) / SPEED_SCALE;
+    ((time - playerLastClaimed) * (comps.P_GameConfig?.get()?.worldSpeed ?? SPEED_SCALE)) / SPEED_SCALE;
   MUDEnums.EResource.forEach((_: string, index: number) => {
     const entity = ResourceEntityLookup[index as EResource];
     if (!entity || index == 0 || index > MUDEnums.EResource.length) return;

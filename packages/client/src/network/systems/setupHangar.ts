@@ -1,5 +1,4 @@
 import { Entity, Has, HasValue, defineComponentSystem, runQuery } from "@latticexyz/recs";
-import { getNow } from "src/util/time";
 import { getUnitTrainingTime } from "src/util/trainUnits";
 import { Hex } from "viem";
 import { components } from "../components";
@@ -50,7 +49,8 @@ export function setupHangar(mud: SetupResult) {
 
         const trainingTime = getUnitTrainingTime(owner as Entity, building, update.unitId as Entity);
         let trainedUnits = update.quantity;
-        if (trainingTime > 0) trainedUnits = (getNow() - startTime) / trainingTime;
+        const now = components.Time.get()?.value ?? 0n;
+        if (trainingTime > 0) trainedUnits = (now - startTime) / trainingTime;
 
         if (trainedUnits == 0n) return;
 

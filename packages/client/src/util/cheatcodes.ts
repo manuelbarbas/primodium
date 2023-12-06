@@ -1,25 +1,25 @@
+import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Cheatcodes } from "@primodiumxyz/mud-game-tools";
+import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { components } from "src/network/components";
+import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 import { SetupResult } from "src/network/types";
 import { encodeEntity } from "src/util/encode";
-import { Hex, padHex, trim } from "viem";
+import { Hex, createWalletClient, fallback, getContract, http, padHex, trim, webSocket } from "viem";
+import { generatePrivateKey } from "viem/accounts";
 import { getBlockTypeName } from "./common";
 import { EntityType, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
+
 const resources: Record<string, Entity> = {
   iron: EntityType.Iron,
   copper: EntityType.Copper,
   lithium: EntityType.Lithium,
-  water: EntityType.Water,
   titanium: EntityType.Titanium,
   iridium: EntityType.Iridium,
   sulfur: EntityType.Sulfur,
-  osmium: EntityType.Osmium,
-  tungsten: EntityType.Tungsten,
   kimberlite: EntityType.Kimberlite,
-  uraninite: EntityType.Uraninite,
-  bolutite: EntityType.Bolutite,
   ironplate: EntityType.IronPlate,
   platinum: EntityType.Platinum,
   alloy: EntityType.Alloy,
@@ -236,6 +236,36 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
             value: BigInt(2 * 1e18),
           }
         );
+      },
+    },
+    spawnPlayers: {
+      params: [{ name: "count", type: "number" }],
+      function: async (count: number) => {
+        const networkConfig = getNetworkConfig();
+        const clientOptions = {
+          chain: networkConfig.chain,
+          transport: transportObserver(fallback([webSocket(), http()])),
+          pollingInterval: 1000,
+        };
+
+        for (let i = 0; i < count; i++) {
+          const privateKey = generatePrivateKey();
+          const burnerAccount = createBurnerAccount(privateKey as Hex);
+
+          const burnerWalletClient = createWalletClient({
+            ...clientOptions,
+            account: burnerAccount,
+          });
+
+          const worldContract = getContract({
+            address: networkConfig.worldAddress as Hex,
+            abi: IWorldAbi,
+            publicClient: mud.network.publicClient,
+            walletClient: burnerWalletClient,
+          });
+
+          await worldContract.write.spawn();
+        }
       },
     },
   };

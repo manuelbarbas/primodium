@@ -71,7 +71,7 @@ export const BuildingMenu: React.FC = () => {
   };
 
   return (
-    <Navigator initialScreen={selectedBuilding} className="w-120">
+    <Navigator initialScreen={selectedBuilding} className="w-96 border-none p-0">
       {/* <Navigator.Breadcrumbs /> */}
 
       {/* Initial Screen */}
@@ -86,6 +86,17 @@ export const BuildingMenu: React.FC = () => {
       <UpgradeUnit building={selectedBuilding} />
       <MiningVessels building={selectedBuilding} />
 
+      {/* <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2">
+        <Button
+          tooltip="Close"
+          tooltipDirection="top"
+          className="btn-square btn-sm font-bold border border-secondary"
+          onClick={handleClose}
+        >
+          x
+        </Button>
+      </div>
+
       {buildingType !== EntityType.MainBase && (
         <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-3 flex flex-row-reverse gap-2">
           <Button
@@ -97,7 +108,21 @@ export const BuildingMenu: React.FC = () => {
             x
           </Button>
 
-          <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Build, selectedBuilding)}>
+          <div className="absolute top-0 right-9 -translate-y-1/2 translate-x-1/2">
+            <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Demolish, selectedBuilding)}>
+              <Navigator.NavButton
+                tooltip="Demolish"
+                tooltipDirection="top"
+                className="btn-square btn-sm font-bold border border-error inline-flex"
+                to="Demolish"
+              >
+                <FaTrash size={12} />
+              </Navigator.NavButton>
+            </TransactionQueueMask>
+          </div>
+        </>
+      )} */}
+      {/* <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Build, selectedBuilding)}>
             <Navigator.NavButton
               tooltip="Move"
               tooltipDirection="top"
@@ -134,8 +159,8 @@ export const BuildingMenu: React.FC = () => {
               {active ? <FaBan size={12} /> : <FaIndustry size={12} />}
             </Button>
           </TransactionQueueMask>
-        </div>
-      )}
+        </div> */}
+      {/* )} */}
     </Navigator>
   );
 };

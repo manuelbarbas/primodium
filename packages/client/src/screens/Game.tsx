@@ -20,7 +20,7 @@ export const Game = () => {
             <span className="font-mono">Initializing Game World</span>
             <span>&hellip;</span>
           </p>
-          <Progress value={100} max={100} className="animate-pulse" />
+          <Progress value={100} max={100} className="animate-pulse w-56" />
         </div>
       )}
 

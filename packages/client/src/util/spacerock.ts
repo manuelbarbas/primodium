@@ -17,10 +17,10 @@ import {
 } from "./constants";
 import { hashKeyEntity } from "./encode";
 import { getFullResourceCount, getMotherlodeResource } from "./resource";
-import { getNow } from "./time";
 
-function getSpaceRockImage(spaceRock: Entity, type: ERock) {
+export function getSpaceRockImage(spaceRock: Entity) {
   const { getSpriteBase64 } = primodium.api().sprite;
+  const type = comps.RockType.get(spaceRock, { value: ERock.Asteroid }).value as ERock;
 
   if (type === ERock.Asteroid) {
     // const pirate = Pirate.get(spaceRock);
@@ -62,10 +62,44 @@ function getSpaceRockImage(spaceRock: Entity, type: ERock) {
   return "";
 }
 
+export function getSpaceRockName(spaceRock: Entity) {
+  const player = comps.Account.get()?.value;
+  const type = comps.RockType.get(spaceRock, { value: ERock.Asteroid }).value as ERock;
+  const motherlodeData = comps.Motherlode.get(spaceRock);
+  const motherlodeResource = getMotherlodeResource(spaceRock);
+  const ownedBy = comps.OwnedBy.get(spaceRock)?.value as Entity | undefined;
+  const mainBaseEntity = comps.Home.get(ownedBy, {
+    mainBase: "-1" as Entity,
+    asteroid: "-1" as Entity,
+  }).mainBase as Entity;
+  const mainBaseLevel = comps.Level.get(mainBaseEntity)?.value;
+
+  if (player === ownedBy) return "Home Asteroid";
+
+  let name = "";
+  switch (type) {
+    case ERock.Motherlode:
+      name = `${MotherlodeSizeNames[motherlodeData?.size ?? 0]} ${getBlockTypeName(motherlodeResource)} Motherlode`;
+      break;
+    case ERock.Asteroid:
+      {
+        const player = comps.Account.get()?.value;
+        const hash = player ? hashKeyEntity(PIRATE_KEY, player) : undefined;
+        name = `${mainBaseLevel ? `LVL. ${mainBaseLevel} ` : ""}${hash === ownedBy ? "Pirate" : "Player"} Asteroid`;
+      }
+      break;
+    default:
+      name = "Unknown Spacerock";
+      break;
+  }
+
+  return name;
+}
+
 export function getSpaceRockInfo(spaceRock: Entity) {
   const type = comps.RockType.get(spaceRock, { value: ERock.Asteroid }).value as ERock;
 
-  const imageUri = getSpaceRockImage(spaceRock, type);
+  const imageUri = getSpaceRockImage(spaceRock);
 
   const motherlodeData = comps.Motherlode.get(spaceRock);
 
@@ -98,7 +132,8 @@ export function getSpaceRockInfo(spaceRock: Entity) {
   const hangar = Hangar.get(spaceRock);
 
   const gracePeriodValue = comps.GracePeriod.get(ownedBy)?.value ?? 0n;
-  const isInGracePeriod = type === ERock.Asteroid ? gracePeriodValue > 0n && gracePeriodValue > getNow() : false;
+  const now = comps.Time.get()?.value ?? 0n;
+  const isInGracePeriod = type === ERock.Asteroid ? gracePeriodValue > 0n && gracePeriodValue > now : false;
 
   let name = "";
   switch (type) {

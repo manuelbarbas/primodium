@@ -31,7 +31,10 @@ export const BlockNumber = createExtendedComponent(
     id: "BlockNumber",
   }
 );
+
+export const Time = createExtendedBigIntComponent(world, { id: "Time" });
 export const Account = createExtendedEntityComponent(world, { id: "Account" });
+export const SelectedRock = createExtendedEntityComponent(world, { id: "SelectedRock" });
 export const SpectateAccount = createExtendedEntityComponent(world, { id: "SpectateAccount" });
 export const GameReady = createExtendedBoolComponent(world, { id: "GameReady" });
 
@@ -48,6 +51,23 @@ export const SelectedAction = createExtendedNumberComponent(world, {
   id: "SelectedAction",
 });
 export const MapOpen = createExtendedBoolComponent(world, { id: "MapOpen" });
+
+/* -------------------------------------------------------------------------- */
+/*                                  RESOURCES                                 */
+/* -------------------------------------------------------------------------- */
+export const PlayerResources = createExtendedComponent(
+  world,
+  {
+    resourceCount: Type.BigInt,
+    resourcesToClaim: Type.BigInt,
+    resourceStorage: Type.BigInt,
+    production: Type.BigInt,
+    producedResource: Type.BigInt,
+  },
+  {
+    id: "PlayerResources",
+  }
+);
 
 /* -------------------------------------------------------------------------- */
 /*                                    Units                                   */
@@ -149,16 +169,21 @@ export default {
 
   /* ------------------------------ Chain State ------------------------------- */
   BlockNumber,
+  Time,
   SpectateAccount,
   Account,
   GameReady,
   CurrentTransaction,
+
+  /* ------------------------------- Resources -------------------------------- */
+  PlayerResources,
 
   /* ---------------------------------- Input --------------------------------- */
   SelectedTile,
   HoverTile,
   SelectedBuilding,
   SelectedAction,
+  SelectedRock,
   MapOpen,
 
   /* ---------------------------------- Units --------------------------------- */

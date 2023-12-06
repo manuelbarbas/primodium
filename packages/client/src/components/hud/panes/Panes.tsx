@@ -9,7 +9,7 @@ import { HostileFleets } from "./hostile-fleets/HostileFleets";
 
 import { Objectives } from "./Objectives";
 import { OwnedMotherlodes } from "./OwnedMotherlodes";
-import { Settings } from "./Settings";
+import { Settings } from "../modals/Settings";
 import { Leaderboard } from "./leaderboard/Leaderboard";
 
 export const Panes: React.FC = () => {

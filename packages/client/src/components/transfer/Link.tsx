@@ -81,7 +81,7 @@ export function Link() {
   return (
     <div className="flex flex-col h-full gap-2 text-left">
       <div className="text-xs text-gray-300 inline flex gap-1">
-        Link your account <p>(</p>
+        Link your wallet (
         {linkedAddress.address ? (
           <>
             linked to
@@ -92,9 +92,9 @@ export function Link() {
         )}
         )
       </div>
-      <AddressDisplay address={burnerAddress} notShort className="p-2 bg-gray-700 text-white text-center" />
-      <p className="text-xs text-gray-300"> to your Primodium address</p>
       <AddressDisplay address={externalAccount.address} notShort className="p-2 bg-gray-700 text-white text-center" />
+      <p className="text-xs text-gray-300"> to your Primodium account</p>
+      <AddressDisplay address={burnerAddress} notShort className="p-2 bg-gray-700 text-white text-center" />
       <Button className="btn-secondary disabled:opacity-50 flex-1" onClick={signMessageAndLink}>
         <div className="font-bold crt">Link Accounts</div>
       </Button>
