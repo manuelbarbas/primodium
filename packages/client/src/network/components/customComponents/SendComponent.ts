@@ -7,6 +7,15 @@ import { toUnitCountArray } from "src/util/send";
 import { SetupNetworkResult } from "../../types";
 import { createExtendedComponent } from "./ExtendedComponent";
 import { ExtendedContractComponents } from "./extendComponents";
+import { getUnitStats } from "src/util/trainUnits";
+
+type stats = {
+  ATK: bigint;
+  DEF: bigint;
+  SPD: bigint;
+  MIN: bigint;
+  CRG: bigint;
+};
 
 function createSendComponent(contractComponents: ExtendedContractComponents<SetupNetworkResult["components"]>) {
   const { Position } = contractComponents;
@@ -121,11 +130,37 @@ function createSendComponent(contractComponents: ExtendedContractComponents<Setu
     return getUnits();
   };
 
+  const useTotalStats = (playerEntity: Entity) => {
+    const unitCounts = component.use()?.count ?? [];
+    return unitCounts.reduce(
+      (acc, curr, index) => {
+        if (curr === 0n) return acc;
+        const entity = UnitEntityLookup[(index + 1) as EUnit];
+        const unitStats = getUnitStats(entity, playerEntity) as stats;
+
+        // Iterate over the stats keys
+        (Object.keys(unitStats) as Array<keyof stats>).forEach((key) => {
+          acc[key] = (acc[key] ?? 0n) + unitStats[key] * curr;
+        });
+
+        return acc;
+      },
+      {
+        ATK: 0n,
+        DEF: 0n,
+        SPD: 0n,
+        MIN: 0n,
+        CRG: 0n,
+      }
+    );
+  };
+
   return {
     ...component,
     getUnits,
     useUnits,
     getUnitCount,
+    useTotalStats,
     setUnitCount,
     setOrigin,
     setDestination,

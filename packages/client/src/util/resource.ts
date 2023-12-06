@@ -67,7 +67,8 @@ export function getMotherlodeResource(entity: Entity) {
 export function getPlayerFullResourceCounts(playerEntity: Entity) {
   const ownedMotherlodes = comps.OwnedMotherlodes.getWithKeys({ entity: playerEntity as Hex })?.value ?? [];
   const motherlodeResources = ownedMotherlodes.map((value) => getFullResourceCounts(value as Entity));
-  const homeResources = getFullResourceCounts();
+  const homeAsteroid = comps.Home.get(playerEntity)?.asteroid as Entity | undefined;
+  const homeResources = getFullResourceCounts(homeAsteroid);
 
   const combinedCounts: Record<Entity, ResourceCountData> = {};
 
