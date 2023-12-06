@@ -2,8 +2,8 @@ import { Hex } from "viem";
 import { config } from "../mud.config";
 import {
   encodeArray,
-  getResourceValues,
   getResourceValue,
+  getResourceValues,
   getUnitValues,
   idsToPrototypes,
   indexifyResourceArray,
@@ -348,7 +348,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_Blueprint: { value: getBlueprint(1, 1) },
       P_MaxLevel: { value: 5n },
-      P_RequiredTile: { value: MUDEnums.EResource.indexOf("Copper") },
+      P_RequiredTile: { value: MUDEnums.EResource.indexOf("Iron") },
     },
     levels: {
       1: {
@@ -382,7 +382,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_Blueprint: { value: getBlueprint(1, 1) },
       P_MaxLevel: { value: 5n },
-      P_RequiredTile: { value: MUDEnums.EResource.indexOf("Lithium") },
+      P_RequiredTile: { value: MUDEnums.EResource.indexOf("Iron") },
     },
     levels: {
       1: {
@@ -416,7 +416,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_Blueprint: { value: getBlueprint(1, 1) },
       P_MaxLevel: { value: 5n },
-      P_RequiredTile: { value: MUDEnums.EResource.indexOf("Sulfur") },
+      P_RequiredTile: { value: MUDEnums.EResource.indexOf("Iron") },
     },
     levels: {
       1: {
