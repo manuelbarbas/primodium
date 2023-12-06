@@ -47,7 +47,7 @@ export const MaterialLabel = ({ name, resource }: { name: string; resource: Enti
     <Badge className={`gap-1 group pointer-events-auto ${maxStorage === 0n ? "badge-error opacity-25" : ""}`}>
       <ResourceIconTooltip
         name={name}
-        playerEntity={player}
+        spaceRock={selectedRock}
         amount={resourceCount + resourcesToClaim}
         resource={resource}
         image={resourceIcon ?? ""}
