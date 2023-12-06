@@ -156,20 +156,6 @@ export const GameHUD = () => {
                 className="rounded-r-none m-0 border-r-0 btn-md border-accent relative hover:text-accent group"
               >
                 <FaArrowRight />
-                {/* <FaCaretLeft
-                    size={22}
-                    className="text-accent absolute top-1/2 left-0  -translate-y-1/2 -translate-x-full "
-                  /> */}
-                {/* <IconLabel imageUri="img/icons/minersicon.png" className="text-2xl" /> */}
-                {/* <p
-                    style={{
-                      writingMode: "vertical-rl",
-                      textOrientation: "sideways",
-                    }}
-                    className=" absolute tracking-widest uppercase font-bold -rotate-180 right-0 bottom-full my-4 mr-2 opacity-75 bg-secondary/25 rounded-box backdrop-blur-md p-2 group-hover:ring-1"
-                  >
-                    manage
-                  </p> */}
               </Tabs.Button>
 
               <Tabs.Pane index={0} className="rounded-r-none border-r-0 z-10">
