@@ -2,8 +2,8 @@ import { Hex } from "viem";
 import { config } from "../mud.config";
 import {
   encodeArray,
-  getResourceValues,
   getResourceValue,
+  getResourceValues,
   getUnitValues,
   idsToPrototypes,
   indexifyResourceArray,
