@@ -8,7 +8,7 @@ import { Hex } from "viem";
 import { ERock } from "contracts/config/enums";
 
 export const setupPlayerResources = () => {
-  const player = components.Account.get()?.value ?? singletonEntity;
+  const playerEntity = components.Account.get()?.value ?? singletonEntity;
 
   const storePlayerResources = (player: Entity) => {
     const playerResources = getPlayerFullResourceCounts(player);
@@ -38,7 +38,7 @@ export const setupPlayerResources = () => {
   };
 
   defineComponentSystem(world, components.BlockNumber, () => {
-    storePlayerResources(player);
+    storePlayerResources(playerEntity);
   });
 
   defineComponentSystem(world, components.SelectedRock, () => {
@@ -47,7 +47,7 @@ export const setupPlayerResources = () => {
       | undefined;
     const rockType = components.RockType.get(components.SelectedRock.get()?.value ?? singletonEntity)?.value;
 
-    if (!owner || owner === player || rockType === ERock.Motherlode) return;
+    if (!owner || owner === playerEntity || rockType === ERock.Motherlode) return;
 
     storePlayerResources(owner);
   });
