@@ -985,7 +985,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   Vault: {
     tables: {
       P_Blueprint: { value: getBlueprint(3, 3) },
-      P_MaxLevel: { value: 3n },
+      P_MaxLevel: { value: 4n },
     },
     levels: {
       1: {
