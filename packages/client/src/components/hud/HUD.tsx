@@ -1,60 +1,45 @@
-import { useEffect } from "react";
-
-import { primodium } from "@game/api";
-import { KeybindActions, Scenes } from "@game/constants";
-import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { MapOpen, SelectedBuilding } from "src/network/components/clientComponents";
-// import { entityToAddress, getBlockTypeName, shortenAddress } from "src/util/common";
-import { useGameStore } from "../../store/GameStore";
+import { SelectedBuilding } from "src/network/components/clientComponents";
 import { HUD } from "../core/HUD";
 import { OverlayModal } from "../core/OverlayModal";
 import { BrandingLabel } from "../shared/BrandingLabel";
-// import { GracePeriod } from "./GracePeriod";
-// import { LoadingIndication } from "./LoadingIndication";
 import { Profile } from "./Profile";
-// import { PrototypeInfo } from "./PrototypeInfo";
 import { SelectAction } from "./SelectAction";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
-// import { Hotbar } from "./hotbar/Hotbar";
-// import { Marketplace } from "./marketplace/Marketplace";
-// import { Panes } from "./panes/Panes";
-// import { Resources } from "./resources/Resources";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 import { Score } from "./Score";
 import { PlayerLeaderboard } from "./modals/leaderboard/PlayerLeaderboard";
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
-import { Settings } from "./modals/Settings";
-import { Objectives } from "./modals/Objectives";
 import { Tabs } from "../core/Tabs";
-import { FaArrowRight, FaCaretLeft, FaCaretRight, FaTimes, FaTrash } from "react-icons/fa";
+import { FaArrowRight, FaCaretLeft, FaCaretRight } from "react-icons/fa";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
 import { CurrenObjective } from "./CurrentObjective";
 import { Blueprints } from "./Blueprints";
 import { Action } from "src/util/constants";
+import { Settings } from "./modals/settings/Settings";
 
 export const GameHUD = () => {
-  const [showUI, toggleShowUI] = useGameStore((state) => [state.showUI, state.toggleShowUI]);
-  const playerEntity = useMud().network.playerEntity;
+  // const [showUI, toggleShowUI] = useGameStore((state) => [state.showUI, state.toggleShowUI]);
+  // const playerEntity = useMud().network.playerEntity;
   const selectedBuilding = SelectedBuilding.use()?.value;
-  const spectatingAccount = components.SpectateAccount.use()?.value;
+  // const spectatingAccount = components.SpectateAccount.use()?.value;
   const action = components.SelectedAction.use()?.value;
-  const mapOpen = MapOpen.use(undefined, {
-    value: false,
-  }).value;
+  // const mapOpen = MapOpen.use(undefined, {
+  //   value: false,
+  // }).value;
 
-  const isSpectating = spectatingAccount !== playerEntity;
+  // const isSpectating = spectatingAccount !== playerEntity;
 
-  useEffect(() => {
-    const asteroidListener = primodium.api(Scenes.Asteroid).input.addListener(KeybindActions.ToggleUI, toggleShowUI);
-    const starmapListener = primodium.api(Scenes.Starmap).input.addListener(KeybindActions.ToggleUI, toggleShowUI);
+  // useEffect(() => {
+  //   const asteroidListener = primodium.api(Scenes.Asteroid).input.addListener(KeybindActions.ToggleUI, toggleShowUI);
+  //   const starmapListener = primodium.api(Scenes.Starmap).input.addListener(KeybindActions.ToggleUI, toggleShowUI);
 
-    return () => {
-      asteroidListener.dispose();
-      starmapListener.dispose();
-    };
-  }, [toggleShowUI]);
+  //   return () => {
+  //     asteroidListener.dispose();
+  //     starmapListener.dispose();
+  //   };
+  // }, [toggleShowUI]);
 
   return (
     <div className="screen-container font-mono">
@@ -126,10 +111,6 @@ export const GameHUD = () => {
                 }}
                 className="rounded-r-none m-0 border-r-0 btn-md border-warning relative py-4 hover:text-accent group"
               >
-                <FaCaretLeft
-                  size={22}
-                  className="text-accent absolute top-1/2 left-0  -translate-y-1/2 -translate-x-full "
-                />
                 <IconLabel imageUri="img/icons/minersicon.png" className="text-2xl" />
                 <p
                   style={{
@@ -175,10 +156,6 @@ export const GameHUD = () => {
               togglable
               className="rounded-l-none m-0 border-l-0 btn-md border-secondary relative py-4 hover:text-accent group"
             >
-              <FaCaretRight
-                size={22}
-                className="text-accent absolute top-1/2 right-0  -translate-y-1/2 translate-x-full "
-              />
               <IconLabel imageUri="img/icons/chaticon.png" className="text-2xl" />
               <p
                 style={{
