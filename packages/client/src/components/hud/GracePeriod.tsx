@@ -6,7 +6,7 @@ import { Hex } from "viem";
 import { IconLabel } from "../core/IconLabel";
 dayjs.extend(duration);
 
-export const GracePeriod: React.FC<{ player: Entity }> = ({ player }) => {
+export const GracePeriod: React.FC<{ player: Entity; className?: string }> = ({ player, className }) => {
   const time = components.Time.use()?.value ?? 0n;
   const endTime = components.GracePeriod.useWithKeys({ entity: player as Hex })?.value;
   if (!endTime) return null;
