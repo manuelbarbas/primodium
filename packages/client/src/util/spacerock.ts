@@ -17,7 +17,6 @@ import {
 } from "./constants";
 import { hashKeyEntity } from "./encode";
 import { getFullResourceCount, getMotherlodeResource } from "./resource";
-import { getNow } from "./time";
 
 export function getSpaceRockImage(spaceRock: Entity) {
   const { getSpriteBase64 } = primodium.api().sprite;
@@ -133,7 +132,8 @@ export function getSpaceRockInfo(spaceRock: Entity) {
   const hangar = Hangar.get(spaceRock);
 
   const gracePeriodValue = comps.GracePeriod.get(ownedBy)?.value ?? 0n;
-  const isInGracePeriod = type === ERock.Asteroid ? gracePeriodValue > 0n && gracePeriodValue > getNow() : false;
+  const now = comps.Time.get()?.value ?? 0n;
+  const isInGracePeriod = type === ERock.Asteroid ? gracePeriodValue > 0n && gracePeriodValue > now : false;
 
   let name = "";
   switch (type) {

@@ -11,11 +11,10 @@ import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
 import { clampedIndex, entityToAddress, getRandomRange, shortenAddress } from "src/util/common";
 import { EntityType, RockRelationship } from "src/util/constants";
-import { getNow } from "src/util/time";
-import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 import { getRockRelationship } from "src/util/spacerock";
 import { ObjectText } from "../../common/object-components/text";
 import { Hex } from "viem";
+import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 
 export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -136,7 +135,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       OnComponentSystem(components.BlockNumber, (gameObject) => {
         const player = components.OwnedBy.get(entity)?.value as Entity | undefined;
         const graceTime = components.GracePeriod.get(player)?.value ?? 0n;
-        const time = getNow();
+        const time = components.Time.get(entity)?.value ?? 0n;
 
         if (time >= graceTime) {
           gameObject.alpha = 0;

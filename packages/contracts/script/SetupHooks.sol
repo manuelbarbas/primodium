@@ -82,6 +82,7 @@ import { OnToggleBuilding_MaxStorage } from "src/hooks/systemHooks/toggleBuildin
 import { OnToggleBuilding_ProductionRate } from "src/hooks/systemHooks/toggleBuilding/OnToggleBuilding_ProductionRate.sol";
 import { OnToggleBuilding_Utility } from "src/hooks/systemHooks/toggleBuilding/OnToggleBuilding_Utility.sol";
 
+import { OnMarketPlace_TargetClaimResources } from "src/hooks/systemHooks/marketPlace/OnMarketPlace_TargetClaimResources.sol";
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
 import { BEFORE_SPLICE_STATIC_DATA, AFTER_SET_RECORD, ALL as STORE_ALL } from "@latticexyz/store/src/storeHookTypes.sol";
 
@@ -119,6 +120,7 @@ function setupHooks(IWorld world) {
   registerAllianceHooks(world, onBefore_ClaimResources);
   registerRecallHooks(world, onBefore_ClaimResources);
   registerToggleBuildingHooks(world, onBefore_ClaimResources, onBefore_ClaimUnits);
+  registerMarketplaceHooks(world, onBefore_ClaimResources);
   //Store Hooks
   registerScoreHook(world);
 }
@@ -172,6 +174,21 @@ function registerToggleBuildingHooks(
   world.grantAccess(MaxResourceCountTableId, hookAddress);
   world.grantAccess(ResourceCountTableId, hookAddress);
   world.registerSystemHook(systemId, onToggleBuilding_Utility, AFTER_CALL_SYSTEM);
+}
+
+function registerMarketplaceHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
+  ResourceId systemId = getSystemResourceId("MarketplaceSystem");
+  world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
+
+  OnMarketPlace_TargetClaimResources onMarketPlace_TargetClaimResources = new OnMarketPlace_TargetClaimResources();
+  world.grantAccess(ResourceCountTableId, address(onMarketPlace_TargetClaimResources));
+  world.grantAccess(MapItemUtilitiesTableId, address(onMarketPlace_TargetClaimResources));
+  world.grantAccess(MapUtilitiesTableId, address(onMarketPlace_TargetClaimResources));
+  world.grantAccess(MapItemStoredUtilitiesTableId, address(onMarketPlace_TargetClaimResources));
+  world.grantAccess(LastClaimedAtTableId, address(onMarketPlace_TargetClaimResources));
+  world.grantAccess(ClaimOffsetTableId, address(onMarketPlace_TargetClaimResources));
+  world.grantAccess(ProducedResourceTableId, address(onMarketPlace_TargetClaimResources));
+  world.registerSystemHook(systemId, onMarketPlace_TargetClaimResources, BEFORE_CALL_SYSTEM);
 }
 
 function registerAllianceHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {

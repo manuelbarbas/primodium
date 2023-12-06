@@ -1,14 +1,13 @@
+import { Entity } from "@latticexyz/recs";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import { components } from "src/network/components";
-import { useNow } from "src/util/time";
 import { Hex } from "viem";
 import { IconLabel } from "../core/IconLabel";
-import { Entity } from "@latticexyz/recs";
 dayjs.extend(duration);
 
-export const GracePeriod: React.FC<{ player: Entity; className?: string }> = ({ player, className }) => {
-  const time = useNow();
+export const GracePeriod: React.FC<{ player: Entity }> = ({ player }) => {
+  const time = components.Time.use()?.value ?? 0n;
   const endTime = components.GracePeriod.useWithKeys({ entity: player as Hex })?.value;
   if (!endTime) return null;
   const duration = dayjs.duration(Number(endTime - time) * 1000);
