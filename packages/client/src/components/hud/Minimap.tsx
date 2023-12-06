@@ -1,4 +1,6 @@
 import { primodium } from "@game/api";
+import { Scenes } from "@game/constants";
+import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
@@ -98,7 +100,24 @@ export const Minimap = () => {
     const owner = components.OwnedBy.get(entity)?.value as Entity | undefined;
     return { ...position!, owner, size: rockType === ERock.Asteroid ? 4 : 2 };
   });
-  const view = primodium.api().hooks.useCamera().worldView;
+  const { hooks, scene } = primodium.api(Scenes.Starmap);
+  const rawView = hooks.useCamera().worldView;
+  const view = useMemo(() => {
+    const tilemap = scene.getConfig(Scenes.Starmap)?.tilemap;
+    if (!rawView || !tilemap) return undefined;
+    const { x, y } = pixelCoordToTileCoord({ x: rawView.x, y: rawView.y }, tilemap.tileWidth, tilemap.tileHeight);
+    const { x: width, y: height } = pixelCoordToTileCoord(
+      { x: rawView.width, y: rawView.height },
+      tilemap.tileWidth,
+      tilemap.tileHeight
+    );
+    return {
+      x,
+      y,
+      width,
+      height,
+    };
+  }, [rawView, scene]);
 
   return (
     <div

@@ -27,6 +27,7 @@ import { Modal } from "../core/Modal";
 import { Tabs } from "../core/Tabs";
 import { Blueprints } from "./Blueprints";
 import { CurrenObjective } from "./CurrentObjective";
+import { Minimap } from "./Minimap";
 import { Score } from "./Score";
 import { Settings } from "./modals/Settings";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
@@ -109,9 +110,7 @@ export const GameHUD = () => {
           <Profile />
         </HUD.TopLeft>
 
-        <HUD.TopRight>
-          <CurrenObjective />
-        </HUD.TopRight>
+        <HUD.TopRight>{mapOpen ? <Minimap /> : <CurrenObjective />}</HUD.TopRight>
 
         <HUD.Right>
           {(!selectedBuilding || action === Action.PlaceBuilding) && (
