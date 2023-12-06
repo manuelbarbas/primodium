@@ -207,7 +207,9 @@ export const GameHUD = () => {
           </Tabs>
         </HUD.Left>
 
-        <HUD.BottomMiddle>{/* <SpacerockMenu /> */}</HUD.BottomMiddle>
+        <HUD.BottomMiddle>
+          <SpacerockMenu />
+        </HUD.BottomMiddle>
       </HUD>
 
       <HUD>

@@ -15,6 +15,7 @@ import { setupSend } from "src/network/systems/setupSend";
 import { setupTime } from "src/network/systems/setupTime";
 import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
 import { useMud } from "./useMud";
+import { setupPlayerResources } from "src/network/systems/setupPlayerResources";
 
 export const useInit = () => {
   const mud = useMud();
@@ -37,6 +38,8 @@ export const useInit = () => {
     setupInvitations(mud);
     setupBattleNotifications(mud);
     setupTime(mud);
+    //temp before full spacerock resource system
+    setupPlayerResources();
   }, [mud, playerEntity]);
 
   useEffect(() => {

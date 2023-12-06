@@ -12,7 +12,10 @@ export const HousingLabel = () => {
   const playerEntity = useMud().network.playerEntity;
   const selectedRock = components.SelectedRock.use()?.value;
   const owner = components.OwnedBy.use(selectedRock)?.value as Entity | undefined;
-  const { resourceCount, maxStorage } = useFullResourceCount(EntityType.Housing, owner ?? playerEntity);
+  const { resourceCount, resourceStorage: maxStorage } = useFullResourceCount(
+    EntityType.Housing,
+    owner ?? playerEntity
+  );
 
   const resourceIcon = ResourceImage.get(EntityType.Housing);
   const percentFull = Math.round((Number(resourceCount) / Number(maxStorage)) * 100);

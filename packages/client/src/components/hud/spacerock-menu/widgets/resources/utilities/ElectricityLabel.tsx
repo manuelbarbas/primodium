@@ -12,7 +12,10 @@ export const ElectricityLabel = () => {
   const playerEntity = useMud().network.playerEntity;
   const selectedRock = components.SelectedRock.use()?.value;
   const owner = components.OwnedBy.use(selectedRock)?.value as Entity | undefined;
-  const { resourceCount, maxStorage } = useFullResourceCount(EntityType.Electricity, owner ?? playerEntity);
+  const { resourceCount, resourceStorage: maxStorage } = useFullResourceCount(
+    EntityType.Electricity,
+    owner ?? playerEntity
+  );
 
   const resourceIcon = ResourceImage.get(EntityType.Electricity);
   const percentFull = Math.round((Number(resourceCount) / Number(maxStorage)) * 100);

@@ -58,28 +58,14 @@ export const MapOpen = createExtendedBoolComponent(world, { id: "MapOpen" });
 export const PlayerResources = createExtendedComponent(
   world,
   {
-    resourcesCount: Type.OptionalBigInt,
-    resourceToClaim: Type.OptionalBigInt,
-    resourceStorage: Type.OptionalBigInt,
-    production: Type.OptionalBigInt,
-    producedResource: Type.OptionalBigInt,
+    resourceCount: Type.BigInt,
+    resourcesToClaim: Type.BigInt,
+    resourceStorage: Type.BigInt,
+    production: Type.BigInt,
+    producedResource: Type.BigInt,
   },
   {
     id: "PlayerResources",
-  }
-);
-
-export const SelectedRockResources = createExtendedComponent(
-  world,
-  {
-    resourcesCount: Type.OptionalBigInt,
-    resourceToClaim: Type.OptionalBigInt,
-    resourceStorage: Type.OptionalBigInt,
-    production: Type.OptionalBigInt,
-    producedResource: Type.OptionalBigInt,
-  },
-  {
-    id: "SelectedRockResources",
   }
 );
 
@@ -191,7 +177,6 @@ export default {
 
   /* ------------------------------- Resources -------------------------------- */
   PlayerResources,
-  SelectedRockResources,
 
   /* ---------------------------------- Input --------------------------------- */
   SelectedTile,
