@@ -5,11 +5,12 @@ import { world } from "../world";
 import { getPlayerFullResourceCounts, isUtility } from "src/util/resource";
 import { ResourceStorages } from "src/util/constants";
 import { Hex } from "viem";
+import { ERock } from "contracts/config/enums";
 
 export const setupPlayerResources = () => {
   const player = components.Account.get()?.value ?? singletonEntity;
 
-  defineComponentSystem(world, components.BlockNumber, () => {
+  const storePlayerResources = (player: Entity) => {
     const playerResources = getPlayerFullResourceCounts(player);
 
     {
@@ -34,5 +35,20 @@ export const setupPlayerResources = () => {
         );
       });
     }
+  };
+
+  defineComponentSystem(world, components.BlockNumber, () => {
+    storePlayerResources(player);
+  });
+
+  defineComponentSystem(world, components.SelectedRock, () => {
+    const owner = components.OwnedBy.get(components.SelectedRock.get()?.value ?? singletonEntity)?.value as
+      | Entity
+      | undefined;
+    const rockType = components.RockType.get(components.SelectedRock.get()?.value ?? singletonEntity)?.value;
+
+    if (!owner || owner === player || rockType === ERock.Motherlode) return;
+
+    storePlayerResources(owner);
   });
 };

@@ -3,7 +3,6 @@ import { encodeEntity, singletonEntity } from "@latticexyz/store-sync/recs";
 import { useMemo } from "react";
 import { Badge } from "src/components/core/Badge";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
-// import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { formatNumber } from "src/util/common";
 import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
