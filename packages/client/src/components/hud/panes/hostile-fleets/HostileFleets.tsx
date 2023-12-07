@@ -93,7 +93,7 @@ export const HostileFleets: React.FC = () => {
               arrivalTime={fleet.arrivalTime}
               destination={fleet.destination}
               sendType={fleet.sendType}
-              outgoing={false}
+              dontShowButton
             />
           ))}
         </>

@@ -1,21 +1,21 @@
-import { useMud } from "src/hooks";
-import { Hex } from "viem";
-import { FaGift, FaMapPin } from "react-icons/fa";
-import { useEffect, useMemo, useState } from "react";
-import { components } from "src/network/components";
-import { ObjectiveEntityLookup, TransactionQueueType } from "src/util/constants";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EObjectives } from "contracts/config/enums";
+import { useEffect, useMemo, useState } from "react";
+import { FaGift, FaMapPin } from "react-icons/fa";
+import { useMud } from "src/hooks";
+import { components } from "src/network/components";
 import { clampedIndex, getBlockTypeName } from "src/util/common";
+import { ObjectiveEntityLookup, TransactionQueueType } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
 import { ObjectiveDescriptions } from "src/util/objectiveDescriptions";
 import { getCanClaimObjective } from "src/util/objectives";
-import { TransactionQueueMask } from "../shared/TransactionQueueMask";
-import { hashEntities } from "src/util/encode";
 import { claimObjective } from "src/util/web3/contractCalls/claimObjective";
+import { Hex } from "viem";
 import { Button } from "../core/Button";
 import { Card } from "../core/Card";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { Modal } from "../core/Modal";
 import { IconLabel } from "../core/IconLabel";
+import { Modal } from "../core/Modal";
+import { TransactionQueueMask } from "../shared/TransactionQueueMask";
 import { Objectives } from "./modals/Objectives";
 
 const tutorialObjectives = [
@@ -26,7 +26,7 @@ const tutorialObjectives = [
   EObjectives.BuildIronPlateFactory,
 ];
 
-export const CurrenObjective = () => {
+export const CurrentObjective = () => {
   const { network } = useMud();
   const playerEntity = components.Account.use()?.value ?? singletonEntity;
   const [currentStep, setCurrentStep] = useState(0);
