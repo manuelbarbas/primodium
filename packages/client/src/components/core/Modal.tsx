@@ -1,10 +1,10 @@
-import React, { useState, createContext, useContext, ReactNode, useEffect, useRef } from "react";
-import ReactDOM from "react-dom";
-import { Button, IconButton } from "./Button";
 import { primodium } from "@game/api";
-import { FaTimes } from "react-icons/fa";
-import { Card } from "./Card";
 import { AudioKeys } from "@game/constants";
+import React, { ReactNode, createContext, useContext, useEffect, useRef, useState } from "react";
+import ReactDOM from "react-dom";
+import { FaTimes } from "react-icons/fa";
+import { Button, IconButton } from "./Button";
+import { Card } from "./Card";
 
 interface ModalContextType {
   isOpen: boolean;
@@ -55,7 +55,15 @@ export const Modal: React.FC<ModalProps> & {
   return <ModalContext.Provider value={{ isOpen, setIsOpen, title }}>{children}</ModalContext.Provider>;
 };
 
-Modal.Button = function ModalButton({ children, className }) {
+Modal.Button = function ModalButton({
+  children,
+  className,
+  onClick,
+}: {
+  children: ReactNode;
+  className?: string;
+  onClick?: () => void;
+}) {
   const { setIsOpen } = useContext(ModalContext);
 
   return (
@@ -63,6 +71,7 @@ Modal.Button = function ModalButton({ children, className }) {
       className={className}
       clickSound={AudioKeys.Sequence}
       onClick={() => {
+        if (onClick) onClick();
         setIsOpen(true);
       }}
     >
@@ -71,14 +80,14 @@ Modal.Button = function ModalButton({ children, className }) {
   );
 };
 
-Modal.IconButton = function ModalButton(props: React.ComponentProps<typeof IconButton>) {
+Modal.IconButton = function ModalIconButton(props: React.ComponentProps<typeof IconButton>) {
   const { setIsOpen } = useContext(ModalContext);
 
   return (
     <IconButton
       onClick={() => {
-        setIsOpen(true);
         if (props.onClick) props.onClick();
+        setIsOpen(true);
       }}
       {...props}
     />

@@ -1,16 +1,16 @@
+import { Entity } from "@latticexyz/recs";
 import { useMud } from "src/hooks";
+import { components } from "src/network/components";
+import { FleetActions } from "../fleet-send/FleetActions";
 import { AllMaterialLabels } from "./material/AllMaterialLabels";
 import { AllUnitLabels } from "./units/AllUnitLabels";
 import { ElectricityLabel } from "./utilities/ElectricityLabel";
 import { HousingLabel } from "./utilities/HousingLabel";
-import { Entity } from "@latticexyz/recs";
-import { components } from "src/network/components";
-import { FleetActions } from "../fleet-send/FleetActions";
 // import { SpectateLabel } from "../fleet-send/SpectateLabel";
+import { ERock } from "contracts/config/enums";
+import { FaCaretUp } from "react-icons/fa";
 import { RelationLabel } from "../fleet-send/RelationLabel";
 import { StationedUnitsLabel } from "../fleet-send/StationedUnitsLabel";
-import { FaCaretUp } from "react-icons/fa";
-import { ERock } from "contracts/config/enums";
 import { MotherlodeMaterial } from "./material/MotherlodeMaterial";
 
 export const Resources: React.FC = () => {
@@ -32,7 +32,7 @@ export const Resources: React.FC = () => {
             {rockType === ERock.Asteroid && <ElectricityLabel />}
             <div className="relative w-full rounded">
               <div className="w-full h-full absolute star-background rounded-box opacity-50 border border-t-0 rounded-t-none border-secondary" />
-              {<AllUnitLabels />}
+              <AllUnitLabels />
             </div>
             {rockType === ERock.Asteroid && <HousingLabel />}
           </div>
