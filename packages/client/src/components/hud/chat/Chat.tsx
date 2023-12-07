@@ -197,7 +197,7 @@ export const Chat = ({ className }: ChatProps) => {
           >
             {Array.from(chat).map(([uuid, message], index) => {
               return (
-                <div key={uuid} className={`flex ${index % 2 === 0 ? "bg-neutral/50" : ""} px-3 py-1`}>
+                <div key={uuid} className={`flex ${index % 2 === 0 ? "bg-neutral/50" : ""} px-3 py-1 items-end`}>
                   <div
                     className={`${message.user === "unknown" ? "opacity-50" : ""} flex ${
                       message.pending ? " opacity-25 animate-pulse" : ""

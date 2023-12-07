@@ -1,5 +1,5 @@
 import { useMud } from "src/hooks";
-import { linkAddress } from "src/util/web2/linkAddress";
+// import { linkAddress } from "src/util/web2/linkAddress";
 import { formatEther } from "viem";
 import { Button } from "../core/Button";
 import { useAccount } from "src/hooks/useAccount";
@@ -68,7 +68,7 @@ export const Profile = () => {
         {!linkedAddress?.address && !loading && (
           <Button
             className="btn-xs btn-secondary btn-ghost flex gap-1 m-auto text-accent mt-1"
-            onClick={() => linkAddress(network)}
+            onClick={() => window.open(`/account?&tab=link`)}
           >
             <FaLink /> LINK ADDRESS
           </Button>
