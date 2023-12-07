@@ -62,6 +62,29 @@ export function getMotherlodeResource(entity: Entity) {
   return ResourceEntityLookup[resource];
 }
 
+export function getPlayerFullResourceCount(resource: Entity, playerEntity: Entity) {
+  const ownedMotherlodes = comps.OwnedMotherlodes.getWithKeys({ entity: playerEntity as Hex })?.value ?? [];
+  const motherlodeResources = ownedMotherlodes.map((value) => getFullResourceCount(resource, value as Entity));
+  const homeAsteroid = comps.Home.get(playerEntity)?.asteroid as Entity | undefined;
+  const homeResources = getFullResourceCount(resource, homeAsteroid);
+
+  return [...motherlodeResources, homeResources].reduce(
+    (prev, curr) => ({
+      resourceCount: prev.resourceCount + curr.resourceCount,
+      resourcesToClaim: prev.resourcesToClaim + curr.resourcesToClaim,
+      resourceStorage: prev.resourceStorage + curr.resourceStorage,
+      production: prev.production + curr.production,
+      producedResource: prev.producedResource + curr.producedResource,
+    }),
+    {
+      resourceCount: 0n,
+      resourcesToClaim: 0n,
+      resourceStorage: 0n,
+      production: 0n,
+      producedResource: 0n,
+    }
+  );
+}
 // This function exists temporarly as mined motherlode resources are claimed to hom asteroid directly
 // in the future we never have to resolve or take into account mutliple space rock resources as they have to manualy transported between space rocks
 export function getPlayerFullResourceCounts(playerEntity: Entity) {
@@ -83,7 +106,6 @@ export function getPlayerFullResourceCounts(playerEntity: Entity) {
           resourceStorage: 0n,
           production: 0n,
           producedResource: 0n,
-          consumptionTimeLength: 0n,
         };
       }
       combinedCounts[key].resourceCount += value.resourceCount;
@@ -111,7 +133,6 @@ type ResourceCountData = {
   resourceStorage: bigint;
   production: bigint;
   producedResource: bigint;
-  consumptionTimeLength?: bigint;
 };
 
 export function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, spaceRock?: Entity, count = 1n) {
@@ -252,7 +273,7 @@ export function getFullResourceCounts(spaceRockEntity?: Entity) {
 
     //if they are both equal no change will be made
     if (productionRate == 0n && consumptionRate == 0n)
-      result.set(entity, {
+      return result.set(entity, {
         resourceCount,
         resourcesToClaim: 0n,
         resourceStorage,
@@ -284,7 +305,7 @@ export function getFullResourceCounts(spaceRockEntity?: Entity) {
 
     //if increase and decrease match than nothing to update
     if (increase == decrease)
-      result.set(entity, {
+      return result.set(entity, {
         resourceCount: resourceCount,
         resourcesToClaim: 0n,
         resourceStorage: resourceStorage,
@@ -318,14 +339,31 @@ export function getFullResourceCounts(spaceRockEntity?: Entity) {
         })?.value ?? 0n;
     }
 
-    result.set(entity, {
+    const finalResourceCount = resourceCount + increase - decrease;
+    const resourcesToClaim =
+      finalResourceCount > resourceStorage
+        ? resourceStorage - resourceCount
+        : finalResourceCount < 0n
+        ? -resourceCount
+        : increase - decrease;
+
+    // if (index == EResource.Iron)
+    // console.log(
+    //   "increse:",
+    //   increase,
+    //   "decrease",
+    //   decrease,
+    //   "final count:",
+    //   finalResourceCount,
+    //   "max storage:",
+    //   resourceStorage,
+    //   "resources to claim:",
+    //   resourcesToClaim
+    // );
+
+    return result.set(entity, {
       resourceCount: resourceCount,
-      resourcesToClaim:
-        resourceCount + increase - decrease > resourceStorage
-          ? resourceStorage - resourceCount
-          : resourceCount + increase - decrease < 0
-          ? -resourceCount
-          : increase - decrease,
+      resourcesToClaim,
       resourceStorage: resourceStorage,
       production: productionRate - consumptionRate,
       producedResource: producedResource,
