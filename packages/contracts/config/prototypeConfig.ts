@@ -387,7 +387,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_RequiredTile: { value: MUDEnums.EResource.indexOf("Iron") },
     },
     levels: {
-      1: { P_RequiredBaseLevel: { value: 1n }, P_Production: getResourceValues({ Iron: 25 }) },
+      1: { P_RequiredBaseLevel: { value: 1n }, P_Production: getResourceValues({ Copper: 25 }) },
       2: {
         P_RequiredBaseLevel: { value: 1n },
         P_RequiredResources: getResourceValues({ Iron: 100000 }),
@@ -432,7 +432,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_RequiredTile: { value: MUDEnums.EResource.indexOf("Iron") },
     },
     levels: {
-      1: { P_RequiredBaseLevel: { value: 1n }, P_Production: getResourceValues({ Iron: 25 }) },
+      1: { P_RequiredBaseLevel: { value: 1n }, P_Production: getResourceValues({ Lithium: 25 }) },
       2: {
         P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Iron: 100000 }),
@@ -477,7 +477,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_RequiredTile: { value: MUDEnums.EResource.indexOf("Iron") },
     },
     levels: {
-      1: { P_RequiredBaseLevel: { value: 1n }, P_Production: getResourceValues({ Iron: 25 }) },
+      1: { P_RequiredBaseLevel: { value: 1n }, P_Production: getResourceValues({ Sulfur: 25 }) },
       2: {
         P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Iron: 100000 }),
