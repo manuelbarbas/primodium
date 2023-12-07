@@ -23,10 +23,6 @@ export default async function handleChatHistory(req: VercelRequest, res: VercelR
 
     const results = (await pipeline.exec()).filter(Boolean) as Chat[];
 
-    console.log(results.length);
-
-    //remove null
-
     return res.send(results);
 
     // store message in kv by channel
