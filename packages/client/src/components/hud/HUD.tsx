@@ -247,7 +247,7 @@ const FleetsPane = () => (
       <ReinforcementFleets />
     </Tabs.Pane>
 
-    <Tabs.Pane index={1} className="rounded-r-none z-10">
+    <Tabs.Pane index={1} className="rounded-r-none z-10 w-full h-full">
       <HostileFleets />
     </Tabs.Pane>
   </Tabs>

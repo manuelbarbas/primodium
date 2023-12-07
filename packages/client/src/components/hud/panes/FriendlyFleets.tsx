@@ -50,23 +50,23 @@ export const ReinforcementFleets: React.FC = () => {
 
   return (
     <div className="w-full text-xs h-full overflow-y-auto flex flex-col gap-2">
-      <div className=" flex gap-1">
+      <div className=" flex gap-1 items-center">
         <Button
-          className="btn-secondary btn-xs"
+          className="btn-primary btn-xs"
           selected={typeSort === ESendType.Reinforce}
           onClick={() => setTypeSort(typeSort === ESendType.Reinforce ? null : ESendType.Reinforce)}
         >
           Reinforce
         </Button>
         <Button
-          className="btn-secondary btn-xs"
+          className="btn-primary btn-xs"
           selected={typeSort === ESendType.Invade}
           onClick={() => setTypeSort(typeSort === ESendType.Invade ? null : ESendType.Invade)}
         >
           Invade
         </Button>
         <Button
-          className="btn-secondary btn-xs"
+          className="btn-primary btn-xs"
           selected={typeSort === ESendType.Raid}
           onClick={() => setTypeSort(typeSort === ESendType.Raid ? null : ESendType.Raid)}
         >
@@ -75,19 +75,20 @@ export const ReinforcementFleets: React.FC = () => {
         <span className="w-6"></span>
 
         <Button
-          className="btn-secondary btn-xs"
+          className="btn-primary btn-xs"
           selected={timeSort === "asc"}
           onClick={() => setTimeSort(timeSort === "asc" ? null : "asc")}
         >
           Time (asc)
         </Button>
         <Button
-          className="btn-secondary btn-xs"
+          className="btn-primary btn-xs"
           selected={timeSort === "desc"}
           onClick={() => setTimeSort(timeSort === "desc" ? null : "desc")}
         >
           Time (desc)
         </Button>
+        <p className="w-full text-right uppercase font-bold">{sortedFleets?.length} fleets</p>
       </div>
       {sortedFleets.length === 0 ? (
         <SecondaryCard className="text-center font-bold w-auto">
