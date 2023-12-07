@@ -14,6 +14,7 @@ import { formatNumber } from "src/util/common";
 import { Hex } from "viem";
 import { DefenseLabel } from "../resources/utilities/DefenseLabel";
 import { Land } from "./Land";
+import { Recall } from "./Recall";
 import { SendFleet } from "./SendFleet";
 
 export const FleetActions = () => {
@@ -49,6 +50,7 @@ export const FleetActions = () => {
       }, 0n),
     [units, owner, playerEntity, getUnitCount]
   );
+  if (!selectedAsteroid) return null;
 
   return (
     <div className="flex flex-col items-center gap-1 m-1">
@@ -90,6 +92,12 @@ export const FleetActions = () => {
             <FaExternalLinkAlt className="opacity-75 scale-90" />
           </Badge>
         )}
+        <Modal title="Recall">
+          <Modal.Content className="w-[51rem]">
+            <Recall rock={selectedAsteroid} />
+          </Modal.Content>
+          <Modal.IconButton className="btn-xs" imageUri="/img/icons/mainbaseicon.png" text="recall" />
+        </Modal>
       </div>
     </div>
   );

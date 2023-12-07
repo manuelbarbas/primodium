@@ -66,7 +66,8 @@ export const Recall = ({ rock }: { rock: Entity }) => {
     counts: [],
   });
 
-  const arrivals = components.Arrival.use({ destination: rock, from: network.playerEntity });
+  const ownedByPlayer = components.OwnedBy.get(rock)?.value === network.playerEntity;
+  const arrivals = components.Arrival.use({ destination: rock, from: network.playerEntity, onlyOrbiting: true });
   const getUnitCount = useCallback(
     (unit: Entity) => {
       if (!units) return 0n;
@@ -89,10 +90,14 @@ export const Recall = ({ rock }: { rock: Entity }) => {
     <div className="flex flex-col gap-1 border-none h-96">
       <TargetInfo />
       <div className="grid grid-cols-2 gap-2 border-none w-full pointer-events-auto h-full">
-        <SecondaryCard className="flex flex-col gap-2 w-full overflow-y-none">
-          <p className="font-bold text-center sticky">Arriving Fleets</p>
+        <SecondaryCard className={`flex flex-col gap-2 w-full overflow-y-none ${!ownedByPlayer ? "col-span-2" : ""}`}>
+          <p className="font-bold text-center ">Orbiting Fleets</p>
           <div className="flex flex-col h-full w-full overflow-y-scroll scrollbar">
-            {!arrivals.length && <p>No Arriving fleets</p>}
+            {arrivals.length == 0 && (
+              <SecondaryCard className="w-full h-full flex text-xs items-center justify-center font-bold">
+                <p className="opacity-50 uppercase">no orbiting fleets</p>
+              </SecondaryCard>
+            )}
             {arrivals.length > 0 &&
               arrivals.map(
                 (arrival) =>
@@ -110,18 +115,27 @@ export const Recall = ({ rock }: { rock: Entity }) => {
           </div>
         </SecondaryCard>
 
-        <SecondaryCard className="flex flex-col w-full space-y-1 h-full">
-          <p className="font-bold text-center">Stationed Units</p>
-          {totalUnits == 0n && <p>No Stationed Units</p>}
-          <div className="grid gap-1 h-full grid-cols-4 grid-rows-2">
-            {unitCounts.map((unit) => (
-              <Unit unit={unit.unit} count={unit.count} key={`counts-${unit.unit}`} />
-            ))}
-          </div>
-          <Button onClick={() => recallStationedUnits(rock, network)} disabled={totalUnits == 0n}>
-            Recall Stationed Units
-          </Button>
-        </SecondaryCard>
+        {ownedByPlayer && (
+          <SecondaryCard className="flex flex-col w-full space-y-1 h-full">
+            <p className="font-bold text-center">Stationed Units</p>
+            {totalUnits == 0n && (
+              <SecondaryCard className="w-full h-full flex text-xs items-center justify-center font-bold">
+                <p className="opacity-50 uppercase">no stationed units</p>
+              </SecondaryCard>
+            )}
+
+            {totalUnits !== 0n && (
+              <div className="grid gap-1 h-full grid-cols-4 grid-rows-2">
+                {unitCounts.map((unit) => (
+                  <Unit unit={unit.unit} count={unit.count} key={`counts-${unit.unit}`} />
+                ))}
+              </div>
+            )}
+            <Button onClick={() => recallStationedUnits(rock, network)} disabled={totalUnits == 0n}>
+              Recall Stationed Units
+            </Button>
+          </SecondaryCard>
+        )}
       </div>
     </div>
   );

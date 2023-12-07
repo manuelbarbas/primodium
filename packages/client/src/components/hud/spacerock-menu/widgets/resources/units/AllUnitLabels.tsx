@@ -115,12 +115,7 @@ export const AllUnitLabels = () => {
               <Modal.Content className="w-[51rem]">
                 <Recall rock={selectedAsteroid} />
               </Modal.Content>
-              <Modal.IconButton
-                className="btn-xs"
-                imageUri="/img/icons/mainbaseicon.png"
-                text="recall"
-                onClick={handleReinforce}
-              />
+              <Modal.IconButton className="btn-xs" imageUri="/img/icons/mainbaseicon.png" text="recall" />
             </Modal>
 
             <Modal title="Send Fleet">
