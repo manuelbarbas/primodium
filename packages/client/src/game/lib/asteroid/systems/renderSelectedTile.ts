@@ -1,12 +1,18 @@
+import { DepthLayers } from "@game/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { ComponentUpdate, Has } from "@latticexyz/recs";
-import { defineEnterSystem, defineExitSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
+import {
+  ComponentUpdate,
+  Has,
+  defineEnterSystem,
+  defineExitSystem,
+  defineUpdateSystem,
+  namespaceWorld,
+} from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { world } from "src/network/world";
 import { SelectedTile } from "src/network/components/clientComponents";
+import { world } from "src/network/world";
 import { ObjectPosition } from "../../common/object-components/common";
 import { Square } from "../../common/object-components/graphics";
-import { DepthLayers } from "@game/constants";
 
 export const renderSelectedTile = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -33,7 +39,7 @@ export const renderSelectedTile = (scene: Scene) => {
           x: Math.floor(pixelCoord.x / tileWidth) * tileWidth,
           y: -Math.floor(pixelCoord.y / tileWidth) * tileHeight,
         },
-        DepthLayers.Path
+        DepthLayers.Tile
       ),
       Square(tileWidth, tileHeight, {
         borderThickness: 1,

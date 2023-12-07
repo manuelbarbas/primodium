@@ -43,12 +43,21 @@ export const config = mudConfig({
     P_GameConfig: {
       keySchema: {},
       valueSchema: {
+        admin: "address",
         unitProductionRate: "uint256",
         maxMotherlodesPerAsteroid: "uint256",
         motherlodeChanceInv: "uint256",
         motherlodeDistance: "uint256",
         travelTime: "uint256",
         worldSpeed: "uint256",
+        tax: "uint256",
+      },
+    },
+
+    P_GameConfig2: {
+      keySchema: {},
+      valueSchema: {
+        wETHAddress: "address",
       },
     },
 
@@ -203,12 +212,12 @@ export const config = mudConfig({
       },
     },
 
-    P_RequiredDependencies: {
+    P_RequiredDependency: {
       keySchema: { prototype: "bytes32", level: "uint256" },
       valueSchema: {
         // mud doesnt recognize EResource arrays so we will manually convert them
-        resources: "uint8[]",
-        amounts: "uint256[]",
+        resource: "uint8",
+        amount: "uint256",
       },
     },
 
@@ -274,6 +283,11 @@ export const config = mudConfig({
       valueSchema: "uint8[]",
     },
 
+    P_ConsumesResource: {
+      keySchema: { resource: "uint8" },
+      valueSchema: "uint8",
+    },
+
     BuildingType: {
       keySchema: { entity: "bytes32" },
       valueSchema: "bytes32",
@@ -287,6 +301,16 @@ export const config = mudConfig({
     ProductionRate: {
       keySchema: { entity: "bytes32", resource: "uint8" },
       valueSchema: "uint256",
+    },
+
+    ConsumptionRate: {
+      keySchema: { entity: "bytes32", resource: "uint8" },
+      valueSchema: "uint256",
+    },
+
+    IsActive: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "bool",
     },
 
     /* ------------------------------- Motherlode ------------------------------- */
@@ -310,6 +334,21 @@ export const config = mudConfig({
     SetMotherlodes: {
       keySchema: { entity: "bytes32" },
       valueSchema: "bytes32[]",
+    },
+
+    P_SizeToAmount: {
+      keySchema: { size: "uint8" },
+      valueSchema: "uint256",
+    },
+
+    OwnedMotherlodes: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "bytes32[]",
+    },
+
+    P_RawResource: {
+      keySchema: { resource: "uint8" },
+      valueSchema: "uint8",
     },
 
     /* ----------------------------- Unit Production ---------------------------- */
@@ -648,6 +687,22 @@ export const config = mudConfig({
     AllianceJoinRequest: {
       keySchema: { entity: "bytes32", alliance: "bytes32" },
       valueSchema: { timeStamp: "uint256" },
+    },
+
+    /* ------------------------------- Marketplace ------------------------------ */
+    MarketplaceOrder: {
+      keySchema: { id: "bytes32" },
+      valueSchema: {
+        seller: "bytes32",
+        resource: "uint8",
+        count: "uint256",
+        price: "uint256",
+      },
+    },
+
+    OrderCount: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "uint256",
     },
   },
 });

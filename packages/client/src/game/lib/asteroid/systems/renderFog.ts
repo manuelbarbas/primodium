@@ -1,13 +1,13 @@
+import { DepthLayers, FogTilekeys } from "@game/constants";
 import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { world } from "src/network/world";
-import { getAsteroidBounds, getPlayerBounds } from "src/util/outOfBounds";
-import { Square } from "../../common/object-components/graphics";
-import { ObjectPosition, SetValue } from "../../common/object-components/common";
-import { ObjectText } from "../../common/object-components/text";
-import { DepthLayers, FogTilekeys } from "@game/constants";
-import { SetupResult } from "src/network/types";
 import { components } from "src/network/components";
+import { SetupResult } from "src/network/types";
+import { world } from "src/network/world";
+import { getAsteroidBounds, getSpaceRockBounds } from "src/util/outOfBounds";
+import { ObjectPosition, SetValue } from "../../common/object-components/common";
+import { Square } from "../../common/object-components/graphics";
+import { ObjectText } from "../../common/object-components/text";
 
 export function renderFog(scene: Scene, { network: { playerEntity } }: SetupResult) {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -38,10 +38,11 @@ export function renderFog(scene: Scene, { network: { playerEntity } }: SetupResu
   }
 
   defineComponentSystem(gameWorld, components.Level, ({ entity }) => {
-    if (entity !== playerEntity) return;
+    const playerEntity = components.Account.get()?.value;
+    if (components.Home.get(playerEntity)?.asteroid != entity) return;
 
-    const bounds = getPlayerBounds(playerEntity);
-    const nextBounds = getPlayerBounds(playerEntity, true);
+    const bounds = getSpaceRockBounds(entity);
+    const nextBounds = getSpaceRockBounds(entity, true);
 
     const objIndex = entity + objSuffix;
     if (scene.objectPool.objects.has(objIndex)) {
@@ -87,6 +88,7 @@ export function renderFog(scene: Scene, { network: { playerEntity } }: SetupResu
       }),
       ObjectText(bounds.maxX !== nextBounds.maxX ? "+ NEXT EXPANSION" : "FINAL EXPANSION", {
         color: "cyan",
+        fontSize: 10,
       }),
     ]);
 

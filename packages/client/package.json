@@ -33,6 +33,7 @@
     "@vercel/analytics": "^1.0.1",
     "@vercel/kv": "^1.0.0",
     "async-mutex": "^0.4.0",
+    "buffer": "^6.0.3",
     "comlink": "^4.4.1",
     "contracts": "workspace:*",
     "dayjs": "^1.11.10",
@@ -61,7 +62,8 @@
     "react-window": "^1.8.9",
     "rxjs": "^7.5.5",
     "threads": "^1.7.0",
-    "viem": "^1.19.1",
+    "viem": "1.14.0",
+    "wagmi": "^1.4.7",
     "zustand": "^4.3.9"
   },
   "devDependencies": {

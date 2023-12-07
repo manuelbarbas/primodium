@@ -52,32 +52,54 @@ contract DestroySystemTest is PrimodiumTest {
     switchPrank(address(creator));
     uint256 originalProduction = 100;
     uint256 productionReduction = 10;
-    ProductionRate.set(playerEntity, uint8(EResource.Iron), originalProduction);
-
-    P_RequiredDependenciesData memory requiredDependenciesData = P_RequiredDependenciesData(
-      new uint8[](1),
-      new uint256[](1)
+    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    ProductionRate.set(spaceRockEntity, uint8(EResource.Iron), originalProduction);
+    P_RequiredDependencyData memory requiredDependenciesData = P_RequiredDependencyData(
+      uint8(Iron),
+      productionReduction
     );
-    requiredDependenciesData.resources[0] = uint8(EResource.Iron);
-    requiredDependenciesData.amounts[0] = productionReduction;
 
-    P_RequiredDependencies.set(IronMinePrototypeId, 1, requiredDependenciesData);
+    P_RequiredDependency.set(IronMinePrototypeId, 1, requiredDependenciesData);
     switchPrank(creator);
 
     world.build(EBuilding.IronMine, getIronPosition(creator));
     uint256 productionIncrease = P_Production.getAmounts(IronMinePrototypeId, 1)[0];
-    assertEq(
-      ProductionRate.get(playerEntity, uint8(EResource.Iron)),
-      originalProduction - productionReduction + productionIncrease
-    );
+    assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), originalProduction + productionIncrease);
+    assertEq(ConsumptionRate.get(spaceRockEntity, uint8(EResource.Iron)), productionReduction);
 
     world.destroy(getIronPosition(creator));
-    assertEq(ProductionRate.get(playerEntity, uint8(EResource.Iron)), originalProduction);
+    assertEq(ConsumptionRate.get(spaceRockEntity, uint8(EResource.Iron)), 0);
+    assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), originalProduction);
+  }
+
+  function testDestroyInActiveWithProductionDependencies() public {
+    switchPrank(address(creator));
+    uint256 originalProduction = 100;
+    uint256 productionReduction = 10;
+    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    ProductionRate.set(spaceRockEntity, uint8(EResource.Iron), originalProduction);
+    P_RequiredDependencyData memory requiredDependenciesData = P_RequiredDependencyData(
+      uint8(Iron),
+      productionReduction
+    );
+
+    P_RequiredDependency.set(IronMinePrototypeId, 1, requiredDependenciesData);
+    switchPrank(creator);
+
+    world.build(EBuilding.IronMine, getIronPosition(creator));
+    uint256 productionIncrease = P_Production.getAmounts(IronMinePrototypeId, 1)[0];
+    assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), originalProduction + productionIncrease);
+    assertEq(ConsumptionRate.get(spaceRockEntity, uint8(EResource.Iron)), productionReduction);
+    world.toggleBuilding(getIronPosition(creator));
+
+    world.destroy(getIronPosition(creator));
+    assertEq(ConsumptionRate.get(spaceRockEntity, uint8(EResource.Iron)), 0);
+    assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), originalProduction);
   }
 
   function testDestroyWithResourceProductionIncrease() public {
     switchPrank(address(creator));
-
+    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
     uint256 increase = 69;
     P_ProductionData memory data = P_ProductionData(new uint8[](1), new uint256[](1));
     data.resources[0] = uint8(EResource.Iron);
@@ -86,26 +108,61 @@ contract DestroySystemTest is PrimodiumTest {
     switchPrank(creator);
 
     world.build(EBuilding.IronMine, getIronPosition(creator));
-    assertEq(ProductionRate.get(playerEntity, uint8(EResource.Iron)), increase);
+    assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), increase);
 
     world.destroy(getIronPosition(creator));
-    assertEq(ProductionRate.get(playerEntity, uint8(EResource.Iron)), 0);
+    assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), 0);
+  }
+
+  function testDestroyInActiveWithResourceProductionIncrease() public {
+    switchPrank(address(creator));
+    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    uint256 increase = 69;
+    P_ProductionData memory data = P_ProductionData(new uint8[](1), new uint256[](1));
+    data.resources[0] = uint8(EResource.Iron);
+    data.amounts[0] = increase;
+    P_Production.set(IronMinePrototypeId, 1, data);
+    switchPrank(creator);
+
+    world.build(EBuilding.IronMine, getIronPosition(creator));
+    assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), increase);
+    world.toggleBuilding(getIronPosition(creator));
+    world.destroy(getIronPosition(creator));
+    assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), 0);
   }
 
   function testDestroyWithMaxStorageIncrease() public {
     switchPrank(creator);
-
+    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
     uint8[] memory data = new uint8[](1);
     data[0] = uint8(EResource.Iron);
     P_ListMaxResourceUpgrades.set(IronMinePrototypeId, 1, data);
     P_ByLevelMaxResourceUpgrades.set(IronMinePrototypeId, uint8(EResource.Iron), 1, 50);
 
     switchPrank(creator);
-    MaxResourceCount.set(playerEntity, uint8(EResource.Iron), 0);
+    MaxResourceCount.set(spaceRockEntity, uint8(EResource.Iron), 0);
     world.build(EBuilding.IronMine, getIronPosition(creator));
-    assertEq(MaxResourceCount.get(playerEntity, uint8(EResource.Iron)), 50);
+    assertEq(MaxResourceCount.get(spaceRockEntity, uint8(EResource.Iron)), 50);
 
     world.destroy(getIronPosition(creator));
-    assertEq(MaxResourceCount.get(playerEntity, uint8(EResource.Iron)), 0);
+    assertEq(MaxResourceCount.get(spaceRockEntity, uint8(EResource.Iron)), 0);
+  }
+
+  function testDestroyInActiveWithMaxStorageIncrease() public {
+    switchPrank(creator);
+    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    uint8[] memory data = new uint8[](1);
+    data[0] = uint8(EResource.Iron);
+    P_ListMaxResourceUpgrades.set(IronMinePrototypeId, 1, data);
+    P_ByLevelMaxResourceUpgrades.set(IronMinePrototypeId, uint8(EResource.Iron), 1, 50);
+
+    switchPrank(creator);
+    MaxResourceCount.set(spaceRockEntity, uint8(EResource.Iron), 0);
+    world.build(EBuilding.IronMine, getIronPosition(creator));
+    assertEq(MaxResourceCount.get(spaceRockEntity, uint8(EResource.Iron)), 50);
+    world.toggleBuilding(getIronPosition(creator));
+    assertEq(MaxResourceCount.get(spaceRockEntity, uint8(EResource.Iron)), 0);
+    world.destroy(getIronPosition(creator));
+    assertEq(MaxResourceCount.get(spaceRockEntity, uint8(EResource.Iron)), 0);
   }
 }

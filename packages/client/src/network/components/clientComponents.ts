@@ -31,7 +31,11 @@ export const BlockNumber = createExtendedComponent(
     id: "BlockNumber",
   }
 );
+
+export const Time = createExtendedBigIntComponent(world, { id: "Time" });
 export const Account = createExtendedEntityComponent(world, { id: "Account" });
+export const SelectedRock = createExtendedEntityComponent(world, { id: "SelectedRock" });
+export const SpectateAccount = createExtendedEntityComponent(world, { id: "SpectateAccount" });
 export const GameReady = createExtendedBoolComponent(world, { id: "GameReady" });
 
 // Todo: extend this with relevant tx data
@@ -148,6 +152,8 @@ export default {
 
   /* ------------------------------ Chain State ------------------------------- */
   BlockNumber,
+  Time,
+  SpectateAccount,
   Account,
   GameReady,
   CurrentTransaction,
@@ -157,6 +163,7 @@ export default {
   HoverTile,
   SelectedBuilding,
   SelectedAction,
+  SelectedRock,
   MapOpen,
 
   /* ---------------------------------- Units --------------------------------- */

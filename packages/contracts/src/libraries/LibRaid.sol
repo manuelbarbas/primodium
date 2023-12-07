@@ -56,7 +56,7 @@ library LibRaid {
    */
   function resolveRaid(BattleResultData memory br) internal returns (RaidResultData memory) {
     LibBattle.updateUnitsAfterBattle(br, ESendType.Raid);
-    (uint256 totalResources, uint256[] memory defenderResources) = LibResource.getAllResourceCountsVaulted(br.defender);
+    (uint256 totalResources, uint256[] memory defenderResources) = LibResource.getAllResourceCountsVaulted(br.rock);
     RaidResultData memory raidResult = RaidResultData({
       defenderValuesBeforeRaid: new uint256[](defenderResources.length),
       raidedAmount: new uint256[](defenderResources.length)
@@ -75,8 +75,8 @@ library LibRaid {
       RaidedResource.set(br.attacker, resource, RaidedResource.get(br.attacker, resource) + raidAmount);
       raidResult.defenderValuesBeforeRaid[i] = defenderResources[i];
       raidResult.raidedAmount[i] = raidAmount;
-      LibStorage.increaseStoredResource(br.attacker, resource, raidAmount);
-      LibStorage.decreaseStoredResource(br.defender, resource, raidAmount);
+      LibStorage.increaseStoredResource(Home.getAsteroid(br.attacker), resource, raidAmount);
+      LibStorage.decreaseStoredResource(Home.getAsteroid(br.defender), resource, raidAmount);
     }
     RaidResult.set(keccak256(abi.encode(br)), raidResult);
     return raidResult;

@@ -24,10 +24,11 @@ export const UpgradeMiningVessel: React.FC = () => {
   const mainBaseLevel = components.Level.use(mainBaseEntity, {
     value: 0n,
   }).value;
+  const homeAsteroid = components.Home.use(player)?.asteroid as Entity;
 
   const { level, maxLevel, mainBaseLvlReq, recipe } = getUpgradeInfo(EntityType.MiningVessel, player);
 
-  const hasEnough = useHasEnoughResources(recipe, player);
+  const hasEnough = useHasEnoughResources(recipe);
   const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && level < maxLevel;
   const atMaxLevel = level >= maxLevel;
 
@@ -54,7 +55,6 @@ export const UpgradeMiningVessel: React.FC = () => {
                   return (
                     <Badge key={resource.id + resource.type} className="text-xs gap-2">
                       <ResourceIconTooltip
-                        playerEntity={player}
                         name={getBlockTypeName(resource.id)}
                         image={ResourceImage.get(resource.id) ?? ""}
                         resource={resource.id}
@@ -77,7 +77,7 @@ export const UpgradeMiningVessel: React.FC = () => {
           className="w-fit btn-secondary btn-sm"
           disabled={!canUpgrade}
           loading={transactionLoading}
-          onClick={() => upgradeUnit(EUnit.MiningVessel, network.network)}
+          onClick={() => upgradeUnit(homeAsteroid, EUnit.MiningVessel, network.network)}
         >
           UPGRADE
         </Button>

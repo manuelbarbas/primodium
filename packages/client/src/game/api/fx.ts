@@ -3,6 +3,7 @@ import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 
 export const createFxApi = (scene: Scene) => {
+  const outlineMap = new Map<Phaser.GameObjects.Sprite, Phaser.FX.Controller>();
   function outline(
     gameObject: Phaser.GameObjects.Sprite,
     options: {
@@ -15,12 +16,13 @@ export const createFxApi = (scene: Scene) => {
 
     if (!(gameObject instanceof Phaser.GameObjects.Sprite)) return;
 
-    gameObject.clearFX();
-    gameObject.postFX?.addGlow(color, thickness, undefined, knockout);
+    const fx = gameObject.postFX?.addGlow(color, thickness, undefined, knockout);
+
+    outlineMap.set(gameObject, fx);
   }
 
   function removeOutline(gameObject: Phaser.GameObjects.Sprite) {
-    gameObject.clearFX();
+    gameObject.postFX.clear();
   }
 
   function emitExplosion(coord: Coord) {

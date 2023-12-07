@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import { IWorld } from "codegen/world/IWorld.sol";
 import { entityToAddress, getSystemResourceId } from "src/utils.sol";
-import { RockType, OwnedBy, BattleResultData, P_UnitPrototypes } from "codegen/index.sol";
+import { OwnedMotherlodes, RockType, OwnedBy, BattleResultData, P_UnitPrototypes } from "codegen/index.sol";
 import { ERock, ESendType } from "src/Types.sol";
 import { LibReinforce } from "libraries/LibReinforce.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
@@ -38,8 +38,20 @@ library LibInvade {
       0
     );
     if (invader == br.winner) {
-      LibReinforce.recallAllReinforcements(defender, rockEntity);
+      LibReinforce.recallAllReinforcements(rockEntity);
       OwnedBy.set(rockEntity, invader);
+
+      bytes32[] memory defenderOwnedMotherlodes = OwnedMotherlodes.get(defender);
+      if (defenderOwnedMotherlodes[defenderOwnedMotherlodes.length - 1] != rockEntity) {
+        for (uint256 i = 0; i < defenderOwnedMotherlodes.length; i++) {
+          if (defenderOwnedMotherlodes[i] == rockEntity) {
+            defenderOwnedMotherlodes[i] = defenderOwnedMotherlodes[defenderOwnedMotherlodes.length - 1];
+            break;
+          }
+        }
+      }
+      OwnedMotherlodes.pop(defender);
+      OwnedMotherlodes.push(invader, rockEntity);
     }
   }
 
@@ -83,5 +95,6 @@ library LibInvade {
     }
     require(attackPoints > 0, "[Invade] Can not invade with 0 attack points");
     OwnedBy.set(rockEntity, invader);
+    OwnedMotherlodes.push(invader, rockEntity);
   }
 }

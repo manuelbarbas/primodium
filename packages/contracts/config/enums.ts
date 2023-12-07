@@ -32,27 +32,24 @@ export enum EBuilding {
 
   ShieldGenerator,
   Vault,
+  Market,
 }
 
 export enum EResource {
-  Sandstone = 1,
-  Biofilm,
-  Alluvium,
-  Regolith,
-  Bedrock,
-  Water,
-  Lithium,
+  //Raw
+  R_Titanium = 1,
+  R_Platinum,
+  R_Iridium,
+  R_Kimberlite,
+
   Iron,
   Copper,
+  Lithium,
   Sulfur,
   Titanium,
   Iridium,
-  Osmium,
-  Tungsten,
   Kimberlite,
   Platinum,
-  Uraninite,
-  Bolutite,
 
   // Crafted Items
   IronPlate,
@@ -64,6 +61,7 @@ export enum EResource {
   U_Electricity,
   U_Housing,
   U_Vessel,
+  U_Orders,
   U_MaxMoves,
   U_Defense,
   U_Unraidable,

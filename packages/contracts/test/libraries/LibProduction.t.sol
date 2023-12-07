@@ -33,13 +33,13 @@ contract LibProductionTest is PrimodiumTest {
     P_Production.set(buildingPrototype, 1, data1);
     P_Production.set(buildingPrototype, 2, data2);
     P_Production.set(buildingPrototype, 3, data3);
-
-    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 1);
-    assertEq(ProductionRate.get(playerEntity, uint8(EResource.Iron)), amount1);
-    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 2);
-    assertEq(ProductionRate.get(playerEntity, uint8(EResource.Iron)), amount2);
-    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 3);
-    assertEq(ProductionRate.get(playerEntity, uint8(EResource.Iron)), amount3);
+    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    LibProduction.upgradeResourceProduction(buildingEntity, 1);
+    assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), amount1);
+    LibProduction.upgradeResourceProduction(buildingEntity, 2);
+    assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), amount2);
+    LibProduction.upgradeResourceProduction(buildingEntity, 3);
+    assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), amount3);
   }
 
   function testUpgradeUtilityProductionNoEarlyLevel() public {
@@ -57,13 +57,13 @@ contract LibProductionTest is PrimodiumTest {
     P_Production.set(buildingPrototype, 1, data1);
     P_Production.set(buildingPrototype, 2, data2);
     P_Production.set(buildingPrototype, 3, data3);
-
-    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 1);
-    assertEq(MaxResourceCount.get(playerEntity, uint8(EResource.Iron)), 0);
-    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 2);
-    assertEq(MaxResourceCount.get(playerEntity, uint8(EResource.Iron)), amount2);
-    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 3);
-    assertEq(MaxResourceCount.get(playerEntity, uint8(EResource.Iron)), amount3);
+    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    LibProduction.upgradeResourceProduction(buildingEntity, 1);
+    assertEq(MaxResourceCount.get(spaceRockEntity, uint8(EResource.Iron)), 0);
+    LibProduction.upgradeResourceProduction(buildingEntity, 2);
+    assertEq(MaxResourceCount.get(spaceRockEntity, uint8(EResource.Iron)), amount2);
+    LibProduction.upgradeResourceProduction(buildingEntity, 3);
+    assertEq(MaxResourceCount.get(spaceRockEntity, uint8(EResource.Iron)), amount3);
 
     assertEq(ProductionRate.get(buildingEntity, uint8(EResource.Iron)), 0);
   }
@@ -91,16 +91,16 @@ contract LibProductionTest is PrimodiumTest {
     P_Production.set(buildingPrototype, 1, data1);
     P_Production.set(buildingPrototype, 2, data2);
     P_Production.set(buildingPrototype, 3, data3);
-
-    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 1);
-    assertEq(ProductionRate.get(playerEntity, uint8(EResource.Iron)), amount1);
-    assertEq(ProductionRate.get(playerEntity, uint8(EResource.Copper)), 0);
-    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 2);
-    assertEq(ProductionRate.get(playerEntity, uint8(EResource.Iron)), amount2);
-    assertEq(ProductionRate.get(playerEntity, uint8(EResource.Copper)), amount1);
-    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 3);
-    assertEq(ProductionRate.get(playerEntity, uint8(EResource.Iron)), amount3);
-    assertEq(ProductionRate.get(playerEntity, uint8(EResource.Copper)), amount2);
+    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    LibProduction.upgradeResourceProduction(buildingEntity, 1);
+    assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), amount1);
+    assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Copper)), 0);
+    LibProduction.upgradeResourceProduction(buildingEntity, 2);
+    assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), amount2);
+    assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Copper)), amount1);
+    LibProduction.upgradeResourceProduction(buildingEntity, 3);
+    assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), amount3);
+    assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Copper)), amount2);
   }
 
   function testUpgradeResourceProductionUtility() public {
@@ -122,38 +122,39 @@ contract LibProductionTest is PrimodiumTest {
     P_Production.set(buildingPrototype, 1, data1);
     P_Production.set(buildingPrototype, 2, data2);
     P_Production.set(buildingPrototype, 3, data3);
-
-    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 1);
-    assertEq(MaxResourceCount.get(playerEntity, uint8(EResource.Iron)), amount1);
-    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 2);
-    assertEq(MaxResourceCount.get(playerEntity, uint8(EResource.Iron)), amount2);
-    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, 3);
-    assertEq(MaxResourceCount.get(playerEntity, uint8(EResource.Iron)), amount3);
+    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    LibProduction.upgradeResourceProduction(buildingEntity, 1);
+    assertEq(MaxResourceCount.get(spaceRockEntity, uint8(EResource.Iron)), amount1);
+    LibProduction.upgradeResourceProduction(buildingEntity, 2);
+    assertEq(MaxResourceCount.get(spaceRockEntity, uint8(EResource.Iron)), amount2);
+    LibProduction.upgradeResourceProduction(buildingEntity, 3);
+    assertEq(MaxResourceCount.get(spaceRockEntity, uint8(EResource.Iron)), amount3);
 
     assertEq(ProductionRate.get(buildingEntity, uint8(EResource.Iron)), 0);
   }
 
   function testClearResourceProductionUtility() public {
     P_IsUtility.set(uint8(EResource.Iron), true);
-    LibProduction.clearResourceProduction(playerEntity, buildingEntity);
+    LibProduction.clearResourceProduction(buildingEntity);
     uint256 startingAmount = 50;
     uint256 amountCleared = 20;
-    MaxResourceCount.set(playerEntity, uint8(EResource.Iron), startingAmount);
-    ResourceCount.set(playerEntity, uint8(EResource.Iron), startingAmount);
+    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    MaxResourceCount.set(spaceRockEntity, uint8(EResource.Iron), startingAmount);
+    ResourceCount.set(spaceRockEntity, uint8(EResource.Iron), startingAmount);
     P_ProductionData memory data1 = P_ProductionData(new uint8[](1), new uint256[](1));
     data1.resources[0] = uint8(EResource.Iron);
     data1.amounts[0] = amountCleared;
 
     P_Production.set(buildingPrototype, level, data1);
 
-    LibProduction.clearResourceProduction(playerEntity, buildingEntity);
+    LibProduction.clearResourceProduction(buildingEntity);
     assertEq(
-      MaxResourceCount.get(playerEntity, uint8(EResource.Iron)),
+      MaxResourceCount.get(spaceRockEntity, uint8(EResource.Iron)),
       startingAmount - amountCleared,
       "max resource count not as expected"
     );
     assertEq(
-      ResourceCount.get(playerEntity, uint8(EResource.Iron)),
+      ResourceCount.get(spaceRockEntity, uint8(EResource.Iron)),
       startingAmount - amountCleared,
       "resource count not as expected"
     );
@@ -162,14 +163,15 @@ contract LibProductionTest is PrimodiumTest {
   function testClearResourceProductionNonUtility() public {
     uint256 startingAmount = 50;
     uint256 amountCleared = 20;
-    ProductionRate.set(playerEntity, uint8(EResource.Iron), 50);
+    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    ProductionRate.set(spaceRockEntity, uint8(EResource.Iron), 50);
 
     P_ProductionData memory data1 = P_ProductionData(new uint8[](1), new uint256[](1));
     data1.resources[0] = uint8(EResource.Iron);
     data1.amounts[0] = amountCleared;
     P_Production.set(buildingPrototype, level, data1);
 
-    LibProduction.clearResourceProduction(playerEntity, buildingEntity);
-    assertEq(ProductionRate.get(playerEntity, uint8(EResource.Iron)), startingAmount - amountCleared);
+    LibProduction.clearResourceProduction(buildingEntity);
+    assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), startingAmount - amountCleared);
   }
 }

@@ -3,10 +3,12 @@ import {
   Entity,
   Has,
   HasValue,
+  defineComponentSystem,
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
   namespaceWorld,
+  runQuery,
 } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 
@@ -25,123 +27,167 @@ const MAX_SIZE = 2 ** 15 - 1;
 export const renderBuilding = (scene: Scene, { network: { playerEntity } }: SetupResult) => {
   const { tileHeight, tileWidth } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
+  const _gameWorld = namespaceWorld(world, "game_specate");
 
-  const render = ({ entity }: { entity: Entity }) => {
-    // const entityId = world.entities[entity];
-    const renderId = `${entity}_entitySprite`;
+  defineComponentSystem(gameWorld, components.SpectateAccount, ({ value }) => {
+    world.dispose("game_specate");
 
-    const buildingType = components.BuildingType.get(entity)?.value as Entity | undefined;
-
-    if (!buildingType) return;
-
-    const origin = components.Position.get(entity);
-    if (!origin) return;
-    const tilePosition = getBuildingTopLeft(origin, buildingType);
-
-    // don't render beyond coord map limitation
-    if (Math.abs(tilePosition.x) > MAX_SIZE || Math.abs(tilePosition.y) > MAX_SIZE) return;
-
-    const pixelCoord = tileCoordToPixelCoord(tilePosition as Coord, tileWidth, tileHeight);
-
-    scene.objectPool.removeGroup(renderId);
-    const buildingRenderGroup = scene.objectPool.getGroup(renderId);
-
-    const buildingSprite = buildingRenderGroup.add("Sprite");
-    const buildingSpriteOutline = buildingRenderGroup.add("Sprite");
-
-    const buildingDimensions = getBuildingDimensions(buildingType);
-    const assetPair = getAssetKeyPair(entity, buildingType);
-
-    const sharedComponents = [
-      ObjectPosition({
-        x: pixelCoord.x,
-        y: -pixelCoord.y + buildingDimensions.height * tileHeight,
+    const positionQuery = [
+      HasValue(components.Position, {
+        parent: components.Home.get(value[0]?.value ?? playerEntity)?.asteroid,
       }),
-      SetValue({
-        originY: 1,
-      }),
-      OnUpdateSystem([...positionQuery, Has(components.Level)], () => {
-        const updatedAssetPair = getAssetKeyPair(entity, buildingType);
-        buildingSprite.setComponents([
-          Texture(Assets.SpriteAtlas, updatedAssetPair.sprite),
-          updatedAssetPair.animation ? Animation(updatedAssetPair.animation) : undefined,
-        ]);
-      }),
-      Texture(Assets.SpriteAtlas, assetPair.sprite),
-      assetPair.animation ? Animation(assetPair.animation) : undefined,
+      Has(components.BuildingType),
+      Has(components.IsActive),
     ];
 
-    buildingSprite.setComponents([
-      SetValue({
-        depth: DepthLayers.Building - tilePosition.y + buildingDimensions.height,
+    const oldPositionQuery = [
+      HasValue(components.Position, {
+        parent: components.Home.get(value[1]?.value ?? playerEntity)?.asteroid,
       }),
-      ...sharedComponents,
-    ]);
+      Has(components.BuildingType),
+      Has(components.IsActive),
+    ];
 
-    buildingSpriteOutline.setComponents([
-      SetValue({ depth: DepthLayers.Building, alpha: 0 }),
-      OnComponentSystem(components.SelectedBuilding, (gameObject) => {
-        if (components.SelectedBuilding.get()?.value === entity) {
-          buildingSpriteOutline.setComponent(Outline({ knockout: true, color: 0x00ffff }));
-          gameObject.setAlpha(1);
-          return;
-        }
+    for (const entity of runQuery(oldPositionQuery)) {
+      const renderId = `${entity}_entitySprite`;
+      scene.objectPool.removeGroup(renderId);
+    }
 
-        if (buildingSpriteOutline.hasComponent(Outline().id)) {
-          buildingSpriteOutline.removeComponent(Outline().id);
-          gameObject.setAlpha(0);
-        }
-      }),
-      ...sharedComponents,
-    ]);
-  };
+    // for (const entity of runQuery(oldPositionQuery)) {
+    //   const renderId = `${entity}_entitySprite`;
+    //   scene.objectPool.removeGroup(renderId);
+    // }
 
-  const throwDust = ({ entity }: { entity: Entity }) => {
-    const buildingType = components.BuildingType.get(entity)?.value as Entity | undefined;
+    const render = ({ entity }: { entity: Entity }) => {
+      // const entityId = world.entities[entity];
+      const renderId = `${entity}_entitySprite`;
 
-    if (!buildingType) return;
+      const buildingType = components.BuildingType.get(entity)?.value as Entity | undefined;
 
-    const origin = components.Position.get(entity);
-    if (!origin) return;
-    const tilePosition = getBuildingTopLeft(origin, buildingType);
+      if (!buildingType) return;
 
-    // don't render beyond coord map limitation
-    if (Math.abs(tilePosition.x) > MAX_SIZE || Math.abs(tilePosition.y) > MAX_SIZE) return;
+      const origin = components.Position.get(entity);
+      if (!origin) return;
+      const tilePosition = getBuildingTopLeft(origin, buildingType);
 
-    const pixelCoord = tileCoordToPixelCoord(tilePosition as Coord, tileWidth, tileHeight);
+      // don't render beyond coord map limitation
+      if (Math.abs(tilePosition.x) > MAX_SIZE || Math.abs(tilePosition.y) > MAX_SIZE) return;
 
-    const buildingDimensions = getBuildingDimensions(buildingType);
+      const pixelCoord = tileCoordToPixelCoord(tilePosition as Coord, tileWidth, tileHeight);
 
-    //throw up dust on build
-    flare(
-      scene,
-      {
-        x: pixelCoord.x + (tileWidth * buildingDimensions.width) / 2,
-        y: -pixelCoord.y + (tileHeight * buildingDimensions.height) / 2,
-      },
-      buildingDimensions.width
-    );
-  };
+      scene.objectPool.removeGroup(renderId);
+      const buildingRenderGroup = scene.objectPool.getGroup(renderId);
 
-  const positionQuery = [
-    HasValue(components.Position, {
-      parent: components.Home.get(playerEntity)?.asteroid,
-    }),
-    Has(components.BuildingType),
-  ];
+      const buildingSprite = buildingRenderGroup.add("Sprite");
+      const buildingSpriteOutline = buildingRenderGroup.add("Sprite");
 
-  defineEnterSystem(gameWorld, positionQuery, render);
-  //dust particle animation on new building
-  defineEnterSystem(gameWorld, positionQuery, throwDust, { runOnInit: false });
+      const buildingDimensions = getBuildingDimensions(buildingType);
+      const assetPair = getAssetKeyPair(entity, buildingType);
 
-  defineUpdateSystem(gameWorld, positionQuery, (update) => {
-    render(update);
-    throwDust(update);
-  });
+      const active = components.IsActive.get(entity)?.value;
+      const sharedComponents = [
+        ObjectPosition({
+          x: pixelCoord.x,
+          y: -pixelCoord.y + buildingDimensions.height * tileHeight,
+        }),
+        SetValue({
+          originY: 1,
+        }),
+        OnUpdateSystem([...positionQuery, Has(components.Level)], () => {
+          const isActive = components.IsActive.get(entity)?.value;
+          const updatedAssetPair = getAssetKeyPair(entity, buildingType);
+          buildingSprite.setComponents([
+            Texture(Assets.SpriteAtlas, updatedAssetPair.sprite),
+            updatedAssetPair.animation ? Animation(updatedAssetPair.animation, !isActive) : undefined,
+            SetValue({ tint: isActive ? 0xffffff : 0x777777 }),
+          ]);
+        }),
+        SetValue({ tint: active ? 0xffffff : 0x777777 }),
+        assetPair.animation ? Animation(assetPair.animation, !active) : undefined,
+        OnComponentSystem(components.IsActive, (object, { entity: _entity }) => {
+          if (entity !== _entity) return;
+          const updatedAssetPair = getAssetKeyPair(entity, buildingType);
+          const isActive = components.IsActive.get(entity)?.value;
+          if (!isActive) {
+            buildingSprite.setComponents([
+              SetValue({ tint: 0x777777 }),
+              updatedAssetPair.animation ? Animation(updatedAssetPair.animation, true) : undefined,
+            ]);
+          } else {
+            buildingSprite.setComponents([
+              SetValue({ tint: 0xffffff }),
+              updatedAssetPair.animation ? Animation(updatedAssetPair.animation) : undefined,
+            ]);
+          }
+        }),
+        Texture(Assets.SpriteAtlas, assetPair.sprite),
+      ];
 
-  defineExitSystem(gameWorld, positionQuery, ({ entity }) => {
-    const renderId = `${entity}_entitySprite`;
-    scene.objectPool.removeGroup(renderId);
+      buildingSprite.setComponents([
+        SetValue({
+          depth: DepthLayers.Building - tilePosition.y + buildingDimensions.height,
+        }),
+        ...sharedComponents,
+      ]);
+
+      buildingSpriteOutline.setComponents([
+        SetValue({ depth: DepthLayers.Building, alpha: 0 }),
+        OnComponentSystem(components.SelectedBuilding, (gameObject) => {
+          if (components.SelectedBuilding.get()?.value === entity) {
+            buildingSpriteOutline.setComponent(Outline({ knockout: true, color: 0x00ffff }));
+            gameObject.setAlpha(1);
+            return;
+          }
+
+          if (buildingSpriteOutline.hasComponent(Outline().id)) {
+            buildingSpriteOutline.removeComponent(Outline().id);
+            gameObject.setAlpha(0);
+          }
+        }),
+        ...sharedComponents,
+      ]);
+    };
+
+    const throwDust = ({ entity }: { entity: Entity }) => {
+      const buildingType = components.BuildingType.get(entity)?.value as Entity | undefined;
+
+      if (!buildingType) return;
+
+      const origin = components.Position.get(entity);
+      if (!origin) return;
+      const tilePosition = getBuildingTopLeft(origin, buildingType);
+
+      // don't render beyond coord map limitation
+      if (Math.abs(tilePosition.x) > MAX_SIZE || Math.abs(tilePosition.y) > MAX_SIZE) return;
+
+      const pixelCoord = tileCoordToPixelCoord(tilePosition as Coord, tileWidth, tileHeight);
+
+      const buildingDimensions = getBuildingDimensions(buildingType);
+
+      //throw up dust on build
+      flare(
+        scene,
+        {
+          x: pixelCoord.x + (tileWidth * buildingDimensions.width) / 2,
+          y: -pixelCoord.y + (tileHeight * buildingDimensions.height) / 2,
+        },
+        buildingDimensions.width
+      );
+    };
+
+    defineEnterSystem(_gameWorld, positionQuery, render);
+    //dust particle animation on new building
+    defineEnterSystem(_gameWorld, positionQuery, throwDust, { runOnInit: false });
+
+    defineUpdateSystem(_gameWorld, positionQuery, (update) => {
+      render(update);
+      throwDust(update);
+    });
+
+    defineExitSystem(_gameWorld, positionQuery, ({ entity }) => {
+      const renderId = `${entity}_entitySprite`;
+      scene.objectPool.removeGroup(renderId);
+    });
   });
 };
 

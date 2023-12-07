@@ -4,11 +4,11 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import AppLoadingState from "./AppLoadingState";
 import { ampli } from "./ampli";
+import { Progress } from "./components/core/Progress";
 import { MudProvider } from "./hooks/providers/MudProvider";
 import { setup } from "./network/setup";
 import { SetupResult } from "./network/types";
 import { world } from "./network/world";
-import { Progress } from "./components/core/Progress";
 
 const DEV = import.meta.env.PRI_DEV === "true";
 
@@ -72,7 +72,7 @@ export default function App() {
         <ToastContainer
           toastClassName={`font-mono text-xs border bg-neutral border-secondary rounded-box drop-shadow-2xl`}
           progressClassName={"bg-accent"}
-          position="top-left"
+          position="top-right"
           autoClose={3000}
           hideProgressBar={false}
           newestOnTop={false}

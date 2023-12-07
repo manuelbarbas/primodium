@@ -1,8 +1,8 @@
 import { Entity } from "@latticexyz/recs";
-import { encodeEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
 import { EBuilding, EObjectives, EResource, ERock, ESize, EUnit } from "contracts/config/enums";
 import { Key } from "engine/types";
+import { encodeEntity } from "src/util/encode";
 import { reverseRecord } from "./common";
 import { toHex32 } from "./encode";
 
@@ -69,6 +69,7 @@ export enum TransactionQueueType {
   RejectRequest,
   Invite,
   DeclineInvite,
+  Toggle,
 }
 
 export enum RockRelationship {
@@ -93,19 +94,19 @@ export const key = {
 };
 
 export const EntityType = {
+  //Raw
+  R_Titanium: toHex32("R_Titanium") as Entity,
+  R_Platinum: toHex32("R_Platinum") as Entity,
+  R_Iridium: toHex32("R_Iridium") as Entity,
+  R_Kimberlite: toHex32("R_Kimberlite") as Entity,
   // Ores
-  Water: toHex32("Water") as Entity,
-  Lithium: toHex32("Lithium") as Entity,
   Iron: toHex32("Iron") as Entity,
   Copper: toHex32("Copper") as Entity,
+  Lithium: toHex32("Lithium") as Entity,
   Titanium: toHex32("Titanium") as Entity,
   Iridium: toHex32("Iridium") as Entity,
   Sulfur: toHex32("Sulfur") as Entity,
-  Osmium: toHex32("Osmium") as Entity,
-  Tungsten: toHex32("Tungsten") as Entity,
   Kimberlite: toHex32("Kimberlite") as Entity,
-  Uraninite: toHex32("Uraninite") as Entity,
-  Bolutite: toHex32("Bolutite") as Entity,
   Platinum: toHex32("Platinum") as Entity,
 
   MainBase: toHex32("MainBase") as Entity,
@@ -135,6 +136,7 @@ export const EntityType = {
   SAMLauncher: toHex32("SAM") as Entity,
   ShieldGenerator: toHex32("ShieldGenerator") as Entity,
   Vault: toHex32("Vault") as Entity,
+  Market: toHex32("Market") as Entity,
 
   Alloy: toHex32("Alloy") as Entity,
   PVCell: toHex32("PVCell") as Entity,
@@ -146,6 +148,7 @@ export const EntityType = {
   FleetMoves: toHex32("U_MaxMoves") as Entity,
   Unraidable: toHex32("U_Unraidable") as Entity,
   AdvancedUnraidable: toHex32("U_AdvancedUnraidable") as Entity,
+  MaxOrders: toHex32("U_Orders") as Entity,
 
   Defense: toHex32("U_Defense") as Entity,
   DefenseMultiplier: toHex32("M_DefenseMultiplier") as Entity,
@@ -269,10 +272,15 @@ export const ResearchImage = new Map<Entity, string>([
   [EntityType.Lithium, "/img/resource/lithium_resource.png"],
   [EntityType.Sulfur, "/img/resource/sulfur_resource.png"],
   [EntityType.Titanium, "/img/resource/titanium_resource.png"],
-  [EntityType.Osmium, "/img/resource/osmium_resource.png"],
-  [EntityType.Tungsten, "/img/resource/tungsten_resource.png"],
+  [EntityType.R_Titanium, "/img/resource/titanium_resource.png"],
+
   [EntityType.Iridium, "/img/resource/iridium_resource.png"],
+  [EntityType.R_Iridium, "/img/resource/iridium_resource.png"],
+
   [EntityType.Kimberlite, "/img/resource/kimberlite_resource.png"],
+  [EntityType.R_Kimberlite, "/img/resource/kimberlite_resource.png"],
+  [EntityType.Platinum, "/img/resource/platinum_resource.png"],
+  [EntityType.R_Platinum, "/img/resource/platinum_resource.png"],
 
   [EntityType.ExpansionResearch1, "/img/icons/mainbaseicon.png"],
   [EntityType.ExpansionResearch2, "/img/icons/mainbaseicon.png"],
@@ -336,14 +344,14 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.Copper, "/img/resource/copper_resource.png"],
   [EntityType.Lithium, "/img/resource/lithium_resource.png"],
   [EntityType.Titanium, "/img/resource/titanium_resource.png"],
+  [EntityType.R_Titanium, "/img/resource/titanium_resource.png"],
   [EntityType.Sulfur, "/img/resource/sulfur_resource.png"],
-  [EntityType.Osmium, "/img/resource/osmium_resource.png"],
-  [EntityType.Tungsten, "/img/resource/tungsten_resource.png"],
   [EntityType.Iridium, "/img/resource/iridium_resource.png"],
+  [EntityType.R_Iridium, "/img/resource/iridium_resource.png"],
   [EntityType.Kimberlite, "/img/resource/kimberlite_resource.png"],
-  [EntityType.Uraninite, "/img/resource/uraninite_resource.png"],
-  [EntityType.Bolutite, "/img/resource/bolutite_resource.png"],
+  [EntityType.R_Kimberlite, "/img/resource/kimberlite_resource.png"],
   [EntityType.Platinum, "/img/resource/platinum_resource.png"],
+  [EntityType.R_Platinum, "/img/resource/platinum_resource.png"],
 
   [EntityType.IronPlate, "/img/crafted/ironplate.png"],
   [EntityType.BasicPowerSource, "/img/crafted/basicbattery.png"],
@@ -372,6 +380,7 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.DefenseMultiplier, "/img/icons/defenseicon.png"],
   [EntityType.Unraidable, "/img/icons/unraidableicon.png"],
   [EntityType.AdvancedUnraidable, "/img/icons/advancedunraidableicon.png"],
+  [EntityType.MaxOrders, "/img/icons/ordericon.png"],
 
   // debug
   [EntityType.Bullet, "/img/crafted/bullet.png"],
@@ -447,11 +456,17 @@ export const UtilityStorages = new Set([
   EntityType.Defense,
   EntityType.Unraidable,
   EntityType.AdvancedUnraidable,
+  EntityType.MaxOrders,
 ]);
 
 export const MultiplierStorages = new Set([EntityType.DefenseMultiplier]);
 
 export const ResourceEnumLookup: Record<Entity, EResource> = {
+  [EntityType.R_Titanium]: EResource.R_Titanium,
+  [EntityType.R_Platinum]: EResource.R_Platinum,
+  [EntityType.R_Iridium]: EResource.R_Iridium,
+  [EntityType.R_Kimberlite]: EResource.R_Kimberlite,
+
   [EntityType.Iron]: EResource.Iron,
   [EntityType.Copper]: EResource.Copper,
   [EntityType.Lithium]: EResource.Lithium,
@@ -460,10 +475,6 @@ export const ResourceEnumLookup: Record<Entity, EResource> = {
   [EntityType.Iridium]: EResource.Iridium,
   [EntityType.Platinum]: EResource.Platinum,
   [EntityType.Kimberlite]: EResource.Kimberlite,
-  [EntityType.Uraninite]: EResource.Uraninite,
-  [EntityType.Bolutite]: EResource.Bolutite,
-  [EntityType.Osmium]: EResource.Osmium,
-  [EntityType.Tungsten]: EResource.Tungsten,
   [EntityType.Alloy]: EResource.Alloy,
   [EntityType.PVCell]: EResource.PVCell,
   [EntityType.RocketFuel]: EResource.RocketFuel,
@@ -476,6 +487,7 @@ export const ResourceEnumLookup: Record<Entity, EResource> = {
   [EntityType.Defense]: EResource.U_Defense,
   [EntityType.Unraidable]: EResource.U_Unraidable,
   [EntityType.AdvancedUnraidable]: EResource.U_AdvancedUnraidable,
+  [EntityType.MaxOrders]: EResource.U_Orders,
 
   [EntityType.DefenseMultiplier]: EResource.M_DefenseMultiplier,
 };
@@ -501,6 +513,7 @@ export const BuildingEnumLookup: Record<Entity, EBuilding> = {
   [EntityType.StarmapperStation]: EBuilding.Starmapper,
   [EntityType.ShieldGenerator]: EBuilding.ShieldGenerator,
   [EntityType.Vault]: EBuilding.Vault,
+  [EntityType.Market]: EBuilding.Market,
 };
 
 export const BuildingEntityLookup = reverseRecord(BuildingEnumLookup);

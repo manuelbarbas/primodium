@@ -25,6 +25,10 @@ export const wrap = (index: number, length: number) => {
   return ((index % length) + length) % length;
 };
 
+export const getRandomRange = (min: number, max: number) => {
+  return Math.random() * (max - min) + min;
+};
+
 export function toRomanNumeral(number: number) {
   const romanNumerals = [
     { value: 1000, symbol: "M" },
@@ -60,9 +64,12 @@ function getDecimals(num: number, max = 3) {
   return num.toFixed(digits);
 }
 
-export function formatNumber(num: number | bigint, options?: { fractionDigits?: number; short?: boolean }): string {
+export function formatNumber(
+  num: number | bigint,
+  options?: { fractionDigits?: number; short?: boolean; showZero?: boolean }
+): string {
   const digits = options?.fractionDigits === undefined ? 0 : options.fractionDigits;
-  if (num === 0 || num === 0n) return "--";
+  if (num === 0 || num === 0n) return options?.showZero ? "0" : "--";
 
   const shorten = (n: number): string => {
     const units = ["", "K", "M", "B", "T"];
@@ -106,7 +113,9 @@ export function reverseRecord<T extends PropertyKey, U extends PropertyKey>(inpu
 }
 
 export const entityToAddress = (entity: Entity | string, shorten = false): Hex => {
-  const checksumAddress = getAddress(trim(entity as Hex));
+  const trimmedAddress = trim(entity as Hex);
+
+  const checksumAddress = isAddress(trimmedAddress) ? getAddress(trimmedAddress) : trimmedAddress;
 
   return shorten ? shortenAddress(checksumAddress) : checksumAddress;
 };

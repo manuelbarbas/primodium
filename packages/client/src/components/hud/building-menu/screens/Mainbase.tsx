@@ -8,11 +8,11 @@ import { SpecialTech } from "../widgets/SpecialTech";
 
 export const MainBase: React.FC<{ building: Entity }> = ({ building }) => {
   return (
-    <Navigator.Screen title={building} className="w-fit">
+    <Navigator.Screen title={building} className="w-fit gap-1">
       <Header building={building} />
       <Upgrade building={building} />
       <ExpandRange />
-      <div className="grid grid-cols-2 w-full">
+      <div className="grid grid-cols-2 w-full gap-1">
         <MiningVessels />
         <SpecialTech />
       </div>
