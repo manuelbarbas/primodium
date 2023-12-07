@@ -81,7 +81,7 @@ export const HostileFleets: React.FC = () => {
       </div>
 
       {sortedAndFilteredFleets.length === 0 ? (
-        <SecondaryCard className="text-center font-bold w-auto">
+        <SecondaryCard className="text-center font-bold w-auto flex-grow items-center justify-center">
           <p className="opacity-50 uppercase">no hostile fleets</p>
         </SecondaryCard>
       ) : (

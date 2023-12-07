@@ -91,7 +91,7 @@ export const ReinforcementFleets: React.FC = () => {
         <p className="w-full text-right uppercase font-bold">{sortedFleets?.length} fleets</p>
       </div>
       {sortedFleets.length === 0 ? (
-        <SecondaryCard className="text-center font-bold w-auto">
+        <SecondaryCard className="text-center font-bold w-auto flex-grow items-center justify-center">
           <p className="opacity-50 uppercase">no friendly fleets</p>
         </SecondaryCard>
       ) : (
