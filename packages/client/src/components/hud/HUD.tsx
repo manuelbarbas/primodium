@@ -9,6 +9,7 @@ import { OverlayModal } from "../core/OverlayModal";
 import { Tabs } from "../core/Tabs";
 import { BrandingLabel } from "../shared/BrandingLabel";
 import { Blueprints } from "./Blueprints";
+import { Outgoingfleets } from "./modals/fleets/OutgoingFleets";
 import { Profile } from "./Profile";
 import { Score } from "./Score";
 import { SelectAction } from "./SelectAction";
@@ -61,7 +62,9 @@ export const GameHUD = () => {
                   <Modal.Button className="rounded-l-none border border-secondary btn-sm">
                     <IconLabel imageUri="/img/icons/outgoingicon.png" tooltipText="Fleets" tooltipDirection="right" />
                   </Modal.Button>
-                  <Modal.Content className="w-[50rem] h-[50rem]">{/* <Objectives /> */}</Modal.Content>
+                  <Modal.Content className="w-[50rem] h-[50rem]">
+                    <Outgoingfleets />
+                  </Modal.Content>
                 </Modal>
                 <Modal title="settings">
                   <Modal.Button className="rounded-l-none border border-secondary btn-sm">
