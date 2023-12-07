@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import PusherJS from "pusher-js";
 import { uuid } from "@latticexyz/utils";
 import { useMud } from "src/hooks";
@@ -160,6 +160,10 @@ export const Chat = ({ className }: ChatProps) => {
     return () => clearTimeout(timer); // Cleanup the timer
   }, [isCooldown]);
 
+  const toggleChannel = useCallback(() => {
+    setChannel((prevChannel) => (prevChannel === "general" ? playerAlliance ?? "" : "general"));
+  }, [playerAlliance]);
+
   return (
     <div className={`${className} duration-300 transition-all pointer-events-auto text-xs`}>
       <button
@@ -174,15 +178,12 @@ export const Chat = ({ className }: ChatProps) => {
         JUMP TO NEWEST
       </button>
       <SecondaryCard className="grid grid-cols-2 gap-1">
-        <Button
-          className={`btn-xs ${channel === "general" ? "border-accent" : ""}`}
-          onClick={() => setChannel("general")}
-        >
+        <Button className={`btn-xs ${channel === "general" ? "border-accent" : ""}`} onClick={toggleChannel}>
           GENERAL
         </Button>
         <Button
           className={`btn-xs ${channel === playerAlliance ? "border-accent" : ""}`}
-          onClick={() => setChannel(playerAlliance ?? "")}
+          onClick={toggleChannel}
           disabled={!playerAlliance}
         >
           ALLIANCE
