@@ -105,7 +105,6 @@ export const BattleDetails: React.FC<{
                   return (
                     <ResourceIconTooltip
                       key={`resource-${i}`}
-                      playerEntity={playerEntity}
                       image={ResourceImage.get(resource.id) ?? ""}
                       resource={resource.id}
                       name={getBlockTypeName(resource.id)}

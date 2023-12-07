@@ -1,29 +1,25 @@
+import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Cheatcodes } from "@primodiumxyz/mud-game-tools";
-import { components } from "src/network/components";
-import { SetupResult } from "src/network/types";
-import { Hex, createWalletClient, fallback, getContract, http, padHex, trim, webSocket } from "viem";
-import { encodeEntity } from "src/util/encode";
-import { EntityType, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
-import { generatePrivateKey } from "viem/accounts";
-import { getNetworkConfig } from "src/network/config/getNetworkConfig";
-import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
+import { components } from "src/network/components";
+import { getNetworkConfig } from "src/network/config/getNetworkConfig";
+import { SetupResult } from "src/network/types";
+import { encodeEntity } from "src/util/encode";
+import { Hex, createWalletClient, fallback, getContract, http, padHex, trim, webSocket } from "viem";
+import { generatePrivateKey } from "viem/accounts";
+import { getBlockTypeName } from "./common";
+import { EntityType, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
 
 const resources: Record<string, Entity> = {
   iron: EntityType.Iron,
   copper: EntityType.Copper,
   lithium: EntityType.Lithium,
-  water: EntityType.Water,
   titanium: EntityType.Titanium,
   iridium: EntityType.Iridium,
   sulfur: EntityType.Sulfur,
-  osmium: EntityType.Osmium,
-  tungsten: EntityType.Tungsten,
   kimberlite: EntityType.Kimberlite,
-  uraninite: EntityType.Uraninite,
-  bolutite: EntityType.Bolutite,
   ironplate: EntityType.IronPlate,
   platinum: EntityType.Platinum,
   alloy: EntityType.Alloy,
@@ -33,6 +29,7 @@ const resources: Record<string, Entity> = {
   electricity: EntityType.Electricity,
   defense: EntityType.Defense,
   orders: EntityType.MaxOrders,
+  moves: EntityType.FleetMoves,
 };
 
 const units: Record<string, Entity> = {
@@ -98,6 +95,9 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
 
         if (!resourceEntity || !home) throw new Error("Resource not found");
 
+        const value = 10000000n;
+        console.log("setting resource", getBlockTypeName(resourceEntity), home, value);
+
         await mud.contractCalls.setComponentValue(
           mud.components.ResourceCount,
           encodeEntity(
@@ -105,7 +105,7 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
             { entity: home as Hex, resource: ResourceEnumLookup[resourceEntity] }
           ),
           {
-            value: 10000000n,
+            value,
           }
         );
       },
@@ -116,15 +116,16 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
         const player = mud.network.playerEntity;
         if (!player) throw new Error("No player found");
 
+        const home = mud.components.Home.get(player)?.asteroid as Entity | undefined;
         const resourceEntity = resources[resource.toLowerCase()];
 
-        if (!resourceEntity) throw new Error("Resource not found");
+        if (!resourceEntity || !home) throw new Error("Resource not found");
 
         await mud.contractCalls.setComponentValue(
           mud.components.MaxResourceCount,
           encodeEntity(
             { entity: "bytes32", resource: "uint8" },
-            { entity: player as Hex, resource: ResourceEnumLookup[resourceEntity] }
+            { entity: resourceEntity as Hex, resource: ResourceEnumLookup[resourceEntity] }
           ),
           {
             value: 2000000n,

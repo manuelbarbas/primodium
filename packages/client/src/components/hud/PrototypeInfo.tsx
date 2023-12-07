@@ -5,7 +5,6 @@ import { primodium } from "@game/api";
 import { EntitytoSpriteKey } from "@game/constants";
 import _ from "lodash";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
-import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { getBuildingLevelStorageUpgrades, transformProductionData } from "src/util/building";
@@ -18,11 +17,11 @@ import { IconLabel } from "../core/IconLabel";
 
 export const RecipeDisplay: React.FC<{
   building: Entity;
-  playerEntity: Entity;
-}> = ({ building, playerEntity }) => {
+}> = ({ building }) => {
   const recipe = getRecipe(building, 1n);
 
   if (recipe.length === 0) return <></>;
+  const spaceRock = components.Position.useWithKeys({ entity: building as Hex })?.parent as Entity | undefined;
 
   return (
     <div className="flex flex-col items-center gap-1">
@@ -35,7 +34,7 @@ export const RecipeDisplay: React.FC<{
               return (
                 <ResourceIconTooltip
                   key={resource.id + resource.type}
-                  playerEntity={playerEntity}
+                  spaceRock={spaceRock}
                   image={resourceImage}
                   resource={resource.id}
                   resourceType={resource.type}
@@ -59,10 +58,10 @@ export const RecipeDisplay: React.FC<{
 export const PrototypeInfo: React.FC<{
   building: Entity;
 }> = ({ building }) => {
-  const playerEntity = useMud().network.playerEntity;
   const { getSpriteBase64 } = primodium.api().sprite;
   const rawProduction = components.P_Production.useWithKeys({ prototype: building as Hex, level: 1n });
   const production = useMemo(() => transformProductionData(rawProduction), [rawProduction]);
+  const spaceRock = components.Position.useWithKeys({ entity: building as Hex })?.parent as Entity | undefined;
 
   const unitProduction = components.P_UnitProdTypes.useWithKeys({ prototype: building as Hex, level: 1n });
   const storageUpgrades = useMemo(() => getBuildingLevelStorageUpgrades(building, 1n), [building]);
@@ -97,7 +96,7 @@ export const PrototypeInfo: React.FC<{
                   name={getBlockTypeName(resource)}
                   image={ResourceImage.get(resource) ?? ""}
                   resource={resource}
-                  playerEntity={playerEntity}
+                  spaceRock={spaceRock}
                   amount={amount}
                   resourceType={type}
                   short
@@ -134,7 +133,7 @@ export const PrototypeInfo: React.FC<{
                           name={getBlockTypeName(resource)}
                           image={ResourceImage.get(resource) ?? ""}
                           resource={resource}
-                          playerEntity={playerEntity}
+                          spaceRock={spaceRock}
                           amount={amount}
                           resourceType={ResourceType.Resource}
                           short
@@ -156,7 +155,7 @@ export const PrototypeInfo: React.FC<{
             <div className="flex gap-1 w-full">
               {
                 <div className="flex flex-col gap-1 w-18 text-xs w-full">
-                  <RecipeDisplay building={building} playerEntity={playerEntity} />
+                  <RecipeDisplay building={building} />
                 </div>
               }
             </div>

@@ -67,7 +67,6 @@ export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
               return (
                 <ResourceIconTooltip
                   key={resource.id}
-                  playerEntity={playerEntity}
                   image={resourceImage}
                   resource={resource.id}
                   name={resourceName}

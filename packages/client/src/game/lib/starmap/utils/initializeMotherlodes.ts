@@ -3,9 +3,15 @@ import { Coord } from "@latticexyz/utils";
 import { EResource, ERock, ESize } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
-import { getMotherlodeEntity } from "src/util/encode";
+import { getMotherlodeEntity, toHex32 } from "src/util/encode";
 import { getPositionByVector } from "src/util/vector";
 import { Hex } from "viem";
+
+const emptyData = {
+  __staticData: "",
+  __encodedLengths: "",
+  __dynamicData: "",
+};
 
 export function initializeMotherlodes(sourceEntity: Entity, source: Coord) {
   const config = components.P_GameConfig.get();
@@ -27,46 +33,22 @@ export function initializeMotherlodes(sourceEntity: Entity, source: Coord) {
 
     if (!isMotherlode(motherlodeEntity, Number(config.motherlodeChanceInv))) continue;
 
-    world.registerEntity({ id: motherlodeEntity });
     const { size: rawSize, motherlodeType: rawMotherlodeType } = getMotherlodeRawPrototype(motherlodeEntity);
     const motherlodeType = getMotherlodeType(rawMotherlodeType);
     const rawResource = components.P_RawResource.getWithKeys({ resource: motherlodeType })?.value;
     const size = getSize(rawSize);
-    components.Motherlode.set(
-      {
-        size,
-        motherlodeType,
-        __staticData: "",
-        __encodedLengths: "",
-        __dynamicData: "",
-      },
-      motherlodeEntity
-    );
-    components.Position.set(
-      { ...motherlodePosition, parent: "0", __staticData: "", __encodedLengths: "", __dynamicData: "" },
-      motherlodeEntity
-    );
-    components.RockType.set(
-      { value: ERock.Motherlode, __staticData: "", __encodedLengths: "", __dynamicData: "" },
-      motherlodeEntity
-    );
+    components.Motherlode.set({ ...emptyData, size, motherlodeType }, motherlodeEntity);
+    components.Position.set({ ...emptyData, ...motherlodePosition, parent: toHex32("0") }, motherlodeEntity);
+    components.RockType.set({ ...emptyData, value: ERock.Motherlode }, motherlodeEntity);
+
     if (rawResource) {
+      const value = components.P_SizeToAmount.getWithKeys({ size: size })?.value ?? 1n;
       components.MaxResourceCount.setWithKeys(
-        {
-          value: components.P_SizeToAmount.getWithKeys({ size: size })?.value ?? 1n,
-          __staticData: "",
-          __encodedLengths: "",
-          __dynamicData: "",
-        },
+        { ...emptyData, value },
         { entity: motherlodeEntity as Hex, resource: rawResource }
       );
       components.ResourceCount.setWithKeys(
-        {
-          value: components.P_SizeToAmount.getWithKeys({ size: size })?.value ?? 1n,
-          __staticData: "",
-          __encodedLengths: "",
-          __dynamicData: "",
-        },
+        { ...emptyData, value },
         { entity: motherlodeEntity as Hex, resource: rawResource }
       );
     }

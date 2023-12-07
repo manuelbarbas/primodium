@@ -2,18 +2,18 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 
-import { Resources } from "./widgets/resources/Resources";
-import { getSpaceRockImage, getSpaceRockName } from "src/util/spacerock";
+import { Entity } from "@latticexyz/recs";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Tabs } from "src/components/core/Tabs";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
-import { Entity } from "@latticexyz/recs";
+import { getSpaceRockImage, getSpaceRockName } from "src/util/spacerock";
 import { GracePeriod } from "../GracePeriod";
+import { Resources } from "./widgets/resources/Resources";
 
 export const SpacerockMenu: React.FC = () => {
   const playerEntity = useMud().network.playerEntity;
   const selectedSpacerock = components.SelectedRock.use()?.value;
-  const ownedBy = components.OwnedBy.use(selectedSpacerock ?? singletonEntity)?.value ?? playerEntity;
+  const ownedBy = components.OwnedBy.use(selectedSpacerock)?.value ?? playerEntity;
   const img = getSpaceRockImage(selectedSpacerock ?? singletonEntity);
   const name = getSpaceRockName(selectedSpacerock ?? singletonEntity);
   const coord = components.Position.get(selectedSpacerock ?? singletonEntity) ?? { x: 0, y: 0 };
