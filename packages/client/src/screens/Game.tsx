@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-// import { GameHUD } from "src/components/hud/HUD";
 import { useMud } from "src/hooks/useMud";
 
 import { primodium } from "@game/api";

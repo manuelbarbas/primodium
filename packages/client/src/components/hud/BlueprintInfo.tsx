@@ -1,7 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import React, { useMemo } from "react";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
-import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { getBuildingLevelStorageUpgrades, transformProductionData } from "src/util/building";
@@ -10,14 +9,14 @@ import { ResourceImage, ResourceType } from "src/util/constants";
 import { getRecipe } from "src/util/resource";
 import { Hex } from "viem";
 import { Badge } from "../core/Badge";
-import { IconLabel } from "../core/IconLabel";
 import { SecondaryCard } from "../core/Card";
+import { IconLabel } from "../core/IconLabel";
 
 export const RecipeDisplay: React.FC<{
   building: Entity;
-  playerEntity: Entity;
-}> = ({ building, playerEntity }) => {
+}> = ({ building }) => {
   const recipe = getRecipe(building, 1n);
+  const spaceRock = components.Position.use(building)?.parent as Entity | undefined;
 
   if (recipe.length === 0)
     return (
@@ -37,7 +36,7 @@ export const RecipeDisplay: React.FC<{
             <Badge key={`recipe-chunk-${i}`} className="border border-secondary/25">
               <ResourceIconTooltip
                 key={resource.id + resource.type}
-                playerEntity={playerEntity}
+                spaceRock={spaceRock}
                 image={resourceImage}
                 resource={resource.id}
                 resourceType={resource.type}
@@ -60,7 +59,7 @@ export const RecipeDisplay: React.FC<{
 export const BlueprintInfo: React.FC<{
   building: Entity;
 }> = ({ building }) => {
-  const playerEntity = useMud().network.playerEntity;
+  const spaceRock = components.Position.use(building)?.parent as Entity | undefined;
   const rawProduction = components.P_Production.useWithKeys({ prototype: building as Hex, level: 1n });
   const production = useMemo(() => transformProductionData(rawProduction), [rawProduction]);
 
@@ -75,7 +74,7 @@ export const BlueprintInfo: React.FC<{
     <div className="flex flex-col w-full items-center">
       <div className="flex flex-col items-center w-full mt-1 h-full text-xs relative gap-1 p-1 border border-secondary/25">
         <div className="absolute top-0 w-full h-full topographic-background opacity-25" />
-        <RecipeDisplay building={building} playerEntity={playerEntity} />
+        <RecipeDisplay building={building} />
 
         <SecondaryCard className="flex flex-col items-center gap-2 p-1 w-full relative bg-transparent border-success/50">
           <p className="font-bold absolute opacity-75 left-0 top-1/2 -translate-y-1/2 text-success text-sm ml-1">+</p>
@@ -84,8 +83,8 @@ export const BlueprintInfo: React.FC<{
               <ResourceIconTooltip
                 name={getBlockTypeName(resource)}
                 image={ResourceImage.get(resource) ?? ""}
+                spaceRock={spaceRock}
                 resource={resource}
-                playerEntity={playerEntity}
                 amount={amount}
                 resourceType={type}
                 short
@@ -120,7 +119,6 @@ export const BlueprintInfo: React.FC<{
                       name={getBlockTypeName(resource)}
                       image={ResourceImage.get(resource) ?? ""}
                       resource={resource}
-                      playerEntity={playerEntity}
                       amount={amount}
                       resourceType={ResourceType.Resource}
                       short
