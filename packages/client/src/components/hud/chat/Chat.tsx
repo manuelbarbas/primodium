@@ -13,7 +13,7 @@ import { components } from "src/network/components";
 import { useFetch } from "src/hooks/useFetch";
 import { Loader } from "src/components/core/Loader";
 
-const COOLDOWN = 1;
+const COOLDOWN = 1.5;
 
 interface ChatProps {
   className?: string;

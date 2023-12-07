@@ -68,7 +68,13 @@ export const pusher = new Pusher({
 
 export default async function handleChatRequest(req: VercelRequest, res: VercelResponse) {
   const { user, message, signature, uuid, channel } = req.body;
-  console.log(uuid);
+
+  const rateLimitKey = `rateLimit:${user}`;
+
+  const isRateLimited = await kv.get(rateLimitKey);
+  if (isRateLimited) {
+    return res.status(429).send("Rate limit exceeded. Please wait a second.");
+  }
 
   if (!isPlayer(user)) return res.status(400).send("Invalid user");
 
@@ -92,6 +98,8 @@ export default async function handleChatRequest(req: VercelRequest, res: VercelR
     await kv.hmset(`chat:${channel}:${payload.uuid}`, payload);
     await kv.zadd(`chat:${channel}`, { score: payload.time, member: `chat:${channel}:${payload.uuid}` });
     await kv.expire(`chat:${channel}:${payload.uuid}`, 60 * 60 * 12); // 12 hours
+    // Set a rate limit key with 1-second expiration
+    await kv.set(rateLimitKey, "1", { ex: 1 });
 
     // store message in kv by channel
   } catch (e) {
