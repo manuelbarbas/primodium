@@ -10,7 +10,11 @@ export type LinkedAddressResult = {
 // NOTE: This function will be replaced with account abstraction in a future update.
 
 const addressMap = new Map<string, LinkedAddressResult>();
-export const getLinkedAddress = async (address?: Hex, hard?: boolean): Promise<LinkedAddressResult> => {
+export const getLinkedAddress = async (
+  address?: Hex,
+  hard?: boolean,
+  fetchEnsName?: boolean
+): Promise<LinkedAddressResult> => {
   if (!address) {
     // Fetch linked address from server using the local browser wallet address
     const networkConfig = getNetworkConfig();
@@ -25,7 +29,9 @@ export const getLinkedAddress = async (address?: Hex, hard?: boolean): Promise<L
 
   try {
     const res = await fetch(
-      `${import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL}/linked-address/local-to-external/${localAddress}`
+      `${
+        import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL
+      }/linked-address/local-to-external/${localAddress}?ensName=${fetchEnsName}`
     );
     const jsonRes = await res.json();
     addressMap.set(localAddress, jsonRes as LinkedAddressResult);

@@ -1,7 +1,6 @@
 import { components } from "src/network/components";
-import { FixedSizeList as List } from "react-window";
 import { LinkedAddressDisplay } from "src/components/hud/LinkedAddressDisplay";
-import { entityToAddress } from "src/util/common";
+import { entityToAddress, isPlayer } from "src/util/common";
 
 export const Statistics = () => {
   const data = components.Leaderboard.use();
@@ -12,18 +11,22 @@ export const Statistics = () => {
   return (
     <div>
       <p>score,primodium_account,external_wallet</p>
-      <List height={285} width="100%" itemCount={data.players.length} itemSize={47} className="scrollbar">
-        {({ index }) => {
-          const player = data.players[index];
-          const score = data.scores[index];
+      {data.players.map((_, index: number) => {
+        const player = data.players[index];
+        const score = data.scores[index];
+        // console.log(player);
+        // console.log(isPlayer(player));
+        if (isPlayer(player)) {
           return (
-            <p>
+            <p key={index}>
               {`${score},${entityToAddress(player)},`}
-              <LinkedAddressDisplay entity={player} shorten={false} displayReadable={false} />
+              <LinkedAddressDisplay entity={player} fullAddress={true} />
             </p>
           );
-        }}
-      </List>
+        } else {
+          return <></>;
+        }
+      })}
     </div>
   );
 };

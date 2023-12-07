@@ -9,12 +9,10 @@ import { Hex } from "viem";
 
 export const LinkedAddressDisplay = ({
   entity,
-  shorten = true,
-  displayReadable = true,
+  fullAddress = true, // for statistics dashboard, always display full address
 }: {
   entity: Entity;
-  shorten?: boolean;
-  displayReadable?: boolean;
+  fullAddress?: boolean;
 }) => {
   const network = useMud().network;
   const playerEntity = network.playerEntity;
@@ -28,34 +26,31 @@ export const LinkedAddressDisplay = ({
     const fetchLocalLinkedAddress = async () => {
       try {
         if (!isPlayer(entity)) return;
-        const jsonRes = await getLinkedAddress(entityToAddress(entity));
+        // hard = true and fetchEnsName = true if fullAddress is true
+        const jsonRes = await getLinkedAddress(entityToAddress(entity), fullAddress, !fullAddress);
         setFetchedExternalWallet(jsonRes);
       } catch (error) {
         return;
       }
     };
     fetchLocalLinkedAddress();
-  }, [entity]);
+  }, [entity, fullAddress]);
 
   // Fetches and displays the linked address as a relevant string
   const entityDisplay: string = useMemo(() => {
     let entityDisplay = "Neutral";
-    if (entity === playerEntity) {
-      entityDisplay = displayReadable
-        ? "You"
-        : fetchedExternalWallet.ensName ??
-          entityToAddress(fetchedExternalWallet.address ?? entity, shorten) ??
-          entityToAddress(entity);
+    if (entity === playerEntity && !fullAddress) {
+      entityDisplay = "You";
     } else if (entity === hashKeyEntity(PIRATE_KEY, playerEntity)) {
-      entityDisplay = displayReadable ? "Pirates!" : entity;
-    } else if (entity && !isPlayer(entity)) {
-      entityDisplay = shorten ? shortenAddress(entity as Hex) : entityToAddress(entity);
-    } else {
+      entityDisplay = "Pirates!";
+    } else if (entity && isPlayer(entity)) {
       entityDisplay =
-        fetchedExternalWallet.ensName ?? entityToAddress(fetchedExternalWallet.address ?? entity, shorten);
+        fetchedExternalWallet.ensName ?? entityToAddress(fetchedExternalWallet.address ?? entity, !fullAddress);
+    } else {
+      entityDisplay = shortenAddress(entity as Hex);
     }
     return entityDisplay;
-  }, [entity, playerEntity, displayReadable, shorten, fetchedExternalWallet.ensName, fetchedExternalWallet.address]);
+  }, [entity, playerEntity, fullAddress, fetchedExternalWallet.ensName, fetchedExternalWallet.address]);
 
   return <>{entityDisplay}</>;
 };
