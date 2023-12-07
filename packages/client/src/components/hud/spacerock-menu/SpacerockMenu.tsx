@@ -30,7 +30,7 @@ export const SpacerockMenu: React.FC = () => {
           className="rounded-b-none border-b-0 btn-md border-secondary relative py-2 hover:text-accent group w-fit"
         >
           {/* <FaCaretUp size={22} className="text-accent absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full" /> */}
-          <IconLabel imageUri={img} className="" text={`${name}`} />
+          <IconLabel imageUri={img} className="" text={name} />
           <p className="scale-95 opacity-50">
             [{coord.x}, {coord.y}]
           </p>

@@ -2,19 +2,22 @@ import { Entity } from "@latticexyz/recs";
 import { useCallback, useMemo } from "react";
 import { SecondaryCard } from "src/components/core/Card";
 
-import { useMud } from "src/hooks";
-import { components } from "src/network/components";
-import { EntityType } from "src/util/constants";
-import { UnitLabel } from "./UnitLabel";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { DefenseLabel } from "../utilities/DefenseLabel";
-import { Hex } from "viem";
-import { IconLabel } from "src/components/core/IconLabel";
-import { formatNumber } from "src/util/common";
-import { Badge } from "src/components/core/Badge";
-import { FaExternalLinkAlt } from "react-icons/fa";
 import { ERock } from "contracts/config/enums";
+import { FaExternalLinkAlt } from "react-icons/fa";
+import { Badge } from "src/components/core/Badge";
 import { IconButton } from "src/components/core/Button";
+import { IconLabel } from "src/components/core/IconLabel";
+import { Modal } from "src/components/core/Modal";
+import { useMud } from "src/hooks";
+import { useFleetMoves } from "src/hooks/useFleetMoves";
+import { components } from "src/network/components";
+import { formatNumber } from "src/util/common";
+import { EntityType } from "src/util/constants";
+import { Hex } from "viem";
+import { SendFleet } from "../../fleet-send/SendFleet";
+import { DefenseLabel } from "../utilities/DefenseLabel";
+import { UnitLabel } from "./UnitLabel";
 
 export const AllUnitLabels = () => {
   const { playerEntity } = useMud().network;
@@ -22,6 +25,7 @@ export const AllUnitLabels = () => {
   const owner = components.OwnedBy.use(selectedAsteroid)?.value as Entity | undefined;
   const rockType = components.RockType.get(selectedAsteroid ?? singletonEntity)?.value ?? ERock.Motherlode;
   const units = components.Hangar.use(selectedAsteroid ?? singletonEntity);
+  const fleetMoves = useFleetMoves();
 
   const getUnitCount = useCallback(
     (unit: Entity) => {
@@ -44,6 +48,10 @@ export const AllUnitLabels = () => {
       }, 0n),
     [units, owner, playerEntity, getUnitCount]
   );
+
+  const handleReinforce = () => {
+    console.log("hello");
+  };
 
   return (
     <div className="flex flex-col items-center gap-1 m-1">
@@ -102,8 +110,19 @@ export const AllUnitLabels = () => {
 
         {playerEntity === owner && rockType === ERock.Motherlode && (
           <div className="flex gap-1">
-            <IconButton imageUri="img/icons/mainbaseicon.png" text="recall" className="btn-xs " />
-            <IconButton imageUri="img/icons/reinforcementicon.png" text="reinforce" className="btn-xs" />
+            <IconButton imageUri="img/icons/mainbaseicon.png" text="recall" className="btn-xs" />
+            <Modal title="Send Fleet">
+              <Modal.Content className="w-[51rem] h-96">
+                <SendFleet />
+              </Modal.Content>
+              <Modal.IconButton
+                disabled={!fleetMoves}
+                className="btn-xs"
+                imageUri="/img/icons/reinforcementicon.png"
+                text="reinforce"
+                // onClick={handleReinforce}
+              />
+            </Modal>
           </div>
         )}
       </div>
