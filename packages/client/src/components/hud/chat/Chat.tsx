@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PusherJS from "pusher-js";
 import { uuid } from "@latticexyz/utils";
 import { useMud } from "src/hooks";
@@ -12,6 +12,8 @@ import { censorText } from "src/util/profanity";
 import { components } from "src/network/components";
 import { useFetch } from "src/hooks/useFetch";
 import { Loader } from "src/components/core/Loader";
+
+const COOLDOWN = 1;
 
 interface ChatProps {
   className?: string;
@@ -46,10 +48,9 @@ export const Chat = ({ className }: ChatProps) => {
   const { data, loading } = useFetch<message[]>(`/api/chatHistory/${channel}`);
   const chatRef = useRef<HTMLDivElement>(null);
   const playerAlliance = components.PlayerAlliance.use(playerEntity)?.alliance;
+  const [isCooldown, setIsCooldown] = useState(false);
 
-  const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const sendMessage = async () => {
     if (!message.current) return;
 
     const messageId = uuid();
@@ -81,9 +82,18 @@ export const Chat = ({ className }: ChatProps) => {
         pending: true,
         uuid: messageId,
       });
-      console.log(newChat);
+      message.current = "";
       return newChat;
     });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isCooldown) {
+      await sendMessage();
+      setIsCooldown(true);
+      (e.target as HTMLFormElement).reset();
+    }
   };
 
   useEffect(() => {
@@ -140,6 +150,16 @@ export const Chat = ({ className }: ChatProps) => {
     });
   }, [data]);
 
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isCooldown) {
+      timer = setTimeout(() => {
+        setIsCooldown(false);
+      }, COOLDOWN * 1000); // Convert seconds to milliseconds
+    }
+    return () => clearTimeout(timer); // Cleanup the timer
+  }, [isCooldown]);
+
   return (
     <div className={`${className} duration-300 transition-all pointer-events-auto text-xs`}>
       <button
@@ -170,7 +190,11 @@ export const Chat = ({ className }: ChatProps) => {
       </SecondaryCard>
       <SecondaryCard className="flex flex-col h-72 w-96 items-center justify-center">
         {!loading && (
-          <div ref={chatRef} className="overflow-y-auto scrollbar scroll-smooth" onWheel={() => setChatScroll(true)}>
+          <div
+            ref={chatRef}
+            className="overflow-y-auto scrollbar w-full scroll-smooth"
+            onWheel={() => setChatScroll(true)}
+          >
             {Array.from(chat).map(([uuid, message], index) => {
               return (
                 <div key={uuid} className={`flex ${index % 2 === 0 ? "bg-neutral/50" : ""} px-3 py-1`}>
@@ -201,14 +225,7 @@ export const Chat = ({ className }: ChatProps) => {
         )}
       </SecondaryCard>
 
-      <form
-        className="flex items-center space-x-2 relative pr-2"
-        onSubmit={async (e) => {
-          await sendMessage(e);
-          //@ts-ignore
-          e.target.reset();
-        }}
-      >
+      <form className="flex items-center space-x-2 relative pr-2" onSubmit={handleSubmit}>
         <div className="absolute left-0 w-full h-full topographic-background opacity-30 z-0" />
         <TextInput
           placeholder="Type a message..."
@@ -218,7 +235,10 @@ export const Chat = ({ className }: ChatProps) => {
           maxLength={128}
           className="w-full placeholder:opacity-50 input-sm bg-neutral border-accent active:ring-0 z-10"
         />
-        <Button className="btn-sm btn-secondary flex-grow"> SEND </Button>
+        <Button className="btn-sm btn-secondary flex-grow" disabled={isCooldown}>
+          {" "}
+          SEND{" "}
+        </Button>
       </form>
     </div>
   );

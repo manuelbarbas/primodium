@@ -6,7 +6,7 @@ import { mountStoreDevtool } from "simple-zustand-devtools";
 import { KeybindActions } from "@game/constants";
 import { Key } from "engine/types";
 
-const VERSION = 5;
+const VERSION = 6;
 
 type Keybinds = Partial<{
   [key in KeybindActions]: Set<Key>;
@@ -41,8 +41,8 @@ const defaults: SettingsState = {
   volume: {
     master: 1,
     music: 0.5,
-    sfx: 0.75,
-    ui: 0.75,
+    sfx: 0.5,
+    ui: 0.5,
   },
   keybinds: {
     [KeybindActions.RightClick]: new Set(["POINTER_RIGHT"]),
@@ -167,6 +167,7 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
         removeItem: (name) => localStorage.removeItem(name),
       },
       version: VERSION,
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
       migrate: (persistedStore: any, version) => {
         if (version === VERSION) return persistedStore;
 
