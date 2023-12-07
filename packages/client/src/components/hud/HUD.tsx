@@ -215,7 +215,7 @@ const Motherlodes = () => {
         className="rounded-r-none m-0 border-r-0 btn-md border-warning relative py-4 hover:text-accent group"
       >
         <FaCaretLeft size={22} className="text-accent absolute top-1/2 left-0  -translate-y-1/2 -translate-x-full " />
-        <IconLabel imageUri="img/icons/outgoingicon.png" className="text-2xl" />
+        <IconLabel imageUri="img/icons/asteroidicon.png" className="text-2xl" />
         <p
           style={{
             writingMode: "vertical-rl",
