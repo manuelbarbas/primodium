@@ -223,10 +223,10 @@ const Motherlodes = () => {
           }}
           className=" absolute tracking-widest uppercase font-bold -rotate-180 right-0 bottom-full my-4 mr-2 opacity-75 bg-secondary/25 rounded-box backdrop-blur-md p-2 group-hover:ring-1"
         >
-          motherlode
+          motherlodes
         </p>
       </Tabs.Button>
-      <Tabs.Pane index={0} className="rounded-r-none border-r-0 z-10">
+      <Tabs.Pane index={0} className="rounded-r-none border-r-0 z-10 h-[400px] w-[350px] overflow-x-hidden">
         <OwnedMotherlodes />
       </Tabs.Pane>
     </Tabs>
@@ -234,7 +234,7 @@ const Motherlodes = () => {
 };
 
 const FleetsPane = () => (
-  <Tabs className="flex flex-col items-center gap-2 w-full h-full">
+  <Tabs className="flex items-center gap-2 w-full h-full">
     <div className="flex gap-1 w-full">
       <Tabs.Button index={0} showActive className="flex-1 btn-md hover:text-accent hover:bg-accent">
         Friendly
