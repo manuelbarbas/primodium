@@ -76,11 +76,11 @@ Modal.IconButton = function ModalButton(props: React.ComponentProps<typeof IconB
 
   return (
     <IconButton
+      {...props}
       onClick={() => {
         setIsOpen(true);
         if (props.onClick) props.onClick();
       }}
-      {...props}
     />
   );
 };

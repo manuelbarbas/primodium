@@ -1,4 +1,4 @@
-import { FaArrowRight, FaCaretLeft } from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
 import { components } from "src/network/components";
 import { Action } from "src/util/constants";
 import { HUD } from "../core/HUD";
@@ -17,6 +17,8 @@ import { Settings } from "./modals/settings/Settings";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
 import { PlayerLeaderboard } from "./modals/leaderboard/PlayerLeaderboard";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
+import { Chat } from "./chat/Chat";
+// import { CurrenObjective } from "./CurrentObjective";
 
 export const GameHUD = () => {
   // const playerEntity = useMud().network.playerEntity;
@@ -89,8 +91,8 @@ export const GameHUD = () => {
 
         <HUD.Left>
           <Tabs className="flex flex-row justify-center items-center gap-0" defaultIndex={-1}>
-            <Tabs.Pane index={0} className="rounded-l-none border-l-0 h-96 z-10">
-              CHAT PLACEHOLDER
+            <Tabs.Pane index={0} className="rounded-l-none border-l-0 z-10">
+              <Chat />
             </Tabs.Pane>
             <Tabs.Button
               index={0}
@@ -141,10 +143,6 @@ const BuildingSelection = () => {
             }}
             className="rounded-r-none m-0 border-r-0 btn-md border-warning relative py-4 hover:text-accent group"
           >
-            <FaCaretLeft
-              size={22}
-              className="text-accent absolute top-1/2 left-0  -translate-y-1/2 -translate-x-full "
-            />
             <IconLabel imageUri="img/icons/minersicon.png" className="text-2xl" />
             <p
               style={{

@@ -1,10 +1,17 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import PusherJS from "pusher-js";
-import { FaMinus } from "react-icons/fa";
 import { uuid } from "@latticexyz/utils";
 import { useMud } from "src/hooks";
-import { entityToAddress, isPlayer, shortenAddress } from "src/util/common";
+import { isPlayer } from "src/util/common";
 import { Entity } from "@latticexyz/recs";
+import { Card, SecondaryCard } from "src/components/core/Card";
+import { TextInput } from "src/components/core/TextInput";
+import { Button } from "src/components/core/Button";
+import { AccountDisplay } from "src/components/shared/AccountDisplay";
+import { censorText } from "src/util/profanity";
+import { components } from "src/network/components";
+import { useFetch } from "src/hooks/useFetch";
+import { Loader } from "src/components/core/Loader";
 
 interface ChatProps {
   className?: string;
@@ -32,25 +39,22 @@ export const Chat = ({ className }: ChatProps) => {
   const {
     network: { walletClient, playerEntity },
   } = useMud();
-  const [isMinimized, setIsMinimized] = useState(true);
-  const [unread, setUnread] = useState(0);
   const [chatScroll, setChatScroll] = useState(false);
   const [chat, setChat] = useState<Map<string, message>>(new Map());
+  const message = useRef("");
+  const [channel, setChannel] = useState("general");
+  const { data, loading } = useFetch<message[]>(`/api/chatHistory/${channel}`);
   const chatRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const playerAlliance = components.PlayerAlliance.use(playerEntity)?.alliance;
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!inputRef.current) return;
-
-    if (inputRef.current.value.length === 0) return;
+    if (!message.current) return;
 
     const messageId = uuid();
-
     const signedMessage = await walletClient.signMessage({
-      message: inputRef.current.value,
-      // account: entityToAddress(playerEntity),
+      message: message.current,
     });
 
     fetch("/api/chat", {
@@ -61,56 +65,52 @@ export const Chat = ({ className }: ChatProps) => {
       method: "POST",
       body: JSON.stringify({
         user: playerEntity,
-        message: inputRef.current.value,
+        message: message.current,
         signature: signedMessage,
-        uuid,
-        channel: "chat",
+        uuid: messageId,
+        channel,
       }),
     });
 
-    setChat(
-      new Map(
-        Array.from(
-          chat.set(messageId, {
-            user: playerEntity ?? "unknown",
-            message: inputRef.current.value,
-            time: Date.now(),
-            pending: true,
-            uuid: messageId,
-          })
-        ).slice(-100)
-      )
-    );
-
-    inputRef.current.value = "";
+    setChat((prevChat) => {
+      const newChat = new Map(prevChat);
+      newChat.set(messageId, {
+        user: playerEntity ?? "unknown",
+        message: message.current,
+        time: Date.now(),
+        pending: true,
+        uuid: messageId,
+      });
+      console.log(newChat);
+      return newChat;
+    });
   };
 
   useEffect(() => {
-    const channel = client.subscribe("chat");
+    const pusherChannel = client.subscribe(channel);
+    chat.clear();
 
-    channel.bind("pusher:subscription_succeeded", () => {
-      setChat(
-        new Map(
-          Array.from(
-            chat.set(uuid(), {
-              user: "SYSTEM",
-              message: "Connected to chat.",
-              time: Date.now(),
-            })
-          ).slice(-100)
-        )
+    pusherChannel.bind("pusher:subscription_succeeded", () => {
+      // Append system message without clearing existing chat
+      setChat((prevChat) =>
+        new Map(prevChat).set(uuid(), {
+          user: "SYSTEM",
+          message: "Connected to chat.",
+          time: Date.now(),
+        })
       );
     });
 
-    channel.bind("message", (data: message) => {
-      setChat(new Map(Array.from(chat.set(uuid(), data)).slice(-100)));
+    pusherChannel.bind("message", (data: message) => {
+      // Append new message without clearing existing chat
+      setChat((prevChat) => new Map(prevChat).set(data.uuid ?? uuid(), data));
     });
 
     return () => {
-      channel.unbind_all();
-      client.unsubscribe("chat");
+      pusherChannel.unbind_all();
+      client.unsubscribe(channel);
     };
-  }, []);
+  }, [channel]); // Ensure this effect only runs when 'channel' changes
 
   useEffect(() => {
     if (!chatRef.current) return;
@@ -124,99 +124,102 @@ export const Chat = ({ className }: ChatProps) => {
       return;
     }
 
-    if (isMinimized) setUnread(Math.min(unread + 1, chat.size));
-
     //scroll to bottom
     chatRef.current?.scrollTo(0, chatRef.current.scrollHeight);
   }, [chat]);
 
   useEffect(() => {
-    setUnread(0);
+    if (!data) return;
 
-    chatRef.current?.scrollTo(0, chatRef.current.scrollHeight);
-    setChatScroll(false);
-  }, [isMinimized]);
+    setChat((prevChat) => {
+      const newChat = new Map(prevChat);
+      for (const message of data) {
+        newChat.set(message.uuid!, message);
+      }
+      return newChat;
+    });
+  }, [data]);
 
   return (
-    <div
-      onClick={() => {
-        if (isMinimized) setIsMinimized(!isMinimized);
-      }}
-      className={`${className} p-5 m-5 bg-neutral border border-accent rounded-xl duration-300 transition-all pointer-events-auto text-xs ${
-        isMinimized ? "w-20 scale-75 cursor-pointer" : " max-w-[30rem]"
-      }`}
-    >
-      <div className="absolute top-0 right-0 bg-pink-700 p-2 px-3 translate-x-1/2 -translate-y-1/2 rounded-full text-sm">
-        {unread}
-      </div>
-      <div className="relative flex">
-        <button
-          onClick={() => {
-            setIsMinimized(!isMinimized);
-          }}
-          className={`btn btn-circle absolute -right-[2.9rem] -top-10 border border-accent ${
-            isMinimized ? "hidden" : ""
-          }`}
+    <div className={`${className} duration-300 transition-all pointer-events-auto text-xs`}>
+      <button
+        className={`absolute bottom-16 left-1/2 -translate-x-1/2 bg-pink-700 p-1 drop-shadow-2xl z-50 transition-opacity ${
+          chatScroll ? "opacity-100" : "opacity-0 pointer-events-none"
+        } `}
+        onClick={() => {
+          setChatScroll(false);
+          chatRef.current?.scrollTo(0, chatRef.current.scrollHeight);
+        }}
+      >
+        JUMP TO NEWEST
+      </button>
+      <SecondaryCard className="grid grid-cols-2 gap-1">
+        <Button
+          className={`btn-xs ${channel === "general" ? "border-accent" : ""}`}
+          onClick={() => setChannel("general")}
         >
-          <FaMinus />
-        </button>
-
-        <div className={`${isMinimized ? "" : "hidden"}`} style={{ imageRendering: "pixelated" }}>
-          {/* <img src={`/images/web/chat.png`} alt="miao-music" width={40} height={40} /> */}
-        </div>
-
-        <div className={` ${isMinimized ? "hidden" : "flex flex-col"}`}>
-          <button
-            className={`absolute bottom-16 left-1/2 -translate-x-1/2 bg-pink-700 p-1 rounded drop-shadow-2xl z-50 transition-opacity ${
-              chatScroll ? "opacity-100" : "opacity-0 pointer-events-none"
-            } `}
-            onClick={() => {
-              setChatScroll(false);
-              chatRef.current?.scrollTo(0, chatRef.current.scrollHeight);
-            }}
-          >
-            JUMP TO NEWEST
-          </button>
-          <div className="flex flex-col h-44 w-[27rem] justify-end" onWheel={() => setChatScroll(true)}>
-            <div ref={chatRef} className="overflow-y-scroll scroll-smooth">
-              {Array.from(chat).map(([uuid, message], index) => {
-                return (
-                  <div key={uuid} className={`flex ${index % 2 === 0 ? "bg-base-100/50" : ""} rounded px-3 py-1`}>
-                    <p
-                      className={`${message.user === "unknown" ? "opacity-50" : ""} ${
-                        message.pending ? " opacity-25 animate-pulse" : ""
-                      } `}
-                    >
-                      <b>
-                        {isPlayer(message.user as Entity)
-                          ? shortenAddress(entityToAddress(message.user))
-                          : message.user}
-                      </b>
-                      : {message.message}
-                    </p>
+          GENERAL
+        </Button>
+        <Button
+          className={`btn-xs ${channel === playerAlliance ? "border-accent" : ""}`}
+          onClick={() => setChannel(playerAlliance ?? "")}
+          disabled={!playerAlliance}
+        >
+          ALLIANCE
+        </Button>
+      </SecondaryCard>
+      <SecondaryCard className="flex flex-col h-72 w-96 items-center justify-center">
+        {!loading && (
+          <div ref={chatRef} className="overflow-y-auto scrollbar scroll-smooth" onWheel={() => setChatScroll(true)}>
+            {Array.from(chat).map(([uuid, message], index) => {
+              return (
+                <div key={uuid} className={`flex ${index % 2 === 0 ? "bg-neutral/50" : ""} px-3 py-1`}>
+                  <div
+                    className={`${message.user === "unknown" ? "opacity-50" : ""} flex ${
+                      message.pending ? " opacity-25 animate-pulse" : ""
+                    } `}
+                  >
+                    <div className="break-all  font-bold">
+                      {isPlayer(message.user as Entity) ? (
+                        <AccountDisplay player={message.user as Entity} />
+                      ) : (
+                        message.user
+                      )}
+                      :<span className="opacity-80 ml-1 font-normal hyphens-auto">{censorText(message.message)}</span>
+                    </div>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              );
+            })}
           </div>
-          <form
-            className="flex items-center space-x-2 mt-3"
-            onSubmit={async (e) => {
-              await sendMessage(e);
-            }}
-          >
-            <input
-              type="text"
-              placeholder="Type a message..."
-              ref={inputRef}
-              maxLength={128}
-              height={32}
-              className="w-full rounded bg-base-100 outline-none p-2 placeholder:opacity-50"
-            />
-            <button className="btn"> SEND </button>
-          </form>
-        </div>
-      </div>
+        )}
+        {loading && (
+          <Card className="items-center">
+            <Loader />
+            LOADING MESSAGES
+          </Card>
+        )}
+      </SecondaryCard>
+
+      <form
+        className="flex items-center space-x-2 relative pr-2"
+        onSubmit={async (e) => {
+          await sendMessage(e);
+          //@ts-ignore
+          e.target.reset();
+        }}
+      >
+        <div className="absolute left-0 w-full h-full topographic-background opacity-30 z-0" />
+        <TextInput
+          placeholder="Type a message..."
+          onChange={(e) => {
+            message.current = e.target.value;
+          }}
+          maxLength={128}
+          className="w-full placeholder:opacity-50 input-sm bg-neutral border-accent active:ring-0 z-10"
+        />
+        <Button className="btn-sm btn-secondary flex-grow"> SEND </Button>
+      </form>
     </div>
   );
 };
