@@ -20,7 +20,7 @@ export const SpacerockMenu: React.FC = () => {
   const coord = components.Position.get(selectedSpacerock ?? singletonEntity) ?? { x: 0, y: 0 };
   return (
     <div className="w-screen px-2 flex justify-center">
-      <Tabs className="min-w-[50%] flex flex-col items-center gap-0">
+      <Tabs className="min-w-fit w-[50rem] flex flex-col items-center gap-0">
         <Tabs.Button
           index={0}
           togglable

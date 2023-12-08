@@ -24,7 +24,7 @@ export const MotherlodeMaterial = () => {
   return (
     <div className="w-full flex flex-col items-center my-3">
       <p className="font-bold text-xs pb-1"> MINABLE RESOURCES </p>
-      <SecondaryCard className="w-full pt-5">
+      <SecondaryCard className="w-96 pt-5">
         <Progress value={Number(resourceCount)} max={Number(resourceStorage)} className="w-full progress-accent mb-1" />
         <div className="flex justify-between text-xs w-full">
           <IconLabel imageUri={ResourceImage.get(resourceId) ?? ""} text={getBlockTypeName(resourceId)} />

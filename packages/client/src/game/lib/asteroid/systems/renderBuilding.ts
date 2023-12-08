@@ -3,6 +3,7 @@ import {
   Entity,
   Has,
   HasValue,
+  NotValue,
   defineComponentSystem,
   defineEnterSystem,
   defineExitSystem,
@@ -18,23 +19,23 @@ import { safeIndex } from "src/util/array";
 
 import { Assets, DepthLayers, EntityIDtoAnimationKey, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
 import { components } from "src/network/components";
-import { SetupResult } from "src/network/types";
 import { getBuildingDimensions, getBuildingTopLeft } from "src/util/building";
 import { ObjectPosition, OnComponentSystem, OnUpdateSystem, SetValue } from "../../common/object-components/common";
 import { Animation, Outline, Texture } from "../../common/object-components/sprite";
+import { EntityType } from "src/util/constants";
 
 const MAX_SIZE = 2 ** 15 - 1;
-export const renderBuilding = (scene: Scene, { network: { playerEntity } }: SetupResult) => {
+export const renderBuilding = (scene: Scene) => {
   const { tileHeight, tileWidth } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
   const _gameWorld = namespaceWorld(world, "game_specate");
 
-  defineComponentSystem(gameWorld, components.SpectateAccount, ({ value }) => {
+  defineComponentSystem(gameWorld, components.ActiveAsteroid, ({ value }) => {
     world.dispose("game_specate");
 
     const positionQuery = [
       HasValue(components.Position, {
-        parent: components.Home.get(value[0]?.value ?? playerEntity)?.asteroid,
+        parent: value[0]?.value,
       }),
       Has(components.BuildingType),
       Has(components.IsActive),
@@ -42,10 +43,11 @@ export const renderBuilding = (scene: Scene, { network: { playerEntity } }: Setu
 
     const oldPositionQuery = [
       HasValue(components.Position, {
-        parent: components.Home.get(value[1]?.value ?? playerEntity)?.asteroid,
+        parent: value[1]?.value,
       }),
       Has(components.BuildingType),
       Has(components.IsActive),
+      NotValue(components.BuildingType, { value: EntityType.MainBase }),
     ];
 
     for (const entity of runQuery(oldPositionQuery)) {
