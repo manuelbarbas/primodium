@@ -90,7 +90,7 @@ const Left: FC<HUDProps> = memo(({ children }) => {
   return (
     <div
       style={{
-        transform: `translateY(-50%) scale(${scale})`,
+        transform: `translateY(50%) scale(${scale})`,
         transformOrigin: "keft center",
       }}
       className="absolute left-0 bottom-1/2"
@@ -105,7 +105,7 @@ const Right: FC<HUDProps> = memo(({ children }) => {
   return (
     <div
       style={{
-        transform: `translateY(-50%) scale(${scale})`,
+        transform: `translateY(50%) scale(${scale})`,
         transformOrigin: "right center",
       }}
       className="absolute right-0 bottom-1/2"
@@ -128,7 +128,9 @@ export const HUD: FC<HUDProps> & {
   const paddingClass = pad ? "p-3" : "";
   return (
     <ScaleContext.Provider value={scale}>
-      <div className={`screen-container ${paddingClass} absolute top-0 right-0 pointer-events-none`}>
+      <div
+        className={`screen-container ${paddingClass} absolute top-0 right-0 pointer-events-none border border-secondary/50`}
+      >
         <div className={`h-full relative`}>{children}</div>
       </div>
     </ScaleContext.Provider>

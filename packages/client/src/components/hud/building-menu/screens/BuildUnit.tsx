@@ -109,7 +109,6 @@ export const BuildUnit: React.FC<{
                     <Badge key={`resource-${i}`}>
                       <ResourceIconTooltip
                         image={ResourceImage.get(resource.id) ?? ""}
-                        playerEntity={playerEntity}
                         resource={resource.id}
                         name={getBlockTypeName(resource.id)}
                         amount={resource.amount * BigInt(count)}
