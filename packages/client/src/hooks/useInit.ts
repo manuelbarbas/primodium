@@ -24,8 +24,6 @@ export const useInit = () => {
   //initialize systems
   useEffect(() => {
     mud.components.Account.set({ value: playerEntity });
-    mud.components.SpectateAccount.set({ value: playerEntity });
-
     setupBlockNumber(mud.network.latestBlockNumber$);
     setupDoubleCounter(mud);
     setupLeaderboard(mud);
@@ -42,6 +40,9 @@ export const useInit = () => {
   useEffect(() => {
     if (initialized) {
       mud.components.SelectedRock.set({
+        value: (components.Home.get(playerEntity)?.asteroid ?? singletonEntity) as Entity,
+      });
+      mud.components.ActiveRock.set({
         value: (components.Home.get(playerEntity)?.asteroid ?? singletonEntity) as Entity,
       });
     }

@@ -9,10 +9,6 @@ import { Profile } from "./Profile";
 // import { PrototypeInfo } from "./PrototypeInfo";
 import { SelectAction } from "./SelectAction";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
-// import { Hotbar } from "./hotbar/Hotbar";
-// import { Marketplace } from "./marketplace/Marketplace";
-// import { Panes } from "./panes/Panes";
-// import { Resources } from "./resources/Resources";
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
 import { Tabs } from "../core/Tabs";
@@ -28,10 +24,14 @@ import { OwnedMotherlodes } from "./panes/OwnedMotherlodes";
 import { BattleReports } from "./panes/battle-reports/BattleReports";
 import { HostileFleets } from "./panes/hostile-fleets/HostileFleets";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
+import { useMud } from "src/hooks";
 
 export const GameHUD = () => {
-  // const playerEntity = useMud().network.playerEntity;
-  // const spectatingAccount = components.SpectateAccount.use()?.value;
+  const playerEntity = useMud().network.playerEntity;
+  const activeRock = components.ActiveRock.use()?.value;
+  const ownedBy = components.OwnedBy.use(activeRock ?? undefined)?.value;
+  const isSpectating = ownedBy !== playerEntity;
+
   const mapOpen = components.MapOpen.use(undefined, {
     value: false,
   }).value;
@@ -42,61 +42,18 @@ export const GameHUD = () => {
     <div className="screen-container font-mono">
       <HUD>
         <HUD.TopMiddle>
-          <div className="flex flex-col items-center">
-            <div className="flex z-10">
-              <span className="flex flex-col gap-1 mt-1">
-                <Modal title="leaderboard">
-                  <Modal.Button className="rounded-r-none border border-secondary btn-sm">
-                    <IconLabel
-                      imageUri="/img/icons/leaderboardicon.png"
-                      tooltipText="leaderboard"
-                      tooltipDirection="left"
-                    />
-                  </Modal.Button>
-                  <Modal.Content className="w-[40rem] h-[50rem]">
-                    <Leaderboard />
-                  </Modal.Content>
-                </Modal>
-                <Modal title="battles">
-                  <Modal.Button className="rounded-r-none border border-secondary btn-sm">
-                    <IconLabel imageUri="/img/icons/reportsicon.png" tooltipText="battles" tooltipDirection="left" />
-                  </Modal.Button>
-                  <Modal.Content className="w-[30rem] h-[50rem]">
-                    <BattleReports />
-                  </Modal.Content>
-                </Modal>
-              </span>
-              <SelectAction />
-              <span className="flex flex-col gap-1 mt-1">
-                <Modal title="Fleets">
-                  <Modal.Button className="rounded-l-none border border-secondary btn-sm">
-                    <IconLabel imageUri="/img/icons/outgoingicon.png" tooltipText="Fleets" tooltipDirection="right" />
-                  </Modal.Button>
-                  <Modal.Content className="w-[50rem] h-[50rem]">
-                    <FleetsPane />
-                  </Modal.Content>
-                </Modal>
-                <Modal title="settings">
-                  <Modal.Button className="rounded-l-none border border-secondary btn-sm">
-                    <IconLabel imageUri="/img/icons/settingsicon.png" tooltipText="settings" tooltipDirection="right" />
-                  </Modal.Button>
-                  <Modal.Content className="w-132 h-96">
-                    <Settings />
-                  </Modal.Content>
-                </Modal>
-              </span>
-            </div>
-            <Score />
-          </div>
+          <TopActions isSpectating={isSpectating} />
         </HUD.TopMiddle>
 
-        <HUD.TopLeft>
-          <Profile />
-        </HUD.TopLeft>
+        {!isSpectating && (
+          <HUD.TopLeft>
+            <Profile />
+          </HUD.TopLeft>
+        )}
 
-        <HUD.TopRight>{mapOpen ? <Minimap /> : <CurrentObjective />}</HUD.TopRight>
+        {!isSpectating && <HUD.TopRight>{mapOpen ? <Minimap /> : <CurrentObjective />}</HUD.TopRight>}
 
-        <HUD.Right>{mapOpen ? <Motherlodes /> : <BuildingSelection />}</HUD.Right>
+        {!isSpectating && <HUD.Right>{mapOpen ? <Motherlodes /> : <BuildingSelection />}</HUD.Right>}
 
         <HUD.Left>
           <Tabs className="flex flex-row justify-center items-center gap-0" defaultIndex={-1}>
@@ -234,3 +191,56 @@ const FleetsPane = () => (
     </Tabs.Pane>
   </Tabs>
 );
+
+const TopActions: React.FC<{ isSpectating: boolean }> = ({ isSpectating }) => {
+  return (
+    <div className="flex flex-col items-center">
+      <div className="flex z-10">
+        {
+          <span className="flex flex-col gap-1 mt-1">
+            <Modal title="leaderboard">
+              <Modal.Button className="rounded-r-none border border-secondary btn-sm">
+                <IconLabel
+                  imageUri="/img/icons/leaderboardicon.png"
+                  tooltipText="leaderboard"
+                  tooltipDirection="left"
+                />
+              </Modal.Button>
+              <Modal.Content className="w-[40rem] h-[50rem]">
+                <Leaderboard />
+              </Modal.Content>
+            </Modal>
+            <Modal title="battles">
+              <Modal.Button className="rounded-r-none border border-secondary btn-sm">
+                <IconLabel imageUri="/img/icons/reportsicon.png" tooltipText="battles" tooltipDirection="left" />
+              </Modal.Button>
+              <Modal.Content className="w-[30rem] h-[50rem]">
+                <BattleReports />
+              </Modal.Content>
+            </Modal>
+          </span>
+        }
+        <SelectAction isSpectating={isSpectating} />
+        <span className="flex flex-col gap-1 mt-1">
+          <Modal title="Fleets">
+            <Modal.Button className="rounded-l-none border border-secondary btn-sm">
+              <IconLabel imageUri="/img/icons/outgoingicon.png" tooltipText="Fleets" tooltipDirection="right" />
+            </Modal.Button>
+            <Modal.Content className="w-[50rem] h-[50rem]">
+              <FleetsPane />
+            </Modal.Content>
+          </Modal>
+          <Modal title="settings">
+            <Modal.Button className="rounded-l-none border border-secondary btn-sm">
+              <IconLabel imageUri="/img/icons/settingsicon.png" tooltipText="settings" tooltipDirection="right" />
+            </Modal.Button>
+            <Modal.Content className="w-132 h-96">
+              <Settings />
+            </Modal.Content>
+          </Modal>
+        </span>
+      </div>
+      {!isSpectating && <Score />}
+    </div>
+  );
+};

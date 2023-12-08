@@ -11,7 +11,7 @@ import { renderSelectedTile } from "./renderSelectedTile";
 
 export const runSystems = (scene: Scene, mud: SetupResult) => {
   //Render world entity's sprites
-  renderBuilding(scene, mud);
+  renderBuilding(scene);
 
   // Render map utility elements, placement indicators, etc
   renderSelectedTile(scene);
