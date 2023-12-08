@@ -139,7 +139,7 @@ const Objective: React.FC<{
             <span className="flex gap-1 items-center opacity-75">
               <FaSpinner /> PROGRESS:
             </span>
-            {Object.entries(requirements ?? {}).map(([key, req], index) => {
+            {Object.entries(requirements ?? {}).map(([, req], index) => {
               const complete = isAllRequirementsMet(req);
               return (
                 <div key={index} className="flex flex-wrap gap-1">
@@ -196,7 +196,6 @@ const Objective: React.FC<{
                     className={`text-xs gap-2 badge-neutral ${!canClaim ? "border-error opacity-60 bg-error" : ""}`}
                   >
                     <ResourceIconTooltip
-                      playerEntity={playerEntity}
                       name={getBlockTypeName(resource.id)}
                       image={ResourceImage.get(resource.id) ?? BackgroundImage.get(resource.id)?.at(0) ?? ""}
                       resource={resource.id}

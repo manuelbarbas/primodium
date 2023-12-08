@@ -1,14 +1,7 @@
-import { useEffect } from "react";
-
-import { primodium } from "@game/api";
-import { KeybindActions, Scenes } from "@game/constants";
-import { useMud } from "src/hooks";
+import { FaArrowRight } from "react-icons/fa";
 import { components } from "src/network/components";
-import { MapOpen, SelectedBuilding } from "src/network/components/clientComponents";
-// import { entityToAddress, getBlockTypeName, shortenAddress } from "src/util/common";
-import { useGameStore } from "../../store/GameStore";
+import { Action } from "src/util/constants";
 import { HUD } from "../core/HUD";
-import { OverlayModal } from "../core/OverlayModal";
 import { BrandingLabel } from "../shared/BrandingLabel";
 // import { GracePeriod } from "./GracePeriod";
 // import { LoadingIndication } from "./LoadingIndication";
@@ -20,41 +13,30 @@ import { BuildingMenu } from "./building-menu/BuildingMenu";
 // import { Marketplace } from "./marketplace/Marketplace";
 // import { Panes } from "./panes/Panes";
 // import { Resources } from "./resources/Resources";
-import { FaArrowRight, FaCaretLeft, FaCaretRight } from "react-icons/fa";
-import { Action } from "src/util/constants";
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
 import { Tabs } from "../core/Tabs";
 import { Blueprints } from "./Blueprints";
-import { CurrenObjective } from "./CurrentObjective";
+import { CurrentObjective } from "./CurrentObjective";
 import { Minimap } from "./Minimap";
 import { Score } from "./Score";
-import { Settings } from "./modals/Settings";
+import { Chat } from "./chat/Chat";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
-import { PlayerLeaderboard } from "./modals/leaderboard/PlayerLeaderboard";
+import { Settings } from "./modals/settings/Settings";
+import { ReinforcementFleets } from "./panes/FriendlyFleets";
+import { OwnedMotherlodes } from "./panes/OwnedMotherlodes";
+import { BattleReports } from "./panes/battle-reports/BattleReports";
+import { HostileFleets } from "./panes/hostile-fleets/HostileFleets";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 
 export const GameHUD = () => {
-  const [showUI, toggleShowUI] = useGameStore((state) => [state.showUI, state.toggleShowUI]);
-  const playerEntity = useMud().network.playerEntity;
-  const selectedBuilding = SelectedBuilding.use()?.value;
-  const spectatingAccount = components.SpectateAccount.use()?.value;
-  const action = components.SelectedAction.use()?.value;
-  const mapOpen = MapOpen.use(undefined, {
+  // const playerEntity = useMud().network.playerEntity;
+  // const spectatingAccount = components.SpectateAccount.use()?.value;
+  const mapOpen = components.MapOpen.use(undefined, {
     value: false,
   }).value;
 
-  const isSpectating = spectatingAccount !== playerEntity;
-
-  useEffect(() => {
-    const asteroidListener = primodium.api(Scenes.Asteroid).input.addListener(KeybindActions.ToggleUI, toggleShowUI);
-    const starmapListener = primodium.api(Scenes.Starmap).input.addListener(KeybindActions.ToggleUI, toggleShowUI);
-
-    return () => {
-      asteroidListener.dispose();
-      starmapListener.dispose();
-    };
-  }, [toggleShowUI]);
+  // const isSpectating = spectatingAccount !== playerEntity;
 
   return (
     <div className="screen-container font-mono">
@@ -71,18 +53,18 @@ export const GameHUD = () => {
                       tooltipDirection="left"
                     />
                   </Modal.Button>
-                  <Modal.Content className="w-[50rem] h-[50rem]">
+                  <Modal.Content className="w-[40rem] h-[50rem]">
                     <Leaderboard />
                   </Modal.Content>
                 </Modal>
-                <OverlayModal>
-                  <OverlayModal.Button className="rounded-r-none border border-secondary btn-sm">
-                    <IconLabel imageUri="/img/icons/reportsicon.png" tooltipText="messages" tooltipDirection="left" />
-                  </OverlayModal.Button>
-                  <OverlayModal.Content>
-                    <PlayerLeaderboard />
-                  </OverlayModal.Content>
-                </OverlayModal>
+                <Modal title="battles">
+                  <Modal.Button className="rounded-r-none border border-secondary btn-sm">
+                    <IconLabel imageUri="/img/icons/reportsicon.png" tooltipText="battles" tooltipDirection="left" />
+                  </Modal.Button>
+                  <Modal.Content className="w-[30rem] h-[50rem]">
+                    <BattleReports />
+                  </Modal.Content>
+                </Modal>
               </span>
               <SelectAction />
               <span className="flex flex-col gap-1 mt-1">
@@ -90,7 +72,9 @@ export const GameHUD = () => {
                   <Modal.Button className="rounded-l-none border border-secondary btn-sm">
                     <IconLabel imageUri="/img/icons/outgoingicon.png" tooltipText="Fleets" tooltipDirection="right" />
                   </Modal.Button>
-                  <Modal.Content className="w-[50rem] h-[50rem]">{/* <Objectives /> */}</Modal.Content>
+                  <Modal.Content className="w-[50rem] h-[50rem]">
+                    <FleetsPane />
+                  </Modal.Content>
                 </Modal>
                 <Modal title="settings">
                   <Modal.Button className="rounded-l-none border border-secondary btn-sm">
@@ -110,73 +94,20 @@ export const GameHUD = () => {
           <Profile />
         </HUD.TopLeft>
 
-        <HUD.TopRight>{mapOpen ? <Minimap /> : <CurrenObjective />}</HUD.TopRight>
+        <HUD.TopRight>{mapOpen ? <Minimap /> : <CurrentObjective />}</HUD.TopRight>
 
-        <HUD.Right>
-          {(!selectedBuilding || action === Action.PlaceBuilding) && (
-            <Tabs className="flex flex-row justify-center items-center gap-0">
-              <Tabs.Button
-                index={0}
-                togglable
-                onClick={() => {
-                  components.SelectedBuilding.remove();
-                  components.SelectedAction.remove();
-                }}
-                className="rounded-r-none m-0 border-r-0 btn-md border-warning relative py-4 hover:text-accent group"
-              >
-                <FaCaretLeft
-                  size={22}
-                  className="text-accent absolute top-1/2 left-0  -translate-y-1/2 -translate-x-full "
-                />
-                <IconLabel imageUri="img/icons/minersicon.png" className="text-2xl" />
-                <p
-                  style={{
-                    writingMode: "vertical-rl",
-                    textOrientation: "sideways",
-                  }}
-                  className=" absolute tracking-widest uppercase font-bold -rotate-180 right-0 bottom-full my-4 mr-2 opacity-75 bg-secondary/25 rounded-box backdrop-blur-md p-2 group-hover:ring-1"
-                >
-                  blueprints
-                </p>
-              </Tabs.Button>
-
-              <Tabs.Pane index={0} className="rounded-r-none border-r-0 z-10">
-                <Blueprints />
-              </Tabs.Pane>
-            </Tabs>
-          )}
-          {selectedBuilding && !action && (
-            <Tabs className="flex flex-row justify-center items-center gap-0">
-              <Tabs.Button
-                index={0}
-                togglable
-                onClick={() => components.SelectedBuilding.remove()}
-                className="rounded-r-none m-0 border-r-0 btn-md border-accent relative hover:text-accent group"
-              >
-                <FaArrowRight />
-              </Tabs.Button>
-
-              <Tabs.Pane index={0} className="rounded-r-none border-r-0 z-10">
-                <BuildingMenu />
-              </Tabs.Pane>
-            </Tabs>
-          )}
-        </HUD.Right>
+        <HUD.Right>{mapOpen ? <Motherlodes /> : <BuildingSelection />}</HUD.Right>
 
         <HUD.Left>
           <Tabs className="flex flex-row justify-center items-center gap-0" defaultIndex={-1}>
-            <Tabs.Pane index={0} className="rounded-l-none border-l-0 h-96 z-10">
-              CHAT PLACEHOLDER
+            <Tabs.Pane index={0} className="rounded-l-none border-l-0 z-10">
+              <Chat />
             </Tabs.Pane>
             <Tabs.Button
               index={0}
               togglable
               className="rounded-l-none m-0 border-l-0 btn-md border-secondary relative py-4 hover:text-accent group"
             >
-              <FaCaretRight
-                size={22}
-                className="text-accent absolute top-1/2 right-0  -translate-y-1/2 translate-x-full "
-              />
               <IconLabel imageUri="img/icons/chaticon.png" className="text-2xl" />
               <p
                 style={{
@@ -204,3 +135,102 @@ export const GameHUD = () => {
     </div>
   );
 };
+
+const BuildingSelection = () => {
+  const selectedBuilding = components.SelectedBuilding.use()?.value;
+  const action = components.SelectedAction.use()?.value;
+  return (
+    <>
+      {(!selectedBuilding || action === Action.PlaceBuilding) && (
+        <Tabs className="flex flex-row justify-center items-center gap-0">
+          <Tabs.Button
+            index={0}
+            togglable
+            onClick={() => {
+              components.SelectedBuilding.remove();
+              components.SelectedAction.remove();
+            }}
+            className="rounded-r-none m-0 border-r-0 btn-md border-warning relative py-4 hover:text-accent group"
+          >
+            <IconLabel imageUri="img/icons/minersicon.png" className="text-2xl" />
+            <p
+              style={{
+                writingMode: "vertical-rl",
+                textOrientation: "sideways",
+              }}
+              className=" absolute tracking-widest uppercase font-bold -rotate-180 right-0 bottom-full my-4 mr-2 opacity-75 bg-secondary/25 rounded-box backdrop-blur-md p-2 group-hover:ring-1"
+            >
+              blueprints
+            </p>
+          </Tabs.Button>
+
+          <Tabs.Pane index={0} className="rounded-r-none border-r-0 z-10">
+            <Blueprints />
+          </Tabs.Pane>
+        </Tabs>
+      )}
+      {selectedBuilding && !action && (
+        <Tabs className="flex flex-row justify-center items-center gap-0">
+          <Tabs.Button
+            index={0}
+            togglable
+            onClick={() => components.SelectedBuilding.remove()}
+            className="rounded-r-none m-0 border-r-0 btn-md border-accent relative hover:text-accent group"
+          >
+            <FaArrowRight />
+          </Tabs.Button>
+
+          <Tabs.Pane index={0} className="rounded-r-none border-r-0 z-10 overflow-y-visible">
+            <BuildingMenu />
+          </Tabs.Pane>
+        </Tabs>
+      )}
+    </>
+  );
+};
+
+const Motherlodes = () => {
+  return (
+    <Tabs className="flex flex-row justify-center items-center gap-0" defaultIndex={-1}>
+      <Tabs.Button
+        index={0}
+        togglable
+        className="rounded-r-none m-0 border-r-0 btn-md border-warning relative py-4 hover:text-accent group"
+      >
+        <IconLabel imageUri="img/icons/asteroidicon.png" className="text-2xl" />
+        <p
+          style={{
+            writingMode: "vertical-rl",
+            textOrientation: "sideways",
+          }}
+          className=" absolute tracking-widest uppercase font-bold -rotate-180 right-0 bottom-full my-4 mr-2 opacity-75 bg-secondary/25 rounded-box backdrop-blur-md p-2 group-hover:ring-1"
+        >
+          motherlodes
+        </p>
+      </Tabs.Button>
+      <Tabs.Pane index={0} className="rounded-r-none border-r-0 z-10 h-[400px] w-[350px] overflow-x-hidden">
+        <OwnedMotherlodes />
+      </Tabs.Pane>
+    </Tabs>
+  );
+};
+
+const FleetsPane = () => (
+  <Tabs className="flex flex-col items-center gap-2 w-full h-full">
+    <div className="flex gap-1 w-full">
+      <Tabs.Button index={0} showActive className="flex-1 btn-md hover:text-accent hover:bg-accent">
+        Friendly
+      </Tabs.Button>
+      <Tabs.Button index={1} showActive className="flex-1 btn-md hover:text-accent hover:bg-accent">
+        Hostile
+      </Tabs.Button>
+    </div>
+    <Tabs.Pane index={0} className="rounded-r-none z-10 w-full h-full">
+      <ReinforcementFleets />
+    </Tabs.Pane>
+
+    <Tabs.Pane index={1} className="rounded-r-none z-10 w-full h-full">
+      <HostileFleets />
+    </Tabs.Pane>
+  </Tabs>
+);

@@ -1,13 +1,13 @@
 import { primodium } from "@game/api";
 import { AudioKeys, KeybindActions, Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect } from "react";
-import { FaCaretUp, FaCrosshairs } from "react-icons/fa";
+import { FaCaretUp } from "react-icons/fa";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { Button } from "../core/Button";
 import { Join } from "../core/Join";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 
 export const SelectAction = () => {
   const mud = useMud();
@@ -17,7 +17,6 @@ export const SelectAction = () => {
   }).value;
 
   const { transitionToScene } = primodium.api().scene;
-  const spectatingAccount = components.SpectateAccount.use()?.value;
   const homeAsteroid = components.Home.use(playerEntity)?.asteroid as Entity | undefined;
 
   const closeMap = async () => {
@@ -87,11 +86,13 @@ export const SelectAction = () => {
 
   return (
     <div className="flex z-10">
-      <Join className="border-b border-x border-secondary rounded-t-none">
+      <Join className="flex border-b border-x border-secondary rounded-t-none">
         <Button
           clickSound={AudioKeys.Sequence}
           onClick={closeMap}
-          className={`relative rounded-t-none rounded-r-none ${mapOpen ? "opacity-50" : "ring ring-accent z-10"}`}
+          className={`flex-1 relative rounded-t-none rounded-r-none ${
+            mapOpen ? "opacity-50" : "ring ring-accent z-10"
+          }`}
         >
           <div className="flex flex-col gap-2 items-center p-2">
             <img src="img/icons/minersicon.png" className="pixel-images w-12 h-12" />
@@ -102,13 +103,13 @@ export const SelectAction = () => {
         <Button
           clickSound={AudioKeys.Sequence}
           onClick={openMap}
-          className={`rounded-t-none rounded-l-none disabled:opacity-100 ${
+          className={`flex-1 rounded-t-none rounded-l-none disabled:opacity-100 ${
             !mapOpen ? "opacity-50" : "ring ring-accent z-10"
           }`}
         >
           <div className="flex flex-col gap-2 items-center p-2">
             <img src="img/icons/starmapicon.png" className="pixel-images w-12 h-12" />
-            <p className="">EXPAND</p>
+            <p className="">CONQUER</p>
           </div>
           {mapOpen && <FaCaretUp size={22} className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-accent" />}
         </Button>

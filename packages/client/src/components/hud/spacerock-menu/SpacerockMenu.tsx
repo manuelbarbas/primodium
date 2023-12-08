@@ -13,7 +13,8 @@ import { Resources } from "./widgets/resources/Resources";
 export const SpacerockMenu: React.FC = () => {
   const playerEntity = useMud().network.playerEntity;
   const selectedSpacerock = components.SelectedRock.use()?.value;
-  const ownedBy = components.OwnedBy.use(selectedSpacerock ?? singletonEntity)?.value ?? playerEntity;
+  const ownedBy = components.OwnedBy.use(selectedSpacerock)?.value ?? playerEntity;
+  if (!selectedSpacerock) return null;
   const img = getSpaceRockImage(selectedSpacerock ?? singletonEntity);
   const name = getSpaceRockName(selectedSpacerock ?? singletonEntity);
   const coord = components.Position.get(selectedSpacerock ?? singletonEntity) ?? { x: 0, y: 0 };
@@ -30,7 +31,7 @@ export const SpacerockMenu: React.FC = () => {
           className="rounded-b-none border-b-0 btn-md border-secondary relative py-2 hover:text-accent group w-fit"
         >
           {/* <FaCaretUp size={22} className="text-accent absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full" /> */}
-          <IconLabel imageUri={img} className="" text={`${name}`} />
+          <IconLabel imageUri={img} className="" text={name} />
           <p className="scale-95 opacity-50">
             [{coord.x}, {coord.y}]
           </p>

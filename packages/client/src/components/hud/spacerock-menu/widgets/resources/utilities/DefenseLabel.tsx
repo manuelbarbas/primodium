@@ -24,7 +24,7 @@ export const DefenseLabel = ({ player }: { player?: Entity }) => {
     <ResourceIconTooltip
       short={true}
       name={name}
-      playerEntity={player}
+      spaceRock={rock}
       amount={defense.points}
       resource={resourceId}
       image={resourceIcon ?? ""}

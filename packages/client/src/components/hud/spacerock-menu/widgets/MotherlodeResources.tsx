@@ -6,9 +6,8 @@ import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { getBlockTypeName } from "src/util/common";
 import { ResourceEntityLookup, ResourceImage, ResourceType } from "src/util/constants";
 
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
-import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
+import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
 import { Hex } from "viem";
 
@@ -24,17 +23,14 @@ const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ lab
 export const MotherlodeResources: React.FC<{
   motherlodeEntity: Entity;
 }> = ({ motherlodeEntity }) => {
-  const resources = useFullResourceCounts(motherlodeEntity);
-  const motherlodeType = components.Motherlode.getWithKeys({ entity: motherlodeEntity as Hex })?.motherlodeType ?? 0;
-  const rawResource = components.P_RawResource.getWithKeys({ resource: motherlodeType })?.value ?? 0n;
-  if (!rawResource) return null;
-
-  const owner = components.OwnedBy.getWithKeys({ entity: motherlodeEntity as Hex }) ?? singletonEntity;
+  const motherlodeType = components.Motherlode.useWithKeys({ entity: motherlodeEntity as Hex })?.motherlodeType;
+  const rawResource = components.P_RawResource.useWithKeys({ resource: motherlodeType ?? 0 })?.value ?? 0n;
+  const rawResourceId = ResourceEntityLookup[rawResource as EResource];
+  const { resourcesToClaim, resourceCount } = useFullResourceCount(rawResourceId, motherlodeEntity);
+  if (!rawResource || !motherlodeType) return null;
 
   const resourceId = ResourceEntityLookup[motherlodeType as EResource];
-  const rawResourceId = ResourceEntityLookup[rawResource as EResource];
 
-  const { resourcesToClaim, resourceCount } = resources[rawResourceId];
   let currCount = (resourceCount ?? 0n) + (resourcesToClaim ?? 0n);
   if (currCount < 0n) currCount = 0n;
   return (
@@ -45,7 +41,7 @@ export const MotherlodeResources: React.FC<{
             name={getBlockTypeName(resourceId)}
             image={ResourceImage.get(resourceId) ?? ""}
             resource={rawResourceId}
-            playerEntity={owner as Entity}
+            spaceRock={motherlodeEntity}
             amount={currCount}
             resourceType={ResourceType.Resource}
             validate={false}

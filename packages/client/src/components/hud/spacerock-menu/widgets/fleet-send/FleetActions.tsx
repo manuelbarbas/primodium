@@ -1,20 +1,21 @@
 import { Entity } from "@latticexyz/recs";
-import { useCallback, useMemo } from "react";
-import { SecondaryCard } from "src/components/core/Card";
-import { useMud } from "src/hooks";
-import { components } from "src/network/components";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { DefenseLabel } from "../resources/utilities/DefenseLabel";
-import { Hex } from "viem";
-import { IconLabel } from "src/components/core/IconLabel";
-import { formatNumber } from "src/util/common";
-import { Badge } from "src/components/core/Badge";
-import { FaExternalLinkAlt } from "react-icons/fa";
-import { Modal } from "src/components/core/Modal";
-import { SendFleet } from "./SendFleet";
-import { useFleetMoves } from "src/hooks/useFleetMoves";
 import { ERock, ESendType } from "contracts/config/enums";
+import { useCallback, useMemo } from "react";
+import { FaExternalLinkAlt } from "react-icons/fa";
+import { Badge } from "src/components/core/Badge";
+import { SecondaryCard } from "src/components/core/Card";
+import { IconLabel } from "src/components/core/IconLabel";
+import { Modal } from "src/components/core/Modal";
+import { useMud } from "src/hooks";
+import { useFleetMoves } from "src/hooks/useFleetMoves";
+import { components } from "src/network/components";
+import { formatNumber } from "src/util/common";
+import { Hex } from "viem";
+import { DefenseLabel } from "../resources/utilities/DefenseLabel";
 import { Land } from "./Land";
+import { Recall } from "./Recall";
+import { SendFleet } from "./SendFleet";
 
 export const FleetActions = () => {
   const { playerEntity } = useMud().network;
@@ -49,6 +50,7 @@ export const FleetActions = () => {
       }, 0n),
     [units, owner, playerEntity, getUnitCount]
   );
+  if (!selectedAsteroid) return null;
 
   return (
     <div className="flex flex-col items-center gap-1 m-1">
@@ -86,10 +88,16 @@ export const FleetActions = () => {
 
         {playerEntity === owner && (
           <Badge className="gap-1 items-center">
-            <div className="animate-pulse bg-success w-1 h-1 rounded-box" />0 ATTACKING FLEETS{" "}
+            <div className="animate-pulse bg-success w-1 h-1 rounded-box" />0 ATTACKING FLEETS
             <FaExternalLinkAlt className="opacity-75 scale-90" />
           </Badge>
         )}
+        <Modal title="Recall">
+          <Modal.Content className="w-[51rem]">
+            <Recall rock={selectedAsteroid} />
+          </Modal.Content>
+          <Modal.IconButton className="btn-xs" imageUri="/img/icons/mainbaseicon.png" text="recall" />
+        </Modal>
       </div>
     </div>
   );

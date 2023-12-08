@@ -1,3 +1,5 @@
+import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect } from "react";
 import { ampli } from "src/ampli";
 import { components } from "src/network/components";
@@ -9,13 +11,10 @@ import { setupDoubleCounter } from "src/network/systems/setupDoubleCounter";
 import { setupHangar } from "src/network/systems/setupHangar";
 import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
 import { setupInvitations } from "src/network/systems/setupPlayerInvites";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { Entity } from "@latticexyz/recs";
 import { setupSend } from "src/network/systems/setupSend";
 import { setupTime } from "src/network/systems/setupTime";
 import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
 import { useMud } from "./useMud";
-import { setupPlayerResources } from "src/network/systems/setupPlayerResources";
 
 export const useInit = () => {
   const mud = useMud();
@@ -38,8 +37,6 @@ export const useInit = () => {
     setupInvitations(mud);
     setupBattleNotifications(mud);
     setupTime(mud);
-    //temp before full spacerock resource system
-    setupPlayerResources();
   }, [mud, playerEntity]);
 
   useEffect(() => {

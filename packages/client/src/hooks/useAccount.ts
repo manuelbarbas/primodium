@@ -22,7 +22,7 @@ export function useAccount(player?: Entity) {
 
   useEffect(() => {
     const getAddressObj = async () => {
-      const addressObj = await getLinkedAddress();
+      const addressObj = await getLinkedAddress(entityToAddress(playerEntity));
       setLinkedAddress(addressObj);
       setLoading(false);
     };
