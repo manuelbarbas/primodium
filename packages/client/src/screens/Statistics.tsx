@@ -4,8 +4,6 @@ import { entityToAddress, isPlayer } from "src/util/common";
 
 export const Statistics = () => {
   const data = components.Leaderboard.use();
-  console.log(data);
-
   if (!data) return null;
 
   return (
@@ -14,8 +12,6 @@ export const Statistics = () => {
       {data.players.map((_, index: number) => {
         const player = data.players[index];
         const score = data.scores[index];
-        // console.log(player);
-        // console.log(isPlayer(player));
         if (isPlayer(player)) {
           return (
             <p key={index}>

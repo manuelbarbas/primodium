@@ -9,7 +9,7 @@ import { Hex } from "viem";
 
 export const LinkedAddressDisplay = ({
   entity,
-  fullAddress = true, // for statistics dashboard, always display full address
+  fullAddress = false, // for statistics dashboard, always display full address
 }: {
   entity: Entity;
   fullAddress?: boolean;
@@ -44,8 +44,11 @@ export const LinkedAddressDisplay = ({
     } else if (entity === hashKeyEntity(PIRATE_KEY, playerEntity)) {
       entityDisplay = "Pirates!";
     } else if (entity && isPlayer(entity)) {
-      entityDisplay =
-        fetchedExternalWallet.ensName ?? entityToAddress(fetchedExternalWallet.address ?? entity, !fullAddress);
+      if (fullAddress) {
+        entityDisplay = entityToAddress(fetchedExternalWallet.address ?? entity, false);
+      } else {
+        entityDisplay = fetchedExternalWallet.ensName ?? entityToAddress(fetchedExternalWallet.address ?? entity, true);
+      }
     } else {
       entityDisplay = shortenAddress(entity as Hex);
     }
