@@ -198,8 +198,8 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     activeGameObject = gameObject;
   }
 
-  function despawn() {
-    if (ignoreCulling) return;
+  function despawn(force = false) {
+    if (ignoreCulling && !force) return;
 
     if (activeGameObject) {
       // Deregister the update handler

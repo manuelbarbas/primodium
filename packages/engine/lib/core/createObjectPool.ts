@@ -83,7 +83,7 @@ export function createObjectPool(scene: Phaser.Scene) {
   function remove(entity: number | string) {
     if (typeof entity === "number") entity = String(entity);
     const object = objects.get(entity);
-    if (object) object.despawn();
+    if (object) object.despawn(true);
     objects.delete(entity);
   }
 
