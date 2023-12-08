@@ -18,7 +18,7 @@ export const ObjectText = (
     once: (gameObject) => {
       gameObject.setText(text);
       gameObject.setFontSize(fontSize);
-      gameObject.setResolution(3);
+      gameObject.setResolution(4);
       gameObject.setAlign(align);
       if (color) gameObject.setColor(color);
       if (backgroundColor) gameObject.setBackgroundColor(backgroundColor);

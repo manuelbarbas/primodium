@@ -50,7 +50,6 @@ export const ExpandRange: React.FC = () => {
                     <Badge key={resource.id + resource.type} className="text-xs gap-2">
                       <ResourceIconTooltip
                         name={getBlockTypeName(resource.id)}
-                        playerEntity={playerEntity}
                         image={ResourceImage.get(resource.id) ?? ""}
                         resource={resource.id}
                         amount={resource.amount}

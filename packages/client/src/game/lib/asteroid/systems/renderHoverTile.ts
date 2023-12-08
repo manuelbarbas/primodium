@@ -1,11 +1,10 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Entity, Has } from "@latticexyz/recs";
-import { defineEnterSystem, defineExitSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
+import { Entity, Has, defineEnterSystem, defineExitSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
+import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { ObjectPosition } from "../../common/object-components/common";
 import { Square } from "../../common/object-components/graphics";
-import { components } from "src/network/components";
 
 const objGraphicsIndex = (entity: Entity) => `${entity}_hoverTile_graphics`;
 
@@ -40,14 +39,11 @@ export const renderHoverTile = (scene: Scene) => {
 
   defineEnterSystem(gameWorld, query, (update) => {
     render(update);
-    console.info("[ENTER SYSTEM](renderHoverTile) Hover tile has been added");
   });
 
   defineUpdateSystem(gameWorld, query, render);
 
   defineExitSystem(gameWorld, query, (update) => {
     scene.objectPool.remove(objGraphicsIndex(update.entity));
-
-    console.info("[EXIT SYSTEM](renderHoverTile) Hover tile has been removed");
   });
 };

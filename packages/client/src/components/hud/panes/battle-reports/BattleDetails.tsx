@@ -65,7 +65,7 @@ export const BattleDetails: React.FC<{
       title="BattleDetails"
       className="relative gap-3 flex flex-col items-center text-white h-full w-full scrollbar overflow-y-auto p-1 mb-1 "
     >
-      <div className="relative bg-slate-800 pixel-images border border-cyan-400 p-3 w-full rounded-md">
+      <div className="relative bg-slate-800 pixel-images border border-cyan-400 p-3 w-full h-full rounded-md">
         <div className="flex flex-col items-center space-y-3">
           {playerEntity === battle.winner && (
             <div className="bg-green-600 p-1 px-4 rounded-md flex flex-col items-center border border-green-400">
@@ -105,7 +105,6 @@ export const BattleDetails: React.FC<{
                   return (
                     <ResourceIconTooltip
                       key={`resource-${i}`}
-                      playerEntity={playerEntity}
                       image={ResourceImage.get(resource.id) ?? ""}
                       resource={resource.id}
                       name={getBlockTypeName(resource.id)}
@@ -164,16 +163,13 @@ export const BattleDetails: React.FC<{
             </div>
           </div>
         </div>
-        <div className="absolute top-0 right-0 flex gap-1 text-xs p-2">
-          {/* <p className="opacity-30">BLOCK</p> */}
+        <div className="absolute top-0 right-0 flex flex-col items-end gap-1 text-xs p-2">
+          <p className="opacity-50 font-bold">{raid ? "RAID" : "INVASION"}</p>
           <p className="opacity-50 font-bold">{new Date(Number(battle.timestamp * 1000n)).toLocaleDateString()}</p>
         </div>
-        <div className="absolute top-0 left-0 flex gap-1 text-xs p-2">
-          <p className="opacity-50 font-bold">{raid ? "RAID" : "INVASION"}</p>
+        <div className="absolute top-0 left-0 p-2">
+          <Navigator.BackButton className="btn btn-primary btn-xs rounded-md" />
         </div>
-      </div>
-      <div className="sticky bottom-0 w-full h-full flex items-center justify-center">
-        <Navigator.BackButton />
       </div>
     </Navigator.Screen>
   );

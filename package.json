@@ -10,6 +10,7 @@
     "dev:contracts": "pnpm --filter 'contracts' deploy:local",
     "dev:node": "pnpm --filter 'contracts' devnode",
     "dev:pty": "run-pty % pnpm dev:node % pnpm dev:client % pnpm dev:contracts",
+    "dev:vercel": "vercel dev --local-config packages/client/vercel-dev.json",
     "foundry:up": "curl -L https://foundry.paradigm.xyz | bash && bash $HOME/.foundry/bin/foundryup",
     "mud:up": "pnpm mud set-version --tag main && pnpm install",
     "prepare": "husky install && (forge --version || pnpm foundry:up)",

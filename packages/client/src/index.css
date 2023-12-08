@@ -32,6 +32,10 @@
     cursor: url("/img/cursors/pointer.png") 12 0, auto;
   }
 
+  button:hover {
+    cursor: url("/img/cursors/pointer.png") 12 0, auto;
+  }
+
   button:active {
     cursor: url("/img/cursors/pointerdown.png") 12 0, auto;
   }
@@ -41,11 +45,11 @@
   }
 
   .scrollbar::-webkit-scrollbar-track {
-    @apply bg-slate-700 rounded-md;
+    @apply bg-slate-700 rounded-box;
   }
 
   .scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-slate-500 rounded-md;
+    @apply bg-slate-500 rounded-box;
   }
 
   .scrollbar::-webkit-scrollbar-thumb:hover {
@@ -102,6 +106,17 @@
     background-image: url("/img/backgrounds/star.png");
     background-repeat: repeat;
     background-size: 2000px;
+  }
+
+  .topographic-background {
+    background-image: url("/img/backgrounds/topographic_bg.png");
+    bacground-opacity: 0.25;
+    background-size: cover;
+    background-size: 500px;
+  }
+
+  .container {
+    position: relative;
   }
 
   /* remove outline on waltour tooltip containers */

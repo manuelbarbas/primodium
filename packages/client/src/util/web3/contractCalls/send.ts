@@ -12,12 +12,6 @@ import { Hex } from "viem";
 import { parseReceipt } from "../../analytics/parseReceipt";
 import { UnitCountTuple } from "../types";
 
-(window as any).checkValue = () => {
-  const playerEntity = components.Account.get()?.value;
-  if (!playerEntity) throw new Error("No player entity found");
-  const arrivalCount = components.ArrivalCount.getWithKeys({ entity: playerEntity as Hex })?.value;
-  console.log("arrivalCount:", arrivalCount);
-};
 export const send = async (
   unitCounts: UnitCountTuple,
   sendType: ESendType,
