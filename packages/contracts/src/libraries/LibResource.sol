@@ -320,7 +320,8 @@ library LibResource {
     uint8 resource,
     uint256 value
   ) internal {
-    uint256 count = ResourceCount.get(Home.getAsteroid(player), resource);
+    bytes32 asteroid = Home.getAsteroid(player);
+    uint256 count = ResourceCount.get(asteroid, resource);
     uint256 currentScore = Score.get(player);
     uint256 scoreChangeAmount = P_ScoreMultiplier.get(resource);
 
