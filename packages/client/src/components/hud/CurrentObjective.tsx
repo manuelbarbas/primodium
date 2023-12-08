@@ -1,21 +1,15 @@
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EObjectives } from "contracts/config/enums";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaGift, FaMapPin } from "react-icons/fa";
-import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { clampedIndex, getBlockTypeName } from "src/util/common";
-import { ObjectiveEntityLookup, TransactionQueueType } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
+import { ObjectiveEntityLookup } from "src/util/constants";
 import { ObjectiveDescriptions } from "src/util/objectiveDescriptions";
-import { getCanClaimObjective } from "src/util/objectives";
-import { claimObjective } from "src/util/web3/contractCalls/claimObjective";
 import { Hex } from "viem";
-import { Button } from "../core/Button";
 import { Card } from "../core/Card";
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
-import { TransactionQueueMask } from "../shared/TransactionQueueMask";
 import { Objectives } from "./modals/Objectives";
 
 const tutorialObjectives = [
@@ -27,7 +21,6 @@ const tutorialObjectives = [
 ];
 
 export const CurrentObjective = () => {
-  const { network } = useMud();
   const playerEntity = components.Account.use()?.value ?? singletonEntity;
   const [currentStep, setCurrentStep] = useState(0);
   const objectiveEntity =
@@ -35,31 +28,6 @@ export const CurrentObjective = () => {
   const claimed =
     components.CompletedObjective.useWithKeys({ entity: playerEntity as Hex, objective: objectiveEntity as Hex })
       ?.value ?? false;
-
-  const blockNumber = components.BlockNumber.use()?.value;
-  const levelRequirement = components.Level.use(objectiveEntity);
-  const objectiveClaimedRequirement = components.CompletedObjective.use(objectiveEntity);
-
-  const hasBuiltBuildingRequirement = components.P_HasBuiltBuildings.use(objectiveEntity);
-  const raidRequirement = components.P_RaidedResources.use(objectiveEntity);
-
-  const resourceRequirement = components.P_RequiredResources.use(objectiveEntity);
-  const unitRequirement = components.P_ProducedUnits.use(objectiveEntity);
-
-  const canClaim = useMemo(() => {
-    return getCanClaimObjective(objectiveEntity, playerEntity);
-  }, [
-    playerEntity,
-    levelRequirement,
-    objectiveClaimedRequirement,
-    hasBuiltBuildingRequirement,
-    raidRequirement,
-    resourceRequirement,
-    resourceRequirement,
-    unitRequirement,
-    blockNumber,
-    objectiveEntity,
-  ]);
 
   useEffect(() => {
     // Function to find the next unclaimed objective
@@ -109,20 +77,15 @@ export const CurrentObjective = () => {
         </div>
       </Card>
       <div className="flex justify-between w-full px-5 pt-2">
-        <TransactionQueueMask
-          className="w-fit flex items-center justify-center"
-          queueItemId={hashEntities(TransactionQueueType.ClaimObjective, objectiveEntity)}
-        >
-          <Button
-            disabled={!canClaim}
-            className={`btn-xs btn-ghost flex items-center justify-center gap-1 text-accent`}
-            onClick={() => {
-              claimObjective(objectiveEntity, network);
-            }}
-          >
+        <Modal>
+          <Modal.Button className={`btn-xs btn-ghost flex items-center justify-center gap-1 text-accent`}>
             <FaGift /> {"Claim"}
-          </Button>
-        </TransactionQueueMask>
+          </Modal.Button>
+          <Modal.Content className="w-[50rem] h-[50rem]">
+            <Objectives highlight={objectiveEntity} />
+          </Modal.Content>
+        </Modal>
+
         <p className="text-xs text-secondary">
           {currentStep + 1} / {tutorialObjectives.length}
         </p>
