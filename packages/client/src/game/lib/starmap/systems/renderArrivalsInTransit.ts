@@ -10,7 +10,6 @@ import { hashKeyEntity } from "src/util/encode";
 import { ObjectPosition, OnComponentSystem, OnRxjsSystem } from "../../common/object-components/common";
 import { Circle, Line } from "../../common/object-components/graphics";
 import { renderEntityOrbitingArrivals } from "./renderArrivalsInOrbit";
-import { Observable } from "rxjs";
 
 export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
   const playerEntity = mud.network.playerEntity;
@@ -46,7 +45,7 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
 
     const sendTrajectory = scene.objectPool.getGroup(entity + objIndexSuffix);
 
-    const trajectory = sendTrajectory.add("Graphics");
+    const trajectory = sendTrajectory.add("Graphics", true);
     trajectory.setComponents([
       ObjectPosition(originPixelCoord, DepthLayers.Marker),
       Line(destinationPixelCoord, {
@@ -78,7 +77,7 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
       }),
     ]);
 
-    const fleetIcon = sendTrajectory.add("Graphics");
+    const fleetIcon = sendTrajectory.add("Graphics", true);
     fleetIcon.setComponents([
       ObjectPosition(originPixelCoord, DepthLayers.Marker),
       Circle(7, {

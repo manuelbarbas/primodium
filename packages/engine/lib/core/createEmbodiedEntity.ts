@@ -9,6 +9,7 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
   id: string,
   group: Phaser.GameObjects.Group,
   type: Type,
+  ignoreCulling = false,
   currentCameraFilter = 0
 ): EmbodiedEntity<Type> {
   const position: PixelCoord = observable({ x: 0, y: 0 });
@@ -198,6 +199,8 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
   }
 
   function despawn() {
+    if (ignoreCulling) return;
+
     if (activeGameObject) {
       // Deregister the update handler
       activeGameObject.scene.events.off("update", handleUpdate);

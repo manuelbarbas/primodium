@@ -14,32 +14,25 @@ function isGameObjectType(t: string): t is keyof GameObjectTypes {
 }
 
 export function createObjectPool(scene: Phaser.Scene) {
-  const groups = mapObject(GameObjectClasses, (classType) =>
-    scene.add.group({ classType })
-  ) as {
+  const groups = mapObject(GameObjectClasses, (classType) => scene.add.group({ classType })) as {
     [key in keyof typeof GameObjectClasses]: Phaser.GameObjects.Group;
   };
 
-  const objects = observable(
-    new Map<string, EmbodiedEntity<keyof GameObjectTypes>>()
-  );
+  const objects = observable(new Map<string, EmbodiedEntity<keyof GameObjectTypes>>());
 
-  const embodiedGroups = new Map<
-    string,
-    Set<EmbodiedEntity<keyof GameObjectTypes>>
-  >();
+  const embodiedGroups = new Map<string, Set<EmbodiedEntity<keyof GameObjectTypes>>>();
 
   const cameraFilter = { current: 0 };
 
   function get<Type extends keyof GameObjectTypes | "Existing">(
     entity: number | string,
-    type: Type
+    type: Type,
+    ignoreCulling = false
   ): ObjectPoolReturnType<typeof type> {
     if (typeof entity === "number") entity = String(entity);
     let embodiedEntity = objects.get(entity);
     if (!isGameObjectType(type)) {
-      if (!embodiedEntity)
-        return undefined as ObjectPoolReturnType<typeof type>;
+      if (!embodiedEntity) return undefined as ObjectPoolReturnType<typeof type>;
       return embodiedEntity as ObjectPoolReturnType<typeof type>;
     }
 
@@ -49,6 +42,7 @@ export function createObjectPool(scene: Phaser.Scene) {
         entity,
         groups[type],
         type,
+        ignoreCulling,
         cameraFilter.current
       );
     }
@@ -69,9 +63,9 @@ export function createObjectPool(scene: Phaser.Scene) {
       embodiedGroups.set(id, group);
     }
 
-    function add<Type extends keyof GameObjectTypes | "Existing">(type: Type) {
+    function add<Type extends keyof GameObjectTypes | "Existing">(type: Type, ignoreCulling = false) {
       const entityID = uuid();
-      const entity = get(entityID, type) as ObjectPoolReturnType<Type>;
+      const entity = get(entityID, type, ignoreCulling) as ObjectPoolReturnType<Type>;
 
       if (!group || !entity) throw Error("Group or entity was not found.");
 
