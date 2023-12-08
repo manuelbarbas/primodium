@@ -50,7 +50,7 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
       ObjectPosition(originPixelCoord, DepthLayers.Marker),
       Line(destinationPixelCoord, {
         id: `${entity}-trajectoryline`,
-        thickness: 2,
+        thickness: Math.min(10, 3 / scene.camera.phaserCamera.zoom),
         alpha: 0.25,
         color: 0x00ffff,
       }),
@@ -63,7 +63,6 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
       OnRxjsSystem(scene.camera.zoom$, (_, zoom) => {
         let thickness = 3 / zoom;
         thickness = Math.min(10, thickness);
-        console.log("thickness:", thickness);
 
         trajectory.removeComponent(`${entity}-trajectoryline`);
         trajectory.setComponent(

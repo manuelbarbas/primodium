@@ -39,29 +39,30 @@ export const renderEntityOrbitingArrivals = (rockEntity: Entity, playerEntity: E
   scene.objectPool.removeGroup(rockEntity + objIndexSuffix);
   if (!position || allArrivals.length == 0) return;
 
-  const destinationPixelCoord = tileCoordToPixelCoord({ x: position.x, y: -position.y }, tileWidth, tileHeight);
-
   scene.objectPool.removeGroup(rockEntity + objIndexSuffix);
-  const arrival = components.Arrival.getEntity(rockEntity);
+  // const arrival = components.Arrival.getEntity(rockEntity);
+  // console.log("here");
 
-  if (!arrival) return;
+  // if (!arrival) return;
 
-  //don't render if arrival is in transit
-  const now = components.Time.get()?.value ?? 0n;
-  if (arrival.arrivalTime >= now) return;
+  // //don't render if arrival is in transit
+  // const now = components.Time.get()?.value ?? 0n;
+  // if (arrival.arrivalTime >= now) return;
+
+  // console.log("here");
 
   //render personal pirate only
-  if (
-    components.PirateAsteroid.has(arrival.destination) &&
-    hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(arrival.destination)?.value
-  )
-    return;
+  // if (
+  //   components.PirateAsteroid.has(arrival.destination) &&
+  //   hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(arrival.destination)?.value
+  // )
+  //   return;
 
-  const destination = components.Position.get(arrival.destination);
+  const destination = components.Position.get(rockEntity);
 
   if (!destination) return;
 
-  // const destinationPixelCoord = tileCoordToPixelCoord({ x: destination.x, y: -destination.y }, tileWidth, tileHeight);
+  const destinationPixelCoord = tileCoordToPixelCoord({ x: destination.x, y: -destination.y }, tileWidth, tileHeight);
 
   const arrivalOrbit = scene.objectPool.getGroup(rockEntity + objIndexSuffix);
 
