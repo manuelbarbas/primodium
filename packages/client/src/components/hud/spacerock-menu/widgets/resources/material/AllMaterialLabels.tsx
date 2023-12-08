@@ -89,7 +89,7 @@ export const AllMaterialLabels = () => {
               <Tabs.Button index={1} className="btn-ghost btn-xs text-accent">
                 <FaCaretLeft size={12} />
               </Tabs.Button>
-              <p className="text-xs opacity-75 font-bold">PROTECTED RESOURCES</p>
+              <p className="text-xs opacity-75 font-bold">UNRAIDABLE RESOURCES</p>
               <Tabs.Button index={-1} disabled className="btn-ghost btn-xs text-accent">
                 <FaCaretRight size={12} />
               </Tabs.Button>
