@@ -15,7 +15,7 @@ export const Asteroid: React.FC<{
 
   return (
     <Navigator.Screen title={data.entity} className="w-full">
-      <Header entity={data.entity} name={data.name} imageUri={data.imageUri} />
+      <Header spaceRock={data.entity} name={data.name} imageUri={data.imageUri} />
       <AsteroidResource resources={data.resources} />
       {data.ownedBy && playerEntity !== data.ownedBy && <GracePeriod player={data.ownedBy} />}
       {(!data.isInGracePeriod || playerEntity === data.ownedBy) && (

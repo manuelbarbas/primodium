@@ -31,12 +31,12 @@ export default {
           "base-100": colors.slate[800],
           info: colors.indigo[600],
           success: colors.emerald[400],
-          warning: colors.amber[600],
+          warning: colors.yellow[600],
           error: colors.rose[700],
 
-          "--rounded-box": ".4rem", // border radius rounded-box utility class, used in card and other large boxes
-          "--rounded-btn": "0.4rem", // border radius rounded-btn utility class, used in buttons and similar element
-          "--rounded-badge": "1.9rem", // border radius rounded-badge utility class, used in badges and similar
+          "--rounded-box": "0rem", // border radius rounded-box utility class, used in card and other large boxes
+          "--rounded-btn": "0rem", // border radius rounded-btn utility class, used in buttons and similar element
+          "--rounded-badge": "0rem", // border radius rounded-badge utility class, used in badges and similar
           "--animation-btn": "0.25s", // duration of animation when you click on button
           "--animation-input": "0.2s", // duration of animation for inputs like checkbox, toggle, radio, etc
           "--btn-text-case": "uppercase", // set default text transform for buttons

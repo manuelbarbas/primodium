@@ -149,6 +149,21 @@ export const getBuildingImage = (building: Entity) => {
   return "";
 };
 
+export const getBuildingImageFromType = (buildingType: Entity) => {
+  const level = comps.Level.get(buildingType)?.value ?? 1n;
+  const { getSpriteBase64 } = primodium.api().sprite;
+
+  if (EntitytoSpriteKey[buildingType]) {
+    const imageIndex = parseInt(level ? level.toString() : "1") - 1;
+
+    return getSpriteBase64(
+      EntitytoSpriteKey[buildingType][clampedIndex(imageIndex, EntitytoSpriteKey[buildingType].length)]
+    );
+  }
+
+  return "";
+};
+
 export const getBuildingStorages = (buildingType: Entity, level: bigint) => {
   const resourceStorages = MUDEnums.EResource.map((_, i) => {
     const storage = comps.P_ByLevelMaxResourceUpgrades.getWithKeys({

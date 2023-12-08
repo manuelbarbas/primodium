@@ -15,7 +15,7 @@ type ResourceIconProps = {
   fontSize?: string;
   direction?: "top" | "bottom" | "right" | "left";
   className?: string;
-  playerEntity: Entity;
+  spaceRock?: Entity;
   validate?: boolean;
   short?: boolean;
   fractionDigits?: number;
@@ -65,7 +65,7 @@ const ResourceIconTooltipContent = ({
 };
 
 const ResourceIconTooltipValidate = (props: ResourceIconProps) => {
-  const hasEnough = useHasEnoughOfResource(props.resource, props.amount, props.playerEntity, props.resourceType);
+  const hasEnough = useHasEnoughOfResource(props.resource, props.amount, props.spaceRock, props.resourceType);
   return <ResourceIconTooltipContent {...props} hasEnough={hasEnough} />;
 };
 

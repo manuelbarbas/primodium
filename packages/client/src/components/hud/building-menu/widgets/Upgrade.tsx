@@ -24,6 +24,7 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
 
   const buildingInfo = useBuildingInfo(building);
   const hasEnough = useHasEnoughResources(buildingInfo?.upgrade?.recipe ?? []);
+  const spaceRock = components.Position.use(building)?.parent as Entity | undefined;
 
   if (!buildingInfo) return null;
   const { position, level, maxLevel, upgrade } = buildingInfo;
@@ -54,11 +55,11 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
                     <Badge key={resource.id + resource.type} className="text-xs gap-2">
                       <ResourceIconTooltip
                         name={getBlockTypeName(resource.id)}
-                        playerEntity={playerEntity}
                         image={ResourceImage.get(resource.id) ?? ""}
                         resource={resource.id}
                         amount={resource.amount}
                         resourceType={resource.type}
+                        spaceRock={spaceRock}
                         direction="top"
                         validate
                       />

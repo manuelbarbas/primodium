@@ -48,7 +48,6 @@ export const Cart = ({
         name={getBlockTypeName(listing.resource)}
         image={ResourceImage.get(listing.resource) ?? ""}
         resource={listing.resource}
-        playerEntity={network.playerEntity}
         amount={listing.count}
         fractionDigits={3}
       />

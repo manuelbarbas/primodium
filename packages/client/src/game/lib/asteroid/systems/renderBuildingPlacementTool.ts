@@ -105,6 +105,7 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
 
           buildBuilding(mud.network, BuildingEnumLookup[selectedBuilding], buildingOrigin);
           components.SelectedAction.remove();
+          components.SelectedBuilding.remove();
         },
         true
       ),

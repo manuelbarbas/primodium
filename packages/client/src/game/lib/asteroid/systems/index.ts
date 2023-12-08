@@ -6,12 +6,12 @@ import { renderBuildingMoveTool } from "./renderBuildingMoveTool";
 import { renderBuildingPlacementTool } from "./renderBuildingPlacementTool";
 import { renderFog } from "./renderFog";
 import { renderHoverTile } from "./renderHoverTile";
-import { renderSelectedTile } from "./renderSelectedTile";
 import { renderQueuedBuildings } from "./renderQueuedBuildings";
+import { renderSelectedTile } from "./renderSelectedTile";
 
 export const runSystems = (scene: Scene, mud: SetupResult) => {
   //Render world entity's sprites
-  renderBuilding(scene, mud);
+  renderBuilding(scene);
 
   // Render map utility elements, placement indicators, etc
   renderSelectedTile(scene);
