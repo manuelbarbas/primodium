@@ -10,9 +10,9 @@ import { scaleLinear } from "@visx/scale";
 import { Circle } from "@visx/shape";
 import { VoronoiPolygon, voronoi } from "@visx/voronoi";
 import { ERock } from "contracts/config/enums";
-import { useMemo, useRef, useState } from "react";
+import { ReactNode, useMemo, useRef } from "react";
 import { components } from "src/network/components";
-import { hashEntities } from "src/util/encode";
+import { entityToColor } from "src/util/color";
 
 type DotPoint = {
   x: number;
@@ -32,6 +32,7 @@ type DotsProps = {
     height: number;
   };
   showControls?: boolean;
+  onCoordinateClick?: (coord: Coord) => void;
 };
 
 function calculateScaledBounds(coords: Coord[]): { minX: number; maxX: number; minY: number; maxY: number } {
@@ -70,36 +71,18 @@ function calculateScaledBounds(coords: Coord[]): { minX: number; maxX: number; m
   return { minX: newMinX, maxX: newMaxX, minY: newMinY, maxY: newMaxY };
 }
 
-function entityToColor(address: Entity | undefined) {
-  if (!address) return "#000000";
-  const hash = hashEntities(address);
-
-  // Define the step size for quantization
-  const stepSize = 16; // Adjust this value to control the granularity
-
-  // Extract and quantize characters from the address to create RGB values
-  const r = Math.floor((parseInt(hash.substring(2, 8), 16) % 256) / stepSize) * stepSize;
-  const g = Math.floor((parseInt(hash.substring(8, 14), 16) % 256) / stepSize) * stepSize;
-  const b = Math.floor((parseInt(hash.substring(14, 20), 16) % 256) / stepSize) * stepSize;
-
-  // Convert to hexadecimal and pad with zeros if necessary
-  const hexR = r.toString(16).padStart(2, "0");
-  const hexG = g.toString(16).padStart(2, "0");
-  const hexB = b.toString(16).padStart(2, "0");
-
-  return `#${hexR}${hexG}${hexB}`;
-}
-
 export const Minimap = () => {
-  const hoverWidth = 450;
-  const normalWidth = 300;
-  const [hover, setHover] = useState<number>(normalWidth);
   const points = useEntityQuery([Has(components.Position), Has(components.RockType)]).map((entity) => {
     const rockType = components.RockType.get(entity)?.value;
     const position = components.Position.get(entity);
     const owner = components.OwnedBy.get(entity)?.value as Entity | undefined;
-    return { ...position!, owner, size: rockType === ERock.Asteroid ? 4 : 2 };
+    return { ...position!, owner, size: rockType === ERock.Asteroid ? 3 : 2 };
   });
+
+  const onCoordinateClick = (coord: Coord) => {
+    const { pan } = primodium.api(Scenes.Starmap).camera;
+    pan(coord);
+  };
   const { hooks, scene } = primodium.api(Scenes.Starmap);
   const rawView = hooks.useCamera().worldView;
   const view = useMemo(() => {
@@ -121,21 +104,15 @@ export const Minimap = () => {
 
   return (
     <div
-      className={`card bg-neutral border border-secondary p-2 drop-shadow-2xl pointer-events-auto transition transition-all`}
-      style={{ width: hover, height: hover }}
-      onMouseEnter={(e) => {
-        setHover(hoverWidth);
-      }}
-      onMouseLeave={() => {
-        setHover(normalWidth);
-      }}
+      className={`card bg-neutral relative border border-secondary p-2 drop-shadow-2xl pointer-events-auto transition transition-all`}
+      style={{ width: 300, height: 300 }}
     >
-      <Voronoi points={points} width={hover} height={hover} view={view} />
+      <Voronoi points={points} width={300} height={300} view={view} onCoordinateClick={onCoordinateClick} />
     </div>
   );
 };
 
-export const Voronoi = ({ points, width, height, view }: DotsProps) => {
+export const Voronoi = ({ points, width, height, view, onCoordinateClick }: DotsProps) => {
   if (width < 10) width = 100;
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -174,8 +151,22 @@ export const Voronoi = ({ points, width, height, view }: DotsProps) => {
     h: (h / (bounds.maxY - bounds.minY)) * height,
   });
 
+  const handleSvgClick = (event: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+    const svg = svgRef.current;
+    if (!svg) return;
+
+    const rect = svg.getBoundingClientRect();
+    const scaleX = (bounds.maxX - bounds.minX) / rect.width;
+    const scaleY = (bounds.maxY - bounds.minY) / rect.height;
+
+    const x = bounds.minX + (event.clientX - rect.left) * scaleX;
+    const y = bounds.maxY - (event.clientY - rect.top) * scaleY;
+
+    onCoordinateClick?.({ x, y });
+  };
+
   return (
-    <svg width={"100%"} height={"100%"} ref={svgRef} color="black">
+    <svg width={"100%"} height={"100%"} ref={svgRef} color="black" onClick={handleSvgClick}>
       <RadialGradient id="bg-gradient" from="#030305" to="0E0E19" />;{/** capture all mouse events with a rect */}
       <rect width={width} height={height} fill="url(#bg-gradient)" />
       <Group pointerEvents="none">
@@ -188,12 +179,12 @@ export const Voronoi = ({ points, width, height, view }: DotsProps) => {
                   key={`polygon-${i}`}
                   polygon={polygon}
                   fill={entityToColor(polygon.data.owner)}
-                  fillOpacity={0.1}
+                  fillOpacity={0.3}
                   stroke="white"
                   strokeWidth={1}
                   strokeOpacity={0.2}
                 />
-              ) as any
+              ) as unknown as ReactNode[]
           )}
         {points.map(
           (point, i) =>
@@ -204,10 +195,10 @@ export const Voronoi = ({ points, width, height, view }: DotsProps) => {
                 cx={xScale(point.x)}
                 cy={yScale(point.y)}
                 r={point.size}
-                fill={"white"}
-                stroke={entityToColor(point.owner)}
+                stroke={"white"}
+                fill={entityToColor(point.owner)}
               />
-            ) as any
+            ) as unknown as ReactNode[]
         )}
       </Group>
       {view && (

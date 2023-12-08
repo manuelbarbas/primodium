@@ -1,22 +1,30 @@
-import { Entity } from "@latticexyz/recs";
-import { useMud } from "src/hooks";
-import { useAccount } from "src/hooks/useAccount";
-import { Button } from "../core/Button";
-import { components } from "src/network/components";
 import { primodium } from "@game/api";
 import { Scenes } from "@game/constants";
+import { Entity } from "@latticexyz/recs";
 import { FaEye } from "react-icons/fa";
+import { useMud } from "src/hooks";
+import { useAccount } from "src/hooks/useAccount";
+import { components } from "src/network/components";
+import { entityToColor } from "src/util/color";
+import { RockRelationshipColors } from "src/util/constants";
+import { getRockRelationship } from "src/util/spacerock";
+import { Button } from "../core/Button";
 
-export const AccountDisplay: React.FC<{ player?: Entity; className?: string; showSpectate?: boolean }> = ({
-  player,
-  className,
-  showSpectate = false,
-}) => {
+export const AccountDisplay: React.FC<{
+  player?: Entity;
+  className?: string;
+  showSpectate?: boolean;
+  noColor?: boolean;
+}> = ({ player, className, noColor, showSpectate = false }) => {
   const { network } = useMud();
   const playerEntity = player ?? network.playerEntity;
   const homeAsteroid = components.Home.use(playerEntity)?.asteroid;
+  const myHomeAsteroid = components.Home.use(network.playerEntity)?.asteroid;
   const { transitionToScene } = primodium.api().scene;
   const { allianceName, loading, address, linkedAddress } = useAccount(playerEntity);
+  const relationship = getRockRelationship(playerEntity, homeAsteroid as Entity);
+  console.log("relationship", relationship);
+  const playerColor = RockRelationshipColors[getRockRelationship(playerEntity, myHomeAsteroid as Entity)];
 
   return (
     <Button
@@ -29,8 +37,12 @@ export const AccountDisplay: React.FC<{ player?: Entity; className?: string; sho
       }}
     >
       {showSpectate && <FaEye />}
-      {allianceName && <span className="font-bold text-accent">[{allianceName.toUpperCase()}]</span>}
-      {linkedAddress?.ensName ?? address}
+      {allianceName && (
+        <span className="font-bold text-accent" style={{ color: noColor ? "auto" : entityToColor(player) }}>
+          [{allianceName.toUpperCase()}]
+        </span>
+      )}
+      <p className={`text-${playerColor}`}>{linkedAddress?.ensName ?? address}</p>
     </Button>
   );
 };

@@ -25,7 +25,7 @@ export const SpacerockMenu: React.FC = () => {
           }}
           className="rounded-b-none border-b-0 btn-md border-secondary relative py-2 hover:text-accent group w-fit"
         >
-          <TargetHeader />
+          <TargetHeader hideStats />
         </Tabs.Button>
         <Tabs.Pane index={0} className="w-full border-b-0 rounded-x-none rounded-b-none relative">
           <Resources />

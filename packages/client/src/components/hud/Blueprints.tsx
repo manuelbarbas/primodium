@@ -1,13 +1,13 @@
 import { Entity } from "@latticexyz/recs";
-import { SecondaryCard } from "../core/Card";
-import { BuildingImageFromType } from "../shared/BuildingImage";
-import { Action, EntityType } from "src/util/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { FaLock } from "react-icons/fa";
 import { components } from "src/network/components";
+import { getBlockTypeName } from "src/util/common";
+import { Action, EntityType } from "src/util/constants";
 import { Hex } from "viem";
 import { Button } from "../core/Button";
-import { getBlockTypeName } from "src/util/common";
-import { FaLock } from "react-icons/fa";
+import { SecondaryCard } from "../core/Card";
+import { BuildingImageFromType } from "../shared/BuildingImage";
 import { BlueprintInfo } from "./BlueprintInfo";
 
 const Blueprint: React.FC<{
