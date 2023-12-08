@@ -47,6 +47,11 @@ export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating
 
   const openMap = async () => {
     if (mapOpen) return;
+    const activeAsteroid = components.ActiveAsteroid.get()?.value;
+    const position = components.Position.get(activeAsteroid) ?? { x: 0, y: 0 };
+    const { pan } = primodium.api(Scenes.Starmap).camera;
+
+    pan(position, 0);
 
     await transitionToScene(
       Scenes.Asteroid,
