@@ -5,9 +5,9 @@ import { hashEntities } from "src/util/encode";
 const entityColor = new Map<Entity, string>();
 export function entityToColor(entity: Entity | undefined) {
   if (!entity) return "#000000";
-  if (entity === components.Account.get()?.value) return "#22d3ee";
   const alliance = components.PlayerAlliance.get(entity)?.alliance as Entity;
   entity = alliance ?? entity;
+  if (entity === components.Account.get()?.value) return "#22d3ee";
   if (entityColor.has(entity)) return entityColor.get(entity) as string;
   const hash = hashEntities(entity);
 

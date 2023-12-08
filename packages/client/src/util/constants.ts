@@ -82,6 +82,13 @@ export enum RockRelationship {
   Self,
 }
 
+export const RockRelationshipColors = {
+  [RockRelationship.Ally]: "success",
+  [RockRelationship.Enemy]: "error",
+  [RockRelationship.Neutral]: "",
+  [RockRelationship.Self]: "accent",
+};
+
 export type TransactionQueueMetadataTypes = {
   [TransactionQueueType.Build]: {
     coord: Coord;
