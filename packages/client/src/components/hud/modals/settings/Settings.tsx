@@ -1,8 +1,7 @@
+import { ReactNode } from "react";
 import { FaDiscord, FaTwitter } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
-import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
-import { Range } from "src/components/core/Range";
 import { AudioSettings } from "./AudioSettings";
 
 const params = new URLSearchParams(window.location.search);
@@ -59,4 +58,6 @@ export const Settings = () => {
   );
 };
 
-const LinkIcon = ({ icon }: { icon: any }) => <div className="link-icon inline-block align-middle my-auto">{icon}</div>;
+const LinkIcon = ({ icon }: { icon: ReactNode }) => (
+  <div className="link-icon inline-block align-middle my-auto">{icon}</div>
+);

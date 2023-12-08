@@ -2,16 +2,25 @@ import { FaArrowRight } from "react-icons/fa";
 import { components } from "src/network/components";
 import { Action } from "src/util/constants";
 import { HUD } from "../core/HUD";
+import { BrandingLabel } from "../shared/BrandingLabel";
+// import { GracePeriod } from "./GracePeriod";
+// import { LoadingIndication } from "./LoadingIndication";
+import { Profile } from "./Profile";
+// import { PrototypeInfo } from "./PrototypeInfo";
+import { SelectAction } from "./SelectAction";
+import { BuildingMenu } from "./building-menu/BuildingMenu";
+// import { Hotbar } from "./hotbar/Hotbar";
+// import { Marketplace } from "./marketplace/Marketplace";
+// import { Panes } from "./panes/Panes";
+// import { Resources } from "./resources/Resources";
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
 import { Tabs } from "../core/Tabs";
-import { BrandingLabel } from "../shared/BrandingLabel";
 import { Blueprints } from "./Blueprints";
 import { CurrentObjective } from "./CurrentObjective";
-import { Profile } from "./Profile";
+import { Minimap } from "./Minimap";
 import { Score } from "./Score";
-import { SelectAction } from "./SelectAction";
-import { BuildingMenu } from "./building-menu/BuildingMenu";
+import { Chat } from "./chat/Chat";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
 import { Settings } from "./modals/settings/Settings";
 import { ReinforcementFleets } from "./panes/FriendlyFleets";
@@ -19,8 +28,6 @@ import { OwnedMotherlodes } from "./panes/OwnedMotherlodes";
 import { BattleReports } from "./panes/battle-reports/BattleReports";
 import { HostileFleets } from "./panes/hostile-fleets/HostileFleets";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
-import { Chat } from "./chat/Chat";
-// import { CurrenObjective } from "./CurrentObjective";
 
 export const GameHUD = () => {
   // const playerEntity = useMud().network.playerEntity;
@@ -87,9 +94,7 @@ export const GameHUD = () => {
           <Profile />
         </HUD.TopLeft>
 
-        <HUD.TopRight>
-          <CurrentObjective />{" "}
-        </HUD.TopRight>
+        <HUD.TopRight>{mapOpen ? <Minimap /> : <CurrentObjective />}</HUD.TopRight>
 
         <HUD.Right>{mapOpen ? <Motherlodes /> : <BuildingSelection />}</HUD.Right>
 

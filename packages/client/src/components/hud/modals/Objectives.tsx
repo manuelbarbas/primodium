@@ -139,7 +139,7 @@ const Objective: React.FC<{
             <span className="flex gap-1 items-center opacity-75">
               <FaSpinner /> PROGRESS:
             </span>
-            {Object.entries(requirements ?? {}).map(([key, req], index) => {
+            {Object.entries(requirements ?? {}).map(([, req], index) => {
               const complete = isAllRequirementsMet(req);
               return (
                 <div key={index} className="flex flex-wrap gap-1">
