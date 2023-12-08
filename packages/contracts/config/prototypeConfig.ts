@@ -22,7 +22,6 @@ const mainBaseMaxResourceUpgrades = {
     Copper: 1000000,
     IronPlate: 500000,
     Lithium: 1000000,
-    Sulfur: 1000000,
     PVCell: 500000,
     Alloy: 500000,
   },
@@ -31,7 +30,6 @@ const mainBaseMaxResourceUpgrades = {
     Copper: 2500000,
     IronPlate: 1500000,
     Lithium: 2500000,
-    Sulfur: 2500000,
     PVCell: 1500000,
     Alloy: 1500000,
     Titanium: 50000,
@@ -44,7 +42,6 @@ const mainBaseMaxResourceUpgrades = {
     Copper: 7500000,
     Lithium: 7500000,
     IronPlate: 5000000,
-    Sulfur: 7500000,
     PVCell: 5000000,
     Alloy: 5000000,
     Titanium: 100000,
@@ -57,7 +54,6 @@ const mainBaseMaxResourceUpgrades = {
     Copper: 15000000,
     IronPlate: 10000000,
     Lithium: 15000000,
-    Sulfur: 15000000,
     PVCell: 10000000,
     Alloy: 10000000,
     Titanium: 300000,
@@ -70,7 +66,6 @@ const mainBaseMaxResourceUpgrades = {
     Copper: 25000000,
     IronPlate: 25000000,
     Lithium: 25000000,
-    Sulfur: 25000000,
     PVCell: 25000000,
     Alloy: 25000000,
     Titanium: 600000,
@@ -83,7 +78,6 @@ const mainBaseMaxResourceUpgrades = {
     Copper: 75000000,
     IronPlate: 50000000,
     Lithium: 75000000,
-    Sulfur: 75000000,
     PVCell: 50000000,
     Alloy: 50000000,
     Titanium: 750000,
@@ -96,7 +90,6 @@ const mainBaseMaxResourceUpgrades = {
     Copper: 150000000,
     IronPlate: 125000000,
     Lithium: 150000000,
-    Sulfur: 150000000,
     PVCell: 125000000,
     Alloy: 125000000,
     Titanium: 1000000,
@@ -111,7 +104,6 @@ const storageUnitMaxResourceUpgrades = {
     Iron: 200000,
     Copper: 200000,
     Lithium: 200000,
-    Sulfur: 200000,
     IronPlate: 100000,
     PVCell: 100000,
     Alloy: 100000,
@@ -120,7 +112,6 @@ const storageUnitMaxResourceUpgrades = {
     Iron: 500000,
     Copper: 500000,
     Lithium: 500000,
-    Sulfur: 500000,
     IronPlate: 250000,
     PVCell: 250000,
     Alloy: 250000,
@@ -133,7 +124,6 @@ const storageUnitMaxResourceUpgrades = {
     Iron: 1500000,
     Copper: 1500000,
     Lithium: 1500000,
-    Sulfur: 1500000,
     IronPlate: 500000,
     PVCell: 500000,
     Alloy: 500000,
@@ -146,7 +136,6 @@ const storageUnitMaxResourceUpgrades = {
     Iron: 2500000,
     Copper: 2500000,
     Lithium: 2500000,
-    Sulfur: 2500000,
     IronPlate: 1000000,
     PVCell: 1000000,
     Alloy: 1000000,
@@ -826,37 +815,37 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     levels: {
       1: {
         P_RequiredBaseLevel: { value: 2n },
-        P_RequiredResources: getResourceValues({ Sulfur: 200000, U_Electricity: 10000 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 200000, U_Electricity: 10000 }),
         P_UnitProdMultiplier: { value: 100n },
         P_UnitProdTypes: { value: encodeArray(["AnvilDrone", "HammerDrone"]) },
       },
       2: {
         P_RequiredBaseLevel: { value: 3n },
-        P_RequiredResources: getResourceValues({ Sulfur: 1000000, U_Electricity: 15000 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 1000000, U_Electricity: 15000 }),
         P_UnitProdMultiplier: { value: 100n },
         P_UnitProdTypes: { value: encodeArray(["AnvilDrone", "HammerDrone", "AegisDrone"]) },
       },
       3: {
         P_RequiredBaseLevel: { value: 4n },
-        P_RequiredResources: getResourceValues({ Sulfur: 2500000, U_Electricity: 20000 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 2500000, U_Electricity: 20000 }),
         P_UnitProdMultiplier: { value: 100n },
         P_UnitProdTypes: { value: encodeArray(["AnvilDrone", "HammerDrone", "AegisDrone", "StingerDrone"]) },
       },
       4: {
         P_RequiredBaseLevel: { value: 5n },
-        P_RequiredResources: getResourceValues({ Sulfur: 10000000, U_Electricity: 30000 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 10000000, U_Electricity: 30000 }),
         P_UnitProdMultiplier: { value: 150n },
         P_UnitProdTypes: { value: encodeArray(["AnvilDrone", "HammerDrone", "AegisDrone", "StingerDrone"]) },
       },
       5: {
         P_RequiredBaseLevel: { value: 6n },
-        P_RequiredResources: getResourceValues({ Sulfur: 25000000, U_Electricity: 40000 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 25000000, U_Electricity: 40000 }),
         P_UnitProdMultiplier: { value: 200n },
         P_UnitProdTypes: { value: encodeArray(["AnvilDrone", "HammerDrone", "AegisDrone", "StingerDrone"]) },
       },
       6: {
         P_RequiredBaseLevel: { value: 7n },
-        P_RequiredResources: getResourceValues({ Sulfur: 100000000, U_Electricity: 50000 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 100000000, U_Electricity: 50000 }),
         P_UnitProdMultiplier: { value: 300n },
         P_UnitProdTypes: { value: encodeArray(["AnvilDrone", "HammerDrone", "AegisDrone", "StingerDrone"]) },
       },
@@ -902,17 +891,17 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     levels: {
       1: {
         P_RequiredBaseLevel: { value: 3n },
-        P_RequiredResources: getResourceValues({ Sulfur: 50000 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 50000 }),
         P_Production: getResourceValues({ U_MaxMoves: 1 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 7n },
-        P_RequiredResources: getResourceValues({ Sulfur: 1000000 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 1000000 }),
         P_Production: getResourceValues({ U_MaxMoves: 2 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 8n },
-        P_RequiredResources: getResourceValues({ Sulfur: 2500000 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 2500000 }),
         P_Production: getResourceValues({ U_MaxMoves: 3 }),
       },
     },
@@ -1809,7 +1798,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         y: -15,
         units: encodeArray(["AnvilDrone", "MinutemanMarine"]),
         unitAmounts: [20n, 120n],
-        resources: indexifyResourceArray(["PVCell", "Lithium", "Sulfur"]),
+        resources: indexifyResourceArray(["PVCell", "Lithium", "IronPlate"]),
         resourceAmounts: [100000n, 100000n, 100000n],
       },
       P_UnitReward: getUnitValues({ MinutemanMarine: 100 }),
@@ -1824,7 +1813,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         y: -15,
         units: encodeArray(["AnvilDrone", "MinutemanMarine"]),
         unitAmounts: [50n, 400n],
-        resources: indexifyResourceArray(["Alloy", "Copper", "Sulfur"]),
+        resources: indexifyResourceArray(["Alloy", "Copper", "IronPlate"]),
         resourceAmounts: [100000n, 500000n, 200000n],
       },
       P_UnitReward: getUnitValues({ AnvilDrone: 70 }),
@@ -1854,7 +1843,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         y: 12,
         units: encodeArray(["AegisDrone", "AnvilDrone"]),
         unitAmounts: [100n, 150n],
-        resources: indexifyResourceArray(["Iron", "Copper", "Lithium", "Sulfur"]),
+        resources: indexifyResourceArray(["Iron", "Copper", "Lithium", "IronPlate"]),
         resourceAmounts: [1000000n, 1000000n, 1000000n, 1000000n],
       },
       P_UnitReward: getUnitValues({ AegisDrone: 30 }),
@@ -1869,8 +1858,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         y: -22,
         units: encodeArray(["AegisDrone", "AnvilDrone"]),
         unitAmounts: [150n, 250n],
-        resources: indexifyResourceArray(["Iron", "Copper", "Lithium", "Sulfur", "IronPlate", "PVCell", "Alloy"]),
-        resourceAmounts: [1000000n, 1000000n, 1000000n, 1000000n, 500000n, 500000n, 500000n],
+        resources: indexifyResourceArray(["Iron", "Copper", "Lithium", "IronPlate", "PVCell", "Alloy"]),
+        resourceAmounts: [1000000n, 1000000n, 1000000n, 500000n, 500000n, 500000n],
       },
       P_ResourceReward: getResourceValues({ Titanium: 50000 }),
     },
@@ -1884,8 +1873,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         y: 12,
         units: encodeArray(["AegisDrone", "AnvilDrone"]),
         unitAmounts: [250n, 350n],
-        resources: indexifyResourceArray(["Iron", "Copper", "Lithium", "Sulfur", "IronPlate", "PVCell", "Alloy"]),
-        resourceAmounts: [1000000n, 1000000n, 1000000n, 500000n, 500000n, 500000n, 500000n],
+        resources: indexifyResourceArray(["Iron", "Copper", "Lithium", "IronPlate", "PVCell", "Alloy"]),
+        resourceAmounts: [1000000n, 1000000n, 1000000n, 500000n, 500000n, 500000n],
       },
       P_ResourceReward: getResourceValues({ Titanium: 100000, Platinum: 50000 }),
     },
@@ -1921,13 +1910,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
 
-  BuildSulfurMine: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildSolarPanel"]) },
-      P_HasBuiltBuildings: { value: encodeArray(["SulfurMine"]) },
-      P_ResourceReward: getResourceValues({ Sulfur: 50000, Copper: 100000 }),
-    },
-  },
   BuildIronPlateFactory: {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildIronMine"]) },
@@ -2039,14 +2021,14 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["TrainMinutemanMarine1"]) },
       P_ProducedUnits: getUnitValues({ MinutemanMarine: 100 }),
-      P_ResourceReward: getResourceValues({ Sulfur: 100000 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 100000 }),
     },
   },
   TrainMinutemanMarine3: {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["TrainMinutemanMarine2"]) },
       P_ProducedUnits: getUnitValues({ MinutemanMarine: 200 }),
-      P_ResourceReward: getResourceValues({ Sulfur: 300000 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 300000 }),
     },
   },
 
@@ -2068,7 +2050,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["TrainTridentMarine2"]) },
       P_ProducedUnits: getUnitValues({ TridentMarine: 200 }),
-      P_ResourceReward: getResourceValues({ Sulfur: 1000000 }),
+      P_ResourceReward: getResourceValues({ Lithium: 1000000 }),
     },
   },
 
@@ -2145,7 +2127,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildDroneFactory"]) },
       P_ProducedUnits: getUnitValues({ StingerDrone: 20 }),
-      P_ResourceReward: getResourceValues({ Iron: 500000, Copper: 500000, Lithium: 500000, Sulfur: 500000 }),
+      P_ResourceReward: getResourceValues({ Iron: 500000, Copper: 500000, Lithium: 500000 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 5n } } },
   },
@@ -2153,14 +2135,14 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["TrainStingerDrone1"]) },
       P_ProducedUnits: getUnitValues({ StingerDrone: 50 }),
-      P_ResourceReward: getResourceValues({ Iron: 1500000, Copper: 1500000, Lithium: 1500000, Sulfur: 1500000 }),
+      P_ResourceReward: getResourceValues({ Iron: 1500000, Copper: 1500000, Lithium: 1500000 }),
     },
   },
   TrainStingerDrone3: {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["TrainStingerDrone2"]) },
       P_ProducedUnits: getUnitValues({ StingerDrone: 100 }),
-      P_ResourceReward: getResourceValues({ Iron: 7500000, Copper: 7500000, Lithium: 7500000, Sulfur: 7500000 }),
+      P_ResourceReward: getResourceValues({ Iron: 7500000, Copper: 7500000, Lithium: 7500000 }),
     },
   },
 
@@ -2254,7 +2236,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   RaidRawResources1: {
     tables: {
-      P_RaidedResources: getResourceValues({ Iron: 200000, Copper: 200000, Lithium: 200000, Sulfur: 200000 }),
+      P_RaidedResources: getResourceValues({ Iron: 200000, Copper: 200000, Lithium: 200000 }),
       P_UnitReward: getUnitValues({ HammerDrone: 30 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 1n } } },
@@ -2262,14 +2244,14 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   RaidRawResources2: {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["RaidRawResources1"]) },
-      P_RaidedResources: getResourceValues({ Iron: 500000, Copper: 500000, Lithium: 500000, Sulfur: 500000 }),
+      P_RaidedResources: getResourceValues({ Iron: 500000, Copper: 500000, Lithium: 500000 }),
       P_UnitReward: getUnitValues({ HammerDrone: 100 }),
     },
   },
   RaidRawResources3: {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["RaidRawResources2"]) },
-      P_RaidedResources: getResourceValues({ Iron: 2500000, Copper: 2500000, Lithium: 2500000, Sulfur: 2500000 }),
+      P_RaidedResources: getResourceValues({ Iron: 2500000, Copper: 2500000, Lithium: 2500000 }),
       P_UnitReward: getUnitValues({ HammerDrone: 300 }),
     },
   },
@@ -2326,7 +2308,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   DestroyEnemyUnits1: {
     tables: {
       P_DestroyedUnits: getUnitValues({ MinutemanMarine: 500 }),
-      P_ResourceReward: getResourceValues({ Copper: 300000, Sulfur: 300000 }),
+      P_ResourceReward: getResourceValues({ Copper: 300000, Iron: 300000 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 1n } } },
   },
@@ -2334,21 +2316,21 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["DestroyEnemyUnits1"]) },
       P_DestroyedUnits: getUnitValues({ TridentMarine: 500 }),
-      P_ResourceReward: getResourceValues({ Copper: 1000000, Sulfur: 1000000 }),
+      P_ResourceReward: getResourceValues({ Copper: 1000000, Lithium: 1000000 }),
     },
   },
   DestroyEnemyUnits3: {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["DestroyEnemyUnits2"]) },
       P_DestroyedUnits: getUnitValues({ AnvilDrone: 300 }),
-      P_ResourceReward: getResourceValues({ Copper: 3000000, Sulfur: 3000000 }),
+      P_ResourceReward: getResourceValues({ Copper: 3000000, IronPlate: 3000000 }),
     },
   },
   DestroyEnemyUnits4: {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["DestroyEnemyUnits3"]) },
       P_DestroyedUnits: getUnitValues({ AegisDrone: 300 }),
-      P_ResourceReward: getResourceValues({ Copper: 30000000, Sulfur: 30000000 }),
+      P_ResourceReward: getResourceValues({ Copper: 30000000, PVCell: 30000000 }),
     },
   },
   DestroyEnemyUnits5: {
