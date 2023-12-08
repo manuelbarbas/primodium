@@ -4,7 +4,7 @@ import { LinkedAddressResult, getLinkedAddress } from "src/util/web2/getLinkedAd
 import { components } from "src/network/components";
 import { getAllianceName } from "src/util/alliance";
 import { Entity } from "@latticexyz/recs";
-import { entityToAddress } from "src/util/common";
+import { entityToAddress, isPlayer as _isPlayer } from "src/util/common";
 
 export function useAccount(player?: Entity) {
   const { network } = useMud();
@@ -14,13 +14,16 @@ export function useAccount(player?: Entity) {
   const wETHBalance = components.WETHBalance.use(playerEntity)?.value ?? 0n;
   const alliance = components.PlayerAlliance.use(playerEntity)?.alliance;
   const allianceName = getAllianceName((alliance ?? "") as Entity);
+  const isPlayer = _isPlayer(playerEntity);
 
   const address = useMemo(() => {
+    if (!isPlayer) return "Pirate";
     if (!linkedAddress) return entityToAddress(playerEntity, true);
     return linkedAddress.ensName ?? entityToAddress(linkedAddress.address ?? playerEntity, true);
   }, [linkedAddress, playerEntity]);
 
   useEffect(() => {
+    if (!isPlayer) return;
     const getAddressObj = async () => {
       const addressObj = await getLinkedAddress(entityToAddress(playerEntity));
       setLinkedAddress(addressObj);
@@ -35,5 +38,6 @@ export function useAccount(player?: Entity) {
     allianceName,
     address,
     loading,
+    isPlayer,
   };
 }
