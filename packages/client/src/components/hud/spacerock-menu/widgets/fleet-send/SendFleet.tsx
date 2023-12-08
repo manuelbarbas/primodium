@@ -1,5 +1,4 @@
 import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { ERock, ESendType } from "contracts/config/enums";
 import dayjs from "dayjs";
 import { useCallback, useMemo } from "react";
@@ -7,18 +6,16 @@ import { FaExclamationTriangle } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
 import { Button } from "src/components/core/Button";
 import { Card, SecondaryCard } from "src/components/core/Card";
-import { IconLabel } from "src/components/core/IconLabel";
 import { NumberInput } from "src/components/shared/NumberInput";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { formatNumber, getBlockTypeName } from "src/util/common";
 import { BackgroundImage, EntityType } from "src/util/constants";
-import { getRockDefense } from "src/util/defense";
 import { toHex32 } from "src/util/encode";
 import { getMoveLength, toUnitCountArray } from "src/util/send";
-import { getSpaceRockImage, getSpaceRockName } from "src/util/spacerock";
 import { send } from "src/util/web3/contractCalls/send";
 import { Hex } from "viem";
+import { TargetHeader } from "../../TargetHeader";
 
 export const Unit: React.FC<{ unit: Entity; count: bigint }> = ({ unit, count }) => {
   return (
@@ -50,55 +47,33 @@ export const Unit: React.FC<{ unit: Entity; count: bigint }> = ({ unit, count })
   );
 };
 
-export const TargetInfo = () => {
-  const selectedSpacerock = components.SelectedRock.use()?.value;
-  const img = getSpaceRockImage(selectedSpacerock ?? singletonEntity);
-  const name = getSpaceRockName(selectedSpacerock ?? singletonEntity);
-  const coord = components.Position.get(selectedSpacerock ?? singletonEntity) ?? { x: 0, y: 0 };
-  const def = getRockDefense(selectedSpacerock ?? singletonEntity);
-
-  return (
-    <div className="flex flex-col gap-1">
-      {/* <p className="text-xs font-bold opacity-75 pb-1">TARGET</p> */}
-      <Badge className="flex gap-1 w-full uppercase font-bold text-sm items-center">
-        <IconLabel imageUri={img} className="" text={`${name}`} />
-      </Badge>
-      <div className="flex gap-1">
-        <Badge className="flex gap-1 w-full uppercase font-bold text-xs items-center">
-          <p className="scale-95 opacity-50">
-            LOC:[{coord.x}, {coord.y}]
-          </p>
-        </Badge>
-        <Badge className="flex gap-1 w-full uppercase font-bold text-xs items-center">
-          <p className="scale-95 opacity-50">DEF:{formatNumber(def.points, { short: true, fractionDigits: 2 })}</p>
-        </Badge>
-      </div>
-    </div>
-  );
-};
-
 export const TotalStats = () => {
   const playerEntity = useMud().network.playerEntity;
   const stats = components.Send.useTotalStats(playerEntity);
+  const fleet = components.Send.useUnits();
+  const fleetSize = Object.values(fleet).reduce((acc, val) => acc + val, 0n);
 
+  if (fleetSize === 0n) {
+    return <div className="font-bold text-center font-sm text-error"> SELECT UNITS TO SEND </div>;
+  }
   return (
     <>
       {/* <p className="text-xs font-bold opacity-75 pb-1">FLEET STATS</p> */}
-      <div className="flex gap-1 text-xs">
-        <Badge>
-          <b className="text-accent">{formatNumber(stats.ATK, { short: true, fractionDigits: 1 })}</b> ATK
+      <div className="grid grid-cols-5 gap-1 text-xs">
+        <Badge className="text-xs w-full">
+          <b className="text-accent mr-1">{formatNumber(stats.ATK, { short: true, fractionDigits: 1 })}</b> ATK
         </Badge>
-        <Badge>
-          <b className="text-accent">{formatNumber(stats.DEF, { short: true })}</b> DEF
+        <Badge className="text-xs w-full">
+          <b className="text-accent mr-1">{formatNumber(stats.DEF, { short: true })}</b> DEF
         </Badge>
-        <Badge>
-          <b className="text-accent">{formatNumber(stats.SPD, { short: true })}</b> SPD
+        <Badge className="text-xs w-full">
+          <b className="text-accent mr-1">{formatNumber(stats.SPD, { short: true })}</b> SPD
         </Badge>
-        <Badge>
-          <b className="text-accent">{formatNumber(stats.MIN, { short: true })}</b> MIN
+        <Badge className="text-xs w-full">
+          <b className="text-accent mr-1">{formatNumber(stats.MIN, { short: true })}</b> MIN
         </Badge>
-        <Badge>
-          <b className="text-accent">{formatNumber(stats.CRG, { short: true })}</b> CRG
+        <Badge className="text-xs w-full">
+          <b className="text-accent mr-1">{formatNumber(stats.CRG, { short: true })}</b> CRG
         </Badge>
       </div>
     </>
@@ -108,20 +83,24 @@ export const TotalStats = () => {
 export const SendFleet = () => {
   const network = useMud().network;
   const playerEntity = network.playerEntity;
-  const origin = components.Home.use(playerEntity)?.asteroid as Entity | undefined;
+
+  const origin = components.Home.get(playerEntity)?.asteroid as Entity | undefined;
   const destination = components.SelectedRock.use()?.value as Entity | undefined;
+  const destinationIsMine = components.OwnedBy.use(destination)?.value === playerEntity;
   const rockType = components.RockType.use(destination)?.value;
   const isPirate = components.PirateAsteroid.use(destination);
-  const attackType = rockType === ERock.Asteroid || isPirate ? ESendType.Raid : ESendType.Invade;
+  const sendType = destinationIsMine
+    ? ESendType.Reinforce
+    : rockType === ERock.Asteroid || isPirate
+    ? ESendType.Raid
+    : ESendType.Invade;
   const fleet = components.Send.useUnits();
-  const sendType = components.Send.use()?.sendType ?? attackType;
   const units = components.Hangar.use(origin, {
     units: [],
     counts: [],
   });
 
   const moveLength = useMemo(() => {
-    console.log("fleet:", fleet);
     if (Object.keys(fleet).length == 0) return;
     const originCoord = components.Position.get(origin) ?? { x: 0, y: 0 };
     const destinationCoord = components.Position.get(destination) ?? { x: 0, y: 0 };
@@ -130,7 +109,8 @@ export const SendFleet = () => {
     return dayjs.duration(moveLength * 1000);
   }, [fleet, destination, origin, playerEntity]);
 
-  console.log("move length:", moveLength?.minutes(), moveLength?.asMinutes());
+  const fleetSize = Object.values(fleet).reduce((acc, val) => acc + val, 0n);
+
   const getUnitCount = useCallback(
     (unit: Entity) => {
       if (!units) return 0n;
@@ -166,50 +146,49 @@ export const SendFleet = () => {
       </div>
       <div className="flex flex-col w-full space-y-1">
         <SecondaryCard>
-          <TargetInfo />
+          <TargetHeader />
         </SecondaryCard>
         <SecondaryCard className="flex-row items-center justify-center gap-2">
-          <Button
-            onClick={() => components.Send.update({ sendType: attackType })}
-            className={`${
-              sendType === ESendType.Invade || sendType === ESendType.Raid ? "border-warning" : "border-secondary/50"
-            } disabled:opacity-100`}
-          >
-            <div className="flex flex-col gap-2 items-center p-2">
-              <img src="img/icons/attackicon.png" className="pixel-images w-12 h-12" />
-              <p className="">ATTACK</p>
-            </div>
-          </Button>
-          <Button
-            onClick={() => components.Send.update({ sendType: ESendType.Reinforce })}
-            className={`${
-              sendType === ESendType.Reinforce ? "border-warning" : "border-secondary/50"
-            } disabled:opacity-100`}
-          >
-            <div className="flex flex-col gap-2 items-center p-2">
-              <img src="img/icons/reinforcementicon.png" className="pixel-images w-12 h-12" />
-              <p className="">REINFORCE</p>
-            </div>
-          </Button>
+          {sendType == ESendType.Reinforce ? (
+            <Button
+              onClick={() => components.Send.update({ sendType: ESendType.Reinforce })}
+              className={`${
+                sendType === ESendType.Reinforce ? "border-warning" : "border-secondary/50"
+              } disabled:opacity-100`}
+            >
+              <div className="flex flex-col gap-2 items-center p-2">
+                <img src="img/icons/reinforcementicon.png" className="pixel-images w-12 h-12" />
+                <p className="">REINFORCE</p>
+              </div>
+            </Button>
+          ) : (
+            <Button
+              onClick={() => components.Send.update({ sendType })}
+              className={`${
+                sendType === ESendType.Invade || sendType === ESendType.Raid ? "border-warning" : "border-secondary/50"
+              } disabled:opacity-100`}
+            >
+              <div className="flex flex-col gap-2 items-center p-2">
+                <img src="img/icons/attackicon.png" className="pixel-images w-12 h-12" />
+                <p className="">ATTACK</p>
+              </div>
+            </Button>
+          )}
         </SecondaryCard>
         <SecondaryCard>
           <TotalStats />
         </SecondaryCard>
-        <Button onClick={() => sendFleet(sendType)} className="btn-warning font-bold h-16">
+        <Button disabled={fleetSize == 0n} onClick={() => sendFleet(sendType)} className="btn-warning font-bold h-16">
           <div className="flex flex-col gap-2 items-center p-2">
             <div className="flex gap-1">
               <FaExclamationTriangle className="opacity-75 animate-pulse" /> LAUNCH FLEET
               <FaExclamationTriangle className="opacity-75 animate-pulse" />
             </div>
             {moveLength && (
-              <div className="inline opacity-50">
-                ETA
-                {moveLength.minutes() !== 0 && (
-                  <p>
-                    {moveLength.asHours().toFixed()} hrs {moveLength.minutes()} min
-                  </p>
-                )}
-                {moveLength.minutes() === 0 && <p>{moveLength.seconds()} sec</p>}
+              <div className="inline opacity-50 inline">
+                {moveLength.hours() !== 0 && `${moveLength.hours()} hr`}
+                {moveLength.minutes() !== 0 && `  ${moveLength.minutes()} min`}
+                {!moveLength.hours() && moveLength.seconds() !== 0 && ` ${moveLength.seconds()} sec`}
               </div>
             )}
           </div>
