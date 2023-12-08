@@ -1,10 +1,8 @@
 import { Entity } from "@latticexyz/recs";
 import { useCallback, useMemo } from "react";
 import { SecondaryCard } from "src/components/core/Card";
-
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { ERock, ESendType } from "contracts/config/enums";
-import { FaExternalLinkAlt } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Modal } from "src/components/core/Modal";
@@ -102,12 +100,12 @@ export const AllUnitLabels = () => {
           )}
         </Badge>
 
-        {playerEntity === owner && rockType === ERock.Asteroid && (
+        {/* {playerEntity === owner && rockType === ERock.Asteroid && (
           <Badge className="gap-1 items-center">
             <div className="animate-pulse bg-success w-1 h-1 rounded-box" />0 ATTACKING FLEETS
             <FaExternalLinkAlt className="opacity-75 scale-90" />
           </Badge>
-        )}
+        )} */}
 
         {playerEntity === owner && rockType === ERock.Motherlode && (
           <div className="flex gap-1">

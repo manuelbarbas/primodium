@@ -56,11 +56,11 @@ export const Profile = () => {
       </Button>
       <div>
         <div className="flex flex-col p-1 bg-opacity-50 bg-neutral backdrop-blur-md rounded-box rounded-l-none rounded-t-none text-sm border border-secondary border-l-0">
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center justify-center">
             <AccountDisplay player={playerEntity} />
           </div>
           <hr className="border-secondary/50" />
-          <div className="flex gap-1 text-right w-full justify-end rounded-b-xl px-2 border-b border-secondary/50 pt-1">
+          <div className="flex gap-1 text-right w-full justify-end px-2 border-secondary/50 pt-1">
             {formatEther(wETHBalance)}
             <p className="font-bold text-success">wETH</p>
           </div>

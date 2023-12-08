@@ -15,7 +15,7 @@ export const SpacerockMenu: React.FC = () => {
   if (!selectedSpacerock) return null;
   return (
     <div className="w-screen px-2 flex justify-center">
-      <Tabs className="min-w-[50%] flex flex-col items-center gap-0">
+      <Tabs className="min-w-fit w-[50rem] flex flex-col items-center gap-0">
         <Tabs.Button
           index={0}
           togglable
@@ -25,13 +25,14 @@ export const SpacerockMenu: React.FC = () => {
           }}
           className="rounded-b-none border-b-0 btn-md border-secondary relative py-2 hover:text-accent group w-fit"
         >
-          <TargetHeader />
+          <TargetHeader hideStats />
         </Tabs.Button>
         <Tabs.Pane index={0} className="w-full border-b-0 rounded-x-none rounded-b-none relative">
           <Resources />
           <AccountDisplay
             player={ownedBy as Entity}
-            className="absolute right-6 -top-1 border border-secondary text-xs bg-base-100 p-2 rounded-box rounded-t-none"
+            showSpectate
+            className="absolute right-6 -top-1 border border-secondary text-xs bg-base-100 !p-2 rounded-box rounded-t-none"
           />
           <GracePeriod
             player={ownedBy as Entity}

@@ -16,7 +16,7 @@ export function useAccount(player?: Entity) {
   const allianceName = getAllianceName((alliance ?? "") as Entity);
 
   const address = useMemo(() => {
-    if (!linkedAddress) return "...";
+    if (!linkedAddress) return entityToAddress(playerEntity, true);
     return linkedAddress.ensName ?? entityToAddress(linkedAddress.address ?? playerEntity, true);
   }, [linkedAddress, playerEntity]);
 
