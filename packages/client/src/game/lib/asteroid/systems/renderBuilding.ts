@@ -30,7 +30,7 @@ export const renderBuilding = (scene: Scene) => {
   const gameWorld = namespaceWorld(world, "game");
   const _gameWorld = namespaceWorld(world, "game_specate");
 
-  defineComponentSystem(gameWorld, components.ActiveAsteroid, ({ value }) => {
+  defineComponentSystem(gameWorld, components.ActiveRock, ({ value }) => {
     world.dispose("game_specate");
 
     const positionQuery = [

@@ -42,7 +42,7 @@ export const useInit = () => {
       mud.components.SelectedRock.set({
         value: (components.Home.get(playerEntity)?.asteroid ?? singletonEntity) as Entity,
       });
-      mud.components.ActiveAsteroid.set({
+      mud.components.ActiveRock.set({
         value: (components.Home.get(playerEntity)?.asteroid ?? singletonEntity) as Entity,
       });
     }

@@ -22,7 +22,7 @@ export const AccountDisplay: React.FC<{ player?: Entity; className?: string; sho
     <Button
       className={`btn-xs btn-ghost p-0 inline-flex flex gap-1 ${className} ${loading ? "animate-pulse" : ""}`}
       onClick={async () => {
-        components.ActiveAsteroid.set({ value: homeAsteroid as Entity });
+        components.ActiveRock.set({ value: homeAsteroid as Entity });
         components.SelectedRock.set({ value: homeAsteroid as Entity });
         await transitionToScene(Scenes.Starmap, Scenes.Asteroid, 0);
         components.MapOpen.set({ value: false });

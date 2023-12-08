@@ -28,8 +28,8 @@ import { useMud } from "src/hooks";
 
 export const GameHUD = () => {
   const playerEntity = useMud().network.playerEntity;
-  const activeAsteroid = components.ActiveAsteroid.use()?.value;
-  const ownedBy = components.OwnedBy.use(activeAsteroid ?? undefined)?.value;
+  const activeRock = components.ActiveRock.use()?.value;
+  const ownedBy = components.OwnedBy.use(activeRock ?? undefined)?.value;
   const isSpectating = ownedBy !== playerEntity;
 
   const mapOpen = components.MapOpen.use(undefined, {
