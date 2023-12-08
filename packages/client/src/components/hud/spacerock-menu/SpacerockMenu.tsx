@@ -40,7 +40,8 @@ export const SpacerockMenu: React.FC = () => {
           <Resources />
           <AccountDisplay
             player={ownedBy as Entity}
-            className="absolute right-6 -top-1 border border-secondary text-xs bg-base-100 p-2 rounded-box rounded-t-none"
+            showSpectate
+            className="absolute right-6 -top-1 border border-secondary text-xs bg-base-100 !p-2 rounded-box rounded-t-none"
           />
           <GracePeriod
             player={ownedBy as Entity}

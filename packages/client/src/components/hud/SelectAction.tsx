@@ -9,7 +9,7 @@ import { components } from "src/network/components";
 import { Button } from "../core/Button";
 import { Join } from "../core/Join";
 
-export const SelectAction = () => {
+export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating }) => {
   const mud = useMud();
   const playerEntity = mud.network.playerEntity;
   const mapOpen = components.MapOpen.use(undefined, {
@@ -69,7 +69,7 @@ export const SelectAction = () => {
       }
     );
     components.MapOpen.set({ value: true });
-    components.SpectateAccount.set({ value: playerEntity });
+    components.ActiveAsteroid.set({ value: homeAsteroid ?? singletonEntity });
     components.SelectedBuilding.remove();
   };
 
@@ -94,10 +94,18 @@ export const SelectAction = () => {
             mapOpen ? "opacity-50" : "ring ring-accent z-10"
           }`}
         >
-          <div className="flex flex-col gap-2 items-center p-2">
-            <img src="img/icons/minersicon.png" className="pixel-images w-12 h-12" />
-            <p className="">BUILD</p>
-          </div>
+          {isSpectating && (
+            <div className="flex flex-col gap-2 items-center p-2 w-16">
+              <img src="img/icons/minersicon.png" className="pixel-images w-12 h-12" />
+              <p className="">SPECTATE</p>
+            </div>
+          )}
+          {!isSpectating && (
+            <div className="flex flex-col gap-2 items-center p-2 w-16">
+              <img src="img/icons/minersicon.png" className="pixel-images w-12 h-12" />
+              <p className="">BUILD</p>
+            </div>
+          )}
           {!mapOpen && <FaCaretUp size={22} className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-accent" />}
         </Button>
         <Button
@@ -107,10 +115,18 @@ export const SelectAction = () => {
             !mapOpen ? "opacity-50" : "ring ring-accent z-10"
           }`}
         >
-          <div className="flex flex-col gap-2 items-center p-2">
-            <img src="img/icons/starmapicon.png" className="pixel-images w-12 h-12" />
-            <p className="">CONQUER</p>
-          </div>
+          {!isSpectating && (
+            <div className="flex flex-col gap-2 items-center p-2 w-16">
+              <img src="img/icons/starmapicon.png" className="pixel-images w-12 h-12" />
+              <p className="">CONQUER</p>
+            </div>
+          )}
+          {isSpectating && (
+            <div className="flex flex-col gap-2 items-center p-2 w-16">
+              <img src="img/icons/starmapicon.png" className="pixel-images w-12 h-12" />
+              <p className="">EXIT</p>
+            </div>
+          )}
           {mapOpen && <FaCaretUp size={22} className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-accent" />}
         </Button>
       </Join>
