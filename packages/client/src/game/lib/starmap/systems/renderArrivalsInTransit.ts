@@ -86,8 +86,8 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
         borderThickness: 1,
         alpha: 0.75,
       }),
-      OnComponentSystem(components.BlockNumber, (gameObject, _, systemId) => {
-        const now = components.Time.get()?.value ?? 0n;
+      OnComponentSystem(components.Time, (gameObject, update, systemId) => {
+        const now = update.value[0]?.value ?? 0n;
         const timeTraveled = now - arrival.sendTime;
         const totaltime = arrival.arrivalTime - arrival.sendTime;
 
