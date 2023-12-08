@@ -94,17 +94,19 @@ export const Fleet: React.FC<{
             <p className="bg-green-900 border border-green-500  rounded-box px-1 text-[.6rem]">REINFORCE</p>
           </div>
         )}
-        <LabeledValue label={`${timeRemaining > 0 ? "IN-TRANSIT" : "ORBITING"}`}>
-          <p>
-            [{destinationPosition.x}, {destinationPosition.y}]
+        <LabeledValue label={`${timeRemaining > 0 ? "IN TRANSIT" : "ORBITING"}`}>
+          <p className="text-xs">
+            [{destinationPosition.x},{destinationPosition.y}]
           </p>
         </LabeledValue>
       </div>
-      <Badge className="text-xs">{unitTotal.toLocaleString()} UNITS</Badge>
+      <Badge className="text-xs flex flex-col items-center h-fit">
+        <p className="text-lg leading-5">{unitTotal.toLocaleString()}</p> UNITS
+      </Badge>
       <div className="text-right mr-2">
         {timeRemaining > 0 ? (
           <LabeledValue label="ETA">
-            <div className="flex gap-1">
+            <div className="flex gap-1 text-xs">
               <p>{timeRemaining.toLocaleString()}</p>
               <span className="opacity-50">SEC</span>
             </div>

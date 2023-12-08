@@ -3,10 +3,9 @@ import { useCallback, useMemo } from "react";
 import { SecondaryCard } from "src/components/core/Card";
 
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { ERock } from "contracts/config/enums";
+import { ERock, ESendType } from "contracts/config/enums";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
-import { IconButton } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Modal } from "src/components/core/Modal";
 import { useMud } from "src/hooks";
@@ -15,6 +14,7 @@ import { components } from "src/network/components";
 import { formatNumber } from "src/util/common";
 import { EntityType } from "src/util/constants";
 import { Hex } from "viem";
+import { Recall } from "../../fleet-send/Recall";
 import { SendFleet } from "../../fleet-send/SendFleet";
 import { DefenseLabel } from "../utilities/DefenseLabel";
 import { UnitLabel } from "./UnitLabel";
@@ -50,9 +50,10 @@ export const AllUnitLabels = () => {
   );
 
   const handleReinforce = () => {
-    console.log("hello");
+    components.Send.update({ sendType: ESendType.Reinforce });
   };
 
+  if (!selectedAsteroid) return null;
   return (
     <div className="flex flex-col items-center gap-1 m-1">
       <SecondaryCard className="flex flex-row w-fit gap-1 m-1">
@@ -103,14 +104,20 @@ export const AllUnitLabels = () => {
 
         {playerEntity === owner && rockType === ERock.Asteroid && (
           <Badge className="gap-1 items-center">
-            <div className="animate-pulse bg-success w-1 h-1 rounded-box" />0 ATTACKING FLEETS{" "}
+            <div className="animate-pulse bg-success w-1 h-1 rounded-box" />0 ATTACKING FLEETS
             <FaExternalLinkAlt className="opacity-75 scale-90" />
           </Badge>
         )}
 
         {playerEntity === owner && rockType === ERock.Motherlode && (
           <div className="flex gap-1">
-            <IconButton imageUri="img/icons/mainbaseicon.png" text="recall" className="btn-xs" />
+            <Modal title="Recall">
+              <Modal.Content className="w-[51rem]">
+                <Recall rock={selectedAsteroid} />
+              </Modal.Content>
+              <Modal.IconButton className="btn-xs" imageUri="/img/icons/mainbaseicon.png" text="recall" />
+            </Modal>
+
             <Modal title="Send Fleet">
               <Modal.Content className="w-[51rem] h-96">
                 <SendFleet />
@@ -120,7 +127,7 @@ export const AllUnitLabels = () => {
                 className="btn-xs"
                 imageUri="/img/icons/reinforcementicon.png"
                 text="reinforce"
-                // onClick={handleReinforce}
+                onClick={handleReinforce}
               />
             </Modal>
           </div>
