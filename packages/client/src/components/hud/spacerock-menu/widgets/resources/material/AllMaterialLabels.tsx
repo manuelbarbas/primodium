@@ -3,6 +3,7 @@ import { MaterialLabel } from "./MaterialLabel";
 import { SecondaryCard } from "src/components/core/Card";
 import { Tabs } from "src/components/core/Tabs";
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
+import { UtilityLabel } from "../utilities/UtilityLabel";
 
 export const AllMaterialLabels = () => {
   return (
@@ -29,6 +30,7 @@ export const AllMaterialLabels = () => {
               <div className="rounded-full w-2 h-1 bg-accent" />
               <div className="rounded-full w-1.5 h-1 bg-base-100" />
               <div className="rounded-full w-1.5 h-1 bg-base-100" />
+              <div className="rounded-full w-1.5 h-1 bg-base-100" />
             </div>
           </div>
         </Tabs.Pane>
@@ -52,6 +54,7 @@ export const AllMaterialLabels = () => {
               <div className="rounded-full w-1.5 h-1 bg-base-100" />
               <div className="rounded-full w-2 h-1 bg-accent" />
               <div className="rounded-full w-1.5 h-1 bg-base-100" />
+              <div className="rounded-full w-1.5 h-1 bg-base-100" />
             </div>
           </div>
         </Tabs.Pane>
@@ -62,7 +65,7 @@ export const AllMaterialLabels = () => {
                 <FaCaretLeft size={12} />
               </Tabs.Button>
               <p className="text-xs opacity-75 font-bold">MOTHERLODE RESOURCES</p>
-              <Tabs.Button index={-1} disabled className="btn-ghost btn-xs text-accent">
+              <Tabs.Button index={3} className="btn-ghost btn-xs text-accent">
                 <FaCaretRight size={12} />
               </Tabs.Button>
             </div>
@@ -73,6 +76,30 @@ export const AllMaterialLabels = () => {
               <MaterialLabel name={"Kimberlite"} resource={EntityType.Kimberlite} />
             </SecondaryCard>
             <div className="flex gap-1 pt-1">
+              <div className="rounded-full w-1.5 h-1 bg-base-100" />
+              <div className="rounded-full w-1.5 h-1 bg-base-100" />
+              <div className="rounded-full w-2 h-1 bg-accent" />
+              <div className="rounded-full w-1.5 h-1 bg-base-100" />
+            </div>
+          </div>
+        </Tabs.Pane>
+        <Tabs.Pane index={3} fragment className="items-center border-none p-0">
+          <div className="flex flex-col items-center">
+            <div className="flex items-center gap-1">
+              <Tabs.Button index={1} className="btn-ghost btn-xs text-accent">
+                <FaCaretLeft size={12} />
+              </Tabs.Button>
+              <p className="text-xs opacity-75 font-bold">UNRAIDABLE RESOURCES</p>
+              <Tabs.Button index={-1} disabled className="btn-ghost btn-xs text-accent">
+                <FaCaretRight size={12} />
+              </Tabs.Button>
+            </div>
+            <SecondaryCard className="flex flex-row w-fit gap-1 m-1">
+              <UtilityLabel name={"Unraidable Resources"} resourceId={EntityType.Unraidable} />
+              <UtilityLabel name={"Unraidable Motherlode Resources"} resourceId={EntityType.AdvancedUnraidable} />
+            </SecondaryCard>
+            <div className="flex gap-1 pt-1">
+              <div className="rounded-full w-1.5 h-1 bg-base-100" />
               <div className="rounded-full w-1.5 h-1 bg-base-100" />
               <div className="rounded-full w-1.5 h-1 bg-base-100" />
               <div className="rounded-full w-2 h-1 bg-accent" />
