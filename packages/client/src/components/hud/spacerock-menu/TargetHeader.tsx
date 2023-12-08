@@ -3,14 +3,12 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Badge } from "src/components/core/Badge";
 import { IconLabel } from "src/components/core/IconLabel";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
-import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { formatNumber } from "src/util/common";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { getRockDefense } from "src/util/defense";
 import { getSpaceRockImage, getSpaceRockName } from "src/util/spacerock";
 export const TargetHeader = ({ hideStats }: { hideStats?: boolean }) => {
-  const player = useMud().network.playerEntity;
   const selectedSpacerock = components.SelectedRock.use()?.value;
   const coord = components.Position.use(selectedSpacerock ?? singletonEntity) ?? { x: 0, y: 0 };
   const def = getRockDefense(selectedSpacerock ?? singletonEntity);
@@ -38,10 +36,7 @@ export const TargetHeader = ({ hideStats }: { hideStats?: boolean }) => {
           </Badge>
           <Badge className="flex gap-1 w-full uppercase font-bold text-xs items-center">
             {owner ? (
-              <AccountDisplay
-                player={owner as Entity}
-                className={`${owner ? (owner === player ? "text-success" : "text-error") : ""} opacity-70 scale-95`}
-              />
+              <AccountDisplay player={owner as Entity} className={`opacity-70 scale-95`} />
             ) : (
               <p className="opacity-50 scale-95">NEUTRAL</p>
             )}
