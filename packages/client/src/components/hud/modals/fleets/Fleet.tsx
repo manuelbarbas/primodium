@@ -129,19 +129,24 @@ export const OrbitActionButton: React.FC<{
   sendType: ESendType;
 }> = ({ arrivalEntity, sendType }) => {
   const network = useMud().network;
-
-  const action = sendType == ESendType.Invade ? invade : sendType == ESendType.Raid ? raid : reinforce;
+  const destination = components.Arrival.getEntity(arrivalEntity)?.destination;
+  if (!destination) return <></>;
 
   const { key } = decodeEntity(components.MapItemArrivals.metadata.keySchema, arrivalEntity);
+  const action =
+    sendType == ESendType.Invade
+      ? () => invade(destination, network, key)
+      : sendType == ESendType.Raid
+      ? () => raid(destination, network, key)
+      : () => reinforce(arrivalEntity, network);
+
   return (
     <TransactionQueueMask queueItemId={key as Entity}>
       <Button
         className={`btn-sm rounded-box ${
           sendType == ESendType.Reinforce ? "big-green-800" : "bg-rose-800"
         } gap-1 flex flex-col items-center w-20`}
-        onClick={() => {
-          action(arrivalEntity, network);
-        }}
+        onClick={action}
       >
         {sendType === ESendType.Invade && "INVADE"}
         {sendType === ESendType.Raid && "RAID"}
