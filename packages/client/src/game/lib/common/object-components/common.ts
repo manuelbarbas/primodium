@@ -12,6 +12,7 @@ import {
 } from "@latticexyz/recs";
 import { Coord, uuid } from "@latticexyz/utils";
 import { GameObjectComponent, GameObjectTypes, Scene } from "engine/types";
+import { takeLast } from "rxjs";
 import { world } from "src/network/world";
 
 type GameObjectInstances = {
@@ -28,6 +29,8 @@ type ComponentSystemMap = Map<
   Component<Schema, Metadata, undefined>,
   Map<string, (update: ComponentUpdate<Schema>) => void>
 >;
+
+type ComponentUpdateMap = Map<Component<Schema, Metadata, undefined>, ComponentUpdate<Schema>>;
 
 type QuerySystemMap = Map<QueryFragment[], Map<string, (update: ComponentUpdate<Schema>) => void>>;
 
@@ -49,7 +52,8 @@ export const ObjectPosition = <T extends keyof GameObjectTypes>(
   depth?: number
 ): GameObjectComponent<T> => {
   return {
-    id: "position",
+    id: uuid(),
+    modifiesPosition: true,
     once: (gameObject) => {
       gameObject.x = coord.x;
       gameObject.y = coord.y;
@@ -123,6 +127,7 @@ export const Tween = <T extends keyof GameObjectTypes>(
 };
 
 const componentMap: ComponentSystemMap = new Map();
+const componentUpdateMap: ComponentUpdateMap = new Map();
 export const OnComponentSystem = <T extends keyof GameObjectTypes, S extends Schema>(
   component: Component<S, Metadata, undefined>,
   callback: SystemCallback<T>,
@@ -132,7 +137,6 @@ export const OnComponentSystem = <T extends keyof GameObjectTypes, S extends Sch
 
   return {
     id,
-
     once: (gameObject) => {
       if (!componentMap.has(component)) {
         componentMap.set(component, new Map());
@@ -141,6 +145,7 @@ export const OnComponentSystem = <T extends keyof GameObjectTypes, S extends Sch
           gameWorld,
           component,
           (update) => {
+            componentUpdateMap.set(component, update);
             const fnMap = componentMap.get(component);
 
             if (!fnMap) return;
@@ -156,6 +161,8 @@ export const OnComponentSystem = <T extends keyof GameObjectTypes, S extends Sch
 
       //subscribe to component updates
       componentMap.get(component)?.set(id, (update) => callback(gameObject, update, id));
+      //send initial update if it missed it
+      if (componentUpdateMap.has(component)) callback(gameObject, componentUpdateMap.get(component)!, id);
     },
     exit: () => {
       //unsub from component updates

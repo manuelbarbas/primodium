@@ -55,7 +55,6 @@ export const UpgradeMiningVessel: React.FC = () => {
                   return (
                     <Badge key={resource.id + resource.type} className="text-xs gap-2">
                       <ResourceIconTooltip
-                        playerEntity={player}
                         name={getBlockTypeName(resource.id)}
                         image={ResourceImage.get(resource.id) ?? ""}
                         resource={resource.id}

@@ -57,7 +57,7 @@ export const BuildingMenu: React.FC = () => {
     components.SelectedAction.remove();
   };
 
-  const renderScreen = () => {
+  const RenderScreen = () => {
     switch (buildingType) {
       case EntityType.MainBase:
         return <MainBase building={selectedBuilding} />;
@@ -69,15 +69,68 @@ export const BuildingMenu: React.FC = () => {
         return <Basic building={selectedBuilding} />;
     }
   };
+  const TopBar = () => {
+    if (buildingType == EntityType.MainBase) return null;
+    return (
+      <div className="absolute -top-2 right-0 -translate-y-full flex flex-row-reverse gap-1 overflow-hidden p-1 border bg-neutral border border-1 border-secondary border-b-base-100">
+        <Button
+          tooltip="Close"
+          tooltipDirection="top"
+          className="btn-square btn-xs font-bold border border-secondary"
+          onClick={handleClose}
+        >
+          x
+        </Button>
 
+        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Build, selectedBuilding)}>
+          <Navigator.NavButton
+            tooltip="Move"
+            tooltipDirection="top"
+            className=" btn-square btn-xs font-bold border border-secondary inline-flex"
+            to="Move"
+            onClick={() => components.SelectedAction.set({ value: Action.MoveBuilding })}
+          >
+            <FaArrowsAlt size={12} />
+          </Navigator.NavButton>
+        </TransactionQueueMask>
+
+        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Demolish, selectedBuilding)}>
+          <Navigator.NavButton
+            tooltip="Demolish"
+            tooltipDirection="top"
+            className="btn-square btn-xs font-bold border border-error inline-flex"
+            to="Demolish"
+          >
+            <FaTrash size={12} />
+          </Navigator.NavButton>
+        </TransactionQueueMask>
+
+        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Toggle, selectedBuilding)}>
+          <Button
+            tooltip={active ? "Deactivate" : "Activate"}
+            disabled={!canToggle}
+            tooltipDirection="top"
+            className={`btn-square btn-xs font-bold border ${active ? "border-error" : "border-success"} inline-flex`}
+            onClick={() => {
+              toggleBuilding(selectedBuilding, network);
+              //components.SelectedBuilding.remove();
+            }}
+          >
+            {active ? <FaBan size={12} /> : <FaIndustry size={12} />}
+          </Button>
+        </TransactionQueueMask>
+      </div>
+    );
+  };
   return (
-    <Navigator initialScreen={selectedBuilding} className="w-120">
+    <Navigator initialScreen={selectedBuilding} className="w-96 border-none p-0 relative overflow-visible">
       {/* <Navigator.Breadcrumbs /> */}
 
-      {/* Initial Screen */}
-      {renderScreen()}
+      <TopBar />
 
       {/* Sub Screens */}
+      {/* Initial Screen */}
+      <RenderScreen />
       <Move building={selectedBuilding} />
       <Demolish building={selectedBuilding} />
       <BuildingInfo building={selectedBuilding} />
@@ -85,57 +138,6 @@ export const BuildingMenu: React.FC = () => {
       <BuildUnit building={selectedBuilding} />
       <UpgradeUnit building={selectedBuilding} />
       <MiningVessels building={selectedBuilding} />
-
-      {buildingType !== EntityType.MainBase && (
-        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-3 flex flex-row-reverse gap-2">
-          <Button
-            tooltip="Close"
-            tooltipDirection="top"
-            className="btn-square btn-sm font-bold border border-secondary"
-            onClick={handleClose}
-          >
-            x
-          </Button>
-
-          <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Build, selectedBuilding)}>
-            <Navigator.NavButton
-              tooltip="Move"
-              tooltipDirection="top"
-              className=" btn-square btn-sm font-bold border border-secondary inline-flex"
-              to="Move"
-              onClick={() => components.SelectedAction.set({ value: Action.MoveBuilding })}
-            >
-              <FaArrowsAlt size={12} />
-            </Navigator.NavButton>
-          </TransactionQueueMask>
-
-          <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Demolish, selectedBuilding)}>
-            <Navigator.NavButton
-              tooltip="Demolish"
-              tooltipDirection="top"
-              className="btn-square btn-sm font-bold border border-error inline-flex"
-              to="Demolish"
-            >
-              <FaTrash size={12} />
-            </Navigator.NavButton>
-          </TransactionQueueMask>
-
-          <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Toggle, selectedBuilding)}>
-            <Button
-              tooltip={active ? "Deactivate" : "Activate"}
-              disabled={!canToggle}
-              tooltipDirection="top"
-              className={`btn-square btn-sm font-bold border ${active ? "border-error" : "border-success"} inline-flex`}
-              onClick={() => {
-                toggleBuilding(selectedBuilding, network);
-                //components.SelectedBuilding.remove();
-              }}
-            >
-              {active ? <FaBan size={12} /> : <FaIndustry size={12} />}
-            </Button>
-          </TransactionQueueMask>
-        </div>
-      )}
     </Navigator>
   );
 };

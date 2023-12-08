@@ -25,8 +25,8 @@ export const createSceneManager = (phaserGame: Phaser.Game) => {
     key: string,
     target: string,
     duration = 1000,
-    onTransitionStart = () => null,
-    onTransitionComplete = () => null,
+    onTransitionStart = (originScene: Scene, targetScene: Scene) => undefined,
+    onTransitionComplete = (originScene: Scene, targetScene: Scene) => undefined,
     sleep = true
   ) => {
     const [resolve, , promise] = deferred();
@@ -43,7 +43,7 @@ export const createSceneManager = (phaserGame: Phaser.Game) => {
       return;
     }
 
-    onTransitionStart();
+    onTransitionStart(originScene, targetScene);
 
     scenes.get(key)?.phaserScene.scene.transition({
       target,
@@ -57,7 +57,7 @@ export const createSceneManager = (phaserGame: Phaser.Game) => {
 
     await promise;
 
-    onTransitionComplete();
+    onTransitionComplete(originScene, targetScene);
   };
 
   return {

@@ -126,7 +126,7 @@ library LibSend {
         !DefeatedPirate.get(playerEntity, PirateAsteroid.get(destination).prototype),
         "[SendUnits] Cannot send to defeated pirate"
       );
-      require(sendType == ESendType.Raid, "[SendUnits] Can only send to pirate asteroid to raid");
+      require(sendType == ESendType.Raid, "[SendUnits] Can only raid pirate asteroids");
       require(
         PirateAsteroid.get(destination).playerEntity == playerEntity,
         "[SendUnits] Cannot send to other player pirate asteroid"

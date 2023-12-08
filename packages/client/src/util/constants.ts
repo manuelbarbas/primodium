@@ -20,6 +20,7 @@ export enum Action {
 export const SPEED_SCALE = BigInt(100);
 export const RESOURCE_SCALE = BigInt(100);
 export const MULTIPLIER_SCALE = BigInt(100);
+export const UNIT_SPEED_SCALE = BigInt(100);
 
 export const PIRATE_KEY = toHex32("pirate");
 export const NUM_UNITS = Object.keys(EUnit).length / 2;
@@ -57,6 +58,8 @@ export enum TransactionQueueType {
   Upgrade,
   Recall,
   Reinforce,
+  Invade,
+  Raid,
   Land,
   Demolish,
   ClaimObjective,
@@ -100,18 +103,13 @@ export const EntityType = {
   R_Iridium: toHex32("R_Iridium") as Entity,
   R_Kimberlite: toHex32("R_Kimberlite") as Entity,
   // Ores
-  Water: toHex32("Water") as Entity,
-  Lithium: toHex32("Lithium") as Entity,
   Iron: toHex32("Iron") as Entity,
   Copper: toHex32("Copper") as Entity,
+  Lithium: toHex32("Lithium") as Entity,
   Titanium: toHex32("Titanium") as Entity,
   Iridium: toHex32("Iridium") as Entity,
   Sulfur: toHex32("Sulfur") as Entity,
-  Osmium: toHex32("Osmium") as Entity,
-  Tungsten: toHex32("Tungsten") as Entity,
   Kimberlite: toHex32("Kimberlite") as Entity,
-  Uraninite: toHex32("Uraninite") as Entity,
-  Bolutite: toHex32("Bolutite") as Entity,
   Platinum: toHex32("Platinum") as Entity,
 
   MainBase: toHex32("MainBase") as Entity,
@@ -279,8 +277,6 @@ export const ResearchImage = new Map<Entity, string>([
   [EntityType.Titanium, "/img/resource/titanium_resource.png"],
   [EntityType.R_Titanium, "/img/resource/titanium_resource.png"],
 
-  [EntityType.Osmium, "/img/resource/osmium_resource.png"],
-  [EntityType.Tungsten, "/img/resource/tungsten_resource.png"],
   [EntityType.Iridium, "/img/resource/iridium_resource.png"],
   [EntityType.R_Iridium, "/img/resource/iridium_resource.png"],
 
@@ -353,14 +349,10 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.Titanium, "/img/resource/titanium_resource.png"],
   [EntityType.R_Titanium, "/img/resource/titanium_resource.png"],
   [EntityType.Sulfur, "/img/resource/sulfur_resource.png"],
-  [EntityType.Osmium, "/img/resource/osmium_resource.png"],
-  [EntityType.Tungsten, "/img/resource/tungsten_resource.png"],
   [EntityType.Iridium, "/img/resource/iridium_resource.png"],
   [EntityType.R_Iridium, "/img/resource/iridium_resource.png"],
   [EntityType.Kimberlite, "/img/resource/kimberlite_resource.png"],
   [EntityType.R_Kimberlite, "/img/resource/kimberlite_resource.png"],
-  [EntityType.Uraninite, "/img/resource/uraninite_resource.png"],
-  [EntityType.Bolutite, "/img/resource/bolutite_resource.png"],
   [EntityType.Platinum, "/img/resource/platinum_resource.png"],
   [EntityType.R_Platinum, "/img/resource/platinum_resource.png"],
 
@@ -486,10 +478,6 @@ export const ResourceEnumLookup: Record<Entity, EResource> = {
   [EntityType.Iridium]: EResource.Iridium,
   [EntityType.Platinum]: EResource.Platinum,
   [EntityType.Kimberlite]: EResource.Kimberlite,
-  [EntityType.Uraninite]: EResource.Uraninite,
-  [EntityType.Bolutite]: EResource.Bolutite,
-  [EntityType.Osmium]: EResource.Osmium,
-  [EntityType.Tungsten]: EResource.Tungsten,
   [EntityType.Alloy]: EResource.Alloy,
   [EntityType.PVCell]: EResource.PVCell,
   [EntityType.RocketFuel]: EResource.RocketFuel,

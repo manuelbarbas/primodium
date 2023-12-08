@@ -8,21 +8,11 @@ import { world } from "../world";
 
 export function setupTrainingQueues(mud: SetupResult) {
   const playerEntity = mud.network.playerEntity;
-  const {
-    BuildingType,
-    LastClaimedAt,
-    ClaimOffset,
-    OwnedBy,
-    Position,
-    QueueUnits,
-    QueueItemUnits,
-    TrainingQueue,
-    Home,
-    Send,
-  } = components;
+  const { BuildingType, LastClaimedAt, ClaimOffset, OwnedBy, QueueUnits, QueueItemUnits, TrainingQueue, Home, Send } =
+    components;
 
   function updateTrainingQueue(building: Entity) {
-    const owner = OwnedBy.get(building)?.value as Entity | undefined;
+    const owner = OwnedBy.get(OwnedBy.get(building)?.value as Entity)?.value as Entity | undefined;
     const config = components.P_GameConfig.get();
     let startTime = LastClaimedAt.get(building, { value: 0n }).value - ClaimOffset.get(building, { value: 0n }).value;
     if (!owner || !startTime || !config) return;
@@ -90,8 +80,8 @@ export function setupTrainingQueues(mud: SetupResult) {
     if (destination && home !== destination) parents.push(destination);
 
     const queries = parents.map((parent) => [
-      HasValue(Position, {
-        parent,
+      HasValue(OwnedBy, {
+        value: parent,
       }),
       Has(BuildingType),
     ]);

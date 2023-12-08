@@ -40,7 +40,7 @@ export const Button: React.FC<{
         onPointerEnter={() => {
           !mute && api?.audio.play(AudioKeys.Click3, "ui");
         }}
-        className={`btn join-item inline pointer-events-auto font-bold outline-none ${className} ${
+        className={`btn join-item inline pointer-events-auto font-bold outline-none h-fit ${className} ${
           disabled ? "opacity-80" : ""
         } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
       >
