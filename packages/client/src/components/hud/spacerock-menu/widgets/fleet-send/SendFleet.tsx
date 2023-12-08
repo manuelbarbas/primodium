@@ -1,7 +1,8 @@
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { ERock, ESendType } from "contracts/config/enums";
-import { useCallback } from "react";
+import dayjs from "dayjs";
+import { useCallback, useMemo } from "react";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
 import { Button } from "src/components/core/Button";
@@ -14,7 +15,7 @@ import { formatNumber, getBlockTypeName } from "src/util/common";
 import { BackgroundImage, EntityType } from "src/util/constants";
 import { getRockDefense } from "src/util/defense";
 import { toHex32 } from "src/util/encode";
-import { toUnitCountArray } from "src/util/send";
+import { getMoveLength, toUnitCountArray } from "src/util/send";
 import { getSpaceRockImage, getSpaceRockName } from "src/util/spacerock";
 import { send } from "src/util/web3/contractCalls/send";
 import { Hex } from "viem";
@@ -107,11 +108,10 @@ export const TotalStats = () => {
 export const SendFleet = () => {
   const network = useMud().network;
   const playerEntity = network.playerEntity;
-  const origin = components.Home.get(playerEntity)?.asteroid as Entity | undefined;
-  const destination = components.SelectedRock.get()?.value as Entity | undefined;
+  const origin = components.Home.use(playerEntity)?.asteroid as Entity | undefined;
+  const destination = components.SelectedRock.use()?.value as Entity | undefined;
   const rockType = components.RockType.use(destination)?.value;
   const isPirate = components.PirateAsteroid.use(destination);
-  console.log("is pirate:", destination, isPirate);
   const attackType = rockType === ERock.Asteroid || isPirate ? ESendType.Raid : ESendType.Invade;
   const fleet = components.Send.useUnits();
   const sendType = components.Send.use()?.sendType ?? attackType;
@@ -120,6 +120,17 @@ export const SendFleet = () => {
     counts: [],
   });
 
+  const moveLength = useMemo(() => {
+    console.log("fleet:", fleet);
+    if (Object.keys(fleet).length == 0) return;
+    const originCoord = components.Position.get(origin) ?? { x: 0, y: 0 };
+    const destinationCoord = components.Position.get(destination) ?? { x: 0, y: 0 };
+    const moveLength = getMoveLength(originCoord, destinationCoord, playerEntity, fleet);
+
+    return dayjs.duration(moveLength * 1000);
+  }, [fleet, destination, origin, playerEntity]);
+
+  console.log("move length:", moveLength?.minutes(), moveLength?.asMinutes());
   const getUnitCount = useCallback(
     (unit: Entity) => {
       if (!units) return 0n;
@@ -190,7 +201,17 @@ export const SendFleet = () => {
               <FaExclamationTriangle className="opacity-75 animate-pulse" /> LAUNCH FLEET
               <FaExclamationTriangle className="opacity-75 animate-pulse" />
             </div>
-            <p className="opacity-50">ETA 00:00:00</p>
+            {moveLength && (
+              <div className="inline opacity-50">
+                ETA
+                {moveLength.minutes() !== 0 && (
+                  <p>
+                    {moveLength.asHours().toFixed()} hrs {moveLength.minutes()} min
+                  </p>
+                )}
+                {moveLength.minutes() === 0 && <p>{moveLength.seconds()} sec</p>}
+              </div>
+            )}
           </div>
         </Button>
       </div>

@@ -1,4 +1,5 @@
 import { Entity } from "@latticexyz/recs";
+import { Coord } from "@latticexyz/utils";
 import { Hex, getAddress, isAddress, trim } from "viem";
 import { BlockIdToKey } from "./constants";
 
@@ -27,6 +28,10 @@ export const wrap = (index: number, length: number) => {
 
 export const getRandomRange = (min: number, max: number) => {
   return Math.random() * (max - min) + min;
+};
+
+export const distanceBI = (a: Coord, b: Coord) => {
+  return BigInt(Math.round(Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2))));
 };
 
 export function toRomanNumeral(number: number) {

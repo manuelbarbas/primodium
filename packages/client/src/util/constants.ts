@@ -20,6 +20,7 @@ export enum Action {
 export const SPEED_SCALE = BigInt(100);
 export const RESOURCE_SCALE = BigInt(100);
 export const MULTIPLIER_SCALE = BigInt(100);
+export const UNIT_SPEED_SCALE = BigInt(100);
 
 export const PIRATE_KEY = toHex32("pirate");
 export const NUM_UNITS = Object.keys(EUnit).length / 2;

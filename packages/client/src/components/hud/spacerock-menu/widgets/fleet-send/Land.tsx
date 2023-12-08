@@ -44,19 +44,20 @@ export const Land: React.FC<{
 
   if (!orbiting.length) return <></>;
 
+  const key = hashEntities(TransactionQueueType.Land, destination);
   return (
     <div className="w-full flex justify-center mt-2">
-      <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Land, destination)}>
+      <TransactionQueueMask queueItemId={key}>
         <Button
           className={`gap-2 w-44 ${isNeutral ? "btn-secondary" : "btn-error"} flex flex-col items-center `}
           onClick={() => {
             if (ERock.Motherlode === rockType) {
-              invade(destination, network);
+              invade(destination, network, key);
               return;
             }
 
             if (ERock.Asteroid === rockType) {
-              raid(destination, network);
+              raid(destination, network, key);
               return;
             }
           }}
