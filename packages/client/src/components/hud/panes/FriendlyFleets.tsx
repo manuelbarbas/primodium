@@ -108,7 +108,6 @@ export const ReinforcementFleets: React.FC = () => {
                 arrivalTime={fleet.arrivalTime}
                 destination={fleet.destination}
                 sendType={fleet.sendType}
-                outgoing={false}
               />
             );
           })}

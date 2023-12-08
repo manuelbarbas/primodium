@@ -107,15 +107,14 @@ export const TotalStats = () => {
 export const SendFleet = () => {
   const network = useMud().network;
   const playerEntity = network.playerEntity;
-  const origin = components.Send.get()?.origin;
-  const originCoord = components.Position.get(origin) ?? { x: 0, y: 0 };
-  const destination = components.Send.get()?.destination;
-  const destinationCoord = components.Position.get(destination) ?? { x: 0, y: 0 };
-  const to = components.OwnedBy.get(destination)?.value as Entity | undefined;
-  const rockType = components.RockType.get(destination)?.value;
-  const attackType = rockType === ERock.Asteroid ? ESendType.Raid : ESendType.Invade;
-  const sendType = components.Send.use()?.sendType ?? attackType;
+  const origin = components.Home.get(playerEntity)?.asteroid as Entity | undefined;
+  const destination = components.SelectedRock.get()?.value as Entity | undefined;
+  const rockType = components.RockType.use(destination)?.value;
+  const isPirate = components.PirateAsteroid.use(destination);
+  console.log("is pirate:", destination, isPirate);
+  const attackType = rockType === ERock.Asteroid || isPirate ? ESendType.Raid : ESendType.Invade;
   const fleet = components.Send.useUnits();
+  const sendType = components.Send.use()?.sendType ?? attackType;
   const units = components.Hangar.use(origin, {
     units: [],
     counts: [],
@@ -130,7 +129,18 @@ export const SendFleet = () => {
     },
     [units]
   );
+  const sendFleet = (sendType: ESendType) => {
+    if (!origin || !destination) return;
+    const originCoord = components.Position.get(origin) ?? { x: 0, y: 0 };
+    const destinationCoord = components.Position.get(destination) ?? { x: 0, y: 0 };
 
+    const to = components.OwnedBy.get(destination)?.value as Entity | undefined;
+
+    //TODO: fix arrival units
+    send(toUnitCountArray(fleet), sendType, originCoord, destinationCoord, (to as Hex) ?? toHex32("0"), network);
+
+    components.Send.reset(playerEntity);
+  };
   return (
     <Card className="grid grid-cols-2 border-none w-full h-full pointer-events-auto">
       <div className="grid gap-1 h-full w-full grid-cols-4 grid-rows-2 pr-1">
@@ -174,21 +184,7 @@ export const SendFleet = () => {
         <SecondaryCard>
           <TotalStats />
         </SecondaryCard>
-        <Button
-          onClick={() => {
-            send(
-              toUnitCountArray(fleet),
-              sendType,
-              originCoord,
-              destinationCoord,
-              (to as Hex) ?? toHex32("0"),
-              network
-            );
-
-            components.Send.reset(playerEntity);
-          }}
-          className="btn-warning font-bold h-16"
-        >
+        <Button onClick={() => sendFleet(sendType)} className="btn-warning font-bold h-16">
           <div className="flex flex-col gap-2 items-center p-2">
             <div className="flex gap-1">
               <FaExclamationTriangle className="opacity-75 animate-pulse" /> LAUNCH FLEET

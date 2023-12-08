@@ -4,19 +4,19 @@ import { Action } from "src/util/constants";
 import { HUD } from "../core/HUD";
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
-import { OverlayModal } from "../core/OverlayModal";
 import { Tabs } from "../core/Tabs";
 import { BrandingLabel } from "../shared/BrandingLabel";
 import { Blueprints } from "./Blueprints";
+import { CurrentObjective } from "./CurrentObjective";
 import { Profile } from "./Profile";
 import { Score } from "./Score";
 import { SelectAction } from "./SelectAction";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
-import { PlayerLeaderboard } from "./modals/leaderboard/PlayerLeaderboard";
 import { Settings } from "./modals/settings/Settings";
 import { ReinforcementFleets } from "./panes/FriendlyFleets";
 import { OwnedMotherlodes } from "./panes/OwnedMotherlodes";
+import { BattleReports } from "./panes/battle-reports/BattleReports";
 import { HostileFleets } from "./panes/hostile-fleets/HostileFleets";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 import { Chat } from "./chat/Chat";
@@ -46,18 +46,18 @@ export const GameHUD = () => {
                       tooltipDirection="left"
                     />
                   </Modal.Button>
-                  <Modal.Content className="w-[50rem] h-[50rem]">
+                  <Modal.Content className="w-[40rem] h-[50rem]">
                     <Leaderboard />
                   </Modal.Content>
                 </Modal>
-                <OverlayModal>
-                  <OverlayModal.Button className="rounded-r-none border border-secondary btn-sm">
-                    <IconLabel imageUri="/img/icons/reportsicon.png" tooltipText="messages" tooltipDirection="left" />
-                  </OverlayModal.Button>
-                  <OverlayModal.Content>
-                    <PlayerLeaderboard />
-                  </OverlayModal.Content>
-                </OverlayModal>
+                <Modal title="battles">
+                  <Modal.Button className="rounded-r-none border border-secondary btn-sm">
+                    <IconLabel imageUri="/img/icons/reportsicon.png" tooltipText="battles" tooltipDirection="left" />
+                  </Modal.Button>
+                  <Modal.Content className="w-[30rem] h-[50rem]">
+                    <BattleReports />
+                  </Modal.Content>
+                </Modal>
               </span>
               <SelectAction />
               <span className="flex flex-col gap-1 mt-1">
@@ -87,7 +87,9 @@ export const GameHUD = () => {
           <Profile />
         </HUD.TopLeft>
 
-        <HUD.TopRight>{/* <CurrenObjective /> */}</HUD.TopRight>
+        <HUD.TopRight>
+          <CurrentObjective />{" "}
+        </HUD.TopRight>
 
         <HUD.Right>{mapOpen ? <Motherlodes /> : <BuildingSelection />}</HUD.Right>
 

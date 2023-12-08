@@ -57,6 +57,8 @@ export enum TransactionQueueType {
   Upgrade,
   Recall,
   Reinforce,
+  Invade,
+  Raid,
   Land,
   Demolish,
   ClaimObjective,
