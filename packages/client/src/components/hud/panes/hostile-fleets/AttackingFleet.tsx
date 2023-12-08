@@ -4,7 +4,6 @@ import { BiSolidInvader } from "react-icons/bi";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { entityToAddress } from "src/util/common";
-import { useNow } from "src/util/time";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -28,7 +27,8 @@ export const AttackingFleet: React.FC<{
 
   const isHomeAsteroid = components.Home.get(playerEntity)?.asteroid === destination;
 
-  const timeRemaining = arrivalTime - useNow();
+  const time = components.Time.use()?.value ?? 0n;
+  const timeRemaining = arrivalTime - time;
 
   return (
     <div

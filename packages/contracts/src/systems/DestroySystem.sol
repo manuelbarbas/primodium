@@ -5,7 +5,7 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { addressToEntity } from "src/utils.sol";
 
-import { P_UnitProdTypes, Position, PositionData, BuildingType, OwnedBy, Level, BuildingType } from "codegen/index.sol";
+import { IsActive, P_UnitProdTypes, Position, PositionData, BuildingType, OwnedBy, Level, BuildingType } from "codegen/index.sol";
 import { LibBuilding, UnitFactorySet } from "codegen/Libraries.sol";
 
 contract DestroySystem is PrimodiumSystem {
@@ -22,7 +22,7 @@ contract DestroySystem is PrimodiumSystem {
     BuildingType.deleteRecord(buildingEntity);
     OwnedBy.deleteRecord(buildingEntity);
     Position.deleteRecord(buildingEntity);
-
+    IsActive.deleteRecord(buildingEntity);
     if (P_UnitProdTypes.length(buildingType, level) != 0) {
       UnitFactorySet.remove(coord.parent, buildingEntity);
     }

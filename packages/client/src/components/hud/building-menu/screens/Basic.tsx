@@ -5,7 +5,7 @@ import { Upgrade } from "../widgets/Upgrade";
 
 export const Basic: React.FC<{ building: Entity }> = ({ building }) => {
   return (
-    <Navigator.Screen title={building}>
+    <Navigator.Screen title={building} className="gap-1">
       <Header building={building} />
       <Upgrade building={building} />
     </Navigator.Screen>

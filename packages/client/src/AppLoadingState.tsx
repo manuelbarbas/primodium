@@ -6,11 +6,12 @@ import { useMud } from "./hooks";
 import { useInit } from "./hooks/useInit";
 import { components } from "./network/components";
 import { world } from "./network/world";
+import { Account } from "./screens/Account";
 import { Game } from "./screens/Game";
 import { Increment } from "./screens/Increment";
 import { Landing } from "./screens/Landing";
-import { Transfer } from "./screens/Transfer";
 import { setupCheatcodes } from "./util/cheatcodes";
+import { Statistics } from "./screens/Statistics";
 
 const DEV = import.meta.env.PRI_DEV === "true";
 
@@ -42,9 +43,9 @@ export default function AppLoadingState() {
                 )}
               </p>
               {loadingState.percentage === 0 ? (
-                <Progress value={100} max={100} className="animate-pulse" />
+                <Progress value={100} max={100} className="animate-pulse w-56" />
               ) : (
-                <Progress value={loadingState.percentage} max={100} />
+                <Progress value={loadingState.percentage} max={100} className="w-56" />
               )}
             </div>
           </div>
@@ -55,7 +56,8 @@ export default function AppLoadingState() {
               <Route path="/" element={<Landing />} />
               <Route path="/game" element={initialized ? <Game /> : <Landing />} />
               <Route path="/increment" element={<Increment />} />
-              <Route path="/transfer" element={<Transfer />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="/statistics" element={<Statistics />} />
             </Routes>
           </BrowserRouter>
         )}

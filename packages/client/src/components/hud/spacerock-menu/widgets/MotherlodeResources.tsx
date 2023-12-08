@@ -1,16 +1,15 @@
 import { SecondaryCard } from "src/components/core/Card";
 
+import { Entity } from "@latticexyz/recs";
 import { Badge } from "src/components/core/Badge";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { getBlockTypeName } from "src/util/common";
 import { ResourceEntityLookup, ResourceImage, ResourceType } from "src/util/constants";
-import { Entity } from "@latticexyz/recs";
 
+import { EResource } from "contracts/config/enums";
+import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
 import { Hex } from "viem";
-import { EResource } from "contracts/config/enums";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 
 const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (
@@ -24,18 +23,16 @@ const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ lab
 export const MotherlodeResources: React.FC<{
   motherlodeEntity: Entity;
 }> = ({ motherlodeEntity }) => {
-  const resources = useFullResourceCounts(motherlodeEntity);
-  const motherlodeType = components.Motherlode.getWithKeys({ entity: motherlodeEntity as Hex })?.motherlodeType ?? 0n;
-  const rawResource = components.P_RawResource.getWithKeys({ resource: motherlodeType as number })?.value ?? 0n;
-  if (!rawResource) return <div></div>;
+  const motherlodeType = components.Motherlode.useWithKeys({ entity: motherlodeEntity as Hex })?.motherlodeType;
+  const rawResource = components.P_RawResource.useWithKeys({ resource: motherlodeType ?? 0 })?.value ?? 0n;
+  const rawResourceId = ResourceEntityLookup[rawResource as EResource];
+  const { resourcesToClaim, resourceCount } = useFullResourceCount(rawResourceId, motherlodeEntity);
+  if (!rawResource || !motherlodeType) return null;
 
-  const owner = components.OwnedBy.getWithKeys({ entity: motherlodeEntity as Hex }) ?? singletonEntity;
+  const resourceId = ResourceEntityLookup[motherlodeType as EResource];
 
-  const { resourcesToClaim, resourceCount } = resources[rawResource];
   let currCount = (resourceCount ?? 0n) + (resourcesToClaim ?? 0n);
   if (currCount < 0n) currCount = 0n;
-  const resourceId = ResourceEntityLookup[motherlodeType as EResource];
-  const rawResourceId = ResourceEntityLookup[rawResource as EResource];
   return (
     <DataLabel label="RESOURCES">
       {
@@ -44,7 +41,7 @@ export const MotherlodeResources: React.FC<{
             name={getBlockTypeName(resourceId)}
             image={ResourceImage.get(resourceId) ?? ""}
             resource={rawResourceId}
-            playerEntity={owner as Entity}
+            spaceRock={motherlodeEntity}
             amount={currCount}
             resourceType={ResourceType.Resource}
             validate={false}

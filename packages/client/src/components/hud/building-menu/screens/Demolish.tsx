@@ -49,7 +49,7 @@ export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
   );
   return (
     <Navigator.Screen title="Demolish">
-      <SecondaryCard className="space-y-3 items-center text-center w-full">
+      <SecondaryCard className="space-y-3 items-center text-center w-full pt-6">
         <Content />
 
         <div className="flex gap-2">

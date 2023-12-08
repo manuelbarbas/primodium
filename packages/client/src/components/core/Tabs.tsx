@@ -1,13 +1,4 @@
-import {
-  ReactNode,
-  memo,
-  createContext,
-  useContext,
-  useState,
-  FC,
-  useEffect,
-  useRef,
-} from "react";
+import { ReactNode, memo, createContext, useContext, useState, FC, useEffect, useRef } from "react";
 import { Button as _Button, IconButton as _IconButton } from "./Button";
 import { Card } from "./Card";
 
@@ -37,88 +28,60 @@ const Pane: FC<{
   index?: number;
   className?: string;
   children: ReactNode;
-}> = memo(({ index, children, className }) => {
+  fragment?: boolean;
+}> = memo(({ index, children, className, fragment = false }) => {
   const { index: currIndex } = useIndex();
 
   if (index === undefined || currIndex !== index) {
     return null;
   }
 
-  return (
-    <Card className={`overflow-y-auto scrollbar ${className} `}>
-      {children}
-    </Card>
-  );
+  return fragment ? <>{children}</> : <Card className={`overflow-y-auto scrollbar ${className} `}>{children}</Card>;
 });
 
-const Button: FC<{
-  index: number;
-  children: ReactNode;
-  className?: string;
-  togglable?: boolean;
-}> = memo(({ index, children, className, togglable = false }) => {
-  const { index: currIndex, setIndex } = useIndex();
-
-  const selected = currIndex === index;
-
-  return (
-    <_Button
-      selected={selected}
-      className={className}
-      onClick={() => setIndex(selected && togglable ? undefined : index)}
-    >
-      {children}
-    </_Button>
-  );
-});
-
-export const IconButton: FC<{
-  index: number;
-  text: string;
-  imageUri: string;
-  hideText?: boolean;
-  tooltipDirection?: "right" | "left" | "top" | "bottom";
-  tooltipText?: string;
-  onClick?: () => void;
-}> = memo(
-  ({
-    index,
-    text,
-    imageUri,
-    hideText = false,
-    tooltipDirection = "right",
-    tooltipText,
-    onClick,
-  }) => {
+const Button: FC<React.ComponentProps<typeof _Button> & { index: number; togglable?: boolean; showActive?: boolean }> =
+  memo((props) => {
     const { index: currIndex, setIndex } = useIndex();
+    const { togglable = false, index, showActive = false } = props;
 
     const selected = currIndex === index;
 
     return (
-      <_IconButton
-        text={text}
-        selected={selected}
-        imageUri={imageUri}
-        hideText={hideText || !selected}
-        onClick={() => {
-          setIndex(selected ? undefined : index);
-          if (onClick) onClick();
+      <_Button
+        {...props}
+        selected={selected && showActive}
+        onClick={(e) => {
+          setIndex(selected && togglable ? undefined : index);
+          if (props.onClick) props.onClick(e);
         }}
-        tooltipDirection={tooltipDirection}
-        tooltipText={tooltipText}
       />
     );
-  }
-);
+  });
+
+const IconButton: React.FC<React.ComponentProps<typeof _IconButton> & { index: number }> = memo((props) => {
+  const { index: currIndex, setIndex } = useIndex();
+  const { index } = props;
+
+  const selected = currIndex === index;
+
+  return (
+    <_IconButton
+      {...props}
+      selected={selected}
+      onClick={() => {
+        setIndex(selected ? undefined : index);
+        if (props.onClick) props.onClick();
+      }}
+    />
+  );
+});
 
 export const Tabs: FC<TabProps> & {
   Button: typeof Button;
   IconButton: typeof IconButton;
   Pane: typeof Pane;
 } = ({ children, defaultIndex = 0, className, onChange }) => {
-  const [currentIndex, setCurrentIndex] = useState<number | undefined>(
-    defaultIndex
-  );
+  const [currentIndex, setCurrentIndex] = useState<number | undefined>(defaultIndex);
 
   // Ref to check if it's the first render
   const initialRender = useRef(true);
@@ -131,12 +94,10 @@ export const Tabs: FC<TabProps> & {
     }
 
     if (onChange) onChange();
-  }, [currentIndex]);
+  }, [currentIndex, onChange]);
 
   return (
-    <IndexContext.Provider
-      value={{ index: currentIndex, setIndex: setCurrentIndex }}
-    >
+    <IndexContext.Provider value={{ index: currentIndex, setIndex: setCurrentIndex }}>
       <div className={`gap-1 ${className}`}>{children}</div>
     </IndexContext.Provider>
   );

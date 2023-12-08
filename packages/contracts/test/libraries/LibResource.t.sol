@@ -148,7 +148,7 @@ contract LibResourceTest is PrimodiumTest {
     requiredResourcesData.resources[0] = uint8(Iron);
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(buildingPrototype, level + 1, requiredResourcesData);
-
+    IsActive.set(buildingEntity, true);
     LibResource.spendBuildingRequiredResources(buildingEntity, level);
     assertEq(ResourceCount.get(spaceRockEntity, Iron), 50);
     assertEq(UtilityMap.get(buildingEntity, Iron), 50);
@@ -167,7 +167,7 @@ contract LibResourceTest is PrimodiumTest {
     requiredResourcesData.resources[0] = uint8(Iron);
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(buildingPrototype, 1, requiredResourcesData);
-
+    IsActive.set(buildingEntity, true);
     LibResource.spendBuildingRequiredResources(buildingEntity, 1);
   }
 
@@ -227,7 +227,7 @@ contract LibResourceTest is PrimodiumTest {
     P_IsUtility.set(Iron, true);
     UtilityMap.set(buildingEntity, Iron, 50);
     ResourceCount.set(spaceRockEntity, Iron, 100);
-
+    IsActive.set(buildingEntity, true);
     LibResource.clearUtilityUsage(buildingEntity);
 
     assertEq(ResourceCount.get(spaceRockEntity, Iron), 150);

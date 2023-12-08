@@ -7,10 +7,10 @@ import { SetupResult } from "src/network/types";
 import { world } from "src/network/world";
 import { PIRATE_KEY } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
-import { getNow } from "src/util/time";
 import { ObjectPosition, OnComponentSystem, OnRxjsSystem } from "../../common/object-components/common";
 import { Circle, Line } from "../../common/object-components/graphics";
 import { renderEntityOrbitingArrivals } from "./renderArrivalsInOrbit";
+import { Observable } from "rxjs";
 
 export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
   const playerEntity = mud.network.playerEntity;
@@ -25,7 +25,8 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
     if (!arrival) return;
 
     //don't render if arrival is already in orbit
-    if (arrival.arrivalTime < getNow()) return;
+    const now = components.Time.get()?.value ?? 0n;
+    if (arrival.arrivalTime < now) return;
 
     const origin = components.Position.get(arrival.origin);
     const destination = components.Position.get(arrival.destination);
@@ -59,6 +60,7 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
         alpha: 0.5,
         color: 0xff0000,
       }),
+      //@ts-ignore
       OnRxjsSystem(scene.camera.zoom$, (_, zoom) => {
         let thickness = 3 / zoom;
         thickness = Math.min(10, thickness);
@@ -86,7 +88,8 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
         alpha: 0.75,
       }),
       OnComponentSystem(components.BlockNumber, (gameObject, _, systemId) => {
-        const timeTraveled = getNow() - arrival.sendTime;
+        const now = components.Time.get()?.value ?? 0n;
+        const timeTraveled = now - arrival.sendTime;
         const totaltime = arrival.arrivalTime - arrival.sendTime;
 
         const progress = Number(timeTraveled) / Number(totaltime);

@@ -18,6 +18,22 @@ library LibReduceProductionRate {
     ConsumptionRate.set(spaceRockEntity, resource, consumptionRate - requiredValue);
   }
 
+  /// @notice re activates reduces production rate for a building
+  /// @param buildingEntity Entity ID of the building
+  /// @param level Target level for the building
+  function activateReduceProductionRate(bytes32 buildingEntity, uint256 level) internal {
+    bytes32 spaceRockEntity = OwnedBy.get(buildingEntity);
+    bytes32 buildingPrototype = BuildingType.get(buildingEntity);
+    P_RequiredDependencyData memory requiredDeps = P_RequiredDependency.get(buildingPrototype, level);
+
+    uint8 resource = requiredDeps.resource;
+    uint256 requiredValue = requiredDeps.amount;
+    if (requiredValue == 0) return;
+
+    uint256 consumptionRate = ConsumptionRate.get(spaceRockEntity, resource);
+    ConsumptionRate.set(spaceRockEntity, resource, consumptionRate + requiredValue);
+  }
+
   /// @notice Reduces production rate when building or upgrading
   /// @param buildingEntity Entity ID of the building
   /// @param level Target level for the building

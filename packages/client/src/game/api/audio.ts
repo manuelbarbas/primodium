@@ -8,8 +8,8 @@ export const createAudioApi = (scene: Scene) => {
   function play(key: AudioKeys, channel: Channel, config?: Phaser.Types.Sound.SoundConfig) {
     const volume = useSettingsStore.getState().volume;
 
+    setVolume(volume[channel], channel);
     scene.audio[channel].playAudioSprite(Assets.AudioAtlas, key, {
-      volume: volume[channel] * volume.master,
       ...config,
     });
   }

@@ -3,5 +3,5 @@ export const Progress: React.FC<{
   max?: number;
   className?: string;
 }> = ({ value, max, className }) => {
-  return <progress className={`progress progress-accent w-56 ${className}`} value={value} max={max} />;
+  return <progress className={`progress progress-accent ${className}`} value={value} max={max} />;
 };

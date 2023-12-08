@@ -56,8 +56,8 @@ export const BattleReports = () => {
 
   return (
     <Navigator initialScreen={"BattleReports"} className="border-none p-0! h-full">
-      <Navigator.Screen title={"BattleReports"} className="w-full h-full">
-        <div className="text-xs space-y-1 w-full h-full overflow-x-hidden">
+      <Navigator.Screen title={"BattleReports"} className="full h-full">
+        <div className="text-xs space-y-1 w-full h-full overflow-x-hidden flex flex-col items-center">
           {battles.length === 0 && (
             <SecondaryCard className="w-full h-full flex items-center justify-center font-bold">
               <p className="opacity-50">NO BATTLE REPORTS FOUND</p>
@@ -71,38 +71,38 @@ export const BattleReports = () => {
                 onClick={() => {
                   setSelectedBattle(battle.entity);
                 }}
-                className="w-full p-0 flex justify-between text-xs bg-base-100 relative border-gray-700"
+                className="w-full p-0 flex justify-start text-xs bg-base-100 relative border-gray-700"
               >
-                <div className="flex gap-1 items-center">
-                  {battle.winner !== playerEntity && (
-                    <div className="rounded-md bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
-                      <FaTimes size={16} />
-                      <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">LOSS</p>
-                    </div>
-                  )}
-                  {battle.winner === playerEntity && (
-                    <div className="rounded-md bg-green-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
-                      <FaTrophy size={16} />
-                      <p className="bg-green-900 border border-green-500  rounded-md px-1 text-[.6rem]">WIN</p>
-                    </div>
-                  )}
+                {battle.winner !== playerEntity && (
+                  <div className="bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
+                    <FaTimes size={16} />
+                    <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">LOSS</p>
+                  </div>
+                )}
+                {battle.winner === playerEntity && (
+                  <div className="bg-green-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
+                    <FaTrophy size={16} />
+                    <p className="bg-green-900 border border-green-500  rounded-md px-1 text-[.6rem]">WIN</p>
+                  </div>
+                )}
 
+                <div className="px-10 flex gap-4">
                   <LabeledValue label="LOCATION">
                     <p>
                       [{components.Position.get(battle.rock as Entity)?.x ?? 0},
                       {components.Position.get(battle.rock as Entity)?.y ?? 0}]
                     </p>
                   </LabeledValue>
-                </div>
-                <LabeledValue label="TYPE">
-                  <p>{!battle.totalCargo ? "INVASION" : "RAID"}</p>
-                </LabeledValue>
-                <div className="text-right">
-                  <LabeledValue label="TIMESTAMP">
-                    <div className="flex gap-1">
-                      <p>{new Date(Number(battle.timestamp * 1000n)).toLocaleDateString()}</p>
-                    </div>
+                  <LabeledValue label="TYPE">
+                    <p>{!battle.totalCargo ? "INVASION" : "RAID"}</p>
                   </LabeledValue>
+                  <div className="text-right">
+                    <LabeledValue label="TIMESTAMP">
+                      <div className="flex gap-1">
+                        <p>{new Date(Number(battle.timestamp * 1000n)).toLocaleDateString()}</p>
+                      </div>
+                    </LabeledValue>
+                  </div>
                 </div>
               </Navigator.NavButton>
             ))}

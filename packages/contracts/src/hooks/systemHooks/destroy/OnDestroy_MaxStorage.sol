@@ -5,7 +5,7 @@ import { addressToEntity } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
-
+import { IsActive } from "codegen/index.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
@@ -39,7 +39,7 @@ contract OnDestroy_MaxStorage is SystemHook {
     bytes32 playerEntity = addressToEntity(msgSender);
 
     // Clear maximum storage increases for the building
-    LibStorage.clearMaxStorageIncrease(buildingEntity);
+    if (IsActive.get(buildingEntity)) LibStorage.clearMaxStorageIncrease(buildingEntity);
   }
 
   /**

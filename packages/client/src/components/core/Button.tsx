@@ -7,6 +7,7 @@ import { Tooltip } from "./Tooltip";
 export const Button: React.FC<{
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
   onClick?: (e?: React.MouseEvent | undefined) => void;
   disabled?: boolean;
   selected?: boolean;
@@ -18,6 +19,7 @@ export const Button: React.FC<{
 }> = ({
   children,
   className,
+  style,
   onClick,
   disabled,
   selected = false,
@@ -32,6 +34,7 @@ export const Button: React.FC<{
   return (
     <Tooltip text={tooltip} direction={tooltipDirection}>
       <button
+        style={style}
         onClick={(e) => {
           !mute && api?.audio.play(clickSound, "ui");
           onClick && onClick(e);
@@ -40,7 +43,7 @@ export const Button: React.FC<{
         onPointerEnter={() => {
           !mute && api?.audio.play(AudioKeys.Click3, "ui");
         }}
-        className={`btn join-item inline pointer-events-auto font-bold outline-none ${className} ${
+        className={`btn join-item inline pointer-events-auto font-bold outline-none h-fit ${className} ${
           disabled ? "opacity-80" : ""
         } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
       >

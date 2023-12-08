@@ -25,7 +25,7 @@ export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
 
   const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = getUpgradeInfo(type, playerEntity);
 
-  const hasEnough = useHasEnoughResources(recipe, playerEntity);
+  const hasEnough = useHasEnoughResources(recipe);
   const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && !isResearched;
 
   let error = "";
@@ -67,7 +67,6 @@ export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
               return (
                 <ResourceIconTooltip
                   key={resource.id}
-                  playerEntity={playerEntity}
                   image={resourceImage}
                   resource={resource.id}
                   name={resourceName}

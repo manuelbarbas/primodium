@@ -2,8 +2,8 @@ import { Hex } from "viem";
 import { config } from "../mud.config";
 import {
   encodeArray,
-  getResourceValues,
   getResourceValue,
+  getResourceValues,
   getUnitValues,
   idsToPrototypes,
   indexifyResourceArray,
@@ -348,7 +348,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_Blueprint: { value: getBlueprint(1, 1) },
       P_MaxLevel: { value: 5n },
-      P_RequiredTile: { value: MUDEnums.EResource.indexOf("Copper") },
+      P_RequiredTile: { value: MUDEnums.EResource.indexOf("Iron") },
     },
     levels: {
       1: {
@@ -382,7 +382,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_Blueprint: { value: getBlueprint(1, 1) },
       P_MaxLevel: { value: 5n },
-      P_RequiredTile: { value: MUDEnums.EResource.indexOf("Lithium") },
+      P_RequiredTile: { value: MUDEnums.EResource.indexOf("Iron") },
     },
     levels: {
       1: {
@@ -416,7 +416,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_Blueprint: { value: getBlueprint(1, 1) },
       P_MaxLevel: { value: 5n },
-      P_RequiredTile: { value: MUDEnums.EResource.indexOf("Sulfur") },
+      P_RequiredTile: { value: MUDEnums.EResource.indexOf("Iron") },
     },
     levels: {
       1: {
@@ -1537,18 +1537,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_ConsumesResource: { value: EResource.R_Iridium },
     },
   },
-  Osmium: {
-    keys: [{ [EResource.Osmium]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 300n },
-    },
-  },
-  Tungsten: {
-    keys: [{ [EResource.Tungsten]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 400n },
-    },
-  },
   Kimberlite: {
     keys: [{ [EResource.Kimberlite]: "uint8" }],
     tables: {
@@ -1563,18 +1551,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_ScoreMultiplier: { value: 1500n },
       P_RawResource: { value: EResource.R_Platinum },
       P_ConsumesResource: { value: EResource.R_Platinum },
-    },
-  },
-  Uraninite: {
-    keys: [{ [EResource.Uraninite]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 2000n },
-    },
-  },
-  Bolutite: {
-    keys: [{ [EResource.Bolutite]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 2500n },
     },
   },
   IronPlate: {

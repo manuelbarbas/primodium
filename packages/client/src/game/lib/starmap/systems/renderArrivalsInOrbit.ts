@@ -35,12 +35,33 @@ export const renderEntityOrbitingArrivals = (rockEntity: Entity, playerEntity: E
   const objIndexSuffix = "_spacerockOrbits";
   const { tileWidth, tileHeight } = scene.tilemap;
   const allArrivals = getAllOrbitingArrivals(rockEntity, playerEntity);
-  console.log("allArrivals", allArrivals);
   const position = components.Position.get(rockEntity);
   scene.objectPool.removeGroup(rockEntity + objIndexSuffix);
   if (!position || allArrivals.length == 0) return;
 
   const destinationPixelCoord = tileCoordToPixelCoord({ x: position.x, y: -position.y }, tileWidth, tileHeight);
+
+  scene.objectPool.removeGroup(rockEntity + objIndexSuffix);
+  const arrival = components.Arrival.getEntity(rockEntity);
+
+  if (!arrival) return;
+
+  //don't render if arrival is in transit
+  const now = components.Time.get()?.value ?? 0n;
+  if (arrival.arrivalTime >= now) return;
+
+  //render personal pirate only
+  if (
+    components.PirateAsteroid.has(arrival.destination) &&
+    hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(arrival.destination)?.value
+  )
+    return;
+
+  const destination = components.Position.get(arrival.destination);
+
+  if (!destination) return;
+
+  // const destinationPixelCoord = tileCoordToPixelCoord({ x: destination.x, y: -destination.y }, tileWidth, tileHeight);
 
   const arrivalOrbit = scene.objectPool.getGroup(rockEntity + objIndexSuffix);
 
@@ -72,6 +93,7 @@ export const renderEntityOrbitingArrivals = (rockEntity: Entity, playerEntity: E
     ]);
   });
 };
+
 export const renderArrivalsInOrbit = (scene: Scene, mud: SetupResult) => {
   const playerEntity = mud.network.playerEntity;
   const gameWorld = namespaceWorld(world, "game");
