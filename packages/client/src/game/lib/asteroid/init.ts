@@ -16,8 +16,6 @@ export const initAsteroidScene = async (game: Game, mud: SetupResult) => {
   const scene = await game.sceneManager.addScene(asteroidSceneConfig, true);
   const audio = createAudioApi(scene);
 
-  scene.camera.phaserCamera.setRoundPixels(false);
-
   const tileManager = await setupTileManager(scene.tilemap);
   tileManager?.renderInitialChunks();
   tileManager?.startChunkRenderer();
