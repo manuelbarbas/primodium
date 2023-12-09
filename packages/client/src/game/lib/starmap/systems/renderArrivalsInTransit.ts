@@ -66,6 +66,7 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
         thickness = Math.min(10, thickness);
 
         trajectory.removeComponent(`${entity}-trajectoryline`);
+
         trajectory.setComponent(
           Line(destinationPixelCoord, {
             id: `${entity}-trajectoryline`,
