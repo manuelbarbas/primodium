@@ -48,10 +48,10 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       SetValue({
         originX: 0.5,
         originY: 0.5,
-        scale: 1.5,
+        scale: 1,
       }),
       Tween(scene, {
-        scale: { from: 1.5 - getRandomRange(0, 0.05), to: 1.5 + getRandomRange(0, 0.05) },
+        scale: { from: 1 - getRandomRange(0, 0.05), to: 1 + getRandomRange(0, 0.05) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
         duration: 5000, // Duration of one wobble
