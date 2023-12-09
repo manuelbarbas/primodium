@@ -96,7 +96,8 @@ const ClaimObjectiveButton: React.FC<{
 
 const Objective: React.FC<{
   objective: Entity;
-}> = ({ objective }) => {
+  highlight?: boolean;
+}> = ({ objective, highlight = false }) => {
   const blockNumber = BlockNumber.use()?.value;
   const playerEntity = Account.use()?.value ?? singletonEntity;
   const objectiveName = useMemo(() => {
@@ -122,7 +123,7 @@ const Objective: React.FC<{
   if (playerEntity === singletonEntity) return <></>;
 
   return (
-    <SecondaryCard className="text-xs w-full flex flex-col justify-between">
+    <SecondaryCard className={`text-xs w-full flex flex-col justify-between ${highlight ? "ring ring-warning" : ""}`}>
       <div>
         <div className="grid grid-cols-10">
           <div className="flex items-center col-span-1">
@@ -216,7 +217,7 @@ const Objective: React.FC<{
   );
 };
 
-const UnclaimedObjective: React.FC = () => {
+const UnclaimedObjective: React.FC<{ highlight?: Entity }> = ({ highlight }) => {
   const player = Account.use()?.value ?? singletonEntity;
   const blockNumber = BlockNumber.use()?.value;
   const objectives = Object.values(ObjectiveEntityLookup);
@@ -242,7 +243,7 @@ const UnclaimedObjective: React.FC = () => {
         </SecondaryCard>
       ) : (
         filteredObjectives.map((objective, i) => {
-          return <Objective key={i} objective={objective} />;
+          return <Objective key={i} objective={objective} highlight={objective === highlight} />;
         })
       )}
     </div>
@@ -274,7 +275,7 @@ const ClaimedObjective: React.FC = () => {
   );
 };
 
-export const Objectives: React.FC = () => {
+export const Objectives: React.FC<{ highlight?: Entity }> = ({ highlight }) => {
   return (
     <Tabs className="flex flex-col items-center w-full h-full">
       <Join className="border-secondary">
@@ -287,7 +288,7 @@ export const Objectives: React.FC = () => {
       </Join>
 
       <Tabs.Pane className="border-none w-full h-full" index={0}>
-        <UnclaimedObjective />
+        <UnclaimedObjective highlight={highlight} />
       </Tabs.Pane>
       <Tabs.Pane className="border-none w-full h-full" index={1}>
         <ClaimedObjective />

@@ -93,7 +93,7 @@ export const OwnedMotherlodes: React.FC = () => {
           <p className="opacity-50 uppercase">you control no MOTHERLODES</p>
         </SecondaryCard>
       )}
-      <div className="grid grid-cols-3 gap-1">
+      <div className="grid grid-cols-2 gap-1">
         {motherlodes.map((entity) => {
           return <Motherlode key={entity} motherlodeId={entity} />;
         })}
