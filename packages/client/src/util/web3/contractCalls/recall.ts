@@ -8,7 +8,9 @@ import { decodeEntity, hashEntities } from "src/util/encode";
 import { Hex } from "viem";
 import { parseReceipt } from "../../analytics/parseReceipt";
 
-export const recallArrival = async (rockEntity: Entity, arrivalEntity: Entity, network: SetupNetworkResult) => {
+export const recallArrival = async (arrivalEntity: Entity, network: SetupNetworkResult) => {
+  const rockEntity = components.Arrival.getEntity(arrivalEntity)?.destination;
+  if (!rockEntity) throw new Error("Arrival has no destination");
   const { key } = decodeEntity(components.MapItemArrivals.metadata.keySchema, arrivalEntity);
 
   await execute(

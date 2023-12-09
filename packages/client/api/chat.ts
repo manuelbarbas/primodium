@@ -37,20 +37,80 @@ export function trim<TValue extends ByteArray | Hex>(
   return data as TrimReturnType<TValue>;
 }
 
+type PadOptions = {
+  dir?: "left" | "right";
+  size?: number | null;
+};
+
+export type PadReturnType<TValue extends ByteArray | Hex> = TValue extends Hex ? Hex : ByteArray;
+
+export function pad<TValue extends ByteArray | Hex>(
+  hexOrBytes: TValue,
+  { dir, size = 32 }: PadOptions = {}
+): PadReturnType<TValue> {
+  if (typeof hexOrBytes === "string") return padHex(hexOrBytes, { dir, size }) as PadReturnType<TValue>;
+  return padBytes(hexOrBytes, { dir, size }) as PadReturnType<TValue>;
+}
+
+export function padHex(hex_: Hex, { dir, size = 32 }: PadOptions = {}) {
+  if (size === null) return hex_;
+  const hex = hex_.replace("0x", "");
+  if (hex.length > size * 2)
+    throw new Error(
+      JSON.stringify({
+        size: Math.ceil(hex.length / 2),
+        targetSize: size,
+        type: "hex",
+      })
+    );
+
+  return `0x${hex[dir === "right" ? "padEnd" : "padStart"](size * 2, "0")}` as Hex;
+}
+
+export function padBytes(bytes: ByteArray, { dir, size = 32 }: PadOptions = {}) {
+  if (size === null) return bytes;
+  if (bytes.length > size)
+    throw new Error(
+      JSON.stringify({
+        size: bytes.length,
+        targetSize: size,
+        type: "bytes",
+      })
+    );
+  const paddedBytes = new Uint8Array(size);
+  for (let i = 0; i < size; i++) {
+    const padEnd = dir === "right";
+    paddedBytes[padEnd ? i : size - i - 1] = bytes[padEnd ? i : bytes.length - i - 1];
+  }
+  return paddedBytes;
+}
+
+export function isHex(value: unknown, { strict = true }: { strict?: boolean } = {}): value is Hex {
+  if (!value) return false;
+  if (typeof value !== "string") return false;
+  return strict ? /^0x[0-9a-fA-F]*$/.test(value) : value.startsWith("0x");
+}
+
+export function size(value: Hex | ByteArray) {
+  if (isHex(value, { strict: false })) return Math.ceil((value.length - 2) / 2);
+  return value.length;
+}
+
+// The following three functions match their respective implementations in packages/client/src/util/common.ts
+// except implemented with ethers.js instead of viem due to issue #686
+export const normalizeAddress = (address: Hex): Hex => {
+  return pad(trim(address), { size: 20 });
+};
+
 export const entityToAddress = (entity: Entity | string, shorten = false): Hex => {
-  const trimmedAddress = trim(entity as Hex);
-
-  const checksumAddress = ethers.utils.isAddress(trimmedAddress)
-    ? ethers.utils.getAddress(trimmedAddress)
-    : trimmedAddress;
-
+  const normalizedAddress = normalizeAddress(entity as Hex);
+  const checksumAddress = ethers.utils.getAddress(normalizedAddress);
   return shorten ? shortenAddress(checksumAddress as Hex) : (checksumAddress as Hex);
 };
 
 export const isPlayer = (entity: Entity) => {
-  const trimmedAddress = trim(entity as Hex);
-
-  return ethers.utils.isAddress(trimmedAddress);
+  const addressSize = size(trim(entity as Hex));
+  return addressSize <= 20;
 };
 
 export const shortenAddress = (address: Hex): Hex => {

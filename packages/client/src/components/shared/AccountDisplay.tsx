@@ -22,8 +22,6 @@ export const AccountDisplay: React.FC<{
   const myHomeAsteroid = components.Home.use(network.playerEntity)?.asteroid;
   const { transitionToScene } = primodium.api().scene;
   const { allianceName, loading, address, linkedAddress } = useAccount(playerEntity);
-  const relationship = getRockRelationship(playerEntity, homeAsteroid as Entity);
-  console.log("relationship", relationship);
   const playerColor = RockRelationshipColors[getRockRelationship(playerEntity, myHomeAsteroid as Entity)];
 
   return (
