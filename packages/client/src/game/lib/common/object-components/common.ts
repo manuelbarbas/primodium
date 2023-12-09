@@ -148,8 +148,11 @@ export const OnComponentSystem = <T extends keyof GameObjectTypes, S extends Sch
 
             if (!fnMap) return;
 
+            //prevent infinite loops if functions themselves modify fn list
+            const staticFnList = Array.from(fnMap.values());
+
             //run all functions for component
-            for (const fn of fnMap.values()) {
+            for (const fn of staticFnList) {
               fn(update);
             }
           },
@@ -192,8 +195,11 @@ export const OnEnterSystem = <T extends keyof GameObjectTypes>(
 
             if (!fnMap) return;
 
+            //prevent infinite loops if functions themselves modify fn list
+            const staticFnList = Array.from(fnMap.values());
+
             //run all functions for component
-            for (const fn of fnMap.values()) {
+            for (const fn of staticFnList) {
               fn(update);
             }
           },
@@ -232,8 +238,11 @@ export const OnUpdateSystem = <T extends keyof GameObjectTypes>(
 
             if (!fnMap) return;
 
+            //prevent infinite loops if functions themselves modify fn list
+            const staticFnList = Array.from(fnMap.values());
+
             //run all functions for component
-            for (const fn of fnMap.values()) {
+            for (const fn of staticFnList) {
               fn(update);
             }
           },
@@ -273,8 +282,11 @@ export const OnExitSystem = <T extends keyof GameObjectTypes>(
 
             if (!fnMap) return;
 
+            //prevent infinite loops if functions themselves modify fn list
+            const staticFnList = Array.from(fnMap.values());
+
             //run all functions for component
-            for (const fn of fnMap.values()) {
+            for (const fn of staticFnList) {
               fn(update);
             }
           },
@@ -317,7 +329,10 @@ export const OnRxjsSystem = <T, GO extends keyof GameObjectTypes>(
 
           if (!fnMap) return;
 
-          for (const fn of fnMap.values()) {
+          //prevent infinite loops if functions themselves modify fn list
+          const staticFnList = Array.from(fnMap.values());
+
+          for (const fn of staticFnList) {
             fn(value);
           }
         });
@@ -325,6 +340,9 @@ export const OnRxjsSystem = <T, GO extends keyof GameObjectTypes>(
       observableMap.get(observable$)?.set(id, (update) => {
         callback(gameObject, update as T, id);
       });
+    },
+    exit: () => {
+      observableMap.get(observable$)?.delete(id);
     },
   };
 };

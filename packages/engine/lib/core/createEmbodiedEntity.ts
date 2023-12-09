@@ -139,7 +139,7 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
       if (isSprite(gameObject, type)) gameObject.stop();
       removeAllTweens(gameObject);
     }
-    gameObject.setDepth(10);
+    gameObject.setDepth(0);
     gameObject.cameraFilter = cameraFilter.current;
     gameObject.resetPipeline(true);
     gameObject.setScale(1, 1);
