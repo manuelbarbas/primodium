@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { Hex, getAddress, size, pad, trim } from "viem";
+import { Hex, getAddress, pad, size, trim } from "viem";
 import { BlockIdToKey } from "./constants";
 
 export function hasCommonElement<T>(setA: Set<T>, setB: Set<T>) {
@@ -117,10 +117,15 @@ export function reverseRecord<T extends PropertyKey, U extends PropertyKey>(inpu
   return Object.fromEntries(Object.entries(input).map(([key, value]) => [value, key])) as Record<U, T>;
 }
 
+export const normalizeAddress = (address: Hex): Hex => {
+  // Assumes that the address is already a valid address with length at most 20 bytes
+  return pad(trim(address), { size: 20 });
+};
+
 export const entityToAddress = (entity: Entity | string, shorten = false): Hex => {
   // Cannot use trim() directly because a valid address might start with 0x0000...
   // After trimming the address, we need to pad it back to 20 bytes using viem pad()
-  const normalizedAddress = pad(trim(entity as Hex), { size: 20 });
+  const normalizedAddress = normalizeAddress(entity as Hex);
 
   // This function should throw an error if entity is not a valid address
   const checksumAddress = getAddress(normalizedAddress);
@@ -130,5 +135,5 @@ export const entityToAddress = (entity: Entity | string, shorten = false): Hex =
 
 export const isPlayer = (entity: Entity) => {
   const addressSize = size(trim(entity as Hex));
-  return addressSize === 20;
+  return addressSize <= 20;
 };
