@@ -154,10 +154,10 @@ const getOutlineSprite = (playerEntity: Entity, rock: Entity, size: ESize) => {
 const getSpriteScale = (size: ESize) => {
   switch (size) {
     case ESize.Small:
-      return 0.9;
+      return 0.7;
     case ESize.Medium:
-      return 0.95;
+      return 0.75;
     case ESize.Large:
-      return 1;
+      return 0.8;
   }
 };
