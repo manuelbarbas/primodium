@@ -1800,7 +1800,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         units: encodeArray(["MinutemanMarine"]),
         unitAmounts: [10n],
         resources: indexifyResourceArray(["Copper", "Iron", "IronPlate"]),
-        resourceAmounts: [50000n, 50000n, 50000n],
+        resourceAmounts: [75000n, 75000n, 75000n],
       },
       P_ResourceReward: getResourceValues({ IronPlate: 50000 }),
     },
