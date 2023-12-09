@@ -10,10 +10,11 @@ import { hashKeyEntity } from "src/util/encode";
 import { ObjectPosition, Tween } from "../../common/object-components/common";
 import { Circle } from "../../common/object-components/graphics";
 
+const orbitRadius = 64;
 function calculatePosition(angleInDegrees: number, origin: { x: number; y: number }): { x: number; y: number } {
   const radians = (angleInDegrees * Math.PI) / 180; // Convert angle to radians
-  const x = 50 * Math.cos(radians); // Calculate x coordinate
-  const y = 50 * Math.sin(radians); // Calculate y coordinate
+  const x = orbitRadius * Math.cos(radians); // Calculate x coordinate
+  const y = orbitRadius * Math.sin(radians); // Calculate y coordinate
 
   return { x: x + origin.x, y: y + origin.y };
 }
@@ -51,7 +52,7 @@ export const renderEntityOrbitingArrivals = (rockEntity: Entity, playerEntity: E
 
   arrivalOrbit.add("Graphics").setComponents([
     ObjectPosition(destinationPixelCoord, DepthLayers.Path),
-    Circle(64, {
+    Circle(orbitRadius, {
       color: 0x363636,
       borderThickness: 1,
       alpha: 0,
