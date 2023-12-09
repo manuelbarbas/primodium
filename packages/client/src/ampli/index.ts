@@ -1598,11 +1598,90 @@ export interface SystemSpawnProperties {
   transactionValid: boolean;
 }
 
+export interface SystemToggleBuildingProperties {
+  /**
+   * Location of an asteroid represented as the \[z\] element in the Position component. This is stored as a single string because the asteroid location is greater than the int32 number limit and has type BigNumber in the client.
+   */
+  asteroidCoord: string;
+  /**
+   * Initial active status of a building fetched before a system is executed.
+   */
+  buildingActiveFrom: boolean;
+  /**
+   * Name of a building in plaintext, as returned by `BlockIdToKey` in `constants.ts` when passing in an EntityID.
+   */
+  buildingType: string;
+  /**
+   * Most systems take a coordinate as a parameter and read the specific building and related metadata during contract execution. Even though such metadata (eg building type and level) aren't passed into the system, we fetch them manually and pass them into Amplitude properties for easier analysis.
+   *
+   * Stored in the format of \[x, y\]. The \[z\] element that represents the asteroid location is stored in `asteroidCoord`.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Min Items | 2 |
+   * | Max Items | 2 |
+   * | Item Type | number |
+   *
+   * @minItems 2
+   * @maxItems 2
+   */
+  coord: [number, number];
+  /**
+   * Current level of the building being upgraded. If there is a duplicate event, then the user failed to upgrade the building in the previous action. Also refers to the level of building expansion on an asteroid.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | number |
+   */
+  currLevel: number;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
 export interface SystemTrainUnitsProperties {
   /**
-   * Name of a building. On the client, this is fetched via its EntityID with `BlockIdToKey`.
+   * Name of a building in plaintext, as returned by `BlockIdToKey` in `constants.ts` when passing in an EntityID.
+   *
+   * Note that this property is suffixed `Name` instead of `Type` for future provisions for custom names per building. This is otherwise identical to `buildingType` but should only be used in `system.TrainUnits` thus far.
    */
-  buildingName?: string;
+  buildingName: string;
   /**
    * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
    */
@@ -1651,7 +1730,10 @@ export interface SystemTrainUnitsProperties {
    */
   unitCount: number;
   /**
-   * Name of a unit. On the client, this is fetched via its EntityID with `BlockIdToKey`.
+   * Name of a unit in plaintext, as returned by `BlockIdToKey` in `constants.ts` when passing in an EntityID.
+   *
+   *
+   * Note that this property is suffixed `Name` instead of `Type` for future provisions for custom names per unit.
    */
   unitName: string;
 }
@@ -1845,7 +1927,10 @@ export interface SystemUpgradeUnitProperties {
    */
   transactionValid: boolean;
   /**
-   * Name of a unit. On the client, this is fetched via its EntityID with `BlockIdToKey`.
+   * Name of a unit in plaintext, as returned by `BlockIdToKey` in `constants.ts` when passing in an EntityID.
+   *
+   *
+   * Note that this property is suffixed `Name` instead of `Type` for future provisions for custom names per unit.
    */
   unitName: string;
 }
@@ -2070,6 +2155,14 @@ export class SystemSpawn implements BaseEvent {
   event_type = "system.Spawn";
 
   constructor(public event_properties: SystemSpawnProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemToggleBuilding implements BaseEvent {
+  event_type = "system.ToggleBuilding";
+
+  constructor(public event_properties: SystemToggleBuildingProperties) {
     this.event_properties = event_properties;
   }
 }
@@ -2689,6 +2782,23 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SystemSpawn(properties), options);
+  }
+
+  /**
+   * system.ToggleBuilding
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.ToggleBuilding)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. asteroidCoord)
+   * @param options Amplitude event options.
+   */
+  systemToggleBuilding(
+    properties: SystemToggleBuildingProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemToggleBuilding(properties), options);
   }
 
   /**
