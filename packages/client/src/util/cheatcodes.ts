@@ -7,9 +7,9 @@ import { components } from "src/network/components";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 import { SetupResult } from "src/network/types";
 import { encodeEntity } from "src/util/encode";
-import { Hex, createWalletClient, fallback, getContract, http, padHex, trim, webSocket } from "viem";
+import { Hex, createWalletClient, fallback, getContract, http, padHex, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
-import { getBlockTypeName } from "./common";
+import { getBlockTypeName, normalizeAddress } from "./common";
 import { EntityType, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
 
 const resources: Record<string, Entity> = {
@@ -231,7 +231,7 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
         if (!player) throw new Error("No player found");
         await mud.contractCalls.setComponentValue(
           mud.components.WETHBalance,
-          encodeEntity({ entity: "address" }, { entity: trim(player) as Hex }),
+          encodeEntity({ entity: "address" }, { entity: normalizeAddress(player) as Hex }),
           {
             value: BigInt(2 * 1e18),
           }
