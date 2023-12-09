@@ -13,8 +13,8 @@ export const starmapSceneConfig: SceneConfig = {
   },
   cullingChunkSize: 128,
   tilemap: {
-    tileWidth: 12,
-    tileHeight: 12,
+    tileWidth: 24,
+    tileHeight: 24,
     chunkSize: 128,
   },
 };

@@ -50,9 +50,10 @@ export const renderArrivalsInOrbit = (scene: Scene, mud: SetupResult) => {
 
     const arrivalOrbit = scene.objectPool.getGroup(entity + objIndexSuffix);
 
+    const circleRadius = 64;
     arrivalOrbit.add("Graphics").setComponents([
       ObjectPosition(destinationPixelCoord, DepthLayers.Marker),
-      Circle(50, {
+      Circle(circleRadius, {
         color: 0x363636,
         borderThickness: 1,
         alpha: 0,
@@ -62,7 +63,7 @@ export const renderArrivalsInOrbit = (scene: Scene, mud: SetupResult) => {
         borderThickness: 1,
         alpha: 0.75,
         position: {
-          x: destinationPixelCoord.x + 50,
+          x: destinationPixelCoord.x + circleRadius,
           y: destinationPixelCoord.y,
         },
       }),
