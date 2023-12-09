@@ -40,23 +40,6 @@ export const renderEntityOrbitingArrivals = (rockEntity: Entity, playerEntity: E
   if (!position || allArrivals.length == 0) return;
 
   scene.objectPool.removeGroup(rockEntity + objIndexSuffix);
-  // const arrival = components.Arrival.getEntity(rockEntity);
-  // console.log("here");
-
-  // if (!arrival) return;
-
-  // //don't render if arrival is in transit
-  // const now = components.Time.get()?.value ?? 0n;
-  // if (arrival.arrivalTime >= now) return;
-
-  // console.log("here");
-
-  //render personal pirate only
-  // if (
-  //   components.PirateAsteroid.has(arrival.destination) &&
-  //   hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(arrival.destination)?.value
-  // )
-  //   return;
 
   const destination = components.Position.get(rockEntity);
 
@@ -101,9 +84,9 @@ export const renderArrivalsInOrbit = (scene: Scene, mud: SetupResult) => {
 
   defineComponentSystem(gameWorld, components.Arrival, (update) => {
     if (update.value[0]) {
-      renderEntityOrbitingArrivals(update.value[0].destination, playerEntity, scene);
+      renderEntityOrbitingArrivals(update.value[0].destination as Entity, playerEntity, scene);
     } else if (update.value[1]) {
-      renderEntityOrbitingArrivals(update.value[1].destination, playerEntity, scene);
+      renderEntityOrbitingArrivals(update.value[1].destination as Entity, playerEntity, scene);
     }
   });
 };

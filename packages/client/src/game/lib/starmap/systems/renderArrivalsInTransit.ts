@@ -18,10 +18,11 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
   const objIndexSuffix = "_arrival";
 
   const render = ({ entity }: ComponentUpdate) => {
-    scene.objectPool.removeGroup(entity + objIndexSuffix);
     const arrival = components.Arrival.getEntity(entity);
 
     if (!arrival) return;
+
+    scene.objectPool.removeGroup(entity + objIndexSuffix);
 
     //don't render if arrival is already in orbit
     const now = components.Time.get()?.value ?? 0n;
@@ -85,7 +86,7 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
         borderThickness: 1,
         alpha: 0.75,
       }),
-      OnComponentSystem(components.Time, (gameObject, update, systemId) => {
+      OnComponentSystem(components.Time, (gameObject, update) => {
         const now = update.value[0]?.value ?? 0n;
         const timeTraveled = now - arrival.sendTime;
         const totaltime = arrival.arrivalTime - arrival.sendTime;
@@ -93,17 +94,11 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
         const progress = Number(timeTraveled) / Number(totaltime);
 
         if (progress > 1) {
-          //remove trajectory
-          scene.objectPool.remove(trajectory.id);
-
-          //remove moving circle
-          fleetIcon.removeComponent("fleet");
-
-          //change to orbit render
+          //render orbit
           renderEntityOrbitingArrivals(arrival.destination, playerEntity, scene);
 
-          //remove system
-          fleetIcon.removeComponent(systemId);
+          //remove transit render
+          scene.objectPool.removeGroup(entity + objIndexSuffix);
 
           return;
         }
