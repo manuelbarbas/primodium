@@ -85,6 +85,17 @@ export function padBytes(bytes: ByteArray, { dir, size = 32 }: PadOptions = {}) 
   return paddedBytes;
 }
 
+export function isHex(value: unknown, { strict = true }: { strict?: boolean } = {}): value is Hex {
+  if (!value) return false;
+  if (typeof value !== "string") return false;
+  return strict ? /^0x[0-9a-fA-F]*$/.test(value) : value.startsWith("0x");
+}
+
+export function size(value: Hex | ByteArray) {
+  if (isHex(value, { strict: false })) return Math.ceil((value.length - 2) / 2);
+  return value.length;
+}
+
 // The following three functions match their respective implementations in packages/client/src/util/common.ts
 // except implemented with ethers.js instead of viem due to issue #686
 export const normalizeAddress = (address: Hex): Hex => {
@@ -98,8 +109,8 @@ export const entityToAddress = (entity: Entity | string, shorten = false): Hex =
 };
 
 export const isPlayer = (entity: Entity) => {
-  const normalizedAddress = normalizeAddress(entity as Hex);
-  return ethers.utils.isAddress(normalizedAddress);
+  const addressSize = size(trim(entity as Hex));
+  return addressSize <= 20;
 };
 
 export const shortenAddress = (address: Hex): Hex => {
