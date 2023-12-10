@@ -94,8 +94,13 @@ export enum ESendType {
 }
 
 export enum EObjectives {
-  UpgradeMainBase = 1,
+  BuildIronMine = 1,
+  BuildCopperMine,
+  BuildGarage,
+  BuildWorkshop,
   DefeatPirateBase1,
+
+  UpgradeMainBase,
   DefeatPirateBase2,
   DefeatPirateBase3,
   DefeatPirateBase4,
@@ -105,13 +110,9 @@ export enum EObjectives {
   DefeatPirateBase8,
   DefeatPirateBase9,
 
-  BuildIronMine,
-  BuildCopperMine,
   BuildLithiumMine,
   BuildSulfurMine,
   BuildIronPlateFactory,
-  BuildGarage,
-  BuildWorkshop,
   BuildHangar,
   BuildPVCellFactory,
   BuildSolarPanel,

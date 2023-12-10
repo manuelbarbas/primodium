@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 
-import { Account, BlockNumber } from "src/network/components/clientComponents";
+import { Account, Time } from "src/network/components/clientComponents";
 
 import { useMemo } from "react";
 import { useMud } from "src/hooks/useMud";
@@ -25,7 +25,7 @@ import {
   ResourceType,
   TransactionQueueType,
 } from "src/util/constants";
-import { hashEntities, toHex32 } from "src/util/encode";
+import { hashEntities } from "src/util/encode";
 import { getObjectiveDescription } from "src/util/objectiveDescriptions";
 import {
   getAllRequirements,
@@ -42,7 +42,7 @@ const ClaimObjectiveButton: React.FC<{
   objectiveEntity: Entity;
 }> = ({ objectiveEntity }) => {
   const network = useMud();
-  const blockNumber = BlockNumber.use()?.value;
+  const time = Time.use()?.value;
   const levelRequirement = comps.Level.use(objectiveEntity);
   const objectiveClaimedRequirement = comps.CompletedObjective.use(objectiveEntity);
 
@@ -65,7 +65,7 @@ const ClaimObjectiveButton: React.FC<{
     resourceRequirement,
     resourceRequirement,
     unitRequirement,
-    blockNumber,
+    time,
     objectiveEntity,
   ]);
 
@@ -96,9 +96,11 @@ const ClaimObjectiveButton: React.FC<{
 
 const Objective: React.FC<{
   objective: Entity;
-}> = ({ objective }) => {
-  const blockNumber = BlockNumber.use()?.value;
-  const playerEntity = Account.use()?.value ?? singletonEntity;
+  highlight?: boolean;
+}> = ({ objective, highlight = false }) => {
+  const time = Time.use()?.value;
+  const playerEntity = Account.use()?.value;
+  const spaceRock = comps.Home.use(playerEntity)?.asteroid as Entity | undefined;
   const objectiveName = useMemo(() => {
     if (!objective) return;
     return getBlockTypeName(objective);
@@ -109,20 +111,19 @@ const Objective: React.FC<{
   }, [objective]);
   const rewardRecipe = useMemo(() => {
     if (!objective) return;
-    if (objective == toHex32("DefeatPirateBase1")) console.log("rewards:", getRewards(objective));
     return getRewards(objective);
   }, [objective]);
 
   const requirements = useMemo(() => {
-    if (!objective) return;
+    if (!objective || !playerEntity) return;
     const reqs = getAllRequirements(objective, playerEntity);
     return reqs;
-  }, [objective, blockNumber, playerEntity]);
+  }, [objective, time, playerEntity]);
 
-  if (playerEntity === singletonEntity) return <></>;
+  if (!spaceRock || playerEntity === singletonEntity) return <></>;
 
   return (
-    <SecondaryCard className="text-xs w-full flex flex-col justify-between">
+    <SecondaryCard className={`text-xs w-full flex flex-col justify-between ${highlight ? "ring ring-warning" : ""}`}>
       <div>
         <div className="grid grid-cols-10">
           <div className="flex items-center col-span-1">
@@ -186,8 +187,7 @@ const Objective: React.FC<{
                     resourceCount,
                     resourcesToClaim,
                     resourceStorage: maxStorage,
-                  } = getFullResourceCount(resource.id, playerEntity);
-
+                  } = getFullResourceCount(resource.id, spaceRock);
                   canClaim = resourceCount + resourcesToClaim + resource.amount <= maxStorage;
                 }
                 return (
@@ -216,9 +216,9 @@ const Objective: React.FC<{
   );
 };
 
-const UnclaimedObjective: React.FC = () => {
+const UnclaimedObjective: React.FC<{ highlight?: Entity }> = ({ highlight }) => {
   const player = Account.use()?.value ?? singletonEntity;
-  const blockNumber = BlockNumber.use()?.value;
+  const time = Time.use()?.value;
   const objectives = Object.values(ObjectiveEntityLookup);
 
   const filteredObjectives = useMemo(() => {
@@ -230,7 +230,7 @@ const UnclaimedObjective: React.FC = () => {
 
       return isAvailable && !claimed;
     });
-  }, [blockNumber]);
+  }, [time]);
 
   if (player === singletonEntity) return <></>;
 
@@ -242,7 +242,7 @@ const UnclaimedObjective: React.FC = () => {
         </SecondaryCard>
       ) : (
         filteredObjectives.map((objective, i) => {
-          return <Objective key={i} objective={objective} />;
+          return <Objective key={i} objective={objective} highlight={objective === highlight} />;
         })
       )}
     </div>
@@ -274,7 +274,7 @@ const ClaimedObjective: React.FC = () => {
   );
 };
 
-export const Objectives: React.FC = () => {
+export const Objectives: React.FC<{ highlight?: Entity }> = ({ highlight }) => {
   return (
     <Tabs className="flex flex-col items-center w-full h-full">
       <Join className="border-secondary">
@@ -287,7 +287,7 @@ export const Objectives: React.FC = () => {
       </Join>
 
       <Tabs.Pane className="border-none w-full h-full" index={0}>
-        <UnclaimedObjective />
+        <UnclaimedObjective highlight={highlight} />
       </Tabs.Pane>
       <Tabs.Pane className="border-none w-full h-full" index={1}>
         <ClaimedObjective />

@@ -1,51 +1,53 @@
 import { ComponentValue, Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { EAllianceInviteMode, EAllianceRole } from "contracts/config/enums";
 import { useState } from "react";
-import { FixedSizeList as List } from "react-window";
 import {
   FaArrowDown,
+  FaArrowLeft,
   FaArrowUp,
+  FaCheck,
   FaCog,
+  FaCopy,
   FaEnvelope,
+  FaInfoCircle,
+  FaLock,
+  FaTimes,
   FaUserMinus,
   FaUserPlus,
-  FaInfoCircle,
-  FaArrowLeft,
-  FaCheck,
-  FaTimes,
-  FaCopy,
-  FaLock,
 } from "react-icons/fa";
+import { GiRank1, GiRank2, GiRank3 } from "react-icons/gi";
+import { FixedSizeList as List } from "react-window";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
-import { useMud } from "src/hooks";
-import { components } from "src/network/components";
-import { Tooltip } from "src/components/core/Tooltip";
+import { Checkbox } from "src/components/core/Checkbox";
+import { Join } from "src/components/core/Join";
 import { Navigator } from "src/components/core/Navigator";
 import { TextInput } from "src/components/core/TextInput";
-import { Checkbox } from "src/components/core/Checkbox";
+import { Tooltip } from "src/components/core/Tooltip";
+import { AccountDisplay } from "src/components/shared/AccountDisplay";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { useMud } from "src/hooks";
+import { components } from "src/network/components";
+import { getAllianceName } from "src/util/alliance";
+import { entityToColor } from "src/util/color";
+import { entityToAddress } from "src/util/common";
+import { TransactionQueueType } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
+import { isProfane } from "src/util/profanity";
 import {
+  acceptJoinRequest,
   createAlliance,
+  declineInvite,
+  grantRole,
+  invite,
   joinAlliance,
   kickPlayer,
   leaveAlliance,
-  grantRole,
-  requestToJoin,
   rejectJoinRequest,
-  acceptJoinRequest,
-  invite,
-  declineInvite,
+  requestToJoin,
 } from "src/util/web3/contractCalls/alliance";
-import { GiRank1, GiRank2, GiRank3 } from "react-icons/gi";
-import { Hex, padHex, isAddress } from "viem";
-import { entityToAddress } from "src/util/common";
-import { Join } from "src/components/core/Join";
-import { EAllianceInviteMode, EAllianceRole } from "contracts/config/enums";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
-import { hashEntities } from "src/util/encode";
-import { TransactionQueueType } from "src/util/constants";
-import { getAllianceName } from "src/util/alliance";
-import { isProfane } from "src/util/profanity";
+import { Hex, isAddress, padHex } from "viem";
 
 const ALLIANCE_TAG_SIZE = 6;
 
@@ -65,7 +67,10 @@ export const ScoreScreen = () => {
   const data = components.AllianceLeaderboard.use();
 
   return (
-    <Navigator.Screen title="score" className="flex flex-col items-center w-full h-full text-xs pointer-events-auto">
+    <Navigator.Screen
+      title="score"
+      className="flex flex-col items-center justify-between w-full h-full text-xs pointer-events-auto"
+    >
       {data && (
         <List height={285} width="100%" itemCount={data.alliances.length} itemSize={47} className="scrollbar">
           {({ index, style }) => {
@@ -84,8 +89,11 @@ export const ScoreScreen = () => {
           NO ALLIANCES
         </SecondaryCard>
       )}
-      <hr className="w-full border-t border-cyan-800 my-2" />
-      <InfoRow data={data} />
+      <div className="w-full">
+        <hr className="w-full border-t border-cyan-800 my-2" />
+
+        <InfoRow data={data} />
+      </div>
     </Navigator.Screen>
   );
 };
@@ -169,16 +177,17 @@ export const ManageScreen: React.FC = () => {
             </label>
             <div
               tabIndex={0}
-              className="card compact dropdown-content z-[1] shadow bg-base-100 rounded-box w-56 p-1 m-1 border border-secondary"
+              className="card compact dropdown-content z-[1] shadow bg-base-100 w-56 p-1 m-1 border border-secondary"
             >
               <span className="flex">
-                <GiRank1 size={18} className="text-yellow-500" />: Invite Members
+                <GiRank3 size={18} className="text-yellow-500" /> Promote/Demote Members
               </span>
               <span className="flex">
-                <GiRank2 size={18} className="text-yellow-500" />: Kick Members
+                <GiRank2 size={18} className="text-yellow-500" /> Kick Members
               </span>
+
               <span className="flex">
-                <GiRank3 size={18} className="text-yellow-500" />: Promote/Demote Members
+                <GiRank1 size={18} className="text-yellow-500" /> Invite Members
               </span>
             </div>
           </div>
@@ -192,27 +201,28 @@ export const ManageScreen: React.FC = () => {
             return (
               <SecondaryCard key={player.entity} className="border-b rounded-none flex-row justify-between">
                 {role === EAllianceRole.Owner && (
-                  <div className="flex items-center gap-1 font-bold text-warning">
+                  <div className="flex items-center gap-1 font-bold text-warning uppercase">
                     <GiRank3 size={18} className="text-yellow-500" />
-                    {entityToAddress(entity, true)} (Owner)
+                    <AccountDisplay player={entity} />{" "}
+                    <p className="bg-yellow-500 text-neutral px-2 rounded-sm text-xs">OWNER</p>
                   </div>
                 )}
                 {role === EAllianceRole.CanGrantRole && (
                   <div className="flex items-center gap-1 font-bold">
                     <GiRank3 size={18} className="text-yellow-500" />
-                    {entityToAddress(entity, true)}
+                    <AccountDisplay player={entity} />{" "}
                   </div>
                 )}
                 {role === EAllianceRole.CanKick && (
                   <div className="flex items-center gap-1 font-bold">
                     <GiRank2 size={18} className="text-yellow-500" />
-                    {entityToAddress(entity, true)}
+                    <AccountDisplay player={entity} />{" "}
                   </div>
                 )}
                 {role === EAllianceRole.CanInvite && (
                   <div className="flex items-center gap-1 font-bold">
                     <GiRank1 size={18} className="text-yellow-500" />
-                    {entityToAddress(entity, true)}
+                    <AccountDisplay player={entity} />{" "}
                   </div>
                 )}
                 {role === EAllianceRole.Member && (
@@ -269,11 +279,12 @@ export const ManageScreen: React.FC = () => {
       </div>
 
       <div className="flex gap-1">
-        <Navigator.BackButton className="btn-error border-none" onClick={() => leaveAlliance(network)}>
-          LEAVE ALLIANCE
-        </Navigator.BackButton>
         <Navigator.BackButton>
           <FaArrowLeft />
+        </Navigator.BackButton>
+
+        <Navigator.BackButton className="btn-error border-none" onClick={() => leaveAlliance(network)}>
+          LEAVE ALLIANCE
         </Navigator.BackButton>
       </div>
     </Navigator.Screen>
@@ -422,12 +433,12 @@ export const InvitesScreen: React.FC = () => {
       )}
 
       <div className="flex gap-1">
-        <Navigator.NavButton to="send" className="btn-secondary btn-sm border-none" disabled={full || !playerAlliance}>
-          SEND INVITE
-        </Navigator.NavButton>
         <Navigator.BackButton>
           <FaArrowLeft />
         </Navigator.BackButton>
+        <Navigator.NavButton to="send" className="btn-secondary btn-sm border-none" disabled={full || !playerAlliance}>
+          SEND INVITE
+        </Navigator.NavButton>
       </div>
       <div className="flex p-2 items-center">
         FRIEND CODE:
@@ -482,27 +493,40 @@ export const SendInviteScreen = () => {
   );
 };
 
-const LeaderboardItem = ({ index, score, entity }: { index: number; score: number; entity: Entity }) => {
+const LeaderboardItem = ({
+  index,
+  score,
+  entity,
+  className,
+}: {
+  index: number;
+  score: number;
+  entity: Entity;
+  className?: string;
+}) => {
   const network = useMud().network;
   const playerEntity = network.playerEntity;
   const allianceMode = components.Alliance.get(entity)?.inviteMode as EAllianceInviteMode | undefined;
-  const playerAlliance = components.PlayerAlliance.get(playerEntity)?.alliance;
+  const playerAlliance = components.PlayerAlliance.get(playerEntity)?.alliance as Entity;
   const inviteOnly = allianceMode === EAllianceInviteMode.Closed;
 
+  if (!playerAlliance) return null;
   return (
     <SecondaryCard
-      className={`grid grid-cols-7 w-full border rounded-md border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center h-10 ${
+      className={`grid grid-cols-7 w-full border border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center h-10 ${
         playerAlliance === entity ? "border-success" : ""
-      }`}
+      } ${className}`}
     >
       <div>{index + 1}.</div>
       <div className="col-span-6 flex justify-between items-center">
         <div className="flex gap-1 items-center">
           <FaLock className="text-warning opacity-75" />
-          {getAllianceName(entity, true)}
+          <p className="font-bold" style={{ color: entityToColor(playerAlliance) }}>
+            [{getAllianceName(entity, true)}]
+          </p>
         </div>
         <div className="flex items-center gap-1">
-          <p className="font-bold rounded-md bg-cyan-700 px-2 ">{score.toLocaleString()}</p>
+          <p className="font-bold bg-cyan-700 px-2 ">{score.toLocaleString()}</p>
           {!playerAlliance && (
             <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.JoinAlliance, entity)}>
               <Button
@@ -532,25 +556,22 @@ const InfoRow = ({ data }: { data?: ComponentValue<typeof components.AllianceLea
 
   if (!allianceEntity) return <SoloPlayerInfo />;
 
-  return <PlayerInfo rank={rank} allianceName={getAllianceName(allianceEntity, true)} score={Number(score)} />;
+  return <PlayerInfo rank={rank} alliance={allianceEntity} score={Number(score)} />;
 };
 
-const PlayerInfo = ({ rank, allianceName, score }: { rank: number; allianceName: string; score: number }) => {
+const PlayerInfo = ({ rank, score, alliance }: { rank: number; alliance: Entity; score: number }) => {
   const playerEntity = useMud().network.playerEntity;
   const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
 
   return (
-    <SecondaryCard className="w-full border border-slate-700 rounded-md p-2 bg-slate-800">
+    <SecondaryCard className="w-full border border-slate-700 p-2 bg-slate-800">
       {
         <div className="grid grid-cols-6 w-full items-center gap-2">
-          <div className="col-span-4 bg-neutral rounded-box p-1">
-            <b className="text-accent">{rank}.</b> <b className="text-error">[{allianceName}]</b>{" "}
-            {score.toLocaleString()}
-          </div>
-          <Navigator.NavButton to="manage" className="btn-xs flex bg-secondary">
+          <LeaderboardItem index={rank - 1} score={score} entity={alliance} className="col-span-4 h-full" />
+          <Navigator.NavButton to="manage" className="flex bg-secondary btn-sm">
             <FaCog />
           </Navigator.NavButton>
-          <Navigator.NavButton to="invites" className="btn-xs flex bg-secondary">
+          <Navigator.NavButton to="invites" className="flex bg-secondary btn-sm">
             <FaEnvelope /> <b>{invites.length}</b>
           </Navigator.NavButton>
         </div>
@@ -564,7 +585,7 @@ const SoloPlayerInfo = () => {
   const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
 
   return (
-    <SecondaryCard className="w-full border border-slate-700 rounded-md p-2 bg-slate-800">
+    <SecondaryCard className="w-full border border-slate-700 p-2 bg-slate-800">
       {
         <div className="grid grid-cols-6 w-full items-center gap-2">
           <Navigator.NavButton to="create" className="btn-xs btn-secondary col-span-5">

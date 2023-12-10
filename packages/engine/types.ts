@@ -89,7 +89,7 @@ export type EmbodiedEntity<Type extends keyof GameObjectTypes> = {
   removeComponent: (id: string, stop?: boolean) => void;
   spawn: () => void;
   reset: (stop?: boolean) => void;
-  despawn: () => void;
+  despawn: (force?: boolean) => void;
   position: Coord;
   id: string;
   setCameraFilter: (filter: number) => void;

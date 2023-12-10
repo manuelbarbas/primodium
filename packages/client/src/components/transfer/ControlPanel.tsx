@@ -8,13 +8,14 @@ import { execute } from "src/network/actions";
 import { components } from "src/network/components";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 import { world } from "src/network/world";
-import { Hex, createPublicClient, createWalletClient, custom, getContract, trim } from "viem";
+import { Hex, createPublicClient, createWalletClient, custom, getContract } from "viem";
 import { toAccount } from "viem/accounts";
 import { useAccount, useDisconnect } from "wagmi";
 import { Link } from "./Link";
 import { MintToken } from "./MintToken";
 import { PlayerBalances } from "./PlayerBalances";
 import { TransferToken } from "./TransferToken";
+import { normalizeAddress } from "src/util/common";
 
 type Tab = "transfer" | "mint" | "balances" | "link";
 
@@ -81,7 +82,7 @@ export function ControlPanel() {
     return { publicClient, walletClient, tokenContract };
   }, [networkConfig.chain, tokenAddress, externalAccount]);
 
-  const burnerAddress = trim(network.address);
+  const burnerAddress = normalizeAddress(network.address);
   const isAdmin = externalAddress === adminAddress;
 
   const onMint = async (address: string, amount: number) => {

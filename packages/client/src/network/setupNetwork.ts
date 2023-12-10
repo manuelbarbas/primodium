@@ -78,7 +78,7 @@ export async function setupNetwork(networkConfig: NetworkConfig) {
   }
 
   const clock = createClock(latestBlock$, {
-    period: 1000,
+    period: 1100,
     initialTime: 0,
     syncInterval: 10000,
   });
