@@ -7,8 +7,7 @@ import { BrandingLabel } from "../shared/BrandingLabel";
 // import { LoadingIndication } from "./LoadingIndication";
 import { Profile } from "./Profile";
 // import { PrototypeInfo } from "./PrototypeInfo";
-import { SelectAction } from "./SelectAction";
-import { BuildingMenu } from "./building-menu/BuildingMenu";
+import { useMud } from "src/hooks";
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
 import { Tabs } from "../core/Tabs";
@@ -16,6 +15,8 @@ import { Blueprints } from "./Blueprints";
 import { CurrentObjective } from "./CurrentObjective";
 import { Minimap } from "./Minimap";
 import { Score } from "./Score";
+import { SelectAction } from "./SelectAction";
+import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { Chat } from "./chat/Chat";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
 import { Settings } from "./modals/settings/Settings";
@@ -24,7 +25,6 @@ import { OwnedMotherlodes } from "./panes/OwnedMotherlodes";
 import { BattleReports } from "./panes/battle-reports/BattleReports";
 import { HostileFleets } from "./panes/hostile-fleets/HostileFleets";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
-import { useMud } from "src/hooks";
 
 export const GameHUD = () => {
   const playerEntity = useMud().network.playerEntity;
@@ -126,7 +126,7 @@ const BuildingSelection = () => {
           </Tabs.Pane>
         </Tabs>
       )}
-      {selectedBuilding && !action && (
+      {selectedBuilding && (!action || action === Action.MoveBuilding) && (
         <Tabs className="flex flex-row justify-center items-center gap-0">
           <Tabs.Button
             index={0}
