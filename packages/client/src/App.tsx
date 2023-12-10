@@ -52,7 +52,7 @@ export default function App() {
   if (networkLayer === undefined) {
     return (
       <div className="bg-black h-screen">
-        <div className="absolute w-full h-full star-background opacity-50" />
+        <div className="absolute w-full h-full star-background opacity-40" />
         <div className="relative">
           <div className="flex items-center justify-center h-screen">
             <div className="flex flex-col items-center gap-4">

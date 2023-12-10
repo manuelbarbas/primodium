@@ -47,6 +47,8 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
 
     const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entity);
 
+    const spriteScale = 0.8;
+
     const sharedComponents = [
       ObjectPosition({
         x: coord.x * tileWidth,
@@ -55,10 +57,10 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       SetValue({
         originX: 0.5,
         originY: 0.5,
-        scale: 1.5,
+        scale: spriteScale,
       }),
       Tween(scene, {
-        scale: { from: 1.5 - getRandomRange(0, 0.05), to: 1.5 + getRandomRange(0, 0.05) },
+        scale: { from: spriteScale - getRandomRange(0, 0.05), to: spriteScale + getRandomRange(0, 0.05) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
         duration: 5000, // Duration of one wobble
