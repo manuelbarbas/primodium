@@ -76,7 +76,7 @@ export const BlueprintInfo: React.FC<{
   return (
     <div className="items-center p-0 w-full z-100">
       <div className="flex flex-col items-center w-full mt-1 h-full text-xs relative gap-1 p-1 border border-secondary/25">
-        <div className="absolute top-0 w-full h-full topographic-background" />
+        <div className="absolute top-0 w-full h-full topographic-background opacity-25" />
         {!hasEnough && <p className="text-rose-400 animate-pulse text-xs text-center">NOT ENOUGH RESOURCES</p>}
         <RecipeDisplay building={building} />
 
@@ -115,7 +115,7 @@ export const BlueprintInfo: React.FC<{
             </div>
           )}
           {!!storageUpgrades?.length && (
-            <div className="flex flex-col items-center border border-secondary/50 bg-black/10">
+            <div className="flex flex-col items-center">
               <p className="text-left font-bold opacity-50 mt-1">STORAGE</p>
               <div className="flex flex-wrap gap-1 w-56 justify-center">
                 {storageUpgrades.map(({ resource, amount }) => (
