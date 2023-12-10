@@ -119,7 +119,6 @@ export enum EObjectives {
   DefeatPirateBase17,
 
   BuildLithiumMine,
-  BuildSulfurMine,
   BuildIronPlateFactory,
   BuildHangar,
   BuildPVCellFactory,
