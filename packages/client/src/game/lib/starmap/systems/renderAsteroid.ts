@@ -159,7 +159,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       }),
     ]);
 
-    const asteroidLabel = asteroidObjectGroup.add("Text");
+    const asteroidLabel = asteroidObjectGroup.add("BitmapText");
 
     asteroidLabel.setComponents([
       ...sharedComponents,
@@ -170,16 +170,21 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       }),
       ObjectText(shortenAddress(entityToAddress(ownedBy) as Hex), {
         id: "addressLabel",
-        backgroundColor: "#000000",
-        color: "cyan",
-        fontSize: Math.max(8, Math.min(12, 8 / scene.camera.phaserCamera.zoom)),
+        fontSize: Math.max(8, Math.min(24, 16 / scene.camera.phaserCamera.zoom)),
       }),
-      //@ts-ignore
-      OnRxjsSystem(scene.camera.zoom$.pipe(throttleTime(50)), (gameObject, zoom) => {
-        const size = Math.max(8, Math.min(12, 8 / zoom));
+      OnRxjsSystem(
+        // @ts-ignore
+        scene.camera.zoom$.pipe(throttleTime(10)),
+        (gameObject, zoom) => {
+          const mapOpen = components.MapOpen.get()?.value ?? false;
 
-        gameObject.setFontSize(size);
-      }),
+          if (!mapOpen) return;
+
+          const size = Math.max(8, Math.min(24, 16 / zoom));
+
+          gameObject.setFontSize(size);
+        }
+      ),
     ]);
   };
 

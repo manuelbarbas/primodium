@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { Hex, getAddress, pad, size, trim } from "viem";
+import { Hex, getAddress, isAddress, pad, size, trim } from "viem";
 import { BlockIdToKey } from "./constants";
 
 export function hasCommonElement<T>(setA: Set<T>, setB: Set<T>) {
@@ -134,6 +134,10 @@ export const entityToAddress = (entity: Entity | string, shorten = false): Hex =
 };
 
 export const isPlayer = (entity: Entity) => {
-  const addressSize = size(trim(entity as Hex));
+  const trimmedAddress = trim(entity as Hex);
+
+  if (!isAddress(trimmedAddress)) return false;
+
+  const addressSize = size(trimmedAddress);
   return addressSize <= 20;
 };
