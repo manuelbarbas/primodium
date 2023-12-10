@@ -1,9 +1,11 @@
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { FaLock } from "react-icons/fa";
+import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { Action, EntityType } from "src/util/constants";
+import { getRecipe } from "src/util/resource";
 import { Hex } from "viem";
 import { Button } from "../core/Button";
 import { SecondaryCard } from "../core/Card";
@@ -21,6 +23,7 @@ const Blueprint: React.FC<{
   const levelRequirement =
     components.P_RequiredBaseLevel.getWithKeys({ prototype: buildingType as Hex, level: 1n })?.value ?? 1n;
 
+  const hasEnough = useHasEnoughResources(getRecipe(buildingType, 1n));
   return (
     <Button
       disabled={mainbaseLevel < levelRequirement}
@@ -35,7 +38,9 @@ const Blueprint: React.FC<{
         components.SelectedBuilding.set({ value: buildingType });
         components.SelectedAction.set({ value: Action.PlaceBuilding });
       }}
-      className={`relative btn-ghost w-fit p-0 hover:bg-accent disabled:opacity-50 border border-secondary hover:z-10 ${
+      className={`relative btn-ghost w-fit p-0 ${
+        hasEnough ? "hover:bg-accent border-accent/50" : "hover:bg-error border-error/75"
+      } disabled:opacity-50 border border-secondary hover:z-10 ${
         selectedBuilding === buildingType ? " ring-2 ring-warning" : ""
       }`}
     >
@@ -55,17 +60,7 @@ export const Blueprints = () => {
   const selectedBuilding = components.SelectedBuilding.use()?.value;
 
   return (
-    <div>
-      <Button
-        disabled={!selectedBuilding}
-        className="w-full btn-sm btn-secondary mb-1"
-        onClick={() => {
-          components.SelectedBuilding.remove();
-          components.SelectedAction.remove();
-        }}
-      >
-        CLEAR SELECTION
-      </Button>
+    <>
       <div className="flex h-fit w-full gap-1 items-start">
         <SecondaryCard className="gap-2 items-center">
           <p className="text-xs opacity-50 font-bold pb-2">BASIC</p>
@@ -96,11 +91,6 @@ export const Blueprints = () => {
         </SecondaryCard>
       </div>
       {selectedBuilding && <BlueprintInfo building={selectedBuilding} />}
-      {!selectedBuilding && (
-        <SecondaryCard className="flex flex-col items-center justify-center gap-3 pt-2 mt-1 w-full text-xs h-16 font-bold opacity-25 topographic-background">
-          BLUEPRINT DETAILS
-        </SecondaryCard>
-      )}
-    </div>
+    </>
   );
 };
