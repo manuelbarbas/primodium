@@ -1,4 +1,5 @@
 import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import React, { useMemo } from "react";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
@@ -20,7 +21,7 @@ export const RecipeDisplay: React.FC<{
   const spaceRock = components.Position.use(building)?.parent as Entity | undefined;
 
   return (
-    <SecondaryCard className="items-center gap-1 w-full border-error/50 bg-transparent">
+    <SecondaryCard className="items-center gap-1 w-full border-error/50 bg-transparent p-1">
       <p className="font-bold absolute opacity-75 left-0 top-1/2 -translate-y-1/2 text-error text-sm ml-1">-</p>
       <div className="flex flex-wrap justify-center items-center gap-1 w-56">
         {recipe.length == 0 ? (
@@ -62,29 +63,24 @@ export const BlueprintInfo: React.FC<{
   const production = useMemo(() => transformProductionData(rawProduction), [rawProduction]);
 
   const unitProduction = components.P_UnitProdTypes.useWithKeys({ prototype: building as Hex, level: 1n });
-  const storageUpgrades = useMemo(() => getBuildingLevelStorageUpgrades(building, 1n), [building]);
+  const storageUpgrades = useMemo(
+    () => (building ? getBuildingLevelStorageUpgrades(building, 1n) : undefined),
+    [building]
+  );
 
-  const hasEnough = useHasEnoughResources(getRecipe(building, 1n));
+  const hasEnough = useHasEnoughResources(getRecipe(building ?? singletonEntity, 1n));
 
+  if (!building) return <div className="items-center p-0 w-full z-100 h-24">Select a building</div>;
   if (!getBlockTypeName(building)) return <></>;
 
   return (
-    <div className="absolute bottom-0 left-0 translate-y-full items-center p-0 w-full z-100">
+    <div className="items-center p-0 w-full z-100">
       <div className="flex flex-col items-center w-full mt-1 h-full text-xs relative gap-1 p-1 border border-secondary/25">
         <div className="absolute top-0 w-full h-full topographic-background" />
-        <Button
-          className="w-full btn-sm btn-primary mb-1"
-          onClick={() => {
-            components.SelectedBuilding.remove();
-            components.SelectedAction.remove();
-          }}
-        >
-          CLEAR SELECTION
-        </Button>
-
+        {!hasEnough && <p className="text-rose-400 animate-pulse text-xs text-center">NOT ENOUGH RESOURCES</p>}
         <RecipeDisplay building={building} />
 
-        <SecondaryCard className="flex flex-col items-center gap-1 w-full relative bg-transparent border-success/50">
+        <SecondaryCard className="flex flex-col items-center gap-1 w-full relative bg-transparent border-success/50 p-1">
           <p className="font-bold absolute opacity-75 left-0 top-1/2 -translate-y-1/2 text-success text-sm ml-1">+</p>
           {production.map(({ resource, amount, type }) => (
             <Badge key={`prototypeproduction-${resource}`} className="text-xs gap-2 border border-secondary/75">
@@ -118,7 +114,7 @@ export const BlueprintInfo: React.FC<{
               ))}
             </div>
           )}
-          {!!storageUpgrades.length && (
+          {!!storageUpgrades?.length && (
             <div className="flex flex-col items-center border border-secondary/50 bg-black/10">
               <p className="text-left font-bold opacity-50 mt-1">STORAGE</p>
               <div className="flex flex-wrap gap-1 w-56 justify-center">
@@ -141,8 +137,18 @@ export const BlueprintInfo: React.FC<{
             </div>
           )}
         </SecondaryCard>
+        {
+          <Button
+            className="btn-xs w-full btn-warning"
+            onClick={() => {
+              components.SelectedBuilding.remove();
+              components.SelectedAction.remove();
+            }}
+          >
+            CLEAR
+          </Button>
+        }
       </div>
-      {!hasEnough && <p className="text-rose-400 animate-pulse text-xs mt-1 text-center">NOT ENOUGH RESOURCES</p>}
     </div>
   );
 };

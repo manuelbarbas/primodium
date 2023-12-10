@@ -99,7 +99,7 @@ const BuildingSelection = () => {
   return (
     <>
       {(!selectedBuilding || action === Action.PlaceBuilding) && (
-        <Tabs className="flex flex-row justify-center items-center gap-0 ">
+        <Tabs className="flex flex-row justify-center items-center gap-0">
           <Tabs.Button
             index={0}
             togglable
@@ -121,7 +121,7 @@ const BuildingSelection = () => {
             </p>
           </Tabs.Button>
 
-          <Tabs.Pane index={0} className="rounded-r-none border-r-0 z-10 overflow-y-visible -translate-y-24">
+          <Tabs.Pane index={0} className="rounded-r-none border-r-0 z-10 overflow-y-visible relative">
             <Blueprints />
           </Tabs.Pane>
         </Tabs>

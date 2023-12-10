@@ -8,7 +8,7 @@ import { Action, EntityType } from "src/util/constants";
 import { getRecipe } from "src/util/resource";
 import { Hex } from "viem";
 import { Button } from "../core/Button";
-import { SecondaryCard } from "../core/Card";
+import { Card, SecondaryCard } from "../core/Card";
 import { BuildingImageFromType } from "../shared/BuildingImage";
 import { BlueprintInfo } from "./BlueprintInfo";
 
@@ -90,7 +90,11 @@ export const Blueprints = () => {
           <Blueprint tooltipDirection="left" buildingType={EntityType.Market} />
         </SecondaryCard>
       </div>
-      {selectedBuilding && <BlueprintInfo building={selectedBuilding} />}
+      {selectedBuilding && (
+        <Card className="absolute card top-0 left-0 -translate-y-full w-full -translate-x-[1px] border-r-0 py-1">
+          <BlueprintInfo building={selectedBuilding} />
+        </Card>
+      )}
     </>
   );
 };
