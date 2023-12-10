@@ -46,6 +46,8 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
     if (asteroidType !== ERock.Asteroid) return;
     const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entity);
 
+    const spriteScale = 0.7;
+
     const sharedComponents = [
       ObjectPosition({
         x: coord.x * tileWidth,
@@ -56,7 +58,7 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
         originY: 0.5,
       }),
       Tween(scene, {
-        scale: { from: 1 - getRandomRange(0, 0.05), to: 1 + getRandomRange(0, 0.05) },
+        scale: { from: spriteScale - getRandomRange(0, 0.05), to: spriteScale + getRandomRange(0, 0.05) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
         duration: 5000, // Duration of one wobble
