@@ -431,4 +431,14 @@ export const animationConfig: Animation<Assets>[] = [
     prefix: "sprites/vault/level3/Vault_LVL3_",
     suffix: ".png",
   },
+  {
+    key: "marketplace/level1",
+    assetKey: "sprite-atlas",
+    frameRate: 5,
+    startFrame: 1,
+    endFrame: 6,
+    repeat: -1,
+    prefix: "sprites/marketplace/level1/Marketplace_LVL1_",
+    suffix: ".png",
+  },
 ];
