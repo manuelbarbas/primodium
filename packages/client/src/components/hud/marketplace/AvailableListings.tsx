@@ -1,14 +1,16 @@
 import { Entity } from "@latticexyz/recs";
-import { useState } from "react";
+import { EOrderType, EResource, EUnit } from "contracts/config/enums";
+import { useMemo, useState } from "react";
 import { FaAngleDoubleRight, FaArrowDown, FaArrowLeft, FaArrowRight, FaArrowUp, FaMinus } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
+import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { NumberInput } from "src/components/shared/NumberInput";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { ValueSansMetadata } from "src/network/components/customComponents/ExtendedComponent";
-import { RESOURCE_SCALE } from "src/util/constants";
+import { ResourceEntityLookup, UnitEntityLookup } from "src/util/constants";
+import { getScale } from "src/util/resource";
 import { formatEther } from "viem";
-import { AccountDisplay } from "src/components/shared/AccountDisplay";
 
 type Listing = ValueSansMetadata<typeof components.MarketplaceOrder.schema> & { id: Entity };
 
@@ -29,14 +31,6 @@ export const AvailableListings = ({
     key: null,
     direction: "ascending",
   });
-  const getCurrentListings = () => {
-    const startIndex = (currentPage - 1) * pageSize;
-    return sortedListings.slice(startIndex, startIndex + pageSize);
-  };
-  const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-  };
-
   const requestSort = (key: keyof Listing) => {
     let direction: "ascending" | "descending" = "ascending";
     if (sortConfig.key === key && sortConfig.direction === "ascending") {
@@ -52,7 +46,7 @@ export const AvailableListings = ({
   }, 0n);
 
   const balance = components.WETHBalance.use(network.playerEntity)?.value ?? 0n;
-  const remainingBalance = balance - totalCost;
+  const remainingBalance = useMemo(() => balance - totalCost, [balance, totalCost]);
 
   const PaginationControls = () => {
     const totalPages = Math.ceil(sortedListings.length / pageSize);
@@ -110,6 +104,13 @@ export const AvailableListings = ({
     return 0;
   });
 
+  const currentListings = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return sortedListings.slice(startIndex, startIndex + pageSize);
+  }, [sortedListings, currentPage, pageSize]);
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
   const getSortIcon = (key: string) => {
     if (sortConfig.key === key) {
       return sortConfig.direction === "ascending" ? <FaArrowDown /> : <FaArrowUp />;
@@ -143,14 +144,19 @@ export const AvailableListings = ({
           </tr>
         </thead>
         <tbody>
-          {getCurrentListings().map((listing) => {
-            const scaledCount = Number(listing.count) / Number(RESOURCE_SCALE);
-            const startingValue = (takenOrders[listing.id] ?? 0n) / RESOURCE_SCALE;
-            const max = Math.min(scaledCount, Number(remainingBalance / listing.price));
+          {currentListings.map((listing) => {
+            const entity =
+              listing.orderType === EOrderType.Resource
+                ? ResourceEntityLookup[listing.resource as EResource]
+                : UnitEntityLookup[listing.resource as EUnit];
+            const scale = getScale(entity);
+            const scaledCount = Number(listing.count) / Number(scale);
+            const startingValue = (takenOrders[listing.id] ?? 0n) / scale;
+            const max = Math.min(scaledCount, Number(remainingBalance / (listing.price * scale)));
 
             return (
               <tr key={`listing-${listing.id}`}>
-                <td className="py-4 whitespace-nowrap">{formatEther(listing.price * RESOURCE_SCALE)}</td>
+                <td className="py-4 whitespace-nowrap">{formatEther(listing.price * scale)}</td>
                 <td className="py-4 whitespace-nowrap">{scaledCount}</td>
                 <td className="py-4 whitespace-nowrap">
                   <AccountDisplay player={listing.seller as Entity} />
@@ -158,8 +164,9 @@ export const AvailableListings = ({
                 <td className="py-4 whitespace-nowrap flex justify-center">
                   <NumberInput
                     startingValue={Number(startingValue)}
+                    min={0}
                     max={Number(max)}
-                    onChange={(e) => setOrder(listing.id, BigInt(e) * RESOURCE_SCALE)}
+                    onChange={(e) => setOrder(listing.id, BigInt(e) * scale)}
                     reset={!takenOrders[listing.id]}
                   />
                 </td>

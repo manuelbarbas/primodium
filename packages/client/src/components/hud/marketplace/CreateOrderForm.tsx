@@ -7,14 +7,8 @@ import { useMud } from "src/hooks";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
-import {
-  EntityType,
-  RESOURCE_SCALE,
-  ResourceEntityLookup,
-  ResourceStorages,
-  UnitEntityLookup,
-  UnitStorages,
-} from "src/util/constants";
+import { EntityType, ResourceEntityLookup, ResourceStorages, UnitEntityLookup, UnitStorages } from "src/util/constants";
+import { getScale } from "src/util/resource";
 import { createOrder } from "src/util/web3/contractCalls/createOrder";
 import { PlayerListings } from "./PlayerListings";
 
@@ -35,11 +29,12 @@ export const CreateOrderForm = () => {
   const resources = useMemo(() => [...ResourceStorages], []);
   const units = useMemo(() => [...UnitStorages], []);
 
+  const selectedScale = selectedItem === "default" ? 1n : getScale(selectedItem);
   // Handle form submission
   const handleSubmit = (e: React.MouseEvent | undefined) => {
     e?.preventDefault();
-    const scaledPrice = BigInt(Number(price) * 1e18) / RESOURCE_SCALE;
-    const scaledQuantity = BigInt(quantity) * RESOURCE_SCALE;
+    const scaledPrice = BigInt(Number(price) * 1e18) / selectedScale;
+    const scaledQuantity = BigInt(quantity) * selectedScale;
     if (selectedItem === "default") return;
     createOrder(selectedItem, scaledQuantity, scaledPrice, network);
   };
@@ -54,6 +49,7 @@ export const CreateOrderForm = () => {
       item,
       price: order.price,
       count: order.count,
+
       seller: order.seller as Entity,
       id: orderEntity,
     };
@@ -83,14 +79,16 @@ export const CreateOrderForm = () => {
   const availableItems = useMemo(() => {
     const itemsUsed: Record<Entity, bigint> = {};
     itemListings.forEach((listing) => {
+      const scale = getScale(listing.item);
       if (!itemsUsed[listing.item]) itemsUsed[listing.item] = 0n;
-      itemsUsed[listing.item] += listing.count / RESOURCE_SCALE;
+      itemsUsed[listing.item] += listing.count / scale;
     });
     resources.forEach((resource) => {
+      const scale = getScale(resource);
       const resourceCount = resourceCounts.get(resource)?.resourceCount ?? 0n;
       const resourcesToClaim = resourceCounts.get(resource)?.resourcesToClaim ?? 0n;
-      const totalResources = resourceCount + resourcesToClaim / RESOURCE_SCALE;
-      itemsUsed[resource] = totalResources - (itemsUsed[resource] ?? 0n);
+      const totalResources = resourceCount + resourcesToClaim;
+      itemsUsed[resource] = (totalResources - (itemsUsed[resource] ?? 0n)) / scale;
     });
     units.forEach((unit) => {
       const unitCount = getUnitCount(unit);
@@ -147,7 +145,7 @@ export const CreateOrderForm = () => {
                 availableItems[selectedItem] == 0n ? "animate-pulse text-error" : "font-gray-500"
               }`}
             >
-              {(availableItems[selectedItem] / RESOURCE_SCALE).toString()} {getBlockTypeName(selectedItem)} available
+              {(availableItems[selectedItem] / selectedScale).toString()} {getBlockTypeName(selectedItem)} available
             </div>
           )}
           <Button

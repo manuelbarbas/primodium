@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { EResource } from "contracts/config/enums";
+import { EOrderType, EResource } from "contracts/config/enums";
 import _ from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { IconButton } from "src/components/core/Button";
@@ -12,6 +12,7 @@ import {
   ResourceEnumLookup,
   ResourceImage,
   ResourceStorages,
+  UnitEnumLookup,
   UnitStorages,
 } from "src/util/constants";
 import { AvailableListings } from "./AvailableListings";
@@ -39,10 +40,11 @@ export function TakeOrderForm() {
 
   const itemListings = useMemo(() => {
     if (!selectedItem) return [];
-    const resourceEnum = ResourceEnumLookup[selectedItem];
-    return allListings.filter(
-      (listing) => listing.resource === resourceEnum && network.playerEntity !== listing.seller
-    );
+    return allListings.filter((listing) => {
+      const itemEnum =
+        listing.orderType === EOrderType.Resource ? ResourceEnumLookup[selectedItem] : UnitEnumLookup[selectedItem];
+      return listing.resource === itemEnum && network.playerEntity !== listing.seller;
+    });
   }, [allListings, selectedItem, network.playerEntity]);
 
   // Update taken orders
@@ -69,23 +71,25 @@ export function TakeOrderForm() {
 
   return (
     <div className="grid grid-cols-10 grid-rows-5 h-full w-full gap-2">
-      <SecondaryCard className="col-span-3 row-span-3 flex flex-col gap-2 overflow-auto scrollbar ">
-        <p className="text-xs opacity-50 font-bold pb-2">ITEMS</p>
-        {_.chunk([...ResourceStorages, ...UnitStorages], 2).map((chunk, i) => (
-          <div key={`chunk-${i}`} className="flex flex-col lg:flex-row items-center gap-2 w-full">
-            {chunk.map((resource) => (
-              <IconButton
-                key={resource}
-                onClick={() => setSelectedItem(resource)}
-                className={`flex-1 flex-col w-full lg:w-auto items-center justify-center p-6 ${
-                  selectedItem === resource ? "bg-base-300 border-accent" : ""
-                }`}
-                imageUri={ResourceImage.get(resource) ?? ""}
-                text={getBlockTypeName(resource)}
-              />
-            ))}
-          </div>
-        ))}
+      <SecondaryCard className="col-span-3 row-span-3 flex flex-col gap-2 overflow-hidden">
+        <p className="text-xs opacity-50 font-bold">ITEMS</p>
+        <div className="flex flex-col overflow-y-auto scrollbar gap-2">
+          {_.chunk([...ResourceStorages, ...UnitStorages], 2).map((chunk, i) => (
+            <div key={`chunk-${i}`} className="flex flex-col lg:flex-row items-center gap-2 w-full">
+              {chunk.map((resource) => (
+                <IconButton
+                  key={resource}
+                  onClick={() => setSelectedItem(resource)}
+                  className={`flex-1 flex-col w-full lg:w-auto items-center justify-center p-6 ${
+                    selectedItem === resource ? "bg-base-300 border-accent" : ""
+                  }`}
+                  imageUri={ResourceImage.get(resource) ?? ""}
+                  text={getBlockTypeName(resource)}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
       </SecondaryCard>
 
       <SecondaryCard className="col-span-7 row-span-5 h-full w-full ">

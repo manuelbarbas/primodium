@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { EResource } from "contracts/config/enums";
+import { EOrderType, EResource, EUnit } from "contracts/config/enums";
 import { useMemo } from "react";
 import { FaTrash } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
@@ -9,7 +9,7 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
-import { ResourceEntityLookup, ResourceImage } from "src/util/constants";
+import { ResourceEntityLookup, ResourceImage, UnitEntityLookup } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { takeOrders } from "src/util/web3/contractCalls/takeOrders";
 import { formatEther } from "viem";
@@ -32,7 +32,11 @@ export const Cart = ({
   const takenOrdersFullData = useMemo(() => {
     return Object.entries(takenOrders).map(([id, count]) => {
       const listing = allListings.find((listing) => listing.id === id)!;
-      return { ...listing, count, resource: ResourceEntityLookup[listing.resource as EResource] };
+      const resource =
+        listing.orderType == EOrderType.Resource
+          ? ResourceEntityLookup[listing.resource as EResource]
+          : UnitEntityLookup[listing.resource as EUnit];
+      return { ...listing, count, resource };
     });
   }, [takenOrders, allListings]);
 

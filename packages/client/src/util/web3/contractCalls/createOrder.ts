@@ -12,12 +12,15 @@ export const createOrder = async (
   network: SetupNetworkResult
 ) => {
   const rawResourceId = ResourceEnumLookup[rawResource];
-  const { resourceId, type } = rawResource
+  const { resourceId, type } = rawResourceId
     ? { resourceId: rawResourceId, type: EOrderType.Resource }
     : { resourceId: UnitEnumLookup[rawResource], type: EOrderType.Unit };
+  if (!resourceId) {
+    throw new Error("Invalid resource or unit");
+  }
 
   await execute(
-    () => network.worldContract.write.addOrder([resourceId, type, quantity, price]),
+    () => network.worldContract.write.addOrder([type, resourceId, quantity, price]),
     network,
     {
       id: world.registerEntity(),

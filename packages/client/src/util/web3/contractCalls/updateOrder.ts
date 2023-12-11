@@ -1,7 +1,8 @@
 import { Entity } from "@latticexyz/recs";
 import { execute } from "src/network/actions";
 import { SetupNetworkResult } from "src/network/types";
-import { ResourceEnumLookup } from "src/util/constants";
+import { getBlockTypeName } from "src/util/common";
+import { ResourceEnumLookup, UnitEnumLookup } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { Hex } from "viem";
 
@@ -12,7 +13,9 @@ export const updateOrder = async (
   count: bigint,
   network: SetupNetworkResult
 ) => {
-  const resource = ResourceEnumLookup[rawResource];
+  const resource = ResourceEnumLookup[rawResource] ?? UnitEnumLookup[rawResource];
+  if (!resource) throw new Error("Invalid resource or unit");
+  console.log("updating", id, getBlockTypeName(rawResource), count, price);
   await execute(
     () => network.worldContract.write.updateOrder([id as Hex, resource, count, price]),
     network,

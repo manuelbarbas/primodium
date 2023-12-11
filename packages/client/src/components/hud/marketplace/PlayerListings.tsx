@@ -5,7 +5,8 @@ import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
 import { NumberInput } from "src/components/shared/NumberInput";
 import { useMud } from "src/hooks";
-import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
+import { ResourceImage } from "src/util/constants";
+import { getScale } from "src/util/resource";
 import { cancelOrder, updateOrder } from "src/util/web3/contractCalls/updateOrder";
 import { formatEther } from "viem";
 import { UserListing } from "./CreateOrderForm";
@@ -35,6 +36,7 @@ export const PlayerListings = ({
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
+
   const PaginationControls = () => {
     const totalPages = Math.ceil(sortedListings.length / pageSize);
     return (
@@ -79,6 +81,7 @@ export const PlayerListings = ({
       </div>
     );
   };
+
   const sortedListings = [...listings].sort((a, b) => {
     if (sortConfig.key === null) return 0;
     if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -137,8 +140,8 @@ export const PlayerListings = ({
                 Count {getSortIcon("count")}
               </div>
             </th>
-            <th className="sortable-header">Update</th>
-            <th className="sortable-header">Delete</th>
+            <th className="sortable-header"></th>
+            <th className="sortable-header"></th>
           </tr>
         </thead>
         <tbody>
@@ -156,31 +159,31 @@ const Listing = ({ listing, availableResource }: { listing: UserListing; availab
   const { network } = useMud();
   const [listingUpdate, setListingUpdate] = useState<{ newPrice?: bigint; newCount?: bigint }>();
 
+  const scale = getScale(listing.item);
+
   const newCount = listingUpdate?.newCount;
   const countDiff = !!newCount && newCount !== listing.count;
   const newPrice = listingUpdate?.newPrice;
   const priceDiff = !!newPrice && newPrice !== listing.price;
-  const scaledCount = Number(listing.count) / Number(RESOURCE_SCALE);
-
   return (
     <tr key={`listing-${listing.id}`}>
       <td className="text-center align-middle ">
         <div className="flex items-center justify-center h-full">
           <IconLabel imageUri={ResourceImage.get(listing.item as Entity) ?? ""} tooltipDirection={"right"} text={""} />
-          <p className="text-xs text-gray-500 ml-1">({(availableResource / RESOURCE_SCALE).toString()})</p>
+          <p className="text-xs text-gray-500 ml-1">({availableResource.toString()})</p>
         </div>
       </td>
 
       <td className="text-center align-middle py-1">
-        <div className="justify-center flex p-1 gap-1 items-center">
+        <div className="flex justify-center p-1 gap-1 items-center">
           <NumberInput
             toFixed={8}
             reset={!newPrice}
-            startingValue={Number(formatEther(listing.price * RESOURCE_SCALE))}
+            startingValue={Number(formatEther(listing.price * scale))}
             onChange={function (val: number): void {
               setListingUpdate({
                 ...listingUpdate,
-                newPrice: BigInt(val * 1e18) / RESOURCE_SCALE,
+                newPrice: BigInt(val * 1e18) / scale,
               });
             }}
           />
@@ -195,14 +198,14 @@ const Listing = ({ listing, availableResource }: { listing: UserListing; availab
       <td className="text-center align-middle">
         <div className="flex justify-center p-1 gap-1 items-center">
           <NumberInput
-            startingValue={scaledCount}
-            max={Number(availableResource / RESOURCE_SCALE)}
+            startingValue={Number(listing.count / scale)}
+            max={Number(availableResource)}
             toFixed={2}
             reset={!newCount}
             onChange={function (val: number): void {
               setListingUpdate({
                 ...listingUpdate,
-                newCount: BigInt(val * Number(RESOURCE_SCALE)),
+                newCount: BigInt(val) * scale,
               });
             }}
           />
@@ -223,12 +226,15 @@ const Listing = ({ listing, availableResource }: { listing: UserListing; availab
           onClick={() => {
             updateOrder(listing.id, listing.item, newPrice || listing.price, newCount || listing.count, network);
           }}
+          className="btn-primary btn-sm"
         >
           Update
         </Button>
       </td>
       <td className="text-center">
-        <Button onClick={() => cancelOrder(listing.id, network)}>Delete</Button>
+        <Button onClick={() => cancelOrder(listing.id, network)} className="btn-primary btn-sm">
+          Delete
+        </Button>
       </td>
     </tr>
   );
