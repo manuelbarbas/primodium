@@ -2198,6 +2198,102 @@ export interface SystemUpgradeUnitProperties {
   unitName: string;
 }
 
+export interface TokenMintProperties {
+  /**
+   * Address to which a token is minted.
+   */
+  tokenMintTo: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface TokenTransferProperties {
+  /**
+   * Address from which a token is transferred.
+   */
+  tokenTransferTo: string;
+  /**
+   * Amount of token that is transferred, logged in raw wei units as a string. This is named `value` in line with the ERC20 standard.
+   */
+  tokenTransferValue: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
 export class AccountLinkWallet implements BaseEvent {
   event_type = "account.LinkWallet";
 
@@ -2498,6 +2594,22 @@ export class SystemUpgradeUnit implements BaseEvent {
   event_type = "system.UpgradeUnit";
 
   constructor(public event_properties: SystemUpgradeUnitProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class TokenMint implements BaseEvent {
+  event_type = "token.Mint";
+
+  constructor(public event_properties: TokenMintProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class TokenTransfer implements BaseEvent {
+  event_type = "token.Transfer";
+
+  constructor(public event_properties: TokenTransferProperties) {
     this.event_properties = event_properties;
   }
 }
@@ -3255,6 +3367,40 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SystemUpgradeUnit(properties), options);
+  }
+
+  /**
+   * token.Mint
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/token.Mint)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. tokenMintTo)
+   * @param options Amplitude event options.
+   */
+  tokenMint(
+    properties: TokenMintProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new TokenMint(properties), options);
+  }
+
+  /**
+   * token.Transfer
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/token.Transfer)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. tokenTransferTo)
+   * @param options Amplitude event options.
+   */
+  tokenTransfer(
+    properties: TokenTransferProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new TokenTransfer(properties), options);
   }
 }
 
