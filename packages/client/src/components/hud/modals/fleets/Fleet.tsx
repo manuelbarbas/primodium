@@ -13,6 +13,7 @@ import { components } from "src/network/components";
 import { decodeEntity } from "src/util/encode";
 import { invade } from "src/util/web3/contractCalls/invade";
 import { raid } from "src/util/web3/contractCalls/raid";
+import { recallArrival } from "src/util/web3/contractCalls/recall";
 import { reinforce } from "src/util/web3/contractCalls/reinforce";
 
 export const LabeledValue: React.FC<{
@@ -66,7 +67,8 @@ export const Fleet: React.FC<{
   destination: Entity;
   sendType: ESendType;
   dontShowButton?: boolean;
-}> = ({ arrivalTime, arrivalEntity, destination, sendType, dontShowButton }) => {
+  small?: boolean;
+}> = ({ arrivalTime, arrivalEntity, destination, sendType, dontShowButton, small }) => {
   const destinationPosition = components.Position.use(destination, {
     x: 0,
     y: 0,
@@ -80,23 +82,23 @@ export const Fleet: React.FC<{
 
   return (
     <div className="flex items-center justify-between w-full border rounded-box border-slate-700 bg-slate-800 ">
-      <div className="flex gap-1 items-center">
+      <div className="flex gap-1 items-center h-full ">
         {sendType === ESendType.Invade && (
-          <div className="rounded-box bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
+          <div className="rounded-box bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center h-full justify-center items-center">
             <BiSolidInvader size={16} />
-            <p className="bg-rose-900 border border-rose-500 rounded-box px-1 text-[.6rem]">INVADE</p>
+            {!small && <p className="bg-rose-900 border border-rose-500 rounded-box px-1 text-[.6rem]">INVADE</p>}
           </div>
         )}
         {sendType === ESendType.Raid && (
-          <div className="rounded-box bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
+          <div className="rounded-box bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center h-full justify-center">
             <BiSolidInvader size={16} />
-            <p className="bg-rose-900 border border-rose-500 rounded-box px-1 text-[.6rem]">RAID</p>
+            {!small && <p className="bg-rose-900 border border-rose-500 rounded-box px-1 text-[.6rem]">RAID</p>}
           </div>
         )}
         {sendType === ESendType.Reinforce && (
-          <div className="rounded-box bg-green-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
+          <div className="rounded-box bg-green-800 gap-1 p-1 mr-2 flex flex-col items-center h-full justify-center">
             <FaShieldAlt size={16} />
-            <p className="bg-green-900 border border-green-500  rounded-box px-1 text-[.6rem]">REINFORCE</p>
+            {!small && <p className="bg-green-900 border border-green-500  rounded-box px-1 text-[.6rem]">REINFORCE</p>}
           </div>
         )}
         <LabeledValue label={`${timeRemaining > 0 ? "IN TRANSIT" : "ORBITING"}`}>
@@ -117,7 +119,7 @@ export const Fleet: React.FC<{
             </div>
           </LabeledValue>
         ) : (
-          !dontShowButton && <OrbitActionButton arrivalEntity={arrivalEntity} sendType={sendType} />
+          !dontShowButton && <OrbitActionButton arrivalEntity={arrivalEntity} sendType={sendType} small={small} />
         )}
       </div>
     </div>
@@ -127,7 +129,8 @@ export const Fleet: React.FC<{
 export const OrbitActionButton: React.FC<{
   arrivalEntity: Entity;
   sendType: ESendType;
-}> = ({ arrivalEntity, sendType }) => {
+  small?: boolean;
+}> = ({ arrivalEntity, sendType, small }) => {
   const network = useMud().network;
   const destination = components.Arrival.getEntity(arrivalEntity)?.destination;
   if (!destination) return <></>;
@@ -142,16 +145,25 @@ export const OrbitActionButton: React.FC<{
 
   return (
     <TransactionQueueMask queueItemId={key as Entity}>
-      <Button
-        className={`btn-sm rounded-box ${
-          sendType == ESendType.Reinforce ? "big-green-800" : "bg-rose-800"
-        } gap-1 flex flex-col items-center w-20`}
-        onClick={action}
-      >
-        {sendType === ESendType.Invade && "INVADE"}
-        {sendType === ESendType.Raid && "RAID"}
-        {sendType === ESendType.Reinforce && "REINFORCE"}
-      </Button>
+      <div className={`flex gap-1 ${small ? "flex-col-reverse gap-0" : ""}`}>
+        <Button
+          className={`${small ? "btn-xs" : "btn-sm"} opacity-75`}
+          onClick={() => recallArrival(arrivalEntity, network)}
+        >
+          RECALL
+        </Button>
+
+        <Button
+          className={`${small ? "btn-xs" : "btn-sm"} ${
+            sendType == ESendType.Reinforce ? "bg-green-800" : "bg-rose-800"
+          }`}
+          onClick={action}
+        >
+          {sendType === ESendType.Invade && "INVADE"}
+          {sendType === ESendType.Raid && "RAID"}
+          {sendType === ESendType.Reinforce && "REINFORCE"}
+        </Button>
+      </div>
     </TransactionQueueMask>
   );
 };

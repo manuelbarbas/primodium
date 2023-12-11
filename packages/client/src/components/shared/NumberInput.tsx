@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Button } from "../core/Button";
 
 function adjustDecimals(num: string, toFixed: number): string {
   const parts = num.split(".");
@@ -53,14 +54,14 @@ export const NumberInput: React.FC<{
   };
 
   return (
-    <div className={`flex gap-2 my-2`}>
-      <button
-        className={`${Number(count) <= min ? "opacity-50" : ""}`}
+    <div className={`flex gap-2 my-2 relative`}>
+      <Button
+        className={`${Number(count) >= max ? "opacity-50" : ""} btn-xs btn-ghost`}
         disabled={Number(count) <= min}
         onClick={() => handleUpdate(Math.max(min, count == "" ? 0 : Number(count) - 1).toString())}
       >
         -
-      </button>
+      </Button>
       <input
         type="number"
         className={`bg-transparent text-center w-fit outline-none border-b border-pink-900 ${
@@ -75,13 +76,24 @@ export const NumberInput: React.FC<{
         min={0}
         max={max}
       />
-      <button
-        className={`${Number(count) >= max ? "opacity-50" : ""}`}
+      <Button
+        className={`${Number(count) >= max ? "opacity-50" : ""} btn-xs btn-ghost`}
         disabled={Number(count) >= max}
         onClick={() => handleUpdate(Math.min(max, count == "" ? min + 1 : Number(count) + 1).toString())}
       >
         +
-      </button>
+      </Button>
+      {max !== Infinity && (
+        <div className="absolute right-1/2 -bottom-1/2 translate-x-1/2 translate-y-1/2">
+          <Button
+            className={`${Number(count) >= max ? "opacity-50" : ""} btn-xs btn-ghost  opacity-50`}
+            disabled={Number(count) >= max}
+            onClick={() => handleUpdate(max.toString())}
+          >
+            max
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

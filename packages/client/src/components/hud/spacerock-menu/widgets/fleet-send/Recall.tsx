@@ -107,7 +107,7 @@ export const Recall = ({ rock }: { rock: Entity }) => {
                       arrivalTime={arrival.arrivalTime}
                       key={arrival.entity}
                       destination={rock}
-                      outgoing
+                      small
                       sendType={arrival.sendType}
                     />
                   )

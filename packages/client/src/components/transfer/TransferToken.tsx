@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { Button } from "src/components/core/Button";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { Hex, createPublicClient, encodeAbiParameters, formatEther, trim } from "viem";
+import { normalizeAddress } from "src/util/common";
+import { Hex, createPublicClient, encodeAbiParameters, formatEther } from "viem";
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 
 interface TransferTokenProps {
@@ -14,8 +15,8 @@ interface TransferTokenProps {
 
 export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, className, client }) => {
   const { network } = useMud();
-  const burnerAddress = trim(network.address);
-  const [input, setInput] = useState<string>(trim(burnerAddress) ?? "");
+  const burnerAddress = normalizeAddress(network.address);
+  const [input, setInput] = useState<string>(normalizeAddress(burnerAddress) ?? "");
   const [valid, setValid] = useState<boolean>(true);
   const [address, setAddress] = useState<string | null>(null);
   const [amount, setAmount] = useState<string>("");

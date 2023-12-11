@@ -10,7 +10,7 @@ import { BuildQueue } from "./screens/BuildQueue";
 import { BuildUnit } from "./screens/BuildUnit";
 import { MainBase } from "./screens/Mainbase";
 // import { UpgradeUnit } from "./screens/UpgradeUnit";
-import { FaArrowsAlt, FaBan, FaIndustry, FaTrash } from "react-icons/fa";
+import { FaArrowsAlt, FaPowerOff, FaTrash } from "react-icons/fa";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { useBuildingName } from "src/hooks/useBuildingName";
@@ -21,6 +21,7 @@ import { MiningVessels } from "./screens/MiningVessels";
 import { Move } from "./screens/Move";
 import { UnitFactory } from "./screens/UnitFactory";
 import { UpgradeUnit } from "./screens/UpgradeUnit";
+import { Market } from "./screens/Market";
 
 export const BuildingMenu: React.FC = () => {
   const network = useMud().network;
@@ -65,6 +66,8 @@ export const BuildingMenu: React.FC = () => {
         return <UnitFactory building={selectedBuilding} />;
       case EntityType.Workshop:
         return <UnitFactory building={selectedBuilding} />;
+      case EntityType.Market:
+        return <Market building={selectedBuilding} />;
       default:
         return <Basic building={selectedBuilding} />;
     }
@@ -72,7 +75,7 @@ export const BuildingMenu: React.FC = () => {
   const TopBar = () => {
     if (buildingType == EntityType.MainBase) return null;
     return (
-      <div className="absolute -top-2 right-0 -translate-y-full flex flex-row-reverse gap-1 overflow-hidden p-1 border bg-neutral border border-1 border-secondary border-b-base-100">
+      <div className="absolute -top-2 right-0 -translate-y-full flex flex-row-reverse gap-1 p-1 border bg-neutral border border-1 border-secondary border-b-base-100">
         <Button
           tooltip="Close"
           tooltipDirection="top"
@@ -82,7 +85,7 @@ export const BuildingMenu: React.FC = () => {
           x
         </Button>
 
-        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Build, selectedBuilding)}>
+        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Move, selectedBuilding)}>
           <Navigator.NavButton
             tooltip="Move"
             tooltipDirection="top"
@@ -113,10 +116,9 @@ export const BuildingMenu: React.FC = () => {
             className={`btn-square btn-xs font-bold border ${active ? "border-error" : "border-success"} inline-flex`}
             onClick={() => {
               toggleBuilding(selectedBuilding, network);
-              //components.SelectedBuilding.remove();
             }}
           >
-            {active ? <FaBan size={12} /> : <FaIndustry size={12} />}
+            <FaPowerOff size={12} />
           </Button>
         </TransactionQueueMask>
       </div>
@@ -124,15 +126,13 @@ export const BuildingMenu: React.FC = () => {
   };
   return (
     <Navigator initialScreen={selectedBuilding} className="w-96 border-none p-0 relative overflow-visible">
-      {/* <Navigator.Breadcrumbs /> */}
-
       <TopBar />
 
       {/* Sub Screens */}
       {/* Initial Screen */}
       <RenderScreen />
-      <Move building={selectedBuilding} />
       <Demolish building={selectedBuilding} />
+      <Move building={selectedBuilding} />
       <BuildingInfo building={selectedBuilding} />
       <BuildQueue building={selectedBuilding} />
       <BuildUnit building={selectedBuilding} />

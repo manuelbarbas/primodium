@@ -20,7 +20,7 @@ export const Header: React.FC<{ building: Entity }> = ({ building }) => {
           <Tooltip direction="top" text={active ? "active" : "inactive"}>
             <Badge className="text-md py-4 rounded-box font-bold mb-2 flex gap-2">
               {buildingName}
-              <FaCircle className={`text-${active ? "green" : "red"}-500`} />
+              <FaCircle className={`text-${active ? "success" : "error"}`} />
             </Badge>
           </Tooltip>
 

@@ -82,7 +82,7 @@ export const CreateOrderForm = () => {
             placeholder="Select Resource"
             value={selectedResource}
             onChange={(e) => setSelectedResource(e.target.value as Entity)}
-            className="w-full p-4 bg-white/10 rounded-md focus:ring-secondary focus:border-secondary"
+            className="w-full p-4 bg-white/10 focus:ring-secondary focus:border-secondary"
           >
             <option className="text-gray-300" value="default" disabled hidden>
               Select a resource
@@ -99,7 +99,7 @@ export const CreateOrderForm = () => {
             id="price"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            className="block w-full p-4 rounded-md bg-transparent border border-bottom-1 border-gray-500 focus:outline-none text-gray-300 focus:ring-secondary focus:border-secondary"
+            className="block w-full p-4 bg-transparent border border-bottom-1 border-gray-500 focus:outline-none text-gray-300 focus:ring-secondary focus:border-secondary"
           />
           <input
             min="0"
@@ -109,7 +109,7 @@ export const CreateOrderForm = () => {
             id="quantity"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
-            className="block w-full p-4 rounded-md bg-transparent border border-bottom-1 border-gray-500 focus:outline-none text-gray-300 focus:ring-secondary focus:border-secondary"
+            className="block w-full p-4 bg-transparent border border-bottom-1 border-gray-500 focus:outline-none text-gray-300 focus:ring-secondary focus:border-secondary"
           />
           <Button
             disabled={
@@ -131,7 +131,8 @@ export const CreateOrderForm = () => {
                 availableResources[selectedResource] == 0n ? "text-error" : "font-gray-500"
               }`}
             >
-              {availableResources[selectedResource].toString()} {getBlockTypeName(selectedResource)} available
+              {(availableResources[selectedResource] / RESOURCE_SCALE).toString()} {getBlockTypeName(selectedResource)}{" "}
+              available
             </div>
           )}
         </form>

@@ -3,13 +3,12 @@ import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Cheatcodes } from "@primodiumxyz/mud-game-tools";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
-import { components } from "src/network/components";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 import { SetupResult } from "src/network/types";
 import { encodeEntity } from "src/util/encode";
-import { Hex, createWalletClient, fallback, getContract, http, padHex, trim, webSocket } from "viem";
+import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
-import { getBlockTypeName } from "./common";
+import { getBlockTypeName, normalizeAddress } from "./common";
 import { EntityType, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
 
 const resources: Record<string, Entity> = {
@@ -47,21 +46,6 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
       function: async (value: number) => {
         await mud.contractCalls.setComponentValue(mud.components.P_GameConfig, singletonEntity, {
           worldSpeed: BigInt(value),
-        });
-      },
-    },
-    setSpecate: {
-      params: [{ name: "value", type: "string" }],
-      function: async (value: string) => {
-        console.log(value);
-        if (!value) {
-          components.SpectateAccount.set({ value: mud.network.playerEntity });
-          return;
-        }
-        components.SpectateAccount.set({
-          value: padHex(value as Hex, {
-            size: 32,
-          }).toLowerCase() as Entity,
         });
       },
     },
@@ -231,7 +215,7 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
         if (!player) throw new Error("No player found");
         await mud.contractCalls.setComponentValue(
           mud.components.WETHBalance,
-          encodeEntity({ entity: "address" }, { entity: trim(player) as Hex }),
+          encodeEntity({ entity: "address" }, { entity: normalizeAddress(player) as Hex }),
           {
             value: BigInt(2 * 1e18),
           }

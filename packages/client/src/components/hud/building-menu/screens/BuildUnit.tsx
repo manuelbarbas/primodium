@@ -124,7 +124,7 @@ export const BuildUnit: React.FC<{
 
               <NumberInput max={maximum} onChange={(val) => setCount(val)} />
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 pt-5">
                 <Navigator.BackButton
                   className="btn-sm btn-secondary"
                   disabled={maximum < count || count < 1}
