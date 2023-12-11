@@ -20,7 +20,7 @@ export function useAccount(player?: Entity) {
   const address = useMemo(() => {
     if (!isPlayer) return "Pirate";
     if (!linkedAddress) return entityToPlayerName(playerEntity);
-    return linkedAddress.ensName ?? entityToPlayerName(playerEntity);
+    return linkedAddress.ensName ?? entityToAddress(linkedAddress.address ?? playerEntity, true);
   }, [linkedAddress, playerEntity]);
 
   useEffect(() => {
