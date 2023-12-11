@@ -4,21 +4,25 @@ import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { EntityType } from "src/util/constants";
 import { formatEther } from "viem";
-import { UtilityLabel } from "../resources/utilities/UtilityLabel";
 import { CreateOrderForm } from "./CreateOrderForm";
 import { TakeOrderForm } from "./TakeOrderForm";
+import { UtilityLabel } from "../spacerock-menu/widgets/resources/utilities/UtilityLabel";
 
 export const Marketplace = () => {
   const { network } = useMud();
   const balance = components.WETHBalance.use(network.playerEntity)?.value ?? 0n;
 
   return (
-    <div className="h-full w-full absolute p-4 bg-neutral">
+    <div className="h-full w-full p-4 bg-neutral">
       <Tabs className="relative h-full flex flex-col items-center">
         <div className="flex gap-2 items-center">
-          <Join className="w-fit">
-            <Tabs.Button index={0}>Buy</Tabs.Button>
-            <Tabs.Button index={1}>Your Orders</Tabs.Button>
+          <Join className="w-fit border border-secondary/25">
+            <Tabs.Button showActive index={0}>
+              Buy
+            </Tabs.Button>
+            <Tabs.Button showActive index={1}>
+              Your Orders
+            </Tabs.Button>
           </Join>
           <div className="absolute right-2 margin-auto my-2 flex flex-col items-end justify-center">
             <div className="flex justify-center items-center gap-1 rounded-md p-1 h-full">

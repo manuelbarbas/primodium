@@ -21,6 +21,7 @@ import { MiningVessels } from "./screens/MiningVessels";
 import { Move } from "./screens/Move";
 import { UnitFactory } from "./screens/UnitFactory";
 import { UpgradeUnit } from "./screens/UpgradeUnit";
+import { Market } from "./screens/Market";
 
 export const BuildingMenu: React.FC = () => {
   const network = useMud().network;
@@ -65,6 +66,8 @@ export const BuildingMenu: React.FC = () => {
         return <UnitFactory building={selectedBuilding} />;
       case EntityType.Workshop:
         return <UnitFactory building={selectedBuilding} />;
+      case EntityType.Market:
+        return <Market building={selectedBuilding} />;
       default:
         return <Basic building={selectedBuilding} />;
     }
