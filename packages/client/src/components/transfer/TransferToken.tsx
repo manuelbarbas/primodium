@@ -122,8 +122,8 @@ export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, classN
           value={amount}
           disabled={wrongChain}
           onChange={(e) => {
-            const value = Number(e.target.value);
-            const bal = Number(balance) / 1e18;
+            const value = BigInt(e.target.value);
+            const bal = BigInt(balance) / BigInt(1e18);
             if (value < 0) {
               setAmount("");
               return;

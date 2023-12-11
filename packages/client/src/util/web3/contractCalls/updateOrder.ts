@@ -24,7 +24,7 @@ export const updateOrder = async (
       id: hashEntities(network.playerEntity, id, rawResource),
     },
     (receipt) => {
-      const scaledPrice = BigInt(Number(price) * 1e18) / RESOURCE_SCALE;
+      const scaledPrice = (price * BigInt(1e18)) / RESOURCE_SCALE;
       const scaledCount = BigInt(count) * RESOURCE_SCALE;
 
       ampli.systemUpdateOrder({

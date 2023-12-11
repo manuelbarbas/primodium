@@ -18,7 +18,7 @@ export const createOrder = async (rawResource: Entity, count: bigint, price: big
       id: world.registerEntity(),
     },
     (receipt) => {
-      const scaledPrice = BigInt(Number(price) * 1e18) / RESOURCE_SCALE;
+      const scaledPrice = (price * BigInt(1e18)) / RESOURCE_SCALE;
       const scaledCount = BigInt(count) * RESOURCE_SCALE;
 
       ampli.systemAddOrder({
