@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { FixedSizeList as List } from "react-window";
-
+import AutoSizer from "react-virtualized-auto-sizer";
 import { EAllianceRole } from "contracts/config/enums";
 import { FaEnvelope } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
@@ -23,24 +23,28 @@ export const PlayerLeaderboard = () => {
   const playerScore = playerIndex == -1 ? undefined : data.scores[playerIndex];
 
   return (
-    <div className="flex flex-col items-center justify-between w-full h-full text-xs pointer-events-auto">
-      <List height={285} width="100%" itemCount={data.players.length} itemSize={47} className="scrollbar h-full">
-        {({ index, style }) => {
-          const player = data.players[index];
-          const score = data.scores[index];
-
-          return (
-            <div style={style} className="pr-2">
-              <LeaderboardItem key={index} player={player} index={index} score={score} />
-            </div>
-          );
-        }}
-      </List>
+    <div className="flex flex-col justify-between w-full h-full text-xs pointer-events-auto">
+      {/* CAUSED BY INCOMPATIBLE REACT VERSIONS */}
+      <AutoSizer>
+        {({ height, width }: { height: number; width: number }) => (
+          <List height={height - 75} width={width} itemCount={data.players.length} itemSize={47} className="scrollbar">
+            {({ index, style }) => {
+              const player = data.players[index];
+              const score = data.scores[index];
+              return (
+                <div style={style} className="pr-2">
+                  <LeaderboardItem key={index} player={player} index={index} score={score} />
+                </div>
+              );
+            }}
+          </List>
+        )}
+      </AutoSizer>
       <div className="w-full">
         <hr className="w-full border-t border-cyan-800 my-2" />
 
         <SecondaryCard className="w-full overflow-y-auto border border-slate-700 p-2 bg-slate-800">
-          {playerScore && <LeaderboardItem player={network.playerEntity} index={playerIndex} score={playerScore} />}
+          <LeaderboardItem player={network.playerEntity} index={playerIndex} score={playerScore ?? 0} />
         </SecondaryCard>
       </div>
     </div>
