@@ -55,7 +55,8 @@ export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, classN
   const balance = components.WETHBalance.use(externalEntity)?.value ?? 0n;
 
   const handleTransfer = async () => {
-    const amountNum = BigInt(amount) * BigInt(1e18);
+    const amountBigInt = BigInt(Math.round(Number(amount)));
+    const amountNum = amountBigInt * BigInt(1e18);
     if (address && amountNum > 0) {
       await onTransfer(address, amountNum);
       setAmount("");
