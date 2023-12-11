@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { EOrderType, EResource, EUnit } from "contracts/config/enums";
 import { useMemo, useState } from "react";
-import { FaAngleDoubleRight, FaArrowDown, FaArrowLeft, FaArrowRight, FaArrowUp, FaMinus } from "react-icons/fa";
+import { FaAngleDoubleRight, FaArrowLeft, FaArrowRight, FaMinus, FaPlay } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { NumberInput } from "src/components/shared/NumberInput";
@@ -113,12 +113,13 @@ export const AvailableListings = ({
   };
   const getSortIcon = (key: string) => {
     if (sortConfig.key === key) {
-      return sortConfig.direction === "ascending" ? <FaArrowDown /> : <FaArrowUp />;
+      return <FaPlay className={`${sortConfig.direction === "ascending" ? "rotate-90" : "-rotate-90"} w-2`} />;
     }
-    return <FaMinus />;
+    return <FaMinus className="w-2" />;
   };
 
-  if (listings.length === 0) return <div className="w-full h-full text-center p-20 uppercase bold">No listings</div>;
+  if (listings.length === 0)
+    return <div className="w-full h-full text-center p-20 uppercase text-error animate-pulse">No listings</div>;
 
   return (
     <div className="p-2 flex flex-col justify-between h-full">
@@ -126,21 +127,30 @@ export const AvailableListings = ({
         <thead className="uppercase text-sm">
           <tr>
             <th className="sortable-header">
-              <div onClick={() => requestSort("price")} className="flex gap-2 items-center cursor-pointer">
+              <div
+                onClick={() => requestSort("price")}
+                className="flex gap-1 items-center text-xs opacity-80 font-bold cursor-pointer"
+              >
                 Price {getSortIcon("price")}
               </div>
             </th>
             <th className="sortable-header">
-              <div onClick={() => requestSort("count")} className="flex gap-2 items-center cursor-pointer">
+              <div
+                onClick={() => requestSort("count")}
+                className="flex gap-1 items-center text-xs opacity-80 font-bold cursor-pointer"
+              >
                 Count {getSortIcon("count")}
               </div>
             </th>
             <th className="sortable-header">
-              <div onClick={() => requestSort("seller")} className="flex gap-2 items-center cursor-pointer">
+              <div
+                onClick={() => requestSort("seller")}
+                className="flex gap-1 items-center text-xs opacity-80 font-bold cursor-pointer"
+              >
                 Seller {getSortIcon("seller")}
               </div>
             </th>
-            <th>Buy</th>
+            <th className="flex gap-1 items-center justify-center text-xs opacity-80 font-bold">Buy</th>
           </tr>
         </thead>
         <tbody>
@@ -155,13 +165,13 @@ export const AvailableListings = ({
             const max = Math.min(scaledCount, Number(remainingBalance / (listing.price * scale)));
 
             return (
-              <tr key={`listing-${listing.id}`}>
-                <td className="py-4 whitespace-nowrap">{formatEther(listing.price * scale)}</td>
-                <td className="py-4 whitespace-nowrap">{scaledCount}</td>
-                <td className="py-4 whitespace-nowrap">
+              <tr key={`listing-${listing.id}`} className="">
+                <td className="py-4">{formatEther(listing.price * scale)}</td>
+                <td className="py-4">{scaledCount}</td>
+                <td className="py-4">
                   <AccountDisplay player={listing.seller as Entity} />
                 </td>
-                <td className="py-4 whitespace-nowrap flex justify-center">
+                <td className="py-4 flex justify-center">
                   <NumberInput
                     startingValue={Number(startingValue)}
                     min={0}

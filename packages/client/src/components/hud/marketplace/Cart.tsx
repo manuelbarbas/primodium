@@ -77,9 +77,9 @@ export const Cart = ({
           <span className="text-xs text-gray-400">balance: {formatEther(balance)} WETH</span>
         </div>
 
-        <TransactionQueueMask queueItemId={hashEntities(...[network.playerEntity, ...Object.keys(takenOrders)])}>
+        <TransactionQueueMask queueItemId={hashEntities(network.playerEntity, ...Object.keys(takenOrders))}>
           <Button
-            className="btn-secondary"
+            className="btn-secondary h-full"
             disabled={Object.keys(takenOrders).length === 0}
             onClick={() => {
               takeOrders(takenOrders, network);
@@ -90,7 +90,7 @@ export const Cart = ({
           </Button>
         </TransactionQueueMask>
 
-        <Button className="btn" onClick={clearOrders} disabled={Object.keys(takenOrders).length === 0}>
+        <Button className="btn h-full" onClick={clearOrders} disabled={Object.keys(takenOrders).length === 0}>
           Clear
         </Button>
       </div>

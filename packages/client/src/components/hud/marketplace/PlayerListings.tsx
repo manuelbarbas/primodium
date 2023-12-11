@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { useState } from "react";
-import { FaAngleDoubleRight, FaArrowDown, FaArrowLeft, FaArrowRight, FaArrowUp, FaMinus, FaUndo } from "react-icons/fa";
+import { FaAngleDoubleRight, FaArrowLeft, FaArrowRight, FaMinus, FaPlay, FaUndo } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
 import { NumberInput } from "src/components/shared/NumberInput";
@@ -102,9 +102,9 @@ export const PlayerListings = ({
   };
   const getSortIcon = (key: string) => {
     if (sortConfig.key === key) {
-      return sortConfig.direction === "ascending" ? <FaArrowDown /> : <FaArrowUp />;
+      return <FaPlay className={`${sortConfig.direction === "ascending" ? "rotate-90" : "-rotate-90"} w-2`} />;
     }
-    return <FaMinus />;
+    return <FaMinus className="w-2" />;
   };
 
   if (listings.length === 0)
@@ -118,16 +118,16 @@ export const PlayerListings = ({
             <th className="sortable-header">
               <div
                 onClick={() => requestSort("item")}
-                className="flex gap-2 items-center justify-center cursor-pointer"
+                className="flex gap-1 items-center text-xs opacity-80 font-bold cursor-pointer"
               >
-                Resource {getSortIcon("resource")}
+                Item {getSortIcon("item")}
               </div>
             </th>
 
             <th className="sortable-header">
               <div
                 onClick={() => requestSort("price")}
-                className="flex gap-2 justify-center items-center cursor-pointer"
+                className="flex gap-1 items-center text-xs opacity-80 font-bold cursor-pointer justify-center"
               >
                 Price {getSortIcon("price")}
               </div>
@@ -135,7 +135,7 @@ export const PlayerListings = ({
             <th className="sortable-header">
               <div
                 onClick={() => requestSort("count")}
-                className="flex gap-2 items-center justify-center cursor-pointer"
+                className="flex gap-1 items-center text-xs opacity-80 font-bold cursor-pointer justify-center"
               >
                 Count {getSortIcon("count")}
               </div>
