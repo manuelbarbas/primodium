@@ -180,14 +180,9 @@ library LibUnit {
     uint256 productionRate = P_MiningRate.get(unitType, level);
     if (productionRate == 0) return;
     uint8 resource = (Motherlode.getMotherlodeType(rockEntity));
-    uint8 size = Motherlode.getSize(rockEntity);
     uint256 prevProductionRate = ProductionRate.get(rockEntity, resource);
-    ProductionRate.set(rockEntity, resource, prevProductionRate + (productionRate * unitCount * size));
-    ConsumptionRate.set(
-      rockEntity,
-      P_RawResource.get(resource),
-      prevProductionRate + (productionRate * unitCount * size)
-    );
+    ProductionRate.set(rockEntity, resource, prevProductionRate + (productionRate * unitCount));
+    ConsumptionRate.set(rockEntity, P_RawResource.get(resource), prevProductionRate + (productionRate * unitCount));
   }
 
   /**
@@ -215,14 +210,9 @@ library LibUnit {
     uint256 productionRate = P_MiningRate.get(unitType, level);
     if (productionRate == 0) return;
     uint8 resource = (Motherlode.getMotherlodeType(rockEntity));
-    uint8 size = Motherlode.getSize(rockEntity);
     uint256 prevProductionRate = ProductionRate.get(rockEntity, resource);
-    require(prevProductionRate >= productionRate * unitCount * size, "[LibUnit] Production rate cannot be negative");
-    ProductionRate.set(rockEntity, resource, prevProductionRate - (productionRate * unitCount * size));
-    ConsumptionRate.set(
-      rockEntity,
-      P_RawResource.get(resource),
-      prevProductionRate - (productionRate * unitCount * size)
-    );
+    require(prevProductionRate >= productionRate * unitCount, "[LibUnit] Production rate cannot be negative");
+    ProductionRate.set(rockEntity, resource, prevProductionRate - (productionRate * unitCount));
+    ConsumptionRate.set(rockEntity, P_RawResource.get(resource), prevProductionRate - (productionRate * unitCount));
   }
 }
