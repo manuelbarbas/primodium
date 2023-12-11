@@ -8,6 +8,7 @@ import {
   SetValue,
   Tween,
   OnRxjsSystem,
+  OnOnce,
 } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
 import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
@@ -15,13 +16,14 @@ import { Coord } from "@latticexyz/utils";
 import { ERock } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
-import { clampedIndex, getRandomRange } from "src/util/common";
+import { clampedIndex, entityToAddress, getRandomRange } from "src/util/common";
 import { EntityType, RockRelationship } from "src/util/constants";
 import { getRockRelationship } from "src/util/spacerock";
 import { ObjectText } from "../../common/object-components/text";
 import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 import { throttleTime } from "rxjs";
 import { entityToPlayerName } from "src/util/name";
+import { getLinkedAddress } from "src/util/web2/getLinkedAddress";
 
 export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -171,6 +173,16 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       ObjectText(entityToPlayerName(ownedBy), {
         id: "addressLabel",
         fontSize: Math.max(8, Math.min(24, 16 / scene.camera.phaserCamera.zoom)),
+      }),
+      OnOnce(async (gameObject) => {
+        const linkedAddress = await getLinkedAddress(entityToAddress(ownedBy));
+
+        const name =
+          linkedAddress.ensName ?? linkedAddress.address
+            ? entityToAddress(linkedAddress.address ?? playerEntity, true)
+            : entityToPlayerName(playerEntity);
+
+        gameObject.setText(name);
       }),
       OnRxjsSystem(
         // @ts-ignore
