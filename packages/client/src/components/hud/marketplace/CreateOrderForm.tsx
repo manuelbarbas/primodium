@@ -108,13 +108,15 @@ export const CreateOrderForm = () => {
             placeholder="Select Item"
             value={selectedItem}
             onChange={(e) => setSelectedItem(e.target.value as Entity)}
-            className="w-full p-4 bg-white/10 text-sm focus:ring-secondary focus:border-secondary"
+            className={`w-full p-4 bg-white/10 ${
+              selectedItem === "default" ? "text-gray-500" : "text-gray-300"
+            } font-bold text-sm focus:ring-secondary focus:border-secondary`}
           >
-            <option className="text-gray-300 opacity/50 font-mono" value="default" disabled hidden>
+            <option className="text-gray-300 opacity-50 font-mono" value="default" disabled hidden>
               Select an item
             </option>
             {[...resources, ...units].map((resource) => (
-              <option key={resource} value={resource} className="font-mono">
+              <option key={resource} value={resource} className="font-mono font-bold">
                 {getBlockTypeName(resource)}
               </option>
             ))}

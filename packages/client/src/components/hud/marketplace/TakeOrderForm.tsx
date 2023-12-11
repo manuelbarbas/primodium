@@ -80,7 +80,7 @@ export function TakeOrderForm() {
                 <IconButton
                   key={resource}
                   onClick={() => setSelectedItem(resource)}
-                  className={`flex-1 flex-col w-full lg:w-auto items-center justify-center p-6 ${
+                  className={`flex-1 flex-col w-full lg:w-auto items-center justify-center p-4 ${
                     selectedItem === resource ? "bg-base-300 border-accent" : ""
                   }`}
                   imageUri={ResourceImage.get(resource) ?? ""}

@@ -1,16 +1,19 @@
 import { Join } from "src/components/core/Join";
 import { Tabs } from "src/components/core/Tabs";
+import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
+import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
-import { EntityType } from "src/util/constants";
+import { EntityType, ResourceImage } from "src/util/constants";
 import { formatEther } from "viem";
-import { UtilityLabel } from "../spacerock-menu/widgets/resources/utilities/UtilityLabel";
 import { CreateOrderForm } from "./CreateOrderForm";
 import { TakeOrderForm } from "./TakeOrderForm";
 
 export const Marketplace = () => {
   const { network } = useMud();
   const balance = components.WETHBalance.use(network.playerEntity)?.value ?? 0n;
+  const { resourceCount } = useFullResourceCount(EntityType.MaxOrders);
+  const resourceIcon = ResourceImage.get(EntityType.MaxOrders) ?? "";
 
   return (
     <div className="h-full w-full p-4 bg-neutral">
@@ -24,15 +27,22 @@ export const Marketplace = () => {
               Your Orders
             </Tabs.Button>
           </Join>
-          <div className="absolute right-2 margin-auto my-2 flex flex-col items-end justify-center">
-            <div className="flex justify-center items-center gap-1 rounded-md p-1 h-full">
+          <div className="absolute left-2 margin-auto my-2 flex flex-col items-end justify-end text-xs">
+            <div className="flex justify-center items-center gap-1 rounded-md mb-1 h-full">
               <p className="font-bold">{formatEther(balance)}</p>
-              <p className="flex h-fit text-xs bg-warning px-1 rounded-sm font-bold items-center">WETH</p>
-            </div>
 
-            <div className="flex items-center justify-center rounded-md p-1 h-full">
-              <UtilityLabel name="Orders" resourceId={EntityType.MaxOrders} />
+              <p className="font-bold text-success">wETH</p>
             </div>
+            <hr className="w-full border-secondary/50" />
+
+            <ResourceIconTooltip
+              className="mt-1"
+              name={"Max Orders"}
+              amount={resourceCount}
+              resource={EntityType.MaxOrders}
+              image={resourceIcon}
+              fontSize={"xs"}
+            />
           </div>
         </div>
         <Tabs.Pane index={0} className="w-full grow border-none">

@@ -69,28 +69,28 @@ export const Cart = ({
         ))}
       </div>
 
-      <div className="flex gap-2 w-full">
-        <div className="flex gap-1 flex-col items-center justify-center w-full">
-          <p>
-            <span className="font-medium">{formatEther(totalCost)} WETH</span>
+      <div className="flex gap-2 w-full items-center">
+        <div className="flex flex-col items-center justify-center w-full">
+          <p className="font-bold inline">
+            {formatEther(totalCost)} <p className="inline text-success">wETH</p>
           </p>
-          <span className="text-xs text-gray-400">balance: {formatEther(balance)} WETH</span>
+          <span className="text-xs text-gray-400">balance: {formatEther(balance)} wETH</span>
         </div>
 
         <TransactionQueueMask queueItemId={hashEntities(network.playerEntity, ...Object.keys(takenOrders))}>
           <Button
-            className="btn-secondary h-full"
+            className="btn-secondary h-full btn-sm"
             disabled={Object.keys(takenOrders).length === 0}
             onClick={() => {
               takeOrders(takenOrders, network);
               clearOrders();
             }}
           >
-            Purchase
+            Buy
           </Button>
         </TransactionQueueMask>
 
-        <Button className="btn h-full" onClick={clearOrders} disabled={Object.keys(takenOrders).length === 0}>
+        <Button className="btn h-full btn-sm" onClick={clearOrders} disabled={Object.keys(takenOrders).length === 0}>
           Clear
         </Button>
       </div>
