@@ -122,11 +122,6 @@ export interface SystemAddOrderProperties {
   /**
    * Count of a resource, currently only used in Marketplace events. Logged here with identical scaling displayed in the frontend.
    *
-   * ```
-   * RESOURCE_SCALE = BigInt(100)
-   * scaledCount = BigInt(count) * RESOURCE_SCALE
-   * ```
-   *
    * | Rule | Value |
    * |---|---|
    * | Type | number |
@@ -134,11 +129,6 @@ export interface SystemAddOrderProperties {
   resourceCount: number;
   /**
    * Price of a resource. The raw price is stored in wei units in smart contracts, but logged here with identical scaling displayed in the frontend.
-   *
-   * ```
-   * RESOURCE_SCALE = BigInt(100)
-   * scaledPrice = BigInt(Number(price) * 1e18) / RESOURCE_SCALE
-   * ```
    *
    * | Rule | Value |
    * |---|---|
@@ -1933,11 +1923,6 @@ export interface SystemUpdateOrderProperties {
   /**
    * Count of a resource, currently only used in Marketplace events. Logged here with identical scaling displayed in the frontend.
    *
-   * ```
-   * RESOURCE_SCALE = BigInt(100)
-   * scaledCount = BigInt(count) * RESOURCE_SCALE
-   * ```
-   *
    * | Rule | Value |
    * |---|---|
    * | Type | number |
@@ -1945,11 +1930,6 @@ export interface SystemUpdateOrderProperties {
   resourceCount: number;
   /**
    * Price of a resource. The raw price is stored in wei units in smart contracts, but logged here with identical scaling displayed in the frontend.
-   *
-   * ```
-   * RESOURCE_SCALE = BigInt(100)
-   * scaledPrice = BigInt(Number(price) * 1e18) / RESOURCE_SCALE
-   * ```
    *
    * | Rule | Value |
    * |---|---|
