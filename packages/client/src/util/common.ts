@@ -135,9 +135,9 @@ export const entityToAddress = (entity: Entity | string, shorten = false): Hex =
 
 export const isPlayer = (entity: Entity) => {
   const trimmedAddress = trim(entity as Hex);
-
-  if (!isAddress(trimmedAddress)) return false;
-
   const addressSize = size(trimmedAddress);
-  return addressSize <= 20;
+
+  const address = addressSize <= 20 ? pad(trimmedAddress, { size: 20 }) : trimmedAddress;
+
+  return isAddress(address);
 };
