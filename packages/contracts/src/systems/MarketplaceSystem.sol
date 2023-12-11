@@ -34,11 +34,6 @@ contract MarketplaceSystem is PrimodiumSystem {
 
     orderId = keccak256(abi.encodePacked(resource, count, block.timestamp, msg.sender));
 
-    require(
-      count > 0 && count <= ResourceCount.get(homeAsteroid, uint8(resource)),
-      "[MarketplaceSystem] Invalid count"
-    );
-
     MarketplaceOrder.set(
       orderId,
       MarketplaceOrderData({
@@ -64,10 +59,7 @@ contract MarketplaceSystem is PrimodiumSystem {
     require(orderCount > 0, "[MarketplaceSystem] Max orders reached");
 
     orderId = keccak256(abi.encodePacked(resource, count, block.timestamp, msg.sender));
-    uint256 currCount = orderType == EOrderType.Resource
-      ? ResourceCount.get(homeAsteroid, resource)
-      : UnitCount.get(playerEntity, homeAsteroid, P_EnumToPrototype.get(UnitKey, resource));
-    require(orderType != EOrderType.Resource || (count > 0 && count <= currCount), "[MarketplaceSystem] Invalid count");
+    require(count > 0, "[MarketplaceSystem] Invalid count");
 
     MarketplaceOrder.set(
       orderId,
@@ -93,11 +85,6 @@ contract MarketplaceSystem is PrimodiumSystem {
     require(orderCount > 0, "[MarketplaceSystem] Max orders reached");
 
     orderId = keccak256(abi.encodePacked(unitType, count, block.timestamp, msg.sender));
-
-    require(
-      count > 0 && count <= UnitCount.get(playerEntity, homeAsteroid, P_EnumToPrototype.get(UnitKey, uint8(unitType))),
-      "[MarketplaceSystem] Invalid count"
-    );
 
     MarketplaceOrder.set(
       orderId,
@@ -138,10 +125,6 @@ contract MarketplaceSystem is PrimodiumSystem {
     MarketplaceOrderData memory order = MarketplaceOrder.get(orderId);
     if (count == 0) return cancelOrder(orderId);
     bytes32 homeAsteroid = Home.getAsteroid(order.seller);
-    uint256 playerBalance = order.orderType == uint8(EOrderType.Resource)
-      ? ResourceCount.get(homeAsteroid, uint8(order.resource))
-      : UnitCount.get(order.seller, homeAsteroid, P_EnumToPrototype.get(UnitKey, uint8(order.resource)));
-    require(count <= playerBalance, "[MarketplaceSystem] Not enough resource in balance");
 
     MarketplaceOrder.setCount(orderId, count);
   }
