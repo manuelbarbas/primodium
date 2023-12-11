@@ -1338,7 +1338,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
     levels: {
       0: {
-        P_RequiredResources: getResourceValues({ Iron: 5000000, PVCell: 500000, U_Vessel: 1 }),
+        P_RequiredResources: getResourceValues({ Iron: 2000000, PVCell: 500000, U_Vessel: 1 }),
         P_RequiredBaseLevel: { value: 3n },
         P_MiningRate: { value: 1n },
         P_Unit: {
@@ -1352,7 +1352,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 50000 }),
         P_RequiredBaseLevel: { value: 3n },
-        P_RequiredResources: getResourceValues({ Iron: 5000000, PVCell: 500000, U_Vessel: 1 }),
+        P_RequiredResources: getResourceValues({ Iron: 2000000, PVCell: 500000, U_Vessel: 1 }),
         P_MiningRate: { value: 2n },
         P_Unit: {
           attack: 50n,
@@ -1365,7 +1365,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       2: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 150000 }),
         P_RequiredBaseLevel: { value: 4n },
-        P_RequiredResources: getResourceValues({ Iron: 5000000, PVCell: 500000, U_Vessel: 1 }),
+        P_RequiredResources: getResourceValues({ Iron: 2000000, PVCell: 500000, U_Vessel: 1 }),
         P_MiningRate: { value: 3n },
         P_Unit: {
           attack: 100n,
@@ -1378,7 +1378,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       3: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 500000 }),
         P_RequiredBaseLevel: { value: 6n },
-        P_RequiredResources: getResourceValues({ Iron: 5000000, PVCell: 500000, U_Vessel: 1 }),
+        P_RequiredResources: getResourceValues({ Iron: 2000000, PVCell: 500000, U_Vessel: 1 }),
         P_MiningRate: { value: 4n },
         P_Unit: {
           attack: 250n,
@@ -1391,7 +1391,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       4: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 1000000 }),
         P_RequiredBaseLevel: { value: 7n },
-        P_RequiredResources: getResourceValues({ Iron: 5000000, PVCell: 500000, U_Vessel: 1 }),
+        P_RequiredResources: getResourceValues({ Iron: 2000000, PVCell: 500000, U_Vessel: 1 }),
         P_MiningRate: { value: 5n },
         P_Unit: {
           attack: 500n,
@@ -1404,7 +1404,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       5: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 1500000 }),
         P_RequiredBaseLevel: { value: 8n },
-        P_RequiredResources: getResourceValues({ Iron: 5000000, PVCell: 500000, U_Vessel: 1 }),
+        P_RequiredResources: getResourceValues({ Iron: 2000000, PVCell: 500000, U_Vessel: 1 }),
         P_MiningRate: { value: 6n },
         P_Unit: {
           attack: 1000n,
