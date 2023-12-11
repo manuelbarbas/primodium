@@ -2204,6 +2204,10 @@ export interface TokenMintProperties {
    */
   tokenMintTo: string;
   /**
+   * Amount of token that is transferred or minted, logged in wei units as a string. This is named `value` in line with the ERC20 standard.
+   */
+  tokenValue: string;
+  /**
    * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
    */
   transactionFrom?: string;
@@ -2250,9 +2254,9 @@ export interface TokenTransferProperties {
    */
   tokenTransferTo: string;
   /**
-   * Amount of token that is transferred, logged in raw wei units as a string. This is named `value` in line with the ERC20 standard.
+   * Amount of token that is transferred or minted, logged in wei units as a string. This is named `value` in line with the ERC20 standard.
    */
-  tokenTransferValue: string;
+  tokenValue: string;
   /**
    * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
    */

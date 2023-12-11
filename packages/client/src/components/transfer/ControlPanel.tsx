@@ -87,7 +87,7 @@ export function ControlPanel() {
   const burnerAddress = normalizeAddress(network.address);
   const isAdmin = externalAddress === adminAddress;
 
-  const onMint = async (address: string, amount: number) => {
+  const onMint = async (address: string, amount: bigint) => {
     if (!client) return;
     await execute(
       () => client.tokenContract.write.mint([address as Hex, BigInt(amount)]),
@@ -98,6 +98,7 @@ export function ControlPanel() {
       (receipt) => {
         ampli.tokenMint({
           tokenMintTo: address,
+          tokenValue: amount.toString(),
           ...parseReceipt(receipt),
         });
       }
@@ -115,7 +116,7 @@ export function ControlPanel() {
       (receipt) => {
         ampli.tokenTransfer({
           tokenTransferTo: address,
-          tokenTransferValue: amount.toString(),
+          tokenValue: amount.toString(),
           ...parseReceipt(receipt),
         });
       }
