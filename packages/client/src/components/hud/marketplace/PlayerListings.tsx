@@ -109,7 +109,7 @@ export const PlayerListings = ({
   return (
     <div className="p-2 flex flex-col justify-between h-full">
       <table className="min-w-full divide-y divide-accent">
-        <thead>
+        <thead className="text-sm uppercase">
           <tr>
             <th className="sortable-header">
               <div
@@ -174,7 +174,7 @@ const Listing = ({ listing, availableResource }: { listing: UserListing; availab
             tooltipDirection={"right"}
             text={""}
           />
-          <p className="text-xs text-gray-500">({availableResource.toString()})</p>
+          <p className="text-xs text-gray-500 ml-1">({(availableResource / RESOURCE_SCALE).toString()})</p>
         </div>
       </td>
 
@@ -203,7 +203,7 @@ const Listing = ({ listing, availableResource }: { listing: UserListing; availab
         <div className="flex justify-center p-1 gap-1 items-center">
           <NumberInput
             startingValue={scaledCount}
-            max={Number(availableResource)}
+            max={Number(availableResource / RESOURCE_SCALE)}
             toFixed={2}
             reset={!newCount}
             onChange={function (val: number): void {
