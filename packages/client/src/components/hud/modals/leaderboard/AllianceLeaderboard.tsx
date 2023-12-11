@@ -18,6 +18,7 @@ import {
 } from "react-icons/fa";
 import { GiRank1, GiRank2, GiRank3 } from "react-icons/gi";
 import { FixedSizeList as List } from "react-window";
+import AutoSizer from "react-virtualized-auto-sizer";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { Checkbox } from "src/components/core/Checkbox";
@@ -69,20 +70,25 @@ export const ScoreScreen = () => {
   return (
     <Navigator.Screen
       title="score"
-      className="flex flex-col items-center justify-between w-full h-full text-xs pointer-events-auto"
+      className="lex flex-col !items-start justify-between w-full h-full text-xs pointer-events-auto"
     >
+      {/* CAUSED BY INCOMPATIBLE REACT VERSIONS */}
       {data && (
-        <List height={285} width="100%" itemCount={data.alliances.length} itemSize={47} className="scrollbar">
-          {({ index, style }) => {
-            const alliance = data.alliances[index];
-            const score = data.scores[index];
-            return (
-              <div style={style} className="pr-2">
-                <LeaderboardItem key={index} index={index} score={Number(score)} entity={alliance} />
-              </div>
-            );
-          }}
-        </List>
+        <AutoSizer>
+          {({ height, width }: { height: number; width: number }) => (
+            <List height={height} width={width} itemCount={data.alliances.length} itemSize={47} className="scrollbar">
+              {({ index, style }) => {
+                const alliance = data.alliances[index];
+                const score = data.scores[index];
+                return (
+                  <div style={style} className="pr-2">
+                    <LeaderboardItem key={index} index={index} score={Number(score)} entity={alliance} />
+                  </div>
+                );
+              }}
+            </List>
+          )}
+        </AutoSizer>
       )}
       {!data && (
         <SecondaryCard className="w-full flex-grow items-center justify-center font-bold opacity-50">
@@ -193,7 +199,10 @@ export const ManageScreen: React.FC = () => {
           </div>
         </div>
 
-        <Join direction="vertical" className="overflow-auto w-full h-64 scrollbar">
+        <Join
+          direction="vertical"
+          className="overflow-auto w-full h-full scrollbar bg-neutral border border-secondary/25"
+        >
           {players.map((player) => {
             const role = player?.role ?? EAllianceRole.Member;
             const entity = player.entity;
@@ -308,16 +317,19 @@ export const InvitesScreen: React.FC = () => {
   return (
     <Navigator.Screen
       title="invites"
-      className="flex flex-col items-center w-full text-xs pointer-events-auto h-full overflow-hidden"
+      className="flex flex-col items-center w-full h-full text-xs pointer-events-auto h-full overflow-hidden"
     >
-      <div className="w-full gap-2 mb-2">
+      <div className="flex flex-grow w-full gap-2 mb-2">
         {!playerAlliance && (
-          <div className={`w-full flex flex-col flex-grow`}>
+          <div className={`w-full flex flex-col`}>
             <div className="flex justify-between items-center">
               <p className="font-bold p-1 opacity-75">INVITES</p>
             </div>
 
-            <Join direction="vertical" className="overflow-auto w-full h-56 scrollbar">
+            <Join
+              direction="vertical"
+              className="overflow-auto w-full h-full scrollbar bg-neutral border border-secondary/25"
+            >
               {invites.map((entity) => {
                 const playerInvite = components.PlayerInvite.get(entity);
                 const playerEntities = components.PlayerAlliance.getAllWith({
@@ -368,17 +380,20 @@ export const InvitesScreen: React.FC = () => {
           </div>
         )}
         {role <= EAllianceRole.CanInvite && (
-          <div className="w-full flex flex-col flex-grow">
+          <div className="w-full flex flex-col">
             <div className="flex justify-between items-center">
               <p className="font-bold p-1 opacity-75">REQUESTS</p>
             </div>
             {full && (
-              <SecondaryCard className="w-full h-56 font-bold items-center justify-center opacity-75 uppercase">
+              <SecondaryCard className="w-full h-full font-bold items-center justify-center opacity-75 uppercase">
                 alliance full
               </SecondaryCard>
             )}
             {!full && (
-              <Join direction="vertical" className="overflow-auto w-full h-56 scrollbar">
+              <Join
+                direction="vertical"
+                className="overflow-auto w-full h-full scrollbar bg-neutral border border-secondary/25"
+              >
                 {joinRequests.map((entity) => {
                   const request = components.AllianceRequest.get(entity);
 
@@ -427,7 +442,7 @@ export const InvitesScreen: React.FC = () => {
       </div>
 
       {role > EAllianceRole.CanInvite && playerAlliance && (
-        <SecondaryCard className="w-full flex-grow items-center justify-center font-bold opacity-50 mb-2 text-center">
+        <SecondaryCard className="w-full h-full items-center justify-center font-bold opacity-50 mb-2 text-center">
           NEED INVITE ROLE TO SEND INVITES OR ACCEPT JOIN REQUESTS
         </SecondaryCard>
       )}
@@ -510,7 +525,6 @@ const LeaderboardItem = ({
   const playerAlliance = components.PlayerAlliance.get(playerEntity)?.alliance as Entity;
   const inviteOnly = allianceMode === EAllianceInviteMode.Closed;
 
-  if (!playerAlliance) return null;
   return (
     <SecondaryCard
       className={`grid grid-cols-7 w-full border border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center h-10 ${
@@ -521,7 +535,7 @@ const LeaderboardItem = ({
       <div className="col-span-6 flex justify-between items-center">
         <div className="flex gap-1 items-center">
           <FaLock className="text-warning opacity-75" />
-          <p className="font-bold" style={{ color: entityToColor(playerAlliance) }}>
+          <p className="font-bold" style={{ color: entityToColor(entity) }}>
             [{getAllianceName(entity, true)}]
           </p>
         </div>
@@ -562,6 +576,8 @@ const InfoRow = ({ data }: { data?: ComponentValue<typeof components.AllianceLea
 const PlayerInfo = ({ rank, score, alliance }: { rank: number; alliance: Entity; score: number }) => {
   const playerEntity = useMud().network.playerEntity;
   const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
+  const playerAlliance = components.PlayerAlliance.use(playerEntity)?.alliance as Entity | undefined;
+  const joinRequests = components.AllianceRequest.useAllWith({ alliance: playerAlliance ?? singletonEntity }) ?? [];
 
   return (
     <SecondaryCard className="w-full border border-slate-700 p-2 bg-slate-800">
@@ -572,7 +588,7 @@ const PlayerInfo = ({ rank, score, alliance }: { rank: number; alliance: Entity;
             <FaCog />
           </Navigator.NavButton>
           <Navigator.NavButton to="invites" className="flex bg-secondary btn-sm">
-            <FaEnvelope /> <b>{invites.length}</b>
+            <FaEnvelope /> <b>{joinRequests.length ?? invites.length}</b>
           </Navigator.NavButton>
         </div>
       }
