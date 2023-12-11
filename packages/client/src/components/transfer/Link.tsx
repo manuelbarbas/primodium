@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useMud } from "src/hooks";
-import { Hex, trim } from "viem";
+import { Hex } from "viem";
 import { useAccount, useSignMessage } from "wagmi";
 import { Button } from "../core/Button";
 import { AddressDisplay } from "../hud/AddressDisplay";
 import { ampli } from "src/ampli";
+import { normalizeAddress } from "src/util/common";
 
 type LocalToExternalResponse = { address: Hex | null; ensName: string | null };
 
@@ -16,17 +17,18 @@ export function Link() {
   const externalAccount = useAccount();
   const { network } = useMud();
 
-  const burnerAddress = trim(network.address);
-  const fetchLocalLinkedAddress = async () => {
+  const burnerAddress = normalizeAddress(network.address);
+  const fetchLocalLinkedAddress = useCallback(async () => {
     const res = await fetch(
       `${import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL}/linked-address/local-to-external/${burnerAddress}`
     );
     const responseJSON = await res.json();
     setLinkedAddress(responseJSON);
-  };
+  }, [burnerAddress]);
+
   useEffect(() => {
     fetchLocalLinkedAddress();
-  }, [externalAccount.address, burnerAddress]);
+  }, [externalAccount.address, burnerAddress, fetchLocalLinkedAddress]);
 
   useEffect(() => {
     const createMessage = async () => {
@@ -36,7 +38,7 @@ export function Link() {
     createMessage();
   }, [network.walletClient, network.address]);
 
-  const signMessageAndLink = async () => {
+  const signMessageAndLink = useCallback(async () => {
     if (!externalAccount || !externalAccount.address) return;
     try {
       const externalSignature = await signMessageAsync({ message: externalAccount.address });
@@ -76,7 +78,7 @@ export function Link() {
     } finally {
       fetchLocalLinkedAddress();
     }
-  };
+  }, [burnerAddress, externalAccount, fetchLocalLinkedAddress, signMessageAsync, signature]);
 
   if (!externalAccount.address) return null;
   if (!linkedAddress)

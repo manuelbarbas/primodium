@@ -1,7 +1,6 @@
 import { FC, ReactNode, createContext, useCallback, useContext, useLayoutEffect, useState } from "react";
 import { Button } from "./Button";
 import { Card, SecondaryCard } from "./Card";
-import { Tooltip } from "./Tooltip";
 
 interface NavigationContextValue {
   navigateTo: (screenTitle: string, replace?: boolean) => void;
@@ -88,18 +87,18 @@ const NavButton: FC<{
   const { navigateTo, history } = useNavigation();
 
   return (
-    <Tooltip text={tooltip} direction={tooltipDirection}>
-      <Button
-        className={className}
-        onClick={() => {
-          if (onClick) onClick();
-          navigateTo(to, true);
-        }}
-        disabled={disabled || to === history[history.length - 1]}
-      >
-        {children}
-      </Button>
-    </Tooltip>
+    <Button
+      tooltip={tooltip}
+      tooltipDirection={tooltipDirection}
+      className={className}
+      onClick={() => {
+        if (onClick) onClick();
+        navigateTo(to, true);
+      }}
+      disabled={disabled || to === history[history.length - 1]}
+    >
+      {children}
+    </Button>
   );
 };
 

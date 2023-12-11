@@ -62,6 +62,7 @@ export enum TransactionQueueType {
   Raid,
   Land,
   Demolish,
+  Move,
   ClaimObjective,
   JoinAlliance,
   RequestToJoin,

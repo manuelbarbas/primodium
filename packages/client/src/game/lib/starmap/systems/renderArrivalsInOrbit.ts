@@ -1,13 +1,6 @@
 import { DepthLayers } from "@game/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import {
-  ComponentUpdate,
-  Has,
-  defineEnterSystem,
-  defineExitSystem,
-  defineUpdateSystem,
-  namespaceWorld,
-} from "@latticexyz/recs";
+import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
@@ -17,73 +10,84 @@ import { hashKeyEntity } from "src/util/encode";
 import { ObjectPosition, Tween } from "../../common/object-components/common";
 import { Circle } from "../../common/object-components/graphics";
 
-export const renderArrivalsInOrbit = (scene: Scene, mud: SetupResult) => {
-  const playerEntity = mud.network.playerEntity;
+const orbitRadius = 64;
+function calculatePosition(angleInDegrees: number, origin: { x: number; y: number }): { x: number; y: number } {
+  const radians = (angleInDegrees * Math.PI) / 180; // Convert angle to radians
+  const x = orbitRadius * Math.cos(radians); // Calculate x coordinate
+  const y = orbitRadius * Math.sin(radians); // Calculate y coordinate
+
+  return { x: x + origin.x, y: y + origin.y };
+}
+
+const getAllOrbitingArrivals = (entity: Entity, playerEntity: Entity) => {
+  if (
+    components.PirateAsteroid.has(entity) &&
+    hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(entity)?.value
+  )
+    return [];
+
+  return components.Arrival.get({
+    destination: entity,
+    onlyOrbiting: true,
+  });
+};
+
+export const renderEntityOrbitingArrivals = (rockEntity: Entity, playerEntity: Entity, scene: Scene) => {
+  const objIndexSuffix = "_spacerockOrbits";
   const { tileWidth, tileHeight } = scene.tilemap;
-  const gameWorld = namespaceWorld(world, "game");
-  const objIndexSuffix = "_arrivalOrbit";
+  const allArrivals = getAllOrbitingArrivals(rockEntity, playerEntity);
+  const position = components.Position.get(rockEntity);
+  scene.objectPool.removeGroup(rockEntity + objIndexSuffix);
+  if (!position || allArrivals.length == 0) return;
 
-  const query = [Has(components.Arrival)];
+  scene.objectPool.removeGroup(rockEntity + objIndexSuffix);
 
-  const render = ({ entity }: ComponentUpdate) => {
-    scene.objectPool.removeGroup(entity + objIndexSuffix);
-    const arrival = components.Arrival.getEntity(entity);
+  const destination = components.Position.get(rockEntity);
 
-    if (!arrival) return;
+  if (!destination) return;
 
-    //don't render if arrival is in transit
-    const now = components.Time.get(entity)?.value ?? 0n;
-    if (arrival.arrivalTime >= now) return;
+  const destinationPixelCoord = tileCoordToPixelCoord({ x: destination.x, y: -destination.y }, tileWidth, tileHeight);
 
-    //render personal pirate only
-    if (
-      components.PirateAsteroid.has(arrival.destination) &&
-      hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(arrival.destination)?.value
-    )
-      return;
+  const arrivalOrbit = scene.objectPool.getGroup(rockEntity + objIndexSuffix);
 
-    const destination = components.Position.get(arrival.destination);
-
-    if (!destination) return;
-
-    const destinationPixelCoord = tileCoordToPixelCoord({ x: destination.x, y: -destination.y }, tileWidth, tileHeight);
-
-    const arrivalOrbit = scene.objectPool.getGroup(entity + objIndexSuffix);
-
+  arrivalOrbit.add("Graphics").setComponents([
+    ObjectPosition(destinationPixelCoord, DepthLayers.Path),
+    Circle(orbitRadius, {
+      color: 0x363636,
+      borderThickness: 1,
+      alpha: 0,
+    }),
+  ]);
+  allArrivals.forEach((arrival, i) => {
+    const angle = ((i + 1) / allArrivals.length) * 360;
+    const distance = 360 / allArrivals.length;
     arrivalOrbit.add("Graphics").setComponents([
       ObjectPosition(destinationPixelCoord, DepthLayers.Marker),
-      Circle(50, {
-        color: 0x363636,
-        borderThickness: 1,
-        alpha: 0,
-      }),
       Circle(5, {
         color: 0x00ffff,
         borderThickness: 1,
         alpha: 0.75,
-        position: {
-          x: destinationPixelCoord.x + 50,
-          y: destinationPixelCoord.y,
-        },
+        position: calculatePosition(angle, destinationPixelCoord),
       }),
       Tween(scene, {
-        angle: 360,
-        duration: 20 * 1000,
+        angle: distance,
+        duration: (20 * 1000) / allArrivals.length,
         repeat: -1,
         ease: "Linear",
       }),
     ]);
-  };
-
-  defineEnterSystem(gameWorld, query, (update) => {
-    render(update);
   });
+};
 
-  defineUpdateSystem(gameWorld, query, render);
+export const renderArrivalsInOrbit = (scene: Scene, mud: SetupResult) => {
+  const playerEntity = mud.network.playerEntity;
+  const gameWorld = namespaceWorld(world, "game");
 
-  defineExitSystem(gameWorld, query, ({ entity }) => {
-    const objIndex = entity + objIndexSuffix;
-
-    scene.objectPool.removeGroup(objIndex);
+  defineComponentSystem(gameWorld, components.Arrival, (update) => {
+    if (update.value[0]) {
+      renderEntityOrbitingArrivals(update.value[0].destination as Entity, playerEntity, scene);
+    } else if (update.value[1]) {
+      renderEntityOrbitingArrivals(update.value[1].destination as Entity, playerEntity, scene);
+    }
   });
 };

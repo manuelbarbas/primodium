@@ -19,7 +19,7 @@ export const ElectricityLabel = () => {
         <IconLabel imageUri={resourceIcon ?? ""} tooltipText="Electricity" className="text-sm" />
 
         <Progress value={Number(resourceCount)} max={Number(maxStorage)} className="w-24 progress-success" />
-        <p className="text-xs opacity-75 font-bold uppercase">{percentFull}%</p>
+        <p className="text-xs opacity-75 font-bold uppercase">{isNaN(percentFull) ? 0 : percentFull}%</p>
       </SecondaryCard>
       <p className="text-xs opacity-75 font-bold">
         {formatNumber(resourceCount / RESOURCE_SCALE)}/{formatNumber(maxStorage / RESOURCE_SCALE)} mWH
