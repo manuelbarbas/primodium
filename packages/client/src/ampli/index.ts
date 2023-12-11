@@ -109,17 +109,74 @@ export interface SystemAcceptJoinRequestProperties {
 
 export interface SystemAddOrderProperties {
   /**
-   * Price of a resource listed as wei
+   * Count of a resource, currently only used in Marketplace events. Logged here with identical scaling displayed in the frontend.
+   *
+   * ```
+   * RESOURCE_SCALE = BigInt(100)
+   * scaledCount = BigInt(count) * RESOURCE_SCALE
+   * ```
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | number |
    */
-  resourcePrice: string;
+  resourceCount: number;
   /**
-   * Quantity of a resource, currently only used in Marketplace events.
+   * Price of a resource. The raw price is stored in wei units in smart contracts, but logged here with identical scaling displayed in the frontend.
+   *
+   * ```
+   * RESOURCE_SCALE = BigInt(100)
+   * scaledPrice = BigInt(Number(price) * 1e18) / RESOURCE_SCALE
+   * ```
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | number |
    */
-  resourceQuantity: string;
+  resourcePrice: number;
   /**
    * Name of a resource in plaintext, as returned by `BlockIdToKey` in `constants.ts` when passing in an EntityID.
    */
   resourceType: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
 }
 
 export interface SystemBuildProperties {
@@ -228,6 +285,52 @@ export interface SystemBuildPathProperties {
    * @maxItems 2
    */
   endCoord: [number, number];
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemCancelOrderProperties {
+  /**
+   * An ID for a Marketplace order. An array of IDs should use the `marketplaceOrderIds` property instead.
+   */
+  marketplaceOrderId: string;
   /**
    * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
    */
@@ -1615,13 +1718,13 @@ export interface SystemSpawnProperties {
 
 export interface SystemTakeOrderBulkProperties {
   /**
-   * Number of Marketplace order IDs, currently used in `system.TakeOrderBulk`. Used in conjunction with `marketplaceOrderIds`.
+   * Counts of resources taken from each Marketplace order, currently used in `system.TakeOrderBulk`. Used in conjunction with `marketplaceOrderIds`.
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Item Type | number |
    */
-  marketplaceOrderCount: number;
+  marketplaceOrderCounts: number[];
   /**
    * An array of Marketplace order IDs, currently used in `system.TakeOrderBulk`. Used in conjunction with `marketplaceOrderCounts`.
    *
@@ -1630,6 +1733,45 @@ export interface SystemTakeOrderBulkProperties {
    * | Item Type | string |
    */
   marketplaceOrderIds: string[];
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
 }
 
 export interface SystemToggleBuildingProperties {
@@ -1777,15 +1919,75 @@ export interface SystemUpdateOrderProperties {
    * An ID for a Marketplace order. An array of IDs should use the `marketplaceOrderIds` property instead.
    */
   marketplaceOrderId: string;
-  resourceCount: string;
   /**
-   * Price of a resource listed as wei
+   * Count of a resource, currently only used in Marketplace events. Logged here with identical scaling displayed in the frontend.
+   *
+   * ```
+   * RESOURCE_SCALE = BigInt(100)
+   * scaledCount = BigInt(count) * RESOURCE_SCALE
+   * ```
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | number |
    */
-  resourcePrice: string;
+  resourceCount: number;
+  /**
+   * Price of a resource. The raw price is stored in wei units in smart contracts, but logged here with identical scaling displayed in the frontend.
+   *
+   * ```
+   * RESOURCE_SCALE = BigInt(100)
+   * scaledPrice = BigInt(Number(price) * 1e18) / RESOURCE_SCALE
+   * ```
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | number |
+   */
+  resourcePrice: number;
   /**
    * Name of a resource in plaintext, as returned by `BlockIdToKey` in `constants.ts` when passing in an EntityID.
    */
   resourceType: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
 }
 
 export interface SystemUpgradeProperties {
@@ -2013,6 +2215,14 @@ export class SystemBuildPath implements BaseEvent {
   event_type = "system.BuildPath";
 
   constructor(public event_properties: SystemBuildPathProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemCancelOrder implements BaseEvent {
+  event_type = "system.CancelOrder";
+
+  constructor(public event_properties: SystemCancelOrderProperties) {
     this.event_properties = event_properties;
   }
 }
@@ -2406,7 +2616,7 @@ export class Ampli {
    *
    * Event has no description in tracking plan.
    *
-   * @param properties The event's properties (e.g. resourcePrice)
+   * @param properties The event's properties (e.g. resourceCount)
    * @param options Amplitude event options.
    */
   systemAddOrder(
@@ -2448,6 +2658,23 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SystemBuildPath(properties), options);
+  }
+
+  /**
+   * system.CancelOrder
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.CancelOrder)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. marketplaceOrderId)
+   * @param options Amplitude event options.
+   */
+  systemCancelOrder(
+    properties: SystemCancelOrderProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemCancelOrder(properties), options);
   }
 
   /**
@@ -2882,7 +3109,7 @@ export class Ampli {
    *
    * Event has no description in tracking plan.
    *
-   * @param properties The event's properties (e.g. marketplaceOrderCount)
+   * @param properties The event's properties (e.g. marketplaceOrderCounts)
    * @param options Amplitude event options.
    */
   systemTakeOrderBulk(
