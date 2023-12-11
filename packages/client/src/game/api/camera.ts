@@ -16,9 +16,9 @@ export const createCameraApi = (targetScene: Scene) => {
 
       const endCoord = {
         // @ts-ignore
-        x: currentTween.data[0].end,
+        x: currentTween.data[0]?.end ?? 0,
         //@ts-ignore
-        y: currentTween.data[1].end,
+        y: currentTween.data[1]?.end ?? 0,
       };
 
       if (coordEq(endCoord, scroll)) return;
