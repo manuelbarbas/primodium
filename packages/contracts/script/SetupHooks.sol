@@ -83,6 +83,8 @@ import { OnToggleBuilding_ProductionRate } from "src/hooks/systemHooks/toggleBui
 import { OnToggleBuilding_Utility } from "src/hooks/systemHooks/toggleBuilding/OnToggleBuilding_Utility.sol";
 
 import { OnMarketPlace_TargetClaimResources } from "src/hooks/systemHooks/marketPlace/OnMarketPlace_TargetClaimResources.sol";
+import { OnMarketPlace_TargetClaimUnits } from "src/hooks/systemHooks/marketPlace/OnMarketPlace_TargetClaimUnits.sol";
+
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
 import { BEFORE_SPLICE_STATIC_DATA, AFTER_SET_RECORD, ALL as STORE_ALL } from "@latticexyz/store/src/storeHookTypes.sol";
 
@@ -189,6 +191,15 @@ function registerMarketplaceHooks(IWorld world, OnBefore_ClaimResources onBefore
   world.grantAccess(ClaimOffsetTableId, address(onMarketPlace_TargetClaimResources));
   world.grantAccess(ProducedResourceTableId, address(onMarketPlace_TargetClaimResources));
   world.registerSystemHook(systemId, onMarketPlace_TargetClaimResources, BEFORE_CALL_SYSTEM);
+
+  OnMarketPlace_TargetClaimUnits onMarketPlace_TargetClaimUnits = new OnMarketPlace_TargetClaimUnits();
+  world.grantAccess(UnitCountTableId, address(onMarketPlace_TargetClaimUnits));
+  world.grantAccess(LastClaimedAtTableId, address(onMarketPlace_TargetClaimUnits));
+  world.grantAccess(ClaimOffsetTableId, address(onMarketPlace_TargetClaimUnits));
+  world.grantAccess(QueueItemUnitsTableId, address(onMarketPlace_TargetClaimUnits));
+  world.grantAccess(QueueUnitsTableId, address(onMarketPlace_TargetClaimUnits));
+  world.grantAccess(ProducedUnitTableId, address(onMarketPlace_TargetClaimUnits));
+  world.registerSystemHook(systemId, onMarketPlace_TargetClaimUnits, BEFORE_CALL_SYSTEM);
 }
 
 function registerAllianceHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
