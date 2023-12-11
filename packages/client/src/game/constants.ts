@@ -281,9 +281,17 @@ export enum AnimationKeys {
 
 export enum AudioKeys {
   Background = "background",
+  Bleep = "Bleep_01",
+  Bleep2 = "Bleep_02",
+  Bleep3 = "Bleep_03",
+  Bleep4 = "Bleep_04",
+  Bleep5 = "Bleep_05",
+  Bleep6 = "Bleep_06",
+  Bleep7 = "Bleep_07",
   Click = "Click_01",
   Click2 = "Click_02",
   Click3 = "Click_03",
+  Click4 = "Click_04",
   Sequence = "Sequence_01",
   Sequence2 = "Sequence_02",
 }
@@ -441,4 +449,18 @@ export enum KeybindActions {
   NextHotbar,
   PrevHotbar,
   Map,
+  NULL,
 }
+
+export const KeyNames: { [key: string]: string } = {
+  ["ONE"]: "1",
+  ["TWO"]: "2",
+  ["THREE"]: "3",
+  ["FOUR"]: "4",
+  ["FIVE"]: "5",
+  ["SIX"]: "6",
+  ["SEVEN"]: "7",
+  ["EIGHT"]: "8",
+  ["NINE"]: "9",
+  ["ZERO"]: "0",
+};

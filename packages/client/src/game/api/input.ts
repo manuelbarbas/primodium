@@ -12,14 +12,12 @@ export function createInputApi(targetScene: Scene) {
     if (!keybinds[keybindAction]) return false;
 
     if (KeybindActions.LeftClick === keybindAction) {
-      if (input.phaserInput.activePointer.downElement?.nodeName !== "CANVAS")
-        return false;
+      if (input.phaserInput.activePointer.downElement?.nodeName !== "CANVAS") return false;
       return input.phaserInput.activePointer.leftButtonDown();
     }
 
     if (KeybindActions.RightClick === keybindAction) {
-      if (input.phaserInput.activePointer.downElement?.nodeName !== "CANVAS")
-        return false;
+      if (input.phaserInput.activePointer.downElement?.nodeName !== "CANVAS") return false;
       return input.phaserInput.activePointer.rightButtonDown();
     }
 
@@ -55,12 +53,7 @@ export function createInputApi(targetScene: Scene) {
     return false;
   }
 
-  function addListener(
-    KeybindActions: KeybindActions,
-    callback: () => void,
-    emitOnRepeat = false,
-    wait = 0
-  ) {
+  function addListener(KeybindActions: KeybindActions, callback: () => void, emitOnRepeat = false, wait = 0) {
     const keybinds = useSettingsStore.getState().keybinds;
     const { input } = targetScene;
 
