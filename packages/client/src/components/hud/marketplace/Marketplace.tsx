@@ -4,9 +4,9 @@ import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { EntityType } from "src/util/constants";
 import { formatEther } from "viem";
+import { UtilityLabel } from "../spacerock-menu/widgets/resources/utilities/UtilityLabel";
 import { CreateOrderForm } from "./CreateOrderForm";
 import { TakeOrderForm } from "./TakeOrderForm";
-import { UtilityLabel } from "../spacerock-menu/widgets/resources/utilities/UtilityLabel";
 
 export const Marketplace = () => {
   const { network } = useMud();

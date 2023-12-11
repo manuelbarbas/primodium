@@ -58,7 +58,7 @@ export const Cart = ({
 
   return (
     <>
-      <p className="text-lg">Your Cart</p>
+      <p className="text-xs opacity-50 font-bold pb-2 uppercase">Cart</p>
       <div className="flex flex-col items-center gap-1 text-sm bg-black/10 p-2 rounded-md w-full h-full overflow-auto scrollbar">
         {Object.entries(takenOrdersFullData).map(([id, listing]) => (
           <Order listing={listing} key={`taken-${id}`} />

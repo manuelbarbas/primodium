@@ -7,7 +7,13 @@ import { SecondaryCard } from "src/components/core/Card";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
-import { ResourceEntityLookup, ResourceEnumLookup, ResourceImage, ResourceStorages } from "src/util/constants";
+import {
+  ResourceEntityLookup,
+  ResourceEnumLookup,
+  ResourceImage,
+  ResourceStorages,
+  UnitStorages,
+} from "src/util/constants";
 import { AvailableListings } from "./AvailableListings";
 import { Cart } from "./Cart";
 
@@ -22,7 +28,7 @@ export function TakeOrderForm() {
   });
 
   useEffect(() => {
-    Object.entries(takenOrders).forEach(([id, count]) => {
+    Object.keys(takenOrders).forEach((id) => {
       if (!allListings.find((listing) => listing.id === id)) {
         const newList = { ...takenOrders };
         delete newList[id as Entity];
@@ -64,8 +70,8 @@ export function TakeOrderForm() {
   return (
     <div className="grid grid-cols-10 grid-rows-5 h-full w-full gap-2">
       <SecondaryCard className="col-span-3 row-span-3 flex flex-col gap-2 overflow-auto scrollbar ">
-        <p className="text-lg">Resources</p>
-        {_.chunk(Array.from(ResourceStorages), 2).map((chunk, i) => (
+        <p className="text-xs opacity-50 font-bold pb-2">ITEMS</p>
+        {_.chunk([...ResourceStorages, ...UnitStorages], 2).map((chunk, i) => (
           <div key={`chunk-${i}`} className="flex flex-col lg:flex-row items-center gap-2 w-full">
             {chunk.map((resource) => (
               <IconButton
@@ -83,7 +89,7 @@ export function TakeOrderForm() {
       </SecondaryCard>
 
       <SecondaryCard className="col-span-7 row-span-5 h-full w-full ">
-        <p className="text-lg">Listings</p>
+        <p className="text-xs opacity-50 font-bold pb-2 uppercase">Listings</p>
         {selectedItem ? (
           <AvailableListings listings={itemListings} takenOrders={takenOrders} setOrder={handleTakeOrderChange} />
         ) : (

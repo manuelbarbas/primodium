@@ -22,6 +22,7 @@ const Blueprint: React.FC<{
     components.Level.use((components.Home.use(player)?.mainBase ?? singletonEntity) as Entity)?.value ?? 1n;
   const levelRequirement =
     components.P_RequiredBaseLevel.getWithKeys({ prototype: buildingType as Hex, level: 1n })?.value ?? 1n;
+  const hasMainbaseLevel = mainbaseLevel >= levelRequirement;
 
   const hasEnough = useHasEnoughResources(getRecipe(buildingType, 1n));
   return (
@@ -39,13 +40,17 @@ const Blueprint: React.FC<{
         components.SelectedAction.set({ value: Action.PlaceBuilding });
       }}
       className={`relative btn-ghost w-fit p-0 ${
-        hasEnough ? "hover:bg-accent border-accent/50" : "hover:bg-error border-error/75"
+        hasMainbaseLevel
+          ? hasEnough
+            ? "hover:bg-accent border-accent/50"
+            : "hover:bg-warning border-warning/75"
+          : "hover:bg-error border-error/75"
       } disabled:opacity-50 border border-secondary hover:z-10 ${
-        selectedBuilding === buildingType ? " ring-2 ring-warning" : ""
+        selectedBuilding === buildingType ? " ring-2 ring-white/75" : ""
       }`}
     >
       <BuildingImageFromType buildingType={buildingType} />
-      {mainbaseLevel < levelRequirement && (
+      {!hasMainbaseLevel && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-error flex text-xs bg">
           <p className="bg-neutral flex gap-1">
             <FaLock /> LVL. {levelRequirement.toString()}

@@ -12,11 +12,11 @@ import { UserListing } from "./CreateOrderForm";
 
 export const PlayerListings = ({
   listings,
-  availableResources,
+  availableItems,
   pageSize = 10,
 }: {
   listings: UserListing[];
-  availableResources: Record<Entity, bigint>;
+  availableItems: Record<Entity, bigint>;
   pageSize?: number;
 }) => {
   const [sortConfig, setSortConfig] = useState<{
@@ -104,7 +104,8 @@ export const PlayerListings = ({
     return <FaMinus />;
   };
 
-  if (listings.length === 0) return <div className="w-full h-full text-center p-20 uppercase bold">No listings</div>;
+  if (listings.length === 0)
+    return <div className="w-full h-full text-center p-20 uppercase text-error animate-pulse">No listings</div>;
 
   return (
     <div className="p-2 flex flex-col justify-between h-full">
@@ -113,7 +114,7 @@ export const PlayerListings = ({
           <tr>
             <th className="sortable-header">
               <div
-                onClick={() => requestSort("resource")}
+                onClick={() => requestSort("item")}
                 className="flex gap-2 items-center justify-center cursor-pointer"
               >
                 Resource {getSortIcon("resource")}
@@ -142,11 +143,7 @@ export const PlayerListings = ({
         </thead>
         <tbody>
           {getCurrentListings().map((listing) => (
-            <Listing
-              key={`listing-${listing.id}`}
-              listing={listing}
-              availableResource={availableResources[listing.resource]}
-            />
+            <Listing key={`listing-${listing.id}`} listing={listing} availableResource={availableItems[listing.item]} />
           ))}
         </tbody>
       </table>
@@ -169,11 +166,7 @@ const Listing = ({ listing, availableResource }: { listing: UserListing; availab
     <tr key={`listing-${listing.id}`}>
       <td className="text-center align-middle ">
         <div className="flex items-center justify-center h-full">
-          <IconLabel
-            imageUri={ResourceImage.get(listing.resource as Entity) ?? ""}
-            tooltipDirection={"right"}
-            text={""}
-          />
+          <IconLabel imageUri={ResourceImage.get(listing.item as Entity) ?? ""} tooltipDirection={"right"} text={""} />
           <p className="text-xs text-gray-500 ml-1">({(availableResource / RESOURCE_SCALE).toString()})</p>
         </div>
       </td>
@@ -228,7 +221,7 @@ const Listing = ({ listing, availableResource }: { listing: UserListing; availab
         <Button
           disabled={!priceDiff && !countDiff}
           onClick={() => {
-            updateOrder(listing.id, listing.resource, newPrice || listing.price, newCount || listing.count, network);
+            updateOrder(listing.id, listing.item, newPrice || listing.price, newCount || listing.count, network);
           }}
         >
           Update
