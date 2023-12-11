@@ -187,7 +187,7 @@ const Listing = ({ listing, availableResource }: { listing: UserListing; availab
             onChange={function (val: number): void {
               setListingUpdate({
                 ...listingUpdate,
-                newPrice: BigInt(val * 1e18) / RESOURCE_SCALE,
+                newPrice: (BigInt(val) * BigInt(1e18)) / RESOURCE_SCALE,
               });
             }}
           />
