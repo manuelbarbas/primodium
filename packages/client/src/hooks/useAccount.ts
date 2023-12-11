@@ -5,6 +5,7 @@ import { components } from "src/network/components";
 import { getAllianceName } from "src/util/alliance";
 import { Entity } from "@latticexyz/recs";
 import { entityToAddress, isPlayer as _isPlayer } from "src/util/common";
+import { entityToPlayerName } from "src/util/name";
 
 export function useAccount(player?: Entity) {
   const { network } = useMud();
@@ -18,8 +19,8 @@ export function useAccount(player?: Entity) {
 
   const address = useMemo(() => {
     if (!isPlayer) return "Pirate";
-    if (!linkedAddress) return entityToAddress(playerEntity, true);
-    return linkedAddress.ensName ?? entityToAddress(linkedAddress.address ?? playerEntity, true);
+    if (!linkedAddress) return entityToPlayerName(playerEntity);
+    return linkedAddress.ensName ?? entityToPlayerName(playerEntity);
   }, [linkedAddress, playerEntity]);
 
   useEffect(() => {
