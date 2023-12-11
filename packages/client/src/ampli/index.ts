@@ -107,6 +107,21 @@ export interface SystemAcceptJoinRequestProperties {
   transactionValid: boolean;
 }
 
+export interface SystemAddOrderProperties {
+  /**
+   * Price of a resource listed as wei
+   */
+  resourcePrice: string;
+  /**
+   * Quantity of a resource, currently only used in Marketplace events.
+   */
+  resourceQuantity: string;
+  /**
+   * Name of a resource in plaintext, as returned by `BlockIdToKey` in `constants.ts` when passing in an EntityID.
+   */
+  resourceType: string;
+}
+
 export interface SystemBuildProperties {
   /**
    * Location of an asteroid represented as the \[z\] element in the Position component. This is stored as a single string because the asteroid location is greater than the int32 number limit and has type BigNumber in the client.
@@ -1598,6 +1613,25 @@ export interface SystemSpawnProperties {
   transactionValid: boolean;
 }
 
+export interface SystemTakeOrderBulkProperties {
+  /**
+   * Number of Marketplace order IDs, currently used in `system.TakeOrderBulk`. Used in conjunction with `marketplaceOrderIds`.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | number |
+   */
+  marketplaceOrderCount: number;
+  /**
+   * An array of Marketplace order IDs, currently used in `system.TakeOrderBulk`. Used in conjunction with `marketplaceOrderCounts`.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | string |
+   */
+  marketplaceOrderIds: string[];
+}
+
 export interface SystemToggleBuildingProperties {
   /**
    * Location of an asteroid represented as the \[z\] element in the Position component. This is stored as a single string because the asteroid location is greater than the int32 number limit and has type BigNumber in the client.
@@ -1736,6 +1770,22 @@ export interface SystemTrainUnitsProperties {
    * Note that this property is suffixed `Name` instead of `Type` for future provisions for custom names per unit.
    */
   unitName: string;
+}
+
+export interface SystemUpdateOrderProperties {
+  /**
+   * An ID for a Marketplace order. An array of IDs should use the `marketplaceOrderIds` property instead.
+   */
+  marketplaceOrderId: string;
+  resourceCount: string;
+  /**
+   * Price of a resource listed as wei
+   */
+  resourcePrice: string;
+  /**
+   * Name of a resource in plaintext, as returned by `BlockIdToKey` in `constants.ts` when passing in an EntityID.
+   */
+  resourceType: string;
 }
 
 export interface SystemUpgradeProperties {
@@ -1939,6 +1989,14 @@ export class SystemAcceptJoinRequest implements BaseEvent {
   event_type = "system.AcceptJoinRequest";
 
   constructor(public event_properties: SystemAcceptJoinRequestProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemAddOrder implements BaseEvent {
+  event_type = "system.AddOrder";
+
+  constructor(public event_properties: SystemAddOrderProperties) {
     this.event_properties = event_properties;
   }
 }
@@ -2159,6 +2217,14 @@ export class SystemSpawn implements BaseEvent {
   }
 }
 
+export class SystemTakeOrderBulk implements BaseEvent {
+  event_type = "system.TakeOrderBulk";
+
+  constructor(public event_properties: SystemTakeOrderBulkProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
 export class SystemToggleBuilding implements BaseEvent {
   event_type = "system.ToggleBuilding";
 
@@ -2171,6 +2237,14 @@ export class SystemTrainUnits implements BaseEvent {
   event_type = "system.TrainUnits";
 
   constructor(public event_properties: SystemTrainUnitsProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemUpdateOrder implements BaseEvent {
+  event_type = "system.UpdateOrder";
+
+  constructor(public event_properties: SystemUpdateOrderProperties) {
     this.event_properties = event_properties;
   }
 }
@@ -2323,6 +2397,23 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SystemAcceptJoinRequest(properties), options);
+  }
+
+  /**
+   * system.AddOrder
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.AddOrder)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. resourcePrice)
+   * @param options Amplitude event options.
+   */
+  systemAddOrder(
+    properties: SystemAddOrderProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemAddOrder(properties), options);
   }
 
   /**
@@ -2785,6 +2876,23 @@ export class Ampli {
   }
 
   /**
+   * system.TakeOrderBulk
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.TakeOrderBulk)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. marketplaceOrderCount)
+   * @param options Amplitude event options.
+   */
+  systemTakeOrderBulk(
+    properties: SystemTakeOrderBulkProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemTakeOrderBulk(properties), options);
+  }
+
+  /**
    * system.ToggleBuilding
    *
    * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.ToggleBuilding)
@@ -2816,6 +2924,23 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SystemTrainUnits(properties), options);
+  }
+
+  /**
+   * system.UpdateOrder
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.UpdateOrder)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. marketplaceOrderId)
+   * @param options Amplitude event options.
+   */
+  systemUpdateOrder(
+    properties: SystemUpdateOrderProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemUpdateOrder(properties), options);
   }
 
   /**
