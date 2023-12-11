@@ -357,3 +357,14 @@ export const OnOnce = <T extends keyof GameObjectTypes>(
     },
   };
 };
+
+export const OnNow = <T extends keyof GameObjectTypes>(
+  callback: (gameObject: InstanceType<GameObjectTypes[T]>) => void
+): GameObjectComponent<T> => {
+  return {
+    id: uuid(),
+    once: (gameObject) => {
+      callback(gameObject as InstanceType<GameObjectTypes[T]>);
+    },
+  };
+};
