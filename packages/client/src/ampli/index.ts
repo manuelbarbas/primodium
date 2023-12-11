@@ -57,6 +57,17 @@ export type LoadOptionsWithClientInstance = LoadOptionsBase & { client: { instan
 
 export type LoadOptions = LoadOptionsWithEnvironment | LoadOptionsWithApiKey | LoadOptionsWithClientInstance;
 
+export interface AccountLinkWalletProperties {
+  /**
+   * The external (user) address connected to the client to be linked.
+   */
+  externalAddress: string;
+  /**
+   * The local (burner) address generated on the client to be linked.
+   */
+  localAddress: string;
+}
+
 export interface SystemAcceptJoinRequestProperties {
   /**
    * Player accepted or invited to an alliance.
@@ -2187,6 +2198,14 @@ export interface SystemUpgradeUnitProperties {
   unitName: string;
 }
 
+export class AccountLinkWallet implements BaseEvent {
+  event_type = "account.LinkWallet";
+
+  constructor(public event_properties: AccountLinkWalletProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
 export class SystemAcceptJoinRequest implements BaseEvent {
   event_type = "system.AcceptJoinRequest";
 
@@ -2590,6 +2609,23 @@ export class Ampli {
     }
 
     return this.amplitude!.track(event, undefined, options);
+  }
+
+  /**
+   * account.LinkWallet
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/account.LinkWallet)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. externalAddress)
+   * @param options Amplitude event options.
+   */
+  accountLinkWallet(
+    properties: AccountLinkWalletProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new AccountLinkWallet(properties), options);
   }
 
   /**
