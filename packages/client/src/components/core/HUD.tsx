@@ -1,4 +1,4 @@
-import { ReactNode, memo, createContext, useContext, FC } from "react";
+import { FC, ReactNode, createContext, memo, useContext } from "react";
 
 interface HUDProps {
   children?: ReactNode;
@@ -91,7 +91,7 @@ const Left: FC<HUDProps> = memo(({ children }) => {
     <div
       style={{
         transform: `translateY(50%) scale(${scale})`,
-        transformOrigin: "keft center",
+        transformOrigin: "left center",
       }}
       className="absolute left-0 bottom-1/2"
     >
