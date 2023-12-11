@@ -8,7 +8,7 @@ import { components } from "src/network/components";
 import { ValueSansMetadata } from "src/network/components/customComponents/ExtendedComponent";
 import { RESOURCE_SCALE } from "src/util/constants";
 import { formatEther } from "viem";
-import { LinkedAddressDisplay } from "../LinkedAddressDisplay";
+import { AccountDisplay } from "src/components/shared/AccountDisplay";
 
 type Listing = ValueSansMetadata<typeof components.MarketplaceOrder.schema> & { id: Entity };
 
@@ -122,7 +122,7 @@ export const AvailableListings = ({
   return (
     <div className="p-2 flex flex-col justify-between h-full">
       <table className="min-w-full divide-y divide-accent">
-        <thead>
+        <thead className="uppercase text-sm">
           <tr>
             <th className="sortable-header">
               <div onClick={() => requestSort("price")} className="flex gap-2 items-center cursor-pointer">
@@ -139,7 +139,7 @@ export const AvailableListings = ({
                 Seller {getSortIcon("seller")}
               </div>
             </th>
-            <th>Orders</th>
+            <th>Buy</th>
           </tr>
         </thead>
         <tbody>
@@ -153,7 +153,7 @@ export const AvailableListings = ({
                 <td className="py-4 whitespace-nowrap">{formatEther(listing.price * RESOURCE_SCALE)}</td>
                 <td className="py-4 whitespace-nowrap">{scaledCount}</td>
                 <td className="py-4 whitespace-nowrap">
-                  <LinkedAddressDisplay entity={listing.seller as Entity} />
+                  <AccountDisplay player={listing.seller as Entity} />
                 </td>
                 <td className="py-4 whitespace-nowrap flex justify-center">
                   <NumberInput
