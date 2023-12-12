@@ -41,7 +41,8 @@ export const Landing: React.FC = () => {
         <div className="relative text-center border border-secondary/25 px-24 py-16 bg-neutral/50 flex flex-col items-center gap-2">
           <div className="absolute top-0 w-full h-full topographic-background2 opacity-25" />
           <h1 className="text-8xl font-bold uppercase stroke stroke-white stroke-4 z-10">Primodium</h1>
-          <h1 className="text-8xl font-bold uppercase text-secondary z-10 -mt-24 opacity-75 z-0">Primodium</h1>
+          <h1 className="text-8xl font-bold uppercase text-accent z-5 -mt-[6.2rem] opacity-75 z-1">Primodium</h1>
+          <h1 className="text-8xl font-bold uppercase text-secondary z-10 -mt-[6.15rem] opacity-75 z-0">Primodium</h1>
           <div className="w-4/5 relative flex flex-col items-center gap-2 h-40">
             <img
               src={"/img/mainbase.png"}
