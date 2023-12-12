@@ -1,10 +1,14 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { MouseEvent, useState } from "react";
+import { useState } from "react";
+import { FaRegCopyright } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Button } from "src/components/core/Button";
 import { useMud } from "src/hooks/useMud";
 import { components } from "src/network/components";
+import { EntityType, ResourceImage } from "src/util/constants";
 import { spawn } from "src/util/web3/contractCalls/spawn";
 
+const params = new URLSearchParams(window.location.search);
 export const Landing: React.FC = () => {
   const [message, setMessage] = useState<string | null>();
   const { network } = useMud();
@@ -13,14 +17,12 @@ export const Landing: React.FC = () => {
   const location = useLocation();
   const hasSpawned = !!components.Home.use(playerEntity)?.asteroid;
 
-  const handlePlay = async (e: MouseEvent<HTMLButtonElement>) => {
+  const handlePlay = async () => {
     setMessage("Spawning Player Asteroid...");
-    e.preventDefault();
     if (!hasSpawned) {
       try {
         await spawn(network);
-      } catch (e) {
-        console.log(e);
+      } catch {
         setMessage("Failed to spawn asteroid...Retry");
       }
     }
@@ -32,28 +34,107 @@ export const Landing: React.FC = () => {
     <AnimatePresence>
       <motion.div
         key="play"
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0, transition: { duration: 0.3 } }}
+        initial={{ scale: 0.5, opacity: 0, y: 50 }}
+        animate={{ scale: 1, opacity: 1, y: 0, transition: { delay: 0.25, duration: 0.5 } }}
         className="flex items-center justify-center h-screen text-white font-mono"
       >
-        <div className="text-center space-y-2">
-          <div className="p-4 mb-2">
-            <h1 className="text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-cyan-200 to-pink-100 p-4 stroke stroke-slate-200 ">
-              Primodium
-            </h1>
+        <div className="relative text-center border border-secondary/25 px-24 py-16 bg-neutral/50 flex flex-col items-center gap-2">
+          <div className="absolute top-0 w-full h-full topographic-background2 opacity-25" />
+          <h1 className="text-8xl font-bold uppercase stroke stroke-white stroke-4 z-10">Primodium</h1>
+          <h1 className="text-8xl font-bold uppercase text-accent z-5 -mt-[6.2rem] opacity-75 z-1">Primodium</h1>
+          <h1 className="text-8xl font-bold uppercase text-secondary z-10 -mt-[6.15rem] opacity-75 z-0">Primodium</h1>
+          <div className="w-4/5 relative flex flex-col items-center gap-2 h-40">
+            <img
+              src={"/img/mainbase.png"}
+              className=" w-32 pixel-images opacity-75 scale-x-[-1] z-0 absolute bottom-6 margin-auto z-20"
+            />
+            <div className="absolute bg-gray-900 blur-[15px] w-56 h-32 margin-auto bottom-0 z-10" />
           </div>
 
           {!message && (
-            <button
-              onClick={handlePlay}
-              className="text-2xl bg-slate-900 border border-cyan-400 p-2 px-4 hover:bg-cyan-800 hover:scale-105 transition-all"
+            <Button
+              onClick={async () => {
+                await handlePlay();
+              }}
+              className="btn-secondary w-4/5 star-background hover:scale-125 relative z-10 mt-4"
             >
-              Play
-            </button>
+              enter
+            </Button>
           )}
-          <p className="text-lg">{message}</p>
+          {message && (
+            <div className="btn disabled btn-secondary w-4/5 star-background relative z-10 mt-4">{message}</div>
+          )}
+          <div className="absolute bottom-0 right-0 p-2 font-bold opacity-50">
+            {params.get("version") ?? ""}
+            {import.meta.env.PRI_VERCEL_GIT_COMMIT_SHA ? import.meta.env.PRI_VERCEL_GIT_COMMIT_SHA.slice(0, 7) : ""}
+          </div>
+          {/* SHIPS */}
+          <motion.img
+            initial={{ x: "50%", y: "-50%" }}
+            animate={{
+              y: "-45%",
+              x: "44%",
+              transition: {
+                repeat: Infinity,
+                repeatType: "reverse",
+                duration: 4,
+                delay: 0.5,
+              },
+            }}
+            src={ResourceImage.get(EntityType.StingerDrone)}
+            className="absolute top-0 right-0 p-0 w-32 pixel-images opacity-75"
+          />
+          <motion.img
+            initial={{ x: "50%", y: "-50%" }}
+            animate={{
+              y: "-53%",
+              x: "47%",
+              transition: {
+                repeat: Infinity,
+                repeatType: "reverse",
+                duration: 2,
+                delay: 1,
+              },
+            }}
+            src={ResourceImage.get(EntityType.StingerDrone)}
+            className="absolute -top-10 -right-24 p-0 w-14 pixel-images opacity-25"
+          />
+          <motion.img
+            initial={{ x: "50%", y: "-50%" }}
+            animate={{
+              y: "-53%",
+              x: "53%",
+              transition: {
+                repeat: Infinity,
+                repeatType: "reverse",
+                duration: 3,
+                delay: 0,
+              },
+            }}
+            src={ResourceImage.get(EntityType.HammerDrone)}
+            className="absolute top-10 -right-24 translate-x-full -translate-y-1/2 p-0 w-16 pixel-images opacity-50"
+          />
+          <motion.img
+            initial={{ x: "-100%", y: "-50%", scaleX: "-100%" }}
+            animate={{
+              y: "-45%",
+              x: "-96%",
+              transition: {
+                repeat: Infinity,
+                repeatType: "reverse",
+                duration: 5,
+                delay: 0,
+              },
+            }}
+            src={ResourceImage.get(EntityType.MiningVessel)}
+            className="absolute -top-0 left-10 p-0 w-44 pixel-images scale-x-[-1]"
+          />
+          <div className="w-full h-full absolute top-0 overflow-hidden"></div>
         </div>
       </motion.div>
+      <div className="fixed bottom-10 w-screen left-0 text-center flex flex-row justify-center items-center gap-2 font-mono uppercase font-bold">
+        <FaRegCopyright size={12} /> 2023 Primodium
+      </div>
     </AnimatePresence>
   );
 };

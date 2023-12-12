@@ -6,9 +6,7 @@ import { AllMaterialLabels } from "./material/AllMaterialLabels";
 import { AllUnitLabels } from "./units/AllUnitLabels";
 import { ElectricityLabel } from "./utilities/ElectricityLabel";
 import { HousingLabel } from "./utilities/HousingLabel";
-// import { SpectateLabel } from "../fleet-send/SpectateLabel";
 import { ERock } from "contracts/config/enums";
-import { FaCaretUp } from "react-icons/fa";
 import { RelationLabel } from "../fleet-send/RelationLabel";
 import { StationedUnitsLabel } from "../fleet-send/StationedUnitsLabel";
 import { MotherlodeMaterial } from "./material/MotherlodeMaterial";
@@ -40,10 +38,8 @@ export const Resources: React.FC = () => {
         {playerEntity !== owner && (
           <div className="relative flex justify-center w-full">
             <div className="w-full h-full absolute star-background rounded-box opacity-50 border border-t-0 rounded-t-none border-secondary" />
-            <FaCaretUp size={22} className="text-warning -mt-2 z-10 animate-bounce" />
             <RelationLabel />
             <FleetActions />
-            <FaCaretUp size={22} className="text-warning -mt-2 z-10 animate-bounce" />
             <StationedUnitsLabel />
           </div>
         )}
