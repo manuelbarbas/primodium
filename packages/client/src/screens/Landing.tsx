@@ -64,7 +64,7 @@ export const Landing: React.FC = () => {
               enter
             </Button>
           )}
-          <div className="absolute bottom-0 right-0">
+          <div className="absolute bottom-0 right-0 p-2 font-bold opacity-50">
             {params.get("version") ?? ""}{" "}
             {import.meta.env.PRI_VERCEL_GIT_COMMIT_SHA ? import.meta.env.PRI_VERCEL_GIT_COMMIT_SHA.slice(0, 7) : ""}
           </div>
@@ -128,7 +128,7 @@ export const Landing: React.FC = () => {
               },
             }}
             src={ResourceImage.get(EntityType.MiningVessel)}
-            className="absolute -top-0 left-10 p-0 w-44 pixel-images opacity-75 scale-x-[-1]"
+            className="absolute -top-0 left-10 p-0 w-44 pixel-images scale-x-[-1]"
           />
           <div className="w-full h-full absolute top-0 overflow-hidden"></div>
         </div>
