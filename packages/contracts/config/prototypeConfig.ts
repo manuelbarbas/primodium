@@ -1692,8 +1692,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   DefeatPirateBase1: {
     tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
-      P_DefeatedPirates: { value: encodeArray(["BuildWorkshop"]) },
+      P_RequiredObjectives: { objectives: encodeArray(["BuildGarage"]) },
+      P_DefeatedPirates: { value: encodeArray(["BuildGarage"]) },
       P_SpawnPirateAsteroid: {
         x: -10,
         y: 22,
@@ -1982,14 +1982,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildIronMine"]) },
       P_HasBuiltBuildings: { value: encodeArray(["Garage"]) },
-      P_UnitReward: getUnitValues({ MinutemanMarine: 10 }),
-    },
-  },
-
-  BuildWorkshop: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildGarage"]) },
-      P_HasBuiltBuildings: { value: encodeArray(["Workshop"]) },
       P_SpawnPirateAsteroid: {
         x: -5,
         y: -7,
@@ -1998,6 +1990,14 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         resources: indexifyResourceArray(["Copper", "Iron", "IronPlate"]),
         resourceAmounts: [20000n, 20000n, 20000n],
       },
+      P_UnitReward: getUnitValues({ MinutemanMarine: 35 }),
+    },
+  },
+
+  BuildWorkshop: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildGarage"]) },
+      P_HasBuiltBuildings: { value: encodeArray(["Workshop"]) },
       P_ResourceReward: getResourceValues({ IronPlate: 50000 }),
     },
   },
