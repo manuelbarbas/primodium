@@ -146,7 +146,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       OnComponentSystem(components.Time, (gameObject) => {
         const player = components.OwnedBy.get(entity)?.value as Entity | undefined;
         const graceTime = components.GracePeriod.get(player)?.value ?? 0n;
-        const time = components.Time.get(entity)?.value ?? 0n;
+        const time = components.Time.get()?.value ?? 0n;
 
         if (time >= graceTime) {
           gameObject.alpha = 0;
