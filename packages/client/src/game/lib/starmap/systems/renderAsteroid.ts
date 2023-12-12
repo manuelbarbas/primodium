@@ -143,7 +143,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
 
     gracePeriod.setComponents([
       ...sharedComponents,
-      OnComponentSystem(components.BlockNumber, (gameObject) => {
+      OnComponentSystem(components.Time, (gameObject) => {
         const player = components.OwnedBy.get(entity)?.value as Entity | undefined;
         const graceTime = components.GracePeriod.get(player)?.value ?? 0n;
         const time = components.Time.get(entity)?.value ?? 0n;
