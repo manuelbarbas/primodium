@@ -180,8 +180,8 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         const name =
           linkedAddress.ensName ??
           (linkedAddress.address
-            ? entityToAddress(linkedAddress.address ?? playerEntity, true)
-            : entityToPlayerName(playerEntity));
+            ? entityToAddress(linkedAddress.address ?? ownedBy, true)
+            : entityToPlayerName(ownedBy));
 
         gameObject.setText(name);
       }),
