@@ -1,8 +1,9 @@
 import { primodium } from "@game/api";
-import { AudioKeys } from "@game/constants";
+import { AudioKeys, KeybindActions } from "@game/constants";
 import { IconLabel } from "./IconLabel";
 import { Loader } from "./Loader";
 import { Tooltip } from "./Tooltip";
+import { useEffect } from "react";
 
 export const Button: React.FC<{
   children: React.ReactNode;
@@ -16,6 +17,7 @@ export const Button: React.FC<{
   tooltipDirection?: "right" | "left" | "top" | "bottom";
   mute?: boolean;
   clickSound?: AudioKeys;
+  keybind?: KeybindActions;
 }> = ({
   children,
   className,
@@ -28,8 +30,22 @@ export const Button: React.FC<{
   tooltipDirection = "top",
   mute = false,
   clickSound = AudioKeys.Click2,
+  keybind,
 }) => {
   const api = primodium.apiOrUndefined();
+
+  useEffect(() => {
+    if (!keybind || !api || disabled) return;
+
+    const listener = api.input.addListener(keybind, () => {
+      onClick && onClick();
+      !mute && api?.audio.play(clickSound, "ui");
+    });
+
+    return () => {
+      listener.dispose();
+    };
+  }, [keybind, api, clickSound, mute, disabled, onClick]);
 
   return (
     <Tooltip text={tooltip} direction={tooltipDirection}>
