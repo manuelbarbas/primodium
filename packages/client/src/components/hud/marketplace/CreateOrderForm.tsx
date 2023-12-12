@@ -3,6 +3,7 @@ import { EOrderType, EResource, EUnit } from "contracts/config/enums";
 import { useCallback, useMemo, useState } from "react";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
+import { NumberInput } from "src/components/shared/NumberInput";
 import { useMud } from "src/hooks";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
@@ -33,7 +34,7 @@ export const CreateOrderForm = () => {
   // Handle form submission
   const handleSubmit = (e: React.MouseEvent | undefined) => {
     e?.preventDefault();
-    const scaledPrice = (BigInt(price) * BigInt(1e18)) / selectedScale;
+    const scaledPrice = BigInt(Math.round(Number(price) * 1e18)) / selectedScale;
     const scaledQuantity = BigInt(quantity) * selectedScale;
     if (selectedItem === "default") return;
     createOrder(selectedItem, scaledQuantity, scaledPrice, network);
@@ -119,24 +120,19 @@ export const CreateOrderForm = () => {
               </option>
             ))}
           </select>
-          <input
-            type="number"
-            placeholder="price per unit"
-            id="price"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            className="block w-full p-4 text-sm bg-transparent border border-bottom-1 border-gray-500 focus:outline-none text-gray-300 placeholder:opacity-50 focus:ring-secondary focus:border-secondary"
-          />
-          <input
-            min="0"
-            step="1"
-            type="number"
-            placeholder="count"
-            id="quantity"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-            className="block w-full p-4 text-sm bg-transparent border border-bottom-1 border-gray-500 focus:outline-none text-gray-300 placeholder:opacity-50 focus:ring-secondary focus:border-secondary"
-          />
+          <div className="flex w-full items-center text-xs font-bold justify-between">
+            PRICE
+            <NumberInput
+              toFixed={3}
+              onChange={(value) => {
+                setPrice(value.toString());
+              }}
+            />
+          </div>
+          <div className="flex w-full items-center text-xs font-bold justify-between">
+            QTY
+            <NumberInput toFixed={0} onChange={(value) => setQuantity(value.toString())} />
+          </div>
 
           {ordersAvailable === 0n && <p className="text-center animate-pulse text-xs text-error">NOT ENOUGH ORDERS</p>}
           {ordersAvailable !== 0n && selectedItem !== "default" && (

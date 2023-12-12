@@ -177,13 +177,13 @@ const Listing = ({ listing, availableResource }: { listing: UserListing; availab
       <td className="text-center align-middle py-1">
         <div className="flex justify-center p-1 gap-1 items-center">
           <NumberInput
-            toFixed={8}
+            toFixed={3}
             reset={!newPrice}
             startingValue={Number(formatEther(listing.price * scale))}
             onChange={function (val: number): void {
               setListingUpdate({
                 ...listingUpdate,
-                newPrice: (BigInt(val) * BigInt(1e18)) / scale,
+                newPrice: BigInt(Math.round(val * 1e18)) / scale,
               });
             }}
           />
@@ -200,12 +200,12 @@ const Listing = ({ listing, availableResource }: { listing: UserListing; availab
           <NumberInput
             startingValue={Number(listing.count / scale)}
             max={Number(availableResource / scale)}
-            toFixed={2}
+            toFixed={0}
             reset={!newCount}
             onChange={function (val: number): void {
               setListingUpdate({
                 ...listingUpdate,
-                newCount: BigInt(val) * scale,
+                newCount: BigInt(Math.round(val * Number(scale))),
               });
             }}
           />

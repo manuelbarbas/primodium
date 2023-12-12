@@ -235,7 +235,7 @@ const AvailableListing = ({
           startingValue={Number(startingValue)}
           min={0}
           max={Number(max)}
-          onChange={(e) => setOrder(listing.id, BigInt(e) * scale)}
+          onChange={(e) => setOrder(listing.id, BigInt(e * Number(scale)))}
           reset={!takenOrders[listing.id]}
         />
       </td>

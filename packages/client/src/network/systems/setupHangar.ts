@@ -8,7 +8,6 @@ import { ERock } from "contracts/config/enums";
 import { SetupResult } from "../types";
 export function createHangar(spaceRock: Entity) {
   const player = components.OwnedBy.get(spaceRock)?.value;
-  console.log("owner of space rock", spaceRock.slice(0, 6), player);
   if (!player) return;
   const units: Map<Entity, bigint> = new Map();
 
@@ -46,7 +45,6 @@ function getTrainedUnclaimedUnits(spaceRock: Entity) {
       parent: spaceRock,
     }),
   ];
-  console.log("query", spaceRock.slice(0, 6), query);
   const buildings = runQuery(query);
   const config = components.P_GameConfig.get();
   if (!config) return units;
