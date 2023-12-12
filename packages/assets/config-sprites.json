@@ -8,7 +8,6 @@
     "height": 4096,
     "textureName": "atlas",
     "fixedSize": false,
-    "powerOfTwo": true,
     "padding": 0,
     "allowRotation": false,
     "detectIdentical": true,
