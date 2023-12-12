@@ -79,16 +79,14 @@ export const CreateOrderForm = () => {
   const availableItems = useMemo(() => {
     const itemsUsed: Record<Entity, bigint> = {};
     itemListings.forEach((listing) => {
-      const scale = getScale(listing.item);
       if (!itemsUsed[listing.item]) itemsUsed[listing.item] = 0n;
-      itemsUsed[listing.item] += listing.count / scale;
+      itemsUsed[listing.item] += listing.count;
     });
     resources.forEach((resource) => {
-      const scale = getScale(resource);
       const resourceCount = resourceCounts.get(resource)?.resourceCount ?? 0n;
       const resourcesToClaim = resourceCounts.get(resource)?.resourcesToClaim ?? 0n;
       const totalResources = resourceCount + resourcesToClaim;
-      itemsUsed[resource] = (totalResources - (itemsUsed[resource] ?? 0n)) / scale;
+      itemsUsed[resource] = totalResources - (itemsUsed[resource] ?? 0n);
     });
     units.forEach((unit) => {
       const unitCount = getUnitCount(unit);

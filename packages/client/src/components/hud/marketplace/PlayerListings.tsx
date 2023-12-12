@@ -170,7 +170,7 @@ const Listing = ({ listing, availableResource }: { listing: UserListing; availab
       <td className="text-center align-middle ">
         <div className="flex items-center justify-center h-full">
           <IconLabel imageUri={ResourceImage.get(listing.item as Entity) ?? ""} tooltipDirection={"right"} text={""} />
-          <p className="text-xs text-gray-500 ml-1">({availableResource.toString()})</p>
+          <p className="text-xs text-gray-500 ml-1">({(availableResource / scale).toString()})</p>
         </div>
       </td>
 
@@ -199,7 +199,7 @@ const Listing = ({ listing, availableResource }: { listing: UserListing; availab
         <div className="flex justify-center p-1 gap-1 items-center">
           <NumberInput
             startingValue={Number(listing.count / scale)}
-            max={Number(availableResource)}
+            max={Number(availableResource / scale)}
             toFixed={2}
             reset={!newCount}
             onChange={function (val: number): void {

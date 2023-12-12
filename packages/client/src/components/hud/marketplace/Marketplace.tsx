@@ -27,11 +27,10 @@ export const Marketplace = () => {
               Your Orders
             </Tabs.Button>
           </Join>
-          <div className="absolute left-2 margin-auto my-2 flex flex-col items-end justify-end text-xs">
-            <div className="flex justify-center items-center gap-1 rounded-md mb-1 h-full">
-              <p className="font-bold">{formatEther(balance)}</p>
-
+          <div className="absolute left-2 margin-auto my-2 flex flex-col text-xs">
+            <div className="flex justify-center items-center gap-1 mb-1 h-full">
               <p className="font-bold text-success">wETH</p>
+              <p className="font-bold">{formatEther(balance)}</p>
             </div>
             <hr className="w-full border-secondary/50" />
 

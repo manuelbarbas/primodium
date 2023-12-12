@@ -8,8 +8,9 @@ import { NumberInput } from "src/components/shared/NumberInput";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { ValueSansMetadata } from "src/network/components/customComponents/ExtendedComponent";
+import { createHangar } from "src/network/systems/setupHangar";
 import { ResourceEntityLookup, UnitEntityLookup } from "src/util/constants";
-import { getScale } from "src/util/resource";
+import { getFullResourceCount, getScale } from "src/util/resource";
 import { formatEther } from "viem";
 
 type Listing = ValueSansMetadata<typeof components.MarketplaceOrder.schema> & { id: Entity };
@@ -154,38 +155,77 @@ export const AvailableListings = ({
           </tr>
         </thead>
         <tbody>
-          {currentListings.map((listing) => {
-            const entity =
-              listing.orderType === EOrderType.Resource
-                ? ResourceEntityLookup[listing.resource as EResource]
-                : UnitEntityLookup[listing.resource as EUnit];
-            const scale = getScale(entity);
-            const scaledCount = Number(listing.count) / Number(scale);
-            const startingValue = (takenOrders[listing.id] ?? 0n) / scale;
-            const max = Math.min(scaledCount, Number(remainingBalance / (listing.price * scale)));
-
-            return (
-              <tr key={`listing-${listing.id}`} className="">
-                <td className="py-4">{formatEther(listing.price * scale)}</td>
-                <td className="py-4">{scaledCount}</td>
-                <td className="py-4">
-                  <AccountDisplay player={listing.seller as Entity} />
-                </td>
-                <td className="py-4 flex justify-center">
-                  <NumberInput
-                    startingValue={Number(startingValue)}
-                    min={0}
-                    max={Number(max)}
-                    onChange={(e) => setOrder(listing.id, BigInt(e) * scale)}
-                    reset={!takenOrders[listing.id]}
-                  />
-                </td>
-              </tr>
-            );
-          })}
+          {currentListings.map((listing) => (
+            <AvailableListing
+              key={listing.id}
+              listing={listing}
+              remainingBalance={remainingBalance}
+              takenOrders={takenOrders}
+              setOrder={setOrder}
+            />
+          ))}
         </tbody>
       </table>
       <PaginationControls />
     </div>
+  );
+};
+
+const AvailableListing = ({
+  listing,
+  remainingBalance,
+  takenOrders,
+  setOrder,
+}: {
+  listing: Listing;
+  takenOrders: Record<Entity, bigint>;
+  remainingBalance: bigint;
+  setOrder: (orderId: Entity, count: bigint) => void;
+}) => {
+  const entity =
+    listing.orderType === EOrderType.Resource
+      ? ResourceEntityLookup[listing.resource as EResource]
+      : UnitEntityLookup[listing.resource as EUnit];
+  const scale = getScale(entity);
+  const scaledCount = Number(listing.count) / Number(scale);
+  const startingValue = (takenOrders[listing.id] ?? 0n) / scale;
+  const sellerHome = components.Home.use(listing.seller as Entity)?.asteroid as Entity | undefined;
+  const sellerMaxResource = useMemo(() => {
+    if (!sellerHome) return 0n;
+    if (listing.orderType === EOrderType.Resource) {
+      const { resourceCount, resourcesToClaim } = getFullResourceCount(entity, sellerHome);
+      return components.MarketplaceOrder.getAll().reduce((acc, entity) => {
+        const _listing = components.MarketplaceOrder.get(entity)!;
+        if (_listing.seller !== listing.seller || _listing.resource !== listing.resource) return acc;
+        return acc - _listing.count;
+      }, resourceCount + resourcesToClaim);
+    }
+    console.log("seller asteroid:", sellerHome.slice(0, 6));
+    const hangar = createHangar(sellerHome)?.get(entity) ?? 0n;
+    return hangar;
+  }, [listing, sellerHome, entity]);
+
+  const max = Math.min(
+    Number(sellerMaxResource / scale),
+    Math.min(scaledCount, Number(remainingBalance / (listing.price * scale)))
+  );
+
+  return (
+    <tr key={`listing-${listing.id}`} className="">
+      <td className="py-4">{formatEther(listing.price * scale)}</td>
+      <td className="py-4">{Math.min(scaledCount, Number(sellerMaxResource / scale))}</td>
+      <td className="py-4">
+        <AccountDisplay player={listing.seller as Entity} />
+      </td>
+      <td className="py-4 flex justify-center">
+        <NumberInput
+          startingValue={Number(startingValue)}
+          min={0}
+          max={Number(max)}
+          onChange={(e) => setOrder(listing.id, BigInt(e) * scale)}
+          reset={!takenOrders[listing.id]}
+        />
+      </td>
+    </tr>
   );
 };

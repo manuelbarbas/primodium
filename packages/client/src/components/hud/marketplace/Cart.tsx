@@ -71,9 +71,9 @@ export const Cart = ({
 
       <div className="flex gap-2 w-full items-center">
         <div className="flex flex-col items-center justify-center w-full">
-          <p className="font-bold inline">
+          <div className="font-bold inline">
             {formatEther(totalCost)} <p className="inline text-success">wETH</p>
-          </p>
+          </div>
           <span className="text-xs text-gray-400">balance: {formatEther(balance)} wETH</span>
         </div>
 
