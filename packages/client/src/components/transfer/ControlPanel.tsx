@@ -16,6 +16,8 @@ import { MintToken } from "./MintToken";
 import { PlayerBalances } from "./PlayerBalances";
 import { TransferToken } from "./TransferToken";
 import { normalizeAddress } from "src/util/common";
+import { ampli } from "src/ampli";
+import { parseReceipt } from "src/util/analytics/parseReceipt";
 
 type Tab = "transfer" | "mint" | "balances" | "link";
 
@@ -85,18 +87,40 @@ export function ControlPanel() {
   const burnerAddress = normalizeAddress(network.address);
   const isAdmin = externalAddress === adminAddress;
 
-  const onMint = async (address: string, amount: number) => {
+  const onMint = async (address: string, amount: bigint) => {
     if (!client) return;
-    await execute(() => client.tokenContract.write.mint([address as Hex, BigInt(amount)]), network, {
-      id: world.registerEntity(),
-    });
+    await execute(
+      () => client.tokenContract.write.mint([address as Hex, BigInt(amount)]),
+      network,
+      {
+        id: world.registerEntity(),
+      },
+      (receipt) => {
+        ampli.tokenMint({
+          tokenMintTo: address,
+          tokenValue: amount.toString(),
+          ...parseReceipt(receipt),
+        });
+      }
+    );
   };
 
-  const onTransfer = async (address: string, amount: number) => {
+  const onTransfer = async (address: string, amount: bigint) => {
     if (!client) return;
-    await execute(() => client.tokenContract.write.transfer([address as Hex, BigInt(amount)]), network, {
-      id: world.registerEntity(),
-    });
+    await execute(
+      () => client.tokenContract.write.transfer([address as Hex, amount]),
+      network,
+      {
+        id: world.registerEntity(),
+      },
+      (receipt) => {
+        ampli.tokenTransfer({
+          tokenTransferTo: address,
+          tokenValue: amount.toString(),
+          ...parseReceipt(receipt),
+        });
+      }
+    );
   };
 
   const tabs: Tab[] = isAdmin ? ["link", "transfer", "mint", "balances"] : ["link", "transfer"];

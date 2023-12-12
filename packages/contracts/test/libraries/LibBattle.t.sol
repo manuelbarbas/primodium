@@ -570,7 +570,7 @@ contract LibBattleTest is PrimodiumTest {
     Motherlode.set(rock, uint8(ESize.Large), uint8(EResource.Iron));
     P_IsUtility.set(uint8(EResource.Iron), false);
     P_MiningRate.set(unit1, 0, 1);
-    ProductionRate.set(rock, uint8(EResource.Iron), 100 + (100 * uint256(ESize.Large)));
+    ProductionRate.set(rock, uint8(EResource.Iron), 100 + 100);
 
     UnitCount.set(enemy, rock, unit1, 100);
 
@@ -588,10 +588,6 @@ contract LibBattleTest is PrimodiumTest {
     });
 
     LibBattle.updateUnitsAfterBattle(br, ESendType.Invade);
-    assertEq(
-      ProductionRate.get(rock, uint8(EResource.Iron)),
-      (70 * uint256(ESize.Large)) + 100,
-      "Player should have 310 iron production"
-    );
+    assertEq(ProductionRate.get(rock, uint8(EResource.Iron)), 70 + 100, "Player should have 310 iron production");
   }
 }

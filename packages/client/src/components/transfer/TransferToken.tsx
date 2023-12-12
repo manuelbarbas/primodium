@@ -8,7 +8,7 @@ import { Hex, createPublicClient, encodeAbiParameters, formatEther } from "viem"
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 
 interface TransferTokenProps {
-  onTransfer: (address: string, amount: number) => Promise<void>;
+  onTransfer: (address: string, amount: bigint) => Promise<void>;
   className?: string;
   client: ReturnType<typeof createPublicClient>;
 }
@@ -55,7 +55,8 @@ export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, classN
   const balance = components.WETHBalance.use(externalEntity)?.value ?? 0n;
 
   const handleTransfer = async () => {
-    const amountNum = Math.round(Number(amount) * 1e18);
+    const amountBigInt = BigInt(Math.round(Number(amount)));
+    const amountNum = amountBigInt * BigInt(1e18);
     if (address && amountNum > 0) {
       await onTransfer(address, amountNum);
       setAmount("");
@@ -121,8 +122,8 @@ export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, classN
           value={amount}
           disabled={wrongChain}
           onChange={(e) => {
-            const value = Number(e.target.value);
-            const bal = Number(balance) / 1e18;
+            const value = BigInt(e.target.value);
+            const bal = BigInt(balance) / BigInt(1e18);
             if (value < 0) {
               setAmount("");
               return;

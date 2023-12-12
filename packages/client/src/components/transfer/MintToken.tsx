@@ -5,7 +5,7 @@ import { Hex, createPublicClient, isHex } from "viem";
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 
 interface MintTokenProps {
-  onMint: (address: string, amount: number) => Promise<void>;
+  onMint: (address: string, amount: bigint) => Promise<void>;
   className?: string;
   client: ReturnType<typeof createPublicClient>;
 }
@@ -45,7 +45,8 @@ export const MintToken: React.FC<MintTokenProps> = ({ onMint, className, client 
   }, [input, client]);
 
   const handleMint = () => {
-    const amountNum = Math.round(Number(amount) * 1e18);
+    const amountBigInt = BigInt(Math.round(Number(amount)));
+    const amountNum = amountBigInt * BigInt(1e18);
     if (address && amountNum > 0) {
       onMint(address, amountNum);
     } else {

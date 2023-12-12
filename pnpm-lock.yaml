@@ -279,6 +279,9 @@ importers:
       '@types/react-transition-group':
         specifier: ^4.4.6
         version: 4.4.6
+      '@types/react-virtualized-auto-sizer':
+        specifier: ^1.0.3
+        version: 1.0.3
       '@types/react-window':
         specifier: ^1.8.5
         version: 1.8.5
@@ -3278,6 +3281,12 @@ packages:
     resolution: {integrity: sha512-VnCdSxfcm08KjsJVQcfBmhEQAPnLB8G08hAxn39azX1qYBQ/5RVQuoHuKIcfKOdncuaUvEpFKFzEvbtIMsfVew==}
     dependencies:
       '@types/react': 18.2.6
+    dev: true
+
+  /@types/react-virtualized-auto-sizer@1.0.3:
+    resolution: {integrity: sha512-xRsQJiM8BuwGiDl77yyFZqq32lLvI4msFtw7nVbw9qh9c2LvchDXezwjEWmysJkXnLZWjHJX9lT8MCPkFy5BfQ==}
+    dependencies:
+      '@types/react': 18.2.43
     dev: true
 
   /@types/react-window@1.8.5:

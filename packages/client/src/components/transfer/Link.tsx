@@ -5,6 +5,7 @@ import { Hex } from "viem";
 import { useAccount, useSignMessage } from "wagmi";
 import { Button } from "../core/Button";
 import { AddressDisplay } from "../hud/AddressDisplay";
+import { ampli } from "src/ampli";
 import { normalizeAddress } from "src/util/common";
 
 type LocalToExternalResponse = { address: Hex | null; ensName: string | null };
@@ -48,6 +49,12 @@ export function Link() {
         externalAddress: externalAccount.address,
         externalSignature,
       };
+
+      ampli.accountLinkWallet({
+        localAddress: burnerAddress,
+        externalAddress: externalAccount.address,
+      });
+
       const res = await fetch(`${import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL}/link`, {
         headers: {
           "Content-Type": "application/json",

@@ -33,7 +33,7 @@ export const CreateOrderForm = () => {
   // Handle form submission
   const handleSubmit = (e: React.MouseEvent | undefined) => {
     e?.preventDefault();
-    const scaledPrice = BigInt(Number(price) * 1e18) / selectedScale;
+    const scaledPrice = (BigInt(price) * BigInt(1e18)) / selectedScale;
     const scaledQuantity = BigInt(quantity) * selectedScale;
     if (selectedItem === "default") return;
     createOrder(selectedItem, scaledQuantity, scaledPrice, network);

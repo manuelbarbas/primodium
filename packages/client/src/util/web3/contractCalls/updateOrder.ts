@@ -1,10 +1,14 @@
 import { Entity } from "@latticexyz/recs";
+import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { SetupNetworkResult } from "src/network/types";
+import { bigintToNumber } from "src/util/bigint";
 import { getBlockTypeName } from "src/util/common";
 import { ResourceEnumLookup, UnitEnumLookup } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
+import { getScale } from "src/util/resource";
 import { Hex } from "viem";
+import { parseReceipt } from "../../analytics/parseReceipt";
 
 export const updateOrder = async (
   id: Entity,
@@ -22,8 +26,18 @@ export const updateOrder = async (
     {
       id: hashEntities(network.playerEntity, id, rawResource),
     },
-    () => {
-      null;
+    (receipt) => {
+      const scale = getScale(rawResource);
+      const scaledPrice = (price * BigInt(1e18)) / scale;
+      const scaledCount = BigInt(count) * scale;
+
+      ampli.systemUpdateOrder({
+        marketplaceOrderId: id,
+        resourceType: getBlockTypeName(rawResource),
+        resourceCount: bigintToNumber(scaledCount),
+        resourcePrice: bigintToNumber(scaledPrice),
+        ...parseReceipt(receipt),
+      });
     }
   );
 };
@@ -35,8 +49,11 @@ export const cancelOrder = async (id: Entity, network: SetupNetworkResult) => {
     {
       id: hashEntities(network.playerEntity, id),
     },
-    () => {
-      null;
+    (receipt) => {
+      ampli.systemCancelOrder({
+        marketplaceOrderId: id,
+        ...parseReceipt(receipt),
+      });
     }
   );
 };
