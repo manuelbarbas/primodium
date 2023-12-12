@@ -77,6 +77,7 @@ export function getSpaceRockName(spaceRock: Entity) {
     asteroid: "-1" as Entity,
   }).mainBase as Entity;
   const mainBaseLevel = comps.Level.get(mainBaseEntity)?.value;
+  const isPirate = !!comps.PirateAsteroid.get(spaceRock);
 
   let name = "";
 
@@ -86,7 +87,7 @@ export function getSpaceRockName(spaceRock: Entity) {
       break;
     case ERock.Asteroid:
       {
-        name += ` ${mainBaseLevel ? `LVL. ${mainBaseLevel} ` : ""} Asteroid`;
+        name += ` ${mainBaseLevel ? `LVL. ${mainBaseLevel} ` : ""} ${isPirate && "Pirate"} Asteroid`;
       }
       break;
     default:
