@@ -59,8 +59,8 @@ export const Landing: React.FC = () => {
               </Button>
             </div>
           )}
-          {message && <p className="text-lg">{message}</p>}
-          <div className="absolute bottom-0 right-0">
+          {message && <p className="text-lg p-2">{message}</p>}
+          <div className="absolute bottom-0 right-0 p-2 font-bold opacity-50">
             {params.get("version") ?? ""}{" "}
             {import.meta.env.PRI_VERCEL_GIT_COMMIT_SHA ? import.meta.env.PRI_VERCEL_GIT_COMMIT_SHA.slice(0, 7) : ""}
           </div>
