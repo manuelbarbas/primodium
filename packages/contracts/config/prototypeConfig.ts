@@ -188,33 +188,38 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_MaxLevel: { value: 7n },
     },
     levels: {
-      1: { Dimensions: { width: 13, height: 11 }, P_RequiredBaseLevel: { value: 1n } },
+      1: { Dimensions: { width: 11, height: 9 }, P_RequiredBaseLevel: { value: 1n } },
       2: {
+        P_RequiredUpgradeResources: getResourceValues({ Iron: 200000 }),
+        Dimensions: { width: 13, height: 11 },
+        P_RequiredBaseLevel: { value: 2n },
+      },
+      3: {
         P_RequiredUpgradeResources: getResourceValues({ Lithium: 150000 }),
         Dimensions: { width: 17, height: 13 },
         P_RequiredBaseLevel: { value: 2n },
       },
-      3: {
+      4: {
         P_RequiredUpgradeResources: getResourceValues({ Lithium: 1500000 }),
         Dimensions: { width: 21, height: 15 },
         P_RequiredBaseLevel: { value: 3n },
       },
-      4: {
+      5: {
         P_RequiredUpgradeResources: getResourceValues({ Lithium: 500000, Kimberlite: 150000 }),
         Dimensions: { width: 25, height: 17 },
         P_RequiredBaseLevel: { value: 4n },
       },
-      5: {
+      6: {
         P_RequiredUpgradeResources: getResourceValues({ Lithium: 1500000, Kimberlite: 500000 }),
         Dimensions: { width: 29, height: 19 },
         P_RequiredBaseLevel: { value: 5n },
       },
-      6: {
+      7: {
         P_RequiredUpgradeResources: getResourceValues({ Lithium: 2500000, Kimberlite: 1000000 }),
         Dimensions: { width: 33, height: 23 },
         P_RequiredBaseLevel: { value: 6n },
       },
-      7: {
+      8: {
         P_RequiredUpgradeResources: getResourceValues({ Lithium: 5000000, Kimberlite: 1500000 }),
         Dimensions: { width: maxRange.xBounds, height: maxRange.yBounds },
         P_RequiredBaseLevel: { value: 7n },
