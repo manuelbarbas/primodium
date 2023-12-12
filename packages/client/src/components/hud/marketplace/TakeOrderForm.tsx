@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { EOrderType, EResource } from "contracts/config/enums";
+import { EOrderType } from "contracts/config/enums";
 import _ from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { IconButton } from "src/components/core/Button";
@@ -7,14 +7,7 @@ import { SecondaryCard } from "src/components/core/Card";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
-import {
-  ResourceEntityLookup,
-  ResourceEnumLookup,
-  ResourceImage,
-  ResourceStorages,
-  UnitEnumLookup,
-  UnitStorages,
-} from "src/util/constants";
+import { ResourceEnumLookup, ResourceImage, ResourceStorages, UnitEnumLookup, UnitStorages } from "src/util/constants";
 import { AvailableListings } from "./AvailableListings";
 import { Cart } from "./Cart";
 
@@ -22,7 +15,7 @@ export function TakeOrderForm() {
   const { network } = useMud();
 
   const [takenOrders, setTakenOrders] = useState<Record<Entity, bigint>>({});
-  const [selectedItem, setSelectedItem] = useState<Entity>(ResourceEntityLookup[EResource.Iron]);
+  const [selectedItem, setSelectedItem] = useState<Entity>();
 
   const allListings = components.MarketplaceOrder.useAll().map((order) => {
     return { ...components.MarketplaceOrder.get(order)!, id: order };
@@ -39,11 +32,12 @@ export function TakeOrderForm() {
   }, [takenOrders, allListings]);
 
   const itemListings = useMemo(() => {
-    if (!selectedItem) return [];
     return allListings.filter((listing) => {
+      if (network.playerEntity == listing.seller) return false;
+      if (!selectedItem) return true;
       const itemEnum =
         listing.orderType === EOrderType.Resource ? ResourceEnumLookup[selectedItem] : UnitEnumLookup[selectedItem];
-      return listing.resource === itemEnum && network.playerEntity !== listing.seller;
+      return listing.resource === itemEnum;
     });
   }, [allListings, selectedItem, network.playerEntity]);
 
@@ -79,7 +73,7 @@ export function TakeOrderForm() {
               {chunk.map((resource) => (
                 <IconButton
                   key={resource}
-                  onClick={() => setSelectedItem(resource)}
+                  onClick={() => (selectedItem == resource ? setSelectedItem(undefined) : setSelectedItem(resource))}
                   className={`flex-1 flex-col w-full lg:w-auto items-center justify-center p-4 ${
                     selectedItem === resource ? "bg-base-300 border-accent" : ""
                   }`}
@@ -94,11 +88,7 @@ export function TakeOrderForm() {
 
       <SecondaryCard className="col-span-7 row-span-5 h-full w-full ">
         <p className="text-xs opacity-50 font-bold pb-2 uppercase">Listings</p>
-        {selectedItem ? (
-          <AvailableListings listings={itemListings} takenOrders={takenOrders} setOrder={handleTakeOrderChange} />
-        ) : (
-          <div className="w-full h-full text-center p-20 uppercase bold">Select a resource to view listings</div>
-        )}
+        <AvailableListings listings={itemListings} takenOrders={takenOrders} setOrder={handleTakeOrderChange} />
       </SecondaryCard>
       <SecondaryCard className="col-span-3 row-span-2 overflow-auto scrollbar flex flex-col gap-1 justify-between overflow-hidden">
         <Cart takenOrders={takenOrders} clearOrders={clearOrders} removeOrder={removeOrder} />

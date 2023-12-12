@@ -3,13 +3,14 @@ import { EOrderType, EResource, EUnit } from "contracts/config/enums";
 import { useMemo, useState } from "react";
 import { FaAngleDoubleRight, FaArrowLeft, FaArrowRight, FaMinus, FaPlay } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
+import { IconLabel } from "src/components/core/IconLabel";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { NumberInput } from "src/components/shared/NumberInput";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { ValueSansMetadata } from "src/network/components/customComponents/ExtendedComponent";
 import { createHangar } from "src/network/systems/setupHangar";
-import { ResourceEntityLookup, UnitEntityLookup } from "src/util/constants";
+import { ResourceEntityLookup, ResourceImage, UnitEntityLookup } from "src/util/constants";
 import { getFullResourceCount, getScale } from "src/util/resource";
 import { formatEther } from "viem";
 
@@ -129,6 +130,15 @@ export const AvailableListings = ({
           <tr>
             <th className="sortable-header">
               <div
+                onClick={() => requestSort("resource")}
+                className="flex gap-1 items-center text-xs opacity-80 font-bold cursor-pointer justify-center"
+              >
+                Item Type {getSortIcon("resource")}
+              </div>
+            </th>
+
+            <th className="sortable-header">
+              <div
                 onClick={() => requestSort("price")}
                 className="flex gap-1 items-center text-xs opacity-80 font-bold cursor-pointer"
               >
@@ -200,7 +210,6 @@ const AvailableListing = ({
         return acc - _listing.count;
       }, resourceCount + resourcesToClaim);
     }
-    console.log("seller asteroid:", sellerHome.slice(0, 6));
     const hangar = createHangar(sellerHome)?.get(entity) ?? 0n;
     return hangar;
   }, [listing, sellerHome, entity]);
@@ -212,6 +221,10 @@ const AvailableListing = ({
 
   return (
     <tr key={`listing-${listing.id}`} className="">
+      <td className="text-center align-middle flex justify-center ">
+        <IconLabel imageUri={ResourceImage.get(entity as Entity) ?? ""} tooltipDirection={"right"} text={""} />
+      </td>
+
       <td className="py-4">{formatEther(listing.price * scale)}</td>
       <td className="py-4">{Math.min(scaledCount, Number(sellerMaxResource / scale))}</td>
       <td className="py-4">
