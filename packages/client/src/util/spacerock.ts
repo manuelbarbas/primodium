@@ -87,7 +87,7 @@ export function getSpaceRockName(spaceRock: Entity) {
       break;
     case ERock.Asteroid:
       {
-        name += ` ${mainBaseLevel ? `LVL. ${mainBaseLevel} ` : ""} ${isPirate && "Pirate"} Asteroid`;
+        name += ` ${mainBaseLevel ? `LVL. ${mainBaseLevel} ` : ""} ${isPirate ? "Pirate" : "Asteroid"}`;
       }
       break;
     default:
