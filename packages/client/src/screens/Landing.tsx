@@ -119,7 +119,7 @@ export const Landing: React.FC = () => {
               transition: {
                 repeat: Infinity,
                 repeatType: "reverse",
-                duration: 2,
+                duration: 5,
                 delay: 0,
               },
             }}
