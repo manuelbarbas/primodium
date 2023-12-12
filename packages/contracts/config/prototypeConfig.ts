@@ -1580,13 +1580,13 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   Copper: {
     keys: [{ [EResource.Copper]: "uint8" }],
     tables: {
-      P_ScoreMultiplier: { value: 20n },
+      P_ScoreMultiplier: { value: 10n },
     },
   },
   Lithium: {
     keys: [{ [EResource.Lithium]: "uint8" }],
     tables: {
-      P_ScoreMultiplier: { value: 30n },
+      P_ScoreMultiplier: { value: 10n },
     },
   },
   Sulfur: {
@@ -1630,21 +1630,21 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   IronPlate: {
     keys: [{ [EResource.IronPlate]: "uint8" }],
     tables: {
-      P_ScoreMultiplier: { value: 40n },
+      P_ScoreMultiplier: { value: 50n },
       P_ConsumesResource: { value: EResource.Iron },
     },
   },
   PVCell: {
     keys: [{ [EResource.PVCell]: "uint8" }],
     tables: {
-      P_ScoreMultiplier: { value: 100n },
+      P_ScoreMultiplier: { value: 50n },
       P_ConsumesResource: { value: EResource.Lithium },
     },
   },
   Alloy: {
     keys: [{ [EResource.Alloy]: "uint8" }],
     tables: {
-      P_ScoreMultiplier: { value: 170n },
+      P_ScoreMultiplier: { value: 50n },
       P_ConsumesResource: { value: EResource.IronPlate },
     },
   },
@@ -1965,8 +1965,17 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildIronMine"]) },
       P_HasBuiltBuildings: { value: encodeArray(["IronPlateFactory"]) },
-      P_ResourceReward: getResourceValues({ Iron: 50000 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 50000 }),
     },
+  },
+
+  BuildAlloyFactory: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildCopperMine"]) },
+      P_HasBuiltBuildings: { value: encodeArray(["IronPlateFactory"]) },
+      P_ResourceReward: getResourceValues({ IronPlate: 50000 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
 
   BuildGarage: {
