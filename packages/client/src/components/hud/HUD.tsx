@@ -18,7 +18,6 @@ import { Score } from "./Score";
 import { SelectAction } from "./SelectAction";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { Chat } from "./chat/Chat";
-import { Marketplace } from "./marketplace/Marketplace";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
 import { Settings } from "./modals/settings/Settings";
 import { ReinforcementFleets } from "./panes/FriendlyFleets";
@@ -83,16 +82,6 @@ export const GameHUD = () => {
         <HUD.BottomMiddle>
           <SpacerockMenu />
         </HUD.BottomMiddle>
-        <HUD.BottomLeft>
-          <Modal>
-            <Modal.Button className={`btn-xs btn-ghost flex items-center justify-center gap-1 text-accent`}>
-              Marketplace
-            </Modal.Button>
-            <Modal.Content className="w-full h-full">
-              <Marketplace />
-            </Modal.Content>
-          </Modal>
-        </HUD.BottomLeft>
       </HUD>
 
       <HUD>
