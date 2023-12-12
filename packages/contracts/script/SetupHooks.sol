@@ -122,7 +122,7 @@ function setupHooks(IWorld world) {
   registerAllianceHooks(world, onBefore_ClaimResources);
   registerRecallHooks(world, onBefore_ClaimResources);
   registerToggleBuildingHooks(world, onBefore_ClaimResources, onBefore_ClaimUnits);
-  registerMarketplaceHooks(world, onBefore_ClaimResources);
+  registerMarketplaceHooks(world, onBefore_ClaimResources, onBefore_ClaimUnits);
   //Store Hooks
   registerScoreHook(world);
 }
@@ -178,9 +178,16 @@ function registerToggleBuildingHooks(
   world.registerSystemHook(systemId, onToggleBuilding_Utility, AFTER_CALL_SYSTEM);
 }
 
-function registerMarketplaceHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
+function registerMarketplaceHooks(
+  IWorld world,
+  OnBefore_ClaimResources onBefore_ClaimResources,
+  OnBefore_ClaimUnits onBefore_ClaimUnits
+) {
   ResourceId systemId = getSystemResourceId("MarketplaceSystem");
+
   world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
+
+  world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
 
   OnMarketPlace_TargetClaimResources onMarketPlace_TargetClaimResources = new OnMarketPlace_TargetClaimResources();
   world.grantAccess(ResourceCountTableId, address(onMarketPlace_TargetClaimResources));
