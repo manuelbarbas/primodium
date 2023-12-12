@@ -127,6 +127,8 @@ export enum SpriteKeys {
   PhotovoltaicCellFactory2 = "sprites/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_1.png",
 
   StarmapperStation1 = "sprites/starmapper-station/level1/Starmapper1.png",
+  StarmapperStation2 = "sprites/starmapper-station/level2/Starmapper_LVL2_1.png",
+  StarmapperStation3 = "sprites/starmapper-station/level3/Starmapper_LVL3_1.png",
 
   Hangar1 = "sprites/hangar/level1/Hangar1.png",
 
@@ -252,6 +254,8 @@ export enum AnimationKeys {
   SolarPanel2 = "solarpanel/level2",
 
   StarmapperStation1 = "starmapperstation/level1",
+  StarmapperStation2 = "starmapperstation/level2",
+  StarmapperStation3 = "starmapperstation/level3",
 
   Hangar1 = "hangar/level1",
 
@@ -333,7 +337,11 @@ export const EntitytoSpriteKey = {
 
   [EntityType.SolarPanel]: [SpriteKeys.SolarPanel1, SpriteKeys.SolarPanel2],
 
-  [EntityType.StarmapperStation]: [SpriteKeys.StarmapperStation1],
+  [EntityType.StarmapperStation]: [
+    SpriteKeys.StarmapperStation1,
+    SpriteKeys.StarmapperStation2,
+    SpriteKeys.StarmapperStation3,
+  ],
 
   [EntityType.Hangar]: [SpriteKeys.Hangar1],
 
@@ -390,7 +398,11 @@ export const EntityIDtoAnimationKey = {
 
   [EntityType.SolarPanel]: [AnimationKeys.SolarPanel1, AnimationKeys.SolarPanel2],
 
-  [EntityType.StarmapperStation]: [AnimationKeys.StarmapperStation1],
+  [EntityType.StarmapperStation]: [
+    AnimationKeys.StarmapperStation1,
+    AnimationKeys.StarmapperStation2,
+    AnimationKeys.StarmapperStation3,
+  ],
 
   [EntityType.Hangar]: [AnimationKeys.Hangar1],
 
