@@ -185,7 +185,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   Expansion: {
     tables: {
-      P_MaxLevel: { value: 7n },
+      P_MaxLevel: { value: 8n },
     },
     levels: {
       1: { Dimensions: { width: 11, height: 9 }, P_RequiredBaseLevel: { value: 1n } },
