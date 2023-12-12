@@ -178,9 +178,10 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         const linkedAddress = await getLinkedAddress(entityToAddress(ownedBy));
 
         const name =
-          linkedAddress.ensName ?? linkedAddress.address
+          linkedAddress.ensName ??
+          (linkedAddress.address
             ? entityToAddress(linkedAddress.address ?? playerEntity, true)
-            : entityToPlayerName(playerEntity);
+            : entityToPlayerName(playerEntity));
 
         gameObject.setText(name);
       }),

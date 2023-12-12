@@ -363,7 +363,7 @@ export const OnNow = <T extends keyof GameObjectTypes>(
 ): GameObjectComponent<T> => {
   return {
     id: uuid(),
-    once: (gameObject) => {
+    now: (gameObject) => {
       callback(gameObject as InstanceType<GameObjectTypes[T]>);
     },
   };
