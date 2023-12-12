@@ -13,6 +13,7 @@ import { Badge } from "../core/Badge";
 import { Button } from "../core/Button";
 import { SecondaryCard } from "../core/Card";
 import { IconLabel } from "../core/IconLabel";
+import { AudioKeys, KeybindActions } from "@game/constants";
 
 export const RecipeDisplay: React.FC<{
   building: Entity;
@@ -140,6 +141,8 @@ export const BlueprintInfo: React.FC<{
         {
           <Button
             className="btn-xs w-full btn-warning"
+            clickSound={AudioKeys.Bleep4}
+            keybind={KeybindActions.Esc}
             onClick={() => {
               components.SelectedBuilding.remove();
               components.SelectedAction.remove();

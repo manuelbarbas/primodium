@@ -2,14 +2,13 @@ import { DepthLayers, FogTilekeys } from "@game/constants";
 import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { components } from "src/network/components";
-import { SetupResult } from "src/network/types";
 import { world } from "src/network/world";
 import { getAsteroidBounds, getSpaceRockBounds } from "src/util/outOfBounds";
 import { ObjectPosition, SetValue } from "../../common/object-components/common";
 import { Square } from "../../common/object-components/graphics";
 import { ObjectText } from "../../common/object-components/text";
 
-export function renderFog(scene: Scene, { network: { playerEntity } }: SetupResult) {
+export function renderFog(scene: Scene) {
   const { tileWidth, tileHeight } = scene.tilemap;
   const objSuffix = "_fog";
   const gameWorld = namespaceWorld(world, "game");
@@ -73,7 +72,7 @@ export function renderFog(scene: Scene, { network: { playerEntity } }: SetupResu
       }),
     ]);
 
-    group.add("Text").setComponents([
+    group.add("BitmapText").setComponents([
       ObjectPosition(
         {
           x: nextBounds.minX * tileWidth,
@@ -87,7 +86,7 @@ export function renderFog(scene: Scene, { network: { playerEntity } }: SetupResu
         alpha: 0.7,
       }),
       ObjectText(bounds.maxX !== nextBounds.maxX ? "+ NEXT EXPANSION" : "FINAL EXPANSION", {
-        color: "cyan",
+        color: 0x00ffff,
         fontSize: 10,
       }),
     ]);

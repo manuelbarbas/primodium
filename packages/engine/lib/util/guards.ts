@@ -20,3 +20,17 @@ export function isGraphics(
 ): _gameObject is GameObject<"Graphics"> {
   return type === "Graphics";
 }
+
+export function isText(
+  _gameObject: Phaser.GameObjects.GameObject,
+  type: keyof GameObjectTypes
+): _gameObject is GameObject<"Text"> {
+  return type === "Text";
+}
+
+export function isBitmapText(
+  _gameObject: Phaser.GameObjects.GameObject,
+  type: keyof GameObjectTypes
+): _gameObject is GameObject<"BitmapText"> {
+  return type === "BitmapText";
+}

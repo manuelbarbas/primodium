@@ -15,11 +15,19 @@ import { Scene } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { PIRATE_KEY } from "src/util/constants";
-import { ObjectPosition, OnClick, OnComponentSystem, SetValue, Tween } from "../../common/object-components/common";
+import {
+  ObjectPosition,
+  OnClick,
+  OnComponentSystem,
+  SetValue,
+  Tween,
+  OnRxjsSystem,
+} from "../../common/object-components/common";
 import { decodeEntity, hashKeyEntity } from "src/util/encode";
 import { Outline, Texture } from "../../common/object-components/sprite";
 import { ObjectText } from "../../common/object-components/text";
 import { getRandomRange } from "src/util/common";
+import { throttleTime } from "rxjs";
 
 export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -38,6 +46,8 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
     if (asteroidType !== ERock.Asteroid) return;
     const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entity);
 
+    const spriteScale = 0.7;
+
     const sharedComponents = [
       ObjectPosition({
         x: coord.x * tileWidth,
@@ -48,7 +58,7 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
         originY: 0.5,
       }),
       Tween(scene, {
-        scale: { from: 1 - getRandomRange(0, 0.05), to: 1 + getRandomRange(0, 0.05) },
+        scale: { from: spriteScale - getRandomRange(0, 0.05), to: spriteScale + getRandomRange(0, 0.05) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
         duration: 5000, // Duration of one wobble
@@ -119,19 +129,34 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
       }),
     ]);
 
-    const asteroidLabel = asteroidObjectGroup.add("Text");
+    const asteroidLabel = asteroidObjectGroup.add("BitmapText");
 
     asteroidLabel.setComponents([
       ...sharedComponents,
       SetValue({
         originX: 0.5,
         originY: -3,
+        depth: DepthLayers.Marker,
       }),
       ObjectText("PIRATE", {
-        backgroundColor: "#000000",
-        color: "orange",
-        fontSize: 8,
+        id: "addressLabel",
+        color: 0xffa500,
+        fontSize: Math.max(8, Math.min(24, 16 / scene.camera.phaserCamera.zoom)),
       }),
+
+      OnRxjsSystem(
+        // @ts-ignore
+        scene.camera.zoom$.pipe(throttleTime(10)),
+        (gameObject, zoom) => {
+          const mapOpen = components.MapOpen.get()?.value ?? false;
+
+          if (!mapOpen) return;
+
+          const size = Math.max(8, Math.min(24, 16 / zoom));
+
+          gameObject.setFontSize(size);
+        }
+      ),
     ]);
   };
 

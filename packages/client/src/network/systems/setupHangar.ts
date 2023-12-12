@@ -90,6 +90,11 @@ export function setupHangar(mud: SetupResult) {
     if (destination) createHangar(destination);
   });
 
+  defineComponentSystem(world, components.SelectedRock, ({ value: [value] }) => {
+    if (!value?.value) return;
+    setupHangar(value.value);
+  });
+
   defineComponentSystem(world, components.BlockNumber, () => {
     const home = components.Home.get(playerEntity)?.asteroid;
     if (home) createHangar(home as Entity);

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PusherJS from "pusher-js";
 import { uuid } from "@latticexyz/utils";
 import { useMud } from "src/hooks";
@@ -12,12 +12,10 @@ import { censorText } from "src/util/profanity";
 import { components } from "src/network/components";
 import { useFetch } from "src/hooks/useFetch";
 import { Loader } from "src/components/core/Loader";
+import { Tabs } from "src/components/core/Tabs";
+import { Join } from "src/components/core/Join";
 
 const COOLDOWN = 1.5;
-
-interface ChatProps {
-  className?: string;
-}
 
 type message = {
   user: string;
@@ -37,17 +35,15 @@ export const client = new PusherJS(import.meta.env.PRI_PUSHER_APP_KEY!, {
   cluster: "NA",
 });
 
-export const Chat = ({ className }: ChatProps) => {
+export const Channel: React.FC<{ className?: string; channel: string }> = ({ className, channel }) => {
   const {
     network: { walletClient, playerEntity },
   } = useMud();
   const [chatScroll, setChatScroll] = useState(false);
   const [chat, setChat] = useState<Map<string, message>>(new Map());
   const message = useRef("");
-  const [channel, setChannel] = useState("general");
   const { data, loading } = useFetch<message[]>(`/api/chatHistory/${channel}`);
   const chatRef = useRef<HTMLDivElement>(null);
-  const playerAlliance = components.PlayerAlliance.use(playerEntity)?.alliance;
   const [isCooldown, setIsCooldown] = useState(false);
 
   const sendMessage = async () => {
@@ -120,7 +116,7 @@ export const Chat = ({ className }: ChatProps) => {
       pusherChannel.unbind_all();
       client.unsubscribe(channel);
     };
-  }, [channel]); // Ensure this effect only runs when 'channel' changes
+  }, []);
 
   useEffect(() => {
     if (!chatRef.current) return;
@@ -160,10 +156,6 @@ export const Chat = ({ className }: ChatProps) => {
     return () => clearTimeout(timer); // Cleanup the timer
   }, [isCooldown]);
 
-  const toggleChannel = useCallback(() => {
-    setChannel((prevChannel) => (prevChannel === "general" ? playerAlliance ?? "" : "general"));
-  }, [playerAlliance]);
-
   return (
     <div className={`${className} duration-300 transition-all pointer-events-auto text-xs`}>
       <button
@@ -177,19 +169,7 @@ export const Chat = ({ className }: ChatProps) => {
       >
         JUMP TO NEWEST
       </button>
-      <SecondaryCard className="grid grid-cols-2 gap-1">
-        <Button className={`btn-xs ${channel === "general" ? "border-accent" : ""}`} onClick={toggleChannel}>
-          GENERAL
-        </Button>
-        <Button
-          className={`btn-xs ${channel === playerAlliance ? "border-accent" : ""}`}
-          onClick={toggleChannel}
-          disabled={!playerAlliance}
-        >
-          ALLIANCE
-        </Button>
-      </SecondaryCard>
-      <SecondaryCard className="flex flex-col h-72 w-96 items-center justify-center">
+      <SecondaryCard className={`"flex flex-col h-72 w-96 items-center ${loading ? "justify-center" : "justify-end"}`}>
         {!loading && (
           <div
             ref={chatRef}
@@ -242,5 +222,32 @@ export const Chat = ({ className }: ChatProps) => {
         </Button>
       </form>
     </div>
+  );
+};
+
+export const Chat = () => {
+  const playerEntity = useMud().network.playerEntity;
+  const playerAlliance = components.PlayerAlliance.use(playerEntity)?.alliance;
+
+  return (
+    <Tabs defaultIndex={0}>
+      <Join className="w-full border border-secondary/25 border-b-0">
+        <Tabs.Button showActive index={0} className="w-1/2">
+          GENERAL
+        </Tabs.Button>
+        <Tabs.Button showActive index={1} disabled={!playerAlliance} className="w-1/2">
+          ALLIANCE
+        </Tabs.Button>
+      </Join>
+
+      <Tabs.Pane index={0} fragment>
+        <Channel channel="general" />
+      </Tabs.Pane>
+      {playerAlliance && (
+        <Tabs.Pane index={1} fragment>
+          <Channel channel={playerAlliance} />
+        </Tabs.Pane>
+      )}
+    </Tabs>
   );
 };
