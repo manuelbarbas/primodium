@@ -128,9 +128,7 @@ export const HUD: FC<HUDProps> & {
   const paddingClass = pad ? "p-3" : "";
   return (
     <ScaleContext.Provider value={scale}>
-      <div
-        className={`screen-container ${paddingClass} absolute top-0 right-0 pointer-events-none border border-secondary/50`}
-      >
+      <div className={`screen-container ${paddingClass} absolute top-0 right-0 pointer-events-none`}>
         <div className={`h-full relative`}>{children}</div>
       </div>
     </ScaleContext.Provider>

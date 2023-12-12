@@ -1,4 +1,4 @@
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaCircle } from "react-icons/fa";
 import { components } from "src/network/components";
 import { Action } from "src/util/constants";
 import { HUD } from "../core/HUD";
@@ -36,8 +36,6 @@ export const GameHUD = () => {
     value: false,
   }).value;
 
-  // const isSpectating = spectatingAccount !== playerEntity;
-
   return (
     <div className="screen-container font-mono">
       <HUD>
@@ -54,6 +52,14 @@ export const GameHUD = () => {
         {!isSpectating && <HUD.TopRight>{mapOpen ? <Minimap /> : <CurrentObjective />}</HUD.TopRight>}
 
         {!isSpectating && <HUD.Right>{mapOpen ? <Motherlodes /> : <BuildingSelection />}</HUD.Right>}
+        {isSpectating && (
+          <HUD.TopRight>
+            <p className="text-accent text-2xl font-bold p-5 flex gap-2 items-center">
+              <FaCircle size={12} className="animate-pulse text-error" />
+              LIVE
+            </p>
+          </HUD.TopRight>
+        )}
 
         <HUD.Left>
           <Tabs className="flex flex-row justify-center items-center gap-0" defaultIndex={-1}>
@@ -109,7 +115,7 @@ const BuildingSelection = () => {
             }}
             className="rounded-r-none m-0 border-r-0 btn-md border-warning relative py-4 hover:text-accent group"
           >
-            <IconLabel imageUri="img/icons/minersicon.png" className="text-2xl" />
+            <IconLabel imageUri="img/icons/blueprinticon.png" className="text-2xl scale-125 " />
             <p
               style={{
                 writingMode: "vertical-rl",

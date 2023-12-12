@@ -101,7 +101,7 @@ export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating
         >
           {isSpectating && (
             <div className="flex flex-col gap-2 items-center p-2 w-16">
-              <img src="img/icons/minersicon.png" className="pixel-images w-12 h-12" />
+              <img src="img/icons/spectateicon.png" className="pixel-images w-12 h-12" />
               <p className="">SPECTATE</p>
             </div>
           )}
@@ -128,7 +128,7 @@ export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating
           )}
           {isSpectating && (
             <div className="flex flex-col gap-2 items-center p-2 w-16">
-              <img src="img/icons/starmapicon.png" className="pixel-images w-12 h-12" />
+              <img src="img/icons/returnicon.png" className="pixel-images w-12 h-12" />
               <p className="">EXIT</p>
             </div>
           )}
