@@ -25,6 +25,8 @@ jobs:
         uses: foundry-rs/foundry-toolchain@v1
 
       - name: Build client bundle
+        env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
         run: pnpm --filter client run build
 
       - name: Run tests in client
