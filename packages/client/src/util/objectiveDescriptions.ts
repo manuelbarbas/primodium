@@ -24,10 +24,6 @@ export const ObjectiveDescriptions = new Map<EObjectives, string>([
     "Select the lithium mine on the building menu below and place it on the lithium ore tile. Lithium mines produce lithium.",
   ],
   [
-    EObjectives.BuildSulfurMine,
-    "Select the sulfur mine on the building menu below and place it on the sulfur ore tile. Sulfur mines produce sulfur.",
-  ],
-  [
     EObjectives.BuildIronPlateFactory,
     "Select the plating factory on the building menu and place it on an empty tile. It produces iron plates by consuming iron production.",
   ],
