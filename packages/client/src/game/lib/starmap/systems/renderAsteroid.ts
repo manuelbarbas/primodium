@@ -70,14 +70,6 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         repeat: -1, // Repeat indefinitely
       }),
       Tween(scene, {
-        rotation: { from: -getRandomRange(0, Math.PI / 8), to: getRandomRange(0, Math.PI / 8) },
-        // ease: "Sine.easeInOut",
-        hold: getRandomRange(0, 10000),
-        duration: 5 * 1000, // Duration of one wobble
-        yoyo: true, // Go back to original scale
-        repeat: -1, // Repeat indefinitely
-      }),
-      Tween(scene, {
         scrollFactorX: { from: 1 - getRandomRange(0, 0.005), to: 1 + getRandomRange(0, 0.005) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
@@ -95,10 +87,20 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       }),
     ];
 
+    const rotationTween = Tween(scene, {
+      rotation: { from: -getRandomRange(0, Math.PI / 8), to: getRandomRange(0, Math.PI / 8) },
+      // ease: "Sine.easeInOut",
+      hold: getRandomRange(0, 10000),
+      duration: 5 * 1000, // Duration of one wobble
+      yoyo: true, // Go back to original scale
+      repeat: -1, // Repeat indefinitely
+    });
+
     const asteroidObject = asteroidObjectGroup.add("Sprite");
 
     asteroidObject.setComponents([
       ...sharedComponents,
+      rotationTween,
       Texture(
         Assets.SpriteAtlas,
         EntitytoSpriteKey[EntityType.Asteroid][
@@ -113,6 +115,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
     const asteroidOutline = asteroidObjectGroup.add("Sprite");
     asteroidOutline.setComponents([
       ...sharedComponents,
+      rotationTween,
       OnComponentSystem(components.SelectedRock, () => {
         if (components.SelectedRock.get()?.value === entity) {
           if (asteroidOutline.hasComponent(Outline().id)) return;
@@ -143,6 +146,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
 
     gracePeriod.setComponents([
       ...sharedComponents,
+      rotationTween,
       OnComponentSystem(components.Time, (gameObject) => {
         const player = components.OwnedBy.get(entity)?.value as Entity | undefined;
         const graceTime = components.GracePeriod.get(player)?.value ?? 0n;
