@@ -1,14 +1,19 @@
 import { Entity } from "@latticexyz/recs";
-import { useState } from "react";
-import { FaAngleDoubleRight, FaArrowDown, FaArrowLeft, FaArrowRight, FaArrowUp, FaMinus } from "react-icons/fa";
+import { EOrderType, EResource, EUnit } from "contracts/config/enums";
+import { useMemo, useState } from "react";
+import { FaAngleDoubleRight, FaArrowLeft, FaArrowRight, FaMinus, FaPlay, FaSync } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
+import { IconLabel } from "src/components/core/IconLabel";
+import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { NumberInput } from "src/components/shared/NumberInput";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { ValueSansMetadata } from "src/network/components/customComponents/ExtendedComponent";
-import { RESOURCE_SCALE } from "src/util/constants";
+import { createHangar } from "src/network/systems/setupHangar";
+import { ResourceEntityLookup, ResourceImage, UnitEntityLookup } from "src/util/constants";
+import { getFullResourceCount, getScale } from "src/util/resource";
+import { claimUnits } from "src/util/web3/contractCalls/claimUnits";
 import { formatEther } from "viem";
-import { AccountDisplay } from "src/components/shared/AccountDisplay";
 
 type Listing = ValueSansMetadata<typeof components.MarketplaceOrder.schema> & { id: Entity };
 
@@ -29,14 +34,6 @@ export const AvailableListings = ({
     key: null,
     direction: "ascending",
   });
-  const getCurrentListings = () => {
-    const startIndex = (currentPage - 1) * pageSize;
-    return sortedListings.slice(startIndex, startIndex + pageSize);
-  };
-  const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-  };
-
   const requestSort = (key: keyof Listing) => {
     let direction: "ascending" | "descending" = "ascending";
     if (sortConfig.key === key && sortConfig.direction === "ascending") {
@@ -52,7 +49,7 @@ export const AvailableListings = ({
   }, 0n);
 
   const balance = components.WETHBalance.use(network.playerEntity)?.value ?? 0n;
-  const remainingBalance = balance - totalCost;
+  const remainingBalance = useMemo(() => balance - totalCost, [balance, totalCost]);
 
   const PaginationControls = () => {
     const totalPages = Math.ceil(sortedListings.length / pageSize);
@@ -110,65 +107,156 @@ export const AvailableListings = ({
     return 0;
   });
 
+  const currentListings = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return sortedListings.slice(startIndex, startIndex + pageSize);
+  }, [sortedListings, currentPage, pageSize]);
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
   const getSortIcon = (key: string) => {
     if (sortConfig.key === key) {
-      return sortConfig.direction === "ascending" ? <FaArrowDown /> : <FaArrowUp />;
+      return <FaPlay className={`${sortConfig.direction === "ascending" ? "rotate-90" : "-rotate-90"} w-2`} />;
     }
-    return <FaMinus />;
+    return <FaMinus className="w-2" />;
   };
 
-  if (listings.length === 0) return <div className="w-full h-full text-center p-20 uppercase bold">No listings</div>;
+  if (listings.length === 0)
+    return <div className="w-full h-full text-center p-20 uppercase text-error animate-pulse">No listings</div>;
 
   return (
     <div className="p-2 flex flex-col justify-between h-full">
       <table className="min-w-full divide-y divide-accent">
         <thead className="uppercase text-sm">
           <tr>
+            <th></th>
             <th className="sortable-header">
-              <div onClick={() => requestSort("price")} className="flex gap-2 items-center cursor-pointer">
+              <div
+                onClick={() => requestSort("resource")}
+                className="text-xs opacity-80 font-bold cursor-pointer flex gap-1 items-center"
+              >
+                Item {getSortIcon("resource")}
+              </div>
+            </th>
+
+            <th className="sortable-header">
+              <div
+                onClick={() => requestSort("price")}
+                className="flex gap-1 items-center text-xs opacity-80 font-bold cursor-pointer"
+              >
                 Price {getSortIcon("price")}
               </div>
             </th>
             <th className="sortable-header">
-              <div onClick={() => requestSort("count")} className="flex gap-2 items-center cursor-pointer">
+              <div
+                onClick={() => requestSort("count")}
+                className="flex gap-1 items-center text-xs opacity-80 font-bold cursor-pointer"
+              >
                 Count {getSortIcon("count")}
               </div>
             </th>
             <th className="sortable-header">
-              <div onClick={() => requestSort("seller")} className="flex gap-2 items-center cursor-pointer">
+              <div
+                onClick={() => requestSort("seller")}
+                className="flex gap-1 items-center text-xs opacity-80 font-bold cursor-pointer"
+              >
                 Seller {getSortIcon("seller")}
               </div>
             </th>
-            <th>Buy</th>
+            <th className="flex gap-1 items-center justify-center text-xs opacity-80 font-bold">Buy</th>
           </tr>
         </thead>
         <tbody>
-          {getCurrentListings().map((listing) => {
-            const scaledCount = Number(listing.count) / Number(RESOURCE_SCALE);
-            const startingValue = (takenOrders[listing.id] ?? 0n) / RESOURCE_SCALE;
-            const max = Math.min(scaledCount, Number(remainingBalance / listing.price));
-
-            return (
-              <tr key={`listing-${listing.id}`}>
-                <td className="py-4 whitespace-nowrap">{formatEther(listing.price * RESOURCE_SCALE)}</td>
-                <td className="py-4 whitespace-nowrap">{scaledCount}</td>
-                <td className="py-4 whitespace-nowrap">
-                  <AccountDisplay player={listing.seller as Entity} />
-                </td>
-                <td className="py-4 whitespace-nowrap flex justify-center">
-                  <NumberInput
-                    startingValue={Number(startingValue)}
-                    max={Number(max)}
-                    onChange={(e) => setOrder(listing.id, BigInt(e) * RESOURCE_SCALE)}
-                    reset={!takenOrders[listing.id]}
-                  />
-                </td>
-              </tr>
-            );
-          })}
+          {currentListings.map((listing) => (
+            <AvailableListing
+              key={listing.id}
+              listing={listing}
+              remainingBalance={remainingBalance}
+              takenOrders={takenOrders}
+              setOrder={setOrder}
+            />
+          ))}
         </tbody>
       </table>
       <PaginationControls />
     </div>
+  );
+};
+
+const AvailableListing = ({
+  listing,
+  remainingBalance,
+  takenOrders,
+  setOrder,
+}: {
+  listing: Listing;
+  takenOrders: Record<Entity, bigint>;
+  remainingBalance: bigint;
+  setOrder: (orderId: Entity, count: bigint) => void;
+}) => {
+  const { network } = useMud();
+  const [isSpinning, setIsSpinning] = useState(false);
+
+  const entity =
+    listing.orderType === EOrderType.Resource
+      ? ResourceEntityLookup[listing.resource as EResource]
+      : UnitEntityLookup[listing.resource as EUnit];
+  const scale = getScale(entity);
+  const scaledCount = Number(listing.count) / Number(scale);
+  const startingValue = (takenOrders[listing.id] ?? 0n) / scale;
+  const sellerHome = components.Home.use(listing.seller as Entity)?.asteroid as Entity | undefined;
+  const sellerMaxResource = useMemo(() => {
+    if (!sellerHome) return 0n;
+    if (listing.orderType === EOrderType.Resource) {
+      const { resourceCount, resourcesToClaim } = getFullResourceCount(entity, sellerHome);
+      return components.MarketplaceOrder.getAll().reduce((acc, entity) => {
+        const _listing = components.MarketplaceOrder.get(entity)!;
+        if (_listing.seller !== listing.seller || _listing.resource !== listing.resource) return acc;
+        return acc - _listing.count;
+      }, resourceCount + resourcesToClaim);
+    }
+    const hangar = createHangar(sellerHome)?.get(entity) ?? 0n;
+    return hangar;
+  }, [listing, sellerHome, entity]);
+
+  const max = Math.min(
+    Number(sellerMaxResource / scale),
+    Math.min(scaledCount, Number(remainingBalance / (listing.price * scale)))
+  );
+
+  const handleSync = () => {
+    setIsSpinning(true);
+    setTimeout(() => setIsSpinning(false), 3000);
+
+    if (listing.orderType === EOrderType.Resource || !sellerHome) return;
+    claimUnits(sellerHome, network);
+  };
+
+  return (
+    <tr key={`listing-${listing.id}`} className="">
+      <td className="py-4 flex justify-center w-fit">
+        <Button className="btn-ghost p-1 h-fit" onClick={handleSync}>
+          <FaSync className={`cursor-pointer ${isSpinning ? "animate-spin" : ""}`} />
+        </Button>
+      </td>
+      <td className="">
+        <IconLabel imageUri={ResourceImage.get(entity as Entity) ?? ""} tooltipDirection={"right"} text={""} />
+      </td>
+
+      <td className="py-4">{formatEther(listing.price * scale)}</td>
+      <td className="py-4">{Math.min(scaledCount, Number(sellerMaxResource / scale))}</td>
+      <td className="py-4">
+        <AccountDisplay player={listing.seller as Entity} />
+      </td>
+      <td className="py-4 flex justify-center">
+        <NumberInput
+          startingValue={Number(startingValue)}
+          min={0}
+          max={Number(max)}
+          onChange={(e) => setOrder(listing.id, BigInt(e * Number(scale)))}
+          reset={!takenOrders[listing.id]}
+        />
+      </td>
+    </tr>
   );
 };

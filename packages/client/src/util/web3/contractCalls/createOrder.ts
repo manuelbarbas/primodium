@@ -1,18 +1,24 @@
 import { Entity } from "@latticexyz/recs";
+import { EOrderType } from "contracts/config/enums";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { SetupNetworkResult } from "src/network/types";
 import { world } from "src/network/world";
-import { parseReceipt } from "../../analytics/parseReceipt";
-import { getBlockTypeName } from "src/util/common";
-import { RESOURCE_SCALE, ResourceEntityLookup, ResourceEnumLookup } from "src/util/constants";
 import { bigintToNumber } from "src/util/bigint";
+import { getBlockTypeName } from "src/util/common";
+import { RESOURCE_SCALE, ResourceEnumLookup, UnitEnumLookup } from "src/util/constants";
+import { parseReceipt } from "../../analytics/parseReceipt";
 
 export const createOrder = async (rawResource: Entity, count: bigint, price: bigint, network: SetupNetworkResult) => {
-  const resource = ResourceEnumLookup[rawResource];
-
+  const rawResourceId = ResourceEnumLookup[rawResource];
+  const { resourceId, type } = rawResourceId
+    ? { resourceId: rawResourceId, type: EOrderType.Resource }
+    : { resourceId: UnitEnumLookup[rawResource], type: EOrderType.Unit };
+  if (!resourceId) {
+    throw new Error("Invalid resource or unit");
+  }
   await execute(
-    () => network.worldContract.write.addOrder([resource, count, price]),
+    () => network.worldContract.write.addOrder([type, resourceId, count, price]),
     network,
     {
       id: world.registerEntity(),
@@ -22,7 +28,7 @@ export const createOrder = async (rawResource: Entity, count: bigint, price: big
       const scaledCount = BigInt(count) * RESOURCE_SCALE;
 
       ampli.systemAddOrder({
-        resourceType: getBlockTypeName(ResourceEntityLookup[resource]),
+        resourceType: getBlockTypeName(rawResource),
         resourceCount: bigintToNumber(scaledCount),
         resourcePrice: bigintToNumber(scaledPrice),
         ...parseReceipt(receipt),

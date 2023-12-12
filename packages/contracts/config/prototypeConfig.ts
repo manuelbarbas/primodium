@@ -949,6 +949,10 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     levels: idsToPrototypes(MUDEnums.EUnit),
   },
 
+  OrderType: {
+    levels: idsToPrototypes(MUDEnums.EOrderType),
+  },
+
   AnvilDrone: {
     tables: {
       P_MaxLevel: { value: 5n },

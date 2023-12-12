@@ -93,6 +93,11 @@ export enum ESendType {
   Raid,
 }
 
+export enum EOrderType {
+  Resource = 1,
+  Unit,
+}
+
 export enum EObjectives {
   BuildIronMine = 1,
   BuildCopperMine,
@@ -202,6 +207,7 @@ export const MUDEnums = {
   EObjectives: enumToArray(EObjectives),
   EAllianceInviteMode: enumToArray(EAllianceInviteMode),
   EAllianceRole: enumToArray(EAllianceRole),
+  EOrderType: enumToArray(EOrderType),
 };
 
 function enumToArray(enumObj: object): string[] {

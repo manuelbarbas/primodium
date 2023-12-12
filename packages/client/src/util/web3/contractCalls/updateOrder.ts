@@ -2,12 +2,13 @@ import { Entity } from "@latticexyz/recs";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { SetupNetworkResult } from "src/network/types";
-import { RESOURCE_SCALE, ResourceEntityLookup, ResourceEnumLookup } from "src/util/constants";
+import { bigintToNumber } from "src/util/bigint";
+import { getBlockTypeName } from "src/util/common";
+import { ResourceEnumLookup, UnitEnumLookup } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
+import { getScale } from "src/util/resource";
 import { Hex } from "viem";
 import { parseReceipt } from "../../analytics/parseReceipt";
-import { getBlockTypeName } from "src/util/common";
-import { bigintToNumber } from "src/util/bigint";
 
 export const updateOrder = async (
   id: Entity,
@@ -16,7 +17,9 @@ export const updateOrder = async (
   count: bigint,
   network: SetupNetworkResult
 ) => {
-  const resource = ResourceEnumLookup[rawResource];
+  const resource = ResourceEnumLookup[rawResource] ?? UnitEnumLookup[rawResource];
+  if (!resource) throw new Error("Invalid resource or unit");
+  console.log("updating", id, getBlockTypeName(rawResource), count, price);
   await execute(
     () => network.worldContract.write.updateOrder([id as Hex, resource, count, price]),
     network,
@@ -24,12 +27,13 @@ export const updateOrder = async (
       id: hashEntities(network.playerEntity, id, rawResource),
     },
     (receipt) => {
-      const scaledPrice = (price * BigInt(1e18)) / RESOURCE_SCALE;
-      const scaledCount = BigInt(count) * RESOURCE_SCALE;
+      const scale = getScale(rawResource);
+      const scaledPrice = (price * BigInt(1e18)) / scale;
+      const scaledCount = BigInt(count) * scale;
 
       ampli.systemUpdateOrder({
         marketplaceOrderId: id,
-        resourceType: getBlockTypeName(ResourceEntityLookup[resource]),
+        resourceType: getBlockTypeName(rawResource),
         resourceCount: bigintToNumber(scaledCount),
         resourcePrice: bigintToNumber(scaledPrice),
         ...parseReceipt(receipt),

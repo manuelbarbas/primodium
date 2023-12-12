@@ -1,22 +1,23 @@
 import { Entity } from "@latticexyz/recs";
 import { useState } from "react";
-import { FaAngleDoubleRight, FaArrowDown, FaArrowLeft, FaArrowRight, FaArrowUp, FaMinus, FaUndo } from "react-icons/fa";
+import { FaAngleDoubleRight, FaArrowLeft, FaArrowRight, FaMinus, FaPlay, FaUndo } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
 import { NumberInput } from "src/components/shared/NumberInput";
 import { useMud } from "src/hooks";
-import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
+import { ResourceImage } from "src/util/constants";
+import { getScale } from "src/util/resource";
 import { cancelOrder, updateOrder } from "src/util/web3/contractCalls/updateOrder";
 import { formatEther } from "viem";
 import { UserListing } from "./CreateOrderForm";
 
 export const PlayerListings = ({
   listings,
-  availableResources,
+  availableItems,
   pageSize = 10,
 }: {
   listings: UserListing[];
-  availableResources: Record<Entity, bigint>;
+  availableItems: Record<Entity, bigint>;
   pageSize?: number;
 }) => {
   const [sortConfig, setSortConfig] = useState<{
@@ -35,6 +36,7 @@ export const PlayerListings = ({
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
+
   const PaginationControls = () => {
     const totalPages = Math.ceil(sortedListings.length / pageSize);
     return (
@@ -79,6 +81,7 @@ export const PlayerListings = ({
       </div>
     );
   };
+
   const sortedListings = [...listings].sort((a, b) => {
     if (sortConfig.key === null) return 0;
     if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -99,12 +102,13 @@ export const PlayerListings = ({
   };
   const getSortIcon = (key: string) => {
     if (sortConfig.key === key) {
-      return sortConfig.direction === "ascending" ? <FaArrowDown /> : <FaArrowUp />;
+      return <FaPlay className={`${sortConfig.direction === "ascending" ? "rotate-90" : "-rotate-90"} w-2`} />;
     }
-    return <FaMinus />;
+    return <FaMinus className="w-2" />;
   };
 
-  if (listings.length === 0) return <div className="w-full h-full text-center p-20 uppercase bold">No listings</div>;
+  if (listings.length === 0)
+    return <div className="w-full h-full text-center p-20 uppercase text-error animate-pulse">No listings</div>;
 
   return (
     <div className="p-2 flex flex-col justify-between h-full">
@@ -113,17 +117,17 @@ export const PlayerListings = ({
           <tr>
             <th className="sortable-header">
               <div
-                onClick={() => requestSort("resource")}
-                className="flex gap-2 items-center justify-center cursor-pointer"
+                onClick={() => requestSort("item")}
+                className="flex gap-1 items-center text-xs opacity-80 font-bold cursor-pointer"
               >
-                Resource {getSortIcon("resource")}
+                Item {getSortIcon("item")}
               </div>
             </th>
 
             <th className="sortable-header">
               <div
                 onClick={() => requestSort("price")}
-                className="flex gap-2 justify-center items-center cursor-pointer"
+                className="flex gap-1 items-center text-xs opacity-80 font-bold cursor-pointer justify-center"
               >
                 Price {getSortIcon("price")}
               </div>
@@ -131,22 +135,18 @@ export const PlayerListings = ({
             <th className="sortable-header">
               <div
                 onClick={() => requestSort("count")}
-                className="flex gap-2 items-center justify-center cursor-pointer"
+                className="flex gap-1 items-center text-xs opacity-80 font-bold cursor-pointer justify-center"
               >
                 Count {getSortIcon("count")}
               </div>
             </th>
-            <th className="sortable-header">Update</th>
-            <th className="sortable-header">Delete</th>
+            <th className="sortable-header"></th>
+            <th className="sortable-header"></th>
           </tr>
         </thead>
         <tbody>
           {getCurrentListings().map((listing) => (
-            <Listing
-              key={`listing-${listing.id}`}
-              listing={listing}
-              availableResource={availableResources[listing.resource]}
-            />
+            <Listing key={`listing-${listing.id}`} listing={listing} availableResource={availableItems[listing.item]} />
           ))}
         </tbody>
       </table>
@@ -159,35 +159,31 @@ const Listing = ({ listing, availableResource }: { listing: UserListing; availab
   const { network } = useMud();
   const [listingUpdate, setListingUpdate] = useState<{ newPrice?: bigint; newCount?: bigint }>();
 
+  const scale = getScale(listing.item);
+
   const newCount = listingUpdate?.newCount;
   const countDiff = !!newCount && newCount !== listing.count;
   const newPrice = listingUpdate?.newPrice;
   const priceDiff = !!newPrice && newPrice !== listing.price;
-  const scaledCount = Number(listing.count) / Number(RESOURCE_SCALE);
-
   return (
     <tr key={`listing-${listing.id}`}>
       <td className="text-center align-middle ">
         <div className="flex items-center justify-center h-full">
-          <IconLabel
-            imageUri={ResourceImage.get(listing.resource as Entity) ?? ""}
-            tooltipDirection={"right"}
-            text={""}
-          />
-          <p className="text-xs text-gray-500 ml-1">({(availableResource / RESOURCE_SCALE).toString()})</p>
+          <IconLabel imageUri={ResourceImage.get(listing.item as Entity) ?? ""} tooltipDirection={"right"} text={""} />
+          <p className="text-xs text-gray-500 ml-1">({(availableResource / scale).toString()})</p>
         </div>
       </td>
 
       <td className="text-center align-middle py-1">
-        <div className="justify-center flex p-1 gap-1 items-center">
+        <div className="flex justify-center p-1 gap-1 items-center">
           <NumberInput
-            toFixed={8}
+            toFixed={3}
             reset={!newPrice}
-            startingValue={Number(formatEther(listing.price * RESOURCE_SCALE))}
+            startingValue={Number(formatEther(listing.price * scale))}
             onChange={function (val: number): void {
               setListingUpdate({
                 ...listingUpdate,
-                newPrice: (BigInt(val) * BigInt(1e18)) / RESOURCE_SCALE,
+                newPrice: BigInt(Math.round(val * 1e18)) / scale,
               });
             }}
           />
@@ -202,14 +198,14 @@ const Listing = ({ listing, availableResource }: { listing: UserListing; availab
       <td className="text-center align-middle">
         <div className="flex justify-center p-1 gap-1 items-center">
           <NumberInput
-            startingValue={scaledCount}
-            max={Number(availableResource / RESOURCE_SCALE)}
-            toFixed={2}
+            startingValue={Number(listing.count / scale)}
+            max={Number(availableResource / scale)}
+            toFixed={0}
             reset={!newCount}
             onChange={function (val: number): void {
               setListingUpdate({
                 ...listingUpdate,
-                newCount: BigInt(val * Number(RESOURCE_SCALE)),
+                newCount: BigInt(Math.round(val * Number(scale))),
               });
             }}
           />
@@ -228,14 +224,17 @@ const Listing = ({ listing, availableResource }: { listing: UserListing; availab
         <Button
           disabled={!priceDiff && !countDiff}
           onClick={() => {
-            updateOrder(listing.id, listing.resource, newPrice || listing.price, newCount || listing.count, network);
+            updateOrder(listing.id, listing.item, newPrice || listing.price, newCount || listing.count, network);
           }}
+          className="btn-primary btn-sm"
         >
           Update
         </Button>
       </td>
       <td className="text-center">
-        <Button onClick={() => cancelOrder(listing.id, network)}>Delete</Button>
+        <Button onClick={() => cancelOrder(listing.id, network)} className="btn-primary btn-sm">
+          Delete
+        </Button>
       </td>
     </tr>
   );

@@ -1,9 +1,9 @@
 import { Entity } from "@latticexyz/recs";
-import { useCallback, useMemo } from "react";
-import { SecondaryCard } from "src/components/core/Card";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { ERock, ESendType } from "contracts/config/enums";
+import { useCallback, useMemo } from "react";
 import { Badge } from "src/components/core/Badge";
+import { SecondaryCard } from "src/components/core/Card";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Modal } from "src/components/core/Modal";
 import { useMud } from "src/hooks";
@@ -56,7 +56,7 @@ export const AllUnitLabels = () => {
     <div className="flex flex-col items-center gap-1 m-1">
       <SecondaryCard className="flex flex-row w-fit gap-1 m-1">
         <UnitLabel
-          name={"Minutemen Marine"}
+          name={"Minuteman Marine"}
           count={getUnitCount(EntityType.MinutemanMarine)}
           resource={EntityType.MinutemanMarine}
         />
