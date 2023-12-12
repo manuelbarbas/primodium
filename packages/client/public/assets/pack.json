@@ -61,6 +61,12 @@
         "type": "image",
         "key": "resource",
         "url": "/assets/tilesets/resource.png"
+      },
+      {
+        "type": "bitmapFont",
+        "key": "teletactile",
+        "textureURL": "/assets/fonts/bitmap/teletactile/teletactile.png",
+        "fontDataURL": "/assets/fonts/bitmap/teletactile/teletactile.xml"
       }
     ]
   }

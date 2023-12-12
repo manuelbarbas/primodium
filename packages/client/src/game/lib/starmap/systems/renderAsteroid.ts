@@ -8,6 +8,7 @@ import {
   SetValue,
   Tween,
   OnRxjsSystem,
+  OnOnce,
 } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
 import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
@@ -15,13 +16,14 @@ import { Coord } from "@latticexyz/utils";
 import { ERock } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
-import { clampedIndex, entityToAddress, getRandomRange, shortenAddress } from "src/util/common";
+import { clampedIndex, entityToAddress, getRandomRange } from "src/util/common";
 import { EntityType, RockRelationship } from "src/util/constants";
 import { getRockRelationship } from "src/util/spacerock";
 import { ObjectText } from "../../common/object-components/text";
-import { Hex } from "viem";
 import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 import { throttleTime } from "rxjs";
+import { entityToPlayerName } from "src/util/name";
+import { getLinkedAddress } from "src/util/web2/getLinkedAddress";
 
 export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -159,7 +161,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       }),
     ]);
 
-    const asteroidLabel = asteroidObjectGroup.add("Text");
+    const asteroidLabel = asteroidObjectGroup.add("BitmapText");
 
     asteroidLabel.setComponents([
       ...sharedComponents,
@@ -168,18 +170,34 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         originY: -3,
         depth: DepthLayers.Marker,
       }),
-      ObjectText(shortenAddress(entityToAddress(ownedBy) as Hex), {
+      ObjectText(entityToPlayerName(ownedBy), {
         id: "addressLabel",
-        backgroundColor: "#000000",
-        color: "cyan",
-        fontSize: Math.max(8, Math.min(12, 8 / scene.camera.phaserCamera.zoom)),
+        fontSize: Math.max(8, Math.min(24, 16 / scene.camera.phaserCamera.zoom)),
       }),
-      //@ts-ignore
-      OnRxjsSystem(scene.camera.zoom$.pipe(throttleTime(50)), (gameObject, zoom) => {
-        const size = Math.max(8, Math.min(12, 8 / zoom));
+      OnOnce(async (gameObject) => {
+        const linkedAddress = await getLinkedAddress(entityToAddress(ownedBy));
 
-        gameObject.setFontSize(size);
+        const name =
+          linkedAddress.ensName ??
+          (linkedAddress.address
+            ? entityToAddress(linkedAddress.address ?? playerEntity, true)
+            : entityToPlayerName(playerEntity));
+
+        gameObject.setText(name);
       }),
+      OnRxjsSystem(
+        // @ts-ignore
+        scene.camera.zoom$.pipe(throttleTime(10)),
+        (gameObject, zoom) => {
+          const mapOpen = components.MapOpen.get()?.value ?? false;
+
+          if (!mapOpen) return;
+
+          const size = Math.max(8, Math.min(24, 16 / zoom));
+
+          gameObject.setFontSize(size);
+        }
+      ),
     ]);
   };
 
