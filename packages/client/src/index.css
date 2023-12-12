@@ -115,6 +115,13 @@
     background-size: 500px;
   }
 
+  .topographic-background2 {
+    background-image: url("/img/backgrounds/topographic_bg.png");
+    bacground-opacity: 0.25;
+    background-size: cover;
+    background-size: 1000px;
+  }
+
   .container {
     position: relative;
   }
