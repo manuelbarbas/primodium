@@ -255,7 +255,7 @@ export function getAllRequirements(objective: Entity, playerEntity: Entity): Rec
     [RequirementType.RewardUtilities]: getRewardUtilitiesRequirement(objective, playerEntity),
   };
   return Object.fromEntries(
-    Object.entries(requirements).filter(([value]) => value !== undefined && value.length > 0)
+    Object.entries(requirements).filter(([, value]) => value !== undefined && value.length > 0)
   ) as Record<RequirementType, Requirement[]>;
 }
 
