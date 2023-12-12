@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { EOrderType, EResource, EUnit } from "contracts/config/enums";
 import { useMemo, useState } from "react";
-import { FaAngleDoubleRight, FaArrowLeft, FaArrowRight, FaMinus, FaPlay } from "react-icons/fa";
+import { FaAngleDoubleRight, FaArrowLeft, FaArrowRight, FaMinus, FaPlay, FaSync } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
@@ -12,6 +12,7 @@ import { ValueSansMetadata } from "src/network/components/customComponents/Exten
 import { createHangar } from "src/network/systems/setupHangar";
 import { ResourceEntityLookup, ResourceImage, UnitEntityLookup } from "src/util/constants";
 import { getFullResourceCount, getScale } from "src/util/resource";
+import { claimUnits } from "src/util/web3/contractCalls/claimUnits";
 import { formatEther } from "viem";
 
 type Listing = ValueSansMetadata<typeof components.MarketplaceOrder.schema> & { id: Entity };
@@ -128,12 +129,13 @@ export const AvailableListings = ({
       <table className="min-w-full divide-y divide-accent">
         <thead className="uppercase text-sm">
           <tr>
+            <th></th>
             <th className="sortable-header">
               <div
                 onClick={() => requestSort("resource")}
-                className="flex gap-1 items-center text-xs opacity-80 font-bold cursor-pointer justify-center"
+                className="text-xs opacity-80 font-bold cursor-pointer flex gap-1 items-center"
               >
-                Item Type {getSortIcon("resource")}
+                Item {getSortIcon("resource")}
               </div>
             </th>
 
@@ -192,6 +194,9 @@ const AvailableListing = ({
   remainingBalance: bigint;
   setOrder: (orderId: Entity, count: bigint) => void;
 }) => {
+  const { network } = useMud();
+  const [isSpinning, setIsSpinning] = useState(false);
+
   const entity =
     listing.orderType === EOrderType.Resource
       ? ResourceEntityLookup[listing.resource as EResource]
@@ -219,9 +224,22 @@ const AvailableListing = ({
     Math.min(scaledCount, Number(remainingBalance / (listing.price * scale)))
   );
 
+  const handleSync = () => {
+    setIsSpinning(true);
+    setTimeout(() => setIsSpinning(false), 3000);
+
+    if (listing.orderType === EOrderType.Resource || !sellerHome) return;
+    claimUnits(sellerHome, network);
+  };
+
   return (
     <tr key={`listing-${listing.id}`} className="">
-      <td className="text-center align-middle flex justify-center ">
+      <td className="py-4 flex justify-center w-fit">
+        <Button className="btn-ghost p-1 h-fit" onClick={handleSync}>
+          <FaSync className={`cursor-pointer ${isSpinning ? "animate-spin" : ""}`} />
+        </Button>
+      </td>
+      <td className="">
         <IconLabel imageUri={ResourceImage.get(entity as Entity) ?? ""} tooltipDirection={"right"} text={""} />
       </td>
 
