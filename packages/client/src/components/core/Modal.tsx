@@ -50,6 +50,7 @@ export const Modal: React.FC<ModalProps> & {
     window.addEventListener("keydown", handleEscPress);
     return () => {
       window.removeEventListener("keydown", handleEscPress);
+      enableInput();
     };
   }, [isOpen, disableInput, enableInput, audio]);
 
