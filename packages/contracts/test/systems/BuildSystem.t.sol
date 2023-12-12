@@ -21,6 +21,8 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testBuildLargeBuilding() public {
     ResourceAccess.set(ROOT_NAMESPACE_ID, creator, true);
+
+    Level.set(Home.getAsteroid(playerEntity), 2);
     int32[] memory blueprint = get2x2Blueprint();
     bytes32[] memory keys = new bytes32[](1);
     keys[0] = IronMinePrototypeId;
