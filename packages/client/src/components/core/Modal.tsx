@@ -24,7 +24,8 @@ interface ModalProps {
 }
 
 export const Modal: React.FC<ModalProps> & {
-  Button: React.FC<{ children: ReactNode; className?: string }>;
+  Button: React.FC<React.ComponentProps<typeof Button>>;
+  CloseButton: React.FC<React.ComponentProps<typeof Button>>;
   Content: React.FC<{ children: ReactNode; className?: string }>;
   IconButton: React.FC<React.ComponentProps<typeof IconButton>>;
 } = ({ children, title }) => {
@@ -55,28 +56,33 @@ export const Modal: React.FC<ModalProps> & {
   return <ModalContext.Provider value={{ isOpen, setIsOpen, title }}>{children}</ModalContext.Provider>;
 };
 
-Modal.Button = function ModalButton({
-  children,
-  className,
-  onClick,
-}: {
-  children: ReactNode;
-  className?: string;
-  onClick?: () => void;
-}) {
+Modal.Button = function ModalButton(props: React.ComponentProps<typeof Button>) {
   const { setIsOpen } = useContext(ModalContext);
 
   return (
     <Button
-      className={className}
-      clickSound={AudioKeys.Sequence}
+      {...props}
+      clickSound={props.clickSound ?? AudioKeys.Sequence}
       onClick={() => {
-        if (onClick) onClick();
+        if (props.onClick) props.onClick();
         setIsOpen(true);
       }}
-    >
-      {children}
-    </Button>
+    />
+  );
+};
+
+Modal.CloseButton = function ModalButton(props: React.ComponentProps<typeof Button>) {
+  const { setIsOpen } = useContext(ModalContext);
+
+  return (
+    <Button
+      {...props}
+      clickSound={props.clickSound ?? AudioKeys.Sequence}
+      onClick={() => {
+        if (props.onClick) props.onClick();
+        setIsOpen(false);
+      }}
+    />
   );
 };
 
