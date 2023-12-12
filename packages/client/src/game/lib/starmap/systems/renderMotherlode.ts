@@ -2,7 +2,14 @@ import { Entity, Has, HasValue, defineEnterSystem, namespaceWorld } from "@latti
 import { Scene } from "engine/types";
 import { world } from "src/network/world";
 import { MotherlodeSizeNames, MotherlodeTypeNames, RockRelationship } from "src/util/constants";
-import { ObjectPosition, OnClick, OnComponentSystem, SetValue, Tween } from "../../common/object-components/common";
+import {
+  ObjectPosition,
+  OnClick,
+  OnComponentSystem,
+  OnRxjsSystem,
+  SetValue,
+  Tween,
+} from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
 import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 import { Coord } from "@latticexyz/utils";
@@ -11,6 +18,9 @@ import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
 import { getRockRelationship } from "src/util/spacerock";
 import { getRandomRange } from "src/util/common";
+import { entityToRockName } from "src/util/name";
+import { ObjectText } from "../../common/object-components/text";
+import { throttleTime } from "rxjs";
 
 export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -124,6 +134,36 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
       SetValue({
         depth: DepthLayers.Rock + 1,
       }),
+    ]);
+
+    const motherlodeLabel = motherlodeObjectGroup.add("BitmapText");
+
+    motherlodeLabel.setComponents([
+      ...sharedComponents,
+      SetValue({
+        originX: 0.5,
+        originY: -3,
+        depth: DepthLayers.Marker,
+        alpha: 0.5,
+      }),
+      ObjectText(entityToRockName(entity), {
+        id: "addressLabel",
+        fontSize: Math.max(8, Math.min(24, 16 / scene.camera.phaserCamera.zoom)),
+        color: 0xffffff,
+      }),
+      OnRxjsSystem(
+        // @ts-ignore
+        scene.camera.zoom$.pipe(throttleTime(10)),
+        (gameObject, zoom) => {
+          const mapOpen = components.MapOpen.get()?.value ?? false;
+
+          if (!mapOpen) return;
+
+          const size = Math.max(8, Math.min(24, 16 / zoom));
+
+          gameObject.setFontSize(size);
+        }
+      ),
     ]);
   };
 

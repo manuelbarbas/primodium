@@ -2,7 +2,7 @@ import { removeAllTweens } from "@latticexyz/phaserx";
 import { PixelCoord } from "@latticexyz/phaserx/src/types";
 import { observable, runInAction } from "mobx";
 
-import { isRectangle, isSprite, isGraphics } from "../util/guards";
+import { isRectangle, isSprite, isGraphics, isBitmapText } from "../util/guards";
 import { EmbodiedEntity, GameObject, GameObjectComponent, GameObjectFunction, GameObjectTypes } from "../../types";
 
 export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
@@ -195,6 +195,7 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     gameObject.setActive(true);
     gameObject.setVisible(true);
     gameObject.setData("objectPoolId", id);
+
     activeGameObject = gameObject;
   }
 

@@ -14,7 +14,12 @@ function isGameObjectType(t: string): t is keyof GameObjectTypes {
 }
 
 export function createObjectPool(scene: Phaser.Scene) {
-  const groups = mapObject(GameObjectClasses, (classType) => scene.add.group({ classType })) as {
+  const groups = mapObject(GameObjectClasses, (classType) => {
+    if (classType === GameObjectClasses.BitmapText) {
+      return scene.add.group({ classType, defaultKey: "teletactile" });
+    }
+    return scene.add.group({ classType });
+  }) as {
     [key in keyof typeof GameObjectClasses]: Phaser.GameObjects.Group;
   };
 
