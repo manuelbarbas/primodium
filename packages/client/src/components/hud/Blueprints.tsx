@@ -93,11 +93,6 @@ export const Blueprints = () => {
             keybind={KeybindActions.Hotbar2}
             keybindActive={index === 0}
           />
-          <Blueprint
-            buildingType={EntityType.SulfurMine}
-            keybind={KeybindActions.Hotbar3}
-            keybindActive={index === 0}
-          />
           <Blueprint buildingType={EntityType.Garage} keybind={KeybindActions.Hotbar4} keybindActive={index === 0} />
           <Blueprint buildingType={EntityType.Workshop} keybind={KeybindActions.Hotbar5} keybindActive={index === 0} />
         </SecondaryCard>
