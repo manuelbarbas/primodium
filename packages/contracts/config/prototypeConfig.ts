@@ -185,7 +185,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   Expansion: {
     tables: {
-      P_MaxLevel: { value: 7n },
+      P_MaxLevel: { value: 8n },
     },
     levels: {
       1: { Dimensions: { width: 11, height: 9 }, P_RequiredBaseLevel: { value: 1n } },
@@ -1734,8 +1734,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         y: -10,
         units: encodeArray(["MinutemanMarine"]),
         unitAmounts: [50n],
-        resources: indexifyResourceArray(["Copper", "Iron", "Lithium"]),
-        resourceAmounts: [100000n, 100000n, 100000n],
+        resources: indexifyResourceArray(["Copper", "Iron", "IronPlate", "Lithium"]),
+        resourceAmounts: [100000n, 100000n, 100000n, 100000n],
       },
       P_UnitReward: getUnitValues({ MinutemanMarine: 50 }),
     },
@@ -1749,8 +1749,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         y: -15,
         units: encodeArray(["MinutemanMarine"]),
         unitAmounts: [60n],
-        resources: indexifyResourceArray(["Copper", "Iron", "Lithium"]),
-        resourceAmounts: [150000n, 150000n, 150000n],
+        resources: indexifyResourceArray(["Copper", "Iron", "IronPlate", "Lithium"]),
+        resourceAmounts: [150000n, 150000n, 150000n, 150000n],
       },
       P_UnitReward: getUnitValues({ MinutemanMarine: 50 }),
     },
