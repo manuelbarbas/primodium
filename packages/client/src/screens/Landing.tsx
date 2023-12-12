@@ -1,10 +1,13 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { MouseEvent, useState } from "react";
+import { FaCopyright } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Button } from "src/components/core/Button";
 import { useMud } from "src/hooks/useMud";
 import { components } from "src/network/components";
 import { spawn } from "src/util/web3/contractCalls/spawn";
 
+const params = new URLSearchParams(window.location.search);
 export const Landing: React.FC = () => {
   const [message, setMessage] = useState<string | null>();
   const { network } = useMud();
@@ -32,28 +35,30 @@ export const Landing: React.FC = () => {
     <AnimatePresence>
       <motion.div
         key="play"
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0, transition: { duration: 0.3 } }}
+        initial={{ scale: 0.5, opacity: 0, y: 50 }}
+        animate={{ scale: 1, opacity: 1, y: 0, transition: { delay: 0.25, duration: 1.5 } }}
         className="flex items-center justify-center h-screen text-white font-mono"
       >
-        <div className="text-center space-y-2">
-          <div className="p-4 mb-2">
-            <h1 className="text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-cyan-200 to-pink-100 p-4 stroke stroke-slate-200 ">
-              Primodium
-            </h1>
-          </div>
+        <div className="relative text-center space-y-2 p-6 bg-neutral/50 border border-secondary flex flex-col items-center justify-center gap-2">
+          <h1 className="text-8xl font-bold uppercase font-arial text-transparent bg-clip-text bg-gradient-to-tr from-cyan-400 to-pink-300 stroke stroke-white stroke-4">
+            Primodium
+          </h1>
 
           {!message && (
-            <button
-              onClick={handlePlay}
-              className="text-2xl bg-slate-900 border border-cyan-400 p-2 px-4 hover:bg-cyan-800 hover:scale-105 transition-all"
-            >
-              Play
-            </button>
+            <Button onClick={handlePlay} className="btn-secondary w-4/5">
+              Enter
+            </Button>
           )}
-          <p className="text-lg">{message}</p>
+          {message && <p className="text-lg">{message}</p>}
+          <div className="absolute bottom-0 right-0">
+            {params.get("version") ?? ""}{" "}
+            {import.meta.env.PRI_VERCEL_GIT_COMMIT_SHA ? import.meta.env.PRI_VERCEL_GIT_COMMIT_SHA.slice(0, 7) : ""}
+          </div>
         </div>
       </motion.div>
+      <div className="fixed bottom-10 w-screen left-0 text-center flex flex-row justify-center items-center gap-2">
+        <FaCopyright /> Primodium 2023
+      </div>
     </AnimatePresence>
   );
 };
