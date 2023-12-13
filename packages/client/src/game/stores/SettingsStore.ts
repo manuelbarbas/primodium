@@ -6,7 +6,7 @@ import { mountStoreDevtool } from "simple-zustand-devtools";
 import { KeybindActions } from "@game/constants";
 import { Key } from "engine/types";
 
-const VERSION = 6;
+const VERSION = 7;
 
 type Keybinds = Partial<{
   [key in KeybindActions]: Set<Key>;
@@ -40,9 +40,9 @@ const defaults: SettingsState = {
   newPlayer: true,
   volume: {
     master: 1,
-    music: 0.5,
+    music: 0.25,
     sfx: 0.5,
-    ui: 0.5,
+    ui: 0.25,
   },
   keybinds: {
     [KeybindActions.RightClick]: new Set(["POINTER_RIGHT"]),

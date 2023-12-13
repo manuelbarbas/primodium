@@ -57,7 +57,7 @@ export const Button: React.FC<{
         }}
         disabled={disabled}
         onPointerEnter={() => {
-          !mute && api?.audio.play(AudioKeys.Click3, "ui");
+          !mute && api?.audio.play(AudioKeys.DataPoint2, "ui");
         }}
         className={`btn join-item inline pointer-events-auto font-bold outline-none h-fit ${className} ${
           disabled ? "opacity-80" : ""

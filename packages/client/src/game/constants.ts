@@ -305,6 +305,8 @@ export enum AudioKeys {
   Sequence7 = "Sequence_07",
   Execute = "Execute_01",
   Execute2 = "Execute_02",
+  DataPoint = "Data_Point_01",
+  DataPoint2 = "Data_Point_02",
 }
 
 export const ResourceToTilesetKey: { [key: number]: ResourceTilekeys } = {
