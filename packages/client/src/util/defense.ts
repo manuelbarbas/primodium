@@ -30,7 +30,7 @@ export function getRockDefense(rockEntity: Entity) {
     multiplier = (rawMultiplier ?? 0n) + 100n;
 
     defensePoints +=
-      components.ResourceCount.getWithKeys({ entity: player, resource: EResource.U_Defense })?.value ?? 0n;
+      components.ResourceCount.getWithKeys({ entity: rockEntity as Hex, resource: EResource.U_Defense })?.value ?? 0n;
     defensePoints = (defensePoints * multiplier) / MULTIPLIER_SCALE;
   }
 
