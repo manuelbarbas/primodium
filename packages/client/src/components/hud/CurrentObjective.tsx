@@ -16,8 +16,10 @@ const tutorialObjectives = [
   EObjectives.BuildIronMine,
   EObjectives.BuildCopperMine,
   EObjectives.BuildGarage,
+  EObjectives.DefeatPirateBase1,
   EObjectives.BuildWorkshop,
   EObjectives.BuildIronPlateFactory,
+  EObjectives.UpgradeMainBase,
 ];
 
 export const CurrentObjective = () => {

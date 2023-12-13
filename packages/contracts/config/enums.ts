@@ -103,8 +103,8 @@ export enum EObjectives {
   BuildIronMine = 1,
   BuildCopperMine,
   BuildGarage,
-  BuildWorkshop,
   DefeatPirateBase1,
+  BuildWorkshop,
 
   UpgradeMainBase,
   DefeatPirateBase2,

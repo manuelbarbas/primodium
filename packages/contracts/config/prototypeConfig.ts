@@ -2010,8 +2010,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_RequiredObjectives: { objectives: encodeArray(["BuildIronMine"]) },
       P_HasBuiltBuildings: { value: encodeArray(["Garage"]) },
       P_SpawnPirateAsteroid: {
-        x: -5,
-        y: -7,
+        x: -10,
+        y: -12,
         units: encodeArray([]),
         unitAmounts: [],
         resources: indexifyResourceArray(["Copper", "Iron"]),
