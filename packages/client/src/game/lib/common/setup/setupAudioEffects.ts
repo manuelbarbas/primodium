@@ -33,8 +33,8 @@ export const setupAudioEffects = (scene: Scene) => {
         return;
       }
 
-      audio.play(AudioKeys.Sequence3, "ui", {
-        // volume: 0.5,
+      audio.play(AudioKeys.Confirm, "ui", {
+        volume: 0.5,
         detune: getRandomRange(-50, 50),
       });
     },
