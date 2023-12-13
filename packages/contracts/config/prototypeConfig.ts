@@ -1969,14 +1969,14 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   BuildIronMine: {
     tables: {
       P_HasBuiltBuildings: { value: encodeArray(["IronMine"]) },
-      P_ResourceReward: getResourceValues({ Iron: 20000 }),
+      P_ResourceReward: getResourceValues({ Iron: 10000 }),
     },
   },
 
   BuildCopperMine: {
     tables: {
       P_HasBuiltBuildings: { value: encodeArray(["CopperMine"]) },
-      P_ResourceReward: getResourceValues({ Copper: 20000, Iron: 20000 }),
+      P_ResourceReward: getResourceValues({ Copper: 10000, Iron: 10000 }),
     },
   },
 
