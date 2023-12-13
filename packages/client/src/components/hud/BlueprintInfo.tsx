@@ -78,7 +78,7 @@ export const BlueprintInfo: React.FC<{
     <div className="items-center p-0 w-full z-100">
       <div className="flex flex-col items-center w-full mt-1 h-full text-xs relative gap-1 p-1 border border-secondary/25">
         <div className="absolute top-0 w-full h-full topographic-background opacity-25" />
-        {!hasEnough && <p className="text-rose-400 animate-pulse text-xs text-center">NOT ENOUGH RESOURCES</p>}
+        {!hasEnough && <p className="text-error animate-pulse text-xs text-center">NOT ENOUGH RESOURCES</p>}
         <RecipeDisplay building={building} />
 
         <SecondaryCard className="flex flex-col items-center gap-1 w-full relative bg-transparent border-success/50 p-1">

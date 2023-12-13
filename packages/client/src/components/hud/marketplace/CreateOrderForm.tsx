@@ -1,18 +1,20 @@
 import { Entity } from "@latticexyz/recs";
-import { EResource } from "contracts/config/enums";
-import { useMemo, useState } from "react";
+import { EOrderType, EResource, EUnit } from "contracts/config/enums";
+import { useCallback, useMemo, useState } from "react";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
+import { NumberInput } from "src/components/shared/NumberInput";
 import { useMud } from "src/hooks";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
-import { EntityType, RESOURCE_SCALE, ResourceEntityLookup, ResourceStorages } from "src/util/constants";
+import { EntityType, ResourceEntityLookup, ResourceStorages, UnitEntityLookup, UnitStorages } from "src/util/constants";
+import { getScale } from "src/util/resource";
 import { createOrder } from "src/util/web3/contractCalls/createOrder";
 import { PlayerListings } from "./PlayerListings";
 
 export type UserListing = {
-  resource: Entity;
+  item: Entity;
   price: bigint;
   count: bigint;
   seller: Entity;
@@ -22,31 +24,49 @@ export type UserListing = {
 export const CreateOrderForm = () => {
   const { network } = useMud();
   // State for form fields
-  const [selectedResource, setSelectedResource] = useState<Entity | "default">("default");
+  const [selectedItem, setSelectedItem] = useState<Entity | "default">("default");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
-  const resources = useMemo(() => Array.from(ResourceStorages), []);
+  const resources = useMemo(() => [...ResourceStorages], []);
+  const units = useMemo(() => [...UnitStorages], []);
 
+  const selectedScale = selectedItem === "default" ? 1n : getScale(selectedItem);
   // Handle form submission
   const handleSubmit = (e: React.MouseEvent | undefined) => {
     e?.preventDefault();
-    const scaledPrice = (BigInt(price) * BigInt(1e18)) / RESOURCE_SCALE;
-    const scaledQuantity = BigInt(quantity) * RESOURCE_SCALE;
-    if (selectedResource === "default") return;
-    createOrder(selectedResource, scaledQuantity, scaledPrice, network);
+    const scaledPrice = BigInt(Math.round(Number(price) * 1e18)) / selectedScale;
+    const scaledQuantity = BigInt(quantity) * selectedScale;
+    if (selectedItem === "default") return;
+    createOrder(selectedItem, scaledQuantity, scaledPrice, network);
   };
 
   const allListings: UserListing[] = components.MarketplaceOrder.useAll().map((orderEntity) => {
     const order = components.MarketplaceOrder.get(orderEntity)!;
+    const item =
+      order.orderType === EOrderType.Resource
+        ? ResourceEntityLookup[order.resource as EResource]
+        : UnitEntityLookup[order.resource as EUnit];
     return {
-      resource: ResourceEntityLookup[order.resource as EResource],
+      item,
       price: order.price,
       count: order.count,
+
       seller: order.seller as Entity,
       id: orderEntity,
     };
   });
 
+  const home = components.Home.use(network.playerEntity)?.asteroid as Entity | undefined;
+  const ownedUnits = components.Hangar.use(home);
+  const getUnitCount = useCallback(
+    (unit: Entity) => {
+      if (!ownedUnits) return 0n;
+      const index = ownedUnits.units.indexOf(unit);
+      if (index === -1) return 0n;
+      return ownedUnits.counts[index];
+    },
+    [ownedUnits]
+  );
   const resourceCounts = useFullResourceCounts();
   const ordersAvailable = useMemo(
     () => resourceCounts.get(EntityType.MaxOrders)?.resourceCount ?? 0n,
@@ -57,66 +77,79 @@ export const CreateOrderForm = () => {
     return allListings.filter((listing) => network.playerEntity === listing.seller);
   }, [allListings, network.playerEntity]);
 
-  const availableResources = useMemo(() => {
-    const resourcesUsed: Record<Entity, bigint> = {};
+  const availableItems = useMemo(() => {
+    const itemsUsed: Record<Entity, bigint> = {};
     itemListings.forEach((listing) => {
-      if (!resourcesUsed[listing.resource]) resourcesUsed[listing.resource] = 0n;
-      resourcesUsed[listing.resource] += listing.count / RESOURCE_SCALE;
+      if (!itemsUsed[listing.item]) itemsUsed[listing.item] = 0n;
+      itemsUsed[listing.item] += listing.count;
     });
     resources.forEach((resource) => {
       const resourceCount = resourceCounts.get(resource)?.resourceCount ?? 0n;
       const resourcesToClaim = resourceCounts.get(resource)?.resourcesToClaim ?? 0n;
-      const totalResources = resourceCount + resourcesToClaim / RESOURCE_SCALE;
-      resourcesUsed[resource] = totalResources - (resourcesUsed[resource] ?? 0n);
+      const totalResources = resourceCount + resourcesToClaim;
+      itemsUsed[resource] = totalResources - (itemsUsed[resource] ?? 0n);
     });
-    return resourcesUsed;
-  }, [resourceCounts, resources, itemListings]);
+    units.forEach((unit) => {
+      const unitCount = getUnitCount(unit);
+      itemsUsed[unit] = unitCount - (itemsUsed[unit] ?? 0n);
+    });
+    return itemsUsed;
+  }, [resourceCounts, resources, units, getUnitCount, itemListings]);
 
+  if (!home) return null;
   return (
     <div className="w-full h-full grid grid-cols-10 flex gap-4">
       <SecondaryCard className="col-span-3 flex flex-col gap-2 overflow-auto scrollbar">
-        <p className="text-lg">New Order</p>
+        <p className="text-xs opacity-50 font-bold pb-2 uppercase">New order</p>
         <form className="max-w-lg flex flex-col w-full gap-4">
           <select
             id="resource"
-            placeholder="Select Resource"
-            value={selectedResource}
-            onChange={(e) => setSelectedResource(e.target.value as Entity)}
-            className="w-full p-4 bg-white/10 focus:ring-secondary focus:border-secondary"
+            placeholder="Select Item"
+            value={selectedItem}
+            onChange={(e) => setSelectedItem(e.target.value as Entity)}
+            className={`w-full p-4 bg-white/10 ${
+              selectedItem === "default" ? "text-gray-500" : "text-gray-300"
+            } font-bold text-sm focus:ring-secondary focus:border-secondary`}
           >
-            <option className="text-gray-300" value="default" disabled hidden>
-              Select a resource
+            <option className="text-gray-300 opacity-50 font-mono" value="default" disabled hidden>
+              Select an item
             </option>
-            {resources.map((resource) => (
-              <option key={resource} value={resource}>
+            {[...resources, ...units].map((resource) => (
+              <option key={resource} value={resource} className="font-mono font-bold">
                 {getBlockTypeName(resource)}
               </option>
             ))}
           </select>
-          <input
-            type="number"
-            placeholder="price per unit"
-            id="price"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            className="block w-full p-4 bg-transparent border border-bottom-1 border-gray-500 focus:outline-none text-gray-300 focus:ring-secondary focus:border-secondary"
-          />
-          <input
-            min="0"
-            step="1"
-            type="number"
-            placeholder="count"
-            id="quantity"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-            className="block w-full p-4 bg-transparent border border-bottom-1 border-gray-500 focus:outline-none text-gray-300 focus:ring-secondary focus:border-secondary"
-          />
+          <div className="flex w-full items-center text-xs font-bold justify-between">
+            PRICE
+            <NumberInput
+              toFixed={3}
+              onChange={(value) => {
+                setPrice(value.toString());
+              }}
+            />
+          </div>
+          <div className="flex w-full items-center text-xs font-bold justify-between">
+            QTY
+            <NumberInput toFixed={0} onChange={(value) => setQuantity(value.toString())} />
+          </div>
+
+          {ordersAvailable === 0n && <p className="text-center animate-pulse text-xs text-error">NOT ENOUGH ORDERS</p>}
+          {ordersAvailable !== 0n && selectedItem !== "default" && (
+            <div
+              className={`text-center text-xs uppercase ${
+                availableItems[selectedItem] == 0n ? "animate-pulse text-error" : "font-gray-500"
+              }`}
+            >
+              {(availableItems[selectedItem] / selectedScale).toString()} {getBlockTypeName(selectedItem)} available
+            </div>
+          )}
           <Button
             disabled={
               !price ||
               !quantity ||
-              selectedResource == "default" ||
-              BigInt(quantity) > availableResources[selectedResource] ||
+              selectedItem == "default" ||
+              BigInt(quantity) > availableItems[selectedItem] ||
               ordersAvailable == 0n
             }
             onClick={handleSubmit}
@@ -124,22 +157,11 @@ export const CreateOrderForm = () => {
           >
             Submit
           </Button>
-          {ordersAvailable === 0n && <div className="text-center text-xs text-error">You have no orders available</div>}
-          {selectedResource !== "default" && (
-            <div
-              className={`text-center text-xs ${
-                availableResources[selectedResource] == 0n ? "text-error" : "font-gray-500"
-              }`}
-            >
-              {(availableResources[selectedResource] / RESOURCE_SCALE).toString()} {getBlockTypeName(selectedResource)}{" "}
-              available
-            </div>
-          )}
         </form>
       </SecondaryCard>
       <SecondaryCard className="col-span-7 flex flex-col gap-2 overflow-auto scrollbar">
-        <p className="text-lg">Manage Listings</p>
-        <PlayerListings listings={itemListings} availableResources={availableResources} />
+        <p className="text-xs opacity-50 font-bold pb-2 uppercase">Manage listings</p>
+        <PlayerListings listings={itemListings} availableItems={availableItems} />
       </SecondaryCard>
     </div>
   );

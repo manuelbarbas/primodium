@@ -54,11 +54,14 @@ export const NumberInput: React.FC<{
   };
 
   return (
-    <div className={`flex gap-2 my-2 relative`}>
+    <div className={`flex my-2 relative`}>
       <Button
         className={`${Number(count) >= max ? "opacity-50" : ""} btn-xs btn-ghost`}
         disabled={Number(count) <= min}
-        onClick={() => handleUpdate(Math.max(min, count == "" ? 0 : Number(count) - 1).toString())}
+        onClick={(e) => {
+          e?.preventDefault();
+          handleUpdate(Math.max(min, count == "" ? 0 : Number(count) - 1).toString());
+        }}
       >
         -
       </Button>
@@ -79,7 +82,10 @@ export const NumberInput: React.FC<{
       <Button
         className={`${Number(count) >= max ? "opacity-50" : ""} btn-xs btn-ghost`}
         disabled={Number(count) >= max}
-        onClick={() => handleUpdate(Math.min(max, count == "" ? min + 1 : Number(count) + 1).toString())}
+        onClick={(e) => {
+          e?.preventDefault();
+          handleUpdate(Math.min(max, count == "" ? min + 1 : Number(count) + 1).toString());
+        }}
       >
         +
       </Button>

@@ -694,6 +694,7 @@ export const config = mudConfig({
       keySchema: { id: "bytes32" },
       valueSchema: {
         seller: "bytes32",
+        orderType: "uint8",
         resource: "uint8",
         count: "uint256",
         price: "uint256",

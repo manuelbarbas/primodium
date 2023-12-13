@@ -470,6 +470,16 @@ export const UtilityStorages = new Set([
   EntityType.MaxOrders,
 ]);
 
+export const UnitStorages = new Set([
+  EntityType.HammerDrone,
+  EntityType.StingerDrone,
+  EntityType.AnvilDrone,
+  EntityType.AegisDrone,
+  EntityType.MiningVessel,
+  EntityType.MinutemanMarine,
+  EntityType.TridentMarine,
+]);
+
 export const MultiplierStorages = new Set([EntityType.DefenseMultiplier]);
 
 export const ResourceEnumLookup: Record<Entity, EResource> = {
