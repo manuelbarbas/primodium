@@ -93,13 +93,8 @@ export const Blueprints = () => {
             keybind={KeybindActions.Hotbar2}
             keybindActive={index === 0}
           />
-          <Blueprint
-            buildingType={EntityType.SulfurMine}
-            keybind={KeybindActions.Hotbar3}
-            keybindActive={index === 0}
-          />
-          <Blueprint buildingType={EntityType.Garage} keybind={KeybindActions.Hotbar4} keybindActive={index === 0} />
-          <Blueprint buildingType={EntityType.Workshop} keybind={KeybindActions.Hotbar5} keybindActive={index === 0} />
+          <Blueprint buildingType={EntityType.Garage} keybind={KeybindActions.Hotbar3} keybindActive={index === 0} />
+          <Blueprint buildingType={EntityType.Workshop} keybind={KeybindActions.Hotbar4} keybindActive={index === 0} />
         </SecondaryCard>
         <SecondaryCard className={`gap-2 items-center ${index === 1 ? "!border-success/75" : ""}`}>
           <p className="text-xs opacity-50 font-bold pb-2">ADVANCED</p>
