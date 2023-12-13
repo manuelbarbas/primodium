@@ -1,8 +1,12 @@
+import ERC20Abi from "contracts/out/ERC20System.sol/ERC20System.abi.json";
 import { useEffect, useState } from "react";
-import { Button } from "src/components/core/Button";
+import { FaBacon } from "react-icons/fa";
+import { toast } from "react-toastify";
+import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { Hex, createPublicClient, isHex } from "viem";
+import { Hex, createPublicClient, getContract, isHex } from "viem";
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
+import data from "./airdrop.json";
 
 interface MintTokenProps {
   onMint: (address: string, amount: bigint) => Promise<void>;
@@ -12,6 +16,7 @@ interface MintTokenProps {
 
 export const MintToken: React.FC<MintTokenProps> = ({ onMint, className, client }) => {
   const adminAddress = components.P_GameConfig.get()?.admin;
+  const { network } = useMud();
   const [address, setAddress] = useState<Hex | null>(null);
   const [amount, setAmount] = useState<string>("");
   const [valid, setValid] = useState<boolean>(true);
@@ -44,40 +49,76 @@ export const MintToken: React.FC<MintTokenProps> = ({ onMint, className, client 
     fetchEnsName(input);
   }, [input, client]);
 
-  const handleMint = () => {
+  const handleMint = async (amount: string | number, address: Hex | null) => {
     const amountBigInt = BigInt(Math.round(Number(amount)));
     const amountNum = amountBigInt * BigInt(1e18);
-    if (address && amountNum > 0) {
-      onMint(address, amountNum);
-    } else {
-      alert("Please enter a valid address and amount.");
+    try {
+      if (address && amountNum > 0) {
+        await onMint(address, amountNum);
+      } else {
+        throw new Error("Invalid address or amount");
+      }
+    } catch (e) {
+      console.log(`${address} failed: ${e}`);
     }
+  };
+
+  const handleAirdrop = async (data: { address: string; amount: number }[]) => {
+    const confirmAirdrop = confirm("Are you sure you want to execute the airdrop?");
+    const tokenAddress = components.P_GameConfig2.get()?.wETHAddress;
+    if (!confirmAirdrop || !tokenAddress) return;
+    const tokenContract = getContract({
+      address: tokenAddress as Hex,
+      abi: ERC20Abi,
+      publicClient: network.publicClient,
+      walletClient: network.walletClient,
+    });
+    const failed = [];
+    const success = [];
+    for (const { address, amount } of data) {
+      try {
+        await tokenContract.write.mint([address as Hex, BigInt(amount * 1e18)]);
+        toast.success(`Airdropped ${amount} to ${address}`);
+        console.log(`airdropped ${amount} to ${address}`);
+        success.push({ address, amount });
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      } catch (e) {
+        toast.error(`airdrop ${amount} to ${address} failed`);
+        console.log(`airdrop to ${address} failed.\n${e}`);
+        failed.push({ address, amount });
+      }
+    }
+
+    console.log("all success:", success);
+    console.log("all failed:", failed);
   };
 
   if (!expectedChain) return null;
   const Btn = () =>
     wrongChain ? (
-      <Button
+      <button
         disabled={!switchNetwork || expectedChain.id === chain?.id}
         key={expectedChain.id}
         onClick={() => switchNetwork?.(expectedChain.id)}
-        className="btn-secondary grow"
+        className="btn-secondary "
       >
         Switch to {expectedChain.name}
         {isLoading && pendingChainId === expectedChain.id && " (switching)"}
-      </Button>
+      </button>
     ) : (
-      <Button
+      <button
         disabled={!valid || !amount || amount === "0" || !address}
-        className="btn-secondary grow"
-        onClick={handleMint}
+        className="btn-secondary "
+        onClick={() => {
+          handleMint(amount, address);
+        }}
       >
         <p>mint</p>
-      </Button>
+      </button>
     );
 
   return (
-    <div className={className + " flex flex-col gap-2 h-full"}>
+    <div className={className + " grid grid-rows-4 gap-2 h-full"}>
       <input
         type="text"
         className={`py-6 px-2 text-sm rounded-md bg-base-100 border ${
@@ -97,6 +138,25 @@ export const MintToken: React.FC<MintTokenProps> = ({ onMint, className, client 
         onChange={(e) => setAmount(e.target.value)}
       />
       <Btn />
+      <button
+        disabled={!switchNetwork || expectedChain.id !== chain?.id}
+        className="btn-error disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+        onClick={() => {
+          handleAirdrop(data);
+        }}
+      >
+        <FaBacon />
+        <FaBacon />
+        <FaBacon />
+        <FaBacon />
+        <FaBacon />
+        <p className="font-bold">AIRDROP</p>
+        <FaBacon />
+        <FaBacon />
+        <FaBacon />
+        <FaBacon />
+        <FaBacon />
+      </button>
     </div>
   );
 };
