@@ -3,10 +3,7 @@ import { components } from "src/network/components";
 import { Action } from "src/util/constants";
 import { HUD } from "../core/HUD";
 import { BrandingLabel } from "../shared/BrandingLabel";
-// import { GracePeriod } from "./GracePeriod";
-// import { LoadingIndication } from "./LoadingIndication";
 import { Profile } from "./Profile";
-// import { PrototypeInfo } from "./PrototypeInfo";
 import { useMud } from "src/hooks";
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
@@ -27,6 +24,8 @@ import { HostileFleets } from "./panes/hostile-fleets/HostileFleets";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 import { KeyNames, KeybindActions } from "@game/constants";
 import { primodium } from "@game/api";
+import { getBuildingName } from "src/util/building";
+import { Card } from "../core/Card";
 
 export const GameHUD = () => {
   const playerEntity = useMud().network.playerEntity;
@@ -41,6 +40,9 @@ export const GameHUD = () => {
   return (
     <div className="screen-container font-mono">
       <HUD>
+        <HUD.CursorFollower>
+          <HoverInfo />
+        </HUD.CursorFollower>
         <HUD.TopMiddle>
           <TopActions isSpectating={isSpectating} />
         </HUD.TopMiddle>
@@ -277,5 +279,19 @@ const Chat = () => {
         </div>
       </Tabs.Button>
     </Tabs>
+  );
+};
+
+const HoverInfo = () => {
+  const hoverEntity = components.HoverEntity.use()?.value;
+  if (!hoverEntity) return <></>;
+
+  const buildingName = getBuildingName(hoverEntity);
+
+  return (
+    <Card className="ml-5 uppercase font-bold text-xs drop-shadow-2xl relative">
+      <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
+      <p className="z-10">{buildingName}</p>
+    </Card>
   );
 };
