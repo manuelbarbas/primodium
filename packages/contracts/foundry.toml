@@ -19,10 +19,10 @@ allow_paths = [
 extra_output_files = ["abi", "evm.bytecode"]
 fs_permissions = [{ access = "read", path = "./" }]
 
-[profile.lattice-testnet]
-eth_rpc_url = "https://follower.testnet-chain.linfra.xyz"
-chain_id = 4242
-
 [profile.caldera]
 eth_rpc_url = "https://primodium-bedrock.calderachain.xyz/replica-http"
 chain_id = 12523
+
+[profile.redstone-holesky]
+eth_rpc_url = "https://rpc.holesky.redstone.xyz"
+chain_id = 17001

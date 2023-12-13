@@ -12,7 +12,7 @@
     "build:mud": "mud tablegen && mud worldgen && pnpm run prototypegen",
     "deploy:caldera": "pnpm run build && pnpm mud deploy --profile=caldera",
     "deploy:local": "pnpm mud deploy",
-    "deploy:testnet": "pnpm run build && pnpm mud deploy --profile=lattice-testnet",
+    "deploy:redstone-holesky": "pnpm run build && pnpm mud deploy --profile=redstone-holesky",
     "dev": "pnpm mud dev-contracts",
     "devnode": "mud devnode",
     "lint": "pnpm run prettier && pnpm run solhint",
