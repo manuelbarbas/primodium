@@ -140,6 +140,11 @@ function createSendComponent(contractComponents: ExtendedContractComponents<Setu
 
         // Iterate over the stats keys
         (Object.keys(unitStats) as Array<keyof stats>).forEach((key) => {
+          if (key === "SPD") {
+            //get the min speed
+            acc[key] = (acc[key] ?? BigInt(Number.MAX_SAFE_INTEGER)) < unitStats[key] ? acc[key] : unitStats[key];
+            return;
+          }
           acc[key] = (acc[key] ?? 0n) + unitStats[key] * curr;
         });
 
@@ -148,7 +153,7 @@ function createSendComponent(contractComponents: ExtendedContractComponents<Setu
       {
         ATK: 0n,
         DEF: 0n,
-        SPD: 0n,
+        SPD: BigInt(Number.MAX_SAFE_INTEGER),
         MIN: 0n,
         CRG: 0n,
       }

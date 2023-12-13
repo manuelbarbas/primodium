@@ -1,4 +1,5 @@
 import { primodium } from "@game/api";
+import { Scenes } from "@game/constants";
 import { useEffect, useRef } from "react";
 
 export const TextInput: React.FC<{
@@ -22,7 +23,8 @@ export const TextInput: React.FC<{
   onChange,
   requirePattern,
 }) => {
-  const { enableInput, disableInput } = primodium.api().input;
+  const input = primodium.api(Scenes.Asteroid).input;
+  const input2 = primodium.api(Scenes.Starmap).input;
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -50,8 +52,14 @@ export const TextInput: React.FC<{
         type="text"
         onChange={onChange}
         maxLength={maxLength}
-        onFocus={disableInput}
-        onBlur={enableInput}
+        onFocus={() => {
+          input.disableInput();
+          input2.disableInput();
+        }}
+        onBlur={() => {
+          input.enableInput();
+          input2.enableInput();
+        }}
         required={!!requirePattern}
         pattern={requirePattern}
         placeholder={placeholder ?? "Type here"}
