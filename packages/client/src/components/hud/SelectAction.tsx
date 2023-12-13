@@ -41,8 +41,8 @@ export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating
         targetScene.camera.phaserCamera.fadeIn(500, 0, 0, 0);
       }
     );
-    components.SelectedRock.set({ value: homeAsteroid ?? singletonEntity });
     components.MapOpen.set({ value: false });
+    components.SelectedRock.set({ value: homeAsteroid ?? singletonEntity });
   };
 
   const openMap = async () => {
