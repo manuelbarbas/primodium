@@ -938,7 +938,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 1n },
+        P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Alloy: 100000 }),
         P_Production: getResourceValues({ U_Unraidable: 75000 }),
       },
