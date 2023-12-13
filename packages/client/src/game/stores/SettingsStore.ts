@@ -6,7 +6,7 @@ import { mountStoreDevtool } from "simple-zustand-devtools";
 import { KeybindActions } from "@game/constants";
 import { Key } from "engine/types";
 
-const VERSION = 7;
+const VERSION = 9;
 
 type Keybinds = Partial<{
   [key in KeybindActions]: Set<Key>;
@@ -51,8 +51,10 @@ const defaults: SettingsState = {
     [KeybindActions.Down]: new Set(["S", "DOWN"]),
     [KeybindActions.Left]: new Set(["A", "LEFT"]),
     [KeybindActions.Right]: new Set(["D", "RIGHT"]),
-    [KeybindActions.Center]: new Set(["C"]),
-    [KeybindActions.Base]: new Set(["SPACE", "B"]),
+    [KeybindActions.Chat]: new Set(["T"]),
+    [KeybindActions.Blueprint]: new Set(["B"]),
+    [KeybindActions.Base]: new Set(["SPACE"]),
+    [KeybindActions.SpacerockMenu]: new Set(["TAB"]),
     [KeybindActions.ZoomIn]: new Set(["X", "PLUS"]),
     [KeybindActions.ZoomOut]: new Set(["Z", "MINUS"]),
     [KeybindActions.Modifier]: new Set(["SHIFT"]),

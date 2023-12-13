@@ -21,12 +21,6 @@ export const initAsteroidScene = async (game: Game, mud: SetupResult) => {
   tileManager?.startChunkRenderer();
 
   scene.camera.phaserCamera.fadeIn(1000);
-  // scene.phaserScene.add
-  //   .bitmapText(12, 10)
-  //   .setDepth(1000)
-  //   .setTintFill(0x00ffff)
-  //   .setText("Asteroid Scene")
-  //   .setFont("teletactile");
 
   audio.play(AudioKeys.Background, "music");
   audio.setPauseOnBlur(false);

@@ -17,7 +17,7 @@ import { Minimap } from "./Minimap";
 import { Score } from "./Score";
 import { SelectAction } from "./SelectAction";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
-import { Chat } from "./chat/Chat";
+import { Chat as _Chat } from "./chat/Chat";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
 import { Settings } from "./modals/settings/Settings";
 import { ReinforcementFleets } from "./panes/FriendlyFleets";
@@ -25,6 +25,8 @@ import { OwnedMotherlodes } from "./panes/OwnedMotherlodes";
 import { BattleReports } from "./panes/battle-reports/BattleReports";
 import { HostileFleets } from "./panes/hostile-fleets/HostileFleets";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
+import { KeyNames, KeybindActions } from "@game/constants";
+import { primodium } from "@game/api";
 
 export const GameHUD = () => {
   const playerEntity = useMud().network.playerEntity;
@@ -62,27 +64,7 @@ export const GameHUD = () => {
         )}
 
         <HUD.Left>
-          <Tabs className="flex flex-row justify-center items-center gap-0" defaultIndex={-1}>
-            <Tabs.Pane index={0} className="rounded-l-none border-l-0 z-10">
-              <Chat />
-            </Tabs.Pane>
-            <Tabs.Button
-              index={0}
-              togglable
-              className="rounded-l-none m-0 border-l-0 btn-md border-secondary relative py-4 hover:text-accent group"
-            >
-              <IconLabel imageUri="img/icons/chaticon.png" className="text-2xl" />
-              <p
-                style={{
-                  writingMode: "vertical-rl",
-                  textOrientation: "sideways",
-                }}
-                className=" absolute tracking-widest uppercase font-bold -rotate-180 left-0 bottom-full my-4 ml-2 opacity-75 bg-secondary/25 rounded-box backdrop-blur-md p-2 group-hover:ring-1"
-              >
-                chat
-              </p>
-            </Tabs.Button>
-          </Tabs>
+          <Chat />
         </HUD.Left>
 
         <HUD.BottomMiddle>
@@ -102,13 +84,19 @@ export const GameHUD = () => {
 const BuildingSelection = () => {
   const selectedBuilding = components.SelectedBuilding.use()?.value;
   const action = components.SelectedAction.use()?.value;
+  const {
+    hooks: { useKeybinds },
+  } = primodium.api()!;
+  const keybinds = useKeybinds();
+
   return (
     <>
       {(!selectedBuilding || action === Action.PlaceBuilding) && (
-        <Tabs className="flex flex-row justify-center items-center gap-0">
+        <Tabs className="flex flex-row justify-center items-center gap-0" defaultIndex={-1}>
           <Tabs.Button
             index={0}
             togglable
+            keybind={KeybindActions.Blueprint}
             onClick={() => {
               components.SelectedBuilding.remove();
               components.SelectedAction.remove();
@@ -125,6 +113,11 @@ const BuildingSelection = () => {
             >
               blueprints
             </p>
+
+            <div className="absolute kbd kbd-sm bottom-0 left-0 -translate-x-1/2 translate-y-1/2 text-accent">
+              {KeyNames[keybinds[KeybindActions.Blueprint]?.entries().next().value[0]] ??
+                keybinds[KeybindActions.Blueprint]?.entries().next().value[0]}
+            </div>
           </Tabs.Button>
 
           <Tabs.Pane index={0} className="rounded-r-none border-r-0 z-10 overflow-y-visible relative">
@@ -248,5 +241,41 @@ const TopActions: React.FC<{ isSpectating: boolean }> = ({ isSpectating }) => {
       </div>
       {!isSpectating && <Score />}
     </div>
+  );
+};
+
+const Chat = () => {
+  const {
+    hooks: { useKeybinds },
+  } = primodium.api()!;
+  const keybinds = useKeybinds();
+
+  return (
+    <Tabs className="flex flex-row justify-center items-center gap-0" defaultIndex={-1}>
+      <Tabs.Pane index={0} className="rounded-l-none border-l-0 z-10">
+        <_Chat />
+      </Tabs.Pane>
+      <Tabs.Button
+        index={0}
+        togglable
+        keybind={KeybindActions.Chat}
+        className="rounded-l-none m-0 border-l-0 btn-md border-secondary relative py-4 hover:text-accent group"
+      >
+        <IconLabel imageUri="img/icons/chaticon.png" className="text-2xl" />
+        <p
+          style={{
+            writingMode: "vertical-rl",
+            textOrientation: "sideways",
+          }}
+          className=" absolute tracking-widest uppercase font-bold -rotate-180 left-0 bottom-full my-4 ml-2 opacity-75 bg-secondary/25 rounded-box backdrop-blur-md p-2 group-hover:ring-1"
+        >
+          chat
+        </p>
+        <div className="absolute kbd kbd-sm bottom-0 right-0 translate-x-1/2 translate-y-1/2 text-accent">
+          {KeyNames[keybinds[KeybindActions.Chat]?.entries().next().value[0]] ??
+            keybinds[KeybindActions.Chat]?.entries().next().value[0]}
+        </div>
+      </Tabs.Button>
+    </Tabs>
   );
 };

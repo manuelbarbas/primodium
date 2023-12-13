@@ -307,6 +307,12 @@ export enum AudioKeys {
   Execute2 = "Execute_02",
   DataPoint = "Data_Point_01",
   DataPoint2 = "Data_Point_02",
+  Confirm = "Confirm_01",
+  Confirm2 = "Confirm_02",
+  Confirm3 = "Confirm_03",
+  Confirm4 = "Confirm_04",
+  Complete = "Complete_01",
+  Complete2 = "Complete_02",
 }
 
 export const ResourceToTilesetKey: { [key: number]: ResourceTilekeys } = {
@@ -439,6 +445,9 @@ export enum KeybindActions {
   Left,
   Right,
   Center,
+  SpacerockMenu,
+  Chat,
+  Blueprint,
   Base,
   Hotbar1,
   Hotbar2,

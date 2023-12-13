@@ -91,7 +91,8 @@ export const OnClick = <T extends keyof GameObjectTypes>(
 };
 
 export const OnHover = <T extends keyof GameObjectTypes>(
-  callback: (gameObject?: GameObjectInstances[T]) => void
+  callback: (gameObject?: GameObjectInstances[T]) => void,
+  leaveCallback?: (gameObject?: GameObjectInstances[T]) => void
 ): GameObjectComponent<T> => {
   return {
     id: uuid(),
@@ -100,6 +101,12 @@ export const OnHover = <T extends keyof GameObjectTypes>(
       gameObject.on("pointerover", () => {
         callback(gameObject as GameObjectInstances[T]);
       });
+
+      if (leaveCallback) {
+        gameObject.on("pointerout", () => {
+          leaveCallback(gameObject as GameObjectInstances[T]);
+        });
+      }
     },
   };
 };

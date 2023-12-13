@@ -20,7 +20,7 @@ export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating
   const homeAsteroid = components.Home.use(playerEntity)?.asteroid as Entity | undefined;
 
   const closeMap = async () => {
-    if (!mapOpen) return;
+    if (!components.MapOpen.get()?.value) return;
     await transitionToScene(
       Scenes.Starmap,
       Scenes.Asteroid,
@@ -46,7 +46,7 @@ export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating
   };
 
   const openMap = async () => {
-    if (mapOpen) return;
+    if (components.MapOpen.get()?.value) return;
     const activeRock = components.ActiveRock.get()?.value;
     const position = components.Position.get(activeRock) ?? { x: 0, y: 0 };
     const { pan } = primodium.api(Scenes.Starmap).camera;

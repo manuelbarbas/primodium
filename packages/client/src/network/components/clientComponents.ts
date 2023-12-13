@@ -46,6 +46,7 @@ export const CurrentTransaction = createExtendedBoolComponent(world, { id: "Curr
 /* -------------------------------------------------------------------------- */
 export const SelectedTile = createExtendedCoordComponent(world, { id: "SelectedTile" });
 export const HoverTile = createExtendedCoordComponent(world, { id: "HoverTile" });
+export const HoverEntity = createExtendedEntityComponent(world, { id: "HoverEntity" });
 export const SelectedBuilding = createExtendedComponent(world, { value: Type.Entity }, { id: "SelectedBuilding" });
 export const SelectedAction = createExtendedNumberComponent(world, {
   id: "SelectedAction",
@@ -160,6 +161,7 @@ export default {
 
   /* ---------------------------------- Input --------------------------------- */
   SelectedTile,
+  HoverEntity,
   HoverTile,
   SelectedBuilding,
   SelectedAction,
