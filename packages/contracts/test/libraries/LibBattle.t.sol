@@ -22,7 +22,7 @@ contract LibBattleTest is PrimodiumTest {
       to: "to",
       origin: "origin",
       destination: "destination",
-      unitCounts: [uint256(0), 0, 0, 0, 0, 0, 0]
+      unitCounts: [uint256(0), 0, 0, 0, 0, 0, 0, 0]
     });
   bytes32 arrivalId = keccak256(abi.encode(arrival));
 
