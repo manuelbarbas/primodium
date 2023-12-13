@@ -96,12 +96,15 @@ export const VesselSlots: React.FC<{
   building: Entity;
   player: Entity;
 }> = ({ building, player }) => {
+  // const home = components.Home.use(player)?.asteroid;
   // vessel capacity increases every level and decreases every vessel
   const {
     resourceCount: vesselsAvailable,
     resourcesToClaim: vesselsToClaim,
     resourceStorage: maxVessels,
   } = useFullResourceCount(EntityType.VesselCapacity);
+
+  console.log(vesselsAvailable, vesselsToClaim, maxVessels);
 
   const rawQueue = TrainingQueue.use(building);
   const queue = useMemo(() => {

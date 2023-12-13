@@ -298,6 +298,13 @@ export enum AudioKeys {
   Click4 = "Click_04",
   Sequence = "Sequence_01",
   Sequence2 = "Sequence_02",
+  Sequence3 = "Sequence_03",
+  Sequence4 = "Sequence_04",
+  Sequence5 = "Sequence_05",
+  Sequence6 = "Sequence_06",
+  Sequence7 = "Sequence_07",
+  Execute = "Execute_01",
+  Execute2 = "Execute_02",
 }
 
 export const ResourceToTilesetKey: { [key: number]: ResourceTilekeys } = {

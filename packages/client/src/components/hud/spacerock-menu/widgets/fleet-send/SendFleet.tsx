@@ -17,6 +17,7 @@ import { send } from "src/util/web3/contractCalls/send";
 import { Hex } from "viem";
 import { TargetHeader } from "../../TargetHeader";
 import { Modal } from "src/components/core/Modal";
+import { AudioKeys } from "@game/constants";
 
 export const Unit: React.FC<{ unit: Entity; count: bigint }> = ({ unit, count }) => {
   return (
@@ -182,6 +183,7 @@ export const SendFleet = () => {
         <Modal.CloseButton
           disabled={fleetSize == 0n}
           onClick={() => sendFleet(sendType)}
+          clickSound={AudioKeys.Execute2}
           className="btn-warning font-bold h-16"
         >
           <div className="flex flex-col gap-2 items-center p-2">
