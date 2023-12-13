@@ -23,7 +23,7 @@ export function getRockDefense(rockEntity: Entity) {
   let multiplier = MULTIPLIER_SCALE;
   if (components.Home.get(player as Entity)?.asteroid === rockEntity) {
     const rawMultiplier = components.ResourceCount.getWithKeys({
-      entity: player,
+      entity: rockEntity as Hex,
       resource: EResource.M_DefenseMultiplier,
     })?.value;
 
