@@ -9,6 +9,7 @@ import {
   Tween,
   OnRxjsSystem,
   OnOnce,
+  OnHover,
 } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
 import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
@@ -137,6 +138,14 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         components.Send.setDestination(entity);
         components.SelectedRock.set({ value: entity });
       }),
+      OnHover(
+        () => {
+          components.HoverEntity.set({ value: entity });
+        },
+        () => {
+          components.HoverEntity.remove();
+        }
+      ),
       SetValue({
         depth: DepthLayers.Rock + 1,
       }),

@@ -6,6 +6,7 @@ import {
   ObjectPosition,
   OnClick,
   OnComponentSystem,
+  OnHover,
   OnRxjsSystem,
   SetValue,
   Tween,
@@ -134,6 +135,14 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
         components.Send.setDestination(entity);
         components.SelectedRock.set({ value: entity });
       }),
+      OnHover(
+        () => {
+          components.HoverEntity.set({ value: entity });
+        },
+        () => {
+          components.HoverEntity.remove();
+        }
+      ),
       SetValue({
         depth: DepthLayers.Rock + 1,
       }),

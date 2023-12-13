@@ -26,6 +26,9 @@ import { KeyNames, KeybindActions } from "@game/constants";
 import { primodium } from "@game/api";
 import { getBuildingName } from "src/util/building";
 import { Card } from "../core/Card";
+import { Entity, hasComponent } from "@latticexyz/recs";
+import { getSpaceRockName } from "src/util/spacerock";
+import { formatNumber } from "src/util/common";
 
 export const GameHUD = () => {
   const playerEntity = useMud().network.playerEntity;
@@ -283,15 +286,53 @@ const Chat = () => {
 };
 
 const HoverInfo = () => {
+  const BuildingInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
+    const buildingName = getBuildingName(entity);
+
+    return (
+      <Card className="ml-5 uppercase font-bold text-xs drop-shadow-2xl relative">
+        <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
+        <p className="z-10">{buildingName}</p>
+      </Card>
+    );
+  };
+
+  const RockInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
+    const rockName = getSpaceRockName(entity);
+
+    return (
+      <Card className="ml-5 uppercase font-bold text-xs drop-shadow-2xl relative">
+        <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
+        <p className="z-10">{rockName}</p>
+      </Card>
+    );
+  };
+
+  const ArrivalInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
+    const arrival = components.Arrival.getWithId(entity);
+    const now = components.Time.use()?.value ?? 0n;
+
+    if (!arrival) return <></>;
+
+    return (
+      <Card className="ml-5 uppercase font-bold text-xs drop-shadow-2xl relative">
+        <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
+        <p className="z-10">
+          <b className="text-accent">{formatNumber(arrival.arrivalTime - now)}</b> sec remaining
+        </p>
+      </Card>
+    );
+  };
+
   const hoverEntity = components.HoverEntity.use()?.value;
+
   if (!hoverEntity) return <></>;
 
-  const buildingName = getBuildingName(hoverEntity);
+  if (hasComponent(components.BuildingType, hoverEntity)) return <BuildingInfo entity={hoverEntity} />;
 
-  return (
-    <Card className="ml-5 uppercase font-bold text-xs drop-shadow-2xl relative">
-      <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
-      <p className="z-10">{buildingName}</p>
-    </Card>
-  );
+  if (hasComponent(components.RockType, hoverEntity)) return <RockInfo entity={hoverEntity} />;
+
+  if (hasComponent(components.Arrival, hoverEntity)) return <ArrivalInfo entity={hoverEntity} />;
+
+  return <></>;
 };

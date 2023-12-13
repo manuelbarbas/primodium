@@ -22,6 +22,7 @@ import {
   SetValue,
   Tween,
   OnRxjsSystem,
+  OnHover,
 } from "../../common/object-components/common";
 import { decodeEntity, hashKeyEntity } from "src/util/encode";
 import { Outline, Texture } from "../../common/object-components/sprite";
@@ -127,6 +128,14 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
       OnClick(scene, () => {
         components.SelectedRock.set({ value: entity });
       }),
+      OnHover(
+        () => {
+          components.HoverEntity.set({ value: entity });
+        },
+        () => {
+          components.HoverEntity.remove();
+        }
+      ),
       SetValue({
         depth: DepthLayers.Rock + 1,
       }),
