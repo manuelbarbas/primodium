@@ -182,10 +182,6 @@ export const renderBuilding = (scene: Scene) => {
           if (components.HoverEntity.get()?.value === entity && components.SelectedBuilding.get()?.value !== entity) {
             buildingSpriteOutline.setComponent(Outline({ id: "hover_outline", knockout: true, color: 0x808080 }));
             gameObject.setAlpha(1);
-            audio.play(AudioKeys.DataPoint2, "ui", {
-              volume: 0.1,
-              detune: getRandomRange(-200, 200),
-            });
             return;
           }
         }),

@@ -311,6 +311,9 @@ export enum AudioKeys {
   Confirm2 = "Confirm_02",
   Confirm3 = "Confirm_03",
   Confirm4 = "Confirm_04",
+  Confirm5 = "Confirm_05",
+  Confirm6 = "Confirm_06",
+  Confirm7 = "Confirm_07",
   Complete = "Complete_01",
   Complete2 = "Complete_02",
 }
