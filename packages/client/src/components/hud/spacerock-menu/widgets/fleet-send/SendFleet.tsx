@@ -143,7 +143,6 @@ export const SendFleet = () => {
         <Unit unit={EntityType.StingerDrone} count={getUnitCount(EntityType.StingerDrone)} />
         <Unit unit={EntityType.AegisDrone} count={getUnitCount(EntityType.AegisDrone)} />
         <Unit unit={EntityType.MiningVessel} count={getUnitCount(EntityType.MiningVessel)} />
-        <div className="w-full h-full topographic-background border border-secondary/50 opacity-25" />
       </div>
       <div className="flex flex-col w-full space-y-1">
         <SecondaryCard>

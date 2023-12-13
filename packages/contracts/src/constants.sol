@@ -7,4 +7,4 @@ uint256 constant UNIT_SPEED_SCALE = 100;
 uint256 constant WORLD_SPEED_SCALE = 100;
 uint256 constant MULTIPLIER_SCALE = 100;
 
-uint256 constant NUM_UNITS = 7;
+uint256 constant NUM_UNITS = 8;
