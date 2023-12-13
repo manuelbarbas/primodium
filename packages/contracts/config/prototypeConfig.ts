@@ -1043,7 +1043,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           attack: 10n,
           defense: 10n,
           cargo: 1000n,
-          speed: 5000n,
+          speed: 500n,
           trainingTime: 500n,
         },
       },
