@@ -92,7 +92,7 @@ export function setupHangar(mud: SetupResult) {
 
   defineComponentSystem(world, components.SelectedRock, ({ value: [value] }) => {
     if (!value?.value) return;
-    setupHangar(value.value);
+    createHangar(value.value);
   });
 
   defineComponentSystem(world, components.BlockNumber, () => {
