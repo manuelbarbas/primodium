@@ -73,16 +73,20 @@ export const MintToken: React.FC<MintTokenProps> = ({ onMint, className, client 
       publicClient: network.publicClient,
       walletClient: network.walletClient,
     });
+    const failed = [];
     for (const { address, amount } of data) {
       try {
         await tokenContract.write.mint([address as Hex, BigInt(amount * 1e18)]);
         toast.success(`Airdropped ${amount} to ${address}`);
+        console.log(`airdropped ${amount} to ${address}`);
         await new Promise((resolve) => setTimeout(resolve, 1000));
       } catch (e) {
         toast.error(`airdrop ${amount} to ${address} failed`);
         console.log(`airdrop to ${address} failed.\n${e}`);
+        failed.push({ address, amount });
       }
     }
+    console.log("all failed:", failed);
   };
 
   if (!expectedChain) return null;
