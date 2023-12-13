@@ -1739,8 +1739,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_SpawnPirateAsteroid: {
         x: -20,
         y: 10,
-        units: encodeArray(["LightningCraft"]),
-        unitAmounts: [20n],
+        units: encodeArray(["LightningCraft", "MinutemanMarine"]),
+        unitAmounts: [40n, 20n],
         resources: indexifyResourceArray(["Copper", "Iron", "IronPlate", "Lithium"]),
         resourceAmounts: [50000n, 50000n, 50000n, 50000n],
       },
