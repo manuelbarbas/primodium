@@ -42,7 +42,8 @@ export const MaterialLabel = ({ name, resource }: { name: string; resource: Enti
       />
       {production !== 0n && (
         <p className="opacity-50 text-xs transition-all">
-          +{formatNumber((production * 60n * worldSpeed) / (SPEED_SCALE * RESOURCE_SCALE), { fractionDigits: 1 })}
+          {production > 0 ? "+" : ""}
+          {formatNumber((production * 60n * worldSpeed) / (SPEED_SCALE * RESOURCE_SCALE), { fractionDigits: 1 })}
           /MIN
           <b className="text-accent">
             [
