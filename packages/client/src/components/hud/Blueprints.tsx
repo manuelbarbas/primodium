@@ -70,7 +70,7 @@ const Blueprint: React.FC<{
         </div>
       )}
       {keybindActive && (
-        <p className="absolute bottom-1 left-0 text-accent flex text-xs kbd kbd-xs">
+        <p className="absolute bottom-1 left-0 flex text-xs kbd kbd-xs">
           {KeyNames[keybinds[keybind ?? KeybindActions.NULL]?.entries().next().value[0]] ?? "?"}
         </p>
       )}

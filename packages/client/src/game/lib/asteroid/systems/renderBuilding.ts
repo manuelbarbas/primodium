@@ -17,18 +17,27 @@ import { Scene } from "engine/types";
 import { world } from "src/network/world";
 import { safeIndex } from "src/util/array";
 
-import { Assets, DepthLayers, EntityIDtoAnimationKey, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
+import { Assets, AudioKeys, DepthLayers, EntityIDtoAnimationKey, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
 import { components } from "src/network/components";
 import { getBuildingDimensions, getBuildingTopLeft } from "src/util/building";
-import { ObjectPosition, OnComponentSystem, OnUpdateSystem, SetValue } from "../../common/object-components/common";
+import {
+  ObjectPosition,
+  OnComponentSystem,
+  OnHover,
+  OnUpdateSystem,
+  SetValue,
+} from "../../common/object-components/common";
 import { Animation, Outline, Texture } from "../../common/object-components/sprite";
 import { EntityType } from "src/util/constants";
+import { createAudioApi } from "src/game/api/audio";
+import { getRandomRange } from "src/util/common";
 
 const MAX_SIZE = 2 ** 15 - 1;
 export const renderBuilding = (scene: Scene) => {
   const { tileHeight, tileWidth } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
   const _gameWorld = namespaceWorld(world, "game_specate");
+  const audio = createAudioApi(scene);
 
   defineComponentSystem(gameWorld, components.ActiveRock, ({ value }) => {
     world.dispose("game_specate");
@@ -129,20 +138,49 @@ export const renderBuilding = (scene: Scene) => {
         SetValue({
           depth: DepthLayers.Building - tilePosition.y + buildingDimensions.height,
         }),
+        OnHover(
+          () => {
+            components.HoverEntity.set({ value: entity });
+          },
+          () => {
+            components.HoverEntity.remove();
+          }
+        ),
         ...sharedComponents,
       ]);
 
       buildingSpriteOutline.setComponents([
         SetValue({ depth: DepthLayers.Building, alpha: 0 }),
         OnComponentSystem(components.SelectedBuilding, (gameObject) => {
-          if (buildingSpriteOutline.hasComponent(Outline().id)) {
+          if (buildingSpriteOutline.hasComponent("select_outline")) {
             if (components.SelectedBuilding.get()?.value === entity) return;
-            buildingSpriteOutline.removeComponent(Outline().id);
+            buildingSpriteOutline.removeComponent("select_outline");
             gameObject.setAlpha(0);
           }
 
           if (components.SelectedBuilding.get()?.value === entity) {
-            buildingSpriteOutline.setComponent(Outline({ knockout: true, color: 0x00ffff }));
+            gameObject.clearFX();
+            buildingSpriteOutline.setComponent(Outline({ id: "select_outline", knockout: true, color: 0x00ffff }));
+            gameObject.setAlpha(1);
+            audio.play(AudioKeys.Confirm, "ui", {
+              volume: 0.5,
+              detune: getRandomRange(-10, 10),
+            });
+            return;
+          }
+        }),
+        OnComponentSystem(components.HoverEntity, (gameObject) => {
+          if (
+            buildingSpriteOutline.hasComponent("hover_outline") &&
+            components.SelectedBuilding.get()?.value !== entity
+          ) {
+            if (components.HoverEntity.get()?.value === entity) return;
+            buildingSpriteOutline.removeComponent("hover_outline");
+            gameObject.setAlpha(0);
+          }
+
+          if (components.HoverEntity.get()?.value === entity && components.SelectedBuilding.get()?.value !== entity) {
+            buildingSpriteOutline.setComponent(Outline({ id: "hover_outline", knockout: true, color: 0x808080 }));
             gameObject.setAlpha(1);
             return;
           }

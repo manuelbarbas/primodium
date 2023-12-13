@@ -9,6 +9,7 @@ import {
   Tween,
   OnRxjsSystem,
   OnOnce,
+  OnHover,
 } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
 import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
@@ -70,14 +71,6 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         repeat: -1, // Repeat indefinitely
       }),
       Tween(scene, {
-        rotation: { from: -getRandomRange(0, Math.PI / 8), to: getRandomRange(0, Math.PI / 8) },
-        // ease: "Sine.easeInOut",
-        hold: getRandomRange(0, 10000),
-        duration: 5 * 1000, // Duration of one wobble
-        yoyo: true, // Go back to original scale
-        repeat: -1, // Repeat indefinitely
-      }),
-      Tween(scene, {
         scrollFactorX: { from: 1 - getRandomRange(0, 0.005), to: 1 + getRandomRange(0, 0.005) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
@@ -95,10 +88,20 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       }),
     ];
 
+    const rotationTween = Tween(scene, {
+      rotation: { from: -getRandomRange(0, Math.PI / 8), to: getRandomRange(0, Math.PI / 8) },
+      // ease: "Sine.easeInOut",
+      hold: getRandomRange(0, 10000),
+      duration: 5 * 1000, // Duration of one wobble
+      yoyo: true, // Go back to original scale
+      repeat: -1, // Repeat indefinitely
+    });
+
     const asteroidObject = asteroidObjectGroup.add("Sprite");
 
     asteroidObject.setComponents([
       ...sharedComponents,
+      rotationTween,
       Texture(
         Assets.SpriteAtlas,
         EntitytoSpriteKey[EntityType.Asteroid][
@@ -113,6 +116,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
     const asteroidOutline = asteroidObjectGroup.add("Sprite");
     asteroidOutline.setComponents([
       ...sharedComponents,
+      rotationTween,
       OnComponentSystem(components.SelectedRock, () => {
         if (components.SelectedRock.get()?.value === entity) {
           if (asteroidOutline.hasComponent(Outline().id)) return;
@@ -134,6 +138,14 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         components.Send.setDestination(entity);
         components.SelectedRock.set({ value: entity });
       }),
+      OnHover(
+        () => {
+          components.HoverEntity.set({ value: entity });
+        },
+        () => {
+          components.HoverEntity.remove();
+        }
+      ),
       SetValue({
         depth: DepthLayers.Rock + 1,
       }),
@@ -143,10 +155,11 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
 
     gracePeriod.setComponents([
       ...sharedComponents,
-      OnComponentSystem(components.BlockNumber, (gameObject) => {
+      rotationTween,
+      OnComponentSystem(components.Time, (gameObject) => {
         const player = components.OwnedBy.get(entity)?.value as Entity | undefined;
         const graceTime = components.GracePeriod.get(player)?.value ?? 0n;
-        const time = components.Time.get(entity)?.value ?? 0n;
+        const time = components.Time.get()?.value ?? 0n;
 
         if (time >= graceTime) {
           gameObject.alpha = 0;

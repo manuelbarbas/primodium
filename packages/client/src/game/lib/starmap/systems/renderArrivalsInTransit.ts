@@ -7,7 +7,13 @@ import { SetupResult } from "src/network/types";
 import { world } from "src/network/world";
 import { PIRATE_KEY } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
-import { ObjectPosition, OnComponentSystem, OnRxjsSystem } from "../../common/object-components/common";
+import {
+  ObjectPosition,
+  OnComponentSystem,
+  OnHover,
+  OnOnce,
+  OnRxjsSystem,
+} from "../../common/object-components/common";
 import { Circle, Line } from "../../common/object-components/graphics";
 import { renderEntityOrbitingArrivals } from "./renderArrivalsInOrbit";
 
@@ -60,6 +66,14 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
         alpha: 0.5,
         color: 0xff0000,
       }),
+      OnHover(
+        () => {
+          components.HoverEntity.set({ value: entity });
+        },
+        () => {
+          components.HoverEntity.remove();
+        }
+      ),
       //@ts-ignore
       OnRxjsSystem(scene.camera.zoom$, (_, zoom) => {
         let thickness = 3 / zoom;
@@ -86,6 +100,17 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
         id: "fleet",
         borderThickness: 1,
         alpha: 0.75,
+      }),
+      OnHover(
+        () => {
+          components.HoverEntity.set({ value: entity });
+        },
+        () => {
+          components.HoverEntity.remove();
+        }
+      ),
+      OnOnce((gameObject) => {
+        gameObject.setInteractive(new Phaser.Geom.Rectangle(-32, -32, 64, 64), Phaser.Geom.Rectangle.Contains);
       }),
       OnComponentSystem(components.Time, (gameObject, update) => {
         const now = update.value[0]?.value ?? 0n;

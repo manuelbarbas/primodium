@@ -9,11 +9,10 @@ import { components } from "src/network/components";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Entity } from "@latticexyz/recs";
 import { IconLabel } from "../core/IconLabel";
-import { primodium } from "@game/api";
-import { SpriteKeys } from "@game/constants";
 import { getSpaceRockImage } from "src/util/spacerock";
 import { useFleetMoves } from "src/hooks/useFleetMoves";
 import { EntityType, ResourceImage } from "src/util/constants";
+import { getBuildingImage } from "src/util/building";
 
 export const Profile = () => {
   const { network } = useMud();
@@ -22,17 +21,15 @@ export const Profile = () => {
   const mainBase = components.Home.use(playerEntity)?.mainBase;
   const asteroid = components.Home.use(playerEntity)?.asteroid;
   const mainbaseLevel = components.Level.use((mainBase ?? singletonEntity) as Entity)?.value ?? 1n;
-  const { getSpriteBase64 } = primodium.api().sprite;
   const fleetMoves = useFleetMoves();
   const mapOpen = components.MapOpen.use()?.value ?? false;
+  const buildingImage = getBuildingImage((mainBase ?? singletonEntity) as Entity);
 
   return (
     <div className="flex flex-row">
       <Button className="flex flex-col justify-end border-t-0 border-secondary rounded-t-none ml-2 w-24 h-[6.3rem] p-0">
         <IconLabel
-          imageUri={
-            mapOpen ? getSpaceRockImage((asteroid ?? singletonEntity) as Entity) : getSpriteBase64(SpriteKeys.Mainbase1)
-          }
+          imageUri={mapOpen ? getSpaceRockImage((asteroid ?? singletonEntity) as Entity) : buildingImage}
           className="text-2xl scale-125 pt-3 pb-2"
         />
         <div className="bg-base-100 w-full rounded-box rounded-t-none p-1 border-t border-secondary">

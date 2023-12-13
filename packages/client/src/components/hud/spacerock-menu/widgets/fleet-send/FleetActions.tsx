@@ -57,7 +57,7 @@ export const FleetActions = () => {
       <SecondaryCard className="flex flex-row w-fit gap-1 m-1">
         {orbitingFleets.length === 0 && (
           <Modal title="Send Fleet">
-            <Modal.Content className="w-[51rem] h-96">
+            <Modal.Content className="w-[51rem] h-[25rem]">
               <SendFleet />
             </Modal.Content>
             <Modal.IconButton

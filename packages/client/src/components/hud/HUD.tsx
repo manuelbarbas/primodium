@@ -1,12 +1,9 @@
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaCircle } from "react-icons/fa";
 import { components } from "src/network/components";
 import { Action } from "src/util/constants";
 import { HUD } from "../core/HUD";
 import { BrandingLabel } from "../shared/BrandingLabel";
-// import { GracePeriod } from "./GracePeriod";
-// import { LoadingIndication } from "./LoadingIndication";
 import { Profile } from "./Profile";
-// import { PrototypeInfo } from "./PrototypeInfo";
 import { useMud } from "src/hooks";
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
@@ -17,7 +14,7 @@ import { Minimap } from "./Minimap";
 import { Score } from "./Score";
 import { SelectAction } from "./SelectAction";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
-import { Chat } from "./chat/Chat";
+import { Chat as _Chat } from "./chat/Chat";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
 import { Settings } from "./modals/settings/Settings";
 import { ReinforcementFleets } from "./panes/FriendlyFleets";
@@ -25,6 +22,13 @@ import { OwnedMotherlodes } from "./panes/OwnedMotherlodes";
 import { BattleReports } from "./panes/battle-reports/BattleReports";
 import { HostileFleets } from "./panes/hostile-fleets/HostileFleets";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
+import { KeyNames, KeybindActions } from "@game/constants";
+import { primodium } from "@game/api";
+import { getBuildingName } from "src/util/building";
+import { Card } from "../core/Card";
+import { Entity, hasComponent } from "@latticexyz/recs";
+import { getSpaceRockName } from "src/util/spacerock";
+import { formatNumber } from "src/util/common";
 
 export const GameHUD = () => {
   const playerEntity = useMud().network.playerEntity;
@@ -36,11 +40,12 @@ export const GameHUD = () => {
     value: false,
   }).value;
 
-  // const isSpectating = spectatingAccount !== playerEntity;
-
   return (
     <div className="screen-container font-mono">
       <HUD>
+        <HUD.CursorFollower>
+          <HoverInfo />
+        </HUD.CursorFollower>
         <HUD.TopMiddle>
           <TopActions isSpectating={isSpectating} />
         </HUD.TopMiddle>
@@ -54,29 +59,17 @@ export const GameHUD = () => {
         {!isSpectating && <HUD.TopRight>{mapOpen ? <Minimap /> : <CurrentObjective />}</HUD.TopRight>}
 
         {!isSpectating && <HUD.Right>{mapOpen ? <Motherlodes /> : <BuildingSelection />}</HUD.Right>}
+        {isSpectating && (
+          <HUD.TopRight>
+            <p className="text-accent text-2xl font-bold p-5 flex gap-2 items-center">
+              <FaCircle size={12} className="animate-pulse text-error" />
+              LIVE
+            </p>
+          </HUD.TopRight>
+        )}
 
         <HUD.Left>
-          <Tabs className="flex flex-row justify-center items-center gap-0" defaultIndex={-1}>
-            <Tabs.Pane index={0} className="rounded-l-none border-l-0 z-10">
-              <Chat />
-            </Tabs.Pane>
-            <Tabs.Button
-              index={0}
-              togglable
-              className="rounded-l-none m-0 border-l-0 btn-md border-secondary relative py-4 hover:text-accent group"
-            >
-              <IconLabel imageUri="img/icons/chaticon.png" className="text-2xl" />
-              <p
-                style={{
-                  writingMode: "vertical-rl",
-                  textOrientation: "sideways",
-                }}
-                className=" absolute tracking-widest uppercase font-bold -rotate-180 left-0 bottom-full my-4 ml-2 opacity-75 bg-secondary/25 rounded-box backdrop-blur-md p-2 group-hover:ring-1"
-              >
-                chat
-              </p>
-            </Tabs.Button>
-          </Tabs>
+          <Chat />
         </HUD.Left>
 
         <HUD.BottomMiddle>
@@ -96,20 +89,26 @@ export const GameHUD = () => {
 const BuildingSelection = () => {
   const selectedBuilding = components.SelectedBuilding.use()?.value;
   const action = components.SelectedAction.use()?.value;
+  const {
+    hooks: { useKeybinds },
+  } = primodium.api()!;
+  const keybinds = useKeybinds();
+
   return (
     <>
       {(!selectedBuilding || action === Action.PlaceBuilding) && (
-        <Tabs className="flex flex-row justify-center items-center gap-0">
+        <Tabs className="flex flex-row justify-center items-center gap-0" defaultIndex={-1}>
           <Tabs.Button
             index={0}
             togglable
+            keybind={KeybindActions.Blueprint}
             onClick={() => {
               components.SelectedBuilding.remove();
               components.SelectedAction.remove();
             }}
             className="rounded-r-none m-0 border-r-0 btn-md border-warning relative py-4 hover:text-accent group"
           >
-            <IconLabel imageUri="img/icons/minersicon.png" className="text-2xl" />
+            <IconLabel imageUri="img/icons/blueprinticon.png" className="text-2xl scale-125 " />
             <p
               style={{
                 writingMode: "vertical-rl",
@@ -119,6 +118,11 @@ const BuildingSelection = () => {
             >
               blueprints
             </p>
+
+            <div className="absolute kbd kbd-xs bottom-0 left-0 -translate-x-1/2 translate-y-1/2">
+              {KeyNames[keybinds[KeybindActions.Blueprint]?.entries().next().value[0]] ??
+                keybinds[KeybindActions.Blueprint]?.entries().next().value[0]}
+            </div>
           </Tabs.Button>
 
           <Tabs.Pane index={0} className="rounded-r-none border-r-0 z-10 overflow-y-visible relative">
@@ -243,4 +247,92 @@ const TopActions: React.FC<{ isSpectating: boolean }> = ({ isSpectating }) => {
       {!isSpectating && <Score />}
     </div>
   );
+};
+
+const Chat = () => {
+  const {
+    hooks: { useKeybinds },
+  } = primodium.api()!;
+  const keybinds = useKeybinds();
+
+  return (
+    <Tabs className="flex flex-row justify-center items-center gap-0" defaultIndex={-1}>
+      <Tabs.Pane index={0} className="rounded-l-none border-l-0 z-10">
+        <_Chat />
+      </Tabs.Pane>
+      <Tabs.Button
+        index={0}
+        togglable
+        keybind={KeybindActions.Chat}
+        className="rounded-l-none m-0 border-l-0 btn-md border-secondary relative py-4 hover:text-accent group"
+      >
+        <IconLabel imageUri="img/icons/chaticon.png" className="text-2xl" />
+        <p
+          style={{
+            writingMode: "vertical-rl",
+            textOrientation: "sideways",
+          }}
+          className=" absolute tracking-widest uppercase font-bold -rotate-180 left-0 bottom-full my-4 ml-2 opacity-75 bg-secondary/25 rounded-box backdrop-blur-md p-2 group-hover:ring-1"
+        >
+          chat
+        </p>
+        <div className="absolute kbd kbd-xs bottom-0 right-0 translate-x-1/2 translate-y-1/2">
+          {KeyNames[keybinds[KeybindActions.Chat]?.entries().next().value[0]] ??
+            keybinds[KeybindActions.Chat]?.entries().next().value[0]}
+        </div>
+      </Tabs.Button>
+    </Tabs>
+  );
+};
+
+const HoverInfo = () => {
+  const BuildingInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
+    const buildingName = getBuildingName(entity);
+
+    return (
+      <Card className="ml-5 uppercase font-bold text-xs drop-shadow-2xl relative">
+        <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
+        <p className="z-10">{buildingName}</p>
+      </Card>
+    );
+  };
+
+  const RockInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
+    const rockName = getSpaceRockName(entity);
+
+    return (
+      <Card className="ml-5 uppercase font-bold text-xs drop-shadow-2xl relative">
+        <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
+        <p className="z-10">{rockName}</p>
+      </Card>
+    );
+  };
+
+  const ArrivalInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
+    const arrival = components.Arrival.getWithId(entity);
+    const now = components.Time.use()?.value ?? 0n;
+
+    if (!arrival) return <></>;
+
+    return (
+      <Card className="ml-5 uppercase font-bold text-xs drop-shadow-2xl relative">
+        <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
+        <p className="z-10">
+          <b className="text-accent">{formatNumber(arrival.arrivalTime - now)}</b> sec remaining
+        </p>
+      </Card>
+    );
+  };
+
+  const hoverEntity = components.HoverEntity.use()?.value;
+
+  if (!hoverEntity) return <></>;
+
+  if (hasComponent(components.BuildingType, hoverEntity)) return <BuildingInfo entity={hoverEntity} />;
+
+  if (hasComponent(components.RockType, hoverEntity)) return <RockInfo entity={hoverEntity} />;
+
+  if (hasComponent(components.Arrival, hoverEntity)) return <ArrivalInfo entity={hoverEntity} />;
+
+  return <></>;
 };

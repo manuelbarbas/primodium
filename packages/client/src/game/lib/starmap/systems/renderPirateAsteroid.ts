@@ -22,6 +22,7 @@ import {
   SetValue,
   Tween,
   OnRxjsSystem,
+  OnHover,
 } from "../../common/object-components/common";
 import { decodeEntity, hashKeyEntity } from "src/util/encode";
 import { Outline, Texture } from "../../common/object-components/sprite";
@@ -66,14 +67,6 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
         repeat: -1, // Repeat indefinitely
       }),
       Tween(scene, {
-        rotation: { from: -getRandomRange(0, Math.PI / 8), to: getRandomRange(0, Math.PI / 8) },
-        // ease: "Sine.easeInOut",
-        hold: getRandomRange(0, 10000),
-        duration: 5 * 1000, // Duration of one wobble
-        yoyo: true, // Go back to original scale
-        repeat: -1, // Repeat indefinitely
-      }),
-      Tween(scene, {
         scrollFactorX: { from: 1 - getRandomRange(0, 0.005), to: 1 + getRandomRange(0, 0.005) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
@@ -91,8 +84,18 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
       }),
     ];
 
+    const rotationTween = Tween(scene, {
+      rotation: { from: -getRandomRange(0, Math.PI / 8), to: getRandomRange(0, Math.PI / 8) },
+      // ease: "Sine.easeInOut",
+      hold: getRandomRange(0, 10000),
+      duration: 5 * 1000, // Duration of one wobble
+      yoyo: true, // Go back to original scale
+      repeat: -1, // Repeat indefinitely
+    });
+
     asteroidObjectGroup.add("Sprite").setComponents([
       ...sharedComponents,
+      rotationTween,
       Texture(Assets.SpriteAtlas, SpriteKeys.PirateAsteroid1),
       OnClick(scene, () => {
         components.Send.setDestination(entity);
@@ -109,6 +112,7 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
 
     asteroidOutline.setComponents([
       ...sharedComponents,
+      rotationTween,
       OnComponentSystem(components.SelectedRock, () => {
         if (components.SelectedRock.get()?.value === entity) {
           if (asteroidOutline.hasComponent(Outline().id)) return;
@@ -124,6 +128,14 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
       OnClick(scene, () => {
         components.SelectedRock.set({ value: entity });
       }),
+      OnHover(
+        () => {
+          components.HoverEntity.set({ value: entity });
+        },
+        () => {
+          components.HoverEntity.remove();
+        }
+      ),
       SetValue({
         depth: DepthLayers.Rock + 1,
       }),

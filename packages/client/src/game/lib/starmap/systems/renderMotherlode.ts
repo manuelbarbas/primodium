@@ -6,6 +6,7 @@ import {
   ObjectPosition,
   OnClick,
   OnComponentSystem,
+  OnHover,
   OnRxjsSystem,
   SetValue,
   Tween,
@@ -63,14 +64,6 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
         repeat: -1, // Repeat indefinitely
       }),
       Tween(scene, {
-        rotation: { from: -getRandomRange(0, Math.PI / 8), to: getRandomRange(0, Math.PI / 8) },
-        // ease: "Sine.easeInOut",
-        hold: getRandomRange(0, 10000),
-        duration: 5 * 1000, // Duration of one wobble
-        yoyo: true, // Go back to original scale
-        repeat: -1, // Repeat indefinitely
-      }),
-      Tween(scene, {
         scrollFactorX: { from: 1 - getRandomRange(0, 0.005), to: 1 + getRandomRange(0, 0.005) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
@@ -88,10 +81,20 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
       }),
     ];
 
+    const rotationTween = Tween(scene, {
+      rotation: { from: -getRandomRange(0, Math.PI / 8), to: getRandomRange(0, Math.PI / 8) },
+      // ease: "Sine.easeInOut",
+      hold: getRandomRange(0, 10000),
+      duration: 5 * 1000, // Duration of one wobble
+      yoyo: true, // Go back to original scale
+      repeat: -1, // Repeat indefinitely
+    });
+
     const motherlodeObject = motherlodeObjectGroup.add("Sprite");
 
     motherlodeObject.setComponents([
       ...sharedComponents,
+      rotationTween,
       Texture(Assets.SpriteAtlas, sprite),
       SetValue({
         depth: DepthLayers.Rock,
@@ -101,6 +104,7 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
     const motherlodeOutline = motherlodeObjectGroup.add("Sprite");
     motherlodeOutline.setComponents([
       ...sharedComponents,
+      rotationTween,
       Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity, motherlodeData.size)),
       OnComponentSystem(components.Send, () => {
         if (components.Send.get()?.destination === entity) {
@@ -131,6 +135,14 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
         components.Send.setDestination(entity);
         components.SelectedRock.set({ value: entity });
       }),
+      OnHover(
+        () => {
+          components.HoverEntity.set({ value: entity });
+        },
+        () => {
+          components.HoverEntity.remove();
+        }
+      ),
       SetValue({
         depth: DepthLayers.Rock + 1,
       }),

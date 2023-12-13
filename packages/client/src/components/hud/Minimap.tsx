@@ -13,6 +13,8 @@ import { ERock } from "contracts/config/enums";
 import { ReactNode, useMemo, useRef } from "react";
 import { components } from "src/network/components";
 import { entityToColor } from "src/util/color";
+import { Button } from "../core/Button";
+import { FaCrosshairs } from "react-icons/fa";
 
 type DotPoint = {
   x: number;
@@ -72,6 +74,7 @@ function calculateScaledBounds(coords: Coord[]): { minX: number; maxX: number; m
 }
 
 export const Minimap = () => {
+  const playerEntity = components.Account.use()?.value;
   const points = useEntityQuery([Has(components.Position), Has(components.RockType)]).map((entity) => {
     const rockType = components.RockType.get(entity)?.value;
     const position = components.Position.get(entity);
@@ -103,11 +106,29 @@ export const Minimap = () => {
   }, [rawView, scene]);
 
   return (
-    <div
-      className={`card bg-neutral relative border border-secondary p-2 drop-shadow-2xl pointer-events-auto transition transition-all`}
-      style={{ width: 300, height: 300 }}
-    >
-      <Voronoi points={points} width={300} height={300} view={view} onCoordinateClick={onCoordinateClick} />
+    <div className="backdrop-blur-sm">
+      <div
+        className={`relative card relative border border-secondary border-t-0 border-r-0 drop-shadow-2xl pointer-events-auto transition transition-all`}
+        style={{ width: 300, height: 300 }}
+      >
+        <Voronoi points={points} width={300} height={300} view={view} onCoordinateClick={onCoordinateClick} />
+        <div className="flex w-full justify-between items-end absolute bottom-0 p-2">
+          <Button
+            className="btn-sm flex text-accent border-secondary"
+            onClick={() => {
+              const home = components.Home.get(playerEntity)?.asteroid as Entity | undefined;
+              const pos = components.Position.get(home);
+
+              if (pos) onCoordinateClick(pos);
+            }}
+          >
+            <FaCrosshairs /> HOME
+          </Button>
+          <p className="font-bold text-sm text-accent bg-neutral/50 p-1 leading-none">
+            [{Math.round(view?.x ?? 0)}, {-Math.round(view?.y ?? 0)}]
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
@@ -180,9 +201,9 @@ export const Voronoi = ({ points, width, height, view, onCoordinateClick }: Dots
                   polygon={polygon}
                   fill={entityToColor(polygon.data.owner)}
                   fillOpacity={0.3}
-                  stroke="white"
+                  stroke="cyan"
                   strokeWidth={1}
-                  strokeOpacity={0.2}
+                  strokeOpacity={0.15}
                 />
               ) as unknown as ReactNode[]
           )}
@@ -195,7 +216,8 @@ export const Voronoi = ({ points, width, height, view, onCoordinateClick }: Dots
                 cx={xScale(point.x)}
                 cy={yScale(point.y)}
                 r={point.size}
-                stroke={"white"}
+                stroke={"cyan"}
+                strokeOpacity={0.5}
                 fill={entityToColor(point.owner)}
               />
             ) as unknown as ReactNode[]
@@ -208,7 +230,7 @@ export const Voronoi = ({ points, width, height, view, onCoordinateClick }: Dots
           width={scaleToBounds(view).w}
           height={scaleToBounds(view).h}
           fill="rgba(255,255,255,10%)"
-          stroke="white"
+          stroke="yellow"
           strokeWidth={1}
           strokeDasharray="4,4"
         />

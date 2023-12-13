@@ -57,7 +57,7 @@ export function renderFog(scene: Scene) {
           x: nextBounds.minX * tileWidth,
           y: (-nextBounds.minY + 1) * tileHeight,
         },
-        DepthLayers.Path
+        DepthLayers.Rock
       ),
       Square(
         (nextBounds.maxX - nextBounds.minX + 1) * tileWidth,

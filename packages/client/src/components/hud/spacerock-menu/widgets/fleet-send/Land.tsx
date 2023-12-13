@@ -1,3 +1,4 @@
+import { AudioKeys } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { ERock, ESendType, EUnit } from "contracts/config/enums";
 import { useMemo } from "react";
@@ -50,6 +51,7 @@ export const Land: React.FC<{
       <TransactionQueueMask queueItemId={key}>
         <Button
           className={`gap-2 w-44 ${isNeutral ? "btn-secondary" : "btn-error"} flex flex-col items-center `}
+          clickSound={AudioKeys.Sequence7}
           onClick={() => {
             if (ERock.Motherlode === rockType) {
               invade(destination, network, key);

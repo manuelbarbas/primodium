@@ -37,6 +37,7 @@ import { getFullResourceCount } from "src/util/resource";
 import { getRewards } from "src/util/reward";
 import { claimObjective } from "src/util/web3/contractCalls/claimObjective";
 import { Hex } from "viem";
+import { AudioKeys } from "@game/constants";
 
 const ClaimObjectiveButton: React.FC<{
   objectiveEntity: Entity;
@@ -78,6 +79,7 @@ const ClaimObjectiveButton: React.FC<{
         <Button
           disabled={!canClaim}
           className={`btn-sm btn-secondary border-accent w-full`}
+          clickSound={AudioKeys.Complete2}
           onClick={() => {
             claimObjective(objectiveEntity, network.network);
           }}

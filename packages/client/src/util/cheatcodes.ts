@@ -109,7 +109,7 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
           mud.components.MaxResourceCount,
           encodeEntity(
             { entity: "bytes32", resource: "uint8" },
-            { entity: resourceEntity as Hex, resource: ResourceEnumLookup[resourceEntity] }
+            { entity: home as Hex, resource: ResourceEnumLookup[resourceEntity] }
           ),
           {
             value: 2000000n,

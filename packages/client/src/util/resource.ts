@@ -282,7 +282,8 @@ export function getFullResourceCounts(spaceRockEntity?: Entity) {
       : 0n;
     //each resource has a production and consumption value. these values need to be seperate so we can calculate best outcome of production and consumption
     let productionRate = comps.ProductionRate.getWithKeys({ entity: spaceRockEntity as Hex, resource })?.value ?? 0n;
-    const consumptionRate = comps.ConsumptionRate.getWithKeys({ entity: spaceRockEntity as Hex, resource })?.value ?? 0n;
+    const consumptionRate =
+      comps.ConsumptionRate.getWithKeys({ entity: spaceRockEntity as Hex, resource })?.value ?? 0n;
 
     //if they are both equal no change will be made
     if (productionRate == 0n && consumptionRate == 0n)

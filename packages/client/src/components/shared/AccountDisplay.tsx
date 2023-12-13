@@ -18,6 +18,7 @@ export const AccountDisplay: React.FC<{
 }> = ({ player, className, noColor, showSpectate = false }) => {
   const { network } = useMud();
   const playerEntity = player ?? network.playerEntity;
+
   const homeAsteroid = components.Home.use(playerEntity)?.asteroid;
   const myHomeAsteroid = components.Home.use(network.playerEntity)?.asteroid;
   const { transitionToScene } = primodium.api().scene;

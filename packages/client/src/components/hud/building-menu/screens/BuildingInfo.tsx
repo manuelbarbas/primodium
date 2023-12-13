@@ -95,7 +95,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
         </div>
       )}
       {(requiredDependencies.length !== 0 || (!!upgrade && upgrade.requiredDependencies.length !== 0)) && (
-        <div className="grid grid-cols-2 w-full ">
+        <div className="grid grid-cols-2 w-full gap-1 ">
           <DataLabel label="resource usage">
             {!requiredDependencies.length ? (
               <b>N/A</b>
@@ -137,7 +137,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
         </div>
       )}
       {unitProductionMultiplier !== undefined && (
-        <div className="grid grid-cols-2 w-full ">
+        <div className="grid grid-cols-2 w-full gap-1 ">
           <DataLabel label="unit prod speed">
             <b>x{(unitProductionMultiplier / RESOURCE_SCALE).toString()}</b>
           </DataLabel>
@@ -151,7 +151,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
         </div>
       )}
       {storages && storages.length !== 0 && (
-        <div className="grid grid-cols-1 w-full">
+        <div className="grid grid-cols-1 w-full gap-1">
           <DataLabel label="storage">
             {storages.map((storage) => {
               return (

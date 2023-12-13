@@ -66,7 +66,7 @@ export const MiningVessels: React.FC<{ building: Entity }> = ({ building }) => {
   const mainBaseLvl = components.Level.useWithKeys({ entity: mainBase as Hex }, { value: 0n }).value;
 
   return (
-    <Navigator.Screen title="MiningVessels" className="w-full">
+    <Navigator.Screen title="MiningVessels" className="w-full gap-1">
       <SecondaryCard className="flex-row gap-1">
         <FaInfoCircle />
         <div className="text-xs italic opacity-75 space-y-2">
@@ -79,11 +79,11 @@ export const MiningVessels: React.FC<{ building: Entity }> = ({ building }) => {
         </div>
       </SecondaryCard>
       {mainBaseLvl >= mainBaseLvlReq && (
-        <>
+        <div className="flex flex-col gap-1 w-full">
           <VesselSlots building={building} player={player} />
           <CommissionCost player={player} />
           <UpgradeMiningVessel />
-        </>
+        </div>
       )}
 
       <Navigator.BackButton className="mt-1" />

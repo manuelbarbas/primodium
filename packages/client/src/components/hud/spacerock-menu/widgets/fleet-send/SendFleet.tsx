@@ -16,6 +16,8 @@ import { getMoveLength, toUnitCountArray } from "src/util/send";
 import { send } from "src/util/web3/contractCalls/send";
 import { Hex } from "viem";
 import { TargetHeader } from "../../TargetHeader";
+import { Modal } from "src/components/core/Modal";
+import { AudioKeys } from "@game/constants";
 
 export const Unit: React.FC<{ unit: Entity; count: bigint }> = ({ unit, count }) => {
   return (
@@ -178,7 +180,12 @@ export const SendFleet = () => {
         <SecondaryCard>
           <TotalStats />
         </SecondaryCard>
-        <Button disabled={fleetSize == 0n} onClick={() => sendFleet(sendType)} className="btn-warning font-bold h-16">
+        <Modal.CloseButton
+          disabled={fleetSize == 0n}
+          onClick={() => sendFleet(sendType)}
+          clickSound={AudioKeys.Execute2}
+          className="btn-warning font-bold h-16"
+        >
           <div className="flex flex-col gap-2 items-center p-2">
             <div className="flex gap-1">
               <FaExclamationTriangle className="opacity-75 animate-pulse" /> LAUNCH FLEET
@@ -192,7 +199,7 @@ export const SendFleet = () => {
               </div>
             )}
           </div>
-        </Button>
+        </Modal.CloseButton>
       </div>
     </Card>
   );

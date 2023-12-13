@@ -127,6 +127,8 @@ export enum SpriteKeys {
   PhotovoltaicCellFactory2 = "sprites/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_1.png",
 
   StarmapperStation1 = "sprites/starmapper-station/level1/Starmapper1.png",
+  StarmapperStation2 = "sprites/starmapper-station/level2/Starmapper_LVL2_1.png",
+  StarmapperStation3 = "sprites/starmapper-station/level3/Starmapper_LVL3_1.png",
 
   Hangar1 = "sprites/hangar/level1/Hangar1.png",
 
@@ -252,6 +254,8 @@ export enum AnimationKeys {
   SolarPanel2 = "solarpanel/level2",
 
   StarmapperStation1 = "starmapperstation/level1",
+  StarmapperStation2 = "starmapperstation/level2",
+  StarmapperStation3 = "starmapperstation/level3",
 
   Hangar1 = "hangar/level1",
 
@@ -294,6 +298,24 @@ export enum AudioKeys {
   Click4 = "Click_04",
   Sequence = "Sequence_01",
   Sequence2 = "Sequence_02",
+  Sequence3 = "Sequence_03",
+  Sequence4 = "Sequence_04",
+  Sequence5 = "Sequence_05",
+  Sequence6 = "Sequence_06",
+  Sequence7 = "Sequence_07",
+  Execute = "Execute_01",
+  Execute2 = "Execute_02",
+  DataPoint = "Data_Point_01",
+  DataPoint2 = "Data_Point_02",
+  Confirm = "Confirm_01",
+  Confirm2 = "Confirm_02",
+  Confirm3 = "Confirm_03",
+  Confirm4 = "Confirm_04",
+  Confirm5 = "Confirm_05",
+  Confirm6 = "Confirm_06",
+  Confirm7 = "Confirm_07",
+  Complete = "Complete_01",
+  Complete2 = "Complete_02",
 }
 
 export const ResourceToTilesetKey: { [key: number]: ResourceTilekeys } = {
@@ -333,7 +355,11 @@ export const EntitytoSpriteKey = {
 
   [EntityType.SolarPanel]: [SpriteKeys.SolarPanel1, SpriteKeys.SolarPanel2],
 
-  [EntityType.StarmapperStation]: [SpriteKeys.StarmapperStation1],
+  [EntityType.StarmapperStation]: [
+    SpriteKeys.StarmapperStation1,
+    SpriteKeys.StarmapperStation2,
+    SpriteKeys.StarmapperStation3,
+  ],
 
   [EntityType.Hangar]: [SpriteKeys.Hangar1],
 
@@ -390,7 +416,11 @@ export const EntityIDtoAnimationKey = {
 
   [EntityType.SolarPanel]: [AnimationKeys.SolarPanel1, AnimationKeys.SolarPanel2],
 
-  [EntityType.StarmapperStation]: [AnimationKeys.StarmapperStation1],
+  [EntityType.StarmapperStation]: [
+    AnimationKeys.StarmapperStation1,
+    AnimationKeys.StarmapperStation2,
+    AnimationKeys.StarmapperStation3,
+  ],
 
   [EntityType.Hangar]: [AnimationKeys.Hangar1],
 
@@ -418,6 +448,9 @@ export enum KeybindActions {
   Left,
   Right,
   Center,
+  SpacerockMenu,
+  Chat,
+  Blueprint,
   Base,
   Hotbar1,
   Hotbar2,

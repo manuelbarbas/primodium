@@ -21,9 +21,9 @@ export const Animation = (key: string, stop?: boolean): GameObjectComponent<"Spr
   };
 };
 
-export const Outline = (options?: Parameters<typeof outline>[1]): GameObjectComponent<"Sprite"> => {
+export const Outline = (options?: Parameters<typeof outline>[1] & { id?: string }): GameObjectComponent<"Sprite"> => {
   return {
-    id: "outline",
+    id: options?.id ?? "outline",
     once: (gameObject) => {
       outline(gameObject, options);
     },

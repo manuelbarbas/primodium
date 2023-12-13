@@ -7,18 +7,26 @@ import { GracePeriod } from "../GracePeriod";
 import { TargetHeader } from "./TargetHeader";
 import { Resources } from "./widgets/resources/Resources";
 import { ERock } from "contracts/config/enums";
+import { KeyNames, KeybindActions } from "@game/constants";
+import { primodium } from "@game/api";
 
 export const SpacerockMenu: React.FC = () => {
   const selectedSpacerock = components.SelectedRock.use()?.value;
   const rockType = components.RockType.use(selectedSpacerock)?.value;
   const ownedBy = components.OwnedBy.use(selectedSpacerock)?.value;
+  const {
+    hooks: { useKeybinds },
+  } = primodium.api()!;
+  const keybinds = useKeybinds();
+
   if (!selectedSpacerock) return null;
   return (
     <div className="w-screen px-2 flex justify-center">
-      <Tabs className="min-w-fit w-[50rem] flex flex-col items-center gap-0">
+      <Tabs className="min-w-fit w-[50rem] flex flex-col items-center gap-0 relative">
         <Tabs.Button
           index={0}
           togglable
+          keybind={KeybindActions.SpacerockMenu}
           onClick={() => {
             components.SelectedBuilding.remove();
             components.SelectedAction.remove();
@@ -26,6 +34,10 @@ export const SpacerockMenu: React.FC = () => {
           className="rounded-b-none border-b-0 btn-md border-secondary relative py-2 hover:text-accent group w-fit"
         >
           <TargetHeader hideStats />
+          <div className="absolute kbd kbd-xs top-0 right-0 translate-x-1/2 -translate-y-1/2">
+            {KeyNames[keybinds[KeybindActions.SpacerockMenu]?.entries().next().value[0]] ??
+              keybinds[KeybindActions.SpacerockMenu]?.entries().next().value[0]}
+          </div>
         </Tabs.Button>
         <Tabs.Pane index={0} className="w-full border-b-0 rounded-x-none rounded-b-none relative">
           <Resources />
