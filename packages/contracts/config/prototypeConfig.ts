@@ -2334,7 +2334,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_RaidedResources: getResourceValues({ Iron: 200000, Copper: 200000, Lithium: 200000 }),
       P_UnitReward: getUnitValues({ HammerDrone: 30 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 1n } } },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
   RaidRawResources2: {
     tables: {
