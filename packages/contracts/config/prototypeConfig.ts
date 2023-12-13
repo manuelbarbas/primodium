@@ -1032,6 +1032,24 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     levels: idsToPrototypes(MUDEnums.EOrderType),
   },
 
+  LightningCraft: {
+    tables: {
+      P_MaxLevel: { value: 1n },
+    },
+    levels: {
+      0: {
+        P_RequiredResources: getResourceValues({ U_Housing: 100 }),
+        P_Unit: {
+          attack: 10n,
+          defense: 10n,
+          cargo: 1000n,
+          speed: 5000n,
+          trainingTime: 500n,
+        },
+      },
+    },
+  },
+
   AnvilDrone: {
     tables: {
       P_MaxLevel: { value: 5n },
@@ -1706,12 +1724,12 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_SpawnPirateAsteroid: {
         x: -10,
         y: 22,
-        units: encodeArray(["MinutemanMarine"]),
-        unitAmounts: [10n],
+        units: encodeArray(["LightningCraft"]),
+        unitAmounts: [20n],
         resources: indexifyResourceArray(["Copper", "Iron", "IronPlate"]),
-        resourceAmounts: [50000n, 50000n, 50000n],
+        resourceAmounts: [30000n, 30000n, 25000n],
       },
-      P_ResourceReward: getResourceValues({ Copper: 100000, Iron: 100000 }),
+      P_UnitReward: getUnitValues({ LightningCraft: 50 }),
     },
   },
   DefeatPirateBase2: {
@@ -1723,10 +1741,10 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         y: 10,
         units: encodeArray(["MinutemanMarine"]),
         unitAmounts: [20n],
-        resources: indexifyResourceArray(["Copper", "Iron", "IronPlate"]),
-        resourceAmounts: [100000n, 100000n, 100000n],
+        resources: indexifyResourceArray(["Copper", "Iron", "IronPlate", "Lithium"]),
+        resourceAmounts: [100000n, 100000n, 50000n, 50000n],
       },
-      P_UnitReward: getUnitValues({ MinutemanMarine: 50 }),
+      P_UnitReward: getUnitValues({ MinutemanMarine: 10 }),
     },
   },
   DefeatPirateBase3: {
@@ -1974,7 +1992,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildIronMine"]) },
       P_HasBuiltBuildings: { value: encodeArray(["IronPlateFactory"]) },
-      P_ResourceReward: getResourceValues({ IronPlate: 50000 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 10000 }),
     },
   },
 
@@ -1982,7 +2000,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildCopperMine"]) },
       P_HasBuiltBuildings: { value: encodeArray(["IronPlateFactory"]) },
-      P_ResourceReward: getResourceValues({ IronPlate: 50000 }),
+      P_ResourceReward: getResourceValues({ Alooy: 20000 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
@@ -1994,12 +2012,12 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_SpawnPirateAsteroid: {
         x: -5,
         y: -7,
-        units: encodeArray(["MinutemanMarine"]),
-        unitAmounts: [10n],
-        resources: indexifyResourceArray(["Copper", "Iron", "IronPlate"]),
-        resourceAmounts: [20000n, 20000n, 20000n],
+        units: encodeArray([]),
+        unitAmounts: [],
+        resources: indexifyResourceArray(["Copper", "Iron"]),
+        resourceAmounts: [20000n, 20000n],
       },
-      P_UnitReward: getUnitValues({ MinutemanMarine: 35 }),
+      P_UnitReward: getUnitValues({ LightningCraft: 35 }),
     },
   },
 
