@@ -278,7 +278,7 @@ const ClaimedObjective: React.FC = () => {
 
 export const Objectives: React.FC<{ highlight?: Entity }> = ({ highlight }) => {
   return (
-    <Tabs className="flex flex-col items-center w-full">
+    <Tabs className="flex flex-col items-center w-full h-full">
       <Join className="border-secondary border border-secondary/25">
         <Tabs.Button showActive index={0} className="btn-sm">
           Available
@@ -291,7 +291,7 @@ export const Objectives: React.FC<{ highlight?: Entity }> = ({ highlight }) => {
       <Tabs.Pane className="border-none w-full h-full" index={0}>
         <UnclaimedObjective highlight={highlight} />
       </Tabs.Pane>
-      <Tabs.Pane className="border-none w-full h-full" index={1}>
+      <Tabs.Pane className="border-none w-full" index={1}>
         <ClaimedObjective />
       </Tabs.Pane>
     </Tabs>
