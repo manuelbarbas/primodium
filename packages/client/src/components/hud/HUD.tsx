@@ -119,7 +119,7 @@ const BuildingSelection = () => {
               blueprints
             </p>
 
-            <div className="absolute kbd kbd-sm bottom-0 left-0 -translate-x-1/2 translate-y-1/2 text-accent">
+            <div className="absolute kbd kbd-xs bottom-0 left-0 -translate-x-1/2 translate-y-1/2">
               {KeyNames[keybinds[KeybindActions.Blueprint]?.entries().next().value[0]] ??
                 keybinds[KeybindActions.Blueprint]?.entries().next().value[0]}
             </div>
@@ -276,7 +276,7 @@ const Chat = () => {
         >
           chat
         </p>
-        <div className="absolute kbd kbd-sm bottom-0 right-0 translate-x-1/2 translate-y-1/2 text-accent">
+        <div className="absolute kbd kbd-xs bottom-0 right-0 translate-x-1/2 translate-y-1/2">
           {KeyNames[keybinds[KeybindActions.Chat]?.entries().next().value[0]] ??
             keybinds[KeybindActions.Chat]?.entries().next().value[0]}
         </div>

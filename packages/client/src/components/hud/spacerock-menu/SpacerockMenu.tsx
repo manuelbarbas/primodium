@@ -34,7 +34,7 @@ export const SpacerockMenu: React.FC = () => {
           className="rounded-b-none border-b-0 btn-md border-secondary relative py-2 hover:text-accent group w-fit"
         >
           <TargetHeader hideStats />
-          <div className="absolute kbd kbd-sm top-0 right-0 translate-x-1/2 -translate-y-1/2 text-accent">
+          <div className="absolute kbd kbd-xs top-0 right-0 translate-x-1/2 -translate-y-1/2">
             {KeyNames[keybinds[KeybindActions.SpacerockMenu]?.entries().next().value[0]] ??
               keybinds[KeybindActions.SpacerockMenu]?.entries().next().value[0]}
           </div>
