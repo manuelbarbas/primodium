@@ -61,7 +61,7 @@ contract LibInvadeTest is PrimodiumTest {
       to: enemy,
       origin: homeRock,
       destination: rock,
-      unitCounts: [uint256(200), 100, 0, 0, 0, 0, 0]
+      unitCounts: [uint256(200), 100, 0, 0, 0, 0, 0, 0]
     });
     ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);
     ArrivalCount.set(player, 1);
@@ -125,7 +125,7 @@ contract LibInvadeTest is PrimodiumTest {
       to: enemy,
       origin: homeRock,
       destination: rock,
-      unitCounts: [uint256(200), 0, 0, 0, 0, 0, 0]
+      unitCounts: [uint256(200), 0, 0, 0, 0, 0, 0, 0]
     });
 
     ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);
@@ -160,7 +160,7 @@ contract LibInvadeTest is PrimodiumTest {
       to: enemy,
       origin: homeRock,
       destination: rock,
-      unitCounts: [uint256(50), 0, 0, 0, 0, 0, 0]
+      unitCounts: [uint256(50), 0, 0, 0, 0, 0, 0, 0]
     });
 
     ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);

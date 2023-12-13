@@ -135,6 +135,7 @@ export const SendFleet = () => {
   return (
     <Card className="grid grid-cols-2 border-none w-full h-full pointer-events-auto">
       <div className="grid gap-1 h-full w-full grid-cols-4 grid-rows-2 pr-1">
+        <Unit unit={EntityType.LightningCraft} count={getUnitCount(EntityType.LightningCraft)} />
         <Unit unit={EntityType.MinutemanMarine} count={getUnitCount(EntityType.MinutemanMarine)} />
         <Unit unit={EntityType.TridentMarine} count={getUnitCount(EntityType.TridentMarine)} />
         <Unit unit={EntityType.AnvilDrone} count={getUnitCount(EntityType.AnvilDrone)} />
@@ -142,7 +143,6 @@ export const SendFleet = () => {
         <Unit unit={EntityType.StingerDrone} count={getUnitCount(EntityType.StingerDrone)} />
         <Unit unit={EntityType.AegisDrone} count={getUnitCount(EntityType.AegisDrone)} />
         <Unit unit={EntityType.MiningVessel} count={getUnitCount(EntityType.MiningVessel)} />
-        <div className="w-full h-full topographic-background border border-secondary/50 opacity-25" />
       </div>
       <div className="flex flex-col w-full space-y-1">
         <SecondaryCard>

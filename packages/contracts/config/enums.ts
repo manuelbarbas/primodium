@@ -85,6 +85,7 @@ export enum EUnit {
   AnvilDrone,
   MinutemanMarine,
   TridentMarine,
+  LightningCraft,
 }
 
 export enum ESendType {
