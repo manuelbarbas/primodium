@@ -1,5 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { hashEntities } from "./encode";
+import { isPlayer } from "./common";
 
 const adjectives = [
   "Stellar",
@@ -69,6 +70,7 @@ const nouns = [
 
 const entityPlayerName = new Map<Entity, string>();
 export const entityToPlayerName = (entity: Entity) => {
+  if (!isPlayer(entity)) return "Pirate";
   if (entityPlayerName.has(entity)) return entityPlayerName.get(entity) as string;
 
   const hash = hashEntities(entity);

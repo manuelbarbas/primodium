@@ -18,22 +18,27 @@ export function useAccount(player?: Entity) {
   const isPlayer = _isPlayer(playerEntity);
 
   const address = useMemo(() => {
-    if (!isPlayer) return "Pirate";
     if (!linkedAddress) return entityToPlayerName(playerEntity);
-    return linkedAddress.ensName ?? linkedAddress.address
-      ? entityToAddress(linkedAddress.address ?? playerEntity, true)
-      : entityToPlayerName(playerEntity);
+    return (
+      linkedAddress.ensName ??
+      (linkedAddress.address
+        ? entityToAddress(linkedAddress.address ?? playerEntity, true)
+        : entityToPlayerName(playerEntity))
+    );
   }, [linkedAddress, playerEntity]);
 
   useEffect(() => {
-    if (!isPlayer) return;
+    if (!isPlayer) {
+      setLinkedAddress(undefined);
+      return;
+    }
     const getAddressObj = async () => {
       const addressObj = await getLinkedAddress(entityToAddress(playerEntity));
       setLinkedAddress(addressObj);
       setLoading(false);
     };
     getAddressObj();
-  }, []);
+  }, [isPlayer, playerEntity]);
 
   return {
     linkedAddress,
