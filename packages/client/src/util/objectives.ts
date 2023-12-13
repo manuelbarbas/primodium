@@ -255,7 +255,7 @@ export function getAllRequirements(objective: Entity, playerEntity: Entity): Rec
     [RequirementType.RewardUtilities]: getRewardUtilitiesRequirement(objective, playerEntity),
   };
   return Object.fromEntries(
-    Object.entries(requirements).filter(([_, value]) => value !== undefined && value.length > 0)
+    Object.entries(requirements).filter(([, value]) => value !== undefined && value.length > 0)
   ) as Record<RequirementType, Requirement[]>;
 }
 
@@ -263,7 +263,7 @@ export function getIsObjectiveAvailable(objective: Entity, playerEntity: Entity)
   const requirements = getAllRequirements(objective, playerEntity);
   const mainbaseRequirement = getMainBaseRequirement(objective);
   const objectivesRequirement = getObjectivesRequirement(objective);
-  if (Object.keys(requirements).length == 0) return true;
+  if (Object.keys(requirements).length == 0) return isAllRequirementsMet(mainbaseRequirement);
   return isAllRequirementsMet(mainbaseRequirement) && isAllRequirementsMet(objectivesRequirement);
 }
 
