@@ -188,6 +188,7 @@ export const EntityType = {
 
   MinutemanMarine: toHex32("MinutemanMarine") as Entity,
   TridentMarine: toHex32("TridentMarine") as Entity,
+  LightningCraft: toHex32("LightningCraft") as Entity,
 
   Expansion: toHex32("Expansion") as Entity,
   ExpansionResearch1: encodeEntityLevel("Expansion", 1) as Entity,
@@ -272,7 +273,7 @@ export const BackgroundImage = new Map<Entity, string[]>([
   [EntityType.AnvilDrone, ["/img/unit/anvildrone.png"]],
   [EntityType.AegisDrone, ["/img/unit/aegisdrone.png"]],
   [EntityType.MiningVessel, ["/img/unit/miningvessel.png"]],
-
+  [EntityType.LightningCraft, ["/img/unit/lightningcraft.png"]],
   [EntityType.MinutemanMarine, ["/img/unit/minutemen_marine.png"]],
   [EntityType.TridentMarine, ["/img/unit/trident_marine.png"]],
 ]);
@@ -404,6 +405,7 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.MiningVessel, "/img/unit/miningvessel.png"],
   [EntityType.MinutemanMarine, "img/unit/minutemen_marine.png"],
   [EntityType.TridentMarine, "img/unit/trident_marine.png"],
+  [EntityType.LightningCraft, "img/unit/lightningcraft.png"],
 ]);
 
 export type DisplayKeyPair = {
@@ -478,6 +480,7 @@ export const UnitStorages = new Set([
   EntityType.MiningVessel,
   EntityType.MinutemanMarine,
   EntityType.TridentMarine,
+  EntityType.LightningCraft,
 ]);
 
 export const MultiplierStorages = new Set([EntityType.DefenseMultiplier]);
@@ -547,6 +550,7 @@ export const UnitEnumLookup: Record<Entity, EUnit> = {
   [EntityType.MiningVessel]: EUnit.MiningVessel,
   [EntityType.MinutemanMarine]: EUnit.MinutemanMarine,
   [EntityType.TridentMarine]: EUnit.TridentMarine,
+  [EntityType.LightningCraft]: EUnit.LightningCraft,
 };
 
 export const UnitEntityLookup = reverseRecord(UnitEnumLookup);

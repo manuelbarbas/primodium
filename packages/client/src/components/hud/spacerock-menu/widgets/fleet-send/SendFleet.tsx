@@ -135,6 +135,7 @@ export const SendFleet = () => {
   return (
     <Card className="grid grid-cols-2 border-none w-full h-full pointer-events-auto">
       <div className="grid gap-1 h-full w-full grid-cols-4 grid-rows-2 pr-1">
+        <Unit unit={EntityType.LightningCraft} count={getUnitCount(EntityType.LightningCraft)} />
         <Unit unit={EntityType.MinutemanMarine} count={getUnitCount(EntityType.MinutemanMarine)} />
         <Unit unit={EntityType.TridentMarine} count={getUnitCount(EntityType.TridentMarine)} />
         <Unit unit={EntityType.AnvilDrone} count={getUnitCount(EntityType.AnvilDrone)} />
