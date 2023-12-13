@@ -56,6 +56,11 @@ export const AllUnitLabels = () => {
     <div className="flex flex-col items-center gap-1 m-1">
       <SecondaryCard className="flex flex-row w-fit gap-1 m-1">
         <UnitLabel
+          name={"Lightning Craft"}
+          count={getUnitCount(EntityType.LightningCraft)}
+          resource={EntityType.LightningCraft}
+        />
+        <UnitLabel
           name={"Minuteman Marine"}
           count={getUnitCount(EntityType.MinutemanMarine)}
           resource={EntityType.MinutemanMarine}

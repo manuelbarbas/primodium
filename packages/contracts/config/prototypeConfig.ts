@@ -1032,6 +1032,24 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     levels: idsToPrototypes(MUDEnums.EOrderType),
   },
 
+  LightningCraft: {
+    tables: {
+      P_MaxLevel: { value: 1n },
+    },
+    levels: {
+      0: {
+        P_RequiredResources: getResourceValues({ U_Housing: 100 }),
+        P_Unit: {
+          attack: 10n,
+          defense: 10n,
+          cargo: 1000n,
+          speed: 500n,
+          trainingTime: 500n,
+        },
+      },
+    },
+  },
+
   AnvilDrone: {
     tables: {
       P_MaxLevel: { value: 5n },
@@ -1706,12 +1724,12 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_SpawnPirateAsteroid: {
         x: -10,
         y: 22,
-        units: encodeArray(["MinutemanMarine"]),
-        unitAmounts: [10n],
+        units: encodeArray(["LightningCraft"]),
+        unitAmounts: [20n],
         resources: indexifyResourceArray(["Copper", "Iron", "IronPlate"]),
-        resourceAmounts: [50000n, 50000n, 50000n],
+        resourceAmounts: [30000n, 30000n, 25000n],
       },
-      P_ResourceReward: getResourceValues({ Copper: 100000, Iron: 100000 }),
+      P_UnitReward: getUnitValues({ LightningCraft: 20 }),
     },
   },
   DefeatPirateBase2: {
@@ -1721,12 +1739,12 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_SpawnPirateAsteroid: {
         x: -20,
         y: 10,
-        units: encodeArray(["MinutemanMarine"]),
-        unitAmounts: [20n],
-        resources: indexifyResourceArray(["Copper", "Iron", "IronPlate"]),
-        resourceAmounts: [100000n, 100000n, 100000n],
+        units: encodeArray(["LightningCraft", "MinutemanMarine"]),
+        unitAmounts: [40n, 20n],
+        resources: indexifyResourceArray(["Copper", "Iron", "IronPlate", "Lithium"]),
+        resourceAmounts: [50000n, 50000n, 50000n, 50000n],
       },
-      P_UnitReward: getUnitValues({ MinutemanMarine: 50 }),
+      P_UnitReward: getUnitValues({ MinutemanMarine: 10 }),
     },
   },
   DefeatPirateBase3: {
@@ -1951,14 +1969,14 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   BuildIronMine: {
     tables: {
       P_HasBuiltBuildings: { value: encodeArray(["IronMine"]) },
-      P_ResourceReward: getResourceValues({ Iron: 20000 }),
+      P_ResourceReward: getResourceValues({ Iron: 10000 }),
     },
   },
 
   BuildCopperMine: {
     tables: {
       P_HasBuiltBuildings: { value: encodeArray(["CopperMine"]) },
-      P_ResourceReward: getResourceValues({ Copper: 20000, Iron: 20000 }),
+      P_ResourceReward: getResourceValues({ Copper: 10000, Iron: 10000 }),
     },
   },
 
@@ -1974,15 +1992,15 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildIronMine"]) },
       P_HasBuiltBuildings: { value: encodeArray(["IronPlateFactory"]) },
-      P_ResourceReward: getResourceValues({ IronPlate: 50000 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 10000 }),
     },
   },
 
   BuildAlloyFactory: {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildCopperMine"]) },
-      P_HasBuiltBuildings: { value: encodeArray(["IronPlateFactory"]) },
-      P_ResourceReward: getResourceValues({ IronPlate: 50000 }),
+      P_HasBuiltBuildings: { value: encodeArray(["AlloyFactory"]) },
+      P_ResourceReward: getResourceValues({ Alloy: 20000 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
@@ -1994,12 +2012,12 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_SpawnPirateAsteroid: {
         x: -5,
         y: -7,
-        units: encodeArray(["MinutemanMarine"]),
-        unitAmounts: [10n],
-        resources: indexifyResourceArray(["Copper", "Iron", "IronPlate"]),
-        resourceAmounts: [20000n, 20000n, 20000n],
+        units: encodeArray([]),
+        unitAmounts: [],
+        resources: indexifyResourceArray(["Copper", "Iron"]),
+        resourceAmounts: [20000n, 20000n],
       },
-      P_UnitReward: getUnitValues({ MinutemanMarine: 35 }),
+      P_UnitReward: getUnitValues({ LightningCraft: 35 }),
     },
   },
 
@@ -2017,6 +2035,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_HasBuiltBuildings: { value: encodeArray(["PVCellFactory"]) },
       P_ResourceReward: getResourceValues({ PVCell: 20000 }),
     },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
   BuildSolarPanel: {
     tables: {
@@ -2024,6 +2043,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_HasBuiltBuildings: { value: encodeArray(["SolarPanel"]) },
       P_ResourceReward: getResourceValues({ Iron: 100000, Copper: 100000 }),
     },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
 
   BuildDroneFactory: {
@@ -2032,6 +2052,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_HasBuiltBuildings: { value: encodeArray(["DroneFactory"]) },
       P_UnitReward: getUnitValues({ HammerDrone: 30 }),
     },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
   BuildHangar: {
     tables: {
@@ -2039,6 +2060,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_HasBuiltBuildings: { value: encodeArray(["Hangar"]) },
       P_UnitReward: getUnitValues({ TridentMarine: 100 }),
     },
+    levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
   },
 
   BuildStarmapper: {
@@ -2092,6 +2114,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_ProducedUnits: getUnitValues({ MinutemanMarine: 100 }),
       P_ResourceReward: getResourceValues({ IronPlate: 100000 }),
     },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
   TrainMinutemanMarine3: {
     tables: {
@@ -2099,6 +2122,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_ProducedUnits: getUnitValues({ MinutemanMarine: 200 }),
       P_ResourceReward: getResourceValues({ IronPlate: 300000 }),
     },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
 
   TrainTridentMarine1: {
@@ -2114,6 +2138,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_ProducedUnits: getUnitValues({ TridentMarine: 100 }),
       P_ResourceReward: getResourceValues({ Lithium: 500000 }),
     },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
   TrainTridentMarine3: {
     tables: {
@@ -2121,6 +2146,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_ProducedUnits: getUnitValues({ TridentMarine: 200 }),
       P_ResourceReward: getResourceValues({ Lithium: 1000000 }),
     },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
 
   TrainAnvilDrone1: {
@@ -2152,7 +2178,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_ProducedUnits: getUnitValues({ HammerDrone: 20 }),
       P_ResourceReward: getResourceValues({ PVCell: 50000 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
   TrainHammerDrone2: {
     tables: {
@@ -2175,7 +2201,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_ProducedUnits: getUnitValues({ AegisDrone: 20 }),
       P_ResourceReward: getResourceValues({ Alloy: 50000 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 4n } } },
+    levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
   },
   TrainAegisDrone2: {
     tables: {
@@ -2198,7 +2224,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_ProducedUnits: getUnitValues({ StingerDrone: 20 }),
       P_ResourceReward: getResourceValues({ Iron: 500000, Copper: 500000, Lithium: 500000 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 5n } } },
+    levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
   },
   TrainStingerDrone2: {
     tables: {
@@ -2308,7 +2334,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_RaidedResources: getResourceValues({ Iron: 200000, Copper: 200000, Lithium: 200000 }),
       P_UnitReward: getUnitValues({ HammerDrone: 30 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 1n } } },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
   RaidRawResources2: {
     tables: {
@@ -2330,7 +2356,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_RaidedResources: getResourceValues({ IronPlate: 200000, PVCell: 200000, Alloy: 200000 }),
       P_UnitReward: getUnitValues({ AegisDrone: 30 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 1n } } },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
   RaidFactoryResources2: {
     tables: {
@@ -2352,7 +2378,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_RaidedResources: getResourceValues({ Titanium: 200000, Platinum: 200000, Iridium: 200000, Kimberlite: 200000 }),
       P_UnitReward: getUnitValues({ StingerDrone: 30 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 1n } } },
+    levels: { 1: { P_RequiredBaseLevel: { value: 4n } } },
   },
   RaidMotherlodeResources2: {
     tables: {
@@ -2379,7 +2405,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_DestroyedUnits: getUnitValues({ MinutemanMarine: 500 }),
       P_ResourceReward: getResourceValues({ Copper: 300000, Iron: 300000 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 1n } } },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
   DestroyEnemyUnits2: {
     tables: {

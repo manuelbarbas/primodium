@@ -24,7 +24,6 @@ export const AllMaterialLabels = () => {
               <MaterialLabel name={"Iron"} resource={EntityType.Iron} />
               <MaterialLabel name={"Copper"} resource={EntityType.Copper} />
               <MaterialLabel name={"Lithium"} resource={EntityType.Lithium} />
-              <MaterialLabel name={"Sulfur"} resource={EntityType.Sulfur} />
             </SecondaryCard>
             <div className="flex gap-1 pt-1">
               <div className="rounded-full w-2 h-1 bg-accent" />
