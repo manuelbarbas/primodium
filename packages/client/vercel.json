@@ -1,3 +1,6 @@
 {
-  "rewrites": [{"source": "/api/chatHistory/:channel", "destination": "/api/chatHistory"},{ "source": "/(.*)", "destination": "/" }]
+  "rewrites": [{
+    "src": "^(?!\\/api).*",
+    "dest": "/"
+  }]
 }
