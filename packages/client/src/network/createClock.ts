@@ -36,7 +36,7 @@ export function createClock(
 
   function createTickInterval() {
     return setInterval(() => {
-      clock.currentTime += period;
+      clock.currentTime += Math.floor(period / 1000);
       emit();
     }, period);
   }
