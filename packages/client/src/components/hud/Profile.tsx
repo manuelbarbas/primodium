@@ -1,6 +1,7 @@
-import { useMud } from "src/hooks";
-// import { linkAddress } from "src/util/web2/linkAddress";
+import { useMemo } from "react";
+import { useLocation } from "react-router-dom";
 import { formatEther } from "viem";
+import { useMud } from "src/hooks";
 import { Button } from "../core/Button";
 import { useAccount } from "src/hooks/useAccount";
 import { AccountDisplay } from "../shared/AccountDisplay";
@@ -13,6 +14,7 @@ import { getSpaceRockImage } from "src/util/spacerock";
 import { useFleetMoves } from "src/hooks/useFleetMoves";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { getBuildingImage } from "src/util/building";
+import { convertObjToParams, convertParamsToObj } from "src/util/params";
 
 export const Profile = () => {
   const { network } = useMud();
@@ -24,6 +26,9 @@ export const Profile = () => {
   const fleetMoves = useFleetMoves();
   const mapOpen = components.MapOpen.use()?.value ?? false;
   const buildingImage = getBuildingImage((mainBase ?? singletonEntity) as Entity);
+
+  const { search } = useLocation();
+  const params = useMemo(() => convertParamsToObj(search), [search]);
 
   return (
     <div className="flex flex-row">
@@ -65,7 +70,11 @@ export const Profile = () => {
         {!linkedAddress?.address && !loading && (
           <Button
             className="btn-xs btn-secondary btn-ghost flex gap-1 m-auto text-accent mt-1"
-            onClick={() => window.open(`/account?&tab=link`)}
+            onClick={() => {
+              console.log("opened string");
+              console.log(convertObjToParams({ ...params, tab: "link" }));
+              window.open(`/account${convertObjToParams({ ...params, tab: "link" })}`);
+            }}
           >
             <FaLink /> LINK ADDRESS
           </Button>
