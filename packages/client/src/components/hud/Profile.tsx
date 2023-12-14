@@ -67,14 +67,23 @@ export const Profile = () => {
             <p className="font-bold text-success">wETH</p>
           </div>
         </div>
-        {!linkedAddress?.address && !loading && (
+        {!loading && (
           <Button
             className="btn-xs btn-secondary btn-ghost flex gap-1 m-auto text-accent mt-1"
             onClick={() => {
               window.open(`/account${convertObjToParams({ ...params, tab: "link" })}`);
             }}
           >
-            <FaLink /> LINK ADDRESS
+            {!linkedAddress?.address && (
+              <>
+                <FaLink /> LINK ADDRESS
+              </>
+            )}
+            {linkedAddress?.address && (
+              <>
+                <FaLink /> MANAGE ACCOUNT
+              </>
+            )}
           </Button>
         )}
       </div>
