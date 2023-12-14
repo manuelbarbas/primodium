@@ -1,13 +1,13 @@
-import { Entity } from "@latticexyz/recs";
 import { createClient as createFaucetClient } from "@latticexyz/faucet";
+import { Entity } from "@latticexyz/recs";
 import { useEffect, useState } from "react";
 import { Button } from "src/components/core/Button";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
+import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 import { normalizeAddress } from "src/util/common";
 import { Hex, createPublicClient, encodeAbiParameters, formatEther } from "viem";
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
-import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 
 interface TransferTokenProps {
   onTransfer: (address: string, amount: bigint) => Promise<void>;
@@ -57,10 +57,9 @@ export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, classN
   const balance = components.WETHBalance.use(externalEntity)?.value ?? 0n;
 
   const handleTransfer = async () => {
-    const amountBigInt = BigInt(Math.round(Number(amount)));
-    const amountNum = amountBigInt * BigInt(1e18);
-    if (address && amountNum > 0) {
-      await onTransfer(address, amountNum);
+    const amountBigInt = BigInt(Number(amount) * 1e18);
+    if (address && amountBigInt > 0) {
+      await onTransfer(address, amountBigInt);
       setAmount("");
     } else {
       alert("Please enter a valid address and amount.");

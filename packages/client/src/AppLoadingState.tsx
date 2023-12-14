@@ -10,8 +10,8 @@ import { Account } from "./screens/Account";
 import { Game } from "./screens/Game";
 import { Increment } from "./screens/Increment";
 import { Landing } from "./screens/Landing";
-import { setupCheatcodes } from "./util/cheatcodes";
 import { Statistics } from "./screens/Statistics";
+import { setupCheatcodes } from "./util/cheatcodes";
 
 const DEV = import.meta.env.PRI_DEV === "true";
 
@@ -50,7 +50,7 @@ export default function AppLoadingState() {
             </div>
           </div>
         )}
-        {loadingState.step === SyncStep.LIVE && (
+        {(loadingState.step === SyncStep.LIVE || loadingState.percentage == 100) && (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Landing />} />
