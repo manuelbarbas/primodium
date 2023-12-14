@@ -2,14 +2,14 @@ import { primodium } from "@game/api";
 import { Scenes } from "@game/constants";
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, HasValue } from "@latticexyz/recs";
-import { ERock } from "contracts/config/enums";
-import { FaCrosshairs } from "react-icons/fa";
+import { ERock, ESize } from "contracts/config/enums";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
+import { IconLabel } from "src/components/core/IconLabel";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
-import { MotherlodeSizeNames } from "src/util/constants";
+import { ResourceImage } from "src/util/constants";
 import { getSpaceRockInfo } from "src/util/spacerock";
 
 export const LabeledValue: React.FC<{
@@ -26,53 +26,49 @@ export const LabeledValue: React.FC<{
 
 const Motherlode: React.FC<{ motherlodeId: Entity }> = ({ motherlodeId }) => {
   const motherlodeInfo = getSpaceRockInfo(motherlodeId);
+  const resource = motherlodeInfo.motherlodeData.motherlodeResource;
+  const size = motherlodeInfo.motherlodeData.size;
+  const sizeName = size === ESize.Small ? "sm" : size === ESize.Medium ? "md" : "lg";
 
   return (
-    <SecondaryCard className="w-full flex-row text-xs items-center justify-between gap-2">
-      <img src={motherlodeInfo.imageUri} className="w-8 h-8" />
-      <div className="flex items-center gap-4 flex-grow justify-between px-4">
-        <LabeledValue label={`RESOURCE`}>
-          <p>{getBlockTypeName(motherlodeInfo.motherlodeData.motherlodeResource)}</p>
-        </LabeledValue>
-        <LabeledValue label={`SIZE`}>
-          <p>{MotherlodeSizeNames[motherlodeInfo.motherlodeData.size ?? 0]}</p>
-        </LabeledValue>
-        <LabeledValue label={`COORD`}>
-          <p className=" whitespace-nowrap">
-            [{motherlodeInfo.position.x}, {motherlodeInfo.position.y}]
-          </p>
-        </LabeledValue>
+    <Button
+      className="row-span-1 flex text-xs bg-base-100 p-2 flex-nowrap border-secondary"
+      onClick={async () => {
+        const mapOpen = components.MapOpen.get(undefined, {
+          value: false,
+        }).value;
+
+        if (!mapOpen) {
+          const { transitionToScene } = primodium.api().scene;
+
+          await transitionToScene(Scenes.Asteroid, Scenes.Starmap);
+          components.MapOpen.set({ value: true });
+        }
+
+        const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
+
+        components.Send.setDestination(motherlodeInfo.entity);
+        components.SelectedRock.set({ value: motherlodeInfo.entity });
+
+        pan({
+          x: motherlodeInfo.position.x,
+          y: motherlodeInfo.position.y,
+        });
+
+        zoomTo(2);
+      }}
+    >
+      <img src={motherlodeInfo.imageUri} className=" w-9 h-9 bg-neutral" />
+      <div className="flex flex-col h-fit text-xs gap-1">
+        <div className="flex gap-1 items-center justify-center">
+          <p>{sizeName}</p>
+          <IconLabel imageUri={ResourceImage.get(resource) ?? ""} tooltipText={getBlockTypeName(resource)} />
+        </div>
+        <p className="whitespace-nowrap font-medium text-white/50">
+          [{motherlodeInfo.position.x},{motherlodeInfo.position.y}]
+        </p>
       </div>
-
-      <Button
-        className="btn-secondary btn-sm btn-square flex"
-        onClick={async () => {
-          const mapOpen = components.MapOpen.get(undefined, {
-            value: false,
-          }).value;
-
-          if (!mapOpen) {
-            const { transitionToScene } = primodium.api().scene;
-
-            await transitionToScene(Scenes.Asteroid, Scenes.Starmap);
-            components.MapOpen.set({ value: true });
-          }
-
-          const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
-
-          components.Send.setDestination(motherlodeInfo.entity);
-
-          pan({
-            x: motherlodeInfo.position.x,
-            y: motherlodeInfo.position.y,
-          });
-
-          zoomTo(2);
-        }}
-      >
-        <FaCrosshairs />
-      </Button>
-    </SecondaryCard>
+    </Button>
   );
 };
 
@@ -84,18 +80,24 @@ export const OwnedMotherlodes: React.FC = () => {
     HasValue(components.RockType, { value: ERock.Motherlode }),
   ];
 
-  const motherlodes = useEntityQuery(query);
+  const motherlodes = useEntityQuery(query).sort((a, b) => {
+    const aMotherlode = getSpaceRockInfo(a);
+    const bMotherlode = getSpaceRockInfo(b);
+    return (bMotherlode.motherlodeData.size ?? 0) - (aMotherlode.motherlodeData.size ?? 0);
+  });
 
   return (
     <>
       {motherlodes.length === 0 && (
         <SecondaryCard className="w-full h-full flex text-xs items-center justify-center font-bold">
-          <p className="opacity-50">NO OWNED MOTHERLODES</p>
+          <p className="opacity-50 uppercase">you control no MOTHERLODES</p>
         </SecondaryCard>
       )}
-      {motherlodes.map((entity) => {
-        return <Motherlode key={entity} motherlodeId={entity} />;
-      })}
+      <div className="grid grid-cols-2 gap-1">
+        {motherlodes.map((entity) => {
+          return <Motherlode key={entity} motherlodeId={entity} />;
+        })}
+      </div>
     </>
   );
 };

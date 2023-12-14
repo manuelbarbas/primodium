@@ -31,7 +31,11 @@ export const BlockNumber = createExtendedComponent(
     id: "BlockNumber",
   }
 );
+
+export const Time = createExtendedBigIntComponent(world, { id: "Time" });
 export const Account = createExtendedEntityComponent(world, { id: "Account" });
+export const SelectedRock = createExtendedEntityComponent(world, { id: "SelectedRock" });
+export const ActiveRock = createExtendedEntityComponent(world, { id: "ActiveAsteroid" });
 export const GameReady = createExtendedBoolComponent(world, { id: "GameReady" });
 
 // Todo: extend this with relevant tx data
@@ -42,6 +46,7 @@ export const CurrentTransaction = createExtendedBoolComponent(world, { id: "Curr
 /* -------------------------------------------------------------------------- */
 export const SelectedTile = createExtendedCoordComponent(world, { id: "SelectedTile" });
 export const HoverTile = createExtendedCoordComponent(world, { id: "HoverTile" });
+export const HoverEntity = createExtendedEntityComponent(world, { id: "HoverEntity" });
 export const SelectedBuilding = createExtendedComponent(world, { value: Type.Entity }, { id: "SelectedBuilding" });
 export const SelectedAction = createExtendedNumberComponent(world, {
   id: "SelectedAction",
@@ -148,15 +153,19 @@ export default {
 
   /* ------------------------------ Chain State ------------------------------- */
   BlockNumber,
+  Time,
+  ActiveRock,
   Account,
   GameReady,
   CurrentTransaction,
 
   /* ---------------------------------- Input --------------------------------- */
   SelectedTile,
+  HoverEntity,
   HoverTile,
   SelectedBuilding,
   SelectedAction,
+  SelectedRock,
   MapOpen,
 
   /* ---------------------------------- Units --------------------------------- */

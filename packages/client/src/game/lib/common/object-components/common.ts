@@ -7,27 +7,28 @@ import {
   defineComponentSystem,
   defineEnterSystem,
   defineExitSystem,
+  defineRxSystem,
   defineUpdateSystem,
   namespaceWorld,
 } from "@latticexyz/recs";
 import { Coord, uuid } from "@latticexyz/utils";
 import { GameObjectComponent, GameObjectTypes, Scene } from "engine/types";
+import { Observable } from "rxjs";
 import { world } from "src/network/world";
 
 type GameObjectInstances = {
   [K in keyof GameObjectTypes]: InstanceType<GameObjectTypes[K]>;
 };
 
-type SystemCallback<T extends keyof GameObjectTypes> = (
+type SystemCallback<T extends keyof GameObjectTypes, S extends Schema = Schema> = (
   gameObject: InstanceType<GameObjectTypes[T]>,
-  update: ComponentUpdate<Schema>,
+  update: ComponentUpdate<S>,
   systemId: string //manage callback lifecycle
 ) => void;
 
-type ComponentSystemMap = Map<
-  Component<Schema, Metadata, undefined>,
-  Map<string, (update: ComponentUpdate<Schema>) => void>
->;
+type ComponentSystemMap = Map<Component<Schema, Metadata>, Map<string, (update: ComponentUpdate<Schema>) => void>>;
+
+type ComponentUpdateMap = Map<Component<Schema, Metadata>, ComponentUpdate<Schema>>;
 
 type QuerySystemMap = Map<QueryFragment[], Map<string, (update: ComponentUpdate<Schema>) => void>>;
 
@@ -49,7 +50,8 @@ export const ObjectPosition = <T extends keyof GameObjectTypes>(
   depth?: number
 ): GameObjectComponent<T> => {
   return {
-    id: "position",
+    id: uuid(),
+    modifiesPosition: true,
     once: (gameObject) => {
       gameObject.x = coord.x;
       gameObject.y = coord.y;
@@ -89,7 +91,8 @@ export const OnClick = <T extends keyof GameObjectTypes>(
 };
 
 export const OnHover = <T extends keyof GameObjectTypes>(
-  callback: (gameObject?: GameObjectInstances[T]) => void
+  callback: (gameObject?: GameObjectInstances[T]) => void,
+  leaveCallback?: (gameObject?: GameObjectInstances[T]) => void
 ): GameObjectComponent<T> => {
   return {
     id: uuid(),
@@ -98,6 +101,12 @@ export const OnHover = <T extends keyof GameObjectTypes>(
       gameObject.on("pointerover", () => {
         callback(gameObject as GameObjectInstances[T]);
       });
+
+      if (leaveCallback) {
+        gameObject.on("pointerout", () => {
+          leaveCallback(gameObject as GameObjectInstances[T]);
+        });
+      }
     },
   };
 };
@@ -123,16 +132,16 @@ export const Tween = <T extends keyof GameObjectTypes>(
 };
 
 const componentMap: ComponentSystemMap = new Map();
+const componentUpdateMap: ComponentUpdateMap = new Map();
 export const OnComponentSystem = <T extends keyof GameObjectTypes, S extends Schema>(
-  component: Component<S, Metadata, undefined>,
-  callback: SystemCallback<T>,
+  component: Component<S, Metadata>,
+  callback: SystemCallback<T, S>,
   options?: { runOnInit?: boolean }
 ): GameObjectComponent<T> => {
   const id = uuid();
 
   return {
     id,
-
     once: (gameObject) => {
       if (!componentMap.has(component)) {
         componentMap.set(component, new Map());
@@ -141,12 +150,16 @@ export const OnComponentSystem = <T extends keyof GameObjectTypes, S extends Sch
           gameWorld,
           component,
           (update) => {
+            componentUpdateMap.set(component, update);
             const fnMap = componentMap.get(component);
 
             if (!fnMap) return;
 
+            //prevent infinite loops if functions themselves modify fn list
+            const staticFnList = Array.from(fnMap.values());
+
             //run all functions for component
-            for (const fn of fnMap.values()) {
+            for (const fn of staticFnList) {
               fn(update);
             }
           },
@@ -155,7 +168,10 @@ export const OnComponentSystem = <T extends keyof GameObjectTypes, S extends Sch
       }
 
       //subscribe to component updates
-      componentMap.get(component)?.set(id, (update) => callback(gameObject, update, id));
+      componentMap.get(component)?.set(id, (update) => callback(gameObject, update as ComponentUpdate<S>, id));
+      //send initial update if it missed it
+      if (componentUpdateMap.has(component))
+        callback(gameObject, componentUpdateMap.get(component)! as ComponentUpdate<S>, id);
     },
     exit: () => {
       //unsub from component updates
@@ -186,8 +202,11 @@ export const OnEnterSystem = <T extends keyof GameObjectTypes>(
 
             if (!fnMap) return;
 
+            //prevent infinite loops if functions themselves modify fn list
+            const staticFnList = Array.from(fnMap.values());
+
             //run all functions for component
-            for (const fn of fnMap.values()) {
+            for (const fn of staticFnList) {
               fn(update);
             }
           },
@@ -226,8 +245,11 @@ export const OnUpdateSystem = <T extends keyof GameObjectTypes>(
 
             if (!fnMap) return;
 
+            //prevent infinite loops if functions themselves modify fn list
+            const staticFnList = Array.from(fnMap.values());
+
             //run all functions for component
-            for (const fn of fnMap.values()) {
+            for (const fn of staticFnList) {
               fn(update);
             }
           },
@@ -267,8 +289,11 @@ export const OnExitSystem = <T extends keyof GameObjectTypes>(
 
             if (!fnMap) return;
 
+            //prevent infinite loops if functions themselves modify fn list
+            const staticFnList = Array.from(fnMap.values());
+
             //run all functions for component
-            for (const fn of fnMap.values()) {
+            for (const fn of staticFnList) {
               fn(update);
             }
           },
@@ -282,6 +307,71 @@ export const OnExitSystem = <T extends keyof GameObjectTypes>(
     exit: () => {
       //unsub from component updates
       exitMap.get(query)?.delete(id);
+    },
+  };
+};
+
+type RxCallback<T extends keyof GameObjectTypes, E = unknown> = (
+  gameObject: InstanceType<GameObjectTypes[T]>,
+  update: E,
+  systemId: string //manage callback lifecycle
+) => void;
+
+type RxSystemMap = Map<Observable<unknown>, Map<string, (update: unknown) => void>>;
+
+const observableMap: RxSystemMap = new Map();
+export const OnRxjsSystem = <T, GO extends keyof GameObjectTypes>(
+  observable$: Observable<T>,
+  callback: RxCallback<GO, T>
+): GameObjectComponent<GO> => {
+  const id = uuid();
+  return {
+    id,
+    once: (gameObject) => {
+      if (!observableMap.has(observable$)) {
+        observableMap.set(observable$, new Map());
+
+        defineRxSystem(gameWorld, observable$, (value) => {
+          const fnMap = observableMap.get(observable$);
+
+          if (!fnMap) return;
+
+          //prevent infinite loops if functions themselves modify fn list
+          const staticFnList = Array.from(fnMap.values());
+
+          for (const fn of staticFnList) {
+            fn(value);
+          }
+        });
+      }
+      observableMap.get(observable$)?.set(id, (update) => {
+        callback(gameObject, update as T, id);
+      });
+    },
+    exit: () => {
+      observableMap.get(observable$)?.delete(id);
+    },
+  };
+};
+
+export const OnOnce = <T extends keyof GameObjectTypes>(
+  callback: (gameObject: InstanceType<GameObjectTypes[T]>) => void
+): GameObjectComponent<T> => {
+  return {
+    id: uuid(),
+    once: (gameObject) => {
+      callback(gameObject as InstanceType<GameObjectTypes[T]>);
+    },
+  };
+};
+
+export const OnNow = <T extends keyof GameObjectTypes>(
+  callback: (gameObject: InstanceType<GameObjectTypes[T]>) => void
+): GameObjectComponent<T> => {
+  return {
+    id: uuid(),
+    now: (gameObject) => {
+      callback(gameObject as InstanceType<GameObjectTypes[T]>);
     },
   };
 };

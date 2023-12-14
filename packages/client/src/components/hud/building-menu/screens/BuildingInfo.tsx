@@ -4,9 +4,10 @@ import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useBuildingInfo } from "src/hooks/useBuildingInfo";
-import { useMud } from "src/hooks/useMud";
+import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
+import { Hex } from "viem";
 
 const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (
@@ -18,7 +19,7 @@ const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ lab
 };
 
 export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
-  const playerEntity = useMud().network.playerEntity;
+  const spaceRock = components.Position.useWithKeys({ entity: building as Hex })?.parent as Entity | undefined;
   const buildingInfo = useBuildingInfo(building);
   if (!buildingInfo) return null;
   const {
@@ -34,11 +35,11 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
   } = buildingInfo;
 
   return (
-    <Navigator.Screen title="BuildingInfo" className="w-full">
+    <Navigator.Screen title="BuildingInfo" className="w-full gap-1">
       <DataLabel label="building type">
         <b>{getBlockTypeName(buildingType as Entity)}</b>
       </DataLabel>
-      <div className="grid grid-cols-3 w-full">
+      <div className="grid grid-cols-3 w-full gap-1">
         <DataLabel label="level">
           <b>{level.toString()}</b>
         </DataLabel>
@@ -52,7 +53,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
         </DataLabel>
       </div>
       {(production.length !== 0 || upgrade?.production.length !== 0) && (
-        <div className="grid grid-cols-2 w-full">
+        <div className="grid grid-cols-2 w-full gap-1">
           <DataLabel label="PRODUCTION">
             {!production.length ? (
               <b>N/A</b>
@@ -63,7 +64,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     name={getBlockTypeName(resource)}
                     image={ResourceImage.get(resource) ?? ""}
                     resource={resource}
-                    playerEntity={playerEntity}
+                    spaceRock={spaceRock}
                     amount={amount}
                     resourceType={type}
                     fractionDigits={3}
@@ -82,7 +83,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     name={getBlockTypeName(resource)}
                     image={ResourceImage.get(resource) ?? ""}
                     resource={resource}
-                    playerEntity={playerEntity}
+                    spaceRock={spaceRock}
                     amount={amount}
                     resourceType={type}
                     fractionDigits={3}
@@ -94,7 +95,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
         </div>
       )}
       {(requiredDependencies.length !== 0 || (!!upgrade && upgrade.requiredDependencies.length !== 0)) && (
-        <div className="grid grid-cols-2 w-full ">
+        <div className="grid grid-cols-2 w-full gap-1 ">
           <DataLabel label="resource usage">
             {!requiredDependencies.length ? (
               <b>N/A</b>
@@ -105,7 +106,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     name={getBlockTypeName(resource)}
                     image={ResourceImage.get(resource) ?? ""}
                     resource={resource}
-                    playerEntity={playerEntity}
+                    spaceRock={spaceRock}
                     amount={amount}
                     resourceType={type}
                     fractionDigits={3}
@@ -125,7 +126,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     name={getBlockTypeName(resource)}
                     image={ResourceImage.get(resource) ?? ""}
                     resource={resource}
-                    playerEntity={playerEntity}
+                    spaceRock={spaceRock}
                     amount={amount}
                     resourceType={type}
                   />
@@ -136,7 +137,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
         </div>
       )}
       {unitProductionMultiplier !== undefined && (
-        <div className="grid grid-cols-2 w-full ">
+        <div className="grid grid-cols-2 w-full gap-1 ">
           <DataLabel label="unit prod speed">
             <b>x{(unitProductionMultiplier / RESOURCE_SCALE).toString()}</b>
           </DataLabel>
@@ -150,7 +151,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
         </div>
       )}
       {storages && storages.length !== 0 && (
-        <div className="grid grid-cols-1 w-full">
+        <div className="grid grid-cols-1 w-full gap-1">
           <DataLabel label="storage">
             {storages.map((storage) => {
               return (
@@ -158,7 +159,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                   <ResourceIconTooltip
                     fractionDigits={3}
                     name={getBlockTypeName(storage.resource)}
-                    playerEntity={playerEntity}
+                    spaceRock={spaceRock}
                     image={ResourceImage.get(storage.resource) ?? ""}
                     resource={storage.resource}
                     amount={storage.amount}
@@ -180,7 +181,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     <ResourceIconTooltip
                       fractionDigits={3}
                       name={getBlockTypeName(storage.resource)}
-                      playerEntity={playerEntity}
+                      spaceRock={spaceRock}
                       image={ResourceImage.get(storage.resource) ?? ""}
                       resource={storage.resource}
                       amount={storage.amount}

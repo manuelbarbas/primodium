@@ -1,5 +1,5 @@
 {
-  "ASTEROID_MAP": {
+  "MAIN": {
     "files": [
       {
         "type": "image",
@@ -43,6 +43,11 @@
         "atlasURL": "/assets/sprites/atlas.json"
       },
       {
+        "type": "audioAtlas",
+        "key": "audio-atlas",
+        "jsonURL": "/assets/audio/atlas.json"
+      },
+      {
         "type": "image",
         "key": "fog",
         "url": "/assets/tilesets/fog.png"
@@ -56,6 +61,12 @@
         "type": "image",
         "key": "resource",
         "url": "/assets/tilesets/resource.png"
+      },
+      {
+        "type": "bitmapFont",
+        "key": "teletactile",
+        "textureURL": "/assets/fonts/bitmap/teletactile/teletactile.png",
+        "fontDataURL": "/assets/fonts/bitmap/teletactile/teletactile.xml"
       }
     ]
   }

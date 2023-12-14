@@ -2,13 +2,14 @@ import { removeAllTweens } from "@latticexyz/phaserx";
 import { PixelCoord } from "@latticexyz/phaserx/src/types";
 import { observable, runInAction } from "mobx";
 
-import { isRectangle, isSprite, isGraphics } from "../util/guards";
+import { isRectangle, isSprite, isGraphics, isBitmapText } from "../util/guards";
 import { EmbodiedEntity, GameObject, GameObjectComponent, GameObjectFunction, GameObjectTypes } from "../../types";
 
 export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
   id: string,
   group: Phaser.GameObjects.Group,
   type: Type,
+  ignoreCulling = false,
   currentCameraFilter = 0
 ): EmbodiedEntity<Type> {
   const position: PixelCoord = observable({ x: 0, y: 0 });
@@ -46,17 +47,18 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
   /**
    * Syncronizes updates to game object positions to the EmbodiedEntity's position
    */
-  function trackPositionUpdates(func: GameObjectFunction<Type>): GameObjectFunction<Type> {
-    if (!modifiesPosition(func)) return func;
+  // function trackPositionUpdates(func: GameObjectFunction<Type>): GameObjectFunction<Type> {
+  // return func;
+  // if (!modifiesPosition(func)) return func;
 
-    return (gameObject, time, delta) => {
-      func(gameObject, time, delta);
-      runInAction(() => {
-        position.x = gameObject.x;
-        position.y = gameObject.y;
-      });
-    };
-  }
+  // return (gameObject, time, delta) => {
+  //   func(gameObject, time, delta);
+  //   runInAction(() => {
+  //     position.x = gameObject.x;
+  //     position.y = gameObject.y;
+  //   });
+  // };
+  // }
 
   /**
    * Stores and executes the component.
@@ -65,24 +67,33 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
    * Now is executed first and awaited, before Once is executed.
    * @param component: GameObjectComponent definition, including id, and optional functions for now, once and update
    */
-  async function setComponent({ id, now, once, update, exit }: GameObjectComponent<Type>) {
+  async function setComponent({
+    id,
+    modifiesPosition: _modifiesPosition = false,
+    now,
+    once,
+    update,
+    exit,
+  }: GameObjectComponent<Type>) {
     // Handle position update when setting the component
-    const newPosition = once && modifiesPosition(once);
-    if (newPosition) {
-      runInAction(() => {
-        position.x = newPosition.x ?? position.x;
-        position.y = newPosition.y ?? position.y;
-      });
+    if (_modifiesPosition) {
+      const newPosition = once && modifiesPosition(once);
+      if (newPosition) {
+        runInAction(() => {
+          position.x = newPosition.x ?? position.x;
+          position.y = newPosition.y ?? position.y;
+        });
+      }
     }
 
     // Store functions
-    once && onOnce.set(id, trackPositionUpdates(once));
-    update && onUpdate.set(id, trackPositionUpdates(update));
-    exit && onExit.set(id, trackPositionUpdates(exit));
+    once && onOnce.set(id, once);
+    update && onUpdate.set(id, update);
+    exit && onExit.set(id, exit);
 
     // Execute functions
     if (activeGameObject && now) {
-      await trackPositionUpdates(now)(activeGameObject, 0, 0);
+      await now(activeGameObject, 0, 0);
     }
 
     if (activeGameObject && once) once(activeGameObject, 0, 0);
@@ -95,6 +106,13 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
   function removeComponent(id: string, stop?: boolean) {
     // Execute exit functions
     if (activeGameObject) {
+      if (onExit.has(id)) {
+        onExit.get(id)?.(activeGameObject, 0, 0);
+        onOnce.delete(id);
+        onUpdate.delete(id);
+        onExit.delete(id);
+        return;
+      }
       executeGameObjectFunctions(activeGameObject, onExit.values());
     }
 
@@ -121,7 +139,7 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
       if (isSprite(gameObject, type)) gameObject.stop();
       removeAllTweens(gameObject);
     }
-    gameObject.setDepth(10);
+    gameObject.setDepth(0);
     gameObject.cameraFilter = cameraFilter.current;
     gameObject.resetPipeline(true);
     gameObject.setScale(1, 1);
@@ -177,10 +195,13 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     gameObject.setActive(true);
     gameObject.setVisible(true);
     gameObject.setData("objectPoolId", id);
+
     activeGameObject = gameObject;
   }
 
-  function despawn() {
+  function despawn(force = false) {
+    if (ignoreCulling && !force) return;
+
     if (activeGameObject) {
       // Deregister the update handler
       activeGameObject.scene.events.off("update", handleUpdate);
@@ -198,6 +219,12 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     setComponents,
     hasComponent,
     removeComponent,
+    reset: (stop?: boolean) => {
+      if (activeGameObject) {
+        reset(activeGameObject, stop);
+        executeGameObjectFunctions(activeGameObject, onOnce.values());
+      }
+    },
     spawn,
     despawn,
     position,

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
+import { IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
 
 import { ERock, EUnit } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
@@ -22,6 +22,8 @@ library LibUnit {
    * @notice Checks if the unit exists and if the building can produce the specified unit.
    */
   function checkTrainUnitsRequirements(bytes32 buildingEntity, EUnit unit) internal view {
+    require(IsActive.get(buildingEntity), "[TrainUnitsSystem] Can not train units using an in active building");
+
     // Ensure the unit is valid (within the defined range of unit types).
     require(unit > EUnit.NULL && unit < EUnit.LENGTH, "[TrainUnitsSystem] Unit does not exist");
 
@@ -53,23 +55,23 @@ library LibUnit {
   }
 
   /// @notice Claim units from all player's buildings
-  /// @param playerEntity Entity ID of the player
-  function claimUnits(bytes32 playerEntity) internal {
+  /// @param spaceRockEntity Entity ID of the player
+  function claimUnits(bytes32 spaceRockEntity) internal {
     // get all player buildings that can produce units
-    bytes32[] memory buildings = UnitFactorySet.getAll(playerEntity);
+    bytes32[] memory buildings = UnitFactorySet.getAll(spaceRockEntity);
     for (uint256 i = 0; i < buildings.length; i++) {
       bytes32 building = buildings[i];
-      claimBuildingUnits(playerEntity, building);
+      claimBuildingUnits(building);
     }
   }
 
   /// @notice Claim units for a single building
-  /// @param playerEntity Entity ID of the player
   /// @param building Entity ID of the building
-  function claimBuildingUnits(bytes32 playerEntity, bytes32 building) internal {
+  function claimBuildingUnits(bytes32 building) internal {
     uint256 startTime = LastClaimedAt.get(building) - ClaimOffset.get(building);
     LastClaimedAt.set(building, block.timestamp);
-
+    bytes32 playerEntity = OwnedBy.get(OwnedBy.get(building));
+    require(Spawned.get(playerEntity), "[ClaimBuildingUnits]: Owner does not exist");
     bool stillClaiming = !UnitProductionQueue.isEmpty(building);
     while (stillClaiming) {
       UnitProductionQueueData memory item = UnitProductionQueue.peek(building);
@@ -120,19 +122,19 @@ library LibUnit {
 
   /**
    * @dev Updates the stored utility resources based on the addition or removal of units.
-   * @param playerEntity The identifier of the player.
+   * @param spaceRockEntity The identifier of the player.
    * @param unitType The type of unit.
    * @param count The number of units being added or removed.
    * @param add A boolean indicating whether units are being added (true) or removed (false).
    */
   function updateStoredUtilities(
-    bytes32 playerEntity,
+    bytes32 spaceRockEntity,
     bytes32 unitType,
     uint256 count,
     bool add
   ) internal {
     if (count == 0) return;
-
+    bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
     uint256 unitLevel = UnitLevel.get(playerEntity, unitType);
 
     P_RequiredResourcesData memory resources = P_RequiredResources.get(unitType, unitLevel);
@@ -140,17 +142,17 @@ library LibUnit {
       uint8 resource = resources.resources[i];
       if (!P_IsUtility.get(resource)) continue;
       uint256 requiredAmount = resources.amounts[i] * count;
-      uint256 currentAmount = ResourceCount.get(playerEntity, resource);
+      uint256 currentAmount = ResourceCount.get(spaceRockEntity, resource);
 
       if (add) {
         require(currentAmount >= requiredAmount, "[LibUnit] Not enough utility resources");
-        ResourceCount.set(playerEntity, resource, currentAmount - requiredAmount);
+        ResourceCount.set(spaceRockEntity, resource, currentAmount - requiredAmount);
       } else {
         require(
-          currentAmount + requiredAmount <= MaxResourceCount.get(playerEntity, resource),
+          currentAmount + requiredAmount <= MaxResourceCount.get(spaceRockEntity, resource),
           "[LibUnit] Can't store more utility resources"
         );
-        ResourceCount.set(playerEntity, resource, currentAmount + requiredAmount);
+        ResourceCount.set(spaceRockEntity, resource, currentAmount + requiredAmount);
       }
     }
   }
@@ -178,9 +180,9 @@ library LibUnit {
     uint256 productionRate = P_MiningRate.get(unitType, level);
     if (productionRate == 0) return;
     uint8 resource = (Motherlode.getMotherlodeType(rockEntity));
-    uint8 size = Motherlode.getSize(rockEntity);
-    uint256 prevProductionRate = ProductionRate.get(playerEntity, resource);
-    ProductionRate.set(playerEntity, resource, prevProductionRate + (productionRate * unitCount * size));
+    uint256 prevProductionRate = ProductionRate.get(rockEntity, resource);
+    ProductionRate.set(rockEntity, resource, prevProductionRate + (productionRate * unitCount));
+    ConsumptionRate.set(rockEntity, P_RawResource.get(resource), prevProductionRate + (productionRate * unitCount));
   }
 
   /**
@@ -208,9 +210,9 @@ library LibUnit {
     uint256 productionRate = P_MiningRate.get(unitType, level);
     if (productionRate == 0) return;
     uint8 resource = (Motherlode.getMotherlodeType(rockEntity));
-    uint8 size = Motherlode.getSize(rockEntity);
-    uint256 prevProductionRate = ProductionRate.get(playerEntity, resource);
-    require(prevProductionRate >= productionRate * unitCount * size, "[LibUnit] Production rate cannot be negative");
-    ProductionRate.set(playerEntity, resource, prevProductionRate - (productionRate * unitCount * size));
+    uint256 prevProductionRate = ProductionRate.get(rockEntity, resource);
+    require(prevProductionRate >= productionRate * unitCount, "[LibUnit] Production rate cannot be negative");
+    ProductionRate.set(rockEntity, resource, prevProductionRate - (productionRate * unitCount));
+    ConsumptionRate.set(rockEntity, P_RawResource.get(resource), prevProductionRate - (productionRate * unitCount));
   }
 }

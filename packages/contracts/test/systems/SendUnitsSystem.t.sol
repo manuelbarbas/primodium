@@ -32,7 +32,9 @@ contract SendUnitsSystemTest is PrimodiumTest {
     unitTypes[0] = unitPrototype;
     P_UnitPrototypes.set(unitTypes);
     BuildingType.set(building, buildingPrototype);
-    OwnedBy.set(building, player);
+    OwnedBy.set(building, origin);
+    OwnedBy.set(origin, player);
+    Spawned.set(player, true);
   }
 
   function prepareTestMovementRules() public {
@@ -42,12 +44,12 @@ contract SendUnitsSystemTest is PrimodiumTest {
     Position.set(origin, originPosition);
     Position.set(destination, destinationPosition);
     ReversePosition.set(destinationPosition.x, destinationPosition.y, destination);
-    ResourceCount.set(player, U_MaxMoves, 10);
+    ResourceCount.set(origin, U_MaxMoves, 10);
   }
 
   function testMovementRulesNotEnoughMoves() public {
     prepareTestMovementRules();
-    ResourceCount.set(player, U_MaxMoves, 0);
+    ResourceCount.set(origin, U_MaxMoves, 0);
     vm.expectRevert(bytes("[SendUnits] Reached max move count"));
     world.sendUnits(unitCounts, ESendType.Reinforce, originPosition, destinationPosition, to);
   }
@@ -174,7 +176,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     RockType.set(destination, uint8(ERock.Motherlode));
     ReversePosition.set(originPosition.x, originPosition.y, origin);
     ReversePosition.set(destinationPosition.x, destinationPosition.y, destination);
-    ResourceCount.set(player, U_MaxMoves, 10);
+    ResourceCount.set(origin, U_MaxMoves, 10);
     OwnedBy.set(origin, player);
   }
 
@@ -429,7 +431,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     assertEq(arrival, expectedArrival);
   }
 
-  function testClaimUnitsHook() public {
+  function testFailClaimUnitsHook() public {
     setupValidInvade();
     OwnedBy.set(destination, to);
     RockType.set(destination, uint8(ERock.Asteroid));
@@ -444,9 +446,9 @@ contract SendUnitsSystemTest is PrimodiumTest {
     UnitFactorySet.add(player, building);
 
     Home.setAsteroid(player, origin);
-    MaxResourceCount.set(player, Iron, 1000);
-    ProductionRate.set(player, Iron, 10);
-    LastClaimedAt.set(player, block.timestamp - 10);
+    MaxResourceCount.set(origin, Iron, 1000);
+    ProductionRate.set(origin, Iron, 10);
+    LastClaimedAt.set(origin, block.timestamp - 10);
 
     unitCounts[0] = 1;
     unitData.speed = 100;

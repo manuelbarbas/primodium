@@ -1,16 +1,16 @@
-import { Hex } from "viem";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
 import { SetupNetworkResult } from "src/network/types";
+import { bigintToNumber } from "src/util/bigint";
 import { getBuildingTopLeft } from "src/util/building";
+import { getBlockTypeName } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
+import { Hex } from "viem";
 import { parseReceipt } from "../../analytics/parseReceipt";
-import { getBlockTypeName } from "src/util/common";
-import { bigintToNumber } from "src/util/bigint";
 
 export const moveBuilding = async (network: SetupNetworkResult, building: Entity, coord: Coord) => {
   // todo: find a cleaner way to extract this value in all web3 functions
@@ -27,8 +27,8 @@ export const moveBuilding = async (network: SetupNetworkResult, building: Entity
     () => network.worldContract.write.moveBuilding([{ ...prevPosition, parent: prevPosition.parent as Hex }, position]),
     network,
     {
-      id: hashEntities(TransactionQueueType.Build, building),
-      type: TransactionQueueType.Build,
+      id: hashEntities(TransactionQueueType.Move, building),
+      type: TransactionQueueType.Move,
       metadata: {
         buildingType,
         coord: getBuildingTopLeft(coord, buildingType),

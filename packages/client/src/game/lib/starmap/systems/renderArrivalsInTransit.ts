@@ -7,9 +7,15 @@ import { SetupResult } from "src/network/types";
 import { world } from "src/network/world";
 import { PIRATE_KEY } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
-import { getNow } from "src/util/time";
-import { ObjectPosition, OnComponentSystem, Tween } from "../../common/object-components/common";
+import {
+  ObjectPosition,
+  OnComponentSystem,
+  OnHover,
+  OnOnce,
+  OnRxjsSystem,
+} from "../../common/object-components/common";
 import { Circle, Line } from "../../common/object-components/graphics";
+import { renderEntityOrbitingArrivals } from "./renderArrivalsInOrbit";
 
 export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
   const playerEntity = mud.network.playerEntity;
@@ -18,13 +24,15 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
   const objIndexSuffix = "_arrival";
 
   const render = ({ entity }: ComponentUpdate) => {
-    scene.objectPool.removeGroup(entity + objIndexSuffix);
     const arrival = components.Arrival.getEntity(entity);
 
     if (!arrival) return;
 
+    scene.objectPool.removeGroup(entity + objIndexSuffix);
+
     //don't render if arrival is already in orbit
-    if (arrival.arrivalTime < getNow()) return;
+    const now = components.Time.get()?.value ?? 0n;
+    if (arrival.arrivalTime < now) return;
 
     const origin = components.Position.get(arrival.origin);
     const destination = components.Position.get(arrival.destination);
@@ -44,11 +52,12 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
 
     const sendTrajectory = scene.objectPool.getGroup(entity + objIndexSuffix);
 
-    const trajectory = sendTrajectory.add("Graphics");
+    const trajectory = sendTrajectory.add("Graphics", true);
     trajectory.setComponents([
       ObjectPosition(originPixelCoord, DepthLayers.Marker),
       Line(destinationPixelCoord, {
-        thickness: 2,
+        id: `${entity}-trajectoryline`,
+        thickness: Math.min(10, 3 / scene.camera.phaserCamera.zoom),
         alpha: 0.25,
         color: 0x00ffff,
       }),
@@ -57,9 +66,33 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
         alpha: 0.5,
         color: 0xff0000,
       }),
+      OnHover(
+        () => {
+          components.HoverEntity.set({ value: entity });
+        },
+        () => {
+          components.HoverEntity.remove();
+        }
+      ),
+      //@ts-ignore
+      OnRxjsSystem(scene.camera.zoom$, (_, zoom) => {
+        let thickness = 3 / zoom;
+        thickness = Math.min(10, thickness);
+
+        trajectory.removeComponent(`${entity}-trajectoryline`);
+
+        trajectory.setComponent(
+          Line(destinationPixelCoord, {
+            id: `${entity}-trajectoryline`,
+            thickness,
+            alpha: 0.25,
+            color: 0x00ffff,
+          })
+        );
+      }),
     ]);
 
-    const fleetIcon = sendTrajectory.add("Graphics");
+    const fleetIcon = sendTrajectory.add("Graphics", true);
     fleetIcon.setComponents([
       ObjectPosition(originPixelCoord, DepthLayers.Marker),
       Circle(7, {
@@ -68,46 +101,30 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
         borderThickness: 1,
         alpha: 0.75,
       }),
-      OnComponentSystem(components.BlockNumber, (gameObject, _, systemId) => {
-        const timeTraveled = getNow() - arrival.sendTime;
+      OnHover(
+        () => {
+          components.HoverEntity.set({ value: entity });
+        },
+        () => {
+          components.HoverEntity.remove();
+        }
+      ),
+      OnOnce((gameObject) => {
+        gameObject.setInteractive(new Phaser.Geom.Rectangle(-32, -32, 64, 64), Phaser.Geom.Rectangle.Contains);
+      }),
+      OnComponentSystem(components.Time, (gameObject, update) => {
+        const now = update.value[0]?.value ?? 0n;
+        const timeTraveled = now - arrival.sendTime;
         const totaltime = arrival.arrivalTime - arrival.sendTime;
 
         const progress = Number(timeTraveled) / Number(totaltime);
 
-        if (progress >= 1) {
-          //remove trajectory
-          scene.objectPool.remove(trajectory.id);
+        if (progress > 1) {
+          //render orbit
+          renderEntityOrbitingArrivals(arrival.destination, playerEntity, scene);
 
-          //remove moving circle
-          fleetIcon.removeComponent("fleet");
-
-          //change to orbit render
-          fleetIcon.setComponents([
-            ObjectPosition(destinationPixelCoord, DepthLayers.Marker),
-            Circle(50, {
-              color: 0x363636,
-              borderThickness: 1,
-              alpha: 0,
-            }),
-            Circle(5, {
-              color: 0x00ffff,
-              borderThickness: 1,
-              alpha: 0.75,
-              position: {
-                x: destinationPixelCoord.x + 50,
-                y: destinationPixelCoord.y,
-              },
-            }),
-            Tween(scene, {
-              angle: 360,
-              duration: 20 * 1000,
-              repeat: -1,
-              ease: "Linear",
-            }),
-          ]);
-
-          //remove system
-          fleetIcon.removeComponent(systemId);
+          //remove transit render
+          scene.objectPool.removeGroup(entity + objIndexSuffix);
 
           return;
         }

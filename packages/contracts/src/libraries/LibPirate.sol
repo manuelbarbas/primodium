@@ -29,7 +29,7 @@ library LibPirate {
       bytes32[] memory units = P_UnitPrototypes.get();
       for (uint8 i = 0; i < units.length; i++) {
         LibUnit.updateStoredUtilities(
-          ownerEntity,
+          asteroidEntity,
           units[i],
           UnitCount.get(ownerEntity, asteroidEntity, units[i]),
           false
@@ -39,10 +39,10 @@ library LibPirate {
     } else {
       Home.setAsteroid(ownerEntity, asteroidEntity);
       uint8 resourceCount = uint8(EResource.LENGTH);
-      LibProduction.increaseResourceProduction(ownerEntity, EResource.U_Housing, 100000000);
+      LibProduction.increaseResourceProduction(asteroidEntity, EResource.U_Housing, 100000000);
       for (uint8 i = 1; i < resourceCount; i++) {
         if (!P_IsUtility.get(i)) {
-          MaxResourceCount.set(ownerEntity, i, 100000000);
+          MaxResourceCount.set(asteroidEntity, i, 100000000);
         }
       }
     }
@@ -62,14 +62,14 @@ library LibPirate {
     for (uint8 i = 0; i < spawnPirateAsteroid.resources.length; i++) {
       uint8 resource = spawnPirateAsteroid.resources[i];
       uint256 amount = spawnPirateAsteroid.resourceAmounts[i];
-      ResourceCount.set(ownerEntity, resource, ResourceCount.get(ownerEntity, resource) + amount);
+      ResourceCount.set(asteroidEntity, resource, ResourceCount.get(asteroidEntity, resource) + amount);
     }
 
     for (uint8 i = 0; i < spawnPirateAsteroid.units.length; i++) {
       bytes32 unit = spawnPirateAsteroid.units[i];
       uint256 amount = spawnPirateAsteroid.unitAmounts[i];
       UnitCount.set(ownerEntity, asteroidEntity, unit, UnitCount.get(ownerEntity, asteroidEntity, unit) + amount);
-      LibUnit.updateStoredUtilities(ownerEntity, unit, amount, true);
+      LibUnit.updateStoredUtilities(asteroidEntity, unit, amount, true);
     }
   }
 }

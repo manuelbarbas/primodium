@@ -22,7 +22,12 @@ contract LibUnitTest is PrimodiumTest {
     super.setUp();
     vm.startPrank(creator);
     player = addressToEntity(worldAddress);
+    Spawned.set(player, true);
+
     BuildingType.set(building, buildingPrototype);
+    OwnedBy.set(Home.getAsteroid(player), player);
+    OwnedBy.set(building, Home.getAsteroid(player));
+    OwnedBy.set(building2, Home.getAsteroid(player));
     BuildingType.set(building2, buildingPrototype);
     P_GameConfigData memory config = P_GameConfig.get();
     config.unitProductionRate = 100;
@@ -52,8 +57,8 @@ contract LibUnitTest is PrimodiumTest {
     Level.set(building2, 1);
     LastClaimedAt.set(building2, block.timestamp);
 
-    UnitFactorySet.add(player, building);
-    UnitFactorySet.add(player, building2);
+    UnitFactorySet.add(Home.getAsteroid(player), building);
+    UnitFactorySet.add(Home.getAsteroid(player), building2);
 
     P_Unit.setTrainingTime(unitPrototype, 0, 1);
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
@@ -61,7 +66,7 @@ contract LibUnitTest is PrimodiumTest {
     UnitProductionQueue.enqueue(building2, item);
 
     vm.warp(block.timestamp + 100);
-    LibUnit.claimUnits(player);
+    LibUnit.claimUnits(Home.getAsteroid(player));
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 200);
   }
 
@@ -73,7 +78,7 @@ contract LibUnitTest is PrimodiumTest {
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
     UnitProductionQueue.enqueue(building, item);
     vm.warp(block.timestamp + 100);
-    LibUnit.claimBuildingUnits(player, building);
+    LibUnit.claimBuildingUnits(building);
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 100);
     assertTrue(UnitProductionQueue.isEmpty(building));
   }
@@ -86,7 +91,7 @@ contract LibUnitTest is PrimodiumTest {
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
     UnitProductionQueue.enqueue(building, item);
     vm.warp(block.timestamp + 25);
-    LibUnit.claimBuildingUnits(player, building);
+    LibUnit.claimBuildingUnits(building);
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 25);
     assertEq(UnitProductionQueue.peek(building).quantity, 75);
     assertFalse(UnitProductionQueue.isEmpty(building));
@@ -106,10 +111,10 @@ contract LibUnitTest is PrimodiumTest {
     UnitProductionQueue.enqueue(building, item2);
 
     vm.warp(block.timestamp + 1000);
-    LibUnit.claimBuildingUnits(player, building);
-    assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 100);
-    assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype2), 100);
-    assertTrue(UnitProductionQueue.isEmpty(building));
+    LibUnit.claimBuildingUnits(building);
+    assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 100, "unit count does not match");
+    assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype2), 100, "unit 2 count does not match");
+    assertTrue(UnitProductionQueue.isEmpty(building), "queue should be empty");
   }
 
   function testClaimBuildingUnitsDoublePart() public {
@@ -126,13 +131,13 @@ contract LibUnitTest is PrimodiumTest {
     UnitProductionQueue.enqueue(building, item2);
 
     vm.warp(block.timestamp + 25);
-    LibUnit.claimBuildingUnits(player, building);
+    LibUnit.claimBuildingUnits(building);
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 25);
     assertEq(UnitProductionQueue.peek(building).quantity, 75);
     assertFalse(UnitProductionQueue.isEmpty(building));
 
     vm.warp(block.timestamp + 76);
-    LibUnit.claimBuildingUnits(player, building);
+    LibUnit.claimBuildingUnits(building);
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 100);
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype2), 1);
     assertEq(toString(UnitProductionQueue.peek(building).unitId), toString(unitPrototype2));
@@ -140,7 +145,7 @@ contract LibUnitTest is PrimodiumTest {
     assertFalse(UnitProductionQueue.isEmpty(building));
 
     vm.warp(block.timestamp + 100);
-    LibUnit.claimBuildingUnits(player, building);
+    LibUnit.claimBuildingUnits(building);
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 100);
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype2), 100);
     assertTrue(UnitProductionQueue.isEmpty(building));
@@ -156,22 +161,22 @@ contract LibUnitTest is PrimodiumTest {
     UnitProductionQueue.enqueue(building, item);
 
     vm.warp(block.timestamp + 25);
-    LibUnit.claimBuildingUnits(player, building);
+    LibUnit.claimBuildingUnits(building);
     assertEq(ClaimOffset.get(building), 25, "offset 1 should be 25");
     assertEq(UnitProductionQueue.peek(building).quantity, 100, "queue should have 100 units");
 
     vm.warp(block.timestamp + 50);
-    LibUnit.claimBuildingUnits(player, building);
+    LibUnit.claimBuildingUnits(building);
     assertEq(ClaimOffset.get(building), 75, "offset 2 should be 75");
     assertEq(UnitProductionQueue.peek(building).quantity, 100, "queue should have 100 units");
 
     vm.warp(block.timestamp + 50);
-    LibUnit.claimBuildingUnits(player, building);
+    LibUnit.claimBuildingUnits(building);
     assertEq(ClaimOffset.get(building), 25, "offset 3 should be 25");
     assertEq(UnitProductionQueue.peek(building).quantity, 99, "queue should have 99 units");
 
     vm.warp(block.timestamp + 174);
-    LibUnit.claimBuildingUnits(player, building);
+    LibUnit.claimBuildingUnits(building);
     assertEq(ClaimOffset.get(building), 99, "offset 3 should be 25");
     assertEq(UnitProductionQueue.peek(building).quantity, 98, "queue should have 98 units");
   }
@@ -186,17 +191,17 @@ contract LibUnitTest is PrimodiumTest {
     UnitProductionQueue.enqueue(building, item);
 
     vm.warp(block.timestamp + 25);
-    LibUnit.claimBuildingUnits(player, building);
+    LibUnit.claimBuildingUnits(building);
     assertEq(ClaimOffset.get(building), 5, "offset 1 should be 5");
     assertEq(UnitProductionQueue.peek(building).quantity, 8, "queue should have 8 units");
 
     vm.warp(block.timestamp + 50);
-    LibUnit.claimBuildingUnits(player, building);
+    LibUnit.claimBuildingUnits(building);
     assertEq(ClaimOffset.get(building), 5, "offset 2 should be 5");
     assertEq(UnitProductionQueue.peek(building).quantity, 3, "queue should have 3 units");
 
     vm.warp(block.timestamp + 135);
-    LibUnit.claimBuildingUnits(player, building);
+    LibUnit.claimBuildingUnits(building);
     assertEq(ClaimOffset.get(building), 0, "offset 3 should be 0");
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 10);
   }
@@ -212,13 +217,13 @@ contract LibUnitTest is PrimodiumTest {
     UnitProductionQueue.enqueue(building, item);
 
     vm.warp(block.timestamp + 125);
-    LibUnit.claimBuildingUnits(player, building);
+    LibUnit.claimBuildingUnits(building);
     assertEq(ClaimOffset.get(building), 5, "offset 1 should be 5");
     assertEq(UnitProductionQueue.peek(building).quantity, 8, "queue should have 8 units");
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 12);
 
     vm.warp(block.timestamp + 135);
-    LibUnit.claimBuildingUnits(player, building);
+    LibUnit.claimBuildingUnits(building);
     assertEq(ClaimOffset.get(building), 0, "offset 2 should be 0");
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 20);
 
@@ -226,7 +231,7 @@ contract LibUnitTest is PrimodiumTest {
     UnitProductionQueue.enqueue(building, item);
 
     vm.warp(block.timestamp + 203);
-    LibUnit.claimBuildingUnits(player, building);
+    LibUnit.claimBuildingUnits(building);
     assertEq(ClaimOffset.get(building), 0, "offset 2 should be 0");
     assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 40);
     assertTrue(UnitProductionQueue.isEmpty(building));

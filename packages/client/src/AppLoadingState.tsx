@@ -1,15 +1,17 @@
 import { SyncStep } from "@latticexyz/store-sync";
 import { Browser } from "@primodiumxyz/mud-game-tools";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Progress } from "./components/core/Progress";
 import { useMud } from "./hooks";
 import { useInit } from "./hooks/useInit";
+import { components } from "./network/components";
 import { world } from "./network/world";
+import { Account } from "./screens/Account";
+import { Game } from "./screens/Game";
 import { Increment } from "./screens/Increment";
 import { Landing } from "./screens/Landing";
 import { setupCheatcodes } from "./util/cheatcodes";
-import { Game } from "./screens/Game";
-import { components } from "./network/components";
-import { Progress } from "./components/core/Progress";
+import { Statistics } from "./screens/Statistics";
 
 const DEV = import.meta.env.PRI_DEV === "true";
 
@@ -27,7 +29,7 @@ export default function AppLoadingState() {
 
   return (
     <div className="bg-black h-screen">
-      <div className="absolute w-full h-full star-background opacity-50" />
+      <div className="absolute w-full h-full star-background opacity-40" />
       <div className="relative">
         {loadingState.step !== SyncStep.LIVE && (
           <div className="flex items-center justify-center h-screen">
@@ -41,9 +43,9 @@ export default function AppLoadingState() {
                 )}
               </p>
               {loadingState.percentage === 0 ? (
-                <Progress value={100} max={100} className="animate-pulse" />
+                <Progress value={100} max={100} className="animate-pulse w-56" />
               ) : (
-                <Progress value={loadingState.percentage} max={100} />
+                <Progress value={loadingState.percentage} max={100} className="w-56" />
               )}
             </div>
           </div>
@@ -54,6 +56,8 @@ export default function AppLoadingState() {
               <Route path="/" element={<Landing />} />
               <Route path="/game" element={initialized ? <Game /> : <Landing />} />
               <Route path="/increment" element={<Increment />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="/statistics" element={<Statistics />} />
             </Routes>
           </BrowserRouter>
         )}

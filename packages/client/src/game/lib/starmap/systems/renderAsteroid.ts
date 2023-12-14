@@ -1,19 +1,30 @@
 import { Entity, Has, HasValue, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { singletonIndex, world } from "src/network/world";
-import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
+import {
+  ObjectPosition,
+  OnClick,
+  OnComponentSystem,
+  SetValue,
+  Tween,
+  OnRxjsSystem,
+  OnOnce,
+  OnHover,
+} from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
-
 import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
 import { Coord } from "@latticexyz/utils";
 import { ERock } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
-import { clampedIndex } from "src/util/common";
+import { clampedIndex, entityToAddress, getRandomRange } from "src/util/common";
 import { EntityType, RockRelationship } from "src/util/constants";
-import { getNow } from "src/util/time";
-import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 import { getRockRelationship } from "src/util/spacerock";
+import { ObjectText } from "../../common/object-components/text";
+import { initializeMotherlodes } from "../utils/initializeMotherlodes";
+import { throttleTime } from "rxjs";
+import { entityToPlayerName } from "src/util/name";
+import { getLinkedAddress } from "src/util/web2/getLinkedAddress";
 
 export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -39,6 +50,8 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
 
     const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entity);
 
+    const spriteScale = 0.8;
+
     const sharedComponents = [
       ObjectPosition({
         x: coord.x * tileWidth,
@@ -47,13 +60,48 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       SetValue({
         originX: 0.5,
         originY: 0.5,
+        scale: spriteScale,
+      }),
+      Tween(scene, {
+        scale: { from: spriteScale - getRandomRange(0, 0.05), to: spriteScale + getRandomRange(0, 0.05) },
+        ease: "Sine.easeInOut",
+        hold: getRandomRange(0, 1000),
+        duration: 5000, // Duration of one wobble
+        yoyo: true, // Go back to original scale
+        repeat: -1, // Repeat indefinitely
+      }),
+      Tween(scene, {
+        scrollFactorX: { from: 1 - getRandomRange(0, 0.005), to: 1 + getRandomRange(0, 0.005) },
+        ease: "Sine.easeInOut",
+        hold: getRandomRange(0, 1000),
+        duration: 3000, // Duration of one wobble
+        yoyo: true, // Go back to original scale
+        repeat: -1, // Repeat indefinitely
+      }),
+      Tween(scene, {
+        scrollFactorY: { from: 1 - getRandomRange(0, 0.005), to: 1 + getRandomRange(0, 0.005) },
+        ease: "Sine.easeInOut",
+        hold: getRandomRange(0, 1000),
+        duration: 5000, // Duration of one wobble
+        yoyo: true, // Go back to original scale
+        repeat: -1, // Repeat indefinitely
       }),
     ];
+
+    const rotationTween = Tween(scene, {
+      rotation: { from: -getRandomRange(0, Math.PI / 8), to: getRandomRange(0, Math.PI / 8) },
+      // ease: "Sine.easeInOut",
+      hold: getRandomRange(0, 10000),
+      duration: 5 * 1000, // Duration of one wobble
+      yoyo: true, // Go back to original scale
+      repeat: -1, // Repeat indefinitely
+    });
 
     const asteroidObject = asteroidObjectGroup.add("Sprite");
 
     asteroidObject.setComponents([
       ...sharedComponents,
+      rotationTween,
       Texture(
         Assets.SpriteAtlas,
         EntitytoSpriteKey[EntityType.Asteroid][
@@ -68,8 +116,9 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
     const asteroidOutline = asteroidObjectGroup.add("Sprite");
     asteroidOutline.setComponents([
       ...sharedComponents,
-      OnComponentSystem(components.Send, () => {
-        if (components.Send.get()?.destination === entity) {
+      rotationTween,
+      OnComponentSystem(components.SelectedRock, () => {
+        if (components.SelectedRock.get()?.value === entity) {
           if (asteroidOutline.hasComponent(Outline().id)) return;
           asteroidOutline.setComponent(Outline({ thickness: 1.5, color: 0xffa500 }));
           return;
@@ -87,7 +136,16 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity)),
       OnClick(scene, () => {
         components.Send.setDestination(entity);
+        components.SelectedRock.set({ value: entity });
       }),
+      OnHover(
+        () => {
+          components.HoverEntity.set({ value: entity });
+        },
+        () => {
+          components.HoverEntity.remove();
+        }
+      ),
       SetValue({
         depth: DepthLayers.Rock + 1,
       }),
@@ -97,10 +155,11 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
 
     gracePeriod.setComponents([
       ...sharedComponents,
-      OnComponentSystem(components.BlockNumber, (gameObject) => {
+      rotationTween,
+      OnComponentSystem(components.Time, (gameObject) => {
         const player = components.OwnedBy.get(entity)?.value as Entity | undefined;
         const graceTime = components.GracePeriod.get(player)?.value ?? 0n;
-        const time = getNow();
+        const time = components.Time.get()?.value ?? 0n;
 
         if (time >= graceTime) {
           gameObject.alpha = 0;
@@ -110,10 +169,48 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       }),
       Texture(Assets.SpriteAtlas, SpriteKeys.GracePeriod),
       SetValue({
-        scale: 1.1,
         depth: DepthLayers.Marker,
         input: null,
       }),
+    ]);
+
+    const asteroidLabel = asteroidObjectGroup.add("BitmapText");
+
+    asteroidLabel.setComponents([
+      ...sharedComponents,
+      SetValue({
+        originX: 0.5,
+        originY: -3,
+        depth: DepthLayers.Marker,
+      }),
+      ObjectText(entityToPlayerName(ownedBy), {
+        id: "addressLabel",
+        fontSize: Math.max(8, Math.min(24, 16 / scene.camera.phaserCamera.zoom)),
+      }),
+      OnOnce(async (gameObject) => {
+        const linkedAddress = await getLinkedAddress(entityToAddress(ownedBy));
+
+        const name =
+          linkedAddress.ensName ??
+          (linkedAddress.address
+            ? entityToAddress(linkedAddress.address ?? ownedBy, true)
+            : entityToPlayerName(ownedBy));
+
+        gameObject.setText(name);
+      }),
+      OnRxjsSystem(
+        // @ts-ignore
+        scene.camera.zoom$.pipe(throttleTime(10)),
+        (gameObject, zoom) => {
+          const mapOpen = components.MapOpen.get()?.value ?? false;
+
+          if (!mapOpen) return;
+
+          const size = Math.max(8, Math.min(24, 16 / zoom));
+
+          gameObject.setFontSize(size);
+        }
+      ),
     ]);
   };
 

@@ -18,13 +18,14 @@ export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
   const { network } = useMud();
   const playerEntity = network.playerEntity;
   const mainBaseEntity = components.Home.use(playerEntity)?.mainBase as Entity;
+  const homeAsteroid = components.Home.use(playerEntity)?.asteroid as Entity;
   const mainBaseLevel = components.Level.use(mainBaseEntity, {
     value: 1n,
   }).value;
 
   const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = getUpgradeInfo(type, playerEntity);
 
-  const hasEnough = useHasEnoughResources(recipe, playerEntity);
+  const hasEnough = useHasEnoughResources(recipe);
   const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && !isResearched;
 
   let error = "";
@@ -66,7 +67,6 @@ export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
               return (
                 <ResourceIconTooltip
                   key={resource.id}
-                  playerEntity={playerEntity}
                   image={resourceImage}
                   resource={resource.id}
                   name={resourceName}
@@ -83,7 +83,7 @@ export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
           className="btn-sm btn-secondary"
           disabled={!canUpgrade}
           onClick={() => {
-            upgradeUnit(UnitEnumLookup[type], network);
+            upgradeUnit(homeAsteroid, UnitEnumLookup[type], network);
           }}
         >
           Upgrade

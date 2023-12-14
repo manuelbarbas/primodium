@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import { addressToEntity } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
-
+import { Home } from "codegen/index.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 
@@ -29,7 +29,7 @@ contract OnBefore_ClaimUnits is SystemHook {
     // Get the player's entity
     bytes32 playerEntity = addressToEntity(msgSender);
 
-    LibUnit.claimUnits(playerEntity);
+    LibUnit.claimUnits(Home.getAsteroid(playerEntity));
   }
 
   /**

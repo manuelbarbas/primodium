@@ -4,11 +4,11 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import AppLoadingState from "./AppLoadingState";
 import { ampli } from "./ampli";
+import { Progress } from "./components/core/Progress";
 import { MudProvider } from "./hooks/providers/MudProvider";
 import { setup } from "./network/setup";
 import { SetupResult } from "./network/types";
 import { world } from "./network/world";
-import { Progress } from "./components/core/Progress";
 
 const DEV = import.meta.env.PRI_DEV === "true";
 
@@ -52,7 +52,7 @@ export default function App() {
   if (networkLayer === undefined) {
     return (
       <div className="bg-black h-screen">
-        <div className="absolute w-full h-full star-background opacity-50" />
+        <div className="absolute w-full h-full star-background opacity-40" />
         <div className="relative">
           <div className="flex items-center justify-center h-screen">
             <div className="flex flex-col items-center gap-4">
@@ -72,7 +72,7 @@ export default function App() {
         <ToastContainer
           toastClassName={`font-mono text-xs border bg-neutral border-secondary rounded-box drop-shadow-2xl`}
           progressClassName={"bg-accent"}
-          position="top-left"
+          position="top-right"
           autoClose={3000}
           hideProgressBar={false}
           newestOnTop={false}

@@ -15,12 +15,11 @@ export const createFxApi = (scene: Scene) => {
 
     if (!(gameObject instanceof Phaser.GameObjects.Sprite)) return;
 
-    gameObject.clearFX();
     gameObject.postFX?.addGlow(color, thickness, undefined, knockout);
   }
 
   function removeOutline(gameObject: Phaser.GameObjects.Sprite) {
-    gameObject.clearFX();
+    gameObject.postFX.clear();
   }
 
   function emitExplosion(coord: Coord) {

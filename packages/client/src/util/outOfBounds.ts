@@ -8,9 +8,22 @@ export function outOfBounds(coord: Coord, player?: Entity) {
   return coord.x > bounds.maxX || coord.x < bounds.minX || coord.y > bounds.maxY || coord.y < bounds.minY;
 }
 
-export function getPlayerBounds(player: Entity, next?: boolean) {
-  const level = components.Level.get(player, { value: 1n }).value;
+export function getSpaceRockBounds(spaceRock: Entity, next?: boolean) {
+  const level = components.Level.get(spaceRock as Entity, { value: 1n }).value;
+  const asteroidDims = components.P_Asteroid.get();
+  const range = components.Dimensions.getWithKeys({ key: key.ExpansionKey, level: level + (next ? 1n : 0n) });
+  if (!asteroidDims || !range) throw new Error("Asteroid dimensions or range not found");
+  return {
+    minX: Math.floor(asteroidDims.xBounds - range.width) / 2,
+    minY: Math.floor(asteroidDims.yBounds - range.height) / 2,
+    maxX: Math.floor(asteroidDims.xBounds + range.width) / 2 - 1,
+    maxY: Math.floor(asteroidDims.yBounds + range.height) / 2 - 1,
+  };
+}
 
+export function getPlayerBounds(player: Entity, next?: boolean) {
+  const activeAsteroid = components.Home.get(player)?.asteroid;
+  const level = components.Level.get(activeAsteroid as Entity, { value: 1n }).value;
   const asteroidDims = components.P_Asteroid.get();
   const range = components.Dimensions.getWithKeys({ key: key.ExpansionKey, level: level + (next ? 1n : 0n) });
   if (!asteroidDims || !range) throw new Error("Asteroid dimensions or range not found");

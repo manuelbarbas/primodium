@@ -1,4 +1,5 @@
 import { Entity } from "@latticexyz/recs";
+import { expect, test } from "vitest";
 import { getMotherlodeEntity, hashKeyEntity, toHex32 } from "../util/encode";
 
 // Outputs of LibEncode.sol's hashKeyEntity function
@@ -28,14 +29,10 @@ const hashKeyEntityOutputs = {
   ],
 };
 
-// Check with second argument padded to 160 bits (as if address)
-hashKeyEntityOutputs.entities.forEach((example) => {
-  if (hashKeyEntity(toHex32(hashKeyEntityOutputs.key), example.entity) != example.output) {
-    console.log("entity: ", example.entity);
-    console.log("expected:", example.output);
-    console.log("actual:", hashKeyEntity(toHex32(hashKeyEntityOutputs.key), example.entity));
-    throw new Error();
-  }
+test("hashKeyEntityOutputs", () => {
+  hashKeyEntityOutputs.entities.forEach((example) => {
+    expect(hashKeyEntity(toHex32(hashKeyEntityOutputs.key), example.entity)).eq(example.output);
+  });
 });
 
 const motherlodeHashes = [
@@ -66,12 +63,9 @@ const motherlodeHashes = [
   },
 ];
 
-for (const example of motherlodeHashes) {
-  const motherlodeEntity = getMotherlodeEntity(toHex32(example.i) as Entity, example.coord);
-  if (example.motherlodeEntity !== motherlodeEntity) {
-    console.log("i:", example.i);
-    console.log("motherlodeEntity:", example.motherlodeEntity);
-    console.log("getMotherlodeEntity:", motherlodeEntity);
-    throw new Error();
+test("motherlodeHashes", () => {
+  for (const example of motherlodeHashes) {
+    const motherlodeEntity = getMotherlodeEntity(toHex32(example.i) as Entity, example.coord);
+    expect(example.motherlodeEntity).eq(motherlodeEntity);
   }
-}
+});

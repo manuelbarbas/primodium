@@ -32,27 +32,24 @@ export enum EBuilding {
 
   ShieldGenerator,
   Vault,
+  Market,
 }
 
 export enum EResource {
-  Sandstone = 1,
-  Biofilm,
-  Alluvium,
-  Regolith,
-  Bedrock,
-  Water,
-  Lithium,
+  //Raw
+  R_Titanium = 1,
+  R_Platinum,
+  R_Iridium,
+  R_Kimberlite,
+
   Iron,
   Copper,
+  Lithium,
   Sulfur,
   Titanium,
   Iridium,
-  Osmium,
-  Tungsten,
   Kimberlite,
   Platinum,
-  Uraninite,
-  Bolutite,
 
   // Crafted Items
   IronPlate,
@@ -64,6 +61,7 @@ export enum EResource {
   U_Electricity,
   U_Housing,
   U_Vessel,
+  U_Orders,
   U_MaxMoves,
   U_Defense,
   U_Unraidable,
@@ -87,6 +85,7 @@ export enum EUnit {
   AnvilDrone,
   MinutemanMarine,
   TridentMarine,
+  LightningCraft,
 }
 
 export enum ESendType {
@@ -95,9 +94,19 @@ export enum ESendType {
   Raid,
 }
 
+export enum EOrderType {
+  Resource = 1,
+  Unit,
+}
+
 export enum EObjectives {
-  UpgradeMainBase = 1,
+  BuildIronMine = 1,
+  BuildCopperMine,
+  BuildGarage,
   DefeatPirateBase1,
+  BuildWorkshop,
+
+  UpgradeMainBase,
   DefeatPirateBase2,
   DefeatPirateBase3,
   DefeatPirateBase4,
@@ -106,14 +115,17 @@ export enum EObjectives {
   DefeatPirateBase7,
   DefeatPirateBase8,
   DefeatPirateBase9,
+  DefeatPirateBase10,
+  DefeatPirateBase11,
+  DefeatPirateBase12,
+  DefeatPirateBase13,
+  DefeatPirateBase14,
+  DefeatPirateBase15,
+  DefeatPirateBase16,
+  DefeatPirateBase17,
 
-  BuildIronMine,
-  BuildCopperMine,
   BuildLithiumMine,
-  BuildSulfurMine,
   BuildIronPlateFactory,
-  BuildGarage,
-  BuildWorkshop,
   BuildHangar,
   BuildPVCellFactory,
   BuildSolarPanel,
@@ -203,6 +215,7 @@ export const MUDEnums = {
   EObjectives: enumToArray(EObjectives),
   EAllianceInviteMode: enumToArray(EAllianceInviteMode),
   EAllianceRole: enumToArray(EAllianceRole),
+  EOrderType: enumToArray(EOrderType),
 };
 
 function enumToArray(enumObj: object): string[] {

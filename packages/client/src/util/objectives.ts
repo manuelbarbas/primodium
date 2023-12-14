@@ -90,7 +90,7 @@ export function getResourceRequirement(objective: Entity): Requirement[] | undef
   return rawRequiredProduction.resources.map((resource, index) => ({
     id: ResourceEntityLookup[resource as EResource],
     requiredValue: rawRequiredProduction.amounts[index],
-    currentValue: getFullResourceCount(ResourceEntityLookup[resource as EResource], player).producedCount,
+    currentValue: getFullResourceCount(ResourceEntityLookup[resource as EResource]).producedResource,
     scale: RESOURCE_SCALE,
     type: RequirementType.ProducedResources,
   }));
@@ -213,7 +213,7 @@ export function getDestroyedUnitsRequirement(objective: Entity): Requirement[] |
 }
 
 export function getRewardUtilitiesRequirement(objective: Entity, playerEntity: Entity): Requirement[] | undefined {
-  const requiredUtilities = getRewards(objective).reduce((acc, cur, i) => {
+  const requiredUtilities = getRewards(objective).reduce((acc, cur) => {
     if (cur.type !== ResourceType.Utility) return acc;
     const prototype = cur.id as Hex;
     const level = comps.UnitLevel.getWithKeys({ unit: prototype, entity: playerEntity as Hex })?.value ?? 0n;
@@ -230,7 +230,7 @@ export function getRewardUtilitiesRequirement(objective: Entity, playerEntity: E
   return Object.entries(requiredUtilities).map(([id, requiredValue]) => ({
     id: id as Entity,
     requiredValue,
-    currentValue: getFullResourceCount(id as Entity, playerEntity).resourceCount,
+    currentValue: getFullResourceCount(id as Entity).resourceCount,
     scale: 100n,
     type: RequirementType.RewardUtilities,
   }));
@@ -255,7 +255,7 @@ export function getAllRequirements(objective: Entity, playerEntity: Entity): Rec
     [RequirementType.RewardUtilities]: getRewardUtilitiesRequirement(objective, playerEntity),
   };
   return Object.fromEntries(
-    Object.entries(requirements).filter(([_, value]) => value !== undefined && value.length > 0)
+    Object.entries(requirements).filter(([, value]) => value !== undefined && value.length > 0)
   ) as Record<RequirementType, Requirement[]>;
 }
 
@@ -263,7 +263,7 @@ export function getIsObjectiveAvailable(objective: Entity, playerEntity: Entity)
   const requirements = getAllRequirements(objective, playerEntity);
   const mainbaseRequirement = getMainBaseRequirement(objective);
   const objectivesRequirement = getObjectivesRequirement(objective);
-  if (Object.keys(requirements).length == 0) return true;
+  if (Object.keys(requirements).length == 0) return isAllRequirementsMet(mainbaseRequirement);
   return isAllRequirementsMet(mainbaseRequirement) && isAllRequirementsMet(objectivesRequirement);
 }
 
@@ -271,8 +271,8 @@ export function getCanClaimObjective(objective: Entity, playerEntity: Entity) {
   const rewards = getRewards(objective);
   const hasEnoughRewardResources = rewards.every((resource) => {
     if (resource.type !== ResourceType.Resource) return true;
-    const { resourceCount, resourcesToClaim, maxStorage } = getFullResourceCount(resource.id, playerEntity);
-    return resourceCount + resourcesToClaim + resource.amount < maxStorage;
+    const { resourceCount, resourcesToClaim, resourceStorage } = getFullResourceCount(resource.id);
+    return resourceCount + resourcesToClaim + resource.amount < resourceStorage;
   });
   return (
     hasEnoughRewardResources && Object.values(getAllRequirements(objective, playerEntity)).every(isAllRequirementsMet)

@@ -10,3 +10,7 @@ function encode(value: string | number, length: number): Hex {
 export default function encodeBytes32(value: string | number): Hex {
   return encode(value, 32);
 }
+
+export function encodeAddress(value: number | string) {
+  return `address(${encode(value, 20)})` as Hex;
+}

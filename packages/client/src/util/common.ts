@@ -1,5 +1,6 @@
 import { Entity } from "@latticexyz/recs";
-import { Hex, getAddress, isAddress, trim } from "viem";
+import { Coord } from "@latticexyz/utils";
+import { Hex, getAddress, isAddress, pad, size, trim } from "viem";
 import { BlockIdToKey } from "./constants";
 
 export function hasCommonElement<T>(setA: Set<T>, setB: Set<T>) {
@@ -23,6 +24,14 @@ export function clampedIndex(index: number, length: number) {
 
 export const wrap = (index: number, length: number) => {
   return ((index % length) + length) % length;
+};
+
+export const getRandomRange = (min: number, max: number) => {
+  return Math.random() * (max - min) + min;
+};
+
+export const distanceBI = (a: Coord, b: Coord) => {
+  return BigInt(Math.round(Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2))));
 };
 
 export function toRomanNumeral(number: number) {
@@ -60,9 +69,12 @@ function getDecimals(num: number, max = 3) {
   return num.toFixed(digits);
 }
 
-export function formatNumber(num: number | bigint, options?: { fractionDigits?: number; short?: boolean }): string {
+export function formatNumber(
+  num: number | bigint,
+  options?: { fractionDigits?: number; short?: boolean; showZero?: boolean }
+): string {
   const digits = options?.fractionDigits === undefined ? 0 : options.fractionDigits;
-  if (num === 0 || num === 0n) return "--";
+  if (num === 0 || num === 0n) return options?.showZero ? "0" : "--";
 
   const shorten = (n: number): string => {
     const units = ["", "K", "M", "B", "T"];
@@ -105,14 +117,27 @@ export function reverseRecord<T extends PropertyKey, U extends PropertyKey>(inpu
   return Object.fromEntries(Object.entries(input).map(([key, value]) => [value, key])) as Record<U, T>;
 }
 
+export const normalizeAddress = (address: Hex): Hex => {
+  // Assumes that the address is already a valid address with length at most 20 bytes
+  return pad(trim(address), { size: 20 });
+};
+
 export const entityToAddress = (entity: Entity | string, shorten = false): Hex => {
-  const checksumAddress = getAddress(trim(entity as Hex));
+  // Cannot use trim() directly because a valid address might start with 0x0000...
+  // After trimming the address, we need to pad it back to 20 bytes using viem pad()
+  const normalizedAddress = normalizeAddress(entity as Hex);
+
+  // This function should throw an error if entity is not a valid address
+  const checksumAddress = getAddress(normalizedAddress);
 
   return shorten ? shortenAddress(checksumAddress) : checksumAddress;
 };
 
 export const isPlayer = (entity: Entity) => {
   const trimmedAddress = trim(entity as Hex);
+  const addressSize = size(trimmedAddress);
 
-  return isAddress(trimmedAddress);
+  const address = addressSize <= 20 ? pad(trimmedAddress, { size: 20 }) : trimmedAddress;
+
+  return isAddress(address);
 };

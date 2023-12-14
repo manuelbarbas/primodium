@@ -58,7 +58,7 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
 
     const buildingDimensions = getBuildingDimensions(selectedBuilding);
 
-    const hasEnough = hasEnoughResources(getRecipe(selectedBuilding, 1n), mud.network.playerEntity);
+    const hasEnough = hasEnoughResources(getRecipe(selectedBuilding, 1n));
     const validPlacement = validateBuildingPlacement(
       tileCoord,
       selectedBuilding,
@@ -105,6 +105,7 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
 
           buildBuilding(mud.network, BuildingEnumLookup[selectedBuilding], buildingOrigin);
           components.SelectedAction.remove();
+          components.SelectedBuilding.remove();
         },
         true
       ),

@@ -9,7 +9,7 @@ interface JoinProps {
 export const Join: FC<JoinProps> = ({ className, direction = "horizontal", children }) => {
   return (
     <div
-      className={`join ${className} border border-secondary drop-shadow-2xl ${
+      className={`join ${className} drop-shadow-2xl backdrop-blur-md ${
         direction === "horizontal" ? "join-horizontal" : "join-vertical"
       }`}
     >

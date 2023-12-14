@@ -1,17 +1,16 @@
 // import { SyncState } from "@latticexyz/network";
 import { Entity, defineComponentSystem } from "@latticexyz/recs";
-import { world } from "../world";
-import { components } from "../components";
-import { SetupResult } from "../types";
 import { toast } from "react-toastify";
 import { entityToAddress } from "src/util/common";
-import { getNow } from "src/util/time";
+import { components } from "../components";
+import { SetupResult } from "../types";
+import { world } from "../world";
 
 export function setupBattleNotifications(mud: SetupResult) {
   const playerEntity = mud.network.playerEntity;
   const { BattleResult, Arrival, BlockNumber, Position } = components;
   defineComponentSystem(world, BattleResult, (update) => {
-    const now = getNow();
+    const now = components.Time.get()?.value ?? 0n;
 
     const battle = update.value[0];
 
@@ -55,7 +54,7 @@ export function setupBattleNotifications(mud: SetupResult) {
 
   const orbitingQueue = new Map<Entity, bigint>();
   defineComponentSystem(world, Arrival, (update) => {
-    const now = getNow();
+    const now = components.Time.get()?.value ?? 0n;
     const entity = update.entity;
 
     const arrival = update.value[0];
@@ -70,7 +69,7 @@ export function setupBattleNotifications(mud: SetupResult) {
   });
 
   defineComponentSystem(world, BlockNumber, () => {
-    const now = getNow();
+    const now = components.Time.get()?.value ?? 0n;
 
     orbitingQueue.forEach((arrivalTime, entityId) => {
       const arrival = Arrival.getWithId(entityId);

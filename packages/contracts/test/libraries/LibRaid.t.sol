@@ -34,6 +34,7 @@ contract LibRaidTest is PrimodiumTest {
     vm.startPrank(creator);
     player = addressToEntity(creator);
     Home.setAsteroid(player, homeRock);
+    Home.setAsteroid(enemy, rock);
     br.attacker = player;
     br.winner = player;
     bytes32[] memory unitTypes = new bytes32[](NUM_UNITS);
@@ -52,9 +53,9 @@ contract LibRaidTest is PrimodiumTest {
   }
 
   function testResolveRaidNoCargo() public {
-    ResourceCount.set(enemy, Iron, 100);
-    ResourceCount.set(enemy, Copper, 200);
-    ResourceCount.set(enemy, Platinum, 500);
+    ResourceCount.set(rock, Iron, 100);
+    ResourceCount.set(rock, Copper, 200);
+    ResourceCount.set(rock, Platinum, 500);
 
     br.totalCargo = 0;
     RaidResultData memory raidResult = LibRaid.resolveRaid(br);
@@ -66,17 +67,17 @@ contract LibRaidTest is PrimodiumTest {
   }
 
   function testResolveRaid() public {
-    MaxResourceCount.set(player, Iron, 1000);
-    MaxResourceCount.set(player, Copper, 1000);
-    ResourceCount.set(enemy, Iron, 100);
-    ResourceCount.set(enemy, Copper, 200);
+    MaxResourceCount.set(homeRock, Iron, 1000);
+    MaxResourceCount.set(homeRock, Copper, 1000);
+    ResourceCount.set(rock, Iron, 100);
+    ResourceCount.set(rock, Copper, 200);
     P_IsUtility.set(Platinum, true);
-    ResourceCount.set(enemy, Platinum, 500);
-    LibResource.claimAllResources(player);
-    LibResource.claimAllResources(enemy);
+    ResourceCount.set(rock, Platinum, 500);
+    LibResource.claimAllResources(homeRock);
+    LibResource.claimAllResources(rock);
     RaidResultData memory raidResult = LibRaid.resolveRaid(br);
-    LibResource.claimAllResources(player);
-    LibResource.claimAllResources(enemy);
+    LibResource.claimAllResources(homeRock);
+    LibResource.claimAllResources(rock);
 
     assertEq(raidResult.defenderValuesBeforeRaid[uint256(Iron)], 100);
     assertEq(raidResult.defenderValuesBeforeRaid[uint256(Copper)], 200);
@@ -88,42 +89,42 @@ contract LibRaidTest is PrimodiumTest {
     assertEq(raidResult.raidedAmount[uint256(Copper)], (br.totalCargo * 200) / total, "Copper raided amount");
     assertEq(raidResult.raidedAmount[uint256(Platinum)], 0, "Platinum raided amount");
 
-    assertEq(ResourceCount.get(player, Iron), raidResult.raidedAmount[uint256(Iron)], "Player Iron");
-    assertEq(ResourceCount.get(player, Copper), raidResult.raidedAmount[uint256(Copper)], "Player Copper");
-    assertEq(ResourceCount.get(player, Platinum), raidResult.raidedAmount[uint256(Platinum)], "Player Platinum");
+    assertEq(ResourceCount.get(homeRock, Iron), raidResult.raidedAmount[uint256(Iron)], "Player Iron");
+    assertEq(ResourceCount.get(homeRock, Copper), raidResult.raidedAmount[uint256(Copper)], "Player Copper");
+    assertEq(ResourceCount.get(homeRock, Platinum), raidResult.raidedAmount[uint256(Platinum)], "Player Platinum");
 
     assertEq(
-      ResourceCount.get(enemy, Iron),
+      ResourceCount.get(rock, Iron),
       raidResult.defenderValuesBeforeRaid[uint256(Iron)] - raidResult.raidedAmount[uint256(Iron)],
       "Enemy Iron"
     );
     assertEq(
-      ResourceCount.get(enemy, Copper),
+      ResourceCount.get(rock, Copper),
       raidResult.defenderValuesBeforeRaid[uint256(Copper)] - raidResult.raidedAmount[uint256(Copper)],
       "Enemy Copper"
     );
-    assertEq(ResourceCount.get(enemy, Platinum), 500, "Enemy Platinum");
+    assertEq(ResourceCount.get(rock, Platinum), 500, "Enemy Platinum");
   }
 
   function testResolveRaidOverflow() public {
-    MaxResourceCount.set(player, Iron, 1000);
-    ResourceCount.set(enemy, Iron, 10);
+    MaxResourceCount.set(homeRock, Iron, 1000);
+    ResourceCount.set(rock, Iron, 10);
 
     br.totalCargo = 10;
-    LibResource.claimAllResources(player);
-    LibResource.claimAllResources(enemy);
+    LibResource.claimAllResources(homeRock);
+    LibResource.claimAllResources(rock);
     RaidResultData memory raidResult = LibRaid.resolveRaid(br);
-    LibResource.claimAllResources(player);
-    LibResource.claimAllResources(enemy);
+    LibResource.claimAllResources(homeRock);
+    LibResource.claimAllResources(rock);
 
     assertEq(raidResult.defenderValuesBeforeRaid[uint256(Iron)], 10);
     assertEq(raidResult.raidedAmount[uint256(Iron)], 10, "Iron raided amount");
-    assertEq(ResourceCount.get(player, Iron), raidResult.raidedAmount[uint256(Iron)], "Player Iron");
+    assertEq(ResourceCount.get(homeRock, Iron), raidResult.raidedAmount[uint256(Iron)], "Player Iron");
   }
 
   function testRaid() public {
-    ResourceCount.set(enemy, Iron, 100);
-    MaxResourceCount.set(player, Iron, 100);
+    ResourceCount.set(rock, Iron, 100);
+    MaxResourceCount.set(homeRock, Iron, 100);
     Home.setAsteroid(player, homeRock);
     OwnedBy.set(rock, enemy);
     RockType.set(rock, uint8(ERock.Asteroid));
@@ -138,7 +139,7 @@ contract LibRaidTest is PrimodiumTest {
       to: enemy,
       origin: homeRock,
       destination: rock,
-      unitCounts: [uint256(200), 0, 0, 0, 0, 0, 0]
+      unitCounts: [uint256(200), 0, 0, 0, 0, 0, 0, 0]
     });
 
     ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);
@@ -147,16 +148,16 @@ contract LibRaidTest is PrimodiumTest {
 
     world.raid(rock);
 
-    assertEq(ResourceCount.get(player, Iron), 100, "Player Iron");
+    assertEq(ResourceCount.get(homeRock, Iron), 100, "Player Iron");
     assertEq(UnitCount.get(player, homeRock, unit1), 100, "Player units");
     assertEq(UnitCount.get(enemy, rock, unit1), 0, "Enemy units");
-    assertEq(ResourceCount.get(enemy, Iron), 0, "Enemy Iron");
+    assertEq(ResourceCount.get(rock, Iron), 0, "Enemy Iron");
   }
 
   function testRaidVault() public {
-    ResourceCount.set(enemy, Iron, 100);
-    MaxResourceCount.set(player, Iron, 100);
-    ResourceCount.set(enemy, uint8(EResource.U_Unraidable), 100);
+    ResourceCount.set(rock, Iron, 100);
+    MaxResourceCount.set(homeRock, Iron, 100);
+    ResourceCount.set(rock, uint8(EResource.U_Unraidable), 100);
     Home.setAsteroid(enemy, rock);
     OwnedBy.set(rock, enemy);
     RockType.set(rock, uint8(ERock.Asteroid));
@@ -171,7 +172,7 @@ contract LibRaidTest is PrimodiumTest {
       to: enemy,
       origin: homeRock,
       destination: rock,
-      unitCounts: [uint256(200), 0, 0, 0, 0, 0, 0]
+      unitCounts: [uint256(200), 0, 0, 0, 0, 0, 0, 0]
     });
 
     ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);
@@ -180,16 +181,16 @@ contract LibRaidTest is PrimodiumTest {
 
     world.raid(rock);
 
-    assertEq(ResourceCount.get(player, Iron), 0, "Player Iron");
+    assertEq(ResourceCount.get(homeRock, Iron), 0, "Player Iron");
     assertEq(UnitCount.get(player, homeRock, unit1), 100, "Player units");
     assertEq(UnitCount.get(enemy, rock, unit1), 0, "Enemy units");
-    assertEq(ResourceCount.get(enemy, Iron), 100, "Enemy Iron");
+    assertEq(ResourceCount.get(rock, Iron), 100, "Enemy Iron");
   }
 
   function testRaidAdvancedVault() public {
-    ResourceCount.set(enemy, Iron, 100);
-    MaxResourceCount.set(player, Iron, 100);
-    ResourceCount.set(enemy, uint8(EResource.U_AdvancedUnraidable), 100);
+    ResourceCount.set(rock, Iron, 100);
+    MaxResourceCount.set(homeRock, Iron, 100);
+    ResourceCount.set(rock, uint8(EResource.U_AdvancedUnraidable), 100);
     P_IsAdvancedResource.set(Iron, true);
     Home.setAsteroid(enemy, rock);
     OwnedBy.set(rock, enemy);
@@ -205,7 +206,7 @@ contract LibRaidTest is PrimodiumTest {
       to: enemy,
       origin: homeRock,
       destination: rock,
-      unitCounts: [uint256(200), 0, 0, 0, 0, 0, 0]
+      unitCounts: [uint256(200), 0, 0, 0, 0, 0, 0, 0]
     });
 
     ArrivalsMap.set(player, rock, keccak256(abi.encode(arrival)), arrival);
@@ -214,10 +215,10 @@ contract LibRaidTest is PrimodiumTest {
 
     world.raid(rock);
 
-    assertEq(ResourceCount.get(player, Iron), 0, "Player Iron");
+    assertEq(ResourceCount.get(homeRock, Iron), 0, "Player Iron");
     assertEq(UnitCount.get(player, homeRock, unit1), 100, "Player units");
     assertEq(UnitCount.get(enemy, rock, unit1), 0, "Enemy units");
-    assertEq(ResourceCount.get(enemy, Iron), 100, "Enemy Iron");
+    assertEq(ResourceCount.get(rock, Iron), 100, "Enemy Iron");
   }
 
   function testFailRaidMotherlode() public {
@@ -237,7 +238,7 @@ contract LibRaidTest is PrimodiumTest {
   }
 
   function testRaidArrivalCount() public {
-    MaxResourceCount.set(player, uint8(EResource.U_Vessel), 2);
+    MaxResourceCount.set(homeRock, uint8(EResource.U_Vessel), 2);
     RockType.set(rock, uint8(ERock.Motherlode));
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
@@ -250,7 +251,7 @@ contract LibRaidTest is PrimodiumTest {
       to: bytes32(""),
       origin: homeRock,
       destination: rock,
-      unitCounts: [uint256(200), 100, 0, 0, 0, 0, 0]
+      unitCounts: [uint256(200), 100, 0, 0, 0, 0, 0, 0]
     });
     LibSend.sendUnits(arrival);
 

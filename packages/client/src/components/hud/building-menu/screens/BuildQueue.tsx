@@ -72,19 +72,19 @@ const ProgressBar: React.FC<{
   const unitsLeft = Math.ceil(Number((100n - progress) * count) / 100);
   if (index === 0) {
     return (
-      <SecondaryCard key={index} className={`w-full text-sm flex-row justify-between p-2`}>
+      <SecondaryCard key={index} className={`w-full text-sm flex-row justify-between p-2 mb-1`}>
         <div className="flex gap-2 items-center justify-center">{getBlockTypeName(unit)}</div>
         <div>
-          <div className="relative flex gap-1 p-1 bg-slate-600 rounded-md items-center">
+          <div className="relative flex gap-1 p-1 bg-slate-600 items-center">
             <img
               key={`unit-${index}`}
               src={BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"}
               className={`border border-cyan-400 w-7 h-7 rounded-xs`}
             />
 
-            <p className="rounded-md bg-cyan-700 text-xs p-1">x{unitsLeft.toString()} REMAINING</p>
+            <p className="bg-cyan-700 text-xs p-1">x{unitsLeft.toString()} REMAINING</p>
           </div>
-          <p className="min-w-fit w-full bg-slate-900 text-xs text-center rounded-md mt-1">
+          <p className="min-w-fit w-full bg-slate-900 text-xs text-center mt-1">
             {Number(timeRemaining)} SECS TILL NEXT
           </p>
         </div>
@@ -93,18 +93,18 @@ const ProgressBar: React.FC<{
   }
 
   return (
-    <SecondaryCard key={index} className="flex flex-row justify-between p-2 w-full text-xs bg-neutral">
+    <SecondaryCard key={index} className="flex flex-row justify-between p-2 w-full text-xs !bg-neutral border-0">
       <div className="flex gap-2 items-center justify-center">
         <p className="text-slate-400"> {index}.</p>
         {getBlockTypeName(unit)}
       </div>
-      <div className="relative flex gap-1 p-1 bg-slate-600 rounded-md items-center">
+      <div className="relative flex gap-1 p-1 bg-slate-600 items-center">
         <img
           key={`unit-${index}`}
           src={BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"}
           className={`border border-cyan-400 w-4 h-4 rounded-xs`}
         />
-        <p className="rounded-md bg-cyan-700 text-xs p-1">x{count.toLocaleString()}</p>
+        <p className="bg-cyan-700 text-xs p-1">x{count.toLocaleString()}</p>
       </div>
     </SecondaryCard>
   );

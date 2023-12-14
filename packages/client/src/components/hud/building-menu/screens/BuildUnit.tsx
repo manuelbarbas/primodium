@@ -48,7 +48,7 @@ export const BuildUnit: React.FC<{
     return getRecipe(selectedUnit ?? EntityType.NULL, unitLevel);
   }, [selectedUnit, unitLevel]);
 
-  const maximum = useMaxCountOfRecipe(requiredResources, playerEntity);
+  const maximum = useMaxCountOfRecipe(requiredResources);
 
   useEffect(() => {
     if (trainableUnits.length == 0) return;
@@ -109,7 +109,6 @@ export const BuildUnit: React.FC<{
                     <Badge key={`resource-${i}`}>
                       <ResourceIconTooltip
                         image={ResourceImage.get(resource.id) ?? ""}
-                        playerEntity={playerEntity}
                         resource={resource.id}
                         name={getBlockTypeName(resource.id)}
                         amount={resource.amount * BigInt(count)}
@@ -125,7 +124,7 @@ export const BuildUnit: React.FC<{
 
               <NumberInput max={maximum} onChange={(val) => setCount(val)} />
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 pt-5">
                 <Navigator.BackButton
                   className="btn-sm btn-secondary"
                   disabled={maximum < count || count < 1}

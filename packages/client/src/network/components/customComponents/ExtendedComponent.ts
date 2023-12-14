@@ -30,12 +30,15 @@ export interface Options<M extends Metadata> {
   metadata?: M;
   indexed?: boolean;
 }
-type NewType<S extends Schema> = Omit<ComponentValue<S>, "__staticData" | "__encodedLengths" | "__dynamicData">;
+export type ValueSansMetadata<S extends Schema> = Omit<
+  ComponentValue<S>,
+  "__staticData" | "__encodedLengths" | "__dynamicData"
+>;
 
 export type ExtendedComponent<S extends Schema, M extends Metadata, T = unknown> = Component<S, M, T> & {
   get(): ComponentValue<S> | undefined;
   get(entity: Entity | undefined): ComponentValue<S> | undefined;
-  get(entity?: Entity | undefined, defaultValue?: NewType<S>): ComponentValue<S>;
+  get(entity?: Entity | undefined, defaultValue?: ValueSansMetadata<S>): ComponentValue<S>;
 
   set: (value: ComponentValue<S, T>, entity?: Entity) => void;
   getAll: () => Entity[];
@@ -50,7 +53,7 @@ export type ExtendedComponent<S extends Schema, M extends Metadata, T = unknown>
   has: (entity?: Entity) => boolean;
 
   use(entity?: Entity | undefined): ComponentValue<S> | undefined;
-  use(entity: Entity | undefined, defaultValue?: NewType<S>): ComponentValue<S>;
+  use(entity: Entity | undefined, defaultValue?: ValueSansMetadata<S>): ComponentValue<S>;
 };
 
 export type ContractMetadata<TKeySchema extends KeySchema> = {
@@ -66,12 +69,12 @@ export type ExtendedContractComponent<
 > = ExtendedComponent<S, ContractMetadata<TKeySchema>, unknown> & {
   getWithKeys(): ComponentValue<S> | undefined;
   getWithKeys(keys?: SchemaToPrimitives<TKeySchema>): ComponentValue<S> | undefined;
-  getWithKeys(keys?: SchemaToPrimitives<TKeySchema>, defaultValue?: NewType<S>): ComponentValue<S>;
+  getWithKeys(keys?: SchemaToPrimitives<TKeySchema>, defaultValue?: ValueSansMetadata<S>): ComponentValue<S>;
 
   hasWithKeys: (keys?: SchemaToPrimitives<TKeySchema>) => boolean;
 
   useWithKeys(keys?: SchemaToPrimitives<TKeySchema>): ComponentValue<S> | undefined;
-  useWithKeys(keys?: SchemaToPrimitives<TKeySchema>, defaultValue?: NewType<S>): ComponentValue<S>;
+  useWithKeys(keys?: SchemaToPrimitives<TKeySchema>, defaultValue?: ValueSansMetadata<S>): ComponentValue<S>;
 
   setWithKeys(value: ComponentValue<S>, keys?: SchemaToPrimitives<TKeySchema>): void;
 };
@@ -83,8 +86,8 @@ export function extendContractComponent<S extends Schema, TKeySchema extends Key
 
   function getWithKeys(): ComponentValue<S> | undefined;
   function getWithKeys(keys?: SchemaToPrimitives<TKeySchema>): ComponentValue<S> | undefined;
-  function getWithKeys(keys?: SchemaToPrimitives<TKeySchema>, defaultValue?: NewType<S>): ComponentValue<S>;
-  function getWithKeys(keys?: SchemaToPrimitives<TKeySchema>, defaultValue?: NewType<S>) {
+  function getWithKeys(keys?: SchemaToPrimitives<TKeySchema>, defaultValue?: ValueSansMetadata<S>): ComponentValue<S>;
+  function getWithKeys(keys?: SchemaToPrimitives<TKeySchema>, defaultValue?: ValueSansMetadata<S>) {
     const entity = keys ? encodeEntity(component, keys) : singletonEntity;
     return extendedComponent.get(entity, defaultValue);
   }
@@ -94,7 +97,7 @@ export function extendContractComponent<S extends Schema, TKeySchema extends Key
     return extendedComponent.has(entity);
   }
 
-  function useWithKeys(key?: SchemaToPrimitives<TKeySchema>, defaultValue?: NewType<S>) {
+  function useWithKeys(key?: SchemaToPrimitives<TKeySchema>, defaultValue?: ValueSansMetadata<S>) {
     const entity = key ? encodeEntity(component, key) : singletonEntity;
     return extendedComponent.use(entity, defaultValue);
   }
@@ -122,8 +125,8 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
 
   function get(): ComponentValue<S> | undefined;
   function get(entity: Entity | undefined): ComponentValue<S> | undefined;
-  function get(entity?: Entity | undefined, defaultValue?: NewType<S>): ComponentValue<S>;
-  function get(entity?: Entity, defaultValue?: NewType<S>) {
+  function get(entity?: Entity | undefined, defaultValue?: ValueSansMetadata<S>): ComponentValue<S>;
+  function get(entity?: Entity, defaultValue?: ValueSansMetadata<S>) {
     entity = entity ?? singletonEntity;
     if (entity == undefined) return defaultValue;
     const value = getComponentValue(component, entity);
@@ -189,8 +192,8 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
   }
 
   function useValue(entity?: Entity | undefined): ComponentValue<S> | undefined;
-  function useValue(entity: Entity | undefined, defaultValue?: NewType<S>): ComponentValue<S>;
-  function useValue(entity?: Entity, defaultValue?: NewType<S>) {
+  function useValue(entity: Entity | undefined, defaultValue?: ValueSansMetadata<S>): ComponentValue<S>;
+  function useValue(entity?: Entity, defaultValue?: ValueSansMetadata<S>) {
     entity = entity ?? singletonEntity;
     const comp = component as Component<S>;
     const [value, setValue] = useState(entity != null ? getComponentValue(comp, entity) : undefined);

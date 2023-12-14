@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { getBuildingImage } from "src/util/building";
+import { getBuildingImage, getBuildingImageFromType } from "src/util/building";
 
 export const BuildingImage: React.FC<{ building: Entity }> = ({ building }) => {
   const imageUri = useMemo(() => getBuildingImage(building), [building]);
@@ -10,6 +10,24 @@ export const BuildingImage: React.FC<{ building: Entity }> = ({ building }) => {
       className={`relative flex flex-col text-sm items-center cursor-pointer min-w-[4rem] h-12 border rounded border-cyan-400`}
     >
       <img src={imageUri} className={`absolute bottom-0 w-14 pixel-images rounded-md`} />
+    </div>
+  );
+};
+
+export const BuildingImageFromType: React.FC<{ buildingType: Entity; blurred?: boolean }> = ({
+  buildingType,
+  blurred,
+}) => {
+  const imageUri = useMemo(() => getBuildingImageFromType(buildingType), [buildingType]);
+
+  return (
+    <div className={`relative flex flex-col text-sm items-center cursor-pointer min-w-[4rem] h-12`}>
+      <img
+        src={imageUri}
+        className={`absolute pointer-events-none bottom-0 w-14 pixel-images rounded-md ${
+          blurred ? "darken-[3px]" : ""
+        }`}
+      />
     </div>
   );
 };

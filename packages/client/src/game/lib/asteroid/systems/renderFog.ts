@@ -1,15 +1,14 @@
+import { DepthLayers, FogTilekeys } from "@game/constants";
 import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { world } from "src/network/world";
-import { getAsteroidBounds, getPlayerBounds } from "src/util/outOfBounds";
-import { Square } from "../../common/object-components/graphics";
-import { ObjectPosition, SetValue } from "../../common/object-components/common";
-import { ObjectText } from "../../common/object-components/text";
-import { DepthLayers, FogTilekeys } from "@game/constants";
-import { SetupResult } from "src/network/types";
 import { components } from "src/network/components";
+import { world } from "src/network/world";
+import { getAsteroidBounds, getSpaceRockBounds } from "src/util/outOfBounds";
+import { ObjectPosition, SetValue } from "../../common/object-components/common";
+import { Square } from "../../common/object-components/graphics";
+import { ObjectText } from "../../common/object-components/text";
 
-export function renderFog(scene: Scene, { network: { playerEntity } }: SetupResult) {
+export function renderFog(scene: Scene) {
   const { tileWidth, tileHeight } = scene.tilemap;
   const objSuffix = "_fog";
   const gameWorld = namespaceWorld(world, "game");
@@ -38,10 +37,11 @@ export function renderFog(scene: Scene, { network: { playerEntity } }: SetupResu
   }
 
   defineComponentSystem(gameWorld, components.Level, ({ entity }) => {
-    if (entity !== playerEntity) return;
+    const playerEntity = components.Account.get()?.value;
+    if (components.Home.get(playerEntity)?.asteroid != entity) return;
 
-    const bounds = getPlayerBounds(playerEntity);
-    const nextBounds = getPlayerBounds(playerEntity, true);
+    const bounds = getSpaceRockBounds(entity);
+    const nextBounds = getSpaceRockBounds(entity, true);
 
     const objIndex = entity + objSuffix;
     if (scene.objectPool.objects.has(objIndex)) {
@@ -57,7 +57,7 @@ export function renderFog(scene: Scene, { network: { playerEntity } }: SetupResu
           x: nextBounds.minX * tileWidth,
           y: (-nextBounds.minY + 1) * tileHeight,
         },
-        DepthLayers.Path
+        DepthLayers.Rock
       ),
       Square(
         (nextBounds.maxX - nextBounds.minX + 1) * tileWidth,
@@ -72,7 +72,7 @@ export function renderFog(scene: Scene, { network: { playerEntity } }: SetupResu
       }),
     ]);
 
-    group.add("Text").setComponents([
+    group.add("BitmapText").setComponents([
       ObjectPosition(
         {
           x: nextBounds.minX * tileWidth,
@@ -86,7 +86,8 @@ export function renderFog(scene: Scene, { network: { playerEntity } }: SetupResu
         alpha: 0.7,
       }),
       ObjectText(bounds.maxX !== nextBounds.maxX ? "+ NEXT EXPANSION" : "FINAL EXPANSION", {
-        color: "cyan",
+        color: 0x00ffff,
+        fontSize: 10,
       }),
     ]);
 

@@ -25,6 +25,8 @@ export const CommissionCost: React.FC<{ player: Entity }> = ({ player }) => {
     return getRecipe(EntityType.MiningVessel, level);
   }, [player]);
 
+  const spaceRock = components.Home.use(player)?.asteroid as Entity | undefined;
+
   return (
     <SecondaryCard className="w-full">
       <p className="text-xs opacity-75 px-2 mb-1">COMMISSION COST</p>
@@ -36,7 +38,7 @@ export const CommissionCost: React.FC<{ player: Entity }> = ({ player }) => {
             return (
               <Badge key={resource.id + resource.type} className="text-xs gap-2">
                 <ResourceIconTooltip
-                  playerEntity={player}
+                  spaceRock={spaceRock}
                   name={getBlockTypeName(resource.id)}
                   image={ResourceImage.get(resource.id) ?? ""}
                   resource={resource.id}
@@ -64,7 +66,7 @@ export const MiningVessels: React.FC<{ building: Entity }> = ({ building }) => {
   const mainBaseLvl = components.Level.useWithKeys({ entity: mainBase as Hex }, { value: 0n }).value;
 
   return (
-    <Navigator.Screen title="MiningVessels" className="w-full">
+    <Navigator.Screen title="MiningVessels" className="w-full gap-1">
       <SecondaryCard className="flex-row gap-1">
         <FaInfoCircle />
         <div className="text-xs italic opacity-75 space-y-2">
@@ -77,11 +79,11 @@ export const MiningVessels: React.FC<{ building: Entity }> = ({ building }) => {
         </div>
       </SecondaryCard>
       {mainBaseLvl >= mainBaseLvlReq && (
-        <>
+        <div className="flex flex-col gap-1 w-full">
           <VesselSlots building={building} player={player} />
           <CommissionCost player={player} />
           <UpgradeMiningVessel />
-        </>
+        </div>
       )}
 
       <Navigator.BackButton className="mt-1" />

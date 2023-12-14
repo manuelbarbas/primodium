@@ -1,8 +1,8 @@
-import { throttle, clone } from "lodash";
-import { useEffect, useState } from "react";
-import { useSettingsStore } from "../stores/SettingsStore";
-import { GameReady } from "src/network/components/clientComponents";
 import { Scene } from "engine/types";
+import { clone, throttle } from "lodash";
+import { useEffect, useState } from "react";
+import { GameReady } from "src/network/components/clientComponents";
+import { useSettingsStore } from "../stores/SettingsStore";
 
 export function createHooksApi(targetScene: Scene) {
   function useKeybinds() {
@@ -23,7 +23,7 @@ export function createHooksApi(targetScene: Scene) {
       const worldViewListener = camera?.worldView$.subscribe(
         throttle((worldView: Phaser.Geom.Rectangle) => {
           setWorldView(clone(worldView));
-        }, 100)
+        }, 50)
       );
 
       const zoomListener = camera?.zoom$.subscribe(throttle(setZoom, 100));
@@ -32,7 +32,7 @@ export function createHooksApi(targetScene: Scene) {
         worldViewListener?.unsubscribe();
         zoomListener?.unsubscribe();
       };
-    }, [gameStatus]);
+    }, [gameStatus, camera]);
 
     return {
       zoom,

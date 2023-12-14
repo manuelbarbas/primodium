@@ -5,7 +5,7 @@ import { addressToEntity } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
-
+import { IsActive } from "codegen/index.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { LibReduceProductionRate } from "libraries/LibReduceProductionRate.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
@@ -39,11 +39,13 @@ contract OnDestroy_ProductionRate is SystemHook {
     // Convert the player's address to an entity
     bytes32 playerEntity = addressToEntity(msgSender);
 
+    if (!IsActive.get(buildingEntity)) return;
+
     // Clear production rate reductions for the building
-    LibReduceProductionRate.clearProductionRateReduction(playerEntity, buildingEntity);
+    LibReduceProductionRate.clearProductionRateReduction(buildingEntity);
 
     // Clear resource production for the building
-    LibProduction.clearResourceProduction(playerEntity, buildingEntity);
+    LibProduction.clearResourceProduction(buildingEntity);
   }
 
   /**

@@ -35,8 +35,8 @@ contract OnRaid_TargetClaimResourcesAndUnits is SystemHook {
 
     // Check if the space rock is owned and claim resources for owner
     if (OwnedBy.get(rockEntity) != 0) {
-      LibResource.claimAllResources(OwnedBy.get(rockEntity));
-      LibUnit.claimUnits(OwnedBy.get(rockEntity));
+      LibResource.claimAllResources(rockEntity);
+      LibUnit.claimUnits(rockEntity);
     }
   }
 

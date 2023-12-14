@@ -17,14 +17,9 @@ import { Hex } from "viem";
 
 const AddSlot: React.FC = () => {
   return (
-    <div className="space-y-1">
-      <Button
-        className="w-[5.2rem] h-[5.2rem] flex-row items-center justify-center border-secondary p-1"
-        disabled={true}
-      >
-        <p className="text-[.7rem] text-center">UPGRADE BUILDING TO ADD SLOT</p>
-      </Button>
-    </div>
+    <Button className="w-[5.2rem] h-[5.2rem] flex-row items-center justify-center border-secondary p-1" disabled={true}>
+      <p className="text-[.7rem] text-center">UPGRADE BASE TO ADD SLOT</p>
+    </Button>
   );
 };
 
@@ -43,22 +38,23 @@ const CommissionVessel: React.FC<{
     return getRecipe(EntityType.MiningVessel, level);
   }, [player]);
 
-  const hasEnough = useHasEnoughResources(recipe, player);
+  const hasEnough = useHasEnoughResources(recipe);
 
   const queueIdHash = hashEntities(TransactionQueueType.Train, building, index);
 
   return (
-    <div className="space-y-1">
-      <TransactionQueueMask queueItemId={queueIdHash}>
-        <Button
-          className={`w-[5.2rem] h-[5.2rem] flex-row items-center justify-center border-secondary p-1`}
-          disabled={!hasEnough}
-          onClick={() => train(building, EUnit.MiningVessel, 1n, network)}
-        >
-          <p className="text-[.7rem] text-center">+ COMMISSION VESSEL</p>
-        </Button>
-      </TransactionQueueMask>
-    </div>
+    <TransactionQueueMask queueItemId={queueIdHash}>
+      <Button
+        className={`h-[5.2rem] w-full flex-row items-center justify-center border-secondary p-1`}
+        disabled={!hasEnough}
+        onClick={() => train(building, EUnit.MiningVessel, 1n, network)}
+      >
+        <p className="text-[.7rem] text-center">
+          + <br />
+          VESSEL
+        </p>
+      </Button>
+    </TransactionQueueMask>
   );
 };
 
@@ -69,14 +65,12 @@ const QueuedVessel: React.FC<{
   if (queuedItem.progress >= 1) return <></>;
 
   return (
-    <div className="space-y-1">
-      <Button
-        className={`w-[5.2rem] h-[5.2rem] flex-row items-center justify-center border-secondary p-1 animate-pulse inline-flex`}
-      >
+    <div className="relative">
+      <Button className={`w-full h-[5.2rem] flex-row items-center justify-center border-secondary p-1 inline-flex`}>
         <img src={BackgroundImage.get(EntityType.MiningVessel)?.at(0)} className="h-8 pixel-images" />
       </Button>
-      <p className="min-w-fit w-full bg-slate-900 text-xs text-center rounded-md mt-1">
-        {active ? queuedItem.timeRemaining + " BLOCKS LEFT" : "QUEUED"}
+      <p className="absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 h-fit animate-pulse opacity-90 margin-auto w-4/5 bg-slate-900 text-xs text-center rounded-md mt-1">
+        {active ? queuedItem.timeRemaining + " SECS LEFT" : "QUEUED"}
       </p>
     </div>
   );
@@ -84,11 +78,11 @@ const QueuedVessel: React.FC<{
 
 const BuiltVessel = () => {
   return (
-    <div className="space-y-1">
-      <Button className={`w-[5.2rem] h-[5.2rem] flex-row items-center justify-center border-secondary p-1 inline-flex`}>
-        <img src={BackgroundImage.get(EntityType.MiningVessel)?.at(0)} className="h-8 pixel-images" />
-      </Button>
-    </div>
+    <Button
+      className={`col-span-1 w-full h-[5.2rem] flex-row items-center justify-center border-secondary p-1 inline-flex`}
+    >
+      <img src={BackgroundImage.get(EntityType.MiningVessel)?.at(0)} className="h-8 pixel-images" />
+    </Button>
   );
 };
 
@@ -96,12 +90,15 @@ export const VesselSlots: React.FC<{
   building: Entity;
   player: Entity;
 }> = ({ building, player }) => {
+  // const home = components.Home.use(player)?.asteroid;
   // vessel capacity increases every level and decreases every vessel
   const {
     resourceCount: vesselsAvailable,
     resourcesToClaim: vesselsToClaim,
-    maxStorage: maxVessels,
-  } = useFullResourceCount(EntityType.VesselCapacity, player);
+    resourceStorage: maxVessels,
+  } = useFullResourceCount(EntityType.VesselCapacity);
+
+  console.log(vesselsAvailable, vesselsToClaim, maxVessels);
 
   const rawQueue = TrainingQueue.use(building);
   const queue = useMemo(() => {
@@ -122,7 +119,7 @@ export const VesselSlots: React.FC<{
   if (builtVessels > 100n || availableVessels > 100n) throw new Error("vessels available is too high");
 
   return (
-    <SecondaryCard className="w-full grid gap-2 grid-cols-5">
+    <SecondaryCard className="w-full grid gap-1 grid-cols-5">
       {Array(Number(builtVessels))
         .fill(0)
         .map((_, index) => {

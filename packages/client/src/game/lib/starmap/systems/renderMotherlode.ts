@@ -2,7 +2,15 @@ import { Entity, Has, HasValue, defineEnterSystem, namespaceWorld } from "@latti
 import { Scene } from "engine/types";
 import { world } from "src/network/world";
 import { MotherlodeSizeNames, MotherlodeTypeNames, RockRelationship } from "src/util/constants";
-import { ObjectPosition, OnClick, OnComponentSystem, SetValue } from "../../common/object-components/common";
+import {
+  ObjectPosition,
+  OnClick,
+  OnComponentSystem,
+  OnHover,
+  OnRxjsSystem,
+  SetValue,
+  Tween,
+} from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
 import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 import { Coord } from "@latticexyz/utils";
@@ -10,6 +18,10 @@ import { ERock, ESize } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
 import { getRockRelationship } from "src/util/spacerock";
+import { getRandomRange } from "src/util/common";
+import { entityToRockName } from "src/util/name";
+import { ObjectText } from "../../common/object-components/text";
+import { throttleTime } from "rxjs";
 
 export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -31,6 +43,8 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
         }` as keyof typeof SpriteKeys
       ];
 
+    const spriteScale = getSpriteScale(motherlodeData.size);
+
     const sharedComponents = [
       ObjectPosition({
         x: coord.x * tileWidth,
@@ -39,11 +53,48 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
       SetValue({
         originX: 0.5,
         originY: 0.5,
+        scale: spriteScale,
+      }),
+      Tween(scene, {
+        scale: { from: spriteScale - getRandomRange(0, 0.05), to: spriteScale + getRandomRange(0, 0.05) },
+        ease: "Sine.easeInOut",
+        hold: getRandomRange(0, 1000),
+        duration: 5000, // Duration of one wobble
+        yoyo: true, // Go back to original scale
+        repeat: -1, // Repeat indefinitely
+      }),
+      Tween(scene, {
+        scrollFactorX: { from: 1 - getRandomRange(0, 0.005), to: 1 + getRandomRange(0, 0.005) },
+        ease: "Sine.easeInOut",
+        hold: getRandomRange(0, 1000),
+        duration: 3000, // Duration of one wobble
+        yoyo: true, // Go back to original scale
+        repeat: -1, // Repeat indefinitely
+      }),
+      Tween(scene, {
+        scrollFactorY: { from: 1 - getRandomRange(0, 0.005), to: 1 + getRandomRange(0, 0.005) },
+        ease: "Sine.easeInOut",
+        hold: getRandomRange(0, 1000),
+        duration: 5000, // Duration of one wobble
+        yoyo: true, // Go back to original scale
+        repeat: -1, // Repeat indefinitely
       }),
     ];
 
-    motherlodeObjectGroup.add("Sprite").setComponents([
+    const rotationTween = Tween(scene, {
+      rotation: { from: -getRandomRange(0, Math.PI / 8), to: getRandomRange(0, Math.PI / 8) },
+      // ease: "Sine.easeInOut",
+      hold: getRandomRange(0, 10000),
+      duration: 5 * 1000, // Duration of one wobble
+      yoyo: true, // Go back to original scale
+      repeat: -1, // Repeat indefinitely
+    });
+
+    const motherlodeObject = motherlodeObjectGroup.add("Sprite");
+
+    motherlodeObject.setComponents([
       ...sharedComponents,
+      rotationTween,
       Texture(Assets.SpriteAtlas, sprite),
       SetValue({
         depth: DepthLayers.Rock,
@@ -53,6 +104,7 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
     const motherlodeOutline = motherlodeObjectGroup.add("Sprite");
     motherlodeOutline.setComponents([
       ...sharedComponents,
+      rotationTween,
       Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity, motherlodeData.size)),
       OnComponentSystem(components.Send, () => {
         if (components.Send.get()?.destination === entity) {
@@ -81,10 +133,49 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
       }),
       OnClick(scene, () => {
         components.Send.setDestination(entity);
+        components.SelectedRock.set({ value: entity });
       }),
+      OnHover(
+        () => {
+          components.HoverEntity.set({ value: entity });
+        },
+        () => {
+          components.HoverEntity.remove();
+        }
+      ),
       SetValue({
         depth: DepthLayers.Rock + 1,
       }),
+    ]);
+
+    const motherlodeLabel = motherlodeObjectGroup.add("BitmapText");
+
+    motherlodeLabel.setComponents([
+      ...sharedComponents,
+      SetValue({
+        originX: 0.5,
+        originY: -3,
+        depth: DepthLayers.Marker,
+        alpha: 0.5,
+      }),
+      ObjectText(entityToRockName(entity), {
+        id: "addressLabel",
+        fontSize: Math.max(8, Math.min(24, 16 / scene.camera.phaserCamera.zoom)),
+        color: 0xffffff,
+      }),
+      OnRxjsSystem(
+        // @ts-ignore
+        scene.camera.zoom$.pipe(throttleTime(10)),
+        (gameObject, zoom) => {
+          const mapOpen = components.MapOpen.get()?.value ?? false;
+
+          if (!mapOpen) return;
+
+          const size = Math.max(8, Math.min(24, 16 / zoom));
+
+          gameObject.setFontSize(size);
+        }
+      ),
     ]);
   };
 
@@ -110,4 +201,15 @@ const getOutlineSprite = (playerEntity: Entity, rock: Entity, size: ESize) => {
       }[rockRelationship]
     }${MotherlodeSizeNames[size]}` as keyof typeof SpriteKeys
   ];
+};
+
+const getSpriteScale = (size: ESize) => {
+  switch (size) {
+    case ESize.Small:
+      return 0.6;
+    case ESize.Medium:
+      return 0.8;
+    case ESize.Large:
+      return 1;
+  }
 };

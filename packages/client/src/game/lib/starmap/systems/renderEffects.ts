@@ -5,14 +5,13 @@ import { Scene } from "engine/types";
 import { components } from "src/network/components";
 import { SetupResult } from "src/network/types";
 import { world } from "src/network/world";
-import { getNow } from "src/util/time";
 
 export const renderEffects = (scene: Scene, mud: SetupResult) => {
   const playerEntity = mud.network.playerEntity;
   const gameWorld = namespaceWorld(world, "game");
   const { BattleResult } = components;
   defineComponentSystem(gameWorld, BattleResult, (update) => {
-    const now = getNow();
+    const now = components.Time.get()?.value ?? 0n;
 
     const battle = update.value[0];
 

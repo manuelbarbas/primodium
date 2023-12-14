@@ -6,7 +6,7 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
-import { Level } from "src/codegen/tables/Level.sol";
+import { IsActive, Level } from "src/codegen/index.sol";
 import { LibReduceProductionRate } from "libraries/LibReduceProductionRate.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
@@ -44,8 +44,6 @@ contract OnUpgrade_ProductionRate is SystemHook {
   ) public {
     // Decode the arguments from the callData
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
-    // Convert the player's address to an entity
-    bytes32 playerEntity = addressToEntity(msgSender);
 
     PositionData memory coord = abi.decode(args, (PositionData));
 
@@ -55,8 +53,10 @@ contract OnUpgrade_ProductionRate is SystemHook {
     // Get the level of the building
     uint256 level = Level.get(buildingEntity);
 
+    if (!IsActive.get(buildingEntity)) return;
+
     // Adjust the production rate and resource production
-    LibReduceProductionRate.reduceProductionRate(playerEntity, buildingEntity, level);
-    LibProduction.upgradeResourceProduction(playerEntity, buildingEntity, level);
+    LibReduceProductionRate.reduceProductionRate(buildingEntity, level);
+    LibProduction.upgradeResourceProduction(buildingEntity, level);
   }
 }

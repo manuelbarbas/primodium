@@ -2,16 +2,17 @@ import { namespaceWorld } from "@latticexyz/recs";
 import engine from "engine";
 import { Game } from "engine/types";
 import { GameReady } from "src/network/components/clientComponents";
+import { SetupResult } from "src/network/types";
+import { world } from "src/network/world";
 import _init from "../init";
+import { createAudioApi } from "./audio";
 import { createCameraApi } from "./camera";
+import { createFxApi } from "./fx";
 import { createGameApi } from "./game";
 import { createHooksApi } from "./hooks";
 import { createInputApi } from "./input";
 import { createSceneApi } from "./scene";
-import { createFxApi } from "./fx";
-import { world } from "src/network/world";
 import { createSpriteApi } from "./sprite";
-import { SetupResult } from "src/network/types";
 
 async function init(mud: SetupResult, version = "v1") {
   const asciiArt = `
@@ -51,16 +52,22 @@ function destroy() {
 }
 
 function api(sceneKey = "MAIN", instance: string | Game = "MAIN") {
+  const api = apiOrUndefined(sceneKey, instance);
+  if (!api) throw Error("No primodium api found with key " + sceneKey);
+  return api;
+}
+
+function apiOrUndefined(sceneKey = "MAIN", instance: string | Game = "MAIN") {
   const _instance = typeof instance === "string" ? engine.getGame().get(instance) : instance;
 
   if (_instance === undefined) {
-    throw Error("No instance found with key " + instance);
+    return undefined;
   }
 
   const scene = _instance.sceneManager.scenes.get(sceneKey);
 
   if (scene === undefined) {
-    throw Error("No scene found with key " + sceneKey);
+    return undefined;
   }
 
   return {
@@ -71,7 +78,8 @@ function api(sceneKey = "MAIN", instance: string | Game = "MAIN") {
     scene: createSceneApi(_instance),
     fx: createFxApi(scene),
     sprite: createSpriteApi(scene),
+    audio: createAudioApi(scene),
   };
 }
 
-export const primodium = { api, init, destroy };
+export const primodium = { apiOrUndefined, api, init, destroy };

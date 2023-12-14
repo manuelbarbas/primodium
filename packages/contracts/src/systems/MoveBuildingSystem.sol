@@ -16,8 +16,8 @@ contract MoveBuildingSystem is PrimodiumSystem {
     bytes32 playerEntity = addressToEntity(_msgSender());
     bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(fromCoord);
     require(
-      OwnedBy.get(buildingEntity) == playerEntity,
-      "[MoveBuildingSystem] the building is not owned by the player"
+      OwnedBy.get(fromCoord.parent) == playerEntity,
+      "[MoveBuildingSystem] the rock which the building is on is not owned by the player"
     );
     bytes32 buildingType = BuildingType.get(buildingEntity);
     require(
@@ -26,6 +26,6 @@ contract MoveBuildingSystem is PrimodiumSystem {
     );
     LibBuilding.removeBuildingTiles(fromCoord);
     Position.set(buildingEntity, toCoord);
-    LibBuilding.placeBuildingTiles(playerEntity, buildingEntity, buildingType, toCoord);
+    LibBuilding.placeBuildingTiles(buildingEntity, buildingType, toCoord);
   }
 }

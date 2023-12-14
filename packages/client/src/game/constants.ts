@@ -19,6 +19,7 @@ export enum Scenes {
 export enum Assets {
   SpriteAtlas = "sprite-atlas",
   ResourceTileset = "resource",
+  AudioAtlas = "audio-atlas",
 }
 
 export enum Tilesets {
@@ -29,7 +30,8 @@ export enum Tilesets {
 
 export enum DepthLayers {
   Rock = 0,
-  Terrain = 0,
+  Terrain = 1,
+  Tile = 2,
   Building = 400,
   Path = 500,
   Marker = 600,
@@ -125,6 +127,8 @@ export enum SpriteKeys {
   PhotovoltaicCellFactory2 = "sprites/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_1.png",
 
   StarmapperStation1 = "sprites/starmapper-station/level1/Starmapper1.png",
+  StarmapperStation2 = "sprites/starmapper-station/level2/Starmapper_LVL2_1.png",
+  StarmapperStation3 = "sprites/starmapper-station/level3/Starmapper_LVL3_1.png",
 
   Hangar1 = "sprites/hangar/level1/Hangar1.png",
 
@@ -134,6 +138,8 @@ export enum SpriteKeys {
   Workshop1 = "sprites/workshop/level1/Workshop_LVL1_1.png",
   Workshop2 = "sprites/workshop/level2/Workshop_LVL2_1.png",
   Workshop3 = "sprites/workshop/level3/Workshop_LVL3_1.png",
+
+  Market1 = "sprites/marketplace/level1/Marketplace_LVL1_1.png",
 
   DroneFactory1 = "sprites/drone-factory/normal/Drone_Factory1.png",
 
@@ -248,6 +254,8 @@ export enum AnimationKeys {
   SolarPanel2 = "solarpanel/level2",
 
   StarmapperStation1 = "starmapperstation/level1",
+  StarmapperStation2 = "starmapperstation/level2",
+  StarmapperStation3 = "starmapperstation/level3",
 
   Hangar1 = "hangar/level1",
 
@@ -271,6 +279,43 @@ export enum AnimationKeys {
   Vault1 = "vault/level1",
   Vault2 = "vault/level2",
   Vault3 = "vault/level3",
+
+  Market1 = "marketplace/level1",
+}
+
+export enum AudioKeys {
+  Background = "background",
+  Bleep = "Bleep_01",
+  Bleep2 = "Bleep_02",
+  Bleep3 = "Bleep_03",
+  Bleep4 = "Bleep_04",
+  Bleep5 = "Bleep_05",
+  Bleep6 = "Bleep_06",
+  Bleep7 = "Bleep_07",
+  Click = "Click_01",
+  Click2 = "Click_02",
+  Click3 = "Click_03",
+  Click4 = "Click_04",
+  Sequence = "Sequence_01",
+  Sequence2 = "Sequence_02",
+  Sequence3 = "Sequence_03",
+  Sequence4 = "Sequence_04",
+  Sequence5 = "Sequence_05",
+  Sequence6 = "Sequence_06",
+  Sequence7 = "Sequence_07",
+  Execute = "Execute_01",
+  Execute2 = "Execute_02",
+  DataPoint = "Data_Point_01",
+  DataPoint2 = "Data_Point_02",
+  Confirm = "Confirm_01",
+  Confirm2 = "Confirm_02",
+  Confirm3 = "Confirm_03",
+  Confirm4 = "Confirm_04",
+  Confirm5 = "Confirm_05",
+  Confirm6 = "Confirm_06",
+  Confirm7 = "Confirm_07",
+  Complete = "Complete_01",
+  Complete2 = "Complete_02",
 }
 
 export const ResourceToTilesetKey: { [key: number]: ResourceTilekeys } = {
@@ -310,7 +355,11 @@ export const EntitytoSpriteKey = {
 
   [EntityType.SolarPanel]: [SpriteKeys.SolarPanel1, SpriteKeys.SolarPanel2],
 
-  [EntityType.StarmapperStation]: [SpriteKeys.StarmapperStation1],
+  [EntityType.StarmapperStation]: [
+    SpriteKeys.StarmapperStation1,
+    SpriteKeys.StarmapperStation2,
+    SpriteKeys.StarmapperStation3,
+  ],
 
   [EntityType.Hangar]: [SpriteKeys.Hangar1],
 
@@ -324,6 +373,7 @@ export const EntitytoSpriteKey = {
 
   [EntityType.ShieldGenerator]: [SpriteKeys.ShieldGenerator1, SpriteKeys.ShieldGenerator2, SpriteKeys.ShieldGenerator3],
   [EntityType.Vault]: [SpriteKeys.Vault1, SpriteKeys.Vault2, SpriteKeys.Vault3],
+  [EntityType.Market]: [SpriteKeys.Market1],
 
   //STARMAP
   [EntityType.Asteroid]: [
@@ -366,7 +416,11 @@ export const EntityIDtoAnimationKey = {
 
   [EntityType.SolarPanel]: [AnimationKeys.SolarPanel1, AnimationKeys.SolarPanel2],
 
-  [EntityType.StarmapperStation]: [AnimationKeys.StarmapperStation1],
+  [EntityType.StarmapperStation]: [
+    AnimationKeys.StarmapperStation1,
+    AnimationKeys.StarmapperStation2,
+    AnimationKeys.StarmapperStation3,
+  ],
 
   [EntityType.Hangar]: [AnimationKeys.Hangar1],
 
@@ -385,6 +439,7 @@ export const EntityIDtoAnimationKey = {
   ],
 
   [EntityType.Vault]: [AnimationKeys.Vault1, AnimationKeys.Vault2, AnimationKeys.Vault3],
+  [EntityType.Market]: [AnimationKeys.Market1],
 };
 
 export enum KeybindActions {
@@ -393,6 +448,9 @@ export enum KeybindActions {
   Left,
   Right,
   Center,
+  SpacerockMenu,
+  Chat,
+  Blueprint,
   Base,
   Hotbar1,
   Hotbar2,
@@ -424,4 +482,18 @@ export enum KeybindActions {
   NextHotbar,
   PrevHotbar,
   Map,
+  NULL,
 }
+
+export const KeyNames: { [key: string]: string } = {
+  ["ONE"]: "1",
+  ["TWO"]: "2",
+  ["THREE"]: "3",
+  ["FOUR"]: "4",
+  ["FIVE"]: "5",
+  ["SIX"]: "6",
+  ["SEVEN"]: "7",
+  ["EIGHT"]: "8",
+  ["NINE"]: "9",
+  ["ZERO"]: "0",
+};

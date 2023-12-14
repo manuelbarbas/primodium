@@ -67,6 +67,7 @@ export type GameObject<Type extends keyof GameObjectTypes> = InstanceType<GameOb
  */
 export type GameObjectComponent<Type extends keyof GameObjectTypes> = {
   id: string;
+  modifiesPosition?: boolean;
   now?: GameObjectFunction<Type>;
   once?: GameObjectFunction<Type>;
   update?: GameObjectFunction<Type>;
@@ -87,7 +88,8 @@ export type EmbodiedEntity<Type extends keyof GameObjectTypes> = {
   hasComponent: (id: string) => boolean;
   removeComponent: (id: string, stop?: boolean) => void;
   spawn: () => void;
-  despawn: () => void;
+  reset: (stop?: boolean) => void;
+  despawn: (force?: boolean) => void;
   position: Coord;
   id: string;
   setCameraFilter: (filter: number) => void;
