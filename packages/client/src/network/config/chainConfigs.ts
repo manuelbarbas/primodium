@@ -15,7 +15,7 @@ export const caldera = {
       webSocket: ["wss://primodium-bedrock.calderachain.xyz/replica-ws"],
     },
   },
-  faucetUrl: "https://primodium-services.caldera.gg/faucet",
+  faucetUrl: "https://caldera-faucet.primodium.ai",
   indexerUrl: "https://caldera-mud2-indexer.primodium.ai/trpc",
   blockExplorers: {
     default: {
