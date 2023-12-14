@@ -128,7 +128,6 @@ export const pusher = new Pusher({
 
 export default async function handleChatRequest(req: VercelRequest, res: VercelResponse) {
   const ip = req.headers["x-forwarded-for"] ?? "127.0.0.1";
-  console.log(ip);
   const { user, message, signature, uuid, channel } = req.body;
 
   const rateLimitKey = `rateLimit:${ip}`;
