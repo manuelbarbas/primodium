@@ -1,4 +1,5 @@
 import { Entity } from "@latticexyz/recs";
+import { createClient as createFaucetClient } from "@latticexyz/faucet";
 import { useEffect, useState } from "react";
 import { Button } from "src/components/core/Button";
 import { useMud } from "src/hooks";
@@ -6,6 +7,7 @@ import { components } from "src/network/components";
 import { normalizeAddress } from "src/util/common";
 import { Hex, createPublicClient, encodeAbiParameters, formatEther } from "viem";
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
+import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 
 interface TransferTokenProps {
   onTransfer: (address: string, amount: bigint) => Promise<void>;
@@ -64,6 +66,20 @@ export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, classN
       alert("Please enter a valid address and amount.");
     }
   };
+
+  const networkConfig = getNetworkConfig();
+
+  // drip faucet to the external address upon component mount
+  // otherwise, the external address will not have any funds to transfer wETH
+  useEffect(() => {
+    const drip = async () => {
+      if (networkConfig.faucetServiceUrl && externalAccount.address) {
+        const faucet = createFaucetClient({ url: networkConfig.faucetServiceUrl });
+        await faucet.drip.mutate({ address: externalAccount.address });
+      }
+    };
+    drip();
+  }, [externalAccount.address, networkConfig.faucetServiceUrl]);
 
   if (!expectedChain) return null;
   const Btn = () =>
