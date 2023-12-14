@@ -1,6 +1,6 @@
 import { ContractWrite, createBurnerAccount, getContract, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
-import { createFaucetService } from "@latticexyz/services/faucet";
+import { createClient as createFaucetClient } from "@latticexyz/faucet";
 import { syncToRecs } from "@latticexyz/store-sync/recs";
 import mudConfig from "contracts/mud.config";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
@@ -59,16 +59,15 @@ export async function setupNetwork(networkConfig: NetworkConfig) {
     const address = burnerAccount.address;
     console.info("[Dev Faucet]: Player address -> ", address);
 
-    const faucet = createFaucetService(networkConfig.faucetServiceUrl);
+    const faucet = createFaucetClient({ url: networkConfig.faucetServiceUrl });
 
     const requestDrip = async () => {
       const balance = await publicClient.getBalance({ address });
       console.info(`[Dev Faucet]: Player balance -> ${balance}`);
-      const lowBalance = balance < parseEther("1");
+      const lowBalance = balance < parseEther("0.2");
       if (lowBalance) {
         console.info("[Dev Faucet]: Balance is low, dripping funds to player");
-        // Double drip
-        await faucet.dripDev({ address });
+        await faucet.drip.mutate({ address: address });
       }
     };
 
