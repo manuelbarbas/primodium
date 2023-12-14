@@ -71,8 +71,6 @@ export const Profile = () => {
           <Button
             className="btn-xs btn-secondary btn-ghost flex gap-1 m-auto text-accent mt-1"
             onClick={() => {
-              console.log("opened string");
-              console.log(convertObjToParams({ ...params, tab: "link" }));
               window.open(`/account${convertObjToParams({ ...params, tab: "link" })}`);
             }}
           >
