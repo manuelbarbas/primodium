@@ -212,7 +212,8 @@ const AvailableListing = ({
       return components.MarketplaceOrder.getAll().reduce((acc, entity) => {
         const _listing = components.MarketplaceOrder.get(entity)!;
         if (_listing.seller !== listing.seller || _listing.resource !== listing.resource) return acc;
-        return acc - _listing.count;
+        const remainingResource = acc - _listing.count;
+        return remainingResource < 0n ? 0n : remainingResource;
       }, resourceCount + resourcesToClaim);
     }
     const hangar = createHangar(sellerHome)?.get(entity) ?? 0n;
@@ -221,7 +222,7 @@ const AvailableListing = ({
 
   const max = Math.min(
     Number(sellerMaxResource / scale),
-    Math.min(scaledCount, Number(remainingBalance / (listing.price * scale)))
+    listing.price ? Math.min(scaledCount, Number(remainingBalance / (listing.price * scale))) : scaledCount
   );
 
   const handleSync = () => {
@@ -231,6 +232,8 @@ const AvailableListing = ({
     if (listing.orderType === EOrderType.Resource || !sellerHome) return;
     claimUnits(sellerHome, network);
   };
+
+  if (listing.price === 0n) return <></>;
 
   return (
     <tr key={`listing-${listing.id}`} className="">
