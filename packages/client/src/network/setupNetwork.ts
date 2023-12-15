@@ -5,16 +5,7 @@ import { syncToRecs } from "@latticexyz/store-sync/recs";
 import mudConfig from "contracts/mud.config";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { Subject, share } from "rxjs";
-import {
-  Hex,
-  createPublicClient,
-  createWalletClient,
-  encodeAbiParameters,
-  fallback,
-  http,
-  parseEther,
-  webSocket,
-} from "viem";
+import { Hex, createPublicClient, createWalletClient, encodeAbiParameters, fallback, http, parseEther } from "viem";
 import { createClock } from "./createClock";
 import { otherTables } from "./otherTables";
 import { NetworkConfig } from "./types";
@@ -23,7 +14,7 @@ import { world } from "./world";
 export async function setupNetwork(networkConfig: NetworkConfig) {
   const clientOptions = {
     chain: networkConfig.chain,
-    transport: transportObserver(fallback([webSocket(), http()])),
+    transport: transportObserver(fallback([http()])),
     pollingInterval: 1000,
   };
 
