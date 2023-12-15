@@ -64,8 +64,9 @@ export function getExpansionRequirement(objective: Entity): Requirement[] | unde
   const requiredExpansion = comps.P_RequiredExpansion.get(objective)?.value;
   if (!requiredExpansion) return;
   const player = comps.Account.get()?.value;
-  if (!player) return;
-  const playerExpansion = comps.Level.get(player, { value: 0n }).value;
+  const asteroid = comps.Home.get(player as Entity)?.asteroid;
+  if (!player || !asteroid) return;
+  const playerExpansion = comps.Level.get(asteroid as Entity, { value: 0n }).value;
 
   return [
     {
