@@ -3,7 +3,6 @@ import {
   Entity,
   Has,
   HasValue,
-  NotValue,
   defineComponentSystem,
   defineEnterSystem,
   defineExitSystem,
@@ -28,7 +27,6 @@ import {
   SetValue,
 } from "../../common/object-components/common";
 import { Animation, Outline, Texture } from "../../common/object-components/sprite";
-import { EntityType } from "src/util/constants";
 import { createAudioApi } from "src/game/api/audio";
 import { getRandomRange } from "src/util/common";
 
@@ -56,18 +54,12 @@ export const renderBuilding = (scene: Scene) => {
       }),
       Has(components.BuildingType),
       Has(components.IsActive),
-      NotValue(components.BuildingType, { value: EntityType.MainBase }),
     ];
 
     for (const entity of runQuery(oldPositionQuery)) {
       const renderId = `${entity}_entitySprite`;
       scene.objectPool.removeGroup(renderId);
     }
-
-    // for (const entity of runQuery(oldPositionQuery)) {
-    //   const renderId = `${entity}_entitySprite`;
-    //   scene.objectPool.removeGroup(renderId);
-    // }
 
     const render = ({ entity }: { entity: Entity }) => {
       // const entityId = world.entities[entity];
