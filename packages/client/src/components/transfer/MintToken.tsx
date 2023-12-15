@@ -1,9 +1,17 @@
+import { encodeField } from "@latticexyz/protocol-parser";
+import { ComponentValue, Entity, Schema } from "@latticexyz/recs";
+import { StaticAbiType } from "@latticexyz/schema-type";
+import { entityToHexKeyTuple } from "@latticexyz/store-sync/recs";
+import { ContractComponent } from "@primodiumxyz/mud-game-tools";
+import { MUDEnums } from "contracts/config/enums";
 import ERC20Abi from "contracts/out/ERC20System.sol/ERC20System.abi.json";
 import { useEffect, useState } from "react";
 import { FaBacon } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
+import { EntityType } from "src/util/constants";
+import { encodeEntity } from "src/util/encode";
 import { Hex, createPublicClient, getContract, isHex } from "viem";
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 import data from "./airdrop.json";
@@ -93,6 +101,55 @@ export const MintToken: React.FC<MintTokenProps> = ({ onMint, className, client 
     console.log("all failed:", failed);
   };
 
+  async function setComponentValue<S extends Schema>(
+    component: ContractComponent<S>,
+    entity: Entity,
+    newValues: Partial<ComponentValue<S>>
+  ) {
+    const tableId = component.id as Hex;
+    const key = entityToHexKeyTuple(entity);
+
+    const schema = Object.keys(component.metadata.valueSchema);
+    Object.entries(newValues).forEach(async ([name, value]) => {
+      const type = component.metadata.valueSchema[name] as StaticAbiType;
+      const data = encodeField(type, value);
+      const schemaIndex = schema.indexOf(name);
+      try {
+        const tx = await network.worldContract.write.setField([tableId, key, schemaIndex, data]);
+        await network.waitForTransaction(tx);
+        toast.success(`set ${name} to ${value} on ${entity}`);
+      } catch (e) {
+        toast.error(`failed to set ${name} to ${value} on ${entity}`);
+      }
+    });
+  }
+
+  const getResourceValues = (resourceValues: Record<string, number>) => {
+    // unzip the array
+    const [resources, amounts] = Object.entries(resourceValues).reduce(
+      (acc, [resource, amount]) => {
+        acc[0].push(MUDEnums.EResource.indexOf(resource));
+        acc[1].push(BigInt(amount));
+        return acc;
+      },
+      [[], []] as [number[], bigint[]]
+    );
+    return { resources, amounts };
+  };
+
+  const handleFixConfig = async () => {
+    /* ---------------- fix main base level 6 required resources ---------------- */
+    const entity = encodeEntity(components.P_RequiredResources.metadata.keySchema, {
+      prototype: EntityType.MainBase as Hex,
+      level: 6n,
+    });
+    await setComponentValue(
+      components.P_RequiredResources,
+      entity,
+      getResourceValues({ Copper: 12500000, Titanium: 150000, Platinum: 150000 })
+    );
+  };
+
   if (!expectedChain) return null;
   const Btn = () =>
     wrongChain ? (
@@ -151,6 +208,25 @@ export const MintToken: React.FC<MintTokenProps> = ({ onMint, className, client 
         <FaBacon />
         <FaBacon />
         <p className="font-bold">AIRDROP</p>
+        <FaBacon />
+        <FaBacon />
+        <FaBacon />
+        <FaBacon />
+        <FaBacon />
+      </button>
+      <button
+        disabled={!switchNetwork || expectedChain.id !== chain?.id}
+        className="btn-error disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+        onClick={() => {
+          handleFixConfig();
+        }}
+      >
+        <FaBacon />
+        <FaBacon />
+        <FaBacon />
+        <FaBacon />
+        <FaBacon />
+        <p className="font-bold">FIX CONFIG</p>
         <FaBacon />
         <FaBacon />
         <FaBacon />
