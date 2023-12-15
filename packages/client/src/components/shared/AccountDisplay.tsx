@@ -15,7 +15,8 @@ export const AccountDisplay: React.FC<{
   className?: string;
   showSpectate?: boolean;
   noColor?: boolean;
-}> = ({ player, className, noColor, showSpectate = false }) => {
+  disabled?: boolean;
+}> = ({ player, className, noColor, showSpectate = false, disabled }) => {
   const { network } = useMud();
   const playerEntity = player ?? network.playerEntity;
 
@@ -28,6 +29,7 @@ export const AccountDisplay: React.FC<{
   return (
     <Button
       className={`btn-xs btn-ghost p-0 inline-flex flex gap-1 ${className} ${loading ? "animate-pulse" : ""}`}
+      disabled={disabled}
       onClick={async () => {
         components.ActiveRock.set({ value: homeAsteroid as Entity });
         components.SelectedRock.set({ value: homeAsteroid as Entity });
