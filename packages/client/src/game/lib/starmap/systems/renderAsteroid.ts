@@ -25,6 +25,7 @@ import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 import { throttleTime } from "rxjs";
 import { entityToPlayerName } from "src/util/name";
 import { getLinkedAddress } from "src/util/web2/getLinkedAddress";
+import { entityToColor } from "src/util/color";
 
 export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -185,7 +186,8 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       }),
       ObjectText(entityToPlayerName(ownedBy), {
         id: "addressLabel",
-        fontSize: Math.max(8, Math.min(24, 16 / scene.camera.phaserCamera.zoom)),
+        fontSize: Math.max(8, Math.min(44, 16 / scene.camera.phaserCamera.zoom)),
+        color: parseInt(entityToColor(ownedBy).slice(1), 16),
       }),
       OnOnce(async (gameObject) => {
         const linkedAddress = await getLinkedAddress(entityToAddress(ownedBy));
@@ -197,6 +199,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
             : entityToPlayerName(ownedBy));
 
         gameObject.setText(name);
+        gameObject.setFontSize(Math.max(8, Math.min(44, 16 / scene.camera.phaserCamera.zoom)));
       }),
       OnRxjsSystem(
         // @ts-ignore
@@ -206,7 +209,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
 
           if (!mapOpen) return;
 
-          const size = Math.max(8, Math.min(24, 16 / zoom));
+          const size = Math.max(8, Math.min(44, 16 / zoom));
 
           gameObject.setFontSize(size);
         }
