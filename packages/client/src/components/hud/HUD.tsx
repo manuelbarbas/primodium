@@ -29,7 +29,6 @@ import { Card } from "../core/Card";
 import { Entity, hasComponent } from "@latticexyz/recs";
 import { getSpaceRockName } from "src/util/spacerock";
 import { formatNumber } from "src/util/common";
-import { Marketplace } from "./marketplace/Marketplace";
 
 export const GameHUD = () => {
   const playerEntity = useMud().network.playerEntity;
@@ -71,7 +70,6 @@ export const GameHUD = () => {
 
         <HUD.Left>
           <Chat />
-          <Marketplace />
         </HUD.Left>
 
         <HUD.BottomMiddle>
