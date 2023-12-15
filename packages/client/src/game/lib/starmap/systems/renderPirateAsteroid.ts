@@ -23,6 +23,7 @@ import {
   Tween,
   OnRxjsSystem,
   OnHover,
+  OnOnce,
 } from "../../common/object-components/common";
 import { decodeEntity, hashKeyEntity } from "src/util/encode";
 import { Outline, Texture } from "../../common/object-components/sprite";
@@ -155,7 +156,9 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
         color: 0xffa500,
         fontSize: Math.max(8, Math.min(24, 16 / scene.camera.phaserCamera.zoom)),
       }),
-
+      OnOnce((gameObject) => {
+        gameObject.setFontSize(Math.max(8, Math.min(24, 16 / scene.camera.phaserCamera.zoom)));
+      }),
       OnRxjsSystem(
         // @ts-ignore
         scene.camera.zoom$.pipe(throttleTime(10)),
