@@ -7,6 +7,7 @@ import {
   OnClick,
   OnComponentSystem,
   OnHover,
+  OnOnce,
   OnRxjsSystem,
   SetValue,
   Tween,
@@ -162,6 +163,9 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
         id: "addressLabel",
         fontSize: Math.max(8, Math.min(24, 16 / scene.camera.phaserCamera.zoom)),
         color: 0xffffff,
+      }),
+      OnOnce((gameObject) => {
+        gameObject.setFontSize(Math.max(8, Math.min(24, 16 / scene.camera.phaserCamera.zoom)));
       }),
       OnRxjsSystem(
         // @ts-ignore
