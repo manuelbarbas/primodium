@@ -186,7 +186,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
       }),
       ObjectText(entityToPlayerName(ownedBy), {
         id: "addressLabel",
-        fontSize: Math.max(8, Math.min(24, 16 / scene.camera.phaserCamera.zoom)),
+        fontSize: Math.max(8, Math.min(44, 16 / scene.camera.phaserCamera.zoom)),
         color: parseInt(entityToColor(ownedBy).slice(1), 16),
       }),
       OnOnce(async (gameObject) => {

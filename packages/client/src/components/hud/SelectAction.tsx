@@ -34,8 +34,9 @@ export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating
           zoom: { from: 0.5, to: 1 },
           duration: 500,
           ease: "Cubic.easeInOut",
-          onComplete: () => {
-            requestAnimationFrame(() => targetScene.camera.worldView$.next(targetScene.camera.phaserCamera.worldView));
+          onUpdate: () => {
+            targetScene.camera.zoom$.next(targetScene.camera.phaserCamera.zoom);
+            targetScene.camera.worldView$.next(targetScene.camera.phaserCamera.worldView);
           },
         });
         targetScene.camera.phaserCamera.fadeIn(500, 0, 0, 0);
@@ -66,8 +67,9 @@ export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating
           zoom: { from: 2, to: 1 },
           duration: 500,
           ease: "Cubic.easeInOut",
-          onComplete: () => {
-            requestAnimationFrame(() => targetScene.camera.worldView$.next(targetScene.camera.phaserCamera.worldView));
+          onUpdate: () => {
+            targetScene.camera.zoom$.next(targetScene.camera.phaserCamera.zoom);
+            targetScene.camera.worldView$.next(targetScene.camera.phaserCamera.worldView);
           },
         });
         targetScene.camera.phaserCamera.fadeIn(500, 0, 0, 0);
