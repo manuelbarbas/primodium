@@ -46,7 +46,7 @@ export default defineConfig({
       },
     },
     target: "ES2022",
-    sourcemap: true,
+    sourcemap: false,
   },
 
   optimizeDeps: {
