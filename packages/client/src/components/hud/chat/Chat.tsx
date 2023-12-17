@@ -159,7 +159,7 @@ export const Channel: React.FC<{ className?: string; channel: string }> = ({ cla
   return (
     <div className={`${className} duration-300 transition-all pointer-events-auto text-xs`}>
       <button
-        className={`absolute bottom-16 left-1/2 -translate-x-1/2 bg-pink-700 p-1 drop-shadow-2xl z-50 transition-opacity ${
+        className={`absolute bottom-16 left-1/2 -translate-x-1/2 bg-pink-700 p-1 z-50 transition-opacity ${
           chatScroll ? "opacity-100" : "opacity-0 pointer-events-none"
         } `}
         onClick={() => {

@@ -70,7 +70,7 @@ export default function App() {
     return (
       <MudProvider {...networkLayer}>
         <ToastContainer
-          toastClassName={`font-mono text-xs border bg-neutral border-secondary rounded-box drop-shadow-2xl`}
+          toastClassName={`font-mono text-xs border bg-neutral border-secondary rounded-box`}
           progressClassName={"bg-accent"}
           position="top-right"
           autoClose={3000}

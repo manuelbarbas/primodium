@@ -290,7 +290,7 @@ const HoverInfo = () => {
     const buildingName = getBuildingName(entity);
 
     return (
-      <Card className="ml-5 uppercase font-bold text-xs drop-shadow-2xl relative">
+      <Card className="ml-5 uppercase font-bold text-xs relative">
         <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
         <p className="z-10">{buildingName}</p>
       </Card>
@@ -301,7 +301,7 @@ const HoverInfo = () => {
     const rockName = getSpaceRockName(entity);
 
     return (
-      <Card className="ml-5 uppercase font-bold text-xs drop-shadow-2xl relative">
+      <Card className="ml-5 uppercase font-bold text-xs relative">
         <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
         <p className="z-10">{rockName}</p>
       </Card>
@@ -315,7 +315,7 @@ const HoverInfo = () => {
     if (!arrival) return <></>;
 
     return (
-      <Card className="ml-5 uppercase font-bold text-xs drop-shadow-2xl relative">
+      <Card className="ml-5 uppercase font-bold text-xs relative">
         <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
         <p className="z-10">
           <b className="text-accent">{formatNumber(arrival.arrivalTime - now)}</b> sec remaining

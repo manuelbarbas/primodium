@@ -15,9 +15,7 @@ export const GracePeriod: React.FC<{ player: Entity; className?: string }> = ({ 
   if (time >= endTime) return null;
 
   return (
-    <div
-      className={`flex flex-col items-center justify-center space-y-1 drop-shadow-2xl pointer-events-auto ${className}`}
-    >
+    <div className={`flex flex-col items-center justify-center space-y-1 pointer-events-auto ${className}`}>
       <div className="flex gap-2 items-center">
         <IconLabel imageUri="img/icons/graceicon.png" tooltipText="Grace Period" />
         {duration.minutes() !== 0 && (
