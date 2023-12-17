@@ -25,8 +25,8 @@ type message = {
   uuid?: string;
 };
 
-export const client = new PusherJS(import.meta.env.PRI_PUSHER_APP_KEY!, {
-  wsHost: import.meta.env.PRI_PUSHER_APP_HOST!,
+export const client = new PusherJS(import.meta.env.PRI_PUSHER_APP_KEY ?? "", {
+  wsHost: import.meta.env.PRI_PUSHER_APP_HOST ?? "",
   wsPort: 443,
   wssPort: 443,
   forceTLS: true,

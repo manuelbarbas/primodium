@@ -11,6 +11,7 @@ import { Card } from "../core/Card";
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
 import { Objectives } from "./modals/Objectives";
+import { Badge } from "../core/Badge";
 
 const tutorialObjectives = [
   EObjectives.BuildIronMine,
@@ -20,6 +21,7 @@ const tutorialObjectives = [
   EObjectives.BuildWorkshop,
   EObjectives.BuildIronPlateFactory,
   EObjectives.UpgradeMainBase,
+  EObjectives.BuildStarmapper,
 ];
 
 export const CurrentObjective = () => {
@@ -53,7 +55,7 @@ export const CurrentObjective = () => {
   if (currentStep === -1)
     return (
       <Modal title="objectives">
-        <Modal.Button className="border-secondary border-t-0 border-r-0 rounded-t-none rounded-r-none">
+        <Modal.Button className="border-secondary border-t-0 border-r-0 px-5 rounded-t-none rounded-r-none w-fit">
           <IconLabel imageUri="img/icons/objectiveicon.png" className="text-sm" text="VIEW OBJECTIVES" />
         </Modal.Button>
         <Modal.Content className="w-[50rem] h-[50rem]">
@@ -77,21 +79,21 @@ export const CurrentObjective = () => {
             </p>
           </div>
         </div>
-      </Card>
-      <div className="flex justify-between w-full px-5 pt-2">
-        <Modal>
-          <Modal.Button className={`btn-xs btn-ghost flex items-center justify-center gap-1 text-accent`}>
-            <FaGift /> {"Claim"}
-          </Modal.Button>
-          <Modal.Content className="w-[50rem] h-[50rem]">
-            <Objectives highlight={objectiveEntity} />
-          </Modal.Content>
-        </Modal>
+        <div className="flex justify-between items-center w-full px-2 py-1 bg-base-100 border-t border-secondary/25">
+          <Modal>
+            <Modal.Button className={`btn-xs flex items-center justify-center gap-1 text-accent`}>
+              <FaGift /> {"Claim"}
+            </Modal.Button>
+            <Modal.Content className="w-[50rem] h-[50rem]">
+              <Objectives highlight={objectiveEntity} />
+            </Modal.Content>
+          </Modal>
 
-        <p className="text-xs text-secondary">
-          {currentStep + 1} / {tutorialObjectives.length}
-        </p>
-      </div>
+          <Badge className="text-xs text-secondary">
+            {currentStep + 1} / {tutorialObjectives.length}
+          </Badge>
+        </div>
+      </Card>
     </div>
   );
 };

@@ -7,7 +7,7 @@ import { SetupResult } from "src/network/types";
 import { world } from "src/network/world";
 import { PIRATE_KEY } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
-import { ObjectPosition, Tween } from "../../common/object-components/common";
+import { ObjectPosition, SetValue, Tween } from "../../common/object-components/common";
 import { Circle } from "../../common/object-components/graphics";
 
 const orbitRadius = 64;
@@ -57,12 +57,18 @@ export const renderEntityOrbitingArrivals = (rockEntity: Entity, playerEntity: E
       borderThickness: 1,
       alpha: 0,
     }),
+    SetValue({
+      input: null,
+    }),
   ]);
   allArrivals.forEach((arrival, i) => {
     const angle = ((i + 1) / allArrivals.length) * 360;
     const distance = 360 / allArrivals.length;
     arrivalOrbit.add("Graphics").setComponents([
       ObjectPosition(destinationPixelCoord, DepthLayers.Marker),
+      SetValue({
+        input: null,
+      }),
       Circle(5, {
         color: 0x00ffff,
         borderThickness: 1,
