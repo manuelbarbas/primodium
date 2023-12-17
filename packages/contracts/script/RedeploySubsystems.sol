@@ -82,33 +82,6 @@ contract RedeploySubsystems is Script {
     );
   }
 
-  function resetPlayerAsteroid(IWorld world) internal {
-    StoreSwitch.setStoreAddress(address(world));
-    bytes32[] memory rocks = new bytes32[](4);
-    rocks[0] = 0xc42968f35ddcbf94cb349d51a19f26f15e30593fccc76f390fc55046a7e7a8c2;
-    rocks[1] = 0xfc7eed37b93510ceeb400a4866223971ad933a0e9436d85336122018b03d9bd7;
-    rocks[2] = 0xb21856b6c1692abdf97d0dced09f2ba9312710f343e1cafd6506d61675623f1c;
-    rocks[3] = 0xedb106a43f3fca89f1060ab108233969879d57b80a3ce6fc31d20b5c0a57b110;
-
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-
-    console.log("unitPrototypes: ", unitPrototypes.length);
-    for (uint256 i = 0; i < rocks.length; i++) {
-      bytes32 rockEntity = rocks[i];
-      bytes32 owner = OwnedBy.get(rockEntity);
-      console.log("checking %s, owned by %s", uint256(rockEntity), uint256(owner));
-      for (uint256 j = 1; j < unitPrototypes.length; j++) {
-        uint256 unitCount = UnitCount.get(owner, rockEntity, unitPrototypes[j]);
-        UnitCount.set(owner, rockEntity, unitPrototypes[j], 0);
-        console.log(
-          "old unit count: %s, new unit count: %s ",
-          unitCount,
-          UnitCount.get(owner, rockEntity, unitPrototypes[j])
-        );
-      }
-    }
-  }
-
   function run() external {
     IWorld world = IWorld(worldAddress);
     StoreSwitch.setStoreAddress(worldAddress);
