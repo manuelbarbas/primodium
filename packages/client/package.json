@@ -32,6 +32,7 @@
     "@latticexyz/world": "2.0.0-main-735d957c",
     "@primodiumxyz/mud-game-tools": "^1.0.7",
     "@sentry/react": "^7.88.0",
+    "@sentry/vite-plugin": "^2.10.2",
     "@vercel/analytics": "^1.0.1",
     "@vercel/kv": "^1.0.0",
     "@visx/gradient": "^3.3.0",
