@@ -1672,7 +1672,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     keys: [{ [EResource.Alloy]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 50n },
-      P_ConsumesResource: { value: EResource.IronPlate },
+      P_ConsumesResource: { value: EResource.Copper },
     },
   },
   RocketFuel: {
