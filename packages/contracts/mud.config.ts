@@ -17,7 +17,7 @@ if (typeof process != undefined && typeof process != "undefined") {
 export type Config = typeof config;
 export const config = mudConfig({
   excludeSystems: [...dev],
-  overrideSystems: {
+  systems: {
     S_BattleSystem: {
       openAccess: false,
       accessList: ["RaidSystem", "InvadeSystem"],
