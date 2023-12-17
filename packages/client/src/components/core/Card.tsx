@@ -3,9 +3,7 @@ export const Card: React.FC<{
   className?: string;
 }> = ({ children, className }) => {
   return (
-    <div className={`${className} card bg-neutral border border-secondary p-2 drop-shadow-2xl pointer-events-auto`}>
-      {children}
-    </div>
+    <div className={`${className} card bg-neutral border border-secondary p-2 pointer-events-auto`}>{children}</div>
   );
 };
 

@@ -108,7 +108,7 @@ export const Minimap = () => {
   return (
     <div className="backdrop-blur-sm">
       <div
-        className={`relative card relative border border-secondary border-t-0 border-r-0 drop-shadow-2xl pointer-events-auto transition transition-all`}
+        className={`relative card relative border border-secondary border-t-0 border-r-0 pointer-events-auto transition transition-all`}
         style={{ width: 300, height: 300 }}
       >
         <Voronoi points={points} width={300} height={300} view={view} onCoordinateClick={onCoordinateClick} />
