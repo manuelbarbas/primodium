@@ -11,7 +11,7 @@ export const isProfane = (text: string) => {
 };
 
 export const censorText = (text: string) => {
-  const matches = matcher.getAllMatches(text);
+  const matches = matcher.getAllMatches(text.toString());
 
   return censor.applyTo(text, matches);
 };
