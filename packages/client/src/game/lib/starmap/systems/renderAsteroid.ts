@@ -75,7 +75,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         scrollFactorX: { from: 1 - getRandomRange(0, 0.0025), to: 1 + getRandomRange(0, 0.0025) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
-        duration: 3000, // Duration of one wobble
+        duration: 5000, // Duration of one wobble
         yoyo: true, // Go back to original scale
         repeat: -1, // Repeat indefinitely
       }),

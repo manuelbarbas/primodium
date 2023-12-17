@@ -56,7 +56,16 @@ export const GameHUD = () => {
           </HUD.TopLeft>
         )}
 
-        {!isSpectating && <HUD.TopRight>{mapOpen ? <Minimap /> : <CurrentObjective />}</HUD.TopRight>}
+        {!isSpectating && (
+          <HUD.TopRight>
+            {
+              <div className="flex flex-col">
+                <CurrentObjective />
+                {mapOpen && <Minimap />}
+              </div>
+            }
+          </HUD.TopRight>
+        )}
 
         {!isSpectating && <HUD.Right>{mapOpen ? <Motherlodes /> : <BuildingSelection />}</HUD.Right>}
         {isSpectating && (
