@@ -8,11 +8,11 @@ export const caldera = {
   rpcUrls: {
     default: {
       http: ["https://primodium-bedrock.calderachain.xyz/replica-http"],
-      webSocket: ["wss://primodium-bedrock.calderachain.xyz/replica-ws"],
+      // webSocket: ["wss://primodium-bedrock.calderachain.xyz/replica-ws"],
     },
     public: {
       http: ["https://primodium-bedrock.calderachain.xyz/replica-http"],
-      webSocket: ["wss://primodium-bedrock.calderachain.xyz/replica-ws"],
+      // webSocket: ["wss://primodium-bedrock.calderachain.xyz/replica-ws"],
     },
   },
   faucetUrl: "https://caldera-faucet.primodium.ai/trpc",
