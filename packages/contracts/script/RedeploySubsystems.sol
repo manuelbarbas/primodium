@@ -20,6 +20,8 @@ import { ResourceAccess } from "@latticexyz/world/src/codegen/tables/ResourceAcc
 import { OwnedBy, UnitCount, P_UnitPrototypes } from "codegen/index.sol";
 import { EUnit } from "src/Types.sol";
 
+// we can use this as an example script moving forward
+
 contract RedeploySubsystems is Script {
   using ResourceIdInstance for ResourceId;
   using WorldResourceIdInstance for ResourceId;
@@ -91,9 +93,8 @@ contract RedeploySubsystems is Script {
 
     vm.startBroadcast(deployerPrivateKey);
 
-    // redeployBattle(world);
-    // redeploySpawnPirate(world);
-    resetPlayerAsteroid(world);
+    redeployBattle(world);
+    redeploySpawnPirate(world);
 
     vm.stopBroadcast();
   }
