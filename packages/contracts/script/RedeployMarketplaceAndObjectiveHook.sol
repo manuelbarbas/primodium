@@ -36,12 +36,6 @@ contract RedeploySubsystems is Script {
   // address worldAddress = 0xdd8EbC2CBCDe94D7c12FE137D0cb47eC560ea587;
   address creator = IWorld(worldAddress).creator();
 
-  function hasAccess(ResourceId resourceId, address caller) internal view returns (bool) {
-    return
-      // First check access based on the namespace. If caller has no namespace access, check access on the resource.
-      ResourceAccess.get(resourceId.getNamespaceId(), caller) || ResourceAccess.get(resourceId, caller);
-  }
-
   function redeployMarketplace(IWorld world) internal {
     ResourceId marketplace = getSystemResourceId("MarketplaceSystem");
     (address addr, bool pubAcc) = Systems.get(marketplace);
