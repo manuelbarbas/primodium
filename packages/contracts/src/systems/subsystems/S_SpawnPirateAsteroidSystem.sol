@@ -14,7 +14,7 @@ contract S_SpawnPirateAsteroidSystem is PrimodiumSystem {
    * @param prototypeEntity The prototype which the pirate is spawned by.
    * @return asteroidEntity the spawned asteroid entity.
    */
-  function spawnPirateAsteroid(bytes32 prototypeEntity) public returns (bytes32 asteroidEntity) {
-    asteroidEntity = LibPirate.createPirateAsteroid(addressToEntity(_msgSender()), prototypeEntity);
+  function spawnPirateAsteroid(bytes32 playerEntity, bytes32 prototypeEntity) public returns (bytes32 asteroidEntity) {
+    asteroidEntity = LibPirate.createPirateAsteroid(playerEntity, prototypeEntity);
   }
 }

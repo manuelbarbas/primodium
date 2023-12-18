@@ -56,7 +56,16 @@ export const GameHUD = () => {
           </HUD.TopLeft>
         )}
 
-        {!isSpectating && <HUD.TopRight>{mapOpen ? <Minimap /> : <CurrentObjective />}</HUD.TopRight>}
+        {!isSpectating && (
+          <HUD.TopRight>
+            {
+              <div className="flex flex-col">
+                <CurrentObjective />
+                {mapOpen && <Minimap />}
+              </div>
+            }
+          </HUD.TopRight>
+        )}
 
         {!isSpectating && <HUD.Right>{mapOpen ? <Motherlodes /> : <BuildingSelection />}</HUD.Right>}
         {isSpectating && (
@@ -290,7 +299,7 @@ const HoverInfo = () => {
     const buildingName = getBuildingName(entity);
 
     return (
-      <Card className="ml-5 uppercase font-bold text-xs drop-shadow-2xl relative">
+      <Card className="ml-5 uppercase font-bold text-xs relative">
         <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
         <p className="z-10">{buildingName}</p>
       </Card>
@@ -301,7 +310,7 @@ const HoverInfo = () => {
     const rockName = getSpaceRockName(entity);
 
     return (
-      <Card className="ml-5 uppercase font-bold text-xs drop-shadow-2xl relative">
+      <Card className="ml-5 uppercase font-bold text-xs relative">
         <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
         <p className="z-10">{rockName}</p>
       </Card>
@@ -315,7 +324,7 @@ const HoverInfo = () => {
     if (!arrival) return <></>;
 
     return (
-      <Card className="ml-5 uppercase font-bold text-xs drop-shadow-2xl relative">
+      <Card className="ml-5 uppercase font-bold text-xs relative">
         <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
         <p className="z-10">
           <b className="text-accent">{formatNumber(arrival.arrivalTime - now)}</b> sec remaining

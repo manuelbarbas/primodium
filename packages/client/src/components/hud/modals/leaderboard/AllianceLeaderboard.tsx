@@ -212,30 +212,32 @@ export const ManageScreen: React.FC = () => {
                 {role === EAllianceRole.Owner && (
                   <div className="flex items-center gap-1 font-bold text-warning uppercase">
                     <GiRank3 size={18} className="text-yellow-500" />
-                    <AccountDisplay player={entity} />{" "}
+                    <AccountDisplay player={entity} />
                     <p className="bg-yellow-500 text-neutral px-2 rounded-sm text-xs">OWNER</p>
                   </div>
                 )}
                 {role === EAllianceRole.CanGrantRole && (
                   <div className="flex items-center gap-1 font-bold">
                     <GiRank3 size={18} className="text-yellow-500" />
-                    <AccountDisplay player={entity} />{" "}
+                    <AccountDisplay player={entity} />
                   </div>
                 )}
                 {role === EAllianceRole.CanKick && (
                   <div className="flex items-center gap-1 font-bold">
                     <GiRank2 size={18} className="text-yellow-500" />
-                    <AccountDisplay player={entity} />{" "}
+                    <AccountDisplay player={entity} />
                   </div>
                 )}
                 {role === EAllianceRole.CanInvite && (
                   <div className="flex items-center gap-1 font-bold">
                     <GiRank1 size={18} className="text-yellow-500" />
-                    <AccountDisplay player={entity} />{" "}
+                    <AccountDisplay player={entity} />
                   </div>
                 )}
                 {role === EAllianceRole.Member && (
-                  <div className="flex items-center gap-1 font-bold">{entityToAddress(entity, true)}</div>
+                  <div className="flex items-center gap-1 font-bold">
+                    <AccountDisplay player={entity} />
+                  </div>
                 )}
                 <div className="flex gap-1">
                   {/* only kick if not current player, has the ability to kick, and current player is higher than member */}
@@ -401,7 +403,7 @@ export const InvitesScreen: React.FC = () => {
 
                   return (
                     <SecondaryCard key={entity} className="border-b rounded-none flex-row justify-between items-center">
-                      {entityToAddress(request.player ?? singletonEntity, true)}
+                      <AccountDisplay player={request.player} />
 
                       <div className="flex gap-1">
                         {/* only kick if not current player, has the ability to kick, and current player is higher than member */}

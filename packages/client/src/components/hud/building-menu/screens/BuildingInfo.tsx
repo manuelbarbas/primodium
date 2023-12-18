@@ -145,7 +145,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
             {!upgrade?.nextLevelUnitProductionMultiplier || level === maxLevel ? (
               <b>N/A</b>
             ) : (
-              <b>x{(upgrade?.nextLevelUnitProductionMultiplier / RESOURCE_SCALE).toString()}</b>
+              <b>x{(Number(upgrade?.nextLevelUnitProductionMultiplier) / Number(RESOURCE_SCALE)).toString()}</b>
             )}
           </DataLabel>
         </div>

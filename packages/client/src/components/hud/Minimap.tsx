@@ -1,15 +1,13 @@
 import { primodium } from "@game/api";
 import { Scenes } from "@game/constants";
 import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
-import { useEntityQuery } from "@latticexyz/react";
-import { Entity, Has } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { RadialGradient } from "@visx/gradient";
 import { Group } from "@visx/group";
 import { scaleLinear } from "@visx/scale";
 import { Circle } from "@visx/shape";
 import { VoronoiPolygon, voronoi } from "@visx/voronoi";
-import { ERock } from "contracts/config/enums";
 import { ReactNode, useMemo, useRef } from "react";
 import { components } from "src/network/components";
 import { entityToColor } from "src/util/color";
@@ -75,12 +73,12 @@ function calculateScaledBounds(coords: Coord[]): { minX: number; maxX: number; m
 
 export const Minimap = () => {
   const playerEntity = components.Account.use()?.value;
-  const points = useEntityQuery([Has(components.Position), Has(components.RockType)]).map((entity) => {
-    const rockType = components.RockType.get(entity)?.value;
-    const position = components.Position.get(entity);
-    const owner = components.OwnedBy.get(entity)?.value as Entity | undefined;
-    return { ...position!, owner, size: rockType === ERock.Asteroid ? 3 : 2 };
-  });
+  // const points = useEntityQuery([Has(components.Position), Has(components.RockType)]).map((entity) => {
+  //   const rockType = components.RockType.get(entity)?.value;
+  //   const position = components.Position.get(entity);
+  //   const owner = components.OwnedBy.get(entity)?.value as Entity | undefined;
+  //   return { ...position!, owner, size: rockType === ERock.Asteroid ? 3 : 2 };
+  // });
 
   const onCoordinateClick = (coord: Coord) => {
     const { pan } = primodium.api(Scenes.Starmap).camera;
@@ -106,13 +104,13 @@ export const Minimap = () => {
   }, [rawView, scene]);
 
   return (
-    <div className="backdrop-blur-sm">
+    <div>
       <div
-        className={`relative card relative border border-secondary border-t-0 border-r-0 drop-shadow-2xl pointer-events-auto transition transition-all`}
-        style={{ width: 300, height: 300 }}
+        className={`relative relative border-t-0 border-r-0 pointer-events-auto transition transition-all`}
+        // style={{ width: 300, height: 300 }}
       >
-        <Voronoi points={points} width={300} height={300} view={view} onCoordinateClick={onCoordinateClick} />
-        <div className="flex w-full justify-between items-end absolute bottom-0 p-2">
+        {/* <Voronoi points={points} width={300} height={300} view={view} onCoordinateClick={onCoordinateClick} /> */}
+        <div className="flex w-full justify-between p-2 items-center gap-1">
           <Button
             className="btn-sm flex text-accent border-secondary"
             onClick={() => {

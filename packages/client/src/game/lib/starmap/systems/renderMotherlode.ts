@@ -7,6 +7,7 @@ import {
   OnClick,
   OnComponentSystem,
   OnHover,
+  OnOnce,
   OnRxjsSystem,
   SetValue,
   Tween,
@@ -64,7 +65,7 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
         repeat: -1, // Repeat indefinitely
       }),
       Tween(scene, {
-        scrollFactorX: { from: 1 - getRandomRange(0, 0.005), to: 1 + getRandomRange(0, 0.005) },
+        scrollFactorX: { from: 1 - getRandomRange(0, 0.0025), to: 1 + getRandomRange(0, 0.0025) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
         duration: 3000, // Duration of one wobble
@@ -72,7 +73,7 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
         repeat: -1, // Repeat indefinitely
       }),
       Tween(scene, {
-        scrollFactorY: { from: 1 - getRandomRange(0, 0.005), to: 1 + getRandomRange(0, 0.005) },
+        scrollFactorY: { from: 1 - getRandomRange(0, 0.0025), to: 1 + getRandomRange(0, 0.0025) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
         duration: 5000, // Duration of one wobble
@@ -162,6 +163,9 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
         id: "addressLabel",
         fontSize: Math.max(8, Math.min(24, 16 / scene.camera.phaserCamera.zoom)),
         color: 0xffffff,
+      }),
+      OnOnce((gameObject) => {
+        gameObject.setFontSize(Math.max(8, Math.min(24, 16 / scene.camera.phaserCamera.zoom)));
       }),
       OnRxjsSystem(
         // @ts-ignore

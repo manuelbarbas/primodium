@@ -145,18 +145,20 @@ export default async function handleChatRequest(req: VercelRequest, res: VercelR
 
   if (message.length === 0) return res.status(200).send("OK");
 
+  const trimmedMessage = message.toString().trim(128);
+
   try {
     const payload = {
       user: user ?? "unknown",
-      message: message.trim(128),
+      message: trimmedMessage,
       time: Date.now(),
       uuid: uuid,
     };
 
     await pusher.trigger(channel, "message", payload);
 
-    //store chat history in kv
-    await kv.hmset(`chat:${channel}:${payload.uuid}`, payload);
+    //store chat history in kv, vercel kv auto parse converts some strings to other objects hence the quotes
+    await kv.hmset(`chat:${channel}:${payload.uuid}`, { ...payload, message: `"${trimmedMessage}"` });
     await kv.zadd(`chat:${channel}`, { score: payload.time, member: `chat:${channel}:${payload.uuid}` });
     await kv.expire(`chat:${channel}:${payload.uuid}`, 60 * 60 * 12); // 12 hours
     // Set a rate limit key with 1-second expiration

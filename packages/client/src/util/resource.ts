@@ -301,8 +301,11 @@ export function getFullResourceCounts(spaceRockEntity?: Entity) {
       //check to see if this resource consumes another resource to be produced
       const consumedResource = (comps.P_ConsumesResource.getWithKeys({ resource })?.value ?? 0) as EResource;
 
+      //check if this resource consumes another resource, but the consumed resource isn't currently consumed by the space rock
+      const consumedTime = consumptionTimeLengths[consumedResource] ?? 0n;
+
       //if this resource consumes another resource the maxium time it can be produced is the maximum time that the required resource is consumed
-      const producedTime = consumedResource ? consumptionTimeLengths[consumedResource] : timeSinceClaimed;
+      const producedTime = consumedResource ? consumedTime : timeSinceClaimed;
 
       //the amount of resource that has been produced
       increase = productionRate * producedTime;

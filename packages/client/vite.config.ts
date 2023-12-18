@@ -1,3 +1,4 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { comlink } from "vite-plugin-comlink";
@@ -5,7 +6,15 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import postcss from "./postcss.config";
 
 export default defineConfig({
-  plugins: [react(), comlink(), tsconfigPaths()],
+  plugins: [
+    react(),
+    comlink(),
+    tsconfigPaths(),
+    sentryVitePlugin({
+      org: "primodium",
+      project: "primodium",
+    }),
+  ],
   server: {
     port: 3000,
     fs: {

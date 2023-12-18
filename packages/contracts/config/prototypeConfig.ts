@@ -288,7 +288,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_UnitProdMultiplier: { value: 100n },
       },
       6: {
-        P_RequiredResources: getResourceValues({ Copper: 125000000, Titanium: 150000, Platinum: 150000 }),
+        P_RequiredResources: getResourceValues({ Copper: 12500000, Titanium: 150000, Platinum: 150000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[6]),
         },
@@ -298,7 +298,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       },
       7: {
         P_RequiredResources: getResourceValues({
-          Copper: 250000000,
+          Copper: 25000000,
           Titanium: 500000,
           Platinum: 500000,
           Iridium: 500000,
@@ -312,7 +312,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       },
       8: {
         P_RequiredResources: getResourceValues({
-          Copper: 250000000,
+          Copper: 25000000,
           Titanium: 1500000,
           Platinum: 1500000,
           Iridium: 1500000,
