@@ -16,6 +16,7 @@ import { S_BattleSystem } from "src/systems/subsystems/S_BattleSystem.sol";
 import { S_SpawnPirateAsteroidSystem } from "src/systems/subsystems/S_SpawnPirateAsteroidSystem.sol";
 import { InvadeSystem } from "src/systems/InvadeSystem.sol";
 import { RaidSystem } from "src/systems/RaidSystem.sol";
+import { ClaimObjectiveSystem } from "src/systems/ClaimObjectiveSystem.sol";
 import { ResourceAccess } from "@latticexyz/world/src/codegen/tables/ResourceAccess.sol";
 import { OwnedBy, UnitCount, P_UnitPrototypes } from "codegen/index.sol";
 import { EUnit } from "src/Types.sol";
@@ -26,6 +27,7 @@ contract RedeploySubsystems is Script {
   using ResourceIdInstance for ResourceId;
   using WorldResourceIdInstance for ResourceId;
   address worldAddress = 0xdd8EbC2CBCDe94D7c12FE137D0cb47eC560ea587;
+  address creator = IWorld(worldAddress).creator();
 
   function hasAccess(ResourceId resourceId, address caller) internal view returns (bool) {
     return
@@ -37,14 +39,14 @@ contract RedeploySubsystems is Script {
     ResourceId battleSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, "", "S_BattleSystem");
     (address battleAddr, bool publicAccess) = Systems.get(battleSystemId);
     console.log("Found existing S_BattleSystem address: %s, public access: %s", battleAddr, publicAccess);
-
-    world.registerSystem(battleSystemId, new S_BattleSystem(), false);
     (battleAddr, publicAccess) = Systems.get(battleSystemId);
-    console.log("new S_BattleSystem address: %s, public access: %s", battleAddr, publicAccess);
 
     ResourceId raidSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, "", "RaidSystem");
     (address raidSystemAddress, bool raidSystemPublicAccess) = Systems.get(raidSystemId);
     console.log("Found existing RaidSystem address: %s, public access: %s", raidSystemAddress, raidSystemPublicAccess);
+    world.registerSystem(raidSystemId, new RaidSystem(), true);
+    (raidSystemAddress, raidSystemPublicAccess) = Systems.get(raidSystemId);
+    console.log("new RaidSystem address: %s, public access: %s", raidSystemAddress, raidSystemPublicAccess);
 
     ResourceId invadeSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, "", "InvadeSystem");
     (address invadeSystemAddress, bool invadeSystemPublicAccess) = Systems.get(invadeSystemId);
@@ -53,11 +55,17 @@ contract RedeploySubsystems is Script {
       invadeSystemAddress,
       invadeSystemPublicAccess
     );
+    world.registerSystem(invadeSystemId, new InvadeSystem(), true);
+    (invadeSystemAddress, invadeSystemPublicAccess) = Systems.get(invadeSystemId);
+    console.log("new InvadeSystem address: %s, public access: %s", invadeSystemAddress, invadeSystemPublicAccess);
 
     world.grantAccess(battleSystemId, raidSystemAddress);
+    world.grantAccess(battleSystemId, invadeSystemAddress);
+    world.grantAccess(battleSystemId, creator);
 
     console.log("raid system has access to battle system: ", hasAccess(battleSystemId, raidSystemAddress));
     console.log("invade system has access to battle system: ", hasAccess(battleSystemId, invadeSystemAddress));
+    console.log("invade system has access to battle system: ", hasAccess(battleSystemId, creator));
   }
 
   function redeploySpawnPirate(IWorld world) internal {
@@ -76,12 +84,22 @@ contract RedeploySubsystems is Script {
       claimObjectiveSystemAddress,
       claimObjectiveSystemPublicAccess
     );
+    world.registerSystem(claimObjectiveSystem, new ClaimObjectiveSystem(), true);
+    (claimObjectiveSystemAddress, claimObjectiveSystemPublicAccess) = Systems.get(claimObjectiveSystem);
+    console.log(
+      "new RaidSystem address: %s, public access: %s",
+      claimObjectiveSystemAddress,
+      claimObjectiveSystemPublicAccess
+    );
 
+    world.grantAccess(spawnPirateAsteroidSystem, creator);
     world.grantAccess(spawnPirateAsteroidSystem, claimObjectiveSystemAddress);
     console.log(
       "claimObjectiveSystem has access to spawnPirateAsteroidSystem: ",
       hasAccess(spawnPirateAsteroidSystem, claimObjectiveSystemAddress)
     );
+
+    console.log("invade system has access to battle system: ", hasAccess(spawnPirateAsteroidSystem, creator));
   }
 
   function run() external {
