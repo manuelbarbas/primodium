@@ -23,6 +23,7 @@ import {
 } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect, useState } from "react";
+import { decodeEntity } from "src/util/encode";
 import { encodeEntity } from "./util";
 
 export interface Options<M extends Metadata> {
@@ -77,6 +78,8 @@ export type ExtendedContractComponent<
   useWithKeys(keys?: SchemaToPrimitives<TKeySchema>, defaultValue?: ValueSansMetadata<S>): ComponentValue<S>;
 
   setWithKeys(value: ComponentValue<S>, keys?: SchemaToPrimitives<TKeySchema>): void;
+
+  getEntityKeys: (entity: Entity) => SchemaToPrimitives<TKeySchema>;
 };
 
 export function extendContractComponent<S extends Schema, TKeySchema extends KeySchema, T = unknown>(
@@ -106,12 +109,17 @@ export function extendContractComponent<S extends Schema, TKeySchema extends Key
     const entity = key ? encodeEntity(component, key) : singletonEntity;
     return extendedComponent.set(value, entity);
   }
+
+  function getEntityKeys(entity: Entity) {
+    return decodeEntity(component.metadata.keySchema, entity);
+  }
   return {
     ...extendedComponent,
     getWithKeys,
     hasWithKeys,
     useWithKeys,
     setWithKeys,
+    getEntityKeys,
   } as ExtendedContractComponent<S, TKeySchema>;
 }
 export function extendComponent<S extends Schema, M extends Metadata, T = unknown>(

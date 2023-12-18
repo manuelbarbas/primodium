@@ -38,6 +38,8 @@ export const renderBuilding = (scene: Scene) => {
   const audio = createAudioApi(scene);
 
   defineComponentSystem(gameWorld, components.ActiveRock, ({ value }) => {
+    if (!value[0] || value[0]?.value === value[1]?.value) return;
+
     world.dispose("game_specate");
 
     const positionQuery = [
