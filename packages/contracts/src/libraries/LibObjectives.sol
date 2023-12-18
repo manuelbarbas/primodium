@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 // tables
-import { ProducedUnit, P_ProducedUnits, P_RequiredExpansion, P_ProducedUnitsData, DefeatedPirate, P_DefeatedPirates, P_RequiredUnits, P_RequiredUnitsData, DestroyedUnit, P_DestroyedUnits, P_DestroyedUnitsData, P_ProducedResources, P_ProducedResourcesData, ProducedResource, RaidedResource, P_RaidedResources, P_RaidedResourcesData, P_EnumToPrototype, HasBuiltBuilding, P_HasBuiltBuildings, P_RequiredObjectives, CompletedObjective, P_RequiredBaseLevel, Level } from "codegen/index.sol";
+import { ProducedUnit, P_ProducedUnits, Home, P_RequiredExpansion, P_ProducedUnitsData, DefeatedPirate, P_DefeatedPirates, P_RequiredUnits, P_RequiredUnitsData, DestroyedUnit, P_DestroyedUnits, P_DestroyedUnitsData, P_ProducedResources, P_ProducedResourcesData, ProducedResource, RaidedResource, P_RaidedResources, P_RaidedResourcesData, P_EnumToPrototype, HasBuiltBuilding, P_HasBuiltBuildings, P_RequiredObjectives, CompletedObjective, P_RequiredBaseLevel, Level } from "codegen/index.sol";
 
 // libraries
 import { LibUnit } from "libraries/LibUnit.sol";
@@ -68,7 +68,8 @@ library LibObjectives {
   function checkObjectiveExpansionRequirement(bytes32 playerEntity, bytes32 objective) internal {
     uint256 requiredExpansionLevel = P_RequiredExpansion.get(objective);
     if (requiredExpansionLevel == 0) return;
-    uint256 playerExpansion = Level.get(playerEntity);
+    bytes32 asteroid = Home.getAsteroid(playerEntity);
+    uint256 playerExpansion = Level.get(asteroid);
     require(playerExpansion >= requiredExpansionLevel, "[LibObjectives] Expansion level requirement not met");
   }
 
