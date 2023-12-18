@@ -59,7 +59,7 @@ contract MarketplaceSystem is PrimodiumSystem {
     require(orderCount > 0, "[MarketplaceSystem] Max orders reached");
 
     orderId = keccak256(abi.encodePacked(resource, count, block.timestamp, msg.sender));
-    require(count > 0, "[MarketplaceSystem] Invalid count");
+    require(count > 0 && price > 0, "[MarketplaceSystem] Invalid count or price");
 
     MarketplaceOrder.set(
       orderId,
