@@ -7,11 +7,12 @@ import { NumberInput } from "src/components/shared/NumberInput";
 import { useMud } from "src/hooks";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
-import { getBlockTypeName } from "src/util/common";
+import { formatNumber, getBlockTypeName } from "src/util/common";
 import { EntityType, ResourceEntityLookup, ResourceStorages, UnitEntityLookup, UnitStorages } from "src/util/constants";
 import { getScale } from "src/util/resource";
 import { createOrder } from "src/util/web3/contractCalls/createOrder";
 import { PlayerListings } from "./PlayerListings";
+import { useSettingsStore } from "src/game/stores/SettingsStore";
 
 export type UserListing = {
   item: Entity;
@@ -28,13 +29,14 @@ export const CreateOrderForm = () => {
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
   const resources = useMemo(() => [...ResourceStorages], []);
+  const unitDisplay = useSettingsStore((state) => state.unitDisplay);
   const units = useMemo(() => [...UnitStorages], []);
 
   const selectedScale = selectedItem === "default" ? 1n : getScale(selectedItem);
   // Handle form submission
   const handleSubmit = (e: React.MouseEvent | undefined) => {
     e?.preventDefault();
-    const scaledPrice = BigInt(Math.round(Number(price) * 1e18)) / selectedScale;
+    const scaledPrice = BigInt(Math.round(Number(price) * (unitDisplay === "ether" ? 1e18 : 1e9))) / selectedScale;
     const scaledQuantity = BigInt(quantity) * selectedScale;
     if (selectedItem === "default") return;
     createOrder(selectedItem, scaledQuantity, scaledPrice, network);
@@ -123,7 +125,7 @@ export const CreateOrderForm = () => {
           <div className="flex w-full items-center text-xs font-bold justify-between">
             PRICE
             <NumberInput
-              toFixed={3}
+              toFixed={unitDisplay === "ether" ? 9 : 0}
               onChange={(value) => {
                 setPrice(value.toString());
               }}
@@ -141,7 +143,7 @@ export const CreateOrderForm = () => {
                 availableItems[selectedItem] == 0n ? "animate-pulse text-error" : "font-gray-500"
               }`}
             >
-              {(availableItems[selectedItem] / selectedScale).toString()} {getBlockTypeName(selectedItem)} available
+              {formatNumber(availableItems[selectedItem] / selectedScale)} {getBlockTypeName(selectedItem)} available
             </div>
           )}
           <Button

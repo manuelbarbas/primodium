@@ -16,7 +16,11 @@ export const CurrencyDisplay: React.FC<{
     if (unitDisplay === "ether") val = Number(weiToEth(wei));
     else val = Number(weiToGwei(wei));
 
-    return formatNumber(val, { short: unitDisplay !== "ether", fractionDigits: 9, ...options });
+    return formatNumber(val, {
+      short: unitDisplay !== "ether",
+      fractionDigits: unitDisplay === "ether" ? 9 : 0,
+      ...options,
+    });
   }, [wei, unitDisplay, options]);
 
   return (

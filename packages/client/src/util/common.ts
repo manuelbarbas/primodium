@@ -88,8 +88,15 @@ export function formatNumber(
 
   if (typeof num === "number") {
     if (options?.short) return shorten(num);
+
     const fixedNum = num.toFixed(digits);
-    return String(parseFloat(fixedNum).toLocaleString());
+
+    if (num < 1) {
+      // Return the fixedNum directly for very small numbers to avoid exponential notation
+      return fixedNum;
+    } else {
+      return parseFloat(fixedNum).toLocaleString();
+    }
   } else if (typeof num === "bigint") {
     if (options?.short) return shorten(Number(num));
     return num.toLocaleString();
