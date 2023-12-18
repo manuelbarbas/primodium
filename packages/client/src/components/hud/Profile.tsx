@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { useLocation } from "react-router-dom";
-import { formatEther } from "viem";
 import { useMud } from "src/hooks";
 import { Button } from "../core/Button";
 import { useAccount } from "src/hooks/useAccount";
@@ -15,6 +14,8 @@ import { useFleetMoves } from "src/hooks/useFleetMoves";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { getBuildingImage } from "src/util/building";
 import { convertObjToParams, convertParamsToObj } from "src/util/params";
+import { CurrencyDisplay } from "../shared/CurrencyDisplay";
+import { useSettingsStore } from "src/game/stores/SettingsStore";
 
 export const Profile = () => {
   const { network } = useMud();
@@ -26,6 +27,7 @@ export const Profile = () => {
   const fleetMoves = useFleetMoves();
   const mapOpen = components.MapOpen.use()?.value ?? false;
   const buildingImage = getBuildingImage((mainBase ?? singletonEntity) as Entity);
+  const unitDisplay = useSettingsStore((state) => state.unitDisplay);
 
   const { search } = useLocation();
   const params = useMemo(() => convertParamsToObj(search), [search]);
@@ -62,9 +64,9 @@ export const Profile = () => {
             <AccountDisplay player={playerEntity} />
           </div>
           <hr className="border-secondary/50" />
-          <div className="flex gap-1 text-right w-full justify-end px-2 border-secondary/50 pt-1">
-            {formatEther(wETHBalance)}
-            <p className="font-bold text-success">wETH</p>
+          <div className="flex gap-1 text-right w-full justify-end items-center px-2 border-secondary/50 pt-1">
+            <CurrencyDisplay wei={wETHBalance} className="font-bold text-sm" />
+            <p className="font-bold text-success">{unitDisplay === "ether" ? "wETH" : "GWEI"}</p>
           </div>
         </div>
         {!loading && (

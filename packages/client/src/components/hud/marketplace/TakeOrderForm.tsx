@@ -34,6 +34,7 @@ export function TakeOrderForm() {
   const itemListings = useMemo(() => {
     return allListings.filter((listing) => {
       if (network.playerEntity == listing.seller) return false;
+      if (listing.price === 0n) return false;
       if (!selectedItem) return true;
       const itemEnum =
         listing.orderType === EOrderType.Resource ? ResourceEnumLookup[selectedItem] : UnitEnumLookup[selectedItem];

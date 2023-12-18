@@ -1,11 +1,13 @@
 import { Entity } from "@latticexyz/recs";
 import { EOrderType, EResource, EUnit } from "contracts/config/enums";
 import { useMemo } from "react";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaWallet } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
 import { Button } from "src/components/core/Button";
+import { CurrencyDisplay } from "src/components/shared/CurrencyDisplay";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
@@ -28,6 +30,7 @@ export const Cart = ({
   const allListings = components.MarketplaceOrder.useAll().map((order) => {
     return { ...components.MarketplaceOrder.get(order)!, id: order };
   });
+  const unitDisplay = useSettingsStore((state) => state.unitDisplay);
 
   const takenOrdersFullData = useMemo(() => {
     return Object.entries(takenOrders).map(([id, count]) => {
@@ -71,10 +74,15 @@ export const Cart = ({
 
       <div className="flex gap-2 w-full items-center">
         <div className="flex flex-col items-center justify-center w-full">
-          <div className="font-bold inline">
-            {formatEther(totalCost)} <p className="inline text-success">wETH</p>
+          <div className="font-bold inline flex items-center gap-1">
+            <CurrencyDisplay wei={totalCost} />
+            <p className="inline text-success">{unitDisplay === "ether" ? "wETH" : "GWEI"}</p>
           </div>
-          <span className="text-xs text-gray-400">balance: {formatEther(balance)} wETH</span>
+          <span className="text-xs text-gray-400 flex gap-1 items-center">
+            <FaWallet />
+            <CurrencyDisplay wei={balance} className="font-bold" />
+            {unitDisplay === "ether" ? "wETH" : "GWEI"}
+          </span>
         </div>
 
         <TransactionQueueMask queueItemId={hashEntities(network.playerEntity, ...Object.keys(takenOrders))}>

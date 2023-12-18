@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { Hex, getAddress, isAddress, pad, size, trim } from "viem";
+import { Hex, formatEther, formatGwei, getAddress, isAddress, pad, size, trim } from "viem";
 import { BlockIdToKey } from "./constants";
 
 export function hasCommonElement<T>(setA: Set<T>, setB: Set<T>) {
@@ -140,4 +140,12 @@ export const isPlayer = (entity: Entity) => {
   const address = addressSize <= 20 ? pad(trimmedAddress, { size: 20 }) : trimmedAddress;
 
   return isAddress(address);
+};
+
+export const weiToEth = (wei: bigint) => {
+  return formatEther(wei, "wei");
+};
+
+export const weiToGwei = (wei: bigint) => {
+  return formatGwei(wei, "wei");
 };

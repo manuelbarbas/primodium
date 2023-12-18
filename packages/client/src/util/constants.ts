@@ -454,7 +454,6 @@ export const ResourceStorages = new Set([
   EntityType.IronPlate,
   EntityType.Alloy,
   EntityType.PVCell,
-  EntityType.Sulfur,
   EntityType.Titanium,
   EntityType.Iridium,
   EntityType.Platinum,
