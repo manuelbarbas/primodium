@@ -31,7 +31,7 @@ library LibRaid {
     require(defenderEntity != playerEntity, "[LibRaid] Can not raid your own rock");
 
     bytes memory rawBr = SystemCall.callWithHooksOrRevert(
-      entityToAddress(playerEntity),
+      world.creator(),
       getSystemResourceId("S_BattleSystem"),
       abi.encodeCall(S_BattleSystem.battle, (playerEntity, defenderEntity, rockEntity, ESendType.Raid)),
       0

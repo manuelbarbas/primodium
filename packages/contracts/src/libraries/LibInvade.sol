@@ -25,14 +25,14 @@ library LibInvade {
     if (defender == 0) return invadeNeutral(world, invader, rockEntity);
 
     bytes memory rawBr = SystemCall.callWithHooksOrRevert(
-      entityToAddress(invader),
+      world.creator(),
       getSystemResourceId("S_BattleSystem"),
       abi.encodeCall(S_BattleSystem.battle, (invader, defender, rockEntity, ESendType.Invade)),
       0
     );
     BattleResultData memory br = abi.decode(rawBr, (BattleResultData));
     SystemCall.callWithHooksOrRevert(
-      entityToAddress(invader),
+      world.creator(),
       getSystemResourceId("S_BattleSystem"),
       abi.encodeCall(S_BattleSystem.updateUnitsAfterBattle, (br, ESendType.Invade)),
       0
@@ -80,7 +80,7 @@ library LibInvade {
     bytes32[] memory unitTypes = P_UnitPrototypes.get();
 
     bytes memory rawAttackCounts = SystemCall.callWithHooksOrRevert(
-      entityToAddress(invader),
+      world.creator(),
       getSystemResourceId("S_BattleSystem"),
       abi.encodeCall(S_BattleSystem.getAttackPoints, (invader, rockEntity, ESendType.Invade)),
       0
