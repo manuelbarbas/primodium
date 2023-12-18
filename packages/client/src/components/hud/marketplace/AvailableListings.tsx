@@ -253,7 +253,7 @@ const AvailableListing = ({
       </td>
 
       <td className="py-4">
-        <CurrencyDisplay wei={listing.price * scale} options={{ short: false }} />
+        <CurrencyDisplay wei={listing.price * scale} options={{ short: false }} className="text-sm font-normal" />
       </td>
       <td className="py-4">{formatNumber(count)}</td>
       <td className="py-4">

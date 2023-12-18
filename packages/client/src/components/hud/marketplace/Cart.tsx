@@ -14,7 +14,6 @@ import { getBlockTypeName } from "src/util/common";
 import { ResourceEntityLookup, ResourceImage, UnitEntityLookup } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { takeOrders } from "src/util/web3/contractCalls/takeOrders";
-import { formatEther } from "viem";
 
 export const Cart = ({
   takenOrders,
@@ -58,7 +57,11 @@ export const Cart = ({
         amount={listing.count}
         fractionDigits={3}
       />
-      <span className="text-xs">{formatEther(listing.price * listing.count)} WETH</span>
+      <span className="text-xs">
+        <CurrencyDisplay wei={listing.price * listing.count} className="text-xs" />{" "}
+        {unitDisplay === "ether" ? "wETH" : "GWEI"}
+      </span>
+
       <FaTrash className="cursor-pointer text-error" onClick={() => removeOrder(listing.id as Entity)} />
     </Badge>
   );
@@ -75,7 +78,7 @@ export const Cart = ({
       <div className="flex gap-2 w-full items-center">
         <div className="flex flex-col items-center justify-center w-full">
           <div className="font-bold inline flex items-center gap-1">
-            <CurrencyDisplay wei={totalCost} />
+            <CurrencyDisplay wei={totalCost} className="text-sm" />
             <p className="inline text-success">{unitDisplay === "ether" ? "wETH" : "GWEI"}</p>
           </div>
           <span className="text-xs text-gray-400 flex gap-1 items-center">
