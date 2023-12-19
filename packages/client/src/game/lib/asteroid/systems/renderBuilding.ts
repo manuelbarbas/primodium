@@ -138,7 +138,8 @@ export const renderBuilding = (scene: Scene) => {
           },
           () => {
             components.HoverEntity.remove();
-          }
+          },
+          true
         ),
         ...sharedComponents,
       ]);

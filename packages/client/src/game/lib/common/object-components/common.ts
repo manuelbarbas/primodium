@@ -92,12 +92,14 @@ export const OnClick = <T extends keyof GameObjectTypes>(
 
 export const OnHover = <T extends keyof GameObjectTypes>(
   callback: (gameObject?: GameObjectInstances[T]) => void,
-  leaveCallback?: (gameObject?: GameObjectInstances[T]) => void
+  leaveCallback?: (gameObject?: GameObjectInstances[T]) => void,
+  pixelPerfect = false
 ): GameObjectComponent<T> => {
   return {
     id: uuid(),
     once: (gameObject) => {
-      gameObject.setInteractive();
+      if (pixelPerfect) gameObject.setInteractive(gameObject.scene.input.makePixelPerfect());
+      else gameObject.setInteractive();
       gameObject.on("pointerover", () => {
         callback(gameObject as GameObjectInstances[T]);
       });
