@@ -3,6 +3,7 @@ import { FaDiscord, FaTwitter } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
 import { AudioSettings } from "./AudioSettings";
+import { GeneralSettings } from "./GeneralSettings";
 
 const params = new URLSearchParams(window.location.search);
 
@@ -25,15 +26,15 @@ export const Settings = () => {
           >
             Game Guide
           </Button>
+          <Navigator.NavButton to="general" className="btn-md btn-seconday border-secondary">
+            General
+          </Navigator.NavButton>
           <Navigator.NavButton to="audio" className="btn-md btn-seconday border-secondary">
             Audio
           </Navigator.NavButton>
-          <Navigator.NavButton to="keybinds" className="btn-md btn-secondary" disabled>
-            Keybinds
-          </Navigator.NavButton>
         </div>
 
-        <div className="space-x-4">
+        <div className="space-x-4 mt-4">
           <a
             href="https://discord.com/invite/bn7eSSKFWV"
             target="_blank"
@@ -54,6 +55,7 @@ export const Settings = () => {
       </Navigator.Screen>
 
       <AudioSettings />
+      <GeneralSettings />
     </Navigator>
   );
 };

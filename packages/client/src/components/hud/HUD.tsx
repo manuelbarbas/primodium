@@ -29,12 +29,14 @@ import { Card } from "../core/Card";
 import { Entity, hasComponent } from "@latticexyz/recs";
 import { getSpaceRockName } from "src/util/spacerock";
 import { formatNumber } from "src/util/common";
+import { useSettingsStore } from "src/game/stores/SettingsStore";
 
 export const GameHUD = () => {
   const playerEntity = useMud().network.playerEntity;
   const activeRock = components.ActiveRock.use()?.value;
   const ownedBy = components.OwnedBy.use(activeRock ?? undefined)?.value;
   const isSpectating = ownedBy !== playerEntity;
+  const uiScale = useSettingsStore((state) => state.uiScale);
 
   const mapOpen = components.MapOpen.use(undefined, {
     value: false,
@@ -42,7 +44,7 @@ export const GameHUD = () => {
 
   return (
     <div className="screen-container font-mono">
-      <HUD>
+      <HUD scale={uiScale}>
         <HUD.CursorFollower>
           <HoverInfo />
         </HUD.CursorFollower>
