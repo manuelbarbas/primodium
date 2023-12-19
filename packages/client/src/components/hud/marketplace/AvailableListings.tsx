@@ -244,7 +244,10 @@ const AvailableListing = ({
   // if (listing.price === 0n || count === 0) return <></>;
 
   return (
-    <tr key={`listing-${listing.id}`} className={`${className}`}>
+    <tr
+      key={`listing-${listing.id}`}
+      className={`${className} ${listing.seller === network.playerEntity ? "pointer-events-none opacity-50" : ""}`}
+    >
       <td className="py-4 flex justify-center w-fit">
         <Button className="btn-ghost p-1 h-fit" onClick={handleSync}>
           <FaSync className={`cursor-pointer ${isSpinning ? "animate-spin" : ""}`} />
