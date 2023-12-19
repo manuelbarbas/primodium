@@ -19,6 +19,7 @@ export const CurrencyDisplay: React.FC<{
     return formatNumber(val, {
       short: unitDisplay !== "ether",
       fractionDigits: unitDisplay === "ether" ? 9 : 0,
+      showZero: true,
       ...options,
     });
   }, [wei, unitDisplay, options]);
