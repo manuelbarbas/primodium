@@ -123,7 +123,7 @@ export const CreateOrderForm = () => {
             ))}
           </select>
           <div className="flex w-full items-center text-xs font-bold justify-between">
-            PRICE
+            PRICE ({unitDisplay === "ether" ? "wETH" : "GWEI"})
             <NumberInput
               toFixed={unitDisplay === "ether" ? 9 : 0}
               onChange={(value) => {

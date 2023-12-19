@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { useState } from "react";
-import { FaAngleDoubleRight, FaArrowLeft, FaArrowRight, FaMinus, FaPlay, FaUndo } from "react-icons/fa";
+import { FaAngleDoubleRight, FaArrowLeft, FaArrowRight, FaMinus, FaPlay, FaTrash, FaUndo } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
 import { NumberInput } from "src/components/shared/NumberInput";
@@ -8,8 +8,9 @@ import { useMud } from "src/hooks";
 import { ResourceImage } from "src/util/constants";
 import { getScale } from "src/util/resource";
 import { cancelOrder, updateOrder } from "src/util/web3/contractCalls/updateOrder";
-import { formatEther } from "viem";
 import { UserListing } from "./CreateOrderForm";
+import { useSettingsStore } from "src/game/stores/SettingsStore";
+import { weiToEth, weiToGwei } from "src/util/common";
 
 export const PlayerListings = ({
   listings,
@@ -28,6 +29,7 @@ export const PlayerListings = ({
     direction: "ascending",
   });
   const [currentPage, setCurrentPage] = useState(1);
+  const unitDisplay = useSettingsStore((state) => state.unitDisplay);
 
   const getCurrentListings = () => {
     const startIndex = (currentPage - 1) * pageSize;
@@ -129,7 +131,7 @@ export const PlayerListings = ({
                 onClick={() => requestSort("price")}
                 className="flex gap-1 items-center text-xs opacity-80 font-bold cursor-pointer justify-center"
               >
-                Price {getSortIcon("price")}
+                Price ({unitDisplay === "ether" ? "wETH" : "GWEI"}) {getSortIcon("price")}
               </div>
             </th>
             <th className="sortable-header">
@@ -158,13 +160,14 @@ export const PlayerListings = ({
 const Listing = ({ listing, availableResource }: { listing: UserListing; availableResource: bigint }) => {
   const { network } = useMud();
   const [listingUpdate, setListingUpdate] = useState<{ newPrice?: bigint; newCount?: bigint }>();
+  const unitDisplay = useSettingsStore((state) => state.unitDisplay);
 
   const scale = getScale(listing.item);
 
   const newCount = listingUpdate?.newCount;
   const countDiff = !!newCount && newCount !== listing.count;
   const newPrice = listingUpdate?.newPrice;
-  const priceDiff = !!newPrice && newPrice !== listing.price;
+  const priceDiff = newPrice !== undefined && newPrice !== listing.price;
   return (
     <tr key={`listing-${listing.id}`}>
       <td className="text-center align-middle ">
@@ -177,20 +180,25 @@ const Listing = ({ listing, availableResource }: { listing: UserListing; availab
       <td className="text-center align-middle py-1">
         <div className="flex justify-center p-1 gap-1 items-center">
           <NumberInput
-            toFixed={3}
-            reset={!newPrice}
-            startingValue={Number(formatEther(listing.price * scale))}
+            toFixed={unitDisplay === "ether" ? 9 : 0}
+            reset={newPrice === undefined}
+            startingValue={Number(
+              unitDisplay === "ether" ? weiToEth(listing.price * scale) : weiToGwei(listing.price * scale)
+            )}
             onChange={function (val: number): void {
               setListingUpdate({
                 ...listingUpdate,
-                newPrice: BigInt(Math.round(val * 1e18)) / scale,
+                newPrice: BigInt(Math.round(val * (unitDisplay === "ether" ? 1e18 : 1e9))) / scale,
               });
             }}
           />
           <FaUndo
             className={`${!priceDiff ? "opacity-25" : ""}`}
             onClick={() => {
-              setListingUpdate({ ...listingUpdate, newPrice: undefined });
+              setListingUpdate({
+                ...listingUpdate,
+                newPrice: undefined,
+              });
             }}
           />
         </div>
@@ -232,8 +240,8 @@ const Listing = ({ listing, availableResource }: { listing: UserListing; availab
         </Button>
       </td>
       <td className="text-center">
-        <Button onClick={() => cancelOrder(listing.id, network)} className="btn-primary btn-sm">
-          Delete
+        <Button onClick={() => cancelOrder(listing.id, network)} className="btn-error btn-sm">
+          <FaTrash />
         </Button>
       </td>
     </tr>

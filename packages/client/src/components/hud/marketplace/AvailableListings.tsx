@@ -15,6 +15,7 @@ import { ResourceEntityLookup, ResourceImage, UnitEntityLookup } from "src/util/
 import { getFullResourceCount, getScale } from "src/util/resource";
 import { claimUnits } from "src/util/web3/contractCalls/claimUnits";
 import { formatNumber } from "src/util/common";
+import { useSettingsStore } from "src/game/stores/SettingsStore";
 
 type Listing = ValueSansMetadata<typeof components.MarketplaceOrder.schema> & { id: Entity };
 
@@ -51,6 +52,7 @@ export const AvailableListings = ({
 
   const balance = components.WETHBalance.use(network.playerEntity)?.value ?? 0n;
   const remainingBalance = useMemo(() => balance - totalCost, [balance, totalCost]);
+  const unitDisplay = useSettingsStore((state) => state.unitDisplay);
 
   const PaginationControls = () => {
     const totalPages = Math.ceil(sortedListings.length / pageSize);
@@ -145,7 +147,7 @@ export const AvailableListings = ({
                 onClick={() => requestSort("price")}
                 className="flex gap-1 items-center text-xs opacity-80 font-bold cursor-pointer"
               >
-                Price {getSortIcon("price")}
+                Price ({unitDisplay === "ether" ? "wETH" : "GWEI"}) {getSortIcon("price")}
               </div>
             </th>
             <th className="sortable-header">

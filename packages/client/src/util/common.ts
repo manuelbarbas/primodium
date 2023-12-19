@@ -93,7 +93,7 @@ export function formatNumber(
 
     if (num < 1) {
       // Return the fixedNum directly for very small numbers to avoid exponential notation
-      return fixedNum;
+      return fixedNum.replace(/(\.\d*?[1-9])0+$|\.0*$/, "$1");
     } else {
       return parseFloat(fixedNum).toLocaleString();
     }
