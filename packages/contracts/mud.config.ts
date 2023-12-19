@@ -11,6 +11,7 @@ if (typeof process != undefined && typeof process != "undefined") {
   });
 }
 
+const DUMMY_ADDRESS = "0x1234567890AbcdEF1234567890aBcdef12345678";
 /* -------------------------------------------------------------------------- */
 /*                                   Config                                   */
 /* -------------------------------------------------------------------------- */
@@ -20,12 +21,12 @@ export const config = mudConfig({
   systems: {
     S_BattleSystem: {
       openAccess: false,
-      accessList: ["RaidSystem", "InvadeSystem"],
+      accessList: [DUMMY_ADDRESS],
       name: "S_BattleSystem",
     },
     S_SpawnPirateAsteroidSystem: {
       openAccess: false,
-      accessList: ["ClaimObjectiveSystem"],
+      accessList: [DUMMY_ADDRESS],
       name: "S_SpawnPirateAsteroidSystem",
     },
   },

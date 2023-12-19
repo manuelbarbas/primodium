@@ -9,6 +9,7 @@ import { S_SpawnPirateAsteroidSystem } from "systems/subsystems/S_SpawnPirateAst
 import { addressToEntity, getSystemResourceId } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
+import { DUMMY_ADDRESS } from "src/constants.sol";
 
 contract ClaimObjectiveSystem is PrimodiumSystem {
   function claimObjective(EObjectives objective) public {
@@ -18,7 +19,7 @@ contract ClaimObjectiveSystem is PrimodiumSystem {
     P_SpawnPirateAsteroidData memory spawnPirateAsteroid = P_SpawnPirateAsteroid.get(objectivePrototype);
     if (spawnPirateAsteroid.x != 0 || spawnPirateAsteroid.y != 0) {
       SystemCall.callWithHooksOrRevert(
-        IWorld(_world()).creator(),
+        DUMMY_ADDRESS,
         getSystemResourceId("S_SpawnPirateAsteroidSystem"),
         abi.encodeCall(S_SpawnPirateAsteroidSystem.spawnPirateAsteroid, (playerEntity, objectivePrototype)),
         0

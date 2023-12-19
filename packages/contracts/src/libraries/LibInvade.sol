@@ -9,6 +9,7 @@ import { LibReinforce } from "libraries/LibReinforce.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { S_BattleSystem } from "systems/subsystems/S_BattleSystem.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
+import { DUMMY_ADDRESS } from "src/constants.sol";
 
 library LibInvade {
   /**
@@ -32,7 +33,7 @@ library LibInvade {
     );
     BattleResultData memory br = abi.decode(rawBr, (BattleResultData));
     SystemCall.callWithHooksOrRevert(
-      world.creator(),
+      DUMMY_ADDRESS,
       getSystemResourceId("S_BattleSystem"),
       abi.encodeCall(S_BattleSystem.updateUnitsAfterBattle, (br, ESendType.Invade)),
       0
