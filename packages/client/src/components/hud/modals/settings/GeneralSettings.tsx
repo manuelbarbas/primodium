@@ -9,25 +9,28 @@ export const GeneralSettings = () => {
   const [unitDisplay, toggleUnitDisplay] = useSettingsStore((state) => [state.unitDisplay, state.toggleUnitDisplay]);
 
   return (
-    <Navigator.Screen title="general" className="flex flex-grow flex-col">
-      <SecondaryCard className="w-full space-y-5 grow">
-        <div>
-          <p className="text-xs opacity-50 font-bold pb-1">UI SCALE</p>
-          <Range
-            min={50}
-            max={200}
-            defaultValue={uiScale * 100}
-            // className="range-accent"
-            onChange={(e) => {
-              setUiScale(e / 100);
-            }}
-          />
-        </div>
-        <div className="">
-          <p className="text-xs opacity-50 font-bold pb-1">SHOW PRICE IN GWEI</p>
-          <Toggle onToggle={toggleUnitDisplay} defaultChecked={unitDisplay === "gwei"} />
-        </div>
-      </SecondaryCard>
+    <Navigator.Screen title="general" className="flex-grow">
+      <div className="w-full h-full">
+        <SecondaryCard className="w-full space-y-5 grow">
+          <div>
+            <p className="text-xs opacity-50 font-bold pb-1">UI SCALE</p>
+            <Range
+              min={50}
+              max={200}
+              defaultValue={uiScale * 100}
+              // className="range-accent"
+              onChange={(e) => {
+                setUiScale(e / 100);
+              }}
+            />
+          </div>
+          <div className="">
+            <p className="text-xs opacity-50 font-bold pb-1">SHOW PRICE IN GWEI</p>
+            <Toggle onToggle={toggleUnitDisplay} defaultChecked={unitDisplay === "gwei"} />
+          </div>
+        </SecondaryCard>
+      </div>
+
       <Navigator.BackButton className="mt-2" />
     </Navigator.Screen>
   );
