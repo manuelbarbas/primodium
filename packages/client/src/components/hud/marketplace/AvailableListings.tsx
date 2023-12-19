@@ -128,8 +128,8 @@ export const AvailableListings = ({
     return <div className="w-full h-full text-center p-20 uppercase text-error animate-pulse">No listings</div>;
 
   return (
-    <div className="p-2 flex flex-col justify-between h-full">
-      <table className="min-w-full divide-y divide-accent">
+    <div className="p-2 flex flex-col justify-between h-full overflow-y-auto scrollbar">
+      <table className="min-w-full divide-y divide-accent mb-2">
         <thead className="uppercase text-sm">
           <tr>
             <th></th>
