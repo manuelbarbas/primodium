@@ -29,6 +29,7 @@ import {
 import { Animation, Outline, Texture } from "../../common/object-components/sprite";
 import { createAudioApi } from "src/game/api/audio";
 import { getRandomRange } from "src/util/common";
+import { Action } from "src/util/constants";
 
 const MAX_SIZE = 2 ** 15 - 1;
 export const renderBuilding = (scene: Scene) => {
@@ -134,7 +135,8 @@ export const renderBuilding = (scene: Scene) => {
         }),
         OnHover(
           () => {
-            components.HoverEntity.set({ value: entity });
+            if (components.SelectedAction.get()?.value !== Action.PlaceBuilding)
+              components.HoverEntity.set({ value: entity });
           },
           () => {
             components.HoverEntity.remove();
