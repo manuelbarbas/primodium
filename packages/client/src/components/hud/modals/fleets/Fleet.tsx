@@ -12,8 +12,8 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { useAccount } from "src/hooks/useAccount";
 import { components } from "src/network/components";
-import { UnitEntityLookup } from "src/util/constants";
-import { decodeEntity } from "src/util/encode";
+import { TransactionQueueType, UnitEntityLookup } from "src/util/constants";
+import { decodeEntity, hashEntities } from "src/util/encode";
 import { getSpaceRockName } from "src/util/spacerock";
 import { getUnitStats } from "src/util/trainUnits";
 import { invade } from "src/util/web3/contractCalls/invade";
@@ -89,7 +89,7 @@ export const Fleet: React.FC<{
   };
 
   return (
-    <div className="flex items-center justify-between w-full border rounded-box border-slate-700 bg-slate-800 ">
+    <div className="flex items-center justify-between w-full border rounded-box border-slate-700 bg-slate-800 pr-1">
       <div className="flex gap-1 justify-between items-center h-full w-full">
         <div className="flex gap-1 items-center h-full">
           {sendType === ESendType.Invade && (
@@ -157,6 +157,8 @@ export const OrbitActionButton: React.FC<{
   if (!destination) return <></>;
 
   const { key } = decodeEntity(components.MapItemArrivals.metadata.keySchema, arrivalEntity);
+  const transactionId = hashEntities(TransactionQueueType.Recall, key, destination);
+
   const action =
     sendType == ESendType.Invade
       ? () => invade(destination, network, key)
@@ -165,7 +167,7 @@ export const OrbitActionButton: React.FC<{
       : () => reinforce(arrivalEntity, network);
 
   return (
-    <TransactionQueueMask queueItemId={key as Entity}>
+    <TransactionQueueMask queueItemId={transactionId as Entity}>
       <div className={`flex gap-1 ${small ? "flex-col-reverse gap-0" : ""}`}>
         <Button
           className={`${small ? "btn-xs" : "btn-sm"} opacity-75`}
