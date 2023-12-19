@@ -12,6 +12,7 @@ import { LibStorage } from "libraries/LibStorage.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { S_BattleSystem } from "systems/subsystems/S_BattleSystem.sol";
+import { DUMMY_ADDRESS } from "src/constants.sol";
 
 library LibRaid {
   /**
@@ -31,7 +32,7 @@ library LibRaid {
     require(defenderEntity != playerEntity, "[LibRaid] Can not raid your own rock");
 
     bytes memory rawBr = SystemCall.callWithHooksOrRevert(
-      world.creator(),
+      DUMMY_ADDRESS,
       getSystemResourceId("S_BattleSystem"),
       abi.encodeCall(S_BattleSystem.battle, (playerEntity, defenderEntity, rockEntity, ESendType.Raid)),
       0
