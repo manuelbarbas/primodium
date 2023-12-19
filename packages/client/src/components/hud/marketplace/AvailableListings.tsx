@@ -147,7 +147,7 @@ export const AvailableListings = ({
                 onClick={() => requestSort("price")}
                 className="flex gap-1 items-center text-xs opacity-80 font-bold cursor-pointer"
               >
-                Price ({unitDisplay === "ether" ? "wETH" : "GWEI"}) {getSortIcon("price")}
+                Price ({unitDisplay === "ether" ? "wETH" : "wGWEI"}) {getSortIcon("price")}
               </div>
             </th>
             <th className="sortable-header">

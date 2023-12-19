@@ -131,7 +131,7 @@ export const PlayerListings = ({
                 onClick={() => requestSort("price")}
                 className="flex gap-1 items-center text-xs opacity-80 font-bold cursor-pointer justify-center"
               >
-                Price ({unitDisplay === "ether" ? "wETH" : "GWEI"}) {getSortIcon("price")}
+                Price ({unitDisplay === "ether" ? "wETH" : "wGWEI"}) {getSortIcon("price")}
               </div>
             </th>
             <th className="sortable-header">

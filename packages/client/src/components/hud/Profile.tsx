@@ -66,7 +66,7 @@ export const Profile = () => {
           <hr className="border-secondary/50" />
           <div className="flex gap-1 text-right w-full justify-end items-center px-2 border-secondary/50 pt-1">
             <CurrencyDisplay wei={wETHBalance} className="font-bold text-sm" />
-            <p className="font-bold text-success">{unitDisplay === "ether" ? "wETH" : "GWEI"}</p>
+            <p className="font-bold text-success">{unitDisplay === "ether" ? "wETH" : "wGWEI"}</p>
           </div>
         </div>
         {!loading && (

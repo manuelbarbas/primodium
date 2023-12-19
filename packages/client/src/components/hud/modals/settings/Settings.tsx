@@ -26,10 +26,10 @@ export const Settings = () => {
           >
             Game Guide
           </Button>
-          <Navigator.NavButton to="general" className="btn-md btn-seconday border-secondary">
+          <Navigator.NavButton to="general" className="btn-md btn-seconday border-secondary w-24">
             General
           </Navigator.NavButton>
-          <Navigator.NavButton to="audio" className="btn-md btn-seconday border-secondary">
+          <Navigator.NavButton to="audio" className="btn-md btn-seconday border-secondary w-24">
             Audio
           </Navigator.NavButton>
         </div>

@@ -59,7 +59,7 @@ export const Cart = ({
       />
       <span className="text-xs">
         <CurrencyDisplay wei={listing.price * listing.count} className="text-xs" />{" "}
-        {unitDisplay === "ether" ? "wETH" : "GWEI"}
+        {unitDisplay === "ether" ? "wETH" : "wGWEI"}
       </span>
 
       <FaTrash className="cursor-pointer text-error" onClick={() => removeOrder(listing.id as Entity)} />
@@ -79,12 +79,12 @@ export const Cart = ({
         <div className="flex flex-col items-center justify-center w-full">
           <div className="font-bold inline flex items-center gap-1">
             <CurrencyDisplay wei={totalCost} className="text-sm" />
-            <p className="inline text-success">{unitDisplay === "ether" ? "wETH" : "GWEI"}</p>
+            <p className="inline text-success">{unitDisplay === "ether" ? "wETH" : "wGWEI"}</p>
           </div>
           <span className="text-xs text-gray-400 flex gap-1 items-center">
             <FaWallet />
             <CurrencyDisplay wei={balance} className="font-bold" />
-            {unitDisplay === "ether" ? "wETH" : "GWEI"}
+            {unitDisplay === "ether" ? "wETH" : "wGWEI"}
           </span>
         </div>
 

@@ -23,7 +23,6 @@ export const ElectricityLabel = () => {
             percentFull < 50 ? "progress-success" : percentFull < 75 ? "progress-warning" : "progress-error"
           }`}
         />
-        <p className="text-xs opacity-75 font-bold uppercase">{isNaN(percentFull) ? 0 : percentFull}%</p>
       </SecondaryCard>
       <p className="text-xs opacity-75 font-bold">
         {formatNumber((maxStorage - resourceCount) / RESOURCE_SCALE)}/{formatNumber(maxStorage / RESOURCE_SCALE)} MW
