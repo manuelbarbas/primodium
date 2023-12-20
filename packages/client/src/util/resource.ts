@@ -140,25 +140,26 @@ export function getFullResourceCounts(rawSpaceRockEntity?: Entity): Map<Entity, 
 
   const spaceRockEntity = rawSpaceRockEntity ?? home;
   if (!spaceRockEntity) throw new Error("No space rock entity found");
-  const time = comps.Time.get()?.value ?? 0n;
 
+  const time = comps.Time.get()?.value ?? 0n;
   const memo = fullResourceValue.get(spaceRockEntity);
   if (memo && memo?.time == time) {
     return memo.resources;
   }
 
-  if (!player || !home) {
-    const isMotherlode = comps.RockType.getWithKeys({ entity: spaceRockEntity as Hex })?.value === ERock.Motherlode;
-    if (isMotherlode) getMotherlodeResourceCount(spaceRockEntity);
-    return fullResourceValue.get(spaceRockEntity)?.resources ?? new Map();
-  }
+  // if the rock is a motherlode, calculate the motherlode resources and return the value
+  const isMotherlode = comps.RockType.getWithKeys({ entity: spaceRockEntity as Hex })?.value === ERock.Motherlode;
+  if (isMotherlode) return getMotherlodeResourceCount(spaceRockEntity);
+
+  // if the asteroid is unowned then it should return nothing
+  if (!home || !player) return fullResourceValue.get(spaceRockEntity)?.resources ?? new Map();
+
+  // Calculate all resources counts for the player's motherlodes and home asteroid and memoize
 
   const motherlodeResources = getMotherlodeResourceCounts(player as Entity);
 
   const consumptionTimeLengths: Record<number, bigint> = {};
   const result: Map<Entity, ResourceCountData> = new Map();
-
-  // get and save the resource counts for the motherlodes
 
   const homeHex = home as Hex;
 
@@ -171,11 +172,14 @@ export function getFullResourceCounts(rawSpaceRockEntity?: Entity): Map<Entity, 
     if (entity == undefined) return;
     const resource = index as EResource;
 
-    const motherlodeResource = motherlodeResources[entity] ?? {
-      resourceCount: 0n,
-      resourceStorage: 0n,
-      production: 0n,
-    };
+    const motherlodeResource =
+      motherlodeResources[entity] ??
+      ({
+        resourceCount: 0n,
+        resourceStorage: 0n,
+        production: 0n,
+        minedAmount: 0n,
+      } satisfies MotherlodeCountData);
 
     const resourceStorage = comps.MaxResourceCount.getWithKeys({ entity: homeHex, resource })?.value ?? 0n;
 
