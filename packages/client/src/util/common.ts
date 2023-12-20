@@ -156,3 +156,7 @@ export const weiToEth = (wei: bigint) => {
 export const weiToGwei = (wei: bigint) => {
   return formatGwei(wei, "wei");
 };
+
+export function clampBigInt(value: bigint, min: bigint, max: bigint) {
+  return value < BigInt(min) ? BigInt(min) : value > BigInt(max) ? BigInt(max) : value;
+}
