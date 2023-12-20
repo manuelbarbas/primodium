@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { EResource, MUDEnums } from "contracts/config/enums";
+import { EResource, ERock, MUDEnums } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
 import { Hex } from "viem";
 import { clampBigInt } from "./common";
@@ -135,8 +135,8 @@ export function getMotherlodeResourceCount(entity: Entity): Map<Entity, Motherlo
 }
 
 export function getFullResourceCounts(rawSpaceRockEntity?: Entity): Map<Entity, ResourceCountData> {
-  const player = comps.OwnedBy.getWithKeys({ entity: rawSpaceRockEntity as Hex })?.value ?? comps.Account.get()?.value;
-  const home = comps.Home.getWithKeys({ entity: player as Hex })?.asteroid as Entity | undefined;
+  const player = comps.OwnedBy.getWithKeys({ entity: rawSpaceRockEntity as Hex })?.value;
+  const home = player ? (comps.Home.getWithKeys({ entity: player as Hex })?.asteroid as Entity) : undefined;
 
   const spaceRockEntity = rawSpaceRockEntity ?? home;
   if (!spaceRockEntity) throw new Error("No space rock entity found");
@@ -147,13 +147,18 @@ export function getFullResourceCounts(rawSpaceRockEntity?: Entity): Map<Entity, 
     return memo.resources;
   }
 
+  if (!player || !home) {
+    const isMotherlode = comps.RockType.getWithKeys({ entity: spaceRockEntity as Hex })?.value === ERock.Motherlode;
+    if (isMotherlode) getMotherlodeResourceCount(spaceRockEntity);
+    return fullResourceValue.get(spaceRockEntity)?.resources ?? new Map();
+  }
+
+  const motherlodeResources = getMotherlodeResourceCounts(player as Entity);
+
   const consumptionTimeLengths: Record<number, bigint> = {};
   const result: Map<Entity, ResourceCountData> = new Map();
 
   // get and save the resource counts for the motherlodes
-  const motherlodeResources = getMotherlodeResourceCounts(player as Entity);
-
-  if (!home) return fullResourceValue.get(spaceRockEntity)?.resources ?? new Map();
 
   const homeHex = home as Hex;
 
