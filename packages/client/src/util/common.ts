@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { Hex, getAddress, isAddress, pad, size, trim } from "viem";
+import { Hex, formatEther, formatGwei, getAddress, isAddress, pad, size, trim } from "viem";
 import { BlockIdToKey } from "./constants";
 
 export function hasCommonElement<T>(setA: Set<T>, setB: Set<T>) {
@@ -88,8 +88,15 @@ export function formatNumber(
 
   if (typeof num === "number") {
     if (options?.short) return shorten(num);
+
     const fixedNum = num.toFixed(digits);
-    return String(parseFloat(fixedNum).toLocaleString());
+
+    if (num < 1) {
+      // Return the fixedNum directly for very small numbers to avoid exponential notation
+      return fixedNum.replace(/(\.\d*?[1-9])0+$|\.0*$/, "$1");
+    } else {
+      return parseFloat(fixedNum).toLocaleString();
+    }
   } else if (typeof num === "bigint") {
     if (options?.short) return shorten(Number(num));
     return num.toLocaleString();
@@ -140,4 +147,12 @@ export const isPlayer = (entity: Entity) => {
   const address = addressSize <= 20 ? pad(trimmedAddress, { size: 20 }) : trimmedAddress;
 
   return isAddress(address);
+};
+
+export const weiToEth = (wei: bigint) => {
+  return formatEther(wei, "wei");
+};
+
+export const weiToGwei = (wei: bigint) => {
+  return formatGwei(wei, "wei");
 };

@@ -6,6 +6,7 @@ import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { NumberInput } from "src/components/shared/NumberInput";
+import { CurrencyDisplay } from "src/components/shared/CurrencyDisplay";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { ValueSansMetadata } from "src/network/components/customComponents/ExtendedComponent";
@@ -13,7 +14,8 @@ import { createHangar } from "src/network/systems/setupHangar";
 import { ResourceEntityLookup, ResourceImage, UnitEntityLookup } from "src/util/constants";
 import { getFullResourceCount, getScale } from "src/util/resource";
 import { claimUnits } from "src/util/web3/contractCalls/claimUnits";
-import { formatEther } from "viem";
+import { formatNumber } from "src/util/common";
+import { useSettingsStore } from "src/game/stores/SettingsStore";
 
 type Listing = ValueSansMetadata<typeof components.MarketplaceOrder.schema> & { id: Entity };
 
@@ -50,6 +52,7 @@ export const AvailableListings = ({
 
   const balance = components.WETHBalance.use(network.playerEntity)?.value ?? 0n;
   const remainingBalance = useMemo(() => balance - totalCost, [balance, totalCost]);
+  const unitDisplay = useSettingsStore((state) => state.unitDisplay);
 
   const PaginationControls = () => {
     const totalPages = Math.ceil(sortedListings.length / pageSize);
@@ -125,8 +128,8 @@ export const AvailableListings = ({
     return <div className="w-full h-full text-center p-20 uppercase text-error animate-pulse">No listings</div>;
 
   return (
-    <div className="p-2 flex flex-col justify-between h-full">
-      <table className="min-w-full divide-y divide-accent">
+    <div className="p-2 flex flex-col justify-between h-full overflow-y-auto scrollbar">
+      <table className="min-w-full divide-y divide-accent mb-2">
         <thead className="uppercase text-sm">
           <tr>
             <th></th>
@@ -144,7 +147,7 @@ export const AvailableListings = ({
                 onClick={() => requestSort("price")}
                 className="flex gap-1 items-center text-xs opacity-80 font-bold cursor-pointer"
               >
-                Price {getSortIcon("price")}
+                Price ({unitDisplay === "ether" ? "wETH" : "wGWEI"}) {getSortIcon("price")}
               </div>
             </th>
             <th className="sortable-header">
@@ -167,10 +170,11 @@ export const AvailableListings = ({
           </tr>
         </thead>
         <tbody>
-          {currentListings.map((listing) => (
+          {currentListings.map((listing, index) => (
             <AvailableListing
               key={listing.id}
               listing={listing}
+              className={`${index % 2 === 0 ? "bg-neutral/50" : ""}`}
               remainingBalance={remainingBalance}
               takenOrders={takenOrders}
               setOrder={setOrder}
@@ -188,10 +192,12 @@ const AvailableListing = ({
   remainingBalance,
   takenOrders,
   setOrder,
+  className = "",
 }: {
   listing: Listing;
   takenOrders: Record<Entity, bigint>;
   remainingBalance: bigint;
+  className?: string;
   setOrder: (orderId: Entity, count: bigint) => void;
 }) => {
   const { network } = useMud();
@@ -225,6 +231,8 @@ const AvailableListing = ({
     listing.price ? Math.min(scaledCount, Number(remainingBalance / (listing.price * scale))) : scaledCount
   );
 
+  const count = Math.min(scaledCount, Number(sellerMaxResource / scale));
+
   const handleSync = () => {
     setIsSpinning(true);
     setTimeout(() => setIsSpinning(false), 3000);
@@ -233,10 +241,13 @@ const AvailableListing = ({
     claimUnits(sellerHome, network);
   };
 
-  if (listing.price === 0n) return <></>;
+  // if (listing.price === 0n || count === 0) return <></>;
 
   return (
-    <tr key={`listing-${listing.id}`} className="">
+    <tr
+      key={`listing-${listing.id}`}
+      className={`${className} ${listing.seller === network.playerEntity ? "pointer-events-none opacity-50" : ""}`}
+    >
       <td className="py-4 flex justify-center w-fit">
         <Button className="btn-ghost p-1 h-fit" onClick={handleSync}>
           <FaSync className={`cursor-pointer ${isSpinning ? "animate-spin" : ""}`} />
@@ -246,8 +257,10 @@ const AvailableListing = ({
         <IconLabel imageUri={ResourceImage.get(entity as Entity) ?? ""} tooltipDirection={"right"} text={""} />
       </td>
 
-      <td className="py-4">{formatEther(listing.price * scale)}</td>
-      <td className="py-4">{Math.min(scaledCount, Number(sellerMaxResource / scale))}</td>
+      <td className="py-4">
+        <CurrencyDisplay wei={listing.price * scale} options={{ short: false }} className="text-sm font-normal" />
+      </td>
+      <td className="py-4">{formatNumber(count)}</td>
       <td className="py-4">
         <AccountDisplay player={listing.seller as Entity} />
       </td>

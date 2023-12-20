@@ -26,15 +26,15 @@ export const NumberInput: React.FC<{
   // this is breaking the rules of react
   useEffect(() => {
     if (reset) {
-      setCount((startingValue || min).toString());
+      setCount(String((startingValue || min).toFixed(toFixed)));
     }
-  }, [reset, startingValue, min]);
+  }, [reset, startingValue, min, toFixed]);
 
   const handleUpdate = (newCount: string) => {
     newCount = adjustDecimals(newCount, toFixed);
-    const allZeroes = newCount.split("").every((digit) => digit == "0");
+    // const allZeroes = newCount.split("").every((digit) => digit == "0");
 
-    if (isNaN(Number(newCount)) || allZeroes) {
+    if (isNaN(Number(newCount))) {
       setCount("");
       onChange(min);
       return;
@@ -49,6 +49,7 @@ export const NumberInput: React.FC<{
       countNum = min;
       newCount = minString;
     }
+
     setCount(newCount);
     onChange(countNum);
   };

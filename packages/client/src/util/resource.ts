@@ -191,17 +191,20 @@ export function getMaxCountOfRecipe(recipe: ReturnType<typeof getRecipe>, spaceR
     const resourceAmount = resourceAmounts[index];
     const { resourceCount, resourcesToClaim, production } = resourceAmount;
     let maxOfResource = 0n;
-    switch (resource.type) {
-      case ResourceType.Resource:
-        maxOfResource = (resourceCount + resourcesToClaim) / resource.amount;
-        break;
-      case ResourceType.ResourceRate:
-        maxOfResource = production / resource.amount;
-        break;
-      case ResourceType.Utility:
-        maxOfResource = resourceCount / resource.amount;
-        break;
-    }
+
+    if (resource.amount !== 0n)
+      switch (resource.type) {
+        case ResourceType.Resource:
+          maxOfResource = (resourceCount + resourcesToClaim) / resource.amount;
+          break;
+        case ResourceType.ResourceRate:
+          maxOfResource = production / resource.amount;
+          break;
+        case ResourceType.Utility:
+          maxOfResource = resourceCount / resource.amount;
+          break;
+      }
+
     if (!count) count = Number(maxOfResource);
     else count = Math.min(count, Number(maxOfResource));
   }
@@ -333,7 +336,7 @@ export function getFullResourceCounts(spaceRockEntity?: Entity) {
     if (resourceCount + increase < decrease) {
       //if the decrease is more than the sum of increase and current amount than the sum is tha maximum that can be consumed
       // we use this amount to see how much time the resource can be consumed
-      consumptionTimeLengths[resource] = (resourceCount + increase) / consumptionRate;
+      consumptionTimeLengths[resource] = consumptionRate !== 0n ? (resourceCount + increase) / consumptionRate : 0n;
       //we use the time length to reduce current resource amount by the difference of the decrease and the increase
       decrease = consumptionRate * consumptionTimeLengths[resource];
       //consumption is from current space rock and will be in the future

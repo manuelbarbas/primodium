@@ -4,7 +4,6 @@ import _ from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { IconButton } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
-import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { ResourceEnumLookup, ResourceImage, ResourceStorages, UnitEnumLookup, UnitStorages } from "src/util/constants";
@@ -12,8 +11,6 @@ import { AvailableListings } from "./AvailableListings";
 import { Cart } from "./Cart";
 
 export function TakeOrderForm() {
-  const { network } = useMud();
-
   const [takenOrders, setTakenOrders] = useState<Record<Entity, bigint>>({});
   const [selectedItem, setSelectedItem] = useState<Entity>();
 
@@ -33,13 +30,13 @@ export function TakeOrderForm() {
 
   const itemListings = useMemo(() => {
     return allListings.filter((listing) => {
-      if (network.playerEntity == listing.seller) return false;
+      if (listing.price === 0n) return false;
       if (!selectedItem) return true;
       const itemEnum =
         listing.orderType === EOrderType.Resource ? ResourceEnumLookup[selectedItem] : UnitEnumLookup[selectedItem];
       return listing.resource === itemEnum;
     });
-  }, [allListings, selectedItem, network.playerEntity]);
+  }, [allListings, selectedItem]);
 
   // Update taken orders
   const handleTakeOrderChange = (id: Entity, count: bigint) => {

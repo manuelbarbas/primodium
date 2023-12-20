@@ -11,18 +11,21 @@ export const ElectricityLabel = () => {
   const { resourceCount, resourceStorage: maxStorage } = useFullResourceCount(EntityType.Electricity, selectedRock);
 
   const resourceIcon = ResourceImage.get(EntityType.Electricity);
-  const percentFull = Math.round((Number(resourceCount) / Number(maxStorage)) * 100);
-
+  const percentFull = Math.round((Number(maxStorage - resourceCount) / Number(maxStorage)) * 100);
   return (
     <div className="flex flex-col items-center gap-1 w-fit">
       <SecondaryCard className="flex flex-row w-full gap-1 items-center rounded-r-none">
         <IconLabel imageUri={resourceIcon ?? ""} tooltipText="Electricity" className="text-sm" />
-
-        <Progress value={Number(resourceCount)} max={Number(maxStorage)} className="w-24 progress-success" />
-        <p className="text-xs opacity-75 font-bold uppercase">{isNaN(percentFull) ? 0 : percentFull}%</p>
+        <Progress
+          value={Number(maxStorage - resourceCount)}
+          max={Number(maxStorage)}
+          className={`w-24 ${
+            percentFull < 50 ? "progress-success" : percentFull < 75 ? "progress-warning" : "progress-error"
+          }`}
+        />
       </SecondaryCard>
       <p className="text-xs opacity-75 font-bold">
-        {formatNumber(resourceCount / RESOURCE_SCALE)}/{formatNumber(maxStorage / RESOURCE_SCALE)} MWH
+        {formatNumber((maxStorage - resourceCount) / RESOURCE_SCALE)}/{formatNumber(maxStorage / RESOURCE_SCALE)} MW
       </p>
     </div>
   );
