@@ -9,6 +9,7 @@ import { MudProvider } from "./hooks/providers/MudProvider";
 import { setup } from "./network/setup";
 import { SetupResult } from "./network/types";
 import { world } from "./network/world";
+import { Maintenance } from "./screens/Maintenance";
 
 const DEV = import.meta.env.PRI_DEV === "true";
 
@@ -48,7 +49,7 @@ export default function App() {
       );
     }
   }, [networkLayer]);
-
+  if (!DEV) return <Maintenance />;
   if (networkLayer === undefined) {
     return (
       <div className="bg-black h-screen">
