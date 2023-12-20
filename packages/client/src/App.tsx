@@ -12,6 +12,7 @@ import { world } from "./network/world";
 import { Maintenance } from "./screens/Maintenance";
 
 const DEV = import.meta.env.PRI_DEV === "true";
+const MAINTENANCE = import.meta.env.PRI_MAINTENANCE === "true";
 
 export default function App() {
   const [networkLayer, setNetworkLayer] = useState<SetupResult>();
@@ -49,7 +50,7 @@ export default function App() {
       );
     }
   }, [networkLayer]);
-  if (!DEV) return <Maintenance />;
+  if (MAINTENANCE) return <Maintenance />;
   if (networkLayer === undefined) {
     return (
       <div className="bg-black h-screen">
