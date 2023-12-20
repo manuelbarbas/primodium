@@ -91,7 +91,7 @@ export function getResourceRequirement(objective: Entity): Requirement[] | undef
   return rawRequiredProduction.resources.map((resource, index) => ({
     id: ResourceEntityLookup[resource as EResource],
     requiredValue: rawRequiredProduction.amounts[index],
-    currentValue: getFullResourceCount(ResourceEntityLookup[resource as EResource]).producedResource,
+    currentValue: comps.ProducedResource?.getWithKeys({ entity: player as Hex, resource })?.value ?? 0n,
     scale: RESOURCE_SCALE,
     type: RequirementType.ProducedResources,
   }));
