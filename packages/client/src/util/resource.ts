@@ -7,7 +7,6 @@ import {
   RESOURCE_SCALE,
   ResourceEntityLookup,
   ResourceEnumLookup,
-  ResourceType,
   SPEED_SCALE,
   UnitEnumLookup,
 } from "./constants";
@@ -24,38 +23,6 @@ export const getScale = (resource: Entity) => {
   return RESOURCE_SCALE;
 };
 
-// building a building requires resources
-// fetch directly from component data
-export function getRecipe(rawEntityType: Entity, level: bigint, upgrade = false) {
-  const entityType = rawEntityType as Hex;
-  const requiredResources = (upgrade ? comps.P_RequiredUpgradeResources : comps.P_RequiredResources).getWithKeys(
-    { prototype: entityType, level: level },
-    {
-      resources: [],
-      amounts: [],
-    }
-  );
-  const requiredProduction = comps.P_RequiredDependency.getWithKeys({ prototype: entityType, level: level }, undefined);
-
-  const resources = requiredResources.resources.map((resource: EResource, index: number) => ({
-    id: ResourceEntityLookup[resource],
-    type: comps.P_IsUtility.getWithKeys({ id: resource })?.value == true ? ResourceType.Utility : ResourceType.Resource,
-    amount: requiredResources.amounts[index],
-  }));
-
-  const resourceRate = requiredProduction
-    ? [
-        {
-          id: ResourceEntityLookup[requiredProduction.resource as EResource],
-          type: ResourceType.ResourceRate,
-          amount: requiredProduction.amount,
-        },
-      ]
-    : [];
-
-  return [...resources, ...resourceRate];
-}
-
 export function getMotherlodeResource(entity: Entity) {
   const resource = comps.Motherlode.get(entity)?.motherlodeType as EResource;
   if (!resource || resource > MUDEnums.EResource.length) return MUDEnums.EResource[0] as Entity;
@@ -71,14 +38,12 @@ export function getPlayerOwnedMotherlodeFullResourceCount(resource: Entity, play
   return [...motherlodeResources, homeResources].reduce(
     (prev, curr) => ({
       resourceCount: prev.resourceCount + curr.resourceCount,
-      resourcesToClaim: prev.resourcesToClaim + curr.resourcesToClaim,
       resourceStorage: prev.resourceStorage + curr.resourceStorage,
       production: prev.production + curr.production,
       producedResource: prev.producedResource + curr.producedResource,
     }),
     {
       resourceCount: 0n,
-      resourcesToClaim: 0n,
       resourceStorage: 0n,
       production: 0n,
       producedResource: 0n,
@@ -100,14 +65,12 @@ export function getPlayerOwnedMotherlodeFullResourceCounts(playerEntity: Entity)
       if (!combinedCounts[key]) {
         combinedCounts[key] = {
           resourceCount: 0n,
-          resourcesToClaim: 0n,
           resourceStorage: 0n,
           production: 0n,
           producedResource: 0n,
         };
       }
       combinedCounts[key].resourceCount += value.resourceCount;
-      combinedCounts[key].resourcesToClaim += value.resourcesToClaim;
       combinedCounts[key].resourceStorage += value.resourceStorage;
       combinedCounts[key].production += value.production;
       combinedCounts[key].producedResource += value.producedResource;
@@ -124,93 +87,10 @@ export function getPlayerOwnedMotherlodeFullResourceCounts(playerEntity: Entity)
 
 export type ResourceCountData = {
   resourceCount: bigint;
-  resourcesToClaim: bigint;
   resourceStorage: bigint;
   production: bigint;
   producedResource: bigint;
 };
-
-export function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, spaceRock?: Entity, count = 1n) {
-  const resourceAmounts = recipe.map((resource) => {
-    return getFullResourceCount(resource.id, spaceRock);
-  });
-
-  for (const [index, resource] of recipe.entries()) {
-    const resourceAmount = resourceAmounts[index];
-    const { resourceCount, resourcesToClaim } = resourceAmount;
-
-    switch (resource.type) {
-      case ResourceType.Resource:
-        if (resourceCount + resourcesToClaim < resource.amount * count) return false;
-        break;
-      case ResourceType.ResourceRate:
-        break;
-      case ResourceType.Utility:
-        if (resourceCount < resource.amount * count) return false;
-        break;
-      default:
-        return false;
-    }
-  }
-
-  return true;
-}
-
-export function getRecipeDifference(
-  firstRecipe: ReturnType<typeof getRecipe>,
-  secondRecipe: ReturnType<typeof getRecipe>
-) {
-  const difference = firstRecipe.map((resource) => {
-    let amount = resource.amount;
-    if (resource.type == ResourceType.Utility) {
-      const secondResource = secondRecipe.find((secondResource) => resource.id === secondResource.id);
-
-      if (secondResource) {
-        amount = resource.amount - secondResource.amount;
-      }
-    }
-
-    return {
-      id: resource.id,
-      amount: amount,
-      type: resource.type,
-    };
-  });
-
-  return difference;
-}
-
-export function getMaxCountOfRecipe(recipe: ReturnType<typeof getRecipe>, spaceRock?: Entity) {
-  spaceRock = spaceRock ?? (comps.Home.getWithKeys({ entity: comps.Account.get()?.value as Hex })?.asteroid as Entity);
-  const resourceAmounts = recipe.map((resource) => {
-    return getFullResourceCount(resource.id, spaceRock);
-  });
-
-  let count;
-  for (const [index, resource] of recipe.entries()) {
-    const resourceAmount = resourceAmounts[index];
-    const { resourceCount, resourcesToClaim, production } = resourceAmount;
-    let maxOfResource = 0n;
-
-    if (resource.amount !== 0n)
-      switch (resource.type) {
-        case ResourceType.Resource:
-          maxOfResource = (resourceCount + resourcesToClaim) / resource.amount;
-          break;
-        case ResourceType.ResourceRate:
-          maxOfResource = production / resource.amount;
-          break;
-        case ResourceType.Utility:
-          maxOfResource = resourceCount / resource.amount;
-          break;
-      }
-
-    if (!count) count = Number(maxOfResource);
-    else count = Math.min(count, Number(maxOfResource));
-  }
-
-  return count ?? 0;
-}
 
 export function isUtility(resource: Entity) {
   const id = ResourceEnumLookup[resource];
@@ -229,7 +109,6 @@ export function getFullResourceCount(resource: Entity, spaceRock?: Entity) {
   return (
     getFullResourceCounts(spaceRock).get(resource) ?? {
       resourceCount: 0n,
-      resourcesToClaim: 0n,
       resourceStorage: 0n,
       production: 0n,
       producedResource: 0n,
@@ -268,7 +147,6 @@ export function getFullResourceCounts(spaceRockEntity?: Entity) {
         entity,
         motherlodeResources[entity] ?? {
           resourceCount: 0n,
-          resourcesToClaim: 0n,
           resourceStorage: 0n,
           production: 0n,
           producedResource: 0n,
@@ -291,8 +169,7 @@ export function getFullResourceCounts(spaceRockEntity?: Entity) {
     //if they are both equal no change will be made
     if (productionRate == 0n && consumptionRate == 0n)
       return result.set(entity, {
-        resourceCount: resourceCount,
-        resourcesToClaim: result.get(entity)?.resourcesToClaim ?? 0n,
+        resourceCount: resourceCount + (result.get(entity)?.resourceCount ?? 0n),
         resourceStorage: resourceStorage + (result.get(entity)?.resourceStorage ?? 0n),
         production: result.get(entity)?.production ?? 0n,
         producedResource: producedResource + (result.get(entity)?.producedResource ?? 0n),
@@ -327,7 +204,6 @@ export function getFullResourceCounts(spaceRockEntity?: Entity) {
     if (increase == decrease)
       return result.set(entity, {
         resourceCount: resourceCount + (result.get(entity)?.resourceCount ?? 0n),
-        resourcesToClaim: result.get(entity)?.resourcesToClaim ?? 0n,
         resourceStorage: resourceStorage + (result.get(entity)?.resourceStorage ?? 0n),
         production: result.get(entity)?.production ?? 0n,
         producedResource: producedResource + (result.get(entity)?.producedResource ?? 0n),
@@ -366,24 +242,8 @@ export function getFullResourceCounts(spaceRockEntity?: Entity) {
         : finalResourceCount < 0n
         ? -resourceCount
         : increase - decrease;
-
-    // if (index == EResource.Iron)
-    // console.log(
-    //   "increse:",
-    //   increase,
-    //   "decrease",
-    //   decrease,
-    //   "final count:",
-    //   finalResourceCount,
-    //   "max storage:",
-    //   resourceStorage,
-    //   "resources to claim:",
-    //   resourcesToClaim
-    // );
-
     return result.set(entity, {
-      resourceCount: resourceCount + (result.get(entity)?.resourceCount ?? 0n),
-      resourcesToClaim: resourcesToClaim + (result.get(entity)?.resourcesToClaim ?? 0n),
+      resourceCount: resourceCount + resourcesToClaim + (result.get(entity)?.resourceCount ?? 0n),
       resourceStorage: resourceStorage + (result.get(entity)?.resourceStorage ?? 0n),
       production: productionRate - consumptionRate + (result.get(entity)?.production ?? 0n),
       producedResource: producedResource + (result.get(entity)?.producedResource ?? 0n),

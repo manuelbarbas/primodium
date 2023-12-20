@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { BlockNumber } from "src/network/components/clientComponents";
-import { getMaxCountOfRecipe, getRecipe } from "src/util/resource";
+import { getMaxCountOfRecipe, getRecipe } from "src/util/recipe";
 
 export function useMaxCountOfRecipe(recipe: ReturnType<typeof getRecipe>, spaceRock?: Entity) {
   const { value: blockNumber } = BlockNumber.use(undefined, {

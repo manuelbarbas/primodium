@@ -12,11 +12,11 @@ export const MaterialLabel = ({ name, resource }: { name: string; resource: Enti
 
   const resourceIcon = ResourceImage.get(resource);
   const worldSpeed = components.P_GameConfig.use()?.worldSpeed ?? SPEED_SCALE;
-  const { resourceCount, resourcesToClaim, production, resourceStorage } = useFullResourceCount(resource, selectedRock);
+  const { resourceCount, production, resourceStorage } = useFullResourceCount(resource, selectedRock);
   const tooltipClass = useMemo(() => {
     if (resourceStorage <= BigInt(0)) return;
 
-    const percentFull = (resourceCount + resourcesToClaim) / resourceStorage;
+    const percentFull = resourceCount / resourceStorage;
 
     if (percentFull >= 1) {
       return "text-accent";
@@ -25,14 +25,14 @@ export const MaterialLabel = ({ name, resource }: { name: string; resource: Enti
     if (percentFull >= 0.9) return "text-accent animate-pulse";
 
     return;
-  }, [resourceCount, resourcesToClaim, resourceStorage]);
+  }, [resourceCount, resourceStorage]);
 
   return (
     <Badge className={`gap-1 group pointer-events-auto ${resourceStorage === 0n ? "badge-error opacity-25" : ""}`}>
       <ResourceIconTooltip
         name={name}
         spaceRock={selectedRock}
-        amount={resourceCount + resourcesToClaim}
+        amount={resourceCount}
         resource={resource}
         image={resourceIcon ?? ""}
         validate={false}

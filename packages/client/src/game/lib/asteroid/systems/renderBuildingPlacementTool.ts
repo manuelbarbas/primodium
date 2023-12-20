@@ -19,7 +19,7 @@ import { world } from "src/network/world";
 import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
 import { Action, BuildingEnumLookup } from "src/util/constants";
-import { getRecipe, hasEnoughResources } from "src/util/resource";
+import { getRecipe, hasEnoughResources } from "src/util/recipe";
 import { buildBuilding } from "src/util/web3/contractCalls/buildBuilding";
 import { ObjectPosition, OnClick, SetValue } from "../../common/object-components/common";
 import { Animation, Outline, Texture } from "../../common/object-components/sprite";

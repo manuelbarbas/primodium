@@ -1,19 +1,19 @@
+import { primodium } from "@game/api";
+import { AudioKeys, KeyNames, KeybindActions } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { useState } from "react";
 import { FaCaretLeft, FaCaretRight, FaLock } from "react-icons/fa";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { Action, EntityType } from "src/util/constants";
-import { getRecipe } from "src/util/resource";
+import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
 import { Button } from "../core/Button";
 import { Card, SecondaryCard } from "../core/Card";
 import { BuildingImageFromType } from "../shared/BuildingImage";
 import { BlueprintInfo } from "./BlueprintInfo";
-import { AudioKeys, KeyNames, KeybindActions } from "@game/constants";
-import { useState } from "react";
-import { primodium } from "@game/api";
 
 const Blueprint: React.FC<{
   buildingType: Entity;

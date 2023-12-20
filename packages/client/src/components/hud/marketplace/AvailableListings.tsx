@@ -5,17 +5,17 @@ import { FaAngleDoubleRight, FaArrowLeft, FaArrowRight, FaMinus, FaPlay, FaSync 
 import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
-import { NumberInput } from "src/components/shared/NumberInput";
 import { CurrencyDisplay } from "src/components/shared/CurrencyDisplay";
+import { NumberInput } from "src/components/shared/NumberInput";
+import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { ValueSansMetadata } from "src/network/components/customComponents/ExtendedComponent";
 import { createHangar } from "src/network/systems/setupHangar";
+import { formatNumber } from "src/util/common";
 import { ResourceEntityLookup, ResourceImage, UnitEntityLookup } from "src/util/constants";
 import { getFullResourceCount, getScale } from "src/util/resource";
 import { claimUnits } from "src/util/web3/contractCalls/claimUnits";
-import { formatNumber } from "src/util/common";
-import { useSettingsStore } from "src/game/stores/SettingsStore";
 
 type Listing = ValueSansMetadata<typeof components.MarketplaceOrder.schema> & { id: Entity };
 
@@ -214,13 +214,13 @@ const AvailableListing = ({
   const sellerMaxResource = useMemo(() => {
     if (!sellerHome) return 0n;
     if (listing.orderType === EOrderType.Resource) {
-      const { resourceCount, resourcesToClaim } = getFullResourceCount(entity, sellerHome);
+      const { resourceCount } = getFullResourceCount(entity, sellerHome);
       return components.MarketplaceOrder.getAll().reduce((acc, entity) => {
         const _listing = components.MarketplaceOrder.get(entity)!;
         if (_listing.seller !== listing.seller || _listing.resource !== listing.resource) return acc;
         const remainingResource = acc - _listing.count;
         return remainingResource < 0n ? 0n : remainingResource;
-      }, resourceCount + resourcesToClaim);
+      }, resourceCount);
     }
     const hangar = createHangar(sellerHome)?.get(entity) ?? 0n;
     return hangar;

@@ -118,8 +118,8 @@ export function getSpaceRockInfo(spaceRock: Entity) {
     parent: "0" as Entity,
   });
   const resources = [...ResourceStorages].reduce((acc, resource) => {
-    const { resourceCount, resourcesToClaim } = getFullResourceCount(resource, spaceRock);
-    const amount = resourceCount + resourcesToClaim;
+    const { resourceCount } = getFullResourceCount(resource, spaceRock);
+    const amount = resourceCount;
 
     if (amount) {
       // only add to the array if amount is non-zero

@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { useEffect, useState } from "react";
 import { BlockNumber } from "src/network/components/clientComponents";
-import { getRecipe, hasEnoughResources } from "src/util/resource";
+import { getRecipe, hasEnoughResources } from "src/util/recipe";
 
 export const useHasEnoughResources = (recipe: ReturnType<typeof getRecipe>, spaceRock?: Entity, count = 1n) => {
   const [enoughResources, setEnoughResources] = useState(false);
