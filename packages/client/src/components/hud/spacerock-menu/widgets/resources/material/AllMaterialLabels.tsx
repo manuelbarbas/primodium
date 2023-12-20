@@ -85,7 +85,7 @@ export const AllMaterialLabels = () => {
         <Tabs.Pane index={3} fragment className="items-center border-none p-0">
           <div className="flex flex-col items-center">
             <div className="flex items-center gap-1">
-              <Tabs.Button index={1} className="btn-ghost btn-xs text-accent">
+              <Tabs.Button index={2} className="btn-ghost btn-xs text-accent">
                 <FaCaretLeft size={12} />
               </Tabs.Button>
               <p className="text-xs opacity-75 font-bold">UNRAIDABLE RESOURCES</p>
