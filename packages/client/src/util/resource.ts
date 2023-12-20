@@ -134,7 +134,7 @@ export function getMotherlodeResourceCount(entity: Entity): Map<Entity, Motherlo
   return resources;
 }
 
-export function getFullResourceCounts(rawSpaceRockEntity?: Entity) {
+export function getFullResourceCounts(rawSpaceRockEntity?: Entity): Map<Entity, ResourceCountData> {
   const player = comps.OwnedBy.getWithKeys({ entity: rawSpaceRockEntity as Hex })?.value ?? comps.Account.get()?.value;
   const home = comps.Home.getWithKeys({ entity: player as Hex })?.asteroid as Entity | undefined;
 
@@ -152,7 +152,8 @@ export function getFullResourceCounts(rawSpaceRockEntity?: Entity) {
 
   // get and save the resource counts for the motherlodes
   const motherlodeResources = getMotherlodeResourceCounts(player as Entity);
-  if (!home || spaceRockEntity !== home) return fullResourceValue.get(spaceRockEntity)?.resources ?? result;
+
+  if (!home) return fullResourceValue.get(spaceRockEntity)?.resources ?? new Map();
 
   const homeHex = home as Hex;
 
@@ -246,9 +247,9 @@ export function getFullResourceCounts(rawSpaceRockEntity?: Entity) {
     });
   });
 
-  fullResourceValue.set(spaceRockEntity, {
+  fullResourceValue.set(home, {
     time,
     resources: result,
   });
-  return result;
+  return fullResourceValue.get(spaceRockEntity)?.resources ?? new Map();
 }
