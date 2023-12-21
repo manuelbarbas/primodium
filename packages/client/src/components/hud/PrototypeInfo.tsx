@@ -10,7 +10,7 @@ import { components } from "src/network/components";
 import { getBuildingLevelStorageUpgrades, transformProductionData } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
 import { ResourceImage, ResourceType } from "src/util/constants";
-import { getRecipe } from "src/util/resource";
+import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
 import { Badge } from "../core/Badge";
 import { IconLabel } from "../core/IconLabel";

@@ -11,7 +11,7 @@ import { components, components as comps } from "src/network/components";
 import { TrainingQueue } from "src/network/components/clientComponents";
 import { BackgroundImage, EntityType, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
-import { getRecipe } from "src/util/resource";
+import { getRecipe } from "src/util/recipe";
 import { train } from "src/util/web3/contractCalls/train";
 import { Hex } from "viem";
 
@@ -92,22 +92,20 @@ export const VesselSlots: React.FC<{
 }> = ({ building, player }) => {
   // const home = components.Home.use(player)?.asteroid;
   // vessel capacity increases every level and decreases every vessel
-  const {
-    resourceCount: vesselsAvailable,
-    resourcesToClaim: vesselsToClaim,
-    resourceStorage: maxVessels,
-  } = useFullResourceCount(EntityType.VesselCapacity);
+  const { resourceCount: vesselsAvailable, resourceStorage: maxVessels } = useFullResourceCount(
+    EntityType.VesselCapacity
+  );
 
-  console.log(vesselsAvailable, vesselsToClaim, maxVessels);
+  console.log(vesselsAvailable, maxVessels);
 
   const rawQueue = TrainingQueue.use(building);
   const queue = useMemo(() => {
     return rawQueue ? convertTrainingQueue(rawQueue) : [];
   }, [rawQueue]);
-  const vesselsInConstruction = BigInt(queue.length) - vesselsToClaim;
+  const vesselsInConstruction = BigInt(queue.length);
   const vesselsUsed = maxVessels - vesselsAvailable;
   const builtVessels = vesselsUsed - vesselsInConstruction;
-  const queuedVessels = vesselsInConstruction - vesselsToClaim;
+  const queuedVessels = vesselsInConstruction;
   const availableVessels = maxVessels - (builtVessels + queuedVessels);
 
   const level = components.Level.use(building, { value: 0n }).value;

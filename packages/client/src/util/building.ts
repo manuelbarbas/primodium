@@ -10,7 +10,7 @@ import { Hex } from "viem";
 import { clampedIndex, getBlockTypeName, toRomanNumeral } from "./common";
 import { ResourceEntityLookup, ResourceStorages, ResourceType, SPEED_SCALE, UtilityStorages } from "./constants";
 import { outOfBounds } from "./outOfBounds";
-import { getRecipe } from "./resource";
+import { getRecipe } from "./recipe";
 import { getBuildingAtCoord, getResourceKey } from "./tile";
 
 type Dimensions = { width: number; height: number };

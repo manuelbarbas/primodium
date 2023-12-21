@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { NumberInput } from "src/components/shared/NumberInput";
+import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
@@ -12,7 +13,6 @@ import { EntityType, ResourceEntityLookup, ResourceStorages, UnitEntityLookup, U
 import { getScale } from "src/util/resource";
 import { createOrder } from "src/util/web3/contractCalls/createOrder";
 import { PlayerListings } from "./PlayerListings";
-import { useSettingsStore } from "src/game/stores/SettingsStore";
 
 export type UserListing = {
   item: Entity;
@@ -87,9 +87,7 @@ export const CreateOrderForm = () => {
     });
     resources.forEach((resource) => {
       const resourceCount = resourceCounts.get(resource)?.resourceCount ?? 0n;
-      const resourcesToClaim = resourceCounts.get(resource)?.resourcesToClaim ?? 0n;
-      const totalResources = resourceCount + resourcesToClaim;
-      itemsUsed[resource] = totalResources - (itemsUsed[resource] ?? 0n);
+      itemsUsed[resource] = resourceCount - (itemsUsed[resource] ?? 0n);
     });
     units.forEach((unit) => {
       const unitCount = getUnitCount(unit);

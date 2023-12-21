@@ -26,12 +26,12 @@ export const MotherlodeResources: React.FC<{
   const motherlodeType = components.Motherlode.useWithKeys({ entity: motherlodeEntity as Hex })?.motherlodeType;
   const rawResource = components.P_RawResource.useWithKeys({ resource: motherlodeType ?? 0 })?.value ?? 0n;
   const rawResourceId = ResourceEntityLookup[rawResource as EResource];
-  const { resourcesToClaim, resourceCount } = useFullResourceCount(rawResourceId, motherlodeEntity);
+  const { resourceCount } = useFullResourceCount(rawResourceId, motherlodeEntity);
   if (!rawResource || !motherlodeType) return null;
 
   const resourceId = ResourceEntityLookup[motherlodeType as EResource];
 
-  let currCount = (resourceCount ?? 0n) + (resourcesToClaim ?? 0n);
+  let currCount = resourceCount ?? 0n;
   if (currCount < 0n) currCount = 0n;
   return (
     <DataLabel label="RESOURCES">

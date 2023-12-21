@@ -8,10 +8,10 @@ export function useHasEnoughOfResource(
   spaceRock?: Entity,
   resourceType = ResourceType.Resource
 ) {
-  const { resourceCount, resourcesToClaim, production } = useFullResourceCount(resource, spaceRock);
+  const { resourceCount, production } = useFullResourceCount(resource, spaceRock);
   switch (resourceType) {
     case ResourceType.Resource:
-      return resourceCount + resourcesToClaim >= amount;
+      return resourceCount >= amount;
     case ResourceType.ResourceRate:
       return production >= amount;
     case ResourceType.Utility:

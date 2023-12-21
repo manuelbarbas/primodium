@@ -1,3 +1,4 @@
+import { AudioKeys, KeybindActions } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import React, { useMemo } from "react";
@@ -7,13 +8,12 @@ import { components } from "src/network/components";
 import { getBuildingLevelStorageUpgrades, transformProductionData } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
 import { ResourceImage, ResourceType } from "src/util/constants";
-import { getRecipe } from "src/util/resource";
+import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
 import { Badge } from "../core/Badge";
 import { Button } from "../core/Button";
 import { SecondaryCard } from "../core/Card";
 import { IconLabel } from "../core/IconLabel";
-import { AudioKeys, KeybindActions } from "@game/constants";
 
 export const RecipeDisplay: React.FC<{
   building: Entity;

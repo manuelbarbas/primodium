@@ -91,7 +91,7 @@ export function getResourceRequirement(objective: Entity): Requirement[] | undef
   return rawRequiredProduction.resources.map((resource, index) => ({
     id: ResourceEntityLookup[resource as EResource],
     requiredValue: rawRequiredProduction.amounts[index],
-    currentValue: getFullResourceCount(ResourceEntityLookup[resource as EResource]).producedResource,
+    currentValue: comps.ProducedResource?.getWithKeys({ entity: player as Hex, resource })?.value ?? 0n,
     scale: RESOURCE_SCALE,
     type: RequirementType.ProducedResources,
   }));
@@ -272,8 +272,8 @@ export function getCanClaimObjective(objective: Entity, playerEntity: Entity) {
   const rewards = getRewards(objective);
   const hasEnoughRewardResources = rewards.every((resource) => {
     if (resource.type !== ResourceType.Resource) return true;
-    const { resourceCount, resourcesToClaim, resourceStorage } = getFullResourceCount(resource.id);
-    return resourceCount + resourcesToClaim + resource.amount < resourceStorage;
+    const { resourceCount, resourceStorage } = getFullResourceCount(resource.id);
+    return resourceCount + resource.amount < resourceStorage;
   });
   return (
     hasEnoughRewardResources && Object.values(getAllRequirements(objective, playerEntity)).every(isAllRequirementsMet)

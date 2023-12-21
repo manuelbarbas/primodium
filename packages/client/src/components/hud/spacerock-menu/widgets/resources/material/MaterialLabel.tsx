@@ -5,18 +5,21 @@ import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
 import { formatNumber } from "src/util/common";
-import { RESOURCE_SCALE, ResourceImage, SPEED_SCALE } from "src/util/constants";
+import { EntityType, RESOURCE_SCALE, ResourceImage, SPEED_SCALE } from "src/util/constants";
 
 export const MaterialLabel = ({ name, resource }: { name: string; resource: Entity }) => {
   const selectedRock = components.SelectedRock.use()?.value;
 
   const resourceIcon = ResourceImage.get(resource);
   const worldSpeed = components.P_GameConfig.use()?.worldSpeed ?? SPEED_SCALE;
-  const { resourceCount, resourcesToClaim, production, resourceStorage } = useFullResourceCount(resource, selectedRock);
+  const { resourceCount, production, resourceStorage } = useFullResourceCount(resource, selectedRock);
+
+  // if (EntityType.Iridium == resource)
+  // console.log(`resourceCount: ${resourceCount} production: ${production} resourceStorage: ${resourceStorage}`);
   const tooltipClass = useMemo(() => {
     if (resourceStorage <= BigInt(0)) return;
 
-    const percentFull = (resourceCount + resourcesToClaim) / resourceStorage;
+    const percentFull = resourceCount / resourceStorage;
 
     if (percentFull >= 1) {
       return "text-accent";
@@ -25,14 +28,18 @@ export const MaterialLabel = ({ name, resource }: { name: string; resource: Enti
     if (percentFull >= 0.9) return "text-accent animate-pulse";
 
     return;
-  }, [resourceCount, resourcesToClaim, resourceStorage]);
+  }, [resourceCount, resourceStorage]);
+
+  const productionMin =
+    production == 1n ? "0.6" : formatNumber((production * 60n * worldSpeed) / (SPEED_SCALE * RESOURCE_SCALE));
+  if (resource === EntityType.Iridium) console.log("productionMin: ", productionMin, production);
 
   return (
     <Badge className={`gap-1 group pointer-events-auto ${resourceStorage === 0n ? "badge-error opacity-25" : ""}`}>
       <ResourceIconTooltip
         name={name}
         spaceRock={selectedRock}
-        amount={resourceCount + resourcesToClaim}
+        amount={resourceCount}
         resource={resource}
         image={resourceIcon ?? ""}
         validate={false}
@@ -43,7 +50,7 @@ export const MaterialLabel = ({ name, resource }: { name: string; resource: Enti
       {production !== 0n && (
         <p className="opacity-50 text-xs transition-all">
           {production > 0 ? "+" : ""}
-          {formatNumber((production * 60n * worldSpeed) / (SPEED_SCALE * RESOURCE_SCALE), { fractionDigits: 1 })}
+          {productionMin}
           /MIN
           <b className="text-accent">
             [

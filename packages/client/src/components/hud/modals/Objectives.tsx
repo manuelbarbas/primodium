@@ -5,6 +5,7 @@ import { Account, Time } from "src/network/components/clientComponents";
 import { useMemo } from "react";
 import { useMud } from "src/hooks/useMud";
 
+import { AudioKeys } from "@game/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { FaCheck, FaGift, FaMedal, FaSpinner } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
@@ -37,7 +38,6 @@ import { getFullResourceCount } from "src/util/resource";
 import { getRewards } from "src/util/reward";
 import { claimObjective } from "src/util/web3/contractCalls/claimObjective";
 import { Hex } from "viem";
-import { AudioKeys } from "@game/constants";
 
 const ClaimObjectiveButton: React.FC<{
   objectiveEntity: Entity;
@@ -185,12 +185,8 @@ const Objective: React.FC<{
               {rewardRecipe.map((resource) => {
                 let canClaim = true;
                 if (resource.type === ResourceType.Resource) {
-                  const {
-                    resourceCount,
-                    resourcesToClaim,
-                    resourceStorage: maxStorage,
-                  } = getFullResourceCount(resource.id, spaceRock);
-                  canClaim = resourceCount + resourcesToClaim + resource.amount <= maxStorage;
+                  const { resourceCount, resourceStorage: maxStorage } = getFullResourceCount(resource.id, spaceRock);
+                  canClaim = resourceCount + resource.amount <= maxStorage;
                 }
                 return (
                   <Badge

@@ -3,7 +3,7 @@ import { components } from "src/network/components";
 import { Hex } from "viem";
 import { getBlockTypeName } from "./common";
 import { EntityType } from "./constants";
-import { getRecipe } from "./resource";
+import { getRecipe } from "./recipe";
 
 export function getUpgradeInfo(research: Entity, playerEntity: Entity) {
   const asteroid = components.Home.get(playerEntity)?.asteroid;
