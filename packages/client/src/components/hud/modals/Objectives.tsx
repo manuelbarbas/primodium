@@ -147,7 +147,6 @@ const Objective: React.FC<{
               return (
                 <div key={index} className="flex flex-wrap gap-1">
                   {req.map((_req, index) => {
-                    const value = _req.currentValue > _req.requiredValue ? _req.requiredValue : _req.currentValue;
                     return (
                       <Badge key={index} className={`text-xs gap-2 ${complete ? "badge-success" : "badge-neutral"}`}>
                         <IconLabel
@@ -156,7 +155,7 @@ const Objective: React.FC<{
                             BackgroundImage.get(_req.id)?.at(0) ??
                             "/img/icons/minersicon.png"
                           }
-                          text={formatNumber(value / _req.scale, { short: true, fractionDigits: 3 })}
+                          text={formatNumber(_req.currentValue / _req.scale, { short: true, fractionDigits: 3 })}
                           tooltipDirection={"bottom"}
                           tooltipText={
                             _req.type === RequirementType.DefeatedPirates
