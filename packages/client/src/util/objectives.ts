@@ -228,13 +228,17 @@ export function getRewardUtilitiesRequirement(objective: Entity, playerEntity: E
     });
     return acc;
   }, {} as Record<Entity, bigint>);
-  return Object.entries(requiredUtilities).map(([id, requiredValue]) => ({
-    id: id as Entity,
-    requiredValue,
-    currentValue: getFullResourceCount(id as Entity).resourceCount,
-    scale: 100n,
-    type: RequirementType.RewardUtilities,
-  }));
+
+  return Object.entries(requiredUtilities).map(([id, requiredValue]) => {
+    const { resourceCount, resourceStorage } = getFullResourceCount(id as Entity);
+    return {
+      id: id as Entity,
+      requiredValue: requiredValue + (resourceStorage - resourceCount),
+      currentValue: resourceStorage,
+      scale: 100n,
+      type: RequirementType.RewardUtilities,
+    };
+  });
 }
 
 export const isRequirementMet = (requirement: Requirement | undefined) =>

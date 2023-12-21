@@ -148,6 +148,7 @@ const Objective: React.FC<{
                 <div key={index} className="flex flex-wrap gap-1">
                   {req.map((_req, index) => {
                     const value = _req.currentValue > _req.requiredValue ? _req.requiredValue : _req.currentValue;
+
                     return (
                       <Badge key={index} className={`text-xs gap-2 ${complete ? "badge-success" : "badge-neutral"}`}>
                         <IconLabel
