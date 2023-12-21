@@ -115,6 +115,7 @@ export function getMotherlodeResourceCount(entity: Entity): Map<Entity, Motherlo
 
   const resource = comps.Motherlode.get(entity)?.motherlodeType as EResource;
   const resourceEntity = ResourceEntityLookup[resource];
+
   const consumedResource = comps.P_ConsumesResource.getWithKeys({ resource })?.value as EResource;
   if (!consumedResource) throw new Error("Motherlode does not consume a resource");
 
@@ -142,6 +143,12 @@ export function getMotherlodeResourceCount(entity: Entity): Map<Entity, Motherlo
     minedAmount,
   });
 
+  resources.set(ResourceEntityLookup[consumedResource], {
+    resourceCount: resourceCountLeft,
+    resourceStorage: maxResourceCount,
+    production: resourceCountLeft == 0n ? 0n : -productionRate,
+    minedAmount,
+  });
   //memoize
   motherlodeResources.set(entity, { time, resources });
   return resources;
@@ -204,7 +211,6 @@ export function getAsteroidResourceCount(asteroid: Entity) {
 
       //check if the consumed resource isn't consumed by the space rock
       const consumedTime = consumptionTimeLengths[consumedResource] ?? 0n;
-
       //maximum production time is required resource consumption
       const producedTime = consumedResource ? consumedTime : timeSinceClaimed;
 
