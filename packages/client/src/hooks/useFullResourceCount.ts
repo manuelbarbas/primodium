@@ -1,26 +1,20 @@
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { BlockNumber } from "src/network/components/clientComponents";
+import { components } from "src/network/components";
 import { getFullResourceCount, getFullResourceCounts } from "src/util/resource";
 
 export function useFullResourceCount(resource: Entity, spaceRockEntity?: Entity) {
-  const { value: blockNumber } = BlockNumber.use(undefined, {
-    value: 0n,
-    avgBlockTime: 1,
-  });
+  const time = components.Time.use(undefined)?.value ?? 0n;
 
   return useMemo(() => {
     return getFullResourceCount(resource, spaceRockEntity);
-  }, [blockNumber, resource, spaceRockEntity]);
+  }, [time, resource, spaceRockEntity]);
 }
 
 export function useFullResourceCounts(spaceRockEntity?: Entity) {
-  const { value: blockNumber } = BlockNumber.use(undefined, {
-    value: 0n,
-    avgBlockTime: 1,
-  });
+  const time = components.Time.use(undefined)?.value ?? 0n;
 
   return useMemo(() => {
     return getFullResourceCounts(spaceRockEntity);
-  }, [blockNumber, spaceRockEntity]);
+  }, [time, spaceRockEntity]);
 }

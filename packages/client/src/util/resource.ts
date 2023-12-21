@@ -184,13 +184,12 @@ export function getAsteroidResourceCount(asteroid: Entity) {
     const resourceCount =
       motherlodeResource.minedAmount + (comps.ResourceCount.getWithKeys({ entity: homeHex, resource })?.value ?? 0n);
 
-    //each resource has a production and consumption value. these values need to be seperate so we can calculate best outcome of production and consumption
+    // motherlode production is negative
     let productionRate =
-      motherlodeResource.production + (comps.ProductionRate.getWithKeys({ entity: homeHex, resource })?.value ?? 0n);
+      -motherlodeResource.production + (comps.ProductionRate.getWithKeys({ entity: homeHex, resource })?.value ?? 0n);
 
     const consumptionRate = comps.ConsumptionRate.getWithKeys({ entity: homeHex, resource })?.value ?? 0n;
 
-    //if they are both equal no change will be made
     if (productionRate == 0n && consumptionRate == 0n)
       return result.set(entity, {
         resourceCount,
@@ -198,32 +197,30 @@ export function getAsteroidResourceCount(asteroid: Entity) {
         production: 0n,
       });
 
-    //first we calculate production
     let increase = 0n;
+    //first we calculate production
     if (productionRate > 0n) {
-      //check to see if this resource consumes another resource to be produced
       const consumedResource = (comps.P_ConsumesResource.getWithKeys({ resource })?.value ?? 0) as EResource;
 
-      //check if this resource consumes another resource, but the consumed resource isn't currently consumed by the space rock
+      //check if the consumed resource isn't consumed by the space rock
       const consumedTime = consumptionTimeLengths[consumedResource] ?? 0n;
 
-      //if this resource consumes another resource the maxium time it can be produced is the maximum time that the required resource is consumed
+      //maximum production time is required resource consumption
       const producedTime = consumedResource ? consumedTime : timeSinceClaimed;
 
       //the amount of resource that has been produced
       increase = productionRate * producedTime;
 
-      //if the condumption time for the required resource is less than the time passed than currently production is 0
+      //if consumption is less than time passed then production is 0
       if (producedTime < timeSinceClaimed) productionRate = 0n;
     }
 
-    // the maximum amount of resourecs that will decrease if there is enough of the resource available decrease < resourceCount + increase
+    // max resource decrease (if there is enough resource) is decrease < resourceCount + increase
     let decrease = consumptionRate * timeSinceClaimed;
 
-    //the maximum amount of time from the last update to this current time is the maximum amount of time this resource could have been consumed
+    //max time from the last update to now is max time this resource was consumed
     consumptionTimeLengths[resource] = timeSinceClaimed;
 
-    //if increase and decrease match than nothing to update
     if (increase == decrease)
       return result.set(entity, {
         resourceCount,
@@ -232,13 +229,13 @@ export function getAsteroidResourceCount(asteroid: Entity) {
       });
 
     if (decrease - increase > resourceCount) {
-      //if the decrease is more than the sum of increase and current amount then the sum is the maximum that can be consumed
+      // if the decrease is more than the sum of increase and current amount then the sum is the maximum that can be consumed
       // we use this amount to see how much time the resource can be consumed
       consumptionTimeLengths[resource] = consumptionRate !== 0n ? (resourceCount + increase) / consumptionRate : 0n;
-      //we use the time length to reduce current resource amount by the difference of the decrease and the increase
+      // we use the time length to reduce current resource amount by the difference of the decrease and the increase
       decrease = consumptionRate * consumptionTimeLengths[resource];
-      //consumption is from current space rock and will be in the future
-      //consumptionRate = 0n;
+      // consumption is from current space rock and will be in the future
+      // consumptionRate = 0n;
     }
 
     const finalResourceCount = clampBigInt(resourceCount + increase - decrease, 0n, resourceStorage);
