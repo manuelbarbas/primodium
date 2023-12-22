@@ -40,7 +40,7 @@ export default function AppLoadingState() {
     lastBlockNumberProcessed: BigInt(0),
   });
 
-  const enoughEth = (balance ?? 0n) >= minEth;
+  const enoughEth = DEV || (balance ?? 0n) >= minEth;
   const loading = loadingState.step !== SyncStep.LIVE || loadingState.percentage < 100;
   const ready = !loading && enoughEth;
 
