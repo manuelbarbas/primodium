@@ -16,6 +16,7 @@ import { Statistics } from "./screens/Statistics";
 import { setupCheatcodes } from "./util/cheatcodes";
 
 export const DEV = import.meta.env.PRI_DEV === "true";
+export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";
 
 export default function AppLoadingState() {
   const initialized = useInit();
@@ -25,7 +26,7 @@ export default function AppLoadingState() {
 
   useEffect(() => {
     const updateBalance = async () => {
-      if (DEV || !time || (balance ?? 0n) > minEth) return;
+      if (DEV_CHAIN || !time || (balance ?? 0n) > minEth) return;
       const bal = await mud.network.publicClient.getBalance({ address: mud.network.address });
       setBalance(bal);
     };
@@ -40,7 +41,7 @@ export default function AppLoadingState() {
     lastBlockNumberProcessed: BigInt(0),
   });
 
-  const enoughEth = DEV || (balance ?? 0n) >= minEth;
+  const enoughEth = DEV_CHAIN || (balance ?? 0n) >= minEth;
   const loading = loadingState.step !== SyncStep.LIVE || loadingState.percentage < 100;
   const ready = !loading && enoughEth;
 
