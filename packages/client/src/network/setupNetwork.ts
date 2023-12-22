@@ -63,8 +63,8 @@ export async function setupNetwork(networkConfig: NetworkConfig) {
     };
 
     requestDrip();
-    // Request a drip every 20 seconds
-    setInterval(requestDrip, 20000);
+    // Request a drip every 4 seconds
+    setInterval(requestDrip, 4000);
   }
 
   const clock = createClock(latestBlock$, {
