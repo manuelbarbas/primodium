@@ -5,29 +5,9 @@ import { ESendType } from "src/Types.sol";
 import { Arrival } from "src/Types.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
+import { LibSend } from "libraries/LibSend.sol";
 
 library LibRecall {
-  /**
-   * @dev Recalls units sent by a player.
-   * @param playerEntity The identifier of the player.
-   * @param rockEntity The identifier of the target rock.
-   **/
-  function recallStationedUnits(bytes32 playerEntity, bytes32 rockEntity) internal {
-    require(OwnedBy.get(rockEntity) == playerEntity, "[Recall] Rock not owned by player");
-    bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
-    require(homeAsteroid != rockEntity, "[Recall] Can not recall units from home asteroid");
-    bool foundUnitToRecall = false;
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      uint256 unitCount = UnitCount.get(playerEntity, rockEntity, unitPrototypes[i]);
-      if (unitCount == 0) continue;
-      LibUnit.decreaseUnitCount(playerEntity, rockEntity, unitPrototypes[i], unitCount);
-      LibUnit.increaseUnitCount(playerEntity, homeAsteroid, unitPrototypes[i], unitCount);
-      foundUnitToRecall = true;
-    }
-    require(foundUnitToRecall, "[Recall] No units to recall");
-  }
-
   /**
    * @dev Recalls units sent by a player.
    * @param playerEntity The identifier of the player.
@@ -64,16 +44,22 @@ library LibRecall {
     Arrival memory arrival
   ) internal {
     bytes32 playerEntity = arrival.from;
-    require(arrival.arrivalTime < block.timestamp, "[Recall] Arrival not arrived yet");
-
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      if (arrival.unitCounts[i] == 0) continue;
-      LibUnit.increaseUnitCount(playerEntity, Home.getAsteroid(playerEntity), unitPrototypes[i], arrival.unitCounts[i]);
+    if (arrival.arrivalTime >= block.timestamp) {
+      arrival.arrivalTime = block.timestamp + block.timestamp - arrival.sendTime;
+    } else {
+      arrival.arrivalTime = block.timestamp + arrival.arrivalTime - arrival.sendTime;
     }
+
     ArrivalCount.set(arrival.from, ArrivalCount.get(arrival.from) - 1);
     bytes32 arrivalsMapPlayer = arrival.sendType == ESendType.Reinforce ? arrival.to : arrival.from;
     ArrivalsMap.remove(arrivalsMapPlayer, rockEntity, arrivalId);
+
+    bytes32 origin = arrival.origin;
+    arrival.origin = arrival.destination;
+    arrival.destination = origin;
+    arrival.sendType = ESendType.Recall;
+
+    LibSend.sendUnits(arrival);
   }
 
   /**

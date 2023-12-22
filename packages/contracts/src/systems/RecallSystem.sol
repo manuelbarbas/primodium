@@ -9,15 +9,6 @@ import { LibRecall } from "codegen/Libraries.sol";
 
 contract RecallSystem is PrimodiumSystem {
   /**
-   * @dev Recalls stationed units.
-   * @param rockEntity The identifier of the target rock.
-   */
-  function recallStationedUnits(bytes32 rockEntity) public {
-    bytes32 playerEntity = addressToEntity(_msgSender());
-    LibRecall.recallStationedUnits(playerEntity, rockEntity);
-  }
-
-  /**
    * @dev Recalls the target arrival id.
    * @param rockEntity The identifier of the target rock.
    * @param arrivalId The identifier of the arrival to recall.

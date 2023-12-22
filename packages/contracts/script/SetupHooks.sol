@@ -77,8 +77,6 @@ import { OnUpgradeRange_SpendResources } from "src/hooks/systemHooks/upgradeRang
 
 import { OnAlliance_TargetClaimResources } from "src/hooks/systemHooks/alliance/OnAlliance_TargetClaimResources.sol";
 
-import { OnRecall_TargetClaimResources } from "src/hooks/systemHooks/recall/OnRecall_TargetClaimResources.sol";
-
 import { OnToggleBuilding_MaxStorage } from "src/hooks/systemHooks/toggleBuilding/OnToggleBuilding_MaxStorage.sol";
 import { OnToggleBuilding_ProductionRate } from "src/hooks/systemHooks/toggleBuilding/OnToggleBuilding_ProductionRate.sol";
 import { OnToggleBuilding_Utility } from "src/hooks/systemHooks/toggleBuilding/OnToggleBuilding_Utility.sol";
@@ -236,17 +234,6 @@ function registerAllianceHooks(IWorld world, OnBefore_ClaimResources onBefore_Cl
 
 function registerRecallHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
   world.registerSystemHook(getSystemResourceId("RecallSystem"), onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
-
-  OnRecall_TargetClaimResources onRecall_TargetClaimResources = new OnRecall_TargetClaimResources();
-  console.log("onRecall_TargetClaimResources address: %s", address(onRecall_TargetClaimResources));
-  address hookAddress = address(onRecall_TargetClaimResources);
-  world.grantAccess(ResourceCountTableId, hookAddress);
-  world.grantAccess(MapItemUtilitiesTableId, hookAddress);
-  world.grantAccess(MapUtilitiesTableId, hookAddress);
-  world.grantAccess(MapItemStoredUtilitiesTableId, hookAddress);
-  world.grantAccess(LastClaimedAtTableId, hookAddress);
-  world.grantAccess(ProducedResourceTableId, hookAddress);
-  world.registerSystemHook(getSystemResourceId("RecallSystem"), onRecall_TargetClaimResources, BEFORE_CALL_SYSTEM);
 }
 
 /**

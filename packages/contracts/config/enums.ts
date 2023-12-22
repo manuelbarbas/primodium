@@ -92,6 +92,7 @@ export enum ESendType {
   Reinforce = 1,
   Invade,
   Raid,
+  Recall,
 }
 
 export enum EOrderType {
