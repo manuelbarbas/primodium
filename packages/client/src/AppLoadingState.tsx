@@ -22,16 +22,15 @@ export default function AppLoadingState() {
   const initialized = useInit();
   const mud = useMud();
   const [balance, setBalance] = useState<bigint>();
-  const time = components.Time.use()?.value;
 
   useEffect(() => {
-    const updateBalance = async () => {
-      if (DEV_CHAIN || !time || (balance ?? 0n) > minEth) return;
+    const updateBalance = setInterval(async () => {
+      if (DEV_CHAIN || (balance ?? 0n) > minEth) return;
       const bal = await mud.network.publicClient.getBalance({ address: mud.network.address });
       setBalance(bal);
-    };
-    updateBalance();
-  }, [time, balance, mud.network.address, mud.network.publicClient, minEth]);
+    }, 1000);
+    return () => clearInterval(updateBalance);
+  }, [balance, mud.network.address, mud.network.publicClient]);
 
   const loadingState = components.SyncProgress.use(undefined, {
     message: "Connecting",
