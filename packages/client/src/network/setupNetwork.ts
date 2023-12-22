@@ -1,11 +1,12 @@
+import { minEth } from "@game/constants";
 import { ContractWrite, createBurnerAccount, getContract, transportObserver } from "@latticexyz/common";
-import { Entity } from "@latticexyz/recs";
 import { createClient as createFaucetClient } from "@latticexyz/faucet";
+import { Entity } from "@latticexyz/recs";
 import { syncToRecs } from "@latticexyz/store-sync/recs";
 import mudConfig from "contracts/mud.config";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { Subject, share } from "rxjs";
-import { Hex, createPublicClient, createWalletClient, encodeAbiParameters, fallback, http, parseEther } from "viem";
+import { Hex, createPublicClient, createWalletClient, encodeAbiParameters, fallback, formatEther, http } from "viem";
 import { createClock } from "./createClock";
 import { otherTables } from "./otherTables";
 import { NetworkConfig } from "./types";
@@ -47,24 +48,25 @@ export async function setupNetwork(networkConfig: NetworkConfig) {
 
   // Request drip from faucet
   if (networkConfig.faucetServiceUrl) {
-    const address = burnerAccount.address;
-    console.info("[Dev Faucet]: Player address -> ", address);
-
     const faucet = createFaucetClient({ url: networkConfig.faucetServiceUrl });
+    const address = burnerAccount.address;
 
+    let balance = await publicClient.getBalance({ address });
+    console.log("[Faucet] balance:", formatEther(balance));
     const requestDrip = async () => {
-      const balance = await publicClient.getBalance({ address });
-      console.info(`[Dev Faucet]: Player balance -> ${balance}`);
-      const lowBalance = balance < parseEther("0.2");
+      balance = await publicClient.getBalance({ address });
+      const lowBalance = balance < minEth;
       if (lowBalance) {
-        console.info("[Dev Faucet]: Balance is low, dripping funds to player");
+        console.info(`[Faucet] Balance is less than ${formatEther(minEth)}, dripping funds`);
         await faucet.drip.mutate({ address: address });
+        balance = await publicClient.getBalance({ address });
+        console.info(`[Faucet] New balance: ${formatEther(balance)} ETH`);
       }
     };
 
     requestDrip();
-    // Request a drip every 20 seconds
-    setInterval(requestDrip, 20000);
+    // Request a drip every 4 seconds
+    setInterval(requestDrip, 4000);
   }
 
   const clock = createClock(latestBlock$, {

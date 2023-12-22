@@ -62,7 +62,9 @@ export const Landing: React.FC = () => {
             </Button>
           )}
           {message && (
-            <div className="btn disabled btn-secondary w-4/5 star-background relative z-10 mt-4">{message}</div>
+            <div className="btn opacity-60 disabled btn-secondary w-4/5 star-background relative z-10 mt-4 cursor-not-allowed">
+              {message}
+            </div>
           )}
           <div className="absolute bottom-0 right-0 p-2 font-bold opacity-50">
             {params.get("version") ?? ""}

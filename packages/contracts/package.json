@@ -11,6 +11,7 @@
     "build:lib": "rm -rf src/codegen && tsx ./ts/terrain/commands/terraingen.ts && tsx ./ts/libraries/commands/libgen.ts ",
     "build:mud": "mud tablegen && mud worldgen && pnpm run prototypegen",
     "deploy:caldera": "pnpm run build && pnpm mud deploy --profile=caldera",
+    "deploy:caldera-sepolia": "pnpm run build && pnpm mud deploy --profile=caldera-sepolia",
     "deploy:local": "pnpm mud deploy",
     "deploy:redstone-holesky": "pnpm run build && pnpm mud deploy --profile=redstone-holesky",
     "dev": "pnpm mud dev-contracts",

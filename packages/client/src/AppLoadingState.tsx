@@ -1,5 +1,7 @@
+import { minEth } from "@game/constants";
 import { SyncStep } from "@latticexyz/store-sync";
 import { Browser } from "@primodiumxyz/mud-game-tools";
+import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Progress } from "./components/core/Progress";
 import { useMud } from "./hooks";
@@ -13,11 +15,23 @@ import { Landing } from "./screens/Landing";
 import { Statistics } from "./screens/Statistics";
 import { setupCheatcodes } from "./util/cheatcodes";
 
-const DEV = import.meta.env.PRI_DEV === "true";
+export const DEV = import.meta.env.PRI_DEV === "true";
+export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";
 
 export default function AppLoadingState() {
   const initialized = useInit();
   const mud = useMud();
+  const [balance, setBalance] = useState<bigint>();
+  const time = components.Time.use()?.value;
+
+  useEffect(() => {
+    const updateBalance = async () => {
+      if (DEV_CHAIN || !time || (balance ?? 0n) > minEth) return;
+      const bal = await mud.network.publicClient.getBalance({ address: mud.network.address });
+      setBalance(bal);
+    };
+    updateBalance();
+  }, [time, balance, mud.network.address, mud.network.publicClient, minEth]);
 
   const loadingState = components.SyncProgress.use(undefined, {
     message: "Connecting",
@@ -27,11 +41,24 @@ export default function AppLoadingState() {
     lastBlockNumberProcessed: BigInt(0),
   });
 
+  const enoughEth = DEV_CHAIN || (balance ?? 0n) >= minEth;
+  const loading = loadingState.step !== SyncStep.LIVE || loadingState.percentage < 100;
+  const ready = !loading && enoughEth;
+
   return (
     <div className="bg-black h-screen">
       <div className="absolute w-full h-full star-background opacity-40" />
       <div className="relative">
-        {loadingState.step !== SyncStep.LIVE && (
+        {!loading && !enoughEth && (
+          <div className="flex flex-col items-center justify-center h-screen text-white font-mono gap-4">
+            <p className="text-lg text-white">
+              <span className="font-mono">Dripping Eth to Primodium account</span>
+              <span>&hellip;</span>
+            </p>
+            <Progress value={100} max={100} className="animate-pulse w-56" />
+          </div>
+        )}
+        {loading && (
           <div className="flex items-center justify-center h-screen">
             <div className="flex flex-col items-center gap-4">
               <p className="text-lg text-white">
@@ -50,7 +77,7 @@ export default function AppLoadingState() {
             </div>
           </div>
         )}
-        {(loadingState.step === SyncStep.LIVE || loadingState.percentage == 100) && (
+        {ready && (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Landing />} />

@@ -2,9 +2,9 @@ import { useEffect } from "react";
 import { useMud } from "src/hooks/useMud";
 
 import { primodium } from "@game/api";
-import { GameReady } from "src/network/components/clientComponents";
 import { Progress } from "src/components/core/Progress";
 import { GameHUD } from "src/components/hud/HUD";
+import { GameReady } from "src/network/components/clientComponents";
 
 const params = new URLSearchParams(window.location.search);
 
