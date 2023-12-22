@@ -23,6 +23,10 @@ fs_permissions = [{ access = "read", path = "./" }]
 eth_rpc_url = "https://primodium-bedrock.calderachain.xyz/replica-http"
 chain_id = 12523
 
+[profile.caldera-sepolia]
+eth_rpc_url = "https://primodium-sepolia.rpc.caldera.xyz/http"
+chain_id = 10017
+
 [profile.redstone-holesky]
 eth_rpc_url = "https://rpc.holesky.redstone.xyz"
 chain_id = 17001
