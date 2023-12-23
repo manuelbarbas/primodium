@@ -1,9 +1,11 @@
 import { EResource } from "contracts/config/enums";
 import { find } from "lodash";
+import { parseEther } from "viem";
 import AsteroidTiledMap from "../maps/asteroid_0.7.json";
 import { EntityType } from "../util/constants";
 export const ASSET_PACK = "/assets/pack.json";
 
+export const minEth = parseEther("0.0049");
 export const TILE_HEIGHT = 16;
 export const TILE_WIDTH = 16;
 export const RENDER_INTERVAL = 30;

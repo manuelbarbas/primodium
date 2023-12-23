@@ -2585,6 +2585,11 @@
     "inputs": [
       {
         "internalType": "bytes32",
+        "name": "playerEntity",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
         "name": "prototypeEntity",
         "type": "bytes32"
       }
