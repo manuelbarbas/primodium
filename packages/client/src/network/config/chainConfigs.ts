@@ -38,7 +38,7 @@ export const calderaSepolia = {
       http: ["https://primodium-sepolia.rpc.caldera.xyz/http"],
     },
   },
-  faucetUrl: "https://caldera-faucet.primodium.ai/trpc",
+  faucetUrl: "https://caldera-sepolia-faucet.primodium.ai/trpc",
   indexerUrl: "https://caldera-mud2-indexer.primodium.ai/trpc",
   blockExplorers: {
     default: {
