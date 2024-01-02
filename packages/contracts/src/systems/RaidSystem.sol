@@ -2,7 +2,6 @@
 pragma solidity >=0.8.21;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { addressToEntity } from "src/utils.sol";
 
 import { LibRaid } from "codegen/Libraries.sol";
 

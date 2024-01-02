@@ -5,8 +5,6 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { PositionData, Level } from "codegen/index.sol";
 import { LibBuilding } from "codegen/Libraries.sol";
 
-import { addressToEntity } from "src/utils.sol";
-
 contract UpgradeBuildingSystem is PrimodiumSystem {
   /// @notice Upgrades the building at the specified coordinate
   /// @param coord Coordinate of the building to be upgraded

@@ -6,8 +6,6 @@ import { PositionData, Level } from "codegen/index.sol";
 import { IsActive, Home, OwnedBy } from "src/codegen/index.sol";
 import { LibBuilding, UnitProductionQueue } from "codegen/Libraries.sol";
 
-import { addressToEntity } from "src/utils.sol";
-
 contract ToggleBuildingSystem is PrimodiumSystem {
   /// @notice Toggles the building at the specified coordinate
   /// @param coord Coordinate of the building to be toggled

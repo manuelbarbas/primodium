@@ -4,8 +4,6 @@ pragma solidity >=0.8.21;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { IWorld } from "codegen/world/IWorld.sol";
-import { addressToEntity } from "src/utils.sol";
-
 import { LibInvade } from "codegen/Libraries.sol";
 
 contract InvadeSystem is PrimodiumSystem {
