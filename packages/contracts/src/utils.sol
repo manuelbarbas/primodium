@@ -33,7 +33,7 @@ function _player(address msgSender, bool highRisk) view returns (bytes32) {
   bytes32 player = addressToEntity(msgSender);
   bytes32 delegator = OwnedBy.get(player);
   if (highRisk) {
-    require(delegator == 0, "PrimodiumSystem: player is delegated");
+    require(delegator == 0, "[Access Control] Cannot delegate high risk actions");
     return player;
   }
 

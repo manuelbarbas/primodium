@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 // external
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { Delegate, OwnedBy } from "codegen/index.sol";
+import { Delegate, OwnedBy, Spawned } from "codegen/index.sol";
 
 /// @title Access System Contract
 /// @notice Manages granting and revoking access to delegates within the Primodium system.
@@ -26,6 +26,12 @@ contract AccessSystem is PrimodiumSystem {
     }
   }
 
+  // write a function that switches delegates
+  function switchDelegate(address payable delegate) public payable {
+    revokeAccessOwner();
+    grantAccess(delegate);
+  }
+
   /// @notice Revokes access for the owner, removing their delegate.
   /// @dev Deletes records from Delegate and OwnedBy mappings for the owner.
   function revokeAccessOwner() public {
@@ -39,7 +45,7 @@ contract AccessSystem is PrimodiumSystem {
   /// @dev Deletes records from Delegate and OwnedBy mappings for the delegate.
   function revokeAccessDelegate() public {
     bytes32 delegate = addressToEntity(_msgSender());
-    bytes32 player = OwnedBy.get(player);
+    bytes32 player = OwnedBy.get(delegate);
     Delegate.deleteRecord(player);
     OwnedBy.deleteRecord(delegate);
   }

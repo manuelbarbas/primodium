@@ -6,7 +6,7 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { BuildSystem } from "systems/BuildSystem.sol";
 
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
-import { P_GameConfig, GracePeriod, P_GracePeriod, Spawned, Position, PositionData, Level, Home } from "codegen/index.sol";
+import { P_GameConfig, GracePeriod, Spawned, P_GracePeriod, Spawned, Position, PositionData, Level, Home } from "codegen/index.sol";
 
 import { LibAsteroid, LibEncode } from "codegen/Libraries.sol";
 import { EBuilding } from "src/Types.sol";
@@ -34,7 +34,7 @@ contract SpawnSystem is PrimodiumSystem {
     position.parent = asteroid;
 
     Home.set(playerEntity, asteroid, LibEncode.getTimedHash(BuildingKey, position));
-    Spawned.set(ownerEntity, true);
+    Spawned.set(playerEntity, true);
     SystemCall.callWithHooksOrRevert(
       entityToAddress(playerEntity),
       getSystemResourceId("BuildSystem"),

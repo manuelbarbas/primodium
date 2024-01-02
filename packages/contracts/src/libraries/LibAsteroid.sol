@@ -2,7 +2,7 @@
 pragma solidity ^0.8.21;
 
 // tables
-import { Spawned, ReversePosition, OwnedBy, Position, PositionData, AsteroidCount, RockType, PositionData } from "codegen/index.sol";
+import { ReversePosition, OwnedBy, Position, PositionData, AsteroidCount, RockType, PositionData } from "codegen/index.sol";
 
 // types
 import { ERock } from "src/Types.sol";
