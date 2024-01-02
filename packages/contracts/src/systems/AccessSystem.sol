@@ -9,9 +9,14 @@ contract AccessSystem is PrimodiumSystem {
   function grantAccess(address payable delegate) public payable {
     bytes32 playerEntity = addressToEntity(_msgSender());
     bytes32 delegateEntity = addressToEntity(delegate);
+    require(OwnedBy.get(delegateEntity) == bytes32(0), "Delegate already has an owner");
     OwnedBy.set(delegateEntity, playerEntity);
     Delegate.set(playerEntity, delegateEntity);
-    delegate.transfer(msg.value);
+
+    if (msg.value > 0) {
+      (bool sent, ) = delegate.call{ value: msg.value }("");
+      require(sent, "Failed to send Ether");
+    }
   }
 
   function revokeAccess() public {
