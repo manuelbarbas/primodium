@@ -24,7 +24,7 @@ contract OnBuild_Requirements is SystemHook {
    */
   function onBeforeCallSystem(
     address msgSender,
-    ResourceId ,
+    ResourceId,
     bytes memory callData
   ) public {
     // Decode the arguments from the callData
@@ -43,9 +43,9 @@ contract OnBuild_Requirements is SystemHook {
    * It does not perform any actions in this case.
    */
   function onAfterCallSystem(
-    address ,
-    ResourceId ,
-    bytes memory 
+    address,
+    ResourceId,
+    bytes memory
   ) public {
     // This function does not perform any actions in this case.
   }

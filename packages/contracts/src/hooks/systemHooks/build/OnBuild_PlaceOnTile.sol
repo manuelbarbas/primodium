@@ -18,9 +18,9 @@ contract OnBuild_PlaceOnTile is SystemHook {
   constructor() {}
 
   function onBeforeCallSystem(
-    address ,
-    ResourceId ,
-    bytes memory 
+    address,
+    ResourceId,
+    bytes memory
   ) public {}
 
   /**
@@ -30,7 +30,7 @@ contract OnBuild_PlaceOnTile is SystemHook {
    */
   function onAfterCallSystem(
     address,
-    ResourceId ,
+    ResourceId,
     bytes memory callData
   ) public {
     // Decode the arguments from the callData

@@ -18,9 +18,9 @@ contract OnBuild_ProductionRate is SystemHook {
   constructor() {}
 
   function onBeforeCallSystem(
-    address ,
-    ResourceId ,
-    bytes memory 
+    address,
+    ResourceId,
+    bytes memory
   ) public {}
 
   /**
@@ -29,8 +29,8 @@ contract OnBuild_ProductionRate is SystemHook {
    * @param callData The data passed to the system.
    */
   function onAfterCallSystem(
-    address ,
-    ResourceId ,
+    address,
+    ResourceId,
     bytes memory callData
   ) public {
     // Decode the arguments from the callData
