@@ -42,6 +42,5 @@ contract OnBuild_Requirements is SystemHook {
     address,
     ResourceId,
     bytes memory
-  ) public {
-  }
+  ) public {}
 }
