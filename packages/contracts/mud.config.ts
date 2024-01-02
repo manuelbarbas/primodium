@@ -116,6 +116,11 @@ export const config = mudConfig({
       },
     },
 
+    Delegate: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "bytes32",
+    },
+
     /* ---------------------------------- Rocks --------------------------------- */
     P_Asteroid: {
       keySchema: {},

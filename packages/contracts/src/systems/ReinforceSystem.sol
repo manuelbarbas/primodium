@@ -15,7 +15,7 @@ contract ReinforceSystem is PrimodiumSystem {
    * @param arrival The identifier of the arrival used for reinforcement.
    */
   function reinforce(bytes32 rockEntity, bytes32 arrival) public {
-    bytes32 playerEntity = addressToEntity(_msgSender());
+    bytes32 playerEntity = _player(false);
 
     require(OwnedBy.get(rockEntity) == playerEntity, "[Reinforce] Rock not owned by sender");
 

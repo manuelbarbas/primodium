@@ -14,7 +14,6 @@ contract InvadeSystem is PrimodiumSystem {
    * @param rockEntity The identifier of the target rock entity.
    */
   function invade(bytes32 rockEntity) public {
-    bytes32 playerEntity = addressToEntity(_msgSender());
-    LibInvade.invade(IWorld(_world()), playerEntity, rockEntity);
+    LibInvade.invade(IWorld(_world()), _player(false), rockEntity);
   }
 }

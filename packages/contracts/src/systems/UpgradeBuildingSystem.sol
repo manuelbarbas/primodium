@@ -13,7 +13,7 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
   /// @return buildingEntity Entity identifier of the upgraded building
   function upgradeBuilding(PositionData memory coord) public returns (bytes32 buildingEntity) {
     // Check there isn't another tile there
-    bytes32 playerEntity = addressToEntity(_msgSender());
+    bytes32 playerEntity = _player(false);
     buildingEntity = LibBuilding.getBuildingFromCoord(coord);
     uint256 targetLevel = Level.get(buildingEntity) + 1;
     Level.set(buildingEntity, targetLevel);

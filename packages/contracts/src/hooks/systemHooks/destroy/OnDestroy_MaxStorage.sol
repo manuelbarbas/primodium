@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { addressToEntity } from "src/utils.sol";
+import { _player } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
@@ -20,12 +20,11 @@ contract OnDestroy_MaxStorage is SystemHook {
   /**
    * @dev This function is called before the system's main logic is executed. It clears maximum storage increases when a building is destroyed.
    * @param msgSender The address of the message sender.
-   * @param systemId The identifier of the system.
    * @param callData The data passed to the system.
    */
   function onBeforeCallSystem(
     address msgSender,
-    ResourceId systemId,
+    ResourceId,
     bytes memory callData
   ) public {
     // Decode the arguments from the callData
@@ -36,23 +35,16 @@ contract OnDestroy_MaxStorage is SystemHook {
     bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
 
     // Convert the player's address to an entity
-    bytes32 playerEntity = addressToEntity(msgSender);
+    bytes32 playerEntity = _player(msgSender, false);
 
     // Clear maximum storage increases for the building
     if (IsActive.get(buildingEntity)) LibStorage.clearMaxStorageIncrease(buildingEntity);
   }
 
-  /**
-   * @dev This function is called after the system's main logic is executed.
-   * It does not perform any actions in this case.
-   * @param msgSender The address of the message sender.
-   * @param systemId The identifier of the system.
-   * @param callData The data passed to the system.
-   */
   function onAfterCallSystem(
-    address msgSender,
-    ResourceId systemId,
-    bytes memory callData
+    address,
+    ResourceId,
+    bytes memory
   ) public {
     // This function does not perform any actions in this case.
   }
