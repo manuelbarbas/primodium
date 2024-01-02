@@ -26,7 +26,7 @@ contract OnBuild_Requirements is SystemHook {
     address msgSender,
     ResourceId,
     bytes memory callData
-  ) public {
+  ) public view {
     // Decode the arguments from the callData
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
     (EBuilding buildingType, PositionData memory coord) = abi.decode(args, (EBuilding, PositionData));
@@ -38,15 +38,10 @@ contract OnBuild_Requirements is SystemHook {
     LibBuilding.checkBuildRequirements(playerEntity, buildingType, coord);
   }
 
-  /**
-   * @dev This function is called after the system's main logic is executed.
-   * It does not perform any actions in this case.
-   */
   function onAfterCallSystem(
     address,
     ResourceId,
     bytes memory
   ) public {
-    // This function does not perform any actions in this case.
   }
 }

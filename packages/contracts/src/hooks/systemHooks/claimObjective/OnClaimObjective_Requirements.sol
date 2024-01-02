@@ -21,7 +21,7 @@ contract OnClaimObjective_Requirements is SystemHook {
     address msgSender,
     ResourceId,
     bytes memory callData
-  ) public {
+  ) public view {
     // Decode the coordinates from the callData
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
     EObjectives objective = abi.decode(args, (EObjectives));

@@ -24,7 +24,7 @@ contract OnUpgrade_Requirements is SystemHook {
     address msgSender,
     ResourceId,
     bytes memory callData
-  ) public {
+  ) public view {
     // Decode the parameters from the call data
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
     PositionData memory coord = abi.decode(args, (PositionData));

@@ -34,7 +34,7 @@ contract OnBuild_MaxStorage is SystemHook {
     // Decode the arguments from the callData
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
 
-    (uint8 buildingType, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
+    (, PositionData memory coord) = abi.decode(args, (uint8, PositionData));
     // Generate the unique building entity key
     bytes32 buildingEntity = LibEncode.getTimedHash(BuildingKey, coord);
     // Increase the max storage capacity for the player's building entity

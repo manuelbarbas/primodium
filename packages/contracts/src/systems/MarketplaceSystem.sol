@@ -118,10 +118,7 @@ contract MarketplaceSystem is PrimodiumSystem {
   }
 
   function _updateOrderCount(bytes32 orderId, uint256 count) internal {
-    MarketplaceOrderData memory order = MarketplaceOrder.get(orderId);
     if (count == 0) return cancelOrder(orderId);
-    bytes32 homeAsteroid = Home.getAsteroid(order.seller);
-
     MarketplaceOrder.setCount(orderId, count);
   }
 

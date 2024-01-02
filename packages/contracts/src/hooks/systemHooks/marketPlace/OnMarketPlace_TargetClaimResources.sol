@@ -30,10 +30,10 @@ contract OnMarketPlace_TargetClaimResources is SystemHook {
     bytes memory functionSelector = SliceInstance.toBytes(SliceLib.getSubslice(callData, 0, 4));
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
     if (bytes4(functionSelector) == MarketplaceSystem.takeOrder.selector) {
-      (bytes32 orderId, uint256 count) = abi.decode(args, (bytes32, uint256));
+      (bytes32 orderId, ) = abi.decode(args, (bytes32, uint256));
       LibResource.claimAllPlayerResources(MarketplaceOrder.getSeller(orderId));
     } else if (bytes4(functionSelector) == MarketplaceSystem.takeOrderBulk.selector) {
-      (bytes32[] memory orderIds, uint256[] memory counts) = abi.decode(args, (bytes32[], uint256[]));
+      (bytes32[] memory orderIds, ) = abi.decode(args, (bytes32[], uint256[]));
       for (uint256 i = 0; i < orderIds.length; i++) {
         LibResource.claimAllPlayerResources(MarketplaceOrder.getSeller(orderIds[i]));
       }

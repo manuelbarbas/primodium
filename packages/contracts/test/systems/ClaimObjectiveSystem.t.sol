@@ -295,7 +295,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     P_RaidedResources.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)), raidedResourcesData);
     P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)));
     setupRaid();
-    RaidResultData memory raidResult = LibRaid.resolveRaid(br);
+    LibRaid.resolveRaid(br);
 
     world.claimObjective(EObjectives.BuildCopperMine);
     assertEq(
@@ -329,7 +329,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     P_ResourceReward.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)), resourceRewardData);
 
     setupRaid();
-    RaidResultData memory raidResult = LibRaid.resolveRaid(br);
+    LibRaid.resolveRaid(br);
     world.claimObjective(EObjectives.BuildCopperMine);
   }
 

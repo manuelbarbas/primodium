@@ -24,14 +24,14 @@ contract PostDeploy is Script {
     address admin = vm.addr(deployerPrivateKey);
 
     IWorld world = IWorld(worldAddress);
-    address creator = world.creator();
+    world.creator();
     vm.startBroadcast(deployerPrivateKey);
     StoreSwitch.setStoreAddress(worldAddress);
-    uint256 newValue = world.increment();
+    world.increment();
 
     createPrototypes(world);
     console.log("Prototypes created");
-    createTerrain(world);
+    createTerrain();
     console.log("Terrain created");
     setupHooks(world);
 

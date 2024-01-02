@@ -28,7 +28,6 @@ contract OnSendUnits_InitMotherlode is SystemHook {
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
     SendArgs memory sendArgs = abi.decode(args, (SendArgs));
 
-    bytes32 origin = ReversePosition.get(sendArgs.originPosition.x, sendArgs.originPosition.y);
     bytes32 destination = ReversePosition.get(sendArgs.destinationPosition.x, sendArgs.destinationPosition.y);
     if (destination == 0) LibMotherlode.createMotherlode(sendArgs.destinationPosition);
   }

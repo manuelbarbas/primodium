@@ -51,7 +51,6 @@ contract LibInvadeTest is PrimodiumTest {
     vm.warp(1000);
     RockType.set(rock, uint8(ERock.Motherlode));
 
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     P_Unit.set(unit1, 0, P_UnitData({ attack: 100, defense: 100, speed: 200, cargo: 100, trainingTime: 0 }));
     Arrival memory arrival = Arrival({
       sendTime: block.timestamp,
@@ -76,8 +75,6 @@ contract LibInvadeTest is PrimodiumTest {
     vm.warp(1000);
     RockType.set(rock, uint8(ERock.Motherlode));
 
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-
     vm.expectRevert("[Invade] Can not invade with 0 attack points");
     world.invade(rock);
   }
@@ -88,7 +85,6 @@ contract LibInvadeTest is PrimodiumTest {
     RockType.set(homeRock, uint8(ERock.Asteroid));
     RockType.set(rock, uint8(ERock.Motherlode));
 
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     P_Unit.set(unit1, 0, P_UnitData({ attack: 100, defense: 100, speed: 200, cargo: 100, trainingTime: 0 }));
 
     UnitCount.set(player, homeRock, unit1, 100);

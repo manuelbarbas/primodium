@@ -18,6 +18,6 @@ contract PrimodiumSystem is System {
   }
 
   function _playerAddress(bool highRisk) internal view returns (address) {
-    return playerAddress(_msgSender(), false);
+    return playerAddress(_msgSender(), highRisk);
   }
 }

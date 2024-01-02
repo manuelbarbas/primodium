@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { _player } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
@@ -20,11 +19,10 @@ contract OnDestroy_ProductionRate is SystemHook {
 
   /**
    * @dev This function is called before the system's main logic is executed. It clears production rate reductions and resource production when a building is destroyed.
-   * @param msgSender The address of the message sender.
    * @param callData The data passed to the system.
    */
   function onBeforeCallSystem(
-    address msgSender,
+    address,
     ResourceId,
     bytes memory callData
   ) public {
@@ -34,9 +32,6 @@ contract OnDestroy_ProductionRate is SystemHook {
 
     // Get the building entity from the coordinates
     bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
-
-    // Convert the player's address to an entity
-    bytes32 playerEntity = _player(msgSender, false);
 
     if (!IsActive.get(buildingEntity)) return;
 

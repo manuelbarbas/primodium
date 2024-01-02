@@ -193,7 +193,7 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
   function testFailToggleBuildingTrainUnits() public {
     Level.set(Home.getAsteroid(player), 2);
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Garage)), 1);
-    bytes32 garage = world.build(EBuilding.Garage, getIronPosition2(creator));
+    world.build(EBuilding.Garage, getIronPosition2(creator));
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Workshop)), 1);
     bytes32 workshop = world.build(EBuilding.Workshop, getNonIronPosition(creator));
     world.toggleBuilding(getNonIronPosition(creator));
@@ -205,7 +205,7 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
   function testToggleBuildingTrainingUnits() public {
     Level.set(Home.getAsteroid(player), 2);
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Garage)), 1);
-    bytes32 garage = world.build(EBuilding.Garage, getPosition1(creator));
+    world.build(EBuilding.Garage, getPosition1(creator));
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Workshop)), 1);
     bytes32 workshop = world.build(EBuilding.Workshop, getPosition2(creator));
 
@@ -218,7 +218,7 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
   function testToggleBuildingTrainingUnitsComplete() public {
     Level.set(Home.getAsteroid(player), 2);
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Garage)), 1);
-    bytes32 garage = world.build(EBuilding.Garage, getPosition1(creator));
+    world.build(EBuilding.Garage, getPosition1(creator));
     console.log("garage built");
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Workshop)), 1);
     bytes32 workshop = world.build(EBuilding.Workshop, getPosition2(creator));

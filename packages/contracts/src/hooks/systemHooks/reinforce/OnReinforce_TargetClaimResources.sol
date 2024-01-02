@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { _player } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
@@ -18,16 +17,14 @@ contract OnReinforce_TargetClaimResources is SystemHook {
 
   /**
    * @dev This function is called before the system's main logic is executed. It updates information about the space rock after an invasion if it is owned.
-   * @param msgSender The address of the message sender.
    * @param callData The data passed to the system, including the identifier of the space rock.
    */
   function onBeforeCallSystem(
-    address msgSender,
+    address,
     ResourceId,
     bytes memory callData
   ) public {
     // Get the player's entity and decode the space rock identifier from the callData
-    bytes32 playerEntity = _player(msgSender, false);
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
     bytes32 rockEntity = abi.decode(args, (bytes32));
 

@@ -123,7 +123,7 @@ contract LibBattleTest is PrimodiumTest {
     setupUnit(unit1, attack, 0);
 
     uint256 expected = unitCount * attack;
-    (uint256[] memory count, uint256 actual, uint256 cargo) = LibBattle.getAttackPoints(player, rock, ESendType.Invade);
+    (uint256[] memory count, uint256 actual, ) = LibBattle.getAttackPoints(player, rock, ESendType.Invade);
     assertEq(count[0], unitCount);
     assertEq(actual, expected, "Attack points should be equal to unitCount * attack");
     assertEq(ArrivalsMap.size(player, rock), 0);
@@ -169,7 +169,7 @@ contract LibBattleTest is PrimodiumTest {
     ArrivalCount.set(player, 2);
 
     uint256 expected = unitCount * attack + unitCount2 * attack2;
-    (uint256[] memory count, uint256 actual, uint256 cargo) = LibBattle.getAttackPoints(player, rock, ESendType.Invade);
+    (uint256[] memory count, uint256 actual, ) = LibBattle.getAttackPoints(player, rock, ESendType.Invade);
     assertEq(count[0], unitCount);
     assertEq(count[1], unitCount2);
     assertEq(actual, expected, "Attack points should be equal to unitCount * attack");
@@ -197,12 +197,8 @@ contract LibBattleTest is PrimodiumTest {
 
     setupUnit(unit1, attackerAttack, defenderDefense);
 
-    (uint256[] memory count, uint256 attackPoints, uint256 cargo) = LibBattle.getAttackPoints(
-      player,
-      rock,
-      ESendType.Invade
-    );
-    (uint256[] memory defenseCount, uint256 defensePoints) = LibBattle.getDefensePoints(enemy, rock);
+    (, uint256 attackPoints, ) = LibBattle.getAttackPoints(player, rock, ESendType.Invade);
+    (, uint256 defensePoints) = LibBattle.getDefensePoints(enemy, rock);
 
     // getAttackPoints removes the arrival from the map so we readd it here
     ArrivalsMap.set(player, rock, arrivalId, arrival);
@@ -236,12 +232,8 @@ contract LibBattleTest is PrimodiumTest {
 
     setupUnit(unit1, attackerAttack, defenderDefense);
 
-    (uint256[] memory count, uint256 attackPoints, uint256 cargo) = LibBattle.getAttackPoints(
-      player,
-      rock,
-      ESendType.Invade
-    );
-    (uint256[] memory defenseCount, uint256 defensePoints) = LibBattle.getDefensePoints(enemy, rock);
+    (, uint256 attackPoints, ) = LibBattle.getAttackPoints(player, rock, ESendType.Invade);
+    (, uint256 defensePoints) = LibBattle.getDefensePoints(enemy, rock);
 
     // getAttackPoints removes the arrival from the map so we read it here
     ArrivalsMap.set(player, rock, arrivalId, arrival);
@@ -254,19 +246,6 @@ contract LibBattleTest is PrimodiumTest {
     uint256 unitsLeft = (defenderUnitCount * lossPoints) / 100;
     assertEq(result.defenderUnitsLeft[0], unitsLeft, "Attacker should have correct units left");
   }
-
-  // struct BattleResultData {
-  //   bytes32 attacker;
-  //   bytes32 defender;
-  //   bytes32 winner;
-  //   bytes32 rock;
-  //   uint256 totalCargo;
-  //   uint256 timestamp;
-  //   uint256[] attackerStartingUnits;
-  //   uint256[] defenderStartingUnits;
-  //   uint256[] attackerUnitsLeft;
-  //   uint256[] defenderUnitsLeft;
-  // }
 
   uint256 playerOriginalIron = 1000;
   uint256 playerOriginalCopper = 500;
@@ -281,8 +260,6 @@ contract LibBattleTest is PrimodiumTest {
     // unit1 requires 1 iron
     LibProduction.increaseResourceProduction(homeRock, EResource.Iron, playerOriginalIron);
     LibProduction.increaseResourceProduction(homeRock, EResource.Copper, playerOriginalCopper);
-    //ResourceCount.set(player, uint8(EResource.Iron), playerOriginalIron);
-    //ResourceCount.set(player, uint8(EResource.Copper), playerOriginalCopper);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);
