@@ -44,7 +44,7 @@ export default function SetupResultProvider() {
 
   if (MAINTENANCE) return <Maintenance />;
 
-  if (externalAccount.isReconnecting || !externalAccount?.address) return null;
+  if (externalAccount.status !== "connected") return null;
 
   if (!network || !playerAccount || !components || !contractCalls) return <Initializing />;
   return (
