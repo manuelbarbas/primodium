@@ -2042,19 +2042,6 @@
   {
     "inputs": [
       {
-        "internalType": "bytes32",
-        "name": "rockEntity",
-        "type": "bytes32"
-      }
-    ],
-    "name": "recallStationedUnits",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
         "name": "delegatee",
         "type": "address"
@@ -2583,6 +2570,11 @@
   },
   {
     "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "playerEntity",
+        "type": "bytes32"
+      },
       {
         "internalType": "bytes32",
         "name": "prototypeEntity",

@@ -108,6 +108,7 @@ export const config = mudConfig({
     },
 
     /* --------------------------------- Player --------------------------------- */
+
     Home: {
       keySchema: { entity: "bytes32" },
       valueSchema: {
@@ -397,7 +398,7 @@ export const config = mudConfig({
     },
 
     UnitCount: {
-      keySchema: { player: "bytes32", rock: "bytes32", unit: "bytes32" },
+      keySchema: { rock: "bytes32", unit: "bytes32" },
       valueSchema: "uint256",
     },
 
@@ -433,6 +434,24 @@ export const config = mudConfig({
       valueSchema: "bytes",
     },
 
+    FleetStatus: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: { origin: "bytes32", destination: "bytes32", timeOfDeparture: "uint256", timeOfArrival: "uint256" },
+    },
+
+    MapIncomingFleets: {
+      keySchema: { asteroid: "bytes32" },
+      valueSchema: { itemKeys: "bytes32[]" },
+    },
+
+    MapStoredIncomingFleets: {
+      keySchema: { asteroid: "bytes32", fleetEntity: "bytes32" },
+      valueSchema: {
+        stored: "bool",
+        index: "uint256",
+      },
+    },
+
     /* ------------------------------ Battle Result ----------------------------- */
     BattleResult: {
       keySchema: { entity: "bytes32" },
@@ -440,7 +459,7 @@ export const config = mudConfig({
         attacker: "bytes32",
         defender: "bytes32",
         winner: "bytes32",
-
+        attackerRock: "bytes32",
         rock: "bytes32",
         totalCargo: "uint256",
         timestamp: "uint256",

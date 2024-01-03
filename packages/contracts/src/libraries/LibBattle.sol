@@ -143,7 +143,7 @@ library LibBattle {
    */
   function updateUnitsAfterBattle(BattleResultData memory br, ESendType sendType) internal {
     bytes32[] memory unitTypes = P_UnitPrototypes.get();
-
+    uint256[] memory unitCounts = new uint256[](unitTypes.length);
     for (uint256 i = 0; i < unitTypes.length; i++) {
       uint256 attackerUnitsLost = br.attackerStartingUnits[i] - br.attackerUnitsLeft[i];
       uint256 defenderUnitsLost = br.defenderStartingUnits[i] - br.defenderUnitsLeft[i];
@@ -159,8 +159,21 @@ library LibBattle {
         bytes32 attackerRock = (br.attacker == br.winner && sendType == ESendType.Raid)
           ? Home.getAsteroid(br.attacker)
           : br.rock;
+        unitCounts[i] = br.attackerUnitsLeft[i];
         LibUnit.increaseUnitCount(br.winner, attackerRock, unitTypes[i], br.attackerUnitsLeft[i]);
       }
     }
+    LibSend.sendUnits(
+      Arrival({
+        unitCounts: sendArgs.unitCounts,
+        sendTime: block.timestamp,
+        sendType: sendArgs.sendType,
+        arrivalTime: arrivalTime,
+        from: playerEntity,
+        to: sendArgs.to,
+        origin: origin,
+        destination: destination
+      })
+    );
   }
 }
