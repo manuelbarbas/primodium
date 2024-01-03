@@ -10,8 +10,9 @@ import { Button } from "../core/Button";
 import { Join } from "../core/Join";
 
 export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating }) => {
-  const mud = useMud();
-  const playerEntity = mud.network.playerEntity;
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
   const mapOpen = components.MapOpen.use(undefined, {
     value: false,
   }).value;

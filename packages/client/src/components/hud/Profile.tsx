@@ -1,25 +1,26 @@
-import { useMemo } from "react";
-import { useLocation } from "react-router-dom";
-import { useMud } from "src/hooks";
-import { Button } from "../core/Button";
-import { useAccount } from "src/hooks/useAccount";
-import { AccountDisplay } from "../shared/AccountDisplay";
-import { FaLink } from "react-icons/fa";
-import { components } from "src/network/components";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Entity } from "@latticexyz/recs";
-import { IconLabel } from "../core/IconLabel";
-import { getSpaceRockImage } from "src/util/spacerock";
-import { useFleetMoves } from "src/hooks/useFleetMoves";
-import { EntityType, ResourceImage } from "src/util/constants";
-import { getBuildingImage } from "src/util/building";
-import { convertObjToParams, convertParamsToObj } from "src/util/params";
-import { CurrencyDisplay } from "../shared/CurrencyDisplay";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { useMemo } from "react";
+import { FaLink } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
 import { useSettingsStore } from "src/game/stores/SettingsStore";
+import { useMud } from "src/hooks";
+import { useAccount } from "src/hooks/useAccount";
+import { useFleetMoves } from "src/hooks/useFleetMoves";
+import { components } from "src/network/components";
+import { getBuildingImage } from "src/util/building";
+import { EntityType, ResourceImage } from "src/util/constants";
+import { convertObjToParams, convertParamsToObj } from "src/util/params";
+import { getSpaceRockImage } from "src/util/spacerock";
+import { Button } from "../core/Button";
+import { IconLabel } from "../core/IconLabel";
+import { AccountDisplay } from "../shared/AccountDisplay";
+import { CurrencyDisplay } from "../shared/CurrencyDisplay";
 
 export const Profile = () => {
-  const { network } = useMud();
-  const playerEntity = network.playerEntity;
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
   const { linkedAddress, loading, wETHBalance } = useAccount(playerEntity);
   const mainBase = components.Home.use(playerEntity)?.mainBase;
   const asteroid = components.Home.use(playerEntity)?.asteroid;

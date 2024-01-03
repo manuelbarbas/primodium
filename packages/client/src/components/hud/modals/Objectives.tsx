@@ -3,7 +3,6 @@ import { Entity } from "@latticexyz/recs";
 import { Account, Time } from "src/network/components/clientComponents";
 
 import { useMemo } from "react";
-import { useMud } from "src/hooks/useMud";
 
 import { AudioKeys } from "@game/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
@@ -17,7 +16,6 @@ import { Tabs } from "src/components/core/Tabs";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { components as comps } from "src/network/components";
-import { claimObjective } from "src/network/setup/contractCalls/claimObjective";
 import { formatNumber, getBlockTypeName } from "src/util/common";
 import {
   BackgroundImage,
@@ -42,7 +40,6 @@ import { Hex } from "viem";
 const ClaimObjectiveButton: React.FC<{
   objectiveEntity: Entity;
 }> = ({ objectiveEntity }) => {
-  const network = useMud();
   const time = Time.use()?.value;
   const levelRequirement = comps.Level.use(objectiveEntity);
   const objectiveClaimedRequirement = comps.CompletedObjective.use(objectiveEntity);
@@ -81,7 +78,7 @@ const ClaimObjectiveButton: React.FC<{
           className={`btn-sm btn-secondary border-accent w-full`}
           clickSound={AudioKeys.Complete2}
           onClick={() => {
-            claimObjective(objectiveEntity, network.network);
+            // claimObjective(objectiveEntity, network.network);
           }}
         >
           {"Claim"}

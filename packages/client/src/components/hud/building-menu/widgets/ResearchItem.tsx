@@ -8,22 +8,19 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
-import { upgradeUnit } from "src/network/setup/contractCalls/upgradeUnit";
 import { getBlockTypeName } from "src/util/common";
-import { BackgroundImage, ResourceImage, TransactionQueueType, UnitEnumLookup } from "src/util/constants";
+import { BackgroundImage, ResourceImage, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { getUpgradeInfo } from "src/util/upgrade";
 
 export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
-  const { network } = useMud();
-  const playerEntity = network.playerEntity;
-  const mainBaseEntity = components.Home.use(playerEntity)?.mainBase as Entity;
-  const homeAsteroid = components.Home.use(playerEntity)?.asteroid as Entity;
+  const { playerAccount } = useMud();
+  const mainBaseEntity = components.Home.use(playerAccount.entity)?.mainBase as Entity;
   const mainBaseLevel = components.Level.use(mainBaseEntity, {
     value: 1n,
   }).value;
 
-  const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = getUpgradeInfo(type, playerEntity);
+  const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = getUpgradeInfo(type, playerAccount.entity);
 
   const hasEnough = useHasEnoughResources(recipe);
   const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && !isResearched;
@@ -83,7 +80,7 @@ export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
           className="btn-sm btn-secondary"
           disabled={!canUpgrade}
           onClick={() => {
-            upgradeUnit(homeAsteroid, UnitEnumLookup[type], network);
+            // contractCalls.upgradeUnit(homeAsteroid, UnitEnumLookup[type]);
           }}
         >
           Upgrade

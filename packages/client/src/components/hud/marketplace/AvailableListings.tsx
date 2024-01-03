@@ -11,7 +11,6 @@ import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { ValueSansMetadata } from "src/network/components/customComponents/ExtendedComponent";
-import { claimUnits } from "src/network/setup/contractCalls/claimUnits";
 import { createHangar } from "src/network/systems/setupHangar";
 import { formatNumber } from "src/util/common";
 import { ResourceEntityLookup, ResourceImage, UnitEntityLookup } from "src/util/constants";
@@ -30,7 +29,9 @@ export const AvailableListings = ({
   setOrder: (orderId: Entity, count: bigint) => void;
   pageSize?: number;
 }) => {
-  const { network } = useMud();
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
   const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState<{ key: keyof Listing | null; direction: "ascending" | "descending" }>({
     key: null,
@@ -50,7 +51,7 @@ export const AvailableListings = ({
     return acc + listing.price * count;
   }, 0n);
 
-  const balance = components.WETHBalance.use(network.playerEntity)?.value ?? 0n;
+  const balance = components.WETHBalance.use(playerEntity)?.value ?? 0n;
   const remainingBalance = useMemo(() => balance - totalCost, [balance, totalCost]);
   const unitDisplay = useSettingsStore((state) => state.unitDisplay);
 
@@ -200,7 +201,7 @@ const AvailableListing = ({
   className?: string;
   setOrder: (orderId: Entity, count: bigint) => void;
 }) => {
-  const { network } = useMud();
+  const { playerAccount } = useMud();
   const [isSpinning, setIsSpinning] = useState(false);
 
   const entity =
@@ -238,7 +239,7 @@ const AvailableListing = ({
     setTimeout(() => setIsSpinning(false), 3000);
 
     if (listing.orderType === EOrderType.Resource || !sellerHome) return;
-    claimUnits(sellerHome, network);
+    // claimUnits(sellerHome, network);
   };
 
   // if (listing.price === 0n || count === 0) return <></>;
@@ -246,7 +247,7 @@ const AvailableListing = ({
   return (
     <tr
       key={`listing-${listing.id}`}
-      className={`${className} ${listing.seller === network.playerEntity ? "pointer-events-none opacity-50" : ""}`}
+      className={`${className} ${listing.seller === playerAccount.entity ? "pointer-events-none opacity-50" : ""}`}
     >
       <td className="py-4 flex justify-center w-fit">
         <Button className="btn-ghost p-1 h-fit" onClick={handleSync}>

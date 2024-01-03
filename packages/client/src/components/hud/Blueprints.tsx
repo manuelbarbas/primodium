@@ -4,6 +4,7 @@ import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useState } from "react";
 import { FaCaretLeft, FaCaretRight, FaLock } from "react-icons/fa";
+import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
@@ -25,7 +26,9 @@ const Blueprint: React.FC<{
     hooks: { useKeybinds },
   } = primodium.api()!;
   const keybinds = useKeybinds();
-  const player = components.Account.use()?.value ?? singletonEntity;
+  const {
+    playerAccount: { entity: player },
+  } = useMud();
   const selectedBuilding = components.SelectedBuilding.use()?.value;
   const mainbaseLevel =
     components.Level.use((components.Home.use(player)?.mainBase ?? singletonEntity) as Entity)?.value ?? 1n;

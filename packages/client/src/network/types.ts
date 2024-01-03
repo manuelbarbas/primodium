@@ -1,6 +1,6 @@
 import { KeySchema } from "@latticexyz/protocol-parser";
 import { Component, Schema } from "@latticexyz/recs";
-import useGame from "src/hooks/useGame";
+import useSetupResult from "src/hooks/useSetupResult";
 import { createComponents } from "./components";
 import { getNetworkConfig } from "./config/getNetworkConfig";
 import { setup } from "./setup/setup";
@@ -16,7 +16,7 @@ export type BurnerAccount = Awaited<ReturnType<typeof setupBurnerAccount>>;
 export type ExternalAccount = Awaited<ReturnType<typeof setupExternalAccount>>;
 export type AnyAccount = BurnerAccount | ExternalAccount;
 
-export type PartialGame = ReturnType<typeof useGame>;
+export type PartialGame = ReturnType<typeof useSetupResult>;
 export type Game = PartialGame &
   SetupResult & {
     playerAccount: AnyAccount;

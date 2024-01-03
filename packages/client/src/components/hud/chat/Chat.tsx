@@ -1,19 +1,19 @@
-import { useEffect, useRef, useState } from "react";
-import PusherJS from "pusher-js";
-import { uuid } from "@latticexyz/utils";
-import { useMud } from "src/hooks";
-import { isPlayer } from "src/util/common";
 import { Entity } from "@latticexyz/recs";
-import { Card, SecondaryCard } from "src/components/core/Card";
-import { TextInput } from "src/components/core/TextInput";
+import { uuid } from "@latticexyz/utils";
+import PusherJS from "pusher-js";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "src/components/core/Button";
-import { AccountDisplay } from "src/components/shared/AccountDisplay";
-import { censorText } from "src/util/profanity";
-import { components } from "src/network/components";
-import { useFetch } from "src/hooks/useFetch";
+import { Card, SecondaryCard } from "src/components/core/Card";
+import { Join } from "src/components/core/Join";
 import { Loader } from "src/components/core/Loader";
 import { Tabs } from "src/components/core/Tabs";
-import { Join } from "src/components/core/Join";
+import { TextInput } from "src/components/core/TextInput";
+import { AccountDisplay } from "src/components/shared/AccountDisplay";
+import { useMud } from "src/hooks";
+import { useFetch } from "src/hooks/useFetch";
+import { components } from "src/network/components";
+import { isPlayer } from "src/util/common";
+import { censorText } from "src/util/profanity";
 
 const COOLDOWN = 1.5;
 
@@ -36,9 +36,7 @@ export const client = new PusherJS(import.meta.env.PRI_PUSHER_APP_KEY ?? "", {
 });
 
 export const Channel: React.FC<{ className?: string; channel: string }> = ({ className, channel }) => {
-  const {
-    network: { walletClient, playerEntity },
-  } = useMud();
+  const { playerAccount } = useMud();
   const [chatScroll, setChatScroll] = useState(false);
   const [chat, setChat] = useState<Map<string, message>>(new Map());
   const message = useRef("");
@@ -50,7 +48,7 @@ export const Channel: React.FC<{ className?: string; channel: string }> = ({ cla
     if (!message.current) return;
 
     const messageId = uuid();
-    const signedMessage = await walletClient.signMessage({
+    const signedMessage = await playerAccount.walletClient.signMessage({
       message: message.current,
     });
 
@@ -61,7 +59,7 @@ export const Channel: React.FC<{ className?: string; channel: string }> = ({ cla
       },
       method: "POST",
       body: JSON.stringify({
-        user: playerEntity,
+        user: playerAccount.entity,
         message: message.current,
         signature: signedMessage,
         uuid: messageId,
@@ -72,7 +70,7 @@ export const Channel: React.FC<{ className?: string; channel: string }> = ({ cla
     setChat((prevChat) => {
       const newChat = new Map(prevChat);
       newChat.set(messageId, {
-        user: playerEntity ?? "unknown",
+        user: playerAccount.entity ?? "unknown",
         message: message.current,
         time: Date.now(),
         pending: true,
@@ -226,7 +224,9 @@ export const Channel: React.FC<{ className?: string; channel: string }> = ({ cla
 };
 
 export const Chat = () => {
-  const playerEntity = useMud().network.playerEntity;
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
   const playerAlliance = components.PlayerAlliance.use(playerEntity)?.alliance;
 
   return (

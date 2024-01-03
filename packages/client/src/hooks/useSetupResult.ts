@@ -9,7 +9,7 @@ import { setupExternalAccount } from "src/network/setup/setupExternalAccount";
 import { BurnerAccount, ExternalAccount, SetupResult } from "src/network/types";
 import { Hex, createWalletClient, fallback, formatEther, http } from "viem";
 
-const useGame = () => {
+const useSetupResult = () => {
   const [network, setNetwork] = useState<SetupResult>(); // Created once when the site loads
   const [sessionAccount, setSessionAccount] = useState<BurnerAccount>();
   const [playerAccount, setPlayerAccount] = useState<BurnerAccount | ExternalAccount>();
@@ -109,4 +109,4 @@ const useGame = () => {
   };
 };
 
-export default useGame;
+export default useSetupResult;

@@ -6,15 +6,15 @@ import { useAccount } from "wagmi";
 import AppLoadingState from "./AppLoadingState";
 import { Initializing } from "./components/shared/Initializing";
 import { MudProvider } from "./hooks/providers/MudProvider";
-import useGame from "./hooks/useGame";
+import useSetupResult from "./hooks/useSetupResult";
 import { world } from "./network/world";
 import { Maintenance } from "./screens/Maintenance";
 
 const MAINTENANCE = import.meta.env.PRI_MAINTENANCE === "true";
 
 export default function SetupResultProvider() {
-  const game = useGame();
-  const { network, updatePlayerAccount, playerAccount, components, contractCalls } = game;
+  const setupResult = useSetupResult();
+  const { network, updatePlayerAccount, playerAccount, components, contractCalls } = setupResult;
   const externalAccount = useAccount();
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export default function SetupResultProvider() {
   if (!network || !playerAccount || !components || !contractCalls) return <Initializing />;
   return (
     <MudProvider
-      {...game}
+      {...setupResult}
       contractCalls={contractCalls}
       components={components}
       network={network}

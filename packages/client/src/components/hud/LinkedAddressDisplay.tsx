@@ -14,8 +14,9 @@ export const LinkedAddressDisplay = ({
   entity: Entity;
   fullAddress?: boolean;
 }) => {
-  const network = useMud().network;
-  const playerEntity = network.playerEntity;
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
 
   const [fetchedExternalWallet, setFetchedExternalWallet] = useState<LinkedAddressResult>({
     address: null,
@@ -41,7 +42,7 @@ export const LinkedAddressDisplay = ({
     let entityDisplay = "Neutral";
     if (entity === playerEntity && !fullAddress) {
       entityDisplay = "You";
-    } else if (entity === hashKeyEntity(PIRATE_KEY, playerEntity)) {
+    } else if (playerEntity && entity === hashKeyEntity(PIRATE_KEY, playerEntity)) {
       entityDisplay = "Pirates!";
     } else if (entity && isPlayer(entity)) {
       if (fullAddress) {

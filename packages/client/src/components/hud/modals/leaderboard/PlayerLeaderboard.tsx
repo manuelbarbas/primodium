@@ -9,17 +9,15 @@ import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { invite } from "src/network/setup/contractCalls/alliance";
 import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 
 export const PlayerLeaderboard = () => {
-  const network = useMud().network;
-  const address = network.address;
+  const { playerAccount } = useMud();
   const data = components.Leaderboard.use();
 
-  if (!data || !address) return null;
-  const playerIndex = data.players.indexOf(network.playerEntity);
+  if (!data || !playerAccount.address) return null;
+  const playerIndex = data.players.indexOf(playerAccount.entity);
   const playerScore = playerIndex == -1 ? undefined : data.scores[playerIndex];
 
   return (
@@ -44,7 +42,7 @@ export const PlayerLeaderboard = () => {
         <hr className="w-full border-t border-cyan-800 my-2" />
 
         <SecondaryCard className="w-full overflow-y-auto border border-slate-700 p-2 bg-slate-800">
-          <LeaderboardItem player={network.playerEntity} index={playerIndex} score={playerScore ?? 0} />
+          <LeaderboardItem player={playerAccount.entity} index={playerIndex} score={playerScore ?? 0} />
         </SecondaryCard>
       </div>
     </div>
@@ -52,8 +50,9 @@ export const PlayerLeaderboard = () => {
 };
 
 const LeaderboardItem = ({ player, index, score }: { player: Entity; index: number; score: number }) => {
-  const network = useMud().network;
-  const playerEntity = network.playerEntity;
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
   const role = components.PlayerAlliance.use(playerEntity)?.role ?? EAllianceRole.Member;
   const alliance = components.PlayerAlliance.use(playerEntity)?.alliance as Entity | undefined;
   const playerAlliance = components.PlayerAlliance.use(player)?.alliance as Entity | undefined;
@@ -79,7 +78,7 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
                 tooltip="Invite"
                 tooltipDirection="left"
                 onClick={async () => {
-                  invite(player, network);
+                  // invite(player, network);
                 }}
               >
                 <FaEnvelope />

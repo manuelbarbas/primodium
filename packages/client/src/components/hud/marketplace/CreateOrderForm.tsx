@@ -8,7 +8,6 @@ import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
-import { createOrder } from "src/network/setup/contractCalls/createOrder";
 import { formatNumber, getBlockTypeName } from "src/util/common";
 import { EntityType, ResourceEntityLookup, ResourceStorages, UnitEntityLookup, UnitStorages } from "src/util/constants";
 import { getScale } from "src/util/resource";
@@ -23,7 +22,9 @@ export type UserListing = {
 };
 
 export const CreateOrderForm = () => {
-  const { network } = useMud();
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
   // State for form fields
   const [selectedItem, setSelectedItem] = useState<Entity | "default">("default");
   const [price, setPrice] = useState("");
@@ -34,13 +35,14 @@ export const CreateOrderForm = () => {
 
   const selectedScale = selectedItem === "default" ? 1n : getScale(selectedItem);
   // Handle form submission
-  const handleSubmit = (e: React.MouseEvent | undefined) => {
-    e?.preventDefault();
-    const scaledPrice = BigInt(Math.round(Number(price) * (unitDisplay === "ether" ? 1e18 : 1e9))) / selectedScale;
-    const scaledQuantity = BigInt(quantity) * selectedScale;
-    if (selectedItem === "default") return;
-    createOrder(selectedItem, scaledQuantity, scaledPrice, network);
-  };
+  const handleSubmit = () => {};
+  // const handleSubmit = (e: React.MouseEvent | undefined) => {
+  // e?.preventDefault();
+  // const scaledPrice = BigInt(Math.round(Number(price) * (unitDisplay === "ether" ? 1e18 : 1e9))) / selectedScale;
+  // const scaledQuantity = BigInt(quantity) * selectedScale;
+  // if (selectedItem === "default") return;
+  // createOrder(selectedItem, scaledQuantity, scaledPrice, network);
+  // };
 
   const allListings: UserListing[] = components.MarketplaceOrder.useAll().map((orderEntity) => {
     const order = components.MarketplaceOrder.get(orderEntity)!;
@@ -58,7 +60,7 @@ export const CreateOrderForm = () => {
     };
   });
 
-  const home = components.Home.use(network.playerEntity)?.asteroid as Entity | undefined;
+  const home = components.Home.use(playerEntity)?.asteroid as Entity | undefined;
   const ownedUnits = components.Hangar.use(home);
   const getUnitCount = useCallback(
     (unit: Entity) => {
@@ -76,8 +78,8 @@ export const CreateOrderForm = () => {
   );
 
   const itemListings = useMemo(() => {
-    return allListings.filter((listing) => network.playerEntity === listing.seller);
-  }, [allListings, network.playerEntity]);
+    return allListings.filter((listing) => playerEntity === listing.seller);
+  }, [allListings, playerEntity]);
 
   const availableItems = useMemo(() => {
     const itemsUsed: Record<Entity, bigint> = {};

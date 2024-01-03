@@ -19,9 +19,8 @@ export const upgradeRange = async (network: SetupNetworkResult, account: AnyAcco
     },
     (receipt) => {
       const asteroid = components.Home.get(account.entity)?.asteroid;
-      const playerEntity = components.Account.get()?.value;
-      const level = components.Level.get(playerEntity)?.value ?? 1n;
-      const bounds = getPlayerBounds(playerEntity!);
+      const level = components.Level.get(account.entity)?.value ?? 1n;
+      const bounds = getPlayerBounds(account.entity);
 
       ampli.systemUpgradeRange({
         asteroidCoord: asteroid!,

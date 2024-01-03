@@ -51,7 +51,9 @@ export const UnitStatus: React.FC<{
 export const BattleDetails: React.FC<{
   battleEntity: Entity;
 }> = ({ battleEntity }) => {
-  const playerEntity = useMud().network.playerEntity;
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
   const raid = components.RaidResult.use(battleEntity);
   const battle = useMemo(() => format(battleEntity), [battleEntity]);
 

@@ -9,10 +9,11 @@ import { scaleLinear } from "@visx/scale";
 import { Circle } from "@visx/shape";
 import { VoronoiPolygon, voronoi } from "@visx/voronoi";
 import { ReactNode, useMemo, useRef } from "react";
+import { FaCrosshairs } from "react-icons/fa";
+import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { entityToColor } from "src/util/color";
 import { Button } from "../core/Button";
-import { FaCrosshairs } from "react-icons/fa";
 
 type DotPoint = {
   x: number;
@@ -72,7 +73,10 @@ function calculateScaledBounds(coords: Coord[]): { minX: number; maxX: number; m
 }
 
 export const Minimap = () => {
-  const playerEntity = components.Account.use()?.value;
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
+
   // const points = useEntityQuery([Has(components.Position), Has(components.RockType)]).map((entity) => {
   //   const rockType = components.RockType.get(entity)?.value;
   //   const position = components.Position.get(entity);

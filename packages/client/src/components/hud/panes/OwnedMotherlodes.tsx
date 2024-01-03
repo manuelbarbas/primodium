@@ -73,8 +73,9 @@ const Motherlode: React.FC<{ motherlodeId: Entity }> = ({ motherlodeId }) => {
 };
 
 export const OwnedMotherlodes: React.FC = () => {
-  const playerEntity = useMud().network.playerEntity;
-
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
   const query = [
     HasValue(components.OwnedBy, { value: playerEntity }),
     HasValue(components.RockType, { value: ERock.Motherlode }),

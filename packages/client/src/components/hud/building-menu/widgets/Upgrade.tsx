@@ -8,16 +8,14 @@ import { useMud } from "src/hooks";
 import { useBuildingInfo } from "src/hooks/useBuildingInfo";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
-import { upgradeBuilding } from "src/network/setup/contractCalls/upgradeBuilding";
 import { getBlockTypeName } from "src/util/common";
 import { ResourceImage, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 
 export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
-  const { network } = useMud();
-  const playerEntity = network.playerEntity;
+  const { playerAccount } = useMud();
 
-  const mainBaseEntity = components.Home.use(playerEntity)?.mainBase as Entity;
+  const mainBaseEntity = components.Home.use(playerAccount.entity)?.mainBase as Entity;
   const mainBaseLevel = components.Level.use(mainBaseEntity, {
     value: 1n,
   }).value;
@@ -76,7 +74,7 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
           <Button
             className="w-fit btn-secondary btn-sm"
             disabled={!canUpgrade}
-            onClick={() => upgradeBuilding(position, network)}
+            // onClick={() => upgradeBuilding(position, network)}
           >
             Upgrade
           </Button>
