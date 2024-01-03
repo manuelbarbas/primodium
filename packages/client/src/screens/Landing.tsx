@@ -12,8 +12,8 @@ import { useNetwork, useSwitchNetwork } from "wagmi";
 const params = new URLSearchParams(window.location.search);
 export const Landing: React.FC = () => {
   const [message, setMessage] = useState<string | null>();
-  const { network } = useMud();
-  const playerEntity = network.playerEntity;
+  const { network, playerAccount } = useMud();
+  const playerEntity = playerAccount.entity;
   const navigate = useNavigate();
   const location = useLocation();
   const hasSpawned = !!components.Home.use(playerEntity)?.asteroid;
@@ -32,7 +32,7 @@ export const Landing: React.FC = () => {
   };
 
   const chain = useNetwork().chain;
-  const expectedChain = network.playerAccount.walletClient.chain;
+  const expectedChain = playerAccount.walletClient.chain;
   const wrongChain = chain?.id !== expectedChain?.id;
   const { isLoading, pendingChainId, switchNetwork } = useSwitchNetwork();
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -6,51 +6,50 @@ import { useAccount } from "wagmi";
 import AppLoadingState from "./AppLoadingState";
 import { Initializing } from "./components/shared/Initializing";
 import { MudProvider } from "./hooks/providers/MudProvider";
-import { noExternalWallet } from "./network/config/getNetworkConfig";
-import { setup } from "./network/setup";
-import { SetupResult } from "./network/types";
+import useGame from "./hooks/useGame";
 import { world } from "./network/world";
 import { Maintenance } from "./screens/Maintenance";
 
 const MAINTENANCE = import.meta.env.PRI_MAINTENANCE === "true";
 
 export default function SetupResultProvider() {
-  const [setupResult, setSetupResult] = useState<SetupResult>();
+  const game = useGame();
+  const { network, updatePlayerAccount, playerAccount, components } = game;
   const externalAccount = useAccount();
 
   useEffect(() => {
-    if (!externalAccount?.address && !noExternalWallet) return;
-    setup(externalAccount.address).then((result) => setSetupResult(result));
-  }, [externalAccount.address]);
+    if (!externalAccount?.address) return;
+    updatePlayerAccount(externalAccount.address);
+  }, [externalAccount.address, updatePlayerAccount]);
 
   useEffect(() => {
-    if (!setupResult) return;
+    if (!network || !playerAccount) return;
     // https://vitejs.dev/guide/env-and-mode.html
     if (import.meta.env.DEV) {
       import("@latticexyz/dev-tools").then(({ mount: mountDevTools }) =>
         mountDevTools({
-          config: setupResult.network.mudConfig,
-          publicClient: setupResult.network.playerAccount.publicClient,
-          walletClient: setupResult.network.playerAccount.walletClient,
-          latestBlock$: setupResult.network.latestBlock$,
-          storedBlockLogs$: setupResult.network.storedBlockLogs$,
-          worldAddress: setupResult.network.playerAccount.worldContract.address,
-          worldAbi: setupResult.network.playerAccount.worldContract.abi,
-          write$: setupResult.network.write$,
+          config: network.mudConfig,
+          publicClient: playerAccount.publicClient,
+          walletClient: playerAccount.walletClient,
+          latestBlock$: network.latestBlock$,
+          storedBlockLogs$: network.storedBlockLogs$,
+          worldAddress: playerAccount.worldContract.address,
+          worldAbi: playerAccount.worldContract.abi,
+          write$: playerAccount.write$,
           recsWorld: world,
         })
       );
     }
-  }, [setupResult]);
+  }, [network, playerAccount]);
 
   if (MAINTENANCE) return <Maintenance />;
 
-  if (!externalAccount?.address && !noExternalWallet) return null;
+  if (externalAccount.isReconnecting || !externalAccount?.address) return null;
 
-  return !setupResult ? (
+  return !network || !playerAccount || !components ? (
     <Initializing />
   ) : (
-    <MudProvider {...setupResult}>
+    <MudProvider {...game} components={components} network={network} playerAccount={playerAccount}>
       <ToastContainer
         toastClassName={`font-mono text-xs border bg-neutral border-secondary rounded-box`}
         progressClassName={"bg-accent"}

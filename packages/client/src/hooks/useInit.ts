@@ -18,7 +18,7 @@ import { useMud } from "./useMud";
 
 export const useInit = () => {
   const mud = useMud();
-  const playerEntity = mud.network.playerEntity;
+  const playerEntity = mud.playerAccount.entity;
   const initialized = !!components.Home.use(playerEntity)?.asteroid;
 
   //initialize systems
@@ -51,8 +51,8 @@ export const useInit = () => {
   // The network object and user wallet will have been loaded by the time the loading state is ready
   // So we can use the user wallet to identify the user
   useEffect(() => {
-    ampli.identify(mud.network.address, {});
-  }, [mud.network.address]);
+    ampli.identify(mud.playerAccount.address, {});
+  }, [mud.playerAccount.address]);
 
   return initialized;
 };

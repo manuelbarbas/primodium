@@ -1,4 +1,3 @@
-import { getBurnerPrivateKey } from "@latticexyz/common";
 import worldsJson from "contracts/worlds.json";
 import { chainConfigs } from "./chainConfigs";
 
@@ -24,13 +23,11 @@ export const getNetworkConfig = () => {
     : world?.blockNumber ?? 0;
 
   return {
-    privateKey: getBurnerPrivateKey(),
     chainId,
     chain,
     faucetServiceUrl: params.get("faucet") ?? chain.faucetUrl,
     worldAddress,
     initialBlockNumber: BigInt(initialBlockNumber),
     indexerUrl: chain.indexerUrl,
-    noExternalWallet,
   };
 };
