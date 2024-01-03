@@ -69,7 +69,7 @@ library LibRecall {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (arrival.unitCounts[i] == 0) continue;
-      LibUnit.increaseUnitCount(playerEntity, Home.getAsteroid(playerEntity), unitPrototypes[i], arrival.unitCounts[i]);
+      LibUnit.increaseUnitCount(Home.getAsteroid(playerEntity), unitPrototypes[i], arrival.unitCounts[i]);
     }
     ArrivalCount.set(arrival.from, ArrivalCount.get(arrival.from) - 1);
     bytes32 arrivalsMapPlayer = arrival.sendType == ESendType.Reinforce ? arrival.to : arrival.from;

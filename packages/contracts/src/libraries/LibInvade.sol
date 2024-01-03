@@ -92,7 +92,7 @@ library LibInvade {
       (uint256[], uint256, uint256)
     );
     for (uint256 i = 0; i < unitTypes.length; i++) {
-      LibUnit.increaseUnitCount(invader, rockEntity, unitTypes[i], attackCounts[i]);
+      LibUnit.increaseUnitCount(rockEntity, unitTypes[i], attackCounts[i]);
     }
     require(attackPoints > 0, "[Invade] Can not invade with 0 attack points");
     OwnedBy.set(rockEntity, invader);

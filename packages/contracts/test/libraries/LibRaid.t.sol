@@ -129,7 +129,7 @@ contract LibRaidTest is PrimodiumTest {
     OwnedBy.set(rock, enemy);
     RockType.set(rock, uint8(ERock.Asteroid));
     RockType.set(homeRock, uint8(ERock.Asteroid));
-    UnitCount.set(enemy, rock, unit1, 100);
+    UnitCount.set(rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
       sendTime: block.timestamp,
@@ -149,8 +149,8 @@ contract LibRaidTest is PrimodiumTest {
     world.raid(rock);
 
     assertEq(ResourceCount.get(homeRock, Iron), 100, "Player Iron");
-    assertEq(UnitCount.get(player, homeRock, unit1), 100, "Player units");
-    assertEq(UnitCount.get(enemy, rock, unit1), 0, "Enemy units");
+    assertEq(UnitCount.get(homeRock, unit1), 100, "Player units");
+    assertEq(UnitCount.get(rock, unit1), 0, "Enemy units");
     assertEq(ResourceCount.get(rock, Iron), 0, "Enemy Iron");
   }
 
@@ -162,7 +162,7 @@ contract LibRaidTest is PrimodiumTest {
     OwnedBy.set(rock, enemy);
     RockType.set(rock, uint8(ERock.Asteroid));
     RockType.set(homeRock, uint8(ERock.Asteroid));
-    UnitCount.set(enemy, rock, unit1, 100);
+    UnitCount.set(rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
       sendTime: block.timestamp,
@@ -182,8 +182,8 @@ contract LibRaidTest is PrimodiumTest {
     world.raid(rock);
 
     assertEq(ResourceCount.get(homeRock, Iron), 0, "Player Iron");
-    assertEq(UnitCount.get(player, homeRock, unit1), 100, "Player units");
-    assertEq(UnitCount.get(enemy, rock, unit1), 0, "Enemy units");
+    assertEq(UnitCount.get(homeRock, unit1), 100, "Player units");
+    assertEq(UnitCount.get(rock, unit1), 0, "Enemy units");
     assertEq(ResourceCount.get(rock, Iron), 100, "Enemy Iron");
   }
 
@@ -196,7 +196,7 @@ contract LibRaidTest is PrimodiumTest {
     OwnedBy.set(rock, enemy);
     RockType.set(rock, uint8(ERock.Asteroid));
     RockType.set(homeRock, uint8(ERock.Asteroid));
-    UnitCount.set(enemy, rock, unit1, 100);
+    UnitCount.set(rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
       sendTime: block.timestamp,
@@ -216,8 +216,8 @@ contract LibRaidTest is PrimodiumTest {
     world.raid(rock);
 
     assertEq(ResourceCount.get(homeRock, Iron), 0, "Player Iron");
-    assertEq(UnitCount.get(player, homeRock, unit1), 100, "Player units");
-    assertEq(UnitCount.get(enemy, rock, unit1), 0, "Enemy units");
+    assertEq(UnitCount.get(homeRock, unit1), 100, "Player units");
+    assertEq(UnitCount.get(rock, unit1), 0, "Enemy units");
     assertEq(ResourceCount.get(rock, Iron), 100, "Enemy Iron");
   }
 
@@ -262,8 +262,8 @@ contract LibRaidTest is PrimodiumTest {
     assertEq(ArrivalCount.get(player), 0);
 
     assertEq(OwnedBy.get(rock), player, "OwnedBy");
-    assertEq(UnitCount.get(player, rock, unit1), 200, "Unit1 Count");
-    assertEq(UnitCount.get(player, rock, unit2), 100, "Unit2 Count");
+    assertEq(UnitCount.get(rock, unit1), 200, "Unit1 Count");
+    assertEq(UnitCount.get(rock, unit2), 100, "Unit2 Count");
 
     vm.stopPrank();
     rock2 = spawn(bob);

@@ -465,7 +465,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
       "Resource count does not match"
     );
     assertEq(
-      UnitCount.get(personalPirateEntity, pirateAsteroidEntity, unit1),
+      UnitCount.get(pirateAsteroidEntity, unit1),
       spawnPirateAsteroid.unitAmounts[0],
       "Unit count does not match"
     );
@@ -523,8 +523,8 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     console.log("raid resolved");
 
     assertEq(ResourceCount.get(pirateAsteroidEntity, uint8(EResource.Iron)), 0, "Resource count does not match");
-    assertEq(UnitCount.get(personalPirateEntity, pirateAsteroidEntity, unit1), 0, "Unit count does not match");
-    assertEq(UnitCount.get(personalPirateEntity, pirateAsteroidEntity, unit2), 0, "Unit count does not match");
+    assertEq(UnitCount.get(pirateAsteroidEntity, unit1), 0, "Unit count does not match");
+    assertEq(UnitCount.get(pirateAsteroidEntity, unit2), 0, "Unit count does not match");
 
     assertEq(
       ResourceCount.get(spaceRockEntity, uint8(EResource.Iron)),
@@ -630,6 +630,6 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     );
     assertTrue(Position.get(pirateAsteroidEntity).x != pirateAsteroidPosition.x, "Pirate asteroid not moved");
     assertEq(ResourceCount.get(pirateAsteroidEntity, uint8(Iron)), 400, "Resource count does not match");
-    assertEq(UnitCount.get(personalPirateEntity, pirateAsteroidEntity, unit1), 10, "Unit count does not match");
+    assertEq(UnitCount.get(pirateAsteroidEntity, unit1), 10, "Unit count does not match");
   }
 }

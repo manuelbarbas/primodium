@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import { MULTIPLIER_SCALE } from "src/constants.sol";
 import { ESendType, Arrival, EResource } from "src/Types.sol";
-import { DestroyedUnit, ResourceCount, UnitLevel, BattleResult, BattleResultData, P_UnitPrototypes, P_Unit, ArrivalCount, UnitCount, Home } from "codegen/index.sol";
+import { DestroyedUnit, ResourceCount, UnitCount, UnitLevel, BattleResult, BattleResultData, P_UnitPrototypes, P_Unit, ArrivalCount, Home } from "codegen/index.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 
@@ -143,12 +143,12 @@ library LibBattle {
    */
   function updateUnitsAfterBattle(BattleResultData memory br, ESendType sendType) internal {
     bytes32[] memory unitTypes = P_UnitPrototypes.get();
-    uint256[] memory unitCounts = new uint256[](unitTypes.length);
+
     for (uint256 i = 0; i < unitTypes.length; i++) {
       uint256 attackerUnitsLost = br.attackerStartingUnits[i] - br.attackerUnitsLeft[i];
       uint256 defenderUnitsLost = br.defenderStartingUnits[i] - br.defenderUnitsLeft[i];
 
-      LibUnit.decreaseUnitCount(br.defender, br.rock, unitTypes[i], defenderUnitsLost);
+      LibUnit.decreaseUnitCount(br.rock, unitTypes[i], defenderUnitsLost);
       LibUnit.updateStoredUtilities(Home.getAsteroid(br.attacker), unitTypes[i], attackerUnitsLost, false);
       LibUnit.updateStoredUtilities(Home.getAsteroid(br.defender), unitTypes[i], defenderUnitsLost, false);
 
@@ -159,27 +159,8 @@ library LibBattle {
         bytes32 attackerRock = (br.attacker == br.winner && sendType == ESendType.Raid)
           ? Home.getAsteroid(br.attacker)
           : br.rock;
-        unitCounts[i] = br.attackerUnitsLeft[i];
-        LibUnit.increaseUnitCount(br.winner, attackerRock, unitTypes[i], br.attackerUnitsLeft[i]);
+        LibUnit.increaseUnitCount(attackerRock, unitTypes[i], br.attackerUnitsLeft[i]);
       }
     }
-    uint256 arrivalTime = LibSend.getArrivalTime(
-      Home.getPosition(br.attacker),
-      Home.getPosition(br.defender),
-      br.attacker,
-      unitCounts
-    );
-    LibSend.sendUnits(
-      Arrival({
-        unitCounts: unitCounts,
-        sendTime: block.timestamp,
-        sendType: ESendType.Recall,
-        arrivalTime: arrivalTime,
-        from: playerEntity,
-        to: sendArgs.to,
-        origin: origin,
-        destination: destination
-      })
-    );
   }
 }
