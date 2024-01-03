@@ -21,7 +21,7 @@ import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
 import { ClaimObjectiveSystem } from "src/systems/ClaimObjectiveSystem.sol";
 import { MarketplaceSystem } from "src/systems/MarketplaceSystem.sol";
 import { ResourceAccess } from "@latticexyz/world/src/codegen/tables/ResourceAccess.sol";
-import { OwnedBy, UnitCount, P_UnitPrototypes } from "codegen/index.sol";
+import { OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 import { EUnit } from "src/Types.sol";
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
 

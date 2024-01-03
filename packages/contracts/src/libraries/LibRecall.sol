@@ -19,10 +19,10 @@ library LibRecall {
     bool foundUnitToRecall = false;
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      uint256 unitCount = UnitCount.get(playerEntity, rockEntity, unitPrototypes[i]);
+      uint256 unitCount = UnitCount.get(rockEntity, unitPrototypes[i]);
       if (unitCount == 0) continue;
-      LibUnit.decreaseUnitCount(playerEntity, rockEntity, unitPrototypes[i], unitCount);
-      LibUnit.increaseUnitCount(playerEntity, homeAsteroid, unitPrototypes[i], unitCount);
+      LibUnit.decreaseUnitCount(rockEntity, unitPrototypes[i], unitCount);
+      LibUnit.increaseUnitCount(homeAsteroid, unitPrototypes[i], unitCount);
       foundUnitToRecall = true;
     }
     require(foundUnitToRecall, "[Recall] No units to recall");

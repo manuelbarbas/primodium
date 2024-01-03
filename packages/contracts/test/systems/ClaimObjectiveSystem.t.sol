@@ -143,7 +143,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
   function testClaimObjectiveReceiveUnitRewards() public {
     bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
-    UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit1, 0);
+    UnitCount.set(Home.get(playerEntity).asteroid, unit1, 0);
     P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)));
     P_UnitRewardData memory unitRewardData = P_UnitRewardData(new bytes32[](1), new uint256[](1));
     unitRewardData.units[0] = unit1;
@@ -166,14 +166,14 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
     world.claimObjective(EObjectives.BuildIronMine);
     assertEq(
-      UnitCount.get(playerEntity, Home.get(playerEntity).asteroid, unit1),
+      UnitCount.get(Home.get(playerEntity).asteroid, unit1),
       unitRewardData.amounts[0],
       "Unit count does not match"
     );
   }
 
   function testFailClaimObjectiveReceiveUnitRewards() public {
-    UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit1, 0);
+    UnitCount.set(Home.get(playerEntity).asteroid, unit1, 0);
     P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)));
     P_UnitRewardData memory unitRewardData = P_UnitRewardData(new bytes32[](1), new uint256[](1));
     unitRewardData.units[0] = unit1;
@@ -351,7 +351,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     requiredUnitsData.amounts[0] = 100;
     P_RequiredUnits.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)), requiredUnitsData);
     P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)));
-    UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit1, 100);
+    UnitCount.set(Home.get(playerEntity).asteroid, unit1, 100);
 
     P_ResourceRewardData memory resourceRewardData = P_ResourceRewardData(new uint8[](1), new uint256[](1));
     resourceRewardData.resources[0] = uint8(EResource.Iron);
@@ -535,8 +535,8 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   }
 
   function tesFailCannotAttackOtherPlayerPirateAsteroid() public {
-    UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit1, 100);
-    UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit2, 50);
+    UnitCount.set(Home.get(playerEntity).asteroid, unit1, 100);
+    UnitCount.set(Home.get(playerEntity).asteroid, unit2, 50);
     LibProduction.increaseResourceProduction(playerEntity, EResource.U_MaxMoves, 100);
 
     bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine));
@@ -567,8 +567,8 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
   function testSendUnitsPirateAsteroid() public {
     bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
-    UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit1, 100);
-    UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit2, 50);
+    UnitCount.set(Home.get(playerEntity).asteroid, unit1, 100);
+    UnitCount.set(Home.get(playerEntity).asteroid, unit2, 50);
     LibProduction.increaseResourceProduction(spaceRockEntity, EResource.U_MaxMoves, 100);
 
     bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine));

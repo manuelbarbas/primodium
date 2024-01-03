@@ -12,7 +12,7 @@ import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 library LibUnit {
   function getUnitCountOnHomeAsteroid(bytes32 playerEntity, bytes32 unitType) internal view returns (uint256) {
-    return UnitCount.get(playerEntity, Home.getAsteroid(playerEntity), unitType);
+    return UnitCount.get(Home.getAsteroid(playerEntity), unitType);
   }
 
   /**
@@ -171,8 +171,8 @@ library LibUnit {
     uint256 unitCount
   ) internal {
     if (unitCount == 0) return;
-    uint256 prevUnitCount = UnitCount.get(playerEntity, rockEntity, unitType);
-    UnitCount.set(playerEntity, rockEntity, unitType, prevUnitCount + unitCount);
+    uint256 prevUnitCount = UnitCount.get(rockEntity, unitType);
+    UnitCount.set(rockEntity, unitType, prevUnitCount + unitCount);
 
     // update production rate
     if (RockType.get(rockEntity) != uint8(ERock.Motherlode)) return;
@@ -200,9 +200,9 @@ library LibUnit {
   ) internal {
     if (unitCount == 0) return;
 
-    uint256 currUnitCount = UnitCount.get(playerEntity, rockEntity, unitType);
+    uint256 currUnitCount = UnitCount.get(rockEntity, unitType);
     if (unitCount > currUnitCount) unitCount = currUnitCount;
-    UnitCount.set(playerEntity, rockEntity, unitType, currUnitCount - unitCount);
+    UnitCount.set(rockEntity, unitType, currUnitCount - unitCount);
 
     // update production rate
     if (RockType.get(rockEntity) != uint8(ERock.Motherlode)) return;

@@ -6,9 +6,9 @@ import { Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, Revers
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { SendArgs } from "src/Types.sol";
-import { WORLD_SPEED_SCALE, NUM_UNITS, UNIT_SPEED_SCALE } from "src/constants.sol";
+import { WORLD_SPEED_SCALE, NUM_UNITS, UNIT_SPEED_SCALE, NUM_RESOURCE } from "src/constants.sol";
 
-library LibSend {
+library LibFleet {
   /**
    * @dev Updates the unit count when units are sent from a specified origin by a player entity.
    * @param playerEntity The identifier of the player entity.
@@ -38,7 +38,22 @@ library LibSend {
 
   /// @notice Adds a new arrival.
   /// @param arrival The Arrival object to add.
-  function sendUnits(Arrival memory arrival) internal returns (bytes32 arrivalId) {
+  function createFleet(
+    bytes32 playerEntity,
+    bytes32 spaceRock,
+    uint256[NUM_UNITS] memory unitCounts,
+    uint256[NUM_RESOURCE] memory resourceCounts
+  ) internal returns (bytes32 fleetId) {
+    require(OwnedBy.get(spaceRock) == playerEntity, "[Fleet] Can only create fleet on owned space rock");
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      require(
+        unitCounts[i] == 0 || UnitCount.get(spaceRock, unitPrototypes[i]) >= unitCounts[i],
+        "[Fleet] Not enough units to send"
+      );
+      UnitCount.set(spaceRock, unitPrototypes[i], UnitCount.get(spaceRock, unitPrototypes[i]) - unitCounts[i]);
+      UnitCount.set(spaceRock, unitPrototypes[i], UnitCount.get(spaceRock, unitPrototypes[i]) - unitCounts[i]);
+    }
     if (
       arrival.sendType != ESendType.Reinforce && // reinforce does not remove grace period
       PirateAsteroid.get(arrival.destination).playerEntity == 0 && // pirate asteroid does not remove grace period
