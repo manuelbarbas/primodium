@@ -1,6 +1,7 @@
 import ERC20Abi from "contracts/out/ERC20System.sol/ERC20System.abi.json";
 import { useMemo } from "react";
 import { Link as NavLink, useLocation } from "react-router-dom";
+import { ampli } from "src/ampli";
 import { Button } from "src/components/core/Button";
 import { AddressDisplay } from "src/components/hud/AddressDisplay";
 import { useMud } from "src/hooks";
@@ -8,6 +9,9 @@ import { execute } from "src/network/actions";
 import { components } from "src/network/components";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 import { world } from "src/network/world";
+import { parseReceipt } from "src/util/analytics/parseReceipt";
+import { normalizeAddress } from "src/util/common";
+import { convertObjToParams, convertParamsToObj } from "src/util/params";
 import { Hex, createPublicClient, createWalletClient, custom, getContract } from "viem";
 import { toAccount } from "viem/accounts";
 import { useAccount, useDisconnect } from "wagmi";
@@ -15,10 +19,6 @@ import { Link } from "./Link";
 import { MintToken } from "./MintToken";
 import { PlayerBalances } from "./PlayerBalances";
 import { TransferToken } from "./TransferToken";
-import { normalizeAddress } from "src/util/common";
-import { ampli } from "src/ampli";
-import { parseReceipt } from "src/util/analytics/parseReceipt";
-import { convertObjToParams, convertParamsToObj } from "src/util/params";
 
 type Tab = "transfer" | "mint" | "balances" | "link";
 

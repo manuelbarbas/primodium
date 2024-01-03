@@ -6,8 +6,8 @@ const params = new URLSearchParams(window.location.search);
 
 const worlds = worldsJson as Partial<Record<string, { address: string; blockNumber?: number }>>;
 
-const envChainId = import.meta.env.PRI_CHAIN_ID;
-console.log("envChainId", envChainId);
+export const noExternalWallet = import.meta.env.VITE_DEV === "true";
+
 export const getNetworkConfig = () => {
   const chainId = params.get("chainid") || import.meta.env.PRI_CHAIN_ID || "dev";
 
@@ -30,5 +30,6 @@ export const getNetworkConfig = () => {
     worldAddress,
     initialBlockNumber: BigInt(initialBlockNumber),
     indexerUrl: chain.indexerUrl,
+    noExternalWallet,
   };
 };

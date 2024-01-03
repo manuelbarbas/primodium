@@ -1,18 +1,20 @@
 import { minEth } from "@game/constants";
 import { ContractWrite, createBurnerAccount, getContract, transportObserver } from "@latticexyz/common";
 import { createClient as createFaucetClient } from "@latticexyz/faucet";
-import { Entity } from "@latticexyz/recs";
 import { syncToRecs } from "@latticexyz/store-sync/recs";
 import mudConfig from "contracts/mud.config";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { Subject, share } from "rxjs";
-import { Hex, createPublicClient, createWalletClient, encodeAbiParameters, fallback, formatEther, http } from "viem";
+import { addressToEntity } from "src/util/encode";
+import { Hex, createPublicClient, createWalletClient, custom, fallback, formatEther, http } from "viem";
+import { toAccount } from "viem/accounts";
+import { getNetworkConfig } from "./config/getNetworkConfig";
 import { createClock } from "./createClock";
 import { otherTables } from "./otherTables";
-import { NetworkConfig } from "./types";
 import { world } from "./world";
 
-export async function setupNetwork(networkConfig: NetworkConfig) {
+export async function setupNetwork(externalAddress?: Hex) {
+  const networkConfig = getNetworkConfig();
   const clientOptions = {
     chain: networkConfig.chain,
     transport: transportObserver(fallback([http()])),
@@ -22,17 +24,17 @@ export async function setupNetwork(networkConfig: NetworkConfig) {
   const publicClient = createPublicClient(clientOptions);
 
   const burnerAccount = createBurnerAccount(networkConfig.privateKey as Hex);
-  const burnerWalletClient = createWalletClient({
+  const sessionWalletClient = createWalletClient({
     ...clientOptions,
     account: burnerAccount,
   });
 
   const write$ = new Subject<ContractWrite>();
-  const worldContract = getContract({
+  const sessionWorldContract = getContract({
     address: networkConfig.worldAddress as Hex,
     abi: IWorldAbi,
     publicClient,
-    walletClient: burnerWalletClient,
+    walletClient: sessionWalletClient,
     onWrite: (write) => write$.next(write),
   });
 
@@ -46,14 +48,57 @@ export async function setupNetwork(networkConfig: NetworkConfig) {
     tables: otherTables,
   });
 
+  const clock = createClock(latestBlock$, {
+    period: 1100,
+    initialTime: 0,
+    syncInterval: 10000,
+  });
+
+  const sessionAccount = {
+    worldContract: sessionWorldContract,
+    account: sessionWalletClient.account,
+    address: sessionWalletClient.account.address,
+    publicClient,
+    walletClient: sessionWalletClient,
+    entity: addressToEntity(sessionWalletClient.account.address),
+  };
+
+  const getPlayerAccount = () => {
+    if (!externalAddress) return sessionAccount;
+    const clientOptions = {
+      chain: networkConfig.chain,
+      transport: custom(window.ethereum),
+      pollingInterval: 1000,
+      account: toAccount(externalAddress),
+    };
+    const publicClient = createPublicClient(clientOptions);
+    const walletClient = createWalletClient(clientOptions);
+    const worldContract = getContract({
+      address: networkConfig.worldAddress as Hex,
+      abi: IWorldAbi,
+      publicClient,
+      walletClient,
+    });
+    return {
+      worldContract,
+      account: walletClient.account,
+      address: walletClient.account.address,
+      publicClient,
+      walletClient,
+      entity: addressToEntity(walletClient.account.address),
+    };
+  };
+
+  const playerAccount = getPlayerAccount();
   // Request drip from faucet
   if (networkConfig.faucetServiceUrl) {
     const faucet = createFaucetClient({ url: networkConfig.faucetServiceUrl });
-    const address = burnerAccount.address;
+    const sessionAddress = sessionAccount.address;
+    const playerAddress = playerAccount.address;
 
-    let balance = await publicClient.getBalance({ address });
-    console.log("[Faucet] balance:", formatEther(balance));
-    const requestDrip = async () => {
+    const requestDrip = async (address: Hex) => {
+      let balance = await publicClient.getBalance({ address });
+      console.log("[Faucet] balance:", formatEther(balance));
       balance = await publicClient.getBalance({ address });
       const lowBalance = balance < minEth;
       if (lowBalance) {
@@ -64,31 +109,26 @@ export async function setupNetwork(networkConfig: NetworkConfig) {
       }
     };
 
-    requestDrip();
-    // Request a drip every 4 seconds
-    setInterval(requestDrip, 4000);
+    requestDrip(sessionAddress);
+    setInterval(() => requestDrip(sessionAddress), 4000);
+    if (sessionAddress !== playerAddress) {
+      requestDrip(playerAddress);
+      setInterval(() => requestDrip(playerAddress), 4000);
+    }
   }
-
-  const clock = createClock(latestBlock$, {
-    period: 1100,
-    initialTime: 0,
-    syncInterval: 10000,
-  });
-
+  // Request a drip every 4 seconds
   return {
     world,
     mudConfig,
     components,
-    playerEntity: encodeAbiParameters([{ type: "address" }], [burnerWalletClient.account.address]) as Entity,
-    address: burnerWalletClient.account.address,
-    publicClient,
-    walletClient: burnerWalletClient,
+    clock,
+    sessionAccount,
+    playerAccount,
     latestBlock$,
     latestBlockNumber$,
     storedBlockLogs$,
+
     waitForTransaction,
-    worldContract,
     write$: write$.asObservable().pipe(share()),
-    clock,
   };
 }

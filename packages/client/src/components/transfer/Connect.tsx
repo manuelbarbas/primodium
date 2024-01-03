@@ -10,6 +10,7 @@ export function Connect() {
   useEffect(() => {
     if (error) toast.warn(error.message);
   }, [error]);
+  console.log("isConnected", isConnected);
 
   if (isConnected) return null;
   return (
