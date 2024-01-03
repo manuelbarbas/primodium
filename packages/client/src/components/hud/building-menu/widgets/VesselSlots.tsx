@@ -9,10 +9,10 @@ import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components, components as comps } from "src/network/components";
 import { TrainingQueue } from "src/network/components/clientComponents";
+import { train } from "src/network/setup/contractCalls/train";
 import { BackgroundImage, EntityType, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { getRecipe } from "src/util/recipe";
-import { train } from "src/util/web3/contractCalls/train";
 import { Hex } from "viem";
 
 const AddSlot: React.FC = () => {

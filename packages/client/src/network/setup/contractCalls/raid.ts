@@ -1,13 +1,18 @@
 import { Entity } from "@latticexyz/recs";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
-import { SetupNetworkResult } from "src/network/types";
+import { AnyAccount, SetupNetworkResult } from "src/network/types";
 import { Hex } from "viem";
-import { parseReceipt } from "../../analytics/parseReceipt";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const raid = async (rockEntity: Entity, network: SetupNetworkResult, key?: Entity | Hex) => {
+export const raid = async (
+  network: SetupNetworkResult,
+  account: AnyAccount,
+  rockEntity: Entity,
+  key?: Entity | Hex
+) => {
   await execute(
-    () => network.worldContract.write.raid([rockEntity as Hex]),
+    () => account.worldContract.write.raid([rockEntity as Hex]),
     network,
     {
       id: (key ?? rockEntity) as Entity,

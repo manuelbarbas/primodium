@@ -11,11 +11,11 @@ import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { ValueSansMetadata } from "src/network/components/customComponents/ExtendedComponent";
+import { claimUnits } from "src/network/setup/contractCalls/claimUnits";
 import { createHangar } from "src/network/systems/setupHangar";
 import { formatNumber } from "src/util/common";
 import { ResourceEntityLookup, ResourceImage, UnitEntityLookup } from "src/util/constants";
 import { getFullResourceCount, getScale } from "src/util/resource";
-import { claimUnits } from "src/util/web3/contractCalls/claimUnits";
 
 type Listing = ValueSansMetadata<typeof components.MarketplaceOrder.schema> & { id: Entity };
 

@@ -34,6 +34,7 @@ export async function setupNetwork() {
   });
   return {
     world,
+    publicClient,
     mudConfig,
     components,
     clock,

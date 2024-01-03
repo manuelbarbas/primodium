@@ -3,18 +3,23 @@ import { Coord } from "@latticexyz/utils";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
-import { SetupNetworkResult } from "src/network/types";
+import { AnyAccount, SetupNetworkResult } from "src/network/types";
 import { bigintToNumber } from "src/util/bigint";
 import { getBuildingTopLeft } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { Hex } from "viem";
-import { parseReceipt } from "../../analytics/parseReceipt";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const moveBuilding = async (network: SetupNetworkResult, building: Entity, coord: Coord) => {
+export const moveBuilding = async (
+  network: SetupNetworkResult,
+  account: AnyAccount,
+  building: Entity,
+  coord: Coord
+) => {
   // todo: find a cleaner way to extract this value in all web3 functions
-  const activeAsteroid = components.Home.get(network.playerEntity)?.asteroid;
+  const activeAsteroid = components.Home.get(account.entity)?.asteroid;
   if (!activeAsteroid) return;
 
   const prevPosition = components.Position.get(building);
@@ -24,7 +29,7 @@ export const moveBuilding = async (network: SetupNetworkResult, building: Entity
   if (!prevPosition || !buildingType) return;
 
   await execute(
-    () => network.worldContract.write.moveBuilding([{ ...prevPosition, parent: prevPosition.parent as Hex }, position]),
+    () => account.worldContract.write.moveBuilding([{ ...prevPosition, parent: prevPosition.parent as Hex }, position]),
     network,
     {
       id: hashEntities(TransactionQueueType.Move, building),
@@ -35,7 +40,7 @@ export const moveBuilding = async (network: SetupNetworkResult, building: Entity
       },
     },
     (receipt) => {
-      const asteroid = components.Home.get(network.playerEntity)?.asteroid;
+      const asteroid = components.Home.get(account.entity)?.asteroid;
       const buildingType = components.BuildingType.get(building)?.value as Entity;
       const currLevel = components.Level.get(building)?.value || 0;
 

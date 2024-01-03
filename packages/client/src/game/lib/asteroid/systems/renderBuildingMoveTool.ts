@@ -14,11 +14,11 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
 import { components } from "src/network/components";
+import { moveBuilding } from "src/network/setup/contractCalls/moveBuilding";
 import { SetupResult } from "src/network/types";
 import { world } from "src/network/world";
 import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
 import { Action } from "src/util/constants";
-import { moveBuilding } from "src/util/web3/contractCalls/moveBuilding";
 import { ObjectPosition, OnClick, SetValue } from "../../common/object-components/common";
 import { Animation, Outline, Texture } from "../../common/object-components/sprite";
 

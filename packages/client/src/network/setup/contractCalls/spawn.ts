@@ -1,12 +1,12 @@
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
-import { SetupNetworkResult } from "src/network/types";
+import { AnyAccount, SetupNetworkResult } from "src/network/types";
 import { world } from "src/network/world";
-import { parseReceipt } from "../../analytics/parseReceipt";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const spawn = async (network: SetupNetworkResult) => {
+export const spawn = async (network: SetupNetworkResult, account: AnyAccount) => {
   await execute(
-    () => network.playerAccount.worldContract.write.spawn(),
+    () => account.worldContract.write.spawn(),
     network,
     { id: world.registerEntity() },
     (receipt) => {

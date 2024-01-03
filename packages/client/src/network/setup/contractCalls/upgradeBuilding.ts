@@ -3,21 +3,21 @@ import { Coord } from "@latticexyz/utils";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
-import { SetupNetworkResult } from "src/network/types";
+import { AnyAccount, SetupNetworkResult } from "src/network/types";
 import { bigintToNumber } from "src/util/bigint";
 import { getBlockTypeName } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { Hex } from "viem";
-import { parseReceipt } from "../../analytics/parseReceipt";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const upgradeBuilding = async (coord: Coord, network: SetupNetworkResult) => {
-  const asteroid = components.Home.get(network.playerEntity)?.asteroid;
+export const upgradeBuilding = async (network: SetupNetworkResult, account: AnyAccount, coord: Coord) => {
+  const asteroid = components.Home.get(account.entity)?.asteroid;
   if (!asteroid) return;
 
   const position = { ...coord, parent: asteroid as Hex };
   await execute(
-    () => network.worldContract.write.upgradeBuilding([position]),
+    () => account.worldContract.write.upgradeBuilding([position]),
     network,
     {
       id: hashEntities(TransactionQueueType.Upgrade, coord.x, coord.y),

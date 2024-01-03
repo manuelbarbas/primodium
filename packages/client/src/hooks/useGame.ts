@@ -1,30 +1,31 @@
 import { useCallback, useEffect, useState } from "react";
 import { setup } from "src/network/setup/setup";
-import { setupPlayerAccount } from "src/network/setup/setupPlayerAccount";
-import { setupSessionAccount } from "src/network/setup/setupSessionAccount";
-import { PlayerAccount, SessionAccount, SetupResult } from "src/network/types";
+import { setupBurnerAccount } from "src/network/setup/setupBurnerAccount";
+import { setupExternalAccount } from "src/network/setup/setupExternalAccount";
+import { BurnerAccount, ExternalAccount, SetupResult } from "src/network/types";
 import { Hex } from "viem";
 
 const useGame = () => {
   const [network, setNetwork] = useState<SetupResult>(); // Created once when the site loads
-  const [sessionAccount, setSessionAccount] = useState<SessionAccount>();
-  const [playerAccount, setPlayerAccount] = useState<PlayerAccount>();
+  const [sessionAccount, setSessionAccount] = useState<BurnerAccount>();
+  const [playerAccount, setPlayerAccount] = useState<BurnerAccount | ExternalAccount>();
 
   useEffect(() => {
     setup().then((network) => setNetwork(network));
   }, []);
 
   const updateSessionAccount = useCallback((pKey: Hex) => {
-    setupSessionAccount(pKey).then((account) => setSessionAccount(account));
+    setupBurnerAccount(pKey).then((account) => setSessionAccount(account));
   }, []);
 
   const updatePlayerAccount = useCallback((address: Hex) => {
-    setupPlayerAccount(address).then((account) => setPlayerAccount(account));
+    setupExternalAccount(address).then((account) => setPlayerAccount(account));
   }, []);
 
   return {
     network: network?.network,
     components: network?.components,
+    contractCalls: network?.contractCalls,
     sessionAccount,
     playerAccount,
     updateSessionAccount,

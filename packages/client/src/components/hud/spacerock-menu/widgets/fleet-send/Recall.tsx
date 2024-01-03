@@ -8,11 +8,11 @@ import { IconLabel } from "src/components/core/IconLabel";
 import { Fleet } from "src/components/hud/modals/fleets/Fleet";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
+import { recallStationedUnits } from "src/network/setup/contractCalls/recall";
 import { formatNumber } from "src/util/common";
 import { BackgroundImage, UnitEnumLookup } from "src/util/constants";
 import { getRockDefense } from "src/util/defense";
 import { getSpaceRockImage, getSpaceRockName } from "src/util/spacerock";
-import { recallStationedUnits } from "src/util/web3/contractCalls/recall";
 
 export const Unit: React.FC<{ unit: Entity; count: bigint }> = ({ unit, count }) => {
   if (count === 0n) return null;

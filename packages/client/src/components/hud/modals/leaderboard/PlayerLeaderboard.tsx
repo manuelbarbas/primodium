@@ -1,17 +1,17 @@
 import { Entity } from "@latticexyz/recs";
-import { FixedSizeList as List } from "react-window";
-import AutoSizer from "react-virtualized-auto-sizer";
 import { EAllianceRole } from "contracts/config/enums";
 import { FaEnvelope } from "react-icons/fa";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List } from "react-window";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
+import { invite } from "src/network/setup/contractCalls/alliance";
 import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
-import { invite } from "src/util/web3/contractCalls/alliance";
 
 export const PlayerLeaderboard = () => {
   const network = useMud().network;

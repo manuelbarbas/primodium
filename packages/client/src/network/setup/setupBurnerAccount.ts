@@ -11,7 +11,7 @@ import { addressToEntity } from "src/util/encode";
 import { Hex, createPublicClient, createWalletClient, fallback, http } from "viem";
 import { getNetworkConfig } from "../config/getNetworkConfig";
 
-export async function setupSessionAccount(pKey?: Hex) {
+export async function setupBurnerAccount(pKey?: Hex) {
   const networkConfig = getNetworkConfig();
   const cacheKey = "primodium:sessionKey";
   const privateKey = pKey ?? getBurnerPrivateKey(cacheKey);

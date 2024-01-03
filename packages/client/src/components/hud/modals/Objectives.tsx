@@ -17,6 +17,7 @@ import { Tabs } from "src/components/core/Tabs";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { components as comps } from "src/network/components";
+import { claimObjective } from "src/network/setup/contractCalls/claimObjective";
 import { formatNumber, getBlockTypeName } from "src/util/common";
 import {
   BackgroundImage,
@@ -36,7 +37,6 @@ import {
 } from "src/util/objectives";
 import { getFullResourceCount } from "src/util/resource";
 import { getRewards } from "src/util/reward";
-import { claimObjective } from "src/util/web3/contractCalls/claimObjective";
 import { Hex } from "viem";
 
 const ClaimObjectiveButton: React.FC<{

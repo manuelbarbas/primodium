@@ -4,20 +4,22 @@ import useGame from "src/hooks/useGame";
 import { createComponents } from "./components";
 import { getNetworkConfig } from "./config/getNetworkConfig";
 import { setup } from "./setup/setup";
+import { setupBurnerAccount } from "./setup/setupBurnerAccount";
+import { setupExternalAccount } from "./setup/setupExternalAccount";
 import { setupNetwork } from "./setup/setupNetwork";
-import { setupPlayerAccount } from "./setup/setupPlayerAccount";
-import { setupSessionAccount } from "./setup/setupSessionAccount";
 
 export type NetworkConfig = ReturnType<typeof getNetworkConfig>;
-
 export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>;
 export type SetupResult = Awaited<ReturnType<typeof setup>>;
-export type PlayerAccount = Awaited<ReturnType<typeof setupPlayerAccount>>;
-export type SessionAccount = Awaited<ReturnType<typeof setupSessionAccount>>;
+
+export type BurnerAccount = Awaited<ReturnType<typeof setupBurnerAccount>>;
+export type ExternalAccount = Awaited<ReturnType<typeof setupExternalAccount>>;
+export type AnyAccount = BurnerAccount | ExternalAccount;
+
 export type PartialGame = ReturnType<typeof useGame>;
 export type Game = PartialGame &
   SetupResult & {
-    playerAccount: PlayerAccount;
+    playerAccount: AnyAccount;
   };
 
 export type Components = ReturnType<typeof createComponents>;

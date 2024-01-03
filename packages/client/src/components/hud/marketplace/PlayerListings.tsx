@@ -4,13 +4,13 @@ import { FaAngleDoubleRight, FaArrowLeft, FaArrowRight, FaMinus, FaPlay, FaTrash
 import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
 import { NumberInput } from "src/components/shared/NumberInput";
+import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
+import { cancelOrder, updateOrder } from "src/network/setup/contractCalls/updateOrder";
+import { weiToEth, weiToGwei } from "src/util/common";
 import { ResourceImage } from "src/util/constants";
 import { getScale } from "src/util/resource";
-import { cancelOrder, updateOrder } from "src/util/web3/contractCalls/updateOrder";
 import { UserListing } from "./CreateOrderForm";
-import { useSettingsStore } from "src/game/stores/SettingsStore";
-import { weiToEth, weiToGwei } from "src/util/common";
 
 export const PlayerListings = ({
   listings,

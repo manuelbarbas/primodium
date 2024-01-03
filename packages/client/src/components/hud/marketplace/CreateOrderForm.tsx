@@ -8,10 +8,10 @@ import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
+import { createOrder } from "src/network/setup/contractCalls/createOrder";
 import { formatNumber, getBlockTypeName } from "src/util/common";
 import { EntityType, ResourceEntityLookup, ResourceStorages, UnitEntityLookup, UnitStorages } from "src/util/constants";
 import { getScale } from "src/util/resource";
-import { createOrder } from "src/util/web3/contractCalls/createOrder";
 import { PlayerListings } from "./PlayerListings";
 
 export type UserListing = {

@@ -1,13 +1,18 @@
 import { Entity } from "@latticexyz/recs";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
-import { SetupNetworkResult } from "src/network/types";
+import { AnyAccount, SetupNetworkResult } from "src/network/types";
 import { Hex } from "viem";
-import { parseReceipt } from "../../analytics/parseReceipt";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const invade = async (destination: Entity, network: SetupNetworkResult, key?: Hex | Entity) => {
+export const invade = async (
+  network: SetupNetworkResult,
+  account: AnyAccount,
+  destination: Entity,
+  key?: Hex | Entity
+) => {
   await execute(
-    () => network.worldContract.write.invade([destination as Hex]),
+    () => account.worldContract.write.invade([destination as Hex]),
     network,
     {
       id: (key ?? destination) as Entity,

@@ -6,7 +6,7 @@ import { Hex, createPublicClient, createWalletClient, custom } from "viem";
 import { toAccount } from "viem/accounts";
 import { getNetworkConfig } from "../config/getNetworkConfig";
 
-export async function setupPlayerAccount(externalAddress: Hex) {
+export async function setupExternalAccount(externalAddress: Hex) {
   const networkConfig = getNetworkConfig();
 
   const clientOptions = {
@@ -26,6 +26,7 @@ export async function setupPlayerAccount(externalAddress: Hex) {
 
     onWrite: (write) => write$.next(write),
   });
+
   return {
     worldContract,
     account: walletClient.account,

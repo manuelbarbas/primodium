@@ -12,14 +12,14 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { useAccount } from "src/hooks/useAccount";
 import { components } from "src/network/components";
+import { invade } from "src/network/setup/contractCalls/invade";
+import { raid } from "src/network/setup/contractCalls/raid";
+import { recallArrival } from "src/network/setup/contractCalls/recall";
+import { reinforce } from "src/network/setup/contractCalls/reinforce";
 import { TransactionQueueType, UnitEntityLookup } from "src/util/constants";
 import { decodeEntity, hashEntities } from "src/util/encode";
 import { getSpaceRockName } from "src/util/spacerock";
 import { getUnitStats } from "src/util/trainUnits";
-import { invade } from "src/util/web3/contractCalls/invade";
-import { raid } from "src/util/web3/contractCalls/raid";
-import { recallArrival } from "src/util/web3/contractCalls/recall";
-import { reinforce } from "src/util/web3/contractCalls/reinforce";
 
 export const LabeledValue: React.FC<{
   label: string;

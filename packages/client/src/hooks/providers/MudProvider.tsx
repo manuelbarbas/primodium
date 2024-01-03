@@ -8,8 +8,5 @@ type Props = Game & {
 };
 
 export const MudProvider = ({ children, ...value }: Props) => {
-  if (!value.network) throw new Error("MudProvider must have a network");
-  if (!value.playerAccount) throw new Error("MudProvider must have a player");
-
   return <MudContext.Provider value={value}>{children}</MudContext.Provider>;
 };

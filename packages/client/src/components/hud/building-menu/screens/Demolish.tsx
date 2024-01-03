@@ -8,10 +8,10 @@ import { useMud } from "src/hooks";
 import { useBuildingInfo } from "src/hooks/useBuildingInfo";
 import { useBuildingName } from "src/hooks/useBuildingName";
 import { components } from "src/network/components";
+import { demolishBuilding } from "src/network/setup/contractCalls/demolishBuilding";
 import { getBlockTypeName } from "src/util/common";
 import { ResourceImage, ResourceType } from "src/util/constants";
 import { getFullResourceCount } from "src/util/resource";
-import { demolishBuilding } from "src/util/web3/contractCalls/demolishBuilding";
 
 export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
   const network = useMud().network;

@@ -3,22 +3,27 @@ import { EBuilding } from "contracts/config/enums";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
-import { SetupNetworkResult } from "src/network/types";
+import { AnyAccount, SetupNetworkResult } from "src/network/types";
 import { getBuildingTopLeft } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
 import { BuildingEntityLookup, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { Hex } from "viem";
-import { parseReceipt } from "../../analytics/parseReceipt";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const buildBuilding = async (network: SetupNetworkResult, building: EBuilding, coord: Coord) => {
-  const activeAsteroid = components.Home.get(network.playerEntity)?.asteroid;
+export const buildBuilding = async (
+  network: SetupNetworkResult,
+  account: AnyAccount,
+  building: EBuilding,
+  coord: Coord
+) => {
+  const activeAsteroid = components.Home.get(account.entity)?.asteroid;
   if (!activeAsteroid) return;
 
   const position = { ...coord, parent: activeAsteroid as Hex };
 
   await execute(
-    () => network.playerAccount.worldContract.write.build([building, position], { gas: 7000000n }),
+    () => account.worldContract.write.build([building, position], { gas: 7000000n }),
     network,
     {
       id: hashEntities(TransactionQueueType.Build, coord.x, coord.y),

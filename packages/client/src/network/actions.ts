@@ -1,25 +1,25 @@
-import { Hex, TransactionReceipt, ContractFunctionExecutionError, CallExecutionError } from "viem";
-import { PublicClient } from "viem/_types/clients/createPublicClient";
 import { Entity } from "@latticexyz/recs";
-import { SetupNetworkResult } from "./types";
 import { toast } from "react-toastify";
+import { CallExecutionError, ContractFunctionExecutionError, Hex, TransactionReceipt } from "viem";
+import { PublicClient } from "viem/_types/clients/createPublicClient";
 import { components } from "./components";
 import { MetadataTypes } from "./components/customComponents/TransactionQueueComponent";
+import { SetupNetworkResult } from "./types";
 
-export async function _execute(txPromise: Promise<Hex>, network: SetupNetworkResult) {
+export async function _execute(txPromise: Promise<Hex>, { waitForTransaction, publicClient }: SetupNetworkResult) {
   let receipt: TransactionReceipt | undefined = undefined;
 
   try {
     const txHash = await txPromise;
-    await network.waitForTransaction(txHash);
+    await waitForTransaction(txHash);
     console.log("Transaction Hash: ", txHash);
 
     // If the transaction runs out of gas, status will be reverted
     // receipt.status is of type TStatus = 'success' | 'reverted' defined in TransactionReceipt
-    receipt = await network.publicClient.getTransactionReceipt({ hash: txHash });
+    receipt = await publicClient.getTransactionReceipt({ hash: txHash });
     if (receipt && receipt.status === "reverted") {
       // Force a CallExecutionError such that we can get the revert reason
-      await callTransaction(txHash, network.publicClient);
+      await callTransaction(txHash, publicClient);
       toast.error("[Insufficient Gas Limit] You're moving fast! Please wait a moment and then try again.");
     }
     return receipt;

@@ -17,8 +17,8 @@ import {
   FaUserPlus,
 } from "react-icons/fa";
 import { GiRank1, GiRank2, GiRank3 } from "react-icons/gi";
-import { FixedSizeList as List } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List } from "react-window";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { Checkbox } from "src/components/core/Checkbox";
@@ -30,12 +30,6 @@ import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { getAllianceName } from "src/util/alliance";
-import { entityToColor } from "src/util/color";
-import { entityToAddress } from "src/util/common";
-import { TransactionQueueType } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
-import { isProfane } from "src/util/profanity";
 import {
   acceptJoinRequest,
   createAlliance,
@@ -47,7 +41,13 @@ import {
   leaveAlliance,
   rejectJoinRequest,
   requestToJoin,
-} from "src/util/web3/contractCalls/alliance";
+} from "src/network/setup/contractCalls/alliance";
+import { getAllianceName } from "src/util/alliance";
+import { entityToColor } from "src/util/color";
+import { entityToAddress } from "src/util/common";
+import { TransactionQueueType } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
+import { isProfane } from "src/util/profanity";
 import { Hex, isAddress, padHex } from "viem";
 
 const ALLIANCE_TAG_SIZE = 6;

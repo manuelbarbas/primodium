@@ -4,9 +4,9 @@ import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
+import { recallStationedUnits } from "src/network/setup/contractCalls/recall";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage } from "src/util/constants";
-import { recallStationedUnits } from "src/util/web3/contractCalls/recall";
 
 export const StationedUnits: React.FC = () => {
   const network = useMud().network;

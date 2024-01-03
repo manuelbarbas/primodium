@@ -8,11 +8,11 @@ import { NumberInput } from "src/components/shared/NumberInput";
 import { useMud } from "src/hooks";
 import { useMaxCountOfRecipe } from "src/hooks/useMaxCountOfRecipe";
 import { components } from "src/network/components";
+import { train } from "src/network/setup/contractCalls/train";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage, EntityType, ResourceImage, UnitEnumLookup } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
 import { getUnitStats } from "src/util/trainUnits";
-import { train } from "src/util/web3/contractCalls/train";
 import { Hex } from "viem";
 import { ResourceIconTooltip } from "../../../shared/ResourceIconTooltip";
 

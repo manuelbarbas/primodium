@@ -3,26 +3,27 @@ import { ESendType } from "contracts/config/enums";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
-import { SetupNetworkResult } from "src/network/types";
+import { AnyAccount, SetupNetworkResult } from "src/network/types";
 import { world } from "src/network/world";
 import { bigintToNumber } from "src/util/bigint";
 import { UnitEnumLookup } from "src/util/constants";
 import { toHex32 } from "src/util/encode";
 import { Hex } from "viem";
-import { parseReceipt } from "../../analytics/parseReceipt";
-import { UnitCountTuple } from "../types";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
+import { UnitCountTuple } from "../../../util/web3/types";
 
 export const send = async (
+  network: SetupNetworkResult,
+  account: AnyAccount,
   unitCounts: UnitCountTuple,
   sendType: ESendType,
   origin: Coord,
   destination: Coord,
-  to: Hex,
-  network: SetupNetworkResult
+  to: Hex
 ) => {
   await execute(
     () =>
-      network.worldContract.write.sendUnits([
+      account.worldContract.write.sendUnits([
         unitCounts,
         sendType,
         { ...origin, parent: toHex32("0") },

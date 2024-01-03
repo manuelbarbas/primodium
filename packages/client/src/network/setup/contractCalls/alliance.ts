@@ -3,18 +3,23 @@ import { EAllianceInviteMode, EAllianceRole } from "contracts/config/enums";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
-import { SetupNetworkResult } from "src/network/types";
+import { AnyAccount, SetupNetworkResult } from "src/network/types";
 import { world } from "src/network/world";
 import { getAllianceName, getAllianceNameFromPlayer } from "src/util/alliance";
 import { TransactionQueueType } from "src/util/constants";
 import { hashEntities, toHex32 } from "src/util/encode";
 import { Hex } from "viem";
-import { parseReceipt } from "../../analytics/parseReceipt";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const createAlliance = async (name: string, inviteOnly: boolean, network: SetupNetworkResult) => {
+export const createAlliance = async (
+  network: SetupNetworkResult,
+  account: AnyAccount,
+  name: string,
+  inviteOnly: boolean
+) => {
   await execute(
     () =>
-      network.worldContract.write.create([
+      account.worldContract.write.create([
         toHex32(name.substring(0, 6).toUpperCase()),
         inviteOnly ? EAllianceInviteMode.Closed : EAllianceInviteMode.Open,
       ]),
@@ -32,12 +37,12 @@ export const createAlliance = async (name: string, inviteOnly: boolean, network:
   );
 };
 
-export const leaveAlliance = async (network: SetupNetworkResult) => {
+export const leaveAlliance = async (network: SetupNetworkResult, account: AnyAccount) => {
   // Fetch alliance name before leaving
-  const allianceName = getAllianceNameFromPlayer(network.playerEntity);
+  const allianceName = getAllianceNameFromPlayer(account.entity);
 
   execute(
-    () => network.worldContract.write.leave(),
+    () => account.worldContract.write.leave(),
     network,
     {
       id: world.registerEntity(),
@@ -51,9 +56,9 @@ export const leaveAlliance = async (network: SetupNetworkResult) => {
   );
 };
 
-export const joinAlliance = async (alliance: Entity, network: SetupNetworkResult) => {
+export const joinAlliance = async (network: SetupNetworkResult, account: AnyAccount, alliance: Entity) => {
   execute(
-    () => network.worldContract.write.join([alliance as Hex]),
+    () => account.worldContract.write.join([alliance as Hex]),
     network,
     {
       id: hashEntities(TransactionQueueType.JoinAlliance, alliance),
@@ -67,9 +72,9 @@ export const joinAlliance = async (alliance: Entity, network: SetupNetworkResult
   );
 };
 
-export const declineInvite = async (inviter: Entity, network: SetupNetworkResult) => {
+export const declineInvite = async (network: SetupNetworkResult, account: AnyAccount, inviter: Entity) => {
   execute(
-    () => network.worldContract.write.declineInvite([inviter as Hex]),
+    () => account.worldContract.write.declineInvite([inviter as Hex]),
     network,
     {
       id: hashEntities(TransactionQueueType.DeclineInvite, inviter),
@@ -84,9 +89,9 @@ export const declineInvite = async (inviter: Entity, network: SetupNetworkResult
   );
 };
 
-export const requestToJoin = async (alliance: Entity, network: SetupNetworkResult) => {
+export const requestToJoin = async (network: SetupNetworkResult, account: AnyAccount, alliance: Entity) => {
   execute(
-    () => network.worldContract.write.requestToJoin([alliance as Hex]),
+    () => account.worldContract.write.requestToJoin([alliance as Hex]),
     network,
     {
       id: hashEntities(TransactionQueueType.JoinAlliance, alliance),
@@ -100,12 +105,12 @@ export const requestToJoin = async (alliance: Entity, network: SetupNetworkResul
   );
 };
 
-export const kickPlayer = async (player: Entity, network: SetupNetworkResult) => {
+export const kickPlayer = async (network: SetupNetworkResult, account: AnyAccount, player: Entity) => {
   // Fetch alliance name before kicking
   const allianceName = getAllianceNameFromPlayer(player);
 
   execute(
-    () => network.worldContract.write.kick([player as Hex]),
+    () => account.worldContract.write.kick([player as Hex]),
     network,
     {
       id: hashEntities(TransactionQueueType.KickPlayer, player),
@@ -120,11 +125,16 @@ export const kickPlayer = async (player: Entity, network: SetupNetworkResult) =>
   );
 };
 
-export const grantRole = async (player: Entity, role: EAllianceRole, network: SetupNetworkResult) => {
+export const grantRole = async (
+  network: SetupNetworkResult,
+  account: AnyAccount,
+  player: Entity,
+  role: EAllianceRole
+) => {
   const currentRole = components.PlayerAlliance.get(player)?.role ?? EAllianceRole.Member;
 
   execute(
-    () => network.worldContract.write.grantRole([player as Hex, role]),
+    () => account.worldContract.write.grantRole([player as Hex, role]),
     network,
     {
       id: hashEntities(role < currentRole ? TransactionQueueType.Promote : TransactionQueueType.Demote, player),
@@ -140,9 +150,9 @@ export const grantRole = async (player: Entity, role: EAllianceRole, network: Se
   );
 };
 
-export const acceptJoinRequest = async (target: Entity, network: SetupNetworkResult) => {
+export const acceptJoinRequest = async (network: SetupNetworkResult, account: AnyAccount, target: Entity) => {
   execute(
-    () => network.worldContract.write.acceptRequestToJoin([target as Hex]),
+    () => account.worldContract.write.acceptRequestToJoin([target as Hex]),
     network,
     {
       id: hashEntities(TransactionQueueType.AcceptRequest, target),
@@ -157,9 +167,9 @@ export const acceptJoinRequest = async (target: Entity, network: SetupNetworkRes
   );
 };
 
-export const rejectJoinRequest = async (target: Entity, network: SetupNetworkResult) => {
+export const rejectJoinRequest = async (network: SetupNetworkResult, account: AnyAccount, target: Entity) => {
   execute(
-    () => network.worldContract.write.rejectRequestToJoin([target as Hex]),
+    () => account.worldContract.write.rejectRequestToJoin([target as Hex]),
     network,
     {
       id: hashEntities(TransactionQueueType.RejectRequest, target),
@@ -174,9 +184,9 @@ export const rejectJoinRequest = async (target: Entity, network: SetupNetworkRes
   );
 };
 
-export const invite = async (target: Entity, network: SetupNetworkResult) => {
+export const invite = async (network: SetupNetworkResult, account: AnyAccount, target: Entity) => {
   execute(
-    () => network.worldContract.write.invite([target as Hex]),
+    () => account.worldContract.write.invite([target as Hex]),
     network,
     {
       id: hashEntities(TransactionQueueType.Invite, target),

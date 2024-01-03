@@ -10,10 +10,10 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
+import { takeOrders } from "src/network/setup/contractCalls/takeOrders";
 import { getBlockTypeName } from "src/util/common";
 import { ResourceEntityLookup, ResourceImage, UnitEntityLookup } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
-import { takeOrders } from "src/util/web3/contractCalls/takeOrders";
 
 export const Cart = ({
   takenOrders,

@@ -2,23 +2,23 @@ import { Entity } from "@latticexyz/recs";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
-import { SetupNetworkResult } from "src/network/types";
+import { AnyAccount, SetupNetworkResult } from "src/network/types";
 import { bigintToNumber } from "src/util/bigint";
 import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { getPlayerBounds } from "src/util/outOfBounds";
 import { Hex } from "viem";
-import { parseReceipt } from "../../analytics/parseReceipt";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const upgradeRange = async (asteroid: Entity, network: SetupNetworkResult) => {
+export const upgradeRange = async (network: SetupNetworkResult, account: AnyAccount, asteroid: Entity) => {
   await execute(
-    () => network.worldContract.write.upgradeRange([asteroid as Hex]),
+    () => account.worldContract.write.upgradeRange([asteroid as Hex]),
     network,
     {
-      id: hashEntities(TransactionQueueType.Upgrade, network.playerEntity),
+      id: hashEntities(TransactionQueueType.Upgrade, account.entity),
     },
     (receipt) => {
-      const asteroid = components.Home.get(network.playerEntity)?.asteroid;
+      const asteroid = components.Home.get(account.entity)?.asteroid;
       const playerEntity = components.Account.get()?.value;
       const level = components.Level.get(playerEntity)?.value ?? 1n;
       const bounds = getPlayerBounds(playerEntity!);

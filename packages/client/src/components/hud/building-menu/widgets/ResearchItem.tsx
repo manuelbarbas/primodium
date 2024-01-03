@@ -8,11 +8,11 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
+import { upgradeUnit } from "src/network/setup/contractCalls/upgradeUnit";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage, ResourceImage, TransactionQueueType, UnitEnumLookup } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { getUpgradeInfo } from "src/util/upgrade";
-import { upgradeUnit } from "src/util/web3/contractCalls/upgradeUnit";
 
 export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
   const { network } = useMud();

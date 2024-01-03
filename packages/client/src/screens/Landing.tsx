@@ -6,13 +6,12 @@ import { Button } from "src/components/core/Button";
 import { useMud } from "src/hooks/useMud";
 import { components } from "src/network/components";
 import { EntityType, ResourceImage } from "src/util/constants";
-import { spawn } from "src/util/web3/contractCalls/spawn";
 import { useNetwork, useSwitchNetwork } from "wagmi";
 
 const params = new URLSearchParams(window.location.search);
 export const Landing: React.FC = () => {
   const [message, setMessage] = useState<string | null>();
-  const { network, playerAccount } = useMud();
+  const { playerAccount, contractCalls } = useMud();
   const playerEntity = playerAccount.entity;
   const navigate = useNavigate();
   const location = useLocation();
@@ -22,7 +21,7 @@ export const Landing: React.FC = () => {
     setMessage("Spawning Player Asteroid...");
     if (!hasSpawned) {
       try {
-        await spawn(network);
+        await contractCalls.spawn(playerAccount);
       } catch {
         setMessage("Failed to spawn asteroid...Retry");
       }

@@ -6,10 +6,10 @@ import { Button } from "src/components/core/Button";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
+import { invade } from "src/network/setup/contractCalls/invade";
+import { raid } from "src/network/setup/contractCalls/raid";
 import { TransactionQueueType, UnitEntityLookup } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
-import { invade } from "src/util/web3/contractCalls/invade";
-import { raid } from "src/util/web3/contractCalls/raid";
 import { Hex } from "viem";
 
 export const Land: React.FC<{
