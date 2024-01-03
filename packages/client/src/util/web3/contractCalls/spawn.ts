@@ -6,7 +6,7 @@ import { parseReceipt } from "../../analytics/parseReceipt";
 
 export const spawn = async (network: SetupNetworkResult) => {
   await execute(
-    () => network.worldContract.write.spawn(),
+    () => network.playerAccount.worldContract.write.spawn(),
     network,
     { id: world.registerEntity() },
     (receipt) => {

@@ -116,6 +116,24 @@ export async function setupNetwork(externalAddress?: Hex) {
       setInterval(() => requestDrip(playerAddress), 4000);
     }
   }
+
+  if (networkConfig.chainId === "dev" && import.meta.env.PRI_DEV_PKEY) {
+    const devDrip = async (address: Hex) => {
+      const daddyPKey = import.meta.env.PRI_DEV_PKEY;
+      const daddyAccount = createBurnerAccount(daddyPKey as Hex);
+      const daddyWalletClient = createWalletClient({
+        ...clientOptions,
+        account: daddyAccount,
+      });
+      const balance = await publicClient.getBalance({ address });
+      const lowBalance = balance < minEth;
+      if (!lowBalance) return;
+      await daddyWalletClient.sendTransaction({ to: address, value: 69n * 10n ** 18n });
+      console.log(`[Drip] Dripped ${formatEther(minEth)} to ${address}`);
+    };
+    devDrip(playerAccount.address);
+    setInterval(() => devDrip(playerAccount.address), 4000);
+  }
   // Request a drip every 4 seconds
   return {
     world,
@@ -124,6 +142,7 @@ export async function setupNetwork(externalAddress?: Hex) {
     clock,
     sessionAccount,
     playerAccount,
+    playerEntity: playerAccount.entity,
     latestBlock$,
     latestBlockNumber$,
     storedBlockLogs$,

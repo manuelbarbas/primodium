@@ -7,6 +7,7 @@ import { useMud } from "src/hooks/useMud";
 import { components } from "src/network/components";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { spawn } from "src/util/web3/contractCalls/spawn";
+import { useNetwork, useSwitchNetwork } from "wagmi";
 
 const params = new URLSearchParams(window.location.search);
 export const Landing: React.FC = () => {
@@ -30,6 +31,32 @@ export const Landing: React.FC = () => {
     navigate("/game" + location.search);
   };
 
+  const chain = useNetwork().chain;
+  const expectedChain = network.playerAccount.walletClient.chain;
+  const wrongChain = chain?.id !== expectedChain?.id;
+  const { isLoading, pendingChainId, switchNetwork } = useSwitchNetwork();
+
+  const EnterButton = () =>
+    wrongChain ? (
+      <Button
+        disabled={!switchNetwork || expectedChain.id === chain?.id}
+        key={expectedChain.id}
+        onClick={() => switchNetwork?.(expectedChain.id)}
+        className="btn-secondary w-4/5 star-background hover:scale-125 relative z-10 mt-4"
+      >
+        switch to {expectedChain.name}
+        {isLoading && pendingChainId === expectedChain.id && " (switching)"}
+      </Button>
+    ) : (
+      <Button
+        onClick={async () => {
+          await handlePlay();
+        }}
+        className="btn-secondary w-4/5 star-background hover:scale-125 relative z-10 mt-4"
+      >
+        enter
+      </Button>
+    );
   return (
     <AnimatePresence>
       <motion.div
@@ -51,16 +78,7 @@ export const Landing: React.FC = () => {
             <div className="absolute bg-gray-900 blur-[15px] w-56 h-32 margin-auto bottom-0 z-10" />
           </div>
 
-          {!message && (
-            <Button
-              onClick={async () => {
-                await handlePlay();
-              }}
-              className="btn-secondary w-4/5 star-background hover:scale-125 relative z-10 mt-4"
-            >
-              enter
-            </Button>
-          )}
+          {!message && <EnterButton />}
           {message && (
             <div className="btn opacity-60 disabled btn-secondary w-4/5 star-background relative z-10 mt-4 cursor-not-allowed">
               {message}

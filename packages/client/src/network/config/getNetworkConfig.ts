@@ -6,7 +6,8 @@ const params = new URLSearchParams(window.location.search);
 
 const worlds = worldsJson as Partial<Record<string, { address: string; blockNumber?: number }>>;
 
-export const noExternalWallet = import.meta.env.VITE_DEV === "true";
+// export const noExternalWallet = import.meta.env.PRI_DEV === "true";
+export const noExternalWallet = false;
 
 export const getNetworkConfig = () => {
   const chainId = params.get("chainid") || import.meta.env.PRI_CHAIN_ID || "dev";

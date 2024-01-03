@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import "react-toastify/dist/ReactToastify.min.css";
 import { WagmiConfig } from "wagmi";
-import App2 from "./App2";
+import SetupResultProvider from "./SetupResultProvider";
 import { ampli } from "./ampli";
 import { Connect } from "./components/transfer/Connect";
 import { Maintenance } from "./screens/Maintenance";
@@ -25,7 +25,7 @@ export default function App() {
   return (
     <WagmiConfig config={wagmiConfig}>
       <Connect />
-      <App2 />
+      <SetupResultProvider />
     </WagmiConfig>
   );
 }
