@@ -3,7 +3,6 @@ import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { ComponentUpdate, Has, defineEnterSystem, defineExitSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { components } from "src/network/components";
-import { SetupResult } from "src/network/types";
 import { world } from "src/network/world";
 import { PIRATE_KEY } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
@@ -17,13 +16,13 @@ import {
 import { Circle, Line } from "../../common/object-components/graphics";
 import { renderEntityOrbitingArrivals } from "./renderArrivalsInOrbit";
 
-export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
-  const playerEntity = mud.network.playerEntity;
+export const renderArrivalsInTransit = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_arrival";
 
   const render = ({ entity }: ComponentUpdate) => {
+    const playerEntity = components.Account.get()?.value;
     const arrival = components.Arrival.getEntity(entity);
 
     if (!arrival) return;
@@ -42,6 +41,7 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
     //render personal pirates only
     if (
       components.PirateAsteroid.has(arrival.destination) &&
+      playerEntity &&
       hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(arrival.destination)?.value
     )
       return;
@@ -74,7 +74,8 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
           components.HoverEntity.remove();
         }
       ),
-      //@ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-expect-error
       OnRxjsSystem(scene.camera.zoom$, (_, zoom) => {
         let thickness = 3 / zoom;
         thickness = Math.min(10, thickness);
@@ -119,7 +120,7 @@ export const renderArrivalsInTransit = (scene: Scene, mud: SetupResult) => {
 
         const progress = Number(timeTraveled) / Number(totaltime);
 
-        if (progress > 1) {
+        if (playerEntity && progress > 1) {
           //render orbit
           renderEntityOrbitingArrivals(arrival.destination, playerEntity, scene);
 

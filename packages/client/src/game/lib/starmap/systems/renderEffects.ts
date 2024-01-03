@@ -1,16 +1,14 @@
 import { primodium } from "@game/api";
 import { Scenes } from "@game/constants";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { Scene } from "engine/types";
 import { components } from "src/network/components";
-import { SetupResult } from "src/network/types";
 import { world } from "src/network/world";
 
-export const renderEffects = (scene: Scene, mud: SetupResult) => {
-  const playerEntity = mud.network.playerEntity;
+export const renderEffects = () => {
   const gameWorld = namespaceWorld(world, "game");
   const { BattleResult } = components;
   defineComponentSystem(gameWorld, BattleResult, (update) => {
+    const playerEntity = components.Account.get()?.value;
     const now = components.Time.get()?.value ?? 0n;
 
     const battle = update.value[0];

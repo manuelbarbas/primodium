@@ -1,9 +1,9 @@
 import { ReactNode, createContext } from "react";
-import { Game } from "src/network/types";
+import { MUD } from "src/network/types";
 
-export const MudContext = createContext<Game | null>(null);
+export const MudContext = createContext<MUD | null>(null);
 
-type Props = Game & {
+type Props = MUD & {
   children: ReactNode;
 };
 

@@ -15,6 +15,7 @@ import { Join } from "src/components/core/Join";
 import { Tabs } from "src/components/core/Tabs";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { useMud } from "src/hooks";
 import { components as comps } from "src/network/components";
 import { formatNumber, getBlockTypeName } from "src/util/common";
 import {
@@ -98,7 +99,10 @@ const Objective: React.FC<{
   highlight?: boolean;
 }> = ({ objective, highlight = false }) => {
   const time = Time.use()?.value;
-  const playerEntity = Account.use()?.value;
+
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
   const spaceRock = comps.Home.use(playerEntity)?.asteroid as Entity | undefined;
   const objectiveName = useMemo(() => {
     if (!objective) return;

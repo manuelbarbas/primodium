@@ -4,16 +4,15 @@ import { Scene } from "engine/types";
 import { createCameraApi } from "src/game/api/camera";
 import { createInputApi } from "src/game/api/input";
 import { components } from "src/network/components";
-import { SetupResult } from "src/network/types";
 import { world } from "src/network/world";
 
-export const setupKeybinds = (scene: Scene, mud: SetupResult) => {
+export const setupKeybinds = (scene: Scene) => {
   const { pan } = createCameraApi(scene);
   const { addListener } = createInputApi(scene);
-  const playerEntity = mud.network.playerEntity;
 
   const mainbaseKeybind = addListener(KeybindActions.Base, () => {
     //TODO - fix converting to entity
+    const playerEntity = components.Account.get()?.value;
     const mainBase = components.Home.get(playerEntity)?.mainBase as Entity | undefined;
 
     if (!mainBase) return;

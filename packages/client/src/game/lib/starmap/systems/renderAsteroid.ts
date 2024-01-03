@@ -1,36 +1,34 @@
+import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
 import { Entity, Has, HasValue, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
+import { Coord } from "@latticexyz/utils";
+import { ERock } from "contracts/config/enums";
 import { Scene } from "engine/types";
+import { throttleTime } from "rxjs";
+import { components } from "src/network/components";
 import { singletonIndex, world } from "src/network/world";
+import { entityToColor } from "src/util/color";
+import { clampedIndex, entityToAddress, getRandomRange } from "src/util/common";
+import { EntityType, RockRelationship } from "src/util/constants";
+import { entityToPlayerName } from "src/util/name";
+import { getRockRelationship } from "src/util/spacerock";
+import { getLinkedAddress } from "src/util/web2/getLinkedAddress";
 import {
   ObjectPosition,
   OnClick,
   OnComponentSystem,
+  OnHover,
+  OnOnce,
+  OnRxjsSystem,
   SetValue,
   Tween,
-  OnRxjsSystem,
-  OnOnce,
-  OnHover,
 } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
-import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
-import { Coord } from "@latticexyz/utils";
-import { ERock } from "contracts/config/enums";
-import { components } from "src/network/components";
-import { SetupResult } from "src/network/types";
-import { clampedIndex, entityToAddress, getRandomRange } from "src/util/common";
-import { EntityType, RockRelationship } from "src/util/constants";
-import { getRockRelationship } from "src/util/spacerock";
 import { ObjectText } from "../../common/object-components/text";
 import { initializeMotherlodes } from "../utils/initializeMotherlodes";
-import { throttleTime } from "rxjs";
-import { entityToPlayerName } from "src/util/name";
-import { getLinkedAddress } from "src/util/web2/getLinkedAddress";
-import { entityToColor } from "src/util/color";
 
-export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
+export const renderAsteroid = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
-  const playerEntity = mud.network.playerEntity;
 
   const render = (entity: Entity, coord: Coord) => {
     scene.objectPool.removeGroup("asteroid_" + entity);
@@ -115,6 +113,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
     ]);
 
     const asteroidOutline = asteroidObjectGroup.add("Sprite");
+    const playerEntity = components.Account.get()?.value;
     asteroidOutline.setComponents([
       ...sharedComponents,
       rotationTween,
@@ -130,11 +129,12 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         }
       }),
       OnComponentSystem(components.PlayerAlliance, (_, { entity: _entity }) => {
-        if (ownedBy !== _entity && playerEntity !== _entity) return;
+        const playerEntity = components.Account.get()?.value;
+        if (!playerEntity || (ownedBy !== _entity && playerEntity !== _entity)) return;
 
         asteroidOutline.setComponent(Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity)));
       }),
-      Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity)),
+      playerEntity ? Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity)) : undefined,
       OnClick(scene, () => {
         components.Send.setDestination(entity);
         components.SelectedRock.set({ value: entity });

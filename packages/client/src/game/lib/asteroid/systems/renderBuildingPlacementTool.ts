@@ -14,21 +14,18 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
 import { components } from "src/network/components";
-import { buildBuilding } from "src/network/setup/contractCalls/buildBuilding";
-import { SetupResult } from "src/network/types";
 import { world } from "src/network/world";
 import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
-import { Action, BuildingEnumLookup } from "src/util/constants";
+import { Action } from "src/util/constants";
 import { getRecipe, hasEnoughResources } from "src/util/recipe";
 import { ObjectPosition, OnClick, SetValue } from "../../common/object-components/common";
 import { Animation, Outline, Texture } from "../../common/object-components/sprite";
 
-export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
+export const renderBuildingPlacementTool = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_buildingPlacement";
-  const playerEntity = mud.network.playerEntity;
 
   const query = [
     Has(components.HoverTile),
@@ -59,6 +56,7 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
     const buildingDimensions = getBuildingDimensions(selectedBuilding);
 
     const hasEnough = hasEnoughResources(getRecipe(selectedBuilding, 1n));
+    const playerEntity = components.Account.get()?.value;
     const validPlacement = validateBuildingPlacement(
       tileCoord,
       selectedBuilding,
@@ -103,7 +101,7 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: SetupResult) => {
           const buildingOrigin = getBuildingOrigin(tileCoord, selectedBuilding);
           if (!buildingOrigin) return;
 
-          buildBuilding(mud.network, BuildingEnumLookup[selectedBuilding], buildingOrigin);
+          // buildBuilding(mud.network, BuildingEnumLookup[selectedBuilding], buildingOrigin);
           components.SelectedAction.remove();
           components.SelectedBuilding.remove();
         },

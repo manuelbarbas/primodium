@@ -16,8 +16,8 @@ export type BurnerAccount = Awaited<ReturnType<typeof setupBurnerAccount>>;
 export type ExternalAccount = Awaited<ReturnType<typeof setupExternalAccount>>;
 export type AnyAccount = BurnerAccount | ExternalAccount;
 
-export type PartialGame = ReturnType<typeof useSetupResult>;
-export type Game = PartialGame &
+export type PartialMUD = ReturnType<typeof useSetupResult>;
+export type MUD = PartialMUD &
   SetupResult & {
     playerAccount: AnyAccount;
   };

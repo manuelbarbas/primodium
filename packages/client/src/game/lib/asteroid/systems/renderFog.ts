@@ -46,9 +46,6 @@ export function renderFog(scene: Scene) {
     }
 
     defineComponentSystem(_gameWorld, components.Level, ({ entity }) => {
-      // const playerEntity = components.Account.get()?.value;
-      // if (components.Home.get(playerEntity)?.asteroid != entity) return;
-
       if (value[0] && value[0].value !== entity) return;
 
       const bounds = getSpaceRockBounds(entity);

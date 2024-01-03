@@ -1,6 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 // import { EResource } from "contracts/config/enums";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
+import { useMud } from "src/hooks";
 import { useRockDefense } from "src/hooks/useRockDefense";
 import { components } from "src/network/components";
 import { EntityType, ResourceImage } from "src/util/constants";

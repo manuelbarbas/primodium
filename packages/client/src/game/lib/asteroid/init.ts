@@ -1,18 +1,16 @@
 // ASTEROID MAP ENTRY POINT
-import { asteroidSceneConfig } from "../../config/asteroidScene";
-import { runSystems } from "./systems";
-import { setupTileManager } from "./setup/setupTileManager";
-import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
-import { setupMouseInputs } from "./setup/setupMouseInputs";
-import { setupKeybinds } from "./setup/setupKeybinds";
-import { SetupResult } from "src/network/types";
-import { Game } from "engine/types";
 import { AudioKeys } from "@game/constants";
+import { Game } from "engine/types";
 import { createAudioApi } from "src/game/api/audio";
+import { world } from "src/network/world";
+import { asteroidSceneConfig } from "../../config/asteroidScene";
+import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
+import { setupKeybinds } from "./setup/setupKeybinds";
+import { setupMouseInputs } from "./setup/setupMouseInputs";
+import { setupTileManager } from "./setup/setupTileManager";
+import { runSystems } from "./systems";
 
-export const initAsteroidScene = async (game: Game, mud: SetupResult) => {
-  const { world } = mud.network;
-
+export const initAsteroidScene = async (game: Game) => {
   const scene = await game.sceneManager.addScene(asteroidSceneConfig, true);
   const audio = createAudioApi(scene);
 
@@ -25,11 +23,11 @@ export const initAsteroidScene = async (game: Game, mud: SetupResult) => {
   audio.play(AudioKeys.Background, "music");
   audio.setPauseOnBlur(false);
 
-  setupMouseInputs(scene, mud);
+  setupMouseInputs(scene);
   setupBasicCameraMovement(scene);
-  setupKeybinds(scene, mud);
+  setupKeybinds(scene);
 
-  runSystems(scene, mud);
+  runSystems(scene);
 
   world.registerDisposer(() => {
     game.dispose();

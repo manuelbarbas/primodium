@@ -6,8 +6,6 @@ import { Button } from "src/components/core/Button";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { invade } from "src/network/setup/contractCalls/invade";
-import { raid } from "src/network/setup/contractCalls/raid";
 import { TransactionQueueType, UnitEntityLookup } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { Hex } from "viem";
@@ -16,8 +14,8 @@ export const Land: React.FC<{
   destination: Entity;
   rockType: ERock;
 }> = ({ destination, rockType }) => {
-  const network = useMud().network;
-  const playerEntity = network.playerEntity;
+  const { playerAccount } = useMud();
+  const playerEntity = playerAccount.entity;
   const destinationOwner = components.OwnedBy.use(destination)?.value;
   const orbiting = components.Arrival.use({
     from: playerEntity,
@@ -54,13 +52,11 @@ export const Land: React.FC<{
           clickSound={AudioKeys.Sequence7}
           onClick={() => {
             if (ERock.Motherlode === rockType) {
-              invade(destination, network, key);
-              return;
+              // invade(destination, network, key);
             }
 
             if (ERock.Asteroid === rockType) {
-              raid(destination, network, key);
-              return;
+              // raid(destination, network, key);
             }
           }}
         >
