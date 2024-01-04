@@ -36,7 +36,7 @@ contract RecallSystemTest is PrimodiumTest {
     ReversePosition.set(destinationPosition.x, destinationPosition.y, destination);
     OwnedBy.set(origin, player);
     OwnedBy.set(destination, player);
-    UnitCount.set(player, origin, unitPrototype, 20);
-    UnitCount.set(player, destination, unitPrototype, 50);
+    UnitCount.set(origin, unitPrototype, 20);
+    UnitCount.set(destination, unitPrototype, 50);
   }
 }

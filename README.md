@@ -1,4 +1,4 @@
-# Primodium v0.9.0 with Contract Hotfixes
+# Primodium v0.10.0
 
 ## Installation
 

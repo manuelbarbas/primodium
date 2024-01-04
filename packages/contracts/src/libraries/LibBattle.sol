@@ -3,8 +3,10 @@ pragma solidity >=0.8.21;
 
 import { MULTIPLIER_SCALE } from "src/constants.sol";
 import { ESendType, Arrival, EResource } from "src/Types.sol";
-import { DestroyedUnit, ResourceCount, UnitCount, UnitLevel, BattleResult, BattleResultData, P_UnitPrototypes, P_Unit, ArrivalCount, UnitCount, Home } from "codegen/index.sol";
+import { Position, DestroyedUnit, ResourceCount, UnitCount, UnitLevel, BattleResult, BattleResultData, P_UnitPrototypes, P_Unit, ArrivalCount, Home } from "codegen/index.sol";
+import { NUM_UNITS } from "src/constants.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
+import { LibSend } from "libraries/LibSend.sol";
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 
 library LibBattle {
@@ -78,7 +80,7 @@ library LibBattle {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     defenseCounts = new uint256[](unitPrototypes.length);
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      uint256 defenderUnitCount = UnitCount.get(defenderEntity, rockEntity, unitPrototypes[i]);
+      uint256 defenderUnitCount = UnitCount.get(rockEntity, unitPrototypes[i]);
       uint256 defenderLevel = UnitLevel.get(defenderEntity, unitPrototypes[i]);
       defensePoints += defenderUnitCount * P_Unit.get(unitPrototypes[i], defenderLevel).defense;
       defenseCounts[i] += defenderUnitCount;
@@ -143,12 +145,12 @@ library LibBattle {
    */
   function updateUnitsAfterBattle(BattleResultData memory br, ESendType sendType) internal {
     bytes32[] memory unitTypes = P_UnitPrototypes.get();
-    uint256[] memory unitCounts = new uint256[](unitTypes.length);
+    uint256[NUM_UNITS] memory unitCounts;
     for (uint256 i = 0; i < unitTypes.length; i++) {
       uint256 attackerUnitsLost = br.attackerStartingUnits[i] - br.attackerUnitsLeft[i];
       uint256 defenderUnitsLost = br.defenderStartingUnits[i] - br.defenderUnitsLeft[i];
 
-      LibUnit.decreaseUnitCount(br.defender, br.rock, unitTypes[i], defenderUnitsLost);
+      LibUnit.decreaseUnitCount(br.rock, unitTypes[i], defenderUnitsLost);
       LibUnit.updateStoredUtilities(Home.getAsteroid(br.attacker), unitTypes[i], attackerUnitsLost, false);
       LibUnit.updateStoredUtilities(Home.getAsteroid(br.defender), unitTypes[i], defenderUnitsLost, false);
 
@@ -156,24 +158,28 @@ library LibBattle {
       DestroyedUnit.set(br.defender, unitTypes[i], DestroyedUnit.get(br.defender, unitTypes[i]) + attackerUnitsLost);
 
       if (br.winner == br.attacker) {
-        bytes32 attackerRock = (br.attacker == br.winner && sendType == ESendType.Raid)
-          ? Home.getAsteroid(br.attacker)
-          : br.rock;
-        unitCounts[i] = br.attackerUnitsLeft[i];
-        LibUnit.increaseUnitCount(br.winner, attackerRock, unitTypes[i], br.attackerUnitsLeft[i]);
+        if (sendType == ESendType.Invade) LibUnit.increaseUnitCount(br.rock, unitTypes[i], br.attackerUnitsLeft[i]);
+        else unitCounts[i] = br.attackerUnitsLeft[i];
       }
     }
-    LibSend.sendUnits(
-      Arrival({
-        unitCounts: sendArgs.unitCounts,
-        sendTime: block.timestamp,
-        sendType: sendArgs.sendType,
-        arrivalTime: arrivalTime,
-        from: playerEntity,
-        to: sendArgs.to,
-        origin: origin,
-        destination: destination
-      })
-    );
+    if (br.winner == br.attacker) {
+      LibSend.sendUnits(
+        Arrival({
+          unitCounts: unitCounts,
+          sendTime: block.timestamp,
+          sendType: ESendType.Reinforce,
+          arrivalTime: LibSend.getArrivalTime(
+            Position.get(br.rock),
+            Position.get(Home.getAsteroid(br.attacker)),
+            br.attacker,
+            unitCounts
+          ),
+          from: br.attacker,
+          to: br.attacker,
+          origin: br.rock,
+          destination: Home.getAsteroid(br.attacker)
+        })
+      );
+    }
   }
 }

@@ -201,15 +201,15 @@ contract MarketplaceSystem is PrimodiumSystem {
     bytes32 buyerHome = Home.getAsteroid(playerEntity);
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, order.resource);
     require(
-      UnitCount.get(order.seller, sellerHome, unitPrototype) >= countBought,
+      UnitCount.get(sellerHome, unitPrototype) >= countBought,
       "[MarketplaceSystem] Seller doesn't have enough units"
     );
 
     LibUnit.updateStoredUtilities(buyerHome, unitPrototype, countBought, true);
     LibUnit.updateStoredUtilities(sellerHome, unitPrototype, countBought, false);
 
-    LibUnit.increaseUnitCount(playerEntity, buyerHome, unitPrototype, countBought);
-    LibUnit.decreaseUnitCount(order.seller, sellerHome, unitPrototype, countBought);
+    LibUnit.increaseUnitCount(buyerHome, unitPrototype, countBought);
+    LibUnit.decreaseUnitCount(sellerHome, unitPrototype, countBought);
   }
 
   function takeOrderBulk(bytes32[] memory orderId, uint256[] memory count) public {

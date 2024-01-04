@@ -398,7 +398,7 @@ export const config = mudConfig({
     },
 
     UnitCount: {
-      keySchema: { rock: "bytes32", unit: "bytes32" },
+      keySchema: { entity: "bytes32", unit: "bytes32" },
       valueSchema: "uint256",
     },
 
@@ -459,7 +459,6 @@ export const config = mudConfig({
         attacker: "bytes32",
         defender: "bytes32",
         winner: "bytes32",
-        attackerRock: "bytes32",
         rock: "bytes32",
         totalCargo: "uint256",
         timestamp: "uint256",

@@ -195,7 +195,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
 
   function testSendUnitsInvadeEmpty() public {
     setupValidInvade();
-    UnitCount.set(player, origin, unitPrototype, 100);
+    UnitCount.set(origin, unitPrototype, 100);
 
     unitData.speed = 100;
     P_Unit.set(unitPrototype, 0, unitData);
@@ -227,7 +227,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
   function testSendUnitsInvadeEnemy() public {
     setupValidInvade();
     OwnedBy.set(destination, to);
-    UnitCount.set(player, origin, unitPrototype, 100);
+    UnitCount.set(origin, unitPrototype, 100);
 
     unitData.speed = 100;
     P_Unit.set(unitPrototype, 0, unitData);
@@ -259,7 +259,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
   function testRecallSentUnitsInvadeEnemy() public {
     setupValidInvade();
     OwnedBy.set(destination, to);
-    UnitCount.set(player, origin, unitPrototype, 100);
+    UnitCount.set(origin, unitPrototype, 100);
     Home.setAsteroid(player, origin);
     unitData.speed = 100;
     P_Unit.set(unitPrototype, 0, unitData);
@@ -279,14 +279,14 @@ contract SendUnitsSystemTest is PrimodiumTest {
     world.recallAll(destination);
     assertEq(ArrivalsMap.size(player, destination), 0);
     assertEq(ArrivalCount.get(player), 0);
-    assertEq(UnitCount.get(player, destination, unitPrototype), 0);
-    assertEq(UnitCount.get(player, origin, unitPrototype), 100);
+    assertEq(UnitCount.get(destination, unitPrototype), 0);
+    assertEq(UnitCount.get(origin, unitPrototype), 100);
   }
 
   function testRecallSpecificSentUnitsInvadeEnemy() public {
     setupValidInvade();
     OwnedBy.set(destination, to);
-    UnitCount.set(player, origin, unitPrototype, 100);
+    UnitCount.set(origin, unitPrototype, 100);
     Home.setAsteroid(player, origin);
     unitData.speed = 100;
     P_Unit.set(unitPrototype, 0, unitData);
@@ -306,14 +306,14 @@ contract SendUnitsSystemTest is PrimodiumTest {
     world.recallAllOfSendType(destination, ESendType.Invade);
     assertEq(ArrivalsMap.size(player, destination), 0);
     assertEq(ArrivalCount.get(player), 0);
-    assertEq(UnitCount.get(player, destination, unitPrototype), 0);
-    assertEq(UnitCount.get(player, origin, unitPrototype), 100);
+    assertEq(UnitCount.get(destination, unitPrototype), 0);
+    assertEq(UnitCount.get(origin, unitPrototype), 100);
   }
 
   function testFailRecallSpecificSentUnitsInvadeEnemy() public {
     setupValidInvade();
     OwnedBy.set(destination, to);
-    UnitCount.set(player, origin, unitPrototype, 100);
+    UnitCount.set(origin, unitPrototype, 100);
 
     unitData.speed = 100;
     P_Unit.set(unitPrototype, 0, unitData);
@@ -336,7 +336,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
   function testSendUnitsReinforceSelf() public {
     setupValidInvade();
     OwnedBy.set(destination, player);
-    UnitCount.set(player, origin, unitPrototype, 100);
+    UnitCount.set(origin, unitPrototype, 100);
 
     unitData.speed = 100;
     P_Unit.set(unitPrototype, 0, unitData);
@@ -368,7 +368,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
   function testSendUnitsReinforceOther() public {
     setupValidInvade();
     OwnedBy.set(destination, to);
-    UnitCount.set(player, origin, unitPrototype, 100);
+    UnitCount.set(origin, unitPrototype, 100);
 
     unitData.speed = 100;
     P_Unit.set(unitPrototype, 0, unitData);
@@ -402,7 +402,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     OwnedBy.set(destination, to);
     RockType.set(destination, uint8(ERock.Asteroid));
 
-    UnitCount.set(player, origin, unitPrototype, 100);
+    UnitCount.set(origin, unitPrototype, 100);
 
     unitData.speed = 100;
     P_Unit.set(unitPrototype, 0, unitData);
@@ -458,7 +458,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     console.log("home:", uint256(Home.getAsteroid(player)));
     console.log("origin", uint256(origin));
     world.sendUnits(unitCounts, ESendType.Raid, originPosition, destinationPosition, to);
-    assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 0);
+    assertEq(UnitCount.get(Home.getAsteroid(player), unitPrototype), 0);
     vm.expectRevert();
     world.sendUnits(unitCounts, ESendType.Raid, originPosition, destinationPosition, to);
   }
@@ -466,7 +466,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
   function testSendUnitsReinforceOtherGracePeriod() public {
     setupValidInvade();
     OwnedBy.set(destination, to);
-    UnitCount.set(player, origin, unitPrototype, 100);
+    UnitCount.set(origin, unitPrototype, 100);
 
     unitData.speed = 100;
     P_Unit.set(unitPrototype, 0, unitData);
@@ -482,7 +482,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
   function testFailInvadeEnemyGracePeriod() public {
     setupValidInvade();
     OwnedBy.set(destination, to);
-    UnitCount.set(player, origin, unitPrototype, 100);
+    UnitCount.set(origin, unitPrototype, 100);
 
     unitData.speed = 100;
     P_Unit.set(unitPrototype, 0, unitData);
@@ -515,7 +515,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
     setupValidInvade();
     OwnedBy.set(destination, to);
     Spawned.set(to, true);
-    UnitCount.set(player, origin, unitPrototype, 100);
+    UnitCount.set(origin, unitPrototype, 100);
 
     unitData.speed = 100;
     P_Unit.set(unitPrototype, 0, unitData);
