@@ -1,6 +1,7 @@
 import { ContractWrite, getContract } from "@latticexyz/common";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { Subject } from "rxjs";
+import { normalizeAddress } from "src/util/common";
 import { addressToEntity } from "src/util/encode";
 import { Hex, createPublicClient, createWalletClient, custom } from "viem";
 import { toAccount } from "viem/accounts";
@@ -30,7 +31,7 @@ export async function setupExternalAccount(externalAddress: Hex) {
   return {
     worldContract,
     account: walletClient.account,
-    address: walletClient.account.address,
+    address: normalizeAddress(walletClient.account.address),
     publicClient,
     walletClient,
     entity: addressToEntity(walletClient.account.address),

@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import "react-toastify/dist/ReactToastify.min.css";
 import { WagmiConfig } from "wagmi";
+import { Connect } from "./Connect";
 import SetupResultProvider from "./SetupResultProvider";
 import { ampli } from "./ampli";
-import { Connect } from "./components/transfer/Connect";
 import { Maintenance } from "./screens/Maintenance";
 import { wagmiConfig } from "./util/web3/wagmi";
 

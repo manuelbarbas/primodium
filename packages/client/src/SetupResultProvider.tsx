@@ -14,7 +14,7 @@ const MAINTENANCE = import.meta.env.PRI_MAINTENANCE === "true";
 
 export default function SetupResultProvider() {
   const setupResult = useSetupResult();
-  const { network, updatePlayerAccount, playerAccount, components, contractCalls } = setupResult;
+  const { network, updatePlayerAccount, playerAccount, components } = setupResult;
   const externalAccount = useAccount();
 
   useEffect(() => {
@@ -46,15 +46,9 @@ export default function SetupResultProvider() {
 
   if (externalAccount.status !== "connected") return null;
 
-  if (!network || !playerAccount || !components || !contractCalls) return <Initializing />;
+  if (!network || !playerAccount || !components) return <Initializing />;
   return (
-    <MudProvider
-      {...setupResult}
-      contractCalls={contractCalls}
-      components={components}
-      network={network}
-      playerAccount={playerAccount}
-    >
+    <MudProvider {...setupResult} components={components} network={network} playerAccount={playerAccount}>
       <ToastContainer
         toastClassName={`font-mono text-xs border bg-neutral border-secondary rounded-box`}
         progressClassName={"bg-accent"}

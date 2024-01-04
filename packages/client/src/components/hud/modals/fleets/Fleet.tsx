@@ -8,9 +8,9 @@ import { FaShieldAlt } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
 import { Button } from "src/components/core/Button";
 import { Modal } from "src/components/core/Modal";
+import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
-import { useAccount } from "src/hooks/useAccount";
 import { components } from "src/network/components";
 import { invade } from "src/network/setup/contractCalls/invade";
 import { raid } from "src/network/setup/contractCalls/raid";
@@ -45,8 +45,6 @@ export const Fleet: React.FC<{
 
   const owner = components.OwnedBy.use(destination)?.value as Entity | undefined;
   const name = getSpaceRockName(destination);
-
-  const { allianceName, address, linkedAddress } = useAccount(owner);
 
   const attack = useMemo(() => {
     const units = components.Arrival.getEntity(arrivalEntity);
@@ -120,14 +118,7 @@ export const Fleet: React.FC<{
         </div>
         <div className="flex gap-5 items-center">
           <Modal.CloseButton className="btn-sm" onClick={onCoordinateClick}>
-            {owner ? (
-              <>
-                {allianceName && <span className="font-bold text-accent text-xs">[{allianceName.toUpperCase()}]</span>}
-                <p className="text-xs">{linkedAddress?.ensName ?? address}</p>
-              </>
-            ) : (
-              <p className="text-xs">{name}</p>
-            )}
+            {owner ? <AccountDisplay player={owner} /> : <p className="text-xs">{name}</p>}
           </Modal.CloseButton>
           <div className="text-right">
             {timeRemaining > 0 ? (

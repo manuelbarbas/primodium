@@ -74,6 +74,7 @@ export enum TransactionQueueType {
   Invite,
   DeclineInvite,
   Toggle,
+  Access,
 }
 
 export enum RockRelationship {

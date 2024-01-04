@@ -11,7 +11,7 @@ import { clampedIndex, entityToAddress, getRandomRange } from "src/util/common";
 import { EntityType, RockRelationship } from "src/util/constants";
 import { entityToPlayerName } from "src/util/name";
 import { getRockRelationship } from "src/util/spacerock";
-import { getLinkedAddress } from "src/util/web2/getLinkedAddress";
+import { getEnsName } from "src/util/web3/getEnsName";
 import {
   ObjectPosition,
   OnClick,
@@ -190,13 +190,11 @@ export const renderAsteroid = (scene: Scene) => {
         color: parseInt(entityToColor(ownedBy).slice(1), 16),
       }),
       OnOnce(async (gameObject) => {
-        const linkedAddress = await getLinkedAddress(entityToAddress(ownedBy));
+        const ensNameData = await getEnsName(ownedBy);
 
         const name =
-          linkedAddress.ensName ??
-          (linkedAddress.address
-            ? entityToAddress(linkedAddress.address ?? ownedBy, true)
-            : entityToPlayerName(ownedBy));
+          ensNameData.ensName ??
+          (ensNameData.address ? entityToAddress(ensNameData.address ?? ownedBy, true) : entityToPlayerName(ownedBy));
 
         gameObject.setText(name);
         gameObject.setFontSize(Math.max(8, Math.min(44, 16 / scene.camera.phaserCamera.zoom)));

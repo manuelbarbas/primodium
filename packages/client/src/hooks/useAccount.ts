@@ -4,7 +4,7 @@ import { components } from "src/network/components";
 import { getAllianceName } from "src/util/alliance";
 import { isPlayer as _isPlayer, entityToAddress } from "src/util/common";
 import { entityToPlayerName } from "src/util/name";
-import { LinkedAddressResult, getLinkedAddress } from "src/util/web2/getLinkedAddress";
+import { LinkedAddressResult, getEnsName } from "src/util/web3/getEnsName";
 import { useMud } from "./useMud";
 
 export function useAccount(player?: Entity) {
@@ -33,7 +33,7 @@ export function useAccount(player?: Entity) {
       return;
     }
     const getAddressObj = async () => {
-      const addressObj = await getLinkedAddress(entityToAddress(playerEntity));
+      const addressObj = await getEnsName(playerEntity);
       setLinkedAddress(addressObj);
       setLoading(false);
     };

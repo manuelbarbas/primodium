@@ -10,7 +10,6 @@ import { useInit } from "./hooks/useInit";
 import { components } from "./network/components";
 import { setComponentValue } from "./network/setup/contractCalls/dev";
 import { world } from "./network/world";
-import { Account } from "./screens/Account";
 import { Game } from "./screens/Game";
 import { Increment } from "./screens/Increment";
 import { Landing } from "./screens/Landing";
@@ -84,7 +83,6 @@ export default function AppLoadingState() {
               <Route path="/" element={<Landing />} />
               <Route path="/game" element={initialized ? <Game /> : <Landing />} />
               <Route path="/increment" element={<Increment />} />
-              <Route path="/account" element={<Account />} />
               <Route path="/statistics" element={<Statistics />} />
             </Routes>
           </BrowserRouter>

@@ -5,20 +5,17 @@ import { Button } from "src/components/core/Button";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
-import { normalizeAddress } from "src/util/common";
-import { Hex, createPublicClient, encodeAbiParameters, formatEther } from "viem";
+import { Hex, encodeAbiParameters, formatEther } from "viem";
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 
 interface TransferTokenProps {
   onTransfer: (address: string, amount: bigint) => Promise<void>;
   className?: string;
-  client: ReturnType<typeof createPublicClient>;
 }
 
-export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, className, client }) => {
-  const { network } = useMud();
-  const burnerAddress = normalizeAddress(network.address);
-  const [input, setInput] = useState<string>(normalizeAddress(burnerAddress) ?? "");
+export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, className }) => {
+  const mud = useMud();
+  const [input, setInput] = useState<string>(mud.sessionAccount?.address ?? "");
   const [valid, setValid] = useState<boolean>(true);
   const [address, setAddress] = useState<string | null>(null);
   const [amount, setAmount] = useState<string>("");
@@ -47,7 +44,7 @@ export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, classN
       return;
     };
     fetchEnsName(input);
-  }, [input, client]);
+  }, [input]);
 
   const chain = useNetwork().chain;
   const expectedChain = externalAccount.connector?.chains[0];
@@ -115,7 +112,7 @@ export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, classN
           onChange={(e) => setInput(e.target.value)}
           disabled={wrongChain}
         />
-        {address == burnerAddress && (
+        {address && address == mud.sessionAccount?.address && (
           <div className="absolute left-2 top-10 text-xs text-gray-500 italic">your Primodium account</div>
         )}
       </div>
