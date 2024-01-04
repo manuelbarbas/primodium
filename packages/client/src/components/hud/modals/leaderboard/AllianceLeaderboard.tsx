@@ -30,13 +30,25 @@ import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
+import {
+  acceptJoinRequest,
+  createAlliance,
+  declineInvite,
+  grantRole,
+  invite,
+  joinAlliance,
+  kickPlayer,
+  leaveAlliance,
+  rejectJoinRequest,
+  requestToJoin,
+} from "src/network/setup/contractCalls/alliance";
 import { getAllianceName } from "src/util/alliance";
 import { entityToColor } from "src/util/color";
 import { entityToAddress } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { isProfane } from "src/util/profanity";
-import { isAddress } from "viem";
+import { Hex, isAddress, padHex } from "viem";
 
 const ALLIANCE_TAG_SIZE = 6;
 
@@ -93,6 +105,7 @@ export const ScoreScreen = () => {
 };
 
 export const CreateScreen = () => {
+  const mud = useMud();
   const [inviteOnly, setInviteOnly] = useState(true);
   inviteOnly;
   const [allianceTag, setAllianceTag] = useState("");
@@ -123,9 +136,7 @@ export const CreateScreen = () => {
         <Navigator.BackButton
           disabled={!allianceTag || isProfane(allianceTag)}
           className="btn-primary btn-sm"
-          onClick={() => {
-            // createAlliance(allianceTag, inviteOnly, network);
-          }}
+          onClick={() => createAlliance(mud, allianceTag, inviteOnly)}
         >
           Create
         </Navigator.BackButton>
@@ -136,9 +147,8 @@ export const CreateScreen = () => {
 };
 
 export const ManageScreen: React.FC = () => {
-  const {
-    playerAccount: { entity: playerEntity },
-  } = useMud();
+  const mud = useMud();
+  const playerEntity = mud.playerAccount.entity;
   const data = components.AllianceLeaderboard.use();
   const allianceEntity = data?.alliances[data?.playerAllianceRank - 1];
   const playerRole = components.PlayerAlliance.get(playerEntity)?.role ?? EAllianceRole.Member;
@@ -236,7 +246,7 @@ export const ManageScreen: React.FC = () => {
                         tooltip="Kick"
                         tooltipDirection="left"
                         className="btn-xs !rounded-box border-error"
-                        // onClick={() => kickPlayer(entity, network)}
+                        onClick={() => kickPlayer(mud, entity)}
                       >
                         <FaUserMinus className="rounded-none" size={10} />
                       </Button>
@@ -249,7 +259,7 @@ export const ManageScreen: React.FC = () => {
                         tooltip="Demote"
                         tooltipDirection="left"
                         className="btn-xs !rounded-box border-warning"
-                        // onClick={() => grantRole(entity, Math.min(role + 1, EAllianceRole.Member), network)}
+                        onClick={() => grantRole(mud, entity, Math.min(role + 1, EAllianceRole.Member))}
                       >
                         <FaArrowDown />
                       </Button>
@@ -262,7 +272,7 @@ export const ManageScreen: React.FC = () => {
                         tooltip="Promote"
                         tooltipDirection="left"
                         className="btn-xs !rounded-box border-success"
-                        // onClick={() => grantRole(entity, Math.max(role - 1, EAllianceRole.CanGrantRole), network)}
+                        onClick={() => grantRole(mud, entity, Math.max(role - 1, EAllianceRole.CanGrantRole))}
                       >
                         <FaArrowUp />
                       </Button>
@@ -283,10 +293,7 @@ export const ManageScreen: React.FC = () => {
           <FaArrowLeft />
         </Navigator.BackButton>
 
-        <Navigator.BackButton
-          className="btn-error border-none"
-          // onClick={() => leaveAlliance(network)}
-        >
+        <Navigator.BackButton className="btn-error border-none" onClick={() => leaveAlliance(mud)}>
           LEAVE ALLIANCE
         </Navigator.BackButton>
       </div>
@@ -295,10 +302,11 @@ export const ManageScreen: React.FC = () => {
 };
 
 export const InvitesScreen: React.FC = () => {
-  const { playerAccount } = useMud();
-  const playerAlliance = components.PlayerAlliance.use(playerAccount.entity)?.alliance as Entity | undefined;
-  const role = components.PlayerAlliance.use(playerAccount.entity)?.role ?? EAllianceRole.Member;
-  const invites = components.PlayerInvite.useAllWith({ target: playerAccount.entity }) ?? [];
+  const mud = useMud();
+  const playerEntity = mud.playerAccount.entity;
+  const playerAlliance = components.PlayerAlliance.use(playerEntity)?.alliance as Entity | undefined;
+  const role = components.PlayerAlliance.use(playerEntity)?.role ?? EAllianceRole.Member;
+  const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
   const joinRequests = components.AllianceRequest.useAllWith({ alliance: playerAlliance ?? singletonEntity }) ?? [];
   const playerEntities = components.PlayerAlliance.useAllWith({
     alliance: playerAlliance,
@@ -347,7 +355,7 @@ export const InvitesScreen: React.FC = () => {
                           tooltip="Decline"
                           tooltipDirection="left"
                           className="btn-xs !rounded-box border-error"
-                          // onClick={() => declineInvite(playerInvite.player, network)}
+                          onClick={() => declineInvite(mud, playerInvite.player)}
                         >
                           <FaTimes className="rounded-none" size={10} />
                         </Button>
@@ -359,7 +367,7 @@ export const InvitesScreen: React.FC = () => {
                           tooltip="Accept"
                           tooltipDirection="left"
                           className="btn-xs !rounded-box border-success"
-                          // onClick={() => joinAlliance(playerInvite.alliance, network)}
+                          onClick={() => joinAlliance(mud, playerInvite.alliance)}
                         >
                           <FaCheck className="rounded-none" size={10} />
                         </Button>
@@ -405,7 +413,7 @@ export const InvitesScreen: React.FC = () => {
                             tooltip="Decline"
                             tooltipDirection="left"
                             className="btn-xs !rounded-box border-error"
-                            // onClick={() => rejectJoinRequest(request.player, network)}
+                            onClick={() => rejectJoinRequest(mud, request.player)}
                           >
                             <FaTimes className="rounded-none" size={10} />
                           </Button>
@@ -418,7 +426,7 @@ export const InvitesScreen: React.FC = () => {
                             tooltip="Accept"
                             tooltipDirection="left"
                             className="btn-xs !rounded-box border-success"
-                            // onClick={() => acceptJoinRequest(request.player, network)}
+                            onClick={() => acceptJoinRequest(mud, request.player)}
                           >
                             <FaCheck className="rounded-none" size={10} />
                           </Button>
@@ -453,9 +461,9 @@ export const InvitesScreen: React.FC = () => {
         <Tooltip text="Click to copy" direction="top">
           <Button
             className="btn-xs flex gap-1"
-            onClick={() => navigator.clipboard.writeText(entityToAddress(playerAccount.entity))}
+            onClick={() => navigator.clipboard.writeText(entityToAddress(playerEntity))}
           >
-            {entityToAddress(playerAccount.entity, true)}
+            {entityToAddress(playerEntity, true)}
             <FaCopy />
           </Button>
         </Tooltip>
@@ -465,6 +473,7 @@ export const InvitesScreen: React.FC = () => {
 };
 
 export const SendInviteScreen = () => {
+  const mud = useMud();
   const [targetAddress, setTargetAddress] = useState("");
 
   return (
@@ -489,7 +498,7 @@ export const SendInviteScreen = () => {
           disabled={!targetAddress || !isAddress(targetAddress)}
           className="btn-primary btn-sm"
           onClick={() => {
-            // invite(padHex(targetAddress as Hex, { size: 32 }) as Entity, network);
+            invite(mud, padHex(targetAddress as Hex, { size: 32 }) as Entity);
           }}
         >
           Invite
@@ -511,7 +520,8 @@ const LeaderboardItem = ({
   entity: Entity;
   className?: string;
 }) => {
-  const { playerAccount } = useMud();
+  const mud = useMud();
+  const { playerAccount } = mud;
   const allianceMode = components.Alliance.get(entity)?.inviteMode as EAllianceInviteMode | undefined;
   const playerAlliance = components.PlayerAlliance.get(playerAccount.entity)?.alliance as Entity;
   const inviteOnly = allianceMode === EAllianceInviteMode.Closed;
@@ -539,7 +549,7 @@ const LeaderboardItem = ({
                 tooltipDirection="left"
                 className={`btn-xs flex border ${inviteOnly ? "border-warning" : "border-secondary"}`}
                 onClick={() => {
-                  // inviteOnly ? requestToJoin(entity, network) : joinAlliance(entity, network);
+                  inviteOnly ? requestToJoin(mud, entity) : joinAlliance(mud, entity);
                 }}
               >
                 <FaUserPlus />

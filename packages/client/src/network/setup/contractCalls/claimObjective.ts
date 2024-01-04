@@ -13,7 +13,7 @@ export const claimObjective = async (mud: MUD, rawObjective: Entity) => {
 
   await execute(
     mud,
-    () => account.worldContract.write.claimObjective([objective]),
+    (account) => account.worldContract.write.claimObjective([objective]),
     {
       id: hashEntities(TransactionQueueType.ClaimObjective, rawObjective),
       delegate: true,

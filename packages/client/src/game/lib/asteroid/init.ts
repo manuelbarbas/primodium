@@ -2,6 +2,7 @@
 import { AudioKeys } from "@game/constants";
 import { Game } from "engine/types";
 import { createAudioApi } from "src/game/api/audio";
+import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import { asteroidSceneConfig } from "../../config/asteroidScene";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
@@ -10,7 +11,7 @@ import { setupMouseInputs } from "./setup/setupMouseInputs";
 import { setupTileManager } from "./setup/setupTileManager";
 import { runSystems } from "./systems";
 
-export const initAsteroidScene = async (game: Game) => {
+export const initAsteroidScene = async (game: Game, mud: MUD) => {
   const scene = await game.sceneManager.addScene(asteroidSceneConfig, true);
   const audio = createAudioApi(scene);
 
@@ -27,7 +28,7 @@ export const initAsteroidScene = async (game: Game) => {
   setupBasicCameraMovement(scene);
   setupKeybinds(scene);
 
-  runSystems(scene);
+  runSystems(scene, mud);
 
   world.registerDisposer(() => {
     game.dispose();

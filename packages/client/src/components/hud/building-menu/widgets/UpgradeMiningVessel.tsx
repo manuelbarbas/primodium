@@ -16,7 +16,7 @@ import { EntityType, ResourceImage } from "src/util/constants";
 import { getUpgradeInfo } from "src/util/upgrade";
 
 export const UpgradeMiningVessel: React.FC = () => {
-  const network = useMud();
+  const mud = useMud();
   const transactionLoading = useGameStore((state) => state.transactionLoading);
   const player = Account.use()?.value ?? singletonEntity;
 
@@ -77,7 +77,7 @@ export const UpgradeMiningVessel: React.FC = () => {
           className="w-fit btn-secondary btn-sm"
           disabled={!canUpgrade}
           loading={transactionLoading}
-          onClick={() => upgradeUnit(homeAsteroid, EUnit.MiningVessel, network.network)}
+          onClick={() => upgradeUnit(mud, homeAsteroid, EUnit.MiningVessel)}
         >
           UPGRADE
         </Button>

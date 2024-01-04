@@ -24,7 +24,7 @@ import { UnitFactory } from "./screens/UnitFactory";
 import { UpgradeUnit } from "./screens/UpgradeUnit";
 
 export const BuildingMenu: React.FC = () => {
-  const network = useMud().network;
+  const mud = useMud();
   const selectedBuilding = components.SelectedBuilding.use()?.value;
 
   const buildingType = useMemo(() => {
@@ -115,7 +115,7 @@ export const BuildingMenu: React.FC = () => {
             tooltipDirection="top"
             className={`btn-square btn-xs font-bold border ${active ? "border-error" : "border-success"} inline-flex`}
             onClick={() => {
-              toggleBuilding(selectedBuilding, network);
+              toggleBuilding(mud, selectedBuilding);
             }}
           >
             <FaPowerOff size={12} />

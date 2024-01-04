@@ -8,6 +8,7 @@ import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
+import { createOrder } from "src/network/setup/contractCalls/createOrder";
 import { formatNumber, getBlockTypeName } from "src/util/common";
 import { EntityType, ResourceEntityLookup, ResourceStorages, UnitEntityLookup, UnitStorages } from "src/util/constants";
 import { getScale } from "src/util/resource";
@@ -22,9 +23,9 @@ export type UserListing = {
 };
 
 export const CreateOrderForm = () => {
-  const {
-    playerAccount: { entity: playerEntity },
-  } = useMud();
+  const mud = useMud();
+  const playerEntity = mud.playerAccount.entity;
+
   // State for form fields
   const [selectedItem, setSelectedItem] = useState<Entity | "default">("default");
   const [price, setPrice] = useState("");
@@ -35,14 +36,13 @@ export const CreateOrderForm = () => {
 
   const selectedScale = selectedItem === "default" ? 1n : getScale(selectedItem);
   // Handle form submission
-  const handleSubmit = () => {};
-  // const handleSubmit = (e: React.MouseEvent | undefined) => {
-  // e?.preventDefault();
-  // const scaledPrice = BigInt(Math.round(Number(price) * (unitDisplay === "ether" ? 1e18 : 1e9))) / selectedScale;
-  // const scaledQuantity = BigInt(quantity) * selectedScale;
-  // if (selectedItem === "default") return;
-  // createOrder(selectedItem, scaledQuantity, scaledPrice, network);
-  // };
+  const handleSubmit = (e: React.MouseEvent | undefined) => {
+    e?.preventDefault();
+    const scaledPrice = BigInt(Math.round(Number(price) * (unitDisplay === "ether" ? 1e18 : 1e9))) / selectedScale;
+    const scaledQuantity = BigInt(quantity) * selectedScale;
+    if (selectedItem === "default") return;
+    createOrder(mud, selectedItem, scaledQuantity, scaledPrice);
+  };
 
   const allListings: UserListing[] = components.MarketplaceOrder.useAll().map((orderEntity) => {
     const order = components.MarketplaceOrder.get(orderEntity)!;

@@ -11,9 +11,12 @@ import { Modal } from "src/components/core/Modal";
 import { NumberInput } from "src/components/shared/NumberInput";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
+import { send } from "src/network/setup/contractCalls/send";
 import { formatNumber, getBlockTypeName } from "src/util/common";
 import { BackgroundImage, EntityType } from "src/util/constants";
-import { getMoveLength } from "src/util/send";
+import { toHex32 } from "src/util/encode";
+import { getMoveLength, toUnitCountArray } from "src/util/send";
+import { Hex } from "viem";
 import { TargetHeader } from "../../TargetHeader";
 
 export const Unit: React.FC<{ unit: Entity; count: bigint }> = ({ unit, count }) => {
@@ -82,9 +85,8 @@ export const TotalStats = () => {
 };
 
 export const SendFleet = () => {
-  const {
-    playerAccount: { entity: playerEntity },
-  } = useMud();
+  const mud = useMud();
+  const playerEntity = mud.playerAccount.entity;
 
   const origin = components.Home.get(playerEntity)?.asteroid as Entity | undefined;
   const destination = components.SelectedRock.use()?.value as Entity | undefined;
@@ -125,13 +127,13 @@ export const SendFleet = () => {
   const sendFleet = (sendType: ESendType) => {
     sendType;
     if (!origin || !destination) return;
-    // const originCoord = components.Position.get(origin) ?? { x: 0, y: 0 };
-    // const destinationCoord = components.Position.get(destination) ?? { x: 0, y: 0 };
+    const originCoord = components.Position.get(origin) ?? { x: 0, y: 0 };
+    const destinationCoord = components.Position.get(destination) ?? { x: 0, y: 0 };
 
-    // const to = components.OwnedBy.get(destination)?.value as Entity | undefined;
+    const to = components.OwnedBy.get(destination)?.value as Entity | undefined;
 
     //TODO: fix arrival units
-    // send(toUnitCountArray(fleet), sendType, originCoord, destinationCoord, (to as Hex) ?? toHex32("0"), network);
+    send(mud, toUnitCountArray(fleet), sendType, originCoord, destinationCoord, (to as Hex) ?? toHex32("0"));
 
     components.Send.reset(playerEntity);
   };

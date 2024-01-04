@@ -14,15 +14,17 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
 import { components } from "src/network/components";
+import { buildBuilding } from "src/network/setup/contractCalls/buildBuilding";
+import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
-import { Action } from "src/util/constants";
+import { Action, BuildingEnumLookup } from "src/util/constants";
 import { getRecipe, hasEnoughResources } from "src/util/recipe";
 import { ObjectPosition, OnClick, SetValue } from "../../common/object-components/common";
 import { Animation, Outline, Texture } from "../../common/object-components/sprite";
 
-export const renderBuildingPlacementTool = (scene: Scene) => {
+export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_buildingPlacement";
@@ -101,7 +103,7 @@ export const renderBuildingPlacementTool = (scene: Scene) => {
           const buildingOrigin = getBuildingOrigin(tileCoord, selectedBuilding);
           if (!buildingOrigin) return;
 
-          // buildBuilding(mud.network, BuildingEnumLookup[selectedBuilding], buildingOrigin);
+          buildBuilding(mud, BuildingEnumLookup[selectedBuilding], buildingOrigin);
           components.SelectedAction.remove();
           components.SelectedBuilding.remove();
         },

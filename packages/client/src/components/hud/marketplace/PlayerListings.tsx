@@ -158,7 +158,7 @@ export const PlayerListings = ({
 };
 
 const Listing = ({ listing, availableResource }: { listing: UserListing; availableResource: bigint }) => {
-  const { network } = useMud();
+  const mud = useMud();
   const [listingUpdate, setListingUpdate] = useState<{ newPrice?: bigint; newCount?: bigint }>();
   const unitDisplay = useSettingsStore((state) => state.unitDisplay);
 
@@ -231,16 +231,16 @@ const Listing = ({ listing, availableResource }: { listing: UserListing; availab
       <td className="text-center">
         <Button
           disabled={!priceDiff && !countDiff}
-          onClick={() => {
-            updateOrder(listing.id, listing.item, newPrice || listing.price, newCount || listing.count, network);
-          }}
+          onClick={() =>
+            updateOrder(mud, listing.id, listing.item, newPrice || listing.price, newCount || listing.count)
+          }
           className="btn-primary btn-sm"
         >
           Update
         </Button>
       </td>
       <td className="text-center">
-        <Button onClick={() => cancelOrder(listing.id, network)} className="btn-error btn-sm">
+        <Button onClick={() => cancelOrder(mud, listing.id)} className="btn-error btn-sm">
           <FaTrash />
         </Button>
       </td>

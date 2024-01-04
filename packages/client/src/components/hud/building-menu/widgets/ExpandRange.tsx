@@ -7,13 +7,15 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
+import { upgradeRange } from "src/network/setup/contractCalls/upgradeRange";
 import { getBlockTypeName } from "src/util/common";
 import { EntityType, ResourceImage, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { getUpgradeInfo } from "src/util/upgrade";
 
 export const ExpandRange: React.FC = () => {
-  const { playerAccount, contractCalls } = useMud();
+  const mud = useMud();
+  const { playerAccount } = mud;
   const mainBaseEntity = components.Home.use(playerAccount.entity)?.mainBase as Entity;
   const mainBaseLevel = components.Level.use(mainBaseEntity, {
     value: 1n,
@@ -68,10 +70,7 @@ export const ExpandRange: React.FC = () => {
           <Button
             className="w-fit btn-secondary btn-sm"
             disabled={!canUpgrade}
-            // loading={transactionLoading}
-            onClick={() => {
-              contractCalls.upgradeRange(playerAccount, homeAsteroid);
-            }}
+            onClick={() => upgradeRange(mud, homeAsteroid)}
           >
             Expand
           </Button>

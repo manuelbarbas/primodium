@@ -14,7 +14,7 @@ import { ResourceImage, ResourceType } from "src/util/constants";
 import { getFullResourceCount } from "src/util/resource";
 
 export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
-  const network = useMud().network;
+  const mud = useMud();
 
   const name = useBuildingName(building);
 
@@ -57,7 +57,7 @@ export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
             disabled={!!blockingResource}
             className="btn-error btn-sm"
             onClick={() => {
-              demolishBuilding(building, network);
+              demolishBuilding(mud, building);
               components.SelectedBuilding.remove();
             }}
           >

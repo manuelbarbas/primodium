@@ -17,6 +17,7 @@ import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { components as comps } from "src/network/components";
+import { claimObjective } from "src/network/setup/contractCalls/claimObjective";
 import { formatNumber, getBlockTypeName } from "src/util/common";
 import {
   BackgroundImage,
@@ -41,6 +42,7 @@ import { Hex } from "viem";
 const ClaimObjectiveButton: React.FC<{
   objectiveEntity: Entity;
 }> = ({ objectiveEntity }) => {
+  const mud = useMud();
   const time = Time.use()?.value;
   const levelRequirement = comps.Level.use(objectiveEntity);
   const objectiveClaimedRequirement = comps.CompletedObjective.use(objectiveEntity);
@@ -79,7 +81,7 @@ const ClaimObjectiveButton: React.FC<{
           className={`btn-sm btn-secondary border-accent w-full`}
           clickSound={AudioKeys.Complete2}
           onClick={() => {
-            // claimObjective(objectiveEntity, network.network);
+            claimObjective(mud, objectiveEntity);
           }}
         >
           {"Claim"}

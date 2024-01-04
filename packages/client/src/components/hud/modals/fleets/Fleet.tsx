@@ -152,7 +152,7 @@ export const OrbitActionButton: React.FC<{
   sendType: ESendType;
   small?: boolean;
 }> = ({ arrivalEntity, sendType, small }) => {
-  const network = useMud().network;
+  const mud = useMud();
   const destination = components.Arrival.getEntity(arrivalEntity)?.destination;
   if (!destination) return <></>;
 
@@ -161,17 +161,17 @@ export const OrbitActionButton: React.FC<{
 
   const action =
     sendType == ESendType.Invade
-      ? () => invade(destination, network, key)
+      ? () => invade(mud, destination, key)
       : sendType == ESendType.Raid
-      ? () => raid(destination, network, key)
-      : () => reinforce(arrivalEntity, network);
+      ? () => raid(mud, destination, key)
+      : () => reinforce(mud, arrivalEntity);
 
   return (
     <TransactionQueueMask queueItemId={transactionId as Entity}>
       <div className={`flex gap-1 ${small ? "flex-col-reverse gap-0" : ""}`}>
         <Button
           className={`${small ? "btn-xs" : "btn-sm"} opacity-75`}
-          onClick={() => recallArrival(arrivalEntity, network)}
+          onClick={() => recallArrival(mud, arrivalEntity)}
         >
           RECALL
         </Button>

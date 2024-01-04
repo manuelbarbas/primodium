@@ -11,6 +11,7 @@ import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { ValueSansMetadata } from "src/network/components/customComponents/ExtendedComponent";
+import { claimUnits } from "src/network/setup/contractCalls/claimUnits";
 import { createHangar } from "src/network/systems/setupHangar";
 import { formatNumber } from "src/util/common";
 import { ResourceEntityLookup, ResourceImage, UnitEntityLookup } from "src/util/constants";
@@ -201,7 +202,8 @@ const AvailableListing = ({
   className?: string;
   setOrder: (orderId: Entity, count: bigint) => void;
 }) => {
-  const { playerAccount } = useMud();
+  const mud = useMud();
+  const { playerAccount } = mud;
   const [isSpinning, setIsSpinning] = useState(false);
 
   const entity =
@@ -239,7 +241,7 @@ const AvailableListing = ({
     setTimeout(() => setIsSpinning(false), 3000);
 
     if (listing.orderType === EOrderType.Resource || !sellerHome) return;
-    // claimUnits(sellerHome, network);
+    claimUnits(mud, sellerHome);
   };
 
   // if (listing.price === 0n || count === 0) return <></>;

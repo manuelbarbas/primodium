@@ -8,14 +8,17 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
+import { upgradeUnit } from "src/network/setup/contractCalls/upgradeUnit";
 import { getBlockTypeName } from "src/util/common";
-import { BackgroundImage, ResourceImage, TransactionQueueType } from "src/util/constants";
+import { BackgroundImage, ResourceImage, TransactionQueueType, UnitEnumLookup } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { getUpgradeInfo } from "src/util/upgrade";
 
 export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
-  const { playerAccount } = useMud();
+  const mud = useMud();
+  const { playerAccount } = mud;
   const mainBaseEntity = components.Home.use(playerAccount.entity)?.mainBase as Entity;
+  const homeAsteroid = components.Home.use(playerAccount.entity)?.asteroid as Entity;
   const mainBaseLevel = components.Level.use(mainBaseEntity, {
     value: 1n,
   }).value;
@@ -79,9 +82,7 @@ export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
         <Button
           className="btn-sm btn-secondary"
           disabled={!canUpgrade}
-          onClick={() => {
-            // contractCalls.upgradeUnit(homeAsteroid, UnitEnumLookup[type]);
-          }}
+          onClick={() => upgradeUnit(mud, homeAsteroid, UnitEnumLookup[type])}
         >
           Upgrade
         </Button>

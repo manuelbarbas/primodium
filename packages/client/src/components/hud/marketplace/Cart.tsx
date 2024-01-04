@@ -10,6 +10,7 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
+import { takeOrders } from "src/network/setup/contractCalls/takeOrders";
 import { getBlockTypeName } from "src/util/common";
 import { ResourceEntityLookup, ResourceImage, UnitEntityLookup } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
@@ -23,13 +24,15 @@ export const Cart = ({
   removeOrder: (id: Entity) => void;
   clearOrders: () => void;
 }) => {
-  const {
-    playerAccount: { entity: playerEntity },
-  } = useMud();
+  const mud = useMud();
+  const playerEntity = mud.playerAccount.entity;
+
   const balance = components.WETHBalance.use(playerEntity)?.value ?? 0n;
+
   const allListings = components.MarketplaceOrder.useAll().map((order) => {
     return { ...components.MarketplaceOrder.get(order)!, id: order };
   });
+
   const unitDisplay = useSettingsStore((state) => state.unitDisplay);
 
   const takenOrdersFullData = useMemo(() => {
@@ -94,8 +97,8 @@ export const Cart = ({
             className="btn-secondary h-full btn-sm"
             disabled={Object.keys(takenOrders).length === 0}
             onClick={() => {
-              // takeOrders(takenOrders, network);
-              // clearOrders();
+              takeOrders(mud, takenOrders);
+              clearOrders();
             }}
           >
             Buy

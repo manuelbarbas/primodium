@@ -60,14 +60,15 @@ export const TargetInfo = () => {
 };
 
 export const Recall = ({ rock }: { rock: Entity }) => {
-  const { network } = useMud();
+  const mud = useMud();
+  const playerEntity = mud.playerAccount.entity;
   const units = components.Hangar.use(rock, {
     units: [],
     counts: [],
   });
 
-  const ownedByPlayer = components.OwnedBy.get(rock)?.value === network.playerEntity;
-  const arrivals = components.Arrival.use({ destination: rock, from: network.playerEntity, onlyOrbiting: true });
+  const ownedByPlayer = components.OwnedBy.get(rock)?.value === playerEntity;
+  const arrivals = components.Arrival.use({ destination: rock, from: playerEntity, onlyOrbiting: true });
   const getUnitCount = useCallback(
     (unit: Entity) => {
       if (!units) return 0n;
@@ -131,7 +132,7 @@ export const Recall = ({ rock }: { rock: Entity }) => {
                 ))}
               </div>
             )}
-            <Button onClick={() => recallStationedUnits(rock, network)} disabled={totalUnits == 0n}>
+            <Button onClick={() => recallStationedUnits(mud, rock)} disabled={totalUnits == 0n}>
               Recall Stationed Units
             </Button>
           </SecondaryCard>

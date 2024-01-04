@@ -8,6 +8,7 @@ import { NumberInput } from "src/components/shared/NumberInput";
 import { useMud } from "src/hooks";
 import { useMaxCountOfRecipe } from "src/hooks/useMaxCountOfRecipe";
 import { components } from "src/network/components";
+import { train } from "src/network/setup/contractCalls/train";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage, EntityType, ResourceImage, UnitEnumLookup } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
@@ -18,7 +19,8 @@ import { ResourceIconTooltip } from "../../../shared/ResourceIconTooltip";
 export const BuildUnit: React.FC<{
   building: Entity;
 }> = ({ building }) => {
-  const { playerAccount, contractCalls } = useMud();
+  const mud = useMud();
+  const { playerAccount } = mud;
   const [selectedUnit, setSelectedUnit] = useState<Entity>();
   const [count, setCount] = useState(1);
 
@@ -129,7 +131,7 @@ export const BuildUnit: React.FC<{
                   onClick={() => {
                     if (!selectedUnit) return;
 
-                    contractCalls.train(playerAccount, building, UnitEnumLookup[selectedUnit], BigInt(count));
+                    train(mud, building, UnitEnumLookup[selectedUnit], BigInt(count));
                   }}
                 >
                   Train

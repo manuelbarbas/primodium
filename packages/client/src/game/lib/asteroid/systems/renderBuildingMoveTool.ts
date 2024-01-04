@@ -14,13 +14,15 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
 import { components } from "src/network/components";
+import { moveBuilding } from "src/network/setup/contractCalls/moveBuilding";
+import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
 import { Action } from "src/util/constants";
 import { ObjectPosition, OnClick, SetValue } from "../../common/object-components/common";
 import { Animation, Outline, Texture } from "../../common/object-components/sprite";
 
-export const renderBuildingMoveTool = (scene: Scene) => {
+export const renderBuildingMoveTool = (scene: Scene, mud: MUD) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_buildingMove";
@@ -93,7 +95,7 @@ export const renderBuildingMoveTool = (scene: Scene) => {
           const buildingOrigin = getBuildingOrigin(tileCoord, buildingPrototype);
           if (!buildingOrigin) return;
 
-          // moveBuilding(mud.network, selectedBuilding, buildingOrigin);
+          moveBuilding(mud, selectedBuilding, buildingOrigin);
           components.SelectedAction.remove();
         },
         true

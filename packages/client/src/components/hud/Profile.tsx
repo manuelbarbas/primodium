@@ -19,7 +19,8 @@ import { CurrencyDisplay } from "../shared/CurrencyDisplay";
 
 export const Profile = () => {
   const {
-    playerAccount: { entity: playerEntity },
+    playerAccount: { entity: playerEntity, address },
+    sessionAccount,
   } = useMud();
   const { linkedAddress, loading, wETHBalance } = useAccount(playerEntity);
   const mainBase = components.Home.use(playerEntity)?.mainBase;
@@ -89,6 +90,11 @@ export const Profile = () => {
             )}
           </Button>
         )}
+      </div>
+
+      <div className="pointer-events-none text-xs">
+        Session Account: {sessionAccount?.address ?? ""} <hr />
+        Player Account : {address}
       </div>
     </div>
   );

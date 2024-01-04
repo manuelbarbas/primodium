@@ -5,14 +5,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "src/components/core/Button";
 import { useMud } from "src/hooks/useMud";
 import { components } from "src/network/components";
+import { spawn } from "src/network/setup/contractCalls/spawn";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { useNetwork, useSwitchNetwork } from "wagmi";
 
 const params = new URLSearchParams(window.location.search);
 export const Landing: React.FC = () => {
   const [message, setMessage] = useState<string | null>();
-  const { playerAccount, contractCalls } = useMud();
-  const playerEntity = playerAccount.entity;
+  const mud = useMud();
+  const playerEntity = mud.playerAccount.entity;
   const navigate = useNavigate();
   const location = useLocation();
   const hasSpawned = !!components.Home.use(playerEntity)?.asteroid;
@@ -21,7 +22,7 @@ export const Landing: React.FC = () => {
     setMessage("Spawning Player Asteroid...");
     if (!hasSpawned) {
       try {
-        await contractCalls.spawn(playerAccount);
+        await spawn(mud);
       } catch {
         setMessage("Failed to spawn asteroid...Retry");
       }
@@ -31,7 +32,7 @@ export const Landing: React.FC = () => {
   };
 
   const chain = useNetwork().chain;
-  const expectedChain = playerAccount.walletClient.chain;
+  const expectedChain = mud.playerAccount.walletClient.chain;
   const wrongChain = chain?.id !== expectedChain?.id;
   const { isLoading, pendingChainId, switchNetwork } = useSwitchNetwork();
 

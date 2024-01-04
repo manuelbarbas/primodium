@@ -1,8 +1,3 @@
-import { encodeField } from "@latticexyz/protocol-parser";
-import { ComponentValue, Entity, Schema } from "@latticexyz/recs";
-import { StaticAbiType } from "@latticexyz/schema-type";
-import { entityToHexKeyTuple } from "@latticexyz/store-sync/recs";
-import { ContractComponent } from "@primodiumxyz/mud-game-tools";
 import { MUDEnums } from "contracts/config/enums";
 import ERC20Abi from "contracts/out/ERC20System.sol/ERC20System.abi.json";
 import { useEffect, useState } from "react";
@@ -100,29 +95,6 @@ export const MintToken: React.FC<MintTokenProps> = ({ onMint, className, client 
     console.log("all success:", success);
     console.log("all failed:", failed);
   };
-
-  async function setComponentValue<S extends Schema>(
-    component: ContractComponent<S>,
-    entity: Entity,
-    newValues: Partial<ComponentValue<S>>
-  ) {
-    const tableId = component.id as Hex;
-    const key = entityToHexKeyTuple(entity);
-
-    const schema = Object.keys(component.metadata.valueSchema);
-    Object.entries(newValues).forEach(async ([name, value]) => {
-      const type = component.metadata.valueSchema[name] as StaticAbiType;
-      const data = encodeField(type, value);
-      const schemaIndex = schema.indexOf(name);
-      try {
-        const tx = await network.worldContract.write.setField([tableId, key, schemaIndex, data]);
-        await network.waitForTransaction(tx);
-        toast.success(`set ${name} to ${value} on ${entity}`);
-      } catch (e) {
-        toast.error(`failed to set ${name} to ${value} on ${entity}`);
-      }
-    });
-  }
 
   const getResourceValues = (resourceValues: Record<string, number>) => {
     // unzip the array

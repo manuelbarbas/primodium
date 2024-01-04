@@ -9,7 +9,7 @@ import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage } from "src/util/constants";
 
 export const StationedUnits: React.FC = () => {
-  const network = useMud().network;
+  const mud = useMud();
 
   const destination = components.Send.get()?.destination;
   const { units, counts } = components.Hangar.use(destination, {
@@ -51,7 +51,7 @@ export const StationedUnits: React.FC = () => {
       <div className="flex gap-2 mt-1">
         <Navigator.BackButton
           className="btn-secondary border-none"
-          onClick={() => recallStationedUnits(destination ?? singletonEntity, network)}
+          onClick={() => recallStationedUnits(mud, destination ?? singletonEntity)}
         >
           RECALL
         </Navigator.BackButton>
