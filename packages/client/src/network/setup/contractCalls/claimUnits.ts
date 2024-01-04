@@ -1,16 +1,17 @@
 import { Entity } from "@latticexyz/recs";
 import { execute } from "src/network/actions";
-import { AnyAccount, SetupNetworkResult } from "src/network/types";
+import { MUD } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { Hex } from "viem";
 
-export const claimUnits = async (network: SetupNetworkResult, account: AnyAccount, rock: Entity) => {
+export const claimUnits = async (mud: MUD, rock: Entity) => {
   await execute(
-    () => account.worldContract.write.claimUnits([rock as Hex]),
-    network,
+    mud,
+    (account) => account.worldContract.write.claimUnits([rock as Hex]),
     {
       id: hashEntities(TransactionQueueType.ClaimObjective, rock),
+      delegate: true,
     },
     () => {
       null;

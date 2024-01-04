@@ -101,7 +101,6 @@ const useSetupResult = () => {
   return {
     network: network?.network,
     components: network?.components,
-    contractCalls: network?.contractCalls,
     sessionAccount,
     playerAccount,
     updateSessionAccount,

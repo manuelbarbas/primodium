@@ -1,24 +1,21 @@
 import { Entity } from "@latticexyz/recs";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
-import { AnyAccount, SetupNetworkResult } from "src/network/types";
+import { MUD } from "src/network/types";
 import { bigintToNumber } from "src/util/bigint";
 import { hashEntities } from "src/util/encode";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const takeOrders = async (
-  network: SetupNetworkResult,
-  account: AnyAccount,
-  rawOrders: Record<Entity, bigint>
-) => {
+export const takeOrders = async (mud: MUD, rawOrders: Record<Entity, bigint>) => {
   const counts = Object.values(rawOrders);
   const orderIds = Object.keys(rawOrders) as Hex[];
   await execute(
-    () => account.worldContract.write.takeOrderBulk([orderIds, counts]),
-    network,
+    mud,
+    (account) => account.worldContract.write.takeOrderBulk([orderIds, counts]),
     {
-      id: hashEntities(...[account.entity, ...orderIds]),
+      id: hashEntities(mud.playerAccount.entity, ...orderIds),
+      delegate: true,
     },
     (receipt) => {
       ampli.systemTakeOrderBulk({

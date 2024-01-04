@@ -3,18 +3,18 @@ import { ESendType } from "contracts/config/enums";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
-import { AnyAccount, SetupNetworkResult } from "src/network/types";
+import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import { bigintToNumber } from "src/util/bigint";
 import { UnitEnumLookup } from "src/util/constants";
 import { toHex32 } from "src/util/encode";
+import { UnitCountTuple } from "src/util/web3/types";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
-import { UnitCountTuple } from "../../../util/web3/types";
 
 export const send = async (
-  network: SetupNetworkResult,
-  account: AnyAccount,
+  mud: MUD,
+
   unitCounts: UnitCountTuple,
   sendType: ESendType,
   origin: Coord,
@@ -22,7 +22,8 @@ export const send = async (
   to: Hex
 ) => {
   await execute(
-    () =>
+    mud,
+    (account) =>
       account.worldContract.write.sendUnits([
         unitCounts,
         sendType,
@@ -30,9 +31,9 @@ export const send = async (
         { ...destination, parent: toHex32("0") },
         to,
       ]),
-    network,
     {
       id: world.registerEntity(),
+      delegate: true,
     },
     (receipt) => {
       const originAsteroid = components.ReversePosition.getWithKeys({ x: origin.x, y: origin.y })?.entity;

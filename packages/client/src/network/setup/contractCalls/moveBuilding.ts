@@ -3,7 +3,7 @@ import { Coord } from "@latticexyz/utils";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
-import { AnyAccount, SetupNetworkResult } from "src/network/types";
+import { MUD } from "src/network/types";
 import { bigintToNumber } from "src/util/bigint";
 import { getBuildingTopLeft } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
@@ -12,14 +12,9 @@ import { hashEntities } from "src/util/encode";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const moveBuilding = async (
-  network: SetupNetworkResult,
-  account: AnyAccount,
-  building: Entity,
-  coord: Coord
-) => {
+export const moveBuilding = async (mud: MUD, building: Entity, coord: Coord) => {
   // todo: find a cleaner way to extract this value in all web3 functions
-  const activeAsteroid = components.Home.get(account.entity)?.asteroid;
+  const activeAsteroid = components.Home.get(mud.playerAccount.entity)?.asteroid;
   if (!activeAsteroid) return;
 
   const prevPosition = components.Position.get(building);
@@ -29,9 +24,11 @@ export const moveBuilding = async (
   if (!prevPosition || !buildingType) return;
 
   await execute(
-    () => account.worldContract.write.moveBuilding([{ ...prevPosition, parent: prevPosition.parent as Hex }, position]),
-    network,
+    mud,
+    (account) =>
+      account.worldContract.write.moveBuilding([{ ...prevPosition, parent: prevPosition.parent as Hex }, position]),
     {
+      delegate: true,
       id: hashEntities(TransactionQueueType.Move, building),
       type: TransactionQueueType.Move,
       metadata: {
@@ -40,7 +37,7 @@ export const moveBuilding = async (
       },
     },
     (receipt) => {
-      const asteroid = components.Home.get(account.entity)?.asteroid;
+      const asteroid = components.Home.get(mud.playerAccount.entity)?.asteroid;
       const buildingType = components.BuildingType.get(building)?.value as Entity;
       const currLevel = components.Level.get(building)?.value || 0;
 

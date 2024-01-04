@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
-import { AnyAccount, SetupNetworkResult } from "src/network/types";
+import { MUD } from "src/network/types";
 import { bigintToNumber } from "src/util/bigint";
 import { getBlockTypeName } from "src/util/common";
 import { ResourceEnumLookup, UnitEnumLookup } from "src/util/constants";
@@ -10,22 +10,15 @@ import { getScale } from "src/util/resource";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const updateOrder = async (
-  network: SetupNetworkResult,
-  account: AnyAccount,
-  id: Entity,
-  rawResource: Entity,
-  price: bigint,
-  count: bigint
-) => {
+export const updateOrder = async (mud: MUD, id: Entity, rawResource: Entity, price: bigint, count: bigint) => {
   const resource = ResourceEnumLookup[rawResource] ?? UnitEnumLookup[rawResource];
   if (!resource) throw new Error("Invalid resource or unit");
-  console.log("updating", id, getBlockTypeName(rawResource), count, price);
   await execute(
-    () => account.worldContract.write.updateOrder([id as Hex, resource, count, price]),
-    network,
+    mud,
+    (account) => account.worldContract.write.updateOrder([id as Hex, resource, count, price]),
     {
-      id: hashEntities(account.entity, id, rawResource),
+      id: hashEntities(mud.playerAccount.entity, id, rawResource),
+      delegate: true,
     },
     (receipt) => {
       const scale = getScale(rawResource);
@@ -43,12 +36,13 @@ export const updateOrder = async (
   );
 };
 
-export const cancelOrder = async (network: SetupNetworkResult, account: AnyAccount, id: Entity) => {
+export const cancelOrder = async (mud: MUD, id: Entity) => {
   await execute(
-    () => account.worldContract.write.cancelOrder([id as Hex]),
-    network,
+    mud,
+    (account) => account.worldContract.write.cancelOrder([id as Hex]),
     {
-      id: hashEntities(account.entity, id),
+      id: hashEntities(mud.playerAccount.entity, id),
+      delegate: true,
     },
     (receipt) => {
       ampli.systemCancelOrder({

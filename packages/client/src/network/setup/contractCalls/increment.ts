@@ -1,10 +1,14 @@
+import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { execute } from "src/network/actions";
 import { components } from "src/network/components";
-import { AnyAccount, SetupNetworkResult } from "src/network/types";
+import { MUD } from "src/network/types";
 
-export const increment = async (network: SetupNetworkResult, account: AnyAccount) => {
+export const increment = async (mud: MUD, delegate?: boolean) => {
   components.CurrentTransaction.set({ value: true });
-  const tx = await account.worldContract.write.increment();
-  await network.waitForTransaction(tx);
+  await execute(mud, (account) => account.worldContract.write.increment(), {
+    id: singletonEntity,
+    delegate: delegate ?? false,
+  });
 
   components.CurrentTransaction.set({ value: false });
   return components.Counter.get();

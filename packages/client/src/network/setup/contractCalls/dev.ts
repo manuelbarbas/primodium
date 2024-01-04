@@ -3,25 +3,24 @@ import { ComponentValue, Entity, Schema } from "@latticexyz/recs";
 import { StaticAbiType } from "@latticexyz/schema-type";
 import { entityToHexKeyTuple } from "@latticexyz/store-sync/recs";
 import { ContractComponent } from "@primodiumxyz/mud-game-tools";
-import { AnyAccount, SetupNetworkResult } from "src/network/types";
+import { execute } from "src/network/actions";
+import { MUD } from "src/network/types";
+import { hashEntities } from "src/util/encode";
 import { Hex } from "viem";
 
-export async function removeComponent<S extends Schema>(
-  network: SetupNetworkResult,
-  account: AnyAccount,
-  component: ContractComponent<S>,
-  entity: Entity
-) {
+export async function removeComponent<S extends Schema>(mud: MUD, component: ContractComponent<S>, entity: Entity) {
   const tableId = component.id as Hex;
   const key = entityToHexKeyTuple(entity);
 
-  const tx = await account.worldContract.write.devDeleteRecord([tableId, key]);
-  await network.waitForTransaction(tx);
+  await execute(mud, (account) => account.worldContract.write.devDeleteRecord([tableId, key]), {
+    id: hashEntities(tableId, entity),
+    delegate: true,
+  });
 }
 
 export async function setComponentValue<S extends Schema>(
-  network: SetupNetworkResult,
-  account: AnyAccount,
+  mud: MUD,
+
   component: ContractComponent<S>,
   entity: Entity,
   newValues: Partial<ComponentValue<S>>
@@ -34,7 +33,9 @@ export async function setComponentValue<S extends Schema>(
     const type = component.metadata.valueSchema[name] as StaticAbiType;
     const data = encodeField(type, value);
     const schemaIndex = schema.indexOf(name);
-    const tx = await account.worldContract.write.devSetField([tableId, key, schemaIndex, data]);
-    await network.waitForTransaction(tx);
+    await execute(mud, (account) => account.worldContract.write.devSetField([tableId, key, schemaIndex, data]), {
+      id: hashEntities(tableId, entity),
+      delegate: true,
+    });
   });
 }
