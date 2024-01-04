@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
+import { P_UnitPrototypes, IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
 
 import { ERock, EUnit } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
 import { UnitKey } from "src/Keys.sol";
-import { WORLD_SPEED_SCALE } from "src/constants.sol";
+import { WORLD_SPEED_SCALE, NUM_UNITS } from "src/constants.sol";
 
 library LibUnit {
   function getUnitCountOnHomeAsteroid(bytes32 playerEntity, bytes32 unitType) internal view returns (uint256) {
@@ -210,5 +210,23 @@ library LibUnit {
     require(prevProductionRate >= productionRate * unitCount, "[LibUnit] Production rate cannot be negative");
     ProductionRate.set(rockEntity, resource, prevProductionRate - (productionRate * unitCount));
     ConsumptionRate.set(rockEntity, P_RawResource.get(resource), prevProductionRate - (productionRate * unitCount));
+  }
+
+  /**
+   * @dev Calculates the attack points for an attacker entity based on arrivals and send type.
+   * @param  playerEntity The identifier of the player entity.
+   * @param  unitCounts the unit counts for which to calculate the cargo
+   * @return cargo The total cargo points.
+   */
+  function getTotalCargo(bytes32 playerEntity, uint256[NUM_UNITS] calldata unitCounts)
+    internal
+    returns (uint256 cargo)
+  {
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    for (uint256 j = 0; j < unitPrototypes.length; j++) {
+      if (unitCounts[j] == 0) continue;
+      uint256 unitLevel = UnitLevel.get(playerEntity, unitPrototypes[j]);
+      cargo += unitCounts[j] * P_Unit.get(unitPrototypes[j], unitLevel).cargo;
+    }
   }
 }

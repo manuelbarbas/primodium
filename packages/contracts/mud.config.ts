@@ -436,16 +436,23 @@ export const config = mudConfig({
 
     FleetStatus: {
       keySchema: { entity: "bytes32" },
-      valueSchema: { origin: "bytes32", destination: "bytes32", timeOfDeparture: "uint256", timeOfArrival: "uint256" },
+      valueSchema: {
+        origin: "bytes32",
+        destination: "bytes32",
+        sendTime: "uint256",
+        arrivalTime: "uint256",
+        resourceStorage: "uint256",
+        occupiedStorage: "uint256",
+      },
     },
 
-    MapIncomingFleets: {
-      keySchema: { asteroid: "bytes32" },
+    MapFleets: {
+      keySchema: { entity: "bytes32" },
       valueSchema: { itemKeys: "bytes32[]" },
     },
 
-    MapStoredIncomingFleets: {
-      keySchema: { asteroid: "bytes32", fleetEntity: "bytes32" },
+    MapStoredFleets: {
+      keySchema: { entity: "bytes32", fleetId: "bytes32" },
       valueSchema: {
         stored: "bool",
         index: "uint256",
