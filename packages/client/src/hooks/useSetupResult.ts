@@ -82,21 +82,25 @@ const useSetupResult = () => {
     [playerAccount?.address, requestDrip]
   );
 
-  const updatePlayerAccount = useCallback(
-    (address: Hex) => {
-      setupExternalAccount(address).then((account) => {
-        setPlayerAccount(account);
+  function updatePlayerAccount(options: { address: Hex }): void;
+  function updatePlayerAccount(options: { burner: true }): void;
+  function updatePlayerAccount(options: { address?: Hex; burner?: boolean }) {
+    const useBurner = options.burner;
+    const address = options.address;
+    if (!useBurner && !address) throw new Error("Must provide address or burner option");
+    (useBurner ? setupBurnerAccount() : setupExternalAccount(address!)).then((account) => {
+      setPlayerAccount(account);
 
-        if (account.address === sessionAccount?.address) return;
-        if (playerAccountInterval.current) {
-          clearInterval(playerAccountInterval.current);
-        }
-        requestDrip(account.address);
-        playerAccountInterval.current = setInterval(() => requestDrip(account.address), 4000);
-      });
-    },
-    [requestDrip, sessionAccount?.address]
-  );
+      if (account.address === sessionAccount?.address) return;
+      if (playerAccountInterval.current) {
+        clearInterval(playerAccountInterval.current);
+      }
+      requestDrip(account.address);
+      playerAccountInterval.current = setInterval(() => requestDrip(account.address), 4000);
+    });
+  }
+
+  const memoizedUpdatePlayerAccount = useCallback(updatePlayerAccount, [requestDrip, sessionAccount?.address]);
 
   return {
     network: network?.network,
@@ -104,7 +108,7 @@ const useSetupResult = () => {
     sessionAccount,
     playerAccount,
     updateSessionAccount,
-    updatePlayerAccount,
+    updatePlayerAccount: memoizedUpdatePlayerAccount,
   };
 };
 

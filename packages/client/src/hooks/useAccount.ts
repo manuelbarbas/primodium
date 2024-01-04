@@ -7,7 +7,7 @@ import { entityToPlayerName } from "src/util/name";
 import { LinkedAddressResult, getEnsName } from "src/util/web3/getEnsName";
 import { useMud } from "./useMud";
 
-export function useAccount(player?: Entity) {
+export function useAccount(player?: Entity, noName?: boolean) {
   const { playerAccount } = useMud();
   const playerEntity = player ?? playerAccount.entity;
   const [linkedAddress, setLinkedAddress] = useState<LinkedAddressResult>();
@@ -23,9 +23,11 @@ export function useAccount(player?: Entity) {
       linkedAddress.ensName ??
       (linkedAddress.address
         ? entityToAddress(linkedAddress.address ?? playerEntity, true)
+        : noName
+        ? entityToAddress(playerEntity)
         : entityToPlayerName(playerEntity))
     );
-  }, [linkedAddress, playerEntity]);
+  }, [linkedAddress, playerEntity, noName]);
 
   useEffect(() => {
     if (!isPlayer) {

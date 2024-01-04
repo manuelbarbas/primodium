@@ -8,17 +8,17 @@ import { world } from "src/network/world";
 import { parseReceipt } from "src/util/analytics/parseReceipt";
 import { Hex, getContract } from "viem";
 import { Button } from "../core/Button";
-import { Link } from "./Link";
+import { Delegate } from "./Delegate";
 import { MintToken } from "./MintToken";
 import { PlayerBalances } from "./PlayerBalances";
 import { TransferToken } from "./TransferToken";
 
-type Tab = "transfer" | "mint" | "balances" | "link";
+type Tab = "transfer" | "mint" | "balances" | "delegate";
 
 export function Account() {
   const mud = useMud();
   const { playerAccount } = mud;
-  const [tab, setTab] = useState<Tab>("link");
+  const [tab, setTab] = useState<Tab>("delegate");
 
   const adminAddress = components.P_GameConfig.use()?.admin;
 
@@ -73,29 +73,25 @@ export function Account() {
     );
   };
 
-  const tabs: Tab[] = isAdmin ? ["link", "transfer", "mint", "balances"] : ["link", "transfer"];
+  const tabs: Tab[] = isAdmin ? ["delegate", "transfer", "mint", "balances"] : ["delegate", "transfer"];
   return (
-    <div className="h-full w-full relative flex flex-col justify-center items-center">
-      <div
-        className={`card flex flex-col border border-secondary p-2 gap-2 transition-all ${
-          tab !== "balances" ? "w-[512px] h-72" : "w-3/4 h-3/4"
-        }`}
-      >
-        <div className="flex gap-6">
-          {tabs.map((tabName) => (
-            <Button
-              className={`${tab === tabName ? "btn-secondary" : "btn-ghost"}`}
-              key={`tab-${tabName}`}
-              onClick={() => setTab(tabName)}
-            >
-              {tabName}
-            </Button>
-          ))}
-        </div>
+    <div className="h-full w-full relative flex flex-col justify-center items-center gap-4">
+      <div className="flex gap-6">
+        {tabs.map((tabName) => (
+          <Button
+            className={`${tab === tabName ? "btn-secondary" : "btn-ghost"}`}
+            key={`tab-${tabName}`}
+            onClick={() => setTab(tabName)}
+          >
+            {tabName}
+          </Button>
+        ))}
+      </div>
+      <div className="p-2 h-full w-full border border-secondary">
         {tab === "transfer" && <TransferToken onTransfer={onTransfer} className="col-span-2" />}
         {tab === "mint" && isAdmin && <MintToken onMint={onMint} className="col-span-2" />}
         {tab === "balances" && isAdmin && <PlayerBalances className="col-span-4" />}
-        {(!tab || tab === "link") && <Link />}
+        {(!tab || tab === "delegate") && <Delegate />}
       </div>
     </div>
   );

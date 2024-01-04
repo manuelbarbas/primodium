@@ -38,8 +38,10 @@ const PhaserWrapper = () => {
   useEffect(() => {
     (async () => {
       try {
+        console.log("mud changed! reinit phaser");
         if (!mud) return;
 
+        GameReady.set({ value: false });
         await primodium.init(mud, params.get("version") ? params.get("version")! : "🔥");
       } catch (e) {
         console.log(e);
@@ -47,8 +49,8 @@ const PhaserWrapper = () => {
     })();
 
     return () => {
-      primodium.destroy();
       GameReady.set({ value: false });
+      primodium.destroy();
     };
   }, [mud]);
 

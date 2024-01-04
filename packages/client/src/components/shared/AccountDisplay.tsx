@@ -15,15 +15,16 @@ export const AccountDisplay: React.FC<{
   className?: string;
   showSpectate?: boolean;
   noColor?: boolean;
+  noName?: boolean;
   disabled?: boolean;
-}> = ({ player, className, noColor, showSpectate = false, disabled }) => {
+}> = ({ player, className, noColor, noName, showSpectate = false, disabled }) => {
   const { playerAccount } = useMud();
   const playerEntity = player ?? playerAccount.entity;
 
   const homeAsteroid = components.Home.use(playerEntity)?.asteroid;
   const myHomeAsteroid = components.Home.use(playerAccount.entity)?.asteroid;
   const { transitionToScene } = primodium.api().scene;
-  const { allianceName, loading, address, linkedAddress } = useAccount(playerEntity);
+  const { allianceName, loading, address, linkedAddress } = useAccount(playerEntity, noName);
   const playerColor = RockRelationshipColors[getRockRelationship(playerEntity, myHomeAsteroid as Entity)];
 
   return (

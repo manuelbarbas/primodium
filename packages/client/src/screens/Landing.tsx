@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "src/components/core/Button";
 import { useMud } from "src/hooks/useMud";
 import { components } from "src/network/components";
+import { noExternalWallet } from "src/network/config/getNetworkConfig";
 import { spawn } from "src/network/setup/contractCalls/spawn";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { useNetwork, useSwitchNetwork } from "wagmi";
@@ -33,7 +34,7 @@ export const Landing: React.FC = () => {
 
   const chain = useNetwork().chain;
   const expectedChain = mud.playerAccount.walletClient.chain;
-  const wrongChain = chain?.id !== expectedChain?.id;
+  const wrongChain = !noExternalWallet && chain?.id !== expectedChain?.id;
   const { isLoading, pendingChainId, switchNetwork } = useSwitchNetwork();
 
   const EnterButton = () =>

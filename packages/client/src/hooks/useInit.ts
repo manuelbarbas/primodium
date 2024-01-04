@@ -23,30 +23,29 @@ export const useInit = () => {
 
   //initialize systems
   useEffect(() => {
-    mud.components.Account.set({ value: playerEntity });
     setupBlockNumber(mud.network.latestBlockNumber$);
     setupDoubleCounter(mud);
     setupLeaderboard(mud);
     setupAllianceLeaderboard(mud);
     setupTrainingQueues(mud);
     setupHangar(mud);
+    setupSend(mud);
     setupArrival();
-    setupSend(playerEntity);
     setupInvitations(mud);
     setupBattleNotifications(mud);
     setupTime(mud);
-  }, [mud, playerEntity]);
+  }, [mud]);
 
   useEffect(() => {
-    if (initialized) {
-      mud.components.SelectedRock.set({
-        value: (components.Home.get(playerEntity)?.asteroid ?? singletonEntity) as Entity,
-      });
-      mud.components.ActiveRock.set({
-        value: (components.Home.get(playerEntity)?.asteroid ?? singletonEntity) as Entity,
-      });
-    }
-  }, [initialized]);
+    if (!initialized) return;
+    mud.components.Account.set({ value: playerEntity });
+    mud.components.SelectedRock.set({
+      value: (components.Home.get(playerEntity)?.asteroid ?? singletonEntity) as Entity,
+    });
+    mud.components.ActiveRock.set({
+      value: (components.Home.get(playerEntity)?.asteroid ?? singletonEntity) as Entity,
+    });
+  }, [initialized, playerEntity]);
 
   // The network object and user wallet will have been loaded by the time the loading state is ready
   // So we can use the user wallet to identify the user

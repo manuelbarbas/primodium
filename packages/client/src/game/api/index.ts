@@ -2,7 +2,7 @@ import { namespaceWorld } from "@latticexyz/recs";
 import engine from "engine";
 import { Game } from "engine/types";
 import { GameReady } from "src/network/components/clientComponents";
-import { SetupResult } from "src/network/types";
+import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import _init from "../init";
 import { createAudioApi } from "./audio";
@@ -14,7 +14,7 @@ import { createInputApi } from "./input";
 import { createSceneApi } from "./scene";
 import { createSpriteApi } from "./sprite";
 
-async function init(mud: SetupResult, version = "v1") {
+async function init(mud: MUD, version = "v1") {
   const asciiArt = `
                                                                           
                                                                           
@@ -42,7 +42,7 @@ function destroy() {
   //for each instance, call game destroy
   const instances = engine.getGame();
 
-  for (const [_, instance] of instances.entries()) {
+  for (const [, instance] of instances.entries()) {
     //dispose phaser
     instance.phaserGame.destroy(true);
   }

@@ -7,6 +7,7 @@ import AppLoadingState from "./AppLoadingState";
 import { Initializing } from "./components/shared/Initializing";
 import { MudProvider } from "./hooks/providers/MudProvider";
 import useSetupResult from "./hooks/useSetupResult";
+import { noExternalWallet } from "./network/config/getNetworkConfig";
 import { world } from "./network/world";
 import { Maintenance } from "./screens/Maintenance";
 
@@ -18,8 +19,11 @@ export default function SetupResultProvider() {
   const externalAccount = useAccount();
 
   useEffect(() => {
-    if (!externalAccount?.address) return;
-    updatePlayerAccount(externalAccount.address);
+    if (noExternalWallet) updatePlayerAccount({ burner: true });
+    else {
+      if (!externalAccount.address) return;
+      updatePlayerAccount({ address: externalAccount.address });
+    }
   }, [externalAccount.address, updatePlayerAccount]);
 
   useEffect(() => {
@@ -44,7 +48,7 @@ export default function SetupResultProvider() {
 
   if (MAINTENANCE) return <Maintenance />;
 
-  if (externalAccount.status !== "connected") return null;
+  if (!noExternalWallet && externalAccount.status !== "connected") return null;
 
   if (!network || !playerAccount || !components) return <Initializing />;
   return (
