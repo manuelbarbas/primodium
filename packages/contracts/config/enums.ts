@@ -193,6 +193,11 @@ export enum EObjectives {
   ExpandBase6,
 }
 
+export enum EFleetKey {
+  OwnedBy = 1,
+  Incoming = 2,
+}
+
 export enum EAllianceInviteMode {
   Open = 1,
   Closed,
@@ -217,6 +222,7 @@ export const MUDEnums = {
   EAllianceInviteMode: enumToArray(EAllianceInviteMode),
   EAllianceRole: enumToArray(EAllianceRole),
   EOrderType: enumToArray(EOrderType),
+  EFleetKey: enumToArray(EFleetKey),
 };
 
 function enumToArray(enumObj: object): string[] {
