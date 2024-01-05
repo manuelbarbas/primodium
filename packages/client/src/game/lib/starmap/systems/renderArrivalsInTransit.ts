@@ -18,7 +18,7 @@ import { renderEntityOrbitingArrivals } from "./renderArrivalsInOrbit";
 
 export const renderArrivalsInTransit = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
-  const gameWorld = namespaceWorld(world, "game");
+  const systemsWorld = namespaceWorld(world, "systems");
   const objIndexSuffix = "_arrival";
 
   const render = ({ entity }: ComponentUpdate) => {
@@ -146,11 +146,11 @@ export const renderArrivalsInTransit = (scene: Scene) => {
     // Not(components.Pirate)
   ];
 
-  defineEnterSystem(gameWorld, query, (update) => {
+  defineEnterSystem(systemsWorld, query, (update) => {
     render(update);
   });
 
-  defineExitSystem(gameWorld, query, ({ entity }) => {
+  defineExitSystem(systemsWorld, query, ({ entity }) => {
     const objIndex = entity + objIndexSuffix;
 
     scene.objectPool.removeGroup(objIndex);

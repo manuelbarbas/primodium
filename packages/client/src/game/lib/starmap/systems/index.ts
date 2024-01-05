@@ -17,5 +17,5 @@ export const runSystems = (scene: Scene) => {
   renderArrivalsInTransit(scene);
   renderArrivalsInOrbit(scene);
 
-  renderEffects();
+  renderEffects(scene);
 };

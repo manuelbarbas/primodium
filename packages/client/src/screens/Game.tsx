@@ -1,47 +1,50 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useMud } from "src/hooks/useMud";
 
-import { primodium } from "@game/api";
+import { Primodium, initPrimodium } from "@game/api";
 import { Progress } from "src/components/core/Progress";
 import { GameHUD } from "src/components/hud/HUD";
-import { GameReady } from "src/network/components/clientComponents";
+import { PrimodiumProvider } from "src/hooks/providers/PrimodiumProvider";
 import { setupDelegate } from "src/network/systems/setupDelegate";
+import { world } from "src/network/world";
 
 const params = new URLSearchParams(window.location.search);
 
 export const Game = () => {
-  const gameReady = GameReady.use()?.value;
   const mud = useMud();
+  const [primodium, setPrimodium] = useState<Primodium | null>(null);
 
   /* Since this system modifies mud.sessionAccount, it can't have mud as a dependency */
   useEffect(() => {
+    if (!primodium) return;
+    world.dispose("delegate");
     setupDelegate(mud);
-  }, [mud.network, mud.playerAccount]);
+  }, [mud.playerAccount, primodium]);
+
+  useEffect(() => {
+    if (!primodium) return;
+    console.log("[Game] Rerunning systems");
+    primodium.rerunSystems(mud);
+  }, [mud, primodium]);
 
   useEffect(() => {
     (async () => {
       try {
-        if (!mud.network) return;
-
-        await primodium.init(mud, params.get("version") ? params.get("version")! : "🔥");
+        const pri = await initPrimodium(mud, params.get("version") ? params.get("version")! : "🔥");
+        setPrimodium(pri);
       } catch (e) {
         console.log(e);
       }
     })();
 
     return () => {
-      GameReady.set({ value: false });
-
-      /* Without this delay the game crashes because it cant switch over to the Landing page fast enough */
-      setTimeout(() => {
-        primodium.destroy();
-      }, 100);
+      primodium?.destroy();
     };
-  }, [mud]);
+  }, []);
 
   return (
     <div>
-      {!gameReady && (
+      {!primodium && (
         <div className="flex flex-col items-center justify-center h-screen text-white font-mono gap-4">
           <p className="text-lg text-white">
             <span className="font-mono">Loading game</span>
@@ -54,7 +57,11 @@ export const Game = () => {
       {/* cannot unmount. needs to be visible for phaser to attach to DOM element */}
       <div id="game-container relative ">
         <div id="phaser-container" className="absolute cursor-pointer screen-container" />
-        {gameReady && <GameHUD />}
+        {!!primodium && (
+          <PrimodiumProvider {...primodium}>
+            <GameHUD />
+          </PrimodiumProvider>
+        )}
       </div>
     </div>
   );

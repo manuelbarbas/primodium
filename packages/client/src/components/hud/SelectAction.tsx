@@ -1,10 +1,10 @@
-import { primodium } from "@game/api";
 import { AudioKeys, KeybindActions, Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect } from "react";
 import { FaCaretUp } from "react-icons/fa";
 import { useMud } from "src/hooks";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { Button } from "../core/Button";
 import { Join } from "../core/Join";
@@ -17,6 +17,7 @@ export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating
     value: false,
   }).value;
 
+  const primodium = usePrimodium();
   const { transitionToScene } = primodium.api().scene;
   const homeAsteroid = components.Home.use(playerEntity)?.asteroid as Entity | undefined;
 

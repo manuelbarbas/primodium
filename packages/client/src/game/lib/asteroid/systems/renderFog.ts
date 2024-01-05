@@ -11,11 +11,11 @@ import { ObjectText } from "../../common/object-components/text";
 export function renderFog(scene: Scene) {
   const { tileWidth, tileHeight } = scene.tilemap;
   const objSuffix = "_fog";
-  const gameWorld = namespaceWorld(world, "game");
-  const _gameWorld = namespaceWorld(world, "game_fog");
+  const systemsWorld = namespaceWorld(world, "systems");
+  const fogWorld = namespaceWorld(world, "game_fog");
   const asteroidBounds = getAsteroidBounds();
 
-  defineComponentSystem(gameWorld, components.ActiveRock, ({ value }) => {
+  defineComponentSystem(systemsWorld, components.ActiveRock, ({ value }) => {
     //remove old indicators
     scene.objectPool.removeGroup(value[1]?.value + objSuffix);
 
@@ -45,7 +45,7 @@ export function renderFog(scene: Scene) {
       }
     }
 
-    defineComponentSystem(_gameWorld, components.Level, ({ entity }) => {
+    defineComponentSystem(fogWorld, components.Level, ({ entity }) => {
       if (value[0] && value[0].value !== entity) return;
 
       const bounds = getSpaceRockBounds(entity);

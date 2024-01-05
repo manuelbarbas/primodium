@@ -24,7 +24,7 @@ import { Animation, Outline, Texture } from "../../common/object-components/spri
 
 export const renderBuildingMoveTool = (scene: Scene, mud: MUD) => {
   const { tileWidth, tileHeight } = scene.tilemap;
-  const gameWorld = namespaceWorld(world, "game");
+  const systemsWorld = namespaceWorld(world, "systems");
   const objIndexSuffix = "_buildingMove";
 
   const render = (update: ComponentUpdate) => {
@@ -110,10 +110,10 @@ export const renderBuildingMoveTool = (scene: Scene, mud: MUD) => {
     }),
   ];
 
-  defineEnterSystem(gameWorld, query, render);
-  defineUpdateSystem(gameWorld, query, render);
+  defineEnterSystem(systemsWorld, query, render);
+  defineUpdateSystem(systemsWorld, query, render);
 
-  defineExitSystem(gameWorld, query, (update) => {
+  defineExitSystem(systemsWorld, query, (update) => {
     const objIndex = update.entity + objIndexSuffix;
 
     scene.objectPool.remove(objIndex);

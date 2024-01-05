@@ -4,6 +4,7 @@ import { FaHandshake, FaHandshakeSlash } from "react-icons/fa";
 import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
 import { useFleetMoves } from "src/hooks/useFleetMoves";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getBuildingImage } from "src/util/building";
 import { entityToAddress } from "src/util/common";
@@ -22,6 +23,7 @@ export const Profile = () => {
     playerAccount: { entity: playerEntity, address },
     sessionAccount,
   } = useMud();
+  const primodium = usePrimodium();
   const delegate = components.Delegate.use(playerEntity)?.value;
   const wETHBalance = components.WETHBalance.use(playerEntity)?.value ?? 0n;
   const mainBase = components.Home.use(playerEntity)?.mainBase;
@@ -29,14 +31,14 @@ export const Profile = () => {
   const mainbaseLevel = components.Level.use((mainBase ?? singletonEntity) as Entity)?.value ?? 1n;
   const fleetMoves = useFleetMoves();
   const mapOpen = components.MapOpen.use()?.value ?? false;
-  const buildingImage = getBuildingImage((mainBase ?? singletonEntity) as Entity);
+  const buildingImage = getBuildingImage(primodium, (mainBase ?? singletonEntity) as Entity);
   const unitDisplay = useSettingsStore((state) => state.unitDisplay);
 
   return (
     <div className="flex flex-row">
       <Button className="flex flex-col justify-end border-t-0 border-secondary rounded-t-none ml-2 w-24 h-[6.3rem] p-0">
         <IconLabel
-          imageUri={mapOpen ? getSpaceRockImage((asteroid ?? singletonEntity) as Entity) : buildingImage}
+          imageUri={mapOpen ? getSpaceRockImage(primodium, (asteroid ?? singletonEntity) as Entity) : buildingImage}
           className="text-2xl scale-125 pt-3 pb-2"
         />
         <div className="bg-base-100 w-full rounded-box rounded-t-none p-1 border-t border-secondary">

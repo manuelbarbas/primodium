@@ -85,9 +85,9 @@ export const renderEntityOrbitingArrivals = (rockEntity: Entity, playerEntity: E
 };
 
 export const renderArrivalsInOrbit = (scene: Scene) => {
-  const gameWorld = namespaceWorld(world, "game");
+  const systemsWorld = namespaceWorld(world, "systems");
 
-  defineComponentSystem(gameWorld, components.Arrival, (update) => {
+  defineComponentSystem(systemsWorld, components.Arrival, (update) => {
     const playerEntity = components.Account.get()?.value;
     if (!playerEntity) return;
     if (update.value[0]) {

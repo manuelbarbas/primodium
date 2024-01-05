@@ -25,7 +25,7 @@ import { ObjectText } from "../../common/object-components/text";
 
 export const renderMotherlode = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
-  const gameWorld = namespaceWorld(world, "game");
+  const systemsWorld = namespaceWorld(world, "systems");
 
   const render = (entity: Entity, coord: Coord) => {
     scene.objectPool.removeGroup("motherlode_" + entity);
@@ -188,7 +188,7 @@ export const renderMotherlode = (scene: Scene) => {
 
   const query = [Has(components.Position), HasValue(components.RockType, { value: ERock.Motherlode })];
 
-  defineEnterSystem(gameWorld, query, ({ entity }) => {
+  defineEnterSystem(systemsWorld, query, ({ entity }) => {
     const coord = components.Position.get(entity);
     if (!coord) return;
     render(entity, coord);

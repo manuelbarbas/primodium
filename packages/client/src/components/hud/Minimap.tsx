@@ -1,4 +1,3 @@
-import { primodium } from "@game/api";
 import { Scenes } from "@game/constants";
 import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { Entity } from "@latticexyz/recs";
@@ -11,6 +10,7 @@ import { VoronoiPolygon, voronoi } from "@visx/voronoi";
 import { ReactNode, useMemo, useRef } from "react";
 import { FaCrosshairs } from "react-icons/fa";
 import { useMud } from "src/hooks";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { entityToColor } from "src/util/color";
 import { Button } from "../core/Button";
@@ -77,12 +77,7 @@ export const Minimap = () => {
     playerAccount: { entity: playerEntity },
   } = useMud();
 
-  // const points = useEntityQuery([Has(components.Position), Has(components.RockType)]).map((entity) => {
-  //   const rockType = components.RockType.get(entity)?.value;
-  //   const position = components.Position.get(entity);
-  //   const owner = components.OwnedBy.get(entity)?.value as Entity | undefined;
-  //   return { ...position!, owner, size: rockType === ERock.Asteroid ? 3 : 2 };
-  // });
+  const primodium = usePrimodium();
 
   const onCoordinateClick = (coord: Coord) => {
     const { pan } = primodium.api(Scenes.Starmap).camera;

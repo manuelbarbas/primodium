@@ -1,4 +1,3 @@
-import { primodium } from "@game/api";
 import { Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { ESendType, EUnit } from "contracts/config/enums";
@@ -11,6 +10,7 @@ import { Modal } from "src/components/core/Modal";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { invade } from "src/network/setup/contractCalls/invade";
 import { raid } from "src/network/setup/contractCalls/raid";
@@ -41,6 +41,7 @@ export const Fleet: React.FC<{
   dontShowButton?: boolean;
   small?: boolean;
 }> = ({ arrivalTime, arrivalEntity, destination, sendType, dontShowButton, small }) => {
+  const primodium = usePrimodium();
   const timeRemaining = arrivalTime - (components.Time.use()?.value ?? 0n);
 
   const owner = components.OwnedBy.use(destination)?.value as Entity | undefined;

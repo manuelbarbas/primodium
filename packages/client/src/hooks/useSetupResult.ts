@@ -90,12 +90,12 @@ const useSetupResult = () => {
   }, []);
 
   function updatePlayerAccount(options: { address: Hex }): void;
-  function updatePlayerAccount(options: { burner: true }): void;
-  function updatePlayerAccount(options: { address?: Hex; burner?: boolean }) {
+  function updatePlayerAccount(options: { burner: true; privateKey?: Hex }): void;
+  function updatePlayerAccount(options: { address?: Hex; burner?: boolean; privateKey?: Hex }) {
     const useBurner = options.burner;
     const address = options.address;
     if (!useBurner && !address) throw new Error("Must provide address or burner option");
-    (useBurner ? setupBurnerAccount() : setupExternalAccount(address!)).then((account) => {
+    (useBurner ? setupBurnerAccount(options.privateKey) : setupExternalAccount(address!)).then((account) => {
       setPlayerAccount(account);
 
       if (playerAccountInterval.current) {

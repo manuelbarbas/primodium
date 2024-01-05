@@ -1,4 +1,3 @@
-import { primodium } from "@game/api";
 import { AudioKeys, KeyNames, KeybindActions } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
@@ -6,6 +5,7 @@ import { useState } from "react";
 import { FaCaretLeft, FaCaretRight, FaLock } from "react-icons/fa";
 import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { Action, EntityType } from "src/util/constants";
@@ -24,7 +24,7 @@ const Blueprint: React.FC<{
 }> = ({ buildingType, tooltipDirection, keybind, keybindActive = false }) => {
   const {
     hooks: { useKeybinds },
-  } = primodium.api()!;
+  } = usePrimodium().api();
   const keybinds = useKeybinds();
   const {
     playerAccount: { entity: player },

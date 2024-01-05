@@ -7,6 +7,7 @@ import { SecondaryCard } from "src/components/core/Card";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Fleet } from "src/components/hud/modals/fleets/Fleet";
 import { useMud } from "src/hooks";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { recallStationedUnits } from "src/network/setup/contractCalls/recall";
 import { formatNumber } from "src/util/common";
@@ -34,7 +35,8 @@ export const Unit: React.FC<{ unit: Entity; count: bigint }> = ({ unit, count })
 
 export const TargetInfo = () => {
   const selectedSpacerock = components.SelectedRock.use()?.value;
-  const img = getSpaceRockImage(selectedSpacerock ?? singletonEntity);
+  const primodium = usePrimodium();
+  const img = getSpaceRockImage(primodium, selectedSpacerock ?? singletonEntity);
   const name = getSpaceRockName(selectedSpacerock ?? singletonEntity);
   const coord = components.Position.get(selectedSpacerock ?? singletonEntity) ?? { x: 0, y: 0 };
   const def = getRockDefense(selectedSpacerock ?? singletonEntity);

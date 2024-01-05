@@ -1,4 +1,4 @@
-import { defineComponentSystem } from "@latticexyz/recs";
+import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { getPrivateKey } from "src/util/burner";
 import { entityToAddress } from "src/util/common";
 import { components } from "../components";
@@ -6,6 +6,7 @@ import { MUD } from "../types";
 import { world } from "../world";
 
 export const setupDelegate = (mud: MUD) => {
+  const delegateWorld = namespaceWorld(world, "delegate");
   const initialDelegate = components.Delegate.get(mud.playerAccount.entity)?.value;
   if (initialDelegate) setDelegate(initialDelegate);
 
@@ -16,10 +17,9 @@ export const setupDelegate = (mud: MUD) => {
   }
 
   defineComponentSystem(
-    world,
+    delegateWorld,
     components.Delegate,
     ({ entity, value }) => {
-      console.log("delegate updated", entity);
       if (entity !== mud.playerAccount.entity) return;
       const newDelegate = value[0]?.value;
       if (!newDelegate) return mud.removeSessionAccount();

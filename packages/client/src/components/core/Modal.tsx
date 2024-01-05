@@ -1,8 +1,8 @@
-import { primodium } from "@game/api";
 import { AudioKeys } from "@game/constants";
 import React, { ReactNode, createContext, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaTimes } from "react-icons/fa";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { Button, IconButton } from "./Button";
 import { Card } from "./Card";
 
@@ -30,6 +30,7 @@ export const Modal: React.FC<ModalProps> & {
   IconButton: React.FC<React.ComponentProps<typeof IconButton>>;
 } = ({ children, title }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const primodium = usePrimodium();
   const { enableInput, disableInput } = primodium.api().input;
   const { audio } = primodium.api();
 
@@ -104,6 +105,7 @@ Modal.IconButton = function ModalIconButton(props: React.ComponentProps<typeof I
 Modal.Content = function ModalContent({ children, className }) {
   const { isOpen, setIsOpen, title } = useContext(ModalContext);
   const modalRef = useRef<HTMLDivElement>(null);
+  const primodium = usePrimodium();
   const { audio } = primodium.api();
 
   const handleClickOutside = (event: React.MouseEvent<HTMLDivElement>) => {

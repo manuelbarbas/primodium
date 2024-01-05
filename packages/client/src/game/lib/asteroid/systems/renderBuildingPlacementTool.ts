@@ -26,7 +26,7 @@ import { Animation, Outline, Texture } from "../../common/object-components/spri
 
 export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
   const { tileWidth, tileHeight } = scene.tilemap;
-  const gameWorld = namespaceWorld(world, "game");
+  const systemsWorld = namespaceWorld(world, "systems");
   const objIndexSuffix = "_buildingPlacement";
 
   const query = [
@@ -112,15 +112,15 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
     ]);
   };
 
-  defineEnterSystem(gameWorld, query, (update) => {
+  defineEnterSystem(systemsWorld, query, (update) => {
     render(update);
 
     console.info("[ENTER SYSTEM](renderBuildingPlacement) Building placement tool has been added");
   });
 
-  defineUpdateSystem(gameWorld, query, render);
+  defineUpdateSystem(systemsWorld, query, render);
 
-  defineExitSystem(gameWorld, query, (update) => {
+  defineExitSystem(systemsWorld, query, (update) => {
     const objIndex = update.entity + objIndexSuffix;
 
     scene.objectPool.remove(objIndex);

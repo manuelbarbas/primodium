@@ -5,19 +5,18 @@ import { ampli } from "src/ampli";
 import { components } from "src/network/components";
 import { useMud } from "./useMud";
 
-export const useInit = (playerEntity: Entity) => {
+export const useInit = () => {
   const mud = useMud();
+  const playerEntity = mud.playerAccount.entity;
   const initialized = components.Home.use(playerEntity)?.asteroid;
+  console.log("initialized: ", components.Home.id, initialized);
 
   useEffect(() => {
     if (!initialized) return;
+    const homeAsteroid = (components.Home.get(playerEntity)?.asteroid ?? singletonEntity) as Entity;
     mud.components.Account.set({ value: playerEntity });
-    mud.components.SelectedRock.set({
-      value: (components.Home.get(playerEntity)?.asteroid ?? singletonEntity) as Entity,
-    });
-    mud.components.ActiveRock.set({
-      value: (components.Home.get(playerEntity)?.asteroid ?? singletonEntity) as Entity,
-    });
+    mud.components.SelectedRock.set({ value: homeAsteroid });
+    mud.components.ActiveRock.set({ value: homeAsteroid });
   }, [initialized, playerEntity, mud]);
 
   // The network object and user wallet will have been loaded by the time the loading state is ready

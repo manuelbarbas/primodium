@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -15,11 +15,21 @@ const MAINTENANCE = import.meta.env.PRI_MAINTENANCE === "true";
 
 export default function SetupResultProvider() {
   const setupResult = useSetupResult();
+  const [loading, setLoading] = useState(true);
   const { network, updatePlayerAccount, playerAccount, components } = setupResult;
   const externalAccount = useAccount();
   const mounted = useRef<boolean>(false);
 
   useEffect(() => {
+    /* This cheese exists because otherwise there is a race condition to check if the player 
+        has a home asteroid. This makes the site crash when a player changes accounts to an account 
+        without a home asteroid 
+    */
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 100);
+
     if (noExternalWallet) updatePlayerAccount({ burner: true });
     else {
       if (!externalAccount.address) return;
@@ -52,7 +62,7 @@ export default function SetupResultProvider() {
 
   if (!noExternalWallet && externalAccount.status !== "connected") return null;
 
-  if (!network || !playerAccount || !components) return <Initializing />;
+  if (loading || !network || !playerAccount || !components) return <Initializing />;
   return (
     <MudProvider {...setupResult} components={components} network={network} playerAccount={playerAccount}>
       <ToastContainer

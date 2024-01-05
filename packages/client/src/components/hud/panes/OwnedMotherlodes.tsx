@@ -1,4 +1,3 @@
-import { primodium } from "@game/api";
 import { Scenes } from "@game/constants";
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, HasValue } from "@latticexyz/recs";
@@ -7,6 +6,7 @@ import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { IconLabel } from "src/components/core/IconLabel";
 import { useMud } from "src/hooks";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { ResourceImage } from "src/util/constants";
@@ -25,7 +25,8 @@ export const LabeledValue: React.FC<{
 };
 
 const Motherlode: React.FC<{ motherlodeId: Entity }> = ({ motherlodeId }) => {
-  const motherlodeInfo = getSpaceRockInfo(motherlodeId);
+  const primodium = usePrimodium();
+  const motherlodeInfo = getSpaceRockInfo(primodium, motherlodeId);
   const resource = motherlodeInfo.motherlodeData.motherlodeResource;
   const size = motherlodeInfo.motherlodeData.size;
   const sizeName = size === ESize.Small ? "sm" : size === ESize.Medium ? "md" : "lg";
@@ -76,14 +77,17 @@ export const OwnedMotherlodes: React.FC = () => {
   const {
     playerAccount: { entity: playerEntity },
   } = useMud();
+
+  const primodium = usePrimodium();
   const query = [
     HasValue(components.OwnedBy, { value: playerEntity }),
     HasValue(components.RockType, { value: ERock.Motherlode }),
   ];
 
+  // this can be optimised by fetching just the size of the motherlode
   const motherlodes = useEntityQuery(query).sort((a, b) => {
-    const aMotherlode = getSpaceRockInfo(a);
-    const bMotherlode = getSpaceRockInfo(b);
+    const aMotherlode = getSpaceRockInfo(primodium, a);
+    const bMotherlode = getSpaceRockInfo(primodium, b);
     return (bMotherlode.motherlodeData.size ?? 0) - (aMotherlode.motherlodeData.size ?? 0);
   });
 

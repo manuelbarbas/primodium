@@ -28,7 +28,7 @@ import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 
 export const renderAsteroid = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
-  const gameWorld = namespaceWorld(world, "game");
+  const systemsWorld = namespaceWorld(world, "systems");
 
   const render = (entity: Entity, coord: Coord) => {
     scene.objectPool.removeGroup("asteroid_" + entity);
@@ -223,7 +223,7 @@ export const renderAsteroid = (scene: Scene) => {
     Not(components.PirateAsteroid),
   ];
 
-  defineEnterSystem(gameWorld, query, ({ entity }) => {
+  defineEnterSystem(systemsWorld, query, ({ entity }) => {
     const coord = components.Position.get(entity);
 
     if (!coord) return;

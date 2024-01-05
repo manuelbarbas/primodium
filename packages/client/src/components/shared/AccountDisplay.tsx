@@ -1,9 +1,9 @@
-import { primodium } from "@game/api";
 import { Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { FaEye } from "react-icons/fa";
 import { useMud } from "src/hooks";
 import { useAccount } from "src/hooks/useAccount";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { entityToColor } from "src/util/color";
 import { RockRelationshipColors } from "src/util/constants";
@@ -23,6 +23,7 @@ export const AccountDisplay: React.FC<{
 
   const homeAsteroid = components.Home.use(playerEntity)?.asteroid;
   const myHomeAsteroid = components.Home.use(playerAccount.entity)?.asteroid;
+  const primodium = usePrimodium();
   const { transitionToScene } = primodium.api().scene;
   const { allianceName, loading, address, linkedAddress } = useAccount(playerEntity, noName);
   const playerColor = RockRelationshipColors[getRockRelationship(playerEntity, myHomeAsteroid as Entity)];

@@ -1,4 +1,4 @@
-import { primodium } from "@game/api";
+import { Primodium } from "@game/api";
 import { Entity } from "@latticexyz/recs";
 
 import { Assets, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
@@ -18,7 +18,7 @@ import {
 import { hashKeyEntity } from "./encode";
 import { getFullResourceCount, getMotherlodeResource } from "./resource";
 
-export function getSpaceRockImage(spaceRock: Entity) {
+export function getSpaceRockImage(primodium: Primodium, spaceRock: Entity) {
   const { getSpriteBase64 } = primodium.api().sprite;
   const type = comps.RockType.get(spaceRock, { value: ERock.Asteroid }).value as ERock;
 
@@ -98,10 +98,10 @@ export function getSpaceRockName(spaceRock: Entity) {
   return name;
 }
 
-export function getSpaceRockInfo(spaceRock: Entity) {
+export function getSpaceRockInfo(primodium: Primodium, spaceRock: Entity) {
   const type = comps.RockType.get(spaceRock, { value: ERock.Asteroid }).value as ERock;
 
-  const imageUri = getSpaceRockImage(spaceRock);
+  const imageUri = getSpaceRockImage(primodium, spaceRock);
 
   const motherlodeData = comps.Motherlode.get(spaceRock);
 

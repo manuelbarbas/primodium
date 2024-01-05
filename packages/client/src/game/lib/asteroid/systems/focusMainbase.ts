@@ -7,7 +7,7 @@ import { world } from "src/network/world";
 
 export const focusMainbase = (scene: Scene) => {
   const { pan } = createCameraApi(scene);
-  const gameWorld = namespaceWorld(world, "game");
+  const systemsWorld = namespaceWorld(world, "systems");
 
   const query = [Has(components.Home)];
 
@@ -25,7 +25,7 @@ export const focusMainbase = (scene: Scene) => {
     pan(mainBaseCoord, 0);
   };
 
-  defineEnterSystem(gameWorld, query, handleMove);
+  defineEnterSystem(systemsWorld, query, handleMove);
 
-  defineUpdateSystem(gameWorld, query, handleMove);
+  defineUpdateSystem(systemsWorld, query, handleMove);
 };
