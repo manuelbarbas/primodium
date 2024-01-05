@@ -2,7 +2,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { FaRegCopyright } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Button } from "src/components/core/Button";
 import { useMud } from "src/hooks/useMud";
 import { components } from "src/network/components";
 import { noExternalWallet } from "src/network/config/getNetworkConfig";
@@ -39,24 +38,24 @@ export const Landing: React.FC = () => {
 
   const EnterButton = () =>
     wrongChain ? (
-      <Button
+      <button
         disabled={!switchNetwork || expectedChain.id === chain?.id}
         key={expectedChain.id}
         onClick={() => switchNetwork?.(expectedChain.id)}
-        className="btn-secondary w-4/5 star-background hover:scale-125 relative z-10 mt-4"
+        className="btn join-item inline pointer-events-auto font-bold outline-none h-fit btn-secondary w-4/5 star-background hover:scale-125 relative z-10 mt-4"
       >
         switch to {expectedChain.name}
         {isLoading && pendingChainId === expectedChain.id && " (switching)"}
-      </Button>
+      </button>
     ) : (
-      <Button
+      <button
         onClick={async () => {
           await handlePlay();
         }}
-        className="btn-secondary w-4/5 star-background hover:scale-125 relative z-10 mt-4"
+        className="btn join-item inline pointer-events-auto font-bold outline-none h-fit btn-secondary w-4/5 star-background hover:scale-125 relative z-10 mt-4"
       >
         enter
-      </Button>
+      </button>
     );
   return (
     <AnimatePresence>

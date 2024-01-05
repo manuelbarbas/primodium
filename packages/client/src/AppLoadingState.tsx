@@ -2,7 +2,7 @@ import { minEth } from "@game/constants";
 import { ComponentValue, Entity, Schema } from "@latticexyz/recs";
 import { SyncStep } from "@latticexyz/store-sync";
 import { Browser, ContractComponent } from "@primodiumxyz/mud-game-tools";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Progress } from "./components/core/Progress";
 import { useMud } from "./hooks";
@@ -21,7 +21,6 @@ export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";
 
 export default function AppLoadingState() {
   const initialized = useInit();
-  console.log("initialized", initialized);
   const mud = useMud();
   const [balance, setBalance] = useState<bigint>();
 
@@ -42,9 +41,12 @@ export default function AppLoadingState() {
     lastBlockNumberProcessed: BigInt(0),
   });
 
-  const enoughEth = DEV_CHAIN || (balance ?? 0n) >= minEth;
-  const loading = loadingState.step !== SyncStep.LIVE || loadingState.percentage < 100;
-  const ready = !loading && enoughEth;
+  const enoughEth = useMemo(() => DEV_CHAIN || (balance ?? 0n) >= minEth, [balance]);
+  const loading = useMemo(
+    () => loadingState.step !== SyncStep.LIVE || loadingState.percentage < 100,
+    [loadingState.percentage, loadingState.step]
+  );
+  const ready = useMemo(() => !loading && enoughEth, [loading, enoughEth]);
 
   return (
     <div className="bg-black h-screen">
