@@ -3,15 +3,12 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect } from "react";
 import { ampli } from "src/ampli";
 import { components } from "src/network/components";
-import { entityToAddress } from "src/util/common";
 import { useMud } from "./useMud";
 
 export const useInit = () => {
   const mud = useMud();
   const playerEntity = mud.playerAccount.entity;
-  const init = components.Home.use(mud.playerAccount.entity)?.asteroid;
-  const initialized = init;
-  console.log("playerEntity", entityToAddress(playerEntity), "initialized", initialized);
+  const initialized = components.Home.get(mud.playerAccount.entity)?.asteroid;
 
   useEffect(() => {
     if (!initialized) return;

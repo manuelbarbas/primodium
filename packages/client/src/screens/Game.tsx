@@ -26,9 +26,8 @@ export const Game = () => {
 
     return () => {
       GameReady.set({ value: false });
-      {
-        /* Without this delay the game crashes because it cant switch over to the Landing page fast enough */
-      }
+
+      /* Without this delay the game crashes because it cant switch over to the Landing page fast enough */
       setTimeout(() => {
         primodium.destroy();
       }, 100);
