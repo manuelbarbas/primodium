@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -17,6 +17,7 @@ export default function SetupResultProvider() {
   const setupResult = useSetupResult();
   const { network, updatePlayerAccount, playerAccount, components } = setupResult;
   const externalAccount = useAccount();
+  const mounted = useRef<boolean>(false);
 
   useEffect(() => {
     if (noExternalWallet) updatePlayerAccount({ burner: true });
@@ -27,7 +28,7 @@ export default function SetupResultProvider() {
   }, [externalAccount.address, updatePlayerAccount]);
 
   useEffect(() => {
-    if (!network || !playerAccount) return;
+    if (!network || !playerAccount || mounted.current) return;
     // https://vitejs.dev/guide/env-and-mode.html
     if (import.meta.env.DEV) {
       import("@latticexyz/dev-tools").then(({ mount: mountDevTools }) =>
@@ -43,8 +44,9 @@ export default function SetupResultProvider() {
           recsWorld: world,
         })
       );
+      mounted.current = true;
     }
-  }, [network, playerAccount]);
+  }, [network, playerAccount, mounted]);
 
   if (MAINTENANCE) return <Maintenance />;
 

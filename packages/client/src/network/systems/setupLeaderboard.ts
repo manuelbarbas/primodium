@@ -1,11 +1,11 @@
 import { Entity, defineComponentSystem } from "@latticexyz/recs";
 import { world } from "src/network/world";
-import { Leaderboard } from "../components/clientComponents";
-import { SetupResult } from "../types";
-import { components } from "../components";
 import { isPlayer } from "src/util/common";
+import { components } from "../components";
+import { Leaderboard } from "../components/clientComponents";
+import { MUD } from "../types";
 
-export const setupLeaderboard = (mud: SetupResult) => {
+export const setupLeaderboard = (mud: MUD) => {
   const leaderboardMap = new Map<Entity, number>();
 
   defineComponentSystem(world, mud.components.Score, ({ entity, value }) => {
@@ -15,7 +15,7 @@ export const setupLeaderboard = (mud: SetupResult) => {
     //check valid player address
     if (!isPlayer(entity)) return;
 
-    const player = mud.network.playerEntity;
+    const player = mud.playerAccount.entity;
 
     const scoreValue = parseInt(value?.at(0)?.value.toString() ?? "0");
     leaderboardMap.set(entity, scoreValue);

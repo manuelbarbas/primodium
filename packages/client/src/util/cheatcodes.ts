@@ -4,7 +4,7 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Cheatcodes } from "@primodiumxyz/mud-game-tools";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
-import { SetupResult } from "src/network/types";
+import { MUD } from "src/network/types";
 import { encodeEntity } from "src/util/encode";
 import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
@@ -39,7 +39,7 @@ const units: Record<string, Entity> = {
   mining: EntityType.MiningVessel,
 };
 
-export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
+export const setupCheatcodes = (mud: MUD): Cheatcodes => {
   return {
     setWorldSpeed: {
       params: [{ name: "value", type: "number" }],
@@ -60,7 +60,7 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
     maxMainBaseLevel: {
       params: [],
       function: async () => {
-        const mainBase = mud.components.Home.get(mud.network.playerEntity)?.mainBase as Entity | undefined;
+        const mainBase = mud.components.Home.get(mud.playerAccount.entity)?.mainBase as Entity | undefined;
         if (!mainBase) throw new Error("No main base found");
         const maxLevel = mud.components.P_MaxLevel.get(mainBase)?.value ?? 8n;
         await mud.contractCalls.setComponentValue(mud.components.Level, mainBase, {
@@ -71,7 +71,7 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
     getResource: {
       params: [{ name: "resource", type: "string" }],
       function: async (resource: string) => {
-        const player = mud.network.playerEntity;
+        const player = mud.playerAccount.entity;
         if (!player) throw new Error("No player found");
         const home = mud.components.Home.get(player)?.asteroid as Entity | undefined;
 
@@ -97,7 +97,7 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
     getMaxResource: {
       params: [{ name: "resource", type: "string" }],
       function: async (resource: string) => {
-        const player = mud.network.playerEntity;
+        const player = mud.playerAccount.entity;
         if (!player) throw new Error("No player found");
 
         const home = mud.components.Home.get(player)?.asteroid as Entity | undefined;
@@ -123,7 +123,7 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
         { name: "count", type: "number" },
       ],
       function: async (unit: string, count: number) => {
-        const player = mud.network.playerEntity;
+        const player = mud.playerAccount.entity;
         if (!player) throw new Error("No player found");
 
         const unitEntity = units[unit.toLowerCase()];
@@ -150,7 +150,7 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
     getTesterPack: {
       params: [],
       function: async () => {
-        const player = mud.network.playerEntity;
+        const player = mud.playerAccount.entity;
         if (!player) throw new Error("No player found");
         for (const resource of [...ResourceStorages]) {
           await mud.contractCalls.setComponentValue(

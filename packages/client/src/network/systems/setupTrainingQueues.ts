@@ -3,11 +3,11 @@ import { getUnitTrainingTime } from "src/util/trainUnits";
 import { Hex } from "viem";
 import { components } from "../components";
 import { BlockNumber } from "../components/clientComponents";
-import { SetupResult } from "../types";
+import { MUD } from "../types";
 import { world } from "../world";
 
-export function setupTrainingQueues(mud: SetupResult) {
-  const playerEntity = mud.network.playerEntity;
+export function setupTrainingQueues(mud: MUD) {
+  const playerEntity = mud.playerAccount.entity;
   const { BuildingType, LastClaimedAt, ClaimOffset, OwnedBy, QueueUnits, QueueItemUnits, TrainingQueue, Home, Send } =
     components;
 

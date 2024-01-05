@@ -69,6 +69,7 @@ export async function execute<T extends keyof MetadataTypes>(
   onComplete?: (receipt: TransactionReceipt | undefined) => void
 ) {
   const account = options?.delegate ? mud.sessionAccount ?? mud.playerAccount : mud.playerAccount;
+  console.log("Executing transaction with account: ", account.address);
   if (options)
     components.TransactionQueue.enqueue(
       async () => {

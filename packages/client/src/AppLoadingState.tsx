@@ -21,6 +21,7 @@ export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";
 
 export default function AppLoadingState() {
   const initialized = useInit();
+  console.log("initialized", initialized);
   const mud = useMud();
   const [balance, setBalance] = useState<bigint>();
 

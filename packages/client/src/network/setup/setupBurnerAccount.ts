@@ -2,15 +2,17 @@ import { ContractWrite, createBurnerAccount, getContract, transportObserver } fr
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { Subject } from "rxjs";
 import { normalizeAddress } from "src/util/common";
+import { STORAGE_PREFIX } from "src/util/constants";
 import { addressToEntity } from "src/util/encode";
 import { Hex, createPublicClient, createWalletClient, fallback, http } from "viem";
+import { generatePrivateKey } from "viem/accounts";
 import { getNetworkConfig } from "../config/getNetworkConfig";
 
-export async function setupBurnerAccount(privateKey: Hex) {
+export async function setupBurnerAccount(privateKey?: Hex) {
+  const key = privateKey ?? generatePrivateKey();
   const networkConfig = getNetworkConfig();
-  const cachePrefix = "primodium:sessionKey";
-  const burnerAccount = createBurnerAccount(privateKey);
-  localStorage.setItem(cachePrefix + burnerAccount.address, privateKey);
+  const burnerAccount = createBurnerAccount(key);
+  localStorage.setItem(STORAGE_PREFIX + burnerAccount.address, key);
   const clientOptions = {
     chain: networkConfig.chain,
     transport: transportObserver(fallback([http()])),

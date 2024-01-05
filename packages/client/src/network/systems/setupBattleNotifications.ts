@@ -3,11 +3,11 @@ import { Entity, defineComponentSystem } from "@latticexyz/recs";
 import { toast } from "react-toastify";
 import { entityToAddress } from "src/util/common";
 import { components } from "../components";
-import { SetupResult } from "../types";
+import { MUD } from "../types";
 import { world } from "../world";
 
-export function setupBattleNotifications(mud: SetupResult) {
-  const playerEntity = mud.network.playerEntity;
+export function setupBattleNotifications(mud: MUD) {
+  const playerEntity = mud.playerAccount.entity;
   const { BattleResult, Arrival, BlockNumber, Position } = components;
   defineComponentSystem(world, BattleResult, (update) => {
     const now = components.Time.get()?.value ?? 0n;

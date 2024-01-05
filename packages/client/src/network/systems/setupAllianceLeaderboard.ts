@@ -1,10 +1,10 @@
 import { Entity, defineComponentSystem } from "@latticexyz/recs";
-import { world } from "src/network/world";
-import { SetupResult } from "../types";
-import { components } from "../components";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { world } from "src/network/world";
+import { components } from "../components";
+import { MUD } from "../types";
 
-export const setupAllianceLeaderboard = (mud: SetupResult) => {
+export const setupAllianceLeaderboard = (mud: MUD) => {
   const leaderboardMap = new Map<Entity, bigint>();
 
   defineComponentSystem(world, components.Alliance, (update) => {
@@ -21,7 +21,7 @@ export const setupAllianceLeaderboard = (mud: SetupResult) => {
     const scores = leaderboardArray.map((entry) => entry[1]);
     const alliances = leaderboardArray.map((entry) => entry[0]);
 
-    const player = mud.network.playerEntity;
+    const player = mud.playerAccount.entity;
     const playerAlliance = components.PlayerAlliance.get(player)?.alliance as Entity | undefined;
 
     const playerAllianceIndex = alliances.indexOf(playerAlliance ?? singletonEntity);

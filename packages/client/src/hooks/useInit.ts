@@ -7,6 +7,7 @@ import { setupAllianceLeaderboard } from "src/network/systems/setupAllianceLeade
 import { setupArrival } from "src/network/systems/setupArrival";
 import { setupBattleNotifications } from "src/network/systems/setupBattleNotifications";
 import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
+import { setupDelegate } from "src/network/systems/setupDelegate";
 import { setupDoubleCounter } from "src/network/systems/setupDoubleCounter";
 import { setupHangar } from "src/network/systems/setupHangar";
 import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
@@ -23,8 +24,8 @@ export const useInit = () => {
 
   //initialize systems
   useEffect(() => {
+    console.log("initializing systems");
     setupBlockNumber(mud.network.latestBlockNumber$);
-    setupDoubleCounter(mud);
     setupLeaderboard(mud);
     setupAllianceLeaderboard(mud);
     setupTrainingQueues(mud);
@@ -34,7 +35,10 @@ export const useInit = () => {
     setupInvitations(mud);
     setupBattleNotifications(mud);
     setupTime(mud);
-  }, [mud]);
+    setupDelegate(mud);
+
+    setupDoubleCounter(mud);
+  }, [mud.network]);
 
   useEffect(() => {
     if (!initialized) return;

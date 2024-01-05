@@ -82,6 +82,13 @@ const useSetupResult = () => {
     [playerAccount?.address, requestDrip]
   );
 
+  const removeSessionAccount = useCallback(() => {
+    if (sessionAccountInterval.current) {
+      clearInterval(sessionAccountInterval.current);
+    }
+    setSessionAccount(undefined);
+  }, [sessionAccountInterval]);
+
   function updatePlayerAccount(options: { address: Hex }): void;
   function updatePlayerAccount(options: { burner: true }): void;
   function updatePlayerAccount(options: { address?: Hex; burner?: boolean }) {
@@ -108,6 +115,7 @@ const useSetupResult = () => {
     sessionAccount,
     playerAccount,
     updateSessionAccount,
+    removeSessionAccount,
     updatePlayerAccount: memoizedUpdatePlayerAccount,
   };
 };

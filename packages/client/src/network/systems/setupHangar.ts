@@ -5,7 +5,7 @@ import { components } from "../components";
 import { world } from "../world";
 // import { SetupResult } from "../types";
 import { ERock } from "contracts/config/enums";
-import { SetupResult } from "../types";
+import { MUD } from "../types";
 export function createHangar(spaceRock: Entity) {
   const player = components.OwnedBy.get(spaceRock)?.value;
   if (!player) return;
@@ -78,8 +78,8 @@ function getTrainedUnclaimedUnits(spaceRock: Entity) {
   });
   return units;
 }
-export function setupHangar(mud: SetupResult) {
-  const playerEntity = mud.network.playerEntity;
+export function setupHangar(mud: MUD) {
+  const playerEntity = mud.playerAccount.entity;
 
   const { Send, RockType, OwnedBy } = components;
 
