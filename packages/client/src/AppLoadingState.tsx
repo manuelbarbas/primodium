@@ -20,8 +20,8 @@ export const DEV = import.meta.env.PRI_DEV === "true";
 export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";
 
 export default function AppLoadingState() {
-  const initialized = useInit();
   const mud = useMud();
+  const initialized = useInit(mud.playerAccount.entity);
   const [balance, setBalance] = useState<bigint>();
 
   useEffect(() => {

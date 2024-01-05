@@ -87,7 +87,7 @@ const useSetupResult = () => {
       clearInterval(sessionAccountInterval.current);
     }
     setSessionAccount(undefined);
-  }, [sessionAccountInterval]);
+  }, []);
 
   function updatePlayerAccount(options: { address: Hex }): void;
   function updatePlayerAccount(options: { burner: true }): void;
@@ -98,7 +98,6 @@ const useSetupResult = () => {
     (useBurner ? setupBurnerAccount() : setupExternalAccount(address!)).then((account) => {
       setPlayerAccount(account);
 
-      if (account.address === sessionAccount?.address) return;
       if (playerAccountInterval.current) {
         clearInterval(playerAccountInterval.current);
       }
@@ -107,7 +106,7 @@ const useSetupResult = () => {
     });
   }
 
-  const memoizedUpdatePlayerAccount = useCallback(updatePlayerAccount, [requestDrip, sessionAccount?.address]);
+  const memoizedUpdatePlayerAccount = useCallback(updatePlayerAccount, [requestDrip]);
 
   return {
     network: network?.network,

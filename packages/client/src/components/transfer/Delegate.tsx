@@ -64,7 +64,7 @@ export function Delegate() {
     <div className="flex flex-col h-full gap-2 text-left">
       Your Account
       <AccountDisplay noName player={playerAccount.entity} className="p-2 bg-gray-700 text-white text-center" />
-      Is linked to
+      delegates low risk transactions to
       <div className="p-2 bg-gray-700 text-white text-center">
         {delegateAddress ? (
           <>
@@ -72,7 +72,7 @@ export function Delegate() {
             <FaTrash onClick={async () => revokeAccessOwner(mud)} />
           </>
         ) : (
-          "unlinked"
+          "nobody"
         )}
       </div>
       Session accounts stored locally
@@ -97,14 +97,14 @@ export function Delegate() {
         ))
       )}
       <Button className="btn-primary" onClick={handleRandomPress}>
-        Press me to connect a random session key
+        Press me to connect a random session account
       </Button>
       <div className="p-2">
         <input
           type="text"
           value={privateKey}
           onChange={handlePrivateKeyInput}
-          placeholder="Enter your private key"
+          placeholder="Enter a private key"
           className="w-full p-2 bg-gray-700 text-white"
         />
       </div>

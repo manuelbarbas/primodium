@@ -199,21 +199,14 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
     return update.component.id === component.id;
   }
 
-  const homeId = "0x74620000000000000000000000000000486f6d65000000000000000000000000";
   function useValue(entity?: Entity | undefined): ComponentValue<S> | undefined;
   function useValue(entity: Entity | undefined, defaultValue?: ValueSansMetadata<S>): ComponentValue<S>;
   function useValue(entity?: Entity, defaultValue?: ValueSansMetadata<S>) {
     entity = entity ?? singletonEntity;
     const comp = component as Component<S>;
     const [value, setValue] = useState(entity != null ? getComponentValue(comp, entity) : undefined);
-    if (comp.id === homeId) {
-      console.log("entity outside useEffect:", entity, "value:", !!value);
-    }
 
     useEffect(() => {
-      if (comp.id === homeId) {
-        console.log("entity inside useEffect:", entity, "value:", !!value);
-      }
       // component or entity changed, update state to latest value
       setValue(entity != null ? getComponentValue(component, entity) : undefined);
       if (entity == null) return;

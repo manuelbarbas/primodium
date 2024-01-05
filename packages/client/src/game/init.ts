@@ -3,7 +3,6 @@ import { setupAllianceLeaderboard } from "src/network/systems/setupAllianceLeade
 import { setupArrival } from "src/network/systems/setupArrival";
 import { setupBattleNotifications } from "src/network/systems/setupBattleNotifications";
 import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
-import { setupDelegate } from "src/network/systems/setupDelegate";
 import { setupDoubleCounter } from "src/network/systems/setupDoubleCounter";
 import { setupHangar } from "src/network/systems/setupHangar";
 import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
@@ -23,6 +22,7 @@ async function init(mud: MUD) {
 
   await initAsteroidScene(game, mud);
   await initStarmapScene(game);
+
   setupBlockNumber(mud.network.latestBlockNumber$);
   setupLeaderboard(mud);
   setupAllianceLeaderboard(mud);
@@ -33,7 +33,6 @@ async function init(mud: MUD) {
   setupInvitations(mud);
   setupBattleNotifications(mud);
   setupTime(mud);
-  setupDelegate(mud);
   setupDoubleCounter(mud);
 
   setupAudioEffects(game.sceneManager.scenes.get(Scenes.Asteroid)!);

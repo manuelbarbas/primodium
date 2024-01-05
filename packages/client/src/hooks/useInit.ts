@@ -5,10 +5,9 @@ import { ampli } from "src/ampli";
 import { components } from "src/network/components";
 import { useMud } from "./useMud";
 
-export const useInit = () => {
+export const useInit = (playerEntity: Entity) => {
   const mud = useMud();
-  const playerEntity = mud.playerAccount.entity;
-  const initialized = components.Home.get(mud.playerAccount.entity)?.asteroid;
+  const initialized = components.Home.use(playerEntity)?.asteroid;
 
   useEffect(() => {
     if (!initialized) return;
@@ -19,7 +18,7 @@ export const useInit = () => {
     mud.components.ActiveRock.set({
       value: (components.Home.get(playerEntity)?.asteroid ?? singletonEntity) as Entity,
     });
-  }, [initialized, playerEntity, mud.components]);
+  }, [initialized, playerEntity, mud]);
 
   // The network object and user wallet will have been loaded by the time the loading state is ready
   // So we can use the user wallet to identify the user

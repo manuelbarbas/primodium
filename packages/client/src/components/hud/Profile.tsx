@@ -6,6 +6,7 @@ import { useMud } from "src/hooks";
 import { useFleetMoves } from "src/hooks/useFleetMoves";
 import { components } from "src/network/components";
 import { getBuildingImage } from "src/util/building";
+import { entityToAddress } from "src/util/common";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { getSpaceRockImage } from "src/util/spacerock";
 import { Button } from "../core/Button";
@@ -89,6 +90,7 @@ export const Profile = () => {
       </div>
 
       <div className="pointer-events-none text-xs">
+        Delegate: {delegate ? entityToAddress(delegate) : ""} <hr />
         Session Account: {sessionAccount?.address ?? ""} <hr />
         Player Account : {address}
       </div>
