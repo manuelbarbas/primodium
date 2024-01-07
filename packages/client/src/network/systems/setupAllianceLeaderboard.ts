@@ -1,13 +1,14 @@
-import { Entity, defineComponentSystem } from "@latticexyz/recs";
+import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { world } from "src/network/world";
 import { components } from "../components";
 import { MUD } from "../types";
 
 export const setupAllianceLeaderboard = (mud: MUD) => {
+  const systemWorld = namespaceWorld(world, "systems");
   const leaderboardMap = new Map<Entity, bigint>();
 
-  defineComponentSystem(world, components.Alliance, (update) => {
+  defineComponentSystem(systemWorld, components.Alliance, (update) => {
     const { entity } = update;
 
     if (!update.value[0]) {

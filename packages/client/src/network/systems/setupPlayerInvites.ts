@@ -1,4 +1,4 @@
-import { Entity, defineComponentSystem } from "@latticexyz/recs";
+import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { toast } from "react-toastify";
 import { decodeEntity } from "src/util/encode";
 import { Hex, hexToString, padHex, zeroAddress } from "viem";
@@ -8,9 +8,10 @@ import { world } from "../world";
 
 export function setupInvitations(mud: MUD) {
   const { AllianceInvitation, PlayerInvite, Alliance, AllianceJoinRequest, AllianceRequest } = components;
+  const systemWorld = namespaceWorld(world, "systems");
   const playerEntity = mud.playerAccount.entity;
 
-  defineComponentSystem(world, AllianceInvitation, ({ entity, value }) => {
+  defineComponentSystem(systemWorld, AllianceInvitation, ({ entity, value }) => {
     const { alliance, entity: player } = decodeEntity(AllianceInvitation.metadata.keySchema, entity);
 
     if (value[0]?.inviter === padHex(zeroAddress, { size: 32 })) {
@@ -29,7 +30,7 @@ export function setupInvitations(mud: MUD) {
     );
   });
 
-  defineComponentSystem(world, AllianceJoinRequest, ({ entity, value }) => {
+  defineComponentSystem(systemWorld, AllianceJoinRequest, ({ entity, value }) => {
     const { alliance, entity: player } = decodeEntity({ entity: "bytes32", alliance: "bytes32" }, entity);
 
     if (!value[0]?.timeStamp) {
@@ -47,7 +48,7 @@ export function setupInvitations(mud: MUD) {
     );
   });
 
-  defineComponentSystem(world, PlayerInvite, ({ entity, value }) => {
+  defineComponentSystem(systemWorld, PlayerInvite, ({ entity, value }) => {
     if (!value[0]) return;
 
     if (value[0]?.player === padHex(zeroAddress, { size: 32 })) {

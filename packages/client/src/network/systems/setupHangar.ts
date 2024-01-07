@@ -1,4 +1,4 @@
-import { Entity, Has, HasValue, defineComponentSystem, runQuery } from "@latticexyz/recs";
+import { Entity, Has, HasValue, defineComponentSystem, namespaceWorld, runQuery } from "@latticexyz/recs";
 import { getUnitTrainingTime } from "src/util/trainUnits";
 import { Hex } from "viem";
 import { components } from "../components";
@@ -79,23 +79,24 @@ function getTrainedUnclaimedUnits(spaceRock: Entity) {
   return units;
 }
 export function setupHangar(mud: MUD) {
+  const systemWorld = namespaceWorld(world, "systems");
   const playerEntity = mud.playerAccount.entity;
 
   const { Send, RockType, OwnedBy } = components;
 
-  defineComponentSystem(world, Send, () => {
+  defineComponentSystem(systemWorld, Send, () => {
     const origin = Send.get()?.origin;
     const destination = Send.get()?.destination;
     if (origin) createHangar(origin);
     if (destination) createHangar(destination);
   });
 
-  defineComponentSystem(world, components.SelectedRock, ({ value: [value] }) => {
+  defineComponentSystem(systemWorld, components.SelectedRock, ({ value: [value] }) => {
     if (!value?.value) return;
     createHangar(value.value);
   });
 
-  defineComponentSystem(world, components.BlockNumber, () => {
+  defineComponentSystem(systemWorld, components.BlockNumber, () => {
     const home = components.Home.get(playerEntity)?.asteroid;
     if (home) createHangar(home as Entity);
     const origin = Send.get()?.origin;

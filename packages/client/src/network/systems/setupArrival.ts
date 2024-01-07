@@ -1,4 +1,4 @@
-import { Entity, defineComponentSystem } from "@latticexyz/recs";
+import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { ESendType } from "contracts/config/enums";
 import { NUM_UNITS } from "src/util/constants";
 import { UnitCountTuple } from "src/util/web3/types";
@@ -61,9 +61,10 @@ const decodeArrival = (rawArrival: Hex) => {
 };
 
 export const setupArrival = () => {
+  const systemWorld = namespaceWorld(world, "systems");
   const { Arrival, MapItemArrivals } = components;
 
-  defineComponentSystem(world, MapItemArrivals, ({ entity, value: [newValue] }) => {
+  defineComponentSystem(systemWorld, MapItemArrivals, ({ entity, value: [newValue] }) => {
     const newVal = newValue?.value;
     if (!newVal) {
       return Arrival.remove(entity);

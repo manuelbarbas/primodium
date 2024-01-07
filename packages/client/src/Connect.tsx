@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-import { Button } from "src/components/core/Button";
 import { noExternalWallet } from "src/network/config/getNetworkConfig";
 import { useAccount, useConnect } from "wagmi";
 
@@ -20,7 +19,7 @@ export function Connect() {
         {connectors
           .filter((x) => x.ready && x.id !== connector?.id)
           .map((x) => (
-            <Button
+            <button
               className="btn-secondary font-bold w-full"
               key={x.id}
               onClick={() => !isLoading && connect({ connector: x })}
@@ -28,7 +27,7 @@ export function Connect() {
             >
               {x.name}
               {isLoading && x.id === pendingConnector?.id && <p className="text-xs">(connecting)</p>}
-            </Button>
+            </button>
           ))}
       </div>
     </div>

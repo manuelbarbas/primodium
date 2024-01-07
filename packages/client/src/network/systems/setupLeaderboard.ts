@@ -1,4 +1,4 @@
-import { Entity, defineComponentSystem } from "@latticexyz/recs";
+import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { world } from "src/network/world";
 import { isPlayer } from "src/util/common";
 import { components } from "../components";
@@ -7,8 +7,9 @@ import { MUD } from "../types";
 
 export const setupLeaderboard = (mud: MUD) => {
   const leaderboardMap = new Map<Entity, number>();
+  const systemWorld = namespaceWorld(world, "systems");
 
-  defineComponentSystem(world, mud.components.Score, ({ entity, value }) => {
+  defineComponentSystem(systemWorld, mud.components.Score, ({ entity, value }) => {
     //don't add alliance entries
     if (components.Alliance.get(entity)) return;
 

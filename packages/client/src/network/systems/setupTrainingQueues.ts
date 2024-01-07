@@ -1,4 +1,4 @@
-import { Entity, Has, HasValue, defineComponentSystem, runQuery } from "@latticexyz/recs";
+import { Entity, Has, HasValue, defineComponentSystem, namespaceWorld, runQuery } from "@latticexyz/recs";
 import { getUnitTrainingTime } from "src/util/trainUnits";
 import { Hex } from "viem";
 import { components } from "../components";
@@ -7,6 +7,7 @@ import { MUD } from "../types";
 import { world } from "../world";
 
 export function setupTrainingQueues(mud: MUD) {
+  const systemWorld = namespaceWorld(world, "systems");
   const playerEntity = mud.playerAccount.entity;
   const { BuildingType, LastClaimedAt, ClaimOffset, OwnedBy, QueueUnits, QueueItemUnits, TrainingQueue, Home, Send } =
     components;
@@ -70,7 +71,7 @@ export function setupTrainingQueues(mud: MUD) {
 
   // update local queues each second
   // todo: create a component that tracks active asteroids (to be updated each second)
-  defineComponentSystem(world, BlockNumber, (update) => {
+  defineComponentSystem(systemWorld, BlockNumber, (update) => {
     const home = Home.get(playerEntity)?.asteroid;
     const origin = Send.get()?.origin;
     const destination = Send.get()?.destination;

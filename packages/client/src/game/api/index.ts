@@ -4,6 +4,17 @@ import engine from "engine";
 import { Game } from "engine/types";
 import { runSystems as runAsteroidSystems } from "src/game/lib/asteroid/systems";
 import { runSystems as runStarmapSystems } from "src/game/lib/starmap/systems";
+import { setupAllianceLeaderboard } from "src/network/systems/setupAllianceLeaderboard";
+import { setupArrival } from "src/network/systems/setupArrival";
+import { setupBattleNotifications } from "src/network/systems/setupBattleNotifications";
+import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
+import { setupDoubleCounter } from "src/network/systems/setupDoubleCounter";
+import { setupHangar } from "src/network/systems/setupHangar";
+import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
+import { setupInvitations } from "src/network/systems/setupPlayerInvites";
+import { setupSend } from "src/network/systems/setupSend";
+import { setupTime } from "src/network/systems/setupTime";
+import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
 import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import _init from "../init";
@@ -36,7 +47,8 @@ export async function initPrimodium(mud: MUD, version = "v1") {
 
   namespaceWorld(world, "game");
 
-  await _init(mud);
+  await _init();
+  runSystems(mud);
 
   function destroy() {
     //for each instance, call game destroy
@@ -52,7 +64,7 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     world.dispose("systems");
   }
 
-  function rerunSystems(mud: MUD, instance: string | Game = "MAIN") {
+  function runSystems(mud: MUD, instance: string | Game = "MAIN") {
     world.dispose("systems");
 
     const _instance = typeof instance === "string" ? engine.getGame().get(instance) : instance;
@@ -66,6 +78,18 @@ export async function initPrimodium(mud: MUD, version = "v1") {
       console.log(_instance.sceneManager.scenes);
       throw new Error("No primodium scene found");
     }
+    setupAllianceLeaderboard(mud);
+    setupArrival();
+    setupBattleNotifications(mud);
+    setupBlockNumber(mud.network.latestBlockNumber$);
+    setupDoubleCounter(mud);
+    setupHangar(mud);
+    setupLeaderboard(mud);
+    setupInvitations(mud);
+    setupSend(mud);
+    setupTime(mud);
+    setupTrainingQueues(mud);
+
     runAsteroidSystems(asteroidScene, mud);
     runStarmapSystems(starmapScene);
   }
@@ -96,5 +120,5 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     };
   }
 
-  return { api, destroy, rerunSystems };
+  return { api, destroy, runSystems };
 }

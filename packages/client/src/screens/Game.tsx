@@ -18,13 +18,13 @@ export const Game = () => {
   useEffect(() => {
     if (!primodium) return;
     world.dispose("delegate");
-    setupDelegate(mud);
-  }, [mud.playerAccount, primodium]);
+    setupDelegate(mud.playerAccount.entity, mud.removeSessionAccount, mud.updateSessionAccount);
+  }, [mud.playerAccount.entity, mud.removeSessionAccount, mud.updateSessionAccount, primodium]);
 
   useEffect(() => {
     if (!primodium) return;
     console.log("[Game] Rerunning systems");
-    primodium.rerunSystems(mud);
+    primodium.runSystems(mud);
   }, [mud, primodium]);
 
   useEffect(() => {
