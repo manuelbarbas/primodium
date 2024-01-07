@@ -1,42 +1,49 @@
-import { Entity } from "@latticexyz/recs";
 import { useMemo, useState } from "react";
-import { FaAmbulance, FaTrash } from "react-icons/fa";
+import { FaClipboard, FaExclamationCircle, FaLink, FaPlus, FaQuestionCircle, FaTrash, FaUnlink } from "react-icons/fa";
+import { toast } from "react-toastify";
 import { useMud } from "src/hooks";
-import { components } from "src/network/components";
 import { grantAccess, revokeAccessOwner, switchDelegate } from "src/network/setup/contractCalls/access";
 import { findEntriesWithPrefix } from "src/util/burner";
-import { entityToAddress } from "src/util/common";
 import { STORAGE_PREFIX } from "src/util/constants";
 import { Hex } from "viem";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
+import { Badge } from "../core/Badge";
 import { Button } from "../core/Button";
+import { Tooltip } from "../core/Tooltip";
 import { AddressDisplay } from "../hud/AddressDisplay";
-import { AccountDisplay } from "../shared/AccountDisplay";
+
+const copyToClipboard = async (text: string, copyType: string) => {
+  try {
+    await navigator.clipboard.writeText(text);
+    // Display a message or handle the UI feedback
+    toast.success(`Copied ${copyType} to clipboard`);
+  } catch (err) {
+    toast.error(`Failed to copy ${copyType} to clipboard`);
+  }
+};
+
+const sessionWalletTooltip =
+  "Use a locally-stored session account to perform low-risk actions without requiring external confirmation.";
 
 export function Delegate() {
   const mud = useMud();
-  const { playerAccount } = mud;
-  const [privateKey, setPrivateKey] = useState("");
+  const { sessionAccount } = mud;
   const [keyUpdate, setKeyUpdate] = useState(0); // state to trigger updates
 
   // Function to handle private key validation and connection
-  const delegate = components.Delegate.use(playerAccount.entity)?.value as Entity | undefined;
-  const delegateAddress = delegate ? entityToAddress(delegate) : undefined;
+  const delegate = sessionAccount?.entity;
+  const delegateAddress = sessionAccount?.address;
 
-  const privateKeyIsValid = useMemo(() => {
-    // Validate the private key format here
-    // This is a basic example, adjust the validation according to your requirements
-    return /^0x[a-fA-F0-9]{64}$/.test(privateKey);
-  }, [privateKey]);
-
-  const handlePrivateKeyInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputKey = event.target.value;
-    setPrivateKey(inputKey);
+  const savePrivateKey = async (privateKey: string) => {
+    const account = privateKeyToAccount(privateKey as Hex);
+    localStorage.setItem(STORAGE_PREFIX + account.address, privateKey);
+    setKeyUpdate((prev) => prev + 1); // increment to trigger update
   };
 
   const submitPrivateKey = async (privateKey: string) => {
     // Validate the private key format here
     // This is a basic example, adjust the validation according to your requirements
+    console.log("submitPrivateKey", privateKey);
     const isValid = /^0x[a-fA-F0-9]{64}$/.test(privateKey);
     if (!isValid) return;
     const account = privateKeyToAccount(privateKey as Hex);
@@ -45,13 +52,12 @@ export function Delegate() {
     if (delegate) await switchDelegate(mud, account.address);
     else await grantAccess(mud, account.address);
 
-    localStorage.setItem(STORAGE_PREFIX + account.address, privateKey);
     setKeyUpdate((prev) => prev + 1); // increment to trigger update
   };
 
   const handleRandomPress = () => {
     const randomPKey = generatePrivateKey();
-    submitPrivateKey(randomPKey);
+    savePrivateKey(randomPKey);
   };
 
   const removeSessionKey = (publicKey: string) => {
@@ -61,56 +67,100 @@ export function Delegate() {
   const accounts = useMemo(() => findEntriesWithPrefix(), [keyUpdate]);
 
   return (
-    <div className="flex flex-col h-full gap-2 text-left">
-      Your Account
-      <AccountDisplay noName player={playerAccount.entity} className="p-2 bg-gray-700 text-white text-center" />
-      delegates low risk transactions to
-      <div className="p-2 bg-gray-700 text-white text-center">
+    <div className="flex flex-col gap-2 text-left border border-secondary p-4 bg-base-100">
+      <div className="text-xs font-bold uppercase flex gap-2 items-center">
+        <p className="opacity-50">Session Account</p>
+        <Tooltip text={sessionWalletTooltip} direction="top" className="text-xs normal-case">
+          <div>
+            <FaQuestionCircle className="opacity-50" />
+          </div>
+        </Tooltip>
+      </div>
+      <Badge className="w-full flex bg-black/30 p-6">
         {delegateAddress ? (
-          <>
-            <AddressDisplay address={delegateAddress} />
-            <FaTrash onClick={async () => revokeAccessOwner(mud)} />
-          </>
+          <div className="w-full flex items-center justify-between">
+            <AddressDisplay address={delegateAddress} notShort className="font-bold" />
+            <div className="flex">
+              <Button
+                onClick={async () => revokeAccessOwner(mud)}
+                tooltip="Unlink"
+                tooltipDirection="top"
+                className="btn-xs btn-ghost"
+              >
+                <FaUnlink />
+              </Button>
+
+              <Button
+                tooltip="Copy address"
+                onClick={() => copyToClipboard(delegateAddress, "address")}
+                tooltipDirection="top"
+                className="btn-xs btn-ghost"
+              >
+                <FaClipboard />
+              </Button>
+              {sessionAccount?.privateKey && (
+                <Button
+                  tooltip="Copy Private Key"
+                  onClick={() => copyToClipboard(sessionAccount.privateKey, "private key")}
+                  tooltipDirection="top"
+                  className="btn-xs btn-ghost"
+                >
+                  <FaExclamationCircle className="text-error" />
+                </Button>
+              )}
+            </div>
+          </div>
         ) : (
-          "nobody"
+          <div className="uppercase font-bold text-sm font-left">INACTIVE</div>
+        )}
+      </Badge>
+      <p className="text-xs opacity-50 font-bold uppercase flex gap-2 items-center">local accounts</p>
+      <div className="grid grid-cols-3 grid-rows-2 gap-1">
+        {accounts.map((account) => (
+          <Badge className="flex flex-col w-full h-full gap-1 p-2 bg-black/30" key={`account-${account.publicKey}`}>
+            <AddressDisplay address={account.publicKey as Hex} className="font-bold" />
+            {account.publicKey == delegateAddress ? (
+              <p className="text-xs bold uppercase opacity-70 font-bold">ACTIVE</p>
+            ) : (
+              <div className="flex">
+                <Button tooltip="Link" tooltipDirection="bottom" className="btn-xs btn-ghost">
+                  <FaLink onClick={async () => submitPrivateKey(account.privateKey)} />
+                </Button>
+                <Button
+                  tooltip="Copy address"
+                  onClick={() => copyToClipboard(account.publicKey, "address")}
+                  tooltipDirection="bottom"
+                  className="btn-xs btn-ghost"
+                >
+                  <FaClipboard />
+                </Button>
+                <Button
+                  tooltip="Copy Private Key"
+                  onClick={() => copyToClipboard(account.privateKey, "private key")}
+                  tooltipDirection="bottom"
+                  className="btn-xs btn-ghost"
+                >
+                  <FaExclamationCircle className="text-error" />
+                </Button>
+                <Button tooltip="Delete" tooltipDirection="bottom" className="btn-xs btn-ghost">
+                  <FaTrash onClick={() => removeSessionKey(account.publicKey)} />
+                </Button>
+              </div>
+            )}
+          </Badge>
+        ))}
+        {accounts.length < 6 && (
+          <Button
+            tooltip="new ACcount"
+            tooltipDirection="bottom"
+            onClick={handleRandomPress}
+            className="btn-primary flex flex-col w-full h-full gap-2 p-2 bg-black/30"
+            style={{ height: "100%" }}
+          >
+            <FaPlus />
+          </Button>
         )}
       </div>
-      Session accounts stored locally
-      {accounts.length == 0 ? (
-        <div className="p-2 bg-gray-700 text-white text-center">NONE!</div>
-      ) : (
-        accounts.map((account) => (
-          <div
-            key={`account-${account.publicKey}`}
-            className={`p-2 bg-gray-700 ${
-              account.publicKey == delegateAddress ? "text-success" : "text-white"
-            } text-center`}
-          >
-            {account.publicKey}
-            {account.publicKey !== delegateAddress && (
-              <>
-                <FaTrash onClick={() => removeSessionKey(account.publicKey)} />
-                <FaAmbulance onClick={() => submitPrivateKey(account.privateKey)} />
-              </>
-            )}
-          </div>
-        ))
-      )}
-      <Button className="btn-primary" onClick={handleRandomPress}>
-        Press me to connect a random session account
-      </Button>
-      <div className="p-2">
-        <input
-          type="text"
-          value={privateKey}
-          onChange={handlePrivateKeyInput}
-          placeholder="Enter a private key"
-          className="w-full p-2 bg-gray-700 text-white"
-        />
-      </div>
-      <Button className="btn-primary" disabled={!privateKeyIsValid} onClick={() => submitPrivateKey(privateKey)}>
-        Connect to input private key
-      </Button>
     </div>
   );
 }

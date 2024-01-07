@@ -41,6 +41,7 @@ export async function setupBurnerAccount(privateKey?: Hex) {
     publicClient,
     walletClient: sessionWalletClient,
     entity: addressToEntity(sessionWalletClient.account.address),
+    privateKey: key,
     write$,
   };
 }

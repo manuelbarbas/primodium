@@ -7,7 +7,6 @@ import { useFleetMoves } from "src/hooks/useFleetMoves";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getBuildingImage } from "src/util/building";
-import { entityToAddress } from "src/util/common";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { getSpaceRockImage } from "src/util/spacerock";
 import { Button } from "../core/Button";
@@ -20,8 +19,7 @@ import { Account } from "../transfer/Account";
 
 export const Profile = () => {
   const {
-    playerAccount: { entity: playerEntity, address },
-    sessionAccount,
+    playerAccount: { entity: playerEntity },
   } = useMud();
   const primodium = usePrimodium();
   const delegate = components.Delegate.use(playerEntity)?.value;
@@ -63,7 +61,6 @@ export const Profile = () => {
       <div>
         <div className="flex flex-col p-1 bg-opacity-50 bg-neutral backdrop-blur-md rounded-box rounded-l-none rounded-t-none text-sm border border-secondary border-l-0">
           <div className="flex gap-2 items-center justify-center">
-            <></>
             <AccountDisplay player={playerEntity} />{" "}
           </div>
           <hr className="border-secondary/50" />
@@ -89,12 +86,6 @@ export const Profile = () => {
             <Account />
           </Modal.Content>
         </Modal>
-      </div>
-
-      <div className="pointer-events-none text-xs">
-        Delegate: {delegate ? entityToAddress(delegate) : ""} <hr />
-        Session Account: {sessionAccount?.address ?? ""} <hr />
-        Player Account : {address}
       </div>
     </div>
   );

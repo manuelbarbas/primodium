@@ -15,9 +15,9 @@ export const AccountDisplay: React.FC<{
   className?: string;
   showSpectate?: boolean;
   noColor?: boolean;
-  noName?: boolean;
   disabled?: boolean;
-}> = ({ player, className, noColor, noName, showSpectate = false, disabled }) => {
+  showAddress?: boolean;
+}> = ({ player, className, noColor, showSpectate = false, disabled, showAddress }) => {
   const { playerAccount } = useMud();
   const playerEntity = player ?? playerAccount.entity;
 
@@ -25,12 +25,12 @@ export const AccountDisplay: React.FC<{
   const myHomeAsteroid = components.Home.use(playerAccount.entity)?.asteroid;
   const primodium = usePrimodium();
   const { transitionToScene } = primodium.api().scene;
-  const { allianceName, loading, address, linkedAddress } = useAccount(playerEntity, noName);
+  const { allianceName, loading, address, linkedAddress } = useAccount(playerEntity, showAddress);
   const playerColor = RockRelationshipColors[getRockRelationship(playerEntity, myHomeAsteroid as Entity)];
 
   return (
     <Button
-      className={`btn-xs btn-ghost p-0 inline-flex flex gap-1 ${className} ${loading ? "animate-pulse" : ""}`}
+      className={`btn-xs btn-ghost p-0 inline-flex flex font-bold gap-1 ${className} ${loading ? "animate-pulse" : ""}`}
       disabled={disabled}
       onClick={async () => {
         components.ActiveRock.set({ value: homeAsteroid as Entity });
@@ -45,7 +45,7 @@ export const AccountDisplay: React.FC<{
           [{allianceName.toUpperCase()}]
         </span>
       )}
-      <p className={`text-${playerColor}`}>{linkedAddress?.ensName ?? address}</p>
+      <p className={`text-${noColor ? "white" : playerColor}`}>{linkedAddress?.ensName ?? address}</p>
     </Button>
   );
 };
