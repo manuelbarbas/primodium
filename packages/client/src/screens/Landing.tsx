@@ -1,7 +1,8 @@
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
 import { FaRegCopyright } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks/useMud";
 import { components } from "src/network/components";
 import { noExternalWallet } from "src/network/config/getNetworkConfig";
@@ -11,21 +12,15 @@ import { useNetwork, useSwitchNetwork } from "wagmi";
 
 const params = new URLSearchParams(window.location.search);
 export const Landing: React.FC = () => {
-  const [message, setMessage] = useState<string | null>();
   const mud = useMud();
   const playerEntity = mud.playerAccount.entity;
   const navigate = useNavigate();
   const location = useLocation();
-  const hasSpawned = !!components.Home.use(playerEntity)?.asteroid;
 
   const handlePlay = async () => {
-    setMessage("Spawning Player Asteroid...");
+    const hasSpawned = !!components.Home.get(playerEntity)?.asteroid;
     if (!hasSpawned) {
-      try {
-        await spawn(mud);
-      } catch {
-        setMessage("Failed to spawn asteroid...Retry");
-      }
+      await spawn(mud);
     }
 
     navigate("/game" + location.search);
@@ -40,9 +35,8 @@ export const Landing: React.FC = () => {
     wrongChain ? (
       <button
         disabled={!switchNetwork || expectedChain.id === chain?.id}
-        key={expectedChain.id}
         onClick={() => switchNetwork?.(expectedChain.id)}
-        className="btn join-item inline pointer-events-auto font-bold outline-none h-fit btn-secondary w-4/5 star-background hover:scale-125 relative z-10 mt-4"
+        className="btn join-item inline pointer-events-auto font-bold outline-none h-fit btn-secondary w-full star-background hover:scale-125 relative"
       >
         switch to {expectedChain.name}
         {isLoading && pendingChainId === expectedChain.id && " (switching)"}
@@ -52,7 +46,7 @@ export const Landing: React.FC = () => {
         onClick={async () => {
           await handlePlay();
         }}
-        className="btn join-item inline pointer-events-auto font-bold outline-none h-fit btn-secondary w-4/5 star-background hover:scale-125 relative z-10 mt-4"
+        className="btn join=item inline pointer-events-auto font-bold outline-none h-fit btn-secondary w-full star-background hover:scale-125 relative"
       >
         enter
       </button>
@@ -65,7 +59,7 @@ export const Landing: React.FC = () => {
         animate={{ scale: 1, opacity: 1, y: 0, transition: { delay: 0.25, duration: 0.5 } }}
         className="flex items-center justify-center h-screen text-white font-mono"
       >
-        <div className="relative text-center border border-secondary/25 px-24 py-16 bg-neutral/50 flex flex-col items-center gap-2">
+        <div className="relative text-center border border-secondary/25 px-24 py-16 bg-neutral/50 flex flex-col items-center gap-2 mb-4">
           <div className="absolute top-0 w-full h-full topographic-background2 opacity-25" />
           <h1 className="text-8xl font-bold uppercase stroke stroke-white stroke-4 z-10">Primodium</h1>
           <h1 className="text-8xl font-bold uppercase text-accent z-5 -mt-[6.2rem] opacity-75 z-1">Primodium</h1>
@@ -78,12 +72,10 @@ export const Landing: React.FC = () => {
             <div className="absolute bg-gray-900 blur-[15px] w-56 h-32 margin-auto bottom-0 z-10" />
           </div>
 
-          {!message && <EnterButton />}
-          {message && (
-            <div className="btn opacity-60 disabled btn-secondary w-4/5 star-background relative z-10 mt-4 cursor-not-allowed">
-              {message}
-            </div>
-          )}
+          <TransactionQueueMask queueItemId={singletonEntity} className="w-4/5 z-10">
+            <EnterButton />
+          </TransactionQueueMask>
+
           <div className="absolute bottom-0 right-0 p-2 font-bold opacity-50">
             {params.get("version") ?? ""}
             {import.meta.env.PRI_VERCEL_GIT_COMMIT_SHA ? import.meta.env.PRI_VERCEL_GIT_COMMIT_SHA.slice(0, 7) : ""}

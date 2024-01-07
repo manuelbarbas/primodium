@@ -10,6 +10,7 @@ export const setupDelegate = (
   removeSessionAccount: () => void,
   updateSessionAccount: (privateKey: Hex) => void
 ) => {
+  world.dispose("delegate");
   const delegateWorld = namespaceWorld(world, "delegate");
   const initialDelegate = components.Delegate.get(playerEntity)?.value;
   if (initialDelegate) setDelegate(initialDelegate);
