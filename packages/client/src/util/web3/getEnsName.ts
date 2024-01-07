@@ -17,7 +17,7 @@ export const getEnsName = async (playerEntity: Entity, hard?: boolean): Promise<
   }
 
   try {
-    const res = await fetch(`${import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL}/ens/by-name/${address}`);
+    const res = await fetch(`${import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL}/ens/by-address/${address}`);
     const jsonRes = await res.json();
     addressMap.set(address, jsonRes as LinkedAddressResult);
     return jsonRes as LinkedAddressResult;

@@ -23,7 +23,6 @@ export const Game = () => {
 
   useEffect(() => {
     if (!primodium) return;
-    console.log("[Game] Rerunning systems");
     primodium.runSystems(mud);
   }, [mud, primodium]);
 

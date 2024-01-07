@@ -9,7 +9,6 @@ export const useInit = () => {
   const mud = useMud();
   const playerEntity = mud.playerAccount.entity;
   const initialized = components.Home.use(playerEntity)?.asteroid;
-  console.log("initialized: ", components.Home.id, initialized);
 
   useEffect(() => {
     if (!initialized) return;

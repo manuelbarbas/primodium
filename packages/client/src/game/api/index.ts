@@ -65,6 +65,7 @@ export async function initPrimodium(mud: MUD, version = "v1") {
   }
 
   function runSystems(mud: MUD, instance: string | Game = "MAIN") {
+    console.info("[Primodium] Running systems");
     world.dispose("systems");
 
     const _instance = typeof instance === "string" ? engine.getGame().get(instance) : instance;
