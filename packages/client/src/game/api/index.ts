@@ -4,6 +4,7 @@ import engine from "engine";
 import { Game } from "engine/types";
 import { runSystems as runAsteroidSystems } from "src/game/lib/asteroid/systems";
 import { runSystems as runStarmapSystems } from "src/game/lib/starmap/systems";
+import { components } from "src/network/components";
 import { setupAllianceLeaderboard } from "src/network/systems/setupAllianceLeaderboard";
 import { setupArrival } from "src/network/systems/setupArrival";
 import { setupBattleNotifications } from "src/network/systems/setupBattleNotifications";
@@ -79,6 +80,10 @@ export async function initPrimodium(mud: MUD, version = "v1") {
       console.log(_instance.sceneManager.scenes);
       throw new Error("No primodium scene found");
     }
+
+    // reset stuff
+
+    components.MapOpen.set({ value: false });
     setupAllianceLeaderboard(mud);
     setupArrival();
     setupBattleNotifications(mud);
