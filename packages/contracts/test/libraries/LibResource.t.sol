@@ -63,7 +63,6 @@ contract LibResourceTest is PrimodiumTest {
 
   function testClaimMotherlodeResources() public {
     OwnedBy.set(motherlode, playerEntity);
-    OwnedMotherlodes.push(playerEntity, motherlode);
 
     bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
     MaxResourceCount.set(spaceRockEntity, Titanium, 1000);
