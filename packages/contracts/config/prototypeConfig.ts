@@ -2373,33 +2373,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
   },
 
-  RaidMotherlodeResources1: {
-    tables: {
-      P_RaidedResources: getResourceValues({ Titanium: 200000, Platinum: 200000, Iridium: 200000, Kimberlite: 200000 }),
-      P_UnitReward: getUnitValues({ StingerDrone: 30 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 4n } } },
-  },
-  RaidMotherlodeResources2: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["RaidMotherlodeResource1"]) },
-      P_RaidedResources: getResourceValues({ Titanium: 500000, Platinum: 500000, Iridium: 500000, Kimberlite: 500000 }),
-      P_UnitReward: getUnitValues({ StingerDrone: 100 }),
-    },
-  },
-  RaidMotherlodeResources3: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["RaidMotherlodeResources2"]) },
-      P_RaidedResources: getResourceValues({
-        Titanium: 2500000,
-        Platinum: 2500000,
-        Iridium: 2500000,
-        Kimberlite: 2500000,
-      }),
-      P_UnitReward: getUnitValues({ StingerDrone: 300 }),
-    },
-  },
-
   DestroyEnemyUnits1: {
     tables: {
       P_DestroyedUnits: getUnitValues({ MinutemanMarine: 500 }),

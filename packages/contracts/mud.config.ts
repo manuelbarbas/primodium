@@ -324,14 +324,6 @@ export const config = mudConfig({
 
     /* ------------------------------- Motherlode ------------------------------- */
 
-    Motherlode: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
-        size: "uint8", // ESize
-        motherlodeType: "uint8", // EResource
-      },
-    },
-
     P_SizeToAmount: {
       keySchema: { size: "uint8" },
       valueSchema: "uint256",

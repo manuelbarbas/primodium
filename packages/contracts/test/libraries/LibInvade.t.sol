@@ -173,12 +173,6 @@ contract LibInvadeTest is PrimodiumTest {
     assertEq(OwnedBy.get(rock), enemy, "OwnedBy");
   }
 
-  function testInvadeAsteroid() public {
-    Asteroid.setIsAsteroid(rock, true);
-    vm.expectRevert("[Invade] Can only invade motherlodes");
-    world.invade(rock);
-  }
-
   function testInvadeSelfOwned() public {
     Asteroid.setIsAsteroid(rock, true);
     OwnedBy.set(rock, player);

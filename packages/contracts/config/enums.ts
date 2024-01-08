@@ -169,9 +169,6 @@ export enum EObjectives {
   RaidFactoryResources1,
   RaidFactoryResources2,
   RaidFactoryResources3,
-  RaidMotherlodeResources1,
-  RaidMotherlodeResources2,
-  RaidMotherlodeResources3,
 
   DestroyEnemyUnits1,
   DestroyEnemyUnits2,

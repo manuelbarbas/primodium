@@ -221,11 +221,6 @@ contract LibRaidTest is PrimodiumTest {
     assertEq(ResourceCount.get(rock, Iron), 100, "Enemy Iron");
   }
 
-  function testFailRaidMotherlode() public {
-    Asteroid.setIsAsteroid(rock, true);
-    world.raid(rock);
-  }
-
   function testFailRaidUnowned() public {
     Asteroid.setIsAsteroid(rock, true);
     world.raid(rock);
