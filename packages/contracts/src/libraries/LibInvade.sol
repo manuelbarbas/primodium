@@ -3,8 +3,8 @@ pragma solidity >=0.8.21;
 
 import { IWorld } from "codegen/world/IWorld.sol";
 import { entityToAddress, getSystemResourceId } from "src/utils.sol";
-import { RockType, OwnedBy, BattleResultData, P_UnitPrototypes } from "codegen/index.sol";
-import { ERock, ESendType } from "src/Types.sol";
+import { OwnedBy, BattleResultData, P_UnitPrototypes, Asteroid } from "codegen/index.sol";
+import { ESendType } from "src/Types.sol";
 import { LibReinforce } from "libraries/LibReinforce.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { S_BattleSystem } from "systems/subsystems/S_BattleSystem.sol";
@@ -51,7 +51,7 @@ library LibInvade {
    * @notice Ensures that the target rock is a motherlode and not owned by the invader.
    */
   function checkInvadeRequirements(bytes32 invader, bytes32 rockEntity) internal {
-    require(RockType.get(rockEntity) == uint8(ERock.Motherlode), "[Invade] Can only invade motherlodes");
+    require(Asteroid.getIsAsteroid(rockEntity), "[Invade] Can only invade asteroids");
     bytes32 defender = OwnedBy.get(rockEntity);
     if (defender != 0) require(defender != invader, "[Invade] can not invade your own rock");
   }

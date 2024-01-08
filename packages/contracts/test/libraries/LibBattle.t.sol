@@ -566,8 +566,7 @@ contract LibBattleTest is PrimodiumTest {
   function testUpdateProductionRatesAfterBattle() public {
     setupUpdateUnitsAfterBattle();
     Home.setAsteroid(player, homeRock);
-    RockType.set(rock, uint8(ERock.Motherlode));
-    Motherlode.set(rock, uint8(ESize.Large), uint8(EResource.Iron));
+    Asteroid.setIsAsteroid(rock, true);
     P_IsUtility.set(uint8(EResource.Iron), false);
     P_MiningRate.set(unit1, 0, 1);
     ProductionRate.set(rock, uint8(EResource.Iron), 100 + 100);

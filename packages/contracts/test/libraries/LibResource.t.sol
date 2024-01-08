@@ -72,7 +72,6 @@ contract LibResourceTest is PrimodiumTest {
     ProductionRate.set(motherlode, R_Titanium, 0);
     ConsumptionRate.set(motherlode, R_Titanium, 100);
     ProductionRate.set(motherlode, Titanium, 100);
-    Motherlode.setMotherlodeType(motherlode, Titanium);
     LastClaimedAt.set(motherlode, block.timestamp - 10);
     LastClaimedAt.set(spaceRockEntity, block.timestamp - 10);
     LibResource.claimAllPlayerResources(playerEntity);

@@ -4,8 +4,8 @@ pragma solidity >=0.8.21;
 import { entityToAddress, getSystemResourceId } from "src/utils.sol";
 
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
-import { PirateAsteroid, DefeatedPirate, RaidedResource, RockType, OwnedBy, BattleResultData, RaidResult, RaidResultData, P_IsUtility, P_UnitPrototypes, Home } from "codegen/index.sol";
-import { ERock, ESendType } from "src/Types.sol";
+import { PirateAsteroid, DefeatedPirate, RaidedResource, OwnedBy, BattleResultData, RaidResult, Asteroid, RaidResultData, P_IsUtility, P_UnitPrototypes, Home } from "codegen/index.sol";
+import { ESendType } from "src/Types.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
@@ -25,7 +25,7 @@ library LibRaid {
     bytes32 playerEntity,
     bytes32 rockEntity
   ) internal {
-    require(RockType.get(rockEntity) == uint8(ERock.Asteroid), "[LibRaid] Can only raid asteroids");
+    require(Asteroid.getIsAsteroid(rockEntity), "[LibRaid] Can only raid asteroids");
 
     bytes32 defenderEntity = OwnedBy.get(rockEntity);
     require(defenderEntity != 0, "[LibRaid] Can not raid unowned rock");
@@ -44,7 +44,7 @@ library LibRaid {
   }
 
   function checkRaidRequirements(bytes32 raider, bytes32 rockEntity) internal view {
-    require(RockType.get(rockEntity) == uint8(ERock.Asteroid), "[LibRaid] Can only raid asteroids");
+    require(Asteroid.getIsAsteroid(rockEntity), "[LibRaid] Can only raid asteroids");
     bytes32 defenderEntity = OwnedBy.get(rockEntity);
     require(defenderEntity != 0, "[LibRaid] Can not raid unowned rock");
     require(defenderEntity != raider, "[LibRaid] Can not raid your own rock");

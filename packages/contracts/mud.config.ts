@@ -117,6 +117,11 @@ export const config = mudConfig({
     },
 
     /* ---------------------------------- Rocks --------------------------------- */
+    AsteroidCount: {
+      keySchema: {},
+      valueSchema: "uint256",
+    },
+
     P_Asteroid: {
       keySchema: {},
       valueSchema: {
@@ -124,15 +129,13 @@ export const config = mudConfig({
         yBounds: "int32",
       },
     },
-    AsteroidCount: {
-      keySchema: {},
-      valueSchema: "uint256",
-    },
 
-    RockType: {
+    Asteroid: {
       keySchema: { entity: "bytes32" },
-      // ERock
-      valueSchema: "uint8",
+      valueSchema: {
+        isAsteroid: "bool",
+        maxLevel: "uint256",
+      },
     },
 
     // note: dimensions will always be positive, but are int32s so they work with coords

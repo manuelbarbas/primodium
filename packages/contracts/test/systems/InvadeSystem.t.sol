@@ -41,8 +41,8 @@ contract InvadeSystemTest is PrimodiumTest {
     Home.setAsteroid(player, homeRock);
     OwnedBy.set(rock, enemy);
 
-    RockType.set(rock, uint8(ERock.Motherlode));
-    RockType.set(homeRock, uint8(ERock.Asteroid));
+    Asteroid.setIsAsteroid(rock, true);
+    Asteroid.setIsAsteroid(homeRock, true);
     UnitCount.set(enemy, rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({

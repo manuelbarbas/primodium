@@ -41,7 +41,6 @@ contract RecallSystemTest is PrimodiumTest {
     setupRecall();
     Home.setAsteroid(player, origin);
     P_MiningRate.set(unitPrototype, 0, 1);
-    Motherlode.set(destination, uint8(ESize.Medium), uint8(EResource.Iron));
     ProductionRate.set(destination, uint8(EResource.Iron), 50);
     world.recallStationedUnits(destination);
     assertEq(ProductionRate.get(destination, uint8(EResource.Iron)), 0);
@@ -53,7 +52,6 @@ contract RecallSystemTest is PrimodiumTest {
     OwnedBy.set(origin, player);
     P_MiningRate.set(unitPrototype, 0, 1);
     OwnedBy.set(destination, player);
-    Motherlode.set(destination, uint8(ESize.Small), uint8(EResource.Titanium));
     MaxResourceCount.set(destination, uint8(EResource.R_Titanium), 10000000);
     MaxResourceCount.set(origin, uint8(EResource.Titanium), 10000000);
     ProductionRate.set(destination, uint8(EResource.Titanium), 50);
@@ -72,8 +70,8 @@ contract RecallSystemTest is PrimodiumTest {
   }
 
   function setupRecall() public {
-    RockType.set(origin, uint8(ERock.Asteroid));
-    RockType.set(destination, uint8(ERock.Motherlode));
+    Asteroid.setIsAsteroid(origin, true);
+    Asteroid.setIsAsteroid(destination, true);
     ReversePosition.set(originPosition.x, originPosition.y, origin);
     ReversePosition.set(destinationPosition.x, destinationPosition.y, destination);
     OwnedBy.set(origin, player);

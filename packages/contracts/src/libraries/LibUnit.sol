@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
+import { IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, P_EnumToPrototype } from "codegen/index.sol";
 
-import { ERock, EUnit } from "src/Types.sol";
+import { EUnit } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
@@ -173,16 +173,6 @@ library LibUnit {
     if (unitCount == 0) return;
     uint256 prevUnitCount = UnitCount.get(playerEntity, rockEntity, unitType);
     UnitCount.set(playerEntity, rockEntity, unitType, prevUnitCount + unitCount);
-
-    // update production rate
-    if (RockType.get(rockEntity) != uint8(ERock.Motherlode)) return;
-    uint256 level = UnitLevel.get(playerEntity, unitType);
-    uint256 productionRate = P_MiningRate.get(unitType, level);
-    if (productionRate == 0) return;
-    uint8 resource = (Motherlode.getMotherlodeType(rockEntity));
-    uint256 prevProductionRate = ProductionRate.get(rockEntity, resource);
-    ProductionRate.set(rockEntity, resource, prevProductionRate + (productionRate * unitCount));
-    ConsumptionRate.set(rockEntity, P_RawResource.get(resource), prevProductionRate + (productionRate * unitCount));
   }
 
   /**
@@ -203,16 +193,5 @@ library LibUnit {
     uint256 currUnitCount = UnitCount.get(playerEntity, rockEntity, unitType);
     if (unitCount > currUnitCount) unitCount = currUnitCount;
     UnitCount.set(playerEntity, rockEntity, unitType, currUnitCount - unitCount);
-
-    // update production rate
-    if (RockType.get(rockEntity) != uint8(ERock.Motherlode)) return;
-    uint256 level = UnitLevel.get(playerEntity, unitType);
-    uint256 productionRate = P_MiningRate.get(unitType, level);
-    if (productionRate == 0) return;
-    uint8 resource = (Motherlode.getMotherlodeType(rockEntity));
-    uint256 prevProductionRate = ProductionRate.get(rockEntity, resource);
-    require(prevProductionRate >= productionRate * unitCount, "[LibUnit] Production rate cannot be negative");
-    ProductionRate.set(rockEntity, resource, prevProductionRate - (productionRate * unitCount));
-    ConsumptionRate.set(rockEntity, P_RawResource.get(resource), prevProductionRate - (productionRate * unitCount));
   }
 }
