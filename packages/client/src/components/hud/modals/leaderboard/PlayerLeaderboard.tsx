@@ -9,6 +9,7 @@ import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
+import { invite } from "src/network/setup/contractCalls/alliance";
 import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 
@@ -50,9 +51,8 @@ export const PlayerLeaderboard = () => {
 };
 
 const LeaderboardItem = ({ player, index, score }: { player: Entity; index: number; score: number }) => {
-  const {
-    playerAccount: { entity: playerEntity },
-  } = useMud();
+  const mud = useMud();
+  const playerEntity = mud.playerAccount.entity;
   const role = components.PlayerAlliance.use(playerEntity)?.role ?? EAllianceRole.Member;
   const alliance = components.PlayerAlliance.use(playerEntity)?.alliance as Entity | undefined;
   const playerAlliance = components.PlayerAlliance.use(player)?.alliance as Entity | undefined;
@@ -77,9 +77,7 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
                 className="btn-xs flex border border-secondary"
                 tooltip="Invite"
                 tooltipDirection="left"
-                onClick={async () => {
-                  // invite(player, network);
-                }}
+                onClick={async () => invite(mud, player)}
               >
                 <FaEnvelope />
               </Button>

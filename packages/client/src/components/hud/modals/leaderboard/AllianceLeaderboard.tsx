@@ -107,7 +107,6 @@ export const ScoreScreen = () => {
 export const CreateScreen = () => {
   const mud = useMud();
   const [inviteOnly, setInviteOnly] = useState(true);
-  inviteOnly;
   const [allianceTag, setAllianceTag] = useState("");
 
   return (

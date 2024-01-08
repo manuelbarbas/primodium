@@ -80,9 +80,7 @@ const ClaimObjectiveButton: React.FC<{
           disabled={!canClaim}
           className={`btn-sm btn-secondary border-accent w-full`}
           clickSound={AudioKeys.Complete2}
-          onClick={() => {
-            claimObjective(mud, objectiveEntity);
-          }}
+          onClick={() => claimObjective(mud, objectiveEntity)}
         >
           {"Claim"}
         </Button>

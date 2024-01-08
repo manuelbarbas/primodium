@@ -110,7 +110,6 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     const scene = _instance.sceneManager.scenes.get(sceneKey);
 
     if (scene === undefined) {
-      console.log(_instance.sceneManager.scenes);
       throw new Error("No primodium scene found with key " + sceneKey);
     }
 

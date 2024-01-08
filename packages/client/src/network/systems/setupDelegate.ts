@@ -1,6 +1,6 @@
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { getPrivateKey } from "src/util/burner";
 import { entityToAddress } from "src/util/common";
+import { getPrivateKey } from "src/util/localStorage";
 import { Hex } from "viem";
 import { components } from "../components";
 import { world } from "../world";

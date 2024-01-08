@@ -125,7 +125,6 @@ export const SendFleet = () => {
     [units]
   );
   const sendFleet = (sendType: ESendType) => {
-    sendType;
     if (!origin || !destination) return;
     const originCoord = components.Position.get(origin) ?? { x: 0, y: 0 };
     const destinationCoord = components.Position.get(destination) ?? { x: 0, y: 0 };

@@ -114,9 +114,7 @@ export const BuildingMenu: React.FC = () => {
             disabled={!canToggle}
             tooltipDirection="top"
             className={`btn-square btn-xs font-bold border ${active ? "border-error" : "border-success"} inline-flex`}
-            onClick={() => {
-              toggleBuilding(mud, selectedBuilding);
-            }}
+            onClick={() => toggleBuilding(mud, selectedBuilding)}
           >
             <FaPowerOff size={12} />
           </Button>
