@@ -6,7 +6,6 @@ import { ESendType, Arrival, EResource } from "src/Types.sol";
 import { Position, DestroyedUnit, ResourceCount, UnitCount, UnitLevel, BattleResult, BattleResultData, P_UnitPrototypes, P_Unit, ArrivalCount, Home } from "codegen/index.sol";
 import { NUM_UNITS } from "src/constants.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
-import { LibSend } from "libraries/LibSend.sol";
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 
 library LibBattle {
@@ -161,25 +160,6 @@ library LibBattle {
         if (sendType == ESendType.Invade) LibUnit.increaseUnitCount(br.rock, unitTypes[i], br.attackerUnitsLeft[i]);
         else unitCounts[i] = br.attackerUnitsLeft[i];
       }
-    }
-    if (br.winner == br.attacker) {
-      LibSend.sendUnits(
-        Arrival({
-          unitCounts: unitCounts,
-          sendTime: block.timestamp,
-          sendType: ESendType.Reinforce,
-          arrivalTime: LibSend.getArrivalTime(
-            Position.get(br.rock),
-            Position.get(Home.getAsteroid(br.attacker)),
-            br.attacker,
-            unitCounts
-          ),
-          from: br.attacker,
-          to: br.attacker,
-          origin: br.rock,
-          destination: Home.getAsteroid(br.attacker)
-        })
-      );
     }
   }
 }
