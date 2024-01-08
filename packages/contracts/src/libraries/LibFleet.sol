@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { ESendType, Arrival, ERock, EResource } from "src/Types.sol";
-import { FleetStatusData, FleetStatus, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ArrivalCount, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
-import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
+import { ESendType, ERock, EResource } from "src/Types.sol";
+import { FleetStatusData, FleetStatus, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
@@ -23,6 +22,7 @@ library LibFleet {
     uint256[NUM_RESOURCE] calldata resourceCounts
   ) internal returns (bytes32 fleetId) {
     require(OwnedBy.get(spaceRock) == playerEntity, "[Fleet] Can only create fleet on owned space rock");
+    require(ResourceCount.get(spaceRock, uint8(EResource.U_MaxMoves)) > 0, "[Fleet] Space rock has no max moves");
     LibStorage.decreaseStoredResource(spaceRock, uint8(EResource.U_MaxMoves), 1);
     //require(ResourceCount.get(spaceRock, EResource.U_Cargo) > 0, "[Fleet] Space rock has no cargo capacity"))
     fleetId = LibEncode.getTimedHash(playerEntity, FleetKey);
@@ -387,15 +387,17 @@ library LibFleet {
     OwnedBy.deleteRecord(fleetId);
   }
 
-  function mergeFleets(bytes32[] calldata fleets) internal {
+  function mergeFleets(bytes32 playerEntity, bytes32[] calldata fleets) internal {
     require(fleets.length > 1, "[Fleet] Can only merge more than one fleet");
     bytes32 spaceRock = FleetStatus.getDestination(fleets[0]);
     require(FleetStatus.getArrivalTime(fleets[0]) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
+    require(OwnedBy.get(OwnedBy.get(fleets[0])) == playerEntity, "[Fleet] Can only merge owned fleets");
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[NUM_UNITS] memory unitCounts;
 
     for (uint256 i = 1; i < fleets.length; i++) {
+      require(OwnedBy.get(OwnedBy.get(fleets[i])) == playerEntity, "[Fleet] Can only merge owned fleets");
       require(FleetStatus.getDestination(fleets[i]) == spaceRock, "[Fleet] Fleets must be on same space rock");
       require(FleetStatus.getArrivalTime(fleets[i]) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
       for (uint8 j = 0; j < NUM_UNITS; j++) {
@@ -433,5 +435,63 @@ library LibFleet {
       FleetsMap.remove(spaceRockOwner, FleetOwnedByKey, fleets[i]);
       FleetsMap.remove(spaceRock, FleetIncomingKey, fleets[i]);
     }
+  }
+
+  function sendFleet(
+    bytes32 playerEntity,
+    bytes32 fleetId,
+    bytes32 destination
+  ) internal {
+    require(OwnedBy.get(OwnerdBy.get(fleetId)) == playerEntity, "[Fleet] Can only send owned fleet");
+    require(
+      FleetStatus.getArrivalTime(fleetId) <= block.timestamp,
+      "[Fleet] Fleet has not reached it's current destination space rock yet"
+    );
+
+    FleetsMap.remove(FleetStatus.getDestination(fleetId), FleetIncomingKey, fleetId);
+    FleetsMap.add(destination, FleetIncomingKey, fleetId);
+
+    FleetStatus.setDestination(fleetId, destination);
+    FleetStatus.setArrivalTime(fleetId, getArrivalTime(fleetId, destination));
+    FleetStatus.setSendTime(fleetId, block.timestamp);
+  }
+
+  /// @notice Computes the block number an arrival will occur.
+  /// @param origin Origin position.
+  /// @param destination Destination position.
+  /// @param playerEntity Entity initiating send.
+  /// @param unitCounts Counts of units being sent.
+  /// @return Block number of arrival.
+  function getArrivalTime(bytes32 fleetId, PositionData memory destination) internal view returns (uint256) {
+    P_GameConfigData memory config = P_GameConfig.get();
+    uint256 unitSpeed = LibUnit.getFleetSlowestUnitSpeed(fleetId);
+    require(unitSpeed > 0 && config.travelTime > 0, "[Fleet] Slowest unit speed must be greater than 0");
+
+    bytes32 origin = FleetStatus.getOrigin(fleetId);
+    return
+      block.timestamp +
+      ((LibMath.distance(origin, destination) * config.travelTime * WORLD_SPEED_SCALE * UNIT_SPEED_SCALE) /
+        (config.worldSpeed * unitSpeed));
+  }
+
+  /// @notice Returns the slowest speed of given unit types.
+  /// @param fleetId fleet being sent.
+  /// @return slowestSpeed Slowest unit speed among the types.
+  function getFleetSlowestUnitSpeed(bytes32 fleetId) internal view returns (uint256 slowestSpeed) {
+    bytes32 ownerSpaceRockEntity = OwnedBy.get(fleetId);
+    uint256 bignum = 115792089237316195423570985008687907853269984665640564039457584007913129639935;
+    slowestSpeed = bignum;
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      uint256 unitCount = UnitCount.get(fleetId, unitPrototypes[i]);
+      if (unitCount == 0) continue;
+      uint256 unitLevel = UnitLevel.get(ownerSpaceRockEntity, unitPrototypes[i]);
+      uint256 speed = P_Unit.getSpeed(unitPrototypes[i], unitLevel);
+      if (speed < slowestSpeed) {
+        slowestSpeed = speed;
+      }
+    }
+    if (slowestSpeed == bignum) return 0;
+    return slowestSpeed;
   }
 }
