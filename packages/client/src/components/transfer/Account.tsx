@@ -21,6 +21,10 @@ export function Account() {
   const tokenAddress = components.P_GameConfig2.use()?.wETHAddress;
 
   const removeBurnerPlayerAccount = () => {
+    const go = confirm(
+      `Are you sure you want to delete your player account? Don't forget to save your keys!\n Public key: ${playerAccount.address}\n Private key: ${playerAccount.privateKey}`
+    );
+    if (!go) return;
     localStorage.removeItem("primodiumPlayerAccount");
     window.location.reload();
   };
@@ -76,11 +80,7 @@ export function Account() {
             >
               <FaExclamationCircle className="text-error" />
             </Button>
-            <Button
-              className="btn-xs btn-error"
-              onClick={removeBurnerPlayerAccount}
-              tooltip="delete and reload with new account"
-            >
+            <Button className="btn-xs" onClick={removeBurnerPlayerAccount} tooltip="delete and reload with new account">
               <FaTrash />
             </Button>
           </>
