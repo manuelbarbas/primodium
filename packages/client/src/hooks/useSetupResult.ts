@@ -95,7 +95,8 @@ const useSetupResult = () => {
     const useBurner = options.burner;
     const address = options.address;
     if (!useBurner && !address) throw new Error("Must provide address or burner option");
-    (useBurner ? setupBurnerAccount(options.privateKey) : setupExternalAccount(address!)).then((account) => {
+    (useBurner ? setupBurnerAccount(options.privateKey, false) : setupExternalAccount(address!)).then((account) => {
+      if (useBurner) localStorage.setItem("primodiumPlayerAccount", account.privateKey ?? "");
       setPlayerAccount(account);
 
       if (playerAccountInterval.current) {

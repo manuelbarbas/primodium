@@ -12,7 +12,7 @@ export async function _execute({ network: { waitForTransaction, publicClient } }
   try {
     const txHash = await txPromise;
     await waitForTransaction(txHash);
-    console.log("Transaction Hash: ", txHash);
+    console.log("[Tx] hash: ", txHash);
 
     // If the transaction runs out of gas, status will be reverted
     // receipt.status is of type TStatus = 'success' | 'reverted' defined in TransactionReceipt
@@ -69,7 +69,7 @@ export async function execute<T extends keyof MetadataTypes>(
   onComplete?: (receipt: TransactionReceipt | undefined) => void
 ) {
   const account = options?.delegate ? mud.sessionAccount ?? mud.playerAccount : mud.playerAccount;
-  console.log("Executing transaction with account: ", account.address);
+  console.log("[Tx] Executing with address: ", account.address.slice(0, 6));
   if (options)
     components.TransactionQueue.enqueue(
       async () => {

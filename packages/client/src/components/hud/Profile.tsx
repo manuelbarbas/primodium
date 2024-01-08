@@ -70,7 +70,7 @@ export const Profile = () => {
           </div>
         </div>
         <Modal title="account">
-          <Modal.Button className="btn-xs btn-ghost flex gap-2 m-auto text-accent mt-1">
+          <Modal.Button className="btn-xs btn-ghost flex gap-2 m-auto text-accent mt-1 w-full">
             <Tooltip text={`${delegate ? "" : "not"} delegating`} direction="bottom">
               <div>
                 {delegate ? (

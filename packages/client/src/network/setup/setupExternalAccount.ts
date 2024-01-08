@@ -36,5 +36,6 @@ export async function setupExternalAccount(externalAddress: Hex) {
     walletClient,
     entity: addressToEntity(walletClient.account.address),
     write$,
+    privateKey: undefined,
   };
 }

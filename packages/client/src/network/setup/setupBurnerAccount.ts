@@ -8,11 +8,11 @@ import { Hex, createPublicClient, createWalletClient, fallback, http } from "vie
 import { generatePrivateKey } from "viem/accounts";
 import { getNetworkConfig } from "../config/getNetworkConfig";
 
-export async function setupBurnerAccount(privateKey?: Hex) {
+export async function setupBurnerAccount(privateKey?: Hex, saveToStorage = true) {
   const key = privateKey ?? generatePrivateKey();
   const networkConfig = getNetworkConfig();
   const burnerAccount = createBurnerAccount(key);
-  localStorage.setItem(STORAGE_PREFIX + burnerAccount.address, key);
+  if (saveToStorage) localStorage.setItem(STORAGE_PREFIX + burnerAccount.address, key);
   const clientOptions = {
     chain: networkConfig.chain,
     transport: transportObserver(fallback([http()])),

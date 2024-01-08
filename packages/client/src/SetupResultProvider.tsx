@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+import { Hex } from "viem";
 import { useAccount } from "wagmi";
 import AppLoadingState from "./AppLoadingState";
 import { Initializing } from "./components/shared/Initializing";
@@ -30,8 +31,10 @@ export default function SetupResultProvider() {
       setLoading(false);
     }, 100);
 
-    if (noExternalWallet) updatePlayerAccount({ burner: true });
-    else {
+    if (noExternalWallet) {
+      const privateKey = localStorage.getItem("primodiumPlayerAccount") ?? undefined;
+      updatePlayerAccount({ burner: true, privateKey: privateKey as Hex | undefined });
+    } else {
       if (!externalAccount.address) return;
       updatePlayerAccount({ address: externalAccount.address });
     }
