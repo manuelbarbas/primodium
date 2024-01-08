@@ -158,9 +158,9 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_Asteroid: maxRange,
       P_GameConfig: {
         admin: encodeAddress("0"),
-        motherlodeDistance: 10n,
-        maxMotherlodesPerAsteroid: 6n,
-        motherlodeChanceInv: 4n,
+        asteroidDistance: 10n,
+        maxAsteroidsPerPlayer: 6n,
+        asteroidChanceInv: 4n,
         unitProductionRate: 100n,
         travelTime: 10n,
         worldSpeed: 100n,

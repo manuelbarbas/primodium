@@ -46,12 +46,12 @@ export const config = mudConfig({
       valueSchema: {
         admin: "address",
         unitProductionRate: "uint256",
-        maxMotherlodesPerAsteroid: "uint256",
-        motherlodeChanceInv: "uint256",
-        motherlodeDistance: "uint256",
         travelTime: "uint256",
         worldSpeed: "uint256",
         tax: "uint256",
+        maxAsteroidsPerPlayer: "uint256",
+        asteroidChanceInv: "uint256",
+        asteroidDistance: "uint256",
       },
     },
 
@@ -146,6 +146,11 @@ export const config = mudConfig({
 
     P_Terrain: {
       keySchema: { x: "int32", y: "int32" },
+      valueSchema: "uint8", // EResource
+    },
+
+    Specialty: {
+      keySchema: { entity: "bytes32" },
       valueSchema: "uint8", // EResource
     },
 
@@ -324,27 +329,9 @@ export const config = mudConfig({
       },
     },
 
-    // Used in the building utilities set
-    SetItemMotherlodes: {
-      keySchema: { motherlode: "bytes32", item: "bytes32" },
-      valueSchema: {
-        stored: "bool",
-        index: "uint256",
-      },
-    },
-    SetMotherlodes: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "bytes32[]",
-    },
-
     P_SizeToAmount: {
       keySchema: { size: "uint8" },
       valueSchema: "uint256",
-    },
-
-    OwnedMotherlodes: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "bytes32[]",
     },
 
     P_RawResource: {
