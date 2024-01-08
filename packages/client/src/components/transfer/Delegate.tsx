@@ -35,7 +35,6 @@ export function Delegate() {
   const submitPrivateKey = async (privateKey: string) => {
     // Validate the private key format here
     // This is a basic example, adjust the validation according to your requirements
-    console.log("submitPrivateKey", privateKey);
     const isValid = /^0x[a-fA-F0-9]{64}$/.test(privateKey);
     if (!isValid) return;
     const account = privateKeyToAccount(privateKey as Hex);

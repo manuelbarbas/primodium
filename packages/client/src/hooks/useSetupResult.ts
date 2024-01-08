@@ -16,22 +16,22 @@ const useSetupResult = () => {
   const sessionAccountInterval = useRef<NodeJS.Timeout | null>(null);
   const playerAccountInterval = useRef<NodeJS.Timeout | null>(null);
 
-  const { daddyWalletClient, faucet } = useMemo(() => {
+  const { externalWalletClient, faucet } = useMemo(() => {
     const networkConfig = getNetworkConfig();
-    const daddyPKey = networkConfig.chainId === "dev" ? import.meta.env.PRI_DEV_PKEY : undefined;
+    const externalPKey = networkConfig.chainId === "dev" ? import.meta.env.PRI_DEV_PKEY : undefined;
     const faucet = networkConfig.faucetServiceUrl
       ? createFaucetClient({ url: networkConfig.faucetServiceUrl })
       : undefined;
 
-    const daddyWalletClient = daddyPKey
+    const externalWalletClient = externalPKey
       ? createWalletClient({
           chain: networkConfig.chain,
           transport: transportObserver(fallback([http()])),
           pollingInterval: 1000,
-          account: createBurnerAccount(daddyPKey as Hex),
+          account: createBurnerAccount(externalPKey as Hex),
         })
       : undefined;
-    return { faucet, daddyWalletClient };
+    return { faucet, externalWalletClient };
   }, []);
 
   const requestDrip = useCallback(
@@ -48,17 +48,17 @@ const useSetupResult = () => {
           balance = await publicClient.getBalance({ address });
           console.info(`[Faucet] New balance: ${formatEther(balance)} ETH`);
         }
-      } else if (daddyWalletClient) {
+      } else if (externalWalletClient) {
         const balance = await publicClient.getBalance({ address });
         const lowBalance = balance < minEth;
         if (!lowBalance) return;
         console.log("[Dev Drip] balance:", formatEther(balance));
         const amountToDrip = 69n * 10n ** 18n;
-        await daddyWalletClient.sendTransaction({ to: address, value: amountToDrip });
+        await externalWalletClient.sendTransaction({ to: address, value: amountToDrip });
         console.info(`[Dev Drip] Dripped ${formatEther(amountToDrip)} to ${address}`);
       }
     },
-    [daddyWalletClient, faucet, network?.network.publicClient]
+    [externalWalletClient, faucet, network?.network.publicClient]
   );
 
   useEffect(() => {
