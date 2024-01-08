@@ -1,7 +1,7 @@
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { execute } from "src/network/actions";
 import { MUD } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
 import { Address } from "viem";
 
 export const grantAccess = async (mud: MUD, address: Address) => {
@@ -9,7 +9,7 @@ export const grantAccess = async (mud: MUD, address: Address) => {
     mud,
     (account) => account.worldContract.write.grantAccess([address]),
     {
-      id: hashEntities(TransactionQueueType.Access),
+      id: singletonEntity,
       delegate: false,
       type: TransactionQueueType.Access,
     },
@@ -24,7 +24,7 @@ export const switchDelegate = async (mud: MUD, address: Address) => {
     mud,
     (account) => account.worldContract.write.switchDelegate([address]),
     {
-      id: hashEntities(TransactionQueueType.Access),
+      id: singletonEntity,
       delegate: false,
       type: TransactionQueueType.Access,
     },
@@ -39,7 +39,7 @@ export const revokeAccessDelegate = async (mud: MUD) => {
     mud,
     (account) => account.worldContract.write.revokeAccessDelegate(),
     {
-      id: hashEntities(TransactionQueueType.Access),
+      id: singletonEntity,
       delegate: true,
       type: TransactionQueueType.Access,
     },
@@ -54,7 +54,7 @@ export const revokeAccessOwner = async (mud: MUD) => {
     mud,
     (account) => account.worldContract.write.revokeAccessOwner(),
     {
-      id: hashEntities(TransactionQueueType.Access),
+      id: singletonEntity,
       delegate: false,
       type: TransactionQueueType.Access,
     },

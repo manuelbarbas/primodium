@@ -1,9 +1,10 @@
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useMemo, useState } from "react";
 import { FaClipboard, FaExclamationCircle, FaLink, FaPlus, FaQuestionCircle, FaTrash, FaUnlink } from "react-icons/fa";
-import { toast } from "react-toastify";
 import { useMud } from "src/hooks";
 import { grantAccess, revokeAccessOwner, switchDelegate } from "src/network/setup/contractCalls/access";
 import { findEntriesWithPrefix } from "src/util/burner";
+import { copyToClipboard } from "src/util/clipboard";
 import { STORAGE_PREFIX } from "src/util/constants";
 import { Hex } from "viem";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
@@ -11,19 +12,10 @@ import { Badge } from "../core/Badge";
 import { Button } from "../core/Button";
 import { Tooltip } from "../core/Tooltip";
 import { AddressDisplay } from "../hud/AddressDisplay";
-
-const copyToClipboard = async (text: string, copyType: string) => {
-  try {
-    await navigator.clipboard.writeText(text);
-    // Display a message or handle the UI feedback
-    toast.success(`Copied ${copyType} to clipboard`);
-  } catch (err) {
-    toast.error(`Failed to copy ${copyType} to clipboard`);
-  }
-};
+import { TransactionQueueMask } from "../shared/TransactionQueueMask";
 
 const sessionWalletTooltip =
-  "Use a locally-stored session account to perform low-risk actions without requiring external confirmation.";
+  "Link a locally stored session account to perform low-risk actions without requiring external confirmation.";
 
 export function Delegate() {
   const mud = useMud();
@@ -58,6 +50,7 @@ export function Delegate() {
   const handleRandomPress = () => {
     const randomPKey = generatePrivateKey();
     savePrivateKey(randomPKey);
+    return randomPKey;
   };
 
   const removeSessionKey = (publicKey: string) => {
@@ -76,44 +69,61 @@ export function Delegate() {
           </div>
         </Tooltip>
       </div>
-      <Badge className="w-full flex bg-black/30 p-6">
-        {delegateAddress ? (
-          <div className="w-full flex items-center justify-between">
-            <AddressDisplay address={delegateAddress} notShort className="font-bold" />
-            <div className="flex">
-              <Button
-                onClick={async () => revokeAccessOwner(mud)}
-                tooltip="Unlink"
-                tooltipDirection="top"
-                className="btn-xs btn-ghost"
-              >
-                <FaUnlink />
-              </Button>
-
-              <Button
-                tooltip="Copy address"
-                onClick={() => copyToClipboard(delegateAddress, "address")}
-                tooltipDirection="top"
-                className="btn-xs btn-ghost"
-              >
-                <FaClipboard />
-              </Button>
-              {sessionAccount?.privateKey && (
+      <TransactionQueueMask queueItemId={singletonEntity}>
+        <Badge className="w-full flex bg-black/30 p-6">
+          {delegateAddress ? (
+            <div className="w-full flex items-center justify-between">
+              <AddressDisplay address={delegateAddress} notShort className="font-bold" />
+              <div className="flex">
                 <Button
-                  tooltip="Copy Private Key"
-                  onClick={() => copyToClipboard(sessionAccount.privateKey, "private key")}
+                  onClick={async () => revokeAccessOwner(mud)}
+                  tooltip="Unlink"
                   tooltipDirection="top"
                   className="btn-xs btn-ghost"
                 >
-                  <FaExclamationCircle className="text-error" />
+                  <FaUnlink />
+                </Button>
+
+                <Button
+                  tooltip="Copy address"
+                  onClick={() => copyToClipboard(delegateAddress, "address")}
+                  tooltipDirection="top"
+                  className="btn-xs btn-ghost"
+                >
+                  <FaClipboard />
+                </Button>
+                {sessionAccount?.privateKey && (
+                  <Button
+                    tooltip="Copy Private Key"
+                    onClick={() => copyToClipboard(sessionAccount.privateKey, "private key")}
+                    tooltipDirection="top"
+                    className="btn-xs btn-ghost"
+                  >
+                    <FaExclamationCircle className="text-error" />
+                  </Button>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="uppercase font-bold text-sm font-left flex items-center gap-2">
+              <p>INACTIVE</p>
+              {accounts.length < 6 && (
+                <Button
+                  tooltip="link new account"
+                  tooltipDirection="bottom"
+                  onClick={() => {
+                    const key = handleRandomPress();
+                    submitPrivateKey(key);
+                  }}
+                  className="btn-ghost btn-xs"
+                >
+                  <FaPlus />
                 </Button>
               )}
             </div>
-          </div>
-        ) : (
-          <div className="uppercase font-bold text-sm font-left">INACTIVE</div>
-        )}
-      </Badge>
+          )}
+        </Badge>
+      </TransactionQueueMask>
       <p className="text-xs opacity-50 font-bold uppercase flex gap-2 items-center">local accounts</p>
       <div className="grid grid-cols-3 grid-rows-2 gap-1">
         {accounts.map((account) => (
