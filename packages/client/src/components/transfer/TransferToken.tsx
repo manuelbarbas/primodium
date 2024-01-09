@@ -3,13 +3,13 @@ import { Button } from "src/components/core/Button";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { Hex, formatEther } from "viem";
+import { Card } from "../core/Card";
 
 interface TransferTokenProps {
   onTransfer: (address: string, amount: bigint) => Promise<void>;
-  className?: string;
 }
 
-export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, className }) => {
+export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer }) => {
   const mud = useMud();
   const { playerAccount } = mud;
   const [input, setInput] = useState<string>("");
@@ -52,7 +52,7 @@ export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, classN
   };
 
   return (
-    <div className={`flex flex-col gap-2 bg-base-100 ${className}`}>
+    <Card className="bg-base-100 gap-2">
       <p className="text-xs opacity-50 font-bold uppercase flex gap-2 items-center">transfer weth</p>
       <div className="relative flex items-center">
         <input
@@ -72,7 +72,7 @@ export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, classN
           <Button
             tooltip={`${formatEther(balance)} wETH`}
             tooltipDirection="top"
-            className="btn-secondary btn-xs disabled:opacity-50"
+            className="btn-primary btn-xs disabled:opacity-50"
             disabled={formatEther(balance) === amount}
             onClick={() => setAmount(formatEther(balance))}
           >
@@ -105,6 +105,6 @@ export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, classN
       >
         <p>transfer</p>
       </Button>
-    </div>
+    </Card>
   );
 };

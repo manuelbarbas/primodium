@@ -88,7 +88,7 @@ export function Account() {
       </div>
       <div className="p-2 h-full w-full flex flex-col gap-6">
         <Delegate />
-        <TransferToken onTransfer={onTransfer} className="border border-secondary p-6" />
+        <TransferToken onTransfer={onTransfer} />
       </div>
     </div>
   );
