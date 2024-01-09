@@ -99,7 +99,6 @@ function setupHooks(IWorld world) {
   registerBuildHooks(world, onBefore_ClaimResources);
   registerUpgradeHooks(world, onBefore_ClaimResources);
   registerDestroyHooks(world, onBefore_ClaimResources);
-  registerSendUnits(world, onBefore_ClaimUnits);
   registerTrainUnits(world, onBefore_ClaimResources, onBefore_ClaimUnits);
   registerClaimObjective(world, onBefore_ClaimResources, onBefore_ClaimUnits);
   registerUpgradeRangeHook(world, onBefore_ClaimResources);

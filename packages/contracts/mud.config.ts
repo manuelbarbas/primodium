@@ -19,11 +19,6 @@ export type Config = typeof config;
 export const config = mudConfig({
   excludeSystems: [...dev],
   systems: {
-    S_BattleSystem: {
-      openAccess: false,
-      accessList: [DUMMY_ADDRESS],
-      name: "S_BattleSystem",
-    },
     S_SpawnPirateAsteroidSystem: {
       openAccess: false,
       accessList: [DUMMY_ADDRESS],
@@ -410,15 +405,13 @@ export const config = mudConfig({
 
     /* ------------------------------ Sending Units ----------------------------- */
 
-    FleetStatus: {
+    FleetMovement: {
       keySchema: { entity: "bytes32" },
       valueSchema: {
         origin: "bytes32",
         destination: "bytes32",
         sendTime: "uint256",
         arrivalTime: "uint256",
-        resourceStorage: "uint256",
-        occupiedStorage: "uint256",
       },
     },
 
@@ -429,6 +422,7 @@ export const config = mudConfig({
         defense: "uint256",
         speed: "uint256",
         cargo: "uint256",
+        occupiedCargo: "uint256",
       },
     },
 

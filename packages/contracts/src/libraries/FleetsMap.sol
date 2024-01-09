@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { FleetStatusData, MapFleets, MapStoredFleets } from "codegen/index.sol";
+import { MapFleets, MapStoredFleets } from "codegen/index.sol";
 
 library FleetsMap {
   /**

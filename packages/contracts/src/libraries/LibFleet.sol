@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { ESendType, ERock, EResource } from "src/Types.sol";
-import { FleetAttributes, FleetStatusData, FleetStatus, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { Position, FleetAttributesData, FleetAttributes, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
@@ -28,19 +28,17 @@ library LibFleet {
     fleetId = LibEncode.getTimedHash(playerEntity, FleetKey);
     OwnedBy.set(fleetId, spaceRock);
 
-    FleetStatus.set(
+    FleetMovement.set(
       fleetId,
-      FleetStatusData({
+      FleetMovementData({
         arrivalTime: block.timestamp,
         sendTime: block.timestamp,
         origin: spaceRock,
-        destination: spaceRock,
-        resourceStorage: 0,
-        occupiedStorage: 0
+        destination: spaceRock
       })
     );
 
-    FleetAttributes.set(fleetId, FleetAttributes({ speed: 0, attack: 0, defense: 0, cargo: 0 }));
+    FleetAttributes.set(fleetId, FleetAttributesData({ speed: 0, attack: 0, defense: 0, cargo: 0, occupiedCargo: 0 }));
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
@@ -70,17 +68,20 @@ library LibFleet {
   ) internal {
     require(OwnedBy.get(OwnedBy.get(fromFleetId)) == playerEntity, "[Fleet] Can only transfer units from owned fleet");
 
-    bytes32 spaceRock = FleetStatus.getDestination(fromFleetId);
+    bytes32 spaceRock = FleetMovement.getDestination(fromFleetId);
     require(
-      FleetStatus.getArrivalTime(fromFleetId) <= block.timestamp,
+      FleetMovement.getArrivalTime(fromFleetId) <= block.timestamp,
       "[Fleet] From fleet has not reached space rock yet"
     );
 
     require(
-      FleetStatus.getDestination(fleetId) == spaceRock,
+      FleetMovement.getDestination(fleetId) == spaceRock,
       "[Fleet] To fleet is not on same space rock as from fleet"
     );
-    require(FleetStatus.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] to Fleet has not reached space rock yet");
+    require(
+      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
+      "[Fleet] to Fleet has not reached space rock yet"
+    );
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     bool sameOwner = OwnedBy.get(fleetId) == OwnedBy.get(fromFleetId);
@@ -102,17 +103,20 @@ library LibFleet {
   ) internal {
     require(OwnedBy.get(OwnedBy.get(fromFleetId)) == playerEntity, "[Fleet] Can only transfer units from owned fleet");
 
-    bytes32 spaceRock = FleetStatus.getDestination(fromFleetId);
+    bytes32 spaceRock = FleetMovement.getDestination(fromFleetId);
     require(
-      FleetStatus.getDestination(fleetId) == spaceRock,
+      FleetMovement.getDestination(fleetId) == spaceRock,
       "[Fleet] To fleet is not on same space rock as from fleet"
     );
 
     require(
-      FleetStatus.getArrivalTime(fromFleetId) <= block.timestamp,
+      FleetMovement.getArrivalTime(fromFleetId) <= block.timestamp,
       "[Fleet] From fleet has not reached space rock yet"
     );
-    require(FleetStatus.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] to Fleet has not reached space rock yet");
+    require(
+      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
+      "[Fleet] to Fleet has not reached space rock yet"
+    );
 
     for (uint8 i = 0; i < NUM_RESOURCE; i++) {
       increaseFleetResource(fleetId, i, resourceCounts[i]);
@@ -127,8 +131,8 @@ library LibFleet {
     uint256[NUM_UNITS] calldata unitCounts
   ) internal {
     require(OwnedBy.get(spaceRock) == playerEntity, "[Fleet] Can only transfer units from owned space rock");
-    require(FleetStatus.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not on space rock");
-    require(FleetStatus.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
+    require(FleetMovement.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not on space rock");
+    require(FleetMovement.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     bool isOwner = OwnedBy.get(fleetId) == spaceRock;
@@ -148,8 +152,8 @@ library LibFleet {
     uint256[NUM_UNITS] calldata unitCounts
   ) internal {
     require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only transfer units from owned fleet");
-    require(FleetStatus.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not in space rock orbit");
-    require(FleetStatus.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
+    require(FleetMovement.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not in space rock orbit");
+    require(FleetMovement.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     bool isOwner = OwnedBy.get(fleetId) == spaceRock;
@@ -169,8 +173,8 @@ library LibFleet {
     uint256[NUM_RESOURCE] calldata resourceCounts
   ) internal {
     require(OwnedBy.get(spaceRock) == playerEntity, "[Fleet] Can only transfer resources from owned space rock");
-    require(FleetStatus.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not on space rock");
-    require(FleetStatus.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
+    require(FleetMovement.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not on space rock");
+    require(FleetMovement.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
 
     for (uint8 i = 0; i < NUM_RESOURCE; i++) {
       uint256 rockResourceCount = ResourceCount.get(spaceRock, i);
@@ -187,8 +191,8 @@ library LibFleet {
     uint256[NUM_RESOURCE] calldata resourceCounts
   ) internal {
     require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only transfer resources from owned fleet");
-    require(FleetStatus.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not in space rock orbit");
-    require(FleetStatus.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
+    require(FleetMovement.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not in space rock orbit");
+    require(FleetMovement.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
     for (uint8 i = 0; i < NUM_RESOURCE; i++) {
       uint256 fleetResourceCount = ResourceCount.get(fleetId, i);
       require(fleetResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
@@ -206,8 +210,8 @@ library LibFleet {
     uint256[NUM_RESOURCE] calldata resourceCounts
   ) internal {
     require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only transfer units from owned fleet");
-    require(FleetStatus.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not in space rock orbit");
-    require(FleetStatus.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
+    require(FleetMovement.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not in space rock orbit");
+    require(FleetMovement.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
@@ -234,8 +238,8 @@ library LibFleet {
     uint256[NUM_RESOURCE] calldata resourceCounts
   ) internal {
     require(OwnedBy.get(spaceRock) == playerEntity, "[Fleet] Can only transfer units from owned space rock");
-    require(FleetStatus.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not on space rock");
-    require(FleetStatus.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
+    require(FleetMovement.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not on space rock");
+    require(FleetMovement.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
@@ -260,17 +264,20 @@ library LibFleet {
   ) internal {
     require(OwnedBy.get(OwnedBy.get(fromFleetId)) == playerEntity, "[Fleet] Can only transfer units from owned fleet");
 
-    bytes32 spaceRock = FleetStatus.getDestination(fromFleetId);
+    bytes32 spaceRock = FleetMovement.getDestination(fromFleetId);
     require(
-      FleetStatus.getArrivalTime(fromFleetId) <= block.timestamp,
+      FleetMovement.getArrivalTime(fromFleetId) <= block.timestamp,
       "[Fleet] From fleet has not reached space rock yet"
     );
 
     require(
-      FleetStatus.getDestination(fleetId) == spaceRock,
+      FleetMovement.getDestination(fleetId) == spaceRock,
       "[Fleet] To fleet is not on same space rock as from fleet"
     );
-    require(FleetStatus.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] to Fleet has not reached space rock yet");
+    require(
+      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
+      "[Fleet] to Fleet has not reached space rock yet"
+    );
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     bool sameOwner = OwnedBy.get(fleetId) == OwnedBy.get(fromFleetId);
@@ -327,7 +334,6 @@ library LibFleet {
     bytes32 ownerSpaceRockEntity = OwnedBy.get(fleetId);
     uint256 unitLevel = UnitLevel.get(ownerSpaceRockEntity, unitPrototype);
     P_UnitData memory unitData = P_Unit.get(unitPrototype, unitLevel);
-    uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototype);
     if (fleetUnitCount - unitCount == 0) {
       if (unitData.speed == fleetAttributes.speed) {
         fleetAttributes.speed = unitData.speed;
@@ -337,12 +343,12 @@ library LibFleet {
     fleetAttributes.defense -= unitData.defense * unitCount;
     fleetAttributes.cargo -= unitData.cargo * unitCount;
     require(
-      fleetAttributes.cargo >= FleetStatus.getOccupiedStorage(fleetId),
+      fleetAttributes.cargo >= FleetAttributes.getOccupiedCargo(fleetId),
       "[Fleet] Fleet doesn't have enough storage"
     );
 
     UnitCount.set(fleetId, unitPrototype, fleetUnitCount - unitCount);
-    FleetStatus.setResourceStorage(fleetId, FleetStatus.getResourceStorage(fleetId) - unitCount * cargo);
+    FleetAttributes.setOccupiedCargo(fleetId, FleetAttributes.getOccupiedCargo(fleetId) - (unitData.cargo * unitCount));
   }
 
   function increaseFleetResource(
@@ -351,13 +357,13 @@ library LibFleet {
     uint256 amount
   ) internal {
     if (amount == 0) return;
-    uint256 currOccupiedStorage = FleetStatus.getOccupiedStorage(fleetId);
+    uint256 currOccupiedCargo = FleetAttributes.getOccupiedCargo(fleetId);
     require(
-      currOccupiedStorage + amount <= FleetStatus.getResourceStorage(fleetId),
+      currOccupiedCargo + amount <= FleetAttributes.getCargo(fleetId),
       "[Fleet] Not enough storage to add resource"
     );
     ResourceCount.set(fleetId, resource, ResourceCount.get(fleetId, resource) + amount);
-    FleetStatus.setOccupiedStorage(fleetId, currOccupiedStorage + amount);
+    FleetAttributes.setOccupiedCargo(fleetId, currOccupiedCargo + amount);
   }
 
   function decreaseFleetResource(
@@ -366,14 +372,11 @@ library LibFleet {
     uint256 amount
   ) internal {
     if (amount == 0) return;
-    uint256 currOccupiedStorage = FleetStatus.getOccupiedStorage(fleetId);
+    uint256 currOccupiedCargo = FleetAttributes.getOccupiedCargo(fleetId);
     uint256 currResourceCount = ResourceCount.get(fleetId, resource);
-    require(
-      currResourceCount >= amount && currOccupiedStorage >= amount,
-      "[Fleet] Not enough stored resource to remove"
-    );
+    require(currResourceCount >= amount && currOccupiedCargo >= amount, "[Fleet] Not enough stored resource to remove");
     ResourceCount.set(fleetId, resource, currResourceCount - amount);
-    FleetStatus.setOccupiedStorage(fleetId, currOccupiedStorage - amount);
+    FleetAttributes.setOccupiedCargo(fleetId, currOccupiedCargo - amount);
   }
 
   function landFleet(
@@ -385,8 +388,8 @@ library LibFleet {
     require(OwnedBy.get(spaceRockOwner) == playerEntity, "[Fleet] Can only transfer units from owned fleet");
     require(OwnedBy.get(spaceRock) == playerEntity, "[Fleet] Can only land fleet on owned space rock");
 
-    require(FleetStatus.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not in space rock orbit");
-    require(FleetStatus.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
+    require(FleetMovement.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not in space rock orbit");
+    require(FleetMovement.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
@@ -416,8 +419,8 @@ library LibFleet {
 
   function mergeFleets(bytes32 playerEntity, bytes32[] calldata fleets) internal {
     require(fleets.length > 1, "[Fleet] Can only merge more than one fleet");
-    bytes32 spaceRock = FleetStatus.getDestination(fleets[0]);
-    require(FleetStatus.getArrivalTime(fleets[0]) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
+    bytes32 spaceRock = FleetMovement.getDestination(fleets[0]);
+    require(FleetMovement.getArrivalTime(fleets[0]) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
     require(OwnedBy.get(OwnedBy.get(fleets[0])) == playerEntity, "[Fleet] Can only merge owned fleets");
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
@@ -425,8 +428,11 @@ library LibFleet {
 
     for (uint256 i = 1; i < fleets.length; i++) {
       require(OwnedBy.get(OwnedBy.get(fleets[i])) == playerEntity, "[Fleet] Can only merge owned fleets");
-      require(FleetStatus.getDestination(fleets[i]) == spaceRock, "[Fleet] Fleets must be on same space rock");
-      require(FleetStatus.getArrivalTime(fleets[i]) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
+      require(FleetMovement.getDestination(fleets[i]) == spaceRock, "[Fleet] Fleets must be on same space rock");
+      require(
+        FleetMovement.getArrivalTime(fleets[i]) <= block.timestamp,
+        "[Fleet] Fleet has not reached space rock yet"
+      );
       for (uint8 j = 0; j < NUM_UNITS; j++) {
         unitCounts[j] += UnitCount.get(fleets[i], unitPrototypes[j]);
       }
@@ -469,36 +475,35 @@ library LibFleet {
     bytes32 fleetId,
     bytes32 destination
   ) internal {
-    require(OwnedBy.get(OwnerdBy.get(fleetId)) == playerEntity, "[Fleet] Can only send owned fleet");
+    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only send owned fleet");
     require(
-      FleetStatus.getArrivalTime(fleetId) <= block.timestamp,
+      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
       "[Fleet] Fleet has not reached it's current destination space rock yet"
     );
 
-    FleetsMap.remove(FleetStatus.getDestination(fleetId), FleetIncomingKey, fleetId);
+    FleetsMap.remove(FleetMovement.getDestination(fleetId), FleetIncomingKey, fleetId);
     FleetsMap.add(destination, FleetIncomingKey, fleetId);
 
-    FleetStatus.setDestination(fleetId, destination);
-    FleetStatus.setArrivalTime(fleetId, getArrivalTime(fleetId, destination));
-    FleetStatus.setSendTime(fleetId, block.timestamp);
+    FleetMovement.setDestination(fleetId, destination);
+    FleetMovement.setArrivalTime(fleetId, getArrivalTime(fleetId, Position.get(destination)));
+    FleetMovement.setSendTime(fleetId, block.timestamp);
   }
 
   /// @notice Computes the block number an arrival will occur.
-  /// @param origin Origin position.
   /// @param destination Destination position.
-  /// @param playerEntity Entity initiating send.
-  /// @param unitCounts Counts of units being sent.
   /// @return Block number of arrival.
   function getArrivalTime(bytes32 fleetId, PositionData memory destination) internal view returns (uint256) {
     P_GameConfigData memory config = P_GameConfig.get();
-    uint256 unitSpeed = LibUnit.getFleetSlowestUnitSpeed(fleetId);
+    uint256 unitSpeed = getFleetSlowestUnitSpeed(fleetId);
     require(unitSpeed > 0 && config.travelTime > 0, "[Fleet] Slowest unit speed must be greater than 0");
 
-    bytes32 origin = FleetStatus.getOrigin(fleetId);
+    bytes32 origin = FleetMovement.getOrigin(fleetId);
     return
       block.timestamp +
-      ((LibMath.distance(origin, destination) * config.travelTime * WORLD_SPEED_SCALE * UNIT_SPEED_SCALE) /
-        (config.worldSpeed * unitSpeed));
+      ((LibMath.distance(Position.get(origin), destination) *
+        config.travelTime *
+        WORLD_SPEED_SCALE *
+        UNIT_SPEED_SCALE) / (config.worldSpeed * unitSpeed));
   }
 
   /// @notice Returns the slowest speed of given unit types.
