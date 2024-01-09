@@ -135,6 +135,7 @@ export const config = mudConfig({
       valueSchema: {
         isAsteroid: "bool",
         maxLevel: "uint256",
+        mapId: "uint8",
       },
     },
 
@@ -148,7 +149,7 @@ export const config = mudConfig({
     },
 
     P_Terrain: {
-      keySchema: { x: "int32", y: "int32" },
+      keySchema: { mapId: "uint8", x: "int32", y: "int32" },
       valueSchema: "uint8", // EResource
     },
 

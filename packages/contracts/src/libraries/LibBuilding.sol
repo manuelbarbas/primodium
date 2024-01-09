@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import { entityToAddress } from "src/utils.sol";
 // tables
-import { IsActive, HasBuiltBuilding, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint } from "codegen/index.sol";
+import { IsActive, HasBuiltBuilding, Asteroid, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint } from "codegen/index.sol";
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -229,6 +229,7 @@ library LibBuilding {
   /// @return True if the building's required terrain matches the terrain of the given coord
   function canBuildOnTile(bytes32 prototype, PositionData memory coord) internal view returns (bool) {
     EResource resource = EResource(P_RequiredTile.get(prototype));
-    return resource == EResource.NULL || uint8(resource) == P_Terrain.get(coord.x, coord.y);
+    uint8 mapId = Asteroid.getMapId(coord.parent);
+    return resource == EResource.NULL || uint8(resource) == P_Terrain.get(mapId, coord.x, coord.y);
   }
 }

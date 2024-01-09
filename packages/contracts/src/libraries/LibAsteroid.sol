@@ -2,7 +2,7 @@
 pragma solidity ^0.8.21;
 
 // tables
-import { Spawned, ReversePosition, OwnedBy, Position, PositionData, AsteroidCount, Asteroid, PositionData } from "codegen/index.sol";
+import { Spawned, ReversePosition, OwnedBy, Asteroid, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, PositionData, P_GameConfigData, P_GameConfig } from "codegen/index.sol";
 
 // libraries
 import { LibMath } from "libraries/LibMath.sol";
@@ -21,7 +21,7 @@ library LibAsteroid {
     PositionData memory coord = getUniqueAsteroidPosition(asteroidCount);
 
     Position.set(asteroidEntity, coord);
-    Asteroid.setIsAsteroid(asteroidEntity, true);
+    Asteroid.set(asteroidEntity, AsteroidData({ isAsteroid: true, maxLevel: 8, mapId: 1 }));
     Spawned.set(ownerEntity, true);
     ReversePosition.set(coord.x, coord.y, asteroidEntity);
     OwnedBy.set(asteroidEntity, ownerEntity);
