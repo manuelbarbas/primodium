@@ -12,7 +12,7 @@ import { Card, SecondaryCard } from "../core/Card";
 import { TransactionQueueMask } from "../shared/TransactionQueueMask";
 
 const sessionWalletTooltip =
-  "Bypass annoying metamask popups by linking a delegate account. This will allow you to perform certain actions without confirming them in metamask.";
+  "Bypass annoying confirmation popups by linking a delegate account. This allows you to securely perform certain actions without external confirmation.";
 
 export function Delegate() {
   const mud = useMud();
@@ -61,7 +61,7 @@ export function Delegate() {
   };
 
   return (
-    <Card className="bg-base-100">
+    <Card className="bg-base-100 gap-1">
       <div className="text-xs font-bold uppercase flex gap-2 items-center">
         <p className="opacity-50">Delegate</p>
       </div>
