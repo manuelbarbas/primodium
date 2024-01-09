@@ -489,22 +489,6 @@ library LibFleet {
     FleetMovement.setSendTime(fleetId, block.timestamp);
   }
 
-  function recallFleet(bytes32 playerEntity, bytes32 fleetId) internal {
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only send owned fleet");
-    require(
-      FleetMovement.getOrigin(fleetId) != FleetMovement.getDestination(fleetId),
-      "[Fleet] Fleet is already at origin"
-    );
-
-    FleetsMap.remove(FleetMovement.getDestination(fleetId), FleetIncomingKey, fleetId);
-    FleetsMap.add(FleetMovement.getOrigin(fleetId), FleetIncomingKey, fleetId);
-    FleetMovement.setOrigin(fleetId, FleetMovement.getDestination(fleetId));
-    FleetMovement.setDestination(fleetId, FleetMovement.getOrigin(fleetId));
-
-    FleetMovement.setArrivalTime(fleetId, block.timestamp + block.timestamp - FleetMovement.getSendTime(fleetId));
-    FleetMovement.setSendTime(fleetId, block.timestamp);
-  }
-
   function sendFleets(
     bytes32 playerEntity,
     bytes32[] calldata fleetIds,
