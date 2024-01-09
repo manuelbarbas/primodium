@@ -136,6 +136,7 @@ export const config = mudConfig({
         isAsteroid: "bool",
         maxLevel: "uint256",
         mapId: "uint8",
+        spawnsSecondary: "bool",
       },
     },
 
