@@ -505,6 +505,55 @@ library LibFleet {
     FleetMovement.setSendTime(fleetId, block.timestamp);
   }
 
+  function sendFleets(
+    bytes32 playerEntity,
+    bytes32[] memory fleetIds,
+    bytes32 destination
+  ) internal {
+    require(fleetIds.length > 1, "[Fleet] Send Fleets can only send more than one fleet");
+    bytes32 slowestFleet = fleetIds[0];
+    uint256 slowestSpeed = getFleetSlowestUnitSpeed(slowestFleet);
+    for (uint256 i = 0; i < fleetIds.length; i++) {
+      require(OwnedBy.get(OwnedBy.get(fleetIds[i])) == playerEntity, "[Fleet] Can only send owned fleet");
+      require(
+        FleetMovement.getArrivalTime(fleetIds[i]) <= block.timestamp,
+        "[Fleet] Fleet has not reached it's current destination space rock yet"
+      );
+
+      uint256 fleetSpeed = getFleetSlowestUnitSpeed(fleetIds[i]);
+      if (fleetSpeed < slowestSpeed) {
+        slowestSpeed = fleetSpeed;
+        slowestFleet = fleetIds[i];
+      }
+
+      FleetsMap.remove(FleetMovement.getDestination(fleetIds[i]), FleetIncomingKey, fleetIds[i]);
+      FleetsMap.add(destination, FleetIncomingKey, fleetIds[i]);
+
+      FleetMovement.setDestination(fleetIds[i], destination);
+      FleetMovement.setSendTime(fleetIds[i], block.timestamp);
+    }
+
+    for (uint256 i = 0; i < fleetIds.length; i++) {
+      FleetMovement.setArrivalTime(fleetIds[i], getArrivalTime(fleetIds[i], Position.get(destination)));
+    }
+  }
+
+  function recallFleet(bytes32 playerEntity, bytes32 fleetId) internal {
+    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only send owned fleet");
+    require(
+      FleetMovement.getOrigin(fleetId) != FleetMovement.getDestination(fleetId),
+      "[Fleet] Fleet is already at origin"
+    );
+
+    FleetsMap.remove(FleetMovement.getDestination(fleetId), FleetIncomingKey, fleetId);
+    FleetsMap.add(FleetMovement.getOrigin(fleetId), FleetIncomingKey, fleetId);
+    FleetMovement.setOrigin(fleetId, FleetMovement.getDestination(fleetId));
+    FleetMovement.setDestination(fleetId, FleetMovement.getOrigin(fleetId));
+
+    FleetMovement.setArrivalTime(fleetId, block.timestamp + block.timestamp - FleetMovement.getSendTime(fleetId));
+    FleetMovement.setSendTime(fleetId, block.timestamp);
+  }
+
   /// @notice Computes the block number an arrival will occur.
   /// @param destination Destination position.
   /// @return Block number of arrival.
