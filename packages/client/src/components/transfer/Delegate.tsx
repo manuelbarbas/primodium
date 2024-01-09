@@ -80,7 +80,7 @@ export function Delegate() {
         {delegateAddress ? (
           <div className="w-full flex flex-col">
             <div className="w-full flex items-center justify-center p-4">
-              <p className="uppercase font-bold text-success w-full flex justify-center text-sm">LINKED</p>
+              <p className="uppercase font-bold text-success w-full flex justify-center text-sm">DELEGATING</p>
               <div className="absolute right-2 flex gap-1">
                 <Button
                   onClick={async () => {
@@ -88,7 +88,7 @@ export function Delegate() {
                     revokeAccessOwner(mud);
                     removeSessionKey(delegateAddress);
                   }}
-                  tooltip="Unlink"
+                  tooltip="stop delegating"
                   tooltipDirection="top"
                   className="btn-sm btn-primary"
                 >
@@ -108,7 +108,7 @@ export function Delegate() {
               <SecondaryCard className="flex flex-col gap-2 p-3 w-full animate-slide-down bg-base-800">
                 <div className="text-sm flex justify-between items-center">
                   <div>
-                    <span className="font-bold">Address: </span>
+                    <span className="font-bold">Delegate Address: </span>
                     <p>{delegateAddress}</p>
                   </div>
                   <div className="flex gap-1">
@@ -141,7 +141,7 @@ export function Delegate() {
               submitPrivateKey(key);
             }}
           >
-            CLICK TO LINK DELEGATE
+            CLICK TO DELEGATE ACTIONS
           </Button>
         )}
       </TransactionQueueMask>
