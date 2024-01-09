@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.21;
 
+import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
+import { BuildSystem } from "systems/BuildSystem.sol";
+
 // tables
 import { Spawned, ReversePosition, OwnedBy, Asteroid, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, PositionData, P_GameConfigData, P_GameConfig } from "codegen/index.sol";
 
@@ -56,18 +59,24 @@ library LibAsteroid {
       bytes32 asteroidSeed = keccak256(abi.encode(sourceAsteroid, bytes32("motherlode"), position.x, position.y));
       if (!isAsteroid(asteroidSeed, config.asteroidChanceInv)) continue;
       initSecondaryAsteroid(position, asteroidSeed);
+
       return asteroidSeed;
     }
     revert("no asteroid found");
   }
 
-  function getRandomAsteroidData(bytes32 asteroidEntity) internal view returns (AsteroidData memory) {
+  function getRandomAsteroidData(bytes32 asteroidEntity, bool spawnsSecondary)
+    internal
+    view
+    returns (AsteroidData memory)
+  {
     // P_GameConfigData memory config = P_GameConfig.get();
-    // uint256 maxLevel = Asteroid.getMaxLevel(asteroidEntity);
-    // uint256 level = LibMath.getRandomNumber(asteroidEntity, maxLevel);
-    // uint256 mapId = LibMath.getRandomNumber(asteroidEntity, config.maxMaps);
-    // bool spawnsSecondary = isAsteroid(asteroidEntity, config.asteroidChanceInv);
-    return AsteroidData({ isAsteroid: true, maxLevel: 4, mapId: 2, spawnsSecondary: true });
+    uint256 maxLevel = Asteroid.getMaxLevel(asteroidEntity);
+    // number between 1 and 5
+    uint256 level = (LibEncode.getByteUint(asteroidEntity, 3, 12) % 4) + 1;
+    // number between 2 and 6
+    uint256 mapId = (LibEncode.getByteUint(asteroidEntity, 3, 20) % 4) + 2;
+    return AsteroidData({ isAsteroid: true, maxLevel: maxLevel, mapId: mapId, spawnsSecondary: spawnsSecondary });
   }
 
   function isAsteroid(bytes32 entity, uint256 chanceInv) internal pure returns (bool) {
@@ -79,10 +88,22 @@ library LibAsteroid {
   /// @param position Position to place the motherlode
   /// @param asteroidEntity Hash of the asteroid to be initialized
   function initSecondaryAsteroid(PositionData memory position, bytes32 asteroidEntity) internal {
-    AsteroidData memory data = getRandomAsteroidData(asteroidEntity);
+    AsteroidData memory data = getRandomAsteroidData(asteroidEntity, false);
     Asteroid.set(asteroidEntity, data);
     Position.set(asteroidEntity, position);
     ReversePosition.set(position.x, position.y, asteroidEntity);
+
+    // remove this once capital ships are built
+    PositionData memory position = Position.get(MainBasePrototypeId);
+    position.parent = asteroid;
+
+    // remove this too
+    SystemCall.callWithHooksOrRevert(
+      _msgSender(),
+      getSystemResourceId("BuildSystem"),
+      abi.encodeCall(BuildSystem.build, (EBuilding.MainBase, position)),
+      0
+    );
   }
 
   /// @dev Calculates position based on distance and max index
