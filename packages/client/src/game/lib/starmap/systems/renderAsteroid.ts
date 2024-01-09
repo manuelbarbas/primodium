@@ -1,31 +1,29 @@
-import { Entity, Has, HasValue, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
+import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
+import { Entity, Has, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
+import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
+import { throttleTime } from "rxjs";
+import { components } from "src/network/components";
+import { SetupResult } from "src/network/types";
 import { singletonIndex, world } from "src/network/world";
+import { entityToColor } from "src/util/color";
+import { clampedIndex, entityToAddress, getRandomRange } from "src/util/common";
+import { EntityType, RockRelationship } from "src/util/constants";
+import { entityToPlayerName } from "src/util/name";
+import { getRockRelationship } from "src/util/spacerock";
+import { getLinkedAddress } from "src/util/web2/getLinkedAddress";
 import {
   ObjectPosition,
   OnClick,
   OnComponentSystem,
+  OnHover,
+  OnOnce,
+  OnRxjsSystem,
   SetValue,
   Tween,
-  OnRxjsSystem,
-  OnOnce,
-  OnHover,
 } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
-import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
-import { Coord } from "@latticexyz/utils";
-import { ERock } from "contracts/config/enums";
-import { components } from "src/network/components";
-import { SetupResult } from "src/network/types";
-import { clampedIndex, entityToAddress, getRandomRange } from "src/util/common";
-import { EntityType, RockRelationship } from "src/util/constants";
-import { getRockRelationship } from "src/util/spacerock";
 import { ObjectText } from "../../common/object-components/text";
-import { initializeMotherlodes } from "../utils/initializeMotherlodes";
-import { throttleTime } from "rxjs";
-import { entityToPlayerName } from "src/util/name";
-import { getLinkedAddress } from "src/util/web2/getLinkedAddress";
-import { entityToColor } from "src/util/color";
 
 export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -218,8 +216,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
   };
 
   const query = [
-    Has(components.RockType),
-    HasValue(components.RockType, { value: ERock.Asteroid }),
+    Has(components.Asteroid),
     Has(components.Position),
     Has(components.OwnedBy),
     Not(components.PirateAsteroid),
@@ -231,7 +228,6 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
     if (!coord) return;
 
     render(entity, coord);
-    initializeMotherlodes(entity, coord);
   });
 };
 

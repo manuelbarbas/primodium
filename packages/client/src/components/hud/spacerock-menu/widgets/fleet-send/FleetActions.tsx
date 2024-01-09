@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { ERock, ESendType } from "contracts/config/enums";
+import { ESendType } from "contracts/config/enums";
 import { useCallback, useMemo } from "react";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
@@ -68,10 +68,7 @@ export const FleetActions = () => {
             />
           </Modal>
         )}
-        <Land
-          destination={selectedAsteroid ?? singletonEntity}
-          rockType={components.RockType.get(selectedAsteroid)?.value ?? ERock.Motherlode}
-        />
+        {selectedAsteroid && <Land destination={selectedAsteroid} />}
       </SecondaryCard>
       <div className="text-xs opacity-75 font-bold w-full flex justify-around items-center mb-1 gap-2">
         <Badge className="flex items-center gap-1">

@@ -1,16 +1,24 @@
+import { primodium } from "@game/api";
+import { KeyNames, KeybindActions } from "@game/constants";
+import { Entity, hasComponent } from "@latticexyz/recs";
 import { FaArrowRight, FaCircle } from "react-icons/fa";
-import { components } from "src/network/components";
-import { Action } from "src/util/constants";
-import { HUD } from "../core/HUD";
-import { BrandingLabel } from "../shared/BrandingLabel";
-import { Profile } from "./Profile";
+import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
+import { components } from "src/network/components";
+import { getBuildingName } from "src/util/building";
+import { formatNumber } from "src/util/common";
+import { Action } from "src/util/constants";
+import { getSpaceRockName } from "src/util/spacerock";
+import { Card } from "../core/Card";
+import { HUD } from "../core/HUD";
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
 import { Tabs } from "../core/Tabs";
+import { BrandingLabel } from "../shared/BrandingLabel";
 import { Blueprints } from "./Blueprints";
 import { CurrentObjective } from "./CurrentObjective";
 import { Minimap } from "./Minimap";
+import { Profile } from "./Profile";
 import { Score } from "./Score";
 import { SelectAction } from "./SelectAction";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
@@ -18,18 +26,10 @@ import { Chat as _Chat } from "./chat/Chat";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
 import { Settings } from "./modals/settings/Settings";
 import { ReinforcementFleets } from "./panes/FriendlyFleets";
-import { OwnedMotherlodes } from "./panes/OwnedMotherlodes";
+import { OwnedAsteroids } from "./panes/OwnedAsteroids";
 import { BattleReports } from "./panes/battle-reports/BattleReports";
 import { HostileFleets } from "./panes/hostile-fleets/HostileFleets";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
-import { KeyNames, KeybindActions } from "@game/constants";
-import { primodium } from "@game/api";
-import { getBuildingName } from "src/util/building";
-import { Card } from "../core/Card";
-import { Entity, hasComponent } from "@latticexyz/recs";
-import { getSpaceRockName } from "src/util/spacerock";
-import { formatNumber } from "src/util/common";
-import { useSettingsStore } from "src/game/stores/SettingsStore";
 
 export const GameHUD = () => {
   const playerEntity = useMud().network.playerEntity;
@@ -69,7 +69,7 @@ export const GameHUD = () => {
           </HUD.TopRight>
         )}
 
-        {!isSpectating && <HUD.Right>{mapOpen ? <Motherlodes /> : <BuildingSelection />}</HUD.Right>}
+        {!isSpectating && <HUD.Right>{mapOpen ? <Asteroids /> : <BuildingSelection />}</HUD.Right>}
         {isSpectating && (
           <HUD.TopRight>
             <p className="text-accent text-2xl font-bold p-5 flex gap-2 items-center">
@@ -161,7 +161,7 @@ const BuildingSelection = () => {
   );
 };
 
-const Motherlodes = () => {
+const Asteroids = () => {
   return (
     <Tabs className="flex flex-row justify-center items-center gap-0" defaultIndex={-1}>
       <Tabs.Button
@@ -177,11 +177,11 @@ const Motherlodes = () => {
           }}
           className=" absolute tracking-widest uppercase font-bold -rotate-180 right-0 bottom-full my-4 mr-2 opacity-75 bg-secondary/25 rounded-box backdrop-blur-md p-2 group-hover:ring-1"
         >
-          motherlodes
+          asteroids
         </p>
       </Tabs.Button>
       <Tabs.Pane index={0} className="rounded-r-none border-r-0 z-10 h-[400px] w-[350px] overflow-x-hidden">
-        <OwnedMotherlodes />
+        <OwnedAsteroids />
       </Tabs.Pane>
     </Tabs>
   );
@@ -341,7 +341,7 @@ const HoverInfo = () => {
 
   if (hasComponent(components.BuildingType, hoverEntity)) return <BuildingInfo entity={hoverEntity} />;
 
-  if (hasComponent(components.RockType, hoverEntity)) return <RockInfo entity={hoverEntity} />;
+  if (hasComponent(components.Asteroid, hoverEntity)) return <RockInfo entity={hoverEntity} />;
 
   if (hasComponent(components.Arrival, hoverEntity)) return <ArrivalInfo entity={hoverEntity} />;
 

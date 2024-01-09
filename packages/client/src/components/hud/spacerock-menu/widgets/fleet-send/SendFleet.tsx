@@ -1,11 +1,13 @@
+import { AudioKeys } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
-import { ERock, ESendType } from "contracts/config/enums";
+import { ESendType } from "contracts/config/enums";
 import dayjs from "dayjs";
 import { useCallback, useMemo } from "react";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
 import { Button } from "src/components/core/Button";
 import { Card, SecondaryCard } from "src/components/core/Card";
+import { Modal } from "src/components/core/Modal";
 import { NumberInput } from "src/components/shared/NumberInput";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
@@ -16,8 +18,6 @@ import { getMoveLength, toUnitCountArray } from "src/util/send";
 import { send } from "src/util/web3/contractCalls/send";
 import { Hex } from "viem";
 import { TargetHeader } from "../../TargetHeader";
-import { Modal } from "src/components/core/Modal";
-import { AudioKeys } from "@game/constants";
 
 export const Unit: React.FC<{ unit: Entity; count: bigint }> = ({ unit, count }) => {
   return (
@@ -89,13 +89,7 @@ export const SendFleet = () => {
   const origin = components.Home.get(playerEntity)?.asteroid as Entity | undefined;
   const destination = components.SelectedRock.use()?.value as Entity | undefined;
   const destinationIsMine = components.OwnedBy.use(destination)?.value === playerEntity;
-  const rockType = components.RockType.use(destination)?.value;
-  const isPirate = components.PirateAsteroid.use(destination);
-  const sendType = destinationIsMine
-    ? ESendType.Reinforce
-    : rockType === ERock.Asteroid || isPirate
-    ? ESendType.Raid
-    : ESendType.Invade;
+  const sendType = destinationIsMine ? ESendType.Reinforce : ESendType.Raid;
   const fleet = components.Send.useUnits();
   const units = components.Hangar.use(origin, {
     units: [],
@@ -167,7 +161,7 @@ export const SendFleet = () => {
             <Button
               onClick={() => components.Send.update({ sendType })}
               className={`${
-                sendType === ESendType.Invade || sendType === ESendType.Raid ? "border-warning" : "border-secondary/50"
+                sendType === ESendType.Raid ? "border-warning" : "border-secondary/50"
               } disabled:opacity-100`}
             >
               <div className="flex flex-col gap-2 items-center p-2">

@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { EBuilding, EObjectives, EResource, ERock, ESize, EUnit } from "contracts/config/enums";
+import { EBuilding, EObjectives, EResource, ESize, EUnit } from "contracts/config/enums";
 import { Key } from "engine/types";
 import { encodeEntity } from "src/util/encode";
 import { reverseRecord } from "./common";
@@ -440,11 +440,6 @@ export const MotherlodeTypeNames: Record<number, string> = {
   [EResource.Iridium]: "Iridium",
   [EResource.Platinum]: "Platinum",
   [EResource.Kimberlite]: "Kimberlite",
-};
-
-export const SpaceRockTypeNames: Record<number, string> = {
-  [ERock.Asteroid]: "Asteroid",
-  [ERock.Motherlode]: "Motherlode",
 };
 
 export const ResourceStorages = new Set([

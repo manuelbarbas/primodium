@@ -1,6 +1,5 @@
 import { KeySchema, SchemaToPrimitives } from "@latticexyz/protocol-parser";
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
 import {
   Hex,
   concatHex,
@@ -22,14 +21,6 @@ export function encodeNumberEntity(key: number, entity: string): Entity {
 export function encodeKeyEntity(key: string, entity: string): Entity {
   return encodeEntity({ key: "bytes32", entity: "bytes32" }, { key: toHex32(key), entity: toHex32(entity) });
 }
-
-export const getMotherlodeEntity = (sourceEntity: Entity, position: Coord) =>
-  keccak256(
-    encodeEntity(
-      { sourceEntity: "bytes32", motherlode: "bytes32", x: "int32", y: "int32" },
-      { sourceEntity: sourceEntity as Hex, motherlode: toHex32("motherlode"), x: position.x, y: position.y }
-    ) as Hex
-  ) as Entity;
 
 export function hashEntities(...args: (Entity | string | number)[]) {
   const values = args.reduce((prev, arg) => `${prev}${arg}`, "") as Hex;

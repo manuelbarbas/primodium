@@ -1,6 +1,6 @@
 import { AudioKeys } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
-import { ERock, ESendType, EUnit } from "contracts/config/enums";
+import { ESendType, EUnit } from "contracts/config/enums";
 import { useMemo } from "react";
 import { Button } from "src/components/core/Button";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
@@ -9,13 +9,11 @@ import { components } from "src/network/components";
 import { TransactionQueueType, UnitEntityLookup } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { invade } from "src/util/web3/contractCalls/invade";
-import { raid } from "src/util/web3/contractCalls/raid";
 import { Hex } from "viem";
 
 export const Land: React.FC<{
   destination: Entity;
-  rockType: ERock;
-}> = ({ destination, rockType }) => {
+}> = ({ destination }) => {
   const network = useMud().network;
   const playerEntity = network.playerEntity;
   const destinationOwner = components.OwnedBy.use(destination)?.value;
@@ -52,17 +50,7 @@ export const Land: React.FC<{
         <Button
           className={`gap-2 w-44 ${isNeutral ? "btn-secondary" : "btn-error"} flex flex-col items-center `}
           clickSound={AudioKeys.Sequence7}
-          onClick={() => {
-            if (ERock.Motherlode === rockType) {
-              invade(destination, network, key);
-              return;
-            }
-
-            if (ERock.Asteroid === rockType) {
-              raid(destination, network, key);
-              return;
-            }
-          }}
+          onClick={() => invade(destination, network, key)}
         >
           <div className="flex flex-col p-1">
             <p className="text-lg">

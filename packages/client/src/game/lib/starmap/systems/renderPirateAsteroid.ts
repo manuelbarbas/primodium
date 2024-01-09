@@ -2,7 +2,6 @@ import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 import {
   Entity,
   Has,
-  HasValue,
   defineComponentSystem,
   defineEnterSystem,
   defineUpdateSystem,
@@ -10,26 +9,25 @@ import {
 } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
-import { ERock } from "contracts/config/enums";
 import { Scene } from "engine/types";
+import { throttleTime } from "rxjs";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
+import { getRandomRange } from "src/util/common";
 import { PIRATE_KEY } from "src/util/constants";
+import { decodeEntity, hashKeyEntity } from "src/util/encode";
 import {
   ObjectPosition,
   OnClick,
   OnComponentSystem,
-  SetValue,
-  Tween,
-  OnRxjsSystem,
   OnHover,
   OnOnce,
+  OnRxjsSystem,
+  SetValue,
+  Tween,
 } from "../../common/object-components/common";
-import { decodeEntity, hashKeyEntity } from "src/util/encode";
 import { Outline, Texture } from "../../common/object-components/sprite";
 import { ObjectText } from "../../common/object-components/text";
-import { getRandomRange } from "src/util/common";
-import { throttleTime } from "rxjs";
 
 export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -37,7 +35,6 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
 
   const render = (entity: Entity, coord: Coord) => {
     scene.objectPool.removeGroup("asteroid_" + entity);
-    const asteroidType = components.RockType.get(entity)?.value;
 
     const ownedBy = components.OwnedBy.get(entity, {
       value: singletonEntity,
@@ -45,7 +42,6 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
 
     if (hashKeyEntity(PIRATE_KEY, player) !== ownedBy) return;
 
-    if (asteroidType !== ERock.Asteroid) return;
     const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entity);
 
     const spriteScale = 0.7;
@@ -176,10 +172,7 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
   };
 
   const query = [
-    Has(components.RockType),
-    HasValue(components.RockType, {
-      value: ERock.Asteroid,
-    }),
+    Has(components.Asteroid),
     Has(components.Position),
     Has(components.PirateAsteroid),
     Has(components.OwnedBy),
