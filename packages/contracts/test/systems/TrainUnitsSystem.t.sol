@@ -23,7 +23,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     P_GameConfigData memory config = P_GameConfig.get();
     config.unitProductionRate = 100;
     P_GameConfig.set(config);
-    RockType.set(rock, uint8(ERock.Asteroid));
+    Asteroid.setIsAsteroid(rock, true);
     Home.setAsteroid(player, rock);
     OwnedBy.set(building, rock);
     Spawned.set(player, true);
@@ -81,7 +81,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     unitPrototypes[0] = unitPrototype;
     P_UnitProdTypes.set(buildingPrototype, 1, unitPrototypes);
 
-    RockType.set(rock, uint8(ERock.Asteroid));
+    Asteroid.setIsAsteroid(rock, true);
 
     setupClaimUnits();
     Home.setAsteroid(player, rock);

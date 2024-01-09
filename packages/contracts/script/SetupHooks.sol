@@ -53,7 +53,6 @@ import { OnDestroy_ProductionRate } from "src/hooks/systemHooks/destroy/OnDestro
 import { OnDestroy_Requirements } from "src/hooks/systemHooks/destroy/OnDestroy_Requirements.sol";
 import { OnDestroy_RemoveFromTiles } from "src/hooks/systemHooks/destroy/OnDestroy_RemoveFromTiles.sol";
 
-import { OnSendUnits_InitMotherlode } from "src/hooks/systemHooks/sendUnits/OnSendUnits_InitMotherlode.sol";
 import { OnSendUnits_Requirements } from "src/hooks/systemHooks/sendUnits/OnSendUnits_Requirements.sol";
 import { OnSendUnits_UnitCount } from "src/hooks/systemHooks/sendUnits/OnSendUnits_UnitCount.sol";
 
@@ -437,25 +436,6 @@ function registerSendUnits(IWorld world, OnBefore_ClaimUnits onBefore_ClaimUnits
   ResourceId systemId = getSystemResourceId("SendUnitsSystem");
 
   world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
-
-  OnSendUnits_InitMotherlode onSendUnits_InitMotherlode = new OnSendUnits_InitMotherlode();
-  console.log("onSendUnits_InitMotherlode address: %s", address(onSendUnits_InitMotherlode));
-  address hookAddress = address(onSendUnits_InitMotherlode);
-  world.grantAccess(MotherlodeTableId, hookAddress);
-  world.grantAccess(PositionTableId, hookAddress);
-  world.grantAccess(ReversePositionTableId, hookAddress);
-  world.grantAccess(LastClaimedAtTableId, hookAddress);
-  world.grantAccess(RockTypeTableId, hookAddress);
-  world.grantAccess(LastClaimedAtTableId, hookAddress);
-  world.grantAccess(QueueUnitsTableId, hookAddress);
-  world.grantAccess(QueueItemUnitsTableId, hookAddress);
-  world.grantAccess(ProducedUnitTableId, hookAddress);
-  world.grantAccess(ProducedUnitTableId, hookAddress);
-  world.grantAccess(UnitCountTableId, hookAddress);
-  world.grantAccess(ProductionRateTableId, hookAddress);
-  world.grantAccess(MaxResourceCountTableId, hookAddress);
-  world.grantAccess(ResourceCountTableId, hookAddress);
-  world.registerSystemHook(systemId, onSendUnits_InitMotherlode, BEFORE_CALL_SYSTEM);
 
   OnSendUnits_Requirements onSendUnits_Requirements = new OnSendUnits_Requirements();
   console.log("onSendUnits_Requirements address: %s", address(onSendUnits_Requirements));

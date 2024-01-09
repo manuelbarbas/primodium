@@ -9,7 +9,6 @@ contract LibResourceTest is PrimodiumTest {
   bytes32 unitPrototype = "unitPrototype";
   bytes32 buildingEntity = "building";
   uint256 level = 2;
-  bytes32 motherlode = "motherlode";
 
   function setUp() public override {
     super.setUp();
@@ -59,27 +58,6 @@ contract LibResourceTest is PrimodiumTest {
     LibResource.claimAllResources(spaceRockEntity);
     assertEq(ResourceCount.get(spaceRockEntity, Copper), 50);
     assertEq(ResourceCount.get(spaceRockEntity, Iron), 0);
-  }
-
-  function testClaimMotherlodeResources() public {
-    OwnedBy.set(motherlode, playerEntity);
-    OwnedMotherlodes.push(playerEntity, motherlode);
-
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
-    MaxResourceCount.set(spaceRockEntity, Titanium, 1000);
-    P_ConsumesResource.set(Titanium, R_Titanium);
-    MaxResourceCount.set(motherlode, R_Titanium, 1000);
-    ResourceCount.set(motherlode, R_Titanium, 1000);
-    ProductionRate.set(motherlode, R_Titanium, 0);
-    ConsumptionRate.set(motherlode, R_Titanium, 100);
-    ProductionRate.set(motherlode, Titanium, 100);
-    Motherlode.setMotherlodeType(motherlode, Titanium);
-    LastClaimedAt.set(motherlode, block.timestamp - 10);
-    LastClaimedAt.set(spaceRockEntity, block.timestamp - 10);
-    LibResource.claimAllPlayerResources(playerEntity);
-
-    assertEq(ResourceCount.get(spaceRockEntity, Titanium), 1000);
-    assertEq(ResourceCount.get(motherlode, R_Titanium), 0);
   }
 
   function testClaimAllResourcesLessThanMax() public {

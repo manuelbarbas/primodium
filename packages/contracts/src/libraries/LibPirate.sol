@@ -2,10 +2,10 @@
 pragma solidity ^0.8.21;
 
 // tables
-import { Home, P_IsUtility, P_UnitPrototypes, MaxResourceCount, ResourceCount, UnitCount, PirateAsteroidData, P_SpawnPirateAsteroid, P_SpawnPirateAsteroidData, PirateAsteroid, Spawned, ReversePosition, OwnedBy, Position, PositionData, RockType } from "codegen/index.sol";
+import { Home, P_IsUtility, P_UnitPrototypes, Asteroid, MaxResourceCount, ResourceCount, UnitCount, PirateAsteroidData, P_SpawnPirateAsteroid, P_SpawnPirateAsteroidData, PirateAsteroid, Spawned, ReversePosition, OwnedBy, Position, PositionData } from "codegen/index.sol";
 
 // types
-import { ERock, EResource } from "src/Types.sol";
+import { EResource } from "src/Types.sol";
 import { PirateKey } from "src/Keys.sol";
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -54,7 +54,7 @@ library LibPirate {
 
     PirateAsteroid.set(asteroidEntity, PirateAsteroidData({ prototype: prototype, playerEntity: playerEntity }));
     Position.set(asteroidEntity, coord);
-    RockType.set(asteroidEntity, uint8(ERock.Asteroid));
+    Asteroid.setIsAsteroid(asteroidEntity, true);
     Spawned.set(ownerEntity, true);
     ReversePosition.set(coord.x, coord.y, asteroidEntity);
     OwnedBy.set(asteroidEntity, ownerEntity);

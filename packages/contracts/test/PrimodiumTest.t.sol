@@ -88,10 +88,6 @@ contract PrimodiumTest is MudTest {
     assertEq(coordA.parent, coordB.parent, "[assertEq]: parent doesn't match");
   }
 
-  function assertEq(ERock a, ERock b) internal {
-    assertEq(uint256(a), uint256(b));
-  }
-
   function assertEq(EResource a, EResource b) internal {
     assertEq(uint256(a), uint256(b));
   }
@@ -106,14 +102,6 @@ contract PrimodiumTest is MudTest {
     for (uint256 i = 0; i < a.unitCounts.length; i++) {
       assertEq(a.unitCounts[i], b.unitCounts[i], "[assertEq]: unitCounts doesn't match");
     }
-  }
-
-  function assertEq(
-    ERock a,
-    ERock b,
-    string memory context
-  ) internal {
-    assertEq(uint256(a), uint256(b), context);
   }
 
   function logPosition(PositionData memory coord) internal view {

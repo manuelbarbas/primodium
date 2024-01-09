@@ -2,10 +2,7 @@
 pragma solidity ^0.8.21;
 
 // tables
-import { Spawned, ReversePosition, OwnedBy, Position, PositionData, AsteroidCount, RockType, PositionData } from "codegen/index.sol";
-
-// types
-import { ERock } from "src/Types.sol";
+import { Spawned, ReversePosition, OwnedBy, Position, PositionData, AsteroidCount, Asteroid, PositionData } from "codegen/index.sol";
 
 // libraries
 import { LibMath } from "libraries/LibMath.sol";
@@ -18,13 +15,13 @@ library LibAsteroid {
   /// @return asteroidEntity Created asteroid's entity ID
   function createAsteroid(bytes32 ownerEntity) internal returns (bytes32 asteroidEntity) {
     asteroidEntity = LibEncode.getHash(ownerEntity);
-    require(RockType.get(asteroidEntity) == uint8(ERock.NULL), "[LibAsteroid] asteroid already exists");
+    require(!Asteroid.getIsAsteroid(asteroidEntity), "[LibAsteroid] asteroid already exists");
 
     uint256 asteroidCount = AsteroidCount.get() + 1;
     PositionData memory coord = getUniqueAsteroidPosition(asteroidCount);
 
     Position.set(asteroidEntity, coord);
-    RockType.set(asteroidEntity, uint8(ERock.Asteroid));
+    Asteroid.setIsAsteroid(asteroidEntity, true);
     Spawned.set(ownerEntity, true);
     ReversePosition.set(coord.x, coord.y, asteroidEntity);
     OwnedBy.set(asteroidEntity, ownerEntity);

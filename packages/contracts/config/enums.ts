@@ -1,8 +1,3 @@
-export enum ERock {
-  Asteroid = 1,
-  Motherlode,
-}
-
 export enum EBuilding {
   MainBase = 1,
 
@@ -174,9 +169,6 @@ export enum EObjectives {
   RaidFactoryResources1,
   RaidFactoryResources2,
   RaidFactoryResources3,
-  RaidMotherlodeResources1,
-  RaidMotherlodeResources2,
-  RaidMotherlodeResources3,
 
   DestroyEnemyUnits1,
   DestroyEnemyUnits2,
@@ -206,7 +198,6 @@ export enum EAllianceRole {
 }
 
 export const MUDEnums = {
-  ERock: enumToArray(ERock),
   EBuilding: enumToArray(EBuilding),
   EResource: enumToArray(EResource),
   ESize: enumToArray(ESize),

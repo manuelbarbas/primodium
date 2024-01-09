@@ -562,32 +562,4 @@ contract LibBattleTest is PrimodiumTest {
       "Defender should gain back 5 copper"
     );
   }
-
-  function testUpdateProductionRatesAfterBattle() public {
-    setupUpdateUnitsAfterBattle();
-    Home.setAsteroid(player, homeRock);
-    RockType.set(rock, uint8(ERock.Motherlode));
-    Motherlode.set(rock, uint8(ESize.Large), uint8(EResource.Iron));
-    P_IsUtility.set(uint8(EResource.Iron), false);
-    P_MiningRate.set(unit1, 0, 1);
-    ProductionRate.set(rock, uint8(EResource.Iron), 100 + 100);
-
-    UnitCount.set(enemy, rock, unit1, 100);
-
-    BattleResultData memory br = BattleResultData({
-      attacker: player,
-      defender: enemy,
-      winner: player,
-      rock: rock,
-      totalCargo: 0,
-      timestamp: block.timestamp,
-      attackerStartingUnits: getUnitArray(100, 0),
-      attackerUnitsLeft: getUnitArray(70, 0),
-      defenderStartingUnits: getUnitArray(100, 0),
-      defenderUnitsLeft: getUnitArray(0, 0)
-    });
-
-    LibBattle.updateUnitsAfterBattle(br, ESendType.Invade);
-    assertEq(ProductionRate.get(rock, uint8(EResource.Iron)), 70 + 100, "Player should have 310 iron production");
-  }
 }

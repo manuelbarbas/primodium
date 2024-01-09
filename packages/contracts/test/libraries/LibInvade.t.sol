@@ -49,7 +49,7 @@ contract LibInvadeTest is PrimodiumTest {
 
   function testInvadeNeutral() public {
     vm.warp(1000);
-    RockType.set(rock, uint8(ERock.Motherlode));
+    Asteroid.setIsAsteroid(rock, true);
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     P_Unit.set(unit1, 0, P_UnitData({ attack: 100, defense: 100, speed: 200, cargo: 100, trainingTime: 0 }));
@@ -74,7 +74,7 @@ contract LibInvadeTest is PrimodiumTest {
 
   function testInvadeNeutralNoAttackPoints() public {
     vm.warp(1000);
-    RockType.set(rock, uint8(ERock.Motherlode));
+    Asteroid.setIsAsteroid(rock, true);
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
@@ -85,8 +85,8 @@ contract LibInvadeTest is PrimodiumTest {
   function testInvadeNeutralWithUnitSend() public {
     OwnedBy.set(homeRock, player);
     ResourceCount.set(homeRock, U_MaxMoves, 10);
-    RockType.set(homeRock, uint8(ERock.Asteroid));
-    RockType.set(rock, uint8(ERock.Motherlode));
+    Asteroid.setIsAsteroid(homeRock, true);
+    Asteroid.setIsAsteroid(rock, true);
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     P_Unit.set(unit1, 0, P_UnitData({ attack: 100, defense: 100, speed: 200, cargo: 100, trainingTime: 0 }));
@@ -111,10 +111,9 @@ contract LibInvadeTest is PrimodiumTest {
     MaxResourceCount.set(player, uint8(EResource.Iron), 100);
     Home.setAsteroid(player, homeRock);
     OwnedBy.set(rock, enemy);
-    OwnedMotherlodes.push(enemy, rock);
 
-    RockType.set(rock, uint8(ERock.Motherlode));
-    RockType.set(homeRock, uint8(ERock.Asteroid));
+    Asteroid.setIsAsteroid(rock, true);
+    Asteroid.setIsAsteroid(homeRock, true);
     UnitCount.set(enemy, rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
@@ -139,8 +138,6 @@ contract LibInvadeTest is PrimodiumTest {
     assertEq(UnitCount.get(enemy, rock, unit1), 0, "Enemy units");
     assertEq(ResourceCount.get(enemy, uint8(EResource.Iron)), 100, "Enemy Iron");
     assertEq(OwnedBy.get(rock), player, "OwnedBy");
-    assertEq(OwnedMotherlodes.length(enemy), 0, "OwnedMotherlodes for enemy should be 0");
-    assertEq(OwnedMotherlodes.length(player), 1, "OwnedMotherlodes for player should be 1");
   }
 
   function testInvadeDefenderWins() public {
@@ -148,8 +145,8 @@ contract LibInvadeTest is PrimodiumTest {
     MaxResourceCount.set(player, uint8(EResource.Iron), 100);
     Home.setAsteroid(player, homeRock);
     OwnedBy.set(rock, enemy);
-    RockType.set(rock, uint8(ERock.Motherlode));
-    RockType.set(homeRock, uint8(ERock.Asteroid));
+    Asteroid.setIsAsteroid(rock, true);
+    Asteroid.setIsAsteroid(homeRock, true);
     UnitCount.set(enemy, rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
@@ -176,14 +173,8 @@ contract LibInvadeTest is PrimodiumTest {
     assertEq(OwnedBy.get(rock), enemy, "OwnedBy");
   }
 
-  function testInvadeAsteroid() public {
-    RockType.set(rock, uint8(ERock.Asteroid));
-    vm.expectRevert("[Invade] Can only invade motherlodes");
-    world.invade(rock);
-  }
-
   function testInvadeSelfOwned() public {
-    RockType.set(rock, uint8(ERock.Motherlode));
+    Asteroid.setIsAsteroid(rock, true);
     OwnedBy.set(rock, player);
     vm.expectRevert("[Invade] can not invade your own rock");
     world.invade(rock);
