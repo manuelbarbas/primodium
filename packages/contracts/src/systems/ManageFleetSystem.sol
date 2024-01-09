@@ -125,4 +125,14 @@ contract ManageFleetSystem is PrimodiumSystem {
     bytes32 playerEntity = addressToEntity(_msgSender());
     LibFleet.mergeFleets(playerEntity, fleets);
   }
+
+  function moveFleets(bytes32[] calldata fleets, bytes32 spaceRock) internal {
+    bytes32 playerEntity = addressToEntity(_msgSender());
+    LibFleet.moveFleets(playerEntity, fleets, destinationPosition);
+  }
+
+  function moveFleet(bytes32 fleetId, bytes32 spaceRock) internal {
+    bytes32 playerEntity = addressToEntity(_msgSender());
+    LibFleet.moveFleet(playerEntity, fleetId, destinationPosition);
+  }
 }

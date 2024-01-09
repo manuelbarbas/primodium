@@ -507,13 +507,13 @@ library LibFleet {
 
   function sendFleets(
     bytes32 playerEntity,
-    bytes32[] memory fleetIds,
+    bytes32[] calldata fleetIds,
     bytes32 destination
   ) internal {
     require(fleetIds.length > 1, "[Fleet] Send Fleets can only send more than one fleet");
     bytes32 slowestFleet = fleetIds[0];
     uint256 slowestSpeed = getFleetSlowestUnitSpeed(slowestFleet);
-    for (uint256 i = 0; i < fleetIds.length; i++) {
+    for (uint256 i = 1; i < fleetIds.length; i++) {
       require(OwnedBy.get(OwnedBy.get(fleetIds[i])) == playerEntity, "[Fleet] Can only send owned fleet");
       require(
         FleetMovement.getArrivalTime(fleetIds[i]) <= block.timestamp,
@@ -534,7 +534,7 @@ library LibFleet {
     }
 
     for (uint256 i = 0; i < fleetIds.length; i++) {
-      FleetMovement.setArrivalTime(fleetIds[i], getArrivalTime(fleetIds[i], Position.get(destination)));
+      FleetMovement.setArrivalTime(fleetIds[i], getArrivalTime(slowestFleet, Position.get(destination)));
     }
   }
 
