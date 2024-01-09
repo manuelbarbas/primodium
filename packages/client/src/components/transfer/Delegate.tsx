@@ -18,8 +18,7 @@ export function Delegate() {
   const mud = useMud();
   const { sessionAccount } = mud;
   const [showDetails, setShowDetails] = useState(false);
-  // const [showHelp, setShowHelp] = useState(!localStorage.getItem("hideHelp"));
-  const [showHelp, setShowHelp] = useState(true);
+  const [showHelp, setShowHelp] = useState(!localStorage.getItem("hideHelp"));
 
   useEffect(() => {
     setShowDetails(false);
