@@ -8,7 +8,7 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { P_EnumToPrototype, PositionData } from "codegen/index.sol";
 
 // libraries
-import { LibBuilding } from "codegen/Libraries.sol";
+import { LibBuilding } from "libraries/LibBuilding.sol";
 
 // types
 import { BuildingKey } from "src/Keys.sol";
