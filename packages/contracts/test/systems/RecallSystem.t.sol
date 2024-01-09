@@ -33,8 +33,8 @@ contract RecallSystemTest is PrimodiumTest {
     setupRecall();
     Home.setAsteroid(player, origin);
     world.recallStationedUnits(destination);
-    assertEq(UnitCount.get(player, destination, unitPrototype), 0);
-    assertEq(UnitCount.get(player, origin, unitPrototype), 70);
+    assertEq(UnitCount.get(destination, unitPrototype), 0);
+    assertEq(UnitCount.get(origin, unitPrototype), 70);
   }
 
   function testRecallUnitsProductionFromMotherlode() public {
@@ -78,7 +78,7 @@ contract RecallSystemTest is PrimodiumTest {
     ReversePosition.set(destinationPosition.x, destinationPosition.y, destination);
     OwnedBy.set(origin, player);
     OwnedBy.set(destination, player);
-    UnitCount.set(player, origin, unitPrototype, 20);
-    UnitCount.set(player, destination, unitPrototype, 50);
+    UnitCount.set(origin, unitPrototype, 20);
+    UnitCount.set(destination, unitPrototype, 50);
   }
 }

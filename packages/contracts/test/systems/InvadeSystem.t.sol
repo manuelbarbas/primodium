@@ -44,7 +44,7 @@ contract InvadeSystemTest is PrimodiumTest {
 
     RockType.set(rock, uint8(ERock.Motherlode));
     RockType.set(homeRock, uint8(ERock.Asteroid));
-    UnitCount.set(enemy, rock, unit1, 100);
+    UnitCount.set(rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
       sendTime: block.timestamp,
@@ -65,8 +65,7 @@ contract InvadeSystemTest is PrimodiumTest {
 
     world.invade(rock);
     assertEq(ResourceCount.get(player, uint8(EResource.Iron)), 0, "Player Iron");
-    assertEq(UnitCount.get(player, rock, unit1), 100, "Player units");
-    assertEq(UnitCount.get(enemy, rock, unit1), 0, "Enemy units");
+    assertEq(UnitCount.get(rock, unit1), 100, "Player units");
     assertEq(ResourceCount.get(enemy, uint8(EResource.Iron)), 100, "Enemy Iron");
     assertEq(OwnedBy.get(rock), player, "OwnedBy");
     assertEq(OwnedMotherlodes.length(enemy), 0, "OwnedMotherlodes for enemy should be 0");

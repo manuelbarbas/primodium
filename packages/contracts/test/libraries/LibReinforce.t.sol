@@ -53,7 +53,7 @@ contract LibReinforceTest is PrimodiumTest {
 
     assertEq(ArrivalCount.get(player), 9);
     assertFalse(ArrivalsMap.has(player, destination, arrivalId));
-    assertEq(UnitCount.get(player, destination, unit), 47);
+    assertEq(UnitCount.get(destination, unit), 47);
   }
 
   function testReinforceAnotherPlayer() public {
@@ -125,7 +125,7 @@ contract LibReinforceTest is PrimodiumTest {
 
     assertEq(ArrivalCount.get(player), 9);
     assertFalse(ArrivalsMap.has(player, destination, arrivalId));
-    assertEq(UnitCount.get(player, Home.getAsteroid(player), unit), 47);
+    assertEq(UnitCount.get(Home.getAsteroid(player), unit), 47);
   }
 
   function testRecallNotReinforce() public {
@@ -142,7 +142,7 @@ contract LibReinforceTest is PrimodiumTest {
 
     assertEq(ArrivalCount.get(player), 10);
     assertTrue(ArrivalsMap.has(player, destination, arrivalId));
-    assertEq(UnitCount.get(player, Home.getAsteroid(player), unit), 0);
+    assertEq(UnitCount.get(Home.getAsteroid(player), unit), 0);
   }
 
   function testRecallAll() public {
@@ -179,6 +179,6 @@ contract LibReinforceTest is PrimodiumTest {
 
     assertEq(ArrivalCount.get(player), 8);
     assertFalse(ArrivalsMap.has(player, destination, arrivalId));
-    assertEq(UnitCount.get(player, Home.getAsteroid(player), unit), 100);
+    assertEq(UnitCount.get(Home.getAsteroid(player), unit), 100);
   }
 }

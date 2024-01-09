@@ -14,8 +14,7 @@ export function createHangar(spaceRock: Entity) {
   // get all units and find their counts on the space rock
   components.P_UnitPrototypes.get()?.value.forEach((entity) => {
     const unitCount = components.UnitCount.getWithKeys({
-      player: player as Hex,
-      rock: spaceRock as Hex,
+      entity: spaceRock as Hex,
       unit: entity as Hex,
     })?.value;
 
