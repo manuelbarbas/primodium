@@ -34,9 +34,10 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
 
   function testFailUpgradeRangeMaxLevel() public {
     bytes32 creatorEntity = addressToEntity(creator);
+    bytes32 home = Home.getAsteroid(creatorEntity);
     // set player level to max level
 
-    uint256 maxLevel = P_MaxLevel.get(ExpansionKey);
+    uint256 maxLevel = Asteroid.getMaxLevel(home);
 
     Level.set(Home.getAsteroid(creatorEntity), maxLevel);
     assertEq(Level.get(Home.getAsteroid(creatorEntity)), maxLevel);
