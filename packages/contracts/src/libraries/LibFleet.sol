@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { ESendType, ERock, EResource } from "src/Types.sol";
-import { FleetStatusData, FleetStatus, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { FleetAttributes, FleetStatusData, FleetStatus, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
@@ -39,6 +39,8 @@ library LibFleet {
         occupiedStorage: 0
       })
     );
+
+    FleetAttributes.set(fleetId, FleetAttributes({ speed: 0, attack: 0, defense: 0, cargo: 0 }));
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
@@ -293,10 +295,22 @@ library LibFleet {
     bytes32 unitPrototype,
     uint256 unitCount
   ) internal {
+    if (unitCount == 0) return;
+    FleetAttributesData memory fleetAttributes = FleetAttributes.get(fleetId);
+    bytes32 ownerSpaceRockEntity = OwnedBy.get(fleetId);
+    uint256 unitLevel = UnitLevel.get(ownerSpaceRockEntity, unitPrototype);
+    P_UnitData memory unitData = P_Unit.get(unitPrototype, unitLevel);
     uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototype);
+    if (fleetUnitCount == 0) {
+      if (unitData.speed < fleetAttributes.speed) {
+        fleetAttributes.speed = unitData.speed;
+      }
+    }
+    fleetAttributes.attack += unitData.attack * unitCount;
+    fleetAttributes.defense += unitData.defense * unitCount;
+    fleetAttributes.cargo += unitData.cargo * unitCount;
+    FleetAttributes.set(fleetId, fleetAttributes);
     UnitCount.set(fleetId, unitPrototype, fleetUnitCount + unitCount);
-    uint256 cargo = P_Unit.get(unitPrototype, UnitLevel.get(OwnedBy.get(OwnedBy.get(fleetId)), unitPrototype)).cargo;
-    FleetStatus.setResourceStorage(fleetId, FleetStatus.getResourceStorage(fleetId) + unitCount * cargo);
   }
 
   function decreaseFleetUnit(
@@ -304,18 +318,31 @@ library LibFleet {
     bytes32 unitPrototype,
     uint256 unitCount
   ) internal {
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    if (unitCount == 0) return;
 
     uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototype);
     require(fleetUnitCount >= unitCount, "[Fleet] Not enough units to remove from fleet");
-    UnitCount.set(fleetId, unitPrototype, fleetUnitCount - unitCount);
-    uint256 cargo = P_Unit.get(unitPrototype, UnitLevel.get(OwnedBy.get(OwnedBy.get(fleetId)), unitPrototype)).cargo;
 
-    FleetStatus.setResourceStorage(fleetId, FleetStatus.getResourceStorage(fleetId) - unitCount * cargo);
+    FleetAttributesData memory fleetAttributes = FleetAttributes.get(fleetId);
+    bytes32 ownerSpaceRockEntity = OwnedBy.get(fleetId);
+    uint256 unitLevel = UnitLevel.get(ownerSpaceRockEntity, unitPrototype);
+    P_UnitData memory unitData = P_Unit.get(unitPrototype, unitLevel);
+    uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototype);
+    if (fleetUnitCount - unitCount == 0) {
+      if (unitData.speed == fleetAttributes.speed) {
+        fleetAttributes.speed = unitData.speed;
+      }
+    }
+    fleetAttributes.attack -= unitData.attack * unitCount;
+    fleetAttributes.defense -= unitData.defense * unitCount;
+    fleetAttributes.cargo -= unitData.cargo * unitCount;
     require(
-      FleetStatus.getResourceStorage(fleetId) >= FleetStatus.getOccupiedStorage(fleetId),
+      fleetAttributes.cargo >= FleetStatus.getOccupiedStorage(fleetId),
       "[Fleet] Fleet doesn't have enough storage"
     );
+
+    UnitCount.set(fleetId, unitPrototype, fleetUnitCount - unitCount);
+    FleetStatus.setResourceStorage(fleetId, FleetStatus.getResourceStorage(fleetId) - unitCount * cargo);
   }
 
   function increaseFleetResource(

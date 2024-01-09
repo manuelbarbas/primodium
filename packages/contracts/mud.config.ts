@@ -422,6 +422,16 @@ export const config = mudConfig({
       },
     },
 
+    FleetAttributes: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: {
+        attack: "uint256",
+        defense: "uint256",
+        speed: "uint256",
+        cargo: "uint256",
+      },
+    },
+
     MapFleets: {
       keySchema: { entity: "bytes32", key: "bytes32" },
       valueSchema: { itemKeys: "bytes32[]" },

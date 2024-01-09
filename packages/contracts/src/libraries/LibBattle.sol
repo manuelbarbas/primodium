@@ -6,7 +6,6 @@ import { ESendType, Arrival, EResource } from "src/Types.sol";
 import { Position, DestroyedUnit, ResourceCount, UnitCount, UnitLevel, BattleResult, BattleResultData, P_UnitPrototypes, P_Unit, ArrivalCount, Home } from "codegen/index.sol";
 import { NUM_UNITS } from "src/constants.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
-import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 
 library LibBattle {
   /**
@@ -19,9 +18,8 @@ library LibBattle {
    */
   function battle(
     bytes32 attackerEntity,
-    bytes32 defenderEntity,
-    bytes32 rockEntity,
-    ESendType sendType
+    bytes32[] calldata attackingFleets,
+    bytes32 rockEntity
   ) internal returns (BattleResultData memory battleResult) {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     battleResult.attackerUnitsLeft = new uint256[](unitPrototypes.length);
@@ -66,12 +64,11 @@ library LibBattle {
 
   /**
    * @dev Calculates the defense points for a defender entity and rock.
-   * @param defenderEntity The identifier of the defender entity.
    * @param rockEntity The identifier of the asteroid/rock.
    * @return defenseCounts The counts of defending units.
    * @return defensePoints The total defense points.
    */
-  function getDefensePoints(bytes32 defenderEntity, bytes32 rockEntity)
+  function getDefensePoints(bytes32 rockEntity)
     internal
     view
     returns (uint256[] memory defenseCounts, uint256 defensePoints)
@@ -80,7 +77,7 @@ library LibBattle {
     defenseCounts = new uint256[](unitPrototypes.length);
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       uint256 defenderUnitCount = UnitCount.get(rockEntity, unitPrototypes[i]);
-      uint256 defenderLevel = UnitLevel.get(defenderEntity, unitPrototypes[i]);
+      uint256 defenderLevel = UnitLevel.get(OwnedBy.get(rockEntity), unitPrototypes[i]);
       defensePoints += defenderUnitCount * P_Unit.get(unitPrototypes[i], defenderLevel).defense;
       defenseCounts[i] += defenderUnitCount;
     }
@@ -102,11 +99,7 @@ library LibBattle {
    * @return attackPoints The total attack points.
    * @return cargo The total cargo points.
    */
-  function getAttackPoints(
-    bytes32 attackerEntity,
-    bytes32 rockEntity,
-    ESendType sendType
-  )
+  function getAttackPoints(bytes32 attackerEntity, bytes32[] calldata attackingFleets)
     internal
     returns (
       uint256[] memory attackCounts,
