@@ -4,14 +4,13 @@ import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 import { throttleTime } from "rxjs";
 import { components } from "src/network/components";
-import { SetupResult } from "src/network/types";
 import { singletonIndex, world } from "src/network/world";
 import { entityToColor } from "src/util/color";
 import { clampedIndex, entityToAddress, getRandomRange } from "src/util/common";
 import { EntityType, RockRelationship } from "src/util/constants";
 import { entityToPlayerName } from "src/util/name";
 import { getRockRelationship } from "src/util/spacerock";
-import { getLinkedAddress } from "src/util/web2/getLinkedAddress";
+import { getEnsName } from "src/util/web3/getEnsName";
 import {
   ObjectPosition,
   OnClick,
@@ -25,10 +24,9 @@ import {
 import { Outline, Texture } from "../../common/object-components/sprite";
 import { ObjectText } from "../../common/object-components/text";
 
-export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
+export const renderAsteroid = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
-  const gameWorld = namespaceWorld(world, "game");
-  const playerEntity = mud.network.playerEntity;
+  const systemsWorld = namespaceWorld(world, "systems");
 
   const render = (entity: Entity, coord: Coord) => {
     scene.objectPool.removeGroup("asteroid_" + entity);
@@ -113,6 +111,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
     ]);
 
     const asteroidOutline = asteroidObjectGroup.add("Sprite");
+    const playerEntity = components.Account.get()?.value;
     asteroidOutline.setComponents([
       ...sharedComponents,
       rotationTween,
@@ -128,11 +127,12 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         }
       }),
       OnComponentSystem(components.PlayerAlliance, (_, { entity: _entity }) => {
-        if (ownedBy !== _entity && playerEntity !== _entity) return;
+        const playerEntity = components.Account.get()?.value;
+        if (!playerEntity || (ownedBy !== _entity && playerEntity !== _entity)) return;
 
         asteroidOutline.setComponent(Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity)));
       }),
-      Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity)),
+      playerEntity ? Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity)) : undefined,
       OnClick(scene, () => {
         components.Send.setDestination(entity);
         components.SelectedRock.set({ value: entity });
@@ -188,13 +188,11 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
         color: parseInt(entityToColor(ownedBy).slice(1), 16),
       }),
       OnOnce(async (gameObject) => {
-        const linkedAddress = await getLinkedAddress(entityToAddress(ownedBy));
+        const ensNameData = await getEnsName(ownedBy);
 
         const name =
-          linkedAddress.ensName ??
-          (linkedAddress.address
-            ? entityToAddress(linkedAddress.address ?? ownedBy, true)
-            : entityToPlayerName(ownedBy));
+          ensNameData.ensName ??
+          (ensNameData.address ? entityToAddress(ensNameData.address ?? ownedBy, true) : entityToPlayerName(ownedBy));
 
         gameObject.setText(name);
         gameObject.setFontSize(Math.max(8, Math.min(44, 16 / scene.camera.phaserCamera.zoom)));
@@ -222,7 +220,7 @@ export const renderAsteroid = (scene: Scene, mud: SetupResult) => {
     Not(components.PirateAsteroid),
   ];
 
-  defineEnterSystem(gameWorld, query, ({ entity }) => {
+  defineEnterSystem(systemsWorld, query, ({ entity }) => {
     const coord = components.Position.get(entity);
 
     if (!coord) return;

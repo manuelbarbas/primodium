@@ -15,13 +15,11 @@ contract OnAlliance_TargetClaimResources is SystemHook {
 
   /**
    * @dev This function is called before the system's main logic is executed. it claims resources for the target player.
-   * @param msgSender The address of the message sender.
-   * @param systemId The identifier of the system.
    * @param callData The data passed to the system, including the identifier of the space rock.
    */
   function onBeforeCallSystem(
-    address msgSender,
-    ResourceId systemId,
+    address,
+    ResourceId,
     bytes memory callData
   ) public {
     // get the function selector
@@ -34,17 +32,9 @@ contract OnAlliance_TargetClaimResources is SystemHook {
     }
   }
 
-  /**
-   * @dev This function is called after the system's main logic is executed. It doesn't perform any specific actions in this case.
-   * @param msgSender The address of the message sender.
-   * @param systemId The identifier of the system.
-   * @param callData The data passed to the system.
-   */
   function onAfterCallSystem(
-    address msgSender,
-    ResourceId systemId,
-    bytes memory callData
-  ) public {
-    // This function doesn't perform any actions in this case.
-  }
+    address,
+    ResourceId,
+    bytes memory
+  ) public {}
 }

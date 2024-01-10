@@ -1,11 +1,11 @@
 import { Entity } from "@latticexyz/recs";
 import React, { useMemo } from "react";
 
-import { primodium } from "@game/api";
 import { EntitytoSpriteKey } from "@game/constants";
 import _ from "lodash";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getBuildingLevelStorageUpgrades, transformProductionData } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
@@ -58,7 +58,7 @@ export const RecipeDisplay: React.FC<{
 export const PrototypeInfo: React.FC<{
   building: Entity;
 }> = ({ building }) => {
-  const { getSpriteBase64 } = primodium.api().sprite;
+  const { getSpriteBase64 } = usePrimodium().api().sprite;
   const rawProduction = components.P_Production.useWithKeys({ prototype: building as Hex, level: 1n });
   const production = useMemo(() => transformProductionData(rawProduction), [rawProduction]);
   const spaceRock = components.Position.useWithKeys({ entity: building as Hex })?.parent as Entity | undefined;

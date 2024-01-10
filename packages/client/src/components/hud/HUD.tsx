@@ -1,9 +1,9 @@
-import { primodium } from "@game/api";
 import { KeyNames, KeybindActions } from "@game/constants";
 import { Entity, hasComponent } from "@latticexyz/recs";
 import { FaArrowRight, FaCircle } from "react-icons/fa";
 import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getBuildingName } from "src/util/building";
 import { formatNumber } from "src/util/common";
@@ -32,7 +32,10 @@ import { HostileFleets } from "./panes/hostile-fleets/HostileFleets";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 
 export const GameHUD = () => {
-  const playerEntity = useMud().network.playerEntity;
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
+
   const activeRock = components.ActiveRock.use()?.value;
   const ownedBy = components.OwnedBy.use(activeRock ?? undefined)?.value;
   const isSpectating = ownedBy !== playerEntity;
@@ -100,9 +103,10 @@ export const GameHUD = () => {
 const BuildingSelection = () => {
   const selectedBuilding = components.SelectedBuilding.use()?.value;
   const action = components.SelectedAction.use()?.value;
+  const primodium = usePrimodium();
   const {
     hooks: { useKeybinds },
-  } = primodium.api()!;
+  } = primodium.api();
   const keybinds = useKeybinds();
 
   return (
@@ -261,6 +265,7 @@ const TopActions: React.FC<{ isSpectating: boolean }> = ({ isSpectating }) => {
 };
 
 const Chat = () => {
+  const primodium = usePrimodium();
   const {
     hooks: { useKeybinds },
   } = primodium.api()!;

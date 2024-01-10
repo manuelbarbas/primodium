@@ -1,10 +1,10 @@
-import { Entity, Has, HasValue, defineComponentSystem, runQuery } from "@latticexyz/recs";
+import { Entity, Has, HasValue, defineComponentSystem, namespaceWorld, runQuery } from "@latticexyz/recs";
 import { getUnitTrainingTime } from "src/util/trainUnits";
 import { Hex } from "viem";
 import { components } from "../components";
 import { world } from "../world";
 // import { SetupResult } from "../types";
-import { SetupResult } from "../types";
+import { MUD } from "../types";
 export function createHangar(spaceRock: Entity) {
   const player = components.OwnedBy.get(spaceRock)?.value;
   if (!player) return;
@@ -13,8 +13,7 @@ export function createHangar(spaceRock: Entity) {
   // get all units and find their counts on the space rock
   components.P_UnitPrototypes.get()?.value.forEach((entity) => {
     const unitCount = components.UnitCount.getWithKeys({
-      player: player as Hex,
-      rock: spaceRock as Hex,
+      entity: spaceRock as Hex,
       unit: entity as Hex,
     })?.value;
 
@@ -74,24 +73,25 @@ function getTrainedUnclaimedUnits(spaceRock: Entity) {
   });
   return units;
 }
-export function setupHangar(mud: SetupResult) {
-  const playerEntity = mud.network.playerEntity;
+export function setupHangar(mud: MUD) {
+  const systemWorld = namespaceWorld(world, "systems");
+  const playerEntity = mud.playerAccount.entity;
 
   const { Send, OwnedBy, Asteroid } = components;
 
-  defineComponentSystem(world, Send, () => {
+  defineComponentSystem(systemWorld, Send, () => {
     const origin = Send.get()?.origin;
     const destination = Send.get()?.destination;
     if (origin) createHangar(origin);
     if (destination) createHangar(destination);
   });
 
-  defineComponentSystem(world, components.SelectedRock, ({ value: [value] }) => {
+  defineComponentSystem(systemWorld, components.SelectedRock, ({ value: [value] }) => {
     if (!value?.value) return;
     createHangar(value.value);
   });
 
-  defineComponentSystem(world, components.BlockNumber, () => {
+  defineComponentSystem(systemWorld, components.BlockNumber, () => {
     const home = components.Home.get(playerEntity)?.asteroid;
     if (home) createHangar(home as Entity);
     const origin = Send.get()?.origin;

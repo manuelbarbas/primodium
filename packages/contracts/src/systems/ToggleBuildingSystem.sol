@@ -6,15 +6,13 @@ import { PositionData, Level } from "codegen/index.sol";
 import { IsActive, Home, OwnedBy } from "src/codegen/index.sol";
 import { LibBuilding, UnitProductionQueue } from "codegen/Libraries.sol";
 
-import { addressToEntity } from "src/utils.sol";
-
 contract ToggleBuildingSystem is PrimodiumSystem {
   /// @notice Toggles the building at the specified coordinate
   /// @param coord Coordinate of the building to be toggled
   /// @return isActive the new active status of the building
   function toggleBuilding(PositionData memory coord) public returns (bool isActive) {
     // Check there isn't another tile there
-    bytes32 playerEntity = addressToEntity(_msgSender());
+    bytes32 playerEntity = _player(false);
     bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
     require(OwnedBy.get(coord.parent) == playerEntity, "[ToggleBuilding] Only owner can toggle building");
     require(buildingEntity != Home.getMainBase(playerEntity), "[ToggleBuilding] Can not toggle main base");

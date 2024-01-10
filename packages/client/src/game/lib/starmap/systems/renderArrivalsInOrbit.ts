@@ -3,7 +3,6 @@ import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { components } from "src/network/components";
-import { SetupResult } from "src/network/types";
 import { world } from "src/network/world";
 import { PIRATE_KEY } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
@@ -85,11 +84,12 @@ export const renderEntityOrbitingArrivals = (rockEntity: Entity, playerEntity: E
   });
 };
 
-export const renderArrivalsInOrbit = (scene: Scene, mud: SetupResult) => {
-  const playerEntity = mud.network.playerEntity;
-  const gameWorld = namespaceWorld(world, "game");
+export const renderArrivalsInOrbit = (scene: Scene) => {
+  const systemsWorld = namespaceWorld(world, "systems");
 
-  defineComponentSystem(gameWorld, components.Arrival, (update) => {
+  defineComponentSystem(systemsWorld, components.Arrival, (update) => {
+    const playerEntity = components.Account.get()?.value;
+    if (!playerEntity) return;
     if (update.value[0]) {
       renderEntityOrbitingArrivals(update.value[0].destination as Entity, playerEntity, scene);
     } else if (update.value[1]) {

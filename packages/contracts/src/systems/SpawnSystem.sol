@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { addressToEntity, getSystemResourceId } from "src/utils.sol";
+import { getSystemResourceId } from "src/utils.sol";
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { BuildSystem } from "systems/BuildSystem.sol";
 
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
-import { P_GameConfig, GracePeriod, P_GracePeriod, Spawned, Position, PositionData, Level, Home } from "codegen/index.sol";
+import { P_GameConfig, GracePeriod, Spawned, P_GracePeriod, Spawned, Position, PositionData, Level, Home } from "codegen/index.sol";
 
 import { LibAsteroid, LibEncode } from "codegen/Libraries.sol";
 import { EBuilding } from "src/Types.sol";
@@ -22,7 +22,7 @@ contract SpawnSystem is PrimodiumSystem {
   /// @notice Checks if player is already spawned, sets initial level and associates asteroid
   /// @return bytes32 The entity ID of the spawned asteroid
   function spawn() public returns (bytes32) {
-    bytes32 playerEntity = addressToEntity(_msgSender());
+    bytes32 playerEntity = _player(true);
 
     require(!Spawned.get(playerEntity), "[SpawnSystem] Already spawned");
     uint256 gracePeriodLength = (P_GracePeriod.get() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
@@ -34,8 +34,9 @@ contract SpawnSystem is PrimodiumSystem {
     position.parent = asteroid;
 
     Home.set(playerEntity, asteroid, LibEncode.getTimedHash(BuildingKey, position));
+    Spawned.set(playerEntity, true);
     SystemCall.callWithHooksOrRevert(
-      _msgSender(),
+      entityToAddress(playerEntity),
       getSystemResourceId("BuildSystem"),
       abi.encodeCall(BuildSystem.build, (EBuilding.MainBase, position)),
       0

@@ -14,12 +14,11 @@ contract OnResourceCount_Score is StoreHook {
   constructor() {}
 
   /// @dev This function is called before splicing static data.
-  /// @param tableId The ID of the table being operated on.
   /// @param keyTuple The key tuple of the resource count.
   /// @param start The start position of the data.
   /// @param data The data to be processed.
   function onBeforeSpliceStaticData(
-    ResourceId tableId,
+    ResourceId,
     bytes32[] memory keyTuple,
     uint48 start,
     bytes memory data

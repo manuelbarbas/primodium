@@ -6,16 +6,16 @@ import { Button } from "src/components/core/Button";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
+import { invade } from "src/network/setup/contractCalls/invade";
 import { TransactionQueueType, UnitEntityLookup } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
-import { invade } from "src/util/web3/contractCalls/invade";
 import { Hex } from "viem";
 
 export const Land: React.FC<{
   destination: Entity;
 }> = ({ destination }) => {
-  const network = useMud().network;
-  const playerEntity = network.playerEntity;
+  const mud = useMud();
+  const playerEntity = mud.playerAccount.entity;
   const destinationOwner = components.OwnedBy.use(destination)?.value;
   const orbiting = components.Arrival.use({
     from: playerEntity,
@@ -50,7 +50,7 @@ export const Land: React.FC<{
         <Button
           className={`gap-2 w-44 ${isNeutral ? "btn-secondary" : "btn-error"} flex flex-col items-center `}
           clickSound={AudioKeys.Sequence7}
-          onClick={() => invade(destination, network, key)}
+          onClick={() => invade(mud, destination, key)}
         >
           <div className="flex flex-col p-1">
             <p className="text-lg">
