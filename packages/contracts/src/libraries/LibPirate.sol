@@ -21,7 +21,7 @@ library LibPirate {
     P_SpawnPirateAsteroidData memory spawnPirateAsteroid = P_SpawnPirateAsteroid.get(prototype);
     bytes32 ownerEntity = LibEncode.getHash(PirateKey, playerEntity);
     asteroidEntity = LibEncode.getHash(ownerEntity);
-    PositionData memory playerHomeAsteroidCoord = Position.get(Home.get(playerEntity).asteroid);
+    PositionData memory playerHomeAsteroidCoord = Position.get(Home.get(playerEntity));
     if (Spawned.get(ownerEntity)) {
       PositionData memory lastCoord = Position.get(asteroidEntity);
       ReversePosition.deleteRecord(lastCoord.x, lastCoord.y);
@@ -32,7 +32,7 @@ library LibPirate {
         UnitCount.set(asteroidEntity, units[i], 0);
       }
     } else {
-      Home.setAsteroid(ownerEntity, asteroidEntity);
+      Home.set(ownerEntity, asteroidEntity);
       uint8 resourceCount = uint8(EResource.LENGTH);
       LibProduction.increaseResourceProduction(asteroidEntity, EResource.U_Housing, 100000000);
       for (uint8 i = 1; i < resourceCount; i++) {

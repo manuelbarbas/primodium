@@ -27,7 +27,7 @@ contract OnBefore_ClaimUnits is SystemHook {
     // Get the player's entity
     bytes32 playerEntity = _player(msgSender, false);
 
-    LibUnit.claimUnits(Home.getAsteroid(playerEntity));
+    LibUnit.claimUnits(Home.get(playerEntity));
   }
 
   function onAfterCallSystem(

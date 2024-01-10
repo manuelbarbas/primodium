@@ -34,13 +34,13 @@ contract OnMarketPlace_TargetClaimUnits is SystemHook {
     if (bytes4(functionSelector) == MarketplaceSystem.takeOrder.selector) {
       (bytes32 orderId, ) = abi.decode(args, (bytes32, uint256));
       bytes32 seller = MarketplaceOrder.getSeller(orderId);
-      bytes32 homeAsteroid = Home.getAsteroid(seller);
+      bytes32 homeAsteroid = Home.get(seller);
       LibUnit.claimUnits(homeAsteroid);
     } else if (bytes4(functionSelector) == MarketplaceSystem.takeOrderBulk.selector) {
       (bytes32[] memory orderIds, ) = abi.decode(args, (bytes32[], uint256[]));
       for (uint256 i = 0; i < orderIds.length; i++) {
         bytes32 seller = MarketplaceOrder.getSeller(orderIds[i]);
-        bytes32 homeAsteroid = Home.getAsteroid(seller);
+        bytes32 homeAsteroid = Home.get(seller);
         LibUnit.claimUnits(homeAsteroid);
       }
     }

@@ -59,7 +59,7 @@ library LibObjectives {
     uint256 requiredMainBaseLevel = P_RequiredBaseLevel.get(objective, 1);
     if (requiredMainBaseLevel > 1) {
       require(
-        LibBuilding.getBaseLevel(playerEntity) >= requiredMainBaseLevel,
+        LibBuilding.getBaseLevel(Home.get(playerEntity)) >= requiredMainBaseLevel,
         "[LibObjectives] MainBase level requirement not met"
       );
     }
@@ -68,7 +68,7 @@ library LibObjectives {
   function checkObjectiveExpansionRequirement(bytes32 playerEntity, bytes32 objective) internal view {
     uint256 requiredExpansionLevel = P_RequiredExpansion.get(objective);
     if (requiredExpansionLevel == 0) return;
-    bytes32 asteroid = Home.getAsteroid(playerEntity);
+    bytes32 asteroid = Home.get(playerEntity);
     uint256 playerExpansion = Level.get(asteroid);
     require(playerExpansion >= requiredExpansionLevel, "[LibObjectives] Expansion level requirement not met");
   }

@@ -33,8 +33,8 @@ contract LibRaidTest is PrimodiumTest {
     super.setUp();
     vm.startPrank(creator);
     player = addressToEntity(creator);
-    Home.setAsteroid(player, homeRock);
-    Home.setAsteroid(enemy, rock);
+    Home.set(player, homeRock);
+    Home.set(enemy, rock);
     br.attacker = player;
     br.winner = player;
     bytes32[] memory unitTypes = new bytes32[](NUM_UNITS);
@@ -125,7 +125,7 @@ contract LibRaidTest is PrimodiumTest {
   function testRaid() public {
     ResourceCount.set(rock, Iron, 100);
     MaxResourceCount.set(homeRock, Iron, 100);
-    Home.setAsteroid(player, homeRock);
+    Home.set(player, homeRock);
     OwnedBy.set(rock, enemy);
     Asteroid.setIsAsteroid(rock, true);
     Asteroid.setIsAsteroid(homeRock, true);
@@ -158,7 +158,7 @@ contract LibRaidTest is PrimodiumTest {
     ResourceCount.set(rock, Iron, 100);
     MaxResourceCount.set(homeRock, Iron, 100);
     ResourceCount.set(rock, uint8(EResource.U_Unraidable), 100);
-    Home.setAsteroid(enemy, rock);
+    Home.set(enemy, rock);
     OwnedBy.set(rock, enemy);
     Asteroid.setIsAsteroid(rock, true);
     Asteroid.setIsAsteroid(homeRock, true);
@@ -192,7 +192,7 @@ contract LibRaidTest is PrimodiumTest {
     MaxResourceCount.set(homeRock, Iron, 100);
     ResourceCount.set(rock, uint8(EResource.U_AdvancedUnraidable), 100);
     P_IsAdvancedResource.set(Iron, true);
-    Home.setAsteroid(enemy, rock);
+    Home.set(enemy, rock);
     OwnedBy.set(rock, enemy);
     Asteroid.setIsAsteroid(rock, true);
     Asteroid.setIsAsteroid(homeRock, true);

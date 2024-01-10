@@ -113,7 +113,7 @@ contract PrimodiumTest is MudTest {
   }
 
   function getHomeAsteroidPosition(address player) public view returns (PositionData memory) {
-    bytes32 asteroid = Home.get(addressToEntity(player)).asteroid;
+    bytes32 asteroid = Home.get(addressToEntity(player));
     return Position.get(asteroid);
   }
 
@@ -180,7 +180,7 @@ contract PrimodiumTest is MudTest {
     vm.prank(player);
     world.spawn();
     bytes32 playerEntity = addressToEntity(player);
-    return Home.getAsteroid(playerEntity);
+    return Home.get(playerEntity);
   }
 
   function get2x2Blueprint() internal pure returns (int32[] memory blueprint) {

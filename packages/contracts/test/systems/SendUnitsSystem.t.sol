@@ -258,7 +258,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
   //   setupValidInvade();
   //   OwnedBy.set(destination, to);
   //   UnitCount.set(player, origin, unitPrototype, 100);
-  //   Home.setAsteroid(player, origin);
+  //   Home.set(player, origin);
   //   unitData.speed = 100;
   //   P_Unit.set(unitPrototype, 0, unitData);
 
@@ -285,7 +285,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
   //   setupValidInvade();
   //   OwnedBy.set(destination, to);
   //   UnitCount.set(player, origin, unitPrototype, 100);
-  //   Home.setAsteroid(player, origin);
+  //   Home.set(player, origin);
   //   unitData.speed = 100;
   //   P_Unit.set(unitPrototype, 0, unitData);
 
@@ -443,7 +443,7 @@ contract SendUnitsSystemTest is PrimodiumTest {
   //   UnitProductionQueue.enqueue(building, item);
   //   UnitFactorySet.add(player, building);
 
-  //   Home.setAsteroid(player, origin);
+  //   Home.set(player, origin);
   //   MaxResourceCount.set(origin, Iron, 1000);
   //   ProductionRate.set(origin, Iron, 10);
   //   LastClaimedAt.set(origin, block.timestamp - 10);
@@ -453,10 +453,10 @@ contract SendUnitsSystemTest is PrimodiumTest {
   //   unitData.trainingTime = 100;
   //   P_Unit.set(unitPrototype, 0, unitData);
 
-  //   console.log("home:", uint256(Home.getAsteroid(player)));
+  //   console.log("home:", uint256(Home.get(player)));
   //   console.log("origin", uint256(origin));
   //   world.sendUnits(unitCounts, ESendType.Raid, originPosition, destinationPosition, to);
-  //   assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 0);
+  //   assertEq(UnitCount.get(player, Home.get(player), unitPrototype), 0);
   //   vm.expectRevert();
   //   world.sendUnits(unitCounts, ESendType.Raid, originPosition, destinationPosition, to);
   // }

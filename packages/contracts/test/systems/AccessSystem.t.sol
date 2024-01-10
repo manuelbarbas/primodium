@@ -92,9 +92,9 @@ contract AccessSystemTest is PrimodiumTest {
   function testHighRiskActionDelegate() public {
     world.grantAccess(alice);
 
-    bytes32 playerHome = Home.getAsteroid(player);
+    bytes32 playerHome = Home.get(player);
     LibProduction.increaseResourceProduction(playerHome, EResource.U_Orders, 1);
-    ResourceCount.set(Home.getAsteroid(player), uint8(EResource.Iron), 100);
+    ResourceCount.set(Home.get(player), uint8(EResource.Iron), 100);
     switchPrank(alice);
     vm.expectRevert(bytes("[Access Control] Cannot delegate high risk actions"));
     world.addResourceOrder(EResource.Iron, 1, 1);
@@ -103,9 +103,9 @@ contract AccessSystemTest is PrimodiumTest {
   function testHighRiskActionOwner() public {
     world.grantAccess(alice);
 
-    bytes32 playerHome = Home.getAsteroid(player);
+    bytes32 playerHome = Home.get(player);
     LibProduction.increaseResourceProduction(playerHome, EResource.U_Orders, 1);
-    ResourceCount.set(Home.getAsteroid(player), uint8(EResource.Iron), 100);
+    ResourceCount.set(Home.get(player), uint8(EResource.Iron), 100);
     world.addResourceOrder(EResource.Iron, 1, 1);
   }
 }

@@ -105,7 +105,7 @@ contract LibInvadeTest is PrimodiumTest {
   function testInvadeAttackerWins() public {
     ResourceCount.set(enemy, uint8(EResource.Iron), 100);
     MaxResourceCount.set(player, uint8(EResource.Iron), 100);
-    Home.setAsteroid(player, homeRock);
+    Home.set(player, homeRock);
     OwnedBy.set(rock, enemy);
 
     Asteroid.setIsAsteroid(rock, true);
@@ -138,7 +138,7 @@ contract LibInvadeTest is PrimodiumTest {
   function testInvadeDefenderWins() public {
     ResourceCount.set(enemy, uint8(EResource.Iron), 100);
     MaxResourceCount.set(player, uint8(EResource.Iron), 100);
-    Home.setAsteroid(player, homeRock);
+    Home.set(player, homeRock);
     OwnedBy.set(rock, enemy);
     Asteroid.setIsAsteroid(rock, true);
     Asteroid.setIsAsteroid(homeRock, true);
