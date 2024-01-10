@@ -34,7 +34,6 @@ export const AccountDisplay: React.FC<{
       className={`btn-xs btn-ghost p-0 inline-flex flex font-bold gap-1 ${className} ${loading ? "animate-pulse" : ""}`}
       disabled={disabled}
       onClick={async () => {
-        components.ActiveRock.set({ value: homeAsteroid as Entity });
         components.SelectedRock.set({ value: homeAsteroid as Entity });
         await transitionToScene(Scenes.Starmap, Scenes.Asteroid, 0);
         components.MapOpen.set({ value: false });

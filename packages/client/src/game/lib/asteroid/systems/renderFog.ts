@@ -3,7 +3,7 @@ import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
-import { getAsteroidBounds, getSpaceRockBounds } from "src/util/outOfBounds";
+import { getAsteroidBounds, getAsteroidMaxBounds } from "src/util/outOfBounds";
 import { ObjectPosition, SetValue } from "../../common/object-components/common";
 import { Square } from "../../common/object-components/graphics";
 import { ObjectText } from "../../common/object-components/text";
@@ -13,14 +13,16 @@ export function renderFog(scene: Scene) {
   const objSuffix = "_fog";
   const systemsWorld = namespaceWorld(world, "systems");
   const fogWorld = namespaceWorld(world, "game_fog");
-  const asteroidBounds = getAsteroidBounds();
 
   defineComponentSystem(systemsWorld, components.ActiveRock, ({ value }) => {
+    if (!value[0]) return;
     //remove old indicators
     scene.objectPool.removeGroup(value[1]?.value + objSuffix);
 
     //dispose old system
     world.dispose("game_fog");
+    const asteroidBounds = getAsteroidMaxBounds(value[0].value);
+    console.log("asteroid bounds", asteroidBounds);
 
     //place initial fog tiles
     for (let x = asteroidBounds.minX; x <= asteroidBounds.maxX - 1; x++) {
@@ -48,8 +50,8 @@ export function renderFog(scene: Scene) {
     defineComponentSystem(fogWorld, components.Level, ({ entity }) => {
       if (value[0] && value[0].value !== entity) return;
 
-      const bounds = getSpaceRockBounds(entity);
-      const nextBounds = getSpaceRockBounds(entity, true);
+      const bounds = getAsteroidBounds(entity);
+      const nextBounds = getAsteroidBounds(entity, true);
 
       const objIndex = entity + objSuffix;
       if (scene.objectPool.objects.has(objIndex)) {

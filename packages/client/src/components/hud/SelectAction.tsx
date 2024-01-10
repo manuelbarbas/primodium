@@ -78,7 +78,6 @@ export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating
       }
     );
     components.MapOpen.set({ value: true });
-    components.ActiveRock.set({ value: homeAsteroid ?? singletonEntity });
     components.SelectedBuilding.remove();
   };
 

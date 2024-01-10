@@ -9,7 +9,6 @@ import { RESOURCE_SCALE, ResourceImage, SPEED_SCALE } from "src/util/constants";
 
 export const MaterialLabel = ({ name, resource }: { name: string; resource: Entity }) => {
   const selectedRock = components.SelectedRock.use()?.value;
-  console.log("material label selected rock:", selectedRock);
 
   const resourceIcon = ResourceImage.get(resource);
   const worldSpeed = components.P_GameConfig.use()?.worldSpeed ?? SPEED_SCALE;
