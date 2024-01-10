@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-
-import { addressToEntity } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
@@ -19,13 +17,11 @@ contract OnDestroy_ClearUtility is SystemHook {
 
   /**
    * @dev This function is called before the system's main logic is executed. It clears utility usage when a building is destroyed.
-   * @param msgSender The address of the message sender.
-   * @param systemId The identifier of the system.
    * @param callData The data passed to the system.
    */
   function onBeforeCallSystem(
-    address msgSender,
-    ResourceId systemId,
+    address,
+    ResourceId,
     bytes memory callData
   ) public {
     // Decode the arguments from the callData
@@ -38,18 +34,9 @@ contract OnDestroy_ClearUtility is SystemHook {
     LibResource.clearUtilityUsage(buildingEntity);
   }
 
-  /**
-   * @dev This function is called after the system's main logic is executed.
-   * It does not perform any actions in this case.
-   * @param msgSender The address of the message sender.
-   * @param systemId The identifier of the system.
-   * @param callData The data passed to the system.
-   */
   function onAfterCallSystem(
-    address msgSender,
-    ResourceId systemId,
-    bytes memory callData
-  ) public {
-    // This function does not perform any actions in this case.
-  }
+    address,
+    ResourceId,
+    bytes memory
+  ) public {}
 }

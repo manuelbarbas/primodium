@@ -20,11 +20,7 @@ library LibRaid {
    * @param playerEntity The identifier of the player initiating the raid.
    * @param rockEntity The identifier of the target asteroid rock.
    */
-  function raid(
-    IWorld world,
-    bytes32 playerEntity,
-    bytes32 rockEntity
-  ) internal {
+  function raid(bytes32 playerEntity, bytes32 rockEntity) internal {
     require(RockType.get(rockEntity) == uint8(ERock.Asteroid), "[LibRaid] Can only raid asteroids");
 
     bytes32 defenderEntity = OwnedBy.get(rockEntity);

@@ -12,7 +12,7 @@ contract AllianceSystem is PrimodiumSystem {
    * @param alliance the entity ID of the alliance.
    */
   function join(bytes32 alliance) public {
-    LibAlliance.join(addressToEntity(_msgSender()), alliance);
+    LibAlliance.join(_player(false), alliance);
   }
 
   /**
@@ -21,14 +21,14 @@ contract AllianceSystem is PrimodiumSystem {
    * @param allianceInviteMode the invite mode of the alliance
    */
   function create(bytes32 name, EAllianceInviteMode allianceInviteMode) public returns (bytes32 allianceEntity) {
-    return LibAlliance.create(addressToEntity(_msgSender()), name, allianceInviteMode);
+    return LibAlliance.create(_player(false), name, allianceInviteMode);
   }
 
   /**
    * @dev leave an alliance
    */
   function leave() public {
-    LibAlliance.leave(addressToEntity(_msgSender()));
+    LibAlliance.leave(_player(false));
   }
 
   /**
@@ -36,7 +36,7 @@ contract AllianceSystem is PrimodiumSystem {
    * @param target the entity ID of the player to invite
    */
   function invite(bytes32 target) public {
-    LibAlliance.invite(addressToEntity(_msgSender()), target);
+    LibAlliance.invite(_player(false), target);
   }
 
   /**
@@ -44,7 +44,7 @@ contract AllianceSystem is PrimodiumSystem {
    * @param target the entity id of the player to revoke the invite from
    */
   function revokeInvite(bytes32 target) public {
-    LibAlliance.revokeInvite(addressToEntity(_msgSender()), target);
+    LibAlliance.revokeInvite(_player(false), target);
   }
 
   /**
@@ -52,7 +52,7 @@ contract AllianceSystem is PrimodiumSystem {
    * @param inviter the entity id of the player to revoke the invite from
    */
   function declineInvite(bytes32 inviter) public {
-    LibAlliance.revokeInvite(inviter, addressToEntity(_msgSender()));
+    LibAlliance.revokeInvite(inviter, _player(false));
   }
 
   /**
@@ -60,7 +60,7 @@ contract AllianceSystem is PrimodiumSystem {
    * @param target the entity id of the player to kick
    */
   function kick(bytes32 target) public {
-    LibAlliance.kick(addressToEntity(_msgSender()), target);
+    LibAlliance.kick(_player(false), target);
   }
 
   /**
@@ -69,7 +69,7 @@ contract AllianceSystem is PrimodiumSystem {
    * @param role The role to grant.
    */
   function grantRole(bytes32 target, EAllianceRole role) public {
-    LibAlliance.grantRole(addressToEntity(_msgSender()), target, role);
+    LibAlliance.grantRole(_player(false), target, role);
   }
 
   /**
@@ -77,7 +77,7 @@ contract AllianceSystem is PrimodiumSystem {
    * @param alliance The entity ID of the alliance the player has requested to join.
    */
   function requestToJoin(bytes32 alliance) public {
-    LibAlliance.requestToJoin(addressToEntity(_msgSender()), alliance);
+    LibAlliance.requestToJoin(_player(false), alliance);
   }
 
   /**
@@ -85,7 +85,7 @@ contract AllianceSystem is PrimodiumSystem {
    * @param rejectee The entity ID of the the player who has requested to join.
    */
   function rejectRequestToJoin(bytes32 rejectee) public {
-    LibAlliance.rejectRequestToJoin(addressToEntity(_msgSender()), rejectee);
+    LibAlliance.rejectRequestToJoin(_player(false), rejectee);
   }
 
   /**
@@ -93,6 +93,6 @@ contract AllianceSystem is PrimodiumSystem {
    * @param accepted The entity ID of the the player who has requested to join.
    */
   function acceptRequestToJoin(bytes32 accepted) public {
-    LibAlliance.acceptRequestToJoin(addressToEntity(_msgSender()), accepted);
+    LibAlliance.acceptRequestToJoin(_player(false), accepted);
   }
 }

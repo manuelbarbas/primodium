@@ -1,19 +1,26 @@
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { ComponentUpdate, Has, HasValue, Entity } from "@latticexyz/recs";
-import { defineEnterSystem, defineExitSystem, namespaceWorld } from "@latticexyz/recs";
-import { Scene } from "engine/types";
-import { TransactionQueueType } from "src/util/constants";
-import { world } from "src/network/world";
-import { components } from "src/network/components";
-import { ObjectPosition, OnExitSystem, SetValue } from "../../common/object-components/common";
-import { ObjectText } from "../../common/object-components/text";
-import { getBuildingDimensions } from "src/util/building";
 import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import {
+  ComponentUpdate,
+  Entity,
+  Has,
+  HasValue,
+  defineEnterSystem,
+  defineExitSystem,
+  namespaceWorld,
+} from "@latticexyz/recs";
+import { Scene } from "engine/types";
+import { components } from "src/network/components";
+import { world } from "src/network/world";
+import { getBuildingDimensions } from "src/util/building";
+import { TransactionQueueType } from "src/util/constants";
+import { ObjectPosition, OnExitSystem, SetValue } from "../../common/object-components/common";
 import { Texture } from "../../common/object-components/sprite";
+import { ObjectText } from "../../common/object-components/text";
 
 export const renderQueuedBuildings = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
-  const gameWorld = namespaceWorld(world, "game");
+  const systemsWorld = namespaceWorld(world, "systems");
   const objIndexSuffix = "_buildingQueued";
 
   const query = [
@@ -91,13 +98,13 @@ export const renderQueuedBuildings = (scene: Scene) => {
     ]);
   };
 
-  defineEnterSystem(gameWorld, query, (update) => {
+  defineEnterSystem(systemsWorld, query, (update) => {
     render(update);
 
     console.info("[ENTER SYSTEM](transaction queued)");
   });
 
-  defineExitSystem(gameWorld, query, (update) => {
+  defineExitSystem(systemsWorld, query, (update) => {
     const objIndex = update.entity + objIndexSuffix;
 
     scene.objectPool.removeGroup(objIndex);

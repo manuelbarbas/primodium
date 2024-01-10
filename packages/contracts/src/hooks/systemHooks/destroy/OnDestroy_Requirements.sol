@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { addressToEntity } from "src/utils.sol";
+import { _player } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { PositionData } from "codegen/tables/Position.sol";
@@ -19,34 +19,25 @@ contract OnDestroy_Requirements is SystemHook {
   /**
    * @dev This function is called before the system's main logic is executed. It checks for destroy requirements before the building is removed.
    * @param msgSender The address of the message sender.
-   * @param systemId The identifier of the system.
    * @param callData The data passed to the system, including the coordinates of the building to be destroyed.
    */
   function onBeforeCallSystem(
     address msgSender,
-    ResourceId systemId,
+    ResourceId,
     bytes memory callData
-  ) public {
+  ) public view {
     // Decode the coordinates from the callData
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
     PositionData memory coord = abi.decode(args, (PositionData));
 
     // Get the player's entity and check destroy requirements
-    bytes32 playerEntity = addressToEntity(msgSender);
+    bytes32 playerEntity = _player(msgSender, false);
     LibBuilding.checkDestroyRequirements(playerEntity, coord);
   }
 
-  /**
-   * @dev This function is called after the system's main logic is executed. It doesn't perform any specific actions in this case.
-   * @param msgSender The address of the message sender.
-   * @param systemId The identifier of the system.
-   * @param callData The data passed to the system.
-   */
   function onAfterCallSystem(
-    address msgSender,
-    ResourceId systemId,
-    bytes memory callData
-  ) public {
-    // This function doesn't perform any actions in this case.
-  }
+    address,
+    ResourceId,
+    bytes memory
+  ) public {}
 }

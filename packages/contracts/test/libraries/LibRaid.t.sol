@@ -241,7 +241,6 @@ contract LibRaidTest is PrimodiumTest {
     MaxResourceCount.set(homeRock, uint8(EResource.U_Vessel), 2);
     RockType.set(rock, uint8(ERock.Motherlode));
 
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     P_Unit.set(unit1, 0, P_UnitData({ attack: 100, defense: 100, speed: 200, cargo: 100, trainingTime: 0 }));
     Arrival memory arrival = Arrival({
       sendTime: block.timestamp,
@@ -272,7 +271,7 @@ contract LibRaidTest is PrimodiumTest {
     arrival.destination = rock2;
 
     vm.startPrank(creator);
-    bytes32 arrival2 = LibSend.sendUnits(arrival);
+    LibSend.sendUnits(arrival);
 
     assertEq(ArrivalCount.get(player), 1, "ArrivalCount 1");
 
@@ -280,12 +279,10 @@ contract LibRaidTest is PrimodiumTest {
     arrival.to = player;
     arrival.destination = rock;
 
-    bytes32 arrival3 = LibSend.sendUnits(arrival);
+    LibSend.sendUnits(arrival);
 
     assertEq(ArrivalCount.get(player), 2, "ArrivalCount 2");
 
-    bytes32[] memory arrivalKeys = ArrivalsMap.keys(player, rock2);
-    uint256 arrivals = ArrivalCount.get(player);
     world.raid(rock2);
     assertEq(ArrivalCount.get(player), 1, "ARrival count 3");
   }

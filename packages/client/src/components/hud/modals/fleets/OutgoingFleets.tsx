@@ -4,7 +4,9 @@ import { components } from "src/network/components";
 import { Fleet } from "./Fleet";
 
 export const Outgoingfleets: React.FC = () => {
-  const playerEntity = useMud().network.playerEntity;
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
 
   const fleets = components.Arrival.useAllWith({
     from: playerEntity,
@@ -29,7 +31,6 @@ export const Outgoingfleets: React.FC = () => {
               arrivalTime={fleet.arrivalTime}
               destination={fleet.destination}
               sendType={fleet.sendType}
-              outgoing={true}
             />
           );
         })

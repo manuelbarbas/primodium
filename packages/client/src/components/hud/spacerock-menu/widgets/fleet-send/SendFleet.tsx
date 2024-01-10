@@ -1,3 +1,4 @@
+import { AudioKeys } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { ERock, ESendType } from "contracts/config/enums";
 import dayjs from "dayjs";
@@ -6,18 +7,17 @@ import { FaExclamationTriangle } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
 import { Button } from "src/components/core/Button";
 import { Card, SecondaryCard } from "src/components/core/Card";
+import { Modal } from "src/components/core/Modal";
 import { NumberInput } from "src/components/shared/NumberInput";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
+import { send } from "src/network/setup/contractCalls/send";
 import { formatNumber, getBlockTypeName } from "src/util/common";
 import { BackgroundImage, EntityType } from "src/util/constants";
 import { toHex32 } from "src/util/encode";
 import { getMoveLength, toUnitCountArray } from "src/util/send";
-import { send } from "src/util/web3/contractCalls/send";
 import { Hex } from "viem";
 import { TargetHeader } from "../../TargetHeader";
-import { Modal } from "src/components/core/Modal";
-import { AudioKeys } from "@game/constants";
 
 export const Unit: React.FC<{ unit: Entity; count: bigint }> = ({ unit, count }) => {
   return (
@@ -50,7 +50,9 @@ export const Unit: React.FC<{ unit: Entity; count: bigint }> = ({ unit, count })
 };
 
 export const TotalStats = () => {
-  const playerEntity = useMud().network.playerEntity;
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
   const stats = components.Send.useTotalStats(playerEntity);
   const fleet = components.Send.useUnits();
   const fleetSize = Object.values(fleet).reduce((acc, val) => acc + val, 0n);
@@ -83,8 +85,8 @@ export const TotalStats = () => {
 };
 
 export const SendFleet = () => {
-  const network = useMud().network;
-  const playerEntity = network.playerEntity;
+  const mud = useMud();
+  const playerEntity = mud.playerAccount.entity;
 
   const origin = components.Home.get(playerEntity)?.asteroid as Entity | undefined;
   const destination = components.SelectedRock.use()?.value as Entity | undefined;
@@ -130,7 +132,7 @@ export const SendFleet = () => {
     const to = components.OwnedBy.get(destination)?.value as Entity | undefined;
 
     //TODO: fix arrival units
-    send(toUnitCountArray(fleet), sendType, originCoord, destinationCoord, (to as Hex) ?? toHex32("0"), network);
+    send(mud, toUnitCountArray(fleet), sendType, originCoord, destinationCoord, (to as Hex) ?? toHex32("0"));
 
     components.Send.reset(playerEntity);
   };

@@ -5,13 +5,10 @@ import { getBuildingAtCoord } from "src/util/tile";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { components } from "src/network/components";
-import { SetupResult } from "src/network/types";
 import { world } from "src/network/world";
 import { outOfBounds } from "src/util/outOfBounds";
 
-export const setupMouseInputs = (scene: Scene, mud: SetupResult) => {
-  const playerEntity = mud.network.playerEntity;
-
+export const setupMouseInputs = (scene: Scene) => {
   const clickSub = scene.input.click$.subscribe((event) => {
     const { x, y } = pixelCoordToTileCoord(
       { x: event.worldX, y: event.worldY },
@@ -21,6 +18,7 @@ export const setupMouseInputs = (scene: Scene, mud: SetupResult) => {
 
     const gameCoord = { x, y: -y };
 
+    const playerEntity = components.Account.get()?.value;
     if (outOfBounds(gameCoord, playerEntity)) {
       components.SelectedBuilding.remove();
       components.SelectedTile.remove();
@@ -60,6 +58,7 @@ export const setupMouseInputs = (scene: Scene, mud: SetupResult) => {
     const currentHoverTile = components.HoverTile.get();
     if (coordEq(currentHoverTile, mouseCoord)) return;
 
+    const playerEntity = components.Account.get()?.value;
     if (outOfBounds(mouseCoord, playerEntity)) {
       components.HoverTile.remove();
       return;

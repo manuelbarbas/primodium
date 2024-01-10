@@ -1,42 +1,42 @@
-import { useMemo } from "react";
-import { useLocation } from "react-router-dom";
-import { useMud } from "src/hooks";
-import { Button } from "../core/Button";
-import { useAccount } from "src/hooks/useAccount";
-import { AccountDisplay } from "../shared/AccountDisplay";
-import { FaLink } from "react-icons/fa";
-import { components } from "src/network/components";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Entity } from "@latticexyz/recs";
-import { IconLabel } from "../core/IconLabel";
-import { getSpaceRockImage } from "src/util/spacerock";
-import { useFleetMoves } from "src/hooks/useFleetMoves";
-import { EntityType, ResourceImage } from "src/util/constants";
-import { getBuildingImage } from "src/util/building";
-import { convertObjToParams, convertParamsToObj } from "src/util/params";
-import { CurrencyDisplay } from "../shared/CurrencyDisplay";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { FaHandshake, FaHandshakeSlash } from "react-icons/fa";
 import { useSettingsStore } from "src/game/stores/SettingsStore";
+import { useMud } from "src/hooks";
+import { useFleetMoves } from "src/hooks/useFleetMoves";
+import { usePrimodium } from "src/hooks/usePrimodium";
+import { components } from "src/network/components";
+import { getBuildingImage } from "src/util/building";
+import { EntityType, ResourceImage } from "src/util/constants";
+import { getSpaceRockImage } from "src/util/spacerock";
+import { Button } from "../core/Button";
+import { IconLabel } from "../core/IconLabel";
+import { Modal } from "../core/Modal";
+import { Tooltip } from "../core/Tooltip";
+import { AccountDisplay } from "../shared/AccountDisplay";
+import { CurrencyDisplay } from "../shared/CurrencyDisplay";
+import { Account } from "../transfer/Account";
 
 export const Profile = () => {
-  const { network } = useMud();
-  const playerEntity = network.playerEntity;
-  const { linkedAddress, loading, wETHBalance } = useAccount(playerEntity);
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
+  const primodium = usePrimodium();
+  const delegate = components.Delegate.use(playerEntity)?.value;
+  const wETHBalance = components.WETHBalance.use(playerEntity)?.value ?? 0n;
   const mainBase = components.Home.use(playerEntity)?.mainBase;
   const asteroid = components.Home.use(playerEntity)?.asteroid;
   const mainbaseLevel = components.Level.use((mainBase ?? singletonEntity) as Entity)?.value ?? 1n;
   const fleetMoves = useFleetMoves();
   const mapOpen = components.MapOpen.use()?.value ?? false;
-  const buildingImage = getBuildingImage((mainBase ?? singletonEntity) as Entity);
+  const buildingImage = getBuildingImage(primodium, (mainBase ?? singletonEntity) as Entity);
   const unitDisplay = useSettingsStore((state) => state.unitDisplay);
-
-  const { search } = useLocation();
-  const params = useMemo(() => convertParamsToObj(search), [search]);
 
   return (
     <div className="flex flex-row">
       <Button className="flex flex-col justify-end border-t-0 border-secondary rounded-t-none ml-2 w-24 h-[6.3rem] p-0">
         <IconLabel
-          imageUri={mapOpen ? getSpaceRockImage((asteroid ?? singletonEntity) as Entity) : buildingImage}
+          imageUri={mapOpen ? getSpaceRockImage(primodium, (asteroid ?? singletonEntity) as Entity) : buildingImage}
           className="text-2xl scale-125 pt-3 pb-2"
         />
         <div className="bg-base-100 w-full rounded-box rounded-t-none p-1 border-t border-secondary">
@@ -61,7 +61,7 @@ export const Profile = () => {
       <div>
         <div className="flex flex-col p-1 bg-opacity-50 bg-neutral backdrop-blur-md rounded-box rounded-l-none rounded-t-none text-sm border border-secondary border-l-0">
           <div className="flex gap-2 items-center justify-center">
-            <AccountDisplay player={playerEntity} />
+            <AccountDisplay player={playerEntity} />{" "}
           </div>
           <hr className="border-secondary/50" />
           <div className="flex gap-1 text-right w-full justify-end items-center px-2 border-secondary/50 pt-1">
@@ -69,25 +69,23 @@ export const Profile = () => {
             <p className="font-bold text-success">{unitDisplay === "ether" ? "wETH" : "wGWEI"}</p>
           </div>
         </div>
-        {!loading && (
-          <Button
-            className="btn-xs btn-secondary btn-ghost flex gap-1 m-auto text-accent mt-1"
-            onClick={() => {
-              window.open(`/account${convertObjToParams({ ...params, tab: "link" })}`);
-            }}
-          >
-            {!linkedAddress?.address && (
-              <>
-                <FaLink /> LINK ADDRESS
-              </>
-            )}
-            {linkedAddress?.address && (
-              <>
-                <FaLink /> MANAGE ACCOUNT
-              </>
-            )}
-          </Button>
-        )}
+        <Modal title="account">
+          <Modal.Button className="btn-xs btn-ghost flex gap-2 m-auto text-accent mt-1 w-full">
+            <Tooltip text={`${delegate ? "" : "not"} delegating`} direction="bottom">
+              <div>
+                {delegate ? (
+                  <FaHandshake className="text-success w-4 h-4" />
+                ) : (
+                  <FaHandshakeSlash className="text-error w-4 h-4" />
+                )}
+              </div>
+            </Tooltip>
+            <p>MANAGE ACCOUNT</p>
+          </Modal.Button>
+          <Modal.Content className="w-[40rem] h-[50rem]">
+            <Account />
+          </Modal.Content>
+        </Modal>
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ const objGraphicsIndex = (entity: Entity) => `${entity}_hoverTile_graphics`;
 
 export const renderHoverTile = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
-  const gameWorld = namespaceWorld(world, "game");
+  const systemsWorld = namespaceWorld(world, "systems");
 
   const query = [Has(components.HoverTile)];
 
@@ -37,13 +37,13 @@ export const renderHoverTile = (scene: Scene) => {
     ]);
   };
 
-  defineEnterSystem(gameWorld, query, (update) => {
+  defineEnterSystem(systemsWorld, query, (update) => {
     render(update);
   });
 
-  defineUpdateSystem(gameWorld, query, render);
+  defineUpdateSystem(systemsWorld, query, render);
 
-  defineExitSystem(gameWorld, query, (update) => {
+  defineExitSystem(systemsWorld, query, (update) => {
     scene.objectPool.remove(objGraphicsIndex(update.entity));
   });
 };

@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 // import { EResource } from "contracts/config/enums";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
+import { useMud } from "src/hooks";
 import { useRockDefense } from "src/hooks/useRockDefense";
 import { components } from "src/network/components";
 import { EntityType, ResourceImage } from "src/util/constants";
@@ -10,7 +10,11 @@ import { EntityType, ResourceImage } from "src/util/constants";
 export const DefenseLabel = ({ player }: { player?: Entity }) => {
   const name = "Defense";
   const resourceId = EntityType.Defense;
-  player = player ?? components.Account.use()?.value ?? singletonEntity;
+
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
+  player = player ?? playerEntity;
   const rock = components.SelectedRock.use()?.value;
   const defense = useRockDefense(rock as Entity);
   if (!player || !rock) return null;
