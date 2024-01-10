@@ -21,8 +21,8 @@ export const LabeledValue: React.FC<{
 };
 
 const Asteroid: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
-  const asteroidInfo = getSpaceRockInfo(asteroid);
   const primodium = usePrimodium();
+  const asteroidInfo = getSpaceRockInfo(primodium, asteroid);
 
   return (
     <Button
