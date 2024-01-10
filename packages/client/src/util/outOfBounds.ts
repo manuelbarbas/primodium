@@ -23,23 +23,14 @@ export function getAsteroidBounds(asteroid: Entity, next?: boolean) {
 
 export function getAsteroidMaxBounds(asteroid: Entity) {
   const asteroidMaxLevel = components.Asteroid.get(asteroid)?.maxLevel ?? 1n;
-  console.log("max level", asteroidMaxLevel);
   const asteroidDims = components.P_Asteroid.get();
-  console.log("asteroid dims", asteroidDims);
   const dimensions = components.Dimensions.getWithKeys({ key: key.ExpansionKey, level: asteroidMaxLevel });
-  console.log("dimensions", dimensions);
   if (!asteroidDims || !dimensions) throw new Error("Asteroid dimensions or range not found");
-  if (asteroidDims.xBounds === dimensions.width && asteroidDims.yBounds === dimensions.height)
-    return {
-      minX: 0,
-      minY: 0,
-      maxX: dimensions.width,
-      maxY: dimensions.height,
-    };
+
   return {
     minX: Math.floor(asteroidDims.xBounds - dimensions.width) / 2,
     minY: Math.floor(asteroidDims.yBounds - dimensions.height) / 2,
-    maxX: Math.floor(asteroidDims.xBounds + dimensions.width) / 2 - 1,
-    maxY: Math.floor(asteroidDims.yBounds + dimensions.height) / 2 - 1,
+    maxX: Math.floor(asteroidDims.xBounds + dimensions.width) / 2,
+    maxY: Math.floor(asteroidDims.yBounds + dimensions.height) / 2,
   };
 }

@@ -1,5 +1,5 @@
 import { DepthLayers, FogTilekeys } from "@game/constants";
-import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
+import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
@@ -14,7 +14,7 @@ export function renderFog(scene: Scene) {
   const systemsWorld = namespaceWorld(world, "systems");
   const fogWorld = namespaceWorld(world, "game_fog");
 
-  defineComponentSystem(systemsWorld, components.ActiveRock, ({ value }) => {
+  defineComponentSystem(systemsWorld, components.SelectedRock, ({ value }) => {
     if (!value[0]) return;
     //remove old indicators
     scene.objectPool.removeGroup(value[1]?.value + objSuffix);
@@ -22,8 +22,24 @@ export function renderFog(scene: Scene) {
     //dispose old system
     world.dispose("game_fog");
     const asteroidBounds = getAsteroidMaxBounds(value[0].value);
-    console.log("asteroid bounds", asteroidBounds);
+    if (value[1]?.value) {
+      const oldAsteroidBounds = getAsteroidMaxBounds(value[1].value);
 
+      // remove old fog
+      for (let x = oldAsteroidBounds.minX; x <= oldAsteroidBounds.maxX - 1; x++) {
+        for (let y = oldAsteroidBounds.minY; y <= oldAsteroidBounds.maxY - 1; y++) {
+          if (
+            x < asteroidBounds.minX ||
+            x > asteroidBounds.maxX - 1 ||
+            y < asteroidBounds.minY ||
+            y > asteroidBounds.maxY - 1
+          ) {
+            // Remove tile at (x, -y)
+            scene.tilemap.map?.putTileAt({ x, y: -y }, FogTilekeys.Empty, "GameFog");
+          }
+        }
+      }
+    }
     //place initial fog tiles
     for (let x = asteroidBounds.minX; x <= asteroidBounds.maxX - 1; x++) {
       for (let y = asteroidBounds.minY; y <= asteroidBounds.maxY - 1; y++) {
@@ -47,9 +63,7 @@ export function renderFog(scene: Scene) {
       }
     }
 
-    defineComponentSystem(fogWorld, components.Level, ({ entity }) => {
-      if (value[0] && value[0].value !== entity) return;
-
+    const renderHoleInFog = (entity: Entity) => {
       const bounds = getAsteroidBounds(entity);
       const nextBounds = getAsteroidBounds(entity, true);
 
@@ -126,6 +140,11 @@ export function renderFog(scene: Scene) {
           scene.tilemap.map?.putTileAt({ x, y: -y }, index, "GameFog");
         }
       }
+    };
+    defineComponentSystem(fogWorld, components.Level, ({ entity }) => {
+      if (value[0] && value[0].value !== entity) return;
+      renderHoleInFog(entity);
     });
+    renderHoleInFog(value[0].value);
   });
 }
