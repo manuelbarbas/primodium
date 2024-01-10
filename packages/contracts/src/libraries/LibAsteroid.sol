@@ -70,9 +70,9 @@ library LibAsteroid {
   }
 
   function getAsteroidData(bytes32 asteroidEntity, bool spawnsSecondary) internal view returns (AsteroidData memory) {
-    // number between 1 and 5
+    // number between 1 and 4
     uint256 maxLevel = (LibEncode.getByteUInt(uint256(asteroidEntity), 3, 12) % 4) + 1;
-    // number between 2 and 6
+    // number between 2 and 5
     uint8 mapId = uint8((LibEncode.getByteUInt(uint256(asteroidEntity), 3, 20) % 4) + 2);
     return AsteroidData({ isAsteroid: true, maxLevel: maxLevel, mapId: mapId, spawnsSecondary: spawnsSecondary });
   }
