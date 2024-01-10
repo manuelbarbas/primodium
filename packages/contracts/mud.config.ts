@@ -426,6 +426,14 @@ export const config = mudConfig({
       },
     },
 
+    FleetStance: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: {
+        stance: "uint8",
+        target: "bytes32",
+      },
+    },
+
     MapFleets: {
       keySchema: { entity: "bytes32", key: "bytes32" },
       valueSchema: { itemKeys: "bytes32[]" },

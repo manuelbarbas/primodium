@@ -2,16 +2,16 @@
 pragma solidity >=0.8.21;
 
 import { ESendType, ERock, EResource } from "src/Types.sol";
-import { Position, FleetAttributesData, FleetAttributes, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { FleetStanceData, FleetStance, Position, FleetAttributesData, FleetAttributes, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { FleetsMap } from "libraries/FleetsMap.sol";
 import { SendArgs } from "src/Types.sol";
-import { FleetKey, FleetOwnedByKey, FleetIncomingKey } from "src/Keys.sol";
+import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE, NUM_UNITS, UNIT_SPEED_SCALE, NUM_RESOURCE } from "src/constants.sol";
-import { EResource } from "src/Types.sol";
+import { EResource, EFleetStance } from "src/Types.sol";
 
 library LibFleet {
   /// @notice creates a fleet.
@@ -574,5 +574,61 @@ library LibFleet {
     }
     if (slowestSpeed == bignum) return 0;
     return slowestSpeed;
+  }
+
+  function clearFleetStance(bytes32 playerEntity, bytes32 fleetId) internal {
+    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only update stance for owned fleet");
+    require(
+      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
+      "[Fleet] Fleet has not reached it's current destination space rock yet"
+    );
+    FleetStanceData memory fleetStance = FleetStance.get(fleetId);
+
+    if (fleetStance.stance == uint8(EFleetStance.None)) return;
+
+    FleetsMap.remove(fleetStance.target, P_EnumToPrototype.get(FleetStanceKey, fleetStance.stance), fleetId);
+    FleetStance.set(fleetId, uint8(EFleetStance.None), bytes32(0));
+  }
+
+  function fleetDefend(
+    bytes32 playerEntity,
+    bytes32 fleetId,
+    bytes32 targetSpaceRock
+  ) internal {
+    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only send owned fleet");
+    require(
+      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
+      "[Fleet] Fleet has not reached it's current destination space rock yet"
+    );
+    require(
+      targetSpaceRock == FleetMovement.getDestination(fleetId),
+      "[Fleet] Target fleet is not in orbit of space rock"
+    );
+    clearFleetStance(playerEntity, fleetId);
+    FleetStance.set(fleetId, uint8(EFleetStance.Defend), targetSpaceRock);
+    FleetsMap.add(targetSpaceRock, P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Defend)), fleetId);
+  }
+
+  function fleetSupport(
+    bytes32 playerEntity,
+    bytes32 fleetId,
+    bytes32 targetFleetId
+  ) internal {
+    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only send owned fleet");
+    require(
+      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
+      "[Fleet] Fleet has not reached it's current destination space rock yet"
+    );
+    require(
+      FleetMovement.getArrivalTime(targetFleetId) <= block.timestamp,
+      "[Fleet] Fleet has not reached it's current destination space rock yet"
+    );
+    require(
+      FleetMovement.getDestination(targetFleetId) == FleetMovement.getDestination(fleetId),
+      "[Fleet] Target fleet is not on same space rock as from fleet"
+    );
+    clearFleetStance(playerEntity, fleetId);
+    FleetStance.set(fleetId, uint8(EFleetStance.Support), targetFleetId);
+    FleetsMap.add(targetFleetId, P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Support)), fleetId);
   }
 }
