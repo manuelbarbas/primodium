@@ -9,7 +9,7 @@ import { LibEncode, LibBuilding } from "codegen/Libraries.sol";
 
 contract UpgradeRangeSystem is PrimodiumSystem {
   function upgradeRange(bytes32 spaceRockEntity) public {
-    bytes32 playerEntity = addressToEntity(msg.sender);
+    bytes32 playerEntity = _player(false);
 
     uint256 targetLevel = Level.get(spaceRockEntity) + 1;
     require(P_MaxLevel.get(ExpansionKey) >= targetLevel, "[UpgradeRangeSystem] Max level reached");

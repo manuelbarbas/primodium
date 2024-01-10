@@ -116,6 +116,11 @@ export const config = mudConfig({
       },
     },
 
+    Delegate: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "bytes32",
+    },
+
     /* ---------------------------------- Rocks --------------------------------- */
     AsteroidCount: {
       keySchema: {},
@@ -379,7 +384,7 @@ export const config = mudConfig({
     },
 
     UnitCount: {
-      keySchema: { player: "bytes32", rock: "bytes32", unit: "bytes32" },
+      keySchema: { entity: "bytes32", unit: "bytes32" },
       valueSchema: "uint256",
     },
 

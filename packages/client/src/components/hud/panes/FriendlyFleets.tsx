@@ -7,7 +7,9 @@ import { components } from "src/network/components";
 import { Fleet } from "../modals/fleets/Fleet";
 
 export const ReinforcementFleets: React.FC = () => {
-  const playerEntity = useMud().network.playerEntity;
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
 
   // State for sorting
   const [typeSort, setTypeSort] = useState<ESendType | null>(null);

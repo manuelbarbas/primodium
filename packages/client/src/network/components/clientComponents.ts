@@ -36,7 +36,6 @@ export const Time = createExtendedBigIntComponent(world, { id: "Time" });
 export const Account = createExtendedEntityComponent(world, { id: "Account" });
 export const SelectedRock = createExtendedEntityComponent(world, { id: "SelectedRock" });
 export const ActiveRock = createExtendedEntityComponent(world, { id: "ActiveAsteroid" });
-export const GameReady = createExtendedBoolComponent(world, { id: "GameReady" });
 
 // Todo: extend this with relevant tx data
 export const CurrentTransaction = createExtendedBoolComponent(world, { id: "CurrentTransaction" });
@@ -156,7 +155,6 @@ export default {
   Time,
   ActiveRock,
   Account,
-  GameReady,
   CurrentTransaction,
 
   /* ---------------------------------- Input --------------------------------- */

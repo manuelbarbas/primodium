@@ -14,19 +14,18 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
 import { components } from "src/network/components";
-import { SetupResult } from "src/network/types";
+import { moveBuilding } from "src/network/setup/contractCalls/moveBuilding";
+import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
 import { Action } from "src/util/constants";
-import { moveBuilding } from "src/util/web3/contractCalls/moveBuilding";
 import { ObjectPosition, OnClick, SetValue } from "../../common/object-components/common";
 import { Animation, Outline, Texture } from "../../common/object-components/sprite";
 
-export const renderBuildingMoveTool = (scene: Scene, mud: SetupResult) => {
+export const renderBuildingMoveTool = (scene: Scene, mud: MUD) => {
   const { tileWidth, tileHeight } = scene.tilemap;
-  const gameWorld = namespaceWorld(world, "game");
+  const systemsWorld = namespaceWorld(world, "systems");
   const objIndexSuffix = "_buildingMove";
-  const playerEntity = mud.network.playerEntity;
 
   const render = (update: ComponentUpdate) => {
     const objIndex = update.entity + objIndexSuffix;
@@ -51,6 +50,7 @@ export const renderBuildingMoveTool = (scene: Scene, mud: SetupResult) => {
 
     const buildingDimensions = getBuildingDimensions(buildingPrototype);
 
+    const playerEntity = components.Account.get()?.value;
     const validPlacement = validateBuildingPlacement(
       tileCoord,
       buildingPrototype,
@@ -95,7 +95,7 @@ export const renderBuildingMoveTool = (scene: Scene, mud: SetupResult) => {
           const buildingOrigin = getBuildingOrigin(tileCoord, buildingPrototype);
           if (!buildingOrigin) return;
 
-          moveBuilding(mud.network, selectedBuilding, buildingOrigin);
+          moveBuilding(mud, selectedBuilding, buildingOrigin);
           components.SelectedAction.remove();
         },
         true
@@ -110,10 +110,10 @@ export const renderBuildingMoveTool = (scene: Scene, mud: SetupResult) => {
     }),
   ];
 
-  defineEnterSystem(gameWorld, query, render);
-  defineUpdateSystem(gameWorld, query, render);
+  defineEnterSystem(systemsWorld, query, render);
+  defineUpdateSystem(systemsWorld, query, render);
 
-  defineExitSystem(gameWorld, query, (update) => {
+  defineExitSystem(systemsWorld, query, (update) => {
     const objIndex = update.entity + objIndexSuffix;
 
     scene.objectPool.remove(objIndex);

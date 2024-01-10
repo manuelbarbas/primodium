@@ -1,25 +1,25 @@
-import { Hex, TransactionReceipt, ContractFunctionExecutionError, CallExecutionError } from "viem";
-import { PublicClient } from "viem/_types/clients/createPublicClient";
 import { Entity } from "@latticexyz/recs";
-import { SetupNetworkResult } from "./types";
 import { toast } from "react-toastify";
+import { CallExecutionError, ContractFunctionExecutionError, Hex, TransactionReceipt } from "viem";
+import { PublicClient } from "viem/_types/clients/createPublicClient";
 import { components } from "./components";
 import { MetadataTypes } from "./components/customComponents/TransactionQueueComponent";
+import { AnyAccount, MUD } from "./types";
 
-export async function _execute(txPromise: Promise<Hex>, network: SetupNetworkResult) {
+export async function _execute({ network: { waitForTransaction, publicClient } }: MUD, txPromise: Promise<Hex>) {
   let receipt: TransactionReceipt | undefined = undefined;
 
   try {
     const txHash = await txPromise;
-    await network.waitForTransaction(txHash);
-    console.log("Transaction Hash: ", txHash);
+    await waitForTransaction(txHash);
+    console.log("[Tx] hash: ", txHash);
 
     // If the transaction runs out of gas, status will be reverted
     // receipt.status is of type TStatus = 'success' | 'reverted' defined in TransactionReceipt
-    receipt = await network.publicClient.getTransactionReceipt({ hash: txHash });
+    receipt = await publicClient.getTransactionReceipt({ hash: txHash });
     if (receipt && receipt.status === "reverted") {
       // Force a CallExecutionError such that we can get the revert reason
-      await callTransaction(txHash, network.publicClient);
+      await callTransaction(publicClient, txHash);
       toast.error("[Insufficient Gas Limit] You're moving fast! Please wait a moment and then try again.");
     }
     return receipt;
@@ -58,35 +58,38 @@ export async function _execute(txPromise: Promise<Hex>, network: SetupNetworkRes
 // Alerts the user if the transaction failed
 // Providers renamed to client: https://viem.sh/docs/ethers-migration.html
 export async function execute<T extends keyof MetadataTypes>(
-  queuedTx: () => Promise<Hex>,
-  network: SetupNetworkResult,
-  queueConfig?: {
+  mud: MUD,
+  queuedTx: (account: AnyAccount) => Promise<Hex>,
+  options?: {
     id: Entity;
     type?: T;
     metadata?: MetadataTypes[T];
+    delegate?: boolean;
   },
   onComplete?: (receipt: TransactionReceipt | undefined) => void
 ) {
-  if (queueConfig)
+  const account = options?.delegate ? mud.sessionAccount ?? mud.playerAccount : mud.playerAccount;
+  console.log("[Tx] Executing with address: ", account.address.slice(0, 6));
+  if (options)
     components.TransactionQueue.enqueue(
       async () => {
-        const txPromise = queuedTx();
-        const receipt = await _execute(txPromise, network);
+        const txPromise = queuedTx(account);
+        const receipt = await _execute(mud, txPromise);
         onComplete?.(receipt);
       },
-      queueConfig.id,
-      queueConfig.type,
-      queueConfig.metadata
+      options.id,
+      options.type,
+      options.metadata
     );
   else {
-    const txPromise = queuedTx();
-    const receipt = await _execute(txPromise, network);
+    const txPromise = queuedTx(account);
+    const receipt = await _execute(mud, txPromise);
     onComplete?.(receipt);
   }
 }
 
 // Call from a hash to force a CallExecutionError such that we can get the revert reason
-export async function callTransaction(txHash: Hex, publicClient: PublicClient): Promise<void> {
+export async function callTransaction(publicClient: PublicClient, txHash: Hex): Promise<void> {
   const tx = await publicClient.getTransaction({ hash: txHash });
   if (!tx) throw new Error("Transaction does not exist");
   await publicClient.call({

@@ -2,7 +2,6 @@
 pragma solidity >=0.8.21;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { addressToEntity } from "src/utils.sol";
 
 import { ESendType } from "src/Types.sol";
 import { LibRecall } from "codegen/Libraries.sol";
@@ -13,7 +12,7 @@ contract RecallSystem is PrimodiumSystem {
    * @param rockEntity The identifier of the target rock.
    */
   function recallStationedUnits(bytes32 rockEntity) public {
-    bytes32 playerEntity = addressToEntity(_msgSender());
+    bytes32 playerEntity = _player(false);
     LibRecall.recallStationedUnits(playerEntity, rockEntity);
   }
 
@@ -23,7 +22,7 @@ contract RecallSystem is PrimodiumSystem {
    * @param arrivalId The identifier of the arrival to recall.
    */
   function recallArrival(bytes32 rockEntity, bytes32 arrivalId) public {
-    bytes32 playerEntity = addressToEntity(_msgSender());
+    bytes32 playerEntity = _player(false);
     LibRecall.recallArrival(playerEntity, rockEntity, arrivalId);
   }
 
@@ -33,7 +32,7 @@ contract RecallSystem is PrimodiumSystem {
    * @param sendType the type of send to recall
    */
   function recallAllOfSendType(bytes32 rockEntity, ESendType sendType) public {
-    bytes32 playerEntity = addressToEntity(_msgSender());
+    bytes32 playerEntity = _player(false);
     LibRecall.recallAllArrivalsOfSendType(playerEntity, rockEntity, sendType);
   }
 
@@ -42,7 +41,7 @@ contract RecallSystem is PrimodiumSystem {
    * @param rockEntity The identifier of the target rock.
    */
   function recallAll(bytes32 rockEntity) public {
-    bytes32 playerEntity = addressToEntity(_msgSender());
+    bytes32 playerEntity = _player(false);
     LibRecall.recallAllArrivals(playerEntity, rockEntity);
   }
 }

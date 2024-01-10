@@ -1,7 +1,15 @@
+import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 import { Entity, Has, HasValue, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
+import { Coord } from "@latticexyz/utils";
+import { ERock, ESize } from "contracts/config/enums";
 import { Scene } from "engine/types";
+import { throttleTime } from "rxjs";
+import { components } from "src/network/components";
 import { world } from "src/network/world";
+import { getRandomRange } from "src/util/common";
 import { MotherlodeSizeNames, MotherlodeTypeNames, RockRelationship } from "src/util/constants";
+import { entityToRockName } from "src/util/name";
+import { getRockRelationship } from "src/util/spacerock";
 import {
   ObjectPosition,
   OnClick,
@@ -13,21 +21,11 @@ import {
   Tween,
 } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
-import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
-import { Coord } from "@latticexyz/utils";
-import { ERock, ESize } from "contracts/config/enums";
-import { components } from "src/network/components";
-import { SetupResult } from "src/network/types";
-import { getRockRelationship } from "src/util/spacerock";
-import { getRandomRange } from "src/util/common";
-import { entityToRockName } from "src/util/name";
 import { ObjectText } from "../../common/object-components/text";
-import { throttleTime } from "rxjs";
 
-export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
+export const renderMotherlode = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
-  const playerEntity = mud.network.playerEntity;
-  const gameWorld = namespaceWorld(world, "game");
+  const systemsWorld = namespaceWorld(world, "systems");
 
   const render = (entity: Entity, coord: Coord) => {
     scene.objectPool.removeGroup("motherlode_" + entity);
@@ -103,10 +101,13 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
     ]);
 
     const motherlodeOutline = motherlodeObjectGroup.add("Sprite");
+    const playerEntity = components.Account.get()?.value;
     motherlodeOutline.setComponents([
       ...sharedComponents,
       rotationTween,
-      Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity, motherlodeData.size)),
+      playerEntity
+        ? Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity, motherlodeData.size))
+        : undefined,
       OnComponentSystem(components.Send, () => {
         if (components.Send.get()?.destination === entity) {
           if (motherlodeOutline.hasComponent(Outline().id)) return;
@@ -118,15 +119,17 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
         }
       }),
       OnComponentSystem(components.OwnedBy, (_, { entity: _entity }) => {
-        if (entity !== _entity) return;
+        const playerEntity = components.Account.get()?.value;
+        if (!playerEntity || entity !== _entity) return;
 
         motherlodeOutline.setComponent(
           Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity, motherlodeData.size))
         );
       }),
       OnComponentSystem(components.PlayerAlliance, (_, { entity: _entity }) => {
+        const playerEntity = components.Account.get()?.value;
         const ownedBy = components.OwnedBy.get(entity)?.value;
-        if (ownedBy !== _entity && playerEntity !== _entity) return;
+        if (!playerEntity || (ownedBy !== _entity && playerEntity !== _entity)) return;
 
         motherlodeOutline.setComponent(
           Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity, motherlodeData.size))
@@ -185,7 +188,7 @@ export const renderMotherlode = (scene: Scene, mud: SetupResult) => {
 
   const query = [Has(components.Position), HasValue(components.RockType, { value: ERock.Motherlode })];
 
-  defineEnterSystem(gameWorld, query, ({ entity }) => {
+  defineEnterSystem(systemsWorld, query, ({ entity }) => {
     const coord = components.Position.get(entity);
     if (!coord) return;
     render(entity, coord);

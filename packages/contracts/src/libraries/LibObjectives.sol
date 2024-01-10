@@ -13,7 +13,7 @@ import { ObjectiveKey } from "src/Keys.sol";
 import { EObjectives } from "src/Types.sol";
 
 library LibObjectives {
-  function checkObjectiveRequirements(bytes32 playerEntity, EObjectives objectiveType) internal {
+  function checkObjectiveRequirements(bytes32 playerEntity, EObjectives objectiveType) internal view {
     checkIsValidObjective(objectiveType);
 
     bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(objectiveType));
@@ -38,14 +38,14 @@ library LibObjectives {
     );
   }
 
-  function checkHasNotCompletedObjective(bytes32 playerEntity, bytes32 objectivePrototype) internal {
+  function checkHasNotCompletedObjective(bytes32 playerEntity, bytes32 objectivePrototype) internal view {
     require(
       !CompletedObjective.get(playerEntity, objectivePrototype),
       "[LibObjectives] Player has already completed objective"
     );
   }
 
-  function checkHasCompletedRequiredObjectives(bytes32 playerEntity, bytes32 objective) internal {
+  function checkHasCompletedRequiredObjectives(bytes32 playerEntity, bytes32 objective) internal view {
     bytes32[] memory requiredObjectives = P_RequiredObjectives.get(objective);
     for (uint256 i = 0; i < requiredObjectives.length; i++) {
       require(
@@ -55,7 +55,7 @@ library LibObjectives {
     }
   }
 
-  function checkObjectiveMainBaseLevelRequirement(bytes32 playerEntity, bytes32 objective) internal {
+  function checkObjectiveMainBaseLevelRequirement(bytes32 playerEntity, bytes32 objective) internal view {
     uint256 requiredMainBaseLevel = P_RequiredBaseLevel.get(objective, 1);
     if (requiredMainBaseLevel > 1) {
       require(
@@ -65,7 +65,7 @@ library LibObjectives {
     }
   }
 
-  function checkObjectiveExpansionRequirement(bytes32 playerEntity, bytes32 objective) internal {
+  function checkObjectiveExpansionRequirement(bytes32 playerEntity, bytes32 objective) internal view {
     uint256 requiredExpansionLevel = P_RequiredExpansion.get(objective);
     if (requiredExpansionLevel == 0) return;
     bytes32 asteroid = Home.getAsteroid(playerEntity);
@@ -73,7 +73,7 @@ library LibObjectives {
     require(playerExpansion >= requiredExpansionLevel, "[LibObjectives] Expansion level requirement not met");
   }
 
-  function checkHasBuiltRequiredBuildings(bytes32 playerEntity, bytes32 objective) internal {
+  function checkHasBuiltRequiredBuildings(bytes32 playerEntity, bytes32 objective) internal view {
     bytes32[] memory requiredBuiltBuildings = P_HasBuiltBuildings.get(objective);
     for (uint256 i = 0; i < requiredBuiltBuildings.length; i++) {
       require(
@@ -83,7 +83,7 @@ library LibObjectives {
     }
   }
 
-  function checkProducedResources(bytes32 playerEntity, bytes32 objective) internal {
+  function checkProducedResources(bytes32 playerEntity, bytes32 objective) internal view {
     P_ProducedResourcesData memory producedResources = P_ProducedResources.get(objective);
     for (uint256 i = 0; i < producedResources.resources.length; i++) {
       require(
@@ -93,7 +93,7 @@ library LibObjectives {
     }
   }
 
-  function checkRaidedResources(bytes32 playerEntity, bytes32 objective) internal {
+  function checkRaidedResources(bytes32 playerEntity, bytes32 objective) internal view {
     P_RaidedResourcesData memory raidedResources = P_RaidedResources.get(objective);
     for (uint256 i = 0; i < raidedResources.resources.length; i++) {
       require(
@@ -103,7 +103,7 @@ library LibObjectives {
     }
   }
 
-  function checkDestroyedUnits(bytes32 playerEntity, bytes32 objective) internal {
+  function checkDestroyedUnits(bytes32 playerEntity, bytes32 objective) internal view {
     P_DestroyedUnitsData memory destroyedUnits = P_DestroyedUnits.get(objective);
     for (uint256 i = 0; i < destroyedUnits.units.length; i++) {
       require(
@@ -113,7 +113,7 @@ library LibObjectives {
     }
   }
 
-  function checkProducedUnits(bytes32 playerEntity, bytes32 objective) internal {
+  function checkProducedUnits(bytes32 playerEntity, bytes32 objective) internal view {
     P_ProducedUnitsData memory producedUnits = P_ProducedUnits.get(objective);
     for (uint256 i = 0; i < producedUnits.units.length; i++) {
       require(
@@ -123,7 +123,7 @@ library LibObjectives {
     }
   }
 
-  function checkHasRequiredUnits(bytes32 playerEntity, bytes32 objective) internal {
+  function checkHasRequiredUnits(bytes32 playerEntity, bytes32 objective) internal view {
     P_RequiredUnitsData memory requiredUnits = P_RequiredUnits.get(objective);
     for (uint256 i = 0; i < requiredUnits.units.length; i++) {
       require(
@@ -133,7 +133,7 @@ library LibObjectives {
     }
   }
 
-  function checkDefeatedPirateAsteroidRequirement(bytes32 playerEntity, bytes32 objective) internal {
+  function checkDefeatedPirateAsteroidRequirement(bytes32 playerEntity, bytes32 objective) internal view {
     bytes32[] memory requiredDefeatedPirates = P_DefeatedPirates.get(objective);
     for (uint256 i = 0; i < requiredDefeatedPirates.length; i++) {
       require(

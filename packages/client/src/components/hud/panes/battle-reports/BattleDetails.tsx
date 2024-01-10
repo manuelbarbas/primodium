@@ -3,6 +3,7 @@ import { EResource, EUnit } from "contracts/config/enums";
 import { useMemo } from "react";
 import { FaTimes, FaTrophy } from "react-icons/fa";
 import { Navigator } from "src/components/core/Navigator";
+import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
@@ -15,7 +16,6 @@ import {
   UnitEntityLookup,
 } from "src/util/constants";
 import { Hex } from "viem";
-import { LinkedAddressDisplay } from "../../LinkedAddressDisplay";
 
 export const UnitStatus: React.FC<{
   unit: Entity;
@@ -51,7 +51,9 @@ export const UnitStatus: React.FC<{
 export const BattleDetails: React.FC<{
   battleEntity: Entity;
 }> = ({ battleEntity }) => {
-  const playerEntity = useMud().network.playerEntity;
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
   const raid = components.RaidResult.use(battleEntity);
   const battle = useMemo(() => format(battleEntity), [battleEntity]);
 
@@ -84,12 +86,12 @@ export const BattleDetails: React.FC<{
           <div className="flex gap-2 text-sm items-center justify-center">
             <div className="bg-slate-700 p-2 rounded-md border border-rose-500 w-32">
               <p className="font-bold text-xs text-cyan-400">ATTACKER</p>
-              <LinkedAddressDisplay entity={battle.attacker as Entity} />
+              <AccountDisplay player={battle.attacker as Entity} />
             </div>
             vs
             <div className="bg-slate-700 p-2 rounded-md border border-green-600 w-32">
               <p className="font-bold text-xs text-cyan-400">DEFENDER</p>
-              <LinkedAddressDisplay entity={battle.defender as Entity} />
+              <AccountDisplay player={battle.defender as Entity} />
             </div>
           </div>
 

@@ -143,7 +143,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
   function testClaimObjectiveReceiveUnitRewards() public {
     bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
-    UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit1, 0);
+    UnitCount.set(Home.get(playerEntity).asteroid, unit1, 0);
     P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)));
     P_UnitRewardData memory unitRewardData = P_UnitRewardData(new bytes32[](1), new uint256[](1));
     unitRewardData.units[0] = unit1;
@@ -166,14 +166,14 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
     world.claimObjective(EObjectives.BuildIronMine);
     assertEq(
-      UnitCount.get(playerEntity, Home.get(playerEntity).asteroid, unit1),
+      UnitCount.get(Home.get(playerEntity).asteroid, unit1),
       unitRewardData.amounts[0],
       "Unit count does not match"
     );
   }
 
   function testFailClaimObjectiveReceiveUnitRewards() public {
-    UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit1, 0);
+    UnitCount.set(Home.get(playerEntity).asteroid, unit1, 0);
     P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)));
     P_UnitRewardData memory unitRewardData = P_UnitRewardData(new bytes32[](1), new uint256[](1));
     unitRewardData.units[0] = unit1;
@@ -295,7 +295,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     P_RaidedResources.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)), raidedResourcesData);
     P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)));
     setupRaid();
-    RaidResultData memory raidResult = LibRaid.resolveRaid(br);
+    LibRaid.resolveRaid(br);
 
     world.claimObjective(EObjectives.BuildCopperMine);
     assertEq(
@@ -329,7 +329,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     P_ResourceReward.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)), resourceRewardData);
 
     setupRaid();
-    RaidResultData memory raidResult = LibRaid.resolveRaid(br);
+    LibRaid.resolveRaid(br);
     world.claimObjective(EObjectives.BuildCopperMine);
   }
 
@@ -351,7 +351,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     requiredUnitsData.amounts[0] = 100;
     P_RequiredUnits.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)), requiredUnitsData);
     P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)));
-    UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit1, 100);
+    UnitCount.set(Home.get(playerEntity).asteroid, unit1, 100);
 
     P_ResourceRewardData memory resourceRewardData = P_ResourceRewardData(new uint8[](1), new uint256[](1));
     resourceRewardData.resources[0] = uint8(EResource.Iron);
@@ -465,7 +465,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
       "Resource count does not match"
     );
     assertEq(
-      UnitCount.get(personalPirateEntity, pirateAsteroidEntity, unit1),
+      UnitCount.get(pirateAsteroidEntity, unit1),
       spawnPirateAsteroid.unitAmounts[0],
       "Unit count does not match"
     );
@@ -523,8 +523,8 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     console.log("raid resolved");
 
     assertEq(ResourceCount.get(pirateAsteroidEntity, uint8(EResource.Iron)), 0, "Resource count does not match");
-    assertEq(UnitCount.get(personalPirateEntity, pirateAsteroidEntity, unit1), 0, "Unit count does not match");
-    assertEq(UnitCount.get(personalPirateEntity, pirateAsteroidEntity, unit2), 0, "Unit count does not match");
+    assertEq(UnitCount.get(pirateAsteroidEntity, unit1), 0, "Unit count does not match");
+    assertEq(UnitCount.get(pirateAsteroidEntity, unit2), 0, "Unit count does not match");
 
     assertEq(
       ResourceCount.get(spaceRockEntity, uint8(EResource.Iron)),
@@ -535,8 +535,8 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   }
 
   function tesFailCannotAttackOtherPlayerPirateAsteroid() public {
-    UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit1, 100);
-    UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit2, 50);
+    UnitCount.set(Home.get(playerEntity).asteroid, unit1, 100);
+    UnitCount.set(Home.get(playerEntity).asteroid, unit2, 50);
     LibProduction.increaseResourceProduction(playerEntity, EResource.U_MaxMoves, 100);
 
     bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine));
@@ -567,8 +567,8 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
   function testSendUnitsPirateAsteroid() public {
     bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
-    UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit1, 100);
-    UnitCount.set(playerEntity, Home.get(playerEntity).asteroid, unit2, 50);
+    UnitCount.set(Home.get(playerEntity).asteroid, unit1, 100);
+    UnitCount.set(Home.get(playerEntity).asteroid, unit2, 50);
     LibProduction.increaseResourceProduction(spaceRockEntity, EResource.U_MaxMoves, 100);
 
     bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine));
@@ -630,6 +630,6 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     );
     assertTrue(Position.get(pirateAsteroidEntity).x != pirateAsteroidPosition.x, "Pirate asteroid not moved");
     assertEq(ResourceCount.get(pirateAsteroidEntity, uint8(Iron)), 400, "Resource count does not match");
-    assertEq(UnitCount.get(personalPirateEntity, pirateAsteroidEntity, unit1), 10, "Unit count does not match");
+    assertEq(UnitCount.get(pirateAsteroidEntity, unit1), 10, "Unit count does not match");
   }
 }

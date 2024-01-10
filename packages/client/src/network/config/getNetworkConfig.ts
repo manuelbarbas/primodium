@@ -1,4 +1,3 @@
-import { getBurnerPrivateKey } from "@latticexyz/common";
 import worldsJson from "contracts/worlds.json";
 import { chainConfigs } from "./chainConfigs";
 
@@ -6,8 +5,9 @@ const params = new URLSearchParams(window.location.search);
 
 const worlds = worldsJson as Partial<Record<string, { address: string; blockNumber?: number }>>;
 
-const envChainId = import.meta.env.PRI_CHAIN_ID;
-console.log("envChainId", envChainId);
+export const noExternalWallet = import.meta.env.PRI_DEV === "true";
+// export const noExternalWallet = false;
+
 export const getNetworkConfig = () => {
   const chainId = params.get("chainid") || import.meta.env.PRI_CHAIN_ID || "dev";
 
@@ -23,7 +23,6 @@ export const getNetworkConfig = () => {
     : world?.blockNumber ?? 0;
 
   return {
-    privateKey: getBurnerPrivateKey(),
     chainId,
     chain,
     faucetServiceUrl: params.get("faucet") ?? chain.faucetUrl,

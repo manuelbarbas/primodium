@@ -67,7 +67,6 @@ contract MoveBuildingSystemTest is PrimodiumTest {
       mainBasePosition.y + 15,
       mainBasePosition.parent
     );
-    bytes32[] memory oldChildren = Children.get(mainBaseEntity);
 
     world.moveBuilding(mainBasePosition, newPosition);
   }
@@ -80,7 +79,6 @@ contract MoveBuildingSystemTest is PrimodiumTest {
       mainBasePosition.y + 1,
       mainBasePosition.parent
     );
-    bytes32[] memory oldChildren = Children.get(mainBaseEntity);
 
     world.moveBuilding(mainBasePosition, newPosition);
     mainBasePosition = Position.get(mainBaseEntity);
@@ -114,7 +112,6 @@ contract MoveBuildingSystemTest is PrimodiumTest {
       mainBasePosition.y - 1,
       mainBasePosition.parent
     );
-    bytes32[] memory oldChildren = Children.get(mainBaseEntity);
 
     world.moveBuilding(mainBasePosition, newPosition);
     console.log("moved success");
@@ -179,8 +176,6 @@ contract MoveBuildingSystemTest is PrimodiumTest {
       mainBasePosition.y - 1,
       mainBasePosition.parent
     );
-
-    bytes32[] memory oldChildren = Children.get(mainBaseEntity);
 
     world.moveBuilding(mainBasePosition, newPosition);
     console.log("moved success");

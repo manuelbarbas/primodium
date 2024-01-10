@@ -1,7 +1,7 @@
-import { primodium } from "@game/api";
 import React, { ReactNode, createContext, useContext, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaTimes } from "react-icons/fa";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { Button } from "./Button";
 
 interface ModalContextType {
@@ -26,6 +26,7 @@ export const OverlayModal: React.FC<ModalProps> & {
   Content: React.FC<{ children: ReactNode }>;
 } = ({ children, title }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const primodium = usePrimodium();
   const { enableInput, disableInput } = primodium.api().input;
 
   useEffect(() => {

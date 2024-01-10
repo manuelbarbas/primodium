@@ -4,8 +4,6 @@ pragma solidity >=0.8.21;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { IWorld } from "codegen/world/IWorld.sol";
-import { addressToEntity } from "src/utils.sol";
-
 import { LibInvade } from "codegen/Libraries.sol";
 
 contract InvadeSystem is PrimodiumSystem {
@@ -14,7 +12,6 @@ contract InvadeSystem is PrimodiumSystem {
    * @param rockEntity The identifier of the target rock entity.
    */
   function invade(bytes32 rockEntity) public {
-    bytes32 playerEntity = addressToEntity(_msgSender());
-    LibInvade.invade(IWorld(_world()), playerEntity, rockEntity);
+    LibInvade.invade(_player(false), rockEntity);
   }
 }

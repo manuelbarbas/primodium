@@ -69,7 +69,7 @@ contract MarketplaceSystemTest is PrimodiumTest {
     LibProduction.increaseResourceProduction(playerHome, EResource.Iron, 100);
 
     LibResource.spendUnitRequiredResources(playerHome, unitPrototype, 100);
-    LibUnit.increaseUnitCount(player, playerHome, unitPrototype, 100);
+    LibUnit.increaseUnitCount(playerHome, unitPrototype, 100);
     bytes32 orderId = world.addOrder(EOrderType.Unit, uint8(unit), 100, 100);
     assertEq(MarketplaceOrder.getSeller(orderId), player, "seller wrong");
     assertEq(MarketplaceOrder.getResource(orderId), uint8(unit), "resource wrong");
@@ -82,8 +82,6 @@ contract MarketplaceSystemTest is PrimodiumTest {
 
     switchPrank(alice);
     world.takeOrder(orderId, 100);
-    uint256 postSellerBalance = wETH.balanceOf(creator);
-    uint256 postBuyerBalance = wETH.balanceOf(alice);
 
     assertEq(MarketplaceOrder.getCount(orderId), 0, "count wrong");
     assertEq(MarketplaceOrder.getPrice(orderId), 0, "price wrong");
@@ -91,8 +89,8 @@ contract MarketplaceSystemTest is PrimodiumTest {
     assertEq(MarketplaceOrder.getSeller(orderId), 0, "seller wrong");
 
     assertEq(ResourceCount.get(Home.getAsteroid(player), uint8(EResource.U_Orders)), 1, "seller order count wrong");
-    assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 0, "seller unit count wrong");
-    assertEq(UnitCount.get(buyer, Home.getAsteroid(buyer), unitPrototype), 100, "buyer unit count wrong");
+    assertEq(UnitCount.get(Home.getAsteroid(player), unitPrototype), 0, "seller unit count wrong");
+    assertEq(UnitCount.get(Home.getAsteroid(buyer), unitPrototype), 100, "buyer unit count wrong");
     assertEq(
       ResourceCount.get(Home.getAsteroid(player), uint8(EResource.Iron)),
       100,
@@ -167,7 +165,7 @@ contract MarketplaceSystemTest is PrimodiumTest {
   }
 
   function testAddMaxOrderReached() public {
-    bytes32 orderId = testAddOrder();
+    testAddOrder();
     ResourceCount.set(Home.getAsteroid(player), uint8(EResource.Iron), 100);
     vm.expectRevert("[MarketplaceSystem] Max orders reached");
     world.addOrder(EOrderType.Resource, uint8(EResource.Iron), 1, 49);
@@ -197,8 +195,6 @@ contract MarketplaceSystemTest is PrimodiumTest {
 
     switchPrank(alice);
     world.takeOrder(orderId, 100);
-    uint256 postSellerBalance = wETH.balanceOf(creator);
-    uint256 postBuyerBalance = wETH.balanceOf(alice);
 
     assertEq(MarketplaceOrder.getCount(orderId), 0, "count wrong");
     assertEq(MarketplaceOrder.getPrice(orderId), 0, "price wrong");
@@ -231,8 +227,6 @@ contract MarketplaceSystemTest is PrimodiumTest {
 
     switchPrank(alice);
     world.takeOrder(orderId, 100);
-    uint256 postSellerBalance = wETH.balanceOf(creator);
-    uint256 postBuyerBalance = wETH.balanceOf(alice);
 
     assertEq(MarketplaceOrder.getCount(orderId), 0, "count wrong");
     assertEq(MarketplaceOrder.getPrice(orderId), 0, "price wrong");
@@ -265,8 +259,6 @@ contract MarketplaceSystemTest is PrimodiumTest {
 
     switchPrank(alice);
     world.takeOrder(orderId, 50);
-    uint256 postSellerBalance = wETH.balanceOf(creator);
-    uint256 postBuyerBalance = wETH.balanceOf(alice);
 
     assertEq(MarketplaceOrder.getCount(orderId), 50, "count wrong");
     assertEq(MarketplaceOrder.getPrice(orderId), 100, "price wrong");
@@ -313,8 +305,6 @@ contract MarketplaceSystemTest is PrimodiumTest {
     counts[0] = 50;
     counts[1] = 50;
     world.takeOrderBulk(orders, counts);
-    uint256 postSellerBalance = wETH.balanceOf(creator);
-    uint256 postBuyerBalance = wETH.balanceOf(alice);
 
     assertEq(MarketplaceOrder.getCount(orderId), 0, "count wrong");
     assertEq(MarketplaceOrder.getPrice(orderId), 0, "price wrong");
