@@ -3,7 +3,6 @@ pragma solidity >=0.8.21;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
-import { LibBattle } from "libraries/LibBattle.sol";
 import { ESendType } from "src/Types.sol";
 import { BattleResultData } from "codegen/index.sol";
 import { LibPirate } from "libraries/LibPirate.sol";

@@ -28,13 +28,8 @@ library LibPirate {
       Position.deleteRecord(asteroidEntity);
       bytes32[] memory units = P_UnitPrototypes.get();
       for (uint8 i = 0; i < units.length; i++) {
-        LibUnit.updateStoredUtilities(
-          asteroidEntity,
-          units[i],
-          UnitCount.get(ownerEntity, asteroidEntity, units[i]),
-          false
-        );
-        UnitCount.set(ownerEntity, asteroidEntity, units[i], 0);
+        LibUnit.updateStoredUtilities(asteroidEntity, units[i], UnitCount.get(asteroidEntity, units[i]), false);
+        UnitCount.set(asteroidEntity, units[i], 0);
       }
     } else {
       Home.setAsteroid(ownerEntity, asteroidEntity);
@@ -68,7 +63,7 @@ library LibPirate {
     for (uint8 i = 0; i < spawnPirateAsteroid.units.length; i++) {
       bytes32 unit = spawnPirateAsteroid.units[i];
       uint256 amount = spawnPirateAsteroid.unitAmounts[i];
-      UnitCount.set(ownerEntity, asteroidEntity, unit, UnitCount.get(ownerEntity, asteroidEntity, unit) + amount);
+      UnitCount.set(asteroidEntity, unit, UnitCount.get(asteroidEntity, unit) + amount);
       LibUnit.updateStoredUtilities(asteroidEntity, unit, amount, true);
     }
   }

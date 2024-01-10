@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
+import { P_UnitPrototypes, IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
 
 import { ERock, EUnit } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
 import { UnitKey } from "src/Keys.sol";
-import { WORLD_SPEED_SCALE } from "src/constants.sol";
+import { WORLD_SPEED_SCALE, NUM_UNITS } from "src/constants.sol";
 
 library LibUnit {
   function getUnitCountOnHomeAsteroid(bytes32 playerEntity, bytes32 unitType) internal view returns (uint256) {
-    return UnitCount.get(playerEntity, Home.getAsteroid(playerEntity), unitType);
+    return UnitCount.get(Home.getAsteroid(playerEntity), unitType);
   }
 
   /**
@@ -95,7 +95,7 @@ library LibUnit {
         stillClaiming = false;
       }
       ProducedUnit.set(playerEntity, item.unitId, ProducedUnit.get(playerEntity, item.unitId) + trainedUnits);
-      increaseUnitCount(playerEntity, Home.getAsteroid(playerEntity), item.unitId, trainedUnits);
+      increaseUnitCount(Home.getAsteroid(playerEntity), item.unitId, trainedUnits);
     }
   }
 
@@ -159,21 +159,19 @@ library LibUnit {
 
   /**
    * @dev Increases the count of a specific unit type for a player's rock entity.
-   * @param playerEntity The identifier of the player.
    * @param rockEntity The identifier of the player's rock entity.
    * @param unitType The type of unit to increase.
    * @param unitCount The number of units to increase.
    */
   function increaseUnitCount(
-    bytes32 playerEntity,
     bytes32 rockEntity,
     bytes32 unitType,
     uint256 unitCount
   ) internal {
+    bytes32 playerEntity = OwnedBy.get(rockEntity);
     if (unitCount == 0) return;
-    uint256 prevUnitCount = UnitCount.get(playerEntity, rockEntity, unitType);
-    UnitCount.set(playerEntity, rockEntity, unitType, prevUnitCount + unitCount);
-
+    uint256 prevUnitCount = UnitCount.get(rockEntity, unitType);
+    UnitCount.set(rockEntity, unitType, prevUnitCount + unitCount);
     // update production rate
     if (RockType.get(rockEntity) != uint8(ERock.Motherlode)) return;
     uint256 level = UnitLevel.get(playerEntity, unitType);
@@ -187,22 +185,20 @@ library LibUnit {
 
   /**
    * @dev Decreases the count of a specific unit type for a player's rock entity.
-   * @param playerEntity The identifier of the player.
    * @param rockEntity The identifier of the player's rock entity.
    * @param unitType The type of unit to decrease.
    * @param unitCount The number of units to decrease.
    */
   function decreaseUnitCount(
-    bytes32 playerEntity,
     bytes32 rockEntity,
     bytes32 unitType,
     uint256 unitCount
   ) internal {
+    bytes32 playerEntity = OwnedBy.get(rockEntity);
     if (unitCount == 0) return;
-
-    uint256 currUnitCount = UnitCount.get(playerEntity, rockEntity, unitType);
+    uint256 currUnitCount = UnitCount.get(rockEntity, unitType);
     if (unitCount > currUnitCount) unitCount = currUnitCount;
-    UnitCount.set(playerEntity, rockEntity, unitType, currUnitCount - unitCount);
+    UnitCount.set(rockEntity, unitType, currUnitCount - unitCount);
 
     // update production rate
     if (RockType.get(rockEntity) != uint8(ERock.Motherlode)) return;
@@ -214,5 +210,23 @@ library LibUnit {
     require(prevProductionRate >= productionRate * unitCount, "[LibUnit] Production rate cannot be negative");
     ProductionRate.set(rockEntity, resource, prevProductionRate - (productionRate * unitCount));
     ConsumptionRate.set(rockEntity, P_RawResource.get(resource), prevProductionRate - (productionRate * unitCount));
+  }
+
+  /**
+   * @dev Calculates the attack points for an attacker entity based on arrivals and send type.
+   * @param  playerEntity The identifier of the player entity.
+   * @param  unitCounts the unit counts for which to calculate the cargo
+   * @return cargo The total cargo points.
+   */
+  function getTotalCargo(bytes32 playerEntity, uint256[NUM_UNITS] calldata unitCounts)
+    internal
+    returns (uint256 cargo)
+  {
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    for (uint256 j = 0; j < unitPrototypes.length; j++) {
+      if (unitCounts[j] == 0) continue;
+      uint256 unitLevel = UnitLevel.get(playerEntity, unitPrototypes[j]);
+      cargo += unitCounts[j] * P_Unit.get(unitPrototypes[j], unitLevel).cargo;
+    }
   }
 }

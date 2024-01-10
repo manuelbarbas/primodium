@@ -137,9 +137,8 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
         await mud.contractCalls.setComponentValue(
           mud.components.UnitCount,
           encodeEntity(mud.components.UnitCount.metadata.keySchema, {
-            player: player as Hex,
             unit: unitEntity as Hex,
-            rock: rock as Hex,
+            entity: rock as Hex,
           }),
           {
             value: BigInt(count),
