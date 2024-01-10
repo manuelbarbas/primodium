@@ -50,7 +50,7 @@ contract LibBattleTest is PrimodiumTest {
   function testGetDefensePointsDefenseBuildings(uint256 unitCount, uint256 defense) public returns (uint256) {
     vm.assume(unitCount < 10000);
     vm.assume(defense < 10000);
-    Home.setAsteroid(player, rock);
+    Home.set(player, rock);
     UnitCount.set(rock, unit1, unitCount);
     setupUnit(unit1, 0, defense);
 
@@ -65,7 +65,7 @@ contract LibBattleTest is PrimodiumTest {
   function testGetDefensePointsDefenseMultiplierBuildings(uint256 unitCount, uint256 defense) public returns (uint256) {
     vm.assume(unitCount < 10000);
     vm.assume(defense < 10000);
-    Home.setAsteroid(player, rock);
+    Home.set(player, rock);
     UnitCount.set(rock, unit1, unitCount);
     setupUnit(unit1, 0, defense);
     ResourceCount.set(rock, uint8(EResource.M_DefenseMultiplier), 200);
@@ -255,8 +255,8 @@ contract LibBattleTest is PrimodiumTest {
   function setupUpdateUnitsAfterBattle() public {
     P_IsUtility.set(uint8(EResource.Iron), true);
     P_IsUtility.set(uint8(EResource.Copper), true);
-    Home.setAsteroid(enemy, rock);
-    Home.setAsteroid(player, homeRock);
+    Home.set(enemy, rock);
+    Home.set(player, homeRock);
     // unit1 requires 1 iron
     LibProduction.increaseResourceProduction(homeRock, EResource.Iron, playerOriginalIron);
     LibProduction.increaseResourceProduction(homeRock, EResource.Copper, playerOriginalCopper);
@@ -411,7 +411,7 @@ contract LibBattleTest is PrimodiumTest {
 
   function testUpdateUnitsAfterBattleRaidAttackerWins() public {
     setupUpdateUnitsAfterBattle();
-    Home.setAsteroid(player, homeRock);
+    Home.set(player, homeRock);
     UnitCount.set(rock, unit1, 100);
     LibUnit.updateStoredUtilities(rock, unit1, 100, true);
     UnitCount.set(rock, unit2, 10);
@@ -487,7 +487,7 @@ contract LibBattleTest is PrimodiumTest {
 
   function testUpdateUnitsAfterBattleRaidDefenderWins() public {
     setupUpdateUnitsAfterBattle();
-    Home.setAsteroid(player, homeRock);
+    Home.set(player, homeRock);
     UnitCount.set(rock, unit1, 100);
     LibUnit.updateStoredUtilities(rock, unit1, 100, true);
     UnitCount.set(rock, unit2, 10);

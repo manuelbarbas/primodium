@@ -71,8 +71,8 @@ library LibRaid {
       RaidedResource.set(br.attacker, resource, RaidedResource.get(br.attacker, resource) + raidAmount);
       raidResult.defenderValuesBeforeRaid[i] = defenderResources[i];
       raidResult.raidedAmount[i] = raidAmount;
-      LibStorage.increaseStoredResource(Home.getAsteroid(br.attacker), resource, raidAmount);
-      LibStorage.decreaseStoredResource(Home.getAsteroid(br.defender), resource, raidAmount);
+      LibStorage.increaseStoredResource(Home.get(br.attacker), resource, raidAmount);
+      LibStorage.decreaseStoredResource(Home.get(br.defender), resource, raidAmount);
     }
     RaidResult.set(keccak256(abi.encode(br)), raidResult);
     return raidResult;

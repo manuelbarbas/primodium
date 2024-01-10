@@ -40,6 +40,12 @@ export const config = mudConfig({
     },
 
     /* --------------------------------- Common --------------------------------- */
+    // if the key is a player, value is their home asteroid.
+    // if the key is an asteroid, value is its main base.
+    Home: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "bytes32",
+    },
 
     P_GameConfig: {
       keySchema: {},
@@ -108,13 +114,6 @@ export const config = mudConfig({
     },
 
     /* --------------------------------- Player --------------------------------- */
-    Home: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
-        asteroid: "bytes32",
-        mainBase: "bytes32",
-      },
-    },
 
     Delegate: {
       keySchema: { entity: "bytes32" },

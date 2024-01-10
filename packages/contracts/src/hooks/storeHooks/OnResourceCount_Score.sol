@@ -27,8 +27,6 @@ contract OnResourceCount_Score is StoreHook {
     bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
     //score only updated for player owned asteroids
     if (playerEntity == 0) return;
-    //score only updated for home asteroid resource changes
-    if (spaceRockEntity != Home.getAsteroid(playerEntity)) return;
     uint8 resource = uint8(uint256(keyTuple[1]));
     bytes memory amountRaw = SliceInstance.toBytes(SliceLib.getSubslice(data, start));
     uint256 amount = abi.decode(amountRaw, (uint256));

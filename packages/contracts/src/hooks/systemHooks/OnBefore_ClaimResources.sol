@@ -5,7 +5,6 @@ import { _player } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { LibResource } from "libraries/LibResource.sol";
-import { Home } from "codegen/index.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 
 /**
