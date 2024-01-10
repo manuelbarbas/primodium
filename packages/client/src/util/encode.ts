@@ -1,5 +1,6 @@
 import { KeySchema, SchemaToPrimitives } from "@latticexyz/protocol-parser";
 import { Entity } from "@latticexyz/recs";
+import { Coord } from "@latticexyz/utils";
 import {
   Hex,
   concatHex,
@@ -88,3 +89,11 @@ export function entityToHexKeyTuple(entity: Entity): readonly Hex[] {
   }
   return new Array(length / 32).fill(0).map((_, index) => sliceHex(entity, index * 32, (index + 1) * 32));
 }
+
+export const getSecondaryAsteroidEntity = (sourceEntity: Entity, position: Coord) =>
+  keccak256(
+    encodeEntity(
+      { sourceEntity: "bytes32", asteroid: "bytes32", x: "int32", y: "int32" },
+      { sourceEntity: sourceEntity as Hex, asteroid: toHex32("asteroid"), x: position.x, y: position.y }
+    ) as Hex
+  ) as Entity;
