@@ -1,31 +1,21 @@
-import { createClient as createFaucetClient } from "@latticexyz/faucet";
-import { Entity } from "@latticexyz/recs";
 import { useEffect, useState } from "react";
 import { Button } from "src/components/core/Button";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { getNetworkConfig } from "src/network/config/getNetworkConfig";
-import { normalizeAddress } from "src/util/common";
-import { Hex, createPublicClient, encodeAbiParameters, formatEther } from "viem";
-import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
+import { Hex, formatEther } from "viem";
+import { Card } from "../core/Card";
 
 interface TransferTokenProps {
   onTransfer: (address: string, amount: bigint) => Promise<void>;
-  className?: string;
-  client: ReturnType<typeof createPublicClient>;
 }
 
-export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, className, client }) => {
-  const { network } = useMud();
-  const burnerAddress = normalizeAddress(network.address);
-  const [input, setInput] = useState<string>(normalizeAddress(burnerAddress) ?? "");
+export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer }) => {
+  const mud = useMud();
+  const { playerAccount } = mud;
+  const [input, setInput] = useState<string>("");
   const [valid, setValid] = useState<boolean>(true);
   const [address, setAddress] = useState<string | null>(null);
   const [amount, setAmount] = useState<string>("");
-  const externalAccount = useAccount();
-  const externalEntity = externalAccount.address
-    ? (encodeAbiParameters([{ type: "address" }], [externalAccount.address]) as Entity)
-    : undefined;
 
   useEffect(() => {
     const fetchEnsName = async (address: string | null) => {
@@ -47,14 +37,9 @@ export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, classN
       return;
     };
     fetchEnsName(input);
-  }, [input, client]);
+  }, [input]);
 
-  const chain = useNetwork().chain;
-  const expectedChain = externalAccount.connector?.chains[0];
-  const { isLoading, pendingChainId, switchNetwork } = useSwitchNetwork();
-
-  const wrongChain = chain?.id !== expectedChain?.id;
-  const balance = components.WETHBalance.use(externalEntity)?.value ?? 0n;
+  const balance = components.WETHBalance.use(playerAccount.entity)?.value ?? 0n;
 
   const handleTransfer = async () => {
     const amountBigInt = BigInt(Number(amount) * 1e18);
@@ -66,76 +51,39 @@ export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, classN
     }
   };
 
-  const networkConfig = getNetworkConfig();
-
-  // drip faucet to the external address upon component mount
-  // otherwise, the external address will not have any funds to transfer wETH
-  useEffect(() => {
-    const drip = async () => {
-      if (networkConfig.faucetServiceUrl && externalAccount.address) {
-        const faucet = createFaucetClient({ url: networkConfig.faucetServiceUrl });
-        await faucet.drip.mutate({ address: externalAccount.address });
-      }
-    };
-    drip();
-  }, [externalAccount.address, networkConfig.faucetServiceUrl]);
-
-  if (!expectedChain) return null;
-  const Btn = () =>
-    wrongChain ? (
-      <Button
-        disabled={!switchNetwork || expectedChain.id === chain?.id}
-        key={expectedChain.id}
-        onClick={() => switchNetwork?.(expectedChain.id)}
-        className="btn-secondary grow"
-      >
-        Switch to {expectedChain.name}
-        {isLoading && pendingChainId === expectedChain.id && " (switching)"}
-      </Button>
-    ) : (
-      <Button
-        disabled={!valid || !amount || amount === "0" || !address}
-        className="btn-secondary grow"
-        onClick={handleTransfer}
-      >
-        <p>transfer</p>
-      </Button>
-    );
-
   return (
-    <div className={className + " flex flex-col gap-2 h-full"}>
+    <Card className="bg-base-100 gap-2">
+      <p className="text-xs opacity-50 font-bold uppercase flex gap-2 items-center">transfer weth</p>
       <div className="relative flex items-center">
         <input
           type="text"
-          className={`py-6 px-2 text-sm rounded-md bg-base-100 w-full border ${
-            valid ? "border-secondary/25 active:border-secondary/25" : "active:border-error border-error bg-error/25"
+          className={`p-4 text-sm bg-base-100 w-full border font-bold ${
+            valid || !input
+              ? "border-secondary/25 active:border-secondary/25"
+              : "active:border-error border-error bg-error/25"
           }  disabled:opacity-50`}
-          placeholder="enter 0x address or ens name"
+          placeholder="ENTER ADDRESS OR ENS"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          disabled={wrongChain}
         />
-        {address == burnerAddress && (
-          <div className="absolute left-2 top-10 text-xs text-gray-500 italic">your Primodium account</div>
-        )}
       </div>
       <div className="relative flex items-center">
         <div className="absolute right-2 text-xs flex flex-col items-end">
           <Button
-            className="btn-secondary btn-xs disabled:opacity-50"
-            disabled={wrongChain || formatEther(balance) === amount}
+            tooltip={`${formatEther(balance)} wETH`}
+            tooltipDirection="top"
+            className="btn-primary btn-xs disabled:opacity-50"
+            disabled={formatEther(balance) === amount}
             onClick={() => setAmount(formatEther(balance))}
           >
             max
           </Button>
-          {!wrongChain && <p className="text-gray-500 italic">Balance: {formatEther(balance)}</p>}
         </div>
         <input
           type="number"
-          className="py-6 px-2 text-sm rounded-md bg-base-100 border border-secondary/25 w-full disabled:opacity-50"
+          className="p-4 text-sm bg-base-100 border border-secondary/25 w-full disabled:opacity-50 font-bold uppercase"
           placeholder="amount"
           value={amount}
-          disabled={wrongChain}
           onChange={(e) => {
             const value = BigInt(e.target.value);
             const bal = BigInt(balance) / BigInt(1e18);
@@ -150,7 +98,13 @@ export const TransferToken: React.FC<TransferTokenProps> = ({ onTransfer, classN
           }}
         />
       </div>
-      <Btn />
-    </div>
+      <Button
+        disabled={!valid || !amount || amount === "0" || !address}
+        className="btn-secondary grow"
+        onClick={handleTransfer}
+      >
+        <p>transfer</p>
+      </Button>
+    </Card>
   );
 };

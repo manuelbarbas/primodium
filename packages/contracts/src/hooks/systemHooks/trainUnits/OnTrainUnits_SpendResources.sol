@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { addressToEntity } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { UnitKey } from "src/Keys.sol";
@@ -19,13 +18,11 @@ contract OnTrainUnits_SpendResources is SystemHook {
 
   /**
    * @dev This function is called before the system's main logic is executed.
-   * @param msgSender The address of the message sender.
-   * @param systemId The identifier of the system.
    * @param callData The data passed to the system.
    */
   function onBeforeCallSystem(
-    address msgSender,
-    ResourceId systemId,
+    address,
+    ResourceId,
     bytes memory callData
   ) public {
     // Decode the arguments from the callData
@@ -37,15 +34,9 @@ contract OnTrainUnits_SpendResources is SystemHook {
     LibResource.spendUnitRequiredResources(OwnedBy.get(buildingEntity), P_EnumToPrototype.get(UnitKey, unit), count);
   }
 
-  /**
-   * @dev This function is called after the system's main logic is executed.
-   * @param msgSender The address of the message sender.
-   * @param systemId The identifier of the system.
-   * @param callData The data passed to the system.
-   */
   function onAfterCallSystem(
-    address msgSender,
-    ResourceId systemId,
-    bytes memory callData
+    address,
+    ResourceId,
+    bytes memory
   ) public {}
 }

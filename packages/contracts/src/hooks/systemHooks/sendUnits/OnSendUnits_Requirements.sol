@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { addressToEntity } from "src/utils.sol";
+import { _player } from "src/utils.sol";
 import { SystemHook } from "@latticexyz/world/src/SystemHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
@@ -20,12 +20,11 @@ contract OnSendUnits_Requirements is SystemHook {
   /**
    * @dev This function is called before the system's main logic is executed. It checks the movement rules for units before they are sent to a destination.
    * @param msgSender The address of the message sender.
-   * @param systemId The identifier of the system.
    * @param callData The data passed to the system, including the parameters of the send units function.
    */
   function onBeforeCallSystem(
     address msgSender,
-    ResourceId systemId,
+    ResourceId,
     bytes memory callData
   ) public {
     // // Decode the parameters of the send units function
@@ -41,17 +40,9 @@ contract OnSendUnits_Requirements is SystemHook {
     // LibSend.checkMovementRules(origin, destination, playerEntity, sendArgs.to, sendArgs.sendType);
   }
 
-  /**
-   * @dev This function is called after the system's main logic is executed. It doesn't perform any specific actions in this case.
-   * @param msgSender The address of the message sender.
-   * @param systemId The identifier of the system.
-   * @param callData The data passed to the system.
-   */
   function onAfterCallSystem(
-    address msgSender,
-    ResourceId systemId,
-    bytes memory callData
-  ) public {
-    // This function doesn't perform any actions in this case.
-  }
+    address,
+    ResourceId,
+    bytes memory
+  ) public {}
 }

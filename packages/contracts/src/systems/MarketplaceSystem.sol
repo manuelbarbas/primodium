@@ -3,7 +3,6 @@ pragma solidity >=0.8.21;
 
 // external
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { addressToEntity } from "src/utils.sol";
 
 import { P_EnumToPrototype, UnitCount, Home, ResourceCount, MarketplaceOrder, MaxResourceCount, MarketplaceOrderData, P_GameConfig, P_GameConfig2 } from "codegen/index.sol";
 import { LibResource, LibStorage, LibUnit } from "codegen/Libraries.sol";
@@ -15,10 +14,7 @@ import { EResource, EUnit, EOrderType } from "src/Types.sol";
 
 contract MarketplaceSystem is PrimodiumSystem {
   modifier onlySeller(bytes32 orderId) {
-    require(
-      MarketplaceOrder.getSeller(orderId) == addressToEntity(_msgSender()),
-      "[MarketplaceSystem] You don't control this order"
-    );
+    require(MarketplaceOrder.getSeller(orderId) == _player(true), "[MarketplaceSystem] You don't control this order");
     _;
   }
 
@@ -27,7 +23,7 @@ contract MarketplaceSystem is PrimodiumSystem {
     uint256 count,
     uint256 price
   ) public returns (bytes32 orderId) {
-    bytes32 playerEntity = addressToEntity(_msgSender());
+    bytes32 playerEntity = _player(true);
     bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
     uint256 orderCount = ResourceCount.get(homeAsteroid, uint8(EResource.U_Orders));
     require(orderCount > 0, "[MarketplaceSystem] Max orders reached");
@@ -53,7 +49,7 @@ contract MarketplaceSystem is PrimodiumSystem {
     uint256 count,
     uint256 price
   ) public returns (bytes32 orderId) {
-    bytes32 playerEntity = addressToEntity(_msgSender());
+    bytes32 playerEntity = _player(true);
     bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
     uint256 orderCount = ResourceCount.get(homeAsteroid, uint8(EResource.U_Orders));
     require(orderCount > 0, "[MarketplaceSystem] Max orders reached");
@@ -79,7 +75,7 @@ contract MarketplaceSystem is PrimodiumSystem {
     uint256 count,
     uint256 price
   ) public returns (bytes32 orderId) {
-    bytes32 playerEntity = addressToEntity(_msgSender());
+    bytes32 playerEntity = _player(true);
     bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
     uint256 orderCount = ResourceCount.get(homeAsteroid, uint8(EResource.U_Orders));
     require(orderCount > 0, "[MarketplaceSystem] Max orders reached");
@@ -122,10 +118,7 @@ contract MarketplaceSystem is PrimodiumSystem {
   }
 
   function _updateOrderCount(bytes32 orderId, uint256 count) internal {
-    MarketplaceOrderData memory order = MarketplaceOrder.get(orderId);
     if (count == 0) return cancelOrder(orderId);
-    bytes32 homeAsteroid = Home.getAsteroid(order.seller);
-
     MarketplaceOrder.setCount(orderId, count);
   }
 
@@ -138,7 +131,7 @@ contract MarketplaceSystem is PrimodiumSystem {
   }
 
   function takeOrder(bytes32 orderId, uint256 countBought) public {
-    bytes32 playerEntity = addressToEntity(_msgSender());
+    bytes32 playerEntity = _player(true);
     if (countBought == 0) revert("[MarketplaceSystem] Invalid count");
     MarketplaceOrderData memory order = MarketplaceOrder.get(orderId);
     require(order.seller != playerEntity, "[MarketplaceSystem] Cannot take your own order");
@@ -155,7 +148,7 @@ contract MarketplaceSystem is PrimodiumSystem {
     IERC20Mintable wETH = IERC20Mintable(P_GameConfig2.getWETHAddress());
 
     uint256 cost = countBought * order.price;
-    require(cost <= wETH.balanceOf(_msgSender()), "[MarketplaceSystem] Not enough weth");
+    require(cost <= wETH.balanceOf(entityToAddress(playerEntity)), "[MarketplaceSystem] Not enough weth");
 
     uint256 tax = (P_GameConfig.getTax() * cost) / 1000;
     cost = cost - tax;
@@ -201,15 +194,15 @@ contract MarketplaceSystem is PrimodiumSystem {
     bytes32 buyerHome = Home.getAsteroid(playerEntity);
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, order.resource);
     require(
-      UnitCount.get(order.seller, sellerHome, unitPrototype) >= countBought,
+      UnitCount.get(sellerHome, unitPrototype) >= countBought,
       "[MarketplaceSystem] Seller doesn't have enough units"
     );
 
     LibUnit.updateStoredUtilities(buyerHome, unitPrototype, countBought, true);
     LibUnit.updateStoredUtilities(sellerHome, unitPrototype, countBought, false);
 
-    LibUnit.increaseUnitCount(playerEntity, buyerHome, unitPrototype, countBought);
-    LibUnit.decreaseUnitCount(order.seller, sellerHome, unitPrototype, countBought);
+    LibUnit.increaseUnitCount(buyerHome, unitPrototype, countBought);
+    LibUnit.decreaseUnitCount(sellerHome, unitPrototype, countBought);
   }
 
   function takeOrderBulk(bytes32[] memory orderId, uint256[] memory count) public {

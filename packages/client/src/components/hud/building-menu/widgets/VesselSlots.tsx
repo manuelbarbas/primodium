@@ -9,10 +9,10 @@ import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components, components as comps } from "src/network/components";
 import { TrainingQueue } from "src/network/components/clientComponents";
+import { train } from "src/network/setup/contractCalls/train";
 import { BackgroundImage, EntityType, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { getRecipe } from "src/util/recipe";
-import { train } from "src/util/web3/contractCalls/train";
 import { Hex } from "viem";
 
 const AddSlot: React.FC = () => {
@@ -28,7 +28,7 @@ const CommissionVessel: React.FC<{
   player: Entity;
   building: Entity;
 }> = ({ player, building, index }) => {
-  const { network } = useMud();
+  const mud = useMud();
   const recipe = useMemo(() => {
     const level = comps.UnitLevel.getWithKeys(
       { entity: player as Hex, unit: EntityType.MiningVessel as Hex },
@@ -47,7 +47,7 @@ const CommissionVessel: React.FC<{
       <Button
         className={`h-[5.2rem] w-full flex-row items-center justify-center border-secondary p-1`}
         disabled={!hasEnough}
-        onClick={() => train(building, EUnit.MiningVessel, 1n, network)}
+        onClick={() => train(mud, building, EUnit.MiningVessel, 1n)}
       >
         <p className="text-[.7rem] text-center">
           + <br />

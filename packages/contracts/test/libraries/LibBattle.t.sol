@@ -51,7 +51,7 @@ contract LibBattleTest is PrimodiumTest {
     vm.assume(unitCount < 10000);
     vm.assume(defense < 10000);
     Home.setAsteroid(player, rock);
-    UnitCount.set(player, rock, unit1, unitCount);
+    UnitCount.set(rock, unit1, unitCount);
     setupUnit(unit1, 0, defense);
 
     ResourceCount.set(rock, uint8(EResource.U_Defense), 100);
@@ -66,7 +66,7 @@ contract LibBattleTest is PrimodiumTest {
     vm.assume(unitCount < 10000);
     vm.assume(defense < 10000);
     Home.setAsteroid(player, rock);
-    UnitCount.set(player, rock, unit1, unitCount);
+    UnitCount.set(rock, unit1, unitCount);
     setupUnit(unit1, 0, defense);
     ResourceCount.set(rock, uint8(EResource.M_DefenseMultiplier), 200);
     uint256 expected = (unitCount * defense) * 3;
@@ -79,7 +79,7 @@ contract LibBattleTest is PrimodiumTest {
   function testGetDefensePoints(uint256 unitCount, uint256 defense) public returns (uint256) {
     vm.assume(unitCount < 10000);
     vm.assume(defense < 10000);
-    UnitCount.set(player, rock, unit1, unitCount);
+    UnitCount.set(rock, unit1, unitCount);
     setupUnit(unit1, 0, defense);
 
     uint256 expected = unitCount * defense;
@@ -95,8 +95,8 @@ contract LibBattleTest is PrimodiumTest {
 
     uint256 unitCount2 = 67;
     uint256 defense2 = 109;
-    UnitCount.set(player, rock, unit1, unitCount);
-    UnitCount.set(player, rock, unit2, unitCount2);
+    UnitCount.set(rock, unit1, unitCount);
+    UnitCount.set(rock, unit2, unitCount2);
     setupUnit(unit1, 0, defense);
     setupUnit(unit2, 0, defense2);
 
@@ -123,7 +123,7 @@ contract LibBattleTest is PrimodiumTest {
     setupUnit(unit1, attack, 0);
 
     uint256 expected = unitCount * attack;
-    (uint256[] memory count, uint256 actual, uint256 cargo) = LibBattle.getAttackPoints(player, rock, ESendType.Invade);
+    (uint256[] memory count, uint256 actual, ) = LibBattle.getAttackPoints(player, rock, ESendType.Invade);
     assertEq(count[0], unitCount);
     assertEq(actual, expected, "Attack points should be equal to unitCount * attack");
     assertEq(ArrivalsMap.size(player, rock), 0);
@@ -169,7 +169,7 @@ contract LibBattleTest is PrimodiumTest {
     ArrivalCount.set(player, 2);
 
     uint256 expected = unitCount * attack + unitCount2 * attack2;
-    (uint256[] memory count, uint256 actual, uint256 cargo) = LibBattle.getAttackPoints(player, rock, ESendType.Invade);
+    (uint256[] memory count, uint256 actual, ) = LibBattle.getAttackPoints(player, rock, ESendType.Invade);
     assertEq(count[0], unitCount);
     assertEq(count[1], unitCount2);
     assertEq(actual, expected, "Attack points should be equal to unitCount * attack");
@@ -193,16 +193,12 @@ contract LibBattleTest is PrimodiumTest {
     uint256 defenderUnitCount = 100;
     uint256 defenderDefense = 50;
 
-    UnitCount.set(enemy, rock, unit1, defenderUnitCount);
+    UnitCount.set(rock, unit1, defenderUnitCount);
 
     setupUnit(unit1, attackerAttack, defenderDefense);
 
-    (uint256[] memory count, uint256 attackPoints, uint256 cargo) = LibBattle.getAttackPoints(
-      player,
-      rock,
-      ESendType.Invade
-    );
-    (uint256[] memory defenseCount, uint256 defensePoints) = LibBattle.getDefensePoints(enemy, rock);
+    (, uint256 attackPoints, ) = LibBattle.getAttackPoints(player, rock, ESendType.Invade);
+    (, uint256 defensePoints) = LibBattle.getDefensePoints(enemy, rock);
 
     // getAttackPoints removes the arrival from the map so we readd it here
     ArrivalsMap.set(player, rock, arrivalId, arrival);
@@ -232,16 +228,12 @@ contract LibBattleTest is PrimodiumTest {
     uint256 defenderUnitCount = 250;
     uint256 defenderDefense = 50;
 
-    UnitCount.set(enemy, rock, unit1, defenderUnitCount);
+    UnitCount.set(rock, unit1, defenderUnitCount);
 
     setupUnit(unit1, attackerAttack, defenderDefense);
 
-    (uint256[] memory count, uint256 attackPoints, uint256 cargo) = LibBattle.getAttackPoints(
-      player,
-      rock,
-      ESendType.Invade
-    );
-    (uint256[] memory defenseCount, uint256 defensePoints) = LibBattle.getDefensePoints(enemy, rock);
+    (, uint256 attackPoints, ) = LibBattle.getAttackPoints(player, rock, ESendType.Invade);
+    (, uint256 defensePoints) = LibBattle.getDefensePoints(enemy, rock);
 
     // getAttackPoints removes the arrival from the map so we read it here
     ArrivalsMap.set(player, rock, arrivalId, arrival);
@@ -254,19 +246,6 @@ contract LibBattleTest is PrimodiumTest {
     uint256 unitsLeft = (defenderUnitCount * lossPoints) / 100;
     assertEq(result.defenderUnitsLeft[0], unitsLeft, "Attacker should have correct units left");
   }
-
-  // struct BattleResultData {
-  //   bytes32 attacker;
-  //   bytes32 defender;
-  //   bytes32 winner;
-  //   bytes32 rock;
-  //   uint256 totalCargo;
-  //   uint256 timestamp;
-  //   uint256[] attackerStartingUnits;
-  //   uint256[] defenderStartingUnits;
-  //   uint256[] attackerUnitsLeft;
-  //   uint256[] defenderUnitsLeft;
-  // }
 
   uint256 playerOriginalIron = 1000;
   uint256 playerOriginalCopper = 500;
@@ -281,8 +260,6 @@ contract LibBattleTest is PrimodiumTest {
     // unit1 requires 1 iron
     LibProduction.increaseResourceProduction(homeRock, EResource.Iron, playerOriginalIron);
     LibProduction.increaseResourceProduction(homeRock, EResource.Copper, playerOriginalCopper);
-    //ResourceCount.set(player, uint8(EResource.Iron), playerOriginalIron);
-    //ResourceCount.set(player, uint8(EResource.Copper), playerOriginalCopper);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(EResource.Iron);
@@ -333,10 +310,8 @@ contract LibBattleTest is PrimodiumTest {
     });
 
     LibBattle.updateUnitsAfterBattle(br, ESendType.Invade);
-    assertEq(UnitCount.get(player, rock, unit1), 50, "Attacker should have 50 units on rock");
-    assertEq(UnitCount.get(player, rock, unit2), 20, "Attacker should have 20 unit2s on rock");
-    assertEq(UnitCount.get(enemy, rock, unit1), 0, "Defender should have 0 units on rock");
-    assertEq(UnitCount.get(enemy, rock, unit2), 0, "Defender should have 0 unit2s on rock");
+    assertEq(UnitCount.get(rock, unit1), 50, "Attacker should have 50 units on rock");
+    assertEq(UnitCount.get(rock, unit2), 20, "Attacker should have 20 unit2s on rock");
 
     // both players should have their utilities removed
 
@@ -361,8 +336,8 @@ contract LibBattleTest is PrimodiumTest {
 
   function testUpdateUnitsAfterBattleInvadeDefenderWins() public {
     setupUpdateUnitsAfterBattle();
-    UnitCount.set(enemy, rock, unit1, 100);
-    UnitCount.set(enemy, rock, unit2, 10);
+    UnitCount.set(rock, unit1, 100);
+    UnitCount.set(rock, unit2, 10);
 
     LibUnit.updateStoredUtilities(rock, unit1, 100, true);
     LibUnit.updateStoredUtilities(rock, unit2, 10, true);
@@ -406,10 +381,8 @@ contract LibBattleTest is PrimodiumTest {
     });
 
     LibBattle.updateUnitsAfterBattle(br, ESendType.Invade);
-    assertEq(UnitCount.get(player, rock, unit1), 0, "Attacker should have 0 units on rock");
-    assertEq(UnitCount.get(player, rock, unit2), 0, "Attacker should have 0 unit2s on rock");
-    assertEq(UnitCount.get(enemy, rock, unit1), 70, "Defender should have 70 units on rock");
-    assertEq(UnitCount.get(enemy, rock, unit2), 5, "Defender should have 0 unit2s on rock");
+    assertEq(UnitCount.get(rock, unit1), 70, "Defender should have 70 units on rock");
+    assertEq(UnitCount.get(rock, unit2), 5, "Defender should have 0 unit2s on rock");
 
     // both players should have their utilities removed
 
@@ -439,9 +412,9 @@ contract LibBattleTest is PrimodiumTest {
   function testUpdateUnitsAfterBattleRaidAttackerWins() public {
     setupUpdateUnitsAfterBattle();
     Home.setAsteroid(player, homeRock);
-    UnitCount.set(enemy, rock, unit1, 100);
+    UnitCount.set(rock, unit1, 100);
     LibUnit.updateStoredUtilities(rock, unit1, 100, true);
-    UnitCount.set(enemy, rock, unit2, 10);
+    UnitCount.set(rock, unit2, 10);
     LibUnit.updateStoredUtilities(rock, unit2, 10, true);
 
     assertEq(
@@ -486,10 +459,10 @@ contract LibBattleTest is PrimodiumTest {
     });
 
     LibBattle.updateUnitsAfterBattle(br, ESendType.Raid);
-    assertEq(UnitCount.get(player, homeRock, unit1), 50, "Attacker should have 50 units on home rock");
-    assertEq(UnitCount.get(player, homeRock, unit2), 20, "Attacker should have 20 unit2s on home rock");
-    assertEq(UnitCount.get(enemy, rock, unit1), 0, "Defender should have 0 units on rock");
-    assertEq(UnitCount.get(enemy, rock, unit2), 0, "Defender should have 0 unit2s on rock");
+    assertEq(UnitCount.get(homeRock, unit1), 50, "Attacker should have 50 units on home rock");
+    assertEq(UnitCount.get(homeRock, unit2), 20, "Attacker should have 20 unit2s on home rock");
+    assertEq(UnitCount.get(rock, unit1), 0, "Defender should have 0 units on rock");
+    assertEq(UnitCount.get(rock, unit2), 0, "Defender should have 0 unit2s on rock");
 
     // both players should have their utilities removed
 
@@ -515,9 +488,9 @@ contract LibBattleTest is PrimodiumTest {
   function testUpdateUnitsAfterBattleRaidDefenderWins() public {
     setupUpdateUnitsAfterBattle();
     Home.setAsteroid(player, homeRock);
-    UnitCount.set(enemy, rock, unit1, 100);
+    UnitCount.set(rock, unit1, 100);
     LibUnit.updateStoredUtilities(rock, unit1, 100, true);
-    UnitCount.set(enemy, rock, unit2, 10);
+    UnitCount.set(rock, unit2, 10);
     LibUnit.updateStoredUtilities(rock, unit2, 10, true);
 
     LibUnit.updateStoredUtilities(homeRock, unit1, 100, true);
@@ -537,10 +510,10 @@ contract LibBattleTest is PrimodiumTest {
     });
 
     LibBattle.updateUnitsAfterBattle(br, ESendType.Raid);
-    assertEq(UnitCount.get(player, homeRock, unit1), 0, "Attacker should have 0 units on home rock");
-    assertEq(UnitCount.get(player, homeRock, unit2), 0, "Attacker should have 0 unit2s on home rock");
-    assertEq(UnitCount.get(enemy, rock, unit1), 70, "Defender should have 70 units on rock");
-    assertEq(UnitCount.get(enemy, rock, unit2), 5, "Defender should have 0 unit2s on rock");
+    assertEq(UnitCount.get(homeRock, unit1), 0, "Attacker should have 0 units on home rock");
+    assertEq(UnitCount.get(homeRock, unit2), 0, "Attacker should have 0 unit2s on home rock");
+    assertEq(UnitCount.get(rock, unit1), 70, "Defender should have 70 units on rock");
+    assertEq(UnitCount.get(rock, unit2), 5, "Defender should have 0 unit2s on rock");
 
     // both players should have their utilities removed
 

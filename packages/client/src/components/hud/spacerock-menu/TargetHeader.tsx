@@ -3,6 +3,7 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Badge } from "src/components/core/Badge";
 import { IconLabel } from "src/components/core/IconLabel";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { formatNumber } from "src/util/common";
 import { EntityType, ResourceImage } from "src/util/constants";
@@ -10,11 +11,12 @@ import { getRockDefense } from "src/util/defense";
 import { getSpaceRockImage, getSpaceRockName } from "src/util/spacerock";
 export const TargetHeader = ({ hideStats }: { hideStats?: boolean }) => {
   const selectedSpacerock = components.SelectedRock.use()?.value;
+  const primodium = usePrimodium();
   const coord = components.Position.use(selectedSpacerock ?? singletonEntity) ?? { x: 0, y: 0 };
   const def = getRockDefense(selectedSpacerock ?? singletonEntity);
   const owner = components.OwnedBy.use(selectedSpacerock)?.value;
   if (!selectedSpacerock) return null;
-  const img = getSpaceRockImage(selectedSpacerock);
+  const img = getSpaceRockImage(primodium, selectedSpacerock);
   const name = getSpaceRockName(selectedSpacerock);
 
   return (

@@ -23,6 +23,13 @@ struct Arrival {
   uint256[NUM_UNITS] unitCounts; // corresponds to EUnit: ["MiningVessel", "AegisDrone", "HammerDrone", "StingerDrone", "AnvilDrone"]
 }
 
+struct FleetStatus {
+  bytes32 origin;
+  bytes32 destination;
+  uint256 timeOfDeparture;
+  uint256 timeOfArrival;
+}
+
 struct SendArgs {
   uint256[NUM_UNITS] unitCounts;
   ESendType sendType;

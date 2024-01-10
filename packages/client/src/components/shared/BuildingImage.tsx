@@ -1,9 +1,11 @@
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { getBuildingImage, getBuildingImageFromType } from "src/util/building";
 
 export const BuildingImage: React.FC<{ building: Entity }> = ({ building }) => {
-  const imageUri = useMemo(() => getBuildingImage(building), [building]);
+  const primodium = usePrimodium();
+  const imageUri = useMemo(() => getBuildingImage(primodium, building), [primodium, building]);
 
   return (
     <div
@@ -18,7 +20,8 @@ export const BuildingImageFromType: React.FC<{ buildingType: Entity; blurred?: b
   buildingType,
   blurred,
 }) => {
-  const imageUri = useMemo(() => getBuildingImageFromType(buildingType), [buildingType]);
+  const primodium = usePrimodium();
+  const imageUri = useMemo(() => getBuildingImageFromType(primodium, buildingType), [primodium, buildingType]);
 
   return (
     <div className={`relative flex flex-col text-sm items-center cursor-pointer min-w-[4rem] h-12`}>

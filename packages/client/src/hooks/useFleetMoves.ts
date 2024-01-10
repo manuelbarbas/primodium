@@ -5,7 +5,7 @@ import { useFullResourceCount } from "./useFullResourceCount";
 import { useMud } from "./useMud";
 
 export const useFleetMoves = () => {
-  const playerEntity = useMud().network.playerEntity;
+  const playerEntity = useMud().playerAccount.entity;
   const home = components.Home.get(playerEntity)?.asteroid;
   if (!home) throw new Error("No home found");
 

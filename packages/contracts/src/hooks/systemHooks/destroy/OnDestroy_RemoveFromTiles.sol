@@ -15,31 +15,20 @@ import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 contract OnDestroy_RemoveFromTiles is SystemHook {
   constructor() {}
 
-  /**
-   * @dev This function is called before the system's main logic is executed.
-   * It does not perform any actions in this case.
-   * @param msgSender The address of the message sender.
-   * @param systemId The identifier of the system.
-   * @param callData The data passed to the system.
-   */
   function onBeforeCallSystem(
-    address msgSender,
-    ResourceId systemId,
-    bytes memory callData
-  ) public {
-    // This function does not perform any actions in this case.
-  }
+    address,
+    ResourceId,
+    bytes memory
+  ) public {}
 
   /**
    * @dev This function is called after the system's main logic is executed.
    * It removes building tiles when a building is destroyed based on the provided coordinates.
-   * @param msgSender The address of the message sender.
-   * @param systemId The identifier of the system.
    * @param callData The data passed to the system, which includes the coordinates of the destroyed building.
    */
   function onAfterCallSystem(
-    address msgSender,
-    ResourceId systemId,
+    address,
+    ResourceId,
     bytes memory callData
   ) public {
     // Decode the arguments from the callData

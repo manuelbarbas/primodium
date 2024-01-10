@@ -1,10 +1,10 @@
-import { primodium } from "@game/api";
 import { Scenes } from "@game/constants";
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { useMud } from "src/hooks";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getSpaceRockInfo } from "src/util/spacerock";
 
@@ -22,6 +22,7 @@ export const LabeledValue: React.FC<{
 
 const Asteroid: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
   const asteroidInfo = getSpaceRockInfo(asteroid);
+  const primodium = usePrimodium();
 
   return (
     <Button
@@ -63,10 +64,11 @@ const Asteroid: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
 };
 
 export const OwnedAsteroids: React.FC = () => {
-  const playerEntity = useMud().network.playerEntity;
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
 
   const query = [HasValue(components.OwnedBy, { value: playerEntity }), Has(components.Asteroid)];
-
   const asteroids = useEntityQuery(query);
 
   return (

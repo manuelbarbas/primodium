@@ -1,17 +1,17 @@
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EObjectives } from "contracts/config/enums";
 import { useEffect, useState } from "react";
 import { FaGift, FaMapPin } from "react-icons/fa";
+import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { clampedIndex, getBlockTypeName } from "src/util/common";
 import { ObjectiveEntityLookup } from "src/util/constants";
 import { ObjectiveDescriptions } from "src/util/objectiveDescriptions";
 import { Hex } from "viem";
+import { Badge } from "../core/Badge";
 import { Card } from "../core/Card";
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
 import { Objectives } from "./modals/Objectives";
-import { Badge } from "../core/Badge";
 
 const tutorialObjectives = [
   EObjectives.BuildIronMine,
@@ -25,7 +25,9 @@ const tutorialObjectives = [
 ];
 
 export const CurrentObjective = () => {
-  const playerEntity = components.Account.use()?.value ?? singletonEntity;
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
   const [currentStep, setCurrentStep] = useState(0);
   const objectiveEntity =
     ObjectiveEntityLookup[tutorialObjectives[clampedIndex(currentStep, tutorialObjectives.length)]];

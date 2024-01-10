@@ -1,18 +1,18 @@
-import { Has, defineEnterSystem, defineUpdateSystem, namespaceWorld, Entity } from "@latticexyz/recs";
+import { Entity, Has, defineEnterSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 
-import { world } from "src/network/world";
 import { createCameraApi } from "src/game/api/camera";
 import { components } from "src/network/components";
-import { SetupResult } from "src/network/types";
+import { world } from "src/network/world";
 
-export const focusMainbase = (scene: Scene, { network: { playerEntity } }: SetupResult) => {
+export const focusMainbase = (scene: Scene) => {
   const { pan } = createCameraApi(scene);
-  const gameWorld = namespaceWorld(world, "game");
+  const systemsWorld = namespaceWorld(world, "systems");
 
   const query = [Has(components.Home)];
 
   const handleMove = ({ entity }: { entity: Entity }) => {
+    const playerEntity = components.Account.get()?.value;
     if (entity !== playerEntity) return;
 
     //TODO - fix converting to entity
@@ -25,7 +25,7 @@ export const focusMainbase = (scene: Scene, { network: { playerEntity } }: Setup
     pan(mainBaseCoord, 0);
   };
 
-  defineEnterSystem(gameWorld, query, handleMove);
+  defineEnterSystem(systemsWorld, query, handleMove);
 
-  defineUpdateSystem(gameWorld, query, handleMove);
+  defineUpdateSystem(systemsWorld, query, handleMove);
 };

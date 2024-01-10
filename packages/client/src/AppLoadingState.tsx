@@ -1,14 +1,15 @@
 import { minEth } from "@game/constants";
+import { ComponentValue, Entity, Schema } from "@latticexyz/recs";
 import { SyncStep } from "@latticexyz/store-sync";
-import { Browser } from "@primodiumxyz/mud-game-tools";
-import { useEffect, useState } from "react";
+import { Browser, ContractComponent } from "@primodiumxyz/mud-game-tools";
+import { useEffect, useMemo, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Progress } from "./components/core/Progress";
 import { useMud } from "./hooks";
 import { useInit } from "./hooks/useInit";
 import { components } from "./network/components";
+import { setComponentValue } from "./network/setup/contractCalls/dev";
 import { world } from "./network/world";
-import { Account } from "./screens/Account";
 import { Game } from "./screens/Game";
 import { Increment } from "./screens/Increment";
 import { Landing } from "./screens/Landing";
@@ -19,18 +20,18 @@ export const DEV = import.meta.env.PRI_DEV === "true";
 export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";
 
 export default function AppLoadingState() {
-  const initialized = useInit();
   const mud = useMud();
+  const initialized = useInit();
   const [balance, setBalance] = useState<bigint>();
 
   useEffect(() => {
     const updateBalance = setInterval(async () => {
       if (DEV_CHAIN || (balance ?? 0n) > minEth) return;
-      const bal = await mud.network.publicClient.getBalance({ address: mud.network.address });
+      const bal = await mud.playerAccount.publicClient.getBalance({ address: mud.playerAccount.address });
       setBalance(bal);
     }, 1000);
     return () => clearInterval(updateBalance);
-  }, [balance, mud.network.address, mud.network.publicClient]);
+  }, [balance, mud.playerAccount.address, mud.playerAccount.publicClient]);
 
   const loadingState = components.SyncProgress.use(undefined, {
     message: "Connecting",
@@ -40,9 +41,12 @@ export default function AppLoadingState() {
     lastBlockNumberProcessed: BigInt(0),
   });
 
-  const enoughEth = DEV_CHAIN || (balance ?? 0n) >= minEth;
-  const loading = loadingState.step !== SyncStep.LIVE || loadingState.percentage < 100;
-  const ready = !loading && enoughEth;
+  const enoughEth = useMemo(() => DEV_CHAIN || (balance ?? 0n) >= minEth, [balance]);
+  const loading = useMemo(
+    () => loadingState.step !== SyncStep.LIVE || loadingState.percentage < 100,
+    [loadingState.percentage, loadingState.step]
+  );
+  const ready = useMemo(() => !loading && enoughEth, [loading, enoughEth]);
 
   return (
     <div className="bg-black h-screen">
@@ -82,7 +86,6 @@ export default function AppLoadingState() {
               <Route path="/" element={<Landing />} />
               <Route path="/game" element={initialized ? <Game /> : <Landing />} />
               <Route path="/increment" element={<Increment />} />
-              <Route path="/account" element={<Account />} />
               <Route path="/statistics" element={<Statistics />} />
             </Routes>
           </BrowserRouter>
@@ -90,7 +93,11 @@ export default function AppLoadingState() {
         {DEV && (
           <Browser
             layers={{ react: { world, components: mud.components } }}
-            setContractComponentValue={mud.contractCalls.setComponentValue}
+            setContractComponentValue={(
+              component: ContractComponent<Schema>,
+              entity: Entity,
+              newValue: ComponentValue<Schema>
+            ) => setComponentValue(mud, component, entity, newValue)}
             world={world}
             cheatcodes={setupCheatcodes(mud)}
           />
