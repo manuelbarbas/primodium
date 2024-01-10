@@ -12,6 +12,10 @@ import {
   toHex,
 } from "viem";
 
+export const addressToEntity = (address: Hex) => {
+  return encodeAbiParameters([{ type: "address" }], [address]) as Entity;
+};
+
 export const toHex32 = (input: string | number | bigint | boolean) => toHex(input, { size: 32 });
 
 export function encodeNumberEntity(key: number, entity: string): Entity {

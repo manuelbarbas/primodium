@@ -7,21 +7,24 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
+import { upgradeRange } from "src/network/setup/contractCalls/upgradeRange";
 import { getBlockTypeName } from "src/util/common";
 import { EntityType, ResourceImage, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { getUpgradeInfo } from "src/util/upgrade";
-import { upgradeRange } from "src/util/web3/contractCalls/upgradeRange";
 
 export const ExpandRange: React.FC = () => {
-  const { network } = useMud();
-  const playerEntity = network.playerEntity;
-  const mainBaseEntity = components.Home.use(playerEntity)?.mainBase as Entity;
+  const mud = useMud();
+  const { playerAccount } = mud;
+  const mainBaseEntity = components.Home.use(playerAccount.entity)?.mainBase as Entity;
   const mainBaseLevel = components.Level.use(mainBaseEntity, {
     value: 1n,
   }).value;
-  const homeAsteroid = components.Home.use(playerEntity)?.asteroid as Entity;
-  const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = getUpgradeInfo(EntityType.Expansion, playerEntity);
+  const homeAsteroid = components.Home.use(playerAccount.entity)?.asteroid as Entity;
+  const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = getUpgradeInfo(
+    EntityType.Expansion,
+    playerAccount.entity
+  );
 
   const hasEnough = useHasEnoughResources(recipe);
   const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && !isResearched;
@@ -63,14 +66,11 @@ export const ExpandRange: React.FC = () => {
             </div>
           </div>
         </div>
-        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, playerEntity)}>
+        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, playerAccount.entity)}>
           <Button
             className="w-fit btn-secondary btn-sm"
             disabled={!canUpgrade}
-            // loading={transactionLoading}
-            onClick={() => {
-              upgradeRange(homeAsteroid, network);
-            }}
+            onClick={() => upgradeRange(mud, homeAsteroid)}
           >
             Expand
           </Button>

@@ -17,16 +17,15 @@ contract MirrorSubscriber is IStoreHook {
   constructor(ResourceId tableId, IWorld world) {}
 
   function onAfterSpliceStaticData(
-    ResourceId tableId,
+    ResourceId,
     bytes32[] memory keyTuple,
     uint48 start,
     bytes memory data
   ) public {
     StoreSwitch.spliceStaticData(OnHookChangedValueTableId, keyTuple, start, data);
-    return;
   }
 
-  function supportsInterface(bytes4 interfaceID) public view returns (bool) {
+  function supportsInterface(bytes4) public pure returns (bool) {
     return true;
   }
 
@@ -37,17 +36,15 @@ contract MirrorSubscriber is IStoreHook {
     PackedCounter encodedLengths,
     bytes memory dynamicData,
     FieldLayout fieldLayout
-  ) public {
-    //  if (ResourceIdInstance.getType(_tableId) != ResourceIdInstance.getType(tableId)) revert("invalid tableId");
-  }
+  ) public {}
 
   function onAfterSetRecord(
-    ResourceId tableId,
+    ResourceId,
     bytes32[] memory keyTuple,
     bytes memory staticData,
     PackedCounter encodedLengths,
     bytes memory dynamicData,
-    FieldLayout fieldLayout
+    FieldLayout
   ) public {
     StoreSwitch.setRecord(OnHookChangedValueTableId, keyTuple, staticData, encodedLengths, dynamicData);
   }
@@ -57,10 +54,7 @@ contract MirrorSubscriber is IStoreHook {
     bytes32[] memory keyTuple,
     uint48 start,
     bytes memory data
-  ) public {
-    //  if (ResourceIdInstance.getType(_tableId) != ResourceIdInstance.getType(tableId)) revert("invalid tableId");
-    return;
-  }
+  ) public {}
 
   function onBeforeSpliceDynamicData(
     ResourceId tableId,
@@ -70,9 +64,7 @@ contract MirrorSubscriber is IStoreHook {
     uint40 deleteCount,
     PackedCounter encodedLengths,
     bytes memory data
-  ) public {
-    return;
-  }
+  ) public {}
 
   function onAfterSpliceDynamicData(
     ResourceId tableId,
@@ -82,22 +74,18 @@ contract MirrorSubscriber is IStoreHook {
     uint40 deleteCount,
     PackedCounter encodedLengths,
     bytes memory data
-  ) public {
-    return;
-  }
+  ) public {}
 
   function onBeforeDeleteRecord(
     ResourceId tableId,
     bytes32[] memory keyTuple,
     FieldLayout fieldLayout
-  ) public {
-    //  if (ResourceIdInstance.getType(_tableId) != ResourceIdInstance.getType(tableId)) revert("invalid tableId");
-  }
+  ) public {}
 
   function onAfterDeleteRecord(
-    ResourceId tableId,
+    ResourceId,
     bytes32[] memory keyTuple,
-    FieldLayout fieldLayout
+    FieldLayout
   ) public {
     StoreSwitch.deleteRecord(OnHookChangedValueTableId, keyTuple);
   }

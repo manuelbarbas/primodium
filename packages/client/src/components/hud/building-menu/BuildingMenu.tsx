@@ -15,16 +15,16 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { useBuildingName } from "src/hooks/useBuildingName";
 import { components } from "src/network/components";
+import { toggleBuilding } from "src/network/setup/contractCalls/toggleBuilding";
 import { hashEntities } from "src/util/encode";
-import { toggleBuilding } from "src/util/web3/contractCalls/toggleBuilding";
+import { Market } from "./screens/Market";
 import { MiningVessels } from "./screens/MiningVessels";
 import { Move } from "./screens/Move";
 import { UnitFactory } from "./screens/UnitFactory";
 import { UpgradeUnit } from "./screens/UpgradeUnit";
-import { Market } from "./screens/Market";
 
 export const BuildingMenu: React.FC = () => {
-  const network = useMud().network;
+  const mud = useMud();
   const selectedBuilding = components.SelectedBuilding.use()?.value;
 
   const buildingType = useMemo(() => {
@@ -114,9 +114,7 @@ export const BuildingMenu: React.FC = () => {
             disabled={!canToggle}
             tooltipDirection="top"
             className={`btn-square btn-xs font-bold border ${active ? "border-error" : "border-success"} inline-flex`}
-            onClick={() => {
-              toggleBuilding(selectedBuilding, network);
-            }}
+            onClick={() => toggleBuilding(mud, selectedBuilding)}
           >
             <FaPowerOff size={12} />
           </Button>

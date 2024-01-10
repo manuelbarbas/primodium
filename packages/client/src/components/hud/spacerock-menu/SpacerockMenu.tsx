@@ -1,10 +1,10 @@
 import { components } from "src/network/components";
 
-import { primodium } from "@game/api";
 import { KeyNames, KeybindActions } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { Tabs } from "src/components/core/Tabs";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { GracePeriod } from "../GracePeriod";
 import { TargetHeader } from "./TargetHeader";
 import { Resources } from "./widgets/resources/Resources";
@@ -12,6 +12,7 @@ import { Resources } from "./widgets/resources/Resources";
 export const SpacerockMenu: React.FC = () => {
   const selectedSpacerock = components.SelectedRock.use()?.value;
   const ownedBy = components.OwnedBy.use(selectedSpacerock)?.value;
+  const primodium = usePrimodium();
   const {
     hooks: { useKeybinds },
   } = primodium.api()!;

@@ -1,4 +1,4 @@
-import { primodium } from "@game/api";
+import { Primodium } from "@game/api";
 import { Entity } from "@latticexyz/recs";
 
 import { Assets, EntitytoSpriteKey } from "@game/constants";
@@ -10,7 +10,7 @@ import { EntityType, PIRATE_KEY, ResourceStorages, RockRelationship } from "./co
 import { hashKeyEntity } from "./encode";
 import { getFullResourceCount } from "./resource";
 
-export function getSpaceRockImage(spaceRock: Entity) {
+export function getSpaceRockImage(primodium: Primodium, spaceRock: Entity) {
   const { getSpriteBase64 } = primodium.api().sprite;
 
   const ownedBy = comps.OwnedBy.get(spaceRock, {
@@ -48,8 +48,8 @@ export function getSpaceRockName(spaceRock: Entity) {
   return ` ${mainBaseLevel ? `LVL. ${mainBaseLevel} ` : ""} ${isPirate ? "Pirate" : "Asteroid"}`;
 }
 
-export function getSpaceRockInfo(spaceRock: Entity) {
-  const imageUri = getSpaceRockImage(spaceRock);
+export function getSpaceRockInfo(primodium: Primodium, spaceRock: Entity) {
+  const imageUri = getSpaceRockImage(primodium, spaceRock);
 
   const ownedBy = comps.OwnedBy.get(spaceRock)?.value as Entity | undefined;
   const mainBaseEntity = comps.Home.get(ownedBy, {

@@ -17,13 +17,9 @@ library LibInvade {
    * @param invader The identifier of the invader.
    * @param rockEntity The identifier of the target rock.
    */
-  function invade(
-    IWorld world,
-    bytes32 invader,
-    bytes32 rockEntity
-  ) internal {
+  function invade(bytes32 invader, bytes32 rockEntity) internal {
     bytes32 defender = OwnedBy.get(rockEntity);
-    if (defender == 0) return invadeNeutral(world, invader, rockEntity);
+    if (defender == 0) return invadeNeutral(invader, rockEntity);
 
     bytes memory rawBr = SystemCall.callWithHooksOrRevert(
       DUMMY_ADDRESS,
@@ -50,7 +46,7 @@ library LibInvade {
    * @param rockEntity The identifier of the target rock.
    * @notice Ensures that the target rock is a motherlode and not owned by the invader.
    */
-  function checkInvadeRequirements(bytes32 invader, bytes32 rockEntity) internal {
+  function checkInvadeRequirements(bytes32 invader, bytes32 rockEntity) internal view {
     require(Asteroid.getIsAsteroid(rockEntity), "[Invade] Can only invade asteroids");
     bytes32 defender = OwnedBy.get(rockEntity);
     if (defender != 0) require(defender != invader, "[Invade] can not invade your own rock");
@@ -61,11 +57,7 @@ library LibInvade {
    * @param invader The identifier of the invader.
    * @param rockEntity The identifier of the target rock.
    */
-  function invadeNeutral(
-    IWorld world,
-    bytes32 invader,
-    bytes32 rockEntity
-  ) internal {
+  function invadeNeutral(bytes32 invader, bytes32 rockEntity) internal {
     bytes32[] memory unitTypes = P_UnitPrototypes.get();
 
     bytes memory rawAttackCounts = SystemCall.callWithHooksOrRevert(
@@ -80,7 +72,7 @@ library LibInvade {
       (uint256[], uint256, uint256)
     );
     for (uint256 i = 0; i < unitTypes.length; i++) {
-      LibUnit.increaseUnitCount(invader, rockEntity, unitTypes[i], attackCounts[i]);
+      LibUnit.increaseUnitCount(rockEntity, unitTypes[i], attackCounts[i]);
     }
     require(attackPoints > 0, "[Invade] Can not invade with 0 attack points");
     OwnedBy.set(rockEntity, invader);

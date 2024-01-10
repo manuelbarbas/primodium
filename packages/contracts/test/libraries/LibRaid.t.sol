@@ -129,7 +129,7 @@ contract LibRaidTest is PrimodiumTest {
     OwnedBy.set(rock, enemy);
     Asteroid.setIsAsteroid(rock, true);
     Asteroid.setIsAsteroid(homeRock, true);
-    UnitCount.set(enemy, rock, unit1, 100);
+    UnitCount.set(rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
       sendTime: block.timestamp,
@@ -149,8 +149,8 @@ contract LibRaidTest is PrimodiumTest {
     world.raid(rock);
 
     assertEq(ResourceCount.get(homeRock, Iron), 100, "Player Iron");
-    assertEq(UnitCount.get(player, homeRock, unit1), 100, "Player units");
-    assertEq(UnitCount.get(enemy, rock, unit1), 0, "Enemy units");
+    assertEq(UnitCount.get(homeRock, unit1), 100, "Player units");
+    assertEq(UnitCount.get(rock, unit1), 0, "Enemy units");
     assertEq(ResourceCount.get(rock, Iron), 0, "Enemy Iron");
   }
 
@@ -162,7 +162,7 @@ contract LibRaidTest is PrimodiumTest {
     OwnedBy.set(rock, enemy);
     Asteroid.setIsAsteroid(rock, true);
     Asteroid.setIsAsteroid(homeRock, true);
-    UnitCount.set(enemy, rock, unit1, 100);
+    UnitCount.set(rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
       sendTime: block.timestamp,
@@ -182,8 +182,8 @@ contract LibRaidTest is PrimodiumTest {
     world.raid(rock);
 
     assertEq(ResourceCount.get(homeRock, Iron), 0, "Player Iron");
-    assertEq(UnitCount.get(player, homeRock, unit1), 100, "Player units");
-    assertEq(UnitCount.get(enemy, rock, unit1), 0, "Enemy units");
+    assertEq(UnitCount.get(homeRock, unit1), 100, "Player units");
+    assertEq(UnitCount.get(rock, unit1), 0, "Enemy units");
     assertEq(ResourceCount.get(rock, Iron), 100, "Enemy Iron");
   }
 
@@ -196,7 +196,7 @@ contract LibRaidTest is PrimodiumTest {
     OwnedBy.set(rock, enemy);
     Asteroid.setIsAsteroid(rock, true);
     Asteroid.setIsAsteroid(homeRock, true);
-    UnitCount.set(enemy, rock, unit1, 100);
+    UnitCount.set(rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
       sendTime: block.timestamp,
@@ -216,8 +216,8 @@ contract LibRaidTest is PrimodiumTest {
     world.raid(rock);
 
     assertEq(ResourceCount.get(homeRock, Iron), 0, "Player Iron");
-    assertEq(UnitCount.get(player, homeRock, unit1), 100, "Player units");
-    assertEq(UnitCount.get(enemy, rock, unit1), 0, "Enemy units");
+    assertEq(UnitCount.get(homeRock, unit1), 100, "Player units");
+    assertEq(UnitCount.get(rock, unit1), 0, "Enemy units");
     assertEq(ResourceCount.get(rock, Iron), 100, "Enemy Iron");
   }
 
@@ -236,7 +236,6 @@ contract LibRaidTest is PrimodiumTest {
     MaxResourceCount.set(homeRock, uint8(EResource.U_Vessel), 2);
     Asteroid.setIsAsteroid(rock, true);
 
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     P_Unit.set(unit1, 0, P_UnitData({ attack: 100, defense: 100, speed: 200, cargo: 100, trainingTime: 0 }));
     Arrival memory arrival = Arrival({
       sendTime: block.timestamp,
@@ -257,8 +256,8 @@ contract LibRaidTest is PrimodiumTest {
     assertEq(ArrivalCount.get(player), 0);
 
     assertEq(OwnedBy.get(rock), player, "OwnedBy");
-    assertEq(UnitCount.get(player, rock, unit1), 200, "Unit1 Count");
-    assertEq(UnitCount.get(player, rock, unit2), 100, "Unit2 Count");
+    assertEq(UnitCount.get(rock, unit1), 200, "Unit1 Count");
+    assertEq(UnitCount.get(rock, unit2), 100, "Unit2 Count");
 
     vm.stopPrank();
     rock2 = spawn(bob);
@@ -267,7 +266,7 @@ contract LibRaidTest is PrimodiumTest {
     arrival.destination = rock2;
 
     vm.startPrank(creator);
-    bytes32 arrival2 = LibSend.sendUnits(arrival);
+    LibSend.sendUnits(arrival);
 
     assertEq(ArrivalCount.get(player), 1, "ArrivalCount 1");
 
@@ -275,12 +274,10 @@ contract LibRaidTest is PrimodiumTest {
     arrival.to = player;
     arrival.destination = rock;
 
-    bytes32 arrival3 = LibSend.sendUnits(arrival);
+    LibSend.sendUnits(arrival);
 
     assertEq(ArrivalCount.get(player), 2, "ArrivalCount 2");
 
-    bytes32[] memory arrivalKeys = ArrivalsMap.keys(player, rock2);
-    uint256 arrivals = ArrivalCount.get(player);
     world.raid(rock2);
     assertEq(ArrivalCount.get(player), 1, "ARrival count 3");
   }

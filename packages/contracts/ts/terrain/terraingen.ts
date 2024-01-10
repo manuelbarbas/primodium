@@ -61,12 +61,10 @@ function addContext(str: string) {
   return `// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { IStore } from "@latticexyz/store/src/IStore.sol";
-
 import { P_Terrain } from "codegen/index.sol";
 import { EResource } from "codegen/common.sol";
 
-  function createTerrain(IStore store) {
+  function createTerrain() {
     ${str}
 }
 `;

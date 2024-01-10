@@ -25,7 +25,7 @@ contract TestStoreHooks is PrimodiumTest {
     console.log("Subscriber Hooked");
   }
 
-  function testStoreHooks(uint256 unitCount, uint256 defense) public returns (uint256) {
+  function testStoreHooks() public {
     HookedValue.setValue(bytes32("test"), 1);
     console.log("Hooked value set");
 

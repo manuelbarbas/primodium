@@ -51,7 +51,6 @@ contract LibInvadeTest is PrimodiumTest {
     vm.warp(1000);
     Asteroid.setIsAsteroid(rock, true);
 
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     P_Unit.set(unit1, 0, P_UnitData({ attack: 100, defense: 100, speed: 200, cargo: 100, trainingTime: 0 }));
     Arrival memory arrival = Arrival({
       sendTime: block.timestamp,
@@ -68,15 +67,13 @@ contract LibInvadeTest is PrimodiumTest {
 
     world.invade(rock);
     assertEq(OwnedBy.get(rock), player, "OwnedBy");
-    assertEq(UnitCount.get(player, rock, unit1), 200, "Unit1 Count");
-    assertEq(UnitCount.get(player, rock, unit2), 100, "Unit2 Count");
+    assertEq(UnitCount.get(rock, unit1), 200, "Unit1 Count");
+    assertEq(UnitCount.get(rock, unit2), 100, "Unit2 Count");
   }
 
   function testInvadeNeutralNoAttackPoints() public {
     vm.warp(1000);
     Asteroid.setIsAsteroid(rock, true);
-
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
     vm.expectRevert("[Invade] Can not invade with 0 attack points");
     world.invade(rock);
@@ -88,10 +85,9 @@ contract LibInvadeTest is PrimodiumTest {
     Asteroid.setIsAsteroid(homeRock, true);
     Asteroid.setIsAsteroid(rock, true);
 
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     P_Unit.set(unit1, 0, P_UnitData({ attack: 100, defense: 100, speed: 200, cargo: 100, trainingTime: 0 }));
 
-    UnitCount.set(player, homeRock, unit1, 100);
+    UnitCount.set(homeRock, unit1, 100);
 
     unitCounts[0] = 10;
 
@@ -103,7 +99,7 @@ contract LibInvadeTest is PrimodiumTest {
 
     world.invade(rock);
     assertEq(OwnedBy.get(rock), player, "OwnedBy");
-    assertEq(UnitCount.get(player, rock, unit1), 10, "Unit1 Count");
+    assertEq(UnitCount.get(rock, unit1), 10, "Unit1 Count");
   }
 
   function testInvadeAttackerWins() public {
@@ -114,7 +110,7 @@ contract LibInvadeTest is PrimodiumTest {
 
     Asteroid.setIsAsteroid(rock, true);
     Asteroid.setIsAsteroid(homeRock, true);
-    UnitCount.set(enemy, rock, unit1, 100);
+    UnitCount.set(rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
       sendTime: block.timestamp,
@@ -134,8 +130,7 @@ contract LibInvadeTest is PrimodiumTest {
     world.invade(rock);
 
     assertEq(ResourceCount.get(player, uint8(EResource.Iron)), 0, "Player Iron");
-    assertEq(UnitCount.get(player, rock, unit1), 100, "Player units");
-    assertEq(UnitCount.get(enemy, rock, unit1), 0, "Enemy units");
+    assertEq(UnitCount.get(rock, unit1), 100, "Player units");
     assertEq(ResourceCount.get(enemy, uint8(EResource.Iron)), 100, "Enemy Iron");
     assertEq(OwnedBy.get(rock), player, "OwnedBy");
   }
@@ -147,7 +142,7 @@ contract LibInvadeTest is PrimodiumTest {
     OwnedBy.set(rock, enemy);
     Asteroid.setIsAsteroid(rock, true);
     Asteroid.setIsAsteroid(homeRock, true);
-    UnitCount.set(enemy, rock, unit1, 100);
+    UnitCount.set(rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
       sendTime: block.timestamp,
@@ -167,8 +162,7 @@ contract LibInvadeTest is PrimodiumTest {
     world.invade(rock);
 
     assertEq(ResourceCount.get(player, uint8(EResource.Iron)), 0, "Player Iron");
-    assertEq(UnitCount.get(player, rock, unit1), 0, "Player units");
-    assertEq(UnitCount.get(enemy, rock, unit1), 50, "Enemy units");
+    assertEq(UnitCount.get(rock, unit1), 50, "Enemy units");
     assertEq(ResourceCount.get(enemy, uint8(EResource.Iron)), 100, "Enemy Iron");
     assertEq(OwnedBy.get(rock), enemy, "OwnedBy");
   }

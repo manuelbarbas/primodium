@@ -17,8 +17,11 @@ import { world } from "src/network/world";
 import { safeIndex } from "src/util/array";
 
 import { Assets, AudioKeys, DepthLayers, EntityIDtoAnimationKey, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
+import { createAudioApi } from "src/game/api/audio";
 import { components } from "src/network/components";
 import { getBuildingDimensions, getBuildingTopLeft } from "src/util/building";
+import { getRandomRange } from "src/util/common";
+import { Action } from "src/util/constants";
 import {
   ObjectPosition,
   OnComponentSystem,
@@ -27,21 +30,18 @@ import {
   SetValue,
 } from "../../common/object-components/common";
 import { Animation, Outline, Texture } from "../../common/object-components/sprite";
-import { createAudioApi } from "src/game/api/audio";
-import { getRandomRange } from "src/util/common";
-import { Action } from "src/util/constants";
 
 const MAX_SIZE = 2 ** 15 - 1;
 export const renderBuilding = (scene: Scene) => {
   const { tileHeight, tileWidth } = scene.tilemap;
-  const gameWorld = namespaceWorld(world, "game");
-  const _gameWorld = namespaceWorld(world, "game_specate");
+  const systemsWorld = namespaceWorld(world, "systems");
+  const spectateWorld = namespaceWorld(world, "game_spectate");
   const audio = createAudioApi(scene);
 
-  defineComponentSystem(gameWorld, components.ActiveRock, ({ value }) => {
+  defineComponentSystem(systemsWorld, components.ActiveRock, ({ value }) => {
     if (!value[0] || value[0]?.value === value[1]?.value) return;
 
-    world.dispose("game_specate");
+    world.dispose("game_spectate");
 
     const positionQuery = [
       HasValue(components.Position, {
@@ -213,16 +213,16 @@ export const renderBuilding = (scene: Scene) => {
       );
     };
 
-    defineEnterSystem(_gameWorld, positionQuery, render);
+    defineEnterSystem(spectateWorld, positionQuery, render);
     //dust particle animation on new building
-    defineEnterSystem(_gameWorld, positionQuery, throwDust, { runOnInit: false });
+    defineEnterSystem(spectateWorld, positionQuery, throwDust, { runOnInit: false });
 
-    defineUpdateSystem(_gameWorld, positionQuery, (update) => {
+    defineUpdateSystem(spectateWorld, positionQuery, (update) => {
       render(update);
       throwDust(update);
     });
 
-    defineExitSystem(_gameWorld, positionQuery, ({ entity }) => {
+    defineExitSystem(spectateWorld, positionQuery, ({ entity }) => {
       const renderId = `${entity}_entitySprite`;
       scene.objectPool.removeGroup(renderId);
     });
