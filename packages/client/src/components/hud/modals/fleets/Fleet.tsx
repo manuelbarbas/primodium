@@ -1,4 +1,3 @@
-import { primodium } from "@game/api";
 import { Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { ESendType, EUnit } from "contracts/config/enums";
@@ -8,18 +7,19 @@ import { FaShieldAlt } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
 import { Button } from "src/components/core/Button";
 import { Modal } from "src/components/core/Modal";
+import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
-import { useAccount } from "src/hooks/useAccount";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
+import { invade } from "src/network/setup/contractCalls/invade";
+import { raid } from "src/network/setup/contractCalls/raid";
+import { recallArrival } from "src/network/setup/contractCalls/recall";
+import { reinforce } from "src/network/setup/contractCalls/reinforce";
 import { TransactionQueueType, UnitEntityLookup } from "src/util/constants";
 import { decodeEntity, hashEntities } from "src/util/encode";
 import { getSpaceRockName } from "src/util/spacerock";
 import { getUnitStats } from "src/util/trainUnits";
-import { invade } from "src/util/web3/contractCalls/invade";
-import { raid } from "src/util/web3/contractCalls/raid";
-import { recallArrival } from "src/util/web3/contractCalls/recall";
-import { reinforce } from "src/util/web3/contractCalls/reinforce";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -41,12 +41,11 @@ export const Fleet: React.FC<{
   dontShowButton?: boolean;
   small?: boolean;
 }> = ({ arrivalTime, arrivalEntity, destination, sendType, dontShowButton, small }) => {
+  const primodium = usePrimodium();
   const timeRemaining = arrivalTime - (components.Time.use()?.value ?? 0n);
 
   const owner = components.OwnedBy.use(destination)?.value as Entity | undefined;
   const name = getSpaceRockName(destination);
-
-  const { allianceName, address, linkedAddress } = useAccount(owner);
 
   const attack = useMemo(() => {
     const units = components.Arrival.getEntity(arrivalEntity);
@@ -120,14 +119,7 @@ export const Fleet: React.FC<{
         </div>
         <div className="flex gap-5 items-center">
           <Modal.CloseButton className="btn-sm" onClick={onCoordinateClick}>
-            {owner ? (
-              <>
-                {allianceName && <span className="font-bold text-accent text-xs">[{allianceName.toUpperCase()}]</span>}
-                <p className="text-xs">{linkedAddress?.ensName ?? address}</p>
-              </>
-            ) : (
-              <p className="text-xs">{name}</p>
-            )}
+            {owner ? <AccountDisplay player={owner} /> : <p className="text-xs">{name}</p>}
           </Modal.CloseButton>
           <div className="text-right">
             {timeRemaining > 0 ? (
@@ -152,7 +144,7 @@ export const OrbitActionButton: React.FC<{
   sendType: ESendType;
   small?: boolean;
 }> = ({ arrivalEntity, sendType, small }) => {
-  const network = useMud().network;
+  const mud = useMud();
   const destination = components.Arrival.getEntity(arrivalEntity)?.destination;
   if (!destination) return <></>;
 
@@ -161,17 +153,17 @@ export const OrbitActionButton: React.FC<{
 
   const action =
     sendType == ESendType.Invade
-      ? () => invade(destination, network, key)
+      ? () => invade(mud, destination, key)
       : sendType == ESendType.Raid
-      ? () => raid(destination, network, key)
-      : () => reinforce(arrivalEntity, network);
+      ? () => raid(mud, destination, key)
+      : () => reinforce(mud, arrivalEntity);
 
   return (
     <TransactionQueueMask queueItemId={transactionId as Entity}>
       <div className={`flex gap-1 ${small ? "flex-col-reverse gap-0" : ""}`}>
         <Button
           className={`${small ? "btn-xs" : "btn-sm"} opacity-75`}
-          onClick={() => recallArrival(arrivalEntity, network)}
+          onClick={() => recallArrival(mud, arrivalEntity)}
         >
           RECALL
         </Button>

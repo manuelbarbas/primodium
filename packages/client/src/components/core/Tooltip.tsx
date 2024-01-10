@@ -7,7 +7,7 @@ interface TooltipProps {
   direction?: "left" | "right" | "top" | "bottom";
 }
 
-export const Tooltip: React.FC<TooltipProps> = ({ children, text, direction = "right" }) => {
+export const Tooltip: React.FC<TooltipProps> = ({ children, text, direction = "right", className }) => {
   const getTooltipClass = () => {
     switch (direction) {
       case "left":
@@ -27,6 +27,6 @@ export const Tooltip: React.FC<TooltipProps> = ({ children, text, direction = "r
     "data-tip": text,
     className: `${
       children.props.className || ""
-    } before:z-100 before:content-[attr(data-tip)] tooltip ${getTooltipClass()} pointer-events-auto`,
+    } before:z-100 before:content-[attr(data-tip)] tooltip ${getTooltipClass()} pointer-events-auto ${className}`,
   });
 };

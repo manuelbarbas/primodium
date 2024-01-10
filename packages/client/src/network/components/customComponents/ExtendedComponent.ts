@@ -205,6 +205,7 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
     entity = entity ?? singletonEntity;
     const comp = component as Component<S>;
     const [value, setValue] = useState(entity != null ? getComponentValue(comp, entity) : undefined);
+
     useEffect(() => {
       // component or entity changed, update state to latest value
       setValue(entity != null ? getComponentValue(component, entity) : undefined);

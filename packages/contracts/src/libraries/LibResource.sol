@@ -126,7 +126,6 @@ library LibResource {
     bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
     bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
     LastClaimedAt.set(spaceRockEntity, block.timestamp);
-    uint256[] memory consumptionTimeLengths = new uint256[](uint8(EResource.LENGTH));
 
     uint8 resource = Motherlode.getMotherlodeType(spaceRockEntity);
     uint8 consumesResource = P_ConsumesResource.get(resource);

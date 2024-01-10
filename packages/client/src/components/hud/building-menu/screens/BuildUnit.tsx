@@ -8,11 +8,11 @@ import { NumberInput } from "src/components/shared/NumberInput";
 import { useMud } from "src/hooks";
 import { useMaxCountOfRecipe } from "src/hooks/useMaxCountOfRecipe";
 import { components } from "src/network/components";
+import { train } from "src/network/setup/contractCalls/train";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage, EntityType, ResourceImage, UnitEnumLookup } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
 import { getUnitStats } from "src/util/trainUnits";
-import { train } from "src/util/web3/contractCalls/train";
 import { Hex } from "viem";
 import { ResourceIconTooltip } from "../../../shared/ResourceIconTooltip";
 
@@ -20,9 +20,9 @@ export const BuildUnit: React.FC<{
   building: Entity;
 }> = ({ building }) => {
   const mud = useMud();
+  const { playerAccount } = mud;
   const [selectedUnit, setSelectedUnit] = useState<Entity>();
   const [count, setCount] = useState(1);
-  const playerEntity = mud.network.playerEntity;
 
   const { UnitLevel, P_UnitProdTypes, BuildingType, Level } = components;
 
@@ -41,8 +41,8 @@ export const BuildUnit: React.FC<{
   const unitLevel = useMemo(() => {
     if (!selectedUnit) return 1n;
 
-    return UnitLevel.getWithKeys({ entity: playerEntity as Hex, unit: selectedUnit as Hex })?.value ?? 1n;
-  }, [selectedUnit, UnitLevel, playerEntity]);
+    return UnitLevel.getWithKeys({ entity: playerAccount.entity as Hex, unit: selectedUnit as Hex })?.value ?? 1n;
+  }, [selectedUnit, UnitLevel, playerAccount.entity]);
 
   const requiredResources = useMemo(() => {
     return getRecipe(selectedUnit ?? EntityType.NULL, unitLevel);
@@ -56,7 +56,7 @@ export const BuildUnit: React.FC<{
     setSelectedUnit(trainableUnits[0]);
   }, [trainableUnits]);
 
-  if (trainableUnits.length === 0) return null;
+  if (trainableUnits.length === 0 || !playerAccount.entity) return null;
 
   return (
     <Navigator.Screen title="BuildUnit" className="relative flex flex-col w-full">
@@ -93,7 +93,7 @@ export const BuildUnit: React.FC<{
               <p className="uppercase font-bold">{getBlockTypeName(selectedUnit)}</p>
 
               <div className="grid grid-cols-5 gap-2 border-y border-cyan-400/30">
-                {Object.entries(getUnitStats(selectedUnit, playerEntity)).map(([name, value]) => (
+                {Object.entries(getUnitStats(selectedUnit, playerAccount.entity)).map(([name, value]) => (
                   <div key={name} className="flex flex-col items-center">
                     <p className="text-xs opacity-50">{name}</p>
                     <p>{value.toLocaleString()}</p>
@@ -131,7 +131,7 @@ export const BuildUnit: React.FC<{
                   onClick={() => {
                     if (!selectedUnit) return;
 
-                    train(building, UnitEnumLookup[selectedUnit], BigInt(count), mud.network);
+                    train(mud, building, UnitEnumLookup[selectedUnit], BigInt(count));
                   }}
                 >
                   Train

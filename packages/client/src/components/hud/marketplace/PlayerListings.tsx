@@ -4,13 +4,13 @@ import { FaAngleDoubleRight, FaArrowLeft, FaArrowRight, FaMinus, FaPlay, FaTrash
 import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
 import { NumberInput } from "src/components/shared/NumberInput";
+import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
+import { cancelOrder, updateOrder } from "src/network/setup/contractCalls/updateOrder";
+import { weiToEth, weiToGwei } from "src/util/common";
 import { ResourceImage } from "src/util/constants";
 import { getScale } from "src/util/resource";
-import { cancelOrder, updateOrder } from "src/util/web3/contractCalls/updateOrder";
 import { UserListing } from "./CreateOrderForm";
-import { useSettingsStore } from "src/game/stores/SettingsStore";
-import { weiToEth, weiToGwei } from "src/util/common";
 
 export const PlayerListings = ({
   listings,
@@ -158,7 +158,7 @@ export const PlayerListings = ({
 };
 
 const Listing = ({ listing, availableResource }: { listing: UserListing; availableResource: bigint }) => {
-  const { network } = useMud();
+  const mud = useMud();
   const [listingUpdate, setListingUpdate] = useState<{ newPrice?: bigint; newCount?: bigint }>();
   const unitDisplay = useSettingsStore((state) => state.unitDisplay);
 
@@ -231,16 +231,16 @@ const Listing = ({ listing, availableResource }: { listing: UserListing; availab
       <td className="text-center">
         <Button
           disabled={!priceDiff && !countDiff}
-          onClick={() => {
-            updateOrder(listing.id, listing.item, newPrice || listing.price, newCount || listing.count, network);
-          }}
+          onClick={() =>
+            updateOrder(mud, listing.id, listing.item, newPrice || listing.price, newCount || listing.count)
+          }
           className="btn-primary btn-sm"
         >
           Update
         </Button>
       </td>
       <td className="text-center">
-        <Button onClick={() => cancelOrder(listing.id, network)} className="btn-error btn-sm">
+        <Button onClick={() => cancelOrder(mud, listing.id)} className="btn-error btn-sm">
           <FaTrash />
         </Button>
       </td>

@@ -5,16 +5,15 @@ import { world } from "src/network/world";
 
 import { createCameraApi } from "src/game/api/camera";
 import { components } from "src/network/components";
-import { SetupResult } from "src/network/types";
 
-export const focusAsteroid = (scene: Scene, mud: SetupResult) => {
+export const focusAsteroid = (scene: Scene) => {
   const { pan } = createCameraApi(scene);
   const gameWorld = namespaceWorld(world, "game");
 
   const query = [Has(components.Home)];
 
   const handleMove = async () => {
-    const playerEntity = mud.network.playerEntity;
+    const playerEntity = components.Account.get()?.value;
     const activeAsteroid = components.Home.get(playerEntity)?.asteroid as Entity;
 
     if (!activeAsteroid) return;

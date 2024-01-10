@@ -1,10 +1,10 @@
-import { primodium } from "@game/api";
 import { AudioKeys, KeybindActions, Scenes } from "@game/constants";
+import { useEffect } from "react";
+import { usePrimodium } from "src/hooks/usePrimodium";
+import { getRandomRange } from "src/util/common";
 import { IconLabel } from "./IconLabel";
 import { Loader } from "./Loader";
 import { Tooltip } from "./Tooltip";
-import { useEffect } from "react";
-import { getRandomRange } from "src/util/common";
 
 export const Button: React.FC<{
   children: React.ReactNode;
@@ -33,8 +33,9 @@ export const Button: React.FC<{
   clickSound = AudioKeys.Confirm2,
   keybind,
 }) => {
-  const api = primodium.apiOrUndefined(Scenes.Asteroid);
-  const api2 = primodium.apiOrUndefined(Scenes.Starmap);
+  const primodium = usePrimodium();
+  const api = primodium.api(Scenes.Asteroid);
+  const api2 = primodium.api(Scenes.Starmap);
 
   useEffect(() => {
     if (!keybind || !api || !api2 || disabled) return;
@@ -113,6 +114,7 @@ export const IconButton: React.FC<{
   mute = false,
   clickSound = AudioKeys.Confirm2,
 }) => {
+  const primodium = usePrimodium();
   const { audio } = primodium.api();
   return (
     <button

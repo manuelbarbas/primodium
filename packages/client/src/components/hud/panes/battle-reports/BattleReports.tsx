@@ -21,7 +21,9 @@ export const LabeledValue: React.FC<{
 };
 
 export const BattleReports = () => {
-  const playerEntity = useMud().network.playerEntity;
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
   const [selectedBattle, setSelectedBattle] = useState<Entity>();
 
   const attackingBattles = components.BattleResult.useAllWith({

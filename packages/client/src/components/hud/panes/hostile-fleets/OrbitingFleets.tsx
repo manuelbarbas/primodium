@@ -5,7 +5,9 @@ import { components } from "src/network/components";
 import { AttackingFleet } from "./AttackingFleet";
 
 export const OrbitingFleets: React.FC = () => {
-  const playerEntity = useMud().network.playerEntity;
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
   const fleets = components.Arrival.useAllWith({
     to: playerEntity,
   });

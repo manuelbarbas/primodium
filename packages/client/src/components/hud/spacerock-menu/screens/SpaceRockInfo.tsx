@@ -1,9 +1,9 @@
 import { Entity } from "@latticexyz/recs";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
+import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { SpaceRockTypeNames } from "src/util/constants";
 import { getSpaceRockInfo } from "src/util/spacerock";
-import { LinkedAddressDisplay } from "../../LinkedAddressDisplay";
 
 const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (
@@ -23,9 +23,7 @@ export const SpacerockInfo: React.FC<{
         <b>{SpaceRockTypeNames[type]}</b>
       </DataLabel>
       <DataLabel label="owned by">
-        <b>
-          <LinkedAddressDisplay entity={ownedBy as Entity} />
-        </b>
+        <AccountDisplay player={ownedBy as Entity} />
       </DataLabel>
       <div className="grid grid-cols-2 w-full">
         {mainBaseLevel !== undefined && (
