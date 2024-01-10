@@ -11,7 +11,7 @@ const config = (await loadConfig()) as StoreConfigWithPrototypes;
 
 const configDir = path.resolve(__dirname, "../../../../config");
 const csvFiles = fs.readdirSync(configDir).filter((file) => file.endsWith(".csv"));
-const csvSrcs = csvFiles.map((file) => ({ id: file.charAt(file.length - 5), filePath: path.join(configDir, file) }));
+const csvSrcs = csvFiles.map((file) => ({ id: file.charAt(0), filePath: path.join(configDir, file) }));
 
 const srcDirectory = await getSrcDirectory();
 

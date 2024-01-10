@@ -39,7 +39,7 @@ contract LibAsteroidTest is PrimodiumTest {
     assertLe(asteroidData.maxLevel, 5, "max level too low");
   }
 
-  function findAsteroid() public returns (bytes32, PositionData memory) {
+  function findSecondaryAsteroid() public returns (bytes32, PositionData memory) {
     P_GameConfigData memory config = P_GameConfig.get();
     bytes32 asteroid = spawn(alice);
     PositionData memory sourcePosition = getHomeAsteroidPosition(alice);
@@ -71,7 +71,7 @@ contract LibAsteroidTest is PrimodiumTest {
   }
 
   function testCreateSecondaryAsteroid() public {
-    (bytes32 asteroid, PositionData memory position) = findAsteroid();
+    (bytes32 asteroid, PositionData memory position) = findSecondaryAsteroid();
     vm.startPrank(creator);
 
     bytes32 actualAsteroidEntity = LibAsteroid.createSecondaryAsteroid(player, position);
