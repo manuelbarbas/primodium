@@ -13,7 +13,8 @@ import { EntityType, ResourceImage, TransactionQueueType } from "src/util/consta
 import { hashEntities } from "src/util/encode";
 import { getUpgradeInfo } from "src/util/upgrade";
 
-export const ExpandRange: React.FC = () => {
+export const ExpandRange: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
+  asteroid;
   const mud = useMud();
   const { playerAccount } = mud;
   const mainBaseEntity = components.Home.use(playerAccount.entity)?.mainBase as Entity;
@@ -25,6 +26,7 @@ export const ExpandRange: React.FC = () => {
     EntityType.Expansion,
     playerAccount.entity
   );
+  console.log("ExpandRange", { level, maxLevel, mainBaseLvlReq, recipe, isResearched });
 
   const hasEnough = useHasEnoughResources(recipe);
   const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && !isResearched;
