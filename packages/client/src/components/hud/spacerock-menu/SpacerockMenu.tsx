@@ -2,7 +2,6 @@ import { components } from "src/network/components";
 
 import { KeyNames, KeybindActions } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
-import { ERock } from "contracts/config/enums";
 import { Tabs } from "src/components/core/Tabs";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { usePrimodium } from "src/hooks/usePrimodium";
@@ -12,7 +11,6 @@ import { Resources } from "./widgets/resources/Resources";
 
 export const SpacerockMenu: React.FC = () => {
   const selectedSpacerock = components.SelectedRock.use()?.value;
-  const rockType = components.RockType.use(selectedSpacerock)?.value;
   const ownedBy = components.OwnedBy.use(selectedSpacerock)?.value;
   const primodium = usePrimodium();
   const {
@@ -49,12 +47,10 @@ export const SpacerockMenu: React.FC = () => {
               className="absolute right-6 -top-1 border border-secondary text-xs bg-base-100 !p-2 rounded-box rounded-t-none"
             />
           )}
-          {rockType === ERock.Asteroid && (
-            <GracePeriod
-              player={ownedBy as Entity}
-              className="absolute left-6 -top-1 border border-secondary text-xs p-2 bg-base-100 rounded-box rounded-t-none"
-            />
-          )}
+          <GracePeriod
+            player={ownedBy as Entity}
+            className="absolute left-6 -top-1 border border-secondary text-xs p-2 bg-base-100 rounded-box rounded-t-none"
+          />
         </Tabs.Pane>
       </Tabs>
     </div>

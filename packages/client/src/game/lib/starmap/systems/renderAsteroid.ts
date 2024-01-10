@@ -1,7 +1,6 @@
 import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
-import { Entity, Has, HasValue, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
+import { Entity, Has, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { ERock } from "contracts/config/enums";
 import { Scene } from "engine/types";
 import { throttleTime } from "rxjs";
 import { components } from "src/network/components";
@@ -24,7 +23,6 @@ import {
 } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
 import { ObjectText } from "../../common/object-components/text";
-import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 
 export const renderAsteroid = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -216,8 +214,7 @@ export const renderAsteroid = (scene: Scene) => {
   };
 
   const query = [
-    Has(components.RockType),
-    HasValue(components.RockType, { value: ERock.Asteroid }),
+    Has(components.Asteroid),
     Has(components.Position),
     Has(components.OwnedBy),
     Not(components.PirateAsteroid),
@@ -229,7 +226,6 @@ export const renderAsteroid = (scene: Scene) => {
     if (!coord) return;
 
     render(entity, coord);
-    initializeMotherlodes(entity, coord);
   });
 };
 

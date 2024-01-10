@@ -1,6 +1,6 @@
 import { AudioKeys } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
-import { ERock, ESendType } from "contracts/config/enums";
+import { ESendType } from "contracts/config/enums";
 import dayjs from "dayjs";
 import { useCallback, useMemo } from "react";
 import { FaExclamationTriangle } from "react-icons/fa";
@@ -91,13 +91,7 @@ export const SendFleet = () => {
   const origin = components.Home.get(playerEntity)?.asteroid as Entity | undefined;
   const destination = components.SelectedRock.use()?.value as Entity | undefined;
   const destinationIsMine = components.OwnedBy.use(destination)?.value === playerEntity;
-  const rockType = components.RockType.use(destination)?.value;
-  const isPirate = components.PirateAsteroid.use(destination);
-  const sendType = destinationIsMine
-    ? ESendType.Reinforce
-    : rockType === ERock.Asteroid || isPirate
-    ? ESendType.Raid
-    : ESendType.Invade;
+  const sendType = destinationIsMine ? ESendType.Reinforce : ESendType.Raid;
   const fleet = components.Send.useUnits();
   const units = components.Hangar.use(origin, {
     units: [],
@@ -169,7 +163,7 @@ export const SendFleet = () => {
             <Button
               onClick={() => components.Send.update({ sendType })}
               className={`${
-                sendType === ESendType.Invade || sendType === ESendType.Raid ? "border-warning" : "border-secondary/50"
+                sendType === ESendType.Raid ? "border-warning" : "border-secondary/50"
               } disabled:opacity-100`}
             >
               <div className="flex flex-col gap-2 items-center p-2">

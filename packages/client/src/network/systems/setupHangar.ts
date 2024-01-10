@@ -4,7 +4,6 @@ import { Hex } from "viem";
 import { components } from "../components";
 import { world } from "../world";
 // import { SetupResult } from "../types";
-import { ERock } from "contracts/config/enums";
 import { MUD } from "../types";
 export function createHangar(spaceRock: Entity) {
   const player = components.OwnedBy.get(spaceRock)?.value;
@@ -22,14 +21,11 @@ export function createHangar(spaceRock: Entity) {
     const prev = units.get(entity as Entity) || 0n;
     units.set(entity as Entity, prev + unitCount);
   });
-  const type = components.RockType.get(spaceRock)?.value;
 
-  if (type == ERock.Asteroid) {
-    const trainedUnclaimedUnits = getTrainedUnclaimedUnits(spaceRock);
-    Array.from(trainedUnclaimedUnits).map(([unit, count]) => {
-      units.set(unit as Entity, (units.get(unit as Entity) ?? 0n) + count);
-    });
-  }
+  const trainedUnclaimedUnits = getTrainedUnclaimedUnits(spaceRock);
+  Array.from(trainedUnclaimedUnits).map(([unit, count]) => {
+    units.set(unit as Entity, (units.get(unit as Entity) ?? 0n) + count);
+  });
 
   const value = { units: [...units.keys()], counts: [...units.values()] };
   components.Hangar.set(value, spaceRock);
@@ -81,7 +77,7 @@ export function setupHangar(mud: MUD) {
   const systemWorld = namespaceWorld(world, "systems");
   const playerEntity = mud.playerAccount.entity;
 
-  const { Send, RockType, OwnedBy } = components;
+  const { Send, OwnedBy, Asteroid } = components;
 
   defineComponentSystem(systemWorld, Send, () => {
     const origin = Send.get()?.origin;
@@ -104,11 +100,7 @@ export function setupHangar(mud: MUD) {
     if (destination && destination != home) createHangar(destination);
 
     // maintain hangars for all player motherlodes to track mining production
-    const query = [
-      Has(RockType),
-      HasValue(OwnedBy, { value: playerEntity }),
-      HasValue(RockType, { value: ERock.Motherlode }),
-    ];
+    const query = [Has(Asteroid), HasValue(OwnedBy, { value: playerEntity })];
 
     const motherlodes = runQuery(query);
     motherlodes.forEach((motherlode) => {
