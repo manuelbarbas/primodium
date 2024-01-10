@@ -10,7 +10,6 @@ import { LibBattle } from "libraries/LibBattle.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibMath } from "libraries/LibMath.sol";
-import { IWorld } from "codegen/world/IWorld.sol";
 import { S_BattleSystem } from "systems/subsystems/S_BattleSystem.sol";
 import { DUMMY_ADDRESS } from "src/constants.sol";
 
@@ -20,11 +19,7 @@ library LibRaid {
    * @param playerEntity The identifier of the player initiating the raid.
    * @param rockEntity The identifier of the target asteroid rock.
    */
-  function raid(
-    IWorld world,
-    bytes32 playerEntity,
-    bytes32 rockEntity
-  ) internal {
+  function raid(bytes32 playerEntity, bytes32 rockEntity) internal {
     require(Asteroid.getIsAsteroid(rockEntity), "[LibRaid] Can only raid asteroids");
 
     bytes32 defenderEntity = OwnedBy.get(rockEntity);

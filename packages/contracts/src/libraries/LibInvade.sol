@@ -46,7 +46,7 @@ library LibInvade {
    * @param rockEntity The identifier of the target rock.
    * @notice Ensures that the target rock is a motherlode and not owned by the invader.
    */
-  function checkInvadeRequirements(bytes32 invader, bytes32 rockEntity) internal {
+  function checkInvadeRequirements(bytes32 invader, bytes32 rockEntity) internal view {
     require(Asteroid.getIsAsteroid(rockEntity), "[Invade] Can only invade asteroids");
     bytes32 defender = OwnedBy.get(rockEntity);
     if (defender != 0) require(defender != invader, "[Invade] can not invade your own rock");

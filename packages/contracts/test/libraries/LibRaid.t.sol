@@ -196,7 +196,7 @@ contract LibRaidTest is PrimodiumTest {
     OwnedBy.set(rock, enemy);
     Asteroid.setIsAsteroid(rock, true);
     Asteroid.setIsAsteroid(homeRock, true);
-    UnitCount.set(enemy, rock, unit1, 100);
+    UnitCount.set(rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
       sendTime: block.timestamp,
