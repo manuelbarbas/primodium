@@ -21,10 +21,8 @@ export const recallArrival = async (mud: MUD, arrivalEntity: Entity) => {
       delegate: true,
     },
     (receipt) => {
-      const asteroid = components.Home.get(mud.playerAccount.entity)?.asteroid;
-
       ampli.systemRecallArrival({
-        asteroidCoord: asteroid!,
+        asteroidCoord: rockEntity,
         ...parseReceipt(receipt),
       });
     }
@@ -40,10 +38,8 @@ export const recallStationedUnits = async (mud: MUD, rockEntity: Entity) => {
       delegate: true,
     },
     (receipt) => {
-      const asteroid = components.Home.get(mud.playerAccount.entity)?.asteroid;
-
       ampli.systemRecallArrival({
-        asteroidCoord: asteroid!,
+        asteroidCoord: rockEntity,
         ...parseReceipt(receipt),
       });
     }

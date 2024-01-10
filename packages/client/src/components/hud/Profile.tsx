@@ -24,9 +24,9 @@ export const Profile = () => {
   const primodium = usePrimodium();
   const delegate = components.Delegate.use(playerEntity)?.value;
   const wETHBalance = components.WETHBalance.use(playerEntity)?.value ?? 0n;
-  const mainBase = components.Home.use(playerEntity)?.mainBase;
-  const asteroid = components.Home.use(playerEntity)?.asteroid;
-  const mainbaseLevel = components.Level.use((mainBase ?? singletonEntity) as Entity)?.value ?? 1n;
+  const asteroid = components.Home.use(playerEntity)?.value as Entity | undefined;
+  const mainBase = components.Home.use(asteroid)?.value;
+  const mainbaseLevel = components.Level.use(mainBase as Entity)?.value ?? 1n;
   const fleetMoves = useFleetMoves();
   const mapOpen = components.MapOpen.use()?.value ?? false;
   const buildingImage = getBuildingImage(primodium, (mainBase ?? singletonEntity) as Entity);

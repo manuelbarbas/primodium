@@ -60,7 +60,7 @@ export const CreateOrderForm = () => {
     };
   });
 
-  const home = components.Home.use(playerEntity)?.asteroid as Entity | undefined;
+  const home = components.Home.use(playerEntity)?.value as Entity | undefined;
   const ownedUnits = components.Hangar.use(home);
   const getUnitCount = useCallback(
     (unit: Entity) => {

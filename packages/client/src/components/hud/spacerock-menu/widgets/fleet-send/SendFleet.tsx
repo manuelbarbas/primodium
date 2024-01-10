@@ -88,7 +88,7 @@ export const SendFleet = () => {
   const mud = useMud();
   const playerEntity = mud.playerAccount.entity;
 
-  const origin = components.Home.get(playerEntity)?.asteroid as Entity | undefined;
+  const origin = components.Home.get(playerEntity)?.value as Entity | undefined;
   const destination = components.SelectedRock.use()?.value as Entity | undefined;
   const destinationIsMine = components.OwnedBy.use(destination)?.value === playerEntity;
   const sendType = destinationIsMine ? ESendType.Reinforce : ESendType.Raid;

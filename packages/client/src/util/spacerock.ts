@@ -13,11 +13,7 @@ import { getFullResourceCount } from "./resource";
 export function getSpaceRockImage(primodium: Primodium, spaceRock: Entity) {
   const { getSpriteBase64 } = primodium.api().sprite;
 
-  const ownedBy = comps.OwnedBy.get(spaceRock, {
-    value: singletonEntity,
-  }).value as Entity;
-
-  const mainBaseEntity = (comps.Home.get(ownedBy)?.mainBase ?? "-1") as Entity;
+  const mainBaseEntity = comps.Home.get(spaceRock)?.value as Entity;
 
   const mainBaseLevel = comps.Level.get(mainBaseEntity, {
     value: 1n,
@@ -33,15 +29,10 @@ export function getSpaceRockImage(primodium: Primodium, spaceRock: Entity) {
 
 export function getSpaceRockName(spaceRock: Entity) {
   const player = comps.Account.get()?.value;
-  const home = comps.Home.get(player)?.asteroid as Entity | undefined;
+  const home = comps.Home.get(player)?.value as Entity | undefined;
   if (home === spaceRock) return "Home Asteroid";
 
-  const ownedBy = comps.OwnedBy.get(spaceRock)?.value as Entity | undefined;
-
-  const mainBaseEntity = comps.Home.get(ownedBy, {
-    mainBase: "-1" as Entity,
-    asteroid: "-1" as Entity,
-  }).mainBase as Entity;
+  const mainBaseEntity = comps.Home.get(spaceRock)?.value as Entity;
   const mainBaseLevel = comps.Level.get(mainBaseEntity)?.value;
   const isPirate = !!comps.PirateAsteroid.get(spaceRock);
 
@@ -52,10 +43,7 @@ export function getSpaceRockInfo(primodium: Primodium, spaceRock: Entity) {
   const imageUri = getSpaceRockImage(primodium, spaceRock);
 
   const ownedBy = comps.OwnedBy.get(spaceRock)?.value as Entity | undefined;
-  const mainBaseEntity = comps.Home.get(ownedBy, {
-    mainBase: "-1" as Entity,
-    asteroid: "-1" as Entity,
-  }).mainBase as Entity;
+  const mainBaseEntity = comps.Home.get(spaceRock)?.value as Entity;
   const mainBaseLevel = comps.Level.get(mainBaseEntity)?.value;
 
   const position = comps.Position.get(spaceRock, {

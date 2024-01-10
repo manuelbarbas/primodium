@@ -24,12 +24,11 @@ export async function toggleBuilding(mud: MUD, building: Entity) {
       delegate: true,
     },
     (receipt) => {
-      const asteroid = components.Home.get(mud.playerAccount.entity)?.asteroid;
       const buildingType = components.BuildingType.get(building)?.value as Entity;
       const currLevel = components.Level.get(building)?.value || 0;
 
       ampli.systemToggleBuilding({
-        asteroidCoord: asteroid!,
+        asteroidCoord: position.parent,
         buildingType: getBlockTypeName(buildingType),
         buildingActiveFrom: active.value,
         coord: [position.x, position.y],

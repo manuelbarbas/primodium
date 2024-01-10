@@ -213,7 +213,7 @@ const AvailableListing = ({
   const scale = getScale(entity);
   const scaledCount = Number(listing.count) / Number(scale);
   const startingValue = (takenOrders[listing.id] ?? 0n) / scale;
-  const sellerHome = components.Home.use(listing.seller as Entity)?.asteroid as Entity | undefined;
+  const sellerHome = components.Home.use(listing.seller as Entity)?.value as Entity | undefined;
   const sellerMaxResource = useMemo(() => {
     if (!sellerHome) return 0n;
     if (listing.orderType === EOrderType.Resource) {

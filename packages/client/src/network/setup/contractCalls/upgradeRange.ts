@@ -6,7 +6,7 @@ import { MUD } from "src/network/types";
 import { bigintToNumber } from "src/util/bigint";
 import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
-import { getPlayerBounds } from "src/util/outOfBounds";
+import { getAsteroidBounds } from "src/util/outOfBounds";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
@@ -19,13 +19,11 @@ export const upgradeRange = async (mud: MUD, asteroid: Entity) => {
       delegate: true,
     },
     (receipt) => {
-      const entity = mud.playerAccount.entity;
-      const asteroid = components.Home.get(entity)?.asteroid;
-      const level = components.Level.get(entity)?.value ?? 1n;
-      const bounds = getPlayerBounds(entity);
+      const level = components.Level.get(asteroid)?.value ?? 1n;
+      const bounds = getAsteroidBounds(asteroid);
 
       ampli.systemUpgradeRange({
-        asteroidCoord: asteroid!,
+        asteroidCoord: asteroid,
         currLevel: bigintToNumber(level),
         currBounds: [bounds.minX, bounds.minY, bounds.maxX, bounds.maxY],
         ...parseReceipt(receipt),

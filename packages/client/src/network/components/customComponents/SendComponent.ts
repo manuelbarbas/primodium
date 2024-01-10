@@ -4,10 +4,10 @@ import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { UnitEntityLookup, UnitEnumLookup } from "src/util/constants";
 import { toUnitCountArray } from "src/util/send";
+import { getUnitStats } from "src/util/trainUnits";
 import { SetupNetworkResult } from "../../types";
 import { createExtendedComponent } from "./ExtendedComponent";
 import { ExtendedContractComponents } from "./extendComponents";
-import { getUnitStats } from "src/util/trainUnits";
 
 type stats = {
   ATK: bigint;
@@ -46,7 +46,7 @@ function createSendComponent(contractComponents: ExtendedContractComponents<Setu
   };
 
   const reset = (playerEntity?: Entity) => {
-    const origin = playerEntity ? (components.Home.get(playerEntity)?.asteroid as Entity | undefined) : undefined;
+    const origin = playerEntity ? (components.Home.get(playerEntity)?.value as Entity | undefined) : undefined;
 
     component.set({
       origin,

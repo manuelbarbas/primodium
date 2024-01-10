@@ -19,7 +19,7 @@ export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating
 
   const primodium = usePrimodium();
   const { transitionToScene } = primodium.api().scene;
-  const homeAsteroid = components.Home.use(playerEntity)?.asteroid as Entity | undefined;
+  const homeAsteroid = components.Home.use(playerEntity)?.value as Entity | undefined;
 
   const closeMap = async () => {
     if (!components.MapOpen.get()?.value) return;

@@ -23,12 +23,11 @@ export async function demolishBuilding(mud: MUD, building: Entity) {
       delegate: true,
     },
     (receipt) => {
-      const asteroid = components.Home.get(mud.playerAccount.entity)?.asteroid;
       const buildingType = components.BuildingType.get(building)?.value as Entity;
       const currLevel = components.Level.get(building)?.value || 0;
 
       ampli.systemDestroy({
-        asteroidCoord: asteroid!,
+        asteroidCoord: position.parent,
         buildingType: getBlockTypeName(buildingType),
         coord: [position.x, position.y],
         currLevel: bigintToNumber(currLevel),

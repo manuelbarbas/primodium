@@ -15,9 +15,9 @@ import { hashEntities } from "src/util/encode";
 
 export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
   const mud = useMud();
-  const { playerAccount } = mud;
 
-  const mainBaseEntity = components.Home.use(playerAccount.entity)?.mainBase as Entity;
+  const selectedRock = components.SelectedRock.get()?.value;
+  const mainBaseEntity = components.Home.use(selectedRock)?.value as Entity;
   const mainBaseLevel = components.Level.use(mainBaseEntity, {
     value: 1n,
   }).value;

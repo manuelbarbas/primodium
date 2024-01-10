@@ -92,19 +92,20 @@ export function setupHangar(mud: MUD) {
   });
 
   defineComponentSystem(systemWorld, components.BlockNumber, () => {
-    const home = components.Home.get(playerEntity)?.asteroid;
-    if (home) createHangar(home as Entity);
+    const selectedRock = components.SelectedRock.get()?.value as Entity;
     const origin = Send.get()?.origin;
     const destination = Send.get()?.destination;
-    if (origin && origin != home) createHangar(origin);
-    if (destination && destination != home) createHangar(destination);
+    if (selectedRock) createHangar(selectedRock);
+    if (origin) createHangar(origin);
+    if (destination) createHangar(destination);
 
     // maintain hangars for all player motherlodes to track mining production
     const query = [Has(Asteroid), HasValue(OwnedBy, { value: playerEntity })];
 
-    const motherlodes = runQuery(query);
-    motherlodes.forEach((motherlode) => {
-      createHangar(motherlode);
+    const playerAsteroids = runQuery(query);
+    playerAsteroids.forEach((asteroid) => {
+      if ([origin, destination, selectedRock].includes(asteroid)) return;
+      createHangar(asteroid);
     });
   });
 }

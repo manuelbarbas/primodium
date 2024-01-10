@@ -22,8 +22,8 @@ export const AccountDisplay: React.FC<{
   const { playerAccount } = useMud();
   const playerEntity = player ?? singletonEntity;
 
-  const homeAsteroid = components.Home.use(playerEntity)?.asteroid;
-  const myHomeAsteroid = components.Home.use(playerAccount.entity)?.asteroid;
+  const homeAsteroid = components.Home.use(playerEntity)?.value;
+  const myHomeAsteroid = components.Home.use(playerAccount.entity)?.value;
   const primodium = usePrimodium();
   const { transitionToScene } = primodium.api().scene;
   const { allianceName, loading, address, linkedAddress } = useAccount(playerEntity, showAddress);

@@ -37,9 +37,10 @@ export const renderAsteroid = (scene: Scene) => {
 
     const ownedBy = components.OwnedBy.get(entity)?.value as Entity | undefined;
 
-    const home = ownedBy ? components.Home.get(ownedBy) : undefined;
+    const homeAsteroid = ownedBy ? components.Home.get(ownedBy)?.value : undefined;
+    const mainBase = components.Home.get(homeAsteroid as Entity)?.value;
 
-    const mainBaseLevel = home?.mainBase ? components.Level.get(home.mainBase as Entity)?.value ?? 1n : 1n;
+    const mainBaseLevel = mainBase ? components.Level.get(mainBase as Entity)?.value ?? 1n : 1n;
 
     const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entity);
 

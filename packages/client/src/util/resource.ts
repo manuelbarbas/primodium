@@ -146,7 +146,7 @@ export function getAsteroidResourceCount(asteroid: Entity) {
 
 export function getFullResourceCounts(rawSpaceRockEntity?: Entity): Map<Entity, ResourceCountData> {
   const player = comps.Account.get()?.value as Entity;
-  const spaceRockEntity = rawSpaceRockEntity ?? (comps.Home.get(player)?.asteroid as Entity);
+  const spaceRockEntity = rawSpaceRockEntity ?? (comps.Home.get(player)?.value as Entity);
   if (!spaceRockEntity) throw new Error("No space rock entity");
   return getAsteroidResourceCount(spaceRockEntity);
 }

@@ -1,9 +1,7 @@
 import { AudioKeys, KeyNames, KeybindActions } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useState } from "react";
 import { FaCaretLeft, FaCaretRight, FaLock } from "react-icons/fa";
-import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
@@ -26,12 +24,10 @@ const Blueprint: React.FC<{
     hooks: { useKeybinds },
   } = usePrimodium().api();
   const keybinds = useKeybinds();
-  const {
-    playerAccount: { entity: player },
-  } = useMud();
+  const selectedRockEntity = components.SelectedRock.use()?.value;
+  const rockMainBase = components.Home.use(selectedRockEntity)?.value;
   const selectedBuilding = components.SelectedBuilding.use()?.value;
-  const mainbaseLevel =
-    components.Level.use((components.Home.use(player)?.mainBase ?? singletonEntity) as Entity)?.value ?? 1n;
+  const mainbaseLevel = components.Level.use(rockMainBase as Entity)?.value ?? 1n;
   const levelRequirement =
     components.P_RequiredBaseLevel.getWithKeys({ prototype: buildingType as Hex, level: 1n })?.value ?? 1n;
   const hasMainbaseLevel = mainbaseLevel >= levelRequirement;
