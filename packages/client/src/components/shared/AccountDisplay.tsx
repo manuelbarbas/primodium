@@ -1,5 +1,6 @@
 import { Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { FaEye } from "react-icons/fa";
 import { useMud } from "src/hooks";
 import { useAccount } from "src/hooks/useAccount";
@@ -11,7 +12,7 @@ import { getRockRelationship } from "src/util/spacerock";
 import { Button } from "../core/Button";
 
 export const AccountDisplay: React.FC<{
-  player?: Entity;
+  player: Entity | undefined;
   className?: string;
   showSpectate?: boolean;
   noColor?: boolean;
@@ -19,7 +20,7 @@ export const AccountDisplay: React.FC<{
   showAddress?: boolean;
 }> = ({ player, className, noColor, showSpectate = false, disabled, showAddress }) => {
   const { playerAccount } = useMud();
-  const playerEntity = player ?? playerAccount.entity;
+  const playerEntity = player ?? singletonEntity;
 
   const homeAsteroid = components.Home.use(playerEntity)?.asteroid;
   const myHomeAsteroid = components.Home.use(playerAccount.entity)?.asteroid;

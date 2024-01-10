@@ -101,6 +101,7 @@ export function getSpaceRockInfo(primodium: Primodium, spaceRock: Entity) {
 }
 
 export const getRockRelationship = (player: Entity, rock: Entity) => {
+  if (player === singletonEntity) return RockRelationship.Neutral;
   const playerAlliance = components.PlayerAlliance.get(player)?.alliance;
   const rockOwner = components.OwnedBy.get(rock)?.value as Entity;
   const rockAlliance = components.PlayerAlliance.get(rockOwner)?.alliance;
