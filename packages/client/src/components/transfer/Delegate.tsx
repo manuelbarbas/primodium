@@ -2,7 +2,7 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect, useState } from "react";
 import { FaClipboard, FaExclamationCircle, FaEye, FaEyeSlash, FaInfoCircle, FaTimes, FaUnlink } from "react-icons/fa";
 import { useMud } from "src/hooks";
-import { grantAccess, revokeAccessOwner, switchDelegate } from "src/network/setup/contractCalls/access";
+import { grantAccess, revokeAccess, switchDelegate } from "src/network/setup/contractCalls/access";
 import { copyToClipboard } from "src/util/clipboard";
 import { STORAGE_PREFIX } from "src/util/constants";
 import { Hex } from "viem";
@@ -85,7 +85,7 @@ export function Delegate() {
                 <Button
                   onClick={async () => {
                     setShowDetails(false);
-                    revokeAccessOwner(mud);
+                    revokeAccess(mud, delegateAddress);
                     removeSessionKey(delegateAddress);
                   }}
                   tooltip="stop delegating"
