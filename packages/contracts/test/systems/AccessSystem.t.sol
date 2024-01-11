@@ -18,4 +18,12 @@ contract AccessSystemTest is PrimodiumTest {
     world.registerDelegation(alice, UNLIMITED_DELEGATION, new bytes(0));
     assertEq(ResourceId.unwrap(UserDelegationControl.get(creator, alice)), ResourceId.unwrap(UNLIMITED_DELEGATION));
   }
+
+  function testRemoveUnlimitedDelegate() public {
+    assertEq(ResourceId.unwrap(UserDelegationControl.get(creator, alice)), bytes32(""));
+    world.registerDelegation(alice, UNLIMITED_DELEGATION, new bytes(0));
+    assertEq(ResourceId.unwrap(UserDelegationControl.get(creator, alice)), ResourceId.unwrap(UNLIMITED_DELEGATION));
+    world.unregisterDelegation(alice);
+    assertEq(ResourceId.unwrap(UserDelegationControl.get(creator, alice)), bytes32(""));
+  }
 }
