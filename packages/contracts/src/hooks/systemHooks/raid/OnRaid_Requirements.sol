@@ -27,7 +27,7 @@ contract OnRaid_Requirements is SystemHook {
     // Decode the space rock identifier and the player's entity from the callData
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
     bytes32 rockEntity = abi.decode(args, (bytes32));
-    bytes32 playerEntity = _player(msgSender, false);
+    bytes32 playerEntity = _player(msgSender);
 
     // Check the requirements for initiating a raid on the space rock
     LibRaid.checkRaidRequirements(playerEntity, rockEntity);
