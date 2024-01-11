@@ -2,6 +2,9 @@
 pragma solidity >=0.8.21;
 
 import "test/PrimodiumTest.t.sol";
+import { UserDelegationControl } from "@latticexyz/world/src/codegen/index.sol";
+import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
+import { UNLIMITED_DELEGATION } from "@latticexyz/world/src/constants.sol";
 
 contract AccessSystemTest is PrimodiumTest {
   bytes32 player;
@@ -13,6 +16,12 @@ contract AccessSystemTest is PrimodiumTest {
     world.spawn();
     player = addressToEntity(creator);
     delegate = addressToEntity(alice);
+  }
+
+  function testSetUnlimitedDelegate() public {
+    assertEq(ResourceId.unwrap(UserDelegationControl.get(creator, alice)), bytes32(""));
+    world.registerDelegation(alice, UNLIMITED_DELEGATION, new bytes(0));
+    assertEq(ResourceId.unwrap(UserDelegationControl.get(creator, alice)), ResourceId.unwrap(UNLIMITED_DELEGATION));
   }
 
   function testSetDelegate() public {
