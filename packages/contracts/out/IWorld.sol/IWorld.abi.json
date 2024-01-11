@@ -792,6 +792,19 @@
     "inputs": [
       {
         "internalType": "bytes32",
+        "name": "fleetId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "clearFleetStance",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
         "name": "name",
         "type": "bytes32"
       },
@@ -2216,24 +2229,6 @@
       }
     ],
     "name": "sendFleet",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32[]",
-        "name": "fleets",
-        "type": "bytes32[]"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "spaceRock",
-        "type": "bytes32"
-      }
-    ],
-    "name": "sendFleets",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
