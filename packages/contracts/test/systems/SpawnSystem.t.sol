@@ -16,7 +16,7 @@ contract SpawnSystemTest is PrimodiumTest {
 
     bool spawned = Spawned.get(playerEntity);
     assertTrue(spawned, "Player should have spawned");
-    assertEq(Home.getAsteroid(playerEntity), asteroidEntity, "Player should have spawned on their own asteroid");
+    assertEq(Home.get(playerEntity), asteroidEntity, "Player should have spawned on their own asteroid");
 
     assertEq(Level.get(asteroidEntity), 1, "Player should have level 1");
   }
@@ -35,7 +35,7 @@ contract SpawnSystemTest is PrimodiumTest {
       bytes32 playerEntity = addressToEntity(newAddress);
       PositionData memory position = LibAsteroid.getUniqueAsteroidPosition(i);
       spawn(newAddress);
-      bytes32 asteroid = Home.getAsteroid(playerEntity);
+      bytes32 asteroid = Home.get(playerEntity);
       PositionData memory retrievedPosition = Position.get(asteroid);
       assertEq(position, retrievedPosition);
     }

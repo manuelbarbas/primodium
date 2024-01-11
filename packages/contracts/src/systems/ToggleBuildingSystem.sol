@@ -3,8 +3,9 @@ pragma solidity >=0.8.21;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { PositionData, Level } from "codegen/index.sol";
-import { IsActive, Home, OwnedBy } from "src/codegen/index.sol";
+import { IsActive, Home, OwnedBy, BuildingType } from "src/codegen/index.sol";
 import { LibBuilding, UnitProductionQueue } from "codegen/Libraries.sol";
+import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 
 contract ToggleBuildingSystem is PrimodiumSystem {
   /// @notice Toggles the building at the specified coordinate
@@ -15,7 +16,10 @@ contract ToggleBuildingSystem is PrimodiumSystem {
     bytes32 playerEntity = _player(false);
     bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
     require(OwnedBy.get(coord.parent) == playerEntity, "[ToggleBuilding] Only owner can toggle building");
-    require(buildingEntity != Home.getMainBase(playerEntity), "[ToggleBuilding] Can not toggle main base");
+
+    bytes32 buildingPrototype = BuildingType.get(buildingEntity);
+    require(buildingPrototype != MainBasePrototypeId, "[ToggleBuilding] Can not toggle main base");
+
     require(
       UnitProductionQueue.isEmpty(buildingEntity),
       "[ToggleBuilding] Can not toggle building while it is training units"

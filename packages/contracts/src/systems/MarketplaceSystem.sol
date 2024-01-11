@@ -24,7 +24,7 @@ contract MarketplaceSystem is PrimodiumSystem {
     uint256 price
   ) public returns (bytes32 orderId) {
     bytes32 playerEntity = _player(true);
-    bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
+    bytes32 homeAsteroid = Home.get(playerEntity);
     uint256 orderCount = ResourceCount.get(homeAsteroid, uint8(EResource.U_Orders));
     require(orderCount > 0, "[MarketplaceSystem] Max orders reached");
 
@@ -50,7 +50,7 @@ contract MarketplaceSystem is PrimodiumSystem {
     uint256 price
   ) public returns (bytes32 orderId) {
     bytes32 playerEntity = _player(true);
-    bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
+    bytes32 homeAsteroid = Home.get(playerEntity);
     uint256 orderCount = ResourceCount.get(homeAsteroid, uint8(EResource.U_Orders));
     require(orderCount > 0, "[MarketplaceSystem] Max orders reached");
 
@@ -76,7 +76,7 @@ contract MarketplaceSystem is PrimodiumSystem {
     uint256 price
   ) public returns (bytes32 orderId) {
     bytes32 playerEntity = _player(true);
-    bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
+    bytes32 homeAsteroid = Home.get(playerEntity);
     uint256 orderCount = ResourceCount.get(homeAsteroid, uint8(EResource.U_Orders));
     require(orderCount > 0, "[MarketplaceSystem] Max orders reached");
 
@@ -168,8 +168,8 @@ contract MarketplaceSystem is PrimodiumSystem {
     MarketplaceOrderData memory order,
     uint256 countBought
   ) internal {
-    bytes32 sellerHome = Home.getAsteroid(order.seller);
-    bytes32 buyerHome = Home.getAsteroid(playerEntity);
+    bytes32 sellerHome = Home.get(order.seller);
+    bytes32 buyerHome = Home.get(playerEntity);
 
     require(
       ResourceCount.get(sellerHome, order.resource) >= countBought,
@@ -190,8 +190,8 @@ contract MarketplaceSystem is PrimodiumSystem {
     MarketplaceOrderData memory order,
     uint256 countBought
   ) internal {
-    bytes32 sellerHome = Home.getAsteroid(order.seller);
-    bytes32 buyerHome = Home.getAsteroid(playerEntity);
+    bytes32 sellerHome = Home.get(order.seller);
+    bytes32 buyerHome = Home.get(playerEntity);
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, order.resource);
     require(
       UnitCount.get(sellerHome, unitPrototype) >= countBought,
@@ -214,7 +214,7 @@ contract MarketplaceSystem is PrimodiumSystem {
 
   function _removeOrder(bytes32 orderId) internal {
     bytes32 seller = MarketplaceOrder.getSeller(orderId);
-    bytes32 homeAsteroid = Home.getAsteroid(seller);
+    bytes32 homeAsteroid = Home.get(seller);
     MarketplaceOrder.deleteRecord(orderId);
     LibStorage.increaseStoredResource(homeAsteroid, uint8(EResource.U_Orders), 1);
   }

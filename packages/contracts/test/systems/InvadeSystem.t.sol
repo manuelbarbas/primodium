@@ -38,7 +38,7 @@ contract InvadeSystemTest is PrimodiumTest {
     bytes32 enemy = addressToEntity(bob);
     ResourceCount.set(enemy, uint8(EResource.Iron), 100);
     MaxResourceCount.set(player, uint8(EResource.Iron), 100);
-    Home.setAsteroid(player, homeRock);
+    Home.set(player, homeRock);
     OwnedBy.set(rock, enemy);
 
     Asteroid.setIsAsteroid(rock, true);

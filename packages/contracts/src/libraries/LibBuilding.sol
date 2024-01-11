@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import { entityToAddress } from "src/utils.sol";
 // tables
-import { IsActive, HasBuiltBuilding, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint } from "codegen/index.sol";
+import { IsActive, HasBuiltBuilding, Asteroid, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint } from "codegen/index.sol";
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -53,16 +53,15 @@ library LibBuilding {
     require(buildingType > EBuilding.NULL && buildingType < EBuilding.LENGTH, "[BuildSystem] Invalid building type");
     if (buildingType == EBuilding.MainBase) {
       require(
-        !HasBuiltBuilding.get(playerEntity, buildingPrototype),
+        !HasBuiltBuilding.get(coord.parent, buildingPrototype),
         "[BuildSystem] Cannot build more than one main base per wallet"
       );
-      require(coord.parent == Home.getAsteroid(playerEntity), "[BuildSystem] Can only build MainBase on home asteroid");
     }
     require(OwnedBy.get(coord.parent) == playerEntity, "[BuildSystem] You can only build on an asteroid you control");
 
     require(!Spawned.get(getBuildingFromCoord(coord)), "[BuildSystem] Building already exists");
     require(
-      LibBuilding.hasRequiredBaseLevel(playerEntity, buildingPrototype, 1),
+      LibBuilding.hasRequiredBaseLevel(coord.parent, buildingPrototype, 1),
       "[BuildSystem] MainBase level requirement not met"
     );
     require(LibBuilding.canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
@@ -113,7 +112,11 @@ library LibBuilding {
     LastClaimedAt.set(buildingEntity, block.timestamp);
     OwnedBy.set(buildingEntity, coord.parent);
     HasBuiltBuilding.set(playerEntity, buildingPrototype, true);
+    HasBuiltBuilding.set(coord.parent, buildingPrototype, true);
     IsActive.set(buildingEntity, true);
+    if (buildingPrototype == MainBasePrototypeId) {
+      Home.set(coord.parent, buildingEntity);
+    }
     if (P_UnitProdTypes.length(buildingPrototype, 1) != 0) {
       UnitFactorySet.add(coord.parent, buildingEntity);
     }
@@ -201,25 +204,24 @@ library LibBuilding {
   }
 
   /// @notice Gets the base level for a player
-  /// @param playerEntity The entity ID of the player
+  /// @param asteroidEntity The entity ID of the asteroid
   /// @return The base level
-  function getBaseLevel(bytes32 playerEntity) internal view returns (uint256) {
-    if (!Spawned.get(playerEntity)) return 0;
-    bytes32 mainBase = Home.getMainBase(playerEntity);
+  function getBaseLevel(bytes32 asteroidEntity) internal view returns (uint256) {
+    bytes32 mainBase = Home.get(asteroidEntity);
     return Level.get(mainBase);
   }
 
   /// @notice Checks if a player meets the base level requirements to build a building
-  /// @param playerEntity The entity ID of the player
+  /// @param asteroidEntity The entity ID of the asteroid
   /// @param prototype The type of building
   /// @param level The level of the building
   /// @return True if requirements are met, false otherwise
   function hasRequiredBaseLevel(
-    bytes32 playerEntity,
+    bytes32 asteroidEntity,
     bytes32 prototype,
     uint256 level
   ) internal view returns (bool) {
-    uint256 mainLevel = getBaseLevel(playerEntity);
+    uint256 mainLevel = getBaseLevel(asteroidEntity);
     return mainLevel >= P_RequiredBaseLevel.get(prototype, level);
   }
 
@@ -229,6 +231,7 @@ library LibBuilding {
   /// @return True if the building's required terrain matches the terrain of the given coord
   function canBuildOnTile(bytes32 prototype, PositionData memory coord) internal view returns (bool) {
     EResource resource = EResource(P_RequiredTile.get(prototype));
-    return resource == EResource.NULL || uint8(resource) == P_Terrain.get(coord.x, coord.y);
+    uint8 mapId = Asteroid.getMapId(coord.parent);
+    return resource == EResource.NULL || uint8(resource) == P_Terrain.get(mapId, coord.x, coord.y);
   }
 }

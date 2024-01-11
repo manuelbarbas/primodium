@@ -104,7 +104,7 @@ library LibResource {
   }
 
   function claimAllPlayerResources(bytes32 playerEntity) internal {
-    claimAllResources(Home.getAsteroid(playerEntity));
+    claimAllResources(Home.get(playerEntity));
   }
 
   /// @notice Claims all unclaimed resources of a spaceRock
@@ -121,7 +121,7 @@ library LibResource {
     uint256 timeSinceClaimed = block.timestamp - lastClaimed;
     timeSinceClaimed = (timeSinceClaimed * P_GameConfig.getWorldSpeed()) / WORLD_SPEED_SCALE;
     bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
-    bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
+    bytes32 homeAsteroid = Home.get(playerEntity);
     LastClaimedAt.set(spaceRockEntity, block.timestamp);
     uint256[] memory consumptionTimeLengths = new uint256[](uint8(EResource.LENGTH));
 
@@ -271,7 +271,7 @@ library LibResource {
     uint8 resource,
     uint256 value
   ) internal {
-    bytes32 asteroid = Home.getAsteroid(player);
+    bytes32 asteroid = Home.get(player);
     uint256 count = ResourceCount.get(asteroid, resource);
     uint256 currentScore = Score.get(player);
     uint256 scoreChangeAmount = P_ScoreMultiplier.get(resource);

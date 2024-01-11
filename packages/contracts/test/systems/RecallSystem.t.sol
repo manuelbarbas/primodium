@@ -31,7 +31,7 @@ contract RecallSystemTest is PrimodiumTest {
 
   function testRecallUnitsFromMotherlode() public {
     setupRecall();
-    Home.setAsteroid(player, origin);
+    Home.set(player, origin);
     world.recallStationedUnits(destination);
     assertEq(UnitCount.get(destination, unitPrototype), 0);
     assertEq(UnitCount.get(origin, unitPrototype), 70);

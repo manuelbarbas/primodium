@@ -12,7 +12,7 @@ import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 library LibUnit {
   function getUnitCountOnHomeAsteroid(bytes32 playerEntity, bytes32 unitType) internal view returns (uint256) {
-    return UnitCount.get(Home.getAsteroid(playerEntity), unitType);
+    return UnitCount.get(Home.get(playerEntity), unitType);
   }
 
   /**
@@ -95,7 +95,7 @@ library LibUnit {
         stillClaiming = false;
       }
       ProducedUnit.set(playerEntity, item.unitId, ProducedUnit.get(playerEntity, item.unitId) + trainedUnits);
-      increaseUnitCount(Home.getAsteroid(playerEntity), item.unitId, trainedUnits);
+      increaseUnitCount(Home.get(playerEntity), item.unitId, trainedUnits);
     }
   }
 
