@@ -43,7 +43,7 @@ contract OnUpgradeUnit_SpendResources is SystemHook {
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, unit);
 
     // Get the unit level
-    uint256 level = UnitLevel.get(playerEntity, unitPrototype);
+    uint256 level = UnitLevel.get(spaceRockEntity, unitPrototype);
 
     // Spend the required resources for upgrading the unit
     LibResource.spendUpgradeResources(spaceRockEntity, unitPrototype, level);

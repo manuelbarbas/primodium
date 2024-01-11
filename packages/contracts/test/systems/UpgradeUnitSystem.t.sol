@@ -31,7 +31,7 @@ contract UpgradeUnitSystemTest is PrimodiumTest {
 
   function testUpgradeUnit1() public {
     world.upgradeUnit(homeAsteroid, unit);
-    assertEq(UnitLevel.get(player, unitPrototype), 1);
+    assertEq(UnitLevel.get(homeAsteroid, unitPrototype), 1);
   }
 
   function testUpgradeUnitMainBaseLevelRequirementNotMet() public {
