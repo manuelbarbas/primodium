@@ -28,18 +28,19 @@ export const AccountDisplay: React.FC<{
   const { transitionToScene } = primodium.api().scene;
   const { allianceName, loading, address, linkedAddress } = useAccount(playerEntity, showAddress);
   const playerColor = RockRelationshipColors[getRockRelationship(playerEntity, myHomeAsteroid as Entity)];
+  const noPlayer = playerEntity === singletonEntity;
 
   return (
     <Button
       className={`btn-xs btn-ghost p-0 inline-flex flex font-bold gap-1 ${className} ${loading ? "animate-pulse" : ""}`}
-      disabled={disabled}
+      disabled={disabled || noPlayer}
       onClick={async () => {
         components.SelectedRock.set({ value: homeAsteroid as Entity });
         await transitionToScene(Scenes.Starmap, Scenes.Asteroid, 0);
         components.MapOpen.set({ value: false });
       }}
     >
-      {showSpectate && <FaEye />}
+      {showSpectate && !noPlayer && <FaEye />}
       {allianceName && (
         <span className="font-bold text-accent" style={{ color: noColor ? "auto" : entityToColor(player) }}>
           [{allianceName.toUpperCase()}]

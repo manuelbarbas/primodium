@@ -38,7 +38,7 @@ export const renderBuilding = (scene: Scene) => {
   const spectateWorld = namespaceWorld(world, "game_spectate");
   const audio = createAudioApi(scene);
 
-  defineComponentSystem(systemsWorld, components.ActiveRock, ({ value }) => {
+  defineComponentSystem(systemsWorld, components.SelectedRock, ({ value }) => {
     if (!value[0] || value[0]?.value === value[1]?.value) return;
 
     world.dispose("game_spectate");

@@ -36,8 +36,8 @@ export const GameHUD = () => {
     playerAccount: { entity: playerEntity },
   } = useMud();
 
-  const activeRock = components.ActiveRock.use()?.value;
-  const ownedBy = components.OwnedBy.use(activeRock ?? undefined)?.value;
+  const selectedRock = components.SelectedRock.use()?.value;
+  const ownedBy = components.OwnedBy.use(selectedRock)?.value;
   const isSpectating = ownedBy !== playerEntity;
   const uiScale = useSettingsStore((state) => state.uiScale);
 

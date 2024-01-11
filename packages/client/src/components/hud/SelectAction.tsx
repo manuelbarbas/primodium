@@ -43,7 +43,7 @@ export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating
 
   const openMap = async () => {
     if (components.MapOpen.get()?.value) return;
-    const activeRock = components.ActiveRock.get()?.value;
+    const activeRock = components.SelectedRock.get()?.value;
     const position = components.Position.get(activeRock) ?? { x: 0, y: 0 };
     const { pan } = primodium.api(Scenes.Starmap).camera;
 
@@ -116,18 +116,10 @@ export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating
             !mapOpen ? "opacity-50" : "ring ring-accent z-10"
           }`}
         >
-          {!isSpectating && (
-            <div className="flex flex-col gap-2 items-center p-2 w-16">
-              <img src="img/icons/starmapicon.png" className="pixel-images w-12 h-12" />
-              <p className="">CONQUER</p>
-            </div>
-          )}
-          {isSpectating && (
-            <div className="flex flex-col gap-2 items-center p-2 w-16">
-              <img src="img/icons/returnicon.png" className="pixel-images w-12 h-12" />
-              <p className="">EXIT</p>
-            </div>
-          )}
+          <div className="flex flex-col gap-2 items-center p-2 w-16">
+            <img src="img/icons/starmapicon.png" className="pixel-images w-12 h-12" />
+            <p className="">CONQUER</p>
+          </div>
           {mapOpen && <FaCaretUp size={22} className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-accent" />}
         </Button>
       </Join>

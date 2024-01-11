@@ -5,8 +5,8 @@ import { Assets, EntitytoSpriteKey } from "@game/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { components, components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
-import { clampedIndex } from "./common";
-import { EntityType, PIRATE_KEY, ResourceStorages, RockRelationship } from "./constants";
+import { clampedIndex, getBlockTypeName } from "./common";
+import { EntityType, MapIdToAsteroidType, PIRATE_KEY, ResourceStorages, RockRelationship } from "./constants";
 import { hashKeyEntity } from "./encode";
 import { getFullResourceCount } from "./resource";
 
@@ -28,15 +28,16 @@ export function getSpaceRockImage(primodium: Primodium, spaceRock: Entity) {
 }
 
 export function getSpaceRockName(spaceRock: Entity) {
-  const player = comps.Account.get()?.value;
-  const home = comps.Home.get(player)?.value as Entity | undefined;
-  if (home === spaceRock) return "Home Asteroid";
-
   const mainBaseEntity = comps.Home.get(spaceRock)?.value as Entity;
   const mainBaseLevel = comps.Level.get(mainBaseEntity)?.value;
   const isPirate = !!comps.PirateAsteroid.get(spaceRock);
+  const asteroidData = comps.Asteroid.get(spaceRock);
 
-  return ` ${mainBaseLevel ? `LVL. ${mainBaseLevel} ` : ""} ${isPirate ? "Pirate" : "Asteroid"}`;
+  const asteroidResource = MapIdToAsteroidType[asteroidData?.mapId ?? 0];
+
+  return ` ${mainBaseLevel ? `LVL. ${mainBaseLevel} ` : ""} ${
+    asteroidResource ? getBlockTypeName(asteroidResource) : ""
+  } ${isPirate ? "Pirate" : "Asteroid"}`;
 }
 
 export function getSpaceRockInfo(primodium: Primodium, spaceRock: Entity) {

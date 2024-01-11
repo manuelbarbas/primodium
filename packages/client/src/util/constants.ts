@@ -261,6 +261,13 @@ export const EntityType = {
   NULL: toHex32("NULL") as Entity,
 };
 
+export const MapIdToAsteroidType: Record<number, Entity> = {
+  2: EntityType.Kimberlite,
+  3: EntityType.Iridium,
+  4: EntityType.Platinum,
+  5: EntityType.Titanium,
+};
+
 export const BlockIdToKey = Object.entries(EntityType).reduce<{
   [key: Entity]: string;
 }>((acc, [key, id]) => {
