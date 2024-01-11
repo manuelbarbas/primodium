@@ -213,7 +213,6 @@ export enum EAllianceRole {
 
 export enum EFleetStance {
   None = 1,
-  Support,
   Follow,
   Defend,
   Block,

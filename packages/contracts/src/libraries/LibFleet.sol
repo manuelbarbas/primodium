@@ -489,45 +489,41 @@ library LibFleet {
       "[Fleet] Fleet has not reached it's current destination space rock yet"
     );
 
+    bytes32 origin = FleetMovement.getDestination(fleetId);
+    require(!isSpaceRockBlocked(origin), "[Fleet] Space rock is blocked");
+
+    bytes32 followingFleetsKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Follow));
+    bytes32[] memory followingFleets = FleetsMap.getFleetIds(fleetId, followingFleetsKey);
+    uint256 slowestSpeed = FleetAttributes.getSpeed(fleetId);
+    for (uint256 i = 0; i < followingFleets.length; i++) {
+      uint256 speed = FleetAttributes.getSpeed(followingFleets[i]);
+      if (speed < slowestSpeed) slowestSpeed = speed;
+    }
+    uint256 arrivalTime = getArrivalTime(origin, Position.get(destination), slowestSpeed);
+
+    sendFleet(fleetId, destination, arrivalTime);
+    for (uint256 i = 0; i < followingFleets.length; i++) {
+      sendFleet(followingFleets[i], destination, arrivalTime);
+    }
+  }
+
+  function sendFleet(
+    bytes32 fleetId,
+    bytes32 destination,
+    uint256 arrivalTime
+  ) private {
     FleetsMap.remove(FleetMovement.getDestination(fleetId), FleetIncomingKey, fleetId);
     FleetsMap.add(destination, FleetIncomingKey, fleetId);
 
-    FleetMovement.setDestination(fleetId, destination);
-    FleetMovement.setArrivalTime(fleetId, getArrivalTime(fleetId, Position.get(destination)));
-    FleetMovement.setSendTime(fleetId, block.timestamp);
-  }
-
-  function sendFleets(
-    bytes32 playerEntity,
-    bytes32[] calldata fleetIds,
-    bytes32 destination
-  ) internal {
-    require(fleetIds.length > 1, "[Fleet] Send Fleets can only send more than one fleet");
-    bytes32 slowestFleet = fleetIds[0];
-    uint256 slowestSpeed = getFleetSlowestUnitSpeed(slowestFleet);
-    for (uint256 i = 1; i < fleetIds.length; i++) {
-      require(OwnedBy.get(OwnedBy.get(fleetIds[i])) == playerEntity, "[Fleet] Can only send owned fleet");
-      require(
-        FleetMovement.getArrivalTime(fleetIds[i]) <= block.timestamp,
-        "[Fleet] Fleet has not reached it's current destination space rock yet"
-      );
-
-      uint256 fleetSpeed = getFleetSlowestUnitSpeed(fleetIds[i]);
-      if (fleetSpeed < slowestSpeed) {
-        slowestSpeed = fleetSpeed;
-        slowestFleet = fleetIds[i];
-      }
-
-      FleetsMap.remove(FleetMovement.getDestination(fleetIds[i]), FleetIncomingKey, fleetIds[i]);
-      FleetsMap.add(destination, FleetIncomingKey, fleetIds[i]);
-
-      FleetMovement.setDestination(fleetIds[i], destination);
-      FleetMovement.setSendTime(fleetIds[i], block.timestamp);
-    }
-
-    for (uint256 i = 0; i < fleetIds.length; i++) {
-      FleetMovement.setArrivalTime(fleetIds[i], getArrivalTime(slowestFleet, Position.get(destination)));
-    }
+    FleetMovement.set(
+      fleetId,
+      FleetMovementData({
+        arrivalTime: arrivalTime,
+        sendTime: block.timestamp,
+        origin: FleetMovement.getDestination(fleetId),
+        destination: destination
+      })
+    );
   }
 
   function recallFleet(bytes32 playerEntity, bytes32 fleetId) internal {
@@ -536,52 +532,46 @@ library LibFleet {
       FleetMovement.getOrigin(fleetId) != FleetMovement.getDestination(fleetId),
       "[Fleet] Fleet is already at origin"
     );
+    require(
+      FleetMovement.getArrivalTime(fleetId) > block.timestamp,
+      "[Fleet] Fleet has already reached it's destination space rock"
+    );
+    bytes32 destination = FleetMovement.getOrigin(fleetId);
+    uint256 arrivalTime = block.timestamp + block.timestamp - FleetMovement.getSendTime(fleetId);
 
-    FleetsMap.remove(FleetMovement.getDestination(fleetId), FleetIncomingKey, fleetId);
-    FleetsMap.add(FleetMovement.getOrigin(fleetId), FleetIncomingKey, fleetId);
-    FleetMovement.setOrigin(fleetId, FleetMovement.getDestination(fleetId));
-    FleetMovement.setDestination(fleetId, FleetMovement.getOrigin(fleetId));
+    sendFleet(fleetId, destination, arrivalTime);
 
-    FleetMovement.setArrivalTime(fleetId, block.timestamp + block.timestamp - FleetMovement.getSendTime(fleetId));
-    FleetMovement.setSendTime(fleetId, block.timestamp);
+    bytes32 followingFleetsKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Follow));
+    bytes32[] memory followingFleets = FleetsMap.getFleetIds(fleetId, followingFleetsKey);
+
+    for (uint256 i = 0; i < followingFleets.length; i++) {
+      sendFleet(followingFleets[i], destination, arrivalTime);
+    }
   }
 
   /// @notice Computes the block number an arrival will occur.
+  /// @param origin origin space rock.
   /// @param destination Destination position.
+  /// @param speed speed of movement.
   /// @return Block number of arrival.
-  function getArrivalTime(bytes32 fleetId, PositionData memory destination) internal view returns (uint256) {
+  function getArrivalTime(
+    bytes32 origin,
+    PositionData memory destination,
+    uint256 speed
+  ) internal view returns (uint256) {
     P_GameConfigData memory config = P_GameConfig.get();
-    uint256 unitSpeed = getFleetSlowestUnitSpeed(fleetId);
-    require(unitSpeed > 0 && config.travelTime > 0, "[Fleet] Slowest unit speed must be greater than 0");
 
-    bytes32 origin = FleetMovement.getOrigin(fleetId);
     return
       block.timestamp +
       ((LibMath.distance(Position.get(origin), destination) *
         config.travelTime *
         WORLD_SPEED_SCALE *
-        UNIT_SPEED_SCALE) / (config.worldSpeed * unitSpeed));
+        UNIT_SPEED_SCALE) / (config.worldSpeed * speed));
   }
 
-  /// @notice Returns the slowest speed of given unit types.
-  /// @param fleetId fleet being sent.
-  /// @return slowestSpeed Slowest unit speed among the types.
-  function getFleetSlowestUnitSpeed(bytes32 fleetId) internal view returns (uint256 slowestSpeed) {
-    bytes32 ownerSpaceRockEntity = OwnedBy.get(fleetId);
-    uint256 bignum = 115792089237316195423570985008687907853269984665640564039457584007913129639935;
-    slowestSpeed = bignum;
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      uint256 unitCount = UnitCount.get(fleetId, unitPrototypes[i]);
-      if (unitCount == 0) continue;
-      uint256 unitLevel = UnitLevel.get(ownerSpaceRockEntity, unitPrototypes[i]);
-      uint256 speed = P_Unit.getSpeed(unitPrototypes[i], unitLevel);
-      if (speed < slowestSpeed) {
-        slowestSpeed = speed;
-      }
-    }
-    if (slowestSpeed == bignum) return 0;
-    return slowestSpeed;
+  function isSpaceRockBlocked(bytes32 spaceRock) private returns (bool) {
+    bytes32 fleetBlockKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Block));
+    return FleetsMap.size(spaceRock, fleetBlockKey) > 0;
   }
 
   function clearFleetStance(bytes32 playerEntity, bytes32 fleetId) internal {
@@ -598,45 +588,36 @@ library LibFleet {
     FleetStance.set(fleetId, uint8(EFleetStance.None), bytes32(0));
   }
 
-  function fleetDefend(
-    bytes32 playerEntity,
-    bytes32 fleetId,
-    bytes32 targetSpaceRock
-  ) internal {
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only send owned fleet");
-    require(
-      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
-      "[Fleet] Fleet has not reached it's current destination space rock yet"
-    );
-    require(
-      targetSpaceRock == FleetMovement.getDestination(fleetId),
-      "[Fleet] Target fleet is not in orbit of space rock"
-    );
-    clearFleetStance(playerEntity, fleetId);
-    FleetStance.set(fleetId, uint8(EFleetStance.Defend), targetSpaceRock);
-    FleetsMap.add(targetSpaceRock, P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Defend)), fleetId);
+  function clearFollowingFleets(bytes32 fleetId) internal {
+    bytes32 fleetFollowKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Follow));
+    bytes32[] memory followingFleets = FleetsMap.getFleetIds(fleetId, fleetFollowKey);
+    for (uint256 i = 0; i < followingFleets.length; i++) {
+      FleetStance.set(followingFleets[i], uint8(EFleetStance.None), bytes32(0));
+    }
+    FleetsMap.clear(fleetId, fleetFollowKey);
   }
 
-  function fleetSupport(
+  function setFleetStance(
     bytes32 playerEntity,
     bytes32 fleetId,
-    bytes32 targetFleetId
+    uint8 stance,
+    bytes32 target
   ) internal {
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only send owned fleet");
+    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only update stance for owned fleet");
     require(
       FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
       "[Fleet] Fleet has not reached it's current destination space rock yet"
     );
     require(
-      FleetMovement.getArrivalTime(targetFleetId) <= block.timestamp,
-      "[Fleet] Fleet has not reached it's current destination space rock yet"
+      FleetStance.getStance(target) == uint8(EFleetStance.None),
+      "[Fleet] Can not target a fleet that is taking a stance"
     );
-    require(
-      FleetMovement.getDestination(targetFleetId) == FleetMovement.getDestination(fleetId),
-      "[Fleet] Target fleet is not on same space rock as from fleet"
-    );
+    if (stance == uint8(EFleetStance.Defend) || stance == uint8(EFleetStance.Block)) {
+      require(FleetMovement.getDestination(fleetId) == target, "[Fleet] Fleet must be on same space rock as target");
+    }
     clearFleetStance(playerEntity, fleetId);
-    FleetStance.set(fleetId, uint8(EFleetStance.Support), targetFleetId);
-    FleetsMap.add(targetFleetId, P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Support)), fleetId);
+    clearFollowingFleets(fleetId);
+    FleetStance.set(fleetId, stance, target);
+    FleetsMap.add(target, P_EnumToPrototype.get(FleetStanceKey, stance), fleetId);
   }
 }
