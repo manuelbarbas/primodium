@@ -12,7 +12,7 @@ import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 library LibUnit {
   function getUnitCountOnHomeAsteroid(bytes32 playerEntity, bytes32 unitType) internal view returns (uint256) {
-    return UnitCount.get(playerEntity, Home.getAsteroid(playerEntity), unitType);
+    return UnitCount.get(Home.getAsteroid(playerEntity), unitType);
   }
 
   /**
@@ -95,7 +95,7 @@ library LibUnit {
         stillClaiming = false;
       }
       ProducedUnit.set(playerEntity, item.unitId, ProducedUnit.get(playerEntity, item.unitId) + trainedUnits);
-      increaseUnitCount(playerEntity, Home.getAsteroid(playerEntity), item.unitId, trainedUnits);
+      increaseUnitCount(Home.getAsteroid(playerEntity), item.unitId, trainedUnits);
     }
   }
 
@@ -159,21 +159,19 @@ library LibUnit {
 
   /**
    * @dev Increases the count of a specific unit type for a player's rock entity.
-   * @param playerEntity The identifier of the player.
    * @param rockEntity The identifier of the player's rock entity.
    * @param unitType The type of unit to increase.
    * @param unitCount The number of units to increase.
    */
   function increaseUnitCount(
-    bytes32 playerEntity,
     bytes32 rockEntity,
     bytes32 unitType,
     uint256 unitCount
   ) internal {
+    bytes32 playerEntity = OwnedBy.get(rockEntity);
     if (unitCount == 0) return;
-    uint256 prevUnitCount = UnitCount.get(playerEntity, rockEntity, unitType);
-    UnitCount.set(playerEntity, rockEntity, unitType, prevUnitCount + unitCount);
-
+    uint256 prevUnitCount = UnitCount.get(rockEntity, unitType);
+    UnitCount.set(rockEntity, unitType, prevUnitCount + unitCount);
     // update production rate
     if (RockType.get(rockEntity) != uint8(ERock.Motherlode)) return;
     uint256 level = UnitLevel.get(playerEntity, unitType);
@@ -187,22 +185,20 @@ library LibUnit {
 
   /**
    * @dev Decreases the count of a specific unit type for a player's rock entity.
-   * @param playerEntity The identifier of the player.
    * @param rockEntity The identifier of the player's rock entity.
    * @param unitType The type of unit to decrease.
    * @param unitCount The number of units to decrease.
    */
   function decreaseUnitCount(
-    bytes32 playerEntity,
     bytes32 rockEntity,
     bytes32 unitType,
     uint256 unitCount
   ) internal {
+    bytes32 playerEntity = OwnedBy.get(rockEntity);
     if (unitCount == 0) return;
-
-    uint256 currUnitCount = UnitCount.get(playerEntity, rockEntity, unitType);
+    uint256 currUnitCount = UnitCount.get(rockEntity, unitType);
     if (unitCount > currUnitCount) unitCount = currUnitCount;
-    UnitCount.set(playerEntity, rockEntity, unitType, currUnitCount - unitCount);
+    UnitCount.set(rockEntity, unitType, currUnitCount - unitCount);
 
     // update production rate
     if (RockType.get(rockEntity) != uint8(ERock.Motherlode)) return;

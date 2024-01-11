@@ -1,5 +1,4 @@
 import { Scene } from "engine/types";
-import { SetupResult } from "src/network/types";
 // import { focusAsteroid } from "./focusAsteroid";
 import { renderArrivalsInOrbit } from "./renderArrivalsInOrbit";
 import { renderArrivalsInTransit } from "./renderArrivalsInTransit";
@@ -8,15 +7,15 @@ import { renderEffects } from "./renderEffects";
 import { renderMotherlode } from "./renderMotherlode";
 import { renderPirateAsteroid } from "./renderPirateAsteroid";
 
-export const runSystems = (scene: Scene, mud: SetupResult) => {
+export const runSystems = (scene: Scene) => {
   // focusAsteroid(scene, mud);
 
-  renderAsteroid(scene, mud);
-  renderMotherlode(scene, mud);
-  renderPirateAsteroid(scene, mud.network.playerEntity);
+  renderAsteroid(scene);
+  renderMotherlode(scene);
+  renderPirateAsteroid(scene);
 
-  renderArrivalsInTransit(scene, mud);
-  renderArrivalsInOrbit(scene, mud);
+  renderArrivalsInTransit(scene);
+  renderArrivalsInOrbit(scene);
 
-  renderEffects(scene, mud);
+  renderEffects(scene);
 };

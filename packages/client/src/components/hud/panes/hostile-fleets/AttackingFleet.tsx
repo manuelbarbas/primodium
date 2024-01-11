@@ -20,7 +20,9 @@ export const LabeledValue: React.FC<{
 export const AttackingFleet: React.FC<{
   fleet: ComponentValue<typeof components.Arrival.schema>;
 }> = ({ fleet }) => {
-  const playerEntity = useMud().network.playerEntity;
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
   const { sendType, destination, arrivalTime } = fleet;
 
   const coord = components.Position.use(destination);

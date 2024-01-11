@@ -1,4 +1,4 @@
-import { primodium } from "@game/api";
+import { Primodium } from "@game/api";
 // import { EntitytoSpriteKey } from "@game/constants";
 import { EntitytoSpriteKey } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
@@ -133,7 +133,7 @@ export const getBuildingName = (building: Entity) => {
   return `${getBlockTypeName(buildingType)} ${toRomanNumeral(Number(level))}`;
 };
 
-export const getBuildingImage = (building: Entity) => {
+export const getBuildingImage = (primodium: Primodium, building: Entity) => {
   const buildingType = comps.BuildingType.get(building)?.value as Entity;
   const level = comps.Level.get(building)?.value ?? 1n;
   const { getSpriteBase64 } = primodium.api().sprite;
@@ -149,7 +149,7 @@ export const getBuildingImage = (building: Entity) => {
   return "";
 };
 
-export const getBuildingImageFromType = (buildingType: Entity) => {
+export const getBuildingImageFromType = (primodium: Primodium, buildingType: Entity) => {
   const level = comps.Level.get(buildingType)?.value ?? 1n;
   const { getSpriteBase64 } = primodium.api().sprite;
 

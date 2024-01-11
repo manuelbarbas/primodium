@@ -24,11 +24,11 @@ library LibSend {
     // Iterate through unit prototypes and check the sent unit counts.
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (sendArgs.unitCounts[i] == 0) continue;
-      uint256 count = UnitCount.get(playerEntity, origin, unitPrototypes[i]);
+      uint256 count = UnitCount.get(origin, unitPrototypes[i]);
       // Ensure that there are enough units to send.
       require(count >= sendArgs.unitCounts[i], "[SendUnits] Not enough units to send");
       // Deduct the sent units from the unit count.
-      UnitCount.set(playerEntity, origin, unitPrototypes[i], count - sendArgs.unitCounts[i]);
+      UnitCount.set(origin, unitPrototypes[i], count - sendArgs.unitCounts[i]);
       anyUnitsSent = true;
     }
 

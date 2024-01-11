@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import "./PrimodiumTest.t.sol";
 
 contract ClientEncodeTest is PrimodiumTest {
-  function testHashKeyEntity() public {
+  function testHashKeyEntity() public view {
     bytes32 key = bytes32("KEY");
     console.log("testHashKeyEntity");
     for (uint256 i = 0; i < 10; i++) {
@@ -15,7 +15,7 @@ contract ClientEncodeTest is PrimodiumTest {
     }
   }
 
-  function testMotherlodeEntity() public {
+  function testMotherlodeEntity() public view {
     console.log("testMotherlodeEntity");
     for (uint256 i = 0; i < 10; i++) {
       bytes32 entity = bytes32(i);

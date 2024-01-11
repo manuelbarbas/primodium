@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
 import { Script } from "forge-std/Script.sol";
 import { console } from "forge-std/console.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
@@ -25,14 +24,14 @@ contract PostDeploy is Script {
     address admin = vm.addr(deployerPrivateKey);
 
     IWorld world = IWorld(worldAddress);
-    address creator = world.creator();
+    world.creator();
     vm.startBroadcast(deployerPrivateKey);
     StoreSwitch.setStoreAddress(worldAddress);
-    uint256 newValue = world.increment();
+    world.increment();
 
     createPrototypes(world);
     console.log("Prototypes created");
-    createTerrain(world);
+    createTerrain();
     console.log("Terrain created");
     setupHooks(world);
 

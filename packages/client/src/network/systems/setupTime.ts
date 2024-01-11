@@ -1,4 +1,4 @@
-import { defineRxSystem } from "@latticexyz/recs";
+import { defineRxSystem, namespaceWorld } from "@latticexyz/recs";
 import { components } from "../components";
 import { SetupResult } from "../types";
 import { world } from "../world";
@@ -8,7 +8,8 @@ export function setupTime({
     clock: { time$ },
   },
 }: SetupResult) {
-  defineRxSystem(world, time$, (time) => {
+  const systemWorld = namespaceWorld(world, "systems");
+  defineRxSystem(systemWorld, time$, (time) => {
     components.Time.set({ value: BigInt(time) });
   });
 }
