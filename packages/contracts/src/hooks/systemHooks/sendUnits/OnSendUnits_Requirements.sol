@@ -37,7 +37,7 @@ contract OnSendUnits_Requirements is SystemHook {
     if (destination == 0) destination = LibMotherlode.createMotherlode(sendArgs.destinationPosition);
 
     // Convert the message sender's address to their entity
-    bytes32 playerEntity = _player(msgSender, false);
+    bytes32 playerEntity = _player(msgSender);
 
     // Check the movement rules for sending units
     LibSend.checkMovementRules(origin, destination, playerEntity, sendArgs.to, sendArgs.sendType);

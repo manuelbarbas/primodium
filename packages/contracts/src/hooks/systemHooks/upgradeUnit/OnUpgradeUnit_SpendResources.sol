@@ -35,7 +35,7 @@ contract OnUpgradeUnit_SpendResources is SystemHook {
     ResourceId,
     bytes memory callData
   ) public {
-    bytes32 playerEntity = _player(msgSender, false);
+    bytes32 playerEntity = _player(msgSender);
     // Decode the arguments from the callData
     bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
 

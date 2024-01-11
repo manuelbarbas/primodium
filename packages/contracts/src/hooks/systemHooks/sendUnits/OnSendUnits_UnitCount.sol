@@ -31,7 +31,7 @@ contract OnSendUnits_UnitCount is SystemHook {
     SendArgs memory sendArgs = abi.decode(args, (SendArgs));
 
     // Convert the message sender's address to their entity
-    bytes32 playerEntity = _player(msgSender, false);
+    bytes32 playerEntity = _player(msgSender);
 
     // Update the unit count when units are sent
     LibSend.updateUnitCountOnSend(playerEntity, sendArgs);

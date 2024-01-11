@@ -14,7 +14,7 @@ import { EResource, EUnit, EOrderType } from "src/Types.sol";
 
 contract MarketplaceSystem is PrimodiumSystem {
   modifier onlySeller(bytes32 orderId) {
-    require(MarketplaceOrder.getSeller(orderId) == _player(true), "[MarketplaceSystem] You don't control this order");
+    require(MarketplaceOrder.getSeller(orderId) == _player(), "[MarketplaceSystem] You don't control this order");
     _;
   }
 
@@ -23,7 +23,7 @@ contract MarketplaceSystem is PrimodiumSystem {
     uint256 count,
     uint256 price
   ) public returns (bytes32 orderId) {
-    bytes32 playerEntity = _player(true);
+    bytes32 playerEntity = _player();
     bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
     uint256 orderCount = ResourceCount.get(homeAsteroid, uint8(EResource.U_Orders));
     require(orderCount > 0, "[MarketplaceSystem] Max orders reached");
@@ -49,7 +49,7 @@ contract MarketplaceSystem is PrimodiumSystem {
     uint256 count,
     uint256 price
   ) public returns (bytes32 orderId) {
-    bytes32 playerEntity = _player(true);
+    bytes32 playerEntity = _player();
     bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
     uint256 orderCount = ResourceCount.get(homeAsteroid, uint8(EResource.U_Orders));
     require(orderCount > 0, "[MarketplaceSystem] Max orders reached");
@@ -75,7 +75,7 @@ contract MarketplaceSystem is PrimodiumSystem {
     uint256 count,
     uint256 price
   ) public returns (bytes32 orderId) {
-    bytes32 playerEntity = _player(true);
+    bytes32 playerEntity = _player();
     bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
     uint256 orderCount = ResourceCount.get(homeAsteroid, uint8(EResource.U_Orders));
     require(orderCount > 0, "[MarketplaceSystem] Max orders reached");
@@ -131,7 +131,7 @@ contract MarketplaceSystem is PrimodiumSystem {
   }
 
   function takeOrder(bytes32 orderId, uint256 countBought) public {
-    bytes32 playerEntity = _player(true);
+    bytes32 playerEntity = _player();
     if (countBought == 0) revert("[MarketplaceSystem] Invalid count");
     MarketplaceOrderData memory order = MarketplaceOrder.get(orderId);
     require(order.seller != playerEntity, "[MarketplaceSystem] Cannot take your own order");
