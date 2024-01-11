@@ -12,17 +12,6 @@ struct Bounds {
   int32 maxY;
 }
 
-struct Arrival {
-  ESendType sendType;
-  uint256 arrivalTime;
-  uint256 sendTime;
-  bytes32 from;
-  bytes32 to;
-  bytes32 origin;
-  bytes32 destination;
-  uint256[NUM_UNITS] unitCounts; // corresponds to EUnit: ["MiningVessel", "AegisDrone", "HammerDrone", "StingerDrone", "AnvilDrone"]
-}
-
 // struct FleetStatus
 // {
 //   PositionData origin,
@@ -32,11 +21,3 @@ struct Arrival {
 //   uint256 resourceStorage;
 //   uint256 occuppiedStorage;
 // }
-
-struct SendArgs {
-  uint256[NUM_UNITS] unitCounts;
-  ESendType sendType;
-  PositionData originPosition;
-  PositionData destinationPosition;
-  bytes32 to;
-}

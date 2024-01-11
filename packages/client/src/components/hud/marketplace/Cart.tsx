@@ -10,10 +10,10 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
+import { takeOrders } from "src/network/setup/contractCalls/takeOrders";
 import { getBlockTypeName } from "src/util/common";
 import { ResourceEntityLookup, ResourceImage, UnitEntityLookup } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
-import { takeOrders } from "src/util/web3/contractCalls/takeOrders";
 
 export const Cart = ({
   takenOrders,
@@ -24,11 +24,15 @@ export const Cart = ({
   removeOrder: (id: Entity) => void;
   clearOrders: () => void;
 }) => {
-  const { network } = useMud();
-  const balance = components.WETHBalance.use(network.playerEntity)?.value ?? 0n;
+  const mud = useMud();
+  const playerEntity = mud.playerAccount.entity;
+
+  const balance = components.WETHBalance.use(playerEntity)?.value ?? 0n;
+
   const allListings = components.MarketplaceOrder.useAll().map((order) => {
     return { ...components.MarketplaceOrder.get(order)!, id: order };
   });
+
   const unitDisplay = useSettingsStore((state) => state.unitDisplay);
 
   const takenOrdersFullData = useMemo(() => {
@@ -88,12 +92,12 @@ export const Cart = ({
           </span>
         </div>
 
-        <TransactionQueueMask queueItemId={hashEntities(network.playerEntity, ...Object.keys(takenOrders))}>
+        <TransactionQueueMask queueItemId={hashEntities(playerEntity!, ...Object.keys(takenOrders))}>
           <Button
             className="btn-secondary h-full btn-sm"
             disabled={Object.keys(takenOrders).length === 0}
             onClick={() => {
-              takeOrders(takenOrders, network);
+              takeOrders(mud, takenOrders);
               clearOrders();
             }}
           >

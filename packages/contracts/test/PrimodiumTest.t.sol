@@ -96,18 +96,6 @@ contract PrimodiumTest is MudTest {
     assertEq(uint256(a), uint256(b));
   }
 
-  function assertEq(Arrival memory a, Arrival memory b) internal {
-    assertEq(uint8(a.sendType), uint8(b.sendType), "[assertEq]: sendType doesn't match");
-    assertEq(a.arrivalTime, b.arrivalTime, "[assertEq]: arrivalTime doesn't match");
-    assertEq(toString(a.from), toString(b.from), "[assertEq]: from doesn't match");
-    assertEq(toString(a.to), toString(b.to), "[assertEq]: to doesn't match");
-    assertEq(toString(a.origin), toString(b.origin), "[assertEq]: origin doesn't match");
-    assertEq(toString(a.destination), toString(b.destination), "[assertEq]: destination doesn't match");
-    for (uint256 i = 0; i < a.unitCounts.length; i++) {
-      assertEq(a.unitCounts[i], b.unitCounts[i], "[assertEq]: unitCounts doesn't match");
-    }
-  }
-
   function assertEq(
     ERock a,
     ERock b,
@@ -134,37 +122,37 @@ contract PrimodiumTest is MudTest {
     return getPosition(PositionData2D(position.x, position.y), player);
   }
 
-  function getPosition1(address player) internal view returns (PositionData memory) {
+  function getPosition1(address player) internal pure returns (PositionData memory) {
     PositionData2D memory coord1 = PositionData2D(15, 12);
     return getPosition(coord1, player);
   }
 
-  function getPosition2(address player) internal view returns (PositionData memory) {
+  function getPosition2(address player) internal pure returns (PositionData memory) {
     PositionData2D memory coord2 = PositionData2D(23, 17);
     return getPosition(coord2, player);
   }
 
-  function getPosition3(address player) internal view returns (PositionData memory) {
+  function getPosition3(address player) internal pure returns (PositionData memory) {
     PositionData2D memory coord3 = PositionData2D(13, 8);
     return getPosition(coord3, player);
   }
 
-  function getIronPosition(address player) internal view returns (PositionData memory) {
+  function getIronPosition(address player) internal pure returns (PositionData memory) {
     PositionData2D memory coord = PositionData2D(20, 8);
     return getPosition(coord, player);
   }
 
-  function getIronPosition2(address player) internal view returns (PositionData memory) {
+  function getIronPosition2(address player) internal pure returns (PositionData memory) {
     PositionData2D memory coord = PositionData2D(21, 8);
     return getPosition(coord, player);
   }
 
-  function getCopperPosition(address player) internal view returns (PositionData memory) {
+  function getCopperPosition(address player) internal pure returns (PositionData memory) {
     PositionData2D memory coord = PositionData2D(20, 15);
     return getPosition(coord, player);
   }
 
-  function getNonIronPosition(address player) internal view returns (PositionData memory) {
+  function getNonIronPosition(address player) internal pure returns (PositionData memory) {
     PositionData2D memory coord = PositionData2D(8, 15);
     return getPosition(coord, player);
   }
@@ -173,13 +161,13 @@ contract PrimodiumTest is MudTest {
     int32 x,
     int32 y,
     address player
-  ) internal view returns (PositionData memory coord) {
+  ) internal pure returns (PositionData memory coord) {
     return getPosition(PositionData2D(x, y), player);
   }
 
   function getPosition(PositionData2D memory coord2D, address player)
     internal
-    view
+    pure
     returns (PositionData memory coord)
   {
     bytes32 playerEntity = addressToEntity(player);
@@ -236,7 +224,7 @@ contract PrimodiumTest is MudTest {
     removeRequiredTile(building);
   }
 
-  function getUnitArray(uint256 unit1Count, uint256 unit2Count) internal returns (uint256[] memory) {
+  function getUnitArray(uint256 unit1Count, uint256 unit2Count) internal pure returns (uint256[] memory) {
     uint256[] memory unitArray = new uint256[](NUM_UNITS);
     unitArray[0] = unit1Count;
     unitArray[1] = unit2Count;

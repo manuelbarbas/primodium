@@ -1,15 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { ESendType, ERock, EResource } from "src/Types.sol";
-import { FleetStanceData, FleetStance, Position, FleetAttributesData, FleetAttributes, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { ERock, EResource } from "src/Types.sol";
+import { P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetAttributesData, FleetAttributes, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { FleetsMap } from "libraries/FleetsMap.sol";
-import { SendArgs } from "src/Types.sol";
 import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
+
 import { WORLD_SPEED_SCALE, NUM_UNITS, UNIT_SPEED_SCALE, NUM_RESOURCE } from "src/constants.sol";
 import { EResource, EFleetStance } from "src/Types.sol";
 
@@ -50,6 +51,7 @@ library LibFleet {
     }
 
     for (uint8 i = 0; i < NUM_RESOURCE; i++) {
+      if (resourceCounts[i] == 0) continue;
       uint256 rockResourceCount = ResourceCount.get(spaceRock, i);
       require(rockResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
       LibStorage.decreaseStoredResource(spaceRock, i, resourceCounts[i]);
@@ -119,6 +121,7 @@ library LibFleet {
     );
 
     for (uint8 i = 0; i < NUM_RESOURCE; i++) {
+      if (resourceCounts[i] == 0) continue;
       increaseFleetResource(fleetId, i, resourceCounts[i]);
       decreaseFleetResource(fromFleetId, i, resourceCounts[i]);
     }
@@ -177,6 +180,7 @@ library LibFleet {
     require(FleetMovement.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
 
     for (uint8 i = 0; i < NUM_RESOURCE; i++) {
+      if (resourceCounts[i] == 0) continue;
       uint256 rockResourceCount = ResourceCount.get(spaceRock, i);
       require(rockResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
       LibStorage.decreaseStoredResource(spaceRock, i, resourceCounts[i]);
@@ -194,6 +198,7 @@ library LibFleet {
     require(FleetMovement.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not in space rock orbit");
     require(FleetMovement.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
     for (uint8 i = 0; i < NUM_RESOURCE; i++) {
+      if (resourceCounts[i] == 0) continue;
       uint256 fleetResourceCount = ResourceCount.get(fleetId, i);
       require(fleetResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
       LibStorage.increaseStoredResource(spaceRock, i, resourceCounts[i]);
@@ -402,6 +407,7 @@ library LibFleet {
 
     for (uint8 i = 0; i < NUM_RESOURCE; i++) {
       uint256 fleetResourceCount = ResourceCount.get(fleetId, i);
+      if (fleetResourceCount == 0) continue;
       LibStorage.increaseStoredResource(spaceRock, i, fleetResourceCount);
       decreaseFleetResource(fleetId, i, fleetResourceCount);
     }
@@ -445,10 +451,12 @@ library LibFleet {
       uint256 totalResourceCount = 0;
       for (uint256 j = 1; j < fleets.length; j++) {
         uint256 resourceCount = ResourceCount.get(fleets[j], i);
+        if (resourceCount == 0) continue;
         decreaseFleetResource(fleets[j], i, resourceCount);
 
         totalResourceCount += resourceCount;
       }
+      if (totalResourceCount == 0) continue;
       increaseFleetResource(fleets[0], i, totalResourceCount);
     }
 

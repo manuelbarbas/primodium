@@ -3,7 +3,6 @@ import { Entity } from "@latticexyz/recs";
 import { Account, Time } from "src/network/components/clientComponents";
 
 import { useMemo } from "react";
-import { useMud } from "src/hooks/useMud";
 
 import { AudioKeys } from "@game/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
@@ -16,7 +15,9 @@ import { Join } from "src/components/core/Join";
 import { Tabs } from "src/components/core/Tabs";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { useMud } from "src/hooks";
 import { components as comps } from "src/network/components";
+import { claimObjective } from "src/network/setup/contractCalls/claimObjective";
 import { formatNumber, getBlockTypeName } from "src/util/common";
 import {
   BackgroundImage,
@@ -36,13 +37,12 @@ import {
 } from "src/util/objectives";
 import { getFullResourceCount } from "src/util/resource";
 import { getRewards } from "src/util/reward";
-import { claimObjective } from "src/util/web3/contractCalls/claimObjective";
 import { Hex } from "viem";
 
 const ClaimObjectiveButton: React.FC<{
   objectiveEntity: Entity;
 }> = ({ objectiveEntity }) => {
-  const network = useMud();
+  const mud = useMud();
   const time = Time.use()?.value;
   const levelRequirement = comps.Level.use(objectiveEntity);
   const objectiveClaimedRequirement = comps.CompletedObjective.use(objectiveEntity);
@@ -80,9 +80,7 @@ const ClaimObjectiveButton: React.FC<{
           disabled={!canClaim}
           className={`btn-sm btn-secondary border-accent w-full`}
           clickSound={AudioKeys.Complete2}
-          onClick={() => {
-            claimObjective(objectiveEntity, network.network);
-          }}
+          onClick={() => claimObjective(mud, objectiveEntity)}
         >
           {"Claim"}
         </Button>
@@ -101,7 +99,10 @@ const Objective: React.FC<{
   highlight?: boolean;
 }> = ({ objective, highlight = false }) => {
   const time = Time.use()?.value;
-  const playerEntity = Account.use()?.value;
+
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
   const spaceRock = comps.Home.use(playerEntity)?.asteroid as Entity | undefined;
   const objectiveName = useMemo(() => {
     if (!objective) return;

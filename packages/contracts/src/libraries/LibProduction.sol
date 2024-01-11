@@ -48,31 +48,6 @@ library LibProduction {
     }
   }
 
-  function upgradeUnitResourceProduction(
-    bytes32 playerEntity,
-    bytes32 unitPrototype,
-    uint256 level
-  ) internal {
-    uint256 miningRate = P_MiningRate.get(unitPrototype, level);
-    if (miningRate == 0) return;
-    uint256 lastLevelMiningRate = P_MiningRate.get(unitPrototype, level - 1);
-    bytes32[] memory ownedMotherlodes = OwnedMotherlodes.get(playerEntity);
-
-    for (uint8 motherlodeIndex = 0; motherlodeIndex < ownedMotherlodes.length; motherlodeIndex++) {
-      bytes32 motherlode = ownedMotherlodes[motherlodeIndex];
-      uint8 motherlodeResource = Motherlode.getMotherlodeType(motherlode);
-      uint256 currProduction = ProductionRate.get(motherlode, motherlodeResource);
-      if (currProduction > 0) {
-        ProductionRate.set(motherlode, motherlodeResource, ((currProduction * miningRate) / lastLevelMiningRate));
-        ConsumptionRate.set(
-          motherlode,
-          P_ConsumesResource.get(motherlodeResource),
-          ((currProduction * miningRate) / lastLevelMiningRate)
-        );
-      }
-    }
-  }
-
   /// @notice increases the resource production for the spaceRock
   /// @param spaceRockEntity Entity ID of the spaceRock owning the building
   /// @param resource the resource the production is increased for

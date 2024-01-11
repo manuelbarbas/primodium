@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import { console } from "forge-std/console.sol";
 import { ResourceId, ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
-import { addressToEntity, entityToAddress, getSystemResourceId } from "src/utils.sol";
+import { entityToAddress, getSystemResourceId } from "src/utils.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { Children, ChildrenTableId } from "codegen/tables/Children.sol";
 import { OwnedBy, OwnedByTableId } from "codegen/tables/OwnedBy.sol";

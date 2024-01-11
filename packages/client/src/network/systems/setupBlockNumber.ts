@@ -1,3 +1,4 @@
+import { namespaceWorld } from "@latticexyz/recs";
 import { Observable } from "rxjs";
 import { BlockNumber } from "../components/clientComponents";
 import { world } from "../world";
@@ -7,6 +8,7 @@ export const setupBlockNumber = (blockNumber$: Observable<bigint>) => {
   const blockTimes: number[] = [];
   let prevBlockTime: number | undefined = undefined;
 
+  const systemWorld = namespaceWorld(world, "systems");
   const blockListener = blockNumber$.subscribe(async (blockNumber) => {
     if (!prevBlockTime) {
       prevBlockTime = Date.now();
@@ -30,5 +32,5 @@ export const setupBlockNumber = (blockNumber$: Observable<bigint>) => {
     BlockNumber.set({ value: blockNumber, avgBlockTime: avgBlockTime });
   });
 
-  world.registerDisposer(() => blockListener.unsubscribe());
+  systemWorld.registerDisposer(() => blockListener.unsubscribe());
 };

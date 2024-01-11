@@ -49,7 +49,7 @@ library LibResource {
     uint256 count
   ) internal {
     bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
-    uint256 level = UnitLevel.get(playerEntity, prototype);
+    uint256 level = UnitLevel.get(spaceRockEntity, prototype);
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(prototype, level);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       spendResource(spaceRockEntity, prototype, requiredResources.resources[i], requiredResources.amounts[i] * count);
@@ -126,7 +126,6 @@ library LibResource {
     bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
     bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
     LastClaimedAt.set(spaceRockEntity, block.timestamp);
-    uint256[] memory consumptionTimeLengths = new uint256[](uint8(EResource.LENGTH));
 
     uint8 resource = Motherlode.getMotherlodeType(spaceRockEntity);
     uint8 consumesResource = P_ConsumesResource.get(resource);

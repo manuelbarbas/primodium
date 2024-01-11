@@ -7,12 +7,13 @@ import { SecondaryCard } from "src/components/core/Card";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Fleet } from "src/components/hud/modals/fleets/Fleet";
 import { useMud } from "src/hooks";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
+import { recallStationedUnits } from "src/network/setup/contractCalls/recall";
 import { formatNumber } from "src/util/common";
 import { BackgroundImage, UnitEnumLookup } from "src/util/constants";
 import { getRockDefense } from "src/util/defense";
 import { getSpaceRockImage, getSpaceRockName } from "src/util/spacerock";
-import { recallStationedUnits } from "src/util/web3/contractCalls/recall";
 
 export const Unit: React.FC<{ unit: Entity; count: bigint }> = ({ unit, count }) => {
   if (count === 0n) return null;
@@ -34,7 +35,8 @@ export const Unit: React.FC<{ unit: Entity; count: bigint }> = ({ unit, count })
 
 export const TargetInfo = () => {
   const selectedSpacerock = components.SelectedRock.use()?.value;
-  const img = getSpaceRockImage(selectedSpacerock ?? singletonEntity);
+  const primodium = usePrimodium();
+  const img = getSpaceRockImage(primodium, selectedSpacerock ?? singletonEntity);
   const name = getSpaceRockName(selectedSpacerock ?? singletonEntity);
   const coord = components.Position.get(selectedSpacerock ?? singletonEntity) ?? { x: 0, y: 0 };
   const def = getRockDefense(selectedSpacerock ?? singletonEntity);
@@ -60,14 +62,15 @@ export const TargetInfo = () => {
 };
 
 export const Recall = ({ rock }: { rock: Entity }) => {
-  const { network } = useMud();
+  const mud = useMud();
+  const playerEntity = mud.playerAccount.entity;
   const units = components.Hangar.use(rock, {
     units: [],
     counts: [],
   });
 
-  const ownedByPlayer = components.OwnedBy.get(rock)?.value === network.playerEntity;
-  const arrivals = components.Arrival.use({ destination: rock, from: network.playerEntity, onlyOrbiting: true });
+  const ownedByPlayer = components.OwnedBy.get(rock)?.value === playerEntity;
+  const arrivals = components.Arrival.use({ destination: rock, from: playerEntity, onlyOrbiting: true });
   const getUnitCount = useCallback(
     (unit: Entity) => {
       if (!units) return 0n;
@@ -131,7 +134,7 @@ export const Recall = ({ rock }: { rock: Entity }) => {
                 ))}
               </div>
             )}
-            <Button onClick={() => recallStationedUnits(rock, network)} disabled={totalUnits == 0n}>
+            <Button onClick={() => recallStationedUnits(mud, rock)} disabled={totalUnits == 0n}>
               Recall Stationed Units
             </Button>
           </SecondaryCard>

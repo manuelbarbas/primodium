@@ -1,13 +1,13 @@
-import { Navigator } from "src/components/core/Navigator";
 import { SecondaryCard } from "src/components/core/Card";
+import { Navigator } from "src/components/core/Navigator";
 import { Range } from "src/components/core/Range";
 import { useSettingsStore } from "src/game/stores/SettingsStore";
-import { primodium } from "@game/api";
+import { usePrimodium } from "src/hooks/usePrimodium";
 
 export const AudioSettings = () => {
   const { master, sfx, ui, music } = useSettingsStore((state) => state.volume);
   // const setVolume = useSettingsStore((state) => state.setVolume);
-  const { setVolume } = primodium.api().audio;
+  const { setVolume } = usePrimodium().api().audio;
 
   return (
     <Navigator.Screen title="audio">

@@ -296,7 +296,6 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   //   P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)));
   //   setupRaid();
   //   RaidResultData memory raidResult = LibRaid.resolveRaid(br);
-
   //   world.claimObjective(EObjectives.BuildCopperMine);
   //   assertEq(
   //     ResourceCount.get(spaceRockEntity, uint8(EResource.Iron)),
@@ -327,7 +326,6 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   //   resourceRewardData.resources[0] = uint8(EResource.Iron);
   //   resourceRewardData.amounts[0] = 100;
   //   P_ResourceReward.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)), resourceRewardData);
-
   //   setupRaid();
   //   RaidResultData memory raidResult = LibRaid.resolveRaid(br);
   //   world.claimObjective(EObjectives.BuildCopperMine);
