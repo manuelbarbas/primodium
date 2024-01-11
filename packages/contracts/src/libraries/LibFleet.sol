@@ -50,6 +50,7 @@ library LibFleet {
     }
 
     for (uint8 i = 0; i < NUM_RESOURCE; i++) {
+      if (resourceCounts[i] == 0) continue;
       uint256 rockResourceCount = ResourceCount.get(spaceRock, i);
       require(rockResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
       LibStorage.decreaseStoredResource(spaceRock, i, resourceCounts[i]);
@@ -119,6 +120,7 @@ library LibFleet {
     );
 
     for (uint8 i = 0; i < NUM_RESOURCE; i++) {
+      if (resourceCounts[i] == 0) continue;
       increaseFleetResource(fleetId, i, resourceCounts[i]);
       decreaseFleetResource(fromFleetId, i, resourceCounts[i]);
     }
@@ -177,6 +179,7 @@ library LibFleet {
     require(FleetMovement.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
 
     for (uint8 i = 0; i < NUM_RESOURCE; i++) {
+      if (resourceCounts[i] == 0) continue;
       uint256 rockResourceCount = ResourceCount.get(spaceRock, i);
       require(rockResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
       LibStorage.decreaseStoredResource(spaceRock, i, resourceCounts[i]);
@@ -194,6 +197,7 @@ library LibFleet {
     require(FleetMovement.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not in space rock orbit");
     require(FleetMovement.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
     for (uint8 i = 0; i < NUM_RESOURCE; i++) {
+      if (resourceCounts[i] == 0) continue;
       uint256 fleetResourceCount = ResourceCount.get(fleetId, i);
       require(fleetResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
       LibStorage.increaseStoredResource(spaceRock, i, resourceCounts[i]);
@@ -402,6 +406,7 @@ library LibFleet {
 
     for (uint8 i = 0; i < NUM_RESOURCE; i++) {
       uint256 fleetResourceCount = ResourceCount.get(fleetId, i);
+      if (fleetResourceCount == 0) continue;
       LibStorage.increaseStoredResource(spaceRock, i, fleetResourceCount);
       decreaseFleetResource(fleetId, i, fleetResourceCount);
     }
@@ -445,10 +450,12 @@ library LibFleet {
       uint256 totalResourceCount = 0;
       for (uint256 j = 1; j < fleets.length; j++) {
         uint256 resourceCount = ResourceCount.get(fleets[j], i);
+        if (resourceCount == 0) continue;
         decreaseFleetResource(fleets[j], i, resourceCount);
 
         totalResourceCount += resourceCount;
       }
+      if (totalResourceCount == 0) continue;
       increaseFleetResource(fleets[0], i, totalResourceCount);
     }
 
