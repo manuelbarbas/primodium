@@ -1,6 +1,5 @@
 import { SecondaryCard } from "src/components/core/Card";
 import { Modal } from "src/components/core/Modal";
-import { Marketplace } from "../../marketplace/Marketplace";
 
 export const OpenMarket: React.FC = () => {
   return (
@@ -14,7 +13,7 @@ export const OpenMarket: React.FC = () => {
           </div>
         </Modal.Button>
         <Modal.Content className="w-screen h-screen">
-          <Marketplace />
+          <p>Wait on it</p>
         </Modal.Content>
       </Modal>
     </SecondaryCard>
