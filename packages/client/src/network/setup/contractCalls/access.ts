@@ -19,9 +19,6 @@ export const grantAccess = async (mud: MUD, address: Address) => {
     {
       id: singletonEntity,
       type: TransactionQueueType.Access,
-    },
-    (receipt) => {
-      receipt;
     }
   );
 };
@@ -32,9 +29,6 @@ export const revokeAccess = async (mud: MUD, address: Address) => {
     {
       id: singletonEntity,
       type: TransactionQueueType.Access,
-    },
-    (receipt) => {
-      receipt;
     }
   );
 };
@@ -64,9 +58,6 @@ export const revokeAllAccess = async (mud: MUD) => {
     {
       id: singletonEntity,
       type: TransactionQueueType.Access,
-    },
-    (receipt) => {
-      receipt;
     }
   );
 };
@@ -85,9 +76,6 @@ export const switchDelegate = async (mud: MUD, newDelegate: Address) => {
     {
       id: singletonEntity,
       type: TransactionQueueType.Access,
-    },
-    (receipt) => {
-      receipt;
     }
   );
 };
