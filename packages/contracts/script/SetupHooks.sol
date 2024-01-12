@@ -33,9 +33,6 @@ import "codegen/index.sol";
 import { OnResourceCount_Score } from "src/hooks/storeHooks/OnResourceCount_Score.sol";
 import { OnScore_Alliance_Score } from "src/hooks/storeHooks/OnScore_Alliance_Score.sol";
 
-import { OnBefore_ClaimResources } from "src/hooks/systemHooks/OnBefore_ClaimResources.sol";
-import { OnBefore_ClaimUnits } from "src/hooks/systemHooks/OnBefore_ClaimUnits.sol";
-
 import { OnBuild_PlaceOnTile } from "src/hooks/systemHooks/build/OnBuild_PlaceOnTile.sol";
 import { OnBuild_Requirements } from "src/hooks/systemHooks/build/OnBuild_Requirements.sol";
 import { OnBuild_SpendResources } from "src/hooks/systemHooks/build/OnBuild_SpendResources.sol";
@@ -89,42 +86,23 @@ import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/sr
 import { BEFORE_SPLICE_STATIC_DATA, AFTER_SET_RECORD, ALL as STORE_ALL } from "@latticexyz/store/src/storeHookTypes.sol";
 
 function setupHooks(IWorld world) {
-  OnBefore_ClaimResources onBefore_ClaimResources = new OnBefore_ClaimResources();
-  console.log("onBefore_ClaimResources address: %s", address(onBefore_ClaimResources));
-  world.grantAccess(ResourceCountTableId, address(onBefore_ClaimResources));
-  world.grantAccess(MapItemUtilitiesTableId, address(onBefore_ClaimResources));
-  world.grantAccess(MapUtilitiesTableId, address(onBefore_ClaimResources));
-  world.grantAccess(MapItemStoredUtilitiesTableId, address(onBefore_ClaimResources));
-  world.grantAccess(LastClaimedAtTableId, address(onBefore_ClaimResources));
-  world.grantAccess(ClaimOffsetTableId, address(onBefore_ClaimResources));
-  world.grantAccess(ProducedResourceTableId, address(onBefore_ClaimResources));
-
-  OnBefore_ClaimUnits onBefore_ClaimUnits = new OnBefore_ClaimUnits();
-  console.log("onBefore_ClaimUnits address: %s", address(onBefore_ClaimUnits));
-  world.grantAccess(UnitCountTableId, address(onBefore_ClaimUnits));
-  world.grantAccess(LastClaimedAtTableId, address(onBefore_ClaimUnits));
-  world.grantAccess(ClaimOffsetTableId, address(onBefore_ClaimUnits));
-  world.grantAccess(QueueItemUnitsTableId, address(onBefore_ClaimUnits));
-  world.grantAccess(QueueUnitsTableId, address(onBefore_ClaimUnits));
-  world.grantAccess(ProducedUnitTableId, address(onBefore_ClaimUnits));
-
   //System Hooks
-  registerBuildHooks(world, onBefore_ClaimResources);
-  registerUpgradeHooks(world, onBefore_ClaimResources);
-  registerDestroyHooks(world, onBefore_ClaimResources);
-  registerSendUnits(world, onBefore_ClaimUnits);
-  registerTrainUnits(world, onBefore_ClaimResources, onBefore_ClaimUnits);
-  registerInvade(world, onBefore_ClaimResources, onBefore_ClaimUnits);
-  registerRaid(world, onBefore_ClaimResources, onBefore_ClaimUnits);
-  registerReinforce(world, onBefore_ClaimUnits);
-  registerClaimObjective(world, onBefore_ClaimResources, onBefore_ClaimUnits);
-  registerUpgradeRangeHook(world, onBefore_ClaimResources);
-  registerUpgradeUnitHook(world, onBefore_ClaimResources);
+  registerBuildHooks(world);
+  registerUpgradeHooks(world);
+  registerDestroyHooks(world);
+  registerSendUnits(world);
+  registerTrainUnits(world);
+  registerInvade(world);
+  registerRaid(world);
+  registerReinforce(world);
+  registerClaimObjective(world);
+  registerUpgradeRangeHook(world);
+  registerUpgradeUnitHook(world);
 
-  registerAllianceHooks(world, onBefore_ClaimResources);
-  registerRecallHooks(world, onBefore_ClaimResources);
-  registerToggleBuildingHooks(world, onBefore_ClaimResources, onBefore_ClaimUnits);
-  registerMarketplaceHooks(world, onBefore_ClaimResources, onBefore_ClaimUnits);
+  registerAllianceHooks(world);
+  registerRecallHooks(world);
+  registerToggleBuildingHooks(world);
+  registerMarketplaceHooks(world);
   //Store Hooks
   registerScoreHook(world);
 }
@@ -145,15 +123,8 @@ function registerScoreHook(IWorld world) {
   world.registerStoreHook(ScoreTableId, onScore_Alliance_Score, BEFORE_SPLICE_STATIC_DATA);
 }
 
-function registerToggleBuildingHooks(
-  IWorld world,
-  OnBefore_ClaimResources onBefore_ClaimResources,
-  OnBefore_ClaimUnits onBefore_ClaimUnits
-) {
+function registerToggleBuildingHooks(IWorld world) {
   ResourceId systemId = getSystemResourceId("ToggleBuildingSystem");
-  world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
-
-  world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
 
   OnToggleBuilding_MaxStorage onToggleBuilding_MaxStorage = new OnToggleBuilding_MaxStorage();
   console.log("onToggleBuilding_MaxStorage address: %s", address(onToggleBuilding_MaxStorage));
@@ -185,16 +156,8 @@ function registerToggleBuildingHooks(
   world.registerSystemHook(systemId, onToggleBuilding_Utility, AFTER_CALL_SYSTEM);
 }
 
-function registerMarketplaceHooks(
-  IWorld world,
-  OnBefore_ClaimResources onBefore_ClaimResources,
-  OnBefore_ClaimUnits onBefore_ClaimUnits
-) {
+function registerMarketplaceHooks(IWorld world) {
   ResourceId systemId = getSystemResourceId("MarketplaceSystem");
-
-  world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
-
-  world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
 
   OnMarketPlace_TargetClaimResources onMarketPlace_TargetClaimResources = new OnMarketPlace_TargetClaimResources();
   console.log("onMarketPlace_TargetClaimResources address: %s", address(onMarketPlace_TargetClaimResources));
@@ -218,9 +181,7 @@ function registerMarketplaceHooks(
   world.registerSystemHook(systemId, onMarketPlace_TargetClaimUnits, BEFORE_CALL_SYSTEM);
 }
 
-function registerAllianceHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
-  world.registerSystemHook(getSystemResourceId("AllianceSystem"), onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
-
+function registerAllianceHooks(IWorld world) {
   OnAlliance_TargetClaimResources onAlliance_TargetClaimResources = new OnAlliance_TargetClaimResources();
   console.log("onAlliance_TargetClaimResources address: %s", address(onAlliance_TargetClaimResources));
   address hookAddress = address(onAlliance_TargetClaimResources);
@@ -233,9 +194,7 @@ function registerAllianceHooks(IWorld world, OnBefore_ClaimResources onBefore_Cl
   world.registerSystemHook(getSystemResourceId("AllianceSystem"), onAlliance_TargetClaimResources, BEFORE_CALL_SYSTEM);
 }
 
-function registerRecallHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
-  world.registerSystemHook(getSystemResourceId("RecallSystem"), onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
-
+function registerRecallHooks(IWorld world) {
   OnRecall_TargetClaimResources onRecall_TargetClaimResources = new OnRecall_TargetClaimResources();
   console.log("onRecall_TargetClaimResources address: %s", address(onRecall_TargetClaimResources));
   address hookAddress = address(onRecall_TargetClaimResources);
@@ -252,9 +211,8 @@ function registerRecallHooks(IWorld world, OnBefore_ClaimResources onBefore_Clai
  * @dev Registers a system hook for when range is upgraded
  * @param world The World contract instance.
  */
-function registerUpgradeRangeHook(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
+function registerUpgradeRangeHook(IWorld world) {
   ResourceId systemId = getSystemResourceId("UpgradeRangeSystem");
-  world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
 
   OnUpgradeRange_SpendResources onUpgradeRange_SpendResources = new OnUpgradeRange_SpendResources();
   console.log("onUpgradeRange_SpendResources address: %s", address(onUpgradeRange_SpendResources));
@@ -271,10 +229,8 @@ function registerUpgradeRangeHook(IWorld world, OnBefore_ClaimResources onBefore
  * @dev Registers a system hook for when unit is upgraded
  * @param world The World contract instance.
  */
-function registerUpgradeUnitHook(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
+function registerUpgradeUnitHook(IWorld world) {
   ResourceId systemId = getSystemResourceId("UpgradeUnitSystem");
-
-  world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
 
   OnUpgradeUnit_SpendResources onUpgradeUnit_SpendResources = new OnUpgradeUnit_SpendResources();
   console.log("onUpgradeUnit_SpendResources address: %s", address(onUpgradeUnit_SpendResources));
@@ -291,9 +247,8 @@ function registerUpgradeUnitHook(IWorld world, OnBefore_ClaimResources onBefore_
  * @dev Register system hooks for the build actions.
  * @param world The World contract instance.
  */
-function registerBuildHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
+function registerBuildHooks(IWorld world) {
   ResourceId systemId = getSystemResourceId("BuildSystem");
-  world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
 
   OnBuild_Requirements onBuild_Requirements = new OnBuild_Requirements();
   console.log("onBuild_Requirements address: %s", address(onBuild_Requirements));
@@ -342,9 +297,8 @@ function registerBuildHooks(IWorld world, OnBefore_ClaimResources onBefore_Claim
  * @dev Register system hooks for the upgrade actions.
  * @param world The World contract instance.
  */
-function registerUpgradeHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
+function registerUpgradeHooks(IWorld world) {
   ResourceId systemId = getSystemResourceId("UpgradeBuildingSystem");
-  world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
 
   OnUpgrade_Requirements onUpgrade_Requirements = new OnUpgrade_Requirements();
   console.log("onUpgrade_Requirements address: %s", address(onUpgrade_Requirements));
@@ -384,9 +338,8 @@ function registerUpgradeHooks(IWorld world, OnBefore_ClaimResources onBefore_Cla
  * @dev Register system hooks for the destroy actions.
  * @param world The World contract instance.
  */
-function registerDestroyHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
+function registerDestroyHooks(IWorld world) {
   ResourceId systemId = getSystemResourceId("DestroySystem");
-  world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
 
   OnDestroy_Requirements onDestroy_Requirements = new OnDestroy_Requirements();
   console.log("onDestroy_Requirements address: %s", address(onDestroy_Requirements));
@@ -432,10 +385,8 @@ function registerDestroyHooks(IWorld world, OnBefore_ClaimResources onBefore_Cla
  * @dev Register system hooks for sending units.
  * @param world The World contract instance.
  */
-function registerSendUnits(IWorld world, OnBefore_ClaimUnits onBefore_ClaimUnits) {
+function registerSendUnits(IWorld world) {
   ResourceId systemId = getSystemResourceId("SendUnitsSystem");
-
-  world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
 
   OnSendUnits_Requirements onSendUnits_Requirements = new OnSendUnits_Requirements();
   console.log("onSendUnits_Requirements address: %s", address(onSendUnits_Requirements));
@@ -451,16 +402,8 @@ function registerSendUnits(IWorld world, OnBefore_ClaimUnits onBefore_ClaimUnits
  * @dev Register system hooks for training units.
  * @param world The World contract instance.
  */
-function registerTrainUnits(
-  IWorld world,
-  OnBefore_ClaimResources onBefore_ClaimResources,
-  OnBefore_ClaimUnits onBefore_ClaimUnits
-) {
+function registerTrainUnits(IWorld world) {
   ResourceId systemId = getSystemResourceId("TrainUnitsSystem");
-
-  world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
-
-  world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
 
   OnTrainUnits_SpendResources onTrainUnits_SpendResources = new OnTrainUnits_SpendResources();
   console.log("onTrainUnits_SpendResources address: %s", address(onTrainUnits_SpendResources));
@@ -481,16 +424,8 @@ function registerTrainUnits(
  * @dev Register system hooks for invading actions.
  * @param world The World contract instance.
  */
-function registerInvade(
-  IWorld world,
-  OnBefore_ClaimResources onBefore_ClaimResources,
-  OnBefore_ClaimUnits onBefore_ClaimUnits
-) {
+function registerInvade(IWorld world) {
   ResourceId systemId = getSystemResourceId("InvadeSystem");
-
-  world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
-
-  world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
 
   OnInvade_Requirements onInvade_Requirements = new OnInvade_Requirements();
   console.log("onInvade_Requirements address: %s", address(onInvade_Requirements));
@@ -515,16 +450,8 @@ function registerInvade(
  * @dev Register system hooks for raid actions.
  * @param world The World contract instance.
  */
-function registerRaid(
-  IWorld world,
-  OnBefore_ClaimResources onBefore_ClaimResources,
-  OnBefore_ClaimUnits onBefore_ClaimUnits
-) {
+function registerRaid(IWorld world) {
   ResourceId systemId = getSystemResourceId("RaidSystem");
-
-  world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
-
-  world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
 
   OnRaid_Requirements onRaid_Requirements = new OnRaid_Requirements();
   console.log("onRaid_Requirements address: %s", address(onRaid_Requirements));
@@ -549,10 +476,8 @@ function registerRaid(
  * @dev Register system hooks for reinforcing actions.
  * @param world The World contract instance.
  */
-function registerReinforce(IWorld world, OnBefore_ClaimUnits onBefore_ClaimUnits) {
+function registerReinforce(IWorld world) {
   ResourceId systemId = getSystemResourceId("ReinforceSystem");
-
-  world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
 
   OnReinforce_TargetClaimResources onReinforce_TargetClaimResources = new OnReinforce_TargetClaimResources();
   console.log("onReinforce_TargetClaimResources address: %s", address(onReinforce_TargetClaimResources));
@@ -565,16 +490,8 @@ function registerReinforce(IWorld world, OnBefore_ClaimUnits onBefore_ClaimUnits
   world.registerSystemHook(systemId, onReinforce_TargetClaimResources, BEFORE_CALL_SYSTEM);
 }
 
-function registerClaimObjective(
-  IWorld world,
-  OnBefore_ClaimResources onBefore_ClaimResources,
-  OnBefore_ClaimUnits onBefore_ClaimUnits
-) {
+function registerClaimObjective(IWorld world) {
   ResourceId systemId = getSystemResourceId("ClaimObjectiveSystem");
-
-  world.registerSystemHook(systemId, onBefore_ClaimResources, BEFORE_CALL_SYSTEM);
-
-  world.registerSystemHook(systemId, onBefore_ClaimUnits, BEFORE_CALL_SYSTEM);
 
   OnClaimObjective_Requirements onClaimObjective_Requirements = new OnClaimObjective_Requirements();
   console.log("onClaimObjective_Requirements address: %s", address(onClaimObjective_Requirements));

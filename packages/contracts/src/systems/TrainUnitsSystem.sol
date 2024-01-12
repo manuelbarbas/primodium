@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { P_EnumToPrototype, QueueItemUnitsData } from "codegen/index.sol";
+import { P_EnumToPrototype, QueueItemUnitsData, Position } from "codegen/index.sol";
 import { UnitProductionQueue } from "codegen/Libraries.sol";
 
 import { EUnit } from "src/Types.sol";
@@ -18,9 +18,11 @@ contract TrainUnitsSystem is PrimodiumSystem {
     EUnit unit,
     uint256 count
   ) public {
-    if (count == 0) {
-      return;
-    }
+    if (count == 0) return;
+    bytes32 spaceRockEntity = Position.getParent(buildingEntity);
+    _claimResources(spaceRockEntity);
+    _claimUnits(spaceRockEntity);
+
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
     QueueItemUnitsData memory queueItem = QueueItemUnitsData({ unitId: unitPrototype, quantity: count });
     UnitProductionQueue.enqueue(buildingEntity, queueItem);

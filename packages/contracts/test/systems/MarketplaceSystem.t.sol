@@ -109,7 +109,6 @@ contract MarketplaceSystemTest is PrimodiumTest {
     LastClaimedAt.set(playerHome, block.timestamp);
     vm.warp(block.timestamp + 1);
     assertEq(MaxResourceCount.get(playerHome, uint8(EResource.Iron)), 100, "before add order max iron not 100");
-    LibResource.claimAllPlayerResources(player);
     assertEq(ResourceCount.get(playerHome, uint8(EResource.Iron)), 100, "before add order iron not 100");
     switchPrank(creator);
     bytes32 orderId = world.addOrder(EOrderType.Resource, uint8(EResource.Iron), 100, 100);

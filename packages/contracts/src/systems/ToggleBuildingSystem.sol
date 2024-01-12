@@ -11,7 +11,12 @@ contract ToggleBuildingSystem is PrimodiumSystem {
   /// @notice Toggles the building at the specified coordinate
   /// @param coord Coordinate of the building to be toggled
   /// @return isActive the new active status of the building
-  function toggleBuilding(PositionData memory coord) public returns (bool isActive) {
+  function toggleBuilding(PositionData memory coord)
+    public
+    claimResources(coord.parent)
+    claimUnits(coord.parent)
+    returns (bool isActive)
+  {
     // Check there isn't another tile there
     bytes32 playerEntity = _player(false);
     bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);

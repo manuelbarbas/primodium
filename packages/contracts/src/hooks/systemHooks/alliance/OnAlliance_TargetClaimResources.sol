@@ -27,7 +27,6 @@ contract OnAlliance_TargetClaimResources is SystemHook {
     if (keccak256(functionSelector) == keccak256("kick(bytes32)")) {
       bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
       bytes32 target = abi.decode(args, (bytes32));
-      LibResource.claimAllPlayerResources(target);
       return;
     }
   }

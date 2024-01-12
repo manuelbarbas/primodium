@@ -9,7 +9,11 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
   /// @notice Upgrades the building at the specified coordinate
   /// @param coord Coordinate of the building to be upgraded
   /// @return buildingEntity Entity identifier of the upgraded building
-  function upgradeBuilding(PositionData memory coord) public returns (bytes32 buildingEntity) {
+  function upgradeBuilding(PositionData memory coord)
+    public
+    claimResources(coord.parent)
+    returns (bytes32 buildingEntity)
+  {
     // Check there isn't another tile there
     buildingEntity = LibBuilding.getBuildingFromCoord(coord);
     uint256 targetLevel = Level.get(buildingEntity) + 1;

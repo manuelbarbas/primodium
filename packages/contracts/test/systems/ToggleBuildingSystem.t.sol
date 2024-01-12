@@ -133,7 +133,7 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
     );
 
     vm.warp(block.timestamp + 10);
-    LibResource.claimAllPlayerResources(player);
+    // LibResource.claimAllPlayerResources(player);
     assertEq(
       ResourceCount.get(Home.get(player), uint8(EResource.Iron)),
       ironProduction * 20,
