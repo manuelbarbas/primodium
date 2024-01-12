@@ -1,9 +1,8 @@
 import { Entity } from "@latticexyz/recs";
 import { Navigator } from "src/components/core/Navigator";
 import { Header } from "../widgets/Header";
-import { Upgrade } from "../widgets/Upgrade";
-
 import { OpenMarket } from "../widgets/OpenMarket";
+import { Upgrade } from "../widgets/Upgrade";
 
 export const Market: React.FC<{ building: Entity }> = ({ building }) => {
   return (
