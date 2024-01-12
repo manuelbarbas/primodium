@@ -4,7 +4,7 @@ import { execute } from "src/network/actions";
 import { MUD } from "src/network/types";
 import { getBlockTypeName } from "src/util/common";
 import { ObjectiveEntityLookup, ObjectiveEnumLookup, TransactionQueueType } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
+import { getSystemId, hashEntities } from "src/util/encode";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const claimObjective = async (mud: MUD, rawObjective: Entity) => {
@@ -12,11 +12,15 @@ export const claimObjective = async (mud: MUD, rawObjective: Entity) => {
   if (!objective) throw new Error(`Objective ${rawObjective} not found in ObjectiveEnumLookup`);
 
   await execute(
-    mud,
-    (account) => account.worldContract.write.claimObjective([objective]),
+    {
+      mud,
+      functionName: "claimObjective",
+      systemId: getSystemId("ObjectiveSystem"),
+      args: [objective],
+      delegate: true,
+    },
     {
       id: hashEntities(TransactionQueueType.ClaimObjective, rawObjective),
-      delegate: true,
     },
     (receipt) => {
       ampli.systemClaimObjective({

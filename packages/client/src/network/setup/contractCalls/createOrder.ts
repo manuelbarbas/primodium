@@ -7,6 +7,7 @@ import { world } from "src/network/world";
 import { bigintToNumber } from "src/util/bigint";
 import { getBlockTypeName } from "src/util/common";
 import { RESOURCE_SCALE, ResourceEnumLookup, UnitEnumLookup } from "src/util/constants";
+import { getSystemId } from "src/util/encode";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const createOrder = async (mud: MUD, rawResource: Entity, count: bigint, price: bigint) => {
@@ -17,12 +18,17 @@ export const createOrder = async (mud: MUD, rawResource: Entity, count: bigint, 
   if (!resourceId) {
     throw new Error("Invalid resource or unit");
   }
+
   await execute(
-    mud,
-    (account) => account.worldContract.write.addOrder([type, resourceId, count, price]),
+    {
+      mud,
+      functionName: "addOrder",
+      systemId: getSystemId("MarketplaceSystem"),
+      args: [type, resourceId, count, price],
+      delegate: true,
+    },
     {
       id: world.registerEntity(),
-      delegate: false,
     },
     (receipt) => {
       const scaledPrice = (price * BigInt(1e18)) / RESOURCE_SCALE;

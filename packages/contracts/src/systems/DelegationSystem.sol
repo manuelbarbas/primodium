@@ -9,7 +9,7 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldRegistrationSystem } from "@latticexyz/world/src/modules/core/implementations/WorldRegistrationSystem.sol";
 import { CORE_SYSTEM_ID } from "@latticexyz/world/src/modules/core/constants.sol";
 
-contract DelegateSystem is PrimodiumSystem {
+contract DelegationSystem is PrimodiumSystem {
   function unregisterDelegation(address delegatee) public {
     bytes32 playerEntity = _player();
     UserDelegationControl.deleteRecord({ delegator: _msgSender(), delegatee: delegatee });

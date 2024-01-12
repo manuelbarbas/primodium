@@ -65,48 +65,50 @@ export async function _execute({ network: { waitForTransaction, publicClient } }
 // Function that takes in a transaction promise that resolves to a completed transaction
 // Alerts the user if the transaction failed
 // Providers renamed to client: https://viem.sh/docs/ethers-migration.html
-export async function execute<T extends keyof MetadataTypes, functionName extends string = string>(
-  {
-    mud,
-    systemId,
-    functionName,
-    args,
-  }: Omit<SystemCall<typeof IWorldAbi, functionName>, "abi"> & {
-    mud: MUD;
-  },
-  options?: { id: Entity; type?: T; metadata?: MetadataTypes[T]; delegate?: boolean },
+
+type ExecuteCallOptions<FunctionName extends string = string> = Omit<
+  SystemCall<typeof IWorldAbi, FunctionName>,
+  "abi"
+> & {
+  mud: MUD;
+  delegate?: boolean;
+  options?: { gas?: bigint };
+};
+
+export async function execute<T extends keyof MetadataTypes, FunctionName extends string = string>(
+  { mud, systemId, functionName, args, delegate, options: callOptions }: ExecuteCallOptions<FunctionName>,
+  txQueueOptions?: { id: Entity; type?: T; metadata?: MetadataTypes[T] },
   onComplete?: (receipt: TransactionReceipt | undefined) => void
 ) {
-  const account = options?.delegate ? mud.sessionAccount ?? mud.playerAccount : mud.playerAccount;
+  const account = delegate ? mud.sessionAccount ?? mud.playerAccount : mud.playerAccount;
   const delegating = account == mud.sessionAccount;
   console.log("[Tx] Executing with address: ", account.address.slice(0, 6));
   const queuedTx = async () => {
     if (delegating && mud.sessionAccount) {
-      const tx = await mud.sessionAccount.worldContract.write.callFrom(
-        encodeSystemCallFrom({
-          abi: IWorldAbi,
-          from: mud.playerAccount.address,
-          systemId,
-          functionName,
-          args,
-        })
-      );
+      const params = encodeSystemCallFrom({
+        abi: IWorldAbi,
+        from: mud.playerAccount.address,
+        systemId,
+        functionName,
+        args,
+      });
+      const tx = await mud.sessionAccount.worldContract.write.callFrom(params, callOptions);
       return tx;
     }
-    const tx = await mud.playerAccount.worldContract.write[functionName](args);
+    const tx = await mud.playerAccount.worldContract.write[functionName](args, callOptions);
     return tx;
   };
 
-  if (options)
+  if (txQueueOptions)
     components.TransactionQueue.enqueue(
       async () => {
         const txPromise = queuedTx();
         const receipt = await _execute(mud, txPromise);
         onComplete?.(receipt);
       },
-      options.id,
-      options.type,
-      options.metadata
+      txQueueOptions.id,
+      txQueueOptions.type,
+      txQueueOptions.metadata
     );
   else {
     const txPromise = queuedTx();
@@ -119,14 +121,16 @@ export async function executeBatch<T extends keyof MetadataTypes, functionName e
   {
     mud,
     systemCalls,
+    delegate,
   }: {
     systemCalls: readonly Omit<SystemCallFrom<typeof IWorldAbi, functionName>, "abi" | "from">[];
     mud: MUD;
+    delegate?: boolean;
   },
-  options?: { id: Entity; type?: T; metadata?: MetadataTypes[T]; delegate?: boolean },
+  options?: { id: Entity; type?: T; metadata?: MetadataTypes[T] },
   onComplete?: (receipt: TransactionReceipt | undefined) => void
 ) {
-  const account = options?.delegate ? mud.sessionAccount ?? mud.playerAccount : mud.playerAccount;
+  const account = delegate ? mud.sessionAccount ?? mud.playerAccount : mud.playerAccount;
   const delegating = account == mud.sessionAccount;
   console.log("[Tx] Executing with address: ", account.address.slice(0, 6));
   const queuedTx = async () => {
