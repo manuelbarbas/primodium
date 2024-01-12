@@ -82,7 +82,9 @@ export async function execute<T extends keyof MetadataTypes, FunctionName extend
 ) {
   const account = delegate ? mud.sessionAccount ?? mud.playerAccount : mud.playerAccount;
   const delegating = account == mud.sessionAccount;
-  console.log("[Tx] Executing with address: ", account.address.slice(0, 6));
+  console.log(
+    `[Tx] Executing ${functionName} with address ${account.address.slice(0, 6)} ${delegate ? "(delegated)" : ""}`
+  );
   const queuedTx = async () => {
     if (delegating && mud.sessionAccount) {
       const params = encodeSystemCallFrom({
@@ -132,7 +134,13 @@ export async function executeBatch<T extends keyof MetadataTypes, functionName e
 ) {
   const account = delegate ? mud.sessionAccount ?? mud.playerAccount : mud.playerAccount;
   const delegating = account == mud.sessionAccount;
-  console.log("[Tx] Executing with address: ", account.address.slice(0, 6));
+
+  console.log(
+    `[Tx] Executing batch: ${systemCalls.map(
+      (system) => `${system.functionName} `
+    )} with address ${account.address.slice(0, 6)} ${delegate ? "(delegated)" : ""}`
+  );
+  console.log("[Tx] Executing batch system with address: ", account.address.slice(0, 6));
   const queuedTx = async () => {
     if (delegating && mud.sessionAccount) {
       const params = encodeSystemCallsFrom(IWorldAbi, mud.playerAccount.address, systemCalls).map(

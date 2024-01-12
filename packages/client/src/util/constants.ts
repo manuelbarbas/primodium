@@ -8,7 +8,6 @@ import { reverseRecord } from "./common";
 import { toHex32 } from "./encode";
 
 export const UNLIMITED_DELEGATION = resourceToHex({ type: "system", namespace: "", name: "unlimited" });
-export const SYSTEMBOUND_DELEGATION = resourceToHex({ type: "system", namespace: "", name: "systembound" });
 
 export const encodeEntityLevel = (entity: string, level: number) => {
   return encodeEntity({ entity: "bytes32", level: "uint256" }, { entity: toHex32(entity), level: BigInt(level) });
