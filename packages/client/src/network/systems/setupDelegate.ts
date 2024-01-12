@@ -2,7 +2,7 @@ import { Entity, Has, defineComponentSystem, namespaceWorld, runQuery } from "@l
 import { entityToAddress } from "src/util/common";
 import { decodeEntity } from "src/util/encode";
 import { getPrivateKey } from "src/util/localStorage";
-import { Hex } from "viem";
+import { Address, Hex } from "viem";
 import { components } from "../components";
 import { world } from "../world";
 
@@ -13,10 +13,14 @@ export const setupDelegate = (
 ) => {
   world.dispose("delegate");
   const delegateWorld = namespaceWorld(world, "delegate");
-  const potentialDelegates = Array.from(runQuery([Has(components.UserDelegationControl)])).filter((entity) => {
-    const key = decodeEntity(components.UserDelegationControl.metadata.keySchema, entity);
-    return key.delegator === entityToAddress(playerEntity);
-  });
+  const potentialDelegates = Array.from(runQuery([Has(components.UserDelegationControl)])).reduce((prev, entity) => {
+    const key = decodeEntity(components.UserDelegationControl.metadata.keySchema, entity) as {
+      delegator: Address;
+      delegatee: Address;
+    };
+    if (key.delegator !== entityToAddress(playerEntity)) return prev;
+    return [...prev, key.delegatee];
+  }, [] as Address[]);
 
   potentialDelegates.find((delegate) => {
     return setDelegate(delegate);
@@ -34,7 +38,7 @@ export const setupDelegate = (
     components.UserDelegationControl,
     ({ entity, value }) => {
       const key = decodeEntity(components.UserDelegationControl.metadata.keySchema, entity);
-      if (key.delegator !== playerEntity) return;
+      if (key.delegator !== entityToAddress(playerEntity)) return;
       const newDelegate = key.delegatee;
       if (!value[0]) return removeSessionAccount();
       setDelegate(newDelegate as string);

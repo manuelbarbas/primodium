@@ -2,10 +2,10 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect, useState } from "react";
 import { FaClipboard, FaExclamationCircle, FaEye, FaEyeSlash, FaInfoCircle, FaTimes, FaUnlink } from "react-icons/fa";
 import { useMud } from "src/hooks";
-import { grantAccess, revokeAccess, switchDelegate } from "src/network/setup/contractCalls/access";
+import { grantAccess, revokeAccess, revokeAllAccess, switchDelegate } from "src/network/setup/contractCalls/access";
 import { copyToClipboard } from "src/util/clipboard";
 import { STORAGE_PREFIX } from "src/util/constants";
-import { Hex } from "viem";
+import { Address, Hex } from "viem";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { Button } from "../core/Button";
 import { Card, SecondaryCard } from "../core/Card";
@@ -51,14 +51,31 @@ export function Delegate() {
     return randomPKey;
   };
 
-  const removeSessionKey = (publicKey: string) => {
+  const removeSessionKey = async (publicKey: Address) => {
+    await revokeAccess(mud, publicKey);
     localStorage.removeItem(STORAGE_PREFIX + publicKey);
   };
+
+  // const removeAllSessionKeys = async () => {
+  //   await revokeAllAccess(mud);
+  //   findEntriesWithPrefix().forEach((entry) => {
+  //     localStorage.removeItem(STORAGE_PREFIX+ entry.publicKey);
+  //   })
+  // }
 
   const hideHelp = () => {
     setShowHelp(false);
     localStorage.setItem("hideHelp", "true");
   };
+
+  // const allDelegates = useEntityQuery([Has(components.UserDelegationControl)]).reduce((prev, entity) => {
+  //   const key = decodeEntity(components.UserDelegationControl.metadata.keySchema, entity) as {
+  //     delegator: Address;
+  //     delegatee: Address;
+  //   };
+  //   if (key.delegator !== mud.playerAccount.address) return prev;
+  //   return [...prev, key.delegatee];
+  // }, [] as Address[]);
 
   return (
     <Card className="bg-base-100 gap-1">
@@ -77,6 +94,27 @@ export function Delegate() {
       )}
 
       <TransactionQueueMask queueItemId={singletonEntity}>
+        <div>
+          {/* {allDelegates.length > 0 &&
+            allDelegates.map((delegate) => (
+              <div
+                key={`delegate-${delegate}`}
+                className="flex flex-col gap-2 p-3 w-full animate-slide-down bg-base-800"
+              >
+                <div className="text-sm flex justify-between items-center">
+                  <div>
+                    <span className="font-bold">Delegating to: </span>
+                    <p>{delegate}</p>
+                  </div>
+                </div>
+              </div>
+            ))} */}
+
+          <Button onClick={() => revokeAllAccess(mud)} className="btn-sm btn-primary">
+            Revoke All Access
+          </Button>
+        </div>
+
         {delegateAddress ? (
           <div className="w-full flex flex-col">
             <div className="w-full flex items-center justify-center p-4">
