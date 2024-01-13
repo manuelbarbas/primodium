@@ -198,11 +198,8 @@ contract MarketplaceSystem is PrimodiumSystem {
       "[MarketplaceSystem] Seller doesn't have enough units"
     );
 
-    LibUnit.updateStoredUtilities(buyerHome, unitPrototype, countBought, true);
-    LibUnit.updateStoredUtilities(sellerHome, unitPrototype, countBought, false);
-
-    LibUnit.increaseUnitCount(buyerHome, unitPrototype, countBought);
-    LibUnit.decreaseUnitCount(sellerHome, unitPrototype, countBought);
+    LibUnit.increaseUnitCount(buyerHome, unitPrototype, countBought, true);
+    LibUnit.decreaseUnitCount(sellerHome, unitPrototype, countBought, true);
   }
 
   function takeOrderBulk(bytes32[] memory orderId, uint256[] memory count) public {

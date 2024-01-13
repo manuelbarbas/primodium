@@ -161,6 +161,12 @@ export const config = mudConfig({
       valueSchema: "bool",
     },
 
+    //when the storage for this resources is provided it is full
+    P_IsStorageFull: {
+      keySchema: { id: "uint8" }, // EResource
+      valueSchema: "bool",
+    },
+
     // tracks the max resource a player can store
     MaxResourceCount: {
       keySchema: { entity: "bytes32", resource: "uint8" }, // EResource
@@ -368,6 +374,7 @@ export const config = mudConfig({
         speed: "uint256",
         cargo: "uint256",
         trainingTime: "uint256",
+        hp: "uint256",
       },
     },
 
@@ -428,6 +435,8 @@ export const config = mudConfig({
         speed: "uint256",
         cargo: "uint256",
         occupiedCargo: "uint256",
+        maxHp: "uint256",
+        hp: "uint256",
       },
     },
 

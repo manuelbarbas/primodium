@@ -68,8 +68,7 @@ contract MarketplaceSystemTest is PrimodiumTest {
     LibProduction.increaseResourceProduction(buyerHome, EResource.Iron, 100);
     LibProduction.increaseResourceProduction(playerHome, EResource.Iron, 100);
 
-    LibResource.spendUnitRequiredResources(playerHome, unitPrototype, 100);
-    LibUnit.increaseUnitCount(playerHome, unitPrototype, 100);
+    LibUnit.increaseUnitCount(playerHome, unitPrototype, 100, true);
     bytes32 orderId = world.addOrder(EOrderType.Unit, uint8(unit), 100, 100);
     assertEq(MarketplaceOrder.getSeller(orderId), player, "seller wrong");
     assertEq(MarketplaceOrder.getResource(orderId), uint8(unit), "resource wrong");

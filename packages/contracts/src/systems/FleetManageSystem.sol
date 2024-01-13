@@ -5,7 +5,7 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibFleet } from "codegen/Libraries.sol";
 import { NUM_UNITS, NUM_RESOURCE } from "src/constants.sol";
 
-contract ManageFleetSystem is PrimodiumSystem {
+contract FleetManageSystem is PrimodiumSystem {
   function createFleet(
     bytes32 spaceRock,
     uint256[NUM_UNITS] calldata unitCounts,
