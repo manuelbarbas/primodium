@@ -5,7 +5,7 @@ import { MUD } from "src/network/types";
 import { bigintToNumber } from "src/util/bigint";
 import { getBlockTypeName } from "src/util/common";
 import { ResourceEnumLookup, UnitEnumLookup } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
+import { getSystemId, hashEntities } from "src/util/encode";
 import { getScale } from "src/util/resource";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
@@ -14,11 +14,15 @@ export const updateOrder = async (mud: MUD, id: Entity, rawResource: Entity, pri
   const resource = ResourceEnumLookup[rawResource] ?? UnitEnumLookup[rawResource];
   if (!resource) throw new Error("Invalid resource or unit");
   await execute(
-    mud,
-    (account) => account.worldContract.write.updateOrder([id as Hex, resource, count, price]),
+    {
+      mud,
+      functionName: "updateOrder",
+      systemId: getSystemId("MarketplaceSystem"),
+      args: [id as Hex, resource, count, price],
+      delegate: true,
+    },
     {
       id: hashEntities(mud.playerAccount.entity, id, rawResource),
-      delegate: true,
     },
     (receipt) => {
       const scale = getScale(rawResource);
@@ -38,11 +42,15 @@ export const updateOrder = async (mud: MUD, id: Entity, rawResource: Entity, pri
 
 export const cancelOrder = async (mud: MUD, id: Entity) => {
   await execute(
-    mud,
-    (account) => account.worldContract.write.cancelOrder([id as Hex]),
+    {
+      mud,
+      functionName: "cancelOrder",
+      systemId: getSystemId("MarketplaceSystem"),
+      args: [id as Hex],
+      delegate: true,
+    },
     {
       id: hashEntities(mud.playerAccount.entity, id),
-      delegate: true,
     },
     (receipt) => {
       ampli.systemCancelOrder({

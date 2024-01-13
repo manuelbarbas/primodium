@@ -2,10 +2,10 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect, useState } from "react";
 import { FaClipboard, FaExclamationCircle, FaEye, FaEyeSlash, FaInfoCircle, FaTimes, FaUnlink } from "react-icons/fa";
 import { useMud } from "src/hooks";
-import { grantAccess, revokeAccessOwner, switchDelegate } from "src/network/setup/contractCalls/access";
+import { grantAccess, revokeAccess, switchDelegate } from "src/network/setup/contractCalls/access";
 import { copyToClipboard } from "src/util/clipboard";
 import { STORAGE_PREFIX } from "src/util/constants";
-import { Hex } from "viem";
+import { Address, Hex } from "viem";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { Button } from "../core/Button";
 import { Card, SecondaryCard } from "../core/Card";
@@ -51,7 +51,8 @@ export function Delegate() {
     return randomPKey;
   };
 
-  const removeSessionKey = (publicKey: string) => {
+  const removeSessionKey = async (publicKey: Address) => {
+    await revokeAccess(mud, publicKey);
     localStorage.removeItem(STORAGE_PREFIX + publicKey);
   };
 
@@ -85,7 +86,7 @@ export function Delegate() {
                 <Button
                   onClick={async () => {
                     setShowDetails(false);
-                    revokeAccessOwner(mud);
+                    revokeAccess(mud, delegateAddress);
                     removeSessionKey(delegateAddress);
                   }}
                   tooltip="stop delegating"
