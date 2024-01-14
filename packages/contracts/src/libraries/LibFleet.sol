@@ -47,6 +47,7 @@ library LibFleet {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
     for (uint8 i = 0; i < NUM_UNITS; i++) {
+      if (unitCounts[i] == 0) continue;
       uint256 rockUnitCount = UnitCount.get(spaceRock, unitPrototypes[i]);
       require(rockUnitCount >= unitCounts[i], "[Fleet] Not enough units to add to fleet");
       LibUnit.decreaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], false);
@@ -246,26 +247,30 @@ library LibFleet {
       increaseFleetResource(fleets[0], i, totalResourceCount);
     }
 
-    for (uint8 i = 0; i < NUM_UNITS; i++) {
-      for (uint256 j = 1; j < fleets.length; j++) {
-        uint256 fleetUnitCount = UnitCount.get(fleets[j], unitPrototypes[i]);
-        decreaseFleetUnit(fleets[j], unitPrototypes[i], fleetUnitCount, false);
-      }
-    }
-
     for (uint256 i = 1; i < fleets.length; i++) {
-      FleetsMap.remove(spaceRock, FleetIncomingKey, fleets[i]);
-      FleetMovement.set(
-        fleets[i],
-        FleetMovementData({
-          arrivalTime: block.timestamp,
-          sendTime: block.timestamp,
-          origin: spaceRockOwner,
-          destination: spaceRockOwner
-        })
-      );
-      FleetsMap.add(spaceRockOwner, FleetOwnedByKey, fleets[i]);
+      for (uint8 j = 0; j < NUM_UNITS; j++) {
+        uint256 fleetUnitCount = UnitCount.get(fleets[i], unitPrototypes[j]);
+        decreaseFleetUnit(fleets[i], unitPrototypes[j], fleetUnitCount);
+      }
+
+      resetFleetOrbit(fleets[i]);
     }
+  }
+
+  function resetFleetOrbit(bytes32 fleetId) internal {
+    bytes32 spaceRock = FleetMovement.getDestination(fleetId);
+    bytes32 spaceRockOwner = OwnedBy.get(spaceRock);
+    FleetsMap.remove(spaceRock, FleetIncomingKey, fleetId);
+    FleetMovement.set(
+      fleetId,
+      FleetMovementData({
+        arrivalTime: block.timestamp,
+        sendTime: block.timestamp,
+        origin: spaceRockOwner,
+        destination: spaceRockOwner
+      })
+    );
+    FleetsMap.add(spaceRockOwner, FleetIncomingKey, fleetId);
   }
 
   function isFleetDamaged(bytes32 fleetId) internal view returns (bool) {
