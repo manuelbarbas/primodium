@@ -11,13 +11,3 @@ struct Bounds {
   int32 maxX;
   int32 maxY;
 }
-
-// struct FleetStatus
-// {
-//   PositionData origin,
-//   PositionData destination,
-//   uint256 arrivalTime;
-//   uint256 sendTime;
-//   uint256 resourceStorage;
-//   uint256 occuppiedStorage;
-// }
