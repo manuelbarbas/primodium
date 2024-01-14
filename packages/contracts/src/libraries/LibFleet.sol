@@ -44,6 +44,7 @@ library LibFleet {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
     for (uint8 i = 0; i < NUM_UNITS; i++) {
+      if (unitCounts[i] == 0) continue;
       uint256 rockUnitCount = UnitCount.get(spaceRock, unitPrototypes[i]);
       require(rockUnitCount >= unitCounts[i], "[Fleet] Not enough units to add to fleet");
       LibUnit.decreaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i]);
@@ -460,14 +461,12 @@ library LibFleet {
       increaseFleetResource(fleets[0], i, totalResourceCount);
     }
 
-    for (uint8 i = 0; i < NUM_UNITS; i++) {
-      for (uint256 j = 1; j < fleets.length; j++) {
-        uint256 fleetUnitCount = UnitCount.get(fleets[j], unitPrototypes[i]);
-        decreaseFleetUnit(fleets[j], unitPrototypes[i], fleetUnitCount);
-      }
-    }
-
     for (uint256 i = 1; i < fleets.length; i++) {
+      for (uint8 j = 0; j < NUM_UNITS; j++) {
+        uint256 fleetUnitCount = UnitCount.get(fleets[i], unitPrototypes[j]);
+        decreaseFleetUnit(fleets[i], unitPrototypes[j], fleetUnitCount);
+      }
+
       bytes32 spaceRockOwner = OwnedBy.get(fleets[i]);
 
       LibStorage.increaseStoredResource(spaceRockOwner, uint8(EResource.U_MaxMoves), 1);
