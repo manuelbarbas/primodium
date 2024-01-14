@@ -88,13 +88,6 @@ export enum EUnit {
   LightningCraft,
 }
 
-export enum ESendType {
-  Reinforce = 1,
-  Invade,
-  Raid,
-  Recall,
-}
-
 export enum EOrderType {
   Resource = 1,
   Unit,
@@ -217,7 +210,6 @@ export const MUDEnums = {
   EResource: enumToArray(EResource),
   ESize: enumToArray(ESize),
   EUnit: enumToArray(EUnit),
-  ESendType: enumToArray(ESendType),
   EObjectives: enumToArray(EObjectives),
   EAllianceInviteMode: enumToArray(EAllianceInviteMode),
   EAllianceRole: enumToArray(EAllianceRole),

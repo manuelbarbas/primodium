@@ -211,22 +211,4 @@ library LibUnit {
     ProductionRate.set(rockEntity, resource, prevProductionRate - (productionRate * unitCount));
     ConsumptionRate.set(rockEntity, P_RawResource.get(resource), prevProductionRate - (productionRate * unitCount));
   }
-
-  /**
-   * @dev Calculates the attack points for an attacker entity based on arrivals and send type.
-   * @param  playerEntity The identifier of the player entity.
-   * @param  unitCounts the unit counts for which to calculate the cargo
-   * @return cargo The total cargo points.
-   */
-  function getTotalCargo(bytes32 playerEntity, uint256[NUM_UNITS] calldata unitCounts)
-    internal
-    returns (uint256 cargo)
-  {
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    for (uint256 j = 0; j < unitPrototypes.length; j++) {
-      if (unitCounts[j] == 0) continue;
-      uint256 unitLevel = UnitLevel.get(playerEntity, unitPrototypes[j]);
-      cargo += unitCounts[j] * P_Unit.get(unitPrototypes[j], unitLevel).cargo;
-    }
-  }
 }
