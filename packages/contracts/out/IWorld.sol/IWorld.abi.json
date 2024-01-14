@@ -1232,6 +1232,60 @@
   {
     "inputs": [
       {
+        "internalType": "bytes32",
+        "name": "fleetId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "disbandFleet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "fleetId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256[8]",
+        "name": "unitCounts",
+        "type": "uint256[8]"
+      }
+    ],
+    "name": "disbandUnits",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "fleetId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256[8]",
+        "name": "unitCounts",
+        "type": "uint256[8]"
+      },
+      {
+        "internalType": "uint256[25]",
+        "name": "resourceCounts",
+        "type": "uint256[25]"
+      }
+    ],
+    "name": "disbandUnitsAndResourcesFromFleet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "ResourceId",
         "name": "tableId",
         "type": "bytes32"
