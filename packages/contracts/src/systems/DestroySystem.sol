@@ -15,6 +15,10 @@ contract DestroySystem is PrimodiumSystem {
     buildingEntity = LibBuilding.getBuildingFromCoord(coord);
     LibBuilding.checkDestroyRequirements(_player(), buildingEntity);
 
+    clearUtilityUsage(buildingEntity);
+    clearMaxStorageIncrease(buildingEntity);
+    clearProductionRate(buildingEntity);
+
     bytes32 buildingType = BuildingType.get(buildingEntity);
 
     uint256 level = Level.get(buildingEntity);
@@ -29,10 +33,6 @@ contract DestroySystem is PrimodiumSystem {
     }
 
     LibBuilding.removeBuildingTiles(coord);
-
-    clearUtilityUsage(buildingEntity);
-    clearMaxStorageIncrease(buildingEntity);
-    clearProductionRate(buildingEntity);
 
     return buildingEntity;
   }

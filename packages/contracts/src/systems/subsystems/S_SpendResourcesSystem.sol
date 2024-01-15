@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
+import { System } from "@latticexyz/world/src/System.sol";
 
 import { LibResource } from "libraries/LibResource.sol";
 import { IsActive } from "codegen/index.sol";
 
-contract S_SpendResourcesSystem is PrimodiumSystem {
+contract S_SpendResourcesSystem is System {
   function spendBuildingRequiredResources(bytes32 buildingEntity, uint256 level) public {
     LibResource.spendBuildingRequiredResources(buildingEntity, level);
   }
