@@ -30,7 +30,7 @@ contract OnInvade_Requirements is SystemHook {
     bytes32 rockEntity = abi.decode(args, (bytes32));
 
     // Get the player's entity and check invade requirements
-    bytes32 playerEntity = _player(msgSender, false);
+    bytes32 playerEntity = _player(msgSender);
     LibInvade.checkInvadeRequirements(playerEntity, rockEntity);
   }
 

@@ -7,7 +7,7 @@ import { MUD } from "src/network/types";
 import { bigintToNumber } from "src/util/bigint";
 import { getBlockTypeName } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
+import { getSystemId, hashEntities } from "src/util/encode";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
@@ -17,12 +17,16 @@ export const upgradeBuilding = async (mud: MUD, coord: Coord) => {
 
   const position = { ...coord, parent: asteroid as Hex };
   await execute(
-    mud,
-    (account) => account.worldContract.write.upgradeBuilding([position]),
+    {
+      mud,
+      functionName: "upgradeBuilding",
+      systemId: getSystemId("UpgradeBuildingSystem"),
+      args: [position],
+      delegate: true,
+    },
     {
       id: hashEntities(TransactionQueueType.Upgrade, coord.x, coord.y),
       type: TransactionQueueType.Upgrade,
-      delegate: true,
     },
     (receipt) => {
       const building = components.SelectedBuilding.get()?.value;

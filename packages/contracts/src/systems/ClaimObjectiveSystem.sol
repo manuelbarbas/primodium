@@ -12,7 +12,7 @@ import { DUMMY_ADDRESS } from "src/constants.sol";
 
 contract ClaimObjectiveSystem is PrimodiumSystem {
   function claimObjective(EObjectives objective) public {
-    bytes32 playerEntity = _player(false);
+    bytes32 playerEntity = _player();
     bytes32 homeAsteroid = Home.get(playerEntity);
     _claimResources(homeAsteroid);
     _claimUnits(homeAsteroid);

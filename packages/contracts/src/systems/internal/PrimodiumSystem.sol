@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { System } from "@latticexyz/world/src/System.sol";
-import { _player as player, _playerAddress as playerAddress } from "src/utils.sol";
+import { _player as player } from "src/utils.sol";
 
 import { getSystemResourceId } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
@@ -46,11 +46,7 @@ contract PrimodiumSystem is System {
     return address(uint160(uint256((a))));
   }
 
-  function _player(bool highRisk) internal view returns (bytes32) {
-    return player(_msgSender(), highRisk);
-  }
-
-  function _playerAddress(bool highRisk) internal view returns (address) {
-    return playerAddress(_msgSender(), highRisk);
+  function _player() internal view returns (bytes32) {
+    return player(_msgSender());
   }
 }

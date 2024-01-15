@@ -27,19 +27,7 @@ function bytes32ToString(bytes32 data) pure returns (string memory) {
 }
 
 /// @dev get the player or delegator entity
-/// @param highRisk if true, will only return the msg sender after checking that they are not delegated
 /// @return the player or delegator entity
-function _player(address msgSender, bool highRisk) view returns (bytes32) {
-  bytes32 player = addressToEntity(msgSender);
-  bytes32 delegator = OwnedBy.get(player);
-  if (highRisk) {
-    require(delegator == 0, "[Access Control] Cannot delegate high risk actions");
-    return player;
-  }
-
-  return delegator != 0 ? delegator : player;
-}
-
-function _playerAddress(address msgSender, bool highRisk) view returns (address) {
-  return entityToAddress(_player(msgSender, highRisk));
+function _player(address msgSender) view returns (bytes32) {
+  return addressToEntity(msgSender);
 }
