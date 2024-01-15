@@ -32,7 +32,7 @@ contract OnBuild_Requirements is SystemHook {
     (EBuilding buildingType, PositionData memory coord) = abi.decode(args, (EBuilding, PositionData));
 
     // Convert the player's address to an entity
-    bytes32 playerEntity = _player(msgSender, false);
+    bytes32 playerEntity = _player(msgSender);
 
     // Check building requirements for construction
     LibBuilding.checkBuildRequirements(playerEntity, buildingType, coord);

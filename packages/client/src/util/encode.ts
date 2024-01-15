@@ -1,3 +1,4 @@
+import { resourceToHex } from "@latticexyz/common";
 import { KeySchema, SchemaToPrimitives } from "@latticexyz/protocol-parser";
 import { Entity } from "@latticexyz/recs";
 import {
@@ -11,6 +12,8 @@ import {
   sliceHex,
   toHex,
 } from "viem";
+
+export const getSystemId = (name: string, namespace = "") => resourceToHex({ type: "system", namespace, name });
 
 export const addressToEntity = (address: Hex) => {
   return encodeAbiParameters([{ type: "address" }], [address]) as Entity;

@@ -1,65 +1,81 @@
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { execute } from "src/network/actions";
+import { Has, runQuery } from "@latticexyz/recs";
+import { decodeEntity, singletonEntity } from "@latticexyz/store-sync/recs";
+import { execute, executeBatch } from "src/network/actions";
+import { components } from "src/network/components";
 import { MUD } from "src/network/types";
-import { TransactionQueueType } from "src/util/constants";
-import { Address } from "viem";
+import { TransactionQueueType, UNLIMITED_DELEGATION } from "src/util/constants";
+import { getSystemId } from "src/util/encode";
+import { Address, Hex } from "viem";
 
 export const grantAccess = async (mud: MUD, address: Address) => {
   await execute(
-    mud,
-    (account) => account.worldContract.write.grantAccess([address]),
+    {
+      mud,
+      systemId: getSystemId("DelegationSystem"),
+      functionName: "registerDelegation",
+      args: [address, UNLIMITED_DELEGATION, "0x0"],
+      delegate: false,
+    },
     {
       id: singletonEntity,
-      delegate: false,
       type: TransactionQueueType.Access,
-    },
-    (receipt) => {
-      receipt;
     }
   );
 };
 
-export const switchDelegate = async (mud: MUD, address: Address) => {
+export const revokeAccess = async (mud: MUD, address: Address) => {
   await execute(
-    mud,
-    (account) => account.worldContract.write.switchDelegate([address]),
+    { mud, systemId: getSystemId("DelegationSystem"), functionName: "unregisterDelegation", args: [address] },
     {
       id: singletonEntity,
-      delegate: false,
       type: TransactionQueueType.Access,
-    },
-    (receipt) => {
-      receipt;
     }
   );
 };
 
-export const revokeAccessDelegate = async (mud: MUD) => {
-  await execute(
-    mud,
-    (account) => account.worldContract.write.revokeAccessDelegate(),
+export const revokeAllAccess = async (mud: MUD) => {
+  const allDelegates = [...runQuery([Has(components.UserDelegationControl)])].reduce((prev, entity) => {
+    const key = decodeEntity(components.UserDelegationControl.metadata.keySchema, entity) as {
+      delegator: Address;
+      delegatee: Address;
+    };
+    if (key.delegator !== mud.playerAccount.address) return prev;
+    return [...prev, key.delegatee];
+  }, [] as Address[]);
+
+  const systemCalls = allDelegates.map((delegatee) => ({
+    systemId: getSystemId("DelegationSystem"),
+    functionName: "unregisterDelegation",
+    args: [delegatee],
+  })) as {
+    systemId: Hex;
+    functionName: "unregisterDelegation";
+    args: [Hex];
+  }[];
+
+  await executeBatch(
+    { mud, systemCalls },
     {
       id: singletonEntity,
-      delegate: true,
       type: TransactionQueueType.Access,
-    },
-    (receipt) => {
-      receipt;
     }
   );
 };
 
-export const revokeAccessOwner = async (mud: MUD) => {
+export const switchDelegate = async (mud: MUD, newDelegate: Address) => {
+  const currentDelegate = mud.sessionAccount?.address;
+  if (!currentDelegate) return;
+
   await execute(
-    mud,
-    (account) => account.worldContract.write.revokeAccessOwner(),
+    {
+      mud,
+      systemId: getSystemId("DelegationSystem"),
+      functionName: "unregisterDelegation",
+      args: [newDelegate],
+    },
     {
       id: singletonEntity,
-      delegate: false,
       type: TransactionQueueType.Access,
-    },
-    (receipt) => {
-      receipt;
     }
   );
 };

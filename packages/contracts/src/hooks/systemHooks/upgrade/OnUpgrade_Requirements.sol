@@ -30,7 +30,7 @@ contract OnUpgrade_Requirements is SystemHook {
     PositionData memory coord = abi.decode(args, (PositionData));
 
     // Get the player's entity
-    bytes32 playerEntity = _player(msgSender, false);
+    bytes32 playerEntity = _player(msgSender);
 
     // Check the upgrade requirements
     LibBuilding.checkUpgradeRequirements(playerEntity, coord);

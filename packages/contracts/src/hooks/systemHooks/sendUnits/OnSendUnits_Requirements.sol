@@ -27,7 +27,7 @@ contract OnSendUnits_Requirements is SystemHook {
     ResourceId,
     bytes memory callData
   ) public {
-    // // Decode the parameters of the send units function
+    // Decode the parameters of the send units function
     // bytes memory args = SliceInstance.toBytes(SliceLib.getSubslice(callData, 4));
     // SendArgs memory sendArgs = abi.decode(args, (SendArgs));
     // // Convert origin and destination coordinates to their corresponding entities
@@ -35,7 +35,7 @@ contract OnSendUnits_Requirements is SystemHook {
     // bytes32 destination = ReversePosition.get(sendArgs.destinationPosition.x, sendArgs.destinationPosition.y);
     // if (destination == 0) destination = LibMotherlode.createMotherlode(sendArgs.destinationPosition);
     // // Convert the message sender's address to their entity
-    // bytes32 playerEntity = addressToEntity(msgSender);
+    // bytes32 playerEntity = _player(msgSender);
     // // Check the movement rules for sending units
     // LibSend.checkMovementRules(origin, destination, playerEntity, sendArgs.to, sendArgs.sendType);
   }

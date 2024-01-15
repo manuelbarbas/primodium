@@ -2,16 +2,21 @@ import { Entity } from "@latticexyz/recs";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { MUD } from "src/network/types";
+import { getSystemId } from "src/util/encode";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const invade = async (mud: MUD, destination: Entity, key?: Hex | Entity) => {
   await execute(
-    mud,
-    (account) => account.worldContract.write.invade([destination as Hex]),
+    {
+      mud,
+      functionName: "invade",
+      systemId: getSystemId("InvadeSystem"),
+      args: [destination as Hex],
+      delegate: true,
+    },
     {
       id: (key ?? destination) as Entity,
-      delegate: true,
     },
     (receipt) => {
       ampli.systemInvade({

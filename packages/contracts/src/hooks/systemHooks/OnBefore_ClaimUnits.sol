@@ -25,7 +25,7 @@ contract OnBefore_ClaimUnits is SystemHook {
     bytes memory
   ) public {
     // Get the player's entity
-    bytes32 playerEntity = _player(msgSender, false);
+    bytes32 playerEntity = _player(msgSender);
 
     LibUnit.claimUnits(Home.get(playerEntity));
   }

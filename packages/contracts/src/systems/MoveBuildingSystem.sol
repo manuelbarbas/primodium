@@ -13,7 +13,7 @@ import { LibBuilding } from "codegen/Libraries.sol";
 contract MoveBuildingSystem is PrimodiumSystem {
   function moveBuilding(PositionData memory fromCoord, PositionData memory toCoord) public {
     toCoord.parent = fromCoord.parent;
-    bytes32 playerEntity = _player(false);
+    bytes32 playerEntity = _player();
     bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(fromCoord);
     require(
       OwnedBy.get(fromCoord.parent) == playerEntity,
