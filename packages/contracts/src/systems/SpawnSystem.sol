@@ -25,7 +25,7 @@ contract SpawnSystem is PrimodiumSystem {
     bytes32 playerEntity = _player(true);
 
     require(!Spawned.get(playerEntity), "[SpawnSystem] Already spawned");
-    uint256 gracePeriodLength = (P_GracePeriod.get() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
+    uint256 gracePeriodLength = (P_GracePeriod.getSpaceRock() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
     GracePeriod.set(playerEntity, block.timestamp + gracePeriodLength);
 
     bytes32 asteroid = LibAsteroid.createAsteroid(playerEntity);

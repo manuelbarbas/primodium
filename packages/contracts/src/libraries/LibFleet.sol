@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { ERock, EResource } from "src/Types.sol";
-import { P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetAttributesData, FleetAttributes, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetAttributesData, FleetAttributes, FleetMovementData, FleetMovement, Spawned, P_GracePeriod, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -250,7 +250,7 @@ library LibFleet {
     for (uint256 i = 1; i < fleets.length; i++) {
       for (uint8 j = 0; j < NUM_UNITS; j++) {
         uint256 fleetUnitCount = UnitCount.get(fleets[i], unitPrototypes[j]);
-        decreaseFleetUnit(fleets[i], unitPrototypes[j], fleetUnitCount);
+        decreaseFleetUnit(fleets[i], unitPrototypes[j], fleetUnitCount, false);
       }
 
       resetFleetOrbit(fleets[i]);
@@ -275,5 +275,9 @@ library LibFleet {
 
   function isFleetDamaged(bytes32 fleetId) internal view returns (bool) {
     return FleetAttributes.getHp(fleetId) < FleetAttributes.getMaxHp(fleetId);
+  }
+
+  function isFleetInGracePeriod(bytes32 fleetId) internal view returns (bool) {
+    return FleetMovement.getArrivalTime(fleetId) + P_GracePeriod.getSpaceRock() < block.timestamp;
   }
 }

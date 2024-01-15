@@ -38,6 +38,11 @@ library LibFleetStance {
     FleetsMap.clear(fleetId, fleetFollowKey);
   }
 
+  function getFollowerFleets(bytes32 fleetId) internal view returns (bytes32[] memory) {
+    bytes32 fleetFollowKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Follow));
+    return FleetsMap.getFleetIds(fleetId, fleetFollowKey);
+  }
+
   function setFleetStance(
     bytes32 playerEntity,
     bytes32 fleetId,

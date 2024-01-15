@@ -480,11 +480,26 @@ export const config = mudConfig({
       offchainOnly: true,
     },
 
+    NewBattleResult: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: {
+        aggressorEntity: "bytes32", //can be fleet or space rock
+        targetEntity: "bytes32", //can be fleet or space rock
+        winner: "bytes32",
+        rock: "bytes32", // place where battle took place
+        timestamp: "uint256", // timestamp of battle
+        aggressorAllies: "bytes32[]", //only fleets
+        targetAllies: "bytes32[]", //only fleets
+      },
+      offchainOnly: true,
+    },
+
     FleetOutcome: {
       keySchema: { entity: "bytes32", fleetId: "bytes32" },
       valueSchema: {
         owner: "bytes32",
         timestamp: "uint256",
+        damageTaken: "uint256",
         unitLevels: "uint256[]",
         unitsAtStart: "uint256[]",
         unitsAtEnd: "uint256[]",
@@ -673,7 +688,10 @@ export const config = mudConfig({
 
     P_GracePeriod: {
       keySchema: {},
-      valueSchema: "uint256",
+      valueSchema: {
+        spaceRock: "uint256",
+        fleet: "uint256",
+      },
     },
 
     GracePeriod: {

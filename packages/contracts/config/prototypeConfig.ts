@@ -252,7 +252,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     keys: [],
     tables: {
       P_AllianceConfig: { maxAllianceMembers: 20n },
-      P_GracePeriod: { value: 60n * 60n * 12n },
+      P_GracePeriod: { spaceRock: 60n * 60n * 12n, fleet: 60n * 30n },
       P_Asteroid: maxRange,
       P_GameConfig: {
         admin: encodeAddress("0"),
