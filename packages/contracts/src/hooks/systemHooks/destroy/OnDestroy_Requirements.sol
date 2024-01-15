@@ -31,7 +31,7 @@ contract OnDestroy_Requirements is SystemHook {
     PositionData memory coord = abi.decode(args, (PositionData));
 
     // Get the player's entity and check destroy requirements
-    bytes32 playerEntity = _player(msgSender, false);
+    bytes32 playerEntity = _player(msgSender);
     LibBuilding.checkDestroyRequirements(playerEntity, coord);
   }
 

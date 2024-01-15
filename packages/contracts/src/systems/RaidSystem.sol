@@ -11,7 +11,7 @@ contract RaidSystem is PrimodiumSystem {
    * @param rockEntity The identifier of the target rock entity.
    */
   function raid(bytes32 rockEntity) public {
-    bytes32 playerEntity = _player(false);
+    bytes32 playerEntity = _player();
 
     LibRaid.raid(playerEntity, rockEntity);
   }
