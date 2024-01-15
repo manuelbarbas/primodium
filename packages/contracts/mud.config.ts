@@ -35,6 +35,10 @@ export const config = mudConfig({
       openAccess: false,
       accessList: [DUMMY_ADDRESS],
     },
+    S_RewardsSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+    },
   },
 
   enums: MUDEnums,

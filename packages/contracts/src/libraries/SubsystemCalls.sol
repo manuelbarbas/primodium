@@ -7,6 +7,7 @@ import { DUMMY_ADDRESS } from "src/constants.sol";
 import { S_ClaimSystem } from "systems/subsystems/S_ClaimSystem.sol";
 import { S_ProductionRateSystem } from "systems/subsystems/S_ProductionRateSystem.sol";
 import { S_StorageSystem } from "systems/subsystems/S_StorageSystem.sol";
+import { S_RewardsSystem } from "systems/subsystems/S_RewardsSystem.sol";
 import { S_SpendResourcesSystem } from "systems/subsystems/S_SpendResourcesSystem.sol";
 
 /* --------------------------------- GLOBAL --------------------------------- */
@@ -97,6 +98,19 @@ function spendBuildingRequiredResources(bytes32 buildingEntity, uint256 level) {
   );
 }
 
+function spendUpgradeResources(
+  bytes32 spaceRockEntity,
+  bytes32 unitPrototype,
+  uint256 level
+) {
+  SystemCall.callWithHooksOrRevert(
+    DUMMY_ADDRESS,
+    getSystemResourceId("S_SpendResourcesSystem"),
+    abi.encodeCall(S_SpendResourcesSystem.spendUpgradeResources, (spaceRockEntity, unitPrototype, level)),
+    0
+  );
+}
+
 function toggleBuildingUtility(bytes32 buildingEntity) {
   SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
@@ -111,6 +125,17 @@ function clearUtilityUsage(bytes32 buildingEntity) {
     DUMMY_ADDRESS,
     getSystemResourceId("S_SpendResourcesSystem"),
     abi.encodeCall(S_SpendResourcesSystem.clearUtilityUsage, (buildingEntity)),
+    0
+  );
+}
+
+/* --------------------------------- REWARDS -------------------------------- */
+
+function receiveRewards(bytes32 playerEntity, bytes32 objectivePrototype) {
+  SystemCall.callWithHooksOrRevert(
+    DUMMY_ADDRESS,
+    getSystemResourceId("S_RewardsSystem"),
+    abi.encodeCall(S_RewardsSystem.receiveRewards, (playerEntity, objectivePrototype)),
     0
   );
 }

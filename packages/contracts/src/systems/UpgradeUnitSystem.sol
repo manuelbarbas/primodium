@@ -8,6 +8,8 @@ import { LibBuilding, LibResource, LibProduction } from "codegen/Libraries.sol";
 import { EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
+import { spendUpgradeResources } from "libraries/SubsystemCalls.sol";
+
 contract UpgradeUnitSystem is PrimodiumSystem {
   /// @notice Upgrades the specified unit for the sender
   /// @param unit The type of unit to upgrade
@@ -25,6 +27,8 @@ contract UpgradeUnitSystem is PrimodiumSystem {
     );
 
     require(targetLevel <= P_MaxLevel.get(unitPrototype), "[UpgradeUnitSystem] Max level reached");
+
+    spendUpgradeResources(playerEntity, unitPrototype, targetLevel);
 
     UnitLevel.set(playerEntity, unitPrototype, targetLevel);
 
