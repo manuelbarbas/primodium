@@ -10,10 +10,6 @@ contract MoveFleetSystem is PrimodiumSystem {
     LibFleet.recallFleet(_player(false), fleetId);
   }
 
-  function sendFleets(bytes32[] calldata fleets, bytes32 spaceRock) public {
-    LibFleet.sendFleets(_player(false), fleets, spaceRock);
-  }
-
   function sendFleet(bytes32 fleetId, bytes32 spaceRock) public {
     LibFleet.sendFleet(_player(false), fleetId, spaceRock);
   }

@@ -211,6 +211,13 @@ export enum EAllianceRole {
   Member, // simple member with no special access
 }
 
+export enum EFleetStance {
+  None = 1,
+  Follow,
+  Defend,
+  Block,
+}
+
 export const MUDEnums = {
   ERock: enumToArray(ERock),
   EBuilding: enumToArray(EBuilding),
@@ -223,6 +230,7 @@ export const MUDEnums = {
   EAllianceRole: enumToArray(EAllianceRole),
   EOrderType: enumToArray(EOrderType),
   EFleetKey: enumToArray(EFleetKey),
+  EFleetStance: enumToArray(EFleetStance),
 };
 
 function enumToArray(enumObj: object): string[] {

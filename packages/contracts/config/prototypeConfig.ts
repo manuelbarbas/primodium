@@ -1028,6 +1028,9 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     levels: idsToPrototypes(MUDEnums.EUnit),
   },
 
+  FleetStance: {
+    levels: idsToPrototypes(MUDEnums.EFleetStance),
+  },
   OrderType: {
     levels: idsToPrototypes(MUDEnums.EOrderType),
   },
