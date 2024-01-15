@@ -17,7 +17,7 @@ import { EBuilding } from "src/Types.sol";
 contract BuildSystem is PrimodiumSystem {
   function build(EBuilding buildingType, PositionData memory coord)
     public
-    claimResources(coord.parent)
+    _claimResources(coord.parent)
     returns (bytes32 buildingEntity)
   {
     bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));

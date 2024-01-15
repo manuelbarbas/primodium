@@ -8,7 +8,7 @@ import { ExpansionKey } from "src/Keys.sol";
 import { LibEncode, LibBuilding } from "codegen/Libraries.sol";
 
 contract UpgradeRangeSystem is PrimodiumSystem {
-  function upgradeRange(bytes32 spaceRockEntity) public claimResources(spaceRockEntity) {
+  function upgradeRange(bytes32 spaceRockEntity) public _claimResources(spaceRockEntity) {
     bytes32 playerEntity = _player();
 
     uint256 targetLevel = Level.get(spaceRockEntity) + 1;

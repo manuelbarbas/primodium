@@ -7,35 +7,28 @@ import { _player as player } from "src/utils.sol";
 import { getSystemResourceId } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 import { DUMMY_ADDRESS } from "src/constants.sol";
-import { S_SharedHooksSystem } from "systems/subsystems/S_SharedHooksSystem.sol";
+
+import { S_ClaimSystem } from "systems/subsystems/S_ClaimSystem.sol";
 
 contract PrimodiumSystem is System {
-  modifier claimResources(bytes32 spaceRockEntity) {
-    _claimResources(spaceRockEntity);
+  modifier _claimResources(bytes32 spaceRockEntity) {
+    SystemCall.callWithHooksOrRevert(
+      DUMMY_ADDRESS,
+      getSystemResourceId("S_ClaimSystem"),
+      abi.encodeCall(S_ClaimSystem.claimResources, (spaceRockEntity)),
+      0
+    );
     _;
   }
 
-  modifier claimUnits(bytes32 spaceRockEntity) {
-    _claimUnits(spaceRockEntity);
+  modifier _claimUnits(bytes32 spaceRockEntity) {
+    SystemCall.callWithHooksOrRevert(
+      DUMMY_ADDRESS,
+      getSystemResourceId("S_ClaimSystem"),
+      abi.encodeCall(S_ClaimSystem.claimUnits, (spaceRockEntity)),
+      0
+    );
     _;
-  }
-
-  function _claimResources(bytes32 spaceRockEntity) internal {
-    SystemCall.callWithHooksOrRevert(
-      DUMMY_ADDRESS,
-      getSystemResourceId("S_SharedHooksSystem"),
-      abi.encodeCall(S_SharedHooksSystem.claimResources, (spaceRockEntity)),
-      0
-    );
-  }
-
-  function _claimUnits(bytes32 spaceRockEntity) internal {
-    SystemCall.callWithHooksOrRevert(
-      DUMMY_ADDRESS,
-      getSystemResourceId("S_SharedHooksSystem"),
-      abi.encodeCall(S_SharedHooksSystem.claimUnits, (spaceRockEntity)),
-      0
-    );
   }
 
   function addressToEntity(address a) internal pure returns (bytes32) {

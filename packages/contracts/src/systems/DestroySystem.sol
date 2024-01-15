@@ -10,7 +10,7 @@ contract DestroySystem is PrimodiumSystem {
   /// @notice Destroys a building entity
   /// @param coord Coordinate of the building to be destroyed
   /// @return buildingEntity Entity identifier of the destroyed building
-  function destroy(PositionData memory coord) public claimResources(coord.parent) returns (bytes32 buildingEntity) {
+  function destroy(PositionData memory coord) public _claimResources(coord.parent) returns (bytes32 buildingEntity) {
     buildingEntity = LibBuilding.getBuildingFromCoord(coord);
     LibBuilding.checkDestroyRequirements(_player(), buildingEntity);
 

@@ -13,8 +13,8 @@ contract ToggleBuildingSystem is PrimodiumSystem {
   /// @return isActive the new active status of the building
   function toggleBuilding(PositionData memory coord)
     public
-    claimResources(coord.parent)
-    claimUnits(coord.parent)
+    _claimResources(coord.parent)
+    _claimUnits(coord.parent)
     returns (bool isActive)
   {
     // Check there isn't another tile there

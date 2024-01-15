@@ -11,7 +11,7 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
   /// @return buildingEntity Entity identifier of the upgraded building
   function upgradeBuilding(PositionData memory coord)
     public
-    claimResources(coord.parent)
+    _claimResources(coord.parent)
     returns (bytes32 buildingEntity)
   {
     // Check there isn't another tile there

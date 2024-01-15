@@ -11,7 +11,7 @@ import { UnitKey } from "src/Keys.sol";
 contract UpgradeUnitSystem is PrimodiumSystem {
   /// @notice Upgrades the specified unit for the sender
   /// @param unit The type of unit to upgrade
-  function upgradeUnit(bytes32 spaceRockEntity, EUnit unit) public claimResources(spaceRockEntity) {
+  function upgradeUnit(bytes32 spaceRockEntity, EUnit unit) public _claimResources(spaceRockEntity) {
     bytes32 playerEntity = _player();
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
     uint256 currentLevel = UnitLevel.get(playerEntity, unitPrototype);

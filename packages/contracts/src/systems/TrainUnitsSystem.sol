@@ -7,6 +7,7 @@ import { UnitProductionQueue } from "codegen/Libraries.sol";
 
 import { EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
+import { claimResources, claimUnits } from "libraries/SubsystemCalls.sol";
 
 contract TrainUnitsSystem is PrimodiumSystem {
   /// @notice Trains units based on specified unit type and count
@@ -20,8 +21,8 @@ contract TrainUnitsSystem is PrimodiumSystem {
   ) public {
     if (count == 0) return;
     bytes32 spaceRockEntity = Position.getParent(buildingEntity);
-    _claimResources(spaceRockEntity);
-    _claimUnits(spaceRockEntity);
+    claimResources(spaceRockEntity);
+    claimUnits(spaceRockEntity);
 
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
     QueueItemUnitsData memory queueItem = QueueItemUnitsData({ unitId: unitPrototype, quantity: count });
