@@ -19,11 +19,6 @@ export type Config = typeof config;
 export const config = mudConfig({
   excludeSystems: [...dev],
   systems: {
-    S_BattleSystem: {
-      openAccess: false,
-      accessList: [DUMMY_ADDRESS],
-      name: "S_BattleSystem",
-    },
     S_SpawnPirateAsteroidSystem: {
       openAccess: false,
       accessList: [DUMMY_ADDRESS],
@@ -108,6 +103,7 @@ export const config = mudConfig({
     },
 
     /* --------------------------------- Player --------------------------------- */
+
     Home: {
       keySchema: { entity: "bytes32" },
       valueSchema: {
@@ -413,29 +409,39 @@ export const config = mudConfig({
     },
 
     /* ------------------------------ Sending Units ----------------------------- */
-    ArrivalCount: {
+
+    FleetMovement: {
       keySchema: { entity: "bytes32" },
-      valueSchema: "uint256",
+      valueSchema: {
+        origin: "bytes32",
+        destination: "bytes32",
+        sendTime: "uint256",
+        arrivalTime: "uint256",
+      },
     },
-    // Tracks player asteroid arrivals
-    MapArrivals: {
-      keySchema: { entity: "bytes32", asteroid: "bytes32" },
+
+    FleetAttributes: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: {
+        attack: "uint256",
+        defense: "uint256",
+        speed: "uint256",
+        cargo: "uint256",
+        occupiedCargo: "uint256",
+      },
+    },
+
+    MapFleets: {
+      keySchema: { entity: "bytes32", key: "bytes32" },
       valueSchema: { itemKeys: "bytes32[]" },
     },
 
-    MapItemStoredArrivals: {
-      keySchema: { entity: "bytes32", asteroid: "bytes32", key: "bytes32" },
+    MapStoredFleets: {
+      keySchema: { entity: "bytes32", key: "bytes32", fleetId: "bytes32" },
       valueSchema: {
         stored: "bool",
         index: "uint256",
       },
-    },
-
-    // We need to split this up because it is too big to compile lol
-    // But this is abstracted away in ArrivalSet.sol
-    MapItemArrivals: {
-      keySchema: { entity: "bytes32", asteroid: "bytes32", key: "bytes32" },
-      valueSchema: "bytes",
     },
 
     /* ------------------------------ Battle Result ----------------------------- */
@@ -445,7 +451,6 @@ export const config = mudConfig({
         attacker: "bytes32",
         defender: "bytes32",
         winner: "bytes32",
-
         rock: "bytes32",
         totalCargo: "uint256",
         timestamp: "uint256",
@@ -454,6 +459,20 @@ export const config = mudConfig({
         defenderStartingUnits: "uint256[]",
         attackerUnitsLeft: "uint256[]",
         defenderUnitsLeft: "uint256[]",
+      },
+      offchainOnly: true,
+    },
+
+    FleetOutcome: {
+      keySchema: { entity: "bytes32", fleetId: "bytes32" },
+      valueSchema: {
+        owner: "bytes32",
+        timestamp: "uint256",
+        unitLevels: "uint256[]",
+        unitsAtStart: "uint256[]",
+        unitsAtEnd: "uint256[]",
+        resourcesAtStart: "uint256[]",
+        resourcesAtEnd: "uint256[]",
       },
       offchainOnly: true,
     },

@@ -671,92 +671,6 @@
   {
     "inputs": [
       {
-        "internalType": "bytes32",
-        "name": "attackerEntity",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "defenderEntity",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "rockEntity",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "enum ESendType",
-        "name": "sendType",
-        "type": "uint8"
-      }
-    ],
-    "name": "battle",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "bytes32",
-            "name": "attacker",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "defender",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "winner",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "rock",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "uint256",
-            "name": "totalCargo",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "timestamp",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "attackerStartingUnits",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "defenderStartingUnits",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "attackerUnitsLeft",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "defenderUnitsLeft",
-            "type": "uint256[]"
-          }
-        ],
-        "internalType": "struct BattleResultData",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "enum EBuilding",
         "name": "buildingType",
         "type": "uint8"
@@ -878,19 +792,6 @@
     "inputs": [
       {
         "internalType": "bytes32",
-        "name": "rockEntity",
-        "type": "bytes32"
-      }
-    ],
-    "name": "claimUnits",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
         "name": "name",
         "type": "bytes32"
       },
@@ -905,6 +806,35 @@
       {
         "internalType": "bytes32",
         "name": "allianceEntity",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "spaceRock",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256[8]",
+        "name": "unitCounts",
+        "type": "uint256[8]"
+      },
+      {
+        "internalType": "uint256[25]",
+        "name": "resourceCounts",
+        "type": "uint256[25]"
+      }
+    ],
+    "name": "createFleet",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "fleetId",
         "type": "bytes32"
       }
     ],
@@ -1283,45 +1213,6 @@
     ],
     "name": "devSpliceStaticData",
     "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "invader",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "rockEntity",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "enum ESendType",
-        "name": "sendType",
-        "type": "uint8"
-      }
-    ],
-    "name": "getAttackPoints",
-    "outputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -1715,6 +1606,19 @@
   {
     "inputs": [
       {
+        "internalType": "address payable",
+        "name": "delegate",
+        "type": "address"
+      }
+    ],
+    "name": "grantAccess",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "ResourceId",
         "name": "resourceId",
         "type": "bytes32"
@@ -1814,19 +1718,6 @@
     "inputs": [
       {
         "internalType": "bytes32",
-        "name": "rockEntity",
-        "type": "bytes32"
-      }
-    ],
-    "name": "invade",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
         "name": "target",
         "type": "bytes32"
       }
@@ -1863,8 +1754,39 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "fleetId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "spaceRock",
+        "type": "bytes32"
+      }
+    ],
+    "name": "landFleet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "leave",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32[]",
+        "name": "fleets",
+        "type": "bytes32[]"
+      }
+    ],
+    "name": "mergeFleets",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1981,73 +1903,11 @@
     "inputs": [
       {
         "internalType": "bytes32",
-        "name": "rockEntity",
+        "name": "fleetId",
         "type": "bytes32"
       }
     ],
-    "name": "raid",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "rockEntity",
-        "type": "bytes32"
-      }
-    ],
-    "name": "recallAll",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "rockEntity",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "enum ESendType",
-        "name": "sendType",
-        "type": "uint8"
-      }
-    ],
-    "name": "recallAllOfSendType",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "rockEntity",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "arrivalId",
-        "type": "bytes32"
-      }
-    ],
-    "name": "recallArrival",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "rockEntity",
-        "type": "bytes32"
-      }
-    ],
-    "name": "recallStationedUnits",
+    "name": "recallFleet",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -2275,24 +2135,6 @@
     "inputs": [
       {
         "internalType": "bytes32",
-        "name": "rockEntity",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "arrival",
-        "type": "bytes32"
-      }
-    ],
-    "name": "reinforce",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
         "name": "rejectee",
         "type": "bytes32"
       }
@@ -2334,6 +2176,20 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "revokeAccessDelegate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "revokeAccessOwner",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "bytes32",
@@ -2349,66 +2205,35 @@
   {
     "inputs": [
       {
-        "internalType": "uint256[8]",
-        "name": "unitCounts",
-        "type": "uint256[8]"
-      },
-      {
-        "internalType": "enum ESendType",
-        "name": "sendType",
-        "type": "uint8"
-      },
-      {
-        "components": [
-          {
-            "internalType": "int32",
-            "name": "x",
-            "type": "int32"
-          },
-          {
-            "internalType": "int32",
-            "name": "y",
-            "type": "int32"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "parent",
-            "type": "bytes32"
-          }
-        ],
-        "internalType": "struct PositionData",
-        "name": "origin",
-        "type": "tuple"
-      },
-      {
-        "components": [
-          {
-            "internalType": "int32",
-            "name": "x",
-            "type": "int32"
-          },
-          {
-            "internalType": "int32",
-            "name": "y",
-            "type": "int32"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "parent",
-            "type": "bytes32"
-          }
-        ],
-        "internalType": "struct PositionData",
-        "name": "destination",
-        "type": "tuple"
+        "internalType": "bytes32",
+        "name": "fleetId",
+        "type": "bytes32"
       },
       {
         "internalType": "bytes32",
-        "name": "to",
+        "name": "spaceRock",
         "type": "bytes32"
       }
     ],
-    "name": "sendUnits",
+    "name": "sendFleet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32[]",
+        "name": "fleets",
+        "type": "bytes32[]"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "spaceRock",
+        "type": "bytes32"
+      }
+    ],
+    "name": "sendFleets",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -2687,6 +2512,19 @@
   {
     "inputs": [
       {
+        "internalType": "address payable",
+        "name": "delegate",
+        "type": "address"
+      }
+    ],
+    "name": "switchDelegate",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes32",
         "name": "orderId",
         "type": "bytes32"
@@ -2846,6 +2684,228 @@
   {
     "inputs": [
       {
+        "internalType": "bytes32",
+        "name": "fromFleetId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "fleetId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256[25]",
+        "name": "resourceCounts",
+        "type": "uint256[25]"
+      }
+    ],
+    "name": "transferResourcesFromFleetToFleet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "spaceRock",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "fleetId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256[25]",
+        "name": "resourceCounts",
+        "type": "uint256[25]"
+      }
+    ],
+    "name": "transferResourcesFromFleetToSpaceRock",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "spaceRock",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "fleetId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256[25]",
+        "name": "resourceCounts",
+        "type": "uint256[25]"
+      }
+    ],
+    "name": "transferResourcesFromSpaceRockToFleet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "fromFleetId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "fleetId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256[8]",
+        "name": "unitCounts",
+        "type": "uint256[8]"
+      },
+      {
+        "internalType": "uint256[25]",
+        "name": "resourceCounts",
+        "type": "uint256[25]"
+      }
+    ],
+    "name": "transferUnitsAndResourcesFromFleetToFleet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "spaceRock",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "fleetId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256[8]",
+        "name": "unitCounts",
+        "type": "uint256[8]"
+      },
+      {
+        "internalType": "uint256[25]",
+        "name": "resourceCounts",
+        "type": "uint256[25]"
+      }
+    ],
+    "name": "transferUnitsAndResourcesFromFleetToSpaceRock",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "spaceRock",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "fleetId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256[8]",
+        "name": "unitCounts",
+        "type": "uint256[8]"
+      },
+      {
+        "internalType": "uint256[25]",
+        "name": "resourceCounts",
+        "type": "uint256[25]"
+      }
+    ],
+    "name": "transferUnitsAndResourcesFromSpaceRockToFleet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "fromFleetId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "fleetId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256[8]",
+        "name": "unitCounts",
+        "type": "uint256[8]"
+      }
+    ],
+    "name": "transferUnitsFromFleetToFleet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "spaceRock",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "fleetId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256[8]",
+        "name": "unitCounts",
+        "type": "uint256[8]"
+      }
+    ],
+    "name": "transferUnitsFromFleetToSpaceRock",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "spaceRock",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "fleetId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256[8]",
+        "name": "unitCounts",
+        "type": "uint256[8]"
+      }
+    ],
+    "name": "transferUnitsFromSpaceRockToFleet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "ResourceId",
         "name": "tableId",
         "type": "bytes32"
@@ -2957,76 +3017,6 @@
       }
     ],
     "name": "updateOrderResource",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "bytes32",
-            "name": "attacker",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "defender",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "winner",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "rock",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "uint256",
-            "name": "totalCargo",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "timestamp",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "attackerStartingUnits",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "defenderStartingUnits",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "attackerUnitsLeft",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "defenderUnitsLeft",
-            "type": "uint256[]"
-          }
-        ],
-        "internalType": "struct BattleResultData",
-        "name": "br",
-        "type": "tuple"
-      },
-      {
-        "internalType": "enum ESendType",
-        "name": "sendType",
-        "type": "uint8"
-      }
-    ],
-    "name": "updateUnitsAfterBattle",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
