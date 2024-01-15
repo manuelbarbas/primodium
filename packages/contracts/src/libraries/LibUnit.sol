@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { P_UnitPrototypes, IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
+import { Position, P_UnitPrototypes, IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
 
 import { ERock, EUnit } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
@@ -112,7 +112,7 @@ library LibUnit {
     uint256 buildingLevel = Level.get(building);
     bytes32 buildingType = BuildingType.get(building);
     uint256 multiplier = P_UnitProdMultiplier.get(buildingType, buildingLevel);
-    uint256 unitLevel = UnitLevel.get(playerEntity, unitPrototype);
+    uint256 unitLevel = UnitLevel.get(Position.getParent(building), unitPrototype);
     uint256 rawTrainingTime = P_Unit.getTrainingTime(unitPrototype, unitLevel);
     require(multiplier > 0, "Building has no unit production multiplier");
     P_GameConfigData memory config = P_GameConfig.get();
@@ -135,7 +135,7 @@ library LibUnit {
   ) internal {
     if (count == 0) return;
     bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
-    uint256 unitLevel = UnitLevel.get(playerEntity, unitType);
+    uint256 unitLevel = UnitLevel.get(spaceRockEntity, unitType);
 
     P_RequiredResourcesData memory resources = P_RequiredResources.get(unitType, unitLevel);
     for (uint8 i = 0; i < resources.resources.length; i++) {
@@ -174,7 +174,7 @@ library LibUnit {
     UnitCount.set(rockEntity, unitType, prevUnitCount + unitCount);
     // update production rate
     if (RockType.get(rockEntity) != uint8(ERock.Motherlode)) return;
-    uint256 level = UnitLevel.get(playerEntity, unitType);
+    uint256 level = UnitLevel.get(rockEntity, unitType);
     uint256 productionRate = P_MiningRate.get(unitType, level);
     if (productionRate == 0) return;
     uint8 resource = (Motherlode.getMotherlodeType(rockEntity));
@@ -202,7 +202,7 @@ library LibUnit {
 
     // update production rate
     if (RockType.get(rockEntity) != uint8(ERock.Motherlode)) return;
-    uint256 level = UnitLevel.get(playerEntity, unitType);
+    uint256 level = UnitLevel.get(rockEntity, unitType);
     uint256 productionRate = P_MiningRate.get(unitType, level);
     if (productionRate == 0) return;
     uint8 resource = (Motherlode.getMotherlodeType(rockEntity));

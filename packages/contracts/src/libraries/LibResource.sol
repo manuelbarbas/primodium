@@ -49,7 +49,7 @@ library LibResource {
     uint256 count
   ) internal {
     bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
-    uint256 level = UnitLevel.get(playerEntity, prototype);
+    uint256 level = UnitLevel.get(spaceRockEntity, prototype);
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(prototype, level);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       spendResource(spaceRockEntity, prototype, requiredResources.resources[i], requiredResources.amounts[i] * count);
