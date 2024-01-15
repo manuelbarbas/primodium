@@ -22,12 +22,22 @@ export const config = mudConfig({
     S_BattleSystem: {
       openAccess: false,
       accessList: [DUMMY_ADDRESS],
-      name: "S_BattleSystem",
     },
     S_SpawnPirateAsteroidSystem: {
       openAccess: false,
       accessList: [DUMMY_ADDRESS],
-      name: "S_SpawnPirateAsteroidSystem",
+    },
+    S_ProductionSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+    },
+    S_SpendResourceSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+    },
+    S_UpgradeSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
     },
   },
 

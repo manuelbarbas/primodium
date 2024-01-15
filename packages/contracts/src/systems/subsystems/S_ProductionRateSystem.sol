@@ -8,7 +8,7 @@ import { LibReduceProductionRate } from "libraries/LibReduceProductionRate.sol";
 import { Level, IsActive } from "codegen/index.sol";
 
 contract S_ProductionRateSystem is PrimodiumSystem {
-  function upgradeProductionRate(bytes32 buildingEntity, uint32 level) public {
+  function upgradeProductionRate(bytes32 buildingEntity, uint256 level) public {
     if (!IsActive.get(buildingEntity)) return;
     // Reduce the production rate of resources the building requires
     LibReduceProductionRate.reduceProductionRate(buildingEntity, level);

@@ -30,7 +30,7 @@ function claimUnits(bytes32 spaceRockEntity) {
 
 /* ------------------------------- PRODUCTION ------------------------------- */
 
-function upgradeProductionRate(bytes32 buildingEntity, uint32 level) {
+function upgradeProductionRate(bytes32 buildingEntity, uint256 level) {
   SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
     getSystemResourceId("S_ProductionRateSystem"),
@@ -39,7 +39,7 @@ function upgradeProductionRate(bytes32 buildingEntity, uint32 level) {
   );
 }
 
-function toggleProductionRate(bytes32 buildingEntity, uint32 level) {
+function toggleProductionRate(bytes32 buildingEntity, uint256 level) {
   SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
     getSystemResourceId("S_ProductionRateSystem"),
@@ -59,7 +59,7 @@ function clearProductionRate(bytes32 buildingEntity) {
 
 /* ------------------------------- MAX STORAGE ------------------------------ */
 
-function increaseMaxStorage(bytes32 buildingEntity, uint32 level) {
+function increaseMaxStorage(bytes32 buildingEntity, uint256 level) {
   SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
     getSystemResourceId("S_StorageSystem"),
@@ -88,7 +88,7 @@ function activateMaxStorage(bytes32 buildingEntity) {
 
 /* --------------------------- RESOURCE & UTILITY --------------------------- */
 
-function spendBuildingRequiredResources(bytes32 buildingEntity, uint32 level) {
+function spendBuildingRequiredResources(bytes32 buildingEntity, uint256 level) {
   SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
     getSystemResourceId("S_SpendResourcesSystem"),

@@ -5,6 +5,7 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { IsActive, P_UnitProdTypes, Position, PositionData, BuildingType, OwnedBy, Level, BuildingType } from "codegen/index.sol";
 import { LibBuilding, UnitFactorySet } from "codegen/Libraries.sol";
+import { clearUtilityUsage, clearMaxStorageIncrease, clearProductionRate } from "libraries/SubsystemCalls.sol";
 
 contract DestroySystem is PrimodiumSystem {
   /// @notice Destroys a building entity
@@ -26,6 +27,13 @@ contract DestroySystem is PrimodiumSystem {
     if (P_UnitProdTypes.length(buildingType, level) != 0) {
       UnitFactorySet.remove(coord.parent, buildingEntity);
     }
+
+    LibBuilding.removeBuildingTiles(coord);
+
+    clearUtilityUsage(buildingEntity);
+    clearMaxStorageIncrease(buildingEntity);
+    clearProductionRate(buildingEntity);
+
     return buildingEntity;
   }
 }

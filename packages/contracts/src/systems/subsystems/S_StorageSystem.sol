@@ -7,7 +7,7 @@ import { LibStorage } from "libraries/LibStorage.sol";
 import { IsActive, Level } from "codegen/index.sol";
 
 contract S_StorageSystem is PrimodiumSystem {
-  function increaseMaxStorage(bytes32 buildingEntity, uint32 level) public {
+  function increaseMaxStorage(bytes32 buildingEntity, uint256 level) public {
     LibStorage.increaseMaxStorage(buildingEntity, level);
   }
 

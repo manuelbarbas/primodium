@@ -4,6 +4,7 @@ pragma solidity >=0.8.21;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { PositionData, Level } from "codegen/index.sol";
 import { LibBuilding } from "codegen/Libraries.sol";
+import { increaseMaxStorage, upgradeProductionRate, spendBuildingRequiredResources } from "libraries/SubsystemCalls.sol";
 
 contract UpgradeBuildingSystem is PrimodiumSystem {
   /// @notice Upgrades the building at the specified coordinate
@@ -21,5 +22,9 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
 
     uint256 targetLevel = Level.get(buildingEntity) + 1;
     Level.set(buildingEntity, targetLevel);
+
+    increaseMaxStorage(buildingEntity, targetLevel);
+    upgradeProductionRate(buildingEntity, targetLevel);
+    spendBuildingRequiredResources(buildingEntity, targetLevel);
   }
 }

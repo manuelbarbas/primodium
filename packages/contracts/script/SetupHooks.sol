@@ -33,15 +33,6 @@ import "codegen/index.sol";
 import { OnResourceCount_Score } from "src/hooks/storeHooks/OnResourceCount_Score.sol";
 import { OnScore_Alliance_Score } from "src/hooks/storeHooks/OnScore_Alliance_Score.sol";
 
-import { OnUpgrade_SpendResources } from "src/hooks/systemHooks/upgrade/OnUpgrade_SpendResources.sol";
-import { OnUpgrade_MaxStorage } from "src/hooks/systemHooks/upgrade/OnUpgrade_MaxStorage.sol";
-import { OnUpgrade_ProductionRate } from "src/hooks/systemHooks/upgrade/OnUpgrade_ProductionRate.sol";
-
-import { OnDestroy_ClearUtility } from "src/hooks/systemHooks/destroy/OnDestroy_ClearUtility.sol";
-import { OnDestroy_MaxStorage } from "src/hooks/systemHooks/destroy/OnDestroy_MaxStorage.sol";
-import { OnDestroy_ProductionRate } from "src/hooks/systemHooks/destroy/OnDestroy_ProductionRate.sol";
-import { OnDestroy_RemoveFromTiles } from "src/hooks/systemHooks/destroy/OnDestroy_RemoveFromTiles.sol";
-
 import { OnSendUnits_Requirements } from "src/hooks/systemHooks/sendUnits/OnSendUnits_Requirements.sol";
 import { OnSendUnits_UnitCount } from "src/hooks/systemHooks/sendUnits/OnSendUnits_UnitCount.sol";
 
@@ -74,9 +65,6 @@ import { BEFORE_SPLICE_STATIC_DATA, AFTER_SET_RECORD, ALL as STORE_ALL } from "@
 
 function setupHooks(IWorld world) {
   //System Hooks
-  registerBuildHooks(world);
-  registerUpgradeHooks(world);
-  registerDestroyHooks(world);
   registerSendUnits(world);
   registerTrainUnits(world);
   registerInvade(world);
@@ -188,86 +176,6 @@ function registerUpgradeUnitHook(IWorld world) {
   world.grantAccess(MapItemStoredUtilitiesTableId, hookAddress);
   world.grantAccess(MaxResourceCountTableId, hookAddress);
   world.registerSystemHook(systemId, onUpgradeUnit_SpendResources, AFTER_CALL_SYSTEM);
-}
-
-/**
- * @dev Register system hooks for the upgrade actions.
- * @param world The World contract instance.
- */
-function registerUpgradeHooks(IWorld world) {
-  ResourceId systemId = getSystemResourceId("UpgradeBuildingSystem");
-
-  OnUpgrade_SpendResources onUpgrade_SpendResources = new OnUpgrade_SpendResources();
-  console.log("onUpgrade_SpendResources address: %s", address(onUpgrade_SpendResources));
-  address hookAddress = address(onUpgrade_SpendResources);
-  world.grantAccess(ResourceCountTableId, hookAddress);
-  world.grantAccess(MapItemUtilitiesTableId, hookAddress);
-  world.grantAccess(MapUtilitiesTableId, hookAddress);
-  world.grantAccess(MapItemStoredUtilitiesTableId, hookAddress);
-  world.grantAccess(MaxResourceCountTableId, hookAddress);
-  world.registerSystemHook(systemId, onUpgrade_SpendResources, AFTER_CALL_SYSTEM);
-
-  OnUpgrade_MaxStorage onUpgrade_MaxStorage = new OnUpgrade_MaxStorage();
-  console.log("onUpgrade_MaxStorage address: %s", address(onUpgrade_MaxStorage));
-  hookAddress = address(onUpgrade_MaxStorage);
-  world.grantAccess(ResourceCountTableId, hookAddress);
-  world.grantAccess(MaxResourceCountTableId, hookAddress);
-  world.registerSystemHook(systemId, onUpgrade_MaxStorage, AFTER_CALL_SYSTEM);
-
-  OnUpgrade_ProductionRate onUpgrade_ProductionRate = new OnUpgrade_ProductionRate();
-  console.log("onUpgrade_ProductionRate address: %s", address(onUpgrade_ProductionRate));
-  hookAddress = address(onUpgrade_ProductionRate);
-  world.grantAccess(ProductionRateTableId, hookAddress);
-  world.grantAccess(MaxResourceCountTableId, hookAddress);
-  world.grantAccess(ResourceCountTableId, hookAddress);
-  world.grantAccess(MapItemUtilitiesTableId, hookAddress);
-  world.grantAccess(MapUtilitiesTableId, hookAddress);
-  world.grantAccess(MapItemStoredUtilitiesTableId, hookAddress);
-  world.grantAccess(ConsumptionRateTableId, hookAddress);
-  world.registerSystemHook(systemId, onUpgrade_ProductionRate, AFTER_CALL_SYSTEM);
-}
-
-/**
- * @dev Register system hooks for the destroy actions.
- * @param world The World contract instance.
- */
-function registerDestroyHooks(IWorld world) {
-  ResourceId systemId = getSystemResourceId("DestroySystem");
-
-  OnDestroy_ClearUtility onDestroy_ClearUtility = new OnDestroy_ClearUtility();
-  console.log("onDestroy_ClearUtility address: %s", address(onDestroy_ClearUtility));
-  address hookAddress = address(onDestroy_ClearUtility);
-  world.grantAccess(MapItemUtilitiesTableId, hookAddress);
-  world.grantAccess(MapUtilitiesTableId, hookAddress);
-  world.grantAccess(MapItemStoredUtilitiesTableId, hookAddress);
-  world.grantAccess(MaxResourceCountTableId, hookAddress);
-  world.grantAccess(ResourceCountTableId, hookAddress);
-  world.registerSystemHook(systemId, onDestroy_ClearUtility, BEFORE_CALL_SYSTEM);
-
-  OnDestroy_MaxStorage onDestroy_MaxStorage = new OnDestroy_MaxStorage();
-  console.log("onDestroy_MaxStorage address: %s", address(onDestroy_MaxStorage));
-
-  hookAddress = address(onDestroy_MaxStorage);
-  world.grantAccess(ResourceCountTableId, hookAddress);
-  world.grantAccess(MaxResourceCountTableId, hookAddress);
-  world.registerSystemHook(systemId, onDestroy_MaxStorage, BEFORE_CALL_SYSTEM);
-
-  OnDestroy_ProductionRate onDestroy_ProductionRate = new OnDestroy_ProductionRate();
-  console.log("onDestroy_ProductionRate address: %s", address(onDestroy_ProductionRate));
-  hookAddress = address(onDestroy_ProductionRate);
-  world.grantAccess(ProductionRateTableId, hookAddress);
-  world.grantAccess(MaxResourceCountTableId, hookAddress);
-  world.grantAccess(MapItemStoredUtilitiesTableId, hookAddress);
-  world.grantAccess(ResourceCountTableId, hookAddress);
-  world.grantAccess(ConsumptionRateTableId, hookAddress);
-  world.registerSystemHook(systemId, onDestroy_ProductionRate, BEFORE_CALL_SYSTEM);
-
-  OnDestroy_RemoveFromTiles onDestroy_RemoveFromTiles = new OnDestroy_RemoveFromTiles();
-  console.log("onDestroy_RemoveFromTiles address: %s", address(onDestroy_RemoveFromTiles));
-  hookAddress = address(onDestroy_RemoveFromTiles);
-  world.grantAccess(ChildrenTableId, hookAddress);
-  world.grantAccess(OwnedByTableId, hookAddress);
-  world.registerSystemHook(systemId, onDestroy_RemoveFromTiles, AFTER_CALL_SYSTEM);
 }
 
 /**
