@@ -34,12 +34,10 @@ import { OnResourceCount_Score } from "src/hooks/storeHooks/OnResourceCount_Scor
 import { OnScore_Alliance_Score } from "src/hooks/storeHooks/OnScore_Alliance_Score.sol";
 
 import { OnBuild_PlaceOnTile } from "src/hooks/systemHooks/build/OnBuild_PlaceOnTile.sol";
-import { OnBuild_Requirements } from "src/hooks/systemHooks/build/OnBuild_Requirements.sol";
 import { OnBuild_SpendResources } from "src/hooks/systemHooks/build/OnBuild_SpendResources.sol";
 import { OnBuild_MaxStorage } from "src/hooks/systemHooks/build/OnBuild_MaxStorage.sol";
 import { OnBuild_ProductionRate } from "src/hooks/systemHooks/build/OnBuild_ProductionRate.sol";
 
-import { OnUpgrade_Requirements } from "src/hooks/systemHooks/upgrade/OnUpgrade_Requirements.sol";
 import { OnUpgrade_SpendResources } from "src/hooks/systemHooks/upgrade/OnUpgrade_SpendResources.sol";
 import { OnUpgrade_MaxStorage } from "src/hooks/systemHooks/upgrade/OnUpgrade_MaxStorage.sol";
 import { OnUpgrade_ProductionRate } from "src/hooks/systemHooks/upgrade/OnUpgrade_ProductionRate.sol";
@@ -47,7 +45,6 @@ import { OnUpgrade_ProductionRate } from "src/hooks/systemHooks/upgrade/OnUpgrad
 import { OnDestroy_ClearUtility } from "src/hooks/systemHooks/destroy/OnDestroy_ClearUtility.sol";
 import { OnDestroy_MaxStorage } from "src/hooks/systemHooks/destroy/OnDestroy_MaxStorage.sol";
 import { OnDestroy_ProductionRate } from "src/hooks/systemHooks/destroy/OnDestroy_ProductionRate.sol";
-import { OnDestroy_Requirements } from "src/hooks/systemHooks/destroy/OnDestroy_Requirements.sol";
 import { OnDestroy_RemoveFromTiles } from "src/hooks/systemHooks/destroy/OnDestroy_RemoveFromTiles.sol";
 
 import { OnSendUnits_Requirements } from "src/hooks/systemHooks/sendUnits/OnSendUnits_Requirements.sol";
@@ -70,8 +67,6 @@ import { OnClaimObjective_ReceiveRewards } from "src/hooks/systemHooks/claimObje
 import { OnUpgradeUnit_SpendResources } from "src/hooks/systemHooks/upgradeUnit/OnUpgradeUnit_SpendResources.sol";
 
 import { OnUpgradeRange_SpendResources } from "src/hooks/systemHooks/upgradeRange/OnUpgradeRange_SpendResources.sol";
-
-import { OnAlliance_TargetClaimResources } from "src/hooks/systemHooks/alliance/OnAlliance_TargetClaimResources.sol";
 
 import { OnRecall_TargetClaimResources } from "src/hooks/systemHooks/recall/OnRecall_TargetClaimResources.sol";
 
@@ -96,7 +91,6 @@ function setupHooks(IWorld world) {
   registerUpgradeRangeHook(world);
   registerUpgradeUnitHook(world);
 
-  registerAllianceHooks(world);
   registerRecallHooks(world);
   registerToggleBuildingHooks(world);
   //Store Hooks
@@ -150,19 +144,6 @@ function registerToggleBuildingHooks(IWorld world) {
   world.grantAccess(MaxResourceCountTableId, hookAddress);
   world.grantAccess(ResourceCountTableId, hookAddress);
   world.registerSystemHook(systemId, onToggleBuilding_Utility, AFTER_CALL_SYSTEM);
-}
-
-function registerAllianceHooks(IWorld world, OnBefore_ClaimResources onBefore_ClaimResources) {
-  OnAlliance_TargetClaimResources onAlliance_TargetClaimResources = new OnAlliance_TargetClaimResources();
-  console.log("onAlliance_TargetClaimResources address: %s", address(onAlliance_TargetClaimResources));
-  address hookAddress = address(onAlliance_TargetClaimResources);
-  world.grantAccess(ResourceCountTableId, hookAddress);
-  world.grantAccess(MapItemUtilitiesTableId, hookAddress);
-  world.grantAccess(MapUtilitiesTableId, hookAddress);
-  world.grantAccess(MapItemStoredUtilitiesTableId, hookAddress);
-  world.grantAccess(LastClaimedAtTableId, hookAddress);
-  world.grantAccess(ProducedResourceTableId, hookAddress);
-  world.registerSystemHook(getSystemResourceId("AllianceSystem"), onAlliance_TargetClaimResources, BEFORE_CALL_SYSTEM);
 }
 
 function registerRecallHooks(IWorld world) {
@@ -221,10 +202,6 @@ function registerUpgradeUnitHook(IWorld world) {
 function registerBuildHooks(IWorld world) {
   ResourceId systemId = getSystemResourceId("BuildSystem");
 
-  OnBuild_Requirements onBuild_Requirements = new OnBuild_Requirements();
-  console.log("onBuild_Requirements address: %s", address(onBuild_Requirements));
-  world.registerSystemHook(systemId, onBuild_Requirements, BEFORE_CALL_SYSTEM);
-
   OnBuild_SpendResources onBuild_SpendResources = new OnBuild_SpendResources();
   console.log("onBuild_SpendResources address: %s", address(onBuild_SpendResources));
   address hookAddress = address(onBuild_SpendResources);
@@ -271,10 +248,6 @@ function registerBuildHooks(IWorld world) {
 function registerUpgradeHooks(IWorld world) {
   ResourceId systemId = getSystemResourceId("UpgradeBuildingSystem");
 
-  OnUpgrade_Requirements onUpgrade_Requirements = new OnUpgrade_Requirements();
-  console.log("onUpgrade_Requirements address: %s", address(onUpgrade_Requirements));
-  world.registerSystemHook(systemId, onUpgrade_Requirements, BEFORE_CALL_SYSTEM);
-
   OnUpgrade_SpendResources onUpgrade_SpendResources = new OnUpgrade_SpendResources();
   console.log("onUpgrade_SpendResources address: %s", address(onUpgrade_SpendResources));
   address hookAddress = address(onUpgrade_SpendResources);
@@ -311,10 +284,6 @@ function registerUpgradeHooks(IWorld world) {
  */
 function registerDestroyHooks(IWorld world) {
   ResourceId systemId = getSystemResourceId("DestroySystem");
-
-  OnDestroy_Requirements onDestroy_Requirements = new OnDestroy_Requirements();
-  console.log("onDestroy_Requirements address: %s", address(onDestroy_Requirements));
-  world.registerSystemHook(systemId, onDestroy_Requirements, BEFORE_CALL_SYSTEM);
 
   OnDestroy_ClearUtility onDestroy_ClearUtility = new OnDestroy_ClearUtility();
   console.log("onDestroy_ClearUtility address: %s", address(onDestroy_ClearUtility));
