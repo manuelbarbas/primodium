@@ -5,6 +5,7 @@ import "../PrimodiumTest.t.sol";
 
 contract LibAsteroidTest is PrimodiumTest {
   bytes32 player;
+  bytes32 asteroid;
 
   function setUp() public override {
     super.setUp();
@@ -13,6 +14,7 @@ contract LibAsteroidTest is PrimodiumTest {
     gameConfig.asteroidDistance = 8;
     gameConfig.maxAsteroidsPerPlayer = 12;
     gameConfig.asteroidChanceInv = 2;
+    asteroid = spawn(creator);
     vm.startPrank(creator);
     player = addressToEntity(creator);
     P_GameConfig.set(gameConfig);
@@ -39,10 +41,9 @@ contract LibAsteroidTest is PrimodiumTest {
     assertLe(asteroidData.maxLevel, 4, "max level too low");
   }
 
-  function findSecondaryAsteroid() public returns (bytes32, PositionData memory) {
+  function findSecondaryAsteroid() public returns (PositionData memory) {
     P_GameConfigData memory config = P_GameConfig.get();
-    bytes32 asteroid = spawn(alice);
-    PositionData memory sourcePosition = getHomeAsteroidPosition(alice);
+    PositionData memory sourcePosition = getHomeAsteroidPosition(creator);
     logPosition(sourcePosition);
     bytes32 asteroidSeed;
     PositionData memory targetPosition;
@@ -67,12 +68,12 @@ contract LibAsteroidTest is PrimodiumTest {
       i++;
     }
     require(found, "uh oh, no asteroid found");
-    return (asteroid, targetPosition);
+    return (targetPosition);
   }
 
   function testCreateSecondaryAsteroid() public {
-    (bytes32 asteroid, PositionData memory position) = findSecondaryAsteroid();
     vm.startPrank(creator);
+    PositionData memory position = findSecondaryAsteroid();
 
     bytes32 actualAsteroidEntity = LibAsteroid.createSecondaryAsteroid(player, position);
     bytes32 asteroidEntity = keccak256(abi.encode(asteroid, bytes32("asteroid"), position.x, position.y));
