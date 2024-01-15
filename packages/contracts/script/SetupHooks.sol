@@ -56,10 +56,6 @@ import { OnUpgradeRange_SpendResources } from "src/hooks/systemHooks/upgradeRang
 
 import { OnRecall_TargetClaimResources } from "src/hooks/systemHooks/recall/OnRecall_TargetClaimResources.sol";
 
-import { OnToggleBuilding_MaxStorage } from "src/hooks/systemHooks/toggleBuilding/OnToggleBuilding_MaxStorage.sol";
-import { OnToggleBuilding_ProductionRate } from "src/hooks/systemHooks/toggleBuilding/OnToggleBuilding_ProductionRate.sol";
-import { OnToggleBuilding_Utility } from "src/hooks/systemHooks/toggleBuilding/OnToggleBuilding_Utility.sol";
-
 import { ALL, BEFORE_CALL_SYSTEM, AFTER_CALL_SYSTEM } from "@latticexyz/world/src/systemHookTypes.sol";
 import { BEFORE_SPLICE_STATIC_DATA, AFTER_SET_RECORD, ALL as STORE_ALL } from "@latticexyz/store/src/storeHookTypes.sol";
 
@@ -75,7 +71,6 @@ function setupHooks(IWorld world) {
   registerUpgradeUnitHook(world);
 
   registerRecallHooks(world);
-  registerToggleBuildingHooks(world);
   //Store Hooks
   registerScoreHook(world);
 }
@@ -94,39 +89,6 @@ function registerScoreHook(IWorld world) {
   console.log("onScore_Alliance_Score address: %s", address(onScore_Alliance_Score));
   world.grantAccess(AllianceTableId, address(onScore_Alliance_Score));
   world.registerStoreHook(ScoreTableId, onScore_Alliance_Score, BEFORE_SPLICE_STATIC_DATA);
-}
-
-function registerToggleBuildingHooks(IWorld world) {
-  ResourceId systemId = getSystemResourceId("ToggleBuildingSystem");
-
-  OnToggleBuilding_MaxStorage onToggleBuilding_MaxStorage = new OnToggleBuilding_MaxStorage();
-  console.log("onToggleBuilding_MaxStorage address: %s", address(onToggleBuilding_MaxStorage));
-  address hookAddress = address(onToggleBuilding_MaxStorage);
-  world.grantAccess(ResourceCountTableId, hookAddress);
-  world.grantAccess(MaxResourceCountTableId, hookAddress);
-  world.registerSystemHook(systemId, onToggleBuilding_MaxStorage, AFTER_CALL_SYSTEM);
-
-  OnToggleBuilding_ProductionRate onToggleBuilding_ProductionRate = new OnToggleBuilding_ProductionRate();
-  console.log("onToggleBuilding_ProductionRate address: %s", address(onToggleBuilding_ProductionRate));
-  hookAddress = address(onToggleBuilding_ProductionRate);
-  world.grantAccess(ProductionRateTableId, hookAddress);
-  world.grantAccess(MaxResourceCountTableId, hookAddress);
-  world.grantAccess(ResourceCountTableId, hookAddress);
-  world.grantAccess(MapItemUtilitiesTableId, hookAddress);
-  world.grantAccess(MapUtilitiesTableId, hookAddress);
-  world.grantAccess(MapItemStoredUtilitiesTableId, hookAddress);
-  world.grantAccess(ConsumptionRateTableId, hookAddress);
-  world.registerSystemHook(systemId, onToggleBuilding_ProductionRate, AFTER_CALL_SYSTEM);
-
-  OnToggleBuilding_Utility onToggleBuilding_Utility = new OnToggleBuilding_Utility();
-  console.log("onToggleBuilding_Utility address: %s", address(onToggleBuilding_Utility));
-  hookAddress = address(onToggleBuilding_Utility);
-  world.grantAccess(MapItemUtilitiesTableId, hookAddress);
-  world.grantAccess(MapUtilitiesTableId, hookAddress);
-  world.grantAccess(MapItemStoredUtilitiesTableId, hookAddress);
-  world.grantAccess(MaxResourceCountTableId, hookAddress);
-  world.grantAccess(ResourceCountTableId, hookAddress);
-  world.registerSystemHook(systemId, onToggleBuilding_Utility, AFTER_CALL_SYSTEM);
 }
 
 function registerRecallHooks(IWorld world) {

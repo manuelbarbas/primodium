@@ -27,15 +27,11 @@ export const config = mudConfig({
       openAccess: false,
       accessList: [DUMMY_ADDRESS],
     },
-    S_ProductionSystem: {
+    S_ProductionRateSystem: {
       openAccess: false,
       accessList: [DUMMY_ADDRESS],
     },
-    S_SpendResourceSystem: {
-      openAccess: false,
-      accessList: [DUMMY_ADDRESS],
-    },
-    S_UpgradeSystem: {
+    S_SpendResourcesSystem: {
       openAccess: false,
       accessList: [DUMMY_ADDRESS],
     },

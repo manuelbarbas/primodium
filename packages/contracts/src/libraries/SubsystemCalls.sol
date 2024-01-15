@@ -39,7 +39,7 @@ function upgradeProductionRate(bytes32 buildingEntity, uint256 level) {
   );
 }
 
-function toggleProductionRate(bytes32 buildingEntity, uint256 level) {
+function toggleProductionRate(bytes32 buildingEntity) {
   SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
     getSystemResourceId("S_ProductionRateSystem"),
@@ -77,11 +77,11 @@ function clearMaxStorageIncrease(bytes32 buildingEntity) {
   );
 }
 
-function activateMaxStorage(bytes32 buildingEntity) {
+function toggleMaxStorage(bytes32 buildingEntity) {
   SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
     getSystemResourceId("S_StorageSystem"),
-    abi.encodeCall(S_StorageSystem.activateMaxStorage, (buildingEntity)),
+    abi.encodeCall(S_StorageSystem.toggleMaxStorage, (buildingEntity)),
     0
   );
 }

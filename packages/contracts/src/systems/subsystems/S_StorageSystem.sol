@@ -15,7 +15,7 @@ contract S_StorageSystem is PrimodiumSystem {
     if (IsActive.get(buildingEntity)) LibStorage.clearMaxStorageIncrease(buildingEntity);
   }
 
-  function activateMaxStorage(bytes32 buildingEntity) public {
+  function toggleMaxStorage(bytes32 buildingEntity) public {
     if (IsActive.get(buildingEntity)) {
       LibStorage.activateMaxStorage(buildingEntity, Level.get(buildingEntity));
     } else {
