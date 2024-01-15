@@ -33,11 +33,6 @@ import "codegen/index.sol";
 import { OnResourceCount_Score } from "src/hooks/storeHooks/OnResourceCount_Score.sol";
 import { OnScore_Alliance_Score } from "src/hooks/storeHooks/OnScore_Alliance_Score.sol";
 
-import { OnBuild_PlaceOnTile } from "src/hooks/systemHooks/build/OnBuild_PlaceOnTile.sol";
-import { OnBuild_SpendResources } from "src/hooks/systemHooks/build/OnBuild_SpendResources.sol";
-import { OnBuild_MaxStorage } from "src/hooks/systemHooks/build/OnBuild_MaxStorage.sol";
-import { OnBuild_ProductionRate } from "src/hooks/systemHooks/build/OnBuild_ProductionRate.sol";
-
 import { OnUpgrade_SpendResources } from "src/hooks/systemHooks/upgrade/OnUpgrade_SpendResources.sol";
 import { OnUpgrade_MaxStorage } from "src/hooks/systemHooks/upgrade/OnUpgrade_MaxStorage.sol";
 import { OnUpgrade_ProductionRate } from "src/hooks/systemHooks/upgrade/OnUpgrade_ProductionRate.sol";
@@ -193,52 +188,6 @@ function registerUpgradeUnitHook(IWorld world) {
   world.grantAccess(MapItemStoredUtilitiesTableId, hookAddress);
   world.grantAccess(MaxResourceCountTableId, hookAddress);
   world.registerSystemHook(systemId, onUpgradeUnit_SpendResources, AFTER_CALL_SYSTEM);
-}
-
-/**
- * @dev Register system hooks for the build actions.
- * @param world The World contract instance.
- */
-function registerBuildHooks(IWorld world) {
-  ResourceId systemId = getSystemResourceId("BuildSystem");
-
-  OnBuild_SpendResources onBuild_SpendResources = new OnBuild_SpendResources();
-  console.log("onBuild_SpendResources address: %s", address(onBuild_SpendResources));
-  address hookAddress = address(onBuild_SpendResources);
-  world.grantAccess(ResourceCountTableId, hookAddress);
-  world.grantAccess(MapItemUtilitiesTableId, hookAddress);
-  world.grantAccess(MapUtilitiesTableId, hookAddress);
-  world.grantAccess(MapItemStoredUtilitiesTableId, hookAddress);
-  world.grantAccess(MaxResourceCountTableId, hookAddress);
-  world.registerSystemHook(systemId, onBuild_SpendResources, AFTER_CALL_SYSTEM);
-
-  OnBuild_PlaceOnTile onBuild_PlaceOnTile = new OnBuild_PlaceOnTile();
-  console.log("onBuild_PlaceOnTile address: %s", address(onBuild_PlaceOnTile));
-  hookAddress = address(onBuild_PlaceOnTile);
-  world.grantAccess(ChildrenTableId, hookAddress);
-  world.grantAccess(OwnedByTableId, hookAddress);
-  world.grantAccess(PositionTableId, hookAddress);
-  world.registerSystemHook(systemId, onBuild_PlaceOnTile, AFTER_CALL_SYSTEM);
-
-  OnBuild_MaxStorage onBuild_MaxStorage = new OnBuild_MaxStorage();
-  console.log("onBuild_MaxStorage address: %s", address(onBuild_MaxStorage));
-  hookAddress = address(onBuild_MaxStorage);
-  world.grantAccess(ResourceCountTableId, hookAddress);
-  world.grantAccess(MaxResourceCountTableId, hookAddress);
-  world.registerSystemHook(systemId, onBuild_MaxStorage, AFTER_CALL_SYSTEM);
-
-  OnBuild_ProductionRate onBuild_ProductionRate = new OnBuild_ProductionRate();
-  console.log("onBuild_ProductionRate address: %s", address(onBuild_ProductionRate));
-  hookAddress = address(onBuild_ProductionRate);
-  world.grantAccess(ProductionRateTableId, hookAddress);
-  world.grantAccess(MaxResourceCountTableId, hookAddress);
-  world.grantAccess(ResourceCountTableId, hookAddress);
-  world.grantAccess(MapItemUtilitiesTableId, hookAddress);
-  world.grantAccess(MapUtilitiesTableId, hookAddress);
-  world.grantAccess(MapItemStoredUtilitiesTableId, hookAddress);
-  world.grantAccess(ConsumptionRateTableId, hookAddress);
-
-  world.registerSystemHook(systemId, onBuild_ProductionRate, AFTER_CALL_SYSTEM);
 }
 
 /**

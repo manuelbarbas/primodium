@@ -120,6 +120,7 @@ library LibBuilding {
     if (P_UnitProdTypes.length(buildingPrototype, 1) != 0) {
       UnitFactorySet.add(coord.parent, buildingEntity);
     }
+    placeBuildingTiles(buildingEntity, buildingPrototype, coord);
   }
 
   /// @notice Places building tiles for a constructed building

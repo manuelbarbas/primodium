@@ -9,6 +9,7 @@ import { P_EnumToPrototype, PositionData } from "codegen/index.sol";
 
 // libraries
 import { LibBuilding } from "libraries/LibBuilding.sol";
+import { increaseMaxStorage, upgradeProductionRate, spendBuildingRequiredResources } from "libraries/SubsystemCalls.sol";
 
 // types
 import { BuildingKey } from "src/Keys.sol";
@@ -21,6 +22,10 @@ contract BuildSystem is PrimodiumSystem {
     returns (bytes32 buildingEntity)
   {
     bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
-    return LibBuilding.build(_player(), buildingPrototype, coord);
+    buildingEntity = LibBuilding.build(_player(), buildingPrototype, coord);
+
+    increaseMaxStorage(buildingEntity, 1);
+    upgradeProductionRate(buildingEntity, 1);
+    spendBuildingRequiredResources(buildingEntity, 1);
   }
 }
