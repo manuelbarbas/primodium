@@ -27,31 +27,31 @@ library LibBuilding {
   /**
    * @dev Checks if the requirements for destroying a building are met.
    * @param playerEntity The entity ID of the player.
-   * @param coord The coordinate of the building to be destroyed.
+   * @param buildingEntity The the building to be destroyed.
    */
-  function checkDestroyRequirements(bytes32 playerEntity, PositionData memory coord) internal view {
-    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
+  function checkDestroyRequirements(bytes32 playerEntity, bytes32 buildingEntity) internal view {
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
 
     require(buildingPrototype != MainBasePrototypeId, "[Destroy] Cannot destroy main base");
-    require(OwnedBy.get(coord.parent) == playerEntity, "[Destroy] Only owner can destroy building");
+    require(
+      OwnedBy.get(Position.getParent(buildingEntity)) == playerEntity,
+      "[Destroy] Only owner can destroy building"
+    );
   }
 
   /**
    * @dev Checks if the requirements for building a new building are met.
    * @param playerEntity The entity ID of the player.
-   * @param buildingType The type of building to be constructed.
+   * @param buildingPrototype The type of building to be constructed.
    * @param coord The coordinate where the building should be placed.
    */
   function checkBuildRequirements(
     bytes32 playerEntity,
-    EBuilding buildingType,
+    bytes32 buildingPrototype,
     PositionData memory coord
   ) internal view {
-    bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
     require(Spawned.get(playerEntity), "[BuildSystem] Player has not spawned");
-    require(buildingType > EBuilding.NULL && buildingType < EBuilding.LENGTH, "[BuildSystem] Invalid building type");
-    if (buildingType == EBuilding.MainBase) {
+    if (buildingPrototype == MainBasePrototypeId) {
       require(
         !HasBuiltBuilding.get(coord.parent, buildingPrototype),
         "[BuildSystem] Cannot build more than one main base per wallet"
@@ -70,16 +70,15 @@ library LibBuilding {
   /**
    * @dev Checks if the requirements for building a new building are met.
    * @param playerEntity The entity ID of the player.
-   * @param coord The coordinate where the building should be placed.
+   * @param buildingEntity The building to be placed.
    */
-  function checkUpgradeRequirements(bytes32 playerEntity, PositionData memory coord) internal view {
-    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
+  function checkUpgradeRequirements(bytes32 playerEntity, bytes32 buildingEntity) internal view {
     require(buildingEntity != 0, "[UpgradeBuildingSystem] no building at this coordinate");
 
     uint256 targetLevel = Level.get(buildingEntity) + 1;
     require(targetLevel > 1, "[UpgradeBuildingSystem] Cannot upgrade a non-building");
     require(
-      OwnedBy.get(coord.parent) == playerEntity,
+      OwnedBy.get(Position.getParent(buildingEntity)) == playerEntity,
       "[UpgradeBuildingSystem] Cannot upgrade a building that is not owned by you"
     );
 
@@ -103,6 +102,7 @@ library LibBuilding {
     bytes32 buildingPrototype,
     PositionData memory coord
   ) internal returns (bytes32 buildingEntity) {
+    checkBuildRequirements(playerEntity, buildingPrototype, coord);
     buildingEntity = LibEncode.getTimedHash(BuildingKey, coord);
 
     Spawned.set(buildingEntity, true);

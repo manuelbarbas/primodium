@@ -16,6 +16,9 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
   {
     // Check there isn't another tile there
     buildingEntity = LibBuilding.getBuildingFromCoord(coord);
+
+    LibBuilding.checkUpgradeRequirements(buildingEntity, buildingEntity);
+
     uint256 targetLevel = Level.get(buildingEntity) + 1;
     Level.set(buildingEntity, targetLevel);
   }
