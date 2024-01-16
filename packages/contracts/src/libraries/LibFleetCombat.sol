@@ -48,7 +48,7 @@ library LibFleetCombat {
       fleetAttackSpaceRock(playerEntity, fleetId, FleetMovement.getDestination(fleetId));
       return;
     } else if (targetFleetStance == uint8(EFleetStance.Follow)) {
-      LibFleetCombat.fleetAttackFleet(playerEntity, fleetId, FleetStance.getTarget(targetFleet));
+      fleetAttackFleet(playerEntity, fleetId, FleetStance.getTarget(targetFleet));
       return;
     }
 
@@ -84,6 +84,102 @@ library LibFleetCombat {
     if (attackerDamage > targetDamage) {
       resolveBattleRaid(battleResult, sumAttackerAttributes, sumTargetAttributes);
     }
+
+    resolveBattleDamage(battleResult, sumAttackerAttributes, sumTargetAttributes);
+  }
+
+  function fleetAttackSpaceRock(
+    bytes32 playerEntity,
+    bytes32 fleetId,
+    bytes32 targetSpaceRock
+  ) internal {
+    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only attack with owned fleet");
+    require(
+      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
+      "[Fleet] Fleet has not reached it's current destination space rock yet"
+    );
+    require(OwnedBy.get(targetSpaceRock) != playerEntity, "[Fleet] Can not attack owned space rock");
+    require(FleetMovement.getDestination(fleetId) == targetSpaceRock, "[Fleet] Fleet is not at the same space rock");
+    require(FleetStance.getStance(fleetId) == 0, "[Fleet] Aggressor fleet can not be in a stance");
+
+    (
+      FleetAttributesData memory sumAttackerAttributes,
+      bytes32[] memory followingAttackerFleets
+    ) = getFleetSumAttributes(fleetId);
+
+    (
+      FleetAttributesData memory sumTargetAttributes,
+      bytes32[] memory defendingTargetFleets
+    ) = getSpaceRockSumAttributes(targetSpaceRock);
+
+    uint256 attackerDamage = (sumAttackerAttributes.attack * sumAttackerAttributes.hp) / sumAttackerAttributes.maxHp;
+
+    uint256 targetDamage = (sumTargetAttributes.defense * sumTargetAttributes.hp) / sumTargetAttributes.maxHp;
+
+    bytes32 battleId = LibEncode.getTimedHash(targetSpaceRock);
+
+    NewBattleResultData memory battleResult = NewBattleResultData({
+      aggressorEntity: fleetId,
+      targetEntity: targetSpaceRock,
+      aggressorAllies: followingAttackerFleets,
+      targetAllies: defendingTargetFleets,
+      winner: attackerDamage > targetDamage ? fleetId : targetSpaceRock,
+      rock: targetSpaceRock,
+      timestamp: block.timestamp
+    });
+
+    NewBattleResult.set(battleId, battleResult);
+
+    if (attackerDamage > targetDamage) {
+      resolveBattleRaid(battleResult, sumAttackerAttributes, sumTargetAttributes);
+    }
+
+    resolveBattleDamage(battleResult, sumAttackerAttributes, sumTargetAttributes);
+  }
+
+  function spaceRockAttackFleet(
+    bytes32 playerEntity,
+    bytes32 spaceRock,
+    bytes32 targetFleet
+  ) internal {
+    require(OwnedBy.get(spaceRock) == playerEntity, "[Fleet] Can only attack with owned space rock");
+    require(OwnedBy.get(OwnedBy.get(targetFleet)) != playerEntity, "[Fleet] Can not attack owned fleet");
+    require(
+      FleetMovement.getArrivalTime(targetFleet) <= block.timestamp,
+      "[Fleet] Target fleet has not reached it's current destination space rock yet"
+    );
+    require(
+      FleetMovement.getDestination(targetFleet) == spaceRock,
+      "[Fleet] Target fleet is not at the same space rock"
+    );
+    require(LibFleet.isFleetInGracePeriod(targetFleet) == false, "[Fleet] Target fleet is in grace period");
+
+    (
+      FleetAttributesData memory sumAttackerAttributes,
+      bytes32[] memory defendingAttackerFleets
+    ) = getSpaceRockSumAttributes(spaceRock);
+
+    (FleetAttributesData memory sumTargetAttributes, bytes32[] memory followingTargetFleets) = getFleetSumAttributes(
+      targetFleet
+    );
+
+    uint256 attackerDamage = (sumAttackerAttributes.defense * sumAttackerAttributes.hp) / sumAttackerAttributes.maxHp;
+
+    uint256 targetDamage = (sumTargetAttributes.attack * sumTargetAttributes.hp) / sumTargetAttributes.maxHp;
+
+    bytes32 battleId = LibEncode.getTimedHash(spaceRock);
+
+    NewBattleResultData memory battleResult = NewBattleResultData({
+      aggressorEntity: spaceRock,
+      targetEntity: targetFleet,
+      aggressorAllies: defendingAttackerFleets,
+      targetAllies: followingTargetFleets,
+      winner: attackerDamage > targetDamage ? spaceRock : targetFleet,
+      rock: spaceRock,
+      timestamp: block.timestamp
+    });
+
+    NewBattleResult.set(battleId, battleResult);
 
     resolveBattleDamage(battleResult, sumAttackerAttributes, sumTargetAttributes);
   }
@@ -130,37 +226,12 @@ library LibFleetCombat {
 
     // this should be true require(raidAmountLeft == 0, "[Fleet] Raid amount left is not 0");
 
-    FleetAttributesData memory fleetAttributes = FleetAttributes.get(battleResult.aggressorEntity);
-    uint256 freeSpace = fleetAttributes.cargo - fleetAttributes.occupiedCargo;
     //apply raid gains to attacker fleet
-    for (uint8 i = 0; i < NUM_RESOURCE; i++) {
-      if (freeSpace == 0) break;
-      if (raidAmounts[i] == 0) continue;
-      uint256 raidedAmount = (raidAmounts[i] * fleetAttributes.attack * fleetAttributes.hp) / fleetAttributes.maxHp;
-      if (raidedAmount > fleetAttributes.cargo - fleetAttributes.occupiedCargo) {
-        raidedAmount = fleetAttributes.cargo - fleetAttributes.occupiedCargo;
-      }
-      LibFleet.increaseFleetResource(battleResult.aggressorEntity, i, raidedAmount);
-      freeSpace -= raidedAmount;
-    }
+    applyRaidToFleet(battleResult.aggressorEntity, sumAttackerAttributes.maxHp, raidAmounts);
 
     //apply raid gains to following fleets
-
     for (uint256 i = 0; i < battleResult.aggressorAllies.length; i++) {
-      fleetAttributes = FleetAttributes.get(battleResult.aggressorAllies[i]);
-      freeSpace = fleetAttributes.cargo - fleetAttributes.occupiedCargo;
-      if (freeSpace == 0) break;
-
-      for (uint8 j = 0; j < NUM_RESOURCE; j++) {
-        if (freeSpace == 0) break;
-        if (raidAmounts[j] == 0) continue;
-        uint256 raidedAmount = (raidAmounts[j] * fleetAttributes.attack * fleetAttributes.hp) / fleetAttributes.maxHp;
-        if (raidedAmount > fleetAttributes.cargo - fleetAttributes.occupiedCargo) {
-          raidedAmount = fleetAttributes.cargo - fleetAttributes.occupiedCargo;
-        }
-        LibFleet.increaseFleetResource(battleResult.aggressorAllies[i], j, raidedAmount);
-        freeSpace -= raidedAmount;
-      }
+      applyRaidToFleet(battleResult.aggressorAllies[i], sumAttackerAttributes.maxHp, raidAmounts);
     }
   }
 
@@ -231,6 +302,25 @@ library LibFleetCombat {
     return (raidedAmounts, raidAmountLeft);
   }
 
+  function applyRaidToFleet(
+    bytes32 targetEntity,
+    uint256 maxHp,
+    uint256[] memory raidAmounts
+  ) internal {
+    FleetAttributesData memory fleetAttributes = FleetAttributes.get(targetEntity);
+    uint256 freeSpace = fleetAttributes.cargo - fleetAttributes.occupiedCargo;
+    for (uint8 i = 0; i < NUM_RESOURCE; i++) {
+      if (freeSpace == 0) break;
+      if (raidAmounts[i] == 0) continue;
+      uint256 raidedAmount = (raidAmounts[i] * fleetAttributes.attack * fleetAttributes.hp) / maxHp;
+      if (raidedAmount > fleetAttributes.cargo - fleetAttributes.occupiedCargo) {
+        raidedAmount = fleetAttributes.cargo - fleetAttributes.occupiedCargo;
+      }
+      LibFleet.increaseFleetResource(targetEntity, i, raidedAmount);
+      freeSpace -= raidedAmount;
+    }
+  }
+
   function getFleetSumAttributes(bytes32 fleetId)
     internal
     view
@@ -277,55 +367,6 @@ library LibFleetCombat {
       sumAttributes.hp += followerAttributes.hp;
       sumAttributes.maxHp += followerAttributes.maxHp;
     }
-  }
-
-  function fleetAttackSpaceRock(
-    bytes32 playerEntity,
-    bytes32 fleetId,
-    bytes32 targetSpaceRock
-  ) internal {
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only attack with owned fleet");
-    require(
-      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
-      "[Fleet] Fleet has not reached it's current destination space rock yet"
-    );
-    require(OwnedBy.get(targetSpaceRock) != playerEntity, "[Fleet] Can not attack owned space rock");
-    require(FleetMovement.getDestination(fleetId) == targetSpaceRock, "[Fleet] Fleet is not at the same space rock");
-    require(FleetStance.getStance(fleetId) == 0, "[Fleet] Aggressor fleet can not be in a stance");
-
-    (
-      FleetAttributesData memory sumAttackerAttributes,
-      bytes32[] memory followingAttackerFleets
-    ) = getFleetSumAttributes(fleetId);
-
-    (
-      FleetAttributesData memory sumTargetAttributes,
-      bytes32[] memory defendingTargetFleets
-    ) = getSpaceRockSumAttributes(targetSpaceRock);
-
-    uint256 attackerDamage = (sumAttackerAttributes.attack * sumAttackerAttributes.hp) / sumAttackerAttributes.maxHp;
-
-    uint256 targetDamage = (sumTargetAttributes.defense * sumTargetAttributes.hp) / sumTargetAttributes.maxHp;
-
-    bytes32 battleId = LibEncode.getTimedHash(targetSpaceRock);
-
-    NewBattleResultData memory battleResult = NewBattleResultData({
-      aggressorEntity: fleetId,
-      targetEntity: targetSpaceRock,
-      aggressorAllies: followingAttackerFleets,
-      targetAllies: defendingTargetFleets,
-      winner: attackerDamage > targetDamage ? fleetId : targetSpaceRock,
-      rock: targetSpaceRock,
-      timestamp: block.timestamp
-    });
-
-    NewBattleResult.set(battleId, battleResult);
-
-    if (attackerDamage > targetDamage) {
-      resolveBattleRaid(battleResult, sumAttackerAttributes, sumTargetAttributes);
-    }
-
-    resolveBattleDamage(battleResult, sumAttackerAttributes, sumTargetAttributes);
   }
 
   function applyDamageToSpaceRock(bytes32 spaceRock, uint256 damage) internal {
