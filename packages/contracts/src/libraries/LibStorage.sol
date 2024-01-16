@@ -22,9 +22,6 @@ library LibStorage {
         maxResourceIncrease -= P_ByLevelMaxResourceUpgrades.get(buildingType, resource, level - 1);
       }
       increaseMaxStorage(spaceRockEntity, resource, maxResourceIncrease);
-      if (P_IsRecoverable.get(resource)) {
-        increaseStoredResource(spaceRockEntity, resource, maxResourceIncrease);
-      }
     }
   }
 
@@ -35,7 +32,7 @@ library LibStorage {
   ) internal {
     uint256 maxResource = MaxResourceCount.get(spaceRockEntity, resource);
     setMaxStorage(spaceRockEntity, resource, maxResource + amount);
-    if (P_IsStorageFull.get(resource)) {
+    if (P_IsRecoverable.get(resource)) {
       increaseStoredResource(spaceRockEntity, resource, amount);
     }
   }
