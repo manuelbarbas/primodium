@@ -17,7 +17,7 @@ const numberBase: Record<string, string> = {
   62: "Lithium",
   64: "Water",
   58: "Copper",
-  66: "Sulfur",
+  66: "Gold",
 };
 
 function csvToJsonCoords(csvUrl: string) {
