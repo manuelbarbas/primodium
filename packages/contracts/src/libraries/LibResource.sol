@@ -274,6 +274,18 @@ library LibResource {
    * @dev Retrieves the counts of all non-utility resources for a spaceRock and calculates the total.
    * @param spaceRockEntity The identifier of the spaceRock.
    * @return totalResources The total count of non-utility resources.
+   */
+  function getTotalStoredResources(bytes32 spaceRockEntity) internal view returns (uint256 totalResources) {
+    for (uint8 i = 1; i < uint8(EResource.LENGTH); i++) {
+      if (P_IsUtility.get(i) || P_IsRecoverable.get(i)) continue;
+      totalResources += ResourceCount.get(spaceRockEntity, i);
+    }
+  }
+
+  /**
+   * @dev Retrieves the counts of all non-utility resources for a spaceRock and calculates the total.
+   * @param spaceRockEntity The identifier of the spaceRock.
+   * @return totalResources The total count of non-utility resources.
    * @return resourceCounts An array containing the counts of each non-utility resource.
    */
   function getAllResourceCounts(bytes32 spaceRockEntity)

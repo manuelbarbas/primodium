@@ -38,20 +38,6 @@ library LibFleet {
       })
     );
 
-    FleetAttributes.set(
-      fleetId,
-      FleetAttributesData({
-        speed: 0,
-        attack: 0,
-        defense: 0,
-        cargo: 0,
-        occupiedCargo: 0,
-        hp: 0,
-        maxHp: 0,
-        encryption: 0
-      })
-    );
-
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
     for (uint8 i = 0; i < NUM_UNITS; i++) {
@@ -183,15 +169,8 @@ library LibFleet {
     bytes32 spaceRock
   ) internal {
     bytes32 spaceRockOwner = OwnedBy.get(spaceRock);
-    require(FleetMovement.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not in space rock orbit");
-
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
     bool isOwner = spaceRockOwner == spaceRock;
-    for (uint8 i = 0; i < NUM_UNITS; i++) {
-      uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototypes[i]);
-      LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], fleetUnitCount, !isOwner);
-    }
 
     for (uint8 i = 0; i < NUM_RESOURCE; i++) {
       uint256 fleetResourceCount = ResourceCount.get(fleetId, i);
@@ -200,9 +179,12 @@ library LibFleet {
       decreaseFleetResource(fleetId, i, fleetResourceCount);
     }
 
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint8 i = 0; i < NUM_UNITS; i++) {
       uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototypes[i]);
+      if (fleetUnitCount == 0) continue;
       decreaseFleetUnit(fleetId, unitPrototypes[i], fleetUnitCount, !isOwner);
+      LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], fleetUnitCount, !isOwner);
     }
     if (!isOwner) {
       FleetMovement.set(

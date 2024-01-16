@@ -16,7 +16,6 @@ contract FleetManageSystem is FleetBaseSystem {
 
   function landFleet(bytes32 fleetId, bytes32 spaceRock)
     public
-    _onlySpaceRockOwner(spaceRock)
     _onlyFleetOwner(fleetId)
     _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock)
   {

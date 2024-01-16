@@ -32,11 +32,12 @@ library LibFleetCombat {
     uint8 targetFleetStance = FleetStance.getStance(targetFleet);
 
     //if target fleet is in a stance, redirect attack to target of stance
+    require(
+      targetFleetStance != uint8(EFleetStance.Defend),
+      "[Fleet] Target fleet is defending space rock, target space rock instead"
+    );
 
-    if (targetFleetStance == uint8(EFleetStance.Defend)) {
-      fleetAttackSpaceRock(playerEntity, fleetId, FleetMovement.getDestination(fleetId));
-      return;
-    } else if (targetFleetStance == uint8(EFleetStance.Follow)) {
+    if (targetFleetStance == uint8(EFleetStance.Follow)) {
       fleetAttackFleet(playerEntity, fleetId, FleetStance.getTarget(targetFleet));
       return;
     }
@@ -337,13 +338,12 @@ library LibFleetCombat {
     view
     returns (FleetAttributesData memory sumAttributes, bytes32[] memory defendingFleets)
   {
-    (uint256 totalResources, uint256[] memory resourceCounts) = LibResource.getAllResourceCounts(spaceRock);
     sumAttributes = FleetAttributesData({
       speed: 0,
       attack: 0,
       defense: 0,
       cargo: 0,
-      occupiedCargo: totalResources,
+      occupiedCargo: LibResource.getTotalStoredResources(spaceRock),
       hp: ResourceCount.get(spaceRock, uint8(EResource.R_HP)),
       maxHp: MaxResourceCount.get(spaceRock, uint8(EResource.R_HP)),
       encryption: 0
