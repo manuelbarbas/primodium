@@ -179,7 +179,7 @@ library LibUnit {
     //updates hp for space rock
     LibStorage.increaseMaxStorage(
       rockEntity,
-      uint8(EResource.SF_HP),
+      uint8(EResource.R_HP),
       unitCount * P_Unit.get(unitType, UnitLevel.get(rockEntity, unitType)).hp
     );
     //updates defense for space rock
@@ -211,7 +211,7 @@ library LibUnit {
     //updates hp for space rock
     LibStorage.decreaseMaxStorage(
       rockEntity,
-      uint8(EResource.SF_HP),
+      uint8(EResource.R_HP),
       unitCount * P_Unit.get(unitType, UnitLevel.get(rockEntity, unitType)).hp
     );
     //updates defense for space rock

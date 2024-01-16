@@ -26,20 +26,7 @@ library LibFleetCombat {
     bytes32 targetFleet
   ) internal {
     bytes32 spaceRock = FleetMovement.getDestination(fleetId);
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only attack with owned fleet");
-    require(OwnedBy.get(OwnedBy.get(targetFleet)) != playerEntity, "[Fleet] Can not attack owned fleet");
-    require(
-      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
-      "[Fleet] Fleet has not reached it's current destination space rock yet"
-    );
-    require(
-      FleetMovement.getArrivalTime(targetFleet) <= block.timestamp,
-      "[Fleet] Target fleet has not reached it's current destination space rock yet"
-    );
-    require(
-      FleetMovement.getDestination(targetFleet) == spaceRock,
-      "[Fleet] Target fleet is not at the same space rock"
-    );
+
     require(FleetStance.getStance(fleetId) == 0, "[Fleet] Aggressor fleet can not be in a stance");
 
     uint8 targetFleetStance = FleetStance.getStance(targetFleet);
@@ -95,13 +82,6 @@ library LibFleetCombat {
     bytes32 fleetId,
     bytes32 targetSpaceRock
   ) internal {
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only attack with owned fleet");
-    require(
-      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
-      "[Fleet] Fleet has not reached it's current destination space rock yet"
-    );
-    require(OwnedBy.get(targetSpaceRock) != playerEntity, "[Fleet] Can not attack owned space rock");
-    require(FleetMovement.getDestination(fleetId) == targetSpaceRock, "[Fleet] Fleet is not at the same space rock");
     require(FleetStance.getStance(fleetId) == 0, "[Fleet] Aggressor fleet can not be in a stance");
 
     (
@@ -145,16 +125,6 @@ library LibFleetCombat {
     bytes32 spaceRock,
     bytes32 targetFleet
   ) internal {
-    require(OwnedBy.get(spaceRock) == playerEntity, "[Fleet] Can only attack with owned space rock");
-    require(OwnedBy.get(OwnedBy.get(targetFleet)) != playerEntity, "[Fleet] Can not attack owned fleet");
-    require(
-      FleetMovement.getArrivalTime(targetFleet) <= block.timestamp,
-      "[Fleet] Target fleet has not reached it's current destination space rock yet"
-    );
-    require(
-      FleetMovement.getDestination(targetFleet) == spaceRock,
-      "[Fleet] Target fleet is not at the same space rock"
-    );
     require(LibFleet.isFleetInGracePeriod(targetFleet) == false, "[Fleet] Target fleet is in grace period");
 
     (
@@ -193,8 +163,8 @@ library LibFleetCombat {
   ) internal {
     uint256 encryption = sumAttackerAttributes.encryption;
     if (encryption == 0) return;
-    LibStorage.decreaseStoredResource(battleResult.targetEntity, uint8(EResource.SF_Encryption), encryption);
-    if (ResourceCount.get(battleResult.targetEntity, uint8(EResource.SF_Encryption)) == 0)
+    LibStorage.decreaseStoredResource(battleResult.targetEntity, uint8(EResource.R_Encryption), encryption);
+    if (ResourceCount.get(battleResult.targetEntity, uint8(EResource.R_Encryption)) == 0)
       transferSpaceRockOwnership(battleResult.rock, battleResult.aggressorEntity);
   }
 
@@ -374,8 +344,8 @@ library LibFleetCombat {
       defense: 0,
       cargo: 0,
       occupiedCargo: totalResources,
-      hp: ResourceCount.get(spaceRock, uint8(EResource.SF_HP)),
-      maxHp: MaxResourceCount.get(spaceRock, uint8(EResource.SF_HP)),
+      hp: ResourceCount.get(spaceRock, uint8(EResource.R_HP)),
+      maxHp: MaxResourceCount.get(spaceRock, uint8(EResource.R_HP)),
       encryption: 0
     });
 
@@ -393,7 +363,7 @@ library LibFleetCombat {
   }
 
   function applyDamageToSpaceRock(bytes32 spaceRock, uint256 damage) internal {
-    LibStorage.decreaseStoredResource(spaceRock, uint8(EResource.SF_HP), damage);
+    LibStorage.decreaseStoredResource(spaceRock, uint8(EResource.R_HP), damage);
   }
 
   function applyDamageToFleet(bytes32 fleetId, uint256 damage) internal {
