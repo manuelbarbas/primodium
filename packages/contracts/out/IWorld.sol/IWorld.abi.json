@@ -14,98 +14,6 @@
   },
   {
     "type": "function",
-    "name": "addOrder",
-    "inputs": [
-      {
-        "name": "orderType",
-        "type": "uint8",
-        "internalType": "enum EOrderType"
-      },
-      {
-        "name": "resource",
-        "type": "uint8",
-        "internalType": "uint8"
-      },
-      {
-        "name": "count",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "price",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "orderId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "addResourceOrder",
-    "inputs": [
-      {
-        "name": "resource",
-        "type": "uint8",
-        "internalType": "enum EResource"
-      },
-      {
-        "name": "count",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "price",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "orderId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "addUnitOrder",
-    "inputs": [
-      {
-        "name": "unitType",
-        "type": "uint8",
-        "internalType": "enum EUnit"
-      },
-      {
-        "name": "count",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "price",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "orderId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "batchCall",
     "inputs": [
       {
@@ -353,21 +261,13 @@
   },
   {
     "type": "function",
-    "name": "cancelOrder",
-    "inputs": [
-      {
-        "name": "orderId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "claimObjective",
     "inputs": [
+      {
+        "name": "spaceRockEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
       {
         "name": "objective",
         "type": "uint8",
@@ -379,10 +279,62 @@
   },
   {
     "type": "function",
+    "name": "claimResources",
+    "inputs": [
+      {
+        "name": "spaceRockEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "claimUnits",
     "inputs": [
       {
-        "name": "rockEntity",
+        "name": "spaceRockEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "clearMaxStorageIncrease",
+    "inputs": [
+      {
+        "name": "buildingEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "clearProductionRate",
+    "inputs": [
+      {
+        "name": "buildingEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "clearUtilityUsage",
+    "inputs": [
+      {
+        "name": "buildingEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       }
@@ -1253,6 +1205,24 @@
   },
   {
     "type": "function",
+    "name": "increaseMaxStorage",
+    "inputs": [
+      {
+        "name": "buildingEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "level",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "increment",
     "inputs": [],
     "outputs": [
@@ -1548,6 +1518,24 @@
     "inputs": [
       {
         "name": "rockEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "receiveRewards",
+    "inputs": [
+      {
+        "name": "playerEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "objectivePrototype",
         "type": "bytes32",
         "internalType": "bytes32"
       }
@@ -2110,6 +2098,47 @@
   },
   {
     "type": "function",
+    "name": "spendBuildingRequiredResources",
+    "inputs": [
+      {
+        "name": "buildingEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "level",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "spendUpgradeResources",
+    "inputs": [
+      {
+        "name": "spaceRockEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "upgradePrototype",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "level",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "spliceDynamicData",
     "inputs": [
       {
@@ -2217,42 +2246,6 @@
   },
   {
     "type": "function",
-    "name": "takeOrder",
-    "inputs": [
-      {
-        "name": "orderId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "countBought",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "takeOrderBulk",
-    "inputs": [
-      {
-        "name": "orderId",
-        "type": "bytes32[]",
-        "internalType": "bytes32[]"
-      },
-      {
-        "name": "count",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "toggleBuilding",
     "inputs": [
       {
@@ -2285,6 +2278,45 @@
         "internalType": "bool"
       }
     ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "toggleBuildingUtility",
+    "inputs": [
+      {
+        "name": "buildingEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "toggleMaxStorage",
+    "inputs": [
+      {
+        "name": "buildingEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "toggleProductionRate",
+    "inputs": [
+      {
+        "name": "buildingEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
@@ -2425,88 +2457,6 @@
   },
   {
     "type": "function",
-    "name": "updateOrder",
-    "inputs": [
-      {
-        "name": "orderId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "resource",
-        "type": "uint8",
-        "internalType": "enum EResource"
-      },
-      {
-        "name": "count",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "price",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "updateOrderCount",
-    "inputs": [
-      {
-        "name": "orderId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "count",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "updateOrderPrice",
-    "inputs": [
-      {
-        "name": "orderId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "price",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "updateOrderResource",
-    "inputs": [
-      {
-        "name": "orderId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "resource",
-        "type": "uint8",
-        "internalType": "enum EResource"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "updateUnitsAfterBattle",
     "inputs": [
       {
@@ -2609,6 +2559,24 @@
         "internalType": "bytes32"
       }
     ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "upgradeProductionRate",
+    "inputs": [
+      {
+        "name": "buildingEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "level",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
     "stateMutability": "nonpayable"
   },
   {

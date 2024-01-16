@@ -106,19 +106,16 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
   function testToggleClaimResources() public {
     vm.warp(block.timestamp);
     world.toggleBuilding(ironPlateFactoryPosition);
-    assertEq(
-      ProductionRate.get(Home.get(player), uint8(EResource.Iron)),
-      ironProduction,
-      "iron production doesn't match"
-    );
-    assertEq(ConsumptionRate.get(Home.get(player), uint8(EResource.Iron)), 0, "iron consumption should be 0");
-    assertEq(ProductionRate.get(Home.get(player), uint8(EResource.IronPlate)), 0, "iron plate production should be 0");
+    bytes32 home = Home.get(player);
+    assertEq(ProductionRate.get(home, uint8(EResource.Iron)), ironProduction, "iron production doesn't match");
+    assertEq(ConsumptionRate.get(home, uint8(EResource.Iron)), 0, "iron consumption should be 0");
+    assertEq(ProductionRate.get(home, uint8(EResource.IronPlate)), 0, "iron plate production should be 0");
 
     vm.warp(block.timestamp + 10);
     world.toggleBuilding(ironMinePostion);
     assertTrue(!IsActive.get(ironMineEntity), "iron mine should be in active");
     assertEq(
-      ResourceCount.get(Home.get(player), uint8(EResource.Iron)),
+      ResourceCount.get(home, uint8(EResource.Iron)),
       ironProduction * 10,
       "resources should be claimed before toggle"
     );
@@ -127,15 +124,15 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
     world.toggleBuilding(ironMinePostion);
     assertTrue(IsActive.get(ironMineEntity), "iron mine should be active");
     assertEq(
-      ResourceCount.get(Home.get(player), uint8(EResource.Iron)),
+      ResourceCount.get(home, uint8(EResource.Iron)),
       ironProduction * 10,
       "resources should not change when building is inactive"
     );
 
     vm.warp(block.timestamp + 10);
-    LibResource.claimAllPlayerResources(player);
+    LibResource.claimAllResources(home);
     assertEq(
-      ResourceCount.get(Home.get(player), uint8(EResource.Iron)),
+      ResourceCount.get(home, uint8(EResource.Iron)),
       ironProduction * 20,
       "resources should be claimed after toggle"
     );

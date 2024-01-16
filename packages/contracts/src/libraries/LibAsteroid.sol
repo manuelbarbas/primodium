@@ -7,7 +7,7 @@ import { BuildSystem } from "systems/BuildSystem.sol";
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 
 // tables
-import { Spawned, ReversePosition, OwnedBy, Asteroid, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, PositionData, P_GameConfigData, P_GameConfig } from "codegen/index.sol";
+import { Spawned, ReversePosition, Level, OwnedBy, Asteroid, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, PositionData, P_GameConfigData, P_GameConfig } from "codegen/index.sol";
 
 // libraries
 import { LibMath } from "libraries/LibMath.sol";
@@ -27,9 +27,9 @@ library LibAsteroid {
     uint256 asteroidCount = AsteroidCount.get() + 1;
     PositionData memory coord = getUniqueAsteroidPosition(asteroidCount);
 
+    Level.set(asteroidEntity, 1);
     Position.set(asteroidEntity, coord);
     Asteroid.set(asteroidEntity, AsteroidData({ isAsteroid: true, maxLevel: 8, mapId: 1, spawnsSecondary: true }));
-    Spawned.set(ownerEntity, true);
     ReversePosition.set(coord.x, coord.y, asteroidEntity);
     OwnedBy.set(asteroidEntity, ownerEntity);
     AsteroidCount.set(asteroidCount);
@@ -94,6 +94,8 @@ library LibAsteroid {
     Asteroid.set(asteroidEntity, data);
     Position.set(asteroidEntity, position);
     ReversePosition.set(position.x, position.y, asteroidEntity);
+    OwnedBy.set(asteroidEntity, playerEntity);
+    Level.set(asteroidEntity, 1);
 
     // remove the next three lines once capital ships and invasions are built
     PositionData memory mainBasePosition = Position.get(MainBasePrototypeId);

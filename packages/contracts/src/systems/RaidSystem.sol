@@ -10,7 +10,7 @@ contract RaidSystem is PrimodiumSystem {
    * @dev Initiates a raid on a rock entity using the LibRaid library.
    * @param rockEntity The identifier of the target rock entity.
    */
-  function raid(bytes32 rockEntity) public {
+  function raid(bytes32 rockEntity) public _claimResources(rockEntity) _claimUnits(rockEntity) {
     bytes32 playerEntity = _player();
 
     LibRaid.raid(playerEntity, rockEntity);

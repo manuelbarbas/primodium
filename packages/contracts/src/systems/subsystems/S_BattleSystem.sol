@@ -1,13 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-
+import { System } from "@latticexyz/world/src/System.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
 import { ESendType } from "src/Types.sol";
 import { BattleResultData } from "codegen/index.sol";
 
-contract S_BattleSystem is PrimodiumSystem {
+contract S_BattleSystem is System {
   /**
    * @dev Initiates a battle between two entities using the LibBattle library.
    * @param attackerEntity The identifier of the attacker entity.
