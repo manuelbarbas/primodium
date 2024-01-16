@@ -7,17 +7,21 @@ import { MUD } from "src/network/types";
 import { bigintToNumber } from "src/util/bigint";
 import { getBlockTypeName } from "src/util/common";
 import { TransactionQueueType, UnitEntityLookup } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
+import { getSystemId, hashEntities } from "src/util/encode";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const upgradeUnit = async (mud: MUD, spaceRock: Entity, unit: EUnit) => {
   await execute(
-    mud,
-    (account) => account.worldContract.write.upgradeUnit([spaceRock as Hex, unit]),
+    {
+      mud,
+      functionName: "upgradeUnit",
+      systemId: getSystemId("UpgradeUnitSystem"),
+      args: [spaceRock as Hex, unit],
+      delegate: true,
+    },
     {
       id: hashEntities(TransactionQueueType.Upgrade, UnitEntityLookup[unit]),
-      delegate: true,
     },
     (receipt) => {
       const unitLevel =

@@ -24,7 +24,7 @@ contract OnDestroy_ClaimResources is SystemHook {
     ResourceId,
     bytes memory
   ) public {
-    LibResource.claimAllResources(_player(msgSender, false));
+    LibResource.claimAllResources(_player(msgSender));
   }
 
   /**

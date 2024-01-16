@@ -12,7 +12,7 @@ contract UpgradeUnitSystem is PrimodiumSystem {
   /// @notice Upgrades the specified unit for the sender
   /// @param unit The type of unit to upgrade
   function upgradeUnit(bytes32 spaceRockEntity, EUnit unit) public {
-    bytes32 playerEntity = _player(false);
+    bytes32 playerEntity = _player();
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
     uint256 currentLevel = UnitLevel.get(spaceRockEntity, unitPrototype);
     uint256 targetLevel = currentLevel + 1;

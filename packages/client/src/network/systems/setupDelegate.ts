@@ -1,7 +1,8 @@
-import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
+import { Entity, Has, defineComponentSystem, namespaceWorld, runQuery } from "@latticexyz/recs";
 import { entityToAddress } from "src/util/common";
+import { decodeEntity } from "src/util/encode";
 import { getPrivateKey } from "src/util/localStorage";
-import { Hex } from "viem";
+import { Address, Hex } from "viem";
 import { components } from "../components";
 import { world } from "../world";
 
@@ -12,23 +13,35 @@ export const setupDelegate = (
 ) => {
   world.dispose("delegate");
   const delegateWorld = namespaceWorld(world, "delegate");
-  const initialDelegate = components.Delegate.get(playerEntity)?.value;
-  if (initialDelegate) setDelegate(initialDelegate);
+  const potentialDelegates = Array.from(runQuery([Has(components.UserDelegationControl)])).reduce((prev, entity) => {
+    const key = decodeEntity(components.UserDelegationControl.metadata.keySchema, entity) as {
+      delegator: Address;
+      delegatee: Address;
+    };
+    if (key.delegator !== entityToAddress(playerEntity)) return prev;
+    return [...prev, key.delegatee];
+  }, [] as Address[]);
+
+  potentialDelegates.find((delegate) => {
+    return setDelegate(delegate);
+  });
 
   function setDelegate(delegate: string) {
     const privateKey = getPrivateKey(entityToAddress(delegate));
-    if (!privateKey) return;
+    if (!privateKey) return false;
     updateSessionAccount(privateKey);
+    return true;
   }
 
   defineComponentSystem(
     delegateWorld,
-    components.Delegate,
+    components.UserDelegationControl,
     ({ entity, value }) => {
-      if (entity !== playerEntity) return;
-      const newDelegate = value[0]?.value;
-      if (!newDelegate) return removeSessionAccount();
-      setDelegate(newDelegate);
+      const key = decodeEntity(components.UserDelegationControl.metadata.keySchema, entity);
+      if (key.delegator !== entityToAddress(playerEntity)) return;
+      const newDelegate = key.delegatee;
+      if (!value[0]) return removeSessionAccount();
+      setDelegate(newDelegate as string);
     },
     { runOnInit: false }
   );
