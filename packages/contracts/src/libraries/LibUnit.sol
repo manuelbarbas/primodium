@@ -193,11 +193,6 @@ library LibUnit {
     uint256 currUnitCount = UnitCount.get(rockEntity, unitType);
     if (unitCount > currUnitCount) unitCount = currUnitCount;
     UnitCount.set(rockEntity, unitType, currUnitCount - unitCount);
-
-    // update production rate
-    if (RockType.get(rockEntity) != uint8(ERock.Motherlode)) return;
-    uint256 level = UnitLevel.get(rockEntity, unitType);
-    uint256 productionRate = P_MiningRate.get(unitType, level);
     if (updatesUtility) updateStoredUtilities(rockEntity, unitType, unitCount, false);
   }
 }
