@@ -7,6 +7,6 @@ import { NUM_UNITS, NUM_RESOURCE } from "src/constants.sol";
 
 contract MergeFleetSystem is PrimodiumSystem {
   function mergeFleets(bytes32[] calldata fleets) public {
-    LibFleet.mergeFleets(_player(false), fleets);
+    LibFleet.mergeFleets(_player(), fleets);
   }
 }
