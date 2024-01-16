@@ -22,7 +22,6 @@ library LibFleet {
     uint256[NUM_UNITS] calldata unitCounts,
     uint256[NUM_RESOURCE] calldata resourceCounts
   ) internal returns (bytes32 fleetId) {
-    require(OwnedBy.get(spaceRock) == playerEntity, "[Fleet] Can only create fleet on owned space rock");
     require(ResourceCount.get(spaceRock, uint8(EResource.U_MaxMoves)) > 0, "[Fleet] Space rock has no max moves");
     LibStorage.decreaseStoredResource(spaceRock, uint8(EResource.U_MaxMoves), 1);
     //require(ResourceCount.get(spaceRock, EResource.U_Cargo) > 0, "[Fleet] Space rock has no cargo capacity"))
@@ -184,11 +183,7 @@ library LibFleet {
     bytes32 spaceRock
   ) internal {
     bytes32 spaceRockOwner = OwnedBy.get(spaceRock);
-    require(OwnedBy.get(spaceRockOwner) == playerEntity, "[Fleet] Can only transfer units from owned fleet");
-    require(OwnedBy.get(spaceRock) == playerEntity, "[Fleet] Can only land fleet on owned space rock");
-
     require(FleetMovement.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not in space rock orbit");
-    require(FleetMovement.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
@@ -229,18 +224,9 @@ library LibFleet {
     bytes32 spaceRock = FleetMovement.getDestination(fleets[0]);
     bytes32 spaceRockOwner = OwnedBy.get(fleets[0]);
 
-    require(FleetMovement.getArrivalTime(fleets[0]) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
-    require(OwnedBy.get(spaceRockOwner) == playerEntity, "[Fleet] Can only merge owned fleets");
-
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[NUM_UNITS] memory unitCounts;
     for (uint256 i = 1; i < fleets.length; i++) {
-      require(OwnedBy.get(fleets[i]) == spaceRockOwner, "[Fleet] Can only merge fleets owned by same space rock");
-      require(FleetMovement.getDestination(fleets[i]) == spaceRock, "[Fleet] Fleets must be on same space rock");
-      require(
-        FleetMovement.getArrivalTime(fleets[i]) <= block.timestamp,
-        "[Fleet] Fleet has not reached space rock yet"
-      );
       for (uint8 j = 0; j < NUM_UNITS; j++) {
         unitCounts[j] += UnitCount.get(fleets[i], unitPrototypes[j]);
       }

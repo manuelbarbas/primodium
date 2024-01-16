@@ -1,28 +1,31 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
+import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleetDisband } from "codegen/Libraries.sol";
 import { NUM_UNITS, NUM_RESOURCE } from "src/constants.sol";
 
-contract FleetDisbandSystem is PrimodiumSystem {
-  function disbandFleet(bytes32 fleetId) public {
-    LibFleetDisband.disbandFleet(_player(false), fleetId);
+contract FleetDisbandSystem is FleetBaseSystem {
+  function disbandFleet(bytes32 fleetId) public _onlyFleetOwner(fleetId) {
+    LibFleetDisband.disbandFleet(_player(), fleetId);
   }
 
   function disbandUnitsAndResourcesFromFleet(
     bytes32 fleetId,
     uint256[NUM_UNITS] calldata unitCounts,
     uint256[NUM_RESOURCE] calldata resourceCounts
-  ) public {
-    LibFleetDisband.disbandUnitsAndResourcesFromFleet(_player(false), fleetId, unitCounts, resourceCounts);
+  ) public _onlyFleetOwner(fleetId) {
+    LibFleetDisband.disbandUnitsAndResourcesFromFleet(_player(), fleetId, unitCounts, resourceCounts);
   }
 
-  function disbandUnits(bytes32 fleetId, uint256[NUM_UNITS] calldata unitCounts) public {
-    LibFleetDisband.disbandUnits(_player(false), fleetId, unitCounts);
+  function disbandUnits(bytes32 fleetId, uint256[NUM_UNITS] calldata unitCounts) public _onlyFleetOwner(fleetId) {
+    LibFleetDisband.disbandUnits(_player(), fleetId, unitCounts);
   }
 
-  function disbandResources(bytes32 fleetId, uint256[NUM_RESOURCE] calldata resourceCounts) internal {
-    LibFleetDisband.disbandResources(_player(false), fleetId, resourceCounts);
+  function disbandResources(bytes32 fleetId, uint256[NUM_RESOURCE] calldata resourceCounts)
+    public
+    _onlyFleetOwner(fleetId)
+  {
+    LibFleetDisband.disbandResources(_player(), fleetId, resourceCounts);
   }
 }

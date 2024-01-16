@@ -21,11 +21,6 @@ library LibFleetMove {
     bytes32 fleetId,
     bytes32 destination
   ) internal {
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only send owned fleet");
-    require(
-      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
-      "[Fleet] Fleet has not reached it's current destination space rock yet"
-    );
     require(LibFleet.isFleetDamaged(fleetId) == false, "[Fleet] Can not move damaged fleet");
 
     bytes32 origin = FleetMovement.getDestination(fleetId);
@@ -66,7 +61,6 @@ library LibFleetMove {
   }
 
   function recallFleet(bytes32 playerEntity, bytes32 fleetId) internal {
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only send owned fleet");
     require(
       FleetMovement.getOrigin(fleetId) != FleetMovement.getDestination(fleetId),
       "[Fleet] Fleet is already at origin"

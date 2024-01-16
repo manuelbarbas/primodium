@@ -16,11 +16,6 @@ import { EResource, EFleetStance } from "src/Types.sol";
 
 library LibFleetStance {
   function clearFleetStance(bytes32 playerEntity, bytes32 fleetId) internal {
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only update stance for owned fleet");
-    require(
-      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
-      "[Fleet] Fleet has not reached it's current destination space rock yet"
-    );
     FleetStanceData memory fleetStance = FleetStance.get(fleetId);
 
     if (fleetStance.stance == uint8(EFleetStance.None)) return;
@@ -54,18 +49,6 @@ library LibFleetStance {
     uint8 stance,
     bytes32 target
   ) internal {
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only update stance for owned fleet");
-    require(
-      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
-      "[Fleet] Fleet has not reached it's current destination space rock yet"
-    );
-    require(
-      FleetStance.getStance(target) == uint8(EFleetStance.None),
-      "[Fleet] Can not target a fleet that is taking a stance"
-    );
-    if (stance == uint8(EFleetStance.Defend) || stance == uint8(EFleetStance.Block)) {
-      require(FleetMovement.getDestination(fleetId) == target, "[Fleet] Fleet must be on same space rock as target");
-    }
     clearFleetStance(playerEntity, fleetId);
     clearFollowingFleets(fleetId);
     FleetStance.set(fleetId, stance, target);

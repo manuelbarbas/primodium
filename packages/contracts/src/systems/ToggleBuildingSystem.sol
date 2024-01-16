@@ -12,7 +12,7 @@ contract ToggleBuildingSystem is PrimodiumSystem {
   /// @return isActive the new active status of the building
   function toggleBuilding(PositionData memory coord) public returns (bool isActive) {
     // Check there isn't another tile there
-    bytes32 playerEntity = _player(false);
+    bytes32 playerEntity = _player();
     bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
     require(OwnedBy.get(coord.parent) == playerEntity, "[ToggleBuilding] Only owner can toggle building");
     require(buildingEntity != Home.getMainBase(playerEntity), "[ToggleBuilding] Can not toggle main base");

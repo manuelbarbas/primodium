@@ -112,11 +112,6 @@ export const config = mudConfig({
       },
     },
 
-    Delegate: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "bytes32",
-    },
-
     /* ---------------------------------- Rocks --------------------------------- */
     P_Asteroid: {
       keySchema: {},
@@ -167,7 +162,7 @@ export const config = mudConfig({
     },
 
     //when the storage for this resources is provided it is full
-    P_IsStorageFull: {
+    P_IsRecoverable: {
       keySchema: { id: "uint8" }, // EResource
       valueSchema: "bool",
     },

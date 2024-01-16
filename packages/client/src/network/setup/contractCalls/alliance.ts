@@ -7,21 +7,24 @@ import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import { getAllianceName, getAllianceNameFromPlayer } from "src/util/alliance";
 import { TransactionQueueType } from "src/util/constants";
-import { hashEntities, toHex32 } from "src/util/encode";
+import { getSystemId, hashEntities, toHex32 } from "src/util/encode";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const createAlliance = async (mud: MUD, name: string, inviteOnly: boolean) => {
   await execute(
-    mud,
-    (account) =>
-      account.worldContract.write.create([
+    {
+      mud,
+      functionName: "create",
+      systemId: getSystemId("AllianceSystem"),
+      args: [
         toHex32(name.substring(0, 6).toUpperCase()),
         inviteOnly ? EAllianceInviteMode.Closed : EAllianceInviteMode.Open,
-      ]),
+      ],
+      delegate: true,
+    },
     {
       id: world.registerEntity(),
-      delegate: true,
     },
     (receipt) => {
       ampli.systemCreate({
@@ -34,19 +37,19 @@ export const createAlliance = async (mud: MUD, name: string, inviteOnly: boolean
 };
 
 export const leaveAlliance = async (mud: MUD) => {
-  // Fetch alliance name before leaving
-  const allianceName = getAllianceNameFromPlayer(account.entity);
-
   execute(
-    mud,
-    () => account.worldContract.write.leave(),
+    {
+      mud,
+      functionName: "leave",
+      systemId: getSystemId("AllianceSystem"),
+      delegate: true,
+    },
     {
       id: world.registerEntity(),
-      delegate: true,
     },
     (receipt) => {
       ampli.systemLeave({
-        allianceName: allianceName,
+        allianceName: getAllianceNameFromPlayer(mud.playerAccount.entity),
         ...parseReceipt(receipt),
       });
     }
@@ -55,11 +58,15 @@ export const leaveAlliance = async (mud: MUD) => {
 
 export const joinAlliance = async (mud: MUD, alliance: Entity) => {
   execute(
-    mud,
-    () => account.worldContract.write.join([alliance as Hex]),
+    {
+      mud,
+      functionName: "join",
+      systemId: getSystemId("AllianceSystem"),
+      args: [alliance as Hex],
+      delegate: true,
+    },
     {
       id: hashEntities(TransactionQueueType.JoinAlliance, alliance),
-      delegate: true,
     },
     (receipt) => {
       ampli.systemJoin({
@@ -72,11 +79,15 @@ export const joinAlliance = async (mud: MUD, alliance: Entity) => {
 
 export const declineInvite = async (mud: MUD, inviter: Entity) => {
   execute(
-    mud,
-    () => account.worldContract.write.declineInvite([inviter as Hex]),
+    {
+      mud,
+      functionName: "declineInvite",
+      systemId: getSystemId("AllianceSystem"),
+      args: [inviter as Hex],
+      delegate: true,
+    },
     {
       id: hashEntities(TransactionQueueType.DeclineInvite, inviter),
-      delegate: true,
     },
     (receipt) => {
       ampli.systemDeclineInvite({
@@ -90,11 +101,15 @@ export const declineInvite = async (mud: MUD, inviter: Entity) => {
 
 export const requestToJoin = async (mud: MUD, alliance: Entity) => {
   execute(
-    mud,
-    () => account.worldContract.write.requestToJoin([alliance as Hex]),
+    {
+      mud,
+      functionName: "requestToJoin",
+      systemId: getSystemId("AllianceSystem"),
+      args: [alliance as Hex],
+      delegate: true,
+    },
     {
       id: hashEntities(TransactionQueueType.JoinAlliance, alliance),
-      delegate: true,
     },
     (receipt) => {
       ampli.systemRequestToJoin({
@@ -110,11 +125,15 @@ export const kickPlayer = async (mud: MUD, player: Entity) => {
   const allianceName = getAllianceNameFromPlayer(player);
 
   execute(
-    mud,
-    () => account.worldContract.write.kick([player as Hex]),
+    {
+      mud,
+      functionName: "kick",
+      systemId: getSystemId("AllianceSystem"),
+      args: [player as Hex],
+      delegate: true,
+    },
     {
       id: hashEntities(TransactionQueueType.KickPlayer, player),
-      delegate: true,
     },
     (receipt) => {
       ampli.systemKick({
@@ -130,11 +149,15 @@ export const grantRole = async (mud: MUD, player: Entity, role: EAllianceRole) =
   const currentRole = components.PlayerAlliance.get(player)?.role ?? EAllianceRole.Member;
 
   execute(
-    mud,
-    () => account.worldContract.write.grantRole([player as Hex, role]),
+    {
+      mud,
+      functionName: "grantRole",
+      systemId: getSystemId("AllianceSystem"),
+      args: [player as Hex, role],
+      delegate: true,
+    },
     {
       id: hashEntities(role < currentRole ? TransactionQueueType.Promote : TransactionQueueType.Demote, player),
-      delegate: true,
     },
     (receipt) => {
       ampli.systemGrantRole({
@@ -149,11 +172,15 @@ export const grantRole = async (mud: MUD, player: Entity, role: EAllianceRole) =
 
 export const acceptJoinRequest = async (mud: MUD, target: Entity) => {
   execute(
-    mud,
-    () => account.worldContract.write.acceptRequestToJoin([target as Hex]),
+    {
+      mud,
+      functionName: "acceptRequestToJoin",
+      systemId: getSystemId("AllianceSystem"),
+      args: [target as Hex],
+      delegate: true,
+    },
     {
       id: hashEntities(TransactionQueueType.AcceptRequest, target),
-      delegate: true,
     },
     (receipt) => {
       ampli.systemAcceptJoinRequest({
@@ -167,11 +194,15 @@ export const acceptJoinRequest = async (mud: MUD, target: Entity) => {
 
 export const rejectJoinRequest = async (mud: MUD, target: Entity) => {
   execute(
-    mud,
-    () => account.worldContract.write.rejectRequestToJoin([target as Hex]),
+    {
+      mud,
+      functionName: "rejectRequestToJoin",
+      systemId: getSystemId("AllianceSystem"),
+      args: [target as Hex],
+      delegate: true,
+    },
     {
       id: hashEntities(TransactionQueueType.RejectRequest, target),
-      delegate: true,
     },
     (receipt) => {
       ampli.systemRejectJoinRequest({
@@ -185,11 +216,15 @@ export const rejectJoinRequest = async (mud: MUD, target: Entity) => {
 
 export const invite = async (mud: MUD, target: Entity) => {
   execute(
-    mud,
-    () => account.worldContract.write.invite([target as Hex]),
+    {
+      mud,
+      functionName: "invite",
+      systemId: getSystemId("AllianceSystem"),
+      args: [target as Hex],
+      delegate: true,
+    },
     {
       id: hashEntities(TransactionQueueType.Invite, target),
-      delegate: true,
     },
     (receipt) => {
       ampli.systemInvite({
