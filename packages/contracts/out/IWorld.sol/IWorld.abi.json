@@ -1535,6 +1535,11 @@
         "internalType": "bytes32"
       },
       {
+        "name": "spaceRockEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
         "name": "objectivePrototype",
         "type": "bytes32",
         "internalType": "bytes32"

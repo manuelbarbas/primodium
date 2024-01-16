@@ -131,7 +131,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     LibAsteroid.initSecondaryAsteroid(playerEntity, PositionData(0, 0, 0), rock);
     MaxResourceCount.set(rock, uint8(EResource.Copper), 1000000);
     // ResourceCount.set(rock, uint8(EResource.Copper), 10000);
-    world.build(EBuilding.CopperMine, PositionData(20, 15, rock));
+    world.build(EBuilding.CopperMine, getTilePosition(rock, EResource.Iron));
     resourceRewardData = P_ResourceRewardData(new uint8[](1), new uint256[](1));
     resourceRewardData.resources[0] = uint8(EResource.Copper);
     resourceRewardData.amounts[0] = 100;
