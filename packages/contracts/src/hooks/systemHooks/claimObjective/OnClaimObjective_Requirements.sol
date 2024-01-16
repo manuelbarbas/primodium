@@ -27,7 +27,7 @@ contract OnClaimObjective_Requirements is SystemHook {
     EObjectives objective = abi.decode(args, (EObjectives));
 
     // Get the player's entity and check destroy requirements
-    bytes32 playerEntity = _player(msgSender, false);
+    bytes32 playerEntity = _player(msgSender);
     LibObjectives.checkObjectiveRequirements(playerEntity, objective);
   }
 

@@ -8,7 +8,7 @@ import { bigintToNumber } from "src/util/bigint";
 import { getBuildingTopLeft } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
+import { getSystemId, hashEntities } from "src/util/encode";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
@@ -24,11 +24,14 @@ export const moveBuilding = async (mud: MUD, building: Entity, coord: Coord) => 
   if (!prevPosition || !buildingType) return;
 
   await execute(
-    mud,
-    (account) =>
-      account.worldContract.write.moveBuilding([{ ...prevPosition, parent: prevPosition.parent as Hex }, position]),
     {
+      mud,
+      functionName: "moveBuilding",
+      systemId: getSystemId("MoveBuildingSystem"),
+      args: [{ ...prevPosition, parent: prevPosition.parent as Hex }, position],
       delegate: true,
+    },
+    {
       id: hashEntities(TransactionQueueType.Move, building),
       type: TransactionQueueType.Move,
       metadata: {

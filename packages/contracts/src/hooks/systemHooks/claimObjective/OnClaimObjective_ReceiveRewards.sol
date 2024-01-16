@@ -34,7 +34,7 @@ contract OnClaimObjective_ReceiveRewards is SystemHook {
     uint8 objective = abi.decode(args, (uint8));
 
     // Get the player's entity and check destroy requirements
-    bytes32 playerEntity = _player(msgSender, false);
+    bytes32 playerEntity = _player(msgSender);
     bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, objective);
     LibReward.receiveRewards(playerEntity, objectivePrototype);
   }

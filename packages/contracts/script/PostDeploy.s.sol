@@ -14,6 +14,7 @@ import { PuppetModule } from "@latticexyz/world-modules/src/modules/puppet/Puppe
 import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 import { registerERC20 } from "@latticexyz/world-modules/src/modules/erc20-puppet/registerERC20.sol";
 import { ERC20MetadataData } from "@latticexyz/world-modules/src/modules/erc20-puppet/tables/ERC20Metadata.sol";
+import { StandardDelegationsModule } from "@latticexyz/world-modules/src/modules/std-delegations/StandardDelegationsModule.sol";
 
 uint256 constant WETH_SUPPLY = 100_000_000 ether; // tokens
 
@@ -28,6 +29,8 @@ contract PostDeploy is Script {
     vm.startBroadcast(deployerPrivateKey);
     StoreSwitch.setStoreAddress(worldAddress);
     world.increment();
+
+    world.installRootModule(new StandardDelegationsModule(), new bytes(0));
 
     createPrototypes(world);
     console.log("Prototypes created");

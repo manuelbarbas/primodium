@@ -24,7 +24,7 @@ contract OnBefore_ClaimResources is SystemHook {
     ResourceId,
     bytes memory
   ) public {
-    bytes32 playerEntity = _player(msgSender, false);
+    bytes32 playerEntity = _player(msgSender);
     LibResource.claimAllPlayerResources(playerEntity);
   }
 
