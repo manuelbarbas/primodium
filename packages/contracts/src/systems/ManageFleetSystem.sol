@@ -11,10 +11,10 @@ contract ManageFleetSystem is PrimodiumSystem {
     uint256[NUM_UNITS] calldata unitCounts,
     uint256[NUM_RESOURCE] calldata resourceCounts
   ) public returns (bytes32 fleetId) {
-    fleetId = LibFleet.createFleet(_player(false), spaceRock, unitCounts, resourceCounts);
+    fleetId = LibFleet.createFleet(_player(), spaceRock, unitCounts, resourceCounts);
   }
 
   function landFleet(bytes32 fleetId, bytes32 spaceRock) public {
-    LibFleet.landFleet(_player(false), fleetId, spaceRock);
+    LibFleet.landFleet(_player(), fleetId, spaceRock);
   }
 }

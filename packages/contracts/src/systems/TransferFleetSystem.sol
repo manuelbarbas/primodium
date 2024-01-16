@@ -11,7 +11,7 @@ contract TransferFleetSystem is PrimodiumSystem {
     bytes32 fleetId,
     uint256[NUM_UNITS] calldata unitCounts
   ) public {
-    LibFleet.transferUnitsFromFleetToFleet(_player(false), fromFleetId, fleetId, unitCounts);
+    LibFleet.transferUnitsFromFleetToFleet(_player(), fromFleetId, fleetId, unitCounts);
   }
 
   function transferResourcesFromFleetToFleet(
@@ -19,7 +19,7 @@ contract TransferFleetSystem is PrimodiumSystem {
     bytes32 fleetId,
     uint256[NUM_RESOURCE] calldata resourceCounts
   ) public {
-    LibFleet.transferResourcesFromFleetToFleet(_player(false), fromFleetId, fleetId, resourceCounts);
+    LibFleet.transferResourcesFromFleetToFleet(_player(), fromFleetId, fleetId, resourceCounts);
   }
 
   function transferUnitsFromSpaceRockToFleet(
@@ -27,7 +27,7 @@ contract TransferFleetSystem is PrimodiumSystem {
     bytes32 fleetId,
     uint256[NUM_UNITS] calldata unitCounts
   ) public {
-    LibFleet.transferUnitsFromSpaceRockToFleet(_player(false), spaceRock, fleetId, unitCounts);
+    LibFleet.transferUnitsFromSpaceRockToFleet(_player(), spaceRock, fleetId, unitCounts);
   }
 
   function transferUnitsFromFleetToSpaceRock(
@@ -35,7 +35,7 @@ contract TransferFleetSystem is PrimodiumSystem {
     bytes32 fleetId,
     uint256[NUM_UNITS] calldata unitCounts
   ) public {
-    LibFleet.transferUnitsFromFleetToSpaceRock(_player(false), spaceRock, fleetId, unitCounts);
+    LibFleet.transferUnitsFromFleetToSpaceRock(_player(), spaceRock, fleetId, unitCounts);
   }
 
   function transferResourcesFromSpaceRockToFleet(
@@ -43,7 +43,7 @@ contract TransferFleetSystem is PrimodiumSystem {
     bytes32 fleetId,
     uint256[NUM_RESOURCE] calldata resourceCounts
   ) public {
-    LibFleet.transferResourcesFromSpaceRockToFleet(_player(false), spaceRock, fleetId, resourceCounts);
+    LibFleet.transferResourcesFromSpaceRockToFleet(_player(), spaceRock, fleetId, resourceCounts);
   }
 
   function transferResourcesFromFleetToSpaceRock(
@@ -51,7 +51,7 @@ contract TransferFleetSystem is PrimodiumSystem {
     bytes32 fleetId,
     uint256[NUM_RESOURCE] calldata resourceCounts
   ) public {
-    LibFleet.transferResourcesFromFleetToSpaceRock(_player(false), spaceRock, fleetId, resourceCounts);
+    LibFleet.transferResourcesFromFleetToSpaceRock(_player(), spaceRock, fleetId, resourceCounts);
   }
 
   function transferUnitsAndResourcesFromFleetToSpaceRock(
@@ -60,13 +60,7 @@ contract TransferFleetSystem is PrimodiumSystem {
     uint256[NUM_UNITS] calldata unitCounts,
     uint256[NUM_RESOURCE] calldata resourceCounts
   ) public {
-    LibFleet.transferUnitsAndResourcesFromFleetToSpaceRock(
-      _player(false),
-      spaceRock,
-      fleetId,
-      unitCounts,
-      resourceCounts
-    );
+    LibFleet.transferUnitsAndResourcesFromFleetToSpaceRock(_player(), spaceRock, fleetId, unitCounts, resourceCounts);
   }
 
   function transferUnitsAndResourcesFromSpaceRockToFleet(
@@ -75,13 +69,7 @@ contract TransferFleetSystem is PrimodiumSystem {
     uint256[NUM_UNITS] calldata unitCounts,
     uint256[NUM_RESOURCE] calldata resourceCounts
   ) public {
-    LibFleet.transferUnitsAndResourcesFromSpaceRockToFleet(
-      _player(false),
-      spaceRock,
-      fleetId,
-      unitCounts,
-      resourceCounts
-    );
+    LibFleet.transferUnitsAndResourcesFromSpaceRockToFleet(_player(), spaceRock, fleetId, unitCounts, resourceCounts);
   }
 
   function transferUnitsAndResourcesFromFleetToFleet(
@@ -90,12 +78,6 @@ contract TransferFleetSystem is PrimodiumSystem {
     uint256[NUM_UNITS] calldata unitCounts,
     uint256[NUM_RESOURCE] calldata resourceCounts
   ) public {
-    LibFleet.transferUnitsAndResourcesFromFleetToFleet(
-      _player(false),
-      fromFleetId,
-      fleetId,
-      unitCounts,
-      resourceCounts
-    );
+    LibFleet.transferUnitsAndResourcesFromFleetToFleet(_player(), fromFleetId, fleetId, unitCounts, resourceCounts);
   }
 }
