@@ -18,12 +18,6 @@ import { EResource, EFleetStance } from "src/Types.sol";
 
 library LibFleetDisband {
   function disbandFleet(bytes32 playerEntity, bytes32 fleetId) internal {
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only disband owned fleet");
-    require(
-      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
-      "[Fleet] Fleet has not reached it's current destination space rock yet"
-    );
-
     bytes32 ownerSpaceRock = OwnedBy.get(fleetId);
 
     //remove resources
@@ -84,11 +78,6 @@ library LibFleetDisband {
     bytes32 fleetId,
     uint256[NUM_UNITS] calldata unitCounts
   ) internal {
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only disband owned fleet");
-    require(
-      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
-      "[Fleet] Fleet has not reached it's current destination space rock yet"
-    );
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint8 i = 0; i < NUM_UNITS; i++) {
       if (unitCounts[i] == 0) continue;
@@ -103,11 +92,6 @@ library LibFleetDisband {
     bytes32 fleetId,
     uint256[NUM_RESOURCE] calldata resourceCounts
   ) internal {
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only disband owned fleet");
-    require(
-      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
-      "[Fleet] Fleet has not reached it's current destination space rock yet"
-    );
     for (uint8 i = 0; i < NUM_RESOURCE; i++) {
       if (resourceCounts[i] == 0) continue;
       uint256 fleetResourceCount = ResourceCount.get(fleetId, i);

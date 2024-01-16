@@ -1,16 +1,20 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
+import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleetMove } from "codegen/Libraries.sol";
 import { NUM_UNITS, NUM_RESOURCE } from "src/constants.sol";
 
-contract FleetMoveSystem is PrimodiumSystem {
-  function recallFleet(bytes32 fleetId) public {
+contract FleetMoveSystem is FleetBaseSystem {
+  function recallFleet(bytes32 fleetId) public _onlyFleetOwner(fleetId) {
     LibFleetMove.recallFleet(_player(), fleetId);
   }
 
-  function sendFleet(bytes32 fleetId, bytes32 spaceRock) public {
+  function sendFleet(bytes32 fleetId, bytes32 spaceRock)
+    public
+    _onlyFleetOwner(fleetId)
+    _onlyWhenFleetIsInOrbit(fleetId)
+  {
     LibFleetMove.sendFleet(_player(), fleetId, spaceRock);
   }
 }
