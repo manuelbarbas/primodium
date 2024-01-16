@@ -838,9 +838,9 @@
         "type": "uint256[8]"
       },
       {
-        "internalType": "uint256[25]",
+        "internalType": "uint256[27]",
         "name": "resourceCounts",
-        "type": "uint256[25]"
+        "type": "uint256[27]"
       }
     ],
     "name": "createFleet",
@@ -1273,12 +1273,48 @@
         "type": "uint256[8]"
       },
       {
-        "internalType": "uint256[25]",
+        "internalType": "uint256[27]",
         "name": "resourceCounts",
-        "type": "uint256[25]"
+        "type": "uint256[27]"
       }
     ],
     "name": "disbandUnitsAndResourcesFromFleet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "fleetId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "targetFleet",
+        "type": "bytes32"
+      }
+    ],
+    "name": "fleetAttackFleet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "fleetId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "targetSpaceRock",
+        "type": "bytes32"
+      }
+    ],
+    "name": "fleetAttackSpaceRock",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -2443,6 +2479,24 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "spaceRock",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "targetFleet",
+        "type": "bytes32"
+      }
+    ],
+    "name": "spaceRockAttackFleet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "spawn",
     "outputs": [
@@ -2743,9 +2797,9 @@
         "type": "bytes32"
       },
       {
-        "internalType": "uint256[25]",
+        "internalType": "uint256[27]",
         "name": "resourceCounts",
-        "type": "uint256[25]"
+        "type": "uint256[27]"
       }
     ],
     "name": "transferResourcesFromFleetToFleet",
@@ -2766,9 +2820,9 @@
         "type": "bytes32"
       },
       {
-        "internalType": "uint256[25]",
+        "internalType": "uint256[27]",
         "name": "resourceCounts",
-        "type": "uint256[25]"
+        "type": "uint256[27]"
       }
     ],
     "name": "transferResourcesFromFleetToSpaceRock",
@@ -2789,9 +2843,9 @@
         "type": "bytes32"
       },
       {
-        "internalType": "uint256[25]",
+        "internalType": "uint256[27]",
         "name": "resourceCounts",
-        "type": "uint256[25]"
+        "type": "uint256[27]"
       }
     ],
     "name": "transferResourcesFromSpaceRockToFleet",
@@ -2817,9 +2871,9 @@
         "type": "uint256[8]"
       },
       {
-        "internalType": "uint256[25]",
+        "internalType": "uint256[27]",
         "name": "resourceCounts",
-        "type": "uint256[25]"
+        "type": "uint256[27]"
       }
     ],
     "name": "transferUnitsAndResourcesFromFleetToFleet",
@@ -2845,9 +2899,9 @@
         "type": "uint256[8]"
       },
       {
-        "internalType": "uint256[25]",
+        "internalType": "uint256[27]",
         "name": "resourceCounts",
-        "type": "uint256[25]"
+        "type": "uint256[27]"
       }
     ],
     "name": "transferUnitsAndResourcesFromFleetToSpaceRock",
@@ -2873,9 +2927,9 @@
         "type": "uint256[8]"
       },
       {
-        "internalType": "uint256[25]",
+        "internalType": "uint256[27]",
         "name": "resourceCounts",
-        "type": "uint256[25]"
+        "type": "uint256[27]"
       }
     ],
     "name": "transferUnitsAndResourcesFromSpaceRockToFleet",
