@@ -50,6 +50,7 @@ export enum EResource {
   Iridium,
   Kimberlite,
   Platinum,
+  Gold,
 
   // Crafted Items
   IronPlate,
