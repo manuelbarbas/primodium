@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { P_EnumToPrototype, QueueItemUnitsData, Position } from "codegen/index.sol";
+import { P_EnumToPrototype, QueueItemUnitsData, OwnedBy } from "codegen/index.sol";
 import { UnitProductionQueue } from "codegen/Libraries.sol";
 
 import { EUnit } from "src/Types.sol";
@@ -25,7 +25,7 @@ contract TrainUnitsSystem is PrimodiumSystem {
     // Ensure the unit is valid (within the defined range of unit types).
     require(unit > EUnit.NULL && unit < EUnit.LENGTH, "[TrainUnitsSystem] Unit does not exist");
 
-    bytes32 spaceRockEntity = Position.getParent(buildingEntity);
+    bytes32 spaceRockEntity = OwnedBy.get(buildingEntity);
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
 
     claimResources(spaceRockEntity);
