@@ -43,6 +43,11 @@ library LibFleetStance {
     return FleetsMap.getFleetIds(fleetId, fleetFollowKey);
   }
 
+  function getDefendingFleets(bytes32 spaceRock) internal view returns (bytes32[] memory) {
+    bytes32 fleetDefendKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Defend));
+    return FleetsMap.getFleetIds(spaceRock, fleetDefendKey);
+  }
+
   function setFleetStance(
     bytes32 playerEntity,
     bytes32 fleetId,

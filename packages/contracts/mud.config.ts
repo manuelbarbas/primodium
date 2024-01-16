@@ -150,6 +150,11 @@ export const config = mudConfig({
       valueSchema: "uint8", // EResource
     },
 
+    IsSpaceRock: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "bool",
+    },
+
     /* -------------------------------- Resources ------------------------------- */
     P_IsAdvancedResource: {
       keySchema: { id: "uint8" }, // EResource
@@ -459,6 +464,11 @@ export const config = mudConfig({
         stored: "bool",
         index: "uint256",
       },
+    },
+
+    IsFleet: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "bool",
     },
 
     /* ------------------------------ Battle Result ----------------------------- */

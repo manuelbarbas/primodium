@@ -21,11 +21,30 @@ library LibStorage {
       if (level > 1) {
         maxResourceIncrease -= P_ByLevelMaxResourceUpgrades.get(buildingType, resource, level - 1);
       }
-      setMaxStorage(spaceRockEntity, resource, maxResource + maxResourceIncrease);
-      if (P_IsStorageFull.get(resource)) {
-        increaseStoredResource(spaceRockEntity, resource, maxResourceIncrease);
-      }
+      increaseMaxStorage(spaceRockEntity, resource, maxResourceIncrease);
     }
+  }
+
+  function increaseMaxStorage(
+    bytes32 spaceRockEntity,
+    uint8 resource,
+    uint256 amount
+  ) internal {
+    uint256 maxResource = MaxResourceCount.get(spaceRockEntity, resource);
+    setMaxStorage(spaceRockEntity, resource, maxResource + amount);
+    if (P_IsStorageFull.get(resource)) {
+      increaseStoredResource(spaceRockEntity, resource, amount);
+    }
+  }
+
+  function decreaseMaxStorage(
+    bytes32 spaceRockEntity,
+    uint8 resource,
+    uint256 amount
+  ) internal {
+    uint256 maxResource = MaxResourceCount.get(spaceRockEntity, resource);
+    require(maxResource >= amount, "[StorageUsage] not enough storage to reduce usage");
+    setMaxStorage(spaceRockEntity, resource, maxResource - amount);
   }
 
   /// @notice activates the max storage of resources based on building prototype data

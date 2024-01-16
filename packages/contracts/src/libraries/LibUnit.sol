@@ -3,9 +3,11 @@ pragma solidity >=0.8.21;
 
 import { Position, P_UnitPrototypes, IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
 
-import { ERock, EUnit } from "src/Types.sol";
+import { ERock, EUnit, EResource } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
+import { LibStorage } from "libraries/LibStorage.sol";
+import { LibProduction } from "libraries/LibProduction.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
 import { UnitKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE, NUM_UNITS } from "src/constants.sol";
@@ -169,11 +171,23 @@ library LibUnit {
     uint256 unitCount,
     bool updatesUtility
   ) internal {
-    bytes32 playerEntity = OwnedBy.get(rockEntity);
     if (unitCount == 0) return;
     uint256 prevUnitCount = UnitCount.get(rockEntity, unitType);
     UnitCount.set(rockEntity, unitType, prevUnitCount + unitCount);
     if (updatesUtility) updateStoredUtilities(rockEntity, unitType, unitCount, true);
+
+    //updates hp for space rock
+    LibStorage.increaseMaxStorage(
+      rockEntity,
+      uint8(EResource.SF_HP),
+      unitCount * P_Unit.get(unitType, UnitLevel.get(rockEntity, unitType)).hp
+    );
+    //updates defense for space rock
+    LibProduction.increaseResourceProduction(
+      rockEntity,
+      EResource.U_Defense,
+      unitCount * P_Unit.get(unitType, UnitLevel.get(rockEntity, unitType)).defense
+    );
   }
 
   /**
@@ -188,16 +202,23 @@ library LibUnit {
     uint256 unitCount,
     bool updatesUtility
   ) internal {
-    bytes32 playerEntity = OwnedBy.get(rockEntity);
     if (unitCount == 0) return;
     uint256 currUnitCount = UnitCount.get(rockEntity, unitType);
-    if (unitCount > currUnitCount) unitCount = currUnitCount;
+    require(currUnitCount >= unitCount, "[LibUnit] Not enough units to decrease");
     UnitCount.set(rockEntity, unitType, currUnitCount - unitCount);
-
-    // update production rate
-    if (RockType.get(rockEntity) != uint8(ERock.Motherlode)) return;
-    uint256 level = UnitLevel.get(rockEntity, unitType);
-    uint256 productionRate = P_MiningRate.get(unitType, level);
     if (updatesUtility) updateStoredUtilities(rockEntity, unitType, unitCount, false);
+
+    //updates hp for space rock
+    LibStorage.decreaseMaxStorage(
+      rockEntity,
+      uint8(EResource.SF_HP),
+      unitCount * P_Unit.get(unitType, UnitLevel.get(rockEntity, unitType)).hp
+    );
+    //updates defense for space rock
+    LibProduction.decreaseResourceProduction(
+      rockEntity,
+      EResource.U_Defense,
+      unitCount * P_Unit.get(unitType, UnitLevel.get(rockEntity, unitType)).defense
+    );
   }
 }
