@@ -53,7 +53,7 @@ export enum ResourceTilekeys {
   Iron,
   Copper,
   Lithium,
-  Sulfur,
+  Gold,
 }
 
 const FogTilekeysGID =
@@ -109,7 +109,7 @@ export enum SpriteKeys {
 
   LithiumMine1 = "sprites/miners/lithiummine/Miner_Lithium_LVL1_1.png",
 
-  SulfurMine1 = "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_1.png",
+  GoldMine1 = "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_1.png",
 
   StorageUnit1 = "sprites/storage-facility/level1/Storage_Facility_LVL1.png",
   StorageUnit2 = "sprites/storage-facility/level2/Storage_Facility_LVL2.png",
@@ -238,7 +238,7 @@ export enum AnimationKeys {
 
   LithiumMine1 = "lithiummine/level1",
 
-  SulfurMine1 = "sulfurmine/level1",
+  GoldMine1 = "sulfurmine/level1",
 
   StorageUnit3 = "storageunit/level3",
 
@@ -324,7 +324,7 @@ export const ResourceToTilesetKey: { [key: number]: ResourceTilekeys } = {
   [EResource.Iron]: ResourceTilekeys.Iron,
   [EResource.Copper]: ResourceTilekeys.Copper,
   [EResource.Lithium]: ResourceTilekeys.Lithium,
-  [EResource.Sulfur]: ResourceTilekeys.Sulfur,
+  [EResource.Gold]: ResourceTilekeys.Gold,
 };
 
 export const EntitytoSpriteKey = {
@@ -343,7 +343,7 @@ export const EntitytoSpriteKey = {
 
   [EntityType.CopperMine]: [SpriteKeys.CopperMine1, SpriteKeys.CopperMine2, SpriteKeys.CopperMine3],
 
-  [EntityType.SulfurMine]: [SpriteKeys.SulfurMine1],
+  [EntityType.GoldMine]: [SpriteKeys.GoldMine1],
 
   [EntityType.LithiumMine]: [SpriteKeys.LithiumMine1],
 
@@ -407,7 +407,7 @@ export const EntityIDtoAnimationKey = {
   [EntityType.IronMine]: [AnimationKeys.IronMine1, AnimationKeys.IronMine2, AnimationKeys.IronMine3],
   [EntityType.CopperMine]: [AnimationKeys.CopperMine1, AnimationKeys.CopperMine2, AnimationKeys.CopperMine3],
   [EntityType.LithiumMine]: [AnimationKeys.LithiumMine1],
-  [EntityType.SulfurMine]: [AnimationKeys.SulfurMine1],
+  [EntityType.GoldMine]: [AnimationKeys.GoldMine1],
   [EntityType.StorageUnit]: [undefined, undefined, AnimationKeys.StorageUnit3],
 
   [EntityType.IronPlateFactory]: [AnimationKeys.IronPlateFactory1, AnimationKeys.IronPlateFactory2],

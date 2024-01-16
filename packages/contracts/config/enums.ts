@@ -10,7 +10,7 @@ export enum EBuilding {
   LithiumMine,
   IronMine,
   CopperMine,
-  SulfurMine,
+  GoldMine,
 
   // Factories
   IronPlateFactory,
@@ -45,12 +45,12 @@ export enum EResource {
   Iron,
   Copper,
   Lithium,
-  Sulfur,
+  Gold,
+
   Titanium,
   Iridium,
   Kimberlite,
   Platinum,
-  Gold,
 
   // Crafted Items
   IronPlate,

@@ -18,7 +18,7 @@ const resources: Record<string, Entity> = {
   lithium: EntityType.Lithium,
   titanium: EntityType.Titanium,
   iridium: EntityType.Iridium,
-  sulfur: EntityType.Sulfur,
+  gold: EntityType.Gold,
   kimberlite: EntityType.Kimberlite,
   ironplate: EntityType.IronPlate,
   platinum: EntityType.Platinum,

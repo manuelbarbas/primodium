@@ -77,7 +77,7 @@ To clean types/ and abis/ in the git diff, run `pnpm clean` in the top level dir
   62: "Lithium"
   64: "Water"
   58: "Copper"
-  66: "Sulfur"
+  66: "Gold"
 ```
 
 4. `prototypesConfig.ts`: Houses preset entity configurations. A prototype object has the following fields:

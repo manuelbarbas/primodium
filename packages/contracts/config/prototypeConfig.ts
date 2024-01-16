@@ -464,6 +464,44 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       },
     },
   },
+  GoldMine: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(1, 1) },
+      P_MaxLevel: { value: 7n },
+      // P_RequiredTile: { value: MUDEnums.EResource.indexOf("Gold") },
+    },
+    levels: {
+      1: { P_Production: getResourceValues({ Gold: 25 }) },
+      2: {
+        P_RequiredResources: getResourceValues({ Iron: 100 }),
+        P_Production: getResourceValues({ Gold: 35 }),
+      },
+      3: {
+        P_RequiredResources: getResourceValues({ Iron: 100 }),
+        P_Production: getResourceValues({ Gold: 45 }),
+      },
+      4: {
+        P_RequiredResources: getResourceValues({ Iron: 300 }),
+        P_Production: getResourceValues({ Gold: 55 }),
+      },
+      5: {
+        P_RequiredResources: getResourceValues({ Iron: 100 }),
+        P_Production: getResourceValues({ Gold: 65 }),
+      },
+      6: {
+        P_RequiredResources: getResourceValues({ Iron: 200 }),
+        P_Production: getResourceValues({ Gold: 75 }),
+      },
+      7: {
+        P_RequiredResources: getResourceValues({ Iron: 500 }),
+        P_Production: getResourceValues({ Gold: 90 }),
+      },
+      8: {
+        P_RequiredResources: getResourceValues({ Iron: 100 }),
+        P_Production: getResourceValues({ Gold: 120 }),
+      },
+    },
+  },
 
   // Factories
   IronPlateFactory: {
@@ -1616,8 +1654,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_ScoreMultiplier: { value: 10n },
     },
   },
-  Sulfur: {
-    keys: [{ [EResource.Sulfur]: "uint8" }],
+  Gold: {
+    keys: [{ [EResource.Gold]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 60n },
     },
