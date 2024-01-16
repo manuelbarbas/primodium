@@ -131,11 +131,15 @@ function clearUtilityUsage(bytes32 buildingEntity) {
 
 /* --------------------------------- REWARDS -------------------------------- */
 
-function receiveRewards(bytes32 playerEntity, bytes32 objectivePrototype) {
+function receiveRewards(
+  bytes32 playerEntity,
+  bytes32 spaceRockEntity,
+  bytes32 objectivePrototype
+) {
   SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
     getSystemResourceId("S_RewardsSystem"),
-    abi.encodeCall(S_RewardsSystem.receiveRewards, (playerEntity, objectivePrototype)),
+    abi.encodeCall(S_RewardsSystem.receiveRewards, (playerEntity, spaceRockEntity, objectivePrototype)),
     0
   );
 }

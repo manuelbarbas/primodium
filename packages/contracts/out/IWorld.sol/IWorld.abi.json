@@ -264,6 +264,11 @@
     "name": "claimObjective",
     "inputs": [
       {
+        "name": "spaceRockEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
         "name": "objective",
         "type": "uint8",
         "internalType": "enum EObjectives"

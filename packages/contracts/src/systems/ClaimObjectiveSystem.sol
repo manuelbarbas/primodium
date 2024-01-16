@@ -13,16 +13,16 @@ import { claimResources, claimUnits, receiveRewards } from "libraries/SubsystemC
 import { LibObjectives } from "libraries/LibObjectives.sol";
 
 contract ClaimObjectiveSystem is PrimodiumSystem {
-  function claimObjective(EObjectives objective) public {
+  function claimObjective(bytes32 spaceRockEntity, EObjectives objective)
+    public
+    _claimResources(spaceRockEntity)
+    _claimUnits(spaceRockEntity)
+  {
     bytes32 playerEntity = _player();
-    bytes32 homeAsteroid = Home.get(playerEntity);
     bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(objective));
 
-    claimResources(homeAsteroid);
-    claimUnits(homeAsteroid);
-
-    LibObjectives.checkObjectiveRequirements(playerEntity, objective);
-    receiveRewards(playerEntity, objectivePrototype);
+    LibObjectives.checkObjectiveRequirements(playerEntity, spaceRockEntity, objective);
+    receiveRewards(playerEntity, spaceRockEntity, objectivePrototype);
 
     CompletedObjective.set(playerEntity, objectivePrototype, true);
     P_SpawnPirateAsteroidData memory spawnPirateAsteroid = P_SpawnPirateAsteroid.get(objectivePrototype);
