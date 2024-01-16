@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { P_IsStorageFull, OwnedBy, P_ListMaxResourceUpgrades, P_ByLevelMaxResourceUpgrades, MaxResourceCount, Level, ResourceCount, BuildingType } from "codegen/index.sol";
+import { P_IsRecoverable, OwnedBy, P_ListMaxResourceUpgrades, P_ByLevelMaxResourceUpgrades, MaxResourceCount, Level, ResourceCount, BuildingType } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 
@@ -22,7 +22,7 @@ library LibStorage {
         maxResourceIncrease -= P_ByLevelMaxResourceUpgrades.get(buildingType, resource, level - 1);
       }
       setMaxStorage(spaceRockEntity, resource, maxResource + maxResourceIncrease);
-      if (P_IsStorageFull.get(resource)) {
+      if (P_IsRecoverable.get(resource)) {
         increaseStoredResource(spaceRockEntity, resource, maxResourceIncrease);
       }
     }

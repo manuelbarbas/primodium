@@ -16,7 +16,7 @@ import { getBlueprint } from "./util/blueprints";
 import encodeBytes32, { encodeAddress } from "./util/encodeBytes32";
 
 const mainBaseMaxResourceUpgrades = {
-  1: { Iron: 500000, Copper: 500000, IronPlate: 250000, SF_HP: 100000 },
+  1: { Iron: 500000, Copper: 500000, IronPlate: 250000, R_HP: 100000 },
   2: {
     Iron: 1000000,
     Copper: 1000000,
@@ -24,7 +24,7 @@ const mainBaseMaxResourceUpgrades = {
     Lithium: 1000000,
     PVCell: 500000,
     Alloy: 500000,
-    SF_HP: 100000,
+    R_HP: 100000,
   },
   3: {
     Iron: 2500000,
@@ -37,7 +37,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 50000,
     Iridium: 50000,
     Kimberlite: 50000,
-    SF_HP: 100000,
+    R_HP: 100000,
   },
   4: {
     Iron: 7500000,
@@ -50,7 +50,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 100000,
     Iridium: 100000,
     Kimberlite: 100000,
-    SF_HP: 100000,
+    R_HP: 100000,
   },
   5: {
     Iron: 15000000,
@@ -63,7 +63,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 300000,
     Iridium: 300000,
     Kimberlite: 300000,
-    SF_HP: 100000,
+    R_HP: 100000,
   },
   6: {
     Iron: 25000000,
@@ -76,7 +76,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 600000,
     Iridium: 600000,
     Kimberlite: 600000,
-    SF_HP: 100000,
+    R_HP: 100000,
   },
   7: {
     Iron: 75000000,
@@ -89,7 +89,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 750000,
     Iridium: 750000,
     Kimberlite: 750000,
-    SF_HP: 100000,
+    R_HP: 100000,
   },
   8: {
     Iron: 150000000,
@@ -102,12 +102,12 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 1000000,
     Iridium: 1000000,
     Kimberlite: 1000000,
-    SF_HP: 100000,
+    R_HP: 100000,
   },
 };
 
 const samSiteMaxResourceUpgrades = {
-  1: { SF_HP: 100000 },
+  1: { R_HP: 100000 },
   2: {
     Iron: 1000000,
     Copper: 1000000,
@@ -115,7 +115,7 @@ const samSiteMaxResourceUpgrades = {
     Lithium: 1000000,
     PVCell: 500000,
     Alloy: 500000,
-    SF_HP: 100000,
+    R_HP: 100000,
   },
   3: {
     Iron: 2500000,
@@ -128,7 +128,7 @@ const samSiteMaxResourceUpgrades = {
     Platinum: 50000,
     Iridium: 50000,
     Kimberlite: 50000,
-    SF_HP: 100000,
+    R_HP: 100000,
   },
   4: {
     Iron: 7500000,
@@ -141,7 +141,7 @@ const samSiteMaxResourceUpgrades = {
     Platinum: 100000,
     Iridium: 100000,
     Kimberlite: 100000,
-    SF_HP: 100000,
+    R_HP: 100000,
   },
   5: {
     Iron: 15000000,
@@ -154,7 +154,7 @@ const samSiteMaxResourceUpgrades = {
     Platinum: 300000,
     Iridium: 300000,
     Kimberlite: 300000,
-    SF_HP: 100000,
+    R_HP: 100000,
   },
   6: {
     Iron: 25000000,
@@ -167,7 +167,7 @@ const samSiteMaxResourceUpgrades = {
     Platinum: 600000,
     Iridium: 600000,
     Kimberlite: 600000,
-    SF_HP: 100000,
+    R_HP: 100000,
   },
   7: {
     Iron: 75000000,
@@ -180,7 +180,7 @@ const samSiteMaxResourceUpgrades = {
     Platinum: 750000,
     Iridium: 750000,
     Kimberlite: 750000,
-    SF_HP: 100000,
+    R_HP: 100000,
   },
   8: {
     Iron: 150000000,
@@ -193,7 +193,7 @@ const samSiteMaxResourceUpgrades = {
     Platinum: 1000000,
     Iridium: 1000000,
     Kimberlite: 1000000,
-    SF_HP: 100000,
+    R_HP: 100000,
   },
 };
 
@@ -346,7 +346,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           value: upgradesToList(mainBaseMaxResourceUpgrades[1]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_MaxMoves: 1, SF_HP: 1 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, R_HP: 1 }),
         P_UnitProdMultiplier: { value: 100n },
       },
       2: {
@@ -355,7 +355,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           value: upgradesToList(mainBaseMaxResourceUpgrades[2]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_MaxMoves: 1, SF_HP: 1 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, R_HP: 1 }),
         P_UnitProdMultiplier: { value: 100n },
       },
       3: {
@@ -364,7 +364,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           value: upgradesToList(mainBaseMaxResourceUpgrades[3]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 2, SF_HP: 1 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 2, R_HP: 1 }),
         P_UnitProdMultiplier: { value: 100n },
       },
       4: {
@@ -373,7 +373,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           value: upgradesToList(mainBaseMaxResourceUpgrades[4]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 3, SF_HP: 1 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 3, R_HP: 1 }),
         P_UnitProdMultiplier: { value: 100n },
       },
       5: {
@@ -382,7 +382,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           value: upgradesToList(mainBaseMaxResourceUpgrades[5]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 4, SF_HP: 1 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 4, R_HP: 1 }),
         P_UnitProdMultiplier: { value: 100n },
       },
       6: {
@@ -391,7 +391,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           value: upgradesToList(mainBaseMaxResourceUpgrades[6]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 5, SF_HP: 1 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 5, R_HP: 1 }),
         P_UnitProdMultiplier: { value: 100n },
       },
       7: {
@@ -405,7 +405,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           value: upgradesToList(mainBaseMaxResourceUpgrades[7]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 6, SF_HP: 1 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 6, R_HP: 1 }),
         P_UnitProdMultiplier: { value: 100n },
       },
       8: {
@@ -419,7 +419,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           value: upgradesToList(mainBaseMaxResourceUpgrades[8]),
         },
         P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
-        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 7, SF_HP: 1 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 7, R_HP: 1 }),
         P_UnitProdMultiplier: { value: 100n },
       },
     },
@@ -975,7 +975,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Alloy: 200000, U_Electricity: 10000 }),
-        P_Production: getResourceValues({ U_Defense: 10000, SF_HP: 10 }),
+        P_Production: getResourceValues({ U_Defense: 10000, R_HP: 10 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[1]),
         },
@@ -986,7 +986,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           Alloy: 1500000,
           U_Electricity: 20000,
         }),
-        P_Production: getResourceValues({ U_Defense: 25000, SF_HP: 25 }),
+        P_Production: getResourceValues({ U_Defense: 25000, R_HP: 25 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 6n },
@@ -994,7 +994,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           Alloy: 5000000,
           U_Electricity: 30000,
         }),
-        P_Production: getResourceValues({ U_Defense: 75000, SF_HP: 75 }),
+        P_Production: getResourceValues({ U_Defense: 75000, R_HP: 75 }),
       },
     },
   },
@@ -1118,8 +1118,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   IsStorageFull: {
     keys: [],
     levels: {
-      [MUDEnums.EResource.indexOf("SF_HP")]: { P_IsStorageFull: { value: true } },
-      [MUDEnums.EResource.indexOf("SF_Encryption")]: { P_IsStorageFull: { value: true } },
+      [MUDEnums.EResource.indexOf("R_HP")]: { P_IsRecoverable: { value: true } },
+      [MUDEnums.EResource.indexOf("R_Encryption")]: { P_IsRecoverable: { value: true } },
     },
   },
 

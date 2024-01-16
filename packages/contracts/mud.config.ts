@@ -157,7 +157,7 @@ export const config = mudConfig({
     },
 
     //when the storage for this resources is provided it is full
-    P_IsStorageFull: {
+    P_IsRecoverable: {
       keySchema: { id: "uint8" }, // EResource
       valueSchema: "bool",
     },
