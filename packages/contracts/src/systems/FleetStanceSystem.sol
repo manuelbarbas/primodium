@@ -8,7 +8,7 @@ import { NUM_UNITS, NUM_RESOURCE } from "src/constants.sol";
 contract FleetStanceSystem is PrimodiumSystem {
   function clearFleetStance(bytes32 fleetId) public {
     bytes32 playerEntity = _player();
-    LibFleet.clearFleetStance(playerEntity, fleetId);
+    LibFleetStance.clearFleetStance(playerEntity, fleetId);
   }
 
   function setFleetStance(
@@ -17,6 +17,6 @@ contract FleetStanceSystem is PrimodiumSystem {
     bytes32 target
   ) internal {
     bytes32 playerEntity = _player();
-    LibFleet.setFleetStance(playerEntity, fleetId, stance, target);
+    LibFleetStance.setFleetStance(playerEntity, fleetId, stance, target);
   }
 }

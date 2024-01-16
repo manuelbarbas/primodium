@@ -7,7 +7,7 @@ import { NUM_UNITS, NUM_RESOURCE } from "src/constants.sol";
 
 contract FleetDisbandSystem is PrimodiumSystem {
   function disbandFleet(bytes32 fleetId) public {
-    LibFleetDisband.disbandFleet(_player(false), fleetId);
+    LibFleetDisband.disbandFleet(_player(), fleetId);
   }
 
   function disbandUnitsAndResourcesFromFleet(
@@ -15,14 +15,14 @@ contract FleetDisbandSystem is PrimodiumSystem {
     uint256[NUM_UNITS] calldata unitCounts,
     uint256[NUM_RESOURCE] calldata resourceCounts
   ) public {
-    LibFleetDisband.disbandUnitsAndResourcesFromFleet(_player(false), fleetId, unitCounts, resourceCounts);
+    LibFleetDisband.disbandUnitsAndResourcesFromFleet(_player(), fleetId, unitCounts, resourceCounts);
   }
 
   function disbandUnits(bytes32 fleetId, uint256[NUM_UNITS] calldata unitCounts) public {
-    LibFleetDisband.disbandUnits(_player(false), fleetId, unitCounts);
+    LibFleetDisband.disbandUnits(_player(), fleetId, unitCounts);
   }
 
   function disbandResources(bytes32 fleetId, uint256[NUM_RESOURCE] calldata resourceCounts) internal {
-    LibFleetDisband.disbandResources(_player(false), fleetId, resourceCounts);
+    LibFleetDisband.disbandResources(_player(), fleetId, resourceCounts);
   }
 }
