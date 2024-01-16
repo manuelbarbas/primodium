@@ -380,6 +380,7 @@ export const config = mudConfig({
         cargo: "uint256",
         trainingTime: "uint256",
         hp: "uint256",
+        encryption: "uint256",
       },
     },
 
@@ -442,6 +443,7 @@ export const config = mudConfig({
         occupiedCargo: "uint256",
         maxHp: "uint256",
         hp: "uint256",
+        encryption: "uint256",
       },
     },
 

@@ -41,7 +41,16 @@ library LibFleet {
 
     FleetAttributes.set(
       fleetId,
-      FleetAttributesData({ speed: 0, attack: 0, defense: 0, cargo: 0, occupiedCargo: 0, hp: 0, maxHp: 0 })
+      FleetAttributesData({
+        speed: 0,
+        attack: 0,
+        defense: 0,
+        cargo: 0,
+        occupiedCargo: 0,
+        hp: 0,
+        maxHp: 0,
+        encryption: 0
+      })
     );
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
@@ -77,6 +86,11 @@ library LibFleet {
     bytes32 ownerSpaceRockEntity = OwnedBy.get(fleetId);
     uint256 unitLevel = UnitLevel.get(ownerSpaceRockEntity, unitPrototype);
     P_UnitData memory unitData = P_Unit.get(unitPrototype, unitLevel);
+
+    require(
+      unitData.encryption == 0 || (unitCount == 1 && fleetAttributes.encryption == 0),
+      "[Fleet] Fleet can only have one colony ship"
+    );
     uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototype);
     if (fleetUnitCount == 0) {
       if (unitData.speed < fleetAttributes.speed) {
@@ -88,6 +102,7 @@ library LibFleet {
     fleetAttributes.cargo += unitData.cargo * unitCount;
     fleetAttributes.maxHp += unitData.hp * unitCount;
     fleetAttributes.hp += unitData.hp * unitCount;
+    fleetAttributes.encryption += unitData.encryption * unitCount;
     FleetAttributes.set(fleetId, fleetAttributes);
     if (updatesUtility) {
       LibUnit.updateStoredUtilities(ownerSpaceRockEntity, unitPrototype, unitCount, true);
@@ -119,6 +134,7 @@ library LibFleet {
     fleetAttributes.attack -= unitData.attack * unitCount;
     fleetAttributes.defense -= unitData.defense * unitCount;
     fleetAttributes.cargo -= unitData.cargo * unitCount;
+    fleetAttributes.encryption -= unitData.encryption * unitCount;
     require(
       fleetAttributes.cargo >= FleetAttributes.getOccupiedCargo(fleetId),
       "[Fleet] Fleet doesn't have enough storage"

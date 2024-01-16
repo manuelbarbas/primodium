@@ -51,7 +51,16 @@ library LibFleetDisband {
     //reset attributes
     FleetAttributes.set(
       fleetId,
-      FleetAttributesData({ speed: 0, attack: 0, defense: 0, cargo: 0, occupiedCargo: 0, hp: 0, maxHp: 0 })
+      FleetAttributesData({
+        speed: 0,
+        attack: 0,
+        defense: 0,
+        cargo: 0,
+        occupiedCargo: 0,
+        hp: 0,
+        maxHp: 0,
+        encryption: 0
+      })
     );
 
     //reset fleet position

@@ -9,6 +9,8 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibFleet } from "libraries/LibFleet.sol";
+import { FleetsMap } from "libraries/FleetsMap.sol";
+import { LibFleetDisband } from "libraries/LibFleetDisband.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibFleetStance } from "libraries/LibFleetStance.sol";
 import { FleetsMap } from "libraries/FleetsMap.sol";
@@ -135,6 +137,7 @@ library LibFleetCombat {
     }
 
     resolveBattleDamage(battleResult, sumAttackerAttributes, sumTargetAttributes);
+    resolveBattleEncryption(battleResult, sumAttackerAttributes);
   }
 
   function spaceRockAttackFleet(
@@ -182,6 +185,25 @@ library LibFleetCombat {
     NewBattleResult.set(battleId, battleResult);
 
     resolveBattleDamage(battleResult, sumAttackerAttributes, sumTargetAttributes);
+  }
+
+  function resolveBattleEncryption(
+    NewBattleResultData memory battleResult,
+    FleetAttributesData memory sumAttackerAttributes
+  ) internal {
+    uint256 encryption = sumAttackerAttributes.encryption;
+    if (encryption == 0) return;
+    LibStorage.decreaseStoredResource(battleResult.targetEntity, uint8(EResource.SF_Encryption), encryption);
+    if (ResourceCount.get(battleResult.targetEntity, uint8(EResource.SF_Encryption)) == 0)
+      transferSpaceRockOwnership(battleResult.rock, battleResult.aggressorEntity);
+  }
+
+  function transferSpaceRockOwnership(bytes32 spaceRock, bytes32 newOwner) internal {
+    bytes32[] memory ownedFleets = FleetsMap.getFleetIds(spaceRock, FleetOwnedByKey);
+    for (uint256 i = 0; i < ownedFleets.length; i++) {
+      LibFleetDisband.disbandFleet(OwnedBy.get(spaceRock), ownedFleets[i]);
+    }
+    OwnedBy.set(spaceRock, newOwner);
   }
 
   function resolveBattleRaid(
@@ -353,7 +375,8 @@ library LibFleetCombat {
       cargo: 0,
       occupiedCargo: totalResources,
       hp: ResourceCount.get(spaceRock, uint8(EResource.SF_HP)),
-      maxHp: MaxResourceCount.get(spaceRock, uint8(EResource.SF_HP))
+      maxHp: MaxResourceCount.get(spaceRock, uint8(EResource.SF_HP)),
+      encryption: 0
     });
 
     defendingFleets = LibFleetStance.getDefendingFleets(spaceRock);
