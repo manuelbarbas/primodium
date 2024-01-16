@@ -8,16 +8,21 @@ import { world } from "src/network/world";
 import { bigintToNumber } from "src/util/bigint";
 import { getBlockTypeName } from "src/util/common";
 import { UnitEntityLookup } from "src/util/constants";
+import { getSystemId } from "src/util/encode";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const train = async (mud: MUD, buildingEntity: Entity, unit: EUnit, count: bigint) => {
   await execute(
-    mud,
-    (account) => account.worldContract.write.trainUnits([buildingEntity as Hex, unit, count]),
+    {
+      mud,
+      functionName: "trainUnits",
+      systemId: getSystemId("TrainUnitsSystem"),
+      args: [buildingEntity as Hex, unit, count],
+      delegate: true,
+    },
     {
       id: world.registerEntity(),
-      delegate: true,
     },
     (receipt) => {
       const buildingType = components.BuildingType.get(buildingEntity)?.value as Entity;

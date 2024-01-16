@@ -18,17 +18,13 @@ library LibUnit {
   /**
    * @dev Checks the requirements for training (producing) a specific unit in a building.
    * @param buildingEntity The identifier of the building where the unit is being trained.
-   * @param unit The type of unit to be trained.
+   * @param unitPrototype The type of unit to be trained.
    * @notice Checks if the unit exists and if the building can produce the specified unit.
    */
-  function checkTrainUnitsRequirements(bytes32 buildingEntity, EUnit unit) internal view {
+  function checkTrainUnitsRequirements(bytes32 buildingEntity, bytes32 unitPrototype) internal view {
     require(IsActive.get(buildingEntity), "[TrainUnitsSystem] Can not train units using an in active building");
 
-    // Ensure the unit is valid (within the defined range of unit types).
-    require(unit > EUnit.NULL && unit < EUnit.LENGTH, "[TrainUnitsSystem] Unit does not exist");
-
     // Determine the prototype of the unit based on its unit key.
-    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
     bytes32 buildingType = BuildingType.get(buildingEntity);
 
     uint256 level = Level.get(buildingEntity);

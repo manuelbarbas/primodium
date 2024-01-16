@@ -7,7 +7,7 @@ import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import { bigintToNumber } from "src/util/bigint";
 import { UnitEnumLookup } from "src/util/constants";
-import { toHex32 } from "src/util/encode";
+import { getSystemId, toHex32 } from "src/util/encode";
 import { UnitCountTuple } from "src/util/web3/types";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
@@ -22,18 +22,15 @@ export const send = async (
   to: Hex
 ) => {
   await execute(
-    mud,
-    (account) =>
-      account.worldContract.write.sendUnits([
-        unitCounts,
-        sendType,
-        { ...origin, parent: toHex32("0") },
-        { ...destination, parent: toHex32("0") },
-        to,
-      ]),
+    {
+      mud,
+      functionName: "sendUnits",
+      systemId: getSystemId("SendUnitsSystem"),
+      args: [unitCounts, sendType, { ...origin, parent: toHex32("0") }, { ...destination, parent: toHex32("0") }, to],
+      delegate: true,
+    },
     {
       id: world.registerEntity(),
-      delegate: true,
     },
     (receipt) => {
       const originAsteroid = components.ReversePosition.getWithKeys({ x: origin.x, y: origin.y })?.entity;

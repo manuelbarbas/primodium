@@ -91,9 +91,9 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     LastClaimedAt.set(rock, block.timestamp - 10);
 
     world.trainUnits(building, unit, 1);
-    LibUnit.claimUnits(Home.get(player));
+    LibUnit.claimUnits(rock);
     assertEq(ResourceCount.get(rock, Iron), 100, "resource count does not match");
-    assertEq(UnitCount.get(Home.get(player), unitPrototype), 100, "unit count does not match");
+    assertEq(UnitCount.get(rock, unitPrototype), 100, "unit count does not match");
   }
 
   function testInvalidBuilding() public {

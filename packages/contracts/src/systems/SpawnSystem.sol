@@ -22,14 +22,13 @@ contract SpawnSystem is PrimodiumSystem {
   /// @notice Checks if player is already spawned, sets initial level and associates asteroid
   /// @return bytes32 The entity ID of the spawned asteroid
   function spawn() public returns (bytes32) {
-    bytes32 playerEntity = _player(true);
+    bytes32 playerEntity = _player();
 
     require(!Spawned.get(playerEntity), "[SpawnSystem] Already spawned");
     uint256 gracePeriodLength = (P_GracePeriod.get() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
     GracePeriod.set(playerEntity, block.timestamp + gracePeriodLength);
 
     bytes32 asteroid = LibAsteroid.createPrimaryAsteroid(playerEntity);
-    Level.set(asteroid, 1);
     PositionData memory position = Position.get(MainBasePrototypeId);
     position.parent = asteroid;
 

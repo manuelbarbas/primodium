@@ -6,7 +6,7 @@ import { MUD } from "src/network/types";
 import { bigintToNumber } from "src/util/bigint";
 import { getBlockTypeName } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
+import { getSystemId, hashEntities } from "src/util/encode";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
@@ -16,11 +16,15 @@ export async function demolishBuilding(mud: MUD, building: Entity) {
   if (!position) return;
 
   await execute(
-    mud,
-    (account) => account.worldContract.write.destroy([{ ...position, parent: position.parent as Hex }]),
+    {
+      mud,
+      functionName: "destroy",
+      systemId: getSystemId("DestroySystem"),
+      args: [{ ...position, parent: position.parent as Hex }],
+      delegate: true,
+    },
     {
       id: hashEntities(TransactionQueueType.Demolish, building),
-      delegate: true,
     },
     (receipt) => {
       const buildingType = components.BuildingType.get(building)?.value as Entity;

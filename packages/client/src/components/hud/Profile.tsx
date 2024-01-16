@@ -20,9 +20,10 @@ import { Account } from "../transfer/Account";
 export const Profile = () => {
   const {
     playerAccount: { entity: playerEntity },
+    sessionAccount,
   } = useMud();
   const primodium = usePrimodium();
-  const delegate = components.Delegate.use(playerEntity)?.value;
+  const delegate = sessionAccount?.entity;
   const wETHBalance = components.WETHBalance.use(playerEntity)?.value ?? 0n;
   const asteroid = components.Home.use(playerEntity)?.value as Entity | undefined;
   const mainBase = components.Home.use(asteroid)?.value;

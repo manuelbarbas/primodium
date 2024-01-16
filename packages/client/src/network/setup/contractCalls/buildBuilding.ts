@@ -7,7 +7,7 @@ import { MUD } from "src/network/types";
 import { getBuildingTopLeft } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
 import { BuildingEntityLookup, TransactionQueueType } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
+import { getSystemId, hashEntities } from "src/util/encode";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
@@ -18,11 +18,16 @@ export const buildBuilding = async (mud: MUD, building: EBuilding, coord: Coord)
   const position = { ...coord, parent: activeAsteroid as Hex };
 
   await execute(
-    mud,
-    (account) => account.worldContract.write.build([building, position], { gas: 7000000n }),
+    {
+      mud,
+      functionName: "build",
+      systemId: getSystemId("BuildSystem"),
+      args: [building, position],
+      delegate: true,
+      options: { gas: 7000000n },
+    },
     {
       id: hashEntities(TransactionQueueType.Build, coord.x, coord.y),
-      delegate: true,
       type: TransactionQueueType.Build,
       metadata: {
         coord: getBuildingTopLeft(coord, BuildingEntityLookup[building]),

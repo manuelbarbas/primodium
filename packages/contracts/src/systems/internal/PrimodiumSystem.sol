@@ -2,9 +2,35 @@
 pragma solidity >=0.8.21;
 
 import { System } from "@latticexyz/world/src/System.sol";
-import { _player as player, _playerAddress as playerAddress } from "src/utils.sol";
+import { _player as player } from "src/utils.sol";
+
+import { getSystemResourceId } from "src/utils.sol";
+import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
+import { DUMMY_ADDRESS } from "src/constants.sol";
+
+import { S_ClaimSystem } from "systems/subsystems/S_ClaimSystem.sol";
 
 contract PrimodiumSystem is System {
+  modifier _claimResources(bytes32 spaceRockEntity) {
+    SystemCall.callWithHooksOrRevert(
+      DUMMY_ADDRESS,
+      getSystemResourceId("S_ClaimSystem"),
+      abi.encodeCall(S_ClaimSystem.claimResources, (spaceRockEntity)),
+      0
+    );
+    _;
+  }
+
+  modifier _claimUnits(bytes32 spaceRockEntity) {
+    SystemCall.callWithHooksOrRevert(
+      DUMMY_ADDRESS,
+      getSystemResourceId("S_ClaimSystem"),
+      abi.encodeCall(S_ClaimSystem.claimUnits, (spaceRockEntity)),
+      0
+    );
+    _;
+  }
+
   function addressToEntity(address a) internal pure returns (bytes32) {
     return bytes32(uint256(uint160((a))));
   }
@@ -13,11 +39,7 @@ contract PrimodiumSystem is System {
     return address(uint160(uint256((a))));
   }
 
-  function _player(bool highRisk) internal view returns (bytes32) {
-    return player(_msgSender(), highRisk);
-  }
-
-  function _playerAddress(bool highRisk) internal view returns (address) {
-    return playerAddress(_msgSender(), highRisk);
+  function _player() internal view returns (bytes32) {
+    return player(_msgSender());
   }
 }

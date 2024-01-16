@@ -5,18 +5,22 @@ import { components } from "src/network/components";
 import { MUD } from "src/network/types";
 import { bigintToNumber } from "src/util/bigint";
 import { TransactionQueueType } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
+import { getSystemId, hashEntities } from "src/util/encode";
 import { getAsteroidBounds } from "src/util/outOfBounds";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const upgradeRange = async (mud: MUD, asteroid: Entity) => {
   await execute(
-    mud,
-    (account) => account.worldContract.write.upgradeRange([asteroid as Hex]),
+    {
+      mud,
+      functionName: "upgradeRange",
+      systemId: getSystemId("UpgradeRangeSystem"),
+      args: [asteroid as Hex],
+      delegate: true,
+    },
     {
       id: hashEntities(TransactionQueueType.Upgrade, mud.playerAccount.entity),
-      delegate: true,
     },
     (receipt) => {
       const level = components.Level.get(asteroid)?.value ?? 1n;

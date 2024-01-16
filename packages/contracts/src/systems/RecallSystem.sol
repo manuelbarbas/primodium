@@ -11,8 +11,8 @@ contract RecallSystem is PrimodiumSystem {
    * @dev Recalls stationed units.
    * @param rockEntity The identifier of the target rock.
    */
-  function recallStationedUnits(bytes32 rockEntity) public {
-    bytes32 playerEntity = _player(false);
+  function recallStationedUnits(bytes32 rockEntity) public _claimResources(rockEntity) {
+    bytes32 playerEntity = _player();
     LibRecall.recallStationedUnits(playerEntity, rockEntity);
   }
 
@@ -21,8 +21,8 @@ contract RecallSystem is PrimodiumSystem {
    * @param rockEntity The identifier of the target rock.
    * @param arrivalId The identifier of the arrival to recall.
    */
-  function recallArrival(bytes32 rockEntity, bytes32 arrivalId) public {
-    bytes32 playerEntity = _player(false);
+  function recallArrival(bytes32 rockEntity, bytes32 arrivalId) public _claimResources(rockEntity) {
+    bytes32 playerEntity = _player();
     LibRecall.recallArrival(playerEntity, rockEntity, arrivalId);
   }
 
@@ -31,8 +31,8 @@ contract RecallSystem is PrimodiumSystem {
    * @param rockEntity The identifier of the target rock.
    * @param sendType the type of send to recall
    */
-  function recallAllOfSendType(bytes32 rockEntity, ESendType sendType) public {
-    bytes32 playerEntity = _player(false);
+  function recallAllOfSendType(bytes32 rockEntity, ESendType sendType) public _claimResources(rockEntity) {
+    bytes32 playerEntity = _player();
     LibRecall.recallAllArrivalsOfSendType(playerEntity, rockEntity, sendType);
   }
 
@@ -40,8 +40,8 @@ contract RecallSystem is PrimodiumSystem {
    * @dev Recalls all units sent by a player to a specific rock.
    * @param rockEntity The identifier of the target rock.
    */
-  function recallAll(bytes32 rockEntity) public {
-    bytes32 playerEntity = _player(false);
+  function recallAll(bytes32 rockEntity) public _claimResources(rockEntity) {
+    bytes32 playerEntity = _player();
     LibRecall.recallAllArrivals(playerEntity, rockEntity);
   }
 }

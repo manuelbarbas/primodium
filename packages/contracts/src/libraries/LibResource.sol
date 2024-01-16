@@ -103,10 +103,6 @@ library LibResource {
     LibStorage.decreaseStoredResource(spaceRockEntity, resource, resourceCost);
   }
 
-  function claimAllPlayerResources(bytes32 playerEntity) internal {
-    claimAllResources(Home.get(playerEntity));
-  }
-
   /// @notice Claims all unclaimed resources of a spaceRock
   /// @param spaceRockEntity ID of the spaceRock to claim
   function claimAllResources(bytes32 spaceRockEntity) internal {

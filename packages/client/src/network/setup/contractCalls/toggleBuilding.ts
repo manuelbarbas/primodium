@@ -6,7 +6,7 @@ import { MUD } from "src/network/types";
 import { bigintToNumber } from "src/util/bigint";
 import { getBlockTypeName } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
+import { getSystemId, hashEntities } from "src/util/encode";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
@@ -17,11 +17,15 @@ export async function toggleBuilding(mud: MUD, building: Entity) {
   if (!position || !active) return;
 
   await execute(
-    mud,
-    (account) => account.worldContract.write.toggleBuilding([{ ...position, parent: position.parent as Hex }]),
+    {
+      mud,
+      functionName: "toggleBuilding",
+      systemId: getSystemId("ToggleBuildingSystem"),
+      args: [{ ...position, parent: position.parent as Hex }],
+      delegate: true,
+    },
     {
       id: hashEntities(TransactionQueueType.Toggle, building),
-      delegate: true,
     },
     (receipt) => {
       const buildingType = components.BuildingType.get(building)?.value as Entity;

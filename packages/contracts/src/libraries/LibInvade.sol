@@ -18,6 +18,7 @@ library LibInvade {
    * @param rockEntity The identifier of the target rock.
    */
   function invade(bytes32 invader, bytes32 rockEntity) internal {
+    checkInvadeRequirements(invader, rockEntity);
     bytes32 defender = OwnedBy.get(rockEntity);
     if (defender == 0) return invadeNeutral(invader, rockEntity);
 

@@ -11,7 +11,7 @@ contract InvadeSystem is PrimodiumSystem {
    * @dev Initiates an invasion of a rock entity using the LibInvade library.
    * @param rockEntity The identifier of the target rock entity.
    */
-  function invade(bytes32 rockEntity) public {
-    LibInvade.invade(_player(false), rockEntity);
+  function invade(bytes32 rockEntity) public _claimResources(rockEntity) _claimUnits(rockEntity) {
+    LibInvade.invade(_player(), rockEntity);
   }
 }

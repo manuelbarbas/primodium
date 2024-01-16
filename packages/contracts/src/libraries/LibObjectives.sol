@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 // tables
-import { ProducedUnit, P_ProducedUnits, Home, P_RequiredExpansion, P_ProducedUnitsData, DefeatedPirate, P_DefeatedPirates, P_RequiredUnits, P_RequiredUnitsData, DestroyedUnit, P_DestroyedUnits, P_DestroyedUnitsData, P_ProducedResources, P_ProducedResourcesData, ProducedResource, RaidedResource, P_RaidedResources, P_RaidedResourcesData, P_EnumToPrototype, HasBuiltBuilding, P_HasBuiltBuildings, P_RequiredObjectives, CompletedObjective, P_RequiredBaseLevel, Level } from "codegen/index.sol";
+import { ProducedUnit, P_ProducedUnits, OwnedBy, UnitCount, P_RequiredExpansion, P_ProducedUnitsData, DefeatedPirate, P_DefeatedPirates, P_RequiredUnits, P_RequiredUnitsData, DestroyedUnit, P_DestroyedUnits, P_DestroyedUnitsData, P_ProducedResources, P_ProducedResourcesData, ProducedResource, RaidedResource, P_RaidedResources, P_RaidedResourcesData, P_EnumToPrototype, HasBuiltBuilding, P_HasBuiltBuildings, P_RequiredObjectives, CompletedObjective, P_RequiredBaseLevel, Level } from "codegen/index.sol";
 
 // libraries
 import { LibUnit } from "libraries/LibUnit.sol";
@@ -13,21 +13,27 @@ import { ObjectiveKey } from "src/Keys.sol";
 import { EObjectives } from "src/Types.sol";
 
 library LibObjectives {
-  function checkObjectiveRequirements(bytes32 playerEntity, EObjectives objectiveType) internal view {
+  function checkObjectiveRequirements(
+    bytes32 playerEntity,
+    bytes32 spaceRockEntity,
+    EObjectives objectiveType
+  ) internal view {
+    bytes32 spaceRockOwner = OwnedBy.get(spaceRockEntity);
+    require(spaceRockOwner == playerEntity, "[LibObjectives] Player does not own the space rock");
     checkIsValidObjective(objectiveType);
 
     bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(objectiveType));
 
     checkHasNotCompletedObjective(playerEntity, objectivePrototype);
     checkHasCompletedRequiredObjectives(playerEntity, objectivePrototype);
-    checkObjectiveMainBaseLevelRequirement(playerEntity, objectivePrototype);
-    checkObjectiveExpansionRequirement(playerEntity, objectivePrototype);
+    checkObjectiveMainBaseLevelRequirement(playerEntity, spaceRockEntity, objectivePrototype);
+    checkObjectiveExpansionRequirement(playerEntity, spaceRockEntity, objectivePrototype);
     checkHasBuiltRequiredBuildings(playerEntity, objectivePrototype);
     checkProducedResources(playerEntity, objectivePrototype);
     checkRaidedResources(playerEntity, objectivePrototype);
     checkDestroyedUnits(playerEntity, objectivePrototype);
     checkProducedUnits(playerEntity, objectivePrototype);
-    checkHasRequiredUnits(playerEntity, objectivePrototype);
+    checkHasRequiredUnits(playerEntity, spaceRockEntity, objectivePrototype);
     checkDefeatedPirateAsteroidRequirement(playerEntity, objectivePrototype);
   }
 
@@ -55,21 +61,28 @@ library LibObjectives {
     }
   }
 
-  function checkObjectiveMainBaseLevelRequirement(bytes32 playerEntity, bytes32 objective) internal view {
+  function checkObjectiveMainBaseLevelRequirement(
+    bytes32 playerEntity,
+    bytes32 spaceRockEntity,
+    bytes32 objective
+  ) internal view {
     uint256 requiredMainBaseLevel = P_RequiredBaseLevel.get(objective, 1);
     if (requiredMainBaseLevel > 1) {
       require(
-        LibBuilding.getBaseLevel(Home.get(playerEntity)) >= requiredMainBaseLevel,
+        LibBuilding.getBaseLevel(spaceRockEntity) >= requiredMainBaseLevel,
         "[LibObjectives] MainBase level requirement not met"
       );
     }
   }
 
-  function checkObjectiveExpansionRequirement(bytes32 playerEntity, bytes32 objective) internal view {
+  function checkObjectiveExpansionRequirement(
+    bytes32 playerEntity,
+    bytes32 spaceRockEntity,
+    bytes32 objective
+  ) internal view {
     uint256 requiredExpansionLevel = P_RequiredExpansion.get(objective);
     if (requiredExpansionLevel == 0) return;
-    bytes32 asteroid = Home.get(playerEntity);
-    uint256 playerExpansion = Level.get(asteroid);
+    uint256 playerExpansion = Level.get(spaceRockEntity);
     require(playerExpansion >= requiredExpansionLevel, "[LibObjectives] Expansion level requirement not met");
   }
 
@@ -123,11 +136,15 @@ library LibObjectives {
     }
   }
 
-  function checkHasRequiredUnits(bytes32 playerEntity, bytes32 objective) internal view {
+  function checkHasRequiredUnits(
+    bytes32 playerEntity,
+    bytes32 spaceRockEntity,
+    bytes32 objective
+  ) internal view {
     P_RequiredUnitsData memory requiredUnits = P_RequiredUnits.get(objective);
     for (uint256 i = 0; i < requiredUnits.units.length; i++) {
       require(
-        LibUnit.getUnitCountOnHomeAsteroid(playerEntity, requiredUnits.units[i]) >= requiredUnits.amounts[i],
+        UnitCount.get(spaceRockEntity, requiredUnits.units[i]) >= requiredUnits.amounts[i],
         "[LibObjectives] Player does not have the required units"
       );
     }

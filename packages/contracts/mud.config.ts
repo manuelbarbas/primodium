@@ -22,12 +22,22 @@ export const config = mudConfig({
     S_BattleSystem: {
       openAccess: false,
       accessList: [DUMMY_ADDRESS],
-      name: "S_BattleSystem",
     },
     S_SpawnPirateAsteroidSystem: {
       openAccess: false,
       accessList: [DUMMY_ADDRESS],
-      name: "S_SpawnPirateAsteroidSystem",
+    },
+    S_ProductionRateSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+    },
+    S_SpendResourcesSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+    },
+    S_RewardsSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
     },
   },
 
@@ -114,11 +124,6 @@ export const config = mudConfig({
     },
 
     /* --------------------------------- Player --------------------------------- */
-
-    Delegate: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "bytes32",
-    },
 
     /* ---------------------------------- Rocks --------------------------------- */
     AsteroidCount: {
