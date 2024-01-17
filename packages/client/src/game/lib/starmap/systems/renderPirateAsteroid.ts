@@ -2,7 +2,6 @@ import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 import {
   Entity,
   Has,
-  HasValue,
   defineComponentSystem,
   defineEnterSystem,
   defineUpdateSystem,
@@ -10,7 +9,6 @@ import {
 } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
-import { ERock } from "contracts/config/enums";
 import { Scene } from "engine/types";
 import { throttleTime } from "rxjs";
 import { components } from "src/network/components";
@@ -37,7 +35,6 @@ export const renderPirateAsteroid = (scene: Scene) => {
 
   const render = (entity: Entity, coord: Coord) => {
     scene.objectPool.removeGroup("asteroid_" + entity);
-    const asteroidType = components.RockType.get(entity)?.value;
 
     const ownedBy = components.OwnedBy.get(entity, {
       value: singletonEntity,
@@ -46,7 +43,6 @@ export const renderPirateAsteroid = (scene: Scene) => {
     const playerEntity = components.Account.get()?.value;
     if (!playerEntity || hashKeyEntity(PIRATE_KEY, playerEntity) !== ownedBy) return;
 
-    if (asteroidType !== ERock.Asteroid) return;
     const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entity);
 
     const spriteScale = 0.7;
@@ -178,10 +174,7 @@ export const renderPirateAsteroid = (scene: Scene) => {
   };
 
   const query = [
-    Has(components.RockType),
-    HasValue(components.RockType, {
-      value: ERock.Asteroid,
-    }),
+    Has(components.Asteroid),
     Has(components.Position),
     Has(components.PirateAsteroid),
     Has(components.OwnedBy),

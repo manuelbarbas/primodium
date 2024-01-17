@@ -2,14 +2,14 @@ import { Entity, Has, HasValue, Not, runQuery } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { components } from "src/network/components";
 
-export function getResourceKey(coord: Coord) {
+export function getResourceKey(coord: Coord, mapId = 1) {
   const resourceDimensions = { width: 37, length: 25 };
 
   if (coord.x < 0 || coord.x > resourceDimensions.width || coord.y < 0 || coord.y > resourceDimensions.length) {
     return null;
   }
 
-  const resource = components.P_Terrain.getWithKeys(coord, { value: 0 })?.value;
+  const resource = components.P_Terrain.getWithKeys({ mapId, ...coord }, { value: 0 })?.value;
 
   return resource;
 }

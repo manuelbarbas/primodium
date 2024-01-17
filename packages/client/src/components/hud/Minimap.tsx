@@ -113,7 +113,7 @@ export const Minimap = () => {
           <Button
             className="btn-sm flex text-accent border-secondary"
             onClick={() => {
-              const home = components.Home.get(playerEntity)?.asteroid as Entity | undefined;
+              const home = components.Home.get(playerEntity) as Entity | undefined;
               const pos = components.Position.get(home);
 
               if (pos) onCoordinateClick(pos);

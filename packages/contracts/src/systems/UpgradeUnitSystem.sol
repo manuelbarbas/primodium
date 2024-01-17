@@ -8,10 +8,12 @@ import { LibBuilding, LibResource, LibProduction } from "codegen/Libraries.sol";
 import { EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
+import { spendUpgradeResources } from "libraries/SubsystemCalls.sol";
+
 contract UpgradeUnitSystem is PrimodiumSystem {
   /// @notice Upgrades the specified unit for the sender
   /// @param unit The type of unit to upgrade
-  function upgradeUnit(bytes32 spaceRockEntity, EUnit unit) public {
+  function upgradeUnit(bytes32 spaceRockEntity, EUnit unit) public _claimResources(spaceRockEntity) {
     bytes32 playerEntity = _player();
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
     uint256 currentLevel = UnitLevel.get(playerEntity, unitPrototype);
@@ -25,6 +27,8 @@ contract UpgradeUnitSystem is PrimodiumSystem {
     );
 
     require(targetLevel <= P_MaxLevel.get(unitPrototype), "[UpgradeUnitSystem] Max level reached");
+
+    spendUpgradeResources(spaceRockEntity, unitPrototype, targetLevel);
 
     UnitLevel.set(playerEntity, unitPrototype, targetLevel);
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { Motherlode, P_ConsumesResource, ConsumptionRate, OwnedMotherlodes, OwnedBy, P_IsAdvancedResource, P_MiningRate, ResourceCount, BuildingType, Level, P_Production, P_ProductionData, P_IsUtility, ProductionRate } from "codegen/index.sol";
+import { P_ConsumesResource, ConsumptionRate, OwnedBy, P_IsAdvancedResource, P_MiningRate, ResourceCount, BuildingType, Level, P_Production, P_ProductionData, P_IsUtility, ProductionRate } from "codegen/index.sol";
 import { EResource } from "src/Types.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 
@@ -53,24 +53,23 @@ library LibProduction {
     bytes32 unitPrototype,
     uint256 level
   ) internal {
-    uint256 miningRate = P_MiningRate.get(unitPrototype, level);
-    if (miningRate == 0) return;
-    uint256 lastLevelMiningRate = P_MiningRate.get(unitPrototype, level - 1);
-    bytes32[] memory ownedMotherlodes = OwnedMotherlodes.get(playerEntity);
-
-    for (uint8 motherlodeIndex = 0; motherlodeIndex < ownedMotherlodes.length; motherlodeIndex++) {
-      bytes32 motherlode = ownedMotherlodes[motherlodeIndex];
-      uint8 motherlodeResource = Motherlode.getMotherlodeType(motherlode);
-      uint256 currProduction = ProductionRate.get(motherlode, motherlodeResource);
-      if (currProduction > 0) {
-        ProductionRate.set(motherlode, motherlodeResource, ((currProduction * miningRate) / lastLevelMiningRate));
-        ConsumptionRate.set(
-          motherlode,
-          P_ConsumesResource.get(motherlodeResource),
-          ((currProduction * miningRate) / lastLevelMiningRate)
-        );
-      }
-    }
+    // uint256 miningRate = P_MiningRate.get(unitPrototype, level);
+    // if (miningRate == 0) return;
+    // uint256 lastLevelMiningRate = P_MiningRate.get(unitPrototype, level - 1);
+    // bytes32[] memory ownedMotherlodes = OwnedMotherlodes.get(playerEntity);
+    // for (uint8 motherlodeIndex = 0; motherlodeIndex < ownedMotherlodes.length; motherlodeIndex++) {
+    //   bytes32 motherlode = ownedMotherlodes[motherlodeIndex];
+    //   uint8 motherlodeResource = Motherlode.getMotherlodeType(motherlode);
+    //   uint256 currProduction = ProductionRate.get(motherlode, motherlodeResource);
+    //   if (currProduction > 0) {
+    //     ProductionRate.set(motherlode, motherlodeResource, ((currProduction * miningRate) / lastLevelMiningRate));
+    //     ConsumptionRate.set(
+    //       motherlode,
+    //       P_ConsumesResource.get(motherlodeResource),
+    //       ((currProduction * miningRate) / lastLevelMiningRate)
+    //     );
+    //   }
+    // }
   }
 
   /// @notice increases the resource production for the spaceRock

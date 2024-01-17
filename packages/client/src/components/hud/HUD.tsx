@@ -26,7 +26,7 @@ import { Chat as _Chat } from "./chat/Chat";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
 import { Settings } from "./modals/settings/Settings";
 import { ReinforcementFleets } from "./panes/FriendlyFleets";
-import { OwnedMotherlodes } from "./panes/OwnedMotherlodes";
+import { OwnedAsteroids } from "./panes/OwnedAsteroids";
 import { BattleReports } from "./panes/battle-reports/BattleReports";
 import { HostileFleets } from "./panes/hostile-fleets/HostileFleets";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
@@ -36,8 +36,8 @@ export const GameHUD = () => {
     playerAccount: { entity: playerEntity },
   } = useMud();
 
-  const activeRock = components.ActiveRock.use()?.value;
-  const ownedBy = components.OwnedBy.use(activeRock ?? undefined)?.value;
+  const selectedRock = components.SelectedRock.use()?.value;
+  const ownedBy = components.OwnedBy.use(selectedRock)?.value;
   const isSpectating = ownedBy !== playerEntity;
   const uiScale = useSettingsStore((state) => state.uiScale);
 
@@ -72,7 +72,7 @@ export const GameHUD = () => {
           </HUD.TopRight>
         )}
 
-        {!isSpectating && <HUD.Right>{mapOpen ? <Motherlodes /> : <BuildingSelection />}</HUD.Right>}
+        {!isSpectating && <HUD.Right>{mapOpen ? <Asteroids /> : <BuildingSelection />}</HUD.Right>}
         {isSpectating && (
           <HUD.TopRight>
             <p className="text-accent text-2xl font-bold p-5 flex gap-2 items-center">
@@ -165,7 +165,7 @@ const BuildingSelection = () => {
   );
 };
 
-const Motherlodes = () => {
+const Asteroids = () => {
   return (
     <Tabs className="flex flex-row justify-center items-center gap-0" defaultIndex={-1}>
       <Tabs.Button
@@ -181,11 +181,11 @@ const Motherlodes = () => {
           }}
           className=" absolute tracking-widest uppercase font-bold -rotate-180 right-0 bottom-full my-4 mr-2 opacity-75 bg-secondary/25 rounded-box backdrop-blur-md p-2 group-hover:ring-1"
         >
-          motherlodes
+          asteroids
         </p>
       </Tabs.Button>
       <Tabs.Pane index={0} className="rounded-r-none border-r-0 z-10 h-[400px] w-[350px] overflow-x-hidden">
-        <OwnedMotherlodes />
+        <OwnedAsteroids />
       </Tabs.Pane>
     </Tabs>
   );
@@ -346,7 +346,7 @@ const HoverInfo = () => {
 
   if (hasComponent(components.BuildingType, hoverEntity)) return <BuildingInfo entity={hoverEntity} />;
 
-  if (hasComponent(components.RockType, hoverEntity)) return <RockInfo entity={hoverEntity} />;
+  if (hasComponent(components.Asteroid, hoverEntity)) return <RockInfo entity={hoverEntity} />;
 
   if (hasComponent(components.Arrival, hoverEntity)) return <ArrivalInfo entity={hoverEntity} />;
 

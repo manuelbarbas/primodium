@@ -18,7 +18,7 @@ export const Landing: React.FC = () => {
   const location = useLocation();
 
   const handlePlay = async () => {
-    const hasSpawned = !!components.Home.get(playerEntity)?.asteroid;
+    const hasSpawned = !!components.Home.get(playerEntity)?.value;
     if (!hasSpawned) {
       await spawn(mud);
     }
