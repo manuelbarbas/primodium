@@ -40,17 +40,20 @@ export const SpacerockMenu: React.FC = () => {
         </Tabs.Button>
         <Tabs.Pane index={0} className="w-full border-b-0 rounded-x-none rounded-b-none relative">
           <Resources />
+
           {ownedBy && (
-            <AccountDisplay
-              player={ownedBy as Entity}
-              showSpectate
-              className="absolute right-6 -top-1 border border-secondary text-xs bg-base-100 !p-2 rounded-box rounded-t-none"
-            />
+            <>
+              <AccountDisplay
+                player={ownedBy as Entity}
+                showSpectate
+                className="absolute right-6 -top-1 border border-secondary text-xs bg-base-100 !p-2 rounded-box rounded-t-none"
+              />
+              <GracePeriod
+                player={ownedBy as Entity}
+                className="absolute left-6 -top-1 border border-secondary text-xs p-2 bg-base-100 rounded-box rounded-t-none"
+              />
+            </>
           )}
-          <GracePeriod
-            player={ownedBy as Entity}
-            className="absolute left-6 -top-1 border border-secondary text-xs p-2 bg-base-100 rounded-box rounded-t-none"
-          />
         </Tabs.Pane>
       </Tabs>
     </div>

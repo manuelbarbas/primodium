@@ -4,9 +4,9 @@ import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 import { throttleTime } from "rxjs";
 import { components } from "src/network/components";
-import { singletonIndex, world } from "src/network/world";
+import { world } from "src/network/world";
 import { entityToColor } from "src/util/color";
-import { clampedIndex, entityToAddress, getRandomRange } from "src/util/common";
+import { clampedIndex, getRandomRange } from "src/util/common";
 import { EntityType, RockRelationship } from "src/util/constants";
 import { entityToPlayerName } from "src/util/name";
 import { getRockRelationship } from "src/util/spacerock";
@@ -23,6 +23,7 @@ import {
 } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
 import { ObjectText } from "../../common/object-components/text";
+import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
 
 export const renderAsteroid = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -31,23 +32,19 @@ export const renderAsteroid = (scene: Scene) => {
   const render = (entity: Entity, coord: Coord) => {
     scene.objectPool.removeGroup("asteroid_" + entity);
 
-    //TODO - fix conversion to Entity
-    const ownedBy = components.OwnedBy.get(entity, {
-      value: singletonIndex,
-    }).value as Entity;
+    const asteroidData = components.Asteroid.get(entity);
+    if (!asteroidData) throw new Error("Asteroid data not found");
 
-    const mainBaseEntity = components.Home.get(ownedBy, {
-      mainBase: "-1" as Entity,
-      asteroid: "-1" as Entity,
-    }).mainBase as Entity;
+    const ownedBy = components.OwnedBy.get(entity)?.value as Entity | undefined;
 
-    const mainBaseLevel = components.Level.get(mainBaseEntity, {
-      value: 1n,
-    }).value;
+    const homeAsteroid = ownedBy ? components.Home.get(ownedBy)?.value : undefined;
+    const mainBase = components.Home.get(homeAsteroid as Entity)?.value;
+
+    const mainBaseLevel = mainBase ? components.Level.get(mainBase as Entity)?.value ?? 1n : 1n;
 
     const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entity);
 
-    const spriteScale = 0.8;
+    const spriteScale = 0.34 + 0.05 * Number(asteroidData.maxLevel);
 
     const sharedComponents = [
       ObjectPosition({
@@ -189,10 +186,7 @@ export const renderAsteroid = (scene: Scene) => {
       }),
       OnOnce(async (gameObject) => {
         const ensNameData = await getEnsName(ownedBy);
-
-        const name =
-          ensNameData.ensName ??
-          (ensNameData.address ? entityToAddress(ensNameData.address ?? ownedBy, true) : entityToPlayerName(ownedBy));
+        const name = ensNameData.ensName ?? entityToPlayerName(ownedBy);
 
         gameObject.setText(name);
         gameObject.setFontSize(Math.max(8, Math.min(44, 16 / scene.camera.phaserCamera.zoom)));
@@ -213,19 +207,16 @@ export const renderAsteroid = (scene: Scene) => {
     ]);
   };
 
-  const query = [
-    Has(components.Asteroid),
-    Has(components.Position),
-    Has(components.OwnedBy),
-    Not(components.PirateAsteroid),
-  ];
+  const query = [Has(components.Asteroid), Has(components.Position), Not(components.PirateAsteroid)];
 
   defineEnterSystem(systemsWorld, query, ({ entity }) => {
     const coord = components.Position.get(entity);
+    const asteroidData = components.Asteroid.get(entity);
 
     if (!coord) return;
 
     render(entity, coord);
+    if (asteroidData?.spawnsSecondary) initializeSecondaryAsteroids(entity, coord);
   });
 };
 
