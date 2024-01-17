@@ -79,4 +79,17 @@ library LibMath {
     int128 distanceSquared = (a.x - b.x)**2 + (a.y - b.y)**2;
     return uint32(Math.toUInt(Math.sqrt(Math.fromInt(distanceSquared))));
   }
+
+  // https://www.mathsisfun.com/calculus/integration-rules.html
+  // this is the power rule B)
+  function integratePolynomial(
+    uint256 x,
+    uint256 exponentTimes1000,
+    uint256 coefficientTimes1000
+  ) private {
+    int128 exp = Math.divu(exponent + 1000, 1000);
+    int128 num = Math.pow(Math.fromUInt(x), exp);
+    uint256 coeff = Math.divu(coefficientTimes1000 / exponentTimes1000);
+    return Math.toUInt(Math.mul(Math.fromUInt(coeff), num));
+  }
 }

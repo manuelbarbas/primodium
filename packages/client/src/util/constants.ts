@@ -21,7 +21,7 @@ export enum Action {
 }
 
 export const SPEED_SCALE = BigInt(100);
-export const RESOURCE_SCALE = BigInt(100);
+export const RESOURCE_SCALE = BigInt(10e18);
 export const MULTIPLIER_SCALE = BigInt(100);
 export const UNIT_SPEED_SCALE = BigInt(100);
 

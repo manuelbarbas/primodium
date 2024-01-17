@@ -691,20 +691,25 @@ export const config = mudConfig({
     },
 
     /* ------------------------------- Marketplace ------------------------------ */
-    MarketplaceOrder: {
-      keySchema: { id: "bytes32" },
+
+    P_MarketplaceConfig: {
+      keySchema: {},
       valueSchema: {
-        seller: "bytes32",
-        orderType: "uint8",
-        resource: "uint8",
-        count: "uint256",
-        price: "uint256",
+        buyCoefficientTimes1000: "uint256",
+        sellCoefficientTimes1000: "uint256",
+        buyExponentTimes1000: "uint256",
+        sellExponentTimes1000: "uint256",
       },
     },
 
-    OrderCount: {
-      keySchema: { entity: "bytes32" },
+    P_InitialTokenPrice: {
+      keySchema: { id: "uint8" },
       valueSchema: "uint256",
+    },
+
+    TokenPool: {
+      keySchema: { resource: "uint8" },
+      valueSchema: { tokenSupply: "uint256" },
     },
   },
 });
