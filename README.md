@@ -64,6 +64,16 @@ The client is automatically deployed on Vercel from the main branch. The live in
 
 To clean types/ and abis/ in the git diff, run `pnpm clean` in the top level directory.
 
+## Vercel Environment Variables
+
+The chat functionality in the client is built on [Vercel Serverless functions](https://vercel.com/docs/functions/serverless-functions) and therefore requires Vercel environment variables to test. If you encounter any errors with the above steps while running the client, you may use the Vercel CLI to run the clien instead as follows:
+
+1. In the top level directory, run `vercel pull` and setup the Vercel project with the following settings. Ask Emerson if you don't have access to Vercel.
+   - Org: `primodium`
+   - Project: `primodium-testnet2`
+2. Check that the `.vercel` exists in the top level directory.
+3. Run `pnpm dev:vercel` to start the client.
+
 # Config
 
 ## There are four sources of configuration for the game:
