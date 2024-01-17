@@ -17,8 +17,8 @@ import { getUpgradeInfo } from "src/util/upgrade";
 export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
   const mud = useMud();
   const { playerAccount } = mud;
-  const mainBaseEntity = components.Home.use(playerAccount.entity)?.mainBase as Entity;
-  const homeAsteroid = components.Home.use(playerAccount.entity)?.asteroid as Entity;
+  const homeAsteroid = components.Home.use(playerAccount.entity)?.value as Entity;
+  const mainBaseEntity = components.Home.use(homeAsteroid)?.value as Entity;
   const mainBaseLevel = components.Level.use(mainBaseEntity, {
     value: 1n,
   }).value;

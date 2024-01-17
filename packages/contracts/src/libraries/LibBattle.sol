@@ -84,7 +84,7 @@ library LibBattle {
       defenseCounts[i] += defenderUnitCount;
     }
 
-    if (Home.get(defenderEntity).asteroid == rockEntity) {
+    if (Home.get(defenderEntity) == rockEntity) {
       defensePoints += ResourceCount.get(rockEntity, uint8(EResource.U_Defense));
       defensePoints +=
         (defensePoints * ResourceCount.get(rockEntity, uint8(EResource.M_DefenseMultiplier))) /
@@ -149,15 +149,15 @@ library LibBattle {
       uint256 defenderUnitsLost = br.defenderStartingUnits[i] - br.defenderUnitsLeft[i];
 
       LibUnit.decreaseUnitCount(br.rock, unitTypes[i], defenderUnitsLost);
-      LibUnit.updateStoredUtilities(Home.getAsteroid(br.attacker), unitTypes[i], attackerUnitsLost, false);
-      LibUnit.updateStoredUtilities(Home.getAsteroid(br.defender), unitTypes[i], defenderUnitsLost, false);
+      LibUnit.updateStoredUtilities(Home.get(br.attacker), unitTypes[i], attackerUnitsLost, false);
+      LibUnit.updateStoredUtilities(Home.get(br.defender), unitTypes[i], defenderUnitsLost, false);
 
       DestroyedUnit.set(br.attacker, unitTypes[i], DestroyedUnit.get(br.attacker, unitTypes[i]) + defenderUnitsLost);
       DestroyedUnit.set(br.defender, unitTypes[i], DestroyedUnit.get(br.defender, unitTypes[i]) + attackerUnitsLost);
 
       if (br.winner == br.attacker) {
         bytes32 attackerRock = (br.attacker == br.winner && sendType == ESendType.Raid)
-          ? Home.getAsteroid(br.attacker)
+          ? Home.get(br.attacker)
           : br.rock;
         LibUnit.increaseUnitCount(attackerRock, unitTypes[i], br.attackerUnitsLeft[i]);
       }

@@ -31,49 +31,15 @@ contract RecallSystemTest is PrimodiumTest {
 
   function testRecallUnitsFromMotherlode() public {
     setupRecall();
-    Home.setAsteroid(player, origin);
+    Home.set(player, origin);
     world.recallStationedUnits(destination);
     assertEq(UnitCount.get(destination, unitPrototype), 0);
     assertEq(UnitCount.get(origin, unitPrototype), 70);
   }
 
-  function testRecallUnitsProductionFromMotherlode() public {
-    setupRecall();
-    Home.setAsteroid(player, origin);
-    P_MiningRate.set(unitPrototype, 0, 1);
-    Motherlode.set(destination, uint8(ESize.Medium), uint8(EResource.Iron));
-    ProductionRate.set(destination, uint8(EResource.Iron), 50);
-    world.recallStationedUnits(destination);
-    assertEq(ProductionRate.get(destination, uint8(EResource.Iron)), 0);
-  }
-
-  function testRecallUnitsProductionClaimFromMotherlode() public {
-    setupRecall();
-    Home.setAsteroid(player, origin);
-    OwnedBy.set(origin, player);
-    P_MiningRate.set(unitPrototype, 0, 1);
-    OwnedBy.set(destination, player);
-    Motherlode.set(destination, uint8(ESize.Small), uint8(EResource.Titanium));
-    MaxResourceCount.set(destination, uint8(EResource.R_Titanium), 10000000);
-    MaxResourceCount.set(origin, uint8(EResource.Titanium), 10000000);
-    ProductionRate.set(destination, uint8(EResource.Titanium), 50);
-    ConsumptionRate.set(destination, uint8(EResource.R_Titanium), 50);
-    ResourceCount.set(destination, uint8(EResource.R_Titanium), 10000000);
-    LastClaimedAt.set(destination, block.timestamp);
-    console.log("before warp ", block.timestamp);
-    vm.warp(block.timestamp + 10);
-    console.log("warped to ", block.timestamp);
-    world.recallStationedUnits(destination);
-    console.log("after recall");
-    assertEq(ProducedResource.get(player, uint8(EResource.Titanium)), 500, "produced resources does not match");
-    assertEq(ResourceCount.get(origin, uint8(EResource.Titanium)), 500, "resource count does not match");
-    assertEq(ProductionRate.get(destination, uint8(EResource.Titanium)), 0, "production rate does not match");
-    assertEq(ConsumptionRate.get(destination, uint8(EResource.R_Titanium)), 0, "consumption rate does not match");
-  }
-
   function setupRecall() public {
-    RockType.set(origin, uint8(ERock.Asteroid));
-    RockType.set(destination, uint8(ERock.Motherlode));
+    Asteroid.setIsAsteroid(origin, true);
+    Asteroid.setIsAsteroid(destination, true);
     ReversePosition.set(originPosition.x, originPosition.y, origin);
     ReversePosition.set(destinationPosition.x, destinationPosition.y, destination);
     OwnedBy.set(origin, player);

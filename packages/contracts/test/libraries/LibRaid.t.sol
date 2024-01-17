@@ -33,8 +33,8 @@ contract LibRaidTest is PrimodiumTest {
     super.setUp();
     vm.startPrank(creator);
     player = addressToEntity(creator);
-    Home.setAsteroid(player, homeRock);
-    Home.setAsteroid(enemy, rock);
+    Home.set(player, homeRock);
+    Home.set(enemy, rock);
     br.attacker = player;
     br.winner = player;
     bytes32[] memory unitTypes = new bytes32[](NUM_UNITS);
@@ -125,10 +125,10 @@ contract LibRaidTest is PrimodiumTest {
   function testRaid() public {
     ResourceCount.set(rock, Iron, 100);
     MaxResourceCount.set(homeRock, Iron, 100);
-    Home.setAsteroid(player, homeRock);
+    Home.set(player, homeRock);
     OwnedBy.set(rock, enemy);
-    RockType.set(rock, uint8(ERock.Asteroid));
-    RockType.set(homeRock, uint8(ERock.Asteroid));
+    Asteroid.setIsAsteroid(rock, true);
+    Asteroid.setIsAsteroid(homeRock, true);
     UnitCount.set(rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
@@ -158,10 +158,10 @@ contract LibRaidTest is PrimodiumTest {
     ResourceCount.set(rock, Iron, 100);
     MaxResourceCount.set(homeRock, Iron, 100);
     ResourceCount.set(rock, uint8(EResource.U_Unraidable), 100);
-    Home.setAsteroid(enemy, rock);
+    Home.set(enemy, rock);
     OwnedBy.set(rock, enemy);
-    RockType.set(rock, uint8(ERock.Asteroid));
-    RockType.set(homeRock, uint8(ERock.Asteroid));
+    Asteroid.setIsAsteroid(rock, true);
+    Asteroid.setIsAsteroid(homeRock, true);
     UnitCount.set(rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
@@ -192,10 +192,10 @@ contract LibRaidTest is PrimodiumTest {
     MaxResourceCount.set(homeRock, Iron, 100);
     ResourceCount.set(rock, uint8(EResource.U_AdvancedUnraidable), 100);
     P_IsAdvancedResource.set(Iron, true);
-    Home.setAsteroid(enemy, rock);
+    Home.set(enemy, rock);
     OwnedBy.set(rock, enemy);
-    RockType.set(rock, uint8(ERock.Asteroid));
-    RockType.set(homeRock, uint8(ERock.Asteroid));
+    Asteroid.setIsAsteroid(rock, true);
+    Asteroid.setIsAsteroid(homeRock, true);
     UnitCount.set(rock, unit1, 100);
     vm.warp(1000);
     Arrival memory arrival = Arrival({
@@ -221,25 +221,20 @@ contract LibRaidTest is PrimodiumTest {
     assertEq(ResourceCount.get(rock, Iron), 100, "Enemy Iron");
   }
 
-  function testFailRaidMotherlode() public {
-    RockType.set(rock, uint8(ERock.Motherlode));
-    world.raid(rock);
-  }
-
   function testFailRaidUnowned() public {
-    RockType.set(rock, uint8(ERock.Asteroid));
+    Asteroid.setIsAsteroid(rock, true);
     world.raid(rock);
   }
 
   function testFailRaidSelfOwned() public {
-    RockType.set(rock, uint8(ERock.Asteroid));
+    Asteroid.setIsAsteroid(rock, true);
     OwnedBy.set(rock, player);
     world.raid(rock);
   }
 
   function testRaidArrivalCount() public {
     MaxResourceCount.set(homeRock, uint8(EResource.U_Vessel), 2);
-    RockType.set(rock, uint8(ERock.Motherlode));
+    Asteroid.setIsAsteroid(rock, true);
 
     P_Unit.set(unit1, 0, P_UnitData({ attack: 100, defense: 100, speed: 200, cargo: 100, trainingTime: 0 }));
     Arrival memory arrival = Arrival({

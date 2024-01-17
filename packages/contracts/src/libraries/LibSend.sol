@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { ESendType, Arrival, ERock, EResource } from "src/Types.sol";
-import { Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ArrivalCount, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { ESendType, Arrival, EResource } from "src/Types.sol";
+import { Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, ArrivalCount, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 import { ArrivalsMap } from "libraries/ArrivalsMap.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { SendArgs } from "src/Types.sol";
@@ -98,68 +98,5 @@ library LibSend {
       block.timestamp +
       ((LibMath.distance(origin, destination) * config.travelTime * WORLD_SPEED_SCALE * UNIT_SPEED_SCALE) /
         (config.worldSpeed * unitSpeed));
-  }
-
-  /// @notice Checks if movement between two positions is allowed.
-  /// @param origin Origin position.
-  /// @param destination Destination position.
-  /// @param playerEntity Entity initiating send.
-  /// @param to Destination entity.
-  /// @param sendType Type of send (invade, raid, reinforce).
-  function checkMovementRules(
-    bytes32 origin,
-    bytes32 destination,
-    bytes32 playerEntity,
-    bytes32 to,
-    ESendType sendType
-  ) internal view {
-    require(
-      ResourceCount.get(origin, uint8(EResource.U_MaxMoves)) > ArrivalCount.get(playerEntity),
-      "[SendUnits] Reached max move count"
-    );
-
-    ERock destinationType = ERock(RockType.get(destination));
-    ERock originType = ERock(RockType.get(origin));
-
-    if (PirateAsteroid.get(destination).playerEntity != 0) {
-      require(
-        !DefeatedPirate.get(playerEntity, PirateAsteroid.get(destination).prototype),
-        "[SendUnits] Cannot send to defeated pirate"
-      );
-      require(sendType == ESendType.Raid, "[SendUnits] Can only raid pirate asteroids");
-      require(
-        PirateAsteroid.get(destination).playerEntity == playerEntity,
-        "[SendUnits] Cannot send to other player pirate asteroid"
-      );
-    } else if (sendType != ESendType.Reinforce && destinationType == ERock.Asteroid) {
-      require(GracePeriod.get(to) <= block.timestamp, "[SendUnits] Cannot send to player in grace period");
-    }
-
-    require(originType != ERock.NULL && destinationType != ERock.NULL, "[SendUnits] Must travel between rocks");
-    bytes32 destinationOwner = OwnedBy.get(destination);
-
-    require(origin != destination, "[SendUnits] Origin and destination cannot be the same");
-
-    if (originType == ERock.Asteroid) {
-      require(OwnedBy.get(origin) == playerEntity, "[SendUnits] Must move from an asteroid you own");
-    }
-
-    if (destinationType == ERock.Motherlode) {
-      require(originType != ERock.Motherlode, "[SendUnits] Cannot move between motherlodes");
-    }
-
-    if (sendType == ESendType.Invade) {
-      require(playerEntity != to, "[SendUnits] Cannot invade yourself");
-      require(destinationType == ERock.Motherlode, "[SendUnits] Must only invade a motherlode");
-    }
-
-    if (sendType == ESendType.Raid) {
-      require(playerEntity != to && to != 0, "[SendUnits] Cannot raid yourself");
-      require(destinationType == ERock.Asteroid, "[SendUnits] Must only raid an asteroid");
-    }
-
-    if (sendType == ESendType.Reinforce) {
-      require(destinationOwner == to && to != 0, "[SendUnits] Must only reinforce motherlode current owner");
-    }
   }
 }

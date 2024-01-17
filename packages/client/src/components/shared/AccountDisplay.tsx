@@ -1,5 +1,6 @@
 import { Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { FaEye } from "react-icons/fa";
 import { useMud } from "src/hooks";
 import { useAccount } from "src/hooks/useAccount";
@@ -11,7 +12,7 @@ import { getRockRelationship } from "src/util/spacerock";
 import { Button } from "../core/Button";
 
 export const AccountDisplay: React.FC<{
-  player?: Entity;
+  player: Entity | undefined;
   className?: string;
   showSpectate?: boolean;
   noColor?: boolean;
@@ -19,27 +20,27 @@ export const AccountDisplay: React.FC<{
   showAddress?: boolean;
 }> = ({ player, className, noColor, showSpectate = false, disabled, showAddress }) => {
   const { playerAccount } = useMud();
-  const playerEntity = player ?? playerAccount.entity;
+  const playerEntity = player ?? singletonEntity;
 
-  const homeAsteroid = components.Home.use(playerEntity)?.asteroid;
-  const myHomeAsteroid = components.Home.use(playerAccount.entity)?.asteroid;
+  const homeAsteroid = components.Home.use(playerEntity)?.value;
+  const myHomeAsteroid = components.Home.use(playerAccount.entity)?.value;
   const primodium = usePrimodium();
   const { transitionToScene } = primodium.api().scene;
   const { allianceName, loading, address, linkedAddress } = useAccount(playerEntity, showAddress);
   const playerColor = RockRelationshipColors[getRockRelationship(playerEntity, myHomeAsteroid as Entity)];
+  const noPlayer = playerEntity === singletonEntity;
 
   return (
     <Button
       className={`btn-xs btn-ghost p-0 inline-flex flex font-bold gap-1 ${className} ${loading ? "animate-pulse" : ""}`}
-      disabled={disabled}
+      disabled={disabled || noPlayer}
       onClick={async () => {
-        components.ActiveRock.set({ value: homeAsteroid as Entity });
         components.SelectedRock.set({ value: homeAsteroid as Entity });
         await transitionToScene(Scenes.Starmap, Scenes.Asteroid, 0);
         components.MapOpen.set({ value: false });
       }}
     >
-      {showSpectate && <FaEye />}
+      {showSpectate && !noPlayer && <FaEye />}
       {allianceName && (
         <span className="font-bold text-accent" style={{ color: noColor ? "auto" : entityToColor(player) }}>
           [{allianceName.toUpperCase()}]

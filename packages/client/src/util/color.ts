@@ -1,10 +1,11 @@
 import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { components } from "src/network/components";
 import { hashEntities } from "src/util/encode";
 
 const entityColor = new Map<Entity, string>();
 export function entityToColor(entity: Entity | undefined) {
-  if (!entity) return "#000000";
+  if (!entity || entity === singletonEntity) return "#999999";
   const alliance = components.PlayerAlliance.get(entity)?.alliance as Entity;
   entity = alliance ?? entity;
   if (entity === components.Account.get()?.value) return "#22d3ee";

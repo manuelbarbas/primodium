@@ -12,8 +12,9 @@ export const setupKeybinds = (scene: Scene) => {
 
   const mainbaseKeybind = addListener(KeybindActions.Base, () => {
     //TODO - fix converting to entity
-    const playerEntity = components.Account.get()?.value;
-    const mainBase = components.Home.get(playerEntity)?.mainBase as Entity | undefined;
+    const selectedRockEntity = components.SelectedRock.get()?.value;
+    if (!selectedRockEntity) return;
+    const mainBase = components.Home.get(selectedRockEntity) as Entity | undefined;
 
     if (!mainBase) return;
 

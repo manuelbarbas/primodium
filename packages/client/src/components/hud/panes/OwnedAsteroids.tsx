@@ -1,15 +1,11 @@
 import { Scenes } from "@game/constants";
 import { useEntityQuery } from "@latticexyz/react";
-import { Entity, HasValue } from "@latticexyz/recs";
-import { ERock, ESize } from "contracts/config/enums";
+import { Entity, Has, HasValue } from "@latticexyz/recs";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
-import { IconLabel } from "src/components/core/IconLabel";
 import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
-import { getBlockTypeName } from "src/util/common";
-import { ResourceImage } from "src/util/constants";
 import { getSpaceRockInfo } from "src/util/spacerock";
 
 export const LabeledValue: React.FC<{
@@ -24,12 +20,9 @@ export const LabeledValue: React.FC<{
   );
 };
 
-const Motherlode: React.FC<{ motherlodeId: Entity }> = ({ motherlodeId }) => {
+const Asteroid: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
   const primodium = usePrimodium();
-  const motherlodeInfo = getSpaceRockInfo(primodium, motherlodeId);
-  const resource = motherlodeInfo.motherlodeData.motherlodeResource;
-  const size = motherlodeInfo.motherlodeData.size;
-  const sizeName = size === ESize.Small ? "sm" : size === ESize.Medium ? "md" : "lg";
+  const asteroidInfo = getSpaceRockInfo(primodium, asteroid);
 
   return (
     <Button
@@ -48,59 +41,46 @@ const Motherlode: React.FC<{ motherlodeId: Entity }> = ({ motherlodeId }) => {
 
         const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
 
-        components.Send.setDestination(motherlodeInfo.entity);
-        components.SelectedRock.set({ value: motherlodeInfo.entity });
+        components.Send.setDestination(asteroidInfo.entity);
+        components.SelectedRock.set({ value: asteroidInfo.entity });
 
         pan({
-          x: motherlodeInfo.position.x,
-          y: motherlodeInfo.position.y,
+          x: asteroidInfo.position.x,
+          y: asteroidInfo.position.y,
         });
 
         zoomTo(2);
       }}
     >
-      <img src={motherlodeInfo.imageUri} className=" w-9 h-9 bg-neutral" />
+      <img src={asteroidInfo.imageUri} className=" w-9 h-9 bg-neutral" />
       <div className="flex flex-col h-fit text-xs gap-1">
-        <div className="flex gap-1 items-center justify-center">
-          <p>{sizeName}</p>
-          <IconLabel imageUri={ResourceImage.get(resource) ?? ""} tooltipText={getBlockTypeName(resource)} />
-        </div>
+        <div className="flex gap-1 items-center justify-center"></div>
         <p className="whitespace-nowrap font-medium text-white/50">
-          [{motherlodeInfo.position.x},{motherlodeInfo.position.y}]
+          [{asteroidInfo.position.x},{asteroidInfo.position.y}]
         </p>
       </div>
     </Button>
   );
 };
 
-export const OwnedMotherlodes: React.FC = () => {
+export const OwnedAsteroids: React.FC = () => {
   const {
     playerAccount: { entity: playerEntity },
   } = useMud();
 
-  const primodium = usePrimodium();
-  const query = [
-    HasValue(components.OwnedBy, { value: playerEntity }),
-    HasValue(components.RockType, { value: ERock.Motherlode }),
-  ];
-
-  // this can be optimised by fetching just the size of the motherlode
-  const motherlodes = useEntityQuery(query).sort((a, b) => {
-    const aMotherlode = getSpaceRockInfo(primodium, a);
-    const bMotherlode = getSpaceRockInfo(primodium, b);
-    return (bMotherlode.motherlodeData.size ?? 0) - (aMotherlode.motherlodeData.size ?? 0);
-  });
+  const query = [HasValue(components.OwnedBy, { value: playerEntity }), Has(components.Asteroid)];
+  const asteroids = useEntityQuery(query);
 
   return (
     <>
-      {motherlodes.length === 0 && (
+      {asteroids.length === 0 && (
         <SecondaryCard className="w-full h-full flex text-xs items-center justify-center font-bold">
           <p className="opacity-50 uppercase">you control no MOTHERLODES</p>
         </SecondaryCard>
       )}
       <div className="grid grid-cols-2 gap-1">
-        {motherlodes.map((entity) => {
-          return <Motherlode key={entity} motherlodeId={entity} />;
+        {asteroids.map((entity) => {
+          return <Asteroid key={entity} asteroid={entity} />;
         })}
       </div>
     </>
