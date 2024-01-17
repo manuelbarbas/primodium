@@ -166,9 +166,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         worldSpeed: 100n,
         tax: 10n, // out of 1000
       },
-      P_GameConfig2: {
-        wETHAddress: encodeAddress("0"),
-      },
 
       P_UnitPrototypes: {
         value: MUDEnums.EUnit.reduce(
@@ -229,18 +226,18 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   InitialPoolSupply: {
     keys: [],
     levels: {
-      [MUDEnums.EResource.indexOf("Iron")]: { P_InitialTokenPrice: { value: 100n } },
-      [MUDEnums.EResource.indexOf("Copper")]: { P_InitialTokenPrice: { value: 100n } },
-      [MUDEnums.EResource.indexOf("Lithium")]: { P_InitialTokenPrice: { value: 100n } },
-      [MUDEnums.EResource.indexOf("Gold")]: { P_InitialTokenPrice: { value: 100n } },
-      [MUDEnums.EResource.indexOf("Titanium")]: { P_InitialTokenPrice: { value: 100n } },
-      [MUDEnums.EResource.indexOf("Iridium")]: { P_InitialTokenPrice: { value: 100n } },
-      [MUDEnums.EResource.indexOf("Kimberlite")]: { P_InitialTokenPrice: { value: 100n } },
-      [MUDEnums.EResource.indexOf("Platinum")]: { P_InitialTokenPrice: { value: 100n } },
-      [MUDEnums.EResource.indexOf("IronPlate")]: { P_InitialTokenPrice: { value: 100n } },
-      [MUDEnums.EResource.indexOf("Alloy")]: { P_InitialTokenPrice: { value: 100n } },
-      [MUDEnums.EResource.indexOf("PVCell")]: { P_InitialTokenPrice: { value: 100n } },
-      [MUDEnums.EResource.indexOf("RocketFuel")]: { P_InitialTokenPrice: { value: 100n } },
+      [MUDEnums.EResource.indexOf("Iron")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
+      [MUDEnums.EResource.indexOf("Copper")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
+      [MUDEnums.EResource.indexOf("Lithium")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
+      [MUDEnums.EResource.indexOf("Gold")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
+      [MUDEnums.EResource.indexOf("Titanium")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
+      [MUDEnums.EResource.indexOf("Iridium")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
+      [MUDEnums.EResource.indexOf("Kimberlite")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
+      [MUDEnums.EResource.indexOf("Platinum")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
+      [MUDEnums.EResource.indexOf("IronPlate")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
+      [MUDEnums.EResource.indexOf("Alloy")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
+      [MUDEnums.EResource.indexOf("PVCell")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
+      [MUDEnums.EResource.indexOf("RocketFuel")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
     },
   },
   /* -------------------------------- Buildings ------------------------------- 

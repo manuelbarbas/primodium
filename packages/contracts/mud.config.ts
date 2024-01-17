@@ -71,13 +71,6 @@ export const config = mudConfig({
       },
     },
 
-    P_GameConfig2: {
-      keySchema: {},
-      valueSchema: {
-        wETHAddress: "address",
-      },
-    },
-
     Position: {
       keySchema: { entity: "bytes32" },
       valueSchema: {
@@ -685,13 +678,8 @@ export const config = mudConfig({
 
     /* ------------------------------- Marketplace ------------------------------ */
 
-    P_InitialTokenPrice: {
-      keySchema: { id: "uint8" },
-      valueSchema: "uint256",
-    },
-
     PoolSupply: {
-      keySchema: { resource: "uint8" },
+      keySchema: { id: "uint8" },
       valueSchema: "uint256",
     },
   },

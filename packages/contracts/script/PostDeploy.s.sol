@@ -10,13 +10,7 @@ import { createPrototypes } from "codegen/Prototypes.sol";
 import { createTerrain } from "codegen/scripts/CreateTerrain.sol";
 import { P_GameConfig, P_GameConfig2 } from "codegen/index.sol";
 
-import { PuppetModule } from "@latticexyz/world-modules/src/modules/puppet/PuppetModule.sol";
-import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
-import { registerERC20 } from "@latticexyz/world-modules/src/modules/erc20-puppet/registerERC20.sol";
-import { ERC20MetadataData } from "@latticexyz/world-modules/src/modules/erc20-puppet/tables/ERC20Metadata.sol";
 import { StandardDelegationsModule } from "@latticexyz/world-modules/src/modules/std-delegations/StandardDelegationsModule.sol";
-
-uint256 constant WETH_SUPPLY = 100_000_000 ether; // tokens
 
 contract PostDeploy is Script {
   function run(address worldAddress) external {
@@ -39,17 +33,6 @@ contract PostDeploy is Script {
     setupHooks(world);
 
     // this must be set after the prototypes or else it will be overwritten
-
-    world.installModule(new PuppetModule(), new bytes(0));
-    IERC20Mintable token = registerERC20(
-      world,
-      "wETH",
-      ERC20MetadataData({ decimals: 18, name: "wETH", symbol: unicode"💎" })
-    );
-
-    P_GameConfig2.setWETHAddress(address(token));
-    P_GameConfig.setAdmin(admin);
-    token.mint(admin, WETH_SUPPLY);
 
     vm.stopBroadcast();
   }
