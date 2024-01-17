@@ -22,7 +22,7 @@ contract BuildSystemTest is PrimodiumTest {
   function testBuildLargeBuilding() public {
     ResourceAccess.set(ROOT_NAMESPACE_ID, creator, true);
 
-    Level.set(Home.getAsteroid(playerEntity), 2);
+    Level.set(Home.get(playerEntity), 2);
     int32[] memory blueprint = get2x2Blueprint();
     bytes32[] memory keys = new bytes32[](1);
     keys[0] = IronMinePrototypeId;
@@ -127,7 +127,7 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testBuildWithRequiredResources() public {
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     ResourceCount.set(spaceRockEntity, Iron, 100);
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(Iron);
@@ -142,7 +142,7 @@ contract BuildSystemTest is PrimodiumTest {
   function testBuildWithProductionDependencies() public {
     uint256 originalProduction = 100;
     uint256 productionReduction = 10;
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     ProductionRate.set(spaceRockEntity, Iron, originalProduction);
     ConsumptionRate.set(spaceRockEntity, Iron, 0);
     P_RequiredDependencyData memory requiredDependenciesData = P_RequiredDependencyData(
@@ -159,7 +159,7 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testBuildWithResourceProductionIncrease() public {
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     uint256 increase = 69;
     P_ProductionData memory data1 = P_ProductionData(new uint8[](1), new uint256[](1));
     data1.resources[0] = uint8(EResource.Iron);
@@ -175,7 +175,7 @@ contract BuildSystemTest is PrimodiumTest {
     data[0] = uint8(Iron);
     P_ListMaxResourceUpgrades.set(IronMinePrototypeId, 1, data);
     P_ByLevelMaxResourceUpgrades.set(IronMinePrototypeId, Iron, 1, 50);
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     MaxResourceCount.set(spaceRockEntity, Iron, 0);
     world.build(EBuilding.IronMine, getIronPosition(creator));
     assertEq(MaxResourceCount.get(spaceRockEntity, Iron), 50);

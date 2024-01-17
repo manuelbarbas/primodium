@@ -2,10 +2,14 @@ import { formatAndWriteSolidity } from "@latticexyz/common/codegen";
 import fs from "fs";
 import path from "path";
 
-type JsonCoords = ReturnType<typeof csvToJsonCoords>;
-
-export async function terraingen(csvSrc: string, outputBaseDirectory: string) {
-  const json = csvToJsonCoords(csvSrc);
+type terrainFile = { id: string; filePath: string };
+type JsonCoords = {
+  coord: { x: number; y: number };
+  index: number;
+  value: string;
+};
+export async function terraingen(csvSrcs: terrainFile[], outputBaseDirectory: string) {
+  const json = csvToJsonCoords(csvSrcs);
   const content = generateContent(json);
   const finalContent = addContext(content);
   const fullOutputPath = path.join(outputBaseDirectory, `scripts/CreateTerrain.sol`);
@@ -20,32 +24,36 @@ const numberBase: Record<string, string> = {
   66: "Gold",
 };
 
-function csvToJsonCoords(csvUrl: string) {
-  const csv = fs.readFileSync(csvUrl, "utf-8");
-  const lines = csv.split("\n");
-  const result = [];
-  for (let i = 0; i < lines.length; i++) {
-    const currentLine = lines[i]
-      .replace(/\s+/g, "")
-      .split(",")
-      .filter((x) => !!x);
-    for (let j = 0; j < currentLine.length; j++) {
-      if (currentLine[j] == "0") continue;
-      const value = numberBase[currentLine[j]];
-      if (!value) throw new Error(`Invalid value ${currentLine[j]} at line ${i}, column ${j}`);
-      result.push({
-        coord: { x: j, y: i },
-        value: value,
-      });
+function csvToJsonCoords(csvUrls: terrainFile[]) {
+  const result: Array<JsonCoords> = [];
+
+  csvUrls.forEach((csvUrl) => {
+    const csv = fs.readFileSync(csvUrl.filePath, "utf-8");
+    const lines = csv.split("\n");
+    for (let i = 0; i < lines.length; i++) {
+      const currentLine = lines[i]
+        .replace(/\s+/g, "")
+        .split(",")
+        .filter((x) => !!x);
+      for (let j = 0; j < currentLine.length; j++) {
+        if (currentLine[j] == "0") continue;
+        const value = numberBase[currentLine[j]];
+        if (!value) throw new Error(`Invalid value ${currentLine[j]} at line ${i}, column ${j}`);
+        result.push({
+          coord: { x: j, y: i },
+          index: Number(csvUrl.id),
+          value: value,
+        });
+      }
     }
-  }
+  });
 
   return result;
 }
 
-function generateContent(jsonContent: JsonCoords) {
+function generateContent(jsonContent: JsonCoords[]) {
   return jsonContent
-    .map((elem) => `P_Terrain.set(${elem.coord.x}, ${elem.coord.y}, uint8(EResource.${elem.value}));`)
+    .map((elem) => `P_Terrain.set(${elem.index}, ${elem.coord.x}, ${elem.coord.y}, uint8(EResource.${elem.value}));`)
     .join("");
 }
 

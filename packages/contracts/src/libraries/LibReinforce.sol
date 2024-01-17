@@ -35,10 +35,10 @@ library LibReinforce {
       if (arrival.unitCounts[i] == 0) continue;
       uint256 count = arrival.unitCounts[i];
       LibUnit.increaseUnitCount(rockEntity, unitPrototypes[i], count);
-      //todo in future updates this condition will be removed and Home.getAsteroid will be the space rocks in the arrival
+      //todo in future updates this condition will be removed and Home.get will be the space rocks in the arrival
       if (arrival.from != playerEntity) {
-        LibUnit.updateStoredUtilities(Home.getAsteroid(arrival.to), unitPrototypes[i], count, true);
-        LibUnit.updateStoredUtilities(Home.getAsteroid(arrival.from), unitPrototypes[i], count, false);
+        LibUnit.updateStoredUtilities(Home.get(arrival.to), unitPrototypes[i], count, true);
+        LibUnit.updateStoredUtilities(Home.get(arrival.from), unitPrototypes[i], count, false);
       }
     }
     ArrivalCount.set(arrival.from, ArrivalCount.get(arrival.from) - 1);
@@ -64,7 +64,7 @@ library LibReinforce {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (arrival.unitCounts[i] == 0) continue;
-      LibUnit.increaseUnitCount(Home.getAsteroid(arrival.from), unitPrototypes[i], arrival.unitCounts[i]);
+      LibUnit.increaseUnitCount(Home.get(arrival.from), unitPrototypes[i], arrival.unitCounts[i]);
     }
     ArrivalCount.set(arrival.from, ArrivalCount.get(arrival.from) - 1);
     ArrivalsMap.remove(playerEntity, rockEntity, arrivalId);

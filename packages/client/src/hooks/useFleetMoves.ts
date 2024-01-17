@@ -6,7 +6,7 @@ import { useMud } from "./useMud";
 
 export const useFleetMoves = () => {
   const playerEntity = useMud().playerAccount.entity;
-  const home = components.Home.get(playerEntity)?.asteroid;
+  const home = components.Home.get(playerEntity)?.value;
   if (!home) throw new Error("No home found");
 
   const maxMoves = useFullResourceCount(EntityType.FleetMoves, home as Entity).resourceCount;
