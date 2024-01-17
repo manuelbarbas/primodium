@@ -228,17 +228,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   },
 
   /* ------------------------------- Marketplace ------------------------------ */
-  P_Marketplace: {
-    keys: [],
-    tables: {
-      P_MarketplaceConfig: {
-        buyCoefficientTimes1000: BigInt(0.00015e3),
-        sellCoefficientTimes1000: BigInt(0.00015e3),
-        buyExponentTimes1000: 1000n,
-        sellExponentTimes1000: 1000n,
-      },
-    },
-  },
+
   InitialPoolSupply: {
     keys: [],
     levels: {
