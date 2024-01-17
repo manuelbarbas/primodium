@@ -2,6 +2,7 @@
 pragma solidity >=0.8.21;
 
 import "test/PrimodiumTest.t.sol";
+import { ABDKMath64x64 as Math } from "abdk/ABDKMath64x64.sol";
 
 contract LibMathTest is PrimodiumTest {
   function setUp() public override {
@@ -45,5 +46,15 @@ contract LibMathTest is PrimodiumTest {
     assertEq(LibMath.distance(a, b), 10);
     b.y = 100;
     assertEq(LibMath.distance(a, b), 100);
+  }
+
+  function testPow() public {
+    uint256 value = 100;
+    uint256 expTimes100 = 50;
+
+    assertApproxEqAbs(Math.toUInt(LibMath.pow(Math.fromUInt(value), Math.divu(expTimes100, 100))), 10, 1);
+
+    expTimes100 = 150;
+    assertApproxEqAbs(Math.toUInt(LibMath.pow(Math.fromUInt(value), Math.divu(expTimes100, 100))), 1000, 1);
   }
 }

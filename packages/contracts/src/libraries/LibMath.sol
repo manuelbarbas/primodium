@@ -80,16 +80,13 @@ library LibMath {
     return uint32(Math.toUInt(Math.sqrt(Math.fromInt(distanceSquared))));
   }
 
-  // https://www.mathsisfun.com/calculus/integration-rules.html
-  // this is the power rule B)
-  function integratePolynomial(
-    uint256 x,
-    uint256 exponentTimes1000,
-    uint256 coefficientTimes1000
-  ) private {
-    int128 exp = Math.divu(exponent + 1000, 1000);
-    int128 num = Math.pow(Math.fromUInt(x), exp);
-    uint256 coeff = Math.divu(coefficientTimes1000 / exponentTimes1000);
-    return Math.toUInt(Math.mul(Math.fromUInt(coeff), num));
+  // https://github.com/abdk-consulting/abdk-libraries-solidity/issues/26
+  function pow(int128 x, int128 y) internal pure returns (int128) {
+    require(x >= 0, "Negative base not allowed");
+    if (x == 0) {
+      require(y > 0, "0^0 is undefined");
+      return 0;
+    }
+    return Math.exp_2(Math.mul(y, Math.log_2(x)));
   }
 }
