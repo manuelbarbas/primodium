@@ -259,7 +259,7 @@ contract LibUnitTest is PrimodiumTest {
     P_GameConfig.setUnitProductionRate(100);
     QueueItemUnitsData memory item = QueueItemUnitsData(unit, 100);
     UnitProductionQueue.enqueue(building, item);
-    LibUnit.increaseUnitCount(Home.getAsteroid(player), unit, 100);
+    LibUnit.increaseUnitCount(Home.getAsteroid(player), unit, 100, false);
     assertEq(UnitCount.get(Home.getAsteroid(player), unit), 150);
   }
 
@@ -326,10 +326,10 @@ contract LibUnitTest is PrimodiumTest {
 
   function testDecreaseUnitCount() public {
     UnitCount.set(rock, unit, 100);
-    LibUnit.decreaseUnitCount(rock, unit, 50);
+    LibUnit.decreaseUnitCount(rock, unit, 50, false);
     assertEq(UnitCount.get(rock, unit), 50);
 
-    LibUnit.decreaseUnitCount(rock, unit, 100);
+    LibUnit.decreaseUnitCount(rock, unit, 100, false);
     assertEq(UnitCount.get(rock, unit), 0);
   }
 }

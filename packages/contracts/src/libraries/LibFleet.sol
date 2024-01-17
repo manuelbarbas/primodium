@@ -22,7 +22,6 @@ library LibFleet {
     uint256[NUM_UNITS] calldata unitCounts,
     uint256[NUM_RESOURCE] calldata resourceCounts
   ) internal returns (bytes32 fleetId) {
-    require(OwnedBy.get(spaceRock) == playerEntity, "[Fleet] Can only create fleet on owned space rock");
     require(ResourceCount.get(spaceRock, uint8(EResource.U_MaxMoves)) > 0, "[Fleet] Space rock has no max moves");
     LibStorage.decreaseStoredResource(spaceRock, uint8(EResource.U_MaxMoves), 1);
     //require(ResourceCount.get(spaceRock, EResource.U_Cargo) > 0, "[Fleet] Space rock has no cargo capacity"))
@@ -39,7 +38,10 @@ library LibFleet {
       })
     );
 
-    FleetAttributes.set(fleetId, FleetAttributesData({ speed: 0, attack: 0, defense: 0, cargo: 0, occupiedCargo: 0 }));
+    FleetAttributes.set(
+      fleetId,
+      FleetAttributesData({ speed: 0, attack: 0, defense: 0, cargo: 0, occupiedCargo: 0, hp: 0, maxHp: 0 })
+    );
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
@@ -47,8 +49,8 @@ library LibFleet {
       if (unitCounts[i] == 0) continue;
       uint256 rockUnitCount = UnitCount.get(spaceRock, unitPrototypes[i]);
       require(rockUnitCount >= unitCounts[i], "[Fleet] Not enough units to add to fleet");
-      LibUnit.decreaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i]);
-      increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i]);
+      LibUnit.decreaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], false);
+      increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], false);
     }
 
     for (uint8 i = 0; i < NUM_RESOURCE; i++) {
@@ -63,250 +65,11 @@ library LibFleet {
     FleetsMap.add(spaceRock, FleetIncomingKey, fleetId);
   }
 
-  function transferUnitsFromFleetToFleet(
-    bytes32 playerEntity,
-    bytes32 fromFleetId,
-    bytes32 fleetId,
-    uint256[NUM_UNITS] calldata unitCounts
-  ) internal {
-    require(OwnedBy.get(OwnedBy.get(fromFleetId)) == playerEntity, "[Fleet] Can only transfer units from owned fleet");
-
-    bytes32 spaceRock = FleetMovement.getDestination(fromFleetId);
-    require(
-      FleetMovement.getArrivalTime(fromFleetId) <= block.timestamp,
-      "[Fleet] From fleet has not reached space rock yet"
-    );
-
-    require(
-      FleetMovement.getDestination(fleetId) == spaceRock,
-      "[Fleet] To fleet is not on same space rock as from fleet"
-    );
-    require(
-      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
-      "[Fleet] to Fleet has not reached space rock yet"
-    );
-
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    bool sameOwner = OwnedBy.get(fleetId) == OwnedBy.get(fromFleetId);
-    for (uint8 i = 0; i < NUM_UNITS; i++) {
-      increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i]);
-      decreaseFleetUnit(fromFleetId, unitPrototypes[i], unitCounts[i]);
-      if (!sameOwner) {
-        LibUnit.updateStoredUtilities(OwnedBy.get(fleetId), unitPrototypes[i], unitCounts[i], true);
-        LibUnit.updateStoredUtilities(OwnedBy.get(fromFleetId), unitPrototypes[i], unitCounts[i], false);
-      }
-    }
-  }
-
-  function transferResourcesFromFleetToFleet(
-    bytes32 playerEntity,
-    bytes32 fromFleetId,
-    bytes32 fleetId,
-    uint256[NUM_RESOURCE] calldata resourceCounts
-  ) internal {
-    require(OwnedBy.get(OwnedBy.get(fromFleetId)) == playerEntity, "[Fleet] Can only transfer units from owned fleet");
-
-    bytes32 spaceRock = FleetMovement.getDestination(fromFleetId);
-    require(
-      FleetMovement.getDestination(fleetId) == spaceRock,
-      "[Fleet] To fleet is not on same space rock as from fleet"
-    );
-
-    require(
-      FleetMovement.getArrivalTime(fromFleetId) <= block.timestamp,
-      "[Fleet] From fleet has not reached space rock yet"
-    );
-    require(
-      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
-      "[Fleet] to Fleet has not reached space rock yet"
-    );
-
-    for (uint8 i = 0; i < NUM_RESOURCE; i++) {
-      if (resourceCounts[i] == 0) continue;
-      increaseFleetResource(fleetId, i, resourceCounts[i]);
-      decreaseFleetResource(fromFleetId, i, resourceCounts[i]);
-    }
-  }
-
-  function transferUnitsFromSpaceRockToFleet(
-    bytes32 playerEntity,
-    bytes32 spaceRock,
-    bytes32 fleetId,
-    uint256[NUM_UNITS] calldata unitCounts
-  ) internal {
-    require(OwnedBy.get(spaceRock) == playerEntity, "[Fleet] Can only transfer units from owned space rock");
-    require(FleetMovement.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not on space rock");
-    require(FleetMovement.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
-
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    bool isOwner = OwnedBy.get(fleetId) == spaceRock;
-    for (uint8 i = 0; i < NUM_UNITS; i++) {
-      uint256 rockUnitCount = UnitCount.get(spaceRock, unitPrototypes[i]);
-      require(rockUnitCount >= unitCounts[i], "[Fleet] Not enough units on space rock to add to fleet");
-      LibUnit.decreaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i]);
-      if (!isOwner) LibUnit.updateStoredUtilities(spaceRock, unitPrototypes[i], unitCounts[i], false);
-      increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i]);
-    }
-  }
-
-  function transferUnitsFromFleetToSpaceRock(
-    bytes32 playerEntity,
-    bytes32 spaceRock,
-    bytes32 fleetId,
-    uint256[NUM_UNITS] calldata unitCounts
-  ) internal {
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only transfer units from owned fleet");
-    require(FleetMovement.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not in space rock orbit");
-    require(FleetMovement.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
-
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    bool isOwner = OwnedBy.get(fleetId) == spaceRock;
-    for (uint8 i = 0; i < NUM_UNITS; i++) {
-      uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototypes[i]);
-      require(fleetUnitCount >= unitCounts[i], "[Fleet] Not enough units to remove from fleet");
-      LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i]);
-      if (!isOwner) LibUnit.updateStoredUtilities(spaceRock, unitPrototypes[i], unitCounts[i], true);
-      decreaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i]);
-    }
-  }
-
-  function transferResourcesFromSpaceRockToFleet(
-    bytes32 playerEntity,
-    bytes32 spaceRock,
-    bytes32 fleetId,
-    uint256[NUM_RESOURCE] calldata resourceCounts
-  ) internal {
-    require(OwnedBy.get(spaceRock) == playerEntity, "[Fleet] Can only transfer resources from owned space rock");
-    require(FleetMovement.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not on space rock");
-    require(FleetMovement.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
-
-    for (uint8 i = 0; i < NUM_RESOURCE; i++) {
-      if (resourceCounts[i] == 0) continue;
-      uint256 rockResourceCount = ResourceCount.get(spaceRock, i);
-      require(rockResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
-      LibStorage.decreaseStoredResource(spaceRock, i, resourceCounts[i]);
-      increaseFleetResource(fleetId, i, resourceCounts[i]);
-    }
-  }
-
-  function transferResourcesFromFleetToSpaceRock(
-    bytes32 playerEntity,
-    bytes32 spaceRock,
-    bytes32 fleetId,
-    uint256[NUM_RESOURCE] calldata resourceCounts
-  ) internal {
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only transfer resources from owned fleet");
-    require(FleetMovement.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not in space rock orbit");
-    require(FleetMovement.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
-    for (uint8 i = 0; i < NUM_RESOURCE; i++) {
-      if (resourceCounts[i] == 0) continue;
-      uint256 fleetResourceCount = ResourceCount.get(fleetId, i);
-      require(fleetResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
-      LibStorage.increaseStoredResource(spaceRock, i, resourceCounts[i]);
-      decreaseFleetResource(fleetId, i, resourceCounts[i]);
-    }
-  }
-
-  //this is required so unit cargo space can be updated correctly without loss of resources
-  function transferUnitsAndResourcesFromFleetToSpaceRock(
-    bytes32 playerEntity,
-    bytes32 spaceRock,
-    bytes32 fleetId,
-    uint256[NUM_UNITS] calldata unitCounts,
-    uint256[NUM_RESOURCE] calldata resourceCounts
-  ) internal {
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only transfer units from owned fleet");
-    require(FleetMovement.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not in space rock orbit");
-    require(FleetMovement.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
-
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-
-    bool isOwner = OwnedBy.get(fleetId) == spaceRock;
-    for (uint8 i = 0; i < NUM_UNITS; i++) {
-      LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i]);
-      if (!isOwner) LibUnit.updateStoredUtilities(spaceRock, unitPrototypes[i], unitCounts[i], true);
-    }
-
-    transferResourcesFromFleetToSpaceRock(playerEntity, spaceRock, fleetId, resourceCounts);
-
-    for (uint8 i = 0; i < NUM_UNITS; i++) {
-      uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototypes[i]);
-      require(fleetUnitCount >= unitCounts[i], "[Fleet] Not enough units to remove from fleet");
-      decreaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i]);
-    }
-  }
-
-  function transferUnitsAndResourcesFromSpaceRockToFleet(
-    bytes32 playerEntity,
-    bytes32 spaceRock,
-    bytes32 fleetId,
-    uint256[NUM_UNITS] calldata unitCounts,
-    uint256[NUM_RESOURCE] calldata resourceCounts
-  ) internal {
-    require(OwnedBy.get(spaceRock) == playerEntity, "[Fleet] Can only transfer units from owned space rock");
-    require(FleetMovement.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not on space rock");
-    require(FleetMovement.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
-
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-
-    for (uint8 i = 0; i < NUM_UNITS; i++) {
-      increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i]);
-    }
-
-    transferResourcesFromSpaceRockToFleet(playerEntity, spaceRock, fleetId, resourceCounts);
-    bool isOwner = OwnedBy.get(fleetId) == spaceRock;
-    for (uint8 i = 0; i < NUM_UNITS; i++) {
-      LibUnit.decreaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i]);
-      if (!isOwner) LibUnit.updateStoredUtilities(spaceRock, unitPrototypes[i], unitCounts[i], false);
-    }
-  }
-
-  function transferUnitsAndResourcesFromFleetToFleet(
-    bytes32 playerEntity,
-    bytes32 fromFleetId,
-    bytes32 fleetId,
-    uint256[NUM_UNITS] calldata unitCounts,
-    uint256[NUM_RESOURCE] calldata resourceCounts
-  ) internal {
-    require(OwnedBy.get(OwnedBy.get(fromFleetId)) == playerEntity, "[Fleet] Can only transfer units from owned fleet");
-
-    bytes32 spaceRock = FleetMovement.getDestination(fromFleetId);
-    require(
-      FleetMovement.getArrivalTime(fromFleetId) <= block.timestamp,
-      "[Fleet] From fleet has not reached space rock yet"
-    );
-
-    require(
-      FleetMovement.getDestination(fleetId) == spaceRock,
-      "[Fleet] To fleet is not on same space rock as from fleet"
-    );
-    require(
-      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
-      "[Fleet] to Fleet has not reached space rock yet"
-    );
-
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    bool sameOwner = OwnedBy.get(fleetId) == OwnedBy.get(fromFleetId);
-    for (uint8 i = 0; i < NUM_UNITS; i++) {
-      increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i]);
-      if (!sameOwner) {
-        LibUnit.updateStoredUtilities(OwnedBy.get(fleetId), unitPrototypes[i], unitCounts[i], true);
-        LibUnit.updateStoredUtilities(OwnedBy.get(fromFleetId), unitPrototypes[i], unitCounts[i], false);
-      }
-    }
-
-    transferResourcesFromFleetToFleet(playerEntity, fromFleetId, fleetId, resourceCounts);
-
-    for (uint8 i = 0; i < NUM_UNITS; i++) {
-      uint256 fleetUnitCount = UnitCount.get(fromFleetId, unitPrototypes[i]);
-      decreaseFleetUnit(fromFleetId, unitPrototypes[i], fleetUnitCount);
-    }
-  }
-
   function increaseFleetUnit(
     bytes32 fleetId,
     bytes32 unitPrototype,
-    uint256 unitCount
+    uint256 unitCount,
+    bool updatesUtility
   ) internal {
     if (unitCount == 0) return;
     FleetAttributesData memory fleetAttributes = FleetAttributes.get(fleetId);
@@ -322,14 +85,21 @@ library LibFleet {
     fleetAttributes.attack += unitData.attack * unitCount;
     fleetAttributes.defense += unitData.defense * unitCount;
     fleetAttributes.cargo += unitData.cargo * unitCount;
+    fleetAttributes.maxHp += unitData.hp * unitCount;
+    fleetAttributes.hp += unitData.hp * unitCount;
     FleetAttributes.set(fleetId, fleetAttributes);
+    if (updatesUtility) {
+      LibUnit.updateStoredUtilities(ownerSpaceRockEntity, unitPrototype, unitCount, true);
+    }
+
     UnitCount.set(fleetId, unitPrototype, fleetUnitCount + unitCount);
   }
 
   function decreaseFleetUnit(
     bytes32 fleetId,
     bytes32 unitPrototype,
-    uint256 unitCount
+    uint256 unitCount,
+    bool updatesUtility
   ) internal {
     if (unitCount == 0) return;
 
@@ -352,9 +122,15 @@ library LibFleet {
       fleetAttributes.cargo >= FleetAttributes.getOccupiedCargo(fleetId),
       "[Fleet] Fleet doesn't have enough storage"
     );
-
+    uint256 hpDifferential = unitData.hp * unitCount;
+    fleetAttributes.maxHp -= hpDifferential;
+    if (fleetAttributes.hp > fleetAttributes.maxHp) {
+      fleetAttributes.hp = fleetAttributes.maxHp;
+    }
+    if (updatesUtility) {
+      LibUnit.updateStoredUtilities(ownerSpaceRockEntity, unitPrototype, unitCount, false);
+    }
     UnitCount.set(fleetId, unitPrototype, fleetUnitCount - unitCount);
-    FleetAttributes.setOccupiedCargo(fleetId, FleetAttributes.getOccupiedCargo(fleetId) - (unitData.cargo * unitCount));
   }
 
   function increaseFleetResource(
@@ -391,19 +167,14 @@ library LibFleet {
     bytes32 spaceRock
   ) internal {
     bytes32 spaceRockOwner = OwnedBy.get(spaceRock);
-    require(OwnedBy.get(spaceRockOwner) == playerEntity, "[Fleet] Can only transfer units from owned fleet");
-    require(OwnedBy.get(spaceRock) == playerEntity, "[Fleet] Can only land fleet on owned space rock");
-
     require(FleetMovement.getDestination(fleetId) == spaceRock, "[Fleet] Fleet is not in space rock orbit");
-    require(FleetMovement.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
     bool isOwner = spaceRockOwner == spaceRock;
     for (uint8 i = 0; i < NUM_UNITS; i++) {
       uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototypes[i]);
-      LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], fleetUnitCount);
-      if (!isOwner) LibUnit.updateStoredUtilities(spaceRock, unitPrototypes[i], fleetUnitCount, true);
+      LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], fleetUnitCount, !isOwner);
     }
 
     for (uint8 i = 0; i < NUM_RESOURCE; i++) {
@@ -415,37 +186,38 @@ library LibFleet {
 
     for (uint8 i = 0; i < NUM_UNITS; i++) {
       uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototypes[i]);
-      decreaseFleetUnit(fleetId, unitPrototypes[i], fleetUnitCount);
+      decreaseFleetUnit(fleetId, unitPrototypes[i], fleetUnitCount, !isOwner);
     }
-
-    LibStorage.increaseStoredResource(spaceRockOwner, uint8(EResource.U_MaxMoves), 1);
-    FleetsMap.remove(spaceRockOwner, FleetOwnedByKey, fleetId);
-    FleetsMap.remove(spaceRock, FleetIncomingKey, fleetId);
-    OwnedBy.deleteRecord(fleetId);
+    if (!isOwner) {
+      FleetMovement.set(
+        fleetId,
+        FleetMovementData({
+          arrivalTime: block.timestamp,
+          sendTime: block.timestamp,
+          origin: spaceRockOwner,
+          destination: spaceRockOwner
+        })
+      );
+      FleetsMap.remove(spaceRock, FleetIncomingKey, fleetId);
+      FleetsMap.add(spaceRockOwner, FleetIncomingKey, fleetId);
+    }
   }
 
   function mergeFleets(bytes32 playerEntity, bytes32[] calldata fleets) internal {
     require(fleets.length > 1, "[Fleet] Can only merge more than one fleet");
     bytes32 spaceRock = FleetMovement.getDestination(fleets[0]);
-    require(FleetMovement.getArrivalTime(fleets[0]) <= block.timestamp, "[Fleet] Fleet has not reached space rock yet");
-    require(OwnedBy.get(OwnedBy.get(fleets[0])) == playerEntity, "[Fleet] Can only merge owned fleets");
+    bytes32 spaceRockOwner = OwnedBy.get(fleets[0]);
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[NUM_UNITS] memory unitCounts;
-
     for (uint256 i = 1; i < fleets.length; i++) {
-      require(OwnedBy.get(OwnedBy.get(fleets[i])) == playerEntity, "[Fleet] Can only merge owned fleets");
-      require(FleetMovement.getDestination(fleets[i]) == spaceRock, "[Fleet] Fleets must be on same space rock");
-      require(
-        FleetMovement.getArrivalTime(fleets[i]) <= block.timestamp,
-        "[Fleet] Fleet has not reached space rock yet"
-      );
       for (uint8 j = 0; j < NUM_UNITS; j++) {
         unitCounts[j] += UnitCount.get(fleets[i], unitPrototypes[j]);
       }
     }
+
     for (uint8 i = 0; i < NUM_UNITS; i++) {
-      increaseFleetUnit(fleets[0], unitPrototypes[i], unitCounts[i]);
+      increaseFleetUnit(fleets[0], unitPrototypes[i], unitCounts[i], false);
     }
 
     for (uint8 i = 0; i < NUM_RESOURCE; i++) {
@@ -464,159 +236,30 @@ library LibFleet {
     for (uint256 i = 1; i < fleets.length; i++) {
       for (uint8 j = 0; j < NUM_UNITS; j++) {
         uint256 fleetUnitCount = UnitCount.get(fleets[i], unitPrototypes[j]);
-        decreaseFleetUnit(fleets[i], unitPrototypes[j], fleetUnitCount);
+        decreaseFleetUnit(fleets[i], unitPrototypes[j], fleetUnitCount, false);
       }
 
-      bytes32 spaceRockOwner = OwnedBy.get(fleets[i]);
-
-      LibStorage.increaseStoredResource(spaceRockOwner, uint8(EResource.U_MaxMoves), 1);
-      OwnedBy.deleteRecord(fleets[i]);
-
-      FleetsMap.remove(spaceRockOwner, FleetOwnedByKey, fleets[i]);
-      FleetsMap.remove(spaceRock, FleetIncomingKey, fleets[i]);
+      resetFleetOrbit(fleets[i]);
     }
   }
 
-  function sendFleet(
-    bytes32 playerEntity,
-    bytes32 fleetId,
-    bytes32 destination
-  ) internal {
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only send owned fleet");
-    require(
-      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
-      "[Fleet] Fleet has not reached it's current destination space rock yet"
-    );
-
-    bytes32 origin = FleetMovement.getDestination(fleetId);
-    require(!isSpaceRockBlocked(origin), "[Fleet] Space rock is blocked");
-
-    bytes32 followingFleetsKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Follow));
-    bytes32[] memory followingFleets = FleetsMap.getFleetIds(fleetId, followingFleetsKey);
-    uint256 slowestSpeed = FleetAttributes.getSpeed(fleetId);
-    for (uint256 i = 0; i < followingFleets.length; i++) {
-      uint256 speed = FleetAttributes.getSpeed(followingFleets[i]);
-      if (speed < slowestSpeed) slowestSpeed = speed;
-    }
-    uint256 arrivalTime = getArrivalTime(origin, Position.get(destination), slowestSpeed);
-
-    sendFleet(fleetId, destination, arrivalTime);
-    for (uint256 i = 0; i < followingFleets.length; i++) {
-      sendFleet(followingFleets[i], destination, arrivalTime);
-    }
-  }
-
-  function sendFleet(
-    bytes32 fleetId,
-    bytes32 destination,
-    uint256 arrivalTime
-  ) private {
-    FleetsMap.remove(FleetMovement.getDestination(fleetId), FleetIncomingKey, fleetId);
-    FleetsMap.add(destination, FleetIncomingKey, fleetId);
-
+  function resetFleetOrbit(bytes32 fleetId) internal {
+    bytes32 spaceRock = FleetMovement.getDestination(fleetId);
+    bytes32 spaceRockOwner = OwnedBy.get(spaceRock);
+    FleetsMap.remove(spaceRock, FleetIncomingKey, fleetId);
     FleetMovement.set(
       fleetId,
       FleetMovementData({
-        arrivalTime: arrivalTime,
+        arrivalTime: block.timestamp,
         sendTime: block.timestamp,
-        origin: FleetMovement.getDestination(fleetId),
-        destination: destination
+        origin: spaceRockOwner,
+        destination: spaceRockOwner
       })
     );
+    FleetsMap.add(spaceRockOwner, FleetIncomingKey, fleetId);
   }
 
-  function recallFleet(bytes32 playerEntity, bytes32 fleetId) internal {
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only send owned fleet");
-    require(
-      FleetMovement.getOrigin(fleetId) != FleetMovement.getDestination(fleetId),
-      "[Fleet] Fleet is already at origin"
-    );
-    require(
-      FleetMovement.getArrivalTime(fleetId) > block.timestamp,
-      "[Fleet] Fleet has already reached it's destination space rock"
-    );
-    bytes32 destination = FleetMovement.getOrigin(fleetId);
-    uint256 arrivalTime = block.timestamp + block.timestamp - FleetMovement.getSendTime(fleetId);
-
-    sendFleet(fleetId, destination, arrivalTime);
-
-    bytes32 followingFleetsKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Follow));
-    bytes32[] memory followingFleets = FleetsMap.getFleetIds(fleetId, followingFleetsKey);
-
-    for (uint256 i = 0; i < followingFleets.length; i++) {
-      sendFleet(followingFleets[i], destination, arrivalTime);
-    }
-  }
-
-  /// @notice Computes the block number an arrival will occur.
-  /// @param origin origin space rock.
-  /// @param destination Destination position.
-  /// @param speed speed of movement.
-  /// @return Block number of arrival.
-  function getArrivalTime(
-    bytes32 origin,
-    PositionData memory destination,
-    uint256 speed
-  ) internal view returns (uint256) {
-    P_GameConfigData memory config = P_GameConfig.get();
-
-    return
-      block.timestamp +
-      ((LibMath.distance(Position.get(origin), destination) *
-        config.travelTime *
-        WORLD_SPEED_SCALE *
-        UNIT_SPEED_SCALE) / (config.worldSpeed * speed));
-  }
-
-  function isSpaceRockBlocked(bytes32 spaceRock) private returns (bool) {
-    bytes32 fleetBlockKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Block));
-    return FleetsMap.size(spaceRock, fleetBlockKey) > 0;
-  }
-
-  function clearFleetStance(bytes32 playerEntity, bytes32 fleetId) internal {
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only update stance for owned fleet");
-    require(
-      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
-      "[Fleet] Fleet has not reached it's current destination space rock yet"
-    );
-    FleetStanceData memory fleetStance = FleetStance.get(fleetId);
-
-    if (fleetStance.stance == uint8(EFleetStance.None)) return;
-
-    FleetsMap.remove(fleetStance.target, P_EnumToPrototype.get(FleetStanceKey, fleetStance.stance), fleetId);
-    FleetStance.set(fleetId, uint8(EFleetStance.None), bytes32(0));
-  }
-
-  function clearFollowingFleets(bytes32 fleetId) internal {
-    bytes32 fleetFollowKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Follow));
-    bytes32[] memory followingFleets = FleetsMap.getFleetIds(fleetId, fleetFollowKey);
-    for (uint256 i = 0; i < followingFleets.length; i++) {
-      FleetStance.set(followingFleets[i], uint8(EFleetStance.None), bytes32(0));
-    }
-    FleetsMap.clear(fleetId, fleetFollowKey);
-  }
-
-  function setFleetStance(
-    bytes32 playerEntity,
-    bytes32 fleetId,
-    uint8 stance,
-    bytes32 target
-  ) internal {
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only update stance for owned fleet");
-    require(
-      FleetMovement.getArrivalTime(fleetId) <= block.timestamp,
-      "[Fleet] Fleet has not reached it's current destination space rock yet"
-    );
-    require(
-      FleetStance.getStance(target) == uint8(EFleetStance.None),
-      "[Fleet] Can not target a fleet that is taking a stance"
-    );
-    if (stance == uint8(EFleetStance.Defend) || stance == uint8(EFleetStance.Block)) {
-      require(FleetMovement.getDestination(fleetId) == target, "[Fleet] Fleet must be on same space rock as target");
-    }
-    clearFleetStance(playerEntity, fleetId);
-    clearFollowingFleets(fleetId);
-    FleetStance.set(fleetId, stance, target);
-    FleetsMap.add(target, P_EnumToPrototype.get(FleetStanceKey, stance), fleetId);
+  function isFleetDamaged(bytes32 fleetId) internal view returns (bool) {
+    return FleetAttributes.getHp(fleetId) < FleetAttributes.getMaxHp(fleetId);
   }
 }

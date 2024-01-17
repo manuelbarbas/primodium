@@ -1,22 +1,29 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { LibFleet } from "codegen/Libraries.sol";
+import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
+import { LibFleetStance } from "codegen/Libraries.sol";
+import { FleetStance, FleetMovement } from "src/codegen/index.sol";
+import { EFleetStance } from "src/codegen/common.sol";
 import { NUM_UNITS, NUM_RESOURCE } from "src/constants.sol";
 
-contract FleetStanceSystem is PrimodiumSystem {
-  function clearFleetStance(bytes32 fleetId) public {
-    bytes32 playerEntity = _player();
-    LibFleet.clearFleetStance(playerEntity, fleetId);
+contract FleetStanceSystem is FleetBaseSystem {
+  function clearFleetStance(bytes32 fleetId) public _onlyFleetOwner(fleetId) _onlyWhenFleetIsInOrbit(fleetId) {
+    LibFleetStance.clearFleetStance(_player(), fleetId);
   }
 
   function setFleetStance(
     bytes32 fleetId,
     uint8 stance,
     bytes32 target
-  ) internal {
-    bytes32 playerEntity = _player();
-    LibFleet.setFleetStance(playerEntity, fleetId, stance, target);
+  ) internal _onlyFleetOwner(fleetId) _onlyWhenFleetIsInOrbit(fleetId) {
+    require(
+      FleetStance.getStance(target) == uint8(EFleetStance.None),
+      "[Fleet] Can not target a fleet that is taking a stance"
+    );
+    if (stance == uint8(EFleetStance.Defend) || stance == uint8(EFleetStance.Block)) {
+      require(FleetMovement.getDestination(fleetId) == target, "[Fleet] Fleet must be in orbit of target space rock");
+    }
+    LibFleetStance.setFleetStance(_player(), fleetId, stance, target);
   }
 }

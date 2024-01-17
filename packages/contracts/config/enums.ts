@@ -66,6 +66,8 @@ export enum EResource {
   U_Defense,
   U_Unraidable,
   U_AdvancedUnraidable,
+  R_HP,
+  R_Encryption,
 
   // Multipliers
   M_DefenseMultiplier,
