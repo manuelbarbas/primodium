@@ -28,7 +28,6 @@ const resources: Record<string, Entity> = {
   vessel: EntityType.VesselCapacity,
   electricity: EntityType.Electricity,
   defense: EntityType.Defense,
-  orders: EntityType.MaxOrders,
   moves: EntityType.FleetMoves,
 };
 

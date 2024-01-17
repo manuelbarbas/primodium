@@ -15,14 +15,14 @@ import { LibMarketplace } from "src/libraries/LibMarketplace.sol";
 import { ABDKMath64x64 as Math } from "abdk/ABDKMath64x64.sol";
 
 contract MarketplaceSystem is PrimodiumSystem {
-  function transfer(
-    bytes32 marketplaceEntity,
+  function transferResource(
+    bytes32 marketEntity,
     EResource resourceToSell,
     EResource resourceToBuy,
     uint256 amountToTransfer
-  ) public {
+  ) public _claimResources(marketplaceEntity) {
     require(resourceToSell != resourceToBuy, "[Marketplace] Cannot transfer same resource");
-    require(BuildingType.get(marketplaceEntity) == MarketPrototypeId, "[Marketplace] Building is not a marketplace");
+    require(BuildingType.get(marketEntity) == MarketPrototypeId, "[Marketplace] Building is not a marketplace");
 
     bytes32 spaceRockEntity = OwnedBy.get(marketplaceEntity);
     require(OwnedBy.get(spaceRockEntity) == _player(), "[Marketplace] Not owned by player");
