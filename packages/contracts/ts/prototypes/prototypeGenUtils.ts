@@ -20,10 +20,14 @@ export const indexifyResourceArray = (resources: string[]) =>
  *          The tables object includes 'Reserves' with 'amountB' and 'amountA', calculated based on the provided ratio.
  */
 const BASE_RESERVE = 100000;
-export const marketplaceSupplyTable = (resource: EResource, ratio: number) => ({
-  keys: [{ [resource]: "uint8" }, { [EResource.Gold]: "uint8" }] as { [x: string]: "uint8" }[],
-  tables: { Reserves: { amountB: BigInt(BASE_RESERVE * SCALE), amountA: BigInt(BASE_RESERVE * SCALE * ratio) } },
-});
+const RESERVE_RESOURCE = EResource.Kimberlite;
+export const marketplaceSupplyTable = (resource: EResource, ratio: number) => {
+  const keys = resource < RESERVE_RESOURCE ? [resource, RESERVE_RESOURCE] : [RESERVE_RESOURCE, resource];
+  return {
+    keys: [{ [keys[0]]: "uint8" }, { [keys[1]]: "uint8" }] as { [x: string]: "uint8" }[],
+    tables: { Reserves: { amountB: BigInt(BASE_RESERVE * SCALE), amountA: BigInt(BASE_RESERVE * SCALE * ratio) } },
+  };
+};
 
 export const upgradesByLevel = (name: string, upgrades: Record<number, Record<string, number>>) =>
   Object.entries(upgrades).reduce((prev, [level, upgrades]) => {

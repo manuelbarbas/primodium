@@ -225,18 +225,26 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   /* ------------------------------- Marketplace ------------------------------ */
 
-  IronSupply: marketplaceSupplyTable(EResource.Iron, 0.01),
-  CopperSupply: marketplaceSupplyTable(EResource.Copper, 0.01),
-  LithiumSupply: marketplaceSupplyTable(EResource.Lithium, 0.01),
-  TitaniumSupply: marketplaceSupplyTable(EResource.Titanium, 100000),
-  PlatinumSupply: marketplaceSupplyTable(EResource.Platinum, 100000),
-  IridiumSupply: marketplaceSupplyTable(EResource.Iridium, 100000),
-  KimberliteSupply: marketplaceSupplyTable(EResource.Kimberlite, 100000),
-  IronPlateSupply: marketplaceSupplyTable(EResource.IronPlate, 100),
-  AlloySupply: marketplaceSupplyTable(EResource.Alloy, 100),
-  PVCellSupply: marketplaceSupplyTable(EResource.PVCell, 100),
-  RocketFuelSupply: marketplaceSupplyTable(EResource.RocketFuel, 100),
+  IronSupply: marketplaceSupplyTable(EResource.Iron, 0.00001),
+  CopperSupply: marketplaceSupplyTable(EResource.Copper, 0.00001),
+  LithiumSupply: marketplaceSupplyTable(EResource.Lithium, 0.00001),
+  TitaniumSupply: marketplaceSupplyTable(EResource.Titanium, 1),
+  PlatinumSupply: marketplaceSupplyTable(EResource.Platinum, 1),
+  IridiumSupply: marketplaceSupplyTable(EResource.Iridium, 1),
+  IronPlateSupply: marketplaceSupplyTable(EResource.IronPlate, 0.001),
+  AlloySupply: marketplaceSupplyTable(EResource.Alloy, 0.001),
+  PVCellSupply: marketplaceSupplyTable(EResource.PVCell, 0.001),
+  RocketFuelSupply: marketplaceSupplyTable(EResource.RocketFuel, 0.001),
 
+  MarketplaceConfig: {
+    keys: [],
+    tables: {
+      P_MarketplaceConfig: {
+        feeTimes1e3: 3n,
+        lock: false,
+      },
+    },
+  },
   /* -------------------------------- Buildings ------------------------------- 
    NOTE the key of a building prototype must match its EBuilding enum equivalent
    This is because we use the enum to look up the prototype in the P_BuildingTypeToPrototype table

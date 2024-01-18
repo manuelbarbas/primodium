@@ -677,6 +677,7 @@ export const config = mudConfig({
     },
 
     /* ------------------------------- Marketplace ------------------------------ */
+    // resource A is always the smaller number than resource B
     Reserves: {
       keySchema: { resourceA: "uint8", resourceB: "uint8" },
       valueSchema: {
@@ -688,7 +689,8 @@ export const config = mudConfig({
     P_MarketplaceConfig: {
       keySchema: {},
       valueSchema: {
-        feePctTimes1e3: "uint256",
+        feeTimes1e3: "uint256",
+        lock: "bool",
       },
     },
   },

@@ -9,6 +9,7 @@ import { WORLD_SPEED_SCALE, NUM_UNITS, UNIT_SPEED_SCALE } from "src/constants.so
 import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 
 import "src/utils.sol";
+import { RESERVE_CURRENCY, RESERVE_CURRENCY_RESOURCE } from "src/constants.sol";
 import "codegen/world/IWorld.sol";
 import "codegen/index.sol";
 import "src/Types.sol";
@@ -29,6 +30,7 @@ function toString(bytes32 entity) pure returns (string memory) {
 contract PrimodiumTest is MudTest {
   IWorld public world;
   uint256 userNonce = 0;
+  uint256 MAX_INT = 2**256 - 1;
 
   address creator;
   address payable alice;
