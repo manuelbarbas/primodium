@@ -223,23 +223,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   /* ------------------------------- Marketplace ------------------------------ */
 
-  InitialPoolSupply: {
-    keys: [],
-    levels: {
-      [MUDEnums.EResource.indexOf("Iron")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
-      [MUDEnums.EResource.indexOf("Copper")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
-      [MUDEnums.EResource.indexOf("Lithium")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
-      [MUDEnums.EResource.indexOf("Gold")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
-      [MUDEnums.EResource.indexOf("Titanium")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
-      [MUDEnums.EResource.indexOf("Iridium")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
-      [MUDEnums.EResource.indexOf("Kimberlite")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
-      [MUDEnums.EResource.indexOf("Platinum")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
-      [MUDEnums.EResource.indexOf("IronPlate")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
-      [MUDEnums.EResource.indexOf("Alloy")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
-      [MUDEnums.EResource.indexOf("PVCell")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
-      [MUDEnums.EResource.indexOf("RocketFuel")]: { PoolSupply: { value: BigInt(1000000 * 1e18) } },
-    },
-  },
   /* -------------------------------- Buildings ------------------------------- 
    NOTE the key of a building prototype must match its EBuilding enum equivalent
    This is because we use the enum to look up the prototype in the P_BuildingTypeToPrototype table
@@ -1657,32 +1640,24 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     keys: [{ [EResource.Titanium]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 750n },
-      P_RawResource: { value: EResource.R_Titanium },
-      P_ConsumesResource: { value: EResource.R_Titanium },
     },
   },
   Iridium: {
     keys: [{ [EResource.Iridium]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 3000n },
-      P_RawResource: { value: EResource.R_Iridium },
-      P_ConsumesResource: { value: EResource.R_Iridium },
     },
   },
   Kimberlite: {
     keys: [{ [EResource.Kimberlite]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 8000n },
-      P_RawResource: { value: EResource.R_Kimberlite },
-      P_ConsumesResource: { value: EResource.R_Kimberlite },
     },
   },
   Platinum: {
     keys: [{ [EResource.Platinum]: "uint8" }],
     tables: {
       P_ScoreMultiplier: { value: 1500n },
-      P_RawResource: { value: EResource.R_Platinum },
-      P_ConsumesResource: { value: EResource.R_Platinum },
     },
   },
   IronPlate: {

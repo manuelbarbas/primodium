@@ -42,7 +42,7 @@ contract PrimodiumTest is MudTest {
   uint8 Kimberlite = uint8(EResource.Kimberlite);
   uint8 Lithium = uint8(EResource.Lithium);
   uint8 Titanium = uint8(EResource.Titanium);
-  uint8 R_Titanium = uint8(EResource.R_Titanium);
+  uint8 Gold = uint8(EResource.Gold);
 
   function setUp() public virtual override {
     super.setUp();
@@ -50,10 +50,6 @@ contract PrimodiumTest is MudTest {
     creator = world.creator();
 
     uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
-    address admin = vm.addr(deployerPrivateKey);
-    IERC20Mintable wETH = IERC20Mintable(P_GameConfig2.getWETHAddress());
-    vm.prank(admin);
-    wETH.mint(creator, 100 ether);
 
     vm.startPrank(creator);
     ResourceAccess.set(ROOT_NAMESPACE_ID, creator, true);

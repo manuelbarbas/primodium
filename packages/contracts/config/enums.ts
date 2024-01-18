@@ -31,13 +31,7 @@ export enum EBuilding {
 }
 
 export enum EResource {
-  //Raw
-  R_Titanium = 1,
-  R_Platinum,
-  R_Iridium,
-  R_Kimberlite,
-
-  Iron,
+  Iron = 1,
   Copper,
   Lithium,
   Gold,

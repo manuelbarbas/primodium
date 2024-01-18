@@ -8,7 +8,7 @@ import { IWorld } from "codegen/world/IWorld.sol";
 import { setupHooks } from "script/SetupHooks.sol";
 import { createPrototypes } from "codegen/Prototypes.sol";
 import { createTerrain } from "codegen/scripts/CreateTerrain.sol";
-import { P_GameConfig, P_GameConfig2 } from "codegen/index.sol";
+import { P_GameConfig } from "codegen/index.sol";
 
 import { StandardDelegationsModule } from "@latticexyz/world-modules/src/modules/std-delegations/StandardDelegationsModule.sol";
 

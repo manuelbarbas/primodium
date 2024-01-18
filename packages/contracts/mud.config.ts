@@ -677,11 +677,6 @@ export const config = mudConfig({
     },
 
     /* ------------------------------- Marketplace ------------------------------ */
-
-    PoolSupply: {
-      keySchema: { id: "uint8" },
-      valueSchema: "uint256",
-    },
   },
 });
 
