@@ -5,12 +5,12 @@ import { setupNetwork } from "./setupNetwork";
 export async function setup() {
   const network = await setupNetwork();
   const components = createComponents(network);
-  const partialMUD = {
+  const setupResult = {
     network,
     components,
   };
 
-  setupInitialSync(partialMUD);
+  setupInitialSync(setupResult);
 
-  return partialMUD;
+  return setupResult;
 }

@@ -45,6 +45,8 @@ export default function AppLoadingState() {
   );
   const ready = useMemo(() => !loading && enoughEth, [loading, enoughEth]);
 
+  console.log(loadingState);
+
   return (
     <div className="bg-black h-screen">
       <div className="absolute w-full h-full star-background opacity-40" />
@@ -64,15 +66,15 @@ export default function AppLoadingState() {
               <p className="text-lg text-white">
                 <span className="font-mono">{loadingState.message}</span>
                 {loadingState.progress > 0 ? (
-                  <span className="font-mono">&nbsp;({Math.floor(loadingState.progress)}%)</span>
+                  <span className="font-mono">&nbsp;({Math.floor(loadingState.progress * 100)}%)</span>
                 ) : (
                   <span>&hellip;</span>
                 )}
               </p>
               {loadingState.progress === 0 ? (
-                <Progress value={100} max={100} className="animate-pulse w-56" />
+                <Progress value={1} max={1} className="animate-pulse w-56" />
               ) : (
-                <Progress value={loadingState.progress} max={100} className="w-56" />
+                <Progress value={loadingState.progress} max={1} className="w-56" />
               )}
             </div>
           </div>
