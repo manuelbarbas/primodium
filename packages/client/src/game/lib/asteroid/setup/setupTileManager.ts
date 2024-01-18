@@ -1,11 +1,11 @@
-import { RENDER_INTERVAL, ResourceToTilesetKey, Tilesets } from "../../../constants";
-import { getResourceKey } from "../../../../util/tile";
 import { Coord, CoordMap } from "@latticexyz/utils";
-import { interval } from "rxjs";
+import { AnimatedTilemap } from "engine/lib/core/tilemap/types";
 import { Scene } from "engine/types";
+import { interval } from "rxjs";
 import { world } from "src/network/world";
 import AsteroidTiledMap from "../../../../maps/asteroid_0.7.json";
-import { AnimatedTilemap } from "engine/lib/core/tilemap/types";
+import { getResourceKey } from "../../../../util/tile";
+import { RENDER_INTERVAL, ResourceToTilesetKey, Tilesets } from "../../../constants";
 
 const renderChunk = async (
   coord: Coord,

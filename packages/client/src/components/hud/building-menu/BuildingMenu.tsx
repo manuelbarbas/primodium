@@ -1,27 +1,24 @@
 import { useEffect, useMemo } from "react";
+import { FaArrowsAlt, FaPowerOff, FaTrash } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
-import { Action, EntityType, TransactionQueueType } from "src/util/constants";
-import { Basic } from "./screens/Basic";
-import { BuildingInfo } from "./screens/BuildingInfo";
-import { Demolish } from "./screens/Demolish";
-// import { UnitFactory } from "./screens/UnitFactory";
-import { BuildQueue } from "./screens/BuildQueue";
-import { BuildUnit } from "./screens/BuildUnit";
-import { MainBase } from "./screens/Mainbase";
-// import { UpgradeUnit } from "./screens/UpgradeUnit";
-import { FaArrowsAlt, FaPowerOff, FaTrash } from "react-icons/fa";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { useBuildingName } from "src/hooks/useBuildingName";
 import { components } from "src/network/components";
 import { toggleBuilding } from "src/network/setup/contractCalls/toggleBuilding";
+import { Action, EntityType, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
+import { Basic } from "./screens/Basic";
+import { BuildQueue } from "./screens/BuildQueue";
+import { BuildUnit } from "./screens/BuildUnit";
+import { BuildingInfo } from "./screens/BuildingInfo";
+import { Demolish } from "./screens/Demolish";
+import { MainBase } from "./screens/Mainbase";
 import { Market } from "./screens/Market";
 import { MiningVessels } from "./screens/MiningVessels";
 import { Move } from "./screens/Move";
 import { UnitFactory } from "./screens/UnitFactory";
-import { UpgradeUnit } from "./screens/UpgradeUnit";
 
 export const BuildingMenu: React.FC = () => {
   const mud = useMud();
@@ -134,7 +131,6 @@ export const BuildingMenu: React.FC = () => {
       <BuildingInfo building={selectedBuilding} />
       <BuildQueue building={selectedBuilding} />
       <BuildUnit building={selectedBuilding} />
-      <UpgradeUnit building={selectedBuilding} />
       <MiningVessels building={selectedBuilding} />
     </Navigator>
   );

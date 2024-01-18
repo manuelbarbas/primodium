@@ -6,7 +6,7 @@ import { LibStorage } from "libraries/LibStorage.sol";
 
 import { UtilityMap } from "libraries/UtilityMap.sol";
 
-import { P_Transportables, P_IsRecoverable, Level, IsActive, Motherlode, OwnedMotherlodes, P_ConsumesResource, ConsumptionRate, Home, P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+import { P_Transportables, P_IsRecoverable, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
 
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -103,61 +103,9 @@ library LibResource {
     LibStorage.decreaseStoredResource(spaceRockEntity, resource, resourceCost);
   }
 
-  function claimAllPlayerResources(bytes32 playerEntity) internal {
-    bytes32[] memory ownedMotherlodes = OwnedMotherlodes.get(playerEntity);
-    for (uint256 i = 0; i < ownedMotherlodes.length; i++) {
-      claimMotherlodeResource(ownedMotherlodes[i]);
-    }
-    claimAllResources(Home.getAsteroid(playerEntity));
-  }
-
-  /// @notice Claims all unclaimed resources of a motherlode
-  /// @param spaceRockEntity ID of the spaceRock motherlode to claim
-  function claimMotherlodeResource(bytes32 spaceRockEntity) internal {
-    uint256 lastClaimed = LastClaimedAt.get(spaceRockEntity);
-    if (lastClaimed == block.timestamp) return;
-
-    if (lastClaimed == 0) {
-      LastClaimedAt.set(spaceRockEntity, block.timestamp);
-      return;
-    }
-    uint256 timeSinceClaimed = block.timestamp - lastClaimed;
-    timeSinceClaimed = (timeSinceClaimed * P_GameConfig.getWorldSpeed()) / WORLD_SPEED_SCALE;
-    bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
-    bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
-    LastClaimedAt.set(spaceRockEntity, block.timestamp);
-
-    uint8 resource = Motherlode.getMotherlodeType(spaceRockEntity);
-    uint8 consumesResource = P_ConsumesResource.get(resource);
-
-    uint256 productionRate = ProductionRate.get(spaceRockEntity, resource);
-    uint256 consumptionRate = ConsumptionRate.get(spaceRockEntity, consumesResource);
-
-    // if both are zero then no need to update
-    if (productionRate == 0 && consumptionRate == 0) return;
-
-    // the maximum amount of resourecs that will minedAmount if there is enough of the resource available minedAmount < resourceCount
-    uint256 minedAmount = (consumptionRate * timeSinceClaimed);
-    uint256 resourceCount = ResourceCount.get(spaceRockEntity, consumesResource);
-    if (resourceCount < minedAmount) {
-      //we use the time length to reduce current resource amount by the difference of the minedAmount and the increase
-      minedAmount = (consumptionRate * resourceCount) / consumptionRate;
-    }
-    LibStorage.decreaseStoredResource(spaceRockEntity, consumesResource, minedAmount);
-
-    ProducedResource.set(playerEntity, resource, ProducedResource.get(playerEntity, resource) + minedAmount);
-    LibStorage.increaseStoredResource(homeAsteroid, resource, minedAmount);
-  }
-
   /// @notice Claims all unclaimed resources of a spaceRock
   /// @param spaceRockEntity ID of the spaceRock to claim
   function claimAllResources(bytes32 spaceRockEntity) internal {
-    // this condition and logic is here so we don't have to change hooks logic and customize for space rock type.
-    if (Motherlode.getMotherlodeType(spaceRockEntity) > 0) {
-      claimMotherlodeResource(spaceRockEntity);
-      return;
-    }
-
     uint256 lastClaimed = LastClaimedAt.get(spaceRockEntity);
     if (lastClaimed == block.timestamp) return;
 
@@ -169,7 +117,6 @@ library LibResource {
     uint256 timeSinceClaimed = block.timestamp - lastClaimed;
     timeSinceClaimed = (timeSinceClaimed * P_GameConfig.getWorldSpeed()) / WORLD_SPEED_SCALE;
     bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
-    bytes32 homeAsteroid = Home.getAsteroid(playerEntity);
     LastClaimedAt.set(spaceRockEntity, block.timestamp);
     uint256[] memory consumptionTimeLengths = new uint256[](uint8(EResource.LENGTH));
 
@@ -209,8 +156,8 @@ library LibResource {
       uint256 resourceCount = ResourceCount.get(spaceRockEntity, resource);
       if (increase > decrease) {
         //if the increase is more than the decrease than we just increase by the difference
-        //todo currently we increase the resources for home asteroid as resource transfer is not a part of this update
-        LibStorage.increaseStoredResource(homeAsteroid, resource, increase - decrease);
+        //todo currently we increase the resources for the current asteroid as resource transfer is not a part of this update
+        LibStorage.increaseStoredResource(spaceRockEntity, resource, increase - decrease);
       } else if (resourceCount + increase >= decrease) {
         //if sum of the increase and curr amount is more than the decrease we just decrease by the difference
         //consumption is from current space rock and will be in the future
@@ -320,11 +267,11 @@ library LibResource {
 
   function updateScore(
     bytes32 player,
+    bytes32 spaceRock,
     uint8 resource,
     uint256 value
   ) internal {
-    bytes32 asteroid = Home.getAsteroid(player);
-    uint256 count = ResourceCount.get(asteroid, resource);
+    uint256 count = ResourceCount.get(spaceRock, resource);
     uint256 currentScore = Score.get(player);
     uint256 scoreChangeAmount = P_ScoreMultiplier.get(resource);
 

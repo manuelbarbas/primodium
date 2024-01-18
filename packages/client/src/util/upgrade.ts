@@ -5,15 +5,21 @@ import { getBlockTypeName } from "./common";
 import { EntityType } from "./constants";
 import { getRecipe } from "./recipe";
 
-export function getUpgradeInfo(research: Entity, playerEntity: Entity) {
-  const asteroid = components.Home.get(playerEntity)?.asteroid;
+export function getUpgradeInfo(research: Entity, asteroid: Entity) {
+  const playerEntity = components.OwnedBy.get(asteroid as Entity)?.value;
   const level =
     research === EntityType.Expansion
       ? components.Level.get(asteroid as Entity)?.value ?? 1n
-      : components.UnitLevel.getWithKeys({ entity: playerEntity as Hex, unit: research as Hex })?.value ?? 0n;
+      : playerEntity
+      ? components.UnitLevel.getWithKeys({ entity: playerEntity as Hex, unit: research as Hex })?.value ?? 0n
+      : 0n;
   let nextLevel = level + 1n;
 
-  const maxLevel = components.P_MaxLevel.getWithKeys({ prototype: research as Hex })?.value ?? 0n;
+  const maxLevel =
+    (research === EntityType.Expansion
+      ? components.Asteroid.getWithKeys({ entity: asteroid as Hex })?.maxLevel
+      : components.P_MaxLevel.getWithKeys({ prototype: research as Hex })?.value) ?? 0n;
+
   nextLevel = nextLevel > maxLevel ? maxLevel : nextLevel;
 
   const recipe = getRecipe(research, nextLevel, true);

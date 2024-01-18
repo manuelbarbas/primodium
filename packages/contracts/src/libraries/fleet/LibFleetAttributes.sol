@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { ERock, EResource } from "src/Types.sol";
+import { EResource } from "src/Types.sol";
 import { FleetMovement, P_Transportables, UnitCount, P_Unit, P_UnitData, UnitLevel, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";

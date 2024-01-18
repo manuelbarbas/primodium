@@ -23,7 +23,7 @@ contract UpgradeUnitSystemTest is PrimodiumTest {
     super.setUp();
     vm.startPrank(creator);
     player = addressToEntity(creator);
-    Home.setAsteroid(player, homeAsteroid);
+    Home.set(player, homeAsteroid);
     OwnedBy.set(homeAsteroid, player);
     P_EnumToPrototype.set(UnitKey, uint8(unit), unitPrototype);
     P_MaxLevel.set(unitPrototype, 2);

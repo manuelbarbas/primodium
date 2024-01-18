@@ -1,25 +1,18 @@
 import { AudioKeys, KeybindActions, Scenes } from "@game/constants";
-import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect } from "react";
 import { FaCaretUp } from "react-icons/fa";
-import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { Button } from "../core/Button";
 import { Join } from "../core/Join";
 
 export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating }) => {
-  const {
-    playerAccount: { entity: playerEntity },
-  } = useMud();
   const mapOpen = components.MapOpen.use(undefined, {
     value: false,
   }).value;
 
   const primodium = usePrimodium();
   const { transitionToScene } = primodium.api().scene;
-  const homeAsteroid = components.Home.use(playerEntity)?.asteroid as Entity | undefined;
 
   const closeMap = async () => {
     if (!components.MapOpen.get()?.value) return;
@@ -45,12 +38,12 @@ export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating
       }
     );
     components.MapOpen.set({ value: false });
-    components.SelectedRock.set({ value: homeAsteroid ?? singletonEntity });
+    // components.SelectedRock.set({ value: homeAsteroid ?? singletonEntity });
   };
 
   const openMap = async () => {
     if (components.MapOpen.get()?.value) return;
-    const activeRock = components.ActiveRock.get()?.value;
+    const activeRock = components.SelectedRock.get()?.value;
     const position = components.Position.get(activeRock) ?? { x: 0, y: 0 };
     const { pan } = primodium.api(Scenes.Starmap).camera;
 
@@ -78,7 +71,6 @@ export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating
       }
     );
     components.MapOpen.set({ value: true });
-    components.ActiveRock.set({ value: homeAsteroid ?? singletonEntity });
     components.SelectedBuilding.remove();
   };
 
@@ -124,18 +116,10 @@ export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating
             !mapOpen ? "opacity-50" : "ring ring-accent z-10"
           }`}
         >
-          {!isSpectating && (
-            <div className="flex flex-col gap-2 items-center p-2 w-16">
-              <img src="img/icons/starmapicon.png" className="pixel-images w-12 h-12" />
-              <p className="">CONQUER</p>
-            </div>
-          )}
-          {isSpectating && (
-            <div className="flex flex-col gap-2 items-center p-2 w-16">
-              <img src="img/icons/returnicon.png" className="pixel-images w-12 h-12" />
-              <p className="">EXIT</p>
-            </div>
-          )}
+          <div className="flex flex-col gap-2 items-center p-2 w-16">
+            <img src="img/icons/starmapicon.png" className="pixel-images w-12 h-12" />
+            <p className="">CONQUER</p>
+          </div>
           {mapOpen && <FaCaretUp size={22} className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-accent" />}
         </Button>
       </Join>

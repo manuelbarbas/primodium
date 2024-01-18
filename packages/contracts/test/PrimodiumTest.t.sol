@@ -88,20 +88,8 @@ contract PrimodiumTest is MudTest {
     assertEq(coordA.parent, coordB.parent, "[assertEq]: parent doesn't match");
   }
 
-  function assertEq(ERock a, ERock b) internal {
-    assertEq(uint256(a), uint256(b));
-  }
-
   function assertEq(EResource a, EResource b) internal {
     assertEq(uint256(a), uint256(b));
-  }
-
-  function assertEq(
-    ERock a,
-    ERock b,
-    string memory context
-  ) internal {
-    assertEq(uint256(a), uint256(b), context);
   }
 
   function logPosition(PositionData memory coord) internal view {
@@ -113,7 +101,7 @@ contract PrimodiumTest is MudTest {
   }
 
   function getHomeAsteroidPosition(address player) public view returns (PositionData memory) {
-    bytes32 asteroid = Home.get(addressToEntity(player)).asteroid;
+    bytes32 asteroid = Home.get(addressToEntity(player));
     return Position.get(asteroid);
   }
 
@@ -157,6 +145,23 @@ contract PrimodiumTest is MudTest {
     return getPosition(coord, player);
   }
 
+  function getTilePosition(bytes32 asteroidEntity, EResource resource) internal view returns (PositionData memory) {
+    uint8 mapId = Asteroid.getMapId(asteroidEntity);
+    console.log("map id:, ", mapId);
+    Bounds memory bounds = LibBuilding.getSpaceRockBounds(asteroidEntity);
+    console.log("x bounds: %s, %s", uint32(bounds.minX), uint32(bounds.maxX));
+    console.log("y bounds: %s, %s", uint32(bounds.minY), uint32(bounds.maxY));
+    for (int32 i = bounds.minX; i < bounds.maxX; i++) {
+      for (int32 j = bounds.minY; j < bounds.maxY; j++) {
+        uint8 foundResource = P_Terrain.get(mapId, i, j);
+        if (foundResource == uint8(resource)) {
+          return PositionData(i, j, asteroidEntity);
+        }
+      }
+    }
+    revert("Resource not found");
+  }
+
   function getPosition(
     int32 x,
     int32 y,
@@ -180,7 +185,7 @@ contract PrimodiumTest is MudTest {
     vm.prank(player);
     world.spawn();
     bytes32 playerEntity = addressToEntity(player);
-    return Home.getAsteroid(playerEntity);
+    return Home.get(playerEntity);
   }
 
   function get2x2Blueprint() internal pure returns (int32[] memory blueprint) {

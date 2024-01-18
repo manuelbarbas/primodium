@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 // tables
-import { P_IsUtility, MaxResourceCount, ResourceCount, P_ResourceReward, P_ResourceRewardData, P_UnitReward, P_UnitRewardData, Home } from "codegen/index.sol";
+import { P_IsUtility, MaxResourceCount, ResourceCount, P_ResourceReward, P_ResourceRewardData, P_UnitReward, P_UnitRewardData } from "codegen/index.sol";
 
 // libraries
 import { LibProduction } from "libraries/LibProduction.sol";
@@ -13,36 +13,46 @@ import { LibUnit } from "libraries/LibUnit.sol";
 import { EResource } from "src/Types.sol";
 
 library LibReward {
-  function receiveRewards(bytes32 playerEntity, bytes32 prototype) internal {
-    receiveUnitRewards(playerEntity, prototype);
-    receiveResourceRewards(playerEntity, prototype);
+  function receiveRewards(
+    bytes32 playerEntity,
+    bytes32 spaceRockEntity,
+    bytes32 prototype
+  ) internal {
+    receiveUnitRewards(playerEntity, spaceRockEntity, prototype);
+    receiveResourceRewards(playerEntity, spaceRockEntity, prototype);
   }
 
-  function receiveUnitRewards(bytes32 playerEntity, bytes32 prototype) internal {
-    bytes32 homeAsteroid = Home.get(playerEntity).asteroid;
+  function receiveUnitRewards(
+    bytes32 playerEntity,
+    bytes32 spaceRockEntity,
+    bytes32 prototype
+  ) internal {
     P_UnitRewardData memory rewardData = P_UnitReward.get(prototype);
     for (uint256 i = 0; i < rewardData.units.length; i++) {
-      LibUnit.increaseUnitCount(homeAsteroid, rewardData.units[i], rewardData.amounts[i], true);
+      LibUnit.increaseUnitCount(spaceRockEntity, rewardData.units[i], rewardData.amounts[i], true);
     }
   }
 
-  function receiveResourceRewards(bytes32 playerEntity, bytes32 prototype) internal {
-    bytes32 homeAsteroid = Home.get(playerEntity).asteroid;
+  function receiveResourceRewards(
+    bytes32 playerEntity,
+    bytes32 spaceRockEntity,
+    bytes32 prototype
+  ) internal {
     P_ResourceRewardData memory rewardData = P_ResourceReward.get(prototype);
     for (uint256 i = 0; i < rewardData.resources.length; i++) {
       if (P_IsUtility.get(rewardData.resources[i])) {
         LibProduction.increaseResourceProduction(
-          homeAsteroid,
+          spaceRockEntity,
           EResource(rewardData.resources[i]),
           rewardData.amounts[i]
         );
       } else {
         require(
-          rewardData.amounts[i] + ResourceCount.get(homeAsteroid, rewardData.resources[i]) <=
-            MaxResourceCount.get(homeAsteroid, rewardData.resources[i]),
+          rewardData.amounts[i] + ResourceCount.get(spaceRockEntity, rewardData.resources[i]) <=
+            MaxResourceCount.get(spaceRockEntity, rewardData.resources[i]),
           "[LibReward] Resource count exceeds max"
         );
-        LibStorage.increaseStoredResource(homeAsteroid, rewardData.resources[i], rewardData.amounts[i]);
+        LibStorage.increaseStoredResource(spaceRockEntity, rewardData.resources[i], rewardData.amounts[i]);
       }
     }
   }

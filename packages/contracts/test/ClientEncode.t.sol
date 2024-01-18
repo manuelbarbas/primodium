@@ -14,18 +14,4 @@ contract ClientEncodeTest is PrimodiumTest {
       console.logBytes32(hash);
     }
   }
-
-  function testMotherlodeEntity() public view {
-    console.log("testMotherlodeEntity");
-    for (uint256 i = 0; i < 10; i++) {
-      bytes32 entity = bytes32(i);
-      uint256 x = (i * 17) % 10;
-      uint256 y = (i * 13) % 10;
-      bytes32 motherlode = keccak256(abi.encode(entity, bytes32("motherlode"), x, y));
-      console.log("entity:", i);
-      console.log("x:", x);
-      console.log("y:", y);
-      console.logBytes32(motherlode);
-    }
-  }
 }

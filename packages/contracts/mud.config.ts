@@ -22,13 +22,29 @@ export const config = mudConfig({
     S_SpawnPirateAsteroidSystem: {
       openAccess: false,
       accessList: [DUMMY_ADDRESS],
-      name: "S_SpawnPirateAsteroidSystem",
+    },
+    S_ProductionRateSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+    },
+    S_SpendResourcesSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+    },
+    S_RewardsSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
     },
 
     S_FleetBattleApplyDamageSystem: {
       openAccess: false,
       accessList: [DUMMY_ADDRESS],
       name: "S_FleetBattleApplyDamageSystem",
+    },
+    S_FleetBattleResolveRaidSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+      name: "S_FleetBattleResolveRaidSystem",
     },
   },
 
@@ -41,18 +57,24 @@ export const config = mudConfig({
     },
 
     /* --------------------------------- Common --------------------------------- */
+    // if the key is a player, value is their home asteroid.
+    // if the key is an asteroid, value is its main base.
+    Home: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "bytes32",
+    },
 
     P_GameConfig: {
       keySchema: {},
       valueSchema: {
         admin: "address",
         unitProductionRate: "uint256",
-        maxMotherlodesPerAsteroid: "uint256",
-        motherlodeChanceInv: "uint256",
-        motherlodeDistance: "uint256",
         travelTime: "uint256",
         worldSpeed: "uint256",
         tax: "uint256",
+        maxAsteroidsPerPlayer: "uint256",
+        asteroidChanceInv: "uint256",
+        asteroidDistance: "uint256",
       },
     },
 
@@ -108,17 +130,12 @@ export const config = mudConfig({
       valueSchema: "bytes32",
     },
 
-    /* --------------------------------- Player --------------------------------- */
-
-    Home: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
-        asteroid: "bytes32",
-        mainBase: "bytes32",
-      },
+    /* ---------------------------------- Rocks --------------------------------- */
+    AsteroidCount: {
+      keySchema: {},
+      valueSchema: "uint256",
     },
 
-    /* ---------------------------------- Rocks --------------------------------- */
     P_Asteroid: {
       keySchema: {},
       valueSchema: {
@@ -126,15 +143,15 @@ export const config = mudConfig({
         yBounds: "int32",
       },
     },
-    AsteroidCount: {
-      keySchema: {},
-      valueSchema: "uint256",
-    },
 
-    RockType: {
+    Asteroid: {
       keySchema: { entity: "bytes32" },
-      // ERock
-      valueSchema: "uint8",
+      valueSchema: {
+        isAsteroid: "bool",
+        maxLevel: "uint256",
+        mapId: "uint8",
+        spawnsSecondary: "bool",
+      },
     },
 
     // note: dimensions will always be positive, but are int32s so they work with coords
@@ -147,7 +164,12 @@ export const config = mudConfig({
     },
 
     P_Terrain: {
-      keySchema: { x: "int32", y: "int32" },
+      keySchema: { mapId: "uint8", x: "int32", y: "int32" },
+      valueSchema: "uint8", // EResource
+    },
+
+    Specialty: {
+      keySchema: { entity: "bytes32" },
       valueSchema: "uint8", // EResource
     },
 
@@ -334,35 +356,9 @@ export const config = mudConfig({
 
     /* ------------------------------- Motherlode ------------------------------- */
 
-    Motherlode: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
-        size: "uint8", // ESize
-        motherlodeType: "uint8", // EResource
-      },
-    },
-
-    // Used in the building utilities set
-    SetItemMotherlodes: {
-      keySchema: { motherlode: "bytes32", item: "bytes32" },
-      valueSchema: {
-        stored: "bool",
-        index: "uint256",
-      },
-    },
-    SetMotherlodes: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "bytes32[]",
-    },
-
     P_SizeToAmount: {
       keySchema: { size: "uint8" },
       valueSchema: "uint256",
-    },
-
-    OwnedMotherlodes: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "bytes32[]",
     },
 
     P_RawResource: {
