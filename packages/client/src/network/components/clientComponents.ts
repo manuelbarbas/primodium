@@ -145,6 +145,21 @@ export const TransactionQueue = createTransactionQueueComponent({
   id: "TransactionQueue",
 });
 
+/* -------------------------------------------------------------------------- */
+/*                                    SYNC                                    */
+/* -------------------------------------------------------------------------- */
+export const SyncStatus = createExtendedComponent(
+  world,
+  {
+    live: Type.Boolean,
+    message: Type.String,
+    progress: Type.Number,
+  },
+  {
+    id: "SyncStatus",
+  }
+);
+
 export default {
   /* ----------------------------------- Dev ---------------------------------- */
   DoubleCounter,
@@ -180,4 +195,6 @@ export default {
   AllianceRequest,
   /* ----------------------------- Transaction ------------------------------- */
   TransactionQueue,
+  /* ---------------------------------- Sync ---------------------------------- */
+  SyncStatus,
 };

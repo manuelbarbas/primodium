@@ -6,6 +6,7 @@ import { getNetworkConfig } from "../config/getNetworkConfig";
 import { createClock } from "../createClock";
 import { otherTables } from "../otherTables";
 import { world } from "../world";
+import { resolveConfig } from "@latticexyz/store";
 
 export async function setupNetwork() {
   const networkConfig = getNetworkConfig();
@@ -16,6 +17,7 @@ export async function setupNetwork() {
   };
 
   const publicClient = createPublicClient(clientOptions);
+  const tables = resolveConfig(mudConfig).tables;
 
   const { components, latestBlock$, latestBlockNumber$, storedBlockLogs$, waitForTransaction } = await syncToRecs({
     world,
@@ -25,6 +27,7 @@ export async function setupNetwork() {
     startBlock: BigInt(networkConfig.initialBlockNumber),
     indexerUrl: networkConfig.indexerUrl,
     tables: otherTables,
+    initialBlockLogs: [],
   });
 
   const clock = createClock(latestBlock$, {
@@ -32,8 +35,10 @@ export async function setupNetwork() {
     initialTime: 0,
     syncInterval: 10000,
   });
-  return {
+
+  const network = {
     world,
+    tables,
     publicClient,
     mudConfig,
     components,
@@ -43,4 +48,6 @@ export async function setupNetwork() {
     storedBlockLogs$,
     waitForTransaction,
   };
+
+  return network;
 }
