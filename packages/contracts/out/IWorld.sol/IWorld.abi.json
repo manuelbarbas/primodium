@@ -839,14 +839,14 @@
         "type": "bytes32"
       },
       {
-        "internalType": "uint256[8]",
+        "internalType": "uint256[]",
         "name": "unitCounts",
-        "type": "uint256[8]"
+        "type": "uint256[]"
       },
       {
-        "internalType": "uint256[27]",
+        "internalType": "uint256[]",
         "name": "resourceCounts",
-        "type": "uint256[27]"
+        "type": "uint256[]"
       }
     ],
     "name": "createFleet",
@@ -1256,9 +1256,9 @@
         "type": "bytes32"
       },
       {
-        "internalType": "uint256[27]",
+        "internalType": "uint256[]",
         "name": "resourceCounts",
-        "type": "uint256[27]"
+        "type": "uint256[]"
       }
     ],
     "name": "disbandResources",
@@ -1274,9 +1274,9 @@
         "type": "bytes32"
       },
       {
-        "internalType": "uint256[8]",
+        "internalType": "uint256[]",
         "name": "unitCounts",
-        "type": "uint256[8]"
+        "type": "uint256[]"
       }
     ],
     "name": "disbandUnits",
@@ -1292,14 +1292,14 @@
         "type": "bytes32"
       },
       {
-        "internalType": "uint256[8]",
+        "internalType": "uint256[]",
         "name": "unitCounts",
-        "type": "uint256[8]"
+        "type": "uint256[]"
       },
       {
-        "internalType": "uint256[27]",
+        "internalType": "uint256[]",
         "name": "resourceCounts",
-        "type": "uint256[27]"
+        "type": "uint256[]"
       }
     ],
     "name": "disbandUnitsAndResourcesFromFleet",
@@ -2928,9 +2928,9 @@
         "type": "bytes32"
       },
       {
-        "internalType": "uint256[27]",
+        "internalType": "uint256[]",
         "name": "resourceCounts",
-        "type": "uint256[27]"
+        "type": "uint256[]"
       }
     ],
     "name": "transferResourcesFromFleetToFleet",
@@ -2951,9 +2951,9 @@
         "type": "bytes32"
       },
       {
-        "internalType": "uint256[27]",
+        "internalType": "uint256[]",
         "name": "resourceCounts",
-        "type": "uint256[27]"
+        "type": "uint256[]"
       }
     ],
     "name": "transferResourcesFromFleetToSpaceRock",
@@ -2974,9 +2974,9 @@
         "type": "bytes32"
       },
       {
-        "internalType": "uint256[27]",
+        "internalType": "uint256[]",
         "name": "resourceCounts",
-        "type": "uint256[27]"
+        "type": "uint256[]"
       }
     ],
     "name": "transferResourcesFromSpaceRockToFleet",
@@ -2997,14 +2997,14 @@
         "type": "bytes32"
       },
       {
-        "internalType": "uint256[8]",
+        "internalType": "uint256[]",
         "name": "unitCounts",
-        "type": "uint256[8]"
+        "type": "uint256[]"
       },
       {
-        "internalType": "uint256[27]",
+        "internalType": "uint256[]",
         "name": "resourceCounts",
-        "type": "uint256[27]"
+        "type": "uint256[]"
       }
     ],
     "name": "transferUnitsAndResourcesFromFleetToFleet",
@@ -3025,14 +3025,14 @@
         "type": "bytes32"
       },
       {
-        "internalType": "uint256[8]",
+        "internalType": "uint256[]",
         "name": "unitCounts",
-        "type": "uint256[8]"
+        "type": "uint256[]"
       },
       {
-        "internalType": "uint256[27]",
+        "internalType": "uint256[]",
         "name": "resourceCounts",
-        "type": "uint256[27]"
+        "type": "uint256[]"
       }
     ],
     "name": "transferUnitsAndResourcesFromFleetToSpaceRock",
@@ -3053,14 +3053,14 @@
         "type": "bytes32"
       },
       {
-        "internalType": "uint256[8]",
+        "internalType": "uint256[]",
         "name": "unitCounts",
-        "type": "uint256[8]"
+        "type": "uint256[]"
       },
       {
-        "internalType": "uint256[27]",
+        "internalType": "uint256[]",
         "name": "resourceCounts",
-        "type": "uint256[27]"
+        "type": "uint256[]"
       }
     ],
     "name": "transferUnitsAndResourcesFromSpaceRockToFleet",
@@ -3081,9 +3081,9 @@
         "type": "bytes32"
       },
       {
-        "internalType": "uint256[8]",
+        "internalType": "uint256[]",
         "name": "unitCounts",
-        "type": "uint256[8]"
+        "type": "uint256[]"
       }
     ],
     "name": "transferUnitsFromFleetToFleet",
@@ -3104,9 +3104,9 @@
         "type": "bytes32"
       },
       {
-        "internalType": "uint256[8]",
+        "internalType": "uint256[]",
         "name": "unitCounts",
-        "type": "uint256[8]"
+        "type": "uint256[]"
       }
     ],
     "name": "transferUnitsFromFleetToSpaceRock",
@@ -3127,9 +3127,9 @@
         "type": "bytes32"
       },
       {
-        "internalType": "uint256[8]",
+        "internalType": "uint256[]",
         "name": "unitCounts",
-        "type": "uint256[8]"
+        "type": "uint256[]"
       }
     ],
     "name": "transferUnitsFromSpaceRockToFleet",
