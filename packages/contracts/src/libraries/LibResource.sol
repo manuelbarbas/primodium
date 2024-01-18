@@ -224,7 +224,7 @@ library LibResource {
    */
   function getTotalStoredResourcesVaulted(bytes32 spaceRockEntity) internal view returns (uint256 totalResources) {
     uint8[] memory transportables = P_Transportables.get();
-    for (uint8 i = 1; i < transportables.length; i++) {
+    for (uint8 i = 0; i < transportables.length; i++) {
       uint256 resourceCount = ResourceCount.get(spaceRockEntity, transportables[i]);
       uint256 vaulted = ResourceCount.get(
         spaceRockEntity,
@@ -251,7 +251,7 @@ library LibResource {
   {
     uint8[] memory transportables = P_Transportables.get();
     resourceCounts = new uint256[](transportables.length);
-    for (uint8 i = 1; i < transportables.length; i++) {
+    for (uint8 i = 0; i < transportables.length; i++) {
       resourceCounts[i] = ResourceCount.get(spaceRockEntity, transportables[i]);
       uint256 vaulted = ResourceCount.get(
         spaceRockEntity,

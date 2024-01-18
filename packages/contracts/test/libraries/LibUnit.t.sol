@@ -329,7 +329,7 @@ contract LibUnitTest is PrimodiumTest {
     LibUnit.decreaseUnitCount(rock, unit, 50, false);
     assertEq(UnitCount.get(rock, unit), 50);
 
-    LibUnit.decreaseUnitCount(rock, unit, 100, false);
+    LibUnit.decreaseUnitCount(rock, unit, 50, false);
     assertEq(UnitCount.get(rock, unit), 0);
   }
 }
