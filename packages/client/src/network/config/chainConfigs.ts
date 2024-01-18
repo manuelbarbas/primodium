@@ -1,5 +1,10 @@
 import { MUDChain, latticeTestnet, mudFoundry } from "@latticexyz/common/chains";
 
+export const dev = {
+  ...mudFoundry,
+  indexerUrl: "http://localhost:3001",
+};
+
 export const caldera = {
   name: "Caldera",
   id: 12523,
@@ -56,5 +61,5 @@ export const chainConfigs: ChainConfigs = {
   latticeTestnet,
   caldera,
   calderaSepolia,
-  dev: mudFoundry,
+  dev,
 };
