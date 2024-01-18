@@ -50,7 +50,7 @@ contract LibBattleTest is PrimodiumTest {
   function testGetDefensePointsDefenseBuildings(uint256 unitCount, uint256 defense) public returns (uint256) {
     vm.assume(unitCount < 10000);
     vm.assume(defense < 10000);
-    Home.setAsteroid(player, rock);
+    Home.set(player, rock);
     UnitCount.set(rock, unit1, unitCount);
     setupUnit(unit1, 0, defense);
 
@@ -65,7 +65,7 @@ contract LibBattleTest is PrimodiumTest {
   function testGetDefensePointsDefenseMultiplierBuildings(uint256 unitCount, uint256 defense) public returns (uint256) {
     vm.assume(unitCount < 10000);
     vm.assume(defense < 10000);
-    Home.setAsteroid(player, rock);
+    Home.set(player, rock);
     UnitCount.set(rock, unit1, unitCount);
     setupUnit(unit1, 0, defense);
     ResourceCount.set(rock, uint8(EResource.M_DefenseMultiplier), 200);
@@ -255,8 +255,8 @@ contract LibBattleTest is PrimodiumTest {
   function setupUpdateUnitsAfterBattle() public {
     P_IsUtility.set(uint8(EResource.Iron), true);
     P_IsUtility.set(uint8(EResource.Copper), true);
-    Home.setAsteroid(enemy, rock);
-    Home.setAsteroid(player, homeRock);
+    Home.set(enemy, rock);
+    Home.set(player, homeRock);
     // unit1 requires 1 iron
     LibProduction.increaseResourceProduction(homeRock, EResource.Iron, playerOriginalIron);
     LibProduction.increaseResourceProduction(homeRock, EResource.Copper, playerOriginalCopper);
@@ -411,7 +411,7 @@ contract LibBattleTest is PrimodiumTest {
 
   function testUpdateUnitsAfterBattleRaidAttackerWins() public {
     setupUpdateUnitsAfterBattle();
-    Home.setAsteroid(player, homeRock);
+    Home.set(player, homeRock);
     UnitCount.set(rock, unit1, 100);
     LibUnit.updateStoredUtilities(rock, unit1, 100, true);
     UnitCount.set(rock, unit2, 10);
@@ -487,7 +487,7 @@ contract LibBattleTest is PrimodiumTest {
 
   function testUpdateUnitsAfterBattleRaidDefenderWins() public {
     setupUpdateUnitsAfterBattle();
-    Home.setAsteroid(player, homeRock);
+    Home.set(player, homeRock);
     UnitCount.set(rock, unit1, 100);
     LibUnit.updateStoredUtilities(rock, unit1, 100, true);
     UnitCount.set(rock, unit2, 10);
@@ -534,33 +534,5 @@ contract LibBattleTest is PrimodiumTest {
       enemyOriginalCopper - 5,
       "Defender should gain back 5 copper"
     );
-  }
-
-  function testUpdateProductionRatesAfterBattle() public {
-    setupUpdateUnitsAfterBattle();
-    Home.setAsteroid(player, homeRock);
-    RockType.set(rock, uint8(ERock.Motherlode));
-    Motherlode.set(rock, uint8(ESize.Large), uint8(EResource.Iron));
-    P_IsUtility.set(uint8(EResource.Iron), false);
-    P_MiningRate.set(unit1, 0, 1);
-    ProductionRate.set(rock, uint8(EResource.Iron), 100 + 100);
-
-    UnitCount.set(rock, unit1, 100);
-
-    BattleResultData memory br = BattleResultData({
-      attacker: player,
-      defender: enemy,
-      winner: player,
-      rock: rock,
-      totalCargo: 0,
-      timestamp: block.timestamp,
-      attackerStartingUnits: getUnitArray(100, 0),
-      attackerUnitsLeft: getUnitArray(70, 0),
-      defenderStartingUnits: getUnitArray(100, 0),
-      defenderUnitsLeft: getUnitArray(0, 0)
-    });
-
-    LibBattle.updateUnitsAfterBattle(br, ESendType.Invade);
-    assertEq(ProductionRate.get(rock, uint8(EResource.Iron)), 70 + 100, "Player should have 310 iron production");
   }
 }

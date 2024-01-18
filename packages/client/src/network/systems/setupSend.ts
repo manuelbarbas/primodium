@@ -6,7 +6,7 @@ export const setupSend = (mud: MUD) => {
   const systemWorld = namespaceWorld(world, "systems");
   defineComponentSystem(systemWorld, components.Home, ({ entity, value }) => {
     if (entity != mud.playerAccount.entity) return;
-    const asteroid = value[0]?.asteroid as Entity | undefined;
+    const asteroid = value[0]?.value as Entity | undefined;
     if (!asteroid) return;
     // temp so we can test without the set origin ui
     components.Send.setOrigin(asteroid);

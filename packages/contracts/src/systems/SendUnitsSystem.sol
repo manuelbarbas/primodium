@@ -14,6 +14,8 @@ contract SendUnitsSystem is PrimodiumSystem {
     bytes32 destination = ReversePosition.get(sendArgs.destinationPosition.x, sendArgs.destinationPosition.y);
     bytes32 playerEntity = _player();
 
+    LibSend.updateUnitCountOnSend(playerEntity, sendArgs);
+
     uint256 arrivalTime = LibSend.getArrivalTime(
       sendArgs.originPosition,
       sendArgs.destinationPosition,

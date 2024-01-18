@@ -25,7 +25,7 @@ export const CommissionCost: React.FC<{ player: Entity }> = ({ player }) => {
     return getRecipe(EntityType.MiningVessel, level);
   }, [player]);
 
-  const spaceRock = components.Home.use(player)?.asteroid as Entity | undefined;
+  const spaceRock = components.Home.use(player) as Entity | undefined;
 
   return (
     <SecondaryCard className="w-full">
@@ -61,7 +61,8 @@ export const MiningVessels: React.FC<{ building: Entity }> = ({ building }) => {
   }).value;
   const mainBaseLvlReq =
     components.P_RequiredBaseLevel.getWithKeys({ level: 0n, prototype: EntityType.MiningVessel as Hex })?.value ?? 1n;
-  const mainBase = components.Home.use(player)?.mainBase;
+  const playerAsteroid = components.Home.use(player)?.value;
+  const mainBase = components.Home.use(playerAsteroid as Entity)?.value;
   if (!mainBase) return null;
   const mainBaseLvl = components.Level.useWithKeys({ entity: mainBase as Hex }, { value: 0n }).value;
 

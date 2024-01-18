@@ -4,13 +4,12 @@ pragma solidity >=0.8.21;
 import { entityToAddress, getSystemResourceId } from "src/utils.sol";
 
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
-import { PirateAsteroid, DefeatedPirate, RaidedResource, RockType, OwnedBy, BattleResultData, RaidResult, RaidResultData, P_IsUtility, P_UnitPrototypes, Home } from "codegen/index.sol";
-import { ERock, ESendType } from "src/Types.sol";
+import { PirateAsteroid, DefeatedPirate, RaidedResource, OwnedBy, BattleResultData, RaidResult, Asteroid, RaidResultData, P_IsUtility, P_UnitPrototypes, Home } from "codegen/index.sol";
+import { ESendType } from "src/Types.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibMath } from "libraries/LibMath.sol";
-import { IWorld } from "codegen/world/IWorld.sol";
 import { S_BattleSystem } from "systems/subsystems/S_BattleSystem.sol";
 import { DUMMY_ADDRESS } from "src/constants.sol";
 
@@ -21,11 +20,8 @@ library LibRaid {
    * @param rockEntity The identifier of the target asteroid rock.
    */
   function raid(bytes32 playerEntity, bytes32 rockEntity) internal {
-    require(RockType.get(rockEntity) == uint8(ERock.Asteroid), "[LibRaid] Can only raid asteroids");
-
+    checkRaidRequirements(playerEntity, rockEntity);
     bytes32 defenderEntity = OwnedBy.get(rockEntity);
-    require(defenderEntity != 0, "[LibRaid] Can not raid unowned rock");
-    require(defenderEntity != playerEntity, "[LibRaid] Can not raid your own rock");
 
     bytes memory rawBr = SystemCall.callWithHooksOrRevert(
       DUMMY_ADDRESS,
@@ -40,7 +36,7 @@ library LibRaid {
   }
 
   function checkRaidRequirements(bytes32 raider, bytes32 rockEntity) internal view {
-    require(RockType.get(rockEntity) == uint8(ERock.Asteroid), "[LibRaid] Can only raid asteroids");
+    require(Asteroid.getIsAsteroid(rockEntity), "[LibRaid] Can only raid asteroids");
     bytes32 defenderEntity = OwnedBy.get(rockEntity);
     require(defenderEntity != 0, "[LibRaid] Can not raid unowned rock");
     require(defenderEntity != raider, "[LibRaid] Can not raid your own rock");
@@ -72,8 +68,8 @@ library LibRaid {
       RaidedResource.set(br.attacker, resource, RaidedResource.get(br.attacker, resource) + raidAmount);
       raidResult.defenderValuesBeforeRaid[i] = defenderResources[i];
       raidResult.raidedAmount[i] = raidAmount;
-      LibStorage.increaseStoredResource(Home.getAsteroid(br.attacker), resource, raidAmount);
-      LibStorage.decreaseStoredResource(Home.getAsteroid(br.defender), resource, raidAmount);
+      LibStorage.increaseStoredResource(Home.get(br.attacker), resource, raidAmount);
+      LibStorage.decreaseStoredResource(Home.get(br.defender), resource, raidAmount);
     }
     RaidResult.set(keccak256(abi.encode(br)), raidResult);
     return raidResult;

@@ -1,19 +1,14 @@
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { ERock, ESendType } from "contracts/config/enums";
 import { useCallback, useMemo } from "react";
 import { Badge } from "src/components/core/Badge";
 import { SecondaryCard } from "src/components/core/Card";
 import { IconLabel } from "src/components/core/IconLabel";
-import { Modal } from "src/components/core/Modal";
 import { useMud } from "src/hooks";
-import { useFleetMoves } from "src/hooks/useFleetMoves";
 import { components } from "src/network/components";
 import { formatNumber } from "src/util/common";
 import { EntityType } from "src/util/constants";
 import { Hex } from "viem";
-import { Recall } from "../../fleet-send/Recall";
-import { SendFleet } from "../../fleet-send/SendFleet";
 import { DefenseLabel } from "../utilities/DefenseLabel";
 import { UnitLabel } from "./UnitLabel";
 
@@ -21,9 +16,7 @@ export const AllUnitLabels = () => {
   const { playerEntity } = useMud().network;
   const selectedAsteroid = components.SelectedRock.use()?.value as Entity | undefined;
   const owner = components.OwnedBy.use(selectedAsteroid)?.value as Entity | undefined;
-  const rockType = components.RockType.get(selectedAsteroid ?? singletonEntity)?.value ?? ERock.Motherlode;
   const units = components.Hangar.use(selectedAsteroid ?? singletonEntity);
-  const fleetMoves = useFleetMoves();
 
   const getUnitCount = useCallback(
     (unit: Entity) => {
@@ -46,10 +39,6 @@ export const AllUnitLabels = () => {
       }, 0n),
     [units, owner, playerEntity, getUnitCount]
   );
-
-  const handleReinforce = () => {
-    components.Send.update({ sendType: ESendType.Reinforce });
-  };
 
   if (!selectedAsteroid) return null;
   return (
@@ -112,7 +101,8 @@ export const AllUnitLabels = () => {
           </Badge>
         )} */}
 
-        {playerEntity === owner && rockType === ERock.Motherlode && (
+        {/* 
+          {playerEntity === owner && rockType === ERock.Motherlode && (
           <div className="flex gap-1">
             <Modal title="Recall">
               <Modal.Content className="w-[51rem]">
@@ -134,7 +124,7 @@ export const AllUnitLabels = () => {
               />
             </Modal>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

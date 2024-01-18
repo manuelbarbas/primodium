@@ -58,12 +58,8 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
     const buildingDimensions = getBuildingDimensions(selectedBuilding);
 
     const hasEnough = hasEnoughResources(getRecipe(selectedBuilding, 1n));
-    const playerEntity = components.Account.get()?.value;
-    const validPlacement = validateBuildingPlacement(
-      tileCoord,
-      selectedBuilding,
-      (components.Home.get(playerEntity)?.asteroid as Entity | undefined) ?? singletonEntity
-    );
+    const selectedRock = components.SelectedRock.get()?.value as Entity;
+    const validPlacement = validateBuildingPlacement(tileCoord, selectedBuilding, selectedRock ?? singletonEntity);
 
     buildingTool.setComponents([
       ObjectPosition(
