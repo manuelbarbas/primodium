@@ -4,7 +4,11 @@ import { getNetworkConfig } from "../config/getNetworkConfig";
 import { Hex, padHex } from "viem";
 import { hydrateFromRPC } from "./rpc";
 
-export const hydrateInitialGameState = (setupResult: SetupResult, onComplete: () => void) => {
+export const hydrateInitialGameState = (
+  setupResult: SetupResult,
+  onComplete: () => void,
+  onError: (err: unknown) => void
+) => {
   const { network, components } = setupResult;
   const { tables, world } = network;
   const networkConfig = getNetworkConfig();
@@ -58,9 +62,11 @@ export const hydrateInitialGameState = (setupResult: SetupResult, onComplete: ()
     // hydrate remaining blocks from RPC
     if (progress === 1) {
       const latestBlockNumber = await network.publicClient.getBlockNumber();
-      hydrateFromRPC(setupResult, fromBlock, latestBlockNumber, onComplete);
+      hydrateFromRPC(setupResult, fromBlock, latestBlockNumber, onComplete, () =>
+        console.warn("Failed to hydrate remaining blocks. Client may be out of sync!")
+      );
     }
-  });
+  }, onError);
 
   world.registerDisposer(sync.unsubscribe);
 };

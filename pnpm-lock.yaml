@@ -153,8 +153,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(csstype@3.1.3)(typescript@5.3.3)(zod@3.22.4)
       '@primodiumxyz/sync-stack':
-        specifier: ^0.2.2
-        version: 0.2.2(@types/react@18.2.6)(react@18.2.0)(typescript@5.3.3)
+        specifier: ^0.3.0
+        version: 0.3.0(@types/react@18.2.6)(react@18.2.0)(typescript@5.3.3)
       '@sentry/react':
         specifier: ^7.88.0
         version: 7.88.0(react@18.2.0)
@@ -3212,8 +3212,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@primodiumxyz/sync-stack@0.2.2(@types/react@18.2.6)(react@18.2.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-jpP6DxMx23O8W+1m15lZqnRuKMaPW9BvNqWUvuye6nQBf58cvL3nj6Eykrh7Unx+/xga3ndtGJkbL+JMWTAnQQ==}
+  /@primodiumxyz/sync-stack@0.3.0(@types/react@18.2.6)(react@18.2.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-jZCJBBxecxrx//MYE7a11IAJlF6An3a3jXe4CNIz93x2+oTw9cAUjcbriRNQLsOhCDqsRcRk6Wlb0L7UB2xECw==}
     dependencies:
       '@latticexyz/block-logs-stream': 2.0.0-main-735d957c(typescript@5.3.3)(zod@3.22.4)
       '@latticexyz/common': 2.0.0-main-735d957c(typescript@5.3.3)(zod@3.22.4)

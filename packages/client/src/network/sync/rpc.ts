@@ -16,7 +16,7 @@ export const subToRPC = (setupResult: SetupResult) => {
   });
 
   sync.start((_, blockNumber) => {
-    console.log("live sync:", blockNumber);
+    console.log("syncing updates on block:", blockNumber);
   });
 
   world.registerDisposer(sync.unsubscribe);
@@ -38,7 +38,6 @@ export const hydrateFromRPC = (
     address: networkConfig.worldAddress as Hex,
     fromBlock,
     publicClient,
-    maxBlockRange: 1n,
     toBlock,
   });
 
