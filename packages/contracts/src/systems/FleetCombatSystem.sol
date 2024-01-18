@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-import { NewBattleResult, NewBattleResultData, FleetMovement, P_GracePeriod } from "codegen/index.sol";
+import { IsFleet, NewBattleResult, NewBattleResultData, FleetMovement, P_GracePeriod } from "codegen/index.sol";
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
 import { NUM_UNITS, NUM_RESOURCE } from "src/constants.sol";
-import { fleetBattleResolveRaid, fleetBattleApplyDamage } from "libraries/SubsystemCalls.sol";
+import { fleetBattleResolveRaid, fleetBattleApplyDamage, resolveBattleEncryption } from "libraries/SubsystemCalls.sol";
 
 contract FleetCombatSystem is FleetBaseSystem {
   function fleetAttackFleet(bytes32 fleetId, bytes32 targetFleet)
@@ -43,6 +43,10 @@ contract FleetCombatSystem is FleetBaseSystem {
 
     if (battleResult.winner == battleResult.aggressorEntity) {
       fleetBattleResolveRaid(battleResult.aggressorEntity, battleResult.targetEntity);
+
+      if (!IsFleet.get(battleResult.targetEntity)) {
+        resolveBattleEncryption(battleResult);
+      }
     }
 
     fleetBattleApplyDamage(battleResult.targetEntity, battleResult.aggressorDamage);

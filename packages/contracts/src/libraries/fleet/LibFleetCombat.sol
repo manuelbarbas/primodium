@@ -120,6 +120,8 @@ library LibFleetCombat {
   }
 
   function resolveBattleEncryption(NewBattleResultData memory battleResult) internal {
+    if (battleResult.winner != battleResult.aggressorEntity) return;
+
     uint256 decryption = LibFleetAttributes.getDecryption(battleResult.aggressorEntity);
     if (decryption == 0) return;
     LibStorage.decreaseStoredResource(battleResult.targetEntity, uint8(EResource.R_Encryption), decryption);

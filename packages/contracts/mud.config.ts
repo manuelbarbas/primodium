@@ -46,6 +46,11 @@ export const config = mudConfig({
       accessList: [DUMMY_ADDRESS],
       name: "S_FleetBattleResolveRaidSystem",
     },
+    S_FleetBattleResolveEncryptionSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+      name: "S_FleetBattleResolveEncryptionSystem",
+    },
   },
 
   enums: MUDEnums,
