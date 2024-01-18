@@ -10,7 +10,12 @@ contract FleetTransferSystem is FleetBaseSystem {
     bytes32 spaceRock,
     bytes32 fleetId,
     uint256[NUM_UNITS] calldata unitCounts
-  ) public _onlySpaceRockOwner(spaceRock) _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock) {
+  )
+    public
+    _onlySpaceRockOwner(spaceRock)
+    _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock)
+    _claimUnits(spaceRock)
+  {
     LibFleetTransfer.transferUnitsFromSpaceRockToFleet(_player(), spaceRock, fleetId, unitCounts);
   }
 
@@ -18,7 +23,12 @@ contract FleetTransferSystem is FleetBaseSystem {
     bytes32 spaceRock,
     bytes32 fleetId,
     uint256[NUM_RESOURCE] calldata resourceCounts
-  ) public _onlySpaceRockOwner(spaceRock) _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock) {
+  )
+    public
+    _onlySpaceRockOwner(spaceRock)
+    _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock)
+    _claimResources(spaceRock)
+  {
     LibFleetTransfer.transferResourcesFromSpaceRockToFleet(_player(), spaceRock, fleetId, resourceCounts);
   }
 
@@ -27,7 +37,13 @@ contract FleetTransferSystem is FleetBaseSystem {
     bytes32 fleetId,
     uint256[NUM_UNITS] calldata unitCounts,
     uint256[NUM_RESOURCE] calldata resourceCounts
-  ) public _onlySpaceRockOwner(spaceRock) _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock) {
+  )
+    public
+    _onlySpaceRockOwner(spaceRock)
+    _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock)
+    _claimResources(spaceRock)
+    _claimUnits(spaceRock)
+  {
     LibFleetTransfer.transferUnitsAndResourcesFromSpaceRockToFleet(
       _player(),
       spaceRock,
@@ -41,7 +57,7 @@ contract FleetTransferSystem is FleetBaseSystem {
     bytes32 fleetId,
     bytes32 spaceRock,
     uint256[NUM_UNITS] calldata unitCounts
-  ) public _onlyFleetOwner(fleetId) _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock) {
+  ) public _onlyFleetOwner(fleetId) _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock) _claimUnits(spaceRock) {
     LibFleetTransfer.transferUnitsFromFleetToSpaceRock(_player(), fleetId, spaceRock, unitCounts);
   }
 
@@ -49,7 +65,7 @@ contract FleetTransferSystem is FleetBaseSystem {
     bytes32 fleetId,
     bytes32 spaceRock,
     uint256[NUM_RESOURCE] calldata resourceCounts
-  ) public _onlyFleetOwner(fleetId) _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock) {
+  ) public _onlyFleetOwner(fleetId) _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock) _claimResources(spaceRock) {
     LibFleetTransfer.transferResourcesFromFleetToSpaceRock(_player(), fleetId, spaceRock, resourceCounts);
   }
 
@@ -58,7 +74,13 @@ contract FleetTransferSystem is FleetBaseSystem {
     bytes32 fleetId,
     uint256[NUM_UNITS] calldata unitCounts,
     uint256[NUM_RESOURCE] calldata resourceCounts
-  ) public _onlyFleetOwner(fleetId) _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock) {
+  )
+    public
+    _onlyFleetOwner(fleetId)
+    _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock)
+    _claimResources(spaceRock)
+    _claimUnits(spaceRock)
+  {
     LibFleetTransfer.transferUnitsAndResourcesFromFleetToSpaceRock(
       _player(),
       spaceRock,

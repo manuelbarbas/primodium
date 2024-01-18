@@ -41,6 +41,8 @@ contract FleetCombatSystem is FleetBaseSystem {
     _onlyFleetOwner(fleetId)
     _onlyWhenNotInStance(fleetId)
     _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, targetSpaceRock)
+    _claimResources(targetSpaceRock)
+    _claimUnits(targetSpaceRock)
   {
     (bytes32 battleId, NewBattleResultData memory batteResult) = LibFleetCombat.attack(fleetId, targetSpaceRock);
 
@@ -52,6 +54,8 @@ contract FleetCombatSystem is FleetBaseSystem {
     _onlyWhenNotInGracePeriod(targetFleet)
     _onlySpaceRockOwner(spaceRock)
     _onlyWhenFleetIsInOrbitOfSpaceRock(targetFleet, spaceRock)
+    _claimResources(spaceRock)
+    _claimUnits(spaceRock)
   {
     (bytes32 battleId, NewBattleResultData memory batteResult) = LibFleetCombat.attack(spaceRock, targetFleet);
     afterBattle(battleId, batteResult);
