@@ -3,7 +3,6 @@ pragma solidity >=0.8.21;
 
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
-import { NUM_UNITS, NUM_RESOURCE } from "src/constants.sol";
 
 contract FleetLandSystem is FleetBaseSystem {
   function landFleet(bytes32 fleetId, bytes32 spaceRock)

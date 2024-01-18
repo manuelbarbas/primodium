@@ -4,7 +4,6 @@ pragma solidity >=0.8.21;
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { FleetMovement, OwnedBy } from "codegen/index.sol";
-import { NUM_UNITS, NUM_RESOURCE } from "src/constants.sol";
 
 contract FleetMergeSystem is FleetBaseSystem {
   modifier _checkRequirements(bytes32[] calldata fleets) {

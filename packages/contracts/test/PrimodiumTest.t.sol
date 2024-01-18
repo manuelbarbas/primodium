@@ -5,7 +5,7 @@ import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 import { ResourceAccess, NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
 import { ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
-import { WORLD_SPEED_SCALE, NUM_UNITS, UNIT_SPEED_SCALE } from "src/constants.sol";
+import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 
 import "src/utils.sol";
@@ -229,8 +229,8 @@ contract PrimodiumTest is MudTest {
     removeRequiredTile(building);
   }
 
-  function getUnitArray(uint256 unit1Count, uint256 unit2Count) internal pure returns (uint256[] memory) {
-    uint256[] memory unitArray = new uint256[](NUM_UNITS);
+  function getUnitArray(uint256 unit1Count, uint256 unit2Count) internal view returns (uint256[] memory) {
+    uint256[] memory unitArray = new uint256[](P_UnitPrototypes.length());
     unitArray[0] = unit1Count;
     unitArray[1] = unit2Count;
     return unitArray;

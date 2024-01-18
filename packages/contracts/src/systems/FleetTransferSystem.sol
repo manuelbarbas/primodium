@@ -3,13 +3,12 @@ pragma solidity >=0.8.21;
 
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleetTransfer } from "libraries/fleet/LibFleetTransfer.sol";
-import { NUM_UNITS, NUM_RESOURCE } from "src/constants.sol";
 
 contract FleetTransferSystem is FleetBaseSystem {
   function transferUnitsFromSpaceRockToFleet(
     bytes32 spaceRock,
     bytes32 fleetId,
-    uint256[NUM_UNITS] calldata unitCounts
+    uint256[] calldata unitCounts
   )
     public
     _onlySpaceRockOwner(spaceRock)
@@ -22,7 +21,7 @@ contract FleetTransferSystem is FleetBaseSystem {
   function transferResourcesFromSpaceRockToFleet(
     bytes32 spaceRock,
     bytes32 fleetId,
-    uint256[NUM_RESOURCE] calldata resourceCounts
+    uint256[] calldata resourceCounts
   )
     public
     _onlySpaceRockOwner(spaceRock)
@@ -35,8 +34,8 @@ contract FleetTransferSystem is FleetBaseSystem {
   function transferUnitsAndResourcesFromSpaceRockToFleet(
     bytes32 spaceRock,
     bytes32 fleetId,
-    uint256[NUM_UNITS] calldata unitCounts,
-    uint256[NUM_RESOURCE] calldata resourceCounts
+    uint256[] calldata unitCounts,
+    uint256[] calldata resourceCounts
   )
     public
     _onlySpaceRockOwner(spaceRock)
@@ -56,7 +55,7 @@ contract FleetTransferSystem is FleetBaseSystem {
   function transferUnitsFromFleetToSpaceRock(
     bytes32 fleetId,
     bytes32 spaceRock,
-    uint256[NUM_UNITS] calldata unitCounts
+    uint256[] calldata unitCounts
   ) public _onlyFleetOwner(fleetId) _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock) _claimUnits(spaceRock) {
     LibFleetTransfer.transferUnitsFromFleetToSpaceRock(_player(), fleetId, spaceRock, unitCounts);
   }
@@ -64,7 +63,7 @@ contract FleetTransferSystem is FleetBaseSystem {
   function transferResourcesFromFleetToSpaceRock(
     bytes32 fleetId,
     bytes32 spaceRock,
-    uint256[NUM_RESOURCE] calldata resourceCounts
+    uint256[] calldata resourceCounts
   ) public _onlyFleetOwner(fleetId) _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock) _claimResources(spaceRock) {
     LibFleetTransfer.transferResourcesFromFleetToSpaceRock(_player(), fleetId, spaceRock, resourceCounts);
   }
@@ -72,8 +71,8 @@ contract FleetTransferSystem is FleetBaseSystem {
   function transferUnitsAndResourcesFromFleetToSpaceRock(
     bytes32 spaceRock,
     bytes32 fleetId,
-    uint256[NUM_UNITS] calldata unitCounts,
-    uint256[NUM_RESOURCE] calldata resourceCounts
+    uint256[] calldata unitCounts,
+    uint256[] calldata resourceCounts
   )
     public
     _onlyFleetOwner(fleetId)
@@ -93,7 +92,7 @@ contract FleetTransferSystem is FleetBaseSystem {
   function transferUnitsFromFleetToFleet(
     bytes32 fromFleetId,
     bytes32 fleetId,
-    uint256[NUM_UNITS] calldata unitCounts
+    uint256[] calldata unitCounts
   ) public _onlyFleetOwner(fromFleetId) _onlyWhenFleetsAreIsInSameOrbit(fromFleetId, fleetId) {
     LibFleetTransfer.transferUnitsFromFleetToFleet(_player(), fromFleetId, fleetId, unitCounts);
   }
@@ -101,7 +100,7 @@ contract FleetTransferSystem is FleetBaseSystem {
   function transferResourcesFromFleetToFleet(
     bytes32 fromFleetId,
     bytes32 fleetId,
-    uint256[NUM_RESOURCE] calldata resourceCounts
+    uint256[] calldata resourceCounts
   ) public _onlyFleetOwner(fromFleetId) _onlyWhenFleetsAreIsInSameOrbit(fromFleetId, fleetId) {
     LibFleetTransfer.transferResourcesFromFleetToFleet(_player(), fromFleetId, fleetId, resourceCounts);
   }
@@ -109,8 +108,8 @@ contract FleetTransferSystem is FleetBaseSystem {
   function transferUnitsAndResourcesFromFleetToFleet(
     bytes32 fromFleetId,
     bytes32 fleetId,
-    uint256[NUM_UNITS] calldata unitCounts,
-    uint256[NUM_RESOURCE] calldata resourceCounts
+    uint256[] calldata unitCounts,
+    uint256[] calldata resourceCounts
   ) public _onlyFleetOwner(fromFleetId) _onlyWhenFleetsAreIsInSameOrbit(fromFleetId, fleetId) {
     LibFleetTransfer.transferUnitsAndResourcesFromFleetToFleet(
       _player(),

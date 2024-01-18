@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { EResource } from "src/Types.sol";
-import { P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, P_GracePeriod, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { P_Transportables, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, P_GracePeriod, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -13,7 +13,7 @@ import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
 
-import { WORLD_SPEED_SCALE, NUM_UNITS, UNIT_SPEED_SCALE, NUM_RESOURCE } from "src/constants.sol";
+import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { EResource, EFleetStance } from "src/Types.sol";
 
 library LibFleet {
@@ -21,8 +21,8 @@ library LibFleet {
   function createFleet(
     bytes32 playerEntity,
     bytes32 spaceRock,
-    uint256[NUM_UNITS] calldata unitCounts,
-    uint256[NUM_RESOURCE] calldata resourceCounts
+    uint256[] calldata unitCounts,
+    uint256[] calldata resourceCounts
   ) internal returns (bytes32 fleetId) {
     require(ResourceCount.get(spaceRock, uint8(EResource.U_MaxMoves)) > 0, "[Fleet] Space rock has no max moves");
     LibStorage.decreaseStoredResource(spaceRock, uint8(EResource.U_MaxMoves), 1);
@@ -42,7 +42,7 @@ library LibFleet {
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
-    for (uint8 i = 0; i < NUM_UNITS; i++) {
+    for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
       uint256 rockUnitCount = UnitCount.get(spaceRock, unitPrototypes[i]);
       require(rockUnitCount >= unitCounts[i], "[Fleet] Not enough units to add to fleet");
@@ -51,7 +51,8 @@ library LibFleet {
     }
 
     uint256 freeCargoSpace = LibFleetAttributes.getFreeCargoSpace(fleetId);
-    for (uint8 i = 0; i < NUM_RESOURCE; i++) {
+    uint8[] memory transportables = P_Transportables.get();
+    for (uint8 i = 0; i < transportables.length; i++) {
       if (resourceCounts[i] == 0) continue;
       uint256 rockResourceCount = ResourceCount.get(spaceRock, i);
       require(rockResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
@@ -134,7 +135,8 @@ library LibFleet {
 
     bool isOwner = spaceRockOwner == spaceRock;
 
-    for (uint8 i = 0; i < NUM_RESOURCE; i++) {
+    uint8[] memory transportables = P_Transportables.get();
+    for (uint8 i = 0; i < transportables.length; i++) {
       uint256 fleetResourceCount = ResourceCount.get(fleetId, i);
       if (fleetResourceCount == 0) continue;
       LibStorage.increaseStoredResource(spaceRock, i, fleetResourceCount);
@@ -142,7 +144,7 @@ library LibFleet {
     }
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    for (uint8 i = 0; i < NUM_UNITS; i++) {
+    for (uint8 i = 0; i < unitPrototypes.length; i++) {
       uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototypes[i]);
       if (fleetUnitCount == 0) continue;
       decreaseFleetUnit(fleetId, unitPrototypes[i], fleetUnitCount, !isOwner);
@@ -169,18 +171,18 @@ library LibFleet {
     bytes32 spaceRockOwner = OwnedBy.get(fleets[0]);
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    uint256[NUM_UNITS] memory unitCounts;
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
     for (uint256 i = 1; i < fleets.length; i++) {
-      for (uint8 j = 0; j < NUM_UNITS; j++) {
+      for (uint8 j = 0; j < unitPrototypes.length; j++) {
         unitCounts[j] += UnitCount.get(fleets[i], unitPrototypes[j]);
       }
     }
 
-    for (uint8 i = 0; i < NUM_UNITS; i++) {
+    for (uint8 i = 0; i < unitPrototypes.length; i++) {
       increaseFleetUnit(fleets[0], unitPrototypes[i], unitCounts[i], false);
     }
-
-    for (uint8 i = 0; i < NUM_RESOURCE; i++) {
+    uint8[] memory transportables = P_Transportables.get();
+    for (uint8 i = 0; i < transportables.length; i++) {
       uint256 totalResourceCount = 0;
       for (uint256 j = 1; j < fleets.length; j++) {
         uint256 resourceCount = ResourceCount.get(fleets[j], i);
@@ -194,7 +196,7 @@ library LibFleet {
     }
 
     for (uint256 i = 1; i < fleets.length; i++) {
-      for (uint8 j = 0; j < NUM_UNITS; j++) {
+      for (uint8 j = 0; j < unitPrototypes.length; j++) {
         uint256 fleetUnitCount = UnitCount.get(fleets[i], unitPrototypes[j]);
         decreaseFleetUnit(fleets[i], unitPrototypes[j], fleetUnitCount, false);
       }

@@ -4,8 +4,6 @@ pragma solidity >=0.8.21;
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
 
-import { NUM_UNITS, NUM_RESOURCE } from "src/constants.sol";
-
 contract FleetMoveSystem is FleetBaseSystem {
   function recallFleet(bytes32 fleetId) public _onlyFleetOwner(fleetId) {
     LibFleetMove.recallFleet(_player(), fleetId);

@@ -3,7 +3,6 @@ pragma solidity >=0.8.21;
 import { FleetStance, IsFleet, NewBattleResult, NewBattleResultData, FleetMovement, P_GracePeriod } from "codegen/index.sol";
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
-import { NUM_UNITS, NUM_RESOURCE } from "src/constants.sol";
 import { EFleetStance } from "src/Types.sol";
 import { fleetBattleResolveRaid, fleetBattleApplyDamage, resolveBattleEncryption } from "libraries/SubsystemCalls.sol";
 

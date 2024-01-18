@@ -4,7 +4,6 @@ pragma solidity >=0.8.21;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { OwnedBy, FleetMovement } from "src/codegen/index.sol";
-import { NUM_UNITS, NUM_RESOURCE } from "src/constants.sol";
 
 contract FleetBaseSystem is PrimodiumSystem {
   modifier _onlyFleetOwner(bytes32 fleetId) {
