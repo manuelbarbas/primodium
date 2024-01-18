@@ -4,7 +4,9 @@ import { EResource, MUDEnums } from "../../config/enums";
 import encodeBytes32 from "../../config/util/encodeBytes32";
 
 export const SCALE = 1e18;
+
 export const encodeArray = (names: string[]) => names.map(encodeBytes32);
+
 export const indexifyResourceArray = (resources: string[]) =>
   resources.map((resource) => MUDEnums.EResource.indexOf(resource));
 
@@ -29,10 +31,10 @@ export const upgradesByLevel = (name: string, upgrades: Record<number, Record<st
     const upgradesObject = Object.entries(upgrades).reduce((prev, [resource, max]) => {
       prev[`${name}${resource}L${level}Upgrade`] = {
         keys: [{ [name32]: "bytes32" }, { [MUDEnums.EResource.indexOf(resource)]: "uint8" }, { [level]: "uint32" }],
-        tables: { P_ByLevelMaxResourceUpgrades: { value: max } },
+        tables: { P_ByLevelMaxResourceUpgrades: { value: BigInt(max) * BigInt(SCALE) } },
       };
       return prev;
-    }, {} as Record<string, { keys: { [x: string]: StaticAbiType }[]; tables: { P_ByLevelMaxResourceUpgrades: { value: number } } }>);
+    }, {} as Record<string, { keys: { [x: string]: StaticAbiType }[]; tables: { P_ByLevelMaxResourceUpgrades: { value: bigint } } }>);
     return { ...prev, ...upgradesObject };
   }, {});
 

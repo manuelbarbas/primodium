@@ -16,10 +16,8 @@ contract PostDeploy is Script {
   function run(address worldAddress) external {
     // Load the private key from the `PRIVATE_KEY` environment variable (in .env)
     uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
-    address admin = vm.addr(deployerPrivateKey);
 
     IWorld world = IWorld(worldAddress);
-    world.creator();
     vm.startBroadcast(deployerPrivateKey);
     StoreSwitch.setStoreAddress(worldAddress);
     world.increment();
@@ -31,8 +29,7 @@ contract PostDeploy is Script {
     createTerrain();
     console.log("Terrain created");
     setupHooks(world);
-
-    // this must be set after the prototypes or else it will be overwritten
+    console.log("Hooks setup");
 
     vm.stopBroadcast();
   }
