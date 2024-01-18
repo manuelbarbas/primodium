@@ -7,7 +7,7 @@ import { NewBattleResultData } from "codegen/index.sol";
 import { NUM_UNITS, NUM_RESOURCE } from "src/constants.sol";
 
 contract S_FleetBattleResolveEncryptionSystem is FleetBaseSystem {
-  function resolveBattleEncryption(NewBattleResultData memory battleResult) public {
-    LibFleetCombat.resolveBattleEncryption(battleResult);
+  function resolveBattleEncryption(bytes32 battleId, NewBattleResultData memory battleResult) public {
+    LibFleetCombat.resolveBattleEncryption(battleId, battleResult);
   }
 }

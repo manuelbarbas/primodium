@@ -37,6 +37,21 @@ library LibSpaceRockAttributes {
     defense = (defense * (100 + ResourceCount.get(spaceRock, uint8(EResource.M_DefenseMultiplier)))) / 100;
   }
 
+  function getDefensesWithDefenders(bytes32 spaceRock)
+    internal
+    view
+    returns (uint256[] memory defenses, uint256 totalDefense)
+  {
+    bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(spaceRock);
+    defenses = new uint256[](defenderFleetIds.length + 1);
+    defenses[0] = getDefense(spaceRock);
+    totalDefense += defenses[0];
+    for (uint8 i = 0; i < defenderFleetIds.length; i++) {
+      defenses[i + 1] = LibFleetAttributes.getDefense(defenderFleetIds[i]);
+      totalDefense += defenses[i + 1];
+    }
+  }
+
   function getDefenseWithDefenders(bytes32 spaceRock) internal view returns (uint256 defense) {
     defense = getDefense(spaceRock);
     bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(spaceRock);

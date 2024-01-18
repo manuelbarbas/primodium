@@ -6,7 +6,11 @@ import { LibFleetRaid } from "libraries/fleet/LibFleetRaid.sol";
 import { NUM_UNITS, NUM_RESOURCE } from "src/constants.sol";
 
 contract S_FleetBattleResolveRaidSystem is FleetBaseSystem {
-  function resolveBattleRaid(bytes32 raider, bytes32 target) public {
-    LibFleetRaid.resolveBattleRaid(raider, target);
+  function resolveBattleRaid(
+    bytes32 battleId,
+    bytes32 raider,
+    bytes32 target
+  ) public {
+    LibFleetRaid.resolveBattleRaid(battleId, raider, target);
   }
 }

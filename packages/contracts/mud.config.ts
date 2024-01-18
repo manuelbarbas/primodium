@@ -501,12 +501,19 @@ export const config = mudConfig({
       offchainOnly: true,
     },
 
-    BattleDamageResult: {
+    BattleDamageDealtResult: {
       keySchema: { battleId: "bytes32", participantEntity: "bytes32" },
       valueSchema: {
         damageDealt: "uint256",
-        damageTaken: "uint256",
+      },
+      offchainOnly: true,
+    },
+
+    BattleDamageTakenResult: {
+      keySchema: { battleId: "bytes32", participantEntity: "bytes32" },
+      valueSchema: {
         hpAtStart: "uint256",
+        damageTaken: "uint256",
       },
       offchainOnly: true,
     },
@@ -516,7 +523,7 @@ export const config = mudConfig({
       valueSchema: {
         unitLevels: "uint256[]",
         unitsAtStart: "uint256[]",
-        unitsAtEnd: "uint256[]",
+        casualties: "uint256[]",
       },
       offchainOnly: true,
     },

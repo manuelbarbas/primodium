@@ -6,7 +6,11 @@ import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
 import { NUM_UNITS, NUM_RESOURCE } from "src/constants.sol";
 
 contract S_FleetBattleApplyDamageSystem is FleetBaseSystem {
-  function applyDamageToWithAllies(bytes32 entity, uint256 damage) public {
-    LibFleetCombat.applyDamageToWithAllies(entity, damage);
+  function applyDamageToWithAllies(
+    bytes32 battleId,
+    bytes32 entity,
+    uint256 damage
+  ) public {
+    LibFleetCombat.applyDamageToWithAllies(battleId, entity, damage);
   }
 }

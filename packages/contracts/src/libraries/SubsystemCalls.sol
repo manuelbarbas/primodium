@@ -16,29 +16,37 @@ import { S_SpendResourcesSystem } from "systems/subsystems/S_SpendResourcesSyste
 
 /* --------------------------------- BATTLE --------------------------------- */
 
-function fleetBattleApplyDamage(bytes32 targetEntity, uint256 damage) {
+function fleetBattleApplyDamage(
+  bytes32 battleId,
+  bytes32 targetEntity,
+  uint256 damage
+) {
   SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
     getSystemResourceId("S_FleetBattleApplyDamageSystem"),
-    abi.encodeCall(S_FleetBattleApplyDamageSystem.applyDamageToWithAllies, (targetEntity, damage)),
+    abi.encodeCall(S_FleetBattleApplyDamageSystem.applyDamageToWithAllies, (battleId, targetEntity, damage)),
     0
   );
 }
 
-function fleetBattleResolveRaid(bytes32 raider, bytes32 target) {
+function fleetBattleResolveRaid(
+  bytes32 battleId,
+  bytes32 raider,
+  bytes32 target
+) {
   SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
     getSystemResourceId("S_FleetBattleResolveRaidSystem"),
-    abi.encodeCall(S_FleetBattleResolveRaidSystem.resolveBattleRaid, (raider, target)),
+    abi.encodeCall(S_FleetBattleResolveRaidSystem.resolveBattleRaid, (battleId, raider, target)),
     0
   );
 }
 
-function resolveBattleEncryption(NewBattleResultData memory battleResult) {
+function resolveBattleEncryption(bytes32 battleId, NewBattleResultData memory battleResult) {
   SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
     getSystemResourceId("S_FleetBattleResolveEncryptionSystem"),
-    abi.encodeCall(S_FleetBattleResolveEncryptionSystem.resolveBattleEncryption, (battleResult)),
+    abi.encodeCall(S_FleetBattleResolveEncryptionSystem.resolveBattleEncryption, (battleId, battleResult)),
     0
   );
 }

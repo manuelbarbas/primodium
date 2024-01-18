@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { EResource } from "src/Types.sol";
-import { P_Transportables, IsFleet, MaxResourceCount, NewBattleResult, NewBattleResultData, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, MaxResourceCount, NewBattleResult, NewBattleResultData, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -22,42 +22,53 @@ import { WORLD_SPEED_SCALE, NUM_UNITS, UNIT_SPEED_SCALE, NUM_RESOURCE } from "sr
 import { EResource, EFleetStance } from "src/Types.sol";
 
 library LibFleetCombat {
-  function fleetAttackFleet(
-    bytes32 playerEntity,
-    bytes32 fleetId,
-    bytes32 targetFleet
-  ) internal returns (NewBattleResultData memory battleResult) {
-    bytes32 spaceRock = FleetMovement.getDestination(fleetId);
+  function getDefensesWithAllies(bytes32 entity) internal view returns (uint256[] memory, uint256) {
+    return
+      IsFleet.get(entity)
+        ? LibFleetAttributes.getDefensesWithFollowers(entity)
+        : LibSpaceRockAttributes.getDefensesWithDefenders(entity);
+  }
 
-    require(FleetStance.getStance(fleetId) == 0, "[Fleet] Aggressor fleet can not be in a stance");
+  function attack(bytes32 entity, bytes32 targetEntity)
+    internal
+    returns (bytes32 battleId, NewBattleResultData memory battleResult)
+  {
+    bool aggressorIsFleet = IsFleet.get(entity);
 
-    uint8 targetFleetStance = FleetStance.getStance(targetFleet);
+    bytes32 spaceRock = aggressorIsFleet ? FleetMovement.getDestination(entity) : entity;
 
-    //if target fleet is in a stance, redirect attack to target of stance
-    require(
-      targetFleetStance != uint8(EFleetStance.Defend),
-      "[Fleet] Target fleet is defending space rock, target space rock instead"
-    );
+    battleId = LibEncode.getTimedHash(spaceRock);
 
-    if (targetFleetStance == uint8(EFleetStance.Follow)) {
-      fleetAttackFleet(playerEntity, fleetId, FleetStance.getTarget(targetFleet));
-      return battleResult;
+    (uint256[] memory aggressorDamages, uint256 aggressorDamage) = aggressorIsFleet
+      ? LibFleetAttributes.getAttacksWithFollowers(entity)
+      : LibSpaceRockAttributes.getDefensesWithDefenders(entity);
+
+    BattleDamageDealtResult.set(battleId, entity, aggressorDamages[0]);
+
+    bytes32[] memory aggressorAllies = getAllies(entity);
+    for (uint256 i = 0; i < aggressorAllies.length; i++) {
+      BattleDamageDealtResult.set(battleId, aggressorAllies[i], aggressorDamages[i + 1]);
     }
 
-    uint256 attackerDamage = LibFleetAttributes.getAttackWithFollowers(fleetId);
+    (uint256[] memory targetDamages, uint256 targetDamage) = aggressorIsFleet
+      ? getDefensesWithAllies(targetEntity)
+      : LibFleetAttributes.getAttacksWithFollowers(targetEntity);
 
-    uint256 targetDamage = LibFleetAttributes.getDefenseWithFollowers(targetFleet);
+    BattleDamageDealtResult.set(battleId, targetEntity, targetDamages[0]);
 
-    bytes32 battleId = LibEncode.getTimedHash(spaceRock);
+    bytes32[] memory targetAllies = getAllies(targetEntity);
+    for (uint256 i = 0; i < targetAllies.length; i++) {
+      BattleDamageDealtResult.set(battleId, targetAllies[i], targetDamages[i + 1]);
+    }
 
     battleResult = NewBattleResultData({
-      aggressorEntity: fleetId,
-      aggressorDamage: attackerDamage,
-      targetEntity: targetFleet,
+      aggressorEntity: entity,
+      aggressorDamage: aggressorDamage,
+      targetEntity: targetEntity,
       targetDamage: targetDamage,
-      aggressorAllies: LibFleetStance.getFollowerFleets(fleetId),
-      targetAllies: LibFleetStance.getFollowerFleets(targetFleet),
-      winner: attackerDamage > targetDamage ? fleetId : targetFleet,
+      aggressorAllies: aggressorAllies,
+      targetAllies: targetAllies,
+      winner: aggressorDamage > targetDamage ? entity : targetEntity,
       rock: spaceRock,
       timestamp: block.timestamp
     });
@@ -65,68 +76,21 @@ library LibFleetCombat {
     NewBattleResult.set(battleId, battleResult);
   }
 
-  function fleetAttackSpaceRock(
-    bytes32 playerEntity,
-    bytes32 fleetId,
-    bytes32 targetSpaceRock
-  ) internal returns (NewBattleResultData memory battleResult) {
-    require(FleetStance.getStance(fleetId) == 0, "[Fleet] Aggressor fleet can not be in a stance");
-
-    uint256 attackerDamage = LibFleetAttributes.getAttackWithFollowers(fleetId);
-
-    uint256 targetDamage = LibSpaceRockAttributes.getDefenseWithDefenders(targetSpaceRock);
-
-    bytes32 battleId = LibEncode.getTimedHash(targetSpaceRock);
-
-    battleResult = NewBattleResultData({
-      aggressorEntity: fleetId,
-      aggressorDamage: attackerDamage,
-      targetEntity: targetSpaceRock,
-      targetDamage: targetDamage,
-      aggressorAllies: LibFleetStance.getFollowerFleets(fleetId),
-      targetAllies: LibFleetStance.getDefendingFleets(targetSpaceRock),
-      winner: attackerDamage > targetDamage ? fleetId : targetSpaceRock,
-      rock: targetSpaceRock,
-      timestamp: block.timestamp
-    });
-
-    NewBattleResult.set(battleId, battleResult);
-  }
-
-  function spaceRockAttackFleet(
-    bytes32 playerEntity,
-    bytes32 spaceRock,
-    bytes32 targetFleet
-  ) internal returns (NewBattleResultData memory battleResult) {
-    uint256 attackerDamage = LibSpaceRockAttributes.getDefenseWithDefenders(spaceRock);
-
-    uint256 targetDamage = LibFleetAttributes.getAttackWithFollowers(targetFleet);
-
-    bytes32 battleId = LibEncode.getTimedHash(spaceRock);
-
-    battleResult = NewBattleResultData({
-      aggressorEntity: spaceRock,
-      aggressorDamage: attackerDamage,
-      targetEntity: targetFleet,
-      targetDamage: targetDamage,
-      aggressorAllies: LibFleetStance.getDefendingFleets(spaceRock),
-      targetAllies: LibFleetStance.getFollowerFleets(targetFleet),
-      winner: attackerDamage > targetDamage ? spaceRock : targetFleet,
-      rock: spaceRock,
-      timestamp: block.timestamp
-    });
-
-    NewBattleResult.set(battleId, battleResult);
-  }
-
-  function resolveBattleEncryption(NewBattleResultData memory battleResult) internal {
+  function resolveBattleEncryption(bytes32 battleId, NewBattleResultData memory battleResult) internal {
     if (battleResult.winner != battleResult.aggressorEntity) return;
 
     uint256 decryption = LibFleetAttributes.getDecryption(battleResult.aggressorEntity);
     if (decryption == 0) return;
+
+    uint256 encryptionAtStart = ResourceCount.get(battleResult.targetEntity, uint8(EResource.R_Encryption));
+
     LibStorage.decreaseStoredResource(battleResult.targetEntity, uint8(EResource.R_Encryption), decryption);
-    if (ResourceCount.get(battleResult.targetEntity, uint8(EResource.R_Encryption)) == 0)
-      transferSpaceRockOwnership(battleResult.rock, battleResult.aggressorEntity);
+
+    uint256 encryptionAtEnd = ResourceCount.get(battleResult.targetEntity, uint8(EResource.R_Encryption));
+
+    BattleEncryptionResult.set(battleId, battleResult.targetEntity, encryptionAtStart, encryptionAtEnd);
+
+    if (encryptionAtEnd == 0) transferSpaceRockOwnership(battleResult.rock, battleResult.aggressorEntity);
   }
 
   function transferSpaceRockOwnership(bytes32 spaceRock, bytes32 newOwner) internal {
@@ -148,9 +112,14 @@ library LibFleetCombat {
         : LibSpaceRockAttributes.getTotalHpWithDefenders(entity);
   }
 
-  function applyDamageToWithAllies(bytes32 entity, uint256 damage) internal {
+  function applyDamageToWithAllies(
+    bytes32 battleId,
+    bytes32 entity,
+    uint256 damage
+  ) internal {
     if (damage == 0) return;
 
+    // get total hp of target and their allies as damage will be split between them
     (uint256[] memory hps, uint256 totalHp) = getHpWithAllies(entity);
 
     if (totalHp == 0) return;
@@ -162,21 +131,26 @@ library LibFleetCombat {
     uint256 damageDealt = 0;
 
     if (IsFleet.get(entity)) {
-      damageDealt = applyDamageToFleet(entity, totalHp, (damage * hps[0]) / totalHp);
+      damageDealt = applyDamageToUnits(battleId, entity, totalHp, damage);
     } else {
-      damageDealt = applyDamageToSpaceRock(entity, totalHp, (damage * hps[0]) / totalHp);
+      damageDealt = applyDamageToSpaceRock(battleId, entity, totalHp, damage);
     }
+
+    BattleDamageTakenResult.set(battleId, entity, hps[0], damageDealt);
 
     if (damageDealt >= damage) return;
 
     bytes32[] memory allies = getAllies(entity);
     for (uint256 i = 0; i < allies.length; i++) {
-      damageDealt += applyDamageToFleet(allies[i], totalHp, (damage * hps[i + 1]) / totalHp);
+      uint256 damageDealtToAlly = applyDamageToUnits(battleId, allies[i], totalHp, damage);
+      BattleDamageTakenResult.set(battleId, allies[i], hps[i + 1], damageDealtToAlly);
+      damageDealt += damageDealtToAlly;
       if (damageDealt >= damage) return;
     }
   }
 
   function applyDamageToSpaceRock(
+    bytes32 battleId,
     bytes32 spaceRock,
     uint256 totalHp,
     uint256 damage
@@ -191,56 +165,60 @@ library LibFleetCombat {
 
     if (damageDealt >= damage) return damageDealt;
 
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    uint256[] memory casualties = new uint256[](unitPrototypes.length);
+    damageDealt += applyDamageToUnits(battleId, spaceRock, totalHp - currHp, damage - damageDealt);
 
-    for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      uint256 unitCount = UnitCount.get(spaceRock, unitPrototypes[i]);
-      if (unitCount == 0) continue;
-
-      uint256 unitHp = P_Unit.getHp(unitPrototypes[i], UnitLevel.get(spaceRock, unitPrototypes[i]));
-      damagePortion = (unitCount * unitHp * damage);
-      casualties[i] = LibMath.divideRoundNear(damagePortion, totalHp);
-
-      LibUnit.decreaseUnitCount(spaceRock, unitPrototypes[i], casualties[i], true);
-
-      damagePortion = casualties[i] * unitHp;
-      damageDealt += damagePortion;
-
-      if (damageDealt >= damage) return damageDealt;
-    }
+    return damageDealt;
   }
 
-  function applyDamageToFleet(
-    bytes32 fleetId,
+  function applyDamageToUnits(
+    bytes32 battleId,
+    bytes32 targetEntity,
     uint256 totalHp,
     uint256 damage
   ) internal returns (uint256 damageDealt) {
-    if (damage == 0) return 0;
-    damageDealt = 0;
-    bytes32 spaceRock = OwnedBy.get(fleetId);
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    uint256[] memory casualties = new uint256[](unitPrototypes.length);
+    BattleUnitResultData memory unitResult = BattleUnitResultData({
+      unitsAtStart: new uint256[](unitPrototypes.length),
+      unitLevels: new uint256[](unitPrototypes.length),
+      casualties: new uint256[](unitPrototypes.length)
+    });
+
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      uint256 unitCount = UnitCount.get(fleetId, unitPrototypes[i]);
-      if (unitCount == 0) continue;
+      unitResult.unitsAtStart[i] = UnitCount.get(targetEntity, unitPrototypes[i]);
+      if (unitResult.unitsAtStart[i] == 0) continue;
+      unitResult.unitLevels[i] = UnitLevel.get(targetEntity, unitPrototypes[i]);
+      uint256 unitHp = P_Unit.getHp(unitPrototypes[i], unitResult.unitLevels[i]);
+      uint256 damagePortion = (unitResult.unitsAtStart[i] * unitHp * damage);
+      unitResult.casualties[i] = LibMath.divideRoundNear(damagePortion, totalHp);
 
-      uint256 unitHp = P_Unit.getHp(unitPrototypes[i], UnitLevel.get(spaceRock, unitPrototypes[i]));
-      uint256 damagePortion = (unitCount * unitHp * damage);
-      casualties[i] = LibMath.divideRoundNear(damagePortion, totalHp);
+      applyUnitCasualty(targetEntity, unitPrototypes[i], unitResult.casualties[i]);
 
-      LibFleet.decreaseFleetUnit(fleetId, unitPrototypes[i], casualties[i], true);
-
-      damagePortion = casualties[i] * unitHp;
+      damagePortion = unitResult.casualties[i] * unitHp;
       damageDealt += damagePortion;
-
       if (damageDealt >= damage) return damageDealt;
     }
 
-    uint256 cargo = LibFleetAttributes.getCargo(fleetId);
-    uint256 occupiedCargo = LibFleetAttributes.getOccupiedCargo(fleetId);
-    if (cargo < occupiedCargo) {
-      applyLostCargo(fleetId, cargo, occupiedCargo);
+    BattleUnitResult.set(battleId, targetEntity, unitResult);
+
+    if (IsFleet.get(targetEntity)) {
+      uint256 cargo = LibFleetAttributes.getCargo(targetEntity);
+      uint256 occupiedCargo = LibFleetAttributes.getOccupiedCargo(targetEntity);
+      if (cargo < occupiedCargo) {
+        applyLostCargo(targetEntity, cargo, occupiedCargo);
+      }
+    }
+  }
+
+  function applyUnitCasualty(
+    bytes32 targetEntity,
+    bytes32 unitPrototype,
+    uint256 unitCount
+  ) internal {
+    if (unitCount == 0) return;
+    if (IsFleet.get(targetEntity)) {
+      LibFleet.decreaseFleetUnit(targetEntity, unitPrototype, unitCount, true);
+    } else {
+      LibUnit.decreaseUnitCount(targetEntity, unitPrototype, unitCount, true);
     }
   }
 

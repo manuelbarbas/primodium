@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { EResource } from "src/Types.sol";
-import { P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { IsFleet, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -31,6 +31,10 @@ library LibFleetStance {
       FleetStance.set(followingFleets[i], uint8(EFleetStance.None), bytes32(0));
     }
     FleetsMap.clear(fleetId, fleetFollowKey);
+  }
+
+  function getAllies(bytes32 entity) internal view returns (bytes32[] memory) {
+    IsFleet.get(entity) ? getFollowerFleets(entity) : getDefendingFleets(entity);
   }
 
   function getFollowerFleets(bytes32 fleetId) internal view returns (bytes32[] memory) {
