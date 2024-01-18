@@ -2,14 +2,16 @@
 pragma solidity >=0.8.21;
 
 import { ERock, EResource } from "src/Types.sol";
-import { P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetAttributesData, FleetAttributes, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
-import { LibFleet } from "libraries/LibFleet.sol";
-import { FleetsMap } from "libraries/FleetsMap.sol";
+import { LibFleet } from "libraries/fleet/LibFleet.sol";
+import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
+import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
+import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
 import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
 
 import { WORLD_SPEED_SCALE, NUM_UNITS, UNIT_SPEED_SCALE, NUM_RESOURCE } from "src/constants.sol";
@@ -21,27 +23,20 @@ library LibFleetMove {
     bytes32 fleetId,
     bytes32 destination
   ) internal {
-    require(LibFleet.isFleetDamaged(fleetId) == false, "[Fleet] Can not move damaged fleet");
-
     bytes32 origin = FleetMovement.getDestination(fleetId);
     require(!isSpaceRockBlocked(origin), "[Fleet] Space rock is blocked");
 
-    bytes32 followingFleetsKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Follow));
-    bytes32[] memory followingFleets = FleetsMap.getFleetIds(fleetId, followingFleetsKey);
-    uint256 slowestSpeed = FleetAttributes.getSpeed(fleetId);
-    for (uint256 i = 0; i < followingFleets.length; i++) {
-      uint256 speed = FleetAttributes.getSpeed(followingFleets[i]);
-      if (speed < slowestSpeed) slowestSpeed = speed;
-    }
-    uint256 arrivalTime = getArrivalTime(origin, Position.get(destination), slowestSpeed);
+    uint256 speed = LibFleetAttributes.getSpeedWithFollowers(fleetId);
 
-    sendFleet(fleetId, destination, arrivalTime);
+    uint256 arrivalTime = getArrivalTime(origin, Position.get(destination), speed);
+    _sendFleet(fleetId, destination, arrivalTime);
+    bytes32[] memory followingFleets = LibFleetStance.getFollowerFleets(fleetId);
     for (uint256 i = 0; i < followingFleets.length; i++) {
-      sendFleet(followingFleets[i], destination, arrivalTime);
+      _sendFleet(followingFleets[i], destination, arrivalTime);
     }
   }
 
-  function sendFleet(
+  function _sendFleet(
     bytes32 fleetId,
     bytes32 destination,
     uint256 arrivalTime
@@ -72,13 +67,13 @@ library LibFleetMove {
     bytes32 destination = FleetMovement.getOrigin(fleetId);
     uint256 arrivalTime = block.timestamp + block.timestamp - FleetMovement.getSendTime(fleetId);
 
-    sendFleet(fleetId, destination, arrivalTime);
+    _sendFleet(fleetId, destination, arrivalTime);
 
     bytes32 followingFleetsKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Follow));
     bytes32[] memory followingFleets = FleetsMap.getFleetIds(fleetId, followingFleetsKey);
 
     for (uint256 i = 0; i < followingFleets.length; i++) {
-      sendFleet(followingFleets[i], destination, arrivalTime);
+      _sendFleet(followingFleets[i], destination, arrivalTime);
     }
   }
 

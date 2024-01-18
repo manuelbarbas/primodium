@@ -24,6 +24,12 @@ export const config = mudConfig({
       accessList: [DUMMY_ADDRESS],
       name: "S_SpawnPirateAsteroidSystem",
     },
+
+    S_FleetBattleApplyDamageSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+      name: "S_FleetBattleApplyDamageSystem",
+    },
   },
 
   enums: MUDEnums,
@@ -165,6 +171,11 @@ export const config = mudConfig({
     P_IsRecoverable: {
       keySchema: { id: "uint8" }, // EResource
       valueSchema: "bool",
+    },
+
+    P_Transportables: {
+      keySchema: {},
+      valueSchema: "uint8[]", // EResource
     },
 
     // tracks the max resource a player can store
@@ -375,7 +386,7 @@ export const config = mudConfig({
         cargo: "uint256",
         trainingTime: "uint256",
         hp: "uint256",
-        encryption: "uint256",
+        decryption: "uint256",
       },
     },
 
@@ -428,20 +439,6 @@ export const config = mudConfig({
       },
     },
 
-    FleetAttributes: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
-        attack: "uint256",
-        defense: "uint256",
-        speed: "uint256",
-        cargo: "uint256",
-        occupiedCargo: "uint256",
-        maxHp: "uint256",
-        hp: "uint256",
-        encryption: "uint256",
-      },
-    },
-
     FleetStance: {
       keySchema: { entity: "bytes32" },
       valueSchema: {
@@ -488,10 +485,12 @@ export const config = mudConfig({
     },
 
     NewBattleResult: {
-      keySchema: { entity: "bytes32" },
+      keySchema: { battleId: "bytes32" },
       valueSchema: {
         aggressorEntity: "bytes32", //can be fleet or space rock
+        aggressorDamage: "uint256", //can be fleet or space rock
         targetEntity: "bytes32", //can be fleet or space rock
+        targetDamage: "uint256", //can be fleet or space rock
         winner: "bytes32",
         rock: "bytes32", // place where battle took place
         timestamp: "uint256", // timestamp of battle
@@ -501,17 +500,40 @@ export const config = mudConfig({
       offchainOnly: true,
     },
 
-    FleetOutcome: {
-      keySchema: { entity: "bytes32", fleetId: "bytes32" },
+    BattleDamageResult: {
+      keySchema: { battleId: "bytes32", participantEntity: "bytes32" },
       valueSchema: {
-        owner: "bytes32",
-        timestamp: "uint256",
+        damageDealt: "uint256",
         damageTaken: "uint256",
+        hpAtStart: "uint256",
+      },
+      offchainOnly: true,
+    },
+
+    BattleUnitResult: {
+      keySchema: { battleId: "bytes32", participantEntity: "bytes32" },
+      valueSchema: {
         unitLevels: "uint256[]",
         unitsAtStart: "uint256[]",
         unitsAtEnd: "uint256[]",
+      },
+      offchainOnly: true,
+    },
+
+    BattleRaidResult: {
+      keySchema: { battleId: "bytes32", participantEntity: "bytes32" },
+      valueSchema: {
         resourcesAtStart: "uint256[]",
         resourcesAtEnd: "uint256[]",
+      },
+      offchainOnly: true,
+    },
+
+    BattleEncryptionResult: {
+      keySchema: { battleId: "bytes32", participantEntity: "bytes32" },
+      valueSchema: {
+        encryptionAtStart: "uint256",
+        encryptionAtEnd: "uint256",
       },
       offchainOnly: true,
     },

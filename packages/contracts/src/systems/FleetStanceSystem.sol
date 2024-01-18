@@ -2,14 +2,14 @@
 pragma solidity >=0.8.21;
 
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
-import { LibFleetStance } from "codegen/Libraries.sol";
+import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { FleetStance, FleetMovement } from "src/codegen/index.sol";
 import { EFleetStance } from "src/codegen/common.sol";
 import { NUM_UNITS, NUM_RESOURCE } from "src/constants.sol";
 
 contract FleetStanceSystem is FleetBaseSystem {
   function clearFleetStance(bytes32 fleetId) public _onlyFleetOwner(fleetId) _onlyWhenFleetIsInOrbit(fleetId) {
-    LibFleetStance.clearFleetStance(_player(), fleetId);
+    LibFleetStance.clearFleetStance(fleetId);
   }
 
   function setFleetStance(
@@ -24,6 +24,6 @@ contract FleetStanceSystem is FleetBaseSystem {
     if (stance == uint8(EFleetStance.Defend) || stance == uint8(EFleetStance.Block)) {
       require(FleetMovement.getDestination(fleetId) == target, "[Fleet] Fleet must be in orbit of target space rock");
     }
-    LibFleetStance.setFleetStance(_player(), fleetId, stance, target);
+    LibFleetStance.setFleetStance(fleetId, stance, target);
   }
 }

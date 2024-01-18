@@ -2,13 +2,15 @@
 pragma solidity >=0.8.21;
 
 import { ERock, EResource } from "src/Types.sol";
-import { P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetAttributesData, FleetAttributes, FleetMovementData, FleetMovement, Spawned, P_GracePeriod, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, P_GracePeriod, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
-import { FleetsMap } from "libraries/FleetsMap.sol";
+import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
+import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
+import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
 
 import { WORLD_SPEED_SCALE, NUM_UNITS, UNIT_SPEED_SCALE, NUM_RESOURCE } from "src/constants.sol";
@@ -48,6 +50,7 @@ library LibFleet {
       increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], false);
     }
 
+    uint256 freeCargoSpace = LibFleetAttributes.getFreeCargoSpace(fleetId);
     for (uint8 i = 0; i < NUM_RESOURCE; i++) {
       if (resourceCounts[i] == 0) continue;
       uint256 rockResourceCount = ResourceCount.get(spaceRock, i);
@@ -67,33 +70,17 @@ library LibFleet {
     bool updatesUtility
   ) internal {
     if (unitCount == 0) return;
-    FleetAttributesData memory fleetAttributes = FleetAttributes.get(fleetId);
     bytes32 ownerSpaceRockEntity = OwnedBy.get(fleetId);
     uint256 unitLevel = UnitLevel.get(ownerSpaceRockEntity, unitPrototype);
     P_UnitData memory unitData = P_Unit.get(unitPrototype, unitLevel);
-
     require(
-      unitData.encryption == 0 || (unitCount == 1 && fleetAttributes.encryption == 0),
+      unitData.decryption == 0 || (unitCount == 1 && LibFleetAttributes.getDecryption(fleetId) == 0),
       "[Fleet] Fleet can only have one colony ship"
     );
-    uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototype);
-    if (fleetUnitCount == 0) {
-      if (unitData.speed < fleetAttributes.speed) {
-        fleetAttributes.speed = unitData.speed;
-      }
-    }
-    fleetAttributes.attack += unitData.attack * unitCount;
-    fleetAttributes.defense += unitData.defense * unitCount;
-    fleetAttributes.cargo += unitData.cargo * unitCount;
-    fleetAttributes.maxHp += unitData.hp * unitCount;
-    fleetAttributes.hp += unitData.hp * unitCount;
-    fleetAttributes.encryption += unitData.encryption * unitCount;
-    FleetAttributes.set(fleetId, fleetAttributes);
     if (updatesUtility) {
       LibUnit.updateStoredUtilities(ownerSpaceRockEntity, unitPrototype, unitCount, true);
     }
-
-    UnitCount.set(fleetId, unitPrototype, fleetUnitCount + unitCount);
+    UnitCount.set(fleetId, unitPrototype, UnitCount.get(fleetId, unitPrototype) + unitCount);
   }
 
   function decreaseFleetUnit(
@@ -106,29 +93,10 @@ library LibFleet {
 
     uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototype);
     require(fleetUnitCount >= unitCount, "[Fleet] Not enough units to remove from fleet");
-
-    FleetAttributesData memory fleetAttributes = FleetAttributes.get(fleetId);
     bytes32 ownerSpaceRockEntity = OwnedBy.get(fleetId);
     uint256 unitLevel = UnitLevel.get(ownerSpaceRockEntity, unitPrototype);
     P_UnitData memory unitData = P_Unit.get(unitPrototype, unitLevel);
-    if (fleetUnitCount - unitCount == 0) {
-      if (unitData.speed == fleetAttributes.speed) {
-        fleetAttributes.speed = unitData.speed;
-      }
-    }
-    fleetAttributes.attack -= unitData.attack * unitCount;
-    fleetAttributes.defense -= unitData.defense * unitCount;
-    fleetAttributes.cargo -= unitData.cargo * unitCount;
-    fleetAttributes.encryption -= unitData.encryption * unitCount;
-    require(
-      fleetAttributes.cargo >= FleetAttributes.getOccupiedCargo(fleetId),
-      "[Fleet] Fleet doesn't have enough storage"
-    );
-    uint256 hpDifferential = unitData.hp * unitCount;
-    fleetAttributes.maxHp -= hpDifferential;
-    if (fleetAttributes.hp > fleetAttributes.maxHp) {
-      fleetAttributes.hp = fleetAttributes.maxHp;
-    }
+
     if (updatesUtility) {
       LibUnit.updateStoredUtilities(ownerSpaceRockEntity, unitPrototype, unitCount, false);
     }
@@ -141,13 +109,9 @@ library LibFleet {
     uint256 amount
   ) internal {
     if (amount == 0) return;
-    uint256 currOccupiedCargo = FleetAttributes.getOccupiedCargo(fleetId);
-    require(
-      currOccupiedCargo + amount <= FleetAttributes.getCargo(fleetId),
-      "[Fleet] Not enough storage to add resource"
-    );
+    uint256 freeCargoSpace = LibFleetAttributes.getFreeCargoSpace(fleetId);
+    require(freeCargoSpace >= amount, "[Fleet] Not enough storage to add resource");
     ResourceCount.set(fleetId, resource, ResourceCount.get(fleetId, resource) + amount);
-    FleetAttributes.setOccupiedCargo(fleetId, currOccupiedCargo + amount);
   }
 
   function decreaseFleetResource(
@@ -156,11 +120,9 @@ library LibFleet {
     uint256 amount
   ) internal {
     if (amount == 0) return;
-    uint256 currOccupiedCargo = FleetAttributes.getOccupiedCargo(fleetId);
     uint256 currResourceCount = ResourceCount.get(fleetId, resource);
-    require(currResourceCount >= amount && currOccupiedCargo >= amount, "[Fleet] Not enough stored resource to remove");
+    require(currResourceCount >= amount, "[Fleet] Not enough stored resource to remove");
     ResourceCount.set(fleetId, resource, currResourceCount - amount);
-    FleetAttributes.setOccupiedCargo(fleetId, currOccupiedCargo - amount);
   }
 
   function landFleet(
@@ -242,9 +204,19 @@ library LibFleet {
   }
 
   function resetFleetOrbit(bytes32 fleetId) internal {
+    //clears any stance
+    LibFleetStance.clearFleetStance(fleetId);
+    //clears any following fleets
+    LibFleetStance.clearFollowingFleets(fleetId);
+
+    //remove fleet from incoming of current space rock
     bytes32 spaceRock = FleetMovement.getDestination(fleetId);
-    bytes32 spaceRockOwner = OwnedBy.get(spaceRock);
     FleetsMap.remove(spaceRock, FleetIncomingKey, fleetId);
+
+    //set fleet to orbit of owner space rock
+    bytes32 spaceRockOwner = OwnedBy.get(spaceRock);
+    FleetsMap.add(spaceRockOwner, FleetIncomingKey, fleetId);
+
     FleetMovement.set(
       fleetId,
       FleetMovementData({
@@ -254,14 +226,5 @@ library LibFleet {
         destination: spaceRockOwner
       })
     );
-    FleetsMap.add(spaceRockOwner, FleetIncomingKey, fleetId);
-  }
-
-  function isFleetDamaged(bytes32 fleetId) internal view returns (bool) {
-    return FleetAttributes.getHp(fleetId) < FleetAttributes.getMaxHp(fleetId);
-  }
-
-  function isFleetInGracePeriod(bytes32 fleetId) internal view returns (bool) {
-    return FleetMovement.getArrivalTime(fleetId) + P_GracePeriod.getSpaceRock() < block.timestamp;
   }
 }

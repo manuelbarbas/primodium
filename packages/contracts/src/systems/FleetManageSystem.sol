@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
-import { LibFleet } from "codegen/Libraries.sol";
+import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { NUM_UNITS, NUM_RESOURCE } from "src/constants.sol";
 
 contract FleetManageSystem is FleetBaseSystem {

@@ -2,20 +2,20 @@
 pragma solidity >=0.8.21;
 
 import { ERock, EResource } from "src/Types.sol";
-import { P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetAttributesData, FleetAttributes, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, RockType, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
-import { FleetsMap } from "libraries/FleetsMap.sol";
+import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
 import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
 
 import { WORLD_SPEED_SCALE, NUM_UNITS, UNIT_SPEED_SCALE, NUM_RESOURCE } from "src/constants.sol";
 import { EResource, EFleetStance } from "src/Types.sol";
 
 library LibFleetStance {
-  function clearFleetStance(bytes32 playerEntity, bytes32 fleetId) internal {
+  function clearFleetStance(bytes32 fleetId) internal {
     FleetStanceData memory fleetStance = FleetStance.get(fleetId);
 
     if (fleetStance.stance == uint8(EFleetStance.None)) return;
@@ -44,23 +44,17 @@ library LibFleetStance {
   }
 
   function setFleetStance(
-    bytes32 playerEntity,
     bytes32 fleetId,
     uint8 stance,
     bytes32 target
   ) internal {
-    clearFleetStance(playerEntity, fleetId);
+    clearFleetStance(fleetId);
     clearFollowingFleets(fleetId);
     FleetStance.set(fleetId, stance, target);
     FleetsMap.add(target, P_EnumToPrototype.get(FleetStanceKey, stance), fleetId);
   }
 
-  function removeFollower(
-    bytes32 playerEntity,
-    bytes32 fleetId,
-    bytes32 followerFleetId
-  ) internal {
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == playerEntity, "[Fleet] Can only remove follower of owned fleet");
+  function removeFollower(bytes32 fleetId, bytes32 followerFleetId) internal {
     bytes32 fleetFollowKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Follow));
     require(FleetsMap.has(fleetId, fleetFollowKey, followerFleetId), "[Fleet] Target fleet is not following");
     FleetStance.set(followerFleetId, uint8(EFleetStance.None), bytes32(0));

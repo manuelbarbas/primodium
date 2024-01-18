@@ -32,6 +32,18 @@ library LibMath {
     return num1 > num2 ? num1 : num2;
   }
 
+  /// @notice Finds the division of num1 by num2 rounded to the nearest integer
+  /// @param num1 The first number to be divided
+  /// @param num2 The second number to be divided by
+  /// @return uint256 The result of division rounded to the nearest integer
+  function divideRoundNear(uint256 num1, uint256 num2) internal pure returns (uint256) {
+    return (num1 / num2) + ((num1 % num2) >= (num2 / 2) ? 1 : 0);
+  }
+
+  function divideRoundUp(uint256 num1, uint256 num2) internal pure returns (uint256) {
+    return (num1 / num2) + ((num1 % num2) != 0 ? 1 : 0);
+  }
+
   /// @notice Calculates position based on distance and direction
   /// @notice Converts angle to radians and calculates x, y coords
   /// @param _distance Distance to asteroid

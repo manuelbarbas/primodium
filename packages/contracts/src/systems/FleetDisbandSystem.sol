@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
-import { LibFleetDisband } from "codegen/Libraries.sol";
+import { LibFleetDisband } from "libraries/fleet/LibFleetDisband.sol";
 import { NUM_UNITS, NUM_RESOURCE } from "src/constants.sol";
 
 contract FleetDisbandSystem is FleetBaseSystem {
