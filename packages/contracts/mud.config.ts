@@ -677,6 +677,20 @@ export const config = mudConfig({
     },
 
     /* ------------------------------- Marketplace ------------------------------ */
+    Reserves: {
+      keySchema: { resourceA: "uint8", resourceB: "uint8" },
+      valueSchema: {
+        amountA: "uint256",
+        amountB: "uint256",
+      },
+    },
+
+    P_MarketplaceConfig: {
+      keySchema: {},
+      valueSchema: {
+        feePctTimes1e3: "uint256",
+      },
+    },
   },
 });
 
