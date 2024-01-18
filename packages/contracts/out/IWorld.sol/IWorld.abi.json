@@ -513,6 +513,11 @@
     "inputs": [
       {
         "internalType": "bytes32",
+        "name": "battleId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
         "name": "entity",
         "type": "bytes32"
       },
@@ -523,6 +528,24 @@
       }
     ],
     "name": "applyDamageToWithAllies",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "entity",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "targetEntity",
+        "type": "bytes32"
+      }
+    ],
+    "name": "attack",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1280,42 +1303,6 @@
       }
     ],
     "name": "disbandUnitsAndResourcesFromFleet",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "fleetId",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "targetFleet",
-        "type": "bytes32"
-      }
-    ],
-    "name": "fleetAttackFleet",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "fleetId",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "targetSpaceRock",
-        "type": "bytes32"
-      }
-    ],
-    "name": "fleetAttackSpaceRock",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -2292,6 +2279,11 @@
   {
     "inputs": [
       {
+        "internalType": "bytes32",
+        "name": "battleId",
+        "type": "bytes32"
+      },
+      {
         "components": [
           {
             "internalType": "bytes32",
@@ -2351,6 +2343,11 @@
   },
   {
     "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "battleId",
+        "type": "bytes32"
+      },
       {
         "internalType": "bytes32",
         "name": "raider",
@@ -2567,24 +2564,6 @@
       }
     ],
     "name": "setStaticField",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "spaceRock",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "targetFleet",
-        "type": "bytes32"
-      }
-    ],
-    "name": "spaceRockAttackFleet",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
