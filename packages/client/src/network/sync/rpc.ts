@@ -26,7 +26,8 @@ export const hydrateFromRPC = (
   setupResult: SetupResult,
   fromBlock: bigint,
   toBlock: bigint,
-  onComplete?: () => void
+  onComplete?: () => void,
+  onError?: (err: unknown) => void
 ) => {
   const { network, components } = setupResult;
   const { tables, publicClient, world } = network;
@@ -51,7 +52,7 @@ export const hydrateFromRPC = (
     if (progress === 1) {
       onComplete?.();
     }
-  });
+  }, onError);
 
   world.registerDisposer(sync.unsubscribe);
 };

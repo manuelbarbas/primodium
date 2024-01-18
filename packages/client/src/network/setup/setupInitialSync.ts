@@ -29,7 +29,7 @@ export const setupInitialSync = async (setupResult: SetupResult) => {
         subToRPC(setupResult);
       },
       //on error
-      (err) => {
+      (err: unknown) => {
         console.warn("Failed to hydrate from RPC");
         console.log(err);
       }
