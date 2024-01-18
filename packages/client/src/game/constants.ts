@@ -53,7 +53,6 @@ export enum ResourceTilekeys {
   Iron,
   Copper,
   Lithium,
-  Gold,
 }
 
 const FogTilekeysGID =
@@ -108,8 +107,6 @@ export enum SpriteKeys {
   CopperMine3 = "sprites/miners/coppermine/level3/Miner_Copper_LVL3_1.png",
 
   LithiumMine1 = "sprites/miners/lithiummine/Miner_Lithium_LVL1_1.png",
-
-  GoldMine1 = "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_1.png",
 
   StorageUnit1 = "sprites/storage-facility/level1/Storage_Facility_LVL1.png",
   StorageUnit2 = "sprites/storage-facility/level2/Storage_Facility_LVL2.png",
@@ -238,8 +235,6 @@ export enum AnimationKeys {
 
   LithiumMine1 = "lithiummine/level1",
 
-  GoldMine1 = "sulfurmine/level1",
-
   StorageUnit3 = "storageunit/level3",
 
   IronPlateFactory1 = "ironplatefactory/level1",
@@ -324,7 +319,6 @@ export const ResourceToTilesetKey: { [key: number]: ResourceTilekeys } = {
   [EResource.Iron]: ResourceTilekeys.Iron,
   [EResource.Copper]: ResourceTilekeys.Copper,
   [EResource.Lithium]: ResourceTilekeys.Lithium,
-  [EResource.Gold]: ResourceTilekeys.Gold,
 };
 
 export const EntitytoSpriteKey = {
@@ -342,8 +336,6 @@ export const EntitytoSpriteKey = {
   [EntityType.IronMine]: [SpriteKeys.IronMine1, SpriteKeys.IronMine2, SpriteKeys.IronMine3],
 
   [EntityType.CopperMine]: [SpriteKeys.CopperMine1, SpriteKeys.CopperMine2, SpriteKeys.CopperMine3],
-
-  [EntityType.GoldMine]: [SpriteKeys.GoldMine1],
 
   [EntityType.LithiumMine]: [SpriteKeys.LithiumMine1],
 
@@ -407,7 +399,6 @@ export const EntityIDtoAnimationKey = {
   [EntityType.IronMine]: [AnimationKeys.IronMine1, AnimationKeys.IronMine2, AnimationKeys.IronMine3],
   [EntityType.CopperMine]: [AnimationKeys.CopperMine1, AnimationKeys.CopperMine2, AnimationKeys.CopperMine3],
   [EntityType.LithiumMine]: [AnimationKeys.LithiumMine1],
-  [EntityType.GoldMine]: [AnimationKeys.GoldMine1],
   [EntityType.StorageUnit]: [undefined, undefined, AnimationKeys.StorageUnit3],
 
   [EntityType.IronPlateFactory]: [AnimationKeys.IronPlateFactory1, AnimationKeys.IronPlateFactory2],

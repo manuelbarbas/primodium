@@ -5,7 +5,6 @@ export enum EBuilding {
   LithiumMine,
   IronMine,
   CopperMine,
-  GoldMine,
 
   // Factories
   IronPlateFactory,

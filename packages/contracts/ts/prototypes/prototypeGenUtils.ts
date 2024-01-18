@@ -11,10 +11,10 @@ export const indexifyResourceArray = (resources: string[]) =>
   resources.map((resource) => MUDEnums.EResource.indexOf(resource));
 
 /**
- * Generates a supply table for a marketplace given a resource and its ratio to gold.
+ * Generates a supply table for a marketplace given a resource and its ratio to the reserve currency.
  *
  * @param {EResource} resource - The specific resource for which to generate the supply table.
- * @param {number} ratio - The ratio of the resource to gold. The larger the number, the more cheap the resource in relation to the reserve.
+ * @param {number} ratio - The ratio of the resource to the reserve currency. The larger the number, the more cheap the resource in relation to the reserve.
  * @returns An object containing keys and tables for the marketplace supply.
  *          The keys array contains objects with resource types and their corresponding data types.
  *          The tables object includes 'Reserves' with 'amountB' and 'amountA', calculated based on the provided ratio.
