@@ -50,17 +50,15 @@ contract MarketplaceSystem is PrimodiumSystem {
 
   function swap(
     bytes32 marketEntity,
-    EResource resourceIn,
-    EResource resourceOut,
+    EResource[] memory path,
     uint256 amountIn,
     uint256 amountOutMin
   ) public onlyUnlocked _claimResources(OwnedBy.get(marketEntity)) {
-    require(resourceOut != resourceIn, "[Marketplace] Cannot transfer same resource");
     require(BuildingType.get(marketEntity) == MarketPrototypeId, "[Marketplace] Building is not a marketplace");
 
     bytes32 spaceRockEntity = OwnedBy.get(marketEntity);
     require(OwnedBy.get(spaceRockEntity) == _player(), "[Marketplace] Not owned by player");
 
-    LibMarketplace.swap(spaceRockEntity, uint8(resourceIn), uint8(resourceOut), amountIn, amountOutMin);
+    LibMarketplace.swap(spaceRockEntity, path, amountIn, amountOutMin);
   }
 }

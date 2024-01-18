@@ -8,6 +8,8 @@ contract MarketplaceSystemTest is PrimodiumTest {
     super.setUp();
   }
 
+  EResource[] path;
+
   function buildMarketplace(address player) public returns (bytes32, bytes32) {
     bytes32 homeAsteroid = spawn(player);
     vm.startPrank(creator);
@@ -19,44 +21,24 @@ contract MarketplaceSystemTest is PrimodiumTest {
     return (homeAsteroid, marketEntity);
   }
 
-  function testTransferResourceFailSameResource() public {
-    (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
-    vm.startPrank(creator);
-    vm.expectRevert("[Marketplace] Cannot transfer same resource");
-    world.swap(market, EResource.Iron, EResource.Iron, 1, 1);
-  }
-
   function testTransferResourceFailNotMarket() public {
     (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
     vm.startPrank(creator);
     vm.expectRevert("[Marketplace] Building is not a marketplace");
-    world.swap(asteroid, EResource.Iron, EResource.Copper, 1, 1);
+
+    path.push(EResource.Iron);
+    path.push(EResource.Copper);
+    world.swap(asteroid, path, 1, 1);
   }
 
   function testTransferResourceMarketNotOwned() public {
     (bytes32 asteroid, bytes32 market) = buildMarketplace(alice);
     vm.startPrank(creator);
     vm.expectRevert("[Marketplace] Not owned by player");
-    world.swap(market, EResource.Iron, EResource.Copper, 1, 1);
-  }
+    path.push(EResource.Iron);
+    path.push(EResource.Copper);
 
-  function testSwapDirect() public {
-    (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
-    vm.startPrank(creator);
-    Reserves.set(Iron, Copper, 1000, 1000);
-
-    MaxResourceCount.set(asteroid, Iron, 1000);
-    ResourceCount.set(asteroid, Iron, 100);
-    MaxResourceCount.set(asteroid, Copper, 1000);
-    ResourceCount.set(asteroid, Copper, 100);
-
-    P_MarketplaceConfig.set(0, false);
-    LibMarketplace._swap(asteroid, Iron, Copper, 10, 1);
-
-    assertApproxEqAbs(Reserves.getAmountA(Iron, Copper), 1010, 5);
-    assertApproxEqAbs(Reserves.getAmountB(Iron, Copper), 990, 5);
-    assertApproxEqAbs(ResourceCount.get(asteroid, Iron), 90, 5);
-    assertApproxEqAbs(ResourceCount.get(asteroid, Copper), 110, 5);
+    world.swap(market, path, 1, 1);
   }
 
   function testSwapReserveCurrencyOut() public {
@@ -66,14 +48,15 @@ contract MarketplaceSystemTest is PrimodiumTest {
     ReservesData memory reserves = Reserves.get(Iron, RESERVE_CURRENCY);
     uint256 amountIn = 1000;
     uint256 expectedAmountOut = LibMarketplace.getAmountOut(amountIn, reserves.amountA, reserves.amountB);
-    console.log("expected amount out: %s", expectedAmountOut);
 
     MaxResourceCount.set(asteroid, Iron, amountIn);
     ResourceCount.set(asteroid, Iron, amountIn);
     MaxResourceCount.set(asteroid, RESERVE_CURRENCY, 2**256 - 1);
 
     uint256 prevIron = ResourceCount.get(asteroid, Iron);
-    world.swap(market, EResource.Iron, RESERVE_CURRENCY_RESOURCE, amountIn, expectedAmountOut);
+    path.push(EResource.Iron);
+    path.push(RESERVE_CURRENCY_RESOURCE);
+    world.swap(market, path, amountIn, expectedAmountOut);
 
     // iron should go up
     assertEq(Reserves.getAmountA(Iron, RESERVE_CURRENCY), reserves.amountA + amountIn, "new reserve A");
@@ -93,7 +76,6 @@ contract MarketplaceSystemTest is PrimodiumTest {
     ReservesData memory reserves = Reserves.get(Iron, RESERVE_CURRENCY);
     uint256 amountIn = 1e18;
     uint256 expectedAmountOut = LibMarketplace.getAmountOut(amountIn, reserves.amountB, reserves.amountA);
-    console.log("expected amount out: %s", expectedAmountOut);
 
     MaxResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
     ResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
@@ -101,7 +83,11 @@ contract MarketplaceSystemTest is PrimodiumTest {
 
     uint256 prevIron = ResourceCount.get(asteroid, Iron);
     uint256 prevReserveCurrency = ResourceCount.get(asteroid, RESERVE_CURRENCY);
-    world.swap(market, RESERVE_CURRENCY_RESOURCE, EResource.Iron, amountIn, expectedAmountOut);
+
+    path.push(RESERVE_CURRENCY_RESOURCE);
+    path.push(EResource.Iron);
+
+    world.swap(market, path, amountIn, expectedAmountOut);
 
     // iron should go up
     assertEq(Reserves.getAmountA(Iron, RESERVE_CURRENCY), reserves.amountA - expectedAmountOut, "new reserve A");
@@ -123,9 +109,34 @@ contract MarketplaceSystemTest is PrimodiumTest {
     vm.startPrank(creator);
 
     ReservesData memory reserves = Reserves.get(Iron, RESERVE_CURRENCY);
+    path.push(RESERVE_CURRENCY_RESOURCE);
+    path.push(EResource.Iron);
 
     vm.expectRevert("[Marketplace] Invalid amount");
-    world.swap(market, RESERVE_CURRENCY_RESOURCE, EResource.Iron, 0, 0);
+    world.swap(market, path, 0, 0);
+  }
+
+  function testTransferResourceFailSameResource() public {
+    (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
+    vm.startPrank(creator);
+    ReservesData memory reserves = Reserves.get(Iron, RESERVE_CURRENCY);
+    uint256 amountIn = 1e18;
+    uint256 expectedAmountOut = LibMarketplace.getAmountOut(amountIn, reserves.amountB, reserves.amountA);
+
+    MaxResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
+    ResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
+    MaxResourceCount.set(asteroid, Iron, 2**256 - 1);
+
+    MaxResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
+    ResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
+    MaxResourceCount.set(asteroid, Iron, 2**256 - 1);
+
+    path.push(RESERVE_CURRENCY_RESOURCE);
+    path.push(EResource.Iron);
+    path.push(EResource.Iron);
+
+    vm.expectRevert("[Marketplace] Cannot swap for same resource");
+    world.swap(market, path, 1, 0);
   }
 
   function testSwapFailMinAmountOutTooSmall() public {
@@ -135,7 +146,6 @@ contract MarketplaceSystemTest is PrimodiumTest {
     ReservesData memory reserves = Reserves.get(Iron, RESERVE_CURRENCY);
     uint256 amountIn = 1e18;
     uint256 expectedAmountOut = LibMarketplace.getAmountOut(amountIn, reserves.amountB, reserves.amountA);
-    console.log("expected amount out: %s", expectedAmountOut);
 
     MaxResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
     ResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
@@ -144,9 +154,12 @@ contract MarketplaceSystemTest is PrimodiumTest {
     MaxResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
     ResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
     MaxResourceCount.set(asteroid, Iron, 2**256 - 1);
+
+    path.push(RESERVE_CURRENCY_RESOURCE);
+    path.push(EResource.Iron);
 
     vm.expectRevert("[Marketplace] Insufficient output amount");
-    world.swap(market, RESERVE_CURRENCY_RESOURCE, EResource.Iron, amountIn, expectedAmountOut + 1);
+    world.swap(market, path, amountIn, expectedAmountOut + 1);
   }
 
   function testSwapFailInsufficientLiquidity() public {
@@ -161,8 +174,10 @@ contract MarketplaceSystemTest is PrimodiumTest {
     ResourceCount.set(asteroid, Iron, inLiquidity + 1);
     MaxResourceCount.set(asteroid, RESERVE_CURRENCY, 10000);
 
-    console.log("here");
+    path.push(EResource.Iron);
+    path.push(RESERVE_CURRENCY_RESOURCE);
+
     vm.expectRevert("[Marketplace] Insufficient liquidity");
-    world.swap(market, EResource.Iron, RESERVE_CURRENCY_RESOURCE, amountIn, 0);
+    world.swap(market, path, amountIn, 0);
   }
 }
