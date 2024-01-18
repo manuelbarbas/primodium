@@ -79,14 +79,4 @@ library LibMath {
     int128 distanceSquared = (a.x - b.x)**2 + (a.y - b.y)**2;
     return uint32(Math.toUInt(Math.sqrt(Math.fromInt(distanceSquared))));
   }
-
-  // https://github.com/abdk-consulting/abdk-libraries-solidity/issues/26
-  function pow(int128 x, int128 y) internal pure returns (int128) {
-    require(x >= 0, "Negative base not allowed");
-    if (x == 0) {
-      require(y > 0, "0^0 is undefined");
-      return 0;
-    }
-    return Math.exp_2(Math.mul(y, Math.log_2(x)));
-  }
 }

@@ -677,7 +677,7 @@ export const config = mudConfig({
     },
 
     /* ------------------------------- Marketplace ------------------------------ */
-    // resource A is always the smaller number than resource B
+    // resource A is always the smaller index in the EResource enum
     Reserves: {
       keySchema: { resourceA: "uint8", resourceB: "uint8" },
       valueSchema: {

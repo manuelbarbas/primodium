@@ -34,7 +34,6 @@ export enum EResource {
   Iron = 1,
   Copper,
   Lithium,
-  Gold,
 
   Titanium,
   Iridium,

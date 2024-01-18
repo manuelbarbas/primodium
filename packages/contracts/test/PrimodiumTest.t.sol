@@ -44,7 +44,6 @@ contract PrimodiumTest is MudTest {
   uint8 Kimberlite = uint8(EResource.Kimberlite);
   uint8 Lithium = uint8(EResource.Lithium);
   uint8 Titanium = uint8(EResource.Titanium);
-  uint8 Gold = uint8(EResource.Gold);
 
   function setUp() public virtual override {
     super.setUp();
