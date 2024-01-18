@@ -39,7 +39,10 @@ Or you can run each process individually:
 pnpm dev:node
 pnpm dev:contracts
 pnpm dev:client
+pnpm dev:indexer
 ```
+
+> NOTE: If you are running the indexer locally, docker network and volumes properly clear only on rerun of `pnpm dev:indexer`. If you would like to manually free these resources run `pnpm clean:indexer`.
 
 # Testing and Deployment
 
