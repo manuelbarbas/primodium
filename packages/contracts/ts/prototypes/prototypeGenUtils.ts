@@ -14,7 +14,7 @@ export const indexifyResourceArray = (resources: string[]) =>
  * Generates a supply table for a marketplace given a resource and its ratio to gold.
  *
  * @param {EResource} resource - The specific resource for which to generate the supply table.
- * @param {number} ratio - The ratio of the resource to gold. The larger the number, the more expensive the resource.
+ * @param {number} ratio - The ratio of the resource to gold. The larger the number, the more cheap the resource in relation to the reserve.
  * @returns An object containing keys and tables for the marketplace supply.
  *          The keys array contains objects with resource types and their corresponding data types.
  *          The tables object includes 'Reserves' with 'amountB' and 'amountA', calculated based on the provided ratio.
@@ -22,6 +22,8 @@ export const indexifyResourceArray = (resources: string[]) =>
 const BASE_RESERVE = 100000;
 const RESERVE_RESOURCE = EResource.Kimberlite;
 export const marketplaceSupplyTable = (resource: EResource, ratio: number) => {
+  if (resource == RESERVE_RESOURCE)
+    throw new Error("[marketplaceSupplyTable] Cannot use the reserve resource as the marketplace resource");
   const keys = resource < RESERVE_RESOURCE ? [resource, RESERVE_RESOURCE] : [RESERVE_RESOURCE, resource];
   return {
     keys: [{ [keys[0]]: "uint8" }, { [keys[1]]: "uint8" }] as { [x: string]: "uint8" }[],

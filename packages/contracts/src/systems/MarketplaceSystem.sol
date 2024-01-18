@@ -12,7 +12,7 @@ import { MarketPrototypeId } from "codegen/Prototypes.sol";
 
 contract MarketplaceSystem is PrimodiumSystem {
   modifier onlyUnlocked() {
-    require(!P_MarketplaceConfig.getLock(), "[Marketplace] marketplace is locked");
+    require(!P_MarketplaceConfig.getLock(), "[Marketplace] Marketplace is locked");
     _;
   }
 

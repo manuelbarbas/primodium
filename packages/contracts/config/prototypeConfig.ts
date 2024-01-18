@@ -225,22 +225,22 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   /* ------------------------------- Marketplace ------------------------------ */
 
-  IronSupply: marketplaceSupplyTable(EResource.Iron, 0.00001),
-  CopperSupply: marketplaceSupplyTable(EResource.Copper, 0.00001),
-  LithiumSupply: marketplaceSupplyTable(EResource.Lithium, 0.00001),
+  IronSupply: marketplaceSupplyTable(EResource.Iron, 1e7),
+  CopperSupply: marketplaceSupplyTable(EResource.Copper, 1e7),
+  LithiumSupply: marketplaceSupplyTable(EResource.Lithium, 1e7),
   TitaniumSupply: marketplaceSupplyTable(EResource.Titanium, 1),
   PlatinumSupply: marketplaceSupplyTable(EResource.Platinum, 1),
   IridiumSupply: marketplaceSupplyTable(EResource.Iridium, 1),
-  IronPlateSupply: marketplaceSupplyTable(EResource.IronPlate, 0.001),
-  AlloySupply: marketplaceSupplyTable(EResource.Alloy, 0.001),
-  PVCellSupply: marketplaceSupplyTable(EResource.PVCell, 0.001),
-  RocketFuelSupply: marketplaceSupplyTable(EResource.RocketFuel, 0.001),
+  IronPlateSupply: marketplaceSupplyTable(EResource.IronPlate, 1e4),
+  AlloySupply: marketplaceSupplyTable(EResource.Alloy, 1e4),
+  PVCellSupply: marketplaceSupplyTable(EResource.PVCell, 1e4),
+  RocketFuelSupply: marketplaceSupplyTable(EResource.RocketFuel, 1e4),
 
   MarketplaceConfig: {
     keys: [],
     tables: {
       P_MarketplaceConfig: {
-        feeTimes1e3: 3n,
+        slippageThousandths: 3n,
         lock: false,
       },
     },

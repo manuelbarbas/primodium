@@ -689,7 +689,7 @@ export const config = mudConfig({
     P_MarketplaceConfig: {
       keySchema: {},
       valueSchema: {
-        feeTimes1e3: "uint256",
+        slippageThousandths: "uint256",
         lock: "bool",
       },
     },
