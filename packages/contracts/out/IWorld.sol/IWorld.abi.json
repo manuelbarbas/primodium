@@ -2292,6 +2292,66 @@
   {
     "inputs": [
       {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "aggressorEntity",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "aggressorDamage",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "targetEntity",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "targetDamage",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "winner",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "rock",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "timestamp",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32[]",
+            "name": "aggressorAllies",
+            "type": "bytes32[]"
+          },
+          {
+            "internalType": "bytes32[]",
+            "name": "targetAllies",
+            "type": "bytes32[]"
+          }
+        ],
+        "internalType": "struct NewBattleResultData",
+        "name": "battleResult",
+        "type": "tuple"
+      }
+    ],
+    "name": "resolveBattleEncryption",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes32",
         "name": "raider",
         "type": "bytes32"
