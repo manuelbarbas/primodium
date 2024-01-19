@@ -1,6 +1,5 @@
 import { Entity } from "@latticexyz/recs";
 import { components } from "src/network/components";
-import { getBlockTypeName } from "./common";
 import { ResourceEnumLookup } from "./constants";
 
 export function getOutAmount(inAmount: bigint, path: Entity[]) {
@@ -30,16 +29,7 @@ function _swap(resourceIn: Entity, resourceOut: Entity, amountIn: bigint, backwa
 
   const [reserveIn, reserveOut] =
     resourceA === resourceIn ? [reserves.amountA, reserves.amountB] : [reserves.amountB, reserves.amountA];
-  console.log(
-    "reserve in",
-    getBlockTypeName(resourceIn),
-    reserveIn,
-    "reserve out",
-    getBlockTypeName(resourceOut),
-    reserveOut
-  );
   const amountOut = getOutAmountTrade(amountIn, reserveIn, reserveOut, backwards);
-  console.log("amount out", getBlockTypeName(resourceOut), amountOut);
   return amountOut;
 }
 

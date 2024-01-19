@@ -4,14 +4,18 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import React, { useCallback, useMemo, useState } from "react";
 import { FaExchangeAlt } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { useMud } from "src/hooks";
 import { components } from "src/network/components";
+import { swap } from "src/network/setup/contractCalls/swap";
 import { getBlockTypeName } from "src/util/common";
 import { EntityType, RESERVE_RESOURCE, ResourceEnumLookup, ResourceStorages } from "src/util/constants";
 import { formatResource, parseResource } from "src/util/resource";
 import { getInAmount, getOutAmount } from "src/util/swap";
 import { Hex } from "viem";
 
-export const Swap = () => {
+export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
+  const mud = useMud();
   const [fromResource, setFromResource] = useState<Entity>(EntityType.Iron);
   const [toResource, setToResource] = useState<Entity>(EntityType.Copper);
   const [inAmountRendered, setInAmountRendered] = useState<string>("");
@@ -95,6 +99,13 @@ export const Swap = () => {
     return { disabled: false, message: "swap" };
   }, [fromResource, inAmountRendered, outAmountRendered, selectedRock, toResource]);
 
+  const handleSubmit = useCallback(() => {
+    const inAmount = parseResource(fromResource, inAmountRendered);
+    const path = getPath(fromResource, toResource);
+    if (path.length < 2) return;
+    swap(mud, marketEntity, path, inAmount);
+  }, [fromResource, inAmountRendered, getPath, toResource, mud, marketEntity]);
+
   return (
     <div className="w-[30rem] grid grid-rows-11 gap-2 m-3 items-center">
       <ResourceSelector
@@ -123,9 +134,11 @@ export const Swap = () => {
         className="row-span-4"
         showSpaceRemaining
       />
-      <Button className="btn-primary btn-lg w-full mt-2" disabled={disabled}>
-        {swapButtonMsg}
-      </Button>
+      <TransactionQueueMask queueItemId={singletonEntity}>
+        <Button className="btn-primary btn-lg w-full mt-2" disabled={disabled} onClick={handleSubmit}>
+          {swapButtonMsg}
+        </Button>
+      </TransactionQueueMask>
     </div>
   );
 };

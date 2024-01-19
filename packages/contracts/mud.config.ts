@@ -12,11 +12,9 @@ if (typeof process != undefined && typeof process != "undefined") {
 }
 
 const DUMMY_ADDRESS = "0x1234567890AbcdEF1234567890aBcdef12345678";
-
 /* -------------------------------------------------------------------------- */
 /*                                   Config                                   */
 /* -------------------------------------------------------------------------- */
-
 export type Config = typeof config;
 export const config = mudConfig({
   excludeSystems: [...dev],

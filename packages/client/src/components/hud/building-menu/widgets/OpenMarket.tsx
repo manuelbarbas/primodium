@@ -1,8 +1,9 @@
+import { Entity } from "@latticexyz/recs";
 import { SecondaryCard } from "src/components/core/Card";
 import { Modal } from "src/components/core/Modal";
 import { Swap } from "../../modals/Swap";
 
-export const OpenMarket: React.FC = () => {
+export const OpenMarket: React.FC<{ building: Entity }> = ({ building }) => {
   return (
     <SecondaryCard className="w-full flex-row items-center justify-center gap-2 relative">
       <div className="absolute top-0 left-0 w-full h-full topographic-background opacity-25 z-0" />
@@ -14,7 +15,7 @@ export const OpenMarket: React.FC = () => {
           </div>
         </Modal.Button>
         <Modal.Content>
-          <Swap />
+          <Swap marketEntity={building} />
         </Modal.Content>
       </Modal>
     </SecondaryCard>
