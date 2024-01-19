@@ -3,6 +3,7 @@ import { SetupResult } from "../types";
 import { getNetworkConfig } from "../config/getNetworkConfig";
 import { Hex, padHex } from "viem";
 import { hydrateFromRPC } from "./rpc";
+import { Entity } from "@latticexyz/recs";
 
 export const hydrateInitialGameState = (
   setupResult: SetupResult,
@@ -14,13 +15,15 @@ export const hydrateInitialGameState = (
   const networkConfig = getNetworkConfig();
   let fromBlock = networkConfig.initialBlockNumber;
 
+  if (!networkConfig.indexerUrl) return;
+
   //get all the tables that start with P_
   const configTableQueries = [...Object.keys(tables)]
     .filter((key) => key.startsWith("P_"))
     .map((tableName) => ({ tableName }));
 
   const sync = Sync.withQueryDecodedIndexerRecsSync({
-    indexerUrl: networkConfig.indexerUrl!,
+    indexerUrl: networkConfig.indexerUrl,
     tables: tables,
     world,
     query: {
@@ -69,4 +72,67 @@ export const hydrateInitialGameState = (
   }, onError);
 
   world.registerDisposer(sync.unsubscribe);
+};
+
+export const hydratePlayerData = (playerEntity: Entity, setupResult: SetupResult) => {
+  const { network, components } = setupResult;
+  const { tables, world } = network;
+  const networkConfig = getNetworkConfig();
+
+  const syncData = Sync.withFilterIndexerRecsSync({
+    indexerUrl: networkConfig.indexerUrl!,
+    tables: tables,
+    world,
+    filter: {
+      address: networkConfig.worldAddress as Hex,
+      filters: [
+        {
+          tableId: tables.Spawned.tableId,
+          key0: playerEntity,
+        },
+        {
+          tableId: tables.Home.tableId,
+          key0: playerEntity,
+        },
+        {
+          tableId: tables.PlayerAlliance.tableId,
+          key0: playerEntity,
+        },
+        {
+          tableId: tables.CompletedObjective.tableId,
+          key0: playerEntity,
+        },
+        {
+          tableId: tables.Score.tableId,
+          key0: playerEntity,
+        },
+      ],
+    },
+  });
+
+  syncData.start((_, __, progress) => {
+    components.SyncStatus.set(
+      {
+        live: false,
+        progress,
+        message: `Hydrating Player Data`,
+      },
+      "player-data" as Entity
+    );
+
+    if (progress === 1) {
+      components.SyncStatus.set(
+        {
+          live: true,
+          progress,
+          message: `DONE`,
+        },
+        "player-data" as Entity
+      );
+    }
+  });
+
+  world.registerDisposer(() => {
+    syncData.unsubscribe();
+  });
 };
