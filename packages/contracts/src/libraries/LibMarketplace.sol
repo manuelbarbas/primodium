@@ -19,13 +19,15 @@ library LibMarketplace {
 
     LibStorage.checkedDecreaseStoredResource(to, uint8(path[0]), amountIn);
 
-    uint256 amountOut = amountIn;
+    // amount received represents the amount of the previous resource in the path
+    // the final amount received is the amount the user is transferred
+    uint256 amountReceived = amountIn;
     for (uint256 i = 0; i < path.length - 1; i++) {
-      amountOut = _swap(uint8(path[i]), uint8(path[i + 1]), amountOut);
+      amountReceived = _swap(uint8(path[i]), uint8(path[i + 1]), amountReceived);
     }
 
-    require(amountOut >= amountOutMin, "[Marketplace] Insufficient output amount");
-    LibStorage.increaseStoredResource(to, uint8(path[path.length - 1]), amountOut);
+    require(amountReceived >= amountOutMin, "[Marketplace] Insufficient output amount");
+    LibStorage.increaseStoredResource(to, uint8(path[path.length - 1]), amountReceived);
   }
 
   function _swap(
@@ -61,7 +63,7 @@ library LibMarketplace {
     uint256 reserveIn,
     uint256 reserveOut
   ) internal view returns (uint256 amountOut) {
-    uint256 amountInWithFee = amountIn * (1e3 - P_MarketplaceConfig.getSlippageThousandths());
+    uint256 amountInWithFee = amountIn * (1e3 - P_MarketplaceConfig.getFeeThousandths());
     uint256 numerator = amountInWithFee * reserveOut;
     uint256 denominator = (reserveIn * 1000) + amountInWithFee;
     amountOut = numerator / denominator;

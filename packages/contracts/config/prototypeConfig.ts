@@ -240,7 +240,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     keys: [],
     tables: {
       P_MarketplaceConfig: {
-        slippageThousandths: 3n,
+        feeThousandths: 3n,
         lock: false,
       },
     },
