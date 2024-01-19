@@ -1,8 +1,8 @@
 import { resourceToHex } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { DECIMALS } from "contracts/config/constants";
 import { EBuilding, EObjectives, EResource, ESize, EUnit } from "contracts/config/enums";
-import { SCALE } from "contracts/ts/prototypes/prototypeGenUtils";
 import { Key } from "engine/types";
 import { encodeEntity } from "src/util/encode";
 import { reverseRecord } from "./common";
@@ -22,7 +22,8 @@ export enum Action {
 }
 
 export const SPEED_SCALE = BigInt(100);
-export const RESOURCE_SCALE = BigInt(SCALE);
+export const RESOURCE_DECIMALS = DECIMALS;
+export const RESOURCE_SCALE = BigInt(10 ** DECIMALS);
 export const MULTIPLIER_SCALE = BigInt(100);
 export const UNIT_SPEED_SCALE = BigInt(100);
 
