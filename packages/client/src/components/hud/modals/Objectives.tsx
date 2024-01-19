@@ -18,7 +18,8 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { components as comps } from "src/network/components";
 import { claimObjective } from "src/network/setup/contractCalls/claimObjective";
-import { formatNumber, getBlockTypeName } from "src/util/common";
+import { getBlockTypeName } from "src/util/common";
+
 import {
   BackgroundImage,
   ObjectiveEntityLookup,
@@ -28,6 +29,7 @@ import {
   TransactionQueueType,
 } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
+import { formatNumber } from "src/util/number";
 import { getObjectiveDescription } from "src/util/objectiveDescriptions";
 import {
   getAllRequirements,

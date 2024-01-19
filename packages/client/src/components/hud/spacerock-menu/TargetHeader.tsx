@@ -5,9 +5,9 @@ import { IconLabel } from "src/components/core/IconLabel";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
-import { formatNumber } from "src/util/common";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { getRockDefense } from "src/util/defense";
+import { formatNumber } from "src/util/number";
 import { getSpaceRockImage, getSpaceRockName } from "src/util/spacerock";
 export const TargetHeader = ({ hideStats }: { hideStats?: boolean }) => {
   const selectedSpacerock = components.SelectedRock.use()?.value;

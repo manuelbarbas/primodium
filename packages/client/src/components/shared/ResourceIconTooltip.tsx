@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { useHasEnoughOfResource } from "src/hooks/useHasEnoughOfResource";
-import { formatNumber } from "src/util/common";
 import { ResourceType } from "src/util/constants";
+import { formatNumber } from "src/util/number";
 import { getScale } from "src/util/resource";
 import { IconLabel } from "../core/IconLabel";
 

@@ -1,14 +1,6 @@
 import { useEffect, useState } from "react";
+import { adjustDecimals } from "src/util/number";
 import { Button } from "../core/Button";
-
-function adjustDecimals(num: string, toFixed: number): string {
-  const parts = num.split(".");
-  if (parts.length > 2) throw new Error("Invalid number");
-  if (parts.length === 2 && parts[1].length > toFixed) {
-    parts[1] = parts[1].substring(0, toFixed);
-  }
-  return toFixed == 0 ? parts[0] : parts.join(".");
-}
 
 export const NumberInput: React.FC<{
   startingValue?: number;
