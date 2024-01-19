@@ -281,6 +281,16 @@ contract MarketplaceSystemTest is PrimodiumTest {
     assertEq(Reserves.getAmountB(Iron, Copper), 1000);
   }
 
+  function testIsolatedPairReserves() public {
+    (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
+    vm.startPrank(creator);
+
+    world.addLiquidity(EResource.Iron, EResource.Copper, 1000, 1000);
+    world.addLiquidity(EResource.Copper, EResource.Lithium, 1000, 1000);
+    assertEq(Reserves.getAmountA(Iron, Copper), 1000);
+    assertEq(Reserves.getAmountB(Iron, Copper), 1000);
+  }
+
   function testAddLiquidityFailNotAdmin() public {
     vm.startPrank(alice);
     vm.expectRevert("[Primodium] Only admin");
