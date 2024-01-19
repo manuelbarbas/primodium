@@ -1,6 +1,5 @@
 import { minEth } from "@game/constants";
 import { ComponentValue, Entity, Schema } from "@latticexyz/recs";
-import { SyncStep } from "@latticexyz/store-sync";
 import { Browser, ContractComponent } from "@primodiumxyz/mud-game-tools";
 import { useEffect, useMemo, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -33,20 +32,20 @@ export default function AppLoadingState() {
     return () => clearInterval(updateBalance);
   }, [balance, mud.playerAccount.address, mud.playerAccount.publicClient]);
 
-  const loadingState = components.SyncProgress.use(undefined, {
+  const loadingState = components.SyncStatus.use(undefined, {
     message: "Connecting",
-    percentage: 0,
-    step: SyncStep.INITIALIZE,
-    latestBlockNumber: BigInt(0),
-    lastBlockNumberProcessed: BigInt(0),
+    live: false,
+    progress: 0,
   });
 
   const enoughEth = useMemo(() => DEV_CHAIN || (balance ?? 0n) >= minEth, [balance]);
   const loading = useMemo(
-    () => loadingState.step !== SyncStep.LIVE || loadingState.percentage < 100,
-    [loadingState.percentage, loadingState.step]
+    () => loadingState.live !== true || loadingState.progress < 1,
+    [loadingState.progress, loadingState.live]
   );
   const ready = useMemo(() => !loading && enoughEth, [loading, enoughEth]);
+
+  console.log(loadingState);
 
   return (
     <div className="bg-black h-screen">
@@ -66,16 +65,16 @@ export default function AppLoadingState() {
             <div className="flex flex-col items-center gap-4">
               <p className="text-lg text-white">
                 <span className="font-mono">{loadingState.message}</span>
-                {loadingState.percentage > 0 ? (
-                  <span className="font-mono">&nbsp;({Math.floor(loadingState.percentage)}%)</span>
+                {loadingState.progress > 0 ? (
+                  <span className="font-mono">&nbsp;({Math.floor(loadingState.progress * 100)}%)</span>
                 ) : (
                   <span>&hellip;</span>
                 )}
               </p>
-              {loadingState.percentage === 0 ? (
-                <Progress value={100} max={100} className="animate-pulse w-56" />
+              {loadingState.progress === 0 ? (
+                <Progress value={1} max={1} className="animate-pulse w-56" />
               ) : (
-                <Progress value={loadingState.percentage} max={100} className="w-56" />
+                <Progress value={loadingState.progress} max={1} className="w-56" />
               )}
             </div>
           </div>

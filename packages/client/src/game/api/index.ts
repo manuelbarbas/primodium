@@ -49,7 +49,7 @@ export async function initPrimodium(mud: MUD, version = "v1") {
   namespaceWorld(world, "game");
 
   await _init();
-  runSystems(mud);
+  // runSystems(mud);
 
   function destroy() {
     //for each instance, call game destroy
