@@ -8,7 +8,7 @@ export function getOutAmount(inAmount: bigint, path: Entity[]) {
 }
 
 export function getInAmount(outAmount: bigint, path: Entity[]) {
-  return getPathResult(outAmount, path, true);
+  return getPathResult(outAmount, path.reverse(), true);
 }
 
 export function getPathResult(inAmount: bigint, path: Entity[], backwards = false) {

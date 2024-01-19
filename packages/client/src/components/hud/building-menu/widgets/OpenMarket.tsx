@@ -1,20 +1,20 @@
 import { SecondaryCard } from "src/components/core/Card";
 import { Modal } from "src/components/core/Modal";
-import { Primodiswap } from "../../modals/Primodiswap";
+import { Swap } from "../../modals/Swap";
 
 export const OpenMarket: React.FC = () => {
   return (
     <SecondaryCard className="w-full flex-row items-center justify-center gap-2 relative">
       <div className="absolute top-0 left-0 w-full h-full topographic-background opacity-25 z-0" />
-      <Modal title="Primodiswap">
+      <Modal title="Swap Resources">
         <Modal.Button className="btn-md w-fit btn-secondary">
           <div className="flex gap-2 items-center z-10">
             <img src="/img/icons/trade.png" className="w-8 h-8" />
-            <p className="uppercase text-xs font-bold">open market</p>
+            <p className="uppercase text-xs font-bold">Swap</p>
           </div>
         </Modal.Button>
-        <Modal.Content className="w-[40rem] h-[40rem]">
-          <Primodiswap />
+        <Modal.Content>
+          <Swap />
         </Modal.Content>
       </Modal>
     </SecondaryCard>
