@@ -45,7 +45,6 @@ export const Swap = () => {
 
   const changeOutAmount = useCallback(
     (outAmountRendered: string) => {
-      console.log("changeOutAmount", outAmountRendered);
       if (!outAmountRendered.includes(".") && !Number(outAmountRendered)) {
         setInAmountRendered("");
         setOutAmountRendered("");
