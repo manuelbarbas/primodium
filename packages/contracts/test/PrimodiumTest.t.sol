@@ -9,6 +9,7 @@ import { WORLD_SPEED_SCALE, NUM_UNITS, UNIT_SPEED_SCALE } from "src/constants.so
 import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 
 import "src/utils.sol";
+import { RESERVE_CURRENCY, RESERVE_CURRENCY_RESOURCE } from "src/constants.sol";
 import "codegen/world/IWorld.sol";
 import "codegen/index.sol";
 import "src/Types.sol";
@@ -29,6 +30,7 @@ function toString(bytes32 entity) pure returns (string memory) {
 contract PrimodiumTest is MudTest {
   IWorld public world;
   uint256 userNonce = 0;
+  uint256 MAX_INT = 2**256 - 1;
 
   address creator;
   address payable alice;
@@ -42,7 +44,6 @@ contract PrimodiumTest is MudTest {
   uint8 Kimberlite = uint8(EResource.Kimberlite);
   uint8 Lithium = uint8(EResource.Lithium);
   uint8 Titanium = uint8(EResource.Titanium);
-  uint8 R_Titanium = uint8(EResource.R_Titanium);
 
   function setUp() public virtual override {
     super.setUp();
@@ -50,10 +51,6 @@ contract PrimodiumTest is MudTest {
     creator = world.creator();
 
     uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
-    address admin = vm.addr(deployerPrivateKey);
-    IERC20Mintable wETH = IERC20Mintable(P_GameConfig2.getWETHAddress());
-    vm.prank(admin);
-    wETH.mint(creator, 100 ether);
 
     vm.startPrank(creator);
     ResourceAccess.set(ROOT_NAMESPACE_ID, creator, true);

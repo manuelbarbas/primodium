@@ -17,8 +17,7 @@ export const getScale = (resource: Entity) => {
     UnitEnumLookup[resource] !== undefined ||
     resource === EntityType.FleetMoves ||
     resource === EntityType.VesselCapacity ||
-    resource === EntityType.Defense ||
-    resource === EntityType.MaxOrders
+    resource === EntityType.Defense
   )
     return 1n;
   return RESOURCE_SCALE;

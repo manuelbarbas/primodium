@@ -9,7 +9,7 @@ import { MUD } from "src/network/types";
 import { encodeEntity } from "src/util/encode";
 import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
-import { getBlockTypeName, normalizeAddress } from "./common";
+import { getBlockTypeName } from "./common";
 import { EntityType, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
 
 const resources: Record<string, Entity> = {
@@ -18,7 +18,6 @@ const resources: Record<string, Entity> = {
   lithium: EntityType.Lithium,
   titanium: EntityType.Titanium,
   iridium: EntityType.Iridium,
-  gold: EntityType.Gold,
   kimberlite: EntityType.Kimberlite,
   ironplate: EntityType.IronPlate,
   platinum: EntityType.Platinum,
@@ -28,7 +27,6 @@ const resources: Record<string, Entity> = {
   vessel: EntityType.VesselCapacity,
   electricity: EntityType.Electricity,
   defense: EntityType.Defense,
-  orders: EntityType.MaxOrders,
   moves: EntityType.FleetMoves,
 };
 
@@ -214,21 +212,6 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
             }
           );
         });
-      },
-    },
-    dripWETH: {
-      params: [],
-      function: async () => {
-        const player = mud.playerAccount.address;
-        if (!player) throw new Error("No player found");
-        await setComponentValue(
-          mud,
-          mud.components.WETHBalance,
-          encodeEntity({ entity: "address" }, { entity: normalizeAddress(player) as Hex }),
-          {
-            value: BigInt(2) * BigInt(1e18),
-          }
-        );
       },
     },
     spawnPlayers: {

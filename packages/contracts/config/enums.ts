@@ -5,7 +5,6 @@ export enum EBuilding {
   LithiumMine,
   IronMine,
   CopperMine,
-  GoldMine,
 
   // Factories
   IronPlateFactory,
@@ -31,16 +30,9 @@ export enum EBuilding {
 }
 
 export enum EResource {
-  //Raw
-  R_Titanium = 1,
-  R_Platinum,
-  R_Iridium,
-  R_Kimberlite,
-
-  Iron,
+  Iron = 1,
   Copper,
   Lithium,
-  Gold,
 
   Titanium,
   Iridium,
@@ -57,7 +49,6 @@ export enum EResource {
   U_Electricity,
   U_Housing,
   U_Vessel,
-  U_Orders,
   U_MaxMoves,
   U_Defense,
   U_Unraidable,
