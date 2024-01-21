@@ -8,7 +8,7 @@ import { EntityType, ResourceEntityLookup, ResourceEnumLookup, SPEED_SCALE, Unit
 import { adjustDecimals } from "./number";
 
 export const getScale = (resource: Entity) => {
-  return 1 ** getDecimals(resource);
+  return 10 ** getDecimals(resource);
 };
 
 export const getDecimals = (resource: Entity) => {

@@ -6,13 +6,13 @@ import { FaExchangeAlt } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
+import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
 import { swap } from "src/network/setup/contractCalls/swap";
 import { getBlockTypeName } from "src/util/common";
-import { EntityType, RESERVE_RESOURCE, ResourceEnumLookup, ResourceStorages } from "src/util/constants";
+import { EntityType, RESERVE_RESOURCE, ResourceStorages } from "src/util/constants";
 import { formatResource, parseResource } from "src/util/resource";
 import { getInAmount, getOutAmount } from "src/util/swap";
-import { Hex } from "viem";
 
 export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
   const mud = useMud();
@@ -72,32 +72,29 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
     changeInAmount(toResource, fromResource, outAmountRendered);
   }, [fromResource, toResource, outAmountRendered, changeInAmount]);
 
+  const { resourceCount: fromResourceCount } = useFullResourceCount(fromResource, selectedRock);
+  const { resourceCount: toResourceCount, resourceStorage: toResourceStorage } = useFullResourceCount(
+    toResource,
+    selectedRock
+  );
+
   const { disabled, message: swapButtonMsg } = useMemo(() => {
     if (!inAmountRendered || !outAmountRendered) return { disabled: true, message: "Enter an amount to swap" };
-    const inBalance =
-      components.ResourceCount.getWithKeys({
-        resource: ResourceEnumLookup[fromResource],
-        entity: selectedRock as Hex,
-      })?.value ?? 0n;
 
-    const outBalance =
-      components.ResourceCount.getWithKeys({
-        resource: ResourceEnumLookup[toResource],
-        entity: selectedRock as Hex,
-      })?.value ?? 0n;
-
-    const outMaxStorage =
-      components.MaxResourceCount.getWithKeys({
-        resource: ResourceEnumLookup[toResource],
-        entity: selectedRock as Hex,
-      })?.value ?? 0n;
-
-    if (inBalance < parseResource(fromResource, inAmountRendered))
+    if (fromResourceCount < parseResource(fromResource, inAmountRendered))
       return { disabled: true, message: "Not enough resources" };
-    if (outBalance + parseResource(toResource, outAmountRendered) > outMaxStorage)
+    if (toResourceCount + parseResource(toResource, outAmountRendered) > toResourceStorage)
       return { disabled: true, message: "Not enough space" };
     return { disabled: false, message: "swap" };
-  }, [fromResource, inAmountRendered, outAmountRendered, selectedRock, toResource]);
+  }, [
+    fromResource,
+    fromResourceCount,
+    inAmountRendered,
+    outAmountRendered,
+    toResource,
+    toResourceCount,
+    toResourceStorage,
+  ]);
 
   const handleSubmit = useCallback(() => {
     const inAmount = parseResource(fromResource, inAmountRendered);
@@ -155,17 +152,7 @@ interface ResourceSelectorProps {
 
 const ResourceSelector: React.FC<ResourceSelectorProps> = (props) => {
   const selectedAsteroid = components.SelectedRock.use()?.value ?? singletonEntity;
-  const balance =
-    components.ResourceCount.useWithKeys({
-      resource: ResourceEnumLookup[props.resource],
-      entity: selectedAsteroid as Hex,
-    })?.value ?? 0n;
-
-  const maxStorage =
-    components.MaxResourceCount.useWithKeys({
-      resource: ResourceEnumLookup[props.resource],
-      entity: selectedAsteroid as Hex,
-    })?.value ?? 0n;
+  const { resourceCount, resourceStorage } = useFullResourceCount(props.resource, selectedAsteroid);
   return (
     <div
       className={`w-full h-20 bg-base-100 relative border border-secondary flex px-2 items-center ${props.className}`}
@@ -193,8 +180,8 @@ const ResourceSelector: React.FC<ResourceSelectorProps> = (props) => {
         </select>
         <p className="text-xs font-bold uppercase text-right opacity-70">
           {props.showSpaceRemaining
-            ? `Space: ${formatResource(props.resource, maxStorage - balance, 0)}`
-            : `Balance: ${formatResource(props.resource, balance, 0)}`}
+            ? `Space: ${formatResource(props.resource, resourceStorage - resourceCount, 0)}`
+            : `Balance: ${formatResource(props.resource, resourceCount, 0)}`}
         </p>
       </div>
     </div>
