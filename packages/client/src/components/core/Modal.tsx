@@ -1,4 +1,4 @@
-import { AudioKeys } from "@game/constants";
+import { AudioKeys, KeybindActions, Scenes } from "@game/constants";
 import React, { ReactNode, createContext, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaTimes } from "react-icons/fa";
@@ -21,6 +21,8 @@ const ModalContext = createContext<ModalContextType>({
 interface ModalProps {
   children: ReactNode;
   title?: string;
+  keybind?: KeybindActions;
+  keybindClose?: boolean;
 }
 
 export const Modal: React.FC<ModalProps> & {
@@ -28,18 +30,24 @@ export const Modal: React.FC<ModalProps> & {
   CloseButton: React.FC<React.ComponentProps<typeof Button>>;
   Content: React.FC<{ children: ReactNode; className?: string }>;
   IconButton: React.FC<React.ComponentProps<typeof IconButton>>;
-} = ({ children, title }) => {
+} = ({ children, title, keybind, keybindClose }) => {
   const [isOpen, setIsOpen] = useState(false);
   const primodium = usePrimodium();
   const { enableInput, disableInput } = primodium.api().input;
   const { audio } = primodium.api();
 
+  const api = primodium.api(Scenes.Asteroid);
+  const api2 = primodium.api(Scenes.Starmap);
+
   useEffect(() => {
-    const handleEscPress = (event: KeyboardEvent) => {
-      if (isOpen && event.key === "Escape") {
-        audio.play(AudioKeys.Sequence2, "ui");
-        setIsOpen(false);
-      }
+    const handleEscPress = () => {
+      audio.play(AudioKeys.Sequence2, "ui");
+      setIsOpen(false);
+    };
+
+    const handleOpenPress = () => {
+      if (!isOpen) setIsOpen(true);
+      if (isOpen && keybindClose) setIsOpen(false);
     };
 
     if (isOpen) {
@@ -48,12 +56,20 @@ export const Modal: React.FC<ModalProps> & {
       enableInput();
     }
 
-    window.addEventListener("keydown", handleEscPress);
+    const escListener = api.input.addListener(KeybindActions.Esc, handleEscPress);
+    const escListener2 = api2.input.addListener(KeybindActions.Esc, handleOpenPress);
+
+    const openListener = keybind ? api.input.addListener(keybind, handleOpenPress) : null;
+    const openListener2 = keybind ? api2.input.addListener(keybind, handleOpenPress) : null;
     return () => {
-      window.removeEventListener("keydown", handleEscPress);
+      escListener.dispose();
+      escListener2?.dispose();
+
+      openListener?.dispose();
+      openListener2?.dispose();
       enableInput();
     };
-  }, [isOpen, disableInput, enableInput, audio]);
+  }, [isOpen, disableInput, enableInput, audio, api.input, keybind, api2.input, keybindClose]);
 
   return <ModalContext.Provider value={{ isOpen, setIsOpen, title }}>{children}</ModalContext.Provider>;
 };

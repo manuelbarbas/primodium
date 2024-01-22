@@ -86,10 +86,7 @@ export const GameHUD = () => {
 
         <HUD.Left>
           <Chat />
-          <Modal title="hacker console">
-            <Modal.Button style={{ display: "none" }} keybind={KeybindActions.Console} disabled={!allowHackerModal}>
-              {null}
-            </Modal.Button>
+          <Modal title="hacker console" keybind={allowHackerModal ? KeybindActions.Console : undefined} keybindClose>
             <Modal.Content className="w-4/5 h-[40rem]">
               <HackerConsole />
             </Modal.Content>

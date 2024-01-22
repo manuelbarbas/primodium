@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { KeybindActions } from "@game/constants";
 import React, { KeyboardEvent, useState } from "react";
 import { Button } from "src/components/core/Button";
-import { Modal } from "src/components/core/Modal";
 import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import createConsoleApi from "src/util/console/consoleApi";
@@ -28,9 +26,6 @@ const HackerConsole: React.FC = () => {
 
   return (
     <div className="flex-grow overflow-hidden">
-      <Modal.CloseButton keybind={KeybindActions.Console} style={{ display: "none" }}>
-        {null}
-      </Modal.CloseButton>
       <div className="grid grid-cols-7 gap-4 p-2 h-full w-full overflow-hidden">
         <div className="h-full w-full overflow-hidden flex flex-col col-span-4">
           <p className="text-xs uppercase opacity-50 font-bold pb-2">command line</p>
