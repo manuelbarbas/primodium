@@ -16,6 +16,7 @@ import { setupInvitations } from "src/network/systems/setupPlayerInvites";
 import { setupSend } from "src/network/systems/setupSend";
 import { setupTime } from "src/network/systems/setupTime";
 import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
+import { setupSync } from "src/network/systems/setupSync";
 import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import _init from "../init";
@@ -95,6 +96,7 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     setupSend(mud);
     setupTime(mud);
     setupTrainingQueues();
+    setupSync(mud);
 
     runAsteroidSystems(asteroidScene, mud);
     runStarmapSystems(starmapScene);

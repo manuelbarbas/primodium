@@ -1,5 +1,5 @@
 import { Sync } from "@primodiumxyz/sync-stack";
-import { SetupResult } from "../types";
+import { MUD, SetupResult } from "../types";
 import { getNetworkConfig } from "../config/getNetworkConfig";
 import { Hex, padHex } from "viem";
 import { hydrateFromRPC } from "./rpc";
@@ -82,6 +82,11 @@ export const hydratePlayerData = (playerEntity: Entity, setupResult: SetupResult
   const { tables, world } = network;
   const networkConfig = getNetworkConfig();
 
+  if (components.SyncStatus.get(playerEntity)) {
+    console.log("Skipping sync for player (exists):", playerEntity);
+    return;
+  }
+
   const syncData = Sync.withFilterIndexerRecsSync({
     indexerUrl: networkConfig.indexerUrl!,
     tables: tables,
@@ -120,7 +125,7 @@ export const hydratePlayerData = (playerEntity: Entity, setupResult: SetupResult
         progress,
         message: `Hydrating Player Data`,
       },
-      "player-data" as Entity
+      playerEntity
     );
 
     if (progress === 1) {
@@ -130,7 +135,80 @@ export const hydratePlayerData = (playerEntity: Entity, setupResult: SetupResult
           progress,
           message: `DONE`,
         },
-        "player-data" as Entity
+        playerEntity
+      );
+    }
+  });
+
+  world.registerDisposer(() => {
+    syncData.unsubscribe();
+  });
+};
+
+export const hydrateSelectedAsteroid = (mud: MUD) => {
+  const { network, components } = mud;
+  const { tables, world } = network;
+  const networkConfig = getNetworkConfig();
+  const selectedRock = components.SelectedRock.get()?.value;
+
+  if (components.SyncStatus.get(selectedRock)) {
+    console.log("Skipping sync for spacerock (exists):", selectedRock);
+    return;
+  }
+
+  const syncData = Sync.withFilterIndexerRecsSync({
+    indexerUrl: networkConfig.indexerUrl!,
+    tables: tables,
+    world,
+    filter: {
+      address: networkConfig.worldAddress as Hex,
+      filters: [
+        {
+          tableId: tables.ResourceCount.tableId,
+          key0: selectedRock,
+        },
+        {
+          tableId: tables.MaxResourceCount.tableId,
+          key0: selectedRock,
+        },
+        {
+          tableId: tables.LastClaimedAt.tableId,
+          key0: selectedRock,
+        },
+        {
+          tableId: tables.ProductionRate.tableId,
+          key0: selectedRock,
+        },
+        {
+          tableId: tables.ConsumptionRate.tableId,
+          key0: selectedRock,
+        },
+        {
+          tableId: tables.UnitCount.tableId,
+          key0: selectedRock,
+        },
+      ],
+    },
+  });
+
+  syncData.start((_, __, progress) => {
+    components.SyncStatus.set(
+      {
+        live: false,
+        progress,
+        message: `Hydrating Selected Asteroid Data`,
+      },
+      selectedRock
+    );
+
+    if (progress === 1) {
+      components.SyncStatus.set(
+        {
+          live: true,
+          progress,
+          message: `DONE`,
+        },
+        selectedRock
       );
     }
   });

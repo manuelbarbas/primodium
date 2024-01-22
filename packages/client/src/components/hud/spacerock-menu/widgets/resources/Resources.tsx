@@ -10,7 +10,7 @@ import { ElectricityLabel } from "./utilities/ElectricityLabel";
 import { HousingLabel } from "./utilities/HousingLabel";
 
 export const Resources: React.FC = () => {
-  const { playerEntity } = useMud().network;
+  const playerEntity = useMud().playerAccount.entity;
   const selectedRock = components.SelectedRock.use()?.value as Entity | undefined;
   const owner = components.OwnedBy.use(selectedRock)?.value as Entity | undefined;
 
