@@ -33,7 +33,9 @@ export const GeneralSettings = () => {
             <Toggle onToggle={toggleUnitDisplay} defaultChecked={unitDisplay === "gwei"} />
           </div>
           <div className="">
-            <p className="text-xs opacity-50 font-bold pb-1">PRESS ` TO OPEN HACKER PANE</p>
+            <div className="text-xs opacity-50 font-bold pb-1">
+              PRESS <p className="kbd">~</p> TO OPEN HACKER PANE
+            </div>
             <Toggle onToggle={toggleAllowHackerModal} defaultChecked={allowHackerModal} />
           </div>
         </SecondaryCard>
