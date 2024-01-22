@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { KeybindActions } from "@game/constants";
 import React, { KeyboardEvent, useState } from "react";
 import { Button } from "src/components/core/Button";
-import { Navigator } from "src/components/core/Navigator";
+import { Modal } from "src/components/core/Modal";
 import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import createConsoleApi from "src/util/console/consoleApi";
@@ -17,7 +18,7 @@ function stringify(obj: unknown) {
   });
 }
 
-const ConsoleInteractor: React.FC = () => {
+const HackerConsole: React.FC = () => {
   const primodium = usePrimodium();
   const mud = useMud();
 
@@ -26,7 +27,10 @@ const ConsoleInteractor: React.FC = () => {
   Object.entries(api).forEach(([key, value]) => ((window as any)[key] = value));
 
   return (
-    <Navigator.Screen title="hack" className="flex-grow overflow-hidden">
+    <div className="flex-grow overflow-hidden">
+      <Modal.CloseButton keybind={KeybindActions.Console} style={{ display: "none" }}>
+        {null}
+      </Modal.CloseButton>
       <div className="grid grid-cols-7 gap-4 p-2 h-full w-full overflow-hidden">
         <div className="h-full w-full overflow-hidden flex flex-col col-span-4">
           <p className="text-xs uppercase opacity-50 font-bold pb-2">command line</p>
@@ -37,9 +41,7 @@ const ConsoleInteractor: React.FC = () => {
           <Dropdown data={api} />
         </div>
       </div>
-
-      <Navigator.BackButton className="mt-2" />
-    </Navigator.Screen>
+    </div>
   );
 };
 
@@ -194,4 +196,4 @@ const Dropdown: React.FC<Props> = ({ data }) => {
   );
 };
 
-export default ConsoleInteractor;
+export default HackerConsole;
