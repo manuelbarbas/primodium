@@ -1,8 +1,8 @@
-import { Assets, DepthLayers, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
+import { Assets, DepthLayers, EntitytoSpriteKey, RENDER_INTERVAL, SpriteKeys } from "@game/constants";
 import { Entity, Has, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
-import { throttleTime } from "rxjs";
+import { interval } from "rxjs";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { entityToColor } from "src/util/color";
@@ -25,6 +25,7 @@ import { Outline, Texture } from "../../common/object-components/sprite";
 import { ObjectText } from "../../common/object-components/text";
 import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
 
+const asteroidQueue: Entity[] = [];
 export const renderAsteroid = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const systemsWorld = namespaceWorld(world, "systems");
@@ -191,25 +192,31 @@ export const renderAsteroid = (scene: Scene) => {
         gameObject.setText(name);
         gameObject.setFontSize(Math.max(8, Math.min(44, 16 / scene.camera.phaserCamera.zoom)));
       }),
-      OnRxjsSystem(
-        // @ts-ignore
-        scene.camera.zoom$.pipe(throttleTime(10)),
-        (gameObject, zoom) => {
-          const mapOpen = components.MapOpen.get()?.value ?? false;
+      OnRxjsSystem(scene.camera.zoom$, (gameObject, zoom) => {
+        const mapOpen = components.MapOpen.get()?.value ?? false;
 
-          if (!mapOpen) return;
+        if (!mapOpen) return;
 
-          const size = Math.max(8, Math.min(44, 16 / zoom));
+        const size = Math.max(8, Math.min(44, 16 / zoom));
 
-          gameObject.setFontSize(size);
-        }
-      ),
+        gameObject.setFontSize(size);
+      }),
     ]);
   };
 
   const query = [Has(components.Asteroid), Has(components.Position), Not(components.PirateAsteroid)];
 
   defineEnterSystem(systemsWorld, query, ({ entity }) => {
+    asteroidQueue.push(entity);
+  });
+
+  const interval$ = interval(RENDER_INTERVAL);
+
+  const asteroidRenderer = interval$.subscribe(() => {
+    if (asteroidQueue.length === 0) return;
+
+    const entity = asteroidQueue.shift() as Entity;
+
     const coord = components.Position.get(entity);
     const asteroidData = components.Asteroid.get(entity);
 
@@ -218,6 +225,8 @@ export const renderAsteroid = (scene: Scene) => {
     render(entity, coord);
     if (asteroidData?.spawnsSecondary) initializeSecondaryAsteroids(entity, coord);
   });
+
+  systemsWorld.registerDisposer(() => asteroidRenderer.unsubscribe());
 };
 
 const getOutlineSprite = (playerEntity: Entity, rock: Entity) => {
