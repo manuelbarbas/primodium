@@ -7,6 +7,22 @@ import { EFleetStance } from "src/Types.sol";
 import { fleetBattleResolveRaid, fleetBattleApplyDamage, resolveBattleEncryption } from "libraries/SubsystemCalls.sol";
 
 contract FleetCombatSystem is FleetBaseSystem {
+  modifier _onlyWhenNotInGracePeriod(bytes32 fleetId) {
+    require(
+      !((FleetMovement.getArrivalTime(fleetId) + P_GracePeriod.getFleet()) <= block.timestamp),
+      "[Fleet] Target fleet is in grace period"
+    );
+    _;
+  }
+
+  modifier _onlyWhenNotInStance(bytes32 fleetId) {
+    require(
+      FleetStance.getStance(fleetId) == uint8(EFleetStance.None),
+      "[Fleet] Can not attack while fleet is in stance"
+    );
+    _;
+  }
+
   function attack(bytes32 entity, bytes32 targetEntity) public {
     bytes32 redirectedTarget = FleetStance.getTarget(targetEntity);
     if (redirectedTarget != bytes32(0)) {
@@ -72,21 +88,5 @@ contract FleetCombatSystem is FleetBaseSystem {
     }
 
     fleetBattleApplyDamage(battleId, battleResult.targetEntity, battleResult.aggressorDamage);
-  }
-
-  modifier _onlyWhenNotInGracePeriod(bytes32 fleetId) {
-    require(
-      !((FleetMovement.getArrivalTime(fleetId) + P_GracePeriod.getFleet()) <= block.timestamp),
-      "[Fleet] Target fleet is in grace period"
-    );
-    _;
-  }
-
-  modifier _onlyWhenNotInStance(bytes32 fleetId) {
-    require(
-      FleetStance.getStance(fleetId) == uint8(EFleetStance.None),
-      "[Fleet] Can not attack while fleet is in stance"
-    );
-    _;
   }
 }
