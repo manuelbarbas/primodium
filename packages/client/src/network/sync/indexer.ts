@@ -47,6 +47,9 @@ export const hydrateInitialGameState = (
             {
               tableName: tables.Asteroid.name!,
             },
+            {
+              tableName: tables.ReversePosition.name!,
+            },
           ],
         },
       ],
