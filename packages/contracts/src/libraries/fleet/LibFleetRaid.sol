@@ -26,14 +26,14 @@ library LibFleetRaid {
     return
       IsFleet.get(entity)
         ? LibFleetAttributes.getFreeCargoSpaceWithFollowers(entity)
-        : LibSpaceRockAttributes.getFreeCargoSpaceWithDefenders(entity);
+        : LibSpaceRockAttributes.getFreeCargoSpacesWithDefenders(entity);
   }
 
-  function getTotalRaidableResourceCountsWithAllies(bytes32 entity) internal view returns (uint256[] memory, uint256) {
+  function getRaidableResourceCountsWithAllies(bytes32 entity) internal view returns (uint256[] memory, uint256) {
     return
       IsFleet.get(entity)
         ? LibFleetAttributes.getResourceCountsWithFollowers(entity)
-        : LibSpaceRockAttributes.getTotalStoredResourceCountsWithDefenders(entity);
+        : LibSpaceRockAttributes.getStoredResourceCountsWithDefenders(entity);
   }
 
   function getAllies(bytes32 entity) internal view returns (bytes32[] memory) {
@@ -74,12 +74,12 @@ library LibFleetRaid {
     (
       uint256[] memory totalRaidableResourceCounts,
       uint256 totalRaidableResources
-    ) = getTotalRaidableResourceCountsWithAllies(targetEntity);
+    ) = getRaidableResourceCountsWithAllies(targetEntity);
 
     //if the fleet can raid more than the total resources available, raid all resources
     if (maxRaidAmount > totalRaidableResources) maxRaidAmount = totalRaidableResources;
 
-    totalRaidedResourceCounts = new uint256[](P_Transportables.getLength());
+    totalRaidedResourceCounts = new uint256[](P_Transportables.length());
 
     (totalRaidedResourceCounts, totalRaidedResources) = calculateRaidFrom(
       battleId,

@@ -222,7 +222,7 @@ library LibResource {
    * @param spaceRockEntity The identifier of the spaceRock.
    * @return totalResources The total count of non-utility resources.
    */
-  function getTotalStoredResourcesVaulted(bytes32 spaceRockEntity) internal view returns (uint256 totalResources) {
+  function getStoredResourceCountVaulted(bytes32 spaceRockEntity) internal view returns (uint256 totalResources) {
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       uint256 resourceCount = ResourceCount.get(spaceRockEntity, transportables[i]);
@@ -244,7 +244,7 @@ library LibResource {
    * @return resourceCounts An array containing the counts of each non-utility resource.
    * @return totalResources The total count of non-utility resources.
    */
-  function getTotalStoredResourceCountsVaulted(bytes32 spaceRockEntity)
+  function getStoredResourceCountsVaulted(bytes32 spaceRockEntity)
     internal
     view
     returns (uint256[] memory resourceCounts, uint256 totalResources)

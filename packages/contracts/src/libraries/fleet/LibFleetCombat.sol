@@ -109,7 +109,7 @@ library LibFleetCombat {
     return
       IsFleet.get(entity)
         ? LibFleetAttributes.getHpWithFollowers(entity)
-        : LibSpaceRockAttributes.getTotalHpWithDefenders(entity);
+        : LibSpaceRockAttributes.getHpWithDefenders(entity);
   }
 
   function applyDamageToWithAllies(

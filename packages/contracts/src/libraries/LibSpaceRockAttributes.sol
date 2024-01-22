@@ -60,7 +60,7 @@ library LibSpaceRockAttributes {
     }
   }
 
-  function getTotalHp(bytes32 spaceRock) internal view returns (uint256 hp) {
+  function getHp(bytes32 spaceRock) internal view returns (uint256 hp) {
     hp = ResourceCount.get(spaceRock, uint8(EResource.R_HP));
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
@@ -70,8 +70,8 @@ library LibSpaceRockAttributes {
     }
   }
 
-  function getTotalHpWithDefenders(bytes32 spaceRock) internal view returns (uint256[] memory hps, uint256 totalHp) {
-    totalHp = getTotalHp(spaceRock);
+  function getHpWithDefenders(bytes32 spaceRock) internal view returns (uint256[] memory hps, uint256 totalHp) {
+    totalHp = getHp(spaceRock);
     bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(spaceRock);
     hps = new uint256[](defenderFleetIds.length + 1);
     hps[0] = totalHp;
@@ -81,7 +81,7 @@ library LibSpaceRockAttributes {
     }
   }
 
-  function getTotalCargo(bytes32 spaceRock) internal view returns (uint256 cargo) {
+  function getCargo(bytes32 spaceRock) internal view returns (uint256 cargo) {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       uint256 unitCount = UnitCount.get(spaceRock, unitPrototypes[i]);
@@ -94,22 +94,16 @@ library LibSpaceRockAttributes {
     encryption = ResourceCount.get(spaceRock, uint8(EResource.R_Encryption));
   }
 
-  function getTotalStoredResourcesWithDefenders(bytes32 spaceRock) internal view returns (uint256 totalResources) {
-    totalResources = LibResource.getTotalStoredResourcesVaulted(spaceRock);
+  function getStoredResourceCountWithDefenders(bytes32 spaceRock) internal view returns (uint256 totalResources) {
+    totalResources = LibResource.getStoredResourceCountVaulted(spaceRock);
     bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(spaceRock);
     for (uint256 i = 0; i < defenderFleetIds.length; i++) {
       totalResources += LibFleetAttributes.getOccupiedCargo(defenderFleetIds[i]);
     }
   }
 
-  function getTotalStoredResourceCountsWithDefenders(bytes32 spaceRock)
-    internal
-    view
-    returns (uint256[] memory, uint256)
-  {
-    (uint256[] memory resourceCounts, uint256 totalResources) = LibResource.getTotalStoredResourceCountsVaulted(
-      spaceRock
-    );
+  function getStoredResourceCountsWithDefenders(bytes32 spaceRock) internal view returns (uint256[] memory, uint256) {
+    (uint256[] memory resourceCounts, uint256 totalResources) = LibResource.getStoredResourceCountsVaulted(spaceRock);
     bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(spaceRock);
     for (uint256 i = 0; i < defenderFleetIds.length; i++) {
       uint256[] memory defenderResourceCounts = LibFleetAttributes.getResourceCounts(defenderFleetIds[i]);
@@ -121,22 +115,22 @@ library LibSpaceRockAttributes {
     return (resourceCounts, totalResources);
   }
 
-  function getTotalFreeCargoSpaceWithDefenders(bytes32 spaceRock) internal view returns (uint256 totalCargo) {
-    totalCargo = getTotalCargo(spaceRock);
+  function getFreeCargoSpaceWithDefenders(bytes32 spaceRock) internal view returns (uint256 totalCargo) {
+    totalCargo = getCargo(spaceRock);
     bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(spaceRock);
     for (uint256 i = 0; i < defenderFleetIds.length; i++) {
       totalCargo += LibFleetAttributes.getFreeCargoSpace(defenderFleetIds[i]);
     }
   }
 
-  function getFreeCargoSpaceWithDefenders(bytes32 fleetId)
+  function getFreeCargoSpacesWithDefenders(bytes32 fleetId)
     internal
     view
     returns (uint256[] memory freeCargoSpaces, uint256 totalFreeCargoSpace)
   {
     bytes32[] memory followerFleetIds = LibFleetStance.getFollowerFleets(fleetId);
     freeCargoSpaces = new uint256[](followerFleetIds.length + 1);
-    freeCargoSpaces[0] = getTotalCargo(fleetId);
+    freeCargoSpaces[0] = getCargo(fleetId);
     totalFreeCargoSpace = freeCargoSpaces[0];
 
     for (uint8 i = 0; i < followerFleetIds.length; i++) {
