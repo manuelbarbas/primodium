@@ -189,7 +189,7 @@ library LibFleetCombat {
       unitResult.unitLevels[i] = UnitLevel.get(targetEntity, unitPrototypes[i]);
       uint256 unitHp = P_Unit.getHp(unitPrototypes[i], unitResult.unitLevels[i]);
       uint256 damagePortion = (unitResult.unitsAtStart[i] * unitHp * damage);
-      unitResult.casualties[i] = LibMath.divideRoundNear(damagePortion, totalHp);
+      unitResult.casualties[i] = LibMath.divideRound(damagePortion, totalHp);
 
       applyUnitCasualty(targetEntity, unitPrototypes[i], unitResult.casualties[i]);
 
@@ -235,7 +235,7 @@ library LibFleetCombat {
       uint256 resourceCount = ResourceCount.get(fleetId, i);
       if (resourceCount == 0) continue;
 
-      uint256 resourcePortion = LibMath.divideRoundUp(resourceCount * cargoLost, occupiedCargo);
+      uint256 resourcePortion = LibMath.divideCeil(resourceCount * cargoLost, occupiedCargo);
       if (resourcePortion > cargoLossLeft) {
         resourcePortion = cargoLossLeft;
       }
