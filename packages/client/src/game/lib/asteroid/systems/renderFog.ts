@@ -14,7 +14,7 @@ export function renderFog(scene: Scene) {
   const systemsWorld = namespaceWorld(world, "systems");
   const fogWorld = namespaceWorld(world, "game_fog");
 
-  defineComponentSystem(systemsWorld, components.SelectedRock, ({ value }) => {
+  defineComponentSystem(systemsWorld, components.ActiveRock, ({ value }) => {
     if (!value[0]) return;
     //remove old indicators
     scene.objectPool.removeGroup(value[1]?.value + objSuffix);

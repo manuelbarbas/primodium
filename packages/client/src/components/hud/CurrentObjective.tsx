@@ -75,7 +75,7 @@ export const CurrentObjective = () => {
             <p className="font-bold">{getBlockTypeName(objectiveEntity)}</p>
           </div>
           <hr className="border-secondary/50" />
-          <div className="flex gap-1 text-right w-full justify-end px-2 border-secondary/50 p-1 w-72">
+          <div className="flex gap-1 text-right justify-end px-2 border-secondary/50 p-1 w-72">
             <p className="text-xs text-success text-left normal-case font-normal">
               {ObjectiveDescriptions.get(tutorialObjectives[currentStep])}
             </p>
