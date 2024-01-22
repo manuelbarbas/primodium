@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
+import { formatNumber } from "src/util/number";
 import { Card } from "../core/Card";
-import { formatNumber } from "src/util/common";
 
 export const Score = () => {
   const address = useMud().network.address;
