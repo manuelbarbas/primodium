@@ -35,7 +35,7 @@ export const Settings = () => {
             Audio
           </Navigator.NavButton>
           <Navigator.NavButton to="hack" className="btn-md btn-seconday border-secondary w-24">
-            Hack
+            Hacking Console
           </Navigator.NavButton>
         </div>
 
