@@ -49,6 +49,7 @@ export const renderBuilding = (scene: Scene) => {
       }),
       Has(components.BuildingType),
       Has(components.IsActive),
+      Has(components.Level),
     ];
 
     const oldPositionQuery = [
@@ -57,6 +58,7 @@ export const renderBuilding = (scene: Scene) => {
       }),
       Has(components.BuildingType),
       Has(components.IsActive),
+      Has(components.Level),
     ];
 
     for (const entity of runQuery(oldPositionQuery)) {

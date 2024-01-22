@@ -63,11 +63,11 @@ export const Landing: React.FC = () => {
           <div className="absolute top-0 w-full h-full topographic-background2 opacity-25" />
           <h1 className="text-8xl font-bold uppercase stroke stroke-white stroke-4 z-10">Primodium</h1>
           <h1 className="text-8xl font-bold uppercase text-accent z-5 -mt-[6.2rem] opacity-75 z-1">Primodium</h1>
-          <h1 className="text-8xl font-bold uppercase text-secondary z-10 -mt-[6.15rem] opacity-75 z-0">Primodium</h1>
+          <h1 className="text-8xl font-bold uppercase text-secondary -mt-[6.15rem] opacity-75 z-0">Primodium</h1>
           <div className="w-4/5 relative flex flex-col items-center gap-2 h-40">
             <img
               src={"/img/mainbase.png"}
-              className=" w-32 pixel-images opacity-75 scale-x-[-1] z-0 absolute bottom-6 margin-auto z-20"
+              className=" w-32 pixel-images opacity-75 scale-x-[-1] absolute bottom-6 margin-auto z-20"
             />
             <div className="absolute bg-gray-900 blur-[15px] w-56 h-32 margin-auto bottom-0 z-10" />
           </div>

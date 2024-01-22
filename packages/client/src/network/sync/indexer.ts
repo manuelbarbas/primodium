@@ -4,6 +4,8 @@ import { getNetworkConfig } from "../config/getNetworkConfig";
 import { Hex, padHex } from "viem";
 import { hydrateFromRPC } from "./rpc";
 import { Entity } from "@latticexyz/recs";
+import { hashEntities } from "src/util/encode";
+import { Keys } from "src/util/constants";
 
 export const hydrateInitialGameState = (
   setupResult: SetupResult,
@@ -32,6 +34,7 @@ export const hydrateInitialGameState = (
         ...configTableQueries,
         { tableName: tables.Dimensions.name! },
         { tableName: tables.GracePeriod.name! },
+        { tableName: tables.MapItemArrivals.name! },
         //get asteroids
         {
           tableName: tables.Position.name!,
@@ -82,6 +85,7 @@ export const hydratePlayerData = (playerEntity: Entity, setupResult: SetupResult
   const { tables, world } = network;
   const networkConfig = getNetworkConfig();
 
+  //TODO: sync again on error
   if (components.SyncStatus.get(playerEntity)) {
     console.log("Skipping sync for player (exists):", playerEntity);
     return;
@@ -112,6 +116,30 @@ export const hydratePlayerData = (playerEntity: Entity, setupResult: SetupResult
         },
         {
           tableId: tables.Score.tableId,
+          key0: playerEntity,
+        },
+        {
+          tableId: tables.HasBuiltBuilding.tableId,
+          key0: playerEntity,
+        },
+        {
+          tableId: tables.ProducedResource.tableId,
+          key0: playerEntity,
+        },
+        {
+          tableId: tables.RaidedResource.tableId,
+          key0: playerEntity,
+        },
+        {
+          tableId: tables.DefeatedPirate.tableId,
+          key0: playerEntity,
+        },
+        {
+          tableId: tables.ProducedUnit.tableId,
+          key0: playerEntity,
+        },
+        {
+          tableId: tables.DestroyedUnit.tableId,
           key0: playerEntity,
         },
       ],
@@ -145,14 +173,17 @@ export const hydratePlayerData = (playerEntity: Entity, setupResult: SetupResult
   });
 };
 
-export const hydrateSelectedAsteroid = (mud: MUD) => {
+export const hydrateSelectedAsteroid = (selectedRock: Entity | undefined, mud: MUD) => {
   const { network, components } = mud;
   const { tables, world } = network;
   const networkConfig = getNetworkConfig();
-  const selectedRock = components.SelectedRock.get()?.value;
 
-  if (components.SyncStatus.get(selectedRock)) {
-    console.log("Skipping sync for spacerock (exists):", selectedRock);
+  if (!selectedRock) return;
+
+  const syncId = hashEntities(Keys.SELECTED, selectedRock);
+
+  if (components.SyncStatus.get(syncId)) {
+    console.log("Skipping sync for selected spacerock (exists):", selectedRock);
     return;
   }
 
@@ -198,7 +229,7 @@ export const hydrateSelectedAsteroid = (mud: MUD) => {
         progress,
         message: `Hydrating Selected Asteroid Data`,
       },
-      selectedRock
+      syncId
     );
 
     if (progress === 1) {
@@ -208,7 +239,103 @@ export const hydrateSelectedAsteroid = (mud: MUD) => {
           progress,
           message: `DONE`,
         },
-        selectedRock
+        syncId
+      );
+    }
+  });
+
+  world.registerDisposer(() => {
+    syncData.unsubscribe();
+  });
+};
+
+export const hydrateActiveAsteroid = (activeRock: Entity | undefined, mud: MUD) => {
+  const { network, components } = mud;
+  const { tables, world } = network;
+  const networkConfig = getNetworkConfig();
+
+  if (!activeRock) return;
+
+  const syncId = hashEntities(Keys.ACTIVE, activeRock);
+
+  if (components.SyncStatus.get(syncId)) {
+    console.log("Skipping sync for active spacerock (exists):", activeRock);
+    return;
+  }
+
+  const syncData = Sync.withQueryDecodedIndexerRecsSync({
+    indexerUrl: networkConfig.indexerUrl!,
+    tables: mud.network.tables,
+    world: world,
+    query: {
+      address: networkConfig.worldAddress as Hex,
+      queries: [
+        //get buildings
+        {
+          tableName: mud.network.tables.Position.name!,
+          where: {
+            column: "parent",
+            operation: "eq",
+            value: activeRock as Hex,
+          },
+          include: [
+            {
+              tableName: tables.OwnedBy.name!,
+            },
+            {
+              tableName: tables.BuildingType.name!,
+            },
+            {
+              tableName: tables.IsActive.name!,
+            },
+            {
+              tableName: tables.Level.name!,
+            },
+            {
+              tableName: tables.LastClaimedAt.name!,
+            },
+            {
+              tableName: tables.ClaimOffset.name!,
+            },
+            {
+              tableName: tables.QueueUnits.name!,
+            },
+            {
+              tableName: tables.QueueItemUnits.name!,
+            },
+          ],
+        },
+        //get expansion level
+        {
+          tableName: tables.Level.name!,
+          where: {
+            column: "entity",
+            operation: "eq",
+            value: activeRock as Hex,
+          },
+        },
+      ],
+    },
+  });
+
+  syncData.start((_, __, progress) => {
+    components.SyncStatus.set(
+      {
+        live: false,
+        progress,
+        message: `Hydrating Active Asteroid Data`,
+      },
+      syncId
+    );
+
+    if (progress === 1) {
+      components.SyncStatus.set(
+        {
+          live: true,
+          progress,
+          message: `DONE`,
+        },
+        syncId
       );
     }
   });
