@@ -4,8 +4,8 @@ import { Badge } from "src/components/core/Badge";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
-import { formatNumber } from "src/util/common";
 import { RESOURCE_SCALE, ResourceImage, SPEED_SCALE } from "src/util/constants";
+import { formatNumber } from "src/util/number";
 
 export const MaterialLabel = ({ name, resource }: { name: string; resource: Entity }) => {
   const selectedRock = components.SelectedRock.use()?.value;

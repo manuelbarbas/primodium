@@ -3,8 +3,8 @@ import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
 import { MUD } from "src/network/types";
-import { bigintToNumber } from "src/util/bigint";
 import { decodeEntity, getSystemId } from "src/util/encode";
+import { bigintToNumber } from "src/util/number";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 

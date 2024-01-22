@@ -1,9 +1,10 @@
 import { StaticAbiType } from "@latticexyz/schema-type";
 import { Hex } from "viem";
+import { DECIMALS } from "../../config/constants";
 import { EResource, MUDEnums } from "../../config/enums";
 import encodeBytes32 from "../../config/util/encodeBytes32";
 
-export const SCALE = 1e18;
+export const SCALE = 10 ** DECIMALS;
 
 export const encodeArray = (names: string[]) => names.map(encodeBytes32);
 
@@ -14,20 +15,34 @@ export const indexifyResourceArray = (resources: string[]) =>
  * Generates a supply table for a marketplace given a resource and its ratio to the reserve currency.
  *
  * @param {EResource} resource - The specific resource for which to generate the supply table.
- * @param {number} ratio - The ratio of the resource to the reserve currency. The larger the number, the more cheap the resource in relation to the reserve.
+ * @param {number} ratio - The ratio of the resource to the reserve currency. The larger the number, the more reserves there are, and the cheaper the resource in relation to the reserve.
  * @returns An object containing keys and tables for the marketplace supply.
  *          The keys array contains objects with resource types and their corresponding data types.
  *          The tables object includes 'Reserves' with 'amountB' and 'amountA', calculated based on the provided ratio.
  */
-const BASE_RESERVE = 100000;
+const BASE_RESERVE = 10000000;
 const RESERVE_RESOURCE = EResource.Kimberlite;
-export const marketplaceSupplyTable = (resource: EResource, ratio: number) => {
+
+export const marketplaceSupplyTable = (resource: EResource, ratio: number, reserveSize?: number) => {
+  const reserve = (reserveSize ?? BASE_RESERVE) * SCALE;
   if (resource == RESERVE_RESOURCE)
     throw new Error("[marketplaceSupplyTable] Cannot use the reserve resource as the marketplace resource");
+
+  // sort the resources so that the reserve resource is always the second key
   const keys = resource < RESERVE_RESOURCE ? [resource, RESERVE_RESOURCE] : [RESERVE_RESOURCE, resource];
+
+  // calculate the reserve amounts based on the ratio
+  const inputResourceAmount = BigInt(reserve * ratio);
+  const reserveResourceAmount = BigInt(reserve);
+
+  const [reserveA, reserveB] =
+    resource < RESERVE_RESOURCE
+      ? [inputResourceAmount, reserveResourceAmount]
+      : [reserveResourceAmount, inputResourceAmount];
+
   return {
     keys: [{ [keys[0]]: "uint8" }, { [keys[1]]: "uint8" }] as { [x: string]: "uint8" }[],
-    tables: { Reserves: { amountB: BigInt(BASE_RESERVE * SCALE), amountA: BigInt(BASE_RESERVE * SCALE * ratio) } },
+    tables: { Reserves: { amountA: reserveA, amountB: reserveB } },
   };
 };
 

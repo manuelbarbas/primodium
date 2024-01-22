@@ -10,7 +10,7 @@ import { encodeEntity } from "src/util/encode";
 import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
 import { getBlockTypeName } from "./common";
-import { EntityType, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
+import { EntityType, RESOURCE_SCALE, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
 
 const resources: Record<string, Entity> = {
   iron: EntityType.Iron,
@@ -79,7 +79,7 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
 
         if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
 
-        const value = 10000000n;
+        const value = 100000n * RESOURCE_SCALE;
         console.log("setting resource", getBlockTypeName(resourceEntity), selectedRock, value);
 
         await setComponentValue(

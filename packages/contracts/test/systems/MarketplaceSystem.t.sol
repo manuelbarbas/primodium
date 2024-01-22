@@ -23,6 +23,39 @@ contract MarketplaceSystemTest is PrimodiumTest {
     return (homeAsteroid, marketEntity);
   }
 
+  function testSwapSanityCheck() public {
+    (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
+    vm.startPrank(creator);
+
+    path.push(EResource.Iron);
+    path.push(RESERVE_CURRENCY_RESOURCE);
+    path.push(EResource.Iron);
+
+    uint256 amountIn = 10e18;
+    uint256 reserveOut = LibMarketplace.getAmountOut(
+      amountIn,
+      Reserves.getAmountA(Iron, RESERVE_CURRENCY),
+      Reserves.getAmountB(Iron, RESERVE_CURRENCY)
+    );
+    uint256 expectedAmountOut = LibMarketplace.getAmountOut(
+      reserveOut,
+      Reserves.getAmountB(Iron, RESERVE_CURRENCY),
+      Reserves.getAmountA(Iron, RESERVE_CURRENCY)
+    );
+
+    console.log("Reserve out: %s", reserveOut);
+    console.log("Expected amount out: %s", expectedAmountOut);
+
+    MaxResourceCount.set(asteroid, Iron, MAX_INT);
+    ResourceCount.set(asteroid, Iron, amountIn);
+
+    MaxResourceCount.set(asteroid, RESERVE_CURRENCY, MAX_INT);
+
+    world.swap(market, path, amountIn, 0);
+
+    console.log(ResourceCount.get(asteroid, Iron) / 1e18);
+  }
+
   /* ---------------------------------- Swap ---------------------------------- */
   function testSwapFailNotMarket() public {
     (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);

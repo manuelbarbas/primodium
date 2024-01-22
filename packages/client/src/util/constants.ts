@@ -1,8 +1,8 @@
 import { resourceToHex } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { DECIMALS } from "contracts/config/constants";
 import { EBuilding, EObjectives, EResource, ESize, EUnit } from "contracts/config/enums";
-import { SCALE } from "contracts/ts/prototypes/prototypeGenUtils";
 import { Key } from "engine/types";
 import { encodeEntity } from "src/util/encode";
 import { reverseRecord } from "./common";
@@ -22,7 +22,8 @@ export enum Action {
 }
 
 export const SPEED_SCALE = BigInt(100);
-export const RESOURCE_SCALE = SCALE;
+export const RESOURCE_DECIMALS = DECIMALS;
+export const RESOURCE_SCALE = BigInt(10 ** DECIMALS);
 export const MULTIPLIER_SCALE = BigInt(100);
 export const UNIT_SPEED_SCALE = BigInt(100);
 
@@ -111,11 +112,6 @@ export const key = {
 };
 
 export const EntityType = {
-  //Raw
-  R_Titanium: toHex32("R_Titanium") as Entity,
-  R_Platinum: toHex32("R_Platinum") as Entity,
-  R_Iridium: toHex32("R_Iridium") as Entity,
-  R_Kimberlite: toHex32("R_Kimberlite") as Entity,
   // Ores
   Iron: toHex32("Iron") as Entity,
   Copper: toHex32("Copper") as Entity,
@@ -262,6 +258,8 @@ export const EntityType = {
   NULL: toHex32("NULL") as Entity,
 };
 
+export const RESERVE_RESOURCE = EntityType.Kimberlite;
+
 export const MapIdToAsteroidType: Record<number, Entity> = {
   2: EntityType.Kimberlite,
   3: EntityType.Iridium,
@@ -293,15 +291,11 @@ export const ResearchImage = new Map<Entity, string>([
   [EntityType.Copper, "/img/resource/copper_resource.png"],
   [EntityType.Lithium, "/img/resource/lithium_resource.png"],
   [EntityType.Titanium, "/img/resource/titanium_resource.png"],
-  [EntityType.R_Titanium, "/img/resource/titanium_resource.png"],
 
   [EntityType.Iridium, "/img/resource/iridium_resource.png"],
-  [EntityType.R_Iridium, "/img/resource/iridium_resource.png"],
 
   [EntityType.Kimberlite, "/img/resource/kimberlite_resource.png"],
-  [EntityType.R_Kimberlite, "/img/resource/kimberlite_resource.png"],
   [EntityType.Platinum, "/img/resource/platinum_resource.png"],
-  [EntityType.R_Platinum, "/img/resource/platinum_resource.png"],
 
   [EntityType.ExpansionResearch1, "/img/icons/mainbaseicon.png"],
   [EntityType.ExpansionResearch2, "/img/icons/mainbaseicon.png"],
@@ -365,13 +359,9 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.Copper, "/img/resource/copper_resource.png"],
   [EntityType.Lithium, "/img/resource/lithium_resource.png"],
   [EntityType.Titanium, "/img/resource/titanium_resource.png"],
-  [EntityType.R_Titanium, "/img/resource/titanium_resource.png"],
   [EntityType.Iridium, "/img/resource/iridium_resource.png"],
-  [EntityType.R_Iridium, "/img/resource/iridium_resource.png"],
   [EntityType.Kimberlite, "/img/resource/kimberlite_resource.png"],
-  [EntityType.R_Kimberlite, "/img/resource/kimberlite_resource.png"],
   [EntityType.Platinum, "/img/resource/platinum_resource.png"],
-  [EntityType.R_Platinum, "/img/resource/platinum_resource.png"],
 
   [EntityType.IronPlate, "/img/crafted/ironplate.png"],
   [EntityType.BasicPowerSource, "/img/crafted/basicbattery.png"],
@@ -486,11 +476,6 @@ export const UnitStorages = new Set([
 export const MultiplierStorages = new Set([EntityType.DefenseMultiplier]);
 
 export const ResourceEnumLookup: Record<Entity, EResource> = {
-  [EntityType.R_Titanium]: EResource.R_Titanium,
-  [EntityType.R_Platinum]: EResource.R_Platinum,
-  [EntityType.R_Iridium]: EResource.R_Iridium,
-  [EntityType.R_Kimberlite]: EResource.R_Kimberlite,
-
   [EntityType.Iron]: EResource.Iron,
   [EntityType.Copper]: EResource.Copper,
   [EntityType.Lithium]: EResource.Lithium,
