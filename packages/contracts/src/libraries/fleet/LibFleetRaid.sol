@@ -22,7 +22,15 @@ import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { EResource, EFleetStance } from "src/Types.sol";
 
 library LibFleetRaid {
-  function getMaxRaidAmountWithAllies(bytes32 entity) internal view returns (uint256[] memory, uint256) {
+  function getMaxRaidAmountWithAllies(bytes32 entity)
+    internal
+    view
+    returns (
+      uint256,
+      uint256[] memory,
+      uint256
+    )
+  {
     return
       IsFleet.get(entity)
         ? LibFleetAttributes.getFreeCargoSpaceWithFollowers(entity)
@@ -46,7 +54,9 @@ library LibFleetRaid {
     bytes32 target
   ) internal {
     //maximum amount of resources the fleet can raid
-    (uint256[] memory freeCargoSpaces, uint256 maxRaidAmount) = getMaxRaidAmountWithAllies(raider);
+    (uint256 freeCargoSpace, uint256[] memory freeCargoSpaces, uint256 maxRaidAmount) = getMaxRaidAmountWithAllies(
+      raider
+    );
 
     // will caculate how much of each resource was successfuly raided from target and increase those to be used for increasing resources of the raiders
     (uint256[] memory totalRaidedResourceCounts, uint256 totalRaidedResources) = calculateRaidFromWithAllies(
@@ -59,6 +69,7 @@ library LibFleetRaid {
     receiveRaidedResourcesWithAllies(
       battleId,
       raider,
+      freeCargoSpace,
       freeCargoSpaces,
       maxRaidAmount,
       totalRaidedResourceCounts,
@@ -140,6 +151,7 @@ library LibFleetRaid {
   function receiveRaidedResourcesWithAllies(
     bytes32 battleId,
     bytes32 targetEntity,
+    uint256 freeCargoSpace,
     uint256[] memory freeCargoSpaces,
     uint256 maxRaidAmount,
     uint256[] memory totalRaidedResourceCounts,
@@ -149,7 +161,7 @@ library LibFleetRaid {
       battleId,
       targetEntity,
       maxRaidAmount,
-      freeCargoSpaces[0],
+      freeCargoSpace,
       totalRaidedResourceCounts,
       totalRaidedResources
     );
@@ -161,7 +173,7 @@ library LibFleetRaid {
         battleId,
         allies[i],
         maxRaidAmount,
-        freeCargoSpaces[i + 1],
+        freeCargoSpaces[i],
         totalRaidedResourceCounts,
         totalRaidedResources
       );

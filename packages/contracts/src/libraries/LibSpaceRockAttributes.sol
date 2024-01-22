@@ -40,15 +40,19 @@ library LibSpaceRockAttributes {
   function getDefensesWithDefenders(bytes32 spaceRock)
     internal
     view
-    returns (uint256[] memory defenses, uint256 totalDefense)
+    returns (
+      uint256 defense,
+      uint256[] memory defenses,
+      uint256 totalDefense
+    )
   {
     bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(spaceRock);
-    defenses = new uint256[](defenderFleetIds.length + 1);
-    defenses[0] = getDefense(spaceRock);
-    totalDefense += defenses[0];
+    defenses = new uint256[](defenderFleetIds.length);
+    defense = getDefense(spaceRock);
+    totalDefense += defense;
     for (uint8 i = 0; i < defenderFleetIds.length; i++) {
-      defenses[i + 1] = LibFleetAttributes.getDefense(defenderFleetIds[i]);
-      totalDefense += defenses[i + 1];
+      defenses[i] = LibFleetAttributes.getDefense(defenderFleetIds[i]);
+      totalDefense += defenses[i];
     }
   }
 
@@ -70,13 +74,21 @@ library LibSpaceRockAttributes {
     }
   }
 
-  function getHpWithDefenders(bytes32 spaceRock) internal view returns (uint256[] memory hps, uint256 totalHp) {
-    totalHp = getHp(spaceRock);
+  function getHpWithDefenders(bytes32 spaceRock)
+    internal
+    view
+    returns (
+      uint256 hp,
+      uint256[] memory hps,
+      uint256 totalHp
+    )
+  {
+    hp = getHp(spaceRock);
     bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(spaceRock);
-    hps = new uint256[](defenderFleetIds.length + 1);
-    hps[0] = totalHp;
+    hps = new uint256[](defenderFleetIds.length);
+    totalHp = hp;
     for (uint8 i = 0; i < defenderFleetIds.length; i++) {
-      hps[i + 1] = LibFleetAttributes.getHp(defenderFleetIds[i]);
+      hps[i] = LibFleetAttributes.getHp(defenderFleetIds[i]);
       totalHp += hps[i + 1];
     }
   }
@@ -126,16 +138,20 @@ library LibSpaceRockAttributes {
   function getFreeCargoSpacesWithDefenders(bytes32 fleetId)
     internal
     view
-    returns (uint256[] memory freeCargoSpaces, uint256 totalFreeCargoSpace)
+    returns (
+      uint256 freeCargoSpace,
+      uint256[] memory freeCargoSpaces,
+      uint256 totalFreeCargoSpace
+    )
   {
     bytes32[] memory followerFleetIds = LibFleetStance.getFollowerFleets(fleetId);
-    freeCargoSpaces = new uint256[](followerFleetIds.length + 1);
-    freeCargoSpaces[0] = getCargo(fleetId);
-    totalFreeCargoSpace = freeCargoSpaces[0];
+    freeCargoSpaces = new uint256[](followerFleetIds.length);
+    freeCargoSpace = getCargo(fleetId);
+    totalFreeCargoSpace = freeCargoSpace;
 
     for (uint8 i = 0; i < followerFleetIds.length; i++) {
-      freeCargoSpaces[i + 1] = LibFleetAttributes.getFreeCargoSpace(followerFleetIds[i]);
-      totalFreeCargoSpace += freeCargoSpaces[i + 1];
+      freeCargoSpaces[i] = LibFleetAttributes.getFreeCargoSpace(followerFleetIds[i]);
+      totalFreeCargoSpace += freeCargoSpaces[i];
     }
   }
 }

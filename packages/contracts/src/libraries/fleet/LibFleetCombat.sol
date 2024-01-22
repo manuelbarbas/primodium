@@ -22,7 +22,15 @@ import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { EResource, EFleetStance } from "src/Types.sol";
 
 library LibFleetCombat {
-  function getDefensesWithAllies(bytes32 entity) internal view returns (uint256[] memory, uint256) {
+  function getDefensesWithAllies(bytes32 entity)
+    internal
+    view
+    returns (
+      uint256,
+      uint256[] memory,
+      uint256
+    )
+  {
     return
       IsFleet.get(entity)
         ? LibFleetAttributes.getDefensesWithFollowers(entity)
@@ -39,36 +47,36 @@ library LibFleetCombat {
 
     battleId = LibEncode.getTimedHash(spaceRock);
 
-    (uint256[] memory aggressorDamages, uint256 aggressorDamage) = aggressorIsFleet
+    (uint256 aggressorDamage, uint256[] memory aggressorDamages, uint256 totalAggressorDamage) = aggressorIsFleet
       ? LibFleetAttributes.getAttacksWithFollowers(entity)
       : LibSpaceRockAttributes.getDefensesWithDefenders(entity);
 
-    BattleDamageDealtResult.set(battleId, entity, aggressorDamages[0]);
+    BattleDamageDealtResult.set(battleId, entity, aggressorDamage);
 
     bytes32[] memory aggressorAllies = getAllies(entity);
     for (uint256 i = 0; i < aggressorAllies.length; i++) {
-      BattleDamageDealtResult.set(battleId, aggressorAllies[i], aggressorDamages[i + 1]);
+      BattleDamageDealtResult.set(battleId, aggressorAllies[i], aggressorDamages[i]);
     }
 
-    (uint256[] memory targetDamages, uint256 targetDamage) = aggressorIsFleet
+    (uint256 targetDamage, uint256[] memory targetDamages, uint256 totalTargetDamage) = aggressorIsFleet
       ? getDefensesWithAllies(targetEntity)
       : LibFleetAttributes.getAttacksWithFollowers(targetEntity);
 
-    BattleDamageDealtResult.set(battleId, targetEntity, targetDamages[0]);
+    BattleDamageDealtResult.set(battleId, targetEntity, targetDamage);
 
     bytes32[] memory targetAllies = getAllies(targetEntity);
     for (uint256 i = 0; i < targetAllies.length; i++) {
-      BattleDamageDealtResult.set(battleId, targetAllies[i], targetDamages[i + 1]);
+      BattleDamageDealtResult.set(battleId, targetAllies[i], targetDamages[i]);
     }
 
     battleResult = NewBattleResultData({
       aggressorEntity: entity,
-      aggressorDamage: aggressorDamage,
+      aggressorDamage: totalAggressorDamage,
       targetEntity: targetEntity,
-      targetDamage: targetDamage,
+      targetDamage: totalTargetDamage,
       aggressorAllies: aggressorAllies,
       targetAllies: targetAllies,
-      winner: aggressorDamage > targetDamage ? entity : targetEntity,
+      winner: totalAggressorDamage > totalTargetDamage ? entity : targetEntity,
       rock: spaceRock,
       timestamp: block.timestamp
     });
@@ -105,7 +113,15 @@ library LibFleetCombat {
     return IsFleet.get(entity) ? LibFleetStance.getFollowerFleets(entity) : LibFleetStance.getDefendingFleets(entity);
   }
 
-  function getHpWithAllies(bytes32 entity) internal view returns (uint256[] memory, uint256) {
+  function getHpWithAllies(bytes32 entity)
+    internal
+    view
+    returns (
+      uint256,
+      uint256[] memory,
+      uint256
+    )
+  {
     return
       IsFleet.get(entity)
         ? LibFleetAttributes.getHpWithFollowers(entity)
@@ -120,7 +136,7 @@ library LibFleetCombat {
     if (damage == 0) return;
 
     // get total hp of target and their allies as damage will be split between them
-    (uint256[] memory hps, uint256 totalHp) = getHpWithAllies(entity);
+    (uint256 hp, uint256[] memory hps, uint256 totalHp) = getHpWithAllies(entity);
 
     if (totalHp == 0) return;
 
@@ -136,14 +152,14 @@ library LibFleetCombat {
       damageDealt = applyDamageToSpaceRock(battleId, entity, totalHp, damage);
     }
 
-    BattleDamageTakenResult.set(battleId, entity, hps[0], damageDealt);
+    BattleDamageTakenResult.set(battleId, entity, hp, damageDealt);
 
     if (damageDealt >= damage) return;
 
     bytes32[] memory allies = getAllies(entity);
     for (uint256 i = 0; i < allies.length; i++) {
       uint256 damageDealtToAlly = applyDamageToUnits(battleId, allies[i], totalHp, damage);
-      BattleDamageTakenResult.set(battleId, allies[i], hps[i + 1], damageDealtToAlly);
+      BattleDamageTakenResult.set(battleId, allies[i], hps[i], damageDealtToAlly);
       damageDealt += damageDealtToAlly;
       if (damageDealt >= damage) return;
     }
