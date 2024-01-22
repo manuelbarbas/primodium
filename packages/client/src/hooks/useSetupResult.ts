@@ -6,6 +6,7 @@ import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 import { setup } from "src/network/setup/setup";
 import { setupBurnerAccount } from "src/network/setup/setupBurnerAccount";
 import { setupExternalAccount } from "src/network/setup/setupExternalAccount";
+import { hydratePlayerData } from "src/network/sync/indexer";
 import { BurnerAccount, ExternalAccount, SetupResult } from "src/network/types";
 import { Hex, createWalletClient, fallback, formatEther, http } from "viem";
 
@@ -103,6 +104,7 @@ const useSetupResult = () => {
         clearInterval(playerAccountInterval.current);
       }
       requestDrip(account.address);
+      if (network) hydratePlayerData(account.entity, network);
       playerAccountInterval.current = setInterval(() => requestDrip(account.address), 4000);
     });
   }

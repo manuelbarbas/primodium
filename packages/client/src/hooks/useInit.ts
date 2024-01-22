@@ -7,7 +7,7 @@ import { useMud } from "./useMud";
 export const useInit = () => {
   const mud = useMud();
   const playerEntity = mud.playerAccount.entity;
-  const initialized = !!components.Home.use(playerEntity)?.value;
+  const initialized = !!components.Spawned.use(playerEntity)?.value;
 
   useEffect(() => {
     if (!initialized) return;
