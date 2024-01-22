@@ -82,7 +82,7 @@ library LibFleetRaid {
     //if the fleet can raid more than the total resources available, raid all resources
     if (maxRaidAmount > totalRaidableResources) maxRaidAmount = totalRaidableResources;
 
-    totalRaidedResourceCounts = new uint256[](P_Transportables.get().length);
+    totalRaidedResourceCounts = new uint256[](P_Transportables.getLength());
 
     (totalRaidedResourceCounts, totalRaidedResources) = calculateRaidFrom(
       battleId,
