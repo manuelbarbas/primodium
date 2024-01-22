@@ -47,11 +47,8 @@ library LibFleetRaid {
   ) internal {
     //maximum amount of resources the fleet can raid
     (uint256[] memory freeCargoSpaces, uint256 maxRaidAmount) = getMaxRaidAmountWithAllies(raider);
-    //total raidable resources the target fleet/space rock and their allies have
 
-    //toal resources that were raided (some potential rounding down errors occur when accounting for portion of resources raided from each resource of each fleet which result in totalRaidedResources not being equal to maxRaidAmount)
-
-    // will caculate how much of each resource was successfuly raided from target and increase those to be used for increasing resources
+    // will caculate how much of each resource was successfuly raided from target and increase those to be used for increasing resources of the raiders
     (uint256[] memory totalRaidedResourceCounts, uint256 totalRaidedResources) = calculateRaidFromWithAllies(
       battleId,
       target,
