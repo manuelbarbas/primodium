@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { FaDiscord, FaTwitter } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
+import ConsoleInteractor from "../ConsoleInteractor";
 import { AudioSettings } from "./AudioSettings";
 import { GeneralSettings } from "./GeneralSettings";
 
@@ -9,13 +10,14 @@ const params = new URLSearchParams(window.location.search);
 
 export const Settings = () => {
   return (
-    <Navigator initialScreen="main" className="flex flex-col items-center gap-2 text-white w-full h-full border-0 p-0">
-      <Navigator.Screen title="main">
-        <h1 className="inline-block align-middle text-xl font-bold">
+    <Navigator
+      initialScreen="main"
+      className="flex flex-col items-center justify-center gap-2 text-white w-full h-full border-0 p-0"
+    >
+      <Navigator.Screen title="main" className="w-132 h-96">
+        <h1 className="inline-block align-middle text-xl font-bold uppercase">
           Primodium {params.get("version") ? params.get("version") : ""}
         </h1>
-
-        <hr className="border border-cyan-600/50 w-full" />
 
         <div className="flex flex-col items-center space-y-3 my-3">
           <Button
@@ -31,6 +33,9 @@ export const Settings = () => {
           </Navigator.NavButton>
           <Navigator.NavButton to="audio" className="btn-md btn-seconday border-secondary w-24">
             Audio
+          </Navigator.NavButton>
+          <Navigator.NavButton to="hack" className="btn-md btn-seconday border-secondary w-24">
+            Hack
           </Navigator.NavButton>
         </div>
 
@@ -56,6 +61,7 @@ export const Settings = () => {
 
       <AudioSettings />
       <GeneralSettings />
+      <ConsoleInteractor />
     </Navigator>
   );
 };

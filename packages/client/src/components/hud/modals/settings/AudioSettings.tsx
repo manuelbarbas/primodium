@@ -10,7 +10,7 @@ export const AudioSettings = () => {
   const { setVolume } = usePrimodium().api().audio;
 
   return (
-    <Navigator.Screen title="audio">
+    <Navigator.Screen title="audio" className="w-132 h-96">
       <SecondaryCard className="w-full space-y-5">
         <div>
           <p className="text-xs opacity-50 font-bold text-accent pb-1">MASTER</p>

@@ -253,7 +253,7 @@ const TopActions: React.FC<{ isSpectating: boolean }> = ({ isSpectating }) => {
             <Modal.Button className="rounded-l-none border border-secondary btn-sm">
               <IconLabel imageUri="/img/icons/settingsicon.png" tooltipText="settings" tooltipDirection="right" />
             </Modal.Button>
-            <Modal.Content className="w-132 h-96">
+            <Modal.Content className="w-4/5 h-[40rem]">
               <Settings />
             </Modal.Content>
           </Modal>

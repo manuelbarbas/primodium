@@ -74,7 +74,7 @@ export function solSin(angle: bigint): bigint {
   return (sine * TENe18) / BigInt(2147483647);
 }
 
-function solCos(_angle: bigint) {
+export function solCos(_angle: bigint) {
   return solSin(_angle + PI_OVER_TWO);
 }
 const sin_table = [

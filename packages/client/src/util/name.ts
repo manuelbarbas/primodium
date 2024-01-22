@@ -87,6 +87,10 @@ export const entityToPlayerName = (entity: Entity | undefined) => {
   return name;
 };
 
+export const playerNameToEntity = (name: string) => {
+  return [...entityPlayerName.entries()].find(([, v]) => v === name)?.[0];
+};
+
 const entityRockname = new Map<Entity, string>();
 export const entityToRockName = (entity: Entity) => {
   if (entityRockname.has(entity)) return entityRockname.get(entity) as string;
@@ -105,4 +109,8 @@ export const entityToRockName = (entity: Entity) => {
   entityRockname.set(entity, name);
 
   return name;
+};
+
+export const rockNameToEntity = (name: string) => {
+  return [...entityRockname.entries()].find(([, v]) => v === name)?.[0];
 };
