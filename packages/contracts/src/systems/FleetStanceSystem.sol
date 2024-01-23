@@ -15,7 +15,7 @@ contract FleetStanceSystem is FleetBaseSystem {
     bytes32 fleetId,
     uint8 stance,
     bytes32 target
-  ) internal _onlyFleetOwner(fleetId) _onlyWhenFleetIsInOrbit(fleetId) {
+  ) public _onlyFleetOwner(fleetId) _onlyWhenFleetIsInOrbit(fleetId) {
     require(
       FleetStance.getStance(target) == uint8(EFleetStance.None),
       "[Fleet] Can not target a fleet that is taking a stance"
