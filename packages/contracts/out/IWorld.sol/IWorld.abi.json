@@ -14,6 +14,34 @@
   },
   {
     "type": "function",
+    "name": "addLiquidity",
+    "inputs": [
+      {
+        "name": "resourceA",
+        "type": "uint8",
+        "internalType": "enum EResource"
+      },
+      {
+        "name": "resourceB",
+        "type": "uint8",
+        "internalType": "enum EResource"
+      },
+      {
+        "name": "liquidityA",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "liquidityB",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "batchCall",
     "inputs": [
       {
@@ -1800,6 +1828,34 @@
   },
   {
     "type": "function",
+    "name": "removeLiquidity",
+    "inputs": [
+      {
+        "name": "resourceA",
+        "type": "uint8",
+        "internalType": "enum EResource"
+      },
+      {
+        "name": "resourceB",
+        "type": "uint8",
+        "internalType": "enum EResource"
+      },
+      {
+        "name": "liquidityA",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "liquidityB",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "requestToJoin",
     "inputs": [
       {
@@ -2223,6 +2279,34 @@
   },
   {
     "type": "function",
+    "name": "swap",
+    "inputs": [
+      {
+        "name": "marketEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "path",
+        "type": "uint8[]",
+        "internalType": "enum EResource[]"
+      },
+      {
+        "name": "amountIn",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "amountOutMin",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "switchDelegation",
     "inputs": [
       {
@@ -2295,6 +2379,13 @@
         "internalType": "bytes32"
       }
     ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "toggleMarketplaceLock",
+    "inputs": [],
     "outputs": [],
     "stateMutability": "nonpayable"
   },

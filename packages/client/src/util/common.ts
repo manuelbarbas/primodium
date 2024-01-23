@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { Hex, formatEther, formatGwei, getAddress, isAddress, pad, size, trim } from "viem";
+import { Hex, getAddress, isAddress, pad, size, trim } from "viem";
 import { BlockIdToKey } from "./constants";
 
 export function hasCommonElement<T>(setA: Set<T>, setB: Set<T>) {
@@ -63,47 +63,6 @@ export function toRomanNumeral(number: number) {
   return result;
 }
 
-function getDecimals(num: number, max = 3) {
-  const parts = num.toString().split(".");
-  const digits = parts[1] ? (parts[1].length > max ? max : parts[1].length) : 0;
-  return num.toFixed(digits);
-}
-
-export function formatNumber(
-  num: number | bigint,
-  options?: { fractionDigits?: number; short?: boolean; showZero?: boolean }
-): string {
-  const digits = options?.fractionDigits === undefined ? 0 : options.fractionDigits;
-  if (num === 0 || num === 0n) return options?.showZero ? "0" : "--";
-
-  const shorten = (n: number): string => {
-    const units = ["", "K", "M", "B", "T"];
-    let unitIndex = 0;
-    while (n >= 1000 && unitIndex < units.length - 1) {
-      n /= 1000;
-      unitIndex++;
-    }
-    return getDecimals(n, digits) + units[unitIndex];
-  };
-
-  if (typeof num === "number") {
-    if (options?.short) return shorten(num);
-
-    const fixedNum = num.toFixed(digits);
-
-    if (num < 1) {
-      // Return the fixedNum directly for very small numbers to avoid exponential notation
-      return fixedNum.replace(/(\.\d*?[1-9])0+$|\.0*$/, "$1");
-    } else {
-      return parseFloat(fixedNum).toLocaleString();
-    }
-  } else if (typeof num === "bigint") {
-    if (options?.short) return shorten(Number(num));
-    return num.toLocaleString();
-  }
-  return "";
-}
-
 export const getBlockTypeName = (blockType: Entity | undefined) => {
   if (blockType === undefined || BlockIdToKey[blockType] == undefined) return "";
 
@@ -147,14 +106,6 @@ export const isPlayer = (entity: Entity) => {
   const address = addressSize <= 20 ? pad(trimmedAddress, { size: 20 }) : trimmedAddress;
 
   return isAddress(address);
-};
-
-export const weiToEth = (wei: bigint) => {
-  return formatEther(wei, "wei");
-};
-
-export const weiToGwei = (wei: bigint) => {
-  return formatGwei(wei, "wei");
 };
 
 export function clampBigInt(value: bigint, min: bigint, max: bigint) {

@@ -25,7 +25,6 @@ type SettingsState = {
   newPlayer: boolean;
   keybinds: Keybinds;
   volume: Volume;
-  unitDisplay: "gwei" | "ether";
   uiScale: number;
 };
 
@@ -36,13 +35,11 @@ type SettingsActions = {
   setKeybind: (keybindAction: KeybindActions, keys: Set<Key>) => void;
   setNewPlayer: (val: boolean) => void;
   setVolume: (volume: number, channel: Channel) => void;
-  toggleUnitDisplay: () => void;
   setUiScale: (scale: number) => void;
 };
 
 const defaults: SettingsState = {
   newPlayer: true,
-  unitDisplay: "gwei",
   uiScale: 1,
   volume: {
     master: 1,
@@ -115,10 +112,6 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
       setKeybind: (keybindAction, keys) => set({ keybinds: { [keybindAction]: keys } }),
       setVolume: (volume, channel) => {
         set({ volume: { ...get().volume, [channel]: volume } });
-      },
-      toggleUnitDisplay: () => {
-        const unitDisplay = get().unitDisplay === "gwei" ? "ether" : "gwei";
-        set({ unitDisplay });
       },
       setUiScale: (scale) => {
         set({ uiScale: scale });

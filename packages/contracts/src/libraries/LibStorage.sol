@@ -72,6 +72,16 @@ library LibStorage {
     ResourceCount.set(spaceRockEntity, resource, newResourceCount);
   }
 
+  function checkedDecreaseStoredResource(
+    bytes32 spaceRockEntity,
+    uint8 resource,
+    uint256 resourceToDecrease
+  ) internal {
+    uint256 resourceCount = ResourceCount.get(spaceRockEntity, resource);
+    require(resourceCount >= resourceToDecrease, "[StorageUsage] not enough resources to decrease");
+    ResourceCount.set(spaceRockEntity, resource, resourceCount - resourceToDecrease);
+  }
+
   /// @notice increases stored resources upon building creation or upgrading
   /// @param spaceRockEntity ID of the spaceRock to update
   /// @param resource ID of the resource to increase
@@ -85,6 +95,17 @@ library LibStorage {
     uint256 maxResources = MaxResourceCount.get(spaceRockEntity, resource);
     uint256 newResourceCount = LibMath.min(resourceCount + resourceToAdd, maxResources);
     ResourceCount.set(spaceRockEntity, resource, newResourceCount);
+  }
+
+  function checkedIncreaseStoredResource(
+    bytes32 spaceRockEntity,
+    uint8 resource,
+    uint256 resourceToAdd
+  ) internal {
+    uint256 resourceCount = ResourceCount.get(spaceRockEntity, resource);
+    uint256 maxResources = MaxResourceCount.get(spaceRockEntity, resource);
+    require(resourceCount + resourceToAdd <= maxResources, "[StorageUsage] not enough storage to increase usage");
+    ResourceCount.set(spaceRockEntity, resource, resourceCount + resourceToAdd);
   }
 
   /// @notice sets the max storage of a resource
