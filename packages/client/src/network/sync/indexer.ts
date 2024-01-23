@@ -302,6 +302,7 @@ export const hydrateActiveAsteroid = (activeRock: Entity | undefined, mud: MUD) 
             },
             {
               tableName: tables.QueueItemUnits.name!,
+              on: "entity",
             },
           ],
         },

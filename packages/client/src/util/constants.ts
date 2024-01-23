@@ -33,7 +33,6 @@ export const Keys = {
   PIRATE: toHex32("pirate") as Entity,
   SELECTED: toHex32("selected") as Entity,
   ACTIVE: toHex32("active") as Entity,
-  MAINBASE: toHex32("MainBase") as Entity,
 };
 
 export enum ResourceType {
