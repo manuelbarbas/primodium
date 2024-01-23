@@ -13,15 +13,23 @@ contract FleetDisbandSystem is FleetBaseSystem {
     bytes32 fleetId,
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
-  ) public _onlyFleetOwner(fleetId) {
+  ) public _onlyFleetOwner(fleetId) _unitCountIsValid(unitCounts) _resourceCountIsValid(resourceCounts) {
     LibFleetDisband.disbandUnitsAndResourcesFromFleet(_player(), fleetId, unitCounts, resourceCounts);
   }
 
-  function disbandUnits(bytes32 fleetId, uint256[] calldata unitCounts) public _onlyFleetOwner(fleetId) {
+  function disbandUnits(bytes32 fleetId, uint256[] calldata unitCounts)
+    public
+    _onlyFleetOwner(fleetId)
+    _unitCountIsValid(unitCounts)
+  {
     LibFleetDisband.disbandUnits(_player(), fleetId, unitCounts);
   }
 
-  function disbandResources(bytes32 fleetId, uint256[] calldata resourceCounts) public _onlyFleetOwner(fleetId) {
+  function disbandResources(bytes32 fleetId, uint256[] calldata resourceCounts)
+    public
+    _onlyFleetOwner(fleetId)
+    _resourceCountIsValid(resourceCounts)
+  {
     LibFleetDisband.disbandResources(_player(), fleetId, resourceCounts);
   }
 }
