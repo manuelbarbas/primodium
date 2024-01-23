@@ -18,7 +18,7 @@ import { getBlueprint } from "./util/blueprints";
 import encodeBytes32, { encodeAddress } from "./util/encodeBytes32";
 
 const mainBaseMaxResourceUpgrades = {
-  1: { Iron: 5000, Copper: 5000, IronPlate: 2500, R_Encryption: 100000 },
+  1: { Iron: 5000, Copper: 5000, IronPlate: 2500, R_Encryption: 1000 },
   2: {
     Iron: 10000,
     Copper: 10000,
@@ -26,7 +26,7 @@ const mainBaseMaxResourceUpgrades = {
     Lithium: 10000,
     PVCell: 5000,
     Alloy: 5000,
-    R_Encryption: 100000,
+    R_Encryption: 1000,
   },
   3: {
     Iron: 25000,
@@ -39,7 +39,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 500,
     Iridium: 500,
     Kimberlite: 500,
-    R_Encryption: 100000,
+    R_Encryption: 1000,
   },
   4: {
     Iron: 75000,
@@ -52,7 +52,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 1000,
     Iridium: 1000,
     Kimberlite: 1000,
-    R_Encryption: 100000,
+    R_Encryption: 1000,
   },
   5: {
     Iron: 150000,
@@ -65,7 +65,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 3000,
     Iridium: 3000,
     Kimberlite: 3000,
-    R_Encryption: 100000,
+    R_Encryption: 1000,
   },
   6: {
     Iron: 250000,
@@ -78,7 +78,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 6000,
     Iridium: 6000,
     Kimberlite: 6000,
-    R_Encryption: 100000,
+    R_Encryption: 1000,
   },
   7: {
     Iron: 750000,
@@ -91,7 +91,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 7500,
     Iridium: 7500,
     Kimberlite: 7500,
-    R_Encryption: 100000,
+    R_Encryption: 1000,
   },
   8: {
     Iron: 1500000,
@@ -104,7 +104,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 10000,
     Iridium: 10000,
     Kimberlite: 10000,
-    R_Encryption: 100000,
+    R_Encryption: 1000,
   },
 };
 
@@ -156,9 +156,9 @@ const storageUnitMaxResourceUpgrades = {
 };
 
 const samSiteMaxResourceUpgrades = {
-  1: { R_HP: 100000 },
-  2: { R_HP: 250000 },
-  3: { R_HP: 750000 },
+  1: { R_HP: 1000 },
+  2: { R_HP: 2500 },
+  3: { R_HP: 7500 },
 };
 
 const maxRange = { xBounds: 37, yBounds: 25 };
@@ -1051,7 +1051,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
   },
 
-  IsStorageFull: {
+  Recoverables: {
     keys: [],
     levels: {
       [MUDEnums.EResource.indexOf("R_HP")]: { P_IsRecoverable: { value: true } },
