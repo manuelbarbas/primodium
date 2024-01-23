@@ -79,6 +79,7 @@ export enum TransactionQueueType {
   Attack,
   CreateFleet,
   DisbandFleet,
+  LandFleet,
 }
 
 export enum RockRelationship {
