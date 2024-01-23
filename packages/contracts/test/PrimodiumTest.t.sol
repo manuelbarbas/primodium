@@ -243,19 +243,28 @@ contract PrimodiumTest is MudTest {
     uint256 count,
     bool fastForward
   ) internal {
+    trainUnits(player, P_EnumToPrototype.get(UnitKey, uint8(unitType)), count, fastForward);
+  }
+
+  function trainUnits(
+    address player,
+    bytes32 unitPrototype,
+    uint256 count,
+    bool fastForward
+  ) internal {
     bytes32 playerEntity = addressToEntity(player);
     bytes32 spaceRock = Home.get(playerEntity);
     bytes32 mainBase = Home.get(spaceRock);
-    P_RequiredResourcesData memory requiredResources = getTrainCost(unitType, count);
+    P_RequiredResourcesData memory requiredResources = getTrainCost(unitPrototype, count);
 
     provideResources(spaceRock, requiredResources);
-    trainUnits(player, mainBase, unitType, count, fastForward);
+    trainUnits(player, mainBase, unitPrototype, count, fastForward);
   }
 
   function trainUnits(
     address player,
     bytes32 buildingEntity,
-    EUnit unitType,
+    bytes32 unitPrototype,
     uint256 count,
     bool fastForward
   ) internal {
@@ -263,7 +272,6 @@ contract PrimodiumTest is MudTest {
 
     bytes32 buildingType = BuildingType.get(buildingEntity);
     uint256 level = Level.get(buildingEntity);
-    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unitType));
 
     bytes32[] memory prodTypes = P_UnitProdTypes.get(buildingType, level);
     uint256 unitProdMultiplier = P_UnitProdMultiplier.get(buildingType, level);
@@ -275,7 +283,7 @@ contract PrimodiumTest is MudTest {
     vm.stopPrank();
 
     vm.startPrank(player);
-    world.trainUnits(buildingEntity, unitType, count);
+    world.trainUnits(buildingEntity, unitPrototype, count);
     if (fastForward) vm.warp(block.timestamp + LibUnit.getUnitBuildTime(buildingEntity, unitPrototype) * count);
     vm.stopPrank();
 
@@ -357,6 +365,14 @@ contract PrimodiumTest is MudTest {
     returns (P_RequiredResourcesData memory requiredResources)
   {
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unitType));
+    requiredResources = getTrainCost(unitPrototype, count);
+  }
+
+  function getTrainCost(bytes32 unitPrototype, uint256 count)
+    internal
+    view
+    returns (P_RequiredResourcesData memory requiredResources)
+  {
     requiredResources = P_RequiredResources.get(unitPrototype, count);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       requiredResources.amounts[i] *= count;
@@ -380,5 +396,22 @@ contract PrimodiumTest is MudTest {
     uint256 level = Level.get(buildingEntity);
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
     requiredResources = P_RequiredResources.get(buildingPrototype, level + 1);
+  }
+
+  function setupCreateFleet(
+    address player,
+    bytes32 spaceRock,
+    uint256[] memory unitCounts,
+    uint256[] memory resourceCounts
+  ) public {
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      trainUnits(player, unitPrototypes[i], unitCounts[i], true);
+    }
+    uint8[] memory transportables = P_Transportables.get();
+    for (uint256 i = 0; i < transportables.length; i++) {
+      increaseResource(spaceRock, EResource(transportables[i]), resourceCounts[i]);
+    }
   }
 }

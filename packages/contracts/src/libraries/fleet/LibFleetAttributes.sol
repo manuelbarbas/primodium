@@ -215,6 +215,7 @@ library LibFleetAttributes {
   function getCargo(bytes32 fleetId) internal view returns (uint256 cargo) {
     bytes32 ownerSpaceRock = OwnedBy.get(fleetId);
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    cargo = 0;
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       uint256 unitCount = UnitCount.get(fleetId, unitPrototypes[i]);
       if (unitCount == 0) continue;
