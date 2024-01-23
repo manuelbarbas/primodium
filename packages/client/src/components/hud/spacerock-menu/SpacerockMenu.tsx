@@ -8,9 +8,17 @@ import { usePrimodium } from "src/hooks/usePrimodium";
 import { GracePeriod } from "../GracePeriod";
 import { TargetHeader } from "./TargetHeader";
 import { Resources } from "./widgets/resources/Resources";
+import { hashEntities } from "src/util/encode";
+import { Keys } from "src/util/constants";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { Loader } from "src/components/core/Loader";
+import { SecondaryCard } from "src/components/core/Card";
+import { useSyncStatus } from "src/hooks/useSyncStatus";
+import { FaTimes } from "react-icons/fa";
 
 export const SpacerockMenu: React.FC = () => {
-  const selectedSpacerock = components.SelectedRock.use()?.value;
+  const selectedSpacerock = components.SelectedRock.use()?.value ?? singletonEntity;
+  const { loading, error } = useSyncStatus(hashEntities(Keys.SELECTED, selectedSpacerock));
   const ownedBy = components.OwnedBy.use(selectedSpacerock)?.value;
   const primodium = usePrimodium();
   const {
@@ -19,6 +27,7 @@ export const SpacerockMenu: React.FC = () => {
   const keybinds = useKeybinds();
 
   if (!selectedSpacerock) return null;
+
   return (
     <div className="w-screen px-2 flex justify-center">
       <Tabs className="min-w-fit w-[50rem] flex flex-col items-center gap-0 relative">
@@ -38,23 +47,41 @@ export const SpacerockMenu: React.FC = () => {
               keybinds[KeybindActions.SpacerockMenu]?.entries().next().value[0]}
           </div>
         </Tabs.Button>
-        <Tabs.Pane index={0} className="w-full border-b-0 rounded-x-none rounded-b-none relative">
-          <Resources />
+        {!loading && !error && (
+          <Tabs.Pane index={0} className="w-full border-b-0 rounded-x-none rounded-b-none relative">
+            <Resources />
 
-          {ownedBy && (
-            <>
-              <AccountDisplay
-                player={ownedBy as Entity}
-                showSpectate
-                className="absolute right-6 -top-1 border border-secondary text-xs bg-base-100 !p-2 rounded-box rounded-t-none"
-              />
-              <GracePeriod
-                player={ownedBy as Entity}
-                className="absolute left-6 -top-1 border border-secondary text-xs p-2 bg-base-100 rounded-box rounded-t-none"
-              />
-            </>
-          )}
-        </Tabs.Pane>
+            {ownedBy && (
+              <>
+                <AccountDisplay
+                  player={ownedBy as Entity}
+                  showSpectate
+                  className="absolute right-6 -top-1 border border-secondary text-xs bg-base-100 !p-2 rounded-box rounded-t-none"
+                />
+                <GracePeriod
+                  player={ownedBy as Entity}
+                  className="absolute left-6 -top-1 border border-secondary text-xs p-2 bg-base-100 rounded-box rounded-t-none"
+                />
+              </>
+            )}
+          </Tabs.Pane>
+        )}
+        {loading && (
+          <Tabs.Pane index={0} className="w-full border-b-0 rounded-x-none rounded-b-none relative ">
+            <SecondaryCard className="uppercase font-bold w-full items-center py-10">
+              <Loader className="opacity-75 p-3" />
+              Fetching Asteroid Info
+            </SecondaryCard>
+          </Tabs.Pane>
+        )}
+        {!loading && error && (
+          <Tabs.Pane index={0} className="w-full border-b-0 rounded-x-none rounded-b-none relative ">
+            <SecondaryCard className="uppercase font-bold w-full items-center py-10 text-error">
+              <FaTimes />
+              Error Fetching Asteroid Info
+            </SecondaryCard>
+          </Tabs.Pane>
+        )}
       </Tabs>
     </div>
   );

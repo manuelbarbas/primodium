@@ -152,7 +152,7 @@ export const TransactionQueue = createTransactionQueueComponent({
 export const SyncStatus = createExtendedComponent(
   world,
   {
-    live: Type.Boolean,
+    step: Type.Number,
     message: Type.String,
     progress: Type.Number,
   },
@@ -160,6 +160,10 @@ export const SyncStatus = createExtendedComponent(
     id: "SyncStatus",
   }
 );
+
+export const SyncSource = createExtendedNumberComponent(world, {
+  id: "SyncSource",
+});
 
 export default {
   /* ----------------------------------- Dev ---------------------------------- */
@@ -199,4 +203,5 @@ export default {
   TransactionQueue,
   /* ---------------------------------- Sync ---------------------------------- */
   SyncStatus,
+  SyncSource,
 };

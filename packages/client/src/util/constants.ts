@@ -13,6 +13,17 @@ export const encodeEntityLevel = (entity: string, level: number) => {
   return encodeEntity({ entity: "bytes32", level: "uint256" }, { entity: toHex32(entity), level: BigInt(level) });
 };
 
+export enum SyncSourceType {
+  Indexer,
+  RPC,
+}
+
+export enum SyncStep {
+  Syncing,
+  Error,
+  Complete,
+}
+
 export enum Action {
   DemolishBuilding,
   SelectBuilding,

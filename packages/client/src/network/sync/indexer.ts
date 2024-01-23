@@ -5,7 +5,8 @@ import { Hex, padHex } from "viem";
 import { hydrateFromRPC } from "./rpc";
 import { Entity } from "@latticexyz/recs";
 import { hashEntities } from "src/util/encode";
-import { Keys } from "src/util/constants";
+import { Keys, SyncSourceType, SyncStep } from "src/util/constants";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 
 export const hydrateInitialGameState = (
   setupResult: SetupResult,
@@ -16,6 +17,9 @@ export const hydrateInitialGameState = (
   const { tables, world } = network;
   const networkConfig = getNetworkConfig();
   let fromBlock = networkConfig.initialBlockNumber;
+
+  // if we're already syncing from RPC, don't hydrate from indexer
+  if (components.SyncSource.get()?.value === SyncSourceType.RPC) return;
 
   if (!networkConfig.indexerUrl) return;
 
@@ -35,6 +39,8 @@ export const hydrateInitialGameState = (
         { tableName: tables.Dimensions.name! },
         { tableName: tables.GracePeriod.name! },
         { tableName: tables.MapItemArrivals.name! },
+        { tableName: tables.Score.name! },
+        { tableName: tables.Alliance.name! },
         //get asteroids
         {
           tableName: tables.Position.name!,
@@ -53,6 +59,9 @@ export const hydrateInitialGameState = (
             {
               tableName: tables.ReversePosition.name!,
             },
+            {
+              tableName: tables.Home.name!,
+            },
           ],
         },
       ],
@@ -63,7 +72,7 @@ export const hydrateInitialGameState = (
     fromBlock = blockNumber;
 
     components.SyncStatus.set({
-      live: false,
+      step: SyncStep.Syncing,
       progress,
       message: `Hydrating from Indexer`,
     });
@@ -84,6 +93,9 @@ export const hydratePlayerData = (playerEntity: Entity, setupResult: SetupResult
   const { network, components } = setupResult;
   const { tables, world } = network;
   const networkConfig = getNetworkConfig();
+
+  // if we're already syncing from RPC, don't hydrate from indexer
+  if (components.SyncSource.get()?.value === SyncSourceType.RPC) return;
 
   //TODO: sync again on error
   if (components.SyncStatus.get(playerEntity)) {
@@ -115,10 +127,6 @@ export const hydratePlayerData = (playerEntity: Entity, setupResult: SetupResult
           key0: playerEntity,
         },
         {
-          tableId: tables.Score.tableId,
-          key0: playerEntity,
-        },
-        {
           tableId: tables.HasBuiltBuilding.tableId,
           key0: playerEntity,
         },
@@ -146,27 +154,40 @@ export const hydratePlayerData = (playerEntity: Entity, setupResult: SetupResult
     },
   });
 
-  syncData.start((_, __, progress) => {
-    components.SyncStatus.set(
-      {
-        live: false,
-        progress,
-        message: `Hydrating Player Data`,
-      },
-      playerEntity
-    );
-
-    if (progress === 1) {
+  syncData.start(
+    (_, __, progress) => {
       components.SyncStatus.set(
         {
-          live: true,
+          step: SyncStep.Syncing,
           progress,
-          message: `DONE`,
+          message: `Hydrating Player Data`,
+        },
+        playerEntity
+      );
+
+      if (progress === 1) {
+        components.SyncStatus.set(
+          {
+            step: SyncStep.Complete,
+            progress,
+            message: `DONE`,
+          },
+          playerEntity
+        );
+      }
+    },
+    //on error
+    () => {
+      components.SyncStatus.set(
+        {
+          step: SyncStep.Error,
+          progress: 0,
+          message: `Failed to hydrate player data`,
         },
         playerEntity
       );
     }
-  });
+  );
 
   world.registerDisposer(() => {
     syncData.unsubscribe();
@@ -177,6 +198,9 @@ export const hydrateSelectedAsteroid = (selectedRock: Entity | undefined, mud: M
   const { network, components } = mud;
   const { tables, world } = network;
   const networkConfig = getNetworkConfig();
+
+  // if we're already syncing from RPC, don't hydrate from indexer
+  if (components.SyncSource.get()?.value === SyncSourceType.RPC) return;
 
   if (!selectedRock) return;
 
@@ -218,31 +242,52 @@ export const hydrateSelectedAsteroid = (selectedRock: Entity | undefined, mud: M
           tableId: tables.UnitCount.tableId,
           key0: selectedRock,
         },
+        {
+          tableId: tables.Home.tableId,
+          key0: selectedRock,
+        },
+        {
+          tableId: tables.Level.tableId,
+          key0: components.Home.get(selectedRock)?.value ?? singletonEntity,
+        },
       ],
     },
   });
 
-  syncData.start((_, __, progress) => {
-    components.SyncStatus.set(
-      {
-        live: false,
-        progress,
-        message: `Hydrating Selected Asteroid Data`,
-      },
-      syncId
-    );
-
-    if (progress === 1) {
+  syncData.start(
+    (_, __, progress) => {
       components.SyncStatus.set(
         {
-          live: true,
+          step: SyncStep.Syncing,
           progress,
-          message: `DONE`,
+          message: `Hydrating Selected Asteroid Data`,
+        },
+        syncId
+      );
+
+      if (progress === 1) {
+        components.SyncStatus.set(
+          {
+            step: SyncStep.Complete,
+            progress,
+            message: `DONE`,
+          },
+          syncId
+        );
+      }
+    },
+    //on error
+    () => {
+      components.SyncStatus.set(
+        {
+          step: SyncStep.Error,
+          progress: 0,
+          message: `Failed to hydrate selected asteroid data`,
         },
         syncId
       );
     }
-  });
+  );
 
   world.registerDisposer(() => {
     syncData.unsubscribe();
@@ -253,6 +298,9 @@ export const hydrateActiveAsteroid = (activeRock: Entity | undefined, mud: MUD) 
   const { network, components } = mud;
   const { tables, world } = network;
   const networkConfig = getNetworkConfig();
+
+  // if we're already syncing from RPC, don't hydrate from indexer
+  if (components.SyncSource.get()?.value === SyncSourceType.RPC) return;
 
   if (!activeRock) return;
 
@@ -319,27 +367,39 @@ export const hydrateActiveAsteroid = (activeRock: Entity | undefined, mud: MUD) 
     },
   });
 
-  syncData.start((_, __, progress) => {
-    components.SyncStatus.set(
-      {
-        live: false,
-        progress,
-        message: `Hydrating Active Asteroid Data`,
-      },
-      syncId
-    );
-
-    if (progress === 1) {
+  syncData.start(
+    (_, __, progress) => {
       components.SyncStatus.set(
         {
-          live: true,
+          step: SyncStep.Syncing,
           progress,
-          message: `DONE`,
+          message: `Hydrating Active Asteroid Data`,
+        },
+        syncId
+      );
+
+      if (progress === 1) {
+        components.SyncStatus.set(
+          {
+            step: SyncStep.Complete,
+            progress,
+            message: `DONE`,
+          },
+          syncId
+        );
+      }
+    },
+    () => {
+      components.SyncStatus.set(
+        {
+          step: SyncStep.Error,
+          progress: 0,
+          message: `Failed to hydrate active asteroid data`,
         },
         syncId
       );
     }
-  });
+  );
 
   world.registerDisposer(() => {
     syncData.unsubscribe();
