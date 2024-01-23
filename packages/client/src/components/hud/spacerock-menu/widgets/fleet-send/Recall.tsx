@@ -9,7 +9,6 @@ import { Fleet } from "src/components/hud/modals/fleets/Fleet";
 import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
-import { recallStationedUnits } from "src/network/setup/contractCalls/recall";
 import { BackgroundImage, UnitEnumLookup } from "src/util/constants";
 import { getRockDefense } from "src/util/defense";
 import { formatNumber } from "src/util/number";
@@ -134,7 +133,7 @@ export const Recall = ({ rock }: { rock: Entity }) => {
                 ))}
               </div>
             )}
-            <Button onClick={() => recallStationedUnits(mud, rock)} disabled={totalUnits == 0n}>
+            <Button onClick={() => null} disabled={totalUnits == 0n}>
               Recall Stationed Units
             </Button>
           </SecondaryCard>

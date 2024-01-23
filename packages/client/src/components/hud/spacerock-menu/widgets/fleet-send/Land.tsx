@@ -6,7 +6,6 @@ import { Button } from "src/components/core/Button";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { invade } from "src/network/setup/contractCalls/invade";
 import { TransactionQueueType, UnitEntityLookup } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { Hex } from "viem";
@@ -50,7 +49,7 @@ export const Land: React.FC<{
         <Button
           className={`gap-2 w-44 ${isNeutral ? "btn-secondary" : "btn-error"} flex flex-col items-center `}
           clickSound={AudioKeys.Sequence7}
-          onClick={() => invade(mud, destination, key)}
+          onClick={() => null}
         >
           <div className="flex flex-col p-1">
             <p className="text-lg">

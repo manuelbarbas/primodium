@@ -11,13 +11,10 @@ import { Modal } from "src/components/core/Modal";
 import { NumberInput } from "src/components/shared/NumberInput";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { send } from "src/network/setup/contractCalls/send";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage, EntityType } from "src/util/constants";
-import { toHex32 } from "src/util/encode";
 import { formatNumber } from "src/util/number";
-import { getMoveLength, toUnitCountArray } from "src/util/send";
-import { Hex } from "viem";
+import { getMoveLength } from "src/util/send";
 import { TargetHeader } from "../../TargetHeader";
 
 export const Unit: React.FC<{ unit: Entity; count: bigint }> = ({ unit, count }) => {
@@ -125,9 +122,10 @@ export const SendFleet = () => {
     const destinationCoord = components.Position.get(destination) ?? { x: 0, y: 0 };
 
     const to = components.OwnedBy.get(destination)?.value as Entity | undefined;
+    to && destinationCoord && originCoord && sendType;
 
     //TODO: fix arrival units
-    send(mud, toUnitCountArray(fleet), sendType, originCoord, destinationCoord, (to as Hex) ?? toHex32("0"));
+    // send(mud, toUnitCountArray(fleet), sendType, originCoord, destinationCoord, (to as Hex) ?? toHex32("0"));
 
     components.Send.reset(playerEntity);
   };

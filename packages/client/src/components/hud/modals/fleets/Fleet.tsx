@@ -9,15 +9,10 @@ import { Button } from "src/components/core/Button";
 import { Modal } from "src/components/core/Modal";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
-import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
-import { invade } from "src/network/setup/contractCalls/invade";
-import { raid } from "src/network/setup/contractCalls/raid";
-import { recallArrival } from "src/network/setup/contractCalls/recall";
-import { reinforce } from "src/network/setup/contractCalls/reinforce";
 import { TransactionQueueType, UnitEntityLookup } from "src/util/constants";
-import { decodeEntity, hashEntities } from "src/util/encode";
+import { hashEntities } from "src/util/encode";
 import { getSpaceRockName } from "src/util/spacerock";
 import { getUnitStats } from "src/util/trainUnits";
 
@@ -144,27 +139,18 @@ export const OrbitActionButton: React.FC<{
   sendType: ESendType;
   small?: boolean;
 }> = ({ arrivalEntity, sendType, small }) => {
-  const mud = useMud();
   const destination = components.Arrival.getEntity(arrivalEntity)?.destination;
   if (!destination) return <></>;
 
-  const { key } = decodeEntity(components.MapItemArrivals.metadata.keySchema, arrivalEntity);
+  const { key } = { key: "key" };
   const transactionId = hashEntities(TransactionQueueType.Recall, key, destination);
 
-  const action =
-    sendType == ESendType.Invade
-      ? () => invade(mud, destination, key)
-      : sendType == ESendType.Raid
-      ? () => raid(mud, destination, key)
-      : () => reinforce(mud, arrivalEntity);
+  const action = sendType == ESendType.Invade ? () => null : sendType == ESendType.Raid ? () => null : () => null;
 
   return (
     <TransactionQueueMask queueItemId={transactionId as Entity}>
       <div className={`flex gap-1 ${small ? "flex-col-reverse gap-0" : ""}`}>
-        <Button
-          className={`${small ? "btn-xs" : "btn-sm"} opacity-75`}
-          onClick={() => recallArrival(mud, arrivalEntity)}
-        >
+        <Button className={`${small ? "btn-xs" : "btn-sm"} opacity-75`} onClick={() => null}>
           RECALL
         </Button>
 
