@@ -277,7 +277,8 @@ export const hydrateSelectedAsteroid = (selectedRock: Entity | undefined, mud: M
       }
     },
     //on error
-    () => {
+    (err) => {
+      console.log(err.status);
       components.SyncStatus.set(
         {
           step: SyncStep.Error,

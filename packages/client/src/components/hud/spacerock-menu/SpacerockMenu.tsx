@@ -1,6 +1,6 @@
 import { components } from "src/network/components";
 
-import { KeyNames, KeybindActions } from "@game/constants";
+import { KeyNames, KeybindActions, Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { Tabs } from "src/components/core/Tabs";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
@@ -14,7 +14,8 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Loader } from "src/components/core/Loader";
 import { SecondaryCard } from "src/components/core/Card";
 import { useSyncStatus } from "src/hooks/useSyncStatus";
-import { FaTimes } from "react-icons/fa";
+import { FaEye, FaTimes } from "react-icons/fa";
+import { Button } from "src/components/core/Button";
 
 export const SpacerockMenu: React.FC = () => {
   const selectedSpacerock = components.SelectedRock.use()?.value ?? singletonEntity;
@@ -23,6 +24,7 @@ export const SpacerockMenu: React.FC = () => {
   const primodium = usePrimodium();
   const {
     hooks: { useKeybinds },
+    scene: { transitionToScene },
   } = primodium.api()!;
   const keybinds = useKeybinds();
 
@@ -53,11 +55,18 @@ export const SpacerockMenu: React.FC = () => {
 
             {ownedBy && (
               <>
-                <AccountDisplay
-                  player={ownedBy as Entity}
-                  showSpectate
-                  className="absolute right-6 -top-1 border border-secondary text-xs bg-base-100 !p-2 rounded-box rounded-t-none"
-                />
+                <Button
+                  className="btn-sm absolute right-6 -top-1 border border-secondary flex"
+                  onClick={async () => {
+                    components.ActiveRock.set({ value: selectedSpacerock as Entity });
+                    await transitionToScene(Scenes.Starmap, Scenes.Asteroid, 0);
+                    components.MapOpen.set({ value: false });
+                  }}
+                >
+                  <FaEye className="text-success" />
+                  <AccountDisplay player={ownedBy as Entity} className=" text-xs" />
+                </Button>
+
                 <GracePeriod
                   player={ownedBy as Entity}
                   className="absolute left-6 -top-1 border border-secondary text-xs p-2 bg-base-100 rounded-box rounded-t-none"
