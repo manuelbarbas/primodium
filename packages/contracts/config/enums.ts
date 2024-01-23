@@ -53,6 +53,8 @@ export enum EResource {
   U_Defense,
   U_Unraidable,
   U_AdvancedUnraidable,
+  R_HP,
+  R_Encryption,
 
   // Multipliers
   M_DefenseMultiplier,
@@ -79,6 +81,7 @@ export enum ESendType {
   Reinforce = 1,
   Invade,
   Raid,
+  Recall,
 }
 
 export enum EOrderType {
@@ -163,6 +166,11 @@ export enum EObjectives {
   ExpandBase6,
 }
 
+export enum EFleetKey {
+  OwnedBy = 1,
+  Incoming = 2,
+}
+
 export enum EAllianceInviteMode {
   Open = 1,
   Closed,
@@ -176,6 +184,13 @@ export enum EAllianceRole {
   Member, // simple member with no special access
 }
 
+export enum EFleetStance {
+  None = 1,
+  Follow,
+  Defend,
+  Block,
+}
+
 export const MUDEnums = {
   EBuilding: enumToArray(EBuilding),
   EResource: enumToArray(EResource),
@@ -186,6 +201,8 @@ export const MUDEnums = {
   EAllianceInviteMode: enumToArray(EAllianceInviteMode),
   EAllianceRole: enumToArray(EAllianceRole),
   EOrderType: enumToArray(EOrderType),
+  EFleetKey: enumToArray(EFleetKey),
+  EFleetStance: enumToArray(EFleetStance),
 };
 
 function enumToArray(enumObj: object): string[] {

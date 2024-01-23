@@ -30,6 +30,6 @@ contract OnResourceCount_Score is StoreHook {
     uint8 resource = uint8(uint256(keyTuple[1]));
     bytes memory amountRaw = SliceInstance.toBytes(SliceLib.getSubslice(data, start));
     uint256 amount = abi.decode(amountRaw, (uint256));
-    LibResource.updateScore(playerEntity, resource, amount);
+    LibResource.updateScore(playerEntity, spaceRockEntity, resource, amount);
   }
 }

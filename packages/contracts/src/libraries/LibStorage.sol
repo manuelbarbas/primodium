@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { OwnedBy, P_ListMaxResourceUpgrades, P_ByLevelMaxResourceUpgrades, MaxResourceCount, Level, ResourceCount, BuildingType } from "codegen/index.sol";
+import { P_IsRecoverable, OwnedBy, P_ListMaxResourceUpgrades, P_ByLevelMaxResourceUpgrades, MaxResourceCount, Level, ResourceCount, BuildingType } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 
@@ -21,8 +21,30 @@ library LibStorage {
       if (level > 1) {
         maxResourceIncrease -= P_ByLevelMaxResourceUpgrades.get(buildingType, resource, level - 1);
       }
-      setMaxStorage(spaceRockEntity, resource, maxResource + maxResourceIncrease);
+      increaseMaxStorage(spaceRockEntity, resource, maxResourceIncrease);
     }
+  }
+
+  function increaseMaxStorage(
+    bytes32 spaceRockEntity,
+    uint8 resource,
+    uint256 amount
+  ) internal {
+    uint256 maxResource = MaxResourceCount.get(spaceRockEntity, resource);
+    setMaxStorage(spaceRockEntity, resource, maxResource + amount);
+    if (P_IsRecoverable.get(resource)) {
+      increaseStoredResource(spaceRockEntity, resource, amount);
+    }
+  }
+
+  function decreaseMaxStorage(
+    bytes32 spaceRockEntity,
+    uint8 resource,
+    uint256 amount
+  ) internal {
+    uint256 maxResource = MaxResourceCount.get(spaceRockEntity, resource);
+    require(maxResource >= amount, "[StorageUsage] not enough storage to reduce usage");
+    setMaxStorage(spaceRockEntity, resource, maxResource - amount);
   }
 
   /// @notice activates the max storage of resources based on building prototype data

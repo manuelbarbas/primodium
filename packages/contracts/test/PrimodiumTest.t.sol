@@ -5,7 +5,7 @@ import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 import { ResourceAccess, NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
 import { ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
-import { WORLD_SPEED_SCALE, NUM_UNITS, UNIT_SPEED_SCALE } from "src/constants.sol";
+import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 
 import "src/utils.sol";
@@ -87,18 +87,6 @@ contract PrimodiumTest is MudTest {
 
   function assertEq(EResource a, EResource b) internal {
     assertEq(uint256(a), uint256(b));
-  }
-
-  function assertEq(Arrival memory a, Arrival memory b) internal {
-    assertEq(uint8(a.sendType), uint8(b.sendType), "[assertEq]: sendType doesn't match");
-    assertEq(a.arrivalTime, b.arrivalTime, "[assertEq]: arrivalTime doesn't match");
-    assertEq(toString(a.from), toString(b.from), "[assertEq]: from doesn't match");
-    assertEq(toString(a.to), toString(b.to), "[assertEq]: to doesn't match");
-    assertEq(toString(a.origin), toString(b.origin), "[assertEq]: origin doesn't match");
-    assertEq(toString(a.destination), toString(b.destination), "[assertEq]: destination doesn't match");
-    for (uint256 i = 0; i < a.unitCounts.length; i++) {
-      assertEq(a.unitCounts[i], b.unitCounts[i], "[assertEq]: unitCounts doesn't match");
-    }
   }
 
   function logPosition(PositionData memory coord) internal view {
@@ -238,8 +226,9 @@ contract PrimodiumTest is MudTest {
     removeRequiredTile(building);
   }
 
-  function getUnitArray(uint256 unit1Count, uint256 unit2Count) internal pure returns (uint256[] memory) {
-    uint256[] memory unitArray = new uint256[](NUM_UNITS);
+  function getUnitArray(uint256 unit1Count, uint256 unit2Count) internal view returns (uint256[] memory unitArray) {
+    unitArray = new uint256[](8);
+    //unitArray = new uint256[](P_UnitPrototypes.length());
     unitArray[0] = unit1Count;
     unitArray[1] = unit2Count;
     return unitArray;
