@@ -80,6 +80,7 @@ export enum TransactionQueueType {
   CreateFleet,
   DisbandFleet,
   LandFleet,
+  MergeFleets,
 }
 
 export enum RockRelationship {
