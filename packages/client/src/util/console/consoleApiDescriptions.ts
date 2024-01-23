@@ -17,6 +17,7 @@ const consoleApiDescriptions: Record<string, string> = {
   priComponents: "All world data is stored in components.",
   priContractCalls: "Directly call world contract functions.",
   priUtils: "Utility functions.",
+  priConstants: "Constants used in the game.",
 
   //components
   ...tableParams,
@@ -136,6 +137,29 @@ const consoleApiDescriptions: Record<string, string> = {
   solCos: "Calculates cosine using solar metrics.",
   solSinDegrees: "Calculates sine in degrees using solar metrics.",
   solCosDegrees: "Calculates cosine in degrees using solar metrics.",
+  SPEED_SCALE: "Defines the scale factor for speed calculations.",
+  RESOURCE_SCALE: "Sets the scale factor for resource-related computations.",
+  MULTIPLIER_SCALE: "Determines the scale for multiplier values.",
+  UNIT_SPEED_SCALE: "Specifies the scale factor for unit speed calculations.",
+
+  EntityType: "Enumerates different types of entities in the system.",
+  BlockIdToKey: "Maps block IDs to their corresponding key values.",
+
+  MotherlodeSizeNames: "Contains names for different sizes of motherlodes.",
+  MotherlodeTypeNames: "Lists names for various types of motherlodes.",
+
+  ResourceStorages: "Defines storage capacities or parameters for different resources.",
+  UtilityStorages: "Specifies storage information for utility items or resources.",
+  MultiplierStorages: "Details storage capacities for multipliers.",
+
+  BuildingEnumLookup: "Provides a lookup for building types using enumeration.",
+  BuildingEntityLookup: "Maps building entities to their respective data or characteristics.",
+
+  ResourceEntityLookup: "Associates resource entities with their specific attributes or details.",
+  ResourceEnumLookup: "Provides a lookup for resource types using enumeration.",
+
+  UnitEntityLookup: "Maps unit entities to their respective attributes or information.",
+  UnitEnumLookup: "Offers a lookup for unit types through enumeration.",
 };
 
 export default consoleApiDescriptions;

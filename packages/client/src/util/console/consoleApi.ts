@@ -45,6 +45,25 @@ import {
   relCoordToAbs,
 } from "../building";
 import { entityToColor } from "../color";
+import {
+  BlockIdToKey,
+  BuildingEntityLookup,
+  BuildingEnumLookup,
+  EntityType,
+  MULTIPLIER_SCALE,
+  MotherlodeSizeNames,
+  MotherlodeTypeNames,
+  MultiplierStorages,
+  RESOURCE_SCALE,
+  ResourceEntityLookup,
+  ResourceEnumLookup,
+  ResourceStorages,
+  SPEED_SCALE,
+  UNIT_SPEED_SCALE,
+  UnitEntityLookup,
+  UnitEnumLookup,
+  UtilityStorages,
+} from "../constants";
 import { findEntriesWithPrefix, getPrivateKey } from "../localStorage";
 import { entityToPlayerName, entityToRockName, playerNameToEntity, rockNameToEntity } from "../name";
 import { getCanClaimObjective, getIsObjectiveAvailable } from "../objectives";
@@ -181,11 +200,33 @@ export default function createConsoleApi(mud: MUD, primodium: Primodium) {
     upgradeRange: _.curry(upgradeRange)(mud),
     upgradeUnit: _.curry(upgradeUnit)(mud),
   };
+
+  const constants = {
+    SPEED_SCALE,
+    RESOURCE_SCALE,
+    MULTIPLIER_SCALE,
+    UNIT_SPEED_SCALE,
+    EntityType,
+    BlockIdToKey,
+    MotherlodeSizeNames,
+    MotherlodeTypeNames,
+    ResourceStorages: [...ResourceStorages],
+    UtilityStorages: [...UtilityStorages],
+    MultiplierStorages: [...MultiplierStorages],
+    BuildingEnumLookup,
+    BuildingEntityLookup,
+    ResourceEntityLookup,
+    ResourceEnumLookup,
+    UnitEntityLookup,
+    UnitEnumLookup,
+  };
+
   const ret = {
     priPlayerAccount: mud.playerAccount,
     priComponents: components,
     priContractCalls: contractCalls,
     priUtils: utils,
+    priConstants: constants,
   };
   return ret;
 }

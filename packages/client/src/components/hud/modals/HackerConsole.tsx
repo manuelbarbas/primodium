@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { KeyboardEvent, useState } from "react";
+import { Scenes } from "@game/constants";
+import React, { KeyboardEvent, useRef, useState } from "react";
 import { Button } from "src/components/core/Button";
 import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
@@ -46,6 +47,10 @@ const Console = () => {
 
   const [input, setInput] = useState<string>("");
   const [output, setOutput] = useState<{ input: string; output: string; type?: "error" }[]>([]);
+  const primodium = usePrimodium();
+  const asteroidInput = primodium.api(Scenes.Asteroid).input;
+  const starmapInput = primodium.api(Scenes.Starmap).input;
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const handleConsoleCommand = () => {
     try {
@@ -63,6 +68,9 @@ const Console = () => {
   };
 
   const handleKeyPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (inputRef.current && e.key === "Escape") {
+      inputRef.current.blur();
+    }
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleConsoleCommand();
@@ -98,12 +106,23 @@ const Console = () => {
     <>
       <div className="relative flex overflow-hidden">
         <textarea
+          ref={inputRef}
           className="border p-2 text-sm border-secondary bg-white/10 w-full h-full"
           value={input}
           placeholder="Enter a command... "
           onKeyDown={handleKeyPress}
           onInput={handleInput}
-        ></textarea>
+          onFocus={() => {
+            console.log("focus");
+            asteroidInput.disableInput();
+            starmapInput.disableInput();
+          }}
+          onBlur={() => {
+            console.log("blur");
+            asteroidInput.enableInput();
+            starmapInput.enableInput();
+          }}
+        />
         <Button className="btn-primary btn-xs absolute bottom-2 right-2" onClick={handleConsoleCommand}>
           Run
         </Button>
@@ -166,9 +185,13 @@ const Dropdown: React.FC<Props> = ({ data }) => {
         const description = consoleApiDescriptions[key];
         const functionParams = typeof value === "function" ? getFunctionParameters(value) : null;
         return (
-          <div key={`dropdown-${key}`} className="border border-primary p-2 mr-1">
-            <button onClick={() => toggleDropdown(key)} className="w-full text-left">
-              <p>{key}</p>
+          <div key={`dropdown-${key}`} className="border border-primary p-2 mr-1 ">
+            <button
+              onClick={() => toggleDropdown(key)}
+              className="w-full text-left overflow-hidden pre-whitespace-wrap"
+              style={{ wordWrap: "break-word" }}
+            >
+              <p className="whitespace-normal">{key}</p>
               {description && <p className="text-xs opacity-70 italic">{description}</p>}
             </button>
             {open[key] && (
