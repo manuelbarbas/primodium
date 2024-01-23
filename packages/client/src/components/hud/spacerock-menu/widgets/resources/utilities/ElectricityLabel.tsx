@@ -3,8 +3,8 @@ import { IconLabel } from "src/components/core/IconLabel";
 import { Progress } from "src/components/core/Progress";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
-import { formatNumber } from "src/util/common";
 import { EntityType, RESOURCE_SCALE, ResourceImage } from "src/util/constants";
+import { formatNumber } from "src/util/number";
 
 export const ElectricityLabel = () => {
   const selectedRock = components.SelectedRock.use()?.value;

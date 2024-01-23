@@ -1,12 +1,10 @@
-import { Navigator } from "src/components/core/Navigator";
 import { SecondaryCard } from "src/components/core/Card";
+import { Navigator } from "src/components/core/Navigator";
 import { Range } from "src/components/core/Range";
 import { useSettingsStore } from "src/game/stores/SettingsStore";
-import { Toggle } from "src/components/core/Toggle";
 
 export const GeneralSettings = () => {
   const [uiScale, setUiScale] = useSettingsStore((state) => [state.uiScale, state.setUiScale]);
-  const [unitDisplay, toggleUnitDisplay] = useSettingsStore((state) => [state.unitDisplay, state.toggleUnitDisplay]);
 
   return (
     <Navigator.Screen title="general" className="flex-grow">
@@ -23,10 +21,6 @@ export const GeneralSettings = () => {
                 setUiScale(e / 100);
               }}
             />
-          </div>
-          <div className="">
-            <p className="text-xs opacity-50 font-bold pb-1">SHOW PRICE IN GWEI</p>
-            <Toggle onToggle={toggleUnitDisplay} defaultChecked={unitDisplay === "gwei"} />
           </div>
         </SecondaryCard>
       </div>

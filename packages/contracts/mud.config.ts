@@ -71,13 +71,6 @@ export const config = mudConfig({
       },
     },
 
-    P_GameConfig2: {
-      keySchema: {},
-      valueSchema: {
-        wETHAddress: "address",
-      },
-    },
-
     Position: {
       keySchema: { entity: "bytes32" },
       valueSchema: {
@@ -684,20 +677,21 @@ export const config = mudConfig({
     },
 
     /* ------------------------------- Marketplace ------------------------------ */
-    MarketplaceOrder: {
-      keySchema: { id: "bytes32" },
+    // resource A is always the smaller index in the EResource enum
+    Reserves: {
+      keySchema: { resourceA: "uint8", resourceB: "uint8" },
       valueSchema: {
-        seller: "bytes32",
-        orderType: "uint8",
-        resource: "uint8",
-        count: "uint256",
-        price: "uint256",
+        amountA: "uint256",
+        amountB: "uint256",
       },
     },
 
-    OrderCount: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "uint256",
+    P_MarketplaceConfig: {
+      keySchema: {},
+      valueSchema: {
+        feeThousandths: "uint256",
+        lock: "bool",
+      },
     },
   },
 });

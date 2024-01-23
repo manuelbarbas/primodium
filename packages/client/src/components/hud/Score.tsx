@@ -1,6 +1,6 @@
 import { components } from "src/network/components";
+import { formatNumber } from "src/util/number";
 import { Card } from "../core/Card";
-import { formatNumber } from "src/util/common";
 
 export const Score = () => {
   const data = components.Leaderboard.use();
