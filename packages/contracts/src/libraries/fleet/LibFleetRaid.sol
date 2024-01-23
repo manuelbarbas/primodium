@@ -22,18 +22,26 @@ import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { EResource, EFleetStance } from "src/Types.sol";
 
 library LibFleetRaid {
-  function getMaxRaidAmountWithAllies(bytes32 entity) internal view returns (uint256[] memory, uint256) {
+  function getMaxRaidAmountWithAllies(bytes32 entity)
+    internal
+    view
+    returns (
+      uint256,
+      uint256[] memory,
+      uint256
+    )
+  {
     return
       IsFleet.get(entity)
         ? LibFleetAttributes.getFreeCargoSpaceWithFollowers(entity)
-        : LibSpaceRockAttributes.getFreeCargoSpaceWithDefenders(entity);
+        : LibSpaceRockAttributes.getFreeCargoSpacesWithDefenders(entity);
   }
 
-  function getTotalRaidableResourceCountsWithAllies(bytes32 entity) internal view returns (uint256[] memory, uint256) {
+  function getRaidableResourceCountsWithAllies(bytes32 entity) internal view returns (uint256[] memory, uint256) {
     return
       IsFleet.get(entity)
         ? LibFleetAttributes.getResourceCountsWithFollowers(entity)
-        : LibSpaceRockAttributes.getTotalStoredResourceCountsWithDefenders(entity);
+        : LibSpaceRockAttributes.getStoredResourceCountsWithDefenders(entity);
   }
 
   function getAllies(bytes32 entity) internal view returns (bytes32[] memory) {
@@ -46,12 +54,11 @@ library LibFleetRaid {
     bytes32 target
   ) internal {
     //maximum amount of resources the fleet can raid
-    (uint256[] memory freeCargoSpaces, uint256 maxRaidAmount) = getMaxRaidAmountWithAllies(raider);
-    //total raidable resources the target fleet/space rock and their allies have
+    (uint256 freeCargoSpace, uint256[] memory freeCargoSpaces, uint256 maxRaidAmount) = getMaxRaidAmountWithAllies(
+      raider
+    );
 
-    //toal resources that were raided (some potential rounding down errors occur when accounting for portion of resources raided from each resource of each fleet which result in totalRaidedResources not being equal to maxRaidAmount)
-
-    // will caculate how much of each resource was successfuly raided from target and increase those to be used for increasing resources
+    // will caculate how much of each resource was successfuly raided from target and increase those to be used for increasing resources of the raiders
     (uint256[] memory totalRaidedResourceCounts, uint256 totalRaidedResources) = calculateRaidFromWithAllies(
       battleId,
       target,
@@ -62,6 +69,7 @@ library LibFleetRaid {
     receiveRaidedResourcesWithAllies(
       battleId,
       raider,
+      freeCargoSpace,
       freeCargoSpaces,
       maxRaidAmount,
       totalRaidedResourceCounts,
@@ -77,12 +85,12 @@ library LibFleetRaid {
     (
       uint256[] memory totalRaidableResourceCounts,
       uint256 totalRaidableResources
-    ) = getTotalRaidableResourceCountsWithAllies(targetEntity);
+    ) = getRaidableResourceCountsWithAllies(targetEntity);
 
     //if the fleet can raid more than the total resources available, raid all resources
     if (maxRaidAmount > totalRaidableResources) maxRaidAmount = totalRaidableResources;
 
-    totalRaidedResourceCounts = new uint256[](P_Transportables.get().length);
+    totalRaidedResourceCounts = new uint256[](P_Transportables.length());
 
     (totalRaidedResourceCounts, totalRaidedResources) = calculateRaidFrom(
       battleId,
@@ -143,6 +151,7 @@ library LibFleetRaid {
   function receiveRaidedResourcesWithAllies(
     bytes32 battleId,
     bytes32 targetEntity,
+    uint256 freeCargoSpace,
     uint256[] memory freeCargoSpaces,
     uint256 maxRaidAmount,
     uint256[] memory totalRaidedResourceCounts,
@@ -152,7 +161,7 @@ library LibFleetRaid {
       battleId,
       targetEntity,
       maxRaidAmount,
-      freeCargoSpaces[0],
+      freeCargoSpace,
       totalRaidedResourceCounts,
       totalRaidedResources
     );
@@ -164,7 +173,7 @@ library LibFleetRaid {
         battleId,
         allies[i],
         maxRaidAmount,
-        freeCargoSpaces[i + 1],
+        freeCargoSpaces[i],
         totalRaidedResourceCounts,
         totalRaidedResources
       );
@@ -184,10 +193,10 @@ library LibFleetRaid {
       resourcesAtStart: new uint256[](transportables.length),
       resourcesAtEnd: new uint256[](transportables.length)
     });
+    uint256 denominator = totalRaidedResources * maxRaidAmount;
     for (uint256 i = 0; i < transportables.length; i++) {
       if (totalRaidedResourceCounts[i] == 0) continue;
-      uint256 resourcePortion = (totalRaidedResourceCounts[i] * freeCargoSpace) /
-        (totalRaidedResources * maxRaidAmount);
+      uint256 resourcePortion = (totalRaidedResourceCounts[i] * freeCargoSpace) / denominator;
       raidResult.resourcesAtStart[i] = ResourceCount.get(targetEntity, transportables[i]);
       if (IsFleet.get(targetEntity)) {
         LibFleet.increaseFleetResource(targetEntity, transportables[i], resourcePortion);

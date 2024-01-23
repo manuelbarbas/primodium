@@ -14,6 +14,7 @@ contract FleetTransferSystem is FleetBaseSystem {
     _onlySpaceRockOwner(spaceRock)
     _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock)
     _claimUnits(spaceRock)
+    _unitCountIsValid(unitCounts)
   {
     LibFleetTransfer.transferUnitsFromSpaceRockToFleet(_player(), spaceRock, fleetId, unitCounts);
   }
@@ -27,6 +28,7 @@ contract FleetTransferSystem is FleetBaseSystem {
     _onlySpaceRockOwner(spaceRock)
     _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock)
     _claimResources(spaceRock)
+    _resourceCountIsValid(resourceCounts)
   {
     LibFleetTransfer.transferResourcesFromSpaceRockToFleet(_player(), spaceRock, fleetId, resourceCounts);
   }
@@ -42,6 +44,8 @@ contract FleetTransferSystem is FleetBaseSystem {
     _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock)
     _claimResources(spaceRock)
     _claimUnits(spaceRock)
+    _unitCountIsValid(unitCounts)
+    _resourceCountIsValid(resourceCounts)
   {
     LibFleetTransfer.transferUnitsAndResourcesFromSpaceRockToFleet(
       _player(),
@@ -56,7 +60,13 @@ contract FleetTransferSystem is FleetBaseSystem {
     bytes32 fleetId,
     bytes32 spaceRock,
     uint256[] calldata unitCounts
-  ) public _onlyFleetOwner(fleetId) _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock) _claimUnits(spaceRock) {
+  )
+    public
+    _onlyFleetOwner(fleetId)
+    _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock)
+    _claimUnits(spaceRock)
+    _unitCountIsValid(unitCounts)
+  {
     LibFleetTransfer.transferUnitsFromFleetToSpaceRock(_player(), fleetId, spaceRock, unitCounts);
   }
 
@@ -64,7 +74,13 @@ contract FleetTransferSystem is FleetBaseSystem {
     bytes32 fleetId,
     bytes32 spaceRock,
     uint256[] calldata resourceCounts
-  ) public _onlyFleetOwner(fleetId) _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock) _claimResources(spaceRock) {
+  )
+    public
+    _onlyFleetOwner(fleetId)
+    _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock)
+    _claimResources(spaceRock)
+    _resourceCountIsValid(resourceCounts)
+  {
     LibFleetTransfer.transferResourcesFromFleetToSpaceRock(_player(), fleetId, spaceRock, resourceCounts);
   }
 
@@ -79,6 +95,8 @@ contract FleetTransferSystem is FleetBaseSystem {
     _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock)
     _claimResources(spaceRock)
     _claimUnits(spaceRock)
+    _unitCountIsValid(unitCounts)
+    _resourceCountIsValid(resourceCounts)
   {
     LibFleetTransfer.transferUnitsAndResourcesFromFleetToSpaceRock(
       _player(),
@@ -93,7 +111,12 @@ contract FleetTransferSystem is FleetBaseSystem {
     bytes32 fromFleetId,
     bytes32 fleetId,
     uint256[] calldata unitCounts
-  ) public _onlyFleetOwner(fromFleetId) _onlyWhenFleetsAreIsInSameOrbit(fromFleetId, fleetId) {
+  )
+    public
+    _onlyFleetOwner(fromFleetId)
+    _onlyWhenFleetsAreIsInSameOrbit(fromFleetId, fleetId)
+    _unitCountIsValid(unitCounts)
+  {
     LibFleetTransfer.transferUnitsFromFleetToFleet(_player(), fromFleetId, fleetId, unitCounts);
   }
 
@@ -101,7 +124,12 @@ contract FleetTransferSystem is FleetBaseSystem {
     bytes32 fromFleetId,
     bytes32 fleetId,
     uint256[] calldata resourceCounts
-  ) public _onlyFleetOwner(fromFleetId) _onlyWhenFleetsAreIsInSameOrbit(fromFleetId, fleetId) {
+  )
+    public
+    _onlyFleetOwner(fromFleetId)
+    _onlyWhenFleetsAreIsInSameOrbit(fromFleetId, fleetId)
+    _resourceCountIsValid(resourceCounts)
+  {
     LibFleetTransfer.transferResourcesFromFleetToFleet(_player(), fromFleetId, fleetId, resourceCounts);
   }
 
@@ -110,7 +138,13 @@ contract FleetTransferSystem is FleetBaseSystem {
     bytes32 fleetId,
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
-  ) public _onlyFleetOwner(fromFleetId) _onlyWhenFleetsAreIsInSameOrbit(fromFleetId, fleetId) {
+  )
+    public
+    _onlyFleetOwner(fromFleetId)
+    _onlyWhenFleetsAreIsInSameOrbit(fromFleetId, fleetId)
+    _unitCountIsValid(unitCounts)
+    _resourceCountIsValid(resourceCounts)
+  {
     LibFleetTransfer.transferUnitsAndResourcesFromFleetToFleet(
       _player(),
       fromFleetId,

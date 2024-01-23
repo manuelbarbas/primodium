@@ -219,9 +219,7 @@ contract LibResourceTest is PrimodiumTest {
     ResourceCount.set(spaceRockEntity, Platinum, 500);
     ResourceCount.set(spaceRockEntity, Kimberlite, 1500);
 
-    (uint256[] memory resources, uint256 totalResources) = LibResource.getTotalStoredResourceCountsVaulted(
-      spaceRockEntity
-    );
+    (uint256[] memory resources, uint256 totalResources) = LibResource.getStoredResourceCountsVaulted(spaceRockEntity);
 
     uint8[] memory transportables = P_Transportables.get();
 

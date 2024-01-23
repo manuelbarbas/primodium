@@ -9,7 +9,15 @@ contract FleetCreateSystem is FleetBaseSystem {
     bytes32 spaceRock,
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
-  ) public _claimResources(spaceRock) _claimUnits(spaceRock) _onlySpaceRockOwner(spaceRock) returns (bytes32 fleetId) {
+  )
+    public
+    _claimResources(spaceRock)
+    _claimUnits(spaceRock)
+    _onlySpaceRockOwner(spaceRock)
+    _unitCountIsValid(unitCounts)
+    _resourceCountIsValid(resourceCounts)
+    returns (bytes32 fleetId)
+  {
     fleetId = LibFleet.createFleet(_player(), spaceRock, unitCounts, resourceCounts);
   }
 }
