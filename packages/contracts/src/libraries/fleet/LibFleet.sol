@@ -131,7 +131,7 @@ library LibFleet {
     bytes32 fleetId,
     bytes32 spaceRock
   ) internal {
-    bytes32 spaceRockOwner = OwnedBy.get(spaceRock);
+    bytes32 spaceRockOwner = OwnedBy.get(fleetId);
 
     bool isOwner = spaceRockOwner == spaceRock;
 
