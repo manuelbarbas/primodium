@@ -512,6 +512,34 @@
   {
     "inputs": [
       {
+        "internalType": "enum EResource",
+        "name": "resourceA",
+        "type": "uint8"
+      },
+      {
+        "internalType": "enum EResource",
+        "name": "resourceB",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "liquidityA",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "liquidityB",
+        "type": "uint256"
+      }
+    ],
+    "name": "addLiquidity",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes32",
         "name": "battleId",
         "type": "bytes32"
@@ -2266,6 +2294,34 @@
   {
     "inputs": [
       {
+        "internalType": "enum EResource",
+        "name": "resourceA",
+        "type": "uint8"
+      },
+      {
+        "internalType": "enum EResource",
+        "name": "resourceB",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "liquidityA",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "liquidityB",
+        "type": "uint256"
+      }
+    ],
+    "name": "removeLiquidity",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes32",
         "name": "alliance",
         "type": "bytes32"
@@ -2728,6 +2784,34 @@
   {
     "inputs": [
       {
+        "internalType": "bytes32",
+        "name": "marketEntity",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "enum EResource[]",
+        "name": "path",
+        "type": "uint8[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountIn",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountOutMin",
+        "type": "uint256"
+      }
+    ],
+    "name": "swap",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "oldDelegatee",
         "type": "address"
@@ -2798,6 +2882,13 @@
       }
     ],
     "name": "toggleBuildingUtility",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "toggleMarketplaceLock",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

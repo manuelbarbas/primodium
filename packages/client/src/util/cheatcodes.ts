@@ -9,8 +9,8 @@ import { MUD } from "src/network/types";
 import { encodeEntity } from "src/util/encode";
 import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
-import { getBlockTypeName, normalizeAddress } from "./common";
-import { EntityType, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
+import { getBlockTypeName } from "./common";
+import { EntityType, RESOURCE_SCALE, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
 
 const resources: Record<string, Entity> = {
   iron: EntityType.Iron,
@@ -18,7 +18,6 @@ const resources: Record<string, Entity> = {
   lithium: EntityType.Lithium,
   titanium: EntityType.Titanium,
   iridium: EntityType.Iridium,
-  sulfur: EntityType.Sulfur,
   kimberlite: EntityType.Kimberlite,
   ironplate: EntityType.IronPlate,
   platinum: EntityType.Platinum,
@@ -28,7 +27,6 @@ const resources: Record<string, Entity> = {
   vessel: EntityType.VesselCapacity,
   electricity: EntityType.Electricity,
   defense: EntityType.Defense,
-  orders: EntityType.MaxOrders,
   moves: EntityType.FleetMoves,
 };
 
@@ -81,7 +79,7 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
 
         if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
 
-        const value = 10000000n;
+        const value = 100000n * RESOURCE_SCALE;
         console.log("setting resource", getBlockTypeName(resourceEntity), selectedRock, value);
 
         await setComponentValue(
@@ -214,21 +212,6 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
             }
           );
         });
-      },
-    },
-    dripWETH: {
-      params: [],
-      function: async () => {
-        const player = mud.playerAccount.address;
-        if (!player) throw new Error("No player found");
-        await setComponentValue(
-          mud,
-          mud.components.WETHBalance,
-          encodeEntity({ entity: "address" }, { entity: normalizeAddress(player) as Hex }),
-          {
-            value: BigInt(2) * BigInt(1e18),
-          }
-        );
       },
     },
     spawnPlayers: {

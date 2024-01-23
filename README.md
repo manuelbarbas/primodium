@@ -99,7 +99,6 @@ See [here](https://github.com/primodiumxyz/primodium/pull/873) for more informat
   62: "Lithium"
   64: "Water"
   58: "Copper"
-  66: "Sulfur"
 ```
 
 4. `prototypesConfig.ts`: Houses preset entity configurations. A prototype object has the following fields:

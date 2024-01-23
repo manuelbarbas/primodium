@@ -2,6 +2,7 @@
 pragma solidity >=0.8.21;
 
 import "test/PrimodiumTest.t.sol";
+import { ABDKMath64x64 as Math } from "abdk/ABDKMath64x64.sol";
 
 contract LibMathTest is PrimodiumTest {
   function setUp() public override {

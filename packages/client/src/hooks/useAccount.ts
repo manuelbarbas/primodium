@@ -9,7 +9,6 @@ import { LinkedAddressResult, getEnsName } from "src/util/web3/getEnsName";
 export function useAccount(playerEntity: Entity, address?: boolean) {
   const [linkedAddress, setLinkedAddress] = useState<LinkedAddressResult>();
   const [loading, setLoading] = useState(true);
-  const wETHBalance = components.WETHBalance.use(playerEntity)?.value ?? 0n;
   const alliance = components.PlayerAlliance.use(playerEntity)?.alliance;
   const allianceName = getAllianceName((alliance ?? "") as Entity);
   const isPlayer = _isPlayer(playerEntity);
@@ -36,7 +35,6 @@ export function useAccount(playerEntity: Entity, address?: boolean) {
 
   return {
     linkedAddress,
-    wETHBalance,
     allianceName,
     address: name,
     loading,
