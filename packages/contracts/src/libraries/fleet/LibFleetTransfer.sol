@@ -41,10 +41,10 @@ library LibFleetTransfer {
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       if (resourceCounts[i] == 0) continue;
-      uint256 rockResourceCount = ResourceCount.get(spaceRock, i);
+      uint256 rockResourceCount = ResourceCount.get(spaceRock, transportables[i]);
       require(rockResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
-      LibStorage.decreaseStoredResource(spaceRock, i, resourceCounts[i]);
-      LibFleet.increaseFleetResource(fleetId, i, resourceCounts[i]);
+      LibStorage.decreaseStoredResource(spaceRock, transportables[i], resourceCounts[i]);
+      LibFleet.increaseFleetResource(fleetId, transportables[i], resourceCounts[i]);
     }
   }
 
@@ -94,10 +94,10 @@ library LibFleetTransfer {
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       if (resourceCounts[i] == 0) continue;
-      uint256 fleetResourceCount = ResourceCount.get(fleetId, i);
+      uint256 fleetResourceCount = ResourceCount.get(fleetId, transportables[i]);
       require(fleetResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
-      LibStorage.increaseStoredResource(spaceRock, i, resourceCounts[i]);
-      LibFleet.decreaseFleetResource(fleetId, i, resourceCounts[i]);
+      LibStorage.increaseStoredResource(spaceRock, transportables[i], resourceCounts[i]);
+      LibFleet.decreaseFleetResource(fleetId, transportables[i], resourceCounts[i]);
     }
   }
 
@@ -148,8 +148,8 @@ library LibFleetTransfer {
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       if (resourceCounts[i] == 0) continue;
-      LibFleet.increaseFleetResource(fleetId, i, resourceCounts[i]);
-      LibFleet.decreaseFleetResource(fromFleetId, i, resourceCounts[i]);
+      LibFleet.increaseFleetResource(fleetId, transportables[i], resourceCounts[i]);
+      LibFleet.decreaseFleetResource(fromFleetId, transportables[i], resourceCounts[i]);
     }
   }
 

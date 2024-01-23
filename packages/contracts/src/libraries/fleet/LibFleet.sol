@@ -54,10 +54,10 @@ library LibFleet {
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       if (resourceCounts[i] == 0) continue;
-      uint256 rockResourceCount = ResourceCount.get(spaceRock, i);
+      uint256 rockResourceCount = ResourceCount.get(spaceRock, transportables[i]);
       require(rockResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
-      LibStorage.decreaseStoredResource(spaceRock, i, resourceCounts[i]);
-      increaseFleetResource(fleetId, i, resourceCounts[i]);
+      LibStorage.decreaseStoredResource(spaceRock, transportables[i], resourceCounts[i]);
+      increaseFleetResource(fleetId, transportables[i], resourceCounts[i]);
     }
 
     FleetsMap.add(spaceRock, FleetOwnedByKey, fleetId);

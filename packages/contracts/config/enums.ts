@@ -193,8 +193,7 @@ export enum EAllianceRole {
 }
 
 export enum EFleetStance {
-  None = 1,
-  Follow,
+  Follow = 1,
   Defend,
   Block,
 }

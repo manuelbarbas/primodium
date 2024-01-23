@@ -4,163 +4,42 @@ import "test/PrimodiumTest.t.sol";
 
 contract FleetCreateSystemTest is PrimodiumTest {
   bytes32 aliceHomeSpaceRock;
+  bytes32 aliceEntity;
 
   function setUp() public override {
     super.setUp();
+    aliceEntity = addressToEntity(alice);
     aliceHomeSpaceRock = spawn(alice);
   }
 
   function testCreateFleet() public {
     trainUnits(alice, EUnit.MinutemanMarine, 1, true);
+    increaseResource(aliceHomeSpaceRock, EResource.Iron, 1);
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      if (unitPrototypes[i] == P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine))) unitCounts[i] = 1;
+      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = 1;
     }
-    uint8[] memory transportables = new uint8[](unitPrototypes.length);
-    uint256[] memory resourceCounts = new uint256[](transportables.length);
+
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+    for (uint256 i = 0; i < resourceCounts.length; i++) {
+      if (P_Transportables.getItemValue(i) == uint8(EResource.Iron)) resourceCounts[i] = 1;
+    }
     vm.startPrank(alice);
-    world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
-  }
-
-  function trainUnits(
-    address player,
-    EUnit unitType,
-    uint256 count,
-    bool fastForward
-  ) internal {
-    bytes32 playerEntity = addressToEntity(player);
-    bytes32 spaceRock = Home.get(playerEntity);
-    bytes32 mainBase = Home.get(spaceRock);
-    P_RequiredResourcesData memory requiredResources = getTrainCost(unitType, count);
-
-    provideResources(spaceRock, requiredResources);
-    trainUnits(player, mainBase, unitType, count, fastForward);
-  }
-
-  function trainUnits(
-    address player,
-    bytes32 buildingEntity,
-    EUnit unitType,
-    uint256 count,
-    bool fastForward
-  ) internal {
-    vm.startPrank(creator);
-
-    bytes32 buildingType = BuildingType.get(buildingEntity);
-    uint256 level = Level.get(buildingEntity);
-    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unitType));
-
-    bytes32[] memory prodTypes = P_UnitProdTypes.get(buildingType, level);
-    uint256 unitProdMultiplier = P_UnitProdMultiplier.get(buildingType, level);
-    bytes32[] memory newProdTypes = new bytes32[](1);
-    newProdTypes[0] = unitPrototype;
-
-    P_UnitProdTypes.set(buildingType, level, newProdTypes);
-    P_UnitProdMultiplier.set(buildingType, level, 1);
-    vm.stopPrank();
-
-    vm.startPrank(player);
-    world.trainUnits(buildingEntity, unitType, count);
-    if (fastForward) vm.warp(block.timestamp + LibUnit.getUnitBuildTime(buildingEntity, unitPrototype) * count);
-    vm.stopPrank();
-
-    vm.startPrank(creator);
-    P_UnitProdTypes.set(buildingType, level, prodTypes);
-    P_UnitProdMultiplier.set(buildingType, level, unitProdMultiplier);
-    vm.stopPrank();
-  }
-
-  function upgradeMainBase(address player) internal returns (uint256) {
-    bytes32 playerEntity = addressToEntity(player);
-    bytes32 spaceRock = Home.get(playerEntity);
-    bytes32 mainBase = Home.get(spaceRock);
-    P_RequiredResourcesData memory requiredResources = getUpgradeCost(mainBase);
-    provideResources(spaceRock, requiredResources);
-    upgradeBuilding(player, mainBase);
-  }
-
-  function upgradeMainBase(address player, uint256 level) internal returns (uint256) {
-    bytes32 playerEntity = addressToEntity(player);
-    bytes32 spaceRock = Home.get(playerEntity);
-    bytes32 mainBase = Home.get(spaceRock);
-    while (Level.get(mainBase) < level) {
-      P_RequiredResourcesData memory requiredResources = getUpgradeCost(mainBase);
-      provideResources(spaceRock, requiredResources);
-      upgradeBuilding(player, mainBase);
-    }
-  }
-
-  function upgradeBuilding(address player, bytes32 buildingEntity) internal {
-    vm.startPrank(player);
-    world.upgradeBuilding(Position.get(buildingEntity));
-    vm.stopPrank();
-  }
-
-  function provideMaxStorage(bytes32 spaceRock, P_RequiredResourcesData memory requiredResources) internal {
-    vm.startPrank(creator);
-    for (uint256 i = 0; i < requiredResources.resources.length; i++) {
-      if (P_IsUtility.get(requiredResources.resources[i])) continue;
-      if (MaxResourceCount.get(spaceRock, requiredResources.resources[i]) < requiredResources.amounts[i])
-        LibStorage.increaseMaxStorage(
-          spaceRock,
-          requiredResources.resources[i],
-          requiredResources.amounts[i] - MaxResourceCount.get(spaceRock, requiredResources.resources[i])
-        );
-    }
-    vm.stopPrank();
-  }
-
-  function provideResources(bytes32 spaceRock, P_RequiredResourcesData memory requiredResources) internal {
-    vm.startPrank(creator);
-    for (uint256 i = 0; i < requiredResources.resources.length; i++) {
-      if (P_IsUtility.get(requiredResources.resources[i])) {
-        LibProduction.increaseResourceProduction(
-          spaceRock,
-          EResource(requiredResources.resources[i]),
-          requiredResources.amounts[i]
-        );
-      } else {
-        if (MaxResourceCount.get(spaceRock, requiredResources.resources[i]) < requiredResources.amounts[i])
-          LibStorage.increaseMaxStorage(
-            spaceRock,
-            requiredResources.resources[i],
-            requiredResources.amounts[i] - MaxResourceCount.get(spaceRock, requiredResources.resources[i])
-          );
-        LibStorage.increaseStoredResource(spaceRock, requiredResources.resources[i], requiredResources.amounts[i]);
-      }
-    }
-    vm.stopPrank();
-  }
-
-  function getTrainCost(EUnit unitType, uint256 count)
-    internal
-    view
-    returns (P_RequiredResourcesData memory requiredResources)
-  {
-    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unitType));
-    requiredResources = P_RequiredResources.get(unitPrototype, count);
-    for (uint256 i = 0; i < requiredResources.resources.length; i++) {
-      requiredResources.amounts[i] *= count;
-    }
-  }
-
-  function getBuildCost(EBuilding buildingType)
-    internal
-    view
-    returns (P_RequiredResourcesData memory requiredResources)
-  {
-    bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
-    requiredResources = P_RequiredResources.get(buildingPrototype, 1);
-  }
-
-  function getUpgradeCost(bytes32 buildingEntity)
-    internal
-    view
-    returns (P_RequiredResourcesData memory requiredResources)
-  {
-    uint256 level = Level.get(buildingEntity);
-    bytes32 buildingPrototype = BuildingType.get(buildingEntity);
-    requiredResources = P_RequiredResources.get(buildingPrototype, level + 1);
+    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    assertEq(UnitCount.get(fleetId, unitPrototype), 1, "fleet unit count doesn't match");
+    assertEq(UnitCount.get(aliceHomeSpaceRock, unitPrototype), 0, "space rock unit count doesn't match");
+    assertEq(ResourceCount.get(fleetId, uint8(EResource.Iron)), 1, "fleet resource count doesn't match");
+    assertEq(
+      ResourceCount.get(aliceHomeSpaceRock, uint8(EResource.Iron)),
+      0,
+      "space rock resource count doesn't match"
+    );
+    assertEq(OwnedBy.get(fleetId), aliceHomeSpaceRock, "fleet owned by doesn't match");
+    assertEq(FleetMovement.getDestination(fleetId), aliceHomeSpaceRock, "fleet destination doesn't match");
+    assertEq(FleetMovement.getArrivalTime(fleetId), block.timestamp, "fleet arrival time doesn't match");
+    assertEq(FleetStance.getStance(fleetId), uint8(EFleetStance.NULL), "fleet stance doesn't match");
+    assertEq(FleetMovement.getOrigin(fleetId), aliceHomeSpaceRock, "fleet origin doesn't match");
   }
 }
