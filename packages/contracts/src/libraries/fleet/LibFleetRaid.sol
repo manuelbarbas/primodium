@@ -193,10 +193,10 @@ library LibFleetRaid {
       resourcesAtStart: new uint256[](transportables.length),
       resourcesAtEnd: new uint256[](transportables.length)
     });
+    uint256 denominator = totalRaidedResources * maxRaidAmount;
     for (uint256 i = 0; i < transportables.length; i++) {
       if (totalRaidedResourceCounts[i] == 0) continue;
-      uint256 resourcePortion = (totalRaidedResourceCounts[i] * freeCargoSpace) /
-        (totalRaidedResources * maxRaidAmount);
+      uint256 resourcePortion = (totalRaidedResourceCounts[i] * freeCargoSpace) / denominator;
       raidResult.resourcesAtStart[i] = ResourceCount.get(targetEntity, transportables[i]);
       if (IsFleet.get(targetEntity)) {
         LibFleet.increaseFleetResource(targetEntity, transportables[i], resourcePortion);
