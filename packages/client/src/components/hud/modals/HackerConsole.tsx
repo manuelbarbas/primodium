@@ -2,6 +2,7 @@
 import { Scenes } from "@game/constants";
 import React, { KeyboardEvent, useRef, useState } from "react";
 import { Button } from "src/components/core/Button";
+import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import createConsoleApi from "src/util/console/consoleApi";
@@ -42,11 +43,13 @@ const HackerConsole: React.FC = () => {
 };
 
 const Console = () => {
-  const [commandHistory, setCommandHistory] = useState<string[]>([]);
+  const [commandHistory, setCommandHistory] = useSettingsStore((state) => [
+    state.consoleHistory,
+    state.setConsoleHistory,
+  ]);
   const [historyIndex, setHistoryIndex] = useState<number>(-1);
 
   const [input, setInput] = useState<string>("");
-  const [output, setOutput] = useState<{ input: string; output: string; type?: "error" }[]>([]);
   const primodium = usePrimodium();
   const asteroidInput = primodium.api(Scenes.Asteroid).input;
   const starmapInput = primodium.api(Scenes.Starmap).input;
@@ -55,13 +58,13 @@ const Console = () => {
   const handleConsoleCommand = () => {
     try {
       const result = eval(input);
-      setOutput([...output, { input, output: stringify(result) }]);
+      const out = stringify(result);
+      setCommandHistory([...commandHistory, { input, output: out }]); // Add input to history
     } catch (error) {
       if (error instanceof Error) {
-        setOutput([...output, { input, output: `Error: ${error.message}`, type: "error" }]);
+        setCommandHistory([...commandHistory, { input, output: `Error: ${error.message}` }]);
       }
     } finally {
-      setCommandHistory([...commandHistory, input]); // Add input to history
       setHistoryIndex(-1); // Reset history index
       setInput("");
     }
@@ -78,14 +81,14 @@ const Console = () => {
       e.preventDefault();
       const newIndex = historyIndex < commandHistory.length - 1 ? historyIndex + 1 : commandHistory.length - 1;
       if (newIndex >= 0) {
-        setInput(commandHistory[commandHistory.length - 1 - newIndex]);
+        setInput(commandHistory[commandHistory.length - 1 - newIndex].input);
         setHistoryIndex(newIndex);
       }
     } else if (e.key === "ArrowDown") {
       e.preventDefault();
       const newIndex = historyIndex > 0 ? historyIndex - 1 : -1;
       if (newIndex >= 0) {
-        setInput(commandHistory[commandHistory.length - 1 - newIndex]);
+        setInput(commandHistory[commandHistory.length - 1 - newIndex].input);
       } else {
         setInput("");
       }
@@ -129,7 +132,7 @@ const Console = () => {
       </div>
       <p className="text-xs italic opacity-50">e.g. priComponents.Home.get(priPlayerAccount.entity).value</p>
       <div className="mt-4 overflow-y-scroll overflow-x-hidden scrollbar h-full text-sm w-full">
-        {output.map((line, index) => (
+        {commandHistory.map((line, index) => (
           <div key={`output-${index}`} className="mr-1 w-full">
             <div key={index} className={`whitespace-normal`}>
               {`>`} {line.input}
@@ -137,7 +140,7 @@ const Console = () => {
             <div
               key={index}
               style={{ wordWrap: "break-word" }}
-              className={`whitespace-pre-wrap text-wrap ${line.type == "error" ? "bg-error/70" : ""}`}
+              className={`whitespace-pre-wrap text-wrap ${line.output.startsWith("Error") ? "bg-error/70" : ""}`}
             >
               {line.output}
             </div>

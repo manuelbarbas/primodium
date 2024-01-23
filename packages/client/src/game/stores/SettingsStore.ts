@@ -28,6 +28,7 @@ type SettingsState = {
   unitDisplay: "gwei" | "ether";
   allowHackerModal: boolean;
   uiScale: number;
+  consoleHistory: { input: string; output: string }[];
 };
 
 type SettingsActions = {
@@ -40,6 +41,7 @@ type SettingsActions = {
   toggleUnitDisplay: () => void;
   toggleAllowHackerModal: () => void;
   setUiScale: (scale: number) => void;
+  setConsoleHistory: (history: { input: string; output: string }[]) => void;
 };
 
 const defaults: SettingsState = {
@@ -47,6 +49,7 @@ const defaults: SettingsState = {
   unitDisplay: "gwei",
   allowHackerModal: false,
   uiScale: 1,
+  consoleHistory: [],
   volume: {
     master: 1,
     music: 0.25,
@@ -130,6 +133,9 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
       },
       setUiScale: (scale) => {
         set({ uiScale: scale });
+      },
+      setConsoleHistory: (history) => {
+        set({ consoleHistory: history });
       },
     }),
     {
