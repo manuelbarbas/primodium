@@ -2854,6 +2854,29 @@
   {
     "inputs": [
       {
+        "internalType": "bytes32",
+        "name": "buildingEntity",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "unitPrototype",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "count",
+        "type": "uint256"
+      }
+    ],
+    "name": "trainUnits",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "ResourceId",
         "name": "fromNamespaceId",
         "type": "bytes32"
