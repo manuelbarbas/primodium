@@ -77,6 +77,7 @@ export enum TransactionQueueType {
   Toggle,
   Access,
   Attack,
+  CreateFleet,
 }
 
 export enum RockRelationship {
