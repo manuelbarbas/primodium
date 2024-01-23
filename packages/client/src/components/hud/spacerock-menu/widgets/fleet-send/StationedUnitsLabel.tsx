@@ -1,7 +1,7 @@
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { SecondaryCard } from "src/components/core/Card";
 import { components } from "src/network/components";
-import { formatNumber } from "src/util/common";
+import { formatNumber } from "src/util/number";
 
 export const StationedUnitsLabel = () => {
   const selectedAsteroid = components.SelectedRock.use()?.value;

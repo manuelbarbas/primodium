@@ -9,7 +9,7 @@ export const Market: React.FC<{ building: Entity }> = ({ building }) => {
     <Navigator.Screen title={building} className="w-full gap-1">
       <Header building={building} />
       <Upgrade building={building} />
-      <OpenMarket />
+      <OpenMarket building={building} />
     </Navigator.Screen>
   );
 };

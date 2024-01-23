@@ -10,7 +10,7 @@ import { Modal } from "src/components/core/Modal";
 import { useMud } from "src/hooks";
 import { useFleetMoves } from "src/hooks/useFleetMoves";
 import { components } from "src/network/components";
-import { formatNumber } from "src/util/common";
+import { formatNumber } from "src/util/number";
 import { Hex } from "viem";
 import { DefenseLabel } from "../resources/utilities/DefenseLabel";
 import { Land } from "./Land";
