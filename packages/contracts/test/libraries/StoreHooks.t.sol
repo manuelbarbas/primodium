@@ -6,7 +6,7 @@ import { StoreCore } from "@latticexyz/store/src/StoreCore.sol";
 import { IStore } from "@latticexyz/store/src/IStore.sol";
 import { SchemaType } from "@latticexyz/schema-type/src/solidity/SchemaType.sol";
 import { MirrorSubscriber } from "libraries/MirrorSubscriber.sol";
-import { HookedValue, HookedValueTableId } from "codegen/tables/HookedValue.sol";
+import { HookedValue, HookedValueTableId } from "codegen/index.sol";
 import { OnHookChangedValue, OnHookChangedValueTableId } from "codegen/tables/OnHookChangedValue.sol";
 import { ALL } from "@latticexyz/store/src/storeHookTypes.sol";
 
@@ -19,9 +19,9 @@ contract TestStoreHooks is PrimodiumTest {
     MirrorSubscriber subscriber = new MirrorSubscriber(HookedValueTableId, world);
     console.log("Subscriber Created");
     world.grantAccess(OnHookChangedValueTableId, address(subscriber));
-    world.registerStoreHook(HookedValueTableId, subscriber, ALL);
+    // world.registerStoreHook(HookedValueTableId, subscriber, ALL);
 
-    //StoreCore.registerStoreHook(HookedValueTableId, subscriber, ALL);
+    StoreCore.registerStoreHook(HookedValueTableId, subscriber, ALL);
     console.log("Subscriber Hooked");
   }
 
