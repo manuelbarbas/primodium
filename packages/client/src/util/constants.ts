@@ -62,11 +62,6 @@ export enum TransactionQueueType {
   Train,
   Research,
   Upgrade,
-  Recall,
-  Reinforce,
-  Invade,
-  Raid,
-  Land,
   Demolish,
   Move,
   ClaimObjective,
@@ -81,6 +76,7 @@ export enum TransactionQueueType {
   DeclineInvite,
   Toggle,
   Access,
+  Attack,
 }
 
 export enum RockRelationship {
