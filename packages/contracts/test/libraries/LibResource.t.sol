@@ -9,20 +9,19 @@ contract LibResourceTest is PrimodiumTest {
   bytes32 unitPrototype = "unitPrototype";
   bytes32 buildingEntity = "building";
   uint256 level = 2;
-  bytes32 motherlode = "motherlode";
 
   function setUp() public override {
     super.setUp();
     spawn(creator);
     vm.startPrank(creator);
     playerEntity = addressToEntity(creator);
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     BuildingType.set(buildingEntity, buildingPrototype);
     OwnedBy.set(buildingEntity, spaceRockEntity);
   }
 
   function testClaimAllResourcesBasic() public {
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     MaxResourceCount.set(spaceRockEntity, Iron, 1000);
     ProductionRate.set(spaceRockEntity, Iron, 10);
     LastClaimedAt.set(spaceRockEntity, block.timestamp - 10);
@@ -31,7 +30,7 @@ contract LibResourceTest is PrimodiumTest {
   }
 
   function testClaimAllResourcesConsumptionBasic() public {
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     MaxResourceCount.set(spaceRockEntity, Copper, 1000);
     ProductionRate.set(spaceRockEntity, Copper, 10);
     P_ConsumesResource.set(Copper, Iron);
@@ -47,7 +46,7 @@ contract LibResourceTest is PrimodiumTest {
   }
 
   function testClaimAllResourcesConsumptionRunOutBasic() public {
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     MaxResourceCount.set(spaceRockEntity, Copper, 1000);
     ProductionRate.set(spaceRockEntity, Copper, 10);
     P_ConsumesResource.set(Copper, Iron);
@@ -61,29 +60,8 @@ contract LibResourceTest is PrimodiumTest {
     assertEq(ResourceCount.get(spaceRockEntity, Iron), 0);
   }
 
-  function testClaimMotherlodeResources() public {
-    OwnedBy.set(motherlode, playerEntity);
-    OwnedMotherlodes.push(playerEntity, motherlode);
-
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
-    MaxResourceCount.set(spaceRockEntity, Titanium, 1000);
-    P_ConsumesResource.set(Titanium, R_Titanium);
-    MaxResourceCount.set(motherlode, R_Titanium, 1000);
-    ResourceCount.set(motherlode, R_Titanium, 1000);
-    ProductionRate.set(motherlode, R_Titanium, 0);
-    ConsumptionRate.set(motherlode, R_Titanium, 100);
-    ProductionRate.set(motherlode, Titanium, 100);
-    Motherlode.setMotherlodeType(motherlode, Titanium);
-    LastClaimedAt.set(motherlode, block.timestamp - 10);
-    LastClaimedAt.set(spaceRockEntity, block.timestamp - 10);
-    LibResource.claimAllPlayerResources(playerEntity);
-
-    assertEq(ResourceCount.get(spaceRockEntity, Titanium), 1000);
-    assertEq(ResourceCount.get(motherlode, R_Titanium), 0);
-  }
-
   function testClaimAllResourcesLessThanMax() public {
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     MaxResourceCount.set(spaceRockEntity, Iron, 50);
     ProductionRate.set(spaceRockEntity, Iron, 10);
     LastClaimedAt.set(spaceRockEntity, block.timestamp - 10);
@@ -92,7 +70,7 @@ contract LibResourceTest is PrimodiumTest {
   }
 
   function testClaimAllResourcesZeroProductionRate() public {
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     MaxResourceCount.set(spaceRockEntity, Iron, 1000);
     LastClaimedAt.set(spaceRockEntity, block.timestamp - 10);
     LibResource.claimAllResources(spaceRockEntity);
@@ -100,7 +78,7 @@ contract LibResourceTest is PrimodiumTest {
   }
 
   function testClaimAllResourcesIsUtility() public {
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     MaxResourceCount.set(spaceRockEntity, Iron, 1000);
     ProductionRate.set(spaceRockEntity, Iron, 10);
     P_IsUtility.set(Iron, true);
@@ -110,7 +88,7 @@ contract LibResourceTest is PrimodiumTest {
   }
 
   function testSpendBuildingRequiredResource() public {
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     ResourceCount.set(spaceRockEntity, Iron, 100);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
@@ -123,7 +101,7 @@ contract LibResourceTest is PrimodiumTest {
   }
 
   function testFailSpendBuildingRequiredResourceInsufficient() public {
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     ResourceCount.set(spaceRockEntity, Iron, 30);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
@@ -135,7 +113,7 @@ contract LibResourceTest is PrimodiumTest {
   }
 
   function testSpendBuildingRequiredUtility() public {
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     P_IsUtility.set(Iron, true);
     ResourceCount.set(spaceRockEntity, Iron, 100);
 
@@ -159,7 +137,7 @@ contract LibResourceTest is PrimodiumTest {
   }
 
   function testFailSpendBuildingRequiredUtilityInsufficient() public {
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     P_IsUtility.set(Iron, true);
     ResourceCount.set(spaceRockEntity, Iron, 30);
 
@@ -172,7 +150,7 @@ contract LibResourceTest is PrimodiumTest {
   }
 
   function testSpendUnitRequiredResource() public {
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     ResourceCount.set(spaceRockEntity, Iron, 100);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
@@ -185,7 +163,7 @@ contract LibResourceTest is PrimodiumTest {
   }
 
   function testFailSpendUnitRequiredResourceInsufficient() public {
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     ResourceCount.set(spaceRockEntity, Iron, 30);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
@@ -197,7 +175,7 @@ contract LibResourceTest is PrimodiumTest {
   }
 
   function testSpendUnitRequiredUtility() public {
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     ResourceCount.set(spaceRockEntity, Iron, 100);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
@@ -210,7 +188,7 @@ contract LibResourceTest is PrimodiumTest {
   }
 
   function testFailSpendUnitRequiredUtilityInsufficient() public {
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     ResourceCount.set(spaceRockEntity, Iron, 30);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
@@ -222,7 +200,7 @@ contract LibResourceTest is PrimodiumTest {
   }
 
   function testClearUtilityUsage() public {
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     MaxResourceCount.set(spaceRockEntity, Iron, 1000);
     P_IsUtility.set(Iron, true);
     UtilityMap.set(buildingEntity, Iron, 50);
@@ -235,19 +213,29 @@ contract LibResourceTest is PrimodiumTest {
   }
 
   function testGetAllResourceCounts() public {
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     ResourceCount.set(spaceRockEntity, Iron, 100);
     ResourceCount.set(spaceRockEntity, Copper, 200);
     ResourceCount.set(spaceRockEntity, Platinum, 500);
     ResourceCount.set(spaceRockEntity, Kimberlite, 1500);
 
-    (uint256 totalResources, uint256[] memory resources) = LibResource.getAllResourceCounts(spaceRockEntity);
+    (uint256[] memory resources, uint256 totalResources) = LibResource.getStoredResourceCountsVaulted(spaceRockEntity);
+
+    uint8[] memory transportables = P_Transportables.get();
 
     assertEq(totalResources, 2300);
-    assertEq(resources[uint8(Iron)], 100);
-    assertEq(resources[uint8(Copper)], 200);
-    assertEq(resources[uint8(Lithium)], 0);
-    assertEq(resources[uint8(Platinum)], 500);
-    assertEq(resources[uint8(Kimberlite)], 1500);
+    for (uint256 i = 0; i < transportables.length; i++) {
+      if (transportables[i] == uint8(Iron)) {
+        assertEq(resources[i], 100);
+      } else if (transportables[i] == uint8(Copper)) {
+        assertEq(resources[i], 200);
+      } else if (transportables[i] == uint8(Platinum)) {
+        assertEq(resources[i], 500);
+      } else if (transportables[i] == uint8(Kimberlite)) {
+        assertEq(resources[i], 1500);
+      } else {
+        assertEq(resources[i], 0);
+      }
+    }
   }
 }

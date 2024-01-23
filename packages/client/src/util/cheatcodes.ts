@@ -61,7 +61,8 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
     maxMainBaseLevel: {
       params: [],
       function: async () => {
-        const mainBase = mud.components.Home.get(mud.playerAccount.entity)?.mainBase as Entity | undefined;
+        const selectedRock = mud.components.SelectedRock.get()?.value;
+        const mainBase = mud.components.Home.get(selectedRock)?.value as Entity | undefined;
         if (!mainBase) throw new Error("No main base found");
         const maxLevel = mud.components.P_MaxLevel.get(mainBase)?.value ?? 8n;
         await setComponentValue(mud, mud.components.Level, mainBase, {
@@ -74,21 +75,21 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
       function: async (resource: string) => {
         const player = mud.playerAccount.entity;
         if (!player) throw new Error("No player found");
-        const home = mud.components.Home.get(player)?.asteroid as Entity | undefined;
+        const selectedRock = mud.components.SelectedRock.get()?.value;
 
         const resourceEntity = resources[resource.toLowerCase()];
 
-        if (!resourceEntity || !home) throw new Error("Resource not found");
+        if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
 
         const value = 10000000n;
-        console.log("setting resource", getBlockTypeName(resourceEntity), home, value);
+        console.log("setting resource", getBlockTypeName(resourceEntity), selectedRock, value);
 
         await setComponentValue(
           mud,
           mud.components.ResourceCount,
           encodeEntity(
             { entity: "bytes32", resource: "uint8" },
-            { entity: home as Hex, resource: ResourceEnumLookup[resourceEntity] }
+            { entity: selectedRock as Hex, resource: ResourceEnumLookup[resourceEntity] }
           ),
           {
             value,
@@ -102,17 +103,17 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
         const player = mud.playerAccount.entity;
         if (!player) throw new Error("No player found");
 
-        const home = mud.components.Home.get(player)?.asteroid as Entity | undefined;
+        const selectedRock = mud.components.SelectedRock.get()?.value;
         const resourceEntity = resources[resource.toLowerCase()];
 
-        if (!resourceEntity || !home) throw new Error("Resource not found");
+        if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
 
         await setComponentValue(
           mud,
           mud.components.MaxResourceCount,
           encodeEntity(
             { entity: "bytes32", resource: "uint8" },
-            { entity: home as Hex, resource: ResourceEnumLookup[resourceEntity] }
+            { entity: selectedRock as Hex, resource: ResourceEnumLookup[resourceEntity] }
           ),
           {
             value: 2000000n,
@@ -133,7 +134,7 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
 
         if (!unitEntity) throw new Error("Unit not found");
 
-        const rock = mud.components.Home.get(player)?.asteroid as Entity | undefined;
+        const rock = mud.components.SelectedRock.get()?.value;
 
         if (!rock) throw new Error("No asteroid found");
 

@@ -13,14 +13,14 @@ import { EntityType, ResourceImage, TransactionQueueType } from "src/util/consta
 import { hashEntities } from "src/util/encode";
 import { getUpgradeInfo } from "src/util/upgrade";
 
-export const ExpandRange: React.FC = () => {
+export const ExpandRange: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
+  asteroid;
   const mud = useMud();
   const { playerAccount } = mud;
-  const mainBaseEntity = components.Home.use(playerAccount.entity)?.mainBase as Entity;
+  const mainBaseEntity = components.Home.use(asteroid)?.value as Entity;
   const mainBaseLevel = components.Level.use(mainBaseEntity, {
     value: 1n,
   }).value;
-  const homeAsteroid = components.Home.use(playerAccount.entity)?.asteroid as Entity;
   const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = getUpgradeInfo(
     EntityType.Expansion,
     playerAccount.entity
@@ -70,7 +70,7 @@ export const ExpandRange: React.FC = () => {
           <Button
             className="w-fit btn-secondary btn-sm"
             disabled={!canUpgrade}
-            onClick={() => upgradeRange(mud, homeAsteroid)}
+            onClick={() => upgradeRange(mud, asteroid)}
           >
             Expand
           </Button>

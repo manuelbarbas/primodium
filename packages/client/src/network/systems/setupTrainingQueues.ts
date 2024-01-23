@@ -3,13 +3,11 @@ import { getUnitTrainingTime } from "src/util/trainUnits";
 import { Hex } from "viem";
 import { components } from "../components";
 import { BlockNumber } from "../components/clientComponents";
-import { MUD } from "../types";
 import { world } from "../world";
 
-export function setupTrainingQueues(mud: MUD) {
+export function setupTrainingQueues() {
   const systemWorld = namespaceWorld(world, "systems");
-  const playerEntity = mud.playerAccount.entity;
-  const { BuildingType, LastClaimedAt, ClaimOffset, OwnedBy, QueueUnits, QueueItemUnits, TrainingQueue, Home, Send } =
+  const { BuildingType, LastClaimedAt, ClaimOffset, OwnedBy, QueueUnits, QueueItemUnits, TrainingQueue, Send } =
     components;
 
   function updateTrainingQueue(building: Entity) {
@@ -72,13 +70,13 @@ export function setupTrainingQueues(mud: MUD) {
   // update local queues each second
   // todo: create a component that tracks active asteroids (to be updated each second)
   defineComponentSystem(systemWorld, BlockNumber, (update) => {
-    const home = Home.get(playerEntity)?.asteroid;
+    const selectedRock = components.SelectedRock.get()?.value;
     const origin = Send.get()?.origin;
     const destination = Send.get()?.destination;
     const parents: string[] = [];
-    if (home) parents.push(home);
-    if (origin && home !== origin) parents.push(origin);
-    if (destination && home !== destination) parents.push(destination);
+    if (selectedRock) parents.push(selectedRock);
+    if (origin && selectedRock !== origin) parents.push(origin);
+    if (destination && selectedRock !== destination) parents.push(destination);
 
     const queries = parents.map((parent) => [
       HasValue(OwnedBy, {

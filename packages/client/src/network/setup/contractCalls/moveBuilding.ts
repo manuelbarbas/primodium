@@ -14,7 +14,7 @@ import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const moveBuilding = async (mud: MUD, building: Entity, coord: Coord) => {
   // todo: find a cleaner way to extract this value in all web3 functions
-  const activeAsteroid = components.Home.get(mud.playerAccount.entity)?.asteroid;
+  const activeAsteroid = components.SelectedRock.get()?.value;
   if (!activeAsteroid) return;
 
   const prevPosition = components.Position.get(building);
@@ -40,12 +40,11 @@ export const moveBuilding = async (mud: MUD, building: Entity, coord: Coord) => 
       },
     },
     (receipt) => {
-      const asteroid = components.Home.get(mud.playerAccount.entity)?.asteroid;
       const buildingType = components.BuildingType.get(building)?.value as Entity;
       const currLevel = components.Level.get(building)?.value || 0;
 
       ampli.systemMoveBuilding({
-        asteroidCoord: asteroid!,
+        asteroidCoord: activeAsteroid,
         buildingType: getBlockTypeName(buildingType),
         coord: [prevPosition.x, prevPosition.y],
         endCoord: [position.x, position.y],

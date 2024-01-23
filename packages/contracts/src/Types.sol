@@ -2,7 +2,6 @@
 pragma solidity >=0.8.0;
 
 import "codegen/common.sol";
-import { NUM_UNITS } from "src/constants.sol";
 import { PositionData } from "codegen/index.sol";
 
 struct Bounds {

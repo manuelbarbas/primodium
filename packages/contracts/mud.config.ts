@@ -22,7 +22,34 @@ export const config = mudConfig({
     S_SpawnPirateAsteroidSystem: {
       openAccess: false,
       accessList: [DUMMY_ADDRESS],
-      name: "S_SpawnPirateAsteroidSystem",
+    },
+    S_ProductionRateSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+    },
+    S_SpendResourcesSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+    },
+    S_RewardsSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+    },
+
+    S_FleetBattleApplyDamageSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+      name: "S_FleetBattleApplyDamageSystem",
+    },
+    S_FleetBattleResolveRaidSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+      name: "S_FleetBattleResolveRaidSystem",
+    },
+    S_FleetBattleResolveEncryptionSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+      name: "S_FleetBattleResolveEncryptionSystem",
     },
   },
 
@@ -35,18 +62,24 @@ export const config = mudConfig({
     },
 
     /* --------------------------------- Common --------------------------------- */
+    // if the key is a player, value is their home asteroid.
+    // if the key is an asteroid, value is its main base.
+    Home: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "bytes32",
+    },
 
     P_GameConfig: {
       keySchema: {},
       valueSchema: {
         admin: "address",
         unitProductionRate: "uint256",
-        maxMotherlodesPerAsteroid: "uint256",
-        motherlodeChanceInv: "uint256",
-        motherlodeDistance: "uint256",
         travelTime: "uint256",
         worldSpeed: "uint256",
         tax: "uint256",
+        maxAsteroidsPerPlayer: "uint256",
+        asteroidChanceInv: "uint256",
+        asteroidDistance: "uint256",
       },
     },
 
@@ -102,17 +135,12 @@ export const config = mudConfig({
       valueSchema: "bytes32",
     },
 
-    /* --------------------------------- Player --------------------------------- */
-
-    Home: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
-        asteroid: "bytes32",
-        mainBase: "bytes32",
-      },
+    /* ---------------------------------- Rocks --------------------------------- */
+    AsteroidCount: {
+      keySchema: {},
+      valueSchema: "uint256",
     },
 
-    /* ---------------------------------- Rocks --------------------------------- */
     P_Asteroid: {
       keySchema: {},
       valueSchema: {
@@ -120,15 +148,15 @@ export const config = mudConfig({
         yBounds: "int32",
       },
     },
-    AsteroidCount: {
-      keySchema: {},
-      valueSchema: "uint256",
-    },
 
-    RockType: {
+    Asteroid: {
       keySchema: { entity: "bytes32" },
-      // ERock
-      valueSchema: "uint8",
+      valueSchema: {
+        isAsteroid: "bool",
+        maxLevel: "uint256",
+        mapId: "uint8",
+        spawnsSecondary: "bool",
+      },
     },
 
     // note: dimensions will always be positive, but are int32s so they work with coords
@@ -141,8 +169,18 @@ export const config = mudConfig({
     },
 
     P_Terrain: {
-      keySchema: { x: "int32", y: "int32" },
+      keySchema: { mapId: "uint8", x: "int32", y: "int32" },
       valueSchema: "uint8", // EResource
+    },
+
+    Specialty: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "uint8", // EResource
+    },
+
+    IsSpaceRock: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "bool",
     },
 
     /* -------------------------------- Resources ------------------------------- */
@@ -160,6 +198,11 @@ export const config = mudConfig({
     P_IsRecoverable: {
       keySchema: { id: "uint8" }, // EResource
       valueSchema: "bool",
+    },
+
+    P_Transportables: {
+      keySchema: {},
+      valueSchema: "uint8[]", // EResource
     },
 
     // tracks the max resource a player can store
@@ -318,35 +361,9 @@ export const config = mudConfig({
 
     /* ------------------------------- Motherlode ------------------------------- */
 
-    Motherlode: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
-        size: "uint8", // ESize
-        motherlodeType: "uint8", // EResource
-      },
-    },
-
-    // Used in the building utilities set
-    SetItemMotherlodes: {
-      keySchema: { motherlode: "bytes32", item: "bytes32" },
-      valueSchema: {
-        stored: "bool",
-        index: "uint256",
-      },
-    },
-    SetMotherlodes: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "bytes32[]",
-    },
-
     P_SizeToAmount: {
       keySchema: { size: "uint8" },
       valueSchema: "uint256",
-    },
-
-    OwnedMotherlodes: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "bytes32[]",
     },
 
     P_RawResource: {
@@ -370,6 +387,7 @@ export const config = mudConfig({
         cargo: "uint256",
         trainingTime: "uint256",
         hp: "uint256",
+        decryption: "uint256",
       },
     },
 
@@ -422,19 +440,6 @@ export const config = mudConfig({
       },
     },
 
-    FleetAttributes: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
-        attack: "uint256",
-        defense: "uint256",
-        speed: "uint256",
-        cargo: "uint256",
-        occupiedCargo: "uint256",
-        maxHp: "uint256",
-        hp: "uint256",
-      },
-    },
-
     FleetStance: {
       keySchema: { entity: "bytes32" },
       valueSchema: {
@@ -456,6 +461,11 @@ export const config = mudConfig({
       },
     },
 
+    IsFleet: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "bool",
+    },
+
     /* ------------------------------ Battle Result ----------------------------- */
     BattleResult: {
       keySchema: { entity: "bytes32" },
@@ -475,16 +485,63 @@ export const config = mudConfig({
       offchainOnly: true,
     },
 
-    FleetOutcome: {
-      keySchema: { entity: "bytes32", fleetId: "bytes32" },
+    NewBattleResult: {
+      keySchema: { battleId: "bytes32" },
       valueSchema: {
-        owner: "bytes32",
-        timestamp: "uint256",
+        aggressorEntity: "bytes32", //can be fleet or space rock
+        aggressorDamage: "uint256", //can be fleet or space rock
+        targetEntity: "bytes32", //can be fleet or space rock
+        targetDamage: "uint256", //can be fleet or space rock
+        winner: "bytes32",
+        rock: "bytes32", // place where battle took place
+        timestamp: "uint256", // timestamp of battle
+        aggressorAllies: "bytes32[]", //only fleets
+        targetAllies: "bytes32[]", //only fleets
+      },
+      offchainOnly: true,
+    },
+
+    BattleDamageDealtResult: {
+      keySchema: { battleId: "bytes32", participantEntity: "bytes32" },
+      valueSchema: {
+        damageDealt: "uint256",
+      },
+      offchainOnly: true,
+    },
+
+    BattleDamageTakenResult: {
+      keySchema: { battleId: "bytes32", participantEntity: "bytes32" },
+      valueSchema: {
+        hpAtStart: "uint256",
+        damageTaken: "uint256",
+      },
+      offchainOnly: true,
+    },
+
+    BattleUnitResult: {
+      keySchema: { battleId: "bytes32", participantEntity: "bytes32" },
+      valueSchema: {
         unitLevels: "uint256[]",
         unitsAtStart: "uint256[]",
-        unitsAtEnd: "uint256[]",
+        casualties: "uint256[]",
+      },
+      offchainOnly: true,
+    },
+
+    BattleRaidResult: {
+      keySchema: { battleId: "bytes32", participantEntity: "bytes32" },
+      valueSchema: {
         resourcesAtStart: "uint256[]",
         resourcesAtEnd: "uint256[]",
+      },
+      offchainOnly: true,
+    },
+
+    BattleEncryptionResult: {
+      keySchema: { battleId: "bytes32", participantEntity: "bytes32" },
+      valueSchema: {
+        encryptionAtStart: "uint256",
+        encryptionAtEnd: "uint256",
       },
       offchainOnly: true,
     },
@@ -668,7 +725,10 @@ export const config = mudConfig({
 
     P_GracePeriod: {
       keySchema: {},
-      valueSchema: "uint256",
+      valueSchema: {
+        spaceRock: "uint256",
+        fleet: "uint256",
+      },
     },
 
     GracePeriod: {

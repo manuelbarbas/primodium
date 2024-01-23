@@ -13,10 +13,11 @@ export const focusMainbase = (scene: Scene) => {
 
   const handleMove = ({ entity }: { entity: Entity }) => {
     const playerEntity = components.Account.get()?.value;
-    if (entity !== playerEntity) return;
+    const playerHome = components.Home.get(playerEntity)?.value as Entity | undefined;
+    if (entity !== playerHome) return;
 
     //TODO - fix converting to entity
-    const mainBase = components.Home.get(playerEntity)?.mainBase as Entity | undefined;
+    const mainBase = components.Home.get(playerHome)?.value as Entity | undefined;
 
     if (!mainBase) return;
 

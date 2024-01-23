@@ -94,7 +94,7 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     setupInvitations(mud);
     setupSend(mud);
     setupTime(mud);
-    setupTrainingQueues(mud);
+    setupTrainingQueues();
 
     runAsteroidSystems(asteroidScene, mud);
     runStarmapSystems(starmapScene);

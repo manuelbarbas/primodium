@@ -31,10 +31,8 @@ export const setupMouseInputs = (scene: Scene) => {
 
     // update selected building
     //TODO - fix converting to entity
-    const building = getBuildingAtCoord(
-      gameCoord,
-      (components.Home.get(playerEntity)?.asteroid as Entity) ?? singletonEntity
-    ) as Entity;
+    const selectedRock = components.SelectedRock.get()?.value;
+    const building = getBuildingAtCoord(gameCoord, (selectedRock as Entity) ?? singletonEntity) as Entity;
 
     if (!building) {
       components.SelectedBuilding.remove();

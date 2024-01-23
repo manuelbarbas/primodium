@@ -7,6 +7,7 @@ import { renderBuildingPlacementTool } from "./renderBuildingPlacementTool";
 import { renderFog } from "./renderFog";
 import { renderHoverTile } from "./renderHoverTile";
 import { renderQueuedBuildings } from "./renderQueuedBuildings";
+import { renderResources } from "./renderResources";
 // import { renderSelectedTile } from "./renderSelectedTile";
 
 export const runSystems = (scene: Scene, mud: MUD) => {
@@ -19,6 +20,7 @@ export const runSystems = (scene: Scene, mud: MUD) => {
   renderBuildingPlacementTool(scene, mud);
   renderBuildingMoveTool(scene, mud);
   focusMainbase(scene);
+  renderResources(scene);
   renderFog(scene);
   renderQueuedBuildings(scene);
 };

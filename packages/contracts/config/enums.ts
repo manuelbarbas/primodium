@@ -1,8 +1,3 @@
-export enum ERock {
-  Asteroid = 1,
-  Motherlode,
-}
-
 export enum EBuilding {
   MainBase = 1,
 
@@ -158,28 +153,12 @@ export enum EObjectives {
   TrainStingerDrone2,
   TrainStingerDrone3,
 
-  MineTitanium1,
-  MineTitanium2,
-  MineTitanium3,
-  MinePlatinum1,
-  MinePlatinum2,
-  MinePlatinum3,
-  MineIridium1,
-  MineIridium2,
-  MineIridium3,
-  MineKimberlite1,
-  MineKimberlite2,
-  MineKimberlite3,
-
   RaidRawResources1,
   RaidRawResources2,
   RaidRawResources3,
   RaidFactoryResources1,
   RaidFactoryResources2,
   RaidFactoryResources3,
-  RaidMotherlodeResources1,
-  RaidMotherlodeResources2,
-  RaidMotherlodeResources3,
 
   DestroyEnemyUnits1,
   DestroyEnemyUnits2,
@@ -221,7 +200,6 @@ export enum EFleetStance {
 }
 
 export const MUDEnums = {
-  ERock: enumToArray(ERock),
   EBuilding: enumToArray(EBuilding),
   EResource: enumToArray(EResource),
   ESize: enumToArray(ESize),

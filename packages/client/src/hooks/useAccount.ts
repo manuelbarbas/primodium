@@ -5,11 +5,8 @@ import { getAllianceName } from "src/util/alliance";
 import { isPlayer as _isPlayer, entityToAddress, shortenAddress } from "src/util/common";
 import { entityToPlayerName } from "src/util/name";
 import { LinkedAddressResult, getEnsName } from "src/util/web3/getEnsName";
-import { useMud } from "./useMud";
 
-export function useAccount(player?: Entity, address?: boolean) {
-  const { playerAccount } = useMud();
-  const playerEntity = player ?? playerAccount.entity;
+export function useAccount(playerEntity: Entity, address?: boolean) {
   const [linkedAddress, setLinkedAddress] = useState<LinkedAddressResult>();
   const [loading, setLoading] = useState(true);
   const wETHBalance = components.WETHBalance.use(playerEntity)?.value ?? 0n;

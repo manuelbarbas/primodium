@@ -27,7 +27,7 @@ export const AttackingFleet: React.FC<{
 
   const coord = components.Position.use(destination);
 
-  const isHomeAsteroid = components.Home.get(playerEntity)?.asteroid === destination;
+  const isHomeAsteroid = components.Home.get(playerEntity)?.value === destination;
 
   const time = components.Time.use()?.value ?? 0n;
   const timeRemaining = arrivalTime - time;

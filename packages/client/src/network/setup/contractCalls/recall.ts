@@ -25,10 +25,8 @@ export const recallArrival = async (mud: MUD, arrivalEntity: Entity) => {
       id: hashEntities(TransactionQueueType.Recall, key, rockEntity),
     },
     (receipt) => {
-      const asteroid = components.Home.get(mud.playerAccount.entity)?.asteroid;
-
       ampli.systemRecallArrival({
-        asteroidCoord: asteroid!,
+        asteroidCoord: rockEntity,
         ...parseReceipt(receipt),
       });
     }
@@ -48,10 +46,8 @@ export const recallStationedUnits = async (mud: MUD, rockEntity: Entity) => {
       id: hashEntities(TransactionQueueType.Recall, rockEntity),
     },
     (receipt) => {
-      const asteroid = components.Home.get(mud.playerAccount.entity)?.asteroid;
-
       ampli.systemRecallArrival({
-        asteroidCoord: asteroid!,
+        asteroidCoord: rockEntity,
         ...parseReceipt(receipt),
       });
     }

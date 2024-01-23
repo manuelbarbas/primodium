@@ -18,7 +18,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
   }
 
   function testMove() public {
-    bytes32 mainBaseEntity = Home.get(playerEntity).mainBase;
+    bytes32 mainBaseEntity = Home.get(Home.get(playerEntity));
     PositionData memory mainBasePosition = Position.get(mainBaseEntity);
     PositionData memory newPosition = PositionData(
       mainBasePosition.x + 3,
@@ -60,7 +60,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
   }
 
   function testFailMoveOutOfBounds() public {
-    bytes32 mainBaseEntity = Home.get(playerEntity).mainBase;
+    bytes32 mainBaseEntity = Home.get(Home.get(playerEntity));
     PositionData memory mainBasePosition = Position.get(mainBaseEntity);
     PositionData memory newPosition = PositionData(
       mainBasePosition.x + 15,
@@ -72,7 +72,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
   }
 
   function testMoveSomeSameTiles() public {
-    bytes32 mainBaseEntity = Home.get(playerEntity).mainBase;
+    bytes32 mainBaseEntity = Home.get(Home.get(playerEntity));
     PositionData memory mainBasePosition = Position.get(mainBaseEntity);
     PositionData memory newPosition = PositionData(
       mainBasePosition.x + 1,
@@ -105,7 +105,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
 
   function testMoveBuildTiles() public {
     console.log("testMoveBuildTiles");
-    bytes32 mainBaseEntity = Home.get(playerEntity).mainBase;
+    bytes32 mainBaseEntity = Home.get(Home.get(playerEntity));
     PositionData memory mainBasePosition = Position.get(mainBaseEntity);
     PositionData memory newPosition = PositionData(
       mainBasePosition.x - 1,
@@ -161,7 +161,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
     P_RequiredTile.deleteRecord(IronMinePrototypeId);
 
     console.log("testMoveBuildTiles");
-    bytes32 mainBaseEntity = Home.get(playerEntity).mainBase;
+    bytes32 mainBaseEntity = Home.get(Home.get(playerEntity));
     PositionData memory mainBasePosition = Position.get(mainBaseEntity);
 
     PositionData memory overlappedPosition = PositionData(

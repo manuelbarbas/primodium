@@ -10,7 +10,8 @@ export type LinkedAddressResult = {
 // NOTE: This function will be replaced with account abstraction in a future update.
 
 const addressMap = new Map<string, LinkedAddressResult>();
-export const getEnsName = async (playerEntity: Entity, hard?: boolean): Promise<LinkedAddressResult> => {
+export const getEnsName = async (playerEntity: Entity | undefined, hard?: boolean): Promise<LinkedAddressResult> => {
+  if (!playerEntity) return { address: null, ensName: null };
   const address = entityToAddress(playerEntity);
   if (!hard && addressMap.has(address)) {
     return addressMap.get(address)!;

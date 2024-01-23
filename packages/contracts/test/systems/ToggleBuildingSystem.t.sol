@@ -49,7 +49,7 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
 
   function testToggleProduction() public {
     assertEq(
-      ProductionRate.get(Home.getAsteroid(player), uint8(EResource.Iron)),
+      ProductionRate.get(Home.get(player), uint8(EResource.Iron)),
       ironProduction,
       "iron production doesn't match"
     );
@@ -57,12 +57,12 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
     world.toggleBuilding(ironMinePostion);
 
     assertTrue(!IsActive.get(ironMineEntity), "built iron mine should be in active");
-    assertEq(ProductionRate.get(Home.getAsteroid(player), uint8(EResource.Iron)), 0, "iron production should be 0");
+    assertEq(ProductionRate.get(Home.get(player), uint8(EResource.Iron)), 0, "iron production should be 0");
 
     world.toggleBuilding(ironMinePostion);
     assertTrue(IsActive.get(ironMineEntity), "built iron mine should be active");
     assertEq(
-      ProductionRate.get(Home.getAsteroid(player), uint8(EResource.Iron)),
+      ProductionRate.get(Home.get(player), uint8(EResource.Iron)),
       ironProduction,
       "iron production doesn't match"
     );
@@ -70,21 +70,21 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
 
   function testToggleProductionAndConsumption() public {
     assertEq(
-      ConsumptionRate.get(Home.getAsteroid(player), uint8(EResource.Iron)),
+      ConsumptionRate.get(Home.get(player), uint8(EResource.Iron)),
       ironConsumption,
       "iron consumption doesn't match"
     );
     assertEq(
-      ProductionRate.get(Home.getAsteroid(player), uint8(EResource.IronPlate)),
+      ProductionRate.get(Home.get(player), uint8(EResource.IronPlate)),
       ironPlateProduction,
       "iron plate production doesn't match"
     );
 
     world.toggleBuilding(ironPlateFactoryPosition);
 
-    assertEq(ConsumptionRate.get(Home.getAsteroid(player), uint8(EResource.Iron)), 0, "iron consumption doesn't match");
+    assertEq(ConsumptionRate.get(Home.get(player), uint8(EResource.Iron)), 0, "iron consumption doesn't match");
     assertEq(
-      ProductionRate.get(Home.getAsteroid(player), uint8(EResource.IronPlate)),
+      ProductionRate.get(Home.get(player), uint8(EResource.IronPlate)),
       0,
       "iron plate production doesn't match"
     );
@@ -92,12 +92,12 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
     world.toggleBuilding(ironPlateFactoryPosition);
 
     assertEq(
-      ConsumptionRate.get(Home.getAsteroid(player), uint8(EResource.Iron)),
+      ConsumptionRate.get(Home.get(player), uint8(EResource.Iron)),
       ironConsumption,
       "iron consumption doesn't match"
     );
     assertEq(
-      ProductionRate.get(Home.getAsteroid(player), uint8(EResource.IronPlate)),
+      ProductionRate.get(Home.get(player), uint8(EResource.IronPlate)),
       ironPlateProduction,
       "iron plate production doesn't match"
     );
@@ -106,23 +106,16 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
   function testToggleClaimResources() public {
     vm.warp(block.timestamp);
     world.toggleBuilding(ironPlateFactoryPosition);
-    assertEq(
-      ProductionRate.get(Home.getAsteroid(player), uint8(EResource.Iron)),
-      ironProduction,
-      "iron production doesn't match"
-    );
-    assertEq(ConsumptionRate.get(Home.getAsteroid(player), uint8(EResource.Iron)), 0, "iron consumption should be 0");
-    assertEq(
-      ProductionRate.get(Home.getAsteroid(player), uint8(EResource.IronPlate)),
-      0,
-      "iron plate production should be 0"
-    );
+    bytes32 home = Home.get(player);
+    assertEq(ProductionRate.get(home, uint8(EResource.Iron)), ironProduction, "iron production doesn't match");
+    assertEq(ConsumptionRate.get(home, uint8(EResource.Iron)), 0, "iron consumption should be 0");
+    assertEq(ProductionRate.get(home, uint8(EResource.IronPlate)), 0, "iron plate production should be 0");
 
     vm.warp(block.timestamp + 10);
     world.toggleBuilding(ironMinePostion);
     assertTrue(!IsActive.get(ironMineEntity), "iron mine should be in active");
     assertEq(
-      ResourceCount.get(Home.getAsteroid(player), uint8(EResource.Iron)),
+      ResourceCount.get(home, uint8(EResource.Iron)),
       ironProduction * 10,
       "resources should be claimed before toggle"
     );
@@ -131,15 +124,15 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
     world.toggleBuilding(ironMinePostion);
     assertTrue(IsActive.get(ironMineEntity), "iron mine should be active");
     assertEq(
-      ResourceCount.get(Home.getAsteroid(player), uint8(EResource.Iron)),
+      ResourceCount.get(home, uint8(EResource.Iron)),
       ironProduction * 10,
       "resources should not change when building is inactive"
     );
 
     vm.warp(block.timestamp + 10);
-    LibResource.claimAllPlayerResources(player);
+    LibResource.claimAllResources(home);
     assertEq(
-      ResourceCount.get(Home.getAsteroid(player), uint8(EResource.Iron)),
+      ResourceCount.get(home, uint8(EResource.Iron)),
       ironProduction * 20,
       "resources should be claimed after toggle"
     );
@@ -149,29 +142,29 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
     vm.warp(block.timestamp);
     world.toggleBuilding(ironMinePostion);
 
-    assertEq(ProductionRate.get(Home.getAsteroid(player), uint8(EResource.Iron)), 0, "iron production should be 0");
+    assertEq(ProductionRate.get(Home.get(player), uint8(EResource.Iron)), 0, "iron production should be 0");
     assertEq(
-      ConsumptionRate.get(Home.getAsteroid(player), uint8(EResource.Iron)),
+      ConsumptionRate.get(Home.get(player), uint8(EResource.Iron)),
       ironConsumption,
       "iron consumption doesn't match"
     );
     assertEq(
-      ProductionRate.get(Home.getAsteroid(player), uint8(EResource.IronPlate)),
+      ProductionRate.get(Home.get(player), uint8(EResource.IronPlate)),
       ironPlateProduction,
       "iron plate production should be 0"
     );
-    ResourceCount.set(Home.getAsteroid(player), uint8(EResource.Iron), ironConsumption * 20);
+    ResourceCount.set(Home.get(player), uint8(EResource.Iron), ironConsumption * 20);
 
     vm.warp(block.timestamp + 10);
 
     world.toggleBuilding(ironPlateFactoryPosition);
     assertEq(
-      ResourceCount.get(Home.getAsteroid(player), uint8(EResource.Iron)),
+      ResourceCount.get(Home.get(player), uint8(EResource.Iron)),
       ironConsumption * 10,
       "iron should be consumed"
     );
     assertEq(
-      ResourceCount.get(Home.getAsteroid(player), uint8(EResource.IronPlate)),
+      ResourceCount.get(Home.get(player), uint8(EResource.IronPlate)),
       ironPlateProduction * 10,
       "iron plate should have been produced"
     );
@@ -179,19 +172,19 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
     vm.warp(block.timestamp + 10);
     world.toggleBuilding(ironPlateFactoryPosition);
     assertEq(
-      ResourceCount.get(Home.getAsteroid(player), uint8(EResource.Iron)),
+      ResourceCount.get(Home.get(player), uint8(EResource.Iron)),
       ironConsumption * 10,
       "iron should not have changed"
     );
     assertEq(
-      ResourceCount.get(Home.getAsteroid(player), uint8(EResource.IronPlate)),
+      ResourceCount.get(Home.get(player), uint8(EResource.IronPlate)),
       ironPlateProduction * 10,
       "iron plate should not have been changed"
     );
   }
 
   function testFailToggleBuildingTrainUnits() public {
-    Level.set(Home.getAsteroid(player), 2);
+    Level.set(Home.get(player), 2);
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Garage)), 1);
     world.build(EBuilding.Garage, getIronPosition2(creator));
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Workshop)), 1);
@@ -203,7 +196,7 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
   }
 
   function testToggleBuildingTrainingUnits() public {
-    Level.set(Home.getAsteroid(player), 2);
+    Level.set(Home.get(player), 2);
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Garage)), 1);
     world.build(EBuilding.Garage, getPosition1(creator));
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Workshop)), 1);
@@ -216,7 +209,7 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
   }
 
   function testToggleBuildingTrainingUnitsComplete() public {
-    Level.set(Home.getAsteroid(player), 2);
+    Level.set(Home.get(player), 2);
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Garage)), 1);
     world.build(EBuilding.Garage, getPosition1(creator));
     console.log("garage built");
@@ -243,6 +236,6 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
 
   function testFailToggleMainBase() public {
     switchPrank(creator);
-    world.toggleBuilding(Position.get(Home.getMainBase(player)));
+    world.toggleBuilding(Position.get(Home.get(player)));
   }
 }

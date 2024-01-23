@@ -1,34 +1,32 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { Position, P_UnitPrototypes, IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
+import { Position, P_UnitPrototypes, IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, P_EnumToPrototype } from "codegen/index.sol";
 
-import { ERock, EUnit } from "src/Types.sol";
+import { EUnit, EResource } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
+import { LibStorage } from "libraries/LibStorage.sol";
+import { LibProduction } from "libraries/LibProduction.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
 import { UnitKey } from "src/Keys.sol";
-import { WORLD_SPEED_SCALE, NUM_UNITS } from "src/constants.sol";
+import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 library LibUnit {
   function getUnitCountOnHomeAsteroid(bytes32 playerEntity, bytes32 unitType) internal view returns (uint256) {
-    return UnitCount.get(Home.getAsteroid(playerEntity), unitType);
+    return UnitCount.get(Home.get(playerEntity), unitType);
   }
 
   /**
    * @dev Checks the requirements for training (producing) a specific unit in a building.
    * @param buildingEntity The identifier of the building where the unit is being trained.
-   * @param unit The type of unit to be trained.
+   * @param unitPrototype The type of unit to be trained.
    * @notice Checks if the unit exists and if the building can produce the specified unit.
    */
-  function checkTrainUnitsRequirements(bytes32 buildingEntity, EUnit unit) internal view {
+  function checkTrainUnitsRequirements(bytes32 buildingEntity, bytes32 unitPrototype) internal view {
     require(IsActive.get(buildingEntity), "[TrainUnitsSystem] Can not train units using an in active building");
 
-    // Ensure the unit is valid (within the defined range of unit types).
-    require(unit > EUnit.NULL && unit < EUnit.LENGTH, "[TrainUnitsSystem] Unit does not exist");
-
     // Determine the prototype of the unit based on its unit key.
-    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
     bytes32 buildingType = BuildingType.get(buildingEntity);
 
     uint256 level = Level.get(buildingEntity);
@@ -95,7 +93,8 @@ library LibUnit {
         stillClaiming = false;
       }
       ProducedUnit.set(playerEntity, item.unitId, ProducedUnit.get(playerEntity, item.unitId) + trainedUnits);
-      increaseUnitCount(Home.getAsteroid(playerEntity), item.unitId, trainedUnits, false);
+
+      increaseUnitCount(Home.get(playerEntity), item.unitId, trainedUnits, false);
     }
   }
 
@@ -169,7 +168,6 @@ library LibUnit {
     uint256 unitCount,
     bool updatesUtility
   ) internal {
-    bytes32 playerEntity = OwnedBy.get(rockEntity);
     if (unitCount == 0) return;
     uint256 prevUnitCount = UnitCount.get(rockEntity, unitType);
     UnitCount.set(rockEntity, unitType, prevUnitCount + unitCount);
@@ -188,10 +186,9 @@ library LibUnit {
     uint256 unitCount,
     bool updatesUtility
   ) internal {
-    bytes32 playerEntity = OwnedBy.get(rockEntity);
     if (unitCount == 0) return;
     uint256 currUnitCount = UnitCount.get(rockEntity, unitType);
-    if (unitCount > currUnitCount) unitCount = currUnitCount;
+    require(currUnitCount >= unitCount, "[LibUnit] Not enough units to decrease");
     UnitCount.set(rockEntity, unitType, currUnitCount - unitCount);
     if (updatesUtility) updateStoredUtilities(rockEntity, unitType, unitCount, false);
   }

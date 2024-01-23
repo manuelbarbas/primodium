@@ -149,58 +149,6 @@ export const ObjectiveDescriptions = new Map<EObjectives, string>([
     "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
   ],
   [
-    EObjectives.MineTitanium1,
-    "Go to the star map and send a mining vessel along with a few defending units to a Titanium motherlode. ",
-  ],
-  [
-    EObjectives.MineTitanium2,
-    "Go to the star map and send a mining vessel along with a few defending units to a Titanium motherlode. ",
-  ],
-  [
-    EObjectives.MineTitanium3,
-    "Go to the star map and send a mining vessel along with a few defending units to a Titanium motherlode. ",
-  ],
-
-  [
-    EObjectives.MinePlatinum1,
-    "Go to the star map and send a mining vessel along with a few defending units to a Platinum motherlode. ",
-  ],
-  [
-    EObjectives.MinePlatinum2,
-    "Go to the star map and send a mining vessel along with a few defending units to a Platinum motherlode. ",
-  ],
-  [
-    EObjectives.MinePlatinum3,
-    "Go to the star map and send a mining vessel along with a few defending units to a Platinum motherlode. ",
-  ],
-
-  [
-    EObjectives.MineIridium1,
-    "Go to the star map and send a mining vessel along with a few defending units to a Iridium motherlode. ",
-  ],
-  [
-    EObjectives.MineIridium2,
-    "Go to the star map and send a mining vessel along with a few defending units to a Iridium motherlode. ",
-  ],
-  [
-    EObjectives.MineIridium3,
-    "Go to the star map and send a mining vessel along with a few defending units to a Iridium motherlode. ",
-  ],
-
-  [
-    EObjectives.MineKimberlite1,
-    "Go to the star map and send a mining vessel along with a few defending units to a Kimberlite motherlode. ",
-  ],
-  [
-    EObjectives.MineKimberlite2,
-    "Go to the star map and send a mining vessel along with a few defending units to a Kimberlite motherlode. ",
-  ],
-  [
-    EObjectives.MineKimberlite3,
-    "Go to the star map and send a mining vessel along with a few defending units to a Kimberlite motherlode. ",
-  ],
-
-  [
     EObjectives.TrainHammerDrone1,
     "Select the drone factory you placed on the map to train hammer drones. Hammer drones are used for attacking.",
   ],
@@ -286,18 +234,6 @@ export const ObjectiveDescriptions = new Map<EObjectives, string>([
     "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
   ],
 
-  [
-    EObjectives.RaidMotherlodeResources1,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-  [
-    EObjectives.RaidMotherlodeResources2,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-  [
-    EObjectives.RaidMotherlodeResources3,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
   [EObjectives.DestroyEnemyUnits1, "Attack and defend against enemy units and destroy your enemies' armies."],
   [EObjectives.DestroyEnemyUnits2, "Attack and defend against enemy units and destroy your enemies' armies."],
   [EObjectives.DestroyEnemyUnits3, "Attack and defend against enemy units and destroy your enemies' armies."],

@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
+import { System } from "@latticexyz/world/src/System.sol";
 
 import { BattleResultData } from "codegen/index.sol";
 import { LibPirate } from "libraries/LibPirate.sol";
 
-contract S_SpawnPirateAsteroidSystem is PrimodiumSystem {
+contract S_SpawnPirateAsteroidSystem is System {
   /**
    * @dev Initiates a battle between two entities using the LibBattle library.
    * @param prototypeEntity The prototype which the pirate is spawned by.

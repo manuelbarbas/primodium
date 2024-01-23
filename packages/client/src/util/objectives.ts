@@ -29,7 +29,7 @@ export function getMainBaseRequirement(objective: Entity): Requirement[] | undef
   const player = comps.Account.get()?.value;
   if (!player) return;
 
-  const mainBase = comps.Home.get(player)?.mainBase;
+  const mainBase = comps.Home.get(comps.Home.get(player)?.value as Entity)?.value;
   const level = comps.Level.get(mainBase as Entity)?.value ?? 1n;
 
   return [
@@ -64,7 +64,7 @@ export function getExpansionRequirement(objective: Entity): Requirement[] | unde
   const requiredExpansion = comps.P_RequiredExpansion.get(objective)?.value;
   if (!requiredExpansion) return;
   const player = comps.Account.get()?.value;
-  const asteroid = comps.Home.get(player as Entity)?.asteroid;
+  const asteroid = comps.SelectedRock.get()?.value;
   if (!player || !asteroid) return;
   const playerExpansion = comps.Level.get(asteroid as Entity, { value: 0n }).value;
 
@@ -141,7 +141,7 @@ export function getRequiredUnitsRequirement(objective: Entity): Requirement[] | 
   const player = comps.Account.get()?.value;
   if (!player) return;
 
-  const homeAsteroid = comps.Home.get(player)?.asteroid;
+  const homeAsteroid = comps.Home.get(player)?.value;
   if (!homeAsteroid) return;
   const units = comps.Hangar.get(homeAsteroid as Entity);
 

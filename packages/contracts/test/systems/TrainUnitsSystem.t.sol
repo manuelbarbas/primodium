@@ -23,8 +23,8 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     P_GameConfigData memory config = P_GameConfig.get();
     config.unitProductionRate = 100;
     P_GameConfig.set(config);
-    RockType.set(rock, uint8(ERock.Asteroid));
-    Home.setAsteroid(player, rock);
+    Asteroid.setIsAsteroid(rock, true);
+    Home.set(player, rock);
     OwnedBy.set(building, rock);
     Spawned.set(player, true);
   }
@@ -81,19 +81,19 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     unitPrototypes[0] = unitPrototype;
     P_UnitProdTypes.set(buildingPrototype, 1, unitPrototypes);
 
-    RockType.set(rock, uint8(ERock.Asteroid));
+    Asteroid.setIsAsteroid(rock, true);
 
     setupClaimUnits();
-    Home.setAsteroid(player, rock);
+    Home.set(player, rock);
     OwnedBy.set(rock, player);
     MaxResourceCount.set(rock, Iron, 1000);
     ProductionRate.set(rock, Iron, 10);
     LastClaimedAt.set(rock, block.timestamp - 10);
 
     world.trainUnits(building, unit, 1);
-    LibUnit.claimUnits(Home.getAsteroid(player));
+    LibUnit.claimUnits(rock);
     assertEq(ResourceCount.get(rock, Iron), 100, "resource count does not match");
-    assertEq(UnitCount.get(Home.getAsteroid(player), unitPrototype), 100, "unit count does not match");
+    assertEq(UnitCount.get(rock, unitPrototype), 100, "unit count does not match");
   }
 
   function testInvalidBuilding() public {

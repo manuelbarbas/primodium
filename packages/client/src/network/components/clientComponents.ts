@@ -35,7 +35,6 @@ export const BlockNumber = createExtendedComponent(
 export const Time = createExtendedBigIntComponent(world, { id: "Time" });
 export const Account = createExtendedEntityComponent(world, { id: "Account" });
 export const SelectedRock = createExtendedEntityComponent(world, { id: "SelectedRock" });
-export const ActiveRock = createExtendedEntityComponent(world, { id: "ActiveAsteroid" });
 
 // Todo: extend this with relevant tx data
 export const CurrentTransaction = createExtendedBoolComponent(world, { id: "CurrentTransaction" });
@@ -153,7 +152,6 @@ export default {
   /* ------------------------------ Chain State ------------------------------- */
   BlockNumber,
   Time,
-  ActiveRock,
   Account,
   CurrentTransaction,
 

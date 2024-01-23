@@ -2,10 +2,10 @@
 pragma solidity ^0.8.21;
 
 // tables
-import { Home, P_IsUtility, P_UnitPrototypes, MaxResourceCount, ResourceCount, UnitCount, PirateAsteroidData, P_SpawnPirateAsteroid, P_SpawnPirateAsteroidData, PirateAsteroid, Spawned, ReversePosition, OwnedBy, Position, PositionData, RockType } from "codegen/index.sol";
+import { Home, P_IsUtility, P_UnitPrototypes, Asteroid, MaxResourceCount, ResourceCount, UnitCount, PirateAsteroidData, P_SpawnPirateAsteroid, P_SpawnPirateAsteroidData, PirateAsteroid, Spawned, ReversePosition, OwnedBy, Position, PositionData } from "codegen/index.sol";
 
 // types
-import { ERock, EResource } from "src/Types.sol";
+import { EResource } from "src/Types.sol";
 import { PirateKey } from "src/Keys.sol";
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -21,7 +21,7 @@ library LibPirate {
     P_SpawnPirateAsteroidData memory spawnPirateAsteroid = P_SpawnPirateAsteroid.get(prototype);
     bytes32 ownerEntity = LibEncode.getHash(PirateKey, playerEntity);
     asteroidEntity = LibEncode.getHash(ownerEntity);
-    PositionData memory playerHomeAsteroidCoord = Position.get(Home.get(playerEntity).asteroid);
+    PositionData memory playerHomeAsteroidCoord = Position.get(Home.get(playerEntity));
     if (Spawned.get(ownerEntity)) {
       PositionData memory lastCoord = Position.get(asteroidEntity);
       ReversePosition.deleteRecord(lastCoord.x, lastCoord.y);
@@ -32,7 +32,7 @@ library LibPirate {
         UnitCount.set(asteroidEntity, units[i], 0);
       }
     } else {
-      Home.setAsteroid(ownerEntity, asteroidEntity);
+      Home.set(ownerEntity, asteroidEntity);
       uint8 resourceCount = uint8(EResource.LENGTH);
       LibProduction.increaseResourceProduction(asteroidEntity, EResource.U_Housing, 100000000);
       for (uint8 i = 1; i < resourceCount; i++) {
@@ -49,7 +49,7 @@ library LibPirate {
 
     PirateAsteroid.set(asteroidEntity, PirateAsteroidData({ prototype: prototype, playerEntity: playerEntity }));
     Position.set(asteroidEntity, coord);
-    RockType.set(asteroidEntity, uint8(ERock.Asteroid));
+    Asteroid.setIsAsteroid(asteroidEntity, true);
     Spawned.set(ownerEntity, true);
     ReversePosition.set(coord.x, coord.y, asteroidEntity);
     OwnedBy.set(asteroidEntity, ownerEntity);

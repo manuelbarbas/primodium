@@ -25,11 +25,11 @@ contract LibBuildingTest is PrimodiumTest {
     P_Asteroid.set(maxX, maxY);
 
     bytes32 playerEntity = addressToEntity(creator);
-    uint256 playerLevel = Level.get(Home.getAsteroid(playerEntity));
+    uint256 playerLevel = Level.get(Home.get(playerEntity));
 
     Dimensions.set(ExpansionKey, playerLevel, currX, currY);
 
-    Bounds memory bounds = LibBuilding.getSpaceRockBounds(Home.getAsteroid(playerEntity));
+    Bounds memory bounds = LibBuilding.getSpaceRockBounds(Home.get(playerEntity));
 
     assertEq(bounds.minX, (int32(maxX) - int32(currX)) / 2);
     assertEq(bounds.maxX, (int32(maxX) + int32(currX)) / 2 - 1);

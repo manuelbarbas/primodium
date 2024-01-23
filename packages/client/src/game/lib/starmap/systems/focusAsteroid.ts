@@ -14,7 +14,7 @@ export const focusAsteroid = (scene: Scene) => {
 
   const handleMove = async () => {
     const playerEntity = components.Account.get()?.value;
-    const activeAsteroid = components.Home.get(playerEntity)?.asteroid as Entity;
+    const activeAsteroid = components.Home.get(playerEntity)?.value as Entity;
 
     if (!activeAsteroid) return;
 

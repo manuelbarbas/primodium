@@ -103,7 +103,7 @@ const Objective: React.FC<{
   const {
     playerAccount: { entity: playerEntity },
   } = useMud();
-  const spaceRock = comps.Home.use(playerEntity)?.asteroid as Entity | undefined;
+  const spaceRock = comps.Home.use(playerEntity)?.value as Entity | undefined;
   const objectiveName = useMemo(() => {
     if (!objective) return;
     return getBlockTypeName(objective);

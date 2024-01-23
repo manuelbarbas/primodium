@@ -12,7 +12,7 @@ import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const upgradeBuilding = async (mud: MUD, coord: Coord) => {
-  const asteroid = components.Home.get(mud.playerAccount.entity)?.asteroid;
+  const asteroid = components.SelectedRock.get()?.value;
   if (!asteroid) return;
 
   const position = { ...coord, parent: asteroid as Hex };

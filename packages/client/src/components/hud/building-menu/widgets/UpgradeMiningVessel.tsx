@@ -20,11 +20,11 @@ export const UpgradeMiningVessel: React.FC = () => {
   const transactionLoading = useGameStore((state) => state.transactionLoading);
   const player = Account.use()?.value ?? singletonEntity;
 
-  const mainBaseEntity = (components.Home.use(player)?.mainBase as Entity) ?? singletonEntity;
+  const homeAsteroid = components.Home.use(player)?.value as Entity;
+  const mainBaseEntity = (components.Home.use(homeAsteroid)?.value as Entity) ?? singletonEntity;
   const mainBaseLevel = components.Level.use(mainBaseEntity, {
     value: 0n,
   }).value;
-  const homeAsteroid = components.Home.use(player)?.asteroid as Entity;
 
   const { level, maxLevel, mainBaseLvlReq, recipe } = getUpgradeInfo(EntityType.MiningVessel, player);
 
