@@ -83,6 +83,7 @@ export enum TransactionQueueType {
   MergeFleets,
   SendFleet,
   FleetStance,
+  TransferFleet,
 }
 
 export enum RockRelationship {
