@@ -9,7 +9,7 @@ import { world } from "../world";
 export function setupBattleNotifications(mud: MUD) {
   const systemWorld = namespaceWorld(world, "systems");
   const playerEntity = mud.playerAccount.entity;
-  const { BattleResult, Arrival, BlockNumber, Position } = components;
+  const { BattleResult, FleetMovement, BlockNumber, Position } = components;
   defineComponentSystem(systemWorld, BattleResult, (update) => {
     const now = components.Time.get()?.value ?? 0n;
 
@@ -54,13 +54,15 @@ export function setupBattleNotifications(mud: MUD) {
   });
 
   const orbitingQueue = new Map<Entity, bigint>();
-  defineComponentSystem(systemWorld, Arrival, (update) => {
+  defineComponentSystem(systemWorld, FleetMovement, (update) => {
+    const selectedRock = components.SelectedRock.get()?.value;
     const now = components.Time.get()?.value ?? 0n;
     const entity = update.entity;
 
     const arrival = update.value[0];
+    if (!arrival) return;
 
-    if (arrival?.from !== playerEntity && arrival?.to !== playerEntity) return;
+    if (arrival.origin !== selectedRock && arrival.destination !== selectedRock) return;
 
     //it has arrived
     if (arrival.sendTime + 30n < now) return;
@@ -73,11 +75,11 @@ export function setupBattleNotifications(mud: MUD) {
     const now = components.Time.get()?.value ?? 0n;
 
     orbitingQueue.forEach((arrivalTime, entityId) => {
-      const arrival = Arrival.getWithId(entityId);
+      const arrival = FleetMovement.get(entityId);
 
       if (!arrival) return;
 
-      const destination = Position.get(arrival.destination);
+      const destination = Position.get(arrival.destination as Entity);
       if (now > arrivalTime) {
         toast.info(`Your fleet has arrived at [${destination?.x ?? 0}, ${destination?.y ?? 0}].`);
 

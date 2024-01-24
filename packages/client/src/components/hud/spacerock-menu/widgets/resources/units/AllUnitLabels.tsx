@@ -13,7 +13,7 @@ import { DefenseLabel } from "../utilities/DefenseLabel";
 import { UnitLabel } from "./UnitLabel";
 
 export const AllUnitLabels = () => {
-  const { playerEntity } = useMud().network;
+  const playerEntity = useMud().playerAccount.entity;
   const selectedAsteroid = components.SelectedRock.use()?.value as Entity | undefined;
   const owner = components.OwnedBy.use(selectedAsteroid)?.value as Entity | undefined;
   const units = components.Hangar.use(selectedAsteroid ?? singletonEntity);

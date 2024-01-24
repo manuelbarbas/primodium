@@ -1,54 +1,37 @@
+import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { ESendType } from "contracts/config/enums";
 import { useMemo, useState } from "react";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
-import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { Fleet } from "../modals/fleets/Fleet";
+import { Fleet } from "../../modals/fleets/Fleet";
 
-export const ReinforcementFleets: React.FC = () => {
-  const {
-    playerAccount: { entity: playerEntity },
-  } = useMud();
-
+export const FriendlyFleets: React.FC = () => {
   // State for sorting
   const [typeSort, setTypeSort] = useState<ESendType | null>(null);
   const [timeSort, setTimeSort] = useState<"asc" | "desc" | null>(null);
+  const selectedRock = components.SelectedRock.use()?.value ?? singletonEntity;
 
   // ... existing code for fetching fleets
-  const reinforcementFleets = components.Arrival.useAllWith({
-    to: playerEntity,
-    sendType: ESendType.Reinforce,
-  });
-
-  const raidFleets = components.Arrival.useAllWith({
-    from: playerEntity,
-    sendType: ESendType.Raid,
-  });
-  const invadeFleets = components.Arrival.useAllWith({
-    from: playerEntity,
-    sendType: ESendType.Invade,
+  const friendlyFleets = components.FleetMovement.useAllWith({
+    origin: selectedRock,
   });
   // Combine and sort fleets
   const sortedFleets = useMemo(() => {
-    let sorted = [...reinforcementFleets, ...raidFleets, ...invadeFleets];
-
-    // Sort by type
-    if (typeSort) {
-      sorted = sorted.filter((fleet) => components.Arrival.getEntity(fleet)?.sendType === typeSort);
-    }
-
+    const sortedFleets = [...friendlyFleets];
     // Sort by time
+
     if (timeSort) {
-      sorted.sort((a, b) => {
-        const timeA = components.Arrival.getEntity(a)?.arrivalTime ?? 0n;
-        const timeB = components.Arrival.getEntity(b)?.arrivalTime ?? 0n;
+      sortedFleets.sort((a, b) => {
+        const timeA = components.FleetMovement.get(a)?.arrivalTime ?? 0n;
+        const timeB = components.FleetMovement.get(b)?.arrivalTime ?? 0n;
         return Number(timeSort === "asc" ? timeA - timeB : timeB - timeA);
       });
     }
 
-    return sorted;
-  }, [reinforcementFleets, raidFleets, invadeFleets, typeSort, timeSort]);
+    return sortedFleets;
+  }, [friendlyFleets, timeSort]);
 
   return (
     <div className="w-full text-xs h-full overflow-y-auto flex flex-col gap-2">
@@ -99,17 +82,17 @@ export const ReinforcementFleets: React.FC = () => {
       ) : (
         <>
           {sortedFleets.map((entity) => {
-            const fleet = components.Arrival.getEntity(entity);
+            const fleet = components.FleetMovement.get(entity);
 
             if (!fleet) return null;
 
             return (
               <Fleet
                 key={entity}
-                arrivalEntity={entity}
+                fleetEntity={entity}
                 arrivalTime={fleet.arrivalTime}
-                destination={fleet.destination}
-                sendType={fleet.sendType}
+                destination={fleet.destination as Entity}
+                origin={fleet.origin as Entity}
               />
             );
           })}

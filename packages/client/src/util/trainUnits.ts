@@ -3,11 +3,11 @@ import { components as comps } from "src/network/components";
 import { Hex } from "viem";
 import { RESOURCE_SCALE, SPEED_SCALE } from "./constants";
 
-export function getUnitStats(rawUnitEntity: Entity, playerEntity: Entity) {
+export function getUnitStats(rawUnitEntity: Entity, spaceRockEntity: Entity) {
   const unitEntity = rawUnitEntity as Hex;
 
   const unitLevel = comps.UnitLevel.getWithKeys(
-    { entity: playerEntity as Hex, unit: unitEntity },
+    { entity: spaceRockEntity as Hex, unit: unitEntity },
     { value: 0n }
   )?.value;
   const unitLevelKeys = { entity: unitEntity, level: unitLevel };
@@ -18,6 +18,8 @@ export function getUnitStats(rawUnitEntity: Entity, playerEntity: Entity) {
     speed: 0n,
     cargo: 0n,
     trainingTime: 0n,
+    hp: 0n,
+    decryption: 0n,
   });
   const mining = comps.P_MiningRate.getWithKeys(unitLevelKeys, { value: 0n }).value;
   return {
