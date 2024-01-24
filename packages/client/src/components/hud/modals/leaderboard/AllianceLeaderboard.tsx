@@ -1,7 +1,7 @@
 import { ComponentValue, Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EAllianceInviteMode, EAllianceRole } from "contracts/config/enums";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FaArrowDown,
   FaArrowLeft,
@@ -42,6 +42,7 @@ import {
   rejectJoinRequest,
   requestToJoin,
 } from "src/network/setup/contractCalls/alliance";
+import { hydrateAllianceData } from "src/network/sync/indexer";
 import { getAllianceName } from "src/util/alliance";
 import { entityToColor } from "src/util/color";
 import { entityToAddress } from "src/util/common";
@@ -155,6 +156,11 @@ export const ManageScreen: React.FC = () => {
     alliance: allianceEntity,
   });
   const maxAllianceMembers = components.P_AllianceConfig.get()?.maxAllianceMembers ?? 1n;
+
+  useEffect(() => {
+    console.log("here");
+    hydrateAllianceData(allianceEntity, mud);
+  }, [allianceEntity, mud]);
 
   if (!data) return <></>;
 

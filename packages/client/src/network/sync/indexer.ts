@@ -411,3 +411,93 @@ export const hydrateActiveAsteroid = (activeRock: Entity | undefined, mud: MUD) 
     syncData.unsubscribe();
   });
 };
+
+export const hydrateAllianceData = (allianceEntity: Entity | undefined, mud: MUD) => {
+  const { network, components } = mud;
+  const { tables, world } = network;
+  const networkConfig = getNetworkConfig();
+
+  // if we're already syncing from RPC, don't hydrate from indexer
+  if (components.SyncSource.get()?.value === SyncSourceType.RPC) return;
+
+  if (components.SyncStatus.get(allianceEntity)) {
+    console.log("Skipping sync for alliance (exists):", allianceEntity);
+    return;
+  }
+
+  const syncData = Sync.withQueryDecodedIndexerRecsSync({
+    indexerUrl: networkConfig.indexerUrl!,
+    tables: tables,
+    world,
+    query: {
+      address: networkConfig.worldAddress as Hex,
+      queries: [
+        {
+          //todo switch query decoded with table id
+          tableName: tables.AllianceJoinRequest.name!.slice(0, 16),
+          where: {
+            column: "alliance",
+            operation: "eq",
+            value: allianceEntity as Hex,
+          },
+        },
+        {
+          tableName: tables.PlayerAlliance.name!,
+          where: {
+            column: "alliance",
+            operation: "eq",
+            value: allianceEntity as Hex,
+          },
+        },
+        {
+          tableName: tables.AllianceInvitation.name!.slice(0, 16),
+          where: {
+            column: "alliance",
+            operation: "eq",
+            value: allianceEntity as Hex,
+          },
+        },
+      ],
+    },
+  });
+
+  syncData.start(
+    (_, __, progress) => {
+      components.SyncStatus.set(
+        {
+          step: SyncStep.Syncing,
+          progress,
+          message: `Hydrating Alliance Data`,
+        },
+        allianceEntity
+      );
+
+      if (progress === 1) {
+        components.SyncStatus.set(
+          {
+            step: SyncStep.Complete,
+            progress,
+            message: `DONE`,
+          },
+          allianceEntity
+        );
+      }
+    },
+    //on error
+    (e) => {
+      console.log(e);
+      components.SyncStatus.set(
+        {
+          step: SyncStep.Error,
+          progress: 0,
+          message: `Failed to Hydrate Alliance data`,
+        },
+        allianceEntity
+      );
+    }
+  );
+
+  world.registerDisposer(() => {
+    syncData.unsubscribe();
+  });
+};

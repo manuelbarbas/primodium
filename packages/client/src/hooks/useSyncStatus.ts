@@ -28,5 +28,11 @@ export const useSyncStatus = (syncId?: Entity) => {
     }
   }, [syncSource, syncStatus]);
 
-  return { loading, error, progress: syncProgress ?? 0, message: syncMessage };
+  return {
+    loading,
+    error,
+    progress: syncProgress ?? 0,
+    message: syncMessage,
+    exists: syncStatus !== undefined,
+  };
 };
