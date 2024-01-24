@@ -2,6 +2,7 @@ import { getNetworkConfig } from "../config/getNetworkConfig";
 import { SetupResult } from "../types";
 import { hydrateFromRPC, subToRPC } from "../sync/rpc";
 import { hydrateInitialGameState } from "../sync/indexer";
+import { SyncSourceType, SyncStep } from "src/util/constants";
 
 export const setupInitialSync = async (setupResult: SetupResult) => {
   const { network, components } = setupResult;
@@ -20,16 +21,24 @@ export const setupInitialSync = async (setupResult: SetupResult) => {
       //on complete
       () => {
         components.SyncStatus.set({
-          live: true,
+          step: SyncStep.Complete,
           progress: 1,
           message: `DONE`,
         });
+
+        components.SyncSource.set({ value: SyncSourceType.RPC });
 
         //finally sync live
         subToRPC(setupResult);
       },
       //on error
       (err: unknown) => {
+        components.SyncStatus.set({
+          step: SyncStep.Error,
+          progress: 0,
+          message: `Failed to hydrate from RPC`,
+        });
+
         console.warn("Failed to hydrate from RPC");
         console.log(err);
       }
@@ -43,11 +52,7 @@ export const setupInitialSync = async (setupResult: SetupResult) => {
     setupResult,
     //on complete
     () => {
-      components.SyncStatus.set({
-        live: true,
-        progress: 1,
-        message: `DONE`,
-      });
+      components.SyncSource.set({ value: SyncSourceType.Indexer });
 
       //finally sync live
       subToRPC(setupResult);
@@ -56,17 +61,30 @@ export const setupInitialSync = async (setupResult: SetupResult) => {
     async (err) => {
       console.warn("Failed to fetch from indexer, hydrating from RPC");
       console.error(err);
-      const toBlock = await publicClient.getBlockNumber();
-      hydrateFromRPC(setupResult, fromBlock, toBlock, () => {
-        components.SyncStatus.set({
-          live: true,
-          progress: 1,
-          message: `DONE`,
-        });
 
-        //finally sync live
-        subToRPC(setupResult);
-      });
+      const toBlock = await publicClient.getBlockNumber();
+      hydrateFromRPC(
+        setupResult,
+        fromBlock,
+        toBlock,
+        //on complete
+        () => {
+          components.SyncSource.set({ value: SyncSourceType.RPC });
+
+          //finally sync live
+          subToRPC(setupResult);
+        },
+        //on error
+        (err: unknown) => {
+          components.SyncStatus.set({
+            step: SyncStep.Error,
+            progress: 0,
+            message: `Failed to hydrate from RPC. Please try again.`,
+          });
+          console.warn("Failed to hydrate from RPC");
+          console.log(err);
+        }
+      );
     }
   );
 };

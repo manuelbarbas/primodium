@@ -14,6 +14,17 @@ export const encodeEntityLevel = (entity: string, level: number) => {
   return encodeEntity({ entity: "bytes32", level: "uint256" }, { entity: toHex32(entity), level: BigInt(level) });
 };
 
+export enum SyncSourceType {
+  Indexer,
+  RPC,
+}
+
+export enum SyncStep {
+  Syncing,
+  Error,
+  Complete,
+}
+
 export enum Action {
   DemolishBuilding,
   SelectBuilding,
@@ -30,6 +41,12 @@ export const UNIT_SPEED_SCALE = BigInt(100);
 export const PIRATE_KEY = toHex32("pirate");
 export const NUM_UNITS = Object.keys(EUnit).length / 2;
 export const STORAGE_PREFIX = "primodiumSessionKey:";
+
+export const Keys = {
+  PIRATE: toHex32("pirate") as Entity,
+  SELECTED: toHex32("selected") as Entity,
+  ACTIVE: toHex32("active") as Entity,
+};
 
 export enum ResourceType {
   Resource,

@@ -1,13 +1,11 @@
-import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { formatNumber } from "src/util/number";
 import { Card } from "../core/Card";
 
 export const Score = () => {
-  const address = useMud().network.address;
   const data = components.Leaderboard.use();
 
-  if (!data || !address) return null;
+  if (!data) return null;
 
   return (
     <Card className="flex gap-1 text-sm flex-grow items-center justify-between w-fit rounded-t-none">

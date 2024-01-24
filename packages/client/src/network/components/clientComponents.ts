@@ -35,6 +35,7 @@ export const BlockNumber = createExtendedComponent(
 export const Time = createExtendedBigIntComponent(world, { id: "Time" });
 export const Account = createExtendedEntityComponent(world, { id: "Account" });
 export const SelectedRock = createExtendedEntityComponent(world, { id: "SelectedRock" });
+export const ActiveRock = createExtendedEntityComponent(world, { id: "ActiveRock" });
 
 // Todo: extend this with relevant tx data
 export const CurrentTransaction = createExtendedBoolComponent(world, { id: "CurrentTransaction" });
@@ -151,7 +152,7 @@ export const TransactionQueue = createTransactionQueueComponent({
 export const SyncStatus = createExtendedComponent(
   world,
   {
-    live: Type.Boolean,
+    step: Type.Number,
     message: Type.String,
     progress: Type.Number,
   },
@@ -159,6 +160,10 @@ export const SyncStatus = createExtendedComponent(
     id: "SyncStatus",
   }
 );
+
+export const SyncSource = createExtendedNumberComponent(world, {
+  id: "SyncSource",
+});
 
 export default {
   /* ----------------------------------- Dev ---------------------------------- */
@@ -177,6 +182,7 @@ export default {
   SelectedBuilding,
   SelectedAction,
   SelectedRock,
+  ActiveRock,
   MapOpen,
 
   /* ---------------------------------- Units --------------------------------- */
@@ -197,4 +203,5 @@ export default {
   TransactionQueue,
   /* ---------------------------------- Sync ---------------------------------- */
   SyncStatus,
+  SyncSource,
 };

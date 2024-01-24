@@ -1,10 +1,12 @@
 import { AudioKeys, KeybindActions, Scenes } from "@game/constants";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect } from "react";
 import { FaCaretUp } from "react-icons/fa";
+
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
-import { Button } from "../core/Button";
-import { Join } from "../core/Join";
+import { Button } from "src/components/core/Button";
+import { Join } from "src/components/core/Join";
 
 export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating }) => {
   const mapOpen = components.MapOpen.use(undefined, {
@@ -38,7 +40,7 @@ export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating
       }
     );
     components.MapOpen.set({ value: false });
-    // components.SelectedRock.set({ value: homeAsteroid ?? singletonEntity });
+    components.SelectedRock.set({ value: components.ActiveRock.get()?.value ?? singletonEntity });
   };
 
   const openMap = async () => {

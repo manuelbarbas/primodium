@@ -8,12 +8,7 @@ import { RESERVE_CURRENCY } from "src/constants.sol";
 import { EResource } from "src/Types.sol";
 
 library LibMarketplace {
-  function swap(
-    bytes32 to,
-    EResource[] memory path,
-    uint256 amountIn,
-    uint256 amountOutMin
-  ) internal {
+  function swap(bytes32 to, EResource[] memory path, uint256 amountIn, uint256 amountOutMin) internal {
     require(amountIn > 0, "[Marketplace] Invalid amount");
     require(path.length > 1, "[Marketplace] Invalid path");
 
@@ -30,11 +25,7 @@ library LibMarketplace {
     LibStorage.increaseStoredResource(to, uint8(path[path.length - 1]), amountReceived);
   }
 
-  function _swap(
-    uint8 resourceIn,
-    uint8 resourceOut,
-    uint256 amountIn
-  ) internal returns (uint256 amountOut) {
+  function _swap(uint8 resourceIn, uint8 resourceOut, uint256 amountIn) internal returns (uint256 amountOut) {
     require(resourceIn != resourceOut, "[Marketplace] Cannot swap for same resource");
     // resourceA is always the smaller index to ensure we don't have two curves for the same pair
     (uint8 resourceA, uint8 resourceB) = resourceIn < resourceOut

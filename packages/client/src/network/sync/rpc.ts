@@ -2,6 +2,7 @@ import { Sync } from "@primodiumxyz/sync-stack";
 import { SetupResult } from "../types";
 import { getNetworkConfig } from "../config/getNetworkConfig";
 import { Hex } from "viem";
+import { SyncStep } from "src/util/constants";
 
 export const subToRPC = (setupResult: SetupResult) => {
   const { network } = setupResult;
@@ -44,12 +45,18 @@ export const hydrateFromRPC = (
 
   sync.start((_, __, progress) => {
     components.SyncStatus.set({
-      live: false,
+      step: SyncStep.Syncing,
       progress,
       message: `Hydrating from RPC`,
     });
 
     if (progress === 1) {
+      components.SyncStatus.set({
+        step: SyncStep.Complete,
+        progress: 1,
+        message: `DONE`,
+      });
+
       onComplete?.();
     }
   }, onError);
