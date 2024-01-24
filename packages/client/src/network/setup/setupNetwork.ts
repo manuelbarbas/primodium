@@ -5,7 +5,6 @@ import { getNetworkConfig } from "../config/getNetworkConfig";
 import { createClock } from "../createClock";
 import { world } from "../world";
 import { setupRecs } from "./setupRecs";
-import { otherTables } from "../otherTables";
 
 export async function setupNetwork() {
   const networkConfig = getNetworkConfig();
@@ -22,7 +21,6 @@ export async function setupNetwork() {
     world,
     publicClient,
     address: networkConfig.worldAddress as Hex,
-    otherTables: otherTables,
   });
 
   const clock = createClock(latestBlock$, {

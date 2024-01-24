@@ -104,7 +104,7 @@ const useSetupResult = () => {
         clearInterval(playerAccountInterval.current);
       }
       requestDrip(account.address);
-      if (network) hydratePlayerData(account.entity, network);
+      if (network) hydratePlayerData(account.entity, account.address, network);
       playerAccountInterval.current = setInterval(() => requestDrip(account.address), 4000);
     });
   }

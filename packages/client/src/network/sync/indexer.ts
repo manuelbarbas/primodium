@@ -1,7 +1,7 @@
 import { Sync } from "@primodiumxyz/sync-stack";
 import { MUD, SetupResult } from "../types";
 import { getNetworkConfig } from "../config/getNetworkConfig";
-import { Hex, padHex } from "viem";
+import { Hex, pad } from "viem";
 import { hydrateFromRPC } from "./rpc";
 import { Entity } from "@latticexyz/recs";
 import { hashEntities } from "src/util/encode";
@@ -47,7 +47,7 @@ export const hydrateInitialGameState = (
           where: {
             column: "parent",
             operation: "eq",
-            value: padHex(`0x`, { size: 32 }),
+            value: pad(`0x`, { size: 32 }),
           },
           include: [
             {
@@ -89,7 +89,7 @@ export const hydrateInitialGameState = (
   world.registerDisposer(sync.unsubscribe);
 };
 
-export const hydratePlayerData = (playerEntity: Entity, setupResult: SetupResult) => {
+export const hydratePlayerData = (playerEntity: Entity, playerAddress: Hex, setupResult: SetupResult) => {
   const { network, components } = setupResult;
   const { tables, world } = network;
   const networkConfig = getNetworkConfig();
@@ -110,6 +110,10 @@ export const hydratePlayerData = (playerEntity: Entity, setupResult: SetupResult
     filter: {
       address: networkConfig.worldAddress as Hex,
       filters: [
+        {
+          tableId: tables.UserDelegationControl.tableId,
+          key0: pad(playerAddress, { size: 32 }),
+        },
         {
           tableId: tables.Spawned.tableId,
           key0: playerEntity,

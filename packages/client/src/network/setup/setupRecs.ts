@@ -6,6 +6,8 @@ import { Observable, concatMap, filter, firstValueFrom, identity, map, scan, sha
 import { Hex, PublicClient, TransactionReceiptNotFoundError } from "viem";
 import { Read } from "@primodiumxyz/sync-stack";
 import { StorageAdapterBlock } from "@latticexyz/store-sync";
+import storeConfig from "@latticexyz/store/mud.config";
+import worldConfig from "@latticexyz/world/mud.config";
 import { isDefined } from "@latticexyz/common/utils";
 
 export const setupRecs = <config extends StoreConfig, extraTables extends Record<string, Table>>(args: {
@@ -13,12 +15,13 @@ export const setupRecs = <config extends StoreConfig, extraTables extends Record
   world: RecsWorld;
   publicClient: PublicClient;
   address: Hex;
-  otherTables: extraTables;
+  otherTables?: extraTables;
 }) => {
   const { mudConfig, publicClient, world, address, otherTables } = args;
+
   const tables = {
     ...resolveConfig(mudConfig).tables,
-    ...otherTables,
+    ...(otherTables ?? {}),
   } as ResolvedStoreConfig<config>["tables"] & extraTables;
 
   const { components } = recsStorage({
@@ -93,5 +96,16 @@ export const setupRecs = <config extends StoreConfig, extraTables extends Record
     await firstValueFrom(hasTransaction$.pipe(filter(identity)));
   }
 
-  return { components, latestBlock$, latestBlockNumber$, tables, storedBlockLogs$, waitForTransaction };
+  //include internal mud tables for recs sync
+  const storeTables = resolveConfig(storeConfig).tables;
+  const worldTables = resolveConfig(worldConfig).tables;
+
+  return {
+    components,
+    latestBlock$,
+    latestBlockNumber$,
+    tables: { ...tables, ...storeTables, ...worldTables },
+    storedBlockLogs$,
+    waitForTransaction,
+  };
 };
