@@ -41,6 +41,7 @@ export const hydrateInitialGameState = (
         { tableName: tables.MapItemArrivals.name! },
         { tableName: tables.Score.name! },
         { tableName: tables.Alliance.name! },
+        { tableName: tables.Reserves.name! },
         //get asteroids
         {
           tableName: tables.Position.name!,
