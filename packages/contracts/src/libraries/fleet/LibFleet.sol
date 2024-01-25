@@ -55,22 +55,17 @@ library LibFleet {
     for (uint8 i = 0; i < transportables.length; i++) {
       uint8 resource = transportables[i];
       if (resourceCounts[i] == 0) continue;
-      uint256 rockResourceCount = ResourceCount.get(spaceRock, resource);
+      uint256 rockResourceCount = ResourceCount.get(spaceRock, transportables[i]);
       require(rockResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
-      LibStorage.decreaseStoredResource(spaceRock, resource, resourceCounts[i]);
-      increaseFleetResource(fleetId, resource, resourceCounts[i]);
+      LibStorage.decreaseStoredResource(spaceRock, transportables[i], resourceCounts[i]);
+      increaseFleetResource(fleetId, transportables[i], resourceCounts[i]);
     }
 
     FleetsMap.add(spaceRock, FleetOwnedByKey, fleetId);
     FleetsMap.add(spaceRock, FleetIncomingKey, fleetId);
   }
 
-  function increaseFleetUnit(
-    bytes32 fleetId,
-    bytes32 unitPrototype,
-    uint256 unitCount,
-    bool updatesUtility
-  ) internal {
+  function increaseFleetUnit(bytes32 fleetId, bytes32 unitPrototype, uint256 unitCount, bool updatesUtility) internal {
     if (unitCount == 0) return;
     bytes32 ownerSpaceRockEntity = OwnedBy.get(fleetId);
     uint256 unitLevel = UnitLevel.get(ownerSpaceRockEntity, unitPrototype);
@@ -85,12 +80,7 @@ library LibFleet {
     UnitCount.set(fleetId, unitPrototype, UnitCount.get(fleetId, unitPrototype) + unitCount);
   }
 
-  function decreaseFleetUnit(
-    bytes32 fleetId,
-    bytes32 unitPrototype,
-    uint256 unitCount,
-    bool updatesUtility
-  ) internal {
+  function decreaseFleetUnit(bytes32 fleetId, bytes32 unitPrototype, uint256 unitCount, bool updatesUtility) internal {
     if (unitCount == 0) return;
 
     uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototype);
@@ -105,34 +95,22 @@ library LibFleet {
     UnitCount.set(fleetId, unitPrototype, fleetUnitCount - unitCount);
   }
 
-  function increaseFleetResource(
-    bytes32 fleetId,
-    uint8 resource,
-    uint256 amount
-  ) internal {
+  function increaseFleetResource(bytes32 fleetId, uint8 resource, uint256 amount) internal {
     if (amount == 0) return;
     uint256 freeCargoSpace = LibFleetAttributes.getFreeCargoSpace(fleetId);
     require(freeCargoSpace >= amount, "[Fleet] Not enough storage to add resource");
     ResourceCount.set(fleetId, resource, ResourceCount.get(fleetId, resource) + amount);
   }
 
-  function decreaseFleetResource(
-    bytes32 fleetId,
-    uint8 resource,
-    uint256 amount
-  ) internal {
+  function decreaseFleetResource(bytes32 fleetId, uint8 resource, uint256 amount) internal {
     if (amount == 0) return;
     uint256 currResourceCount = ResourceCount.get(fleetId, resource);
     require(currResourceCount >= amount, "[Fleet] Not enough stored resource to remove");
     ResourceCount.set(fleetId, resource, currResourceCount - amount);
   }
 
-  function landFleet(
-    bytes32 playerEntity,
-    bytes32 fleetId,
-    bytes32 spaceRock
-  ) internal {
-    bytes32 spaceRockOwner = OwnedBy.get(spaceRock);
+  function landFleet(bytes32 playerEntity, bytes32 fleetId, bytes32 spaceRock) internal {
+    bytes32 spaceRockOwner = OwnedBy.get(fleetId);
 
     bool isOwner = spaceRockOwner == spaceRock;
 
@@ -152,17 +130,7 @@ library LibFleet {
       LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], fleetUnitCount, !isOwner);
     }
     if (!isOwner) {
-      FleetMovement.set(
-        fleetId,
-        FleetMovementData({
-          arrivalTime: block.timestamp,
-          sendTime: block.timestamp,
-          origin: spaceRockOwner,
-          destination: spaceRockOwner
-        })
-      );
-      FleetsMap.remove(spaceRock, FleetIncomingKey, fleetId);
-      FleetsMap.add(spaceRockOwner, FleetIncomingKey, fleetId);
+      resetFleetOrbit(fleetId);
     }
   }
 
@@ -206,6 +174,14 @@ library LibFleet {
     }
   }
 
+  function resetFleetIfNoUnitsLeft(bytes32 fleetId) internal {
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    for (uint8 i = 0; i < unitPrototypes.length; i++) {
+      if (UnitCount.get(fleetId, unitPrototypes[i]) > 0) return;
+    }
+    resetFleetOrbit(fleetId);
+  }
+
   function resetFleetOrbit(bytes32 fleetId) internal {
     //clears any stance
     LibFleetStance.clearFleetStance(fleetId);
@@ -217,7 +193,7 @@ library LibFleet {
     FleetsMap.remove(spaceRock, FleetIncomingKey, fleetId);
 
     //set fleet to orbit of owner space rock
-    bytes32 spaceRockOwner = OwnedBy.get(spaceRock);
+    bytes32 spaceRockOwner = OwnedBy.get(fleetId);
     FleetsMap.add(spaceRockOwner, FleetIncomingKey, fleetId);
 
     FleetMovement.set(

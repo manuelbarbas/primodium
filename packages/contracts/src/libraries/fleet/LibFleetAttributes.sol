@@ -21,15 +21,9 @@ library LibFleetAttributes {
     }
   }
 
-  function getAttacksWithFollowers(bytes32 fleetId)
-    internal
-    view
-    returns (
-      uint256 attack,
-      uint256[] memory attacks,
-      uint256 totalAttack
-    )
-  {
+  function getAttacksWithFollowers(
+    bytes32 fleetId
+  ) internal view returns (uint256 attack, uint256[] memory attacks, uint256 totalAttack) {
     bytes32[] memory followerFleetIds = LibFleetStance.getFollowerFleets(fleetId);
 
     attacks = new uint256[](followerFleetIds.length);
@@ -50,15 +44,9 @@ library LibFleetAttributes {
     }
   }
 
-  function getDefensesWithFollowers(bytes32 fleetId)
-    internal
-    view
-    returns (
-      uint256 defense,
-      uint256[] memory defenses,
-      uint256 totalDefense
-    )
-  {
+  function getDefensesWithFollowers(
+    bytes32 fleetId
+  ) internal view returns (uint256 defense, uint256[] memory defenses, uint256 totalDefense) {
     bytes32[] memory followerFleetIds = LibFleetStance.getFollowerFleets(fleetId);
 
     defenses = new uint256[](followerFleetIds.length);
@@ -72,15 +60,9 @@ library LibFleetAttributes {
     }
   }
 
-  function getHpWithFollowers(bytes32 fleetId)
-    internal
-    view
-    returns (
-      uint256 hp,
-      uint256[] memory hps,
-      uint256 totalHp
-    )
-  {
+  function getHpWithFollowers(
+    bytes32 fleetId
+  ) internal view returns (uint256 hp, uint256[] memory hps, uint256 totalHp) {
     hp = getHp(fleetId);
     bytes32[] memory followerFleetIds = LibFleetStance.getFollowerFleets(fleetId);
     hps = new uint256[](followerFleetIds.length);
@@ -116,15 +98,9 @@ library LibFleetAttributes {
     }
   }
 
-  function getFreeCargoSpaceWithFollowers(bytes32 fleetId)
-    internal
-    view
-    returns (
-      uint256 freeCargoSpace,
-      uint256[] memory freeCargoSpaces,
-      uint256 totalFreeCargoSpace
-    )
-  {
+  function getFreeCargoSpaceWithFollowers(
+    bytes32 fleetId
+  ) internal view returns (uint256 freeCargoSpace, uint256[] memory freeCargoSpaces, uint256 totalFreeCargoSpace) {
     bytes32[] memory followerFleetIds = LibFleetStance.getFollowerFleets(fleetId);
     freeCargoSpaces = new uint256[](followerFleetIds.length);
     freeCargoSpace = getFreeCargoSpace(fleetId);
@@ -135,11 +111,9 @@ library LibFleetAttributes {
     }
   }
 
-  function getResourceCountsWithFollowers(bytes32 fleetId)
-    internal
-    view
-    returns (uint256[] memory resourceCounts, uint256 totalResources)
-  {
+  function getResourceCountsWithFollowers(
+    bytes32 fleetId
+  ) internal view returns (uint256[] memory resourceCounts, uint256 totalResources) {
     bytes32[] memory followerFleetIds = LibFleetStance.getFollowerFleets(fleetId);
     uint8[] memory transportables = P_Transportables.get();
     resourceCounts = new uint256[](transportables.length);
@@ -215,6 +189,7 @@ library LibFleetAttributes {
   function getCargo(bytes32 fleetId) internal view returns (uint256 cargo) {
     bytes32 ownerSpaceRock = OwnedBy.get(fleetId);
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    cargo = 0;
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       uint256 unitCount = UnitCount.get(fleetId, unitPrototypes[i]);
       if (unitCount == 0) continue;

@@ -17,7 +17,7 @@ contract FleetCombatSystem is FleetBaseSystem {
 
   modifier _onlyWhenNotInStance(bytes32 fleetId) {
     require(
-      FleetStance.getStance(fleetId) == uint8(EFleetStance.None),
+      FleetStance.getStance(fleetId) == uint8(EFleetStance.NULL),
       "[Fleet] Can not attack while fleet is in stance"
     );
     _;
@@ -39,7 +39,10 @@ contract FleetCombatSystem is FleetBaseSystem {
     }
   }
 
-  function fleetAttackFleet(bytes32 fleetId, bytes32 targetFleet)
+  function fleetAttackFleet(
+    bytes32 fleetId,
+    bytes32 targetFleet
+  )
     private
     _onlyWhenNotInGracePeriod(targetFleet)
     _onlyFleetOwner(fleetId)
@@ -51,7 +54,10 @@ contract FleetCombatSystem is FleetBaseSystem {
     afterBattle(battleId, batteResult);
   }
 
-  function fleetAttackSpaceRock(bytes32 fleetId, bytes32 targetSpaceRock)
+  function fleetAttackSpaceRock(
+    bytes32 fleetId,
+    bytes32 targetSpaceRock
+  )
     private
     _onlyFleetOwner(fleetId)
     _onlyWhenNotInStance(fleetId)
@@ -64,7 +70,10 @@ contract FleetCombatSystem is FleetBaseSystem {
     afterBattle(battleId, batteResult);
   }
 
-  function spaceRockAttackFleet(bytes32 spaceRock, bytes32 targetFleet)
+  function spaceRockAttackFleet(
+    bytes32 spaceRock,
+    bytes32 targetFleet
+  )
     private
     _onlyWhenNotInGracePeriod(targetFleet)
     _onlySpaceRockOwner(spaceRock)

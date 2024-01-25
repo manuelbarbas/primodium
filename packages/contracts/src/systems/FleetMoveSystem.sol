@@ -6,14 +6,13 @@ import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
 
 contract FleetMoveSystem is FleetBaseSystem {
   function recallFleet(bytes32 fleetId) public _onlyFleetOwner(fleetId) {
-    LibFleetMove.recallFleet(_player(), fleetId);
+    LibFleetMove.recallFleet(fleetId);
   }
 
-  function sendFleet(bytes32 fleetId, bytes32 spaceRock)
-    public
-    _onlyFleetOwner(fleetId)
-    _onlyWhenFleetIsInOrbit(fleetId)
-  {
-    LibFleetMove.sendFleet(_player(), fleetId, spaceRock);
+  function sendFleet(
+    bytes32 fleetId,
+    bytes32 spaceRock
+  ) public _onlyFleetOwner(fleetId) _onlyWhenFleetIsInOrbit(fleetId) {
+    LibFleetMove.sendFleet(fleetId, spaceRock);
   }
 }

@@ -22,25 +22,17 @@ import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { EResource, EFleetStance } from "src/Types.sol";
 
 library LibFleetCombat {
-  function getDefensesWithAllies(bytes32 entity)
-    internal
-    view
-    returns (
-      uint256,
-      uint256[] memory,
-      uint256
-    )
-  {
+  function getDefensesWithAllies(bytes32 entity) internal view returns (uint256, uint256[] memory, uint256) {
     return
       IsFleet.get(entity)
         ? LibFleetAttributes.getDefensesWithFollowers(entity)
         : LibSpaceRockAttributes.getDefensesWithDefenders(entity);
   }
 
-  function attack(bytes32 entity, bytes32 targetEntity)
-    internal
-    returns (bytes32 battleId, NewBattleResultData memory battleResult)
-  {
+  function attack(
+    bytes32 entity,
+    bytes32 targetEntity
+  ) internal returns (bytes32 battleId, NewBattleResultData memory battleResult) {
     bool aggressorIsFleet = IsFleet.get(entity);
 
     bytes32 spaceRock = aggressorIsFleet ? FleetMovement.getDestination(entity) : entity;
@@ -104,7 +96,7 @@ library LibFleetCombat {
   function transferSpaceRockOwnership(bytes32 spaceRock, bytes32 newOwner) internal {
     bytes32[] memory ownedFleets = FleetsMap.getFleetIds(spaceRock, FleetOwnedByKey);
     for (uint256 i = 0; i < ownedFleets.length; i++) {
-      LibFleetDisband.disbandFleet(OwnedBy.get(spaceRock), ownedFleets[i]);
+      LibFleetDisband.disbandFleet(ownedFleets[i]);
     }
     OwnedBy.set(spaceRock, newOwner);
   }
@@ -113,26 +105,14 @@ library LibFleetCombat {
     return IsFleet.get(entity) ? LibFleetStance.getFollowerFleets(entity) : LibFleetStance.getDefendingFleets(entity);
   }
 
-  function getHpWithAllies(bytes32 entity)
-    internal
-    view
-    returns (
-      uint256,
-      uint256[] memory,
-      uint256
-    )
-  {
+  function getHpWithAllies(bytes32 entity) internal view returns (uint256, uint256[] memory, uint256) {
     return
       IsFleet.get(entity)
         ? LibFleetAttributes.getHpWithFollowers(entity)
         : LibSpaceRockAttributes.getHpWithDefenders(entity);
   }
 
-  function applyDamageToWithAllies(
-    bytes32 battleId,
-    bytes32 entity,
-    uint256 damage
-  ) internal {
+  function applyDamageToWithAllies(bytes32 battleId, bytes32 entity, uint256 damage) internal {
     if (damage == 0) return;
 
     // get total hp of target and their allies as damage will be split between them
@@ -217,19 +197,12 @@ library LibFleetCombat {
     BattleUnitResult.set(battleId, targetEntity, unitResult);
 
     if (IsFleet.get(targetEntity)) {
-      uint256 cargo = LibFleetAttributes.getCargo(targetEntity);
-      uint256 occupiedCargo = LibFleetAttributes.getOccupiedCargo(targetEntity);
-      if (cargo < occupiedCargo) {
-        applyLostCargo(targetEntity, cargo, occupiedCargo);
-      }
+      applyLostCargo(targetEntity);
+      LibFleet.resetFleetIfNoUnitsLeft(targetEntity);
     }
   }
 
-  function applyUnitCasualty(
-    bytes32 targetEntity,
-    bytes32 unitPrototype,
-    uint256 unitCount
-  ) internal {
+  function applyUnitCasualty(bytes32 targetEntity, bytes32 unitPrototype, uint256 unitCount) internal {
     if (unitCount == 0) return;
     if (IsFleet.get(targetEntity)) {
       LibFleet.decreaseFleetUnit(targetEntity, unitPrototype, unitCount, true);
@@ -238,11 +211,11 @@ library LibFleetCombat {
     }
   }
 
-  function applyLostCargo(
-    bytes32 fleetId,
-    uint256 cargo,
-    uint256 occupiedCargo
-  ) internal {
+  function applyLostCargo(bytes32 fleetId) internal {
+    uint256 cargo = LibFleetAttributes.getCargo(fleetId);
+    uint256 occupiedCargo = LibFleetAttributes.getOccupiedCargo(fleetId);
+    if (cargo >= occupiedCargo) return;
+
     uint256 cargoLost = occupiedCargo - cargo;
     uint256 cargoLossLeft = cargoLost;
     uint8[] memory transportables = P_Transportables.get();

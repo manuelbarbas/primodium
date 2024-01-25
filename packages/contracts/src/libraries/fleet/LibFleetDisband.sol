@@ -11,13 +11,14 @@ import { LibStorage } from "libraries/LibStorage.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
+import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
 import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
 
 import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { EResource, EFleetStance } from "src/Types.sol";
 
 library LibFleetDisband {
-  function disbandFleet(bytes32 playerEntity, bytes32 fleetId) internal {
+  function disbandFleet(bytes32 fleetId) internal {
     bytes32 ownerSpaceRock = OwnedBy.get(fleetId);
 
     uint8[] memory transportables = P_Transportables.get();
@@ -42,20 +43,16 @@ library LibFleetDisband {
   }
 
   function disbandUnitsAndResourcesFromFleet(
-    bytes32 playerEntity,
     bytes32 fleetId,
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
   ) internal {
-    disbandResources(playerEntity, fleetId, resourceCounts);
-    disbandUnits(playerEntity, fleetId, unitCounts);
+    disbandResources(fleetId, resourceCounts);
+    disbandUnits(fleetId, unitCounts);
+    LibFleet.resetFleetIfNoUnitsLeft(fleetId);
   }
 
-  function disbandUnits(
-    bytes32 playerEntity,
-    bytes32 fleetId,
-    uint256[] calldata unitCounts
-  ) internal {
+  function disbandUnits(bytes32 fleetId, uint256[] calldata unitCounts) internal {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
@@ -63,19 +60,19 @@ library LibFleetDisband {
       require(fleetUnitCount >= unitCounts[i], "[Fleet] Not enough units to disband from fleet");
       LibFleet.decreaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], true);
     }
+    uint256 cargo = LibFleetAttributes.getCargo(fleetId);
+    uint256 occupiedCargo = LibFleetAttributes.getOccupiedCargo(fleetId);
+    require(cargo >= occupiedCargo, "[Fleet] Not enough cargo to disband units from fleet");
+    LibFleet.resetFleetIfNoUnitsLeft(fleetId);
   }
 
-  function disbandResources(
-    bytes32 playerEntity,
-    bytes32 fleetId,
-    uint256[] calldata resourceCounts
-  ) internal {
+  function disbandResources(bytes32 fleetId, uint256[] calldata resourceCounts) internal {
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       if (resourceCounts[i] == 0) continue;
-      uint256 fleetResourceCount = ResourceCount.get(fleetId, i);
+      uint256 fleetResourceCount = ResourceCount.get(fleetId, transportables[i]);
       require(fleetResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to disband from fleet");
-      LibFleet.decreaseFleetResource(fleetId, i, resourceCounts[i]);
+      LibFleet.decreaseFleetResource(fleetId, transportables[i], resourceCounts[i]);
     }
   }
 }
