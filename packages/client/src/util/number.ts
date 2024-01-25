@@ -28,6 +28,8 @@ function getDecimals(num: number, max = 3) {
 
 type FormatOptions = { fractionDigits?: number; short?: boolean; showZero?: boolean; notLocale?: boolean };
 
+export const bigintMax = (a: bigint, b: bigint) => (a > b ? a : b);
+export const bigintMin = (a: bigint, b: bigint) => (a < b ? a : b);
 export const formatResourceCount = (resource: Entity, amountRaw: bigint, formatOptions?: FormatOptions) => {
   const decimals = getResourceDecimals(resource);
 

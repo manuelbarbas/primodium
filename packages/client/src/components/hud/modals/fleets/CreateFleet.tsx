@@ -1,3 +1,4 @@
+import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
@@ -44,6 +45,7 @@ export const CreateFleet = () => {
   const [dragging, setDragging] = useState<{ entity: Entity; count: bigint } | null>(null);
   const [dragLocation, setDragLocation] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [hoveringArea, setHoveringArea] = useState<"from" | "to" | null>(null);
+  const [keyDown, setKeyDown] = useState<"shift" | "ctrl" | null>();
   const selectedRock = components.SelectedRock.use()?.value ?? singletonEntity;
 
   const units = components.Hangar.use(selectedRock);
@@ -76,12 +78,50 @@ export const CreateFleet = () => {
     window.removeEventListener("mousemove", (e) => setDragLocation({ x: e.clientX, y: e.clientY }));
   }, [dragging, fleetCounts, hoveringArea]);
 
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Shift") {
+        setKeyDown("shift");
+      } else if (e.key === "Meta" || e.key === "Control") {
+        setKeyDown("ctrl");
+      }
+      if (!dragging) return;
+      if (e.key === "e" || e.key === "E") {
+        const delta = parseResourceCount(dragging.entity, e.key === "E" ? "10" : "1");
+        const maxCount = UnitStorages.has(dragging.entity)
+          ? units
+            ? units.counts[units.units.indexOf(dragging.entity)]
+            : 0n
+          : transportableResources[dragging.entity];
+        setDragging({
+          ...dragging,
+          count: bigIntMin(maxCount, dragging.count + delta),
+        });
+      } else if (e.key === "q" || e.key == "Q") {
+        const delta = parseResourceCount(dragging.entity, e.key === "Q" ? "10" : "1");
+        setDragging({ ...dragging, count: bigIntMax(0n, dragging.count - delta) });
+      }
+    },
+    [dragging, transportableResources, units]
+  );
+
+  const handleKeyUp = useCallback((e: KeyboardEvent) => {
+    if (e.key === "Shift" || e.key === "Control" || e.key === "Meta") {
+      setKeyDown(null);
+    }
+  }, []);
+
+  useEffect(() => {}, [dragging]);
   useEffect(() => {
     window.addEventListener("mouseup", stopDragging);
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
     return () => {
       window.removeEventListener("mouseup", stopDragging);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [stopDragging]);
+  }, [handleKeyDown, handleKeyUp, stopDragging]);
 
   return (
     <Navigator.Screen title="CreateFleet" className="w-full h-full flex flex-col gap-2 p-2">
@@ -100,25 +140,34 @@ export const CreateFleet = () => {
         onMouseEnter={() => dragging && setHoveringArea("from")}
         onMouseLeave={() => setHoveringArea(null)}
       >
-        <div className="w-full h-full bg-base-100 p-2 flex flex-col gap-2">
+        <div className="w-full h-full bg-base-100 p-2 pb-8 flex flex-col gap-2">
           <div className="h-12">
             <TargetHeader />
           </div>
-          <div className="flex-1 flex flex-col bg-neutral p-2 grid grid-cols-4 grid-rows-2 gap-2">
+
+          {/*Units to select from*/}
+          <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
             {units?.units.map((unit) => {
-              const count = units.counts[units.units.indexOf(unit)] - (fleetCounts[unit as Entity] ?? 0n);
+              const count =
+                units.counts[units.units.indexOf(unit)] -
+                (dragging?.entity === unit ? dragging?.count ?? 0n : 0n) -
+                (fleetCounts[unit] ?? 0n);
               if (count == 0n) return null;
               return (
                 <ResourceIcon
                   key={`from-unit-${unit}`}
                   resource={unit}
                   amount={count.toString()}
-                  setDragging={(e: React.MouseEvent, entity: Entity) => initDragging(e, { entity, count: 1n })}
+                  setDragging={(e: React.MouseEvent, entity: Entity) =>
+                    initDragging(e, { entity, count: keyDown == "shift" ? count : keyDown == "ctrl" ? count / 2n : 1n })
+                  }
                 />
               );
             })}
           </div>
-          <div className="flex-1 flex flex-col bg-neutral p-2 grid grid-cols-4 grid-rows-2 gap-2">
+
+          {/*Resources to select from*/}
+          <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
             {Object.entries(transportableResources).map(([entity, data]) => {
               const count =
                 data -
@@ -138,7 +187,11 @@ export const CreateFleet = () => {
                     { fractionDigits: 0 }
                   )}
                   setDragging={(e: React.MouseEvent, entity: Entity) =>
-                    initDragging(e, { entity, count: parseResourceCount(entity, "1") })
+                    initDragging(e, {
+                      entity,
+                      count:
+                        keyDown == "shift" ? count : keyDown == "ctrl" ? count / 2n : parseResourceCount(entity, "1"),
+                    })
                   }
                 />
               );
@@ -146,14 +199,18 @@ export const CreateFleet = () => {
           </div>
         </div>
         <div
-          className={`w-full h-full bg-base-100 p-2 flex flex-col gap-2 ${
+          className={`w-full h-full bg-base-100 p-2 pb-8 flex flex-col gap-2 relative ${
             hoveringArea === "to" ? "ring-2 ring-secondary" : ""
           }`}
           onMouseOver={() => dragging && setHoveringArea("to")}
           onMouseLeave={() => setHoveringArea(null)}
         >
-          <div className="h-12">Your Fleet</div>
-          <div className="flex-1 flex flex-col bg-neutral p-2 grid grid-cols-4 grid-rows-2 gap-2">
+          <div className="h-12 bg-neutral text-sm w-full h-full font-bold grid place-items-center uppercase">
+            New Fleet
+          </div>
+
+          {/*Units sent*/}
+          <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
             {Object.entries(fleetCounts).map(([unit, count]) =>
               UnitStorages.has(unit as Entity) ? (
                 <ResourceIcon
@@ -168,7 +225,9 @@ export const CreateFleet = () => {
               ) : null
             )}
           </div>
-          <div className="flex-1 flex flex-col bg-neutral p-2 grid grid-cols-4 grid-rows-2 gap-2">
+
+          {/*Resources sent*/}
+          <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
             {Object.entries(fleetCounts).map(([entity, data]) =>
               UnitStorages.has(entity as Entity) ? null : (
                 <ResourceIcon
@@ -183,6 +242,9 @@ export const CreateFleet = () => {
               )
             )}
           </div>
+          <Button className="absolute bottom-1 right-2 btn-primary btn-xs" onClick={() => setFleetCounts({})}>
+            Clear all
+          </Button>
         </div>
       </div>
       <Button className="w-fit btn-primary w-36" disabled={Object.entries(fleetCounts).length === 0}>
