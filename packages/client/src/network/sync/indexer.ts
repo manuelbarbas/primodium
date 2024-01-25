@@ -26,7 +26,7 @@ export const hydrateInitialGameState = (
   //get all the tables that start with P_
   const configTableQueries = [...Object.keys(tables)]
     .filter((key) => key.startsWith("P_"))
-    .map((tableName) => ({ tableName }));
+    .map((tableName) => ({ tableId: tables[tableName].tableId }));
 
   const sync = Sync.withQueryDecodedIndexerRecsSync({
     indexerUrl: networkConfig.indexerUrl,
@@ -36,15 +36,15 @@ export const hydrateInitialGameState = (
       address: networkConfig.worldAddress as Hex,
       queries: [
         ...configTableQueries,
-        { tableName: tables.Dimensions.name! },
-        { tableName: tables.GracePeriod.name! },
-        { tableName: tables.MapItemArrivals.name! },
-        { tableName: tables.Score.name! },
-        { tableName: tables.Alliance.name! },
-        { tableName: tables.Reserves.name! },
+        { tableId: tables.Dimensions.tableId! },
+        { tableId: tables.GracePeriod.tableId! },
+        { tableId: tables.MapItemArrivals.tableId! },
+        { tableId: tables.Score.tableId! },
+        { tableId: tables.Alliance.tableId! },
+        { tableId: tables.Reserves.tableId! },
         //get asteroids
         {
-          tableName: tables.Position.name!,
+          tableId: tables.Position.tableId!,
           where: {
             column: "parent",
             operation: "eq",
@@ -52,16 +52,16 @@ export const hydrateInitialGameState = (
           },
           include: [
             {
-              tableName: tables.OwnedBy.name!,
+              tableId: tables.OwnedBy.tableId!,
             },
             {
-              tableName: tables.Asteroid.name!,
+              tableId: tables.Asteroid.tableId!,
             },
             {
-              tableName: tables.ReversePosition.name!,
+              tableId: tables.ReversePosition.tableId!,
             },
             {
-              tableName: tables.Home.name!,
+              tableId: tables.Home.tableId!,
             },
           ],
         },
@@ -326,7 +326,7 @@ export const hydrateActiveAsteroid = (activeRock: Entity | undefined, mud: MUD) 
       queries: [
         //get buildings
         {
-          tableName: mud.network.tables.Position.name!,
+          tableId: mud.network.tables.Position.tableId!,
           where: {
             column: "parent",
             operation: "eq",
@@ -334,35 +334,35 @@ export const hydrateActiveAsteroid = (activeRock: Entity | undefined, mud: MUD) 
           },
           include: [
             {
-              tableName: tables.OwnedBy.name!,
+              tableId: tables.OwnedBy.tableId!,
             },
             {
-              tableName: tables.BuildingType.name!,
+              tableId: tables.BuildingType.tableId!,
             },
             {
-              tableName: tables.IsActive.name!,
+              tableId: tables.IsActive.tableId!,
             },
             {
-              tableName: tables.Level.name!,
+              tableId: tables.Level.tableId!,
             },
             {
-              tableName: tables.LastClaimedAt.name!,
+              tableId: tables.LastClaimedAt.tableId!,
             },
             {
-              tableName: tables.ClaimOffset.name!,
+              tableId: tables.ClaimOffset.tableId!,
             },
             {
-              tableName: tables.QueueUnits.name!,
+              tableId: tables.QueueUnits.tableId!,
             },
             {
-              tableName: tables.QueueItemUnits.name!,
+              tableId: tables.QueueItemUnits.tableId!,
               on: "entity",
             },
           ],
         },
         //get expansion level
         {
-          tableName: tables.Level.name!,
+          tableId: tables.Level.tableId!,
           where: {
             column: "entity",
             operation: "eq",
@@ -434,7 +434,7 @@ export const hydrateAllianceData = (allianceEntity: Entity | undefined, mud: MUD
       queries: [
         {
           //todo switch query decoded with table id
-          tableName: tables.AllianceJoinRequest.name!.slice(0, 16),
+          tableId: tables.AllianceJoinRequest.tableId,
           where: {
             column: "alliance",
             operation: "eq",
@@ -442,7 +442,7 @@ export const hydrateAllianceData = (allianceEntity: Entity | undefined, mud: MUD
           },
         },
         {
-          tableName: tables.PlayerAlliance.name!,
+          tableId: tables.PlayerAlliance.tableId,
           where: {
             column: "alliance",
             operation: "eq",
@@ -450,7 +450,7 @@ export const hydrateAllianceData = (allianceEntity: Entity | undefined, mud: MUD
           },
         },
         {
-          tableName: tables.AllianceInvitation.name!.slice(0, 16),
+          tableId: tables.AllianceInvitation.tableId,
           where: {
             column: "alliance",
             operation: "eq",
@@ -485,7 +485,7 @@ export const hydrateAllianceData = (allianceEntity: Entity | undefined, mud: MUD
     },
     //on error
     (e) => {
-      console.log(e);
+      console.error(e);
       components.SyncStatus.set(
         {
           step: SyncStep.Error,
