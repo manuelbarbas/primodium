@@ -18,7 +18,6 @@ import { EResource, EFleetStance } from "src/Types.sol";
 
 library LibFleetTransfer {
   function transferUnitsFromSpaceRockToFleet(
-    bytes32 playerEntity,
     bytes32 spaceRock,
     bytes32 fleetId,
     uint256[] calldata unitCounts
@@ -26,15 +25,13 @@ library LibFleetTransfer {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     bool isOwner = OwnedBy.get(fleetId) == spaceRock;
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
-      uint256 rockUnitCount = UnitCount.get(spaceRock, unitPrototypes[i]);
-      require(rockUnitCount >= unitCounts[i], "[Fleet] Not enough units on space rock to add to fleet");
+      if (unitCounts[i] == 0) continue;
       LibUnit.decreaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !isOwner);
       LibFleet.increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !isOwner);
     }
   }
 
   function transferResourcesFromSpaceRockToFleet(
-    bytes32 playerEntity,
     bytes32 spaceRock,
     bytes32 fleetId,
     uint256[] calldata resourceCounts
@@ -42,15 +39,12 @@ library LibFleetTransfer {
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       if (resourceCounts[i] == 0) continue;
-      uint256 rockResourceCount = ResourceCount.get(spaceRock, transportables[i]);
-      require(rockResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
       LibStorage.decreaseStoredResource(spaceRock, transportables[i], resourceCounts[i]);
       LibFleet.increaseFleetResource(fleetId, transportables[i], resourceCounts[i]);
     }
   }
 
   function transferUnitsAndResourcesFromSpaceRockToFleet(
-    bytes32 playerEntity,
     bytes32 spaceRock,
     bytes32 fleetId,
     uint256[] calldata unitCounts,
@@ -63,7 +57,7 @@ library LibFleetTransfer {
       LibFleet.increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !isOwner);
     }
 
-    transferResourcesFromSpaceRockToFleet(playerEntity, spaceRock, fleetId, resourceCounts);
+    transferResourcesFromSpaceRockToFleet(spaceRock, fleetId, resourceCounts);
 
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       LibUnit.decreaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !isOwner);
@@ -71,7 +65,6 @@ library LibFleetTransfer {
   }
 
   function transferUnitsFromFleetToSpaceRock(
-    bytes32 playerEntity,
     bytes32 spaceRock,
     bytes32 fleetId,
     uint256[] calldata unitCounts
@@ -79,8 +72,6 @@ library LibFleetTransfer {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     bool isOwner = OwnedBy.get(fleetId) == spaceRock;
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
-      uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototypes[i]);
-      require(fleetUnitCount >= unitCounts[i], "[Fleet] Not enough units to remove from fleet");
       LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !isOwner);
       LibFleet.decreaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !isOwner);
     }
@@ -91,7 +82,6 @@ library LibFleetTransfer {
   }
 
   function transferResourcesFromFleetToSpaceRock(
-    bytes32 playerEntity,
     bytes32 spaceRock,
     bytes32 fleetId,
     uint256[] calldata resourceCounts
@@ -99,8 +89,6 @@ library LibFleetTransfer {
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       if (resourceCounts[i] == 0) continue;
-      uint256 fleetResourceCount = ResourceCount.get(fleetId, transportables[i]);
-      require(fleetResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
       LibStorage.increaseStoredResource(spaceRock, transportables[i], resourceCounts[i]);
       LibFleet.decreaseFleetResource(fleetId, transportables[i], resourceCounts[i]);
     }
@@ -108,7 +96,6 @@ library LibFleetTransfer {
 
   //this is required so unit cargo space can be updated correctly without loss of resources
   function transferUnitsAndResourcesFromFleetToSpaceRock(
-    bytes32 playerEntity,
     bytes32 spaceRock,
     bytes32 fleetId,
     uint256[] calldata unitCounts,
@@ -121,11 +108,9 @@ library LibFleetTransfer {
       LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !isOwner);
     }
 
-    transferResourcesFromFleetToSpaceRock(playerEntity, spaceRock, fleetId, resourceCounts);
+    transferResourcesFromFleetToSpaceRock(spaceRock, fleetId, resourceCounts);
 
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
-      uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototypes[i]);
-      require(fleetUnitCount >= unitCounts[i], "[Fleet] Not enough units to remove from fleet");
       LibFleet.decreaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !isOwner);
     }
 
@@ -135,7 +120,6 @@ library LibFleetTransfer {
   }
 
   function transferUnitsFromFleetToFleet(
-    bytes32 playerEntity,
     bytes32 fromFleetId,
     bytes32 fleetId,
     uint256[] calldata unitCounts
@@ -143,6 +127,7 @@ library LibFleetTransfer {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     bool sameOwner = OwnedBy.get(fleetId) == OwnedBy.get(fromFleetId);
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
+      if (unitCounts[i] == 0) continue;
       LibFleet.increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !sameOwner);
       LibFleet.decreaseFleetUnit(fromFleetId, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
@@ -153,7 +138,6 @@ library LibFleetTransfer {
   }
 
   function transferResourcesFromFleetToFleet(
-    bytes32 playerEntity,
     bytes32 fromFleetId,
     bytes32 fleetId,
     uint256[] calldata resourceCounts
@@ -167,7 +151,6 @@ library LibFleetTransfer {
   }
 
   function transferUnitsAndResourcesFromFleetToFleet(
-    bytes32 playerEntity,
     bytes32 fromFleetId,
     bytes32 fleetId,
     uint256[] calldata unitCounts,
@@ -179,11 +162,10 @@ library LibFleetTransfer {
       LibFleet.increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
-    transferResourcesFromFleetToFleet(playerEntity, fromFleetId, fleetId, resourceCounts);
+    transferResourcesFromFleetToFleet(fromFleetId, fleetId, resourceCounts);
 
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
-      uint256 fleetUnitCount = UnitCount.get(fromFleetId, unitPrototypes[i]);
-      LibFleet.decreaseFleetUnit(fromFleetId, unitPrototypes[i], fleetUnitCount, !sameOwner);
+      LibFleet.decreaseFleetUnit(fromFleetId, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
     uint256 cargo = LibFleetAttributes.getCargo(fromFleetId);
