@@ -18,17 +18,17 @@ library LibFleetStance {
   function clearFleetStance(bytes32 fleetId) internal {
     FleetStanceData memory fleetStance = FleetStance.get(fleetId);
 
-    if (fleetStance.stance == uint8(EFleetStance.None)) return;
+    if (fleetStance.stance == uint8(EFleetStance.NULL)) return;
 
     FleetsMap.remove(fleetStance.target, P_EnumToPrototype.get(FleetStanceKey, fleetStance.stance), fleetId);
-    FleetStance.set(fleetId, uint8(EFleetStance.None), bytes32(0));
+    FleetStance.set(fleetId, uint8(EFleetStance.NULL), bytes32(0));
   }
 
   function clearFollowingFleets(bytes32 fleetId) internal {
     bytes32 fleetFollowKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Follow));
     bytes32[] memory followingFleets = FleetsMap.getFleetIds(fleetId, fleetFollowKey);
     for (uint256 i = 0; i < followingFleets.length; i++) {
-      FleetStance.set(followingFleets[i], uint8(EFleetStance.None), bytes32(0));
+      FleetStance.set(followingFleets[i], uint8(EFleetStance.NULL), bytes32(0));
     }
     FleetsMap.clear(fleetId, fleetFollowKey);
   }
@@ -61,7 +61,7 @@ library LibFleetStance {
   function removeFollower(bytes32 fleetId, bytes32 followerFleetId) internal {
     bytes32 fleetFollowKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Follow));
     require(FleetsMap.has(fleetId, fleetFollowKey, followerFleetId), "[Fleet] Target fleet is not following");
-    FleetStance.set(followerFleetId, uint8(EFleetStance.None), bytes32(0));
+    FleetStance.set(followerFleetId, uint8(EFleetStance.NULL), bytes32(0));
     FleetsMap.remove(fleetId, fleetFollowKey, followerFleetId);
   }
 }

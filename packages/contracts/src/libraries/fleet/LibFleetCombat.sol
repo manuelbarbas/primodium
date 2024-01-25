@@ -104,7 +104,7 @@ library LibFleetCombat {
   function transferSpaceRockOwnership(bytes32 spaceRock, bytes32 newOwner) internal {
     bytes32[] memory ownedFleets = FleetsMap.getFleetIds(spaceRock, FleetOwnedByKey);
     for (uint256 i = 0; i < ownedFleets.length; i++) {
-      LibFleetDisband.disbandFleet(OwnedBy.get(spaceRock), ownedFleets[i]);
+      LibFleetDisband.disbandFleet(ownedFleets[i]);
     }
     OwnedBy.set(spaceRock, newOwner);
   }
@@ -217,11 +217,8 @@ library LibFleetCombat {
     BattleUnitResult.set(battleId, targetEntity, unitResult);
 
     if (IsFleet.get(targetEntity)) {
-      uint256 cargo = LibFleetAttributes.getCargo(targetEntity);
-      uint256 occupiedCargo = LibFleetAttributes.getOccupiedCargo(targetEntity);
-      if (cargo < occupiedCargo) {
-        applyLostCargo(targetEntity, cargo, occupiedCargo);
-      }
+      applyLostCargo(targetEntity);
+      LibFleet.resetFleetIfNoUnitsLeft(targetEntity);
     }
   }
 
@@ -238,11 +235,11 @@ library LibFleetCombat {
     }
   }
 
-  function applyLostCargo(
-    bytes32 fleetId,
-    uint256 cargo,
-    uint256 occupiedCargo
-  ) internal {
+  function applyLostCargo(bytes32 fleetId) internal {
+    uint256 cargo = LibFleetAttributes.getCargo(fleetId);
+    uint256 occupiedCargo = LibFleetAttributes.getOccupiedCargo(fleetId);
+    if (cargo >= occupiedCargo) return;
+
     uint256 cargoLost = occupiedCargo - cargo;
     uint256 cargoLossLeft = cargoLost;
     uint8[] memory transportables = P_Transportables.get();

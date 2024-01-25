@@ -241,17 +241,17 @@ contract LibUnitTest is PrimodiumTest {
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
     P_Unit.setTrainingTime(unitPrototype, 0, 100);
     Level.set(building, 1);
-    assertEq(LibUnit.getUnitBuildTime(player, building, unitPrototype), 100);
+    assertEq(LibUnit.getUnitBuildTime(building, unitPrototype), 100);
 
     P_UnitProdMultiplier.set(buildingPrototype, 1, 50);
     P_Unit.setTrainingTime(unitPrototype, 0, 100);
     Level.set(building, 1);
-    assertEq(LibUnit.getUnitBuildTime(player, building, unitPrototype), 200);
+    assertEq(LibUnit.getUnitBuildTime(building, unitPrototype), 200);
 
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
     P_Unit.setTrainingTime(unitPrototype, 0, 200);
     Level.set(building, 1);
-    assertEq(LibUnit.getUnitBuildTime(player, building, unitPrototype), 200);
+    assertEq(LibUnit.getUnitBuildTime(building, unitPrototype), 200);
   }
 
   function testincreaseUnitCount() public {

@@ -18,11 +18,7 @@ import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { EResource, EFleetStance } from "src/Types.sol";
 
 library LibFleetMove {
-  function sendFleet(
-    bytes32 playerEntity,
-    bytes32 fleetId,
-    bytes32 destination
-  ) internal {
+  function sendFleet(bytes32 fleetId, bytes32 destination) internal {
     bytes32 origin = FleetMovement.getDestination(fleetId);
     require(!isSpaceRockBlocked(origin), "[Fleet] Space rock is blocked");
 
@@ -41,6 +37,15 @@ library LibFleetMove {
     bytes32 destination,
     uint256 arrivalTime
   ) private {
+    _sendFleet(fleetId, destination, block.timestamp, arrivalTime);
+  }
+
+  function _sendFleet(
+    bytes32 fleetId,
+    bytes32 destination,
+    uint256 sendTime,
+    uint256 arrivalTime
+  ) private {
     FleetsMap.remove(FleetMovement.getDestination(fleetId), FleetIncomingKey, fleetId);
     FleetsMap.add(destination, FleetIncomingKey, fleetId);
 
@@ -48,32 +53,30 @@ library LibFleetMove {
       fleetId,
       FleetMovementData({
         arrivalTime: arrivalTime,
-        sendTime: block.timestamp,
+        sendTime: sendTime,
         origin: FleetMovement.getDestination(fleetId),
         destination: destination
       })
     );
   }
 
-  function recallFleet(bytes32 playerEntity, bytes32 fleetId) internal {
+  function recallFleet(bytes32 fleetId) internal {
+    FleetMovementData memory fleetMovement = FleetMovement.get(fleetId);
+    require(fleetMovement.origin != fleetMovement.destination, "[Fleet] Fleet is already at origin");
     require(
-      FleetMovement.getOrigin(fleetId) != FleetMovement.getDestination(fleetId),
-      "[Fleet] Fleet is already at origin"
-    );
-    require(
-      FleetMovement.getArrivalTime(fleetId) > block.timestamp,
+      fleetMovement.arrivalTime > block.timestamp,
       "[Fleet] Fleet has already reached it's destination space rock"
     );
-    bytes32 destination = FleetMovement.getOrigin(fleetId);
-    uint256 arrivalTime = block.timestamp + block.timestamp - FleetMovement.getSendTime(fleetId);
-
-    _sendFleet(fleetId, destination, arrivalTime);
+    bytes32 destination = fleetMovement.origin;
+    uint256 arrivalTime = block.timestamp + block.timestamp - fleetMovement.sendTime;
+    uint256 sendTime = block.timestamp - (fleetMovement.arrivalTime - block.timestamp);
+    _sendFleet(fleetId, destination, sendTime, arrivalTime);
 
     bytes32 followingFleetsKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Follow));
     bytes32[] memory followingFleets = FleetsMap.getFleetIds(fleetId, followingFleetsKey);
 
     for (uint256 i = 0; i < followingFleets.length; i++) {
-      _sendFleet(followingFleets[i], destination, arrivalTime);
+      _sendFleet(followingFleets[i], destination, sendTime, arrivalTime);
     }
   }
 

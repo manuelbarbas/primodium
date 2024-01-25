@@ -16,7 +16,7 @@ contract FleetTransferSystem is FleetBaseSystem {
     _claimUnits(spaceRock)
     _unitCountIsValid(unitCounts)
   {
-    LibFleetTransfer.transferUnitsFromSpaceRockToFleet(_player(), spaceRock, fleetId, unitCounts);
+    LibFleetTransfer.transferUnitsFromSpaceRockToFleet(spaceRock, fleetId, unitCounts);
   }
 
   function transferResourcesFromSpaceRockToFleet(
@@ -30,7 +30,7 @@ contract FleetTransferSystem is FleetBaseSystem {
     _claimResources(spaceRock)
     _resourceCountIsValid(resourceCounts)
   {
-    LibFleetTransfer.transferResourcesFromSpaceRockToFleet(_player(), spaceRock, fleetId, resourceCounts);
+    LibFleetTransfer.transferResourcesFromSpaceRockToFleet(spaceRock, fleetId, resourceCounts);
   }
 
   function transferUnitsAndResourcesFromSpaceRockToFleet(
@@ -47,13 +47,7 @@ contract FleetTransferSystem is FleetBaseSystem {
     _unitCountIsValid(unitCounts)
     _resourceCountIsValid(resourceCounts)
   {
-    LibFleetTransfer.transferUnitsAndResourcesFromSpaceRockToFleet(
-      _player(),
-      spaceRock,
-      fleetId,
-      unitCounts,
-      resourceCounts
-    );
+    LibFleetTransfer.transferUnitsAndResourcesFromSpaceRockToFleet(spaceRock, fleetId, unitCounts, resourceCounts);
   }
 
   function transferUnitsFromFleetToSpaceRock(
@@ -67,7 +61,7 @@ contract FleetTransferSystem is FleetBaseSystem {
     _claimUnits(spaceRock)
     _unitCountIsValid(unitCounts)
   {
-    LibFleetTransfer.transferUnitsFromFleetToSpaceRock(_player(), fleetId, spaceRock, unitCounts);
+    LibFleetTransfer.transferUnitsFromFleetToSpaceRock(fleetId, spaceRock, unitCounts);
   }
 
   function transferResourcesFromFleetToSpaceRock(
@@ -81,7 +75,7 @@ contract FleetTransferSystem is FleetBaseSystem {
     _claimResources(spaceRock)
     _resourceCountIsValid(resourceCounts)
   {
-    LibFleetTransfer.transferResourcesFromFleetToSpaceRock(_player(), fleetId, spaceRock, resourceCounts);
+    LibFleetTransfer.transferResourcesFromFleetToSpaceRock(fleetId, spaceRock, resourceCounts);
   }
 
   function transferUnitsAndResourcesFromFleetToSpaceRock(
@@ -98,13 +92,7 @@ contract FleetTransferSystem is FleetBaseSystem {
     _unitCountIsValid(unitCounts)
     _resourceCountIsValid(resourceCounts)
   {
-    LibFleetTransfer.transferUnitsAndResourcesFromFleetToSpaceRock(
-      _player(),
-      spaceRock,
-      fleetId,
-      unitCounts,
-      resourceCounts
-    );
+    LibFleetTransfer.transferUnitsAndResourcesFromFleetToSpaceRock(spaceRock, fleetId, unitCounts, resourceCounts);
   }
 
   function transferUnitsFromFleetToFleet(
@@ -117,7 +105,7 @@ contract FleetTransferSystem is FleetBaseSystem {
     _onlyWhenFleetsAreIsInSameOrbit(fromFleetId, fleetId)
     _unitCountIsValid(unitCounts)
   {
-    LibFleetTransfer.transferUnitsFromFleetToFleet(_player(), fromFleetId, fleetId, unitCounts);
+    LibFleetTransfer.transferUnitsFromFleetToFleet(fromFleetId, fleetId, unitCounts);
   }
 
   function transferResourcesFromFleetToFleet(
@@ -130,7 +118,7 @@ contract FleetTransferSystem is FleetBaseSystem {
     _onlyWhenFleetsAreIsInSameOrbit(fromFleetId, fleetId)
     _resourceCountIsValid(resourceCounts)
   {
-    LibFleetTransfer.transferResourcesFromFleetToFleet(_player(), fromFleetId, fleetId, resourceCounts);
+    LibFleetTransfer.transferResourcesFromFleetToFleet(fromFleetId, fleetId, resourceCounts);
   }
 
   function transferUnitsAndResourcesFromFleetToFleet(
@@ -145,12 +133,6 @@ contract FleetTransferSystem is FleetBaseSystem {
     _unitCountIsValid(unitCounts)
     _resourceCountIsValid(resourceCounts)
   {
-    LibFleetTransfer.transferUnitsAndResourcesFromFleetToFleet(
-      _player(),
-      fromFleetId,
-      fleetId,
-      unitCounts,
-      resourceCounts
-    );
+    LibFleetTransfer.transferUnitsAndResourcesFromFleetToFleet(fromFleetId, fleetId, unitCounts, resourceCounts);
   }
 }

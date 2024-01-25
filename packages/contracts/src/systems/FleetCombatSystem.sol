@@ -17,7 +17,7 @@ contract FleetCombatSystem is FleetBaseSystem {
 
   modifier _onlyWhenNotInStance(bytes32 fleetId) {
     require(
-      FleetStance.getStance(fleetId) == uint8(EFleetStance.None),
+      FleetStance.getStance(fleetId) == uint8(EFleetStance.NULL),
       "[Fleet] Can not attack while fleet is in stance"
     );
     _;

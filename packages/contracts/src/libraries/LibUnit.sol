@@ -73,7 +73,7 @@ library LibUnit {
     bool stillClaiming = !UnitProductionQueue.isEmpty(building);
     while (stillClaiming) {
       UnitProductionQueueData memory item = UnitProductionQueue.peek(building);
-      uint256 trainingTime = getUnitBuildTime(playerEntity, building, item.unitId);
+      uint256 trainingTime = getUnitBuildTime(building, item.unitId);
       uint256 trainedUnits = item.quantity;
       if (trainingTime > 0) trainedUnits = LibMath.min(item.quantity, ((block.timestamp - startTime) / (trainingTime)));
 
@@ -99,15 +99,10 @@ library LibUnit {
   }
 
   /// @notice Get the build time for a unit
-  /// @param playerEntity Entity ID of the player
   /// @param building Entity ID of the building
   /// @param unitPrototype Unit prototype to check
   /// @return Time in seconds
-  function getUnitBuildTime(
-    bytes32 playerEntity,
-    bytes32 building,
-    bytes32 unitPrototype
-  ) internal view returns (uint256) {
+  function getUnitBuildTime(bytes32 building, bytes32 unitPrototype) internal view returns (uint256) {
     uint256 buildingLevel = Level.get(building);
     bytes32 buildingType = BuildingType.get(building);
     uint256 multiplier = P_UnitProdMultiplier.get(buildingType, buildingLevel);
