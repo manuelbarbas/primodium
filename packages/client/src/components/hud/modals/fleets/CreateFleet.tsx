@@ -6,8 +6,10 @@ import React, { useCallback, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
+import { useMud } from "src/hooks";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
+import { createFleet } from "src/network/setup/contractCalls/createFleet";
 import { ResourceEntityLookup, ResourceImage, UnitStorages } from "src/util/constants";
 import { formatResourceCount, parseResourceCount } from "src/util/number";
 import { TargetHeader } from "../../spacerock-menu/TargetHeader";
@@ -104,6 +106,20 @@ export const CreateFleet = () => {
     },
     [dragging, transportableResources, units]
   );
+  const mud = useMud();
+  const handleSubmit = () => {
+    const { units, resources } = Object.entries(fleetCounts).reduce(
+      (acc, [entity, count]) => {
+        const isUnit = UnitStorages.has(entity as Entity);
+        if (isUnit) acc.units[entity as Entity] = count;
+        else acc.resources[entity as Entity] = count;
+
+        return acc;
+      },
+      { units: {}, resources: {} } as { units: Record<Entity, bigint>; resources: Record<Entity, bigint> }
+    );
+    createFleet(mud, selectedRock, units, resources);
+  };
 
   const handleKeyUp = useCallback((e: KeyboardEvent) => {
     if (e.key === "Shift" || e.key === "Control" || e.key === "Meta") {
@@ -111,7 +127,6 @@ export const CreateFleet = () => {
     }
   }, []);
 
-  useEffect(() => {}, [dragging]);
   useEffect(() => {
     window.addEventListener("mouseup", stopDragging);
     window.addEventListener("keydown", handleKeyDown);
@@ -247,7 +262,11 @@ export const CreateFleet = () => {
           </Button>
         </div>
       </div>
-      <Button className="w-fit btn-primary w-36" disabled={Object.entries(fleetCounts).length === 0}>
+      <Button
+        className="w-fit btn-primary w-36"
+        disabled={Object.entries(fleetCounts).length === 0}
+        onClick={handleSubmit}
+      >
         Create
       </Button>
     </Navigator.Screen>

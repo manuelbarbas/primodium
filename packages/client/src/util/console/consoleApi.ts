@@ -19,12 +19,7 @@ import { buildBuilding } from "src/network/setup/contractCalls/buildBuilding";
 import { claimObjective } from "src/network/setup/contractCalls/claimObjective";
 import { claimUnits } from "src/network/setup/contractCalls/claimUnits";
 import { demolishBuilding } from "src/network/setup/contractCalls/demolishBuilding";
-import { invade } from "src/network/setup/contractCalls/invade";
 import { moveBuilding } from "src/network/setup/contractCalls/moveBuilding";
-import { raid } from "src/network/setup/contractCalls/raid";
-import { recallArrival, recallStationedUnits } from "src/network/setup/contractCalls/recall";
-import { reinforce } from "src/network/setup/contractCalls/reinforce";
-import { send } from "src/network/setup/contractCalls/send";
 import { toggleBuilding } from "src/network/setup/contractCalls/toggleBuilding";
 import { train } from "src/network/setup/contractCalls/train";
 import { upgradeBuilding } from "src/network/setup/contractCalls/upgradeBuilding";
@@ -187,13 +182,7 @@ export default function createConsoleApi(mud: MUD, primodium: Primodium) {
     claimObjective: _.curry(claimObjective)(mud),
     claimUnits: _.curry(claimUnits)(mud),
     demolishBuilding: _.curry(demolishBuilding)(mud),
-    invade: _.curry(invade)(mud),
     moveBuilding: _.curry(moveBuilding)(mud),
-    raid: _.curry(raid)(mud),
-    recallArrival: _.curry(recallArrival)(mud),
-    recallStationedUnits: _.curry(recallStationedUnits)(mud),
-    reinforce: _.curry(reinforce)(mud),
-    send: _.curry(send)(mud),
     toggleBuilding: _.curry(toggleBuilding)(mud),
     train: _.curry(train)(mud),
     upgradeBuilding: _.curry(upgradeBuilding)(mud),

@@ -6,7 +6,7 @@ import { getSystemId, hashEntities } from "src/util/encode";
 import { toTransportableResourceArray, toUnitCountArray } from "src/util/send";
 import { Hex } from "viem";
 
-export const attack = async (
+export const createFleet = async (
   mud: MUD,
   spaceRock: Entity,
   units: Record<Entity, bigint>,

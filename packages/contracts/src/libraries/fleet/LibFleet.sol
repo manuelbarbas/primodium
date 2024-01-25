@@ -53,11 +53,12 @@ library LibFleet {
     uint256 freeCargoSpace = LibFleetAttributes.getFreeCargoSpace(fleetId);
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
+      uint8 resource = transportables[i];
       if (resourceCounts[i] == 0) continue;
-      uint256 rockResourceCount = ResourceCount.get(spaceRock, i);
+      uint256 rockResourceCount = ResourceCount.get(spaceRock, resource);
       require(rockResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
-      LibStorage.decreaseStoredResource(spaceRock, i, resourceCounts[i]);
-      increaseFleetResource(fleetId, i, resourceCounts[i]);
+      LibStorage.decreaseStoredResource(spaceRock, resource, resourceCounts[i]);
+      increaseFleetResource(fleetId, resource, resourceCounts[i]);
     }
 
     FleetsMap.add(spaceRock, FleetOwnedByKey, fleetId);
