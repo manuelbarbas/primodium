@@ -16,7 +16,7 @@ contract UpgradeUnitSystem is PrimodiumSystem {
   function upgradeUnit(bytes32 spaceRockEntity, EUnit unit) public _claimResources(spaceRockEntity) {
     bytes32 playerEntity = _player();
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
-    uint256 currentLevel = UnitLevel.get(playerEntity, unitPrototype);
+    uint256 currentLevel = UnitLevel.get(spaceRockEntity, unitPrototype);
     uint256 targetLevel = currentLevel + 1;
     require(OwnedBy.get(spaceRockEntity) == playerEntity, "[UpgradeUnitSystem] space rock not owned by player");
     require(unit != EUnit.NULL && unit != EUnit.LENGTH, "[UpgradeUnitSystem] Invalid unit");
@@ -30,11 +30,6 @@ contract UpgradeUnitSystem is PrimodiumSystem {
 
     spendUpgradeResources(spaceRockEntity, unitPrototype, targetLevel);
 
-    UnitLevel.set(playerEntity, unitPrototype, targetLevel);
-
-    //TODO: this is a HotFix for upgrading mining vessels it works as the only unit which mines resources is the mining vessel
-    // should be replaced by generalized logic
-    //upgrade for unit is universal and not specific to space rock
-    LibProduction.upgradeUnitResourceProduction(playerEntity, unitPrototype, targetLevel);
+    UnitLevel.set(spaceRockEntity, unitPrototype, targetLevel);
   }
 }

@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, P_EnumToPrototype } from "codegen/index.sol";
+import { Position, P_UnitPrototypes, IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, P_EnumToPrototype } from "codegen/index.sol";
 
-import { EUnit } from "src/Types.sol";
+import { EUnit, EResource } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
+import { LibStorage } from "libraries/LibStorage.sol";
+import { LibProduction } from "libraries/LibProduction.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
 import { UnitKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
@@ -91,7 +93,8 @@ library LibUnit {
         stillClaiming = false;
       }
       ProducedUnit.set(playerEntity, item.unitId, ProducedUnit.get(playerEntity, item.unitId) + trainedUnits);
-      increaseUnitCount(Home.get(playerEntity), item.unitId, trainedUnits);
+
+      increaseUnitCount(Home.get(playerEntity), item.unitId, trainedUnits, false);
     }
   }
 
@@ -108,7 +111,7 @@ library LibUnit {
     uint256 buildingLevel = Level.get(building);
     bytes32 buildingType = BuildingType.get(building);
     uint256 multiplier = P_UnitProdMultiplier.get(buildingType, buildingLevel);
-    uint256 unitLevel = UnitLevel.get(playerEntity, unitPrototype);
+    uint256 unitLevel = UnitLevel.get(Position.getParent(building), unitPrototype);
     uint256 rawTrainingTime = P_Unit.getTrainingTime(unitPrototype, unitLevel);
     require(multiplier > 0, "Building has no unit production multiplier");
     P_GameConfigData memory config = P_GameConfig.get();
@@ -131,7 +134,7 @@ library LibUnit {
   ) internal {
     if (count == 0) return;
     bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
-    uint256 unitLevel = UnitLevel.get(playerEntity, unitType);
+    uint256 unitLevel = UnitLevel.get(spaceRockEntity, unitType);
 
     P_RequiredResourcesData memory resources = P_RequiredResources.get(unitType, unitLevel);
     for (uint8 i = 0; i < resources.resources.length; i++) {
@@ -162,12 +165,13 @@ library LibUnit {
   function increaseUnitCount(
     bytes32 rockEntity,
     bytes32 unitType,
-    uint256 unitCount
+    uint256 unitCount,
+    bool updatesUtility
   ) internal {
-    bytes32 playerEntity = OwnedBy.get(rockEntity);
     if (unitCount == 0) return;
     uint256 prevUnitCount = UnitCount.get(rockEntity, unitType);
     UnitCount.set(rockEntity, unitType, prevUnitCount + unitCount);
+    if (updatesUtility) updateStoredUtilities(rockEntity, unitType, unitCount, true);
   }
 
   /**
@@ -179,12 +183,13 @@ library LibUnit {
   function decreaseUnitCount(
     bytes32 rockEntity,
     bytes32 unitType,
-    uint256 unitCount
+    uint256 unitCount,
+    bool updatesUtility
   ) internal {
-    bytes32 playerEntity = OwnedBy.get(rockEntity);
     if (unitCount == 0) return;
     uint256 currUnitCount = UnitCount.get(rockEntity, unitType);
-    if (unitCount > currUnitCount) unitCount = currUnitCount;
+    require(currUnitCount >= unitCount, "[LibUnit] Not enough units to decrease");
     UnitCount.set(rockEntity, unitType, currUnitCount - unitCount);
+    if (updatesUtility) updateStoredUtilities(rockEntity, unitType, unitCount, false);
   }
 }

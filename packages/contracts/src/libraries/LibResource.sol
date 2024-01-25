@@ -6,7 +6,7 @@ import { LibStorage } from "libraries/LibStorage.sol";
 
 import { UtilityMap } from "libraries/UtilityMap.sol";
 
-import { Level, IsActive, P_ConsumesResource, ConsumptionRate, Home, P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+import { P_Transportables, P_IsRecoverable, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
 
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -49,7 +49,7 @@ library LibResource {
     uint256 count
   ) internal {
     bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
-    uint256 level = UnitLevel.get(playerEntity, prototype);
+    uint256 level = UnitLevel.get(spaceRockEntity, prototype);
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(prototype, level);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       spendResource(spaceRockEntity, prototype, requiredResources.resources[i], requiredResources.amounts[i] * count);
@@ -117,7 +117,6 @@ library LibResource {
     uint256 timeSinceClaimed = block.timestamp - lastClaimed;
     timeSinceClaimed = (timeSinceClaimed * P_GameConfig.getWorldSpeed()) / WORLD_SPEED_SCALE;
     bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
-    bytes32 homeAsteroid = Home.get(playerEntity);
     LastClaimedAt.set(spaceRockEntity, block.timestamp);
     uint256[] memory consumptionTimeLengths = new uint256[](uint8(EResource.LENGTH));
 
@@ -157,8 +156,8 @@ library LibResource {
       uint256 resourceCount = ResourceCount.get(spaceRockEntity, resource);
       if (increase > decrease) {
         //if the increase is more than the decrease than we just increase by the difference
-        //todo currently we increase the resources for home asteroid as resource transfer is not a part of this update
-        LibStorage.increaseStoredResource(homeAsteroid, resource, increase - decrease);
+        //todo currently we increase the resources for the current asteroid as resource transfer is not a part of this update
+        LibStorage.increaseStoredResource(spaceRockEntity, resource, increase - decrease);
       } else if (resourceCount + increase >= decrease) {
         //if sum of the increase and curr amount is more than the decrease we just decrease by the difference
         //consumption is from current space rock and will be in the future
@@ -222,39 +221,43 @@ library LibResource {
    * @dev Retrieves the counts of all non-utility resources for a spaceRock and calculates the total.
    * @param spaceRockEntity The identifier of the spaceRock.
    * @return totalResources The total count of non-utility resources.
-   * @return resourceCounts An array containing the counts of each non-utility resource.
    */
-  function getAllResourceCounts(bytes32 spaceRockEntity)
-    internal
-    view
-    returns (uint256 totalResources, uint256[] memory resourceCounts)
-  {
-    resourceCounts = new uint256[](uint8(EResource.LENGTH));
-    for (uint8 i = 1; i < resourceCounts.length; i++) {
-      if (P_IsUtility.get(i)) continue;
-      resourceCounts[i] = ResourceCount.get(spaceRockEntity, i);
-      totalResources += resourceCounts[i];
+  function getStoredResourceCountVaulted(bytes32 spaceRockEntity) internal view returns (uint256 totalResources) {
+    uint8[] memory transportables = P_Transportables.get();
+    for (uint8 i = 0; i < transportables.length; i++) {
+      uint256 resourceCount = ResourceCount.get(spaceRockEntity, transportables[i]);
+      uint256 vaulted = ResourceCount.get(
+        spaceRockEntity,
+        P_IsAdvancedResource.get(transportables[i])
+          ? uint8(EResource.U_AdvancedUnraidable)
+          : uint8(EResource.U_Unraidable)
+      );
+      if (vaulted > resourceCount) resourceCount = 0;
+      else resourceCount -= vaulted;
+      totalResources += resourceCount;
     }
   }
 
   /**
    * @dev Retrieves the counts of all non-utility resources for a spaceRock and calculates the total.
    * @param spaceRockEntity The identifier of the spaceRock.
-   * @return totalResources The total count of non-utility resources.
    * @return resourceCounts An array containing the counts of each non-utility resource.
+   * @return totalResources The total count of non-utility resources.
    */
-  function getAllResourceCountsVaulted(bytes32 spaceRockEntity)
+  function getStoredResourceCountsVaulted(bytes32 spaceRockEntity)
     internal
     view
-    returns (uint256 totalResources, uint256[] memory resourceCounts)
+    returns (uint256[] memory resourceCounts, uint256 totalResources)
   {
-    resourceCounts = new uint256[](uint8(EResource.LENGTH));
-    for (uint8 i = 1; i < resourceCounts.length; i++) {
-      if (P_IsUtility.get(i)) continue;
-      resourceCounts[i] = ResourceCount.get(spaceRockEntity, i);
+    uint8[] memory transportables = P_Transportables.get();
+    resourceCounts = new uint256[](transportables.length);
+    for (uint8 i = 0; i < transportables.length; i++) {
+      resourceCounts[i] = ResourceCount.get(spaceRockEntity, transportables[i]);
       uint256 vaulted = ResourceCount.get(
         spaceRockEntity,
-        P_IsAdvancedResource.get(i) ? uint8(EResource.U_AdvancedUnraidable) : uint8(EResource.U_Unraidable)
+        P_IsAdvancedResource.get(transportables[i])
+          ? uint8(EResource.U_AdvancedUnraidable)
+          : uint8(EResource.U_Unraidable)
       );
       if (vaulted > resourceCounts[i]) resourceCounts[i] = 0;
       else resourceCounts[i] -= vaulted;
@@ -264,11 +267,11 @@ library LibResource {
 
   function updateScore(
     bytes32 player,
+    bytes32 spaceRock,
     uint8 resource,
     uint256 value
   ) internal {
-    bytes32 asteroid = Home.get(player);
-    uint256 count = ResourceCount.get(asteroid, resource);
+    uint256 count = ResourceCount.get(spaceRock, resource);
     uint256 currentScore = Score.get(player);
     uint256 scoreChangeAmount = P_ScoreMultiplier.get(resource);
 

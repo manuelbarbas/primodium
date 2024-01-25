@@ -10,9 +10,9 @@ import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { recallStationedUnits } from "src/network/setup/contractCalls/recall";
-import { formatNumber } from "src/util/common";
 import { BackgroundImage, UnitEnumLookup } from "src/util/constants";
 import { getRockDefense } from "src/util/defense";
+import { formatNumber } from "src/util/number";
 import { getSpaceRockImage, getSpaceRockName } from "src/util/spacerock";
 
 export const Unit: React.FC<{ unit: Entity; count: bigint }> = ({ unit, count }) => {

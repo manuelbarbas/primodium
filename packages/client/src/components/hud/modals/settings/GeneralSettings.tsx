@@ -6,7 +6,6 @@ import { useSettingsStore } from "src/game/stores/SettingsStore";
 
 export const GeneralSettings = () => {
   const [uiScale, setUiScale] = useSettingsStore((state) => [state.uiScale, state.setUiScale]);
-  const [unitDisplay, toggleUnitDisplay] = useSettingsStore((state) => [state.unitDisplay, state.toggleUnitDisplay]);
   const [allowHackerModal, toggleAllowHackerModal] = useSettingsStore((state) => [
     state.allowHackerModal,
     state.toggleAllowHackerModal,
@@ -27,10 +26,6 @@ export const GeneralSettings = () => {
                 setUiScale(e / 100);
               }}
             />
-          </div>
-          <div className="">
-            <p className="text-xs opacity-50 font-bold pb-1">SHOW PRICE IN GWEI</p>
-            <Toggle onToggle={toggleUnitDisplay} defaultChecked={unitDisplay === "gwei"} />
           </div>
           <div className="">
             <div className="text-xs opacity-50 font-bold pb-1">

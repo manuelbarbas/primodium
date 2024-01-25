@@ -219,13 +219,23 @@ contract LibResourceTest is PrimodiumTest {
     ResourceCount.set(spaceRockEntity, Platinum, 500);
     ResourceCount.set(spaceRockEntity, Kimberlite, 1500);
 
-    (uint256 totalResources, uint256[] memory resources) = LibResource.getAllResourceCounts(spaceRockEntity);
+    (uint256[] memory resources, uint256 totalResources) = LibResource.getStoredResourceCountsVaulted(spaceRockEntity);
+
+    uint8[] memory transportables = P_Transportables.get();
 
     assertEq(totalResources, 2300);
-    assertEq(resources[uint8(Iron)], 100);
-    assertEq(resources[uint8(Copper)], 200);
-    assertEq(resources[uint8(Lithium)], 0);
-    assertEq(resources[uint8(Platinum)], 500);
-    assertEq(resources[uint8(Kimberlite)], 1500);
+    for (uint256 i = 0; i < transportables.length; i++) {
+      if (transportables[i] == uint8(Iron)) {
+        assertEq(resources[i], 100);
+      } else if (transportables[i] == uint8(Copper)) {
+        assertEq(resources[i], 200);
+      } else if (transportables[i] == uint8(Platinum)) {
+        assertEq(resources[i], 500);
+      } else if (transportables[i] == uint8(Kimberlite)) {
+        assertEq(resources[i], 1500);
+      } else {
+        assertEq(resources[i], 0);
+      }
+    }
   }
 }

@@ -29,8 +29,7 @@ library LibReward {
   ) internal {
     P_UnitRewardData memory rewardData = P_UnitReward.get(prototype);
     for (uint256 i = 0; i < rewardData.units.length; i++) {
-      LibUnit.updateStoredUtilities(spaceRockEntity, rewardData.units[i], rewardData.amounts[i], true);
-      LibUnit.increaseUnitCount(spaceRockEntity, rewardData.units[i], rewardData.amounts[i]);
+      LibUnit.increaseUnitCount(spaceRockEntity, rewardData.units[i], rewardData.amounts[i], true);
     }
   }
 

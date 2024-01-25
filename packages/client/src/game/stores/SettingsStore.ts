@@ -25,7 +25,6 @@ type SettingsState = {
   newPlayer: boolean;
   keybinds: Keybinds;
   volume: Volume;
-  unitDisplay: "gwei" | "ether";
   allowHackerModal: boolean;
   uiScale: number;
   consoleHistory: { input: string; output: string }[];
@@ -38,7 +37,6 @@ type SettingsActions = {
   setKeybind: (keybindAction: KeybindActions, keys: Set<Key>) => void;
   setNewPlayer: (val: boolean) => void;
   setVolume: (volume: number, channel: Channel) => void;
-  toggleUnitDisplay: () => void;
   toggleAllowHackerModal: () => void;
   setUiScale: (scale: number) => void;
   setConsoleHistory: (history: { input: string; output: string }[]) => void;
@@ -46,7 +44,6 @@ type SettingsActions = {
 
 const defaults: SettingsState = {
   newPlayer: true,
-  unitDisplay: "gwei",
   allowHackerModal: false,
   uiScale: 1,
   consoleHistory: [],
@@ -122,10 +119,6 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
       setKeybind: (keybindAction, keys) => set({ keybinds: { [keybindAction]: keys } }),
       setVolume: (volume, channel) => {
         set({ volume: { ...get().volume, [channel]: volume } });
-      },
-      toggleUnitDisplay: () => {
-        const unitDisplay = get().unitDisplay === "gwei" ? "ether" : "gwei";
-        set({ unitDisplay });
       },
       toggleAllowHackerModal: () => {
         const allow = get().allowHackerModal === false ? true : false;
