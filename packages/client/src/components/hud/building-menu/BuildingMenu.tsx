@@ -123,9 +123,9 @@ export const BuildingMenu: React.FC = () => {
     <Navigator initialScreen={selectedBuilding} className="w-96 border-none p-0 relative overflow-visible">
       <TopBar />
 
-      {/* Sub Screens */}
       {/* Initial Screen */}
       <RenderScreen />
+      {/* Sub Screens */}
       <Demolish building={selectedBuilding} />
       <Move building={selectedBuilding} />
       <BuildingInfo building={selectedBuilding} />

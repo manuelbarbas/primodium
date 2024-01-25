@@ -27,8 +27,7 @@ import { Leaderboard } from "./modals/leaderboard/Leaderboard";
 import { Settings } from "./modals/settings/Settings";
 import { OwnedAsteroids } from "./panes/OwnedAsteroids";
 import { BattleReports } from "./panes/battle-reports/BattleReports";
-import { FriendlyFleets } from "./panes/fleets/FriendlyFleets";
-import { HostileFleets } from "./panes/fleets/HostileFleets";
+import { Fleets } from "./panes/fleets/Fleets";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 
 export const GameHUD = () => {
@@ -191,26 +190,6 @@ const Asteroids = () => {
   );
 };
 
-const FleetsPane = () => (
-  <Tabs className="flex flex-col items-center gap-2 w-full h-full">
-    <div className="flex gap-1 w-full">
-      <Tabs.Button index={0} showActive className="flex-1 btn-md hover:text-accent hover:bg-accent">
-        Friendly
-      </Tabs.Button>
-      <Tabs.Button index={1} showActive className="flex-1 btn-md hover:text-accent hover:bg-accent">
-        Hostile
-      </Tabs.Button>
-    </div>
-    <Tabs.Pane index={0} className="rounded-r-none z-10 w-full h-full">
-      <FriendlyFleets />
-    </Tabs.Pane>
-
-    <Tabs.Pane index={1} className="rounded-r-none z-10 w-full h-full">
-      <HostileFleets />
-    </Tabs.Pane>
-  </Tabs>
-);
-
 const TopActions: React.FC<{ isSpectating: boolean }> = ({ isSpectating }) => {
   return (
     <div className="flex flex-col items-center">
@@ -245,8 +224,8 @@ const TopActions: React.FC<{ isSpectating: boolean }> = ({ isSpectating }) => {
             <Modal.Button className="rounded-l-none border border-secondary btn-sm">
               <IconLabel imageUri="/img/icons/outgoingicon.png" tooltipText="Fleets" tooltipDirection="right" />
             </Modal.Button>
-            <Modal.Content className="w-[50rem] h-[50rem]">
-              <FleetsPane />
+            <Modal.Content className="w-4/5 h-4/5">
+              <Fleets />
             </Modal.Content>
           </Modal>
           <Modal title="settings">
