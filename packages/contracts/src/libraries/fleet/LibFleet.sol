@@ -216,7 +216,7 @@ library LibFleet {
     FleetsMap.remove(spaceRock, FleetIncomingKey, fleetId);
 
     //set fleet to orbit of owner space rock
-    bytes32 spaceRockOwner = OwnedBy.get(spaceRock);
+    bytes32 spaceRockOwner = OwnedBy.get(fleetId);
     FleetsMap.add(spaceRockOwner, FleetIncomingKey, fleetId);
 
     FleetMovement.set(
