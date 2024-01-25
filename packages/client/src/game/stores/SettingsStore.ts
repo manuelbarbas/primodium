@@ -6,7 +6,7 @@ import { mountStoreDevtool } from "simple-zustand-devtools";
 import { KeybindActions } from "@game/constants";
 import { Key } from "engine/types";
 
-const VERSION = 9;
+const VERSION = 10;
 
 type Keybinds = Partial<{
   [key in KeybindActions]: Set<Key>;
@@ -25,7 +25,9 @@ type SettingsState = {
   newPlayer: boolean;
   keybinds: Keybinds;
   volume: Volume;
+  allowHackerModal: boolean;
   uiScale: number;
+  consoleHistory: { input: string; output: string }[];
 };
 
 type SettingsActions = {
@@ -35,12 +37,16 @@ type SettingsActions = {
   setKeybind: (keybindAction: KeybindActions, keys: Set<Key>) => void;
   setNewPlayer: (val: boolean) => void;
   setVolume: (volume: number, channel: Channel) => void;
+  toggleAllowHackerModal: () => void;
   setUiScale: (scale: number) => void;
+  setConsoleHistory: (history: { input: string; output: string }[]) => void;
 };
 
 const defaults: SettingsState = {
   newPlayer: true,
+  allowHackerModal: false,
   uiScale: 1,
+  consoleHistory: [],
   volume: {
     master: 1,
     music: 0.25,
@@ -78,6 +84,7 @@ const defaults: SettingsState = {
     [KeybindActions.Inventory]: new Set(["I", "TAB"]),
     [KeybindActions.Research]: new Set(["R"]),
     [KeybindActions.Map]: new Set(["M"]),
+    [KeybindActions.Console]: new Set(["BACKTICK"]),
   },
 };
 
@@ -113,8 +120,15 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
       setVolume: (volume, channel) => {
         set({ volume: { ...get().volume, [channel]: volume } });
       },
+      toggleAllowHackerModal: () => {
+        const allow = get().allowHackerModal === false ? true : false;
+        set({ allowHackerModal: allow });
+      },
       setUiScale: (scale) => {
         set({ uiScale: scale });
+      },
+      setConsoleHistory: (history) => {
+        set({ consoleHistory: history });
       },
     }),
     {

@@ -475,6 +475,7 @@ export enum KeybindActions {
   NextHotbar,
   PrevHotbar,
   Map,
+  Console,
   NULL,
 }
 
