@@ -87,7 +87,7 @@ contract MarketplaceSystemTest is PrimodiumTest {
 
     MaxResourceCount.set(asteroid, Iron, amountIn);
     ResourceCount.set(asteroid, Iron, amountIn);
-    MaxResourceCount.set(asteroid, RESERVE_CURRENCY, 2**256 - 1);
+    MaxResourceCount.set(asteroid, RESERVE_CURRENCY, 2 ** 256 - 1);
 
     uint256 prevIron = ResourceCount.get(asteroid, Iron);
     path.push(EResource.Iron);
@@ -115,7 +115,7 @@ contract MarketplaceSystemTest is PrimodiumTest {
 
     MaxResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
     ResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
-    MaxResourceCount.set(asteroid, Iron, 2**256 - 1);
+    MaxResourceCount.set(asteroid, Iron, 2 ** 256 - 1);
 
     uint256 prevIron = ResourceCount.get(asteroid, Iron);
     uint256 prevReserveCurrency = ResourceCount.get(asteroid, RESERVE_CURRENCY);
@@ -175,11 +175,11 @@ contract MarketplaceSystemTest is PrimodiumTest {
 
     MaxResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
     ResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
-    MaxResourceCount.set(asteroid, Iron, 2**256 - 1);
+    MaxResourceCount.set(asteroid, Iron, 2 ** 256 - 1);
 
     MaxResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
     ResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
-    MaxResourceCount.set(asteroid, Iron, 2**256 - 1);
+    MaxResourceCount.set(asteroid, Iron, 2 ** 256 - 1);
 
     path.push(RESERVE_CURRENCY_RESOURCE);
     path.push(EResource.Iron);
@@ -199,11 +199,11 @@ contract MarketplaceSystemTest is PrimodiumTest {
 
     MaxResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
     ResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
-    MaxResourceCount.set(asteroid, Iron, 2**256 - 1);
+    MaxResourceCount.set(asteroid, Iron, 2 ** 256 - 1);
 
     MaxResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
     ResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
-    MaxResourceCount.set(asteroid, Iron, 2**256 - 1);
+    MaxResourceCount.set(asteroid, Iron, 2 ** 256 - 1);
 
     path.push(RESERVE_CURRENCY_RESOURCE);
     path.push(EResource.Iron);
@@ -289,7 +289,7 @@ contract MarketplaceSystemTest is PrimodiumTest {
 
     MaxResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
     ResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
-    MaxResourceCount.set(asteroid, Iron, 2**256 - 1);
+    MaxResourceCount.set(asteroid, Iron, 2 ** 256 - 1);
 
     uint256 prevIron = ResourceCount.get(asteroid, Iron);
     uint256 prevReserveCurrency = ResourceCount.get(asteroid, RESERVE_CURRENCY);

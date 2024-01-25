@@ -10,14 +10,12 @@ import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { Account } from "src/network/components/clientComponents";
 import { upgradeUnit } from "src/network/setup/contractCalls/upgradeUnit";
-import { useGameStore } from "src/store/GameStore";
 import { getBlockTypeName } from "src/util/common";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { getUpgradeInfo } from "src/util/upgrade";
 
 export const UpgradeMiningVessel: React.FC = () => {
   const mud = useMud();
-  const transactionLoading = useGameStore((state) => state.transactionLoading);
   const player = Account.use()?.value ?? singletonEntity;
 
   const homeAsteroid = components.Home.use(player)?.value as Entity;
@@ -76,7 +74,7 @@ export const UpgradeMiningVessel: React.FC = () => {
         <Button
           className="w-fit btn-secondary btn-sm"
           disabled={!canUpgrade}
-          loading={transactionLoading}
+          // loading={transactionLoading}
           onClick={() => upgradeUnit(mud, homeAsteroid, EUnit.MiningVessel)}
         >
           UPGRADE

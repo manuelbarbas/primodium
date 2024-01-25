@@ -30,7 +30,7 @@ function toString(bytes32 entity) pure returns (string memory) {
 contract PrimodiumTest is MudTest {
   IWorld public world;
   uint256 userNonce = 0;
-  uint256 MAX_INT = 2**256 - 1;
+  uint256 MAX_INT = 2 ** 256 - 1;
 
   address creator;
   address payable alice;
@@ -159,19 +159,14 @@ contract PrimodiumTest is MudTest {
     revert("Resource not found");
   }
 
-  function getPosition(
-    int32 x,
-    int32 y,
-    address player
-  ) internal pure returns (PositionData memory coord) {
+  function getPosition(int32 x, int32 y, address player) internal pure returns (PositionData memory coord) {
     return getPosition(PositionData2D(x, y), player);
   }
 
-  function getPosition(PositionData2D memory coord2D, address player)
-    internal
-    pure
-    returns (PositionData memory coord)
-  {
+  function getPosition(
+    PositionData2D memory coord2D,
+    address player
+  ) internal pure returns (PositionData memory coord) {
     bytes32 playerEntity = addressToEntity(player);
     bytes32 asteroid = LibEncode.getHash(playerEntity);
 
