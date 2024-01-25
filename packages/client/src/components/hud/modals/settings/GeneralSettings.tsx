@@ -1,10 +1,15 @@
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { Range } from "src/components/core/Range";
+import { Toggle } from "src/components/core/Toggle";
 import { useSettingsStore } from "src/game/stores/SettingsStore";
 
 export const GeneralSettings = () => {
   const [uiScale, setUiScale] = useSettingsStore((state) => [state.uiScale, state.setUiScale]);
+  const [allowHackerModal, toggleAllowHackerModal] = useSettingsStore((state) => [
+    state.allowHackerModal,
+    state.toggleAllowHackerModal,
+  ]);
 
   return (
     <Navigator.Screen title="general" className="flex-grow">
@@ -21,6 +26,12 @@ export const GeneralSettings = () => {
                 setUiScale(e / 100);
               }}
             />
+          </div>
+          <div className="">
+            <div className="text-xs opacity-50 font-bold pb-1">
+              PRESS <p className="kbd">~</p> TO OPEN HACKER PANE
+            </div>
+            <Toggle onToggle={toggleAllowHackerModal} defaultChecked={allowHackerModal} />
           </div>
         </SecondaryCard>
       </div>

@@ -23,6 +23,7 @@ import { Score } from "./Score";
 import { SelectAction } from "./SelectAction";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { Chat as _Chat } from "./chat/Chat";
+import HackerConsole from "./modals/HackerConsole";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
 import { Settings } from "./modals/settings/Settings";
 import { OwnedAsteroids } from "./panes/OwnedAsteroids";
@@ -40,6 +41,7 @@ export const GameHUD = () => {
   const isSpectating = ownedBy !== playerEntity;
   const uiScale = useSettingsStore((state) => state.uiScale);
 
+  const allowHackerModal = useSettingsStore((state) => state.allowHackerModal);
   const mapOpen = components.MapOpen.use(undefined, {
     value: false,
   }).value;
@@ -83,6 +85,11 @@ export const GameHUD = () => {
 
         <HUD.Left>
           <Chat />
+          <Modal title="hacker console" keybind={allowHackerModal ? KeybindActions.Console : undefined} keybindClose>
+            <Modal.Content className="w-4/5 h-[40rem]">
+              <HackerConsole />
+            </Modal.Content>
+          </Modal>
         </HUD.Left>
 
         <HUD.BottomMiddle>
