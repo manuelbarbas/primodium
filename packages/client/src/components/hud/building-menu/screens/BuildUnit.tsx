@@ -86,7 +86,7 @@ export const BuildUnit: React.FC<{
           <hr className="border-t border-cyan-600 w-full" />
           {!selectedUnit ? (
             <p className="opacity-50 text-xs italic mb-2 flex gap-2 z-10">
-              <FaInfoCircle size={16} /> Select a unit to start building drones.
+              <FaInfoCircle size={16} /> Select a unit to start building drones!
             </p>
           ) : (
             <>
