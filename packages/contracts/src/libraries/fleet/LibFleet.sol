@@ -151,17 +151,7 @@ library LibFleet {
       LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], fleetUnitCount, !isOwner);
     }
     if (!isOwner) {
-      FleetMovement.set(
-        fleetId,
-        FleetMovementData({
-          arrivalTime: block.timestamp,
-          sendTime: block.timestamp,
-          origin: spaceRockOwner,
-          destination: spaceRockOwner
-        })
-      );
-      FleetsMap.remove(spaceRock, FleetIncomingKey, fleetId);
-      FleetsMap.add(spaceRockOwner, FleetIncomingKey, fleetId);
+      resetFleetOrbit(fleetId);
     }
   }
 
@@ -203,6 +193,14 @@ library LibFleet {
 
       resetFleetOrbit(fleets[i]);
     }
+  }
+
+  function resetFleetIfNoUnitsLeft(bytes32 fleetId) internal {
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    for (uint8 i = 0; i < unitPrototypes.length; i++) {
+      if (UnitCount.get(fleetId, unitPrototypes[i]) > 0) return;
+    }
+    resetFleetOrbit(fleetId);
   }
 
   function resetFleetOrbit(bytes32 fleetId) internal {

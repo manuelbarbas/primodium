@@ -9,6 +9,7 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
+import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
 import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
 
@@ -83,6 +84,10 @@ library LibFleetTransfer {
       LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !isOwner);
       LibFleet.decreaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !isOwner);
     }
+
+    uint256 cargo = LibFleetAttributes.getCargo(fleetId);
+    uint256 occupiedCargo = LibFleetAttributes.getOccupiedCargo(fleetId);
+    require(cargo >= occupiedCargo, "[Fleet] Not enough cargo space to transfer units");
   }
 
   function transferResourcesFromFleetToSpaceRock(
@@ -123,6 +128,10 @@ library LibFleetTransfer {
       require(fleetUnitCount >= unitCounts[i], "[Fleet] Not enough units to remove from fleet");
       LibFleet.decreaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !isOwner);
     }
+
+    uint256 cargo = LibFleetAttributes.getCargo(fleetId);
+    uint256 occupiedCargo = LibFleetAttributes.getOccupiedCargo(fleetId);
+    require(cargo >= occupiedCargo, "[Fleet] Not enough cargo space to transfer units");
   }
 
   function transferUnitsFromFleetToFleet(
@@ -137,6 +146,10 @@ library LibFleetTransfer {
       LibFleet.increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !sameOwner);
       LibFleet.decreaseFleetUnit(fromFleetId, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
+
+    uint256 cargo = LibFleetAttributes.getCargo(fromFleetId);
+    uint256 occupiedCargo = LibFleetAttributes.getOccupiedCargo(fromFleetId);
+    require(cargo >= occupiedCargo, "[Fleet] Not enough cargo space to transfer units");
   }
 
   function transferResourcesFromFleetToFleet(
@@ -172,5 +185,9 @@ library LibFleetTransfer {
       uint256 fleetUnitCount = UnitCount.get(fromFleetId, unitPrototypes[i]);
       LibFleet.decreaseFleetUnit(fromFleetId, unitPrototypes[i], fleetUnitCount, !sameOwner);
     }
+
+    uint256 cargo = LibFleetAttributes.getCargo(fromFleetId);
+    uint256 occupiedCargo = LibFleetAttributes.getOccupiedCargo(fromFleetId);
+    require(cargo >= occupiedCargo, "[Fleet] Not enough cargo space to transfer units");
   }
 }
