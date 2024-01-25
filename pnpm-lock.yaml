@@ -12,8 +12,8 @@ importers:
         specifier: 2.0.0-main-9ef3f9a7
         version: 2.0.0-main-9ef3f9a7(google-protobuf@3.21.2)
       '@primodiumxyz/pg-indexer-reader':
-        specifier: ^0.4.3
-        version: 0.4.3(react@18.2.0)(typescript@5.1.6)
+        specifier: ^0.5.0
+        version: 0.5.0(react@18.2.0)(typescript@5.1.6)
       '@typescript-eslint/eslint-plugin':
         specifier: 5.46.1
         version: 5.46.1(@typescript-eslint/parser@5.46.1)(eslint@8.29.0)(typescript@5.1.6)
@@ -107,6 +107,9 @@ importers:
       '@improbable-eng/grpc-web':
         specifier: ^0.15.0
         version: 0.15.0(google-protobuf@3.21.2)
+      '@latticexyz/block-logs-stream':
+        specifier: 2.0.0-main-9ef3f9a7
+        version: 2.0.0-main-9ef3f9a7(typescript@5.3.3)(zod@3.22.4)
       '@latticexyz/common':
         specifier: 2.0.0-main-9ef3f9a7
         version: 2.0.0-main-9ef3f9a7(typescript@5.3.3)(zod@3.22.4)
@@ -153,8 +156,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.8(@types/react@18.2.48)(csstype@3.1.3)(typescript@5.3.3)(zod@3.22.4)
       '@primodiumxyz/sync-stack':
-        specifier: ^0.4.2
-        version: 0.4.2(typescript@5.3.3)
+        specifier: ^0.5.0
+        version: 0.5.0(typescript@5.3.3)
       '@sentry/react':
         specifier: ^7.88.0
         version: 7.94.1(react@18.2.0)
@@ -246,8 +249,8 @@ importers:
         specifier: ^1.8.9
         version: 1.8.10(react-dom@18.2.0)(react@18.2.0)
       rxjs:
-        specifier: ^7.5.5
-        version: 7.8.1
+        specifier: 7.5.5
+        version: 7.5.5
       threads:
         specifier: ^1.7.0
         version: 1.7.0
@@ -2986,8 +2989,8 @@ packages:
       - zod
     dev: false
 
-  /@primodiumxyz/pg-indexer-reader@0.4.3(react@18.2.0)(typescript@5.1.6):
-    resolution: {integrity: sha512-Rkvwo07lgl1Jsw7+AW1+MK/aCJ9kfL4nq2XBx9wlKqsMZptLSz9ut5phGHiPiUH9MJR8IJvXWv/ODtxKsboSvg==}
+  /@primodiumxyz/pg-indexer-reader@0.5.0(react@18.2.0)(typescript@5.1.6):
+    resolution: {integrity: sha512-plISPkCg3bBqbXXfx3mH2LKBYyggmqBMnUGOE+VduXft4+FfT28uzutJMK15FxBOI87DtPSavRckSmhxtMUWzg==}
     hasBin: true
     dependencies:
       '@koa/cors': 4.0.0
@@ -3031,8 +3034,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@primodiumxyz/sync-stack@0.4.2(typescript@5.3.3):
-    resolution: {integrity: sha512-R/S+3b++ChgOMh9MoiI8S89lC3sk58PsfNUtoP1TLMlp0sARi3AnmAAFWs3Zr+1haEclqrd3y7QS9BlIKP5b4w==}
+  /@primodiumxyz/sync-stack@0.5.0(typescript@5.3.3):
+    resolution: {integrity: sha512-W9S1wDgeYrGDLA6Os9iQcBRtTfcPwsVPx+4rYaplnskVcNukS6G3i9CYk2dkcwwoFcQv6RyXrAojFKgn5iK4RA==}
     dependencies:
       '@latticexyz/block-logs-stream': 2.0.0-main-735d957c(typescript@5.3.3)(zod@3.22.4)
       '@latticexyz/common': 2.0.0-main-735d957c(typescript@5.3.3)(zod@3.22.4)

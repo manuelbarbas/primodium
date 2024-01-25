@@ -1,15 +1,11 @@
 import { Entity } from "@latticexyz/recs";
 import { SecondaryCard } from "src/components/core/Card";
-import { Loader } from "src/components/core/Loader";
 import { Navigator } from "src/components/core/Navigator";
 import { components } from "src/network/components";
-import { useGameStore } from "src/store/GameStore";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage } from "src/util/constants";
 
 export const BuildQueue: React.FC<{ building: Entity }> = ({ building }) => {
-  const transactionLoading = useGameStore((state) => state.transactionLoading);
-
   const rawQueue = components.TrainingQueue.use(building);
 
   const queue = rawQueue ? convertTrainingQueue(rawQueue) : [];
@@ -32,8 +28,9 @@ export const BuildQueue: React.FC<{ building: Entity }> = ({ building }) => {
       {/* <p className="text-xs p-1 font-bold text-slate-400">QUEUE</p> */}
       <SecondaryCard className="h-44 overflow-y-auto scrollbar w-full">
         {(!queue || queue.length === 0) && (
+          //TODO - use transaction queue
           <p className="text-sm font-bold text-slate-400 h-full flex items-center justify-center">
-            {transactionLoading ? "QUEUING TRAINING ORDER..." : "NO TRAINING ORDERS QUEUED"}
+            {/* {transactionLoading ? "QUEUING TRAINING ORDER..." : "NO TRAINING ORDERS QUEUED"} */}
           </p>
         )}
         {queue && queue.length !== 0 && (
@@ -48,7 +45,6 @@ export const BuildQueue: React.FC<{ building: Entity }> = ({ building }) => {
                 key={`queue-${i + 1}`}
               />
             ))}
-            {transactionLoading && <TrainingProgressSpinner />}
           </div>
         )}
       </SecondaryCard>
@@ -107,20 +103,6 @@ const ProgressBar: React.FC<{
         <p className="bg-cyan-700 text-xs p-1">x{count.toLocaleString()}</p>
       </div>
     </SecondaryCard>
-  );
-};
-
-// In the style of ProgressBar above, but replace the contents with a Spinner that fits in with previous list items.
-// This is used in packages/client/src/components/asteroid-ui/tile-info/TrainUnits.tsx
-const TrainingProgressSpinner: React.FC = () => {
-  return (
-    <div className="w-full border-b-slate-700 text-xs bg-slate-800 flex items-center justify-center">
-      <div className="flex justify-between p-2">
-        <div className="flex gap-2 items-center justify-center">
-          <Loader />
-        </div>
-      </div>
-    </div>
   );
 };
 

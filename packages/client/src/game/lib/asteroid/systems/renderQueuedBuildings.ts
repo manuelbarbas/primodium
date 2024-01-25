@@ -48,7 +48,7 @@ export const renderQueuedBuildings = (scene: Scene) => {
 
     if (!constructionSprite) return;
 
-    const textRenderObject = constructionGroup.add("Text");
+    const textRenderObject = constructionGroup.add("BitmapText");
     const spriteRenderObject = constructionGroup.add("Sprite");
 
     textRenderObject.setComponents([
@@ -68,18 +68,14 @@ export const renderQueuedBuildings = (scene: Scene) => {
       OnExitSystem([Has(components.TransactionQueue)], () => {
         textRenderObject.setComponent(
           ObjectText(getQueuePositionString(entity), {
-            align: "center",
-            fontSize: 16,
-            backgroundColor: "black",
-            color: "cyan",
+            fontSize: 14,
+            color: 0x34d399,
           })
         );
       }),
       ObjectText(getQueuePositionString(entity), {
-        align: "center",
-        fontSize: 16,
-        backgroundColor: "black",
-        color: "cyan",
+        fontSize: 14,
+        color: 0x34d399,
       }),
     ]);
 

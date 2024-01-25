@@ -1,7 +1,7 @@
 import { Sync } from "@primodiumxyz/sync-stack";
 import { MUD, SetupResult } from "../types";
 import { getNetworkConfig } from "../config/getNetworkConfig";
-import { Hex, padHex } from "viem";
+import { Hex, pad } from "viem";
 import { hydrateFromRPC } from "./rpc";
 import { Entity } from "@latticexyz/recs";
 import { hashEntities } from "src/util/encode";
@@ -26,7 +26,7 @@ export const hydrateInitialGameState = (
   //get all the tables that start with P_
   const configTableQueries = [...Object.keys(tables)]
     .filter((key) => key.startsWith("P_"))
-    .map((tableName) => ({ tableName }));
+    .map((tableName) => ({ tableId: tables[tableName].tableId }));
 
   const sync = Sync.withQueryDecodedIndexerRecsSync({
     indexerUrl: networkConfig.indexerUrl,
@@ -36,31 +36,32 @@ export const hydrateInitialGameState = (
       address: networkConfig.worldAddress as Hex,
       queries: [
         ...configTableQueries,
-        { tableName: tables.Dimensions.name! },
-        { tableName: tables.GracePeriod.name! },
-        { tableName: tables.MapItemArrivals.name! },
-        { tableName: tables.Score.name! },
-        { tableName: tables.Alliance.name! },
+        { tableId: tables.Dimensions.tableId! },
+        { tableId: tables.GracePeriod.tableId! },
+        { tableId: tables.MapItemArrivals.tableId! },
+        { tableId: tables.Score.tableId! },
+        { tableId: tables.Alliance.tableId! },
+        { tableId: tables.Reserves.tableId! },
         //get asteroids
         {
-          tableName: tables.Position.name!,
+          tableId: tables.Position.tableId!,
           where: {
             column: "parent",
             operation: "eq",
-            value: padHex(`0x`, { size: 32 }),
+            value: pad(`0x`, { size: 32 }),
           },
           include: [
             {
-              tableName: tables.OwnedBy.name!,
+              tableId: tables.OwnedBy.tableId!,
             },
             {
-              tableName: tables.Asteroid.name!,
+              tableId: tables.Asteroid.tableId!,
             },
             {
-              tableName: tables.ReversePosition.name!,
+              tableId: tables.ReversePosition.tableId!,
             },
             {
-              tableName: tables.Home.name!,
+              tableId: tables.Home.tableId!,
             },
           ],
         },
@@ -89,7 +90,7 @@ export const hydrateInitialGameState = (
   world.registerDisposer(sync.unsubscribe);
 };
 
-export const hydratePlayerData = (playerEntity: Entity, setupResult: SetupResult) => {
+export const hydratePlayerData = (playerEntity: Entity, playerAddress: Hex, setupResult: SetupResult) => {
   const { network, components } = setupResult;
   const { tables, world } = network;
   const networkConfig = getNetworkConfig();
@@ -110,6 +111,10 @@ export const hydratePlayerData = (playerEntity: Entity, setupResult: SetupResult
     filter: {
       address: networkConfig.worldAddress as Hex,
       filters: [
+        {
+          tableId: tables.UserDelegationControl.tableId,
+          key0: pad(playerAddress, { size: 32 }),
+        },
         {
           tableId: tables.Spawned.tableId,
           key0: playerEntity,
@@ -321,7 +326,7 @@ export const hydrateActiveAsteroid = (activeRock: Entity | undefined, mud: MUD) 
       queries: [
         //get buildings
         {
-          tableName: mud.network.tables.Position.name!,
+          tableId: mud.network.tables.Position.tableId!,
           where: {
             column: "parent",
             operation: "eq",
@@ -329,35 +334,35 @@ export const hydrateActiveAsteroid = (activeRock: Entity | undefined, mud: MUD) 
           },
           include: [
             {
-              tableName: tables.OwnedBy.name!,
+              tableId: tables.OwnedBy.tableId!,
             },
             {
-              tableName: tables.BuildingType.name!,
+              tableId: tables.BuildingType.tableId!,
             },
             {
-              tableName: tables.IsActive.name!,
+              tableId: tables.IsActive.tableId!,
             },
             {
-              tableName: tables.Level.name!,
+              tableId: tables.Level.tableId!,
             },
             {
-              tableName: tables.LastClaimedAt.name!,
+              tableId: tables.LastClaimedAt.tableId!,
             },
             {
-              tableName: tables.ClaimOffset.name!,
+              tableId: tables.ClaimOffset.tableId!,
             },
             {
-              tableName: tables.QueueUnits.name!,
+              tableId: tables.QueueUnits.tableId!,
             },
             {
-              tableName: tables.QueueItemUnits.name!,
+              tableId: tables.QueueItemUnits.tableId!,
               on: "entity",
             },
           ],
         },
         //get expansion level
         {
-          tableName: tables.Level.name!,
+          tableId: tables.Level.tableId!,
           where: {
             column: "entity",
             operation: "eq",
@@ -398,6 +403,96 @@ export const hydrateActiveAsteroid = (activeRock: Entity | undefined, mud: MUD) 
           message: `Failed to hydrate active asteroid data`,
         },
         syncId
+      );
+    }
+  );
+
+  world.registerDisposer(() => {
+    syncData.unsubscribe();
+  });
+};
+
+export const hydrateAllianceData = (allianceEntity: Entity | undefined, mud: MUD) => {
+  const { network, components } = mud;
+  const { tables, world } = network;
+  const networkConfig = getNetworkConfig();
+
+  // if we're already syncing from RPC, don't hydrate from indexer
+  if (components.SyncSource.get()?.value === SyncSourceType.RPC) return;
+
+  if (components.SyncStatus.get(allianceEntity)) {
+    console.log("Skipping sync for alliance (exists):", allianceEntity);
+    return;
+  }
+
+  const syncData = Sync.withQueryDecodedIndexerRecsSync({
+    indexerUrl: networkConfig.indexerUrl!,
+    tables: tables,
+    world,
+    query: {
+      address: networkConfig.worldAddress as Hex,
+      queries: [
+        {
+          //todo switch query decoded with table id
+          tableId: tables.AllianceJoinRequest.tableId,
+          where: {
+            column: "alliance",
+            operation: "eq",
+            value: allianceEntity as Hex,
+          },
+        },
+        {
+          tableId: tables.PlayerAlliance.tableId,
+          where: {
+            column: "alliance",
+            operation: "eq",
+            value: allianceEntity as Hex,
+          },
+        },
+        {
+          tableId: tables.AllianceInvitation.tableId,
+          where: {
+            column: "alliance",
+            operation: "eq",
+            value: allianceEntity as Hex,
+          },
+        },
+      ],
+    },
+  });
+
+  syncData.start(
+    (_, __, progress) => {
+      components.SyncStatus.set(
+        {
+          step: SyncStep.Syncing,
+          progress,
+          message: `Hydrating Alliance Data`,
+        },
+        allianceEntity
+      );
+
+      if (progress === 1) {
+        components.SyncStatus.set(
+          {
+            step: SyncStep.Complete,
+            progress,
+            message: `DONE`,
+          },
+          allianceEntity
+        );
+      }
+    },
+    //on error
+    (e) => {
+      console.error(e);
+      components.SyncStatus.set(
+        {
+          step: SyncStep.Error,
+          progress: 0,
+          message: `Failed to Hydrate Alliance data`,
+        },
+        allianceEntity
       );
     }
   );

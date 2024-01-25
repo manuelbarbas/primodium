@@ -1,12 +1,10 @@
 import { transportObserver } from "@latticexyz/common";
-import { syncToRecs } from "@latticexyz/store-sync/recs";
 import mudConfig from "contracts/mud.config";
 import { Hex, createPublicClient, fallback, http } from "viem";
 import { getNetworkConfig } from "../config/getNetworkConfig";
 import { createClock } from "../createClock";
-import { otherTables } from "../otherTables";
 import { world } from "../world";
-import { resolveConfig } from "@latticexyz/store";
+import { setupRecs } from "./setupRecs";
 
 export async function setupNetwork() {
   const networkConfig = getNetworkConfig();
@@ -17,17 +15,12 @@ export async function setupNetwork() {
   };
 
   const publicClient = createPublicClient(clientOptions);
-  const tables = resolveConfig(mudConfig).tables;
 
-  const { components, latestBlock$, latestBlockNumber$, storedBlockLogs$, waitForTransaction } = await syncToRecs({
+  const { components, latestBlock$, latestBlockNumber$, tables, storedBlockLogs$, waitForTransaction } = setupRecs({
+    mudConfig,
     world,
-    config: mudConfig,
-    address: networkConfig.worldAddress as Hex,
     publicClient,
-    startBlock: BigInt(networkConfig.initialBlockNumber),
-    indexerUrl: networkConfig.indexerUrl,
-    tables: otherTables,
-    initialBlockLogs: [],
+    address: networkConfig.worldAddress as Hex,
   });
 
   const clock = createClock(latestBlock$, {
