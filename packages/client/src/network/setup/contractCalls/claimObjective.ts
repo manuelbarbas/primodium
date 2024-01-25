@@ -5,9 +5,10 @@ import { MUD } from "src/network/types";
 import { getBlockTypeName } from "src/util/common";
 import { ObjectiveEntityLookup, ObjectiveEnumLookup, TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
+import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const claimObjective = async (mud: MUD, rawObjective: Entity) => {
+export const claimObjective = async (mud: MUD, rockEntity: Entity, rawObjective: Entity) => {
   const objective = ObjectiveEnumLookup[rawObjective];
   if (!objective) throw new Error(`Objective ${rawObjective} not found in ObjectiveEnumLookup`);
 
@@ -16,7 +17,7 @@ export const claimObjective = async (mud: MUD, rawObjective: Entity) => {
       mud,
       functionName: "claimObjective",
       systemId: getSystemId("ObjectiveSystem"),
-      args: [objective],
+      args: [rockEntity as Hex, objective],
       delegate: true,
     },
     {

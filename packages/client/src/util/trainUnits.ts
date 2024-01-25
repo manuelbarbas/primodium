@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { components as comps } from "src/network/components";
 import { Hex } from "viem";
-import { RESOURCE_SCALE, SPEED_SCALE } from "./constants";
+import { SPEED_SCALE } from "./constants";
 
 export function getUnitStats(rawUnitEntity: Entity, spaceRockEntity: Entity) {
   const unitEntity = rawUnitEntity as Hex;
@@ -12,7 +12,7 @@ export function getUnitStats(rawUnitEntity: Entity, spaceRockEntity: Entity) {
   )?.value;
   const unitLevelKeys = { entity: unitEntity, level: unitLevel };
 
-  const { attack, defense, speed, cargo } = comps.P_Unit.getWithKeys(unitLevelKeys, {
+  const { hp, decryption, attack, defense, speed, cargo } = comps.P_Unit.getWithKeys(unitLevelKeys, {
     attack: 0n,
     defense: 0n,
     speed: 0n,
@@ -21,13 +21,13 @@ export function getUnitStats(rawUnitEntity: Entity, spaceRockEntity: Entity) {
     hp: 0n,
     decryption: 0n,
   });
-  const mining = comps.P_MiningRate.getWithKeys(unitLevelKeys, { value: 0n }).value;
   return {
     ATK: attack,
     DEF: defense,
     SPD: speed,
-    MIN: mining,
-    CRG: cargo / RESOURCE_SCALE,
+    CRG: cargo,
+    HP: hp,
+    DEC: decryption,
   };
 }
 

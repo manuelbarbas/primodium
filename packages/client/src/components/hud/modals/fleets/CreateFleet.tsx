@@ -2,16 +2,22 @@ import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FaTrash } from "react-icons/fa";
+import { Badge } from "src/components/core/Badge";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
 import { createFleet } from "src/network/setup/contractCalls/createFleet";
-import { ResourceEntityLookup, ResourceImage, UnitStorages } from "src/util/constants";
+import { ResourceEntityLookup, ResourceImage, TransactionQueueType, UnitStorages } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
 import { formatResourceCount, parseResourceCount } from "src/util/number";
+import { getUnitStats } from "src/util/trainUnits";
+import { Hex } from "viem";
+import { FleetHeader } from "../../panes/fleets/FleetHeader";
 import { TargetHeader } from "../../spacerock-menu/TargetHeader";
 
 const ResourceIcon = ({
@@ -31,7 +37,7 @@ const ResourceIcon = ({
   >
     <img
       src={ResourceImage.get(resource) ?? ""}
-      className={`pixel-images w-16 scale-200 font-bold text-lg pointer-events-none`}
+      className={`pixel-images w-14 scale-200 font-bold text-lg pointer-events-none`}
     />
     <p className="font-bold">{amount}</p>
     {onClear && (
@@ -43,12 +49,28 @@ const ResourceIcon = ({
 );
 
 export const CreateFleet = () => {
-  const [fleetCounts, setFleetCounts] = useState<Record<Entity, bigint>>({});
+  const [fleetUnitCounts, setFleetUnitCounts] = useState<Record<Entity, bigint>>({});
+  const [fleetResourceCounts, setFleetResourceCounts] = useState<Record<Entity, bigint>>({});
+
   const [dragging, setDragging] = useState<{ entity: Entity; count: bigint } | null>(null);
   const [dragLocation, setDragLocation] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [hoveringArea, setHoveringArea] = useState<"from" | "to" | null>(null);
   const [keyDown, setKeyDown] = useState<"shift" | "ctrl" | null>();
   const selectedRock = components.SelectedRock.use()?.value ?? singletonEntity;
+  const fleetStats = useMemo(() => {
+    const data = { attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
+
+    Object.entries(fleetUnitCounts).forEach(([unit, count]) => {
+      const unitData = getUnitStats(unit as Entity, selectedRock);
+      data.attack += unitData.ATK * count;
+      data.defense += unitData.DEF * count;
+      data.hp += unitData.HP * count;
+      data.cargo += unitData.CRG * count;
+      data.decryption = bigIntMax(data.decryption, unitData.DEC);
+      data.speed = bigIntMin(data.speed == 0n ? BigInt(10e100) : data.speed, unitData.SPD);
+    });
+    return data;
+  }, [fleetUnitCounts, selectedRock]);
 
   const units = components.Hangar.use(selectedRock);
   const allResources = useFullResourceCounts(selectedRock);
@@ -61,6 +83,8 @@ export const CreateFleet = () => {
     acc[entity] = resourceCount;
     return acc;
   }, {} as Record<Entity, bigint>);
+  const maxFleets =
+    components.ResourceCount.getWithKeys({ entity: selectedRock as Hex, resource: EResource.U_MaxMoves })?.value ?? 0n;
 
   const initDragging = (e: React.MouseEvent, val: { entity: Entity; count: bigint }) => {
     document.body.style.userSelect = "none";
@@ -73,12 +97,22 @@ export const CreateFleet = () => {
     document.body.style.userSelect = "";
     setDragging(null);
     if (hoveringArea === "to" && dragging) {
-      fleetCounts[dragging.entity] = (fleetCounts[dragging.entity] ?? 0n) + dragging.count;
-      setFleetCounts({ ...fleetCounts });
+      if (UnitStorages.has(dragging.entity)) {
+        console.log("adding unit to fleet", dragging.entity, dragging.count, fleetUnitCounts[dragging.entity]);
+        setFleetUnitCounts({
+          ...fleetUnitCounts,
+          [dragging.entity]: (fleetUnitCounts[dragging.entity] ?? 0n) + dragging.count,
+        });
+      } else {
+        setFleetResourceCounts({
+          ...fleetResourceCounts,
+          [dragging.entity]: (fleetResourceCounts[dragging.entity] ?? 0n) + dragging.count,
+        });
+      }
     }
     setHoveringArea(null);
     window.removeEventListener("mousemove", (e) => setDragLocation({ x: e.clientX, y: e.clientY }));
-  }, [dragging, fleetCounts, hoveringArea]);
+  }, [dragging, fleetResourceCounts, fleetUnitCounts, hoveringArea]);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -108,17 +142,7 @@ export const CreateFleet = () => {
   );
   const mud = useMud();
   const handleSubmit = () => {
-    const { units, resources } = Object.entries(fleetCounts).reduce(
-      (acc, [entity, count]) => {
-        const isUnit = UnitStorages.has(entity as Entity);
-        if (isUnit) acc.units[entity as Entity] = count;
-        else acc.resources[entity as Entity] = count;
-
-        return acc;
-      },
-      { units: {}, resources: {} } as { units: Record<Entity, bigint>; resources: Record<Entity, bigint> }
-    );
-    createFleet(mud, selectedRock, units, resources);
+    createFleet(mud, selectedRock, fleetUnitCounts, fleetResourceCounts);
   };
 
   const handleKeyUp = useCallback((e: KeyboardEvent) => {
@@ -138,6 +162,19 @@ export const CreateFleet = () => {
     };
   }, [handleKeyDown, handleKeyUp, stopDragging]);
 
+  const { disabled, submitMessage } = useMemo(() => {
+    if (maxFleets === 0n) {
+      return { disabled: true, submitMessage: "No Fleets Left" };
+    }
+    if (Object.entries(fleetUnitCounts).length + Object.entries(fleetResourceCounts).length === 0) {
+      return { disabled: true, submitMessage: "Create Fleet" };
+    }
+    if (Object.entries(fleetResourceCounts).reduce((acc, curr) => curr[1] + acc, 0n) > fleetStats.cargo) {
+      return { disabled: true, submitMessage: "Not Enough Cargo" };
+    }
+    return { disabled: false, submitMessage: "Create Fleet" };
+  }, [fleetResourceCounts, fleetStats.cargo, fleetUnitCounts, maxFleets]);
+
   return (
     <Navigator.Screen title="CreateFleet" className="w-full h-full flex flex-col gap-2 p-2">
       {dragging && (
@@ -149,24 +186,32 @@ export const CreateFleet = () => {
         </div>
       )}
 
-      <p className="w-full uppercase opacity-50 font-bold text-xs text-left">Create Fleet</p>
+      {/*Create Fleet Header*/}
+      <div className="flex items-center justify-between gap-2 w-full uppercase font-bold text-xs text-left">
+        <p className="opacity-50">Create Fleet</p>
+        <Badge className="border border-secondary/50 text-xs font-bold uppercase p-2">
+          {maxFleets.toString()} Fleets Left
+        </Badge>
+      </div>
+
       <div
         className="grid grid-cols-2 w-full h-full gap-4"
         onMouseEnter={() => dragging && setHoveringArea("from")}
         onMouseLeave={() => setHoveringArea(null)}
       >
-        <div className="w-full h-full bg-base-100 p-2 pb-8 flex flex-col gap-2">
+        {/*Left Side */}
+        <div className="w-full h-full bg-base-100 p-2 pb-8 flex flex-col gap-2 border border-secondary/50">
           <div className="h-12">
             <TargetHeader />
           </div>
 
           {/*Units to select from*/}
-          <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
+          <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2 ">
             {units?.units.map((unit) => {
               const count =
                 units.counts[units.units.indexOf(unit)] -
                 (dragging?.entity === unit ? dragging?.count ?? 0n : 0n) -
-                (fleetCounts[unit] ?? 0n);
+                (fleetUnitCounts[unit] ?? 0n);
               if (count == 0n) return null;
               return (
                 <ResourceIcon
@@ -187,9 +232,10 @@ export const CreateFleet = () => {
               const count =
                 data -
                 (dragging?.entity === entity ? dragging?.count ?? 0n : 0n) -
-                (fleetCounts[entity as Entity] ?? 0n);
+                (fleetResourceCounts[entity as Entity] ?? 0n);
 
-              if (count == 0n) return null;
+              const resourceCount = formatResourceCount(entity as Entity, count, { fractionDigits: 0 });
+              if (resourceCount === "--" || resourceCount == "0") return null;
               return (
                 <ResourceIcon
                   key={`from-resource-${entity}`}
@@ -198,7 +244,7 @@ export const CreateFleet = () => {
                     entity as Entity,
                     data -
                       (dragging?.entity === entity ? dragging?.count ?? 0n : 0n) -
-                      (fleetCounts[entity as Entity] ?? 0n),
+                      (fleetResourceCounts[entity as Entity] ?? 0n),
                     { fractionDigits: 0 }
                   )}
                   setDragging={(e: React.MouseEvent, entity: Entity) =>
@@ -213,28 +259,29 @@ export const CreateFleet = () => {
             })}
           </div>
         </div>
+        {/* Right Side */}
         <div
-          className={`w-full h-full bg-base-100 p-2 pb-8 flex flex-col gap-2 relative ${
+          className={`w-full h-full bg-base-100 p-2 pb-8 flex flex-col gap-2 border border-secondary/50 relative ${
             hoveringArea === "to" ? "ring-2 ring-secondary" : ""
           }`}
           onMouseOver={() => dragging && setHoveringArea("to")}
           onMouseLeave={() => setHoveringArea(null)}
         >
-          <div className="h-12 bg-neutral text-sm w-full h-full font-bold grid place-items-center uppercase">
-            New Fleet
+          <div className="h-12 text-sm w-full h-full font-bold grid place-items-center uppercase">
+            <FleetHeader title={"NEW FLEET"} {...fleetStats} />
           </div>
 
           {/*Units sent*/}
           <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
-            {Object.entries(fleetCounts).map(([unit, count]) =>
+            {Object.entries(fleetUnitCounts).map(([unit, count]) =>
               UnitStorages.has(unit as Entity) ? (
                 <ResourceIcon
                   key={`to-unit-${unit}`}
                   resource={unit as Entity}
                   amount={count.toString()}
                   onClear={(entity) => {
-                    delete fleetCounts[entity];
-                    setFleetCounts({ ...fleetCounts });
+                    delete fleetUnitCounts[entity];
+                    setFleetUnitCounts({ ...fleetUnitCounts });
                   }}
                 />
               ) : null
@@ -243,32 +290,40 @@ export const CreateFleet = () => {
 
           {/*Resources sent*/}
           <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
-            {Object.entries(fleetCounts).map(([entity, data]) =>
+            {Object.entries(fleetResourceCounts).map(([entity, data]) =>
               UnitStorages.has(entity as Entity) ? null : (
                 <ResourceIcon
                   key={`to-resource-${entity}`}
                   resource={entity as Entity}
                   amount={formatResourceCount(entity as Entity, data, { fractionDigits: 0 })}
                   onClear={(entity) => {
-                    delete fleetCounts[entity];
-                    setFleetCounts({ ...fleetCounts });
+                    delete fleetResourceCounts[entity];
+                    setFleetResourceCounts({ ...fleetResourceCounts });
                   }}
                 />
               )
             )}
           </div>
-          <Button className="absolute bottom-1 right-2 btn-primary btn-xs" onClick={() => setFleetCounts({})}>
+          <Button
+            className="btn-primary btn-xs absolute bottom-1 right-2"
+            onClick={() => {
+              setFleetUnitCounts({});
+              setFleetResourceCounts({});
+            }}
+            disabled={Object.entries(fleetUnitCounts).length + Object.entries(fleetResourceCounts).length === 0}
+          >
             Clear all
           </Button>
         </div>
       </div>
-      <Button
-        className="w-fit btn-primary w-36"
-        disabled={Object.entries(fleetCounts).length === 0}
-        onClick={handleSubmit}
-      >
-        Create
-      </Button>
+      <div className="flex gap-4">
+        <Navigator.BackButton className="btn-secondary absolute left-0 bottom-0">Back</Navigator.BackButton>
+        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.CreateFleet, selectedRock)}>
+          <Button className="btn-primary w-48" disabled={disabled} onClick={handleSubmit}>
+            {submitMessage}
+          </Button>
+        </TransactionQueueMask>
+      </div>
     </Navigator.Screen>
   );
 };
