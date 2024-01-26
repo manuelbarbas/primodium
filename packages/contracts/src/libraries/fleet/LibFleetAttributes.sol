@@ -185,7 +185,11 @@ library LibFleetAttributes {
     }
   }
 
-  function getDecryption(bytes32 fleetId) internal view returns (uint256 decryption) {
+  function getDecryption(bytes32 fleetId)
+    internal
+    view
+    returns (bytes32 unitWithDecryptionPrototype, uint256 decryption)
+  {
     bytes32 ownerSpaceRock = OwnedBy.get(fleetId);
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
@@ -194,8 +198,13 @@ library LibFleetAttributes {
       uint256 unitLevel = UnitLevel.get(ownerSpaceRock, unitPrototypes[i]);
       uint256 unitDecryption = P_Unit.getDecryption(unitPrototypes[i], unitLevel);
       if (unitDecryption == 0) continue;
-      else if (decryption == 0) decryption = unitDecryption;
-      else if (unitDecryption > decryption) decryption = unitDecryption;
+      else if (decryption == 0) {
+        decryption = unitDecryption;
+        unitWithDecryptionPrototype = unitPrototypes[i];
+      } else if (unitDecryption > decryption) {
+        decryption = unitDecryption;
+        unitWithDecryptionPrototype = unitPrototypes[i];
+      }
     }
   }
 

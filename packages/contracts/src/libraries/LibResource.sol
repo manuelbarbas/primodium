@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-import { EResource } from "src/Types.sol";
+import { EResource, EUnit } from "src/Types.sol";
 
 import { LibStorage } from "libraries/LibStorage.sol";
-
+import { LibUnit } from "libraries/LibUnit.sol";
 import { UtilityMap } from "libraries/UtilityMap.sol";
 
 import { P_Transportables, P_IsRecoverable, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
-
+import { AsteroidOwnedByKey, UnitKey } from "src/Keys.sol";
+import { COLONY_SHIP_BASE_COST, COLONY_SHIP_COST_RESOURCE } from "src/constants.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 library LibResource {
@@ -48,11 +49,18 @@ library LibResource {
     bytes32 prototype,
     uint256 count
   ) internal {
-    bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
     uint256 level = UnitLevel.get(spaceRockEntity, prototype);
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(prototype, level);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       spendResource(spaceRockEntity, prototype, requiredResources.resources[i], requiredResources.amounts[i] * count);
+    }
+    if (prototype == P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip))) {
+      require(count == 1, "[SpendResources] Colony ships can only be trained one at a time");
+      LibStorage.decreaseStoredResource(
+        spaceRockEntity,
+        uint8(COLONY_SHIP_COST_RESOURCE),
+        COLONY_SHIP_BASE_COST * LibUnit.getNextColonyShipResourceCostMultiplier(spaceRockEntity)
+      );
     }
   }
 

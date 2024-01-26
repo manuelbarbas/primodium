@@ -292,7 +292,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[1]),
         },
-        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
+
         P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 1 }, true),
         P_UnitProdMultiplier: { value: 100n },
       },
@@ -301,7 +301,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[2]),
         },
-        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
+
         P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 1 }, true),
         P_UnitProdMultiplier: { value: 100n },
       },
@@ -310,7 +310,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[3]),
         },
-        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
+
         P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 2, R_Encryption: 1 }, true),
         P_UnitProdMultiplier: { value: 100n },
       },
@@ -319,7 +319,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[4]),
         },
-        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
+
         P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 3, R_Encryption: 1 }, true),
         P_UnitProdMultiplier: { value: 100n },
       },
@@ -328,7 +328,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[5]),
         },
-        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
+
         P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 4, R_Encryption: 1 }, true),
         P_UnitProdMultiplier: { value: 100n },
       },
@@ -337,7 +337,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[6]),
         },
-        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
+
         P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 5, R_Encryption: 1 }, true),
         P_UnitProdMultiplier: { value: 100n },
       },
@@ -351,7 +351,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[7]),
         },
-        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
+
         P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 6, R_Encryption: 1 }, true),
 
         P_UnitProdMultiplier: { value: 100n },
@@ -366,7 +366,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[8]),
         },
-        P_UnitProdTypes: { value: encodeArray(["MiningVessel"]) },
 
         P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 7, R_Encryption: 1 }, true),
         P_UnitProdMultiplier: { value: 100n },
@@ -890,6 +889,40 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       },
     },
   },
+
+  Shipyard: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(2, 2) },
+      P_MaxLevel: { value: 4n },
+    },
+    levels: {
+      1: {
+        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredResources: getResourceValues({ IronPlate: 2500, Alloy: 2500, PVCell: 2500 }),
+        P_UnitProdMultiplier: { value: 100n },
+        P_UnitProdTypes: { value: encodeArray(["ColonyShip"]) },
+      },
+      2: {
+        P_RequiredBaseLevel: { value: 2n },
+        P_RequiredResources: getResourceValues({ IronPlate: 7500, Alloy: 7500, PVCell: 7500 }),
+        P_UnitProdMultiplier: { value: 150n },
+        P_UnitProdTypes: { value: encodeArray(["ColonyShip"]) },
+      },
+      3: {
+        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredResources: getResourceValues({ IronPlate: 17500, Alloy: 17500, PVCell: 17500 }),
+        P_UnitProdMultiplier: { value: 250n },
+        P_UnitProdTypes: { value: encodeArray(["ColonyShip"]) },
+      },
+      4: {
+        P_RequiredBaseLevel: { value: 4n },
+        P_RequiredResources: getResourceValues({ IronPlate: 27500, Alloy: 27500, PVCell: 27500 }),
+        P_UnitProdMultiplier: { value: 300n },
+        P_UnitProdTypes: { value: encodeArray(["ColonyShip"]) },
+      },
+    },
+  },
+
   Starmapper: {
     tables: {
       P_Blueprint: { value: getBlueprint(3, 2) },
@@ -1458,116 +1491,104 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       },
     },
   },
-  MiningVessel: {
+  ColonyShip: {
     tables: {
       P_MaxLevel: { value: 5n },
     },
     levels: {
       0: {
         P_RequiredResources: {
-          ...getResourceValues({ Iron: 20000, PVCell: 5000 }),
           ...getResourceValues({ U_Vessel: 1 }, true),
         },
         P_RequiredBaseLevel: { value: 3n },
-        P_MiningRate: { value: 1n },
         P_Unit: {
           hp: 100n,
-          decryption: 0n,
+          decryption: 10n,
           attack: 20n,
           defense: 5000n,
           cargo: 100000n,
           speed: 100n,
-          trainingTime: 10000n,
+          trainingTime: 100000n,
         },
       },
       1: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 500 }),
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: {
-          ...getResourceValues({ Iron: 20000, PVCell: 5000 }),
           ...getResourceValues({ U_Vessel: 1 }, true),
         },
-        P_MiningRate: { value: 2n },
         P_Unit: {
           hp: 100n,
-          decryption: 0n,
+          decryption: 12n,
           attack: 50n,
           defense: 5500n,
           cargo: 100000n,
           speed: 200n,
-          trainingTime: 10000n,
+          trainingTime: 100000n,
         },
       },
       2: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 1500 }),
         P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: {
-          ...getResourceValues({ Iron: 20000, PVCell: 5000 }),
           ...getResourceValues({ U_Vessel: 1 }, true),
         },
-        P_MiningRate: { value: 3n },
         P_Unit: {
           hp: 100n,
-          decryption: 0n,
+          decryption: 15n,
           attack: 100n,
           defense: 6000n,
           cargo: 100000n,
           speed: 300n,
-          trainingTime: 10000n,
+          trainingTime: 100000n,
         },
       },
       3: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 5000 }),
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: {
-          ...getResourceValues({ Iron: 20000, PVCell: 5000 }),
           ...getResourceValues({ U_Vessel: 1 }, true),
         },
-        P_MiningRate: { value: 4n },
         P_Unit: {
           hp: 100n,
-          decryption: 0n,
+          decryption: 17n,
           attack: 250n,
           defense: 6500n,
           cargo: 100000n,
           speed: 400n,
-          trainingTime: 10000n,
+          trainingTime: 100000n,
         },
       },
       4: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 10000 }),
         P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: {
-          ...getResourceValues({ Iron: 20000, PVCell: 5000 }),
           ...getResourceValues({ U_Vessel: 1 }, true),
         },
-        P_MiningRate: { value: 5n },
         P_Unit: {
           hp: 100n,
-          decryption: 0n,
+          decryption: 20n,
           attack: 500n,
           defense: 7000n,
           cargo: 100000n,
           speed: 500n,
-          trainingTime: 10000n,
+          trainingTime: 100000n,
         },
       },
       5: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 15000 }),
         P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: {
-          ...getResourceValues({ Iron: 20000, PVCell: 5000 }),
           ...getResourceValues({ U_Vessel: 1 }, true),
         },
-        P_MiningRate: { value: 6n },
         P_Unit: {
           hp: 100n,
-          decryption: 0n,
+          decryption: 22n,
           attack: 1000n,
           defense: 7500n,
           cargo: 100000n,
           speed: 600n,
-          trainingTime: 10000n,
+          trainingTime: 100000n,
         },
       },
     },

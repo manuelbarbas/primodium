@@ -10,3 +10,6 @@ uint256 constant MULTIPLIER_SCALE = 100;
 address constant DUMMY_ADDRESS = 0x1234567890AbcdEF1234567890aBcdef12345678;
 EResource constant RESERVE_CURRENCY_RESOURCE = EResource.Kimberlite;
 uint8 constant RESERVE_CURRENCY = uint8(RESERVE_CURRENCY_RESOURCE);
+
+EResource constant COLONY_SHIP_COST_RESOURCE = EResource.Iridium;
+uint256 constant COLONY_SHIP_BASE_COST = 10;

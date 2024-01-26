@@ -74,10 +74,6 @@ library LibFleet {
     bytes32 ownerSpaceRockEntity = OwnedBy.get(fleetId);
     uint256 unitLevel = UnitLevel.get(ownerSpaceRockEntity, unitPrototype);
     P_UnitData memory unitData = P_Unit.get(unitPrototype, unitLevel);
-    require(
-      unitData.decryption == 0 || (unitCount == 1 && LibFleetAttributes.getDecryption(fleetId) == 0),
-      "[Fleet] Fleet can only have one colony ship"
-    );
     if (updatesUtility) {
       LibUnit.updateStoredUtilities(ownerSpaceRockEntity, unitPrototype, unitCount, true);
     }

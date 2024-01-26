@@ -16,8 +16,8 @@ import { LibResource } from "libraries/LibResource.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { LibSpaceRockAttributes } from "libraries/LibSpaceRockAttributes.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
-import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
-
+import { AsteroidOwnedByKey, FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
+import { ColoniesMap } from "libraries/ColoniesMap.sol";
 import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { EResource, EFleetStance } from "src/Types.sol";
 
@@ -87,7 +87,9 @@ library LibFleetCombat {
   function resolveBattleEncryption(bytes32 battleId, NewBattleResultData memory battleResult) internal {
     if (battleResult.winner != battleResult.aggressorEntity) return;
 
-    uint256 decryption = LibFleetAttributes.getDecryption(battleResult.aggressorEntity);
+    (bytes32 unitWithDecryptionPrototype, uint256 decryption) = LibFleetAttributes.getDecryption(
+      battleResult.aggressorEntity
+    );
     if (decryption == 0) return;
 
     uint256 encryptionAtStart = ResourceCount.get(battleResult.targetEntity, uint8(EResource.R_Encryption));
@@ -98,7 +100,11 @@ library LibFleetCombat {
 
     BattleEncryptionResult.set(battleId, battleResult.targetEntity, encryptionAtStart, encryptionAtEnd);
 
-    if (encryptionAtEnd == 0) transferSpaceRockOwnership(battleResult.rock, battleResult.aggressorEntity);
+    if (encryptionAtEnd == 0) {
+      transferSpaceRockOwnership(battleResult.rock, battleResult.aggressorEntity);
+      // remove colony ship from fleet as it is used up in the process
+      LibFleet.decreaseFleetUnit(battleResult.aggressorEntity, unitWithDecryptionPrototype, 1, true);
+    }
   }
 
   function transferSpaceRockOwnership(bytes32 spaceRock, bytes32 newOwner) internal {
@@ -106,6 +112,8 @@ library LibFleetCombat {
     for (uint256 i = 0; i < ownedFleets.length; i++) {
       LibFleetDisband.disbandFleet(ownedFleets[i]);
     }
+    ColoniesMap.add(newOwner, AsteroidOwnedByKey, spaceRock);
+    if (OwnedBy.get(spaceRock) != bytes32(0)) ColoniesMap.remove(OwnedBy.get(spaceRock), AsteroidOwnedByKey, spaceRock);
     OwnedBy.set(spaceRock, newOwner);
   }
 
