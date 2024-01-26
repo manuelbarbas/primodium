@@ -177,7 +177,8 @@ contract PrimodiumTest is MudTest {
     vm.prank(player);
     world.spawn();
     bytes32 playerEntity = addressToEntity(player);
-    return Home.get(playerEntity);
+    bytes32 homeRock = Home.get(playerEntity);
+    return homeRock;
   }
 
   function get2x2Blueprint() internal pure returns (int32[] memory blueprint) {
@@ -300,6 +301,14 @@ contract PrimodiumTest is MudTest {
   function upgradeBuilding(address player, bytes32 buildingEntity) internal {
     vm.startPrank(player);
     world.upgradeBuilding(Position.get(buildingEntity));
+    vm.stopPrank();
+  }
+
+  function buildBuilding(address player, EBuilding building, PositionData memory position) internal {
+    P_RequiredResourcesData memory requiredResources = getBuildCost(building);
+    provideResources(position.parent, requiredResources);
+    vm.startPrank(player);
+    world.build(building, position);
     vm.stopPrank();
   }
 

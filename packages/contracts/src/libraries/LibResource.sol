@@ -44,23 +44,21 @@ library LibResource {
   /// @param spaceRockEntity Entity ID of the spaceRock
   /// @param prototype Unit Prototype
   /// @param count Quantity of units to be trained
-  function spendUnitRequiredResources(
-    bytes32 spaceRockEntity,
-    bytes32 prototype,
-    uint256 count
-  ) internal {
+  function spendUnitRequiredResources(bytes32 spaceRockEntity, bytes32 prototype, uint256 count) internal {
+    if (prototype == P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip))) {
+      require(count == 1, "[SpendResources] Colony ships can only be trained one at a time");
+      uint256 cost = COLONY_SHIP_BASE_COST * LibUnit.getNextColonyShipResourceCostMultiplier(spaceRockEntity);
+      require(
+        ResourceCount.get(spaceRockEntity, uint8(COLONY_SHIP_COST_RESOURCE)) >= cost,
+        "[SpendResources] Not enough resources to train colony ship"
+      );
+      LibStorage.decreaseStoredResource(spaceRockEntity, uint8(COLONY_SHIP_COST_RESOURCE), cost);
+    }
+
     uint256 level = UnitLevel.get(spaceRockEntity, prototype);
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(prototype, level);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       spendResource(spaceRockEntity, prototype, requiredResources.resources[i], requiredResources.amounts[i] * count);
-    }
-    if (prototype == P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip))) {
-      require(count == 1, "[SpendResources] Colony ships can only be trained one at a time");
-      LibStorage.decreaseStoredResource(
-        spaceRockEntity,
-        uint8(COLONY_SHIP_COST_RESOURCE),
-        COLONY_SHIP_BASE_COST * LibUnit.getNextColonyShipResourceCostMultiplier(spaceRockEntity)
-      );
     }
   }
 
@@ -69,11 +67,7 @@ library LibResource {
   /// @param spaceRockEntity ID of the spaceRock upgrading
   /// @param unitPrototype Prototype ID of the unit to upgrade
   /// @param level Target level for the building
-  function spendUpgradeResources(
-    bytes32 spaceRockEntity,
-    bytes32 unitPrototype,
-    uint256 level
-  ) internal {
+  function spendUpgradeResources(bytes32 spaceRockEntity, bytes32 unitPrototype, uint256 level) internal {
     P_RequiredUpgradeResourcesData memory requiredResources = P_RequiredUpgradeResources.get(unitPrototype, level);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       spendResource(spaceRockEntity, unitPrototype, requiredResources.resources[i], requiredResources.amounts[i]);
@@ -88,12 +82,7 @@ library LibResource {
    * @param resourceCost The amount of the resource to be spent.
    * @notice Ensures that the spaceRock has enough of the specified resource and updates resource counts accordingly.
    */
-  function spendResource(
-    bytes32 spaceRockEntity,
-    bytes32 entity,
-    uint8 resource,
-    uint256 resourceCost
-  ) internal {
+  function spendResource(bytes32 spaceRockEntity, bytes32 entity, uint8 resource, uint256 resourceCost) internal {
     // Check if the spaceRock has enough resources.
     uint256 spaceRockResourceCount = ResourceCount.get(spaceRockEntity, resource);
     bool isUtility = P_IsUtility.get(resource);
@@ -252,11 +241,9 @@ library LibResource {
    * @return resourceCounts An array containing the counts of each non-utility resource.
    * @return totalResources The total count of non-utility resources.
    */
-  function getStoredResourceCountsVaulted(bytes32 spaceRockEntity)
-    internal
-    view
-    returns (uint256[] memory resourceCounts, uint256 totalResources)
-  {
+  function getStoredResourceCountsVaulted(
+    bytes32 spaceRockEntity
+  ) internal view returns (uint256[] memory resourceCounts, uint256 totalResources) {
     uint8[] memory transportables = P_Transportables.get();
     resourceCounts = new uint256[](transportables.length);
     for (uint8 i = 0; i < transportables.length; i++) {
@@ -273,12 +260,7 @@ library LibResource {
     }
   }
 
-  function updateScore(
-    bytes32 player,
-    bytes32 spaceRock,
-    uint8 resource,
-    uint256 value
-  ) internal {
+  function updateScore(bytes32 player, bytes32 spaceRock, uint8 resource, uint256 value) internal {
     uint256 count = ResourceCount.get(spaceRock, resource);
     uint256 currentScore = Score.get(player);
     uint256 scoreChangeAmount = P_ScoreMultiplier.get(resource);
