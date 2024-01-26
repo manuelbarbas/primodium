@@ -12,7 +12,13 @@ import { useMud } from "src/hooks";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
 import { createFleet } from "src/network/setup/contractCalls/createFleet";
-import { ResourceEntityLookup, ResourceImage, TransactionQueueType, UnitStorages } from "src/util/constants";
+import {
+  RESOURCE_SCALE,
+  ResourceEntityLookup,
+  ResourceImage,
+  TransactionQueueType,
+  UnitStorages,
+} from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { formatResourceCount, parseResourceCount } from "src/util/number";
 import { getUnitStats } from "src/util/trainUnits";
@@ -41,8 +47,8 @@ const ResourceIcon = ({
     />
     <p className="font-bold">{amount}</p>
     {onClear && (
-      <Button className="btn-error btn-xs absolute bottom-0 right-0" onClick={() => onClear(resource)}>
-        <FaTrash />
+      <Button className="btn-ghost btn-xs absolute bottom-0 right-0" onClick={() => onClear(resource)}>
+        <FaTrash className="text-error" />
       </Button>
     )}
   </div>
@@ -163,15 +169,11 @@ export const CreateFleet = () => {
   }, [handleKeyDown, handleKeyUp, stopDragging]);
 
   const { disabled, submitMessage } = useMemo(() => {
-    if (maxFleets === 0n) {
-      return { disabled: true, submitMessage: "No Fleets Left" };
-    }
-    if (Object.entries(fleetUnitCounts).length + Object.entries(fleetResourceCounts).length === 0) {
+    if (maxFleets === 0n) return { disabled: true, submitMessage: "No Fleets Left" };
+    if (Object.entries(fleetUnitCounts).length + Object.entries(fleetResourceCounts).length === 0)
       return { disabled: true, submitMessage: "Create Fleet" };
-    }
-    if (Object.entries(fleetResourceCounts).reduce((acc, curr) => curr[1] + acc, 0n) > fleetStats.cargo) {
+    if (Object.entries(fleetResourceCounts).reduce((acc, curr) => curr[1] + acc, 0n) > fleetStats.cargo)
       return { disabled: true, submitMessage: "Not Enough Cargo" };
-    }
     return { disabled: false, submitMessage: "Create Fleet" };
   }, [fleetResourceCounts, fleetStats.cargo, fleetUnitCounts, maxFleets]);
 
@@ -195,7 +197,7 @@ export const CreateFleet = () => {
       </div>
 
       <div
-        className="grid grid-cols-2 w-full h-full gap-4"
+        className="grid grid-cols-[1fr_5px_1fr]  w-full h-full gap-4"
         onMouseEnter={() => dragging && setHoveringArea("from")}
         onMouseLeave={() => setHoveringArea(null)}
       >
@@ -206,57 +208,80 @@ export const CreateFleet = () => {
           </div>
 
           {/*Units to select from*/}
-          <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2 ">
-            {units?.units.map((unit) => {
-              const count =
-                units.counts[units.units.indexOf(unit)] -
-                (dragging?.entity === unit ? dragging?.count ?? 0n : 0n) -
-                (fleetUnitCounts[unit] ?? 0n);
-              if (count == 0n) return null;
-              return (
-                <ResourceIcon
-                  key={`from-unit-${unit}`}
-                  resource={unit}
-                  amount={count.toString()}
-                  setDragging={(e: React.MouseEvent, entity: Entity) =>
-                    initDragging(e, { entity, count: keyDown == "shift" ? count : keyDown == "ctrl" ? count / 2n : 1n })
-                  }
-                />
-              );
-            })}
-          </div>
+          {units && units.units.length > 0 ? (
+            <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
+              {units.units.map((unit) => {
+                const count =
+                  units.counts[units.units.indexOf(unit)] -
+                  (dragging?.entity === unit ? dragging?.count ?? 0n : 0n) -
+                  (fleetUnitCounts[unit] ?? 0n);
+                if (count <= 0n) return null;
+                return (
+                  <ResourceIcon
+                    key={`from-unit-${unit}`}
+                    resource={unit}
+                    amount={count.toString()}
+                    setDragging={(e: React.MouseEvent, entity: Entity) =>
+                      initDragging(e, {
+                        entity,
+                        count: keyDown == "shift" ? count : keyDown == "ctrl" ? count / 2n : 1n,
+                      })
+                    }
+                  />
+                );
+              })}
+            </div>
+          ) : (
+            <div className="flex-1 bg-neutral p-4 grid place-items-center">
+              <p className="text-xs uppercase font-bold text-error/70 animate-pulse">This rock has no units</p>
+            </div>
+          )}
 
           {/*Resources to select from*/}
-          <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
-            {Object.entries(transportableResources).map(([entity, data]) => {
-              const count =
-                data -
-                (dragging?.entity === entity ? dragging?.count ?? 0n : 0n) -
-                (fleetResourceCounts[entity as Entity] ?? 0n);
+          {Object.entries(transportableResources).length > 0 ? (
+            <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
+              {Object.entries(transportableResources).map(([entity, data]) => {
+                const count =
+                  data -
+                  (dragging?.entity === entity ? dragging?.count ?? 0n : 0n) -
+                  (fleetResourceCounts[entity as Entity] ?? 0n);
 
-              const resourceCount = formatResourceCount(entity as Entity, count, { fractionDigits: 0 });
-              if (resourceCount === "--" || resourceCount == "0") return null;
-              return (
-                <ResourceIcon
-                  key={`from-resource-${entity}`}
-                  resource={entity as Entity}
-                  amount={formatResourceCount(
-                    entity as Entity,
-                    data -
-                      (dragging?.entity === entity ? dragging?.count ?? 0n : 0n) -
-                      (fleetResourceCounts[entity as Entity] ?? 0n),
-                    { fractionDigits: 0 }
-                  )}
-                  setDragging={(e: React.MouseEvent, entity: Entity) =>
-                    initDragging(e, {
-                      entity,
-                      count:
-                        keyDown == "shift" ? count : keyDown == "ctrl" ? count / 2n : parseResourceCount(entity, "1"),
-                    })
-                  }
-                />
-              );
-            })}
+                if (count / RESOURCE_SCALE <= 0n) return null;
+                return (
+                  <ResourceIcon
+                    key={`from-resource-${entity}`}
+                    resource={entity as Entity}
+                    amount={formatResourceCount(
+                      entity as Entity,
+                      data -
+                        (dragging?.entity === entity ? dragging?.count ?? 0n : 0n) -
+                        (fleetResourceCounts[entity as Entity] ?? 0n),
+                      { fractionDigits: 0 }
+                    )}
+                    setDragging={(e: React.MouseEvent, entity: Entity) =>
+                      initDragging(e, {
+                        entity,
+                        count:
+                          keyDown == "shift" ? count : keyDown == "ctrl" ? count / 2n : parseResourceCount(entity, "1"),
+                      })
+                    }
+                  />
+                );
+              })}
+            </div>
+          ) : (
+            <div className="flex-1 bg-neutral p-4 grid place-items-center ">
+              <p className="text-xs uppercase font-bold text-error/70 animate-pulse">This rock has no resources</p>
+            </div>
+          )}
+        </div>
+
+        <div className="grid grid-rows-2 h-full">
+          <div className="grid place-items-center">
+            <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[15px] border-b-secondary rotate-90 -translate-x-1/3"></div>
+          </div>
+          <div className="grid place-items-center">
+            <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[15px] border-b-secondary rotate-90 -translate-x-1/3"></div>
           </div>
         </div>
         {/* Right Side */}
@@ -272,38 +297,50 @@ export const CreateFleet = () => {
           </div>
 
           {/*Units sent*/}
-          <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
-            {Object.entries(fleetUnitCounts).map(([unit, count]) =>
-              UnitStorages.has(unit as Entity) ? (
-                <ResourceIcon
-                  key={`to-unit-${unit}`}
-                  resource={unit as Entity}
-                  amount={count.toString()}
-                  onClear={(entity) => {
-                    delete fleetUnitCounts[entity];
-                    setFleetUnitCounts({ ...fleetUnitCounts });
-                  }}
-                />
-              ) : null
-            )}
-          </div>
+          {Object.entries(fleetUnitCounts).length > 0 ? (
+            <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
+              {Object.entries(fleetUnitCounts).map(([unit, count]) =>
+                UnitStorages.has(unit as Entity) ? (
+                  <ResourceIcon
+                    key={`to-unit-${unit}`}
+                    resource={unit as Entity}
+                    amount={count.toString()}
+                    onClear={(entity) => {
+                      delete fleetUnitCounts[entity];
+                      setFleetUnitCounts({ ...fleetUnitCounts });
+                    }}
+                  />
+                ) : null
+              )}
+            </div>
+          ) : (
+            <div className="flex-1 grid p-4 place-items-center bg-neutral">
+              <p className="opacity-50 text-xs font-bold uppercase">Drag units to add them to your fleet</p>
+            </div>
+          )}
 
           {/*Resources sent*/}
-          <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
-            {Object.entries(fleetResourceCounts).map(([entity, data]) =>
-              UnitStorages.has(entity as Entity) ? null : (
-                <ResourceIcon
-                  key={`to-resource-${entity}`}
-                  resource={entity as Entity}
-                  amount={formatResourceCount(entity as Entity, data, { fractionDigits: 0 })}
-                  onClear={(entity) => {
-                    delete fleetResourceCounts[entity];
-                    setFleetResourceCounts({ ...fleetResourceCounts });
-                  }}
-                />
-              )
-            )}
-          </div>
+          {Object.entries(fleetResourceCounts).length > 0 ? (
+            <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
+              {Object.entries(fleetResourceCounts).map(([entity, data]) =>
+                UnitStorages.has(entity as Entity) ? null : (
+                  <ResourceIcon
+                    key={`to-resource-${entity}`}
+                    resource={entity as Entity}
+                    amount={formatResourceCount(entity as Entity, data, { fractionDigits: 0 })}
+                    onClear={(entity) => {
+                      delete fleetResourceCounts[entity];
+                      setFleetResourceCounts({ ...fleetResourceCounts });
+                    }}
+                  />
+                )
+              )}
+            </div>
+          ) : (
+            <div className="flex-1 grid p-4 place-items-center bg-neutral">
+              <p className="opacity-50 text-xs font-bold uppercase">Drag resources to add them to your fleet</p>
+            </div>
+          )}
           <Button
             className="btn-primary btn-xs absolute bottom-1 right-2"
             onClick={() => {
