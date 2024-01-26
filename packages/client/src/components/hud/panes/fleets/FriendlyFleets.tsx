@@ -1,10 +1,12 @@
 import { useEntityQuery } from "@latticexyz/react";
 import { Has, HasValue } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { EResource } from "contracts/config/enums";
 import { FaPlus } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
 import { Navigator } from "src/components/core/Navigator";
 import { components } from "src/network/components";
+import { Hex } from "viem";
 import { FleetButton } from "../../modals/fleets/FleetButton";
 
 export const FriendlyFleets: React.FC = () => {
@@ -12,10 +14,9 @@ export const FriendlyFleets: React.FC = () => {
 
   const query = [Has(components.IsFleet), HasValue(components.OwnedBy, { value: selectedRock })];
   const friendlyFleets = useEntityQuery(query);
-  // const maxFleets =
-  //   components.ResourceCount.getWithKeys({ entity: selectedRock as Hex, resource: EResource.U_MaxMoves })?.value ?? 0n;
+  const maxFleets =
+    components.ResourceCount.getWithKeys({ entity: selectedRock as Hex, resource: EResource.U_MaxMoves })?.value ?? 0n;
 
-  const maxFleets = 3n;
   return (
     <div className="flex flex-col gap-2 p-2">
       <Badge className="border border-secondary/50 text-xs font-bold uppercase p-2 self-end">

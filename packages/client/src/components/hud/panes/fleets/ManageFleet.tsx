@@ -1,9 +1,14 @@
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
-import { EResource } from "contracts/config/enums";
+import { EFleetStance, EResource } from "contracts/config/enums";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { useMud } from "src/hooks";
 import { components } from "src/network/components";
+import { disbandFleet } from "src/network/setup/contractCalls/fleetDisband";
+import { landFleet } from "src/network/setup/contractCalls/fleetLand";
+import { clearFleetStance, setFleetStance } from "src/network/setup/contractCalls/fleetStance";
 import { ResourceEntityLookup } from "src/util/constants";
 import { entityToRockName } from "src/util/name";
 import { Hex } from "viem";
@@ -11,7 +16,9 @@ import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { FleetEntityHeader } from "./FleetHeader";
 
 export const ManageFleet = ({ fleetEntity }: { fleetEntity: Entity }) => {
+  const mud = useMud();
   const destination = components.FleetMovement.getWithKeys({ entity: fleetEntity as Hex })?.destination;
+  const selectedRock = components.SelectedRock.get()?.value;
   const units = components.P_UnitPrototypes.get(undefined, { value: [] }).value.reduce((acc, entity) => {
     const unitCount = components.UnitCount.getWithKeys({
       entity: fleetEntity as Hex,
@@ -36,7 +43,28 @@ export const ManageFleet = ({ fleetEntity }: { fleetEntity: Entity }) => {
 
   const fleetsOnAsteroidQuery = [Has(components.IsFleet), HasValue(components.FleetMovement, { destination })];
   const fleetsOnAsteroid = useEntityQuery(fleetsOnAsteroidQuery);
+  const followableFleets = fleetsOnAsteroid.filter(
+    (entity) => entity != fleetEntity && !components.FleetStance.get(entity)
+  );
+  const activeStance = components.FleetStance.use(fleetEntity);
 
+  const handleDefend = () => {
+    if (!selectedRock) return;
+    if (activeStance?.stance == EFleetStance.Defend) clearFleetStance(mud, fleetEntity);
+    setFleetStance(mud, fleetEntity, EFleetStance.Defend, selectedRock);
+  };
+
+  const handleBlock = () => {
+    if (!selectedRock) return;
+    if (activeStance?.stance == EFleetStance.Block) clearFleetStance(mud, fleetEntity);
+    setFleetStance(mud, fleetEntity, EFleetStance.Block, selectedRock);
+  };
+
+  const handleFollow = (target: Entity) => {
+    if (activeStance?.stance == EFleetStance.Follow && activeStance?.target == target)
+      clearFleetStance(mud, fleetEntity);
+    setFleetStance(mud, fleetEntity, EFleetStance.Follow, target);
+  };
   return (
     <Navigator.Screen title={`manage-fleet-${fleetEntity}`} className="h-full">
       <div className="grid grid-cols-4 gap-4 h-full">
@@ -80,29 +108,66 @@ export const ManageFleet = ({ fleetEntity }: { fleetEntity: Entity }) => {
         </div>
         {/* Right Side */}
         <div className="flex flex-col col-span-1">
-          <div className="h-full bg-base-100 flex flex-col p-4 gap-1 overflow-hidden">
-            <div className="bg-neutral uppercase text-sm font-bold text-center">STANCE</div>
-            <p className="uppercase font-bold">DEFEND</p>
-            <p className="italic opacity-50 text-xs">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-            <Button className="btn btn-primary btn-sm">DEFEND</Button>
-            <p className="uppercase font-bold">BLOCK</p>
-            <p className="italic opacity-50 text-xs">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-            <Button className="btn btn-primary btn-sm">BLOCK</Button>
-            <p className="uppercase font-bold">FOLLOW</p>
-            <p className="italic opacity-50 text-xs">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-            <div className="flex flex-col overflow-y-auto">
-              {fleetsOnAsteroid.map((fleet, i) => (
-                <div className="w-full p-2 bg-neutral flex justify-between items-center" key={`follow-${fleet}-${i}`}>
-                  <p className="text-sm font-bold">{entityToRockName(fleet)}</p>
-                  <Button className="btn btn-primary btn-sm">FOLLOW</Button>
-                </div>
-              ))}
+          <TransactionQueueMask queueItemId={"FleetStance" as Entity}>
+            <div className="h-full bg-base-100 flex flex-col p-4 gap-1 overflow-hidden">
+              <div className="bg-neutral uppercase text-sm font-bold text-center">STANCE</div>
+              <div className="flex items-center gap-1 uppercase font-bold">
+                DEFEND
+                {activeStance?.stance == EFleetStance.Defend && (
+                  <p className="opacity-50 text-xs font-bold uppercase">(active)</p>
+                )}
+              </div>
+              <p className="italic opacity-50 text-xs">Use this fleet{"'"}s units to the defense of this space rock</p>
+              <Button className="btn btn-primary btn-sm" onClick={handleDefend}>
+                DEFEND
+              </Button>
+              <div className="flex items-center gap-1 uppercase font-bold">
+                BLOCK
+                {activeStance?.stance == EFleetStance.Block && (
+                  <p className="opacity-50 text-xs font-bold uppercase">(active)</p>
+                )}
+              </div>
+              <p className="italic opacity-50 text-xs">Stop other fleets from moving away from this space rock</p>
+              <Button className="btn btn-primary btn-sm" onClick={handleBlock}>
+                BLOCK
+              </Button>
+              <div className="flex items-center gap-1 uppercase font-bold">
+                FOLLOW
+                {activeStance?.stance == EFleetStance.Follow && (
+                  <p className="opacity-50 text-xs font-bold uppercase">(active)</p>
+                )}
+              </div>
+              <p className="italic opacity-50 text-xs">Automatically move whenever another fleet moves</p>
+              <div className="flex flex-col">
+                {followableFleets.length > 0 ? (
+                  followableFleets.map((target, i) => (
+                    <div
+                      className="w-full p-2 bg-neutral flex justify-between items-center"
+                      key={`follow-${target}-${i}`}
+                    >
+                      <p className="text-sm font-bold">{entityToRockName(target)}</p>
+                      <Button className="btn btn-primary btn-sm" onClick={() => handleFollow(target)}>
+                        {activeStance?.target === target ? "UN" : ""}FOLLOW
+                      </Button>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-error font-bold uppercase text-xs">No fleets to follow</div>
+                )}
+              </div>
             </div>
-          </div>
+          </TransactionQueueMask>
           <div className="flex flex-col gap-2">
             <Button className="btn btn-primary">ATTACK</Button>
-            <Button className="btn btn-primary">LAND</Button>
-            <Button className="btn btn-error">DISBAND</Button>
+            <Button
+              className="btn btn-primary"
+              onClick={() => selectedRock && landFleet(mud, fleetEntity, selectedRock)}
+            >
+              LAND
+            </Button>
+            <Button className="btn btn-error" onClick={() => disbandFleet(mud, fleetEntity)}>
+              DISBAND
+            </Button>
           </div>
         </div>
       </div>
