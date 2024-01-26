@@ -4,7 +4,7 @@ import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { Fleet } from "../../modals/fleets/Fleet";
+import { FleetButton } from "../../modals/fleets/FleetButton";
 
 export const HostileFleets: React.FC = () => {
   const {
@@ -89,14 +89,7 @@ export const HostileFleets: React.FC = () => {
       ) : (
         <>
           {sortedAndFilteredFleets.map((fleet) => (
-            <Fleet
-              key={fleet.entity.toString()}
-              fleetEntity={fleet.entity}
-              arrivalTime={fleet.arrivalTime}
-              destination={fleet.destination as Entity}
-              origin={fleet.origin as Entity}
-              dontShowButton
-            />
+            <FleetButton key={fleet.entity.toString()} fleetEntity={fleet.entity} dontShowButton />
           ))}
         </>
       )}

@@ -2,7 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { SecondaryCard } from "src/components/core/Card";
 import { components } from "src/network/components";
-import { Fleet } from "./Fleet";
+import { Fleet } from "./FleetButton";
 
 export const Outgoingfleets: React.FC = () => {
   const selectedRock = components.SelectedRock.use()?.value ?? singletonEntity;

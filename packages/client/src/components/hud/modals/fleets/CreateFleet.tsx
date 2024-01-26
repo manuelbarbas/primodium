@@ -3,8 +3,6 @@ import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { FaTrash } from "react-icons/fa";
-import { Badge } from "src/components/core/Badge";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
@@ -12,47 +10,14 @@ import { useMud } from "src/hooks";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
 import { createFleet } from "src/network/setup/contractCalls/createFleet";
-import {
-  RESOURCE_SCALE,
-  ResourceEntityLookup,
-  ResourceImage,
-  TransactionQueueType,
-  UnitStorages,
-} from "src/util/constants";
+import { RESOURCE_SCALE, ResourceEntityLookup, TransactionQueueType, UnitStorages } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { formatResourceCount, parseResourceCount } from "src/util/number";
 import { getUnitStats } from "src/util/trainUnits";
 import { Hex } from "viem";
 import { FleetHeader } from "../../panes/fleets/FleetHeader";
 import { TargetHeader } from "../../spacerock-menu/TargetHeader";
-
-const ResourceIcon = ({
-  resource,
-  amount,
-  setDragging = () => null,
-  onClear,
-}: {
-  resource: Entity;
-  amount: string;
-  setDragging?: (e: React.MouseEvent, entity: Entity) => void;
-  onClear?: (entity: Entity) => void;
-}) => (
-  <div
-    onMouseDown={(e) => setDragging(e, resource)}
-    className="relative flex flex-col gap-1 items-center justify-center bg-neutral border border-primary w-full h-full p-2"
-  >
-    <img
-      src={ResourceImage.get(resource) ?? ""}
-      className={`pixel-images w-14 scale-200 font-bold text-lg pointer-events-none`}
-    />
-    <p className="font-bold">{amount}</p>
-    {onClear && (
-      <Button className="btn-ghost btn-xs absolute bottom-0 right-0" onClick={() => onClear(resource)}>
-        <FaTrash className="text-error" />
-      </Button>
-    )}
-  </div>
-);
+import { ResourceIcon } from "./ResourceIcon";
 
 export const CreateFleet = () => {
   const [fleetUnitCounts, setFleetUnitCounts] = useState<Record<Entity, bigint>>({});
@@ -191,9 +156,6 @@ export const CreateFleet = () => {
       {/*Create Fleet Header*/}
       <div className="flex items-center justify-between gap-2 w-full uppercase font-bold text-xs text-left">
         <p className="opacity-50">Create Fleet</p>
-        <Badge className="border border-secondary/50 text-xs font-bold uppercase p-2">
-          {maxFleets.toString()} Fleets Left
-        </Badge>
       </div>
 
       <div
@@ -284,6 +246,7 @@ export const CreateFleet = () => {
             <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[15px] border-b-secondary rotate-90 -translate-x-1/3"></div>
           </div>
         </div>
+
         {/* Right Side */}
         <div
           className={`w-full h-full bg-base-100 p-2 pb-8 flex flex-col gap-2 border border-secondary/50 relative ${
@@ -354,7 +317,7 @@ export const CreateFleet = () => {
         </div>
       </div>
       <div className="flex gap-4">
-        <Navigator.BackButton className="btn-secondary absolute left-0 bottom-0">Back</Navigator.BackButton>
+        <Navigator.BackButton className="absolute left-0 bottom-0">Back</Navigator.BackButton>
         <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.CreateFleet, selectedRock)}>
           <Button className="btn-primary w-48" disabled={disabled} onClick={handleSubmit}>
             {submitMessage}

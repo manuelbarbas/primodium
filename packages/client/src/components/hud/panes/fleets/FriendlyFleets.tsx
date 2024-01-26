@@ -1,65 +1,47 @@
 import { useEntityQuery } from "@latticexyz/react";
-import { Entity, Has, HasValue } from "@latticexyz/recs";
+import { Has, HasValue } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { useState } from "react";
-import { Button } from "src/components/core/Button";
-import { SecondaryCard } from "src/components/core/Card";
+import { FaPlus } from "react-icons/fa";
+import { Badge } from "src/components/core/Badge";
 import { Navigator } from "src/components/core/Navigator";
 import { components } from "src/network/components";
-import { Fleet } from "../../modals/fleets/Fleet";
+import { FleetButton } from "../../modals/fleets/FleetButton";
 
 export const FriendlyFleets: React.FC = () => {
-  const [timeSort, setTimeSort] = useState<"asc" | "desc" | null>(null);
   const selectedRock = components.SelectedRock.use()?.value ?? singletonEntity;
 
   const query = [Has(components.IsFleet), HasValue(components.OwnedBy, { value: selectedRock })];
-  const friendlyFleets = useEntityQuery(query); // Combine and sort fleets
+  const friendlyFleets = useEntityQuery(query);
+  // const maxFleets =
+  //   components.ResourceCount.getWithKeys({ entity: selectedRock as Hex, resource: EResource.U_MaxMoves })?.value ?? 0n;
 
+  const maxFleets = 3n;
   return (
-    <div className="w-full text-xs h-full overflow-y-auto flex flex-col gap-2">
-      <div className=" flex gap-1 items-center">
-        <Button
-          className="btn-primary btn-xs"
-          selected={timeSort === "asc"}
-          onClick={() => setTimeSort(timeSort === "asc" ? null : "asc")}
-        >
-          Time (asc)
-        </Button>
-        <Button
-          className="btn-primary btn-xs"
-          selected={timeSort === "desc"}
-          onClick={() => setTimeSort(timeSort === "desc" ? null : "desc")}
-        >
-          Time (desc)
-        </Button>
-        <p className="w-full text-right uppercase font-bold">{friendlyFleets?.length} fleets</p>
+    <div className="flex flex-col gap-2 p-2">
+      <Badge className="border border-secondary/50 text-xs font-bold uppercase p-2 self-end">
+        {maxFleets.toString()} Fleet{maxFleets == 1n ? "" : "s"} Available
+      </Badge>
+      <div className="w-full text-xs overflow-y-auto grid grid-cols-2 gap-2">
+        {friendlyFleets.length === 0
+          ? null
+          : friendlyFleets.map((entity) => {
+              const fleet = components.FleetMovement.get(entity);
+
+              if (!fleet) return null;
+
+              return <FleetButton key={entity} fleetEntity={entity} />;
+            })}
+
+        {new Array(Number(maxFleets)).fill(0).map((_, index) => (
+          <Navigator.NavButton
+            key={`newFleet-${index}`}
+            to="CreateFleet"
+            className="btn-primary grid place-items-center w-full h-full"
+          >
+            <FaPlus className="h-full" />
+          </Navigator.NavButton>
+        ))}
       </div>
-      {friendlyFleets.length === 0 ? (
-        <SecondaryCard className="text-center font-bold w-auto flex-grow items-center justify-center">
-          <p className="opacity-50 uppercase">no friendly fleets</p>
-        </SecondaryCard>
-      ) : (
-        <>
-          {friendlyFleets.map((entity) => {
-            const fleet = components.FleetMovement.get(entity);
-
-            if (!fleet) return null;
-
-            return (
-              <Fleet
-                key={entity}
-                fleetEntity={entity}
-                arrivalTime={fleet.arrivalTime}
-                destination={fleet.destination as Entity}
-                origin={fleet.origin as Entity}
-              />
-            );
-          })}
-        </>
-      )}
-      <Navigator.NavButton to="CreateFleet" className="btn-primary btn-sm">
-        Create New Fleet{" "}
-      </Navigator.NavButton>
     </div>
   );
 };
