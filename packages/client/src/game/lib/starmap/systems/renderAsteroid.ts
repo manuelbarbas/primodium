@@ -1,4 +1,4 @@
-import { Assets, DepthLayers, EntitytoSpriteKey, RENDER_INTERVAL, SpriteKeys } from "@game/constants";
+import { Assets, DepthLayers, RENDER_INTERVAL, SpriteKeys } from "@game/constants";
 import { Entity, Has, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
@@ -6,10 +6,8 @@ import { interval } from "rxjs";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { entityToColor } from "src/util/color";
-import { clampedIndex, getBlockTypeName, getRandomRange } from "src/util/common";
-import { EntityType, MapIdToAsteroidType, RockRelationship } from "src/util/constants";
+import { getRandomRange } from "src/util/common";
 import { entityToPlayerName, entityToRockName } from "src/util/name";
-import { getRockRelationship } from "src/util/spacerock";
 import { getEnsName } from "src/util/web3/getEnsName";
 import {
   ObjectPosition,
@@ -25,6 +23,7 @@ import { Outline, Texture } from "../../common/object-components/sprite";
 import { ObjectText } from "../../common/object-components/text";
 import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { getOutlineSprite, getRockSprite, getSecondaryOutlineSprite, getSecondaryRockSprite } from "./utils/getSprites";
 
 const asteroidQueue: Entity[] = [];
 export const renderAsteroid = (scene: Scene) => {
@@ -233,60 +232,4 @@ export const renderAsteroid = (scene: Scene) => {
   });
 
   systemsWorld.registerDisposer(() => asteroidRenderer.unsubscribe());
-};
-
-const getRockSprite = (mapId: number, level: bigint) => {
-  return EntitytoSpriteKey[EntityType.Asteroid][
-    clampedIndex(Number(level) - 1, EntitytoSpriteKey[EntityType.Asteroid].length)
-  ];
-};
-
-const getSecondaryRockSprite = (mapId: number, maxLevel: bigint) => {
-  return SpriteKeys[
-    `Motherlode${getBlockTypeName(MapIdToAsteroidType[mapId])}${
-      {
-        1: "Small",
-        2: "Medium",
-        3: "Large",
-        4: "Large",
-      }[Number(maxLevel)]
-    }` as keyof typeof SpriteKeys
-  ];
-};
-
-const getOutlineSprite = (playerEntity: Entity, rock: Entity) => {
-  const rockRelationship = getRockRelationship(playerEntity, rock);
-
-  return SpriteKeys[
-    `Asteroid${
-      {
-        [RockRelationship.Ally]: "Alliance",
-        [RockRelationship.Enemy]: "Enemy",
-        [RockRelationship.Neutral]: "Enemy",
-        [RockRelationship.Self]: "Player",
-      }[rockRelationship]
-    }` as keyof typeof SpriteKeys
-  ];
-};
-
-const getSecondaryOutlineSprite = (playerEntity: Entity, rock: Entity, maxLevel: bigint) => {
-  const rockRelationship = getRockRelationship(playerEntity, rock);
-
-  return SpriteKeys[
-    `Motherlode${
-      {
-        [RockRelationship.Ally]: "Alliance",
-        [RockRelationship.Enemy]: "Enemy",
-        [RockRelationship.Neutral]: "Neutral",
-        [RockRelationship.Self]: "Player",
-      }[rockRelationship]
-    }${
-      {
-        1: "Small",
-        2: "Small",
-        3: "Medium",
-        4: "Large",
-      }[Number(maxLevel)]
-    }` as keyof typeof SpriteKeys
-  ];
 };
