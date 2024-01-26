@@ -34,8 +34,16 @@ export function getSpaceRockName(spaceRock: Entity) {
   const asteroidData = comps.Asteroid.get(spaceRock);
 
   const asteroidResource = MapIdToAsteroidType[asteroidData?.mapId ?? 0];
+  const asteroidSize = asteroidResource
+    ? {
+        1: "Micro",
+        2: "Small",
+        3: "Medium",
+        4: "Large",
+      }[Number(asteroidData?.maxLevel ?? 1)]
+    : "";
 
-  return ` ${mainBaseLevel ? `LVL. ${mainBaseLevel} ` : ""} ${
+  return ` ${mainBaseLevel ? `LVL. ${mainBaseLevel} ` : asteroidSize} ${
     asteroidResource ? getBlockTypeName(asteroidResource) : ""
   } ${isPirate ? "Pirate" : "Asteroid"}`;
 }
