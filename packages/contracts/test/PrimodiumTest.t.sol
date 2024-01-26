@@ -30,7 +30,7 @@ function toString(bytes32 entity) pure returns (string memory) {
 contract PrimodiumTest is MudTest {
   IWorld public world;
   uint256 userNonce = 0;
-  uint256 MAX_INT = 2**256 - 1;
+  uint256 MAX_INT = 2 ** 256 - 1;
 
   address creator;
   address payable alice;
@@ -159,19 +159,14 @@ contract PrimodiumTest is MudTest {
     revert("Resource not found");
   }
 
-  function getPosition(
-    int32 x,
-    int32 y,
-    address player
-  ) internal pure returns (PositionData memory coord) {
+  function getPosition(int32 x, int32 y, address player) internal pure returns (PositionData memory coord) {
     return getPosition(PositionData2D(x, y), player);
   }
 
-  function getPosition(PositionData2D memory coord2D, address player)
-    internal
-    pure
-    returns (PositionData memory coord)
-  {
+  function getPosition(
+    PositionData2D memory coord2D,
+    address player
+  ) internal pure returns (PositionData memory coord) {
     bytes32 playerEntity = addressToEntity(player);
     bytes32 asteroid = LibEncode.getHash(playerEntity);
 
@@ -234,21 +229,11 @@ contract PrimodiumTest is MudTest {
     return unitArray;
   }
 
-  function trainUnits(
-    address player,
-    EUnit unitType,
-    uint256 count,
-    bool fastForward
-  ) internal {
+  function trainUnits(address player, EUnit unitType, uint256 count, bool fastForward) internal {
     trainUnits(player, P_EnumToPrototype.get(UnitKey, uint8(unitType)), count, fastForward);
   }
 
-  function trainUnits(
-    address player,
-    bytes32 unitPrototype,
-    uint256 count,
-    bool fastForward
-  ) internal {
+  function trainUnits(address player, bytes32 unitPrototype, uint256 count, bool fastForward) internal {
     bytes32 playerEntity = addressToEntity(player);
     bytes32 spaceRock = Home.get(playerEntity);
     bytes32 mainBase = Home.get(spaceRock);
@@ -336,11 +321,7 @@ contract PrimodiumTest is MudTest {
     }
   }
 
-  function increaseResource(
-    bytes32 spaceRock,
-    EResource resourceType,
-    uint256 count
-  ) internal {
+  function increaseResource(bytes32 spaceRock, EResource resourceType, uint256 count) internal {
     vm.startPrank(creator);
     if (P_IsUtility.get(uint8(resourceType))) {
       LibProduction.increaseResourceProduction(spaceRock, resourceType, count);
@@ -356,40 +337,34 @@ contract PrimodiumTest is MudTest {
     vm.stopPrank();
   }
 
-  function getTrainCost(EUnit unitType, uint256 count)
-    internal
-    view
-    returns (P_RequiredResourcesData memory requiredResources)
-  {
+  function getTrainCost(
+    EUnit unitType,
+    uint256 count
+  ) internal view returns (P_RequiredResourcesData memory requiredResources) {
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unitType));
     requiredResources = getTrainCost(unitPrototype, count);
   }
 
-  function getTrainCost(bytes32 unitPrototype, uint256 count)
-    internal
-    view
-    returns (P_RequiredResourcesData memory requiredResources)
-  {
+  function getTrainCost(
+    bytes32 unitPrototype,
+    uint256 count
+  ) internal view returns (P_RequiredResourcesData memory requiredResources) {
     requiredResources = P_RequiredResources.get(unitPrototype, count);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       requiredResources.amounts[i] *= count;
     }
   }
 
-  function getBuildCost(EBuilding buildingType)
-    internal
-    view
-    returns (P_RequiredResourcesData memory requiredResources)
-  {
+  function getBuildCost(
+    EBuilding buildingType
+  ) internal view returns (P_RequiredResourcesData memory requiredResources) {
     bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
     requiredResources = P_RequiredResources.get(buildingPrototype, 1);
   }
 
-  function getUpgradeCost(bytes32 buildingEntity)
-    internal
-    view
-    returns (P_RequiredResourcesData memory requiredResources)
-  {
+  function getUpgradeCost(
+    bytes32 buildingEntity
+  ) internal view returns (P_RequiredResourcesData memory requiredResources) {
     uint256 level = Level.get(buildingEntity);
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
     requiredResources = P_RequiredResources.get(buildingPrototype, level + 1);

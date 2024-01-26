@@ -1,15 +1,14 @@
+import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { SecondaryCard } from "src/components/core/Card";
-import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { Fleet } from "./Fleet";
 
 export const Outgoingfleets: React.FC = () => {
-  const {
-    playerAccount: { entity: playerEntity },
-  } = useMud();
+  const selectedRock = components.SelectedRock.use()?.value ?? singletonEntity;
 
-  const fleets = components.Arrival.useAllWith({
-    from: playerEntity,
+  const fleets = components.FleetMovement.useAllWith({
+    origin: selectedRock,
   });
 
   return (
@@ -20,17 +19,17 @@ export const Outgoingfleets: React.FC = () => {
         </SecondaryCard>
       ) : (
         fleets.map((entity) => {
-          const fleet = components.Arrival.getEntity(entity);
+          const fleet = components.FleetMovement.get(entity);
 
           if (!fleet) return null;
 
           return (
             <Fleet
               key={entity}
-              arrivalEntity={entity}
+              fleetEntity={entity}
               arrivalTime={fleet.arrivalTime}
-              destination={fleet.destination}
-              sendType={fleet.sendType}
+              destination={fleet.destination as Entity}
+              origin={fleet.origin as Entity}
             />
           );
         })

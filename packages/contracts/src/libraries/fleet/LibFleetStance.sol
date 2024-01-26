@@ -47,11 +47,7 @@ library LibFleetStance {
     return FleetsMap.getFleetIds(spaceRock, fleetDefendKey);
   }
 
-  function setFleetStance(
-    bytes32 fleetId,
-    uint8 stance,
-    bytes32 target
-  ) internal {
+  function setFleetStance(bytes32 fleetId, uint8 stance, bytes32 target) internal {
     clearFleetStance(fleetId);
     clearFollowingFleets(fleetId);
     FleetStance.set(fleetId, stance, target);

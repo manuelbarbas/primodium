@@ -1,5 +1,4 @@
 import { ComponentValue, Entity } from "@latticexyz/recs";
-import { ESendType } from "contracts/config/enums";
 import { useMemo, useState } from "react";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
@@ -11,13 +10,14 @@ export const HostileFleets: React.FC = () => {
   const {
     playerAccount: { entity: playerEntity },
   } = useMud();
+  const selectedRock = components.SelectedRock.use()?.value ?? playerEntity;
 
   // State for sorting and filtering
   const [timeSort, setTimeSort] = useState<"asc" | "desc" | null>(null);
   const [fleetStatus, setFleetStatus] = useState<"orbiting" | "transiting" | null>(null);
 
-  const fleets = components.Arrival.useAllWith({
-    to: playerEntity,
+  const fleets = components.FleetMovement.useAllWith({
+    destination: selectedRock,
   });
   const currentTime = components.Time.use()?.value ?? 0n;
 
@@ -25,8 +25,8 @@ export const HostileFleets: React.FC = () => {
   const sortedAndFilteredFleets = useMemo(() => {
     return fleets
       .reduce((acc, entity) => {
-        const fleet = components.Arrival.getEntity(entity);
-        if (!fleet || fleet.sendType === ESendType.Reinforce) return acc;
+        const fleet = components.FleetMovement.get(entity);
+        if (!fleet) return acc;
 
         const isOrbiting = fleet.arrivalTime <= currentTime;
         if ((fleetStatus === "orbiting" && !isOrbiting) || (fleetStatus === "transiting" && isOrbiting)) {
@@ -34,7 +34,7 @@ export const HostileFleets: React.FC = () => {
         }
 
         return [...acc, { ...fleet, entity }];
-      }, [] as (ComponentValue<typeof components.Arrival.schema> & { entity: Entity })[])
+      }, [] as (ComponentValue<typeof components.FleetMovement.schema> & { entity: Entity })[])
       .sort((a, b) => {
         if (!timeSort) return 0;
         const timeA = a.arrivalTime ?? 0n;
@@ -91,10 +91,10 @@ export const HostileFleets: React.FC = () => {
           {sortedAndFilteredFleets.map((fleet) => (
             <Fleet
               key={fleet.entity.toString()}
-              arrivalEntity={fleet.entity}
+              fleetEntity={fleet.entity}
               arrivalTime={fleet.arrivalTime}
-              destination={fleet.destination}
-              sendType={fleet.sendType}
+              destination={fleet.destination as Entity}
+              origin={fleet.origin as Entity}
               dontShowButton
             />
           ))}

@@ -1,7 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { FleetActions } from "../fleet-send/FleetActions";
 import { RelationLabel } from "../fleet-send/RelationLabel";
 import { StationedUnitsLabel } from "../fleet-send/StationedUnitsLabel";
 import { AllMaterialLabels } from "./material/AllMaterialLabels";
@@ -10,7 +9,7 @@ import { ElectricityLabel } from "./utilities/ElectricityLabel";
 import { HousingLabel } from "./utilities/HousingLabel";
 
 export const Resources: React.FC = () => {
-  const { playerEntity } = useMud().network;
+  const playerEntity = useMud().playerAccount.entity;
   const selectedRock = components.SelectedRock.use()?.value as Entity | undefined;
   const owner = components.OwnedBy.use(selectedRock)?.value as Entity | undefined;
 
@@ -35,7 +34,6 @@ export const Resources: React.FC = () => {
           <div className="relative flex justify-center w-full">
             <div className="w-full h-full absolute star-background rounded-box opacity-50 border border-t-0 rounded-t-none border-secondary" />
             <RelationLabel />
-            <FleetActions />
             <StationedUnitsLabel />
           </div>
         )}

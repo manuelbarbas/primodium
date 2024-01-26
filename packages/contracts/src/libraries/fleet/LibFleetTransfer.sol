@@ -119,11 +119,7 @@ library LibFleetTransfer {
     require(cargo >= occupiedCargo, "[Fleet] Not enough cargo space to transfer units");
   }
 
-  function transferUnitsFromFleetToFleet(
-    bytes32 fromFleetId,
-    bytes32 fleetId,
-    uint256[] calldata unitCounts
-  ) internal {
+  function transferUnitsFromFleetToFleet(bytes32 fromFleetId, bytes32 fleetId, uint256[] calldata unitCounts) internal {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     bool sameOwner = OwnedBy.get(fleetId) == OwnedBy.get(fromFleetId);
     for (uint8 i = 0; i < unitPrototypes.length; i++) {

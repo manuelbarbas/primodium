@@ -1,25 +1,16 @@
 import { Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
-import { ESendType, EUnit } from "contracts/config/enums";
+import { EUnit } from "contracts/config/enums";
 import { useMemo } from "react";
-import { BiSolidInvader } from "react-icons/bi";
-import { FaShieldAlt } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
-import { Button } from "src/components/core/Button";
 import { Modal } from "src/components/core/Modal";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
-import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
-import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
-import { invade } from "src/network/setup/contractCalls/invade";
-import { raid } from "src/network/setup/contractCalls/raid";
-import { recallArrival } from "src/network/setup/contractCalls/recall";
-import { reinforce } from "src/network/setup/contractCalls/reinforce";
-import { TransactionQueueType, UnitEntityLookup } from "src/util/constants";
-import { decodeEntity, hashEntities } from "src/util/encode";
+import { UnitEntityLookup, UnitStorages } from "src/util/constants";
 import { getSpaceRockName } from "src/util/spacerock";
 import { getUnitStats } from "src/util/trainUnits";
+import { Hex } from "viem";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -34,13 +25,12 @@ export const LabeledValue: React.FC<{
 };
 
 export const Fleet: React.FC<{
-  arrivalEntity: Entity;
+  fleetEntity: Entity;
   arrivalTime: bigint;
+  origin: Entity;
   destination: Entity;
-  sendType: ESendType;
   dontShowButton?: boolean;
-  small?: boolean;
-}> = ({ arrivalTime, arrivalEntity, destination, sendType, dontShowButton, small }) => {
+}> = ({ arrivalTime, fleetEntity, destination, origin }) => {
   const primodium = usePrimodium();
   const timeRemaining = arrivalTime - (components.Time.use()?.value ?? 0n);
 
@@ -48,15 +38,15 @@ export const Fleet: React.FC<{
   const name = getSpaceRockName(destination);
 
   const attack = useMemo(() => {
-    const units = components.Arrival.getEntity(arrivalEntity);
-    if (!units) return 0n;
-    return units.unitCounts.reduce((acc, curr, index) => {
-      if (curr === 0n) return acc;
+    return [...UnitStorages].reduce((acc, curr, index) => {
+      const unitCount =
+        components.UnitCount.getWithKeys({ entity: fleetEntity as Hex, unit: curr as Hex })?.value ?? 0n;
+      if (unitCount === 0n) return acc;
       const entity = UnitEntityLookup[(index + 1) as EUnit];
-      const unitStats = getUnitStats(entity, units.from).ATK;
-      return acc + unitStats * curr;
-    });
-  }, [arrivalEntity]);
+      const attack = getUnitStats(entity, origin).ATK;
+      return acc + attack * unitCount;
+    }, 0n);
+  }, [fleetEntity, origin]);
 
   const onCoordinateClick = async () => {
     const coord = components.Position.get(destination, {
@@ -91,26 +81,6 @@ export const Fleet: React.FC<{
     <div className="flex items-center justify-between w-full border rounded-box border-slate-700 bg-slate-800 pr-1">
       <div className="flex gap-1 justify-between items-center h-full w-full">
         <div className="flex gap-1 items-center h-full">
-          {sendType === ESendType.Invade && (
-            <div className="rounded-box bg-rose-800 gap-1 p-1 flex flex-col items-center h-full justify-center items-center">
-              <BiSolidInvader size={16} />
-              {!small && <p className="bg-rose-900 border border-rose-500 rounded-box px-1 text-[.6rem]">INVADE</p>}
-            </div>
-          )}
-          {sendType === ESendType.Raid && (
-            <div className="rounded-box bg-rose-800 gap-1 p-1 flex flex-col items-center h-full justify-center">
-              <BiSolidInvader size={16} />
-              {!small && <p className="bg-rose-900 border border-rose-500 rounded-box px-1 text-[.6rem]">RAID</p>}
-            </div>
-          )}
-          {sendType === ESendType.Reinforce && (
-            <div className="rounded-box bg-green-800 gap-1 p-1 flex flex-col items-center h-full justify-center">
-              <FaShieldAlt size={16} />
-              {!small && (
-                <p className="bg-green-900 border border-green-500  rounded-box px-1 text-[.6rem]">REINFORCE</p>
-              )}
-            </div>
-          )}
           <Badge className="text-xs flex flex-col items-center h-fit bg-transparent border-none">
             <p className="text-lg leading-5">{attack.toLocaleString()}</p> ATK
           </Badge>
@@ -122,63 +92,20 @@ export const Fleet: React.FC<{
             {owner ? <AccountDisplay player={owner} /> : <p className="text-xs">{name}</p>}
           </Modal.CloseButton>
           <div className="text-right">
-            {timeRemaining > 0 ? (
-              <LabeledValue label="ETA">
-                <div className="flex gap-1 text-xs">
-                  <p>{timeRemaining.toLocaleString()}</p>
-                  <span className="opacity-50">SEC</span>
-                </div>
-              </LabeledValue>
-            ) : (
-              !dontShowButton && <OrbitActionButton arrivalEntity={arrivalEntity} sendType={sendType} small={small} />
-            )}
+            {
+              timeRemaining > 0 ? (
+                <LabeledValue label="ETA">
+                  <div className="flex gap-1 text-xs">
+                    <p>{timeRemaining.toLocaleString()}</p>
+                    <span className="opacity-50">SEC</span>
+                  </div>
+                </LabeledValue>
+              ) : null
+              // !dontShowButton && <OrbitActionButton arrivalEntity={arrivalEntity} sendType={sendType} small={small} />
+            }
           </div>
         </div>
       </div>
     </div>
-  );
-};
-
-export const OrbitActionButton: React.FC<{
-  arrivalEntity: Entity;
-  sendType: ESendType;
-  small?: boolean;
-}> = ({ arrivalEntity, sendType, small }) => {
-  const mud = useMud();
-  const destination = components.Arrival.getEntity(arrivalEntity)?.destination;
-  if (!destination) return <></>;
-
-  const { key } = decodeEntity(components.MapItemArrivals.metadata.keySchema, arrivalEntity);
-  const transactionId = hashEntities(TransactionQueueType.Recall, key, destination);
-
-  const action =
-    sendType == ESendType.Invade
-      ? () => invade(mud, destination, key)
-      : sendType == ESendType.Raid
-      ? () => raid(mud, destination, key)
-      : () => reinforce(mud, arrivalEntity);
-
-  return (
-    <TransactionQueueMask queueItemId={transactionId as Entity}>
-      <div className={`flex gap-1 ${small ? "flex-col-reverse gap-0" : ""}`}>
-        <Button
-          className={`${small ? "btn-xs" : "btn-sm"} opacity-75`}
-          onClick={() => recallArrival(mud, arrivalEntity)}
-        >
-          RECALL
-        </Button>
-
-        <Button
-          className={`${small ? "btn-xs" : "btn-sm"} ${
-            sendType == ESendType.Reinforce ? "bg-green-800" : "bg-rose-800"
-          }`}
-          onClick={action}
-        >
-          {sendType === ESendType.Invade && "INVADE"}
-          {sendType === ESendType.Raid && "RAID"}
-          {sendType === ESendType.Reinforce && "REINFORCE"}
-        </Button>
-      </div>
-    </TransactionQueueMask>
   );
 };

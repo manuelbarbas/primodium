@@ -53,6 +53,7 @@ library LibFleet {
     uint256 freeCargoSpace = LibFleetAttributes.getFreeCargoSpace(fleetId);
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
+      uint8 resource = transportables[i];
       if (resourceCounts[i] == 0) continue;
       uint256 rockResourceCount = ResourceCount.get(spaceRock, transportables[i]);
       require(rockResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
@@ -64,12 +65,7 @@ library LibFleet {
     FleetsMap.add(spaceRock, FleetIncomingKey, fleetId);
   }
 
-  function increaseFleetUnit(
-    bytes32 fleetId,
-    bytes32 unitPrototype,
-    uint256 unitCount,
-    bool updatesUtility
-  ) internal {
+  function increaseFleetUnit(bytes32 fleetId, bytes32 unitPrototype, uint256 unitCount, bool updatesUtility) internal {
     if (unitCount == 0) return;
     bytes32 ownerSpaceRockEntity = OwnedBy.get(fleetId);
     uint256 unitLevel = UnitLevel.get(ownerSpaceRockEntity, unitPrototype);
@@ -84,12 +80,7 @@ library LibFleet {
     UnitCount.set(fleetId, unitPrototype, UnitCount.get(fleetId, unitPrototype) + unitCount);
   }
 
-  function decreaseFleetUnit(
-    bytes32 fleetId,
-    bytes32 unitPrototype,
-    uint256 unitCount,
-    bool updatesUtility
-  ) internal {
+  function decreaseFleetUnit(bytes32 fleetId, bytes32 unitPrototype, uint256 unitCount, bool updatesUtility) internal {
     if (unitCount == 0) return;
 
     uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototype);
@@ -104,33 +95,21 @@ library LibFleet {
     UnitCount.set(fleetId, unitPrototype, fleetUnitCount - unitCount);
   }
 
-  function increaseFleetResource(
-    bytes32 fleetId,
-    uint8 resource,
-    uint256 amount
-  ) internal {
+  function increaseFleetResource(bytes32 fleetId, uint8 resource, uint256 amount) internal {
     if (amount == 0) return;
     uint256 freeCargoSpace = LibFleetAttributes.getFreeCargoSpace(fleetId);
     require(freeCargoSpace >= amount, "[Fleet] Not enough storage to add resource");
     ResourceCount.set(fleetId, resource, ResourceCount.get(fleetId, resource) + amount);
   }
 
-  function decreaseFleetResource(
-    bytes32 fleetId,
-    uint8 resource,
-    uint256 amount
-  ) internal {
+  function decreaseFleetResource(bytes32 fleetId, uint8 resource, uint256 amount) internal {
     if (amount == 0) return;
     uint256 currResourceCount = ResourceCount.get(fleetId, resource);
     require(currResourceCount >= amount, "[Fleet] Not enough stored resource to remove");
     ResourceCount.set(fleetId, resource, currResourceCount - amount);
   }
 
-  function landFleet(
-    bytes32 playerEntity,
-    bytes32 fleetId,
-    bytes32 spaceRock
-  ) internal {
+  function landFleet(bytes32 playerEntity, bytes32 fleetId, bytes32 spaceRock) internal {
     bytes32 spaceRockOwner = OwnedBy.get(fleetId);
 
     bool isOwner = spaceRockOwner == spaceRock;

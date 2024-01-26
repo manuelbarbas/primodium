@@ -1,6 +1,5 @@
 import { Type } from "@latticexyz/recs";
 import { world } from "../world";
-import { createArrivalComponent } from "./customComponents/ArrivalComponent";
 import {
   createExtendedBigIntComponent,
   createExtendedBoolComponent,
@@ -107,10 +106,6 @@ export const AllianceLeaderboard = createExtendedComponent(
 );
 
 /* -------------------------------------------------------------------------- */
-/*                                   Battle                                   */
-/* -------------------------------------------------------------------------- */
-const Arrival = createArrivalComponent();
-/* -------------------------------------------------------------------------- */
 /*                                  ALLIANCES                                 */
 /* -------------------------------------------------------------------------- */
 export const PlayerInvite = createExtendedComponent(
@@ -171,9 +166,6 @@ export default {
   /* ------------------------------ Leaderboard ------------------------------- */
   Leaderboard,
   AllianceLeaderboard,
-
-  /* --------------------------------- Battle --------------------------------- */
-  Arrival,
 
   /* ------------------------------- Alliances -------------------------------- */
   PlayerInvite,

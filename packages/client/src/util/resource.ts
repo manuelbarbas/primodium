@@ -2,16 +2,15 @@ import { Entity } from "@latticexyz/recs";
 import { DECIMALS } from "contracts/config/constants";
 import { EResource, MUDEnums } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
-import { Hex, formatUnits, parseUnits } from "viem";
+import { Hex } from "viem";
 import { clampBigInt } from "./common";
 import { EntityType, ResourceEntityLookup, ResourceEnumLookup, SPEED_SCALE, UnitEnumLookup } from "./constants";
-import { adjustDecimals } from "./number";
 
 export const getScale = (resource: Entity) => {
-  return 10 ** getDecimals(resource);
+  return 10 ** getResourceDecimals(resource);
 };
 
-export const getDecimals = (resource: Entity) => {
+export const getResourceDecimals = (resource: Entity) => {
   if (
     UnitEnumLookup[resource] !== undefined ||
     resource === EntityType.FleetMoves ||
@@ -20,19 +19,6 @@ export const getDecimals = (resource: Entity) => {
   )
     return 0;
   return DECIMALS;
-};
-
-export const formatResource = (resource: Entity, amountRaw: bigint, toFixed: number | false = false) => {
-  const decimals = getDecimals(resource);
-
-  const formatted = formatUnits(amountRaw, decimals);
-  return toFixed !== false ? adjustDecimals(formatted, toFixed) : formatted;
-};
-
-export const parseResource = (resource: Entity, amount: string) => {
-  const units = getDecimals(resource);
-
-  return parseUnits(amount, units);
 };
 
 export type ResourceCountData = {

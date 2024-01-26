@@ -22,25 +22,17 @@ import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { EResource, EFleetStance } from "src/Types.sol";
 
 library LibFleetCombat {
-  function getDefensesWithAllies(bytes32 entity)
-    internal
-    view
-    returns (
-      uint256,
-      uint256[] memory,
-      uint256
-    )
-  {
+  function getDefensesWithAllies(bytes32 entity) internal view returns (uint256, uint256[] memory, uint256) {
     return
       IsFleet.get(entity)
         ? LibFleetAttributes.getDefensesWithFollowers(entity)
         : LibSpaceRockAttributes.getDefensesWithDefenders(entity);
   }
 
-  function attack(bytes32 entity, bytes32 targetEntity)
-    internal
-    returns (bytes32 battleId, NewBattleResultData memory battleResult)
-  {
+  function attack(
+    bytes32 entity,
+    bytes32 targetEntity
+  ) internal returns (bytes32 battleId, NewBattleResultData memory battleResult) {
     bool aggressorIsFleet = IsFleet.get(entity);
 
     bytes32 spaceRock = aggressorIsFleet ? FleetMovement.getDestination(entity) : entity;
@@ -113,26 +105,14 @@ library LibFleetCombat {
     return IsFleet.get(entity) ? LibFleetStance.getFollowerFleets(entity) : LibFleetStance.getDefendingFleets(entity);
   }
 
-  function getHpWithAllies(bytes32 entity)
-    internal
-    view
-    returns (
-      uint256,
-      uint256[] memory,
-      uint256
-    )
-  {
+  function getHpWithAllies(bytes32 entity) internal view returns (uint256, uint256[] memory, uint256) {
     return
       IsFleet.get(entity)
         ? LibFleetAttributes.getHpWithFollowers(entity)
         : LibSpaceRockAttributes.getHpWithDefenders(entity);
   }
 
-  function applyDamageToWithAllies(
-    bytes32 battleId,
-    bytes32 entity,
-    uint256 damage
-  ) internal {
+  function applyDamageToWithAllies(bytes32 battleId, bytes32 entity, uint256 damage) internal {
     if (damage == 0) return;
 
     // get total hp of target and their allies as damage will be split between them
@@ -222,11 +202,7 @@ library LibFleetCombat {
     }
   }
 
-  function applyUnitCasualty(
-    bytes32 targetEntity,
-    bytes32 unitPrototype,
-    uint256 unitCount
-  ) internal {
+  function applyUnitCasualty(bytes32 targetEntity, bytes32 unitPrototype, uint256 unitCount) internal {
     if (unitCount == 0) return;
     if (IsFleet.get(targetEntity)) {
       LibFleet.decreaseFleetUnit(targetEntity, unitPrototype, unitCount, true);

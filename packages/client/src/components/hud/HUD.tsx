@@ -26,10 +26,9 @@ import { Chat as _Chat } from "./chat/Chat";
 import HackerConsole from "./modals/HackerConsole";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
 import { Settings } from "./modals/settings/Settings";
-import { ReinforcementFleets } from "./panes/FriendlyFleets";
 import { OwnedAsteroids } from "./panes/OwnedAsteroids";
 import { BattleReports } from "./panes/battle-reports/BattleReports";
-import { HostileFleets } from "./panes/hostile-fleets/HostileFleets";
+import { Fleets } from "./panes/fleets/Fleets";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 
 export const GameHUD = () => {
@@ -198,26 +197,6 @@ const Asteroids = () => {
   );
 };
 
-const FleetsPane = () => (
-  <Tabs className="flex flex-col items-center gap-2 w-full h-full">
-    <div className="flex gap-1 w-full">
-      <Tabs.Button index={0} showActive className="flex-1 btn-md hover:text-accent hover:bg-accent">
-        Friendly
-      </Tabs.Button>
-      <Tabs.Button index={1} showActive className="flex-1 btn-md hover:text-accent hover:bg-accent">
-        Hostile
-      </Tabs.Button>
-    </div>
-    <Tabs.Pane index={0} className="rounded-r-none z-10 w-full h-full">
-      <ReinforcementFleets />
-    </Tabs.Pane>
-
-    <Tabs.Pane index={1} className="rounded-r-none z-10 w-full h-full">
-      <HostileFleets />
-    </Tabs.Pane>
-  </Tabs>
-);
-
 const TopActions: React.FC<{ isSpectating: boolean }> = ({ isSpectating }) => {
   return (
     <div className="flex flex-col items-center">
@@ -252,8 +231,8 @@ const TopActions: React.FC<{ isSpectating: boolean }> = ({ isSpectating }) => {
             <Modal.Button className="rounded-l-none border border-secondary btn-sm">
               <IconLabel imageUri="/img/icons/outgoingicon.png" tooltipText="Fleets" tooltipDirection="right" />
             </Modal.Button>
-            <Modal.Content className="w-[50rem] h-[50rem]">
-              <FleetsPane />
+            <Modal.Content className="w-4/5 h-4/5">
+              <Fleets />
             </Modal.Content>
           </Modal>
           <Modal title="settings">
@@ -331,17 +310,17 @@ const HoverInfo = () => {
     );
   };
 
-  const ArrivalInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
-    const arrival = components.Arrival.getWithId(entity);
+  const FleetMovementInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
+    const fleetMovement = components.FleetMovement.use(entity);
     const now = components.Time.use()?.value ?? 0n;
 
-    if (!arrival) return <></>;
+    if (!fleetMovement) return <></>;
 
     return (
       <Card className="ml-5 uppercase font-bold text-xs relative">
         <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
         <p className="z-10">
-          <b className="text-accent">{formatNumber(arrival.arrivalTime - now)}</b> sec remaining
+          <b className="text-accent">{formatNumber(fleetMovement.arrivalTime - now)}</b> sec remaining
         </p>
       </Card>
     );
@@ -355,7 +334,7 @@ const HoverInfo = () => {
 
   if (hasComponent(components.Asteroid, hoverEntity)) return <RockInfo entity={hoverEntity} />;
 
-  if (hasComponent(components.Arrival, hoverEntity)) return <ArrivalInfo entity={hoverEntity} />;
+  if (hasComponent(components.FleetMovement, hoverEntity)) return <FleetMovementInfo entity={hoverEntity} />;
 
   return <></>;
 };
