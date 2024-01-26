@@ -292,54 +292,42 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[1]),
         },
-
         P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 1 }, true),
-        P_UnitProdMultiplier: { value: 100n },
       },
       2: {
         P_RequiredResources: getResourceValues({ Copper: 1500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[2]),
         },
-
         P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 1 }, true),
-        P_UnitProdMultiplier: { value: 100n },
       },
       3: {
         P_RequiredResources: getResourceValues({ Copper: 10000, PVCell: 1500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[3]),
         },
-
         P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 2, R_Encryption: 1 }, true),
-        P_UnitProdMultiplier: { value: 100n },
       },
       4: {
         P_RequiredResources: getResourceValues({ Copper: 25000, PVCell: 5000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[4]),
         },
-
         P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 3, R_Encryption: 1 }, true),
-        P_UnitProdMultiplier: { value: 100n },
       },
       5: {
         P_RequiredResources: getResourceValues({ Copper: 75000, PVCell: 500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[5]),
         },
-
         P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 4, R_Encryption: 1 }, true),
-        P_UnitProdMultiplier: { value: 100n },
       },
       6: {
         P_RequiredResources: getResourceValues({ Copper: 125000, Titanium: 1500, Platinum: 1500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[6]),
         },
-
         P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 5, R_Encryption: 1 }, true),
-        P_UnitProdMultiplier: { value: 100n },
       },
       7: {
         P_RequiredResources: getResourceValues({
@@ -351,10 +339,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[7]),
         },
-
         P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 6, R_Encryption: 1 }, true),
-
-        P_UnitProdMultiplier: { value: 100n },
       },
       8: {
         P_RequiredResources: getResourceValues({
@@ -366,9 +351,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[8]),
         },
-
         P_Production: getResourceValues({ U_MaxMoves: 1, U_Vessel: 7, R_Encryption: 1 }, true),
-        P_UnitProdMultiplier: { value: 100n },
       },
     },
   },
