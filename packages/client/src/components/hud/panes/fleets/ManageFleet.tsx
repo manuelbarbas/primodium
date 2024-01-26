@@ -69,7 +69,7 @@ export const ManageFleet = ({ fleetEntity }: { fleetEntity: Entity }) => {
     <Navigator.Screen title={`manage-fleet-${fleetEntity}`} className="h-full">
       <div className="grid grid-cols-4 gap-4 h-full">
         {/* Left Side */}
-        <div className="col-span-3 flex flex-col gap-4 h-full">
+        <div className="col-span-3 flex flex-col gap-4 h-full relative">
           <div className="bg-base-100 p-4">
             <FleetEntityHeader entity={fleetEntity} />
           </div>
@@ -85,6 +85,8 @@ export const ManageFleet = ({ fleetEntity }: { fleetEntity: Entity }) => {
             ) : (
               <p className="w-full h-full grid place-items-center text-xs uppercase font-bold">No Units</p>
             )}
+
+            <Button className="btn-xs self-right">Add Units</Button>
           </div>
           <div className="flex-1 flex flex-col bg-base-100 p-4 gap-2">
             <p className="uppercase text-xs opacity-50 font-bold">RESOURCES</p>
@@ -104,6 +106,7 @@ export const ManageFleet = ({ fleetEntity }: { fleetEntity: Entity }) => {
             ) : (
               <p className="w-full h-full grid place-items-center text-xs uppercase font-bold">No Resources</p>
             )}
+            <Button className="btn-xs self-right">Add Resources</Button>
           </div>
         </div>
         {/* Right Side */}
