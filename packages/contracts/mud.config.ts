@@ -83,6 +83,14 @@ export const config = mudConfig({
       },
     },
 
+    P_ColonyShipConfig: {
+      keySchema: {},
+      valueSchema: {
+        resourceType: "uint8",
+        resourceAmount: "uint256",
+      },
+    },
+
     Position: {
       keySchema: { entity: "bytes32" },
       valueSchema: {

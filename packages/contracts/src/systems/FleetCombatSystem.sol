@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-import { FleetStance, IsFleet, NewBattleResult, NewBattleResultData, FleetMovement, P_GracePeriod } from "codegen/index.sol";
+import { FleetStance, IsFleet, NewBattleResult, NewBattleResultData, FleetMovement, P_GracePeriod, OwnedBy } from "codegen/index.sol";
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
 import { EFleetStance } from "src/Types.sol";
-import { fleetBattleResolveRaid, fleetBattleApplyDamage, resolveBattleEncryption } from "libraries/SubsystemCalls.sol";
+import { fleetBattleResolveRaid, fleetBattleApplyDamage, resolveBattleEncryption, transferSpaceRockOwnership, initializeSpaceRockOwnership } from "libraries/SubsystemCalls.sol";
 
 contract FleetCombatSystem is FleetBaseSystem {
   modifier _onlyWhenNotInGracePeriod(bytes32 fleetId) {
@@ -39,7 +39,10 @@ contract FleetCombatSystem is FleetBaseSystem {
     }
   }
 
-  function fleetAttackFleet(bytes32 fleetId, bytes32 targetFleet)
+  function fleetAttackFleet(
+    bytes32 fleetId,
+    bytes32 targetFleet
+  )
     private
     _onlyWhenNotInGracePeriod(targetFleet)
     _onlyFleetOwner(fleetId)
@@ -51,7 +54,10 @@ contract FleetCombatSystem is FleetBaseSystem {
     afterBattle(battleId, batteResult);
   }
 
-  function fleetAttackSpaceRock(bytes32 fleetId, bytes32 targetSpaceRock)
+  function fleetAttackSpaceRock(
+    bytes32 fleetId,
+    bytes32 targetSpaceRock
+  )
     private
     _onlyFleetOwner(fleetId)
     _onlyWhenNotInStance(fleetId)
@@ -64,7 +70,10 @@ contract FleetCombatSystem is FleetBaseSystem {
     afterBattle(battleId, batteResult);
   }
 
-  function spaceRockAttackFleet(bytes32 spaceRock, bytes32 targetFleet)
+  function spaceRockAttackFleet(
+    bytes32 spaceRock,
+    bytes32 targetFleet
+  )
     private
     _onlyWhenNotInGracePeriod(targetFleet)
     _onlySpaceRockOwner(spaceRock)
@@ -83,7 +92,18 @@ contract FleetCombatSystem is FleetBaseSystem {
       fleetBattleResolveRaid(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
 
       if (!IsFleet.get(battleResult.targetEntity)) {
-        resolveBattleEncryption(battleId, battleResult);
+        uint256 encryptionAtEnd = resolveBattleEncryption(
+          battleId,
+          battleResult.aggressorEntity,
+          battleResult.targetEntity
+        );
+        if (encryptionAtEnd == 0) {
+          if (OwnedBy.get(battleResult.targetEntity) == bytes32(0)) {
+            transferSpaceRockOwnership(battleResult.targetEntity, _player());
+          } else {
+            initializeSpaceRockOwnership(battleResult.targetEntity, _player());
+          }
+        }
       }
     }
 

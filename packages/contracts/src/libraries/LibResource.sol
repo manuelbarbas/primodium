@@ -6,9 +6,9 @@ import { LibStorage } from "libraries/LibStorage.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { UtilityMap } from "libraries/UtilityMap.sol";
 
-import { P_Transportables, P_IsRecoverable, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+import { P_ColonyShipConfig, P_Transportables, P_IsRecoverable, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
 import { AsteroidOwnedByKey, UnitKey } from "src/Keys.sol";
-import { COLONY_SHIP_BASE_COST, COLONY_SHIP_COST_RESOURCE } from "src/constants.sol";
+
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 library LibResource {
@@ -47,12 +47,14 @@ library LibResource {
   function spendUnitRequiredResources(bytes32 spaceRockEntity, bytes32 prototype, uint256 count) internal {
     if (prototype == P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip))) {
       require(count == 1, "[SpendResources] Colony ships can only be trained one at a time");
-      uint256 cost = COLONY_SHIP_BASE_COST * LibUnit.getNextColonyShipResourceCostMultiplier(spaceRockEntity);
+      uint8 colonyShipResource = P_ColonyShipConfig.getResourceType();
+      uint256 cost = P_ColonyShipConfig.getResourceAmount() *
+        LibUnit.getNextColonyShipResourceCostMultiplier(spaceRockEntity);
       require(
-        ResourceCount.get(spaceRockEntity, uint8(COLONY_SHIP_COST_RESOURCE)) >= cost,
+        ResourceCount.get(spaceRockEntity, colonyShipResource) >= cost,
         "[SpendResources] Not enough resources to train colony ship"
       );
-      LibStorage.decreaseStoredResource(spaceRockEntity, uint8(COLONY_SHIP_COST_RESOURCE), cost);
+      LibStorage.decreaseStoredResource(spaceRockEntity, colonyShipResource, cost);
     }
 
     uint256 level = UnitLevel.get(spaceRockEntity, prototype);

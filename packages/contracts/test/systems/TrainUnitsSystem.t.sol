@@ -2,7 +2,6 @@
 pragma solidity >=0.8.21;
 
 import "test/PrimodiumTest.t.sol";
-import { COLONY_SHIP_BASE_COST, COLONY_SHIP_COST_RESOURCE } from "src/constants.sol";
 
 contract TrainUnitsSystemTest is PrimodiumTest {
   bytes32 rock = bytes32("rock");
@@ -14,8 +13,13 @@ contract TrainUnitsSystemTest is PrimodiumTest {
   bytes32 building = "building";
   bytes32 buildingPrototype = "buildingPrototype";
 
+  uint256 COLONY_SHIP_BASE_COST;
+  EResource COLONY_SHIP_COST_RESOURCE;
+
   function setUp() public override {
     super.setUp();
+    COLONY_SHIP_BASE_COST = P_ColonyShipConfig.getResourceAmount();
+    COLONY_SHIP_COST_RESOURCE = EResource(P_ColonyShipConfig.getResourceType());
     vm.startPrank(creator);
     player = addressToEntity(creator);
     BuildingType.set(building, buildingPrototype);

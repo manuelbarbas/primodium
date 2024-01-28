@@ -8,7 +8,7 @@ import { CompletedObjective } from "codegen/tables/CompletedObjective.sol";
 import { OwnedBy } from "codegen/tables/OwnedBy.sol";
 import { BuildingType } from "codegen/tables/BuildingType.sol";
 import { P_HasBuiltBuildings } from "codegen/tables/P_HasBuiltBuildings.sol";
-
+import { initializeSpaceRockOwnership } from "src/libraries/SubsystemCalls.sol";
 import "test/PrimodiumTest.t.sol";
 
 contract ClaimObjectiveSystemTest is PrimodiumTest {
@@ -128,9 +128,19 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
       "Resource does not match"
     );
     // claim copper mine with secondary rock
-    LibAsteroid.initSecondaryAsteroid(playerEntity, PositionData(0, 0, 0), rock);
+    LibAsteroid.initSecondaryAsteroid(PositionData(0, 0, 0), rock);
     MaxResourceCount.set(rock, uint8(EResource.Copper), 1000000);
     // ResourceCount.set(rock, uint8(EResource.Copper), 10000);
+    console.log("reached here");
+
+    //todo for some reason the line bellow encounters an error  so the actual function code is copy pasted here
+    //LibAsteroid.initializeSpaceRockOwnership(rock, playerEntity);
+    OwnedBy.set(rock, playerEntity);
+    ColoniesMap.add(playerEntity, AsteroidOwnedByKey, rock);
+    PositionData memory mainBasePosition = Position.get(MainBasePrototypeId);
+    mainBasePosition.parent = rock;
+    world.build(EBuilding.MainBase, mainBasePosition);
+    console.log("reached here 2");
     world.build(EBuilding.CopperMine, getTilePosition(rock, EResource.Iron));
     resourceRewardData = P_ResourceRewardData(new uint8[](1), new uint256[](1));
     resourceRewardData.resources[0] = uint8(EResource.Copper);
@@ -413,10 +423,9 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     P_SpawnPirateAsteroid.set(objectivePrototype, spawnPirateAsteroid);
   }
 
-  function setupSpawnPirateAsteroid(bytes32 objectivePrototype)
-    internal
-    returns (P_SpawnPirateAsteroidData memory spawnPirateAsteroid)
-  {
+  function setupSpawnPirateAsteroid(
+    bytes32 objectivePrototype
+  ) internal returns (P_SpawnPirateAsteroidData memory spawnPirateAsteroid) {
     spawnPirateAsteroid = setupSpawnPirateAsteroid(objectivePrototype, 10, -10, 10, 100);
   }
 

@@ -181,6 +181,10 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         worldSpeed: 100n,
         tax: 10n, // out of 1000
       },
+      P_ColonyShipConfig: {
+        resourceType: EResource.Iron,
+        resourceAmount: 10n,
+      },
 
       P_UnitPrototypes: {
         value: MUDEnums.EUnit.reduce(
