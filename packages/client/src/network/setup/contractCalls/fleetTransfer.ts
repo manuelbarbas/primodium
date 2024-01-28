@@ -65,8 +65,8 @@ export const transferFleet = async (
     const functionName = fromIsSpaceRock
       ? "transferUnitsAndResourcesFromSpaceRockToFleet"
       : toIsSpaceRock
-      ? "transferUnitsAndResourcesFleetToSpaceRock"
-      : "transferUnitsAndResourcesFleetToFleet";
+      ? "transferUnitsAndResourcesFromFleetToSpaceRock"
+      : "transferUnitsAndResourcesFromFleetToFleet";
     await execute({
       mud,
       functionName,
