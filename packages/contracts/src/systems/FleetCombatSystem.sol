@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-import { console } from "forge-std/console.sol";
 
 import { ResourceCount, FleetStance, IsFleet, NewBattleResult, NewBattleResultData, FleetMovement, P_GracePeriod, GracePeriod, OwnedBy } from "codegen/index.sol";
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
@@ -73,11 +72,8 @@ contract FleetCombatSystem is FleetBaseSystem {
     _claimResources(targetSpaceRock)
     _claimUnits(targetSpaceRock)
   {
-    console.log("fleetAttackSpaceRock");
     (bytes32 battleId, NewBattleResultData memory batteResult) = LibFleetCombat.attack(fleetId, targetSpaceRock);
-    console.log("fleetAttackSpaceRock 1");
     afterBattle(battleId, batteResult);
-    console.log("fleetAttackSpaceRock 2");
   }
 
   function spaceRockAttackFleet(
@@ -96,23 +92,15 @@ contract FleetCombatSystem is FleetBaseSystem {
   }
 
   function afterBattle(bytes32 battleId, NewBattleResultData memory battleResult) internal {
-    console.log("fleetAttackSpaceRock after battle");
     fleetBattleApplyDamage(battleId, battleResult.aggressorEntity, battleResult.targetDamage);
-    console.log("fleetAttackSpaceRock after battle deal damage");
     if (battleResult.winner == battleResult.aggressorEntity) {
-      console.log("fleetAttackSpaceRock after battle will raid");
       fleetBattleResolveRaid(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
-      console.log("fleetAttackSpaceRock after battle raid");
       if (!IsFleet.get(battleResult.targetEntity)) {
-        console.log("fleetAttackSpaceRock after battle will encryption");
         resolveBattleEncryption(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
-        console.log("fleetAttackSpaceRock after battle encryption");
         if (ResourceCount.get(battleResult.targetEntity, uint8(EResource.R_Encryption)) == 0) {
           if (OwnedBy.get(battleResult.targetEntity) != bytes32(0)) {
-            console.log("fleetAttackSpaceRock transfer ownership");
             transferSpaceRockOwnership(battleResult.targetEntity, _player());
           } else {
-            console.log("fleetAttackSpaceRock initialize ownership");
             initializeSpaceRockOwnership(battleResult.targetEntity, _player());
           }
         }
