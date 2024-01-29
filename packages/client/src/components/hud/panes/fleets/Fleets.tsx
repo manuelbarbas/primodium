@@ -15,11 +15,8 @@ type NavButtonProps<J extends View = View> = ComponentProps<typeof Button> & {
 } & Props<J>;
 
 type View = keyof typeof fleetsPanes;
-type ViewProps = {
-  [K in keyof typeof fleetsPanes]: ComponentProps<(typeof fleetsPanes)[K]>;
-};
 type Props<J extends View = View> = ComponentProps<(typeof fleetsPanes)[J]>;
-// Define a context with an initial navigate function
+
 const FleetNavContext = createContext<{
   navigateTo: <J extends View>(view: J, props?: Props<J>) => void;
   goBack: () => void;
@@ -40,11 +37,10 @@ export const useFleetNav = () => {
   return context;
 };
 
-export const Fleets = ({ initialState = "fleets", ...initialProps }: { initialState: View } & ViewProps[View]) => {
-  const [history, setHistory] = useState<{ view: View; props: ViewProps[View] }[]>([
+export const Fleets = ({ initialState = "fleets", ...initialProps }: { initialState: View } & Props) => {
+  const [history, setHistory] = useState<{ view: View; props: Props }[]>([
     { view: initialState, props: initialProps ?? {} },
   ]);
-  console.log("history:", history);
 
   const { Component, props } = useMemo(
     () => ({
@@ -90,6 +86,7 @@ export const Fleets = ({ initialState = "fleets", ...initialProps }: { initialSt
       </Button>
     );
   }
+
   function BackButton({ children, onClick, className, disabled = false }: ComponentProps<typeof Button>) {
     if (history.length <= 1) return <></>;
 
@@ -106,6 +103,7 @@ export const Fleets = ({ initialState = "fleets", ...initialProps }: { initialSt
       </Button>
     );
   }
+
   return (
     <FleetNavContext.Provider value={{ navigateTo, NavButton, BackButton, goBack }}>
       <Component {...props} />
