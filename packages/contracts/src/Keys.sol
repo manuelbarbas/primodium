@@ -10,6 +10,8 @@ bytes32 constant FleetKey = bytes32("fleet");
 bytes32 constant FleetOwnedByKey = bytes32("fleet.key");
 bytes32 constant FleetIncomingKey = bytes32("fleet.incoming");
 
+bytes32 constant AsteroidOwnedByKey = bytes32("asteroid.key");
+
 bytes32 constant FleetStanceKey = FleetStancePrototypeId;
 bytes32 constant ExpansionKey = ExpansionPrototypeId;
 bytes32 constant BuildingKey = BuildingPrototypeId;

@@ -4,13 +4,13 @@ pragma solidity >=0.8.21;
 import { getSystemResourceId } from "src/utils.sol";
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { BuildSystem } from "systems/BuildSystem.sol";
-
+import { initializeSpaceRockOwnership } from "src/libraries/SubsystemCalls.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 import { OwnedBy, P_GameConfig, GracePeriod, Spawned, P_GracePeriod, Spawned, Position, PositionData, Level, Home } from "codegen/index.sol";
-
+import { ColoniesMap } from "src/libraries/ColoniesMap.sol";
 import { LibAsteroid, LibEncode } from "codegen/Libraries.sol";
 import { EBuilding } from "src/Types.sol";
-import { BuildingKey } from "src/Keys.sol";
+import { BuildingKey, AsteroidOwnedByKey } from "src/Keys.sol";
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -29,18 +29,9 @@ contract SpawnSystem is PrimodiumSystem {
     GracePeriod.set(playerEntity, block.timestamp + gracePeriodLength);
 
     bytes32 asteroid = LibAsteroid.createPrimaryAsteroid(playerEntity);
-    PositionData memory position = Position.get(MainBasePrototypeId);
-    position.parent = asteroid;
-    OwnedBy.set(asteroid, playerEntity);
     Home.set(playerEntity, asteroid);
     Spawned.set(playerEntity, true);
-    SystemCall.callWithHooksOrRevert(
-      entityToAddress(playerEntity),
-      getSystemResourceId("BuildSystem"),
-      abi.encodeCall(BuildSystem.build, (EBuilding.MainBase, position)),
-      0
-    );
-
+    initializeSpaceRockOwnership(asteroid, playerEntity);
     return asteroid;
   }
 }

@@ -64,73 +64,39 @@ library LibFleet {
     FleetsMap.add(spaceRock, FleetIncomingKey, fleetId);
   }
 
-  function increaseFleetUnit(
-    bytes32 fleetId,
-    bytes32 unitPrototype,
-    uint256 unitCount,
-    bool updatesUtility
-  ) internal {
+  function increaseFleetUnit(bytes32 fleetId, bytes32 unitPrototype, uint256 unitCount, bool updatesUtility) internal {
     if (unitCount == 0) return;
-    bytes32 ownerSpaceRockEntity = OwnedBy.get(fleetId);
-    uint256 unitLevel = UnitLevel.get(ownerSpaceRockEntity, unitPrototype);
-    P_UnitData memory unitData = P_Unit.get(unitPrototype, unitLevel);
-    require(
-      unitData.decryption == 0 || (unitCount == 1 && LibFleetAttributes.getDecryption(fleetId) == 0),
-      "[Fleet] Fleet can only have one colony ship"
-    );
     if (updatesUtility) {
-      LibUnit.updateStoredUtilities(ownerSpaceRockEntity, unitPrototype, unitCount, true);
+      LibUnit.updateStoredUtilities(OwnedBy.get(fleetId), unitPrototype, unitCount, true);
     }
     UnitCount.set(fleetId, unitPrototype, UnitCount.get(fleetId, unitPrototype) + unitCount);
   }
 
-  function decreaseFleetUnit(
-    bytes32 fleetId,
-    bytes32 unitPrototype,
-    uint256 unitCount,
-    bool updatesUtility
-  ) internal {
+  function decreaseFleetUnit(bytes32 fleetId, bytes32 unitPrototype, uint256 unitCount, bool updatesUtility) internal {
     if (unitCount == 0) return;
-
     uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototype);
     require(fleetUnitCount >= unitCount, "[Fleet] Not enough units to remove from fleet");
-    bytes32 ownerSpaceRockEntity = OwnedBy.get(fleetId);
-    uint256 unitLevel = UnitLevel.get(ownerSpaceRockEntity, unitPrototype);
-    P_UnitData memory unitData = P_Unit.get(unitPrototype, unitLevel);
-
     if (updatesUtility) {
-      LibUnit.updateStoredUtilities(ownerSpaceRockEntity, unitPrototype, unitCount, false);
+      LibUnit.updateStoredUtilities(OwnedBy.get(fleetId), unitPrototype, unitCount, false);
     }
     UnitCount.set(fleetId, unitPrototype, fleetUnitCount - unitCount);
   }
 
-  function increaseFleetResource(
-    bytes32 fleetId,
-    uint8 resource,
-    uint256 amount
-  ) internal {
+  function increaseFleetResource(bytes32 fleetId, uint8 resource, uint256 amount) internal {
     if (amount == 0) return;
     uint256 freeCargoSpace = LibFleetAttributes.getFreeCargoSpace(fleetId);
     require(freeCargoSpace >= amount, "[Fleet] Not enough storage to add resource");
     ResourceCount.set(fleetId, resource, ResourceCount.get(fleetId, resource) + amount);
   }
 
-  function decreaseFleetResource(
-    bytes32 fleetId,
-    uint8 resource,
-    uint256 amount
-  ) internal {
+  function decreaseFleetResource(bytes32 fleetId, uint8 resource, uint256 amount) internal {
     if (amount == 0) return;
     uint256 currResourceCount = ResourceCount.get(fleetId, resource);
     require(currResourceCount >= amount, "[Fleet] Not enough stored resource to remove");
     ResourceCount.set(fleetId, resource, currResourceCount - amount);
   }
 
-  function landFleet(
-    bytes32 playerEntity,
-    bytes32 fleetId,
-    bytes32 spaceRock
-  ) internal {
+  function landFleet(bytes32 playerEntity, bytes32 fleetId, bytes32 spaceRock) internal {
     bytes32 spaceRockOwner = OwnedBy.get(fleetId);
 
     bool isOwner = spaceRockOwner == spaceRock;
@@ -209,13 +175,15 @@ library LibFleet {
     //clears any following fleets
     LibFleetStance.clearFollowingFleets(fleetId);
 
-    //remove fleet from incoming of current space rock
     bytes32 spaceRock = FleetMovement.getDestination(fleetId);
-    FleetsMap.remove(spaceRock, FleetIncomingKey, fleetId);
-
-    //set fleet to orbit of owner space rock
     bytes32 spaceRockOwner = OwnedBy.get(fleetId);
-    FleetsMap.add(spaceRockOwner, FleetIncomingKey, fleetId);
+
+    if (spaceRockOwner != spaceRock) {
+      //remove fleet from incoming of current space rock
+      FleetsMap.remove(spaceRock, FleetIncomingKey, fleetId);
+      //set fleet to orbit of owner space rock
+      FleetsMap.add(spaceRockOwner, FleetIncomingKey, fleetId);
+    }
 
     FleetMovement.set(
       fleetId,

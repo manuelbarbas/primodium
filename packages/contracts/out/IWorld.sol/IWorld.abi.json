@@ -1805,6 +1805,24 @@
   {
     "inputs": [
       {
+        "internalType": "bytes32",
+        "name": "spaceRock",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "owner",
+        "type": "bytes32"
+      }
+    ],
+    "name": "initializeSpaceRockOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "contract IModule",
         "name": "module",
         "type": "address"
@@ -2340,56 +2358,14 @@
         "type": "bytes32"
       },
       {
-        "components": [
-          {
-            "internalType": "bytes32",
-            "name": "aggressorEntity",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "uint256",
-            "name": "aggressorDamage",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "targetEntity",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "uint256",
-            "name": "targetDamage",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "winner",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "rock",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "uint256",
-            "name": "timestamp",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bytes32[]",
-            "name": "aggressorAllies",
-            "type": "bytes32[]"
-          },
-          {
-            "internalType": "bytes32[]",
-            "name": "targetAllies",
-            "type": "bytes32[]"
-          }
-        ],
-        "internalType": "struct NewBattleResultData",
-        "name": "battleResult",
-        "type": "tuple"
+        "internalType": "bytes32",
+        "name": "aggressorEntity",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "targetEntity",
+        "type": "bytes32"
       }
     ],
     "name": "resolveBattleEncryption",
@@ -2462,6 +2438,41 @@
         "internalType": "bytes32",
         "name": "spaceRock",
         "type": "bytes32"
+      }
+    ],
+    "name": "sendFleet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "fleetId",
+        "type": "bytes32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "int32",
+            "name": "x",
+            "type": "int32"
+          },
+          {
+            "internalType": "int32",
+            "name": "y",
+            "type": "int32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "parent",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct PositionData",
+        "name": "position",
+        "type": "tuple"
       }
     ],
     "name": "sendFleet",
@@ -2554,6 +2565,29 @@
       }
     ],
     "name": "setField",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "fleetId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint8",
+        "name": "stance",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "target",
+        "type": "bytes32"
+      }
+    ],
+    "name": "setFleetStance",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -3094,6 +3128,24 @@
       }
     ],
     "name": "transferResourcesFromSpaceRockToFleet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "aggressorEntity",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "targetEntity",
+        "type": "bytes32"
+      }
+    ],
+    "name": "transferSpaceRockOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

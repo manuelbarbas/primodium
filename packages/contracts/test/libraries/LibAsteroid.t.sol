@@ -75,7 +75,7 @@ contract LibAsteroidTest is PrimodiumTest {
     vm.startPrank(creator);
     PositionData memory position = findSecondaryAsteroid();
 
-    bytes32 actualAsteroidEntity = LibAsteroid.createSecondaryAsteroid(player, position);
+    bytes32 actualAsteroidEntity = LibAsteroid.createSecondaryAsteroid(position);
     bytes32 asteroidEntity = keccak256(abi.encode(asteroid, bytes32("asteroid"), position.x, position.y));
 
     assertEq(actualAsteroidEntity, asteroidEntity, "asteroidEntity");
@@ -90,6 +90,6 @@ contract LibAsteroidTest is PrimodiumTest {
   }
 
   function testFailNoAsteroidNoSource() public {
-    LibAsteroid.createSecondaryAsteroid(player, PositionData(0, 0, 0));
+    LibAsteroid.createSecondaryAsteroid(PositionData(0, 0, 0));
   }
 }
