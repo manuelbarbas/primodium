@@ -134,6 +134,8 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     console.log("reached here");
 
     //todo for some reason the line bellow encounters an error  so the actual function code is copy pasted here
+    // I removed call to subsytem from libraries but issue still persists
+    //initializeSpaceRockOwnership(rock, playerEntity);
     //LibAsteroid.initializeSpaceRockOwnership(rock, playerEntity);
     OwnedBy.set(rock, playerEntity);
     ColoniesMap.add(playerEntity, AsteroidOwnedByKey, rock);

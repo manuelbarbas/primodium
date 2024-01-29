@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { EResource } from "src/Types.sol";
-import { P_Transportables, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, P_GracePeriod, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { IsFleet, P_Transportables, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, P_GracePeriod, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -29,7 +29,7 @@ library LibFleet {
     //require(ResourceCount.get(spaceRock, EResource.U_Cargo) > 0, "[Fleet] Space rock has no cargo capacity"))
     fleetId = LibEncode.getTimedHash(playerEntity, FleetKey);
     OwnedBy.set(fleetId, spaceRock);
-
+    IsFleet.set(fleetId, true);
     FleetMovement.set(
       fleetId,
       FleetMovementData({

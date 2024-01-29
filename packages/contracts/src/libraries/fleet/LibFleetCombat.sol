@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-
+import { console } from "forge-std/console.sol";
 import { EResource } from "src/Types.sol";
 import { BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, MaxResourceCount, NewBattleResult, NewBattleResultData, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 import { getSystemResourceId } from "src/utils.sol";
@@ -38,6 +38,15 @@ library LibFleetCombat {
     bytes32 targetEntity
   ) internal returns (bytes32 battleId, NewBattleResultData memory battleResult) {
     bool aggressorIsFleet = IsFleet.get(entity);
+
+    if (aggressorIsFleet) {
+      bytes32 fleetOwnerSpaceRock = OwnedBy.get(entity);
+      if (GracePeriod.get(fleetOwnerSpaceRock) > block.timestamp) {
+        GracePeriod.set(fleetOwnerSpaceRock, block.timestamp);
+      }
+    } else if (GracePeriod.get(entity) > block.timestamp) {
+      GracePeriod.set(entity, block.timestamp);
+    }
 
     bytes32 spaceRock = aggressorIsFleet ? FleetMovement.getDestination(entity) : entity;
 
@@ -85,14 +94,21 @@ library LibFleetCombat {
     bytes32 aggressorEntity,
     bytes32 targetEntity
   ) internal returns (uint256 encryptionAtEnd) {
+    console.log("resolveBattleEncryption 1");
     (bytes32 unitWithDecryptionPrototype, uint256 decryption) = LibFleetAttributes.getDecryption(aggressorEntity);
+
+    console.log("resolveBattleEncryption 2");
     uint256 encryptionAtStart = ResourceCount.get(targetEntity, uint8(EResource.R_Encryption));
     encryptionAtEnd = encryptionAtStart;
-    if (decryption != 0) {
+    if (decryption == 0) return encryptionAtEnd;
+    console.log("resolveBattleEncryption 3");
+    if (encryptionAtStart != 0) {
       LibStorage.decreaseStoredResource(targetEntity, uint8(EResource.R_Encryption), decryption);
       encryptionAtEnd = ResourceCount.get(targetEntity, uint8(EResource.R_Encryption));
     }
+    console.log("resolveBattleEncryption 4");
     BattleEncryptionResult.set(battleId, targetEntity, encryptionAtStart, encryptionAtEnd);
+    console.log("resolveBattleEncryption 4");
   }
 
   function transferSpaceRockOwnership(bytes32 spaceRock, bytes32 newOwner) internal {
@@ -159,7 +175,7 @@ library LibFleetCombat {
     uint256 totalHp,
     uint256 damage
   ) internal returns (uint256 damageDealt) {
-    if (damage == 0) return 0;
+    if (damage == 0 || totalHp == 0) return 0;
     uint256 currHp = ResourceCount.get(spaceRock, uint8(EResource.R_HP));
     damageDealt = 0;
 
@@ -180,6 +196,7 @@ library LibFleetCombat {
     uint256 totalHp,
     uint256 damage
   ) internal returns (uint256 damageDealt) {
+    if (damage == 0 || totalHp == 0) return 0;
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     BattleUnitResultData memory unitResult = BattleUnitResultData({
       unitsAtStart: new uint256[](unitPrototypes.length),

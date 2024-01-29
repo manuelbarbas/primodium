@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
+import { console } from "forge-std/console.sol";
 
 import { EResource } from "src/Types.sol";
 import { BattleRaidResult, BattleRaidResultData, P_Transportables, IsFleet, MaxResourceCount, NewBattleResult, NewBattleResultData, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
@@ -22,15 +23,7 @@ import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { EResource, EFleetStance } from "src/Types.sol";
 
 library LibFleetRaid {
-  function getMaxRaidAmountWithAllies(bytes32 entity)
-    internal
-    view
-    returns (
-      uint256,
-      uint256[] memory,
-      uint256
-    )
-  {
+  function getMaxRaidAmountWithAllies(bytes32 entity) internal view returns (uint256, uint256[] memory, uint256) {
     return
       IsFleet.get(entity)
         ? LibFleetAttributes.getFreeCargoSpaceWithFollowers(entity)
@@ -48,15 +41,14 @@ library LibFleetRaid {
     return IsFleet.get(entity) ? LibFleetStance.getFollowerFleets(entity) : LibFleetStance.getDefendingFleets(entity);
   }
 
-  function resolveBattleRaid(
-    bytes32 battleId,
-    bytes32 raider,
-    bytes32 target
-  ) internal {
+  function resolveBattleRaid(bytes32 battleId, bytes32 raider, bytes32 target) internal {
+    console.log("resolveBattleRaid");
     //maximum amount of resources the fleet can raid
     (uint256 freeCargoSpace, uint256[] memory freeCargoSpaces, uint256 maxRaidAmount) = getMaxRaidAmountWithAllies(
       raider
     );
+    console.log("resolveBattleRaid 1");
+    if (maxRaidAmount == 0) return;
 
     // will caculate how much of each resource was successfuly raided from target and increase those to be used for increasing resources of the raiders
     (uint256[] memory totalRaidedResourceCounts, uint256 totalRaidedResources) = calculateRaidFromWithAllies(
@@ -64,7 +56,7 @@ library LibFleetRaid {
       target,
       maxRaidAmount
     );
-
+    console.log("resolveBattleRaid 2");
     //will increase the resources that were successfully raided to the raider and their allies
     receiveRaidedResourcesWithAllies(
       battleId,
@@ -75,6 +67,7 @@ library LibFleetRaid {
       totalRaidedResourceCounts,
       totalRaidedResources
     );
+    console.log("resolveBattleRaid 3");
   }
 
   function calculateRaidFromWithAllies(
@@ -89,6 +82,8 @@ library LibFleetRaid {
 
     //if the fleet can raid more than the total resources available, raid all resources
     if (maxRaidAmount > totalRaidableResources) maxRaidAmount = totalRaidableResources;
+
+    if (maxRaidAmount == 0) return (totalRaidedResourceCounts, totalRaidedResources);
 
     totalRaidedResourceCounts = new uint256[](P_Transportables.length());
 
@@ -125,6 +120,8 @@ library LibFleetRaid {
     uint256[] memory totalRaidedResourceCounts,
     uint256 totalRaidedResources
   ) internal returns (uint256[] memory, uint256) {
+    if (maxRaidAmount == 0 || totalRaidableResources == 0) return (totalRaidedResourceCounts, totalRaidedResources);
+
     uint8[] memory transportables = P_Transportables.get();
     BattleRaidResultData memory raidResult = BattleRaidResultData({
       resourcesAtStart: new uint256[](transportables.length),
@@ -157,6 +154,9 @@ library LibFleetRaid {
     uint256[] memory totalRaidedResourceCounts,
     uint256 totalRaidedResources
   ) internal {
+    console.log("receiveRaidedResourcesWithAllies");
+    if (maxRaidAmount == 0) return;
+    console.log("receiveRaidedResourcesWithAllies 1");
     receiveRaidedResources(
       battleId,
       targetEntity,
@@ -165,9 +165,9 @@ library LibFleetRaid {
       totalRaidedResourceCounts,
       totalRaidedResources
     );
-
+    console.log("receiveRaidedResourcesWithAllies 2");
     bytes32[] memory allies = getAllies(targetEntity);
-
+    console.log("receiveRaidedResourcesWithAllies 3");
     for (uint256 i = 0; i < allies.length; i++) {
       receiveRaidedResources(
         battleId,
@@ -178,6 +178,7 @@ library LibFleetRaid {
         totalRaidedResources
       );
     }
+    console.log("receiveRaidedResourcesWithAllies 4");
   }
 
   function receiveRaidedResources(
@@ -188,12 +189,16 @@ library LibFleetRaid {
     uint256[] memory totalRaidedResourceCounts,
     uint256 totalRaidedResources
   ) internal {
+    console.log("receiveRaidedResources");
+    if (maxRaidAmount == 0 || freeCargoSpace == 0 || totalRaidedResources == 0) return;
     uint8[] memory transportables = P_Transportables.get();
     BattleRaidResultData memory raidResult = BattleRaidResultData({
       resourcesAtStart: new uint256[](transportables.length),
       resourcesAtEnd: new uint256[](transportables.length)
     });
+    console.log("receiveRaidedResources 2");
     uint256 denominator = totalRaidedResources * maxRaidAmount;
+    console.log("receiveRaidedResources 3");
     for (uint256 i = 0; i < transportables.length; i++) {
       if (totalRaidedResourceCounts[i] == 0) continue;
       uint256 resourcePortion = (totalRaidedResourceCounts[i] * freeCargoSpace) / denominator;
@@ -206,5 +211,6 @@ library LibFleetRaid {
       raidResult.resourcesAtEnd[i] = ResourceCount.get(targetEntity, transportables[i]);
     }
     BattleRaidResult.set(battleId, targetEntity, raidResult);
+    console.log("receiveRaidedResources 4");
   }
 }

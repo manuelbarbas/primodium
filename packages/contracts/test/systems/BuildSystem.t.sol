@@ -91,7 +91,7 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testBuildTwiceMainBaseFail() public {
     PositionData memory coord1 = getPosition3(creator);
-    vm.expectRevert(bytes("[BuildSystem] Cannot build more than one main base per wallet"));
+    vm.expectRevert(bytes("[BuildSystem] Cannot build more than one main base per space rock"));
     world.build(EBuilding.MainBase, coord1);
   }
 

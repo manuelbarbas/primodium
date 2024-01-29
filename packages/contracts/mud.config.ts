@@ -51,6 +51,21 @@ export const config = mudConfig({
       accessList: [DUMMY_ADDRESS],
       name: "S_FleetBattleResolveEncryptionSystem",
     },
+    S_FleetResetIfNoUnitsLeftSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+      name: "S_FleetResetIfNoUnitsLeftSystem",
+    },
+    S_InitializeSpaceRockOwnershipSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+      name: "S_InitializeSpaceRockOwnershipSystem",
+    },
+    S_TransferSpaceRockOwnershipSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+      name: "S_TransferSpaceRockOwnershipSystem",
+    },
   },
 
   enums: MUDEnums,

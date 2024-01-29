@@ -23,6 +23,7 @@ library LibFleetMove {
     require(!isSpaceRockBlocked(origin), "[Fleet] Space rock is blocked");
 
     uint256 speed = LibFleetAttributes.getSpeedWithFollowers(fleetId);
+    require(speed > 0, "[Fleet] Fleet has no speed");
 
     uint256 arrivalTime = getArrivalTime(origin, Position.get(destination), speed);
     _sendFleet(fleetId, destination, arrivalTime);
@@ -32,20 +33,11 @@ library LibFleetMove {
     }
   }
 
-  function _sendFleet(
-    bytes32 fleetId,
-    bytes32 destination,
-    uint256 arrivalTime
-  ) private {
+  function _sendFleet(bytes32 fleetId, bytes32 destination, uint256 arrivalTime) private {
     _sendFleet(fleetId, destination, block.timestamp, arrivalTime);
   }
 
-  function _sendFleet(
-    bytes32 fleetId,
-    bytes32 destination,
-    uint256 sendTime,
-    uint256 arrivalTime
-  ) private {
+  function _sendFleet(bytes32 fleetId, bytes32 destination, uint256 sendTime, uint256 arrivalTime) private {
     FleetsMap.remove(FleetMovement.getDestination(fleetId), FleetIncomingKey, fleetId);
     FleetsMap.add(destination, FleetIncomingKey, fleetId);
 

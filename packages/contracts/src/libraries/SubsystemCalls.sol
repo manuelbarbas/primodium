@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-
+import { console } from "forge-std/console.sol";
 import { getSystemResourceId, entityToAddress } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 import { DUMMY_ADDRESS } from "src/constants.sol";
@@ -41,8 +41,9 @@ function fleetBattleResolveRaid(bytes32 battleId, bytes32 raider, bytes32 target
   );
 }
 
-function resolveBattleEncryption(bytes32 battleId, bytes32 aggressorEntity, bytes32 targetEntity) returns (uint256) {
-  bytes memory encryptionAtEnd = SystemCall.callWithHooksOrRevert(
+function resolveBattleEncryption(bytes32 battleId, bytes32 aggressorEntity, bytes32 targetEntity) {
+  console.log("resolveBattleEncryption subsystem call");
+  SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
     getSystemResourceId("S_FleetBattleResolveEncryptionSystem"),
     abi.encodeCall(
@@ -51,7 +52,8 @@ function resolveBattleEncryption(bytes32 battleId, bytes32 aggressorEntity, byte
     ),
     0
   );
-  return abi.decode(encryptionAtEnd, (uint256));
+  console.log("resolveBattleEncryption subsystem call 2");
+  //return abi.decode(encryptionAtEnd, (uint256));
 }
 
 function resetFleetIfNoUnitsLeft(bytes32 fleetId) {
