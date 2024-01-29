@@ -2,6 +2,9 @@ import { Scene } from "engine/types";
 import { clone, throttle } from "lodash";
 import { useEffect, useState } from "react";
 import { useSettingsStore } from "../stores/SettingsStore";
+import { Coord } from "@latticexyz/utils";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { getDegreeDirection } from "src/util/common";
 
 export function createHooksApi(targetScene: Scene) {
   function useKeybinds() {
@@ -34,8 +37,66 @@ export function createHooksApi(targetScene: Scene) {
     };
   }
 
+  function useCoordToScreenCoord(coord: Coord, bounded = false) {
+    const {
+      tilemap: { tileHeight, tileWidth },
+      camera,
+    } = targetScene;
+
+    const [state, setState] = useState({
+      screenCoord: { x: 0, y: 0 },
+      isBounded: false,
+      direction: 0,
+    });
+
+    useEffect(() => {
+      const worldViewListener = camera?.worldView$.subscribe((worldView) => {
+        const pixelCoord = tileCoordToPixelCoord(coord, tileWidth, tileHeight);
+        const zoom = camera.phaserCamera.zoom;
+        pixelCoord.y = -pixelCoord.y; // Adjust for coordinate system. Y is inverted in Phaser
+
+        let isBoundedTemp = false;
+
+        if (bounded) {
+          if (pixelCoord.x < worldView.x) {
+            pixelCoord.x = worldView.x;
+            isBoundedTemp = true;
+          } else if (pixelCoord.x > worldView.right) {
+            pixelCoord.x = worldView.right;
+            isBoundedTemp = true;
+          }
+
+          if (pixelCoord.y < worldView.y) {
+            pixelCoord.y = worldView.y;
+            isBoundedTemp = true;
+          } else if (pixelCoord.y > worldView.bottom) {
+            pixelCoord.y = worldView.bottom;
+            isBoundedTemp = true;
+          }
+        }
+
+        const newScreenCoord = {
+          x: (pixelCoord.x - worldView.x) * zoom,
+          y: (pixelCoord.y - worldView.y) * zoom,
+        };
+        const newDirection = getDegreeDirection({ x: worldView.centerX, y: worldView.centerY }, pixelCoord);
+
+        setState({
+          screenCoord: newScreenCoord,
+          isBounded: isBoundedTemp,
+          direction: newDirection,
+        });
+      });
+
+      return () => worldViewListener?.unsubscribe();
+    }, [camera, coord, bounded, tileHeight, tileWidth]);
+
+    return state;
+  }
+
   return {
     useKeybinds,
     useCamera,
+    useCoordToScreenCoord,
   };
 }
