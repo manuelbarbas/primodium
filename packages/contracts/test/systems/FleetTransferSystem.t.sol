@@ -369,7 +369,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     increaseResource(aliceHomeSpaceRock, EResource.Iron, 1);
 
     vm.startPrank(alice);
-    world.transferUnitsAndResourcesFromSpaceRockToFleet(fleetId, aliceHomeSpaceRock, unitCounts, resourceCounts);
+    world.transferUnitsAndResourcesFromSpaceRockToFleet(aliceHomeSpaceRock, fleetId, unitCounts, resourceCounts);
     vm.stopPrank();
 
     assertEq(UnitCount.get(fleetId, unitPrototype), 3, "fleet unit count doesn't match");
