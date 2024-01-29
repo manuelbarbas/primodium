@@ -4,7 +4,6 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "src/components/core/Button";
-import { Navigator } from "src/components/core/Navigator";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
@@ -16,13 +15,15 @@ import { formatResourceCount, parseResourceCount } from "src/util/number";
 import { getUnitStats } from "src/util/unit";
 import { Hex } from "viem";
 import { FleetHeader } from "../../panes/fleets/FleetHeader";
+import { useFleetNav } from "../../panes/fleets/Fleets";
 import { TargetHeader } from "../../spacerock-menu/TargetHeader";
 import { ResourceIcon } from "./ResourceIcon";
 
-export const CreateFleet = () => {
+export const CreateFleet: React.FC = () => {
   const [fleetUnitCounts, setFleetUnitCounts] = useState<Record<Entity, bigint>>({});
   const [fleetResourceCounts, setFleetResourceCounts] = useState<Record<Entity, bigint>>({});
 
+  const Nav = useFleetNav();
   const [dragging, setDragging] = useState<{ entity: Entity; count: bigint } | null>(null);
   const [dragLocation, setDragLocation] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [hoveringArea, setHoveringArea] = useState<"from" | "to" | null>(null);
@@ -143,7 +144,7 @@ export const CreateFleet = () => {
   }, [fleetResourceCounts, fleetStats.cargo, fleetUnitCounts, maxFleets]);
 
   return (
-    <Navigator.Screen title="CreateFleet" className="w-full h-full flex flex-col gap-2 p-2">
+    <div className="w-full h-full flex flex-col gap-2 p-2">
       {dragging && (
         <div className={`fixed pointer-events-none z-10`} style={{ left: dragLocation.x, top: dragLocation.y }}>
           <ResourceIcon
@@ -317,13 +318,13 @@ export const CreateFleet = () => {
         </div>
       </div>
       <div className="flex gap-4">
-        <Navigator.BackButton className="absolute left-0 bottom-0">Back</Navigator.BackButton>
+        <Nav.BackButton className="absolute left-0 bottom-0">Back</Nav.BackButton>
         <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.CreateFleet, selectedRock)}>
           <Button className="btn-primary w-48" disabled={disabled} onClick={handleSubmit}>
             {submitMessage}
           </Button>
         </TransactionQueueMask>
       </div>
-    </Navigator.Screen>
+    </div>
   );
 };

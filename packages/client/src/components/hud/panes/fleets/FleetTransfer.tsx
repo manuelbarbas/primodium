@@ -18,7 +18,7 @@ import { getFleetStatsFromUnits } from "src/util/unit";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { TargetHeader } from "../../spacerock-menu/TargetHeader";
 
-export const FleetTransfer = ({ from, to }: { from: Entity; to: Entity }) => {
+export const FleetTransfer = () => {
   const [unitDelta, setUnitDelta] = useState<Record<Entity, bigint>>({});
   const [resourceDelta, setResourceDelta] = useState<Record<Entity, bigint>>({});
 

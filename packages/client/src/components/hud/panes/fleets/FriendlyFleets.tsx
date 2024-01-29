@@ -4,13 +4,14 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
 import { FaPlus } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
-import { Navigator } from "src/components/core/Navigator";
 import { components } from "src/network/components";
 import { Hex } from "viem";
 import { FleetButton } from "../../modals/fleets/FleetButton";
+import { useFleetNav } from "./Fleets";
 
 export const FriendlyFleets: React.FC = () => {
   const selectedRock = components.SelectedRock.use()?.value ?? singletonEntity;
+  const Nav = useFleetNav();
 
   const query = [Has(components.IsFleet), HasValue(components.OwnedBy, { value: selectedRock })];
   const friendlyFleets = useEntityQuery(query);
@@ -34,13 +35,13 @@ export const FriendlyFleets: React.FC = () => {
             })}
 
         {new Array(Number(maxFleets)).fill(0).map((_, index) => (
-          <Navigator.NavButton
+          <Nav.NavButton
             key={`newFleet-${index}`}
-            to="CreateFleet"
+            to="createFleet"
             className="btn-primary grid place-items-center w-full h-full"
           >
             <FaPlus className="h-full" />
-          </Navigator.NavButton>
+          </Nav.NavButton>
         ))}
       </div>
     </div>

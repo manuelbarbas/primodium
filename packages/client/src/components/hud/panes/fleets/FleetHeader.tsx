@@ -1,8 +1,8 @@
 import { Entity } from "@latticexyz/recs";
 import { Badge } from "src/components/core/Badge";
 import { EntityType } from "src/util/constants";
-import { getFleetStats } from "src/util/fleet";
 import { formatNumber, formatResourceCount } from "src/util/number";
+import { getFleetStats } from "src/util/unit";
 
 export const FleetHeader = (props: {
   title: string;

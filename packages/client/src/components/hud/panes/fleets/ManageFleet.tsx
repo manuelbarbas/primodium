@@ -1,8 +1,8 @@
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
 import { EFleetStance, EResource } from "contracts/config/enums";
+import { FC } from "react";
 import { Button } from "src/components/core/Button";
-import { Navigator } from "src/components/core/Navigator";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
@@ -15,7 +15,7 @@ import { Hex } from "viem";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { FleetEntityHeader } from "./FleetHeader";
 
-export const ManageFleet = ({ fleetEntity }: { fleetEntity: Entity }) => {
+export const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
   const mud = useMud();
   const destination = components.FleetMovement.getWithKeys({ entity: fleetEntity as Hex })?.destination;
   const selectedRock = components.SelectedRock.get()?.value;
@@ -66,7 +66,7 @@ export const ManageFleet = ({ fleetEntity }: { fleetEntity: Entity }) => {
     setFleetStance(mud, fleetEntity, EFleetStance.Follow, target);
   };
   return (
-    <Navigator.Screen title={`manage-fleet-${fleetEntity}`} className="h-full">
+    <div>
       <div className="grid grid-cols-4 gap-4 h-full">
         {/* Left Side */}
         <div className="col-span-3 flex flex-col gap-4 h-full relative">
@@ -174,7 +174,7 @@ export const ManageFleet = ({ fleetEntity }: { fleetEntity: Entity }) => {
           </div>
         </div>
       </div>
-      <Navigator.BackButton className="mt-2">BACK</Navigator.BackButton>
-    </Navigator.Screen>
+      {/* <Navigator.BackButton className="mt-2">BACK</Navigator.BackButton> */}
+    </div>
   );
 };

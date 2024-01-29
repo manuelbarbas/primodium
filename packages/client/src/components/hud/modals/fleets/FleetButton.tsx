@@ -2,9 +2,9 @@ import { Entity } from "@latticexyz/recs";
 import { Navigator } from "src/components/core/Navigator";
 import { components } from "src/network/components";
 import { EntityType } from "src/util/constants";
-import { getFleetStats } from "src/util/fleet";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount, formatTime } from "src/util/number";
+import { getFleetStats } from "src/util/unit";
 
 export const LabeledValue: React.FC<{
   label: string;
