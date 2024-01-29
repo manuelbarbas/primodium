@@ -71,6 +71,7 @@ export const getFleetStats = (fleet: Entity) => {
       { entity: fleet as Hex, unit: unitEntity as Hex },
       { value: 0n }
     )?.value;
+    if (count == 0n) return;
 
     const unitData = getUnitStats(unitEntity as Entity, spaceRock);
     ret.attack += unitData.ATK * count;

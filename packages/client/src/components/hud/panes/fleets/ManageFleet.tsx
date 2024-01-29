@@ -1,7 +1,7 @@
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
 import { EFleetStance } from "contracts/config/enums";
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { Button } from "src/components/core/Button";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
@@ -25,6 +25,12 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
   const selectedRock = components.SelectedRock.get()?.value;
   const units = useUnitCounts(fleetEntity);
   const resources = useFullResourceCounts(fleetEntity);
+
+  const totalUnits = useMemo(() => [...units.values()].reduce((acc, cur) => acc + cur, 0n), [units]);
+  const totalResources = useMemo(
+    () => [...resources.values()].reduce((acc, cur) => acc + cur.resourceCount, 0n),
+    [resources]
+  );
 
   const fleetsOnAsteroidQuery = [Has(components.IsFleet), HasValue(components.FleetMovement, { destination })];
   const fleetsOnAsteroid = useEntityQuery(fleetsOnAsteroidQuery);
@@ -113,8 +119,8 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
                 <p className="opacity-50 text-xs font-bold uppercase">(active)</p>
               )}
             </div>
-            <p className="italic opacity-50 text-xs">Use this fleet{"'"}s units to the defense of this space rock</p>
-            <Button className="btn btn-primary btn-sm" onClick={handleDefend}>
+            <p className="italic opacity-50 text-xs">Use this fleet{"'"}s units to defend this space rock</p>
+            <Button className="btn btn-primary btn-sm" onClick={handleDefend} disabled={totalUnits <= 0n}>
               {activeStance?.stance == EFleetStance.Defend ? "STOP DEFENDING" : "DEFEND"}
             </Button>
             <div className="flex items-center gap-1 uppercase font-bold">
@@ -124,7 +130,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               )}
             </div>
             <p className="italic opacity-50 text-xs">Stop other fleets from leaving this space rock</p>
-            <Button className="btn btn-primary btn-sm" onClick={handleBlock}>
+            <Button className="btn btn-primary btn-sm" onClick={handleBlock} disabled={totalUnits <= 0n}>
               {activeStance?.stance == EFleetStance.Block ? "STOP BLOCKING" : "BLOCK"}
             </Button>
             <div className="flex items-center gap-1 uppercase font-bold">
@@ -144,7 +150,11 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
                     onMouseLeave={() => components.HoverEntity.remove()}
                   >
                     <p className="text-sm font-bold">{entityToRockName(target)}</p>
-                    <Button className="btn btn-primary btn-sm" onClick={() => handleFollow(target)}>
+                    <Button
+                      className="btn btn-primary btn-sm"
+                      onClick={() => handleFollow(target)}
+                      disabled={totalUnits <= 0n}
+                    >
                       {activeStance?.target === target ? "UN" : ""}FOLLOW
                     </Button>
                   </div>
@@ -155,16 +165,27 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
             </div>
           </TransactionQueueMask>
           <div className="flex flex-col gap-2">
-            <Button className="btn btn-primary btn-sm">ATTACK</Button>
-            <Button
-              className="btn btn-primary btn-sm"
-              onClick={() => selectedRock && landFleet(mud, fleetEntity, selectedRock)}
-            >
-              LAND
+            <Button className="btn btn-primary btn-sm" disabled={totalUnits <= 0}>
+              ATTACK
             </Button>
-            <Button className="btn btn-error btn-sm" onClick={() => disbandFleet(mud, fleetEntity)}>
-              DISBAND
-            </Button>
+            <TransactionQueueMask queueItemId={"landFleet" as Entity}>
+              <Button
+                className="btn btn-primary btn-sm"
+                onClick={() => selectedRock && landFleet(mud, fleetEntity, selectedRock)}
+                disabled={totalUnits <= 0n}
+              >
+                LAND
+              </Button>
+            </TransactionQueueMask>
+            <TransactionQueueMask queueItemId={"disband" as Entity}>
+              <Button
+                className="btn btn-error btn-sm"
+                disabled={totalUnits + totalResources <= 0n}
+                onClick={() => disbandFleet(mud, fleetEntity)}
+              >
+                DISBAND
+              </Button>
+            </TransactionQueueMask>
           </div>
         </div>
       </div>

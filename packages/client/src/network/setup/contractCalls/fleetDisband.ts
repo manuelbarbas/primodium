@@ -6,6 +6,8 @@ import { getSystemId, hashEntities } from "src/util/encode";
 import { toTransportableResourceArray, toUnitCountArray } from "src/util/send";
 import { Hex } from "viem";
 
+const disbandId = "disband" as Entity;
+
 export const disbandFleet = async (mud: MUD, fleet: Entity) => {
   await execute(
     {
@@ -16,7 +18,7 @@ export const disbandFleet = async (mud: MUD, fleet: Entity) => {
       delegate: true,
     },
     {
-      id: hashEntities(TransactionQueueType.DisbandFleet, fleet),
+      id: disbandId,
       type: TransactionQueueType.DisbandFleet,
     }
   );
@@ -47,7 +49,7 @@ export const disbandFleetUnitsResources = async (
         delegate: true,
       },
       {
-        id: hashEntities(TransactionQueueType.DisbandFleet, fleet),
+        id: disbandId,
         type: TransactionQueueType.CreateFleet,
       }
     );
