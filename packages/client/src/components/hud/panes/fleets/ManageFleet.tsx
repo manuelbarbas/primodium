@@ -14,9 +14,11 @@ import { entityToRockName } from "src/util/name";
 import { Hex } from "viem";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { FleetEntityHeader } from "./FleetHeader";
+import { useFleetNav } from "./Fleets";
 
-export const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
+const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
   const mud = useMud();
+  const { BackButton } = useFleetNav();
   const destination = components.FleetMovement.getWithKeys({ entity: fleetEntity as Hex })?.destination;
   const selectedRock = components.SelectedRock.get()?.value;
   const units = components.P_UnitPrototypes.get(undefined, { value: [] }).value.reduce((acc, entity) => {
@@ -66,8 +68,8 @@ export const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
     setFleetStance(mud, fleetEntity, EFleetStance.Follow, target);
   };
   return (
-    <div>
-      <div className="grid grid-cols-4 gap-4 h-full">
+    <div className="w-full h-full flex flex-col">
+      <div className="grid grid-cols-4 gap-4 h-full overflow-hidden">
         {/* Left Side */}
         <div className="col-span-3 flex flex-col gap-4 h-full relative">
           <div className="bg-base-100 p-4">
@@ -86,7 +88,7 @@ export const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               <p className="w-full h-full grid place-items-center text-xs uppercase font-bold">No Units</p>
             )}
 
-            <Button className="btn-xs self-right">Add Units</Button>
+            <Button className="btn-primary btn-xs w-fit self-end">Transfer Units</Button>
           </div>
           <div className="flex-1 flex flex-col bg-base-100 p-4 gap-2">
             <p className="uppercase text-xs opacity-50 font-bold">RESOURCES</p>
@@ -106,75 +108,78 @@ export const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
             ) : (
               <p className="w-full h-full grid place-items-center text-xs uppercase font-bold">No Resources</p>
             )}
-            <Button className="btn-xs self-right">Add Resources</Button>
+            <Button className="btn-primary btn-xs self-end w-fit">Transfer Resources</Button>
           </div>
         </div>
         {/* Right Side */}
-        <div className="flex flex-col col-span-1">
-          <TransactionQueueMask queueItemId={"FleetStance" as Entity}>
-            <div className="h-full bg-base-100 flex flex-col p-4 gap-1 overflow-hidden">
-              <div className="bg-neutral uppercase text-sm font-bold text-center">STANCE</div>
-              <div className="flex items-center gap-1 uppercase font-bold">
-                DEFEND
-                {activeStance?.stance == EFleetStance.Defend && (
-                  <p className="opacity-50 text-xs font-bold uppercase">(active)</p>
-                )}
-              </div>
-              <p className="italic opacity-50 text-xs">Use this fleet{"'"}s units to the defense of this space rock</p>
-              <Button className="btn btn-primary btn-sm" onClick={handleDefend}>
-                DEFEND
-              </Button>
-              <div className="flex items-center gap-1 uppercase font-bold">
-                BLOCK
-                {activeStance?.stance == EFleetStance.Block && (
-                  <p className="opacity-50 text-xs font-bold uppercase">(active)</p>
-                )}
-              </div>
-              <p className="italic opacity-50 text-xs">Stop other fleets from moving away from this space rock</p>
-              <Button className="btn btn-primary btn-sm" onClick={handleBlock}>
-                BLOCK
-              </Button>
-              <div className="flex items-center gap-1 uppercase font-bold">
-                FOLLOW
-                {activeStance?.stance == EFleetStance.Follow && (
-                  <p className="opacity-50 text-xs font-bold uppercase">(active)</p>
-                )}
-              </div>
-              <p className="italic opacity-50 text-xs">Automatically move whenever another fleet moves</p>
-              <div className="flex flex-col">
-                {followableFleets.length > 0 ? (
-                  followableFleets.map((target, i) => (
-                    <div
-                      className="w-full p-2 bg-neutral flex justify-between items-center"
-                      key={`follow-${target}-${i}`}
-                    >
-                      <p className="text-sm font-bold">{entityToRockName(target)}</p>
-                      <Button className="btn btn-primary btn-sm" onClick={() => handleFollow(target)}>
-                        {activeStance?.target === target ? "UN" : ""}FOLLOW
-                      </Button>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-error font-bold uppercase text-xs">No fleets to follow</div>
-                )}
-              </div>
+        <div className="flex flex-col col-span-1 overflow-hidden gap-2">
+          <TransactionQueueMask
+            queueItemId={"FleetStance" as Entity}
+            className="h-full bg-base-100 flex flex-col p-4 gap-1 overflow-hidden"
+          >
+            <div className="bg-neutral uppercase text-sm font-bold text-center">STANCE</div>
+            <div className="flex items-center gap-1 uppercase font-bold">
+              DEFEND
+              {activeStance?.stance == EFleetStance.Defend && (
+                <p className="opacity-50 text-xs font-bold uppercase">(active)</p>
+              )}
+            </div>
+            <p className="italic opacity-50 text-xs">Use this fleet{"'"}s units to the defense of this space rock</p>
+            <Button className="btn btn-primary btn-sm" onClick={handleDefend}>
+              {activeStance?.stance == EFleetStance.Defend ? "STOP DEFENDING" : "DEFEND"}
+            </Button>
+            <div className="flex items-center gap-1 uppercase font-bold">
+              BLOCK
+              {activeStance?.stance == EFleetStance.Block && (
+                <p className="opacity-50 text-xs font-bold uppercase">(active)</p>
+              )}
+            </div>
+            <p className="italic opacity-50 text-xs">Stop other fleets from leaving this space rock</p>
+            <Button className="btn btn-primary btn-sm" onClick={handleBlock}>
+              {activeStance?.stance == EFleetStance.Block ? "STOP BLOCKING" : "BLOCK"}
+            </Button>
+            <div className="flex items-center gap-1 uppercase font-bold">
+              FOLLOW
+              {activeStance?.stance == EFleetStance.Follow && (
+                <p className="opacity-50 text-xs font-bold uppercase">(active)</p>
+              )}
+            </div>
+            <p className="italic opacity-50 text-xs">Automatically move whenever another fleet moves</p>
+            <div className="flex flex-col h-full overflow-y-auto scrollbar">
+              {followableFleets.length > 0 ? (
+                followableFleets.map((target, i) => (
+                  <div
+                    className="w-full p-2 bg-neutral flex justify-between items-center"
+                    key={`follow-${target}-${i}`}
+                  >
+                    <p className="text-sm font-bold">{entityToRockName(target)}</p>
+                    <Button className="btn btn-primary btn-sm" onClick={() => handleFollow(target)}>
+                      {activeStance?.target === target ? "UN" : ""}FOLLOW
+                    </Button>
+                  </div>
+                ))
+              ) : (
+                <div className="text-error font-bold uppercase text-xs">No fleets to follow</div>
+              )}
             </div>
           </TransactionQueueMask>
           <div className="flex flex-col gap-2">
-            <Button className="btn btn-primary">ATTACK</Button>
+            <Button className="btn btn-primary btn-sm">ATTACK</Button>
             <Button
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               onClick={() => selectedRock && landFleet(mud, fleetEntity, selectedRock)}
             >
               LAND
             </Button>
-            <Button className="btn btn-error" onClick={() => disbandFleet(mud, fleetEntity)}>
+            <Button className="btn btn-error btn-sm" onClick={() => disbandFleet(mud, fleetEntity)}>
               DISBAND
             </Button>
           </div>
         </div>
       </div>
-      {/* <Navigator.BackButton className="mt-2">BACK</Navigator.BackButton> */}
+      <BackButton className="mt-2 self-start">BACK</BackButton>
     </div>
   );
 };
+
+export default ManageFleet;

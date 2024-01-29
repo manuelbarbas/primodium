@@ -1,8 +1,8 @@
-import { ComponentProps, FC, createContext, useCallback, useContext, useMemo, useState } from "react";
+import { ComponentProps, FC, Suspense, createContext, lazy, useCallback, useContext, useMemo, useState } from "react";
 import { Button } from "src/components/core/Button";
-import { CreateFleet } from "../../modals/fleets/CreateFleet";
-import { FleetsPane } from "./FleetsPane";
-import { ManageFleet } from "./ManageFleet";
+const FleetsPane = lazy(() => import("./FleetsPane"));
+const CreateFleet = lazy(() => import("../../modals/fleets/CreateFleet"));
+const ManageFleet = lazy(() => import("./ManageFleet"));
 
 const fleetsPanes = {
   fleets: FleetsPane,
@@ -32,7 +32,7 @@ const FleetNavContext = createContext<{
 export const useFleetNav = () => {
   const context = useContext(FleetNavContext);
   if (!context) {
-    throw new Error("Navigation components must be used within Navigator");
+    throw new Error("Fleet nav components must be used within fleet navigator");
   }
   return context;
 };
@@ -106,7 +106,9 @@ export const Fleets = ({ initialState = "fleets", ...initialProps }: { initialSt
 
   return (
     <FleetNavContext.Provider value={{ navigateTo, NavButton, BackButton, goBack }}>
-      <Component {...props} />
+      <Suspense fallback="Loading...">
+        <Component {...props} />
+      </Suspense>
     </FleetNavContext.Provider>
   );
 };

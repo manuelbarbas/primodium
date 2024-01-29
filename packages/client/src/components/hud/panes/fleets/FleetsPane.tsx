@@ -1,7 +1,7 @@
 import { Tabs } from "src/components/core/Tabs";
 import { FriendlyFleets } from "./FriendlyFleets";
 
-export const FleetsPane: React.FC = () => (
+const FleetsPane: React.FC = () => (
   <div className="w-full h-full border-0">
     <Tabs className="flex flex-col items-center gap-2 w-full h-full">
       <div className="flex gap-1 w-full">
@@ -22,3 +22,5 @@ export const FleetsPane: React.FC = () => (
     </Tabs>
   </div>
 );
+
+export default FleetsPane;

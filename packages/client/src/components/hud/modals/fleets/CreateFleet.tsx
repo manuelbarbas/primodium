@@ -19,7 +19,7 @@ import { useFleetNav } from "../../panes/fleets/Fleets";
 import { TargetHeader } from "../../spacerock-menu/TargetHeader";
 import { ResourceIcon } from "./ResourceIcon";
 
-export const CreateFleet: React.FC = () => {
+const CreateFleet: React.FC = () => {
   const [fleetUnitCounts, setFleetUnitCounts] = useState<Record<Entity, bigint>>({});
   const [fleetResourceCounts, setFleetResourceCounts] = useState<Record<Entity, bigint>>({});
 
@@ -317,7 +317,7 @@ export const CreateFleet: React.FC = () => {
           </Button>
         </div>
       </div>
-      <div className="flex gap-4">
+      <div className="flex gap-4 w-full justify-center items-center relative">
         <Nav.BackButton className="absolute left-0 bottom-0">Back</Nav.BackButton>
         <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.CreateFleet, selectedRock)}>
           <Button className="btn-primary w-48" disabled={disabled} onClick={handleSubmit}>
@@ -328,3 +328,5 @@ export const CreateFleet: React.FC = () => {
     </div>
   );
 };
+
+export default CreateFleet;

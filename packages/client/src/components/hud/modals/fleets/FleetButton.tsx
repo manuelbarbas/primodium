@@ -1,10 +1,10 @@
 import { Entity } from "@latticexyz/recs";
-import { Navigator } from "src/components/core/Navigator";
 import { components } from "src/network/components";
 import { EntityType } from "src/util/constants";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount, formatTime } from "src/util/number";
 import { getFleetStats } from "src/util/unit";
+import { useFleetNav } from "../../panes/fleets/Fleets";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -22,15 +22,17 @@ export const FleetButton: React.FC<{
   fleetEntity: Entity;
   dontShowButton?: boolean;
 }> = ({ fleetEntity }) => {
+  const { NavButton } = useFleetNav();
   const fleetData = components.FleetMovement.get(fleetEntity);
   const timeRemaining = (fleetData?.arrivalTime ?? 0n) - (components.Time.use()?.value ?? 0n);
   if (!fleetData) return null;
   const destinationLocation = components.Position.get(fleetData.destination as Entity);
 
   return (
-    <Navigator.NavButton
+    <NavButton
       className="btn-base-100 border border-secondary btn-sm flex flex-row p-2 text-xs"
-      to={`manage-fleet-${fleetEntity}`}
+      to={`manageFleet`}
+      fleetEntity={fleetEntity}
     >
       <FleetStats fleetEntity={fleetEntity} />
       {timeRemaining > 0 && <p className="animate-pulse opacity-80">LANDING IN {formatTime(Number(timeRemaining))} </p>}
@@ -39,7 +41,7 @@ export const FleetButton: React.FC<{
           ORBITING [{destinationLocation.x}, {destinationLocation.y}]
         </p>
       )}
-    </Navigator.NavButton>
+    </NavButton>
   );
 };
 
