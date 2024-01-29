@@ -9,11 +9,13 @@ export const ResourceIcon = ({
   amount,
   setDragging = () => null,
   onClear,
+  size = "md",
 }: {
   resource: Entity;
   amount: string;
   setDragging?: (e: React.MouseEvent, entity: Entity) => void;
   onClear?: (entity: Entity) => void;
+  size?: "sm" | "md";
 }) => (
   <div
     onMouseDown={(e) => setDragging(e, resource)}
@@ -21,9 +23,9 @@ export const ResourceIcon = ({
   >
     <img
       src={ResourceImage.get(resource) ?? ""}
-      className={`pixel-images w-14 scale-200 font-bold text-lg pointer-events-none`}
+      className={`pixel-images ${size == "md" ? "w-14" : "w-10"} scale-200 font-bold text-lg pointer-events-none`}
     />
-    <p className="font-bold">{amount}</p>
+    <p className={`${size == "sm" ? "text-sm" : ""} font-bold`}>{amount}</p>
     {onClear && (
       <Button className="btn-ghost btn-xs absolute bottom-0 right-0" onClick={() => onClear(resource)}>
         <FaTrash className="text-error" />

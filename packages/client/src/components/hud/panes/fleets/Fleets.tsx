@@ -37,7 +37,7 @@ export const useFleetNav = () => {
   return context;
 };
 
-export const Fleets = ({ initialState = "fleets", ...initialProps }: { initialState: View } & Props) => {
+export const Fleets = ({ initialState = "fleets", ...initialProps }: { initialState?: View } & Props) => {
   const [history, setHistory] = useState<{ view: View; props: Props }[]>([
     { view: initialState, props: initialProps ?? {} },
   ]);

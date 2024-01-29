@@ -1,16 +1,18 @@
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
-import { EFleetStance, EResource } from "contracts/config/enums";
+import { EFleetStance } from "contracts/config/enums";
 import { FC } from "react";
 import { Button } from "src/components/core/Button";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
+import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
+import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { disbandFleet } from "src/network/setup/contractCalls/fleetDisband";
 import { landFleet } from "src/network/setup/contractCalls/fleetLand";
 import { clearFleetStance, setFleetStance } from "src/network/setup/contractCalls/fleetStance";
-import { ResourceEntityLookup } from "src/util/constants";
 import { entityToRockName } from "src/util/name";
+import { formatResourceCount } from "src/util/number";
 import { Hex } from "viem";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { FleetEntityHeader } from "./FleetHeader";
@@ -21,33 +23,17 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
   const { BackButton } = useFleetNav();
   const destination = components.FleetMovement.getWithKeys({ entity: fleetEntity as Hex })?.destination;
   const selectedRock = components.SelectedRock.get()?.value;
-  const units = components.P_UnitPrototypes.get(undefined, { value: [] }).value.reduce((acc, entity) => {
-    const unitCount = components.UnitCount.getWithKeys({
-      entity: fleetEntity as Hex,
-      unit: entity as Hex,
-    })?.value;
-    if (!unitCount) return acc;
-    acc[entity as Entity] = unitCount;
-    return acc;
-  }, {} as Record<Entity, bigint>);
-
-  const transportables = components.P_Transportables.get()?.value ?? [];
-  const transportableResources = transportables.reduce((acc, transportable) => {
-    const entity = ResourceEntityLookup[transportable as EResource];
-    const resourceCount = components.ResourceCount.getWithKeys({
-      entity: entity as Hex,
-      resource: transportable,
-    })?.value;
-    if (!resourceCount) return acc;
-    acc[entity] = resourceCount;
-    return acc;
-  }, {} as Record<Entity, bigint>);
+  const units = useUnitCounts(fleetEntity);
+  const resources = useFullResourceCounts(fleetEntity);
 
   const fleetsOnAsteroidQuery = [Has(components.IsFleet), HasValue(components.FleetMovement, { destination })];
   const fleetsOnAsteroid = useEntityQuery(fleetsOnAsteroidQuery);
-  const followableFleets = fleetsOnAsteroid.filter(
-    (entity) => entity != fleetEntity && !components.FleetStance.get(entity)
-  );
+  const followableFleets = fleetsOnAsteroid.filter((entity) => {
+    if (entity == fleetEntity) return false;
+    const stance = components.FleetStance.get(entity);
+    return stance?.stance != 0;
+  });
+
   const activeStance = components.FleetStance.use(fleetEntity);
 
   const handleDefend = () => {
@@ -77,11 +63,13 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
           </div>
           <div className="flex-1 flex flex-col bg-base-100 p-4 gap-2">
             <p className="uppercase text-xs opacity-50 font-bold">UNITS</p>
-            {Object.entries(units).length > 0 ? (
+            {units.size > 0 ? (
               <div className="grid grid-cols-4 grid-rows-2 gap-2">
-                {Object.entries(units).map(([unit, count]) => {
+                {[...units.entries()].map(([unit, count]) => {
                   if (count <= 0n) return null;
-                  return <ResourceIcon key={`unit-${unit}`} resource={unit as Entity} amount={count.toString()} />;
+                  return (
+                    <ResourceIcon key={`unit-${unit}`} resource={unit as Entity} amount={count.toString()} size="sm" />
+                  );
                 })}
               </div>
             ) : (
@@ -92,15 +80,16 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
           </div>
           <div className="flex-1 flex flex-col bg-base-100 p-4 gap-2">
             <p className="uppercase text-xs opacity-50 font-bold">RESOURCES</p>
-            {Object.entries(transportableResources).length > 0 ? (
+            {resources.size > 0 ? (
               <div className="flex-1 flex flex-col bg-base-100 p-4 grid grid-cols-4 grid-rows-2 gap-2">
-                {Object.entries(transportableResources).map(([resource, count]) => {
-                  if (count <= 0n) return null;
+                {[...resources.entries()].map(([resource, data]) => {
+                  if (data.resourceCount <= 0n) return null;
                   return (
                     <ResourceIcon
                       key={`resource-${resource}`}
                       resource={resource as Entity}
-                      amount={count.toString()}
+                      amount={formatResourceCount(resource as Entity, data.resourceCount)}
+                      size="sm"
                     />
                   );
                 })}
@@ -112,10 +101,10 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
           </div>
         </div>
         {/* Right Side */}
-        <div className="flex flex-col col-span-1 overflow-hidden gap-2">
+        <div className="flex flex-col grow col-span-1 overflow-hidden gap-2">
           <TransactionQueueMask
             queueItemId={"FleetStance" as Entity}
-            className="h-full bg-base-100 flex flex-col p-4 gap-1 overflow-hidden"
+            className="bg-base-100 flex flex-col p-4 gap-1 overflow-hidden h-full"
           >
             <div className="bg-neutral uppercase text-sm font-bold text-center">STANCE</div>
             <div className="flex items-center gap-1 uppercase font-bold">
@@ -145,12 +134,14 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               )}
             </div>
             <p className="italic opacity-50 text-xs">Automatically move whenever another fleet moves</p>
-            <div className="flex flex-col h-full overflow-y-auto scrollbar">
+            <div className="flex flex-col overflow-y-auto scrollbar h-full">
               {followableFleets.length > 0 ? (
                 followableFleets.map((target, i) => (
                   <div
                     className="w-full p-2 bg-neutral flex justify-between items-center"
                     key={`follow-${target}-${i}`}
+                    onMouseEnter={() => components.HoverEntity.set({ value: target as Entity })}
+                    onMouseLeave={() => components.HoverEntity.remove()}
                   >
                     <p className="text-sm font-bold">{entityToRockName(target)}</p>
                     <Button className="btn btn-primary btn-sm" onClick={() => handleFollow(target)}>

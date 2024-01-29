@@ -55,7 +55,7 @@ export function getFleetResourceCount(fleet: Entity) {
   return transportables.reduce((acc, resource) => {
     const resourceCount = components.ResourceCount.getWithKeys({ entity: fleet as Hex, resource })?.value ?? 0n;
     if (!resourceCount) return acc;
-    acc.set(fleet, { resourceStorage: 0n, production: 0n, resourceCount });
+    acc.set(ResourceEntityLookup[resource as EResource], { resourceStorage: 0n, production: 0n, resourceCount });
     return acc;
   }, new Map() as Map<Entity, ResourceCountData>);
 }

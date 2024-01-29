@@ -1,15 +1,10 @@
 import { KeyNames, KeybindActions } from "@game/constants";
-import { Entity, hasComponent } from "@latticexyz/recs";
 import { FaArrowRight, FaCircle } from "react-icons/fa";
 import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
-import { getBuildingName } from "src/util/building";
 import { Action } from "src/util/constants";
-import { formatNumber } from "src/util/number";
-import { getSpaceRockName } from "src/util/spacerock";
-import { Card } from "../core/Card";
 import { HUD } from "../core/HUD";
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
@@ -17,6 +12,7 @@ import { Tabs } from "../core/Tabs";
 import { BrandingLabel } from "../shared/BrandingLabel";
 import { Blueprints } from "./Blueprints";
 import { CurrentObjective } from "./CurrentObjective";
+import { HoverInfo } from "./HoverInfo";
 import { Minimap } from "./Minimap";
 import { Profile } from "./Profile";
 import { Score } from "./Score";
@@ -285,56 +281,4 @@ const Chat = () => {
       </Tabs.Button>
     </Tabs>
   );
-};
-
-const HoverInfo = () => {
-  const BuildingInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
-    const buildingName = getBuildingName(entity);
-
-    return (
-      <Card className="ml-5 uppercase font-bold text-xs relative">
-        <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
-        <p className="z-10">{buildingName}</p>
-      </Card>
-    );
-  };
-
-  const RockInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
-    const rockName = getSpaceRockName(entity);
-
-    return (
-      <Card className="ml-5 uppercase font-bold text-xs relative">
-        <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
-        <p className="z-10">{rockName}</p>
-      </Card>
-    );
-  };
-
-  const FleetMovementInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
-    const fleetMovement = components.FleetMovement.use(entity);
-    const now = components.Time.use()?.value ?? 0n;
-
-    if (!fleetMovement) return <></>;
-
-    return (
-      <Card className="ml-5 uppercase font-bold text-xs relative">
-        <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
-        <p className="z-10">
-          <b className="text-accent">{formatNumber(fleetMovement.arrivalTime - now)}</b> sec remaining
-        </p>
-      </Card>
-    );
-  };
-
-  const hoverEntity = components.HoverEntity.use()?.value;
-
-  if (!hoverEntity) return <></>;
-
-  if (hasComponent(components.BuildingType, hoverEntity)) return <BuildingInfo entity={hoverEntity} />;
-
-  if (hasComponent(components.Asteroid, hoverEntity)) return <RockInfo entity={hoverEntity} />;
-
-  if (hasComponent(components.FleetMovement, hoverEntity)) return <FleetMovementInfo entity={hoverEntity} />;
-
-  return <></>;
 };
