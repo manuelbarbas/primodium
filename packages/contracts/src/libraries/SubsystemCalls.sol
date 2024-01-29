@@ -14,6 +14,7 @@ import { S_TransferSpaceRockOwnershipSystem } from "systems/subsystems/S_Transfe
 import { S_FleetBattleApplyDamageSystem } from "systems/subsystems/S_FleetBattleApplyDamageSystem.sol";
 import { S_FleetBattleResolveRaidSystem } from "systems/subsystems/S_FleetBattleResolveRaidSystem.sol";
 import { S_FleetBattleResolveEncryptionSystem } from "systems/subsystems/S_FleetBattleResolveEncryptionSystem.sol";
+import { S_FleetResetIfNoUnitsLeftSystem } from "systems/subsystems/S_FleetResetIfNoUnitsLeftSystem.sol";
 import { S_ClaimSystem } from "systems/subsystems/S_ClaimSystem.sol";
 import { S_ProductionRateSystem } from "systems/subsystems/S_ProductionRateSystem.sol";
 import { S_StorageSystem } from "systems/subsystems/S_StorageSystem.sol";
@@ -52,6 +53,17 @@ function resolveBattleEncryption(bytes32 battleId, bytes32 aggressorEntity, byte
   );
   return abi.decode(encryptionAtEnd, (uint256));
 }
+
+function resetFleetIfNoUnitsLeft(bytes32 fleetId) {
+  SystemCall.callWithHooksOrRevert(
+    DUMMY_ADDRESS,
+    getSystemResourceId("S_FleetResetIfNoUnitsLeftSystem"),
+    abi.encodeCall(S_FleetResetIfNoUnitsLeftSystem.resetFleetIfNoUnitsLeft, (fleetId)),
+    0
+  );
+}
+
+/* --------------------------------- ASTEROID --------------------------------- */
 
 function transferSpaceRockOwnership(bytes32 spaceRock, bytes32 newOwner) {
   SystemCall.callWithHooksOrRevert(
