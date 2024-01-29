@@ -5,11 +5,11 @@ import { ResourceCount, FleetStance, IsFleet, NewBattleResult, NewBattleResultDa
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
 import { EFleetStance, EResource } from "src/Types.sol";
-import { fleetBattleResolveRaid, fleetBattleApplyDamage, resolveBattleEncryption, transferSpaceRockOwnership, initializeSpaceRockOwnership } from "libraries/SubsystemCalls.sol";
+import { fleetBattleResolveRaid, fleetBattleApplyDamage, fleetResolveBattleEncryption, transferSpaceRockOwnership, initializeSpaceRockOwnership } from "libraries/SubsystemCalls.sol";
 
 contract FleetCombatSystem is FleetBaseSystem {
   modifier _onlyWhenSpaceRockNotInGracePeriod(bytes32 spaceRock) {
-    require(block.timestamp >= GracePeriod.get(OwnedBy.get(spaceRock)), "[Fleet] Target space rock is in grace period");
+    require(block.timestamp >= GracePeriod.get(spaceRock), "[Fleet] Target space rock is in grace period");
     _;
   }
 
@@ -96,7 +96,9 @@ contract FleetCombatSystem is FleetBaseSystem {
     if (battleResult.winner == battleResult.aggressorEntity) {
       fleetBattleResolveRaid(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
       if (!IsFleet.get(battleResult.targetEntity)) {
-        resolveBattleEncryption(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
+        LibFleetCombat.resolveBattleEncryption(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
+        //todo the following commented line reverts for some reason although it just calles the library function above
+        //fleetResolveBattleEncryption(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
         if (ResourceCount.get(battleResult.targetEntity, uint8(EResource.R_Encryption)) == 0) {
           if (OwnedBy.get(battleResult.targetEntity) != bytes32(0)) {
             transferSpaceRockOwnership(battleResult.targetEntity, _player());

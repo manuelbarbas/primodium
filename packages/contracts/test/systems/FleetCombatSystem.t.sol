@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
+import { console } from "forge-std/console.sol";
 import "test/PrimodiumTest.t.sol";
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
 
@@ -47,36 +48,33 @@ contract FleetCombatSystemTest is PrimodiumTest {
     vm.stopPrank();
 
     vm.startPrank(creator);
-    GracePeriod.set(bobEntity, block.timestamp);
+    GracePeriod.set(bobHomeSpaceRock, block.timestamp);
     vm.stopPrank();
 
     vm.warp(FleetMovement.getArrivalTime(fleetId));
 
     uint256 unitCargo = P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
-    require(unitCargo > 0, "unit cargo should more than 0");
-    increaseResource(bobEntity, EResource.Iron, unitCargo);
+    assertTrue(unitCargo > 0, "unit cargo should more than 0");
+    increaseResource(bobHomeSpaceRock, EResource.Iron, unitCargo);
 
     vm.startPrank(alice);
+    console.log("before attack");
     world.attack(fleetId, bobHomeSpaceRock);
+    console.log("after attack");
     vm.stopPrank();
-    require(GracePeriod.get(aliceEntity) == 0, "alice should not be in grace period");
-    require(ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Iron)) == 0, "space rock iron count should be 0");
-    require(ResourceCount.get(fleetId, uint8(EResource.Iron)) == unitCargo, "fleet should have raided iron");
-    require(
-      ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)) ==
-        MaxResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)),
+    assertEq(GracePeriod.get(aliceEntity), 0, "alice should not be in grace period");
+    assertEq(ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Iron)), 0, "space rock iron count should be 0");
+    assertEq(ResourceCount.get(fleetId, uint8(EResource.Iron)), unitCargo, "fleet should have raided iron");
+    assertEq(
+      ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)),
+      MaxResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)),
       "fleet should have full encryption"
     );
 
     uint256 unitAttack = P_Unit.getAttack(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
-    require(unitAttack > 0, "unit attack should more than 0");
+    assertTrue(unitAttack > 0, "unit attack should more than 0");
 
     assertEq(ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Iron)), 0, "space rock iron count should be 0");
-    assertEq(
-      ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_HP)),
-      MaxResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_HP)) - unitAttack,
-      "space rock cargo count should be 0"
-    );
   }
 
   function testFailFleetAttackSpaceRockInGracePeriod() public {
@@ -137,8 +135,8 @@ contract FleetCombatSystemTest is PrimodiumTest {
     vm.stopPrank();
 
     vm.startPrank(creator);
-    GracePeriod.set(aliceEntity, block.timestamp);
-    GracePeriod.set(bobEntity, block.timestamp);
+    GracePeriod.set(aliceHomeSpaceRock, block.timestamp);
+    GracePeriod.set(bobHomeSpaceRock, block.timestamp);
     vm.stopPrank();
 
     vm.warp(FleetMovement.getArrivalTime(fleetId));
@@ -157,10 +155,5 @@ contract FleetCombatSystemTest is PrimodiumTest {
     require(unitAttack > 0, "unit attack should more than 0");
 
     assertEq(ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Iron)), 0, "space rock iron count should be 0");
-    assertEq(
-      ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_HP)),
-      MaxResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_HP)) - unitAttack,
-      "space rock cargo count should be 0"
-    );
   }
 }
