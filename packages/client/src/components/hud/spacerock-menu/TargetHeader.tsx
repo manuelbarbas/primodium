@@ -5,10 +5,10 @@ import { IconLabel } from "src/components/core/IconLabel";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
+import { getAsteroidImage, getSpaceRockName } from "src/util/asteroid";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { getRockDefense } from "src/util/defense";
 import { formatNumber } from "src/util/number";
-import { getAsteroidImage, getSpaceRockName } from "src/util/asteroid";
 import { UtilityLabel } from "./widgets/resources/utilities/UtilityLabel";
 export const TargetHeader = ({
   entity,
@@ -25,7 +25,7 @@ export const TargetHeader = ({
   const def = getRockDefense(selectedSpacerock ?? singletonEntity);
   const owner = components.OwnedBy.use(selectedSpacerock)?.value;
   if (!selectedSpacerock) return null;
-  const img = getAsteroidImage(primodium, selectedSpacerock);
+  const img = getAsteroidImage(primodium, selectedSpacerock) ?? "";
   const name = getSpaceRockName(selectedSpacerock);
 
   return (

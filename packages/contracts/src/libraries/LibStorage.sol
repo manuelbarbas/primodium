@@ -25,11 +25,7 @@ library LibStorage {
     }
   }
 
-  function increaseMaxStorage(
-    bytes32 spaceRockEntity,
-    uint8 resource,
-    uint256 amount
-  ) internal {
+  function increaseMaxStorage(bytes32 spaceRockEntity, uint8 resource, uint256 amount) internal {
     uint256 maxResource = MaxResourceCount.get(spaceRockEntity, resource);
     setMaxStorage(spaceRockEntity, resource, maxResource + amount);
     if (P_IsRecoverable.get(resource)) {
@@ -37,11 +33,7 @@ library LibStorage {
     }
   }
 
-  function decreaseMaxStorage(
-    bytes32 spaceRockEntity,
-    uint8 resource,
-    uint256 amount
-  ) internal {
+  function decreaseMaxStorage(bytes32 spaceRockEntity, uint8 resource, uint256 amount) internal {
     uint256 maxResource = MaxResourceCount.get(spaceRockEntity, resource);
     require(maxResource >= amount, "[StorageUsage] not enough storage to reduce usage");
     setMaxStorage(spaceRockEntity, resource, maxResource - amount);

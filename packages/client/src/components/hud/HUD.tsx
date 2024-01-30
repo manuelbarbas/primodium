@@ -10,6 +10,7 @@ import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
 import { Tabs } from "../core/Tabs";
 import { BrandingLabel } from "../shared/BrandingLabel";
+import { AsteroidTarget } from "./AsteroidTarget";
 import { Blueprints } from "./Blueprints";
 import { CurrentObjective } from "./CurrentObjective";
 import { HoverInfo } from "./HoverInfo";
@@ -19,6 +20,8 @@ import { Score } from "./Score";
 import { SelectAction } from "./SelectAction";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { Chat as _Chat } from "./chat/Chat";
+import { ActiveMarker } from "./markers/ActiveMarker";
+import { HomeMarker } from "./markers/HomeMarker";
 import HackerConsole from "./modals/HackerConsole";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
 import { Settings } from "./modals/settings/Settings";
@@ -26,9 +29,6 @@ import { OwnedAsteroids } from "./panes/OwnedAsteroids";
 import { BattleReports } from "./panes/battle-reports/BattleReports";
 import { Fleets } from "./panes/fleets/Fleets";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
-import { ActiveMarker } from "./markers/ActiveMarker";
-import { HomeMarker } from "./markers/HomeMarker";
-import { AsteroidTarget } from "./AsteroidTarget";
 
 export const GameHUD = () => {
   const {

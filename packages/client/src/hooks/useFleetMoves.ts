@@ -10,7 +10,5 @@ export const useFleetMoves = () => {
   if (!home) throw new Error("No home found");
 
   const maxMoves = useFullResourceCount(EntityType.FleetMoves, home as Entity).resourceCount;
-  const movesUsed = 0n;
-
-  return maxMoves - movesUsed;
+  return maxMoves;
 };

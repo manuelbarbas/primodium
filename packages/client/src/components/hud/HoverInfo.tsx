@@ -2,10 +2,10 @@ import { Entity } from "@latticexyz/recs";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
+import { getSpaceRockName } from "src/util/asteroid";
 import { getBuildingName } from "src/util/building";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { formatNumber, formatResourceCount } from "src/util/number";
-import { getSpaceRockName } from "src/util/asteroid";
 import { getFleetStats } from "src/util/unit";
 import { Card } from "../core/Card";
 
