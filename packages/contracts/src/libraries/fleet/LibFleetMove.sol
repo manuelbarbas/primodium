@@ -32,20 +32,11 @@ library LibFleetMove {
     }
   }
 
-  function _sendFleet(
-    bytes32 fleetId,
-    bytes32 destination,
-    uint256 arrivalTime
-  ) private {
+  function _sendFleet(bytes32 fleetId, bytes32 destination, uint256 arrivalTime) private {
     _sendFleet(fleetId, destination, block.timestamp, arrivalTime);
   }
 
-  function _sendFleet(
-    bytes32 fleetId,
-    bytes32 destination,
-    uint256 sendTime,
-    uint256 arrivalTime
-  ) private {
+  function _sendFleet(bytes32 fleetId, bytes32 destination, uint256 sendTime, uint256 arrivalTime) private {
     FleetsMap.remove(FleetMovement.getDestination(fleetId), FleetIncomingKey, fleetId);
     FleetsMap.add(destination, FleetIncomingKey, fleetId);
 

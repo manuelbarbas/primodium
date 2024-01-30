@@ -9,8 +9,17 @@ import { EntityType, ResourceImage } from "src/util/constants";
 import { getRockDefense } from "src/util/defense";
 import { formatNumber } from "src/util/number";
 import { getAsteroidImage, getSpaceRockName } from "src/util/asteroid";
-export const TargetHeader = ({ hideStats }: { hideStats?: boolean }) => {
-  const selectedSpacerock = components.SelectedRock.use()?.value;
+import { UtilityLabel } from "./widgets/resources/utilities/UtilityLabel";
+export const TargetHeader = ({
+  entity,
+  hideStats,
+  showHousing,
+}: {
+  entity?: Entity;
+  hideStats?: boolean;
+  showHousing?: boolean;
+}) => {
+  const selectedSpacerock = entity ?? components.SelectedRock.use()?.value;
   const primodium = usePrimodium();
   const coord = components.Position.use(selectedSpacerock ?? singletonEntity) ?? { x: 0, y: 0 };
   const def = getRockDefense(selectedSpacerock ?? singletonEntity);
@@ -20,10 +29,10 @@ export const TargetHeader = ({ hideStats }: { hideStats?: boolean }) => {
   const name = getSpaceRockName(selectedSpacerock);
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1 w-full">
       {/* <p className="text-xs font-bold opacity-75 pb-1">TARGET</p> */}
       <Badge className="w-full uppercase font-bold text-sm items-center flex flex-col h-fit">
-        <IconLabel imageUri={img} className="" text={`${name}`} />
+        <IconLabel imageUri={img ?? ""} className="" text={`${name}`} />
       </Badge>
       {!hideStats && (
         <div className="grid grid-cols-3 gap-1">
@@ -35,6 +44,9 @@ export const TargetHeader = ({ hideStats }: { hideStats?: boolean }) => {
           <Badge className="flex gap-1 w-full uppercase font-bold text-xs items-center">
             <IconLabel imageUri={ResourceImage.get(EntityType.Defense) ?? ""} text={``} className="w-4 h-4" />
             <p className="scale-95 opacity-50">{formatNumber(def.points, { short: true, fractionDigits: 2 })}</p>
+            {showHousing && (
+              <UtilityLabel spaceRock={selectedSpacerock} name="Housing" resourceId={EntityType.Housing} size="xs" />
+            )}
           </Badge>
           <Badge className="flex gap-1 w-full uppercase font-bold text-xs items-center">
             {owner ? (

@@ -85,7 +85,6 @@ export async function initPrimodium(mud: MUD, version = "v1") {
 
     components.MapOpen.set({ value: false });
     setupAllianceLeaderboard(mud);
-    // setupArrival();
     setupBattleNotifications(mud);
     setupBlockNumber(mud.network.latestBlockNumber$);
     setupDoubleCounter(mud);

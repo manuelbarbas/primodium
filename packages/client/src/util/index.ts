@@ -22,7 +22,7 @@ import { getRewards } from "./reward";
 import { getMoveLength, getSlowestUnitSpeed } from "./send";
 import { getRockRelationship, getAsteroidImage, getSpaceRockInfo, getSpaceRockName } from "./asteroid";
 import { getBuildingAtCoord, getBuildingsOfTypeInRange } from "./tile";
-import { getUnitStats, getUnitTrainingTime } from "./trainUnits";
+import { getUnitStats, getUnitTrainingTime } from "./unit";
 import { getUpgradeInfo } from "./upgrade";
 import { solCos, solCosDegrees, solSin, solSinDegrees } from "./vector";
 

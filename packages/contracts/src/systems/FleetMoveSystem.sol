@@ -9,11 +9,10 @@ contract FleetMoveSystem is FleetBaseSystem {
     LibFleetMove.recallFleet(fleetId);
   }
 
-  function sendFleet(bytes32 fleetId, bytes32 spaceRock)
-    public
-    _onlyFleetOwner(fleetId)
-    _onlyWhenFleetIsInOrbit(fleetId)
-  {
+  function sendFleet(
+    bytes32 fleetId,
+    bytes32 spaceRock
+  ) public _onlyFleetOwner(fleetId) _onlyWhenFleetIsInOrbit(fleetId) {
     LibFleetMove.sendFleet(fleetId, spaceRock);
   }
 }
