@@ -84,11 +84,11 @@ export const getFleetStats = (fleet: Entity) => {
   return { ...ret, title: entityToRockName(fleet) };
 };
 
-export const getFleetStatsFromUnits = (units: Record<Entity, bigint>) => {
+export const getFleetStatsFromUnits = (units: Map<Entity, bigint>) => {
   const selectedRock = components.SelectedRock.get()?.value as Entity;
   const data = { attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
 
-  Object.entries(units).forEach(([unit, count]) => {
+  units.forEach((count, unit) => {
     const unitData = getUnitStats(unit as Entity, selectedRock);
     data.attack += unitData.ATK * count;
     data.defense += unitData.DEF * count;

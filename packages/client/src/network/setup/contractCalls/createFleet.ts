@@ -9,8 +9,8 @@ import { Hex } from "viem";
 export const createFleet = async (
   mud: MUD,
   spaceRock: Entity,
-  units: Record<Entity, bigint>,
-  resources: Record<Entity, bigint>
+  units: Map<Entity, bigint>,
+  resources: Map<Entity, bigint>
 ) => {
   await execute(
     {

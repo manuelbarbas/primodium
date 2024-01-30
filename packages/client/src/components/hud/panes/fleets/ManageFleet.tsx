@@ -1,5 +1,6 @@
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EFleetStance } from "contracts/config/enums";
 import { FC, useMemo } from "react";
 import { Button } from "src/components/core/Button";
@@ -20,7 +21,7 @@ import { useFleetNav } from "./Fleets";
 
 const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
   const mud = useMud();
-  const { BackButton } = useFleetNav();
+  const { BackButton, NavButton } = useFleetNav();
   const destination = components.FleetMovement.getWithKeys({ entity: fleetEntity as Hex })?.destination;
   const selectedRock = components.SelectedRock.get()?.value;
   const units = useUnitCounts(fleetEntity);
@@ -34,8 +35,11 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
 
   const fleetsOnAsteroidQuery = [Has(components.IsFleet), HasValue(components.FleetMovement, { destination })];
   const fleetsOnAsteroid = useEntityQuery(fleetsOnAsteroidQuery);
+  const time = components.Time.use()?.value ?? 0n;
   const followableFleets = fleetsOnAsteroid.filter((entity) => {
     if (entity == fleetEntity) return false;
+    const movement = components.FleetMovement.get(entity);
+    if ((movement?.arrivalTime ?? 0n) > time) return false;
     const stance = components.FleetStance.get(entity);
     return stance?.stance != 0;
   });
@@ -82,7 +86,14 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               <p className="w-full h-full grid place-items-center text-xs uppercase font-bold">No Units</p>
             )}
 
-            <Button className="btn-primary btn-xs w-fit self-end">Transfer Units</Button>
+            <NavButton
+              className="btn-primary btn-xs w-fit self-end"
+              goto="transfer"
+              from={selectedRock ?? singletonEntity}
+              to={fleetEntity}
+            >
+              Transfer Units
+            </NavButton>
           </div>
           <div className="flex-1 flex flex-col bg-base-100 p-4 gap-2">
             <p className="uppercase text-xs opacity-50 font-bold">RESOURCES</p>
@@ -103,7 +114,14 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
             ) : (
               <p className="w-full h-full grid place-items-center text-xs uppercase font-bold">No Resources</p>
             )}
-            <Button className="btn-primary btn-xs self-end w-fit">Transfer Resources</Button>
+            <NavButton
+              className="btn-primary btn-xs w-fit self-end"
+              goto="transfer"
+              from={selectedRock ?? singletonEntity}
+              to={fleetEntity}
+            >
+              Transfer Resources
+            </NavButton>
           </div>
         </div>
         {/* Right Side */}

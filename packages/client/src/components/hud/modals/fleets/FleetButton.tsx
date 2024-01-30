@@ -31,7 +31,7 @@ export const FleetButton: React.FC<{
   return (
     <NavButton
       className="btn-base-100 border border-secondary btn-sm flex flex-row p-2 text-xs"
-      to={`manageFleet`}
+      goto="manageFleet"
       fleetEntity={fleetEntity}
     >
       <FleetStats fleetEntity={fleetEntity} />

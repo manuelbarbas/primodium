@@ -20,8 +20,8 @@ import { TargetHeader } from "../../spacerock-menu/TargetHeader";
 import { ResourceIcon } from "./ResourceIcon";
 
 const CreateFleet: React.FC = () => {
-  const [fleetUnitCounts, setFleetUnitCounts] = useState<Record<Entity, bigint>>({});
-  const [fleetResourceCounts, setFleetResourceCounts] = useState<Record<Entity, bigint>>({});
+  const [fleetUnitCounts, setFleetUnitCounts] = useState<Map<Entity, bigint>>(new Map());
+  const [fleetResourceCounts, setFleetResourceCounts] = useState<Map<Entity, bigint>>(new Map());
 
   const Nav = useFleetNav();
   const [dragging, setDragging] = useState<{ entity: Entity; count: bigint } | null>(null);
@@ -31,8 +31,9 @@ const CreateFleet: React.FC = () => {
   const selectedRock = components.SelectedRock.use()?.value ?? singletonEntity;
   const fleetStats = useMemo(() => {
     const data = { attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
+    console.log("fleetUnitCounts:", fleetUnitCounts, "selectedRock:", selectedRock);
 
-    Object.entries(fleetUnitCounts).forEach(([unit, count]) => {
+    fleetUnitCounts.forEach((count, unit) => {
       const unitData = getUnitStats(unit as Entity, selectedRock);
       data.attack += unitData.ATK * count;
       data.defense += unitData.DEF * count;
@@ -52,9 +53,9 @@ const CreateFleet: React.FC = () => {
     const entity = ResourceEntityLookup[transportable as EResource];
     const resourceCount = allResources.get(entity)?.resourceCount;
     if (!resourceCount) return acc;
-    acc[entity] = resourceCount;
+    acc.set(entity, resourceCount);
     return acc;
-  }, {} as Record<Entity, bigint>);
+  }, new Map<Entity, bigint>());
   const maxFleets =
     components.ResourceCount.getWithKeys({ entity: selectedRock as Hex, resource: EResource.U_MaxMoves })?.value ?? 0n;
 
@@ -70,16 +71,13 @@ const CreateFleet: React.FC = () => {
     setDragging(null);
     if (hoveringArea === "to" && dragging) {
       if (UnitStorages.has(dragging.entity)) {
-        console.log("adding unit to fleet", dragging.entity, dragging.count, fleetUnitCounts[dragging.entity]);
-        setFleetUnitCounts({
-          ...fleetUnitCounts,
-          [dragging.entity]: (fleetUnitCounts[dragging.entity] ?? 0n) + dragging.count,
-        });
+        const newMap = new Map(fleetUnitCounts);
+        newMap.set(dragging.entity, (fleetUnitCounts.get(dragging.entity) ?? 0n) + dragging.count);
+        setFleetUnitCounts(newMap);
       } else {
-        setFleetResourceCounts({
-          ...fleetResourceCounts,
-          [dragging.entity]: (fleetResourceCounts[dragging.entity] ?? 0n) + dragging.count,
-        });
+        const newMap = new Map(fleetResourceCounts);
+        newMap.set(dragging.entity, (fleetResourceCounts.get(dragging.entity) ?? 0n) + dragging.count);
+        setFleetResourceCounts(newMap);
       }
     }
     setHoveringArea(null);
@@ -100,7 +98,7 @@ const CreateFleet: React.FC = () => {
           ? units
             ? units.counts[units.units.indexOf(dragging.entity)]
             : 0n
-          : transportableResources[dragging.entity];
+          : transportableResources.get(dragging.entity) ?? 0n;
         setDragging({
           ...dragging,
           count: bigIntMin(maxCount, dragging.count + delta),
@@ -135,10 +133,10 @@ const CreateFleet: React.FC = () => {
   }, [handleKeyDown, handleKeyUp, stopDragging]);
 
   const { disabled, submitMessage } = useMemo(() => {
+    console.log("sizes:", fleetUnitCounts.size, fleetResourceCounts.size);
     if (maxFleets === 0n) return { disabled: true, submitMessage: "No Fleets Left" };
-    if (Object.entries(fleetUnitCounts).length + Object.entries(fleetResourceCounts).length === 0)
-      return { disabled: true, submitMessage: "Create Fleet" };
-    if (Object.entries(fleetResourceCounts).reduce((acc, curr) => curr[1] + acc, 0n) > fleetStats.cargo)
+    if (fleetUnitCounts.size + fleetResourceCounts.size === 0) return { disabled: true, submitMessage: "Create Fleet" };
+    if ([...fleetResourceCounts.entries()].reduce((acc, curr) => curr[1] + acc, 0n) > fleetStats.cargo)
       return { disabled: true, submitMessage: "Not Enough Cargo" };
     return { disabled: false, submitMessage: "Create Fleet" };
   }, [fleetResourceCounts, fleetStats.cargo, fleetUnitCounts, maxFleets]);
@@ -177,7 +175,7 @@ const CreateFleet: React.FC = () => {
                 const count =
                   units.counts[units.units.indexOf(unit)] -
                   (dragging?.entity === unit ? dragging?.count ?? 0n : 0n) -
-                  (fleetUnitCounts[unit] ?? 0n);
+                  (fleetUnitCounts.get(unit) ?? 0n);
                 if (count <= 0n) return null;
                 return (
                   <ResourceIcon
@@ -201,13 +199,13 @@ const CreateFleet: React.FC = () => {
           )}
 
           {/*Resources to select from*/}
-          {Object.entries(transportableResources).length > 0 ? (
+          {transportableResources.size > 0 ? (
             <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
-              {Object.entries(transportableResources).map(([entity, data]) => {
+              {[...transportableResources.entries()].map(([entity, data]) => {
                 const count =
                   data -
                   (dragging?.entity === entity ? dragging?.count ?? 0n : 0n) -
-                  (fleetResourceCounts[entity as Entity] ?? 0n);
+                  (fleetResourceCounts.get(entity) ?? 0n);
 
                 if (count / RESOURCE_SCALE <= 0n) return null;
                 return (
@@ -218,7 +216,7 @@ const CreateFleet: React.FC = () => {
                       entity as Entity,
                       data -
                         (dragging?.entity === entity ? dragging?.count ?? 0n : 0n) -
-                        (fleetResourceCounts[entity as Entity] ?? 0n),
+                        (fleetResourceCounts.get(entity) ?? 0n),
                       { fractionDigits: 0 }
                     )}
                     setDragging={(e: React.MouseEvent, entity: Entity) =>
@@ -261,17 +259,18 @@ const CreateFleet: React.FC = () => {
           </div>
 
           {/*Units sent*/}
-          {Object.entries(fleetUnitCounts).length > 0 ? (
+          {fleetUnitCounts.size > 0 ? (
             <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
-              {Object.entries(fleetUnitCounts).map(([unit, count]) =>
+              {[...fleetUnitCounts.entries()].map(([unit, count]) =>
                 UnitStorages.has(unit as Entity) ? (
                   <ResourceIcon
                     key={`to-unit-${unit}`}
                     resource={unit as Entity}
                     amount={count.toString()}
                     onClear={(entity) => {
-                      delete fleetUnitCounts[entity];
-                      setFleetUnitCounts({ ...fleetUnitCounts });
+                      const newMap = new Map(fleetUnitCounts);
+                      newMap.delete(entity);
+                      setFleetUnitCounts(newMap);
                     }}
                   />
                 ) : null
@@ -284,17 +283,18 @@ const CreateFleet: React.FC = () => {
           )}
 
           {/*Resources sent*/}
-          {Object.entries(fleetResourceCounts).length > 0 ? (
+          {fleetResourceCounts.size > 0 ? (
             <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
-              {Object.entries(fleetResourceCounts).map(([entity, data]) =>
+              {[...fleetResourceCounts.entries()].map(([entity, data]) =>
                 UnitStorages.has(entity as Entity) ? null : (
                   <ResourceIcon
                     key={`to-resource-${entity}`}
                     resource={entity as Entity}
                     amount={formatResourceCount(entity as Entity, data, { fractionDigits: 0 })}
                     onClear={(entity) => {
-                      delete fleetResourceCounts[entity];
-                      setFleetResourceCounts({ ...fleetResourceCounts });
+                      const newMap = new Map(fleetResourceCounts);
+                      newMap.delete(entity);
+                      setFleetResourceCounts(newMap);
                     }}
                   />
                 )
@@ -308,10 +308,10 @@ const CreateFleet: React.FC = () => {
           <Button
             className="btn-primary btn-xs absolute bottom-1 right-2"
             onClick={() => {
-              setFleetUnitCounts({});
-              setFleetResourceCounts({});
+              setFleetUnitCounts(new Map());
+              setFleetResourceCounts(new Map());
             }}
-            disabled={Object.entries(fleetUnitCounts).length + Object.entries(fleetResourceCounts).length === 0}
+            disabled={fleetUnitCounts.size + fleetResourceCounts.size === 0}
           >
             Clear all
           </Button>

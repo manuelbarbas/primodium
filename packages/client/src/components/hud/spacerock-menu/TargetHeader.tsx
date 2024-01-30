@@ -9,8 +9,8 @@ import { EntityType, ResourceImage } from "src/util/constants";
 import { getRockDefense } from "src/util/defense";
 import { formatNumber } from "src/util/number";
 import { getSpaceRockImage, getSpaceRockName } from "src/util/spacerock";
-export const TargetHeader = ({ hideStats }: { hideStats?: boolean }) => {
-  const selectedSpacerock = components.SelectedRock.use()?.value;
+export const TargetHeader = ({ entity, hideStats }: { entity?: Entity; hideStats?: boolean }) => {
+  const selectedSpacerock = entity ?? components.SelectedRock.use()?.value;
   const primodium = usePrimodium();
   const coord = components.Position.use(selectedSpacerock ?? singletonEntity) ?? { x: 0, y: 0 };
   const def = getRockDefense(selectedSpacerock ?? singletonEntity);

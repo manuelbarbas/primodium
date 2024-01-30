@@ -5,9 +5,9 @@ import { Hex } from "viem";
 import { distanceBI } from "./common";
 import { NUM_UNITS, ResourceEnumLookup, SPEED_SCALE, UNIT_SPEED_SCALE, UnitEnumLookup } from "./constants";
 
-export function toUnitCountArray(map: Record<Entity, bigint>): bigint[] {
+export function toUnitCountArray(map: Map<Entity, bigint>): bigint[] {
   const arr = Array.from({ length: NUM_UNITS }, () => 0n);
-  Object.entries(map).forEach(([key, value]) => {
+  map.forEach((value, key) => {
     const index = UnitEnumLookup[key as Entity];
     if (index === undefined) throw new Error("Invalid unit entity");
     arr[index - 1] = value;
@@ -15,10 +15,10 @@ export function toUnitCountArray(map: Record<Entity, bigint>): bigint[] {
   return arr;
 }
 
-export function toTransportableResourceArray(map: Record<Entity, bigint>): bigint[] {
+export function toTransportableResourceArray(map: Map<Entity, bigint>): bigint[] {
   const transportables = components.P_Transportables.get()?.value ?? [];
   const arr = Array.from({ length: transportables.length }, () => 0n);
-  Object.entries(map).forEach(([key, value]) => {
+  map.forEach((value, key) => {
     const index = transportables.indexOf(ResourceEnumLookup[key as Entity]);
     if (index === undefined) throw new Error("Invalid resource entity");
     arr[index] = value;
