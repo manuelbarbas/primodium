@@ -18,7 +18,7 @@ import { recallArrival } from "src/network/setup/contractCalls/recall";
 import { reinforce } from "src/network/setup/contractCalls/reinforce";
 import { TransactionQueueType, UnitEntityLookup } from "src/util/constants";
 import { decodeEntity, hashEntities } from "src/util/encode";
-import { getSpaceRockName } from "src/util/spacerock";
+import { getSpaceRockName } from "src/util/asteroid";
 import { getUnitStats } from "src/util/trainUnits";
 
 export const LabeledValue: React.FC<{

@@ -20,7 +20,7 @@ import { getRecipe, getRecipeDifference } from "./recipe";
 import { getAsteroidResourceCount, getFullResourceCount, getFullResourceCounts, getScale, isUtility } from "./resource";
 import { getRewards } from "./reward";
 import { getMoveLength, getSlowestUnitSpeed } from "./send";
-import { getRockRelationship, getSpaceRockImage, getSpaceRockInfo, getSpaceRockName } from "./spacerock";
+import { getRockRelationship, getAsteroidImage, getSpaceRockInfo, getSpaceRockName } from "./asteroid";
 import { getBuildingAtCoord, getBuildingsOfTypeInRange } from "./tile";
 import { getUnitStats, getUnitTrainingTime } from "./trainUnits";
 import { getUpgradeInfo } from "./upgrade";
@@ -86,7 +86,7 @@ export default {
     getSlowestUnitSpeed,
   },
   spaceRock: {
-    getSpaceRockImage,
+    getSpaceRockImage: getAsteroidImage,
     getSpaceRockName,
     getSpaceRockInfo,
     getRockRelationship,

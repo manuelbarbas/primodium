@@ -1,6 +1,6 @@
-import { KeyNames, KeybindActions, Scenes } from "@game/constants";
+import { KeyNames, KeybindActions } from "@game/constants";
 import { Entity, hasComponent } from "@latticexyz/recs";
-import { FaArrowRight, FaChevronRight, FaCircle } from "react-icons/fa";
+import { FaArrowRight, FaCircle } from "react-icons/fa";
 import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
@@ -8,7 +8,7 @@ import { components } from "src/network/components";
 import { getBuildingName } from "src/util/building";
 import { Action } from "src/util/constants";
 import { formatNumber } from "src/util/number";
-import { getSpaceRockName } from "src/util/spacerock";
+import { getSpaceRockName } from "src/util/asteroid";
 import { Card } from "../core/Card";
 import { HUD } from "../core/HUD";
 import { IconLabel } from "../core/IconLabel";
@@ -31,9 +31,9 @@ import { OwnedAsteroids } from "./panes/OwnedAsteroids";
 import { BattleReports } from "./panes/battle-reports/BattleReports";
 import { HostileFleets } from "./panes/hostile-fleets/HostileFleets";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { useMemo } from "react";
-import { Button } from "../core/Button";
+import { ActiveMarker } from "./markers/ActiveMarker";
+import { HomeMarker } from "./markers/HomeMarker";
+import { AsteroidTarget } from "./AsteroidTarget";
 
 export const GameHUD = () => {
   const {
@@ -99,8 +99,14 @@ export const GameHUD = () => {
         <HUD.BottomMiddle>
           <SpacerockMenu />
         </HUD.BottomMiddle>
+
+        {/* MARKERS */}
+        <ActiveMarker />
+        <HomeMarker />
+
+        <AsteroidTarget />
       </HUD>
-      <HomeMarker />
+
       <HUD>
         <HUD.BottomRight>
           <BrandingLabel />
@@ -361,60 +367,4 @@ const HoverInfo = () => {
   if (hasComponent(components.Arrival, hoverEntity)) return <ArrivalInfo entity={hoverEntity} />;
 
   return <></>;
-};
-
-const HomeMarker = () => {
-  const { playerAccount } = useMud();
-  const primodium = usePrimodium();
-  const {
-    hooks: { useCoordToScreenCoord },
-    camera: { pan },
-  } = primodium.api(Scenes.Starmap);
-  const homeAsteroid = components.Home.use(playerAccount.entity)?.value ?? singletonEntity;
-  const mapOpen = components.MapOpen.use()?.value ?? false;
-  const position = components.Position.use(homeAsteroid as Entity) ?? { x: 0, y: 0 };
-  const { screenCoord, direction, isBounded } = useCoordToScreenCoord(position, true);
-  const MARGIN = 150;
-
-  const coord = useMemo(() => {
-    const coord = { x: screenCoord.x, y: screenCoord.y };
-    if (isBounded) {
-      coord.x = Math.max(MARGIN, Math.min(window.innerWidth - MARGIN, coord.x));
-      coord.y = Math.max(MARGIN, Math.min(window.innerHeight - MARGIN, coord.y));
-    }
-
-    return coord;
-  }, [screenCoord, isBounded]);
-
-  if (!mapOpen) return <></>;
-
-  return (
-    <>
-      <div
-        style={{ left: `calc(${coord.x}px)`, top: `calc(${coord.y}px)` }}
-        className={`text-error absolute -translate-y-1/2 -translate-x-1/2`}
-      >
-        <Button
-          className="btn-ghost p-0!"
-          disabled={!isBounded}
-          onClick={() => {
-            pan(position);
-          }}
-        >
-          <IconLabel
-            imageUri="/img/icons/utilitiesicon.png"
-            className={`text-2xl p-2  ${isBounded ? "border border-accent min-w-14 bg-secondary" : "max-w-12"}`}
-          />
-          {isBounded && (
-            <div className="absolute inset-0" style={{ transform: `rotate(${direction}deg)` }}>
-              <FaChevronRight
-                size={24}
-                className="text-success font-bold absolute top-1/2 -translate-y-1/2 -right-10"
-              />
-            </div>
-          )}
-        </Button>
-      </div>
-    </>
-  );
 };

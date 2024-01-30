@@ -2,7 +2,7 @@ import { EntitytoSpriteKey, SpriteKeys } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { clampedIndex, getBlockTypeName } from "src/util/common";
 import { EntityType, MapIdToAsteroidType, RockRelationship } from "src/util/constants";
-import { getRockRelationship } from "src/util/spacerock";
+import { getRockRelationship } from "src/util/asteroid";
 
 const maxLevelToSize: Record<number, string> = {
   1: "Small",
@@ -12,6 +12,10 @@ const maxLevelToSize: Record<number, string> = {
 };
 
 export const getRockSprite = (mapId: number, level: bigint) => {
+  return mapId === 1 ? getPrimaryRockSprite(level) : getSecondaryRockSprite(mapId, level);
+};
+
+export const getPrimaryRockSprite = (level: bigint) => {
   return EntitytoSpriteKey[EntityType.Asteroid][
     clampedIndex(Number(level) - 1, EntitytoSpriteKey[EntityType.Asteroid].length)
   ];
