@@ -146,12 +146,10 @@ contract FleetCombatSystemTest is PrimodiumTest {
     uint256 hpProduction = 1;
     uint256 hp = 1000;
     increaseResource(bobHomeSpaceRock, EResource.U_Defense, defense);
-    increaseResource(bobHomeSpaceRock, EResource.R_HP, hpProduction);
-    vm.startPrank(creator);
-    MaxResourceCount.set(bobHomeSpaceRock, uint8(EResource.R_HP), hp);
-    ResourceCount.set(bobHomeSpaceRock, uint8(EResource.R_HP), hp);
-    vm.stopPrank();
+    increaseResource(bobHomeSpaceRock, EResource.R_HP, hp);
+    increaseProduction(bobHomeSpaceRock, EResource.R_HP, hpProduction);
 
+    //for testing raiding
     increaseResource(bobHomeSpaceRock, EResource.Iron, 10);
 
     /*
@@ -209,5 +207,22 @@ contract FleetCombatSystemTest is PrimodiumTest {
     assertEq(FleetMovement.getOrigin(fleetId), aliceHomeSpaceRock, "fleet origin doesn't match");
     assertEq(FleetMovement.getArrivalTime(fleetId), block.timestamp, "fleet arrival time doesn't match");
     assertEq(FleetMovement.getSendTime(fleetId), block.timestamp, "fleet send time doesn't match");
+
+    vm.warp(block.timestamp + 5);
+    claimResources(bobHomeSpaceRock);
+    assertEq(
+      ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_HP)),
+      hp - unitAttack + (hpProduction * 5),
+      "space rock hp should have recovered by production"
+    );
+
+    vm.warp(block.timestamp + (unitAttack / hpProduction));
+
+    claimResources(bobHomeSpaceRock);
+    assertEq(
+      ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_HP)),
+      hp,
+      "space rock hp should have recovered completely"
+    );
   }
 }

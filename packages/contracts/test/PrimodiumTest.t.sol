@@ -339,6 +339,18 @@ contract PrimodiumTest is MudTest {
     }
   }
 
+  function claimResources(bytes32 spaceRock) internal {
+    vm.startPrank(creator);
+    world.claimResources(spaceRock);
+    vm.stopPrank();
+  }
+
+  function increaseProduction(bytes32 spaceRock, EResource resource, uint256 amount) internal {
+    vm.startPrank(creator);
+    LibProduction.increaseResourceProduction(spaceRock, resource, amount);
+    vm.stopPrank();
+  }
+
   function increaseResource(bytes32 spaceRock, EResource resourceType, uint256 count) internal {
     vm.startPrank(creator);
     if (P_IsUtility.get(uint8(resourceType))) {
