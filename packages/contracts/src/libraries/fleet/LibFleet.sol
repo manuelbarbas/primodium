@@ -152,7 +152,7 @@ library LibFleet {
     }
 
     for (uint256 i = 1; i < fleets.length; i++) {
-      for (uint8 j = 0; j < unitPrototypes.length; j++) {
+      for (uint256 j = 0; j < unitPrototypes.length; j++) {
         uint256 fleetUnitCount = UnitCount.get(fleets[i], unitPrototypes[j]);
         decreaseFleetUnit(fleets[i], unitPrototypes[j], fleetUnitCount, false);
       }
@@ -163,7 +163,7 @@ library LibFleet {
 
   function resetFleetIfNoUnitsLeft(bytes32 fleetId) internal {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    for (uint8 i = 0; i < unitPrototypes.length; i++) {
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (UnitCount.get(fleetId, unitPrototypes[i]) > 0) return;
     }
     resetFleetOrbit(fleetId);

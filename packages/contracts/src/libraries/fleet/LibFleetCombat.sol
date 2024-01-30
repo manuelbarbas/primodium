@@ -201,16 +201,18 @@ library LibFleetCombat {
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       unitResult.unitsAtStart[i] = UnitCount.get(targetEntity, unitPrototypes[i]);
       if (unitResult.unitsAtStart[i] == 0) continue;
-      unitResult.unitLevels[i] = UnitLevel.get(targetEntity, unitPrototypes[i]);
+      bytes32 spaceRock = IsFleet.get(targetEntity) ? OwnedBy.get(targetEntity) : targetEntity;
+      unitResult.unitLevels[i] = UnitLevel.get(spaceRock, unitPrototypes[i]);
       uint256 unitHp = P_Unit.getHp(unitPrototypes[i], unitResult.unitLevels[i]);
       uint256 damagePortion = (unitResult.unitsAtStart[i] * unitHp * damage);
       unitResult.casualties[i] = LibMath.divideRound(damagePortion, totalHp);
 
+      if (unitResult.casualties[i] > unitResult.unitsAtStart[i]) unitResult.casualties[i] = unitResult.unitsAtStart[i];
       applyUnitCasualty(targetEntity, unitPrototypes[i], unitResult.casualties[i]);
 
       damagePortion = unitResult.casualties[i] * unitHp;
       damageDealt += damagePortion;
-      if (damageDealt >= damage) return damageDealt;
+      if (damageDealt >= damage) break;
     }
 
     BattleUnitResult.set(battleId, targetEntity, unitResult);
