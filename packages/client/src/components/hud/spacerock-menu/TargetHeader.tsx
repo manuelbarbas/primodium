@@ -25,7 +25,7 @@ export const TargetHeader = ({
   const def = getRockDefense(selectedSpacerock ?? singletonEntity);
   const owner = components.OwnedBy.use(selectedSpacerock)?.value;
   if (!selectedSpacerock) return null;
-  const img = getAsteroidImage(primodium, selectedSpacerock);
+  const img = getAsteroidImage(primodium, selectedSpacerock) ?? "";
   const name = getSpaceRockName(selectedSpacerock);
 
   return (
