@@ -1,5 +1,5 @@
 import { Gesture } from "@use-gesture/vanilla";
-import { BehaviorSubject, map, scan, Subject, throttleTime } from "rxjs";
+import { BehaviorSubject, map, scan, share, Subject, throttleTime } from "rxjs";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Coord, GestureState, ObjectPool } from "@latticexyz/phaserx/dist/types";
 import { CameraConfig } from "../../types";
@@ -10,7 +10,9 @@ export function createCamera(phaserCamera: Phaser.Cameras.Scene2D.Camera, option
   document.addEventListener("gesturestart", (e) => e.preventDefault());
   document.addEventListener("gesturechange", (e) => e.preventDefault());
 
-  const worldView$ = new BehaviorSubject<Phaser.Cameras.Scene2D.Camera["worldView"]>(phaserCamera.worldView);
+  const worldView$ = new BehaviorSubject<Phaser.Cameras.Scene2D.Camera["worldView"]>(phaserCamera.worldView).pipe(
+    share()
+  );
   const zoom$ = new BehaviorSubject<number>(phaserCamera.zoom);
   const pinchStream$ = new Subject<GestureState<"onPinch">>();
 
