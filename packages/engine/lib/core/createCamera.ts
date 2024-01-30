@@ -12,8 +12,8 @@ export function createCamera(phaserCamera: Phaser.Cameras.Scene2D.Camera, option
 
   const worldView$ = new BehaviorSubject<Phaser.Cameras.Scene2D.Camera["worldView"]>(phaserCamera.worldView).pipe(
     share()
-  );
-  const zoom$ = new BehaviorSubject<number>(phaserCamera.zoom);
+  ) as BehaviorSubject<Phaser.Cameras.Scene2D.Camera["worldView"]>;
+  const zoom$ = new BehaviorSubject<number>(phaserCamera.zoom).pipe(share()) as BehaviorSubject<number>;
   const pinchStream$ = new Subject<GestureState<"onPinch">>();
 
   const gesture = new Gesture(
