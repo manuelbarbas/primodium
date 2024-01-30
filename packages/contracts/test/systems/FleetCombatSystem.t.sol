@@ -56,12 +56,13 @@ contract FleetCombatSystemTest is PrimodiumTest {
     uint256 unitCargo = P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
     assertTrue(unitCargo > 0, "unit cargo should more than 0");
     increaseResource(bobHomeSpaceRock, EResource.Iron, unitCargo);
-
+    console.log("iron to raid: %s", ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Iron)));
     vm.startPrank(alice);
     console.log("before attack");
     world.attack(fleetId, bobHomeSpaceRock);
     console.log("after attack");
     vm.stopPrank();
+    console.log("iron after raid: %s", ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Iron)));
     assertEq(GracePeriod.get(aliceEntity), 0, "alice should not be in grace period");
     assertEq(ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Iron)), 0, "space rock iron count should be 0");
     assertEq(ResourceCount.get(fleetId, uint8(EResource.Iron)), unitCargo, "fleet should have raided iron");
@@ -140,14 +141,14 @@ contract FleetCombatSystemTest is PrimodiumTest {
     vm.stopPrank();
 
     vm.warp(FleetMovement.getArrivalTime(fleetId));
-
+    console.log("before attack");
     vm.startPrank(alice);
     world.attack(fleetId, bobHomeSpaceRock);
     vm.stopPrank();
-
-    require(
-      ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)) ==
-        MaxResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)),
+    console.log("after attack");
+    assertEq(
+      ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)),
+      MaxResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)),
       "fleet should have full encryption"
     );
 
