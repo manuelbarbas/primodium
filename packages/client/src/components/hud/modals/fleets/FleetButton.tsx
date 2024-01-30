@@ -1,9 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { components } from "src/network/components";
-import { EntityType } from "src/util/constants";
-import { entityToRockName } from "src/util/name";
-import { formatResourceCount, formatTime } from "src/util/number";
-import { getFleetStats } from "src/util/unit";
+import { formatTime } from "src/util/number";
+import { FleetEntityHeader } from "../../panes/fleets/FleetHeader";
 import { useFleetNav } from "../../panes/fleets/Fleets";
 
 export const LabeledValue: React.FC<{
@@ -34,7 +32,7 @@ export const FleetButton: React.FC<{
       goto="manageFleet"
       fleetEntity={fleetEntity}
     >
-      <FleetStats fleetEntity={fleetEntity} />
+      <FleetEntityHeader entity={fleetEntity} />
       {timeRemaining > 0 && <p className="animate-pulse opacity-80">LANDING IN {formatTime(Number(timeRemaining))} </p>}
       {destinationLocation && timeRemaining <= 0 && (
         <p className="animate-pulse opacity-80 text-xs">
@@ -42,20 +40,5 @@ export const FleetButton: React.FC<{
         </p>
       )}
     </NavButton>
-  );
-};
-
-const FleetStats: React.FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
-  const name = entityToRockName(fleetEntity);
-  const stats = getFleetStats(fleetEntity);
-
-  return (
-    <div className="flex flex-col gap-1">
-      {name}
-      <div className="flex texs-xs uppercase">
-        {stats.attack.toLocaleString()}|{stats.defense.toLocaleString()}|
-        {formatResourceCount(EntityType.Iron, stats.cargo)}|{stats.speed.toLocaleString()}|{stats.hp.toLocaleString()}
-      </div>
-    </div>
   );
 };

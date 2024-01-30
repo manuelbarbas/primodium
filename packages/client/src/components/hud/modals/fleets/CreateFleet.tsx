@@ -31,7 +31,6 @@ const CreateFleet: React.FC = () => {
   const selectedRock = components.SelectedRock.use()?.value ?? singletonEntity;
   const fleetStats = useMemo(() => {
     const data = { attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
-    console.log("fleetUnitCounts:", fleetUnitCounts, "selectedRock:", selectedRock);
 
     fleetUnitCounts.forEach((count, unit) => {
       const unitData = getUnitStats(unit as Entity, selectedRock);

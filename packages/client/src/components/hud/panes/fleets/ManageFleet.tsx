@@ -64,10 +64,15 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
     setFleetStance(mud, fleetEntity, EFleetStance.Follow, target);
   };
   return (
-    <div className="w-full h-full flex flex-col">
-      <div className="grid grid-cols-4 gap-4 h-full overflow-hidden">
+    <div className="w-full h-full flex flex-col gap-2 p-2">
+      {/*Header*/}
+      <div className="flex items-center justify-between gap-2 w-full uppercase font-bold text-xs text-left">
+        <p className="opacity-50">Manage Fleet</p>
+      </div>
+
+      <div className="grid grid-cols-4 gap-2 h-full overflow-hidden">
         {/* Left Side */}
-        <div className="col-span-3 flex flex-col gap-4 h-full relative">
+        <div className="col-span-3 flex flex-col gap-2 h-full relative">
           <div className="bg-base-100 p-4">
             <FleetEntityHeader entity={fleetEntity} />
           </div>
@@ -188,7 +193,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
             </Button>
             <TransactionQueueMask queueItemId={"landFleet" as Entity}>
               <Button
-                className="btn btn-primary btn-sm"
+                className="btn btn-primary btn-sm w-full"
                 onClick={() => selectedRock && landFleet(mud, fleetEntity, selectedRock)}
                 disabled={totalUnits <= 0n}
               >
@@ -197,7 +202,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
             </TransactionQueueMask>
             <TransactionQueueMask queueItemId={"disband" as Entity}>
               <Button
-                className="btn btn-error btn-sm"
+                className="btn btn-error btn-sm w-full"
                 disabled={totalUnits + totalResources <= 0n}
                 onClick={() => disbandFleet(mud, fleetEntity)}
               >
@@ -207,7 +212,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
           </div>
         </div>
       </div>
-      <BackButton className="mt-2 self-start">BACK</BackButton>
+      <BackButton className="self-start">BACK</BackButton>
     </div>
   );
 };

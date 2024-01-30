@@ -3,6 +3,7 @@ import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { FaExchangeAlt } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
@@ -173,7 +174,10 @@ const TransferToSide = ({
   );
 };
 
-const Transfer = ({ from, to }: { from: Entity; to: Entity }) => {
+const Transfer = ({ from: initialFrom, to: initialTo }: { from: Entity; to: Entity }) => {
+  const [from, setFrom] = useState(initialFrom);
+  const [to, setTo] = useState(initialTo);
+
   const [unitDelta, setUnitDelta] = useState<Map<Entity, bigint>>(new Map());
   const [resourceDelta, setResourceDelta] = useState<Map<Entity, bigint>>(new Map());
 
@@ -183,44 +187,55 @@ const Transfer = ({ from, to }: { from: Entity; to: Entity }) => {
   const [keyDown, setKeyDown] = useState<"shift" | "ctrl" | null>();
   const selectedRock = components.SelectedRock.use()?.value ?? singletonEntity;
 
+  // Resources
   const transportables = components.P_Transportables.use()?.value ?? [];
-  const fromResourceCounts = useFullResourceCounts(from);
 
-  const fromInitialResourceCounts = transportables.reduce((acc, transportable) => {
+  const fromInitialResourceCounts = useFullResourceCounts(from);
+  const fromResourceCounts = transportables.reduce((acc, transportable) => {
     const entity = ResourceEntityLookup[transportable as EResource];
-    const resourceCount = fromResourceCounts.get(entity)?.resourceCount;
-    if (!resourceCount) return acc;
-    acc.set(entity, resourceCount);
+    const resourceCount = fromInitialResourceCounts.get(entity)?.resourceCount ?? 0n;
+    const delta = resourceDelta.get(entity) ?? 0n;
+    const draggingCount = dragging?.entity === entity ? dragging.count : 0n;
+    const total = resourceCount - delta - draggingCount;
+    if (total <= 0n) return acc;
+    acc.set(entity, total);
     return acc;
   }, new Map<Entity, bigint>());
 
-  const toResourceCounts = useFullResourceCounts(to);
-  const toInitialResourceCounts = useMemo(() => {
-    const counts: Map<Entity, bigint> = new Map();
-    console.log("resource delta:", resourceDelta);
-    resourceDelta.forEach((count, entity) => {
-      counts.set(entity, (toResourceCounts.get(entity)?.resourceCount ?? 0n) + count);
-    });
-    return counts;
-  }, [resourceDelta, toResourceCounts]);
+  const toInitialResourceCounts = useFullResourceCounts(to);
+  const toResourceCounts = transportables.reduce((acc, transportable) => {
+    const entity = ResourceEntityLookup[transportable as EResource];
+    const resourceCount = toInitialResourceCounts.get(entity)?.resourceCount;
+    const delta = resourceDelta.get(entity) ?? 0n;
+    const total = (resourceCount ?? 0n) + delta;
+    if (total == 0n) return acc;
+    acc.set(entity, total);
+    return acc;
+  }, new Map<Entity, bigint>());
+
+  // Units
   const fromInitialUnitCounts = useUnitCounts(from);
   const toInitialUnitCounts = useUnitCounts(to);
 
-  const toFinalUnitCounts = useMemo(() => {
-    const counts: Map<Entity, bigint> = new Map();
-    unitDelta.forEach((count, entity) => {
-      counts.set(entity, (toInitialUnitCounts.get(entity) ?? 0n) + count);
-    });
-    return counts;
-  }, [unitDelta, toInitialUnitCounts]);
+  const fromUnitCounts = useMemo(() => {
+    return [...UnitStorages].reduce((acc, unit) => {
+      const count = fromInitialUnitCounts.get(unit) ?? 0n;
+      const delta = unitDelta.get(unit) ?? 0n;
+      const draggingCount = dragging?.entity === unit ? dragging.count : 0n;
+      const total = count - delta - draggingCount;
+      if (total > 0n) acc.set(unit, total);
+      return acc;
+    }, new Map<Entity, bigint>());
+  }, [dragging, fromInitialUnitCounts, unitDelta]);
 
-  const toFinalResourceCounts = useMemo(() => {
-    const counts: Map<Entity, bigint> = new Map();
-    resourceDelta.forEach((count, entity) => {
-      counts.set(entity, (toInitialResourceCounts.get(entity) ?? 0n) + count);
-    });
-    return counts;
-  }, [resourceDelta, toInitialResourceCounts]);
+  const toUnitCounts = useMemo(() => {
+    return [...UnitStorages].reduce((acc, unit) => {
+      const count = toInitialUnitCounts.get(unit) ?? 0n;
+      const delta = unitDelta.get(unit) ?? 0n;
+      if (count + delta > 0n) acc.set(unit, count + delta);
+      return acc;
+    }, new Map<Entity, bigint>());
+  }, [unitDelta, toInitialUnitCounts]);
 
   const initDragging = (e: React.MouseEvent, val: { from: "from" | "to"; entity: Entity; count: bigint }) => {
     document.body.style.userSelect = "none";
@@ -234,15 +249,13 @@ const Transfer = ({ from, to }: { from: Entity; to: Entity }) => {
     setDragging(null);
     if (hoveringArea === "to" && dragging) {
       if (UnitStorages.has(dragging.entity)) {
-        setUnitDelta({
-          ...unitDelta,
-          [dragging.entity]: (unitDelta.get(dragging.entity) ?? 0n) + dragging.count,
-        });
+        const newMap = new Map(unitDelta);
+        newMap.set(dragging.entity, (unitDelta.get(dragging.entity) ?? 0n) + dragging.count);
+        setUnitDelta(newMap);
       } else {
-        setResourceDelta({
-          ...resourceDelta,
-          [dragging.entity]: (resourceDelta.get(dragging.entity) ?? 0n) + dragging.count,
-        });
+        const newMap = new Map(resourceDelta);
+        newMap.set(dragging.entity, (resourceDelta.get(dragging.entity) ?? 0n) + dragging.count);
+        setResourceDelta(newMap);
       }
     }
     setHoveringArea(null);
@@ -273,6 +286,8 @@ const Transfer = ({ from, to }: { from: Entity; to: Entity }) => {
   const mud = useMud();
   const handleSubmit = () => {
     transferFleet(mud, from, to, { resources: resourceDelta, units: unitDelta });
+    setUnitDelta(new Map());
+    setResourceDelta(new Map());
   };
 
   const handleKeyUp = useCallback((e: KeyboardEvent) => {
@@ -294,13 +309,13 @@ const Transfer = ({ from, to }: { from: Entity; to: Entity }) => {
 
   const { disabled, submitMessage } = useMemo(() => {
     if (components.IsFleet.get(to)) {
-      const cargo = getFleetStatsFromUnits(toFinalUnitCounts).cargo;
-      if (cargo > [...toFinalResourceCounts.entries()].reduce((acc, [, count]) => acc + count, 0n))
+      const cargo = getFleetStatsFromUnits(toUnitCounts).cargo;
+      if (cargo < [...toResourceCounts.entries()].reduce((acc, [, count]) => acc + count, 0n))
         return { disabled: true, submitMessage: "Cargo capacity exceeded" };
     }
     if (unitDelta.size + resourceDelta.size === 0) return { disabled: true, submitMessage: "Transfer" };
     return { disabled: false, submitMessage: "Transfer" };
-  }, [resourceDelta, to, toFinalResourceCounts, toFinalUnitCounts, unitDelta]);
+  }, [resourceDelta, to, toResourceCounts, toUnitCounts, unitDelta]);
 
   return (
     <div className="w-full h-full flex flex-col gap-2 p-2">
@@ -313,21 +328,21 @@ const Transfer = ({ from, to }: { from: Entity; to: Entity }) => {
         </div>
       )}
 
-      {/*Create Fleet Header*/}
+      {/*Header*/}
       <div className="flex items-center justify-between gap-2 w-full uppercase font-bold text-xs text-left">
-        <p className="opacity-50">Create Fleet</p>
+        <p className="opacity-50">Transfer</p>
       </div>
 
       <div
-        className="grid grid-cols-[1fr_5px_1fr]  w-full h-full gap-4"
+        className="grid grid-cols-[1fr_3rem_1fr]  w-full h-full"
         onMouseEnter={() => dragging && setHoveringArea("from")}
         onMouseLeave={() => setHoveringArea(null)}
       >
         {/*Left Side */}
         <TransferFromSide
           entity={from}
-          unitCounts={fromInitialUnitCounts}
-          resourceCounts={fromInitialResourceCounts}
+          unitCounts={fromUnitCounts}
+          resourceCounts={fromResourceCounts}
           setDragging={(e: React.MouseEvent, entity: Entity, count: bigint) =>
             initDragging(e, {
               from: "to",
@@ -336,27 +351,40 @@ const Transfer = ({ from, to }: { from: Entity; to: Entity }) => {
             })
           }
         />
-        <div className="grid grid-rows-2 h-full">
+        <div className="grid grid-rows-3 h-full w-full place-items-center">
           <div className="grid place-items-center">
-            <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[15px] border-b-secondary rotate-90 -translate-x-1/3"></div>
+            <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[15px] border-b-secondary rotate-90"></div>
           </div>
+          <Button
+            className="btn-xs btn-primary"
+            onClick={() => {
+              setUnitDelta(new Map());
+              setResourceDelta(new Map());
+              setFrom(to);
+              setTo(from);
+            }}
+          >
+            <FaExchangeAlt />
+          </Button>
           <div className="grid place-items-center">
-            <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[15px] border-b-secondary rotate-90 -translate-x-1/3"></div>
+            <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[15px] border-b-secondary rotate-90"></div>
           </div>
         </div>
 
         {/* Right Side */}
         <TransferToSide
           entity={to}
-          unitCounts={toFinalUnitCounts}
-          resourceCounts={toFinalResourceCounts}
+          unitCounts={toUnitCounts}
+          resourceCounts={toResourceCounts}
           clearResource={(entity) => {
-            resourceDelta.delete(entity);
-            setResourceDelta(resourceDelta);
+            const newMap = new Map(resourceDelta);
+            newMap.delete(entity);
+            setResourceDelta(newMap);
           }}
           clearUnit={(entity) => {
-            unitDelta.delete(entity);
-            setUnitDelta(unitDelta);
+            const newMap = new Map(unitDelta);
+            newMap.delete(entity);
+            setUnitDelta(newMap);
           }}
           clearAll={() => {
             setUnitDelta(new Map());
