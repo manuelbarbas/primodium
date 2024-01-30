@@ -18,7 +18,8 @@ import { Recall } from "./Recall";
 import { SendFleet } from "./SendFleet";
 
 export const FleetActions = () => {
-  const { playerEntity } = useMud().network;
+  const { playerAccount } = useMud();
+  const playerEntity = playerAccount?.entity;
   const selectedAsteroid = components.SelectedRock.use()?.value as Entity | undefined;
   const owner = components.OwnedBy.use(selectedAsteroid)?.value as Entity | undefined;
   const units = components.Hangar.use(selectedAsteroid ?? singletonEntity);

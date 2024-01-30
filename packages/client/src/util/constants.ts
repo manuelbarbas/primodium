@@ -2,7 +2,7 @@ import { resourceToHex } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { DECIMALS } from "contracts/config/constants";
-import { EBuilding, EObjectives, EResource, ESize, EUnit } from "contracts/config/enums";
+import { EBuilding, EObjectives, EResource, EUnit } from "contracts/config/enums";
 import { Key } from "engine/types";
 import { encodeEntity } from "src/util/encode";
 import { reverseRecord } from "./common";
@@ -441,20 +441,6 @@ export const KeyImages = new Map<Key, string>([
   ["Q", "/img/keys/q.png"],
   ["E", "/img/keys/e.png"],
 ]);
-
-export const MotherlodeSizeNames: Record<number, string> = {
-  [ESize.Small]: "Small",
-  [ESize.Medium]: "Medium",
-  [ESize.Large]: "Large",
-};
-
-// do the same for types
-export const MotherlodeTypeNames: Record<number, string> = {
-  [EResource.Titanium]: "Titanium",
-  [EResource.Iridium]: "Iridium",
-  [EResource.Platinum]: "Platinum",
-  [EResource.Kimberlite]: "Kimberlite",
-};
 
 export const ResourceStorages = new Set([
   EntityType.Iron,
