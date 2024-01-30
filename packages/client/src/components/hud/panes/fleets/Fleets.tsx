@@ -1,17 +1,15 @@
 import { ComponentProps, FC, Suspense, createContext, lazy, useCallback, useContext, useMemo, useState } from "react";
 import { Button } from "src/components/core/Button";
-const FleetsPane = lazy(() => import("./FleetsPane"));
-const CreateFleet = lazy(() => import("../../modals/fleets/CreateFleet"));
-const ManageFleet = lazy(() => import("./ManageFleet"));
 
 const fleetsPanes = {
-  fleets: FleetsPane,
-  createFleet: CreateFleet,
-  manageFleet: ManageFleet,
+  fleets: lazy(() => import("./FleetsPane")),
+  createFleet: lazy(() => import("../../modals/fleets/CreateFleet")),
+  manageFleet: lazy(() => import("./ManageFleet")),
+  transfer: lazy(() => import("./FleetTransfer")),
 };
 
 type NavButtonProps<J extends View = View> = ComponentProps<typeof Button> & {
-  to: J;
+  goto: J;
 } & Props<J>;
 
 type View = keyof typeof fleetsPanes;
@@ -62,7 +60,7 @@ export const Fleets = ({ initialState = "fleets", ...initialProps }: { initialSt
   }, []);
 
   function NavButton({
-    to,
+    goto,
     className,
     children,
     disabled,
@@ -78,9 +76,9 @@ export const Fleets = ({ initialState = "fleets", ...initialProps }: { initialSt
         className={className}
         onClick={() => {
           if (onClick) onClick();
-          navigateTo(to, props);
+          navigateTo(goto, props);
         }}
-        disabled={disabled || to === history[history.length - 1].view}
+        disabled={disabled || goto === history[history.length - 1].view}
       >
         {children}
       </Button>

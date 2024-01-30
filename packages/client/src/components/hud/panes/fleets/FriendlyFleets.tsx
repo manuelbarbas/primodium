@@ -17,6 +17,7 @@ export const FriendlyFleets: React.FC = () => {
   const friendlyFleets = useEntityQuery(query);
   const maxFleets =
     components.ResourceCount.getWithKeys({ entity: selectedRock as Hex, resource: EResource.U_MaxMoves })?.value ?? 0n;
+  console.log(friendlyFleets);
 
   return (
     <div className="flex flex-col gap-2 p-2">
@@ -37,7 +38,7 @@ export const FriendlyFleets: React.FC = () => {
         {new Array(Number(maxFleets)).fill(0).map((_, index) => (
           <Nav.NavButton
             key={`newFleet-${index}`}
-            to="createFleet"
+            goto="createFleet"
             className="btn-primary grid place-items-center w-full h-full"
           >
             <FaPlus className="h-full" />

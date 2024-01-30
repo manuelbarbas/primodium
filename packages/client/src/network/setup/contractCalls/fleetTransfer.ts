@@ -11,13 +11,13 @@ export const transferFleet = async (
   mud: MUD,
   from: Entity,
   to: Entity,
-  content: { units?: Record<Entity, bigint>; resources?: Record<Entity, bigint> }
+  content: { units?: Map<Entity, bigint>; resources?: Map<Entity, bigint> }
 ) => {
   const fromIsSpaceRock = components.Asteroid.has(from);
   const toIsSpaceRock = components.Asteroid.has(to);
 
-  const unitCounts = toUnitCountArray(content.units ?? {});
-  const resourceCounts = toTransportableResourceArray(content.resources ?? {});
+  const unitCounts = content.units ? toUnitCountArray(content.units) : [];
+  const resourceCounts = content.resources ? toTransportableResourceArray(content.resources) : [];
 
   const totalUnits = unitCounts.reduce((acc, cur) => acc + cur, 0n);
   const totalResources = resourceCounts.reduce((acc, cur) => acc + cur, 0n);

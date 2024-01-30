@@ -3,7 +3,6 @@ import { EUnit } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { UnitEntityLookup, UnitEnumLookup } from "src/util/constants";
-import { toUnitCountArray } from "src/util/send";
 import { getUnitStats } from "src/util/unit";
 import { SetupNetworkResult } from "../../types";
 import { createExtendedComponent } from "./ExtendedComponent";
@@ -45,7 +44,7 @@ function createSendComponent(contractComponents: ExtendedContractComponents<Setu
     component.set({
       origin,
       destination: undefined,
-      count: toUnitCountArray({}),
+      count: [],
       to: undefined,
       sendType: undefined,
     });
@@ -79,7 +78,7 @@ function createSendComponent(contractComponents: ExtendedContractComponents<Setu
 
     //initialize if null
     if (!currentCount) {
-      (currentCount = toUnitCountArray({})),
+      (currentCount = []),
         component.set({
           ...(component.get() || emptyComponent),
           count: currentCount,
