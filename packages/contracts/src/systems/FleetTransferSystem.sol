@@ -94,7 +94,7 @@ contract FleetTransferSystem is FleetBaseSystem {
     _unitCountIsValid(unitCounts)
     _resourceCountIsValid(resourceCounts)
   {
-    LibFleetTransfer.transferUnitsAndResourcesFromFleetToSpaceRock(spaceRock, fromFleetId, unitCounts, resourceCounts);
+    LibFleetTransfer.transferUnitsAndResourcesFromFleetToSpaceRock(fromFleetId, spaceRock, unitCounts, resourceCounts);
     resetFleetIfNoUnitsLeft(fromFleetId);
   }
 
