@@ -1,9 +1,10 @@
 import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
-import { Entity } from "@latticexyz/recs";
+import { useEntityQuery } from "@latticexyz/react";
+import { Entity, Has, HasValue } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { FaExchangeAlt } from "react-icons/fa";
+import { FaExchangeAlt, FaTimes } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
@@ -11,7 +12,7 @@ import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { transferFleet } from "src/network/setup/contractCalls/fleetTransfer";
-import { RESOURCE_SCALE, ResourceEntityLookup, TransactionQueueType, UnitStorages } from "src/util/constants";
+import { ResourceEntityLookup, TransactionQueueType, UnitStorages } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { formatResourceCount, parseResourceCount } from "src/util/number";
 import { getFleetStatsFromUnits } from "src/util/unit";
@@ -19,162 +20,124 @@ import { ResourceIcon } from "../modals/fleets/ResourceIcon";
 import { TargetHeader } from "../spacerock-menu/TargetHeader";
 import { FleetEntityHeader } from "./fleets/FleetHeader";
 
-const TransferFromSide = ({
-  entity,
-  unitCounts,
-  resourceCounts,
-  setDragging,
-  onMouseOver,
-  onMouseLeave,
-}: {
+const TransferSide = (props: {
   entity: Entity;
   unitCounts: Map<Entity, bigint>;
   resourceCounts: Map<Entity, bigint>;
   setDragging?: (e: React.MouseEvent, entity: Entity, count: bigint) => void;
   onMouseOver?: (e: React.MouseEvent) => void;
   onMouseLeave?: (e: React.MouseEvent) => void;
-}) => {
-  const Header = components.IsFleet.use(entity)?.value ? FleetEntityHeader : TargetHeader;
-  return (
-    <div
-      className="w-full h-full bg-base-100 p-2 pb-8 flex flex-col gap-2 border border-secondary/50"
-      onMouseOver={onMouseOver}
-      onMouseLeave={onMouseLeave}
-    >
-      <div className="h-12">
-        <Header entity={entity} />
-      </div>
-
-      {/*Units to select from*/}
-      {unitCounts.size > 0 ? (
-        <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
-          {[...unitCounts].map(([unit, count]) => {
-            if (count <= 0n) return null;
-            return (
-              <ResourceIcon
-                key={`from-unit-${unit}`}
-                resource={unit}
-                amount={count.toString()}
-                setDragging={(e) => setDragging && setDragging(e, unit, count)}
-              />
-            );
-          })}
-        </div>
-      ) : (
-        <div className="flex-1 bg-neutral p-4 grid place-items-center">
-          <p className="text-xs uppercase font-bold text-error/70 animate-pulse">No units</p>
-        </div>
-      )}
-
-      {/*Resources to select from*/}
-      {resourceCounts.size > 0 ? (
-        <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
-          {[...resourceCounts.entries()].map(([entity, count]) => {
-            if (count / RESOURCE_SCALE <= 0n) return null;
-            return (
-              <ResourceIcon
-                key={`from-resource-${entity}`}
-                resource={entity as Entity}
-                amount={formatResourceCount(entity as Entity, count, { fractionDigits: 0 })}
-                setDragging={(e) => setDragging && setDragging(e, entity, count)}
-              />
-            );
-          })}
-        </div>
-      ) : (
-        <div className="flex-1 bg-neutral p-4 grid place-items-center ">
-          <p className="text-xs uppercase font-bold text-error/70 animate-pulse">This rock has no resources</p>
-        </div>
-      )}
-    </div>
-  );
-};
-
-const TransferToSide = ({
-  entity,
-  unitCounts,
-  resourceCounts,
-  setDragging,
-  clearUnit,
-  clearResource,
-  clearAll,
-  onMouseOver,
-  onMouseLeave,
-  hovering,
-}: {
-  entity: Entity;
-  unitCounts: Map<Entity, bigint>;
-  resourceCounts: Map<Entity, bigint>;
-  setDragging?: (e: React.MouseEvent, entity: Entity, count: bigint) => void;
-  onMouseOver?: (e: React.MouseEvent) => void;
-  onMouseLeave?: (e: React.MouseEvent) => void;
+  remove?: () => void;
   clearResource?: (entity: Entity) => void;
   clearUnit?: (entity: Entity) => void;
   clearAll?: () => void;
   hovering?: boolean;
 }) => {
-  const Header = components.IsFleet.use(entity)?.value ? FleetEntityHeader : TargetHeader;
+  const isFleet = components.IsFleet.get(props.entity)?.value;
+  const Header = isFleet ? FleetEntityHeader : TargetHeader;
   return (
     <div
       className={`w-full h-full bg-base-100 p-2 pb-8 flex flex-col gap-2 border border-secondary/50 relative ${
-        hovering ? "ring-2 ring-secondary" : ""
+        props.hovering ? "ring-2 ring-secondary" : ""
       }`}
-      onMouseOver={onMouseOver}
-      onMouseLeave={onMouseLeave}
+      onMouseOver={props.onMouseOver}
+      onMouseLeave={props.onMouseLeave}
     >
-      <div className="h-12 text-sm w-full h-full font-bold grid place-items-center uppercase">
-        <Header entity={entity} />
+      <div className="h-12 text-sm w-full flex font-bold gap-1">
+        <Header entity={props.entity} />
+        {props.remove && (
+          <Button className="btn-error p-1 btn-xs h-full" onClick={props.remove}>
+            <FaTimes className="w-2" />
+          </Button>
+        )}
       </div>
 
-      {/*Units sent*/}
-      {unitCounts.size > 0 ? (
+      {/*Units*/}
+      {props.unitCounts.size > 0 ? (
         <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
-          {[...unitCounts.entries()].map(([unit, count]) =>
+          {[...props.unitCounts.entries()].map(([unit, count]) =>
             UnitStorages.has(unit) ? (
               <ResourceIcon
                 key={`to-unit-${unit}`}
                 resource={unit as Entity}
                 amount={count.toString()}
-                onClear={clearUnit && (() => clearUnit(unit))}
-                setDragging={(e) => setDragging && setDragging(e, unit, count)}
+                onClear={props.clearUnit && (() => props.clearUnit && props.clearUnit(unit))}
+                setDragging={(e) => props.setDragging && props.setDragging(e, unit, count)}
               />
             ) : null
           )}
         </div>
       ) : (
         <div className="flex-1 grid p-4 place-items-center bg-neutral">
-          <p className="opacity-50 text-xs font-bold uppercase">Drag units to add them to your fleet</p>
+          <p className="opacity-50 text-xs font-bold uppercase">This {isFleet ? "fleet" : "rock"} has no units</p>
         </div>
       )}
 
-      {/*Resources sent*/}
-      {resourceCounts.size > 0 ? (
+      {/*Resources*/}
+      {props.resourceCounts.size > 0 ? (
         <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
-          {[...resourceCounts.entries()].map(([entity, data]) =>
+          {[...props.resourceCounts.entries()].map(([entity, data]) =>
             UnitStorages.has(entity) ? null : (
               <ResourceIcon
                 key={`to-resource-${entity}`}
                 resource={entity as Entity}
                 amount={formatResourceCount(entity as Entity, data, { fractionDigits: 0 })}
-                onClear={clearResource && (() => clearResource(entity))}
-                setDragging={(e) => setDragging && setDragging(e, entity, data)}
+                onClear={props.clearResource && (() => props.clearResource && props.clearResource(entity))}
+                setDragging={(e) => props.setDragging && props.setDragging(e, entity, data)}
               />
             )
           )}
         </div>
       ) : (
         <div className="flex-1 grid p-4 place-items-center bg-neutral">
-          <p className="opacity-50 text-xs font-bold uppercase">Drag resources to add them to your fleet</p>
+          <p className="opacity-50 text-xs font-bold uppercase">This {isFleet ? "fleet" : "rock"} has no resources</p>
         </div>
       )}
-      <Button className="btn-primary btn-xs absolute bottom-1 right-2" onClick={clearAll}>
-        Clear all
-      </Button>
+      {props.clearAll && (
+        <Button className="btn-primary btn-xs absolute bottom-1 right-2" onClick={props.clearAll}>
+          Clear all
+        </Button>
+      )}
     </div>
   );
 };
 
-const Transfer = ({ from: initialFrom, to: initialTo }: { from: Entity; to: Entity }) => {
+const Select = ({
+  rockEntity,
+  activeEntity,
+  setEntity,
+}: {
+  rockEntity: Entity;
+  activeEntity?: Entity;
+  setEntity: (entity: Entity) => void;
+}) => {
+  const query = [Has(components.IsFleet), HasValue(components.FleetMovement, { destination: rockEntity })];
+  const time = components.Time.use()?.value ?? 0n;
+  const fleetsOnRock = [rockEntity, ...useEntityQuery(query)].filter(
+    (entity) => entity !== activeEntity && (components.FleetMovement.get(entity)?.arrivalTime ?? 0n < time)
+  );
+
+  return (
+    <div className="w-full h-full bg-base-100 p-2 overflow-hidden pb-8 flex flex-col gap-2 border border-secondary/50">
+      <div className="w-full h-12 bg-neutral grid place-items-center text-sm uppercase font-bold">
+        Select A Fleet or Asteroid
+      </div>
+
+      <div className="overflow-y-auto flex gap-1 flex-col w-full h-full scrollbar">
+        {fleetsOnRock.map((entity) => {
+          const Header = components.IsFleet.get(entity)?.value ? FleetEntityHeader : TargetHeader;
+          return (
+            <Button className="btn-primary p-2 btn-xs" onClick={() => setEntity(entity)} key={`select-${entity}`}>
+              <Header entity={entity} />
+            </Button>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+const Transfer = ({ from: initialFrom, to: initialTo }: { from?: Entity; to?: Entity }) => {
   const [from, setFrom] = useState(initialFrom);
   const [to, setTo] = useState(initialTo);
 
@@ -285,6 +248,7 @@ const Transfer = ({ from: initialFrom, to: initialTo }: { from: Entity; to: Enti
   );
   const mud = useMud();
   const handleSubmit = () => {
+    if (!from || !to) return;
     transferFleet(mud, from, to, { resources: resourceDelta, units: unitDelta });
     setUnitDelta(new Map());
     setResourceDelta(new Map());
@@ -339,18 +303,29 @@ const Transfer = ({ from: initialFrom, to: initialTo }: { from: Entity; to: Enti
         onMouseLeave={() => setHoveringArea(null)}
       >
         {/*Left Side */}
-        <TransferFromSide
-          entity={from}
-          unitCounts={fromUnitCounts}
-          resourceCounts={fromResourceCounts}
-          setDragging={(e: React.MouseEvent, entity: Entity, count: bigint) =>
-            initDragging(e, {
-              from: "to",
-              entity,
-              count: keyDown == "shift" ? count : keyDown == "ctrl" ? count / 2n : parseResourceCount(entity, "1"),
-            })
-          }
-        />
+        {from ? (
+          <TransferSide
+            entity={from}
+            unitCounts={fromUnitCounts}
+            resourceCounts={fromResourceCounts}
+            setDragging={(e: React.MouseEvent, entity: Entity, count: bigint) =>
+              initDragging(e, {
+                from: "to",
+                entity,
+                count: keyDown == "shift" ? count : keyDown == "ctrl" ? count / 2n : parseResourceCount(entity, "1"),
+              })
+            }
+            remove={() => {
+              setFrom(undefined);
+              setUnitDelta(new Map());
+              setResourceDelta(new Map());
+            }}
+          />
+        ) : (
+          <Select rockEntity={selectedRock} activeEntity={to} setEntity={setFrom} />
+        )}
+
+        {/*Middle*/}
         <div className="grid grid-rows-3 h-full w-full place-items-center">
           <div className="grid place-items-center">
             <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[15px] border-b-secondary rotate-90"></div>
@@ -372,30 +347,39 @@ const Transfer = ({ from: initialFrom, to: initialTo }: { from: Entity; to: Enti
         </div>
 
         {/* Right Side */}
-        <TransferToSide
-          entity={to}
-          unitCounts={toUnitCounts}
-          resourceCounts={toResourceCounts}
-          clearResource={(entity) => {
-            const newMap = new Map(resourceDelta);
-            newMap.delete(entity);
-            setResourceDelta(newMap);
-          }}
-          clearUnit={(entity) => {
-            const newMap = new Map(unitDelta);
-            newMap.delete(entity);
-            setUnitDelta(newMap);
-          }}
-          clearAll={() => {
-            setUnitDelta(new Map());
-            setResourceDelta(new Map());
-          }}
-          onMouseOver={() => dragging && setHoveringArea("to")}
-          onMouseLeave={() => setHoveringArea(null)}
-          hovering={hoveringArea === "to"}
-        />
+        {to ? (
+          <TransferSide
+            entity={to}
+            unitCounts={toUnitCounts}
+            resourceCounts={toResourceCounts}
+            remove={() => {
+              setTo(undefined);
+              setUnitDelta(new Map());
+              setResourceDelta(new Map());
+            }}
+            clearResource={(entity) => {
+              const newMap = new Map(resourceDelta);
+              newMap.delete(entity);
+              setResourceDelta(newMap);
+            }}
+            clearUnit={(entity) => {
+              const newMap = new Map(unitDelta);
+              newMap.delete(entity);
+              setUnitDelta(newMap);
+            }}
+            clearAll={() => {
+              setUnitDelta(new Map());
+              setResourceDelta(new Map());
+            }}
+            onMouseOver={() => dragging && setHoveringArea("to")}
+            onMouseLeave={() => setHoveringArea(null)}
+            hovering={hoveringArea === "to"}
+          />
+        ) : (
+          <Select rockEntity={selectedRock} activeEntity={from} setEntity={setTo} />
+        )}
       </div>
-      <div className="flex gap-4">
+      <div className="flex justify-center gap-4">
         <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.CreateFleet, selectedRock)}>
           <Button className="btn-primary w-48" disabled={disabled} onClick={handleSubmit}>
             {submitMessage}

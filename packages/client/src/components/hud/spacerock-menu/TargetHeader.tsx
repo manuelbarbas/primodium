@@ -20,7 +20,7 @@ export const TargetHeader = ({ entity, hideStats }: { entity?: Entity; hideStats
   const name = getSpaceRockName(selectedSpacerock);
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1 w-full">
       {/* <p className="text-xs font-bold opacity-75 pb-1">TARGET</p> */}
       <Badge className="w-full uppercase font-bold text-sm items-center flex flex-col h-fit">
         <IconLabel imageUri={img} className="" text={`${name}`} />
