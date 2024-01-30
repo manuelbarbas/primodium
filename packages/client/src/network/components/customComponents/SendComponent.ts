@@ -4,18 +4,12 @@ import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { UnitEntityLookup, UnitEnumLookup } from "src/util/constants";
 import { toUnitCountArray } from "src/util/send";
-import { getUnitStats } from "src/util/trainUnits";
+import { getUnitStats } from "src/util/unit";
 import { SetupNetworkResult } from "../../types";
 import { createExtendedComponent } from "./ExtendedComponent";
 import { ExtendedContractComponents } from "./extendComponents";
 
-type stats = {
-  ATK: bigint;
-  DEF: bigint;
-  SPD: bigint;
-  MIN: bigint;
-  CRG: bigint;
-};
+type stats = { ATK: bigint; DEF: bigint; SPD: bigint; CRG: bigint; HP: bigint; DEC: bigint };
 
 function createSendComponent(contractComponents: ExtendedContractComponents<SetupNetworkResult["components"]>) {
   const { Position } = contractComponents;
@@ -156,6 +150,8 @@ function createSendComponent(contractComponents: ExtendedContractComponents<Setu
         SPD: BigInt(Number.MAX_SAFE_INTEGER),
         MIN: 0n,
         CRG: 0n,
+        HP: 0n,
+        DEC: 0n,
       }
     );
   };
