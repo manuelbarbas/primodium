@@ -10,6 +10,7 @@ import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
 import { Tabs } from "../core/Tabs";
 import { BrandingLabel } from "../shared/BrandingLabel";
+import { AsteroidTarget } from "./AsteroidTarget";
 import { Blueprints } from "./Blueprints";
 import { CurrentObjective } from "./CurrentObjective";
 import { HoverInfo } from "./HoverInfo";
@@ -19,6 +20,8 @@ import { Score } from "./Score";
 import { SelectAction } from "./SelectAction";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { Chat as _Chat } from "./chat/Chat";
+import { ActiveMarker } from "./markers/ActiveMarker";
+import { HomeMarker } from "./markers/HomeMarker";
 import HackerConsole from "./modals/HackerConsole";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
 import { Settings } from "./modals/settings/Settings";
@@ -32,8 +35,8 @@ export const GameHUD = () => {
     playerAccount: { entity: playerEntity },
   } = useMud();
 
-  const selectedRock = components.SelectedRock.use()?.value;
-  const ownedBy = components.OwnedBy.use(selectedRock)?.value;
+  const activeRock = components.ActiveRock.use()?.value;
+  const ownedBy = components.OwnedBy.use(activeRock)?.value;
   const isSpectating = ownedBy !== playerEntity;
   const uiScale = useSettingsStore((state) => state.uiScale);
 
@@ -91,6 +94,12 @@ export const GameHUD = () => {
         <HUD.BottomMiddle>
           <SpacerockMenu />
         </HUD.BottomMiddle>
+
+        {/* MARKERS */}
+        <ActiveMarker />
+        <HomeMarker />
+
+        <AsteroidTarget />
       </HUD>
 
       <HUD>

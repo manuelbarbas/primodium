@@ -1,7 +1,7 @@
 import { ComponentValue, Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EAllianceInviteMode, EAllianceRole } from "contracts/config/enums";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   FaArrowDown,
   FaArrowLeft,
@@ -23,12 +23,14 @@ import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { Checkbox } from "src/components/core/Checkbox";
 import { Join } from "src/components/core/Join";
+import { Loader } from "src/components/core/Loader";
 import { Navigator } from "src/components/core/Navigator";
 import { TextInput } from "src/components/core/TextInput";
 import { Tooltip } from "src/components/core/Tooltip";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
+import { useSyncStatus } from "src/hooks/useSyncStatus";
 import { components } from "src/network/components";
 import {
   acceptJoinRequest,
@@ -42,6 +44,7 @@ import {
   rejectJoinRequest,
   requestToJoin,
 } from "src/network/setup/contractCalls/alliance";
+import { hydrateAllianceData } from "src/network/sync/indexer";
 import { getAllianceName } from "src/util/alliance";
 import { entityToColor } from "src/util/color";
 import { entityToAddress } from "src/util/common";
@@ -53,14 +56,61 @@ import { Hex, isAddress, padHex } from "viem";
 const ALLIANCE_TAG_SIZE = 6;
 
 export const AllianceLeaderboard = () => {
+  const mud = useMud();
+  const playerEntity = mud.playerAccount.entity;
+  const allianceEntity = (components.PlayerAlliance.use(playerEntity)?.alliance ?? singletonEntity) as Entity;
+  const { loading, error } = useSyncStatus(allianceEntity);
+
+  useEffect(() => {
+    hydrateAllianceData(allianceEntity, mud);
+  }, [allianceEntity, mud]);
+
+  const initialScreen = useMemo(() => {
+    if (error) return "error";
+
+    if (loading) return "loading";
+
+    return "score";
+  }, [loading, error]);
+
   return (
-    <Navigator initialScreen="score" className="border-none p-0! h-full">
+    <Navigator initialScreen={initialScreen} className="border-none p-0! h-full">
+      <LoadingScreen />
+      <ErrorScreen />
       <ScoreScreen />
       <CreateScreen />
       <InvitesScreen />
       <SendInviteScreen />
       <ManageScreen />
     </Navigator>
+  );
+};
+
+export const LoadingScreen = () => {
+  return (
+    <Navigator.Screen
+      title="loading"
+      className="lex flex-col !items-start justify-between w-full h-full text-sm pointer-events-auto"
+    >
+      <SecondaryCard className="w-full flex-grow items-center justify-center font-bold opacity-50">
+        <Loader />
+        LOADING ALLIANCE DATA
+      </SecondaryCard>
+    </Navigator.Screen>
+  );
+};
+
+export const ErrorScreen = () => {
+  return (
+    <Navigator.Screen
+      title="error"
+      className="lex flex-col !items-start justify-between w-full h-full text-sm pointer-events-auto"
+    >
+      <SecondaryCard className="w-full flex-grow items-center justify-center font-bold opacity-50 text-error">
+        <FaTimes />
+        ERROR SYNCING ALLIANCE DATA
+      </SecondaryCard>
+    </Navigator.Screen>
   );
 };
 
@@ -72,7 +122,6 @@ export const ScoreScreen = () => {
       title="score"
       className="lex flex-col !items-start justify-between w-full h-full text-xs pointer-events-auto"
     >
-      {/* CAUSED BY INCOMPATIBLE REACT VERSIONS */}
       {data && (
         <AutoSizer>
           {({ height, width }: { height: number; width: number }) => (
@@ -97,7 +146,6 @@ export const ScoreScreen = () => {
       )}
       <div className="w-full">
         <hr className="w-full border-t border-cyan-800 my-2" />
-
         <InfoRow data={data} />
       </div>
     </Navigator.Screen>

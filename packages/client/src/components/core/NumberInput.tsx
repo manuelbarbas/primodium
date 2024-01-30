@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { adjustDecimals } from "src/util/number";
-import { Button } from "../core/Button";
+import { Button } from "./Button";
 
 export const NumberInput: React.FC<{
   startingValue?: number;

@@ -25,11 +25,7 @@ library LibStorage {
     }
   }
 
-  function increaseMaxStorage(
-    bytes32 spaceRockEntity,
-    uint8 resource,
-    uint256 amount
-  ) internal {
+  function increaseMaxStorage(bytes32 spaceRockEntity, uint8 resource, uint256 amount) internal {
     uint256 maxResource = MaxResourceCount.get(spaceRockEntity, resource);
     setMaxStorage(spaceRockEntity, resource, maxResource + amount);
     if (P_IsRecoverable.get(resource)) {
@@ -37,11 +33,7 @@ library LibStorage {
     }
   }
 
-  function decreaseMaxStorage(
-    bytes32 spaceRockEntity,
-    uint8 resource,
-    uint256 amount
-  ) internal {
+  function decreaseMaxStorage(bytes32 spaceRockEntity, uint8 resource, uint256 amount) internal {
     uint256 maxResource = MaxResourceCount.get(spaceRockEntity, resource);
     require(maxResource >= amount, "[StorageUsage] not enough storage to reduce usage");
     setMaxStorage(spaceRockEntity, resource, maxResource - amount);
@@ -84,21 +76,13 @@ library LibStorage {
   /// @param spaceRockEntity ID of the spaceRock to update
   /// @param resource ID of the resource to decrease
   /// @param resourceToDecrease amount of resource to be decreased
-  function decreaseStoredResource(
-    bytes32 spaceRockEntity,
-    uint8 resource,
-    uint256 resourceToDecrease
-  ) internal {
+  function decreaseStoredResource(bytes32 spaceRockEntity, uint8 resource, uint256 resourceToDecrease) internal {
     uint256 resourceCount = ResourceCount.get(spaceRockEntity, resource);
     uint256 newResourceCount = resourceCount < resourceToDecrease ? 0 : resourceCount - resourceToDecrease;
     ResourceCount.set(spaceRockEntity, resource, newResourceCount);
   }
 
-  function checkedDecreaseStoredResource(
-    bytes32 spaceRockEntity,
-    uint8 resource,
-    uint256 resourceToDecrease
-  ) internal {
+  function checkedDecreaseStoredResource(bytes32 spaceRockEntity, uint8 resource, uint256 resourceToDecrease) internal {
     uint256 resourceCount = ResourceCount.get(spaceRockEntity, resource);
     require(resourceCount >= resourceToDecrease, "[StorageUsage] not enough resources to decrease");
     ResourceCount.set(spaceRockEntity, resource, resourceCount - resourceToDecrease);
@@ -108,22 +92,14 @@ library LibStorage {
   /// @param spaceRockEntity ID of the spaceRock to update
   /// @param resource ID of the resource to increase
   /// @param resourceToAdd amount of resource to be increased
-  function increaseStoredResource(
-    bytes32 spaceRockEntity,
-    uint8 resource,
-    uint256 resourceToAdd
-  ) internal {
+  function increaseStoredResource(bytes32 spaceRockEntity, uint8 resource, uint256 resourceToAdd) internal {
     uint256 resourceCount = ResourceCount.get(spaceRockEntity, resource);
     uint256 maxResources = MaxResourceCount.get(spaceRockEntity, resource);
     uint256 newResourceCount = LibMath.min(resourceCount + resourceToAdd, maxResources);
     ResourceCount.set(spaceRockEntity, resource, newResourceCount);
   }
 
-  function checkedIncreaseStoredResource(
-    bytes32 spaceRockEntity,
-    uint8 resource,
-    uint256 resourceToAdd
-  ) internal {
+  function checkedIncreaseStoredResource(bytes32 spaceRockEntity, uint8 resource, uint256 resourceToAdd) internal {
     uint256 resourceCount = ResourceCount.get(spaceRockEntity, resource);
     uint256 maxResources = MaxResourceCount.get(spaceRockEntity, resource);
     require(resourceCount + resourceToAdd <= maxResources, "[StorageUsage] not enough storage to increase usage");
@@ -134,11 +110,7 @@ library LibStorage {
   /// @param spaceRockEntity ID of the  spaceRock to update
   /// @param resource ID of the resource to increase
   /// @param newMaxStorage amount of max storage resource to be set
-  function setMaxStorage(
-    bytes32 spaceRockEntity,
-    uint8 resource,
-    uint256 newMaxStorage
-  ) internal {
+  function setMaxStorage(bytes32 spaceRockEntity, uint8 resource, uint256 newMaxStorage) internal {
     MaxResourceCount.set(spaceRockEntity, resource, newMaxStorage);
     uint256 spaceRockResourceAmount = ResourceCount.get(spaceRockEntity, resource);
     if (spaceRockResourceAmount > newMaxStorage) {
@@ -152,11 +124,7 @@ library LibStorage {
   /// @param spaceRockEntity ID of the  spaceRock to update
   /// @param resource ID of the utility to increase
   /// @param amountToIncrease of max storage to be set
-  function increaseMaxUtility(
-    bytes32 spaceRockEntity,
-    uint8 resource,
-    uint256 amountToIncrease
-  ) internal {
+  function increaseMaxUtility(bytes32 spaceRockEntity, uint8 resource, uint256 amountToIncrease) internal {
     uint256 prevMax = MaxResourceCount.get(spaceRockEntity, resource);
     setMaxStorage(spaceRockEntity, resource, prevMax + amountToIncrease);
   }
@@ -165,11 +133,7 @@ library LibStorage {
   /// @param spaceRockEntity ID of the  spaceRock to update
   /// @param resource ID of the resource to decrease
   /// @param amountToDecrease of max storage to be set
-  function decreaseMaxUtility(
-    bytes32 spaceRockEntity,
-    uint8 resource,
-    uint256 amountToDecrease
-  ) internal {
+  function decreaseMaxUtility(bytes32 spaceRockEntity, uint8 resource, uint256 amountToDecrease) internal {
     uint256 maxUtility = MaxResourceCount.get(spaceRockEntity, resource);
     if (maxUtility < amountToDecrease) {
       MaxResourceCount.set(spaceRockEntity, resource, 0);

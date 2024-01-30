@@ -13,6 +13,7 @@ import { setupHangar } from "src/network/systems/setupHangar";
 import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
 import { setupInvitations } from "src/network/systems/setupPlayerInvites";
 import { setupSend } from "src/network/systems/setupSend";
+import { setupSync } from "src/network/systems/setupSync";
 import { setupTime } from "src/network/systems/setupTime";
 import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
 import { MUD } from "src/network/types";
@@ -48,7 +49,7 @@ export async function initPrimodium(mud: MUD, version = "v1") {
   namespaceWorld(world, "game");
 
   await _init();
-  runSystems(mud);
+  // runSystems(mud);
 
   function destroy() {
     //for each instance, call game destroy
@@ -93,6 +94,7 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     setupSend(mud);
     setupTime(mud);
     setupTrainingQueues();
+    setupSync(mud);
 
     runAsteroidSystems(asteroidScene, mud);
     runStarmapSystems(starmapScene);

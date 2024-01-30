@@ -6,7 +6,7 @@ import { SecondaryCard } from "src/components/core/Card";
 import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
-import { getSpaceRockInfo } from "src/util/spacerock";
+import { getSpaceRockInfo } from "src/util/asteroid";
 
 export const LabeledValue: React.FC<{
   label: string;

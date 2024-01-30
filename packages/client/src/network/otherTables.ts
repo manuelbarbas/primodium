@@ -4,7 +4,7 @@ const UserDelegationControlTableId = resourceToHex({ type: "table", namespace: "
 
 export const otherTables = {
   UserDelegationControl: {
-    namespace: "",
+    namespace: "world",
     name: "UserDelegationControl",
     tableId: UserDelegationControlTableId,
     keySchema: {

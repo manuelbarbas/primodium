@@ -1,28 +1,30 @@
 import { Primodium } from "@game/api";
 import { Entity } from "@latticexyz/recs";
 
-import { Assets, EntitytoSpriteKey } from "@game/constants";
+import { Assets } from "@game/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { components, components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
-import { clampedIndex, getBlockTypeName } from "./common";
-import { EntityType, MapIdToAsteroidType, PIRATE_KEY, ResourceStorages, RockRelationship } from "./constants";
+import { getBlockTypeName } from "./common";
+import { MapIdToAsteroidType, PIRATE_KEY, ResourceStorages, RockRelationship } from "./constants";
 import { hashKeyEntity } from "./encode";
 import { getFullResourceCount } from "./resource";
+import { getRockSprite } from "src/game/lib/starmap/systems/utils/getSprites";
 
-export function getSpaceRockImage(primodium: Primodium, spaceRock: Entity) {
+export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
   const { getSpriteBase64 } = primodium.api().sprite;
-
-  const mainBaseEntity = comps.Home.get(spaceRock)?.value as Entity;
-
+  const asteroidData = comps.Asteroid.get(asteroid);
+  const mainBaseEntity = comps.Home.get(asteroid)?.value as Entity;
   const mainBaseLevel = comps.Level.get(mainBaseEntity, {
     value: 1n,
   }).value;
 
-  const spriteKey =
-    EntitytoSpriteKey[EntityType.Asteroid][
-      clampedIndex(Number(mainBaseLevel - 1n), EntitytoSpriteKey[EntityType.Asteroid].length)
-    ];
+  if (!asteroidData) {
+    console.error("Asteroid data not found for: " + asteroid);
+    return undefined;
+  }
+
+  const spriteKey = getRockSprite(asteroidData.mapId, asteroidData.mapId === 1 ? mainBaseLevel : asteroidData.maxLevel);
 
   return getSpriteBase64(spriteKey, Assets.SpriteAtlas);
 }
@@ -34,15 +36,22 @@ export function getSpaceRockName(spaceRock: Entity) {
   const asteroidData = comps.Asteroid.get(spaceRock);
 
   const asteroidResource = MapIdToAsteroidType[asteroidData?.mapId ?? 0];
+  const asteroidSize = asteroidResource
+    ? {
+        1: "Micro",
+        2: "Small",
+        3: "Medium",
+        4: "Large",
+      }[Number(asteroidData?.maxLevel ?? 1)]
+    : "";
 
-  return ` ${mainBaseLevel ? `LVL. ${mainBaseLevel} ` : ""} ${
+  return ` ${mainBaseLevel ? `LVL. ${mainBaseLevel} ` : asteroidSize} ${
     asteroidResource ? getBlockTypeName(asteroidResource) : ""
   } ${isPirate ? "Pirate" : "Asteroid"}`;
 }
 
 export function getSpaceRockInfo(primodium: Primodium, spaceRock: Entity) {
-  const imageUri = getSpaceRockImage(primodium, spaceRock);
-
+  const imageUri = getAsteroidImage(primodium, spaceRock);
   const ownedBy = comps.OwnedBy.get(spaceRock)?.value as Entity | undefined;
   const mainBaseEntity = comps.Home.get(spaceRock)?.value as Entity;
   const mainBaseLevel = comps.Level.get(mainBaseEntity)?.value;
@@ -52,6 +61,7 @@ export function getSpaceRockInfo(primodium: Primodium, spaceRock: Entity) {
     y: 0,
     parent: "0" as Entity,
   });
+
   const resources = [...ResourceStorages].reduce((acc, resource) => {
     const { resourceCount } = getFullResourceCount(resource, spaceRock);
     const amount = resourceCount;

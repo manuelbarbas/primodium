@@ -7,7 +7,7 @@ import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getBuildingImage } from "src/util/building";
 import { EntityType, ResourceImage } from "src/util/constants";
-import { getSpaceRockImage } from "src/util/spacerock";
+import { getAsteroidImage } from "src/util/asteroid";
 import { Button } from "../core/Button";
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
@@ -33,7 +33,7 @@ export const Profile = () => {
     <div className="flex flex-row">
       <Button className="flex flex-col justify-end border-t-0 border-secondary rounded-t-none ml-2 w-24 h-[6.3rem] p-0">
         <IconLabel
-          imageUri={mapOpen ? getSpaceRockImage(primodium, (asteroid ?? singletonEntity) as Entity) : buildingImage}
+          imageUri={mapOpen ? getAsteroidImage(primodium, (asteroid ?? singletonEntity) as Entity) : buildingImage}
           className="text-2xl scale-125 pt-3 pb-2"
         />
         <div className="bg-base-100 w-full rounded-box rounded-t-none p-1 border-t border-secondary">

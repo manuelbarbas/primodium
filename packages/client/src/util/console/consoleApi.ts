@@ -46,8 +46,6 @@ import {
   BuildingEnumLookup,
   EntityType,
   MULTIPLIER_SCALE,
-  MotherlodeSizeNames,
-  MotherlodeTypeNames,
   MultiplierStorages,
   RESOURCE_SCALE,
   ResourceEntityLookup,
@@ -73,7 +71,7 @@ import {
 } from "../resource";
 import { getRewards } from "../reward";
 import { getMoveLength, getSlowestUnitSpeed } from "../send";
-import { getRockRelationship, getSpaceRockImage, getSpaceRockInfo, getSpaceRockName } from "../spacerock";
+import { getRockRelationship, getAsteroidImage, getSpaceRockInfo, getSpaceRockName } from "../asteroid";
 import { getBuildingAtCoord, getBuildingsOfTypeInRange } from "../tile";
 import { getUnitStats, getUnitTrainingTime } from "../unit";
 import { getUpgradeInfo } from "../upgrade";
@@ -140,7 +138,7 @@ export default function createConsoleApi(mud: MUD, primodium: Primodium) {
       getSlowestUnitSpeed,
     },
     spaceRock: {
-      getSpaceRockImage: (rock: Entity) => getSpaceRockImage(primodium, rock),
+      getSpaceRockImage: (rock: Entity) => getAsteroidImage(primodium, rock),
       getSpaceRockName,
       getSpaceRockInfo: (rock: Entity) => getSpaceRockInfo(primodium, rock),
       getRockRelationship,
@@ -197,8 +195,6 @@ export default function createConsoleApi(mud: MUD, primodium: Primodium) {
     UNIT_SPEED_SCALE,
     EntityType,
     BlockIdToKey,
-    MotherlodeSizeNames,
-    MotherlodeTypeNames,
     ResourceStorages: [...ResourceStorages],
     UtilityStorages: [...UtilityStorages],
     MultiplierStorages: [...MultiplierStorages],

@@ -5,7 +5,7 @@ import { FaInfoCircle } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
-import { NumberInput } from "src/components/shared/NumberInput";
+import { NumberInput } from "src/components/core/NumberInput";
 import { useMud } from "src/hooks";
 import { useMaxCountOfRecipe } from "src/hooks/useMaxCountOfRecipe";
 import { components } from "src/network/components";

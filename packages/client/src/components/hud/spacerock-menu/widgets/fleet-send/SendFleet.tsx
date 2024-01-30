@@ -8,7 +8,7 @@ import { Badge } from "src/components/core/Badge";
 import { Button } from "src/components/core/Button";
 import { Card, SecondaryCard } from "src/components/core/Card";
 import { Modal } from "src/components/core/Modal";
-import { NumberInput } from "src/components/shared/NumberInput";
+import { NumberInput } from "src/components/core/NumberInput";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
