@@ -9,7 +9,16 @@ import { EntityType, ResourceImage } from "src/util/constants";
 import { getRockDefense } from "src/util/defense";
 import { formatNumber } from "src/util/number";
 import { getSpaceRockImage, getSpaceRockName } from "src/util/spacerock";
-export const TargetHeader = ({ entity, hideStats }: { entity?: Entity; hideStats?: boolean }) => {
+import { UtilityLabel } from "./widgets/resources/utilities/UtilityLabel";
+export const TargetHeader = ({
+  entity,
+  hideStats,
+  showHousing,
+}: {
+  entity?: Entity;
+  hideStats?: boolean;
+  showHousing?: boolean;
+}) => {
   const selectedSpacerock = entity ?? components.SelectedRock.use()?.value;
   const primodium = usePrimodium();
   const coord = components.Position.use(selectedSpacerock ?? singletonEntity) ?? { x: 0, y: 0 };
@@ -35,6 +44,9 @@ export const TargetHeader = ({ entity, hideStats }: { entity?: Entity; hideStats
           <Badge className="flex gap-1 w-full uppercase font-bold text-xs items-center">
             <IconLabel imageUri={ResourceImage.get(EntityType.Defense) ?? ""} text={``} className="w-4 h-4" />
             <p className="scale-95 opacity-50">{formatNumber(def.points, { short: true, fractionDigits: 2 })}</p>
+            {showHousing && (
+              <UtilityLabel spaceRock={selectedSpacerock} name="Housing" resourceId={EntityType.Housing} size="xs" />
+            )}
           </Badge>
           <Badge className="flex gap-1 w-full uppercase font-bold text-xs items-center">
             {owner ? (

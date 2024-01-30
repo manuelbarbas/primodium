@@ -12,10 +12,12 @@ import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { transferFleet } from "src/network/setup/contractCalls/fleetTransfer";
-import { ResourceEntityLookup, TransactionQueueType, UnitStorages } from "src/util/constants";
+import { EntityType, ResourceEntityLookup, TransactionQueueType, UnitStorages } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { formatResourceCount, parseResourceCount } from "src/util/number";
+import { getFullResourceCount } from "src/util/resource";
 import { getFleetStatsFromUnits } from "src/util/unit";
+import { Hex } from "viem";
 import { ResourceIcon } from "../modals/fleets/ResourceIcon";
 import { TargetHeader } from "../spacerock-menu/TargetHeader";
 import { FleetEntityHeader } from "./fleets/FleetHeader";
@@ -34,7 +36,11 @@ const TransferSide = (props: {
   hovering?: boolean;
 }) => {
   const isFleet = components.IsFleet.get(props.entity)?.value;
-  const Header = isFleet ? FleetEntityHeader : TargetHeader;
+  const Header = isFleet ? (
+    <FleetEntityHeader entity={props.entity} />
+  ) : (
+    <TargetHeader entity={props.entity} showHousing />
+  );
   return (
     <div
       className={`w-full h-full bg-base-100 p-2 pb-8 flex flex-col gap-2 border border-secondary/50 relative ${
@@ -44,7 +50,7 @@ const TransferSide = (props: {
       onMouseLeave={props.onMouseLeave}
     >
       <div className="h-12 text-sm w-full flex font-bold gap-1">
-        <Header entity={props.entity} />
+        {Header}
         {props.remove && (
           <Button className="btn-error p-1 btn-xs h-full" onClick={props.remove}>
             <FaTimes className="w-2" />
@@ -276,10 +282,20 @@ const Transfer = ({ from: initialFrom, to: initialTo }: { from?: Entity; to?: En
       const cargo = getFleetStatsFromUnits(toUnitCounts).cargo;
       if (cargo < [...toResourceCounts.entries()].reduce((acc, [, count]) => acc + count, 0n))
         return { disabled: true, submitMessage: "Cargo capacity exceeded" };
+    } else {
+      const { resourceCount } = getFullResourceCount(EntityType.Housing);
+      const housingUsed = [...toUnitCounts.entries()].reduce((acc, [entity, count]) => {
+        const level =
+          components.UnitLevel.getWithKeys({ entity: selectedRock as Hex, unit: entity as Hex })?.value ?? 0n;
+        const requiredResources = components.P_RequiredResources.getWithKeys({ prototype: entity as Hex, level });
+        if (!requiredResources || !requiredResources.resources.includes(EResource.U_Housing)) return acc;
+        return acc + requiredResources.amounts[requiredResources.resources.indexOf(EResource.U_Housing)] * count;
+      }, 0n);
+      if (housingUsed > resourceCount) return { disabled: true, submitMessage: "Housing capacity exceeded" };
     }
     if (unitDelta.size + resourceDelta.size === 0) return { disabled: true, submitMessage: "Transfer" };
     return { disabled: false, submitMessage: "Transfer" };
-  }, [resourceDelta, to, toResourceCounts, toUnitCounts, unitDelta]);
+  }, [resourceDelta.size, selectedRock, to, toResourceCounts, toUnitCounts, unitDelta.size]);
 
   return (
     <div className="w-full h-full flex flex-col gap-2 p-2">
