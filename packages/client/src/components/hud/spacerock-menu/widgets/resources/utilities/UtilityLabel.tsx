@@ -8,10 +8,12 @@ export const UtilityLabel = ({
   name,
   resourceId,
   spaceRock,
+  size = "sm",
 }: {
   name: string;
   resourceId: Entity;
   spaceRock?: Entity;
+  size?: "sm" | "md" | "xs";
 }) => {
   const { resourceCount } = useFullResourceCount(resourceId);
 
@@ -26,7 +28,7 @@ export const UtilityLabel = ({
         resource={resourceId}
         image={resourceIcon ?? ""}
         validate={false}
-        fontSize={"sm"}
+        fontSize={size}
       />
     </Badge>
   );
