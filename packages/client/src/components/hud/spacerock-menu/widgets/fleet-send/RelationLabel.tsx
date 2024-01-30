@@ -3,7 +3,7 @@ import { SecondaryCard } from "src/components/core/Card";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { RockRelationship } from "src/util/constants";
-import { getRockRelationship } from "src/util/spacerock";
+import { getRockRelationship } from "src/util/asteroid";
 
 export const RelationLabel = () => {
   const selectedRock = components.SelectedRock.use()?.value;

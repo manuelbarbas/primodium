@@ -39,7 +39,7 @@ export default function AppLoadingState() {
 
   return (
     <div className="bg-black h-screen">
-      <div className="absolute w-full h-full star-background opacity-40" />
+      <div className="absolute w-full h-full star-background opacity-30" />
       {!error && (
         <div className="relative">
           {!loading && !enoughEth && (

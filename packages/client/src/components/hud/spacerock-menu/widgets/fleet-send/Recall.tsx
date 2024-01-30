@@ -13,7 +13,7 @@ import { recallStationedUnits } from "src/network/setup/contractCalls/recall";
 import { BackgroundImage, UnitEnumLookup } from "src/util/constants";
 import { getRockDefense } from "src/util/defense";
 import { formatNumber } from "src/util/number";
-import { getSpaceRockImage, getSpaceRockName } from "src/util/spacerock";
+import { getAsteroidImage, getSpaceRockName } from "src/util/asteroid";
 
 export const Unit: React.FC<{ unit: Entity; count: bigint }> = ({ unit, count }) => {
   if (count === 0n) return null;
@@ -36,7 +36,7 @@ export const Unit: React.FC<{ unit: Entity; count: bigint }> = ({ unit, count })
 export const TargetInfo = () => {
   const selectedSpacerock = components.SelectedRock.use()?.value;
   const primodium = usePrimodium();
-  const img = getSpaceRockImage(primodium, selectedSpacerock ?? singletonEntity);
+  const img = getAsteroidImage(primodium, selectedSpacerock ?? singletonEntity);
   const name = getSpaceRockName(selectedSpacerock ?? singletonEntity);
   const coord = components.Position.get(selectedSpacerock ?? singletonEntity) ?? { x: 0, y: 0 };
   const def = getRockDefense(selectedSpacerock ?? singletonEntity);

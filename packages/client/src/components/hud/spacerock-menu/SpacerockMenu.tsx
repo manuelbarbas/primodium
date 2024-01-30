@@ -52,21 +52,20 @@ export const SpacerockMenu: React.FC = () => {
         {!loading && !error && (
           <Tabs.Pane index={0} className="w-full border-b-0 rounded-x-none rounded-b-none relative">
             <Resources />
+            <Button
+              className="btn-sm absolute right-6 -top-1 border border-secondary flex"
+              onClick={async () => {
+                components.ActiveRock.set({ value: selectedSpacerock as Entity });
+                await transitionToScene(Scenes.Starmap, Scenes.Asteroid, 0);
+                components.MapOpen.set({ value: false });
+              }}
+            >
+              <FaEye className="text-success" />
+              <AccountDisplay player={ownedBy as Entity} className=" text-xs" />
+            </Button>
 
             {ownedBy && (
               <>
-                <Button
-                  className="btn-sm absolute right-6 -top-1 border border-secondary flex"
-                  onClick={async () => {
-                    components.ActiveRock.set({ value: selectedSpacerock as Entity });
-                    await transitionToScene(Scenes.Starmap, Scenes.Asteroid, 0);
-                    components.MapOpen.set({ value: false });
-                  }}
-                >
-                  <FaEye className="text-success" />
-                  <AccountDisplay player={ownedBy as Entity} className=" text-xs" />
-                </Button>
-
                 <GracePeriod
                   player={ownedBy as Entity}
                   className="absolute left-6 -top-1 border border-secondary text-xs p-2 bg-base-100 rounded-box rounded-t-none"

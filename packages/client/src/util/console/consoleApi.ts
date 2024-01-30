@@ -76,7 +76,7 @@ import {
 } from "../resource";
 import { getRewards } from "../reward";
 import { getMoveLength, getSlowestUnitSpeed } from "../send";
-import { getRockRelationship, getSpaceRockImage, getSpaceRockInfo, getSpaceRockName } from "../spacerock";
+import { getRockRelationship, getAsteroidImage, getSpaceRockInfo, getSpaceRockName } from "../asteroid";
 import { getBuildingAtCoord, getBuildingsOfTypeInRange } from "../tile";
 import { getUnitStats, getUnitTrainingTime } from "../trainUnits";
 import { getUpgradeInfo } from "../upgrade";
@@ -143,7 +143,7 @@ export default function createConsoleApi(mud: MUD, primodium: Primodium) {
       getSlowestUnitSpeed,
     },
     spaceRock: {
-      getSpaceRockImage: (rock: Entity) => getSpaceRockImage(primodium, rock),
+      getSpaceRockImage: (rock: Entity) => getAsteroidImage(primodium, rock),
       getSpaceRockName,
       getSpaceRockInfo: (rock: Entity) => getSpaceRockInfo(primodium, rock),
       getRockRelationship,

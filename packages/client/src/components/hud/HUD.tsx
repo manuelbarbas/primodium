@@ -8,7 +8,7 @@ import { components } from "src/network/components";
 import { getBuildingName } from "src/util/building";
 import { Action } from "src/util/constants";
 import { formatNumber } from "src/util/number";
-import { getSpaceRockName } from "src/util/spacerock";
+import { getSpaceRockName } from "src/util/asteroid";
 import { Card } from "../core/Card";
 import { HUD } from "../core/HUD";
 import { IconLabel } from "../core/IconLabel";
@@ -31,6 +31,9 @@ import { OwnedAsteroids } from "./panes/OwnedAsteroids";
 import { BattleReports } from "./panes/battle-reports/BattleReports";
 import { HostileFleets } from "./panes/hostile-fleets/HostileFleets";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
+import { ActiveMarker } from "./markers/ActiveMarker";
+import { HomeMarker } from "./markers/HomeMarker";
+import { AsteroidTarget } from "./AsteroidTarget";
 
 export const GameHUD = () => {
   const {
@@ -96,6 +99,12 @@ export const GameHUD = () => {
         <HUD.BottomMiddle>
           <SpacerockMenu />
         </HUD.BottomMiddle>
+
+        {/* MARKERS */}
+        <ActiveMarker />
+        <HomeMarker />
+
+        <AsteroidTarget />
       </HUD>
 
       <HUD>

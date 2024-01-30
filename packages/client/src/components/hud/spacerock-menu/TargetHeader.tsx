@@ -8,7 +8,7 @@ import { components } from "src/network/components";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { getRockDefense } from "src/util/defense";
 import { formatNumber } from "src/util/number";
-import { getSpaceRockImage, getSpaceRockName } from "src/util/spacerock";
+import { getAsteroidImage, getSpaceRockName } from "src/util/asteroid";
 export const TargetHeader = ({ hideStats }: { hideStats?: boolean }) => {
   const selectedSpacerock = components.SelectedRock.use()?.value;
   const primodium = usePrimodium();
@@ -16,7 +16,7 @@ export const TargetHeader = ({ hideStats }: { hideStats?: boolean }) => {
   const def = getRockDefense(selectedSpacerock ?? singletonEntity);
   const owner = components.OwnedBy.use(selectedSpacerock)?.value;
   if (!selectedSpacerock) return null;
-  const img = getSpaceRockImage(primodium, selectedSpacerock);
+  const img = getAsteroidImage(primodium, selectedSpacerock);
   const name = getSpaceRockName(selectedSpacerock);
 
   return (

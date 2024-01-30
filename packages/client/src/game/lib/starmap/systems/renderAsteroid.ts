@@ -23,7 +23,7 @@ import { Outline, Texture } from "../../common/object-components/sprite";
 import { ObjectText } from "../../common/object-components/text";
 import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { getOutlineSprite, getRockSprite, getSecondaryOutlineSprite, getSecondaryRockSprite } from "./utils/getSprites";
+import { getOutlineSprite, getRockSprite, getSecondaryOutlineSprite } from "./utils/getSprites";
 
 const asteroidQueue: Entity[] = [];
 export const renderAsteroid = (scene: Scene) => {
@@ -93,10 +93,7 @@ export const renderAsteroid = (scene: Scene) => {
 
     const asteroidObject = asteroidObjectGroup.add("Sprite");
 
-    const sprite =
-      asteroidData.mapId === 1
-        ? getRockSprite(asteroidData.mapId, mainBaseLevel)
-        : getSecondaryRockSprite(asteroidData.mapId, asteroidData.maxLevel);
+    const sprite = getRockSprite(asteroidData.mapId, asteroidData.mapId === 1 ? mainBaseLevel : asteroidData.maxLevel);
     asteroidObject.setComponents([
       ...sharedComponents,
       rotationTween,
