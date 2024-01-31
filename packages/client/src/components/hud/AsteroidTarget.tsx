@@ -7,10 +7,13 @@ import { useOrbitingFleets } from "src/hooks/useOrbitingFleets";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getAsteroidImage } from "src/util/asteroid";
+import { TransactionQueueType } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
 import { Button } from "../core/Button";
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
 import { Marker } from "../shared/Marker";
+import { TransactionQueueMask } from "../shared/TransactionQueueMask";
 import { GracePeriod } from "./GracePeriod";
 import { SelectFleet } from "./panes/fleets/SelectFleet";
 
@@ -58,31 +61,31 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
             {playerEntity === ownedBy && <IconLabel imageUri="/img/icons/minersicon.png" className={``} text="BUILD" />}
           </Button>
         </div>
-        {ownedBy && (
-          <>
-            <div className="absolute bottom-0 right-0 translate-x-full w-36">
-              <Modal title="Select a Fleet to Move">
-                <Modal.Button
-                  disabled={selectingDestination || !canSendFleet}
-                  onClick={() => components.Send.setOrigin(selectedAsteroid)}
-                  className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
-                >
-                  <IconLabel imageUri="/img/icons/weaponryicon.png" className={``} text="SEND FLEET" />
-                </Modal.Button>
-                <Modal.Content className="h-[30rem] w-[60rem]">
-                  <SelectFleet />
-                </Modal.Content>
-              </Modal>
-            </div>
+        <TransactionQueueMask
+          queueItemId={hashEntities(TransactionQueueType.SendFleet)}
+          className="absolute bottom-0 right-0 translate-x-full w-36"
+          size="xs"
+        >
+          <Modal title="Select a Fleet to Move">
+            <Modal.Button
+              disabled={selectingDestination || !canSendFleet}
+              onClick={() => components.Send.setOrigin(selectedAsteroid)}
+              className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
+            >
+              <IconLabel imageUri="/img/icons/weaponryicon.png" className={``} text="SEND FLEET" />
+            </Modal.Button>
+            <Modal.Content className="h-[30rem] w-[60rem]">
+              <SelectFleet />
+            </Modal.Content>
+          </Modal>
+        </TransactionQueueMask>
 
-            {inGracePeriod && (
-              <div className="absolute top-0 left-0 -translate-x-full">
-                <Button className="btn-ghost btn-xs text-xs text-accent bg-emerald-900 border border-r-0 border-secondary/50 w-36">
-                  <GracePeriod player={ownedBy as Entity} />
-                </Button>
-              </div>
-            )}
-          </>
+        {inGracePeriod && (
+          <div className="absolute top-0 left-0 -translate-x-full">
+            <Button className="btn-ghost btn-xs text-xs text-accent bg-emerald-900 border border-r-0 border-secondary/50 w-36">
+              <GracePeriod player={ownedBy as Entity} />
+            </Button>
+          </div>
         )}
         <div className="absolute bottom-0 left-0 -translate-x-full">
           <Button

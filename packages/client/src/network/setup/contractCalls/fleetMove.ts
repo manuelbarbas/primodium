@@ -16,7 +16,7 @@ export const sendFleet = async (mud: MUD, fleet: Entity, spaceRock: Entity) => {
       delegate: true,
     },
     {
-      id: hashEntities(TransactionQueueType.SendFleet, fleet),
+      id: hashEntities(TransactionQueueType.SendFleet),
       type: TransactionQueueType.SendFleet,
     }
   );
@@ -32,7 +32,7 @@ export const sendFleetPosition = async (mud: MUD, fleet: Entity, position: Coord
       delegate: true,
     },
     {
-      id: hashEntities(TransactionQueueType.SendFleet, fleet),
+      id: hashEntities(TransactionQueueType.SendFleet),
       type: TransactionQueueType.SendFleet,
     }
   );
@@ -48,7 +48,7 @@ export const recallFleet = async (mud: MUD, fleet: Entity) => {
       delegate: true,
     },
     {
-      id: hashEntities(TransactionQueueType.SendFleet, fleet),
+      id: hashEntities(TransactionQueueType.SendFleet),
       type: TransactionQueueType.SendFleet,
     }
   );
