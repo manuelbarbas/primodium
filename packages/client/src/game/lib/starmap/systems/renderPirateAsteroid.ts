@@ -96,7 +96,6 @@ export const renderPirateAsteroid = (scene: Scene) => {
       rotationTween,
       Texture(Assets.SpriteAtlas, SpriteKeys.PirateAsteroid1),
       OnClick(scene, () => {
-        console.log("hello");
         if (components.Send.get()?.fleetEntity) {
           components.Send.setDestination(entity);
         } else {
@@ -129,7 +128,6 @@ export const renderPirateAsteroid = (scene: Scene) => {
       }),
       Texture(Assets.SpriteAtlas, outlineSprite),
       OnClick(scene, () => {
-        console.log("hello");
         if (components.Send.get()?.fleetEntity) {
           components.Send.setDestination(entity);
         } else {

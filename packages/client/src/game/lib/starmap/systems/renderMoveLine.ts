@@ -49,7 +49,7 @@ export const renderMoveLine = (scene: Scene, mud: MUD) => {
               id: `moveLine-line`,
               thickness: Math.min(10, 3 / zoom),
               alpha: 0.25,
-              color: 0x00ffff,
+              color: 0xffffff,
             }
           )
         );
@@ -69,7 +69,7 @@ export const renderMoveLine = (scene: Scene, mud: MUD) => {
               id: `moveLine-line`,
               thickness: Math.min(10, 3 / scene.camera.phaserCamera.zoom),
               alpha: 0.25,
-              color: 0x00ffff,
+              color: 0xffffff,
             }
           )
         );

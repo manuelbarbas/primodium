@@ -5,7 +5,7 @@ import { components } from "src/network/components";
 import { getSpaceRockName } from "src/util/asteroid";
 import { getBuildingName } from "src/util/building";
 import { EntityType, ResourceImage } from "src/util/constants";
-import { formatNumber, formatResourceCount } from "src/util/number";
+import { formatNumber, formatResourceCount, formatTime } from "src/util/number";
 import { getFleetStats } from "src/util/unit";
 import { Card } from "../core/Card";
 
@@ -37,7 +37,10 @@ export const HoverInfo = () => {
     const units = useUnitCounts(entity);
     const resources = useFullResourceCounts(entity);
     const movement = components.FleetMovement.use(entity);
-    const inTransit = (movement?.arrivalTime ?? 0n) > (components.Time.use()?.value ?? 0n);
+    const time = components.Time.use()?.value ?? 0n;
+    const arrivalTime = movement?.arrivalTime ?? 0n;
+    const inTransit = arrivalTime > (time ?? 0n);
+    const eta = inTransit ? formatTime(arrivalTime - time) : "";
 
     return (
       <Card className="ml-5 uppercase font-bold text-xs relative w-48">
@@ -45,7 +48,7 @@ export const HoverInfo = () => {
         <div className="flex flex-col gap-1 z-10">
           <div className="flex gap-1 items-center">
             <p className="text-sm">{fleetStats.title}</p>
-            <p className="text-xs opacity-50 bg-primary px-1">{inTransit ? "IN TRANSIT" : "ORBITING"}</p>
+            <p className="text-xs opacity-50 bg-primary px-1">{inTransit ? `ETA ${eta}` : "ORBITING"}</p>
           </div>
           <div className="text-xs grid grid-cols-3 gap-1 divide-x divide-primary/50">
             <div className="flex flex-col gap-1 p-1">
