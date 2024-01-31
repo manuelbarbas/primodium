@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { EResource } from "src/Types.sol";
-import { P_Transportables, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { P_Transportables, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -65,15 +65,15 @@ library LibFleetTransfer {
   }
 
   function transferUnitsFromFleetToSpaceRock(
-    bytes32 spaceRock,
     bytes32 fleetId,
+    bytes32 spaceRock,
     uint256[] calldata unitCounts
   ) internal {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     bool isOwner = OwnedBy.get(fleetId) == spaceRock;
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
-      LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !isOwner);
       LibFleet.decreaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !isOwner);
+      LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !isOwner);
     }
 
     uint256 cargo = LibFleetAttributes.getCargo(fleetId);
@@ -82,8 +82,8 @@ library LibFleetTransfer {
   }
 
   function transferResourcesFromFleetToSpaceRock(
-    bytes32 spaceRock,
     bytes32 fleetId,
+    bytes32 spaceRock,
     uint256[] calldata resourceCounts
   ) internal {
     uint8[] memory transportables = P_Transportables.get();
@@ -96,8 +96,8 @@ library LibFleetTransfer {
 
   //this is required so unit cargo space can be updated correctly without loss of resources
   function transferUnitsAndResourcesFromFleetToSpaceRock(
-    bytes32 spaceRock,
     bytes32 fleetId,
+    bytes32 spaceRock,
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
   ) internal {
@@ -108,7 +108,7 @@ library LibFleetTransfer {
       LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !isOwner);
     }
 
-    transferResourcesFromFleetToSpaceRock(spaceRock, fleetId, resourceCounts);
+    transferResourcesFromFleetToSpaceRock(fleetId, spaceRock, resourceCounts);
 
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       LibFleet.decreaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !isOwner);
@@ -119,11 +119,7 @@ library LibFleetTransfer {
     require(cargo >= occupiedCargo, "[Fleet] Not enough cargo space to transfer units");
   }
 
-  function transferUnitsFromFleetToFleet(
-    bytes32 fromFleetId,
-    bytes32 fleetId,
-    uint256[] calldata unitCounts
-  ) internal {
+  function transferUnitsFromFleetToFleet(bytes32 fromFleetId, bytes32 fleetId, uint256[] calldata unitCounts) internal {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     bool sameOwner = OwnedBy.get(fleetId) == OwnedBy.get(fromFleetId);
     for (uint8 i = 0; i < unitPrototypes.length; i++) {

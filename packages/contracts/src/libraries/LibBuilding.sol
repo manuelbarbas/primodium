@@ -53,12 +53,11 @@ library LibBuilding {
     require(Spawned.get(playerEntity), "[BuildSystem] Player has not spawned");
     if (buildingPrototype == MainBasePrototypeId) {
       require(
-        !HasBuiltBuilding.get(coord.parent, buildingPrototype),
-        "[BuildSystem] Cannot build more than one main base per wallet"
+        Home.get(coord.parent) == bytes32(0),
+        "[BuildSystem] Cannot build more than one main base per space rock"
       );
     }
     require(OwnedBy.get(coord.parent) == playerEntity, "[BuildSystem] You can only build on an asteroid you control");
-
     require(!Spawned.get(getBuildingFromCoord(coord)), "[BuildSystem] Building already exists");
     require(
       LibBuilding.hasRequiredBaseLevel(coord.parent, buildingPrototype, 1),
@@ -217,11 +216,7 @@ library LibBuilding {
   /// @param prototype The type of building
   /// @param level The level of the building
   /// @return True if requirements are met, false otherwise
-  function hasRequiredBaseLevel(
-    bytes32 asteroidEntity,
-    bytes32 prototype,
-    uint256 level
-  ) internal view returns (bool) {
+  function hasRequiredBaseLevel(bytes32 asteroidEntity, bytes32 prototype, uint256 level) internal view returns (bool) {
     uint256 mainLevel = getBaseLevel(asteroidEntity);
     return mainLevel >= P_RequiredBaseLevel.get(prototype, level);
   }

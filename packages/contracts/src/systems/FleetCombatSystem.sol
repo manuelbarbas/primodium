@@ -1,13 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-import { FleetStance, IsFleet, NewBattleResult, NewBattleResultData, FleetMovement, P_GracePeriod, OwnedBy } from "codegen/index.sol";
+
+import { ResourceCount, FleetStance, IsFleet, NewBattleResult, NewBattleResultData, FleetMovement, P_GracePeriod, GracePeriod, OwnedBy } from "codegen/index.sol";
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
-import { EFleetStance } from "src/Types.sol";
-import { fleetBattleResolveRaid, fleetBattleApplyDamage, resolveBattleEncryption, transferSpaceRockOwnership, initializeSpaceRockOwnership } from "libraries/SubsystemCalls.sol";
+import { EFleetStance, EResource } from "src/Types.sol";
+import { fleetBattleResolveRaid, fleetBattleApplyDamage, fleetResolveBattleEncryption, transferSpaceRockOwnership, initializeSpaceRockOwnership } from "libraries/SubsystemCalls.sol";
 
 contract FleetCombatSystem is FleetBaseSystem {
-  modifier _onlyWhenNotInGracePeriod(bytes32 fleetId) {
+  modifier _onlyWhenSpaceRockNotInGracePeriod(bytes32 spaceRock) {
+    require(block.timestamp >= GracePeriod.get(spaceRock), "[Fleet] Target space rock is in grace period");
+    _;
+  }
+
+  modifier _onlyWhenFleetNotInGracePeriod(bytes32 fleetId) {
     require(
       !((FleetMovement.getArrivalTime(fleetId) + P_GracePeriod.getFleet()) <= block.timestamp),
       "[Fleet] Target fleet is in grace period"
@@ -44,7 +50,7 @@ contract FleetCombatSystem is FleetBaseSystem {
     bytes32 targetFleet
   )
     private
-    _onlyWhenNotInGracePeriod(targetFleet)
+    _onlyWhenFleetNotInGracePeriod(targetFleet)
     _onlyFleetOwner(fleetId)
     _onlyWhenNotInStance(fleetId)
     _onlyWhenFleetsAreIsInSameOrbit(fleetId, targetFleet)
@@ -61,12 +67,12 @@ contract FleetCombatSystem is FleetBaseSystem {
     private
     _onlyFleetOwner(fleetId)
     _onlyWhenNotInStance(fleetId)
+    _onlyWhenSpaceRockNotInGracePeriod(targetSpaceRock)
     _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, targetSpaceRock)
     _claimResources(targetSpaceRock)
     _claimUnits(targetSpaceRock)
   {
     (bytes32 battleId, NewBattleResultData memory batteResult) = LibFleetCombat.attack(fleetId, targetSpaceRock);
-
     afterBattle(battleId, batteResult);
   }
 
@@ -75,7 +81,7 @@ contract FleetCombatSystem is FleetBaseSystem {
     bytes32 targetFleet
   )
     private
-    _onlyWhenNotInGracePeriod(targetFleet)
+    _onlyWhenFleetNotInGracePeriod(targetFleet)
     _onlySpaceRockOwner(spaceRock)
     _onlyWhenFleetIsInOrbitOfSpaceRock(targetFleet, spaceRock)
     _claimResources(spaceRock)
@@ -87,18 +93,14 @@ contract FleetCombatSystem is FleetBaseSystem {
 
   function afterBattle(bytes32 battleId, NewBattleResultData memory battleResult) internal {
     fleetBattleApplyDamage(battleId, battleResult.aggressorEntity, battleResult.targetDamage);
-
     if (battleResult.winner == battleResult.aggressorEntity) {
       fleetBattleResolveRaid(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
-
       if (!IsFleet.get(battleResult.targetEntity)) {
-        uint256 encryptionAtEnd = resolveBattleEncryption(
-          battleId,
-          battleResult.aggressorEntity,
-          battleResult.targetEntity
-        );
-        if (encryptionAtEnd == 0) {
-          if (OwnedBy.get(battleResult.targetEntity) == bytes32(0)) {
+        LibFleetCombat.resolveBattleEncryption(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
+        //todo the following commented line reverts for some reason although it just calles the library function above
+        //fleetResolveBattleEncryption(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
+        if (ResourceCount.get(battleResult.targetEntity, uint8(EResource.R_Encryption)) == 0) {
+          if (OwnedBy.get(battleResult.targetEntity) != bytes32(0)) {
             transferSpaceRockOwnership(battleResult.targetEntity, _player());
           } else {
             initializeSpaceRockOwnership(battleResult.targetEntity, _player());

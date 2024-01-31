@@ -26,9 +26,9 @@ contract SpawnSystem is PrimodiumSystem {
 
     require(!Spawned.get(playerEntity), "[SpawnSystem] Already spawned");
     uint256 gracePeriodLength = (P_GracePeriod.getSpaceRock() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
-    GracePeriod.set(playerEntity, block.timestamp + gracePeriodLength);
 
     bytes32 asteroid = LibAsteroid.createPrimaryAsteroid(playerEntity);
+    GracePeriod.set(asteroid, block.timestamp + gracePeriodLength);
     Home.set(playerEntity, asteroid);
     Spawned.set(playerEntity, true);
     initializeSpaceRockOwnership(asteroid, playerEntity);
