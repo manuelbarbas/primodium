@@ -20,7 +20,7 @@ export const Profile = () => {
         <FaUser />
         <AccountDisplay player={playerEntity} />
       </div>
-      <Score />
+      <Score player={playerEntity} />
       <Modal title="account">
         <Modal.Button className="absolute -bottom-8 btn-xs btn-ghost flex gap-2 m-auto text-accent mt-1 w-fit">
           <Tooltip text={`${delegate ? "" : "not"} delegating`} direction="bottom">
