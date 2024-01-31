@@ -27,7 +27,8 @@ library LibSpaceRockAttributes {
     defense = ResourceCount.get(spaceRock, uint8(EResource.U_Defense));
     uint256 hp = ResourceCount.get(spaceRock, uint8(EResource.R_HP));
     uint256 maxHp = MaxResourceCount.get(spaceRock, uint8(EResource.R_HP));
-    defense = (defense * hp) / maxHp;
+    if (maxHp > 0) defense = (defense * hp) / maxHp;
+    else defense = 0;
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       uint256 unitCount = UnitCount.get(spaceRock, unitPrototypes[i]);
@@ -37,15 +38,9 @@ library LibSpaceRockAttributes {
     defense = (defense * (100 + ResourceCount.get(spaceRock, uint8(EResource.M_DefenseMultiplier)))) / 100;
   }
 
-  function getDefensesWithDefenders(bytes32 spaceRock)
-    internal
-    view
-    returns (
-      uint256 defense,
-      uint256[] memory defenses,
-      uint256 totalDefense
-    )
-  {
+  function getDefensesWithDefenders(
+    bytes32 spaceRock
+  ) internal view returns (uint256 defense, uint256[] memory defenses, uint256 totalDefense) {
     bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(spaceRock);
     defenses = new uint256[](defenderFleetIds.length);
     defense = getDefense(spaceRock);
@@ -74,15 +69,9 @@ library LibSpaceRockAttributes {
     }
   }
 
-  function getHpWithDefenders(bytes32 spaceRock)
-    internal
-    view
-    returns (
-      uint256 hp,
-      uint256[] memory hps,
-      uint256 totalHp
-    )
-  {
+  function getHpWithDefenders(
+    bytes32 spaceRock
+  ) internal view returns (uint256 hp, uint256[] memory hps, uint256 totalHp) {
     hp = getHp(spaceRock);
     bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(spaceRock);
     hps = new uint256[](defenderFleetIds.length);
@@ -135,15 +124,9 @@ library LibSpaceRockAttributes {
     }
   }
 
-  function getFreeCargoSpacesWithDefenders(bytes32 fleetId)
-    internal
-    view
-    returns (
-      uint256 freeCargoSpace,
-      uint256[] memory freeCargoSpaces,
-      uint256 totalFreeCargoSpace
-    )
-  {
+  function getFreeCargoSpacesWithDefenders(
+    bytes32 fleetId
+  ) internal view returns (uint256 freeCargoSpace, uint256[] memory freeCargoSpaces, uint256 totalFreeCargoSpace) {
     bytes32[] memory followerFleetIds = LibFleetStance.getFollowerFleets(fleetId);
     freeCargoSpaces = new uint256[](followerFleetIds.length);
     freeCargoSpace = getCargo(fleetId);

@@ -13,8 +13,13 @@ contract TrainUnitsSystemTest is PrimodiumTest {
   bytes32 building = "building";
   bytes32 buildingPrototype = "buildingPrototype";
 
+  uint256 COLONY_SHIP_BASE_COST;
+  EResource COLONY_SHIP_COST_RESOURCE;
+
   function setUp() public override {
     super.setUp();
+    COLONY_SHIP_BASE_COST = P_ColonyShipConfig.getResourceAmount();
+    COLONY_SHIP_COST_RESOURCE = EResource(P_ColonyShipConfig.getResourceType());
     vm.startPrank(creator);
     player = addressToEntity(creator);
     BuildingType.set(building, buildingPrototype);
@@ -94,6 +99,80 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     LibUnit.claimUnits(rock);
     assertEq(ResourceCount.get(rock, Iron), 100, "resource count does not match");
     assertEq(UnitCount.get(rock, unitPrototype), 100, "unit count does not match");
+  }
+
+  function testTrainColonyShip() public {
+    vm.startPrank(alice);
+    bytes32 aliceHomeSpaceRock = world.spawn();
+    vm.stopPrank();
+
+    uint256 amount = COLONY_SHIP_BASE_COST * 2;
+    assertEq(
+      amount,
+      COLONY_SHIP_BASE_COST * LibUnit.getNextColonyShipResourceCostMultiplier(aliceHomeSpaceRock),
+      "next colony ship cost does not match expectation"
+    );
+    EResource resource = COLONY_SHIP_COST_RESOURCE;
+    increaseResource(aliceHomeSpaceRock, resource, amount);
+    assertEq(ResourceCount.get(aliceHomeSpaceRock, uint8(resource)), amount, "resource count does not match");
+    trainUnits(alice, EUnit.ColonyShip, 1, true);
+    assertEq(ResourceCount.get(aliceHomeSpaceRock, uint8(resource)), 0, "resource count does not match");
+  }
+
+  function testFailTrainColonyShipNoSpecialResource() public {
+    vm.startPrank(alice);
+    bytes32 aliceHomeSpaceRock = world.spawn();
+    vm.stopPrank();
+
+    trainUnits(alice, EUnit.ColonyShip, 1, true);
+  }
+
+  function testTrainColonyShipsCostIncrease() public {
+    vm.startPrank(alice);
+    bytes32 aliceHomeSpaceRock = world.spawn();
+    vm.stopPrank();
+
+    uint256 amount = COLONY_SHIP_BASE_COST * 2;
+    EResource resource = COLONY_SHIP_COST_RESOURCE;
+    increaseResource(aliceHomeSpaceRock, resource, amount);
+    trainUnits(alice, EUnit.ColonyShip, 1, true);
+
+    amount *= 2;
+    increaseResource(aliceHomeSpaceRock, resource, amount);
+    assertEq(
+      amount,
+      COLONY_SHIP_BASE_COST * LibUnit.getNextColonyShipResourceCostMultiplier(aliceHomeSpaceRock),
+      "next colony ship cost does not match expectation"
+    );
+    trainUnits(alice, EUnit.ColonyShip, 1, true);
+
+    amount *= 2;
+    increaseResource(aliceHomeSpaceRock, resource, amount);
+    trainUnits(alice, EUnit.ColonyShip, 1, true);
+  }
+
+  function testFailTrainColonyShipsNoCostIncrease() public {
+    vm.startPrank(alice);
+    bytes32 aliceHomeSpaceRock = world.spawn();
+    vm.stopPrank();
+
+    uint256 amount = COLONY_SHIP_BASE_COST * 2;
+    EResource resource = COLONY_SHIP_COST_RESOURCE;
+    increaseResource(aliceHomeSpaceRock, resource, amount);
+    assertEq(
+      amount,
+      COLONY_SHIP_BASE_COST * LibUnit.getNextColonyShipResourceCostMultiplier(aliceHomeSpaceRock),
+      "next colony ship cost does not match expectation"
+    );
+    trainUnits(alice, EUnit.ColonyShip, 2, true);
+
+    increaseResource(aliceHomeSpaceRock, resource, amount);
+    assertEq(
+      amount,
+      COLONY_SHIP_BASE_COST * LibUnit.getNextColonyShipResourceCostMultiplier(aliceHomeSpaceRock),
+      "next colony ship cost does not match expectation"
+    );
+    trainUnits(alice, EUnit.ColonyShip, 1, true);
   }
 
   function testInvalidBuilding() public {

@@ -1,15 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { Position, P_UnitPrototypes, IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, P_EnumToPrototype } from "codegen/index.sol";
+import { Position, P_UnitPrototypes, IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, ProductionRate, P_UnitProdTypes, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, P_EnumToPrototype } from "codegen/index.sol";
 
 import { EUnit, EResource } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
+import { ColoniesMap } from "libraries/ColoniesMap.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
-import { UnitKey } from "src/Keys.sol";
+import { UnitKey, AsteroidOwnedByKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 library LibUnit {
@@ -140,6 +141,22 @@ library LibUnit {
         ResourceCount.set(spaceRockEntity, resource, currentAmount + requiredAmount);
       }
     }
+  }
+
+  function getNextColonyShipResourceCostMultiplier(bytes32 asteroid) internal view returns (uint256) {
+    bytes32 playerEntity = OwnedBy.get(asteroid);
+    bytes32[] memory ownedAsteroids = ColoniesMap.getAsteroidIds(playerEntity, AsteroidOwnedByKey);
+    uint256 exponant = 0;
+    for (uint256 i = 0; i < ownedAsteroids.length; i++) {
+      exponant += 1 + LibUnit.getNumberOfActiveColonyShips(ownedAsteroids[i]);
+    }
+    return 2 ** exponant;
+  }
+
+  function getNumberOfActiveColonyShips(bytes32 asteroid) internal view returns (uint256) {
+    return
+      MaxResourceCount.get(asteroid, uint8(EResource.U_Vessel)) -
+      ResourceCount.get(asteroid, uint8(EResource.U_Vessel));
   }
 
   /**

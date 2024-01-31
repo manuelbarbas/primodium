@@ -32,7 +32,7 @@ export const TargetHeader = ({
     <div className="flex flex-col gap-1 w-full">
       {/* <p className="text-xs font-bold opacity-75 pb-1">TARGET</p> */}
       <Badge className="w-full uppercase font-bold text-sm items-center flex flex-col h-fit">
-        <IconLabel imageUri={img} className="" text={`${name}`} />
+        <IconLabel imageUri={img ?? ""} className="" text={`${name}`} />
       </Badge>
       {!hideStats && (
         <div className="grid grid-cols-3 gap-1">

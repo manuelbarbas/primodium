@@ -5,7 +5,7 @@ import "test/PrimodiumTest.t.sol";
 import { WorldResourceIdInstance, WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { AccessControl } from "@latticexyz/world/src/AccessControl.sol";
 
-contract BuildSystemTest is PrimodiumTest {
+contract AllianceSystemTest is PrimodiumTest {
   bytes32 playerEntity;
   bytes32 bobEntity;
   bytes32 aliceEntity;
