@@ -19,7 +19,7 @@ export const setupMouseInputs = (scene: Scene) => {
     const gameCoord = { x, y: -y };
 
     const playerEntity = components.Account.get()?.value;
-    if (outOfBounds(gameCoord, playerEntity)) {
+    if (playerEntity && outOfBounds(gameCoord, playerEntity)) {
       components.SelectedBuilding.remove();
       components.SelectedTile.remove();
       return;
@@ -57,7 +57,7 @@ export const setupMouseInputs = (scene: Scene) => {
     if (coordEq(currentHoverTile, mouseCoord)) return;
 
     const playerEntity = components.Account.get()?.value;
-    if (outOfBounds(mouseCoord, playerEntity)) {
+    if (playerEntity && outOfBounds(mouseCoord, playerEntity)) {
       components.HoverTile.remove();
       return;
     }
