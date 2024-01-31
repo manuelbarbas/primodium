@@ -2,8 +2,9 @@ import { DepthLayers } from "@game/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
+import { toast } from "react-toastify";
 import { components } from "src/network/components";
-import { sendFleet } from "src/network/setup/contractCalls/fleetMove";
+import { sendFleetPosition } from "src/network/setup/contractCalls/fleetMove";
 import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import { ObjectPosition, OnRxjsSystem } from "../../common/object-components/common";
@@ -80,7 +81,9 @@ export const renderMoveLine = (scene: Scene, mud: MUD) => {
     if (send.destination) {
       scene.objectPool.removeGroup(id);
       components.Send.clear();
-      await sendFleet(mud, send.fleetEntity, send.destination);
+      const destinationPosition = components.Position.get(send.destination);
+      if (!destinationPosition) return toast.error("Invalid destination");
+      await sendFleetPosition(mud, send.fleetEntity, destinationPosition);
       return;
     }
 

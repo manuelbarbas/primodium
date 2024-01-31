@@ -1,9 +1,9 @@
 import { Scenes } from "@game/constants";
-import { useEntityQuery } from "@latticexyz/react";
-import { Entity, Has, HasValue } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useMud } from "src/hooks";
 import { useInGracePeriod } from "src/hooks/useInGracePeriod";
+import { useOrbitingFleets } from "src/hooks/useOrbitingFleets";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getAsteroidImage } from "src/util/asteroid";
@@ -30,8 +30,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   const { screenCoord, isBounded } = useCoordToScreenCoord(position, true);
   const selectingDestination = !!components.Send.use()?.fleetEntity;
   const { inGracePeriod } = useInGracePeriod((ownedBy as Entity) ?? singletonEntity);
-  const canSendFleet =
-    useEntityQuery([Has(components.IsFleet), HasValue(components.OwnedBy, { value: selectedAsteroid })]).length > 0;
+  const canSendFleet = useOrbitingFleets(selectedAsteroid).length > 0;
 
   if (!mapOpen) return <></>;
 
