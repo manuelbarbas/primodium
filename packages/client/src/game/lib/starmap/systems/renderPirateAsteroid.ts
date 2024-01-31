@@ -18,7 +18,7 @@ import { PIRATE_KEY } from "src/util/constants";
 import { decodeEntity, hashKeyEntity } from "src/util/encode";
 import {
   ObjectPosition,
-  OnClick,
+  OnClickUp,
   OnComponentSystem,
   OnHover,
   OnOnce,
@@ -95,7 +95,7 @@ export const renderPirateAsteroid = (scene: Scene) => {
       ...sharedComponents,
       rotationTween,
       Texture(Assets.SpriteAtlas, SpriteKeys.PirateAsteroid1),
-      OnClick(scene, () => {
+      OnClickUp(scene, () => {
         if (components.Send.get()?.fleetEntity) {
           components.Send.setDestination(entity);
         } else {
@@ -127,15 +127,12 @@ export const renderPirateAsteroid = (scene: Scene) => {
         }
       }),
       Texture(Assets.SpriteAtlas, outlineSprite),
-      OnClick(scene, () => {
+      OnClickUp(scene, () => {
         if (components.Send.get()?.fleetEntity) {
           components.Send.setDestination(entity);
         } else {
           components.SelectedRock.set({ value: entity });
         }
-      }),
-      OnClick(scene, () => {
-        components.SelectedRock.set({ value: entity });
       }),
       OnHover(
         () => {

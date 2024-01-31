@@ -12,7 +12,7 @@ import { entityToPlayerName, entityToRockName } from "src/util/name";
 import { getEnsName } from "src/util/web3/getEnsName";
 import {
   ObjectPosition,
-  OnClick,
+  OnClickUp,
   OnComponentSystem,
   OnHover,
   OnOnce,
@@ -131,7 +131,7 @@ export const renderAsteroid = (scene: Scene) => {
         asteroidOutline.setComponent(Texture(Assets.SpriteAtlas, outlineSprite));
       }),
       Texture(Assets.SpriteAtlas, outlineSprite),
-      OnClick(scene, () => {
+      OnClickUp(scene, () => {
         if (components.Send.get()?.fleetEntity) {
           components.Send.setDestination(entity);
         } else {

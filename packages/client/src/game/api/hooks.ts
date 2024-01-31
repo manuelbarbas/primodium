@@ -1,10 +1,10 @@
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 import { clone, throttle } from "lodash";
-import { useEffect, useState } from "react";
-import { useSettingsStore } from "../stores/SettingsStore";
-import { Coord } from "@latticexyz/utils";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { useCallback, useEffect, useState } from "react";
 import { getDegreeDirection } from "src/util/common";
+import { useSettingsStore } from "../stores/SettingsStore";
 
 export function createHooksApi(targetScene: Scene) {
   function useKeybinds() {
@@ -49,8 +49,8 @@ export function createHooksApi(targetScene: Scene) {
       direction: 0,
     });
 
-    useEffect(() => {
-      const worldViewListener = camera?.worldView$.subscribe((worldView) => {
+    const callback = useCallback(
+      (worldView: Phaser.Geom.Rectangle) => {
         const pixelCoord = tileCoordToPixelCoord(coord, tileWidth, tileHeight);
         const zoom = camera.phaserCamera.zoom;
         pixelCoord.y = -pixelCoord.y; // Adjust for coordinate system. Y is inverted in Phaser
@@ -86,10 +86,15 @@ export function createHooksApi(targetScene: Scene) {
           isBounded: isBoundedTemp,
           direction: newDirection,
         });
-      });
+      },
+      [camera, coord, bounded, tileHeight, tileWidth]
+    );
 
-      return () => worldViewListener?.unsubscribe();
-    }, [camera, coord, bounded, tileHeight, tileWidth]);
+    useEffect(() => {
+      callback(camera.phaserCamera.worldView);
+      const worldViewListener = camera.worldView$.subscribe(callback);
+      return () => worldViewListener.unsubscribe();
+    }, [callback, camera.worldView$]);
 
     return state;
   }

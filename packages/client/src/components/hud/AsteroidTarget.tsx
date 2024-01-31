@@ -26,10 +26,10 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
     hooks: { useCoordToScreenCoord },
     scene: { transitionToScene },
   } = primodium.api(Scenes.Starmap);
-  const ownedBy = components.OwnedBy.use(selectedAsteroid as Entity)?.value;
+  const ownedBy = components.OwnedBy.use(selectedAsteroid)?.value;
   const mapOpen = components.MapOpen.use()?.value ?? false;
-  const position = components.Position.use(selectedAsteroid as Entity) ?? { x: 0, y: 0 };
-  const imageUri = getAsteroidImage(primodium, selectedAsteroid as Entity);
+  const position = components.Position.use(selectedAsteroid) ?? { x: 0, y: 0 };
+  const imageUri = getAsteroidImage(primodium, selectedAsteroid);
   const { screenCoord, isBounded } = useCoordToScreenCoord(position, true);
   const selectingDestination = !!components.Send.use()?.fleetEntity;
   const { inGracePeriod } = useInGracePeriod((ownedBy as Entity) ?? singletonEntity);
