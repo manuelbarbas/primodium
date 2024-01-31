@@ -11,7 +11,7 @@ import { components } from "src/network/components";
 import { swap } from "src/network/setup/contractCalls/swap";
 import { getBlockTypeName } from "src/util/common";
 import { EntityType, RESERVE_RESOURCE, ResourceStorages } from "src/util/constants";
-import { formatResource, parseResource } from "src/util/resource";
+import { formatResourceCount, parseResourceCount } from "src/util/number";
 import { getInAmount, getOutAmount } from "src/util/swap";
 
 export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
@@ -37,11 +37,11 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
         return;
       }
       setInAmountRendered(inAmountRendered);
-      const inAmount = parseResource(resourceIn, inAmountRendered);
+      const inAmount = parseResourceCount(resourceIn, inAmountRendered);
       const path = getPath(resourceIn, resourceOut);
       const out = getOutAmount(inAmount, path);
       if (out == 0n) return "";
-      const outString = formatResource(resourceOut, out, 9);
+      const outString = formatResourceCount(resourceOut, out, { fractionDigits: 9, notLocale: true });
       setOutAmountRendered(outString);
     },
     [getPath]
@@ -56,11 +56,11 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
       }
 
       setOutAmountRendered(outAmountRendered);
-      const outAmount = parseResource(toResource, outAmountRendered);
+      const outAmount = parseResourceCount(toResource, outAmountRendered);
       const path = getPath(fromResource, toResource);
       const inAmount = getInAmount(outAmount, path);
       if (inAmount == 0n) return "";
-      const inString = formatResource(fromResource, inAmount, 9);
+      const inString = formatResourceCount(fromResource, inAmount, { fractionDigits: 9, notLocale: true });
       setInAmountRendered(inString);
     },
     [fromResource, toResource, getPath]
@@ -81,9 +81,9 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
   const { disabled, message: swapButtonMsg } = useMemo(() => {
     if (!inAmountRendered || !outAmountRendered) return { disabled: true, message: "Enter an amount to swap" };
 
-    if (fromResourceCount < parseResource(fromResource, inAmountRendered))
+    if (fromResourceCount < parseResourceCount(fromResource, inAmountRendered))
       return { disabled: true, message: "Not enough resources" };
-    if (toResourceCount + parseResource(toResource, outAmountRendered) > toResourceStorage)
+    if (toResourceCount + parseResourceCount(toResource, outAmountRendered) > toResourceStorage)
       return { disabled: true, message: "Not enough space" };
     return { disabled: false, message: "swap" };
   }, [
@@ -97,7 +97,7 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
   ]);
 
   const handleSubmit = useCallback(() => {
-    const inAmount = parseResource(fromResource, inAmountRendered);
+    const inAmount = parseResourceCount(fromResource, inAmountRendered);
     const path = getPath(fromResource, toResource);
     if (path.length < 2) return;
     swap(mud, marketEntity, path, inAmount);
@@ -180,8 +180,8 @@ const ResourceSelector: React.FC<ResourceSelectorProps> = (props) => {
         </select>
         <p className="text-xs font-bold uppercase text-right opacity-70">
           {props.showSpaceRemaining
-            ? `Space: ${formatResource(props.resource, resourceStorage - resourceCount, 0)}`
-            : `Balance: ${formatResource(props.resource, resourceCount, 0)}`}
+            ? `Space: ${formatResourceCount(props.resource, resourceStorage - resourceCount, { fractionDigits: 0 })}`
+            : `Balance: ${formatResourceCount(props.resource, resourceCount, { fractionDigits: 0 })}`}
         </p>
       </div>
     </div>

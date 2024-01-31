@@ -46,6 +46,7 @@ const ClaimObjectiveButton: React.FC<{
 }> = ({ objectiveEntity }) => {
   const mud = useMud();
   const time = Time.use()?.value;
+  const selectedRock = comps.SelectedRock.use()?.value ?? singletonEntity;
   const levelRequirement = comps.Level.use(objectiveEntity);
   const objectiveClaimedRequirement = comps.CompletedObjective.use(objectiveEntity);
 
@@ -82,9 +83,9 @@ const ClaimObjectiveButton: React.FC<{
           disabled={!canClaim}
           className={`btn-sm btn-secondary border-accent w-full`}
           clickSound={AudioKeys.Complete2}
-          onClick={() => claimObjective(mud, objectiveEntity)}
+          onClick={() => claimObjective(mud, selectedRock, objectiveEntity)}
         >
-          {"Claim"}
+          Claim
         </Button>
       </TransactionQueueMask>
     );

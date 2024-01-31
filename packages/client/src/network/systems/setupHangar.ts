@@ -1,5 +1,5 @@
 import { Entity, Has, HasValue, defineComponentSystem, namespaceWorld, runQuery } from "@latticexyz/recs";
-import { getUnitTrainingTime } from "src/util/trainUnits";
+import { getUnitTrainingTime } from "src/util/unit";
 import { Hex } from "viem";
 import { components } from "../components";
 import { world } from "../world";

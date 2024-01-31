@@ -79,11 +79,6 @@ export enum TransactionQueueType {
   Train,
   Research,
   Upgrade,
-  Recall,
-  Reinforce,
-  Invade,
-  Raid,
-  Land,
   Demolish,
   Move,
   ClaimObjective,
@@ -98,6 +93,14 @@ export enum TransactionQueueType {
   DeclineInvite,
   Toggle,
   Access,
+  Attack,
+  CreateFleet,
+  DisbandFleet,
+  LandFleet,
+  MergeFleets,
+  SendFleet,
+  FleetStance,
+  TransferFleet,
 }
 
 export enum RockRelationship {

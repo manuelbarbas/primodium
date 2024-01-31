@@ -40,11 +40,7 @@ library LibUnit {
   /// @param level Level of the building
   /// @param unitPrototype Unit prototype to check
   /// @return True if unit can be produced, false otherwise
-  function canProduceUnit(
-    bytes32 buildingEntity,
-    uint256 level,
-    bytes32 unitPrototype
-  ) internal view returns (bool) {
+  function canProduceUnit(bytes32 buildingEntity, uint256 level, bytes32 unitPrototype) internal view returns (bool) {
     if (P_UnitProdTypes.length(buildingEntity, level) == 0) return false;
     bytes32[] memory unitTypes = P_UnitProdTypes.get(buildingEntity, level);
     for (uint256 i = 0; i < unitTypes.length; i++) {
@@ -122,12 +118,7 @@ library LibUnit {
    * @param count The number of units being added or removed.
    * @param add A boolean indicating whether units are being added (true) or removed (false).
    */
-  function updateStoredUtilities(
-    bytes32 spaceRockEntity,
-    bytes32 unitType,
-    uint256 count,
-    bool add
-  ) internal {
+  function updateStoredUtilities(bytes32 spaceRockEntity, bytes32 unitType, uint256 count, bool add) internal {
     if (count == 0) return;
     bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
     uint256 unitLevel = UnitLevel.get(spaceRockEntity, unitType);
@@ -159,7 +150,7 @@ library LibUnit {
     for (uint256 i = 0; i < ownedAsteroids.length; i++) {
       exponant += 1 + LibUnit.getNumberOfActiveColonyShips(ownedAsteroids[i]);
     }
-    return 2**exponant;
+    return 2 ** exponant;
   }
 
   function getNumberOfActiveColonyShips(bytes32 asteroid) internal view returns (uint256) {
@@ -174,12 +165,7 @@ library LibUnit {
    * @param unitType The type of unit to increase.
    * @param unitCount The number of units to increase.
    */
-  function increaseUnitCount(
-    bytes32 rockEntity,
-    bytes32 unitType,
-    uint256 unitCount,
-    bool updatesUtility
-  ) internal {
+  function increaseUnitCount(bytes32 rockEntity, bytes32 unitType, uint256 unitCount, bool updatesUtility) internal {
     if (unitCount == 0) return;
     uint256 prevUnitCount = UnitCount.get(rockEntity, unitType);
     UnitCount.set(rockEntity, unitType, prevUnitCount + unitCount);
@@ -192,12 +178,7 @@ library LibUnit {
    * @param unitType The type of unit to decrease.
    * @param unitCount The number of units to decrease.
    */
-  function decreaseUnitCount(
-    bytes32 rockEntity,
-    bytes32 unitType,
-    uint256 unitCount,
-    bool updatesUtility
-  ) internal {
+  function decreaseUnitCount(bytes32 rockEntity, bytes32 unitType, uint256 unitCount, bool updatesUtility) internal {
     if (unitCount == 0) return;
     uint256 currUnitCount = UnitCount.get(rockEntity, unitType);
     require(currUnitCount >= unitCount, "[LibUnit] Not enough units to decrease");
