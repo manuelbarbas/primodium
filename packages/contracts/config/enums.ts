@@ -27,6 +27,8 @@ export enum EBuilding {
   ShieldGenerator,
   Vault,
   Market,
+
+  Shipyard,
 }
 
 export enum EResource {
@@ -67,14 +69,14 @@ export enum ESize {
 }
 
 export enum EUnit {
-  MiningVessel = 1,
-  AegisDrone,
-  HammerDrone,
-  StingerDrone,
+  AegisDrone = 1,
   AnvilDrone,
+  StingerDrone,
+  HammerDrone,
   MinutemanMarine,
   TridentMarine,
   LightningCraft,
+  ColonyShip,
 }
 
 export enum ESendType {

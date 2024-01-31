@@ -12,7 +12,7 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
     aliceHomeSpaceRock = spawn(alice);
   }
 
-  function testCreateLandFleet() public {
+  function testCreateFleet() public {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
     //create fleet with 1 minuteman marine
@@ -42,6 +42,7 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
       0,
       "space rock resource count doesn't match"
     );
+    assertEq(IsFleet.get(fleetId), true, "fleet is not a fleet");
     assertEq(OwnedBy.get(fleetId), aliceHomeSpaceRock, "fleet owned by doesn't match");
     assertEq(FleetMovement.getDestination(fleetId), aliceHomeSpaceRock, "fleet destination doesn't match");
     assertEq(FleetMovement.getArrivalTime(fleetId), block.timestamp, "fleet arrival time doesn't match");

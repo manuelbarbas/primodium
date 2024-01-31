@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-import { EResource } from "src/Types.sol";
+import { EResource, EUnit } from "src/Types.sol";
 
 import { LibStorage } from "libraries/LibStorage.sol";
-
+import { LibUnit } from "libraries/LibUnit.sol";
 import { UtilityMap } from "libraries/UtilityMap.sol";
 
-import { P_Transportables, P_IsRecoverable, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+import { P_ColonyShipConfig, P_Transportables, P_IsRecoverable, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+import { AsteroidOwnedByKey, UnitKey } from "src/Keys.sol";
 
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -43,12 +44,19 @@ library LibResource {
   /// @param spaceRockEntity Entity ID of the spaceRock
   /// @param prototype Unit Prototype
   /// @param count Quantity of units to be trained
-  function spendUnitRequiredResources(
-    bytes32 spaceRockEntity,
-    bytes32 prototype,
-    uint256 count
-  ) internal {
-    bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
+  function spendUnitRequiredResources(bytes32 spaceRockEntity, bytes32 prototype, uint256 count) internal {
+    if (prototype == P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip))) {
+      require(count == 1, "[SpendResources] Colony ships can only be trained one at a time");
+      uint8 colonyShipResource = P_ColonyShipConfig.getResourceType();
+      uint256 cost = P_ColonyShipConfig.getResourceAmount() *
+        LibUnit.getNextColonyShipResourceCostMultiplier(spaceRockEntity);
+      require(
+        ResourceCount.get(spaceRockEntity, colonyShipResource) >= cost,
+        "[SpendResources] Not enough resources to train colony ship"
+      );
+      LibStorage.decreaseStoredResource(spaceRockEntity, colonyShipResource, cost);
+    }
+
     uint256 level = UnitLevel.get(spaceRockEntity, prototype);
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(prototype, level);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
@@ -61,11 +69,7 @@ library LibResource {
   /// @param spaceRockEntity ID of the spaceRock upgrading
   /// @param unitPrototype Prototype ID of the unit to upgrade
   /// @param level Target level for the building
-  function spendUpgradeResources(
-    bytes32 spaceRockEntity,
-    bytes32 unitPrototype,
-    uint256 level
-  ) internal {
+  function spendUpgradeResources(bytes32 spaceRockEntity, bytes32 unitPrototype, uint256 level) internal {
     P_RequiredUpgradeResourcesData memory requiredResources = P_RequiredUpgradeResources.get(unitPrototype, level);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       spendResource(spaceRockEntity, unitPrototype, requiredResources.resources[i], requiredResources.amounts[i]);
@@ -80,12 +84,7 @@ library LibResource {
    * @param resourceCost The amount of the resource to be spent.
    * @notice Ensures that the spaceRock has enough of the specified resource and updates resource counts accordingly.
    */
-  function spendResource(
-    bytes32 spaceRockEntity,
-    bytes32 entity,
-    uint8 resource,
-    uint256 resourceCost
-  ) internal {
+  function spendResource(bytes32 spaceRockEntity, bytes32 entity, uint8 resource, uint256 resourceCost) internal {
     // Check if the spaceRock has enough resources.
     uint256 spaceRockResourceCount = ResourceCount.get(spaceRockEntity, resource);
     bool isUtility = P_IsUtility.get(resource);
@@ -226,6 +225,7 @@ library LibResource {
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       uint256 resourceCount = ResourceCount.get(spaceRockEntity, transportables[i]);
+      if (resourceCount == 0) continue;
       uint256 vaulted = ResourceCount.get(
         spaceRockEntity,
         P_IsAdvancedResource.get(transportables[i])
@@ -244,15 +244,14 @@ library LibResource {
    * @return resourceCounts An array containing the counts of each non-utility resource.
    * @return totalResources The total count of non-utility resources.
    */
-  function getStoredResourceCountsVaulted(bytes32 spaceRockEntity)
-    internal
-    view
-    returns (uint256[] memory resourceCounts, uint256 totalResources)
-  {
+  function getStoredResourceCountsVaulted(
+    bytes32 spaceRockEntity
+  ) internal view returns (uint256[] memory resourceCounts, uint256 totalResources) {
     uint8[] memory transportables = P_Transportables.get();
     resourceCounts = new uint256[](transportables.length);
     for (uint8 i = 0; i < transportables.length; i++) {
       resourceCounts[i] = ResourceCount.get(spaceRockEntity, transportables[i]);
+      if (resourceCounts[i] == 0) continue;
       uint256 vaulted = ResourceCount.get(
         spaceRockEntity,
         P_IsAdvancedResource.get(transportables[i])
@@ -265,12 +264,7 @@ library LibResource {
     }
   }
 
-  function updateScore(
-    bytes32 player,
-    bytes32 spaceRock,
-    uint8 resource,
-    uint256 value
-  ) internal {
+  function updateScore(bytes32 player, bytes32 spaceRock, uint8 resource, uint256 value) internal {
     uint256 count = ResourceCount.get(spaceRock, resource);
     uint256 currentScore = Score.get(player);
     uint256 scoreChangeAmount = P_ScoreMultiplier.get(resource);

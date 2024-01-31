@@ -33,6 +33,15 @@ library LibFleetStance {
     FleetsMap.clear(fleetId, fleetFollowKey);
   }
 
+  function clearDefendingFleets(bytes32 spaceRock) internal {
+    bytes32 fleetDefendKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Defend));
+    bytes32[] memory defendingFleets = FleetsMap.getFleetIds(spaceRock, fleetDefendKey);
+    for (uint256 i = 0; i < defendingFleets.length; i++) {
+      FleetStance.set(defendingFleets[i], uint8(EFleetStance.NULL), bytes32(0));
+    }
+    FleetsMap.clear(spaceRock, fleetDefendKey);
+  }
+
   function getAllies(bytes32 entity) internal view returns (bytes32[] memory) {
     IsFleet.get(entity) ? getFollowerFleets(entity) : getDefendingFleets(entity);
   }
@@ -47,15 +56,13 @@ library LibFleetStance {
     return FleetsMap.getFleetIds(spaceRock, fleetDefendKey);
   }
 
-  function setFleetStance(
-    bytes32 fleetId,
-    uint8 stance,
-    bytes32 target
-  ) internal {
+  function setFleetStance(bytes32 fleetId, uint8 stance, bytes32 target) internal {
     clearFleetStance(fleetId);
     clearFollowingFleets(fleetId);
     FleetStance.set(fleetId, stance, target);
-    FleetsMap.add(target, P_EnumToPrototype.get(FleetStanceKey, stance), fleetId);
+    if (target != bytes32(0)) {
+      FleetsMap.add(target, P_EnumToPrototype.get(FleetStanceKey, stance), fleetId);
+    }
   }
 
   function removeFollower(bytes32 fleetId, bytes32 followerFleetId) internal {

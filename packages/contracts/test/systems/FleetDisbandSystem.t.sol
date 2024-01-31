@@ -13,6 +13,9 @@ contract FleetDisbandSystemTest is PrimodiumTest {
     super.setUp();
     aliceEntity = addressToEntity(alice);
     aliceHomeSpaceRock = spawn(alice);
+
+    bobEntity = addressToEntity(bob);
+    bobHomeSpaceRock = spawn(bob);
   }
 
   function testDisbandFleet() public {

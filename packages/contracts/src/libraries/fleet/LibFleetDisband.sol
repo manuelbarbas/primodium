@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { EResource } from "src/Types.sol";
-import { P_Transportables, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { P_Transportables, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -19,10 +19,7 @@ import { EResource, EFleetStance } from "src/Types.sol";
 
 library LibFleetDisband {
   function disbandFleet(bytes32 fleetId) internal {
-    bytes32 ownerSpaceRock = OwnedBy.get(fleetId);
-
     uint8[] memory transportables = P_Transportables.get();
-
     //remove resources from fleet
     for (uint8 i = 0; i < transportables.length; i++) {
       uint256 fleetResourceCount = ResourceCount.get(fleetId, transportables[i]);
@@ -40,6 +37,13 @@ library LibFleetDisband {
 
     //reset fleet back to owner space rock orbit
     LibFleet.resetFleetOrbit(fleetId);
+  }
+
+  function disbandAllFleets(bytes32 spaceRock) internal {
+    bytes32[] memory ownedFleets = FleetsMap.getFleetIds(spaceRock, FleetOwnedByKey);
+    for (uint256 i = 0; i < ownedFleets.length; i++) {
+      LibFleetDisband.disbandFleet(ownedFleets[i]);
+    }
   }
 
   function disbandUnitsAndResourcesFromFleet(

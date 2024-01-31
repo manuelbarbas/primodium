@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
+import { buildMainBase } from "src/libraries/SubsystemCalls.sol";
 import { EObjectives } from "src/Types.sol";
 import { ObjectiveKey } from "src/Keys.sol";
 import { P_RequiredObjectives } from "codegen/tables/P_RequiredObjectives.sol";
@@ -8,7 +9,7 @@ import { CompletedObjective } from "codegen/tables/CompletedObjective.sol";
 import { OwnedBy } from "codegen/tables/OwnedBy.sol";
 import { BuildingType } from "codegen/tables/BuildingType.sol";
 import { P_HasBuiltBuildings } from "codegen/tables/P_HasBuiltBuildings.sol";
-
+import { initializeSpaceRockOwnership } from "src/libraries/SubsystemCalls.sol";
 import "test/PrimodiumTest.t.sol";
 
 contract ClaimObjectiveSystemTest is PrimodiumTest {
@@ -128,9 +129,24 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
       "Resource does not match"
     );
     // claim copper mine with secondary rock
-    LibAsteroid.initSecondaryAsteroid(playerEntity, PositionData(0, 0, 0), rock);
+    LibAsteroid.initSecondaryAsteroid(PositionData(0, 0, 0), rock);
     MaxResourceCount.set(rock, uint8(EResource.Copper), 1000000);
     // ResourceCount.set(rock, uint8(EResource.Copper), 10000);
+    console.log("reached here");
+
+    //todo for some reason the line bellow encounters an error  so the actual function code is copy pasted here
+    // I removed call to subsytem from libraries but issue still persists
+    //initializeSpaceRockOwnership(rock, playerEntity);
+
+    //alternative
+    //LibAsteroid.initializeSpaceRockOwnership(rock, playerEntity);
+    //buildMainBase(playerEntity, rock);
+    OwnedBy.set(rock, playerEntity);
+    ColoniesMap.add(playerEntity, AsteroidOwnedByKey, rock);
+    PositionData memory mainBasePosition = Position.get(MainBasePrototypeId);
+    mainBasePosition.parent = rock;
+    world.build(EBuilding.MainBase, mainBasePosition);
+    console.log("reached here 2");
     world.build(EBuilding.CopperMine, getTilePosition(rock, EResource.Iron));
     resourceRewardData = P_ResourceRewardData(new uint8[](1), new uint256[](1));
     resourceRewardData.resources[0] = uint8(EResource.Copper);
@@ -413,10 +429,9 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     P_SpawnPirateAsteroid.set(objectivePrototype, spawnPirateAsteroid);
   }
 
-  function setupSpawnPirateAsteroid(bytes32 objectivePrototype)
-    internal
-    returns (P_SpawnPirateAsteroidData memory spawnPirateAsteroid)
-  {
+  function setupSpawnPirateAsteroid(
+    bytes32 objectivePrototype
+  ) internal returns (P_SpawnPirateAsteroidData memory spawnPirateAsteroid) {
     spawnPirateAsteroid = setupSpawnPirateAsteroid(objectivePrototype, 10, -10, 10, 100);
   }
 

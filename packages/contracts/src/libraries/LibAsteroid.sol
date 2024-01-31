@@ -2,14 +2,14 @@
 pragma solidity ^0.8.21;
 
 import { entityToAddress, getSystemResourceId } from "src/utils.sol";
-import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
-import { BuildSystem } from "systems/BuildSystem.sol";
-import { MainBasePrototypeId } from "codegen/Prototypes.sol";
+import { buildMainBase } from "src/libraries/SubsystemCalls.sol";
+import { AsteroidOwnedByKey } from "src/Keys.sol";
 
 // tables
 import { Spawned, ReversePosition, Level, OwnedBy, Asteroid, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, PositionData, P_GameConfigData, P_GameConfig } from "codegen/index.sol";
 
 // libraries
+import { ColoniesMap } from "src/libraries/ColoniesMap.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
@@ -51,7 +51,7 @@ library LibAsteroid {
   /// @notice Create a new asteroid at a position
   /// @param position Position to place the asteroid
   /// @return asteroidSeed Hash of the newly created asteroid
-  function createSecondaryAsteroid(bytes32 playerEntity, PositionData memory position) internal returns (bytes32) {
+  function createSecondaryAsteroid(PositionData memory position) internal returns (bytes32) {
     P_GameConfigData memory config = P_GameConfig.get();
     for (uint256 i = 0; i < config.maxAsteroidsPerPlayer; i++) {
       PositionData memory sourcePosition = getPosition(i, config.asteroidDistance, config.maxAsteroidsPerPlayer);
@@ -62,7 +62,7 @@ library LibAsteroid {
       if (!Asteroid.getSpawnsSecondary(sourceAsteroid)) continue;
       bytes32 asteroidSeed = keccak256(abi.encode(sourceAsteroid, bytes32("asteroid"), position.x, position.y));
       if (!isAsteroid(asteroidSeed, config.asteroidChanceInv)) continue;
-      initSecondaryAsteroid(playerEntity, position, asteroidSeed);
+      initSecondaryAsteroid(position, asteroidSeed);
 
       return asteroidSeed;
     }
@@ -85,22 +85,17 @@ library LibAsteroid {
   /// @dev Initialize a motherlode
   /// @param position Position to place the motherlode
   /// @param asteroidEntity Hash of the asteroid to be initialized
-  function initSecondaryAsteroid(
-    bytes32 playerEntity,
-    PositionData memory position,
-    bytes32 asteroidEntity
-  ) internal {
+  function initSecondaryAsteroid(PositionData memory position, bytes32 asteroidEntity) internal {
     AsteroidData memory data = getAsteroidData(asteroidEntity, false);
     Asteroid.set(asteroidEntity, data);
     Position.set(asteroidEntity, position);
     ReversePosition.set(position.x, position.y, asteroidEntity);
-    OwnedBy.set(asteroidEntity, playerEntity);
     Level.set(asteroidEntity, 1);
+  }
 
-    // remove the next three lines once capital ships and invasions are built
-    PositionData memory mainBasePosition = Position.get(MainBasePrototypeId);
-    mainBasePosition.parent = asteroidEntity;
-    LibBuilding.build(playerEntity, MainBasePrototypeId, mainBasePosition);
+  function initializeSpaceRockOwnership(bytes32 spaceRock, bytes32 owner) internal {
+    OwnedBy.set(spaceRock, owner);
+    ColoniesMap.add(owner, AsteroidOwnedByKey, spaceRock);
   }
 
   /// @dev Calculates position based on distance and max index
@@ -108,11 +103,7 @@ library LibAsteroid {
   /// @param distance Distance
   /// @param max Max index
   /// @return position
-  function getPosition(
-    uint256 i,
-    uint256 distance,
-    uint256 max
-  ) internal pure returns (PositionData memory) {
+  function getPosition(uint256 i, uint256 distance, uint256 max) internal pure returns (PositionData memory) {
     return LibMath.getPositionByVector(distance, (i * 360) / max);
   }
 }

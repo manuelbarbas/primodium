@@ -51,6 +51,21 @@ export const config = mudConfig({
       accessList: [DUMMY_ADDRESS],
       name: "S_FleetBattleResolveEncryptionSystem",
     },
+    S_FleetResetIfNoUnitsLeftSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+      name: "S_FleetResetIfNoUnitsLeftSystem",
+    },
+    S_InitializeSpaceRockOwnershipSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+      name: "S_InitializeSpaceRockOwnershipSystem",
+    },
+    S_TransferSpaceRockOwnershipSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+      name: "S_TransferSpaceRockOwnershipSystem",
+    },
   },
 
   enums: MUDEnums,
@@ -80,6 +95,14 @@ export const config = mudConfig({
         maxAsteroidsPerPlayer: "uint256",
         asteroidChanceInv: "uint256",
         asteroidDistance: "uint256",
+      },
+    },
+
+    P_ColonyShipConfig: {
+      keySchema: {},
+      valueSchema: {
+        resourceType: "uint8",
+        resourceAmount: "uint256",
       },
     },
 
@@ -382,11 +405,6 @@ export const config = mudConfig({
         hp: "uint256",
         decryption: "uint256",
       },
-    },
-
-    P_MiningRate: {
-      keySchema: { entity: "bytes32", level: "uint256" },
-      valueSchema: "uint256",
     },
 
     QueueUnits: {
@@ -794,6 +812,21 @@ export const config = mudConfig({
       valueSchema: {
         feeThousandths: "uint256",
         lock: "bool",
+      },
+    },
+
+    /* ------------------------------- Colony ------------------------------ */
+
+    MapColonies: {
+      keySchema: { entity: "bytes32", key: "bytes32" },
+      valueSchema: { itemKeys: "bytes32[]" },
+    },
+
+    MapStoredColonies: {
+      keySchema: { entity: "bytes32", key: "bytes32", asteroidId: "bytes32" },
+      valueSchema: {
+        stored: "bool",
+        index: "uint256",
       },
     },
   },
