@@ -41,7 +41,7 @@ const Asteroid: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
 
         const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
 
-        components.Send.setDestination(asteroidInfo.entity);
+        components.Send.setOrigin(asteroidInfo.entity);
         components.SelectedRock.set({ value: asteroidInfo.entity });
 
         pan({

@@ -89,7 +89,7 @@ export const HostileFleets: React.FC = () => {
       ) : (
         <>
           {sortedAndFilteredFleets.map((fleet) => (
-            <FleetButton key={fleet.entity.toString()} fleetEntity={fleet.entity} dontShowButton />
+            <FleetButton key={fleet.entity.toString()} fleetEntity={fleet.entity} />
           ))}
         </>
       )}

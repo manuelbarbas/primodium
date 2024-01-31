@@ -1,13 +1,14 @@
+import { Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
+import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
+import { getAsteroidImage } from "src/util/asteroid";
 import { Button } from "../core/Button";
 import { IconLabel } from "../core/IconLabel";
-import { Scenes } from "@game/constants";
+import { Modal } from "../core/Modal";
 import { Marker } from "../shared/Marker";
 import { GracePeriod } from "./GracePeriod";
-import { getAsteroidImage } from "src/util/asteroid";
-import { useMud } from "src/hooks";
 
 export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ selectedAsteroid }) => {
   const {
@@ -50,9 +51,15 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
           </Button>
         </div>
         <div className="absolute bottom-0 right-0 translate-x-full w-36">
-          <Button className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50">
-            <IconLabel imageUri="/img/icons/weaponryicon.png" className={``} text="SEND FLEET" />
-          </Button>
+          <Modal>
+            <Modal.Button
+              onClick={() => components.Send.setOrigin(selectedAsteroid)}
+              className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
+            >
+              <IconLabel imageUri="/img/icons/weaponryicon.png" className={``} text="SEND FLEET" />
+            </Modal.Button>
+            <Modal.Content>HELLO!</Modal.Content>
+          </Modal>
         </div>
         {ownedBy && (
           <div className="absolute top-0 left-0 -translate-x-full">
@@ -64,7 +71,10 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
         <div className="absolute bottom-0 left-0 -translate-x-full">
           <Button
             className="btn-ghost btn-xs text-xs text-accent bg-neutral border border-r-0 border-secondary/50 w-28"
-            onClick={() => components.SelectedRock.remove()}
+            onClick={() => {
+              components.Send.clear();
+              components.SelectedRock.remove();
+            }}
           >
             <IconLabel imageUri="/img/icons/returnicon.png" className={``} text="CLOSE" />
           </Button>

@@ -96,7 +96,6 @@ export const renderPirateAsteroid = (scene: Scene) => {
       rotationTween,
       Texture(Assets.SpriteAtlas, SpriteKeys.PirateAsteroid1),
       OnClick(scene, () => {
-        components.Send.setDestination(entity);
         components.SelectedRock.set({ value: entity });
       }),
       SetValue({
@@ -214,6 +213,6 @@ export const renderPirateAsteroid = (scene: Scene) => {
     if (values.length === 0) return;
 
     scene.objectPool.removeGroup("asteroid_" + values[0]);
-    components.Send.setDestination(undefined);
+    components.Send.clear();
   });
 };

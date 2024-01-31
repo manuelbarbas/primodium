@@ -35,11 +35,12 @@ export const GameHUD = () => {
     playerAccount: { entity: playerEntity },
   } = useMud();
 
-  const activeRock = components.ActiveRock.use()?.value;
-  const ownedBy = components.OwnedBy.use(activeRock)?.value;
+  const selectedRock = components.SelectedRock.use()?.value;
+  const ownedBy = components.OwnedBy.use(selectedRock)?.value;
   const isSpectating = ownedBy !== playerEntity;
   const uiScale = useSettingsStore((state) => state.uiScale);
 
+  const send = components.Send.use();
   const allowHackerModal = useSettingsStore((state) => state.allowHackerModal);
   const mapOpen = components.MapOpen.use(undefined, {
     value: false,
@@ -60,6 +61,14 @@ export const GameHUD = () => {
             <Profile />
           </HUD.TopLeft>
         )}
+
+        <HUD.BottomLeft>
+          <div className="flex flex-col text-xs z-[1000]">
+            <p>Origin: {send?.origin}</p>
+            <p>Destination: {send?.destination}</p>
+            <p>Fleet: {send?.fleetEntity}</p>
+          </div>
+        </HUD.BottomLeft>
 
         {!isSpectating && (
           <HUD.TopRight>

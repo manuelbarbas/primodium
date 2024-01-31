@@ -27,12 +27,18 @@ export const FriendlyFleets: React.FC = () => {
       <div className="w-full text-xs overflow-y-auto grid grid-cols-2 gap-2">
         {friendlyFleets.length === 0
           ? null
-          : friendlyFleets.map((entity) => {
-              const fleet = components.FleetMovement.get(entity);
+          : friendlyFleets.map((fleetEntity) => {
+              const fleet = components.FleetMovement.get(fleetEntity);
 
               if (!fleet) return null;
 
-              return <FleetButton key={entity} fleetEntity={entity} />;
+              return (
+                <FleetButton
+                  key={fleetEntity}
+                  fleetEntity={fleetEntity}
+                  onClick={() => Nav.navigateTo("manageFleet", { fleetEntity })}
+                />
+              );
             })}
 
         {new Array(Number(maxFleets)).fill(0).map((_, index) => (

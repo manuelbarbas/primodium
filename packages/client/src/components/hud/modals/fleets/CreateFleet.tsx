@@ -34,6 +34,7 @@ const CreateFleet: React.FC = () => {
 
     fleetUnitCounts.forEach((count, unit) => {
       const unitData = getUnitStats(unit as Entity, selectedRock);
+      console.log("unit data:", unitData);
       data.attack += unitData.ATK * count;
       data.defense += unitData.DEF * count;
       data.hp += unitData.HP * count;
@@ -132,7 +133,6 @@ const CreateFleet: React.FC = () => {
   }, [handleKeyDown, handleKeyUp, stopDragging]);
 
   const { disabled, submitMessage } = useMemo(() => {
-    console.log("sizes:", fleetUnitCounts.size, fleetResourceCounts.size);
     if (maxFleets === 0n) return { disabled: true, submitMessage: "No Fleets Left" };
     if (fleetUnitCounts.size + fleetResourceCounts.size === 0) return { disabled: true, submitMessage: "Create Fleet" };
     if ([...fleetResourceCounts.entries()].reduce((acc, curr) => curr[1] + acc, 0n) > fleetStats.cargo)
@@ -253,7 +253,7 @@ const CreateFleet: React.FC = () => {
           onMouseOver={() => dragging && setHoveringArea("to")}
           onMouseLeave={() => setHoveringArea(null)}
         >
-          <div className="h-12 text-sm w-full h-full font-bold grid place-items-center uppercase">
+          <div className="h-12 text-sm w-full font-bold grid place-items-center uppercase">
             <FleetHeader title={"NEW FLEET"} {...fleetStats} />
           </div>
 

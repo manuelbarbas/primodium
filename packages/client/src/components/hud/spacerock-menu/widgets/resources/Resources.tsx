@@ -1,8 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { RelationLabel } from "../fleet-send/RelationLabel";
-import { StationedUnitsLabel } from "../fleet-send/StationedUnitsLabel";
 import { AllMaterialLabels } from "./material/AllMaterialLabels";
 import { AllUnitLabels } from "./units/AllUnitLabels";
 import { ElectricityLabel } from "./utilities/ElectricityLabel";
@@ -28,13 +26,6 @@ export const Resources: React.FC = () => {
               <AllUnitLabels />
             </div>
             <HousingLabel />
-          </div>
-        )}
-        {playerEntity !== owner && (
-          <div className="relative flex justify-center w-full">
-            <div className="w-full h-full absolute star-background rounded-box opacity-50 border border-t-0 rounded-t-none border-secondary" />
-            <RelationLabel />
-            <StationedUnitsLabel />
           </div>
         )}
       </div>

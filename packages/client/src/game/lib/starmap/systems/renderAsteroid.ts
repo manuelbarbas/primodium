@@ -1,5 +1,6 @@
 import { Assets, DepthLayers, RENDER_INTERVAL, SpriteKeys } from "@game/constants";
 import { Entity, Has, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 import { interval } from "rxjs";
@@ -21,9 +22,8 @@ import {
 } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
 import { ObjectText } from "../../common/object-components/text";
-import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { getOutlineSprite, getRockSprite, getSecondaryOutlineSprite } from "./utils/getSprites";
+import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
 
 const asteroidQueue: Entity[] = [];
 export const renderAsteroid = (scene: Scene) => {
@@ -132,7 +132,6 @@ export const renderAsteroid = (scene: Scene) => {
       }),
       Texture(Assets.SpriteAtlas, outlineSprite),
       OnClick(scene, () => {
-        components.Send.setDestination(entity);
         components.SelectedRock.set({ value: entity });
       }),
       OnHover(
