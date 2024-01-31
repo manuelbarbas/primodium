@@ -24,6 +24,69 @@ export default mudConfig({
       valueSchema: "uint256",
     },
 
+    /* --------------------------------- Common --------------------------------- */
+    // if the key is a player, value is their home asteroid.
+    // if the key is an asteroid, value is its main base.
+    Home: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "bytes32",
+    },
+
+    P_GameConfig: {
+      keySchema: {},
+      valueSchema: {
+        admin: "address",
+        unitProductionRate: "uint256",
+        travelTime: "uint256",
+        worldSpeed: "uint256",
+        tax: "uint256",
+        maxAsteroidsPerPlayer: "uint256",
+        asteroidChanceInv: "uint256",
+        asteroidDistance: "uint256",
+      },
+    },
+
+    P_ColonyShipConfig: {
+      keySchema: {},
+      valueSchema: {
+        resourceType: "uint8",
+        resourceAmount: "uint256",
+      },
+    },
+
+    Position: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: {
+        x: "int32",
+        y: "int32",
+        parent: "bytes32",
+      },
+    },
+
+    ReversePosition: {
+      keySchema: { x: "int32", y: "int32" },
+      valueSchema: {
+        entity: "bytes32",
+      },
+    },
+
+    OwnedBy: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: {
+        value: "bytes32",
+      },
+    },
+
+    Level: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "uint256",
+    },
+
+    Spawned: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "bool",
+    },
+
     /* --------------------------- Build Requirements --------------------------- */
     P_RequiredTile: {
       keySchema: { prototype: "bytes32" },

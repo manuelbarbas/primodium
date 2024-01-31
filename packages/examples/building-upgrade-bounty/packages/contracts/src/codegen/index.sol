@@ -5,6 +5,14 @@ pragma solidity >=0.8.21;
 
 import { Counter, CounterTableId } from "./tables/Counter.sol";
 import { Deposit, DepositTableId } from "./tables/Deposit.sol";
+import { Home, HomeTableId } from "./tables/Home.sol";
+import { P_GameConfig, P_GameConfigData, P_GameConfigTableId } from "./tables/P_GameConfig.sol";
+import { P_ColonyShipConfig, P_ColonyShipConfigData, P_ColonyShipConfigTableId } from "./tables/P_ColonyShipConfig.sol";
+import { Position, PositionData, PositionTableId } from "./tables/Position.sol";
+import { ReversePosition, ReversePositionTableId } from "./tables/ReversePosition.sol";
+import { OwnedBy, OwnedByTableId } from "./tables/OwnedBy.sol";
+import { Level, LevelTableId } from "./tables/Level.sol";
+import { Spawned, SpawnedTableId } from "./tables/Spawned.sol";
 import { P_RequiredTile, P_RequiredTileTableId } from "./tables/P_RequiredTile.sol";
 import { P_RequiredBaseLevel, P_RequiredBaseLevelTableId } from "./tables/P_RequiredBaseLevel.sol";
 import { P_RequiredResources, P_RequiredResourcesData, P_RequiredResourcesTableId } from "./tables/P_RequiredResources.sol";
