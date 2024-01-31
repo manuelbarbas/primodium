@@ -253,7 +253,7 @@ const CreateFleet: React.FC = () => {
           onMouseOver={() => dragging && setHoveringArea("to")}
           onMouseLeave={() => setHoveringArea(null)}
         >
-          <div className="h-12 text-sm w-full h-full font-bold grid place-items-center uppercase">
+          <div className="h-12 text-sm w-full font-bold grid place-items-center uppercase">
             <FleetHeader title={"NEW FLEET"} {...fleetStats} />
           </div>
 
