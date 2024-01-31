@@ -34,7 +34,6 @@ const CreateFleet: React.FC = () => {
 
     fleetUnitCounts.forEach((count, unit) => {
       const unitData = getUnitStats(unit as Entity, selectedRock);
-      console.log("unit data:", unitData);
       data.attack += unitData.ATK * count;
       data.defense += unitData.DEF * count;
       data.hp += unitData.HP * count;

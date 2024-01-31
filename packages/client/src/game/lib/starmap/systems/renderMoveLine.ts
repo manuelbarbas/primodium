@@ -35,6 +35,9 @@ export const renderMoveLine = (scene: Scene, mud: MUD) => {
           color: 0x00ffff,
         }
       ),
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-expect-error
       OnRxjsSystem(scene.camera.zoom$, async (_, zoom) => {
         trajectory.removeComponent(`moveLine-line`);
         const x = scene.input.phaserInput.activePointer.worldX;
@@ -51,6 +54,9 @@ export const renderMoveLine = (scene: Scene, mud: MUD) => {
           )
         );
       }),
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-expect-error
       OnRxjsSystem(scene.input.pointermove$, (_, { worldX, worldY }) => {
         trajectory.removeComponent(`moveLine-line`);
         const x = worldX;
