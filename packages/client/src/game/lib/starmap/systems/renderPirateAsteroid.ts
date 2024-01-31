@@ -96,7 +96,12 @@ export const renderPirateAsteroid = (scene: Scene) => {
       rotationTween,
       Texture(Assets.SpriteAtlas, SpriteKeys.PirateAsteroid1),
       OnClick(scene, () => {
-        components.SelectedRock.set({ value: entity });
+        console.log("hello");
+        if (components.Send.get()?.fleetEntity) {
+          components.Send.setDestination(entity);
+        } else {
+          components.SelectedRock.set({ value: entity });
+        }
       }),
       SetValue({
         depth: DepthLayers.Rock,
@@ -123,6 +128,14 @@ export const renderPirateAsteroid = (scene: Scene) => {
         }
       }),
       Texture(Assets.SpriteAtlas, outlineSprite),
+      OnClick(scene, () => {
+        console.log("hello");
+        if (components.Send.get()?.fleetEntity) {
+          components.Send.setDestination(entity);
+        } else {
+          components.SelectedRock.set({ value: entity });
+        }
+      }),
       OnClick(scene, () => {
         components.SelectedRock.set({ value: entity });
       }),
