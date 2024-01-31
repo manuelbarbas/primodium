@@ -1,14 +1,18 @@
 import { AudioKeys, KeybindActions, Scenes } from "@game/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect } from "react";
-import { FaCaretUp } from "react-icons/fa";
+import { Entity } from "@latticexyz/recs";
 
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { Button } from "src/components/core/Button";
-import { Join } from "src/components/core/Join";
+import { IconLabel } from "src/components/core/IconLabel";
+import { useMud } from "src/hooks";
 
-export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating }) => {
+export const MapButton: React.FC<{ isSpectating: boolean }> = ({ isSpectating }) => {
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
   const mapOpen = components.MapOpen.use(undefined, {
     value: false,
   }).value;
@@ -45,7 +49,7 @@ export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating
 
   const openMap = async () => {
     if (components.MapOpen.get()?.value) return;
-    const activeRock = components.SelectedRock.get()?.value;
+    const activeRock = components.ActiveRock.get()?.value;
     const position = components.Position.get(activeRock) ?? { x: 0, y: 0 };
     const { pan } = primodium.api(Scenes.Starmap).camera;
 
@@ -74,6 +78,8 @@ export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating
     );
     components.MapOpen.set({ value: true });
     components.SelectedBuilding.remove();
+    if (isSpectating)
+      components.ActiveRock.set({ value: (components.Home.get(playerEntity)?.value ?? singletonEntity) as Entity });
   };
 
   useEffect(() => {
@@ -88,43 +94,21 @@ export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating
   }, []);
 
   return (
-    <div className="flex z-10">
-      <Join className="flex border-b border-x border-secondary rounded-t-none">
-        <Button
-          clickSound={AudioKeys.Sequence}
-          onClick={closeMap}
-          className={`flex-1 relative rounded-t-none rounded-r-none ${
-            mapOpen ? "opacity-50" : "ring ring-accent z-10"
-          }`}
-        >
-          {isSpectating && (
-            <div className="flex flex-col gap-2 items-center p-2 w-16">
-              <img src="img/icons/spectateicon.png" className="pixel-images w-12 h-12" />
-              <p className="">SPECTATE</p>
-            </div>
-          )}
-          {!isSpectating && (
-            <div className="flex flex-col gap-2 items-center p-2 w-16">
-              <img src="img/icons/minersicon.png" className="pixel-images w-12 h-12" />
-              <p className="">BUILD</p>
-            </div>
-          )}
-          {!mapOpen && <FaCaretUp size={22} className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-accent" />}
-        </Button>
-        <Button
-          clickSound={AudioKeys.Sequence}
-          onClick={openMap}
-          className={`flex-1 rounded-t-none rounded-l-none disabled:opacity-100 ${
-            !mapOpen ? "opacity-50" : "ring ring-accent z-10"
-          }`}
-        >
-          <div className="flex flex-col gap-2 items-center p-2 w-16">
-            <img src="img/icons/starmapicon.png" className="pixel-images w-12 h-12" />
-            <p className="">CONQUER</p>
-          </div>
-          {mapOpen && <FaCaretUp size={22} className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-accent" />}
-        </Button>
-      </Join>
+    <div className="pl-2 flex flex-col items-center gap-1 drop-shadow-hard group">
+      <Button
+        className={`rounded-t-none border border-t-0 border-accent btn-sm text-3xl px-10 py-6 ${
+          !mapOpen ? "star-background-sm" : "topographic-background-md"
+        } group-hover:!border-success`}
+        clickSound={AudioKeys.Sequence}
+        onClick={!mapOpen ? openMap : closeMap}
+      >
+        {!mapOpen && !isSpectating && <IconLabel imageUri="/img/icons/starmapicon.png" />}
+        {!mapOpen && isSpectating && <IconLabel imageUri="/img/icons/returnicon.png" />}
+        {mapOpen && <IconLabel imageUri="/img/icons/minersicon.png" />}
+      </Button>
+      <p className="font-semibold bg-white/10 group-hover:bg-secondary/20 px-2 uppercase">
+        {!mapOpen ? (isSpectating ? "stop spectating" : "star map") : "Return to asteroid"}
+      </p>
     </div>
   );
 };

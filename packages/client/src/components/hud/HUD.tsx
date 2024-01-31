@@ -14,21 +14,17 @@ import { AsteroidTarget } from "./AsteroidTarget";
 import { Blueprints } from "./Blueprints";
 import { CurrentObjective } from "./CurrentObjective";
 import { HoverInfo } from "./HoverInfo";
-import { Minimap } from "./Minimap";
 import { Profile } from "./Profile";
-import { Score } from "./Score";
-import { SelectAction } from "./SelectAction";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { Chat as _Chat } from "./chat/Chat";
 import { ActiveMarker } from "./markers/ActiveMarker";
 import { HomeMarker } from "./markers/HomeMarker";
 import HackerConsole from "./modals/HackerConsole";
-import { Leaderboard } from "./modals/leaderboard/Leaderboard";
-import { Settings } from "./modals/settings/Settings";
 import { OwnedAsteroids } from "./panes/OwnedAsteroids";
-import { BattleReports } from "./panes/battle-reports/BattleReports";
-import { Fleets } from "./panes/fleets/Fleets";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
+import { MenuButtons } from "./MenuButtons";
+import { MapButton } from "./MapButton";
+import { SpectatingDetails } from "./SpectatingDetails";
 
 export const GameHUD = () => {
   const {
@@ -48,25 +44,31 @@ export const GameHUD = () => {
   return (
     <div className="screen-container font-mono">
       <HUD scale={uiScale}>
+        {/* MARKERS */}
+        <ActiveMarker />
+        <HomeMarker />
+
+        <AsteroidTarget />
+
         <HUD.CursorFollower>
           <HoverInfo />
         </HUD.CursorFollower>
-        <HUD.TopMiddle>
-          <TopActions isSpectating={isSpectating} />
-        </HUD.TopMiddle>
-
-        {!isSpectating && (
-          <HUD.TopLeft>
+        <HUD.TopLeft>
+          <div className="flex">
             <Profile />
-          </HUD.TopLeft>
-        )}
+            <MenuButtons />
+          </div>
+        </HUD.TopLeft>
+
+        <HUD.TopMiddle>
+          <MapButton isSpectating={isSpectating} />
+        </HUD.TopMiddle>
 
         {!isSpectating && (
           <HUD.TopRight>
             {
               <div className="flex flex-col">
                 <CurrentObjective />
-                {mapOpen && <Minimap />}
               </div>
             }
           </HUD.TopRight>
@@ -91,15 +93,10 @@ export const GameHUD = () => {
           </Modal>
         </HUD.Left>
 
-        <HUD.BottomMiddle>
-          <SpacerockMenu />
-        </HUD.BottomMiddle>
-
-        {/* MARKERS */}
-        <ActiveMarker />
-        <HomeMarker />
-
-        <AsteroidTarget />
+        <HUD.BottomLeft>
+          {!isSpectating && <SpacerockMenu />}
+          {isSpectating && <SpectatingDetails />}
+        </HUD.BottomLeft>
       </HUD>
 
       <HUD>
@@ -199,59 +196,6 @@ const Asteroids = () => {
         <OwnedAsteroids />
       </Tabs.Pane>
     </Tabs>
-  );
-};
-
-const TopActions: React.FC<{ isSpectating: boolean }> = ({ isSpectating }) => {
-  return (
-    <div className="flex flex-col items-center">
-      <div className="flex z-10">
-        {
-          <span className="flex flex-col gap-1 mt-1">
-            <Modal title="leaderboard">
-              <Modal.Button className="rounded-r-none border border-secondary btn-sm">
-                <IconLabel
-                  imageUri="/img/icons/leaderboardicon.png"
-                  tooltipText="leaderboard"
-                  tooltipDirection="left"
-                />
-              </Modal.Button>
-              <Modal.Content className="w-[40rem] h-[50rem]">
-                <Leaderboard />
-              </Modal.Content>
-            </Modal>
-            <Modal title="battles">
-              <Modal.Button className="rounded-r-none border border-secondary btn-sm">
-                <IconLabel imageUri="/img/icons/reportsicon.png" tooltipText="battles" tooltipDirection="left" />
-              </Modal.Button>
-              <Modal.Content className="w-[30rem] h-[50rem]">
-                <BattleReports />
-              </Modal.Content>
-            </Modal>
-          </span>
-        }
-        <SelectAction isSpectating={isSpectating} />
-        <span className="flex flex-col gap-1 mt-1">
-          <Modal title="Fleets">
-            <Modal.Button className="rounded-l-none border border-secondary btn-sm">
-              <IconLabel imageUri="/img/icons/outgoingicon.png" tooltipText="Fleets" tooltipDirection="right" />
-            </Modal.Button>
-            <Modal.Content className="w-4/5 h-4/5">
-              <Fleets />
-            </Modal.Content>
-          </Modal>
-          <Modal title="settings">
-            <Modal.Button className="rounded-l-none border border-secondary btn-sm">
-              <IconLabel imageUri="/img/icons/settingsicon.png" tooltipText="settings" tooltipDirection="right" />
-            </Modal.Button>
-            <Modal.Content className="w-132 h-96">
-              <Settings />
-            </Modal.Content>
-          </Modal>
-        </span>
-      </div>
-      {!isSpectating && <Score />}
-    </div>
   );
 };
 
