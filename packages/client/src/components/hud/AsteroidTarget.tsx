@@ -1,5 +1,7 @@
 import { Scenes } from "@game/constants";
-import { Entity } from "@latticexyz/recs";
+import { useEntityQuery } from "@latticexyz/react";
+import { Entity, Has, HasValue } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useMud } from "src/hooks";
 import { useInGracePeriod } from "src/hooks/useInGracePeriod";
 import { usePrimodium } from "src/hooks/usePrimodium";
@@ -27,7 +29,9 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   const imageUri = getAsteroidImage(primodium, selectedAsteroid as Entity);
   const { screenCoord, isBounded } = useCoordToScreenCoord(position, true);
   const selectingDestination = !!components.Send.use()?.fleetEntity;
-  const { inGracePeriod } = useInGracePeriod(ownedBy as Entity);
+  const { inGracePeriod } = useInGracePeriod((ownedBy as Entity) ?? singletonEntity);
+  const canSendFleet =
+    useEntityQuery([Has(components.IsFleet), HasValue(components.OwnedBy, { value: selectedAsteroid })]).length > 0;
 
   if (!mapOpen) return <></>;
 
@@ -60,7 +64,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
             <div className="absolute bottom-0 right-0 translate-x-full w-36">
               <Modal title="Select a Fleet to Move">
                 <Modal.Button
-                  disabled={selectingDestination}
+                  disabled={selectingDestination || !canSendFleet}
                   onClick={() => components.Send.setOrigin(selectedAsteroid)}
                   className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
                 >

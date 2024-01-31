@@ -3,11 +3,13 @@ import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { components } from "src/network/components";
+import { sendFleet } from "src/network/setup/contractCalls/fleetMove";
+import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import { ObjectPosition, OnRxjsSystem } from "../../common/object-components/common";
 import { Line } from "../../common/object-components/graphics";
 
-export const renderMoveLine = (scene: Scene) => {
+export const renderMoveLine = (scene: Scene, mud: MUD) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const { tileWidth, tileHeight } = scene.tilemap;
   const id = "moveLine";
@@ -68,13 +70,20 @@ export const renderMoveLine = (scene: Scene) => {
     ]);
   }
 
-  defineComponentSystem(systemsWorld, components.Send, ({ value }) => {
+  defineComponentSystem(systemsWorld, components.Send, async ({ value }) => {
     // const mapOpen = components.MapOpen.get()?.value;
     const send = value[0];
     if (!send || !send.fleetEntity || !send.origin) {
       scene.objectPool.removeGroup(id);
       return;
     }
+    if (send.destination) {
+      scene.objectPool.removeGroup(id);
+      components.Send.clear();
+      await sendFleet(mud, send.fleetEntity, send.destination);
+      return;
+    }
+
     render(send.origin);
   });
 };

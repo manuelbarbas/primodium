@@ -97,7 +97,7 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     setupSync(mud);
 
     runAsteroidSystems(asteroidScene, mud);
-    runStarmapSystems(starmapScene);
+    runStarmapSystems(starmapScene, mud);
   }
 
   function api(sceneKey = "MAIN", instance: string | Game = "MAIN") {
