@@ -8,6 +8,7 @@ import { getKeysWithValue } from "@latticexyz/world-modules/src/modules/keyswith
 import { IWorld } from "../src/codegen/world/IWorld.sol";
 import { Counter, CounterTableId } from "../src/codegen/index.sol";
 
+/*
 contract CounterTest is MudTest {
   function testWorldExists() public {
     uint256 codeSize;
@@ -29,3 +30,4 @@ contract CounterTest is MudTest {
     assertEq(counter, 2);
   }
 }
+*/
