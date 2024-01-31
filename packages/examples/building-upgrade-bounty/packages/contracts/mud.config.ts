@@ -19,8 +19,11 @@ export default mudConfig({
       keySchema: {},
       valueSchema: "uint32",
     },
-    Deposit: {
-      keySchema: { depositor: "address" },
+    UpgradeBounty: {
+      keySchema: {
+        depositor: "address",
+        coord: "bytes32",
+      },
       valueSchema: "uint256",
     },
 

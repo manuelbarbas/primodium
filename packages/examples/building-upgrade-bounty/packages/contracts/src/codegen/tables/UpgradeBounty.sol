@@ -21,15 +21,15 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { RESOURCE_TABLE, RESOURCE_OFFCHAIN_TABLE } from "@latticexyz/store/src/storeResourceTypes.sol";
 
 ResourceId constant _tableId = ResourceId.wrap(
-  bytes32(abi.encodePacked(RESOURCE_TABLE, bytes14("upgrade_bounty"), bytes16("Deposit")))
+  bytes32(abi.encodePacked(RESOURCE_TABLE, bytes14("upgrade_bounty"), bytes16("UpgradeBounty")))
 );
-ResourceId constant DepositTableId = _tableId;
+ResourceId constant UpgradeBountyTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
   0x0020010020000000000000000000000000000000000000000000000000000000
 );
 
-library Deposit {
+library UpgradeBounty {
   /**
    * @notice Get the table values' field layout.
    * @return _fieldLayout The field layout for the table.
@@ -43,8 +43,9 @@ library Deposit {
    * @return _keySchema The key schema for the table.
    */
   function getKeySchema() internal pure returns (Schema) {
-    SchemaType[] memory _keySchema = new SchemaType[](1);
+    SchemaType[] memory _keySchema = new SchemaType[](2);
     _keySchema[0] = SchemaType.ADDRESS;
+    _keySchema[1] = SchemaType.BYTES32;
 
     return SchemaLib.encode(_keySchema);
   }
@@ -65,8 +66,9 @@ library Deposit {
    * @return keyNames An array of strings with the names of key fields.
    */
   function getKeyNames() internal pure returns (string[] memory keyNames) {
-    keyNames = new string[](1);
+    keyNames = new string[](2);
     keyNames[0] = "depositor";
+    keyNames[1] = "coord";
   }
 
   /**
@@ -95,9 +97,10 @@ library Deposit {
   /**
    * @notice Get value.
    */
-  function getValue(address depositor) internal view returns (uint256 value) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
+  function getValue(address depositor, bytes32 coord) internal view returns (uint256 value) {
+    bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
+    _keyTuple[1] = coord;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint256(bytes32(_blob)));
@@ -106,9 +109,10 @@ library Deposit {
   /**
    * @notice Get value.
    */
-  function _getValue(address depositor) internal view returns (uint256 value) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
+  function _getValue(address depositor, bytes32 coord) internal view returns (uint256 value) {
+    bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
+    _keyTuple[1] = coord;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint256(bytes32(_blob)));
@@ -117,9 +121,10 @@ library Deposit {
   /**
    * @notice Get value.
    */
-  function get(address depositor) internal view returns (uint256 value) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
+  function get(address depositor, bytes32 coord) internal view returns (uint256 value) {
+    bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
+    _keyTuple[1] = coord;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint256(bytes32(_blob)));
@@ -128,9 +133,10 @@ library Deposit {
   /**
    * @notice Get value.
    */
-  function _get(address depositor) internal view returns (uint256 value) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
+  function _get(address depositor, bytes32 coord) internal view returns (uint256 value) {
+    bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
+    _keyTuple[1] = coord;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint256(bytes32(_blob)));
@@ -139,9 +145,10 @@ library Deposit {
   /**
    * @notice Set value.
    */
-  function setValue(address depositor, uint256 value) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
+  function setValue(address depositor, bytes32 coord, uint256 value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
+    _keyTuple[1] = coord;
 
     StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
@@ -149,9 +156,10 @@ library Deposit {
   /**
    * @notice Set value.
    */
-  function _setValue(address depositor, uint256 value) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
+  function _setValue(address depositor, bytes32 coord, uint256 value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
+    _keyTuple[1] = coord;
 
     StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
@@ -159,9 +167,10 @@ library Deposit {
   /**
    * @notice Set value.
    */
-  function set(address depositor, uint256 value) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
+  function set(address depositor, bytes32 coord, uint256 value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
+    _keyTuple[1] = coord;
 
     StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
@@ -169,9 +178,10 @@ library Deposit {
   /**
    * @notice Set value.
    */
-  function _set(address depositor, uint256 value) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
+  function _set(address depositor, bytes32 coord, uint256 value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
+    _keyTuple[1] = coord;
 
     StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
@@ -179,9 +189,10 @@ library Deposit {
   /**
    * @notice Delete all data for given keys.
    */
-  function deleteRecord(address depositor) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
+  function deleteRecord(address depositor, bytes32 coord) internal {
+    bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
+    _keyTuple[1] = coord;
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple);
   }
@@ -189,9 +200,10 @@ library Deposit {
   /**
    * @notice Delete all data for given keys.
    */
-  function _deleteRecord(address depositor) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
+  function _deleteRecord(address depositor, bytes32 coord) internal {
+    bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
+    _keyTuple[1] = coord;
 
     StoreCore.deleteRecord(_tableId, _keyTuple, _fieldLayout);
   }
@@ -222,9 +234,10 @@ library Deposit {
   /**
    * @notice Encode keys as a bytes32 array using this table's field layout.
    */
-  function encodeKeyTuple(address depositor) internal pure returns (bytes32[] memory) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
+  function encodeKeyTuple(address depositor, bytes32 coord) internal pure returns (bytes32[] memory) {
+    bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
+    _keyTuple[1] = coord;
 
     return _keyTuple;
   }
