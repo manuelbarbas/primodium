@@ -2354,6 +2354,19 @@
     "inputs": [
       {
         "internalType": "bytes32",
+        "name": "fleetId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "resetFleetIfNoUnitsLeft",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
         "name": "battleId",
         "type": "bytes32"
       },
@@ -3182,12 +3195,12 @@
     "inputs": [
       {
         "internalType": "bytes32",
-        "name": "spaceRock",
+        "name": "fromFleetId",
         "type": "bytes32"
       },
       {
         "internalType": "bytes32",
-        "name": "fleetId",
+        "name": "spaceRock",
         "type": "bytes32"
       },
       {
@@ -3261,7 +3274,7 @@
     "inputs": [
       {
         "internalType": "bytes32",
-        "name": "fleetId",
+        "name": "fromFleetId",
         "type": "bytes32"
       },
       {

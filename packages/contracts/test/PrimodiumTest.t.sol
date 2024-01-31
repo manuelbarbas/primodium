@@ -292,13 +292,18 @@ contract PrimodiumTest is MudTest {
     bytes32 spaceRock = Home.get(playerEntity);
     bytes32 mainBase = Home.get(spaceRock);
     while (Level.get(mainBase) < level) {
-      P_RequiredResourcesData memory requiredResources = getUpgradeCost(mainBase);
-      provideResources(spaceRock, requiredResources);
       upgradeBuilding(player, mainBase);
     }
   }
 
   function upgradeBuilding(address player, bytes32 buildingEntity) internal {
+    P_RequiredResourcesData memory requiredResources = getUpgradeCost(buildingEntity);
+    provideResources(Position.get(buildingEntity).parent, requiredResources);
+    uint256 requiredMainBaseLevel = P_RequiredBaseLevel.get(
+      BuildingType.get(buildingEntity),
+      Level.get(buildingEntity) + 1
+    );
+    upgradeMainBase(player, requiredMainBaseLevel);
     vm.startPrank(player);
     world.upgradeBuilding(Position.get(buildingEntity));
     vm.stopPrank();
@@ -307,6 +312,8 @@ contract PrimodiumTest is MudTest {
   function buildBuilding(address player, EBuilding building, PositionData memory position) internal {
     P_RequiredResourcesData memory requiredResources = getBuildCost(building);
     provideResources(position.parent, requiredResources);
+    uint256 requiredMainBaseLevel = P_RequiredBaseLevel.get(P_EnumToPrototype.get(BuildingKey, uint8(building)), 1);
+    upgradeMainBase(player, requiredMainBaseLevel);
     vm.startPrank(player);
     world.build(building, position);
     vm.stopPrank();

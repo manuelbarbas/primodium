@@ -225,6 +225,7 @@ library LibResource {
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       uint256 resourceCount = ResourceCount.get(spaceRockEntity, transportables[i]);
+      if (resourceCount == 0) continue;
       uint256 vaulted = ResourceCount.get(
         spaceRockEntity,
         P_IsAdvancedResource.get(transportables[i])
@@ -250,6 +251,7 @@ library LibResource {
     resourceCounts = new uint256[](transportables.length);
     for (uint8 i = 0; i < transportables.length; i++) {
       resourceCounts[i] = ResourceCount.get(spaceRockEntity, transportables[i]);
+      if (resourceCounts[i] == 0) continue;
       uint256 vaulted = ResourceCount.get(
         spaceRockEntity,
         P_IsAdvancedResource.get(transportables[i])

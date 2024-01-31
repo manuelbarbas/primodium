@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { EResource } from "src/Types.sol";
-import { P_Transportables, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, P_GracePeriod, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { IsFleet, P_Transportables, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, P_GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -29,7 +29,7 @@ library LibFleet {
     //require(ResourceCount.get(spaceRock, EResource.U_Cargo) > 0, "[Fleet] Space rock has no cargo capacity"))
     fleetId = LibEncode.getTimedHash(playerEntity, FleetKey);
     OwnedBy.set(fleetId, spaceRock);
-
+    IsFleet.set(fleetId, true);
     FleetMovement.set(
       fleetId,
       FleetMovementData({
@@ -152,7 +152,7 @@ library LibFleet {
     }
 
     for (uint256 i = 1; i < fleets.length; i++) {
-      for (uint8 j = 0; j < unitPrototypes.length; j++) {
+      for (uint256 j = 0; j < unitPrototypes.length; j++) {
         uint256 fleetUnitCount = UnitCount.get(fleets[i], unitPrototypes[j]);
         decreaseFleetUnit(fleets[i], unitPrototypes[j], fleetUnitCount, false);
       }
@@ -163,7 +163,7 @@ library LibFleet {
 
   function resetFleetIfNoUnitsLeft(bytes32 fleetId) internal {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    for (uint8 i = 0; i < unitPrototypes.length; i++) {
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (UnitCount.get(fleetId, unitPrototypes[i]) > 0) return;
     }
     resetFleetOrbit(fleetId);

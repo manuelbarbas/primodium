@@ -96,7 +96,6 @@ library LibAsteroid {
   function initializeSpaceRockOwnership(bytes32 spaceRock, bytes32 owner) internal {
     OwnedBy.set(spaceRock, owner);
     ColoniesMap.add(owner, AsteroidOwnedByKey, spaceRock);
-    buildMainBase(owner, spaceRock);
   }
 
   /// @dev Calculates position based on distance and max index

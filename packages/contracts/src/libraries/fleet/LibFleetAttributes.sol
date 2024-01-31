@@ -210,6 +210,7 @@ library LibFleetAttributes {
 
   function getOccupiedCargo(bytes32 fleetId) internal view returns (uint256 totalStoredResources) {
     uint8[] memory transportables = P_Transportables.get();
+    totalStoredResources = 0;
     for (uint8 i = 0; i < transportables.length; i++) {
       totalStoredResources += ResourceCount.get(fleetId, transportables[i]);
     }
