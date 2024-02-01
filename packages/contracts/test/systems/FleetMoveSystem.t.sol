@@ -59,6 +59,33 @@ contract FleetMoveSystemTest is PrimodiumTest {
     assertEq(FleetMovement.getSendTime(fleetId), block.timestamp, "fleet send time doesn't match");
   }
 
+  function testFailSendFleetToOrigin() public {
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    //create fleet with 1 minuteman marine
+    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = 1;
+    }
+
+    //create fleet with 1 iron
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+    for (uint256 i = 0; i < resourceCounts.length; i++) {
+      if (P_Transportables.getItemValue(i) == uint8(EResource.Iron)) resourceCounts[i] = 1;
+    }
+
+    //provide resource and unit requirements to create fleet
+    setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
+
+    vm.startPrank(alice);
+    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+    world.sendFleet(fleetId, aliceHomeSpaceRock);
+    vm.stopPrank();
+  }
+
   function testRecallFleet() public {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
