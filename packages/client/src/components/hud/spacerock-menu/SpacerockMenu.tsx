@@ -1,12 +1,12 @@
 import { components } from "src/network/components";
 
-import { KeyNames, KeybindActions, Scenes } from "@game/constants";
+import { KeybindActions, Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { Tabs } from "src/components/core/Tabs";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { GracePeriod } from "../GracePeriod";
-import { TargetHeader } from "./TargetHeader";
+// import { TargetHeader } from "./TargetHeader";
 import { Resources } from "./widgets/resources/Resources";
 import { hashEntities } from "src/util/encode";
 import { Keys } from "src/util/constants";
@@ -23,32 +23,48 @@ export const SpacerockMenu: React.FC = () => {
   const ownedBy = components.OwnedBy.use(selectedSpacerock)?.value;
   const primodium = usePrimodium();
   const {
-    hooks: { useKeybinds },
+    // hooks: { useKeybinds },
     scene: { transitionToScene },
   } = primodium.api()!;
-  const keybinds = useKeybinds();
+  // const keybinds = useKeybinds();
 
   if (!selectedSpacerock) return null;
 
   return (
-    <div className="w-screen px-2 flex justify-center">
-      <Tabs className="min-w-fit w-[50rem] flex flex-col items-center gap-0 relative">
-        <Tabs.Button
-          index={0}
-          togglable
-          keybind={KeybindActions.SpacerockMenu}
-          onClick={() => {
-            components.SelectedBuilding.remove();
-            components.SelectedAction.remove();
-          }}
-          className="rounded-b-none border-b-0 btn-md border-secondary relative py-2 hover:text-accent group w-fit"
-        >
-          <TargetHeader hideStats />
+    <div className="ml-2 flex">
+      <Tabs className="">
+        <div className="ml-2 flex gap-1">
+          <Tabs.Button
+            index={0}
+            // togglable
+            keybind={KeybindActions.SpacerockMenu}
+            // onClick={() => {
+            //   components.SelectedBuilding.remove();
+            //   components.SelectedAction.remove();
+            // }}
+            className="rounded-b-none border-b-0 btn-md border-secondary relative hover:text-accent group w-fit"
+          >
+            blueprints
+          </Tabs.Button>
+          <Tabs.Button
+            index={0}
+            // togglable
+            keybind={KeybindActions.SpacerockMenu}
+            onClick={() => {
+              components.SelectedBuilding.remove();
+              components.SelectedAction.remove();
+            }}
+            className="rounded-b-none border-b-0 btn-md border-secondary relative py-2 hover:text-accent group w-fit"
+          >
+            {/* <TargetHeader hideStats />
           <div className="absolute kbd kbd-xs top-0 right-0 translate-x-1/2 -translate-y-1/2">
             {KeyNames[keybinds[KeybindActions.SpacerockMenu]?.entries().next().value[0]] ??
               keybinds[KeybindActions.SpacerockMenu]?.entries().next().value[0]}
-          </div>
-        </Tabs.Button>
+          </div> */}
+            OWNED ASTEROIDS
+          </Tabs.Button>
+        </div>
+
         {!loading && !error && (
           <Tabs.Pane index={0} className="w-full border-b-0 rounded-x-none rounded-b-none relative">
             <Resources />

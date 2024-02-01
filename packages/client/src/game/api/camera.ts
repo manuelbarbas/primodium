@@ -63,7 +63,10 @@ export const createCameraApi = (targetScene: Scene) => {
   function updateWorldView() {
     const { camera } = targetScene;
 
-    requestAnimationFrame(() => camera?.worldView$.next(camera.phaserCamera.worldView));
+    requestAnimationFrame(() => {
+      camera?.worldView$.next(camera.phaserCamera.worldView);
+      camera?.zoom$.next(camera.phaserCamera.zoom);
+    });
   }
 
   const shake = () => {
