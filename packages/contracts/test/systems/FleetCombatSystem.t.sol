@@ -452,7 +452,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     console.log("curr encryption: %s", ResourceCount.get(fleetId, uint8(EResource.R_Encryption)));
     assertEq(
-      ResourceCount.get(fleetId, uint8(EResource.R_Encryption)),
+      ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)),
       encryption - decryption,
       "encryption should have been reduced by decryption"
     );
