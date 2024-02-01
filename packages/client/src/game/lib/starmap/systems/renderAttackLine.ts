@@ -2,6 +2,7 @@ import { DepthLayers } from "@game/constants";
 import { Coord, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
+import { createCameraApi } from "src/game/api/camera";
 import { components } from "src/network/components";
 import { attack as callAttack } from "src/network/setup/contractCalls/attack";
 import { MUD } from "src/network/types";
@@ -13,11 +14,24 @@ export const renderAttackLine = (scene: Scene, mud: MUD) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const { tileWidth, tileHeight } = scene.tilemap;
   const id = "attackLine";
+  const { pan, zoomTo } = createCameraApi(scene);
+
+  function panToDestination(entity: Entity) {
+    const fleetDestinationEntity = components.FleetMovement.get(entity)?.destination as Entity;
+    if (!fleetDestinationEntity) return;
+    const fleetDestinationPosition = components.Position.get(fleetDestinationEntity);
+    if (!fleetDestinationPosition) return;
+    pan(fleetDestinationPosition);
+  }
 
   function render(originEntity: Entity, originCoord?: Coord) {
     scene.objectPool.removeGroup(id);
     const origin = originCoord ?? components.Position.get(originEntity);
     if (!origin) return;
+
+    zoomTo(5);
+    panToDestination(originEntity);
+
     const attackLine = scene.objectPool.getGroup(id);
     const trajectory = attackLine.add("Graphics", true);
     const originPixelCoord = tileCoordToPixelCoord({ x: origin.x, y: -origin.y }, tileWidth, tileHeight);
@@ -81,6 +95,7 @@ export const renderAttackLine = (scene: Scene, mud: MUD) => {
     // const mapOpen = components.MapOpen.get()?.value;
     const attack = value[0];
     if (!attack || !attack.originFleet) {
+      zoomTo(1);
       scene.objectPool.removeGroup(id);
       return;
     }

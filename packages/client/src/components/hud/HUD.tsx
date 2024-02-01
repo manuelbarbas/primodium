@@ -9,7 +9,6 @@ import { HUD } from "../core/HUD";
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
 import { Tabs } from "../core/Tabs";
-import { BrandingLabel } from "../shared/BrandingLabel";
 import { AsteroidTarget } from "./AsteroidTarget";
 import { Blueprints } from "./Blueprints";
 import { CurrentObjective } from "./CurrentObjective";
@@ -36,6 +35,7 @@ export const GameHUD = () => {
   const ownedBy = components.OwnedBy.use(selectedRock)?.value;
   const isSpectating = ownedBy !== playerEntity;
   const uiScale = useSettingsStore((state) => state.uiScale);
+  const attack = components.Attack.use();
 
   const allowHackerModal = useSettingsStore((state) => state.allowHackerModal);
   const mapOpen = components.MapOpen.use(undefined, {
@@ -103,7 +103,12 @@ export const GameHUD = () => {
 
       <HUD>
         <HUD.BottomRight>
-          <BrandingLabel />
+          {/* <BrandingLabel /> */}
+          {Object.entries(attack ?? {}).map(([fleet, target]) => (
+            <div key={fleet}>
+              {fleet}: {target?.toString()}
+            </div>
+          ))}
         </HUD.BottomRight>
       </HUD>
     </div>

@@ -22,10 +22,11 @@ import { useFleetNav } from "./Fleets";
 
 const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
   const mud = useMud();
-  const api = usePrimodium().api();
+  const api = usePrimodium().api(Scenes.Starmap);
 
   const { BackButton, NavButton } = useFleetNav();
   const selectedRock = components.SelectedRock.get()?.value;
+
   const units = useUnitCounts(fleetEntity);
   const resources = useFullResourceCounts(fleetEntity);
 
@@ -196,6 +197,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               disabled={totalUnits <= 0}
               onClick={() => {
                 const fleetLocation = getFleetLocation(fleetEntity, api.scene.getConfig(Scenes.Starmap)?.tilemap);
+                components.Attack.reset();
                 components.Send.setOrigin(fleetEntity, fleetLocation);
                 api.util.openMap();
               }}
@@ -203,9 +205,25 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               SEND
             </Modal.CloseButton>
 
-            <Button className="btn btn-primary btn-sm" disabled={totalUnits <= 0}>
+            <Modal.CloseButton
+              className="btn btn-primary btn-sm"
+              disabled={totalUnits <= 0}
+              onClick={async () => {
+                const fleetPosition = getFleetLocation(fleetEntity, api.scene.getConfig(Scenes.Starmap)?.tilemap);
+                components.Send.reset();
+                components.Attack.setOrigin(fleetEntity, fleetPosition);
+                await api.util.openMap();
+                api.camera.zoomTo(5);
+
+                const fleetDestinationEntity = components.FleetMovement.get(fleetEntity)?.destination as Entity;
+                if (!fleetDestinationEntity) return;
+                const fleetDestinationPosition = components.Position.get(fleetDestinationEntity);
+                if (!fleetDestinationPosition) return;
+                api.camera.pan(fleetDestinationPosition);
+              }}
+            >
               ATTACK
-            </Button>
+            </Modal.CloseButton>
             <TransactionQueueMask queueItemId={"landFleet" as Entity}>
               <Button
                 className="btn btn-primary btn-sm w-full"
