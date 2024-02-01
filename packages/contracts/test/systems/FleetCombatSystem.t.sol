@@ -384,12 +384,20 @@ contract FleetCombatSystemTest is PrimodiumTest {
   function testFleetAttackSpaceRockEncryption() public {
     console.log("start");
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
     uint256 numberOfUnits = 10;
+
     //create fleet with 1 minuteman marine
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
+    bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
+    uint256 decryption = P_Unit.getDecryption(
+      colonyShipPrototype,
+      UnitLevel.get(aliceHomeSpaceRock, colonyShipPrototype)
+    );
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == unitPrototype) unitCounts[i] = numberOfUnits;
+      if (unitPrototypes[i] == colonyShipPrototype) unitCounts[i] = 2;
     }
 
     //create fleet with 1 iron
@@ -414,84 +422,41 @@ contract FleetCombatSystemTest is PrimodiumTest {
       P_Unit.getAttack(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype))) / 2;
     uint256 hpProduction = 1;
     uint256 hp = defense;
+    uint256 encryption = ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption));
     increaseResource(bobHomeSpaceRock, EResource.U_Defense, defense);
     increaseResource(bobHomeSpaceRock, EResource.R_HP, hp);
     increaseProduction(bobHomeSpaceRock, EResource.R_HP, hpProduction);
-    console.log("space rock defense: %s ", LibSpaceRockAttributes.getDefense(bobHomeSpaceRock));
-    assertEq(
-      LibSpaceRockAttributes.getDefense(bobHomeSpaceRock),
-      defense,
-      "space rock defense should match increased defense"
-    );
 
     uint256 ironAmount = numberOfUnits *
       P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
-    uint256 copperAmount = numberOfUnits *
-      P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
     increaseResource(bobHomeSpaceRock, EResource.Iron, ironAmount);
-    increaseResource(bobHomeSpaceRock, EResource.Copper, copperAmount);
-    console.log("before attack");
+
     vm.warp(FleetMovement.getArrivalTime(fleetId));
     vm.startPrank(alice);
     world.attack(fleetId, bobHomeSpaceRock);
     vm.stopPrank();
-    console.log("after attack");
+
     assertEq(
       ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_HP)),
       0,
       "space rock hp should have been reduced by unit attack"
     );
 
-    assertEq(
-      LibFleetAttributes.getOccupiedCargo(fleetId),
-      LibFleetAttributes.getCargo(fleetId),
-      "fleet should have maxed out their cargo"
-    );
+    assertEq(LibFleetAttributes.getOccupiedCargo(fleetId), 0, "fleet should not have raided");
 
     assertEq(
-      ResourceCount.get(fleetId, uint8(EResource.Iron)) + ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Iron)),
+      ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Iron)),
       ironAmount,
-      "sum of un raided and raided should be initial amount"
-    );
-    assertEq(
-      ResourceCount.get(fleetId, uint8(EResource.Copper)) +
-        ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Copper)),
-      copperAmount,
-      "sum of un raided and raided should be initial amount"
-    );
-    assertEq(
-      ResourceCount.get(fleetId, uint8(EResource.Copper)),
-      ResourceCount.get(fleetId, uint8(EResource.Iron)),
-      "fleet should have raided equal amounts of iron and copper"
+      "space rock should not have been raided"
     );
 
-    uint256 casualtyCount = LibMath.divideRound(
-      defense,
-      P_Unit.getHp(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype))
-    );
-    if (casualtyCount > numberOfUnits) casualtyCount = numberOfUnits;
-
-    P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(
-      unitPrototype,
-      UnitLevel.get(aliceHomeSpaceRock, unitPrototype)
-    );
-    for (uint8 i = 0; i < requiredResources.resources.length; i++) {
-      if (P_IsUtility.get(requiredResources.resources[i])) {
-        assertEq(
-          ResourceCount.get(aliceHomeSpaceRock, requiredResources.resources[i]),
-          requiredResources.amounts[i] * casualtyCount,
-          "utility should have been refunded to owner soace rock when fleet took casualties"
-        );
-      }
-    }
-
-    assertEq(UnitCount.get(fleetId, unitPrototype), numberOfUnits - casualtyCount, "fleet should have lost units");
+    console.log("curr encryption: %s", ResourceCount.get(fleetId, uint8(EResource.R_Encryption)));
     assertEq(
-      LibFleetAttributes.getCargo(fleetId),
-      (numberOfUnits - casualtyCount) *
-        P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype)),
-      "fleet cargo should map units"
+      ResourceCount.get(fleetId, uint8(EResource.R_Encryption)),
+      encryption - decryption,
+      "encryption should have been reduced by decryption"
     );
+
     console.log("end");
   }
 }

@@ -99,6 +99,9 @@ library LibFleetCombat {
     encryptionAtEnd = encryptionAtStart;
     if (decryption == 0) return encryptionAtEnd;
     if (encryptionAtStart != 0) {
+      if (decryption > encryptionAtStart) {
+        decryption = encryptionAtStart;
+      }
       LibStorage.decreaseStoredResource(targetEntity, uint8(EResource.R_Encryption), decryption);
       encryptionAtEnd = ResourceCount.get(targetEntity, uint8(EResource.R_Encryption));
     }
