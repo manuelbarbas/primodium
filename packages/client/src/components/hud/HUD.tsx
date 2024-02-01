@@ -95,7 +95,7 @@ export const GameHUD = () => {
 
         <HUD.BottomLeft>
           {!isSpectating && <SpacerockMenu />}
-          {isSpectating && <SpectatingDetails />}
+          {isSpectating && !mapOpen && <SpectatingDetails />}
         </HUD.BottomLeft>
       </HUD>
 
