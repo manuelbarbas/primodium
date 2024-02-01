@@ -4,6 +4,7 @@ import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs"
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
 import { createCameraApi } from "src/game/api/camera";
+import { starmapSceneConfig } from "src/game/config/starmapScene";
 import { components } from "src/network/components";
 import { sendFleetPosition } from "src/network/setup/contractCalls/fleetMove";
 import { MUD } from "src/network/types";
@@ -21,7 +22,7 @@ export const renderMoveLine = (scene: Scene, mud: MUD) => {
     scene.objectPool.removeGroup(id);
     const origin = originCoord ?? components.Position.get(originEntity);
     if (!origin) return;
-    zoomTo(0.5);
+    zoomTo(starmapSceneConfig.camera.minZoom, 500);
     const moveLine = scene.objectPool.getGroup(id);
     const trajectory = moveLine.add("Graphics", true);
     const originPixelCoord = tileCoordToPixelCoord({ x: origin.x, y: -origin.y }, tileWidth, tileHeight);
@@ -86,6 +87,8 @@ export const renderMoveLine = (scene: Scene, mud: MUD) => {
     const send = value[0];
     if (!send || !send.originFleet) {
       scene.objectPool.removeGroup(id);
+      console.log("zooming to 1");
+      zoomTo(1);
       return;
     }
     if (send.destination) {

@@ -3,6 +3,7 @@ import { Coord, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { createCameraApi } from "src/game/api/camera";
+import { starmapSceneConfig } from "src/game/config/starmapScene";
 import { components } from "src/network/components";
 import { attack as callAttack } from "src/network/setup/contractCalls/attack";
 import { MUD } from "src/network/types";
@@ -24,13 +25,15 @@ export const renderAttackLine = (scene: Scene, mud: MUD) => {
     pan(fleetDestinationPosition);
   }
 
-  function render(originEntity: Entity, originCoord?: Coord) {
+  async function render(originEntity: Entity, originCoord?: Coord) {
     scene.objectPool.removeGroup(id);
     const origin = originCoord ?? components.Position.get(originEntity);
     if (!origin) return;
 
-    zoomTo(5);
+    const zoomTime = 500;
+    zoomTo(starmapSceneConfig.camera.maxZoom, zoomTime);
     panToDestination(originEntity);
+    await new Promise((resolve) => setTimeout(resolve, zoomTime));
 
     const attackLine = scene.objectPool.getGroup(id);
     const trajectory = attackLine.add("Graphics", true);
