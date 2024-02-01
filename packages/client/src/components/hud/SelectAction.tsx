@@ -1,12 +1,11 @@
 import { AudioKeys, KeybindActions, Scenes } from "@game/constants";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect } from "react";
 import { FaCaretUp } from "react-icons/fa";
 
-import { usePrimodium } from "src/hooks/usePrimodium";
-import { components } from "src/network/components";
 import { Button } from "src/components/core/Button";
 import { Join } from "src/components/core/Join";
+import { usePrimodium } from "src/hooks/usePrimodium";
+import { components } from "src/network/components";
 
 export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating }) => {
   const mapOpen = components.MapOpen.use(undefined, {
@@ -14,67 +13,7 @@ export const SelectAction: React.FC<{ isSpectating: boolean }> = ({ isSpectating
   }).value;
 
   const primodium = usePrimodium();
-  const { transitionToScene } = primodium.api().scene;
-
-  const closeMap = async () => {
-    if (!components.MapOpen.get()?.value) return;
-    await transitionToScene(
-      Scenes.Starmap,
-      Scenes.Asteroid,
-      0,
-      (_, targetScene) => {
-        targetScene.camera.phaserCamera.fadeOut(0, 0, 0, 0);
-      },
-      (_, targetScene) => {
-        targetScene.phaserScene.add.tween({
-          targets: targetScene.camera.phaserCamera,
-          zoom: { from: 0.5, to: 1 },
-          duration: 500,
-          ease: "Cubic.easeInOut",
-          onUpdate: () => {
-            targetScene.camera.zoom$.next(targetScene.camera.phaserCamera.zoom);
-            targetScene.camera.worldView$.next(targetScene.camera.phaserCamera.worldView);
-          },
-        });
-        targetScene.camera.phaserCamera.fadeIn(500, 0, 0, 0);
-      }
-    );
-    components.MapOpen.set({ value: false });
-    components.SelectedRock.set({ value: components.ActiveRock.get()?.value ?? singletonEntity });
-  };
-
-  const openMap = async () => {
-    if (components.MapOpen.get()?.value) return;
-    const activeRock = components.SelectedRock.get()?.value;
-    const position = components.Position.get(activeRock) ?? { x: 0, y: 0 };
-    const { pan } = primodium.api(Scenes.Starmap).camera;
-
-    pan(position, 0);
-
-    await transitionToScene(
-      Scenes.Asteroid,
-      Scenes.Starmap,
-      0,
-      (_, targetScene) => {
-        targetScene.camera.phaserCamera.fadeOut(0, 0, 0, 0);
-      },
-      (_, targetScene) => {
-        targetScene.phaserScene.add.tween({
-          targets: targetScene.camera.phaserCamera,
-          zoom: { from: 2, to: 1 },
-          duration: 500,
-          ease: "Cubic.easeInOut",
-          onUpdate: () => {
-            targetScene.camera.zoom$.next(targetScene.camera.phaserCamera.zoom);
-            targetScene.camera.worldView$.next(targetScene.camera.phaserCamera.worldView);
-          },
-        });
-        targetScene.camera.phaserCamera.fadeIn(500, 0, 0, 0);
-      }
-    );
-    components.MapOpen.set({ value: true });
-    components.SelectedBuilding.remove();
-  };
+  const { openMap, closeMap } = primodium.api().util;
 
   useEffect(() => {
     const starmapListener = primodium.api(Scenes.Starmap).input.addListener(KeybindActions.Map, closeMap);

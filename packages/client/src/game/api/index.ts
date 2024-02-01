@@ -1,5 +1,6 @@
 import { Scenes } from "@game/constants";
 import { namespaceWorld } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import engine from "engine";
 import { Game } from "engine/types";
 import { runSystems as runAsteroidSystems } from "src/game/lib/asteroid/systems";
@@ -112,16 +113,76 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     if (scene === undefined) {
       throw new Error("No primodium scene found with key " + sceneKey);
     }
+    const sceneApi = createSceneApi(_instance);
+    const cameraApi = createCameraApi(scene);
+    const closeMap = async () => {
+      if (!components.MapOpen.get()?.value) return;
+      await sceneApi.transitionToScene(
+        Scenes.Starmap,
+        Scenes.Asteroid,
+        0,
+        (_, targetScene) => {
+          targetScene.camera.phaserCamera.fadeOut(0, 0, 0, 0);
+        },
+        (_, targetScene) => {
+          targetScene.phaserScene.add.tween({
+            targets: targetScene.camera.phaserCamera,
+            zoom: { from: 0.5, to: 1 },
+            duration: 500,
+            ease: "Cubic.easeInOut",
+            onUpdate: () => {
+              targetScene.camera.zoom$.next(targetScene.camera.phaserCamera.zoom);
+              targetScene.camera.worldView$.next(targetScene.camera.phaserCamera.worldView);
+            },
+          });
+          targetScene.camera.phaserCamera.fadeIn(500, 0, 0, 0);
+        }
+      );
+      components.MapOpen.set({ value: false });
+      components.SelectedRock.set({ value: components.ActiveRock.get()?.value ?? singletonEntity });
+    };
 
+    const openMap = async () => {
+      if (components.MapOpen.get()?.value) return;
+      const activeRock = components.SelectedRock.get()?.value;
+      const position = components.Position.get(activeRock) ?? { x: 0, y: 0 };
+
+      cameraApi.pan(position, 0);
+
+      await sceneApi.transitionToScene(
+        Scenes.Asteroid,
+        Scenes.Starmap,
+        0,
+        (_, targetScene) => {
+          targetScene.camera.phaserCamera.fadeOut(0, 0, 0, 0);
+        },
+        (_, targetScene) => {
+          targetScene.phaserScene.add.tween({
+            targets: targetScene.camera.phaserCamera,
+            zoom: { from: 2, to: 1 },
+            duration: 500,
+            ease: "Cubic.easeInOut",
+            onUpdate: () => {
+              targetScene.camera.zoom$.next(targetScene.camera.phaserCamera.zoom);
+              targetScene.camera.worldView$.next(targetScene.camera.phaserCamera.worldView);
+            },
+          });
+          targetScene.camera.phaserCamera.fadeIn(500, 0, 0, 0);
+        }
+      );
+      components.MapOpen.set({ value: true });
+      components.SelectedBuilding.remove();
+    };
     return {
-      camera: createCameraApi(scene),
+      camera: cameraApi,
       game: createGameApi(_instance),
       hooks: createHooksApi(scene),
       input: createInputApi(scene),
-      scene: createSceneApi(_instance),
+      scene: sceneApi,
       fx: createFxApi(scene),
       sprite: createSpriteApi(scene),
       audio: createAudioApi(scene),
+      util: { openMap, closeMap },
     };
   }
 

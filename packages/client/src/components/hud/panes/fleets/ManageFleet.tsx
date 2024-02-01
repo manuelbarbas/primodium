@@ -3,9 +3,11 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EFleetStance } from "contracts/config/enums";
 import { FC, useMemo } from "react";
 import { Button } from "src/components/core/Button";
+import { Modal } from "src/components/core/Modal";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { disbandFleet } from "src/network/setup/contractCalls/fleetDisband";
@@ -18,6 +20,7 @@ import { useFleetNav } from "./Fleets";
 
 const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
   const mud = useMud();
+  const { openMap } = usePrimodium().api().util;
   const { BackButton, NavButton } = useFleetNav();
   const selectedRock = components.SelectedRock.get()?.value;
   const units = useUnitCounts(fleetEntity);
@@ -185,6 +188,18 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
             </div> */}
           </TransactionQueueMask>
           <div className="flex flex-col gap-2">
+            <Modal.CloseButton
+              className="btn btn-primary btn-sm"
+              disabled={totalUnits <= 0}
+              onClick={() => {
+                components.Send.setOrigin(selectedRock);
+                components.Send.setFleetEntity(fleetEntity);
+                openMap();
+              }}
+            >
+              SEND
+            </Modal.CloseButton>
+
             <Button className="btn btn-primary btn-sm" disabled={totalUnits <= 0}>
               ATTACK
             </Button>
