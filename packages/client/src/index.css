@@ -102,6 +102,12 @@
     background-color: rgb(100 116 139);
   }
 
+  .star-background-sm {
+    background-image: url("/img/backgrounds/star.png");
+    background-repeat: repeat;
+    background-size: 200px;
+  }
+
   .star-background {
     background-image: url("/img/backgrounds/star.png");
     background-repeat: repeat;
@@ -113,6 +119,13 @@
     bacground-opacity: 0.25;
     background-size: cover;
     background-size: 200px;
+  }
+
+  .topographic-background-md {
+    background-image: url("/img/backgrounds/topographic_bg.png");
+    bacground-opacity: 0.25;
+    background-size: cover;
+    background-size: 300px;
   }
 
   .topographic-background {
