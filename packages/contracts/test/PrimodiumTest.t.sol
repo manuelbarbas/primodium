@@ -238,7 +238,11 @@ contract PrimodiumTest is MudTest {
     bytes32 playerEntity = addressToEntity(player);
     bytes32 spaceRock = Home.get(playerEntity);
     bytes32 mainBase = Home.get(spaceRock);
-    P_RequiredResourcesData memory requiredResources = getTrainCost(unitPrototype, count);
+    P_RequiredResourcesData memory requiredResources = getTrainCost(
+      unitPrototype,
+      UnitLevel.get(spaceRock, unitPrototype),
+      count
+    );
 
     provideResources(spaceRock, requiredResources);
     trainUnits(player, mainBase, unitPrototype, count, fastForward);
@@ -369,17 +373,19 @@ contract PrimodiumTest is MudTest {
 
   function getTrainCost(
     EUnit unitType,
+    uint256 level,
     uint256 count
   ) internal view returns (P_RequiredResourcesData memory requiredResources) {
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unitType));
-    requiredResources = getTrainCost(unitPrototype, count);
+    requiredResources = getTrainCost(unitPrototype, level, count);
   }
 
   function getTrainCost(
     bytes32 unitPrototype,
+    uint256 level,
     uint256 count
   ) internal view returns (P_RequiredResourcesData memory requiredResources) {
-    requiredResources = P_RequiredResources.get(unitPrototype, count);
+    requiredResources = P_RequiredResources.get(unitPrototype, level);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       requiredResources.amounts[i] *= count;
     }
