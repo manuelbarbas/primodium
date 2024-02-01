@@ -62,6 +62,7 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
       relationship === RockRelationship.Ally ? 0x00ff00 : relationship === RockRelationship.Enemy ? 0xff0000 : 0x00ffff;
     const circlePositionAbs = calculatePosition(angle, destinationPixelCoord);
     const circlePositionRel = calculatePosition(angle, { x: 0, y: 0 });
+    console.log(`${i}: ${circlePositionRel.x}, ${circlePositionRel.y}`);
     const hoverSize = 16;
     fleetOrbit.add("Graphics").setComponents([
       ObjectPosition(destinationPixelCoord, DepthLayers.Marker),
@@ -86,13 +87,14 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
         () => components.HoverEntity.set({ value: fleet }),
         () => components.HoverEntity.remove()
       ),
-      OnClickUp(scene, () =>
+      OnClickUp(scene, () => {
+        if (relationship !== RockRelationship.Self) return;
         components.SelectedFleet.set({
           fleet,
           ...calculatePosition(angle - 180, { x: destination.x, y: destination.y }, { tileWidth, tileHeight }),
           angle,
-        })
-      ),
+        });
+      }),
     ]);
   });
 };

@@ -15,7 +15,7 @@ import { disbandFleet } from "src/network/setup/contractCalls/fleetDisband";
 import { landFleet } from "src/network/setup/contractCalls/fleetLand";
 import { clearFleetStance, setFleetStance } from "src/network/setup/contractCalls/fleetStance";
 import { formatResourceCount } from "src/util/number";
-import { getFleetLocation } from "src/util/unit";
+import { getFleetTilePosition } from "src/util/unit";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { FleetEntityHeader } from "./FleetHeader";
 import { useFleetNav } from "./Fleets";
@@ -196,7 +196,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               className="btn btn-primary btn-sm"
               disabled={totalUnits <= 0}
               onClick={() => {
-                const fleetLocation = getFleetLocation(fleetEntity, api.scene.getConfig(Scenes.Starmap)?.tilemap);
+                const fleetLocation = getFleetTilePosition(fleetEntity, api.scene.getConfig(Scenes.Starmap)?.tilemap);
                 components.Attack.reset();
                 components.Send.setOrigin(fleetEntity, fleetLocation);
                 api.util.openMap();
@@ -209,7 +209,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               className="btn btn-primary btn-sm"
               disabled={totalUnits <= 0}
               onClick={async () => {
-                const fleetPosition = getFleetLocation(fleetEntity, api.scene.getConfig(Scenes.Starmap)?.tilemap);
+                const fleetPosition = getFleetTilePosition(fleetEntity, api.scene.getConfig(Scenes.Starmap)?.tilemap);
                 components.Send.reset();
                 components.Attack.setOrigin(fleetEntity, fleetPosition);
                 await api.util.openMap();

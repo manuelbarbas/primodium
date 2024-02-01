@@ -118,7 +118,7 @@ export const getAllOrbitingFleets = (entity: Entity) => {
     }
   );
 };
-export const getFleetLocation = (fleet: Entity, scale?: { tileWidth: number; tileHeight: number }) => {
+export const getFleetTilePosition = (fleet: Entity, scale?: { tileWidth: number; tileHeight: number }) => {
   const tileWidth = scale?.tileWidth ?? 1;
   const tileHeight = scale?.tileHeight ?? 1;
 

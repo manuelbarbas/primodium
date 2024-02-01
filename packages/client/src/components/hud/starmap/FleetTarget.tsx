@@ -3,11 +3,11 @@ import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
-import { Button } from "../core/Button";
-import { IconLabel } from "../core/IconLabel";
-import { Modal } from "../core/Modal";
-import { Marker } from "../shared/Marker";
-import { Fleets } from "./panes/fleets/Fleets";
+import { Button } from "../../core/Button";
+import { IconLabel } from "../../core/IconLabel";
+import { Modal } from "../../core/Modal";
+import { Marker } from "../../shared/Marker";
+import { Fleets } from "../panes/fleets/Fleets";
 
 export const _FleetTarget: React.FC<{ fleet: Entity; x: number; y: number }> = ({ fleet, x, y }) => {
   const location = components.FleetMovement.use(fleet)?.destination;

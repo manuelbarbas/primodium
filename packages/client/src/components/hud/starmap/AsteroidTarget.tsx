@@ -8,12 +8,12 @@ import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getAsteroidImage } from "src/util/asteroid";
 import { Hex } from "viem";
-import { Button } from "../core/Button";
-import { IconLabel } from "../core/IconLabel";
-import { Modal } from "../core/Modal";
-import { Marker } from "../shared/Marker";
-import { GracePeriod } from "./GracePeriod";
-import { Fleets } from "./panes/fleets/Fleets";
+import { Button } from "../../core/Button";
+import { IconLabel } from "../../core/IconLabel";
+import { Modal } from "../../core/Modal";
+import { Marker } from "../../shared/Marker";
+import { GracePeriod } from "../GracePeriod";
+import { Fleets } from "../panes/fleets/Fleets";
 
 export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ selectedAsteroid }) => {
   const {
