@@ -7,7 +7,7 @@ import { world } from "src/network/world";
 import { getRockRelationship } from "src/util/asteroid";
 import { PIRATE_KEY, RockRelationship } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
-import { ObjectPosition, SetValue, Tween } from "../../common/object-components/common";
+import { ObjectPosition, OnHover, OnOnce, SetValue } from "../../common/object-components/common";
 import { Circle } from "../../common/object-components/graphics";
 
 const orbitRadius = 64;
@@ -63,29 +63,42 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, playerEntity: Ent
     }),
   ]);
   allFleets.forEach((fleet, i) => {
-    const angle = ((i + 1) / allFleets.length) * 360;
-    const distance = 360 / allFleets.length;
+    const angle = ((i + 1) / allFleets.length) * 360 - 90;
     const owner = components.OwnedBy.get(fleet)?.value;
     const relationship = owner ? getRockRelationship(playerEntity, owner as Entity) : RockRelationship.Neutral;
     const color =
       relationship === RockRelationship.Ally ? 0x00ff00 : relationship === RockRelationship.Enemy ? 0xff0000 : 0x00ffff;
+    const circlePositionAbs = calculatePosition(angle, destinationPixelCoord);
+    const circlePositionRel = calculatePosition(angle, { x: 0, y: 0 });
+    const hoverSize = 16;
     fleetOrbit.add("Graphics").setComponents([
       ObjectPosition(destinationPixelCoord, DepthLayers.Marker),
-      SetValue({
-        input: null,
-      }),
       Circle(5, {
         color,
         borderThickness: 1,
         alpha: 0.75,
-        position: calculatePosition(angle, destinationPixelCoord),
+        position: circlePositionAbs,
       }),
-      Tween(scene, {
-        angle: distance,
-        duration: (20 * 1000) / allFleets.length,
-        repeat: -1,
-        ease: "Linear",
+      OnOnce((gameObject) => {
+        gameObject.setInteractive(
+          new Phaser.Geom.Rectangle(
+            circlePositionRel.x - hoverSize / 2,
+            circlePositionRel.y - hoverSize / 2,
+            hoverSize,
+            hoverSize
+          ),
+          Phaser.Geom.Rectangle.Contains
+        );
       }),
+      OnHover(
+        () => {
+          console.log("hovering");
+          components.HoverEntity.set({ value: fleet });
+        },
+        () => {
+          components.HoverEntity.remove();
+        }
+      ),
     ]);
   });
 };

@@ -84,14 +84,6 @@ export const renderFleetsInTransit = (scene: Scene) => {
         alpha: 0.5,
         color: 0xff0000,
       }),
-      OnHover(
-        () => {
-          components.HoverEntity.set({ value: entity });
-        },
-        () => {
-          components.HoverEntity.remove();
-        }
-      ),
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-expect-error
       OnRxjsSystem(scene.camera.zoom$, (_, zoom) => {
@@ -123,16 +115,12 @@ export const renderFleetsInTransit = (scene: Scene) => {
         direction: direction - 90,
       }),
       OnHover(
-        () => {
-          components.HoverEntity.set({ value: entity });
-        },
-        () => {
-          components.HoverEntity.remove();
-        }
+        () => components.HoverEntity.set({ value: entity }),
+        () => components.HoverEntity.remove()
       ),
-      OnOnce((gameObject) => {
-        gameObject.setInteractive(new Phaser.Geom.Rectangle(-32, -32, 64, 64), Phaser.Geom.Rectangle.Contains);
-      }),
+      OnOnce((gameObject) =>
+        gameObject.setInteractive(new Phaser.Geom.Rectangle(-32, -32, 64, 64), Phaser.Geom.Rectangle.Contains)
+      ),
       OnComponentSystem(components.Time, (gameObject, update) => {
         const now = update.value[0]?.value ?? 0n;
         const timeTraveled = now - movement.sendTime;
