@@ -94,7 +94,6 @@ contract FleetCombatSystem is FleetBaseSystem {
   function afterBattle(bytes32 battleId, NewBattleResultData memory battleResult) internal {
     fleetBattleApplyDamage(battleId, battleResult.aggressorEntity, battleResult.targetDamage);
     if (battleResult.winner == battleResult.aggressorEntity) {
-      fleetBattleResolveRaid(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
       if (!IsFleet.get(battleResult.targetEntity)) {
         LibFleetCombat.resolveBattleEncryption(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
         //todo the following commented line reverts for some reason although it just calles the library function above
@@ -105,6 +104,8 @@ contract FleetCombatSystem is FleetBaseSystem {
           } else {
             initializeSpaceRockOwnership(battleResult.targetEntity, _player());
           }
+        } else {
+          fleetBattleResolveRaid(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
         }
       }
     }
