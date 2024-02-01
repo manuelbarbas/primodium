@@ -23,10 +23,12 @@ export const HoverInfo = () => {
 
   const RockInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
     const rockName = getSpaceRockName(entity);
+    const isTarget = !!components.Send.get()?.fleetEntity;
 
     return (
-      <Card className="ml-5 uppercase font-bold text-xs relative">
+      <Card className="ml-5 uppercase font-bold text-xs relative text-center">
         <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
+        {isTarget && <p className="z-10 text-error">SEND TO</p>}
         <p className="z-10">{rockName}</p>
       </Card>
     );
