@@ -20,7 +20,6 @@ import {
   ObjectPosition,
   OnClickUp,
   OnComponentSystem,
-  OnHover,
   OnOnce,
   OnRxjsSystem,
   SetValue,
@@ -96,7 +95,9 @@ export const renderPirateAsteroid = (scene: Scene) => {
       rotationTween,
       Texture(Assets.SpriteAtlas, SpriteKeys.PirateAsteroid1),
       OnClickUp(scene, () => {
-        if (components.Send.get()?.originFleet) {
+        if (components.Attack.get()?.originFleet) {
+          components.Attack.setDestination(entity);
+        } else if (components.Send.get()?.originFleet) {
           components.Send.setDestination(entity);
         } else {
           components.SelectedRock.set({ value: entity });
@@ -127,21 +128,6 @@ export const renderPirateAsteroid = (scene: Scene) => {
         }
       }),
       Texture(Assets.SpriteAtlas, outlineSprite),
-      OnClickUp(scene, () => {
-        if (components.Send.get()?.originFleet) {
-          components.Send.setDestination(entity);
-        } else {
-          components.SelectedRock.set({ value: entity });
-        }
-      }),
-      OnHover(
-        () => {
-          components.HoverEntity.set({ value: entity });
-        },
-        () => {
-          components.HoverEntity.remove();
-        }
-      ),
       SetValue({
         depth: DepthLayers.Rock + 1,
       }),

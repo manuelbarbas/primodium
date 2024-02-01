@@ -81,6 +81,7 @@ export const Hangar = createExtendedComponent(
 );
 
 export const Send = createSendComponent();
+export const Attack = createSendComponent();
 
 export const SelectedFleet = createExtendedComponent(
   world,
@@ -193,6 +194,7 @@ export default {
   TrainingQueue,
   Hangar,
   Send,
+  Attack,
   SelectedFleet,
 
   /* ------------------------------ Leaderboard ------------------------------- */

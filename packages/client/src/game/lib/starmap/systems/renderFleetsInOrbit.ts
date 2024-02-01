@@ -108,6 +108,7 @@ export const renderFleetsInOrbit = (scene: Scene) => {
   defineEnterSystem(systemsWorld, [Has(components.SelectedFleet)], () => {
     components.SelectedRock.remove();
   });
+
   defineEnterSystem(systemsWorld, [Has(components.SelectedRock)], () => {
     components.SelectedFleet.remove();
   });

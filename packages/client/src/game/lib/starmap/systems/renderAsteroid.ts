@@ -132,7 +132,9 @@ export const renderAsteroid = (scene: Scene) => {
       }),
       Texture(Assets.SpriteAtlas, outlineSprite),
       OnClickUp(scene, () => {
-        if (components.Send.get()?.originFleet) {
+        if (components.Attack.get()?.originFleet) {
+          components.Attack.setDestination(entity);
+        } else if (components.Send.get()?.originFleet) {
           components.Send.setDestination(entity);
         } else {
           components.SelectedRock.set({ value: entity });

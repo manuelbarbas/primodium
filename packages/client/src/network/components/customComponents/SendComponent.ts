@@ -13,7 +13,6 @@ function createSendComponent() {
 
   const emptyComponent = {
     destination: undefined,
-    fleetEntity: undefined,
     originX: undefined,
     originY: undefined,
     originFleet: undefined,

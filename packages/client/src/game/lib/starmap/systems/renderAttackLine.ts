@@ -2,25 +2,24 @@ import { DepthLayers } from "@game/constants";
 import { Coord, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { toast } from "react-toastify";
 import { components } from "src/network/components";
-import { sendFleetPosition } from "src/network/setup/contractCalls/fleetMove";
+import { attack as callAttack } from "src/network/setup/contractCalls/attack";
 import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import { ObjectPosition, OnRxjsSystem } from "../../common/object-components/common";
 import { Line } from "../../common/object-components/graphics";
 
-export const renderMoveLine = (scene: Scene, mud: MUD) => {
+export const renderAttackLine = (scene: Scene, mud: MUD) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const { tileWidth, tileHeight } = scene.tilemap;
-  const id = "moveLine";
+  const id = "attackLine";
 
   function render(originEntity: Entity, originCoord?: Coord) {
     scene.objectPool.removeGroup(id);
     const origin = originCoord ?? components.Position.get(originEntity);
     if (!origin) return;
-    const moveLine = scene.objectPool.getGroup(id);
-    const trajectory = moveLine.add("Graphics", true);
+    const attackLine = scene.objectPool.getGroup(id);
+    const trajectory = attackLine.add("Graphics", true);
     const originPixelCoord = tileCoordToPixelCoord({ x: origin.x, y: -origin.y }, tileWidth, tileHeight);
     const x = scene.input.phaserInput.activePointer.worldX;
     const y = scene.input.phaserInput.activePointer.worldY;
@@ -30,27 +29,27 @@ export const renderMoveLine = (scene: Scene, mud: MUD) => {
       Line(
         { x, y },
         {
-          id: `moveLine-line`,
+          id: `attackLine-line`,
           thickness: Math.min(10, 3 / scene.camera.phaserCamera.zoom),
           alpha: 0.25,
-          color: 0xffffff,
+          color: 0xff0000,
         }
       ),
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-expect-error
       OnRxjsSystem(scene.camera.zoom$, async (_, zoom) => {
-        trajectory.removeComponent(`moveLine-line`);
+        trajectory.removeComponent(`attackLine-line`);
         const x = scene.input.phaserInput.activePointer.worldX;
         const y = scene.input.phaserInput.activePointer.worldY;
         trajectory.setComponent(
           Line(
             { x, y },
             {
-              id: `moveLine-line`,
+              id: `attackLine-line`,
               thickness: Math.min(10, 3 / zoom),
               alpha: 0.25,
-              color: 0xffffff,
+              color: 0xff0000,
             }
           )
         );
@@ -67,10 +66,10 @@ export const renderMoveLine = (scene: Scene, mud: MUD) => {
           Line(
             { x, y },
             {
-              id: `moveLine-line`,
+              id: `attackLine-line`,
               thickness: Math.min(10, 3 / scene.camera.phaserCamera.zoom),
               alpha: 0.25,
-              color: 0xffffff,
+              color: 0xff0000,
             }
           )
         );
@@ -78,25 +77,23 @@ export const renderMoveLine = (scene: Scene, mud: MUD) => {
     ]);
   }
 
-  defineComponentSystem(systemsWorld, components.Send, async ({ value }) => {
+  defineComponentSystem(systemsWorld, components.Attack, async ({ value }) => {
     // const mapOpen = components.MapOpen.get()?.value;
-    const send = value[0];
-    if (!send || !send.originFleet) {
+    const attack = value[0];
+    if (!attack || !attack.originFleet) {
       scene.objectPool.removeGroup(id);
       return;
     }
-    if (send.destination) {
+    if (attack.destination) {
       scene.objectPool.removeGroup(id);
-      components.Send.reset();
+      components.Attack.reset();
       components.SelectedFleet.clear();
       components.SelectedRock.clear();
-      const destinationPosition = components.Position.get(send.destination);
-      if (!destinationPosition) return toast.error("Invalid destination");
-      await sendFleetPosition(mud, send.originFleet, destinationPosition);
+      await callAttack(mud, attack.originFleet, attack.destination);
       return;
     }
-    const originPosition = send.originX && send.originY ? { x: send.originX, y: send.originY } : undefined;
+    const originPosition = attack.originX && attack.originY ? { x: attack.originX, y: attack.originY } : undefined;
 
-    render(send.originFleet, originPosition);
+    render(attack.originFleet, originPosition);
   });
 };
