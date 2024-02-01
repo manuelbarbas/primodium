@@ -28,7 +28,7 @@ interface IFleetTransferSystem {
   ) external;
 
   function transferUnitsFromFleetToSpaceRock(
-    bytes32 fleetId,
+    bytes32 fromFleetId,
     bytes32 spaceRock,
     uint256[] calldata unitCounts
   ) external;
@@ -40,8 +40,8 @@ interface IFleetTransferSystem {
   ) external;
 
   function transferUnitsAndResourcesFromFleetToSpaceRock(
+    bytes32 fromFleetId,
     bytes32 spaceRock,
-    bytes32 fleetId,
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
   ) external;

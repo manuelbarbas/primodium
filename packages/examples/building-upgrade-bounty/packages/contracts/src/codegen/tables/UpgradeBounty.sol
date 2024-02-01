@@ -68,7 +68,7 @@ library UpgradeBounty {
   function getKeyNames() internal pure returns (string[] memory keyNames) {
     keyNames = new string[](2);
     keyNames[0] = "depositor";
-    keyNames[1] = "coord";
+    keyNames[1] = "buildingEntity";
   }
 
   /**
@@ -97,10 +97,10 @@ library UpgradeBounty {
   /**
    * @notice Get value.
    */
-  function getValue(address depositor, bytes32 coord) internal view returns (uint256 value) {
+  function getValue(address depositor, bytes32 buildingEntity) internal view returns (uint256 value) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
-    _keyTuple[1] = coord;
+    _keyTuple[1] = buildingEntity;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint256(bytes32(_blob)));
@@ -109,10 +109,10 @@ library UpgradeBounty {
   /**
    * @notice Get value.
    */
-  function _getValue(address depositor, bytes32 coord) internal view returns (uint256 value) {
+  function _getValue(address depositor, bytes32 buildingEntity) internal view returns (uint256 value) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
-    _keyTuple[1] = coord;
+    _keyTuple[1] = buildingEntity;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint256(bytes32(_blob)));
@@ -121,10 +121,10 @@ library UpgradeBounty {
   /**
    * @notice Get value.
    */
-  function get(address depositor, bytes32 coord) internal view returns (uint256 value) {
+  function get(address depositor, bytes32 buildingEntity) internal view returns (uint256 value) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
-    _keyTuple[1] = coord;
+    _keyTuple[1] = buildingEntity;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint256(bytes32(_blob)));
@@ -133,10 +133,10 @@ library UpgradeBounty {
   /**
    * @notice Get value.
    */
-  function _get(address depositor, bytes32 coord) internal view returns (uint256 value) {
+  function _get(address depositor, bytes32 buildingEntity) internal view returns (uint256 value) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
-    _keyTuple[1] = coord;
+    _keyTuple[1] = buildingEntity;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint256(bytes32(_blob)));
@@ -145,10 +145,10 @@ library UpgradeBounty {
   /**
    * @notice Set value.
    */
-  function setValue(address depositor, bytes32 coord, uint256 value) internal {
+  function setValue(address depositor, bytes32 buildingEntity, uint256 value) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
-    _keyTuple[1] = coord;
+    _keyTuple[1] = buildingEntity;
 
     StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
@@ -156,10 +156,10 @@ library UpgradeBounty {
   /**
    * @notice Set value.
    */
-  function _setValue(address depositor, bytes32 coord, uint256 value) internal {
+  function _setValue(address depositor, bytes32 buildingEntity, uint256 value) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
-    _keyTuple[1] = coord;
+    _keyTuple[1] = buildingEntity;
 
     StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
@@ -167,10 +167,10 @@ library UpgradeBounty {
   /**
    * @notice Set value.
    */
-  function set(address depositor, bytes32 coord, uint256 value) internal {
+  function set(address depositor, bytes32 buildingEntity, uint256 value) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
-    _keyTuple[1] = coord;
+    _keyTuple[1] = buildingEntity;
 
     StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
@@ -178,10 +178,10 @@ library UpgradeBounty {
   /**
    * @notice Set value.
    */
-  function _set(address depositor, bytes32 coord, uint256 value) internal {
+  function _set(address depositor, bytes32 buildingEntity, uint256 value) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
-    _keyTuple[1] = coord;
+    _keyTuple[1] = buildingEntity;
 
     StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
@@ -189,10 +189,10 @@ library UpgradeBounty {
   /**
    * @notice Delete all data for given keys.
    */
-  function deleteRecord(address depositor, bytes32 coord) internal {
+  function deleteRecord(address depositor, bytes32 buildingEntity) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
-    _keyTuple[1] = coord;
+    _keyTuple[1] = buildingEntity;
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple);
   }
@@ -200,10 +200,10 @@ library UpgradeBounty {
   /**
    * @notice Delete all data for given keys.
    */
-  function _deleteRecord(address depositor, bytes32 coord) internal {
+  function _deleteRecord(address depositor, bytes32 buildingEntity) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
-    _keyTuple[1] = coord;
+    _keyTuple[1] = buildingEntity;
 
     StoreCore.deleteRecord(_tableId, _keyTuple, _fieldLayout);
   }
@@ -234,10 +234,10 @@ library UpgradeBounty {
   /**
    * @notice Encode keys as a bytes32 array using this table's field layout.
    */
-  function encodeKeyTuple(address depositor, bytes32 coord) internal pure returns (bytes32[] memory) {
+  function encodeKeyTuple(address depositor, bytes32 buildingEntity) internal pure returns (bytes32[] memory) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint160(depositor)));
-    _keyTuple[1] = coord;
+    _keyTuple[1] = buildingEntity;
 
     return _keyTuple;
   }

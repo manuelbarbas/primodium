@@ -22,7 +22,7 @@ export default mudConfig({
     UpgradeBounty: {
       keySchema: {
         depositor: "address",
-        coord: "bytes32",
+        buildingEntity: "bytes32",
       },
       valueSchema: "uint256",
     },

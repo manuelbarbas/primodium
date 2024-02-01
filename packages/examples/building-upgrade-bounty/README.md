@@ -8,3 +8,4 @@ This example will implement a bounty for an allowlist of addresses to upgrade th
 - [ ] fix coord type in System
 - [ ] set up initial script for testing
 - [ ] document for external readers
+- [ ] clean up and minimize necessary info from Primodium world

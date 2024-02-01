@@ -17,5 +17,5 @@ interface IBuildingUpgradeBountySystem {
   function upgrade_bounty__upgradeForBounty(
     address bountyPublisher,
     PositionData memory coord
-  ) external returns (bytes32);
+  ) external returns (bytes32 newBuildingEntity);
 }

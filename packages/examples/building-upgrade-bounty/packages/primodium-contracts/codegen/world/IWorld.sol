@@ -29,6 +29,7 @@ import { IS_ClaimSystem } from "./IS_ClaimSystem.sol";
 import { IS_FleetBattleApplyDamageSystem } from "./IS_FleetBattleApplyDamageSystem.sol";
 import { IS_FleetBattleResolveEncryptionSystem } from "./IS_FleetBattleResolveEncryptionSystem.sol";
 import { IS_FleetBattleResolveRaidSystem } from "./IS_FleetBattleResolveRaidSystem.sol";
+import { IS_FleetResetIfNoUnitsLeftSystem } from "./IS_FleetResetIfNoUnitsLeftSystem.sol";
 import { IS_InitializeSpaceRockOwnershipSystem } from "./IS_InitializeSpaceRockOwnershipSystem.sol";
 import { IS_ProductionRateSystem } from "./IS_ProductionRateSystem.sol";
 import { IS_RewardsSystem } from "./IS_RewardsSystem.sol";
@@ -74,6 +75,7 @@ interface IWorld is
   IS_FleetBattleApplyDamageSystem,
   IS_FleetBattleResolveEncryptionSystem,
   IS_FleetBattleResolveRaidSystem,
+  IS_FleetResetIfNoUnitsLeftSystem,
   IS_InitializeSpaceRockOwnershipSystem,
   IS_ProductionRateSystem,
   IS_RewardsSystem,
