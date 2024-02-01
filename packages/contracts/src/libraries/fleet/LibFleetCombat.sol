@@ -91,16 +91,19 @@ library LibFleetCombat {
 
   function resolveBattleEncryption(
     bytes32 battleId,
-    bytes32 aggressorEntity,
-    bytes32 targetEntity
+    bytes32 targetEntity,
+    bytes32 unitWithDecryptionPrototype,
+    uint256 decryption
   ) internal returns (uint256 encryptionAtEnd) {
-    (bytes32 unitWithDecryptionPrototype, uint256 decryption) = LibFleetAttributes.getDecryption(aggressorEntity);
     uint256 encryptionAtStart = ResourceCount.get(targetEntity, uint8(EResource.R_Encryption));
     encryptionAtEnd = encryptionAtStart;
     if (decryption == 0) return encryptionAtEnd;
     if (encryptionAtStart != 0) {
       LibStorage.decreaseStoredResource(targetEntity, uint8(EResource.R_Encryption), decryption);
       encryptionAtEnd = ResourceCount.get(targetEntity, uint8(EResource.R_Encryption));
+    }
+    if (encryptionAtEnd == 0) {
+      LibFleet.decreaseFleetUnit(targetEntity, unitWithDecryptionPrototype, 1, true);
     }
     BattleEncryptionResult.set(battleId, targetEntity, encryptionAtStart, encryptionAtEnd);
   }

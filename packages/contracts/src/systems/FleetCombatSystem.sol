@@ -4,6 +4,7 @@ pragma solidity >=0.8.21;
 import { ResourceCount, FleetStance, IsFleet, NewBattleResult, NewBattleResultData, FleetMovement, P_GracePeriod, GracePeriod, OwnedBy } from "codegen/index.sol";
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
+import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
 import { EFleetStance, EResource } from "src/Types.sol";
 import { fleetBattleResolveRaid, fleetBattleApplyDamage, fleetResolveBattleEncryption, transferSpaceRockOwnership, initializeSpaceRockOwnership } from "libraries/SubsystemCalls.sol";
 
@@ -92,24 +93,40 @@ contract FleetCombatSystem is FleetBaseSystem {
   }
 
   function afterBattle(bytes32 battleId, NewBattleResultData memory battleResult) internal {
+    bool isAggressorWinner = battleResult.winner == battleResult.aggressorEntity;
+
+    bool isAggressorFleet = IsFleet.get(battleResult.aggressorEntity);
+
+    bool isTargetFleet = IsFleet.get(battleResult.targetEntity);
+    uint256 aggressorDecryption = 0;
+    bytes32 aggressorDecryptionUnitPrototype = bytes32(0);
+    if (isAggressorFleet)
+      (aggressorDecryptionUnitPrototype, aggressorDecryption) = LibFleetAttributes.getDecryption(
+        battleResult.aggressorEntity
+      );
+
+    bool isRaid = isAggressorWinner && (isTargetFleet || aggressorDecryption == 0);
+
+    bool isDecyption = !isRaid && isAggressorWinner && !isTargetFleet && aggressorDecryption > 0;
     fleetBattleApplyDamage(battleId, battleResult.aggressorEntity, battleResult.targetDamage);
-    if (battleResult.winner == battleResult.aggressorEntity) {
-      if (!IsFleet.get(battleResult.targetEntity)) {
-        LibFleetCombat.resolveBattleEncryption(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
-        //todo the following commented line reverts for some reason although it just calles the library function above
-        //fleetResolveBattleEncryption(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
-        if (ResourceCount.get(battleResult.targetEntity, uint8(EResource.R_Encryption)) == 0) {
-          if (OwnedBy.get(battleResult.targetEntity) != bytes32(0)) {
-            transferSpaceRockOwnership(battleResult.targetEntity, _player());
-          } else {
-            initializeSpaceRockOwnership(battleResult.targetEntity, _player());
-          }
+    if (isRaid) {
+      fleetBattleResolveRaid(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
+    } else if (isDecyption) {
+      //in decryption we resolve encryption first so the fleet decryption unit isn't lost before decrypting
+      LibFleetCombat.resolveBattleEncryption(
+        battleId,
+        battleResult.targetEntity,
+        aggressorDecryptionUnitPrototype,
+        aggressorDecryption
+      );
+      if (ResourceCount.get(battleResult.targetEntity, uint8(EResource.R_Encryption)) == 0) {
+        if (OwnedBy.get(battleResult.targetEntity) != bytes32(0)) {
+          transferSpaceRockOwnership(battleResult.targetEntity, _player());
         } else {
-          fleetBattleResolveRaid(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
+          initializeSpaceRockOwnership(battleResult.targetEntity, _player());
         }
       }
     }
-
     fleetBattleApplyDamage(battleId, battleResult.targetEntity, battleResult.aggressorDamage);
   }
 }
