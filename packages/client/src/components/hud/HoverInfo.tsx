@@ -94,7 +94,6 @@ export const HoverInfo = () => {
   };
 
   const hoverEntity = components.HoverEntity.use()?.value;
-  console.log(hoverEntity);
 
   if (!hoverEntity) return <></>;
 
