@@ -13,6 +13,7 @@ import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { PIRATE_KEY } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
+import { getAngleBetweenPoints } from "src/util/vector";
 import {
   ObjectPosition,
   OnComponentSystem,
@@ -20,7 +21,7 @@ import {
   OnOnce,
   OnRxjsSystem,
 } from "../../common/object-components/common";
-import { Circle, Line } from "../../common/object-components/graphics";
+import { Circle, Line, Triangle } from "../../common/object-components/graphics";
 import { renderEntityOrbitingFleets } from "./renderFleetsInOrbit";
 
 export const renderFleetsInTransit = (scene: Scene) => {
@@ -111,13 +112,15 @@ export const renderFleetsInTransit = (scene: Scene) => {
     ]);
 
     const fleetIcon = sendTrajectory.add("Graphics", true);
+    const direction = getAngleBetweenPoints(originPosition, destinationPosition);
     fleetIcon.setComponents([
       ObjectPosition(originPixelCoord, DepthLayers.Marker),
-      Circle(7, {
+      Triangle(15, 20, {
         color: 0x00ffff,
         id: "fleet",
         borderThickness: 1,
         alpha: 0.75,
+        direction: direction - 90,
       }),
       OnHover(
         () => {

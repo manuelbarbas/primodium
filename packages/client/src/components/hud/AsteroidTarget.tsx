@@ -1,6 +1,7 @@
 import { Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { EResource } from "contracts/config/enums";
 import { useMud } from "src/hooks";
 import { useInGracePeriod } from "src/hooks/useInGracePeriod";
 import { useOrbitingFleets } from "src/hooks/useOrbitingFleets";
@@ -9,12 +10,14 @@ import { components } from "src/network/components";
 import { getAsteroidImage } from "src/util/asteroid";
 import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
+import { Hex } from "viem";
 import { Button } from "../core/Button";
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
 import { Marker } from "../shared/Marker";
 import { TransactionQueueMask } from "../shared/TransactionQueueMask";
 import { GracePeriod } from "./GracePeriod";
+import { Fleets } from "./panes/fleets/Fleets";
 import { SelectFleet } from "./panes/fleets/SelectFleet";
 
 export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ selectedAsteroid }) => {
@@ -34,6 +37,10 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   const selectingDestination = !!components.Send.use()?.fleetEntity;
   const { inGracePeriod } = useInGracePeriod((ownedBy as Entity) ?? singletonEntity);
   const canSendFleet = useOrbitingFleets(selectedAsteroid).length > 0;
+  const canAddFleets =
+    0n <
+    (components.ResourceCount.getWithKeys({ entity: selectedAsteroid as Hex, resource: EResource.U_MaxMoves })?.value ??
+      0n);
 
   if (!mapOpen) return <></>;
 
@@ -61,24 +68,37 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
             {playerEntity === ownedBy && <IconLabel imageUri="/img/icons/minersicon.png" className={``} text="BUILD" />}
           </Button>
         </div>
-        <TransactionQueueMask
-          queueItemId={hashEntities(TransactionQueueType.SendFleet)}
-          className="absolute bottom-0 right-0 translate-x-full w-36"
-          size="xs"
-        >
-          <Modal title="Select a Fleet to Move">
-            <Modal.Button
-              disabled={selectingDestination || !canSendFleet}
-              onClick={() => components.Send.setOrigin(selectedAsteroid)}
-              className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
-            >
-              <IconLabel imageUri="/img/icons/weaponryicon.png" className={``} text="SEND FLEET" />
-            </Modal.Button>
-            <Modal.Content className="h-[30rem] w-[60rem]">
-              <SelectFleet />
-            </Modal.Content>
-          </Modal>
-        </TransactionQueueMask>
+        {canAddFleets && !canSendFleet ? (
+          <div className="absolute bottom-0 right-0 translate-x-full w-36">
+            <Modal title="Add Fleet">
+              <Modal.Button className="btn-ghost btn-xs text-xs text-accent bg-slate-900 border border-l-0 border-secondary/50">
+                <IconLabel imageUri="/img/icons/addicon.png" text="ADD FLEET" />
+              </Modal.Button>
+              <Modal.Content className="w-4/5 h-4/5">
+                <Fleets initialState="createFleet" />
+              </Modal.Content>
+            </Modal>
+          </div>
+        ) : (
+          <TransactionQueueMask
+            queueItemId={hashEntities(TransactionQueueType.SendFleet)}
+            className="absolute bottom-0 right-0 translate-x-full w-36"
+            size="xs"
+          >
+            <Modal title="Select a Fleet to Move">
+              <Modal.Button
+                disabled={selectingDestination || !canSendFleet}
+                onClick={() => components.Send.setOrigin(selectedAsteroid)}
+                className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
+              >
+                <IconLabel imageUri="/img/icons/weaponryicon.png" className={``} text="SEND FLEET" />
+              </Modal.Button>
+              <Modal.Content className="h-[30rem] w-[60rem]">
+                <SelectFleet />
+              </Modal.Content>
+            </Modal>
+          </TransactionQueueMask>
+        )}
 
         {inGracePeriod && (
           <div className="absolute top-0 left-0 -translate-x-full">
