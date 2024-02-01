@@ -7,13 +7,15 @@ import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
 contract S_FleetBattleResolveEncryptionSystem is PrimodiumSystem {
   function resolveBattleEncryption(
     bytes32 battleId,
-    bytes32 targetEntity,
+    bytes32 targetSpaceRock,
+    bytes32 aggressorEntity,
     bytes32 aggressorDecryptionUnitPrototype,
     uint256 aggressorDecryption
   ) public {
     LibFleetCombat.resolveBattleEncryption(
       battleId,
-      targetEntity,
+      targetSpaceRock,
+      aggressorEntity,
       aggressorDecryptionUnitPrototype,
       aggressorDecryption
     );

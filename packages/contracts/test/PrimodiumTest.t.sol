@@ -425,6 +425,18 @@ contract PrimodiumTest is MudTest {
     uint256[] memory unitCounts,
     uint256[] memory resourceCounts
   ) public {
+    if (ResourceCount.get(spaceRock, uint8(EResource.U_MaxMoves)) == 0) {
+      increaseProduction(spaceRock, EResource.U_MaxMoves, 1);
+    }
+    setupCreateFleetNoMaxMovesGranted(player, spaceRock, unitCounts, resourceCounts);
+  }
+
+  function setupCreateFleetNoMaxMovesGranted(
+    address player,
+    bytes32 spaceRock,
+    uint256[] memory unitCounts,
+    uint256[] memory resourceCounts
+  ) public {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       trainUnits(player, unitPrototypes[i], unitCounts[i], true);

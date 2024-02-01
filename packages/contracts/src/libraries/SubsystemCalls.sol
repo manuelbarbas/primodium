@@ -43,7 +43,8 @@ function fleetBattleResolveRaid(bytes32 battleId, bytes32 raider, bytes32 target
 
 function fleetResolveBattleEncryption(
   bytes32 battleId,
-  bytes32 targetEntity,
+  bytes32 targetSpaceRock,
+  bytes32 aggressorEntity,
   bytes32 unitWithDecryptionPrototype,
   uint256 decryption
 ) {
@@ -52,7 +53,7 @@ function fleetResolveBattleEncryption(
     getSystemResourceId("S_FleetBattleResolveEncryptionSystem"),
     abi.encodeCall(
       S_FleetBattleResolveEncryptionSystem.resolveBattleEncryption,
-      (battleId, targetEntity, unitWithDecryptionPrototype, decryption)
+      (battleId, targetSpaceRock, aggressorEntity, unitWithDecryptionPrototype, decryption)
     ),
     0
   );

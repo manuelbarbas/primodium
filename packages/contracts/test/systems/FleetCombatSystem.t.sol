@@ -53,7 +53,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     vm.startPrank(creator);
     GracePeriod.set(bobHomeSpaceRock, block.timestamp);
     vm.stopPrank();
-    console.log("after attack");
+
     vm.warp(FleetMovement.getArrivalTime(fleetId));
 
     uint256 unitCargo = P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
@@ -63,6 +63,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     vm.startPrank(alice);
     world.attack(fleetId, bobHomeSpaceRock);
     vm.stopPrank();
+    console.log("after attack");
     console.log("iron after raid: %s", ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Iron)));
     assertEq(GracePeriod.get(aliceEntity), 0, "alice should not be in grace period");
     assertEq(ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Iron)), 0, "space rock iron count should be 0");
@@ -457,6 +458,134 @@ contract FleetCombatSystemTest is PrimodiumTest {
       "encryption should have been reduced by decryption"
     );
 
+    vm.warp(block.timestamp + 5);
+    claimResources(bobHomeSpaceRock);
+    assertEq(
+      ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)),
+      encryption - decryption + ProductionRate.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)) * 5,
+      "encryption should recovered by production"
+    );
+
+    console.log("end");
+  }
+
+  //test fleet attack space rock and lose
+  function testFleetAttackSpaceRockEncryptionTakeOver() public {
+    console.log("start");
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    uint256 numberOfUnits = 10;
+
+    //create fleet with 1 minuteman marine
+    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
+    bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
+    uint256 decryption = P_Unit.getDecryption(
+      colonyShipPrototype,
+      UnitLevel.get(aliceHomeSpaceRock, colonyShipPrototype)
+    );
+    console.log("decryption: %s", decryption);
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = numberOfUnits;
+      if (unitPrototypes[i] == colonyShipPrototype) unitCounts[i] = 1;
+    }
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+
+    uint256 encryption = ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption));
+    console.log("encryption: %s", encryption);
+    uint256 fleetCountToWin = LibMath.divideCeil(encryption, decryption);
+
+    bytes32[] memory fleetIds = new bytes32[](fleetCountToWin);
+    require(fleetCountToWin > 0, "should have at least 1 fleet to win");
+
+    for (uint256 i = 0; i < fleetCountToWin; i++) {
+      console.log("create fleet %s", i);
+      setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
+
+      vm.startPrank(alice);
+      fleetIds[i] = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+      vm.stopPrank();
+      console.log("create fleet done %s", i);
+    }
+
+    vm.startPrank(alice);
+    for (uint256 i = 0; i < fleetCountToWin; i++) {
+      console.log("send fleet %s", i);
+      world.sendFleet(fleetIds[i], bobHomeSpaceRock);
+      console.log("send fleet done %s", i);
+    }
+    vm.stopPrank();
+    //bob stuff:
+
+    uint256 ironAmount = numberOfUnits *
+      P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
+    increaseResource(bobHomeSpaceRock, EResource.Iron, ironAmount);
+
+    vm.startPrank(creator);
+    GracePeriod.set(bobHomeSpaceRock, block.timestamp);
+    vm.stopPrank();
+
+    console.log("creaete bob fleet");
+    setupCreateFleet(bob, bobHomeSpaceRock, unitCounts, resourceCounts);
+
+    vm.startPrank(bob);
+    bytes32 bobFleet = world.createFleet(bobHomeSpaceRock, unitCounts, resourceCounts);
+
+    world.sendFleet(bobFleet, aliceHomeSpaceRock);
+    vm.stopPrank();
+    console.log("creaete bob fleet done");
+
+    vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetIds[0]), block.timestamp));
+    vm.startPrank(alice);
+    for (uint256 i = 0; i < fleetCountToWin; i++) {
+      console.log("fleet attack %s", i);
+      uint256 encryptionBeforeAttack = ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption));
+
+      world.attack(fleetIds[i], bobHomeSpaceRock);
+      if (encryptionBeforeAttack > decryption) {
+        assertEq(
+          ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)),
+          encryptionBeforeAttack - decryption,
+          "encryption should have decreased after attack"
+        );
+      } else {
+        assertEq(
+          ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)),
+          0,
+          "encryption should have reached zero"
+        );
+      }
+      assertEq(LibFleetAttributes.getOccupiedCargo(fleetIds[i]), 0, "fleet should not have raided");
+      console.log("fleet attack done %s", i);
+    }
+
+    vm.stopPrank();
+    console.log("encryption after battles: %s", ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)));
+
+    assertEq(OwnedBy.get(bobHomeSpaceRock), aliceEntity, "space rock should have been taken over");
+
+    assertEq(UnitCount.get(bobFleet, unitPrototype), 0, "fleet should have been disbanded and marine units");
+    assertEq(
+      UnitCount.get(bobFleet, colonyShipPrototype),
+      0,
+      "fleet should have been disbanded and colony ship unit lost"
+    );
+
+    assertEq(FleetMovement.getDestination(bobFleet), bobHomeSpaceRock, "fleet should have been reset to orbit");
+    assertEq(FleetMovement.getOrigin(bobFleet), bobHomeSpaceRock, "fleet should have been reset to orbit");
+    assertEq(FleetMovement.getArrivalTime(bobFleet), block.timestamp, "fleet should have been reset to orbit");
+    assertEq(FleetMovement.getSendTime(bobFleet), block.timestamp, "fleet should have been reset to orbit");
+
+    assertEq(
+      ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Iron)),
+      ironAmount,
+      "space rock should not have been raided"
+    );
+    assertEq(
+      ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)),
+      0,
+      "encryption should have reached zero"
+    );
     console.log("end");
   }
 }

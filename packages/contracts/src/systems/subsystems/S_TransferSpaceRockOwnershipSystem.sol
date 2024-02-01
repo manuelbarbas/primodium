@@ -7,7 +7,7 @@ import { OwnedBy } from "src/codegen/index.sol";
 import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
 
 contract S_TransferSpaceRockOwnershipSystem is PrimodiumSystem {
-  function transferSpaceRockOwnership(bytes32 aggressorEntity, bytes32 targetEntity) public {
-    LibFleetCombat.transferSpaceRockOwnership(targetEntity, OwnedBy.get(OwnedBy.get(aggressorEntity)));
+  function transferSpaceRockOwnership(bytes32 spaceRock, bytes32 newOwner) public {
+    LibFleetCombat.transferSpaceRockOwnership(spaceRock, newOwner);
   }
 }

@@ -1,6 +1,7 @@
 import { Hex } from "viem";
 import { config } from "../mud.config";
 import {
+  SCALE,
   encodeArray,
   getPirateObjectiveResourceValues,
   getResourceValue,
@@ -18,7 +19,7 @@ import { getBlueprint } from "./util/blueprints";
 import encodeBytes32, { encodeAddress } from "./util/encodeBytes32";
 
 const mainBaseMaxResourceUpgrades = {
-  1: { Iron: 5000, Copper: 5000, IronPlate: 2500, R_Encryption: 1000 },
+  1: { Iron: 5000, Copper: 5000, IronPlate: 2500, R_Encryption: 100 },
   2: {
     Iron: 10000,
     Copper: 10000,
@@ -26,7 +27,7 @@ const mainBaseMaxResourceUpgrades = {
     Lithium: 10000,
     PVCell: 5000,
     Alloy: 5000,
-    R_Encryption: 1000,
+    R_Encryption: 100,
   },
   3: {
     Iron: 25000,
@@ -39,7 +40,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 500,
     Iridium: 500,
     Kimberlite: 500,
-    R_Encryption: 1000,
+    R_Encryption: 100,
   },
   4: {
     Iron: 75000,
@@ -52,7 +53,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 1000,
     Iridium: 1000,
     Kimberlite: 1000,
-    R_Encryption: 1000,
+    R_Encryption: 100,
   },
   5: {
     Iron: 150000,
@@ -65,7 +66,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 3000,
     Iridium: 3000,
     Kimberlite: 3000,
-    R_Encryption: 1000,
+    R_Encryption: 100,
   },
   6: {
     Iron: 250000,
@@ -78,7 +79,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 6000,
     Iridium: 6000,
     Kimberlite: 6000,
-    R_Encryption: 1000,
+    R_Encryption: 100,
   },
   7: {
     Iron: 750000,
@@ -91,7 +92,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 7500,
     Iridium: 7500,
     Kimberlite: 7500,
-    R_Encryption: 1000,
+    R_Encryption: 100,
   },
   8: {
     Iron: 1500000,
@@ -104,7 +105,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 10000,
     Iridium: 10000,
     Kimberlite: 10000,
-    R_Encryption: 1000,
+    R_Encryption: 100,
   },
 };
 
@@ -1490,7 +1491,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredBaseLevel: { value: 3n },
         P_Unit: {
           hp: 100n,
-          decryption: 10n,
+          decryption: BigInt(SCALE) * 10n,
           attack: 20n,
           defense: 5000n,
           cargo: 100000n,
@@ -1506,7 +1507,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         },
         P_Unit: {
           hp: 100n,
-          decryption: 12n,
+          decryption: BigInt(SCALE) * 12n,
           attack: 50n,
           defense: 5500n,
           cargo: 100000n,
@@ -1522,7 +1523,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         },
         P_Unit: {
           hp: 100n,
-          decryption: 15n,
+          decryption: BigInt(SCALE) * 15n,
           attack: 100n,
           defense: 6000n,
           cargo: 100000n,
@@ -1538,7 +1539,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         },
         P_Unit: {
           hp: 100n,
-          decryption: 17n,
+          decryption: BigInt(SCALE) * 17n,
           attack: 250n,
           defense: 6500n,
           cargo: 100000n,
@@ -1554,7 +1555,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         },
         P_Unit: {
           hp: 100n,
-          decryption: 20n,
+          decryption: BigInt(SCALE) * 20n,
           attack: 500n,
           defense: 7000n,
           cargo: 100000n,
@@ -1570,7 +1571,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         },
         P_Unit: {
           hp: 100n,
-          decryption: 22n,
+          decryption: BigInt(SCALE) * 22n,
           attack: 1000n,
           defense: 7500n,
           cargo: 100000n,

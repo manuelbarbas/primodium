@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-
 import { EResource } from "src/Types.sol";
 import { BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, MaxResourceCount, NewBattleResult, NewBattleResultData, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 import { getSystemResourceId } from "src/utils.sol";
@@ -91,24 +90,27 @@ library LibFleetCombat {
 
   function resolveBattleEncryption(
     bytes32 battleId,
-    bytes32 targetEntity,
+    bytes32 targetSpaceRock,
+    bytes32 aggressorEntity,
     bytes32 unitWithDecryptionPrototype,
     uint256 decryption
   ) internal returns (uint256 encryptionAtEnd) {
-    uint256 encryptionAtStart = ResourceCount.get(targetEntity, uint8(EResource.R_Encryption));
+    uint256 encryptionAtStart = ResourceCount.get(targetSpaceRock, uint8(EResource.R_Encryption));
     encryptionAtEnd = encryptionAtStart;
     if (decryption == 0) return encryptionAtEnd;
     if (encryptionAtStart != 0) {
       if (decryption > encryptionAtStart) {
         decryption = encryptionAtStart;
       }
-      LibStorage.decreaseStoredResource(targetEntity, uint8(EResource.R_Encryption), decryption);
-      encryptionAtEnd = ResourceCount.get(targetEntity, uint8(EResource.R_Encryption));
+      if (decryption != 0) {
+        LibStorage.decreaseStoredResource(targetSpaceRock, uint8(EResource.R_Encryption), decryption);
+        encryptionAtEnd = ResourceCount.get(targetSpaceRock, uint8(EResource.R_Encryption));
+      }
     }
     if (encryptionAtEnd == 0) {
-      LibFleet.decreaseFleetUnit(targetEntity, unitWithDecryptionPrototype, 1, true);
+      LibFleet.decreaseFleetUnit(aggressorEntity, unitWithDecryptionPrototype, 1, true);
     }
-    BattleEncryptionResult.set(battleId, targetEntity, encryptionAtStart, encryptionAtEnd);
+    BattleEncryptionResult.set(battleId, targetSpaceRock, encryptionAtStart, encryptionAtEnd);
   }
 
   function transferSpaceRockOwnership(bytes32 spaceRock, bytes32 newOwner) internal {

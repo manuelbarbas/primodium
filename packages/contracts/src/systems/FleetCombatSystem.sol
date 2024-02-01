@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-
 import { ResourceCount, FleetStance, IsFleet, NewBattleResult, NewBattleResultData, FleetMovement, P_GracePeriod, GracePeriod, OwnedBy } from "codegen/index.sol";
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
@@ -116,6 +115,7 @@ contract FleetCombatSystem is FleetBaseSystem {
       LibFleetCombat.resolveBattleEncryption(
         battleId,
         battleResult.targetEntity,
+        battleResult.aggressorEntity,
         aggressorDecryptionUnitPrototype,
         aggressorDecryption
       );
