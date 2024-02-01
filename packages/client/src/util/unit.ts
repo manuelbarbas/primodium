@@ -1,8 +1,9 @@
 import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
-import { Entity } from "@latticexyz/recs";
+import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
 import { components, components as comps } from "src/network/components";
 import { Hex } from "viem";
-import { SPEED_SCALE, UnitStorages } from "./constants";
+import { PIRATE_KEY, SPEED_SCALE, UnitStorages } from "./constants";
+import { hashKeyEntity } from "./encode";
 import { entityToRockName } from "./name";
 
 export function getFleetUnitCounts(fleet: Entity) {
@@ -99,6 +100,55 @@ export const getFleetStatsFromUnits = (units: Map<Entity, bigint>) => {
   });
   return data;
 };
+
+export const getAllOrbitingFleets = (entity: Entity) => {
+  const playerEntity = components.Account.get()?.value;
+  if (
+    !playerEntity ||
+    (components.PirateAsteroid.has(entity) &&
+      hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(entity)?.value)
+  )
+    return [];
+
+  return [...runQuery([Has(components.IsFleet), HasValue(components.FleetMovement, { destination: entity })])].filter(
+    (entity) => {
+      const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
+      const now = components.Time.get()?.value ?? 0n;
+      return arrivalTime < now;
+    }
+  );
+};
+export const getFleetLocation = (fleet: Entity, scale?: { tileWidth: number; tileHeight: number }) => {
+  const tileWidth = scale?.tileWidth ?? 1;
+  const tileHeight = scale?.tileHeight ?? 1;
+
+  const spaceRock = components.FleetMovement.get(fleet)?.destination as Entity;
+  const rockPosition = components.Position.get(spaceRock);
+  const allFleets = getAllOrbitingFleets(spaceRock);
+  const i = allFleets.indexOf(fleet);
+  const angle = ((i + 1) / allFleets.length) * 360 - 90;
+
+  return calculatePosition(
+    angle - 180,
+    { x: rockPosition?.x ?? 0, y: rockPosition?.y ?? 0 },
+    { tileWidth, tileHeight }
+  );
+};
+
+const orbitRadius = 64;
+export function calculatePosition(
+  angleInDegrees: number,
+  origin: { x: number; y: number },
+  scale?: { tileWidth: number; tileHeight: number }
+): { x: number; y: number } {
+  const tileWidth = scale?.tileWidth ?? 1;
+  const tileHeight = scale?.tileHeight ?? 1;
+  const radians = (angleInDegrees * Math.PI) / 180; // Convert angle to radians
+  const x = (orbitRadius / tileWidth) * Math.cos(radians); // Calculate x coordinate
+  const y = (orbitRadius / tileHeight) * Math.sin(radians); // Calculate y coordinate
+
+  return { x: x + origin.x, y: y + origin.y };
+}
 
 // time is in blocks (~1/second)
 export function getUnitTrainingTime(rawPlayer: Entity, rawBuilding: Entity, rawUnit: Entity) {

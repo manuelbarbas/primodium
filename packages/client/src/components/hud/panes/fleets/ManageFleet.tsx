@@ -1,3 +1,4 @@
+import { Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EFleetStance } from "contracts/config/enums";
@@ -14,13 +15,15 @@ import { disbandFleet } from "src/network/setup/contractCalls/fleetDisband";
 import { landFleet } from "src/network/setup/contractCalls/fleetLand";
 import { clearFleetStance, setFleetStance } from "src/network/setup/contractCalls/fleetStance";
 import { formatResourceCount } from "src/util/number";
+import { getFleetLocation } from "src/util/unit";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { FleetEntityHeader } from "./FleetHeader";
 import { useFleetNav } from "./Fleets";
 
 const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
   const mud = useMud();
-  const { openMap } = usePrimodium().api().util;
+  const api = usePrimodium().api();
+
   const { BackButton, NavButton } = useFleetNav();
   const selectedRock = components.SelectedRock.get()?.value;
   const units = useUnitCounts(fleetEntity);
@@ -192,9 +195,9 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               className="btn btn-primary btn-sm"
               disabled={totalUnits <= 0}
               onClick={() => {
-                components.Send.setOrigin(selectedRock);
-                components.Send.setFleetEntity(fleetEntity);
-                openMap();
+                const fleetLocation = getFleetLocation(fleetEntity, api.scene.getConfig(Scenes.Starmap)?.tilemap);
+                components.Send.setOrigin(fleetEntity, fleetLocation);
+                api.util.openMap();
               }}
             >
               SEND

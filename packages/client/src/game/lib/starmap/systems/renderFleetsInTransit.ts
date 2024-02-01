@@ -11,7 +11,8 @@ import {
 import { Scene } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
-import { PIRATE_KEY } from "src/util/constants";
+import { getRockRelationship } from "src/util/asteroid";
+import { PIRATE_KEY, RockRelationship } from "src/util/constants";
 import { hashKeyEntity } from "src/util/encode";
 import { getAngleBetweenPoints } from "src/util/vector";
 import {
@@ -33,7 +34,7 @@ export const renderFleetsInTransit = (scene: Scene) => {
     const playerEntity = components.Account.get()?.value;
     const movement = components.FleetMovement.get(entity);
 
-    if (!movement) return;
+    if (!movement || !playerEntity) return;
 
     const origin = movement.origin as Entity;
     const destination = movement.destination as Entity;
@@ -105,10 +106,15 @@ export const renderFleetsInTransit = (scene: Scene) => {
 
     const fleetIcon = sendTrajectory.add("Graphics", true);
     const direction = getAngleBetweenPoints(originPosition, destinationPosition);
+    const owner = components.OwnedBy.get(entity)?.value;
+    const relationship = owner ? getRockRelationship(playerEntity, owner as Entity) : RockRelationship.Neutral;
+    const color =
+      relationship === RockRelationship.Ally ? 0x00ff00 : relationship === RockRelationship.Enemy ? 0xff0000 : 0x00ffff;
+
     fleetIcon.setComponents([
       ObjectPosition(originPixelCoord, DepthLayers.Marker),
       Triangle(15, 20, {
-        color: 0x00ffff,
+        color,
         id: "fleet",
         borderThickness: 1,
         alpha: 0.75,
@@ -128,9 +134,9 @@ export const renderFleetsInTransit = (scene: Scene) => {
 
         const progress = Number(timeTraveled) / Number(totaltime);
 
-        if (playerEntity && progress > 1) {
+        if (progress > 1) {
           //render orbit
-          renderEntityOrbitingFleets(destination, playerEntity, scene);
+          renderEntityOrbitingFleets(destination, scene);
 
           //remove transit render
           scene.objectPool.removeGroup(entity + objIndexSuffix);

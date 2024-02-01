@@ -1,5 +1,5 @@
 import { DepthLayers } from "@game/constants";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { Coord, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
@@ -15,8 +15,9 @@ export const renderMoveLine = (scene: Scene, mud: MUD) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const id = "moveLine";
 
-  function render(originEntity: Entity) {
-    const origin = components.Position.get(originEntity);
+  function render(originEntity: Entity, originCoord?: Coord) {
+    scene.objectPool.removeGroup(id);
+    const origin = originCoord ?? components.Position.get(originEntity);
     if (!origin) return;
     const moveLine = scene.objectPool.getGroup(id);
     const trajectory = moveLine.add("Graphics", true);
@@ -80,19 +81,22 @@ export const renderMoveLine = (scene: Scene, mud: MUD) => {
   defineComponentSystem(systemsWorld, components.Send, async ({ value }) => {
     // const mapOpen = components.MapOpen.get()?.value;
     const send = value[0];
-    if (!send || !send.fleetEntity || !send.origin) {
+    if (!send || !send.originFleet) {
       scene.objectPool.removeGroup(id);
       return;
     }
     if (send.destination) {
       scene.objectPool.removeGroup(id);
-      components.Send.clear();
+      components.Send.reset();
+      components.SelectedFleet.clear();
+      components.SelectedRock.clear();
       const destinationPosition = components.Position.get(send.destination);
       if (!destinationPosition) return toast.error("Invalid destination");
-      await sendFleetPosition(mud, send.fleetEntity, destinationPosition);
+      await sendFleetPosition(mud, send.originFleet, destinationPosition);
       return;
     }
+    const originPosition = send.originX && send.originY ? { x: send.originX, y: send.originY } : undefined;
 
-    render(send.origin);
+    render(send.originFleet, originPosition);
   });
 };

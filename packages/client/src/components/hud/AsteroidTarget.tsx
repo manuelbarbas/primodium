@@ -4,21 +4,16 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
 import { useMud } from "src/hooks";
 import { useInGracePeriod } from "src/hooks/useInGracePeriod";
-import { useOrbitingFleets } from "src/hooks/useOrbitingFleets";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getAsteroidImage } from "src/util/asteroid";
-import { TransactionQueueType } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
 import { Hex } from "viem";
 import { Button } from "../core/Button";
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
 import { Marker } from "../shared/Marker";
-import { TransactionQueueMask } from "../shared/TransactionQueueMask";
 import { GracePeriod } from "./GracePeriod";
 import { Fleets } from "./panes/fleets/Fleets";
-import { SelectFleet } from "./panes/fleets/SelectFleet";
 
 export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ selectedAsteroid }) => {
   const {
@@ -27,16 +22,14 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   const primodium = usePrimodium();
   const {
     hooks: { useCoordToScreenCoord },
-    scene: { transitionToScene },
+    util: { closeMap },
   } = primodium.api(Scenes.Starmap);
   const ownedBy = components.OwnedBy.use(selectedAsteroid)?.value;
   const mapOpen = components.MapOpen.use()?.value ?? false;
   const position = components.Position.use(selectedAsteroid) ?? { x: 0, y: 0 };
   const imageUri = getAsteroidImage(primodium, selectedAsteroid);
   const { screenCoord, isBounded } = useCoordToScreenCoord(position, true);
-  const selectingDestination = !!components.Send.use()?.fleetEntity;
   const { inGracePeriod } = useInGracePeriod((ownedBy as Entity) ?? singletonEntity);
-  const canSendFleet = useOrbitingFleets(selectedAsteroid).length > 0;
   const canAddFleets =
     0n <
     (components.ResourceCount.getWithKeys({ entity: selectedAsteroid as Hex, resource: EResource.U_MaxMoves })?.value ??
@@ -56,11 +49,10 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
           <Button
             className="btn-ghost btn-xs text-xs text-accent bg-slate-900 border border-l-0 border-secondary/50"
             onClick={async () => {
+              components.Send.reset();
               components.ActiveRock.set({ value: selectedAsteroid });
-              await transitionToScene(Scenes.Starmap, Scenes.Asteroid, 0);
-              components.MapOpen.set({ value: false });
+              await closeMap();
             }}
-            disabled={selectingDestination}
           >
             {playerEntity !== ownedBy && (
               <IconLabel imageUri="/img/icons/spectateicon.png" className={``} text="VIEW" />
@@ -68,7 +60,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
             {playerEntity === ownedBy && <IconLabel imageUri="/img/icons/minersicon.png" className={``} text="BUILD" />}
           </Button>
         </div>
-        {canAddFleets && !canSendFleet ? (
+        {canAddFleets && (
           <div className="absolute bottom-0 right-0 translate-x-full w-36">
             <Modal title="Add Fleet">
               <Modal.Button className="btn-ghost btn-xs text-xs text-accent bg-slate-900 border border-l-0 border-secondary/50">
@@ -79,25 +71,6 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
               </Modal.Content>
             </Modal>
           </div>
-        ) : (
-          <TransactionQueueMask
-            queueItemId={hashEntities(TransactionQueueType.SendFleet)}
-            className="absolute bottom-0 right-0 translate-x-full w-36"
-            size="xs"
-          >
-            <Modal title="Select a Fleet to Move">
-              <Modal.Button
-                disabled={selectingDestination || !canSendFleet}
-                onClick={() => components.Send.setOrigin(selectedAsteroid)}
-                className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
-              >
-                <IconLabel imageUri="/img/icons/weaponryicon.png" className={``} text="SEND FLEET" />
-              </Modal.Button>
-              <Modal.Content className="h-[30rem] w-[60rem]">
-                <SelectFleet />
-              </Modal.Content>
-            </Modal>
-          </TransactionQueueMask>
         )}
 
         {inGracePeriod && (
@@ -109,19 +82,10 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
         )}
         <div className="absolute bottom-0 left-0 -translate-x-full">
           <Button
-            className={`btn-ghost btn-xs text-xs text-accent bg-neutral border border-r-0 pl-2 border-secondary/50 ${
-              selectingDestination ? "w-32" : "w-28"
-            } transition-[width] duration-200`}
-            onClick={() => {
-              components.Send.clear();
-              !selectingDestination && components.SelectedRock.remove();
-            }}
+            className="btn-ghost btn-xs text-xs text-accent bg-neutral border border-r-0 pl-2 border-secondary/50 w-28 transition-[width] duration-200"
+            onClick={() => components.Send.clear()}
           >
-            <IconLabel
-              imageUri="/img/icons/returnicon.png"
-              className={``}
-              text={selectingDestination ? "CANCEL MOVE" : "CLOSE"}
-            />
+            <IconLabel imageUri="/img/icons/returnicon.png" className={``} text="CLOSE" />
           </Button>
         </div>
         <img src={imageUri} className="scale-75" />

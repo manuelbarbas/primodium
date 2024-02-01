@@ -1,44 +1,36 @@
 import { DepthLayers } from "@game/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Entity, Has, HasValue, defineComponentSystem, namespaceWorld, runQuery } from "@latticexyz/recs";
+import { Entity, Has, defineComponentSystem, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { getRockRelationship } from "src/util/asteroid";
-import { PIRATE_KEY, RockRelationship } from "src/util/constants";
-import { hashKeyEntity } from "src/util/encode";
-import { ObjectPosition, OnHover, OnOnce, SetValue } from "../../common/object-components/common";
+import { RockRelationship } from "src/util/constants";
+import { getAllOrbitingFleets } from "src/util/unit";
+import { ObjectPosition, OnClickUp, OnHover, OnOnce, SetValue } from "../../common/object-components/common";
 import { Circle } from "../../common/object-components/graphics";
 
 const orbitRadius = 64;
-function calculatePosition(angleInDegrees: number, origin: { x: number; y: number }): { x: number; y: number } {
+function calculatePosition(
+  angleInDegrees: number,
+  origin: { x: number; y: number },
+  scale?: { tileWidth: number; tileHeight: number }
+): { x: number; y: number } {
+  const tileWidth = scale?.tileWidth ?? 1;
+  const tileHeight = scale?.tileHeight ?? 1;
   const radians = (angleInDegrees * Math.PI) / 180; // Convert angle to radians
-  const x = orbitRadius * Math.cos(radians); // Calculate x coordinate
-  const y = orbitRadius * Math.sin(radians); // Calculate y coordinate
+  const x = (orbitRadius / tileWidth) * Math.cos(radians); // Calculate x coordinate
+  const y = (orbitRadius / tileHeight) * Math.sin(radians); // Calculate y coordinate
 
   return { x: x + origin.x, y: y + origin.y };
 }
 
-const getAllOrbitingFleets = (entity: Entity, playerEntity: Entity) => {
-  if (
-    components.PirateAsteroid.has(entity) &&
-    hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(entity)?.value
-  )
-    return [];
-
-  return [...runQuery([Has(components.IsFleet), HasValue(components.FleetMovement, { destination: entity })])].filter(
-    (entity) => {
-      const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
-      const now = components.Time.get()?.value ?? 0n;
-      return arrivalTime < now;
-    }
-  );
-};
-
-export const renderEntityOrbitingFleets = (rockEntity: Entity, playerEntity: Entity, scene: Scene) => {
+export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => {
   const objIndexSuffix = "_spacerockOrbits";
   const { tileWidth, tileHeight } = scene.tilemap;
-  const allFleets = getAllOrbitingFleets(rockEntity, playerEntity);
+  const playerEntity = components.Account.get()?.value;
+  if (!playerEntity) return;
+  const allFleets = getAllOrbitingFleets(rockEntity);
   const position = components.Position.get(rockEntity);
   scene.objectPool.removeGroup(rockEntity + objIndexSuffix);
   if (!position || allFleets.length == 0) return;
@@ -91,13 +83,15 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, playerEntity: Ent
         );
       }),
       OnHover(
-        () => {
-          console.log("hovering");
-          components.HoverEntity.set({ value: fleet });
-        },
-        () => {
-          components.HoverEntity.remove();
-        }
+        () => components.HoverEntity.set({ value: fleet }),
+        () => components.HoverEntity.remove()
+      ),
+      OnClickUp(scene, () =>
+        components.SelectedFleet.set({
+          fleet,
+          ...calculatePosition(angle - 180, { x: destination.x, y: destination.y }, { tileWidth, tileHeight }),
+          angle,
+        })
       ),
     ]);
   });
@@ -107,13 +101,14 @@ export const renderFleetsInOrbit = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   defineComponentSystem(systemsWorld, components.FleetMovement, (update) => {
-    const playerEntity = components.Account.get()?.value;
-    if (!playerEntity) return;
-    if (update.value[0]) {
-      renderEntityOrbitingFleets(update.value[0].destination as Entity, playerEntity, scene);
-    }
-    if (update.value[1]) {
-      renderEntityOrbitingFleets(update.value[1].destination as Entity, playerEntity, scene);
-    }
+    if (update.value[0]) renderEntityOrbitingFleets(update.value[0].destination as Entity, scene);
+    if (update.value[1]) renderEntityOrbitingFleets(update.value[1].destination as Entity, scene);
+  });
+
+  defineEnterSystem(systemsWorld, [Has(components.SelectedFleet)], () => {
+    components.SelectedRock.remove();
+  });
+  defineEnterSystem(systemsWorld, [Has(components.SelectedRock)], () => {
+    components.SelectedFleet.remove();
   });
 };
