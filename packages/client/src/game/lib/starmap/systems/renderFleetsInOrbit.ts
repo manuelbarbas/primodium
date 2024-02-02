@@ -94,14 +94,12 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
       ),
       OnComponentSystem(components.HoverEntity, (_, { value: [newVal, oldVal] }) => {
         if (oldVal?.value === fleet) {
-          console.log("resetting");
           return fleetHomeLineObject.setComponent(SetValue({ alpha: 0 }));
         }
         if (newVal?.value !== fleet) return;
         const owner = components.OwnedBy.get(fleet)?.value as Entity | undefined;
         const ownerPosition = components.Position.get(owner);
         if (!ownerPosition) return;
-        console.log("adding");
         fleetHomeLineObject.setComponents([
           ...sharedComponents,
           Line(tileCoordToPixelCoord({ x: ownerPosition.x, y: -ownerPosition.y }, tileWidth, tileHeight), {

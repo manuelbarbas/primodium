@@ -138,9 +138,9 @@ const phoneticAlphabet: Record<string, string> = {
   T: "Tango",
   U: "Uniform",
   V: "Victor",
-  W: "Whisky",
-  X: "X-ray",
-  Y: "Yank",
+  W: "Whiskey",
+  X: "Xray",
+  Y: "Yankee",
   Z: "Zulu",
 };
 

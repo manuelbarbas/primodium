@@ -30,20 +30,32 @@ export const setupBattleComponents = () => {
 
   const updateBattleParticipant = ({ entity }: { entity: Entity }) => {
     const damageDealt = components.BattleDamageDealtResult.get(entity)!.damageDealt;
-    const damageTaken = components.BattleDamageTakenResult.get(entity)!;
-    const unitResult = components.BattleUnitResult.get(entity)!;
-    const raidResult = components.BattleRaidResult.get(entity) ?? {
+    const { hpAtStart, damageTaken } = components.BattleDamageTakenResult.get(entity)!;
+    const { unitLevels, casualties, unitsAtStart } = components.BattleUnitResult.get(entity)!;
+    const { resourcesAtStart, resourcesAtEnd } = components.BattleRaidResult.get(entity) ?? {
       resourcesAtStart: undefined,
       resourcesAtEnd: undefined,
     };
-    const encryptionResult = components.BattleEncryptionResult.get(entity) ?? {
+    const { encryptionAtStart, encryptionAtEnd } = components.BattleEncryptionResult.get(entity) ?? {
       encryptionAtStart: undefined,
       encryptionAtEnd: undefined,
     };
 
     const previousData = RawBattleParticipant.get(entity);
 
-    const newData = { ...previousData, damageDealt, ...damageTaken, ...unitResult, ...raidResult, ...encryptionResult };
+    const newData = {
+      ...previousData,
+      damageDealt,
+      hpAtStart,
+      damageTaken,
+      unitLevels,
+      unitsAtStart,
+      casualties,
+      resourcesAtStart,
+      resourcesAtEnd,
+      encryptionAtStart,
+      encryptionAtEnd,
+    };
 
     RawBattleParticipant.set(newData, entity);
     const { battleId } = decodeEntity(components.BattleDamageDealtResult.metadata.keySchema, entity);
@@ -58,6 +70,14 @@ export const setupBattleComponents = () => {
   ];
   defineEnterSystem(systemWorld, requiredParticipantQuery, updateBattleParticipant);
 
-  defineComponentSystem(systemWorld, components.BattleRaidResult, updateBattleParticipant);
-  defineComponentSystem(systemWorld, components.BattleEncryptionResult, updateBattleParticipant);
+  defineEnterSystem(
+    systemWorld,
+    [...requiredParticipantQuery, Has(components.BattleRaidResult)],
+    updateBattleParticipant
+  );
+  defineEnterSystem(
+    systemWorld,
+    [...requiredParticipantQuery, Has(components.BattleEncryptionResult)],
+    updateBattleParticipant
+  );
 };

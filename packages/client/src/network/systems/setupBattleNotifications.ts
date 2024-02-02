@@ -1,54 +1,51 @@
 // import { SyncState } from "@latticexyz/network";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { toast } from "react-toastify";
-import { entityToAddress } from "src/util/common";
+import { entityToFleetName, entityToRockName } from "src/util/name";
 import { components } from "../components";
 import { MUD } from "../types";
 import { world } from "../world";
 
 export function setupBattleNotifications(mud: MUD) {
   const systemWorld = namespaceWorld(world, "systems");
-  const playerEntity = mud.playerAccount.entity;
-  const { BattleResult, FleetMovement, BlockNumber, Position } = components;
-  defineComponentSystem(systemWorld, BattleResult, (update) => {
+  const { Battle, FleetMovement, BlockNumber, Position } = components;
+  defineComponentSystem(systemWorld, Battle.RawBattle, (update) => {
     const now = components.Time.get()?.value ?? 0n;
 
-    const battle = update.value[0];
+    const battle = components.Battle.get(update.entity);
 
     if (!battle) return;
 
     if (battle.timestamp + 30n < now) return;
 
+    const playerEntity = mud.playerAccount.entity;
+    const attackerRock = components.OwnedBy.get(battle.attacker)?.value as Entity | undefined;
+    const attackerRockOwner = components.OwnedBy.get(attackerRock)?.value;
+    const defenderIsFleet = components.IsFleet.get(battle.defender)?.value;
+    const defenderRock = defenderIsFleet
+      ? (components.OwnedBy.get(battle.defender)?.value as Entity | undefined)
+      : battle.defender;
+    const defenderRockOwner = components.OwnedBy.get(defenderRock)?.value;
+
     const winner = battle.winner;
-    if (battle.attacker === playerEntity) {
-      playerEntity === winner
-        ? toast.success(
-            `Victory! You attacked ${entityToAddress(
-              playerEntity,
-              true
-            )} and won! View details in the battle reports pane.`
-          )
-        : toast.error(
-            `Defeat! You attacked ${entityToAddress(
-              playerEntity,
-              true
-            )} and lost! View details in the battle reports pane.`
-          );
+    if (defenderRock && attackerRockOwner === playerEntity) {
+      const defenderName = defenderIsFleet ? entityToFleetName(battle.defender) : entityToRockName(defenderRock);
+      battle.attacker === winner
+        ? toast.success(`Victory! You attacked ${defenderName} and won! View details in the battle report.`)
+        : toast.error(`Defeat! You attacked ${defenderName} and lost! View details in the battle report.`);
     }
 
-    if (battle.defender === playerEntity) {
-      playerEntity === winner
+    if (attackerRock && defenderRockOwner === playerEntity) {
+      battle.defender === winner
         ? toast.success(
-            `Victory! You defended against ${entityToAddress(
-              playerEntity,
-              true
-            )} and won! View details in the battle reports pane.`
+            `Victory! You defended against ${entityToFleetName(
+              battle.attacker
+            )} and won! View details in the battle report.`
           )
         : toast.error(
-            `Defeat! You defended against ${entityToAddress(
-              playerEntity,
-              true
-            )} and lost! View details in the battle reports pane.`
+            `Defeat! You defended against ${entityToFleetName(
+              battle.attacker
+            )} and lost! View details in the battle report .`
           );
     }
   });

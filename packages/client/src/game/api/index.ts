@@ -7,6 +7,7 @@ import { runSystems as runAsteroidSystems } from "src/game/lib/asteroid/systems"
 import { runSystems as runStarmapSystems } from "src/game/lib/starmap/systems";
 import { components } from "src/network/components";
 import { setupAllianceLeaderboard } from "src/network/systems/setupAllianceLeaderboard";
+import { setupBattleComponents } from "src/network/systems/setupBattleComponents";
 import { setupBattleNotifications } from "src/network/systems/setupBattleNotifications";
 import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
 import { setupDoubleCounter } from "src/network/systems/setupDoubleCounter";
@@ -85,6 +86,7 @@ export async function initPrimodium(mud: MUD, version = "v1") {
 
     components.MapOpen.set({ value: false });
     setupAllianceLeaderboard(mud);
+    setupBattleComponents();
     setupBattleNotifications(mud);
     setupBlockNumber(mud.network.latestBlockNumber$);
     setupDoubleCounter(mud);
