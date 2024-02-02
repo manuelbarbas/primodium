@@ -13,11 +13,23 @@ export const renderEffects = (scene: Scene) => {
   const fx = createFxApi(scene);
   const camera = createCameraApi(scene);
 
+  const attackAnimation = async (attacker: Entity, defender: Entity) => {
+    fx;
+    camera;
+    attacker;
+    defender;
+    // const { emitExplosion } = fx;
+    // emitExplosion(defendPosition);
+    // if (battle.defender === playerEntity || battle.attacker === playerEntity) {
+    //       const { shake } = camera;
+    //       shake();
+    //     }
+  };
+
   defineComponentSystem(gameWorld, BattleResult, (update) => {
-    const playerEntity = components.Account.get()?.value;
     const now = components.Time.get()?.value ?? 0n;
 
-    const battle = update.value[0];
+    const battle = components.Battle.get(update.entity);
 
     if (!battle) return;
 
@@ -26,12 +38,6 @@ export const renderEffects = (scene: Scene) => {
     const destination = components.Position.get(battle.rock as Entity);
     if (!destination) return;
 
-    const { emitExplosion } = fx;
-    emitExplosion(destination);
-
-    if (battle.defender === playerEntity || battle.attacker === playerEntity) {
-      const { shake } = camera;
-      shake();
-    }
+    attackAnimation(battle.attacker, battle.defender);
   });
 };
