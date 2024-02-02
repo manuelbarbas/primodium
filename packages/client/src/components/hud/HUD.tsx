@@ -1,4 +1,4 @@
-import { KeyNames, KeybindActions } from "@game/constants";
+import { KeyNames, KeybindActions, Scenes } from "@game/constants";
 import { FaArrowRight, FaCircle } from "react-icons/fa";
 import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
@@ -25,6 +25,8 @@ import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 import { MenuButtons } from "./MenuButtons";
 import { MapButton } from "./MapButton";
 import { SpectatingDetails } from "./SpectatingDetails";
+import { PinnedPane } from "../core/PinnedPane";
+import { Card } from "../core/Card";
 
 export const GameHUD = () => {
   const {
@@ -49,6 +51,10 @@ export const GameHUD = () => {
         <HomeMarker />
 
         <AsteroidTarget />
+
+        <PinnedPane id="test" title="test" coord={{ x: 0, y: 0 }} scene={Scenes.Asteroid}>
+          <Card className="p-2">test</Card>
+        </PinnedPane>
 
         <HUD.CursorFollower>
           <HoverInfo />

@@ -37,7 +37,7 @@ export function createHooksApi(targetScene: Scene) {
     };
   }
 
-  function useCoordToScreenCoord(coord: Coord, bounded = false) {
+  function useCoordToScreenCoord(coord: Coord, bounded = false, raw = false) {
     const {
       tilemap: { tileHeight, tileWidth },
       camera,
@@ -51,9 +51,9 @@ export function createHooksApi(targetScene: Scene) {
 
     useEffect(() => {
       const worldViewListener = camera?.worldView$.subscribe((worldView) => {
-        const pixelCoord = tileCoordToPixelCoord(coord, tileWidth, tileHeight);
+        const pixelCoord = raw ? coord : tileCoordToPixelCoord(coord, tileWidth, tileHeight);
         const zoom = camera.phaserCamera.zoom;
-        pixelCoord.y = -pixelCoord.y; // Adjust for coordinate system. Y is inverted in Phaser
+        pixelCoord.y = raw ? pixelCoord.y : -pixelCoord.y; // Adjust for coordinate system. Y is inverted in Phaser
 
         let isBoundedTemp = false;
 
@@ -89,7 +89,7 @@ export function createHooksApi(targetScene: Scene) {
       });
 
       return () => worldViewListener?.unsubscribe();
-    }, [camera, coord, bounded, tileHeight, tileWidth]);
+    }, [camera, coord, bounded, tileHeight, tileWidth, raw]);
 
     return state;
   }

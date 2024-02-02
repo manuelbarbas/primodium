@@ -22,6 +22,9 @@ const gameConfig: GameConfig = {
   transparent: true,
   pixelArt: true,
   assetPackUrl: ASSET_PACK,
+  dom: {
+    createContainer: true,
+  },
 };
 
 export default gameConfig;

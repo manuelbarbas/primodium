@@ -2,6 +2,7 @@ import { coordEq, pixelCoordToTileCoord, tileCoordToPixelCoord } from "@latticex
 import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 
+// const anchorMap =
 export const createCameraApi = (targetScene: Scene) => {
   function pan(coord: Coord, duration = 1000, ease = "Power2") {
     const { phaserScene, camera, tilemap } = targetScene;
@@ -66,6 +67,17 @@ export const createCameraApi = (targetScene: Scene) => {
     requestAnimationFrame(() => camera?.worldView$.next(camera.phaserCamera.worldView));
   }
 
+  function screenCoordToPixelCoord(screenCoord: Coord) {
+    const { camera } = targetScene;
+
+    const pixelCoord = {
+      x: screenCoord.x + camera.phaserCamera.scrollX,
+      y: screenCoord.y + camera.phaserCamera.scrollY,
+    };
+
+    return pixelCoord;
+  }
+
   const shake = () => {
     const { camera } = targetScene;
 
@@ -74,11 +86,38 @@ export const createCameraApi = (targetScene: Scene) => {
     camera.phaserCamera.shake(300, 0.01 / camera.phaserCamera.zoom);
   };
 
+  function createDOMContainer(id: string, coord: Coord, raw = false) {
+    const {
+      tilemap: { tileHeight, tileWidth },
+    } = targetScene;
+    const pixelCoord = raw ? coord : tileCoordToPixelCoord(coord, tileWidth, tileHeight);
+    pixelCoord.y = raw ? pixelCoord.y : -pixelCoord.y;
+
+    if (targetScene.phaserScene.data.get(id)) {
+      const containerInfo = targetScene.phaserScene.data.get(id) as {
+        obj: Phaser.GameObjects.DOMElement;
+        container: HTMLDivElement;
+      };
+      containerInfo.obj.setPosition(pixelCoord.x, pixelCoord.y);
+      return containerInfo;
+    }
+
+    const div = document.createElement("div");
+    div.id = id;
+
+    const obj = targetScene.phaserScene.add.dom(pixelCoord.x, pixelCoord.y, div);
+    targetScene.phaserScene.data.set(id, { obj, container: div });
+
+    return { obj, container: div };
+  }
+
   return {
     pan,
     zoomTo,
     getPosition,
+    screenCoordToPixelCoord,
     updateWorldView,
     shake,
+    createDOMContainer,
   };
 };
