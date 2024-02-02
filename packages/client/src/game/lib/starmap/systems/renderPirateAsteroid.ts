@@ -22,6 +22,7 @@ import {
   ObjectPosition,
   OnClickUp,
   OnComponentSystem,
+  OnHover,
   OnOnce,
   OnRxjsSystem,
   SetValue,
@@ -109,6 +110,14 @@ export const renderPirateAsteroid = (scene: Scene) => {
           components.SelectedRock.set({ value: entity });
         }
       }),
+      OnHover(
+        () => {
+          components.HoverEntity.set({ value: entity });
+        },
+        () => {
+          components.HoverEntity.remove();
+        }
+      ),
       SetValue({
         depth: DepthLayers.Rock,
       }),
