@@ -27,6 +27,7 @@ import { upgradeRange } from "src/network/setup/contractCalls/upgradeRange";
 import { upgradeUnit } from "src/network/setup/contractCalls/upgradeUnit";
 import { MUD } from "src/network/types";
 import { getAllianceName, getAllianceNameFromPlayer } from "../alliance";
+import { getAsteroidImage, getRockRelationship, getSpaceRockInfo, getSpaceRockName } from "../asteroid";
 import {
   calcDims,
   getBuildingDimensions,
@@ -58,7 +59,7 @@ import {
   UtilityStorages,
 } from "../constants";
 import { findEntriesWithPrefix, getPrivateKey } from "../localStorage";
-import { entityToPlayerName, entityToRockName, playerNameToEntity, rockNameToEntity } from "../name";
+import { entityToFleetName, entityToPlayerName, entityToRockName, playerNameToEntity, rockNameToEntity } from "../name";
 import { getCanClaimObjective, getIsObjectiveAvailable } from "../objectives";
 import { getAsteroidBounds, getAsteroidMaxBounds, outOfBounds } from "../outOfBounds";
 import { getRecipe, getRecipeDifference } from "../recipe";
@@ -71,7 +72,6 @@ import {
 } from "../resource";
 import { getRewards } from "../reward";
 import { getMoveLength, getSlowestUnitSpeed } from "../send";
-import { getRockRelationship, getAsteroidImage, getSpaceRockInfo, getSpaceRockName } from "../asteroid";
 import { getBuildingAtCoord, getBuildingsOfTypeInRange } from "../tile";
 import { getUnitStats, getUnitTrainingTime } from "../unit";
 import { getUpgradeInfo } from "../upgrade";
@@ -107,6 +107,7 @@ export default function createConsoleApi(mud: MUD, primodium: Primodium) {
     name: {
       entityToPlayerName,
       entityToRockName,
+      entityToFleetName,
       playerNameToEntity,
       rockNameToEntity,
     },

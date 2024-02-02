@@ -10,12 +10,14 @@ import {
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
+import { toast } from "react-toastify";
 import { throttleTime } from "rxjs";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { getRandomRange } from "src/util/common";
 import { PIRATE_KEY } from "src/util/constants";
 import { decodeEntity, hashKeyEntity } from "src/util/encode";
+import { getCanAttack, getCanSend } from "src/util/unit";
 import {
   ObjectPosition,
   OnClickUp,
@@ -95,10 +97,14 @@ export const renderPirateAsteroid = (scene: Scene) => {
       rotationTween,
       Texture(Assets.SpriteAtlas, SpriteKeys.PirateAsteroid1),
       OnClickUp(scene, () => {
-        if (components.Attack.get()?.originFleet) {
-          components.Attack.setDestination(entity);
-        } else if (components.Send.get()?.originFleet) {
-          components.Send.setDestination(entity);
+        const attackOrigin = components.Attack.get()?.originFleet;
+        const sendOrigin = components.Send.get()?.originFleet;
+        if (attackOrigin) {
+          if (getCanAttack(attackOrigin, entity)) components.Attack.setDestination(entity);
+          else toast.error("Cannot attack this asteroid.");
+        } else if (sendOrigin) {
+          if (getCanSend(sendOrigin, entity)) components.Send.setDestination(entity);
+          else toast.error("Cannot send to this asteroid.");
         } else {
           components.SelectedRock.set({ value: entity });
         }

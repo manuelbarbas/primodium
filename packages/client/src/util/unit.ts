@@ -177,3 +177,27 @@ export function getUnitTrainingTime(rawPlayer: Entity, rawBuilding: Entity, rawU
   const rawTrainingTime = comps.P_Unit.getWithKeys({ entity: unitEntity, level: unitLevel })?.trainingTime ?? 0n;
   return (rawTrainingTime * 100n * 100n * SPEED_SCALE) / (multiplier * config.unitProductionRate * config.worldSpeed);
 }
+
+export function getCanAttack(originEntity: Entity, targetEntity: Entity) {
+  const isFleet = components.IsFleet.get(targetEntity);
+  const targetRock = (isFleet ? components.FleetMovement.get(targetEntity)?.destination : targetEntity) as
+    | Entity
+    | undefined;
+  const targetOwnerRock = (isFleet ? components.OwnedBy.get(targetEntity)?.value : targetEntity) as Entity | undefined;
+  const targetRockOwner = components.OwnedBy.get(targetRock)?.value;
+
+  const originEntityRock = components.FleetMovement.get(originEntity)?.destination as Entity | undefined;
+  const originEntityOwnerRock = components.OwnedBy.get(originEntity)?.value as Entity;
+  const originEntityOwnerRockOwner = components.OwnedBy.get(originEntityOwnerRock)?.value;
+  if (!originEntityOwnerRockOwner || !targetOwnerRock) return false;
+  if (targetRock !== originEntityRock || targetRockOwner === originEntityOwnerRockOwner) return false;
+  return true;
+}
+
+export function getCanSend(originEntity: Entity, targetEntity: Entity) {
+  const isFleet = components.IsFleet.get(targetEntity);
+
+  const ownerRock = components.FleetMovement.get(originEntity)?.destination;
+  if (isFleet || components.BuildingType.has(targetEntity) || ownerRock == targetEntity) return false;
+  return true;
+}
