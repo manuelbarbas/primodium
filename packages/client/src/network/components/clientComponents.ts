@@ -1,5 +1,6 @@
 import { Type } from "@latticexyz/recs";
 import { world } from "../world";
+import { createBattleComponents } from "./customComponents/BattleComponents";
 import {
   createExtendedBigIntComponent,
   createExtendedBoolComponent,
@@ -80,6 +81,10 @@ export const Hangar = createExtendedComponent(
   }
 );
 
+/* -------------------------------------------------------------------------- */
+/*                                    Fleet                                   */
+/* -------------------------------------------------------------------------- */
+
 export const Send = createSendComponent();
 export const Attack = createSendComponent();
 
@@ -88,6 +93,8 @@ export const SelectedFleet = createExtendedComponent(
   { fleet: Type.Entity, x: Type.Number, y: Type.Number, angle: Type.Number },
   { id: "SelectedFleet" }
 );
+
+export const Battle = createBattleComponents();
 
 /* -------------------------------------------------------------------------- */
 /*                                 Leaderboard                                */
@@ -193,9 +200,12 @@ export default {
   /* ---------------------------------- Units --------------------------------- */
   TrainingQueue,
   Hangar,
+
+  /* --------------------------------- Fleets --------------------------------- */
   Send,
   Attack,
   SelectedFleet,
+  Battle,
 
   /* ------------------------------ Leaderboard ------------------------------- */
   Leaderboard,

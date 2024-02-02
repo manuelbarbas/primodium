@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { ResourceCount, FleetStance, IsFleet, NewBattleResult, NewBattleResultData, FleetMovement, P_GracePeriod, GracePeriod, OwnedBy } from "codegen/index.sol";
+import { ResourceCount, FleetStance, IsFleet, BattleResult, BattleResultData, FleetMovement, P_GracePeriod, GracePeriod, OwnedBy } from "codegen/index.sol";
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
 import { EFleetStance, EResource } from "src/Types.sol";
@@ -55,7 +55,7 @@ contract FleetCombatSystem is FleetBaseSystem {
     _onlyWhenNotInStance(fleetId)
     _onlyWhenFleetsAreIsInSameOrbit(fleetId, targetFleet)
   {
-    (bytes32 battleId, NewBattleResultData memory batteResult) = LibFleetCombat.attack(fleetId, targetFleet);
+    (bytes32 battleId, BattleResultData memory batteResult) = LibFleetCombat.attack(fleetId, targetFleet);
 
     afterBattle(battleId, batteResult);
   }
@@ -72,7 +72,7 @@ contract FleetCombatSystem is FleetBaseSystem {
     _claimResources(targetSpaceRock)
     _claimUnits(targetSpaceRock)
   {
-    (bytes32 battleId, NewBattleResultData memory batteResult) = LibFleetCombat.attack(fleetId, targetSpaceRock);
+    (bytes32 battleId, BattleResultData memory batteResult) = LibFleetCombat.attack(fleetId, targetSpaceRock);
     afterBattle(battleId, batteResult);
   }
 
@@ -87,11 +87,11 @@ contract FleetCombatSystem is FleetBaseSystem {
     _claimResources(spaceRock)
     _claimUnits(spaceRock)
   {
-    (bytes32 battleId, NewBattleResultData memory batteResult) = LibFleetCombat.attack(spaceRock, targetFleet);
+    (bytes32 battleId, BattleResultData memory batteResult) = LibFleetCombat.attack(spaceRock, targetFleet);
     afterBattle(battleId, batteResult);
   }
 
-  function afterBattle(bytes32 battleId, NewBattleResultData memory battleResult) internal {
+  function afterBattle(bytes32 battleId, BattleResultData memory battleResult) internal {
     fleetBattleApplyDamage(battleId, battleResult.aggressorEntity, battleResult.targetDamage);
     if (battleResult.winner == battleResult.aggressorEntity) {
       fleetBattleResolveRaid(battleId, battleResult.aggressorEntity, battleResult.targetEntity);

@@ -133,7 +133,7 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
         color: 0xffffff,
       }),
       OnComponentSystem(components.HoverEntity, (_, { value: [newVal] }) => {
-        const alpha = newVal?.value === fleet ? 0.4 : 0;
+        const alpha = newVal?.value === fleet ? 0.25 : 0;
         fleetHomeLineObject.setComponent(SetValue({ alpha: alpha }));
       }),
     ]);
