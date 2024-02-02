@@ -106,11 +106,11 @@ contract FleetCombatSystem is FleetBaseSystem {
 
     bool isRaid = isAggressorWinner && (isTargetFleet || aggressorDecryption == 0);
 
-    bool isDecyption = !isRaid && isAggressorWinner && !isTargetFleet && aggressorDecryption > 0;
+    bool isDecryption = !isRaid && isAggressorWinner && !isTargetFleet && aggressorDecryption > 0;
     fleetBattleApplyDamage(battleId, battleResult.aggressorEntity, battleResult.targetDamage);
     if (isRaid) {
       fleetBattleResolveRaid(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
-    } else if (isDecyption) {
+    } else if (isDecryption) {
       //in decryption we resolve encryption first so the fleet decryption unit isn't lost before decrypting
       LibFleetCombat.resolveBattleEncryption(
         battleId,
