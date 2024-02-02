@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { EResource } from "src/Types.sol";
-import { BattleRaidResult, BattleRaidResultData, P_Transportables, IsFleet, MaxResourceCount, NewBattleResult, NewBattleResultData, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { RaidedResource, BattleRaidResult, BattleRaidResultData, P_Transportables, IsFleet, MaxResourceCount, NewBattleResult, NewBattleResultData, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -176,6 +176,9 @@ library LibFleetRaid {
       resourcesAtEnd: new uint256[](transportables.length)
     });
     uint256 receivedResources = 0;
+    bytes32 playerEntity = IsFleet.get(targetEntity)
+      ? OwnedBy.get(OwnedBy.get(targetEntity))
+      : OwnedBy.get(targetEntity);
     for (uint256 i = 0; i < transportables.length; i++) {
       if (totalRaidedResourceCounts[i] == 0) continue;
       uint256 resourcePortion = LibMath.divideRound(
@@ -190,6 +193,11 @@ library LibFleetRaid {
       } else {
         LibStorage.increaseStoredResource(targetEntity, transportables[i], resourcePortion);
       }
+      RaidedResource.set(
+        playerEntity,
+        transportables[i],
+        RaidedResource.get(playerEntity, transportables[i]) + resourcePortion
+      );
       receivedResources += resourcePortion;
       raidResult.resourcesAtEnd[i] = ResourceCount.get(targetEntity, transportables[i]);
     }
