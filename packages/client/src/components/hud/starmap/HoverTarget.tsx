@@ -11,7 +11,9 @@ export const HoverSendTarget: React.FC<{ hoverEntity: Entity; sendUnit: Entity }
   if (isFleet) return null;
   const position = components.Position.use(hoverEntity) ?? { x: 0, y: 0 };
 
-  return <Marker coord={position} imageUri={canSend ? "/img/icons/weaponryicon.png" : "/img/icons/debugicon.png"} />;
+  return (
+    <Marker coord={position} imageUri={canSend ? "/img/icons/crosshairsicon.png" : "/img/icons/notallowedicon.png"} />
+  );
 };
 
 export const HoverAttackTarget: React.FC<{ hoverEntity: Entity; attackOrigin: Entity }> = ({
@@ -25,7 +27,9 @@ export const HoverAttackTarget: React.FC<{ hoverEntity: Entity; attackOrigin: En
     : components.Position.use(hoverEntity) ?? { x: 0, y: 0 };
   const canAttack = getCanAttack(attackOrigin, hoverEntity);
 
-  return <Marker coord={position} imageUri={canAttack ? "/img/icons/weaponryicon.png" : "/img/icons/debugicon.png"} />;
+  return (
+    <Marker coord={position} imageUri={canAttack ? "/img/icons/crosshairsicon.png" : "/img/icons/notallowedicon.png"} />
+  );
 };
 
 export const HoverTarget = () => {
