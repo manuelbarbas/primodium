@@ -33,9 +33,7 @@ export function setupBattleNotifications(mud: MUD) {
       battle.attacker === winner
         ? toast.success(`Victory! You attacked ${defenderName} and won! View details in the battle report.`)
         : toast.error(`Defeat! You attacked ${defenderName} and lost! View details in the battle report.`);
-    }
-
-    if (attackerRock && defenderRockOwner === playerEntity) {
+    } else if (attackerRock && defenderRockOwner === playerEntity) {
       battle.defender === winner
         ? toast.success(
             `Victory! You defended against ${entityToFleetName(
