@@ -2,12 +2,14 @@
 pragma solidity >=0.8.21;
 
 import { System } from "@latticexyz/world/src/System.sol";
-import { PositionData, Level } from "../codegen/index.sol";
-import { Counter } from "../codegen/index.sol";
-import { IsActive } from "../codegen/index.sol";
-import { UpgradeBounty } from "../codegen/index.sol";
+import { PositionData, Level } from "codegen/index.sol";
+import { IsActive } from "codegen/index.sol";
+import { UpgradeBounty } from "codegen/index.sol";
+import { OwnedBy } from "codegen/index.sol";
 
-import { LibBuilding } from "../codegen/Libraries.sol";
+// import { LibEncode } from "prim-codegen/Libraries.sol";
+
+bytes32 constant BuildingTileKey = bytes32("building:tile");
 
 interface WorldWithUpgradeBuilding {
   function upgradeBuilding(PositionData memory coord) external returns (bytes32 buildingEntity);
@@ -18,8 +20,19 @@ interface WorldWithUpgradeBuilding {
 // !! technically users can deposit upgrade bounties at any coordinate, regardless of building existence
 // !! technically Alice can issue an upgrade bounty at Bob's building, and Bob can claim it
 contract BuildingUpgradeBountySystem is System {
+  // circumvented LibEncode library
+  function getHash(bytes32 key, PositionData memory position) internal pure returns (bytes32) {
+    return keccak256(abi.encode(key, position.x, position.y, position.parent));
+  }
+
+  // circumvented LibBuilding library
+  function getBuildingFromCoord(PositionData memory coord) internal view returns (bytes32) {
+    bytes32 buildingTile = getHash(BuildingTileKey, coord);
+    return OwnedBy.get(buildingTile);
+  }
+
   function depositBounty(PositionData memory coord) public payable returns (uint256 bountyValue) {
-    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
+    bytes32 buildingEntity = getBuildingFromCoord(coord);
 
     // Check there isn't an existing bounty on that coord
     require(
@@ -36,7 +49,7 @@ contract BuildingUpgradeBountySystem is System {
   }
 
   function withdrawBounty(PositionData memory coord) public {
-    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
+    bytes32 buildingEntity = getBuildingFromCoord(coord);
 
     // Check that there is a bounty on that buildingEntity
     require(
@@ -56,7 +69,7 @@ contract BuildingUpgradeBountySystem is System {
     address bountyPublisher,
     PositionData memory coord
   ) public returns (bytes32 newBuildingEntity) {
-    bytes32 oldBuildingEntity = LibBuilding.getBuildingFromCoord(coord);
+    bytes32 oldBuildingEntity = getBuildingFromCoord(coord);
     // Check that there is a bounty on that coord
     require(
       UpgradeBounty.get(bountyPublisher, oldBuildingEntity) > 0,

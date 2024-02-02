@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -126,8 +130,6 @@ importers:
       solhint-plugin-mud:
         specifier: 2.0.0-next.16
         version: 2.0.0-next.16
-
-  packages/primodium-contracts: {}
 
 packages:
 
