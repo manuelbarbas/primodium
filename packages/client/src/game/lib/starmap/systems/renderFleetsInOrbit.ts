@@ -6,9 +6,11 @@ import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { getRockRelationship } from "src/util/asteroid";
 import { RockRelationship } from "src/util/constants";
+import { entityToFleetName } from "src/util/name";
 import { getAllOrbitingFleets } from "src/util/unit";
 import { ObjectPosition, OnClickUp, OnHover, OnOnce, SetValue } from "../../common/object-components/common";
 import { Circle } from "../../common/object-components/graphics";
+import { ObjectText } from "../../common/object-components/text";
 
 const orbitRadius = 64;
 function calculatePosition(
@@ -61,25 +63,20 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
     const color =
       relationship === RockRelationship.Ally ? 0x00ff00 : relationship === RockRelationship.Enemy ? 0xff0000 : 0x00ffff;
     const circlePositionAbs = calculatePosition(angle, destinationPixelCoord);
-    const circlePositionRel = calculatePosition(angle, { x: 0, y: 0 });
-    console.log(`${i}: ${circlePositionRel.x}, ${circlePositionRel.y}`);
-    const hoverSize = 16;
+    const name = entityToFleetName(fleet, true);
+    const sharedComponents = [ObjectPosition(circlePositionAbs, DepthLayers.Marker)];
     fleetOrbit.add("Graphics").setComponents([
-      ObjectPosition(destinationPixelCoord, DepthLayers.Marker),
-      Circle(5, {
+      ...sharedComponents,
+      Circle(8, {
         color,
         borderThickness: 1,
         alpha: 0.75,
         position: circlePositionAbs,
       }),
       OnOnce((gameObject) => {
+        const hoverSize = 16;
         gameObject.setInteractive(
-          new Phaser.Geom.Rectangle(
-            circlePositionRel.x - hoverSize / 2,
-            circlePositionRel.y - hoverSize / 2,
-            hoverSize,
-            hoverSize
-          ),
+          new Phaser.Geom.Rectangle(-hoverSize / 2, -hoverSize / 2, hoverSize, hoverSize),
           Phaser.Geom.Rectangle.Contains
         );
       }),
@@ -94,6 +91,21 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
           ...calculatePosition(angle - 180, { x: destination.x, y: destination.y }, { tileWidth, tileHeight }),
           angle,
         });
+      }),
+    ]);
+    const fleetLabel = fleetOrbit.add("BitmapText");
+
+    fleetLabel.setComponents([
+      ...sharedComponents,
+      SetValue({
+        originX: 0.5,
+        originY: 0.4,
+        depth: DepthLayers.Marker + 1,
+      }),
+      ObjectText(name, {
+        id: "fleetLabel",
+        fontSize: 6,
+        color: 0xffffff,
       }),
     ]);
   });

@@ -21,10 +21,8 @@ export const FleetInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
     <Card className="ml-5 uppercase font-bold text-xs relative w-48">
       <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
       <div className="flex flex-col gap-1 z-10">
-        <div className="flex gap-1 items-center">
-          <p className="text-sm">{fleetStats.title}</p>
-          <p className="text-xs opacity-50 bg-primary px-1">{inTransit ? `ETA ${eta}` : "ORBITING"}</p>
-        </div>
+        <p className="text-sm">{fleetStats.title}</p>
+        <p className="text-xs opacity-50 bg-primary px-1 w-fit">{inTransit ? `ETA ${eta}` : "ORBITING"}</p>
         <div className="text-xs grid grid-cols-3 gap-1 divide-x divide-primary/50">
           <div className="flex flex-col gap-1 p-1">
             <div className="flex gap-1">

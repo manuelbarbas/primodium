@@ -4,7 +4,7 @@ import { components, components as comps } from "src/network/components";
 import { Hex } from "viem";
 import { PIRATE_KEY, SPEED_SCALE, UnitStorages } from "./constants";
 import { hashKeyEntity } from "./encode";
-import { entityToRockName } from "./name";
+import { entityToFleetName } from "./name";
 
 export function getFleetUnitCounts(fleet: Entity) {
   return components.P_UnitPrototypes.get(undefined, { value: [] }).value.reduce((acc, entity) => {
@@ -82,7 +82,7 @@ export const getFleetStats = (fleet: Entity) => {
     ret.decryption = bigIntMax(ret.decryption, unitData.DEC);
     ret.speed = bigIntMin(ret.speed == 0n ? BigInt(10e100) : ret.speed, unitData.SPD);
   });
-  return { ...ret, title: entityToRockName(fleet) };
+  return { ...ret, title: entityToFleetName(fleet) };
 };
 
 export const getFleetStatsFromUnits = (units: Map<Entity, bigint>) => {

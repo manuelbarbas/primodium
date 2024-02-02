@@ -114,3 +114,66 @@ export const entityToRockName = (entity: Entity) => {
 export const rockNameToEntity = (name: string) => {
   return [...entityRockname.entries()].find(([, v]) => v === name)?.[0];
 };
+
+const phoneticAlphabet: Record<string, string> = {
+  A: "Alpha",
+  B: "Bravo",
+  C: "Charlie",
+  D: "Delta",
+  E: "Echo",
+  F: "Foxtrot",
+  G: "Golf",
+  H: "Hotel",
+  I: "India",
+  J: "Juliet",
+  K: "Kilo",
+  L: "Lima",
+  M: "Mike",
+  N: "Nova",
+  O: "Oscar",
+  P: "Papa",
+  Q: "Quebec",
+  R: "Romeo",
+  S: "Sierra",
+  T: "Tango",
+  U: "Uniform",
+  V: "Victor",
+  W: "Whisky",
+  X: "X-ray",
+  Y: "Yank",
+  Z: "Zulu",
+};
+
+function getAlphabetLetter(index: number): string | null {
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  if (index >= 1 && index <= 26) {
+    return alphabet[index - 1]; // Subtract 1 because arrays are zero-indexed
+  }
+  return null; // Return null if the index is out of bounds
+}
+
+const extendName = (name: string) => {
+  return `${phoneticAlphabet[name[0]]} ${phoneticAlphabet[name[1]]} ${name[2]}`;
+};
+
+const entityFleetName = new Map<Entity, string>();
+export const entityToFleetName = (entity: Entity, shorten?: boolean) => {
+  const fetched = entityFleetName.get(entity);
+  if (fetched) return shorten ? fetched : extendName(fetched);
+
+  const hash = hashEntities(entity);
+  const index1 = parseInt(hash.substring(0, 8), 16) % 26;
+  const index2 = parseInt(hash.substring(8, 16), 16) % 26;
+  let index3 = (parseInt(hash.substring(16, 32), 16) % 100) - 1;
+  let name = `${getAlphabetLetter(index1)}${getAlphabetLetter(index2)}${index3}`;
+  while (fleetNameToEntity(name)) {
+    index3++;
+    name = `${getAlphabetLetter(index1)}${getAlphabetLetter(index2)}${index3}`;
+  }
+  entityFleetName.set(entity, name);
+  return shorten ? name : extendName(name);
+};
+
+export const fleetNameToEntity = (name: string) => {
+  return [...entityFleetName.entries()].find(([, v]) => v === name)?.[0];
+};
