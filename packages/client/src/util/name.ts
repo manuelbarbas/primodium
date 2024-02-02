@@ -144,16 +144,13 @@ const phoneticAlphabet: Record<string, string> = {
   Z: "Zulu",
 };
 
-function getAlphabetLetter(index: number): string | null {
-  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  if (index >= 1 && index <= 26) {
-    return alphabet[index - 1]; // Subtract 1 because arrays are zero-indexed
-  }
-  return null; // Return null if the index is out of bounds
+function getAlphabetLetter(index: number): string {
+  index = index % 26;
+  return "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[index];
 }
 
 const extendName = (name: string) => {
-  return `${phoneticAlphabet[name[0]]} ${phoneticAlphabet[name[1]]} ${name[2]}`;
+  return `${phoneticAlphabet[name[0]]} ${phoneticAlphabet[name[1]]} ${phoneticAlphabet[name[2]]}`;
 };
 
 const entityFleetName = new Map<Entity, string>();
@@ -164,11 +161,11 @@ export const entityToFleetName = (entity: Entity, shorten?: boolean) => {
   const hash = hashEntities(entity);
   const index1 = parseInt(hash.substring(0, 8), 16) % 26;
   const index2 = parseInt(hash.substring(8, 16), 16) % 26;
-  let index3 = (parseInt(hash.substring(16, 32), 16) % 100) - 1;
-  let name = `${getAlphabetLetter(index1)}${getAlphabetLetter(index2)}${index3}`;
+  let index3 = parseInt(hash.substring(16, 32), 16) % 26;
+  let name = `${getAlphabetLetter(index1)}${getAlphabetLetter(index2)}${getAlphabetLetter(index3)}`;
   while (fleetNameToEntity(name)) {
-    index3++;
-    name = `${getAlphabetLetter(index1)}${getAlphabetLetter(index2)}${index3}`;
+    index3 = (index3 + 1) % 26;
+    name = `${getAlphabetLetter(index1)}${getAlphabetLetter(index2)}${getAlphabetLetter(index3)}`;
   }
   entityFleetName.set(entity, name);
   return shorten ? name : extendName(name);
