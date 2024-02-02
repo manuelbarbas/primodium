@@ -12,9 +12,10 @@ export const FleetHeader = (props: {
   defense: bigint;
   speed: bigint;
   hp: bigint;
+  className?: string;
 }) => {
   return (
-    <div className="flex flex-col gap-1 w-full">
+    <div className={`flex flex-col gap-1 w-full ${props.className}`}>
       <Badge className="w-full uppercase font-bold text-sm items-center flex flex-col h-fit">{props.title}</Badge>
       <div className="grid grid-cols-6 gap-1">
         <Badge className="flex gap-1 w-full uppercase font-bold text-xs items-center">
@@ -46,7 +47,7 @@ export const FleetHeader = (props: {
   );
 };
 
-export const FleetEntityHeader = ({ entity }: { entity: Entity }) => {
+export const FleetEntityHeader = ({ entity, className }: { entity: Entity; className?: string }) => {
   const stats = getFleetStats(entity);
-  return <FleetHeader {...stats} />;
+  return <FleetHeader className={className} {...stats} />;
 };

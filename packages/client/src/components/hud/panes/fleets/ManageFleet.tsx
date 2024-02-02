@@ -1,28 +1,27 @@
-import { useEntityQuery } from "@latticexyz/react";
-import { Entity, Has, HasValue } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EFleetStance } from "contracts/config/enums";
 import { FC, useMemo } from "react";
 import { Button } from "src/components/core/Button";
+import { Modal } from "src/components/core/Modal";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { disbandFleet } from "src/network/setup/contractCalls/fleetDisband";
 import { landFleet } from "src/network/setup/contractCalls/fleetLand";
 import { clearFleetStance, setFleetStance } from "src/network/setup/contractCalls/fleetStance";
-import { entityToRockName } from "src/util/name";
 import { formatResourceCount } from "src/util/number";
-import { Hex } from "viem";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { FleetEntityHeader } from "./FleetHeader";
 import { useFleetNav } from "./Fleets";
 
 const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
   const mud = useMud();
+  const { openMap } = usePrimodium().api().util;
   const { BackButton, NavButton } = useFleetNav();
-  const destination = components.FleetMovement.getWithKeys({ entity: fleetEntity as Hex })?.destination;
   const selectedRock = components.SelectedRock.get()?.value;
   const units = useUnitCounts(fleetEntity);
   const resources = useFullResourceCounts(fleetEntity);
@@ -33,16 +32,17 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
     [resources]
   );
 
-  const fleetsOnAsteroidQuery = [Has(components.IsFleet), HasValue(components.FleetMovement, { destination })];
-  const fleetsOnAsteroid = useEntityQuery(fleetsOnAsteroidQuery);
-  const time = components.Time.use()?.value ?? 0n;
-  const followableFleets = fleetsOnAsteroid.filter((entity) => {
-    if (entity == fleetEntity) return false;
-    const movement = components.FleetMovement.get(entity);
-    if ((movement?.arrivalTime ?? 0n) > time) return false;
-    const stance = components.FleetStance.get(entity);
-    return stance?.stance != 0;
-  });
+  // const destination = components.FleetMovement.getWithKeys({ entity: fleetEntity as Hex })?.destination;
+  // const fleetsOnAsteroidQuery = [Has(components.IsFleet), HasValue(components.FleetMovement, { destination })];
+  // const fleetsOnAsteroid = useEntityQuery(fleetsOnAsteroidQuery);
+  // const time = components.Time.use()?.value ?? 0n;
+  // const followableFleets = fleetsOnAsteroid.filter((entity) => {
+  //   if (entity == fleetEntity) return false;
+  //   const movement = components.FleetMovement.get(entity);
+  //   if ((movement?.arrivalTime ?? 0n) > time) return false;
+  //   const stance = components.FleetStance.get(entity);
+  //   return stance?.stance != 0;
+  // });
 
   const activeStance = components.FleetStance.use(fleetEntity);
 
@@ -58,11 +58,11 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
     setFleetStance(mud, fleetEntity, EFleetStance.Block, selectedRock);
   };
 
-  const handleFollow = (target: Entity) => {
-    if (activeStance?.stance == EFleetStance.Follow && activeStance?.target == target)
-      clearFleetStance(mud, fleetEntity);
-    setFleetStance(mud, fleetEntity, EFleetStance.Follow, target);
-  };
+  // const handleFollow = (target: Entity) => {
+  //   if (activeStance?.stance == EFleetStance.Follow && activeStance?.target == target)
+  //     clearFleetStance(mud, fleetEntity);
+  //   setFleetStance(mud, fleetEntity, EFleetStance.Follow, target);
+  // };
   return (
     <div className="w-full h-full flex flex-col gap-2 p-2">
       {/*Header*/}
@@ -156,14 +156,14 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
             <Button className="btn btn-primary btn-sm" onClick={handleBlock} disabled={totalUnits <= 0n}>
               {activeStance?.stance == EFleetStance.Block ? "STOP BLOCKING" : "BLOCK"}
             </Button>
-            <div className="flex items-center gap-1 uppercase font-bold">
+            {/* <div className="flex items-center gap-1 uppercase font-bold">
               FOLLOW
               {activeStance?.stance == EFleetStance.Follow && (
                 <p className="opacity-50 text-xs font-bold uppercase">(active)</p>
               )}
-            </div>
-            <p className="italic opacity-50 text-xs">Automatically move whenever another fleet moves</p>
-            <div className="flex flex-col overflow-y-auto scrollbar h-full">
+            </div> */}
+            {/* <p className="italic opacity-50 text-xs">Automatically move whenever another fleet moves</p> */}
+            {/* <div className="flex flex-col overflow-y-auto scrollbar h-full">
               {followableFleets.length > 0 ? (
                 followableFleets.map((target, i) => (
                   <div
@@ -185,9 +185,21 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               ) : (
                 <div className="text-error font-bold uppercase text-xs">No fleets to follow</div>
               )}
-            </div>
+            </div> */}
           </TransactionQueueMask>
           <div className="flex flex-col gap-2">
+            <Modal.CloseButton
+              className="btn btn-primary btn-sm"
+              disabled={totalUnits <= 0}
+              onClick={() => {
+                components.Send.setOrigin(selectedRock);
+                components.Send.setFleetEntity(fleetEntity);
+                openMap();
+              }}
+            >
+              SEND
+            </Modal.CloseButton>
+
             <Button className="btn btn-primary btn-sm" disabled={totalUnits <= 0}>
               ATTACK
             </Button>

@@ -8,6 +8,7 @@ import {
   createExtendedEntityComponent,
   createExtendedNumberComponent,
 } from "./customComponents/ExtendedComponent";
+import createSendComponent from "./customComponents/SendComponent";
 import { createTransactionQueueComponent } from "./customComponents/TransactionQueueComponent";
 
 /* -------------------------------------------------------------------------- */
@@ -78,6 +79,8 @@ export const Hangar = createExtendedComponent(
     id: "Hangar",
   }
 );
+
+export const Send = createSendComponent();
 
 /* -------------------------------------------------------------------------- */
 /*                                 Leaderboard                                */
@@ -183,6 +186,7 @@ export default {
   /* ---------------------------------- Units --------------------------------- */
   TrainingQueue,
   Hangar,
+  Send,
 
   /* ------------------------------ Leaderboard ------------------------------- */
   Leaderboard,

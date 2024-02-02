@@ -1,5 +1,6 @@
 import { Assets, DepthLayers, RENDER_INTERVAL, SpriteKeys } from "@game/constants";
 import { Entity, Has, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 import { interval } from "rxjs";
@@ -11,7 +12,7 @@ import { entityToPlayerName, entityToRockName } from "src/util/name";
 import { getEnsName } from "src/util/web3/getEnsName";
 import {
   ObjectPosition,
-  OnClick,
+  OnClickUp,
   OnComponentSystem,
   OnHover,
   OnOnce,
@@ -21,9 +22,8 @@ import {
 } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
 import { ObjectText } from "../../common/object-components/text";
-import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { getOutlineSprite, getRockSprite, getSecondaryOutlineSprite } from "./utils/getSprites";
+import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
 
 const asteroidQueue: Entity[] = [];
 export const renderAsteroid = (scene: Scene) => {
@@ -131,9 +131,12 @@ export const renderAsteroid = (scene: Scene) => {
         asteroidOutline.setComponent(Texture(Assets.SpriteAtlas, outlineSprite));
       }),
       Texture(Assets.SpriteAtlas, outlineSprite),
-      OnClick(scene, () => {
-        components.Send.setDestination(entity);
-        components.SelectedRock.set({ value: entity });
+      OnClickUp(scene, () => {
+        if (components.Send.get()?.fleetEntity) {
+          components.Send.setDestination(entity);
+        } else {
+          components.SelectedRock.set({ value: entity });
+        }
       }),
       OnHover(
         () => {

@@ -1,9 +1,8 @@
-import { useEntityQuery } from "@latticexyz/react";
-import { Has, HasValue } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
 import { FaPlus } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
+import { useOrbitingFleets } from "src/hooks/useOrbitingFleets";
 import { components } from "src/network/components";
 import { Hex } from "viem";
 import { FleetButton } from "../../modals/fleets/FleetButton";
@@ -13,11 +12,9 @@ export const FriendlyFleets: React.FC = () => {
   const selectedRock = components.SelectedRock.use()?.value ?? singletonEntity;
   const Nav = useFleetNav();
 
-  const query = [Has(components.IsFleet), HasValue(components.OwnedBy, { value: selectedRock })];
-  const friendlyFleets = useEntityQuery(query);
+  const friendlyFleets = useOrbitingFleets(selectedRock);
   const maxFleets =
     components.ResourceCount.getWithKeys({ entity: selectedRock as Hex, resource: EResource.U_MaxMoves })?.value ?? 0n;
-  console.log(friendlyFleets);
 
   return (
     <div className="flex flex-col gap-2 p-2">
@@ -27,12 +24,18 @@ export const FriendlyFleets: React.FC = () => {
       <div className="w-full text-xs overflow-y-auto grid grid-cols-2 gap-2">
         {friendlyFleets.length === 0
           ? null
-          : friendlyFleets.map((entity) => {
-              const fleet = components.FleetMovement.get(entity);
+          : friendlyFleets.map((fleetEntity) => {
+              const fleet = components.FleetMovement.get(fleetEntity);
 
               if (!fleet) return null;
 
-              return <FleetButton key={entity} fleetEntity={entity} />;
+              return (
+                <FleetButton
+                  key={fleetEntity}
+                  fleetEntity={fleetEntity}
+                  onClick={() => Nav.navigateTo("manageFleet", { fleetEntity })}
+                />
+              );
             })}
 
         {new Array(Number(maxFleets)).fill(0).map((_, index) => (

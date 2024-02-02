@@ -18,7 +18,7 @@ import { PIRATE_KEY } from "src/util/constants";
 import { decodeEntity, hashKeyEntity } from "src/util/encode";
 import {
   ObjectPosition,
-  OnClick,
+  OnClickUp,
   OnComponentSystem,
   OnHover,
   OnOnce,
@@ -95,9 +95,12 @@ export const renderPirateAsteroid = (scene: Scene) => {
       ...sharedComponents,
       rotationTween,
       Texture(Assets.SpriteAtlas, SpriteKeys.PirateAsteroid1),
-      OnClick(scene, () => {
-        components.Send.setDestination(entity);
-        components.SelectedRock.set({ value: entity });
+      OnClickUp(scene, () => {
+        if (components.Send.get()?.fleetEntity) {
+          components.Send.setDestination(entity);
+        } else {
+          components.SelectedRock.set({ value: entity });
+        }
       }),
       SetValue({
         depth: DepthLayers.Rock,
@@ -124,8 +127,12 @@ export const renderPirateAsteroid = (scene: Scene) => {
         }
       }),
       Texture(Assets.SpriteAtlas, outlineSprite),
-      OnClick(scene, () => {
-        components.SelectedRock.set({ value: entity });
+      OnClickUp(scene, () => {
+        if (components.Send.get()?.fleetEntity) {
+          components.Send.setDestination(entity);
+        } else {
+          components.SelectedRock.set({ value: entity });
+        }
       }),
       OnHover(
         () => {
@@ -214,6 +221,6 @@ export const renderPirateAsteroid = (scene: Scene) => {
     if (values.length === 0) return;
 
     scene.objectPool.removeGroup("asteroid_" + values[0]);
-    components.Send.setDestination(undefined);
+    components.Send.clear();
   });
 };
