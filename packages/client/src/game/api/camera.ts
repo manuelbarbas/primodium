@@ -70,10 +70,7 @@ export const createCameraApi = (targetScene: Scene) => {
   function screenCoordToPixelCoord(screenCoord: Coord) {
     const { camera } = targetScene;
 
-    const pixelCoord = {
-      x: screenCoord.x + camera.phaserCamera.scrollX,
-      y: screenCoord.y + camera.phaserCamera.scrollY,
-    };
+    const pixelCoord = camera.phaserCamera.getWorldPoint(screenCoord.x, screenCoord.y);
 
     return pixelCoord;
   }
@@ -106,6 +103,7 @@ export const createCameraApi = (targetScene: Scene) => {
     div.id = id;
 
     const obj = targetScene.phaserScene.add.dom(pixelCoord.x, pixelCoord.y, div);
+
     targetScene.phaserScene.data.set(id, { obj, container: div });
 
     return { obj, container: div };
@@ -119,5 +117,6 @@ export const createCameraApi = (targetScene: Scene) => {
     updateWorldView,
     shake,
     createDOMContainer,
+    ...targetScene.camera,
   };
 };

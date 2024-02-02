@@ -21,12 +21,11 @@ import { ActiveMarker } from "./markers/ActiveMarker";
 import { HomeMarker } from "./markers/HomeMarker";
 import HackerConsole from "./modals/HackerConsole";
 import { OwnedAsteroids } from "./panes/OwnedAsteroids";
-import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
 import { MenuButtons } from "./MenuButtons";
 import { MapButton } from "./MapButton";
 import { SpectatingDetails } from "./SpectatingDetails";
 import { PinnedPane } from "../core/PinnedPane";
-import { Card } from "../core/Card";
+import { Resources } from "./spacerock-menu/widgets/resources/Resources";
 
 export const GameHUD = () => {
   const {
@@ -52,8 +51,16 @@ export const GameHUD = () => {
 
         <AsteroidTarget />
 
-        <PinnedPane id="test" title="test" coord={{ x: 0, y: 0 }} scene={Scenes.Asteroid}>
-          <Card className="p-2">test</Card>
+        <PinnedPane
+          id="test"
+          title="test"
+          coord={{ x: 0, y: 0 }}
+          scene={Scenes.Asteroid}
+          minOpacity={0.75}
+          draggable
+          position="center-top"
+        >
+          <Resources />
         </PinnedPane>
 
         <HUD.CursorFollower>
@@ -99,10 +106,7 @@ export const GameHUD = () => {
           </Modal>
         </HUD.Left>
 
-        <HUD.BottomLeft>
-          {!isSpectating && <SpacerockMenu />}
-          {isSpectating && !mapOpen && <SpectatingDetails />}
-        </HUD.BottomLeft>
+        <HUD.BottomLeft>{isSpectating && !mapOpen && <SpectatingDetails />}</HUD.BottomLeft>
       </HUD>
 
       <HUD>
