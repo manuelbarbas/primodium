@@ -4,6 +4,7 @@ import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { EntityType, ResourceImage } from "src/util/constants";
+import { entityToRockName } from "src/util/name";
 import { formatNumber, formatResourceCount, formatTime } from "src/util/number";
 import { getFleetStats } from "src/util/unit";
 
@@ -16,13 +17,22 @@ export const FleetInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
   const arrivalTime = movement?.arrivalTime ?? 0n;
   const inTransit = arrivalTime > (time ?? 0n);
   const eta = inTransit ? formatTime(arrivalTime - time) : "";
+  const owner = components.OwnedBy.use(entity)?.value as Entity | undefined;
 
   return (
-    <Card className="ml-5 uppercase font-bold text-xs relative w-48">
+    <Card className="ml-5 uppercase font-bold text-xs relative w-56">
       <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
       <div className="flex flex-col gap-1 z-10">
         <p className="text-sm">{fleetStats.title}</p>
-        <p className="text-xs opacity-70 bg-primary px-1 w-fit">{inTransit ? `ETA ${eta}` : "ORBITING"}</p>
+        <div className="flex gap-1">
+          <p className="text-xs opacity-70 bg-primary px-1 w-fit">{inTransit ? `ETA ${eta}` : "ORBITING"}</p>
+          {owner && (
+            <div className="text-xs opacity-70 bg-primary px-1 w-fit uppercase flex gap-1 items-center">
+              <img src="/img/icons/utilitiesicon.png" alt="fleet base" className={`pixel-images  h-[.75rem]`} />
+              {entityToRockName(owner)}
+            </div>
+          )}
+        </div>
         <div className="text-xs grid grid-cols-3 gap-1 divide-x divide-primary/50">
           <div className="flex flex-col gap-1 p-1">
             <div className="flex gap-1">

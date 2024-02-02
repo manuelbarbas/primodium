@@ -1,7 +1,6 @@
 import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FaExchangeAlt, FaTimes } from "react-icons/fa";
@@ -154,7 +153,7 @@ const Transfer = ({ from: initialFrom, to: initialTo }: { from?: Entity; to?: En
   const [dragLocation, setDragLocation] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [hoveringArea, setHoveringArea] = useState<"from" | "to" | null>(null);
   const [keyDown, setKeyDown] = useState<"shift" | "ctrl" | null>();
-  const selectedRock = components.SelectedRock.use()?.value ?? singletonEntity;
+  const selectedRock = components.SelectedRock.use()?.value;
 
   // Resources
   const transportables = components.P_Transportables.use()?.value ?? [];
@@ -297,6 +296,7 @@ const Transfer = ({ from: initialFrom, to: initialTo }: { from?: Entity; to?: En
     return { disabled: false, submitMessage: "Transfer" };
   }, [resourceDelta.size, selectedRock, to, toResourceCounts, toUnitCounts, unitDelta.size]);
 
+  if (!selectedRock) return <div className="w-full h-full flex justify-center items-center">Select a rock</div>;
   return (
     <div className="w-full h-full flex flex-col gap-2 p-2">
       {dragging && (

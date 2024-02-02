@@ -8,8 +8,15 @@ import { getRockRelationship } from "src/util/asteroid";
 import { RockRelationship } from "src/util/constants";
 import { entityToFleetName } from "src/util/name";
 import { getAllOrbitingFleets } from "src/util/unit";
-import { ObjectPosition, OnClickUp, OnHover, OnOnce, SetValue } from "../../common/object-components/common";
-import { Circle } from "../../common/object-components/graphics";
+import {
+  ObjectPosition,
+  OnClickUp,
+  OnComponentSystem,
+  OnHover,
+  OnOnce,
+  SetValue,
+} from "../../common/object-components/common";
+import { Circle, Line } from "../../common/object-components/graphics";
 import { ObjectText } from "../../common/object-components/text";
 
 const orbitRadius = 64;
@@ -58,14 +65,15 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
   ]);
   allFleets.forEach((fleet, i) => {
     const angle = ((i + 1) / allFleets.length) * 360 - 90;
-    const owner = components.OwnedBy.get(fleet)?.value;
+    const owner = components.OwnedBy.get(fleet)?.value as Entity | undefined;
     const relationship = owner ? getRockRelationship(playerEntity, owner as Entity) : RockRelationship.Neutral;
     const color =
       relationship === RockRelationship.Ally ? 0x00ff00 : relationship === RockRelationship.Enemy ? 0xff0000 : 0x00ffff;
     const circlePositionAbs = calculatePosition(angle, destinationPixelCoord);
     const name = entityToFleetName(fleet, true);
     const sharedComponents = [ObjectPosition(circlePositionAbs, DepthLayers.Marker)];
-    fleetOrbit.add("Graphics").setComponents([
+    const fleetOrbitObject = fleetOrbit.add("Graphics");
+    fleetOrbitObject.setComponents([
       ...sharedComponents,
       Circle(8, {
         color,
@@ -84,6 +92,26 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
         () => components.HoverEntity.set({ value: fleet }),
         () => components.HoverEntity.remove()
       ),
+      OnComponentSystem(components.HoverEntity, (_, { value: [newVal, oldVal] }) => {
+        if (oldVal?.value === fleet) {
+          console.log("resetting");
+          return fleetHomeLineObject.setComponent(SetValue({ alpha: 0 }));
+        }
+        if (newVal?.value !== fleet) return;
+        const owner = components.OwnedBy.get(fleet)?.value as Entity | undefined;
+        const ownerPosition = components.Position.get(owner);
+        if (!ownerPosition) return;
+        console.log("adding");
+        fleetHomeLineObject.setComponents([
+          ...sharedComponents,
+          Line(tileCoordToPixelCoord({ x: ownerPosition.x, y: -ownerPosition.y }, tileWidth, tileHeight), {
+            id: `homeLine`,
+            thickness: Math.min(10, 3 / scene.camera.phaserCamera.zoom),
+            alpha: 0.1,
+            color: 0xffffff,
+          }),
+        ]);
+      }),
       OnClickUp(scene, () => {
         if (relationship !== RockRelationship.Self) return;
         components.SelectedFleet.set({
@@ -93,6 +121,23 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
         });
       }),
     ]);
+
+    const fleetHomeLineObject = fleetOrbit.add("Graphics");
+
+    const ownerPosition = components.Position.get(owner) ?? { x: 0, y: 0 };
+    fleetHomeLineObject.setComponents([
+      Line(tileCoordToPixelCoord({ x: ownerPosition.x, y: -ownerPosition.y }, tileWidth, tileHeight), {
+        id: `homeLine`,
+        thickness: Math.min(10, 3 / scene.camera.phaserCamera.zoom),
+        alpha: 0,
+        color: 0xffffff,
+      }),
+      OnComponentSystem(components.HoverEntity, (_, { value: [newVal] }) => {
+        const alpha = newVal?.value === fleet ? 0.4 : 0;
+        fleetHomeLineObject.setComponent(SetValue({ alpha: alpha }));
+      }),
+    ]);
+
     const fleetLabel = fleetOrbit.add("BitmapText");
 
     fleetLabel.setComponents([
