@@ -1,0 +1,20 @@
+import { Scenes } from "@game/constants";
+import { PinnedPane } from "src/components/core/PinnedPane";
+
+import { AllBlueprints } from "./AllBlueprints";
+
+export const Blueprints = () => {
+  return (
+    <PinnedPane
+      id="blueprints"
+      title="BLUEPRINTS"
+      coord={{ x: 11.5, y: 16.5 }}
+      scene={Scenes.Asteroid}
+      minOpacity={0.75}
+      draggable
+      origin="top-right"
+    >
+      <AllBlueprints />
+    </PinnedPane>
+  );
+};

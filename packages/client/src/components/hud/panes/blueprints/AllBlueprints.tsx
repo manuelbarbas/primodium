@@ -9,12 +9,12 @@ import { getBlockTypeName } from "src/util/common";
 import { Action, EntityType } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
-import { Button } from "../core/Button";
-import { Card, SecondaryCard } from "../core/Card";
-import { BuildingImageFromType } from "../shared/BuildingImage";
+import { Button } from "../../../core/Button";
+import { Card, SecondaryCard } from "../../../core/Card";
+import { BuildingImageFromType } from "../../../shared/BuildingImage";
 import { BlueprintInfo } from "./BlueprintInfo";
 
-const Blueprint: React.FC<{
+const BlueprintButton: React.FC<{
   buildingType: Entity;
   tooltipDirection?: "left" | "right" | "top" | "bottom";
   keybind?: KeybindActions;
@@ -77,7 +77,7 @@ const Blueprint: React.FC<{
   );
 };
 
-export const Blueprints = () => {
+export const AllBlueprints = () => {
   const selectedBuilding = components.SelectedBuilding.use()?.value;
   const [index, setIndex] = useState(0);
 
@@ -86,53 +86,65 @@ export const Blueprints = () => {
       <div className="flex h-fit w-full gap-1 items-start">
         <SecondaryCard className={`gap-2 items-center ${index === 0 ? "!border-success/75" : ""}`}>
           <p className="text-xs opacity-50 font-bold pb-2">BASIC</p>
-          <Blueprint buildingType={EntityType.IronMine} keybind={KeybindActions.Hotbar0} keybindActive={index === 0} />
-          <Blueprint
+          <BlueprintButton
+            buildingType={EntityType.IronMine}
+            keybind={KeybindActions.Hotbar0}
+            keybindActive={index === 0}
+          />
+          <BlueprintButton
             buildingType={EntityType.CopperMine}
             keybind={KeybindActions.Hotbar1}
             keybindActive={index === 0}
           />
-          <Blueprint
+          <BlueprintButton
             buildingType={EntityType.LithiumMine}
             keybind={KeybindActions.Hotbar2}
             keybindActive={index === 0}
           />
-          <Blueprint buildingType={EntityType.Garage} keybind={KeybindActions.Hotbar3} keybindActive={index === 0} />
-          <Blueprint buildingType={EntityType.Workshop} keybind={KeybindActions.Hotbar4} keybindActive={index === 0} />
+          <BlueprintButton
+            buildingType={EntityType.Garage}
+            keybind={KeybindActions.Hotbar3}
+            keybindActive={index === 0}
+          />
+          <BlueprintButton
+            buildingType={EntityType.Workshop}
+            keybind={KeybindActions.Hotbar4}
+            keybindActive={index === 0}
+          />
         </SecondaryCard>
         <SecondaryCard className={`gap-2 items-center ${index === 1 ? "!border-success/75" : ""}`}>
           <p className="text-xs opacity-50 font-bold pb-2">ADVANCED</p>
-          <Blueprint
+          <BlueprintButton
             tooltipDirection="top"
             buildingType={EntityType.StorageUnit}
             keybind={KeybindActions.Hotbar0}
             keybindActive={index === 1}
           />
-          <Blueprint
+          <BlueprintButton
             tooltipDirection="top"
             buildingType={EntityType.SolarPanel}
             keybind={KeybindActions.Hotbar1}
             keybindActive={index === 1}
           />
-          <Blueprint
+          <BlueprintButton
             tooltipDirection="top"
             buildingType={EntityType.DroneFactory}
             keybind={KeybindActions.Hotbar2}
             keybindActive={index === 1}
           />
-          <Blueprint
+          <BlueprintButton
             tooltipDirection="top"
             buildingType={EntityType.IronPlateFactory}
             keybind={KeybindActions.Hotbar3}
             keybindActive={index === 1}
           />
-          <Blueprint
+          <BlueprintButton
             tooltipDirection="top"
             buildingType={EntityType.PVCellFactory}
             keybind={KeybindActions.Hotbar4}
             keybindActive={index === 1}
           />
-          <Blueprint
+          <BlueprintButton
             tooltipDirection="top"
             buildingType={EntityType.Vault}
             keybind={KeybindActions.Hotbar5}
@@ -141,37 +153,37 @@ export const Blueprints = () => {
         </SecondaryCard>
         <SecondaryCard className={`gap-2 items-center ${index === 2 ? "!border-success/75" : ""}`}>
           <p className="text-xs opacity-50 font-bold pb-2">ELITE</p>
-          <Blueprint
+          <BlueprintButton
             tooltipDirection="left"
             buildingType={EntityType.SAMLauncher}
             keybind={KeybindActions.Hotbar0}
             keybindActive={index === 2}
           />
-          <Blueprint
+          <BlueprintButton
             tooltipDirection="left"
             buildingType={EntityType.Hangar}
             keybind={KeybindActions.Hotbar1}
             keybindActive={index === 2}
           />
-          <Blueprint
+          <BlueprintButton
             tooltipDirection="left"
             buildingType={EntityType.AlloyFactory}
             keybind={KeybindActions.Hotbar2}
             keybindActive={index === 2}
           />
-          <Blueprint
+          <BlueprintButton
             tooltipDirection="left"
             buildingType={EntityType.StarmapperStation}
             keybind={KeybindActions.Hotbar3}
             keybindActive={index === 2}
           />
-          <Blueprint
+          <BlueprintButton
             tooltipDirection="left"
             buildingType={EntityType.ShieldGenerator}
             keybind={KeybindActions.Hotbar4}
             keybindActive={index === 2}
           />
-          <Blueprint
+          <BlueprintButton
             tooltipDirection="left"
             buildingType={EntityType.Market}
             keybind={KeybindActions.Hotbar5}

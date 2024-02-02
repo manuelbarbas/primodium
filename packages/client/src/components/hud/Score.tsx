@@ -28,8 +28,8 @@ export const Score: React.FC<{ player: Entity }> = ({ player }) => {
         <span>#{rank}</span>
       </p>
       <div className="flex grow items-center gap-1 px-2 bg-neutral justify-end font-bold border border-secondary/50">
-        <span>
-          {formatNumber(score, {
+        <span className="font-pixel">
+          {formatNumber(score / 1e18, {
             short: true,
             showZero: true,
             fractionDigits: 2,

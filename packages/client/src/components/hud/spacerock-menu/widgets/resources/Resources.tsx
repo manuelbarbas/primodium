@@ -3,7 +3,7 @@ import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { RelationLabel } from "../fleet-send/RelationLabel";
 import { StationedUnitsLabel } from "../fleet-send/StationedUnitsLabel";
-import { AllMaterialLabels } from "./material/AllMaterialLabels";
+import { AllMaterialLabels } from "../../../panes/resources/material/AllMaterialLabels";
 import { AllUnitLabels } from "./units/AllUnitLabels";
 import { ElectricityLabel } from "./utilities/ElectricityLabel";
 import { HousingLabel } from "./utilities/HousingLabel";
