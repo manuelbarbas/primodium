@@ -67,12 +67,23 @@ export const createCameraApi = (targetScene: Scene) => {
     requestAnimationFrame(() => camera?.worldView$.next(camera.phaserCamera.worldView));
   }
 
-  function screenCoordToPixelCoord(screenCoord: Coord) {
+  function screenCoordToWorldCoord(screenCoord: Coord) {
     const { camera } = targetScene;
 
     const pixelCoord = camera.phaserCamera.getWorldPoint(screenCoord.x, screenCoord.y);
 
     return pixelCoord;
+  }
+
+  function worldCoordToScreenCoord(worldCoord: Coord) {
+    const { camera } = targetScene;
+
+    //convert canvas screen coord to phaser screen coord
+    // Convert world coord to phaser screen coord
+    const screenCoordX = (worldCoord.x - camera.phaserCamera.scrollX) * camera.phaserCamera.zoom;
+    const screenCoordY = (worldCoord.y - camera.phaserCamera.scrollY) * camera.phaserCamera.zoom;
+
+    return { x: screenCoordX, y: screenCoordY };
   }
 
   const shake = () => {
@@ -113,7 +124,8 @@ export const createCameraApi = (targetScene: Scene) => {
     pan,
     zoomTo,
     getPosition,
-    screenCoordToPixelCoord,
+    screenCoordToWorldCoord,
+    worldCoordToScreenCoord,
     updateWorldView,
     shake,
     createDOMContainer,

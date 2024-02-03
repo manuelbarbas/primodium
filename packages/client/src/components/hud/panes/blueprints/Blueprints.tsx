@@ -1,11 +1,11 @@
 import { Scenes } from "@game/constants";
-import { PinnedPane } from "src/components/core/PinnedPane";
+import { Pane } from "src/components/core/Pane";
 
 import { AllBlueprints } from "./AllBlueprints";
 
 export const Blueprints = () => {
   return (
-    <PinnedPane
+    <Pane
       id="blueprints"
       title="BLUEPRINTS"
       coord={{ x: 11.5, y: 16.5 }}
@@ -15,6 +15,6 @@ export const Blueprints = () => {
       origin="top-right"
     >
       <AllBlueprints />
-    </PinnedPane>
+    </Pane>
   );
 };

@@ -3,9 +3,13 @@ import { Coord } from "@latticexyz/utils";
 import React, { useState, useEffect, ReactNode, FC, useMemo } from "react";
 import ReactDOM from "react-dom";
 import { FaArrowsAlt, FaMinus, FaPlus } from "react-icons/fa";
+import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
 import { usePrimodium } from "src/hooks/usePrimodium";
 
-export const PinnedPane: FC<{
+let pinnedDepth = 0;
+let unpinnedDepth = 10000;
+
+export const Pane: FC<{
   id: string;
   title?: string;
   coord: Coord;
@@ -37,6 +41,7 @@ export const PinnedPane: FC<{
 }) => {
   const primodium = usePrimodium();
   const [container, setContainer] = useState<Phaser.GameObjects.DOMElement>();
+  const [pinned, setPinned] = useState(true);
   const [containerRef, setContainerRef] = useState<HTMLDivElement>();
   const [minimized, setMinimized] = useState(false);
   const [dragging, setDragging] = useState(false);
@@ -72,8 +77,6 @@ export const PinnedPane: FC<{
     const { container, obj } = createDOMContainer(id, coord);
     obj.setAlpha(minOpacity);
     obj.pointerEvents = "none";
-    // obj.perspective = 800;
-    // obj.rotate3d = new Phaser.Math.Vector4(1, 0, 0, 10);
     setContainer(obj);
     setContainerRef(container);
 
@@ -92,7 +95,7 @@ export const PinnedPane: FC<{
       if (dragging) {
         requestAnimationFrame(() => {
           const {
-            camera: { screenCoordToPixelCoord },
+            camera: { screenCoordToWorldCoord: screenCoordToPixelCoord },
           } = primodium.api(Scenes.Asteroid);
 
           const newPixelPosition = screenCoordToPixelCoord({
@@ -116,33 +119,76 @@ export const PinnedPane: FC<{
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [dragging, draggable, dragOffset, container, primodium]);
+  }, [dragging, draggable, dragOffset, container, primodium, pinned]);
 
   if (!containerRef || !container) return null;
 
   return ReactDOM.createPortal(
     <div
-      className={`relative min-w-44 transition-opacity duration-600 ${translate} pointer-events-auto font-pixel`}
-      onPointerEnter={() => container.setAlpha(1)}
-      onPointerLeave={() => !dragging && container.setAlpha(minOpacity)}
+      className={`relative min-w-44 transition-opacity duration-600 ${translate} pointer-events-auto font-pixel select-none ${
+        !pinned ? "drop-shadow-hard" : ""
+      }`}
+      onPointerEnter={() => pinned && container.setAlpha(1)}
+      onPointerLeave={() => pinned && !dragging && container.setAlpha(minOpacity)}
     >
       <div
-        className="flex absolute top-0 -translate-y-full right-0 bg-neutral/75 p-1 border-secondary text-xs items-center gap-3 justify-between w-full cursor-move"
+        className={`flex absolute top-0 -translate-y-full right-0 p-1 border-secondary text-xs items-center gap-3 justify-between w-full cursor-move ${
+          pinned ? "bg-neutral/75" : "bg-secondary"
+        }`}
         onMouseDown={(event) => {
           const {
-            camera: { screenCoordToPixelCoord },
+            camera: { screenCoordToWorldCoord: screenCoordToPixelCoord },
           } = primodium.api(scene);
 
           const originPixelCoord = screenCoordToPixelCoord({ x: event.clientX, y: event.clientY });
           setDragOffset({ x: originPixelCoord.x - container.x, y: originPixelCoord.y - container.y });
+          if (pinned) {
+            container.setDepth(pinnedDepth + 1);
+            pinnedDepth++;
+          } else {
+            container.setDepth(unpinnedDepth + 1);
+            unpinnedDepth++;
+          }
           setDragging(true);
         }}
       >
         {title}
         <div className="flex items-center gap-1">
-          {draggable && <FaArrowsAlt className="text-secondary" />}
-          {!minimized && <FaMinus className="text-secondary cursor-row-resize" onClick={() => setMinimized(true)} />}
-          {minimized && <FaPlus className="text-success cursor-row-resize" onClick={() => setMinimized(false)} />}
+          {!pinned && (
+            <RiPushpinFill
+              className=""
+              onClick={() => {
+                const {
+                  camera: { screenCoordToWorldCoord },
+                } = primodium.api(scene);
+
+                const { x, y } = screenCoordToWorldCoord({ x: container.x, y: container.y });
+                container.setScrollFactor(1, 1);
+                container.setPosition(x, y);
+
+                setPinned(true);
+              }}
+            />
+          )}
+          {pinned && (
+            <RiUnpinFill
+              className=""
+              onClick={() => {
+                const {
+                  camera: { worldCoordToScreenCoord },
+                } = primodium.api(scene);
+
+                const { x, y } = worldCoordToScreenCoord({ x: container.x, y: container.y });
+                container.setScrollFactor(0, 0);
+                container.setPosition(x, y);
+                container.setDepth(unpinnedDepth);
+                setPinned(false);
+              }}
+            />
+          )}
+          {draggable && <FaArrowsAlt className="" />}
+          {!minimized && <FaMinus className="cursor-row-resize" onClick={() => setMinimized(true)} />}
+          {minimized && <FaPlus className="cursor-row-resize" onClick={() => setMinimized(false)} />}
         </div>
       </div>
       <div className={`${minimized ? "max-h-0 overflow-hidden" : ""}`}>{children}</div>
