@@ -70,6 +70,10 @@ export const createCameraApi = (targetScene: Scene) => {
   function screenCoordToWorldCoord(screenCoord: Coord) {
     const { camera } = targetScene;
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    camera.phaserCamera.preRender();
+
     const pixelCoord = camera.phaserCamera.getWorldPoint(screenCoord.x, screenCoord.y);
 
     return pixelCoord;
@@ -77,6 +81,10 @@ export const createCameraApi = (targetScene: Scene) => {
 
   function worldCoordToScreenCoord(worldCoord: Coord) {
     const { camera } = targetScene;
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    camera.phaserCamera.preRender();
 
     //convert canvas screen coord to phaser screen coord
     // Convert world coord to phaser screen coord

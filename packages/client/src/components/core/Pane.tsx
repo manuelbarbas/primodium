@@ -72,22 +72,35 @@ export const Pane: FC<{
 
   useEffect(() => {
     const {
-      camera: { createDOMContainer, zoom$ },
+      camera: { createDOMContainer },
     } = primodium.api(scene);
+
     const { container, obj } = createDOMContainer(id, coord);
     obj.setAlpha(minOpacity);
     obj.pointerEvents = "none";
     setContainer(obj);
     setContainerRef(container);
+  }, [coord, id, scene, primodium, minOpacity]);
 
-    if (noScale) return;
+  useEffect(() => {
+    const {
+      camera: { zoom$ },
+    } = primodium.api(scene);
+
+    if (!container) return;
 
     const sub = zoom$.subscribe((zoom) => {
-      obj.scale = 1 / zoom;
+      // if (noScale || !pinned) {
+      //   // adjust container offset to keep it in the same position on the screen
+      //   const { x, y } = worldCoordToScreenCoord({ x: unpinnedCoord.x, y: unpinnedCoord.y });
+      //   container.setPosition(x, y);
+      //   // return;
+      // }
+      container.scale = 1 / zoom;
     });
 
     return () => sub.unsubscribe();
-  }, [coord, id, scene, primodium, minOpacity, noScale]);
+  }, [pinned, noScale, primodium, scene, container]);
 
   useEffect(() => {
     if (!draggable) return;
@@ -137,10 +150,11 @@ export const Pane: FC<{
         }`}
         onMouseDown={(event) => {
           const {
-            camera: { screenCoordToWorldCoord: screenCoordToPixelCoord },
+            camera: { screenCoordToWorldCoord },
           } = primodium.api(scene);
 
-          const originPixelCoord = screenCoordToPixelCoord({ x: event.clientX, y: event.clientY });
+          const originPixelCoord = screenCoordToWorldCoord({ x: event.clientX, y: event.clientY });
+
           setDragOffset({ x: originPixelCoord.x - container.x, y: originPixelCoord.y - container.y });
           if (pinned) {
             container.setDepth(pinnedDepth + 1);

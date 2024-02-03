@@ -156,22 +156,35 @@ export const setupBasicCameraMovement = (
     pan(gameCoord);
   });
 
-  //handle zooming with mouse wheel
-  scene.input.phaserInput.on("wheel", ({ deltaY }: { deltaY: number; event: any }) => {
-    if (!wheel) return;
+  //handle wheel zoom
+  scene.phaserScene.input.on(
+    "wheel",
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (pointer: Phaser.Input.Pointer, _gameObjects: any, _deltaX: any, deltaY: number) => {
+      if (!wheel) return;
 
-    let scale = 0.02;
+      let scale = 0.0002;
 
-    if (isDown(KeybindActions.Modifier)) scale /= 2;
+      if (isDown(KeybindActions.Modifier)) scale /= 2;
 
-    if (deltaY < 0) {
-      const zoom = Math.min(scene.camera.phaserCamera.zoom + wheelSpeed * scale, maxZoom);
-      scene.camera.setZoom(zoom);
-    } else if (deltaY > 0) {
-      const zoom = Math.max(scene.camera.phaserCamera.zoom - wheelSpeed * scale, minZoom);
-      scene.camera.setZoom(zoom);
+      const camera = scene.camera.phaserCamera;
+      // Get the current world point under pointer.
+      const worldPoint = camera.getWorldPoint(pointer.x, pointer.y);
+      const newZoom = camera.zoom - camera.zoom * scale * wheelSpeed * deltaY;
+      scene.camera.setZoom(Phaser.Math.Clamp(newZoom, minZoom, maxZoom));
+
+      // Update camera matrix, so `getWorldPoint` returns zoom-adjusted coordinates.
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      camera.preRender();
+      const newWorldPoint = camera.getWorldPoint(pointer.x, pointer.y);
+      // Scroll the camera to keep the pointer under the same world point.
+      scene.camera.setScroll(
+        camera.scrollX - (newWorldPoint.x - worldPoint.x),
+        camera.scrollY - (newWorldPoint.y - worldPoint.y)
+      );
     }
-  });
+  );
 
   world.registerDisposer(() => {
     doubleClickSub.unsubscribe();
