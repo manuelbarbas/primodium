@@ -26,13 +26,8 @@ export const BattleReports = () => {
   } = useMud();
   const [selectedBattle, setSelectedBattle] = useState<Entity>();
 
-  const attackingBattles = components.BattleResult.useAllWith({
-    attacker: playerEntity,
-  });
-  const defendingBattles = components.BattleResult.useAllWith({
-    defender: playerEntity,
-  });
-
+  const attackingBattles = useMemo(() => [] as Entity[], []);
+  const defendingBattles = useMemo(() => [] as Entity[], []);
   const battles = useMemo(() => {
     const battles = [];
 
@@ -94,9 +89,6 @@ export const BattleReports = () => {
                       [{components.Position.get(battle.rock as Entity)?.x ?? 0},
                       {components.Position.get(battle.rock as Entity)?.y ?? 0}]
                     </p>
-                  </LabeledValue>
-                  <LabeledValue label="TYPE">
-                    <p>{!battle.totalCargo ? "INVASION" : "RAID"}</p>
                   </LabeledValue>
                   <div className="text-right">
                     <LabeledValue label="TIMESTAMP">

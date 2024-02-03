@@ -18,11 +18,9 @@ export const renderEffects = (scene: Scene) => {
     const { tileWidth, tileHeight } = scene.tilemap;
     const isFleet = components.IsFleet.get(defender)?.value;
     const attackerPosition = getFleetTilePosition(attacker, { tileHeight, tileWidth });
-    console.log("attacker position:", attackerPosition);
     const position = isFleet
       ? getFleetTilePosition(defender, { tileHeight, tileWidth })
       : components.Position.get(defender);
-    console.log("defender position:", position);
     const playerEntity = components.Account.get()?.value;
     if (!position || !playerEntity) return;
     const { emitExplosion, fireMissile } = fx;
@@ -36,12 +34,6 @@ export const renderEffects = (scene: Scene) => {
       }
     }, duration * 0.8);
   };
-
-  defineComponentSystem(gameWorld, components.HoverEntity, (update) => {
-    const activeFleet = components.SelectedFleet.get()?.fleet;
-    const hoverEntity = update.value[0]?.value;
-    if (activeFleet && hoverEntity) attackAnimation(activeFleet, hoverEntity);
-  });
 
   defineComponentSystem(gameWorld, BattleResult, (update) => {
     const now = components.Time.get()?.value ?? 0n;

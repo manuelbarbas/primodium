@@ -96,7 +96,7 @@ export const createBattleComponents = () => {
     }, {} as Record<string, ReturnType<typeof getParticipant>>);
     return {
       ...battle,
-      battleParticipants,
+      participants: battleParticipants,
     };
   };
 
