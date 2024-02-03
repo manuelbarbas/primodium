@@ -17,7 +17,6 @@ export const Pane: FC<{
   draggable?: boolean;
   scene: Scenes;
   minOpacity?: number;
-  noScale?: boolean;
   origin?:
     | "top-left"
     | "top-right"
@@ -28,17 +27,7 @@ export const Pane: FC<{
     | "center-right"
     | "center-top"
     | "center-bottom";
-}> = ({
-  title,
-  scene,
-  id,
-  coord,
-  children,
-  draggable = false,
-  minOpacity = 0.5,
-  origin = "top-left",
-  noScale = false,
-}) => {
+}> = ({ title, scene, id, coord, children, draggable = false, minOpacity = 0.5, origin = "top-left" }) => {
   const primodium = usePrimodium();
   const [container, setContainer] = useState<Phaser.GameObjects.DOMElement>();
   const [pinned, setPinned] = useState(true);
@@ -46,6 +35,23 @@ export const Pane: FC<{
   const [minimized, setMinimized] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState<Coord>({ x: 0, y: 0 });
+
+  const [camera, uiCamera] = useMemo(() => {
+    const { camera } = primodium.api(scene);
+    const { camera: uiCamera } = primodium.api(Scenes.UI);
+
+    return [camera, uiCamera];
+  }, [primodium, scene]);
+
+  const createContainer = (_camera: typeof camera, _coord: Coord, raw: boolean) => {
+    if (container) container.destroy();
+
+    const { container: _container, obj } = _camera.createDOMContainer(id, _coord, raw);
+    obj.pointerEvents = "none";
+    obj.setAlpha(minOpacity);
+    setContainer(obj);
+    setContainerRef(_container);
+  };
 
   const translate = useMemo(() => {
     switch (origin) {
@@ -71,50 +77,37 @@ export const Pane: FC<{
   }, [origin]);
 
   useEffect(() => {
-    const {
-      camera: { createDOMContainer },
-    } = primodium.api(scene);
+    createContainer(camera, coord, scene === Scenes.UI ? true : false);
 
-    const { container, obj } = createDOMContainer(id, coord);
-    obj.setAlpha(minOpacity);
-    obj.pointerEvents = "none";
-    setContainer(obj);
-    setContainerRef(container);
-  }, [coord, id, scene, primodium, minOpacity]);
+    return () => {
+      if (container) container.destroy();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [coord]);
 
   useEffect(() => {
-    const {
-      camera: { zoom$ },
-    } = primodium.api(scene);
+    if (!container || !pinned) return;
 
-    if (!container) return;
+    container.scale = 1 / camera.phaserCamera.zoom;
 
-    const sub = zoom$.subscribe((zoom) => {
-      // if (noScale || !pinned) {
-      //   // adjust container offset to keep it in the same position on the screen
-      //   const { x, y } = worldCoordToScreenCoord({ x: unpinnedCoord.x, y: unpinnedCoord.y });
-      //   container.setPosition(x, y);
-      //   // return;
-      // }
+    const sub = camera.zoom$.subscribe((zoom) => {
       container.scale = 1 / zoom;
     });
 
     return () => sub.unsubscribe();
-  }, [pinned, noScale, primodium, scene, container]);
+  }, [scene, container, pinned, camera]);
 
   useEffect(() => {
     if (!draggable) return;
     const handleMouseMove = (event: MouseEvent) => {
       if (dragging) {
         requestAnimationFrame(() => {
-          const {
-            camera: { screenCoordToWorldCoord: screenCoordToPixelCoord },
-          } = primodium.api(Scenes.Asteroid);
-
-          const newPixelPosition = screenCoordToPixelCoord({
+          const newPixelPosition = (!pinned ? uiCamera : camera).screenCoordToWorldCoord({
             x: event.clientX,
             y: event.clientY,
           });
+
+          console.log(dragOffset);
 
           container?.setPosition(newPixelPosition.x - dragOffset.x, newPixelPosition.y - dragOffset.y);
         });
@@ -132,7 +125,7 @@ export const Pane: FC<{
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [dragging, draggable, dragOffset, container, primodium, pinned]);
+  }, [dragging, draggable, dragOffset, container, pinned, camera, uiCamera]);
 
   if (!containerRef || !container) return null;
 
@@ -149,11 +142,10 @@ export const Pane: FC<{
           pinned ? "bg-neutral/75" : "bg-secondary"
         }`}
         onMouseDown={(event) => {
-          const {
-            camera: { screenCoordToWorldCoord },
-          } = primodium.api(scene);
-
-          const originPixelCoord = screenCoordToWorldCoord({ x: event.clientX, y: event.clientY });
+          const originPixelCoord = (!pinned ? uiCamera : camera).screenCoordToWorldCoord({
+            x: event.clientX,
+            y: event.clientY,
+          });
 
           setDragOffset({ x: originPixelCoord.x - container.x, y: originPixelCoord.y - container.y });
           if (pinned) {
@@ -172,15 +164,12 @@ export const Pane: FC<{
             <RiPushpinFill
               className=""
               onClick={() => {
-                const {
-                  camera: { screenCoordToWorldCoord },
-                } = primodium.api(scene);
-
-                const { x, y } = screenCoordToWorldCoord({ x: container.x, y: container.y });
-                container.setScrollFactor(1, 1);
-                container.setPosition(x, y);
-
                 setPinned(true);
+                const worldCoord = camera.screenCoordToWorldCoord({ x: container.x, y: container.y });
+                createContainer(camera, worldCoord, true);
+                container.setDepth(pinnedDepth);
+                container.setAlpha(1);
+                container.setScale(1 / 8);
               }}
             />
           )}
@@ -188,15 +177,11 @@ export const Pane: FC<{
             <RiUnpinFill
               className=""
               onClick={() => {
-                const {
-                  camera: { worldCoordToScreenCoord },
-                } = primodium.api(scene);
-
-                const { x, y } = worldCoordToScreenCoord({ x: container.x, y: container.y });
-                container.setScrollFactor(0, 0);
-                container.setPosition(x, y);
-                container.setDepth(unpinnedDepth);
                 setPinned(false);
+                const screenCoord = camera.worldCoordToScreenCoord({ x: container.x, y: container.y });
+                createContainer(uiCamera, screenCoord, true);
+                container.setDepth(unpinnedDepth);
+                container.setAlpha(1);
               }}
             />
           )}

@@ -9,12 +9,12 @@ const gameConfig: GameConfig = {
   width: window.innerWidth,
   height: window.innerHeight,
   scale: {
-    mode: Phaser.Scale.ENVELOP,
+    mode: Phaser.Scale.RESIZE,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
   antialias: false,
   antialiasGL: false,
-  desynchronized: true,
+  // desynchronized: true,
   autoMobilePipeline: true,
   premultipliedAlpha: true,
   // autoFocus: true,
@@ -24,6 +24,7 @@ const gameConfig: GameConfig = {
   assetPackUrl: ASSET_PACK,
   dom: {
     createContainer: true,
+    pointerEvents: "none",
   },
 };
 

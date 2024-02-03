@@ -1,8 +1,9 @@
 import { Scenes } from "@game/constants";
 import { Pane } from "src/components/core/Pane";
 import { AllResourceLabels } from "./AllResourceLabels";
+import { memo } from "react";
 
-export const Resources = () => {
+export const Resources = memo(() => {
   return (
     <Pane
       id="resources"
@@ -15,4 +16,4 @@ export const Resources = () => {
       <AllResourceLabels />
     </Pane>
   );
-};
+});

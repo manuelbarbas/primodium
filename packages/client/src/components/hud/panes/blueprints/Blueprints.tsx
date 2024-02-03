@@ -1,9 +1,10 @@
+import { memo } from "react";
 import { Scenes } from "@game/constants";
 import { Pane } from "src/components/core/Pane";
 
 import { AllBlueprints } from "./AllBlueprints";
 
-export const Blueprints = () => {
+export const Blueprints = memo(() => {
   return (
     <Pane
       id="blueprints"
@@ -17,4 +18,4 @@ export const Blueprints = () => {
       <AllBlueprints />
     </Pane>
   );
-};
+});

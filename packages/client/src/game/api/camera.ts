@@ -88,8 +88,8 @@ export const createCameraApi = (targetScene: Scene) => {
 
     //convert canvas screen coord to phaser screen coord
     // Convert world coord to phaser screen coord
-    const screenCoordX = (worldCoord.x - camera.phaserCamera.scrollX) * camera.phaserCamera.zoom;
-    const screenCoordY = (worldCoord.y - camera.phaserCamera.scrollY) * camera.phaserCamera.zoom;
+    const screenCoordX = (worldCoord.x - camera.phaserCamera.worldView.x) * camera.phaserCamera.zoom;
+    const screenCoordY = (worldCoord.y - camera.phaserCamera.worldView.y) * camera.phaserCamera.zoom;
 
     return { x: screenCoordX, y: screenCoordY };
   }
@@ -109,14 +109,14 @@ export const createCameraApi = (targetScene: Scene) => {
     const pixelCoord = raw ? coord : tileCoordToPixelCoord(coord, tileWidth, tileHeight);
     pixelCoord.y = raw ? pixelCoord.y : -pixelCoord.y;
 
-    if (targetScene.phaserScene.data.get(id)) {
-      const containerInfo = targetScene.phaserScene.data.get(id) as {
-        obj: Phaser.GameObjects.DOMElement;
-        container: HTMLDivElement;
-      };
-      containerInfo.obj.setPosition(pixelCoord.x, pixelCoord.y);
-      return containerInfo;
-    }
+    // if (targetScene.phaserScene.data.get(id)) {
+    //   const containerInfo = targetScene.phaserScene.data.get(id) as {
+    //     obj: Phaser.GameObjects.DOMElement;
+    //     container: HTMLDivElement;
+    //   };
+    //   containerInfo.obj.setPosition(pixelCoord.x, pixelCoord.y);
+    //   return containerInfo;
+    // }
 
     const div = document.createElement("div");
     div.id = id;

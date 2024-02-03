@@ -1,5 +1,5 @@
 // ASTEROID MAP ENTRY POINT
-import { AudioKeys } from "@game/constants";
+import { AudioKeys, Scenes } from "@game/constants";
 import { Game } from "engine/types";
 import { createAudioApi } from "src/game/api/audio";
 import { world } from "src/network/world";
@@ -8,14 +8,19 @@ import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMoveme
 import { setupKeybinds } from "./setup/setupKeybinds";
 import { setupMouseInputs } from "./setup/setupMouseInputs";
 import { setupTileManager } from "./setup/setupTileManager";
+import { uiSceneConfig } from "src/game/config/uiScene";
 
 export const initAsteroidScene = async (game: Game) => {
+  const scene2 = await game.sceneManager.addScene(uiSceneConfig, true);
   const scene = await game.sceneManager.addScene(asteroidSceneConfig, true);
+
   const audio = createAudioApi(scene);
 
   const tileManager = await setupTileManager(scene.tilemap);
   tileManager?.renderInitialChunks();
   tileManager?.startChunkRenderer();
+
+  scene2.phaserScene.scene.bringToTop(Scenes.UI);
 
   scene.camera.phaserCamera.fadeIn(1000);
 
