@@ -566,6 +566,11 @@ export const config = mudConfig({
       offchainOnly: true,
     },
 
+    DamageDealt: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "uint256",
+    },
+
     /* ---------------------------------- Score --------------------------------- */
 
     P_ScoreMultiplier: {
@@ -604,6 +609,8 @@ export const config = mudConfig({
     PirateAsteroid: {
       keySchema: { entity: "bytes32" },
       valueSchema: {
+        isPirateAsteroid: "bool",
+        isDefeated: "bool",
         playerEntity: "bytes32",
         prototype: "bytes32",
       },

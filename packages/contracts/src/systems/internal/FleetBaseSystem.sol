@@ -55,4 +55,11 @@ contract FleetBaseSystem is PrimodiumSystem {
     );
     _;
   }
+  modifier _onlyWhenNotPirateAsteroid(bytes32 spaceRock) {
+    require(
+      !PirateAsteroid.getIsPirateAsteroid(spaceRock),
+      "[Fleet] Action can not be performed towards pirate asteroids"
+    );
+    _;
+  }
 }

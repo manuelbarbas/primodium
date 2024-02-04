@@ -28,7 +28,13 @@ contract FleetMoveSystem is FleetBaseSystem {
   function sendFleet(
     bytes32 fleetId,
     bytes32 spaceRock
-  ) public _onlyFleetOwner(fleetId) _onlyWhenFleetIsInOrbit(fleetId) _onlyOtherSpaceRock(fleetId, spaceRock) {
+  )
+    public
+    _onlyFleetOwner(fleetId)
+    _onlyWhenFleetIsInOrbit(fleetId)
+    _onlyOtherSpaceRock(fleetId, spaceRock)
+    _onlyWhenNotPirateAsteroid(spaceRock)
+  {
     require(Asteroid.getIsAsteroid(spaceRock), "[Fleet] Space rock does not exist");
     LibFleetMove.sendFleet(fleetId, spaceRock);
   }

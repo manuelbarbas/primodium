@@ -23,11 +23,19 @@ import { S_SpendResourcesSystem } from "systems/subsystems/S_SpendResourcesSyste
 
 /* --------------------------------- BATTLE --------------------------------- */
 
-function fleetBattleApplyDamage(bytes32 battleId, bytes32 targetEntity, uint256 damage) {
+function fleetBattleApplyDamage(
+  bytes32 battleId,
+  bytes32 damageDealerPlayerEntity,
+  bytes32 targetEntity,
+  uint256 damage
+) {
   SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
     getSystemResourceId("S_FleetBattleApplyDamageSystem"),
-    abi.encodeCall(S_FleetBattleApplyDamageSystem.applyDamageToWithAllies, (battleId, targetEntity, damage)),
+    abi.encodeCall(
+      S_FleetBattleApplyDamageSystem.applyDamageToWithAllies,
+      (battleId, damageDealerPlayerEntity, targetEntity, damage)
+    ),
     0
   );
 }

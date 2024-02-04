@@ -13,6 +13,15 @@ contract FleetCombatSystem is FleetBaseSystem {
     _;
   }
 
+  modifier _onlyWhenPirateAsteroidHasNotBeenDefeated(bytes32 spaceRock) {
+    require(!PirateAsteroid.getIsDefeated(spaceRock), "[Fleet] Target pirate asteroid has been defeated");
+    require(
+      !PirateAsteroid.getIsPirateAsteroid(spaceRock) || PirateAsteroid.getPlayerEntity(spaceRock) == _player(),
+      "[Fleet] Can only attack personal pirate asteroids"
+    );
+    _;
+  }
+
   modifier _onlyWhenFleetNotInGracePeriod(bytes32 fleetId) {
     require(
       !((FleetMovement.getArrivalTime(fleetId) + P_GracePeriod.getFleet()) <= block.timestamp),
@@ -69,6 +78,7 @@ contract FleetCombatSystem is FleetBaseSystem {
     _onlyWhenNotInStance(fleetId)
     _onlyWhenSpaceRockNotInGracePeriod(targetSpaceRock)
     _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, targetSpaceRock)
+    _onlyWhenPirateAsteroidHasNotBeenDefeated(targetSpaceRock)
     _claimResources(targetSpaceRock)
     _claimUnits(targetSpaceRock)
   {
@@ -97,17 +107,20 @@ contract FleetCombatSystem is FleetBaseSystem {
     bool isAggressorFleet = IsFleet.get(battleResult.aggressorEntity);
 
     bool isTargetFleet = IsFleet.get(battleResult.targetEntity);
+    bytes32 defendingPlayerEntity = isTargetFleet
+      ? OwnedBy.get(OwnedBy.get(battleResult.targetEntity))
+      : OwnedBy.get(battleResult.targetEntity);
     uint256 aggressorDecryption = 0;
     bytes32 aggressorDecryptionUnitPrototype = bytes32(0);
     if (isAggressorFleet)
       (aggressorDecryptionUnitPrototype, aggressorDecryption) = LibFleetAttributes.getDecryption(
         battleResult.aggressorEntity
       );
+    bool isPirateAsteroid = PirateAsteroid.getIsPirateAsteroid(battleResult.targetEntity);
+    bool isRaid = isAggressorWinner && (isTargetFleet || aggressorDecryption == 0 || isPirateAsteroid);
 
-    bool isRaid = isAggressorWinner && (isTargetFleet || aggressorDecryption == 0);
-
-    bool isDecyption = !isRaid && isAggressorWinner && !isTargetFleet && aggressorDecryption > 0;
-    fleetBattleApplyDamage(battleId, battleResult.aggressorEntity, battleResult.targetDamage);
+    bool isDecyption = !isRaid && isAggressorWinner && !isTargetFleet && aggressorDecryption > 0 && !isPirateAsteroid;
+    fleetBattleApplyDamage(battleId, defendingPlayerEntity, battleResult.aggressorEntity, battleResult.targetDamage);
     if (isRaid) {
       fleetBattleResolveRaid(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
     } else if (isDecyption) {
@@ -127,6 +140,9 @@ contract FleetCombatSystem is FleetBaseSystem {
         }
       }
     }
-    fleetBattleApplyDamage(battleId, battleResult.targetEntity, battleResult.aggressorDamage);
+    fleetBattleApplyDamage(battleId, _player(), battleResult.targetEntity, battleResult.aggressorDamage);
+    if (isPirateAsteroid && isAggressorWinner) {
+      PirateAsteroid.setIsDefeated(battleResult.targetEntity, true);
+    }
   }
 }
