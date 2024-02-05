@@ -147,11 +147,19 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
     let subscription: Subscription | null = null;
 
     const subscribeToUpdates = (tween: Phaser.Tweens.Tween) =>
-      merge(components.SelectedFleet.update$, components.SelectedRock.update$).subscribe(() => {
+      merge(
+        components.SelectedFleet.update$,
+        components.SelectedRock.update$,
+        components.BattleRender.update$
+      ).subscribe(() => {
         const asteroid = components.SelectedFleet.get()?.asteroid;
         const selectedAsteroid = components.SelectedRock.get()?.value;
+        const battlePosition = components.BattleRender.get()?.value;
 
-        if (!tween.isDestroyed() && (asteroid !== rockEntity || selectedAsteroid !== rockEntity)) {
+        if (
+          !tween.isDestroyed() &&
+          (asteroid !== rockEntity || (selectedAsteroid !== rockEntity && battlePosition !== rockEntity))
+        ) {
           tween.play();
         }
       });
@@ -190,7 +198,8 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
         onUpdate: (...[tween, , , current]) => {
           const asteroid = components.SelectedFleet.get()?.asteroid;
           const selectedAsteroid = components.SelectedRock.get()?.value;
-          if (asteroid == rockEntity || selectedAsteroid == rockEntity) {
+          const battlePosition = components.BattleRender.get()?.value;
+          if ([asteroid, selectedAsteroid, battlePosition].includes(rockEntity)) {
             tween.pause();
             return;
           }

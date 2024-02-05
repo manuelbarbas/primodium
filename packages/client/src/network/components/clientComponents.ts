@@ -95,6 +95,7 @@ export const SelectedFleet = createExtendedComponent(
 );
 
 export const Battle = createBattleComponents();
+export const BattleRender = createExtendedEntityComponent(world, { id: "BattleRender" });
 
 /* -------------------------------------------------------------------------- */
 /*                                 Leaderboard                                */
@@ -206,6 +207,7 @@ export default {
   Attack,
   SelectedFleet,
   Battle,
+  BattleRender,
 
   /* ------------------------------ Leaderboard ------------------------------- */
   Leaderboard,

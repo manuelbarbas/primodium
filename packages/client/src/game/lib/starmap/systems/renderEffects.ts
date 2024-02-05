@@ -19,9 +19,11 @@ export const renderEffects = (scene: Scene) => {
     const attackerPosition = getFleetTilePosition(scene, attacker);
     const position = isFleet ? getFleetTilePosition(scene, defender) : components.Position.get(defender);
     const playerEntity = components.Account.get()?.value;
+    const attackerRock = components.FleetMovement.get(attacker)?.destination as Entity;
     if (!position || !playerEntity) return;
+    components.BattleRender.set({ value: attackerRock });
     const { emitExplosion, fireMissile } = fx;
-    const duration = fireMissile(attackerPosition, position, { offsetMs: 50 });
+    const duration = fireMissile(attackerPosition, position, { offsetMs: 50, numMissiles: 5 });
 
     setTimeout(() => {
       emitExplosion(position, isFleet ? "sm" : "md");
@@ -29,6 +31,7 @@ export const renderEffects = (scene: Scene) => {
         const { shake } = camera;
         shake();
       }
+      components.BattleRender.clear();
     }, duration * 0.8);
   };
 
