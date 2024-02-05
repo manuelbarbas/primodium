@@ -95,6 +95,8 @@ export const SelectedFleet = createExtendedComponent(
 );
 
 export const Battle = createBattleComponents();
+
+// this component is used to freeze orbiting of fleets when a battle is rendering
 export const BattleRender = createExtendedEntityComponent(world, { id: "BattleRender" });
 
 /* -------------------------------------------------------------------------- */

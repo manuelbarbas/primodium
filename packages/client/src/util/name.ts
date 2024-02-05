@@ -144,10 +144,7 @@ const phoneticAlphabet: Record<string, string> = {
   Z: "Zulu",
 };
 
-function getAlphabetLetter(index: number): string {
-  index = index % 26;
-  return "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[index];
-}
+const getAlphabetLetter = (index: number) => "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[index % 26];
 
 const extendName = (name: string) => {
   return `${phoneticAlphabet[name[0]]} ${phoneticAlphabet[name[1]]} ${phoneticAlphabet[name[2]]}`;
