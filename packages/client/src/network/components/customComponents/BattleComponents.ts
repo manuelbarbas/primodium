@@ -1,10 +1,7 @@
 import { Entity, Type } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { ResourceEnumLookup, UnitEnumLookup } from "src/util/constants";
-import { encodeEntity } from "src/util/encode";
-import { Hex } from "viem";
 import { createExtendedComponent } from "./ExtendedComponent";
 
 export const createBattleComponents = () => {
@@ -49,12 +46,8 @@ export const createBattleComponents = () => {
     { id: "RawBattleParticipant" }
   );
 
-  const getParticipant = (battleEntity: Entity, participantEntity: Entity) => {
-    const entity = encodeEntity(components.BattleDamageDealtResult.metadata.keySchema, {
-      battleId: battleEntity as Hex,
-      participantEntity: participantEntity as Hex,
-    });
-    const participant = RawBattleParticipant.get(entity);
+  const getParticipant = (participantEntity: Entity) => {
+    const participant = RawBattleParticipant.get(participantEntity);
     if (!participant) return;
     const units = Object.entries(UnitEnumLookup).reduce((acc, [entity, index]) => {
       const level = participant.unitLevels[index];
@@ -89,7 +82,7 @@ export const createBattleComponents = () => {
     const participants = RawBattleParticipants.get(battleEntity)?.value ?? [];
     if (!battle) return undefined;
     const battleParticipants = participants.reduce((acc, participant) => {
-      const data = getParticipant(battleEntity, participant);
+      const data = getParticipant(participant);
       if (!data) return acc;
       acc[participant] = data;
       return acc;

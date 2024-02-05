@@ -151,7 +151,7 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
         const asteroid = components.SelectedFleet.get()?.asteroid;
         const selectedAsteroid = components.SelectedRock.get()?.value;
 
-        if ((!tween.isDestroyed() && asteroid !== rockEntity) || selectedAsteroid !== rockEntity) {
+        if (!tween.isDestroyed() && (asteroid !== rockEntity || selectedAsteroid !== rockEntity)) {
           tween.play();
         }
       });
