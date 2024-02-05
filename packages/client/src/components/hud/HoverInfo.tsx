@@ -40,7 +40,7 @@ export const HoverInfo = () => {
     const inTransit = (movement?.arrivalTime ?? 0n) > (components.Time.use()?.value ?? 0n);
 
     return (
-      <Card className="ml-5 uppercase font-bold text-xs relative w-48">
+      <Card className="ml-5 uppercase font-bold text-xs relative w-48 ">
         <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
         <div className="flex flex-col gap-1 z-10">
           <div className="flex gap-1 items-center">
@@ -103,7 +103,7 @@ export const HoverInfo = () => {
   else if (components.IsFleet.has(hoverEntity)) content = <FleetInfo entity={hoverEntity} />;
 
   return (
-    <div className="relative" style={{ zIndex: 1001 }}>
+    <div className="relative font-pixel" style={{ zIndex: 1001 }}>
       {content}
     </div>
   );

@@ -141,6 +141,12 @@ export const Pane: FC<{
         className={`flex absolute top-0 -translate-y-full right-0 p-1 border-secondary text-xs items-center gap-3 justify-between w-full cursor-move ${
           pinned ? "bg-neutral/75" : "bg-secondary"
         }`}
+        onDoubleClick={() => {
+          setPinned(true);
+          createContainer(camera, coord, scene === Scenes.UI ? true : false);
+          container.setDepth(pinnedDepth);
+          container.setAlpha(1);
+        }}
         onMouseDown={(event) => {
           const originPixelCoord = (!pinned ? uiCamera : camera).screenCoordToWorldCoord({
             x: event.clientX,
