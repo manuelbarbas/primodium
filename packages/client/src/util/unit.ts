@@ -176,7 +176,7 @@ export function getCanAttack(originEntity: Entity, targetEntity: Entity) {
     | Entity
     | undefined;
   const targetOwnerRock = (isFleet ? components.OwnedBy.get(targetEntity)?.value : targetEntity) as Entity | undefined;
-  const targetRockOwner = components.OwnedBy.get(targetRock)?.value;
+  const targetRockOwner = components.OwnedBy.get(targetOwnerRock)?.value;
 
   const originEntityRock = components.FleetMovement.get(originEntity)?.destination as Entity | undefined;
   const originEntityOwnerRock = components.OwnedBy.get(originEntity)?.value as Entity;

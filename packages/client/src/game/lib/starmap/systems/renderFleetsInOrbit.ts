@@ -2,13 +2,14 @@ import { DepthLayers } from "@game/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity, Has, defineComponentSystem, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
+import { toast } from "react-toastify";
 import { Subscription, merge } from "rxjs";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { getRockRelationship } from "src/util/asteroid";
 import { RockRelationship } from "src/util/constants";
 import { entityToFleetName } from "src/util/name";
-import { getAllOrbitingFleets } from "src/util/unit";
+import { getAllOrbitingFleets, getCanAttack } from "src/util/unit";
 import {
   ObjectPosition,
   OnClickUp,
@@ -121,6 +122,12 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
       }),
 
       OnClickUp(scene, (gameObject) => {
+        const attackOrigin = components.Attack.get()?.originFleet;
+        if (attackOrigin) {
+          if (getCanAttack(attackOrigin, fleet)) components.Attack.setDestination(fleet);
+          else toast.error("Cannot attack this fleet.");
+          return;
+        }
         if (!gameObject || relationship !== RockRelationship.Self) return;
         const position = { x: gameObject.x, y: -gameObject.y };
 
