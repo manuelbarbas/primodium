@@ -135,6 +135,25 @@ export const OnHover = <T extends keyof GameObjectTypes>(
   };
 };
 
+export const TweenCounter = <T extends keyof GameObjectTypes>(
+  scene: Scene,
+  config: Partial<Phaser.Types.Tweens.NumberTweenBuilderConfig>
+): GameObjectComponent<T> => {
+  let tween: Phaser.Tweens.Tween;
+  return {
+    id: uuid(),
+    once: () => {
+      tween = scene.phaserScene.tweens.addCounter({
+        ...config,
+      });
+    },
+    exit: () => {
+      tween.stop();
+      tween.destroy();
+    },
+  };
+};
+
 export const Tween = <T extends keyof GameObjectTypes>(
   scene: Scene,
   config: Partial<Phaser.Types.Tweens.TweenBuilderConfig>

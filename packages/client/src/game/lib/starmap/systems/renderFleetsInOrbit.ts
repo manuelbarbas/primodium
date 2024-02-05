@@ -2,6 +2,7 @@ import { DepthLayers } from "@game/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity, Has, defineComponentSystem, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
+import { Subscription, merge } from "rxjs";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { getRockRelationship } from "src/util/asteroid";
@@ -15,6 +16,7 @@ import {
   OnHover,
   OnOnce,
   SetValue,
+  TweenCounter,
 } from "../../common/object-components/common";
 import { Circle, Line } from "../../common/object-components/graphics";
 import { ObjectText } from "../../common/object-components/text";
@@ -40,13 +42,9 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
   const playerEntity = components.Account.get()?.value;
   if (!playerEntity) return;
   const allFleets = getAllOrbitingFleets(rockEntity);
-  const position = components.Position.get(rockEntity);
-  scene.objectPool.removeGroup(rockEntity + objIndexSuffix);
-  if (!position || allFleets.length == 0) return;
-
   const destination = components.Position.get(rockEntity);
-
-  if (!destination) return;
+  scene.objectPool.removeGroup(rockEntity + objIndexSuffix);
+  if (!destination || allFleets.length == 0) return;
 
   const destinationPixelCoord = tileCoordToPixelCoord({ x: destination.x, y: -destination.y }, tileWidth, tileHeight);
 
@@ -63,23 +61,33 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
       input: null,
     }),
   ]);
+
+  const revolutionDuration = 120;
+
   allFleets.forEach((fleet, i) => {
-    const angle = ((i + 1) / allFleets.length) * 360 - 90;
     const owner = components.OwnedBy.get(fleet)?.value as Entity | undefined;
     const relationship = owner ? getRockRelationship(playerEntity, owner as Entity) : RockRelationship.Neutral;
     const color =
       relationship === RockRelationship.Ally ? 0x00ff00 : relationship === RockRelationship.Enemy ? 0xff0000 : 0x00ffff;
-    const circlePositionAbs = calculatePosition(angle, destinationPixelCoord);
     const name = entityToFleetName(fleet, true);
-    const sharedComponents = [ObjectPosition(circlePositionAbs, DepthLayers.Marker)];
+
+    const now = components.Time.get()?.value ?? 0n;
+    const offset = (Number(now) / revolutionDuration) % 360;
+    const angle = offset + ((i + 1) / allFleets.length) * 360;
+    const fleetPosition = calculatePosition(angle, destinationPixelCoord);
+
+    const sharedComponents = [ObjectPosition(fleetPosition, DepthLayers.Marker), SetValue({ originX: 1, originY: -1 })];
     const fleetOrbitObject = fleetOrbit.add("Graphics");
+    const fleetHomeLineObject = fleetOrbit.add("Graphics");
+
     fleetOrbitObject.setComponents([
       ...sharedComponents,
       Circle(8, {
         color,
         borderThickness: 1,
         alpha: 0.75,
-        position: circlePositionAbs,
+        position: fleetPosition,
+        id: `circle-${i}`,
       }),
       OnOnce((gameObject) => {
         const hoverSize = 16;
@@ -88,55 +96,67 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
           Phaser.Geom.Rectangle.Contains
         );
       }),
+
       OnHover(
-        () => components.HoverEntity.set({ value: fleet }),
-        () => components.HoverEntity.remove()
-      ),
-      OnComponentSystem(components.HoverEntity, (_, { value: [newVal, oldVal] }) => {
-        if (oldVal?.value === fleet) {
-          return fleetHomeLineObject.setComponent(SetValue({ alpha: 0 }));
+        () => {
+          components.HoverEntity.set({ value: fleet });
+        },
+        () => {
+          components.HoverEntity.remove();
         }
-        if (newVal?.value !== fleet) return;
-        const owner = components.OwnedBy.get(fleet)?.value as Entity | undefined;
-        const ownerPosition = components.Position.get(owner);
-        if (!ownerPosition) return;
-        fleetHomeLineObject.setComponents([
-          ...sharedComponents,
-          Line(tileCoordToPixelCoord({ x: ownerPosition.x, y: -ownerPosition.y }, tileWidth, tileHeight), {
-            id: `homeLine`,
-            thickness: Math.min(10, 3 / scene.camera.phaserCamera.zoom),
-            alpha: 0.1,
-            color: 0xffffff,
-          }),
-        ]);
+      ),
+      OnComponentSystem(components.SelectedFleet, (_, { value: [newVal, oldVal] }) => {
+        const id = `homeLine-${fleet}`;
+        if (newVal?.fleet == fleet) {
+          fleetHomeLineObject.setComponent(
+            Line(tileCoordToPixelCoord({ x: ownerPosition.x, y: -ownerPosition.y }, tileWidth, tileHeight), {
+              id,
+              thickness: Math.min(10, 3 / scene.camera.phaserCamera.zoom),
+              alpha: 0.25,
+              color: 0xffffff,
+            })
+          );
+        } else if (oldVal?.fleet == fleet) {
+          fleetHomeLineObject.removeComponent(id);
+        }
       }),
-      OnClickUp(scene, () => {
-        if (relationship !== RockRelationship.Self) return;
+
+      OnClickUp(scene, (gameObject) => {
+        if (!gameObject || relationship !== RockRelationship.Self) return;
+        const position = { x: gameObject.x, y: -gameObject.y };
+
+        const tilePosition = { x: position.x / tileWidth, y: position.y / tileHeight };
         components.SelectedFleet.set({
           fleet,
-          ...calculatePosition(angle - 180, { x: destination.x, y: destination.y }, { tileWidth, tileHeight }),
+          asteroid: rockEntity,
+          ...tilePosition,
           angle,
         });
       }),
     ]);
 
-    const fleetHomeLineObject = fleetOrbit.add("Graphics");
-
     const ownerPosition = components.Position.get(owner) ?? { x: 0, y: 0 };
-    fleetHomeLineObject.setComponents([
-      Line(tileCoordToPixelCoord({ x: ownerPosition.x, y: -ownerPosition.y }, tileWidth, tileHeight), {
-        id: `homeLine`,
-        thickness: Math.min(10, 3 / scene.camera.phaserCamera.zoom),
-        alpha: 0,
-        color: 0xffffff,
-      }),
-      OnComponentSystem(components.HoverEntity, (_, { value: [newVal] }) => {
-        const alpha = newVal?.value === fleet ? 0.25 : 0;
-        fleetHomeLineObject.setComponent(SetValue({ alpha: alpha }));
-      }),
-    ]);
 
     const fleetLabel = fleetOrbit.add("BitmapText");
+    let subscription: Subscription | null = null;
+
+    const subscribeToUpdates = (tween: Phaser.Tweens.Tween) =>
+      merge(components.SelectedFleet.update$, components.SelectedRock.update$).subscribe(() => {
+        const asteroid = components.SelectedFleet.get()?.asteroid;
+        const selectedAsteroid = components.SelectedRock.get()?.value;
+
+        if (asteroid !== rockEntity || selectedAsteroid !== rockEntity) {
+          tween.play();
+        }
+      });
+
+    const unsubscribeFromUpdates = () => {
+      // Check if subscription exists and then unsubscribe
+      if (subscription) {
+        subscription.unsubscribe();
+        subscription = null; // Optional: Clean up the reference
+      }
+    };
 
     fleetLabel.setComponents([
       ...sharedComponents,
@@ -149,6 +169,32 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
         id: "fleetLabel",
         fontSize: 6,
         color: 0xffffff,
+      }),
+      TweenCounter(scene, {
+        from: 0,
+        to: 360,
+        duration: 60 * 1000, // Duration of one complete revolution in milliseconds
+        repeat: -1, // -1 makes the tween loop infinitely
+        onPause: (tween) => {
+          subscribeToUpdates(tween);
+        },
+        onStart: () => {
+          unsubscribeFromUpdates();
+        },
+        onUpdate: (...[tween, , , current]) => {
+          const asteroid = components.SelectedFleet.get()?.asteroid;
+          const selectedAsteroid = components.SelectedRock.get()?.value;
+          if (asteroid == rockEntity || selectedAsteroid == rockEntity) {
+            tween.pause();
+            return;
+          }
+          const angleRads = Phaser.Math.DegToRad(current + offset);
+          const x = destinationPixelCoord.x + orbitRadius * Math.cos(angleRads);
+          const y = destinationPixelCoord.y + orbitRadius * Math.sin(angleRads);
+          fleetOrbitObject.setComponent(ObjectPosition({ x, y }, DepthLayers.Marker));
+          fleetLabel.setComponent(ObjectPosition({ x, y }, DepthLayers.Marker + 1));
+          fleetHomeLineObject.setComponent(ObjectPosition({ x, y }, DepthLayers.Marker - 1));
+        },
       }),
     ]);
   });

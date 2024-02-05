@@ -48,16 +48,16 @@ export const createFxApi = (scene: Scene) => {
   function fireMissile(
     origin: Coord,
     destination: Coord,
-    options?: { speed?: number; numMissiles?: number; offset?: number }
+    options?: { speed?: number; numMissiles?: number; offset?: number; spray?: number }
   ) {
     const speed = options?.speed ?? 20;
     const numMissiles = options?.numMissiles ?? 10;
     const offset = options?.offset ?? 150;
+    const spray = options?.spray ?? 5;
     const { tileWidth, tileHeight } = scene.tilemap;
     const originPixelCoord = tileCoordToPixelCoord({ x: origin.x, y: -origin.y }, tileWidth, tileHeight);
     const destinationPixelCoord = tileCoordToPixelCoord({ x: destination.x, y: -destination.y }, tileWidth, tileHeight);
 
-    const spray = 5;
     const distance = getDistance(origin, destination);
     const duration = (distance * 10000) / speed;
     const animationTime = duration + numMissiles * offset;
@@ -65,7 +65,7 @@ export const createFxApi = (scene: Scene) => {
     for (let i = 0; i < numMissiles; i++) {
       const currOffset = i * offset;
       setTimeout(() => {
-        const missile = scene.phaserScene.add.circle(originPixelCoord.x, originPixelCoord.y, 1, 0xff0000);
+        const missile = scene.phaserScene.add.circle(originPixelCoord.x, originPixelCoord.y, 2, 0xff0000);
         const randomizedDestination = {
           x: destinationPixelCoord.x + Phaser.Math.Between(-spray, spray),
           y: destinationPixelCoord.y + Phaser.Math.Between(-spray, spray),

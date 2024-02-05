@@ -87,8 +87,8 @@ export const renderMoveLine = (scene: Scene, mud: MUD) => {
     const send = value[0];
     if (!send || !send.originFleet) {
       scene.objectPool.removeGroup(id);
-      console.log("zooming to 1");
-      zoomTo(1);
+      if (value[1]?.originFleet) zoomTo(1);
+
       return;
     }
     if (send.destination) {

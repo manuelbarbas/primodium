@@ -90,7 +90,7 @@ export const Attack = createSendComponent();
 
 export const SelectedFleet = createExtendedComponent(
   world,
-  { fleet: Type.Entity, x: Type.Number, y: Type.Number, angle: Type.Number },
+  { fleet: Type.Entity, asteroid: Type.OptionalEntity, x: Type.Number, y: Type.Number, angle: Type.Number },
   { id: "SelectedFleet" }
 );
 

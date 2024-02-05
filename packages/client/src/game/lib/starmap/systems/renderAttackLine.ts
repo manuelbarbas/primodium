@@ -98,7 +98,7 @@ export const renderAttackLine = (scene: Scene, mud: MUD) => {
     // const mapOpen = components.MapOpen.get()?.value;
     const attack = value[0];
     if (!attack || !attack.originFleet) {
-      zoomTo(1);
+      if (value[1]?.originFleet) zoomTo(1);
       scene.objectPool.removeGroup(id);
       return;
     }
