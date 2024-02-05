@@ -111,11 +111,12 @@ contract FleetCombatSystem is FleetBaseSystem {
     bool isPirateAsteroid = PirateAsteroid.getIsPirateAsteroid(battleResult.targetEntity);
     bool isRaid = isAggressorWinner && (isTargetFleet || aggressorDecryption == 0 || isPirateAsteroid);
 
-    bool isDecyption = !isRaid && isAggressorWinner && !isTargetFleet && aggressorDecryption > 0 && !isPirateAsteroid;
+    bool isDecryption = !isRaid && isAggressorWinner && !isTargetFleet && aggressorDecryption > 0 && !isPirateAsteroid;
     fleetBattleApplyDamage(battleId, defendingPlayerEntity, battleResult.aggressorEntity, battleResult.targetDamage);
+
     if (isRaid) {
       fleetBattleResolveRaid(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
-    } else if (isDecyption) {
+    } else if (isDecryption) {
       //in decryption we resolve encryption first so the fleet decryption unit isn't lost before decrypting
       LibFleetCombat.resolveBattleEncryption(
         battleId,

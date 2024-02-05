@@ -37,8 +37,7 @@ library LibMath {
   /// @param num2 The second number to be divided by
   /// @return uint256 The result of division rounded to the nearest integer
   function divideRound(uint256 num1, uint256 num2) internal pure returns (uint256) {
-    uint256 remainder = num1 % num2;
-    return (num1 / num2) + (((remainder != 0) && remainder >= (num2 / 2)) ? 1 : 0);
+    return (num1 / num2) + (((num1 % num2) * 2 >= num2) ? 1 : 0);
   }
 
   function divideCeil(uint256 num1, uint256 num2) internal pure returns (uint256) {

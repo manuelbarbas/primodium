@@ -10,7 +10,10 @@ import { PirateAsteroid, Asteroid, PositionData, ReversePosition } from "codegen
 
 contract FleetMoveSystem is FleetBaseSystem {
   modifier _onlyOtherSpaceRock(bytes32 fleetId, bytes32 spaceRock) {
-    require(FleetMovement.getDestination(fleetId) != spaceRock, "[Fleet] Only fleet owner can call this function");
+    require(
+      FleetMovement.getDestination(fleetId) != spaceRock,
+      "[Fleet] Can not send fleet to the space rock which the fleet is already in orbit of"
+    );
     _;
   }
 
