@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
+
 import { EResource } from "src/Types.sol";
-import { DestroyedUnit, DamageDealt, BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, MaxResourceCount, NewBattleResult, NewBattleResultData, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { DefeatedPirate, PirateAsteroid, DestroyedUnit, DamageDealt, BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, MaxResourceCount, NewBattleResult, NewBattleResultData, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 import { getSystemResourceId } from "src/utils.sol";
 import { BuildSystem } from "systems/BuildSystem.sol";
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
@@ -17,6 +18,7 @@ import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { LibSpaceRockAttributes } from "libraries/LibSpaceRockAttributes.sol";
+import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
 import { AsteroidOwnedByKey, FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
 import { ColoniesMap } from "libraries/ColoniesMap.sol";
@@ -300,6 +302,19 @@ library LibFleetCombat {
       }
       LibFleet.decreaseFleetResource(fleetId, i, resourcePortion);
       cargoLossLeft -= resourcePortion;
+    }
+  }
+
+  function resolvePirateAsteroid(bytes32 playerEntity, bytes32 pirateAsteroid) internal {
+    PirateAsteroid.setIsDefeated(pirateAsteroid, true);
+    DefeatedPirate.set(playerEntity, PirateAsteroid.getPrototype(pirateAsteroid), true);
+    bytes32[] memory incomingFleets = FleetsMap.getFleetIds(pirateAsteroid, FleetIncomingKey);
+    for (uint256 i = 0; i < incomingFleets.length; i++) {
+      if (FleetMovement.getArrivalTime(incomingFleets[i]) <= block.timestamp) {
+        LibFleetMove.sendFleet(incomingFleets[i], OwnedBy.get(incomingFleets[i]));
+      } else {
+        LibFleetMove.recallFleet(incomingFleets[i]);
+      }
     }
   }
 }

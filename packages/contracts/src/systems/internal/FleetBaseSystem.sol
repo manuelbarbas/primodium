@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
-import { OwnedBy, FleetMovement, P_UnitPrototypes, P_Transportables } from "src/codegen/index.sol";
+import { OwnedBy, FleetMovement, P_UnitPrototypes, P_Transportables, PirateAsteroid } from "src/codegen/index.sol";
 
 contract FleetBaseSystem is PrimodiumSystem {
   modifier _onlyFleetOwner(bytes32 fleetId) {
@@ -59,6 +59,15 @@ contract FleetBaseSystem is PrimodiumSystem {
     require(
       !PirateAsteroid.getIsPirateAsteroid(spaceRock),
       "[Fleet] Action can not be performed towards pirate asteroids"
+    );
+    _;
+  }
+
+  modifier _onlyWhenNotPirateAsteroidOrHasNotBeenDefeated(bytes32 spaceRock) {
+    require(!PirateAsteroid.getIsDefeated(spaceRock), "[Fleet] Target pirate asteroid has been defeated");
+    require(
+      !PirateAsteroid.getIsPirateAsteroid(spaceRock) || PirateAsteroid.getPlayerEntity(spaceRock) == _player(),
+      "[Fleet] Can only attack personal pirate asteroids"
     );
     _;
   }

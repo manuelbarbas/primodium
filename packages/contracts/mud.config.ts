@@ -66,6 +66,16 @@ export const config = mudConfig({
       accessList: [DUMMY_ADDRESS],
       name: "S_TransferSpaceRockOwnershipSystem",
     },
+    S_FleetResolvePirateAsteroidSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+      name: "S_FleetResolvePirateAsteroidSystem",
+    },
+    S_CreateSecondaryAsteroidSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+      name: "S_CreateSecondaryAsteroidSystem",
+    },
   },
 
   enums: MUDEnums,

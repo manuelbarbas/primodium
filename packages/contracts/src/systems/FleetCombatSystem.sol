@@ -1,24 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-import { ResourceCount, FleetStance, IsFleet, NewBattleResult, NewBattleResultData, FleetMovement, P_GracePeriod, GracePeriod, OwnedBy } from "codegen/index.sol";
+
+import { PirateAsteroid, ResourceCount, FleetStance, IsFleet, NewBattleResult, NewBattleResultData, FleetMovement, P_GracePeriod, GracePeriod, OwnedBy } from "codegen/index.sol";
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
 import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
 import { EFleetStance, EResource } from "src/Types.sol";
-import { fleetBattleResolveRaid, fleetBattleApplyDamage, fleetResolveBattleEncryption, transferSpaceRockOwnership, initializeSpaceRockOwnership } from "libraries/SubsystemCalls.sol";
+import { fleetBattleResolveRaid, fleetBattleApplyDamage, fleetResolveBattleEncryption, transferSpaceRockOwnership, initializeSpaceRockOwnership, fleetResolvePirateAsteroid } from "libraries/SubsystemCalls.sol";
 
 contract FleetCombatSystem is FleetBaseSystem {
   modifier _onlyWhenSpaceRockNotInGracePeriod(bytes32 spaceRock) {
     require(block.timestamp >= GracePeriod.get(spaceRock), "[Fleet] Target space rock is in grace period");
-    _;
-  }
-
-  modifier _onlyWhenPirateAsteroidHasNotBeenDefeated(bytes32 spaceRock) {
-    require(!PirateAsteroid.getIsDefeated(spaceRock), "[Fleet] Target pirate asteroid has been defeated");
-    require(
-      !PirateAsteroid.getIsPirateAsteroid(spaceRock) || PirateAsteroid.getPlayerEntity(spaceRock) == _player(),
-      "[Fleet] Can only attack personal pirate asteroids"
-    );
     _;
   }
 
@@ -78,7 +70,7 @@ contract FleetCombatSystem is FleetBaseSystem {
     _onlyWhenNotInStance(fleetId)
     _onlyWhenSpaceRockNotInGracePeriod(targetSpaceRock)
     _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, targetSpaceRock)
-    _onlyWhenPirateAsteroidHasNotBeenDefeated(targetSpaceRock)
+    _onlyWhenNotPirateAsteroidOrHasNotBeenDefeated(targetSpaceRock)
     _claimResources(targetSpaceRock)
     _claimUnits(targetSpaceRock)
   {
@@ -142,7 +134,7 @@ contract FleetCombatSystem is FleetBaseSystem {
     }
     fleetBattleApplyDamage(battleId, _player(), battleResult.targetEntity, battleResult.aggressorDamage);
     if (isPirateAsteroid && isAggressorWinner) {
-      PirateAsteroid.setIsDefeated(battleResult.targetEntity, true);
+      fleetResolvePirateAsteroid(_player(), battleResult.targetEntity);
     }
   }
 }

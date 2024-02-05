@@ -467,4 +467,22 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     assertEq(ResourceCount.get(pirateAsteroidEntity, uint8(Iron)), 400, "Resource count does not match");
     assertEq(UnitCount.get(pirateAsteroidEntity, unit1), 10, "Unit count does not match");
   }
+
+  function testClaimObjectiveSpawnPirateAsteroid() public {
+    bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine));
+    setupSpawnPirateAsteroid(objectivePrototype);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
+    MaxResourceCount.set(spaceRockEntity, uint8(EResource.Iron), 100);
+    P_ResourceRewardData memory resourceRewardData = P_ResourceRewardData(new uint8[](1), new uint256[](1));
+    resourceRewardData.resources[0] = uint8(EResource.Iron);
+    resourceRewardData.amounts[0] = 100;
+    P_ResourceReward.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)), resourceRewardData);
+
+    world.claimObjective(homeRock, EObjectives.BuildIronMine);
+    bytes32 personalPirateEntity = LibEncode.getHash(PirateKey, playerEntity);
+    bytes32 pirateAsteroidEntity = LibEncode.getHash(personalPirateEntity);
+    assertEq(PirateAsteroid.get(pirateAsteroidEntity).isPirateAsteroid, true, "Pirate asteroid not created");
+    assertEq(ResourceCount.get(pirateAsteroidEntity, uint8(Iron)), 100, "Resource count does not match");
+    assertEq(UnitCount.get(pirateAsteroidEntity, unit1), 10, "Unit count does not match");
+  }
 }
