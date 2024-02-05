@@ -1,9 +1,11 @@
 import { Scenes } from "@game/constants";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Coord } from "@latticexyz/utils";
-import React, { useState, useEffect, ReactNode, FC, useMemo } from "react";
+import { useState, useEffect, ReactNode, FC, useMemo } from "react";
 import ReactDOM from "react-dom";
 import { FaArrowsAlt, FaMinus, FaPlus } from "react-icons/fa";
 import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
+import { usePersistantStore } from "src/game/stores/PersistantStore";
 import { usePrimodium } from "src/hooks/usePrimodium";
 
 let pinnedDepth = 0;
@@ -12,11 +14,13 @@ let unpinnedDepth = 10000;
 export const Pane: FC<{
   id: string;
   title?: string;
-  coord: Coord;
+  defaultCoord: Coord;
   children: ReactNode;
   draggable?: boolean;
   scene: Scenes;
   minOpacity?: number;
+  persist?: boolean;
+  pinnable?: boolean;
   origin?:
     | "top-left"
     | "top-right"
@@ -27,21 +31,48 @@ export const Pane: FC<{
     | "center-right"
     | "center-top"
     | "center-bottom";
-}> = ({ title, scene, id, coord, children, draggable = false, minOpacity = 0.5, origin = "top-left" }) => {
+}> = ({
+  title,
+  scene,
+  id,
+  defaultCoord,
+  children,
+  draggable = false,
+  minOpacity = 0.5,
+  origin = "top-left",
+  persist = false,
+  pinnable = false,
+}) => {
   const primodium = usePrimodium();
+  const [paneInfo, setPane] = usePersistantStore((state) => [state.panes, state.setPane]);
   const [container, setContainer] = useState<Phaser.GameObjects.DOMElement>();
-  const [pinned, setPinned] = useState(true);
   const [containerRef, setContainerRef] = useState<HTMLDivElement>();
   const [minimized, setMinimized] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState<Coord>({ x: 0, y: 0 });
+  const [pinned, setPinned] = useState(paneInfo[id]?.pinned ?? (scene === Scenes.UI ? false : true));
 
-  const [camera, uiCamera] = useMemo(() => {
+  const [camera, uiCamera, config] = useMemo(() => {
     const { camera } = primodium.api(scene);
-    const { camera: uiCamera } = primodium.api(Scenes.UI);
+    const {
+      camera: uiCamera,
+      scene: { getConfig },
+    } = primodium.api(Scenes.UI);
+    const config = getConfig(scene);
 
-    return [camera, uiCamera];
+    return [camera, uiCamera, config];
   }, [primodium, scene]);
+
+  const [coord, resetCoord] = useMemo(() => {
+    const storedCoord = usePersistantStore.getState().panes[id]?.coord;
+    const pixelCoord = tileCoordToPixelCoord(
+      defaultCoord,
+      config?.tilemap.tileWidth ?? 32,
+      config?.tilemap.tileHeight ?? 32
+    );
+    const resetCoord = { x: pixelCoord.x, y: -pixelCoord.y };
+    return [storedCoord ?? resetCoord, resetCoord];
+  }, [defaultCoord, id, config]);
 
   const createContainer = (_camera: typeof camera, _coord: Coord, raw: boolean) => {
     if (container) container.destroy();
@@ -77,7 +108,7 @@ export const Pane: FC<{
   }, [origin]);
 
   useEffect(() => {
-    createContainer(camera, coord, scene === Scenes.UI ? true : false);
+    createContainer(pinned ? camera : uiCamera, coord, true);
 
     return () => {
       if (container) container.destroy();
@@ -107,14 +138,20 @@ export const Pane: FC<{
             y: event.clientY,
           });
 
-          console.log(dragOffset);
+          const newCoord = { x: newPixelPosition.x - dragOffset.x, y: newPixelPosition.y - dragOffset.y };
 
-          container?.setPosition(newPixelPosition.x - dragOffset.x, newPixelPosition.y - dragOffset.y);
+          container?.setPosition(newCoord.x, newCoord.y);
         });
       }
     };
 
     const handleMouseUp = () => {
+      if (dragging) {
+        if (!container) return;
+
+        persist && setPane(id, container, pinned);
+      }
+
       setDragging(false);
     };
 
@@ -125,7 +162,7 @@ export const Pane: FC<{
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [dragging, draggable, dragOffset, container, pinned, camera, uiCamera]);
+  }, [dragging, draggable, dragOffset, container, pinned, camera, uiCamera, config, id, setPane, persist]);
 
   if (!containerRef || !container) return null;
 
@@ -143,7 +180,7 @@ export const Pane: FC<{
         }`}
         onDoubleClick={() => {
           setPinned(true);
-          createContainer(camera, coord, scene === Scenes.UI ? true : false);
+          createContainer(camera, resetCoord, true);
           container.setDepth(pinnedDepth);
           container.setAlpha(1);
         }}
@@ -166,31 +203,38 @@ export const Pane: FC<{
       >
         {title}
         <div className="flex items-center gap-1">
-          {!pinned && (
-            <RiPushpinFill
-              className=""
-              onClick={() => {
-                setPinned(true);
-                const worldCoord = camera.screenCoordToWorldCoord({ x: container.x, y: container.y });
-                createContainer(camera, worldCoord, true);
-                container.setDepth(pinnedDepth);
-                container.setAlpha(1);
-                container.setScale(1 / 8);
-              }}
-            />
+          {pinnable && scene !== Scenes.UI && (
+            <>
+              {!pinned && (
+                <RiPushpinFill
+                  className=""
+                  onClick={() => {
+                    setPinned(true);
+                    const worldCoord = camera.screenCoordToWorldCoord({ x: container.x, y: container.y });
+                    createContainer(camera, worldCoord, true);
+                    container.setDepth(pinnedDepth);
+                    container.setAlpha(1);
+                    container.setScale(1 / 8);
+                    persist && setPane(id, worldCoord, true);
+                  }}
+                />
+              )}
+              {pinned && (
+                <RiUnpinFill
+                  className=""
+                  onClick={() => {
+                    setPinned(false);
+                    const screenCoord = camera.worldCoordToScreenCoord({ x: container.x, y: container.y });
+                    createContainer(uiCamera, screenCoord, true);
+                    container.setDepth(unpinnedDepth);
+                    container.setAlpha(1);
+                    persist && setPane(id, screenCoord, false);
+                  }}
+                />
+              )}
+            </>
           )}
-          {pinned && (
-            <RiUnpinFill
-              className=""
-              onClick={() => {
-                setPinned(false);
-                const screenCoord = camera.worldCoordToScreenCoord({ x: container.x, y: container.y });
-                createContainer(uiCamera, screenCoord, true);
-                container.setDepth(unpinnedDepth);
-                container.setAlpha(1);
-              }}
-            />
-          )}
+
           {draggable && <FaArrowsAlt className="" />}
           {!minimized && <FaMinus className="cursor-row-resize" onClick={() => setMinimized(true)} />}
           {minimized && <FaPlus className="cursor-row-resize" onClick={() => setMinimized(false)} />}

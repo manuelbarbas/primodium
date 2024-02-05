@@ -1,6 +1,6 @@
 import { KeybindActions } from "@game/constants";
 import { FaCircle } from "react-icons/fa";
-import { useSettingsStore } from "src/game/stores/SettingsStore";
+import { usePersistantStore } from "src/game/stores/PersistantStore";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { HUD } from "../core/HUD";
@@ -27,9 +27,9 @@ export const GameHUD = () => {
   const activeRock = components.ActiveRock.use()?.value;
   const ownedBy = components.OwnedBy.use(activeRock)?.value;
   const isSpectating = ownedBy !== playerEntity;
-  const uiScale = useSettingsStore((state) => state.uiScale);
+  const uiScale = usePersistantStore((state) => state.uiScale);
 
-  const allowHackerModal = useSettingsStore((state) => state.allowHackerModal);
+  const allowHackerModal = usePersistantStore((state) => state.allowHackerModal);
   const mapOpen = components.MapOpen.use(undefined, {
     value: false,
   }).value;

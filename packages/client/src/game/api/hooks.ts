@@ -1,14 +1,14 @@
 import { Scene } from "engine/types";
 import { clone, throttle } from "lodash";
 import { useEffect, useState } from "react";
-import { useSettingsStore } from "../stores/SettingsStore";
+import { usePersistantStore } from "../stores/PersistantStore";
 import { Coord } from "@latticexyz/utils";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { getDegreeDirection } from "src/util/common";
 
 export function createHooksApi(targetScene: Scene) {
   function useKeybinds() {
-    return useSettingsStore((state) => state.keybinds);
+    return usePersistantStore((state) => state.keybinds);
   }
 
   function useCamera() {

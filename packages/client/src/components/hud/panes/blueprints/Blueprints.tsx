@@ -9,7 +9,7 @@ export const Blueprints = memo(() => {
     <Pane
       id="blueprints"
       title="BLUEPRINTS"
-      coord={{ x: 11.5, y: 16.5 }}
+      defaultCoord={{ x: 11.5, y: 16.5 }}
       scene={Scenes.Asteroid}
       minOpacity={0.75}
       draggable
