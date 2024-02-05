@@ -3,7 +3,7 @@ import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Coord } from "@latticexyz/utils";
 import { useState, useEffect, ReactNode, FC, useMemo } from "react";
 import ReactDOM from "react-dom";
-import { FaArrowsAlt, FaMinus, FaPlus } from "react-icons/fa";
+import { FaMinus, FaPlus, FaTimes } from "react-icons/fa";
 import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
 import { usePersistantStore } from "src/game/stores/PersistantStore";
 import { usePrimodium } from "src/hooks/usePrimodium";
@@ -21,6 +21,8 @@ export const Pane: FC<{
   minOpacity?: number;
   persist?: boolean;
   pinnable?: boolean;
+  visible?: boolean;
+  onClose?: () => void;
   origin?:
     | "top-left"
     | "top-right"
@@ -42,6 +44,8 @@ export const Pane: FC<{
   origin = "top-left",
   persist = false,
   pinnable = false,
+  visible = true,
+  onClose,
 }) => {
   const primodium = usePrimodium();
   const [paneInfo, setPane] = usePersistantStore((state) => [state.panes, state.setPane]);
@@ -79,9 +83,11 @@ export const Pane: FC<{
 
     const { container: _container, obj } = _camera.createDOMContainer(id, _coord, raw);
     obj.pointerEvents = "none";
-    obj.setAlpha(minOpacity);
+    obj.setAlpha(pinned ? minOpacity : 1);
     setContainer(obj);
     setContainerRef(_container);
+
+    return obj;
   };
 
   const translate = useMemo(() => {
@@ -164,7 +170,7 @@ export const Pane: FC<{
     };
   }, [dragging, draggable, dragOffset, container, pinned, camera, uiCamera, config, id, setPane, persist]);
 
-  if (!containerRef || !container) return null;
+  if (!containerRef || !container || !visible) return null;
 
   return ReactDOM.createPortal(
     <div
@@ -211,10 +217,9 @@ export const Pane: FC<{
                   onClick={() => {
                     setPinned(true);
                     const worldCoord = camera.screenCoordToWorldCoord({ x: container.x, y: container.y });
-                    createContainer(camera, worldCoord, true);
-                    container.setDepth(pinnedDepth);
-                    container.setAlpha(1);
-                    container.setScale(1 / 8);
+                    const newContainer = createContainer(camera, worldCoord, true);
+                    newContainer.setDepth(pinnedDepth);
+                    newContainer.setAlpha(1);
                     persist && setPane(id, worldCoord, true);
                   }}
                 />
@@ -225,9 +230,9 @@ export const Pane: FC<{
                   onClick={() => {
                     setPinned(false);
                     const screenCoord = camera.worldCoordToScreenCoord({ x: container.x, y: container.y });
-                    createContainer(uiCamera, screenCoord, true);
-                    container.setDepth(unpinnedDepth);
-                    container.setAlpha(1);
+                    const newContainer = createContainer(uiCamera, screenCoord, true);
+                    newContainer.setDepth(unpinnedDepth);
+                    newContainer.setAlpha(1);
                     persist && setPane(id, screenCoord, false);
                   }}
                 />
@@ -235,9 +240,9 @@ export const Pane: FC<{
             </>
           )}
 
-          {draggable && <FaArrowsAlt className="" />}
           {!minimized && <FaMinus className="cursor-row-resize" onClick={() => setMinimized(true)} />}
           {minimized && <FaPlus className="cursor-row-resize" onClick={() => setMinimized(false)} />}
+          {onClose && <FaTimes className="cursor-pointer" onClick={onClose} />}
         </div>
       </div>
       <div className={`${minimized ? "max-h-0 overflow-hidden" : ""}`}>{children}</div>
