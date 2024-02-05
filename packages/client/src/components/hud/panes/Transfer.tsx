@@ -142,7 +142,7 @@ const Select = ({
   );
 };
 
-const Transfer = ({ from: initialFrom, to: initialTo }: { from?: Entity; to?: Entity }) => {
+const Transfer = ({ from: initialFrom, to: initialTo }: { from?: Entity | undefined; to?: Entity | undefined }) => {
   const [from, setFrom] = useState(initialFrom);
   const [to, setTo] = useState(initialTo);
 
@@ -153,7 +153,7 @@ const Transfer = ({ from: initialFrom, to: initialTo }: { from?: Entity; to?: En
   const [dragLocation, setDragLocation] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [hoveringArea, setHoveringArea] = useState<"from" | "to" | null>(null);
   const [keyDown, setKeyDown] = useState<"shift" | "ctrl" | null>();
-  const selectedRock = components.SelectedRock.use()?.value;
+  const selectedRock = components.ActiveRock.use()?.value;
 
   // Resources
   const transportables = components.P_Transportables.use()?.value ?? [];

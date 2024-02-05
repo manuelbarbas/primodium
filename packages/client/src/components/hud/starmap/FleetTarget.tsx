@@ -3,6 +3,7 @@ import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
+import { getFleetStats } from "src/util/unit";
 import { Button } from "../../core/Button";
 import { IconLabel } from "../../core/IconLabel";
 import { Modal } from "../../core/Modal";
@@ -14,6 +15,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; x: number; y: number }> = (
   const mapOpen = components.MapOpen.use()?.value ?? false;
   const selectingAttackDestination = !!components.Attack.use()?.originFleet;
   const selectingDestination = !!components.Send.use()?.originFleet || selectingAttackDestination;
+  const stats = getFleetStats(fleet);
   const primodium = usePrimodium();
   const {
     hooks: { useCoordToScreenCoord },
@@ -35,7 +37,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; x: number; y: number }> = (
       <div className="w-14 h-14 border-2 border-error flex items-center justify-center bg-transparent">
         <div className="absolute top-0 right-0 translate-x-full w-36">
           <Button
-            disabled={selectingDestination}
+            disabled={selectingDestination || stats.attack == 0n}
             onClick={() => components.Attack.setOrigin(fleet)}
             className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
           >
@@ -44,7 +46,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; x: number; y: number }> = (
         </div>
         <div className="absolute bottom-0 right-0 translate-x-full w-36">
           <Button
-            disabled={selectingDestination}
+            disabled={selectingDestination || stats.speed == 0n}
             onClick={() => components.Send.setOrigin(fleet)}
             className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
           >

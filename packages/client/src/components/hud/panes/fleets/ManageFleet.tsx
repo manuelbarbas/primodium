@@ -95,12 +95,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               <p className="w-full h-full grid place-items-center text-xs uppercase font-bold">No Units</p>
             )}
 
-            <NavButton
-              className="btn-primary btn-xs w-fit self-end"
-              goto="transfer"
-              from={selectedRock ?? singletonEntity}
-              to={fleetEntity}
-            >
+            <NavButton className="btn-primary btn-xs w-fit self-end" goto="transfer" to={fleetEntity}>
               Transfer Units
             </NavButton>
           </div>
