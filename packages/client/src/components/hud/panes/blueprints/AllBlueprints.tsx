@@ -10,7 +10,7 @@ import { Action, EntityType } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
 import { Button } from "../../../core/Button";
-import { Card, SecondaryCard } from "../../../core/Card";
+import { Card } from "../../../core/Card";
 import { BuildingImageFromType } from "../../../shared/BuildingImage";
 import { BlueprintInfo } from "./BlueprintInfo";
 
@@ -83,115 +83,133 @@ export const AllBlueprints = () => {
 
   return (
     <>
-      <div className="flex h-fit w-full gap-1 items-start">
-        <SecondaryCard className={`gap-2 items-center ${index === 0 ? "!border-success/75" : ""}`}>
-          <p className="text-xs opacity-50 font-bold pb-2">BASIC</p>
-          <BlueprintButton
-            buildingType={EntityType.IronMine}
-            keybind={KeybindActions.Hotbar0}
-            keybindActive={index === 0}
-          />
-          <BlueprintButton
-            buildingType={EntityType.CopperMine}
-            keybind={KeybindActions.Hotbar1}
-            keybindActive={index === 0}
-          />
-          <BlueprintButton
-            buildingType={EntityType.LithiumMine}
-            keybind={KeybindActions.Hotbar2}
-            keybindActive={index === 0}
-          />
-          <BlueprintButton
-            buildingType={EntityType.Garage}
-            keybind={KeybindActions.Hotbar3}
-            keybindActive={index === 0}
-          />
-          <BlueprintButton
-            buildingType={EntityType.Workshop}
-            keybind={KeybindActions.Hotbar4}
-            keybindActive={index === 0}
-          />
-        </SecondaryCard>
-        <SecondaryCard className={`gap-2 items-center ${index === 1 ? "!border-success/75" : ""}`}>
-          <p className="text-xs opacity-50 font-bold pb-2">ADVANCED</p>
-          <BlueprintButton
-            tooltipDirection="top"
-            buildingType={EntityType.StorageUnit}
-            keybind={KeybindActions.Hotbar0}
-            keybindActive={index === 1}
-          />
-          <BlueprintButton
-            tooltipDirection="top"
-            buildingType={EntityType.SolarPanel}
-            keybind={KeybindActions.Hotbar1}
-            keybindActive={index === 1}
-          />
-          <BlueprintButton
-            tooltipDirection="top"
-            buildingType={EntityType.DroneFactory}
-            keybind={KeybindActions.Hotbar2}
-            keybindActive={index === 1}
-          />
-          <BlueprintButton
-            tooltipDirection="top"
-            buildingType={EntityType.IronPlateFactory}
-            keybind={KeybindActions.Hotbar3}
-            keybindActive={index === 1}
-          />
-          <BlueprintButton
-            tooltipDirection="top"
-            buildingType={EntityType.PVCellFactory}
-            keybind={KeybindActions.Hotbar4}
-            keybindActive={index === 1}
-          />
-          <BlueprintButton
-            tooltipDirection="top"
-            buildingType={EntityType.Vault}
-            keybind={KeybindActions.Hotbar5}
-            keybindActive={index === 1}
-          />
-        </SecondaryCard>
-        <SecondaryCard className={`gap-2 items-center ${index === 2 ? "!border-success/75" : ""}`}>
-          <p className="text-xs opacity-50 font-bold pb-2">ELITE</p>
-          <BlueprintButton
-            tooltipDirection="left"
-            buildingType={EntityType.SAMLauncher}
-            keybind={KeybindActions.Hotbar0}
-            keybindActive={index === 2}
-          />
-          <BlueprintButton
-            tooltipDirection="left"
-            buildingType={EntityType.Hangar}
-            keybind={KeybindActions.Hotbar1}
-            keybindActive={index === 2}
-          />
-          <BlueprintButton
-            tooltipDirection="left"
-            buildingType={EntityType.AlloyFactory}
-            keybind={KeybindActions.Hotbar2}
-            keybindActive={index === 2}
-          />
-          <BlueprintButton
-            tooltipDirection="left"
-            buildingType={EntityType.StarmapperStation}
-            keybind={KeybindActions.Hotbar3}
-            keybindActive={index === 2}
-          />
-          <BlueprintButton
-            tooltipDirection="left"
-            buildingType={EntityType.ShieldGenerator}
-            keybind={KeybindActions.Hotbar4}
-            keybindActive={index === 2}
-          />
-          <BlueprintButton
-            tooltipDirection="left"
-            buildingType={EntityType.Market}
-            keybind={KeybindActions.Hotbar5}
-            keybindActive={index === 2}
-          />
-        </SecondaryCard>
+      <div className="p-2 flex flex-col h-fit w-full gap-1 items-start">
+        <div className={`p-1 flex flex-col gap-6 items-center w-full ${index === 0 ? " bg-success/10" : ""}`}>
+          <div className="flex border-b border-secondary justify-between w-full">
+            <p className="text-xs opacity-75 font-bold text-success">BASIC</p>
+            <div className="flex gap-1 items-center text-xs text-warning">*</div>
+          </div>
+          <div className="grid grid-cols-4 gap-1 w-full">
+            <BlueprintButton
+              buildingType={EntityType.IronMine}
+              keybind={KeybindActions.Hotbar0}
+              keybindActive={index === 0}
+            />
+            <BlueprintButton
+              buildingType={EntityType.CopperMine}
+              keybind={KeybindActions.Hotbar1}
+              keybindActive={index === 0}
+            />
+            <BlueprintButton
+              buildingType={EntityType.LithiumMine}
+              keybind={KeybindActions.Hotbar2}
+              keybindActive={index === 0}
+            />
+            <BlueprintButton
+              buildingType={EntityType.Garage}
+              keybind={KeybindActions.Hotbar3}
+              keybindActive={index === 0}
+            />
+            <BlueprintButton
+              buildingType={EntityType.Workshop}
+              keybind={KeybindActions.Hotbar4}
+              keybindActive={index === 0}
+            />
+          </div>
+        </div>
+
+        <div className={`flex flex-col gap-6 w-full items-center p-1 ${index === 1 ? " bg-success/10" : ""}`}>
+          <div className="flex border-b border-secondary justify-between w-full">
+            <p className="text-xs opacity-75 font-bold text-info">ADVANCED</p>
+            <div className="flex gap-1 items-center text-xs text-warning">**</div>
+          </div>
+          <div className="grid grid-cols-4 gap-2 w-full">
+            <BlueprintButton
+              tooltipDirection="top"
+              buildingType={EntityType.StorageUnit}
+              keybind={KeybindActions.Hotbar0}
+              keybindActive={index === 1}
+            />
+            <BlueprintButton
+              tooltipDirection="top"
+              buildingType={EntityType.SolarPanel}
+              keybind={KeybindActions.Hotbar1}
+              keybindActive={index === 1}
+            />
+            <BlueprintButton
+              tooltipDirection="top"
+              buildingType={EntityType.DroneFactory}
+              keybind={KeybindActions.Hotbar2}
+              keybindActive={index === 1}
+            />
+            <BlueprintButton
+              tooltipDirection="top"
+              buildingType={EntityType.IronPlateFactory}
+              keybind={KeybindActions.Hotbar3}
+              keybindActive={index === 1}
+            />
+            <BlueprintButton
+              tooltipDirection="top"
+              buildingType={EntityType.PVCellFactory}
+              keybind={KeybindActions.Hotbar4}
+              keybindActive={index === 1}
+            />
+            <BlueprintButton
+              tooltipDirection="top"
+              buildingType={EntityType.Vault}
+              keybind={KeybindActions.Hotbar5}
+              keybindActive={index === 1}
+            />
+          </div>
+        </div>
+
+        <div className={`flex flex-col gap-6 items-center p-1 ${index === 2 ? " bg-success/10" : ""}`}>
+          <div className="flex border-b border-secondary justify-between w-full">
+            <p className="text-xs opacity-75 font-bold text-warning">ELITE</p>
+            <div className="flex gap-1 items-center text-xs text-warning">***</div>
+          </div>
+          <div className="grid grid-cols-4 gap-2 w-full">
+            <BlueprintButton
+              tooltipDirection="left"
+              buildingType={EntityType.SAMLauncher}
+              keybind={KeybindActions.Hotbar0}
+              keybindActive={index === 2}
+            />
+            <BlueprintButton
+              tooltipDirection="left"
+              buildingType={EntityType.Hangar}
+              keybind={KeybindActions.Hotbar1}
+              keybindActive={index === 2}
+            />
+            <BlueprintButton
+              tooltipDirection="left"
+              buildingType={EntityType.AlloyFactory}
+              keybind={KeybindActions.Hotbar2}
+              keybindActive={index === 2}
+            />
+            <BlueprintButton
+              tooltipDirection="left"
+              buildingType={EntityType.StarmapperStation}
+              keybind={KeybindActions.Hotbar3}
+              keybindActive={index === 2}
+            />
+            <BlueprintButton
+              tooltipDirection="left"
+              buildingType={EntityType.ShieldGenerator}
+              keybind={KeybindActions.Hotbar4}
+              keybindActive={index === 2}
+            />
+            <BlueprintButton
+              tooltipDirection="left"
+              buildingType={EntityType.Market}
+              keybind={KeybindActions.Hotbar5}
+              keybindActive={index === 2}
+            />
+          </div>
+        </div>
       </div>
-      <div className="w-full flex justify-center gap-1 pt-2">
+
+      <div className="w-full flex justify-center gap-1 py-2">
         <Button
           className="btn-xs btn-ghost"
           keybind={KeybindActions.PrevHotbar}
@@ -218,7 +236,7 @@ export const AllBlueprints = () => {
         </Button>
       </div>
       {selectedBuilding && (
-        <Card className="absolute card top-0 left-0 -translate-y-full w-full -translate-x-[1px] border-r-0 py-1">
+        <Card className="absolute card bottom-0 left-0 translate-y-full w-full -translate-x-[1px] border-r-0 py-1">
           <BlueprintInfo building={selectedBuilding} />
         </Card>
       )}

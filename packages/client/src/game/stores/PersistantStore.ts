@@ -52,6 +52,7 @@ type PersistantActions = {
   setUiScale: (scale: number) => void;
   setConsoleHistory: (history: { input: string; output: string }[]) => void;
   setPane: (id: string, coord: Coord, pinned: boolean) => void;
+  removePane: (id: string) => void;
   resetPanes: () => void;
 };
 
@@ -154,6 +155,11 @@ export const usePersistantStore = create<PersistantState & PersistantActions>()(
             },
           },
         });
+      },
+      removePane: (id) => {
+        const panes = { ...get().panes };
+        delete panes[id];
+        set({ panes });
       },
       resetPanes: () => {
         set({ panes: {} });

@@ -48,7 +48,7 @@ export const Pane: FC<{
   onClose,
 }) => {
   const primodium = usePrimodium();
-  const [paneInfo, setPane] = usePersistantStore((state) => [state.panes, state.setPane]);
+  const [paneInfo, setPane, removePane] = usePersistantStore((state) => [state.panes, state.setPane, state.removePane]);
   const [container, setContainer] = useState<Phaser.GameObjects.DOMElement>();
   const [containerRef, setContainerRef] = useState<HTMLDivElement>();
   const [minimized, setMinimized] = useState(false);
@@ -79,7 +79,9 @@ export const Pane: FC<{
   }, [defaultCoord, id, config]);
 
   const createContainer = (_camera: typeof camera, _coord: Coord, raw: boolean) => {
-    if (container) container.destroy();
+    if (container) {
+      container.destroy();
+    }
 
     const { container: _container, obj } = _camera.createDOMContainer(id, _coord, raw);
     obj.pointerEvents = "none";
@@ -187,6 +189,7 @@ export const Pane: FC<{
         onDoubleClick={() => {
           setPinned(true);
           createContainer(camera, resetCoord, true);
+          removePane(id);
           container.setDepth(pinnedDepth);
           container.setAlpha(1);
         }}
@@ -245,7 +248,13 @@ export const Pane: FC<{
           {onClose && <FaTimes className="cursor-pointer" onClick={onClose} />}
         </div>
       </div>
-      <div className={`${minimized ? "max-h-0 overflow-hidden" : ""}`}>{children}</div>
+      <div
+        className={`bg-base-200 min-w-72 border border-t-success border-secondary ${
+          minimized ? "max-h-0 overflow-hidden " : ""
+        }`}
+      >
+        {children}
+      </div>
     </div>,
     containerRef
   );

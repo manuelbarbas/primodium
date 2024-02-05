@@ -13,6 +13,8 @@ export const Blueprints = memo(() => {
       scene={Scenes.Asteroid}
       minOpacity={0.75}
       draggable
+      pinnable
+      persist
       origin="top-right"
     >
       <AllBlueprints />

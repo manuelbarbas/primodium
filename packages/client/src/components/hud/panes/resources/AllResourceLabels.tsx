@@ -3,7 +3,7 @@ import { ResourceLabel } from "./ResourceLabel";
 
 export const AllResourceLabels = () => {
   return (
-    <div className="flex flex-col items-end p-2 bg-base-200 min-w-72 border border-t-success border-secondary">
+    <div className="flex flex-col items-end p-2">
       <div className="flex flex-col gap-2 w-full">
         <div className="flex border-b border-secondary justify-between w-full">
           <p className="text-xs opacity-75 font-bold text-success">BASIC</p>
