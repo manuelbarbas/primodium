@@ -87,7 +87,7 @@ export const getFleetStats = (fleet: Entity) => {
 };
 
 export const getFleetStatsFromUnits = (units: Map<Entity, bigint>) => {
-  const selectedRock = components.SelectedRock.get()?.value as Entity;
+  const selectedRock = components.ActiveRock.get()?.value as Entity;
   const data = { attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
 
   units.forEach((count, unit) => {
@@ -171,16 +171,24 @@ export function getUnitTrainingTime(rawPlayer: Entity, rawBuilding: Entity, rawU
 }
 
 export function getCanAttack(originEntity: Entity, targetEntity: Entity) {
-  const isFleet = components.IsFleet.get(targetEntity);
-  const targetRock = (isFleet ? components.FleetMovement.get(targetEntity)?.destination : targetEntity) as
+  const isOriginFleet = components.IsFleet.get(originEntity);
+  const isTargetFleet = components.IsFleet.get(targetEntity);
+  if (!isOriginFleet && !isTargetFleet) return false;
+
+  const targetRock = (isTargetFleet ? components.FleetMovement.get(targetEntity)?.destination : targetEntity) as
     | Entity
     | undefined;
-  const targetOwnerRock = (isFleet ? components.OwnedBy.get(targetEntity)?.value : targetEntity) as Entity | undefined;
+  const targetOwnerRock = (isTargetFleet ? components.OwnedBy.get(targetEntity)?.value : targetEntity) as
+    | Entity
+    | undefined;
   const targetRockOwner = components.OwnedBy.get(targetOwnerRock)?.value;
 
-  const originEntityRock = components.FleetMovement.get(originEntity)?.destination as Entity | undefined;
-  const originEntityOwnerRock = components.OwnedBy.get(originEntity)?.value as Entity;
+  const originEntityRock = (isOriginFleet ? components.FleetMovement.get(originEntity)?.destination : originEntity) as
+    | Entity
+    | undefined;
+  const originEntityOwnerRock = (isOriginFleet ? components.OwnedBy.get(originEntity)?.value : originEntity) as Entity;
   const originEntityOwnerRockOwner = components.OwnedBy.get(originEntityOwnerRock)?.value;
+
   if (!originEntityOwnerRockOwner || !targetOwnerRock) return false;
   if (targetRock !== originEntityRock || targetRockOwner === originEntityOwnerRockOwner) return false;
   return true;
