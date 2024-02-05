@@ -1,5 +1,5 @@
 import { DepthLayers } from "@game/constants";
-import { Coord, tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { createCameraApi } from "src/game/api/camera";
@@ -8,6 +8,7 @@ import { components } from "src/network/components";
 import { attack as callAttack } from "src/network/setup/contractCalls/attack";
 import { MUD } from "src/network/types";
 import { world } from "src/network/world";
+import { getFleetTilePosition } from "src/util/unit";
 import { ObjectPosition, OnRxjsSystem } from "../../common/object-components/common";
 import { Line } from "../../common/object-components/graphics";
 
@@ -25,9 +26,10 @@ export const renderAttackLine = (scene: Scene, mud: MUD) => {
     pan(fleetDestinationPosition);
   }
 
-  async function render(originEntity: Entity, originCoord?: Coord) {
+  async function render(originEntity: Entity) {
     scene.objectPool.removeGroup(id);
-    const origin = originCoord ?? components.Position.get(originEntity);
+    const isFleet = components.IsFleet.get(originEntity)?.value;
+    const origin = isFleet ? getFleetTilePosition(scene, originEntity) : components.Position.get(originEntity);
     if (!origin) return;
 
     const zoomTime = 500;
@@ -36,7 +38,7 @@ export const renderAttackLine = (scene: Scene, mud: MUD) => {
     await new Promise((resolve) => setTimeout(resolve, zoomTime));
 
     const attackLine = scene.objectPool.getGroup(id);
-    const trajectory = attackLine.add("Graphics", true);
+    const trajectory = attackLine.add("Graphics", `${originEntity}-attackLine`, true);
     const originPixelCoord = tileCoordToPixelCoord({ x: origin.x, y: -origin.y }, tileWidth, tileHeight);
     const x = scene.input.phaserInput.activePointer.worldX;
     const y = scene.input.phaserInput.activePointer.worldY;
@@ -110,8 +112,7 @@ export const renderAttackLine = (scene: Scene, mud: MUD) => {
       await callAttack(mud, attack.originFleet, attack.destination);
       return;
     }
-    const originPosition = attack.originX && attack.originY ? { x: attack.originX, y: attack.originY } : undefined;
 
-    render(attack.originFleet, originPosition);
+    render(attack.originFleet);
   });
 };

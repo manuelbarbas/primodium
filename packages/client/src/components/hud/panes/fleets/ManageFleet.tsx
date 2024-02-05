@@ -15,7 +15,6 @@ import { disbandFleet } from "src/network/setup/contractCalls/fleetDisband";
 import { landFleet } from "src/network/setup/contractCalls/fleetLand";
 import { clearFleetStance, setFleetStance } from "src/network/setup/contractCalls/fleetStance";
 import { formatResourceCount } from "src/util/number";
-import { getFleetTilePosition } from "src/util/unit";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { FleetEntityHeader } from "./FleetHeader";
 import { useFleetNav } from "./Fleets";
@@ -23,6 +22,7 @@ import { useFleetNav } from "./Fleets";
 const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
   const mud = useMud();
   const api = usePrimodium().api(Scenes.Starmap);
+  const scene = api.scene.getScene(Scenes.Starmap);
 
   const { BackButton, NavButton } = useFleetNav();
   const selectedRock = components.SelectedRock.get()?.value;
@@ -196,9 +196,9 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               className="btn btn-primary btn-sm"
               disabled={totalUnits <= 0}
               onClick={() => {
-                const fleetLocation = getFleetTilePosition(fleetEntity, api.scene.getConfig(Scenes.Starmap)?.tilemap);
+                if (!scene) return;
                 components.Attack.reset();
-                components.Send.setOrigin(fleetEntity, fleetLocation);
+                components.Send.setOrigin(fleetEntity);
                 api.util.openMap();
               }}
             >
@@ -209,11 +209,10 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               className="btn btn-primary btn-sm"
               disabled={totalUnits <= 0}
               onClick={async () => {
-                const fleetPosition = getFleetTilePosition(fleetEntity, api.scene.getConfig(Scenes.Starmap)?.tilemap);
+                if (!scene) return;
                 components.Send.reset();
-                components.Attack.setOrigin(fleetEntity, fleetPosition);
+                components.Attack.setOrigin(fleetEntity);
                 await api.util.openMap();
-                api.camera.zoomTo(5);
 
                 const fleetDestinationEntity = components.FleetMovement.get(fleetEntity)?.destination as Entity;
                 if (!fleetDestinationEntity) return;

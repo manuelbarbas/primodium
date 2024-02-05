@@ -77,7 +77,7 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
     const fleetPosition = calculatePosition(angle, destinationPixelCoord);
 
     const sharedComponents = [ObjectPosition(fleetPosition, DepthLayers.Marker), SetValue({ originX: 1, originY: -1 })];
-    const fleetOrbitObject = fleetOrbit.add("Graphics");
+    const fleetOrbitObject = fleetOrbit.add("Graphics", fleet + "_fleetOrbit");
     const fleetHomeLineObject = fleetOrbit.add("Graphics");
 
     fleetOrbitObject.setComponents([

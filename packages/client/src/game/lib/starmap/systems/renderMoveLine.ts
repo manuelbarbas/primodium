@@ -1,5 +1,5 @@
 import { DepthLayers } from "@game/constants";
-import { Coord, tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
@@ -9,23 +9,25 @@ import { components } from "src/network/components";
 import { sendFleetPosition } from "src/network/setup/contractCalls/fleetMove";
 import { MUD } from "src/network/types";
 import { world } from "src/network/world";
+import { getFleetTilePosition } from "src/util/unit";
 import { ObjectPosition, OnRxjsSystem } from "../../common/object-components/common";
 import { Line } from "../../common/object-components/graphics";
 
 export const renderMoveLine = (scene: Scene, mud: MUD) => {
   const systemsWorld = namespaceWorld(world, "systems");
-  const { tileWidth, tileHeight } = scene.tilemap;
   const id = "moveLine";
   const { zoomTo } = createCameraApi(scene);
+  const { tileWidth, tileHeight } = scene.tilemap;
 
-  function render(originEntity: Entity, originCoord?: Coord) {
+  function render(originEntity: Entity) {
     scene.objectPool.removeGroup(id);
-    const origin = originCoord ?? components.Position.get(originEntity);
+    const isFleet = components.IsFleet.get(originEntity)?.value;
+    const origin = isFleet ? getFleetTilePosition(scene, originEntity) : components.Position.get(originEntity);
     if (!origin) return;
+    const originPixelCoord = tileCoordToPixelCoord({ x: origin.x, y: -origin.y }, tileWidth, tileHeight);
     zoomTo(starmapSceneConfig.camera.minZoom, 500);
     const moveLine = scene.objectPool.getGroup(id);
-    const trajectory = moveLine.add("Graphics", true);
-    const originPixelCoord = tileCoordToPixelCoord({ x: origin.x, y: -origin.y }, tileWidth, tileHeight);
+    const trajectory = moveLine.add("Graphics", `${originEntity}-moveline`, true);
     const x = scene.input.phaserInput.activePointer.worldX;
     const y = scene.input.phaserInput.activePointer.worldY;
 
@@ -101,8 +103,7 @@ export const renderMoveLine = (scene: Scene, mud: MUD) => {
       await sendFleetPosition(mud, send.originFleet, destinationPosition);
       return;
     }
-    const originPosition = send.originX && send.originY ? { x: send.originX, y: send.originY } : undefined;
 
-    render(send.originFleet, originPosition);
+    render(send.originFleet);
   });
 };

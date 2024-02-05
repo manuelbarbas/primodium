@@ -1,5 +1,6 @@
 import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
+import { Scene } from "engine/types";
 import { components, components as comps } from "src/network/components";
 import { Hex } from "viem";
 import { PIRATE_KEY, SPEED_SCALE, UnitStorages } from "./constants";
@@ -118,21 +119,12 @@ export const getAllOrbitingFleets = (entity: Entity) => {
     }
   );
 };
-export const getFleetTilePosition = (fleet: Entity, scale?: { tileWidth: number; tileHeight: number }) => {
-  const tileWidth = scale?.tileWidth ?? 1;
-  const tileHeight = scale?.tileHeight ?? 1;
-
+export const getFleetTilePosition = (scene: Scene, fleet: Entity) => {
+  const { tileHeight, tileWidth } = scene.tilemap;
   const spaceRock = components.FleetMovement.get(fleet)?.destination as Entity;
-  const rockPosition = components.Position.get(spaceRock);
-  const allFleets = getAllOrbitingFleets(spaceRock);
-  const i = allFleets.indexOf(fleet);
-  const angle = ((i + 1) / allFleets.length) * 360 - 90;
-
-  return calculatePosition(
-    angle - 180,
-    { x: rockPosition?.x ?? 0, y: rockPosition?.y ?? 0 },
-    { tileWidth, tileHeight }
-  );
+  const rockGroup = scene.objectPool.getGroup(spaceRock + "_spacerockOrbits");
+  const position = rockGroup.get(fleet + "_fleetOrbit", "Graphics").position;
+  return { x: position.x / tileWidth, y: -position.y / tileHeight };
 };
 
 const orbitRadius = 64;

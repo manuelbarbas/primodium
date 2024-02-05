@@ -1,6 +1,7 @@
 import { Scenes } from "@game/constants";
 import { namespaceWorld } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { Coord } from "@latticexyz/utils";
 import engine from "engine";
 import { Game } from "engine/types";
 import { runSystems as runAsteroidSystems } from "src/game/lib/asteroid/systems";
@@ -30,6 +31,7 @@ import { createSceneApi } from "./scene";
 import { createSpriteApi } from "./sprite";
 
 export type Primodium = Awaited<ReturnType<typeof initPrimodium>>;
+export type PrimodiumApi = ReturnType<Primodium["api"]>;
 
 export async function initPrimodium(mud: MUD, version = "v1") {
   const asciiArt = `
@@ -142,12 +144,12 @@ export async function initPrimodium(mud: MUD, version = "v1") {
       components.SelectedRock.set({ value: components.ActiveRock.get()?.value ?? singletonEntity });
     };
 
-    const openMap = async () => {
+    const openMap = async (position?: Coord) => {
       if (components.MapOpen.get()?.value) return;
       const activeRock = components.SelectedRock.get()?.value;
-      const position = components.Position.get(activeRock) ?? { x: 0, y: 0 };
+      const pos = position ?? components.Position.get(activeRock) ?? { x: 0, y: 0 };
 
-      cameraApi.pan(position, 0);
+      cameraApi.pan(pos, 0);
 
       await sceneApi.transitionToScene(
         Scenes.Asteroid,

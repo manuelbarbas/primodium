@@ -1,4 +1,5 @@
 import { Scenes } from "@game/constants";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity } from "@latticexyz/recs";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
@@ -21,9 +22,12 @@ export const HoverAttackTarget: React.FC<{ hoverEntity: Entity; attackOrigin: En
   attackOrigin,
 }) => {
   const isFleet = components.IsFleet.use(hoverEntity) !== undefined;
-  const tilemap = usePrimodium().api(Scenes.Starmap).scene.getConfig(Scenes.Starmap)?.tilemap;
+  const primodium = usePrimodium().api(Scenes.Starmap);
+  const scene = primodium.scene.getScene(Scenes.Starmap);
+  if (!scene) return;
+  const tilemap = scene.tilemap;
   const position = isFleet
-    ? getFleetTilePosition(hoverEntity, tilemap)
+    ? tileCoordToPixelCoord(getFleetTilePosition(scene, hoverEntity), tilemap.tileWidth, tilemap.tileHeight)
     : components.Position.use(hoverEntity) ?? { x: 0, y: 0 };
   const canAttack = getCanAttack(attackOrigin, hoverEntity);
 

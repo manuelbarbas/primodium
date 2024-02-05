@@ -15,12 +15,9 @@ export const renderEffects = (scene: Scene) => {
   const camera = createCameraApi(scene);
 
   const attackAnimation = async (attacker: Entity, defender: Entity) => {
-    const { tileWidth, tileHeight } = scene.tilemap;
     const isFleet = components.IsFleet.get(defender)?.value;
-    const attackerPosition = getFleetTilePosition(attacker, { tileHeight, tileWidth });
-    const position = isFleet
-      ? getFleetTilePosition(defender, { tileHeight, tileWidth })
-      : components.Position.get(defender);
+    const attackerPosition = getFleetTilePosition(scene, attacker);
+    const position = isFleet ? getFleetTilePosition(scene, defender) : components.Position.get(defender);
     const playerEntity = components.Account.get()?.value;
     if (!position || !playerEntity) return;
     const { emitExplosion, fireMissile } = fx;

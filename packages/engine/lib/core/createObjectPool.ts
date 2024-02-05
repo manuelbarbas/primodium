@@ -1,9 +1,8 @@
-import { uuid } from "@latticexyz/utils";
+import { mapObject, uuid } from "@latticexyz/utils";
+import { observable } from "mobx";
+import { GameObjectClasses } from "../../constants";
 import { EmbodiedEntity, GameObjectTypes } from "../../types";
 import { createEmbodiedEntity } from "./createEmbodiedEntity";
-import { observable } from "mobx";
-import { mapObject } from "@latticexyz/utils";
-import { GameObjectClasses } from "../../constants";
 
 type ObjectPoolReturnType<Type> = Type extends keyof GameObjectTypes
   ? EmbodiedEntity<Type>
@@ -68,8 +67,8 @@ export function createObjectPool(scene: Phaser.Scene) {
       embodiedGroups.set(id, group);
     }
 
-    function add<Type extends keyof GameObjectTypes | "Existing">(type: Type, ignoreCulling = false) {
-      const entityID = uuid();
+    function add<Type extends keyof GameObjectTypes | "Existing">(type: Type, id?: string, ignoreCulling = false) {
+      const entityID = id ?? uuid();
       const entity = get(entityID, type, ignoreCulling) as ObjectPoolReturnType<Type>;
 
       if (!group || !entity) throw Error("Group or entity was not found.");
@@ -81,6 +80,7 @@ export function createObjectPool(scene: Phaser.Scene) {
 
     return {
       objects: group,
+      get,
       add,
     };
   }
