@@ -21,7 +21,7 @@ export const renderEffects = (scene: Scene) => {
     const playerEntity = components.Account.get()?.value;
     if (!position || !playerEntity) return;
     const { emitExplosion, fireMissile } = fx;
-    const duration = fireMissile(attackerPosition, position);
+    const duration = fireMissile(attackerPosition, position, { offsetMs: 50 });
 
     setTimeout(() => {
       emitExplosion(position, isFleet ? "sm" : "md");

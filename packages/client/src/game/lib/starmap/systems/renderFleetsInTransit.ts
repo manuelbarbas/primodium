@@ -71,7 +71,7 @@ export const renderFleetsInTransit = (scene: Scene) => {
 
     const sendTrajectory = scene.objectPool.getGroup(entity + objIndexSuffix);
 
-    const trajectory = sendTrajectory.add("Graphics", true);
+    const trajectory = sendTrajectory.add("Graphics", `${entity}-move-trajectory`, true);
     trajectory.setComponents([
       ObjectPosition(originPixelCoord, DepthLayers.Marker),
       Line(destinationPixelCoord, {
@@ -104,7 +104,7 @@ export const renderFleetsInTransit = (scene: Scene) => {
       }),
     ]);
 
-    const fleetIcon = sendTrajectory.add("Graphics", true);
+    const fleetIcon = sendTrajectory.add("Graphics", `${entity}-fleetIcon`, true);
     const direction = getAngleBetweenPoints(originPosition, destinationPosition);
     const owner = components.OwnedBy.get(entity)?.value;
     const relationship = owner ? getRockRelationship(playerEntity, owner as Entity) : RockRelationship.Neutral;
@@ -136,6 +136,7 @@ export const renderFleetsInTransit = (scene: Scene) => {
 
         if (progress > 1) {
           //render orbit
+          console.log("rendering orbiting fleets from in transit");
           renderEntityOrbitingFleets(destination, scene);
 
           //remove transit render

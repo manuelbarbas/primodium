@@ -62,8 +62,7 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
     }),
   ]);
 
-  const revolutionDuration = 120;
-
+  const revolutionDuration = 60;
   allFleets.forEach((fleet, i) => {
     const owner = components.OwnedBy.get(fleet)?.value as Entity | undefined;
     const relationship = owner ? getRockRelationship(playerEntity, owner as Entity) : RockRelationship.Neutral;
@@ -72,9 +71,9 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
     const name = entityToFleetName(fleet, true);
 
     const now = components.Time.get()?.value ?? 0n;
-    const offset = (Number(now) / revolutionDuration) % 360;
-    const angle = offset + ((i + 1) / allFleets.length) * 360;
-    const fleetPosition = calculatePosition(angle, destinationPixelCoord);
+    const addedOffset = (Number(now) / revolutionDuration) % 360;
+    const offset = addedOffset + ((i + 1) / allFleets.length) * 360;
+    const fleetPosition = calculatePosition(offset, destinationPixelCoord);
 
     const sharedComponents = [ObjectPosition(fleetPosition, DepthLayers.Marker), SetValue({ originX: 1, originY: -1 })];
     const fleetOrbitObject = fleetOrbit.add("Graphics", fleet + "_fleetOrbit");
@@ -130,7 +129,7 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
           fleet,
           asteroid: rockEntity,
           ...tilePosition,
-          angle,
+          angle: offset,
         });
       }),
     ]);
@@ -145,7 +144,7 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
         const asteroid = components.SelectedFleet.get()?.asteroid;
         const selectedAsteroid = components.SelectedRock.get()?.value;
 
-        if (asteroid !== rockEntity || selectedAsteroid !== rockEntity) {
+        if ((!tween.isDestroyed() && asteroid !== rockEntity) || selectedAsteroid !== rockEntity) {
           tween.play();
         }
       });
@@ -173,7 +172,7 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
       TweenCounter(scene, {
         from: 0,
         to: 360,
-        duration: 60 * 1000, // Duration of one complete revolution in milliseconds
+        duration: revolutionDuration * 1000, // Duration of one complete revolution in milliseconds
         repeat: -1, // -1 makes the tween loop infinitely
         onPause: (tween) => {
           subscribeToUpdates(tween);
@@ -204,7 +203,14 @@ export const renderFleetsInOrbit = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   defineComponentSystem(systemsWorld, components.FleetMovement, (update) => {
-    if (update.value[0]) renderEntityOrbitingFleets(update.value[0].destination as Entity, scene);
+    const newMovement = update.value[0];
+    if (newMovement) {
+      const time = components.Time.get()?.value ?? 0n;
+      const arrivalTime = newMovement.arrivalTime ?? 0n;
+      if (arrivalTime < time) {
+        renderEntityOrbitingFleets(newMovement.destination as Entity, scene);
+      }
+    }
     if (update.value[1]) renderEntityOrbitingFleets(update.value[1].destination as Entity, scene);
   });
 
