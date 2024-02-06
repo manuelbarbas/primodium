@@ -1,7 +1,7 @@
 import { Scenes } from "@game/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Coord } from "@latticexyz/utils";
-import { useState, useEffect, ReactNode, FC, useMemo } from "react";
+import { useState, useEffect, ReactNode, FC, useMemo, useCallback } from "react";
 import ReactDOM from "react-dom";
 import { FaMinus, FaPlus, FaTimes } from "react-icons/fa";
 import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
@@ -78,19 +78,22 @@ export const Pane: FC<{
     return [storedCoord ?? resetCoord, resetCoord];
   }, [defaultCoord, id, config]);
 
-  const createContainer = (_camera: typeof camera, _coord: Coord, raw: boolean) => {
-    if (container) {
-      container.destroy();
-    }
+  const createContainer = useCallback(
+    (_camera: typeof camera, _coord: Coord, raw: boolean) => {
+      if (container) {
+        container.destroy();
+      }
 
-    const { container: _container, obj } = _camera.createDOMContainer(id, _coord, raw);
-    obj.pointerEvents = "none";
-    obj.setAlpha(pinned ? minOpacity : 1);
-    setContainer(obj);
-    setContainerRef(_container);
+      const { container: _container, obj } = _camera.createDOMContainer(id, _coord, raw);
+      obj.pointerEvents = "none";
+      obj.setAlpha(pinned ? minOpacity : 1);
+      setContainer(obj);
+      setContainerRef(_container);
 
-    return obj;
-  };
+      return obj;
+    },
+    [container, id, minOpacity, pinned]
+  );
 
   const translate = useMemo(() => {
     switch (origin) {
@@ -188,6 +191,10 @@ export const Pane: FC<{
     };
 
     window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, [pinned, container, camera, resetCoord, id, removePane, createContainer, uiCamera, minOpacity]);
 
   if (!containerRef || !container || !visible) return null;
