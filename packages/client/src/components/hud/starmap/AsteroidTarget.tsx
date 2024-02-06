@@ -2,12 +2,14 @@ import { Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
+import { useMemo } from "react";
 import { useMud } from "src/hooks";
 import { useInGracePeriod } from "src/hooks/useInGracePeriod";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { getAsteroidImage } from "src/util/asteroid";
+import { getCanAttackSomeone } from "src/util/unit";
 import { Hex } from "viem";
 import { Button } from "../../core/Button";
 import { IconLabel } from "../../core/IconLabel";
@@ -31,16 +33,22 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   const imageUri = getAsteroidImage(primodium, selectedAsteroid);
   const { screenCoord, isBounded } = useCoordToScreenCoord(position, true);
   const { inGracePeriod } = useInGracePeriod((ownedBy as Entity) ?? singletonEntity);
+  const ownedByPlayer = ownedBy === playerEntity;
   const canAddFleets =
+    ownedByPlayer &&
     0n <
-    (components.ResourceCount.getWithKeys({ entity: selectedAsteroid as Hex, resource: EResource.U_MaxMoves })?.value ??
-      0n);
+      (components.ResourceCount.getWithKeys({ entity: selectedAsteroid as Hex, resource: EResource.U_MaxMoves })
+        ?.value ?? 0n);
   const noUnits = [...useUnitCounts(selectedAsteroid).entries()].every(([, count]) => count === 0n);
 
   const selectingDestination = !!components.Attack.use()?.originFleet;
-  const canAttack = !selectingDestination && !noUnits;
-  if (!mapOpen) return <></>;
 
+  const hideAttack = useMemo(
+    () => !ownedByPlayer || selectingDestination || noUnits || !getCanAttackSomeone(selectedAsteroid),
+    [ownedByPlayer, selectingDestination, noUnits, selectedAsteroid]
+  );
+
+  if (!mapOpen) return <></>;
   if (isBounded) return <Marker coord={position} imageUri="/img/icons/weaponryicon.png" />;
 
   return (
@@ -58,16 +66,13 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
               await closeMap();
             }}
           >
-            {playerEntity !== ownedBy && (
-              <IconLabel imageUri="/img/icons/spectateicon.png" className={``} text="VIEW" />
-            )}
-            {playerEntity === ownedBy && <IconLabel imageUri="/img/icons/minersicon.png" className={``} text="BUILD" />}
+            {!ownedByPlayer && <IconLabel imageUri="/img/icons/spectateicon.png" className={``} text="VIEW" />}
+            {ownedByPlayer && <IconLabel imageUri="/img/icons/minersicon.png" className={``} text="BUILD" />}
           </Button>
         </div>
-        {(canAttack || !canAddFleets) && (
+        {!hideAttack && (
           <div className="absolute bottom-0 right-0 translate-x-full w-36">
             <Button
-              disabled={selectingDestination || noUnits}
               onClick={() => components.Attack.setOrigin(selectedAsteroid)}
               className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
             >
@@ -75,10 +80,13 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
             </Button>
           </div>
         )}
-        {!canAttack && canAddFleets && (
+        {ownedByPlayer && hideAttack && (
           <div className="absolute bottom-0 right-0 translate-x-full w-36">
             <Modal title="Add Fleet">
-              <Modal.Button className="btn-ghost btn-xs text-xs text-accent bg-slate-900 border border-l-0 border-secondary/50">
+              <Modal.Button
+                disabled={!canAddFleets}
+                className="btn-ghost btn-xs text-xs text-accent bg-slate-900 border border-l-0 border-secondary/50"
+              >
                 <IconLabel imageUri="/img/icons/addicon.png" text="ADD FLEET" />
               </Modal.Button>
               <Modal.Content className="w-4/5 h-4/5">

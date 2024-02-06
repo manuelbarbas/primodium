@@ -112,8 +112,8 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
             Line(tileCoordToPixelCoord({ x: ownerPosition.x, y: -ownerPosition.y }, tileWidth, tileHeight), {
               id,
               thickness: Math.min(10, 3 / scene.camera.phaserCamera.zoom),
-              alpha: 0.25,
-              color: 0xffffff,
+              alpha: 0.2,
+              color: 0x696969,
             })
           );
         } else if (oldVal?.fleet == fleet) {

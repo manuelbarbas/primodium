@@ -170,6 +170,23 @@ export function getUnitTrainingTime(rawPlayer: Entity, rawBuilding: Entity, rawU
   return (rawTrainingTime * 100n * 100n * SPEED_SCALE) / (multiplier * config.unitProductionRate * config.worldSpeed);
 }
 
+export function getCanAttackSomeone(entity: Entity) {
+  const isFleet = components.IsFleet.get(entity);
+  const spaceRock = (isFleet ? components.FleetMovement.get(entity)?.destination : entity) as Entity | undefined;
+  if (!spaceRock) return false;
+  const player = components.Account.get()?.value;
+  if (components.OwnedBy.get(spaceRock)?.value !== player) return true;
+
+  const allFleets = getAllOrbitingFleets(spaceRock);
+  return !!allFleets.find((fleet) => {
+    if (fleet === entity) return false;
+    const owner = components.OwnedBy.get(fleet)?.value as Entity;
+    if (!owner) return false;
+    const ownerOwner = components.OwnedBy.get(entity)?.value;
+    return ownerOwner !== player;
+  });
+}
+
 export function getCanAttack(originEntity: Entity, targetEntity: Entity) {
   const isOriginFleet = components.IsFleet.get(originEntity);
   const isTargetFleet = components.IsFleet.get(targetEntity);

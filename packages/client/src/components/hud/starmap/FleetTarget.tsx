@@ -3,13 +3,14 @@ import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
-import { getFleetStats } from "src/util/unit";
+import { getCanAttackSomeone, getFleetStats } from "src/util/unit";
 import { Button } from "../../core/Button";
 import { IconLabel } from "../../core/IconLabel";
 import { Modal } from "../../core/Modal";
 import { Marker } from "../../shared/Marker";
 import { Fleets } from "../panes/fleets/Fleets";
 
+// this component assumes the fleet is owned by the player
 export const _FleetTarget: React.FC<{ fleet: Entity; x: number; y: number }> = ({ fleet, x, y }) => {
   const location = components.FleetMovement.use(fleet)?.destination;
   const mapOpen = components.MapOpen.use()?.value ?? false;
@@ -24,6 +25,11 @@ export const _FleetTarget: React.FC<{ fleet: Entity; x: number; y: number }> = (
   // this is dumb
   const coord = useMemo(() => ({ x, y }), [x, y]);
   const { screenCoord, isBounded } = useCoordToScreenCoord(coord, true);
+  const disableAttack = useMemo(
+    () => selectingDestination || stats.attack === 0n || !getCanAttackSomeone(fleet),
+    [selectingDestination, stats.attack, fleet]
+  );
+
   if (!mapOpen || !location) return <></>;
 
   if (isBounded)
@@ -37,11 +43,11 @@ export const _FleetTarget: React.FC<{ fleet: Entity; x: number; y: number }> = (
       <div className="w-14 h-14 border-2 border-error flex items-center justify-center bg-transparent">
         <div className="absolute top-0 right-0 translate-x-full w-36">
           <Button
-            disabled={selectingDestination || stats.attack == 0n}
+            disabled={disableAttack}
             onClick={() => components.Attack.setOrigin(fleet)}
             className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
           >
-            Attack
+            <IconLabel imageUri="/img/icons/weaponryicon.png" text="Attack" />
           </Button>
         </div>
         <div className="absolute bottom-0 right-0 translate-x-full w-36">
@@ -50,7 +56,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; x: number; y: number }> = (
             onClick={() => components.Send.setOrigin(fleet)}
             className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
           >
-            Move Fleet
+            <IconLabel imageUri="/img/icons/moveicon.png" text="Move" />
           </Button>
         </div>
         <div className="absolute bottom-0 left-0 -translate-x-full">
@@ -62,11 +68,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; x: number; y: number }> = (
               !selectingDestination && components.SelectedFleet.remove();
             }}
           >
-            <IconLabel
-              imageUri="/img/icons/returnicon.png"
-              className={``}
-              text={selectingDestination ? "CANCEL" : "CLOSE"}
-            />
+            <IconLabel imageUri="/img/icons/returnicon.png" text={selectingDestination ? "CANCEL" : "CLOSE"} />
           </Button>
         </div>
         <div className="absolute top-0 left-0 -translate-x-full">
@@ -75,7 +77,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; x: number; y: number }> = (
               disabled={selectingDestination}
               className="btn-ghost btn-xs text-xs text-accent bg-neutral border border-r-0 pl-2 border-secondary/50 w-28 transition-[width] duration-200"
             >
-              <IconLabel imageUri="/img/icons/returnicon.png" text={"MANAGE"} />
+              <IconLabel imageUri="/img/icons/settingsicon.png" text={"MANAGE"} />
             </Modal.Button>
             <Modal.Content className="w-3/4 h-4/5">
               <Fleets initialState="manageFleet" fleetEntity={fleet} />
