@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import { Hex } from "viem";
 import { useAccount } from "wagmi";
@@ -68,20 +67,6 @@ export default function SetupResultProvider() {
   if (loading || !network || !playerAccount || !components) return <Initializing />;
   return (
     <MudProvider {...setupResult} components={components} network={network} playerAccount={playerAccount}>
-      <ToastContainer
-        toastClassName={`font-mono text-xs border bg-neutral border-secondary rounded-box`}
-        progressClassName={"bg-accent"}
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
       <AppLoadingState />
     </MudProvider>
   );
