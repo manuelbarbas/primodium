@@ -12,8 +12,8 @@ importers:
         specifier: 2.0.0-main-9ef3f9a7
         version: 2.0.0-main-9ef3f9a7(google-protobuf@3.21.2)
       '@primodiumxyz/pg-indexer-reader':
-        specifier: ^0.5.0
-        version: 0.5.0(react@18.2.0)(typescript@5.1.6)
+        specifier: ^0.5.1
+        version: 0.5.1(react@18.2.0)(typescript@5.1.6)
       '@typescript-eslint/eslint-plugin':
         specifier: 5.46.1
         version: 5.46.1(@typescript-eslint/parser@5.46.1)(eslint@8.29.0)(typescript@5.1.6)
@@ -2989,8 +2989,8 @@ packages:
       - zod
     dev: false
 
-  /@primodiumxyz/pg-indexer-reader@0.5.0(react@18.2.0)(typescript@5.1.6):
-    resolution: {integrity: sha512-plISPkCg3bBqbXXfx3mH2LKBYyggmqBMnUGOE+VduXft4+FfT28uzutJMK15FxBOI87DtPSavRckSmhxtMUWzg==}
+  /@primodiumxyz/pg-indexer-reader@0.5.1(react@18.2.0)(typescript@5.1.6):
+    resolution: {integrity: sha512-WTXpt22n/dQzA/b3F8tx1K0JS4NSXfiNy+oj2jjyty26QMo2OR7fZ8pxSTozOtTHlW3gEVtwmSChrJNTasB93g==}
     hasBin: true
     dependencies:
       '@koa/cors': 4.0.0

@@ -6,7 +6,7 @@ import { SecondaryCard } from "src/components/core/Card";
 import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
-import { getSpaceRockInfo } from "src/util/spacerock";
+import { getSpaceRockInfo } from "src/util/asteroid";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -41,7 +41,6 @@ const Asteroid: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
 
         const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
 
-        components.Send.setDestination(asteroidInfo.entity);
         components.SelectedRock.set({ value: asteroidInfo.entity });
 
         pan({

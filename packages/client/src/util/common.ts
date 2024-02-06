@@ -34,6 +34,10 @@ export const distanceBI = (a: Coord, b: Coord) => {
   return BigInt(Math.round(Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2))));
 };
 
+export const getDistance = (a: Coord, b: Coord) => {
+  return Math.round(Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2)));
+};
+
 export function toRomanNumeral(number: number) {
   const romanNumerals = [
     { value: 1000, symbol: "M" },
@@ -110,4 +114,13 @@ export const isPlayer = (entity: Entity) => {
 
 export function clampBigInt(value: bigint, min: bigint, max: bigint) {
   return value < BigInt(min) ? BigInt(min) : value > BigInt(max) ? BigInt(max) : value;
+}
+
+export function getDegreeDirection(point1: Coord, point2: Coord) {
+  const dy = point2.y - point1.y;
+  const dx = point2.x - point1.x;
+  const radian = Math.atan2(dy, dx);
+  let degree = radian * (180 / Math.PI);
+  if (degree < 0) degree = 360 + degree;
+  return degree;
 }

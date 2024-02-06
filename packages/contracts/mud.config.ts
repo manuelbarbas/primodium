@@ -479,24 +479,6 @@ export const config = mudConfig({
 
     /* ------------------------------ Battle Result ----------------------------- */
     BattleResult: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
-        attacker: "bytes32",
-        defender: "bytes32",
-        winner: "bytes32",
-        rock: "bytes32",
-        totalCargo: "uint256",
-        timestamp: "uint256",
-
-        attackerStartingUnits: "uint256[]",
-        defenderStartingUnits: "uint256[]",
-        attackerUnitsLeft: "uint256[]",
-        defenderUnitsLeft: "uint256[]",
-      },
-      offchainOnly: true,
-    },
-
-    NewBattleResult: {
       keySchema: { battleId: "bytes32" },
       valueSchema: {
         aggressorEntity: "bytes32", //can be fleet or space rock
@@ -553,15 +535,6 @@ export const config = mudConfig({
       valueSchema: {
         encryptionAtStart: "uint256",
         encryptionAtEnd: "uint256",
-      },
-      offchainOnly: true,
-    },
-
-    RaidResult: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
-        defenderValuesBeforeRaid: "uint256[]",
-        raidedAmount: "uint256[]",
       },
       offchainOnly: true,
     },

@@ -2,7 +2,7 @@ import { resourceToHex } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { DECIMALS } from "contracts/config/constants";
-import { EBuilding, EObjectives, EResource, ESize, EUnit } from "contracts/config/enums";
+import { EBuilding, EObjectives, EResource, EUnit } from "contracts/config/enums";
 import { Key } from "engine/types";
 import { encodeEntity } from "src/util/encode";
 import { reverseRecord } from "./common";
@@ -79,11 +79,6 @@ export enum TransactionQueueType {
   Train,
   Research,
   Upgrade,
-  Recall,
-  Reinforce,
-  Invade,
-  Raid,
-  Land,
   Demolish,
   Move,
   ClaimObjective,
@@ -98,6 +93,14 @@ export enum TransactionQueueType {
   DeclineInvite,
   Toggle,
   Access,
+  Attack,
+  CreateFleet,
+  DisbandFleet,
+  LandFleet,
+  MergeFleets,
+  SendFleet,
+  FleetStance,
+  TransferFleet,
 }
 
 export enum RockRelationship {
@@ -442,20 +445,6 @@ export const KeyImages = new Map<Key, string>([
   ["E", "/img/keys/e.png"],
 ]);
 
-export const MotherlodeSizeNames: Record<number, string> = {
-  [ESize.Small]: "Small",
-  [ESize.Medium]: "Medium",
-  [ESize.Large]: "Large",
-};
-
-// do the same for types
-export const MotherlodeTypeNames: Record<number, string> = {
-  [EResource.Titanium]: "Titanium",
-  [EResource.Iridium]: "Iridium",
-  [EResource.Platinum]: "Platinum",
-  [EResource.Kimberlite]: "Kimberlite",
-};
-
 export const ResourceStorages = new Set([
   EntityType.Iron,
   EntityType.Copper,
@@ -546,7 +535,6 @@ export const UnitEnumLookup: Record<Entity, EUnit> = {
   [EntityType.StingerDrone]: EUnit.StingerDrone,
   [EntityType.AnvilDrone]: EUnit.AnvilDrone,
   [EntityType.AegisDrone]: EUnit.AegisDrone,
-  [EntityType.MiningVessel]: EUnit.MiningVessel,
   [EntityType.MinutemanMarine]: EUnit.MinutemanMarine,
   [EntityType.TridentMarine]: EUnit.TridentMarine,
   [EntityType.LightningCraft]: EUnit.LightningCraft,

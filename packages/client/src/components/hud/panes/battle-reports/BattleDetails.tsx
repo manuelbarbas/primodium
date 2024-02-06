@@ -1,21 +1,11 @@
 import { Entity } from "@latticexyz/recs";
-import { EResource, EUnit } from "contracts/config/enums";
-import { useMemo } from "react";
 import { FaTimes, FaTrophy } from "react-icons/fa";
 import { Navigator } from "src/components/core/Navigator";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
-import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { getBlockTypeName, toRomanNumeral } from "src/util/common";
-import {
-  BackgroundImage,
-  ResourceEntityLookup,
-  ResourceImage,
-  ResourceType,
-  UnitEntityLookup,
-} from "src/util/constants";
-import { Hex } from "viem";
+import { BackgroundImage } from "src/util/constants";
 
 export const UnitStatus: React.FC<{
   unit: Entity;
@@ -54,13 +44,9 @@ export const BattleDetails: React.FC<{
   const {
     playerAccount: { entity: playerEntity },
   } = useMud();
-  const raid = components.RaidResult.use(battleEntity);
-  const battle = useMemo(() => format(battleEntity), [battleEntity]);
+  const battle = components.Battle.use(battleEntity);
 
   if (!battle) return <></>;
-
-  const playersUnits = playerEntity === battle.attacker ? battle.attackerUnits : battle.defenderUnits;
-  const enemyUnits = playerEntity === battle.attacker ? battle.defenderUnits : battle.attackerUnits;
 
   return (
     <Navigator.Screen
@@ -97,30 +83,9 @@ export const BattleDetails: React.FC<{
 
           <hr className="border-t border-cyan-600/40 w-full" />
 
-          {battle.resources.length !== 0 && (
-            <div className="flex flex-col justify-center items-center gap-2 bg-slate-900 p-2 px-5 rounded-md border border-slate-700 text-sm">
-              <p className="text-lg font-bold leading-none">{playerEntity === battle.winner ? "REWARDS" : "RAIDED"}</p>
-              <div className="flex items-center gap-2 flex-wrap">
-                {battle.resources.map((resource, i) => {
-                  if (!resource.amount) return;
-
-                  return (
-                    <ResourceIconTooltip
-                      key={`resource-${i}`}
-                      image={ResourceImage.get(resource.id) ?? ""}
-                      resource={resource.id}
-                      name={getBlockTypeName(resource.id)}
-                      amount={resource.amount}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
           <div className="w-full">
             <p className="p-1 text-xs font-bold text-cyan-400">YOUR FLEET STATUS</p>
-            <div className="w-full rounded-md overflow-hidden h-32 border border-slate-500 bg-slate-800 overflow-y-auto flex flex-col items-center justify-center scrollbar">
+            {/* <div className="w-full rounded-md overflow-hidden h-32 border border-slate-500 bg-slate-800 overflow-y-auto flex flex-col items-center justify-center scrollbar">
               {playersUnits.length === 0 && (
                 <p className="text-sm font-bold text-slate-400 text-center">NO FLEET FOUND</p>
               )}
@@ -139,11 +104,11 @@ export const BattleDetails: React.FC<{
                   )}
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
           <div className="w-full">
             <p className="p-1 text-xs font-bold text-cyan-400">ENEMY FLEET STATUS</p>
-            <div className="w-full rounded-md overflow-hidden h-32 border border-slate-500 bg-slate-800 overflow-y-auto flex flex-col items-center justify-center scrollbar">
+            {/* <div className="w-full rounded-md overflow-hidden h-32 border border-slate-500 bg-slate-800 overflow-y-auto flex flex-col items-center justify-center scrollbar">
               {enemyUnits.length === 0 && (
                 <p className="text-sm font-bold text-slate-400 text-center">NO FLEET FOUND</p>
               )}
@@ -162,11 +127,10 @@ export const BattleDetails: React.FC<{
                   )}
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="absolute top-0 right-0 flex flex-col items-end gap-1 text-xs p-2">
-          <p className="opacity-50 font-bold">{raid ? "RAID" : "INVASION"}</p>
           <p className="opacity-50 font-bold">{new Date(Number(battle.timestamp * 1000n)).toLocaleDateString()}</p>
         </div>
         <div className="absolute top-0 left-0 p-2">
@@ -175,66 +139,4 @@ export const BattleDetails: React.FC<{
       </div>
     </Navigator.Screen>
   );
-};
-
-const format = (battleEntity: Entity) => {
-  const battle = components.BattleResult.get(battleEntity);
-
-  if (!battle) return null;
-
-  const attackerUnits = battle.attackerStartingUnits.map((startingUnitCount, i) => {
-    const unitEntity = UnitEntityLookup[(i + 1) as EUnit];
-    if (!unitEntity) return;
-
-    return {
-      type: unitEntity,
-      count: startingUnitCount,
-      unitsLeft: battle.attackerUnitsLeft[i],
-      level: components.UnitLevel.getWithKeys({ entity: battle.attacker as Hex, unit: unitEntity as Hex })?.value ?? 1n,
-    };
-  });
-
-  const defenderUnits = battle.defenderStartingUnits.map((startingUnitCount, i) => {
-    const unitEntity = UnitEntityLookup[(i + 1) as EUnit];
-    if (!unitEntity) return;
-
-    return {
-      type: unitEntity,
-      count: startingUnitCount,
-      unitsLeft: battle.defenderUnitsLeft[i],
-      level: components.UnitLevel.getWithKeys({ entity: battle.defender as Hex, unit: unitEntity as Hex })?.value ?? 1n,
-    };
-  });
-
-  const resources = (components.RaidResult.get(battleEntity)?.raidedAmount ?? []).map((resourceCount, i) => {
-    const resourceEntity = ResourceEntityLookup[i as EResource];
-
-    return {
-      id: resourceEntity,
-      amount: resourceCount,
-      type: ResourceType.Resource,
-    };
-  });
-
-  const defense =
-    components.ResourceCount.getWithKeys({ entity: battle.defender as Hex, resource: EResource.U_Defense })?.value ??
-    0n;
-  const defenseMultiplier =
-    components.ResourceCount.getWithKeys({ entity: battle.defender as Hex, resource: EResource.M_DefenseMultiplier })
-      ?.value ?? 0n;
-
-  return {
-    entity: battleEntity,
-    attacker: battle.attacker,
-    defender: battle.defender,
-    winner: battle.winner,
-    attackerUnits,
-    defenderUnits,
-    resources: resources,
-    totalCargo: battle.totalCargo,
-    timestamp: battle.timestamp,
-    spaceRock: battle.rock,
-    defense,
-    defenseMultiplier,
-  };
 };

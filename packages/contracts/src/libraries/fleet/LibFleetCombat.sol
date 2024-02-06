@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { EResource } from "src/Types.sol";
-import { BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, MaxResourceCount, NewBattleResult, NewBattleResultData, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, MaxResourceCount, BattleResult, BattleResultData, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 import { getSystemResourceId } from "src/utils.sol";
 import { BuildSystem } from "systems/BuildSystem.sol";
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
@@ -35,7 +35,7 @@ library LibFleetCombat {
   function attack(
     bytes32 entity,
     bytes32 targetEntity
-  ) internal returns (bytes32 battleId, NewBattleResultData memory battleResult) {
+  ) internal returns (bytes32 battleId, BattleResultData memory battleResult) {
     bool aggressorIsFleet = IsFleet.get(entity);
 
     if (aggressorIsFleet) {
@@ -73,7 +73,7 @@ library LibFleetCombat {
       BattleDamageDealtResult.set(battleId, targetAllies[i], targetDamages[i]);
     }
 
-    battleResult = NewBattleResultData({
+    battleResult = BattleResultData({
       aggressorEntity: entity,
       aggressorDamage: totalAggressorDamage,
       targetEntity: targetEntity,
@@ -85,7 +85,7 @@ library LibFleetCombat {
       timestamp: block.timestamp
     });
 
-    NewBattleResult.set(battleId, battleResult);
+    BattleResult.set(battleId, battleResult);
   }
 
   function resolveBattleEncryption(

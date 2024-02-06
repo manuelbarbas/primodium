@@ -5,7 +5,7 @@ import { useAccount } from "src/hooks/useAccount";
 import { components } from "src/network/components";
 import { entityToColor } from "src/util/color";
 import { RockRelationshipColors } from "src/util/constants";
-import { getRockRelationship } from "src/util/spacerock";
+import { getRockRelationship } from "src/util/asteroid";
 
 export const AccountDisplay: React.FC<{
   player: Entity | undefined;
