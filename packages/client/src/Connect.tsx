@@ -1,13 +1,20 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { chunk } from "lodash";
 import { useEffect, useState } from "react";
-import { FaRegCopyright } from "react-icons/fa";
+import { FaExclamationTriangle, FaRegCopyright } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { useAccount, useConnect } from "wagmi";
 import { useSettingsStore } from "./game/stores/SettingsStore";
 
 const params = new URLSearchParams(window.location.search);
+
+const connectorIcons: Record<string, string> = {
+  ["MetaMask"]: "/img/icons/web3/metamask.svg",
+  ["WalletConnect"]: "/img/icons/web3/walletconnect.svg",
+  ["Coinbase Wallet"]: "/img/icons/web3/coinbase.svg",
+};
+
 export const Connect: React.FC = () => {
   const { connector, isConnected } = useAccount();
   const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
@@ -25,7 +32,11 @@ export const Connect: React.FC = () => {
     toast(
       ({ closeToast }) => (
         <div className="flex flex-col gap-4">
-          Are you sure you want to play as guest? You will not be able to win prizes or play across devices.
+          <div className="flex flex-col text-center justify-center items-center gap-2 w-full">
+            <FaExclamationTriangle size={24} className="text-warning" />
+            Are you sure you want to play as guest? You will not be able to win prizes or play across devices.
+          </div>
+
           <div className="flex justify-center w-full gap-2">
             <button
               className="btn btn-secondary btn-xs"
@@ -49,6 +60,7 @@ export const Connect: React.FC = () => {
         </div>
       ),
       {
+        // className: "border-error",
         position: "top-center",
         autoClose: false,
         closeOnClick: false,
@@ -86,7 +98,7 @@ export const Connect: React.FC = () => {
 
           <div className="flex flex-col gap-2 w-full">
             <button
-              className="btn-lg btn-secondary star-background font-bold w-full btn join-item inline pointer-events-auto font-bold outline-none h-fit z-10"
+              className="btn-lg btn-secondary star-background w-full btn join-item inline pointer-events-auto font-bold outline-none h-fit z-10"
               onClick={confirmToast}
             >
               Play as Guest
@@ -99,13 +111,16 @@ export const Connect: React.FC = () => {
               <div key={`chunk-${i}`} className="flex flex-row gap-2">
                 {chunk.map((x) => (
                   <button
-                    className="flex-1 btn btn-secondary star-background font-bold join-item inline pointer-events-auto font-bold outline-none h-fit z-10"
+                    className="flex-1 items-center justify-center btn btn-secondary star-background join-item inline pointer-events-auto font-bold outline-none h-fit z-10"
                     key={`${x.id}-${x.name}`}
                     onClick={() => !isLoading && connect({ connector: x })}
                     disabled={isLoading && x.id !== pendingConnector?.id}
                   >
-                    {x.name}
-                    {isLoading && x.id === pendingConnector?.id && <p className="text-xs">(connecting)</p>}
+                    <div className="flex w-full items-center justify-center gap-2">
+                      {connectorIcons[x.name] && <img src={connectorIcons[x.name]} className="w-6 h-6" />}
+                      {x.name}
+                      {isLoading && x.id === pendingConnector?.id && <p className="text-xs">(connecting)</p>}
+                    </div>
                   </button>
                 ))}
               </div>
