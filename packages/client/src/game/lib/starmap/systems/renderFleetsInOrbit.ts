@@ -107,7 +107,7 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
       ),
       OnComponentSystem(components.SelectedFleet, (_, { value: [newVal, oldVal] }) => {
         const id = `homeLine-${fleet}`;
-        if (newVal?.fleet == fleet) {
+        if (newVal?.value == fleet) {
           fleetHomeLineObject.setComponent(
             Line(tileCoordToPixelCoord({ x: ownerPosition.x, y: -ownerPosition.y }, tileWidth, tileHeight), {
               id,
@@ -116,7 +116,7 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
               color: 0x696969,
             })
           );
-        } else if (oldVal?.fleet == fleet) {
+        } else if (oldVal?.value == fleet) {
           fleetHomeLineObject.removeComponent(id);
         }
       }),
@@ -129,14 +129,9 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
           return;
         }
         if (!gameObject || relationship !== RockRelationship.Self) return;
-        const position = { x: gameObject.x, y: -gameObject.y };
 
-        const tilePosition = { x: position.x / tileWidth, y: position.y / tileHeight };
         components.SelectedFleet.set({
-          fleet,
-          asteroid: rockEntity,
-          ...tilePosition,
-          angle: offset,
+          value: fleet,
         });
       }),
     ]);
@@ -152,13 +147,14 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
         components.SelectedRock.update$,
         components.BattleRender.update$
       ).subscribe(() => {
-        const asteroid = components.SelectedFleet.get()?.asteroid;
         const selectedAsteroid = components.SelectedRock.get()?.value;
         const battlePosition = components.BattleRender.get()?.value;
+        const selectedFleet = components.SelectedFleet.get()?.value;
+        const fleetRock = components.FleetMovement.get(selectedFleet)?.destination as Entity;
 
         if (
           !tween.isDestroyed() &&
-          (asteroid !== rockEntity || (selectedAsteroid !== rockEntity && battlePosition !== rockEntity))
+          (fleetRock !== rockEntity || (selectedAsteroid !== rockEntity && battlePosition !== rockEntity))
         ) {
           tween.play();
         }
@@ -196,10 +192,11 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
           unsubscribeFromUpdates();
         },
         onUpdate: (...[tween, , , current]) => {
-          const asteroid = components.SelectedFleet.get()?.asteroid;
+          const selectedFleet = components.SelectedFleet.get()?.value;
+          const fleetRock = components.FleetMovement.get(selectedFleet)?.destination as Entity;
           const selectedAsteroid = components.SelectedRock.get()?.value;
           const battlePosition = components.BattleRender.get()?.value;
-          if ([asteroid, selectedAsteroid, battlePosition].includes(rockEntity)) {
+          if ([fleetRock, selectedAsteroid, battlePosition].includes(rockEntity)) {
             tween.pause();
             return;
           }
@@ -232,7 +229,7 @@ export const renderFleetsInOrbit = (scene: Scene) => {
 
   defineEnterSystem(systemsWorld, [Has(components.SelectedFleet)], () => {
     components.SelectedRock.remove();
-    const fleet = components.SelectedFleet.get()?.fleet;
+    const fleet = components.SelectedFleet.get()?.value;
     const location = components.FleetMovement.get(fleet)?.destination;
 
     components.ActiveRock.set({ value: location as Entity });

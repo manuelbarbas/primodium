@@ -3,7 +3,7 @@ import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
-import { getCanAttackSomeone, getFleetStats } from "src/util/unit";
+import { getCanAttackSomeone, getFleetStats, getFleetTilePosition } from "src/util/unit";
 import { Button } from "../../core/Button";
 import { IconLabel } from "../../core/IconLabel";
 import { Modal } from "../../core/Modal";
@@ -11,7 +11,7 @@ import { Marker } from "../../shared/Marker";
 import { Fleets } from "../panes/fleets/Fleets";
 
 // this component assumes the fleet is owned by the player
-export const _FleetTarget: React.FC<{ fleet: Entity; x: number; y: number }> = ({ fleet, x, y }) => {
+export const _FleetTarget: React.FC<{ fleet: Entity }> = ({ fleet }) => {
   const location = components.FleetMovement.use(fleet)?.destination;
   const mapOpen = components.MapOpen.use()?.value ?? false;
   const selectingAttackDestination = !!components.Attack.use()?.originFleet;
@@ -19,18 +19,20 @@ export const _FleetTarget: React.FC<{ fleet: Entity; x: number; y: number }> = (
   const stats = getFleetStats(fleet);
   const primodium = usePrimodium();
   const {
+    scene: rawScene,
     hooks: { useCoordToScreenCoord },
   } = primodium.api(Scenes.Starmap);
+  const scene = rawScene.getScene(Scenes.Starmap);
 
   // this is dumb
-  const coord = useMemo(() => ({ x, y }), [x, y]);
+  const coord = useMemo(() => (scene ? getFleetTilePosition(scene, fleet) : { x: 0, y: 0 }), [fleet, scene]);
   const { screenCoord, isBounded } = useCoordToScreenCoord(coord, true);
   const disableAttack = useMemo(
     () => selectingDestination || stats.attack === 0n || !getCanAttackSomeone(fleet),
     [selectingDestination, stats.attack, fleet]
   );
 
-  if (!mapOpen || !location) return <></>;
+  if (!scene || !mapOpen || !location) return <></>;
 
   if (isBounded)
     return <Marker coord={{ x: screenCoord.x, y: screenCoord.y }} imageUri="/img/icons/outgoingicon.png" />;
@@ -90,7 +92,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; x: number; y: number }> = (
 };
 
 export const FleetTarget = () => {
-  const activeFleet = components.SelectedFleet.use();
+  const activeFleet = components.SelectedFleet.use()?.value;
   if (!activeFleet) return <></>;
-  return <_FleetTarget {...activeFleet} />;
+  return <_FleetTarget fleet={activeFleet as Entity} />;
 };
