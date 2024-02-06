@@ -4,24 +4,22 @@ import { createExtendedComponent } from "./ExtendedComponent";
 
 function createSendComponent() {
   const component = createExtendedComponent(world, {
-    origin: Type.OptionalEntity,
+    originFleet: Type.OptionalEntity,
     destination: Type.OptionalEntity,
-    fleetEntity: Type.OptionalEntity,
   });
 
   const emptyComponent = {
-    origin: undefined,
     destination: undefined,
-    fleetEntity: undefined,
+    originFleet: undefined,
   };
 
   const reset = () => {
     component.set(emptyComponent);
   };
 
-  const setOrigin = (spaceRock: Entity | undefined) => {
+  const setOrigin = (fleet: Entity) => {
     if (!component.get()) reset();
-    component.update({ origin: spaceRock });
+    component.update({ originFleet: fleet });
   };
 
   const setDestination = (spaceRock: Entity | undefined) => {
@@ -29,16 +27,10 @@ function createSendComponent() {
     component.update({ destination: spaceRock });
   };
 
-  const setFleetEntity = (fleetEntity: Entity | undefined) => {
-    if (!component.get()) reset();
-    component.update({ fleetEntity });
-  };
-
   return {
     ...component,
     setOrigin,
     setDestination,
-    setFleetEntity,
     reset,
   };
 }

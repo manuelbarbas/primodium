@@ -1,19 +1,20 @@
 import { Scenes } from "@game/constants";
 import { namespaceWorld } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { Coord } from "@latticexyz/utils";
 import engine from "engine";
 import { Game } from "engine/types";
 import { runSystems as runAsteroidSystems } from "src/game/lib/asteroid/systems";
 import { runSystems as runStarmapSystems } from "src/game/lib/starmap/systems";
 import { components } from "src/network/components";
 import { setupAllianceLeaderboard } from "src/network/systems/setupAllianceLeaderboard";
+import { setupBattleComponents } from "src/network/systems/setupBattleComponents";
 import { setupBattleNotifications } from "src/network/systems/setupBattleNotifications";
 import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
 import { setupDoubleCounter } from "src/network/systems/setupDoubleCounter";
 import { setupHangar } from "src/network/systems/setupHangar";
 import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
 import { setupInvitations } from "src/network/systems/setupPlayerInvites";
-import { setupSend } from "src/network/systems/setupSend";
 import { setupSync } from "src/network/systems/setupSync";
 import { setupTime } from "src/network/systems/setupTime";
 import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
@@ -30,6 +31,7 @@ import { createSceneApi } from "./scene";
 import { createSpriteApi } from "./sprite";
 
 export type Primodium = Awaited<ReturnType<typeof initPrimodium>>;
+export type PrimodiumApi = ReturnType<Primodium["api"]>;
 
 export async function initPrimodium(mud: MUD, version = "v1") {
   const asciiArt = `
@@ -86,13 +88,13 @@ export async function initPrimodium(mud: MUD, version = "v1") {
 
     components.MapOpen.set({ value: false });
     setupAllianceLeaderboard(mud);
+    setupBattleComponents();
     setupBattleNotifications(mud);
     setupBlockNumber(mud.network.latestBlockNumber$);
     setupDoubleCounter(mud);
     setupHangar(mud);
     setupLeaderboard(mud);
     setupInvitations(mud);
-    setupSend(mud);
     setupTime(mud);
     setupTrainingQueues();
     setupSync(mud);
@@ -142,12 +144,12 @@ export async function initPrimodium(mud: MUD, version = "v1") {
       components.SelectedRock.set({ value: components.ActiveRock.get()?.value ?? singletonEntity });
     };
 
-    const openMap = async () => {
+    const openMap = async (position?: Coord) => {
       if (components.MapOpen.get()?.value) return;
       const activeRock = components.SelectedRock.get()?.value;
-      const position = components.Position.get(activeRock) ?? { x: 0, y: 0 };
+      const pos = position ?? components.Position.get(activeRock) ?? { x: 0, y: 0 };
 
-      cameraApi.pan(position, 0);
+      cameraApi.pan(pos, 0);
 
       await sceneApi.transitionToScene(
         Scenes.Asteroid,

@@ -3,12 +3,14 @@ import { Entity, Has, Not, defineEnterSystem, namespaceWorld } from "@latticexyz
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
+import { toast } from "react-toastify";
 import { interval } from "rxjs";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { entityToColor } from "src/util/color";
 import { getRandomRange } from "src/util/common";
 import { entityToPlayerName, entityToRockName } from "src/util/name";
+import { getCanAttack, getCanSend } from "src/util/unit";
 import { getEnsName } from "src/util/web3/getEnsName";
 import {
   ObjectPosition,
@@ -132,8 +134,14 @@ export const renderAsteroid = (scene: Scene) => {
       }),
       Texture(Assets.SpriteAtlas, outlineSprite),
       OnClickUp(scene, () => {
-        if (components.Send.get()?.fleetEntity) {
-          components.Send.setDestination(entity);
+        const attackOrigin = components.Attack.get()?.originFleet;
+        const sendOrigin = components.Send.get()?.originFleet;
+        if (attackOrigin) {
+          if (getCanAttack(attackOrigin, entity)) components.Attack.setDestination(entity);
+          else toast.error("Cannot attack this asteroid.");
+        } else if (sendOrigin) {
+          if (getCanSend(sendOrigin, entity)) components.Send.setDestination(entity);
+          else toast.error("Cannot send to this asteroid.");
         } else {
           components.SelectedRock.set({ value: entity });
         }

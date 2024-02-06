@@ -66,7 +66,8 @@ export const setupMouseInputs = (scene: Scene) => {
   });
 
   const rightClickSub = scene.input.rightClick$.subscribe(() => {
-    components.Send.clear();
+    components.Send.reset();
+    components.Attack.reset();
   });
 
   world.registerDisposer(() => {

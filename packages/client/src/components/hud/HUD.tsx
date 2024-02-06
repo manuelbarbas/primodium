@@ -10,21 +10,23 @@ import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
 import { Tabs } from "../core/Tabs";
 import { BrandingLabel } from "../shared/BrandingLabel";
-import { AsteroidTarget } from "./AsteroidTarget";
 import { Blueprints } from "./Blueprints";
 import { CurrentObjective } from "./CurrentObjective";
-import { HoverInfo } from "./HoverInfo";
+import { MapButton } from "./MapButton";
+import { MenuButtons } from "./MenuButtons";
 import { Profile } from "./Profile";
+import { SpectatingDetails } from "./SpectatingDetails";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { Chat as _Chat } from "./chat/Chat";
+import { HoverInfo } from "./hover/HoverInfo";
 import { ActiveMarker } from "./markers/ActiveMarker";
 import { HomeMarker } from "./markers/HomeMarker";
 import HackerConsole from "./modals/HackerConsole";
 import { OwnedAsteroids } from "./panes/OwnedAsteroids";
 import { SpacerockMenu } from "./spacerock-menu/SpacerockMenu";
-import { MenuButtons } from "./MenuButtons";
-import { MapButton } from "./MapButton";
-import { SpectatingDetails } from "./SpectatingDetails";
+import { AsteroidTarget } from "./starmap/AsteroidTarget";
+import { FleetTarget } from "./starmap/FleetTarget";
+import { HoverTarget } from "./starmap/HoverTarget";
 
 export const GameHUD = () => {
   const {
@@ -49,6 +51,8 @@ export const GameHUD = () => {
         <HomeMarker />
 
         <AsteroidTarget />
+        <FleetTarget />
+        <HoverTarget />
 
         <HUD.CursorFollower>
           <HoverInfo />

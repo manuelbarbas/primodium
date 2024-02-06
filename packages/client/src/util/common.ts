@@ -34,6 +34,10 @@ export const distanceBI = (a: Coord, b: Coord) => {
   return BigInt(Math.round(Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2))));
 };
 
+export const getDistance = (a: Coord, b: Coord) => {
+  return Math.round(Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2)));
+};
+
 export function toRomanNumeral(number: number) {
   const romanNumerals = [
     { value: 1000, symbol: "M" },

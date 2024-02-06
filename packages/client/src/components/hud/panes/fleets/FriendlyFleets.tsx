@@ -1,4 +1,3 @@
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
 import { FaPlus } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
@@ -9,7 +8,8 @@ import { FleetButton } from "../../modals/fleets/FleetButton";
 import { useFleetNav } from "./Fleets";
 
 export const FriendlyFleets: React.FC = () => {
-  const selectedRock = components.SelectedRock.use()?.value ?? singletonEntity;
+  const selectedRock = components.ActiveRock.use()?.value;
+  if (!selectedRock) throw new Error("No rock selected");
   const Nav = useFleetNav();
 
   const friendlyFleets = useOrbitingFleets(selectedRock);
