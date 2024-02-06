@@ -7,7 +7,7 @@ import { KeybindActions } from "@game/constants";
 import { Key } from "engine/types";
 import { Coord } from "@latticexyz/utils";
 
-const VERSION = 10;
+const VERSION = 1;
 
 type Keybinds = Partial<{
   [key in KeybindActions]: Set<Key>;

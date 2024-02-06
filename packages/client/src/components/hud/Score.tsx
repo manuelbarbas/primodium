@@ -1,8 +1,9 @@
 import { components } from "src/network/components";
-import { formatNumber } from "src/util/number";
+import { formatResourceCount } from "src/util/number";
 import { SecondaryCard } from "../core/Card";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 
 export const Score: React.FC<{ player: Entity }> = ({ player }) => {
   const leaderboardPlayers = components.Leaderboard.use()?.players;
@@ -29,9 +30,9 @@ export const Score: React.FC<{ player: Entity }> = ({ player }) => {
       </p>
       <div className="flex grow items-center gap-1 px-2 bg-neutral justify-end font-bold border border-secondary/50">
         <span className="font-pixel">
-          {formatNumber(score / 1e18, {
+          {formatResourceCount(singletonEntity, BigInt(score), {
             short: true,
-            showZero: true,
+            showZero: false,
             fractionDigits: 2,
           })}
         </span>
