@@ -133,7 +133,9 @@ export const Pane: FC<{
       container.scale = 1 / zoom;
     });
 
-    return () => sub.unsubscribe();
+    return () => {
+      sub.unsubscribe();
+    };
   }, [scene, container, pinned, camera]);
 
   useEffect(() => {
@@ -172,6 +174,22 @@ export const Pane: FC<{
     };
   }, [dragging, draggable, dragOffset, container, pinned, camera, uiCamera, config, id, setPane, persist]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (!container || pinned) return;
+
+      if (!uiCamera.phaserCamera.worldView.contains(container.x, container.y)) {
+        setPinned(true);
+        const newContainer = createContainer(camera, resetCoord, true);
+        removePane(id);
+        newContainer.setDepth(pinnedDepth);
+        newContainer.setAlpha(minOpacity);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+  }, [pinned, container, camera, resetCoord, id, removePane, createContainer, uiCamera, minOpacity]);
+
   if (!containerRef || !container || !visible) return null;
 
   return ReactDOM.createPortal(
@@ -188,10 +206,10 @@ export const Pane: FC<{
         }`}
         onDoubleClick={() => {
           setPinned(true);
-          createContainer(camera, resetCoord, true);
+          const newContainer = createContainer(camera, resetCoord, true);
           removePane(id);
-          container.setDepth(pinnedDepth);
-          container.setAlpha(1);
+          newContainer.setDepth(pinnedDepth);
+          newContainer.setAlpha(1);
         }}
         onMouseDown={(event) => {
           const originPixelCoord = (!pinned ? uiCamera : camera).screenCoordToWorldCoord({
