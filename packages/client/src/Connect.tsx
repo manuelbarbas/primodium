@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { chunk } from "lodash";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaRegCopyright } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { EntityType, ResourceImage } from "src/util/constants";
@@ -12,13 +12,51 @@ export const Connect: React.FC = () => {
   const { connector, isConnected } = useAccount();
   const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
   const { noExternalWallet, setNoExternalWallet } = useSettingsStore();
+  const [showingToast, setShowingToast] = useState(false);
 
   useEffect(() => {
     if (error) toast.warn(error.message);
   }, [error]);
 
-  const handleGuest = () => {
-    setNoExternalWallet(true);
+  const confirmToast = async () => {
+    toast.dismiss();
+    if (showingToast) await new Promise((resolve) => setTimeout(resolve, 500));
+    setShowingToast(true);
+    toast(
+      ({ closeToast }) => (
+        <div className="flex flex-col gap-4">
+          Are you sure you want to play as guest? You will not be able to win prizes or play across devices.
+          <div className="flex justify-center w-full gap-2">
+            <button
+              className="btn btn-secondary btn-xs"
+              onClick={() => {
+                setNoExternalWallet(true);
+                closeToast && closeToast();
+              }}
+            >
+              Confirm
+            </button>
+            <button
+              onClick={() => {
+                setShowingToast(false);
+                closeToast && closeToast();
+              }}
+              className="btn btn-primary btn-xs"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        position: "top-center",
+        autoClose: false,
+        closeOnClick: false,
+        draggable: false,
+        closeButton: false,
+        hideProgressBar: true,
+      }
+    );
   };
 
   if (isConnected || noExternalWallet) return null;
@@ -49,7 +87,7 @@ export const Connect: React.FC = () => {
           <div className="flex flex-col gap-2 w-full">
             <button
               className="btn-lg btn-secondary star-background font-bold w-full btn join-item inline pointer-events-auto font-bold outline-none h-fit z-10"
-              onClick={handleGuest}
+              onClick={confirmToast}
             >
               Play as Guest
             </button>
