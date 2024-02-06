@@ -173,10 +173,8 @@ export const setupBasicCameraMovement = (
       const newZoom = camera.zoom - camera.zoom * scale * wheelSpeed * deltaY;
       scene.camera.setZoom(Phaser.Math.Clamp(newZoom, minZoom, maxZoom));
 
-      // Update camera matrix, so `getWorldPoint` returns zoom-adjusted coordinates.
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
-      camera.preRender();
       const newWorldPoint = camera.getWorldPoint(pointer.x, pointer.y);
       // Scroll the camera to keep the pointer under the same world point.
       scene.camera.setScroll(

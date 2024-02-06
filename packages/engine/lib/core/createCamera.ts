@@ -1,5 +1,5 @@
 import { Gesture } from "@use-gesture/vanilla";
-import { BehaviorSubject, map, scan, share, Subject, throttleTime } from "rxjs";
+import { BehaviorSubject, share, Subject, tap } from "rxjs";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Coord, GestureState, ObjectPool } from "@latticexyz/phaserx/dist/types";
 import { CameraConfig } from "../../types";
@@ -13,7 +13,15 @@ export function createCamera(phaserCamera: Phaser.Cameras.Scene2D.Camera, option
   const worldView$ = new BehaviorSubject<Phaser.Cameras.Scene2D.Camera["worldView"]>(phaserCamera.worldView).pipe(
     share()
   ) as BehaviorSubject<Phaser.Cameras.Scene2D.Camera["worldView"]>;
-  const zoom$ = new BehaviorSubject<number>(phaserCamera.zoom).pipe(share()) as BehaviorSubject<number>;
+  const zoom$ = new BehaviorSubject<number>(phaserCamera.zoom).pipe(
+    tap(() => {
+      // Update camera matrix/zoom-adjusted coordinates.
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-expect-error
+      phaserCamera.preRender();
+    }),
+    share()
+  ) as BehaviorSubject<number>;
   const pinchStream$ = new Subject<GestureState<"onPinch">>();
 
   const gesture = new Gesture(

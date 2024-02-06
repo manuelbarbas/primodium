@@ -50,7 +50,7 @@ const BlueprintButton: React.FC<{
         components.SelectedBuilding.set({ value: buildingType });
         components.SelectedAction.set({ value: Action.PlaceBuilding });
       }}
-      className={`relative btn-ghost w-fit p-0 ${
+      className={`relative btn-ghost min-h-9 ! p-0 ${
         hasMainbaseLevel
           ? hasEnough
             ? "hover:bg-accent border-accent/50"
@@ -91,26 +91,31 @@ export const AllBlueprints = () => {
           </div>
           <div className="grid grid-cols-4 gap-1 w-full">
             <BlueprintButton
+              tooltipDirection="top"
               buildingType={EntityType.IronMine}
               keybind={KeybindActions.Hotbar0}
               keybindActive={index === 0}
             />
             <BlueprintButton
+              tooltipDirection="top"
               buildingType={EntityType.CopperMine}
               keybind={KeybindActions.Hotbar1}
               keybindActive={index === 0}
             />
             <BlueprintButton
+              tooltipDirection="top"
               buildingType={EntityType.LithiumMine}
               keybind={KeybindActions.Hotbar2}
               keybindActive={index === 0}
             />
             <BlueprintButton
+              tooltipDirection="top"
               buildingType={EntityType.Garage}
               keybind={KeybindActions.Hotbar3}
               keybindActive={index === 0}
             />
             <BlueprintButton
+              tooltipDirection="top"
               buildingType={EntityType.Workshop}
               keybind={KeybindActions.Hotbar4}
               keybindActive={index === 0}
@@ -163,44 +168,44 @@ export const AllBlueprints = () => {
           </div>
         </div>
 
-        <div className={`flex flex-col gap-6 items-center p-1 ${index === 2 ? " bg-success/10" : ""}`}>
+        <div className={`flex flex-col gap-6 w-full items-center p-1 ${index === 2 ? " bg-success/10" : ""}`}>
           <div className="flex border-b border-secondary justify-between w-full">
             <p className="text-xs opacity-75 font-bold text-warning">ELITE</p>
             <div className="flex gap-1 items-center text-xs text-warning">***</div>
           </div>
           <div className="grid grid-cols-4 gap-2 w-full">
             <BlueprintButton
-              tooltipDirection="left"
+              tooltipDirection="top"
               buildingType={EntityType.SAMLauncher}
               keybind={KeybindActions.Hotbar0}
               keybindActive={index === 2}
             />
             <BlueprintButton
-              tooltipDirection="left"
+              tooltipDirection="top"
               buildingType={EntityType.Hangar}
               keybind={KeybindActions.Hotbar1}
               keybindActive={index === 2}
             />
             <BlueprintButton
-              tooltipDirection="left"
+              tooltipDirection="top"
               buildingType={EntityType.AlloyFactory}
               keybind={KeybindActions.Hotbar2}
               keybindActive={index === 2}
             />
             <BlueprintButton
-              tooltipDirection="left"
+              tooltipDirection="top"
               buildingType={EntityType.StarmapperStation}
               keybind={KeybindActions.Hotbar3}
               keybindActive={index === 2}
             />
             <BlueprintButton
-              tooltipDirection="left"
+              tooltipDirection="top"
               buildingType={EntityType.ShieldGenerator}
               keybind={KeybindActions.Hotbar4}
               keybindActive={index === 2}
             />
             <BlueprintButton
-              tooltipDirection="left"
+              tooltipDirection="top"
               buildingType={EntityType.Market}
               keybind={KeybindActions.Hotbar5}
               keybindActive={index === 2}

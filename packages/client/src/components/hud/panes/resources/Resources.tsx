@@ -8,9 +8,10 @@ export const Resources = memo(() => {
     <Pane
       id="resources"
       title="ASTEROID RESOURCES"
-      defaultCoord={{ x: 25.5, y: 16.5 }}
+      defaultCoord={{ x: 26, y: 11 }}
       scene={Scenes.Asteroid}
-      minOpacity={0.75}
+      origin="center-left"
+      minOpacity={0.5}
       draggable
       persist
       pinnable

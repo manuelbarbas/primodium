@@ -216,7 +216,7 @@ export const Pane: FC<{
           const newContainer = createContainer(camera, resetCoord, true);
           removePane(id);
           newContainer.setDepth(pinnedDepth);
-          newContainer.setAlpha(1);
+          newContainer.setAlpha(minOpacity);
         }}
         onMouseDown={(event) => {
           const originPixelCoord = (!pinned ? uiCamera : camera).screenCoordToWorldCoord({
