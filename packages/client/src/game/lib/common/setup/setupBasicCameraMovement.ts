@@ -171,7 +171,7 @@ export const setupBasicCameraMovement = (
       // Get the current world point under pointer.
       const worldPoint = camera.getWorldPoint(pointer.x, pointer.y);
       const newZoom = camera.zoom - camera.zoom * scale * wheelSpeed * deltaY;
-      scene.camera.setZoom(Phaser.Math.Clamp(newZoom, minZoom, maxZoom));
+      scene.camera.setZoom(newZoom);
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore

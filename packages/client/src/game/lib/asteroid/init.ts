@@ -21,6 +21,7 @@ export const initAsteroidScene = async (game: Game) => {
   tileManager?.startChunkRenderer();
 
   scene2.phaserScene.scene.bringToTop(Scenes.UI);
+  scene2.phaserScene.input.enabled = false;
 
   scene.camera.phaserCamera.fadeIn(1000);
 

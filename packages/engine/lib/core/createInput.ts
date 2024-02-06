@@ -19,6 +19,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
 
     phaserKeyboard.disableGlobalCapture();
     phaserKeyboard.enabled = false;
+    inputPlugin.enabled = false;
   }
 
   function enableInput() {
@@ -27,6 +28,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
 
     phaserKeyboard?.enableGlobalCapture();
     phaserKeyboard.enabled = true;
+    inputPlugin.enabled = true;
   }
 
   function setCursor(cursor: string) {
@@ -165,6 +167,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
   }
 
   function dispose() {
+    inputPlugin.removeAllListeners();
     for (const disposer of disposers) {
       disposer();
     }

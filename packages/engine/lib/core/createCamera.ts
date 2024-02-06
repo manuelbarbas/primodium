@@ -1,7 +1,7 @@
 import { Gesture } from "@use-gesture/vanilla";
 import { BehaviorSubject, share, Subject, tap } from "rxjs";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Coord, GestureState, ObjectPool } from "@latticexyz/phaserx/dist/types";
+import { Coord, GestureState, ObjectPool } from "@latticexyz/phaserx/src/types";
 import { CameraConfig } from "../../types";
 
 export function createCamera(phaserCamera: Phaser.Cameras.Scene2D.Camera, options: CameraConfig) {
@@ -38,10 +38,13 @@ export function createCamera(phaserCamera: Phaser.Cameras.Scene2D.Camera, option
   phaserCamera.scene.scale.addListener("resize", onResize);
 
   function setZoom(zoom: number) {
-    phaserCamera.setZoom(zoom);
-    // worldView$.next(phaserCamera.worldView);
-    zoom$.next(zoom);
-    requestAnimationFrame(() => worldView$.next(phaserCamera.worldView));
+    const { minZoom, maxZoom } = options;
+    const _zoom = Phaser.Math.Clamp(zoom, minZoom, maxZoom);
+    phaserCamera.setZoom(_zoom);
+    zoom$.next(_zoom);
+    requestAnimationFrame(() => {
+      worldView$.next(phaserCamera.worldView);
+    });
   }
 
   function ignore(objectPool: ObjectPool, ignore: boolean) {

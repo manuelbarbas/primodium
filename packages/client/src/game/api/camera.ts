@@ -64,15 +64,14 @@ export const createCameraApi = (targetScene: Scene) => {
   function updateWorldView() {
     const { camera } = targetScene;
 
-    requestAnimationFrame(() => camera?.worldView$.next(camera.phaserCamera.worldView));
+    requestAnimationFrame(() => {
+      camera.zoom$.next(camera.phaserCamera.zoom);
+      camera.worldView$.next(camera.phaserCamera.worldView);
+    });
   }
 
   function screenCoordToWorldCoord(screenCoord: Coord) {
     const { camera } = targetScene;
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    camera.phaserCamera.preRender();
 
     const pixelCoord = camera.phaserCamera.getWorldPoint(screenCoord.x, screenCoord.y);
 
@@ -81,10 +80,6 @@ export const createCameraApi = (targetScene: Scene) => {
 
   function worldCoordToScreenCoord(worldCoord: Coord) {
     const { camera } = targetScene;
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    camera.phaserCamera.preRender();
 
     //convert canvas screen coord to phaser screen coord
     // Convert world coord to phaser screen coord
@@ -108,15 +103,6 @@ export const createCameraApi = (targetScene: Scene) => {
     } = targetScene;
     const pixelCoord = raw ? coord : tileCoordToPixelCoord(coord, tileWidth, tileHeight);
     pixelCoord.y = raw ? pixelCoord.y : -pixelCoord.y;
-
-    // if (targetScene.phaserScene.data.get(id)) {
-    //   const containerInfo = targetScene.phaserScene.data.get(id) as {
-    //     obj: Phaser.GameObjects.DOMElement;
-    //     container: HTMLDivElement;
-    //   };
-    //   containerInfo.obj.setPosition(pixelCoord.x, pixelCoord.y);
-    //   return containerInfo;
-    // }
 
     const div = document.createElement("div");
     div.id = id;

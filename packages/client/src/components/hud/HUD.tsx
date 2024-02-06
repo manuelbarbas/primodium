@@ -20,6 +20,7 @@ import HackerConsole from "./modals/HackerConsole";
 import { AsteroidTarget } from "./starmap/AsteroidTarget";
 import { FleetTarget } from "./starmap/FleetTarget";
 import { HoverTarget } from "./starmap/HoverTarget";
+import { BuildingMenu } from "./building-menu/BuildingMenu";
 
 export const GameHUD = () => {
   const {
@@ -91,6 +92,9 @@ export const GameHUD = () => {
         )}
 
         <HUD.BottomLeft>{isSpectating && !mapOpen && <SpectatingDetails />}</HUD.BottomLeft>
+        <HUD.BottomMiddle>
+          <BuildingMenu />
+        </HUD.BottomMiddle>
       </HUD>
 
       <HUD>

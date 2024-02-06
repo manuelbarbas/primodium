@@ -241,7 +241,7 @@ export const Pane: FC<{
             <>
               {!pinned && (
                 <RiPushpinFill
-                  className="cursor-crosshair"
+                  className="CURSOR-CROSSHAIR"
                   onClick={() => {
                     setPinned(true);
                     const worldCoord = camera.screenCoordToWorldCoord({ x: container.x, y: container.y });
