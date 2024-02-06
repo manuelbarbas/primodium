@@ -3,9 +3,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { FaRegCopyright } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks/useMud";
 import { components } from "src/network/components";
-import { noExternalWallet } from "src/network/config/getNetworkConfig";
 import { spawn } from "src/network/setup/contractCalls/spawn";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { useNetwork, useSwitchNetwork } from "wagmi";
@@ -16,6 +16,7 @@ export const Landing: React.FC = () => {
   const playerEntity = mud.playerAccount.entity;
   const navigate = useNavigate();
   const location = useLocation();
+  const { noExternalWallet } = useSettingsStore();
 
   const handlePlay = async () => {
     const hasSpawned = !!components.Home.get(playerEntity)?.value;
@@ -52,7 +53,7 @@ export const Landing: React.FC = () => {
       </button>
     );
   return (
-    <AnimatePresence>
+    <AnimatePresence key="animate-2">
       <motion.div
         key="play"
         initial={{ scale: 0.5, opacity: 0, y: 50 }}

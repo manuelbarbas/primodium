@@ -1,4 +1,5 @@
 import { FaClipboard, FaExclamationCircle, FaTrash } from "react-icons/fa";
+import { useSettingsStore } from "src/game/stores/SettingsStore";
 import { useMud } from "src/hooks";
 import { copyToClipboard } from "src/util/clipboard";
 import { Button } from "../core/Button";
@@ -8,20 +9,20 @@ import { Delegate } from "./Delegate";
 export function Account() {
   const mud = useMud();
   const { playerAccount } = mud;
+  const { setNoExternalWallet } = useSettingsStore();
 
   const removeBurnerPlayerAccount = () => {
-    const go = confirm(
-      `Are you sure you want to delete your player account? Don't forget to save your keys!\n Public key: ${playerAccount.address}\n Private key: ${playerAccount.privateKey}`
-    );
+    const go = confirm(`Are you sure you want to delete your player account? Don't forget to backup your keys!`);
     if (!go) return;
+
+    setNoExternalWallet(false);
     localStorage.removeItem("primodiumPlayerAccount");
-    window.location.reload();
   };
 
   return (
     <div className="h-full w-full relative flex flex-col justify-center items-center">
       <div className="flex w-full items-center px-4">
-        <AccountDisplay noColor player={playerAccount.entity} className="text-sm" disabled />
+        <AccountDisplay noColor player={playerAccount.entity} className="text-sm" />
         {!!playerAccount.privateKey && (
           <>
             <Button
@@ -40,7 +41,7 @@ export function Account() {
             >
               <FaExclamationCircle className="text-error" />
             </Button>
-            <Button className="btn-xs" onClick={removeBurnerPlayerAccount} tooltip="delete and reload with new account">
+            <Button className="btn-xs" onClick={removeBurnerPlayerAccount} tooltip="Delete account">
               <FaTrash />
             </Button>
           </>

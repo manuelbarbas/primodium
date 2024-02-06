@@ -3,27 +3,30 @@ import { chunk } from "lodash";
 import { useEffect } from "react";
 import { FaRegCopyright } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { noExternalWallet } from "src/network/config/getNetworkConfig";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { useAccount, useConnect } from "wagmi";
+import { useSettingsStore } from "./game/stores/SettingsStore";
 
 const params = new URLSearchParams(window.location.search);
 export const Connect: React.FC = () => {
   const { connector, isConnected } = useAccount();
   const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
+  const { noExternalWallet, setNoExternalWallet } = useSettingsStore();
 
-  console.log("is loading", isLoading);
   useEffect(() => {
     if (error) toast.warn(error.message);
   }, [error]);
 
-  const handleGuest = () => {};
+  const handleGuest = () => {
+    setNoExternalWallet(true);
+  };
+
   if (isConnected || noExternalWallet) return null;
 
   return (
-    <AnimatePresence>
-      <div className="absolute w-full h-full bg-black" />
-      <div className="absolute w-full h-full star-background opacity-30" />
+    <AnimatePresence key="animate-1">
+      <div key="bg" className="absolute w-full h-full bg-black" />
+      <div key="star" className="absolute w-full h-full star-background opacity-30" />
       <motion.div
         key="play"
         initial={{ scale: 0.5, opacity: 0, y: 50 }}
@@ -43,7 +46,6 @@ export const Connect: React.FC = () => {
             <div className="absolute bg-gray-900 blur-[15px] w-56 h-32 margin-auto bottom-0 z-10" />
           </div>
 
-          <p className="text-xs opacity-50 uppercase font-bold self-start">Login</p>
           <div className="flex flex-col gap-2 w-full">
             <button
               className="btn-lg btn-secondary star-background font-bold w-full btn join-item inline pointer-events-auto font-bold outline-none h-fit z-10"
@@ -60,7 +62,7 @@ export const Connect: React.FC = () => {
                 {chunk.map((x) => (
                   <button
                     className="flex-1 btn btn-secondary star-background font-bold join-item inline pointer-events-auto font-bold outline-none h-fit z-10"
-                    key={x.id}
+                    key={`${x.id}-${x.name}`}
                     onClick={() => !isLoading && connect({ connector: x })}
                     disabled={isLoading && x.id !== pendingConnector?.id}
                   >
@@ -77,6 +79,7 @@ export const Connect: React.FC = () => {
           </div>
           {/* SHIPS */}
           <motion.img
+            key="ship1"
             initial={{ x: "50%", y: "-50%" }}
             animate={{
               y: "-45%",
@@ -92,6 +95,7 @@ export const Connect: React.FC = () => {
             className="absolute top-0 right-0 p-0 w-32 pixel-images opacity-75"
           />
           <motion.img
+            key="ship2"
             initial={{ x: "50%", y: "-50%" }}
             animate={{
               y: "-53%",
@@ -107,6 +111,7 @@ export const Connect: React.FC = () => {
             className="absolute -top-10 -right-24 p-0 w-14 pixel-images opacity-25"
           />
           <motion.img
+            key="ship3"
             initial={{ x: "50%", y: "-50%" }}
             animate={{
               y: "-53%",
@@ -122,6 +127,7 @@ export const Connect: React.FC = () => {
             className="absolute top-10 -right-24 translate-x-full -translate-y-1/2 p-0 w-16 pixel-images opacity-50"
           />
           <motion.img
+            key="ship4"
             initial={{ x: "-100%", y: "-50%", scaleX: "-100%" }}
             animate={{
               y: "-45%",
@@ -138,7 +144,10 @@ export const Connect: React.FC = () => {
           />
         </div>
       </motion.div>
-      <div className="fixed bottom-10 w-screen left-0 text-center flex flex-row justify-center items-center gap-2 font-mono uppercase font-bold">
+      <div
+        key="copyright"
+        className="fixed bottom-10 w-screen left-0 text-center flex flex-row justify-center items-center gap-2 font-mono uppercase font-bold"
+      >
         <FaRegCopyright size={12} /> 2023 Primodium
       </div>
     </AnimatePresence>

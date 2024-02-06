@@ -5,9 +5,9 @@ import { Hex } from "viem";
 import { useAccount } from "wagmi";
 import AppLoadingState from "./AppLoadingState";
 import { Initializing } from "./components/shared/Initializing";
+import { useSettingsStore } from "./game/stores/SettingsStore";
 import { MudProvider } from "./hooks/providers/MudProvider";
 import useSetupResult from "./hooks/useSetupResult";
-import { noExternalWallet } from "./network/config/getNetworkConfig";
 import { world } from "./network/world";
 import { Maintenance } from "./screens/Maintenance";
 
@@ -19,6 +19,7 @@ export default function SetupResultProvider() {
   const { network, updatePlayerAccount, playerAccount, components } = setupResult;
   const externalAccount = useAccount();
   const mounted = useRef<boolean>(false);
+  const { noExternalWallet } = useSettingsStore();
 
   useEffect(() => {
     /* This cheese exists because otherwise there is a race condition to check if the player 
@@ -37,7 +38,7 @@ export default function SetupResultProvider() {
       if (!externalAccount.address) return;
       updatePlayerAccount({ address: externalAccount.address });
     }
-  }, [externalAccount.address, updatePlayerAccount]);
+  }, [noExternalWallet, externalAccount.address, updatePlayerAccount]);
 
   useEffect(() => {
     if (!network || !playerAccount || mounted.current) return;

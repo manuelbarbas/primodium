@@ -6,7 +6,7 @@ import { mountStoreDevtool } from "simple-zustand-devtools";
 import { KeybindActions } from "@game/constants";
 import { Key } from "engine/types";
 
-const VERSION = 10;
+const VERSION = 11;
 
 type Keybinds = Partial<{
   [key in KeybindActions]: Set<Key>;
@@ -28,6 +28,7 @@ type SettingsState = {
   allowHackerModal: boolean;
   uiScale: number;
   consoleHistory: { input: string; output: string }[];
+  noExternalWallet: boolean;
 };
 
 type SettingsActions = {
@@ -40,11 +41,13 @@ type SettingsActions = {
   toggleAllowHackerModal: () => void;
   setUiScale: (scale: number) => void;
   setConsoleHistory: (history: { input: string; output: string }[]) => void;
+  setNoExternalWallet: (val: boolean) => void;
 };
 
 const defaults: SettingsState = {
   newPlayer: true,
   allowHackerModal: false,
+  noExternalWallet: false,
   uiScale: 1,
   consoleHistory: [],
   volume: {
@@ -129,6 +132,9 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
       },
       setConsoleHistory: (history) => {
         set({ consoleHistory: history });
+      },
+      setNoExternalWallet: (val: boolean) => {
+        set({ noExternalWallet: val });
       },
     }),
     {
