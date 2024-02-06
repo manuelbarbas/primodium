@@ -241,7 +241,7 @@ export const Pane: FC<{
             <>
               {!pinned && (
                 <RiPushpinFill
-                  className=""
+                  className="cursor-crosshair"
                   onClick={() => {
                     setPinned(true);
                     const worldCoord = camera.screenCoordToWorldCoord({ x: container.x, y: container.y });
@@ -254,7 +254,7 @@ export const Pane: FC<{
               )}
               {pinned && (
                 <RiUnpinFill
-                  className=""
+                  className="cursor-crosshair"
                   onClick={() => {
                     setPinned(false);
                     const screenCoord = camera.worldCoordToScreenCoord({ x: container.x, y: container.y });
@@ -268,16 +268,12 @@ export const Pane: FC<{
             </>
           )}
 
-          {!minimized && <FaMinus className="cursor-row-resize" onClick={() => setMinimized(true)} />}
-          {minimized && <FaPlus className="cursor-row-resize" onClick={() => setMinimized(false)} />}
+          {!minimized && <FaMinus className="cursor-n-resize" onClick={() => setMinimized(true)} />}
+          {minimized && <FaPlus className="cursor-s-resize" onClick={() => setMinimized(false)} />}
           {onClose && <FaTimes className="cursor-pointer" onClick={onClose} />}
         </div>
       </div>
-      <div
-        className={`bg-base-200 min-w-72 border border-t-success border-secondary ${
-          minimized ? "max-h-0 overflow-hidden " : ""
-        }`}
-      >
+      <div className={`bg-base-200 min-w-72 border border-t-success border-secondary ${minimized ? "opacity-0" : ""}`}>
         {children}
       </div>
     </div>,
