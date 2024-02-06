@@ -34,8 +34,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity }> = ({ fleet }) => {
 
   if (!scene || !mapOpen || !location) return <></>;
 
-  if (isBounded)
-    return <Marker coord={{ x: screenCoord.x, y: screenCoord.y }} imageUri="/img/icons/outgoingicon.png" />;
+  if (isBounded) return <Marker coord={coord} imageUri="/img/icons/outgoingicon.png" />;
 
   return (
     <div

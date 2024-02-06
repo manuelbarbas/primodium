@@ -3,13 +3,13 @@ import { Entity } from "@latticexyz/recs";
 
 import { Assets } from "@game/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { getRockSprite } from "src/game/lib/starmap/systems/utils/getSprites";
 import { components, components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
 import { getBlockTypeName } from "./common";
 import { MapIdToAsteroidType, PIRATE_KEY, ResourceStorages, RockRelationship } from "./constants";
 import { hashKeyEntity } from "./encode";
 import { getFullResourceCount } from "./resource";
-import { getRockSprite } from "src/game/lib/starmap/systems/utils/getSprites";
 
 export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
   const { getSpriteBase64 } = primodium.api().sprite;
@@ -24,6 +24,7 @@ export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
     return undefined;
   }
 
+  if (components.PirateAsteroid.has(asteroid)) return getSpriteBase64(getRockSprite(1, 1n), Assets.SpriteAtlas);
   const spriteKey = getRockSprite(asteroidData.mapId, asteroidData.mapId === 1 ? mainBaseLevel : asteroidData.maxLevel);
 
   return getSpriteBase64(spriteKey, Assets.SpriteAtlas);
