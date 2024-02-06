@@ -238,10 +238,27 @@ contract PrimodiumTest is MudTest {
     bytes32 playerEntity = addressToEntity(player);
     bytes32 spaceRock = Home.get(playerEntity);
     bytes32 mainBase = Home.get(spaceRock);
-    P_RequiredResourcesData memory requiredResources = getTrainCost(unitPrototype, count);
+    P_RequiredResourcesData memory requiredResources = getTrainCost(
+      unitPrototype,
+      UnitLevel.get(spaceRock, unitPrototype),
+      count
+    );
 
     provideResources(spaceRock, requiredResources);
-    trainUnits(player, mainBase, unitPrototype, count, fastForward);
+
+    if (unitPrototype == P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip))) {
+      uint8 colonyShipResource = P_ColonyShipConfig.getResourceType();
+      uint256 countLeft = count;
+      while (countLeft > 0) {
+        uint256 cost = P_ColonyShipConfig.getResourceAmount() *
+          LibUnit.getNextColonyShipResourceCostMultiplier(spaceRock);
+        increaseResource(spaceRock, EResource(colonyShipResource), cost);
+        trainUnits(player, mainBase, unitPrototype, 1, fastForward);
+        countLeft--;
+      }
+    } else {
+      trainUnits(player, mainBase, unitPrototype, count, fastForward);
+    }
   }
 
   function trainUnits(
@@ -339,6 +356,18 @@ contract PrimodiumTest is MudTest {
     }
   }
 
+  function claimResources(bytes32 spaceRock) internal {
+    vm.startPrank(creator);
+    world.claimResources(spaceRock);
+    vm.stopPrank();
+  }
+
+  function increaseProduction(bytes32 spaceRock, EResource resource, uint256 amount) internal {
+    vm.startPrank(creator);
+    LibProduction.increaseResourceProduction(spaceRock, resource, amount);
+    vm.stopPrank();
+  }
+
   function increaseResource(bytes32 spaceRock, EResource resourceType, uint256 count) internal {
     vm.startPrank(creator);
     if (P_IsUtility.get(uint8(resourceType))) {
@@ -357,17 +386,19 @@ contract PrimodiumTest is MudTest {
 
   function getTrainCost(
     EUnit unitType,
+    uint256 level,
     uint256 count
   ) internal view returns (P_RequiredResourcesData memory requiredResources) {
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unitType));
-    requiredResources = getTrainCost(unitPrototype, count);
+    requiredResources = getTrainCost(unitPrototype, level, count);
   }
 
   function getTrainCost(
     bytes32 unitPrototype,
+    uint256 level,
     uint256 count
   ) internal view returns (P_RequiredResourcesData memory requiredResources) {
-    requiredResources = P_RequiredResources.get(unitPrototype, count);
+    requiredResources = P_RequiredResources.get(unitPrototype, level);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       requiredResources.amounts[i] *= count;
     }
@@ -389,6 +420,18 @@ contract PrimodiumTest is MudTest {
   }
 
   function setupCreateFleet(
+    address player,
+    bytes32 spaceRock,
+    uint256[] memory unitCounts,
+    uint256[] memory resourceCounts
+  ) public {
+    if (ResourceCount.get(spaceRock, uint8(EResource.U_MaxMoves)) == 0) {
+      increaseProduction(spaceRock, EResource.U_MaxMoves, 1);
+    }
+    setupCreateFleetNoMaxMovesGranted(player, spaceRock, unitCounts, resourceCounts);
+  }
+
+  function setupCreateFleetNoMaxMovesGranted(
     address player,
     bytes32 spaceRock,
     uint256[] memory unitCounts,

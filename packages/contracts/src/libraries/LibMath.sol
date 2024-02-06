@@ -37,7 +37,7 @@ library LibMath {
   /// @param num2 The second number to be divided by
   /// @return uint256 The result of division rounded to the nearest integer
   function divideRound(uint256 num1, uint256 num2) internal pure returns (uint256) {
-    return (num1 / num2) + ((num1 % num2) >= (num2 / 2) ? 1 : 0);
+    return (num1 / num2) + (((num1 % num2) * 2 >= num2) ? 1 : 0);
   }
 
   function divideCeil(uint256 num1, uint256 num2) internal pure returns (uint256) {
@@ -88,7 +88,7 @@ library LibMath {
   }
 
   function distance(PositionData memory a, PositionData memory b) internal pure returns (uint32) {
-    int128 distanceSquared = (a.x - b.x)**2 + (a.y - b.y)**2;
+    int128 distanceSquared = (a.x - b.x) ** 2 + (a.y - b.y) ** 2;
     return uint32(Math.toUInt(Math.sqrt(Math.fromInt(distanceSquared))));
   }
 }
