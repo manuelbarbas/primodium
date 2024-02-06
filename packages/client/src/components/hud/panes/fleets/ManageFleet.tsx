@@ -1,6 +1,5 @@
 import { Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EFleetStance } from "contracts/config/enums";
 import { FC, useMemo } from "react";
 import { Button } from "src/components/core/Button";
@@ -25,7 +24,6 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
   const scene = api.scene.getScene(Scenes.Starmap);
 
   const { BackButton, NavButton } = useFleetNav();
-  const selectedRock = components.SelectedRock.get()?.value;
 
   const units = useUnitCounts(fleetEntity);
   const resources = useFullResourceCounts(fleetEntity);
@@ -35,6 +33,8 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
     () => [...resources.values()].reduce((acc, cur) => acc + cur.resourceCount, 0n),
     [resources]
   );
+  const time = components.Time.use()?.value ?? 0n;
+  const movement = components.FleetMovement.use(fleetEntity);
 
   // const destination = components.FleetMovement.getWithKeys({ entity: fleetEntity as Hex })?.destination;
   // const fleetsOnAsteroidQuery = [Has(components.IsFleet), HasValue(components.FleetMovement, { destination })];
@@ -49,17 +49,20 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
   // });
 
   const activeStance = components.FleetStance.use(fleetEntity);
+  const cannotDoAnything = totalUnits <= 0n || !movement || movement.arrivalTime > time;
 
   const handleDefend = () => {
-    if (!selectedRock) return;
+    const position = movement?.destination as Entity;
+    if (!position) return;
     if (activeStance?.stance == EFleetStance.Defend) clearFleetStance(mud, fleetEntity);
-    setFleetStance(mud, fleetEntity, EFleetStance.Defend, selectedRock);
+    setFleetStance(mud, fleetEntity, EFleetStance.Defend, position);
   };
 
   const handleBlock = () => {
-    if (!selectedRock) return;
+    const position = movement?.destination as Entity;
+    if (!position) return;
     if (activeStance?.stance == EFleetStance.Block) clearFleetStance(mud, fleetEntity);
-    setFleetStance(mud, fleetEntity, EFleetStance.Block, selectedRock);
+    setFleetStance(mud, fleetEntity, EFleetStance.Block, position);
   };
 
   // const handleFollow = (target: Entity) => {
@@ -95,7 +98,12 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               <p className="w-full h-full grid place-items-center text-xs uppercase font-bold">No Units</p>
             )}
 
-            <NavButton className="btn-primary btn-xs w-fit self-end" goto="transfer" to={fleetEntity}>
+            <NavButton
+              className="btn-primary btn-xs w-fit self-end"
+              goto="transfer"
+              from={movement?.destination as Entity}
+              to={fleetEntity}
+            >
               Transfer Units
             </NavButton>
           </div>
@@ -121,7 +129,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
             <NavButton
               className="btn-primary btn-xs w-fit self-end"
               goto="transfer"
-              from={selectedRock ?? singletonEntity}
+              from={movement?.destination as Entity}
               to={fleetEntity}
             >
               Transfer Resources
@@ -142,7 +150,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               )}
             </div>
             <p className="italic opacity-50 text-xs">Use this fleet{"'"}s units to defend this space rock</p>
-            <Button className="btn btn-primary btn-sm" onClick={handleDefend} disabled={totalUnits <= 0n}>
+            <Button className="btn btn-primary btn-sm" onClick={handleDefend} disabled={cannotDoAnything}>
               {activeStance?.stance == EFleetStance.Defend ? "STOP DEFENDING" : "DEFEND"}
             </Button>
             <div className="flex items-center gap-1 uppercase font-bold">
@@ -152,7 +160,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               )}
             </div>
             <p className="italic opacity-50 text-xs">Stop other fleets from leaving this space rock</p>
-            <Button className="btn btn-primary btn-sm" onClick={handleBlock} disabled={totalUnits <= 0n}>
+            <Button className="btn btn-primary btn-sm" onClick={handleBlock} disabled={cannotDoAnything}>
               {activeStance?.stance == EFleetStance.Block ? "STOP BLOCKING" : "BLOCK"}
             </Button>
             {/* <div className="flex items-center gap-1 uppercase font-bold">
@@ -189,7 +197,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
           <div className="flex flex-col gap-2">
             <Modal.CloseButton
               className="btn btn-primary btn-sm"
-              disabled={totalUnits <= 0}
+              disabled={cannotDoAnything}
               onClick={() => {
                 if (!scene) return;
                 components.Attack.reset();
@@ -202,7 +210,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
 
             <Modal.CloseButton
               className="btn btn-primary btn-sm"
-              disabled={totalUnits <= 0}
+              disabled={cannotDoAnything}
               onClick={async () => {
                 if (!scene) return;
                 components.Send.reset();
@@ -221,7 +229,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
             <TransactionQueueMask queueItemId={"landFleet" as Entity}>
               <Button
                 className="btn btn-primary btn-sm w-full"
-                onClick={() => selectedRock && landFleet(mud, fleetEntity, selectedRock)}
+                onClick={() => movement?.destination && landFleet(mud, fleetEntity, movement.destination as Entity)}
                 disabled={totalUnits <= 0n}
               >
                 LAND
