@@ -1,5 +1,6 @@
 import { Type } from "@latticexyz/recs";
 import { world } from "../world";
+import { createBattleComponents } from "./customComponents/BattleComponents";
 import {
   createExtendedBigIntComponent,
   createExtendedBoolComponent,
@@ -8,6 +9,7 @@ import {
   createExtendedEntityComponent,
   createExtendedNumberComponent,
 } from "./customComponents/ExtendedComponent";
+import createSendComponent from "./customComponents/SendComponent";
 import { createTransactionQueueComponent } from "./customComponents/TransactionQueueComponent";
 
 /* -------------------------------------------------------------------------- */
@@ -78,6 +80,20 @@ export const Hangar = createExtendedComponent(
     id: "Hangar",
   }
 );
+
+/* -------------------------------------------------------------------------- */
+/*                                    Fleet                                   */
+/* -------------------------------------------------------------------------- */
+
+export const Send = createSendComponent();
+export const Attack = createSendComponent();
+
+export const SelectedFleet = createExtendedEntityComponent(world, { id: "SelectedFleet" });
+
+export const Battle = createBattleComponents();
+
+// this component is used to freeze orbiting of fleets when a battle is rendering
+export const BattleRender = createExtendedEntityComponent(world, { id: "BattleRender" });
 
 /* -------------------------------------------------------------------------- */
 /*                                 Leaderboard                                */
@@ -183,6 +199,13 @@ export default {
   /* ---------------------------------- Units --------------------------------- */
   TrainingQueue,
   Hangar,
+
+  /* --------------------------------- Fleets --------------------------------- */
+  Send,
+  Attack,
+  SelectedFleet,
+  Battle,
+  BattleRender,
 
   /* ------------------------------ Leaderboard ------------------------------- */
   Leaderboard,

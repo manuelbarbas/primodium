@@ -113,18 +113,17 @@ contract TrainUnitsSystemTest is PrimodiumTest {
       "next colony ship cost does not match expectation"
     );
     EResource resource = COLONY_SHIP_COST_RESOURCE;
-    increaseResource(aliceHomeSpaceRock, resource, amount);
-    assertEq(ResourceCount.get(aliceHomeSpaceRock, uint8(resource)), amount, "resource count does not match");
     trainUnits(alice, EUnit.ColonyShip, 1, true);
-    assertEq(ResourceCount.get(aliceHomeSpaceRock, uint8(resource)), 0, "resource count does not match");
+    assertEq(ResourceCount.get(aliceHomeSpaceRock, uint8(resource)), 0, "special resource should have been spent");
   }
 
   function testFailTrainColonyShipNoSpecialResource() public {
     vm.startPrank(alice);
     bytes32 aliceHomeSpaceRock = world.spawn();
     vm.stopPrank();
-
-    trainUnits(alice, EUnit.ColonyShip, 1, true);
+    increaseResource(aliceHomeSpaceRock, EResource.U_Vessel, 1);
+    //this func doesn't provide resources
+    trainUnits(alice, Home.get(aliceHomeSpaceRock), P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip)), 1, true);
   }
 
   function testTrainColonyShipsCostIncrease() public {
@@ -135,20 +134,23 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     uint256 amount = COLONY_SHIP_BASE_COST * 2;
     EResource resource = COLONY_SHIP_COST_RESOURCE;
     increaseResource(aliceHomeSpaceRock, resource, amount);
-    trainUnits(alice, EUnit.ColonyShip, 1, true);
+    increaseResource(aliceHomeSpaceRock, EResource.U_Vessel, 1);
+    trainUnits(alice, Home.get(aliceHomeSpaceRock), P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip)), 1, true);
 
     amount *= 2;
     increaseResource(aliceHomeSpaceRock, resource, amount);
+    increaseResource(aliceHomeSpaceRock, EResource.U_Vessel, 1);
     assertEq(
       amount,
       COLONY_SHIP_BASE_COST * LibUnit.getNextColonyShipResourceCostMultiplier(aliceHomeSpaceRock),
       "next colony ship cost does not match expectation"
     );
-    trainUnits(alice, EUnit.ColonyShip, 1, true);
+    trainUnits(alice, Home.get(aliceHomeSpaceRock), P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip)), 1, true);
 
     amount *= 2;
     increaseResource(aliceHomeSpaceRock, resource, amount);
-    trainUnits(alice, EUnit.ColonyShip, 1, true);
+    increaseResource(aliceHomeSpaceRock, EResource.U_Vessel, 1);
+    trainUnits(alice, Home.get(aliceHomeSpaceRock), P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip)), 1, true);
   }
 
   function testFailTrainColonyShipsNoCostIncrease() public {

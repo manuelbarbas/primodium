@@ -535,7 +535,6 @@ export const UnitEnumLookup: Record<Entity, EUnit> = {
   [EntityType.StingerDrone]: EUnit.StingerDrone,
   [EntityType.AnvilDrone]: EUnit.AnvilDrone,
   [EntityType.AegisDrone]: EUnit.AegisDrone,
-  [EntityType.MiningVessel]: EUnit.MiningVessel,
   [EntityType.MinutemanMarine]: EUnit.MinutemanMarine,
   [EntityType.TridentMarine]: EUnit.TridentMarine,
   [EntityType.LightningCraft]: EUnit.LightningCraft,

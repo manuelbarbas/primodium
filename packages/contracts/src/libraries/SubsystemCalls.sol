@@ -4,7 +4,6 @@ pragma solidity >=0.8.21;
 import { getSystemResourceId, entityToAddress } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 import { DUMMY_ADDRESS } from "src/constants.sol";
-import { NewBattleResultData } from "codegen/index.sol";
 import { Position, PositionData } from "codegen/index.sol";
 import { EBuilding } from "src/Types.sol";
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
@@ -41,13 +40,19 @@ function fleetBattleResolveRaid(bytes32 battleId, bytes32 raider, bytes32 target
   );
 }
 
-function fleetResolveBattleEncryption(bytes32 battleId, bytes32 aggressorEntity, bytes32 targetEntity) {
+function fleetResolveBattleEncryption(
+  bytes32 battleId,
+  bytes32 targetSpaceRock,
+  bytes32 aggressorEntity,
+  bytes32 unitWithDecryptionPrototype,
+  uint256 decryption
+) {
   SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
     getSystemResourceId("S_FleetBattleResolveEncryptionSystem"),
     abi.encodeCall(
       S_FleetBattleResolveEncryptionSystem.resolveBattleEncryption,
-      (battleId, aggressorEntity, targetEntity)
+      (battleId, targetSpaceRock, aggressorEntity, unitWithDecryptionPrototype, decryption)
     ),
     0
   );

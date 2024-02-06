@@ -6,26 +6,28 @@ import { components } from "src/network/components";
 import { HUD } from "../core/HUD";
 import { Modal } from "../core/Modal";
 import { BrandingLabel } from "../shared/BrandingLabel";
-import { AsteroidTarget } from "./AsteroidTarget";
 import { CurrentObjective } from "./CurrentObjective";
-import { HoverInfo } from "./HoverInfo";
-import { Profile } from "./Profile";
-import { ActiveMarker } from "./markers/ActiveMarker";
-import { HomeMarker } from "./markers/HomeMarker";
-import HackerConsole from "./modals/HackerConsole";
-import { MenuButtons } from "./MenuButtons";
 import { MapButton } from "./MapButton";
+import { Profile } from "./Profile";
+import { MenuButtons } from "./MenuButtons";
 import { SpectatingDetails } from "./SpectatingDetails";
 import { Resources } from "./panes/resources/Resources";
 import { Blueprints } from "./panes/blueprints/Blueprints";
+import { HoverInfo } from "./hover/HoverInfo";
+import { ActiveMarker } from "./markers/ActiveMarker";
+import { HomeMarker } from "./markers/HomeMarker";
+import HackerConsole from "./modals/HackerConsole";
+import { AsteroidTarget } from "./starmap/AsteroidTarget";
+import { FleetTarget } from "./starmap/FleetTarget";
+import { HoverTarget } from "./starmap/HoverTarget";
 
 export const GameHUD = () => {
   const {
     playerAccount: { entity: playerEntity },
   } = useMud();
 
-  const activeRock = components.ActiveRock.use()?.value;
-  const ownedBy = components.OwnedBy.use(activeRock)?.value;
+  const selectedRock = components.SelectedRock.use()?.value;
+  const ownedBy = components.OwnedBy.use(selectedRock)?.value;
   const isSpectating = ownedBy !== playerEntity;
   const uiScale = usePersistantStore((state) => state.uiScale);
 
@@ -48,6 +50,8 @@ export const GameHUD = () => {
         <HomeMarker />
 
         <AsteroidTarget />
+        <FleetTarget />
+        <HoverTarget />
 
         {/* GAME PANES */}
         <Resources />

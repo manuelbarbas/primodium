@@ -1,10 +1,10 @@
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 import { clone, throttle } from "lodash";
 import { useEffect, useState } from "react";
-import { usePersistantStore } from "../stores/PersistantStore";
-import { Coord } from "@latticexyz/utils";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { getDegreeDirection } from "src/util/common";
+import { usePersistantStore } from "../stores/PersistantStore";
 
 export function createHooksApi(targetScene: Scene) {
   function useKeybinds() {
@@ -37,10 +37,10 @@ export function createHooksApi(targetScene: Scene) {
     };
   }
 
-  function useCoordToScreenCoord(coord: Coord, bounded = false, raw = false) {
+  function useCoordToScreenCoord(coord: Coord, bounded = false) {
     const {
       tilemap: { tileHeight, tileWidth },
-      camera,
+      camera: { phaserCamera, worldView$ },
     } = targetScene;
 
     const [state, setState] = useState({
@@ -50,10 +50,10 @@ export function createHooksApi(targetScene: Scene) {
     });
 
     useEffect(() => {
-      const worldViewListener = camera?.worldView$.subscribe((worldView) => {
-        const pixelCoord = raw ? coord : tileCoordToPixelCoord(coord, tileWidth, tileHeight);
-        const zoom = camera.phaserCamera.zoom;
-        pixelCoord.y = raw ? pixelCoord.y : -pixelCoord.y; // Adjust for coordinate system. Y is inverted in Phaser
+      const callback = (worldView: Phaser.Geom.Rectangle) => {
+        const pixelCoord = tileCoordToPixelCoord(coord, tileWidth, tileHeight);
+        const zoom = phaserCamera.zoom;
+        pixelCoord.y = -pixelCoord.y; // Adjust for coordinate system. Y is inverted in Phaser
 
         let isBoundedTemp = false;
 
@@ -86,10 +86,11 @@ export function createHooksApi(targetScene: Scene) {
           isBounded: isBoundedTemp,
           direction: newDirection,
         });
-      });
-
-      return () => worldViewListener?.unsubscribe();
-    }, [camera, coord, bounded, tileHeight, tileWidth, raw]);
+      };
+      callback(phaserCamera.worldView);
+      const worldViewListener = worldView$.subscribe(callback);
+      return () => worldViewListener.unsubscribe();
+    }, [coord, bounded, phaserCamera, tileHeight, tileWidth, worldView$]);
 
     return state;
   }

@@ -2372,13 +2372,23 @@
       },
       {
         "internalType": "bytes32",
+        "name": "targetSpaceRock",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
         "name": "aggressorEntity",
         "type": "bytes32"
       },
       {
         "internalType": "bytes32",
-        "name": "targetEntity",
+        "name": "aggressorDecryptionUnitPrototype",
         "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "aggressorDecryption",
+        "type": "uint256"
       }
     ],
     "name": "resolveBattleEncryption",
@@ -3149,12 +3159,12 @@
     "inputs": [
       {
         "internalType": "bytes32",
-        "name": "aggressorEntity",
+        "name": "spaceRock",
         "type": "bytes32"
       },
       {
         "internalType": "bytes32",
-        "name": "targetEntity",
+        "name": "newOwner",
         "type": "bytes32"
       }
     ],
