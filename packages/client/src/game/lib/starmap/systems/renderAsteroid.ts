@@ -244,11 +244,13 @@ export const renderAsteroid = (scene: Scene) => {
         yoyo: true,
         repeat: -1,
       }),
-      OnComponentSystem(components.FleetStance, (gameObject, { entity: fleetEntity, value: [newVal, oldVal] }) => {
+      OnComponentSystem(components.FleetStance, (gameObject, { entity: fleetEntity }) => {
         const fleetPosition = components.FleetMovement.get(fleetEntity)?.destination;
         if (fleetPosition !== entity) return;
-        if (newVal?.stance === EFleetStance.Block) gameObject.alpha = 0.5;
-        if (oldVal?.stance === EFleetStance.Block && newVal?.stance !== EFleetStance.Block) gameObject.alpha = 0;
+        const isBlocked = !!getOrbitingFleets(entity).find(
+          (fleet) => components.FleetStance.get(fleet)?.stance == EFleetStance.Block
+        );
+        gameObject.alpha = isBlocked ? 0.5 : 0;
       }),
     ]);
   };
