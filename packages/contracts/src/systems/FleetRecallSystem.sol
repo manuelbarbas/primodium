@@ -17,7 +17,9 @@ contract FleetRecallSystem is FleetBaseSystem {
     _;
   }
 
-  function recallFleet(bytes32 fleetId) public _onlyFleetOwner(fleetId) _onlyWhenOriginIsNotPirateAsteroid(fleetId) {
+  function recallFleet(
+    bytes32 fleetId
+  ) public _onlyFleetOwner(fleetId) _onlyWhenOriginIsNotPirateAsteroid(fleetId) _onlyWhenNotInStance(fleetId) {
     LibFleetMove.recallFleet(fleetId);
   }
 }

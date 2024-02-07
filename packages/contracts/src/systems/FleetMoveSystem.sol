@@ -55,6 +55,7 @@ contract FleetMoveSystem is FleetBaseSystem {
     _onlyIfAsteroidExists(spaceRock)
     _onlyFleetOwner(fleetId)
     _onlyWhenFleetIsInOrbit(fleetId)
+    _onlyWhenNotInStance(fleetId)
     _onlyOtherSpaceRock(fleetId, spaceRock)
     _onlyWhenNotPirateAsteroidOrHasNotBeenDefeated(spaceRock)
     _onlyWhenPersonalPirate(spaceRock)

@@ -3,7 +3,8 @@ pragma solidity >=0.8.21;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
-import { OwnedBy, FleetMovement, P_UnitPrototypes, P_Transportables, PirateAsteroid } from "src/codegen/index.sol";
+import { EFleetStance } from "src/Types.sol";
+import { FleetStance, OwnedBy, FleetMovement, P_UnitPrototypes, P_Transportables, PirateAsteroid } from "src/codegen/index.sol";
 
 contract FleetBaseSystem is PrimodiumSystem {
   modifier _onlyFleetOwner(bytes32 fleetId) {
@@ -68,6 +69,14 @@ contract FleetBaseSystem is PrimodiumSystem {
     require(
       !PirateAsteroid.getIsPirateAsteroid(spaceRock) || PirateAsteroid.getPlayerEntity(spaceRock) == _player(),
       "[Fleet] Can only attack personal pirate asteroids"
+    );
+    _;
+  }
+
+  modifier _onlyWhenNotInStance(bytes32 fleetId) {
+    require(
+      FleetStance.getStance(fleetId) == uint8(EFleetStance.NULL),
+      "[Fleet] Can not attack while fleet is in stance"
     );
     _;
   }

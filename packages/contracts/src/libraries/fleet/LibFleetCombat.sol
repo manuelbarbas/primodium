@@ -117,20 +117,6 @@ library LibFleetCombat {
     BattleEncryptionResult.set(battleId, targetSpaceRock, encryptionAtStart, encryptionAtEnd);
   }
 
-  function transferSpaceRockOwnership(bytes32 spaceRock, bytes32 newOwner) internal {
-    bytes32 lastOwner = OwnedBy.get(spaceRock);
-    if (lastOwner != bytes32(0)) {
-      //clear defending fleets
-      LibFleetStance.clearDefendingFleets(spaceRock);
-      //disband all fleets
-      LibFleetDisband.disbandAllFleets(spaceRock);
-
-      ColoniesMap.remove(lastOwner, AsteroidOwnedByKey, spaceRock);
-    }
-    OwnedBy.set(spaceRock, newOwner);
-    ColoniesMap.add(newOwner, AsteroidOwnedByKey, spaceRock);
-  }
-
   function getAllies(bytes32 entity) internal view returns (bytes32[] memory) {
     return IsFleet.get(entity) ? LibFleetStance.getFollowerFleets(entity) : LibFleetStance.getDefendingFleets(entity);
   }
