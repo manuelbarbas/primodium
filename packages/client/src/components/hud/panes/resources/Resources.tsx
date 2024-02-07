@@ -14,7 +14,7 @@ export const Resources = memo(() => {
       title="ASTEROID RESOURCES"
       defaultCoord={{ x: 26, y: 11 }}
       scene={Scenes.Asteroid}
-      origin="center-left"
+      // origin="center-left"
       minOpacity={0.5}
       draggable
       persist

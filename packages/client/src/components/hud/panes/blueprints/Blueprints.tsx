@@ -14,13 +14,14 @@ export const Blueprints = memo(() => {
     <Pane
       id="blueprints"
       title="BLUEPRINTS"
-      defaultCoord={{ x: 11, y: 11.5 }}
+      defaultCoord={{ x: 20, y: 800 }}
+      // defaultPinned
       scene={Scenes.Asteroid}
       minOpacity={0.5}
       draggable
       pinnable
       persist
-      origin="center-right"
+      // origin="center-right"
     >
       <AllBlueprints />
     </Pane>

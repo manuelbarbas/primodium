@@ -62,7 +62,7 @@ const BlueprintButton: React.FC<{
     >
       <BuildingImageFromType buildingType={buildingType} />
       {!hasMainbaseLevel && (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-error flex text-xs bg">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-error flex text-[.6rem] bg">
           <p className="bg-neutral flex gap-1">
             <FaLock /> LVL. {levelRequirement.toString()}
           </p>
@@ -83,11 +83,10 @@ export const AllBlueprints = () => {
 
   return (
     <>
-      <div className="p-2 flex flex-col h-fit w-full gap-1 items-start">
+      <div className="p-2 flex flex-col gap-1 items-start">
         <div className={`p-1 flex flex-col gap-6 items-center w-full ${index === 0 ? " bg-success/10" : ""}`}>
           <div className="flex border-b border-secondary justify-between w-full">
             <p className="text-xs opacity-75 font-bold text-success">BASIC</p>
-            <div className="flex gap-1 items-center text-xs text-warning">*</div>
           </div>
           <div className="grid grid-cols-4 gap-1 w-full">
             <BlueprintButton
@@ -126,7 +125,6 @@ export const AllBlueprints = () => {
         <div className={`flex flex-col gap-6 w-full items-center p-1 ${index === 1 ? " bg-success/10" : ""}`}>
           <div className="flex border-b border-secondary justify-between w-full">
             <p className="text-xs opacity-75 font-bold text-info">ADVANCED</p>
-            <div className="flex gap-1 items-center text-xs text-warning">**</div>
           </div>
           <div className="grid grid-cols-4 gap-2 w-full">
             <BlueprintButton
@@ -171,7 +169,6 @@ export const AllBlueprints = () => {
         <div className={`flex flex-col gap-6 w-full items-center p-1 ${index === 2 ? " bg-success/10" : ""}`}>
           <div className="flex border-b border-secondary justify-between w-full">
             <p className="text-xs opacity-75 font-bold text-warning">ELITE</p>
-            <div className="flex gap-1 items-center text-xs text-warning">***</div>
           </div>
           <div className="grid grid-cols-4 gap-2 w-full">
             <BlueprintButton

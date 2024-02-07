@@ -32,7 +32,7 @@ export const Score: React.FC<{ player: Entity }> = ({ player }) => {
         <span className="font-pixel">
           {formatResourceCount(singletonEntity, BigInt(score), {
             short: true,
-            showZero: false,
+            showZero: true,
             fractionDigits: 2,
           })}
         </span>
