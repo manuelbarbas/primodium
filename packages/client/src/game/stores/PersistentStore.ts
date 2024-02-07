@@ -32,7 +32,7 @@ type Volume = {
 
 type Channel = "music" | "sfx" | "ui" | "master";
 
-type PersistantState = {
+type PersistentState = {
   newPlayer: boolean;
   keybinds: Keybinds;
   volume: Volume;
@@ -43,7 +43,7 @@ type PersistantState = {
   panes: Panes;
 };
 
-type PersistantActions = {
+type PersistentActions = {
   replaceKey: (keybindAction: KeybindActions, oldKey: Key, newKey: Key) => void;
   addKey: (keybindAction: KeybindActions, key: Key) => void;
   removeKey: (keybindAction: KeybindActions, key: Key) => void;
@@ -59,7 +59,7 @@ type PersistantActions = {
   resetPanes: () => void;
 };
 
-const defaults: PersistantState = {
+const defaults: PersistentState = {
   newPlayer: true,
   allowHackerModal: false,
   noExternalWallet: false,
@@ -107,7 +107,7 @@ const defaults: PersistantState = {
   },
 };
 
-export const usePersistantStore = create<PersistantState & PersistantActions>()(
+export const usePersistentStore = create<PersistentState & PersistentActions>()(
   persist(
     (set, get) => ({
       ...defaults,
@@ -174,12 +174,12 @@ export const usePersistantStore = create<PersistantState & PersistantActions>()(
       },
     }),
     {
-      name: "persistant-storage",
+      name: "persistent-storage",
       // handle parsing of set objects since storing raw sets is not possible due to stringify behavior
       storage: {
         getItem: (key) => {
           const str = localStorage.getItem(key);
-          const result: PersistantState["keybinds"] = {};
+          const result: PersistentState["keybinds"] = {};
           const parsed = JSON.parse(str!);
           const version: number = parsed.version;
           const keybinds = parsed.state.keybinds as Partial<{
@@ -235,7 +235,7 @@ export const usePersistantStore = create<PersistantState & PersistantActions>()(
       migrate: (persistedStore: any, version) => {
         if (version === VERSION) return persistedStore;
 
-        return { ...persistedStore!, ...defaults } as PersistantState & PersistantActions;
+        return { ...persistedStore!, ...defaults } as PersistentState & PersistentActions;
       },
     }
   )
@@ -243,5 +243,5 @@ export const usePersistantStore = create<PersistantState & PersistantActions>()(
 
 //store dev tools
 if (import.meta.env.VITE_DEV === "true") {
-  mountStoreDevtool("SettingsStore", usePersistantStore);
+  mountStoreDevtool("SettingsStore", usePersistentStore);
 }

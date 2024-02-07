@@ -1,5 +1,5 @@
 import { FaClipboard, FaExclamationCircle, FaTrash } from "react-icons/fa";
-import { useSettingsStore } from "src/game/stores/SettingsStore";
+import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useMud } from "src/hooks";
 import { copyToClipboard } from "src/util/clipboard";
 import { Button } from "../core/Button";
@@ -9,7 +9,7 @@ import { Delegate } from "./Delegate";
 export function Account() {
   const mud = useMud();
   const { playerAccount } = mud;
-  const { setNoExternalWallet } = useSettingsStore();
+  const { setNoExternalWallet } = usePersistentStore();
 
   const removeBurnerPlayerAccount = () => {
     const go = confirm(`Are you sure you want to delete your player account? Don't forget to backup your keys!`);

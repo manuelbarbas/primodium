@@ -5,7 +5,7 @@ import { FaExclamationTriangle, FaRegCopyright } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { useAccount, useConnect } from "wagmi";
-import { useSettingsStore } from "./game/stores/SettingsStore";
+import { usePersistentStore } from "./game/stores/PersistentStore";
 
 const params = new URLSearchParams(window.location.search);
 
@@ -18,7 +18,7 @@ const connectorIcons: Record<string, string> = {
 export const Connect: React.FC = () => {
   const { connector, isConnected } = useAccount();
   const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
-  const { noExternalWallet, setNoExternalWallet } = useSettingsStore();
+  const { noExternalWallet, setNoExternalWallet } = usePersistentStore();
   const [showingToast, setShowingToast] = useState(false);
 
   useEffect(() => {

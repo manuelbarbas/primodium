@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
 import "react-toastify/dist/ReactToastify.min.css";
+import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { Hex } from "viem";
 import { useAccount } from "wagmi";
 import AppLoadingState from "./AppLoadingState";
 import { Initializing } from "./components/shared/Initializing";
-import { useSettingsStore } from "./game/stores/SettingsStore";
 import { MudProvider } from "./hooks/providers/MudProvider";
 import useSetupResult from "./hooks/useSetupResult";
 import { world } from "./network/world";
@@ -19,7 +19,7 @@ export default function SetupResultProvider() {
   const { network, updatePlayerAccount, playerAccount, components } = setupResult;
   const externalAccount = useAccount();
   const mounted = useRef<boolean>(false);
-  const { noExternalWallet } = useSettingsStore();
+  const { noExternalWallet } = usePersistentStore();
 
   useEffect(() => {
     /* This cheese exists because otherwise there is a race condition to check if the player 
