@@ -5,6 +5,7 @@ import { WagmiConfig } from "wagmi";
 import { Connect } from "./Connect";
 import SetupResultProvider from "./SetupResultProvider";
 import { ampli } from "./ampli";
+import { NoExternalAccountContextProvider } from "./hooks/useNoExternalAccount";
 import { Maintenance } from "./screens/Maintenance";
 import { wagmiConfig } from "./util/web3/wagmi";
 
@@ -24,23 +25,25 @@ export default function App() {
   if (MAINTENANCE) return <Maintenance />;
 
   return (
-    <WagmiConfig config={wagmiConfig}>
-      <ToastContainer
-        toastClassName={`font-mono text-xs border bg-neutral border-secondary rounded-box`}
-        progressClassName={"bg-accent"}
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
-      <Connect />
-      <SetupResultProvider />
-    </WagmiConfig>
+    <NoExternalAccountContextProvider>
+      <WagmiConfig config={wagmiConfig}>
+        <ToastContainer
+          toastClassName={`font-mono text-xs border bg-neutral border-secondary rounded-box`}
+          progressClassName={"bg-accent"}
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
+        <Connect />
+        <SetupResultProvider />
+      </WagmiConfig>
+    </NoExternalAccountContextProvider>
   );
 }

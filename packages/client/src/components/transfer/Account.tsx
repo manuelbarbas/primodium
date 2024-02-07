@@ -11,7 +11,7 @@ import { Delegate } from "./Delegate";
 export function Account() {
   const mud = useMud();
   const { playerAccount } = mud;
-  const { setNoExternalAccount } = useNoExternalAccount();
+  const { removeNoExternalAccount } = useNoExternalAccount();
   const [showingToast, setShowingToast] = useState(false);
 
   const removeBurnerPlayerAccount = async () => {
@@ -31,8 +31,7 @@ export function Account() {
               className="btn btn-secondary btn-xs"
               onClick={() => {
                 closeToast && closeToast();
-                setNoExternalAccount(false);
-                localStorage.removeItem("primodiumPlayerAccount");
+                removeNoExternalAccount();
               }}
             >
               Confirm
