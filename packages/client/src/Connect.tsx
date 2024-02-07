@@ -34,7 +34,7 @@ export const Connect: React.FC = () => {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col text-center justify-center items-center gap-2 w-full">
             <FaExclamationTriangle size={24} className="text-warning" />
-            Are you sure you want to play as guest? You will not be able to win prizes or play across devices.
+            Are you sure you want to login as guest? You will not be able to win prizes or play across devices.
           </div>
 
           <div className="flex justify-center w-full gap-2">
@@ -101,7 +101,7 @@ export const Connect: React.FC = () => {
               className="btn-lg btn-secondary star-background w-full btn join-item inline pointer-events-auto font-bold outline-none h-fit z-10"
               onClick={confirmToast}
             >
-              Play as Guest
+              Login as Guest
             </button>
 
             {chunk(

@@ -35,7 +35,7 @@ export const Landing: React.FC = () => {
   const wrongChain = !noExternalAccount && chain?.id !== expectedChain?.id;
   const { isLoading, pendingChainId, switchNetwork } = useSwitchNetwork();
 
-  const EnterButton = () =>
+  const PlayButton = () =>
     wrongChain ? (
       <button
         disabled={!switchNetwork || expectedChain.id === chain?.id}
@@ -52,7 +52,7 @@ export const Landing: React.FC = () => {
         }}
         className="btn join=item inline pointer-events-auto font-bold outline-none h-fit btn-secondary w-full star-background hover:scale-125 relative"
       >
-        enter
+        Play
       </button>
     );
   return (
@@ -77,7 +77,7 @@ export const Landing: React.FC = () => {
           </div>
 
           <TransactionQueueMask queueItemId={singletonEntity} className="w-4/5 z-10">
-            <EnterButton />
+            <PlayButton />
           </TransactionQueueMask>
 
           <div className="absolute bottom-0 right-0 p-2 font-bold opacity-50">
