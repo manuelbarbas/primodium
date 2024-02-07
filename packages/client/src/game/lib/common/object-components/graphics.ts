@@ -29,18 +29,24 @@ function drawLine(
 
 function drawCircle(
   gameObject: Phaser.GameObjects.Graphics,
-  position: Coord,
-  radius: number,
-  color: number,
-  alpha: number,
-  borderThickness: number
+  options: {
+    position: Coord;
+    radius: number;
+    color: number | undefined;
+    strokeColor: number | undefined;
+    alpha: number;
+    borderAlpha?: number;
+    borderThickness: number;
+  }
 ) {
-  const pos = getRelativeCoord(gameObject, position);
+  const fillColor = options.color;
+  const borderColor = options.strokeColor ?? options.color;
+  const pos = getRelativeCoord(gameObject, options.position);
 
-  gameObject.fillStyle(color, alpha);
-  gameObject.lineStyle(borderThickness, color);
-  gameObject.strokeCircle(pos.x, pos.y, radius);
-  gameObject.fillCircle(pos.x, pos.y, radius);
+  fillColor && gameObject.fillStyle(fillColor, options.alpha);
+  borderColor && gameObject.lineStyle(options.borderThickness, borderColor, options.borderAlpha);
+  gameObject.strokeCircle(pos.x, pos.y, options.radius);
+  gameObject.fillCircle(pos.x, pos.y, options.radius);
 }
 
 function calculateTrianglePoints(width: number, height: number, directionDegrees: number, centroid: Coord) {
@@ -190,16 +196,26 @@ export const Circle = (
     position?: Coord;
     id?: string;
     color?: number;
+    borderColor?: number;
     alpha?: number;
     borderThickness?: number;
+    borderAlpha?: number;
   } = {}
 ): GameObjectComponent<"Graphics"> => {
-  const { position, id, color = 0xffffff, alpha = 0.3, borderThickness = 1 } = options;
+  const { position, id, color, borderColor, alpha = 0.3, borderThickness = 1 } = options;
 
   return {
     id: id ?? `circle_${uuid()}`,
     once: (gameObject) => {
-      drawCircle(gameObject, position ?? { x: gameObject.x, y: gameObject.y }, radius, color, alpha, borderThickness);
+      drawCircle(gameObject, {
+        strokeColor: borderColor,
+        position: position ?? { x: gameObject.x, y: gameObject.y },
+        radius,
+        color,
+        alpha,
+        borderThickness,
+        borderAlpha: options.borderAlpha,
+      });
     },
   };
 };

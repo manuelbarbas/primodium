@@ -2,6 +2,7 @@ import { Assets, DepthLayers, RENDER_INTERVAL, SpriteKeys } from "@game/constant
 import { Entity, Has, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
+import { EFleetStance } from "contracts/config/enums";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
 import { interval } from "rxjs";
@@ -22,6 +23,7 @@ import {
   SetValue,
   Tween,
 } from "../../common/object-components/common";
+import { Circle } from "../../common/object-components/graphics";
 import { Outline, Texture } from "../../common/object-components/sprite";
 import { ObjectText } from "../../common/object-components/text";
 import { getOutlineSprite, getRockSprite, getSecondaryOutlineSprite } from "./utils/getSprites";
@@ -213,6 +215,31 @@ export const renderAsteroid = (scene: Scene) => {
         const size = Math.max(8, Math.min(44, 16 / zoom));
 
         gameObject.setFontSize(size);
+      }),
+    ]);
+
+    const asteroidBlockade = asteroidObjectGroup.add("Graphics");
+
+    asteroidBlockade.setComponents([
+      ObjectPosition({
+        x: coord.x * tileWidth,
+        y: -coord.y * tileHeight,
+      }),
+      SetValue({
+        scale: spriteScale,
+        alpha: 0,
+      }),
+      SetValue({ scale: spriteScale, depth: DepthLayers.Marker - 2 }),
+      Circle(128, {
+        borderAlpha: 0.5,
+        borderThickness: 8,
+        borderColor: 0xff0000,
+      }),
+      OnComponentSystem(components.FleetStance, (gameObject, { entity: fleetEntity, value: [newVal, oldVal] }) => {
+        const fleetPosition = components.FleetMovement.get(fleetEntity)?.destination;
+        if (fleetPosition !== entity) return;
+        if (newVal?.stance === EFleetStance.Block) gameObject.alpha = 0.5;
+        if (oldVal?.stance === EFleetStance.Block && newVal?.stance !== EFleetStance.Block) gameObject.alpha = 0;
       }),
     ]);
   };

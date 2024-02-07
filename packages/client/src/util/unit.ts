@@ -119,6 +119,7 @@ export const getAllOrbitingFleets = (entity: Entity) => {
     }
   );
 };
+
 export const getFleetTilePosition = (scene: Scene, fleet: Entity) => {
   const { tileHeight, tileWidth } = scene.tilemap;
   const spaceRock = components.FleetMovement.get(fleet)?.destination as Entity;

@@ -50,8 +50,7 @@ function getFleetShape(fleetEntity: Entity, position: Coord) {
 
   const id = `fleetShape-${fleetEntity}`;
   if (stance === EFleetStance.Defend) {
-    console.log("rendering shield", entityToFleetName(fleetEntity));
-    return Shield(16, 16, {
+    return Shield(16, 12, {
       color,
       borderThickness: 1,
       alpha: 0.75,
