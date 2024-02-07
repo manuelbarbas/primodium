@@ -165,9 +165,7 @@ export const renderPirateAsteroid = (scene: Scene) => {
       }),
       OnComponentSystem(components.DefeatedPirate, (gameObject, { entity }) => {
         const { pirate } = decodeEntity(components.DefeatedPirate.metadata.keySchema, entity);
-        console.log("defeated pirate", pirate);
         if (pirate !== entity) return;
-        console.log("defeated pirate");
         asteroidLabel.setComponent(
           ObjectText("DEFEATED PIRATE", {
             id: "addressLabel",
