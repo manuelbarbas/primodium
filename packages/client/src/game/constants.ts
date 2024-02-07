@@ -16,6 +16,7 @@ export enum Scenes {
   Root = "ROOT",
   Asteroid = "MAIN",
   Starmap = "STARMAP",
+  UI = "UI",
 }
 
 export enum Assets {

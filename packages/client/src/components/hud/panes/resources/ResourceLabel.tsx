@@ -7,7 +7,7 @@ import { components } from "src/network/components";
 import { RESOURCE_SCALE, ResourceImage, SPEED_SCALE } from "src/util/constants";
 import { formatNumber } from "src/util/number";
 
-export const MaterialLabel = ({ name, resource }: { name: string; resource: Entity }) => {
+export const ResourceLabel = ({ name, resource }: { name: string; resource: Entity }) => {
   const selectedRock = components.SelectedRock.use()?.value;
 
   const resourceIcon = ResourceImage.get(resource);

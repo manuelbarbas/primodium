@@ -1,12 +1,12 @@
 import { throttle } from "lodash";
 
 import { KeybindActions } from "@game/constants";
-import { useSettingsStore } from "../stores/SettingsStore";
+import { usePersistantStore } from "../stores/PersistantStore";
 import { Key, Scene } from "engine/types";
 
 export function createInputApi(targetScene: Scene) {
   function isDown(keybindAction: KeybindActions) {
-    const keybinds = useSettingsStore.getState().keybinds;
+    const keybinds = usePersistantStore.getState().keybinds;
     const { input } = targetScene;
 
     if (!keybinds[keybindAction]) return false;
@@ -31,7 +31,7 @@ export function createInputApi(targetScene: Scene) {
   }
 
   function isUp(keybindAction: KeybindActions) {
-    const keybinds = useSettingsStore.getState().keybinds;
+    const keybinds = usePersistantStore.getState().keybinds;
     const { input } = targetScene;
 
     if (!keybinds[keybindAction]) return false;
@@ -54,7 +54,7 @@ export function createInputApi(targetScene: Scene) {
   }
 
   function addListener(KeybindActions: KeybindActions, callback: () => void, emitOnRepeat = false, wait = 0) {
-    const keybinds = useSettingsStore.getState().keybinds;
+    const keybinds = usePersistantStore.getState().keybinds;
     const { input } = targetScene;
 
     const fn = throttle(callback, wait);
