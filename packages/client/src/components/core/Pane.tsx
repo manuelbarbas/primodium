@@ -229,120 +229,21 @@ export const Pane: FC<{
     [container, id, minOpacity, pinned]
   );
 
-  //initialize phaser container
-  useEffect(() => {
-    createContainer(pinned ? camera : uiCamera, coord, true);
-
-    return () => {
-      if (container) container.destroy();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [coord]);
-
-  //scale container with camera zoom. Do not scale if pinned
-  useEffect(() => {
-    if (!container || !pinned) return;
-
-    container.scale = 1 / camera.phaserCamera.zoom;
-
-    const sub = camera.zoom$.subscribe((zoom) => {
-      container.scale = 1 / zoom;
-    });
-
-    return () => {
-      sub.unsubscribe();
-    };
-  }, [scene, container, pinned, camera]);
-
-  //handle dragging
-  useEffect(() => {
-    if (!draggable) return;
-    const handleMouseMove = (event: MouseEvent) => {
-      if (dragging) {
-        requestAnimationFrame(() => {
-          const newPixelPosition = (!pinned ? uiCamera : camera).screenCoordToWorldCoord({
-            x: event.clientX,
-            y: event.clientY,
-          });
-
-          const newCoord = { x: newPixelPosition.x - dragOffset.x, y: newPixelPosition.y - dragOffset.y };
-
-          container?.setPosition(newCoord.x, newCoord.y);
-        });
-      }
-    };
-
-    const handleMouseUp = () => {
-      if (dragging) {
-        if (!container) return;
-
-        persist && setPane(id, container, pinned, false);
-      }
-
-      setDragging(false);
-    };
-
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
-
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [dragging, draggable, dragOffset, container, pinned, camera, uiCamera, id, setPane, persist]);
-
-  //TODO: handle reposition of container when window is resized
-  useEffect(() => {
-    const handleResize = () => {
-      if (!container || pinned) return;
-
-      if (!uiCamera.phaserCamera.worldView.contains(container.x, container.y)) {
-        setPinned(true);
-        const newContainer = createContainer(camera, defaultCoord, true);
-        removePane(id);
-        newContainer.setDepth(pinnedDepth);
-        newContainer.setAlpha(minOpacity);
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [pinned, container, camera, defaultCoord, id, removePane, createContainer, uiCamera, minOpacity]);
-
-  const handlePointerEnter = useCallback(() => {
-    if (!container) return;
-
-    if (pinned) {
-      container.setAlpha(1);
-    }
-  }, [pinned, container]);
-
-  const handlePointerLeave = useCallback(() => {
-    if (!container) return;
-
-    if (pinned && !dragging) {
-      container.setAlpha(minOpacity);
-    }
-  }, [pinned, dragging, container, minOpacity]);
-
   // reset on double click to default
   const handleReset = useCallback(() => {
     setPinned(defaultPinned);
-    setLocked(true);
+    setLocked(defaultLocked);
     setCoord(defaultCoord);
     setMinimized(false);
     setDragging(false);
     setDragOffset({ x: 0, y: 0 });
-    setPane(id, defaultCoord, false, true);
+    setPane(id, defaultCoord, defaultPinned, defaultLocked);
 
     // set
     const newContainer = createContainer(defaultPinned ? camera : uiCamera, defaultCoord, true);
     newContainer.setDepth(defaultPinned ? pinnedDepth : unpinnedDepth);
     newContainer.setAlpha(defaultPinned ? minOpacity : 1);
-  }, [defaultPinned, defaultCoord, setPane, id, createContainer, camera, uiCamera, minOpacity]);
+  }, [defaultPinned, defaultCoord, setPane, id, createContainer, camera, uiCamera, minOpacity, defaultLocked]);
 
   // calculate drag offset, set depth and set dragging flag
   const handleMouseDown = useCallback(
@@ -456,6 +357,100 @@ export const Pane: FC<{
     persist && setPane(id, screenCoord, false, false);
   }, [setLocked, id, setPane, persist, createContainer, uiCamera, origin]);
 
+  //initialize phaser container
+  useEffect(() => {
+    createContainer(pinned ? camera : uiCamera, coord, true);
+
+    return () => {
+      if (container) container.destroy();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [coord]);
+
+  //scale container with camera zoom. Do not scale if pinned
+  useEffect(() => {
+    if (!container || !pinned) return;
+
+    container.scale = 1 / camera.phaserCamera.zoom;
+
+    const sub = camera.zoom$.subscribe((zoom) => {
+      container.scale = 1 / zoom;
+    });
+
+    return () => {
+      sub.unsubscribe();
+    };
+  }, [scene, container, pinned, camera]);
+
+  //handle dragging
+  useEffect(() => {
+    if (!draggable) return;
+    const handleMouseMove = (event: MouseEvent) => {
+      if (dragging) {
+        requestAnimationFrame(() => {
+          const newPixelPosition = (!pinned ? uiCamera : camera).screenCoordToWorldCoord({
+            x: event.clientX,
+            y: event.clientY,
+          });
+
+          const newCoord = { x: newPixelPosition.x - dragOffset.x, y: newPixelPosition.y - dragOffset.y };
+
+          container?.setPosition(newCoord.x, newCoord.y);
+        });
+      }
+    };
+
+    const handleMouseUp = () => {
+      if (dragging) {
+        if (!container) return;
+
+        persist && setPane(id, container, pinned, false);
+      }
+
+      setDragging(false);
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [dragging, draggable, dragOffset, container, pinned, camera, uiCamera, id, setPane, persist]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (!container || pinned) return;
+
+      if (!uiCamera.phaserCamera.worldView.contains(container.x, container.y)) {
+        handleReset();
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [pinned, container, camera, defaultCoord, id, removePane, createContainer, uiCamera, minOpacity, handleReset]);
+
+  const handlePointerEnter = useCallback(() => {
+    if (!container) return;
+
+    if (pinned) {
+      container.setAlpha(1);
+    }
+  }, [pinned, container]);
+
+  const handlePointerLeave = useCallback(() => {
+    if (!container) return;
+
+    if (pinned && !dragging) {
+      container.setAlpha(minOpacity);
+    }
+  }, [pinned, dragging, container, minOpacity]);
+
   if (!containerRef || !container || !visible) return null;
 
   if (locked)
@@ -463,13 +458,15 @@ export const Pane: FC<{
       <Content
         id={id}
         title={title}
-        minimized={false}
+        minimized={minimized}
         pinned={false}
         origin={"top-left"}
         onClose={onClose}
         locked={locked}
         onLock={handleLock}
         onUnlock={handleUnlock}
+        onMinimize={toggleMinimize}
+        onMaximize={toggleMinimize}
       >
         {children}
       </Content>
@@ -491,6 +488,7 @@ export const Pane: FC<{
       onMinimize={toggleMinimize}
       onMaximize={toggleMinimize}
       onClose={onClose}
+      onLock={handleLock}
       origin={origin}
     >
       {children}
