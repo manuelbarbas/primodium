@@ -15,8 +15,8 @@ export default {
         120: "30rem",
         132: "33rem",
       },
-      padding: {
-        "0!": "0 !important",
+      dropShadow: {
+        hard: "4px 5px 0px rgba(0, 0, 0, 0.3)", // Add your custom shadow here
       },
     },
   },

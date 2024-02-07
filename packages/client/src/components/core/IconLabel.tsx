@@ -13,12 +13,12 @@ export const IconLabel: React.FC<{
       {tooltipText && (
         <Tooltip text={tooltipText} direction={tooltipDirection}>
           <div>
-            <img src={imageUri} alt={text} className={`pixel-images w-[1.5em] scale-200`} />
+            <img src={imageUri} alt={text} className={`pixel-images w-[1em] scale-150`} />
           </div>
         </Tooltip>
       )}
 
-      {!tooltipText && <img src={imageUri} alt={text} className={`pixel-images w-[1.5em] scale-200`} />}
+      {!tooltipText && <img src={imageUri} alt={text} className={`pixel-images w-[1em] scale-150`} />}
 
       {text && <span className="pl-2">{text}</span>}
     </span>

@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { BlockNumber } from "src/network/components/clientComponents";
-import { getSpaceRockInfo } from "src/util/spacerock";
+import { getSpaceRockInfo } from "src/util/asteroid";
 import { usePrimodium } from "./usePrimodium";
 
 export function useSpaceRock(rock: Entity) {

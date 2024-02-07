@@ -1,12 +1,13 @@
-import { components } from "src/network/components";
 import { Entity } from "@latticexyz/recs";
+import { components } from "src/network/components";
 import { Loader } from "../core/Loader";
 
 export const TransactionQueueMask: React.FC<{
   children: React.ReactNode;
   queueItemId: Entity;
   className?: string;
-}> = ({ children, queueItemId, className }) => {
+  size?: "sm" | "xs";
+}> = ({ children, queueItemId, className, size = "sm" }) => {
   const queuePosition = components.TransactionQueue.useIndex(queueItemId);
 
   if (queuePosition === -1) return <div className={className}>{children}</div>;
@@ -22,7 +23,7 @@ export const TransactionQueueMask: React.FC<{
         )}
         {queuePosition === 0 && (
           <div className="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2">
-            <Loader />
+            <Loader size={size} />
           </div>
         )}
       </div>

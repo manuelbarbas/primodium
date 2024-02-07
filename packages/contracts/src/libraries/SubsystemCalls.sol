@@ -4,7 +4,6 @@ pragma solidity >=0.8.21;
 import { getSystemResourceId, entityToAddress } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 import { DUMMY_ADDRESS } from "src/constants.sol";
-import { NewBattleResultData } from "codegen/index.sol";
 import { Position, PositionData } from "codegen/index.sol";
 import { EBuilding } from "src/Types.sol";
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";

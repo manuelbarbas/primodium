@@ -1,26 +1,19 @@
 import { Gesture } from "@use-gesture/vanilla";
-import { BehaviorSubject, map, scan, Subject, throttleTime } from "rxjs";
+import { BehaviorSubject, map, scan, share, Subject, throttleTime } from "rxjs";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import {
-  Coord,
-  GestureState,
-  ObjectPool,
-} from "@latticexyz/phaserx/dist/types";
+import { Coord, GestureState, ObjectPool } from "@latticexyz/phaserx/dist/types";
 import { CameraConfig } from "../../types";
 
-export function createCamera(
-  phaserCamera: Phaser.Cameras.Scene2D.Camera,
-  options: CameraConfig
-) {
+export function createCamera(phaserCamera: Phaser.Cameras.Scene2D.Camera, options: CameraConfig) {
   // Stop default gesture events to not collide with use-gesture
   // https://github.com/pmndrs/use-gesture/blob/404e2b2ac145a45aff179c1faf5097b97414731c/documentation/pages/docs/gestures.mdx#about-the-pinch-gesture
   document.addEventListener("gesturestart", (e) => e.preventDefault());
   document.addEventListener("gesturechange", (e) => e.preventDefault());
 
-  const worldView$ = new BehaviorSubject<
-    Phaser.Cameras.Scene2D.Camera["worldView"]
-  >(phaserCamera.worldView);
-  const zoom$ = new BehaviorSubject<number>(phaserCamera.zoom);
+  const worldView$ = new BehaviorSubject<Phaser.Cameras.Scene2D.Camera["worldView"]>(phaserCamera.worldView).pipe(
+    share()
+  ) as BehaviorSubject<Phaser.Cameras.Scene2D.Camera["worldView"]>;
+  const zoom$ = new BehaviorSubject<number>(phaserCamera.zoom).pipe(share()) as BehaviorSubject<number>;
   const pinchStream$ = new Subject<GestureState<"onPinch">>();
 
   const gesture = new Gesture(
@@ -38,8 +31,9 @@ export function createCamera(
 
   function setZoom(zoom: number) {
     phaserCamera.setZoom(zoom);
-    worldView$.next(phaserCamera.worldView);
+    // worldView$.next(phaserCamera.worldView);
     zoom$.next(zoom);
+    requestAnimationFrame(() => worldView$.next(phaserCamera.worldView));
   }
 
   const pinchSub = pinchStream$
@@ -60,6 +54,7 @@ export function createCamera(
     )
     .subscribe(([, zoom]) => {
       // Set the gesture zoom state to the current zoom value to avoid zooming beyond the max values
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       if (gesture._ctrl.state.pinch) gesture._ctrl.state.pinch.offset[0] = zoom;
       setZoom(zoom);
@@ -69,11 +64,7 @@ export function createCamera(
     objectPool.ignoreCamera(phaserCamera.id, ignore);
   }
 
-  function centerOnCoord(
-    tileCoord: Coord,
-    tileWidth: number,
-    tileHeight: number
-  ) {
+  function centerOnCoord(tileCoord: Coord, tileWidth: number, tileHeight: number) {
     const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);
     centerOn(pixelCoord.x, pixelCoord.y);
   }

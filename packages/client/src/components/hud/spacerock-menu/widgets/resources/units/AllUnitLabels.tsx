@@ -13,7 +13,7 @@ import { DefenseLabel } from "../utilities/DefenseLabel";
 import { UnitLabel } from "./UnitLabel";
 
 export const AllUnitLabels = () => {
-  const { playerEntity } = useMud().network;
+  const playerEntity = useMud().playerAccount.entity;
   const selectedAsteroid = components.SelectedRock.use()?.value as Entity | undefined;
   const owner = components.OwnedBy.use(selectedAsteroid)?.value as Entity | undefined;
   const units = components.Hangar.use(selectedAsteroid ?? singletonEntity);
@@ -93,38 +93,6 @@ export const AllUnitLabels = () => {
             />
           )}
         </Badge>
-
-        {/* {playerEntity === owner && rockType === ERock.Asteroid && (
-          <Badge className="gap-1 items-center">
-            <div className="animate-pulse bg-success w-1 h-1 rounded-box" />0 ATTACKING FLEETS
-            <FaExternalLinkAlt className="opacity-75 scale-90" />
-          </Badge>
-        )} */}
-
-        {/* 
-          {playerEntity === owner && rockType === ERock.Motherlode && (
-          <div className="flex gap-1">
-            <Modal title="Recall">
-              <Modal.Content className="w-[51rem]">
-                <Recall rock={selectedAsteroid} />
-              </Modal.Content>
-              <Modal.IconButton className="btn-xs" imageUri="/img/icons/mainbaseicon.png" text="recall" />
-            </Modal>
-
-            <Modal title="Send Fleet">
-              <Modal.Content className="w-[51rem] h-96">
-                <SendFleet />
-              </Modal.Content>
-              <Modal.IconButton
-                disabled={!fleetMoves}
-                className="btn-xs"
-                imageUri="/img/icons/reinforcementicon.png"
-                text="reinforce"
-                onClick={handleReinforce}
-              />
-            </Modal>
-          </div>
-        )} */}
       </div>
     </div>
   );

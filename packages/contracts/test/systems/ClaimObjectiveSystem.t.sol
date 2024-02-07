@@ -22,20 +22,6 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   bytes32 homeRock;
   bytes32 rock = "rock";
 
-  BattleResultData br =
-    BattleResultData({
-      attacker: playerEntity,
-      defender: enemy,
-      winner: playerEntity,
-      rock: rock,
-      totalCargo: 100,
-      timestamp: block.timestamp,
-      attackerStartingUnits: getUnitArray(100, 50),
-      defenderStartingUnits: getUnitArray(100, 10),
-      attackerUnitsLeft: getUnitArray(50, 20),
-      defenderUnitsLeft: getUnitArray(0, 0)
-    });
-
   function setUp() public override {
     super.setUp();
     playerEntity = addressToEntity(creator);
@@ -44,8 +30,6 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   }
 
   function setupRaid() internal {
-    br.attacker = playerEntity;
-    br.winner = playerEntity;
     bytes32[] memory unitTypes = new bytes32[](P_UnitPrototypes.length());
     unitTypes[0] = unit1;
     P_UnitPrototypes.set(unitTypes);

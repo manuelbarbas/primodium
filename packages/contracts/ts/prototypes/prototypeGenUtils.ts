@@ -64,6 +64,12 @@ export const getResourceValue = (resourceValue: { [x: string]: number }) => {
   return { resource: MUDEnums.EResource.indexOf(resource), amount: BigInt(amount * SCALE) };
 };
 
+/**
+ *
+ * @param resourceValues Record of resources and their scaled amounts
+ * @param noScale If true, the amounts will not be scaled
+ * @returns An object containing the resources and their amounts
+ */
 export const getResourceValues = (resourceValues: Record<string, number>, noScale?: boolean) => {
   // unzip the array
   const [resources, amounts] = Object.entries(resourceValues).reduce(

@@ -43,7 +43,7 @@ const CursorFollower: FC<HUDProps> = ({ children }) => {
         left: mousePosition.x,
         top: mousePosition.y,
         transform: `scale(${scale})`,
-        // transformOrigin: "top right"
+        zIndex: 1001,
       }}
     >
       {children}
