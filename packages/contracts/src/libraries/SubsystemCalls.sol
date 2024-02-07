@@ -14,6 +14,8 @@ import { S_FleetBattleApplyDamageSystem } from "systems/subsystems/S_FleetBattle
 import { S_FleetBattleResolveRaidSystem } from "systems/subsystems/S_FleetBattleResolveRaidSystem.sol";
 import { S_FleetBattleResolveEncryptionSystem } from "systems/subsystems/S_FleetBattleResolveEncryptionSystem.sol";
 import { S_FleetResetIfNoUnitsLeftSystem } from "systems/subsystems/S_FleetResetIfNoUnitsLeftSystem.sol";
+import { S_FleetResolvePirateAsteroidSystem } from "systems/subsystems/S_FleetResolvePirateAsteroidSystem.sol";
+import { S_CreateSecondaryAsteroidSystem } from "systems/subsystems/S_CreateSecondaryAsteroidSystem.sol";
 import { S_ClaimSystem } from "systems/subsystems/S_ClaimSystem.sol";
 import { S_ProductionRateSystem } from "systems/subsystems/S_ProductionRateSystem.sol";
 import { S_StorageSystem } from "systems/subsystems/S_StorageSystem.sol";
@@ -22,11 +24,19 @@ import { S_SpendResourcesSystem } from "systems/subsystems/S_SpendResourcesSyste
 
 /* --------------------------------- BATTLE --------------------------------- */
 
-function fleetBattleApplyDamage(bytes32 battleId, bytes32 targetEntity, uint256 damage) {
+function fleetBattleApplyDamage(
+  bytes32 battleId,
+  bytes32 damageDealerPlayerEntity,
+  bytes32 targetEntity,
+  uint256 damage
+) {
   SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
     getSystemResourceId("S_FleetBattleApplyDamageSystem"),
-    abi.encodeCall(S_FleetBattleApplyDamageSystem.applyDamageToWithAllies, (battleId, targetEntity, damage)),
+    abi.encodeCall(
+      S_FleetBattleApplyDamageSystem.applyDamageToWithAllies,
+      (battleId, damageDealerPlayerEntity, targetEntity, damage)
+    ),
     0
   );
 }
@@ -54,6 +64,15 @@ function fleetResolveBattleEncryption(
       S_FleetBattleResolveEncryptionSystem.resolveBattleEncryption,
       (battleId, targetSpaceRock, aggressorEntity, unitWithDecryptionPrototype, decryption)
     ),
+    0
+  );
+}
+
+function fleetResolvePirateAsteroid(bytes32 playerEntity, bytes32 pirateAsteroid) {
+  SystemCall.callWithHooksOrRevert(
+    DUMMY_ADDRESS,
+    getSystemResourceId("S_FleetResolvePirateAsteroidSystem"),
+    abi.encodeCall(S_FleetResolvePirateAsteroidSystem.resolvePirateAsteroid, (playerEntity, pirateAsteroid)),
     0
   );
 }
@@ -96,6 +115,16 @@ function buildMainBase(bytes32 playerEntity, bytes32 spaceRock) {
     abi.encodeCall(BuildSystem.build, (EBuilding.MainBase, position)),
     0
   );
+}
+
+function createSecondaryAsteroid(PositionData memory position) returns (bytes32) {
+  bytes memory rawAsteroid = SystemCall.callWithHooksOrRevert(
+    DUMMY_ADDRESS,
+    getSystemResourceId("S_CreateSecondaryAsteroidSystem"),
+    abi.encodeCall(S_CreateSecondaryAsteroidSystem.createSecondaryAsteroid, (position)),
+    0
+  );
+  return abi.decode(rawAsteroid, (bytes32));
 }
 
 /* --------------------------------- GLOBAL --------------------------------- */

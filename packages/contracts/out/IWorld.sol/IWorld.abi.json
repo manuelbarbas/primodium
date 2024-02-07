@@ -546,6 +546,11 @@
       },
       {
         "internalType": "bytes32",
+        "name": "damageDealerPlayerEntity",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
         "name": "entity",
         "type": "bytes32"
       },
@@ -556,7 +561,13 @@
       }
     ],
     "name": "applyDamageToWithAllies",
-    "outputs": [],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -882,6 +893,42 @@
       {
         "internalType": "bytes32",
         "name": "fleetId",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "int32",
+            "name": "x",
+            "type": "int32"
+          },
+          {
+            "internalType": "int32",
+            "name": "y",
+            "type": "int32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "parent",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct PositionData",
+        "name": "positionData",
+        "type": "tuple"
+      }
+    ],
+    "name": "createSecondaryAsteroid",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
         "type": "bytes32"
       }
     ],
@@ -2415,6 +2462,24 @@
       }
     ],
     "name": "resolveBattleRaid",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "playerEntity",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "pirateAsteroid",
+        "type": "bytes32"
+      }
+    ],
+    "name": "resolvePirateAsteroid",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

@@ -59,6 +59,7 @@ contract FleetTransferSystem is FleetBaseSystem {
     public
     _onlyFleetOwner(fromFleetId)
     _onlyWhenFleetIsInOrbitOfSpaceRock(fromFleetId, spaceRock)
+    _onlyWhenNotPirateAsteroid(spaceRock)
     _claimUnits(spaceRock)
     _unitCountIsValid(unitCounts)
   {
@@ -74,6 +75,7 @@ contract FleetTransferSystem is FleetBaseSystem {
     public
     _onlyFleetOwner(fleetId)
     _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock)
+    _onlyWhenNotPirateAsteroid(spaceRock)
     _claimResources(spaceRock)
     _resourceCountIsValid(resourceCounts)
   {
@@ -89,6 +91,7 @@ contract FleetTransferSystem is FleetBaseSystem {
     public
     _onlyFleetOwner(fromFleetId)
     _onlyWhenFleetIsInOrbitOfSpaceRock(fromFleetId, spaceRock)
+    _onlyWhenNotPirateAsteroid(spaceRock)
     _claimResources(spaceRock)
     _claimUnits(spaceRock)
     _unitCountIsValid(unitCounts)

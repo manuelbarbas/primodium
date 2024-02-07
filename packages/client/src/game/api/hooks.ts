@@ -4,11 +4,11 @@ import { Scene } from "engine/types";
 import { clone, throttle } from "lodash";
 import { useEffect, useState } from "react";
 import { getDegreeDirection } from "src/util/common";
-import { useSettingsStore } from "../stores/SettingsStore";
+import { usePersistantStore } from "../stores/PersistantStore";
 
 export function createHooksApi(targetScene: Scene) {
   function useKeybinds() {
-    return useSettingsStore((state) => state.keybinds);
+    return usePersistantStore((state) => state.keybinds);
   }
 
   function useCamera() {
