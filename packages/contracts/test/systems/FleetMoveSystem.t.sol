@@ -141,4 +141,186 @@ contract FleetMoveSystemTest is PrimodiumTest {
       "fleet send time doesn't match"
     );
   }
+
+  function testSendFleetFromPirateAsteroidToOrigin() public {
+    console.log("start");
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    uint256 numberOfUnits = 10;
+
+    //create fleet with 1 minuteman marine
+    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
+    bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
+    uint256 cargo = P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
+
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = numberOfUnits;
+      if (unitPrototypes[i] == colonyShipPrototype) unitCounts[i] = 2;
+    }
+
+    //create fleet with 1 iron
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+
+    //provide resource and unit requirements to create fleet
+    setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
+
+    vm.startPrank(alice);
+    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    vm.stopPrank();
+
+    P_SpawnPirateAsteroidData memory spawnPirateAsteroid;
+
+    spawnPirateAsteroid.x = 5;
+    spawnPirateAsteroid.y = 5;
+    spawnPirateAsteroid.resources = new uint8[](1);
+    spawnPirateAsteroid.resources[0] = uint8(EResource.Iron);
+    spawnPirateAsteroid.resourceAmounts = new uint256[](1);
+    spawnPirateAsteroid.resourceAmounts[0] =
+      cargo *
+      numberOfUnits +
+      (P_Unit.getCargo(colonyShipPrototype, UnitLevel.get(aliceHomeSpaceRock, colonyShipPrototype)) * 2);
+    spawnPirateAsteroid.units = new bytes32[](1);
+    spawnPirateAsteroid.units[0] = unitPrototype;
+    spawnPirateAsteroid.unitAmounts = new uint256[](1);
+    spawnPirateAsteroid.unitAmounts[0] = 5;
+
+    vm.startPrank(creator);
+    bytes32 objectivePrototype = bytes32("someObjective");
+    P_SpawnPirateAsteroid.set(objectivePrototype, spawnPirateAsteroid);
+    bytes32 pirateAsteroid = world.spawnPirateAsteroid(aliceEntity, objectivePrototype);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+
+    world.sendFleet(fleetId, pirateAsteroid);
+    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+    world.sendFleet(fleetId, aliceHomeSpaceRock);
+    vm.stopPrank();
+  }
+
+  function testFailSendFleetFromPirateAsteroidToSpaceRockOtherThanOrigin() public {
+    console.log("start");
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    uint256 numberOfUnits = 10;
+
+    //create fleet with 1 minuteman marine
+    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
+    bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
+    uint256 cargo = P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
+
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = numberOfUnits;
+      if (unitPrototypes[i] == colonyShipPrototype) unitCounts[i] = 2;
+    }
+
+    //create fleet with 1 iron
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+
+    //provide resource and unit requirements to create fleet
+    setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
+
+    vm.startPrank(alice);
+    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    vm.stopPrank();
+
+    P_SpawnPirateAsteroidData memory spawnPirateAsteroid;
+
+    spawnPirateAsteroid.x = 5;
+    spawnPirateAsteroid.y = 5;
+    spawnPirateAsteroid.resources = new uint8[](1);
+    spawnPirateAsteroid.resources[0] = uint8(EResource.Iron);
+    spawnPirateAsteroid.resourceAmounts = new uint256[](1);
+    spawnPirateAsteroid.resourceAmounts[0] =
+      cargo *
+      numberOfUnits +
+      (P_Unit.getCargo(colonyShipPrototype, UnitLevel.get(aliceHomeSpaceRock, colonyShipPrototype)) * 2);
+    spawnPirateAsteroid.units = new bytes32[](1);
+    spawnPirateAsteroid.units[0] = unitPrototype;
+    spawnPirateAsteroid.unitAmounts = new uint256[](1);
+    spawnPirateAsteroid.unitAmounts[0] = 5;
+
+    vm.startPrank(creator);
+    bytes32 objectivePrototype = bytes32("someObjective");
+    P_SpawnPirateAsteroid.set(objectivePrototype, spawnPirateAsteroid);
+    bytes32 pirateAsteroid = world.spawnPirateAsteroid(aliceEntity, objectivePrototype);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+
+    world.sendFleet(fleetId, pirateAsteroid);
+    vm.warp(FleetMovement.getArrivalTime(fleetId));
+
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+    world.sendFleet(fleetId, bobHomeSpaceRock);
+    vm.stopPrank();
+  }
+
+  function testFailRecallFleetFromPirateAsteroid() public {
+    console.log("start");
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    uint256 numberOfUnits = 10;
+
+    //create fleet with 1 minuteman marine
+    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
+    bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
+    uint256 cargo = P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
+
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = numberOfUnits;
+      if (unitPrototypes[i] == colonyShipPrototype) unitCounts[i] = 2;
+    }
+
+    //create fleet with 1 iron
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+
+    //provide resource and unit requirements to create fleet
+    setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
+
+    vm.startPrank(alice);
+    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    vm.stopPrank();
+
+    P_SpawnPirateAsteroidData memory spawnPirateAsteroid;
+
+    spawnPirateAsteroid.x = 5;
+    spawnPirateAsteroid.y = 5;
+    spawnPirateAsteroid.resources = new uint8[](1);
+    spawnPirateAsteroid.resources[0] = uint8(EResource.Iron);
+    spawnPirateAsteroid.resourceAmounts = new uint256[](1);
+    spawnPirateAsteroid.resourceAmounts[0] =
+      cargo *
+      numberOfUnits +
+      (P_Unit.getCargo(colonyShipPrototype, UnitLevel.get(aliceHomeSpaceRock, colonyShipPrototype)) * 2);
+    spawnPirateAsteroid.units = new bytes32[](1);
+    spawnPirateAsteroid.units[0] = unitPrototype;
+    spawnPirateAsteroid.unitAmounts = new uint256[](1);
+    spawnPirateAsteroid.unitAmounts[0] = 5;
+
+    vm.startPrank(creator);
+    bytes32 objectivePrototype = bytes32("someObjective");
+    P_SpawnPirateAsteroid.set(objectivePrototype, spawnPirateAsteroid);
+    bytes32 pirateAsteroid = world.spawnPirateAsteroid(aliceEntity, objectivePrototype);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+
+    world.sendFleet(fleetId, pirateAsteroid);
+    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+    world.sendFleet(fleetId, aliceHomeSpaceRock);
+    world.recallFleet(fleetId);
+    vm.stopPrank();
+  }
 }

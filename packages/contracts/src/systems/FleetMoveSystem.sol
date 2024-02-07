@@ -6,7 +6,7 @@ import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
 import { FleetMovement } from "codegen/index.sol";
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { createSecondaryAsteroid } from "libraries/SubsystemCalls.sol";
-import { PirateAsteroid, Asteroid, PositionData, ReversePosition } from "codegen/index.sol";
+import { OwnedBy, PirateAsteroid, Asteroid, PositionData, ReversePosition } from "codegen/index.sol";
 
 contract FleetMoveSystem is FleetBaseSystem {
   modifier _onlyOtherSpaceRock(bytes32 fleetId, bytes32 spaceRock) {
@@ -31,6 +31,14 @@ contract FleetMoveSystem is FleetBaseSystem {
     _;
   }
 
+  modifier _canNotSendFleetFromPirateAsteroidToSpaceRockOtherThanOrigin(bytes32 fleetId, bytes32 spaceRock) {
+    require(
+      !PirateAsteroid.getIsPirateAsteroid(FleetMovement.getDestination(fleetId)) || OwnedBy.get(fleetId) == spaceRock,
+      "[Fleet] Can not send fleet from pirate asteroid to space rock other than origin"
+    );
+    _;
+  }
+
   function sendFleet(bytes32 fleetId, PositionData memory position) public {
     bytes32 spaceRock = ReversePosition.get(position.x, position.y);
     if (spaceRock == bytes32(0)) {
@@ -50,6 +58,7 @@ contract FleetMoveSystem is FleetBaseSystem {
     _onlyOtherSpaceRock(fleetId, spaceRock)
     _onlyWhenNotPirateAsteroidOrHasNotBeenDefeated(spaceRock)
     _onlyWhenPersonalPirate(spaceRock)
+    _canNotSendFleetFromPirateAsteroidToSpaceRockOtherThanOrigin(fleetId, spaceRock)
   {
     LibFleetMove.sendFleet(fleetId, spaceRock);
   }

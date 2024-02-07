@@ -9,7 +9,15 @@ import { createSecondaryAsteroid } from "libraries/SubsystemCalls.sol";
 import { PirateAsteroid, Asteroid, PositionData, ReversePosition } from "codegen/index.sol";
 
 contract FleetRecallSystem is FleetBaseSystem {
-  function recallFleet(bytes32 fleetId) public _onlyFleetOwner(fleetId) {
+  modifier _onlyWhenOriginIsNotPirateAsteroid(bytes32 fleetId) {
+    require(
+      !PirateAsteroid.getIsPirateAsteroid(FleetMovement.getOrigin(fleetId)),
+      "[Fleet] Can not recall fleet sent from pirate asteroid"
+    );
+    _;
+  }
+
+  function recallFleet(bytes32 fleetId) public _onlyFleetOwner(fleetId) _onlyWhenOriginIsNotPirateAsteroid(fleetId) {
     LibFleetMove.recallFleet(fleetId);
   }
 }
