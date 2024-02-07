@@ -1,7 +1,7 @@
 import { Gesture } from "@use-gesture/vanilla";
-import { BehaviorSubject, map, scan, share, Subject, throttleTime } from "rxjs";
+import { BehaviorSubject, share, Subject, tap } from "rxjs";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Coord, GestureState, ObjectPool } from "@latticexyz/phaserx/dist/types";
+import { Coord, GestureState, ObjectPool } from "@latticexyz/phaserx/src/types";
 import { CameraConfig } from "../../types";
 
 export function createCamera(phaserCamera: Phaser.Cameras.Scene2D.Camera, options: CameraConfig) {
@@ -30,35 +30,18 @@ export function createCamera(phaserCamera: Phaser.Cameras.Scene2D.Camera, option
   phaserCamera.scene.scale.addListener("resize", onResize);
 
   function setZoom(zoom: number) {
-    phaserCamera.setZoom(zoom);
-    // worldView$.next(phaserCamera.worldView);
-    zoom$.next(zoom);
-    requestAnimationFrame(() => worldView$.next(phaserCamera.worldView));
-  }
+    const { minZoom, maxZoom } = options;
+    const _zoom = Phaser.Math.Clamp(zoom, minZoom, maxZoom);
+    phaserCamera.setZoom(_zoom);
+    zoom$.next(_zoom);
 
-  const pinchSub = pinchStream$
-    .pipe(
-      throttleTime(10),
-      map((state) => {
-        // Because this event stream is throttled, we're dropping events which contain delta data, so we need to calculate the delta ourselves.
-        const zoom = zoom$.getValue();
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const delta = state.offset[0] - zoom;
-        const scaledDelta = delta * options.pinchSpeed;
-        // console.log(zoom, scaledDelta);
-        return zoom + scaledDelta;
-      }), // Compute pinch speed
-      map((zoom) => Math.min(Math.max(zoom, options.minZoom), options.maxZoom)), // Limit zoom values
-      scan((acc, curr) => [acc[1], curr], [1, 1]) // keep track of the last value to offset the map position (not implemented yet)
-    )
-    .subscribe(([, zoom]) => {
-      // Set the gesture zoom state to the current zoom value to avoid zooming beyond the max values
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      if (gesture._ctrl.state.pinch) gesture._ctrl.state.pinch.offset[0] = zoom;
-      setZoom(zoom);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-expect-error
+    phaserCamera.preRender();
+    requestAnimationFrame(() => {
+      worldView$.next(phaserCamera.worldView);
     });
+  }
 
   function ignore(objectPool: ObjectPool, ignore: boolean) {
     objectPool.ignoreCamera(phaserCamera.id, ignore);
@@ -85,7 +68,6 @@ export function createCamera(phaserCamera: Phaser.Cameras.Scene2D.Camera, option
     zoom$,
     ignore,
     dispose: () => {
-      pinchSub.unsubscribe();
       pinchStream$.unsubscribe();
       zoom$.unsubscribe();
       gesture.destroy();

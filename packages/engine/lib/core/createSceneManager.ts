@@ -47,7 +47,7 @@ export const createSceneManager = (phaserGame: Phaser.Game) => {
 
     scenes.get(key)?.phaserScene.scene.transition({
       target,
-      moveAbove: true,
+      // moveAbove: true,
       sleep,
       duration,
       allowInput: false,

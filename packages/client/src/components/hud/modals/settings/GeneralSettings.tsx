@@ -2,11 +2,11 @@ import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { Range } from "src/components/core/Range";
 import { Toggle } from "src/components/core/Toggle";
-import { useSettingsStore } from "src/game/stores/SettingsStore";
+import { usePersistantStore } from "src/game/stores/PersistantStore";
 
 export const GeneralSettings = () => {
-  const [uiScale, setUiScale] = useSettingsStore((state) => [state.uiScale, state.setUiScale]);
-  const [allowHackerModal, toggleAllowHackerModal] = useSettingsStore((state) => [
+  const [uiScale, setUiScale] = usePersistantStore((state) => [state.uiScale, state.setUiScale]);
+  const [allowHackerModal, toggleAllowHackerModal] = usePersistantStore((state) => [
     state.allowHackerModal,
     state.toggleAllowHackerModal,
   ]);

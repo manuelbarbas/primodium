@@ -9,6 +9,7 @@ export default {
     extend: {
       fontFamily: {
         mono: ["Space Mono", ...defaultTheme.fontFamily.mono],
+        pixel: ["Silkscreen", ...defaultTheme.fontFamily.mono],
       },
       width: {
         108: "27rem",

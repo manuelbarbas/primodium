@@ -10,10 +10,10 @@ import { getBlockTypeName } from "src/util/common";
 import { ResourceImage, ResourceType } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
-import { Badge } from "../core/Badge";
-import { Button } from "../core/Button";
-import { SecondaryCard } from "../core/Card";
-import { IconLabel } from "../core/IconLabel";
+import { Badge } from "../../../core/Badge";
+import { Button } from "../../../core/Button";
+import { SecondaryCard } from "../../../core/Card";
+import { IconLabel } from "../../../core/IconLabel";
 
 export const RecipeDisplay: React.FC<{
   building: Entity;
