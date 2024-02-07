@@ -86,24 +86,6 @@ const Asteroid: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
         image={ResourceImage.get(EntityType.Encryption) ?? ""}
         name={getBlockTypeName(EntityType.Encryption)}
       />
-      {/* <div className="absolute top-0 right-0 bg-neutral p-1 flex divide-x-2 divide-secondary">
-        {selected && (
-          <IconLabel
-            imageUri="/img/icons/attackicon.png"
-            className="text-[.6rem] px-2"
-            tooltipDirection="left"
-            tooltipText="selected"
-          />
-        )}
-        {active && (
-          <IconLabel
-            imageUri="/img/icons/minersicon.png"
-            className="text-[.6rem] px-2"
-            tooltipDirection="left"
-            tooltipText="active"
-          />
-        )}
-      </div> */}
     </Button>
   );
 };
