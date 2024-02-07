@@ -4,10 +4,10 @@ import { persist } from "zustand/middleware";
 import { mountStoreDevtool } from "simple-zustand-devtools";
 
 import { KeybindActions } from "@game/constants";
-import { Key } from "engine/types";
 import { Coord } from "@latticexyz/utils";
+import { Key } from "engine/types";
 
-const VERSION = 1;
+const VERSION = 2;
 
 type Keybinds = Partial<{
   [key in KeybindActions]: Set<Key>;
@@ -32,17 +32,18 @@ type Volume = {
 
 type Channel = "music" | "sfx" | "ui" | "master";
 
-type PersistantState = {
+type PersistentState = {
   newPlayer: boolean;
   keybinds: Keybinds;
   volume: Volume;
   allowHackerModal: boolean;
   uiScale: number;
   consoleHistory: { input: string; output: string }[];
+  noExternalWallet: boolean;
   panes: Panes;
 };
 
-type PersistantActions = {
+type PersistentActions = {
   replaceKey: (keybindAction: KeybindActions, oldKey: Key, newKey: Key) => void;
   addKey: (keybindAction: KeybindActions, key: Key) => void;
   removeKey: (keybindAction: KeybindActions, key: Key) => void;
@@ -52,14 +53,16 @@ type PersistantActions = {
   toggleAllowHackerModal: () => void;
   setUiScale: (scale: number) => void;
   setConsoleHistory: (history: { input: string; output: string }[]) => void;
+  setNoExternalWallet: (val: boolean) => void;
   setPane: (id: string, coord: Coord, pinned: boolean, locked: boolean) => void;
   removePane: (id: string) => void;
   resetPanes: () => void;
 };
 
-const defaults: PersistantState = {
+const defaults: PersistentState = {
   newPlayer: true,
   allowHackerModal: false,
+  noExternalWallet: false,
   uiScale: 1,
   consoleHistory: [],
   panes: {},
@@ -104,7 +107,7 @@ const defaults: PersistantState = {
   },
 };
 
-export const usePersistantStore = create<PersistantState & PersistantActions>()(
+export const usePersistentStore = create<PersistentState & PersistentActions>()(
   persist(
     (set, get) => ({
       ...defaults,
@@ -146,6 +149,9 @@ export const usePersistantStore = create<PersistantState & PersistantActions>()(
       setConsoleHistory: (history) => {
         set({ consoleHistory: history });
       },
+      setNoExternalWallet: (val: boolean) => {
+        set({ noExternalWallet: val });
+      },
       setPane: (id, coord, pinned, locked) => {
         set({
           panes: {
@@ -168,12 +174,12 @@ export const usePersistantStore = create<PersistantState & PersistantActions>()(
       },
     }),
     {
-      name: "persistant-storage",
+      name: "persistent-storage",
       // handle parsing of set objects since storing raw sets is not possible due to stringify behavior
       storage: {
         getItem: (key) => {
           const str = localStorage.getItem(key);
-          const result: PersistantState["keybinds"] = {};
+          const result: PersistentState["keybinds"] = {};
           const parsed = JSON.parse(str!);
           const version: number = parsed.version;
           const keybinds = parsed.state.keybinds as Partial<{
@@ -229,7 +235,7 @@ export const usePersistantStore = create<PersistantState & PersistantActions>()(
       migrate: (persistedStore: any, version) => {
         if (version === VERSION) return persistedStore;
 
-        return { ...persistedStore!, ...defaults } as PersistantState & PersistantActions;
+        return { ...persistedStore!, ...defaults } as PersistentState & PersistentActions;
       },
     }
   )
@@ -237,5 +243,5 @@ export const usePersistantStore = create<PersistantState & PersistantActions>()(
 
 //store dev tools
 if (import.meta.env.VITE_DEV === "true") {
-  mountStoreDevtool("SettingsStore", usePersistantStore);
+  mountStoreDevtool("SettingsStore", usePersistentStore);
 }

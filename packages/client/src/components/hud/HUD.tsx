@@ -1,6 +1,6 @@
 import { KeybindActions } from "@game/constants";
 import { FaCircle } from "react-icons/fa";
-import { usePersistantStore } from "src/game/stores/PersistantStore";
+import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { HUD } from "../core/HUD";
@@ -8,19 +8,19 @@ import { Modal } from "../core/Modal";
 import { BrandingLabel } from "../shared/BrandingLabel";
 import { CurrentObjective } from "./CurrentObjective";
 import { MapButton } from "./MapButton";
-import { Profile } from "./Profile";
 import { MenuButtons } from "./MenuButtons";
+import { Profile } from "./Profile";
 import { SpectatingDetails } from "./SpectatingDetails";
-import { Resources } from "./panes/resources/Resources";
-import { Blueprints } from "./panes/blueprints/Blueprints";
+import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { HoverInfo } from "./hover/HoverInfo";
 import { ActiveMarker } from "./markers/ActiveMarker";
 import { HomeMarker } from "./markers/HomeMarker";
 import HackerConsole from "./modals/HackerConsole";
+import { Blueprints } from "./panes/blueprints/Blueprints";
+import { Resources } from "./panes/resources/Resources";
 import { AsteroidTarget } from "./starmap/AsteroidTarget";
 import { FleetTarget } from "./starmap/FleetTarget";
 import { HoverTarget } from "./starmap/HoverTarget";
-import { BuildingMenu } from "./building-menu/BuildingMenu";
 
 export const GameHUD = () => {
   const {
@@ -30,9 +30,9 @@ export const GameHUD = () => {
   const selectedRock = components.SelectedRock.use()?.value;
   const ownedBy = components.OwnedBy.use(selectedRock)?.value;
   const isSpectating = ownedBy !== playerEntity;
-  const uiScale = usePersistantStore((state) => state.uiScale);
+  const uiScale = usePersistentStore((state) => state.uiScale);
 
-  const allowHackerModal = usePersistantStore((state) => state.allowHackerModal);
+  const allowHackerModal = usePersistentStore((state) => state.allowHackerModal);
   const mapOpen = components.MapOpen.use(undefined, {
     value: false,
   }).value;
