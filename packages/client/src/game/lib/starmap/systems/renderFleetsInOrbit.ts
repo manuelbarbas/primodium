@@ -10,7 +10,7 @@ import { world } from "src/network/world";
 import { getRockRelationship } from "src/util/asteroid";
 import { RockRelationship } from "src/util/constants";
 import { entityToFleetName } from "src/util/name";
-import { getAllOrbitingFleets, getCanAttack } from "src/util/unit";
+import { getCanAttack, getOrbitingFleets } from "src/util/unit";
 import {
   ObjectPosition,
   OnClickUp,
@@ -87,7 +87,7 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
   const { tileWidth, tileHeight } = scene.tilemap;
   const playerEntity = components.Account.get()?.value;
   if (!playerEntity) return;
-  const allFleets = getAllOrbitingFleets(rockEntity);
+  const allFleets = getOrbitingFleets(rockEntity);
   const destination = components.Position.get(rockEntity);
   scene.objectPool.removeGroup(rockEntity + objIndexSuffix);
   if (!destination || allFleets.length == 0) return;

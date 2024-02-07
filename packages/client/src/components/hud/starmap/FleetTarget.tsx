@@ -2,6 +2,7 @@ import { Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { usePrimodium } from "src/hooks/usePrimodium";
+import { useSpaceRock } from "src/hooks/useSpaceRock";
 import { components } from "src/network/components";
 import { getCanAttackSomeone, getFleetStats, getFleetTilePosition } from "src/util/unit";
 import { Button } from "../../core/Button";
@@ -11,12 +12,12 @@ import { Marker } from "../../shared/Marker";
 import { Fleets } from "../panes/fleets/Fleets";
 
 // this component assumes the fleet is owned by the player
-export const _FleetTarget: React.FC<{ fleet: Entity }> = ({ fleet }) => {
-  const location = components.FleetMovement.use(fleet)?.destination;
+export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fleet, position }) => {
   const mapOpen = components.MapOpen.use()?.value ?? false;
   const selectingAttackDestination = !!components.Attack.use()?.originFleet;
   const selectingDestination = !!components.Send.use()?.originFleet || selectingAttackDestination;
   const stats = getFleetStats(fleet);
+  const spaceRockData = useSpaceRock(position);
   const primodium = usePrimodium();
   const {
     scene: rawScene,
@@ -32,7 +33,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity }> = ({ fleet }) => {
     [selectingDestination, stats.attack, fleet]
   );
 
-  if (!scene || !mapOpen || !location) return <></>;
+  if (!scene || !mapOpen || !position) return <></>;
 
   if (isBounded)
     return <Marker coord={{ x: screenCoord.x, y: screenCoord.y }} imageUri="/img/icons/outgoingicon.png" />;
@@ -54,11 +55,11 @@ export const _FleetTarget: React.FC<{ fleet: Entity }> = ({ fleet }) => {
         </div>
         <div className="absolute bottom-0 right-0 translate-x-full w-36">
           <Button
-            disabled={selectingDestination || stats.speed == 0n}
+            disabled={selectingDestination || stats.speed == 0n || spaceRockData.isBlocked}
             onClick={() => components.Send.setOrigin(fleet)}
             className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
           >
-            <IconLabel imageUri="/img/icons/moveicon.png" text="Move" />
+            <IconLabel imageUri="/img/icons/moveicon.png" text={spaceRockData.isBlocked ? "Blocked" : "Move"} />
           </Button>
         </div>
         <div className="absolute bottom-0 left-0 -translate-x-full">
@@ -93,6 +94,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity }> = ({ fleet }) => {
 
 export const FleetTarget = () => {
   const activeFleet = components.SelectedFleet.use()?.value;
-  if (!activeFleet) return <></>;
-  return <_FleetTarget fleet={activeFleet as Entity} />;
+  const position = components.FleetMovement.use(activeFleet as Entity)?.destination;
+  if (!activeFleet || !position) return <></>;
+  return <_FleetTarget fleet={activeFleet as Entity} position={position as Entity} />;
 };

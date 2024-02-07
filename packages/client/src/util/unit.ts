@@ -102,7 +102,7 @@ export const getFleetStatsFromUnits = (units: Map<Entity, bigint>) => {
   return data;
 };
 
-export const getAllOrbitingFleets = (entity: Entity) => {
+export const getOrbitingFleets = (entity: Entity) => {
   const playerEntity = components.Account.get()?.value;
   if (
     !playerEntity ||
@@ -178,7 +178,7 @@ export function getCanAttackSomeone(entity: Entity) {
   const player = components.Account.get()?.value;
   if (components.OwnedBy.get(spaceRock)?.value !== player) return true;
 
-  const allFleets = getAllOrbitingFleets(spaceRock);
+  const allFleets = getOrbitingFleets(spaceRock);
   return !!allFleets.find((fleet) => {
     if (fleet === entity) return false;
     const owner = components.OwnedBy.get(fleet)?.value as Entity;

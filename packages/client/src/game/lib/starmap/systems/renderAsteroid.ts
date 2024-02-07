@@ -11,7 +11,7 @@ import { world } from "src/network/world";
 import { entityToColor } from "src/util/color";
 import { getRandomRange } from "src/util/common";
 import { entityToPlayerName, entityToRockName } from "src/util/name";
-import { getCanAttack, getCanSend } from "src/util/unit";
+import { getCanAttack, getCanSend, getOrbitingFleets } from "src/util/unit";
 import { getEnsName } from "src/util/web3/getEnsName";
 import {
   ObjectPosition,
@@ -219,7 +219,9 @@ export const renderAsteroid = (scene: Scene) => {
     ]);
 
     const asteroidBlockade = asteroidObjectGroup.add("Graphics");
-
+    const isBlocked = !!getOrbitingFleets(entity).find(
+      (fleet) => components.FleetStance.get(fleet)?.stance == EFleetStance.Block
+    );
     asteroidBlockade.setComponents([
       ObjectPosition({
         x: coord.x * tileWidth,
@@ -227,7 +229,7 @@ export const renderAsteroid = (scene: Scene) => {
       }),
       SetValue({
         scale: spriteScale,
-        alpha: 0,
+        alpha: isBlocked ? 0.5 : 0,
       }),
       SetValue({ scale: spriteScale, depth: DepthLayers.Marker - 2 }),
       Circle(128, {
