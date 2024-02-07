@@ -21,14 +21,15 @@ import { AsteroidTarget } from "./starmap/AsteroidTarget";
 import { FleetTarget } from "./starmap/FleetTarget";
 import { HoverTarget } from "./starmap/HoverTarget";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
+import { OwnedAsteroids } from "./panes/OwnedAsteroids";
 
 export const GameHUD = () => {
   const {
     playerAccount: { entity: playerEntity },
   } = useMud();
 
-  const selectedRock = components.SelectedRock.use()?.value;
-  const ownedBy = components.OwnedBy.use(selectedRock)?.value;
+  const activeRock = components.ActiveRock.use()?.value;
+  const ownedBy = components.OwnedBy.use(activeRock)?.value;
   const isSpectating = ownedBy !== playerEntity;
   const uiScale = usePersistantStore((state) => state.uiScale);
 
@@ -72,6 +73,7 @@ export const GameHUD = () => {
           <HUD.TopRight>
             <div className="mr-2 space-y-2">
               <CurrentObjective />
+              <OwnedAsteroids />
               <Resources />
               <Blueprints />
             </div>

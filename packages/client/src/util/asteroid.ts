@@ -6,7 +6,7 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { components, components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
 import { getBlockTypeName } from "./common";
-import { MapIdToAsteroidType, PIRATE_KEY, ResourceStorages, RockRelationship } from "./constants";
+import { EntityType, MapIdToAsteroidType, PIRATE_KEY, ResourceStorages, RockRelationship } from "./constants";
 import { hashKeyEntity } from "./encode";
 import { getFullResourceCount } from "./resource";
 import { getRockSprite } from "src/game/lib/starmap/systems/utils/getSprites";
@@ -55,6 +55,7 @@ export function getSpaceRockInfo(primodium: Primodium, spaceRock: Entity) {
   const ownedBy = comps.OwnedBy.get(spaceRock)?.value as Entity | undefined;
   const mainBaseEntity = comps.Home.get(spaceRock)?.value as Entity;
   const mainBaseLevel = comps.Level.get(mainBaseEntity)?.value;
+  const asteroidData = comps.Asteroid.get(spaceRock);
 
   const position = comps.Position.get(spaceRock, {
     x: 0,
@@ -73,6 +74,7 @@ export function getSpaceRockInfo(primodium: Primodium, spaceRock: Entity) {
 
     return acc;
   }, [] as { id: Entity; amount: bigint }[]);
+  const { resourceCount: encryption } = getFullResourceCount(EntityType.Encryption, spaceRock);
 
   const hangar = Hangar.get(spaceRock);
 
@@ -96,6 +98,8 @@ export function getSpaceRockInfo(primodium: Primodium, spaceRock: Entity) {
     entity: spaceRock,
     isInGracePeriod,
     gracePeriodValue,
+    asteroidData,
+    encryption,
   };
 }
 

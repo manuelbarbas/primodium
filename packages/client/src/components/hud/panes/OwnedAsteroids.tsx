@@ -3,10 +3,15 @@ import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
+import { Pane } from "src/components/core/Pane";
+import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
-import { getSpaceRockInfo } from "src/util/asteroid";
+import { getSpaceRockInfo, getSpaceRockName } from "src/util/asteroid";
+import { getBlockTypeName } from "src/util/common";
+import { EntityType, ResourceImage } from "src/util/constants";
+import { entityToRockName } from "src/util/name";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -21,12 +26,22 @@ export const LabeledValue: React.FC<{
 };
 
 const Asteroid: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
+  const {
+    components,
+    playerAccount: { entity: playerEntity },
+  } = useMud();
   const primodium = usePrimodium();
-  const asteroidInfo = getSpaceRockInfo(primodium, asteroid);
+  const { position, imageUri, encryption } = getSpaceRockInfo(primodium, asteroid);
+  const description = getSpaceRockName(asteroid);
+  const home = components.Home.use(playerEntity)?.value === asteroid;
+  const active = components.ActiveRock.use()?.value === asteroid;
+  const selected = components.SelectedRock.use()?.value === asteroid;
 
   return (
     <Button
-      className="row-span-1 flex text-xs bg-base-100 p-2 flex-nowrap border-secondary"
+      className={`row-span-1 flex flex-col p-2 items-center text-xs bg-base-100 flex-nowrap border-secondary ${
+        selected ? "drop-shadow-hard ring-2 ring-warning" : ""
+      }`}
       onClick={async () => {
         const mapOpen = components.MapOpen.get(undefined, {
           value: false,
@@ -41,28 +56,59 @@ const Asteroid: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
 
         const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
 
-        components.SelectedRock.set({ value: asteroidInfo.entity });
+        components.SelectedRock.set({ value: asteroid });
 
         pan({
-          x: asteroidInfo.position.x,
-          y: asteroidInfo.position.y,
+          x: position.x,
+          y: position.y,
         });
 
         zoomTo(2);
       }}
     >
-      <img src={asteroidInfo.imageUri} className=" w-9 h-9 bg-neutral" />
-      <div className="flex flex-col h-fit text-xs gap-1">
-        <div className="flex gap-1 items-center justify-center"></div>
-        <p className="whitespace-nowrap font-medium text-white/50">
-          [{asteroidInfo.position.x},{asteroidInfo.position.y}]
-        </p>
+      <div className="flex flex-col items-center gap-1">
+        <img src={imageUri} className=" w-12 h-12 p-2 bg-neutral border border-secondary" />
+        <div className="flex flex-col h-fit text-xs gap-1">
+          <div className="flex gap-1 items-center justify-center"></div>
+          <p className="font-bold -mt-3 bg-secondary">{entityToRockName(asteroid)}</p>
+          <p className="w-26 text-center wrap font-thin">{description}</p>
+        </div>
       </div>
+
+      <hr className="w-full border border-secondary/25" />
+      {home && <div className="absolute top-0 left-0 px-1 bg-info text-[.6rem]">home</div>}
+      {active && <div className="absolute top-0 right-0 px-1 bg-neutral text-[.6rem]">active</div>}
+
+      <ResourceIconTooltip
+        resource={EntityType.Encryption}
+        amount={encryption}
+        spaceRock={asteroid}
+        image={ResourceImage.get(EntityType.Encryption) ?? ""}
+        name={getBlockTypeName(EntityType.Encryption)}
+      />
+      {/* <div className="absolute top-0 right-0 bg-neutral p-1 flex divide-x-2 divide-secondary">
+        {selected && (
+          <IconLabel
+            imageUri="/img/icons/attackicon.png"
+            className="text-[.6rem] px-2"
+            tooltipDirection="left"
+            tooltipText="selected"
+          />
+        )}
+        {active && (
+          <IconLabel
+            imageUri="/img/icons/minersicon.png"
+            className="text-[.6rem] px-2"
+            tooltipDirection="left"
+            tooltipText="active"
+          />
+        )}
+      </div> */}
     </Button>
   );
 };
 
-export const OwnedAsteroids: React.FC = () => {
+export const _OwnedAsteroids: React.FC = () => {
   const {
     playerAccount: { entity: playerEntity },
   } = useMud();
@@ -71,10 +117,10 @@ export const OwnedAsteroids: React.FC = () => {
   const asteroids = useEntityQuery(query);
 
   return (
-    <>
+    <div className="p-2 max-h-96 overflow-y-auto scrollbar">
       {asteroids.length === 0 && (
         <SecondaryCard className="w-full h-full flex text-xs items-center justify-center font-bold">
-          <p className="opacity-50 uppercase">you control no MOTHERLODES</p>
+          <p className="opacity-50 uppercase">you control no asteroids</p>
         </SecondaryCard>
       )}
       <div className="grid grid-cols-2 gap-1">
@@ -82,6 +128,27 @@ export const OwnedAsteroids: React.FC = () => {
           return <Asteroid key={entity} asteroid={entity} />;
         })}
       </div>
-    </>
+    </div>
+  );
+};
+
+export const OwnedAsteroids = () => {
+  const { components } = useMud();
+  const mapOpen = components.MapOpen.use()?.value;
+
+  if (!mapOpen) return null;
+
+  return (
+    <Pane
+      id="owned_asteroids"
+      title="Owned Asteroids"
+      defaultLocked
+      draggable
+      persist
+      scene={Scenes.Asteroid}
+      defaultCoord={{ x: 0, y: 0 }}
+    >
+      <_OwnedAsteroids />
+    </Pane>
   );
 };

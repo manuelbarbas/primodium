@@ -61,7 +61,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   return (
     <div
       style={{ left: `calc(${screenCoord.x}px)`, top: `calc(${screenCoord.y}px)` }}
-      className={`text-error absolute -translate-y-1/2 -translate-x-1/2`}
+      className={`text-error font-pixel absolute -translate-y-1/2 -translate-x-1/2`}
     >
       <div
         className="w-14 h-14 border-2 border-error flex items-center justify-center"
