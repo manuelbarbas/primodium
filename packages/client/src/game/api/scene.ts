@@ -3,6 +3,9 @@ import { createGame } from "engine/api";
 import { Scene } from "engine/types";
 
 export function createSceneApi(game: Awaited<ReturnType<typeof createGame>>) {
+  function getScene(scene: Scenes) {
+    return game.sceneManager.scenes.get(scene);
+  }
   function getConfig(scene: Scenes) {
     const config = game.sceneManager.scenes.get(scene)?.config;
 
@@ -23,6 +26,7 @@ export function createSceneApi(game: Awaited<ReturnType<typeof createGame>>) {
 
   return {
     getConfig,
+    getScene,
     transitionToScene,
   };
 }

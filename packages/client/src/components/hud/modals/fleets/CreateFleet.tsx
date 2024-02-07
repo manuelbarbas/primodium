@@ -132,7 +132,6 @@ const CreateFleet: React.FC = () => {
   }, [handleKeyDown, handleKeyUp, stopDragging]);
 
   const { disabled, submitMessage } = useMemo(() => {
-    console.log("sizes:", fleetUnitCounts.size, fleetResourceCounts.size);
     if (maxFleets === 0n) return { disabled: true, submitMessage: "No Fleets Left" };
     if (fleetUnitCounts.size + fleetResourceCounts.size === 0) return { disabled: true, submitMessage: "Create Fleet" };
     if ([...fleetResourceCounts.entries()].reduce((acc, curr) => curr[1] + acc, 0n) > fleetStats.cargo)

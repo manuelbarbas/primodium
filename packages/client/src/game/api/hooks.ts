@@ -1,14 +1,14 @@
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 import { clone, throttle } from "lodash";
 import { useEffect, useState } from "react";
-import { useSettingsStore } from "../stores/SettingsStore";
-import { Coord } from "@latticexyz/utils";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { getDegreeDirection } from "src/util/common";
+import { usePersistantStore } from "../stores/PersistantStore";
 
 export function createHooksApi(targetScene: Scene) {
   function useKeybinds() {
-    return useSettingsStore((state) => state.keybinds);
+    return usePersistantStore((state) => state.keybinds);
   }
 
   function useCamera() {
@@ -40,7 +40,7 @@ export function createHooksApi(targetScene: Scene) {
   function useCoordToScreenCoord(coord: Coord, bounded = false) {
     const {
       tilemap: { tileHeight, tileWidth },
-      camera,
+      camera: { phaserCamera, worldView$ },
     } = targetScene;
 
     const [state, setState] = useState({
@@ -50,9 +50,9 @@ export function createHooksApi(targetScene: Scene) {
     });
 
     useEffect(() => {
-      const worldViewListener = camera?.worldView$.subscribe((worldView) => {
+      const callback = (worldView: Phaser.Geom.Rectangle) => {
         const pixelCoord = tileCoordToPixelCoord(coord, tileWidth, tileHeight);
-        const zoom = camera.phaserCamera.zoom;
+        const zoom = phaserCamera.zoom;
         pixelCoord.y = -pixelCoord.y; // Adjust for coordinate system. Y is inverted in Phaser
 
         let isBoundedTemp = false;
@@ -86,10 +86,11 @@ export function createHooksApi(targetScene: Scene) {
           isBounded: isBoundedTemp,
           direction: newDirection,
         });
-      });
-
-      return () => worldViewListener?.unsubscribe();
-    }, [camera, coord, bounded, tileHeight, tileWidth]);
+      };
+      callback(phaserCamera.worldView);
+      const worldViewListener = worldView$.subscribe(callback);
+      return () => worldViewListener.unsubscribe();
+    }, [coord, bounded, phaserCamera, tileHeight, tileWidth, worldView$]);
 
     return state;
   }

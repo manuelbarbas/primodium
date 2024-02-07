@@ -1,3 +1,3 @@
-export const Loader = ({ className }: { className?: string }) => {
-  return <span className={`loading loading-dots loading-sm ${className}`}></span>;
+export const Loader = ({ className, size = "sm" }: { className?: string; size?: "sm" | "xs" }) => {
+  return <span className={`loading loading-dots ${size == "sm" ? "loading-sm" : "loading-xs"} ${className}`}></span>;
 };

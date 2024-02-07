@@ -1,9 +1,11 @@
 import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
-import { Entity } from "@latticexyz/recs";
+import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
+import { Scene } from "engine/types";
 import { components, components as comps } from "src/network/components";
 import { Hex } from "viem";
-import { SPEED_SCALE, UnitStorages } from "./constants";
-import { entityToRockName } from "./name";
+import { PIRATE_KEY, SPEED_SCALE, UnitStorages } from "./constants";
+import { hashKeyEntity } from "./encode";
+import { entityToFleetName } from "./name";
 
 export function getFleetUnitCounts(fleet: Entity) {
   return components.P_UnitPrototypes.get(undefined, { value: [] }).value.reduce((acc, entity) => {
@@ -81,11 +83,11 @@ export const getFleetStats = (fleet: Entity) => {
     ret.decryption = bigIntMax(ret.decryption, unitData.DEC);
     ret.speed = bigIntMin(ret.speed == 0n ? BigInt(10e100) : ret.speed, unitData.SPD);
   });
-  return { ...ret, title: entityToRockName(fleet) };
+  return { ...ret, title: entityToFleetName(fleet) };
 };
 
 export const getFleetStatsFromUnits = (units: Map<Entity, bigint>) => {
-  const selectedRock = components.SelectedRock.get()?.value as Entity;
+  const selectedRock = components.ActiveRock.get()?.value as Entity;
   const data = { attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
 
   units.forEach((count, unit) => {
@@ -99,6 +101,46 @@ export const getFleetStatsFromUnits = (units: Map<Entity, bigint>) => {
   });
   return data;
 };
+
+export const getAllOrbitingFleets = (entity: Entity) => {
+  const playerEntity = components.Account.get()?.value;
+  if (
+    !playerEntity ||
+    (components.PirateAsteroid.has(entity) &&
+      hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(entity)?.value)
+  )
+    return [];
+
+  return [...runQuery([Has(components.IsFleet), HasValue(components.FleetMovement, { destination: entity })])].filter(
+    (entity) => {
+      const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
+      const now = components.Time.get()?.value ?? 0n;
+      return arrivalTime < now;
+    }
+  );
+};
+export const getFleetTilePosition = (scene: Scene, fleet: Entity) => {
+  const { tileHeight, tileWidth } = scene.tilemap;
+  const spaceRock = components.FleetMovement.get(fleet)?.destination as Entity;
+  const rockGroup = scene.objectPool.getGroup(spaceRock + "_spacerockOrbits");
+  const position = rockGroup.get(fleet + "_fleetOrbit", "Graphics").position;
+  return { x: position.x / tileWidth, y: -position.y / tileHeight };
+};
+
+const orbitRadius = 64;
+export function calculatePosition(
+  angleInDegrees: number,
+  origin: { x: number; y: number },
+  scale?: { tileWidth: number; tileHeight: number }
+): { x: number; y: number } {
+  const tileWidth = scale?.tileWidth ?? 1;
+  const tileHeight = scale?.tileHeight ?? 1;
+  const radians = (angleInDegrees * Math.PI) / 180; // Convert angle to radians
+  const x = (orbitRadius / tileWidth) * Math.cos(radians); // Calculate x coordinate
+  const y = (orbitRadius / tileHeight) * Math.sin(radians); // Calculate y coordinate
+
+  return { x: x + origin.x, y: y + origin.y };
+}
 
 // time is in blocks (~1/second)
 export function getUnitTrainingTime(rawPlayer: Entity, rawBuilding: Entity, rawUnit: Entity) {
@@ -126,4 +168,53 @@ export function getUnitTrainingTime(rawPlayer: Entity, rawBuilding: Entity, rawU
 
   const rawTrainingTime = comps.P_Unit.getWithKeys({ entity: unitEntity, level: unitLevel })?.trainingTime ?? 0n;
   return (rawTrainingTime * 100n * 100n * SPEED_SCALE) / (multiplier * config.unitProductionRate * config.worldSpeed);
+}
+
+export function getCanAttackSomeone(entity: Entity) {
+  const isFleet = components.IsFleet.get(entity);
+  const spaceRock = (isFleet ? components.FleetMovement.get(entity)?.destination : entity) as Entity | undefined;
+  if (!spaceRock) return false;
+  const player = components.Account.get()?.value;
+  if (components.OwnedBy.get(spaceRock)?.value !== player) return true;
+
+  const allFleets = getAllOrbitingFleets(spaceRock);
+  return !!allFleets.find((fleet) => {
+    if (fleet === entity) return false;
+    const owner = components.OwnedBy.get(fleet)?.value as Entity;
+    if (!owner) return false;
+    const ownerOwner = components.OwnedBy.get(entity)?.value;
+    return ownerOwner !== player;
+  });
+}
+
+export function getCanAttack(originEntity: Entity, targetEntity: Entity) {
+  const isOriginFleet = components.IsFleet.get(originEntity);
+  const isTargetFleet = components.IsFleet.get(targetEntity);
+  if (!isOriginFleet && !isTargetFleet) return false;
+
+  const targetRock = (isTargetFleet ? components.FleetMovement.get(targetEntity)?.destination : targetEntity) as
+    | Entity
+    | undefined;
+  const targetOwnerRock = (isTargetFleet ? components.OwnedBy.get(targetEntity)?.value : targetEntity) as
+    | Entity
+    | undefined;
+  const targetRockOwner = components.OwnedBy.get(targetOwnerRock)?.value;
+
+  const originEntityRock = (isOriginFleet ? components.FleetMovement.get(originEntity)?.destination : originEntity) as
+    | Entity
+    | undefined;
+  const originEntityOwnerRock = (isOriginFleet ? components.OwnedBy.get(originEntity)?.value : originEntity) as Entity;
+  const originEntityOwnerRockOwner = components.OwnedBy.get(originEntityOwnerRock)?.value;
+
+  if (!originEntityOwnerRockOwner || !targetOwnerRock) return false;
+  if (targetRock !== originEntityRock || targetRockOwner === originEntityOwnerRockOwner) return false;
+  return true;
+}
+
+export function getCanSend(originEntity: Entity, targetEntity: Entity) {
+  const isFleet = components.IsFleet.get(targetEntity);
+
+  const ownerRock = components.FleetMovement.get(originEntity)?.destination;
+  if (isFleet || components.BuildingType.has(targetEntity) || ownerRock == targetEntity) return false;
+  return true;
 }

@@ -2,6 +2,7 @@ import { coordEq, pixelCoordToTileCoord, tileCoordToPixelCoord } from "@latticex
 import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 
+// const anchorMap =
 export const createCameraApi = (targetScene: Scene) => {
   function pan(coord: Coord, duration = 1000, ease = "Power2") {
     const { phaserScene, camera, tilemap } = targetScene;
@@ -15,9 +16,11 @@ export const createCameraApi = (targetScene: Scene) => {
       const currentTween = phaserScene.tweens.getTweensOf(camera.phaserCamera)[0];
 
       const endCoord = {
-        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         x: currentTween.data[0]?.end ?? 0,
-        //@ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-expect-error
         y: currentTween.data[1]?.end ?? 0,
       };
 
@@ -64,9 +67,28 @@ export const createCameraApi = (targetScene: Scene) => {
     const { camera } = targetScene;
 
     requestAnimationFrame(() => {
-      camera?.worldView$.next(camera.phaserCamera.worldView);
-      camera?.zoom$.next(camera.phaserCamera.zoom);
+      camera.zoom$.next(camera.phaserCamera.zoom);
+      camera.worldView$.next(camera.phaserCamera.worldView);
     });
+  }
+
+  function screenCoordToWorldCoord(screenCoord: Coord) {
+    const { camera } = targetScene;
+
+    const pixelCoord = camera.phaserCamera.getWorldPoint(screenCoord.x, screenCoord.y);
+
+    return pixelCoord;
+  }
+
+  function worldCoordToScreenCoord(worldCoord: Coord) {
+    const { camera } = targetScene;
+
+    //convert canvas screen coord to phaser screen coord
+    // Convert world coord to phaser screen coord
+    const screenCoordX = (worldCoord.x - camera.phaserCamera.worldView.x) * camera.phaserCamera.zoom;
+    const screenCoordY = (worldCoord.y - camera.phaserCamera.worldView.y) * camera.phaserCamera.zoom;
+
+    return { x: screenCoordX, y: screenCoordY };
   }
 
   const shake = () => {
@@ -77,11 +99,32 @@ export const createCameraApi = (targetScene: Scene) => {
     camera.phaserCamera.shake(300, 0.01 / camera.phaserCamera.zoom);
   };
 
+  function createDOMContainer(id: string, coord: Coord, raw = false) {
+    const {
+      tilemap: { tileHeight, tileWidth },
+    } = targetScene;
+    const pixelCoord = raw ? coord : tileCoordToPixelCoord(coord, tileWidth, tileHeight);
+    pixelCoord.y = raw ? pixelCoord.y : -pixelCoord.y;
+
+    const div = document.createElement("div");
+    div.id = id;
+
+    const obj = targetScene.phaserScene.add.dom(pixelCoord.x, pixelCoord.y, div);
+
+    targetScene.phaserScene.data.set(id, { obj, container: div });
+
+    return { obj, container: div };
+  }
+
   return {
     pan,
     zoomTo,
     getPosition,
+    screenCoordToWorldCoord,
+    worldCoordToScreenCoord,
     updateWorldView,
     shake,
+    createDOMContainer,
+    ...targetScene.camera,
   };
 };

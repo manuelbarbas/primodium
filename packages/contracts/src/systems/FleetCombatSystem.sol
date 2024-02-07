@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { ResourceCount, FleetStance, IsFleet, NewBattleResult, NewBattleResultData, FleetMovement, P_GracePeriod, GracePeriod, OwnedBy } from "codegen/index.sol";
+import { PirateAsteroid, ResourceCount, FleetStance, IsFleet, BattleResult, BattleResultData, FleetMovement, P_GracePeriod, GracePeriod, OwnedBy } from "codegen/index.sol";
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
+import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
 import { EFleetStance, EResource } from "src/Types.sol";
-import { fleetBattleResolveRaid, fleetBattleApplyDamage, fleetResolveBattleEncryption, transferSpaceRockOwnership, initializeSpaceRockOwnership } from "libraries/SubsystemCalls.sol";
+import { fleetBattleResolveRaid, fleetBattleApplyDamage, fleetResolveBattleEncryption, transferSpaceRockOwnership, initializeSpaceRockOwnership, fleetResolvePirateAsteroid } from "libraries/SubsystemCalls.sol";
 
 contract FleetCombatSystem is FleetBaseSystem {
   modifier _onlyWhenSpaceRockNotInGracePeriod(bytes32 spaceRock) {
@@ -17,14 +18,6 @@ contract FleetCombatSystem is FleetBaseSystem {
     require(
       !((FleetMovement.getArrivalTime(fleetId) + P_GracePeriod.getFleet()) <= block.timestamp),
       "[Fleet] Target fleet is in grace period"
-    );
-    _;
-  }
-
-  modifier _onlyWhenNotInStance(bytes32 fleetId) {
-    require(
-      FleetStance.getStance(fleetId) == uint8(EFleetStance.NULL),
-      "[Fleet] Can not attack while fleet is in stance"
     );
     _;
   }
@@ -55,7 +48,7 @@ contract FleetCombatSystem is FleetBaseSystem {
     _onlyWhenNotInStance(fleetId)
     _onlyWhenFleetsAreIsInSameOrbit(fleetId, targetFleet)
   {
-    (bytes32 battleId, NewBattleResultData memory batteResult) = LibFleetCombat.attack(fleetId, targetFleet);
+    (bytes32 battleId, BattleResultData memory batteResult) = LibFleetCombat.attack(fleetId, targetFleet);
 
     afterBattle(battleId, batteResult);
   }
@@ -69,10 +62,11 @@ contract FleetCombatSystem is FleetBaseSystem {
     _onlyWhenNotInStance(fleetId)
     _onlyWhenSpaceRockNotInGracePeriod(targetSpaceRock)
     _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, targetSpaceRock)
+    _onlyWhenNotPirateAsteroidOrHasNotBeenDefeated(targetSpaceRock)
     _claimResources(targetSpaceRock)
     _claimUnits(targetSpaceRock)
   {
-    (bytes32 battleId, NewBattleResultData memory batteResult) = LibFleetCombat.attack(fleetId, targetSpaceRock);
+    (bytes32 battleId, BattleResultData memory batteResult) = LibFleetCombat.attack(fleetId, targetSpaceRock);
     afterBattle(battleId, batteResult);
   }
 
@@ -87,28 +81,53 @@ contract FleetCombatSystem is FleetBaseSystem {
     _claimResources(spaceRock)
     _claimUnits(spaceRock)
   {
-    (bytes32 battleId, NewBattleResultData memory batteResult) = LibFleetCombat.attack(spaceRock, targetFleet);
+    (bytes32 battleId, BattleResultData memory batteResult) = LibFleetCombat.attack(spaceRock, targetFleet);
     afterBattle(battleId, batteResult);
   }
 
-  function afterBattle(bytes32 battleId, NewBattleResultData memory battleResult) internal {
-    fleetBattleApplyDamage(battleId, battleResult.aggressorEntity, battleResult.targetDamage);
-    if (battleResult.winner == battleResult.aggressorEntity) {
+  function afterBattle(bytes32 battleId, BattleResultData memory battleResult) internal {
+    bool isAggressorWinner = battleResult.winner == battleResult.aggressorEntity;
+
+    bool isAggressorFleet = IsFleet.get(battleResult.aggressorEntity);
+
+    bool isTargetFleet = IsFleet.get(battleResult.targetEntity);
+    bytes32 defendingPlayerEntity = isTargetFleet
+      ? OwnedBy.get(OwnedBy.get(battleResult.targetEntity))
+      : OwnedBy.get(battleResult.targetEntity);
+    uint256 aggressorDecryption = 0;
+    bytes32 aggressorDecryptionUnitPrototype = bytes32(0);
+    if (isAggressorFleet)
+      (aggressorDecryptionUnitPrototype, aggressorDecryption) = LibFleetAttributes.getDecryption(
+        battleResult.aggressorEntity
+      );
+    bool isPirateAsteroid = PirateAsteroid.getIsPirateAsteroid(battleResult.targetEntity);
+    bool isRaid = isAggressorWinner && (isTargetFleet || aggressorDecryption == 0 || isPirateAsteroid);
+
+    bool isDecryption = !isRaid && isAggressorWinner && !isTargetFleet && aggressorDecryption > 0 && !isPirateAsteroid;
+    fleetBattleApplyDamage(battleId, defendingPlayerEntity, battleResult.aggressorEntity, battleResult.targetDamage);
+
+    if (isRaid) {
       fleetBattleResolveRaid(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
-      if (!IsFleet.get(battleResult.targetEntity)) {
-        LibFleetCombat.resolveBattleEncryption(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
-        //todo the following commented line reverts for some reason although it just calles the library function above
-        //fleetResolveBattleEncryption(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
-        if (ResourceCount.get(battleResult.targetEntity, uint8(EResource.R_Encryption)) == 0) {
-          if (OwnedBy.get(battleResult.targetEntity) != bytes32(0)) {
-            transferSpaceRockOwnership(battleResult.targetEntity, _player());
-          } else {
-            initializeSpaceRockOwnership(battleResult.targetEntity, _player());
-          }
+    } else if (isDecryption) {
+      //in decryption we resolve encryption first so the fleet decryption unit isn't lost before decrypting
+      LibFleetCombat.resolveBattleEncryption(
+        battleId,
+        battleResult.targetEntity,
+        battleResult.aggressorEntity,
+        aggressorDecryptionUnitPrototype,
+        aggressorDecryption
+      );
+      if (ResourceCount.get(battleResult.targetEntity, uint8(EResource.R_Encryption)) == 0) {
+        if (OwnedBy.get(battleResult.targetEntity) != bytes32(0)) {
+          transferSpaceRockOwnership(battleResult.targetEntity, _player());
+        } else {
+          initializeSpaceRockOwnership(battleResult.targetEntity, _player());
         }
       }
     }
-
-    fleetBattleApplyDamage(battleId, battleResult.targetEntity, battleResult.aggressorDamage);
+    fleetBattleApplyDamage(battleId, _player(), battleResult.targetEntity, battleResult.aggressorDamage);
+    if (isPirateAsteroid && isAggressorWinner) {
+      fleetResolvePirateAsteroid(_player(), battleResult.targetEntity);
+    }
   }
 }

@@ -1,16 +1,11 @@
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
-import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { recallStationedUnits } from "src/network/setup/contractCalls/recall";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage } from "src/util/constants";
 
 export const StationedUnits: React.FC = () => {
-  const mud = useMud();
-
   const destination = components.Send.get()?.destination;
   const { units, counts } = components.Hangar.use(destination, {
     units: [],
@@ -51,7 +46,7 @@ export const StationedUnits: React.FC = () => {
       <div className="flex gap-2 mt-1">
         <Navigator.BackButton
           className="btn-secondary border-none"
-          onClick={() => recallStationedUnits(mud, destination ?? singletonEntity)}
+          // onClick={() => recallStationedUnits(mud, destination ?? singletonEntity)}
         >
           RECALL
         </Navigator.BackButton>

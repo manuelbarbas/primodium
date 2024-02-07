@@ -1,12 +1,12 @@
 import { Assets, AudioKeys } from "@game/constants";
 import { Scene } from "engine/types";
-import { useSettingsStore } from "../stores/SettingsStore";
+import { usePersistantStore } from "../stores/PersistantStore";
 
 export type Channel = "music" | "sfx" | "ui";
 
 export const createAudioApi = (scene: Scene) => {
   function play(key: AudioKeys, channel: Channel, config?: Phaser.Types.Sound.SoundConfig) {
-    const volume = useSettingsStore.getState().volume;
+    const volume = usePersistantStore.getState().volume;
 
     setVolume(volume[channel], channel);
     scene.audio[channel].playAudioSprite(Assets.AudioAtlas, key, {
@@ -15,7 +15,7 @@ export const createAudioApi = (scene: Scene) => {
   }
 
   function setVolume(volume: number, channel: Channel | "master" = "master") {
-    const { setVolume, volume: _volume } = useSettingsStore.getState();
+    const { setVolume, volume: _volume } = usePersistantStore.getState();
 
     setVolume(volume, channel);
 

@@ -101,7 +101,7 @@ export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, 
 
   const input = createInput(scene.input);
 
-  camera.centerOn(0, 0);
+  // camera.centerOn(0, 0);
   camera.setZoom(defaultZoom);
 
   /* -------------------------- Create Audio Channels ------------------------- */
