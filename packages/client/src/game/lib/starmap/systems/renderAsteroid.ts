@@ -237,6 +237,13 @@ export const renderAsteroid = (scene: Scene) => {
         borderThickness: 8,
         borderColor: 0xff0000,
       }),
+      Tween(scene, {
+        scale: { from: spriteScale - 0.03, to: spriteScale + 0.03 },
+        ease: "Sine.easeInOut",
+        duration: 3000,
+        yoyo: true,
+        repeat: -1,
+      }),
       OnComponentSystem(components.FleetStance, (gameObject, { entity: fleetEntity, value: [newVal, oldVal] }) => {
         const fleetPosition = components.FleetMovement.get(fleetEntity)?.destination;
         if (fleetPosition !== entity) return;
