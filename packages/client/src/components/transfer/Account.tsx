@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { FaClipboard, FaExclamationCircle, FaExclamationTriangle, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useMud } from "src/hooks";
-import { useNoExternalAccount } from "src/hooks/useNoExternalAccount";
 import { copyToClipboard } from "src/util/clipboard";
+import { useShallow } from "zustand/react/shallow";
 import { Button } from "../core/Button";
 import { AccountDisplay } from "../shared/AccountDisplay";
 import { Delegate } from "./Delegate";
@@ -11,7 +12,9 @@ import { Delegate } from "./Delegate";
 export function Account() {
   const mud = useMud();
   const { playerAccount } = mud;
-  const { removeNoExternalAccount } = useNoExternalAccount();
+  const { removeNoExternalAccount } = usePersistentStore(
+    useShallow((state) => ({ removeNoExternalAccount: state.removeNoExternalAccount }))
+  );
   const [showingToast, setShowingToast] = useState(false);
 
   const removeBurnerPlayerAccount = async () => {

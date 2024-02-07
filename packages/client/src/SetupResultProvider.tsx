@@ -3,10 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import "react-toastify/dist/ReactToastify.min.css";
 import { Hex } from "viem";
 import { useAccount } from "wagmi";
+import { useShallow } from "zustand/react/shallow";
 import AppLoadingState from "./AppLoadingState";
 import { Initializing } from "./components/shared/Initializing";
+import { usePersistentStore } from "./game/stores/PersistentStore";
 import { MudProvider } from "./hooks/providers/MudProvider";
-import { useNoExternalAccount } from "./hooks/useNoExternalAccount";
 import useSetupResult from "./hooks/useSetupResult";
 import { world } from "./network/world";
 import { Maintenance } from "./screens/Maintenance";
@@ -19,7 +20,10 @@ export default function SetupResultProvider() {
   const { network, updatePlayerAccount, playerAccount, components } = setupResult;
   const externalAccount = useAccount();
   const mounted = useRef<boolean>(false);
-  const { noExternalAccount } = useNoExternalAccount();
+
+  const { noExternalAccount } = usePersistentStore(
+    useShallow((state) => ({ noExternalAccount: state.noExternalAccount }))
+  );
 
   useEffect(() => {
     /* This cheese exists because otherwise there is a race condition to check if the player 

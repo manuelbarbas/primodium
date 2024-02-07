@@ -7,7 +7,7 @@ import { KeybindActions } from "@game/constants";
 import { Coord } from "@latticexyz/utils";
 import { Key } from "engine/types";
 
-const VERSION = 3;
+const VERSION = 4;
 
 type Keybinds = Partial<{
   [key in KeybindActions]: Set<Key>;
@@ -39,6 +39,7 @@ type PersistentState = {
   allowHackerModal: boolean;
   uiScale: number;
   consoleHistory: { input: string; output: string }[];
+  noExternalAccount: boolean;
   panes: Panes;
 };
 
@@ -55,6 +56,8 @@ type PersistentActions = {
   setPane: (id: string, coord: Coord, pinned: boolean, locked: boolean) => void;
   removePane: (id: string) => void;
   resetPanes: () => void;
+  setNoExternalAccount: (value: boolean) => void; // Add this action
+  removeNoExternalAccount: () => void; // Add this action
 };
 
 const defaults: PersistentState = {
@@ -62,6 +65,7 @@ const defaults: PersistentState = {
   allowHackerModal: false,
   uiScale: 1,
   consoleHistory: [],
+  noExternalAccount: false,
   panes: {},
   volume: {
     master: 1,
@@ -166,6 +170,8 @@ export const usePersistentStore = create<PersistentState & PersistentActions>()(
       resetPanes: () => {
         set({ panes: {} });
       },
+      setNoExternalAccount: (value: boolean) => set({ noExternalAccount: value }),
+      removeNoExternalAccount: () => set({ noExternalAccount: false }),
     }),
     {
       name: "persistent-storage",

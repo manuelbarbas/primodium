@@ -3,12 +3,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { FaRegCopyright } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useMud } from "src/hooks/useMud";
-import { useNoExternalAccount } from "src/hooks/useNoExternalAccount";
 import { components } from "src/network/components";
 import { spawn } from "src/network/setup/contractCalls/spawn";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { useNetwork, useSwitchNetwork } from "wagmi";
+import { useShallow } from "zustand/react/shallow";
 
 const params = new URLSearchParams(window.location.search);
 export const Landing: React.FC = () => {
@@ -16,7 +17,9 @@ export const Landing: React.FC = () => {
   const playerEntity = mud.playerAccount.entity;
   const navigate = useNavigate();
   const location = useLocation();
-  const { noExternalAccount } = useNoExternalAccount();
+  const { noExternalAccount } = usePersistentStore(
+    useShallow((state) => ({ noExternalAccount: state.noExternalAccount }))
+  );
 
   const handlePlay = async () => {
     const hasSpawned = !!components.Home.get(playerEntity)?.value;

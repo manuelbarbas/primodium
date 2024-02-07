@@ -3,9 +3,9 @@ import { chunk } from "lodash";
 import { useEffect, useState } from "react";
 import { FaExclamationTriangle, FaRegCopyright } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { useNoExternalAccount } from "src/hooks/useNoExternalAccount";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { useAccount, useConnect } from "wagmi";
+import { usePersistentStore } from "./game/stores/PersistentStore";
 
 const params = new URLSearchParams(window.location.search);
 
@@ -18,7 +18,7 @@ const connectorIcons: Record<string, string> = {
 export const Connect: React.FC = () => {
   const { connector, isConnected } = useAccount();
   const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
-  const { noExternalAccount, setNoExternalAccount } = useNoExternalAccount();
+  const { noExternalAccount, setNoExternalAccount } = usePersistentStore();
   const [showingToast, setShowingToast] = useState(false);
 
   useEffect(() => {
