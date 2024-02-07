@@ -29,11 +29,11 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
 
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
-
+    uint256 aliceScore = Score.get(aliceEntity);
     vm.startPrank(alice);
     bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
-
+    assertEq(Score.get(aliceEntity), aliceScore, "score should stay the same");
     assertEq(UnitCount.get(fleetId, unitPrototype), 1, "fleet unit count doesn't match");
     assertEq(UnitCount.get(aliceHomeSpaceRock, unitPrototype), 0, "space rock unit count doesn't match");
     assertEq(ResourceCount.get(fleetId, uint8(EResource.Iron)), 1, "fleet resource count doesn't match");
@@ -67,12 +67,12 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
 
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
-
+    uint256 aliceScore = Score.get(aliceEntity);
     vm.startPrank(alice);
     bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     world.landFleet(fleetId, aliceHomeSpaceRock);
     vm.stopPrank();
-
+    assertEq(Score.get(aliceEntity), aliceScore, "score should stay the same");
     assertEq(UnitCount.get(fleetId, unitPrototype), 0, "fleet unit count doesn't match");
     assertEq(UnitCount.get(aliceHomeSpaceRock, unitPrototype), 1, "space rock unit count doesn't match");
     assertEq(ResourceCount.get(fleetId, uint8(EResource.Iron)), 0, "fleet resource count doesn't match");

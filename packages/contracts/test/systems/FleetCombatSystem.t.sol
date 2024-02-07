@@ -538,6 +538,11 @@ contract FleetCombatSystemTest is PrimodiumTest {
     console.log("creaete bob fleet done");
 
     vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetIds[0]), block.timestamp));
+
+    uint256 bobHomeScore = Score.get(bobHomeSpaceRock);
+    uint256 bobPlayerScore = Score.get(bobEntity);
+    uint256 aliceScore = Score.get(aliceEntity);
+
     vm.startPrank(alice);
     for (uint256 i = 0; i < fleetCountToWin; i++) {
       console.log("fleet attack %s", i);
@@ -563,7 +568,9 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     vm.stopPrank();
     console.log("encryption after battles: %s", ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)));
-
+    assertEq(Score.get(aliceEntity), aliceScore + bobHomeScore, "alice should have gained bob's home asteroid score");
+    assertEq(Score.get(bobHomeSpaceRock), bobHomeScore, "bobs home score should not have changed");
+    assertEq(Score.get(bobEntity), 0, "bob's score should reset to zero after losing space rock control");
     assertEq(OwnedBy.get(bobHomeSpaceRock), aliceEntity, "space rock should have been taken over");
 
     assertEq(UnitCount.get(bobFleet, unitPrototype), 0, "fleet should have been disbanded and marine units");

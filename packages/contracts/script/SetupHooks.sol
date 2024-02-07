@@ -4,10 +4,10 @@ pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 
-import { ScoreTableId, AllianceTableId, ResourceCountTableId } from "codegen/index.sol";
+import { OwnedByTableId, ScoreTableId, AllianceTableId, ResourceCountTableId } from "codegen/index.sol";
 import { OnResourceCount_Score } from "src/hooks/storeHooks/OnResourceCount_Score.sol";
 import { OnScore_Alliance_Score } from "src/hooks/storeHooks/OnScore_Alliance_Score.sol";
-
+import { OnOwnedBy_Score } from "src/hooks/storeHooks/OnOwnedBy_Score.sol";
 import { BEFORE_SPLICE_STATIC_DATA } from "@latticexyz/store/src/storeHookTypes.sol";
 
 function setupHooks(IWorld world) {
@@ -28,4 +28,9 @@ function registerScoreHook(IWorld world) {
   console.log("onScore_Alliance_Score address: %s", address(onScore_Alliance_Score));
   world.grantAccess(AllianceTableId, address(onScore_Alliance_Score));
   world.registerStoreHook(ScoreTableId, onScore_Alliance_Score, BEFORE_SPLICE_STATIC_DATA);
+
+  OnOwnedBy_Score onOwnedBy_Score = new OnOwnedBy_Score();
+  console.log("onOwnedBy_Score address: %s", address(onOwnedBy_Score));
+  world.grantAccess(ScoreTableId, address(onOwnedBy_Score));
+  world.registerStoreHook(OwnedByTableId, onOwnedBy_Score, BEFORE_SPLICE_STATIC_DATA);
 }

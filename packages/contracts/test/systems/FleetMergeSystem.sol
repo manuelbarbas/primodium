@@ -47,7 +47,7 @@ contract FleetMergeSystemTest is PrimodiumTest {
     vm.startPrank(alice);
     bytes32 secondFleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
-
+    uint256 aliceScore = Score.get(aliceEntity);
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == unitPrototype) unitCounts[i] = 1;
     }
@@ -64,6 +64,8 @@ contract FleetMergeSystemTest is PrimodiumTest {
     fleets[0] = fleetId;
     fleets[1] = secondFleetId;
     world.mergeFleets(fleets);
+
+    assertEq(Score.get(aliceEntity), aliceScore, "score should stay the same");
     vm.stopPrank();
 
     assertEq(UnitCount.get(fleetId, unitPrototype), 4, "fleet unit count doesn't match");
