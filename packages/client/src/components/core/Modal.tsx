@@ -41,6 +41,7 @@ export const Modal: React.FC<ModalProps> & {
 
   useEffect(() => {
     const handleEscPress = () => {
+      if (!isOpen) return;
       audio.play(AudioKeys.Sequence2, "ui");
       setIsOpen(false);
     };
@@ -57,7 +58,7 @@ export const Modal: React.FC<ModalProps> & {
     }
 
     const escListener = api.input.addListener(KeybindActions.Esc, handleEscPress);
-    const escListener2 = api2.input.addListener(KeybindActions.Esc, handleOpenPress);
+    const escListener2 = api2.input.addListener(KeybindActions.Esc, handleEscPress);
 
     const openListener = keybind ? api.input.addListener(keybind, handleOpenPress) : null;
     const openListener2 = keybind ? api2.input.addListener(keybind, handleOpenPress) : null;

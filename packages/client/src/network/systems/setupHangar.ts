@@ -92,7 +92,7 @@ export function setupHangar(mud: MUD) {
   });
 
   defineComponentSystem(systemWorld, components.BlockNumber, () => {
-    const selectedRock = components.SelectedRock.get()?.value as Entity;
+    const selectedRock = components.ActiveRock.get()?.value as Entity;
     const origin = Send.get()?.origin;
     const destination = Send.get()?.destination;
     if (selectedRock) createHangar(selectedRock);

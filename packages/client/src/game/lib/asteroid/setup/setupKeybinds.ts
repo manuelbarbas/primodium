@@ -22,7 +22,20 @@ export const setupKeybinds = (scene: Scene) => {
     if (mainBaseCoord) pan(mainBaseCoord);
   });
 
+  const escapeKeybind = addListener(KeybindActions.Esc, () => {
+    // todo: dont run this if a modal is open
+    if (components.SelectedBuilding.get()) components.SelectedBuilding.remove();
+
+    if (components.Send.get() || components.Attack.get()) {
+      components.Send.remove();
+      components.Attack.remove();
+    } else if (components.SelectedFleet.get()) components.SelectedFleet.remove();
+
+    if (components.SelectedRock.get()) components.SelectedRock.remove();
+  });
+
   world.registerDisposer(() => {
     mainbaseKeybind.dispose();
+    escapeKeybind.dispose();
   }, "game");
 };

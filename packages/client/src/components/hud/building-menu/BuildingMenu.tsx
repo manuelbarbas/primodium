@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { FaArrowsAlt, FaPowerOff, FaTrash } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
@@ -33,20 +33,6 @@ export const BuildingMenu: React.FC = () => {
   const buildingName = useBuildingName(selectedBuilding);
   const active = components.IsActive.use(selectedBuilding)?.value;
   const canToggle = !components.TrainingQueue.use(selectedBuilding)?.units.length;
-
-  useEffect(() => {
-    const removeSelectedBuildingOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        components.SelectedBuilding.remove();
-      }
-    };
-
-    document.addEventListener("keydown", removeSelectedBuildingOnEscape);
-
-    return () => {
-      document.removeEventListener("keydown", removeSelectedBuildingOnEscape);
-    };
-  }, []);
 
   if (!buildingName || !selectedBuilding) return null;
 

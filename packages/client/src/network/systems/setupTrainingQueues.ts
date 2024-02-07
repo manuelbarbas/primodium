@@ -70,7 +70,7 @@ export function setupTrainingQueues() {
   // update local queues each second
   // todo: create a component that tracks active asteroids (to be updated each second)
   defineComponentSystem(systemWorld, BlockNumber, (update) => {
-    const selectedRock = components.SelectedRock.get()?.value;
+    const selectedRock = components.ActiveRock.get()?.value;
     const origin = Send.get()?.origin;
     const destination = Send.get()?.destination;
     const parents: string[] = [];

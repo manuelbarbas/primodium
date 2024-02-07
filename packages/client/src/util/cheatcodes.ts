@@ -59,7 +59,7 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
     maxMainBaseLevel: {
       params: [],
       function: async () => {
-        const selectedRock = mud.components.SelectedRock.get()?.value;
+        const selectedRock = mud.components.ActiveRock.get()?.value;
         const mainBase = mud.components.Home.get(selectedRock)?.value as Entity | undefined;
         if (!mainBase) throw new Error("No main base found");
         const maxLevel = mud.components.P_MaxLevel.get(mainBase)?.value ?? 8n;
@@ -73,7 +73,7 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
       function: async (resource: string) => {
         const player = mud.playerAccount.entity;
         if (!player) throw new Error("No player found");
-        const selectedRock = mud.components.SelectedRock.get()?.value;
+        const selectedRock = mud.components.ActiveRock.get()?.value;
 
         const resourceEntity = resources[resource.toLowerCase()];
 
@@ -101,7 +101,7 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
         const player = mud.playerAccount.entity;
         if (!player) throw new Error("No player found");
 
-        const selectedRock = mud.components.SelectedRock.get()?.value;
+        const selectedRock = mud.components.ActiveRock.get()?.value;
         const resourceEntity = resources[resource.toLowerCase()];
 
         if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
@@ -132,7 +132,7 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
 
         if (!unitEntity) throw new Error("Unit not found");
 
-        const rock = mud.components.SelectedRock.get()?.value;
+        const rock = mud.components.ActiveRock.get()?.value;
 
         if (!rock) throw new Error("No asteroid found");
 
