@@ -61,7 +61,6 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
         {!!stance && (
           <div className="absolute bottom-0 right-0 translate-x-full w-36">
             <Button
-              disabled={selectingDestination || stats.speed == 0n || spaceRockData.isBlocked}
               onClick={() => clearFleetStance(mud, fleet)}
               className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
             >
