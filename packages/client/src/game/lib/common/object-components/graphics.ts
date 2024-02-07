@@ -297,13 +297,10 @@ function drawShield(
   const pos = getRelativeCoord(gameObject, position);
   let centerX = pos.x;
   let centerY = pos.y;
-  console.log("centerX", centerX, "centerY", centerY);
   if (center) {
     centerX -= width / 2;
     centerY -= height / 2;
   }
-
-  console.log("drawing shield");
   // Start drawing the shield shape
   gameObject.beginPath();
 

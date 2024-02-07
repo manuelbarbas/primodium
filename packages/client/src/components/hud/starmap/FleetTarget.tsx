@@ -1,9 +1,11 @@
 import { Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
+import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useSpaceRock } from "src/hooks/useSpaceRock";
 import { components } from "src/network/components";
+import { clearFleetStance } from "src/network/setup/contractCalls/fleetStance";
 import { getCanAttackSomeone, getFleetStats, getFleetTilePosition } from "src/util/unit";
 import { Button } from "../../core/Button";
 import { IconLabel } from "../../core/IconLabel";
@@ -18,6 +20,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
   const selectingDestination = !!components.Send.use()?.originFleet || selectingAttackDestination;
   const stats = getFleetStats(fleet);
   const spaceRockData = useSpaceRock(position);
+  const mud = useMud();
   const primodium = usePrimodium();
   const {
     scene: rawScene,
@@ -32,6 +35,8 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
     () => selectingDestination || stats.attack === 0n || !getCanAttackSomeone(fleet),
     [selectingDestination, stats.attack, fleet]
   );
+
+  const stance = components.FleetStance.use(fleet)?.stance;
 
   if (!scene || !mapOpen || !position) return <></>;
 
@@ -53,15 +58,28 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
             <IconLabel imageUri="/img/icons/weaponryicon.png" text="Attack" />
           </Button>
         </div>
-        <div className="absolute bottom-0 right-0 translate-x-full w-36">
-          <Button
-            disabled={selectingDestination || stats.speed == 0n || spaceRockData.isBlocked}
-            onClick={() => components.Send.setOrigin(fleet)}
-            className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
-          >
-            <IconLabel imageUri="/img/icons/moveicon.png" text={spaceRockData.isBlocked ? "Blocked" : "Move"} />
-          </Button>
-        </div>
+        {!!stance && (
+          <div className="absolute bottom-0 right-0 translate-x-full w-36">
+            <Button
+              disabled={selectingDestination || stats.speed == 0n || spaceRockData.isBlocked}
+              onClick={() => clearFleetStance(mud, fleet)}
+              className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
+            >
+              <IconLabel imageUri="/img/icons/moveicon.png" text="Clear Stance" />
+            </Button>
+          </div>
+        )}
+
+        {!stance && (
+          <div className="absolute bottom-0 right-0 translate-x-full w-36">
+            <Button
+              onClick={() => components.Send.setOrigin(fleet)}
+              className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
+            >
+              <IconLabel imageUri="/img/icons/moveicon.png" text={spaceRockData.isBlocked ? "Blocked" : "Move"} />
+            </Button>
+          </div>
+        )}
         <div className="absolute bottom-0 left-0 -translate-x-full">
           <Button
             className="btn-ghost btn-xs text-xs text-accent bg-neutral border border-r-0 pl-2 border-secondary/50 w-28 transition-[width] duration-200"

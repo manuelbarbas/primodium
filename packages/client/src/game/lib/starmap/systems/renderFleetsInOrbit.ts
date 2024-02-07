@@ -61,7 +61,6 @@ function getFleetShape(fleetEntity: Entity, position: Coord) {
   }
 
   if (stance === EFleetStance.Block) {
-    console.log("rendering square", entityToFleetName(fleetEntity));
     return Square(16, 16, {
       color,
       borderThickness: 1,
@@ -72,7 +71,6 @@ function getFleetShape(fleetEntity: Entity, position: Coord) {
       center: true,
     });
   }
-  console.log("rendering circle", entityToFleetName(fleetEntity));
   return Circle(8, {
     color,
     borderThickness: 1,
