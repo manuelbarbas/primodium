@@ -235,7 +235,7 @@ export function getRewardUtilitiesRequirement(objective: Entity, playerEntity: E
       id: id as Entity,
       requiredValue: requiredValue + (resourceStorage - resourceCount),
       currentValue: resourceStorage,
-      scale: 100n,
+      scale: 1n,
       type: RequirementType.RewardUtilities,
     };
   });
