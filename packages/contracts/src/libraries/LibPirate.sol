@@ -2,7 +2,7 @@
 pragma solidity ^0.8.21;
 
 // tables
-import { Home, P_IsUtility, P_UnitPrototypes, Asteroid, MaxResourceCount, ResourceCount, UnitCount, PirateAsteroidData, P_SpawnPirateAsteroid, P_SpawnPirateAsteroidData, PirateAsteroid, Spawned, ReversePosition, OwnedBy, Position, PositionData } from "codegen/index.sol";
+import { P_RequiredResources, P_RequiredResourcesData, Home, P_IsUtility, P_UnitPrototypes, Asteroid, MaxResourceCount, ResourceCount, UnitCount, PirateAsteroidData, P_SpawnPirateAsteroid, P_SpawnPirateAsteroidData, PirateAsteroid, Spawned, ReversePosition, OwnedBy, Position, PositionData } from "codegen/index.sol";
 
 // types
 import { EResource } from "src/Types.sol";
@@ -11,6 +11,7 @@ import { PirateKey } from "src/Keys.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
+import { LibStorage } from "libraries/LibStorage.sol";
 
 library LibPirate {
   /// @notice spawns new pirate asteroid for player in world
@@ -28,26 +29,27 @@ library LibPirate {
       Position.deleteRecord(asteroidEntity);
       bytes32[] memory units = P_UnitPrototypes.get();
       for (uint8 i = 0; i < units.length; i++) {
-        LibUnit.updateStoredUtilities(asteroidEntity, units[i], UnitCount.get(asteroidEntity, units[i]), false);
-        UnitCount.set(asteroidEntity, units[i], 0);
+        LibUnit.decreaseUnitCount(asteroidEntity, units[i], UnitCount.get(asteroidEntity, units[i]), true);
       }
     } else {
       Home.set(ownerEntity, asteroidEntity);
-      uint8 resourceCount = uint8(EResource.LENGTH);
-      LibProduction.increaseResourceProduction(asteroidEntity, EResource.U_Housing, 100000000);
-      for (uint8 i = 1; i < resourceCount; i++) {
-        if (!P_IsUtility.get(i)) {
-          MaxResourceCount.set(asteroidEntity, i, 100000000);
-        }
-      }
     }
+
     PositionData memory coord = PositionData({
       x: playerHomeAsteroidCoord.x + spawnPirateAsteroid.x,
       y: playerHomeAsteroidCoord.y + spawnPirateAsteroid.y,
       parent: 0
     });
 
-    PirateAsteroid.set(asteroidEntity, PirateAsteroidData({ prototype: prototype, playerEntity: playerEntity }));
+    PirateAsteroid.set(
+      asteroidEntity,
+      PirateAsteroidData({
+        isPirateAsteroid: true,
+        isDefeated: false,
+        prototype: prototype,
+        playerEntity: playerEntity
+      })
+    );
     Position.set(asteroidEntity, coord);
     Asteroid.setIsAsteroid(asteroidEntity, true);
     Spawned.set(ownerEntity, true);
@@ -57,14 +59,38 @@ library LibPirate {
     for (uint8 i = 0; i < spawnPirateAsteroid.resources.length; i++) {
       uint8 resource = spawnPirateAsteroid.resources[i];
       uint256 amount = spawnPirateAsteroid.resourceAmounts[i];
-      ResourceCount.set(asteroidEntity, resource, ResourceCount.get(asteroidEntity, resource) + amount);
+      increaseResource(asteroidEntity, resource, amount);
     }
 
     for (uint8 i = 0; i < spawnPirateAsteroid.units.length; i++) {
       bytes32 unit = spawnPirateAsteroid.units[i];
       uint256 amount = spawnPirateAsteroid.unitAmounts[i];
-      UnitCount.set(asteroidEntity, unit, UnitCount.get(asteroidEntity, unit) + amount);
-      LibUnit.updateStoredUtilities(asteroidEntity, unit, amount, true);
+      P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(unit, 0);
+      for (uint8 j = 0; j < requiredResources.resources.length; j++) {
+        uint8 resource = requiredResources.resources[j];
+        if (P_IsUtility.get(resource))
+          increaseResource(asteroidEntity, resource, requiredResources.amounts[j] * amount);
+      }
+      LibUnit.increaseUnitCount(asteroidEntity, unit, amount, true);
+    }
+  }
+
+  function increaseResource(bytes32 spaceRock, uint8 resourceType, uint256 count) internal {
+    if (P_IsUtility.get(resourceType)) {
+      if (ResourceCount.get(spaceRock, resourceType) < count)
+        LibProduction.increaseResourceProduction(
+          spaceRock,
+          EResource(resourceType),
+          count - ResourceCount.get(spaceRock, resourceType)
+        );
+    } else {
+      if (MaxResourceCount.get(spaceRock, resourceType) < count + ResourceCount.get(spaceRock, resourceType))
+        LibStorage.increaseMaxStorage(
+          spaceRock,
+          resourceType,
+          count + ResourceCount.get(spaceRock, resourceType) - MaxResourceCount.get(spaceRock, resourceType)
+        );
+      LibStorage.increaseStoredResource(spaceRock, resourceType, count);
     }
   }
 }
