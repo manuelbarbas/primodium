@@ -11,19 +11,22 @@ export const Blueprints = memo(() => {
   if (mapOpen) return null;
 
   return (
-    <Pane
-      id="blueprints"
-      title="BLUEPRINTS"
-      defaultCoord={{ x: 20, y: 800 }}
-      // defaultPinned
-      scene={Scenes.Asteroid}
-      minOpacity={0.5}
-      draggable
-      pinnable
-      persist
-      // origin="center-right"
-    >
-      <AllBlueprints />
-    </Pane>
+    <div>
+      <Pane
+        id="blueprints"
+        title="BLUEPRINTS"
+        defaultCoord={{ x: 69, y: 420 }}
+        defaultLocked
+        defaultPinned
+        origin="center"
+        scene={Scenes.Asteroid}
+        minOpacity={0.6}
+        draggable
+        pinnable
+        persist
+      >
+        <AllBlueprints />
+      </Pane>
+    </div>
   );
 });

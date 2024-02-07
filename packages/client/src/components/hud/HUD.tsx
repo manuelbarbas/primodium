@@ -54,10 +54,6 @@ export const GameHUD = () => {
         <FleetTarget />
         <HoverTarget />
 
-        {/* GAME PANES */}
-        <Resources />
-        <Blueprints />
-
         <HUD.CursorFollower>
           <HoverInfo />
         </HUD.CursorFollower>
@@ -74,11 +70,11 @@ export const GameHUD = () => {
 
         {!isSpectating && (
           <HUD.TopRight>
-            {
-              <div className="flex flex-col">
-                <CurrentObjective />
-              </div>
-            }
+            <div className="mr-2 space-y-2">
+              <CurrentObjective />
+              <Resources />
+              <Blueprints />
+            </div>
           </HUD.TopRight>
         )}
 
@@ -92,6 +88,8 @@ export const GameHUD = () => {
         )}
 
         <HUD.BottomLeft>{isSpectating && !mapOpen && <SpectatingDetails />}</HUD.BottomLeft>
+        <HUD.BottomRight></HUD.BottomRight>
+
         <HUD.BottomMiddle>
           <BuildingMenu />
         </HUD.BottomMiddle>

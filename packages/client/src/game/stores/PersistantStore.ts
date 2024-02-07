@@ -18,6 +18,7 @@ type Panes = Record<
   | {
       pinned: boolean;
       coord: Coord;
+      locked: boolean;
     }
   | undefined
 >;
@@ -51,7 +52,7 @@ type PersistantActions = {
   toggleAllowHackerModal: () => void;
   setUiScale: (scale: number) => void;
   setConsoleHistory: (history: { input: string; output: string }[]) => void;
-  setPane: (id: string, coord: Coord, pinned: boolean) => void;
+  setPane: (id: string, coord: Coord, pinned: boolean, locked: boolean) => void;
   removePane: (id: string) => void;
   resetPanes: () => void;
 };
@@ -145,13 +146,14 @@ export const usePersistantStore = create<PersistantState & PersistantActions>()(
       setConsoleHistory: (history) => {
         set({ consoleHistory: history });
       },
-      setPane: (id, coord, pinned) => {
+      setPane: (id, coord, pinned, locked) => {
         set({
           panes: {
             ...get().panes,
             [id]: {
               coord,
               pinned,
+              locked,
             },
           },
         });

@@ -13,15 +13,7 @@ export function createCamera(phaserCamera: Phaser.Cameras.Scene2D.Camera, option
   const worldView$ = new BehaviorSubject<Phaser.Cameras.Scene2D.Camera["worldView"]>(phaserCamera.worldView).pipe(
     share()
   ) as BehaviorSubject<Phaser.Cameras.Scene2D.Camera["worldView"]>;
-  const zoom$ = new BehaviorSubject<number>(phaserCamera.zoom).pipe(
-    tap(() => {
-      // Update camera matrix/zoom-adjusted coordinates.
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-expect-error
-      phaserCamera.preRender();
-    }),
-    share()
-  ) as BehaviorSubject<number>;
+  const zoom$ = new BehaviorSubject<number>(phaserCamera.zoom).pipe(share()) as BehaviorSubject<number>;
   const pinchStream$ = new Subject<GestureState<"onPinch">>();
 
   const gesture = new Gesture(
@@ -42,6 +34,10 @@ export function createCamera(phaserCamera: Phaser.Cameras.Scene2D.Camera, option
     const _zoom = Phaser.Math.Clamp(zoom, minZoom, maxZoom);
     phaserCamera.setZoom(_zoom);
     zoom$.next(_zoom);
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-expect-error
+    phaserCamera.preRender();
     requestAnimationFrame(() => {
       worldView$.next(phaserCamera.worldView);
     });
