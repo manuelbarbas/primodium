@@ -1,6 +1,7 @@
 import { DepthLayers } from "@game/constants";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { Coord, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity, Has, defineComponentSystem, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
+import { EFleetStance } from "contracts/config/enums";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
 import { Subscription, merge } from "rxjs";
@@ -9,7 +10,7 @@ import { world } from "src/network/world";
 import { getRockRelationship } from "src/util/asteroid";
 import { RockRelationship } from "src/util/constants";
 import { entityToFleetName } from "src/util/name";
-import { getAllOrbitingFleets, getCanAttack } from "src/util/unit";
+import { getCanAttack, getOrbitingFleets } from "src/util/unit";
 import {
   ObjectPosition,
   OnClickUp,
@@ -19,7 +20,7 @@ import {
   SetValue,
   TweenCounter,
 } from "../../common/object-components/common";
-import { Circle, Line } from "../../common/object-components/graphics";
+import { Circle, Line, Shield, Square } from "../../common/object-components/graphics";
 import { ObjectText } from "../../common/object-components/text";
 
 const orbitRadius = 64;
@@ -37,12 +38,54 @@ function calculatePosition(
   return { x: x + origin.x, y: y + origin.y };
 }
 
+function getFleetShape(fleetEntity: Entity, position: Coord) {
+  const playerEntity = components.Account.get()?.value;
+  if (!playerEntity) throw new Error("Player entity not found");
+  const owner = components.OwnedBy.get(fleetEntity)?.value as Entity | undefined;
+  const relationship = owner ? getRockRelationship(playerEntity, owner as Entity) : RockRelationship.Neutral;
+  const color =
+    relationship === RockRelationship.Ally ? 0x00ff00 : relationship === RockRelationship.Enemy ? 0xff0000 : 0x00ffff;
+
+  const stance = components.FleetStance.get(fleetEntity)?.stance;
+
+  const id = `fleetShape-${fleetEntity}`;
+  if (stance === EFleetStance.Defend) {
+    return Shield(16, 12, {
+      color,
+      borderThickness: 1,
+      alpha: 0.75,
+      position,
+      id,
+      center: true,
+    });
+  }
+
+  if (stance === EFleetStance.Block) {
+    return Square(16, 16, {
+      color,
+      borderThickness: 1,
+      alpha: 0.75,
+      position,
+      id,
+      rotate: 45,
+      center: true,
+    });
+  }
+  return Circle(8, {
+    color,
+    borderThickness: 1,
+    alpha: 0.75,
+    position,
+    id,
+  });
+}
+
 export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => {
   const objIndexSuffix = "_spacerockOrbits";
   const { tileWidth, tileHeight } = scene.tilemap;
   const playerEntity = components.Account.get()?.value;
   if (!playerEntity) return;
-  const allFleets = getAllOrbitingFleets(rockEntity);
+  const allFleets = getOrbitingFleets(rockEntity);
   const destination = components.Position.get(rockEntity);
   scene.objectPool.removeGroup(rockEntity + objIndexSuffix);
   if (!destination || allFleets.length == 0) return;
@@ -67,8 +110,6 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
   allFleets.forEach((fleet, i) => {
     const owner = components.OwnedBy.get(fleet)?.value as Entity | undefined;
     const relationship = owner ? getRockRelationship(playerEntity, owner as Entity) : RockRelationship.Neutral;
-    const color =
-      relationship === RockRelationship.Ally ? 0x00ff00 : relationship === RockRelationship.Enemy ? 0xff0000 : 0x00ffff;
     const name = entityToFleetName(fleet, true);
 
     const now = components.Time.get()?.value ?? 0n;
@@ -82,13 +123,7 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
 
     fleetOrbitObject.setComponents([
       ...sharedComponents,
-      Circle(8, {
-        color,
-        borderThickness: 1,
-        alpha: 0.75,
-        position: fleetPosition,
-        id: `circle-${i}`,
-      }),
+      getFleetShape(fleet, { x: fleetPosition.x, y: fleetPosition.y }),
       OnOnce((gameObject) => {
         const hoverSize = 16;
         gameObject.setInteractive(
@@ -104,6 +139,19 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
         () => {
           components.HoverEntity.remove();
         }
+      ),
+      OnComponentSystem(
+        components.FleetStance,
+        (gameObject, { entity, value: [newVal, oldVal] }) => {
+          if (entity !== fleet || oldVal?.stance === newVal?.stance) return;
+          const id = `fleetShape-${fleet}`;
+          if (fleetOrbitObject.hasComponent(id)) {
+            fleetOrbitObject.removeComponent(id);
+            const shape = getFleetShape(fleet, { x: gameObject.x, y: gameObject.y });
+            fleetOrbitObject.setComponent(shape);
+          }
+        },
+        { runOnInit: false }
       ),
       OnComponentSystem(components.SelectedFleet, (_, { value: [newVal, oldVal] }) => {
         const id = `homeLine-${fleet}`;

@@ -55,14 +55,14 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
     const position = movement?.destination as Entity;
     if (!position) return;
     if (activeStance?.stance == EFleetStance.Defend) clearFleetStance(mud, fleetEntity);
-    setFleetStance(mud, fleetEntity, EFleetStance.Defend, position);
+    else setFleetStance(mud, fleetEntity, EFleetStance.Defend, position);
   };
 
   const handleBlock = () => {
     const position = movement?.destination as Entity;
     if (!position) return;
     if (activeStance?.stance == EFleetStance.Block) clearFleetStance(mud, fleetEntity);
-    setFleetStance(mud, fleetEntity, EFleetStance.Block, position);
+    else setFleetStance(mud, fleetEntity, EFleetStance.Block, position);
   };
 
   // const handleFollow = (target: Entity) => {
