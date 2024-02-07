@@ -1,4 +1,6 @@
-import { FaClipboard, FaExclamationCircle, FaTrash } from "react-icons/fa";
+import { useState } from "react";
+import { FaClipboard, FaExclamationCircle, FaExclamationTriangle, FaTrash } from "react-icons/fa";
+import { toast } from "react-toastify";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useMud } from "src/hooks";
 import { copyToClipboard } from "src/util/clipboard";
@@ -10,13 +12,53 @@ export function Account() {
   const mud = useMud();
   const { playerAccount } = mud;
   const { setNoExternalWallet } = usePersistentStore();
+  const [showingToast, setShowingToast] = useState(false);
 
-  const removeBurnerPlayerAccount = () => {
-    const go = confirm(`Are you sure you want to delete your player account? Don't forget to backup your keys!`);
-    if (!go) return;
+  const removeBurnerPlayerAccount = async () => {
+    toast.dismiss();
+    if (showingToast) await new Promise((resolve) => setTimeout(resolve, 500));
+    setShowingToast(true);
+    toast(
+      ({ closeToast }) => (
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col text-center justify-center items-center gap-2 w-full">
+            <FaExclamationTriangle size={24} className="text-warning" />
+            Are you sure you want to delete your player account? Don&apos;t forget to backup your keys!
+          </div>
 
-    setNoExternalWallet(false);
-    localStorage.removeItem("primodiumPlayerAccount");
+          <div className="flex justify-center w-full gap-2">
+            <button
+              className="btn btn-secondary btn-xs"
+              onClick={() => {
+                closeToast && closeToast();
+                setNoExternalWallet(false);
+                localStorage.removeItem("primodiumPlayerAccount");
+              }}
+            >
+              Confirm
+            </button>
+            <button
+              onClick={() => {
+                setShowingToast(false);
+                closeToast && closeToast();
+              }}
+              className="btn btn-primary btn-xs"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        // className: "border-error",
+        position: "top-center",
+        autoClose: false,
+        closeOnClick: false,
+        draggable: false,
+        closeButton: false,
+        hideProgressBar: true,
+      }
+    );
   };
 
   return (
