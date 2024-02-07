@@ -34,16 +34,6 @@ library LibFleetDisband {
       if (unitCount == 0) continue;
       LibFleet.decreaseFleetUnit(fleetId, unitPrototypes[i], unitCount, true);
     }
-
-    //reset fleet back to owner space rock orbit
-    LibFleet.resetFleetOrbit(fleetId);
-  }
-
-  function disbandAllFleets(bytes32 spaceRock) internal {
-    bytes32[] memory ownedFleets = FleetsMap.getFleetIds(spaceRock, FleetOwnedByKey);
-    for (uint256 i = 0; i < ownedFleets.length; i++) {
-      LibFleetDisband.disbandFleet(ownedFleets[i]);
-    }
   }
 
   function disbandUnitsAndResourcesFromFleet(
@@ -53,7 +43,6 @@ library LibFleetDisband {
   ) internal {
     disbandResources(fleetId, resourceCounts);
     disbandUnits(fleetId, unitCounts);
-    LibFleet.resetFleetIfNoUnitsLeft(fleetId);
   }
 
   function disbandUnits(bytes32 fleetId, uint256[] calldata unitCounts) internal {
@@ -67,7 +56,6 @@ library LibFleetDisband {
     uint256 cargo = LibFleetAttributes.getCargo(fleetId);
     uint256 occupiedCargo = LibFleetAttributes.getOccupiedCargo(fleetId);
     require(cargo >= occupiedCargo, "[Fleet] Not enough cargo to disband units from fleet");
-    LibFleet.resetFleetIfNoUnitsLeft(fleetId);
   }
 
   function disbandResources(bytes32 fleetId, uint256[] calldata resourceCounts) internal {
