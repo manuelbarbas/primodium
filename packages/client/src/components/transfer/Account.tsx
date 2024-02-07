@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { FaClipboard, FaExclamationCircle, FaExclamationTriangle, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useMud } from "src/hooks";
+import { useNoExternalAccount } from "src/hooks/useNoExternalAccount";
 import { copyToClipboard } from "src/util/clipboard";
 import { Button } from "../core/Button";
 import { AccountDisplay } from "../shared/AccountDisplay";
@@ -11,7 +11,7 @@ import { Delegate } from "./Delegate";
 export function Account() {
   const mud = useMud();
   const { playerAccount } = mud;
-  const { setNoExternalWallet } = usePersistentStore();
+  const { setNoExternalAccount } = useNoExternalAccount();
   const [showingToast, setShowingToast] = useState(false);
 
   const removeBurnerPlayerAccount = async () => {
@@ -31,7 +31,7 @@ export function Account() {
               className="btn btn-secondary btn-xs"
               onClick={() => {
                 closeToast && closeToast();
-                setNoExternalWallet(false);
+                setNoExternalAccount(false);
                 localStorage.removeItem("primodiumPlayerAccount");
               }}
             >

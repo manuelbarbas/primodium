@@ -3,8 +3,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { FaRegCopyright } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
-import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useMud } from "src/hooks/useMud";
+import { useNoExternalAccount } from "src/hooks/useNoExternalAccount";
 import { components } from "src/network/components";
 import { spawn } from "src/network/setup/contractCalls/spawn";
 import { EntityType, ResourceImage } from "src/util/constants";
@@ -16,7 +16,7 @@ export const Landing: React.FC = () => {
   const playerEntity = mud.playerAccount.entity;
   const navigate = useNavigate();
   const location = useLocation();
-  const { noExternalWallet } = usePersistentStore();
+  const { noExternalAccount } = useNoExternalAccount();
 
   const handlePlay = async () => {
     const hasSpawned = !!components.Home.get(playerEntity)?.value;
@@ -29,7 +29,7 @@ export const Landing: React.FC = () => {
 
   const chain = useNetwork().chain;
   const expectedChain = mud.playerAccount.walletClient.chain;
-  const wrongChain = !noExternalWallet && chain?.id !== expectedChain?.id;
+  const wrongChain = !noExternalAccount && chain?.id !== expectedChain?.id;
   const { isLoading, pendingChainId, switchNetwork } = useSwitchNetwork();
 
   const EnterButton = () =>

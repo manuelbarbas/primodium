@@ -3,9 +3,9 @@ import { chunk } from "lodash";
 import { useEffect, useState } from "react";
 import { FaExclamationTriangle, FaRegCopyright } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { useNoExternalAccount } from "src/hooks/useNoExternalAccount";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { useAccount, useConnect } from "wagmi";
-import { usePersistentStore } from "./game/stores/PersistentStore";
 
 const params = new URLSearchParams(window.location.search);
 
@@ -18,7 +18,7 @@ const connectorIcons: Record<string, string> = {
 export const Connect: React.FC = () => {
   const { connector, isConnected } = useAccount();
   const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
-  const { noExternalWallet, setNoExternalWallet } = usePersistentStore();
+  const { noExternalAccount, setNoExternalAccount } = useNoExternalAccount();
   const [showingToast, setShowingToast] = useState(false);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export const Connect: React.FC = () => {
             <button
               className="btn btn-secondary btn-xs"
               onClick={() => {
-                setNoExternalWallet(true);
+                setNoExternalAccount(true);
                 closeToast && closeToast();
               }}
             >
@@ -71,7 +71,7 @@ export const Connect: React.FC = () => {
     );
   };
 
-  if (isConnected || noExternalWallet) return null;
+  if (isConnected || noExternalAccount) return null;
 
   return (
     <AnimatePresence key="animate-1">
