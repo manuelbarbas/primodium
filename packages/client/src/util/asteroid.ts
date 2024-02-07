@@ -3,13 +3,15 @@ import { Entity } from "@latticexyz/recs";
 
 import { Assets } from "@game/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { EFleetStance } from "contracts/config/enums";
+import { getRockSprite } from "src/game/lib/starmap/systems/utils/getSprites";
 import { components, components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
 import { getBlockTypeName } from "./common";
 import { MapIdToAsteroidType, PIRATE_KEY, ResourceStorages, RockRelationship } from "./constants";
 import { hashKeyEntity } from "./encode";
 import { getFullResourceCount } from "./resource";
-import { getRockSprite } from "src/game/lib/starmap/systems/utils/getSprites";
+import { getOrbitingFleets } from "./unit";
 
 export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
   const { getSpriteBase64 } = primodium.api().sprite;
@@ -85,6 +87,10 @@ export function getSpaceRockInfo(primodium: Primodium, spaceRock: Entity) {
   const hash = player ? hashKeyEntity(PIRATE_KEY, player) : undefined;
   name = `${hash === ownedBy ? "Pirate" : "Player"} Asteroid`;
 
+  const isBlocked = !!getOrbitingFleets(spaceRock).find(
+    (fleet) => components.FleetStance.get(fleet)?.stance == EFleetStance.Block
+  );
+
   return {
     imageUri,
     resources,
@@ -96,6 +102,7 @@ export function getSpaceRockInfo(primodium: Primodium, spaceRock: Entity) {
     entity: spaceRock,
     isInGracePeriod,
     gracePeriodValue,
+    isBlocked,
   };
 }
 
