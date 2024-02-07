@@ -75,6 +75,9 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
             onClick={async () => {
               components.Send.reset();
               components.ActiveRock.set({ value: selectedAsteroid });
+              if (ownedByPlayer) {
+                components.BuildRock.set({ value: selectedAsteroid });
+              }
               await closeMap();
             }}
           >

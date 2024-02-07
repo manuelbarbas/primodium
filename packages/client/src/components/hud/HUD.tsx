@@ -39,7 +39,7 @@ export const GameHUD = () => {
   }).value;
 
   return (
-    <div className="screen-container font-mono">
+    <div className={`screen-container font-mono`}>
       <HUD scale={uiScale}>
         <Modal title="hacker console" keybind={allowHackerModal ? KeybindActions.Console : undefined} keybindClose>
           <Modal.Content className="w-4/5 h-[40rem]">
