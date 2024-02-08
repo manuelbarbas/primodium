@@ -3,6 +3,7 @@ import { starmapSceneConfig } from "../../config/starmapScene";
 
 import { Game } from "engine/types";
 import { world } from "src/network/world";
+import { setupKeybinds } from "../asteroid/setup/setupKeybinds";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
 
 export const initStarmapScene = async (game: Game) => {
@@ -11,6 +12,7 @@ export const initStarmapScene = async (game: Game) => {
   setupBasicCameraMovement(scene, {
     translateKeybind: false,
   });
+  setupKeybinds(scene);
 
   world.registerDisposer(() => {
     game.dispose();

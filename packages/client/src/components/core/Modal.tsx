@@ -36,11 +36,11 @@ export const Modal: React.FC<ModalProps> & {
   const { enableInput, disableInput } = primodium.api().input;
   const { audio } = primodium.api();
 
-  const api = primodium.api(Scenes.Asteroid);
-  const api2 = primodium.api(Scenes.Starmap);
+  const api = primodium.api(Scenes.UI);
 
   useEffect(() => {
     const handleEscPress = () => {
+      if (!isOpen) return;
       audio.play(AudioKeys.Sequence2, "ui");
       setIsOpen(false);
     };
@@ -57,19 +57,15 @@ export const Modal: React.FC<ModalProps> & {
     }
 
     const escListener = api.input.addListener(KeybindActions.Esc, handleEscPress);
-    const escListener2 = api2.input.addListener(KeybindActions.Esc, handleOpenPress);
-
     const openListener = keybind ? api.input.addListener(keybind, handleOpenPress) : null;
-    const openListener2 = keybind ? api2.input.addListener(keybind, handleOpenPress) : null;
+
     return () => {
       escListener.dispose();
-      escListener2?.dispose();
-
       openListener?.dispose();
-      openListener2?.dispose();
+
       enableInput();
     };
-  }, [isOpen, disableInput, enableInput, audio, api.input, keybind, api2.input, keybindClose]);
+  }, [isOpen, disableInput, enableInput, audio, api.input, keybind, keybindClose]);
 
   return <ModalContext.Provider value={{ isOpen, setIsOpen, title }}>{children}</ModalContext.Provider>;
 };

@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { FaClipboard, FaExclamationCircle, FaExclamationTriangle, FaTrash } from "react-icons/fa";
+import { FaClipboard, FaExclamationCircle, FaExclamationTriangle } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useMud } from "src/hooks";
 import { copyToClipboard } from "src/util/clipboard";
+import { useDisconnect } from "wagmi";
+import { useShallow } from "zustand/react/shallow";
 import { Button } from "../core/Button";
 import { AccountDisplay } from "../shared/AccountDisplay";
 import { Delegate } from "./Delegate";
@@ -11,9 +13,20 @@ import { Delegate } from "./Delegate";
 export function Account() {
   const mud = useMud();
   const { playerAccount } = mud;
-  const { setNoExternalWallet } = usePersistentStore();
+  const { removeNoExternalAccount } = usePersistentStore(
+    useShallow((state) => ({ removeNoExternalAccount: state.removeNoExternalAccount }))
+  );
   const [showingToast, setShowingToast] = useState(false);
+  const { disconnect } = useDisconnect();
 
+  const logout = () => {
+    // only true if burner account
+    if (playerAccount.privateKey) {
+      removeBurnerPlayerAccount();
+    } else {
+      disconnect();
+    }
+  };
   const removeBurnerPlayerAccount = async () => {
     toast.dismiss();
     if (showingToast) await new Promise((resolve) => setTimeout(resolve, 500));
@@ -31,8 +44,7 @@ export function Account() {
               className="btn btn-secondary btn-xs"
               onClick={() => {
                 closeToast && closeToast();
-                setNoExternalWallet(false);
-                localStorage.removeItem("primodiumPlayerAccount");
+                removeNoExternalAccount();
               }}
             >
               Confirm
@@ -83,11 +95,11 @@ export function Account() {
             >
               <FaExclamationCircle className="text-error" />
             </Button>
-            <Button className="btn-xs" onClick={removeBurnerPlayerAccount} tooltip="Delete account">
-              <FaTrash />
-            </Button>
           </>
         )}
+        <Button className="btn-xs" onClick={logout}>
+          LOGOUT
+        </Button>
       </div>
       <div className="p-2 h-full w-full flex flex-col gap-6">
         <Delegate />

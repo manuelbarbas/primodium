@@ -2,18 +2,18 @@ import { minEth } from "@game/constants";
 import { ComponentValue, Entity, Schema } from "@latticexyz/recs";
 import { Browser, ContractComponent } from "@primodiumxyz/mud-game-tools";
 import { useEffect, useMemo, useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Progress } from "./components/core/Progress";
 import { useMud } from "./hooks";
 import { useInit } from "./hooks/useInit";
+import { useSyncStatus } from "./hooks/useSyncStatus";
 import { setComponentValue } from "./network/setup/contractCalls/dev";
 import { world } from "./network/world";
+import { Enter } from "./screens/Enter";
 import { Game } from "./screens/Game";
 import { Increment } from "./screens/Increment";
-import { Landing } from "./screens/Landing";
 import { Statistics } from "./screens/Statistics";
 import { setupCheatcodes } from "./util/cheatcodes";
-import { useSyncStatus } from "./hooks/useSyncStatus";
 
 export const DEV = import.meta.env.PRI_DEV === "true";
 export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";
@@ -73,8 +73,8 @@ export default function AppLoadingState() {
           {ready && (
             <BrowserRouter>
               <Routes>
-                <Route path="/" element={<Landing />} />
-                <Route path="/game" element={initialized ? <Game /> : <Landing />} />
+                <Route path="/" element={<Navigate to="/game" replace />} />
+                <Route path="/game" element={initialized ? <Game /> : <Enter />} />
                 <Route path="/increment" element={<Increment />} />
                 <Route path="/statistics" element={<Statistics />} />
               </Routes>

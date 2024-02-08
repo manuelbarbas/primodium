@@ -64,7 +64,7 @@ export function getExpansionRequirement(objective: Entity): Requirement[] | unde
   const requiredExpansion = comps.P_RequiredExpansion.get(objective)?.value;
   if (!requiredExpansion) return;
   const player = comps.Account.get()?.value;
-  const asteroid = comps.SelectedRock.get()?.value;
+  const asteroid = comps.ActiveRock.get()?.value;
   if (!player || !asteroid) return;
   const playerExpansion = comps.Level.get(asteroid as Entity, { value: 0n }).value;
 
@@ -235,7 +235,7 @@ export function getRewardUtilitiesRequirement(objective: Entity, playerEntity: E
       id: id as Entity,
       requiredValue: requiredValue + (resourceStorage - resourceCount),
       currentValue: resourceStorage,
-      scale: 100n,
+      scale: 1n,
       type: RequirementType.RewardUtilities,
     };
   });

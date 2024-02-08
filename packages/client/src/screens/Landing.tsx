@@ -1,59 +1,15 @@
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { AnimatePresence, motion } from "framer-motion";
+import React from "react";
 import { FaRegCopyright } from "react-icons/fa";
-import { useLocation, useNavigate } from "react-router-dom";
-import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
-import { usePersistentStore } from "src/game/stores/PersistentStore";
-import { useMud } from "src/hooks/useMud";
-import { components } from "src/network/components";
-import { spawn } from "src/network/setup/contractCalls/spawn";
 import { EntityType, ResourceImage } from "src/util/constants";
-import { useNetwork, useSwitchNetwork } from "wagmi";
 
 const params = new URLSearchParams(window.location.search);
-export const Landing: React.FC = () => {
-  const mud = useMud();
-  const playerEntity = mud.playerAccount.entity;
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { noExternalWallet } = usePersistentStore();
-
-  const handlePlay = async () => {
-    const hasSpawned = !!components.Home.get(playerEntity)?.value;
-    if (!hasSpawned) {
-      await spawn(mud);
-    }
-
-    navigate("/game" + location.search);
-  };
-
-  const chain = useNetwork().chain;
-  const expectedChain = mud.playerAccount.walletClient.chain;
-  const wrongChain = !noExternalWallet && chain?.id !== expectedChain?.id;
-  const { isLoading, pendingChainId, switchNetwork } = useSwitchNetwork();
-
-  const EnterButton = () =>
-    wrongChain ? (
-      <button
-        disabled={!switchNetwork || expectedChain.id === chain?.id}
-        onClick={() => switchNetwork?.(expectedChain.id)}
-        className="btn join-item inline pointer-events-auto font-bold outline-none h-fit btn-secondary w-full star-background hover:scale-125 relative"
-      >
-        switch to {expectedChain.name}
-        {isLoading && pendingChainId === expectedChain.id && " (switching)"}
-      </button>
-    ) : (
-      <button
-        onClick={async () => {
-          await handlePlay();
-        }}
-        className="btn join=item inline pointer-events-auto font-bold outline-none h-fit btn-secondary w-full star-background hover:scale-125 relative"
-      >
-        enter
-      </button>
-    );
+export const Landing: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <AnimatePresence key="animate-2">
+      <div key="bg" className="fixed w-full h-full bg-black" />
+      <div key="star" className="w-full h-full star-background opacity-30" />
+
       <motion.div
         key="play"
         initial={{ scale: 0.5, opacity: 0, y: 50 }}
@@ -73,9 +29,7 @@ export const Landing: React.FC = () => {
             <div className="absolute bg-gray-900 blur-[15px] w-56 h-32 margin-auto bottom-0 z-10" />
           </div>
 
-          <TransactionQueueMask queueItemId={singletonEntity} className="w-4/5 z-10">
-            <EnterButton />
-          </TransactionQueueMask>
+          {children}
 
           <div className="absolute bottom-0 right-0 p-2 font-bold opacity-50">
             {params.get("version") ?? ""}

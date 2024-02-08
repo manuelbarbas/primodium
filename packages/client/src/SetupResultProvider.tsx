@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 
 import "react-toastify/dist/ReactToastify.min.css";
-import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { Hex } from "viem";
 import { useAccount } from "wagmi";
+import { useShallow } from "zustand/react/shallow";
 import AppLoadingState from "./AppLoadingState";
 import { Initializing } from "./components/shared/Initializing";
+import { usePersistentStore } from "./game/stores/PersistentStore";
 import { MudProvider } from "./hooks/providers/MudProvider";
 import useSetupResult from "./hooks/useSetupResult";
 import { world } from "./network/world";
@@ -19,7 +20,10 @@ export default function SetupResultProvider() {
   const { network, updatePlayerAccount, playerAccount, components } = setupResult;
   const externalAccount = useAccount();
   const mounted = useRef<boolean>(false);
-  const { noExternalWallet } = usePersistentStore();
+
+  const { noExternalAccount } = usePersistentStore(
+    useShallow((state) => ({ noExternalAccount: state.noExternalAccount }))
+  );
 
   useEffect(() => {
     /* This cheese exists because otherwise there is a race condition to check if the player 
@@ -31,14 +35,14 @@ export default function SetupResultProvider() {
       setLoading(false);
     }, 100);
 
-    if (noExternalWallet) {
+    if (noExternalAccount) {
       const privateKey = localStorage.getItem("primodiumPlayerAccount") ?? undefined;
       updatePlayerAccount({ burner: true, privateKey: privateKey as Hex | undefined });
     } else {
       if (!externalAccount.address) return;
       updatePlayerAccount({ address: externalAccount.address });
     }
-  }, [noExternalWallet, externalAccount.address, updatePlayerAccount]);
+  }, [noExternalAccount, externalAccount.address, updatePlayerAccount]);
 
   useEffect(() => {
     if (!network || !playerAccount || mounted.current) return;
@@ -63,7 +67,7 @@ export default function SetupResultProvider() {
 
   if (MAINTENANCE) return <Maintenance />;
 
-  if (!noExternalWallet && externalAccount.status !== "connected") return null;
+  if (!noExternalAccount && externalAccount.status !== "connected") return null;
 
   if (loading || !network || !playerAccount || !components) return <Initializing />;
   return (
