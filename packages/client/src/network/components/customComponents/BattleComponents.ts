@@ -1,5 +1,6 @@
 import { Entity, Type } from "@latticexyz/recs";
 import { useMemo } from "react";
+import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { ResourceEnumLookup, UnitEnumLookup } from "src/util/constants";
 import { createExtendedComponent } from "./ExtendedComponent";
@@ -99,11 +100,33 @@ export const createBattleComponents = () => {
     return useMemo(() => get(battleEntity), [rawBattleUpdate, rawBattleParticipantsUpdate]);
   };
 
+  const getAllPlayerBattles = (player: Entity) => {
+    return RawBattle.getAll().reduce((acc, battleEntity) => {
+      const battle = get(battleEntity);
+      if (!battle) return acc;
+
+      const isAcceptable = !![battle.attacker, battle.defender].find((entity) => {
+        const isFleet = components.IsFleet.has(entity);
+        const rockEntity = isFleet ? components.OwnedBy.get(entity)?.value : entity;
+        return components.OwnedBy.get(rockEntity as Entity)?.value === player;
+      });
+      if (!isAcceptable) return acc;
+      return [...acc, battle];
+    }, [] as ReturnType<typeof get>[]);
+  };
+
+  const useAllPlayerBattles = (player: Entity) => {
+    const rawBattleUpdate = RawBattle.useAll();
+    return useMemo(() => getAllPlayerBattles(player), [rawBattleUpdate]);
+  };
+
   return {
     RawBattle,
     RawBattleParticipant,
     RawBattleParticipants,
     getParticipant,
+    getAllPlayerBattles,
+    useAllPlayerBattles,
     get,
     use: useValue,
   };
