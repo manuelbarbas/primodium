@@ -15,6 +15,7 @@ export const initStarmapScene = async (game: Game) => {
 
   const clickSub = scene.input.click$.subscribe(() => {
     components.SelectedRock.remove();
+    components.SelectedFleet.remove();
   });
 
   world.registerDisposer(() => {
