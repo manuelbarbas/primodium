@@ -167,8 +167,7 @@ export const renderAsteroid = (scene: Scene) => {
       ...sharedComponents,
       rotationTween,
       OnComponentSystem(components.Time, (gameObject) => {
-        const player = components.OwnedBy.get(entity)?.value as Entity | undefined;
-        const graceTime = components.GracePeriod.get(player)?.value ?? 0n;
+        const graceTime = components.GracePeriod.get(entity)?.value ?? 0n;
         const time = components.Time.get()?.value ?? 0n;
 
         if (time >= graceTime) {
