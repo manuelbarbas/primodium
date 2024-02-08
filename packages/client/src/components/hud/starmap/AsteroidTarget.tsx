@@ -9,6 +9,7 @@ import { useInGracePeriod } from "src/hooks/useInGracePeriod";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
+import { getAsteroidImage } from "src/util/asteroid";
 import { getCanAttackSomeone } from "src/util/unit";
 import { Hex } from "viem";
 import { Button } from "../../core/Button";
@@ -30,6 +31,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   const ownedBy = components.OwnedBy.use(selectedAsteroid)?.value;
   const mapOpen = components.MapOpen.use()?.value ?? false;
   const position = components.Position.use(selectedAsteroid) ?? { x: 0, y: 0 };
+  const imageUri = getAsteroidImage(primodium, selectedAsteroid);
   const { screenCoord, isBounded } = useCoordToScreenCoord(position, true);
   const { inGracePeriod } = useInGracePeriod((selectedAsteroid as Entity) ?? singletonEntity);
   const isPirate = components.PirateAsteroid.has(selectedAsteroid);
@@ -56,7 +58,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
       style={{ left: `calc(${screenCoord.x}px)`, top: `calc(${screenCoord.y}px)` }}
       className={`text-error absolute -translate-y-1/2 -translate-x-1/2`}
     >
-      <div className="w-14 h-14 border-2 border-error flex items-center justify-center">
+      <div className="w-14 h-14 border-2 border-error flex items-center justify-center bg-neutral/75">
         <div className="absolute top-0 right-0 translate-x-full w-24">
           <Button
             className="btn-ghost btn-xs text-xs text-accent bg-slate-900 border border-l-0 border-secondary/50"
@@ -117,6 +119,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
             <IconLabel imageUri="/img/icons/returnicon.png" className={``} text="CLOSE" />
           </Button>
         </div>
+        <img src={imageUri} className="scale-75" />
       </div>
     </div>
   );
