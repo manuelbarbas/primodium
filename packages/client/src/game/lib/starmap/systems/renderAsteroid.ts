@@ -60,30 +60,30 @@ export const renderAsteroid = (scene: Scene) => {
         originY: 0.5,
         scale: spriteScale,
       }),
-      Tween(scene, {
-        scale: { from: spriteScale - getRandomRange(0, 0.05), to: spriteScale + getRandomRange(0, 0.05) },
-        ease: "Sine.easeInOut",
-        hold: getRandomRange(0, 1000),
-        duration: 5000, // Duration of one wobble
-        yoyo: true, // Go back to original scale
-        repeat: -1, // Repeat indefinitely
-      }),
-      Tween(scene, {
-        scrollFactorX: { from: 1 - getRandomRange(0, 0.0025), to: 1 + getRandomRange(0, 0.0025) },
-        ease: "Sine.easeInOut",
-        hold: getRandomRange(0, 1000),
-        duration: 5000, // Duration of one wobble
-        yoyo: true, // Go back to original scale
-        repeat: -1, // Repeat indefinitely
-      }),
-      Tween(scene, {
-        scrollFactorY: { from: 1 - getRandomRange(0, 0.0025), to: 1 + getRandomRange(0, 0.0025) },
-        ease: "Sine.easeInOut",
-        hold: getRandomRange(0, 1000),
-        duration: 5000, // Duration of one wobble
-        yoyo: true, // Go back to original scale
-        repeat: -1, // Repeat indefinitely
-      }),
+      // Tween(scene, {
+      //   scale: { from: spriteScale - getRandomRange(0, 0.05), to: spriteScale + getRandomRange(0, 0.05) },
+      //   ease: "Sine.easeInOut",
+      //   hold: getRandomRange(0, 1000),
+      //   duration: 5000, // Duration of one wobble
+      //   yoyo: true, // Go back to original scale
+      //   repeat: -1, // Repeat indefinitely
+      // }),
+      // Tween(scene, {
+      //   scrollFactorX: { from: 1 - getRandomRange(0, 0.0025), to: 1 + getRandomRange(0, 0.0025) },
+      //   ease: "Sine.easeInOut",
+      //   hold: getRandomRange(0, 1000),
+      //   duration: 5000, // Duration of one wobble
+      //   yoyo: true, // Go back to original scale
+      //   repeat: -1, // Repeat indefinitely
+      // }),
+      // Tween(scene, {
+      //   scrollFactorY: { from: 1 - getRandomRange(0, 0.0025), to: 1 + getRandomRange(0, 0.0025) },
+      //   ease: "Sine.easeInOut",
+      //   hold: getRandomRange(0, 1000),
+      //   duration: 5000, // Duration of one wobble
+      //   yoyo: true, // Go back to original scale
+      //   repeat: -1, // Repeat indefinitely
+      // }),
     ];
 
     const rotationTween = Tween(scene, {

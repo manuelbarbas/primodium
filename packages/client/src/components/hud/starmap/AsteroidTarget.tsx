@@ -2,7 +2,7 @@ import { Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { useMud } from "src/hooks";
 import { useInGracePeriod } from "src/hooks/useInGracePeriod";
 import { usePrimodium } from "src/hooks/usePrimodium";
@@ -14,9 +14,10 @@ import { Hex } from "viem";
 import { Button } from "../../core/Button";
 import { IconLabel } from "../../core/IconLabel";
 import { Modal } from "../../core/Modal";
-import { Marker } from "../../shared/Marker";
 import { GracePeriod } from "../GracePeriod";
 import { Fleets } from "../panes/fleets/Fleets";
+import { Marker } from "src/components/core/Marker";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 
 export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ selectedAsteroid }) => {
   const {
@@ -24,14 +25,14 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   } = useMud();
   const primodium = usePrimodium();
   const {
-    hooks: { useCoordToScreenCoord },
+    scene: { getConfig },
     util: { closeMap },
-  } = primodium.api(Scenes.Starmap);
+  } = useRef(primodium.api(Scenes.Starmap)).current;
   const ownedBy = components.OwnedBy.use(selectedAsteroid)?.value;
   const mapOpen = components.MapOpen.use()?.value ?? false;
-  const position = components.Position.use(selectedAsteroid) ?? { x: 0, y: 0 };
+  const position = components.Position.use(selectedAsteroid);
   const imageUri = getAsteroidImage(primodium, selectedAsteroid);
-  const { screenCoord, isBounded } = useCoordToScreenCoord(position, true);
+  // const { screenCoord, isBounded } = useCoordToScreenCoord(position, true);
   const { inGracePeriod } = useInGracePeriod((ownedBy as Entity) ?? singletonEntity);
   const isPirate = components.PirateAsteroid.has(selectedAsteroid);
   const ownedByPlayer = ownedBy === playerEntity;
@@ -49,13 +50,30 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
     [ownedByPlayer, selectingDestination, noUnits, selectedAsteroid]
   );
 
+  const coord = useMemo(() => {
+    const config = getConfig(Scenes.Starmap);
+
+    if (!config) throw Error("No config found for scene");
+
+    const {
+      tilemap: { tileHeight, tileWidth },
+    } = config;
+
+    const pixelCoord = tileCoordToPixelCoord(position ?? { x: 0, y: 0 }, tileWidth, tileHeight);
+
+    return { x: pixelCoord.x, y: -pixelCoord.y };
+  }, [position, getConfig]);
+
   if (!mapOpen) return <></>;
-  if (isBounded) return <Marker coord={position} imageUri="/img/icons/weaponryicon.png" />;
+  // if (isBounded) return <Marker coord={position} imageUri="/img/icons/weaponryicon.png" />;
 
   return (
-    <div
-      style={{ left: `calc(${screenCoord.x}px)`, top: `calc(${screenCoord.y}px)` }}
-      className={`text-error absolute -translate-y-1/2 -translate-x-1/2`}
+    <Marker
+      scene={Scenes.Starmap}
+      coord={coord}
+      id={`asteroid-target`}
+      // style={{ left: `calc(${screenCoord.x}px)`, top: `calc(${screenCoord.y}px)` }}
+      // className={`text-error absolute -translate-y-1/2 -translate-x-1/2`}
     >
       <div className="w-14 h-14 border-2 border-error flex items-center justify-center bg-neutral/75">
         <div className="absolute top-0 right-0 translate-x-full w-24">
@@ -119,7 +137,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
         </div>
         <img src={imageUri} className="scale-75" />
       </div>
-    </div>
+    </Marker>
   );
 };
 

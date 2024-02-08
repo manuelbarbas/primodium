@@ -25,7 +25,7 @@ export const initAsteroidScene = async (game: Game) => {
 
   scene.camera.phaserCamera.fadeIn(1000);
 
-  audio.play(AudioKeys.Background, "music");
+  audio.play(AudioKeys.Background2, "music");
   audio.setPauseOnBlur(false);
 
   setupMouseInputs(scene);

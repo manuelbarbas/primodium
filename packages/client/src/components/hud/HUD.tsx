@@ -1,4 +1,4 @@
-import { KeybindActions } from "@game/constants";
+import { KeybindActions, Scenes } from "@game/constants";
 import { FaCircle } from "react-icons/fa";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useMud } from "src/hooks";
@@ -21,6 +21,7 @@ import { Resources } from "./panes/resources/Resources";
 import { AsteroidTarget } from "./starmap/AsteroidTarget";
 import { FleetTarget } from "./starmap/FleetTarget";
 import { HoverTarget } from "./starmap/HoverTarget";
+import { Marker } from "../core/Marker";
 
 export const GameHUD = () => {
   const {
@@ -49,6 +50,10 @@ export const GameHUD = () => {
         {/* MARKERS */}
         <ActiveMarker />
         <HomeMarker />
+
+        <Marker scene={Scenes.Asteroid} coord={{ x: 0, y: 0 }} id="test">
+          TEST
+        </Marker>
 
         <AsteroidTarget />
         <FleetTarget />
