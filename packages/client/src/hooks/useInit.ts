@@ -15,6 +15,7 @@ export const useInit = () => {
     mud.components.Account.set({ value: playerEntity });
     mud.components.SelectedRock.set({ value: homeAsteroid });
     mud.components.ActiveRock.set({ value: homeAsteroid });
+    mud.components.BuildRock.set({ value: homeAsteroid });
   }, [initialized, playerEntity, mud]);
 
   // The network object and user wallet will have been loaded by the time the loading state is ready

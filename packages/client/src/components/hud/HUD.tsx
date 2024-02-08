@@ -11,7 +11,6 @@ import { MapButton } from "./MapButton";
 import { MenuButtons } from "./MenuButtons";
 import { Profile } from "./Profile";
 import { SpectatingDetails } from "./SpectatingDetails";
-import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { HoverInfo } from "./hover/HoverInfo";
 import { ActiveMarker } from "./markers/ActiveMarker";
 import { HomeMarker } from "./markers/HomeMarker";
@@ -21,14 +20,16 @@ import { Resources } from "./panes/resources/Resources";
 import { AsteroidTarget } from "./starmap/AsteroidTarget";
 import { FleetTarget } from "./starmap/FleetTarget";
 import { HoverTarget } from "./starmap/HoverTarget";
+import { BuildingMenu } from "./building-menu/BuildingMenu";
+import { OwnedAsteroids } from "./panes/OwnedAsteroids";
 
 export const GameHUD = () => {
   const {
     playerAccount: { entity: playerEntity },
   } = useMud();
 
-  const selectedRock = components.ActiveRock.use()?.value;
-  const ownedBy = components.OwnedBy.use(selectedRock)?.value;
+  const activeRock = components.ActiveRock.use()?.value;
+  const ownedBy = components.OwnedBy.use(activeRock)?.value;
   const isSpectating = ownedBy !== playerEntity;
   const uiScale = usePersistentStore((state) => state.uiScale);
 
@@ -38,7 +39,7 @@ export const GameHUD = () => {
   }).value;
 
   return (
-    <div className="screen-container font-mono">
+    <div className={`screen-container font-mono`}>
       <HUD scale={uiScale}>
         <Modal title="hacker console" keybind={allowHackerModal ? KeybindActions.Console : undefined} keybindClose>
           <Modal.Content className="w-4/5 h-[40rem]">
@@ -72,6 +73,7 @@ export const GameHUD = () => {
           <HUD.TopRight>
             <div className="mr-2 space-y-2">
               <CurrentObjective />
+              <OwnedAsteroids />
               <Resources />
               <Blueprints />
             </div>

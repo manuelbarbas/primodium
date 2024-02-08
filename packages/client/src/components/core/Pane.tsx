@@ -141,8 +141,8 @@ export const Content: FC<{
           }
           {locked && onUnlock && <FaLock className="cursor-pointer" onClick={onUnlock} />}
           {!locked && onLock && <FaLockOpen className="cursor-pointer" onClick={onLock} />}
-          {!minimized && onMinimize && <FaMinus className="cursor-n-resize" onClick={onMinimize} />}
-          {minimized && onMaximize && <FaPlus className="cursor-s-resize" onClick={onMaximize} />}
+          {!minimized && onMinimize && <FaMinus className="cursor-nesw-resize" onClick={onMinimize} />}
+          {minimized && onMaximize && <FaPlus className="cursor-nesw-resize" onClick={onMaximize} />}
           {onClose && <FaTimes className="cursor-pointer" onClick={onClose} />}
         </div>
       </div>

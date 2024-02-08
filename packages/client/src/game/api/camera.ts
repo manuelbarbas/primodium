@@ -16,9 +16,11 @@ export const createCameraApi = (targetScene: Scene) => {
       const currentTween = phaserScene.tweens.getTweensOf(camera.phaserCamera)[0];
 
       const endCoord = {
-        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         x: currentTween.data[0]?.end ?? 0,
-        //@ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-expect-error
         y: currentTween.data[1]?.end ?? 0,
       };
 

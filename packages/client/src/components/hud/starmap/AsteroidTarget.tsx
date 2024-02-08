@@ -24,9 +24,15 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   } = useMud();
   const primodium = usePrimodium();
   const {
-    hooks: { useCoordToScreenCoord },
+    hooks: { useCoordToScreenCoord, useCamera },
     util: { closeMap },
+    scene: { getConfig },
   } = primodium.api(Scenes.Starmap);
+  const { zoom } = useCamera();
+  const {
+    camera: { defaultZoom, minZoom },
+  } = getConfig(Scenes.Starmap);
+
   const ownedBy = components.OwnedBy.use(selectedAsteroid)?.value;
   const mapOpen = components.MapOpen.use()?.value ?? false;
   const position = components.Position.use(selectedAsteroid) ?? { x: 0, y: 0 };
@@ -55,9 +61,14 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   return (
     <div
       style={{ left: `calc(${screenCoord.x}px)`, top: `calc(${screenCoord.y}px)` }}
-      className={`text-error absolute -translate-y-1/2 -translate-x-1/2`}
+      className={`text-error font-pixel absolute -translate-y-1/2 -translate-x-1/2`}
     >
-      <div className="w-14 h-14 border-2 border-error flex items-center justify-center bg-neutral/75">
+      <div
+        className="w-14 h-14 border-2 border-error flex items-center justify-center"
+        style={{
+          background: `rgba(0,0,0, ${Math.max(0, (defaultZoom - zoom) / (defaultZoom - minZoom))}`,
+        }}
+      >
         <div className="absolute top-0 right-0 translate-x-full w-24">
           <Button
             className="btn-ghost btn-xs text-xs text-accent bg-slate-900 border border-l-0 border-secondary/50"
@@ -65,6 +76,9 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
             onClick={async () => {
               components.Send.reset();
               components.ActiveRock.set({ value: selectedAsteroid });
+              if (ownedByPlayer) {
+                components.BuildRock.set({ value: selectedAsteroid });
+              }
               await closeMap();
             }}
           >
@@ -117,7 +131,11 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
             <IconLabel imageUri="/img/icons/returnicon.png" className={``} text="CLOSE" />
           </Button>
         </div>
-        <img src={imageUri} className="scale-75" />
+        <img
+          src={imageUri}
+          className="scale-75"
+          style={{ opacity: `${Math.max(0, ((defaultZoom - zoom) / (defaultZoom - minZoom)) * 100)}%` }}
+        />
       </div>
     </div>
   );

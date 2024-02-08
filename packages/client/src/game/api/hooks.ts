@@ -13,7 +13,7 @@ export function createHooksApi(targetScene: Scene) {
 
   function useCamera() {
     const [worldView, setWorldView] = useState<Phaser.Geom.Rectangle>();
-    const [zoom, setZoom] = useState(0);
+    const [zoom, setZoom] = useState(targetScene.camera.phaserCamera.zoom);
     const { camera } = targetScene;
 
     useEffect(() => {

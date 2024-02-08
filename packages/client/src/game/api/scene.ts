@@ -7,7 +7,11 @@ export function createSceneApi(game: Awaited<ReturnType<typeof createGame>>) {
     return game.sceneManager.scenes.get(scene);
   }
   function getConfig(scene: Scenes) {
-    return game.sceneManager.scenes.get(scene)?.config;
+    const config = game.sceneManager.scenes.get(scene)?.config;
+
+    if (!config) throw new Error(`Scene ${scene} does not exist`);
+
+    return config;
   }
 
   async function transitionToScene(
