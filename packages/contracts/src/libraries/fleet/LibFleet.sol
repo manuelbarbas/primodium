@@ -103,10 +103,10 @@ library LibFleet {
 
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
-      uint256 fleetResourceCount = ResourceCount.get(fleetId, i);
+      uint256 fleetResourceCount = ResourceCount.get(fleetId, transportables[i]);
       if (fleetResourceCount == 0) continue;
-      LibStorage.increaseStoredResource(spaceRock, i, fleetResourceCount);
-      decreaseFleetResource(fleetId, i, fleetResourceCount);
+      LibStorage.increaseStoredResource(spaceRock, transportables[i], fleetResourceCount);
+      decreaseFleetResource(fleetId, transportables[i], fleetResourceCount);
     }
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
@@ -141,14 +141,14 @@ library LibFleet {
     for (uint8 i = 0; i < transportables.length; i++) {
       uint256 totalResourceCount = 0;
       for (uint256 j = 1; j < fleets.length; j++) {
-        uint256 resourceCount = ResourceCount.get(fleets[j], i);
+        uint256 resourceCount = ResourceCount.get(fleets[j], transportables[i]);
         if (resourceCount == 0) continue;
-        decreaseFleetResource(fleets[j], i, resourceCount);
+        decreaseFleetResource(fleets[j], transportables[i], resourceCount);
 
         totalResourceCount += resourceCount;
       }
       if (totalResourceCount == 0) continue;
-      increaseFleetResource(fleets[0], i, totalResourceCount);
+      increaseFleetResource(fleets[0], transportables[i], totalResourceCount);
     }
 
     for (uint256 i = 1; i < fleets.length; i++) {

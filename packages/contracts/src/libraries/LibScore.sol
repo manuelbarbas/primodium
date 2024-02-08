@@ -12,10 +12,9 @@ import { AsteroidOwnedByKey, UnitKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 library LibScore {
-  function updateScore(bytes32 playerEntity, bytes32 spaceRock, uint8 resource, uint256 value) internal {
+  function updateScore(bytes32 spaceRock, uint8 resource, uint256 value) internal {
     uint256 count = ResourceCount.get(spaceRock, resource);
     uint256 currentSpaceRockScore = Score.get(spaceRock);
-    uint256 currenPlayerScore = Score.get(playerEntity);
     uint256 scoreChangeAmount = P_ScoreMultiplier.get(resource);
 
     if (scoreChangeAmount == 0) return;
@@ -23,14 +22,23 @@ library LibScore {
     if (value < count) {
       scoreChangeAmount *= (count - value);
       currentSpaceRockScore -= scoreChangeAmount;
-      currenPlayerScore -= scoreChangeAmount;
     } else {
       scoreChangeAmount *= (value - count);
       currentSpaceRockScore += scoreChangeAmount;
-      currenPlayerScore += scoreChangeAmount;
     }
     Score.set(spaceRock, currentSpaceRockScore);
-    Score.set(playerEntity, currenPlayerScore);
+  }
+
+  function updatePlayerScore(bytes32 playerEntity, bytes32 spaceRockEntity, uint256 score) internal {
+    uint256 currentScore = Score.get(playerEntity);
+    uint256 spaceRockScore = Score.get(spaceRockEntity);
+
+    if (score < spaceRockScore) {
+      currentScore -= spaceRockScore - score;
+    } else {
+      currentScore += score - spaceRockScore;
+    }
+    Score.set(playerEntity, currentScore);
   }
 
   function updateScoreOnSpaceRock(bytes32 playerEntity, bytes32 spaceRock, bool isAquisition) internal {
