@@ -21,6 +21,7 @@ import {
   OnHover,
   OnOnce,
   OnRxjsSystem,
+  SetValue,
 } from "../../common/object-components/common";
 import { Circle, Line, Triangle } from "../../common/object-components/graphics";
 import { renderEntityOrbitingFleets } from "./renderFleetsInOrbit";
@@ -50,12 +51,14 @@ export const renderFleetsInTransit = (scene: Scene) => {
     if (!originPosition || !destinationPosition) return;
 
     //render personal pirates only
-    if (
-      components.PirateAsteroid.has(destination) &&
+    const hide =
       playerEntity &&
-      hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(destination)?.value
-    )
-      return;
+      ((components.PirateAsteroid.has(destination) &&
+        hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(destination)?.value) ||
+        (components.PirateAsteroid.has(origin) &&
+          hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(origin)?.value));
+
+    const sharedComponents = hide ? [SetValue({ alpha: 0 })] : [];
 
     const originPixelCoord = tileCoordToPixelCoord(
       { x: originPosition.x, y: -originPosition.y },
@@ -73,6 +76,7 @@ export const renderFleetsInTransit = (scene: Scene) => {
 
     const trajectory = sendTrajectory.add("Graphics", `${entity}-move-trajectory`, true);
     trajectory.setComponents([
+      ...sharedComponents,
       ObjectPosition(originPixelCoord, DepthLayers.Marker),
       Line(destinationPixelCoord, {
         id: `${entity}-trajectoryline`,
@@ -112,6 +116,7 @@ export const renderFleetsInTransit = (scene: Scene) => {
       relationship === RockRelationship.Ally ? 0x00ff00 : relationship === RockRelationship.Enemy ? 0xff0000 : 0x00ffff;
 
     fleetIcon.setComponents([
+      ...sharedComponents,
       ObjectPosition(originPixelCoord, DepthLayers.Marker),
       Triangle(15, 20, {
         color,
@@ -136,7 +141,6 @@ export const renderFleetsInTransit = (scene: Scene) => {
 
         if (progress > 1) {
           //render orbit
-          console.log("rendering orbiting fleets from in transit");
           renderEntityOrbitingFleets(destination, scene);
 
           //remove transit render

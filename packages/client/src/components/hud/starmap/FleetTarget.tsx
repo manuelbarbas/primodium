@@ -40,8 +40,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
 
   if (!scene || !mapOpen || !position) return <></>;
 
-  if (isBounded)
-    return <Marker coord={{ x: screenCoord.x, y: screenCoord.y }} imageUri="/img/icons/outgoingicon.png" />;
+  if (isBounded) return <Marker coord={coord} imageUri="/img/icons/outgoingicon.png" />;
 
   return (
     <div
@@ -94,6 +93,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
         <div className="absolute top-0 left-0 -translate-x-full">
           <Modal>
             <Modal.Button
+              onClick={() => components.ActiveRock.set({ value: location as Entity })}
               disabled={selectingDestination}
               className="btn-ghost btn-xs text-xs text-accent bg-neutral border border-r-0 pl-2 border-secondary/50 w-28 transition-[width] duration-200"
             >

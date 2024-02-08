@@ -215,7 +215,13 @@ export function getCanAttack(originEntity: Entity, targetEntity: Entity) {
 export function getCanSend(originEntity: Entity, targetEntity: Entity) {
   const isFleet = components.IsFleet.get(targetEntity);
 
-  const ownerRock = components.FleetMovement.get(originEntity)?.destination;
-  if (isFleet || components.BuildingType.has(targetEntity) || ownerRock == targetEntity) return false;
-  return true;
+  const currentRock = components.FleetMovement.get(originEntity)?.destination as Entity | undefined;
+  if (!currentRock || isFleet || components.BuildingType.has(targetEntity) || currentRock == targetEntity) return false;
+
+  const currentRockIsPirate = components.PirateAsteroid.has(currentRock);
+  if (!currentRockIsPirate) return true;
+
+  const player = components.Account.get()?.value;
+  const playerHome = components.Home.get(player)?.value;
+  return targetEntity == playerHome;
 }

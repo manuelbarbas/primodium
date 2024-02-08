@@ -26,6 +26,7 @@ export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
     return undefined;
   }
 
+  if (components.PirateAsteroid.has(asteroid)) return getSpriteBase64(getRockSprite(1, 1n), Assets.SpriteAtlas);
   const spriteKey = getRockSprite(asteroidData.mapId, asteroidData.mapId === 1 ? mainBaseLevel : asteroidData.maxLevel);
 
   return getSpriteBase64(spriteKey, Assets.SpriteAtlas);
