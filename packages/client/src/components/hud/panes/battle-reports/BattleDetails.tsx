@@ -3,18 +3,19 @@ import { FaTimes, FaTrophy } from "react-icons/fa";
 import { Navigator } from "src/components/core/Navigator";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { useMud } from "src/hooks";
+import { usePlayerOwner } from "src/hooks/usePlayerOwner";
 import { components } from "src/network/components";
 import { getBlockTypeName, toRomanNumeral } from "src/util/common";
-import { BackgroundImage } from "src/util/constants";
+import { BackgroundImage, ResourceImage } from "src/util/constants";
+import { entityToFleetName, entityToRockName } from "src/util/name";
+import { formatResourceCount } from "src/util/number";
 
 export const UnitStatus: React.FC<{
   unit: Entity;
-  unitsLeft: bigint;
-  count: bigint;
+  casualties: bigint;
+  unitsAtStart: bigint;
   level: bigint;
-}> = ({ unit, unitsLeft, count, level }) => {
-  if (unitsLeft - count <= 0n && count === 0n) return <></>;
-
+}> = ({ unit, unitsAtStart, casualties, level }) => {
   return (
     <div className={`w-full border-b border-b-slate-700 text-xs bg-slate-800`}>
       <div className="flex justify-between p-2">
@@ -22,15 +23,15 @@ export const UnitStatus: React.FC<{
           <img
             key={`unit-${unit}`}
             src={BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"}
-            className={`border border-cyan-400 w-6 h-6 rounded-xs`}
+            className={`border border-secondary w-8 h-8 p-1`}
           />
-          <p className="rounded-md bg-cyan-700 text-xs p-1">x{unitsLeft.toLocaleString()}</p>
+          <p className="bg-primary text-xs p-1 uppercase font-bold">
+            {(unitsAtStart - casualties).toLocaleString()} LEFT
+          </p>
           {getBlockTypeName(unit)} {toRomanNumeral(Number(level))}
         </div>
-        <div className="relative flex gap-1 p-1 px-2 bg-slate-900 rounded-md items-center">
-          <p className={`font-bold ${unitsLeft - count < 0 ? "text-rose-500" : "text-green-500"}`}>
-            {Math.abs(Math.min(Number(unitsLeft - count), 0))}
-          </p>{" "}
+        <div className="flex gap-1 p-1 px-2 text-xs bg-slate-900 items-center uppercase font-bold">
+          <p className="text-rose-500">{casualties.toLocaleString()}</p>
           LOST
         </div>
       </div>
@@ -45,98 +46,170 @@ export const BattleDetails: React.FC<{
     playerAccount: { entity: playerEntity },
   } = useMud();
   const battle = components.Battle.use(battleEntity);
+  const attackingPlayer = usePlayerOwner(battle?.attacker as Entity);
+  const defendingPlayer = usePlayerOwner(battle?.defender as Entity);
+  const playerIsAttacker = playerEntity === attackingPlayer;
+  const winningPlayer = usePlayerOwner(battle?.winner as Entity);
+  const attackerIsFleet = components.IsFleet.use(battle?.attacker);
+  const defenderIsFleet = components.IsFleet.use(battle?.defender);
 
   if (!battle) return <></>;
+
+  console.log(battle.participants);
+  const attackerDetails = Object.values(battle.participants).find((p) => p.entity === battle.attacker);
+  const defenderDetails = Object.values(battle.participants).find((p) => p.entity === battle.defender);
+  const playerDetails = playerIsAttacker ? attackerDetails : defenderDetails;
+  const enemyDetails = playerIsAttacker ? defenderDetails : attackerDetails;
 
   return (
     <Navigator.Screen
       title="BattleDetails"
-      className="relative gap-3 flex flex-col items-center text-white h-full w-full scrollbar overflow-y-auto p-1 mb-1 "
+      className="relative gap-3 flex flex-col items-center text-white h-full w-full overflow-y-hidden p-1 mb-1 "
     >
-      <div className="relative bg-slate-800 pixel-images border border-cyan-400 p-3 w-full h-full rounded-md">
+      <div className="relative bg-slate-800 pixel-images p-3 w-full h-full overflow-y-scroll scrollbar">
         <div className="flex flex-col items-center space-y-3">
-          {playerEntity === battle.winner && (
-            <div className="bg-green-600 p-1 px-4 rounded-md flex flex-col items-center border border-green-400">
+          {playerEntity === winningPlayer && (
+            <div className="bg-green-600 p-1 px-4  flex flex-col items-center border border-green-400">
               <FaTrophy size={24} />
               <p className="font-bold text-2xl">WON</p>
             </div>
           )}
-          {playerEntity !== battle.winner && (
-            <div className="bg-rose-600 p-1 px-4 rounded-md flex flex-col items-center border border-rose-400">
+          {playerEntity !== winningPlayer && (
+            <div className="bg-rose-600 p-1 px-4  flex flex-col items-center border border-rose-400">
               <FaTimes size={24} />
               <p className="font-bold text-2xl">LOST</p>
             </div>
           )}
-          <hr className="border-t border-cyan-600/40 w-full" />
+          <hr className="border-t border-secondary/40 w-full" />
 
-          <div className="flex gap-2 text-sm items-center justify-center">
-            <div className="bg-slate-700 p-2 rounded-md border border-rose-500 w-32">
-              <p className="font-bold text-xs text-cyan-400">ATTACKER</p>
-              <AccountDisplay player={battle.attacker as Entity} />
+          <div className="grid grid-cols-[1fr_3rem_1fr] gap-2 text-sm items-center justify-center">
+            <div className="h-full flex flex-col">
+              <p className="flex flex-col font-bold text-xs text-accent">ATTACKER</p>
+              <div
+                className={`flex flex-col justify-center items-center bg-slate-700 p-2 border ${
+                  battle.winner == battle.attacker ? "border-green-500" : "border-rose-500"
+                }`}
+              >
+                <div className="flex gap-1 items-center">
+                  <p className="font-bold text-xs uppercase text-white">
+                    {attackerIsFleet ? entityToFleetName(battle.attacker) : entityToRockName(battle.attacker)}
+                  </p>
+                  <img
+                    src={attackerIsFleet ? "img/icons/outgoingicon.png" : "img/icons/asteroidicon.png"}
+                    className="w-6 h-6"
+                  />
+                </div>
+                <AccountDisplay player={attackingPlayer} className="text-xs opacity-80" />
+              </div>
             </div>
-            vs
-            <div className="bg-slate-700 p-2 rounded-md border border-green-600 w-32">
-              <p className="font-bold text-xs text-cyan-400">DEFENDER</p>
-              <AccountDisplay player={battle.defender as Entity} />
+            <p className="grid place-items-center uppercase font-bold">vs</p>
+            <div className="h-full flex flex-col">
+              <p className="font-bold text-xs text-accent">DEFENDER</p>
+
+              <div
+                className={`flex flex-col justify-center items-center bg-slate-700 p-2 border ${
+                  battle.winner == battle.defender ? "border-green-500" : "border-rose-500"
+                }`}
+              >
+                <div className="flex gap-1 items-center">
+                  <p className="font-bold text-xs uppercase text-white">
+                    {defenderIsFleet ? entityToFleetName(battle.defender) : entityToRockName(battle.defender)}
+                  </p>
+                  <img
+                    src={defenderIsFleet ? "img/icons/outgoingicon.png" : "img/icons/asteroidicon.png"}
+                    className="w-6 h-6"
+                  />
+                </div>
+                <AccountDisplay player={defendingPlayer} className="text-xs opacity-80" />
+              </div>
             </div>
           </div>
 
-          <hr className="border-t border-cyan-600/40 w-full" />
+          <hr className="border-t border-primary/40 w-full" />
 
-          <div className="w-full">
-            <p className="p-1 text-xs font-bold text-cyan-400">YOUR FLEET STATUS</p>
-            {/* <div className="w-full rounded-md overflow-hidden h-32 border border-slate-500 bg-slate-800 overflow-y-auto flex flex-col items-center justify-center scrollbar">
-              {playersUnits.length === 0 && (
-                <p className="text-sm font-bold text-slate-400 text-center">NO FLEET FOUND</p>
-              )}
-              {playersUnits.length !== 0 && (
-                <div className="w-full h-full">
-                  {playersUnits.map((unit, i) =>
-                    unit ? (
+          {playerDetails && (
+            <div className="w-full">
+              <p className="p-1 text-xs font-bold text-accent">YOUR FLEET </p>
+              <div className="w-full overflow-hidden h-32 border border-slate-500 bg-slate-800 overflow-y-auto flex flex-col items-center justify-center scrollbar">
+                {Object.entries(playerDetails.units).length > 0 && (
+                  <div className="w-full h-full">
+                    {Object.entries(playerDetails.units).map(([entity, unit], i) => (
                       <UnitStatus
-                        unit={unit.type}
-                        unitsLeft={unit.unitsLeft}
-                        count={unit.count}
+                        unit={entity as Entity}
+                        casualties={unit.casualties}
+                        unitsAtStart={unit.unitsAtStart}
                         level={unit.level}
                         key={`unit-${i + 1}`}
                       />
-                    ) : null
-                  )}
+                    ))}
+                  </div>
+                )}
+              </div>
+              {Object.entries(playerDetails.resources).length !== 0 && (
+                <div className="grid grid-cols-6 gap-1 mt-1">
+                  {Object.entries(playerDetails.resources).map(([resource, data], i) => {
+                    const resourceDelta = data.resourcesAtEnd - data.resourcesAtStart;
+                    return (
+                      <div
+                        key={`resource-${i}`}
+                        className={`border ${
+                          resourceDelta > 0n ? "border-green-800" : "border-rose-800"
+                        } flex items-center`}
+                      >
+                        <img src={ResourceImage.get(resource as Entity) ?? ""} className={`w-8 h-8 p-1`} />
+
+                        <p className={`grid place-items-center text-sm p-1 uppercase font-bold w-full h-full`}>
+                          {resourceDelta > 0n ? "+" : ""}
+                          {formatResourceCount(resource as Entity, resourceDelta, {
+                            short: true,
+                            showZero: true,
+                          })}
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
-            </div> */}
-          </div>
-          <div className="w-full">
-            <p className="p-1 text-xs font-bold text-cyan-400">ENEMY FLEET STATUS</p>
-            {/* <div className="w-full rounded-md overflow-hidden h-32 border border-slate-500 bg-slate-800 overflow-y-auto flex flex-col items-center justify-center scrollbar">
-              {enemyUnits.length === 0 && (
-                <p className="text-sm font-bold text-slate-400 text-center">NO FLEET FOUND</p>
-              )}
-              {enemyUnits.length !== 0 && (
-                <div className="w-full h-full">
-                  {enemyUnits.map((unit, i) =>
-                    unit ? (
+            </div>
+          )}
+          {enemyDetails && (
+            <div className="w-full">
+              <p className="p-1 text-xs font-bold text-accent">ENEMY FLEET </p>
+              <div className="w-full overflow-hidden h-32 border border-slate-500 bg-slate-800 overflow-y-auto flex flex-col items-center justify-center scrollbar">
+                {Object.entries(enemyDetails.units).length === 0 ? (
+                  <p className="text-sm font-bold text-slate-400 text-center">NO FLEET FOUND</p>
+                ) : (
+                  <div className="w-full h-full">
+                    {Object.entries(enemyDetails.units).map(([entity, unit], i) => (
                       <UnitStatus
-                        unit={unit.type}
-                        unitsLeft={unit.unitsLeft}
-                        count={unit.count}
+                        unit={entity as Entity}
+                        casualties={unit.casualties}
+                        unitsAtStart={unit.unitsAtStart}
                         level={unit.level}
                         key={`unit-${i + 1}`}
                       />
-                    ) : null
-                  )}
-                </div>
-              )}
-            </div> */}
-          </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
+
         <div className="absolute top-0 right-0 flex flex-col items-end gap-1 text-xs p-2">
-          <p className="opacity-50 font-bold">{new Date(Number(battle.timestamp * 1000n)).toLocaleDateString()}</p>
-        </div>
-        <div className="absolute top-0 left-0 p-2">
-          <Navigator.BackButton className="btn btn-primary btn-xs rounded-md" />
+          <p className="opacity-50 font-bold">
+            {new Date(Number(battle.timestamp * 1000n)).toLocaleString(undefined, {
+              hour: "numeric",
+              minute: "numeric",
+              hour12: false,
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </p>
         </div>
       </div>
+      <Navigator.BackButton className="btn btn-primary btn-xs" />
     </Navigator.Screen>
   );
 };

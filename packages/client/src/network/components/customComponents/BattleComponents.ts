@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { ResourceEnumLookup, UnitEnumLookup } from "src/util/constants";
+import { decodeEntity } from "src/util/encode";
 import { createExtendedComponent } from "./ExtendedComponent";
 
 export const createBattleComponents = () => {
@@ -50,10 +51,15 @@ export const createBattleComponents = () => {
   const getParticipant = (participantEntity: Entity) => {
     const participant = RawBattleParticipant.get(participantEntity);
     if (!participant) return;
+    const { participantEntity: entity } = decodeEntity(
+      components.BattleDamageDealtResult.metadata.keySchema,
+      participantEntity
+    );
     const units = Object.entries(UnitEnumLookup).reduce((acc, [entity, index]) => {
       const level = participant.unitLevels[index];
       const unitsAtStart = participant.unitsAtStart[index];
       const casualties = participant.casualties[index];
+      if (unitsAtStart === 0n) return acc;
       acc[entity] = {
         level,
         unitsAtStart,
@@ -65,6 +71,7 @@ export const createBattleComponents = () => {
     const resources = Object.entries(ResourceEnumLookup).reduce((acc, [entity, index]) => {
       const resourcesAtStart = participant.resourcesAtStart ? participant.resourcesAtStart[index] : 0n;
       const resourcesAtEnd = participant.resourcesAtEnd ? participant.resourcesAtEnd[index] : 0n;
+      if (resourcesAtStart === resourcesAtEnd) return acc;
       acc[entity] = {
         resourcesAtStart,
         resourcesAtEnd,
@@ -73,6 +80,7 @@ export const createBattleComponents = () => {
     }, {} as Record<string, { resourcesAtStart: bigint; resourcesAtEnd: bigint }>);
     return {
       ...participant,
+      entity,
       units,
       resources,
     };
@@ -87,7 +95,7 @@ export const createBattleComponents = () => {
       if (!data) return acc;
       acc[participant] = data;
       return acc;
-    }, {} as Record<string, ReturnType<typeof getParticipant>>);
+    }, {} as Record<string, Exclude<ReturnType<typeof getParticipant>, undefined>>);
     return {
       ...battle,
       participants: battleParticipants,
@@ -111,8 +119,8 @@ export const createBattleComponents = () => {
         return components.OwnedBy.get(rockEntity as Entity)?.value === player;
       });
       if (!isAcceptable) return acc;
-      return [...acc, { ...battle, entity: battleEntity }];
-    }, [] as (ReturnType<typeof get> & { entity: Entity })[]);
+      return [...acc, battleEntity];
+    }, [] as Entity[]);
   };
 
   const useAllPlayerBattles = (player: Entity) => {
