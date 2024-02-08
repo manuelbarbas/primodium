@@ -2,7 +2,9 @@ import { Entity } from "@latticexyz/recs";
 import { EFleetStance } from "contracts/config/enums";
 import { useMemo } from "react";
 import { Card } from "src/components/core/Card";
+import { IconLabel } from "src/components/core/IconLabel";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
+import { useInGracePeriod } from "src/hooks/useInGracePeriod";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { EntityType, ResourceImage } from "src/util/constants";
@@ -17,6 +19,7 @@ export const FleetInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
   const movement = components.FleetMovement.use(entity);
   const time = components.Time.use()?.value ?? 0n;
   const stance = components.FleetStance.use(entity);
+  const { inGracePeriod } = useInGracePeriod(entity);
 
   const fleetStateText = useMemo(() => {
     const arrivalTime = movement?.arrivalTime ?? 0n;
@@ -35,6 +38,7 @@ export const FleetInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
       <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
       <div className="flex flex-col gap-1 z-10">
         <p className="text-sm">{fleetStats.title}</p>
+        {inGracePeriod && <IconLabel imageUri="/img/icons/doveicon.png" className="text-xs" />}
         <div className="flex gap-1">
           <p className="text-xs opacity-70 bg-primary px-1 w-fit">{fleetStateText}</p>
           {owner && (

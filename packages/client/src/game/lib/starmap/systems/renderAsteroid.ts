@@ -166,12 +166,21 @@ export const renderAsteroid = (scene: Scene) => {
     gracePeriod.setComponents([
       ...sharedComponents,
       rotationTween,
+      OnComponentSystem(components.SelectedRock, (gameObject, update) => {
+        const isSelected = update.value[0]?.value === entity;
+        const wasSelected = update.value[1]?.value === entity;
+        if (isSelected) {
+          gameObject.alpha = 0;
+        } else if (wasSelected) {
+          gameObject.alpha = 0.8;
+        }
+      }),
       OnComponentSystem(components.Time, (gameObject) => {
-        const player = components.OwnedBy.get(entity)?.value as Entity | undefined;
-        const graceTime = components.GracePeriod.get(player)?.value ?? 0n;
+        const isSelected = components.SelectedRock.get()?.value === entity;
+        const graceTime = components.GracePeriod.get(entity)?.value ?? 0n;
         const time = components.Time.get()?.value ?? 0n;
 
-        if (time >= graceTime) {
+        if (isSelected || time >= graceTime) {
           gameObject.alpha = 0;
         } else {
           gameObject.alpha = 0.8;
