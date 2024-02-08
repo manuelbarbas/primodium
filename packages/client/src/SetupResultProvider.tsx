@@ -1,14 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { Hex } from "viem";
 import { useAccount } from "wagmi";
 import AppLoadingState from "./AppLoadingState";
 import { Initializing } from "./components/shared/Initializing";
 import { MudProvider } from "./hooks/providers/MudProvider";
 import useSetupResult from "./hooks/useSetupResult";
-import { noExternalWallet } from "./network/config/getNetworkConfig";
 import { world } from "./network/world";
 import { Maintenance } from "./screens/Maintenance";
 
@@ -20,6 +19,7 @@ export default function SetupResultProvider() {
   const { network, updatePlayerAccount, playerAccount, components } = setupResult;
   const externalAccount = useAccount();
   const mounted = useRef<boolean>(false);
+  const { noExternalWallet } = usePersistentStore();
 
   useEffect(() => {
     /* This cheese exists because otherwise there is a race condition to check if the player 
@@ -38,7 +38,7 @@ export default function SetupResultProvider() {
       if (!externalAccount.address) return;
       updatePlayerAccount({ address: externalAccount.address });
     }
-  }, [externalAccount.address, updatePlayerAccount]);
+  }, [noExternalWallet, externalAccount.address, updatePlayerAccount]);
 
   useEffect(() => {
     if (!network || !playerAccount || mounted.current) return;
@@ -68,20 +68,6 @@ export default function SetupResultProvider() {
   if (loading || !network || !playerAccount || !components) return <Initializing />;
   return (
     <MudProvider {...setupResult} components={components} network={network} playerAccount={playerAccount}>
-      <ToastContainer
-        toastClassName={`font-mono text-xs border bg-neutral border-secondary rounded-box`}
-        progressClassName={"bg-accent"}
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
       <AppLoadingState />
     </MudProvider>
   );

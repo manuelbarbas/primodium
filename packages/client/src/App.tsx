@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import { WagmiConfig } from "wagmi";
 import { Connect } from "./Connect";
@@ -24,6 +25,20 @@ export default function App() {
 
   return (
     <WagmiConfig config={wagmiConfig}>
+      <ToastContainer
+        toastClassName={`font-mono text-xs border bg-neutral border-secondary rounded-box`}
+        progressClassName={"bg-accent"}
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <Connect />
       <SetupResultProvider />
     </WagmiConfig>
