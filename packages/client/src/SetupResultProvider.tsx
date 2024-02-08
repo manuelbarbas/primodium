@@ -69,7 +69,7 @@ export default function SetupResultProvider() {
 
   if (!noExternalAccount && externalAccount.status !== "connected") return null;
 
-  if (loading || !network || !playerAccount || !components) return <Initializing />;
+  if (loading || !network || !playerAccount || !components) return <Initializing message="Loading blockchain" />;
   return (
     <MudProvider {...setupResult} components={components} network={network} playerAccount={playerAccount}>
       <AppLoadingState />
