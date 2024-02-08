@@ -21,7 +21,7 @@ export const MenuButtons = () => {
           <Modal.Button className="rounded-t-none border border-t-0 pt-3 pb-2 border-secondary btn-sm text-base">
             <IconLabel imageUri="/img/icons/reportsicon.png" tooltipText="battles" />
           </Modal.Button>
-          <Modal.Content className="w-[30rem] h-[50rem]">
+          <Modal.Content className="w-[40rem] h-[50rem]">
             <BattleReports />
           </Modal.Content>
         </Modal>

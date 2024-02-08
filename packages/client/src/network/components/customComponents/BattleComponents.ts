@@ -111,8 +111,8 @@ export const createBattleComponents = () => {
         return components.OwnedBy.get(rockEntity as Entity)?.value === player;
       });
       if (!isAcceptable) return acc;
-      return [...acc, battle];
-    }, [] as ReturnType<typeof get>[]);
+      return [...acc, { ...battle, entity: battleEntity }];
+    }, [] as (ReturnType<typeof get> & { entity: Entity })[]);
   };
 
   const useAllPlayerBattles = (player: Entity) => {
