@@ -3,13 +3,15 @@ import { Entity } from "@latticexyz/recs";
 
 import { Assets } from "@game/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { EFleetStance } from "contracts/config/enums";
+import { getRockSprite } from "src/game/lib/starmap/systems/utils/getSprites";
 import { components, components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
 import { getBlockTypeName } from "./common";
 import { EntityType, MapIdToAsteroidType, PIRATE_KEY, ResourceStorages, RockRelationship } from "./constants";
 import { hashKeyEntity } from "./encode";
 import { getFullResourceCount } from "./resource";
-import { getRockSprite } from "src/game/lib/starmap/systems/utils/getSprites";
+import { getOrbitingFleets } from "./unit";
 
 export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
   const { getSpriteBase64 } = primodium.api().sprite;
@@ -24,6 +26,7 @@ export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
     return undefined;
   }
 
+  if (components.PirateAsteroid.has(asteroid)) return getSpriteBase64(getRockSprite(1, 1n), Assets.SpriteAtlas);
   const spriteKey = getRockSprite(asteroidData.mapId, asteroidData.mapId === 1 ? mainBaseLevel : asteroidData.maxLevel);
 
   return getSpriteBase64(spriteKey, Assets.SpriteAtlas);
@@ -87,6 +90,10 @@ export function getSpaceRockInfo(primodium: Primodium, spaceRock: Entity) {
   const hash = player ? hashKeyEntity(PIRATE_KEY, player) : undefined;
   name = `${hash === ownedBy ? "Pirate" : "Player"} Asteroid`;
 
+  const isBlocked = !!getOrbitingFleets(spaceRock).find(
+    (fleet) => components.FleetStance.get(fleet)?.stance == EFleetStance.Block
+  );
+
   return {
     imageUri,
     resources,
@@ -100,6 +107,7 @@ export function getSpaceRockInfo(primodium: Primodium, spaceRock: Entity) {
     gracePeriodValue,
     asteroidData,
     encryption,
+    isBlocked,
   };
 }
 

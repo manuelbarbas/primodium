@@ -39,7 +39,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   const imageUri = getAsteroidImage(primodium, selectedAsteroid);
   const { screenCoord, isBounded } = useCoordToScreenCoord(position, true);
   const { inGracePeriod } = useInGracePeriod((ownedBy as Entity) ?? singletonEntity);
-
+  const isPirate = components.PirateAsteroid.has(selectedAsteroid);
   const ownedByPlayer = ownedBy === playerEntity;
   const canAddFleets =
     ownedByPlayer &&
@@ -72,6 +72,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
         <div className="absolute top-0 right-0 translate-x-full w-24">
           <Button
             className="btn-ghost btn-xs text-xs text-accent bg-slate-900 border border-l-0 border-secondary/50"
+            disabled={isPirate}
             onClick={async () => {
               components.Send.reset();
               components.ActiveRock.set({ value: selectedAsteroid });

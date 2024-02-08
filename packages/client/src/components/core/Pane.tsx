@@ -1,10 +1,10 @@
 import { Scenes } from "@game/constants";
 import { Coord } from "@latticexyz/utils";
-import { useState, useEffect, ReactNode, FC, useMemo, useCallback } from "react";
+import { FC, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaLock, FaLockOpen, FaMinus, FaPlus, FaTimes } from "react-icons/fa";
 import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
-import { usePersistantStore } from "src/game/stores/PersistantStore";
+import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { usePrimodium } from "src/hooks/usePrimodium";
 
 let pinnedDepth = 0;
@@ -58,7 +58,7 @@ export const Content: FC<{
   onLock,
   onUnlock,
 }) => {
-  const [uiScale] = usePersistantStore((state) => [state.uiScale]);
+  const [uiScale] = usePersistentStore((state) => [state.uiScale]);
 
   // Calculate translate values based on 'origin'
   const { translateX, translateY, transformOrigin } = useMemo(() => {
@@ -195,7 +195,7 @@ export const Pane: FC<{
   onClose,
 }) => {
   const primodium = usePrimodium();
-  const [paneInfo, setPane, removePane] = usePersistantStore((state) => [state.panes, state.setPane, state.removePane]);
+  const [paneInfo, setPane, removePane] = usePersistentStore((state) => [state.panes, state.setPane, state.removePane]);
   const [container, setContainer] = useState<Phaser.GameObjects.DOMElement>();
   const [containerRef, setContainerRef] = useState<HTMLDivElement>();
   const [minimized, setMinimized] = useState(false);

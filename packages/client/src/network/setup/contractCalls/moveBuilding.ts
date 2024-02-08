@@ -14,7 +14,7 @@ import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const moveBuilding = async (mud: MUD, building: Entity, coord: Coord) => {
   // todo: find a cleaner way to extract this value in all web3 functions
-  const activeAsteroid = components.SelectedRock.get()?.value;
+  const activeAsteroid = components.ActiveRock.get()?.value;
   if (!activeAsteroid) return;
 
   const prevPosition = components.Position.get(building);

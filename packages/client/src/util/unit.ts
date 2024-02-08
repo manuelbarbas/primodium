@@ -102,7 +102,7 @@ export const getFleetStatsFromUnits = (units: Map<Entity, bigint>) => {
   return data;
 };
 
-export const getAllOrbitingFleets = (entity: Entity) => {
+export const getOrbitingFleets = (entity: Entity) => {
   const playerEntity = components.Account.get()?.value;
   if (
     !playerEntity ||
@@ -119,6 +119,7 @@ export const getAllOrbitingFleets = (entity: Entity) => {
     }
   );
 };
+
 export const getFleetTilePosition = (scene: Scene, fleet: Entity) => {
   const { tileHeight, tileWidth } = scene.tilemap;
   const spaceRock = components.FleetMovement.get(fleet)?.destination as Entity;
@@ -177,7 +178,7 @@ export function getCanAttackSomeone(entity: Entity) {
   const player = components.Account.get()?.value;
   if (components.OwnedBy.get(spaceRock)?.value !== player) return true;
 
-  const allFleets = getAllOrbitingFleets(spaceRock);
+  const allFleets = getOrbitingFleets(spaceRock);
   return !!allFleets.find((fleet) => {
     if (fleet === entity) return false;
     const owner = components.OwnedBy.get(fleet)?.value as Entity;
@@ -214,7 +215,13 @@ export function getCanAttack(originEntity: Entity, targetEntity: Entity) {
 export function getCanSend(originEntity: Entity, targetEntity: Entity) {
   const isFleet = components.IsFleet.get(targetEntity);
 
-  const ownerRock = components.FleetMovement.get(originEntity)?.destination;
-  if (isFleet || components.BuildingType.has(targetEntity) || ownerRock == targetEntity) return false;
-  return true;
+  const currentRock = components.FleetMovement.get(originEntity)?.destination as Entity | undefined;
+  if (!currentRock || isFleet || components.BuildingType.has(targetEntity) || currentRock == targetEntity) return false;
+
+  const currentRockIsPirate = components.PirateAsteroid.has(currentRock);
+  if (!currentRockIsPirate) return true;
+
+  const player = components.Account.get()?.value;
+  const playerHome = components.Home.get(player)?.value;
+  return targetEntity == playerHome;
 }
