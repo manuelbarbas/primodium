@@ -2,18 +2,16 @@ import { minEth } from "@game/constants";
 import { ComponentValue, Entity, Schema } from "@latticexyz/recs";
 import { Browser, ContractComponent } from "@primodiumxyz/mud-game-tools";
 import { useEffect, useMemo, useState } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Progress } from "./components/core/Progress";
-import { Initializing } from "./components/shared/Initializing";
 import { useMud } from "./hooks";
 import { useInit } from "./hooks/useInit";
 import { useSyncStatus } from "./hooks/useSyncStatus";
-import { components } from "./network/components";
 import { setComponentValue } from "./network/setup/contractCalls/dev";
-import { spawn } from "./network/setup/contractCalls/spawn";
 import { world } from "./network/world";
 import { Game } from "./screens/Game";
 import { Increment } from "./screens/Increment";
+import { Landing } from "./screens/Landing";
 import { Statistics } from "./screens/Statistics";
 import { setupCheatcodes } from "./util/cheatcodes";
 
@@ -22,8 +20,8 @@ export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";
 
 export default function AppLoadingState() {
   const mud = useMud();
+  const initialized = useInit();
   const [balance, setBalance] = useState<bigint>();
-  const spawned = useInit();
 
   useEffect(() => {
     const updateBalance = setInterval(async () => {
@@ -37,27 +35,24 @@ export default function AppLoadingState() {
   const { loading, message, progress, error } = useSyncStatus();
 
   const enoughEth = useMemo(() => DEV_CHAIN || (balance ?? 0n) >= minEth, [balance]);
-  const ready = useMemo(() => spawned && !loading && enoughEth, [spawned, loading, enoughEth]);
-
-  useEffect(() => {
-    if (!enoughEth) return;
-    // this beautiful snippet of code is to ensure that the player is spawned
-    const spawnIfNecessary = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const spawned = components.Spawned.get(mud.playerAccount.entity)?.value;
-      if (loading || spawned) return;
-      await spawn(mud);
-    };
-    spawnIfNecessary();
-  }, [spawned, mud, loading, enoughEth]);
+  const ready = useMemo(() => !loading && enoughEth, [loading, enoughEth]);
 
   return (
     <div className="bg-black h-screen">
       <div className="absolute w-full h-full star-background opacity-30" />
       {!error && (
         <div className="relative">
+          {!loading && !enoughEth && (
+            <div className="flex flex-col items-center justify-center h-screen text-white font-mono gap-4">
+              <p className="text-lg text-white">
+                <span className="font-mono">Dripping Eth to Primodium account</span>
+                <span>&hellip;</span>
+              </p>
+              <Progress value={100} max={100} className="animate-pulse w-56" />
+            </div>
+          )}
           {loading && (
-            <div className="flex items-center justify-center h-screen z-30">
+            <div className="flex items-center justify-center h-screen">
               <div className="flex flex-col items-center gap-4">
                 <p className="text-lg text-white">
                   <span className="font-mono">{message}</span>
@@ -75,14 +70,11 @@ export default function AppLoadingState() {
               </div>
             </div>
           )}
-          {!loading && !enoughEth && <Initializing className="z-20" message="Dripping Eth to Primodium account" />}
-          {!spawned && <Initializing className="z-10" message="Spawning player" />}
-
           {ready && (
             <BrowserRouter>
               <Routes>
-                <Route path="/" element={<Navigate to="/game" replace />} />
-                <Route path="/game" element={<Game />} />
+                <Route path="/" element={<Landing />} />
+                <Route path="/game" element={initialized ? <Game /> : <Landing />} />
                 <Route path="/increment" element={<Increment />} />
                 <Route path="/statistics" element={<Statistics />} />
               </Routes>
