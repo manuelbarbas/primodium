@@ -40,15 +40,16 @@ export default function AppLoadingState() {
   const ready = useMemo(() => spawned && !loading && enoughEth, [spawned, loading, enoughEth]);
 
   useEffect(() => {
+    if (!enoughEth) return;
     // this beautiful snippet of code is to ensure that the player is spawned
     const spawnIfNecessary = async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const spawned = components.Spawned.get(mud.playerAccount.entity)?.value;
       if (loading || spawned) return;
-      spawn(mud);
+      await spawn(mud);
     };
     spawnIfNecessary();
-  }, [spawned, mud, loading]);
+  }, [spawned, mud, loading, enoughEth]);
 
   return (
     <div className="bg-black h-screen">
