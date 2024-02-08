@@ -27,12 +27,14 @@ export const BattleReports = () => {
   } = useMud();
   const [selectedBattle, setSelectedBattle] = useState<Entity>();
 
-  const battles = components.Battle.useAllPlayerBattles(playerEntity);
+  const battles = components.Battle.useAllPlayerBattles(playerEntity).sort((a, b) =>
+    Number(components.Battle.get(b)?.timestamp! - components.Battle.get(a)?.timestamp!)
+  );
 
   return (
     <Navigator initialScreen={"BattleReports"} className="border-none p-0! h-full">
       <Navigator.Screen title={"BattleReports"} className="full h-full">
-        <div className="text-xs space-y-1 w-full h-full overflow-x-hidden flex flex-col items-center">
+        <div className="text-xs gap-2 w-full h-full overflow-x-hidden flex flex-col items-center">
           {battles.length === 0 && (
             <SecondaryCard className="w-full h-full flex items-center justify-center font-bold">
               <p className="opacity-50">NO BATTLE REPORTS FOUND</p>
@@ -61,6 +63,7 @@ const BattleButton = ({
   } = useMud();
 
   const battle = components.Battle.use(battleEntity);
+
   const playerIsWinner = usePlayerOwner(battle?.winner as Entity) === playerEntity;
   const attackerIsFleet = components.IsFleet.use(battle?.attacker);
   const defenderIsFleet = components.IsFleet.use(battle?.defender);
@@ -86,8 +89,8 @@ const BattleButton = ({
       )}
       <div className="grid grid-cols-[10rem_4rem_10rem] place-items-center gap-1 p-1">
         <div
-          className={`flex bg-black/10 border border-secondary/50 text-xs justify-center items-center gap-2 p-1 w-full ${
-            battle.winner == battle.attacker ? "ring-2 ring-secondary" : ""
+          className={`flex bg-black/10 border  text-xs justify-center items-center gap-2 p-1 w-full ${
+            battle.winner == battle.attacker ? "border-success/50" : "border-error/50"
           }`}
         >
           {attackerIsFleet ? entityToFleetName(battle.attacker) : entityToRockName(battle.attacker)}
@@ -95,8 +98,8 @@ const BattleButton = ({
         </div>
         <FaFistRaised size={18} className="w-12 rotate-90 -scale-x-100" />
         <div
-          className={`flex bg-black/10 border border-secondary/50 text-xs justify-center items-center gap-2 p-1 w-full ${
-            battle.winner == battle.defender ? "ring-2 ring-secondary" : ""
+          className={`flex bg-black/10 border text-xs justify-center items-center gap-2 p-1 w-full ${
+            battle.winner == battle.defender ? "border-success/50" : "border-error/50"
           }`}
         >
           {defenderIsFleet ? entityToFleetName(battle.defender) : entityToRockName(battle.defender)}
