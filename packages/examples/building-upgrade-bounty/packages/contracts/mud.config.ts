@@ -1,7 +1,7 @@
 import { mudConfig } from "@latticexyz/world/register";
 
 export default mudConfig({
-  namespace: "upgrade_bounty",
+  namespace: "upgradeBounty",
   systems: {
     AgreementMembersSystem: {
       // Don't think this one is necessary
@@ -13,11 +13,23 @@ export default mudConfig({
       name: "BuildingUpgradeBountySystem",
       // deposits and withdrawals track the depositor and amount
     },
+    MessageSystem: {
+      name: "MessageSystem",
+      openAccess: true,
+    },
   },
   tables: {
     Counter: {
       keySchema: {},
       valueSchema: "uint32",
+    },
+    Messages: {
+      keySchema: {
+        counterValue: "uint32",
+      },
+      valueSchema: {
+        message: "string",
+      },
     },
     UpgradeBounty: {
       keySchema: {

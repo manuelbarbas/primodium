@@ -21,7 +21,7 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { RESOURCE_TABLE, RESOURCE_OFFCHAIN_TABLE } from "@latticexyz/store/src/storeResourceTypes.sol";
 
 ResourceId constant _tableId = ResourceId.wrap(
-  bytes32(abi.encodePacked(RESOURCE_TABLE, bytes14("upgrade_bounty"), bytes16("P_RequiredTile")))
+  bytes32(abi.encodePacked(RESOURCE_TABLE, bytes14("upgradeBounty"), bytes16("P_RequiredTile")))
 );
 ResourceId constant P_RequiredTileTableId = _tableId;
 
@@ -208,7 +208,7 @@ library P_RequiredTile {
    * @notice Encode all of a record's fields.
    * @return The static (fixed length) data, encoded into a sequence of bytes.
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
-   * @return The dynamic (variable length) data, encoded into a sequence of bytes.
+   * @return The dyanmic (variable length) data, encoded into a sequence of bytes.
    */
   function encode(uint8 value) internal pure returns (bytes memory, PackedCounter, bytes memory) {
     bytes memory _staticData = encodeStatic(value);

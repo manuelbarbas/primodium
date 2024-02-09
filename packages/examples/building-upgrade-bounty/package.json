@@ -18,7 +18,7 @@
     "dev:vercel": "vercel dev --local-config packages/client/vercel-dev.json",
     "foundry:up": "curl -L https://foundry.paradigm.xyz | bash && bash $HOME/.foundry/bin/foundryup",
     "mud:up": "pnpm mud set-version --tag main && pnpm install",
-    "prepare": "husky install && (forge --version || pnpm foundry:up)",
+    "prepare": "forge --version || pnpm foundry:up",
     "sort-package-json": "npx sort-package-json package.json 'packages/*/package.json'",
     "test": "pnpm recursive run test",
     "upgrade:mud": "pnpm mud set-version --tag=next"
