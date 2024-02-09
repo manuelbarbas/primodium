@@ -3,8 +3,15 @@ import { createGame } from "engine/api";
 import { Scene } from "engine/types";
 
 export function createSceneApi(game: Awaited<ReturnType<typeof createGame>>) {
+  function getScene(scene: Scenes) {
+    return game.sceneManager.scenes.get(scene);
+  }
   function getConfig(scene: Scenes) {
-    return game.sceneManager.scenes.get(scene)?.config;
+    const config = game.sceneManager.scenes.get(scene)?.config;
+
+    if (!config) throw new Error(`Scene ${scene} does not exist`);
+
+    return config;
   }
 
   async function transitionToScene(
@@ -19,6 +26,7 @@ export function createSceneApi(game: Awaited<ReturnType<typeof createGame>>) {
 
   return {
     getConfig,
+    getScene,
     transitionToScene,
   };
 }

@@ -19,6 +19,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
 
     phaserKeyboard.disableGlobalCapture();
     phaserKeyboard.enabled = false;
+    inputPlugin.enabled = false;
   }
 
   function enableInput() {
@@ -27,6 +28,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
 
     phaserKeyboard?.enableGlobalCapture();
     phaserKeyboard.enabled = true;
+    inputPlugin.enabled = true;
   }
 
   function setCursor(cursor: string) {
@@ -74,7 +76,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
       Date.now(),
     ]), // Map events to whether the left button is down and the current timestamp
     bufferCount(2, 1), // Store the last two timestamps
-    filter(([prev, now]) => prev[0] && !now[0] && now[1] - prev[1] < 250), // Only care if button was pressed before and is not anymore and it happened within 500ms
+    filter(([prev, now]) => prev[0] && !now[0] && now[1] - prev[1] < 100), // Only care if button was pressed before and is not anymore and it happened within 500ms
     map(() => inputPlugin.manager?.activePointer), // Return the current pointer
     filter((pointer) => pointer?.downElement?.nodeName === "CANVAS")
   );
@@ -165,6 +167,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
   }
 
   function dispose() {
+    inputPlugin.removeAllListeners();
     for (const disposer of disposers) {
       disposer();
     }

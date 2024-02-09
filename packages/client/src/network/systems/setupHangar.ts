@@ -1,5 +1,5 @@
 import { Entity, Has, HasValue, defineComponentSystem, namespaceWorld, runQuery } from "@latticexyz/recs";
-import { getUnitTrainingTime } from "src/util/trainUnits";
+import { getUnitTrainingTime } from "src/util/unit";
 import { Hex } from "viem";
 import { components } from "../components";
 import { world } from "../world";
@@ -92,7 +92,7 @@ export function setupHangar(mud: MUD) {
   });
 
   defineComponentSystem(systemWorld, components.BlockNumber, () => {
-    const selectedRock = components.SelectedRock.get()?.value as Entity;
+    const selectedRock = components.ActiveRock.get()?.value as Entity;
     const origin = Send.get()?.origin;
     const destination = Send.get()?.destination;
     if (selectedRock) createHangar(selectedRock);

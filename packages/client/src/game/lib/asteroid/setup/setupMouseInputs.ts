@@ -19,7 +19,7 @@ export const setupMouseInputs = (scene: Scene) => {
     const gameCoord = { x, y: -y };
 
     const playerEntity = components.Account.get()?.value;
-    if (outOfBounds(gameCoord, playerEntity)) {
+    if (playerEntity && outOfBounds(gameCoord, playerEntity)) {
       components.SelectedBuilding.remove();
       components.SelectedTile.remove();
       return;
@@ -31,7 +31,7 @@ export const setupMouseInputs = (scene: Scene) => {
 
     // update selected building
     //TODO - fix converting to entity
-    const selectedRock = components.SelectedRock.get()?.value;
+    const selectedRock = components.ActiveRock.get()?.value;
     const building = getBuildingAtCoord(gameCoord, (selectedRock as Entity) ?? singletonEntity) as Entity;
 
     if (!building) {
@@ -57,7 +57,7 @@ export const setupMouseInputs = (scene: Scene) => {
     if (coordEq(currentHoverTile, mouseCoord)) return;
 
     const playerEntity = components.Account.get()?.value;
-    if (outOfBounds(mouseCoord, playerEntity)) {
+    if (playerEntity && outOfBounds(mouseCoord, playerEntity)) {
       components.HoverTile.remove();
       return;
     }
@@ -65,8 +65,14 @@ export const setupMouseInputs = (scene: Scene) => {
     components.HoverTile.set(mouseCoord);
   });
 
+  const rightClickSub = scene.input.rightClick$.subscribe(() => {
+    components.Send.reset();
+    components.Attack.reset();
+  });
+
   world.registerDisposer(() => {
     clickSub.unsubscribe();
     pointerMoveSub.unsubscribe();
+    rightClickSub.unsubscribe();
   }, "game");
 };

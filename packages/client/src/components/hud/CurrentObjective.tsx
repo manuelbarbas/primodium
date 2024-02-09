@@ -68,7 +68,7 @@ export const CurrentObjective = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <Card className="flex flex-col justify-center border-t-0 border-secondary rounded-t-none mr-2 w-fit p-0">
+      <Card className="flex flex-col justify-center border-t-0 border-secondary rounded-t-none w-fit !p-0">
         <div className="flex flex-col p-1 bg-opacity-50">
           <div className="flex gap-1 items-center p-1">
             <FaMapPin className="text-accent" />

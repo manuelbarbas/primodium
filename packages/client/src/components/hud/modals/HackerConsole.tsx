@@ -2,7 +2,7 @@
 import { Scenes } from "@game/constants";
 import React, { KeyboardEvent, useRef, useState } from "react";
 import { Button } from "src/components/core/Button";
-import { useSettingsStore } from "src/game/stores/SettingsStore";
+import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import createConsoleApi from "src/util/console/consoleApi";
@@ -43,7 +43,7 @@ const HackerConsole: React.FC = () => {
 };
 
 const Console = () => {
-  const [commandHistory, setCommandHistory] = useSettingsStore((state) => [
+  const [commandHistory, setCommandHistory] = usePersistentStore((state) => [
     state.consoleHistory,
     state.setConsoleHistory,
   ]);

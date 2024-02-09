@@ -22,20 +22,6 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   bytes32 homeRock;
   bytes32 rock = "rock";
 
-  BattleResultData br =
-    BattleResultData({
-      attacker: playerEntity,
-      defender: enemy,
-      winner: playerEntity,
-      rock: rock,
-      totalCargo: 100,
-      timestamp: block.timestamp,
-      attackerStartingUnits: getUnitArray(100, 50),
-      defenderStartingUnits: getUnitArray(100, 10),
-      attackerUnitsLeft: getUnitArray(50, 20),
-      defenderUnitsLeft: getUnitArray(0, 0)
-    });
-
   function setUp() public override {
     super.setUp();
     playerEntity = addressToEntity(creator);
@@ -44,8 +30,6 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   }
 
   function setupRaid() internal {
-    br.attacker = playerEntity;
-    br.winner = playerEntity;
     bytes32[] memory unitTypes = new bytes32[](P_UnitPrototypes.length());
     unitTypes[0] = unit1;
     P_UnitPrototypes.set(unitTypes);
@@ -465,6 +449,24 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     );
     assertTrue(Position.get(pirateAsteroidEntity).x != pirateAsteroidPosition.x, "Pirate asteroid not moved");
     assertEq(ResourceCount.get(pirateAsteroidEntity, uint8(Iron)), 400, "Resource count does not match");
+    assertEq(UnitCount.get(pirateAsteroidEntity, unit1), 10, "Unit count does not match");
+  }
+
+  function testClaimObjectiveSpawnPirateAsteroid() public {
+    bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine));
+    setupSpawnPirateAsteroid(objectivePrototype);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
+    MaxResourceCount.set(spaceRockEntity, uint8(EResource.Iron), 100);
+    P_ResourceRewardData memory resourceRewardData = P_ResourceRewardData(new uint8[](1), new uint256[](1));
+    resourceRewardData.resources[0] = uint8(EResource.Iron);
+    resourceRewardData.amounts[0] = 100;
+    P_ResourceReward.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)), resourceRewardData);
+
+    world.claimObjective(homeRock, EObjectives.BuildIronMine);
+    bytes32 personalPirateEntity = LibEncode.getHash(PirateKey, playerEntity);
+    bytes32 pirateAsteroidEntity = LibEncode.getHash(personalPirateEntity);
+    assertEq(PirateAsteroid.get(pirateAsteroidEntity).isPirateAsteroid, true, "Pirate asteroid not created");
+    assertEq(ResourceCount.get(pirateAsteroidEntity, uint8(Iron)), 100, "Resource count does not match");
     assertEq(UnitCount.get(pirateAsteroidEntity, unit1), 10, "Unit count does not match");
   }
 }

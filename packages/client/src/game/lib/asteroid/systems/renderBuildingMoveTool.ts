@@ -50,7 +50,7 @@ export const renderBuildingMoveTool = (scene: Scene, mud: MUD) => {
 
     const buildingDimensions = getBuildingDimensions(buildingPrototype);
 
-    const selectedRock = components.SelectedRock.get()?.value as Entity;
+    const selectedRock = components.ActiveRock.get()?.value as Entity;
     const validPlacement = validateBuildingPlacement(
       tileCoord,
       buildingPrototype,

@@ -1,19 +1,21 @@
-import { Assets, DepthLayers, EntitytoSpriteKey, RENDER_INTERVAL, SpriteKeys } from "@game/constants";
+import { Assets, DepthLayers, RENDER_INTERVAL, SpriteKeys } from "@game/constants";
 import { Entity, Has, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
+import { EFleetStance } from "contracts/config/enums";
 import { Scene } from "engine/types";
+import { toast } from "react-toastify";
 import { interval } from "rxjs";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { entityToColor } from "src/util/color";
-import { clampedIndex, getRandomRange } from "src/util/common";
-import { EntityType, RockRelationship } from "src/util/constants";
-import { entityToPlayerName } from "src/util/name";
-import { getRockRelationship } from "src/util/spacerock";
+import { getRandomRange } from "src/util/common";
+import { entityToPlayerName, entityToRockName } from "src/util/name";
+import { getCanAttack, getCanSend, getOrbitingFleets } from "src/util/unit";
 import { getEnsName } from "src/util/web3/getEnsName";
 import {
   ObjectPosition,
-  OnClick,
+  OnClickUp,
   OnComponentSystem,
   OnHover,
   OnOnce,
@@ -21,8 +23,10 @@ import {
   SetValue,
   Tween,
 } from "../../common/object-components/common";
+import { Circle } from "../../common/object-components/graphics";
 import { Outline, Texture } from "../../common/object-components/sprite";
 import { ObjectText } from "../../common/object-components/text";
+import { getOutlineSprite, getRockSprite, getSecondaryOutlineSprite } from "./utils/getSprites";
 import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
 
 const asteroidQueue: Entity[] = [];
@@ -46,7 +50,6 @@ export const renderAsteroid = (scene: Scene) => {
     const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entity);
 
     const spriteScale = 0.34 + 0.05 * Number(asteroidData.maxLevel);
-
     const sharedComponents = [
       ObjectPosition({
         x: coord.x * tileWidth,
@@ -94,22 +97,23 @@ export const renderAsteroid = (scene: Scene) => {
 
     const asteroidObject = asteroidObjectGroup.add("Sprite");
 
+    const sprite = getRockSprite(asteroidData.mapId, asteroidData.mapId === 1 ? mainBaseLevel : asteroidData.maxLevel);
     asteroidObject.setComponents([
       ...sharedComponents,
       rotationTween,
-      Texture(
-        Assets.SpriteAtlas,
-        EntitytoSpriteKey[EntityType.Asteroid][
-          clampedIndex(Number(mainBaseLevel) - 1, EntitytoSpriteKey[EntityType.Asteroid].length)
-        ]
-      ),
+      Texture(Assets.SpriteAtlas, sprite),
       SetValue({
         depth: DepthLayers.Rock,
       }),
     ]);
 
     const asteroidOutline = asteroidObjectGroup.add("Sprite");
-    const playerEntity = components.Account.get()?.value;
+    const playerEntity = components.Account.get()?.value ?? singletonEntity;
+    const outlineSprite =
+      asteroidData.mapId === 1
+        ? getOutlineSprite(playerEntity, entity)
+        : getSecondaryOutlineSprite(playerEntity, entity, asteroidData.maxLevel);
+
     asteroidOutline.setComponents([
       ...sharedComponents,
       rotationTween,
@@ -128,12 +132,21 @@ export const renderAsteroid = (scene: Scene) => {
         const playerEntity = components.Account.get()?.value;
         if (!playerEntity || (ownedBy !== _entity && playerEntity !== _entity)) return;
 
-        asteroidOutline.setComponent(Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity)));
+        asteroidOutline.setComponent(Texture(Assets.SpriteAtlas, outlineSprite));
       }),
-      playerEntity ? Texture(Assets.SpriteAtlas, getOutlineSprite(playerEntity, entity)) : undefined,
-      OnClick(scene, () => {
-        components.Send.setDestination(entity);
-        components.SelectedRock.set({ value: entity });
+      Texture(Assets.SpriteAtlas, outlineSprite),
+      OnClickUp(scene, () => {
+        const attackOrigin = components.Attack.get()?.originFleet;
+        const sendOrigin = components.Send.get()?.originFleet;
+        if (attackOrigin) {
+          if (getCanAttack(attackOrigin, entity)) components.Attack.setDestination(entity);
+          else toast.error("Cannot attack this asteroid.");
+        } else if (sendOrigin) {
+          if (getCanSend(sendOrigin, entity)) components.Send.setDestination(entity);
+          else toast.error("Cannot send to this asteroid.");
+        } else {
+          components.SelectedRock.set({ value: entity });
+        }
       }),
       OnHover(
         () => {
@@ -153,12 +166,21 @@ export const renderAsteroid = (scene: Scene) => {
     gracePeriod.setComponents([
       ...sharedComponents,
       rotationTween,
+      OnComponentSystem(components.SelectedRock, (gameObject, update) => {
+        const isSelected = update.value[0]?.value === entity;
+        const wasSelected = update.value[1]?.value === entity;
+        if (isSelected) {
+          gameObject.alpha = 0;
+        } else if (wasSelected) {
+          gameObject.alpha = 0.8;
+        }
+      }),
       OnComponentSystem(components.Time, (gameObject) => {
-        const player = components.OwnedBy.get(entity)?.value as Entity | undefined;
-        const graceTime = components.GracePeriod.get(player)?.value ?? 0n;
+        const isSelected = components.SelectedRock.get()?.value === entity;
+        const graceTime = components.GracePeriod.get(entity)?.value ?? 0n;
         const time = components.Time.get()?.value ?? 0n;
 
-        if (time >= graceTime) {
+        if (isSelected || time >= graceTime) {
           gameObject.alpha = 0;
         } else {
           gameObject.alpha = 0.8;
@@ -187,11 +209,13 @@ export const renderAsteroid = (scene: Scene) => {
       }),
       OnOnce(async (gameObject) => {
         const ensNameData = await getEnsName(ownedBy);
-        const name = ensNameData.ensName ?? entityToPlayerName(ownedBy);
+        const name =
+          ensNameData.ensName ?? asteroidData.mapId === 1 ? entityToPlayerName(ownedBy) : entityToRockName(entity);
 
         gameObject.setText(name);
         gameObject.setFontSize(Math.max(8, Math.min(44, 16 / scene.camera.phaserCamera.zoom)));
       }),
+      // @ts-ignore
       OnRxjsSystem(scene.camera.zoom$, (gameObject, zoom) => {
         const mapOpen = components.MapOpen.get()?.value ?? false;
 
@@ -200,6 +224,42 @@ export const renderAsteroid = (scene: Scene) => {
         const size = Math.max(8, Math.min(44, 16 / zoom));
 
         gameObject.setFontSize(size);
+      }),
+    ]);
+
+    const asteroidBlockade = asteroidObjectGroup.add("Graphics");
+    const isBlocked = !!getOrbitingFleets(entity).find(
+      (fleet) => components.FleetStance.get(fleet)?.stance == EFleetStance.Block
+    );
+    asteroidBlockade.setComponents([
+      ObjectPosition({
+        x: coord.x * tileWidth,
+        y: -coord.y * tileHeight,
+      }),
+      SetValue({
+        scale: spriteScale,
+        alpha: isBlocked ? 0.5 : 0,
+      }),
+      SetValue({ scale: spriteScale, depth: DepthLayers.Marker - 2 }),
+      Circle(128, {
+        borderAlpha: 0.5,
+        borderThickness: 8,
+        borderColor: 0xff0000,
+      }),
+      Tween(scene, {
+        scale: { from: spriteScale - 0.03, to: spriteScale + 0.03 },
+        ease: "Sine.easeInOut",
+        duration: 3000,
+        yoyo: true,
+        repeat: -1,
+      }),
+      OnComponentSystem(components.FleetStance, (gameObject, { entity: fleetEntity }) => {
+        const fleetPosition = components.FleetMovement.get(fleetEntity)?.destination;
+        if (fleetPosition !== entity) return;
+        const isBlocked = !!getOrbitingFleets(entity).find(
+          (fleet) => components.FleetStance.get(fleet)?.stance == EFleetStance.Block
+        );
+        gameObject.alpha = isBlocked ? 0.5 : 0;
       }),
     ]);
   };
@@ -227,19 +287,4 @@ export const renderAsteroid = (scene: Scene) => {
   });
 
   systemsWorld.registerDisposer(() => asteroidRenderer.unsubscribe());
-};
-
-const getOutlineSprite = (playerEntity: Entity, rock: Entity) => {
-  const rockRelationship = getRockRelationship(playerEntity, rock);
-
-  return SpriteKeys[
-    `Asteroid${
-      {
-        [RockRelationship.Ally]: "Alliance",
-        [RockRelationship.Enemy]: "Enemy",
-        [RockRelationship.Neutral]: "Enemy",
-        [RockRelationship.Self]: "Player",
-      }[rockRelationship]
-    }` as keyof typeof SpriteKeys
-  ];
 };

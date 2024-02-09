@@ -39,11 +39,11 @@ const CursorFollower: FC<HUDProps> = ({ children }) => {
   return (
     <div
       style={{
-        position: "absolute",
+        position: "fixed",
         left: mousePosition.x,
         top: mousePosition.y,
         transform: `scale(${scale})`,
-        // transformOrigin: "top right"
+        zIndex: 1001,
       }}
     >
       {children}
@@ -54,7 +54,7 @@ const CursorFollower: FC<HUDProps> = ({ children }) => {
 const TopRight: FC<HUDProps> = memo(({ children }) => {
   const scale = useScale();
   return (
-    <div style={{ transform: `scale(${scale})`, transformOrigin: "top right" }} className="absolute top-0 right-0">
+    <div style={{ transform: `scale(${scale})`, transformOrigin: "top right" }} className="fixed top-0 right-0">
       {children}
     </div>
   );
@@ -63,7 +63,7 @@ const TopRight: FC<HUDProps> = memo(({ children }) => {
 const TopLeft: FC<HUDProps> = memo(({ children }) => {
   const scale = useScale();
   return (
-    <div style={{ transform: `scale(${scale})`, transformOrigin: "top left" }} className="absolute top-0 left-0">
+    <div style={{ transform: `scale(${scale})`, transformOrigin: "top left" }} className="fixed top-0 left-0">
       {children}
     </div>
   );
@@ -72,10 +72,7 @@ const TopLeft: FC<HUDProps> = memo(({ children }) => {
 const BottomRight: FC<HUDProps> = memo(({ children }) => {
   const scale = useScale();
   return (
-    <div
-      style={{ transform: `scale(${scale})`, transformOrigin: "bottom right" }}
-      className="absolute bottom-0 right-0"
-    >
+    <div style={{ transform: `scale(${scale})`, transformOrigin: "bottom right" }} className="fixed bottom-0 right-0">
       {children}
     </div>
   );
@@ -84,7 +81,7 @@ const BottomRight: FC<HUDProps> = memo(({ children }) => {
 const BottomLeft: FC<HUDProps> = memo(({ children }) => {
   const scale = useScale();
   return (
-    <div style={{ transform: `scale(${scale})`, transformOrigin: "bottom left" }} className="absolute bottom-0 left-0">
+    <div style={{ transform: `scale(${scale})`, transformOrigin: "bottom left" }} className="fixed bottom-0 left-0">
       {children}
     </div>
   );
@@ -98,7 +95,7 @@ const TopMiddle: FC<HUDProps> = memo(({ children }) => {
         transform: `translateX(-50%) scale(${scale})`,
         transformOrigin: "top center",
       }}
-      className="absolute top-0 left-1/2"
+      className="fixed top-0 left-1/2"
     >
       {children}
     </div>
@@ -113,7 +110,7 @@ const BottomMiddle: FC<HUDProps> = memo(({ children }) => {
         transform: `translateX(-50%) scale(${scale})`,
         transformOrigin: "bottom center",
       }}
-      className="absolute bottom-0 left-1/2"
+      className="fixed bottom-0 left-1/2"
     >
       {children}
     </div>
@@ -128,7 +125,7 @@ const Left: FC<HUDProps> = memo(({ children }) => {
         transform: `translateY(50%) scale(${scale})`,
         transformOrigin: "left center",
       }}
-      className="absolute left-0 bottom-1/2"
+      className="fixed left-0 bottom-1/2"
     >
       {children}
     </div>
@@ -143,7 +140,7 @@ const Right: FC<HUDProps> = memo(({ children }) => {
         transform: `translateY(50%) scale(${scale})`,
         transformOrigin: "right center",
       }}
-      className="absolute right-0 bottom-1/2"
+      className="fixed right-0 bottom-1/2"
     >
       {children}
     </div>
@@ -164,7 +161,7 @@ export const HUD: FC<HUDProps> & {
   const paddingClass = pad ? "p-3" : "";
   return (
     <ScaleContext.Provider value={scale}>
-      <div className={`screen-container ${paddingClass} absolute top-0 right-0 pointer-events-none`}>
+      <div className={`screen-container ${paddingClass} fixed top-0 right-0 pointer-events-none`}>
         <div className={`h-full relative`}>{children}</div>
       </div>
     </ScaleContext.Provider>

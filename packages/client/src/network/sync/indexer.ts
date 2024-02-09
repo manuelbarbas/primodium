@@ -38,11 +38,10 @@ export const hydrateInitialGameState = (
         ...configTableQueries,
         { tableId: tables.Dimensions.tableId! },
         { tableId: tables.GracePeriod.tableId! },
-        { tableId: tables.MapItemArrivals.tableId! },
         { tableId: tables.Score.tableId! },
         { tableId: tables.Alliance.tableId! },
         { tableId: tables.Reserves.tableId! },
-        //get asteroids
+        // //get asteroids
         {
           tableId: tables.Position.tableId!,
           where: {
@@ -283,7 +282,7 @@ export const hydrateSelectedAsteroid = (selectedRock: Entity | undefined, mud: M
     },
     //on error
     (err) => {
-      console.log(err.status);
+      console.log(err);
       components.SyncStatus.set(
         {
           step: SyncStep.Error,

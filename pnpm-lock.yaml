@@ -12,8 +12,8 @@ importers:
         specifier: 2.0.0-main-9ef3f9a7
         version: 2.0.0-main-9ef3f9a7(google-protobuf@3.21.2)
       '@primodiumxyz/pg-indexer-reader':
-        specifier: ^0.5.0
-        version: 0.5.0(react@18.2.0)(typescript@5.1.6)
+        specifier: ^0.5.1
+        version: 0.5.1(react@18.2.0)(typescript@5.1.6)
       '@typescript-eslint/eslint-plugin':
         specifier: 5.46.1
         version: 5.46.1(@typescript-eslint/parser@5.46.1)(eslint@8.29.0)(typescript@5.1.6)
@@ -101,6 +101,12 @@ importers:
       '@amplitude/analytics-browser':
         specifier: ^2.1.3
         version: 2.3.8
+      '@fontsource-variable/pixelify-sans':
+        specifier: ^5.0.1
+        version: 5.0.1
+      '@fontsource/silkscreen':
+        specifier: ^5.0.18
+        version: 5.0.18
       '@fontsource/space-mono':
         specifier: ^5.0.14
         version: 5.0.18
@@ -251,6 +257,9 @@ importers:
       rxjs:
         specifier: 7.5.5
         version: 7.5.5
+      shallow:
+        specifier: link:zustand/react/shallow
+        version: link:zustand/react/shallow
       threads:
         specifier: ^1.7.0
         version: 1.7.0
@@ -1568,6 +1577,14 @@ packages:
     resolution: {integrity: sha512-aZAXGYo6m22Fk1zZzEUKBvut/CIIQe/BapEORnxiD5Qr0kPHqqI69NtEMCme74h+at72sPhbkb4ZrLd1W3KRLA==}
     dependencies:
       fast-json-stringify: 5.10.0
+    dev: false
+
+  /@fontsource-variable/pixelify-sans@5.0.1:
+    resolution: {integrity: sha512-CAU9pAYo6/8CCrznnT6WSvgAyuMzQPGDH5JNEmTfk6rpGlEPFjuH4m0klnkwvtLEMFXbApKAQpbLsESEKzZ5YQ==}
+    dev: false
+
+  /@fontsource/silkscreen@5.0.18:
+    resolution: {integrity: sha512-++hQ8DVxtREntWU3EAx7Omwv7eLkHOUOZJJa006N/PEeDSTwP5eNVys1GwZlOXg6w9NcV5Z3xw8bNDyo/c/E4Q==}
     dev: false
 
   /@fontsource/space-mono@5.0.18:
@@ -2989,8 +3006,8 @@ packages:
       - zod
     dev: false
 
-  /@primodiumxyz/pg-indexer-reader@0.5.0(react@18.2.0)(typescript@5.1.6):
-    resolution: {integrity: sha512-plISPkCg3bBqbXXfx3mH2LKBYyggmqBMnUGOE+VduXft4+FfT28uzutJMK15FxBOI87DtPSavRckSmhxtMUWzg==}
+  /@primodiumxyz/pg-indexer-reader@0.5.1(react@18.2.0)(typescript@5.1.6):
+    resolution: {integrity: sha512-WTXpt22n/dQzA/b3F8tx1K0JS4NSXfiNy+oj2jjyty26QMo2OR7fZ8pxSTozOtTHlW3gEVtwmSChrJNTasB93g==}
     hasBin: true
     dependencies:
       '@koa/cors': 4.0.0

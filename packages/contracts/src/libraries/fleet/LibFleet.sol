@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { EResource } from "src/Types.sol";
-import { IsFleet, P_Transportables, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, P_GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { IsFleet, P_Transportables, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -13,7 +13,6 @@ import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
 
-import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { EResource, EFleetStance } from "src/Types.sol";
 
 library LibFleet {
@@ -53,6 +52,7 @@ library LibFleet {
     uint256 freeCargoSpace = LibFleetAttributes.getFreeCargoSpace(fleetId);
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
+      uint8 resource = transportables[i];
       if (resourceCounts[i] == 0) continue;
       uint256 rockResourceCount = ResourceCount.get(spaceRock, transportables[i]);
       require(rockResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");

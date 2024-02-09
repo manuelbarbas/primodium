@@ -10,15 +10,17 @@ import {
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
+import { toast } from "react-toastify";
 import { throttleTime } from "rxjs";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { getRandomRange } from "src/util/common";
 import { PIRATE_KEY } from "src/util/constants";
 import { decodeEntity, hashKeyEntity } from "src/util/encode";
+import { getCanAttack, getCanSend } from "src/util/unit";
 import {
   ObjectPosition,
-  OnClick,
+  OnClickUp,
   OnComponentSystem,
   OnHover,
   OnOnce,
@@ -91,14 +93,12 @@ export const renderPirateAsteroid = (scene: Scene) => {
       repeat: -1, // Repeat indefinitely
     });
 
-    asteroidObjectGroup.add("Sprite").setComponents([
+    const asteroidBody = asteroidObjectGroup.add("Sprite");
+    asteroidBody.setComponents([
       ...sharedComponents,
       rotationTween,
       Texture(Assets.SpriteAtlas, SpriteKeys.PirateAsteroid1),
-      OnClick(scene, () => {
-        components.Send.setDestination(entity);
-        components.SelectedRock.set({ value: entity });
-      }),
+
       SetValue({
         depth: DepthLayers.Rock,
       }),
@@ -123,18 +123,24 @@ export const renderPirateAsteroid = (scene: Scene) => {
           asteroidOutline.removeComponent(Outline().id);
         }
       }),
-      Texture(Assets.SpriteAtlas, outlineSprite),
-      OnClick(scene, () => {
-        components.SelectedRock.set({ value: entity });
+      OnClickUp(scene, () => {
+        const attackOrigin = components.Attack.get()?.originFleet;
+        const sendOrigin = components.Send.get()?.originFleet;
+        if (attackOrigin) {
+          if (getCanAttack(attackOrigin, entity)) components.Attack.setDestination(entity);
+          else toast.error("Cannot attack this asteroid.");
+        } else if (sendOrigin) {
+          if (getCanSend(sendOrigin, entity)) components.Send.setDestination(entity);
+          else toast.error("Cannot send to this asteroid.");
+        } else {
+          components.SelectedRock.set({ value: entity });
+        }
       }),
       OnHover(
-        () => {
-          components.HoverEntity.set({ value: entity });
-        },
-        () => {
-          components.HoverEntity.remove();
-        }
+        () => components.HoverEntity.set({ value: entity }),
+        () => components.HoverEntity.remove()
       ),
+      Texture(Assets.SpriteAtlas, outlineSprite),
       SetValue({
         depth: DepthLayers.Rock + 1,
       }),
@@ -156,6 +162,18 @@ export const renderPirateAsteroid = (scene: Scene) => {
       }),
       OnOnce((gameObject) => {
         gameObject.setFontSize(Math.max(8, Math.min(24, 16 / scene.camera.phaserCamera.zoom)));
+      }),
+      OnComponentSystem(components.DefeatedPirate, (gameObject, { entity }) => {
+        const { pirate } = decodeEntity(components.DefeatedPirate.metadata.keySchema, entity);
+        if (pirate !== entity) return;
+        asteroidLabel.setComponent(
+          ObjectText("DEFEATED PIRATE", {
+            id: "addressLabel",
+            color: 0xff0000,
+            fontSize: Math.max(8, Math.min(24, 16 / scene.camera.phaserCamera.zoom)),
+          })
+        );
+        asteroidBody.setComponent(SetValue({ alpha: 0.5 }));
       }),
       OnRxjsSystem(
         // @ts-ignore
@@ -214,6 +232,6 @@ export const renderPirateAsteroid = (scene: Scene) => {
     if (values.length === 0) return;
 
     scene.objectPool.removeGroup("asteroid_" + values[0]);
-    components.Send.setDestination(undefined);
+    components.Send.clear();
   });
 };

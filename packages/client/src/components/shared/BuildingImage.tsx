@@ -24,10 +24,10 @@ export const BuildingImageFromType: React.FC<{ buildingType: Entity; blurred?: b
   const imageUri = useMemo(() => getBuildingImageFromType(primodium, buildingType), [primodium, buildingType]);
 
   return (
-    <div className={`relative flex flex-col text-sm items-center cursor-pointer min-w-[4rem] h-12`}>
+    <div className={`relative flex flex-col text-sm items-center cursor-pointer min-w-[3.5rem] h-6`}>
       <img
         src={imageUri}
-        className={`absolute pointer-events-none bottom-0 w-14 pixel-images rounded-md ${
+        className={`absolute pointer-events-none bottom-0 w-10 pixel-images rounded-md ${
           blurred ? "darken-[3px]" : ""
         }`}
       />

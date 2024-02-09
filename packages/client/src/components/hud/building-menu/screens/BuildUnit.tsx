@@ -1,4 +1,5 @@
 import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect, useMemo, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
@@ -12,7 +13,7 @@ import { train } from "src/network/setup/contractCalls/train";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage, EntityType, ResourceImage, UnitEnumLookup } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
-import { getUnitStats } from "src/util/trainUnits";
+import { getUnitStats } from "src/util/unit";
 import { Hex } from "viem";
 import { ResourceIconTooltip } from "../../../shared/ResourceIconTooltip";
 
@@ -25,6 +26,7 @@ export const BuildUnit: React.FC<{
   const [count, setCount] = useState(1);
 
   const { UnitLevel, P_UnitProdTypes, BuildingType, Level } = components;
+  const selectedRock = components.SelectedRock.use()?.value ?? singletonEntity;
 
   const buildingType = (BuildingType.get(building)?.value as Entity) ?? EntityType.NULL;
   const buildingLevel = Level.use(building)?.value ?? 1n;
@@ -86,14 +88,14 @@ export const BuildUnit: React.FC<{
           <hr className="border-t border-cyan-600 w-full" />
           {!selectedUnit ? (
             <p className="opacity-50 text-xs italic mb-2 flex gap-2 z-10">
-              <FaInfoCircle size={16} /> Select a unit to start building drones.
+              <FaInfoCircle size={16} /> Select a unit to start building drones!
             </p>
           ) : (
             <>
               <p className="uppercase font-bold">{getBlockTypeName(selectedUnit)}</p>
 
               <div className="grid grid-cols-5 gap-2 border-y border-cyan-400/30">
-                {Object.entries(getUnitStats(selectedUnit, playerAccount.entity)).map(([name, value]) => (
+                {Object.entries(getUnitStats(selectedUnit, selectedRock)).map(([name, value]) => (
                   <div key={name} className="flex flex-col items-center">
                     <p className="text-xs opacity-50">{name}</p>
                     <p>{value.toLocaleString()}</p>

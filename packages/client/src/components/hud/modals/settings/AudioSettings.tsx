@@ -1,12 +1,11 @@
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { Range } from "src/components/core/Range";
-import { useSettingsStore } from "src/game/stores/SettingsStore";
+import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { usePrimodium } from "src/hooks/usePrimodium";
 
 export const AudioSettings = () => {
-  const { master, sfx, ui, music } = useSettingsStore((state) => state.volume);
-  // const setVolume = useSettingsStore((state) => state.setVolume);
+  const { master, sfx, ui, music } = usePersistentStore((state) => state.volume);
   const { setVolume } = usePrimodium().api().audio;
 
   return (

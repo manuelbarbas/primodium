@@ -55,13 +55,18 @@ library LibFleetMove {
   function recallFleet(bytes32 fleetId) internal {
     FleetMovementData memory fleetMovement = FleetMovement.get(fleetId);
     require(fleetMovement.origin != fleetMovement.destination, "[Fleet] Fleet is already at origin");
-    require(
-      fleetMovement.arrivalTime > block.timestamp,
-      "[Fleet] Fleet has already reached it's destination space rock"
-    );
+    if (block.timestamp >= fleetMovement.arrivalTime) {
+      //if fleet has already reached its destination, send it back
+      sendFleet(fleetId, fleetMovement.origin);
+      return;
+    }
     bytes32 destination = fleetMovement.origin;
-    uint256 arrivalTime = block.timestamp + block.timestamp - fleetMovement.sendTime;
-    uint256 sendTime = block.timestamp - (fleetMovement.arrivalTime - block.timestamp);
+
+    uint256 travelTime = fleetMovement.arrivalTime - block.timestamp;
+    uint256 timePassedSinceSend = block.timestamp - fleetMovement.sendTime;
+
+    uint256 arrivalTime = block.timestamp + timePassedSinceSend;
+    uint256 sendTime = block.timestamp - travelTime;
     _sendFleet(fleetId, destination, sendTime, arrivalTime);
 
     bytes32 followingFleetsKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Follow));

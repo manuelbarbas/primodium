@@ -1,17 +1,16 @@
 import { Entity } from "@latticexyz/recs";
 import { DECIMALS } from "contracts/config/constants";
 import { EResource, MUDEnums } from "contracts/config/enums";
-import { components as comps } from "src/network/components";
-import { Hex, formatUnits, parseUnits } from "viem";
+import { components, components as comps } from "src/network/components";
+import { Hex } from "viem";
 import { clampBigInt } from "./common";
 import { EntityType, ResourceEntityLookup, ResourceEnumLookup, SPEED_SCALE, UnitEnumLookup } from "./constants";
-import { adjustDecimals } from "./number";
 
 export const getScale = (resource: Entity) => {
-  return 10 ** getDecimals(resource);
+  return 10 ** getResourceDecimals(resource);
 };
 
-export const getDecimals = (resource: Entity) => {
+export const getResourceDecimals = (resource: Entity) => {
   if (
     UnitEnumLookup[resource] !== undefined ||
     resource === EntityType.FleetMoves ||
@@ -20,19 +19,6 @@ export const getDecimals = (resource: Entity) => {
   )
     return 0;
   return DECIMALS;
-};
-
-export const formatResource = (resource: Entity, amountRaw: bigint, toFixed: number | false = false) => {
-  const decimals = getDecimals(resource);
-
-  const formatted = formatUnits(amountRaw, decimals);
-  return toFixed !== false ? adjustDecimals(formatted, toFixed) : formatted;
-};
-
-export const parseResource = (resource: Entity, amount: string) => {
-  const units = getDecimals(resource);
-
-  return parseUnits(amount, units);
 };
 
 export type ResourceCountData = {
@@ -54,14 +40,24 @@ const asteroidResources: Map<
   }
 > = new Map();
 
-export function getFullResourceCount(resource: Entity, spaceRock?: Entity) {
+export function getFullResourceCount(resource: Entity, entity?: Entity) {
   return (
-    getFullResourceCounts(spaceRock).get(resource) ?? {
+    getFullResourceCounts(entity).get(resource) ?? {
       resourceCount: 0n,
       resourceStorage: 0n,
       production: 0n,
     }
   );
+}
+
+export function getFleetResourceCount(fleet: Entity) {
+  const transportables = components.P_Transportables.get()?.value ?? [];
+  return transportables.reduce((acc, resource) => {
+    const resourceCount = components.ResourceCount.getWithKeys({ entity: fleet as Hex, resource })?.value ?? 0n;
+    if (!resourceCount) return acc;
+    acc.set(ResourceEntityLookup[resource as EResource], { resourceStorage: 0n, production: 0n, resourceCount });
+    return acc;
+  }, new Map() as Map<Entity, ResourceCountData>);
 }
 
 export function getAsteroidResourceCount(asteroid: Entity) {
@@ -155,9 +151,9 @@ export function getAsteroidResourceCount(asteroid: Entity) {
   return result;
 }
 
-export function getFullResourceCounts(rawSpaceRockEntity?: Entity): Map<Entity, ResourceCountData> {
+export function getFullResourceCounts(rawEntity?: Entity): Map<Entity, ResourceCountData> {
   const player = comps.Account.get()?.value as Entity;
-  const spaceRockEntity = rawSpaceRockEntity ?? (comps.Home.get(player)?.value as Entity);
-  if (!spaceRockEntity) throw new Error("No space rock entity");
-  return getAsteroidResourceCount(spaceRockEntity);
+  const entity = rawEntity ?? (comps.Home.get(player)?.value as Entity);
+  if (!entity) throw new Error("No entity");
+  return components.IsFleet.get(entity) ? getFleetResourceCount(entity) : getAsteroidResourceCount(entity);
 }

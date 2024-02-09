@@ -1,6 +1,6 @@
 import { Type } from "@latticexyz/recs";
 import { world } from "../world";
-import { createArrivalComponent } from "./customComponents/ArrivalComponent";
+import { createBattleComponents } from "./customComponents/BattleComponents";
 import {
   createExtendedBigIntComponent,
   createExtendedBoolComponent,
@@ -9,6 +9,7 @@ import {
   createExtendedEntityComponent,
   createExtendedNumberComponent,
 } from "./customComponents/ExtendedComponent";
+import createSendComponent from "./customComponents/SendComponent";
 import { createTransactionQueueComponent } from "./customComponents/TransactionQueueComponent";
 
 /* -------------------------------------------------------------------------- */
@@ -36,6 +37,7 @@ export const Time = createExtendedBigIntComponent(world, { id: "Time" });
 export const Account = createExtendedEntityComponent(world, { id: "Account" });
 export const SelectedRock = createExtendedEntityComponent(world, { id: "SelectedRock" });
 export const ActiveRock = createExtendedEntityComponent(world, { id: "ActiveRock" });
+export const BuildRock = createExtendedEntityComponent(world, { id: "BuildRock" });
 
 // Todo: extend this with relevant tx data
 export const CurrentTransaction = createExtendedBoolComponent(world, { id: "CurrentTransaction" });
@@ -81,6 +83,20 @@ export const Hangar = createExtendedComponent(
 );
 
 /* -------------------------------------------------------------------------- */
+/*                                    Fleet                                   */
+/* -------------------------------------------------------------------------- */
+
+export const Send = createSendComponent();
+export const Attack = createSendComponent();
+
+export const SelectedFleet = createExtendedEntityComponent(world, { id: "SelectedFleet" });
+
+export const Battle = createBattleComponents();
+
+// this component is used to freeze orbiting of fleets when a battle is rendering
+export const BattleRender = createExtendedEntityComponent(world, { id: "BattleRender" });
+
+/* -------------------------------------------------------------------------- */
 /*                                 Leaderboard                                */
 /* -------------------------------------------------------------------------- */
 export const Leaderboard = createExtendedComponent(
@@ -107,10 +123,6 @@ export const AllianceLeaderboard = createExtendedComponent(
   }
 );
 
-/* -------------------------------------------------------------------------- */
-/*                                   Battle                                   */
-/* -------------------------------------------------------------------------- */
-const Arrival = createArrivalComponent();
 /* -------------------------------------------------------------------------- */
 /*                                  ALLIANCES                                 */
 /* -------------------------------------------------------------------------- */
@@ -183,18 +195,23 @@ export default {
   SelectedAction,
   SelectedRock,
   ActiveRock,
+  BuildRock,
   MapOpen,
 
   /* ---------------------------------- Units --------------------------------- */
   TrainingQueue,
   Hangar,
 
+  /* --------------------------------- Fleets --------------------------------- */
+  Send,
+  Attack,
+  SelectedFleet,
+  Battle,
+  BattleRender,
+
   /* ------------------------------ Leaderboard ------------------------------- */
   Leaderboard,
   AllianceLeaderboard,
-
-  /* --------------------------------- Battle --------------------------------- */
-  Arrival,
 
   /* ------------------------------- Alliances -------------------------------- */
   PlayerInvite,

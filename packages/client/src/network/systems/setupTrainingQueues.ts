@@ -1,5 +1,5 @@
 import { Entity, Has, HasValue, defineComponentSystem, namespaceWorld, runQuery } from "@latticexyz/recs";
-import { getUnitTrainingTime } from "src/util/trainUnits";
+import { getUnitTrainingTime } from "src/util/unit";
 import { Hex } from "viem";
 import { components } from "../components";
 import { BlockNumber } from "../components/clientComponents";
@@ -70,7 +70,7 @@ export function setupTrainingQueues() {
   // update local queues each second
   // todo: create a component that tracks active asteroids (to be updated each second)
   defineComponentSystem(systemWorld, BlockNumber, (update) => {
-    const selectedRock = components.SelectedRock.get()?.value;
+    const selectedRock = components.ActiveRock.get()?.value;
     const origin = Send.get()?.origin;
     const destination = Send.get()?.destination;
     const parents: string[] = [];

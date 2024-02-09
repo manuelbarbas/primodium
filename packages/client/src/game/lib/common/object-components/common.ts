@@ -90,6 +90,28 @@ export const OnClick = <T extends keyof GameObjectTypes>(
   };
 };
 
+export const OnClickUp = <T extends keyof GameObjectTypes>(
+  scene: Scene,
+  callback: (gameObject?: GameObjectInstances[T], e?: Phaser.Input.Pointer) => void,
+  pixelPerfect = false
+): GameObjectComponent<T> => {
+  return {
+    id: uuid(),
+    once: (gameObject) => {
+      if (pixelPerfect) gameObject.setInteractive(scene.input.phaserInput.makePixelPerfect());
+      else gameObject.setInteractive();
+      let downTime = Date.now();
+      gameObject.on("pointerdown", () => (downTime = Date.now()));
+      gameObject.on("pointerup", (e: Phaser.Input.Pointer) => {
+        if (e.downElement.nodeName !== "CANVAS") return;
+        const prevDownTime = downTime;
+        downTime = Date.now();
+        if (downTime - prevDownTime < 250) callback(gameObject as GameObjectInstances[T], e);
+      });
+    },
+  };
+};
+
 export const OnHover = <T extends keyof GameObjectTypes>(
   callback: (gameObject?: GameObjectInstances[T]) => void,
   leaveCallback?: (gameObject?: GameObjectInstances[T]) => void,
@@ -109,6 +131,25 @@ export const OnHover = <T extends keyof GameObjectTypes>(
           leaveCallback(gameObject as GameObjectInstances[T]);
         });
       }
+    },
+  };
+};
+
+export const TweenCounter = <T extends keyof GameObjectTypes>(
+  scene: Scene,
+  config: Partial<Phaser.Types.Tweens.NumberTweenBuilderConfig>
+): GameObjectComponent<T> => {
+  let tween: Phaser.Tweens.Tween;
+  return {
+    id: uuid(),
+    once: () => {
+      tween = scene.phaserScene.tweens.addCounter({
+        ...config,
+      });
+    },
+    exit: () => {
+      tween.stop();
+      tween.destroy();
     },
   };
 };

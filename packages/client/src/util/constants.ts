@@ -2,7 +2,7 @@ import { resourceToHex } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { DECIMALS } from "contracts/config/constants";
-import { EBuilding, EObjectives, EResource, ESize, EUnit } from "contracts/config/enums";
+import { EBuilding, EObjectives, EResource, EUnit } from "contracts/config/enums";
 import { Key } from "engine/types";
 import { encodeEntity } from "src/util/encode";
 import { reverseRecord } from "./common";
@@ -79,11 +79,6 @@ export enum TransactionQueueType {
   Train,
   Research,
   Upgrade,
-  Recall,
-  Reinforce,
-  Invade,
-  Raid,
-  Land,
   Demolish,
   Move,
   ClaimObjective,
@@ -98,6 +93,14 @@ export enum TransactionQueueType {
   DeclineInvite,
   Toggle,
   Access,
+  Attack,
+  CreateFleet,
+  DisbandFleet,
+  LandFleet,
+  MergeFleets,
+  SendFleet,
+  FleetStance,
+  TransferFleet,
 }
 
 export enum RockRelationship {
@@ -179,6 +182,8 @@ export const EntityType = {
 
   Defense: toHex32("U_Defense") as Entity,
   DefenseMultiplier: toHex32("M_DefenseMultiplier") as Entity,
+
+  Encryption: toHex32("R_Encryption") as Entity,
 
   Bullet: toHex32("Bullet") as Entity,
   IronPlate: toHex32("IronPlate") as Entity,
@@ -407,6 +412,7 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.DefenseMultiplier, "/img/icons/defenseicon.png"],
   [EntityType.Unraidable, "/img/icons/unraidableicon.png"],
   [EntityType.AdvancedUnraidable, "/img/icons/advancedunraidableicon.png"],
+  [EntityType.Encryption, "/img/icons/advancedunraidableicon.png"],
 
   // debug
   [EntityType.Bullet, "/img/crafted/bullet.png"],
@@ -442,20 +448,6 @@ export const KeyImages = new Map<Key, string>([
   ["E", "/img/keys/e.png"],
 ]);
 
-export const MotherlodeSizeNames: Record<number, string> = {
-  [ESize.Small]: "Small",
-  [ESize.Medium]: "Medium",
-  [ESize.Large]: "Large",
-};
-
-// do the same for types
-export const MotherlodeTypeNames: Record<number, string> = {
-  [EResource.Titanium]: "Titanium",
-  [EResource.Iridium]: "Iridium",
-  [EResource.Platinum]: "Platinum",
-  [EResource.Kimberlite]: "Kimberlite",
-};
-
 export const ResourceStorages = new Set([
   EntityType.Iron,
   EntityType.Copper,
@@ -477,6 +469,7 @@ export const UtilityStorages = new Set([
   EntityType.Defense,
   EntityType.Unraidable,
   EntityType.AdvancedUnraidable,
+  EntityType.Encryption,
 ]);
 
 export const UnitStorages = new Set([
@@ -512,8 +505,8 @@ export const ResourceEnumLookup: Record<Entity, EResource> = {
   [EntityType.Defense]: EResource.U_Defense,
   [EntityType.Unraidable]: EResource.U_Unraidable,
   [EntityType.AdvancedUnraidable]: EResource.U_AdvancedUnraidable,
-
   [EntityType.DefenseMultiplier]: EResource.M_DefenseMultiplier,
+  [EntityType.Encryption]: EResource.R_Encryption,
 };
 
 export const ResourceEntityLookup = reverseRecord(ResourceEnumLookup);
@@ -546,7 +539,6 @@ export const UnitEnumLookup: Record<Entity, EUnit> = {
   [EntityType.StingerDrone]: EUnit.StingerDrone,
   [EntityType.AnvilDrone]: EUnit.AnvilDrone,
   [EntityType.AegisDrone]: EUnit.AegisDrone,
-  [EntityType.MiningVessel]: EUnit.MiningVessel,
   [EntityType.MinutemanMarine]: EUnit.MinutemanMarine,
   [EntityType.TridentMarine]: EUnit.TridentMarine,
   [EntityType.LightningCraft]: EUnit.LightningCraft,
