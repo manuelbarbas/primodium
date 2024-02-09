@@ -11,17 +11,18 @@ import { MapButton } from "./MapButton";
 import { MenuButtons } from "./MenuButtons";
 import { Profile } from "./Profile";
 import { SpectatingDetails } from "./SpectatingDetails";
+import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { HoverInfo } from "./hover/HoverInfo";
 import { BuildMarker } from "./markers/starmap/BuildMarker";
 import { HomeMarker } from "./markers/starmap/HomeMarker";
 import HackerConsole from "./modals/HackerConsole";
+import { OwnedAsteroids } from "./panes/OwnedAsteroids";
 import { Blueprints } from "./panes/blueprints/Blueprints";
+import { Hangar as HangarComponent } from "./panes/hangar/Hangar";
 import { Resources } from "./panes/resources/Resources";
 import { AsteroidTarget } from "./markers/starmap/AsteroidTarget";
 import { FleetTarget } from "./markers/starmap/FleetTarget";
 import { HoverTarget } from "./markers/HoverTarget";
-import { BuildingMenu } from "./building-menu/BuildingMenu";
-import { OwnedAsteroids } from "./panes/OwnedAsteroids";
 
 export const GameHUD = () => {
   const {
@@ -67,9 +68,12 @@ export const GameHUD = () => {
           <HoverInfo />
         </HUD.CursorFollower>
         <HUD.TopLeft>
-          <div className="flex">
-            <Profile />
-            <MenuButtons />
+          <div className="ml-2 space-y-2">
+            <div className="flex">
+              <Profile />
+              <MenuButtons />
+            </div>
+            <HangarComponent />
           </div>
         </HUD.TopLeft>
 
