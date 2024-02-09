@@ -7,12 +7,8 @@ import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
-import { useMud } from "src/hooks";
 
 export const MapButton: React.FC<{ isSpectating: boolean }> = ({ isSpectating }) => {
-  const {
-    playerAccount: { entity: playerEntity },
-  } = useMud();
   const mapOpen = components.MapOpen.use(undefined, {
     value: false,
   }).value;
@@ -79,7 +75,7 @@ export const MapButton: React.FC<{ isSpectating: boolean }> = ({ isSpectating })
     components.MapOpen.set({ value: true });
     components.SelectedBuilding.remove();
     if (isSpectating)
-      components.ActiveRock.set({ value: (components.Home.get(playerEntity)?.value ?? singletonEntity) as Entity });
+      components.ActiveRock.set({ value: (components.BuildRock.get()?.value ?? singletonEntity) as Entity });
   };
 
   useEffect(() => {

@@ -13,7 +13,6 @@ import { uiSceneConfig } from "src/game/config/uiScene";
 export const initAsteroidScene = async (game: Game) => {
   const scene2 = await game.sceneManager.addScene(uiSceneConfig, true);
   const scene = await game.sceneManager.addScene(asteroidSceneConfig, true);
-
   const audio = createAudioApi(scene);
 
   const tileManager = await setupTileManager(scene.tilemap);

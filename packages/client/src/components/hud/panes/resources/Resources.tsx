@@ -8,6 +8,8 @@ export const Resources = memo(() => {
   const { components } = useMud();
   const mapOpen = components.MapOpen.use()?.value;
 
+  if (mapOpen) return null;
+
   return (
     <Pane
       id="resources"
@@ -15,11 +17,9 @@ export const Resources = memo(() => {
       defaultCoord={{ x: 26, y: 11 }}
       scene={Scenes.Asteroid}
       defaultLocked
-      // origin="center-left"
       minOpacity={0.5}
       draggable
       persist
-      pinnable={!mapOpen}
     >
       <AllResourceLabels />
     </Pane>

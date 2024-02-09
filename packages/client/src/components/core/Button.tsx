@@ -11,6 +11,8 @@ export const Button: React.FC<{
   className?: string;
   style?: React.CSSProperties;
   onClick?: (e?: React.MouseEvent | undefined) => void;
+  onPointerEnter?: (e?: React.PointerEvent) => void;
+  onPointerLeave?: (e?: React.PointerEvent) => void;
   disabled?: boolean;
   selected?: boolean;
   loading?: boolean;
@@ -24,6 +26,8 @@ export const Button: React.FC<{
   className,
   style,
   onClick,
+  onPointerEnter,
+  onPointerLeave,
   disabled,
   selected = false,
   loading = false,
@@ -66,7 +70,8 @@ export const Button: React.FC<{
             api?.audio.play(clickSound, "ui", {
               detune: getRandomRange(-100, 100),
             });
-          onClick && onClick(e);
+
+          onClick?.(e);
         }}
         disabled={disabled}
         onPointerEnter={() => {
@@ -75,7 +80,10 @@ export const Button: React.FC<{
               volume: 0.1,
               detune: getRandomRange(-200, 200),
             });
+
+          onPointerEnter?.();
         }}
+        onPointerLeave={onPointerLeave}
         className={`btn join-item inline pointer-events-auto font-bold outline-none h-fit ${className} ${
           disabled ? "opacity-80" : ""
         } ${selected ? "border-accent z-10 bg-base-100" : ""} `}

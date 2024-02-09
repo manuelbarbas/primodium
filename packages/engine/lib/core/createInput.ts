@@ -76,7 +76,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
       Date.now(),
     ]), // Map events to whether the left button is down and the current timestamp
     bufferCount(2, 1), // Store the last two timestamps
-    filter(([prev, now]) => prev[0] && !now[0] && now[1] - prev[1] < 250), // Only care if button was pressed before and is not anymore and it happened within 500ms
+    filter(([prev, now]) => prev[0] && !now[0] && now[1] - prev[1] < 150), // Only care if button was pressed before and is not anymore and it happened within 500ms
     map(() => inputPlugin.manager?.activePointer), // Return the current pointer
     filter((pointer) => pointer?.downElement?.nodeName === "CANVAS")
   );
