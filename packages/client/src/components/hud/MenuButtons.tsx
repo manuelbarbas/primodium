@@ -12,7 +12,7 @@ export const MenuButtons = () => {
       <div className="flex pl-2 gap-1 drop-shadow-hard">
         <Modal title="leaderboard">
           <Modal.Button className="rounded-t-none border border-t-0 pt-3 pb-2 border-secondary btn-sm text-base">
-            <IconLabel imageUri="/img/icons/leaderboardicon.png" tooltipText="leaderboard" />
+            <IconLabel imageUri="/img/icons/leaderboardicon.png" tooltipText="leaderboard" tooltipDirection="bottom" />
           </Modal.Button>
           <Modal.Content className="w-[40rem] h-[50rem]">
             <Leaderboard />
@@ -20,7 +20,7 @@ export const MenuButtons = () => {
         </Modal>
         <Modal title="battles">
           <Modal.Button className="rounded-t-none border border-t-0 pt-3 pb-2 border-secondary btn-sm text-base">
-            <IconLabel imageUri="/img/icons/reportsicon.png" tooltipText="battles" />
+            <IconLabel imageUri="/img/icons/reportsicon.png" tooltipText="battles" tooltipDirection="bottom" />
           </Modal.Button>
           <Modal.Content className="w-[30rem] h-[50rem]">
             <BattleReports />
@@ -28,7 +28,7 @@ export const MenuButtons = () => {
         </Modal>
         <Modal title="Fleets">
           <Modal.Button className="rounded-t-none border border-t-0 pt-3 pb-2 border-secondary btn-sm text-base">
-            <IconLabel imageUri="/img/icons/outgoingicon.png" tooltipText="Fleets" />
+            <IconLabel imageUri="/img/icons/outgoingicon.png" tooltipText="Fleets" tooltipDirection="bottom" />
           </Modal.Button>
           <Modal.Content className="w-4/5 h-4/5">
             <Fleets />
@@ -36,7 +36,7 @@ export const MenuButtons = () => {
         </Modal>
         <Modal title="settings">
           <Modal.Button className="rounded-t-none border border-t-0 pt-3 pb-2 border-secondary btn-sm text-base">
-            <IconLabel imageUri="/img/icons/settingsicon.png" tooltipText="settings" />
+            <IconLabel imageUri="/img/icons/settingsicon.png" tooltipText="settings" tooltipDirection="bottom" />
           </Modal.Button>
           <Modal.Content className="w-132 h-96">
             <Settings />
@@ -44,7 +44,7 @@ export const MenuButtons = () => {
         </Modal>
         <Modal title="upgrade units">
           <Modal.Button className="rounded-t-none border border-t-0 pt-3 pb-2 border-secondary btn-sm text-base">
-            <IconLabel imageUri="/img/unit/trident_marine.png" tooltipText="units" />
+            <IconLabel imageUri="/img/unit/trident_marine.png" tooltipText="upgrade units" tooltipDirection="bottom" />
           </Modal.Button>
           <Modal.Content>
             <UpgradeUnit />

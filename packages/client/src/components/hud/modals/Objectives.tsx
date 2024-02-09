@@ -46,7 +46,7 @@ const ClaimObjectiveButton: React.FC<{
 }> = ({ objectiveEntity }) => {
   const mud = useMud();
   const time = Time.use()?.value;
-  const selectedRock = comps.SelectedRock.use()?.value ?? singletonEntity;
+  const selectedRock = comps.ActiveRock.use()?.value ?? singletonEntity;
   const levelRequirement = comps.Level.use(objectiveEntity);
   const objectiveClaimedRequirement = comps.CompletedObjective.use(objectiveEntity);
 
