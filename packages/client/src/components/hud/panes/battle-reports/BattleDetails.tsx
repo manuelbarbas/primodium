@@ -52,6 +52,7 @@ export const BattleDetails: React.FC<{
   const winningPlayer = usePlayerOwner(battle?.winner as Entity);
   const attackerIsFleet = components.IsFleet.use(battle?.attacker);
   const defenderIsFleet = components.IsFleet.use(battle?.defender);
+  const position = components.Position.use(battle?.rock as Entity);
 
   if (!battle) return <></>;
 
@@ -255,7 +256,7 @@ export const BattleDetails: React.FC<{
         </div>
 
         <div className="absolute top-0 right-0 flex flex-col items-end gap-1 text-xs p-2">
-          <p className="opacity-50 font-bold">
+          <p className="opacity-70 font-bold">
             {new Date(Number(battle.timestamp * 1000n)).toLocaleString(undefined, {
               hour: "numeric",
               minute: "numeric",
@@ -264,6 +265,9 @@ export const BattleDetails: React.FC<{
               day: "numeric",
               year: "numeric",
             })}
+          </p>
+          <p className="opacity-50 font-bold">
+            [{position?.x ?? 0},{position?.y ?? 0}] {entityToRockName(battle.rock)}
           </p>
         </div>
       </div>
