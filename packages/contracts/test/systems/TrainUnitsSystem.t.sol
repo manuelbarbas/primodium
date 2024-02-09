@@ -13,13 +13,8 @@ contract TrainUnitsSystemTest is PrimodiumTest {
   bytes32 building = "building";
   bytes32 buildingPrototype = "buildingPrototype";
 
-  uint256 COLONY_SHIP_BASE_COST;
-  EResource COLONY_SHIP_COST_RESOURCE;
-
   function setUp() public override {
     super.setUp();
-    COLONY_SHIP_BASE_COST = P_ColonyShipConfig.getResourceAmount();
-    COLONY_SHIP_COST_RESOURCE = EResource(P_ColonyShipConfig.getResourceType());
     vm.startPrank(creator);
     player = addressToEntity(creator);
     BuildingType.set(building, buildingPrototype);
@@ -106,13 +101,13 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     bytes32 aliceHomeSpaceRock = world.spawn();
     vm.stopPrank();
 
-    uint256 amount = COLONY_SHIP_BASE_COST * 2;
+    uint256 amount = P_ColonyShipConfig.getInitialCost() * 2;
     assertEq(
       amount,
-      COLONY_SHIP_BASE_COST * LibUnit.getNextColonyShipResourceCostMultiplier(aliceHomeSpaceRock),
+      P_ColonyShipConfig.getInitialCost() * LibUnit.getColonyShipCostMultiplier(aliceHomeSpaceRock),
       "next colony ship cost does not match expectation"
     );
-    EResource resource = COLONY_SHIP_COST_RESOURCE;
+    uint8 resource = P_ColonyShipConfig.getResource();
     trainUnits(alice, EUnit.ColonyShip, 1, true);
     assertEq(ResourceCount.get(aliceHomeSpaceRock, uint8(resource)), 0, "special resource should have been spent");
   }
@@ -131,26 +126,27 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     bytes32 aliceHomeSpaceRock = world.spawn();
     vm.stopPrank();
 
-    uint256 amount = COLONY_SHIP_BASE_COST * 2;
-    EResource resource = COLONY_SHIP_COST_RESOURCE;
-    increaseResource(aliceHomeSpaceRock, resource, amount);
+    uint256 amount = P_ColonyShipConfig.getInitialCost() * 2;
+    uint8 resource = P_ColonyShipConfig.getResource();
+    increaseResource(aliceHomeSpaceRock, EResource(resource), amount);
     increaseResource(aliceHomeSpaceRock, EResource.U_Vessel, 1);
     trainUnits(alice, Home.get(aliceHomeSpaceRock), P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip)), 1, true);
 
-    amount *= 2;
-    increaseResource(aliceHomeSpaceRock, resource, amount);
-    increaseResource(aliceHomeSpaceRock, EResource.U_Vessel, 1);
     assertEq(
       amount,
-      COLONY_SHIP_BASE_COST * LibUnit.getNextColonyShipResourceCostMultiplier(aliceHomeSpaceRock),
-      "next colony ship cost does not match expectation"
+      P_ColonyShipConfig.getInitialCost() * LibUnit.getColonyShipCostMultiplier(aliceHomeSpaceRock),
+      "colony ship 2 cost does not match expectation"
     );
-    trainUnits(alice, Home.get(aliceHomeSpaceRock), P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip)), 1, true);
 
     amount *= 2;
-    increaseResource(aliceHomeSpaceRock, resource, amount);
+    increaseResource(aliceHomeSpaceRock, EResource(resource), amount);
     increaseResource(aliceHomeSpaceRock, EResource.U_Vessel, 1);
     trainUnits(alice, Home.get(aliceHomeSpaceRock), P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip)), 1, true);
+    assertEq(
+      amount,
+      P_ColonyShipConfig.getInitialCost() * LibUnit.getColonyShipCostMultiplier(aliceHomeSpaceRock),
+      "next colony ship 3 cost does not match expectation"
+    );
   }
 
   function testFailTrainColonyShipsNoCostIncrease() public {
@@ -158,20 +154,20 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     bytes32 aliceHomeSpaceRock = world.spawn();
     vm.stopPrank();
 
-    uint256 amount = COLONY_SHIP_BASE_COST * 2;
-    EResource resource = COLONY_SHIP_COST_RESOURCE;
-    increaseResource(aliceHomeSpaceRock, resource, amount);
+    uint256 amount = P_ColonyShipConfig.getInitialCost() * 2;
+    uint8 resource = P_ColonyShipConfig.getResource();
+    increaseResource(aliceHomeSpaceRock, EResource(resource), amount);
     assertEq(
       amount,
-      COLONY_SHIP_BASE_COST * LibUnit.getNextColonyShipResourceCostMultiplier(aliceHomeSpaceRock),
+      P_ColonyShipConfig.getInitialCost() * LibUnit.getColonyShipCostMultiplier(aliceHomeSpaceRock),
       "next colony ship cost does not match expectation"
     );
     trainUnits(alice, EUnit.ColonyShip, 2, true);
 
-    increaseResource(aliceHomeSpaceRock, resource, amount);
+    increaseResource(aliceHomeSpaceRock, EResource(resource), amount);
     assertEq(
       amount,
-      COLONY_SHIP_BASE_COST * LibUnit.getNextColonyShipResourceCostMultiplier(aliceHomeSpaceRock),
+      P_ColonyShipConfig.getInitialCost() * LibUnit.getColonyShipCostMultiplier(aliceHomeSpaceRock),
       "next colony ship cost does not match expectation"
     );
     trainUnits(alice, EUnit.ColonyShip, 1, true);

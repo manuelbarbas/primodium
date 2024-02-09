@@ -111,8 +111,8 @@ export const config = mudConfig({
     P_ColonyShipConfig: {
       keySchema: {},
       valueSchema: {
-        resourceType: "uint8",
-        resourceAmount: "uint256",
+        resource: "uint8",
+        initialCost: "uint256",
       },
     },
 

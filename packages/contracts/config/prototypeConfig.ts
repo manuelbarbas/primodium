@@ -183,8 +183,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         tax: 10n, // out of 1000
       },
       P_ColonyShipConfig: {
-        resourceType: EResource.Iron,
-        resourceAmount: 10n,
+        resource: EResource.Iron,
+        initialCost: 10n * BigInt(SCALE),
       },
 
       P_UnitPrototypes: {
