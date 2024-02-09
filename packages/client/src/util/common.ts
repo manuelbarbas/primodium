@@ -116,11 +116,11 @@ export function clampBigInt(value: bigint, min: bigint, max: bigint) {
   return value < BigInt(min) ? BigInt(min) : value > BigInt(max) ? BigInt(max) : value;
 }
 
-export function getDegreeDirection(point1: Coord, point2: Coord) {
+export function calculateAngleBetweenPoints(point1: Coord, point2: Coord) {
   const dy = point2.y - point1.y;
   const dx = point2.x - point1.x;
   const radian = Math.atan2(dy, dx);
   let degree = radian * (180 / Math.PI);
   if (degree < 0) degree = 360 + degree;
-  return degree;
+  return { radian, degree };
 }

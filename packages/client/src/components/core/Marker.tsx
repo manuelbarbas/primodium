@@ -3,7 +3,7 @@ import { Coord } from "@latticexyz/utils";
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { usePrimodium } from "src/hooks/usePrimodium";
-import { getDegreeDirection } from "src/util/common";
+import { calculateAngleBetweenPoints } from "src/util/common";
 import { Button } from "./Button";
 import { IconLabel } from "./IconLabel";
 import { FaChevronRight } from "react-icons/fa";
@@ -70,7 +70,7 @@ export const Marker: React.FC<{
     return { container, obj };
   }, []);
 
-  //initialize container
+  //setup container on correct scene
   useEffect(() => {
     const { obj } = createContainer(visible ? camera : uiCamera, id, coord);
 
@@ -80,7 +80,6 @@ export const Marker: React.FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coord, id, visible]);
 
-  //update container position on coord change
   useEffect(() => {
     if (!marker || !container) return;
 
@@ -92,15 +91,24 @@ export const Marker: React.FC<{
         }
 
         if (!visible) {
-          const degrees = getDegreeDirection({ x: view.centerX, y: view.centerY }, { x: coord.x, y: coord.y });
-          const rad = degrees * (Math.PI / 180);
+          const a = window.innerWidth / 3; // major axis
+          const b = window.innerHeight / 3; // minor axis
 
-          marker.setPosition(
-            (window.innerWidth / 3) * Math.cos(rad) + window.innerWidth / 2,
-            (window.innerHeight / 3) * Math.sin(rad) + window.innerHeight / 2
+          const { radian, degree } = calculateAngleBetweenPoints(
+            { x: view.centerX, y: view.centerY },
+            { x: coord.x, y: coord.y }
           );
 
-          setDirection(degrees);
+          //convert to ellipse coordinates
+          const r = Math.sqrt(1 / (Math.cos(radian) ** 2 / a ** 2 + Math.sin(radian) ** 2 / b ** 2));
+
+          const markerX = r * Math.cos(radian) + window.innerWidth / 2;
+          const markerY = r * Math.sin(radian) + window.innerHeight / 2;
+
+          // Set the marker position
+          marker.setPosition(markerX, markerY);
+
+          setDirection(degree);
 
           return;
         }

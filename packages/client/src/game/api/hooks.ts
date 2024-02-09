@@ -3,7 +3,7 @@ import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 import { clone, throttle } from "lodash";
 import { useEffect, useState } from "react";
-import { getDegreeDirection } from "src/util/common";
+import { calculateAngleBetweenPoints } from "src/util/common";
 import { usePersistentStore } from "../stores/PersistentStore";
 
 export function createHooksApi(targetScene: Scene) {
@@ -79,7 +79,7 @@ export function createHooksApi(targetScene: Scene) {
           x: (pixelCoord.x - worldView.x) * zoom,
           y: (pixelCoord.y - worldView.y) * zoom,
         };
-        const newDirection = getDegreeDirection({ x: worldView.centerX, y: worldView.centerY }, pixelCoord);
+        const newDirection = calculateAngleBetweenPoints({ x: worldView.centerX, y: worldView.centerY }, pixelCoord);
 
         setState({
           screenCoord: newScreenCoord,
