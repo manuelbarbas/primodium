@@ -1,5 +1,6 @@
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
+import { UpgradeUnit } from "./building-menu/screens/UpgradeUnit";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
 import { Settings } from "./modals/settings/Settings";
 import { BattleReports } from "./panes/battle-reports/BattleReports";
@@ -39,6 +40,14 @@ export const MenuButtons = () => {
           </Modal.Button>
           <Modal.Content className="w-132 h-96">
             <Settings />
+          </Modal.Content>
+        </Modal>
+        <Modal title="upgrade units">
+          <Modal.Button className="rounded-t-none border border-t-0 pt-3 pb-2 border-secondary btn-sm text-base">
+            <IconLabel imageUri="/img/unit/trident_marine.png" tooltipText="units" />
+          </Modal.Button>
+          <Modal.Content>
+            <UpgradeUnit />
           </Modal.Content>
         </Modal>
       </div>
