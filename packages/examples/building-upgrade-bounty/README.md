@@ -9,3 +9,4 @@ This example will implement a bounty for an allowlist of addresses to upgrade th
 - [ ] set up initial script for testing
 - [ ] document for external readers
 - [ ] clean up and minimize necessary info from Primodium world
+- [ ] fix _remappings.txt

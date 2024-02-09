@@ -33,8 +33,8 @@ contract MessagingExtension is Script {
 
     // Prep encoding the Ids before executing anything
     WorldRegistrationSystem world = WorldRegistrationSystem(worldAddress);
-    ResourceId namespaceResource = WorldResourceIdLib.encodeNamespace(bytes14("messaging"));
-    ResourceId systemResource = WorldResourceIdLib.encode(RESOURCE_SYSTEM, "messaging", "MessageSystem");
+    ResourceId namespaceResource = WorldResourceIdLib.encodeNamespace(bytes14("upgradeBounty"));
+    ResourceId systemResource = WorldResourceIdLib.encode(RESOURCE_SYSTEM, "upgradeBounty", "MessageSystem");
 
     // Visual debug check
     console.log("Namespace ID: %x", uint256(ResourceId.unwrap(namespaceResource)));
@@ -52,12 +52,12 @@ contract MessagingExtension is Script {
     world.registerSystem(systemResource, messageSystem, false); // registers the MessageSystem contract address to the MessageSystem namespace and resourceID in the world address, allows anyone to access the System
 
     // Register MessageSystem.incrementMessage(string) as a function selector to make it accessible through the World.
-    // When called through the world (MUD version 2.0.0-next.16^), it will be through <namespace>__<function>, e.g. "messaging__incrementMessage(string)"
-    // If MUD version is 2.0.0-next.15 or lower, it will be through <namespace>_<system>_<function>, e.g. "messaging_MessageSystem_incrementMessage(string)"
+    // When called through the world (MUD version 2.0.0-next.16^), it will be through <namespace>__<function>, e.g. "upgradeBounty__incrementMessage(string)"
+    // If MUD version is 2.0.0-next.15 or lower, it will be through <namespace>_<system>_<function>, e.g. "upgradeBounty_MessageSystem_incrementMessage(string)"
     world.registerFunctionSelector(systemResource, "incrementMessage(string)");
     world.registerFunctionSelector(systemResource, "incrementMessageFrom(address,string)");
     console.log(
-      "Alice successfully registered the messaging namespace, Messages table, and MessageSystem contract to the Admin's world address."
+      "Alice successfully registered the upgradeBounty namespace, Messages table, and MessageSystem contract to the Admin's world address."
     );
 
     ResourceId counterSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, ROOT_NAMESPACE, "IncrementSystem");
