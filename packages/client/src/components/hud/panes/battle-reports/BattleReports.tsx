@@ -1,6 +1,5 @@
 import { Entity } from "@latticexyz/recs";
 import { useState } from "react";
-import { FaFistRaised } from "react-icons/fa";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { useMud } from "src/hooks";
@@ -87,7 +86,7 @@ const BattleButton = ({
           <p className="bg-green-900 border border-green-500  rounded-md px-1 text-2xl">W</p>
         </div>
       )}
-      <div className="grid grid-cols-[10rem_4rem_10rem] place-items-center gap-1 p-1">
+      <div className="grid grid-cols-[11rem_3rem_11rem] place-items-center gap-1 p-1">
         <div
           className={`flex bg-black/10 border  text-xs justify-center items-center gap-2 p-1 w-full ${
             battle.winner == battle.attacker ? "border-success/50" : "border-error/50"
@@ -96,7 +95,7 @@ const BattleButton = ({
           {attackerIsFleet ? entityToFleetName(battle.attacker) : entityToRockName(battle.attacker)}
           <img src={attackerIsFleet ? "img/icons/outgoingicon.png" : "img/icons/asteroidicon.png"} className="w-4" />
         </div>
-        <FaFistRaised size={18} className="w-12 rotate-90 -scale-x-100" />
+        <p className="grid place-items-center uppercase font-bold">vs</p>
         <div
           className={`flex bg-black/10 border text-xs justify-center items-center gap-2 p-1 w-full ${
             battle.winner == battle.defender ? "border-success/50" : "border-error/50"
