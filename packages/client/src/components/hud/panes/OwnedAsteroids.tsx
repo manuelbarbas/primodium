@@ -74,11 +74,9 @@ const Asteroid: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
           <p className="w-26 text-center wrap font-thin">{description}</p>
         </div>
       </div>
-
       <hr className="w-full border border-secondary/25" />
       {home && <div className="absolute top-0 left-0 px-1 bg-info text-[.6rem]">home</div>}
       {active && <div className="absolute top-0 right-0 px-1 bg-neutral text-[.6rem]">active</div>}
-
       <ResourceIconTooltip
         resource={EntityType.Encryption}
         amount={encryption}
