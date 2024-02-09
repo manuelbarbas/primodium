@@ -61,8 +61,6 @@ export const setupBattleComponents = () => {
       encryptionAtStart,
       encryptionAtEnd,
     };
-    if (battleId == "0xd1199db8c55292d62a7f9d6a8625b6e8d2619d4d054ffa63374883899bd63bd8")
-      console.log("battle updating", newData);
 
     RawBattleParticipant.set(newData, entity);
     const oldParticipantList = RawBattleParticipants.get(battleId as Entity)?.value;

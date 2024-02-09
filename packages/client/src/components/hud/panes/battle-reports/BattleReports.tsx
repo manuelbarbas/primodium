@@ -86,7 +86,7 @@ const BattleButton = ({
           <p className="bg-green-900 border border-green-500  rounded-md px-1 text-2xl">W</p>
         </div>
       )}
-      <div className="grid grid-cols-[11rem_3rem_11rem] place-items-center gap-1 p-1">
+      <div className="grid grid-cols-[10rem_3rem_10rem] place-items-center gap-1 p-1">
         <div
           className={`flex bg-black/10 border  text-xs justify-center items-center gap-2 p-1 w-full ${
             battle.winner == battle.attacker ? "border-success/50" : "border-error/50"

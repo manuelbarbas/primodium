@@ -6,7 +6,7 @@ import { useMud } from "src/hooks";
 import { usePlayerOwner } from "src/hooks/usePlayerOwner";
 import { components } from "src/network/components";
 import { getBlockTypeName, toRomanNumeral } from "src/util/common";
-import { BackgroundImage, ResourceImage } from "src/util/constants";
+import { BackgroundImage, EntityType, ResourceImage } from "src/util/constants";
 import { entityToFleetName, entityToRockName } from "src/util/name";
 import { formatResourceCount } from "src/util/number";
 
@@ -56,7 +56,6 @@ export const BattleDetails: React.FC<{
 
   if (!battle) return <></>;
 
-  console.log(battle.participants);
   const attackerDetails = Object.values(battle.participants).find((p) => p.entity === battle.attacker);
   const defenderDetails = Object.values(battle.participants).find((p) => p.entity === battle.defender);
   const [playerDetails, enemyDetails] = playerIsAttacker
@@ -140,7 +139,19 @@ export const BattleDetails: React.FC<{
           )}
           {playerDetails && (
             <div className="w-full">
-              <div className="w-full overflow-hidden h-32 border border-slate-500 bg-slate-800 overflow-y-auto flex flex-col gap-2 scrollbar">
+              <div className="w-full overflow-hidden h-32 border border-slate-500 bg-slate-800 overflow-y-auto flex flex-col p-2 gap-2 scrollbar">
+                {!!playerDetails.encryptionAtStart &&
+                  !!playerDetails.encryptionAtEnd &&
+                  playerDetails.encryptionAtStart !== playerDetails.encryptionAtEnd && (
+                    <div className="bg-error font-bold uppercase text-center">
+                      LOST{" "}
+                      {formatResourceCount(
+                        EntityType.Encryption,
+                        playerDetails.encryptionAtStart - playerDetails.encryptionAtEnd
+                      )}{" "}
+                      ENCRYPTION
+                    </div>
+                  )}
                 {Object.entries(playerDetails.units).length > 0 && (
                   <div className="w-full h-full">
                     {Object.entries(playerDetails.units).map(([entity, unit], i) => (
@@ -155,7 +166,7 @@ export const BattleDetails: React.FC<{
                   </div>
                 )}
                 {Object.entries(playerDetails.resources).length !== 0 && (
-                  <div className="grid grid-cols-6 gap-1 p-2">
+                  <div className="grid grid-cols-6 gap-1">
                     {Object.entries(playerDetails.resources).map(([resource, data], i) => {
                       const resourceDelta = data.resourcesAtEnd - data.resourcesAtStart;
                       return (
@@ -201,7 +212,19 @@ export const BattleDetails: React.FC<{
           )}
           {enemyDetails && (
             <div className="w-full">
-              <div className="w-full overflow-hidden h-32 border border-slate-500 bg-slate-800 overflow-y-auto flex flex-col scrollbar">
+              <div className="w-full overflow-hidden h-32 border border-slate-500 bg-slate-800 overflow-y-auto flex flex-col scrollbar p-2">
+                {!!enemyDetails.encryptionAtStart &&
+                  !!enemyDetails.encryptionAtEnd &&
+                  enemyDetails.encryptionAtStart !== enemyDetails.encryptionAtEnd && (
+                    <div className="bg-error font-bold uppercase text-center">
+                      LOST{" "}
+                      {formatResourceCount(
+                        EntityType.Encryption,
+                        enemyDetails.encryptionAtStart - enemyDetails.encryptionAtEnd
+                      )}{" "}
+                      ENCRYPTION
+                    </div>
+                  )}
                 {Object.entries(enemyDetails.units).length > 0 && (
                   <div className="w-full h-full">
                     {Object.entries(enemyDetails.units).map(([entity, unit], i) => (
