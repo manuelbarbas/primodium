@@ -194,7 +194,7 @@
     "background2": {
       "start": 500,
       "end": 746.0473469387755,
-      "loop": false
+      "loop": true
     }
   }
 }

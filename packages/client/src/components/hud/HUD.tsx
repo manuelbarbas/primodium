@@ -41,6 +41,14 @@ export const GameHUD = () => {
   return (
     <div className={`screen-container font-mono`}>
       <HUD scale={uiScale}>
+        {/* Make map look inset */}
+        {mapOpen && (
+          <>
+            <div className="absolute inset-0 border-8 blur-lg border-secondary/25" />
+            <div className="absolute inset-0 scale-[98%] border-8 blur-lg border-info/25" />
+          </>
+        )}
+
         <Modal title="hacker console" keybind={allowHackerModal ? KeybindActions.Console : undefined} keybindClose>
           <Modal.Content className="w-4/5 h-[40rem]">
             <HackerConsole />
