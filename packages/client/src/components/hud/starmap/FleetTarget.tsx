@@ -1,17 +1,17 @@
 import { Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useSpaceRock } from "src/hooks/useSpaceRock";
 import { components } from "src/network/components";
 import { clearFleetStance } from "src/network/setup/contractCalls/fleetStance";
-import { getCanAttackSomeone, getFleetStats, getFleetTilePosition } from "src/util/unit";
+import { getCanAttackSomeone, getFleetPixelPosition, getFleetStats } from "src/util/unit";
 import { Button } from "../../core/Button";
 import { IconLabel } from "../../core/IconLabel";
 import { Modal } from "../../core/Modal";
-import { Marker } from "../../shared/Marker";
 import { Fleets } from "../panes/fleets/Fleets";
+import { Marker } from "src/components/core/Marker";
 
 // this component assumes the fleet is owned by the player
 export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fleet, position }) => {
@@ -23,14 +23,17 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
   const mud = useMud();
   const primodium = usePrimodium();
   const {
-    scene: rawScene,
-    hooks: { useCoordToScreenCoord },
-  } = primodium.api(Scenes.Starmap);
-  const scene = rawScene.getScene(Scenes.Starmap);
+    scene: { getScene },
+  } = useRef(primodium.api(Scenes.Starmap)).current;
 
-  // this is dumb
-  const coord = useMemo(() => (scene ? getFleetTilePosition(scene, fleet) : { x: 0, y: 0 }), [fleet, scene]);
-  const { screenCoord, isBounded } = useCoordToScreenCoord(coord, true);
+  const coord = useMemo(() => {
+    const scene = getScene(Scenes.Starmap);
+
+    if (!scene) return { x: 0, y: 0 };
+
+    return getFleetPixelPosition(scene, fleet);
+  }, [fleet, getScene]);
+
   const disableAttack = useMemo(
     () => selectingDestination || stats.attack === 0n || !getCanAttackSomeone(fleet),
     [selectingDestination, stats.attack, fleet]
@@ -38,15 +41,10 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
 
   const stance = components.FleetStance.use(fleet)?.stance;
 
-  if (!scene || !mapOpen || !position) return <></>;
-
-  if (isBounded) return <Marker coord={coord} imageUri="/img/icons/outgoingicon.png" />;
+  if (!mapOpen || !position) return <></>;
 
   return (
-    <div
-      style={{ left: `calc(${screenCoord.x}px)`, top: `calc(${screenCoord.y}px)` }}
-      className={`text-error absolute -translate-y-1/2 -translate-x-1/2`}
-    >
+    <Marker id={"fleet-target"} scene={Scenes.Starmap} coord={coord}>
       <div className="w-14 h-14 border-2 border-error flex items-center justify-center bg-transparent">
         <div className="absolute top-0 right-0 translate-x-full w-36">
           <Button
@@ -93,7 +91,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
         <div className="absolute top-0 left-0 -translate-x-full">
           <Modal>
             <Modal.Button
-              onClick={() => components.ActiveRock.set({ value: location as Entity })}
+              onClick={() => components.ActiveRock.set({ value: position as Entity })}
               disabled={selectingDestination}
               className="btn-ghost btn-xs text-xs text-accent bg-neutral border border-r-0 pl-2 border-secondary/50 w-28 transition-[width] duration-200"
             >
@@ -105,7 +103,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
           </Modal>
         </div>
       </div>
-    </div>
+    </Marker>
   );
 };
 
