@@ -12,8 +12,8 @@ import { MenuButtons } from "./MenuButtons";
 import { Profile } from "./Profile";
 import { SpectatingDetails } from "./SpectatingDetails";
 import { HoverInfo } from "./hover/HoverInfo";
-// import { ActiveMarker } from "./markers/ActiveMarker";
-// import { HomeMarker } from "./markers/HomeMarker";
+import { BuildMarker } from "./markers/BuildMarker";
+import { HomeMarker } from "./markers/HomeMarker";
 import HackerConsole from "./modals/HackerConsole";
 import { Blueprints } from "./panes/blueprints/Blueprints";
 import { Resources } from "./panes/resources/Resources";
@@ -48,8 +48,8 @@ export const GameHUD = () => {
         </Modal>
 
         {/* MARKERS */}
-        {/* <ActiveMarker /> */}
-        {/* <HomeMarker /> */}
+        <BuildMarker />
+        <HomeMarker />
 
         <AsteroidTarget />
         <FleetTarget />

@@ -59,26 +59,30 @@ export const Marker: React.FC<{
   const camera = useRef(primodium.api(scene).camera).current;
   const uiCamera = useRef(primodium.api(Scenes.UI).camera).current;
 
-  const createContainer = useCallback((_camera: typeof camera, id: string, coord: Coord) => {
-    const { container, obj } = _camera.createDOMContainer(id, coord, true);
-    obj.pointerEvents = "none";
-    obj.setOrigin(0.5, 0.5);
-    obj.setScale(1 / _camera.phaserCamera.zoom);
+  const createContainer = useCallback(
+    (_camera: typeof camera, id: string, coord: Coord) => {
+      const { container, obj } = _camera.createDOMContainer(id, coord, true);
+      obj.pointerEvents = "none";
+      obj.setOrigin(0.5, 0.5);
+      obj.setScale(1 / _camera.phaserCamera.zoom);
+      obj.setAlpha(camera.phaserCamera.scene.scene.isActive() ? 1 : 0);
 
-    setMarker(obj);
-    setContainer(container);
-    return { container, obj };
-  }, []);
+      setMarker(obj);
+      setContainer(container);
+      return { container, obj };
+    },
+    [camera]
+  );
 
   //setup container on correct scene
   useEffect(() => {
-    const { obj } = createContainer(visible ? camera : uiCamera, id, coord);
+    const { obj } = createContainer(!visible && offScreenIconUri ? uiCamera : camera, id, coord);
 
     return () => {
       obj.destroy();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [coord, id, visible]);
+  }, [coord, id, visible, offScreenIconUri]);
 
   useEffect(() => {
     if (!marker || !container) return;
@@ -101,13 +105,11 @@ export const Marker: React.FC<{
 
           //convert to ellipse coordinates
           const r = Math.sqrt(1 / (Math.cos(radian) ** 2 / a ** 2 + Math.sin(radian) ** 2 / b ** 2));
-
           const markerX = r * Math.cos(radian) + window.innerWidth / 2;
           const markerY = r * Math.sin(radian) + window.innerHeight / 2;
 
           // Set the marker position
           marker.setPosition(markerX, markerY);
-
           setDirection(degree);
 
           return;
@@ -115,6 +117,7 @@ export const Marker: React.FC<{
       }
 
       marker.setScale(1 / camera.phaserCamera.zoom);
+      marker.setAlpha(camera.phaserCamera.scene.scene.isActive() ? 1 : 0);
     };
 
     cameraCallback(camera.phaserCamera.worldView);
@@ -137,5 +140,18 @@ export const Marker: React.FC<{
       {(visible || !offScreenIconUri) && children}
     </div>,
     container
+  );
+};
+
+export const IconMarker: React.FC<{
+  id: string;
+  scene: Scenes;
+  coord: Coord;
+  iconUri: string;
+}> = ({ id, scene, coord, iconUri }) => {
+  return (
+    <Marker id={id} scene={scene} coord={coord} offScreenIconUri={iconUri}>
+      <IconLabel imageUri={iconUri} className={`text-xl drop-shadow-hard`} />
+    </Marker>
   );
 };

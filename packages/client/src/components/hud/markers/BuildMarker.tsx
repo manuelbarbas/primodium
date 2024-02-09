@@ -4,17 +4,13 @@ import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useMemo } from "react";
 import { IconMarker } from "src/components/core/Marker";
-import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
+import { components } from "src/network/components";
 
-export const HomeMarker = () => {
-  const {
-    components,
-    playerAccount: { entity: playerEntity },
-  } = useMud();
+export const BuildMarker = () => {
   const primodium = usePrimodium();
-  const homeAsteroid = components.Home.use(playerEntity)?.value ?? singletonEntity;
-  const position = components.Position.use(homeAsteroid as Entity);
+  const buildAsteroid = components.BuildRock.use()?.value ?? singletonEntity;
+  const position = components.Position.use(buildAsteroid as Entity);
 
   const coord = useMemo(() => {
     const {
@@ -31,5 +27,5 @@ export const HomeMarker = () => {
     return { x: pixelCoord.x, y: -pixelCoord.y };
   }, [position, primodium]);
 
-  return <IconMarker id="home-icon" scene={Scenes.Starmap} coord={coord} iconUri="/img/icons/utilitiesicon.png" />;
+  return <IconMarker id="home-icon" scene={Scenes.Starmap} coord={coord} iconUri="/img/icons/minersicon.png" />;
 };

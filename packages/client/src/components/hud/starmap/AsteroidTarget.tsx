@@ -69,7 +69,6 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   }, [position, getConfig]);
 
   if (!mapOpen) return <></>;
-  // if (isBounded) return <Marker coord={position} imageUri="/img/icons/weaponryicon.png" />;
 
   return (
     <Marker scene={Scenes.Starmap} coord={coord} id={`asteroid-target`} offScreenIconUri="/img/icons/attackicon.png">
