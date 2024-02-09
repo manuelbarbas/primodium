@@ -26,7 +26,7 @@ export const HoverAttackTarget: React.FC<{ hoverEntity: Entity; attackOrigin: En
   if (!scene || hoverEntity === attackOrigin) return;
   const position = isFleet
     ? getFleetTilePosition(scene, hoverEntity)
-    : components.Position.use(hoverEntity) ?? { x: 0, y: 0 };
+    : components.Position.get(hoverEntity) ?? { x: 0, y: 0 };
   const canAttack = getCanAttack(attackOrigin, hoverEntity);
 
   return (

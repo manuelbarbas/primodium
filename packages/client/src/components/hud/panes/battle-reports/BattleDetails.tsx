@@ -58,8 +58,12 @@ export const BattleDetails: React.FC<{
   console.log(battle.participants);
   const attackerDetails = Object.values(battle.participants).find((p) => p.entity === battle.attacker);
   const defenderDetails = Object.values(battle.participants).find((p) => p.entity === battle.defender);
-  const playerDetails = playerIsAttacker ? attackerDetails : defenderDetails;
-  const enemyDetails = playerIsAttacker ? defenderDetails : attackerDetails;
+  const [playerDetails, enemyDetails] = playerIsAttacker
+    ? [attackerDetails, defenderDetails]
+    : [defenderDetails, attackerDetails];
+  const [playerAllies, enemyAllies] = playerIsAttacker
+    ? [battle.aggressorAllies, battle.targetAllies]
+    : [battle.targetAllies, battle.aggressorAllies];
 
   return (
     <Navigator.Screen
@@ -67,7 +71,7 @@ export const BattleDetails: React.FC<{
       className="relative gap-3 flex flex-col items-center text-white h-full w-full overflow-y-hidden p-1 mb-1 "
     >
       <div className="relative bg-slate-800 pixel-images p-3 w-full h-full overflow-y-scroll scrollbar">
-        <div className="flex flex-col items-center space-y-3">
+        <div className="flex flex-col items-center gap-3">
           {playerEntity === winningPlayer && (
             <div className="bg-green-600 p-1 px-4  flex flex-col items-center border border-green-400">
               <FaTrophy size={24} />
@@ -127,10 +131,15 @@ export const BattleDetails: React.FC<{
 
           <hr className="border-t border-primary/40 w-full" />
 
+          <p className="p-1 text-xs font-bold text-accent flex justify-start w-full">YOU</p>
+          {!playerDetails && (
+            <div className="w-full bg-base-100 h-32 border border-slate-500 pulse text-secondary uppercase text-sm flex justify-center items-center">
+              Nothing to report
+            </div>
+          )}
           {playerDetails && (
             <div className="w-full">
-              <p className="p-1 text-xs font-bold text-accent">YOUR FLEET </p>
-              <div className="w-full overflow-hidden h-32 border border-slate-500 bg-slate-800 overflow-y-auto flex flex-col items-center justify-center scrollbar">
+              <div className="w-full overflow-hidden h-32 border border-slate-500 bg-slate-800 overflow-y-auto flex flex-col gap-2 scrollbar">
                 {Object.entries(playerDetails.units).length > 0 && (
                   <div className="w-full h-full">
                     {Object.entries(playerDetails.units).map(([entity, unit], i) => (
@@ -144,41 +153,55 @@ export const BattleDetails: React.FC<{
                     ))}
                   </div>
                 )}
-              </div>
-              {Object.entries(playerDetails.resources).length !== 0 && (
-                <div className="grid grid-cols-6 gap-1 mt-1">
-                  {Object.entries(playerDetails.resources).map(([resource, data], i) => {
-                    const resourceDelta = data.resourcesAtEnd - data.resourcesAtStart;
-                    return (
-                      <div
-                        key={`resource-${i}`}
-                        className={`border ${
-                          resourceDelta > 0n ? "border-green-800" : "border-rose-800"
-                        } flex items-center`}
-                      >
-                        <img src={ResourceImage.get(resource as Entity) ?? ""} className={`w-8 h-8 p-1`} />
+                {Object.entries(playerDetails.resources).length !== 0 && (
+                  <div className="grid grid-cols-6 gap-1 p-2">
+                    {Object.entries(playerDetails.resources).map(([resource, data], i) => {
+                      const resourceDelta = data.resourcesAtEnd - data.resourcesAtStart;
+                      return (
+                        <div
+                          key={`resource-${i}`}
+                          className={`border ${
+                            resourceDelta > 0n ? "border-green-800" : "border-rose-800"
+                          } flex items-center`}
+                        >
+                          <img src={ResourceImage.get(resource as Entity) ?? ""} className={`w-8 h-8 p-1`} />
 
-                        <p className={`grid place-items-center text-sm p-1 uppercase font-bold w-full h-full`}>
-                          {resourceDelta > 0n ? "+" : ""}
-                          {formatResourceCount(resource as Entity, resourceDelta, {
-                            short: true,
-                            showZero: true,
-                          })}
-                        </p>
-                      </div>
-                    );
-                  })}
-                </div>
+                          <p className={`grid place-items-center text-sm p-1 uppercase font-bold w-full h-full`}>
+                            {resourceDelta > 0n ? "+" : ""}
+                            {formatResourceCount(resource as Entity, resourceDelta, {
+                              short: true,
+                              showZero: true,
+                            })}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+              {playerAllies.length > 0 && (
+                <>
+                  <p className="p-1 text-xs font-bold text-accent/70 flex justify-start w-full">ALLIES</p>
+                  <div className="grid grid-cols-3 gap-1 w-full">
+                    {playerAllies.map((ally) => (
+                      <Ally key={`ally-${ally}`} entity={ally} />
+                    ))}
+                  </div>
+                </>
               )}
+            </div>
+          )}
+
+          <p className="p-1 text-xs font-bold text-accent flex justify-start w-full">ENEMY</p>
+          {!enemyDetails && (
+            <div className="w-full bg-base-100 h-32 border border-slate-500 pulse text-secondary uppercase text-sm flex justify-center items-center">
+              Nothing to report
             </div>
           )}
           {enemyDetails && (
             <div className="w-full">
-              <p className="p-1 text-xs font-bold text-accent">ENEMY FLEET </p>
-              <div className="w-full overflow-hidden h-32 border border-slate-500 bg-slate-800 overflow-y-auto flex flex-col items-center justify-center scrollbar">
-                {Object.entries(enemyDetails.units).length === 0 ? (
-                  <p className="text-sm font-bold text-slate-400 text-center">NO FLEET FOUND</p>
-                ) : (
+              <div className="w-full overflow-hidden h-32 border border-slate-500 bg-slate-800 overflow-y-auto flex flex-col scrollbar">
+                {Object.entries(enemyDetails.units).length > 0 && (
                   <div className="w-full h-full">
                     {Object.entries(enemyDetails.units).map(([entity, unit], i) => (
                       <UnitStatus
@@ -191,7 +214,42 @@ export const BattleDetails: React.FC<{
                     ))}
                   </div>
                 )}
+                {Object.entries(enemyDetails.resources).length !== 0 && (
+                  <div className="grid grid-cols-6 gap-1 p-2">
+                    {Object.entries(enemyDetails.resources).map(([resource, data], i) => {
+                      const resourceDelta = data.resourcesAtEnd - data.resourcesAtStart;
+                      return (
+                        <div
+                          key={`resource-${i}`}
+                          className={`border ${
+                            resourceDelta > 0n ? "border-green-800" : "border-rose-800"
+                          } flex items-center`}
+                        >
+                          <img src={ResourceImage.get(resource as Entity) ?? ""} className={`w-8 h-8 p-1`} />
+
+                          <p className={`grid place-items-center text-sm p-1 uppercase font-bold w-full h-full`}>
+                            {resourceDelta > 0n ? "+" : ""}
+                            {formatResourceCount(resource as Entity, resourceDelta, {
+                              short: true,
+                              showZero: true,
+                            })}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
+              {enemyAllies.length > 0 && (
+                <>
+                  <p className="p-1 text-xs font-bold text-accent/70 flex justify-start w-full">ALLIES</p>
+                  <div className="grid grid-cols-3 gap-1 w-full">
+                    {enemyAllies.map((ally) => (
+                      <Ally key={`ally-${ally}`} entity={ally} />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -211,5 +269,17 @@ export const BattleDetails: React.FC<{
       </div>
       <Navigator.BackButton className="btn btn-primary btn-xs" />
     </Navigator.Screen>
+  );
+};
+
+const Ally = ({ entity }: { entity: Entity }) => {
+  const isFleet = components.IsFleet.use(entity)?.value;
+  return (
+    <div
+      className={`flex bg-black/10 border  text-xs justify-center items-center gap-2 p-1 w-full border-secondary/50`}
+    >
+      {isFleet ? entityToFleetName(entity) : entityToRockName(entity)}
+      <img src={isFleet ? "img/icons/outgoingicon.png" : "img/icons/asteroidicon.png"} className="w-4" />
+    </div>
   );
 };

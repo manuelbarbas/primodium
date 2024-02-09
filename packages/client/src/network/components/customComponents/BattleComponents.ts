@@ -2,7 +2,7 @@ import { Entity, Type } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
-import { ResourceEnumLookup, UnitEnumLookup } from "src/util/constants";
+import { ResourceEnumLookup } from "src/util/constants";
 import { decodeEntity } from "src/util/encode";
 import { createExtendedComponent } from "./ExtendedComponent";
 
@@ -37,9 +37,9 @@ export const createBattleComponents = () => {
       damageDealt: Type.BigInt,
       damageTaken: Type.BigInt,
       hpAtStart: Type.BigInt,
-      unitLevels: Type.BigIntArray,
-      unitsAtStart: Type.BigIntArray,
-      casualties: Type.BigIntArray,
+      unitLevels: Type.OptionalBigIntArray,
+      unitsAtStart: Type.OptionalBigIntArray,
+      casualties: Type.OptionalBigIntArray,
       resourcesAtStart: Type.OptionalBigIntArray,
       resourcesAtEnd: Type.OptionalBigIntArray,
       encryptionAtStart: Type.OptionalBigInt,
@@ -55,10 +55,11 @@ export const createBattleComponents = () => {
       components.BattleDamageDealtResult.metadata.keySchema,
       participantEntity
     );
-    const units = Object.entries(UnitEnumLookup).reduce((acc, [entity, index]) => {
-      const level = participant.unitLevels[index];
-      const unitsAtStart = participant.unitsAtStart[index];
-      const casualties = participant.casualties[index];
+    const unitPrototypes = components.P_UnitPrototypes.get()?.value ?? [];
+    const units = unitPrototypes.reduce((acc, entity, index) => {
+      const level = participant.unitLevels ? participant.unitLevels[index] : 0n;
+      const unitsAtStart = participant.unitsAtStart ? participant.unitsAtStart[index] : 0n;
+      const casualties = participant.casualties ? participant.casualties[index] : 0n;
       if (unitsAtStart === 0n) return acc;
       acc[entity] = {
         level,
