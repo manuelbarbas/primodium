@@ -1,4 +1,4 @@
-import { Scenes } from "@game/constants";
+import { DepthLayers, Scenes } from "@game/constants";
 import { Coord } from "@latticexyz/utils";
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
@@ -50,7 +50,8 @@ export const Marker: React.FC<{
   coord: Coord;
   children: ReactNode;
   offScreenIconUri?: string;
-}> = ({ id, scene, coord, children, offScreenIconUri }) => {
+  depth?: number;
+}> = ({ id, scene, coord, children, offScreenIconUri, depth = DepthLayers.Marker }) => {
   const primodium = usePrimodium();
   const [marker, setMarker] = useState<Phaser.GameObjects.DOMElement>();
   const [container, setContainer] = useState<HTMLDivElement>();
@@ -66,12 +67,13 @@ export const Marker: React.FC<{
       obj.setOrigin(0.5, 0.5);
       obj.setScale(1 / _camera.phaserCamera.zoom);
       obj.setAlpha(camera.phaserCamera.scene.scene.isActive() ? 1 : 0);
+      obj.setDepth(depth);
 
       setMarker(obj);
       setContainer(container);
       return { container, obj };
     },
-    [camera]
+    [camera, depth]
   );
 
   //setup container on correct scene

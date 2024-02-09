@@ -1,4 +1,4 @@
-import { Scenes } from "@game/constants";
+import { DepthLayers, Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
@@ -12,11 +12,11 @@ import { components } from "src/network/components";
 import { getAsteroidImage } from "src/util/asteroid";
 import { getCanAttackSomeone } from "src/util/unit";
 import { Hex } from "viem";
-import { Button } from "../../core/Button";
-import { IconLabel } from "../../core/IconLabel";
-import { Modal } from "../../core/Modal";
-import { GracePeriod } from "../GracePeriod";
-import { Fleets } from "../panes/fleets/Fleets";
+import { Button } from "../../../core/Button";
+import { IconLabel } from "../../../core/IconLabel";
+import { Modal } from "../../../core/Modal";
+import { GracePeriod } from "../../GracePeriod";
+import { Fleets } from "../../panes/fleets/Fleets";
 import { Marker } from "src/components/core/Marker";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 
@@ -71,7 +71,13 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   if (!mapOpen) return <></>;
 
   return (
-    <Marker scene={Scenes.Starmap} coord={coord} id={`asteroid-target`} offScreenIconUri="/img/icons/attackicon.png">
+    <Marker
+      scene={Scenes.Starmap}
+      coord={coord}
+      id={`asteroid-target`}
+      offScreenIconUri="/img/icons/attackicon.png"
+      depth={DepthLayers.Path}
+    >
       <div
         className="w-14 h-14 border-2 border-error flex items-center justify-center font-mono"
         style={{

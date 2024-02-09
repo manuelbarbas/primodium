@@ -1,4 +1,4 @@
-import { Scenes } from "@game/constants";
+import { DepthLayers, Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { useMemo, useRef } from "react";
 import { useMud } from "src/hooks";
@@ -7,10 +7,10 @@ import { useSpaceRock } from "src/hooks/useSpaceRock";
 import { components } from "src/network/components";
 import { clearFleetStance } from "src/network/setup/contractCalls/fleetStance";
 import { getCanAttackSomeone, getFleetPixelPosition, getFleetStats } from "src/util/unit";
-import { Button } from "../../core/Button";
-import { IconLabel } from "../../core/IconLabel";
-import { Modal } from "../../core/Modal";
-import { Fleets } from "../panes/fleets/Fleets";
+import { Button } from "../../../core/Button";
+import { IconLabel } from "../../../core/IconLabel";
+import { Modal } from "../../../core/Modal";
+import { Fleets } from "../../panes/fleets/Fleets";
 import { Marker } from "src/components/core/Marker";
 
 // this component assumes the fleet is owned by the player
@@ -44,7 +44,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
   if (!mapOpen || !position) return <></>;
 
   return (
-    <Marker id={"fleet-target"} scene={Scenes.Starmap} coord={coord}>
+    <Marker id={"fleet-target"} scene={Scenes.Starmap} coord={coord} depth={DepthLayers.Path}>
       <div className="w-14 h-14 border-2 border-error flex items-center justify-center bg-transparent">
         <div className="absolute top-0 right-0 translate-x-full w-36">
           <Button
