@@ -72,7 +72,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   // if (isBounded) return <Marker coord={position} imageUri="/img/icons/weaponryicon.png" />;
 
   return (
-    <Marker scene={Scenes.Starmap} coord={coord} id={`asteroid-target`}>
+    <Marker scene={Scenes.Starmap} coord={coord} id={`asteroid-target`} offScreenIconUri="/img/icons/attackicon.png">
       <div
         className="w-14 h-14 border-2 border-error flex items-center justify-center font-mono"
         style={{
