@@ -36,3 +36,11 @@ export function getRockDefense(rockEntity: Entity) {
 
   return { points: defensePoints, multiplier };
 }
+
+export const getInGracePeriod = (entity: Entity) => {
+  const time = components.Time.get()?.value ?? 0n;
+  const endTime = components.GracePeriod.get(entity)?.value ?? 0n;
+  const inGracePeriod = time < endTime;
+  if (!inGracePeriod) return { inGracePeriod: false, duration: 0 };
+  return { inGracePeriod, duration: endTime - time };
+};
