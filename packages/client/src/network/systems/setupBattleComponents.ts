@@ -18,8 +18,8 @@ export const setupBattleComponents = () => {
       winner: battleData.winner as Entity,
       rock: battleData.rock as Entity,
       timestamp: battleData.timestamp,
-      aggressorAllies: [...battleData.aggressorAllies, entity] as Entity[],
-      targetAllies: [...battleData.targetAllies, entity] as Entity[],
+      aggressorAllies: battleData.aggressorAllies as Entity[],
+      targetAllies: battleData.targetAllies as Entity[],
     };
 
     RawBattle.set(data, entity);
