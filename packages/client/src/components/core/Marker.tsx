@@ -9,11 +9,11 @@ import { IconLabel } from "./IconLabel";
 import { FaChevronRight } from "react-icons/fa";
 import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
 
-const BoundedMarker: React.FC<{ scene: Scenes; coord: Coord; iconUri: string; direction: number }> = ({
+const BoundedMarker: React.FC<{ scene: Scenes; coord: Coord; iconUri: string; degrees: number }> = ({
   coord,
   scene,
   iconUri,
-  direction,
+  degrees,
 }) => {
   const primodium = usePrimodium();
 
@@ -37,7 +37,7 @@ const BoundedMarker: React.FC<{ scene: Scenes; coord: Coord; iconUri: string; di
   return (
     <Button className="border border-secondary hover:bg-secondary hover:border-accent" onClick={handleClick}>
       <IconLabel imageUri={iconUri} className={`text-xl drop-shadow-hard`} />
-      <div className="absolute inset-0 pointer-events-none" style={{ transform: `rotate(${direction}deg)` }}>
+      <div className="absolute inset-0 pointer-events-none" style={{ transform: `rotate(${degrees}deg)` }}>
         <FaChevronRight size={24} className="text-success font-bold absolute top-1/2 -translate-y-1/2 -right-10" />
       </div>
     </Button>
@@ -56,7 +56,7 @@ export const Marker: React.FC<{
   const [marker, setMarker] = useState<Phaser.GameObjects.DOMElement>();
   const [container, setContainer] = useState<HTMLDivElement>();
   const [visible, setVisible] = useState(true);
-  const [direction, setDirection] = useState(0);
+  const [degrees, setDegrees] = useState(0);
   const camera = useRef(primodium.api(scene).camera).current;
   const uiCamera = useRef(primodium.api(Scenes.UI).camera).current;
 
@@ -112,7 +112,7 @@ export const Marker: React.FC<{
 
           // Set the marker position
           marker.setPosition(markerX, markerY);
-          setDirection(degree);
+          setDegrees(degree);
 
           return;
         }
@@ -137,7 +137,7 @@ export const Marker: React.FC<{
   return ReactDOM.createPortal(
     <div className={"-translate-x-1/2 -translate-y-1/2"}>
       {!visible && offScreenIconUri && (
-        <BoundedMarker scene={scene} coord={coord} iconUri={offScreenIconUri} direction={direction} />
+        <BoundedMarker scene={scene} coord={coord} iconUri={offScreenIconUri} degrees={degrees} />
       )}
       {(visible || !offScreenIconUri) && children}
     </div>,
