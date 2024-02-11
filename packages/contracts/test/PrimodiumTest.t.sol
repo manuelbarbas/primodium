@@ -250,7 +250,8 @@ contract PrimodiumTest is MudTest {
       uint8 colonyShipResource = P_ColonyShipConfig.getResource();
       uint256 countLeft = count;
       while (countLeft > 0) {
-        uint256 cost = P_ColonyShipConfig.getInitialCost() * LibUnit.getColonyShipCostMultiplier(spaceRock);
+        uint256 cost = P_ColonyShipConfig.getInitialCost() *
+          LibUnit.getColonyShipCostMultiplier(OwnedBy.get(spaceRock));
         increaseResource(spaceRock, EResource(colonyShipResource), cost);
         trainUnits(player, mainBase, unitPrototype, 1, fastForward);
         countLeft--;
