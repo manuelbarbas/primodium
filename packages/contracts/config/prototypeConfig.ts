@@ -2362,15 +2362,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
   },
 
-  CommissionMiningVessel: {
-    tables: {
-      P_ProducedUnits: getUnitValues({ MiningVessel: 1 }),
-      P_ResourceReward: getResourceValues({ Alloy: 1000 }),
-    },
-
-    levels: { 1: { P_RequiredBaseLevel: { value: 4n } } },
-  },
-
   TrainMinutemanMarine1: {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },

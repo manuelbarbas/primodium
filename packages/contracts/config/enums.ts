@@ -127,7 +127,6 @@ export enum EObjectives {
   BuildVault,
   BuildShieldGenerator,
 
-  CommissionMiningVessel,
   TrainMinutemanMarine1,
   TrainMinutemanMarine2,
   TrainMinutemanMarine3,

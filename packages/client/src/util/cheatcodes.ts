@@ -35,7 +35,7 @@ const units: Record<string, Entity> = {
   aegis: EntityType.AegisDrone,
   anvil: EntityType.AnvilDrone,
   hammer: EntityType.HammerDrone,
-  mining: EntityType.MiningVessel,
+  colonyShip: EntityType.ColonyShip,
 };
 
 export const setupCheatcodes = (mud: MUD): Cheatcodes => {
