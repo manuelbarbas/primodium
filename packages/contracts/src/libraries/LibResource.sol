@@ -47,10 +47,10 @@ library LibResource {
   function spendUnitRequiredResources(bytes32 spaceRockEntity, bytes32 prototype, uint256 count) internal {
     if (prototype == P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip))) {
       require(count == 1, "[SpendResources] Colony ships can only be trained one at a time");
-      uint256 cost = P_ColonyShipConfig.getInitialCost() * LibUnit.getColonyShipCostMultiplier(spaceRockEntity);
+      uint256 cost = P_ColonyShipConfig.getInitialCost() *
+        LibUnit.getColonyShipCostMultiplier(OwnedBy.get(spaceRockEntity));
 
       spendResource(spaceRockEntity, prototype, P_ColonyShipConfig.getResource(), cost);
-      return;
     }
 
     uint256 level = UnitLevel.get(spaceRockEntity, prototype);
