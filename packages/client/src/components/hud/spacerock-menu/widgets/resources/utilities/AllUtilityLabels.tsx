@@ -9,8 +9,6 @@ export const AllUtilityLabels = () => {
       <UtilityLabel name={"Electricity"} resourceId={EntityType.Electricity} />
       <UtilityLabel name={"Housing"} resourceId={EntityType.Housing} />
       <DefenseLabel />
-      <UtilityLabel name={"Unraidable Resources"} resourceId={EntityType.Unraidable} />
-      <UtilityLabel name={"Unraidable Motherlode Resources"} resourceId={EntityType.AdvancedUnraidable} />
     </SecondaryCard>
   );
 };

@@ -166,7 +166,6 @@ export const EntityType = {
   StarmapperStation: toHex32("Starmapper") as Entity,
   SAMLauncher: toHex32("SAM") as Entity,
   ShieldGenerator: toHex32("ShieldGenerator") as Entity,
-  Vault: toHex32("Vault") as Entity,
   Market: toHex32("Market") as Entity,
 
   Alloy: toHex32("Alloy") as Entity,
@@ -177,8 +176,6 @@ export const EntityType = {
   Housing: toHex32("U_Housing") as Entity,
   VesselCapacity: toHex32("U_Vessel") as Entity,
   FleetMoves: toHex32("U_MaxMoves") as Entity,
-  Unraidable: toHex32("U_Unraidable") as Entity,
-  AdvancedUnraidable: toHex32("U_AdvancedUnraidable") as Entity,
   ColonyShipCapacity: toHex32("U_ColonyShip") as Entity,
 
   Defense: toHex32("U_Defense") as Entity,
@@ -399,8 +396,6 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.ColonyShipCapacity, "/img/unit/miningvessel.png"],
   [EntityType.Defense, "/img/icons/defenseicon.png"],
   [EntityType.DefenseMultiplier, "/img/icons/defenseicon.png"],
-  [EntityType.Unraidable, "/img/icons/unraidableicon.png"],
-  [EntityType.AdvancedUnraidable, "/img/icons/advancedunraidableicon.png"],
   [EntityType.Encryption, "/img/icons/advancedunraidableicon.png"],
 
   // debug
@@ -456,8 +451,6 @@ export const UtilityStorages = new Set([
   EntityType.VesselCapacity,
   EntityType.FleetMoves,
   EntityType.Defense,
-  EntityType.Unraidable,
-  EntityType.AdvancedUnraidable,
   EntityType.Encryption,
 ]);
 
@@ -492,8 +485,6 @@ export const ResourceEnumLookup: Record<Entity, EResource> = {
   [EntityType.ColonyShipCapacity]: EResource.U_ColonyShip,
   [EntityType.FleetMoves]: EResource.U_MaxMoves,
   [EntityType.Defense]: EResource.U_Defense,
-  [EntityType.Unraidable]: EResource.U_Unraidable,
-  [EntityType.AdvancedUnraidable]: EResource.U_AdvancedUnraidable,
   [EntityType.DefenseMultiplier]: EResource.M_DefenseMultiplier,
   [EntityType.Encryption]: EResource.R_Encryption,
 };
@@ -517,7 +508,6 @@ export const BuildingEnumLookup: Record<Entity, EBuilding> = {
   [EntityType.SAMLauncher]: EBuilding.SAM,
   [EntityType.StarmapperStation]: EBuilding.Starmapper,
   [EntityType.ShieldGenerator]: EBuilding.ShieldGenerator,
-  [EntityType.Vault]: EBuilding.Vault,
   [EntityType.Market]: EBuilding.Market,
 };
 

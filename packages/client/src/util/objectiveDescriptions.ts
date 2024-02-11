@@ -198,7 +198,6 @@ export const ObjectiveDescriptions = new Map<EObjectives, string>([
     EObjectives.BuildSAMLauncher,
     "Construct a SAM site. SAM sites protect you from enemy attacks and raids by providing a base level of defense.",
   ],
-  [EObjectives.BuildVault, "Build a vault. Vaults protect your resources from being raided."],
   [
     EObjectives.BuildShieldGenerator,
     "Build a shield generator. Shield generators multiply your asteroid's defense numbers.",

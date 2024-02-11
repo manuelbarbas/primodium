@@ -1010,40 +1010,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
   },
 
-  Vault: {
-    tables: {
-      P_Blueprint: { value: getBlueprint(3, 3) },
-      P_MaxLevel: { value: 4n },
-    },
-    levels: {
-      1: {
-        P_RequiredBaseLevel: { value: 2n },
-        P_RequiredResources: getResourceValues({ Alloy: 1000 }),
-        P_Production: getResourceValues({ U_Unraidable: 750 }),
-      },
-      2: {
-        P_RequiredBaseLevel: { value: 3n },
-        P_RequiredResources: getResourceValues({ Alloy: 7500, U_Electricity: 100 }),
-        P_Production: getResourceValues({ U_Unraidable: 2000, U_AdvancedUnraidable: 500 }),
-      },
-      3: {
-        P_RequiredBaseLevel: { value: 5n },
-        P_RequiredResources: getResourceValues({
-          Alloy: 20000,
-          U_Electricity: 15000,
-        }),
-        P_Production: getResourceValues({ U_Unraidable: 5000, U_AdvancedUnraidable: 1000 }),
-      },
-      4: {
-        P_RequiredBaseLevel: { value: 7n },
-        P_RequiredResources: getResourceValues({
-          Alloy: 100000,
-          U_Electricity: 200,
-        }),
-        P_Production: getResourceValues({ U_Unraidable: 10000, U_AdvancedUnraidable: 2500 }),
-      },
-    },
-  },
   Market: {
     tables: {
       P_Blueprint: { value: getBlueprint(3, 3) },
@@ -1067,8 +1033,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       [MUDEnums.EResource.indexOf("U_MaxMoves")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Defense")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("M_DefenseMultiplier")]: { P_IsUtility: { value: true } },
-      [MUDEnums.EResource.indexOf("U_Unraidable")]: { P_IsUtility: { value: true } },
-      [MUDEnums.EResource.indexOf("U_AdvancedUnraidable")]: { P_IsUtility: { value: true } },
     },
   },
 
@@ -2347,13 +2311,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
-  BuildVault: {
-    tables: {
-      P_HasBuiltBuildings: { value: encodeArray(["Vault"]) },
-      P_UnitReward: getUnitValues({ AnvilDrone: 50 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
-  },
+
   BuildShieldGenerator: {
     tables: {
       P_HasBuiltBuildings: { value: encodeArray(["ShieldGenerator"]) },

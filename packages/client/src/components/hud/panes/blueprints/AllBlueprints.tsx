@@ -157,12 +157,6 @@ export const AllBlueprints = () => {
               keybind={KeybindActions.Hotbar4}
               keybindActive={index === 1}
             />
-            <BlueprintButton
-              tooltipDirection="top"
-              buildingType={EntityType.Vault}
-              keybind={KeybindActions.Hotbar5}
-              keybindActive={index === 1}
-            />
           </div>
         </div>
 
