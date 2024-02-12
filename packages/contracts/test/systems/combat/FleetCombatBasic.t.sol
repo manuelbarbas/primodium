@@ -8,6 +8,16 @@ import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
 import { FleetIncomingKey } from "src/Keys.sol";
 
+/* 
+  More tests to write
+  - only owner
+  - unit count is valid
+  - resource count is valid
+  - not in stance
+  - fleets in same orbit
+  - fleet vs fleet
+  - 
+*/
 contract FleetCombatSystemTest is PrimodiumTest {
   bytes32 aliceHomeSpaceRock;
   bytes32 aliceEntity;
@@ -56,12 +66,15 @@ contract FleetCombatSystemTest is PrimodiumTest {
     uint256 unitCargo = P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
     assertTrue(unitCargo > 0, "unit cargo should more than 0");
     increaseResource(bobHomeSpaceRock, EResource.Iron, unitCargo);
+    assertGt(GracePeriod.get(fleetId), 0, "fleet should be in grace period");
+    assertGt(GracePeriod.get(aliceHomeSpaceRock), 0, "home rock should be in grace period");
 
     switchPrank(alice);
     world.attack(fleetId, bobHomeSpaceRock);
     vm.stopPrank();
 
-    assertEq(GracePeriod.get(aliceEntity), 0, "alice should not be in grace period");
+    assertLe(GracePeriod.get(fleetId), block.timestamp, "fleet should not be in grace period");
+    assertLe(GracePeriod.get(aliceHomeSpaceRock), block.timestamp, "home rock should not be in grace period");
     assertEq(ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Iron)), 0, "space rock iron count should be 0");
     assertEq(ResourceCount.get(fleetId, uint8(EResource.Iron)), unitCargo, "fleet should have raided iron");
     assertEq(
@@ -76,7 +89,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     assertEq(ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Iron)), 0, "space rock iron count should be 0");
   }
 
-  function testFailFleetAttackSpaceRockInGracePeriod() public {
+  function testFleetAttackSpaceRockInGracePeriod() public {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
     //create fleet with 1 minuteman marine
@@ -101,6 +114,8 @@ contract FleetCombatSystemTest is PrimodiumTest {
     assertGt(unitCargo, 0, "unit cargo should more than 0");
     increaseResource(bobEntity, EResource.Iron, unitCargo);
 
+    vm.expectRevert("[Fleet] Target is in grace period");
+    switchPrank(alice);
     world.attack(fleetId, bobHomeSpaceRock);
   }
 
@@ -122,17 +137,14 @@ contract FleetCombatSystemTest is PrimodiumTest {
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
-    vm.startPrank(alice);
+    vm.prank(alice);
     bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
-    vm.stopPrank();
 
-    vm.startPrank(alice);
+    vm.prank(alice);
     world.sendFleet(fleetId, bobHomeSpaceRock);
-    vm.stopPrank();
 
-    vm.startPrank(creator);
+    vm.prank(creator);
     GracePeriod.set(bobHomeSpaceRock, block.timestamp);
-    vm.stopPrank();
 
     //todo the same build has some prototype config issues realted to storage increase when fixed the following lines which initialize
     //buildBuilding(bob, EBuilding.SAM, getPosition1(bob));
@@ -146,16 +158,14 @@ contract FleetCombatSystemTest is PrimodiumTest {
     //for testing raiding
     increaseResource(bobHomeSpaceRock, EResource.Iron, 10);
 
-    console.log("hp: %s, curr HP: %s", hp, ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_HP)));
     assertEq(ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_HP)), hp, "space rock hp should have match SAM");
     assertEq(hp, defense, "space rock hp and defense should be the same when full hp");
 
     vm.warp(FleetMovement.getArrivalTime(fleetId));
-    console.log("before attack");
-    vm.startPrank(alice);
+
+    vm.prank(alice);
     world.attack(fleetId, bobHomeSpaceRock);
-    vm.stopPrank();
-    console.log("after attack");
+
     assertEq(
       ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)),
       MaxResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)),
@@ -163,15 +173,15 @@ contract FleetCombatSystemTest is PrimodiumTest {
     );
 
     uint256 unitAttack = P_Unit.getAttack(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
-    require(unitAttack > 0, "unit attack should more than 0");
+    assertGt(unitAttack, 0, "unit attack should more than 0");
 
     assertEq(
       ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_HP)),
       hp - unitAttack,
       "space rock hp should have been reduced by unit attack"
     );
-    assertEq(ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Iron)), 10, "space rock should not have been raided");
 
+    assertEq(ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Iron)), 10, "space rock should not have been raided");
     assertEq(ResourceCount.get(fleetId, uint8(EResource.Iron)), 0, "fleet should have lost its resources");
     assertEq(UnitCount.get(fleetId, unitPrototype), 0, "fleet should have lost its units");
 
@@ -203,7 +213,6 @@ contract FleetCombatSystemTest is PrimodiumTest {
   }
 
   function testFleetAttackSpaceRockWithStrongAttack() public {
-    console.log("start");
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
     uint256 numberOfUnits = 10;
@@ -219,17 +228,13 @@ contract FleetCombatSystemTest is PrimodiumTest {
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
-    vm.startPrank(alice);
+    vm.prank(alice);
     bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
-    vm.stopPrank();
-
-    vm.startPrank(alice);
+    vm.prank(alice);
     world.sendFleet(fleetId, bobHomeSpaceRock);
-    vm.stopPrank();
 
-    vm.startPrank(creator);
+    vm.prank(creator);
     GracePeriod.set(bobHomeSpaceRock, block.timestamp);
-    vm.stopPrank();
 
     uint256 defense = (numberOfUnits *
       P_Unit.getAttack(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype))) / 2;
@@ -238,7 +243,6 @@ contract FleetCombatSystemTest is PrimodiumTest {
     increaseResource(bobHomeSpaceRock, EResource.U_Defense, defense);
     increaseResource(bobHomeSpaceRock, EResource.R_HP, hp);
     increaseProduction(bobHomeSpaceRock, EResource.R_HP, hpProduction);
-    console.log("space rock defense: %s ", LibSpaceRockAttributes.getDefense(bobHomeSpaceRock));
     assertEq(
       LibSpaceRockAttributes.getDefense(bobHomeSpaceRock),
       defense,
@@ -251,12 +255,9 @@ contract FleetCombatSystemTest is PrimodiumTest {
       P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
     increaseResource(bobHomeSpaceRock, EResource.Iron, ironAmount);
     increaseResource(bobHomeSpaceRock, EResource.Copper, copperAmount);
-    console.log("before attack");
     vm.warp(FleetMovement.getArrivalTime(fleetId));
-    vm.startPrank(alice);
+    vm.prank(alice);
     world.attack(fleetId, bobHomeSpaceRock);
-    vm.stopPrank();
-    console.log("after attack");
     assertEq(
       ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_HP)),
       0,
@@ -272,13 +273,13 @@ contract FleetCombatSystemTest is PrimodiumTest {
     assertEq(
       ResourceCount.get(fleetId, uint8(EResource.Iron)) + ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Iron)),
       ironAmount,
-      "sum of un raided and raided should be initial amount"
+      "sum of unraided and raided should equal initial amount"
     );
     assertEq(
       ResourceCount.get(fleetId, uint8(EResource.Copper)) +
         ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Copper)),
       copperAmount,
-      "sum of un raided and raided should be initial amount"
+      "sum of unraided and raided should equal initial amount"
     );
     assertEq(
       ResourceCount.get(fleetId, uint8(EResource.Copper)),
@@ -313,10 +314,9 @@ contract FleetCombatSystemTest is PrimodiumTest {
         P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype)),
       "fleet cargo should map units"
     );
-    console.log("end");
   }
 
-  function testFailAttackNotInOrbit() public {
+  function testAttackNotInOrbit() public {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
     //create fleet with 1 minuteman marine
@@ -333,20 +333,15 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     vm.startPrank(alice);
     bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
-    vm.stopPrank();
-
-    vm.startPrank(alice);
     world.sendFleet(fleetId, bobHomeSpaceRock);
-    vm.stopPrank();
 
-    vm.startPrank(creator);
+    switchPrank(creator);
     GracePeriod.set(bobHomeSpaceRock, block.timestamp);
-    vm.stopPrank();
 
     vm.warp(FleetMovement.getArrivalTime(fleetId) - 1);
 
-    vm.startPrank(alice);
+    switchPrank(alice);
+    vm.expectRevert("[Fleet] Fleet is not in orbit");
     world.attack(fleetId, bobHomeSpaceRock);
-    vm.stopPrank();
   }
 }

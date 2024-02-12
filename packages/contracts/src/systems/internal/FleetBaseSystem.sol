@@ -21,7 +21,7 @@ contract FleetBaseSystem is PrimodiumSystem {
     require(
       (FleetMovement.getArrivalTime(fleetId) <= block.timestamp) &&
         (FleetMovement.getDestination(fleetId) == spaceRock),
-      "[Fleet] Fleet is not in orbit of space rock"
+      "[Fleet] Fleet is not in orbit"
     );
     _;
   }
@@ -31,7 +31,7 @@ contract FleetBaseSystem is PrimodiumSystem {
       (FleetMovement.getArrivalTime(fleetId) <= block.timestamp) &&
         (FleetMovement.getArrivalTime(fleetId2) <= block.timestamp) &&
         (FleetMovement.getDestination(fleetId) == FleetMovement.getDestination(fleetId2)),
-      "[Fleet] Fleets are not in orbit of same space rock"
+      "[Fleet] Fleets are not in orbit"
     );
     _;
   }
