@@ -118,14 +118,14 @@ export const Content: FC<{
         transform: `translate(${translateX}, ${translateY}) scale(${!locked ? uiScale : 1})`,
         transformOrigin: transformOrigin,
       }}
-      className={`relative min-w-44 w-fit transition-opacity duration-600 pointer-events-auto font-pixel select-none ${
+      className={`relative min-w-44 w-fit transition-opacity duration-600 font-pixel select-none pointer-events-none ${
         !pinned ? "drop-shadow-hard" : ""
       }`}
       onPointerEnter={onPointerEnter}
       onPointerLeave={onPointerLeave}
     >
       <div
-        className={`flex p-1 border-secondary text-xs items-center gap-3 justify-between w-full cursor-move ${
+        className={`flex p-1 border-secondary text-xs items-center gap-3 justify-between w-full cursor-move pointer-events-auto ${
           locked ? "bg-error" : pinned ? "bg-neutral/75" : "bg-secondary"
         }`}
         onDoubleClick={onDoubleClick}
@@ -147,7 +147,11 @@ export const Content: FC<{
         </div>
       </div>
 
-      <div className={`bg-base-200 min-w-72 border border-t-success border-secondary ${minimized ? "opacity-0" : ""}`}>
+      <div
+        className={`bg-base-200 min-w-72 border border-t-success border-secondary ${
+          minimized ? "opacity-0 !pointer-events-none" : "pointer-events-auto"
+        }`}
+      >
         {children}
       </div>
     </div>

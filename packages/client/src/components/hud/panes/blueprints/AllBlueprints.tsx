@@ -50,7 +50,7 @@ const BlueprintButton: React.FC<{
         components.SelectedBuilding.set({ value: buildingType });
         components.SelectedAction.set({ value: Action.PlaceBuilding });
       }}
-      className={`relative btn-ghost min-h-9 ! p-0 ${
+      className={`relative btn-ghost min-h-9 p-0 ${
         hasMainbaseLevel
           ? hasEnough
             ? "hover:bg-accent border-accent/50"
