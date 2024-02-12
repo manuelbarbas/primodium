@@ -17,6 +17,7 @@ export const Resources = memo(() => {
       defaultCoord={{ x: 26, y: 11 }}
       scene={Scenes.Asteroid}
       defaultLocked
+      pinnable
       minOpacity={0.5}
       draggable
       persist

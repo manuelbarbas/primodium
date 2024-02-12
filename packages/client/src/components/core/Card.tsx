@@ -2,11 +2,7 @@ export const Card: React.FC<{
   children: React.ReactNode;
   className?: string;
 }> = ({ children, className }) => {
-  return (
-    <div className={`${className} card bg-neutral border border-secondary p-2 pointer-events-auto drop-shadow-hard`}>
-      {children}
-    </div>
-  );
+  return <div className={`${className} card bg-neutral border border-secondary p-2 drop-shadow-hard`}>{children}</div>;
 };
 
 export const SecondaryCard: React.FC<{
