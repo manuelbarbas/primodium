@@ -6,7 +6,7 @@ import { LibStorage } from "libraries/LibStorage.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { UtilityMap } from "libraries/UtilityMap.sol";
 
-import { P_ColonyShipConfig, P_Transportables, P_IsRecoverable, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+import { P_CapitalShipConfig, P_Transportables, P_IsRecoverable, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
 import { AsteroidOwnedByKey, UnitKey } from "src/Keys.sol";
 
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
@@ -45,12 +45,12 @@ library LibResource {
   /// @param prototype Unit Prototype
   /// @param count Quantity of units to be trained
   function spendUnitRequiredResources(bytes32 spaceRockEntity, bytes32 prototype, uint256 count) internal {
-    if (prototype == P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip))) {
+    if (prototype == P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip))) {
       require(count == 1, "[SpendResources] Colony ships can only be trained one at a time");
-      uint256 cost = P_ColonyShipConfig.getInitialCost() *
-        LibUnit.getColonyShipCostMultiplier(OwnedBy.get(spaceRockEntity));
+      uint256 cost = P_CapitalShipConfig.getInitialCost() *
+        LibUnit.getCapitalShipCostMultiplier(OwnedBy.get(spaceRockEntity));
 
-      spendResource(spaceRockEntity, prototype, P_ColonyShipConfig.getResource(), cost);
+      spendResource(spaceRockEntity, prototype, P_CapitalShipConfig.getResource(), cost);
     }
 
     uint256 level = UnitLevel.get(spaceRockEntity, prototype);

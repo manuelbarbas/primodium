@@ -246,13 +246,13 @@ contract PrimodiumTest is MudTest {
 
     provideResources(spaceRock, requiredResources);
 
-    if (unitPrototype == P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip))) {
-      uint8 colonyShipResource = P_ColonyShipConfig.getResource();
+    if (unitPrototype == P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip))) {
+      uint8 capitalShipResource = P_CapitalShipConfig.getResource();
       uint256 countLeft = count;
       while (countLeft > 0) {
-        uint256 cost = P_ColonyShipConfig.getInitialCost() *
-          LibUnit.getColonyShipCostMultiplier(OwnedBy.get(spaceRock));
-        increaseResource(spaceRock, EResource(colonyShipResource), cost);
+        uint256 cost = P_CapitalShipConfig.getInitialCost() *
+          LibUnit.getCapitalShipCostMultiplier(OwnedBy.get(spaceRock));
+        increaseResource(spaceRock, EResource(capitalShipResource), cost);
         trainUnits(player, mainBase, unitPrototype, 1, fastForward);
         countLeft--;
       }
