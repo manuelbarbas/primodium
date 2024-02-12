@@ -8,6 +8,11 @@ export function outOfBounds(coord: Coord, asteroid: Entity) {
   return coord.x > bounds.maxX || coord.x < bounds.minX || coord.y > bounds.maxY || coord.y < bounds.minY;
 }
 
+export function outOfMaxBounds(coord: Coord, asteroid: Entity) {
+  const bounds = getAsteroidMaxBounds(asteroid);
+  return coord.x > bounds.maxX || coord.x < bounds.minX || coord.y > bounds.maxY || coord.y < bounds.minY;
+}
+
 export function getAsteroidBounds(asteroid: Entity, next?: boolean) {
   const level = components.Level.get(asteroid as Entity, { value: 1n }).value;
   const asteroidDims = components.P_Asteroid.get();

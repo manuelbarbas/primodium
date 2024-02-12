@@ -8,8 +8,7 @@ import { getRockSprite } from "src/game/lib/starmap/systems/utils/getSprites";
 import { components, components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
 import { getBlockTypeName } from "./common";
-import { EntityType, MapIdToAsteroidType, PIRATE_KEY, ResourceStorages, RockRelationship } from "./constants";
-import { hashKeyEntity } from "./encode";
+import { EntityType, MapIdToAsteroidType, ResourceStorages, RockRelationship } from "./constants";
 import { getFullResourceCount } from "./resource";
 import { getOrbitingFleets } from "./unit";
 
@@ -85,11 +84,6 @@ export function getSpaceRockInfo(primodium: Primodium, spaceRock: Entity) {
   const now = comps.Time.get()?.value ?? 0n;
   const isInGracePeriod = gracePeriodValue > 0n && gracePeriodValue > now;
 
-  let name = "";
-  const player = comps.Account.get()?.value;
-  const hash = player ? hashKeyEntity(PIRATE_KEY, player) : undefined;
-  name = `${hash === ownedBy ? "Pirate" : "Player"} Asteroid`;
-
   const isBlocked = !!getOrbitingFleets(spaceRock).find(
     (fleet) => components.FleetStance.get(fleet)?.stance == EFleetStance.Block
   );
@@ -101,7 +95,7 @@ export function getSpaceRockInfo(primodium: Primodium, spaceRock: Entity) {
     mainBaseLevel,
     hangar,
     position,
-    name,
+    name: getSpaceRockName(spaceRock),
     entity: spaceRock,
     isInGracePeriod,
     gracePeriodValue,

@@ -24,9 +24,7 @@ export enum Assets {
 }
 
 export enum Tilesets {
-  Terrain = "Terrain",
-  Resource = "Resource",
-  Fog = "Fog",
+  Resource = "resource",
 }
 
 export enum Tilemaps {

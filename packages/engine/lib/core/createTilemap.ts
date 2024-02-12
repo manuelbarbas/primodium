@@ -1,6 +1,8 @@
 import type Phaser from "phaser";
+
 export const createTilemap = (scene: Phaser.Scene, tileWidth: number, tileHeight: number, defaultKey?: string) => {
-  const _renderTilemap = (key: string) => {
+  const renderTilemap = (key: string) => {
+    currentMap?.destroy();
     const mapData = scene.cache.tilemap.get(key).data as Phaser.Tilemaps.MapData;
 
     const map = scene.add.tilemap(key);
@@ -13,19 +15,17 @@ export const createTilemap = (scene: Phaser.Scene, tileWidth: number, tileHeight
       map.createLayer(layer.name, tilesets, -19 * 32, -50 * 32)
     );
 
+    currentMap = map;
     return map;
   };
 
-  let map = defaultKey ? _renderTilemap(defaultKey) : null;
-
-  const renderTilemap = (key: string) => {
-    map?.destroy();
-    map = _renderTilemap(key);
-  };
+  let currentMap: Phaser.Tilemaps.Tilemap | null = defaultKey ? renderTilemap(defaultKey) : null;
 
   const dispose = () => {
-    map?.destroy();
+    currentMap?.destroy();
   };
 
-  return { render: renderTilemap, map, tileHeight, tileWidth, dispose };
+  const getMap = () => currentMap;
+
+  return { render: renderTilemap, getMap, tileHeight, tileWidth, dispose };
 };
