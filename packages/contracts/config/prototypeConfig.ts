@@ -880,7 +880,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   Shipyard: {
     tables: {
-      P_Blueprint: { value: getBlueprint(2, 2) },
+      P_Blueprint: { value: getBlueprint(6, 4) },
       P_MaxLevel: { value: 4n },
     },
     levels: {
