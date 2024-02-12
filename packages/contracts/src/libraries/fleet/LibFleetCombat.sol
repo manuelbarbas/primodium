@@ -42,12 +42,14 @@ library LibFleetCombat {
   ) internal returns (bytes32 battleId, BattleResultData memory battleResult) {
     bool aggressorIsFleet = IsFleet.get(entity);
 
+    // update grace period of rock and fleet on rock
     if (aggressorIsFleet) {
       bytes32 fleetOwnerSpaceRock = OwnedBy.get(entity);
       if (GracePeriod.get(fleetOwnerSpaceRock) > block.timestamp) {
         GracePeriod.set(fleetOwnerSpaceRock, block.timestamp);
       }
-    } else if (GracePeriod.get(entity) > block.timestamp) {
+    }
+    if (GracePeriod.get(entity) > block.timestamp) {
       GracePeriod.set(entity, block.timestamp);
     }
 
