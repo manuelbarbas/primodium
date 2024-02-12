@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
+
 import { console } from "forge-std/console.sol";
 import "test/PrimodiumTest.t.sol";
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
@@ -36,14 +37,14 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     //create fleet with 1 minuteman marine
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
-    bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
+    bytes32 capitalShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip));
     uint256 decryption = P_Unit.getDecryption(
-      colonyShipPrototype,
-      UnitLevel.get(aliceHomeSpaceRock, colonyShipPrototype)
+      capitalShipPrototype,
+      UnitLevel.get(aliceHomeSpaceRock, capitalShipPrototype)
     );
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == unitPrototype) unitCounts[i] = numberOfUnits;
-      if (unitPrototypes[i] == colonyShipPrototype) unitCounts[i] = 2;
+      if (unitPrototypes[i] == capitalShipPrototype) unitCounts[i] = 2;
     }
 
     //create fleet with 1 iron
@@ -123,15 +124,15 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     //create fleet with 1 minuteman marine
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
-    bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
+    bytes32 capitalShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip));
     uint256 decryption = P_Unit.getDecryption(
-      colonyShipPrototype,
-      UnitLevel.get(aliceHomeSpaceRock, colonyShipPrototype)
+      capitalShipPrototype,
+      UnitLevel.get(aliceHomeSpaceRock, capitalShipPrototype)
     );
     console.log("decryption: %s", decryption);
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == unitPrototype) unitCounts[i] = numberOfUnits;
-      if (unitPrototypes[i] == colonyShipPrototype) unitCounts[i] = 1;
+      if (unitPrototypes[i] == capitalShipPrototype) unitCounts[i] = 1;
     }
     uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
 
@@ -210,7 +211,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     assertEq(UnitCount.get(bobFleet, unitPrototype), 0, "fleet should have been disbanded and marine units");
     assertEq(
-      UnitCount.get(bobFleet, colonyShipPrototype),
+      UnitCount.get(bobFleet, capitalShipPrototype),
       0,
       "fleet should have been disbanded and colony ship unit lost"
     );
