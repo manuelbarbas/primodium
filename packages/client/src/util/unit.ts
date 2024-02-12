@@ -1,5 +1,6 @@
 import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
+import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { Scene } from "engine/types";
 import { components, components as comps } from "src/network/components";
 import { Hex } from "viem";
@@ -123,10 +124,16 @@ export const getOrbitingFleets = (entity: Entity) => {
 
 export const getFleetTilePosition = (scene: Scene, fleet: Entity) => {
   const { tileHeight, tileWidth } = scene.tilemap;
+  const pixelPosition = getFleetPixelPosition(scene, fleet);
+
+  return pixelCoordToTileCoord({ x: pixelPosition.x, y: -pixelPosition.y }, tileWidth, tileHeight);
+};
+
+export const getFleetPixelPosition = (scene: Scene, fleet: Entity) => {
   const spaceRock = components.FleetMovement.get(fleet)?.destination as Entity;
   const rockGroup = scene.objectPool.getGroup(spaceRock + "_spacerockOrbits");
   const position = rockGroup.get(fleet + "_fleetOrbit", "Graphics").position;
-  return { x: position.x / tileWidth, y: -position.y / tileHeight };
+  return { x: position.x, y: position.y };
 };
 
 const orbitRadius = 64;

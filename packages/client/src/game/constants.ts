@@ -283,6 +283,7 @@ export enum AnimationKeys {
 
 export enum AudioKeys {
   Background = "background",
+  Background2 = "background2",
   Bleep = "Bleep_01",
   Bleep2 = "Bleep_02",
   Bleep3 = "Bleep_03",
