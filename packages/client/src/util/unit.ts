@@ -1,5 +1,4 @@
 import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
-import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { components, components as comps } from "src/network/components";
@@ -126,7 +125,8 @@ export const getFleetTilePosition = (scene: Scene, fleet: Entity) => {
   const { tileHeight, tileWidth } = scene.tilemap;
   const pixelPosition = getFleetPixelPosition(scene, fleet);
 
-  return pixelCoordToTileCoord({ x: pixelPosition.x, y: -pixelPosition.y }, tileWidth, tileHeight);
+  // using the helper function rounds to the nearest tile which doesnt work here
+  return { x: pixelPosition.x / tileWidth, y: -pixelPosition.y / tileHeight };
 };
 
 export const getFleetPixelPosition = (scene: Scene, fleet: Entity) => {
