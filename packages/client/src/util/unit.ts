@@ -5,6 +5,7 @@ import { Scene } from "engine/types";
 import { components, components as comps } from "src/network/components";
 import { Hex } from "viem";
 import { PIRATE_KEY, SPEED_SCALE, UnitStorages } from "./constants";
+import { getInGracePeriod } from "./defense";
 import { hashKeyEntity } from "./encode";
 import { entityToFleetName } from "./name";
 
@@ -182,20 +183,12 @@ export function getCanAttackSomeone(entity: Entity) {
   const isFleet = components.IsFleet.get(entity);
   const spaceRock = (isFleet ? components.FleetMovement.get(entity)?.destination : entity) as Entity | undefined;
   if (!spaceRock) return false;
-  const player = components.Account.get()?.value;
-  if (components.OwnedBy.get(spaceRock)?.value !== player) return true;
-
-  const allFleets = getOrbitingFleets(spaceRock);
-  return !!allFleets.find((fleet) => {
-    if (fleet === entity) return false;
-    const owner = components.OwnedBy.get(fleet)?.value as Entity;
-    if (!owner) return false;
-    const ownerOwner = components.OwnedBy.get(entity)?.value;
-    return ownerOwner !== player;
-  });
+  [spaceRock, ...getOrbitingFleets(spaceRock)].some((target) => getCanAttack(entity, target));
 }
 
 export function getCanAttack(originEntity: Entity, targetEntity: Entity) {
+  if (originEntity === targetEntity) return false;
+  if (getInGracePeriod(targetEntity)) return false;
   const isOriginFleet = components.IsFleet.get(originEntity);
   const isTargetFleet = components.IsFleet.get(targetEntity);
   if (!isOriginFleet && !isTargetFleet) return false;

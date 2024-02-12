@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { PirateAsteroid, ResourceCount, FleetStance, IsFleet, BattleResult, BattleResultData, FleetMovement, P_GracePeriod, GracePeriod, OwnedBy } from "codegen/index.sol";
+import { PirateAsteroid, ResourceCount, FleetStance, IsFleet, BattleResult, BattleResultData, FleetMovement, GracePeriod, OwnedBy } from "codegen/index.sol";
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
 import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
@@ -9,16 +9,8 @@ import { EFleetStance, EResource } from "src/Types.sol";
 import { fleetBattleResolveRaid, fleetBattleApplyDamage, fleetResolveBattleEncryption, transferSpaceRockOwnership, initializeSpaceRockOwnership, fleetResolvePirateAsteroid } from "libraries/SubsystemCalls.sol";
 
 contract FleetCombatSystem is FleetBaseSystem {
-  modifier _onlyWhenSpaceRockNotInGracePeriod(bytes32 spaceRock) {
-    require(block.timestamp >= GracePeriod.get(spaceRock), "[Fleet] Target space rock is in grace period");
-    _;
-  }
-
-  modifier _onlyWhenFleetNotInGracePeriod(bytes32 fleetId) {
-    require(
-      !((FleetMovement.getArrivalTime(fleetId) + P_GracePeriod.getFleet()) <= block.timestamp),
-      "[Fleet] Target fleet is in grace period"
-    );
+  modifier _onlyWhenNotInGracePeriod(bytes32 entity) {
+    require(block.timestamp >= GracePeriod.get(entity), "[Fleet] Target is in grace period");
     _;
   }
 
@@ -43,7 +35,7 @@ contract FleetCombatSystem is FleetBaseSystem {
     bytes32 targetFleet
   )
     private
-    _onlyWhenFleetNotInGracePeriod(targetFleet)
+    _onlyWhenNotInGracePeriod(targetFleet)
     _onlyFleetOwner(fleetId)
     _onlyWhenNotInStance(fleetId)
     _onlyWhenFleetsAreIsInSameOrbit(fleetId, targetFleet)
@@ -60,7 +52,7 @@ contract FleetCombatSystem is FleetBaseSystem {
     private
     _onlyFleetOwner(fleetId)
     _onlyWhenNotInStance(fleetId)
-    _onlyWhenSpaceRockNotInGracePeriod(targetSpaceRock)
+    _onlyWhenNotInGracePeriod(targetSpaceRock)
     _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, targetSpaceRock)
     _onlyWhenNotPirateAsteroidOrHasNotBeenDefeated(targetSpaceRock)
     _claimResources(targetSpaceRock)
@@ -75,7 +67,7 @@ contract FleetCombatSystem is FleetBaseSystem {
     bytes32 targetFleet
   )
     private
-    _onlyWhenFleetNotInGracePeriod(targetFleet)
+    _onlyWhenNotInGracePeriod(targetFleet)
     _onlySpaceRockOwner(spaceRock)
     _onlyWhenFleetIsInOrbitOfSpaceRock(targetFleet, spaceRock)
     _claimResources(spaceRock)
