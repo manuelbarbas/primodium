@@ -67,6 +67,27 @@
         "key": "teletactile",
         "textureURL": "/assets/fonts/bitmap/teletactile/teletactile.png",
         "fontDataURL": "/assets/fonts/bitmap/teletactile/teletactile.xml"
+      },
+      {
+        "type": "tilemapTiledJSON",
+        "key": "asteroid-small",
+        "url": "/assets/maps/asteroid-small.json"
+      },
+      {
+        "type": "tilemapTiledJSON",
+        "key": "asteroid-player",
+        "url": "/assets/maps/asteroid-player.json"
+      }, 
+      {
+        "type": "audioSprite",
+        "key": "audio-atlas",
+        "urls": [
+          "/assets/audio/atlas.mp3",
+          "/assets/audio/atlas.ogg",
+          "/assets/audio/atlas.m4a",
+          "/assets/audio/atlas.ac3"
+        ],
+        "jsonURL": "/assets/audio/atlas.json"
       }
     ]
   }

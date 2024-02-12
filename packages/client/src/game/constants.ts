@@ -6,8 +6,6 @@ import { EntityType } from "../util/constants";
 export const ASSET_PACK = "/assets/pack.json";
 
 export const minEth = parseEther("0.0049");
-export const TILE_HEIGHT = 16;
-export const TILE_WIDTH = 16;
 export const RENDER_INTERVAL = 30;
 export const ANIMATION_INTERVAL = 200;
 export const KEY = "MAIN";
@@ -29,6 +27,13 @@ export enum Tilesets {
   Terrain = "Terrain",
   Resource = "Resource",
   Fog = "Fog",
+}
+
+export enum Tilemaps {
+  AsteroidPlayer = "asteroid-player",
+  AsteroidSmall = "asteroid-small",
+  AsteroidMedium = "asteroid-medium",
+  AsteroidLarge = "asteroid-large",
 }
 
 export enum DepthLayers {
@@ -492,4 +497,12 @@ export const KeyNames: { [key: string]: string } = {
   ["EIGHT"]: "8",
   ["NINE"]: "9",
   ["ZERO"]: "0",
+};
+
+export const MaxLevelToTilemap: Record<number, Tilemaps> = {
+  1: Tilemaps.AsteroidSmall,
+  2: Tilemaps.AsteroidSmall,
+  3: Tilemaps.AsteroidPlayer,
+  4: Tilemaps.AsteroidPlayer,
+  8: Tilemaps.AsteroidPlayer,
 };

@@ -4,23 +4,23 @@ import { focusMainbase } from "./focusMainbase";
 import { renderBuilding } from "./renderBuilding";
 import { renderBuildingMoveTool } from "./renderBuildingMoveTool";
 import { renderBuildingPlacementTool } from "./renderBuildingPlacementTool";
-import { renderFog } from "./renderFog";
+// import { renderFog } from "./renderFog";
+import { renderTilemap } from "./renderTilemap";
 import { renderHoverTile } from "./renderHoverTile";
 import { renderQueuedBuildings } from "./renderQueuedBuildings";
 import { renderResources } from "./renderResources";
-// import { renderSelectedTile } from "./renderSelectedTile";
 
 export const runSystems = (scene: Scene, mud: MUD) => {
   //Render world entity's sprites
+  renderTilemap(scene);
   renderBuilding(scene);
 
   // Render map utility elements, placement indicators, etc
-  // renderSelectedTile(scene);
   renderHoverTile(scene);
   renderBuildingPlacementTool(scene, mud);
   renderBuildingMoveTool(scene, mud);
   focusMainbase(scene);
   renderResources(scene);
-  renderFog(scene);
+  // renderFog(scene);
   renderQueuedBuildings(scene);
 };
