@@ -2,6 +2,10 @@ import { DepthLayers, Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { useMemo, useRef } from "react";
 import { Badge } from "src/components/core/Badge";
+import { Button } from "src/components/core/Button";
+import { IconLabel } from "src/components/core/IconLabel";
+import { Marker } from "src/components/core/Marker";
+import { Modal } from "src/components/core/Modal";
 import { useMud } from "src/hooks";
 import { useInGracePeriod } from "src/hooks/useInGracePeriod";
 import { usePrimodium } from "src/hooks/usePrimodium";
@@ -9,12 +13,8 @@ import { useSpaceRock } from "src/hooks/useSpaceRock";
 import { components } from "src/network/components";
 import { clearFleetStance } from "src/network/setup/contractCalls/fleetStance";
 import { getCanAttackSomeone, getFleetPixelPosition, getFleetStats } from "src/util/unit";
-import { Button } from "../../core/Button";
-import { IconLabel } from "../../core/IconLabel";
-import { Modal } from "../../core/Modal";
-import { Marker } from "../../shared/Marker";
-import { GracePeriod } from "../GracePeriod";
-import { Fleets } from "../panes/fleets/Fleets";
+import { GracePeriod } from "../../GracePeriod";
+import { Fleets } from "../../panes/fleets/Fleets";
 
 // this component assumes the fleet is owned by the player
 export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fleet, position }) => {
