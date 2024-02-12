@@ -40,7 +40,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 500,
     Iridium: 500,
     Kimberlite: 500,
-    R_Encryption: 100,
+    R_Encryption: 125,
   },
   4: {
     Iron: 75000,
@@ -53,7 +53,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 1000,
     Iridium: 1000,
     Kimberlite: 1000,
-    R_Encryption: 100,
+    R_Encryption: 150,
   },
   5: {
     Iron: 150000,
@@ -66,7 +66,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 3000,
     Iridium: 3000,
     Kimberlite: 3000,
-    R_Encryption: 100,
+    R_Encryption: 175,
   },
   6: {
     Iron: 250000,
@@ -79,7 +79,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 6000,
     Iridium: 6000,
     Kimberlite: 6000,
-    R_Encryption: 100,
+    R_Encryption: 200,
   },
   7: {
     Iron: 750000,
@@ -92,7 +92,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 7500,
     Iridium: 7500,
     Kimberlite: 7500,
-    R_Encryption: 100,
+    R_Encryption: 225,
   },
   8: {
     Iron: 1500000,
@@ -105,7 +105,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 10000,
     Iridium: 10000,
     Kimberlite: 10000,
-    R_Encryption: 100,
+    R_Encryption: 250,
   },
 };
 
