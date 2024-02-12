@@ -885,9 +885,11 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
     levels: {
       1: {
+        // P_RequiredResources: getResourceValues({ IronPlate: 2500, Alloy: 2500, PVCell: 2500 }),
+        P_RequiredResources: getResourceValues({ Iron: 1 }),
         P_RequiredBaseLevel: { value: 3n },
-        P_RequiredResources: getResourceValues({ IronPlate: 2500, Alloy: 2500, PVCell: 2500 }),
         P_UnitProdMultiplier: { value: 100n },
+        P_Production: getResourceValues({ U_CapitalShipCapacity: 1_000_000_000_000 }),
         P_UnitProdTypes: { value: encodeArray(["CapitalShip"]) },
       },
       2: {
@@ -1063,7 +1065,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     levels: {
       [MUDEnums.EResource.indexOf("U_Electricity")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Housing")]: { P_IsUtility: { value: true } },
-      [MUDEnums.EResource.indexOf("U_CapitalShip")]: { P_IsUtility: { value: true } },
+      [MUDEnums.EResource.indexOf("U_CapitalShipCapacity")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_MaxMoves")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Defense")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("M_DefenseMultiplier")]: { P_IsUtility: { value: true } },
@@ -1540,7 +1542,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     levels: {
       0: {
         P_RequiredResources: {
-          ...getResourceValues({ U_CapitalShip: 1 }, true),
+          ...getResourceValues({ U_CapitalShipCapacity: 1 }, true),
         },
         P_RequiredBaseLevel: { value: 3n },
         P_Unit: {
@@ -1557,7 +1559,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 500 }),
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: {
-          ...getResourceValues({ U_CapitalShip: 1 }, true),
+          ...getResourceValues({ U_CapitalShipCapacity: 1 }, true),
         },
         P_Unit: {
           hp: 100n,
@@ -1573,7 +1575,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 1500 }),
         P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: {
-          ...getResourceValues({ U_CapitalShip: 1 }, true),
+          ...getResourceValues({ U_CapitalShipCapacity: 1 }, true),
         },
         P_Unit: {
           hp: 100n,
@@ -1589,7 +1591,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 5000 }),
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: {
-          ...getResourceValues({ U_CapitalShip: 1 }, true),
+          ...getResourceValues({ U_CapitalShipCapacity: 1 }, true),
         },
         P_Unit: {
           hp: 100n,
@@ -1605,7 +1607,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 10000 }),
         P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: {
-          ...getResourceValues({ U_CapitalShip: 1 }, true),
+          ...getResourceValues({ U_CapitalShipCapacity: 1 }, true),
         },
         P_Unit: {
           hp: 100n,
@@ -1621,7 +1623,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 15000 }),
         P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: {
-          ...getResourceValues({ U_CapitalShip: 1 }, true),
+          ...getResourceValues({ U_CapitalShipCapacity: 1 }, true),
         },
         P_Unit: {
           hp: 100n,

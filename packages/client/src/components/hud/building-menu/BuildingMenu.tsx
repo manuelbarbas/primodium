@@ -48,6 +48,8 @@ export const BuildingMenu: React.FC = () => {
         return <UnitFactory building={selectedBuilding} />;
       case EntityType.Workshop:
         return <UnitFactory building={selectedBuilding} />;
+      case EntityType.Shipyard:
+        return <UnitFactory building={selectedBuilding} />;
       case EntityType.Market:
         return <Market building={selectedBuilding} />;
       default:

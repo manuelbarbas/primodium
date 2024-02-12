@@ -75,7 +75,7 @@ export const BuildUnit: React.FC<{
                 >
                   <img
                     src={BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"}
-                    className={`border w-[64px] h-[64px] group-hover:opacity-50 rounded-xl ${
+                    className={`border w-[72px] p-2 group-hover:opacity-50 rounded-xl ${
                       selectedUnit == unit ? "border-2 border-accent" : "border-secondary/75"
                     }`}
                   />
@@ -99,7 +99,11 @@ export const BuildUnit: React.FC<{
                 {Object.entries(getUnitStats(selectedUnit, selectedRock)).map(([name, value]) => (
                   <div key={name} className="flex flex-col items-center">
                     <p className="text-xs opacity-50">{name}</p>
-                    <p>{name == "CRG" ? formatResourceCount(EntityType.Iron, value) : formatNumber(value)}</p>
+                    <p>
+                      {["CRG", "DEC"].includes(name)
+                        ? formatResourceCount(EntityType.Iron, value)
+                        : formatNumber(value)}
+                    </p>
                   </div>
                 ))}
               </div>

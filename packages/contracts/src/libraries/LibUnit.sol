@@ -152,8 +152,8 @@ library LibUnit {
     bytes32[] memory ownedAsteroids = ColoniesMap.getAsteroidIds(playerEntity, AsteroidOwnedByKey);
     uint256 ret = 0;
     for (uint256 i = 0; i < ownedAsteroids.length; i++) {
-      uint256 ships = MaxResourceCount.get(ownedAsteroids[i], uint8(EResource.U_CapitalShip)) -
-        ResourceCount.get(ownedAsteroids[i], uint8(EResource.U_CapitalShip));
+      uint256 ships = MaxResourceCount.get(ownedAsteroids[i], uint8(EResource.U_CapitalShipCapacity)) -
+        ResourceCount.get(ownedAsteroids[i], uint8(EResource.U_CapitalShipCapacity));
 
       ret += ships;
     }
