@@ -151,6 +151,10 @@ export enum SpriteKeys {
   ShieldGenerator2 = "sprites/shield-generator/level2/Shield_Generator_LVL2_1.png",
   ShieldGenerator3 = "sprites/shield-generator/level3/Shield_Generator_LVL3_1.png",
 
+  Vault1 = "sprites/vault/level1/Vault_LVL1_1.png",
+  Vault2 = "sprites/vault/level2/Vault_LVL2_1.png",
+  Vault3 = "sprites/vault/level3/Vault_LVL3_1.png",
+
   //ASTEROIDS
   Asteroid1 = "sprites/spacerocks/asteroids/asteroid1.png",
   Asteroid2 = "sprites/spacerocks/asteroids/asteroid2.png",
@@ -270,6 +274,10 @@ export enum AnimationKeys {
   ShieldGenerator2 = "shieldgenerator/level2",
   ShieldGenerator3 = "shieldgenerator/level3",
 
+  Vault1 = "vault/level1",
+  Vault2 = "vault/level2",
+  Vault3 = "vault/level3",
+
   Market1 = "marketplace/level1",
 }
 
@@ -359,6 +367,7 @@ export const EntitytoSpriteKey = {
   [EntityType.DroneFactory]: [SpriteKeys.DroneFactory1],
 
   [EntityType.ShieldGenerator]: [SpriteKeys.ShieldGenerator1, SpriteKeys.ShieldGenerator2, SpriteKeys.ShieldGenerator3],
+  [EntityType.Vault]: [SpriteKeys.Vault1, SpriteKeys.Vault2, SpriteKeys.Vault3],
   [EntityType.Market]: [SpriteKeys.Market1],
 
   //STARMAP
@@ -423,6 +432,7 @@ export const EntityIDtoAnimationKey = {
     AnimationKeys.ShieldGenerator3,
   ],
 
+  [EntityType.Vault]: [AnimationKeys.Vault1, AnimationKeys.Vault2, AnimationKeys.Vault3],
   [EntityType.Market]: [AnimationKeys.Market1],
 };
 

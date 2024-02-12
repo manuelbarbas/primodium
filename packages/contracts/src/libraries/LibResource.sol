@@ -217,11 +217,19 @@ library LibResource {
    * @param spaceRockEntity The identifier of the spaceRock.
    * @return totalResources The total count of non-utility resources.
    */
-  function getStoredResourceCount(bytes32 spaceRockEntity) internal view returns (uint256 totalResources) {
+  function getStoredResourceCountVaulted(bytes32 spaceRockEntity) internal view returns (uint256 totalResources) {
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       uint256 resourceCount = ResourceCount.get(spaceRockEntity, transportables[i]);
       if (resourceCount == 0) continue;
+      uint256 vaulted = ResourceCount.get(
+        spaceRockEntity,
+        P_IsAdvancedResource.get(transportables[i])
+          ? uint8(EResource.U_AdvancedUnraidable)
+          : uint8(EResource.U_Unraidable)
+      );
+      if (vaulted > resourceCount) resourceCount = 0;
+      else resourceCount -= vaulted;
       totalResources += resourceCount;
     }
   }
@@ -232,7 +240,7 @@ library LibResource {
    * @return resourceCounts An array containing the counts of each non-utility resource.
    * @return totalResources The total count of non-utility resources.
    */
-  function getStoredResourceCounts(
+  function getStoredResourceCountsVaulted(
     bytes32 spaceRockEntity
   ) internal view returns (uint256[] memory resourceCounts, uint256 totalResources) {
     uint8[] memory transportables = P_Transportables.get();
@@ -240,6 +248,14 @@ library LibResource {
     for (uint8 i = 0; i < transportables.length; i++) {
       resourceCounts[i] = ResourceCount.get(spaceRockEntity, transportables[i]);
       if (resourceCounts[i] == 0) continue;
+      uint256 vaulted = ResourceCount.get(
+        spaceRockEntity,
+        P_IsAdvancedResource.get(transportables[i])
+          ? uint8(EResource.U_AdvancedUnraidable)
+          : uint8(EResource.U_Unraidable)
+      );
+      if (vaulted > resourceCounts[i]) resourceCounts[i] = 0;
+      else resourceCounts[i] -= vaulted;
       totalResources += resourceCounts[i];
     }
   }

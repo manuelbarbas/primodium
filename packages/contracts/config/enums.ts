@@ -25,6 +25,7 @@ export enum EBuilding {
   SAM,
 
   ShieldGenerator,
+  Vault,
   Market,
 
   Shipyard,
@@ -52,6 +53,8 @@ export enum EResource {
   U_ColonyShip,
   U_MaxMoves,
   U_Defense,
+  U_Unraidable,
+  U_AdvancedUnraidable,
   R_HP,
   R_Encryption,
 
@@ -121,6 +124,7 @@ export enum EObjectives {
   BuildDroneFactory,
   BuildStarmapper,
   BuildSAMLauncher,
+  BuildVault,
   BuildShieldGenerator,
 
   TrainMinutemanMarine1,

@@ -96,7 +96,7 @@ library LibSpaceRockAttributes {
   }
 
   function getStoredResourceCountWithDefenders(bytes32 spaceRock) internal view returns (uint256 totalResources) {
-    totalResources = LibResource.getStoredResourceCount(spaceRock);
+    totalResources = LibResource.getStoredResourceCountVaulted(spaceRock);
     bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(spaceRock);
     for (uint256 i = 0; i < defenderFleetIds.length; i++) {
       totalResources += LibFleetAttributes.getOccupiedCargo(defenderFleetIds[i]);
@@ -104,7 +104,7 @@ library LibSpaceRockAttributes {
   }
 
   function getStoredResourceCountsWithDefenders(bytes32 spaceRock) internal view returns (uint256[] memory, uint256) {
-    (uint256[] memory resourceCounts, uint256 totalResources) = LibResource.getStoredResourceCounts(spaceRock);
+    (uint256[] memory resourceCounts, uint256 totalResources) = LibResource.getStoredResourceCountsVaulted(spaceRock);
     bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(spaceRock);
     for (uint256 i = 0; i < defenderFleetIds.length; i++) {
       uint256[] memory defenderResourceCounts = LibFleetAttributes.getResourceCounts(defenderFleetIds[i]);
