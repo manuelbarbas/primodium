@@ -1,5 +1,4 @@
 import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect, useMemo, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
@@ -12,6 +11,7 @@ import { components } from "src/network/components";
 import { train } from "src/network/setup/contractCalls/train";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage, EntityType, ResourceImage, UnitEnumLookup } from "src/util/constants";
+import { formatNumber, formatResourceCount } from "src/util/number";
 import { getRecipe } from "src/util/recipe";
 import { getUnitStats } from "src/util/unit";
 import { Hex } from "viem";
@@ -26,7 +26,8 @@ export const BuildUnit: React.FC<{
   const [count, setCount] = useState(1);
 
   const { UnitLevel, P_UnitProdTypes, BuildingType, Level } = components;
-  const selectedRock = components.SelectedRock.use()?.value ?? singletonEntity;
+  const selectedRock = components.ActiveRock.use()?.value;
+  if (!selectedRock) throw new Error("[BuildUnit] No active rock selected");
 
   const buildingType = (BuildingType.get(building)?.value as Entity) ?? EntityType.NULL;
   const buildingLevel = Level.use(building)?.value ?? 1n;
@@ -62,7 +63,7 @@ export const BuildUnit: React.FC<{
 
   return (
     <Navigator.Screen title="BuildUnit" className="relative flex flex-col w-full">
-      <SecondaryCard className="pixel-images w-full pointer-events-auto">
+      <SecondaryCard className="pixel-images w-full pointer-events-auto h-96">
         <div className="flex flex-col items-center space-y-3">
           <div className="flex flex-wrap gap-2 items-center justify-center">
             {trainableUnits.map((unit, index) => {
@@ -94,11 +95,11 @@ export const BuildUnit: React.FC<{
             <>
               <p className="uppercase font-bold">{getBlockTypeName(selectedUnit)}</p>
 
-              <div className="grid grid-cols-5 gap-2 border-y border-cyan-400/30">
+              <div className="grid grid-cols-6 gap-2 border-y border-cyan-400/30">
                 {Object.entries(getUnitStats(selectedUnit, selectedRock)).map(([name, value]) => (
                   <div key={name} className="flex flex-col items-center">
                     <p className="text-xs opacity-50">{name}</p>
-                    <p>{value.toLocaleString()}</p>
+                    <p>{name == "CRG" ? formatResourceCount(EntityType.Iron, value) : formatNumber(value)}</p>
                   </div>
                 ))}
               </div>
