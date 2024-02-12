@@ -490,7 +490,7 @@ export const ResourceEnumLookup: Record<Entity, EResource> = {
 
   [EntityType.Electricity]: EResource.U_Electricity,
   [EntityType.Housing]: EResource.U_Housing,
-  [EntityType.CapitalShipCapacity]: EResource.U_CapitalShip,
+  [EntityType.CapitalShipCapacity]: EResource.U_CapitalShipCapacity,
   [EntityType.FleetMoves]: EResource.U_MaxMoves,
   [EntityType.Defense]: EResource.U_Defense,
   [EntityType.Unraidable]: EResource.U_Unraidable,
