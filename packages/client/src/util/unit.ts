@@ -1,6 +1,6 @@
 import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
-import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
 import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
+import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { components, components as comps } from "src/network/components";
 import { Hex } from "viem";
@@ -183,12 +183,12 @@ export function getCanAttackSomeone(entity: Entity) {
   const isFleet = components.IsFleet.get(entity);
   const spaceRock = (isFleet ? components.FleetMovement.get(entity)?.destination : entity) as Entity | undefined;
   if (!spaceRock) return false;
-  [spaceRock, ...getOrbitingFleets(spaceRock)].some((target) => getCanAttack(entity, target));
+  return [spaceRock, ...getOrbitingFleets(spaceRock)].some((target) => getCanAttack(entity, target));
 }
 
 export function getCanAttack(originEntity: Entity, targetEntity: Entity) {
   if (originEntity === targetEntity) return false;
-  if (getInGracePeriod(targetEntity)) return false;
+  if (getInGracePeriod(targetEntity).inGracePeriod) return false;
   const isOriginFleet = components.IsFleet.get(originEntity);
   const isTargetFleet = components.IsFleet.get(targetEntity);
   if (!isOriginFleet && !isTargetFleet) return false;

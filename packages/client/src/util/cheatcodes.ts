@@ -3,6 +3,7 @@ import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Cheatcodes } from "@primodiumxyz/mud-game-tools";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
+import { components } from "src/network/components";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 import { setComponentValue } from "src/network/setup/contractCalls/dev";
 import { MUD } from "src/network/types";
@@ -46,6 +47,17 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
         await setComponentValue(mud, mud.components.P_GameConfig, singletonEntity, {
           worldSpeed: BigInt(value),
         });
+      },
+    },
+    speedUpTrainingtime: {
+      params: [],
+      function: async () => {
+        // const entity = encodeEntity(components.P_Unit.metadata.keySchema, {
+        //   level: 0n,
+        //   entity: EntityType.CapitalShip as Hex,
+        // });
+        // setComponentValue(mud, components.P_Unit, entity, {trainingTime: 10n})
+        setComponentValue(mud, components.P_GracePeriod, singletonEntity, { spaceRock: 0n });
       },
     },
     setMaxAllianceCount: {
