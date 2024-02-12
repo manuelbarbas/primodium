@@ -168,6 +168,7 @@ export const EntityType = {
   ShieldGenerator: toHex32("ShieldGenerator") as Entity,
   Vault: toHex32("Vault") as Entity,
   Market: toHex32("Market") as Entity,
+  Shipyard: toHex32("Shipyard") as Entity,
 
   Alloy: toHex32("Alloy") as Entity,
   PVCell: toHex32("PVCell") as Entity,
@@ -519,6 +520,7 @@ export const BuildingEnumLookup: Record<Entity, EBuilding> = {
   [EntityType.ShieldGenerator]: EBuilding.ShieldGenerator,
   [EntityType.Vault]: EBuilding.Vault,
   [EntityType.Market]: EBuilding.Market,
+  [EntityType.Shipyard]: EBuilding.Shipyard,
 };
 
 export const BuildingEntityLookup = reverseRecord(BuildingEnumLookup);

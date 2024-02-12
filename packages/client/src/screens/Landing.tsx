@@ -100,7 +100,7 @@ export const Landing: React.FC<{ children: React.ReactNode }> = ({ children }) =
         </div>
       </motion.div>
       <div className="fixed bottom-10 w-screen left-0 text-center flex flex-row justify-center items-center gap-2 font-mono uppercase font-bold">
-        <FaRegCopyright size={12} /> 2023 Primodium
+        <FaRegCopyright size={12} /> 2024 Primodium
       </div>
     </AnimatePresence>
   );
