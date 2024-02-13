@@ -87,8 +87,14 @@ contract UpgrBounSystem is System {
     // call the upgradeBuilding function from the World contract
     newBuildingEntity = WorldWithUpgradeBuilding(_world()).upgradeBuilding(coord);
 
+    // prep params for the transferBalanceToAddress function
+    uint256 bountyValue = UpgradeBounty.get(bountyPublisher, oldBuildingEntity);
+    IWorld world = IWorld(_world());
+    ResourceId namespaceResource = WorldResourceIdLib.encodeNamespace(bytes14("upgradeBounty"));
+
     // Distribute the bounty value from the UpgradeBounty table to the collector
-    payable(_msgSender()).transfer(UpgradeBounty.get(bountyPublisher, oldBuildingEntity));
+    // payable(_msgSender()).transfer(UpgradeBounty.get(bountyPublisher, oldBuildingEntity));
+    world.transferBalanceToAddress(namespaceResource, _msgSender(), bountyValue);
 
     // Remove the bounty from the UpgradeBounty table
     UpgradeBounty.set(bountyPublisher, oldBuildingEntity, 0);
