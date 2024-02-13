@@ -8,7 +8,7 @@ import { FleetStance, OwnedBy, FleetMovement, P_UnitPrototypes, P_Transportables
 
 contract FleetBaseSystem is PrimodiumSystem {
   modifier _onlyFleetOwner(bytes32 fleetId) {
-    require(OwnedBy.get(OwnedBy.get(fleetId)) == _player(), "[Fleet] Only fleet owner can call this function");
+    require(OwnedBy.get(OwnedBy.get(fleetId)) == _player(), "[Fleet] Not fleet owner");
     _;
   }
 
@@ -37,30 +37,21 @@ contract FleetBaseSystem is PrimodiumSystem {
   }
 
   modifier _onlySpaceRockOwner(bytes32 spaceRock) {
-    require(OwnedBy.get(spaceRock) == _player(), "[Fleet] Only space rock owner can call this function");
+    require(OwnedBy.get(spaceRock) == _player(), "[Fleet] Not asteroid owner");
     _;
   }
 
   modifier _unitCountIsValid(uint256[] memory unitCounts) {
-    require(
-      unitCounts.length == P_UnitPrototypes.length(),
-      "[Fleet] Unit count array must be same length as unit prototypes"
-    );
+    require(unitCounts.length == P_UnitPrototypes.length(), "[Fleet] Incorrect unit array length");
     _;
   }
 
   modifier _resourceCountIsValid(uint256[] memory resourceCounts) {
-    require(
-      resourceCounts.length == P_Transportables.length(),
-      "[Fleet] Resource count array must be same length as transportable resources"
-    );
+    require(resourceCounts.length == P_Transportables.length(), "[Fleet] Incorrect resource array length");
     _;
   }
   modifier _onlyWhenNotPirateAsteroid(bytes32 spaceRock) {
-    require(
-      !PirateAsteroid.getIsPirateAsteroid(spaceRock),
-      "[Fleet] Action can not be performed towards pirate asteroids"
-    );
+    require(!PirateAsteroid.getIsPirateAsteroid(spaceRock), "[Fleet] Target cannot be pirate asteroid");
     _;
   }
 
@@ -68,16 +59,13 @@ contract FleetBaseSystem is PrimodiumSystem {
     require(!PirateAsteroid.getIsDefeated(spaceRock), "[Fleet] Target pirate asteroid has been defeated");
     require(
       !PirateAsteroid.getIsPirateAsteroid(spaceRock) || PirateAsteroid.getPlayerEntity(spaceRock) == _player(),
-      "[Fleet] Can only attack personal pirate asteroids"
+      "[Fleet] Can only attack personal pirate asteroid"
     );
     _;
   }
 
   modifier _onlyWhenNotInStance(bytes32 fleetId) {
-    require(
-      FleetStance.getStance(fleetId) == uint8(EFleetStance.NULL),
-      "[Fleet] Can not attack while fleet is in stance"
-    );
+    require(FleetStance.getStance(fleetId) == uint8(EFleetStance.NULL), "[Fleet] Fleet cannot be in stance");
     _;
   }
 }

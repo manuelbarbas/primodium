@@ -10,10 +10,6 @@ import { FleetIncomingKey } from "src/Keys.sol";
 
 /* 
   More tests to write
-  - only owner
-  - unit count is valid
-  - resource count is valid
-  - not in stance
   - fleets in same orbit
   - fleet vs fleet
   - 
@@ -38,6 +34,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     eveHomeSpaceRock = spawn(eve);
   }
 
+  /* --------------------------------- SUCCEED -------------------------------- */
   //test fleet attack space rock and win raid
   function testFleetAttackSpaceRock() public {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
@@ -87,36 +84,6 @@ contract FleetCombatSystemTest is PrimodiumTest {
     assertTrue(unitAttack > 0, "unit attack should more than 0");
 
     assertEq(ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Iron)), 0, "space rock iron count should be 0");
-  }
-
-  function testFleetAttackSpaceRockInGracePeriod() public {
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
-    //create fleet with 1 minuteman marine
-    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
-    for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = 1;
-    }
-
-    //create fleet with 1 iron
-    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
-
-    //provide resource and unit requirements to create fleet
-    setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
-
-    vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
-    world.sendFleet(fleetId, bobHomeSpaceRock);
-
-    vm.warp(FleetMovement.getArrivalTime(fleetId));
-
-    uint256 unitCargo = P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
-    assertGt(unitCargo, 0, "unit cargo should more than 0");
-    increaseResource(bobEntity, EResource.Iron, unitCargo);
-
-    vm.expectRevert("[Fleet] Target is in grace period");
-    switchPrank(alice);
-    world.attack(fleetId, bobHomeSpaceRock);
   }
 
   function testFleetAttackSpaceRockWithStrongDefense() public {
@@ -314,6 +281,107 @@ contract FleetCombatSystemTest is PrimodiumTest {
         P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype)),
       "fleet cargo should map units"
     );
+  }
+  /* ------------------------------ FAILURE CASES ----------------------------- */
+  function testAttackWrongOwner() public {
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    //create fleet with 1 minuteman marine
+    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = 1;
+    }
+
+    //create fleet with 1 iron
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+
+    //provide resource and unit requirements to create fleet
+    setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
+
+    vm.startPrank(alice);
+    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    world.sendFleet(fleetId, bobHomeSpaceRock);
+
+    switchPrank(creator);
+    GracePeriod.set(bobHomeSpaceRock, block.timestamp);
+
+    vm.warp(FleetMovement.getArrivalTime(fleetId));
+
+    uint256 unitCargo = P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
+    assertTrue(unitCargo > 0, "unit cargo should more than 0");
+    increaseResource(bobHomeSpaceRock, EResource.Iron, unitCargo);
+    assertGt(GracePeriod.get(fleetId), 0, "fleet should be in grace period");
+    assertGt(GracePeriod.get(aliceHomeSpaceRock), 0, "home rock should be in grace period");
+
+    switchPrank(bob);
+    vm.expectRevert("[Fleet] Not fleet owner");
+    world.attack(fleetId, bobHomeSpaceRock);
+    vm.stopPrank();
+  }
+
+  function testFleetAttackSpaceRockInGracePeriod() public {
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    //create fleet with 1 minuteman marine
+    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = 1;
+    }
+
+    //create fleet with 1 iron
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+
+    //provide resource and unit requirements to create fleet
+    setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
+
+    vm.startPrank(alice);
+    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    world.sendFleet(fleetId, bobHomeSpaceRock);
+
+    vm.warp(FleetMovement.getArrivalTime(fleetId));
+
+    uint256 unitCargo = P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
+    assertGt(unitCargo, 0, "unit cargo should more than 0");
+    increaseResource(bobEntity, EResource.Iron, unitCargo);
+
+    vm.expectRevert("[Fleet] Target is in grace period");
+    switchPrank(alice);
+    world.attack(fleetId, bobHomeSpaceRock);
+  }
+
+  function testFleetAttackInStance() public {
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    //create fleet with 1 minuteman marine
+    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = 1;
+    }
+
+    //create fleet with 1 iron
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+
+    //provide resource and unit requirements to create fleet
+    setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
+
+    vm.startPrank(alice);
+    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    world.sendFleet(fleetId, bobHomeSpaceRock);
+
+    switchPrank(creator);
+    GracePeriod.set(bobHomeSpaceRock, block.timestamp);
+
+    vm.warp(FleetMovement.getArrivalTime(fleetId) + 1);
+
+    switchPrank(alice);
+    world.setFleetStance(fleetId, uint8(EFleetStance.Defend), bobHomeSpaceRock);
+    vm.expectRevert("[Fleet] Fleet cannot be in stance");
+    world.attack(fleetId, bobHomeSpaceRock);
+
+    world.setFleetStance(fleetId, uint8(EFleetStance.Block), bobHomeSpaceRock);
+
+    vm.expectRevert("[Fleet] Fleet cannot be in stance");
+    world.attack(fleetId, bobHomeSpaceRock);
   }
 
   function testAttackNotInOrbit() public {
