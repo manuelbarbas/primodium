@@ -1,7 +1,11 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Coord } from "@latticexyz/utils";
+import { Coord, uuid } from "@latticexyz/utils";
 import { Scene } from "engine/types";
-import { getDistance } from "src/util/common";
+import { getDistance, getRandomRange } from "src/util/common";
+import { ObjectPosition, OnComponentSystem, Tween } from "../lib/common/object-components/common";
+import { DepthLayers } from "@game/constants";
+import { ObjectText } from "../lib/common/object-components/text";
+import { components } from "src/network/components";
 
 export const createFxApi = (scene: Scene) => {
   function outline(
@@ -85,10 +89,47 @@ export const createFxApi = (scene: Scene) => {
     return animationTime;
   }
 
+  function emitFloatingText(text: string, coord: Coord) {
+    const { tileWidth, tileHeight } = scene.tilemap;
+    const pixelCoord = tileCoordToPixelCoord({ x: coord.x, y: -coord.y }, tileWidth, tileHeight);
+    const id = uuid();
+    const group = scene.objectPool.getGroup(id);
+
+    group.add("BitmapText").setComponents([
+      ObjectPosition(
+        { x: pixelCoord.x + getRandomRange(-10, 10), y: pixelCoord.y + getRandomRange(-10, 10) },
+        DepthLayers.Path
+      ),
+      ObjectText(text, {
+        fontSize: getRandomRange(8, 14),
+        stroke: 0xff0000,
+      }),
+      OnComponentSystem(
+        components.MapOpen,
+        (_, { value }) => {
+          if (value[1]?.value) return;
+
+          scene.objectPool.removeGroup(id);
+        },
+        { runOnInit: false }
+      ),
+      Tween(scene, {
+        duration: getRandomRange(700, 1500),
+        props: {
+          y: `-=${getRandomRange(30, 50)}`,
+          x: `+=${getRandomRange(-10, 10)}`,
+          alpha: 0, // fade out
+        },
+        onComplete: () => scene.objectPool.removeGroup(id),
+      }),
+    ]);
+  }
+
   return {
     outline,
     removeOutline,
     emitExplosion,
     fireMissile,
+    emitFloatingText,
   };
 };

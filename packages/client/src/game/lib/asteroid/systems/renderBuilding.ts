@@ -18,10 +18,11 @@ import { safeIndex } from "src/util/array";
 
 import { Assets, AudioKeys, DepthLayers, EntityIDtoAnimationKey, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
 import { createAudioApi } from "src/game/api/audio";
+import { createFxApi } from "src/game/api/fx";
 import { components } from "src/network/components";
 import { getBuildingDimensions, getBuildingTopLeft } from "src/util/building";
-import { getRandomRange } from "src/util/common";
-import { Action } from "src/util/constants";
+import { getBlockTypeName, getRandomRange } from "src/util/common";
+import { Action, ResourceEntityLookup, ResourceStorages, SPEED_SCALE } from "src/util/constants";
 import {
   ObjectPosition,
   OnComponentSystem,
@@ -30,6 +31,10 @@ import {
   SetValue,
 } from "../../common/object-components/common";
 import { Animation, Outline, Texture } from "../../common/object-components/sprite";
+import { Hex } from "viem";
+import { formatResourceCount } from "src/util/number";
+import { EResource } from "contracts/config/enums";
+import { getFullResourceCount } from "src/util/resource";
 
 const MAX_SIZE = 2 ** 15 - 1;
 export const renderBuilding = (scene: Scene) => {
@@ -37,9 +42,13 @@ export const renderBuilding = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const spectateWorld = namespaceWorld(world, "game_spectate");
   const audio = createAudioApi(scene);
+  const fx = createFxApi(scene);
+  const worldSpeed = components.P_GameConfig.get()?.worldSpeed ?? SPEED_SCALE;
 
   defineComponentSystem(systemsWorld, components.ActiveRock, ({ value }) => {
     if (!value[0] || value[0]?.value === value[1]?.value) return;
+
+    const activeRock = value[0]?.value as Entity;
 
     world.dispose("game_spectate");
 
@@ -101,6 +110,7 @@ export const renderBuilding = (scene: Scene) => {
         SetValue({
           originY: 1,
         }),
+
         OnUpdateSystem([...positionQuery, Has(components.Level)], () => {
           const isActive = components.IsActive.get(entity)?.value;
           const updatedAssetPair = getAssetKeyPair(entity, buildingType);
@@ -144,6 +154,42 @@ export const renderBuilding = (scene: Scene) => {
             components.HoverEntity.remove();
           },
           true
+        ),
+        OnComponentSystem(
+          components.Time,
+          (_, { value }) => {
+            if ((value[0]?.value ?? 0n) % 2n !== 0n) return;
+
+            if (components.BuildRock.get()?.value !== activeRock || !scene.phaserScene.scene.isActive()) return;
+
+            const producedResource = components.P_Production.getWithKeys({
+              level: components.Level.get(entity)?.value ?? 1n,
+              prototype: buildingType as Hex,
+            });
+
+            producedResource?.resources.forEach((resource) => {
+              const resourceEntity = ResourceEntityLookup[resource as EResource];
+
+              if (!ResourceStorages.has(resourceEntity)) return;
+
+              const { production } = getFullResourceCount(resourceEntity, activeRock);
+
+              if (production <= 0) return;
+
+              const productionMin = (production * worldSpeed) / SPEED_SCALE;
+              fx.emitFloatingText(
+                `+ ${formatResourceCount(resourceEntity, productionMin * 2n, {
+                  short: true,
+                  fractionDigits: 2,
+                })} ${getBlockTypeName(resourceEntity)}`,
+                {
+                  x: tilePosition.x,
+                  y: tilePosition.y,
+                }
+              );
+            });
+          },
+          { runOnInit: false }
         ),
         ...sharedComponents,
       ]);
