@@ -49,8 +49,16 @@ contract BountyNamespaceAccess is Script {
     console.log("Alice set a bounty for %d wei.", bountyValue);
 
     // Alice withdraws a bounty at the same coordinate
+    vm.startBroadcast(deployerPrivateKey);
+    bountyValue = world.upgradeBounty_UpgrBounSystem_withdrawBounty(bountyCoord);
+    vm.stopBroadcast();
+    console.log("Alice withdrew a %d wei bounty.", bountyValue);
 
     // Alice deposits a bounty again, at a coordinate
+    vm.startBroadcast(deployerPrivateKey);
+    bountyValue = world.upgradeBounty_UpgrBounSystem_depositBounty{ value: oneEther }(bountyCoord);
+    vm.stopBroadcast();
+    console.log("Alice set another bounty for %d wei.", bountyValue);
 
     // Bob upgrades Alice's building. Note it needs the requisite resources to succeed.
 

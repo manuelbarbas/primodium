@@ -14,7 +14,9 @@ interface IUpgrBounSystem {
     PositionData memory coord
   ) external payable returns (uint256 bountyValue);
 
-  function upgradeBounty_UpgrBounSystem_withdrawBounty(PositionData memory coord) external;
+  function upgradeBounty_UpgrBounSystem_withdrawBounty(
+    PositionData memory coord
+  ) external returns (uint256 bountyValue);
 
   function upgradeBounty_UpgrBounSystem_upgradeForBounty(
     address bountyPublisher,

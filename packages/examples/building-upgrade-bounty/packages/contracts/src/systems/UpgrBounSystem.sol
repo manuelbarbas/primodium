@@ -6,6 +6,10 @@ import { PositionData, Level } from "../codegen/index.sol";
 import { IsActive } from "../codegen/index.sol";
 import { UpgradeBounty } from "../codegen/index.sol";
 import { OwnedBy } from "../codegen/index.sol";
+import { IWorld } from "../codegen/world/IWorld.sol";
+import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
+import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
+import { SystemSwitch } from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 
 // import { LibEncode } from "prim-codegen/Libraries.sol";
 
@@ -50,7 +54,7 @@ contract UpgrBounSystem is System {
     UpgradeBounty.set(_msgSender(), buildingEntity, bountyValue);
   }
 
-  function withdrawBounty(PositionData memory coord) public {
+  function withdrawBounty(PositionData memory coord) public returns (uint256 bountyValue) {
     bytes32 buildingEntity = getBuildingFromCoord(coord);
 
     // Check that there is a bounty on that buildingEntity
@@ -60,8 +64,11 @@ contract UpgrBounSystem is System {
     );
 
     // Transfer the bounty value to the caller
-    uint256 bountyValue = UpgradeBounty.get(_msgSender(), buildingEntity);
-    payable(_msgSender()).transfer(bountyValue);
+
+    bountyValue = UpgradeBounty.get(_msgSender(), buildingEntity);
+    IWorld world = IWorld(_world());
+    ResourceId namespaceResource = WorldResourceIdLib.encodeNamespace(bytes14("upgradeBounty"));
+    SystemSwitch.call(abi.encodeCall(world.transferBalanceToAddress, (namespaceResource, _msgSender(), bountyValue)));
 
     // Remove the bounty from the UpgradeBounty table
     UpgradeBounty.set(_msgSender(), buildingEntity, 0);
