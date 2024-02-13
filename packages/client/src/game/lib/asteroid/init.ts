@@ -7,7 +7,6 @@ import { asteroidSceneConfig } from "../../config/asteroidScene";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
 import { setupKeybinds } from "./setup/setupKeybinds";
 import { setupMouseInputs } from "./setup/setupMouseInputs";
-// import { setupTileManager } from "./setup/setupTileManager";
 import { uiSceneConfig } from "src/game/config/uiScene";
 
 export const initAsteroidScene = async (game: Game) => {
@@ -19,6 +18,12 @@ export const initAsteroidScene = async (game: Game) => {
   scene2.phaserScene.input.enabled = false;
 
   scene.camera.phaserCamera.fadeIn(1000);
+
+  // scene.phaserScene.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
+  //   const x = Math.floor(pointer.worldX / 32);
+  //   const y = Math.floor(pointer.worldY / 32);
+  //   console.log("x", x, "y", y);
+  // });
 
   audio.play(AudioKeys.Background, "music");
   audio.setPauseOnBlur(false);

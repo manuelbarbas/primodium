@@ -8,6 +8,7 @@ import { renderTilemap } from "./renderTilemap";
 import { renderHoverTile } from "./renderHoverTile";
 import { renderQueuedBuildings } from "./renderQueuedBuildings";
 import { renderResources } from "./renderResources";
+import { renderBounds } from "./renderBounds";
 
 export const runSystems = (scene: Scene, mud: MUD) => {
   //Render world entity's sprites
@@ -16,6 +17,7 @@ export const runSystems = (scene: Scene, mud: MUD) => {
   renderBuilding(scene);
 
   // Render map utility elements, placement indicators, etc
+  renderBounds(scene);
   renderHoverTile(scene);
   renderBuildingPlacementTool(scene, mud);
   renderBuildingMoveTool(scene, mud);

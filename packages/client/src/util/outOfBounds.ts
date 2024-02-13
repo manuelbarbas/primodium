@@ -5,12 +5,12 @@ import { key } from "./constants";
 
 export function outOfBounds(coord: Coord, asteroid: Entity) {
   const bounds = getAsteroidBounds(asteroid);
-  return coord.x > bounds.maxX || coord.x < bounds.minX || coord.y > bounds.maxY || coord.y < bounds.minY;
+  return coord.x >= bounds.maxX || coord.x < bounds.minX || coord.y >= bounds.maxY || coord.y < bounds.minY;
 }
 
 export function outOfMaxBounds(coord: Coord, asteroid: Entity) {
   const bounds = getAsteroidMaxBounds(asteroid);
-  return coord.x > bounds.maxX || coord.x < bounds.minX || coord.y > bounds.maxY || coord.y < bounds.minY;
+  return coord.x >= bounds.maxX || coord.x < bounds.minX || coord.y >= bounds.maxY || coord.y < bounds.minY;
 }
 
 export function getAsteroidBounds(asteroid: Entity, next?: boolean) {
@@ -21,8 +21,8 @@ export function getAsteroidBounds(asteroid: Entity, next?: boolean) {
   return {
     minX: Math.floor(asteroidDims.xBounds - range.width) / 2,
     minY: Math.floor(asteroidDims.yBounds - range.height) / 2,
-    maxX: Math.floor(asteroidDims.xBounds + range.width) / 2 - 1,
-    maxY: Math.floor(asteroidDims.yBounds + range.height) / 2 - 1,
+    maxX: Math.floor(asteroidDims.xBounds + range.width) / 2,
+    maxY: Math.floor(asteroidDims.yBounds + range.height) / 2,
   };
 }
 
