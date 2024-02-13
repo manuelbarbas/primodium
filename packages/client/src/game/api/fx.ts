@@ -97,7 +97,7 @@ export const createFxApi = (scene: Scene) => {
       icon?: SpriteKeys;
     } = {}
   ) {
-    if (!scene.phaserScene.scene.isActive() || scene.phaserScene.scene.isPaused()) return;
+    if (!scene.phaserScene.scene.isActive() || scene.phaserScene.scene.isPaused() || document.hidden) return;
 
     const { tileWidth, tileHeight } = scene.tilemap;
     const pixelCoord = tileCoordToPixelCoord({ x: coord.x, y: -coord.y }, tileWidth, tileHeight);
@@ -125,7 +125,9 @@ export const createFxApi = (scene: Scene) => {
         y: `-=${yMove}`,
         alpha: 0, // fade out
       },
-      onComplete: () => scene.objectPool.removeGroup(id),
+      onComplete: () => {
+        scene.objectPool.removeGroup(id);
+      },
     };
 
     const sharedComponents = [

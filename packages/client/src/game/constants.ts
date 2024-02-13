@@ -219,6 +219,7 @@ export enum SpriteKeys {
   Lithium = "sprites/icons/resources/lithium_resource.png",
   IronPlate = "sprites/icons/resources/ironplate.png",
   PVCell = "sprites/icons/resources/photovoltaiccell_resource.png",
+  Alloy = "sprites/icons/resources/alloy_resource.png",
 }
 
 export enum AnimationKeys {
@@ -333,6 +334,7 @@ export const EntityToResourceSpriteKey = {
   [EntityType.Lithium]: SpriteKeys.Lithium,
   [EntityType.IronPlate]: SpriteKeys.IronPlate,
   [EntityType.PVCell]: SpriteKeys.PVCell,
+  [EntityType.Alloy]: SpriteKeys.Alloy,
 };
 
 export const EntitytoBuildingSpriteKey = {

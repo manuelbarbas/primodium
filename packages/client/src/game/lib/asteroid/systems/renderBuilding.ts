@@ -166,12 +166,11 @@ export const renderBuilding = (scene: Scene) => {
         OnComponentSystem(
           components.Time,
           (_, { value }) => {
-            //show resource updates slow for larger buildings
-            const timeDelay = BigInt(Math.max(buildingDimensions.width, buildingDimensions.height) * 4);
+            //show resource updates slower for larger buildings with offset to prevent spam
+            const frequency = BigInt(buildingDimensions.width * buildingDimensions.height) + 5n;
+            if ((value[0]?.value ?? 0n) % frequency !== 0n) return;
 
-            if ((value[0]?.value ?? 0n) % timeDelay !== 0n) return;
-
-            if (components.BuildRock.get()?.value !== activeRock) return;
+            if (components.BuildRock.get()?.value !== activeRock || !components.IsActive.get(entity)?.value) return;
 
             const producedResource = components.P_Production.getWithKeys({
               level: components.Level.get(entity)?.value ?? 1n,
@@ -189,7 +188,7 @@ export const renderBuilding = (scene: Scene) => {
 
               const productionMin = (production * worldSpeed) / SPEED_SCALE;
               fx.emitFloatingText(
-                `${formatResourceCount(resourceEntity, productionMin * timeDelay, {
+                `${formatResourceCount(resourceEntity, productionMin * frequency, {
                   short: true,
                   fractionDigits: 2,
                 })}`,
