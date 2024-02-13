@@ -97,6 +97,8 @@ export const createFxApi = (scene: Scene) => {
       icon?: SpriteKeys;
     } = {}
   ) {
+    if (!scene.phaserScene.scene.isActive() || scene.phaserScene.scene.isPaused()) return;
+
     const { tileWidth, tileHeight } = scene.tilemap;
     const pixelCoord = tileCoordToPixelCoord({ x: coord.x, y: -coord.y }, tileWidth, tileHeight);
     const id = uuid();
@@ -104,7 +106,7 @@ export const createFxApi = (scene: Scene) => {
     const { icon } = options;
 
     const _coord = { x: pixelCoord.x, y: pixelCoord.y };
-    const duration = getRandomRange(1000, 1500);
+    const duration = getRandomRange(1500, 2000);
     const delay = getRandomRange(0, 1000);
     const xMove = getRandomRange(-10, 10);
     const yMove = getRandomRange(30, 50);
@@ -126,36 +128,8 @@ export const createFxApi = (scene: Scene) => {
       onComplete: () => scene.objectPool.removeGroup(id),
     };
 
-    if (icon) {
-      group.add("Sprite").setComponents([
-        ObjectPosition({ x: _coord.x, y: _coord.y }, DepthLayers.Path),
-        SetValue({
-          scale: 0.5,
-          originY: 0.5,
-          originX: 1.5,
-          alpha: 0,
-        }),
-        OnComponentSystem(
-          components.MapOpen,
-          (_, { value }) => {
-            if (value[1]?.value) return;
-
-            scene.objectPool.removeGroup(id);
-          },
-          { runOnInit: false }
-        ),
-        Texture(Assets.SpriteAtlas, icon),
-        Tween(scene, tweenConfig),
-      ]);
-    }
-
-    group.add("BitmapText").setComponents([
+    const sharedComponents = [
       ObjectPosition({ x: _coord.x, y: _coord.y }, DepthLayers.Path),
-      ObjectText(text, {
-        fontSize: getRandomRange(8, 12),
-        color: 0xffffff,
-        stroke: 0x000000,
-      }),
       OnComponentSystem(
         components.MapOpen,
         (_, { value }) => {
@@ -166,10 +140,31 @@ export const createFxApi = (scene: Scene) => {
         { runOnInit: false }
       ),
       Tween(scene, tweenConfig),
+    ];
+
+    if (icon) {
+      group.add("Sprite").setComponents([
+        SetValue({
+          scale: 0.5,
+          originY: 0.5,
+          originX: 1.5,
+          alpha: 0,
+        }),
+        Texture(Assets.SpriteAtlas, icon),
+        ...sharedComponents,
+      ]);
+    }
+
+    group.add("BitmapText").setComponents([
+      ObjectText(text, {
+        fontSize: getRandomRange(8, 12),
+        color: 0xffffff,
+      }),
       SetValue({
         alpha: 0,
         originY: 0.5,
       }),
+      ...sharedComponents,
     ]);
   }
 

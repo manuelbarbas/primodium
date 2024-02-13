@@ -171,7 +171,7 @@ export const renderBuilding = (scene: Scene) => {
 
             if ((value[0]?.value ?? 0n) % timeDelay !== 0n) return;
 
-            if (components.BuildRock.get()?.value !== activeRock || !scene.phaserScene.scene.isActive()) return;
+            if (components.BuildRock.get()?.value !== activeRock) return;
 
             const producedResource = components.P_Production.getWithKeys({
               level: components.Level.get(entity)?.value ?? 1n,
