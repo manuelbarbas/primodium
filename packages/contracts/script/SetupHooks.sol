@@ -7,6 +7,7 @@ import { IWorld } from "codegen/world/IWorld.sol";
 import { OwnedByTableId, ScoreTableId, AllianceTableId, ResourceCountTableId } from "codegen/index.sol";
 import { OnResourceCount_Score } from "src/hooks/storeHooks/OnResourceCount_Score.sol";
 import { OnScore_Alliance_Score } from "src/hooks/storeHooks/OnScore_Alliance_Score.sol";
+import { OnAsteroidScore_PlayerScore } from "src/hooks/storeHooks/OnAsteroidScore_PlayerScore.sol";
 import { OnOwnedBy_Score } from "src/hooks/storeHooks/OnOwnedBy_Score.sol";
 import { BEFORE_SPLICE_STATIC_DATA } from "@latticexyz/store/src/storeHookTypes.sol";
 
@@ -23,6 +24,11 @@ function registerScoreHook(IWorld world) {
   console.log("onResourceCount_Score address: %s", address(onResourceCount_Score));
   world.grantAccess(ScoreTableId, address(onResourceCount_Score));
   world.registerStoreHook(ResourceCountTableId, onResourceCount_Score, BEFORE_SPLICE_STATIC_DATA);
+
+  OnAsteroidScore_PlayerScore onAsteroidScore = new OnAsteroidScore_PlayerScore();
+  console.log("onAsteroidScore address: %s", address(onAsteroidScore));
+  world.grantAccess(ScoreTableId, address(onAsteroidScore));
+  world.registerStoreHook(ScoreTableId, onAsteroidScore, BEFORE_SPLICE_STATIC_DATA);
 
   OnScore_Alliance_Score onScore_Alliance_Score = new OnScore_Alliance_Score();
   console.log("onScore_Alliance_Score address: %s", address(onScore_Alliance_Score));

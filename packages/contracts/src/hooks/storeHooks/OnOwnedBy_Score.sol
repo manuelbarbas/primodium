@@ -6,7 +6,7 @@ pragma solidity >=0.8.21;
 import { StoreHook } from "@latticexyz/store/src/StoreHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { LibScore } from "libraries/LibScore.sol";
-import { OwnedBy, IsFleet, Asteroid } from "codegen/index.sol";
+import { OwnedBy, Asteroid } from "codegen/index.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 
 /// @title OnOwnedBy_Score - Handles updating score when asteroid ownership changes.
