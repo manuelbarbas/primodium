@@ -19,7 +19,7 @@ import { LibFleetDisband } from "libraries/fleet/LibFleetDisband.sol";
 import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
-import { LibSpaceRockAttributes } from "libraries/LibSpaceRockAttributes.sol";
+import { LibAsteroidAttributes } from "libraries/LibAsteroidAttributes.sol";
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
 import { AsteroidOwnedByKey, FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
@@ -33,7 +33,7 @@ library LibFleetCombat {
     return
       IsFleet.get(entity)
         ? LibFleetAttributes.getDefensesWithFollowers(entity)
-        : LibSpaceRockAttributes.getDefensesWithDefenders(entity);
+        : LibAsteroidAttributes.getDefensesWithDefenders(entity);
   }
 
   function attack(
@@ -44,14 +44,10 @@ library LibFleetCombat {
 
     // update grace period of rock and fleet on rock
     if (aggressorIsFleet) {
-      bytes32 fleetOwnerSpaceRock = OwnedBy.get(entity);
-      if (GracePeriod.get(fleetOwnerSpaceRock) > block.timestamp) {
-        GracePeriod.set(fleetOwnerSpaceRock, block.timestamp);
-      }
+      bytes32 ownerEntity = OwnedBy.get(entity);
+      if (GracePeriod.get(OwnedBy.get(entity)) > 0) GracePeriod.deleteRecord(ownerEntity);
     }
-    if (GracePeriod.get(entity) > block.timestamp) {
-      GracePeriod.set(entity, block.timestamp);
-    }
+    if (GracePeriod.get(entity) > 0) GracePeriod.deleteRecord(entity);
 
     bytes32 spaceRock = aggressorIsFleet ? FleetMovement.getDestination(entity) : entity;
 
@@ -59,7 +55,7 @@ library LibFleetCombat {
 
     (uint256 aggressorDamage, uint256[] memory aggressorDamages, uint256 totalAggressorDamage) = aggressorIsFleet
       ? LibFleetAttributes.getAttacksWithFollowers(entity)
-      : LibSpaceRockAttributes.getDefensesWithDefenders(entity);
+      : LibAsteroidAttributes.getDefensesWithDefenders(entity);
 
     BattleDamageDealtResult.set(battleId, entity, aggressorDamage);
 
@@ -127,7 +123,7 @@ library LibFleetCombat {
     return
       IsFleet.get(entity)
         ? LibFleetAttributes.getHpWithFollowers(entity)
-        : LibSpaceRockAttributes.getHpWithDefenders(entity);
+        : LibAsteroidAttributes.getHpWithDefenders(entity);
   }
 
   function applyDamageToWithAllies(

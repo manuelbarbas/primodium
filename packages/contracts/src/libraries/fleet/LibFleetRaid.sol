@@ -14,7 +14,7 @@ import { LibFleetDisband } from "libraries/fleet/LibFleetDisband.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
-import { LibSpaceRockAttributes } from "libraries/LibSpaceRockAttributes.sol";
+import { LibAsteroidAttributes } from "libraries/LibAsteroidAttributes.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
 import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
 
@@ -26,14 +26,14 @@ library LibFleetRaid {
     return
       IsFleet.get(entity)
         ? LibFleetAttributes.getFreeCargoSpaceWithFollowers(entity)
-        : LibSpaceRockAttributes.getFreeCargoSpacesWithDefenders(entity);
+        : LibAsteroidAttributes.getFreeCargoSpacesWithDefenders(entity);
   }
 
   function getRaidableResourceCountsWithAllies(bytes32 entity) internal view returns (uint256[] memory, uint256) {
     return
       IsFleet.get(entity)
         ? LibFleetAttributes.getResourceCountsWithFollowers(entity)
-        : LibSpaceRockAttributes.getStoredResourceCountsWithDefenders(entity);
+        : LibAsteroidAttributes.getStoredResourceCountsWithDefenders(entity);
   }
 
   function getAllies(bytes32 entity) internal view returns (bytes32[] memory) {

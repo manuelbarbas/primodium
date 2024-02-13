@@ -13,37 +13,37 @@ import { P_Unit, UnitCount, P_UnitPrototypes, P_Transportables, P_IsRecoverable,
 
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
-library LibSpaceRockAttributes {
-  function getAllUnits(bytes32 spaceRock) internal view returns (uint256[] memory units) {
+library LibAsteroidAttributes {
+  function getAllUnits(bytes32 asteroid) internal view returns (uint256[] memory units) {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     units = new uint256[](unitPrototypes.length);
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
-      units[i] = UnitCount.get(spaceRock, unitPrototypes[i]);
+      units[i] = UnitCount.get(asteroid, unitPrototypes[i]);
     }
     return units;
   }
 
-  function getDefense(bytes32 spaceRock) internal view returns (uint256 defense) {
-    defense = ResourceCount.get(spaceRock, uint8(EResource.U_Defense));
-    uint256 hp = ResourceCount.get(spaceRock, uint8(EResource.R_HP));
-    uint256 maxHp = MaxResourceCount.get(spaceRock, uint8(EResource.R_HP));
+  function getDefense(bytes32 asteroid) internal view returns (uint256 defense) {
+    defense = ResourceCount.get(asteroid, uint8(EResource.U_Defense));
+    uint256 hp = ResourceCount.get(asteroid, uint8(EResource.R_HP));
+    uint256 maxHp = MaxResourceCount.get(asteroid, uint8(EResource.R_HP));
     if (maxHp > 0) defense = (defense * hp) / maxHp;
     else defense = 0;
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
-      uint256 unitCount = UnitCount.get(spaceRock, unitPrototypes[i]);
-      uint256 unitLevel = UnitLevel.get(spaceRock, unitPrototypes[i]);
+      uint256 unitCount = UnitCount.get(asteroid, unitPrototypes[i]);
+      uint256 unitLevel = UnitLevel.get(asteroid, unitPrototypes[i]);
       defense += P_Unit.getDefense(unitPrototypes[i], unitLevel) * unitCount;
     }
-    defense = (defense * (100 + ResourceCount.get(spaceRock, uint8(EResource.M_DefenseMultiplier)))) / 100;
+    defense = (defense * (100 + ResourceCount.get(asteroid, uint8(EResource.M_DefenseMultiplier)))) / 100;
   }
 
   function getDefensesWithDefenders(
-    bytes32 spaceRock
+    bytes32 asteroid
   ) internal view returns (uint256 defense, uint256[] memory defenses, uint256 totalDefense) {
-    bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(spaceRock);
+    bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(asteroid);
     defenses = new uint256[](defenderFleetIds.length);
-    defense = getDefense(spaceRock);
+    defense = getDefense(asteroid);
     totalDefense += defense;
     for (uint8 i = 0; i < defenderFleetIds.length; i++) {
       defenses[i] = LibFleetAttributes.getDefense(defenderFleetIds[i]);
@@ -51,29 +51,29 @@ library LibSpaceRockAttributes {
     }
   }
 
-  function getDefenseWithDefenders(bytes32 spaceRock) internal view returns (uint256 defense) {
-    defense = getDefense(spaceRock);
-    bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(spaceRock);
+  function getDefenseWithDefenders(bytes32 asteroid) internal view returns (uint256 defense) {
+    defense = getDefense(asteroid);
+    bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(asteroid);
     for (uint8 i = 0; i < defenderFleetIds.length; i++) {
       defense += LibFleetAttributes.getDefense(defenderFleetIds[i]);
     }
   }
 
-  function getHp(bytes32 spaceRock) internal view returns (uint256 hp) {
-    hp = ResourceCount.get(spaceRock, uint8(EResource.R_HP));
+  function getHp(bytes32 asteroid) internal view returns (uint256 hp) {
+    hp = ResourceCount.get(asteroid, uint8(EResource.R_HP));
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
-      uint256 unitCount = UnitCount.get(spaceRock, unitPrototypes[i]);
-      uint256 unitLevel = UnitLevel.get(spaceRock, unitPrototypes[i]);
+      uint256 unitCount = UnitCount.get(asteroid, unitPrototypes[i]);
+      uint256 unitLevel = UnitLevel.get(asteroid, unitPrototypes[i]);
       hp += P_Unit.getHp(unitPrototypes[i], unitLevel) * unitCount;
     }
   }
 
   function getHpWithDefenders(
-    bytes32 spaceRock
+    bytes32 asteroid
   ) internal view returns (uint256 hp, uint256[] memory hps, uint256 totalHp) {
-    hp = getHp(spaceRock);
-    bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(spaceRock);
+    hp = getHp(asteroid);
+    bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(asteroid);
     hps = new uint256[](defenderFleetIds.length);
     totalHp = hp;
     for (uint8 i = 0; i < defenderFleetIds.length; i++) {
@@ -82,30 +82,30 @@ library LibSpaceRockAttributes {
     }
   }
 
-  function getCargo(bytes32 spaceRock) internal view returns (uint256 cargo) {
+  function getCargo(bytes32 asteroid) internal view returns (uint256 cargo) {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
-      uint256 unitCount = UnitCount.get(spaceRock, unitPrototypes[i]);
-      uint256 unitLevel = UnitLevel.get(spaceRock, unitPrototypes[i]);
+      uint256 unitCount = UnitCount.get(asteroid, unitPrototypes[i]);
+      uint256 unitLevel = UnitLevel.get(asteroid, unitPrototypes[i]);
       cargo += P_Unit.getCargo(unitPrototypes[i], unitLevel) * unitCount;
     }
   }
 
-  function getEncryption(bytes32 spaceRock) internal view returns (uint256 encryption) {
-    encryption = ResourceCount.get(spaceRock, uint8(EResource.R_Encryption));
+  function getEncryption(bytes32 asteroid) internal view returns (uint256 encryption) {
+    encryption = ResourceCount.get(asteroid, uint8(EResource.R_Encryption));
   }
 
-  function getStoredResourceCountWithDefenders(bytes32 spaceRock) internal view returns (uint256 totalResources) {
-    totalResources = LibResource.getStoredResourceCountVaulted(spaceRock);
-    bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(spaceRock);
+  function getStoredResourceCountWithDefenders(bytes32 asteroid) internal view returns (uint256 totalResources) {
+    totalResources = LibResource.getStoredResourceCountVaulted(asteroid);
+    bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(asteroid);
     for (uint256 i = 0; i < defenderFleetIds.length; i++) {
       totalResources += LibFleetAttributes.getOccupiedCargo(defenderFleetIds[i]);
     }
   }
 
-  function getStoredResourceCountsWithDefenders(bytes32 spaceRock) internal view returns (uint256[] memory, uint256) {
-    (uint256[] memory resourceCounts, uint256 totalResources) = LibResource.getStoredResourceCountsVaulted(spaceRock);
-    bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(spaceRock);
+  function getStoredResourceCountsWithDefenders(bytes32 asteroid) internal view returns (uint256[] memory, uint256) {
+    (uint256[] memory resourceCounts, uint256 totalResources) = LibResource.getStoredResourceCountsVaulted(asteroid);
+    bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(asteroid);
     for (uint256 i = 0; i < defenderFleetIds.length; i++) {
       uint256[] memory defenderResourceCounts = LibFleetAttributes.getResourceCounts(defenderFleetIds[i]);
       for (uint256 j = 0; j < defenderResourceCounts.length; j++) {
@@ -116,9 +116,9 @@ library LibSpaceRockAttributes {
     return (resourceCounts, totalResources);
   }
 
-  function getFreeCargoSpaceWithDefenders(bytes32 spaceRock) internal view returns (uint256 totalCargo) {
-    totalCargo = getCargo(spaceRock);
-    bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(spaceRock);
+  function getFreeCargoSpaceWithDefenders(bytes32 asteroid) internal view returns (uint256 totalCargo) {
+    totalCargo = getCargo(asteroid);
+    bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(asteroid);
     for (uint256 i = 0; i < defenderFleetIds.length; i++) {
       totalCargo += LibFleetAttributes.getFreeCargoSpace(defenderFleetIds[i]);
     }
