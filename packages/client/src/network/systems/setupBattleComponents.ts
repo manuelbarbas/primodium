@@ -18,20 +18,25 @@ export const setupBattleComponents = () => {
       winner: battleData.winner as Entity,
       rock: battleData.rock as Entity,
       timestamp: battleData.timestamp,
+      aggressorAllies: battleData.aggressorAllies as Entity[],
+      targetAllies: battleData.targetAllies as Entity[],
     };
 
-    const oldComponent = RawBattle.get(entity);
-    if (!oldComponent) {
-      RawBattle.set({ ...data, aggressorAllies: [], targetAllies: [] }, entity);
-    } else {
-      RawBattle.update(data, entity);
-    }
+    RawBattle.set(data, entity);
   });
 
   const updateBattleParticipant = ({ entity }: { entity: Entity }) => {
-    const damageDealt = components.BattleDamageDealtResult.get(entity)!.damageDealt;
-    const { hpAtStart, damageTaken } = components.BattleDamageTakenResult.get(entity)!;
-    const { unitLevels, casualties, unitsAtStart } = components.BattleUnitResult.get(entity)!;
+    const { battleId } = decodeEntity(components.BattleDamageDealtResult.metadata.keySchema, entity);
+    const damageDealt = components.BattleDamageDealtResult.get(entity)?.damageDealt ?? 0n;
+    const { hpAtStart, damageTaken } = components.BattleDamageTakenResult.get(entity) ?? {
+      hpAtStart: 0n,
+      damageTaken: 0n,
+    };
+    const { unitLevels, casualties, unitsAtStart } = components.BattleUnitResult.get(entity) ?? {
+      unitLevels: undefined,
+      casualties: undefined,
+      unitsAtStart: undefined,
+    };
     const { resourcesAtStart, resourcesAtEnd } = components.BattleRaidResult.get(entity) ?? {
       resourcesAtStart: undefined,
       resourcesAtEnd: undefined,
@@ -58,26 +63,16 @@ export const setupBattleComponents = () => {
     };
 
     RawBattleParticipant.set(newData, entity);
-    const { battleId } = decodeEntity(components.BattleDamageDealtResult.metadata.keySchema, entity);
-    const oldParticipantList = RawBattleParticipants.get(battleId as Entity);
-    RawBattleParticipants.set({ value: oldParticipantList?.value.concat(entity) ?? [entity] }, battleId as Entity);
+    const oldParticipantList = RawBattleParticipants.get(battleId as Entity)?.value;
+    if (oldParticipantList?.includes(entity)) return;
+    RawBattleParticipants.set({ value: oldParticipantList?.concat(entity) ?? [entity] }, battleId as Entity);
   };
 
-  const requiredParticipantQuery = [
-    Has(components.BattleDamageDealtResult),
-    Has(components.BattleDamageTakenResult),
-    Has(components.BattleUnitResult),
-  ];
-  defineEnterSystem(systemWorld, requiredParticipantQuery, updateBattleParticipant);
+  defineEnterSystem(systemWorld, [Has(components.BattleDamageDealtResult)], updateBattleParticipant);
 
-  defineEnterSystem(
-    systemWorld,
-    [...requiredParticipantQuery, Has(components.BattleRaidResult)],
-    updateBattleParticipant
-  );
-  defineEnterSystem(
-    systemWorld,
-    [...requiredParticipantQuery, Has(components.BattleEncryptionResult)],
-    updateBattleParticipant
-  );
+  defineEnterSystem(systemWorld, [Has(components.BattleDamageTakenResult)], updateBattleParticipant);
+
+  defineEnterSystem(systemWorld, [Has(components.BattleUnitResult)], updateBattleParticipant);
+  defineEnterSystem(systemWorld, [Has(components.BattleRaidResult)], updateBattleParticipant);
+  defineEnterSystem(systemWorld, [Has(components.BattleEncryptionResult)], updateBattleParticipant);
 };

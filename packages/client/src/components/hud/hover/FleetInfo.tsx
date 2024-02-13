@@ -37,8 +37,10 @@ export const FleetInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
     <Card className="ml-5 uppercase font-bold text-xs relative w-56">
       <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
       <div className="flex flex-col gap-1 z-10">
-        <p className="text-sm">{fleetStats.title}</p>
-        {inGracePeriod && <IconLabel imageUri="/img/icons/doveicon.png" className="text-xs" />}
+        <div className="text-sm">
+          {fleetStats.title}
+          {inGracePeriod && <IconLabel imageUri="/img/icons/graceicon.png" className="text-xs ml-2" />}
+        </div>
         <div className="flex gap-1">
           <p className="text-xs opacity-70 bg-primary px-1 w-fit">{fleetStateText}</p>
           {owner && (

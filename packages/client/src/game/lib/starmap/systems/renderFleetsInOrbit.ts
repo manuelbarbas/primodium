@@ -1,4 +1,4 @@
-import { DepthLayers } from "@game/constants";
+import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 import { Coord, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity, Has, defineComponentSystem, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { EFleetStance } from "contracts/config/enums";
@@ -21,6 +21,7 @@ import {
   TweenCounter,
 } from "../../common/object-components/common";
 import { Circle, Line, Shield, Square } from "../../common/object-components/graphics";
+import { Texture } from "../../common/object-components/sprite";
 import { ObjectText } from "../../common/object-components/text";
 
 const orbitRadius = 64;
@@ -117,7 +118,7 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
     const offset = addedOffset + ((i + 1) / allFleets.length) * 360;
     const fleetPosition = calculatePosition(offset, destinationPixelCoord);
 
-    const sharedComponents = [ObjectPosition(fleetPosition, DepthLayers.Marker), SetValue({ originX: 1, originY: -1 })];
+    const sharedComponents = [ObjectPosition(fleetPosition, DepthLayers.Marker)];
     const fleetOrbitObject = fleetOrbit.add("Graphics", fleet + "_fleetOrbit");
     const fleetHomeLineObject = fleetOrbit.add("Graphics");
 
@@ -215,18 +216,40 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
         subscription = null; // Optional: Clean up the reference
       }
     };
+    const gracePeriod = fleetOrbit.add("Sprite");
 
+    gracePeriod.setComponents([
+      ...sharedComponents,
+      SetValue({ scale: 0.25, originX: 0.5, originY: 1.2 }),
+
+      OnComponentSystem(components.Time, (gameObject) => {
+        const graceTime = components.GracePeriod.get(fleet)?.value ?? 0n;
+        const time = components.Time.get()?.value ?? 0n;
+
+        if (time >= graceTime) {
+          gameObject.alpha = 0;
+        } else {
+          gameObject.alpha = 1;
+        }
+      }),
+      Texture(Assets.SpriteAtlas, SpriteKeys.GracePeriod),
+      SetValue({
+        depth: DepthLayers.Marker + 1,
+        input: null,
+      }),
+    ]);
     fleetLabel.setComponents([
       ...sharedComponents,
       SetValue({
         originX: 0.5,
         originY: 0.4,
-        depth: DepthLayers.Marker + 1,
+        depth: DepthLayers.Marker + 2,
       }),
       ObjectText(name, {
         id: "fleetLabel",
         fontSize: 6,
         color: 0xffffff,
+        stroke: 0x000000,
       }),
       TweenCounter(scene, {
         from: 0,
@@ -252,8 +275,9 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
           const x = destinationPixelCoord.x + orbitRadius * Math.cos(angleRads);
           const y = destinationPixelCoord.y + orbitRadius * Math.sin(angleRads);
           fleetOrbitObject.setComponent(ObjectPosition({ x, y }, DepthLayers.Marker));
-          fleetLabel.setComponent(ObjectPosition({ x, y }, DepthLayers.Marker + 1));
+          fleetLabel.setComponent(ObjectPosition({ x, y }, DepthLayers.Marker + 2));
           fleetHomeLineObject.setComponent(ObjectPosition({ x, y }, DepthLayers.Marker - 1));
+          gracePeriod.setComponent(ObjectPosition({ x, y }, DepthLayers.Marker + 1));
         },
       }),
     ]);

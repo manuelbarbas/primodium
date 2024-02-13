@@ -169,9 +169,13 @@ export const renderAsteroid = (scene: Scene) => {
       OnComponentSystem(components.SelectedRock, (gameObject, update) => {
         const isSelected = update.value[0]?.value === entity;
         const wasSelected = update.value[1]?.value === entity;
+        const graceTime = components.GracePeriod.get(entity)?.value ?? 0n;
+        const time = components.Time.get()?.value ?? 0n;
+
         if (isSelected) {
           gameObject.alpha = 0;
-        } else if (wasSelected) {
+        } else if (wasSelected && graceTime !== 0n && graceTime < time) {
+          console.log("time", time, "graceTime: ", graceTime);
           gameObject.alpha = 0.8;
         }
       }),
@@ -180,7 +184,7 @@ export const renderAsteroid = (scene: Scene) => {
         const graceTime = components.GracePeriod.get(entity)?.value ?? 0n;
         const time = components.Time.get()?.value ?? 0n;
 
-        if (isSelected || time >= graceTime) {
+        if (isSelected || time >= graceTime || graceTime == 0n) {
           gameObject.alpha = 0;
         } else {
           gameObject.alpha = 0.8;

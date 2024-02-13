@@ -103,6 +103,9 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               goto="transfer"
               from={movement?.destination as Entity}
               to={fleetEntity}
+              onClick={() =>
+                movement?.destination && components.ActiveRock.set({ value: movement.destination as Entity })
+              }
             >
               Transfer Units
             </NavButton>
@@ -131,6 +134,9 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               goto="transfer"
               from={movement?.destination as Entity}
               to={fleetEntity}
+              onClick={() =>
+                movement?.destination && components.ActiveRock.set({ value: movement.destination as Entity })
+              }
             >
               Transfer Resources
             </NavButton>

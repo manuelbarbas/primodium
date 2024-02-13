@@ -11,17 +11,18 @@ import { MapButton } from "./MapButton";
 import { MenuButtons } from "./MenuButtons";
 import { Profile } from "./Profile";
 import { SpectatingDetails } from "./SpectatingDetails";
-import { HoverInfo } from "./hover/HoverInfo";
-import { ActiveMarker } from "./markers/ActiveMarker";
-import { HomeMarker } from "./markers/HomeMarker";
-import HackerConsole from "./modals/HackerConsole";
-import { Blueprints } from "./panes/blueprints/Blueprints";
-import { Resources } from "./panes/resources/Resources";
-import { AsteroidTarget } from "./starmap/AsteroidTarget";
-import { FleetTarget } from "./starmap/FleetTarget";
-import { HoverTarget } from "./starmap/HoverTarget";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
+import { HoverInfo } from "./hover/HoverInfo";
+import { BuildMarker } from "./markers/starmap/BuildMarker";
+import { HomeMarker } from "./markers/starmap/HomeMarker";
+import HackerConsole from "./modals/HackerConsole";
 import { OwnedAsteroids } from "./panes/OwnedAsteroids";
+import { Blueprints } from "./panes/blueprints/Blueprints";
+import { Hangar as HangarComponent } from "./panes/hangar/Hangar";
+import { Resources } from "./panes/resources/Resources";
+import { AsteroidTarget } from "./markers/starmap/AsteroidTarget";
+import { FleetTarget } from "./markers/starmap/FleetTarget";
+import { HoverTarget } from "./markers/HoverTarget";
 
 export const GameHUD = () => {
   const {
@@ -41,6 +42,14 @@ export const GameHUD = () => {
   return (
     <div className={`screen-container font-mono`}>
       <HUD scale={uiScale}>
+        {/* Make map look inset */}
+        {mapOpen && (
+          <>
+            <div className="absolute inset-0 border-8 blur-lg border-secondary/25" />
+            <div className="absolute inset-0 scale-[98%] border-8 blur-lg border-info/25" />
+          </>
+        )}
+
         <Modal title="hacker console" keybind={allowHackerModal ? KeybindActions.Console : undefined} keybindClose>
           <Modal.Content className="w-4/5 h-[40rem]">
             <HackerConsole />
@@ -48,7 +57,7 @@ export const GameHUD = () => {
         </Modal>
 
         {/* MARKERS */}
-        <ActiveMarker />
+        <BuildMarker />
         <HomeMarker />
 
         <AsteroidTarget />
@@ -59,9 +68,12 @@ export const GameHUD = () => {
           <HoverInfo />
         </HUD.CursorFollower>
         <HUD.TopLeft>
-          <div className="flex">
-            <Profile />
-            <MenuButtons />
+          <div className="ml-2 space-y-2">
+            <div className="flex">
+              <Profile />
+              <MenuButtons />
+            </div>
+            <HangarComponent />
           </div>
         </HUD.TopLeft>
 
