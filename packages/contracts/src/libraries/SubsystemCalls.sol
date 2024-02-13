@@ -45,7 +45,7 @@ function fleetBattleResolveRaid(bytes32 battleId, bytes32 raider, bytes32 target
   SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
     getSystemResourceId("S_FleetBattleResolveRaidSystem"),
-    abi.encodeCall(S_FleetBattleResolveRaidSystem.resolveBattleRaid, (battleId, raider, target)),
+    abi.encodeCall(S_FleetBattleResolveRaidSystem.battleResolveRaid, (battleId, raider, target)),
     0
   );
 }

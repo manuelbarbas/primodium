@@ -100,7 +100,8 @@ contract FleetCombatSystem is FleetBaseSystem {
 
     if (isRaid) {
       fleetBattleResolveRaid(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
-    } else if (isDecryption) {
+    }
+    if (isDecryption) {
       //in decryption we resolve encryption first so the fleet decryption unit isn't lost before decrypting
       LibFleetCombat.resolveBattleEncryption(
         battleId,
