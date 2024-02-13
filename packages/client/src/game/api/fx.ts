@@ -107,13 +107,11 @@ export const createFxApi = (scene: Scene) => {
 
     const _coord = { x: pixelCoord.x, y: pixelCoord.y };
     const duration = getRandomRange(1500, 2000);
-    const delay = getRandomRange(0, 1000);
     const xMove = getRandomRange(-10, 10);
     const yMove = getRandomRange(30, 50);
 
     const tweenConfig: Parameters<typeof Tween>["1"] = {
       duration,
-      delay,
       onStart: () => {
         // Change the opacity of the object here
         scene.objectPool.getGroup(id).objects.forEach((entity) => {

@@ -165,9 +165,13 @@ export const renderBuilding = (scene: Scene) => {
         ),
         OnComponentSystem(
           components.Time,
-          (_, { value }) => {
-            //show resource updates slower for larger buildings with offset to prevent spam
-            const frequency = BigInt(buildingDimensions.width * buildingDimensions.height) + 5n;
+          (gameObject, { value }) => {
+            const hoverEntity = components.HoverEntity.get()?.value;
+            const selectedBuilding = components.SelectedBuilding.get()?.value;
+
+            if (hoverEntity !== entity && selectedBuilding !== entity) return;
+
+            const frequency = 1n;
             if ((value[0]?.value ?? 0n) % frequency !== 0n) return;
 
             if (components.BuildRock.get()?.value !== activeRock || !components.IsActive.get(entity)?.value) return;
@@ -177,8 +181,9 @@ export const renderBuilding = (scene: Scene) => {
               prototype: buildingType as Hex,
             });
 
-            producedResource?.resources.forEach((resource) => {
+            producedResource?.resources.forEach((resource, i) => {
               const resourceEntity = ResourceEntityLookup[resource as EResource];
+              const amount = producedResource.amounts[i];
 
               if (!ResourceStorages.has(resourceEntity)) return;
 
@@ -186,7 +191,7 @@ export const renderBuilding = (scene: Scene) => {
 
               if (production <= 0) return;
 
-              const productionMin = (production * worldSpeed) / SPEED_SCALE;
+              const productionMin = (amount * worldSpeed) / SPEED_SCALE;
               fx.emitFloatingText(
                 `${formatResourceCount(resourceEntity, productionMin * frequency, {
                   short: true,

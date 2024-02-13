@@ -26,7 +26,7 @@ export const BuildUnit: React.FC<{
   const [count, setCount] = useState(1);
 
   const { UnitLevel, P_UnitProdTypes, BuildingType, Level } = components;
-  const selectedRock = components.SelectedRock.use()?.value ?? singletonEntity;
+  const activeRock = components.ActiveRock.use()?.value ?? singletonEntity;
 
   const buildingType = (BuildingType.get(building)?.value as Entity) ?? EntityType.NULL;
   const buildingLevel = Level.use(building)?.value ?? 1n;
@@ -95,7 +95,7 @@ export const BuildUnit: React.FC<{
               <p className="uppercase font-bold">{getBlockTypeName(selectedUnit)}</p>
 
               <div className="grid grid-cols-5 gap-2 border-y border-cyan-400/30">
-                {Object.entries(getUnitStats(selectedUnit, selectedRock)).map(([name, value]) => (
+                {Object.entries(getUnitStats(selectedUnit, activeRock)).map(([name, value]) => (
                   <div key={name} className="flex flex-col items-center">
                     <p className="text-xs opacity-50">{name}</p>
                     <p>{value.toLocaleString()}</p>
